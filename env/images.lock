@@ -41,7 +41,7 @@
       "pdk_source_image_digest": "sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
       "pdk_ciel_revision": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
       "status": "qualified",
-      "qualification_note": "Locally reproduced from digest-pinned ARM64 bases using the bounded builder in env/builders.lock. A generic four-bit GF180 core canary passed LibreLane 3.0.5 lint, synthesis and mapped-cell checks, nine-corner STA, placement, CTS, routing, antenna, OpenRCX extraction, PDNSim connectivity, Magic and KLayout DRC, layout XOR, Netgen LVS, powered zero-delay gate simulation, and scan-cell replacement. The OpenROAD build explicitly reports scan optimization/stitching as unimplemented. This narrow pre-silicon qualification excludes project RTL, pads, complete DFT insertion, SDF, package-aware IR/EM, provider precheck, and fabrication qualification."
+      "qualification_note": "Locally reproduced from digest-pinned ARM64 bases using the bounded builder in env/builders.lock. A generic four-bit GF180 core canary passed LibreLane 3.0.5 lint, synthesis and mapped-cell checks, nine-corner STA, placement, CTS, routing, antenna, OpenRCX extraction, PDNSim connectivity, Magic and KLayout DRC, layout XOR, Netgen LVS, powered zero-delay gate simulation, scan-cell replacement, single-chain stitching, and scan-shift/functional-handoff simulation. The scan-inserted netlist was not physically re-closed. This narrow pre-silicon qualification excludes project RTL, pads, ATPG/coverage, scan-inserted physical closure, SDF, package-aware IR/EM, provider precheck, and fabrication qualification."
     }
   ]
 }

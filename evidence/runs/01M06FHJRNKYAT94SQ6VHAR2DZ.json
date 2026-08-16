@@ -41,7 +41,8 @@
     "magic_klayout_xor": "pass",
     "netgen_lvs": "pass",
     "scan_cell_replacement": "pass",
-    "complete_scan_chain_stitching": "blocked_unimplemented_in_locked_openroad"
+    "scan_optimization": "documented_noop",
+    "complete_scan_chain_stitching": "not_exercised_in_this_run"
   },
   "observed": {
     "standard_cell_instances": 79,
@@ -94,7 +95,7 @@
     "The public embedded PDK snapshot is not provider accepted or fabrication qualified.",
     "Pad timing libraries, pad integration, provider precheck, package-aware IR/EM, and SDF simulation were not exercised.",
     "OpenROAD reports unsupported public-PDK LEF58 enclosure constructs and two floating optimization nets; final DRC and disconnected-pin metrics are zero.",
-    "OpenROAD scan-cell replacement passed, but its scan optimization/stitching command reports unimplemented; complete DFT insertion remains a red readiness blocker.",
+    "OpenROAD scan-cell replacement passed. This run incorrectly treated the documented scan_opt no-op as the stitch command; follow-up evidence uses execute_dft_plan and supersedes that interpretation.",
     "G0 process/provider eligibility and G1 PCIe specification/interface freeze remain blocked, so project RTL was intentionally not created."
   ]
 }

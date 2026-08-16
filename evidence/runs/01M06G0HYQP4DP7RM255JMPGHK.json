@@ -1,0 +1,67 @@
+{
+  "id": "run.01M06G0HYQP4DP7RM255JMPGHK",
+  "component": "project.pcie_gen1_endpoint",
+  "target": "generic_gf180_single_scan_chain_insertion",
+  "start_time_utc": "2026-08-16T23:53:09Z",
+  "end_time_utc": "2026-08-16T23:54:21Z",
+  "source_commit": "19841cc29c8b4a14ef328d22c32bd9002c63601e",
+  "source_dirty": true,
+  "source_status_sha256": "ab3d769f77e7ec673159c40270615de646528fd254ddd1564a5ad19f9e249c91",
+  "image": {
+    "reference": "svalbard/librelane-gf180-canary:2026.08",
+    "local_image_id": "sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
+    "platform": "linux/arm64",
+    "openroad_revision": "dcf36133a369abc8f3c5e5738cd4d82e4903c0e0"
+  },
+  "command_semantics_source": {
+    "url": "https://openroad.readthedocs.io/en/latest/main/src/dft/README.html",
+    "accessed_at_utc": "2026-08-16",
+    "conclusion": "execute_dft_plan performs scan-chain stitching; scan_opt is a documented no-op"
+  },
+  "resource_limits": {
+    "minimum_free_bytes": 107374182400,
+    "minimum_available_memory_bytes": 8589934592,
+    "timeout_seconds": 1200,
+    "cpus": 2,
+    "memory_bytes": 4294967296,
+    "memory_swap_bytes": 4294967296,
+    "pids": 512,
+    "network": "none",
+    "root_filesystem": "read_only",
+    "temporary_success_outputs_deleted": true
+  },
+  "result": "pass_with_limitations",
+  "checks": {
+    "ordinary_core_flow": "pass",
+    "scan_cell_replacement": "pass_4_of_4_flops",
+    "scan_chain_plan": "pass_1_chain_4_bits",
+    "scan_chain_ports": "pass_scan_enable_scan_in_scan_out",
+    "scan_shift_simulation": "pass_shifted_0xA",
+    "functional_handoff_simulation": "pass_incremented_0xA_to_0xB",
+    "toolchain_readiness": "pass"
+  },
+  "final_artifact_hashes": {
+    "ordinary_gds": "6d4f548c772ad19c39f17cbdfcbb0719da3ee341c9fa73b105010e3ab10bca3c",
+    "ordinary_klayout_gds": "4d3cda2146ab660fdeeb74a8f424e4fb1f55f39b4530a0d744d85e16d8833850",
+    "ordinary_nominal_spef": "ea0e5ab1da404844b91939d5c1bc7f888749daa1273a92d98eafabc4355b2cd7",
+    "ordinary_powered_netlist": "d893f23d2392decae2688301809eb4330c7cc83b07c7d8a1d7409ac705675b37",
+    "scan_stitched_netlist": "6af2a960368b2c70e29e1cc6e16bda6b010aec083473d03f2a6abc7bebc1c84f",
+    "ordinary_spice": "d4ca4f30bd6282c71bb39ce23e7ea7875f66a80af0a85428799df25181d9589c"
+  },
+  "artifact_hashes": [
+    {"path": "env/images.lock", "sha256": "9001c0edce4d06f0db6245962b08504bb2933c39f9e300129cf51aa08903d5fb"},
+    {"path": "env/tools.lock", "sha256": "f09de4f0c0885a75069580af6d69fb061c850560f436e26ef439fc3ac2a73094"},
+    {"path": "env/tool_gaps.yaml", "sha256": "15ff867266e0e143f1f1fe6a8502db3e8ddbfb9e57f3d2b1f1b0e68b5400878c"},
+    {"path": "flows/smoke/digital_pnr/dft_probe.tcl", "sha256": "7c670a2c225287103d5b4c76d3e245e96f7f58aff0e34d8debed550fdcab6fdf"},
+    {"path": "flows/smoke/digital_pnr/counter_scan_tb.v", "sha256": "cf3a20f774691a17a4c30090b1f9e709454eb6e2e205acd1cb4cb91e85c2efa7"},
+    {"path": "flows/smoke/digital_pnr/container_smoke.sh", "sha256": "4c7ae6d6fa2fe70ddb5c33cd73d604e5ee08dc427cce4a2e0254da82921bfb4d"},
+    {"path": "flows/smoke/digital_pnr/check_results.py", "sha256": "f84c2cc02b2887bbc4e18675e7a949f44d3678eac196383d612a294a20994140"},
+    {"path": "scratch/digital-pnr-smoke-last.json", "sha256": "52d790832f5155b0e8e7f5cee21cfbe90218d407a3ae2d64011601555dbe148c", "retained": false}
+  ],
+  "limitations": [
+    "The scan replacement and one-chain stitching probe runs after the ordinary core flow, so the scan-inserted netlist was not physically re-closed.",
+    "No ATPG, stuck-at/transition fault coverage, boundary scan, scan compression, test-mode timing, or scan-chain physical routing evidence was produced.",
+    "This is a generic four-bit counter canary and does not exercise project RTL, pads, package-aware IR/EM, SDF, provider precheck, or fabrication qualification.",
+    "G0 process/provider eligibility and G1 PCIe specification/interface freeze remain blocked."
+  ]
+}

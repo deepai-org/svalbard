@@ -24,11 +24,17 @@ iverilog -g2012 -DFUNCTIONAL -DUSE_POWER_PINS \
   "$final/pnl/counter.pnl.v" /src/counter_gate_tb.v
 vvp /work/counter_gate_sim > /work/gate-simulation.log
 
-FINAL_DIR="$final" DFT_NETLIST=/work/counter.scan-replaced.v \
+FINAL_DIR="$final" DFT_NETLIST=/work/counter.scan-stitched.v \
   openroad -no_init -no_splash /src/dft_probe.tcl > /work/dft-probe.log 2>&1
+iverilog -g2012 -DFUNCTIONAL \
+  -s counter_scan_tb -o /work/counter_scan_sim \
+  /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/verilog/primitives.v \
+  /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/verilog/gf180mcu_fd_sc_mcu7t5v0.v \
+  /work/counter.scan-stitched.v /src/counter_scan_tb.v
+vvp /work/counter_scan_sim > /work/scan-simulation.log
 
 python3 /src/check_results.py \
   "$final/metrics.json" "$final" /work/design/runs/CANARY/warning.log \
   /work/gate-simulation.log /work/dft-probe.log \
-  /work/counter.scan-replaced.v /work/result.json
+  /work/counter.scan-stitched.v /work/scan-simulation.log /work/result.json
 echo 'digital-pnr-smoke: full core flow PASS'

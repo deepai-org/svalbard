@@ -15,8 +15,8 @@ def fail(message: str) -> None:
     raise SystemExit(f"digital-pnr-smoke: {message}")
 
 
-if len(sys.argv) != 8:
-    fail("usage: check_results.py METRICS FINAL_DIR WARNING_LOG GATE_LOG DFT_LOG DFT_NETLIST OUTPUT_JSON")
+if len(sys.argv) != 9:
+    fail("usage: check_results.py METRICS FINAL_DIR WARNING_LOG GATE_LOG DFT_LOG DFT_NETLIST SCAN_LOG OUTPUT_JSON")
 
 (
     metrics_path,
@@ -25,6 +25,7 @@ if len(sys.argv) != 8:
     gate_log,
     dft_log,
     dft_netlist,
+    scan_log,
     output_path,
 ) = map(Path, sys.argv[1:])
 metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
@@ -80,8 +81,16 @@ if dft_text.count("gf180mcu_fd_sc_mcu7t5v0__sdffq_1") != 4:
     fail("OpenROAD did not replace all four flops with scan-capable cells")
 if "gf180mcu_fd_sc_mcu7t5v0__dffq_1" in dft_text:
     fail("ordinary flop remains after scan replacement")
-if "DFT-0014" not in dft_log.read_text(encoding="utf-8"):
-    fail("OpenROAD DFT probe no longer demonstrates the recorded scan-stitching gap")
+dft_log_text = dft_log.read_text(encoding="utf-8")
+if "Scan chain 'chain_0'" not in dft_log_text:
+    fail("OpenROAD did not report the requested single scan chain")
+if "Number of chains: 1" not in dft_log_text or "has 4 cells (4 bits)" not in dft_log_text:
+    fail("OpenROAD DFT plan does not contain exactly one four-bit chain")
+for port in ("scan_enable_0", "scan_in_0", "scan_out_0"):
+    if f" {port};" not in dft_text:
+        fail(f"stitched scan netlist lacks port {port}")
+if "stitched scan simulation: PASS" not in scan_log.read_text(encoding="utf-8"):
+    fail("stitched scan chain did not pass structural gate simulation")
 
 allowed_warning_markers = {
     "duplicate timing library": "STA-1140",
@@ -114,7 +123,7 @@ artifacts = {
     "powered_netlist": final_dir / "pnl/counter.pnl.v",
     "nominal_spef": final_dir / "spef/nom/counter.nom.spef",
     "spice": final_dir / "spice/counter.spice",
-    "scan_replaced_netlist": dft_netlist,
+    "scan_stitched_netlist": dft_netlist,
 }
 artifact_hashes = {}
 for name, path in artifacts.items():
@@ -132,7 +141,7 @@ result = {
     "checks": {
         "lint_synthesis_and_unmapped_cells": "pass",
         "powered_gate_level_simulation": "pass",
-        "scan_cell_replacement": "pass",
+        "scan_cell_replacement_and_single_chain_stitching": "pass",
         "multi_corner_setup_and_hold": "pass",
         "routing_drc_and_antenna": "pass",
         "power_grid_connectivity": "pass",
@@ -156,8 +165,8 @@ result = {
         "IR drop has no qualified package or VSRC location model",
         "OpenROAD reports unsupported LEF58 enclosure constructs from the public PDK",
         "OpenROAD repair reports two floating optimization nets; final disconnected-pin metrics are zero",
-        "OpenROAD scan-cell replacement passed, but this build reports scan optimization/stitching as unimplemented",
-        "no complete DFT insertion, equivalence, SDF timing simulation, or project RTL was exercised",
+        "scan replacement and one-chain stitching were probed after the ordinary core flow; the scan-inserted netlist was not physically re-closed",
+        "no DFT coverage/ATPG, equivalence, SDF timing simulation, or project RTL was exercised",
     ],
 }
 output_path.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")

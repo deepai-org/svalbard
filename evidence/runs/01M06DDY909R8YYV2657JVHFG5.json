@@ -1,0 +1,48 @@
+{
+  "id": "run.01M06DDY909R8YYV2657JVHFG5",
+  "component": "project.pcie_gen1_endpoint",
+  "target": "full_bfm_history_lineage_audit",
+  "start_time_utc": "2026-08-16T23:13:01Z",
+  "end_time_utc": "2026-08-16T23:13:03Z",
+  "source_commit": "d919a0553e522de2151be11360aaf81961f4c02e",
+  "source_dirty": true,
+  "source_status_sha256": "00668cf517090c3c64fc8f55bfd48593fa676ad010c996631b9954f58a2b6154",
+  "resource_limits": {
+    "minimum_free_bytes": 107374182400,
+    "minimum_available_memory_bytes": 8589934592,
+    "clone_timeout_seconds_each": 300,
+    "maximum_subprocess_file_bytes": 67108864,
+    "temporary_bare_clones_deleted": true
+  },
+  "result": "pass_with_limitations",
+  "checks": {
+    "cocotbext_pcie": {
+      "revision": "92732edd2d8cef002f0e984697ff31ccfe8a19a9",
+      "ancestor_commits": 309,
+      "author_identities": 1,
+      "source_blob_objects": 661,
+      "cross_project_reference_commits": 0
+    },
+    "pcievhost": {
+      "revision": "b82b2ff3a047f742354c9607dea34b9b97bf108c",
+      "ancestor_commits": 178,
+      "author_identities": 2,
+      "source_blob_objects": 488,
+      "cross_project_reference_commits": 0
+    },
+    "shared_author_identities": 0,
+    "shared_source_blob_objects": 0
+  },
+  "artifact_hashes": [
+    {"path": "scripts/bfm_history_audit.py", "sha256": "b55bc1859c531d94c92bd6695c8d325e34d3d51dc5303f6699fc80df63b9691b"},
+    {"path": "projects/pcie_gen1_endpoint/verification/bfm_candidates.yaml", "sha256": "424b02cabf4d18d44a43b18bc745cd4e4bb7637c8eee8411ec7338b3c307385d"},
+    {"path": "Makefile", "sha256": "6a61f771e185edb1e285d67b28c71f1307ac146cf9fc9077082dd3ef3f33a6ec"},
+    {"path": "scripts/validate.py", "sha256": "91872025b88dfc6e91cf5d59c9b3ddd946e58c5dcc5b4cb8e76a5f0ffe697434"},
+    {"path": "scratch/bfm-history-audit-last.json", "sha256": "aff7c232bf38b44d87a20490e26c302fcdc6e1ef914d3c016b28628ba9c91795", "retained": false}
+  ],
+  "limitations": [
+    "Git object identity and text/reference scans support distinct lineage but do not prove independent specification interpretation",
+    "remote Git transport is audit input only; executable sources remain bound by the SHA-256 archive lock",
+    "endpoint adapters and endpoint-facing scenario evidence remain gated on the frozen G1 boundaries"
+  ]
+}

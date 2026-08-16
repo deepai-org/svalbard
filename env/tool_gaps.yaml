@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "observed_at_utc": "2026-08-16",
-  "status": "pdk_digital_flow_gap",
+  "status": "generic_gf180_core_flow_qualified_project_flow_pending_gates",
   "required_roles": [
     {"role": "rtl_lint_verible", "status": "generic_smoke_passed", "provider": "analog_open_flow", "version": "v0.0-4084-gf3e4d98b"},
     {"role": "rtl_frontend_slang", "status": "generic_smoke_passed", "provider": "analog_open_flow", "version": "11.0.429+3c984ff9"},
@@ -13,14 +13,22 @@
     {"role": "compiled_rtl_simulation_verilator", "status": "generic_smoke_passed", "provider": "analog_open_flow", "version": "5.050"},
     {"role": "cocotb", "status": "upstream_bfm_smoke_passed", "provider": "analog_open_flow", "version": "2.0.1"},
     {"role": "pytest", "status": "version_probe_passed", "provider": "analog_open_flow", "version": "9.1.1"},
-    {"role": "synthesis_yosys", "status": "generic_smoke_passed", "provider": "analog_open_flow", "version": "0.67"},
-    {"role": "sta_opensta", "status": "version_probe_passed", "provider": "analog_open_flow", "version": "3.1.0"},
-    {"role": "physical_implementation_openroad", "status": "version_probe_passed", "provider": "analog_open_flow", "version": "26Q3-850-gc74892e7b"}
+    {"role": "synthesis_yosys", "status": "generic_pdk_smoke_passed", "provider": "digital_open_flow", "version": "0.62+7326bb7d"},
+    {"role": "sta_opensta", "status": "generic_pdk_smoke_passed", "provider": "digital_open_flow", "version": "2.7.0"},
+    {"role": "physical_implementation_openroad", "status": "generic_pdk_smoke_passed", "provider": "digital_open_flow", "version": "dcf36133a369abc8f3c5e5738cd4d82e4903c0e0"},
+    {"role": "parasitic_extraction_openrcx", "status": "generic_pdk_smoke_passed", "provider": "digital_open_flow", "version": "dcf36133a369abc8f3c5e5738cd4d82e4903c0e0"},
+    {"role": "power_grid_pdnsim", "status": "generic_pdk_smoke_passed", "provider": "digital_open_flow", "version": "dcf36133a369abc8f3c5e5738cd4d82e4903c0e0"},
+    {"role": "drc_magic", "status": "generic_pdk_smoke_passed", "provider": "digital_open_flow", "version": "8.3.623"},
+    {"role": "drc_klayout", "status": "generic_pdk_smoke_passed", "provider": "digital_open_flow", "version": "0.30.7"},
+    {"role": "lvs_netgen", "status": "generic_pdk_smoke_passed", "provider": "digital_open_flow", "version": "1.5.316"},
+    {"role": "gate_simulation_iverilog", "status": "generic_pdk_smoke_passed", "provider": "digital_open_flow", "version": "13.0-devel"},
+    {"role": "dft_openroad", "status": "incompatible", "provider": "digital_open_flow", "version": "dcf36133a369abc8f3c5e5738cd4d82e4903c0e0"}
   ],
-  "policy": "Yices, Boolector, and Z3 independently pass the same generic proof-and-cover canary under bounded execution. This does not qualify project RTL or a PDK-backed digital flow. Supplemental artifacts are extracted into ephemeral scratch storage and no solver is installed on the host.",
+  "policy": "Yices, Boolector, and Z3 independently pass the same generic proof-and-cover canary. The bounded GF180 core canary qualifies only the recorded generic synthesis, nine-corner STA, physical implementation, extraction, geometry, LVS, power-grid-connectivity, and powered zero-delay gate-simulation behaviors. It does not qualify project RTL, the public PDK for fabrication, pad integration, DFT, SDF, or package-aware IR/EM.",
   "resolution": [
-    "obtain a qualified GF180 standard-cell and timing-library source after G0",
-    "run representative synthesis, STA, DFT, gate-level, and physical implementation canaries",
+    "obtain an OpenROAD build with implemented scan optimization/stitching, or implement and independently verify deterministic chain stitching; scan-cell replacement alone is insufficient",
+    "freeze G0 and G1 before creating project PCIe RTL or using this flow on it",
+    "obtain provider-accepted GF180 PDK, pad, package, and precheck inputs before any fabrication claim",
     "retain exact artifact and canary evidence when project RTL formal properties are introduced after G1"
   ]
 }

@@ -26,6 +26,8 @@ def pull_list() -> None:
             raise SystemExit(f"image {image.get('role')} metadata is not reviewed for pulling")
         if not NAME.fullmatch(name) or not DIGEST.fullmatch(digest):
             raise SystemExit(f"image {image.get('role')} has an unsafe or incomplete reference")
+        if image.get("distribution") == "local_build":
+            continue
         references.append(f"{name}@{digest}")
     if not references:
         raise SystemExit("image lock contains no pullable images")

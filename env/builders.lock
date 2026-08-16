@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "builder": {
+    "name": "svalbard-bounded",
+    "driver": "docker-container",
+    "image": "docker.io/moby/buildkit@sha256:5a8cd84cb3fcfd082789a08f92bd36f8e745c6231edd78e24a3bf34fd471a823",
+    "platform": "linux/arm64",
+    "limits": {
+      "memory": "4g",
+      "memory_swap": "4g",
+      "cpu_period": 100000,
+      "cpu_quota": 200000
+    },
+    "network": "bridge",
+    "note": "The dedicated BuildKit daemon is resource-bounded. Individual Dockerfile builds must use digest-pinned sources and --network=none for build steps."
+  }
+}

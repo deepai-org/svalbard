@@ -1,0 +1,100 @@
+{
+  "id": "run.01M06FHJRNKYAT94SQ6VHAR2DZ",
+  "component": "project.pcie_gen1_endpoint",
+  "target": "generic_gf180_digital_core_flow",
+  "start_time_utc": "2026-08-16T23:44:31Z",
+  "end_time_utc": "2026-08-16T23:45:42Z",
+  "source_commit": "780254f3ae95876db284052f928aed3d1c7ad90b",
+  "source_dirty": true,
+  "source_status_sha256": "28209158bad669b1b6a910fcff2f2e06b81eda91445c39ba052df7712692b957",
+  "image": {
+    "reference": "svalbard/librelane-gf180-canary:2026.08",
+    "local_image_id": "sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
+    "platform": "linux/arm64",
+    "unpacked_image_bytes": 6326310906,
+    "librelane_version": "3.0.5",
+    "pdk_ciel_revision": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
+    "dockerfile_rebuild_identity_verified": true
+  },
+  "resource_limits": {
+    "minimum_free_bytes": 107374182400,
+    "minimum_available_memory_bytes": 8589934592,
+    "timeout_seconds": 1200,
+    "cpus": 2,
+    "memory_bytes": 4294967296,
+    "memory_swap_bytes": 4294967296,
+    "pids": 512,
+    "network": "none",
+    "root_filesystem": "read_only",
+    "temporary_success_outputs_deleted": true
+  },
+  "result": "pass_with_limitations",
+  "checks": {
+    "lint_synthesis_and_unmapped_cells": "pass",
+    "powered_gate_level_simulation": "pass",
+    "multi_corner_setup_and_hold": "pass_9_corners",
+    "placement_cts_routing": "pass",
+    "routing_drc_and_antenna": "pass",
+    "power_grid_connectivity": "pass",
+    "openrcx_nominal_extraction": "pass",
+    "magic_and_klayout_drc": "pass",
+    "magic_klayout_xor": "pass",
+    "netgen_lvs": "pass",
+    "scan_cell_replacement": "pass",
+    "complete_scan_chain_stitching": "blocked_unimplemented_in_locked_openroad"
+  },
+  "observed": {
+    "standard_cell_instances": 79,
+    "die_area_um2": 7367.41,
+    "route_wirelength_um": 569,
+    "worst_setup_slack_ns": 10.309675183150722,
+    "worst_hold_slack_ns": 0.3654664452289774,
+    "flow_errors": 0,
+    "route_drc_errors": 0,
+    "magic_drc_errors": 0,
+    "klayout_drc_errors": 0,
+    "lvs_errors": 0,
+    "setup_violations": 0,
+    "hold_violations": 0,
+    "disconnected_pins": 0,
+    "warning_counts": {
+      "duplicate_timing_library": 18,
+      "floating_optimization_nets": 1,
+      "unsupported_public_pdk_enclosure": 8,
+      "missing_package_source_locations": 1,
+      "public_pdk_pad_site_metadata": 15,
+      "unqualified_wire_length_threshold": 1
+    }
+  },
+  "final_artifact_hashes": {
+    "gds": "958a64fafb0ce7307f091d03f11a45b84f300897316b1991512432a5d000dc5e",
+    "klayout_gds": "d85ad9a4193d288a9fbd135431c1d42d03abd7755cd8e5d5b6ed789fb950634d",
+    "nominal_spef": "8ea494732cd163a3d61242a67a094b844dbd5da95d4e8b31aaf9c5230d1bbaff",
+    "powered_netlist": "d893f23d2392decae2688301809eb4330c7cc83b07c7d8a1d7409ac705675b37",
+    "scan_replaced_netlist": "14340433ea33f48849c76ceaf7875983c869381311b6701acda81bbd24a9ebba",
+    "spice": "d4ca4f30bd6282c71bb39ce23e7ea7875f66a80af0a85428799df25181d9589c"
+  },
+  "artifact_hashes": [
+    {"path": "env/images.lock", "sha256": "e3f7c3262691a12390baa4db56698d2d7a8f9021bbfc353b05df27ca0f8fb7d9"},
+    {"path": "env/tools.lock", "sha256": "3750347bea4adb5610c3d4f239d804d490d090ec4202c4e3f701ab171574a113"},
+    {"path": "env/tool_gaps.yaml", "sha256": "00288f0d36bdca2284b57c472aa9488e0c20f14c04c19216f2d3b6cbccee319e"},
+    {"path": "env/builders.lock", "sha256": "8da70659bac18639305681bcf53d0024fc28c0082f5ddedd615bf1a4c076cc53"},
+    {"path": "env/images/librelane-gf180-canary/Dockerfile", "sha256": "ceda50714a30e4f601ee629b4da9afa15269adabb25834af206708c68c773311"},
+    {"path": "env/images/librelane-gf180-canary/overlay_pdk.py", "sha256": "0920e345e9c693d89e057d0ecea5c85829c7d67f571b59d522e20bd129ca6e6d"},
+    {"path": "env/images/librelane-gf180-canary/build.sh", "sha256": "bd41728ad78bdcfebe5fbd60ca5a54fcb7c3c831e2df6292acf4d83684aa321d"},
+    {"path": "flows/smoke/digital_pnr/run.sh", "sha256": "ee76cac969c25a087f43ffb8852bd1dac82cf3ade8e86aa53e771f9ee1d99ce7"},
+    {"path": "flows/smoke/digital_pnr/container_smoke.sh", "sha256": "cdde7cfce930983798a5c2421087ef2f1ff0aa53213917bf00cf107a687b39f7"},
+    {"path": "flows/smoke/digital_pnr/check_results.py", "sha256": "32125e2b8566536c96341fc615b5844fe571e81fdf752380c45af10bc4b1bc95"},
+    {"path": "flows/smoke/digital_pnr/config.yaml", "sha256": "88f2da1574e44abee0e91389bd797f118b433ec7a39c184e28be4ba1d5d4ce6d"},
+    {"path": "flows/smoke/digital_pnr/dft_probe.tcl", "sha256": "65eb9866225fb137d60e2b5fb779af0ad5292af6514ef6b3d7c86f12a235910c"},
+    {"path": "scratch/digital-pnr-smoke-last.json", "sha256": "994d0ad00663965803387c7abd84a7370b2c4da82d1f3d27830e5eadda256a66", "retained": false}
+  ],
+  "limitations": [
+    "This is a generic four-bit counter core canary, not PCIe endpoint RTL evidence.",
+    "The public embedded PDK snapshot is not provider accepted or fabrication qualified.",
+    "Pad timing libraries, pad integration, provider precheck, package-aware IR/EM, and SDF simulation were not exercised.",
+    "OpenROAD reports unsupported public-PDK LEF58 enclosure constructs and two floating optimization nets; final DRC and disconnected-pin metrics are zero.",
+    "OpenROAD scan-cell replacement passed, but its scan optimization/stitching command reports unimplemented; complete DFT insertion remains a red readiness blocker.",
+    "G0 process/provider eligibility and G1 PCIe specification/interface freeze remain blocked, so project RTL was intentionally not created."
+  ]
+}

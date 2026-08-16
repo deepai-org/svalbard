@@ -26,6 +26,7 @@ def structure() -> None:
     required = [
         "portfolio.yaml",
         "env/images.lock",
+        "env/builders.lock",
         "env/tools.lock",
         "env/tool_gaps.yaml",
         "env/tool_artifacts.lock",
@@ -59,6 +60,18 @@ def structure() -> None:
         "flows/smoke/digital/counter.sv",
         "flows/smoke/digital/counter_tb.sv",
         "flows/smoke/digital/counter.sby",
+        "env/images/librelane-gf180-canary/Dockerfile",
+        "env/images/librelane-gf180-canary/build.sh",
+        "env/images/librelane-gf180-canary/overlay_pdk.py",
+        "flows/smoke/digital_pnr/run.sh",
+        "flows/smoke/digital_pnr/container_smoke.sh",
+        "flows/smoke/digital_pnr/check_results.py",
+        "flows/smoke/digital_pnr/config.yaml",
+        "flows/smoke/digital_pnr/constraints.sdc",
+        "flows/smoke/digital_pnr/dft_probe.tcl",
+        "flows/smoke/digital_pnr/counter.v",
+        "flows/smoke/digital_pnr/counter_gate_tb.v",
+        "flows/smoke/digital_pnr/pin_order.cfg",
     ]
     missing = [path for path in required if not (ROOT / path).is_file()]
     if missing:
@@ -175,7 +188,8 @@ def image_lock_ready() -> None:
     images = load("env/images.lock")["images"]
     unresolved = [
         item["role"] for item in images
-        if not item.get("digest") or item.get("status") != "qualified"
+        if item.get("required_for_role_readiness", True)
+        and (not item.get("digest") or item.get("status") != "qualified")
     ]
     if unresolved:
         print("images-ready: BLOCKED", file=sys.stderr)
@@ -193,6 +207,7 @@ def toolchain_readiness() -> None:
         fail("tool gap inventory contains duplicate required roles")
     recognized = {
         "generic_smoke_passed",
+        "generic_pdk_smoke_passed",
         "upstream_bfm_smoke_passed",
         "version_probe_passed",
         "representative_smoke_pending",

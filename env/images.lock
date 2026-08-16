@@ -15,7 +15,7 @@
       "qualification_note": "Exact ARM64 manifest was pulled and version-probed in a bounded network-disabled read-only container. The GF180 Chain 1 inverter canary passed schematic netlisting, pre-layout simulation, Magic DRC and extraction, Netgen LVS, coupled-capacitance PEX, post-layout simulation, and deterministic golden comparison. This qualification is limited to that canary and does not qualify the embedded PDK for fabrication."
     },
     {
-      "role": "digital_open_flow",
+      "role": "digital_open_flow_base",
       "name": "ghcr.io/librelane/librelane",
       "tag_observed": "3.0.5",
       "platform": "linux/arm64",
@@ -25,7 +25,23 @@
       "local_image_id": "sha256:ff52cafb05c8cef319d8e8c080af33f1f7a2210756c574921afb89c44481d866",
       "unpacked_image_bytes": 5568194487,
       "status": "version_probe_passed",
+      "required_for_role_readiness": false,
       "qualification_note": "Exact ARM64 manifest was pulled and LibreLane v3.0.5 was version-probed in a bounded network-disabled read-only container. A representative GF180 digital flow has not yet been run, so this image is not role-qualified."
+    },
+    {
+      "role": "digital_open_flow",
+      "name": "svalbard/librelane-gf180-canary",
+      "tag_observed": "2026.08",
+      "platform": "linux/arm64",
+      "distribution": "local_build",
+      "digest": "sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
+      "local_image_id": "sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
+      "unpacked_image_bytes": 6326310906,
+      "base_image_digest": "sha256:d8f3de6a4b0563d8632ce317a84fdc5a88f3cad1d4409cdef5c8e983f1505012",
+      "pdk_source_image_digest": "sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+      "pdk_ciel_revision": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
+      "status": "qualified",
+      "qualification_note": "Locally reproduced from digest-pinned ARM64 bases using the bounded builder in env/builders.lock. A generic four-bit GF180 core canary passed LibreLane 3.0.5 lint, synthesis and mapped-cell checks, nine-corner STA, placement, CTS, routing, antenna, OpenRCX extraction, PDNSim connectivity, Magic and KLayout DRC, layout XOR, Netgen LVS, powered zero-delay gate simulation, and scan-cell replacement. The OpenROAD build explicitly reports scan optimization/stitching as unimplemented. This narrow pre-silicon qualification excludes project RTL, pads, complete DFT insertion, SDF, package-aware IR/EM, provider precheck, and fabrication qualification."
     }
   ]
 }

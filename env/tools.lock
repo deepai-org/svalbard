@@ -3,6 +3,10 @@
   "policy": "Evidence tools require exact versions and an immutable image digest.",
   "image": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
   "tools": [
+    {"role": "rtl_lint", "executable": "verible-verilog-lint", "version": "v0.0-4084-gf3e4d98b", "source_revision": "f3e4d98b"},
+    {"role": "systemverilog_frontend", "executable": "slang", "version": "11.0.429+3c984ff9", "source_revision": "3c984ff9"},
+    {"role": "formal_orchestration", "executable": "sby", "version": "v0.67-dirty", "source_revision": "embedded_image_build"},
+    {"role": "formal_solver", "executable": "/foss/tools/yosys/bin/yices-smt2", "version": "2.7.0", "source_revision": "05178c03ddf49c6bba63c5c7153774c11a5da12d"},
     {"role": "schematic", "executable": "xschem", "version": "3.4.8RC", "source_revision": "b69f793f83383d4e59cdb66aa431375b5a9966cc"},
     {"role": "spice", "executable": "ngspice", "version": "46", "source_revision": "ngspice-46"},
     {"role": "layout", "executable": "magic", "version": "8.3.678", "source_revision": "8.3.678"},
@@ -11,8 +15,11 @@
     {"role": "synthesis", "executable": "yosys", "version": "0.67", "source_revision": "v0.67"},
     {"role": "compiled_rtl_simulation", "executable": "verilator", "version": "5.050", "source_revision": "v5.050"},
     {"role": "rtl_simulation", "executable": "iverilog", "version": "14.0-devel", "source_revision": "eda9fdcd13d7566b9aab29a8a098e2f4189ea3f3"},
+    {"role": "python_cosimulation", "executable": "cocotb-config", "version": "2.0.1", "source_revision": "image_python_distribution"},
+    {"role": "python_test_runner", "executable": "pytest", "version": "9.1.1", "source_revision": "image_python_distribution"},
+    {"role": "static_timing", "executable": "sta", "version": "3.1.0", "source_revision": "image_build"},
     {"role": "physical_implementation", "executable": "openroad", "version": "26Q3-850-gc74892e7b", "source_revision": "c74892e7b314c6d7932ca56c76942ee81103715a"}
   ],
-  "status": "version_probe_passed",
-  "qualification_note": "Presence and identity only. Role qualification requires representative checked flows and correlation."
+  "status": "partial_role_qualification",
+  "qualification_note": "The Chain 1 inverter, upstream BFM, and generic RTL/formal canaries qualify only their recorded behaviors. Boolector and Z3 are missing, and no PDK-backed digital implementation, STA, DFT, IR/EM, or signoff flow is qualified."
 }

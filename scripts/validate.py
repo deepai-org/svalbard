@@ -27,6 +27,7 @@ def structure() -> None:
         "portfolio.yaml",
         "env/images.lock",
         "env/tools.lock",
+        "env/tool_gaps.yaml",
         "processes/gf180/process.lock",
         "processes/gf180/data_gaps.yaml",
         "processes/gf180/image_candidate.yaml",
@@ -49,6 +50,11 @@ def structure() -> None:
         "flows/verification/pcie_bfms/run.sh",
         "flows/verification/pcie_bfms/container_smoke.sh",
         "flows/verification/pcie_bfms/check_results.py",
+        "flows/smoke/digital/run.sh",
+        "flows/smoke/digital/container_smoke.sh",
+        "flows/smoke/digital/counter.sv",
+        "flows/smoke/digital/counter_tb.sv",
+        "flows/smoke/digital/counter.sby",
     ]
     missing = [path for path in required if not (ROOT / path).is_file()]
     if missing:
@@ -168,8 +174,26 @@ def image_lock_ready() -> None:
         if not item.get("digest") or item.get("status") != "qualified"
     ]
     if unresolved:
-        fail("image locks unresolved: " + ", ".join(unresolved))
+        print("images-ready: BLOCKED", file=sys.stderr)
+        for role in unresolved:
+            print(f"- {role} is not role-qualified", file=sys.stderr)
+        raise SystemExit(2)
     print("image locks: PASS")
+
+
+def toolchain_readiness() -> None:
+    document = load("env/tool_gaps.yaml")
+    blockers = [
+        f"{item['role']} is {item['status']}"
+        for item in document["required_roles"]
+        if item["status"] in {"missing", "representative_smoke_pending"}
+    ]
+    if blockers:
+        print("toolchain-readiness: BLOCKED", file=sys.stderr)
+        for blocker in blockers:
+            print(f"- {blocker}", file=sys.stderr)
+        raise SystemExit(2)
+    print("toolchain-readiness: PASS")
 
 
 def repo_audit() -> None:
@@ -208,6 +232,7 @@ COMMANDS = {
     "structure": structure,
     "process-eligibility": process_eligibility,
     "image-lock-ready": image_lock_ready,
+    "toolchain-readiness": toolchain_readiness,
     "repo-audit": repo_audit,
     "graph": graph,
 }

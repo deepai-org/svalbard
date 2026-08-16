@@ -1,0 +1,19 @@
+[tasks]
+prove
+cover
+
+[options]
+prove: mode prove
+prove: depth 20
+cover: mode cover
+cover: depth 20
+
+[engines]
+smtbmc yices
+
+[script]
+read -formal -D FORMAL counter.sv
+prep -top counter
+
+[files]
+counter.sv

@@ -1,0 +1,51 @@
+{
+  "id": "run.01M06C7F9KJ98H0NJE9K9RVE16",
+  "component": "portfolio.svalbard",
+  "target": "digital_toolchain_smoke",
+  "start_time_utc": "2026-08-16T22:49:07Z",
+  "end_time_utc": "2026-08-16T22:49:09Z",
+  "source_commit": "f1bc894502e8ff123ad403ce58e119871db8d73a",
+  "source_dirty": true,
+  "source_status_sha256": "a77fe04f4ef1a22905fdc7a688996ef357e1808df4d9fa7d59216bfe0d15989b",
+  "image": {
+    "reference": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+    "local_image_id": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+    "platform": "linux/arm64"
+  },
+  "resource_limits": {
+    "cpus": 2,
+    "memory_bytes": 2147483648,
+    "memory_swap_bytes": 2147483648,
+    "pids": 256,
+    "timeout_seconds": 600,
+    "network": "none",
+    "root_filesystem": "read_only",
+    "source_mount": "read_only",
+    "scratch_mount": "unique_and_write_only"
+  },
+  "result": "pass_with_limitations",
+  "checks": [
+    "Verible lint",
+    "Slang lint",
+    "Icarus Verilog simulation",
+    "Verilator lint",
+    "Yosys generic synthesis",
+    "SymbiYosys/Yices 20-step proof by induction",
+    "SymbiYosys/Yices post-reset cover reached at step 17"
+  ],
+  "artifact_hashes": [
+    {"path": "flows/smoke/digital/counter.sv", "sha256": "0b63700502e0cbb9a1181afaf05d4e360959e0308c41a1c0950a6c99b4560a5d"},
+    {"path": "flows/smoke/digital/counter_tb.sv", "sha256": "f43380a16454bbfaf3463a5e371c2963cca1c27ac71a3d0aacfe20f1bda608b9"},
+    {"path": "flows/smoke/digital/counter.sby", "sha256": "aa5f6af4ed2498e0660b7d57332dd1efd49558c8bd4ea2fa5a6c2060ac445ec2"},
+    {"path": "flows/smoke/digital/container_smoke.sh", "sha256": "00c167f27200f5464e1350f2ad43a1b8e79539ac78e58183e8028a8ebcd0f846"},
+    {"path": "flows/smoke/digital/run.sh", "sha256": "d71353543e2d95bb20292c871b91203ea267e2815ca1a72758b062f68969f2c2"},
+    {"path": "env/tool_gaps.yaml", "sha256": "5f8d423e9809c5fbddf8173c8ec3017d242cb5a2d99317a0a7a0d6f1db26787c"},
+    {"path": "env/tools.lock", "sha256": "0d67cce21bd238fac50c49cea0b1fd46878fe92551ce3ea6efd77a0ba982636f"}
+  ],
+  "limitations": [
+    "generic counter canary only",
+    "Boolector and Z3 remain required and missing",
+    "no PDK, standard-cell library, STA, DFT, IR/EM, or physical implementation was exercised",
+    "the repository worktree was dirty, so this is local qualification evidence rather than immutable release evidence"
+  ]
+}

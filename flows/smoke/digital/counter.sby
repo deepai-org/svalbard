@@ -1,15 +1,32 @@
 [tasks]
-prove
-cover
+prove_yices
+prove_boolector
+prove_z3
+cover_yices
+cover_boolector
+cover_z3
 
 [options]
-prove: mode prove
-prove: depth 20
-cover: mode cover
-cover: depth 20
+prove_yices: mode prove
+prove_yices: depth 20
+prove_boolector: mode prove
+prove_boolector: depth 20
+prove_z3: mode prove
+prove_z3: depth 20
+cover_yices: mode cover
+cover_yices: depth 20
+cover_boolector: mode cover
+cover_boolector: depth 20
+cover_z3: mode cover
+cover_z3: depth 20
 
 [engines]
-smtbmc yices
+prove_yices: smtbmc yices
+prove_boolector: smtbmc boolector
+prove_z3: smtbmc z3
+cover_yices: smtbmc yices
+cover_boolector: smtbmc boolector
+cover_z3: smtbmc z3
 
 [script]
 read -formal -D FORMAL counter.sv

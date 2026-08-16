@@ -36,11 +36,17 @@ if [[ "$actual_image_id" != "$expected_image_id" || "$actual_architecture" != "a
   exit 2
 fi
 
+python3 "$repo_root/scripts/tool_artifacts.py" verify >/dev/null
+
 mkdir -p "$scratch_root"
 run_dir="$(mktemp -d "$scratch_root/toolchain-smoke.XXXXXXXX")"
+artifact_parent="$(mktemp -d "$scratch_root/tool-artifacts-run.XXXXXXXX")"
+solver_dir="$artifact_parent/solvers"
 chmod 700 "$run_dir"
+chmod 700 "$artifact_parent"
 completed=0
 finish() {
+  find "$artifact_parent" -depth -delete
   if (( completed == 1 )); then
     find "$run_dir" -depth -delete
   else
@@ -52,12 +58,15 @@ trap finish EXIT
 exec 9>"$scratch_root/heavy-job.lock"
 flock -n 9 || { printf 'toolchain-smoke: another bounded heavy job holds the lock\n' >&2; exit 2; }
 
+python3 "$repo_root/scripts/tool_artifacts.py" materialize "$solver_dir" >/dev/null
+
 timeout 10m docker run --rm \
   --cpus=2 --memory=2g --memory-swap=2g --pids-limit=256 \
   --network=none --read-only --cap-drop=ALL --security-opt=no-new-privileges \
   --user "$(id -u):$(id -g)" --env HOME=/tmp \
   --mount "type=bind,src=$source_dir,dst=/src,readonly" \
   --mount "type=bind,src=$run_dir,dst=/work" \
+  --mount "type=bind,src=$solver_dir,dst=/solvers,readonly" \
   --tmpfs /tmp:size=128m,mode=1777 \
   --tmpfs /headless/.data-default:size=16m,mode=0700,uid="$(id -u)",gid="$(id -g)" \
   --entrypoint /bin/bash "$image_ref" -lc /src/container_smoke.sh

@@ -1,0 +1,75 @@
+{
+  "id": "run.01M06CWM5095MSKV65V6MYN2A8",
+  "component": "portfolio.svalbard",
+  "target": "three_solver_digital_toolchain_smoke",
+  "start_time_utc": "2026-08-16T23:00:48Z",
+  "end_time_utc": "2026-08-16T23:00:50Z",
+  "source_commit": "f68801d00c0b217868ff9382499e1b367de6946c",
+  "source_dirty": true,
+  "source_status_sha256": "6cdff5dabc4e14ba75437c7933825ff141263c320c8690b00497ca2078998be0",
+  "image": {
+    "reference": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+    "local_image_id": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+    "platform": "linux/arm64"
+  },
+  "resource_limits": {
+    "cpus": 2,
+    "memory_bytes": 2147483648,
+    "memory_swap_bytes": 2147483648,
+    "pids": 256,
+    "timeout_seconds": 600,
+    "network": "none",
+    "root_filesystem": "read_only",
+    "source_mount": "read_only",
+    "solver_mount": "read_only_ephemeral_extraction",
+    "scratch_mount": "unique_and_write_only"
+  },
+  "result": "pass_with_limitations",
+  "checks": {
+    "verible_lint": "pass",
+    "slang_lint": "pass",
+    "iverilog_simulation": "pass",
+    "verilator_lint": "pass",
+    "yosys_synthesis": "pass",
+    "formal": {
+      "yices_2.7.0": {"proof": "pass", "cover_step": 17},
+      "boolector_3.2.4": {"proof": "pass", "cover_step": 17},
+      "z3_4.8.12": {"proof": "pass", "cover_step": 17}
+    }
+  },
+  "solver_artifacts": [
+    {
+      "id": "solver.boolector",
+      "bytes": 6109799,
+      "sha256": "0e67dd05acd11a0c0291239bf1ca905d2c7b04a10e1fe2b15ee6741bda5ec151",
+      "payload_sha256": "dfb75fd153a605298e047ce4d1c67174a869280d08d592d63d1fd3b4e6e11df5"
+    },
+    {
+      "id": "solver.z3",
+      "bytes": 5572736,
+      "sha256": "a153e71f786027480dd5ec35d3b8615d9d0105b492718fa38d271d2ff724014f"
+    },
+    {
+      "id": "solver.libz3",
+      "bytes": 5492238,
+      "sha256": "7297a82d2c3eee4909108ddfb4d11a04cae10868ad03ee469efed0e9f8250959"
+    }
+  ],
+  "artifact_hashes": [
+    {"path": "flows/smoke/digital/counter.sv", "sha256": "0b63700502e0cbb9a1181afaf05d4e360959e0308c41a1c0950a6c99b4560a5d"},
+    {"path": "flows/smoke/digital/counter_tb.sv", "sha256": "f43380a16454bbfaf3463a5e371c2963cca1c27ac71a3d0aacfe20f1bda608b9"},
+    {"path": "flows/smoke/digital/counter.sby", "sha256": "a89ea65836a7088f0a425331881dd7c837caa9633ab5e1acddee6fac70d8d33f"},
+    {"path": "flows/smoke/digital/container_smoke.sh", "sha256": "8359ff1bd089cfff4ae265c1bbcc46cfffac47b53f07cbf56411b71d66917fe0"},
+    {"path": "flows/smoke/digital/run.sh", "sha256": "3bd7b12d6ccd15dff1f49aa68dcb711caf2aad9bad22b9cb056ce5943bd105f6"},
+    {"path": "scripts/tool_artifacts.py", "sha256": "df42cfcaf2d8aeca829a51320777c0c4c35b1d7ac6141b6e7212ca1efb067736"},
+    {"path": "env/tool_artifacts.lock", "sha256": "3a2ce4cae360c6d1a540af3e1072d3a7a92079d5b3ef0f61dc69d44f99bb1e2a"},
+    {"path": "env/tool_gaps.yaml", "sha256": "b48c7b560e1bca3a14698ca94188df4f97af4c7b97693d815d0a417ba6974210"},
+    {"path": "env/tools.lock", "sha256": "dfc2ce3d8df6297727085657210925a619b25ca52f65d5b88794bf254633a07b"}
+  ],
+  "limitations": [
+    "generic counter canary only",
+    "no project RTL or PCIe property was exercised",
+    "no PDK, standard-cell library, STA, DFT, IR/EM, or physical implementation was exercised",
+    "the repository worktree was dirty, so this is local qualification evidence rather than immutable release evidence"
+  ]
+}

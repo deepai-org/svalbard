@@ -6,7 +6,9 @@
     {"role": "rtl_lint", "executable": "verible-verilog-lint", "version": "v0.0-4084-gf3e4d98b", "source_revision": "f3e4d98b"},
     {"role": "systemverilog_frontend", "executable": "slang", "version": "11.0.429+3c984ff9", "source_revision": "3c984ff9"},
     {"role": "formal_orchestration", "executable": "sby", "version": "v0.67-dirty", "source_revision": "embedded_image_build"},
-    {"role": "formal_solver", "executable": "/foss/tools/yosys/bin/yices-smt2", "version": "2.7.0", "source_revision": "05178c03ddf49c6bba63c5c7153774c11a5da12d"},
+    {"role": "formal_solver_yices", "executable": "/foss/tools/yosys/bin/yices-smt2", "version": "2.7.0", "source_revision": "05178c03ddf49c6bba63c5c7153774c11a5da12d"},
+    {"role": "formal_solver_boolector", "executable": "/solvers/usr/bin/boolector", "version": "3.2.4", "source_revision": "YosysHQ ARM64 artifact sha256:0e67dd05acd11a0c0291239bf1ca905d2c7b04a10e1fe2b15ee6741bda5ec151"},
+    {"role": "formal_solver_z3", "executable": "/solvers/usr/bin/z3", "version": "4.8.12", "source_revision": "Ubuntu 4.8.12-3.1build1 packages"},
     {"role": "schematic", "executable": "xschem", "version": "3.4.8RC", "source_revision": "b69f793f83383d4e59cdb66aa431375b5a9966cc"},
     {"role": "spice", "executable": "ngspice", "version": "46", "source_revision": "ngspice-46"},
     {"role": "layout", "executable": "magic", "version": "8.3.678", "source_revision": "8.3.678"},
@@ -21,5 +23,5 @@
     {"role": "physical_implementation", "executable": "openroad", "version": "26Q3-850-gc74892e7b", "source_revision": "c74892e7b314c6d7932ca56c76942ee81103715a"}
   ],
   "status": "partial_role_qualification",
-  "qualification_note": "The Chain 1 inverter, upstream BFM, and generic RTL/formal canaries qualify only their recorded behaviors. Boolector and Z3 are missing, and no PDK-backed digital implementation, STA, DFT, IR/EM, or signoff flow is qualified."
+  "qualification_note": "The Chain 1 inverter, upstream BFM, and generic RTL/formal canaries qualify only their recorded behaviors. Yices, Boolector, and Z3 independently passed the generic formal canary. No PDK-backed digital implementation, STA, DFT, IR/EM, or signoff flow is qualified."
 }

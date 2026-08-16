@@ -2,7 +2,7 @@ PYTHON ?= python3
 COMPONENT ?= project.pcie_gen1_endpoint
 PROJECT ?=
 
-.PHONY: doctor check check-fast check-digital spec process-eligibility images-ready toolchain-readiness scratch-report repo-audit graph smoke toolchain-smoke bfm-smoke verification-deps-fetch pull
+.PHONY: doctor check check-fast check-digital spec process-eligibility images-ready toolchain-readiness scratch-report repo-audit graph smoke toolchain-smoke bfm-smoke verification-deps-fetch tool-artifacts-fetch pull
 
 doctor:
 	./bootstrap.sh doctor
@@ -48,6 +48,9 @@ toolchain-smoke:
 
 verification-deps-fetch:
 	$(PYTHON) scripts/verification_deps.py fetch
+
+tool-artifacts-fetch:
+	$(PYTHON) scripts/tool_artifacts.py fetch
 
 bfm-smoke:
 	./flows/verification/pcie_bfms/run.sh

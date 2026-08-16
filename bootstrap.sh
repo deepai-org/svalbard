@@ -18,7 +18,7 @@ doctor() {
     printf 'WARN: plan baseline is aarch64; observed %s\n' "$architecture"
   fi
 
-  for command_name in git python3 make docker timeout flock; do
+  for command_name in git python3 make docker timeout flock dpkg-deb; do
     if command -v "$command_name" >/dev/null 2>&1; then
       printf 'tool %-8s OK\n' "$command_name"
     else

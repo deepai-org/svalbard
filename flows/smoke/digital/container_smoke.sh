@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-export PATH="/foss/tools/yosys/bin:$PATH"
+export PATH="/solvers/usr/bin:/foss/tools/yosys/bin:$PATH"
+export LD_LIBRARY_PATH="/solvers/usr/lib/aarch64-linux-gnu${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 cp /src/counter.sv /src/counter_tb.sv /src/counter.sby /work/
 cd /work
 
@@ -19,15 +20,23 @@ import json
 from pathlib import Path
 import re
 
-for task in ("counter_prove", "counter_cover"):
+tasks = (
+    "counter_prove_yices",
+    "counter_prove_boolector",
+    "counter_prove_z3",
+    "counter_cover_yices",
+    "counter_cover_boolector",
+    "counter_cover_z3",
+)
+for task in tasks:
     status = (Path(task) / "status").read_text(encoding="utf-8").split()
     if not status or status[0] != "PASS":
         raise SystemExit(f"{task} status is {status!r}, expected 'PASS'")
 
 formal_log = Path("symbiyosys.log").read_text(encoding="utf-8")
-cover_match = re.search(r"Reached cover statement in step ([0-9]+)", formal_log)
-if cover_match is None or int(cover_match.group(1)) != 17:
-    raise SystemExit("formal cover did not reach the post-reset wrap at step 17")
+cover_steps = [int(step) for step in re.findall(r"Reached cover statement in step ([0-9]+)", formal_log)]
+if cover_steps != [17, 17, 17]:
+    raise SystemExit(f"formal covers did not all reach the post-reset wrap at step 17: {cover_steps}")
 
 result = {
     "schema_version": 1,
@@ -38,19 +47,19 @@ result = {
         "iverilog_simulation",
         "verilator_lint",
         "yosys_synthesis",
-        "symbiyosys_yices_prove",
-        "symbiyosys_yices_cover"
+        "symbiyosys_yices_prove_and_cover",
+        "symbiyosys_boolector_prove_and_cover",
+        "symbiyosys_z3_prove_and_cover"
     ],
-    "formal_solver": "Yices 2.7.0",
-    "formal_cover_step": 17,
+    "formal_solvers": ["Yices 2.7.0", "Boolector 3.2.4", "Z3 4.8.12"],
+    "formal_cover_steps": {"yices": 17, "boolector": 17, "z3": 17},
     "limitations": [
         "generic counter canary only",
-        "Boolector and Z3 remain required and missing",
         "no PDK, standard-cell library, STA, or physical implementation was exercised"
     ]
 }
 Path("result.json").write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 PY
 
-echo 'digital formal proof: PASS; post-reset cover reached at step 17'
+echo 'digital formal proof: PASS with Yices, Boolector, and Z3; covers reached at step 17'
 echo 'digital toolchain smoke: PASS'

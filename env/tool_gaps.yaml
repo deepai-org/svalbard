@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "observed_at_utc": "2026-08-16",
-  "status": "formal_solver_gap",
+  "status": "pdk_digital_flow_gap",
   "required_roles": [
     {"role": "rtl_lint_verible", "status": "generic_smoke_passed", "provider": "analog_open_flow", "version": "v0.0-4084-gf3e4d98b"},
     {"role": "rtl_frontend_slang", "status": "generic_smoke_passed", "provider": "analog_open_flow", "version": "11.0.429+3c984ff9"},
     {"role": "formal_orchestration", "status": "generic_smoke_passed", "provider": "analog_open_flow", "version": "SBY v0.67-dirty"},
     {"role": "formal_solver_yices", "status": "generic_smoke_passed", "provider": "analog_open_flow", "version": "2.7.0"},
-    {"role": "formal_solver_boolector", "status": "missing", "provider": null, "version": null},
-    {"role": "formal_solver_z3", "status": "missing", "provider": null, "version": null},
+    {"role": "formal_solver_boolector", "status": "generic_smoke_passed", "provider": "locked_yosyshq_artifact", "version": "3.2.4"},
+    {"role": "formal_solver_z3", "status": "generic_smoke_passed", "provider": "locked_ubuntu_artifact", "version": "4.8.12"},
     {"role": "rtl_simulation_iverilog", "status": "generic_smoke_passed", "provider": "analog_open_flow", "version": "14.0-devel"},
     {"role": "compiled_rtl_simulation_verilator", "status": "generic_smoke_passed", "provider": "analog_open_flow", "version": "5.050"},
     {"role": "cocotb", "status": "upstream_bfm_smoke_passed", "provider": "analog_open_flow", "version": "2.0.1"},
@@ -17,10 +17,10 @@
     {"role": "sta_opensta", "status": "version_probe_passed", "provider": "analog_open_flow", "version": "3.1.0"},
     {"role": "physical_implementation_openroad", "status": "version_probe_passed", "provider": "analog_open_flow", "version": "26Q3-850-gc74892e7b"}
   ],
-  "policy": "Missing required solvers remain red. The generic Yices canary supplements but does not waive the plan's Boolector and Z3 requirement. No solver is installed on the host.",
+  "policy": "Yices, Boolector, and Z3 independently pass the same generic proof-and-cover canary under bounded execution. This does not qualify project RTL or a PDK-backed digital flow. Supplemental artifacts are extracted into ephemeral scratch storage and no solver is installed on the host.",
   "resolution": [
-    "select reviewed ARM64 Boolector and Z3 artifacts or a small digest-locked supplemental image",
-    "checksum and license review all direct and transitive artifacts",
-    "run the same formal canary independently through Boolector and Z3 under resource limits"
+    "obtain a qualified GF180 standard-cell and timing-library source after G0",
+    "run representative synthesis, STA, DFT, gate-level, and physical implementation canaries",
+    "retain exact artifact and canary evidence when project RTL formal properties are introduced after G1"
   ]
 }

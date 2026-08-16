@@ -28,6 +28,7 @@ def structure() -> None:
         "env/images.lock",
         "env/tools.lock",
         "env/tool_gaps.yaml",
+        "env/tool_artifacts.lock",
         "processes/gf180/process.lock",
         "processes/gf180/data_gaps.yaml",
         "processes/gf180/image_candidate.yaml",
@@ -47,6 +48,7 @@ def structure() -> None:
         "schemas/pcie_gen1_endpoint_spec.schema.json",
         "scripts/image_lock.py",
         "scripts/verification_deps.py",
+        "scripts/tool_artifacts.py",
         "flows/verification/pcie_bfms/run.sh",
         "flows/verification/pcie_bfms/container_smoke.sh",
         "flows/verification/pcie_bfms/check_results.py",
@@ -183,10 +185,32 @@ def image_lock_ready() -> None:
 
 def toolchain_readiness() -> None:
     document = load("env/tool_gaps.yaml")
+    roles = document["required_roles"]
+    role_names = [item["role"] for item in roles]
+    if len(role_names) != len(set(role_names)):
+        fail("tool gap inventory contains duplicate required roles")
+    recognized = {
+        "generic_smoke_passed",
+        "upstream_bfm_smoke_passed",
+        "version_probe_passed",
+        "representative_smoke_pending",
+        "missing",
+        "incompatible",
+    }
+    unknown = [item["role"] for item in roles if item["status"] not in recognized]
+    if unknown:
+        fail("tool gap inventory has unrecognized statuses: " + ", ".join(unknown))
+    incomplete = [
+        item["role"] for item in roles
+        if item["status"] not in {"missing", "incompatible"}
+        and (not item.get("provider") or not item.get("version"))
+    ]
+    if incomplete:
+        fail("available tool roles lack provider/version: " + ", ".join(incomplete))
     blockers = [
         f"{item['role']} is {item['status']}"
-        for item in document["required_roles"]
-        if item["status"] in {"missing", "representative_smoke_pending"}
+        for item in roles
+        if item["status"] in {"missing", "representative_smoke_pending", "incompatible"}
     ]
     if blockers:
         print("toolchain-readiness: BLOCKED", file=sys.stderr)

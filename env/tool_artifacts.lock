@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "status": "qualified_for_generic_formal_canary",
+  "policy": "Checksum-pinned ARM64 artifacts are downloaded from approved upstream or distribution hosts and materialized into ignored scratch storage. Debian packages are extracted without running maintainer scripts; tar archives contribute only an exact named regular file. Nothing is installed on the host.",
+  "artifacts": [
+    {
+      "id": "solver.boolector",
+      "format": "tar_gzip_member",
+      "package": "boolector",
+      "version": "3.2.4",
+      "architecture": "arm64",
+      "url": "https://github.com/YosysHQ/oss-cad-suite-build/releases/download/bucket-linux-arm64/linux-arm64-boolector.tgz",
+      "bytes": 6109799,
+      "sha256": "0e67dd05acd11a0c0291239bf1ca905d2c7b04a10e1fe2b15ee6741bda5ec151",
+      "member": "_outputs/linux-arm64/boolector/yosyshq/bin/boolector",
+      "payload_bytes": 5130952,
+      "payload_sha256": "dfb75fd153a605298e047ce4d1c67174a869280d08d592d63d1fd3b4e6e11df5",
+      "license": "MIT; bundled static dependencies carry their recorded upstream licenses",
+      "license_sha256": [
+        "558c4f0750c7830c7bae735971443ed794024df70cae2b9a2fceee9f12f06ae9",
+        "a92d83d90a764fb955f760b2d3d8f061e7b490e1f0a201a0b193dad7c89f9fbf",
+        "5a1029be4ab9be41d22c66f9a765bc12efc881039e2eedebc949dc3df7dca8c9",
+        "2a75d00619884c18d669e6ca456c9045e5286782f04272a02abe680f490a9e67"
+      ]
+    },
+    {
+      "id": "solver.z3",
+      "format": "deb",
+      "package": "z3",
+      "version": "4.8.12-3.1build1",
+      "architecture": "arm64",
+      "url": "https://ports.ubuntu.com/ubuntu-ports/pool/universe/z/z3/z3_4.8.12-3.1build1_arm64.deb",
+      "bytes": 5572736,
+      "sha256": "a153e71f786027480dd5ec35d3b8615d9d0105b492718fa38d271d2ff724014f",
+      "license": "MIT",
+      "license_sha256": "807f874c81a0dbce7d4e32b1a4e1ef1e094b9a3fe8579f34e60fda4f2077289c"
+    },
+    {
+      "id": "solver.libz3",
+      "format": "deb",
+      "package": "libz3-4",
+      "version": "4.8.12-3.1build1",
+      "architecture": "arm64",
+      "url": "https://ports.ubuntu.com/ubuntu-ports/pool/universe/z/z3/libz3-4_4.8.12-3.1build1_arm64.deb",
+      "bytes": 5492238,
+      "sha256": "7297a82d2c3eee4909108ddfb4d11a04cae10868ad03ee469efed0e9f8250959",
+      "license": "MIT",
+      "license_sha256": "807f874c81a0dbce7d4e32b1a4e1ef1e094b9a3fe8579f34e60fda4f2077289c"
+    }
+  ]
+}

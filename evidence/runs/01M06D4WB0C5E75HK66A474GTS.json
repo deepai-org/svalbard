@@ -1,0 +1,41 @@
+{
+  "id": "run.01M06D4WB0C5E75HK66A474GTS",
+  "component": "project.pcie_gen1_endpoint",
+  "target": "locked_bfm_source_audit",
+  "start_time_utc": "2026-08-16T23:05:12Z",
+  "end_time_utc": "2026-08-16T23:05:13Z",
+  "source_commit": "aaa49a9a163a87fc84b57fc4b549a7bd719d5a20",
+  "source_dirty": true,
+  "source_status_sha256": "74ea386505b4efa319f9c001a9a089b12f15fdc49766f65cd1d27c38f6663783",
+  "inputs": {
+    "archive_count": 6,
+    "archive_bytes": 7152943,
+    "archive_total_ceiling_bytes": 104857600,
+    "materialization": "unique_ignored_scratch_then_deleted"
+  },
+  "result": "pass_with_limitations",
+  "checks": {
+    "locked_license_hashes": 6,
+    "license_hash_mismatches": 0,
+    "cross_family_name_or_attribution_references": 0,
+    "byte_identical_cross_family_source_files": 0,
+    "cocotbext_family_python_sources": 112,
+    "pcievhost_family_c_cxx_header_sources": 80
+  },
+  "conclusion": "The locked snapshots support provisional source independence through distinct provenance, implementation languages and frameworks; full history and specification-interpretation independence are not proven.",
+  "artifact_hashes": [
+    {"path": "scripts/bfm_source_audit.py", "sha256": "b6bad3d96d645901a2b3e92281038de2de11a84a6754185032da02dd009b20b2"},
+    {"path": "scripts/verification_deps.py", "sha256": "be448317fd70c6428a2d8e4b93383d9f33fe74fe4caf6da18fe1f2f17c087ef1"},
+    {"path": "projects/pcie_gen1_endpoint/verification/dependencies.lock", "sha256": "33f2d1598f55931b24eae81f5b7c874ebe2b345eae6ce4e81948e2902324f9ba"},
+    {"path": "projects/pcie_gen1_endpoint/verification/bfm_candidates.yaml", "sha256": "165ee5d286427394c5db9b454c4555cac0d27c59c1548d34ce644a031ebbae09"},
+    {"path": "flows/verification/pcie_bfms/run.sh", "sha256": "a63050c9aeeca23a66ce739f10668795c6ec82789991b7802fd1435d864b0b76"},
+    {"path": "flows/verification/pcie_bfms/container_smoke.sh", "sha256": "6267a901f50cd2f44577e18b002eb35f6c10b6dcb6e188c9af0dec287777324a"},
+    {"path": "flows/verification/pcie_bfms/check_results.py", "sha256": "3dd28fb42fd34b010c69f7c57448ca46154e209a92c603b62a1db8a12a224274"}
+  ],
+  "limitations": [
+    "archive snapshots do not contain full revision history",
+    "absence of matching names or source hashes cannot prove independent specification interpretation",
+    "the combined BFM target exercises upstream self-tests, not the SVALBARD endpoint",
+    "the repository worktree was dirty, so this is local qualification evidence rather than immutable release evidence"
+  ]
+}

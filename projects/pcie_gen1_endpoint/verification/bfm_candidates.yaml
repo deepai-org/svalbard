@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "component": "project.pcie_gen1_endpoint",
-  "status": "candidate_pair",
+  "status": "provisionally_independent_source_pair",
   "observed_at_utc": "2026-08-16",
   "candidates": [
     {
@@ -58,11 +58,17 @@
     "different_implementation_languages": true,
     "shared_code_lineage": "not_observed_in_targeted_import_and_attribution_scan",
     "specification_interpretation_independence": "not_reviewed",
-    "conclusion": "Different authors, languages, frameworks and layer boundaries support provisional independence, but specification-interpretation independence is not yet proven."
+    "conclusion": "Locked-source license hashes, cross-family name/attribution scanning, and byte-identical source comparison passed. Different authors, languages, frameworks and layer boundaries support provisional source independence, but full history and specification-interpretation independence are not yet proven."
   },
+  "completed_pair_checks": [
+    "all six materialized dependency LICENSE files match their locked hashes",
+    "no cross-family project name or author attribution was found in implementation source",
+    "no byte-identical implementation source was found between the two dependency families",
+    "the primary implementations use different languages and simulation frameworks",
+    "both upstream representative smokes pass in one bounded network-disabled target"
+  ],
   "required_before_freeze": [
-    "review exact pinned licenses and dependency licenses",
-    "audit revision history and source imports for shared BFM lineage",
+    "audit full revision history for shared BFM lineage",
     "map each required scenario to both models or an independently justified complementary checker",
     "prove both can connect to the endpoint's versioned symbol/TLP verification boundaries",
     "record limitations, especially cocotbext-pcie physical/link coverage and pcievhost partial LTSSM",

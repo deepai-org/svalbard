@@ -13,4 +13,5 @@ make -f makefile.verilator run ARCHFLAG= TRACEFLAG= VCDFLAG= > /work/pcievhost.l
 python3 /runner/check_results.py \
   /work/src/bfm.cocotbext_pcie/tests/pcie/results.xml \
   /work/pcievhost.log \
+  /work/source-audit.json \
   /work/result.json

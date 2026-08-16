@@ -48,6 +48,7 @@ def structure() -> None:
         "schemas/pcie_gen1_endpoint_spec.schema.json",
         "scripts/image_lock.py",
         "scripts/verification_deps.py",
+        "scripts/bfm_source_audit.py",
         "scripts/tool_artifacts.py",
         "flows/verification/pcie_bfms/run.sh",
         "flows/verification/pcie_bfms/container_smoke.sh",

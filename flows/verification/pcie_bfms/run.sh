@@ -58,6 +58,8 @@ exec 9>"$scratch_root/heavy-job.lock"
 flock -n 9 || { printf 'bfm-smoke: another bounded heavy job holds the lock\n' >&2; exit 2; }
 
 python3 "$repo_root/scripts/verification_deps.py" materialize "$run_dir/src" >/dev/null
+python3 "$repo_root/scripts/bfm_source_audit.py" \
+  "$run_dir/src" "$run_dir/source-audit.json"
 mv "$run_dir/src/cosim.vproc" "$run_dir/src/vproc"
 chmod -R u+rwX "$run_dir"
 

@@ -14,10 +14,13 @@ def fail(message: str) -> None:
     raise SystemExit(f"bfm-smoke: {message}")
 
 
-if len(sys.argv) != 4:
-    fail("usage: check_results.py RESULTS_XML PCIEVHOST_LOG OUTPUT_JSON")
+if len(sys.argv) != 5:
+    fail("usage: check_results.py RESULTS_XML PCIEVHOST_LOG SOURCE_AUDIT OUTPUT_JSON")
 
-xml_path, log_path, output_path = map(Path, sys.argv[1:])
+xml_path, log_path, source_audit_path, output_path = map(Path, sys.argv[1:])
+source_audit = json.loads(source_audit_path.read_text(encoding="utf-8"))
+if source_audit.get("result") != "pass_with_limitations":
+    fail("source audit result is absent or invalid")
 root = ET.parse(xml_path).getroot()
 suites = [root] if root.tag == "testsuite" else list(root.iter("testsuite"))
 if not suites:
@@ -64,6 +67,7 @@ result = {
         "normal_finish": True,
         "traffic_markers": markers,
     },
+    "source_audit": source_audit,
     "limitations": [
         "these are upstream self-tests, not tests against the SVALBARD endpoint",
         "the pair's specification-interpretation independence remains unproven",

@@ -1,0 +1,70 @@
+{
+  "id": "run.01M06ATQMMZ2376DCPEADH0TBD",
+  "component": "portfolio.svalbard",
+  "target": "chain1_inverter_smoke",
+  "start_time_utc": "2026-08-16T22:24:41Z",
+  "end_time_utc": "2026-08-16T22:24:43Z",
+  "source_commit": "4cad89df6d8407dd487049fa0450c0c130b03541",
+  "source_dirty": true,
+  "source_status_sha256": "e7cd83bc004f5a0fdf1ec76b1c5c2fc96cc0bca59e5cf9274590c595ea90d433",
+  "image": {
+    "reference": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+    "local_image_id": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+    "platform": "linux/arm64"
+  },
+  "resource_limits": {
+    "cpus": 2,
+    "memory_bytes": 4294967296,
+    "memory_swap_bytes": 4294967296,
+    "pids": 256,
+    "timeout_seconds": 600,
+    "network": "none",
+    "root_filesystem": "read_only",
+    "source_mount": "read_only",
+    "scratch_mount": "unique_and_write_only"
+  },
+  "result": "pass_with_limitations",
+  "checks": {
+    "xschem_netlist": "pass",
+    "ngspice_prelayout": "pass",
+    "magic_drc_error_count": 0,
+    "magic_extraction": "pass",
+    "netgen_lvs": "Circuits match uniquely.",
+    "coupled_capacitance_pex": "pass",
+    "ngspice_postlayout": "pass",
+    "golden_comparison": "pass"
+  },
+  "observed": {
+    "prelayout": {
+      "t_phl_seconds": 5.69054e-11,
+      "t_plh_seconds": 8.03711e-11,
+      "vout_high_volts": 5.0,
+      "vout_low_volts": 4.12513e-08
+    },
+    "postlayout": {
+      "t_phl_seconds": 6.55955e-11,
+      "t_plh_seconds": 9.32166e-11,
+      "vout_high_volts": 5.0,
+      "vout_low_volts": 1.19528e-08
+    }
+  },
+  "pdk": {
+    "node": "gf180mcuD",
+    "ciel_version": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7d"
+  },
+  "artifact_hashes": [
+    {"path": "flows/smoke/inverter/inverter.sch", "sha256": "858c9141a716fb2a180814ea59f0dddb0f967f3e49e0596dab3232291553466b"},
+    {"path": "flows/smoke/inverter/layout.tcl", "sha256": "f5ae663cf51fe38abc14b7a99bc7074824aa9f513a196321977db5fa55fed6a0"},
+    {"path": "flows/smoke/inverter/prelayout_tb.spice", "sha256": "519af08bb83cd57e5114084191b59ccc0db009def3e561432a4d405301ca9ed3"},
+    {"path": "flows/smoke/inverter/postlayout_tb.spice", "sha256": "839b3c4c901f73545f1367b9dfca195e85378dfd30b6e218b1711e41712a684a"},
+    {"path": "flows/smoke/inverter/golden.json", "sha256": "ba570cc5570be4d611564e70d872dd1a99ef912272b16ba362b25bb8494e26f0"},
+    {"path": "flows/smoke/inverter/check_results.py", "sha256": "730e4270d0251093ffbff139b7e69dd9d50ae519f65890886ce7d5a9c5faca84"},
+    {"path": "flows/smoke/inverter/container_smoke.sh", "sha256": "90eeb44dc5d9d148985a21f1d9cd47e78df59dac6e494ee1d20111dad10acc21"},
+    {"path": "flows/smoke/run.sh", "sha256": "256f87201725c61c63f6839875b6f8455fd076806a4046336a4da12124165009"}
+  ],
+  "limitations": [
+    "the repository worktree was dirty, so this is local qualification evidence rather than immutable release evidence",
+    "the canary exercises one nominal inverter and does not qualify the embedded PDK for fabrication",
+    "provider acceptance and the canonical process lock remain unresolved"
+  ]
+}

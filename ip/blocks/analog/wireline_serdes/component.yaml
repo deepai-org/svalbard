@@ -1,0 +1,17 @@
+{
+  "id": "block.analog.wireline_serdes",
+  "kind": "block",
+  "owner": "unassigned",
+  "independent_reviewer": "unassigned",
+  "lifecycle": "experimental",
+  "process_compatibility": ["process.gf180"],
+  "license": "unresolved",
+  "dependencies": [],
+  "public_interfaces": ["interface.wireline_serdes.control_v1", "interface.wireline_serdes.symbol_v1"],
+  "verification_targets": ["spec"],
+  "children": [
+    "serdes_tx", "serdes_rx", "pll", "cdr", "phase_interpolator",
+    "termination", "serializer", "deserializer"
+  ],
+  "release_policy": "Each child requires an immutable source manifest; hardened GF180 releases live under ip/macros/gf180 and are digest-pinned by consumers."
+}

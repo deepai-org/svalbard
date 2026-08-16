@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "component": "project.pcie_gen1_endpoint",
+  "status": "draft",
+  "profile": {
+    "standard": "PCI Express Base Specification",
+    "revision": null,
+    "lawful_source_evidence": null,
+    "generation": 1,
+    "lanes": 1,
+    "line_rate_gt_s": 2.5,
+    "role": "endpoint",
+    "clocking": "common_clock",
+    "channel": "short_low_loss",
+    "bar_count": 1,
+    "bar_purpose": "diagnostic",
+    "root_complex_mode": false,
+    "gen2_or_higher": false
+  },
+  "external_interfaces": [
+    "interface.pcie_gen1_endpoint.pcie_lane0_v1",
+    "interface.pcie_gen1_endpoint.management_v1",
+    "interface.pcie_gen1_endpoint.raw_phy_v1"
+  ],
+  "electrical_limits": {
+    "source": null,
+    "status": "unresolved",
+    "note": "Exact limits must be transcribed from the lawful frozen revision and reviewed; no numbers are inferred here."
+  },
+  "performance_budgets": [],
+  "power_budgets": {
+    "by_supply_and_mode": [],
+    "status": "unresolved"
+  },
+  "physical_budgets": {
+    "die_area_mm2": null,
+    "project_area_mm2": null,
+    "pad_count": null,
+    "status": "unresolved"
+  },
+  "clock_reset_plan": {
+    "clock_domains": [],
+    "reset_domains": [],
+    "external_reference_mode": true,
+    "external_reset_override": true,
+    "status": "unresolved"
+  },
+  "test_access": {
+    "slow_control": ["SPI", "JTAG"],
+    "scan_required": true,
+    "event_trace_minimum_entries": 64,
+    "raw_phy_access_required": true,
+    "status": "unresolved"
+  },
+  "process": {
+    "lock": "processes/gf180/process.lock",
+    "option": null,
+    "metal_stack": null,
+    "allowed_device_families": [],
+    "allowed_voltage_families": [],
+    "required_pvt_corners": [],
+    "status": "unresolved"
+  },
+  "environment": {
+    "supply_domains": null,
+    "temperature_range_c": null,
+    "package": null,
+    "board": null,
+    "connector": null,
+    "reference_clock": null,
+    "channel_model": null
+  },
+  "requirement_allocations": [],
+  "variation_budgets": {
+    "process_variation": null,
+    "mismatch": null,
+    "package_passive_tolerance": null,
+    "protocol_channel_stress": null,
+    "model_uncertainty": null,
+    "status": "unresolved"
+  },
+  "communications_contract": {
+    "standards_clauses": [],
+    "software_interoperability_peers": ["bfm.cocotbext_pcie", "bfm.pcievhost"],
+    "compliance_tests": [],
+    "integration_boundary": "Protocol engine, PCS, complete 2.5 GT/s PHY and clock generation on die; exact permitted external components unresolved.",
+    "permitted_external_components": [],
+    "package_channel_envelope": null,
+    "calibration_assumptions": null,
+    "fallback_modes": ["external_clock", "reference_assisted", "raw_symbol", "prbs_loopback"],
+    "required_success_ladder_level": null,
+    "status": "unresolved"
+  },
+  "required_modes": [
+    "tx_only", "rx_only", "raw_symbol", "external_clock", "reference_assisted",
+    "autonomous_cdr", "near_loopback", "far_loopback", "package_loopback",
+    "prbs_generate", "prbs_check", "eye_phase_scan", "electrical_idle", "receiver_detect"
+  ],
+  "digital_proof": {
+    "external_hardware_required": false,
+    "independent_software_bfm_count_min": 2,
+    "methods": [
+      "formal", "compiled_rtl_simulation", "protocol_assertions",
+      "coverage_guided_constrained_random", "mutation_testing", "error_injection"
+    ],
+    "required_scenarios": [
+      "enumeration", "configuration", "bar_access", "memory_transactions", "reset",
+      "malformed_packets", "replay", "retry", "timeout", "credit_exhaustion",
+      "link_loss", "recovery"
+    ],
+    "bfm_implementations": [
+      {
+        "id": "bfm.cocotbext_pcie",
+        "revision": "92732edd2d8cef002f0e984697ff31ccfe8a19a9",
+                "status": "upstream_smoke_passed_not_endpoint_qualified"
+      },
+      {
+        "id": "bfm.pcievhost",
+        "revision": "b82b2ff3a047f742354c9607dea34b9b97bf108c",
+                "status": "upstream_smoke_passed_not_endpoint_qualified"
+      }
+    ]
+  },
+  "success_criteria": {
+    "digital": null,
+    "electrical": null,
+    "integrated": null,
+    "status": "unresolved"
+  },
+  "golden_path": {
+    "mode": "common-clock Gen1 x1 endpoint with one diagnostic BAR",
+    "dependencies": ["block.analog.wireline_serdes"],
+    "conservative_configuration": null,
+    "required_margin": null,
+    "raw_diagnostic_path": "SPI/JTAG control plus raw symbol and external-clock modes",
+    "forbidden_dependencies": ["experimental_cdr_only", "automatic_calibration_only", "external_lab_hardware"]
+  },
+  "assurance_artifacts": {
+    "interfaces": "projects/pcie_gen1_endpoint/interfaces.yaml",
+    "risks": "projects/pcie_gen1_endpoint/risks.yaml",
+    "uncertainties": "projects/pcie_gen1_endpoint/uncertainties.yaml",
+    "cross_die_diversity_matrix": null,
+    "control_observable_matrix": null,
+    "trim_contracts": null,
+    "safe_configurations": null,
+    "variant_measurement_contracts": null
+  },
+  "freeze_blockers": [
+    "lawful standard revision and exact electrical limits",
+    "provider, PDK, pad/ESD, package, board, connector, clock, and channel selections",
+    "supply and temperature envelopes",
+    "candidate software BFM pair provenance, license, integration, and independence review",
+    "measurable pass/fail thresholds",
+    "named owner and independent reviewer"
+  ]
+}

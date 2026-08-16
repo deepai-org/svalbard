@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "observed_at_utc": "2026-08-16",
+  "purpose": "Discovery baseline only. These observations do not select a provider, qualify a PDK, or prove lawful possession of a specification document.",
+  "sources": [
+    {
+      "id": "source.gf180mcu_pdk.public",
+      "url": "https://github.com/google/gf180mcu-pdk",
+      "observed_head": "de3240d7529a6970437ac3344820aaae7839f215",
+      "state": "archived_experimental_preview",
+      "qualification": "candidate_public_source"
+    },
+    {
+      "id": "source.open_pdks.public",
+      "url": "https://github.com/fossi-foundation/open-pdks",
+      "observed_head": "026824c7969ce6f4fc9678e6ca04b0a06a596c4b",
+      "state": "active",
+      "qualification": "candidate_public_source"
+    },
+    {
+      "id": "source.iic_osic_tools.public",
+      "url": "https://github.com/iic-jku/iic-osic-tools",
+      "observed_head": "764a8daa0af1b10183359333e3e8ff7dda230868",
+      "state": "active",
+      "qualification": "candidate_tool_source"
+    },
+    {
+      "id": "source.librelane.public",
+      "url": "https://github.com/librelane/librelane",
+      "observed_head": "d623fa1fb7946d91800839b2c8d97c3313bd3755",
+      "state": "active",
+      "qualification": "candidate_tool_source"
+    },
+    {
+      "id": "image.iic_osic_tools.arm64",
+      "url": "docker.io/hpretl/iic-osic-tools:2026.07",
+      "observed_index_digest": "sha256:5d6adf1f437cd0f2f8f8614488ec3c247ba8c768f4663a25d5e997b30ccb13b0",
+      "observed_platform_digest": "sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+      "platform": "linux/arm64",
+      "qualification": "metadata_verified_not_pulled"
+    },
+    {
+      "id": "image.librelane.arm64",
+      "url": "ghcr.io/librelane/librelane:3.0.5",
+      "observed_index_digest": "sha256:ecabd075d0ddf6a2bd1cd4a32109c7dbb861ec007f7e4e423a9a081f8d23b8e2",
+      "observed_platform_digest": "sha256:d8f3de6a4b0563d8632ce317a84fdc5a88f3cad1d4409cdef5c8e983f1505012",
+      "platform": "linux/arm64",
+      "qualification": "metadata_verified_not_pulled"
+    },
+    {
+      "id": "source.pcisig.base_spec_index",
+      "url": "https://pcisig.com/specification-overview/pci-express-base",
+      "observed_fact": "The official index lists PCI Express Base Specification Revision 1.1 dated 2005-03-08 as a previous approved specification.",
+      "candidate_revision": "1.1",
+      "document_possession_confirmed": false,
+      "lawful_access_confirmed": false,
+      "qualification": "candidate_legal_source"
+    },
+    {
+      "id": "source.bfm.cocotbext_pcie",
+      "url": "https://github.com/alexforencich/cocotbext-pcie",
+      "observed_head": "92732edd2d8cef002f0e984697ff31ccfe8a19a9",
+      "qualification": "candidate_verification_dependency"
+    },
+    {
+      "id": "source.bfm.pcievhost",
+      "url": "https://github.com/wyvernSemi/pcievhost",
+      "observed_head": "b82b2ff3a047f742354c9607dea34b9b97bf108c",
+      "qualification": "candidate_verification_dependency"
+    }
+  ]
+}

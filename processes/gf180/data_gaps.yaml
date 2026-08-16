@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "process": "process.gf180",
+  "entries": [
+    {
+      "id": "gf180.high_speed_transistor_envelope",
+      "datum": "RF and high-speed transistor model validity through the 2.5 GT/s SerDes envelope",
+      "disposition": "unavailable",
+      "source_revision": null,
+      "validity_envelope": null,
+      "affected_components": ["project.pcie_gen1_endpoint", "block.analog.wireline_serdes"],
+      "affected_claims": ["claim.pcie_gen1_endpoint.integrated_transfer"],
+      "owner": "unassigned",
+      "decision_deadline": "before gate.project.g1 freeze",
+      "fallback": "Constrain claims, retain external-clock/reference-assisted modes, and use bounded adversarial sweeps after review.",
+      "required_silicon_structure": "Directly bonded device and SerDes replica structures",
+      "evidence": null
+    },
+    {
+      "id": "gf180.pad_esd_bandwidth",
+      "datum": "Qualified pad and ESD bandwidth, impedance, parasitics, and ESD rating for 2.5 GT/s",
+      "disposition": "unavailable",
+      "source_revision": null,
+      "validity_envelope": null,
+      "affected_components": ["project.pcie_gen1_endpoint"],
+      "affected_claims": ["claim.pcie_gen1_endpoint.integrated_transfer"],
+      "owner": "unassigned",
+      "decision_deadline": "before analog layout freeze",
+      "fallback": "No integrated-link claim; preserve direct pad/interconnect de-embedding structures and raw diagnostics.",
+      "required_silicon_structure": "Open-short-thru-load structures and exact local pad replicas",
+      "evidence": null
+    },
+    {
+      "id": "gf180.package_channel_models",
+      "datum": "Versioned package, bond, board, connector, and short-channel frequency-dependent models",
+      "disposition": "unavailable",
+      "source_revision": null,
+      "validity_envelope": null,
+      "affected_components": ["project.pcie_gen1_endpoint"],
+      "affected_claims": ["claim.pcie_gen1_endpoint.integrated_transfer"],
+      "owner": "unassigned",
+      "decision_deadline": "before analog layout freeze",
+      "fallback": "Keep alternate bond-outs and termination footprints; block package-level performance claims.",
+      "required_silicon_structure": "Package loopback and de-embedding structures",
+      "evidence": null
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "component": "project.pcie_gen1_endpoint",
+  "risks": [
+    {
+      "id": "pcie.risk.serdes_model_validity",
+      "failure_mode": "2.5 GT/s transistor or interconnect behavior lies outside qualified public model evidence",
+      "local_effect": "insufficient eye opening or clock recovery margin",
+      "system_effect": "link cannot train or sustain transfers",
+      "criticality": "red",
+      "common_cause_id": "wireline.high_speed_model_gap",
+      "observable": "raw symbols, PRBS errors, eye/phase scan, lock and divided-clock outputs",
+      "control_or_bypass": "external clock, reference-assisted sampling, selectable TX/RX and programmable analog trims",
+      "fallback": "1.25 GBd externally clocked diagnostic operation and direct structures",
+      "owner": "unassigned",
+      "reviewer": "unassigned",
+      "evidence": []
+    },
+    {
+      "id": "pcie.risk.software_bfm_common_mode",
+      "failure_mode": "independent BFMs share an interpretation bug or implementation lineage",
+      "local_effect": "protocol RTL defect escapes pre-silicon testing",
+      "system_effect": "enumeration or transfer failure on silicon",
+      "criticality": "red",
+      "common_cause_id": "verification.pcie_interpretation",
+      "observable": "differential traces, assertion failures, coverage and mutation survivors",
+      "control_or_bypass": "provenance review, independently generated tests, formal properties and cross-model differential checking",
+      "fallback": "raw PHY diagnostic mode and slow control island remain independent of protocol engine",
+      "owner": "unassigned",
+      "reviewer": "unassigned",
+      "evidence": []
+    }
+  ]
+}

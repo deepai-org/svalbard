@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "status": "candidate_not_provider_accepted",
+  "source_image": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "ciel_version": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7d",
+  "node": "gf180mcuD",
+  "feature_size": "180nm",
+  "options": ["MIM_2P0", "METAL5"],
+  "open_pdks_build_version": "1.0.605",
+  "open_pdks_build_commit": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7d",
+  "open_pdks_reference_commit": "d658698bd8bcf4e05fc7b5991a701247ba0d744c",
+  "gf180mcu_pdk_reference_commit": "a897aa30369d3bcec87d9d50ce9b01f320f854ef",
+  "primitive_library_revision": "b6866b82e2bd560a29f3576c19106ff7b8b41b10",
+  "physical_verification_revision": "e766ad1974edf7712ebd4729e40037f24d9232cb",
+  "io_library_revision": "40cdef6d74ec5c9b7d596c147df94c98366afc5b",
+  "standard_cell_candidates": {
+    "gf180mcu_fd_sc_mcu7t5v0": "0ef8889a8df0acf959683fbe73013f342a2206a2",
+    "gf180mcu_fd_sc_mcu9t5v0": "02b7af3f8d88c0b014d9af3db6a17f02aa983305"
+  },
+  "known_blockers": [
+    "fabrication provider has not accepted this release or its decks",
+    "process option, stack, standard-cell library and I/O library are not selected",
+    "the image's GF180 source reference differs from the observed archived public repository HEAD",
+    "high-speed model and pad/ESD validity are not established by installation metadata"
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "status": "upstream_smoke_passed_not_endpoint_qualified",
+  "policy": "No verification dependency may be fetched by an upstream build. Direct and transitive sources are immutable and checksum-locked here, fetched by the repository acquisition script, and supplied read-only to a network-disabled bounded container.",
+  "runtime_image": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "dependencies": [
+    {
+      "id": "bfm.cocotbext_pcie",
+      "url": "https://github.com/alexforencich/cocotbext-pcie",
+      "revision": "92732edd2d8cef002f0e984697ff31ccfe8a19a9",
+      "archive_url": "https://codeload.github.com/alexforencich/cocotbext-pcie/tar.gz/92732edd2d8cef002f0e984697ff31ccfe8a19a9",
+      "archive_bytes": 147305,
+      "archive_sha256": "5b441c99137a7e6fa8c5c98c9ccfedf0741c3e578f700e20925a421d106eda72",
+      "license": "MIT",
+      "license_sha256": "d10da1a65b4ba610e3df21fc1b8122dca0043e8ee7715eaf341d5d8a4a560729",
+      "status": "upstream_smoke_passed"
+    },
+    {
+      "id": "python.cocotbext_axi",
+      "url": "https://github.com/alexforencich/cocotbext-axi",
+      "revision": "6bdc3a490b8b3528094e6f7ba321566604c6f83c",
+      "archive_url": "https://codeload.github.com/alexforencich/cocotbext-axi/tar.gz/6bdc3a490b8b3528094e6f7ba321566604c6f83c",
+      "archive_bytes": 42085,
+      "archive_sha256": "e473108ba0633cdfd911218c601529964dfc4301f06ff8090d20ccc1ff0a16ff",
+      "license": "MIT",
+      "license_sha256": "d10da1a65b4ba610e3df21fc1b8122dca0043e8ee7715eaf341d5d8a4a560729",
+      "status": "loaded_by_upstream_smoke"
+    },
+    {
+      "id": "python.cocotb_bus",
+      "url": "https://github.com/cocotb/cocotb-bus",
+      "revision": "c65a8a2c9a7818a13574d8097af8c1c9635ee0df",
+      "archive_url": "https://codeload.github.com/cocotb/cocotb-bus/tar.gz/c65a8a2c9a7818a13574d8097af8c1c9635ee0df",
+      "archive_bytes": 105484,
+      "archive_sha256": "c4a84b6b5e062c898e933432c66725e3f310d01de0ce41b5d813a69ec7869230",
+      "license": "BSD-3-Clause",
+      "license_sha256": "76d7490df6f3f46c0451c1507c494f2e08cef7603a23eec5c2222b967140459f",
+      "status": "loaded_by_upstream_smoke"
+    },
+    {
+      "id": "python.cocotb",
+      "version": "2.0.1",
+      "source": "runtime_image",
+      "license": "BSD-3-Clause",
+      "license_sha256": "de942dcc37409f373b9261dae1c602602c56f89120e58b0b355335234d780d07",
+      "status": "runtime_used_by_upstream_smoke"
+    },
+    {
+      "id": "python.cocotb_test",
+      "url": "https://pypi.org/project/cocotb-test/0.2.6/",
+      "revision": "0.2.6",
+      "archive_url": "https://files.pythonhosted.org/packages/cd/49/2d00e3518fcff0abc4c15207b1d14745420c6b4b4c7ece60d5c35717842e/cocotb_test-0.2.6.tar.gz",
+      "archive_bytes": 21254,
+      "archive_sha256": "a4661948ca145eee6bccaf832174b5efb9f6d3420677157c04ade72bb2160692",
+      "license": "MIT",
+      "license_sha256": "611790a82678c9b758f736f1bdd7c634d1de09fbf9fd16ed9fd9199b5548cdb6",
+      "status": "loaded_by_upstream_smoke"
+    },
+    {
+      "id": "bfm.pcievhost",
+      "url": "https://github.com/wyvernSemi/pcievhost",
+      "revision": "b82b2ff3a047f742354c9607dea34b9b97bf108c",
+      "archive_url": "https://codeload.github.com/wyvernSemi/pcievhost/tar.gz/b82b2ff3a047f742354c9607dea34b9b97bf108c",
+      "archive_bytes": 4256428,
+      "archive_sha256": "e3fb9225675c417962ca8f9d163b68cfe65cfe7b7835768d3697edc0789060a6",
+      "license": "GPL-3.0-only",
+      "license_sha256": "589ed823e9a84c56feb95ac58e7cf384626b9cbf4fda2a907bc36e103de1bad2",
+      "status": "upstream_smoke_passed"
+    },
+    {
+      "id": "cosim.vproc",
+      "url": "https://github.com/wyvernSemi/vproc",
+      "revision": "ae80e5b5cb43d4e9f82f9d45aa3b614e053f9df4",
+      "archive_url": "https://codeload.github.com/wyvernSemi/vproc/tar.gz/ae80e5b5cb43d4e9f82f9d45aa3b614e053f9df4",
+      "archive_bytes": 2580387,
+      "archive_sha256": "141d8da15d932bb798adac0e0f04f4d8ef00f7718ade5fe179b86a88961a6c19",
+      "license": "GPL-3.0-only",
+      "license_sha256": "589ed823e9a84c56feb95ac58e7cf384626b9cbf4fda2a907bc36e103de1bad2",
+      "status": "upstream_smoke_passed",
+      "note": "SVALBARD bypasses pcievhost's unpinned Makefile clone and supplies this exact source archive directly."
+    }
+  ]
+}

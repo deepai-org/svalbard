@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "component": "project.pcie_gen1_endpoint",
+  "status": "capability_audit_not_endpoint_evidence",
+  "allowed_statuses": [
+    "upstream_smoke_passed",
+    "capability_observed_not_tested",
+    "adapter_required",
+    "not_observed"
+  ],
+  "scenarios": [
+    {
+      "id": "enumeration",
+      "bfm.cocotbext_pcie": {"status": "upstream_smoke_passed", "source": "tests/pcie/test_pcie.py:162"},
+      "bfm.pcievhost": {"status": "adapter_required", "source": "verilog/test/usercode/VUserMain0.cpp"}
+    },
+    {
+      "id": "configuration",
+      "bfm.cocotbext_pcie": {"status": "upstream_smoke_passed", "source": "tests/pcie/test_pcie.py:145"},
+      "bfm.pcievhost": {"status": "upstream_smoke_passed", "source": "verilog/test/usercode/VUserMain0.cpp:157"}
+    },
+    {
+      "id": "bar_access",
+      "bfm.cocotbext_pcie": {"status": "upstream_smoke_passed", "source": "tests/pcie/test_pcie.py:172"},
+      "bfm.pcievhost": {"status": "upstream_smoke_passed", "source": "verilog/test/usercode/VUserMain0.cpp:157"}
+    },
+    {
+      "id": "memory_transactions",
+      "bfm.cocotbext_pcie": {"status": "upstream_smoke_passed", "source": "tests/pcie/test_pcie.py:378"},
+      "bfm.pcievhost": {"status": "upstream_smoke_passed", "source": "src/mem_model.c"}
+    },
+    {
+      "id": "reset",
+      "bfm.cocotbext_pcie": {"status": "adapter_required", "source": "vendor-specific adapters expose reset signals"},
+      "bfm.pcievhost": {"status": "upstream_smoke_passed", "source": "verilog/test/usercode/VUserMain0.cpp:38"}
+    },
+    {
+      "id": "malformed_packets",
+      "bfm.cocotbext_pcie": {"status": "capability_observed_not_tested", "source": "cocotbext/pcie/core/device.py:134"},
+      "bfm.pcievhost": {"status": "capability_observed_not_tested", "source": "src/pcie_utils.c:644"}
+    },
+    {
+      "id": "replay",
+      "bfm.cocotbext_pcie": {"status": "capability_observed_not_tested", "source": "cocotbext/pcie/core/port.py:601"},
+      "bfm.pcievhost": {"status": "capability_observed_not_tested", "source": "src/pcie_utils.c:1815"}
+    },
+    {
+      "id": "retry",
+      "bfm.cocotbext_pcie": {"status": "capability_observed_not_tested", "source": "cocotbext/pcie/core/port.py:392"},
+      "bfm.pcievhost": {"status": "capability_observed_not_tested", "source": "src/pcie.c:237"}
+    },
+    {
+      "id": "timeout",
+      "bfm.cocotbext_pcie": {"status": "capability_observed_not_tested", "source": "cocotbext/pcie/core/function.py:465"},
+      "bfm.pcievhost": {"status": "capability_observed_not_tested", "source": "src/pcie_utils.c:258"}
+    },
+    {
+      "id": "credit_exhaustion",
+      "bfm.cocotbext_pcie": {"status": "capability_observed_not_tested", "source": "cocotbext/pcie/core/port.py"},
+      "bfm.pcievhost": {"status": "capability_observed_not_tested", "source": "src/pcie.c:363"}
+    },
+    {
+      "id": "link_loss",
+      "bfm.cocotbext_pcie": {"status": "adapter_required", "source": "vendor-specific adapters expose link-down signals"},
+      "bfm.pcievhost": {"status": "capability_observed_not_tested", "source": "src/ltssm.c"}
+    },
+    {
+      "id": "recovery",
+      "bfm.cocotbext_pcie": {"status": "not_observed", "source": "core model has no generic serial LTSSM"},
+      "bfm.pcievhost": {"status": "capability_observed_not_tested", "source": "src/ltssm.c:410"}
+    }
+  ],
+  "freeze_requirements": [
+    "replace every adapter_required status with a versioned SVALBARD adapter and test",
+    "turn every required scenario into endpoint-facing evidence from both peers or record an independently reviewed complementary checker",
+    "do not interpret source capability as a passing endpoint test"
+  ]
+}

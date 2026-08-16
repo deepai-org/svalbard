@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "component": "project.pcie_gen1_endpoint",
+  "status": "draft",
+  "interfaces": [
+    {
+      "id": "interface.pcie_gen1_endpoint.pcie_lane0_v1",
+      "signals": [
+        {
+          "pad_name": "pcie_tx_p",
+          "direction": "output",
+          "voltage_domain": null,
+          "reset_state": "electrical_idle",
+          "drive_pull_policy": "SerDes-controlled; exact qualified pad unresolved",
+          "package_pin": null,
+          "bond_option": null,
+          "pcb_net": null,
+          "connector_pin": null,
+          "rtl_port": "pcie_tx_p",
+          "register_visible_function": "TX enable, electrical idle, PRBS and raw-symbol controls",
+          "firmware_alias": "PCIE_LANE0_TX"
+        },
+        {
+          "pad_name": "pcie_tx_n",
+          "direction": "output",
+          "voltage_domain": null,
+          "reset_state": "electrical_idle",
+          "drive_pull_policy": "SerDes-controlled; exact qualified pad unresolved",
+          "package_pin": null,
+          "bond_option": null,
+          "pcb_net": null,
+          "connector_pin": null,
+          "rtl_port": "pcie_tx_n",
+          "register_visible_function": "TX enable, electrical idle, PRBS and raw-symbol controls",
+          "firmware_alias": "PCIE_LANE0_TX"
+        },
+        {
+          "pad_name": "pcie_rx_p",
+          "direction": "input",
+          "voltage_domain": null,
+          "reset_state": "receiver_disabled",
+          "drive_pull_policy": "Programmable termination with safe reset code",
+          "package_pin": null,
+          "bond_option": null,
+          "pcb_net": null,
+          "connector_pin": null,
+          "rtl_port": "pcie_rx_p",
+          "register_visible_function": "RX enable, termination, threshold and diagnostic controls",
+          "firmware_alias": "PCIE_LANE0_RX"
+        },
+        {
+          "pad_name": "pcie_rx_n",
+          "direction": "input",
+          "voltage_domain": null,
+          "reset_state": "receiver_disabled",
+          "drive_pull_policy": "Programmable termination with safe reset code",
+          "package_pin": null,
+          "bond_option": null,
+          "pcb_net": null,
+          "connector_pin": null,
+          "rtl_port": "pcie_rx_n",
+          "register_visible_function": "RX enable, termination, threshold and diagnostic controls",
+          "firmware_alias": "PCIE_LANE0_RX"
+        }
+      ]
+    },
+    {
+      "id": "interface.pcie_gen1_endpoint.management_v1",
+      "signals": [],
+      "note": "SPI/JTAG, external reset/reference, interrupts, supplies and grounds must be added after the pad budget and shared test-access contract are frozen."
+    }
+  ],
+  "freeze_blockers": [
+    "qualified pad cells and voltage domains",
+    "package, bond, board and connector mappings",
+    "shared SPI/JTAG management and test-access signal budget",
+    "external reference clock and reset pins",
+    "power and ground pad allocation"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "images": [
+    {
+      "role": "analog_open_flow",
+      "name": "docker.io/hpretl/iic-osic-tools",
+      "tag_observed": "2026.07",
+      "platform": "linux/arm64",
+      "index_digest": "sha256:5d6adf1f437cd0f2f8f8614488ec3c247ba8c768f4663a25d5e997b30ccb13b0",
+      "digest": "sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+      "compressed_layer_bytes": 3500630911,
+      "local_image_id": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+      "unpacked_image_bytes": 11368986417,
+      "status": "qualified",
+      "qualification_note": "Exact ARM64 manifest was pulled and version-probed in a bounded network-disabled read-only container. The GF180 Chain 1 inverter canary passed schematic netlisting, pre-layout simulation, Magic DRC and extraction, Netgen LVS, coupled-capacitance PEX, post-layout simulation, and deterministic golden comparison. This qualification is limited to that canary and does not qualify the embedded PDK for fabrication."
+    },
+    {
+      "role": "digital_open_flow",
+      "name": "ghcr.io/librelane/librelane",
+      "tag_observed": "3.0.5",
+      "platform": "linux/arm64",
+      "index_digest": "sha256:ecabd075d0ddf6a2bd1cd4a32109c7dbb861ec007f7e4e423a9a081f8d23b8e2",
+      "digest": "sha256:d8f3de6a4b0563d8632ce317a84fdc5a88f3cad1d4409cdef5c8e983f1505012",
+      "compressed_layer_bytes": 1468761934,
+      "local_image_id": "sha256:ff52cafb05c8cef319d8e8c080af33f1f7a2210756c574921afb89c44481d866",
+      "unpacked_image_bytes": 5568194487,
+      "status": "version_probe_passed",
+      "qualification_note": "Exact ARM64 manifest was pulled and LibreLane v3.0.5 was version-probed in a bounded network-disabled read-only container. A representative GF180 digital flow has not yet been run, so this image is not role-qualified."
+    }
+  ]
+}

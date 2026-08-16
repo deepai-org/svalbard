@@ -1,0 +1,13 @@
+{
+  "id": "project.pcie_gen1_endpoint",
+  "kind": "project",
+  "owner": "unassigned",
+  "independent_reviewer": "unassigned",
+  "lifecycle": "experimental",
+  "process_compatibility": ["process.gf180"],
+  "license": "unresolved",
+  "dependencies": ["block.analog.wireline_serdes"],
+  "public_interfaces": ["interface.pcie_gen1_endpoint.management_v1", "interface.pcie_gen1_endpoint.raw_phy_v1"],
+  "verification_targets": ["spec", "check-fast"],
+  "next_gate": "gate.portfolio.g0"
+}

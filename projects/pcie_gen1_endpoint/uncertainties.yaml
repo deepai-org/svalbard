@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "component": "project.pcie_gen1_endpoint",
+  "entries": [
+    {
+      "id": "pcie.uncertainty.pad_package_channel",
+      "parameter": "frequency-dependent pad, ESD, bond, package, board, connector and channel behavior",
+      "available_evidence": null,
+      "validity_range": null,
+      "bound": null,
+      "claim_sensitivity": "existential for integrated 2.5 GT/s transfer",
+      "correlated_blocks": ["serdes_tx", "serdes_rx", "termination", "cdr"],
+      "observable": "package loopback, de-embedding structures, PRBS and eye scans",
+      "control": "swing, emphasis, termination, threshold, bandwidth and phase trims",
+      "safe_fallback": "external clock and raw-symbol diagnostic modes",
+      "silicon_measurement": "matched open-short-thru-load and exact local replicas"
+    }
+  ]
+}

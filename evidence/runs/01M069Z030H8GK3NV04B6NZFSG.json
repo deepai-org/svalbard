@@ -1,0 +1,38 @@
+{
+  "id": "run.01M069Z030H8GK3NV04B6NZFSG",
+  "component": "portfolio.svalbard",
+  "target": "iic_image_version_probe",
+  "start_time_utc": "2026-08-16T22:09:28Z",
+  "end_time_utc": "2026-08-16T22:10:25Z",
+  "source_commit": "4cad89df6d8407dd487049fa0450c0c130b03541",
+  "source_dirty": true,
+  "source_status_sha256": "872dbeb8ad5fd3551d6667550d1f4ef19944cc1831d784d5b362b10d9cee7af3",
+  "image": {
+    "reference": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+    "local_image_id": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+    "platform": "linux/arm64"
+  },
+  "resource_limits": {
+    "cpus": 2,
+    "memory_bytes": 4294967296,
+    "memory_swap_bytes": 4294967296,
+    "pids": 256,
+    "timeout_seconds": 180,
+    "network": "none",
+    "root_filesystem": "read_only",
+    "host_mounts": []
+  },
+  "result": "pass_with_limitations",
+  "checks": [
+    "image architecture is arm64",
+    "xschem, ngspice, Magic, KLayout, Netgen, Yosys, Verilator, Icarus Verilog and OpenROAD executable identities were observed",
+    "embedded gf180mcuD node metadata and source revisions were captured"
+  ],
+  "limitations": [
+    "no design source was mounted",
+    "no simulator, DRC, LVS, extraction, or implementation flow was executed",
+    "tool presence is not role qualification",
+    "the embedded PDK is not provider accepted"
+  ],
+  "artifact_hashes": []
+}

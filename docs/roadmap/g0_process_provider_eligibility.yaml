@@ -1,0 +1,28 @@
+{
+  "id": "decision.g0.process_provider_eligibility",
+  "gate": "gate.portfolio.g0",
+  "status": "blocked",
+  "review_status": "not_reviewed",
+  "provider": null,
+  "shuttle": null,
+  "accepted_pdk": null,
+  "accepted_decks": [],
+  "die_and_reticle_limits": null,
+  "package_and_probe_constraints": null,
+  "pad_and_esd_disposition": null,
+  "submission_format": null,
+  "waiver_policy": null,
+  "pcie_standard_source": {
+    "revision": null,
+    "candidate_revision": "1.1",
+    "official_index": "https://pcisig.com/specification-overview/pci-express-base",
+    "lawful_access_confirmed": false,
+    "verification_access": "software-only strategy; two exact candidate BFM source sets are checksum-locked and pass upstream self-tests, but endpoint adapters, scenario evidence, and specification-interpretation independence remain unresolved"
+  },
+  "blockers": [
+    "fabrication provider and shuttle are not selected",
+    "canonical GF180 release and deck revisions are not pinned",
+    "qualified high-speed pad/ESD and package options are unknown",
+    "lawful PCIe specification revision is not recorded"
+  ]
+}

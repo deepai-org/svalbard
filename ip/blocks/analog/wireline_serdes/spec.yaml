@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "component": "block.analog.wireline_serdes",
+  "status": "draft",
+  "rates_gbd": [1.25, 2.5],
+  "milestones_in_order": [
+    "externally_clocked_prbs_loopback_1p25_gbd",
+    "extracted_1000base_x_1p25_gbd",
+    "externally_clocked_2p5_gt_s",
+    "reference_assisted_sampling_2p5_gt_s",
+    "autonomous_cdr_2p5_gt_s",
+    "pcie_electrical_idle_receiver_detect_training_enumeration_transfer"
+  ],
+  "required_children": [
+    "serdes_tx", "serdes_rx", "pll", "cdr", "phase_interpolator",
+    "termination", "serializer", "deserializer"
+  ],
+  "required_controls": [
+    "tx_bias", "tx_current", "tx_swing", "tx_common_mode", "tx_emphasis",
+    "rx_termination", "rx_threshold", "rx_bandwidth", "sample_phase",
+    "vco_band", "loop_settings"
+  ],
+  "required_observability": [
+    "divided_clock", "lock", "raw_symbols", "prbs_errors", "eye_phase_scan",
+    "error_counters", "reset_cause", "temperature_monitor", "supply_monitor"
+  ],
+  "safety": {
+    "safe_reset_codes_required": true,
+    "hardware_clamps_required": true,
+    "tx_rx_independent_enable_required": true,
+    "external_clock_injection_required": true
+  }
+}

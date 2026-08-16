@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "component": "project.pcie_gen1_endpoint",
+  "status": "candidate_pair",
+  "observed_at_utc": "2026-08-16",
+  "candidates": [
+    {
+      "id": "bfm.cocotbext_pcie",
+      "upstream": "https://github.com/alexforencich/cocotbext-pcie",
+      "observed_revision": "92732edd2d8cef002f0e984697ff31ccfe8a19a9",
+      "implementation": "Python/cocotb event-driven PCIe system model",
+      "license_observed": "MIT",
+      "root_complex": true,
+      "transaction_layer": true,
+      "data_link_layer": "requires integration review",
+      "physical_symbol_layer": false,
+      "documented_capabilities": [
+        "enumeration", "configuration_space", "bar_allocation", "memory_io",
+        "dma_memory", "message_signaled_interrupts", "switches_and_routing"
+      ],
+      "qualification": "pinned_upstream_smoke_passed_not_endpoint_qualified",
+      "audit_findings": [
+        "MIT license text and Alex Forencich authorship observed at the pinned revision",
+        "runtime dependencies use minimum versions rather than immutable pins",
+        "core model includes TLP, DLLP, credit, retry, enumeration and root-complex logic",
+        "no serial physical-symbol adapter for this custom endpoint was found",
+        "19 upstream root-complex/endpoint cases passed in the bounded network-disabled ARM64 smoke target"
+      ]
+    },
+    {
+      "id": "bfm.pcievhost",
+      "upstream": "https://github.com/wyvernSemi/pcievhost",
+      "observed_revision": "b82b2ff3a047f742354c9607dea34b9b97bf108c",
+      "implementation": "C virtual root complex connected to HDL simulation through VProc",
+      "license_observed": "GPL-3.0",
+      "root_complex": true,
+      "transaction_layer": true,
+      "data_link_layer": true,
+      "physical_symbol_layer": true,
+      "documented_capabilities": [
+        "tlp_generation", "dllp_generation", "ack_nak", "flow_control",
+        "training_sequences", "ordered_sets", "8b10b", "scrambling",
+        "serial_io", "programmable_credit_and_ack_delay", "partial_ltssm"
+      ],
+      "qualification": "pinned_upstream_smoke_passed_not_endpoint_qualified",
+      "audit_findings": [
+        "GPL-3.0 license and Simon Southwell authorship observed at the pinned revision",
+        "model spans serial symbols, 8b10b, DLLP, TLP, credit and root-complex behavior",
+        "LTSSM is documented as partial",
+        "upstream Makefiles auto-clone VProc without pinning a revision",
+        "repository includes vendor-oriented example artifacts outside the minimal open-model source subset",
+        "the upstream serial Verilator smoke passed with valid TLP, DLLP, credit, ACK/NAK and completion traffic"
+      ]
+    }
+  ],
+  "independence_assessment": {
+    "different_maintainers": true,
+    "different_implementation_languages": true,
+    "shared_code_lineage": "not_observed_in_targeted_import_and_attribution_scan",
+    "specification_interpretation_independence": "not_reviewed",
+    "conclusion": "Different authors, languages, frameworks and layer boundaries support provisional independence, but specification-interpretation independence is not yet proven."
+  },
+  "required_before_freeze": [
+    "review exact pinned licenses and dependency licenses",
+    "audit revision history and source imports for shared BFM lineage",
+    "map each required scenario to both models or an independently justified complementary checker",
+    "prove both can connect to the endpoint's versioned symbol/TLP verification boundaries",
+    "record limitations, especially cocotbext-pcie physical/link coverage and pcievhost partial LTSSM",
+    "prove the acquisition cache and smoke on a clean clone"
+  ]
+}

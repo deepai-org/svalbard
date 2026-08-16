@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "qualification": "nominal Chain 1 canary only",
+  "image_digest": "sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "pdk": {
+    "node": "gf180mcuD",
+    "ciel_version": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7d"
+  },
+  "measurements": {
+    "prelayout": {
+      "vout_high_initial": {"expected": 5.0, "absolute_tolerance": 1e-6},
+      "vout_low": {"expected": 4.12513e-8, "absolute_tolerance": 1e-7},
+      "vout_high_final": {"expected": 5.0, "absolute_tolerance": 1e-6},
+      "t_phl": {"expected": 5.69054e-11, "relative_tolerance": 0.02},
+      "t_plh": {"expected": 8.03711e-11, "relative_tolerance": 0.02}
+    },
+    "postlayout": {
+      "vout_high_initial": {"expected": 5.0, "absolute_tolerance": 1e-6},
+      "vout_low": {"expected": 1.19528e-8, "absolute_tolerance": 1e-7},
+      "vout_high_final": {"expected": 5.0, "absolute_tolerance": 1e-6},
+      "t_phl": {"expected": 6.55955e-11, "relative_tolerance": 0.02},
+      "t_plh": {"expected": 9.32166e-11, "relative_tolerance": 0.02}
+    }
+  },
+  "drc_error_count": 0,
+  "lvs_result": "Circuits match uniquely."
+}

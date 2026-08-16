@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.svalbard.pcie_gen1_endpoint_spec.v1",
+  "title": "SVALBARD PCIe Gen1 endpoint specification",
+  "type": "object",
+  "required": [
+    "schema_version", "component", "status", "profile", "external_interfaces",
+    "electrical_limits", "performance_budgets", "power_budgets", "physical_budgets",
+    "clock_reset_plan", "test_access", "process", "environment", "requirement_allocations",
+    "variation_budgets", "communications_contract", "required_modes", "digital_proof",
+    "success_criteria", "golden_path", "assurance_artifacts", "freeze_blockers"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "component": {"const": "project.pcie_gen1_endpoint"},
+    "status": {"enum": ["draft", "frozen", "retired"]},
+    "profile": {
+      "type": "object",
+      "required": ["standard", "revision", "lawful_source_evidence", "generation", "lanes", "line_rate_gt_s", "role", "clocking", "channel", "bar_count", "bar_purpose"]
+    },
+    "external_interfaces": {"type": "array"},
+    "electrical_limits": {"type": "object"},
+    "performance_budgets": {"type": "array"},
+    "power_budgets": {"type": "object"},
+    "physical_budgets": {"type": "object"},
+    "clock_reset_plan": {"type": "object"},
+    "test_access": {"type": "object"},
+    "process": {"type": "object"},
+    "environment": {"type": "object"},
+    "requirement_allocations": {"type": "array"},
+    "variation_budgets": {"type": "object"},
+    "communications_contract": {"type": "object"},
+    "required_modes": {"type": "array"},
+    "digital_proof": {
+      "type": "object",
+      "required": ["external_hardware_required", "independent_software_bfm_count_min", "methods", "required_scenarios", "bfm_implementations"]
+    },
+    "success_criteria": {"type": "object"},
+    "golden_path": {"type": "object"},
+    "assurance_artifacts": {"type": "object"},
+    "freeze_blockers": {"type": "array"}
+  },
+  "additionalProperties": false
+}

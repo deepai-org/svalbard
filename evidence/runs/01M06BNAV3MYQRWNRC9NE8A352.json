@@ -1,0 +1,53 @@
+{
+  "id": "run.01M06BNAV3MYQRWNRC9NE8A352",
+  "component": "project.pcie_gen1_endpoint",
+  "target": "bfm_smoke",
+  "start_time_utc": "2026-08-16T22:38:10Z",
+  "end_time_utc": "2026-08-16T22:39:15Z",
+  "source_commit": "4cad89df6d8407dd487049fa0450c0c130b03541",
+  "source_dirty": true,
+  "source_status_sha256": "e7cd83bc004f5a0fdf1ec76b1c5c2fc96cc0bca59e5cf9274590c595ea90d433",
+  "image": {
+    "reference": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+    "local_image_id": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+    "platform": "linux/arm64"
+  },
+  "resource_limits": {
+    "cpus": 2,
+    "memory_bytes": 3221225472,
+    "memory_swap_bytes": 3221225472,
+    "pids": 256,
+    "timeout_seconds": 600,
+    "network": "none",
+    "root_filesystem": "read_only",
+    "runner_mount": "read_only",
+    "scratch_mount": "unique_and_write_only"
+  },
+  "result": "pass_with_limitations",
+  "checks": {
+    "cocotbext_pcie": {"tests": 19, "failures": 0, "errors": 0, "skipped": 0},
+    "pcievhost": {
+      "normal_finish": true,
+      "good_lcrc": 334,
+      "good_dllp_crc": 569,
+      "ack": 201,
+      "update_fc": 236,
+      "completion": 72
+    }
+  },
+  "artifact_hashes": [
+    {"path": "flows/verification/pcie_bfms/check_results.py", "sha256": "11edc8efbb1681a7f614c8be107e3c5639358792983d1068364fa48ce2186ebb"},
+    {"path": "flows/verification/pcie_bfms/container_smoke.sh", "sha256": "476059428f7174df1c082775f0229314c35f634e9e5eb13b6fd8a4c0c318b1d6"},
+    {"path": "flows/verification/pcie_bfms/run.sh", "sha256": "72f086e472e0cb6481e7aaf8ae70a2299f5fcc1e0df266797a92bded08a51638"},
+    {"path": "scripts/verification_deps.py", "sha256": "d98571c992a7e27877e7c71435e7a145592199ae789dbcda7309899bc32cd00b"},
+    {"path": "projects/pcie_gen1_endpoint/verification/dependencies.lock", "sha256": "33f2d1598f55931b24eae81f5b7c874ebe2b345eae6ce4e81948e2902324f9ba"},
+    {"path": "projects/pcie_gen1_endpoint/verification/bfm_candidates.yaml", "sha256": "10b1d5daa5ccab2092497ee48b4b30292302e68a0fd503f586b6e8ce13d75347"}
+  ],
+  "limitations": [
+    "these are upstream self-tests, not tests against the SVALBARD endpoint",
+    "the pair's specification-interpretation independence remains unproven",
+    "pcievhost documents only partial LTSSM coverage",
+    "cocotbext-pcie does not provide the custom endpoint serial PHY boundary",
+    "the repository worktree was dirty, so this is local qualification evidence rather than immutable release evidence"
+  ]
+}

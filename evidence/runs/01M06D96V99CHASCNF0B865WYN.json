@@ -1,0 +1,45 @@
+{
+  "id": "run.01M06D96V99CHASCNF0B865WYN",
+  "component": "project.pcie_gen1_endpoint",
+  "target": "clean_clone_bfm_reproduction",
+  "start_time_utc": "2026-08-16T23:06:18Z",
+  "end_time_utc": "2026-08-16T23:07:27Z",
+  "source_commit": "ab9c1a2208326831dec7962a6a516048c322c528",
+  "source_dirty": false,
+  "clone": {
+    "source": "https://github.com/deepai-org/svalbard.git",
+    "depth": 1,
+    "deleted_after_audit": true
+  },
+  "resource_limits": {
+    "archive_total_ceiling_bytes": 104857600,
+    "cpus": 2,
+    "memory_bytes": 3221225472,
+    "memory_swap_bytes": 3221225472,
+    "pids": 256,
+    "timeout_seconds": 600,
+    "simulation_network": "none",
+    "container_root_filesystem": "read_only"
+  },
+  "result": "pass_with_limitations",
+  "checks": {
+    "fresh_locked_archive_acquisition": 6,
+    "source_license_and_lineage_audit": "pass_with_limitations",
+    "cocotbext_pcie": {"tests": 19, "failures": 0, "errors": 0, "skipped": 0},
+    "pcievhost": {
+      "normal_finish": true,
+      "good_lcrc": 334,
+      "good_dllp_crc": 569,
+      "ack": 201,
+      "update_fc": 236,
+      "completion": 72
+    },
+    "compact_result_sha256": "81331c7206f4cc95c90039aba739c0331373ee834ff96aa79a79111feb0be0e9"
+  },
+  "limitations": [
+    "these are upstream self-tests, not tests against the SVALBARD endpoint",
+    "full revision-history and specification-interpretation independence remain unproven",
+    "pcievhost documents only partial LTSSM coverage",
+    "cocotbext-pcie lacks the custom endpoint serial PHY boundary"
+  ]
+}

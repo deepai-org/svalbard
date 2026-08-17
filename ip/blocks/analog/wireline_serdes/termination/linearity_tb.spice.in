@@ -1,0 +1,25 @@
+* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include @PEX_FILE@
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VCM RXN 0 @VCM_V@
+VTEST RXP RXN @VTEST_V@
+VB0 TERM_EN0_N 0 @B0_V@
+VB1 TERM_EN1_N 0 @B1_V@
+VB2 TERM_EN2_N 0 @B2_V@
+VB3 TERM_EN3_N 0 @B3_V@
+VB4 TERM_EN4_N 0 @B4_V@
+VB5 TERM_EN5_N 0 @B5_V@
+VB6 TERM_EN6_N 0 @B6_V@
+XDUT RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N TERM_EN5_N TERM_EN6_N VDD 0 serdes_termination_pex
+
+.control
+op
+let rdiff_dc = @VTEST_V@/(-i(VTEST))
+print rdiff_dc
+.endc
+.end

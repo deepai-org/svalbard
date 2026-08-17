@@ -4,4 +4,4 @@ Reusable GF180 wireline PHY family anchored by PCIe Gen1 at 2.5 GT/s and staged 
 
 The block is not qualified or frozen. Each named child becomes immutable only through its own reviewed release manifest and process-specific hardened macro release.
 
-The first implemented child is [`serdes_tx`](serdes_tx/README.md): a GF180 transistor netlist plus code-generated, DRC-clean, LVS-matched layout with extracted simulations at 1.25 and 2.5 GT/s. Its evidence remains explicitly experimental and pre-silicon.
+Implemented children are [`serdes_tx`](serdes_tx/README.md), a GF180 transistor-level CML transmitter with extracted simulations at 1.25 and 2.5 GT/s, and [`termination`](termination/README.md), a seven-branch programmable differential termination with code calibration across schematic and full-RC extracted PVT matrices. Both layouts are code-generated, DRC-clean, LVS-matched, and explicitly experimental pre-silicon evidence.

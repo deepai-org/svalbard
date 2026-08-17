@@ -1,0 +1,32 @@
+* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include /src/termination.spice
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VCM RXN 0 @VCM_V@
+VTEST RXP RXN DC 0.1 AC 1
+VB0 TERM_EN0_N 0 @B0_V@
+VB1 TERM_EN1_N 0 @B1_V@
+VB2 TERM_EN2_N 0 @B2_V@
+VB3 TERM_EN3_N 0 @B3_V@
+VB4 TERM_EN4_N 0 @B4_V@
+VB5 TERM_EN5_N 0 @B5_V@
+VB6 TERM_EN6_N 0 @B6_V@
+XDUT RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N TERM_EN5_N TERM_EN6_N VDD 0 serdes_termination
+
+.control
+op
+let rdiff_dc = 0.1/(-i(VTEST))
+print rdiff_dc
+ac dec 100 1meg 20gig
+let zdiff = v(RXP,RXN)/i(VTEST)
+let zmag = mag(zdiff)
+meas ac zmag_100m find zmag at=100meg
+meas ac zmag_1p25g find zmag at=1.25gig
+meas ac zmag_2p5g find zmag at=2.5gig
+meas ac zmag_5g find zmag at=5gig
+.endc
+.end

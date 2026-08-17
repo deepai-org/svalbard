@@ -1,0 +1,54 @@
+* SPDX-License-Identifier: Apache-2.0
+* Seven-branch active-low GF180 differential termination trim.
+.subckt serdes_termination RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N TERM_EN5_N TERM_EN6_N VDD VSS
+XBASE RXP RXN VSS ppolyf_u r_width=4u r_length=1.23u
+
+XTRIM0P RXP P0 VSS ppolyf_u r_width=1u r_length=2.43u
+XPINV0 EN0 TERM_EN0_N VDD VDD pfet_03v3 w=2u l=0.28u m=1
+XNINV0 EN0 TERM_EN0_N VSS VSS nfet_03v3 w=1u l=0.28u m=1
+XSW0 P0 TERM_EN0_N N0 VDD pfet_03v3 w=10u l=0.28u m=2
+XNSW0 P0 EN0 N0 VSS nfet_03v3 w=10u l=0.28u m=2
+XTRIM0N N0 RXN VSS ppolyf_u r_width=1u r_length=2.43u
+
+XTRIM1P RXP P1 VSS ppolyf_u r_width=1u r_length=2.43u
+XPINV1 EN1 TERM_EN1_N VDD VDD pfet_03v3 w=2u l=0.28u m=1
+XNINV1 EN1 TERM_EN1_N VSS VSS nfet_03v3 w=1u l=0.28u m=1
+XSW1 P1 TERM_EN1_N N1 VDD pfet_03v3 w=10u l=0.28u m=2
+XNSW1 P1 EN1 N1 VSS nfet_03v3 w=10u l=0.28u m=2
+XTRIM1N N1 RXN VSS ppolyf_u r_width=1u r_length=2.43u
+
+XTRIM2P RXP P2 VSS ppolyf_u r_width=1u r_length=1.00u
+XPINV2 EN2 TERM_EN2_N VDD VDD pfet_03v3 w=2u l=0.28u m=1
+XNINV2 EN2 TERM_EN2_N VSS VSS nfet_03v3 w=1u l=0.28u m=1
+XSW2 P2 TERM_EN2_N N2 VDD pfet_03v3 w=10u l=0.28u m=2
+XNSW2 P2 EN2 N2 VSS nfet_03v3 w=10u l=0.28u m=2
+XTRIM2N N2 RXN VSS ppolyf_u r_width=1u r_length=1.00u
+
+XTRIM3P RXP P3 VSS ppolyf_u r_width=1u r_length=1.00u
+XPINV3 EN3 TERM_EN3_N VDD VDD pfet_03v3 w=2u l=0.28u m=1
+XNINV3 EN3 TERM_EN3_N VSS VSS nfet_03v3 w=1u l=0.28u m=1
+XSW3 P3 TERM_EN3_N N3 VDD pfet_03v3 w=10u l=0.28u m=2
+XNSW3 P3 EN3 N3 VSS nfet_03v3 w=10u l=0.28u m=2
+XTRIM3N N3 RXN VSS ppolyf_u r_width=1u r_length=1.00u
+
+XTRIM4P RXP P4 VSS ppolyf_u r_width=1u r_length=1.00u
+XPINV4 EN4 TERM_EN4_N VDD VDD pfet_03v3 w=2u l=0.28u m=1
+XNINV4 EN4 TERM_EN4_N VSS VSS nfet_03v3 w=1u l=0.28u m=1
+XSW4 P4 TERM_EN4_N N4 VDD pfet_03v3 w=10u l=0.28u m=2
+XNSW4 P4 EN4 N4 VSS nfet_03v3 w=10u l=0.28u m=2
+XTRIM4N N4 RXN VSS ppolyf_u r_width=1u r_length=1.00u
+
+XTRIM5P RXP P5 VSS ppolyf_u r_width=1u r_length=1.00u
+XPINV5 EN5 TERM_EN5_N VDD VDD pfet_03v3 w=2u l=0.28u m=1
+XNINV5 EN5 TERM_EN5_N VSS VSS nfet_03v3 w=1u l=0.28u m=1
+XSW5 P5 TERM_EN5_N N5 VDD pfet_03v3 w=10u l=0.28u m=2
+XNSW5 P5 EN5 N5 VSS nfet_03v3 w=10u l=0.28u m=2
+XTRIM5N N5 RXN VSS ppolyf_u r_width=1u r_length=1.00u
+
+XTRIM6P RXP P6 VSS ppolyf_u r_width=1u r_length=1.00u
+XPINV6 EN6 TERM_EN6_N VDD VDD pfet_03v3 w=2u l=0.28u m=1
+XNINV6 EN6 TERM_EN6_N VSS VSS nfet_03v3 w=1u l=0.28u m=1
+XSW6 P6 TERM_EN6_N N6 VDD pfet_03v3 w=10u l=0.28u m=2
+XNSW6 P6 EN6 N6 VSS nfet_03v3 w=10u l=0.28u m=2
+XTRIM6N N6 RXN VSS ppolyf_u r_width=1u r_length=1.00u
+.ends serdes_termination

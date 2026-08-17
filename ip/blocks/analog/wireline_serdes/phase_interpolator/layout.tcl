@@ -102,7 +102,7 @@ set buffer_tail_cell [magic::gencell_makecell gf180mcu::nfet_03v3 \
 set interpolate_load [magic::gencell_makecell gf180mcu::ppolyf_u \
     w 2 l 4.00 guard 1 full_metal 1]
 set output_load [magic::gencell_makecell gf180mcu::ppolyf_u \
-    w 2 l 4.57 guard 1 full_metal 1]
+    w 2 l 5.25 guard 1 full_metal 1]
 
 units microns
 foreach {cell instance x y} [list \

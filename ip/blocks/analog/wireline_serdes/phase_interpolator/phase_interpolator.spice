@@ -15,8 +15,8 @@ XTAILB TB CTRL_B VSS VSS nfet_03v3 w=5u l=0.28u m=4
 
 * A second inversion restores positive phase polarity and isolates the
 * interpolating node from the sampler clock load.
-XRL2P VDD CLK_P VSS ppolyf_u r_width=2u r_length=4.57u
-XRL2N VDD CLK_N VSS ppolyf_u r_width=2u r_length=4.57u
+XRL2P VDD CLK_P VSS ppolyf_u r_width=2u r_length=5.25u
+XRL2N VDD CLK_N VSS ppolyf_u r_width=2u r_length=5.25u
 XBUFP CLK_P N1P TBUF VSS nfet_03v3 w=5u l=0.28u m=2
 XBUFN CLK_N N1N TBUF VSS nfet_03v3 w=5u l=0.28u m=2
 XTAILBUF TBUF VBIAS_BUF VSS VSS nfet_03v3 w=10u l=0.28u m=4

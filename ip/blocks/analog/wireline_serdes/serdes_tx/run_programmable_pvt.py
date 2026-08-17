@@ -178,6 +178,7 @@ def main() -> None:
                         continue
 
                     enabled = int(selected["enabled_branches"])
+                    tried_codes = {enabled}
                     observed: dict[str, float] = {}
                     core: dict[str, bool] = {}
                     boundary: dict[str, bool] = {}
@@ -211,7 +212,25 @@ def main() -> None:
                                 and min(float(row["outp_v"]), float(row["outn_v"])) >= 1.8
                             ]
                             if not alternatives:
-                                break
+                                lower_code_options = []
+                                for lower_enabled in range(enabled - 1, -1, -1):
+                                    if lower_enabled in tried_codes:
+                                        continue
+                                    option = choose(
+                                        [
+                                            row for row in candidates
+                                            if int(row["enabled_branches"]) == lower_enabled
+                                        ],
+                                        supply,
+                                    )
+                                    if option is not None:
+                                        lower_code_options.append(option)
+                                if not lower_code_options:
+                                    break
+                                selected = lower_code_options[0]
+                                enabled = int(selected["enabled_branches"])
+                                tried_codes.add(enabled)
+                                continue
                             selected = min(
                                 alternatives,
                                 key=lambda row: abs(float(row["current_a"]) - target_current),

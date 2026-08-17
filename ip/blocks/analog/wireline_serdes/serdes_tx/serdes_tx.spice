@@ -1,20 +1,20 @@
 * SPDX-License-Identifier: Apache-2.0
 * Experimental GF180 3.3 V CML transmitter with symmetric thermometer loads.
 .subckt serdes_tx INP INN OUTP OUTN VBIAS LOAD_EN0_N LOAD_EN1_N LOAD_EN2_N LOAD_EN3_N VDD VSS
-XBASE_P VDD OUTP VSS ppolyf_s r_width=0.5u r_length=56u
-XTRIM_P0 OUTP P0 VSS ppolyf_s r_width=0.5u r_length=14u
-XTRIM_P1 OUTP P1 VSS ppolyf_s r_width=0.5u r_length=14u
-XTRIM_P2 OUTP P2 VSS ppolyf_s r_width=0.5u r_length=14u
-XTRIM_P3 OUTP P3 VSS ppolyf_s r_width=0.5u r_length=14u
+XBASE_P VDD OUTP VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_P0 OUTP P0 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_P1 OUTP P1 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_P2 OUTP P2 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_P3 OUTP P3 VSS ppolyf_u r_width=1u r_length=0.8u
 XSW_P0 P0 LOAD_EN0_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
 XSW_P1 P1 LOAD_EN1_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
 XSW_P2 P2 LOAD_EN2_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
 XSW_P3 P3 LOAD_EN3_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
-XBASE_N VDD OUTN VSS ppolyf_s r_width=0.5u r_length=56u
-XTRIM_N0 OUTN N0 VSS ppolyf_s r_width=0.5u r_length=14u
-XTRIM_N1 OUTN N1 VSS ppolyf_s r_width=0.5u r_length=14u
-XTRIM_N2 OUTN N2 VSS ppolyf_s r_width=0.5u r_length=14u
-XTRIM_N3 OUTN N3 VSS ppolyf_s r_width=0.5u r_length=14u
+XBASE_N VDD OUTN VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_N0 OUTN N0 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_N1 OUTN N1 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_N2 OUTN N2 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_N3 OUTN N3 VSS ppolyf_u r_width=1u r_length=0.8u
 XSW_N0 N0 LOAD_EN0_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
 XSW_N1 N1 LOAD_EN1_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
 XSW_N2 N2 LOAD_EN2_N VDD VDD pfet_03v3 w=20u l=0.28u m=5

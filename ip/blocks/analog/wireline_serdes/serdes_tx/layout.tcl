@@ -85,10 +85,10 @@ set diff_cell [magic::gencell_makecell gf180mcu::nfet_03v3 \
     w 20 l 0.28 nf 10 guard 0 topc 0 botc 0 full_metal 0]
 set tail_cell [magic::gencell_makecell gf180mcu::nfet_03v3 \
     w 20 l 0.5 nf 10 guard 0 topc 0 botc 0 full_metal 0]
-set base_load_cell [magic::gencell_makecell gf180mcu::ppolyf_s \
-    w 0.5 l 56 guard 1 full_metal 1]
-set trim_load_cell [magic::gencell_makecell gf180mcu::ppolyf_s \
-    w 0.5 l 14 guard 1 full_metal 1]
+set base_load_cell [magic::gencell_makecell gf180mcu::ppolyf_u \
+    w 1 l 0.8 guard 1 full_metal 1]
+set trim_load_cell [magic::gencell_makecell gf180mcu::ppolyf_u \
+    w 1 l 0.8 guard 1 full_metal 1]
 set load_switch_cell [magic::gencell_makecell gf180mcu::pfet_03v3 \
     w 20 l 0.28 nf 5 guard 0 topc 0 botc 0 full_metal 0]
 
@@ -97,16 +97,16 @@ foreach {cell instance x y} [list \
         $diff_cell MDIFF_P -5 0 \
         $diff_cell MDIFF_N 5 0 \
         $tail_cell MTAIL 0 -24 \
-        $base_load_cell RBASE_P -34.4 43.18 \
-        $base_load_cell RBASE_N 34.4 43.18 \
-        $trim_load_cell RTRIM_P0 -8.8 22.18 \
-        $trim_load_cell RTRIM_P1 -15.2 22.18 \
-        $trim_load_cell RTRIM_P2 -21.6 22.18 \
-        $trim_load_cell RTRIM_P3 -28.0 22.18 \
-        $trim_load_cell RTRIM_N0 8.8 22.18 \
-        $trim_load_cell RTRIM_N1 15.2 22.18 \
-        $trim_load_cell RTRIM_N2 21.6 22.18 \
-        $trim_load_cell RTRIM_N3 28.0 22.18 \
+        $base_load_cell RBASE_P -34.4 15.73 \
+        $base_load_cell RBASE_N 34.4 15.73 \
+        $trim_load_cell RTRIM_P0 -8.8 15.73 \
+        $trim_load_cell RTRIM_P1 -15.2 15.73 \
+        $trim_load_cell RTRIM_P2 -21.6 15.73 \
+        $trim_load_cell RTRIM_P3 -28.0 15.73 \
+        $trim_load_cell RTRIM_N0 8.8 15.73 \
+        $trim_load_cell RTRIM_N1 15.2 15.73 \
+        $trim_load_cell RTRIM_N2 21.6 15.73 \
+        $trim_load_cell RTRIM_N3 28.0 15.73 \
         $load_switch_cell MSW_P0 -8.8 42 \
         $load_switch_cell MSW_P1 -15.2 42 \
         $load_switch_cell MSW_P2 -21.6 42 \
@@ -215,7 +215,7 @@ foreach x {-34.4 -28.0 -21.6 -15.2 -8.8 8.8 15.2 21.6 28.0 34.4} {
     }
 }
 foreach x {-28.0 -21.6 -15.2 -8.8 8.8 15.2 21.6 28.0} {
-    set y 29.36
+    set y 16.46
     paint_rect metal1 [expr {$x-0.28}] [expr {$y-0.28}] \
         [expr {$x+0.28}] [expr {$y+0.28}]
     via_at via1 $x $y
@@ -223,10 +223,10 @@ foreach x {-28.0 -21.6 -15.2 -8.8 8.8 15.2 21.6 28.0} {
         [expr {$x+0.42}] [expr {$y+0.42}]
     via_at via2 $x $y
     via_at via2 $x 34.0
-    paint_rect metal3 [expr {$x-0.70}] 28.86 [expr {$x+0.70}] 34.50
+    paint_rect metal3 [expr {$x-0.70}] 15.96 [expr {$x+0.70}] 34.50
 }
 foreach x {-34.4 34.4} {
-    set y 71.36
+    set y 16.46
     paint_rect metal1 [expr {$x-0.28}] [expr {$y-0.28}] \
         [expr {$x+0.28}] [expr {$y+0.28}]
     via_at via1 $x $y
@@ -234,7 +234,7 @@ foreach x {-34.4 34.4} {
         [expr {$x+0.42}] [expr {$y+0.42}]
     via_at via2 $x $y
     via_at via2 $x 50.0
-    paint_rect metal3 [expr {$x-0.70}] 49.50 [expr {$x+0.70}] 71.86
+    paint_rect metal3 [expr {$x-0.70}] 15.96 [expr {$x+0.70}] 50.50
 }
 
 # Matched outputs use identical metal3 buses and redundant transitions.  The
@@ -301,7 +301,9 @@ foreach {idx layer xl xr} {0 metal2 -8.8 8.8 1 metal3 -15.2 15.2 2 metal4 -21.6 
         }
     }
     paint_rect $layer [expr {$xl-0.50}] 52.35 [expr {$xr+0.50}] 53.05
-    make_port LOAD_EN${idx}_N [expr {6+$idx}] $layer -0.45 52.35 0.45 53.05
+    set label_x [lindex {0 -10 10 -22} $idx]
+    make_port LOAD_EN${idx}_N [expr {6+$idx}] $layer \
+        [expr {$label_x-0.45}] 52.35 [expr {$label_x+0.45}] 53.05
 }
 
 # The tail source is a wide local VSS rail.

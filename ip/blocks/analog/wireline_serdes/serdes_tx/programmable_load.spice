@@ -1,11 +1,11 @@
 * SPDX-License-Identifier: Apache-2.0
 * Four-bit active-low GF180 CML parallel load trim.
 .subckt serdes_tx_load OUT LOAD_EN0_N LOAD_EN1_N LOAD_EN2_N LOAD_EN3_N VDD VSS
-XBASE VDD OUT VSS ppolyf_s r_width=0.5u r_length=56u
-XTRIM0 OUT N0 VSS ppolyf_s r_width=0.5u r_length=14u
-XTRIM1 OUT N1 VSS ppolyf_s r_width=0.5u r_length=14u
-XTRIM2 OUT N2 VSS ppolyf_s r_width=0.5u r_length=14u
-XTRIM3 OUT N3 VSS ppolyf_s r_width=0.5u r_length=14u
+XBASE VDD OUT VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM0 OUT N0 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM1 OUT N1 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM2 OUT N2 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM3 OUT N3 VSS ppolyf_u r_width=1u r_length=0.8u
 XSW0 N0 LOAD_EN0_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
 XSW1 N1 LOAD_EN1_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
 XSW2 N2 LOAD_EN2_N VDD VDD pfet_03v3 w=20u l=0.28u m=5

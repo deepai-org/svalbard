@@ -1,0 +1,35 @@
+* SPDX-License-Identifier: Apache-2.0
+* Full-RC adversarial load, edge, skew, and supply-noise deck.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.include @PEX_PATH@
+
+VBASE VDD_BASE 0 @VDD@
+VRIPPLE VDD VDD_BASE SIN(0 @RIPPLE@ @RIPPLE_FREQ@)
+VBIAS VBIAS 0 1.20
+VB0 LOAD_EN0_N 0 0
+VB1 LOAD_EN1_N 0 0
+VB2 LOAD_EN2_N 0 0
+VB3 LOAD_EN3_N 0 0
+VINP INP 0 PULSE(0 @VDD@ 100p @EDGE@ @EDGE@ @PULSE_WIDTH@ @PERIOD@)
+VINN INN 0 PULSE(@VDD@ 0 @INN_DELAY@ @EDGE@ @EDGE@ @PULSE_WIDTH@ @PERIOD@)
+CLOAD_P OUTP 0 @CLOAD_P@
+CLOAD_N OUTN 0 @CLOAD_N@
+XDUT INP INN OUTP OUTN VBIAS LOAD_EN0_N LOAD_EN1_N LOAD_EN2_N LOAD_EN3_N VDD 0 serdes_tx_pex
+
+.control
+tran @TSTEP@ @TSTOP@
+let vdiff = v(OUTN)-v(OUTP)
+let vcm = (v(OUTN)+v(OUTP))/2
+let isupply = -i(VBASE)
+meas tran diff_high find vdiff at=@SAMPLE_HIGH@
+meas tran diff_low find vdiff at=@SAMPLE_LOW@
+meas tran supply_current_avg avg isupply from=@MEAS_START@ to=@TSTOP@
+meas tran output_floor min v(OUTP) from=@MEAS_START@ to=@TSTOP@
+meas tran output_floor_n min v(OUTN) from=@MEAS_START@ to=@TSTOP@
+meas tran common_mode_avg avg vcm from=@MEAS_START@ to=@TSTOP@
+meas tran diff_rise trig vdiff val=-0.3 rise=6 targ vdiff val=0.3 rise=6
+meas tran diff_fall trig vdiff val=0.3 fall=6 targ vdiff val=-0.3 fall=6
+.endc
+.end

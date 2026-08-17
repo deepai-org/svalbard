@@ -1,0 +1,30 @@
+* SPDX-License-Identifier: Apache-2.0
+* Full-RC statistical load-code and tail-bias calibration template.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.param sw_stat_global=@STAT_GLOBAL@
+.param sw_stat_mismatch=@STAT_MISMATCH@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice statistical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_statistical
+.include @PEX_PATH@
+.temp 27
+
+VVDD VDD 0 3.3
+VBIAS VBIAS 0 0.5
+VB0 LOAD_EN0_N 0 @B0_V@
+VB1 LOAD_EN1_N 0 @B1_V@
+VB2 LOAD_EN2_N 0 @B2_V@
+VB3 LOAD_EN3_N 0 @B3_V@
+VINP INP 0 3.3
+VINN INN 0 0
+CLOAD_P OUTP 0 50f
+CLOAD_N OUTN 0 50f
+XDUT INP INN OUTP OUTN VBIAS LOAD_EN0_N LOAD_EN1_N LOAD_EN2_N LOAD_EN3_N VDD 0 serdes_tx_pex
+
+.control
+set wr_singlescale
+set wr_vecnames
+dc VBIAS 0.5 1.8 0.01
+let isupply = -i(VVDD)
+wrdata @CAL_DATA@ v(VBIAS) v(OUTP) v(OUTN) isupply
+.endc
+.end

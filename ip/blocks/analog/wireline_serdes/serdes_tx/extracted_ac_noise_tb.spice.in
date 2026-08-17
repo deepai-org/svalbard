@@ -1,0 +1,41 @@
+* SPDX-License-Identifier: Apache-2.0
+* Nominal full-RC differential AC and device-noise characterization.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.include @PEX_PATH@
+.temp 27
+
+VVDD VDD 0 DC 3.3 AC 0
+VBIAS VBIAS 0 1.20
+VB0 LOAD_EN0_N 0 0
+VB1 LOAD_EN1_N 0 0
+VB2 LOAD_EN2_N 0 0
+VB3 LOAD_EN3_N 0 0
+VCM NCM 0 1.65
+VAC IDIFF 0 DC 0 AC 1
+EINP INP NCM IDIFF 0 0.5
+EINN NCM INN IDIFF 0 0.5
+CLOAD_P OUTP 0 50f
+CLOAD_N OUTN 0 50f
+XDUT INP INN OUTP OUTN VBIAS LOAD_EN0_N LOAD_EN1_N LOAD_EN2_N LOAD_EN3_N VDD 0 serdes_tx_pex
+
+.control
+set wr_singlescale
+set wr_vecnames
+ac dec 100 1meg 100gig
+let vdiff = v(OUTN)-v(OUTP)
+wrdata @AC_DATA@ vdiff
+alter @VAC[acmag] = 0
+alter @VVDD[acmag] = 1
+ac dec 100 1meg 20gig
+let supply_diff = v(OUTN)-v(OUTP)
+let supply_cm = (v(OUTN)+v(OUTP))/2
+wrdata @SUPPLY_AC_DATA@ supply_diff supply_cm
+alter @VAC[acmag] = 1
+alter @VVDD[acmag] = 0
+noise v(OUTN,OUTP) VAC dec 100 1meg 20gig
+setplot noise2
+wrdata @NOISE_DATA@ onoise_spectrum inoise_spectrum
+.endc
+.end

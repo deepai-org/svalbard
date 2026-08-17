@@ -1,0 +1,31 @@
+* SPDX-License-Identifier: Apache-2.0
+* Coupling-capacitance extracted transient verification at 2.5 GT/s.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.include /work/pex/serdes_tx.pex.spice
+
+VVDD VDD 0 3.3
+VBIAS VBIAS 0 1.07
+VINP INP 0 PULSE(0 3.3 100p 20p 20p 180p 400p)
+VINN INN 0 PULSE(3.3 0 100p 20p 20p 180p 400p)
+CLOAD_P OUTP 0 50f
+CLOAD_N OUTN 0 50f
+XDUT INP INN OUTP OUTN VBIAS VDD 0 serdes_tx_pex
+
+.control
+set wr_singlescale
+set wr_vecnames
+tran 2p 4n
+let vdiff = v(OUTN)-v(OUTP)
+let isupply = -i(VVDD)
+wrdata /work/postlayout-wave.dat v(INP) v(INN) v(OUTP) v(OUTN) i(VVDD)
+meas tran diff_high find vdiff at=1.2n
+meas tran diff_low find vdiff at=1.4n
+meas tran supply_current_avg avg isupply from=1n to=4n
+meas tran output_floor min v(OUTP) from=1n to=4n
+meas tran output_floor_n min v(OUTN) from=1n to=4n
+meas tran diff_rise trig vdiff val=-0.3 rise=3 targ vdiff val=0.3 rise=3
+meas tran diff_fall trig vdiff val=0.3 fall=3 targ vdiff val=-0.3 fall=3
+.endc
+.end

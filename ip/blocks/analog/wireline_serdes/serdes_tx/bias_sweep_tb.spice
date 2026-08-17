@@ -1,0 +1,20 @@
+* SPDX-License-Identifier: Apache-2.0
+* DC tail-bias characterization for the experimental GF180 CML transmitter.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.include /src/serdes_tx.spice
+
+VVDD VDD 0 3.3
+VBIAS VBIAS 0 0.5
+VINP INP 0 3.3
+VINN INN 0 0
+XDUT INP INN OUTP OUTN VBIAS VDD 0 serdes_tx
+
+.control
+set wr_singlescale
+set wr_vecnames
+dc VBIAS 0.5 2.5 0.01
+wrdata /work/bias-sweep.dat v(VBIAS) v(OUTP) v(OUTN) v(XDUT.TAIL) i(VVDD)
+.endc
+.end

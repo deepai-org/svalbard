@@ -1,0 +1,37 @@
+* SPDX-License-Identifier: Apache-2.0
+* DUT source SHA-256: @DUT_SHA256@
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include /src/cml_phase_detector.spice
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VPREV_P PREV_P 0 PWL(@PREV_P_PWL@)
+VPREV_N PREV_N 0 PWL(@PREV_N_PWL@)
+VEDGE_P EDGE_P 0 PWL(@EDGE_P_PWL@)
+VEDGE_N EDGE_N 0 PWL(@EDGE_N_PWL@)
+VCUR_P CUR_P 0 PWL(@CUR_P_PWL@)
+VCUR_N CUR_N 0 PWL(@CUR_N_PWL@)
+VBIAS VBIAS 0 @VBIAS_V@
+XDUT PREV_P PREV_N EDGE_P EDGE_N CUR_P CUR_N VBIAS VDD 0
++ EARLY_P EARLY_N LATE_P LATE_N cml_alexander_boundary
+CEARLY_P EARLY_P 0 @CLOAD_F@
+CEARLY_N EARLY_N 0 @CLOAD_F@
+CLATE_P LATE_P 0 @CLOAD_F@
+CLATE_N LATE_N 0 @CLOAD_F@
+
+.control
+tran @TSTEP_S@ @TSTOP_S@
+let early_diff = v(EARLY_P)-v(EARLY_N)
+let late_diff = v(LATE_P)-v(LATE_N)
+let early_cm = (v(EARLY_P)+v(EARLY_N))/2
+let late_cm = (v(LATE_P)+v(LATE_N))/2
+let isupply = -i(VDD)
+@MEASURES@
+meas tran early_cm_avg avg early_cm from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran late_cm_avg avg late_cm from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran supply_current avg isupply from=@MEAS_START_S@ to=@TSTOP_S@
+print early_cm_avg late_cm_avg supply_current
+.endc
+.end

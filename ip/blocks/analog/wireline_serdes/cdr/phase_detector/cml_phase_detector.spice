@@ -1,0 +1,23 @@
+* SPDX-License-Identifier: Apache-2.0
+* Stacked CML XOR/XNOR cell for the half-rate Alexander phase detector.
+.subckt cml_xor AP AN BP BN VBIAS VDD VSS OUTP OUTN
+XRP VDD OUTP VSS ppolyf_u r_width=2u r_length=9.00u
+XRN VDD OUTN VSS ppolyf_u r_width=2u r_length=9.00u
+
+* A selects an internal branch.  The two B pairs are drain-crossed so OUTP is
+* high for A xor B and OUTN is high for A xnor B.
+XAP NX AP NTAIL VSS nfet_03v3 w=10u l=0.28u m=2
+XAN NY AN NTAIL VSS nfet_03v3 w=10u l=0.28u m=2
+XNX_BP OUTP BP NX VSS nfet_03v3 w=10u l=0.28u m=2
+XNX_BN OUTN BN NX VSS nfet_03v3 w=10u l=0.28u m=2
+XNY_BP OUTN BP NY VSS nfet_03v3 w=10u l=0.28u m=2
+XNY_BN OUTP BN NY VSS nfet_03v3 w=10u l=0.28u m=2
+XTAIL NTAIL VBIAS VSS VSS nfet_03v3 w=15u l=0.28u m=4
+.ends cml_xor
+
+* One half-rate boundary: PREV/CUR are adjacent data decisions and EDGE is the
+* intervening edge sample.  EARLY=PREV xor EDGE and LATE=EDGE xor CUR.
+.subckt cml_alexander_boundary PREV_P PREV_N EDGE_P EDGE_N CUR_P CUR_N VBIAS VDD VSS EARLY_P EARLY_N LATE_P LATE_N
+XE PREV_P PREV_N EDGE_P EDGE_N VBIAS VDD VSS EARLY_P EARLY_N cml_xor
+XL EDGE_P EDGE_N CUR_P CUR_N VBIAS VDD VSS LATE_P LATE_N cml_xor
+.ends cml_alexander_boundary

@@ -1,0 +1,28 @@
+* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include /src/cml_phase_detector.spice
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VAP AP 0 PWL(@AP_PWL@)
+VAN AN 0 PWL(@AN_PWL@)
+VBP BP 0 PWL(@BP_PWL@)
+VBN BN 0 PWL(@BN_PWL@)
+VBIAS VBIAS 0 @VBIAS_V@
+XDUT AP AN BP BN VBIAS VDD 0 OUTP OUTN cml_xor
+COUTP OUTP 0 @CLOAD_F@
+COUTN OUTN 0 @CLOAD_F@
+
+.control
+tran @TSTEP_S@ @TSTOP_S@
+let outdiff = v(OUTP)-v(OUTN)
+let outcm = (v(OUTP)+v(OUTN))/2
+let isupply = -i(VDD)
+@MEASURES@
+meas tran outcm_avg avg outcm from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran supply_current avg isupply from=@MEAS_START_S@ to=@TSTOP_S@
+print outcm_avg supply_current
+.endc
+.end

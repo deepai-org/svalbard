@@ -57,3 +57,8 @@ detection and loop dynamics, post-fill extraction, EM/IR, independent-simulator
 correlation, and pad/package/board/channel co-simulation remain open. Results
 are experimental pre-silicon public-model evidence, not PCIe compliance or
 silicon qualification.
+
+The next autonomous-CDR primitive is the transistor-level
+[half-rate Alexander phase-detector boundary](phase_detector/README.md). Its
+schematic PVT calibration is closed; physical implementation and extracted
+verification remain in progress.

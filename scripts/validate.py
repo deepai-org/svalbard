@@ -74,8 +74,11 @@ def structure() -> None:
         "flows/smoke/digital_pnr/counter.v",
         "flows/smoke/digital_pnr/counter_gate_tb.v",
         "flows/smoke/digital_pnr/counter_scan_tb.v",
+        "flows/smoke/digital_pnr/equiv_gate_wrapper.v",
+        "flows/smoke/digital_pnr/equiv_gold_wrapper.v",
         "flows/smoke/digital_pnr/pin_order.cfg",
         "flows/smoke/digital_pnr/scan_config.yaml",
+        "flows/smoke/digital_pnr/scan_equiv.ys",
         "flows/smoke/digital_pnr/scan_pin_order.cfg",
         "flows/smoke/digital_pnr/stuck_at.py",
     ]

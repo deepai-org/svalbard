@@ -114,6 +114,9 @@ scan_warnings = warning_counts(scan_run / "warning.log", "scan")
 faults = json.loads((work / "stuck-at.json").read_text())
 if faults["detected"] != faults["faults"] or faults["faults"] < 16:
     fail("stuck-at coverage")
+equivalence_log = (work / "scan-equivalence.log").read_text()
+if "Equivalence successfully proven!" not in equivalence_log:
+    fail("scan functional equivalence")
 
 if "powered gate simulation: PASS" not in (work / "gate-simulation.log").read_text():
     fail("ordinary powered gate simulation")
@@ -144,6 +147,7 @@ artifacts = {
     "scan_powered_netlist": scan_final / "pnl/counter.pnl.v",
     "scan_spef": scan_final / "spef/nom/counter.nom.spef",
     "scan_spice": scan_final / "spice/counter.spice",
+    "scan_equivalence": work / "scan-equivalence.log",
     "stuck_at": work / "stuck-at.json",
 }
 result = {
@@ -154,12 +158,14 @@ result = {
     "checks": {
         "ordinary_rtl_to_gds": "pass",
         "scan_insert": "pass",
+        "scan_functional_equivalence": "pass",
         "scan_shift": "pass",
         "scan_rtl_to_gds": "pass",
         "stuck_at": "pass",
     },
     "corners": list(CORNERS),
     "observed": {
+        "scan_equivalence_points": 4,
         "ordinary": summary(ordinary_metrics, ordinary_warnings),
         "scan": summary(scan_metrics, scan_warnings),
         "stuck_at_faults": faults["faults"],
@@ -173,7 +179,7 @@ result = {
         "core_only_no_pads",
         "no_package_vsrc_model",
         "no_independent_atpg_or_transition_fault_coverage",
-        "no_equivalence_or_sdf",
+        "no_sdf",
         "no_project_rtl",
     ],
 }

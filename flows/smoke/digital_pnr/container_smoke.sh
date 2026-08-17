@@ -30,6 +30,7 @@ DFT_INPUT_ODB=/work/design/runs/CANARY/32-openroad-repairdesignpostgpl/counter.o
   openroad -no_init -no_splash /src/dft_probe.tcl > /work/dft-probe.log 2>&1
 python3 /src/normalize_scan_netlist.py \
   /work/counter.scan-raw.v /work/counter.scan-stitched.v
+yosys -ql /work/scan-equivalence.log /src/scan_equiv.ys
 iverilog -g2012 -DFUNCTIONAL \
   -s counter_scan_tb -o /work/counter_scan_sim \
   /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/verilog/primitives.v \

@@ -1,0 +1,27 @@
+read_verilog /src/counter.v /src/equiv_gold_wrapper.v
+hierarchy -top gold_wrapper
+proc
+flatten
+opt
+rename gold_wrapper gold
+design -stash gold
+
+design -reset
+read_liberty -ignore_miss_func -ignore_miss_dir -ignore_miss_data_latch /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/lib/gf180mcu_fd_sc_mcu7t5v0__tt_025C_5v00.lib
+read_verilog /work/counter.scan-stitched.v /src/equiv_gate_wrapper.v
+hierarchy -top gate_wrapper
+flatten
+proc
+opt
+rename gate_wrapper gate
+design -stash gate
+
+design -reset
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate equiv
+hierarchy -top equiv
+select -assert-count 4 equiv/t:$equiv
+equiv_simple -seq 8
+equiv_induct -seq 8
+equiv_status -assert

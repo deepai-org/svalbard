@@ -1,0 +1,32 @@
+* SPDX-License-Identifier: Apache-2.0
+* Two-stage static CML receiver with differential threshold and bandwidth trim.
+.subckt serdes_rx RXP RXN VTHP VTHN VBIAS BW_EN_N VDD VSS OUTP OUTN
+
+* First limiting stage: 800-ohm base loads and active-low 490-ohm shunts.
+XRL1P VDD N1P VSS ppolyf_u r_width=2u r_length=4.57u
+XRL1N VDD N1N VSS ppolyf_u r_width=2u r_length=4.57u
+XRBWP VDD BWP VSS ppolyf_u r_width=1u r_length=1.40u
+XRBWN VDD BWN VSS ppolyf_u r_width=1u r_length=1.40u
+XSWP BWP BW_EN_N N1P VDD pfet_03v3 w=5u l=0.28u m=1
+XSWN BWN BW_EN_N N1N VDD pfet_03v3 w=5u l=0.28u m=1
+
+XINP N1P RXP TAIL1 VSS nfet_03v3 w=10u l=0.28u m=2
+XINN N1N RXN TAIL1 VSS nfet_03v3 w=10u l=0.28u m=2
+XTAIL1 TAIL1 VBIAS VSS VSS nfet_03v3 w=10u l=0.28u m=5
+
+* A smaller auxiliary pair sums a programmable differential threshold current.
+XTHP N1P VTHP TAILTH VSS nfet_03v3 w=2u l=0.28u m=2
+XTHN N1N VTHN TAILTH VSS nfet_03v3 w=2u l=0.28u m=2
+XTAILTH TAILTH VBIAS VSS VSS nfet_03v3 w=2u l=0.28u m=4
+
+* Cross-coupled polarity restores a positive RXP-to-OUTP transfer.
+XRL2P VDD OUTP VSS ppolyf_u r_width=2u r_length=3.43u
+XRL2N VDD OUTN VSS ppolyf_u r_width=2u r_length=3.43u
+XRBW2P VDD BW2P VSS ppolyf_u r_width=1u r_length=1.40u
+XRBW2N VDD BW2N VSS ppolyf_u r_width=1u r_length=1.40u
+XSW2P BW2P BW_EN_N OUTP VDD pfet_03v3 w=5u l=0.28u m=1
+XSW2N BW2N BW_EN_N OUTN VDD pfet_03v3 w=5u l=0.28u m=1
+XBUF2P OUTP N1P TAIL2 VSS nfet_03v3 w=5u l=0.28u m=2
+XBUF2N OUTN N1N TAIL2 VSS nfet_03v3 w=5u l=0.28u m=2
+XTAIL2 TAIL2 VBIAS VSS VSS nfet_03v3 w=10u l=0.28u m=5
+.ends serdes_rx

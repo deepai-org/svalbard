@@ -1,0 +1,28 @@
+* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+@DUT_INCLUDE@
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VDIFF VDIFF 0 0
+EINP RXP 0 VALUE={@VCM_V@+V(VDIFF)/2}
+EINN RXN 0 VALUE={@VCM_V@-V(VDIFF)/2}
+VTHP VTHP 0 @VTHP_V@
+VTHN VTHN 0 @VTHN_V@
+VBIAS VBIAS 0 @VBIAS_V@
+VBW BW_EN_N 0 @BW_CODE_V@
+XDUT RXP RXN VTHP VTHN VBIAS BW_EN_N VDD 0 OUTP OUTN @DUT_SUBCKT@
+COUTP OUTP 0 @CLOAD_F@
+COUTN OUTN 0 @CLOAD_F@
+
+.control
+dc VDIFF -0.25 0.25 0.002
+let vout = v(OUTP)-v(OUTN)
+meas dc trip_input when vout=0 cross=1
+meas dc out_at_m50 find vout at=-0.05
+meas dc out_at_p50 find vout at=0.05
+print trip_input out_at_m50 out_at_p50
+.endc
+.end

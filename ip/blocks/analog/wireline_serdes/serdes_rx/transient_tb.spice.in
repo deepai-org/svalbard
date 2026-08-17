@@ -1,0 +1,33 @@
+* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+@DUT_INCLUDE@
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VINP RXP 0 PULSE(@INP_LOW@ @INP_HIGH@ 0 @EDGE_S@ @EDGE_S@ @HALF_HIGH_S@ @PERIOD_S@)
+VINN RXN 0 PULSE(@INP_HIGH@ @INP_LOW@ 0 @EDGE_S@ @EDGE_S@ @HALF_HIGH_S@ @PERIOD_S@)
+VTHP VTHP 0 @VCM_V@
+VTHN VTHN 0 @VCM_V@
+VBIAS VBIAS 0 @VBIAS_V@
+VBW BW_EN_N 0 @BW_CODE_V@
+XDUT RXP RXN VTHP VTHN VBIAS BW_EN_N VDD 0 OUTP OUTN @DUT_SUBCKT@
+COUTP OUTP 0 @CLOAD_F@
+COUTN OUTN 0 @CLOAD_F@
+
+.control
+tran @TSTEP_S@ @TSTOP_S@
+let vdiff = v(OUTP)-v(OUTN)
+let vin_diff = v(RXP)-v(RXN)
+let vcm = (v(OUTP)+v(OUTN))/2
+let isupply = -i(VDD)
+meas tran diff_high avg vdiff from=@HIGH_START_S@ to=@HIGH_END_S@
+meas tran diff_low avg vdiff from=@LOW_START_S@ to=@LOW_END_S@
+meas tran output_cm avg vcm from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran supply_current avg isupply from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran delay_rise trig vin_diff val=0 rise=5 targ vdiff val=0 rise=5
+meas tran delay_fall trig vin_diff val=0 fall=5 targ vdiff val=0 fall=5
+print diff_high diff_low output_cm supply_current delay_rise delay_fall
+.endc
+.end

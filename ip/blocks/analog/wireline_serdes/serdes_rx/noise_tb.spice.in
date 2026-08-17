@@ -1,0 +1,24 @@
+* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+@DUT_INCLUDE@
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VCM NCM 0 @VCM_V@
+VDIFF RXP NCM DC 0 AC 1
+VZERO RXN NCM 0
+VTHP VTHP 0 @VCM_V@
+VTHN VTHN 0 @VCM_V@
+VBIAS VBIAS 0 @VBIAS_V@
+VBW BW_EN_N 0 @BW_CODE_V@
+XDUT RXP RXN VTHP VTHN VBIAS BW_EN_N VDD 0 OUTP OUTN @DUT_SUBCKT@
+COUTP OUTP 0 50f
+COUTN OUTN 0 50f
+
+.control
+noise v(OUTP,OUTN) VDIFF dec 100 1meg 20gig
+print onoise_total inoise_total
+.endc
+.end

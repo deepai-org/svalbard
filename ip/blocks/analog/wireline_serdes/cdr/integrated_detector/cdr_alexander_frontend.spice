@@ -1,0 +1,14 @@
+* SPDX-License-Identifier: Apache-2.0
+* Two-phase half-rate Alexander sampling and phase-comparison front end.
+.subckt cdr_alexander_frontend DATA_P DATA_N CLK_DATA_P CLK_DATA_N CLK_EDGE_P CLK_EDGE_N VBIAS_SAMPLER VBIAS_PD VDD VSS EARLY0_P EARLY0_N LATE0_P LATE0_N EARLY1_P EARLY1_N LATE1_P LATE1_N
+XDATA DATA_P DATA_N CLK_DATA_P CLK_DATA_N VBIAS_SAMPLER VDD VSS DATA_EVEN_P DATA_EVEN_N DATA_ODD_P DATA_ODD_N cdr_sampler
+XEDGE DATA_P DATA_N CLK_EDGE_P CLK_EDGE_N VBIAS_SAMPLER VDD VSS EDGE_EVEN_P EDGE_EVEN_N EDGE_ODD_P EDGE_ODD_N cdr_sampler
+
+* CLK_EDGE rises half a UI after CLK_DATA.  Boundary zero spans the odd data
+* decision, odd edge decision, and following even data decision.
+XB0 DATA_ODD_P DATA_ODD_N EDGE_ODD_P EDGE_ODD_N DATA_EVEN_P DATA_EVEN_N VBIAS_PD VDD VSS EARLY0_P EARLY0_N LATE0_P LATE0_N cml_alexander_boundary
+
+* Boundary one spans the even data decision, even edge decision, and the next
+* odd data decision.  The held sampler states make the wrap naturally cyclic.
+XB1 DATA_EVEN_P DATA_EVEN_N EDGE_EVEN_P EDGE_EVEN_N DATA_ODD_P DATA_ODD_N VBIAS_PD VDD VSS EARLY1_P EARLY1_N LATE1_P LATE1_N cml_alexander_boundary
+.ends cdr_alexander_frontend

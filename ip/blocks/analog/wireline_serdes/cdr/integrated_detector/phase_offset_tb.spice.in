@@ -1,0 +1,56 @@
+* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include /src/cdr_sampler.spice
+.include /src/phase_detector/cml_phase_detector.spice
+.include /src/integrated_detector/cdr_alexander_frontend.spice
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VDP DATA_P 0 PWL(@DATA_P_PWL@)
+VDN DATA_N 0 PWL(@DATA_N_PWL@)
+VCDP CLK_DATA_P 0 SIN(@CLOCK_CM_V@ @CLOCK_PEAK_V@ 1.25g 0 0 0)
+VCDN CLK_DATA_N 0 SIN(@CLOCK_CM_V@ @CLOCK_PEAK_V@ 1.25g 0 0 180)
+VCEP CLK_EDGE_P 0 SIN(@CLOCK_CM_V@ @CLOCK_PEAK_V@ 1.25g 0 0 @EDGE_PHASE_DEG@)
+VCEN CLK_EDGE_N 0 SIN(@CLOCK_CM_V@ @CLOCK_PEAK_V@ 1.25g 0 0 @EDGE_N_PHASE_DEG@)
+VBS VBIAS_SAMPLER 0 @VBIAS_SAMPLER_V@
+VBP VBIAS_PD 0 @VBIAS_PD_V@
+
+XDUT DATA_P DATA_N CLK_DATA_P CLK_DATA_N CLK_EDGE_P CLK_EDGE_N
++ VBIAS_SAMPLER VBIAS_PD VDD 0 E0P E0N L0P L0N E1P E1N L1P L1N
++ cdr_alexander_frontend
+
+CE0P E0P 0 25f
+CE0N E0N 0 25f
+CL0P L0P 0 25f
+CL0N L0N 0 25f
+CE1P E1P 0 25f
+CE1N E1N 0 25f
+CL1P L1P 0 25f
+CL1N L1N 0 25f
+
+.control
+tran @TSTEP_S@ @TSTOP_S@
+let early0 = v(E0P)-v(E0N)
+let late0 = v(L0P)-v(L0N)
+let early1 = v(E1P)-v(E1N)
+let late1 = v(L1P)-v(L1N)
+let data_even = v(XDUT.DATA_EVEN_P)-v(XDUT.DATA_EVEN_N)
+let data_odd = v(XDUT.DATA_ODD_P)-v(XDUT.DATA_ODD_N)
+let edge_even = v(XDUT.EDGE_EVEN_P)-v(XDUT.EDGE_EVEN_N)
+let edge_odd = v(XDUT.EDGE_ODD_P)-v(XDUT.EDGE_ODD_N)
+let isupply = -i(VDD)
+@SAMPLE_MEASURES@
+meas tran early0_avg avg early0 from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran late0_avg avg late0 from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran early1_avg avg early1 from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran late1_avg avg late1 from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran data_even_avg avg data_even from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran data_odd_avg avg data_odd from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran edge_even_avg avg edge_even from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran edge_odd_avg avg edge_odd from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran supply_current avg isupply from=@MEAS_START_S@ to=@TSTOP_S@
+print early0_avg late0_avg early1_avg late1_avg data_even_avg data_odd_avg edge_even_avg edge_odd_avg supply_current
+.endc
+.end

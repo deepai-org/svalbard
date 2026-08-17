@@ -58,7 +58,11 @@ correlation, and pad/package/board/channel co-simulation remain open. Results
 are experimental pre-silicon public-model evidence, not PCIe compliance or
 silicon qualification.
 
-The next autonomous-CDR primitive is the transistor-level
-[half-rate Alexander phase-detector boundary](phase_detector/README.md). Its
-schematic PVT calibration is closed; physical implementation and extracted
-verification remain in progress.
+The transistor-level [half-rate Alexander phase-detector boundary](phase_detector/README.md)
+is also DRC-clean, uniquely LVS-matched, and closed across full-RC PVT and
+fixed-code stress. The next integration checkpoint combines two samplers and
+two detector boundaries in the
+[integrated half-rate detector](integrated_detector/README.md). Its coordinated
+sampler-bias and edge-phase calibration closes across representative schematic
+PVT; valid-window retiming, loop filtering, and autonomous closed-loop recovery
+remain in progress.

@@ -1,0 +1,33 @@
+* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+@DUT_INCLUDE@
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VDP DATA_P 0 PWL(@DATA_P_PWL@)
+VDN DATA_N 0 PWL(@DATA_N_PWL@)
+VCP CLK_P 0 SIN(@CLOCK_CM_V@ @CLOCK_PEAK_V@ @CLOCK_HZ@ 0 0 0)
+VCN CLK_N 0 SIN(@CLOCK_CM_V@ @CLOCK_PEAK_V@ @CLOCK_HZ@ 0 0 180)
+VBIAS VBIAS 0 @VBIAS_V@
+XDUT DATA_P DATA_N CLK_P CLK_N VBIAS VDD 0 EVEN_P EVEN_N ODD_P ODD_N @DUT_SUBCKT@
+CE_P EVEN_P 0 @CLOAD_F@
+CE_N EVEN_N 0 @CLOAD_F@
+CO_P ODD_P 0 @CLOAD_F@
+CO_N ODD_N 0 @CLOAD_F@
+
+.control
+tran @TSTEP_S@ @TSTOP_S@
+let even_diff = v(EVEN_P)-v(EVEN_N)
+let odd_diff = v(ODD_P)-v(ODD_N)
+let even_cm = (v(EVEN_P)+v(EVEN_N))/2
+let odd_cm = (v(ODD_P)+v(ODD_N))/2
+let isupply = -i(VDD)
+@SAMPLE_MEASURES@
+meas tran even_cm_avg avg even_cm from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran odd_cm_avg avg odd_cm from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran supply_current avg isupply from=@MEAS_START_S@ to=@TSTOP_S@
+print even_cm_avg odd_cm_avg supply_current
+.endc
+.end

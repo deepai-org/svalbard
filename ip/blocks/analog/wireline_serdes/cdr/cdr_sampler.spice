@@ -1,0 +1,27 @@
+* SPDX-License-Identifier: Apache-2.0
+* Differential current-steering CML latch.
+.subckt cml_sampler_latch DATA_P DATA_N CLK_P CLK_N VBIAS VDD VSS Q_P Q_N
+XRP VDD Q_P VSS ppolyf_u r_width=2u r_length=5.00u
+XRN VDD Q_N VSS ppolyf_u r_width=2u r_length=5.00u
+
+* Track pair: positive input pulls Q_N down so Q_P-Q_N is positive.
+XDP Q_N DATA_P NTRACK VSS nfet_03v3 w=6u l=0.28u m=2
+XDN Q_P DATA_N NTRACK VSS nfet_03v3 w=6u l=0.28u m=2
+
+* Cross-coupled hold pair.  Current is steered here while CLK_N is high.
+XLP Q_P Q_N NHOLD VSS nfet_03v3 w=6u l=0.28u m=2
+XLN Q_N Q_P NHOLD VSS nfet_03v3 w=6u l=0.28u m=2
+
+* Differential clock pair steers one programmable tail current between track
+* and hold paths without putting a large clock device directly in each source.
+XCT NTRACK CLK_P NCLK VSS nfet_03v3 w=8u l=0.28u m=2
+XCH NHOLD CLK_N NCLK VSS nfet_03v3 w=8u l=0.28u m=2
+XTAIL NCLK VBIAS VSS VSS nfet_03v3 w=10u l=0.28u m=4
+.ends cml_sampler_latch
+
+* Dual-edge sampler for 2.5 GT/s data using a 1.25 GHz differential clock.
+* EVEN holds after CLK_P falls; ODD uses the swapped clock and holds after it rises.
+.subckt cdr_sampler DATA_P DATA_N CLK_P CLK_N VBIAS VDD VSS EVEN_P EVEN_N ODD_P ODD_N
+XEVEN DATA_P DATA_N CLK_P CLK_N VBIAS VDD VSS EVEN_P EVEN_N cml_sampler_latch
+XODD  DATA_P DATA_N CLK_N CLK_P VBIAS VDD VSS ODD_P ODD_N cml_sampler_latch
+.ends cdr_sampler

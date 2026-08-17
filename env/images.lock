@@ -47,6 +47,24 @@
       "qualification_evidence": "run.01M06KEBMRGGVTWD4PVNFQ6XMD",
       "scope": ["generic_core_rtl_to_gds", "generic_scan_rtl_to_gds", "generic_scan_functional_equivalence", "generic_stuck_at", "generic_transition_fault"],
       "excludes": ["project_rtl", "pads", "independent_atpg", "sdf", "at_speed_transition_delay", "package_ir_em", "provider_precheck", "fabrication_qualification"]
+    },
+    {
+      "role": "independent_atpg",
+      "name": "svalbard/quaigh-atpg",
+      "tag_observed": "0.0.6",
+      "platform": "linux/arm64",
+      "distribution": "local_build",
+      "digest": "sha256:871e098d7879729b5130d790cfa29e87d26c7eafc0156612354020bc11f6b381",
+      "local_image_id": "sha256:871e098d7879729b5130d790cfa29e87d26c7eafc0156612354020bc11f6b381",
+      "unpacked_image_bytes": 98792807,
+      "runtime_base_image_digest": "sha256:273c4267223752a058c730533a8b9a5e1c44b213674f258b76fd1135fc87fdd2",
+      "builder_base_image_digest": "sha256:ed6e6a4aa37e6f71bf7329736fd2b3cf29c8b82b23072f8255708b54f9c87944",
+      "source_revision": "192bfb9edb330fb726dca4b9746fb3fb96524aba",
+      "source_package_sha256": "a50ba101318b96250a8f08faf4243eaf35ceecf9a8eaf2363f72c36c951c4d8a",
+      "status": "qualified",
+      "qualification_evidence": "run.01M06N7B8YDC5B8E1GA3JNMZAA",
+      "scope": ["generic_full_scan_combinational_stuck_at_atpg"],
+      "excludes": ["project_rtl", "transition_delay", "at_speed", "fabrication_qualification"]
     }
   ]
 }

@@ -2,7 +2,7 @@ PYTHON ?= python3
 COMPONENT ?= project.pcie_gen1_endpoint
 PROJECT ?=
 
-.PHONY: doctor check check-fast check-digital spec process-eligibility images-ready toolchain-readiness scratch-report repo-audit graph smoke toolchain-smoke digital-image digital-pnr-smoke bfm-smoke bfm-history-audit verification-deps-fetch tool-artifacts-fetch pull
+.PHONY: doctor check check-fast check-digital spec process-eligibility images-ready toolchain-readiness scratch-report repo-audit graph smoke toolchain-smoke digital-image quaigh-image digital-pnr-smoke bfm-smoke bfm-history-audit verification-deps-fetch tool-artifacts-fetch pull
 
 doctor:
 	./bootstrap.sh doctor
@@ -49,7 +49,10 @@ toolchain-smoke:
 digital-image:
 	./env/images/librelane-gf180-canary/build.sh
 
-digital-pnr-smoke: digital-image
+quaigh-image:
+	./env/images/quaigh-atpg/build.sh
+
+digital-pnr-smoke: digital-image quaigh-image
 	./flows/smoke/digital_pnr/run.sh
 
 verification-deps-fetch:

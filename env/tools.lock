@@ -3,6 +3,7 @@
   "policy": "exact_versions_immutable_digests",
   "image": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
   "digital_image": "svalbard/librelane-gf180-canary@sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
+  "atpg_image": "svalbard/quaigh-atpg@sha256:871e098d7879729b5130d790cfa29e87d26c7eafc0156612354020bc11f6b381",
   "tools": [
     {"role": "rtl_lint", "executable": "verible-verilog-lint", "version": "v0.0-4084-gf3e4d98b", "source_revision": "f3e4d98b"},
     {"role": "systemverilog_frontend", "executable": "slang", "version": "11.0.429+3c984ff9", "source_revision": "3c984ff9"},
@@ -32,14 +33,16 @@
     {"role": "gf180_powered_gate_simulation", "executable": "iverilog", "version": "13.0-devel", "source_revision": "locked digital image build"},
     {"role": "gf180_scan_functional_equivalence", "executable": "yosys", "version": "0.62", "source_revision": "7326bb7d6641500ecb285c291a54a662cb1e76cf"},
     {"role": "gf180_stuck_at_pattern_generation", "executable": "flows/smoke/digital_pnr/stuck_at.py", "version": "sha256:d71589527123fda6356003ce6ce9a4482507d1a3086a0a3e4d3ce5c514749b3b", "source_revision": "repository"},
-    {"role": "gf180_transition_fault_pattern_generation", "executable": "flows/smoke/digital_pnr/transition_fault.py", "version": "sha256:a350942b472485c28a620b794b606af75b7788983b352198a404dd1180748185", "source_revision": "repository"}
+    {"role": "gf180_transition_fault_pattern_generation", "executable": "flows/smoke/digital_pnr/transition_fault.py", "version": "sha256:a350942b472485c28a620b794b606af75b7788983b352198a404dd1180748185", "source_revision": "repository"},
+    {"role": "gf180_independent_stuck_at_atpg", "executable": "quaigh", "version": "0.0.6", "source_revision": "192bfb9edb330fb726dca4b9746fb3fb96524aba"}
   ],
   "status": "partial_role_qualification",
   "qualification_evidence": [
     "run.01M06ATQMMZ2376DCPEADH0TBD",
     "run.01M06CWM5095MSKV65V6MYN2A8",
     "run.01M06BNAV3MYQRWNRC9NE8A352",
-    "run.01M06KEBMRGGVTWD4PVNFQ6XMD"
+    "run.01M06KEBMRGGVTWD4PVNFQ6XMD",
+    "run.01M06N7B8YDC5B8E1GA3JNMZAA"
   ],
-  "open_items": ["project_rtl", "pads", "independent_atpg", "sdf", "at_speed_transition_delay", "package_ir_em", "provider_precheck"]
+  "open_items": ["project_rtl", "pads", "sdf", "at_speed_transition_delay", "package_ir_em", "provider_precheck"]
 }

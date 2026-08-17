@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "observed_at_utc": "2026-08-17",
-  "status": "generic_gf180_scan_physical_flow_qualified_project_pending_gates",
+  "status": "generic_gf180_scan_atpg_physical_flow_qualified_project_pending_gates",
   "required_roles": [
     {"role": "rtl_lint_verible", "status": "generic_smoke_passed", "provider": "analog_open_flow", "version": "v0.0-4084-gf3e4d98b"},
     {"role": "rtl_frontend_slang", "status": "generic_smoke_passed", "provider": "analog_open_flow", "version": "11.0.429+3c984ff9"},
@@ -25,8 +25,9 @@
     {"role": "dft_openroad", "status": "generic_pdk_smoke_passed", "provider": "digital_open_flow", "version": "dcf36133a369abc8f3c5e5738cd4d82e4903c0e0"},
     {"role": "scan_functional_equivalence_yosys", "status": "generic_pdk_smoke_passed", "provider": "digital_open_flow", "version": "0.62+7326bb7d"},
     {"role": "stuck_at_pattern_generation", "status": "generic_pdk_smoke_passed", "provider": "repository_script", "version": "sha256:d71589527123fda6356003ce6ce9a4482507d1a3086a0a3e4d3ce5c514749b3b"},
-    {"role": "transition_fault_pattern_generation", "status": "generic_pdk_smoke_passed", "provider": "repository_script", "version": "sha256:a350942b472485c28a620b794b606af75b7788983b352198a404dd1180748185"}
+    {"role": "transition_fault_pattern_generation", "status": "generic_pdk_smoke_passed", "provider": "repository_script", "version": "sha256:a350942b472485c28a620b794b606af75b7788983b352198a404dd1180748185"},
+    {"role": "independent_stuck_at_atpg", "status": "generic_pdk_smoke_passed", "provider": "independent_atpg", "version": "0.0.6"}
   ],
-  "qualification_evidence": "run.01M06KEBMRGGVTWD4PVNFQ6XMD",
-  "open_items": ["g0", "g1", "project_rtl", "pads", "independent_atpg", "sdf", "at_speed_transition_delay", "package_ir_em", "provider_precheck"]
+  "qualification_evidence": "run.01M06N7B8YDC5B8E1GA3JNMZAA",
+  "open_items": ["g0", "g1", "project_rtl", "pads", "sdf", "at_speed_transition_delay", "package_ir_em", "provider_precheck"]
 }

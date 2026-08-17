@@ -2,6 +2,7 @@
 import hashlib
 import json
 import os
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -99,6 +100,73 @@ def summary(metrics: dict, warnings: dict) -> dict:
     }
 
 
+def independent_atpg(work: Path, netlist_hash: str) -> dict:
+    bench = (work / "counter.atpg.bench").read_text()
+    source_match = re.search(r"^# source_sha256=([0-9a-f]{64})$", bench, re.MULTILINE)
+    if source_match is None or source_match.group(1) != netlist_hash:
+        fail("ATPG model source identity")
+    if bench.count(" = DFF(") != 4:
+        fail("ATPG model scan-cell count")
+
+    generation = (work / "quaigh-atpg.log").read_text()
+    analysis_match = re.search(
+        r"Analyzing network with (\d+) inputs, (\d+) outputs, (\d+) gates, "
+        r"(\d+) possible faults, (\d+) unique faults",
+        generation,
+    )
+    coverage_match = re.search(
+        r"Kept (\d+) patterns, detecting (\d+)/(\d+) faults \(100\.00% coverage\)",
+        generation,
+    )
+    if "Exposing flip-flops for a sequential network" not in generation:
+        fail("ATPG did not expose the scan state")
+    if analysis_match is None or coverage_match is None:
+        fail("ATPG generation report")
+    inputs, outputs, gates, possible, unique = map(int, analysis_match.groups())
+    patterns, detected, covered = map(int, coverage_match.groups())
+    if (
+        inputs != 5
+        or outputs != 9
+        or gates < 12
+        or possible < unique
+        or unique < 16
+        or detected != covered
+        or covered != unique
+        or patterns < 1
+    ):
+        fail("ATPG generation coverage")
+
+    pattern_lines = []
+    for line in (work / "quaigh-patterns.test").read_text().splitlines():
+        if line.strip() and not line.startswith("*"):
+            pattern_lines.append(line.strip())
+    if len(pattern_lines) != patterns:
+        fail("ATPG pattern count")
+    for index, line in enumerate(pattern_lines, start=1):
+        match = re.fullmatch(r"(\d+):\s+([01]+)", line)
+        if match is None or int(match.group(1)) != index or len(match.group(2)) != inputs:
+            fail("ATPG pattern format")
+
+    report = (work / "quaigh-atpg-report.log").read_text()
+    report_match = re.search(
+        r"Analyzed (\d+) patterns, detecting (\d+)/(\d+) faults \(100\.00% coverage\)",
+        report,
+    )
+    if "Exposing flip-flops for a sequential network" not in report or report_match is None:
+        fail("ATPG simulation report")
+    reported_patterns, reported_detected, reported_faults = map(int, report_match.groups())
+    if (reported_patterns, reported_detected, reported_faults) != (patterns, unique, unique):
+        fail("ATPG simulated coverage")
+    return {
+        "inputs": inputs,
+        "outputs": outputs,
+        "gates": gates,
+        "possible_faults": possible,
+        "unique_faults": unique,
+        "patterns": patterns,
+    }
+
+
 if len(sys.argv) != 2:
     fail("usage: check_results.py OUTPUT_JSON")
 
@@ -114,6 +182,7 @@ scan_warnings = warning_counts(scan_run / "warning.log", "scan")
 faults = json.loads((work / "stuck-at.json").read_text())
 if faults["detected"] != faults["faults"] or faults["faults"] < 16:
     fail("stuck-at coverage")
+atpg = independent_atpg(work, faults["netlist_sha256"])
 transitions = json.loads((work / "transition-fault.json").read_text())
 if (
     transitions["detected"] != transitions["faults"]
@@ -160,9 +229,13 @@ artifacts = {
     "scan_equivalence": work / "scan-equivalence.log",
     "stuck_at": work / "stuck-at.json",
     "transition_fault": work / "transition-fault.json",
+    "independent_atpg_model": work / "counter.atpg.bench",
+    "independent_atpg_patterns": work / "quaigh-patterns.test",
+    "independent_atpg_generation": work / "quaigh-atpg.log",
+    "independent_atpg_simulation": work / "quaigh-atpg-report.log",
 }
 result = {
-    "schema_version": 2,
+    "schema_version": 3,
     "result": "pass_with_limitations",
     "start_time_utc": os.environ["RUN_START_UTC"],
     "end_time_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
@@ -174,6 +247,7 @@ result = {
         "scan_rtl_to_gds": "pass",
         "stuck_at": "pass",
         "transition_fault": "pass",
+        "independent_atpg": "pass",
     },
     "corners": list(CORNERS),
     "observed": {
@@ -185,6 +259,7 @@ result = {
         "stuck_at_patterns": faults["patterns"],
         "transition_faults": transitions["faults"],
         "transition_patterns": transitions["patterns"],
+        "independent_atpg": atpg,
     },
     "artifacts": {key: digest(path) for key, path in artifacts.items()},
     "limitations": [
@@ -192,7 +267,6 @@ result = {
         "public_pdk_not_fabrication_qualified",
         "core_only_no_pads",
         "no_package_vsrc_model",
-        "no_independent_atpg",
         "no_sdf_or_at_speed_transition_delay",
         "no_project_rtl",
     ],

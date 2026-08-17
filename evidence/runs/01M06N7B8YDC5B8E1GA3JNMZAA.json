@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "id": "run.01M06N7B8YDC5B8E1GA3JNMZAA",
+  "component": "project.pcie_gen1_endpoint",
+  "target": "generic_gf180_independent_atpg_physical",
+  "start_time_utc": "2026-08-17T01:32:26Z",
+  "end_time_utc": "2026-08-17T01:34:51Z",
+  "source_commit": "d4bc8f79738f9823bd88c4b87e34c004d96e4dba",
+  "source_dirty": true,
+  "source_status_sha256": "855ddc427503accf0af42dec250cb170129c3e6c0a5e4291cb48ea57f5f1432e",
+  "image_id": "sha256:871e098d7879729b5130d790cfa29e87d26c7eafc0156612354020bc11f6b381",
+  "flow_image_id": "sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
+  "reproducible_clean_builds": 2,
+  "limits": {
+    "physical": {"cpus": 2, "memory_bytes": 4294967296, "pids": 512, "network": "none"},
+    "atpg": {"cpus": 1, "memory_bytes": 536870912, "pids": 64, "network": "none"}
+  },
+  "result": "pass_with_limitations",
+  "checks": {
+    "ordinary_rtl_to_gds": "pass",
+    "scan_insert": "pass",
+    "scan_functional_equivalence": "pass",
+    "scan_shift": "pass",
+    "scan_rtl_to_gds": "pass",
+    "stuck_at": "pass",
+    "transition_fault": "pass",
+    "independent_atpg": "pass"
+  },
+  "corners": 9,
+  "observed": {
+    "scan_equivalence_points": 4,
+    "forced_stuck_at_faults": 26,
+    "forced_transition_faults": 26,
+    "independent_atpg": {"inputs": 5, "outputs": 9, "gates": 19, "possible_faults": 98, "unique_faults": 46, "patterns": 8, "coverage_percent": 100.0}
+  },
+  "artifacts": {
+    "ordinary_gds": "bb9e4eb436618623c03fe712ccecc468a2d41e50ad2bde57d3fce608de51a99c",
+    "ordinary_powered_netlist": "d893f23d2392decae2688301809eb4330c7cc83b07c7d8a1d7409ac705675b37",
+    "ordinary_spef": "2690b1333d62a08d1ee0fdabf0b952cf03443aa86dfd17e008a8ce063de957ac",
+    "ordinary_spice": "d4ca4f30bd6282c71bb39ce23e7ea7875f66a80af0a85428799df25181d9589c",
+    "scan_equivalence": "606e122b80b75f90ad7941b1f0718d6c1b23f3857829294b59c1d1aafe680efb",
+    "scan_gds": "e94d532e2e7def849ecf6e0554a03939fa22cff06c808de7dc6d43b41d23f91c",
+    "scan_input_netlist": "0491fdb8e724f3b27b932eac87a217d451e1192a100003d3f78991b6a05d0709",
+    "scan_powered_netlist": "7dad70615c31beb90d729dc627017b52f7ebd8313a9f6788380f4709e37785f8",
+    "scan_spef": "5b5a450dca875524864c2345d5ad502f3c9a679cb7f1558202bf8dfa9a5937bf",
+    "scan_spice": "30eef16c583daaea51910d5dd3f1b63fe529e24f9dbf55f6b6e02c2ff7799680",
+    "stuck_at": "a7ad75cc33349f1e36046ac27f83e7c7d3af7dccee3faa10c07e6a7e5aaf302f",
+    "transition_fault": "4e29c6f8a84201cfc6de06c5572fd774678692395acc4a8b93381a6c9b12477c",
+    "independent_atpg_model": "65d4401a4f23bbd4e0beb03c85622288a9df127458abd9ba5fbf9e5b7b4212f4",
+    "independent_atpg_patterns": "1536e883cdd06e38203397eebab887fb71693064eec192995ac0a9227713322e",
+    "independent_atpg_generation": "fbd2048cd7d9555039b91d8c5071f37c7151135f0e1f38c9b79eb46550b2e7b6",
+    "independent_atpg_simulation": "a2f80fd35ce171f78b03277126a9862934d2813b658361eb833b1d26336fadc6"
+  },
+  "source_artifacts": {
+    "dockerfile": "5cfd80e308bade9ded3284c48ae624c1f9c4e701e45f24a45bf5a0aa8f35811b",
+    "image_builder": "770938de584f4a247dc74feb0670ebad87ef92c78c5b139519367ef0c3394ab0",
+    "runner": "5afc30d87a1f6a84a8f8e1238bcdb0d7f49a5c77fd5d4bfb07bf5b2dcb24c3ef",
+    "scan_converter": "7835685cb34aebd9c9b1ebdf64c47dc9b1d97024aed68362ce156940b58fdf37",
+    "result_check": "2f25de63c91b1e876f6cdf1712292059b79124f2c5c8e1ed0c72d01a3189867a"
+  },
+  "limitations": ["generic_counter_only", "public_pdk", "no_pads", "no_sdf", "no_at_speed_transition_delay", "no_project_rtl"]
+}

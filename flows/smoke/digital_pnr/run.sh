@@ -6,6 +6,8 @@ source_dir="$repo_root/flows/smoke/digital_pnr"
 scratch_root="${SVALBARD_SCRATCH:-$repo_root/scratch}"
 image_ref="svalbard/librelane-gf180-canary:2026.08"
 expected_image_id="sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17"
+atpg_image_ref="svalbard/quaigh-atpg:0.0.6"
+expected_atpg_image_id="sha256:871e098d7879729b5130d790cfa29e87d26c7eafc0156612354020bc11f6b381"
 minimum_free_kib=$((100 * 1024 * 1024))
 
 free_kib() { df -Pk "$1" | awk 'NR == 2 { print $4 }'; }
@@ -32,6 +34,13 @@ actual_image_id="$(docker image inspect "$image_ref" --format '{{.Id}}')"
 actual_architecture="$(docker image inspect "$image_ref" --format '{{.Architecture}}')"
 if [[ "$actual_image_id" != "$expected_image_id" || "$actual_architecture" != "arm64" ]]; then
   printf 'digital-pnr-smoke: locked ARM64 image is missing; run make digital-image\n' >&2
+  exit 2
+fi
+actual_atpg_image_id="$(docker image inspect "$atpg_image_ref" --format '{{.Id}}')"
+actual_atpg_architecture="$(docker image inspect "$atpg_image_ref" --format '{{.Architecture}}')"
+if [[ "$actual_atpg_image_id" != "$expected_atpg_image_id" || \
+      "$actual_atpg_architecture" != "arm64" ]]; then
+  printf 'digital-pnr-smoke: locked ARM64 ATPG image is missing; run make quaigh-image\n' >&2
   exit 2
 fi
 
@@ -61,6 +70,33 @@ timeout 20m docker run --rm \
   --mount "type=bind,src=$run_dir,dst=/work" \
   --tmpfs /tmp:size=128m,mode=1777 \
   --entrypoint /bin/sh "$image_ref" /src/container_smoke.sh
+
+timeout 2m docker run --rm \
+  --cpus=1 --memory=512m --memory-swap=512m --pids-limit=64 \
+  --network=none --read-only --cap-drop=ALL --security-opt=no-new-privileges \
+  --user "$(id -u):$(id -g)" \
+  --mount "type=bind,src=$run_dir,dst=/work" \
+  "$atpg_image_ref" atpg /work/counter.atpg.bench \
+  --output /work/quaigh-patterns.test --seed 1 \
+  > "$run_dir/quaigh-atpg.log" 2>&1
+
+timeout 2m docker run --rm \
+  --cpus=1 --memory=512m --memory-swap=512m --pids-limit=64 \
+  --network=none --read-only --cap-drop=ALL --security-opt=no-new-privileges \
+  --user "$(id -u):$(id -g)" \
+  --mount "type=bind,src=$run_dir,dst=/work" \
+  "$atpg_image_ref" atpg-report /work/counter.atpg.bench \
+  /work/quaigh-patterns.test \
+  > "$run_dir/quaigh-atpg-report.log" 2>&1
+
+timeout 2m docker run --rm \
+  --cpus=1 --memory=1g --memory-swap=1g --pids-limit=64 \
+  --network=none --read-only --cap-drop=ALL --security-opt=no-new-privileges \
+  --user "$(id -u):$(id -g)" --env HOME=/work/home \
+  --env "RUN_START_UTC=$run_start_utc" \
+  --mount "type=bind,src=$source_dir,dst=/src,readonly" \
+  --mount "type=bind,src=$run_dir,dst=/work" \
+  --entrypoint python3 "$image_ref" /src/check_results.py /work/result.json
 
 cp "$run_dir/result.json" "$scratch_root/digital-pnr-smoke-last.json"
 chmod 600 "$scratch_root/digital-pnr-smoke-last.json"

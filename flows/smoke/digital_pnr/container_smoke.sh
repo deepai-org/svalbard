@@ -30,6 +30,8 @@ DFT_INPUT_ODB=/work/design/runs/CANARY/32-openroad-repairdesignpostgpl/counter.o
   openroad -no_init -no_splash /src/dft_probe.tcl > /work/dft-probe.log 2>&1
 python3 /src/normalize_scan_netlist.py \
   /work/counter.scan-raw.v /work/counter.scan-stitched.v
+python3 /src/scan_to_bench.py \
+  /work/counter.scan-stitched.v /work/counter.atpg.bench
 yosys -ql /work/scan-equivalence.log /src/scan_equiv.ys
 iverilog -g2012 -DFUNCTIONAL \
   -s counter_scan_tb -o /work/counter_scan_sim \
@@ -60,5 +62,4 @@ iverilog -g2012 -DFUNCTIONAL -DUSE_POWER_PINS \
   "$scan_final/pnl/counter.pnl.v" /src/counter_scan_tb.v
 vvp /work/counter_scan_physical_sim > /work/scan-physical-simulation.log
 
-python3 /src/check_results.py /work/result.json
-echo 'digital-pnr-smoke: full core flow PASS'
+echo 'digital-pnr-smoke: physical stages PASS'

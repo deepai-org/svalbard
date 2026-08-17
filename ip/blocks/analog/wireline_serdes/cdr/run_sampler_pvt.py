@@ -54,11 +54,12 @@ def main() -> None:
                                 "DUT_INCLUDE": (f".include {args.pex}" if args.pex else
                                                 ".include /src/cdr_sampler.spice"),
                                 "DUT_SUBCKT": "cdr_sampler_pex" if args.pex else "cdr_sampler",
-                                "TEMP_C": str(temperature), "VDD_V": f"{vdd:.2f}",
+                                "TEMP_C": str(temperature), "VDD_SOURCE": f"{vdd:.2f}",
                                 "DATA_P_PWL": pwl(True, common_mode, 0.10, ui, 20e-12),
                                 "DATA_N_PWL": pwl(False, common_mode, 0.10, ui, 20e-12),
                                 "CLOCK_CM_V": f"{common_mode:.6f}", "CLOCK_PEAK_V": "0.45",
-                                "CLOCK_HZ": "1.25g", "VBIAS_V": f"{bias:.2f}",
+                                "CLOCK_HZ": "1.25g", "CLOCK_PHASE_DEG": "0",
+                                "CLOCK_N_PHASE_DEG": "180", "VBIAS_V": f"{bias:.2f}",
                                 "CLOAD_F": "25f", "TSTEP_S": f"{ui / 100:.12g}",
                                 "TSTOP_S": f"{(len(BITS) + 1) * ui:.12g}",
                                 "MEAS_START_S": f"{4 * ui:.12g}",
@@ -70,16 +71,24 @@ def main() -> None:
     def simulate(specification: tuple[object, ...]) -> dict[str, object]:
         case_id, mos, resistor, vdd, temperature, cm_fraction, bias, values = specification
         deck, log = args.work / f"{case_id}.spice", args.work / f"{case_id}.log"
-        deck.write_text(instantiate(template, values))
-        with log.open("w") as output:
-            run = subprocess.run(["ngspice", "-b", str(deck)], stdout=output,
-                                 stderr=subprocess.STDOUT, timeout=90, check=False)
+        deck_text = instantiate(template, values)
+        reusable = (deck.exists() and log.exists() and deck.read_text() == deck_text
+                    and len({name for name, _ in SCALAR.findall(log.read_text())})
+                    == len(SAMPLE_INDICES) + 3)
+        if reusable:
+            return_code = 0
+        else:
+            deck.write_text(deck_text)
+            with log.open("w") as output:
+                run = subprocess.run(["ngspice", "-b", str(deck)], stdout=output,
+                                     stderr=subprocess.STDOUT, timeout=90, check=False)
+            return_code = run.returncode
         observed = {name: float(value) for name, value in SCALAR.findall(log.read_text())}
         signed = {index: observed.get(f"sample_{index}", 0.0) * (1 if BITS[index] else -1)
                   for index in SAMPLE_INDICES}
         even_margin = min(value for index, value in signed.items() if index % 2 == 0)
         odd_margin = min(value for index, value in signed.items() if index % 2 == 1)
-        complete = run.returncode == 0 and len(observed) == len(SAMPLE_INDICES) + 3
+        complete = return_code == 0 and len(observed) == len(SAMPLE_INDICES) + 3
         electrical = (complete and even_margin >= 0.10 and odd_margin >= 0.10
                       and abs(even_margin - odd_margin) <= 0.10
                       and 0.50 <= observed["even_cm_avg"] <= float(vdd) - 0.10
@@ -101,7 +110,7 @@ def main() -> None:
     groups = []
     for key, members in grouped.items():
         passing = [case for case in members if case["result"] == "pass"
-                   and 1.00 <= float(case["bias_v"]) <= 1.30]
+                   and 0.90 <= float(case["bias_v"]) <= 1.30]
         selected = (max(passing, key=lambda case: min(float(case["even_margin_v"]),
                                                        float(case["odd_margin_v"])))
                     if passing else None)

@@ -51,11 +51,16 @@ for order, layer_index in enumerate(layout.layer_indices()):
 
 draw = ImageDraw.Draw(canvas)
 font = ImageFont.load_default()
-draw.rounded_rectangle((18, 14, 868, 52), radius=8, fill=(5, 8, 12, 225),
+draw.rounded_rectangle((18, 14, 1035, 52), radius=8, fill=(5, 8, 12, 225),
                        outline=(92, 116, 145, 255), width=1)
 draw.text((32, 25),
           f"GF180 CDR dual-edge CML sampler | {bbox.width() * layout.dbu:.1f} x "
-          f"{bbox.height() * layout.dbu:.1f} um | routed layout checkpoint",
+          f"{bbox.height() * layout.dbu:.1f} um | DRC 0 | unique LVS | 480R/193C PEX",
+          font=font, fill=(239, 244, 250, 255))
+draw.rounded_rectangle((1060, 14, 1782, 52), radius=8, fill=(5, 8, 12, 225),
+                       outline=(92, 116, 145, 255), width=1)
+draw.text((1074, 25),
+          "Ports: DATA_N/P, CLK_P/N, VBIAS, VSS below | VDD and four outputs above",
           font=font, fill=(239, 244, 250, 255))
 
 

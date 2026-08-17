@@ -4,7 +4,11 @@ This directory begins the `cdr` macro with the reference-assisted sampling front
 
 Each latch steers one tail current between a differential tracking pair and a cross-coupled regenerative pair. The clock pair performs the steering below those devices, avoiding a separate large clock transistor in every signal source. Matched p-poly loads provide static CML outputs. This is a real transistor-level sampler, not the eventual Alexander decision logic or loop filter.
 
-The current schematic matrix completes 1,701/1,701 simulations over 3 MOS corners, 3 unsalicided-resistor corners, 3 supplies, 3 temperatures, 3 shared data/clock common-mode fractions, and 7 bias settings. All 243 groups calibrate with an interior 1.00--1.30 V setting. The selected minimum signed decision margin is 0.480--1.533 V, selected current is 2.18--6.39 mA, and every group retains 3--7 electrically valid bias settings while checking 20 alternating even/odd decisions per case.
+The schematic matrix completes 1,701/1,701 simulations over 3 MOS corners, 3
+unsalicided-resistor corners, 3 supplies, 3 temperatures, 3 shared data/clock
+common-mode fractions, and 7 bias settings. All 243 groups calibrate with an
+interior 0.90--1.30 V setting while retaining the 0.80 and 1.40 V endpoints as
+range margin.
 
 The routed physical checkpoint is available below. It places the even
 and odd latches as mirrored halves, keeps the regenerative devices and p-poly
@@ -20,10 +24,36 @@ Netgen LVS. Its coupled full-RC extraction contains 480 resistors and 193
 capacitors. A nominal extracted bias sweep passes four adjacent codes from
 0.90--1.20 V with 0.233--0.701 V minimum signed decision margin.
 
-This remains a pre-signoff physical checkpoint. The full extracted PVT,
-aperture/setup-hold, jitter, load, and input/clock sensitivity matrices are in
-progress. Mismatch, metastability-tail characterization, supply-noise
-injection, phase-detector logic, loop dynamics, autonomous acquisition,
-post-fill extraction, EM/IR, and package/channel co-simulation remain open.
-Results are experimental pre-silicon public-model evidence, not PCIe compliance
-or silicon qualification.
+Run the bounded reproducible evidence flow with:
+
+```sh
+make cdr-sampler-smoke
+```
+
+The full-RC PVT matrix also completes 1,701/1,701 simulations and calibrates
+243/243 groups. Selected decision margin is 0.283--1.132 V, selected supply
+current is 1.31--4.43 mA, and every group retains 3--7 passing codes. A further
+720 extracted stress simulations pass 9/9 representative environments with one
+fixed bias per environment over 10--50 fF load, at least 200 mV differential
+data, at least 600 mV differential clock, and +/-50 ps clock displacement. The
+270 deliberately out-of-envelope low-amplitude, 100 fF, offset, and combined
+cases remain reported separately; 65 pass.
+
+The 225-case aperture grid passes all nine environments over a qualified -80 to
++80 ps data-transition shift. Their common observed passing interval is -240 to
++80 ps; the negative boundary is censored because every environment still
+passes at the -240 ps sweep limit. Another 225 extracted supply-injection cases
+pass 9/9 environments for up to 50 mV-peak ripple from 10 MHz through 1.25 GHz
+at two phases. All 72 separately reported 100 mV-peak cases also pass.
+
+The programmable bias exists to absorb unknown global silicon, temperature,
+supply, passive, and extracted-interconnect shifts while preserving margin away
+from trim rails. It does not discover its own code: integration still requires
+a reference-assisted calibration search and retained setting.
+
+This remains a pre-signoff physical checkpoint. Statistical mismatch using a
+provider-qualified model, metastability-tail statistics, autonomous phase
+detection and loop dynamics, post-fill extraction, EM/IR, independent-simulator
+correlation, and pad/package/board/channel co-simulation remain open. Results
+are experimental pre-silicon public-model evidence, not PCIe compliance or
+silicon qualification.

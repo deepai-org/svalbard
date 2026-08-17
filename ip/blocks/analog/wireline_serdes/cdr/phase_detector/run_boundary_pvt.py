@@ -34,16 +34,21 @@ def main() -> None:
     parser.add_argument("--source", required=True, type=Path)
     parser.add_argument("--work", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--pex", type=Path)
     parser.add_argument("--jobs", type=int, default=2)
     parser.add_argument("--nominal", action="store_true")
     parser.add_argument("--hot-only", action="store_true")
+    parser.add_argument("--symbol-rate", type=float, default=1.25e9)
     args = parser.parse_args()
     if not 1 <= args.jobs <= 4:
         parser.error("--jobs must be between 1 and 4")
+    if not 0.5e9 <= args.symbol_rate <= 2.5e9:
+        parser.error("--symbol-rate must be between 0.5e9 and 2.5e9")
     args.work.mkdir(parents=True, exist_ok=True)
     template = (args.source / "boundary_tb.spice.in").read_text()
-    dut_sha256 = hashlib.sha256((args.source / "cml_phase_detector.spice").read_bytes()).hexdigest()
-    ui = 1 / 2.5e9
+    dut_path = args.pex if args.pex else args.source / "cml_phase_detector.spice"
+    dut_sha256 = hashlib.sha256(dut_path.read_bytes()).hexdigest()
+    ui = 1 / args.symbol_rate
     measures = []
     for index in SAMPLE_INDICES:
         time = (index + 0.5) * ui
@@ -70,7 +75,11 @@ def main() -> None:
             values = {
                 "MOS_CORNER": mos, "RES_CORNER": resistor,
                 "DUT_SHA256": dut_sha256,
-                "TEMP_C": str(temperature), "VDD_V": f"{vdd:.2f}",
+                "DUT_INCLUDE": (f".include {args.pex}" if args.pex else
+                                ".include /src/cml_phase_detector.spice"),
+                "DUT_SUBCKT": "cml_alexander_boundary_pex" if args.pex else
+                               "cml_alexander_boundary",
+                "TEMP_C": str(temperature), "VDD_SOURCE": f"{vdd:.2f}",
                 "VBIAS_V": f"{bias:.2f}", "CLOAD_F": "25f",
                 "TSTEP_S": f"{ui / 100:.12g}",
                 "TSTOP_S": f"{(len(PREV) + 1) * ui:.12g}",
@@ -134,7 +143,8 @@ def main() -> None:
     complete_cases = sum(len(case["observed"]) == 2 * len(SAMPLE_INDICES) + 3 for case in cases)
     passing_groups = sum(group["result"] == "pass" for group in groups)
     passed = complete_cases == len(cases) and passing_groups == len(groups)
-    result = {"schema_version": 1, "extraction": "schematic",
+    result = {"schema_version": 1, "extraction": "full_rc" if args.pex else "schematic",
+              "symbol_rate_hz": args.symbol_rate,
               "result": "pass" if passed else "fail", "case_count": len(cases),
               "complete_case_count": complete_cases, "group_count": len(groups),
               "passing_group_count": passing_groups, "groups": groups, "cases": cases}

@@ -3,10 +3,10 @@
 .include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
 .lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
 .lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
-.include /src/cml_phase_detector.spice
+@DUT_INCLUDE@
 .temp @TEMP_C@
 
-VDD VDD 0 @VDD_V@
+VDD VDD 0 @VDD_SOURCE@
 VPREV_P PREV_P 0 PWL(@PREV_P_PWL@)
 VPREV_N PREV_N 0 PWL(@PREV_N_PWL@)
 VEDGE_P EDGE_P 0 PWL(@EDGE_P_PWL@)
@@ -15,7 +15,7 @@ VCUR_P CUR_P 0 PWL(@CUR_P_PWL@)
 VCUR_N CUR_N 0 PWL(@CUR_N_PWL@)
 VBIAS VBIAS 0 @VBIAS_V@
 XDUT PREV_P PREV_N EDGE_P EDGE_N CUR_P CUR_N VBIAS VDD 0
-+ EARLY_P EARLY_N LATE_P LATE_N cml_alexander_boundary
++ EARLY_P EARLY_N LATE_P LATE_N @DUT_SUBCKT@
 CEARLY_P EARLY_P 0 @CLOAD_F@
 CEARLY_N EARLY_N 0 @CLOAD_F@
 CLATE_P LATE_P 0 @CLOAD_F@

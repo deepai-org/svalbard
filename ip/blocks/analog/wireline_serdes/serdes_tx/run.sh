@@ -57,7 +57,7 @@ flock -n 9 || {
   exit 2
 }
 
-timeout 12m docker run --rm \
+timeout --kill-after=30s 12m docker run --rm \
   --cpus=2 \
   --memory=4g \
   --memory-swap=4g \

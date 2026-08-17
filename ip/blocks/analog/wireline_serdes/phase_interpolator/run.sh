@@ -33,7 +33,7 @@ trap finish EXIT
 exec 9>"$scratch_root/heavy-job.lock"
 flock -n 9 || { printf 'phase-interpolator: another bounded heavy job is running\n' >&2; exit 2; }
 
-timeout 180m docker run --rm --cpus=2 --memory=4g --memory-swap=4g --pids-limit=256 \
+timeout --kill-after=30s 180m docker run --rm --cpus=2 --memory=4g --memory-swap=4g --pids-limit=256 \
   --network=none --read-only --cap-drop=ALL --security-opt=no-new-privileges \
   --user "$(id -u):$(id -g)" --env HOME=/tmp --env PDK=gf180mcuD \
   --env PDKPATH=/foss/pdks/gf180mcuD --workdir /work \

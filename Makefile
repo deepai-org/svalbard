@@ -2,7 +2,7 @@ PYTHON ?= python3
 COMPONENT ?= project.pcie_gen1_endpoint
 PROJECT ?=
 
-.PHONY: doctor check check-fast check-digital spec process-eligibility images-ready toolchain-readiness scratch-report repo-audit graph smoke toolchain-smoke serdes-tx-smoke serdes-termination-smoke serdes-rx-smoke phase-interpolator-smoke cdr-sampler-smoke cdr-phase-detector-schematic digital-image quaigh-image digital-pnr-smoke bfm-smoke bfm-history-audit verification-deps-fetch tool-artifacts-fetch pull
+.PHONY: doctor check check-fast check-digital spec process-eligibility images-ready toolchain-readiness scratch-report repo-audit graph smoke toolchain-smoke serdes-tx-smoke serdes-termination-smoke serdes-rx-smoke phase-interpolator-smoke cdr-sampler-smoke cdr-phase-detector-smoke cdr-phase-detector-schematic digital-image quaigh-image digital-pnr-smoke bfm-smoke bfm-history-audit verification-deps-fetch tool-artifacts-fetch pull
 
 doctor:
 	./bootstrap.sh doctor
@@ -63,6 +63,9 @@ cdr-sampler-smoke:
 
 cdr-phase-detector-schematic:
 	./ip/blocks/analog/wireline_serdes/cdr/phase_detector/run_schematic.sh
+
+cdr-phase-detector-smoke:
+	./ip/blocks/analog/wireline_serdes/cdr/phase_detector/run.sh
 
 digital-image:
 	./env/images/librelane-gf180-canary/build.sh

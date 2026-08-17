@@ -33,17 +33,19 @@ trap finish EXIT
 exec 9>"$scratch_root/heavy-job.lock"
 flock -n 9 || { printf 'cdr-phase-detector: another bounded heavy job is running\n' >&2; exit 2; }
 
-timeout --kill-after=30s 45m docker run --rm --cpus=4 --memory=4g --memory-swap=4g --pids-limit=256 \
+timeout --kill-after=30s 150m docker run --rm --cpus=4 --memory=6g --memory-swap=6g --pids-limit=256 \
   --network=none --read-only --cap-drop=ALL --security-opt=no-new-privileges \
-  --user "$(id -u):$(id -g)" --env PDK=gf180mcuD \
+  --user "$(id -u):$(id -g)" --env HOME=/tmp --env PDK=gf180mcuD \
   --env PDKPATH=/foss/pdks/gf180mcuD --workdir /work \
   --mount "type=bind,src=$source_dir,dst=/src,readonly" \
   --mount "type=bind,src=$run_dir,dst=/work" \
   --tmpfs /tmp:size=256m,mode=1777 \
-  --entrypoint /bin/bash "$image_ref" -lc /src/container_schematic.sh
+  --tmpfs /headless/.data-default:size=16m,mode=0700,uid="$(id -u)",gid="$(id -g)" \
+  --entrypoint /bin/bash "$image_ref" -lc /src/container_flow.sh
 
-cp "$run_dir/summary.json" "$scratch_root/cdr-phase-detector-schematic-last.json"
-chmod 600 "$scratch_root/cdr-phase-detector-schematic-last.json"
+cp "$run_dir/result.json" "$scratch_root/cdr-phase-detector-last.json"
+cp "$run_dir/cml_alexander_boundary-layout.png" "$scratch_root/cdr-phase-detector-layout-last.png"
+chmod 600 "$scratch_root/cdr-phase-detector-last.json" "$scratch_root/cdr-phase-detector-layout-last.png"
 completed=1
-printf 'cdr-phase-detector schematic: PASS\nsummary: %s\n' \
-  "$scratch_root/cdr-phase-detector-schematic-last.json"
+printf 'cdr-phase-detector: PASS\nresult: %s\nrender: %s\n' \
+  "$scratch_root/cdr-phase-detector-last.json" "$scratch_root/cdr-phase-detector-layout-last.png"

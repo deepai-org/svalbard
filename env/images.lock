@@ -12,7 +12,9 @@
       "local_image_id": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
       "unpacked_image_bytes": 11368986417,
       "status": "qualified",
-      "qualification_note": "Exact ARM64 manifest was pulled and version-probed in a bounded network-disabled read-only container. The GF180 Chain 1 inverter canary passed schematic netlisting, pre-layout simulation, Magic DRC and extraction, Netgen LVS, coupled-capacitance PEX, post-layout simulation, and deterministic golden comparison. This qualification is limited to that canary and does not qualify the embedded PDK for fabrication."
+      "qualification_evidence": "run.01M06ATQMMZ2376DCPEADH0TBD",
+      "scope": ["chain1_inverter"],
+      "excludes": ["pdk_fabrication_qualification"]
     },
     {
       "role": "digital_open_flow_base",
@@ -26,7 +28,8 @@
       "unpacked_image_bytes": 5568194487,
       "status": "version_probe_passed",
       "required_for_role_readiness": false,
-      "qualification_note": "Exact ARM64 manifest was pulled and LibreLane v3.0.5 was version-probed in a bounded network-disabled read-only container. A representative GF180 digital flow has not yet been run, so this image is not role-qualified."
+      "qualification_evidence": "run.01M069Z030H8GK3NV04B6NZFSG",
+      "scope": ["version_probe"]
     },
     {
       "role": "digital_open_flow",
@@ -41,7 +44,9 @@
       "pdk_source_image_digest": "sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
       "pdk_ciel_revision": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
       "status": "qualified",
-      "qualification_note": "Locally reproduced from digest-pinned ARM64 bases using the bounded builder in env/builders.lock. A generic four-bit GF180 core canary passed LibreLane 3.0.5 lint, synthesis and mapped-cell checks, nine-corner STA, placement, CTS, routing, antenna, OpenRCX extraction, PDNSim connectivity, Magic and KLayout DRC, layout XOR, Netgen LVS, powered zero-delay gate simulation, scan-cell replacement, single-chain stitching, and scan-shift/functional-handoff simulation. The scan-inserted netlist was not physically re-closed. This narrow pre-silicon qualification excludes project RTL, pads, ATPG/coverage, scan-inserted physical closure, SDF, package-aware IR/EM, provider precheck, and fabrication qualification."
+      "qualification_evidence": "run.01M06H68TX8YB2931SCEWXGDB3",
+      "scope": ["generic_core_rtl_to_gds", "generic_scan_rtl_to_gds"],
+      "excludes": ["project_rtl", "pads", "atpg", "sdf", "package_ir_em", "provider_precheck", "fabrication_qualification"]
     }
   ]
 }

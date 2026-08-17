@@ -24,8 +24,12 @@ iverilog -g2012 -DFUNCTIONAL -DUSE_POWER_PINS \
   "$final/pnl/counter.pnl.v" /src/counter_gate_tb.v
 vvp /work/counter_gate_sim > /work/gate-simulation.log
 
-FINAL_DIR="$final" DFT_NETLIST=/work/counter.scan-stitched.v \
+DFT_INPUT_ODB=/work/design/runs/CANARY/32-openroad-repairdesignpostgpl/counter.odb \
+  DFT_INPUT_SDC=/work/design/constraints.sdc \
+  DFT_NETLIST=/work/counter.scan-raw.v \
   openroad -no_init -no_splash /src/dft_probe.tcl > /work/dft-probe.log 2>&1
+python3 /src/normalize_scan_netlist.py \
+  /work/counter.scan-raw.v /work/counter.scan-stitched.v
 iverilog -g2012 -DFUNCTIONAL \
   -s counter_scan_tb -o /work/counter_scan_sim \
   /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/verilog/primitives.v \
@@ -33,8 +37,24 @@ iverilog -g2012 -DFUNCTIONAL \
   /work/counter.scan-stitched.v /src/counter_scan_tb.v
 vvp /work/counter_scan_sim > /work/scan-simulation.log
 
-python3 /src/check_results.py \
-  "$final/metrics.json" "$final" /work/design/runs/CANARY/warning.log \
-  /work/gate-simulation.log /work/dft-probe.log \
-  /work/counter.scan-stitched.v /work/scan-simulation.log /work/result.json
+mkdir /work/scan_design
+cp /src/scan_config.yaml /src/constraints.sdc /src/scan_pin_order.cfg /work/scan_design/
+cp /work/counter.scan-stitched.v /work/scan_design/counter.v
+mv /work/scan_design/scan_pin_order.cfg /work/scan_design/pin_order.cfg
+cd /work/scan_design
+librelane \
+  --manual-pdk --pdk-root /pdk \
+  -p gf180mcuD -s gf180mcu_fd_sc_mcu7t5v0 \
+  -j 2 --condensed --hide-progress-bar --run-tag SCAN \
+  scan_config.yaml > /work/librelane-scan.log 2>&1
+
+scan_final=/work/scan_design/runs/SCAN/final
+iverilog -g2012 -DFUNCTIONAL -DUSE_POWER_PINS \
+  -s counter_scan_tb -o /work/counter_scan_physical_sim \
+  /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/verilog/primitives.v \
+  /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/verilog/gf180mcu_fd_sc_mcu7t5v0.v \
+  "$scan_final/pnl/counter.pnl.v" /src/counter_scan_tb.v
+vvp /work/counter_scan_physical_sim > /work/scan-physical-simulation.log
+
+python3 /src/check_results.py /work/result.json
 echo 'digital-pnr-smoke: full core flow PASS'

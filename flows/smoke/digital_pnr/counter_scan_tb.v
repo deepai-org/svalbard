@@ -7,6 +7,13 @@ module counter_scan_tb;
     reg scan_in_0 = 1'b0;
     wire scan_out_0;
     wire [3:0] count;
+    reg [3:0] shifted_out;
+    reg [3:0] expected_count;
+    integer index;
+`ifdef USE_POWER_PINS
+    supply1 VDD;
+    supply0 VSS;
+`endif
 
     counter dut (
         .clk(clk),
@@ -15,6 +22,10 @@ module counter_scan_tb;
         .scan_enable_0(scan_enable_0),
         .scan_in_0(scan_in_0),
         .scan_out_0(scan_out_0)
+`ifdef USE_POWER_PINS
+        ,.VDD(VDD)
+        ,.VSS(VSS)
+`endif
     );
 
     always #5 clk = ~clk;
@@ -39,14 +50,19 @@ module counter_scan_tb;
         shift_bit(1'b0);
         shift_bit(1'b1);
         shift_bit(1'b0);
-        if (count !== 4'ha || scan_out_0 !== 1'b1) begin
-            $fatal(1, "scan chain mismatch: count=%h scan_out=%b", count, scan_out_0);
+        for (index = 3; index >= 0; index = index - 1) begin
+            shifted_out[index] = scan_out_0;
+            shift_bit(1'b0);
+        end
+        if (shifted_out !== 4'b1010) begin
+            $fatal(1, "scan chain mismatch: shifted_out=%b", shifted_out);
         end
         scan_enable_0 = 1'b0;
+        expected_count = count + 4'h1;
         @(posedge clk);
         #1;
-        if (count !== 4'hb) begin
-            $fatal(1, "scan netlist failed functional handoff: %h", count);
+        if (count !== expected_count) begin
+            $fatal(1, "scan netlist failed functional handoff: expected=%h observed=%h", expected_count, count);
         end
         $display("stitched scan simulation: PASS");
         $finish;

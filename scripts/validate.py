@@ -35,6 +35,7 @@ def structure() -> None:
         "processes/gf180/image_candidate.yaml",
         "docs/roadmap/g0_process_provider_eligibility.yaml",
         "docs/roadmap/public_source_audit.yaml",
+        "docs/verification/gf180-digital-canary.md",
         "projects/pcie_gen1_endpoint/component.yaml",
         "projects/pcie_gen1_endpoint/spec/spec.yaml",
         "projects/pcie_gen1_endpoint/interfaces.yaml",
@@ -69,10 +70,13 @@ def structure() -> None:
         "flows/smoke/digital_pnr/config.yaml",
         "flows/smoke/digital_pnr/constraints.sdc",
         "flows/smoke/digital_pnr/dft_probe.tcl",
+        "flows/smoke/digital_pnr/normalize_scan_netlist.py",
         "flows/smoke/digital_pnr/counter.v",
         "flows/smoke/digital_pnr/counter_gate_tb.v",
         "flows/smoke/digital_pnr/counter_scan_tb.v",
         "flows/smoke/digital_pnr/pin_order.cfg",
+        "flows/smoke/digital_pnr/scan_config.yaml",
+        "flows/smoke/digital_pnr/scan_pin_order.cfg",
     ]
     missing = [path for path in required if not (ROOT / path).is_file()]
     if missing:
@@ -197,6 +201,13 @@ def image_lock_ready() -> None:
         for role in unresolved:
             print(f"- {role} is not role-qualified", file=sys.stderr)
         raise SystemExit(2)
+    for item in images:
+        evidence_id = item.get("qualification_evidence", "")
+        evidence_path = ROOT / "evidence/runs" / f"{evidence_id.removeprefix('run.')}.json"
+        if not evidence_id or not evidence_path.is_file():
+            fail(f"image {item['role']} lacks qualification evidence")
+        if load(str(evidence_path.relative_to(ROOT))).get("id") != evidence_id:
+            fail(f"image {item['role']} qualification evidence ID mismatch")
     print("image locks: PASS")
 
 

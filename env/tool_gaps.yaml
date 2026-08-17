@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "observed_at_utc": "2026-08-16",
-  "status": "generic_gf180_core_flow_qualified_project_flow_pending_gates",
+  "observed_at_utc": "2026-08-17",
+  "status": "generic_gf180_scan_physical_flow_qualified_project_pending_gates",
   "required_roles": [
     {"role": "rtl_lint_verible", "status": "generic_smoke_passed", "provider": "analog_open_flow", "version": "v0.0-4084-gf3e4d98b"},
     {"role": "rtl_frontend_slang", "status": "generic_smoke_passed", "provider": "analog_open_flow", "version": "11.0.429+3c984ff9"},
@@ -24,11 +24,6 @@
     {"role": "gate_simulation_iverilog", "status": "generic_pdk_smoke_passed", "provider": "digital_open_flow", "version": "13.0-devel"},
     {"role": "dft_openroad", "status": "generic_pdk_smoke_passed", "provider": "digital_open_flow", "version": "dcf36133a369abc8f3c5e5738cd4d82e4903c0e0"}
   ],
-  "policy": "Yices, Boolector, and Z3 independently pass the same generic proof-and-cover canary. The bounded GF180 core canary qualifies only the recorded generic synthesis, nine-corner STA, physical implementation, extraction, geometry, LVS, power-grid-connectivity, powered zero-delay gate simulation, and a one-chain DFT insertion/shift canary. It does not qualify project RTL, the public PDK for fabrication, pad integration, ATPG/DFT coverage, scan-inserted physical closure, SDF, or package-aware IR/EM.",
-  "resolution": [
-    "integrate scan insertion before project placement, then physically re-close and add ATPG/coverage evidence after G1",
-    "freeze G0 and G1 before creating project PCIe RTL or using this flow on it",
-    "obtain provider-accepted GF180 PDK, pad, package, and precheck inputs before any fabrication claim",
-    "retain exact artifact and canary evidence when project RTL formal properties are introduced after G1"
-  ]
+  "qualification_evidence": "run.01M06H68TX8YB2931SCEWXGDB3",
+  "open_items": ["g0", "g1", "project_rtl", "pads", "atpg", "sdf", "package_ir_em", "provider_precheck"]
 }

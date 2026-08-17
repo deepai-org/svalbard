@@ -1,0 +1,44 @@
+{
+  "schema_version": 2,
+  "id": "run.01M06H68TX8YB2931SCEWXGDB3",
+  "component": "project.pcie_gen1_endpoint",
+  "target": "generic_gf180_scan_rtl_to_gds",
+  "start_time_utc": "2026-08-17T00:13:00Z",
+  "end_time_utc": "2026-08-17T00:15:26Z",
+  "source_commit": "cc0b34c966010c16490f20b9200af41676a606fb",
+  "source_dirty": true,
+  "source_status_sha256": "8f8f59031a98a239653deba82b7621523e2e6cc53b5c8218623d0be0fd64160c",
+  "image_id": "sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
+  "limits": {"cpus": 2, "memory_bytes": 4294967296, "pids": 512, "network": "none"},
+  "result": "pass_with_limitations",
+  "checks": {
+    "ordinary_rtl_to_gds": "pass",
+    "scan_insert": "pass",
+    "scan_shift": "pass",
+    "scan_rtl_to_gds": "pass"
+  },
+  "corners": 9,
+  "observed": {
+    "ordinary": {"instances": 79, "area_um2": 7367.41, "wire_um": 569, "setup_ns": 10.309675183150722, "hold_ns": 0.3654664452289774},
+    "scan": {"instances": 112, "area_um2": 10866.1, "wire_um": 912, "setup_ns": 8.530017822410718, "hold_ns": 0.2768417795587729}
+  },
+  "artifacts": {
+    "ordinary_gds": "5c30499a9de9b591e67f34ff3b9ab535a24c89919ef726763a7369ff5fd884b0",
+    "ordinary_powered_netlist": "d893f23d2392decae2688301809eb4330c7cc83b07c7d8a1d7409ac705675b37",
+    "ordinary_spef": "560d4dcb2f894eb698906027f5093c9bb6db55fefd274bf67493acc7bc0b94fd",
+    "ordinary_spice": "d4ca4f30bd6282c71bb39ce23e7ea7875f66a80af0a85428799df25181d9589c",
+    "scan_input_netlist": "0491fdb8e724f3b27b932eac87a217d451e1192a100003d3f78991b6a05d0709",
+    "scan_gds": "d9ab3d8ee47f662b2947334cf43b335708b3885d6ccca8fa2fe01e095edf77d3",
+    "scan_powered_netlist": "7dad70615c31beb90d729dc627017b52f7ebd8313a9f6788380f4709e37785f8",
+    "scan_spef": "efd99596b92a74aab822d95f570b1eae702a1edbd8865597e31f37ef5d2d3d86",
+    "scan_spice": "30eef16c583daaea51910d5dd3f1b63fe529e24f9dbf55f6b6e02c2ff7799680"
+  },
+  "source_artifacts": {
+    "container_smoke": "4727bf38ba617fc4361f5fc9e49b3259725e3d3c1e932ba58512e3bf153e1db7",
+    "result_check": "e70fba5d38a39e6c3ac4e946064fc955a6131041e04d3bdc32b19d4ebacb5da1",
+    "dft_probe": "60a230eced15a24f676c610602b2446d2292f4f6d23ff0e12e91e5ebcfb1cd99",
+    "normalizer": "d677abf467f89b3c56012f7308e8fbb0b703302f1c6d41be75b85abb939c8d75",
+    "result": "a15ae4929aa57e53048bc92e6bd48e445f40ec57267853737f970e0bbfdd4eff"
+  },
+  "limitations": ["generic_counter_only", "public_pdk", "no_pads", "no_atpg", "no_sdf", "no_package_ir_em", "no_project_rtl"]
+}

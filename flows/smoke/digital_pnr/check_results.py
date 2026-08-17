@@ -111,6 +111,9 @@ ordinary_metrics = load_metrics(ordinary_final / "metrics.json", "ordinary")
 scan_metrics = load_metrics(scan_final / "metrics.json", "scan")
 ordinary_warnings = warning_counts(ordinary_run / "warning.log", "ordinary")
 scan_warnings = warning_counts(scan_run / "warning.log", "scan")
+faults = json.loads((work / "stuck-at.json").read_text())
+if faults["detected"] != faults["faults"] or faults["faults"] < 16:
+    fail("stuck-at coverage")
 
 if "powered gate simulation: PASS" not in (work / "gate-simulation.log").read_text():
     fail("ordinary powered gate simulation")
@@ -141,6 +144,7 @@ artifacts = {
     "scan_powered_netlist": scan_final / "pnl/counter.pnl.v",
     "scan_spef": scan_final / "spef/nom/counter.nom.spef",
     "scan_spice": scan_final / "spice/counter.spice",
+    "stuck_at": work / "stuck-at.json",
 }
 result = {
     "schema_version": 2,
@@ -152,11 +156,15 @@ result = {
         "scan_insert": "pass",
         "scan_shift": "pass",
         "scan_rtl_to_gds": "pass",
+        "stuck_at": "pass",
     },
     "corners": list(CORNERS),
     "observed": {
         "ordinary": summary(ordinary_metrics, ordinary_warnings),
         "scan": summary(scan_metrics, scan_warnings),
+        "stuck_at_faults": faults["faults"],
+        "stuck_at_sites": len(faults["sites"]),
+        "stuck_at_patterns": faults["patterns"],
     },
     "artifacts": {key: digest(path) for key, path in artifacts.items()},
     "limitations": [
@@ -164,7 +172,7 @@ result = {
         "public_pdk_not_fabrication_qualified",
         "core_only_no_pads",
         "no_package_vsrc_model",
-        "no_atpg_or_fault_coverage",
+        "no_independent_atpg_or_transition_fault_coverage",
         "no_equivalence_or_sdf",
         "no_project_rtl",
     ],

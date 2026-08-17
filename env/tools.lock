@@ -29,14 +29,15 @@
     {"role": "gf180_magic_drc", "executable": "magic", "version": "8.3.623", "source_revision": "locked digital image build"},
     {"role": "gf180_klayout_drc_and_xor", "executable": "klayout", "version": "0.30.7", "source_revision": "locked digital image build"},
     {"role": "gf180_lvs", "executable": "netgen", "version": "1.5.316", "source_revision": "locked digital image build"},
-    {"role": "gf180_powered_gate_simulation", "executable": "iverilog", "version": "13.0-devel", "source_revision": "locked digital image build"}
+    {"role": "gf180_powered_gate_simulation", "executable": "iverilog", "version": "13.0-devel", "source_revision": "locked digital image build"},
+    {"role": "gf180_stuck_at_pattern_generation", "executable": "flows/smoke/digital_pnr/stuck_at.py", "version": "sha256:d71589527123fda6356003ce6ce9a4482507d1a3086a0a3e4d3ce5c514749b3b", "source_revision": "repository"}
   ],
   "status": "partial_role_qualification",
   "qualification_evidence": [
     "run.01M06ATQMMZ2376DCPEADH0TBD",
     "run.01M06CWM5095MSKV65V6MYN2A8",
     "run.01M06BNAV3MYQRWNRC9NE8A352",
-    "run.01M06H68TX8YB2931SCEWXGDB3"
+    "run.01M06J0MNPYRM5BG8AT4TGR0GY"
   ],
-  "open_items": ["project_rtl", "pads", "atpg", "sdf", "package_ir_em", "provider_precheck"]
+  "open_items": ["project_rtl", "pads", "independent_atpg", "transition_faults", "sdf", "package_ir_em", "provider_precheck"]
 }

@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "run.01M06J0MNPYRM5BG8AT4TGR0GY",
+  "component": "project.pcie_gen1_endpoint",
+  "target": "generic_gf180_stuck_at_physical",
+  "start_time_utc": "2026-08-17T00:31:49Z",
+  "end_time_utc": "2026-08-17T00:34:16Z",
+  "source_commit": "81e78cd1469856da1e70c6885228167f5b40ef58",
+  "source_dirty": true,
+  "source_status_sha256": "afc7703a55259b30ea717d8e2ca5e871a8ed5151ea4245194bacf5f12cda193b",
+  "image_id": "sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
+  "limits": {"cpus": 2, "memory_bytes": 4294967296, "pids": 512, "network": "none"},
+  "result": "pass_with_limitations",
+  "checks": {
+    "ordinary_rtl_to_gds": "pass",
+    "scan_insert": "pass",
+    "scan_shift": "pass",
+    "scan_rtl_to_gds": "pass",
+    "stuck_at": "pass"
+  },
+  "corners": 9,
+  "observed": {
+    "ordinary": {"instances": 79, "area_um2": 7367.41, "wire_um": 569, "setup_ns": 10.309675183150722, "hold_ns": 0.3654664452289774},
+    "scan": {"instances": 112, "area_um2": 10866.1, "wire_um": 912, "setup_ns": 8.530017822410718, "hold_ns": 0.2768417795587729},
+    "stuck_at_sites": 13,
+    "stuck_at_faults": 26,
+    "stuck_at_patterns": {
+      "_00_/sa0": 0, "_00_/sa1": 16,
+      "_01_/sa0": 1, "_01_/sa1": 16,
+      "_02_/sa0": 3, "_02_/sa1": 16,
+      "_03_/sa0": 7, "_03_/sa1": 16,
+      "_04_/sa0": 0, "_04_/sa1": 1,
+      "_05_/sa0": 0, "_05_/sa1": 3,
+      "_06_/sa0": 7, "_06_/sa1": 0,
+      "_07_/sa0": 0, "_07_/sa1": 7,
+      "net1/sa0": 16, "net1/sa1": 0,
+      "net2/sa0": 0, "net2/sa1": 16,
+      "net3/sa0": 1, "net3/sa1": 16,
+      "net4/sa0": 3, "net4/sa1": 16,
+      "net5/sa0": 7, "net5/sa1": 16
+    }
+  },
+  "artifacts": {
+    "ordinary_gds": "cdb95738ed7216e93e56408d7bceaf3bf16359333a50e3fce63b6638108f758e",
+    "ordinary_powered_netlist": "d893f23d2392decae2688301809eb4330c7cc83b07c7d8a1d7409ac705675b37",
+    "ordinary_spef": "475dcd67c54259c070b123a792963b2efd186a33b420d9b192c7dc99910abf12",
+    "ordinary_spice": "d4ca4f30bd6282c71bb39ce23e7ea7875f66a80af0a85428799df25181d9589c",
+    "scan_input_netlist": "0491fdb8e724f3b27b932eac87a217d451e1192a100003d3f78991b6a05d0709",
+    "scan_gds": "9692f02077fe8dff8b0a2d729798d64cd2a2f4703ea5bb4a0547d9f15764ba84",
+    "scan_powered_netlist": "7dad70615c31beb90d729dc627017b52f7ebd8313a9f6788380f4709e37785f8",
+    "scan_spef": "3fba6280862de9f46c8f6d5a19d844c32bc1184656c34073552a66c0020474d9",
+    "scan_spice": "30eef16c583daaea51910d5dd3f1b63fe529e24f9dbf55f6b6e02c2ff7799680",
+    "stuck_at": "a7ad75cc33349f1e36046ac27f83e7c7d3af7dccee3faa10c07e6a7e5aaf302f"
+  },
+  "source_artifacts": {
+    "container_smoke": "9e3f881e1d7d300a686e8b746c7212585db92708e45708b2a5bb75963faf2afd",
+    "result_check": "dbe536176e527f9cb9bf3e2e35d5c1daa2cd3a8e05936d0bab80df8366e72a18",
+    "stuck_at": "d71589527123fda6356003ce6ce9a4482507d1a3086a0a3e4d3ce5c514749b3b",
+    "dft_probe": "60a230eced15a24f676c610602b2446d2292f4f6d23ff0e12e91e5ebcfb1cd99",
+    "normalizer": "d677abf467f89b3c56012f7308e8fbb0b703302f1c6d41be75b85abb939c8d75",
+    "result": "ed055149374065ba3957b0c9dfe0dd0b4ffabef1b59e99e47dcac4777f51dd17"
+  },
+  "limitations": ["generic_counter_only", "public_pdk", "no_pads", "no_independent_atpg", "no_transition_faults", "no_sdf", "no_project_rtl"]
+}

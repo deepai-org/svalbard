@@ -36,6 +36,7 @@ iverilog -g2012 -DFUNCTIONAL \
   /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/verilog/gf180mcu_fd_sc_mcu7t5v0.v \
   /work/counter.scan-stitched.v /src/counter_scan_tb.v
 vvp /work/counter_scan_sim > /work/scan-simulation.log
+python3 /src/stuck_at.py /work/counter.scan-stitched.v /work/stuck-at.json
 
 mkdir /work/scan_design
 cp /src/scan_config.yaml /src/constraints.sdc /src/scan_pin_order.cfg /work/scan_design/

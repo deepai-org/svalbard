@@ -34,6 +34,21 @@ proc stack_to {x y highest} {
     }
 }
 
+proc stack_from3_to {x y highest} {
+    paint_rect metal3 [expr {$x-0.38}] [expr {$y-0.38}] \
+        [expr {$x+0.38}] [expr {$y+0.38}]
+    if {$highest >= 4} {
+        via_at via3 $x $y
+        paint_rect metal4 [expr {$x-0.38}] [expr {$y-0.38}] \
+            [expr {$x+0.38}] [expr {$y+0.38}]
+    }
+    if {$highest >= 5} {
+        via_at via4 $x $y
+        paint_rect metal5 [expr {$x-0.38}] [expr {$y-0.38}] \
+            [expr {$x+0.38}] [expr {$y+0.38}]
+    }
+}
+
 proc substrate_contact {x y} {
     paint_rect psubdiffcont [expr {$x-0.25}] [expr {$y-0.30}] \
         [expr {$x+0.25}] [expr {$y+0.30}]
@@ -129,8 +144,9 @@ foreach x {-36 -28 -20 -12 12 20 28 36} {
     mos_terminal_strap $x 4 1.75 {-0.8 0.8} 3
     mos_terminal_strap $x 4 -1.75 {0.0} 3
 }
-foreach x {-36 -12 12 36} { manual_gate_bottom $x 0.65 0.55 {-0.4 0.4} }
-foreach x {-28 -20 20 28} { manual_gate_top $x 7.10 0.55 {-0.4 0.4} }
+foreach x {-36 -28 -20 -12 12 20 28 36} {
+    manual_gate_bottom $x 0.65 0.55 {-0.4 0.4}
+}
 
 # Compact differential output nodes and local resistive loads.
 foreach {x1 x2 lx} [list -37.2 -26.8 -32 -21.2 -10.8 -16 \
@@ -147,11 +163,14 @@ foreach {cx track_l track_r hold_l hold_r track_clk hold_clk} [list \
     stack_to $track_l 2.25 5
     stack_to $track_r 2.25 5
     paint_rect metal5 [expr {$track_clk-0.45}] -5.75 [expr {$track_clk+0.45}] 2.70
+    stack_from3_to $track_clk -5.75 5
 
-    paint_rect metal4 [expr {$hold_l-0.45}] 1.80 [expr {$hold_r+0.45}] 2.70
+    paint_rect metal4 [expr {min($hold_l,$hold_r,$hold_clk)-0.45}] 1.80 \
+        [expr {max($hold_l,$hold_r,$hold_clk)+0.45}] 2.70
     stack_to $hold_l 2.25 4
     stack_to $hold_r 2.25 4
     paint_rect metal4 [expr {$hold_clk-0.45}] -5.75 [expr {$hold_clk+0.45}] 2.70
+    stack_from3_to $hold_clk -5.75 4
 }
 
 # Clock steering pairs and local tails.
@@ -169,15 +188,31 @@ foreach cx {-24 24} {
     paint_rect metal3 [expr {$cx-2.4}] -22.45 [expr {$cx+2.4}] -21.55
 }
 
-# Cross-coupled latch gates: Q_N drives XLP on M4, Q_P drives XLN on M5.
-foreach {qp qn xlp xln} [list -32 -16 -28 -20 16 32 20 28] {
-    stack_to $qn 11.0 4
-    paint_rect metal4 [expr {$xlp-0.38}] 7.48 [expr {$qn+0.38}] 11.38
-    stack_to $xlp 7.50 4
-    stack_to $qp 13.0 5
-    paint_rect metal5 [expr {$qp-0.38}] 12.62 [expr {$xln+0.38}] 13.38
-    paint_rect metal5 [expr {$xln-0.38}] 7.48 [expr {$xln+0.38}] 13.38
-    stack_to $xln 7.50 5
+# Cross-coupled latch gates enter below the source rails.  Each connection
+# changes to M3 in the open channel between devices, then rises to its own
+# output node; the two crossing gate branches stay isolated on M4 and M5.
+foreach {qp qn xlp xln qn_chan qp_chan} [list \
+        -32 -16 -28 -20 -24 -26 \
+         16  32  20  28  26  24] {
+    stack_to $xlp 0.25 4
+    paint_rect metal4 [expr {min($xlp,$qn_chan)-0.38}] -0.13 \
+        [expr {max($xlp,$qn_chan)+0.38}] 0.63
+    stack_to $qn_chan 0.25 4
+    paint_rect metal3 [expr {$qn_chan-0.38}] 0.25 \
+        [expr {$qn_chan+0.38}] 5.75
+    paint_rect metal3 [expr {min($qn_chan,$qn)-0.38}] 4.70 \
+        [expr {max($qn_chan,$qn)+0.38}] 5.58
+
+    stack_to $xln 0.25 5
+    paint_rect metal5 [expr {$xln-0.38}] -1.58 \
+        [expr {$xln+0.38}] 0.63
+    paint_rect metal5 [expr {min($xln,$qp_chan)-0.38}] -1.58 \
+        [expr {max($xln,$qp_chan)+0.38}] -0.82
+    stack_from3_to $qp_chan -1.20 5
+    paint_rect metal3 [expr {$qp_chan-0.38}] -1.20 \
+        [expr {$qp_chan+0.38}] 5.75
+    paint_rect metal3 [expr {min($qp_chan,$qp)-0.38}] 4.70 \
+        [expr {max($qp_chan,$qp)+0.38}] 5.58
 }
 
 # Load contacts and the upper VDD bus.
@@ -194,25 +229,39 @@ foreach {name number x} [list EVEN_P 8 -32 EVEN_N 9 -16 ODD_P 10 16 ODD_N 11 32]
     make_port $name $number metal3 [expr {$x-0.45}] 14.0 [expr {$x+0.45}] 16.0
 }
 
-# Matched data inputs drive the outer quartet devices on M5.
-foreach {x name number rail_x} [list -36 DATA_N 2 -43 -12 DATA_P 1 -41 \
-                                       12 DATA_N 2 -43 36 DATA_P 1 -41] {
-    stack_to $x 0.25 5
-    paint_rect metal5 [expr {$x-0.38}] -1.5 [expr {$x+0.38}] 0.63
-    paint_rect metal5 $rail_x -1.88 [expr {$x+0.38}] -1.12
+# Matched data inputs use separated M3 trunks.  DATA_P changes to M4 only for
+# its short gate drops so neither input crosses the other input's trunk.
+foreach x {-36 12} {
+    stack_to $x 0.25 3
+    paint_rect metal3 [expr {$x-0.38}] -2.50 [expr {$x+0.38}] 0.63
 }
-paint_rect metal5 -43.38 -25.0 -42.62 -1.12
-paint_rect metal5 -41.38 -25.0 -40.62 -1.12
-make_port DATA_N 2 metal5 -43.38 -25.0 -42.62 -23.5
-make_port DATA_P 1 metal5 -41.38 -25.0 -40.62 -23.5
+paint_rect metal3 -45.38 -2.88 12.38 -2.12
+foreach x {-12 36} {
+    stack_to $x 0.25 4
+    paint_rect metal4 [expr {$x-0.38}] -4.00 [expr {$x+0.38}] 0.63
+    stack_from3_to $x -4.00 4
+}
+paint_rect metal3 -43.38 -4.38 36.38 -3.62
+stack_from3_to -45 -2.50 4
+stack_from3_to -43 -4.00 5
+paint_rect metal4 -45.38 -25.0 -44.62 -2.12
+paint_rect metal5 -43.38 -25.0 -42.62 -3.62
+make_port DATA_N 2 metal4 -45.38 -25.0 -44.62 -23.5
+make_port DATA_P 1 metal5 -43.38 -25.0 -42.62 -23.5
 
 # Clock gates: even uses P/N and odd swaps N/P.
-foreach {x layer rail_x} [list -30 metal5 -39 -18 metal4 -37 18 metal4 -37 30 metal5 -39] {
-    stack_to $x -12.70 [expr {$layer eq "metal5" ? 5 : 4}]
-    paint_rect $layer $rail_x -13.08 [expr {$x+0.38}] -12.32
+foreach x {-30 30} {
+    stack_to $x -12.70 5
+    paint_rect metal5 [expr {$x-0.38}] -15.38 [expr {$x+0.38}] -12.32
 }
-paint_rect metal5 -39.38 -25.0 -38.62 -12.32
-paint_rect metal4 -37.38 -25.0 -36.62 -12.32
+paint_rect metal5 -39.38 -15.38 30.38 -14.62
+foreach x {-18 18} {
+    stack_to $x -12.70 4
+    paint_rect metal4 [expr {$x-0.38}] -16.38 [expr {$x+0.38}] -12.32
+}
+paint_rect metal4 -37.38 -16.38 18.38 -15.62
+paint_rect metal5 -39.38 -25.0 -38.62 -14.62
+paint_rect metal4 -37.38 -25.0 -36.62 -15.62
 make_port CLK_P 3 metal5 -39.38 -25.0 -38.62 -23.5
 make_port CLK_N 4 metal4 -37.38 -25.0 -36.62 -23.5
 

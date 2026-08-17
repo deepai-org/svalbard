@@ -1,0 +1,22 @@
+* SPDX-License-Identifier: Apache-2.0
+* DUT source SHA-256: @DUT_SHA256@
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+@DUT_INCLUDE@
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VIP INP 0 PWL(@INP_PWL@)
+VIN INN 0 PWL(@INN_PWL@)
+VCLK SENSE_CLK 0 PULSE(0 @VDD_V@ 50p 20p 20p @EVAL_WIDTH_S@ 800p)
+XDUT INP INN SENSE_CLK VDD 0 OUTP OUTN @DUT_SUBCKT@
+CLOADP OUTP 0 @CLOAD_F@
+CLOADN OUTN 0 @CLOAD_F@
+
+.control
+tran 2p @TSTOP_S@
+let isupply = -i(VDD)
+@MEASURES@
+meas tran supply_current avg isupply from=2.4n to=@TSTOP_S@
+.endc
+.end

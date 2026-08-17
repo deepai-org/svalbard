@@ -1,0 +1,47 @@
+* SPDX-License-Identifier: Apache-2.0
+* Clocked regenerative differential CML-to-CMOS sense amplifier.
+.subckt cml_to_cmos INP INN SENSE_CLK VDD VSS OUTP OUTN
+* Both internal nodes precharge high while SENSE_CLK is low.
+XPREP XP SENSE_CLK VDD VDD pfet_03v3 w=4u l=0.28u m=8
+XPREN XN SENSE_CLK VDD VDD pfet_03v3 w=4u l=0.28u m=8
+XEQUAL XP SENSE_CLK XN VDD pfet_03v3 w=4u l=0.28u m=8
+XLATP XP XN VDD VDD pfet_03v3 w=4u l=0.28u m=10
+XLATN XN XP VDD VDD pfet_03v3 w=4u l=0.28u m=10
+
+* The high input discharges its node first.  Cross-coupled helpers regenerate
+* the differential decision after the clocked tail enables evaluation.
+XIP XP INP NTAIL VSS nfet_03v3 w=4u l=0.28u m=6
+XIN XN INN NTAIL VSS nfet_03v3 w=4u l=0.28u m=6
+XREGENP XP XN NTAIL VSS nfet_03v3 w=3u l=0.28u m=2
+XREGENN XN XP NTAIL VSS nfet_03v3 w=3u l=0.28u m=2
+XTAIL NTAIL SENSE_CLK VSS VSS nfet_03v3 w=4u l=0.28u m=16
+
+* Small isolation inverters reduce loading on the dynamic sense nodes.  Both
+* MID nodes are low in precharge and one rises during evaluation.
+XMIPP MIDP XP VDD VDD pfet_03v3 w=4u l=0.28u m=4
+XMIPN MIDP XP VSS VSS nfet_03v3 w=2u l=0.28u m=2
+XMINP MIDN XN VDD VDD pfet_03v3 w=4u l=0.28u m=4
+XMINN MIDN XN VSS VSS nfet_03v3 w=2u l=0.28u m=2
+
+* Active-high cross-coupled NOR latch.  MIDP sets QP, MIDN resets it, and
+* both-low precharge retains the decision.
+XPRP NPQP MIDN VDD VDD pfet_03v3 w=4u l=0.28u m=8
+XPFP QP QN NPQP VDD pfet_03v3 w=4u l=0.28u m=8
+XNRP QP MIDN VSS VSS nfet_03v3 w=4u l=0.28u m=8
+XNFP QP QN VSS VSS nfet_03v3 w=4u l=0.28u m=8
+
+XPRS NPQN MIDP VDD VDD pfet_03v3 w=4u l=0.28u m=8
+XPFN QN QP NPQN VDD pfet_03v3 w=4u l=0.28u m=8
+XNRS QN MIDP VSS VSS nfet_03v3 w=4u l=0.28u m=8
+XNFN QN QP VSS VSS nfet_03v3 w=4u l=0.28u m=8
+
+* Two-stage tapered buffers isolate the held nodes from external capacitance.
+XPP_P PREP QP VDD VDD pfet_03v3 w=4u l=0.28u m=4
+XPP_N PREP QP VSS VSS nfet_03v3 w=4u l=0.28u m=4
+XPN_P PREN QN VDD VDD pfet_03v3 w=4u l=0.28u m=4
+XPN_N PREN QN VSS VSS nfet_03v3 w=4u l=0.28u m=4
+XOPP OUTP PREP VDD VDD pfet_03v3 w=4u l=0.28u m=12
+XOPN OUTP PREP VSS VSS nfet_03v3 w=4u l=0.28u m=12
+XONP OUTN PREN VDD VDD pfet_03v3 w=4u l=0.28u m=12
+XONN OUTN PREN VSS VSS nfet_03v3 w=4u l=0.28u m=12
+.ends cml_to_cmos

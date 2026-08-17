@@ -1,0 +1,23 @@
+* SPDX-License-Identifier: Apache-2.0
+* Two-input CML phase interpolator with analog tail-current weights.
+.subckt phase_interpolator A_P A_N B_P B_N CTRL_A CTRL_B VBIAS_BUF VDD VSS CLK_P CLK_N
+
+* The two matched input pairs sum current into one differential load.  A and B
+* are adjacent reference phases; CTRL_A/CTRL_B are supplied by calibrated DACs.
+XRL1P VDD N1P VSS ppolyf_u r_width=2u r_length=4.00u
+XRL1N VDD N1N VSS ppolyf_u r_width=2u r_length=4.00u
+XAP N1P A_P TA VSS nfet_03v3 w=5u l=0.28u m=2
+XAN N1N A_N TA VSS nfet_03v3 w=5u l=0.28u m=2
+XBP N1P B_P TB VSS nfet_03v3 w=5u l=0.28u m=2
+XBN N1N B_N TB VSS nfet_03v3 w=5u l=0.28u m=2
+XTAILA TA CTRL_A VSS VSS nfet_03v3 w=5u l=0.28u m=4
+XTAILB TB CTRL_B VSS VSS nfet_03v3 w=5u l=0.28u m=4
+
+* A second inversion restores positive phase polarity and isolates the
+* interpolating node from the sampler clock load.
+XRL2P VDD CLK_P VSS ppolyf_u r_width=2u r_length=4.57u
+XRL2N VDD CLK_N VSS ppolyf_u r_width=2u r_length=4.57u
+XBUFP CLK_P N1P TBUF VSS nfet_03v3 w=5u l=0.28u m=2
+XBUFN CLK_N N1N TBUF VSS nfet_03v3 w=5u l=0.28u m=2
+XTAILBUF TBUF VBIAS_BUF VSS VSS nfet_03v3 w=10u l=0.28u m=4
+.ends phase_interpolator

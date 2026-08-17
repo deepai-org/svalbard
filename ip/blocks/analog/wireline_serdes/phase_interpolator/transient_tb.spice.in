@@ -1,0 +1,36 @@
+* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+@DUT_INCLUDE@
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VAP A_P 0 SIN(@VCM_V@ @INPUT_PEAK_V@ @FREQ_HZ@ 0 0 0)
+VAN A_N 0 SIN(@VCM_V@ @INPUT_PEAK_V@ @FREQ_HZ@ 0 0 180)
+VBP B_P 0 SIN(@VCM_V@ @INPUT_PEAK_V@ @FREQ_HZ@ 0 0 270)
+VBN B_N 0 SIN(@VCM_V@ @INPUT_PEAK_V@ @FREQ_HZ@ 0 0 90)
+VCTRLA CTRL_A 0 @CTRL_A_V@
+VCTRLB CTRL_B 0 @CTRL_B_V@
+VBUF VBIAS_BUF 0 @VBIAS_BUF_V@
+XDUT A_P A_N B_P B_N CTRL_A CTRL_B VBIAS_BUF VDD 0 CLK_P CLK_N @DUT_SUBCKT@
+COUTP CLK_P 0 @CLOAD_F@
+COUTN CLK_N 0 @CLOAD_F@
+
+.control
+tran @TSTEP_S@ @TSTOP_S@
+let va_diff = v(A_P)-v(A_N)
+let vb_diff = v(B_P)-v(B_N)
+let vout = v(CLK_P)-v(CLK_N)
+let vcm = (v(CLK_P)+v(CLK_N))/2
+let isupply = -i(VDD)
+meas tran phase_delay trig va_diff val=0 rise=4 targ vout val=0 rise=5
+meas tran b_delay trig va_diff val=0 rise=4 targ vb_diff val=0 rise=5
+meas tran diff_high max vout from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran diff_low min vout from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran output_cm avg vcm from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran supply_current avg isupply from=@MEAS_START_S@ to=@TSTOP_S@
+meas tran duty_high trig vout val=0 rise=5 targ vout val=0 fall=5
+print phase_delay b_delay diff_high diff_low output_cm supply_current duty_high
+.endc
+.end

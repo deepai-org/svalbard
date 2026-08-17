@@ -18,5 +18,6 @@ tran 2p @TSTOP_S@
 let isupply = -i(VDD)
 @MEASURES@
 meas tran supply_current avg isupply from=2.4n to=@TSTOP_S@
+@WAVEFORM_COMMAND@
 .endc
 .end

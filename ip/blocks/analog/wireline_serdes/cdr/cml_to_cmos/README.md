@@ -1,10 +1,10 @@
 # Held CML-to-CMOS retimer
 
 This directory is a routed GF180MCU development checkpoint for the CDR's
-CML-to-CMOS boundary.  It is **not an analog signoff claim**.  The present
-active-high NOR-latch candidate is schematic-functional and physically clean,
-but the full-RC extracted circuit does not yet meet the 800 ps throughput
-contract.
+CML-to-CMOS boundary. It is **not an analog signoff claim**. The current held
+retimer meets its 800 ps nominal schematic and full-RC contracts, while a
+bounded extracted PVT smoke identifies slow/hot reset recovery as the next
+physical blocker.
 
 ![Current routed layout](layout.png)
 
@@ -14,29 +14,32 @@ contract.
   input and 10, 25, and 50 fF differential output loading.
 - Magic DRC: zero errors.
 - Netgen LVS: circuits match uniquely.
-- Full-RC PEX: 1,676 resistors and 1,204 capacitors.
-- Extracted nominal matrix: 0/9 pass.  The output decision is approximately
-  one 800 ps interval late on alternating data, so this is a real throughput
-  blocker rather than a waived measurement.
-- Extracted average supply current: 7.36 to 8.22 mA, below the 20 mA ceiling.
+- Full-RC PEX: 689 resistors and 434 capacitors.
+- Extracted nominal matrix: 9/9 pass. Minimum qualified logic margin is
+  310.66 mV at 100 mV differential input and 50 fF output loading.
+- Extracted average supply current: 5.09 to 5.83 mA, below the 20 mA ceiling.
+- Extracted PVT smoke: 18/18 simulations complete across nine representative
+  environments at 50 fF. Seven of nine 200 mV contract cases and five of nine
+  100 mV stress cases pass. Both contract failures are slow-slow, 2.97 V,
+  125 C reset-memory failures at the 0.60 and 0.80 VDD common-mode limits.
 
-The committed JSON files are the exact nominal results behind this status.
-`schematic_nominal_result.json` is passing;
-`extracted_nominal_result.json` is intentionally failing and prevents this
-cell from being promoted as complete.
+The committed JSON files are the exact results behind this status. Both
+nominal summaries pass. `extracted_pvt_smoke_result.json` intentionally fails
+and prevents this cell from being promoted as PVT-complete.
 
 ## Architecture
 
-The clocked differential pair precharges `XP`/`XN` high, regenerates the CML
-decision during evaluation, and drives small isolation inverters.  Their
-active-high outputs update a cross-coupled NOR latch; both return low during
-precharge, so the latch holds.  Tapered CMOS buffers drive `OUTP`/`OUTN`.
+The clocked differential pair precharges `XP`/`XN` high and regenerates the CML
+decision during evaluation. A falling sense node enables a PMOS set device on
+a compact cross-coupled inverter latch. Both set devices turn off when the
+sense nodes precharge, so the latch holds. Cross-connected, single-stage CMOS
+inverters drive `OUTP`/`OUTN` with the required polarity.
 
-The layout generator uses symmetric unit fingers, explicit body ties, a
-contacted substrate guard ring, matched high-metal buses, and staggered latch
-rows to prevent same-row local-route shorts.  The tail is directly adjacent to
-the input pair and the sense-to-latch routes have been compacted relative to
-the first routed candidate.
+The layout generator uses legal 0.8 um-pitch shared-diffusion fingers, explicit
+body ties, a contacted substrate guard ring, matched high-metal buses, and a
+compacted latch/output slice adjacent to the n-well boundary. The tail is
+directly adjacent to the input pair. Moving the output devices and buses next
+to the held latch was necessary to close nominal extraction.
 
 ## Reproducing the checks
 
@@ -55,7 +58,8 @@ python3 run_nominal.py --source /src \
   --output /work/extracted.json --eval-width-ps 500 --timeout-s 300
 ```
 
-Next work is to reduce the extracted sensor-to-held-output delay, then rerun
-the full normalized PVT matrix.  No PVT or Monte Carlo result should be read
-into the current checkpoint until nominal full-RC throughput passes.
-
+Next work is a reset-isolated regeneration topology that erases the previous
+decision at slow/hot corners without adding enough XP/XN capacitance to lose
+nominal closure. After that change, rerun the full 729-case extracted PVT
+matrix, bounded stress, and only then statistical and top-level integration
+work. The present smoke failure is not waived.

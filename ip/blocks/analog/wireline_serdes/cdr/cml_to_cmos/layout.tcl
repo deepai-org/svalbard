@@ -134,10 +134,9 @@ proc manual_gate {cx cy width nf} {
 }
 
 array set tracks {
-    VSS -5.0 INP -3.6 INN -2.2 SENSE_CLK -0.8 NTAIL 0.6
-    XP 2.0 XN 3.4 MIDP 4.8 MIDN 6.2 SETBP 7.6 SETBN 9.0
-    NPQP 10.4 NPQN 11.8 RISEBP 13.2 RISEBN 14.6 QP 16.0 QN 17.4
-    PREP 18.8 PREN 20.2 OUTP 21.6 OUTN 23.0 VDD 24.4
+    VSS -20.0 INP -3.6 INN -2.2 SENSE_CLK -0.8 NTAIL 0.6
+    XP 2.0 XN 3.4 QP 7.6 QN 9.0
+    OUTP 27.0 OUTN 28.4 VDD 67.0
 }
 array set net_min {}
 array set net_max {}
@@ -145,8 +144,9 @@ array set net_max {}
 proc connect_net {net x y} {
     global tracks net_min net_max
     set ty $tracks($net)
-    paint_rect metal3 [expr {$x-0.14}] [expr {min($y,$ty)-0.38}] \
-        [expr {$x+0.14}] [expr {max($y,$ty)+0.38}]
+    set half_width [expr {$net eq "VDD" || $net eq "VSS" ? 0.23 : 0.14}]
+    paint_rect metal3 [expr {$x-$half_width}] [expr {min($y,$ty)-0.38}] \
+        [expr {$x+$half_width}] [expr {max($y,$ty)+0.38}]
     # Via3 needs a legal Metal3 landing.  Keep the long access wire narrow,
     # but widen only at the M3/M4 transition instead of widening the full run.
     paint_rect metal3 [expr {$x-0.23}] [expr {$ty-0.23}] \
@@ -169,71 +169,71 @@ proc device_cell {kind width nf} {
 }
 
 proc finger_groups {nf cx} {
-    set result {}
-    for {set index 0} {$index < $nf} {incr index} {
-        set gx [expr {$cx+($index-($nf-1)/2.0)*1.6}]
-        lappend result [list $index $gx 1]
+    return [list [list 0 $cx $nf]]
+}
+
+proc draw_shared_mos {kind width nf cx cy} {
+    set diff_layer [expr {[string match "pfet*" $kind] ? "pdiff" : "ndiff"}]
+    set contact_layer [expr {[string match "pfet*" $kind] ? "pdc" : "ndc"}]
+    set diffusion_xs [diffusion_offsets $nf 0]
+    set diffusion_xs [concat $diffusion_xs [diffusion_offsets $nf 1]]
+    set diffusion_xs [lsort -real $diffusion_xs]
+    set left [expr {$cx+[lindex $diffusion_xs 0]}]
+    set right [expr {$cx+[lindex $diffusion_xs end]}]
+    paint_rect $diff_layer [expr {$left-0.18}] [expr {$cy-$width/2.0}] \
+        [expr {$right+0.18}] [expr {$cy+$width/2.0}]
+    foreach xoff [gate_offsets $nf] {
+        set x [expr {$cx+$xoff}]
+        paint_rect polysilicon [expr {$x-0.14}] [expr {$cy-$width/2.0-0.22}] \
+            [expr {$x+0.14}] [expr {$cy+$width/2.0+0.22}]
     }
-    return $result
+    foreach xoff $diffusion_xs {
+        set x [expr {$cx+$xoff}]
+        paint_rect $contact_layer [expr {$x-0.115}] \
+            [expr {$cy-$width/2.0+0.065}] [expr {$x+0.115}] \
+            [expr {$cy+$width/2.0-0.065}]
+        paint_rect metal1 [expr {$x-0.18}] [expr {$cy-$width/2.0}] \
+            [expr {$x+0.18}] [expr {$cy+$width/2.0}]
+    }
 }
 
 # instance kind width fingers x y drain gate source
 set devices {
-    {XOPP pfet_03v3 4 12 -50 72 OUTP PREP VDD}
-    {XONP pfet_03v3 4 12  50 72 OUTN PREN VDD}
-    {XPREP  pfet_03v3 4 8  -12 72 XP SENSE_CLK VDD}
-    {XPREN  pfet_03v3 4 8   12 72 XN SENSE_CLK VDD}
-    {XEQUAL pfet_03v3 4 8    0 82 XP SENSE_CLK XN}
+    {XOPP pfet_03v3 8 3 -50 35 OUTP QN VDD}
+    {XONP pfet_03v3 8 3  50 35 OUTN QP VDD}
+    {XPREP  pfet_03v3 8 4  -12 55 XP SENSE_CLK VDD}
+    {XPREN  pfet_03v3 8 4   12 55 XN SENSE_CLK VDD}
+    {XEQUAL pfet_03v3 8 4    0 55 XP SENSE_CLK XN}
+    {XLATP pfet_03v3 8 5 -12 45 XP XN VDD}
+    {XLATN pfet_03v3 8 5  12 45 XN XP VDD}
 
-    {XLATP pfet_03v3 4 10 -12 60 XP XN VDD}
-    {XLATN pfet_03v3 4 10  12 60 XN XP VDD}
-    {XMIPP pfet_03v3 4 4   -6 35 MIDP XP VDD}
-    {XMINP pfet_03v3 4 4    6 35 MIDN XN VDD}
-    {XPFP  pfet_03v3 4 8  -20 45 QP QN NPQP}
-    {XPFN  pfet_03v3 4 8   20 45 QN QP NPQN}
-    {XPRP  pfet_03v3 4 8  -34 55 NPQP MIDN VDD}
-    {XPRS  pfet_03v3 4 8   34 55 NPQN MIDP VDD}
-    {XPP_P pfet_03v3 4 4 -45 45 PREP QP VDD}
-    {XPN_P pfet_03v3 4 4  45 45 PREN QN VDD}
+    {XLP pfet_03v3 4 1 -18 35 QP QN VDD}
+    {XRP pfet_03v3 4 1  18 35 QN QP VDD}
+    {XSP pfet_03v3 8 4 -28 35 QP XP VDD}
+    {XSN pfet_03v3 8 4  28 35 QN XN VDD}
 
-    {XIP nfet_03v3 4 6 -14 3 XP INP NTAIL}
-    {XIN nfet_03v3 4 6  14 3 XN INN NTAIL}
-    {XREGENP nfet_03v3 3 2 -24 3 XP XN NTAIL}
-    {XREGENN nfet_03v3 3 2  24 3 XN XP NTAIL}
-    {XTAIL nfet_03v3 4 16 0 13 NTAIL SENSE_CLK VSS}
+    {XIP nfet_03v3 8 2 -14 10 XP INP NTAIL}
+    {XIN nfet_03v3 8 2  14 10 XN INN NTAIL}
+    {XREGENP nfet_03v3 8 3 -24 10 XP XN NTAIL}
+    {XREGENN nfet_03v3 8 3  24 10 XN XP NTAIL}
+    {XTAIL nfet_03v3 8 8 0 10 NTAIL SENSE_CLK VSS}
 
-    {XMIPN nfet_03v3 2 2  -6 -8 MIDP XP VSS}
-    {XMINN nfet_03v3 2 2   6 -8 MIDN XN VSS}
-    {XNFP nfet_03v3 4 8 -14 -18 QP QN VSS}
-    {XNFN nfet_03v3 4 8  14 -18 QN QP VSS}
-    {XNRP nfet_03v3 4 8 -28 -29 QP MIDN VSS}
-    {XNRS nfet_03v3 4 8  28 -29 QN MIDP VSS}
-    {XPP_N nfet_03v3 4 4 -45 -40 PREP QP VSS}
-    {XPN_N nfet_03v3 4 4  45 -40 PREN QN VSS}
-    {XOPN nfet_03v3 4 12 -50 -52 OUTP PREP VSS}
-    {XONN nfet_03v3 4 12  50 -52 OUTN PREN VSS}
+    {XLN nfet_03v3 4 1 -18 22 QP QN VSS}
+    {XRN nfet_03v3 4 1  18 22 QN QP VSS}
+    {XOPN nfet_03v3 8 1 -50 22 OUTP QN VSS}
+    {XONN nfet_03v3 8 1  50 22 OUTN QP VSS}
 }
 
 crashbackups stop
-load cml_to_cmos_hier
-array set device_cells {}
-units microns
-foreach spec $devices {
-    lassign $spec instance kind width nf cx cy drain gate source
-    foreach group [finger_groups $nf $cx] {
-        lassign $group index gx group_nf
-        set cell [device_cell $kind $width $group_nf]
-        getcell $cell child 0 0 parent $gx $cy
-        identify ${instance}_${index}
-    }
-}
-
-select top cell
-flatten cml_to_cmos
 load cml_to_cmos
 units microns
 paint_rect pwell -75 -70 75 29
 paint_rect nwell -75 30 75 90
+
+foreach spec $devices {
+    lassign $spec instance kind width nf cx cy drain gate source
+    draw_shared_mos $kind $width $nf $cx $cy
+}
 
 foreach spec $devices {
     lassign $spec instance kind width nf cx cy drain gate source
@@ -243,17 +243,33 @@ foreach spec $devices {
     foreach group [finger_groups $nf $cx] {
         lassign $group index gx group_nf
         set yoff [expr {max(0.70,$width/2.0-0.8)}]
-        set top_xs [diffusion_offsets $group_nf 0]
-        set bottom_xs [diffusion_offsets $group_nf 1]
-        terminal_strap $gx $cy $yoff $top_xs
-        terminal_strap $gx $cy [expr {-$yoff}] $bottom_xs
+        # The GF180 MOS PCell places drain and source diffusion contacts on
+        # the west/east sides of an nf=1 device.  Escape them vertically on
+        # M1 before forming the separate drain/source M2 straps.
+        set drain_y [expr {$cy+$yoff}]
+        set source_y [expr {$cy-$yoff}]
+        foreach xoff [diffusion_offsets $group_nf 0] {
+            set drain_x [expr {$gx+$xoff}]
+            paint_rect metal1 [expr {$drain_x-0.28}] [expr {$cy-0.28}] \
+                [expr {$drain_x+0.28}] [expr {$drain_y+0.28}]
+            via_at via1 $drain_x $drain_y
+            paint_rect metal2 [expr {$drain_x-0.28}] [expr {$drain_y-0.28}] \
+                [expr {$drain_x+0.28}] [expr {$drain_y+0.28}]
+            lappend drain_points $drain_x
+        }
+        foreach xoff [diffusion_offsets $group_nf 1] {
+            set source_x [expr {$gx+$xoff}]
+            paint_rect metal1 [expr {$source_x-0.28}] [expr {$source_y-0.28}] \
+                [expr {$source_x+0.28}] [expr {$cy+0.28}]
+            via_at via1 $source_x $source_y
+            paint_rect metal2 [expr {$source_x-0.28}] [expr {$source_y-0.28}] \
+                [expr {$source_x+0.28}] [expr {$source_y+0.28}]
+            lappend source_points $source_x
+        }
         set gate_y [manual_gate $gx $cy $width $group_nf]
-
-        set drain_x [expr {$gx+[lindex $top_xs 0]}]
-        set source_x [expr {$gx+[lindex $bottom_xs end]}]
-        lappend drain_points $drain_x
-        lappend source_points $source_x
-        lappend gate_points $gx
+        foreach xoff [gate_offsets $group_nf] {
+            lappend gate_points [expr {$gx+$xoff}]
+        }
     }
 
     set drain_y [expr {$cy+$yoff}]
@@ -262,19 +278,31 @@ foreach spec $devices {
     set drain_route [route_column [expr {$cx-0.8}]]
     set source_route [route_column [expr {$cx+0.8}]]
     set gate_route [route_column $cx]
+    set source_routes [list $source_route]
+    if {($source eq "VDD" || $source eq "VSS") && $nf >= 8} {
+        lappend source_routes [route_column [expr {$cx+2.4}]]
+    }
 
     paint_rect metal2 [expr {min($drain_route,[lindex $drain_points 0])-0.38}] \
         [expr {$drain_y-0.38}] \
         [expr {max($drain_route,[lindex $drain_points end])+0.38}] \
         [expr {$drain_y+0.38}]
-    paint_rect metal2 [expr {min($source_route,[lindex $source_points 0])-0.38}] \
+    set source_route_min $source_route
+    set source_route_max $source_route
+    foreach tap $source_routes {
+        if {$tap < $source_route_min} { set source_route_min $tap }
+        if {$tap > $source_route_max} { set source_route_max $tap }
+    }
+    paint_rect metal2 [expr {min($source_route_min,[lindex $source_points 0])-0.38}] \
         [expr {$source_y-0.38}] \
-        [expr {max($source_route,[lindex $source_points end])+0.38}] \
+        [expr {max($source_route_max,[lindex $source_points end])+0.38}] \
         [expr {$source_y+0.38}]
     m2_to_m3 $drain_route $drain_y
-    m2_to_m3 $source_route $source_y
     connect_net $drain $drain_route $drain_y
-    connect_net $source $source_route $source_y
+    foreach tap $source_routes {
+        m2_to_m3 $tap $source_y
+        connect_net $source $tap $source_y
+    }
 
     paint_rect metal1 [expr {min($gate_route,[lindex $gate_points 0])-0.35}] \
         [expr {$gate_y-0.30}] \
@@ -315,7 +343,7 @@ foreach x {-70 -54 -38 -22 -6 10 26 42 58 70} {
     stack_to $x 88.4 5
 }
 paint_rect metal5 -73 87.95 73 88.85
-paint_rect metal5 -67.38 24.4 -66.62 88.85
+paint_rect metal5 -67.38 67.0 -66.62 88.85
 
 # A contacted substrate guard ring provides explicit body and VSS return.
 paint_rect psubdiff -75 -70 -74.2 29
@@ -336,7 +364,7 @@ foreach y {-66 -54 -42 -30 -18 -6 6 18 27} {
 }
 stack_to 74.6 -69.6 5
 paint_rect metal5 67.0 -69.98 74.98 -69.22
-paint_rect metal5 66.62 -69.6 67.38 -5.0
+paint_rect metal5 66.62 -69.6 67.38 -20.0
 
 save /work/cml_to_cmos
 gds write /work/cml_to_cmos.gds

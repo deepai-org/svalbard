@@ -53,7 +53,19 @@ def main() -> None:
     parser.add_argument("--eval-width-ps", type=int, default=500)
     parser.add_argument("--timeout-s", type=int, default=90,
                         help="per-case ngspice timeout (increase for full-RC PEX)")
+    parser.add_argument("--input-v", type=float, choices=(0.10, 0.20, 0.40))
+    parser.add_argument("--load-ff", type=int, choices=(10, 25, 50))
+    parser.add_argument("--mos-corner", choices=("typical", "ff", "ss"),
+                        default="typical")
+    parser.add_argument("--temp-c", type=int, default=27)
+    parser.add_argument("--vdd-v", type=float, default=3.30)
+    parser.add_argument("--common-mode-fraction", type=float,
+                        default=2.30 / 3.30)
+    parser.add_argument("--waveform", type=Path,
+                        help="write internal-node transient data for one selected case")
     args = parser.parse_args()
+    if args.waveform and (args.input_v is None or args.load_ff is None):
+        parser.error("--waveform requires --input-v and --load-ff")
     if not 450 <= args.eval_width_ps <= 650:
         parser.error("--eval-width-ps must be between 450 and 650")
     args.work.mkdir(parents=True, exist_ok=True)
@@ -62,7 +74,10 @@ def main() -> None:
     template = (source_dir / "transient_tb.spice.in").read_text()
     dut_path = args.pex if args.pex else source_dir / "cml_to_cmos.spice"
     dut_sha256 = hashlib.sha256(dut_path.read_bytes()).hexdigest()
+    if not 0.55 <= args.common_mode_fraction <= 0.85:
+        parser.error("--common-mode-fraction must be between 0.55 and 0.85")
     interval, edge = 800e-12, 20e-12
+    common_mode = args.vdd_v * args.common_mode_fraction
     measures = []
     for index in SAMPLE_INDICES:
         for delay in SAMPLE_DELAYS_S:
@@ -71,19 +86,28 @@ def main() -> None:
             measures.append(f"meas tran outP_{index}_{delay_ps} find v(OUTP) at={sample_time:.12g}")
             measures.append(f"meas tran outN_{index}_{delay_ps} find v(OUTN) at={sample_time:.12g}")
     cases = []
-    for differential_input in (0.10, 0.20, 0.40):
-        for load_ff in (10, 25, 50):
+    input_values = (args.input_v,) if args.input_v is not None else (0.10, 0.20, 0.40)
+    load_values = (args.load_ff,) if args.load_ff is not None else (10, 25, 50)
+    for differential_input in input_values:
+        for load_ff in load_values:
             peak = differential_input / 2
             values = {
-                "MOS_CORNER": "typical", "TEMP_C": "27", "VDD_V": "3.30",
+                "MOS_CORNER": args.mos_corner, "TEMP_C": str(args.temp_c),
+                "VDD_V": f"{args.vdd_v:.6g}",
                 "DUT_SHA256": dut_sha256,
                 "DUT_INCLUDE": f".include {dut_path}",
                 "DUT_SUBCKT": "cml_to_cmos_pex" if args.pex else "cml_to_cmos",
                 "EVAL_WIDTH_S": f"{args.eval_width_ps}p",
-                "INP_PWL": pwl(True, 2.30, peak, interval, edge),
-                "INN_PWL": pwl(False, 2.30, peak, interval, edge),
+                "INP_PWL": pwl(True, common_mode, peak, interval, edge),
+                "INN_PWL": pwl(False, common_mode, peak, interval, edge),
                 "CLOAD_F": f"{load_ff}f", "TSTOP_S": f"{len(BITS) * interval:.12g}",
                 "MEASURES": "\n".join(measures),
+                "WAVEFORM_COMMAND": (
+                    "wrdata " + str(args.waveform) +
+                    " time v(xdut.xp) v(xdut.xn) v(xdut.ntail)"
+                    " v(xdut.qp) v(xdut.qn)"
+                    " v(outp) v(outn)"
+                    if args.waveform else "* waveform capture disabled"),
             }
             case_id = f"input{differential_input:.2f}_load{load_ff}".replace(".", "p")
             deck, log = args.work / f"{case_id}.spice", args.work / f"{case_id}.log"
@@ -115,7 +139,8 @@ def main() -> None:
                     low = observed.get(
                         f"outn_{index}_{delay_ps}" if BITS[index]
                         else f"outp_{index}_{delay_ps}", 3.30)
-                    margins_by_delay[delay_ps].extend((high - 2.64, 0.66 - low))
+                    margins_by_delay[delay_ps].extend(
+                        (high - 0.8 * args.vdd_v, 0.2 * args.vdd_v - low))
             complete = (return_code == 0 and len(observed)
                         == 2 * len(SAMPLE_INDICES) * len(SAMPLE_DELAYS_S) + 1)
             early_margin = min(margins_by_delay[min(margins_by_delay)])

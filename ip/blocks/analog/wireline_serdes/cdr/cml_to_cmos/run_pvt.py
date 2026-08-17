@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the clocked CML-to-CMOS sense amplifier across schematic PVT."""
+"""Verify the clocked CML-to-CMOS sense amplifier across PVT."""
 
 from __future__ import annotations
 
@@ -29,6 +29,8 @@ def main() -> None:
     parser.add_argument("--pex", type=Path)
     parser.add_argument("--eval-width-ps", type=int, default=500)
     parser.add_argument("--jobs", type=int, default=2)
+    parser.add_argument("--timeout-s", type=int, default=90,
+                        help="per-case ngspice timeout")
     parser.add_argument("--case", action="append", default=[],
                         help="run only an exact case ID (repeatable)")
     args = parser.parse_args()
@@ -79,6 +81,7 @@ def main() -> None:
                                 "CLOAD_F": f"{load_ff}f",
                                 "TSTOP_S": f"{len(BITS) * interval:.12g}",
                                 "MEASURES": "\n".join(measures),
+                                "WAVEFORM_COMMAND": "* waveform capture disabled",
                             }
                             environment = (mos, vdd, temperature, common_mode_fraction)
                             specifications.append((case_id, environment,
@@ -103,7 +106,8 @@ def main() -> None:
             deck.write_text(deck_text)
             with log.open("w") as output:
                 run = subprocess.run(["ngspice", "-b", str(deck)], stdout=output,
-                                     stderr=subprocess.STDOUT, timeout=90, check=False)
+                                     stderr=subprocess.STDOUT,
+                                     timeout=args.timeout_s, check=False)
             return_code = run.returncode
         observed = {name: float(value) for name, value in SCALAR.findall(log.read_text())}
         vdd = float(environment[1])
@@ -171,7 +175,7 @@ def main() -> None:
               "group_count": len(groups), "passing_group_count": passing_groups,
               "groups": groups, "cases": cases}
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
-    print(f"cml_to_cmos schematic PVT: {complete_count}/{len(cases)} complete; "
+    print(f"cml_to_cmos PVT: {complete_count}/{len(cases)} complete; "
           f"{passing_groups}/{len(groups)} environments pass")
     if not passed:
         raise SystemExit(1)

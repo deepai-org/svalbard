@@ -66,3 +66,9 @@ two detector boundaries in the
 sampler-bias and edge-phase calibration closes across representative schematic
 PVT; valid-window retiming, loop filtering, and autonomous closed-loop recovery
 remain in progress.
+
+The [held CML-to-CMOS retimer](cml_to_cmos/README.md) now has a zero-DRC,
+uniquely LVS-matched layout and passes all nine nominal full-RC input/load
+cases at 800 ps throughput. Its bounded extracted PVT smoke exposes reset
+memory at slow-slow, 2.97 V, 125 C, so it remains a development checkpoint
+rather than a PVT-closed integration boundary.

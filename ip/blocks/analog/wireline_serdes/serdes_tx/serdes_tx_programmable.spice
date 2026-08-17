@@ -1,0 +1,10 @@
+* SPDX-License-Identifier: Apache-2.0
+* Experimental GF180 CML transmitter with a symmetric four-bit load trim.
+.include /src/programmable_load.spice
+.subckt serdes_tx_programmable INP INN OUTP OUTN VBIAS LOAD_EN0_N LOAD_EN1_N LOAD_EN2_N LOAD_EN3_N VDD VSS
+XLOAD_P OUTP LOAD_EN0_N LOAD_EN1_N LOAD_EN2_N LOAD_EN3_N VDD VSS serdes_tx_load
+XLOAD_N OUTN LOAD_EN0_N LOAD_EN1_N LOAD_EN2_N LOAD_EN3_N VDD VSS serdes_tx_load
+XDIFF_P OUTP INP TAIL VSS nfet_03v3 w=20u l=0.28u m=10
+XDIFF_N OUTN INN TAIL VSS nfet_03v3 w=20u l=0.28u m=10
+XTAIL TAIL VBIAS VSS VSS nfet_03v3 w=20u l=0.5u m=10
+.ends serdes_tx_programmable

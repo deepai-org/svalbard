@@ -13,7 +13,9 @@ sak-lvs.sh -m -w /work/lvs \
   -s /src/serdes_tx.spice \
   -l /work/serdes_tx.mag \
   -c serdes_tx > /work/lvs-stage.log 2>&1
-sak-pex.sh -m 2 -n serdes_tx_pex -w /work/pex \
+# Preserve distributed conductor resistance down to 1 mOhm as well as coupled
+# capacitance.  Zero gating thresholds force full-RC output for this small cell.
+sak-pex.sh -m 3 -t 0 -r 1 -y 0 -n serdes_tx_pex -w /work/pex \
   /work/serdes_tx.mag > /work/pex-stage.log 2>&1
 
 ngspice -b -o /work/postlayout.log /src/postlayout_tb.spice

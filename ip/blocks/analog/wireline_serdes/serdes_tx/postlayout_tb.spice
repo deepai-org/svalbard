@@ -1,17 +1,21 @@
 * SPDX-License-Identifier: Apache-2.0
-* Coupling-capacitance extracted transient verification at 2.5 GT/s.
+* Full coupled-RC extracted transient verification at 2.5 GT/s.
 .include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
 .lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
 .lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
 .include /work/pex/serdes_tx.pex.spice
 
 VVDD VDD 0 3.3
-VBIAS VBIAS 0 1.07
+VBIAS VBIAS 0 1.25
+VLOAD0 LOAD_EN0_N 0 0
+VLOAD1 LOAD_EN1_N 0 0
+VLOAD2 LOAD_EN2_N 0 0
+VLOAD3 LOAD_EN3_N 0 3.3
 VINP INP 0 PULSE(0 3.3 100p 20p 20p 180p 400p)
 VINN INN 0 PULSE(3.3 0 100p 20p 20p 180p 400p)
 CLOAD_P OUTP 0 50f
 CLOAD_N OUTN 0 50f
-XDUT INP INN OUTP OUTN VBIAS VDD 0 serdes_tx_pex
+XDUT INP INN OUTP OUTN VBIAS LOAD_EN0_N LOAD_EN1_N LOAD_EN2_N LOAD_EN3_N VDD 0 serdes_tx_pex
 
 .control
 set wr_singlescale

@@ -56,12 +56,12 @@ def main() -> None:
     checks: dict[str, bool] = {}
     for stage, values in stages.items():
         checks[f"{stage}.finite"] = all(math.isfinite(value) for value in values.values())
-        checks[f"{stage}.diff_high"] = values["diff_high"] <= -0.38
-        checks[f"{stage}.diff_low"] = values["diff_low"] >= 0.38
+        checks[f"{stage}.diff_high"] = values["diff_high"] <= -0.40
+        checks[f"{stage}.diff_low"] = values["diff_low"] >= 0.40
         checks[f"{stage}.symmetry"] = (
             abs(abs(values["diff_high"]) - abs(values["diff_low"])) <= 0.005
         )
-        checks[f"{stage}.supply_current"] = 0.0035 <= values["supply_current_avg"] <= 0.0048
+        checks[f"{stage}.supply_current"] = 0.0035 <= values["supply_current_avg"] <= 0.008
         checks[f"{stage}.output_floor"] = min(
             values["output_floor"], values["output_floor_n"]
         ) >= 2.30
@@ -82,10 +82,15 @@ def main() -> None:
         and "Property errors were found" not in lvs_text
     )
     pex_text = args.pex.read_text()
-    checks["pex.coupling_capacitance"] = (
+    resistor_count = len(re.findall(r"^R\d+\s", pex_text, re.MULTILINE))
+    capacitor_count = len(re.findall(r"^C\d+\s", pex_text, re.MULTILINE))
+    checks["pex.full_rc"] = (
         ".subckt serdes_tx_pex" in pex_text
-        and len(re.findall(r"^C\d+\s", pex_text, re.MULTILINE)) >= 1
+        and "m=3" in pex_text
+        and "extresist threshold=0 mOhm" in pex_text
+        and resistor_count >= 100
     )
+    checks["pex.coupling_capacitance"] = capacitor_count >= 1
     checks["layout.rendered"] = args.render.stat().st_size >= 10_000
 
     passed = all(checks.values())
@@ -94,6 +99,11 @@ def main() -> None:
         "result": "pass" if passed else "fail",
         "qualification": "experimental pre-silicon GF180 public-model evidence only",
         "rates_gt_s": [1.25, 2.5],
+        "pex": {
+            "mode": "full_rc_coupled",
+            "resistor_count": resistor_count,
+            "capacitor_count": capacitor_count,
+        },
         "observed": stages,
         "checks": checks,
     }

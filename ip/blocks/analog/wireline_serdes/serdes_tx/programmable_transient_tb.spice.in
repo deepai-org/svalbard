@@ -1,0 +1,37 @@
+* SPDX-License-Identifier: Apache-2.0
+* Calibrated 2.5 GT/s PVT template for the programmable CML topology.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include /src/serdes_tx_programmable.spice
+.temp @TEMP_C@
+
+VVDD VDD 0 @VDD_V@
+VBIAS VBIAS 0 @VBIAS_V@
+VB0 LOAD_EN0_N 0 @B0_V@
+VB1 LOAD_EN1_N 0 @B1_V@
+VB2 LOAD_EN2_N 0 @B2_V@
+VB3 LOAD_EN3_N 0 @B3_V@
+VINP INP 0 PULSE(0 @VDD_V@ 100p 20p 20p 180p 400p)
+VINN INN 0 PULSE(@VDD_V@ 0 100p 20p 20p 180p 400p)
+CLOAD_P OUTP 0 50f
+CLOAD_N OUTN 0 50f
+XDUT INP INN OUTP OUTN VBIAS LOAD_EN0_N LOAD_EN1_N LOAD_EN2_N LOAD_EN3_N VDD 0 serdes_tx_programmable
+
+.control
+tran 2p 4n
+let vdiff = v(OUTN)-v(OUTP)
+let vcm = (v(OUTN)+v(OUTP))/2
+let isupply = -i(VVDD)
+meas tran diff_high find vdiff at=3.2n
+meas tran diff_low find vdiff at=3.4n
+meas tran supply_current_avg avg isupply from=2n to=4n
+meas tran output_floor min v(OUTP) from=2n to=4n
+meas tran output_floor_n min v(OUTN) from=2n to=4n
+meas tran output_ceiling max v(OUTP) from=2n to=4n
+meas tran output_ceiling_n max v(OUTN) from=2n to=4n
+meas tran common_mode_avg avg vcm from=2n to=4n
+meas tran diff_rise trig vdiff val=-0.3 rise=6 targ vdiff val=0.3 rise=6
+meas tran diff_fall trig vdiff val=0.3 fall=6 targ vdiff val=-0.3 fall=6
+.endc
+.end

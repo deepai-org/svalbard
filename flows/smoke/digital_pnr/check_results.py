@@ -114,6 +114,16 @@ scan_warnings = warning_counts(scan_run / "warning.log", "scan")
 faults = json.loads((work / "stuck-at.json").read_text())
 if faults["detected"] != faults["faults"] or faults["faults"] < 16:
     fail("stuck-at coverage")
+transitions = json.loads((work / "transition-fault.json").read_text())
+if (
+    transitions["detected"] != transitions["faults"]
+    or transitions["faults"] != 2 * len(transitions["sites"])
+    or transitions["sites"] != faults["sites"]
+    or transitions["netlist_sha256"] != faults["netlist_sha256"]
+    or transitions["pattern_ids"] != {"reset_assert": 16, "reset_deassert": 17}
+    or any(not 0 <= pattern <= 17 for pattern in transitions["patterns"].values())
+):
+    fail("transition-fault coverage")
 equivalence_log = (work / "scan-equivalence.log").read_text()
 if "Equivalence successfully proven!" not in equivalence_log:
     fail("scan functional equivalence")
@@ -149,6 +159,7 @@ artifacts = {
     "scan_spice": scan_final / "spice/counter.spice",
     "scan_equivalence": work / "scan-equivalence.log",
     "stuck_at": work / "stuck-at.json",
+    "transition_fault": work / "transition-fault.json",
 }
 result = {
     "schema_version": 2,
@@ -162,6 +173,7 @@ result = {
         "scan_shift": "pass",
         "scan_rtl_to_gds": "pass",
         "stuck_at": "pass",
+        "transition_fault": "pass",
     },
     "corners": list(CORNERS),
     "observed": {
@@ -171,6 +183,8 @@ result = {
         "stuck_at_faults": faults["faults"],
         "stuck_at_sites": len(faults["sites"]),
         "stuck_at_patterns": faults["patterns"],
+        "transition_faults": transitions["faults"],
+        "transition_patterns": transitions["patterns"],
     },
     "artifacts": {key: digest(path) for key, path in artifacts.items()},
     "limitations": [
@@ -178,8 +192,8 @@ result = {
         "public_pdk_not_fabrication_qualified",
         "core_only_no_pads",
         "no_package_vsrc_model",
-        "no_independent_atpg_or_transition_fault_coverage",
-        "no_sdf",
+        "no_independent_atpg",
+        "no_sdf_or_at_speed_transition_delay",
         "no_project_rtl",
     ],
 }

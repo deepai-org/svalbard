@@ -81,6 +81,7 @@ def structure() -> None:
         "flows/smoke/digital_pnr/scan_equiv.ys",
         "flows/smoke/digital_pnr/scan_pin_order.cfg",
         "flows/smoke/digital_pnr/stuck_at.py",
+        "flows/smoke/digital_pnr/transition_fault.py",
     ]
     missing = [path for path in required if not (ROOT / path).is_file()]
     if missing:

@@ -38,6 +38,8 @@ iverilog -g2012 -DFUNCTIONAL \
   /work/counter.scan-stitched.v /src/counter_scan_tb.v
 vvp /work/counter_scan_sim > /work/scan-simulation.log
 python3 /src/stuck_at.py /work/counter.scan-stitched.v /work/stuck-at.json
+python3 /src/transition_fault.py \
+  /work/counter.scan-stitched.v /work/transition-fault.json
 
 mkdir /work/scan_design
 cp /src/scan_config.yaml /src/constraints.sdc /src/scan_pin_order.cfg /work/scan_design/

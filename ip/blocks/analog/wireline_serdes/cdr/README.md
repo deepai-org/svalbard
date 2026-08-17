@@ -6,4 +6,19 @@ Each latch steers one tail current between a differential tracking pair and a cr
 
 The current schematic matrix completes 1,701/1,701 simulations over 3 MOS corners, 3 unsalicided-resistor corners, 3 supplies, 3 temperatures, 3 shared data/clock common-mode fractions, and 7 bias settings. All 243 groups calibrate with an interior 1.00--1.30 V setting. The selected minimum signed decision margin is 0.480--1.533 V, selected current is 2.18--6.39 mA, and every group retains 3--7 electrically valid bias settings while checking 20 alternating even/odd decisions per case.
 
-This is a schematic checkpoint only. Layout, DRC/LVS/PEX, extracted aperture and setup/hold sweeps, jitter and supply sensitivity, mismatch, metastability characterization, phase-detector logic, loop dynamics, and autonomous acquisition remain open. Results are experimental pre-silicon public-model evidence, not PCIe compliance or silicon qualification.
+The first routed physical checkpoint is now available below. It places the even
+and odd latches as mirrored halves, keeps the regenerative devices and p-poly
+loads local to their outputs, locates clock steering directly below each latch,
+uses compact local tail connections, and surrounds the 96 x 55 um cell with a
+contacted substrate guard ring. The full-resolution PNG is intended for quick
+review; `layout.tcl` remains the editable, reproducible source.
+
+![GF180 dual-edge CDR sampler routed layout checkpoint](layout.png)
+
+This image is a work-in-progress physical checkpoint, not signoff. The current
+generated layout has eight local metal-1 spacing markers around regenerative
+gate contacts, and LVS still reports connectivity/pin mismatches. DRC/LVS/PEX,
+extracted aperture and setup/hold sweeps, jitter and supply sensitivity,
+mismatch, metastability characterization, phase-detector logic, loop dynamics,
+and autonomous acquisition remain open. Results are experimental pre-silicon
+public-model evidence, not PCIe compliance or silicon qualification.

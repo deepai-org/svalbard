@@ -29,3 +29,8 @@ All bounded host flows share `scripts/run_analog_flow.sh`; use
 declarations without starting simulation.
 The current completion inventory and analog-top critical path are tracked in
 the [PCIe analog status](../../../../docs/verification/pcie-analog-status.md).
+
+The [`pll`](pll/README.md) directory contains the first transistor-level
+autonomous-clock experiment: a regenerative differential CML ring VCO with a
+screened coarse R/C bank. It is schematic architecture evidence only, not yet
+a routed VCO or a closed PLL.

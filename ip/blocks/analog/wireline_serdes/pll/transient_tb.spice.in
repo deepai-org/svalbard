@@ -1,0 +1,32 @@
+* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include /src/ring_vco.spice
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VCTRL VCTRL 0 @VCTRL_V@
+XDUT VCTRL VDD 0 CLK_P CLK_N ring_vco LOAD_L=@LOAD_L@ CAP_W=@CAP_W@ CAP_L=@CAP_L@
+CLOADP CLK_P 0 @CLOAD_F@
+CLOADN CLK_N 0 @CLOAD_F@
+* Deterministic millivolt seed checks startup without an ideal forcing pulse.
+.ic v(XDUT.N0P)=@SEED_HIGH@ v(XDUT.N0N)=@SEED_LOW@
+.ic v(XDUT.N1P)=@SEED_LOW@ v(XDUT.N1N)=@SEED_HIGH@
+.ic v(XDUT.N2P)=@SEED_HIGH@ v(XDUT.N2N)=@SEED_LOW@
+
+.control
+tran 2p 20n uic
+let vdiff = v(CLK_P)-v(CLK_N)
+let vcm = (v(CLK_P)+v(CLK_N))/2
+let isupply = -i(VDD)
+meas tran period trig vdiff val=0 rise=20 targ vdiff val=0 rise=21
+meas tran period_late trig vdiff val=0 rise=35 targ vdiff val=0 rise=36
+meas tran diff_high max vdiff from=12n to=20n
+meas tran diff_low min vdiff from=12n to=20n
+meas tran output_cm avg vcm from=12n to=20n
+meas tran supply_current avg isupply from=12n to=20n
+meas tran startup_time when vdiff=0 rise=10
+print period period_late diff_high diff_low output_cm supply_current startup_time
+.endc
+.end

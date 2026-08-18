@@ -1,0 +1,39 @@
+{
+  "cell": "ring_vco",
+  "claim": "schematic_architecture_screen",
+  "line_rate_target_hz": 2500000000.0,
+  "result": "pass_for_six_bounding_environments",
+  "limitations": [
+    "The parameter points are architecture candidates, not a realized switch network.",
+    "The 12-environment adversarial screen has not been rerun after the final band additions.",
+    "No layout, extraction, phase-noise, supply-pushing, mismatch, startup-without-seed, divider, PFD, charge pump, or loop-filter claim is made."
+  ],
+  "evidence": [
+    {
+      "qualification": "band_tuning_bounds",
+      "source_sha256": "12145e5ca3169b74d5a838fc0c7d6d27ef8027ec12c973c709ccf05526b89561",
+      "case_count": 420,
+      "electrical_pass_count": 318,
+      "covered_environment_count": 3,
+      "environment_count": 6,
+      "covered": [
+        {"environment": ["typical", "res_typical", 3.30, 27], "band": "center", "frequency_range_hz": [2289987008.9036984, 2519676151.063656], "control_bracket_v": [1.08, 1.18]},
+        {"environment": ["ff", "res_ff", 3.63, -40], "band": "high_gain_mid", "frequency_range_hz": [2459129271.5075445, 2559412277.039999], "control_bracket_v": [0.98, 1.08]},
+        {"environment": ["ff", "res_typical", 3.30, 27], "band": "mid_gain", "frequency_range_hz": [2433750867.632184, 2516417738.4299517], "control_bracket_v": [0.98, 1.08]}
+      ]
+    },
+    {
+      "qualification": "band_gap_repair",
+      "source_sha256": "d40424d7106919e45cda329300fc9b9ee16501beab9079767c838a737d151670",
+      "case_count": 315,
+      "electrical_pass_count": 176,
+      "covered_environment_count": 3,
+      "environment_count": 3,
+      "covered": [
+        {"environment": ["ff", "res_ss", 2.97, 125], "band": "low_transition_fine", "frequency_range_hz": [2496357813.9494476, 2538545271.400952], "control_bracket_v": [0.88, 0.98], "kvco_polarity": "positive"},
+        {"environment": ["ss", "res_ff", 2.97, 125], "band": "high_gain_transition_fine", "frequency_range_hz": [2478207879.015874, 2502930305.655346], "control_bracket_v": [1.30, 1.40], "kvco_polarity": "negative"},
+        {"environment": ["ss", "res_ss", 2.97, 125], "band": "minimum_transition", "frequency_range_hz": [2489509208.1966596, 2516042918.6601067], "control_bracket_v": [1.40, 1.50], "kvco_polarity": "negative"}
+      ]
+    }
+  ]
+}

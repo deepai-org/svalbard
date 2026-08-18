@@ -22,7 +22,7 @@ tracked separately in [PCIe Gen1 analog speed checkpoint](pcie-analog-speed-budg
 | Phase interpolator + dual 5-bit control DAC | Both physically closed; composed full-RC 2,367/2,367 and 9/9 calibrated to 31 codes with 2.80 ps worst error | Calibration controller/storage, glitch-safe updates, clock-tree/sampler composition, jitter/supply coupling |
 | CML-to-CMOS boundary | Physically closed with programmable-tail PVT and timing window | Denser composed timing/jitter matrix and clock distribution |
 | 1:2 deserializer | Physically closed alone and with extracted CML-to-CMOS front end | Parallel RX connection and clock/reset distribution |
-| PLL/VCO/divider | Not implemented | Architecture, tuning bands, startup/lock, jitter, layout, extraction |
+| PLL/VCO/divider | Differential CML ring-VCO schematic architecture screened in 735 cases; R/C candidates cover six speed/gain bounds after calibration | Realize and prune the switched bands, rerun broad PVT, then layout/DRC/LVS/PEX, startup/noise/supply sensitivity, divider and closed PLL |
 | Serializer | Not implemented | Parallel-to-serial topology, clock phases, TX loading, layout, extraction |
 | PCIe receiver detect/electrical idle | Not implemented | Pad-aware circuits, safe clamps, protocol-visible controls |
 | Shared bias/reference/control DACs | PI control DAC physically closed; remaining biases/references not implemented as an analog top | Bandgap/reference choice, bias distribution, calibration observables and retained codes |
@@ -41,9 +41,10 @@ and analog-top verification as major work rather than treating them as wiring.
 1. Add valid-window retiming, a realizable accumulator/integrator, and a
    calibration controller for the closed phase-interpolator DAC; demonstrate
    reference-assisted tracking.
-2. Build the PLL/VCO/divider with external-clock bypass and observable divided
-   clock/lock outputs, then close startup, tuning range, jitter, and supply
-   sensitivity through extraction.
+2. Convert the screened VCO R/C candidates into a safe selectable physical
+   bank, close it through extraction, then build the divider and PLL with
+   external-clock bypass and observable divided clock/lock outputs; close
+   startup, tuning range, jitter, and supply sensitivity.
 3. Build and extract the serializer and compose it with the transmitter at
    2.5 GT/s, including emphasis and electrical-idle behavior.
 4. Add receiver detect, electrical idle, shared bias/reference generation,

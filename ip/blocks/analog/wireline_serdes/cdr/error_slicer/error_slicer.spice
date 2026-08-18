@@ -1,0 +1,27 @@
+* SPDX-License-Identifier: Apache-2.0
+* Dual CML window slicer.  VBIAS_TH programs the symmetric dead zone.
+.subckt cml_error_slicer ERRP ERRN VREFP VREFN VBIAS_MAIN VBIAS_TH VDD VSS UPP UPN DNP DNN
+XURP VDD UPP VSS ppolyf_u r_width=2u r_length=4.00u
+XURN VDD UPN VSS ppolyf_u r_width=2u r_length=4.00u
+XDRP VDD DNP VSS ppolyf_u r_width=2u r_length=4.00u
+XDRN VDD DNN VSS ppolyf_u r_width=2u r_length=4.00u
+
+* UP main pair: ERRP > ERRN raises UPP-UPN.
+XUMP UPN ERRP UTM VSS nfet_03v3 w=8u l=0.28u m=2
+XUMN UPP ERRN UTM VSS nfet_03v3 w=8u l=0.28u m=2
+XUMT UTM VBIAS_MAIN VSS VSS nfet_03v3 w=8u l=0.28u m=2
+
+* A smaller opposing pair establishes the programmable UP threshold.
+XUTP UPP VREFP UTT VSS nfet_03v3 w=8u l=0.28u m=2
+XUTN UPN VREFN UTT VSS nfet_03v3 w=8u l=0.28u m=2
+XUTT UTT VBIAS_TH VSS VSS nfet_03v3 w=8u l=0.28u m=2
+
+* DOWN is the exact mirror: ERRN > ERRP raises DNP-DNN.
+XDMP DNN ERRN DTM VSS nfet_03v3 w=8u l=0.28u m=2
+XDMN DNP ERRP DTM VSS nfet_03v3 w=8u l=0.28u m=2
+XDMT DTM VBIAS_MAIN VSS VSS nfet_03v3 w=8u l=0.28u m=2
+
+XDTP DNP VREFP DTT VSS nfet_03v3 w=8u l=0.28u m=2
+XDTN DNN VREFN DTT VSS nfet_03v3 w=8u l=0.28u m=2
+XDTT DTT VBIAS_TH VSS VSS nfet_03v3 w=8u l=0.28u m=2
+.ends cml_error_slicer

@@ -77,6 +77,14 @@ boundaries, and the extracted combiner now closes all nine environments after
 post-layout sampler-bias and edge-phase calibration, with 151.8 mV minimum
 signed replay margin.
 
+The following [programmable CML error slicer](error_slicer/README.md) is also
+zero-DRC, uniquely LVS-matched, and full-RC closed. It rejects the composed
+neutral-residue envelope, turns genuine signed error into mutually exclusive
+UP/DOWN requests, and calibrates all nine environments with interior main and
+threshold bias codes. Its worst selected extracted assertion delay is 61.96 ps
+against a 300 ps design limit. Retimed CML-to-CMOS vote capture, the digital
+accumulator, and a realizable phase-interpolator control DAC remain open.
+
 The [aperture-qualified CML-to-CMOS front end](cml_to_cmos/README.md) now has a
 zero-DRC, uniquely LVS-matched layout and closes all nine nominal full-RC
 input/load cases at 800 ps throughput. Its programmable two-mode tail closes

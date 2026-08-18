@@ -1,0 +1,52 @@
+* SPDX-License-Identifier: Apache-2.0
+* DUT SHA-256: @DUT_SHA256@
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include @DUT_PATH@
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VBM VBIAS_MAIN 0 @MAIN_BIAS_V@
+VBT VBIAS_TH 0 @THRESHOLD_BIAS_V@
+VRP VREFP 0 @VREFP_V@
+VRN VREFN 0 @VREFN_V@
+VEP ERRP 0 PWL(@ERRP_PWL@)
+VEN ERRN 0 PWL(@ERRN_PWL@)
+
+XDUT ERRP ERRN VREFP VREFN VBIAS_MAIN VBIAS_TH VDD 0 UPP UPN DNP DNN @DUT_SUBCKT@
+CUPP UPP 0 30f
+CUPN UPN 0 30f
+CDNP DNP 0 30f
+CDNN DNN 0 30f
+
+.control
+tran 4p 16n
+let up = v(UPP)-v(UPN)
+let down = v(DNP)-v(DNN)
+let err = v(ERRP)-v(ERRN)
+let nerr = -err
+let outcm = (v(UPP)+v(UPN)+v(DNP)+v(DNN))/4
+let isupply = -i(VDD)
+meas tran neutral0_up avg up from=1.5n to=1.9n
+meas tran neutral0_down avg down from=1.5n to=1.9n
+meas tran pos40_up avg up from=3.5n to=3.9n
+meas tran pos40_down avg down from=3.5n to=3.9n
+meas tran pos150_up avg up from=5.5n to=5.9n
+meas tran pos150_down avg down from=5.5n to=5.9n
+meas tran pos300_up avg up from=7.5n to=7.9n
+meas tran pos300_down avg down from=7.5n to=7.9n
+meas tran neutral1_up avg up from=9.5n to=9.9n
+meas tran neutral1_down avg down from=9.5n to=9.9n
+meas tran neg40_up avg up from=11.5n to=11.9n
+meas tran neg40_down avg down from=11.5n to=11.9n
+meas tran neg150_up avg up from=13.5n to=13.9n
+meas tran neg150_down avg down from=13.5n to=13.9n
+meas tran neg300_up avg up from=15.5n to=15.9n
+meas tran neg300_down avg down from=15.5n to=15.9n
+meas tran output_cm avg outcm from=1.5n to=15.9n
+meas tran supply_current avg isupply from=1.5n to=15.9n
+meas tran up_assert_delay trig err val=0.095 rise=1 targ up val=0 rise=1
+meas tran down_assert_delay trig nerr val=0.095 rise=1 targ down val=0 rise=1
+.endc
+.end

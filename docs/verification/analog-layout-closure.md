@@ -99,6 +99,13 @@ geometry in small Tcl procedures for rectangles, via stacks, terminal straps,
 contacts, and ports. The generated MAG/GDS is disposable output; the Tcl source
 is the editable design.
 
+Prefer one repeated unit geometry inside a matching array when programmable
+tail current can express the required ratio. Besides reducing systematic
+mismatch, this prevents mixed-size parameterized cells from quietly moving
+their generated terminal/contact geometry relative to hand-authored straps.
+If mixed geometry is necessary, derive contacts from cell bounds or explicit
+ports and prove each device class with LVS before routing the full array.
+
 Do not rely on a via-stack helper blindly at route crossings. A stack to M5 also
 contains M4, M3, M2, and M1 shapes. Any lower-metal route passing through that
 location becomes electrically connected even if the visible top metals differ.

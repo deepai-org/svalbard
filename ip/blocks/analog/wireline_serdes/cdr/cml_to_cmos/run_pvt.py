@@ -36,6 +36,8 @@ def main() -> None:
     parser.add_argument("--jobs", type=int, default=2)
     parser.add_argument("--timeout-s", type=int, default=90,
                         help="per-case ngspice timeout")
+    parser.add_argument("--sample-delay-ps", action="append", type=int,
+                        help="sample delay from decision-UI start; repeat for a grid")
     parser.add_argument("--case", action="append", default=[],
                         help="run only an exact case ID (repeatable)")
     parser.add_argument("--waveform-dir", type=Path,
@@ -53,6 +55,12 @@ def main() -> None:
         parser.error("--capture-width-ps must be at least 50 ps")
     if args.capture_delay_ps + args.capture_width_ps > 700:
         parser.error("capture fall must complete at least 10 ps before the next UI")
+    sample_delays_s = (tuple(delay * 1e-12 for delay in args.sample_delay_ps)
+                       if args.sample_delay_ps else SAMPLE_DELAYS_S)
+    if (len(set(sample_delays_s)) != len(sample_delays_s)
+            or any(delay <= 0 or delay >= 1500e-12 for delay in sample_delays_s)):
+        parser.error("sample delays must be unique and between 0 and 1500 ps")
+    sample_delays_s = tuple(sorted(sample_delays_s))
     args.work.mkdir(parents=True, exist_ok=True)
     if args.waveform_dir:
         args.waveform_dir.mkdir(parents=True, exist_ok=True)
@@ -64,14 +72,14 @@ def main() -> None:
     interval, edge = 800e-12, 20e-12
     measures = []
     for index in SAMPLE_INDICES:
-        for delay in SAMPLE_DELAYS_S:
+        for delay in sample_delays_s:
             sample_time = index * interval + delay
             delay_ps = round(delay / 1e-12)
             measures.append(f"meas tran outP_{index}_{delay_ps} find v(OUTP) "
                             f"at={sample_time:.12g}")
             measures.append(f"meas tran outN_{index}_{delay_ps} find v(OUTN) "
                             f"at={sample_time:.12g}")
-    expected_scalars = 2 * len(SAMPLE_INDICES) * len(SAMPLE_DELAYS_S) + 1
+    expected_scalars = 2 * len(SAMPLE_INDICES) * len(sample_delays_s) + 1
     specifications = []
     for mos in MOS_CORNERS:
         for vdd in SUPPLIES_V:
@@ -147,10 +155,10 @@ def main() -> None:
             return_code = run.returncode
         observed = {name: float(value) for name, value in SCALAR.findall(log.read_text())}
         vdd = float(environment[1])
-        margins_by_delay = {round(delay / 1e-12): [] for delay in SAMPLE_DELAYS_S}
+        margins_by_delay = {round(delay / 1e-12): [] for delay in sample_delays_s}
         for index in SAMPLE_INDICES:
             expected = BITS[index - PIPELINE_LATENCY_UI]
-            for delay in SAMPLE_DELAYS_S:
+            for delay in sample_delays_s:
                 delay_ps = round(delay / 1e-12)
                 high = observed.get(
                     f"outp_{index}_{delay_ps}" if expected
@@ -171,11 +179,30 @@ def main() -> None:
                 "complete": complete,
                 "early_logic_margin_v": early_margin,
                 "qualified_logic_margin_v": qualified_margin,
-                "qualified_delay_s": max(SAMPLE_DELAYS_S), "observed": observed,
+                "logic_margin_by_delay_v": {
+                    str(delay_ps): min(margins)
+                    for delay_ps, margins in margins_by_delay.items()
+                },
+                "qualified_delay_s": max(sample_delays_s), "observed": observed,
                 "result": "pass" if passed else "fail"}
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as executor:
         cases = list(executor.map(simulate, specifications))
+    delay_summary = []
+    for delay in sample_delays_s:
+        delay_ps = round(delay / 1e-12)
+        members = [(case, case["logic_margin_by_delay_v"][str(delay_ps)])
+                   for case in cases]
+        contract = [margin for case, margin in members
+                    if case["role"] == "contract"]
+        delay_summary.append({
+            "delay_s": delay,
+            "minimum_contract_logic_margin_v": min(contract, default=None),
+            "passing_contract_case_count": sum(margin >= 0 for margin in contract),
+            "contract_case_count": len(contract),
+            "passing_case_count": sum(margin >= 0 for _, margin in members),
+            "case_count": len(members),
+        })
     groups = []
     environments = sorted({tuple(case["environment"]) for case in cases})
     for environment in environments:
@@ -203,6 +230,8 @@ def main() -> None:
     passed = complete_count == len(cases) and passing_groups == len(groups)
     result = {"schema_version": 1, "dut_sha256": dut_sha256,
               "pipeline_latency_ui": PIPELINE_LATENCY_UI,
+              "sample_delays_s": sample_delays_s,
+              "delay_summary": delay_summary,
               "result": "pass" if passed else "fail",
               "case_count": len(cases), "complete_case_count": complete_count,
               "contract_case_count": sum(case["role"] == "contract" for case in cases),

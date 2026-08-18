@@ -1,0 +1,31 @@
+* SPDX-License-Identifier: Apache-2.0
+* Dual half-rate differential CMOS capture stage for the CDR output streams.
+.subckt cmos_differential_capture D DB CLK VDD VSS Q QB
+* A static cross-coupled inverter pair owns state after capture.
+XLQP Q_INT QB_INT VDD VDD pfet_03v3 w=8u l=0.28u m=4
+XLQN Q_INT QB_INT VSS VSS nfet_03v3 w=8u l=0.28u m=4
+XLBP QB_INT Q_INT VDD VDD pfet_03v3 w=8u l=0.28u m=4
+XLBN QB_INT Q_INT VSS VSS nfet_03v3 w=8u l=0.28u m=4
+
+* During capture, complementary series branches directly force one state node
+* low.  Positive feedback raises the other node without a request-gate delay.
+XSETD QB_INT D SET_TAIL VSS nfet_03v3 w=8u l=0.28u m=8
+XSETC SET_TAIL CLK VSS VSS nfet_03v3 w=8u l=0.28u m=8
+XRSTD Q_INT DB RST_TAIL VSS nfet_03v3 w=8u l=0.28u m=8
+XRSTC RST_TAIL CLK VSS VSS nfet_03v3 w=8u l=0.28u m=8
+
+* Tapered buffers isolate the retained state from external pin capacitance.
+XQBP QB_BUF Q_INT VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XQBN QB_BUF Q_INT VSS VSS nfet_03v3 w=4u l=0.28u m=2
+XQOP Q QB_BUF VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XQON Q QB_BUF VSS VSS nfet_03v3 w=8u l=0.28u m=6
+XBBP Q_BUF QB_INT VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XBBN Q_BUF QB_INT VSS VSS nfet_03v3 w=4u l=0.28u m=2
+XBOP QB Q_BUF VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XBON QB Q_BUF VSS VSS nfet_03v3 w=8u l=0.28u m=6
+.ends cmos_differential_capture
+
+.subckt deserializer_1to2 EVEN_D EVEN_DB ODD_D ODD_DB CAPTURE_CLK CAPTURE_CLKB VDD VSS EVEN_Q EVEN_QB ODD_Q ODD_QB
+XEVEN EVEN_D EVEN_DB CAPTURE_CLK VDD VSS EVEN_Q EVEN_QB cmos_differential_capture
+XODD  ODD_D  ODD_DB  CAPTURE_CLK VDD VSS ODD_Q  ODD_QB  cmos_differential_capture
+.ends deserializer_1to2

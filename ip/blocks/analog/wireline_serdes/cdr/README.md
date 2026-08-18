@@ -72,5 +72,7 @@ zero-DRC, uniquely LVS-matched layout and closes all nine nominal full-RC
 input/load cases at 800 ps throughput. Its programmable two-mode tail closes
 all nine representative extracted PVT contract environments at 200 mV input;
 seven of nine paired 100 mV stress cases also pass. The next integration gate
-is composing its 650--750 ps valid aperture with a clocked deserializer rather
-than duplicating state retention inside the analog boundary.
+is composing its measured late-valid interval with a clocked deserializer rather
+than duplicating state retention inside the analog boundary. The first
+transistor-level composition now closes all nine representative environments;
+deserializer layout and extracted verification are next.

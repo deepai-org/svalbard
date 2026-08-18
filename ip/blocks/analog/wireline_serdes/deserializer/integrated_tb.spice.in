@@ -1,0 +1,33 @@
+* SPDX-License-Identifier: Apache-2.0
+* Front-end PEX SHA-256: @FRONTEND_SHA256@
+* Deserializer SHA-256: @DESERIALIZER_SHA256@
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.include @FRONTEND_PATH@
+.include @DESERIALIZER_PATH@
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VIP INP 0 PWL(@INP_PWL@)
+VIN INN 0 PWL(@INN_PWL@)
+VSENSE SENSE_CLK 0 PULSE(0 @VDD_V@ 50p 20p 20p 575p 800p)
+VBOOST SENSE_BOOST_CLK 0 @BOOST_CLOCK@
+VREGEN REGEN_CLK 0 PULSE(0 @VDD_V@ 60p 20p 20p 565p 800p)
+VREGENB REGEN_CLKB 0 PULSE(@VDD_V@ 0 60p 20p 20p 565p 800p)
+VCAPTURE CAPTURE_CLK 0 PULSE(0 @VDD_V@ 600p 20p 20p @CAPTURE_WIDTH@ 800p)
+VCAPTUREB CAPTURE_CLKB 0 PULSE(@VDD_V@ 0 600p 20p 20p @CAPTURE_WIDTH@ 800p)
+
+XFRONT INP INN SENSE_CLK REGEN_CLK REGEN_CLKB CAPTURE_CLK CAPTURE_CLKB VDD 0 FRONT_P FRONT_N SENSE_BOOST_CLK cml_to_cmos_pex
+XCATCH FRONT_P FRONT_N CAPTURE_CLK VDD 0 Q QB cmos_differential_capture
+CFRONTP FRONT_P 0 50f
+CFRONTN FRONT_N 0 50f
+COUTP Q 0 50f
+COUTN QB 0 50f
+
+.control
+tran 2p @TSTOP@
+let isupply = -i(VDD)
+@MEASURES@
+meas tran supply_current avg isupply from=2.4n to=@TSTOP@
+.endc
+.end

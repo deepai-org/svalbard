@@ -3,7 +3,7 @@
 This directory contains a routed GF180MCU development checkpoint for the
 CDR-to-deserializer boundary. It is **not an analog signoff claim**. The cell
 accepts a CML decision, regenerates it, and produces complementary CMOS levels
-within a qualified 650--750 ps aperture of each 800 ps UI. The downstream
+at a qualified 750 ps sampling point in each 800 ps UI. The downstream
 clocked deserializer owns sampling and retention; this cell is intentionally
 not another static retimer.
 
@@ -80,8 +80,16 @@ runners mark 200 mV and above as the required sensitivity contract and retain
 
 ## Remaining boundary
 
-Next integration must connect this aperture to a clocked deserializer and prove
-setup/hold composition with the recovered-clock phases. A full 729-case
+The separate 10 ps timing grid shows that all nine representative extracted
+contract environments first pass together at 700 ps: worst margin is 12.9 mV
+there, peaks at 439.9 mV at 870 ps, and remains 370.5 mV at 900 ps. This is a
+sampled late-valid interval,
+not yet a setup/hold guarantee; the deserializer closing edge and clock skew
+must be composed explicitly with it.
+
+The transistor-level deserializer now composes successfully with this full-RC
+front end at 850, 880, and 900 ps closing phases in all nine representative
+environments. Its own layout and extracted timing remain open. A full 729-case
 extracted matrix, provider-qualified mismatch/noise and metastability-tail
 analysis, post-fill extraction, EM/IR, thermal/substrate coupling, and
 pad/package/board/channel co-simulation remain open.

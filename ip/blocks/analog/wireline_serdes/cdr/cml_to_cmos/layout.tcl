@@ -98,7 +98,7 @@ set used_route_columns {
     -84.8 -84 -83.2 -60.8 -60 -59.2 -36.8 -36 -35.2
     -21.8 -21 -20.2 -12.8 -12 -11.2 -0.8 0 0.8
     11.2 12 12.8 20.2 21 21.8 35.2 36 36.8
-    59.2 60 60.8 83.2 84 84.8
+    -56.8 59.2 60 60.8 63.2 83.2 84 84.8
 }
 array set net_route_columns {}
 proc route_column {preferred net {force_new 0}} {
@@ -116,7 +116,7 @@ proc route_column {preferred net {force_new 0}} {
                 set best_distance $distance
             }
         }
-        if {$best_distance <= 10.0} { return $best }
+        if {$best_distance <= 6.0} { return $best }
     }
     for {set radius 0} {$radius < 400} {incr radius} {
         foreach sign {1 -1} {
@@ -174,11 +174,10 @@ proc manual_gate_top {cx cy width nf} {
 }
 
 array set tracks {
-    VSS -30.0 INP -15.0 INN -13.6 SENSE_CLK -12.2
+    VSS -30.0 INP -15.0 INN -13.6 SENSE_CLK -12.2 SENSE_BOOST_CLK -10.8
     NTAIL -8.0 SA -5.2 SB -3.8 NREGEN 10.0
-    SXP 14.0 SXN 15.4 MIP 16.2 MIN 18.2
-    QPB 19.6 QNB 21.0 QP 22.4 QN 23.8
-    XP 25.2 XN 26.6 OUTP 30.5 OUTN 31.9
+    SXP 14.0 SXN 15.4
+    XP 25.2 XN 26.6 BP 28.0 BN 29.4 OUTP 30.8 OUTN 32.2
     CAPTURE_CLK 34.0 CAPTURE_CLKB 35.4
     REGEN_CLK 38.0 REGEN_CLKB 39.4
     VREGP 55.0 VREGN 56.4 VDD 85.0
@@ -249,7 +248,8 @@ set devices {
     {XREGENP nfet_03v3 8 3 -21 8 XP XN NREGEN}
     {XIP nfet_03v3 8 2 -15 8 SA INP NTAIL}
     {XRTAIL nfet_03v3 8 8 -6 8 NREGEN REGEN_CLK VSS}
-    {XTAIL nfet_03v3 8 8 6 -6 NTAIL SENSE_CLK VSS}
+    {XTAILBOOST nfet_03v3 8 6 -6 -6 NTAIL SENSE_BOOST_CLK VSS}
+    {XTAIL nfet_03v3 8 2 6 -6 NTAIL SENSE_CLK VSS}
     {XIN nfet_03v3 8 2 15 8 SB INN NTAIL}
     {XREGENN nfet_03v3 8 3 21 8 XN XP NREGEN}
     {XACQN nfet_03v3 8 8 30 8 XN SA NREGEN}
@@ -266,32 +266,21 @@ set devices {
     {XALOADN pfet_03v3 8 1   6 74 SB VSS VDD}
     {XLATP pfet_03v3 8 8 -18 49 XP XN VREGP}
     {XLATN pfet_03v3 8 8 18 49 XN XP VREGN}
+    {XRPREP pfet_03v3 8 2 -30 49 NREGEN REGEN_CLK VDD}
+    {XRPREN pfet_03v3 8 2 30 49 NREGEN REGEN_CLK VDD}
 
-    {XONP pfet_03v3 8 3 -78 37 OUTN QP VDD}
-    {XONN nfet_03v3 8 3 -81 14 OUTN QP VSS}
-    {XBP pfet_03v3 8 2 -30 37 SXP XP VDD}
-    {XBN nfet_03v3 8 2 -33 22 SXP XP VSS}
-    {XTGIP pfet_03v3 8 4 -42 37 MIP CAPTURE_CLKB SXP}
-    {XTGIN nfet_03v3 8 4 -45 22 MIP CAPTURE_CLK SXP}
-    {XIP1 pfet_03v3 8 2 -54 37 QPB MIP VDD}
-    {XIN1 nfet_03v3 8 2 -57 22 QPB MIP VSS}
-    {XTGFP pfet_03v3 4 1 -60 37 MIP CAPTURE_CLK QP}
-    {XTGFN nfet_03v3 4 1 -63 22 MIP CAPTURE_CLKB QP}
-    {XIP2 pfet_03v3 8 2 -66 37 QP QPB VDD}
-    {XIN2 nfet_03v3 8 2 -69 22 QP QPB VSS}
-    {XRPRE pfet_03v3 8 4 0 47 NREGEN REGEN_CLK VDD}
-    {XTGGP pfet_03v3 4 1 60 37 MIN CAPTURE_CLK QN}
-    {XTGGN nfet_03v3 4 1 63 22 MIN CAPTURE_CLKB QN}
-    {XJP2 pfet_03v3 8 2 66 37 QN QNB VDD}
-    {XJN2 nfet_03v3 8 2 69 22 QN QNB VSS}
-    {XJP1 pfet_03v3 8 2 54 37 QNB MIN VDD}
-    {XJN1 nfet_03v3 8 2 57 22 QNB MIN VSS}
-    {XTGJP pfet_03v3 8 4 42 37 MIN CAPTURE_CLKB SXN}
-    {XTGJN nfet_03v3 8 4 45 22 MIN CAPTURE_CLK SXN}
-    {XDP pfet_03v3 8 2 30 37 SXN XN VDD}
-    {XDN nfet_03v3 8 2 33 22 SXN XN VSS}
-    {XOPP pfet_03v3 8 3 78 37 OUTP QN VDD}
-    {XOPN nfet_03v3 8 3 81 14 OUTP QN VSS}
+    {XPBP pfet_03v3 8 2 -69 37 BP SXP VDD}
+    {XPBN nfet_03v3 8 8 -69 14 BP SXP VSS}
+    {XOPP pfet_03v3 8 8 -78 37 OUTP BP VDD}
+    {XOPN nfet_03v3 8 6 -81 14 OUTP BP VSS}
+    {XBP pfet_03v3 8 8 -27 37 SXP XP VDD}
+    {XBN nfet_03v3 8 4 -27 22 SXP XP VSS}
+    {XDP pfet_03v3 8 8 27 37 SXN XN VDD}
+    {XDN nfet_03v3 8 4 27 22 SXN XN VSS}
+    {XNBP pfet_03v3 8 2 69 37 BN SXN VDD}
+    {XNBN nfet_03v3 8 8 69 14 BN SXN VSS}
+    {XONP pfet_03v3 8 8 78 37 OUTN BN VDD}
+    {XONN nfet_03v3 8 6 81 14 OUTN BN VSS}
 }
 
 crashbackups stop
@@ -352,9 +341,13 @@ foreach spec $devices {
     set source_y [expr {$cy-$yoff}]
     set gate_y [expr {$cy-$width/2.0-0.70}]
     set drain_route [route_column [expr {$cx-0.8}] $drain]
-    set source_route [route_column [expr {$cx+0.8}] $source]
+    set local_reset_supply [expr {$instance eq "XRPREP" || $instance eq "XRPREN"}]
+    set source_route [route_column [expr {$cx+0.8}] $source $local_reset_supply]
     set gate_route [route_column $cx $gate]
     set source_routes [list $source_route]
+    if {[info exists ::env(LAYOUT_ROUTE_DEBUG)]} {
+        puts "ROUTE $instance d=$drain:$drain_route g=$gate:$gate_route s=$source:$source_route"
+    }
     if {($source eq "VDD" || $source eq "VSS") && $nf >= 8} {
         lappend source_routes [route_column [expr {$cx+2.4}] $source 1]
     }
@@ -426,7 +419,7 @@ paint_rect metal5 -87.38 81.62 \
 paint_rect metal5 -87.38 81.62 -86.62 88.85
 
 # External pins participate in the same compact M4 net buses.
-foreach {name number x} {INP 1 -93 INN 2 -91 SENSE_CLK 3 -89 REGEN_CLK 4 87 REGEN_CLKB 5 89 CAPTURE_CLK 6 91 CAPTURE_CLKB 7 93 OUTP 10 89 OUTN 11 -89} {
+foreach {name number x} {INP 1 -93 INN 2 -91 SENSE_CLK 3 -89 REGEN_CLK 4 87 REGEN_CLKB 5 89 CAPTURE_CLK 6 91 CAPTURE_CLKB 7 93 OUTP 10 -89 OUTN 11 89 SENSE_BOOST_CLK 12 -87} {
     connect_net $name $x $tracks($name)
     via_at via4 $x $tracks($name)
     make_port $name $number metal5 [expr {$x-0.45}] [expr {$tracks($name)-0.45}] \

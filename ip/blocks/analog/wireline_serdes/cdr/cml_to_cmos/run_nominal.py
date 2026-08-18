@@ -11,6 +11,7 @@ import subprocess
 from pathlib import Path
 
 BITS = (1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0)
+PIPELINE_LATENCY_UI = 0
 SAMPLE_INDICES = tuple(range(3, 12))
 SAMPLE_DELAYS_S = (650e-12, 750e-12)
 SCALAR = re.compile(r"^(out[pn]_\d+_\d+|supply_current)\s*=\s*([-+0-9.eE]+)",
@@ -79,8 +80,8 @@ def main() -> None:
         parser.error("--capture-delay-ps must follow regeneration by at least 50 ps")
     if args.capture_width_ps < 50:
         parser.error("--capture-width-ps must be at least 50 ps")
-    if args.capture_delay_ps + args.capture_width_ps > args.eval_width_ps - 10:
-        parser.error("capture must close at least 10 ps before sensor precharge")
+    if args.capture_delay_ps + args.capture_width_ps > 700:
+        parser.error("capture fall must complete at least 10 ps before the next UI")
     args.work.mkdir(parents=True, exist_ok=True)
     source_dir = (args.source / "cml_to_cmos" if
                   (args.source / "cml_to_cmos").is_dir() else args.source)
@@ -111,6 +112,9 @@ def main() -> None:
                 "DUT_INCLUDE": f".include {dut_path}",
                 "DUT_SUBCKT": "cml_to_cmos_pex" if args.pex else "cml_to_cmos",
                 "EVAL_WIDTH_S": f"{args.eval_width_ps}p",
+                "BOOST_CLOCK": (f"PULSE(0 {args.vdd_v:.6g} 50p 20p 20p "
+                                f"{args.eval_width_ps}p 800p)"
+                                if args.common_mode_fraction <= 0.70 else "0"),
                 "REGEN_DELAY_S": f"{50 + args.regen_delay_ps}p",
                 "REGEN_WIDTH_S": f"{args.eval_width_ps - args.regen_delay_ps}p",
                 "CAPTURE_DELAY_S": f"{50 + args.capture_delay_ps}p",
@@ -123,11 +127,9 @@ def main() -> None:
                     "wrdata " + str(args.waveform) +
                     " time v(xdut.sa) v(xdut.sb)"
                     " v(xdut.xp) v(xdut.xn) v(xdut.ntail)"
-                    " v(xdut.nregen)"
-                    " v(xdut.qp) v(xdut.qn)"
-                    " v(xdut.vregp) v(xdut.vregn)"
+                    " v(xdut.nregen) v(xdut.vregp) v(xdut.vregn)"
                     " v(xdut.sxp) v(xdut.sxn)"
-                    " v(xdut.mip) v(xdut.min) v(xdut.qpb) v(xdut.qnb)"
+                    " v(xdut.bp) v(xdut.bn)"
                     " v(sense_clk)"
                     " v(regen_clk) v(regen_clkb)"
                     " v(capture_clk) v(capture_clkb)"
@@ -156,13 +158,14 @@ def main() -> None:
             observed = {name: float(value) for name, value in SCALAR.findall(log.read_text())}
             margins_by_delay = {round(delay / 1e-12): [] for delay in SAMPLE_DELAYS_S}
             for index in SAMPLE_INDICES:
+                expected = BITS[index - PIPELINE_LATENCY_UI]
                 for delay in SAMPLE_DELAYS_S:
                     delay_ps = round(delay / 1e-12)
                     high = observed.get(
-                        f"outp_{index}_{delay_ps}" if BITS[index]
+                        f"outp_{index}_{delay_ps}" if expected
                         else f"outn_{index}_{delay_ps}", 0.0)
                     low = observed.get(
-                        f"outn_{index}_{delay_ps}" if BITS[index]
+                        f"outn_{index}_{delay_ps}" if expected
                         else f"outp_{index}_{delay_ps}", 3.30)
                     margins_by_delay[delay_ps].extend(
                         (high - 0.8 * args.vdd_v, 0.2 * args.vdd_v - low))
@@ -173,16 +176,34 @@ def main() -> None:
             passed = (complete and qualified_margin >= 0.0
                       and 0.00001 <= observed["supply_current"] <= 0.020)
             cases.append({"differential_input_v": differential_input, "load_ff": load_ff,
+                          "tail_boost_enabled": args.common_mode_fraction <= 0.70,
+                          "role": "contract" if differential_input >= 0.20 else "stress",
+                          "complete": complete,
                           "early_logic_margin_v": early_margin,
                           "qualified_logic_margin_v": qualified_margin,
                           "qualified_delay_s": max(SAMPLE_DELAYS_S), "observed": observed,
                           "result": "pass" if passed else "fail"})
     passing = sum(case["result"] == "pass" for case in cases)
-    result = {"schema_version": 1, "result": "pass" if passing == len(cases) else "fail",
-              "case_count": len(cases), "passing_case_count": passing, "cases": cases}
+    contract = [case for case in cases if case["role"] == "contract"]
+    stress = [case for case in cases if case["role"] == "stress"]
+    passing_contract = sum(case["result"] == "pass" for case in contract)
+    passing_stress = sum(case["result"] == "pass" for case in stress)
+    complete_count = sum(case["complete"] for case in cases)
+    overall_pass = (complete_count == len(cases)
+                    and passing_contract == len(contract))
+    result = {"schema_version": 1, "dut_sha256": dut_sha256,
+              "pipeline_latency_ui": PIPELINE_LATENCY_UI,
+              "result": "pass" if overall_pass else "fail",
+              "case_count": len(cases), "complete_case_count": complete_count,
+              "passing_case_count": passing,
+              "contract_case_count": len(contract),
+              "passing_contract_case_count": passing_contract,
+              "stress_case_count": len(stress),
+              "passing_stress_case_count": passing_stress, "cases": cases}
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
-    print(f"cml_to_cmos nominal: {passing}/{len(cases)} cases pass")
-    if passing != len(cases):
+    print(f"cml_to_cmos nominal: {passing_contract}/{len(contract)} contract and "
+          f"{passing_stress}/{len(stress)} stress cases pass")
+    if not overall_pass:
         raise SystemExit(1)
 
 

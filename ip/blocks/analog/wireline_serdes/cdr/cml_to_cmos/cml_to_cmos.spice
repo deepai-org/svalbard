@@ -1,6 +1,6 @@
 * SPDX-License-Identifier: Apache-2.0
 * Clocked regenerative differential CML-to-CMOS sense amplifier.
-.subckt cml_to_cmos INP INN SENSE_CLK REGEN_CLK REGEN_CLKB CAPTURE_CLK CAPTURE_CLKB VDD VSS OUTP OUTN
+.subckt cml_to_cmos INP INN SENSE_CLK REGEN_CLK REGEN_CLKB CAPTURE_CLK CAPTURE_CLKB VDD VSS OUTP OUTN SENSE_BOOST_CLK
 * A small first stage acquires the CML decision on SA/SB.  These nodes only
 * drive gates in the regenerative stage, isolating input sensing from the
 * larger reset and positive-feedback diffusion capacitance on XP/XN.
@@ -32,44 +32,30 @@ XACQP XP SB NREGEN VSS nfet_03v3 w=8u l=0.28u m=8
 XACQN XN SA NREGEN VSS nfet_03v3 w=8u l=0.28u m=8
 XREGENP XP XN NREGEN VSS nfet_03v3 w=8u l=0.28u m=3
 XREGENN XN XP NREGEN VSS nfet_03v3 w=8u l=0.28u m=3
-XTAIL NTAIL SENSE_CLK VSS VSS nfet_03v3 w=8u l=0.28u m=8
+XTAIL NTAIL SENSE_CLK VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XTAILBOOST NTAIL SENSE_BOOST_CLK VSS VSS nfet_03v3 w=8u l=0.28u m=6
 XRTAIL NREGEN REGEN_CLK VSS VSS nfet_03v3 w=8u l=0.28u m=8
-XRPRE NREGEN REGEN_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=4
+XRPREP NREGEN REGEN_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XRPREN NREGEN REGEN_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=2
 
-* Small restoring inverters observe the dynamic nodes through gate capacitance
-* only.  A late, non-overlapping capture pulse connects their complementary
-* rail-level decisions to the static latch after regeneration has completed.
-XBP SXP XP VDD VDD pfet_03v3 w=8u l=0.28u m=2
-XBN SXP XP VSS VSS nfet_03v3 w=8u l=0.28u m=2
-XDP SXN XN VDD VDD pfet_03v3 w=8u l=0.28u m=2
-XDN SXN XN VSS VSS nfet_03v3 w=8u l=0.28u m=2
+* Matched restoring inverters qualify the dynamic decision.  During precharge
+* SXP=SXN=0; during evaluation only the side whose dynamic node resolves low
+* can assert.  The following buffers preserve that decision for the aperture.
+XBP SXP XP VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XBN SXP XP VSS VSS nfet_03v3 w=8u l=0.28u m=4
+XDP SXN XN VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XDN SXN XN VSS VSS nfet_03v3 w=8u l=0.28u m=4
 
-* Two matched static transmission-gate D latches retain the complementary
-* restored decisions.  Their feedback paths open during capture, eliminating
-* the write contention of a directly forced cross-coupled latch.
-XTGIP MIP CAPTURE_CLKB SXP VDD pfet_03v3 w=8u l=0.28u m=4
-XTGIN MIP CAPTURE_CLK  SXP VSS nfet_03v3 w=8u l=0.28u m=4
-XIP1 QPB MIP VDD VDD pfet_03v3 w=8u l=0.28u m=2
-XIN1 QPB MIP VSS VSS nfet_03v3 w=8u l=0.28u m=2
-XIP2 QP QPB VDD VDD pfet_03v3 w=8u l=0.28u m=2
-XIN2 QP QPB VSS VSS nfet_03v3 w=8u l=0.28u m=2
-XTGFP MIP CAPTURE_CLK  QP VDD pfet_03v3 w=4u l=0.28u m=1
-XTGFN MIP CAPTURE_CLKB QP VSS nfet_03v3 w=4u l=0.28u m=1
-
-XTGJP MIN CAPTURE_CLKB SXN VDD pfet_03v3 w=8u l=0.28u m=4
-XTGJN MIN CAPTURE_CLK  SXN VSS nfet_03v3 w=8u l=0.28u m=4
-XJP1 QNB MIN VDD VDD pfet_03v3 w=8u l=0.28u m=2
-XJN1 QNB MIN VSS VSS nfet_03v3 w=8u l=0.28u m=2
-XJP2 QN QNB VDD VDD pfet_03v3 w=8u l=0.28u m=2
-XJN2 QN QNB VSS VSS nfet_03v3 w=8u l=0.28u m=2
-XTGGP MIN CAPTURE_CLK  QN VDD pfet_03v3 w=4u l=0.28u m=1
-XTGGN MIN CAPTURE_CLKB QN VSS nfet_03v3 w=4u l=0.28u m=1
-
-* Cross-connected output inverters preserve decision polarity.  Balanced
-* three-finger pull-up/pull-down devices close the 50 fF extracted falling
-* edge without adding another buffering stage to the held latch.
-XOPP OUTP QN VDD VDD pfet_03v3 w=8u l=0.28u m=3
-XOPN OUTP QN VSS VSS nfet_03v3 w=8u l=0.28u m=3
-XONP OUTN QP VDD VDD pfet_03v3 w=8u l=0.28u m=3
-XONN OUTN QP VSS VSS nfet_03v3 w=8u l=0.28u m=3
+* Non-inverting two-stage output buffers expose the restored regenerative
+* decision during its qualified aperture.  The clocked deserializer owns the
+* sampling/hold function, avoiding a second static latch on these critical
+* nodes.  CAPTURE_CLK/CLKB remain interface-compatible reserved pins.
+XPBP BP SXP VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XPBN BP SXP VSS VSS nfet_03v3 w=8u l=0.28u m=8
+XOPP OUTP BP VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XOPN OUTP BP VSS VSS nfet_03v3 w=8u l=0.28u m=6
+XNBP BN SXN VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XNBN BN SXN VSS VSS nfet_03v3 w=8u l=0.28u m=8
+XONP OUTN BN VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XONN OUTN BN VSS VSS nfet_03v3 w=8u l=0.28u m=6
 .ends cml_to_cmos

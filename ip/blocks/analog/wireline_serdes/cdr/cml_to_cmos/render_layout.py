@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render the routed held CML-to-CMOS retimer for physical review."""
+"""Render the routed aperture-qualified CML-to-CMOS front end."""
 
 import pya
 from PIL import Image, ImageDraw, ImageFont
@@ -50,8 +50,8 @@ font = ImageFont.load_default()
 draw.rounded_rectangle((18, 14, 1250, 54), radius=8, fill=(5, 8, 12, 225),
                        outline=(92, 116, 145, 255), width=1)
 draw.text((32, 27),
-          f"GF180 held CML-to-CMOS retimer | {bbox.width() * layout.dbu:.1f} x "
-          f"{bbox.height() * layout.dbu:.1f} um | DRC/LVS clean; extracted PVT in progress",
+          f"GF180 CML-to-CMOS front end | {bbox.width() * layout.dbu:.1f} x "
+          f"{bbox.height() * layout.dbu:.1f} um | DRC/LVS clean | PEX: 2048 R / 1340 C",
           font=font, fill=(239, 244, 250, 255))
 
 
@@ -64,9 +64,9 @@ def annotate(text, x_um, y_um, color):
 
 
 annotate("isolated reset + regenerative PMOS", 0, 63, (245, 166, 35, 255))
-annotate("acquisition loads + held inverter latch", 0, 39, (80, 227, 194, 255))
-annotate("two-stage sense + NMOS regeneration", 0, 10, (189, 103, 217, 255))
-annotate("matched CMOS outputs", 56, 25, (61, 214, 255, 255))
+annotate("acquisition loads + restoring inverters", 0, 39, (80, 227, 194, 255))
+annotate("two-stage sense + programmable tail", 0, 10, (189, 103, 217, 255))
+annotate("matched two-stage CMOS outputs", 56, 25, (61, 214, 255, 255))
 annotate("contacted substrate guard ring", 0, -69.6, (255, 92, 92, 255))
 
 canvas.convert("RGB").save("/work/cml_to_cmos-layout.png", quality=94)

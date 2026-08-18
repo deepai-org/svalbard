@@ -1,63 +1,67 @@
-# Held CML-to-CMOS retimer
+# Aperture-qualified CML-to-CMOS front end
 
-This directory is a routed GF180MCU development checkpoint for the CDR's
-CML-to-CMOS boundary. It is **not an analog signoff claim**. The reset-isolated
-two-stage retimer meets its 800 ps schematic contracts and its nominal
-200 mV extracted contract. A bounded extracted PVT smoke still identifies
-reset/regeneration timing at extreme environments as the physical blocker.
+This directory contains a routed GF180MCU development checkpoint for the
+CDR-to-deserializer boundary. It is **not an analog signoff claim**. The cell
+accepts a CML decision, regenerates it, and produces complementary CMOS levels
+within a qualified 650--750 ps aperture of each 800 ps UI. The downstream
+clocked deserializer owns sampling and retention; this cell is intentionally
+not another static retimer.
 
 ![Current routed layout](layout.png)
 
 ## Current evidence
 
-- Schematic nominal matrix: 9/9 pass at 100, 200, and 400 mV differential
-  input and 10, 25, and 50 fF output loading.
-- Schematic PVT smoke: 18/18 complete and all 9 representative environments
-  pass at 100 mV stress and 200 mV contract sensitivity with 50 fF loading.
+- Schematic nominal matrix: all 6 required 200/400 mV cases and all 3
+  exploratory 100 mV cases pass over 10, 25, and 50 fF loading.
+- Schematic PVT smoke: 18/18 complete; all 9 representative 200 mV contract
+  environments and all 9 paired 100 mV stress cases pass.
 - Magic DRC: zero errors.
-- Netgen LVS: circuits match uniquely.
-- Full-RC PEX: 1,857 distributed resistors and 1,267 capacitors.
-- Extracted nominal matrix: 6/9 pass. All six 200 and 400 mV contract cases
-  pass; the three exploratory 100 mV cases fail. Minimum qualified contract
-  logic margin is 232.2 mV at 200 mV input and 50 fF loading.
-- Extracted average supply current: 9.01 to 9.53 mA, below the 20 mA ceiling.
-- Extracted PVT smoke: 18/18 simulations complete across nine representative
-  environments at 50 fF. Five of nine 200 mV contract cases and three of nine
-  100 mV stress cases pass. Contract failures are fast/hot/high-common-mode,
-  slow/hot/low-voltage at both common-mode limits, and
-  slow/cold/high-common-mode. Their rail-level failures are not marginal and
-  are not waived.
+- Netgen LVS: circuits match uniquely, including pin names.
+- Full-RC PEX: 2,048 distributed resistors and 1,340 capacitors.
+- Extracted nominal matrix: all 6 contract cases and all 3 stress cases pass.
+  The minimum required logic margin is 338.7 mV at the 750 ps qualification
+  point; average supply current is 10.66--11.51 mA.
+- Extracted PVT smoke: 18/18 simulations complete and all 9 representative
+  200 mV contract environments pass. The minimum contract margin is 278.2 mV.
+  Seven of nine deliberately tighter 100 mV stress cases pass. Average supply
+  current is 8.74--14.96 mA, below the 20 mA cell ceiling.
 
-The committed JSON files are the exact results behind this status.
-`extracted_nominal_result.json` fails because the 100 mV exploratory points
-remain in that matrix, despite all 200/400 mV contract points passing.
-`extracted_pvt_smoke_result.json` intentionally fails and prevents this cell
-from being promoted as PVT-complete.
+The committed JSON files are the exact numeric results behind this status.
+Passing this bounded smoke is a physical integration gate, not PCIe compliance
+or final silicon qualification.
 
-## Architecture
+## Architecture and calibration
 
-The clocked differential pair first acquires the CML input on small `SA`/`SB`
-nodes. Those nodes gate a separate, stronger second-stage pair, isolating input
-acquisition from the reset and positive-feedback capacitance on `XP`/`XN`.
-Independent sense, regeneration, and capture phases prevent the previous
-decision from fighting reset. Restoring inverters drive two matched
-transmission-gate static latches; balanced CMOS inverters drive `OUTP`/`OUTN`.
+A small differential pair first acquires the CML decision on `SA`/`SB`. Those
+nodes drive only second-stage gates, isolating the input from the larger reset
+and regenerative capacitance on `XP`/`XN`. Separate sense and regeneration
+clocks establish a 575 ps evaluation interval. Matched restoring inverters and
+two-stage non-inverting buffers deliver rail-level `OUTP`/`OUTN` for the
+deserializer to sample. `CAPTURE_CLK/CLKB` remain reserved interface pins and
+do not control devices in this revision.
 
-The layout generator uses legal 0.8 um-pitch shared-diffusion fingers, explicit
-body ties, a contacted substrate guard ring, matched high-metal buses, and
-net-aware escape-column reuse that keeps low-metal terminal straps local. The
-tail is directly adjacent to the input pair, the acquisition loads occupy the
-open header row, and the matched output NFETs sit on a separate row to avoid a
-same-height Metal2 conflict. This generated 190 by 160 um layout is the exact
-geometry used for the committed image and extracted evidence.
+No one fixed tail size closed both ends of the 0.60--0.80 VDD input
+common-mode design envelope after extraction. The layout therefore contains a
+two-finger base tail plus a six-finger parallel boost tail. Assert
+`SENSE_BOOST_CLK` with `SENSE_CLK` for the effective eight-finger low/mid
+common-mode mode; hold it low for the two-finger high-common-mode mode. The
+test flow selects boost at common-mode fractions up to 0.70. Integration must
+calibrate or otherwise derive that mode from an observable; the cell does not
+autonomously know its input common mode.
+
+The generated 190 by 160 um layout contains 35 logical MOS instances. It uses
+legal 0.8 um-pitch shared-diffusion fingers, explicit body ties, a contacted
+substrate guard ring, matched high-metal buses, local tails, and net-aware
+escape-column reuse. `layout.tcl` is the editable geometry source; the rendered
+image comes from the exact GDS used for extraction.
 
 ## Reproducing the checks
 
-Use the repository's pinned `iic-osic-tools` ARM64 image and GF180MCU-D PDK.
-The core commands are:
+Use the repository's digest-pinned `iic-osic-tools` ARM64 image and GF180MCU-D
+PDK. The core in-container commands are:
 
 ```sh
-magic -dnull -noconsole -rcfile "$PDKPATH/libs.tech/magic/$PDK.magicrc" layout.tcl
+magic -dnull -noconsole -rcfile "$PDK_ROOT/$PDK/libs.tech/magic/$PDK.magicrc" layout.tcl
 sak-drc.sh -m -w /work/drc /work/cml_to_cmos.mag
 sak-lvs.sh -m -w /work/lvs -s /src/cml_to_cmos.spice \
   -l /work/cml_to_cmos.mag -c cml_to_cmos
@@ -66,19 +70,18 @@ sak-pex.sh -m 3 -t 0 -r 1 -y 0 -n cml_to_cmos_pex \
 python3 run_nominal.py --source /src \
   --pex /work/pex/cml_to_cmos.pex.spice --work /work/extracted \
   --output /work/extracted.json --eval-width-ps 575 \
-  --regen-delay-ps 10 --capture-delay-ps 200 \
-  --capture-width-ps 320 --timeout-s 300
+  --regen-delay-ps 10 --timeout-s 300
 ```
 
-`run_pvt.py --waveform-dir <path>` records the internal acquisition,
-regeneration, restoration, latch, clock, and output nodes for selected cases.
-Those waveforms show the physical trade directly: a 650 ps evaluation window
-regenerates well but leaves only about 80 ps to reset routed `XP`/`XN`; the
-575 ps selection restores nominal transition behavior but is too short at
-several slow/extreme environments.
+`run_pvt.py --waveform-dir <path>` can preserve internal acquisition,
+regeneration, restoration, clock, and output nodes for selected cases. Both
+runners mark 200 mV and above as the required sensitivity contract and retain
+100 mV separately as exploratory stress.
 
-Next work is to strengthen and localize reset without materially increasing
-`XP`/`XN` capacitance, then re-balance regeneration/capture timing. Only after
-the representative extracted smoke passes should the full 729-case extracted
-matrix, mismatch/noise, EM/IR, thermal/substrate, and top-level integration
-work begin. The present smoke failures are not waived.
+## Remaining boundary
+
+Next integration must connect this aperture to a clocked deserializer and prove
+setup/hold composition with the recovered-clock phases. A full 729-case
+extracted matrix, provider-qualified mismatch/noise and metastability-tail
+analysis, post-fill extraction, EM/IR, thermal/substrate coupling, and
+pad/package/board/channel co-simulation remain open.

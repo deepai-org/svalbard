@@ -67,9 +67,10 @@ sampler-bias and edge-phase calibration closes across representative schematic
 PVT; valid-window retiming, loop filtering, and autonomous closed-loop recovery
 remain in progress.
 
-The [held CML-to-CMOS retimer](cml_to_cmos/README.md) now has a zero-DRC,
-uniquely LVS-matched layout and passes all nine nominal full-RC input/load
-cases at 800 ps throughput. Its bounded extracted PVT smoke exposes reset
-memory at slow-slow, 2.97 V, 125 C and a marginal high-common-mode slow-slow
-cold case; six of nine contract environments pass. It therefore remains a
-development checkpoint rather than a PVT-closed integration boundary.
+The [aperture-qualified CML-to-CMOS front end](cml_to_cmos/README.md) now has a
+zero-DRC, uniquely LVS-matched layout and closes all nine nominal full-RC
+input/load cases at 800 ps throughput. Its programmable two-mode tail closes
+all nine representative extracted PVT contract environments at 200 mV input;
+seven of nine paired 100 mV stress cases also pass. The next integration gate
+is composing its 650--750 ps valid aperture with a clocked deserializer rather
+than duplicating state retention inside the analog boundary.

@@ -150,6 +150,21 @@ one physical mechanism at a time, regenerate DRC/LVS/PEX, and reject a larger
 reset device when its added sensitive-node capacitance costs more evaluation
 margin than its reset current gains.
 
+Assign state retention to exactly one architectural stage. If the downstream
+deserializer is already clocked, qualify the analog front end over an explicit
+valid aperture and prove setup/hold composition there. Adding a second static
+latch can turn a fast regenerated decision into a slower, parasitic-dominated
+write path and create stale-decision feedback. The contract must say whether a
+cell produces a held value or an aperture-qualified value; both are useful,
+but they are not interchangeable.
+
+When one fixed device size cannot close two physically distinct operating
+regions, expose a small realizable trim before oversizing the whole path. The
+trim must correspond to actual placed devices, have a defined selection
+observable, and be verified at each mode boundary. Record mode selection as an
+integration requirement rather than implying that a programmable device
+calibrates itself.
+
 ## 8. Add stress dimensions in layers
 
 After extracted PVT closure, add tests according to the block's physical risks:

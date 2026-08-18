@@ -1,0 +1,321 @@
+// SPDX-License-Identifier: Apache-2.0
+// Aether is a hypothetical analog compiler language.  This one source is the
+// contract for the complete PCIe Gen1 x1 analog PHY, not a collection of leaf
+// block specifications.  A release compile must realize layout and discharge
+// every proof obligation below; an unresolved evidence import is a hard error.
+
+language Aether 0.1;
+
+evidence pcie = require lawful_standard(
+  name: "PCI Express Base Specification",
+  revision: decision("pcie_gen1_endpoint.standard_revision"),
+  clauses: { electrical, common_clock, receiver_detect, electrical_idle }
+);
+
+evidence process = require foundry_process(
+  lock: "processes/gf180/process.lock",
+  option: decision("pcie_gen1_endpoint.gf180_option"),
+  metal_stack: decision("pcie_gen1_endpoint.metal_stack"),
+  models: { dc, transient, ac, noise, mismatch, reliability }
+);
+
+evidence pads = require qualified_pad_esd_library(
+  selection: decision("pcie_gen1_endpoint.pad_esd_selection"),
+  models: { nonlinear, broadband, clamp, leakage, failure_limits }
+);
+
+evidence assembly = require package_board_bundle(
+  selection: decision("pcie_gen1_endpoint.package_board_connector"),
+  includes: { bond_map, mutual_inductance, s_parameters, thermal, tolerances }
+);
+
+discipline electrical { across voltage: V; through current: A; }
+discipline thermal    { across temperature: K; through heat: W; }
+
+quantity ui       = 400 ps;
+quantity line_rate = 2.5 GT/s;
+quantity vdda     in interval [2.97 V, 3.63 V];
+quantity temp     in interval [-40 degC, 125 degC];
+
+stream bitstream at line_rate;
+stream half_rate_decisions at 1.25 Gsample/s;
+
+measure ber(reference: bitstream, observed: bitstream)
+  : probability estimator {
+    exact     = exhaustive_error_process;
+    fast      = importance_sampled_tail with confidence_interval;
+    silicon   = prbs_error_counter with clopper_pearson;
+  }
+
+measure eye(stream: electrical.diff, phase: time) : eye_opening;
+measure lock_time(lock: event, enable: event) : time;
+measure rms_jitter(clock: electrical.diff, band: frequency) : time;
+measure peak_current(node: electrical) : A;
+measure average_power(supplies: set<electrical>, window: time) : W;
+measure settling_margin(signal: electrical.diff, aperture: time) : V;
+measure robustness(p: predicate) : real;
+
+ensemble gf180_product {
+  process_corner in process.required_pvt;
+  supply         in vdda;
+  temperature    in temp;
+  local_mismatch ~ process.approved_mismatch_distribution;
+  device_noise   ~ process.approved_noise_process;
+  aging          in process.approved_lifetime_envelope;
+
+  // Missing public characterization is bounded, never assigned an invented
+  // probability distribution.  A production claim needs provider evidence.
+  rf_model_error       in interval_bound("gf180.rf_model_error");
+  resistor_mismatch    in interval_bound("gf180.resistor_mismatch");
+  interconnect_error   in interval_bound("gf180.interconnect_error");
+  substrate_parameters in interval_bound("gf180.substrate_coupling");
+}
+
+ensemble package_population {
+  member in assembly.tolerance_set;
+  pad    in pads.nonlinear_model_set;
+  bond   in assembly.bond_parasitic_set including mutual_coupling;
+  board  in assembly.board_tolerance_set;
+}
+
+class short_common_clock_channel : electrical.two_port {
+  member in s4p_family(decision("pcie_gen1_endpoint.channel_models"));
+  assume passive(member) and causal(member);
+  assume insertion_loss(member, f <= 1.25 GHz) <= 12 dB;
+  assume return_loss(member, f <= 1.25 GHz) <= -8 dB;
+  assume mask(member, pcie.channel_mask);
+  include adversarial_bound("connector_discontinuity");
+  include adversarial_bound("pair_skew");
+  include adversarial_bound("mode_conversion");
+}
+
+module pcie_gen1_x1_analog : serial_link in physical_environment {
+  terminal tx_p, tx_n, rx_p, rx_n : electrical;
+  terminal refclk_p, refclk_n      : electrical;
+  terminal vdda_tx, vdda_rx, vdda_clk, vssa : electrical;
+  terminal substrate               : electrical;
+  terminal die_thermal             : thermal;
+
+  input  tx_bits        : bitstream;
+  output rx_bits        : bitstream;
+  input  phy_enable, tx_enable, rx_enable : event;
+  input  force_electrical_idle, request_receiver_detect : event;
+  output receiver_present, electrical_idle_seen, cdr_lock, pll_lock : event;
+
+  input  raw_tx_even, raw_tx_odd : bit;
+  output raw_rx_even, raw_rx_odd : bit;
+  output recovered_half_rate : half_rate_decisions;
+
+  control trim {
+    tx_swing       : thermometer<5> safe 4 range pcie.tx_swing_range;
+    tx_bias        : code<6>        safe midpoint;
+    tx_emphasis    : signed_code<5> safe 0;
+    rx_termination : thermometer<8> safe midpoint;
+    rx_bias        : code<6>        safe midpoint;
+    rx_threshold   : signed_code<6> safe 0;
+    rx_bandwidth   : code<3>        safe conservative;
+    sample_phase   : cyclic_code<32> safe center;
+    vco_band       : code<5>        safe external_reference;
+    loop_gain      : code<4>        safe minimum_stable;
+    charge_pump    : code<5>        safe midpoint;
+  }
+
+  mode mode_select in {
+    disabled, tx_only, rx_only, raw_symbol, external_clock,
+    reference_assisted, autonomous_cdr, near_loopback, far_loopback,
+    package_loopback, prbs_generate, prbs_check, eye_phase_scan,
+    electrical_idle, receiver_detect
+  } safe disabled;
+
+  // This is the quantified environment of the composed link.  Supplies,
+  // substrate and temperature are shared conservation nodes, so TX activity
+  // automatically becomes an RX aggressor rather than an omitted corner.
+  assume environment {
+    silicon in gf180_product;
+    package in package_population;
+    channel in short_common_clock_channel;
+    connect tx_p, tx_n through package and channel to rx_p, rx_n;
+    connect all analog instances.substrate to substrate;
+    connect all analog instances.thermal to die_thermal;
+    refclk = pcie.common_clock_source with assembly.refclk_parasitics;
+    traffic in all_legal_8b10b_sequences
+      union { prbs7, prbs15, comma_bursts, alternating, long_run_limits };
+    simultaneous_activity in {
+      tx_worst_toggle, rx_acquire_while_tx_toggles,
+      calibration_while_tx_toggles, loopback_feedback
+    };
+    power_sequence in all_orderings_allowed_by(pads, process);
+  }
+
+  // The compiler owns budget partition.  These are link-level requirements;
+  // no pre-allocation to a TX, CTLE, PLL or CDR is supplied by the author.
+  guarantee functional_link for every {
+    silicon in gf180_product,
+    package in package_population,
+    channel in short_common_clock_channel,
+    traffic in environment.traffic
+  } {
+    ber(tx_bits, rx_bits) <= 1e-12 with confidence >= 95%;
+    lock_time(cdr_lock, rx_enable) <= 10 us;
+    conforms(tx_p - tx_n, pcie.tx_electrical_mask);
+    conforms(rx_p - rx_n, pcie.rx_tolerance_mask);
+    tracks(pcie.common_clock_jitter_tolerance);
+    no_false_lock;
+    no_bit_slip while cdr_lock;
+  }
+
+  // Deliberate internal guardbands are tighter than the product contract.
+  guarantee design_margin {
+    operates at 3.125 GT/s over nominal package and channel;
+    resolves differential_input >= 100 mV under nominal package load;
+    resolves differential_input >= pcie.minimum_rx_input over full environment;
+    settling_margin(recovered_half_rate, sampling_aperture) >= 50 mV;
+    every selected trim code is at least 1 code from a rail;
+    calibration_range >= 1.5 * worst_bounded_shift;
+    robustness(all hard predicates) > 0;
+  }
+
+  guarantee power_area {
+    average_power({vdda_tx, vdda_rx, vdda_clk}, active_window) <= 45 mW hard;
+    peak_current(each supply) <= pads.allowed_transient_current;
+    junction_temperature <= process.maximum_junction_temperature;
+    area minimize after all hard guarantees;
+  }
+
+  guarantee shared_physics {
+    for every legal tx activity {
+      rx_input_referred_supply_error <= allocated_by_compiler("rx_supply_noise");
+      rx_input_referred_substrate_error <= allocated_by_compiler("substrate_noise");
+      refclk_spur <= allocated_by_compiler("reference_spur");
+      local_temperature_gradient <= allocated_by_compiler("matching_gradient");
+    }
+    solve circular_assumptions by least_fixed_point over bounded injections;
+    forbid proof by disconnected ideal supplies or ideal substrate;
+  }
+
+  guarantee protocol_analog_modes {
+    force_electrical_idle -> eventually[0 ps, pcie.idle_entry_time]
+      conforms(tx_p - tx_n, pcie.electrical_idle_output);
+    request_receiver_detect -> eventually[0 ps, pcie.receiver_detect_time]
+      receiver_present == classify(pcie.receiver_load_class);
+    electrical_idle_seen == classify(rx_p - rx_n, pcie.electrical_idle_input);
+    never drive active signaling during reset or uncalibrated unsafe state;
+  }
+
+  guarantee startup_and_calibration {
+    sequence {
+      qualify_supplies;
+      establish_reference_and_bias;
+      select_vco_band_or_external_clock;
+      await pll_lock or enter external_clock;
+      calibrate_rx_termination against realized reference;
+      calibrate_rx_offset_and_bandwidth;
+      center_reference_assisted_phase;
+      acquire_cdr;
+      release_link only if all safety predicates hold;
+    }
+    each search terminates, records its observable, and retains its code;
+    any failed search enters a named safe fallback and raises a cause;
+    no guarantee depends on an unknown power-up state;
+  }
+
+  guarantee diagnostic_survivability {
+    available without autonomous_cdr {
+      external_clock, reference_assisted, raw_symbol, prbs_generate,
+      prbs_check, near_loopback, package_loopback
+    };
+    observable {
+      divided_tx_clock, divided_rx_clock, pll_lock, cdr_lock,
+      raw_rx_even, raw_rx_odd, error_counter, reset_cause,
+      phase_scan, supply_monitor, temperature_monitor
+    };
+    probe any node in analog_signal_path through debug_mux;
+    debug access remains live after pll, cdr, calibration, or protocol failure;
+  }
+
+  realize jointly, allowing the compiler to trade power and margin across {
+    output_driver, emphasis, electrical_idle_driver, receiver_detect,
+    differential_termination, input_amplifier, threshold_trim, equalization,
+    samplers, cml_to_cmos_retiming, phase_detector, loop_filter,
+    phase_interpolator, vco, pll, cdr, clock_tree, bias_reference,
+    calibration_observables, monitors, loopbacks, pad_esd_interface
+  };
+
+  require architectural_diversity {
+    autonomous_cdr is isolatable;
+    reference_assisted path does not require autonomous_cdr lock;
+    external_clock path bypasses pll and cdr;
+    raw_symbol path bypasses protocol training;
+    near_loopback and package_loopback have independent enables;
+  }
+
+  synthesize physical_layout {
+    process process;
+    place matched differential devices adjacent or common_centroid;
+    interdigitate where gradient sensitivity dominates;
+    add dummies at every matched array edge;
+    minimize dynamic, output, tail, and recovered_clock node parasitics;
+    route differential nets with extracted symmetry constraints;
+    route supplies for electromigration, dynamic_ir and simultaneous_switching;
+    isolate tx, rx and clock supplies while preserving shared-node models;
+    insert explicit wells, body ties, guard rings and substrate collection;
+    shield clocks from data and high_impedance nodes;
+    enforce antenna, density, fill, latchup and reliability decks;
+    preserve test structures for open, short, thru, load and local replicas;
+    expose alternate bond options required by assembly;
+  }
+
+  assert structure after layout {
+    for every pair in reflection.matching_pairs {
+      pair.orientation is symmetric;
+      abs(pair.parasitic_delta) <= pair.allocated_mismatch;
+      pair.thermal_gradient <= pair.allocated_gradient;
+    }
+    for every high_current_node {
+      via_array.capacity >= 1.5 * peak_current(node);
+      metal.capacity >= 1.5 * peak_current(node);
+    }
+    for every sensitive_node {
+      coupling_from(tx_aggressors) <= allocated_by_compiler(node, "coupling");
+    }
+    no floating_well;
+    no implicit_body_connection;
+    every trim has safe reset hardware clamps;
+  }
+
+  prove release_candidate {
+    schematic across complete(gf180_product) and bounded(package_population);
+    extracted_rc across complete(gf180_product) and bounded(package_population);
+    post_fill_extracted across complete(gf180_product);
+    transient with { all traffic classes, startup, lock, loss, reacquisition };
+    ac_noise with { supply_injection, substrate_injection, refclk_spurs };
+    jitter with { random, deterministic, periodic, bounded_unmodeled };
+    statistical only from approved distributions with declared confidence;
+    adversarial for every interval-valued unknown;
+    faults with { open, short, stuck_trim, missing_clock, brownout, hot_plug };
+    package_channel_cosim for every channel in short_common_clock_channel;
+    independent_solver_crosscheck for critical measures;
+    formal_contract_refinement from extracted_link to functional_link;
+
+    require drc(provider_accepted) == clean;
+    require lvs(hierarchical) == unique_match;
+    require lvs(flattened) == unique_match;
+    require pex(coupled_rc) == complete;
+    require erc == clean;
+    require antenna == clean;
+    require density_and_fill == clean;
+    require em_ir(all_modes) has positive_margin;
+    require reliability(all_devices) has positive_margin;
+
+    forbid waived_failure without named_owner and bounded_claim;
+    forbid cached_result unless all input_hashes match;
+    forbid compliance_claim from pre_silicon_evidence;
+  }
+
+  emit {
+    gds, oasis, extracted_spice, behavioral_twin, calibration_controller,
+    register_map, safe_reset_image, timing_constraints, power_intent,
+    pad_bond_board_map, rendered_layouts, proof_manifest,
+    reproduction_commands, bringup_sequence, raw_measurement_schema
+  } content_addressed and reproducible;
+}

@@ -23,3 +23,8 @@ evidence rather than qualified PCIe macros.
 The repeatable method used to take these cells from an executable electrical
 contract through generated layout and full-RC evidence is documented in the
 [analog layout closure workflow](../../../../docs/verification/analog-layout-closure.md).
+All bounded host flows share `scripts/run_analog_flow.sh`; use
+`make analog-flow-preflight` to validate their pinned image, paths, and resource
+declarations without starting simulation.
+The current completion inventory and analog-top critical path are tracked in
+the [PCIe analog status](../../../../docs/verification/pcie-analog-status.md).

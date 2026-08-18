@@ -216,6 +216,16 @@ Every committed flow should:
 - bind summaries to source and result hashes;
 - run repository validation before committing.
 
+Use `scripts/run_analog_flow.sh` for the common host boundary. A block wrapper
+declares only its source directory, timeout, CPU/RAM cap, container command,
+and copied artifacts. The shared harness owns the digest-pinned image check,
+minimum disk/RAM checks, exclusive heavy-job lock, read-only/networkless Docker
+sandbox, bounded timeout, failure retention, and successful scratch cleanup.
+Run `make analog-flow-preflight` to validate every declaration and the local
+pinned image without launching simulation. Keep circuit-specific sequencing
+inside the block's mounted `container_flow.sh`; the common harness must not
+hide which analyses or signoff gates a block actually runs.
+
 Commit and push at meaningful gates: schematic PVT closure, physical DRC/LVS
 closure, and extracted/stress closure. Do not present a schematic checkpoint as
 a finished macro or a core-only result as a complete PCIe interface.

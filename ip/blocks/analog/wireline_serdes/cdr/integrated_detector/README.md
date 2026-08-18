@@ -35,7 +35,21 @@ make cdr-integrated-detector-schematic
 ```
 
 The sampler and phase-detector primitives have independent DRC/LVS/full-RC
-physical closure. This integration checkpoint is schematic-level. Hierarchical
-top-level interconnect extraction, valid-window retiming, loop filtering,
-closed-loop CDR behavior, statistical metastability/mismatch, clock-tree
-loading, and PLL coupling remain open.
+physical closure. The subsequent composition attaches the independently
+full-RC-extracted sampler, detector, and
+[phase-error combiner](../phase_error_filter/README.md). Reusing schematic
+settings closes only 5/9 environments; an extracted edge-phase search closes
+6/9, and targeted sampler-bias plus phase searches recover the remaining
+three. The search covers 672 extracted cases. A separate 36-case replay at the
+selected settings passes all nine environments and every +/-40 ps and +/-80 ps
+offset with at least 151.8 mV signed error.
+
+```sh
+make cdr-integrated-error-smoke
+```
+
+This proves calibrated composition of the leaf extractions, not hierarchical
+top-level interconnect or a closed CDR loop. Explicit vote retiming, a digital
+accumulator/control DAC boundary, acquisition and tracking dynamics,
+statistical metastability/mismatch, clock-tree loading, and PLL coupling remain
+open.

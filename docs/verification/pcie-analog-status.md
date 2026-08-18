@@ -6,6 +6,9 @@ Netgen LVS, and full-RC simulation against the block's declared public-model
 contract. It does not include provider signoff, selected pads/package, or
 measured silicon.
 
+The current rate/delay evidence and remaining model-validity boundary are
+tracked separately in [PCIe Gen1 analog speed checkpoint](pcie-analog-speed-budget.md).
+
 | Function | Current evidence | Next boundary |
 |---|---|---|
 | CML transmitter | Physically closed with calibrated PVT, robustness, noise, PRBS, and bounded statistical recovery | Pad/ESD/package/channel, emphasis integration, EM/IR/post-fill |
@@ -13,8 +16,8 @@ measured silicon.
 | Receiver amplifier | Physically closed with bandwidth, threshold, transient, and noise matrices | Termination/pad/channel composition and offset-calibration implementation |
 | Dual-edge CDR sampler | Physically closed with PVT, aperture, stress, and supply-injection evidence | Clock-tree loading, mismatch/metastability, integrated extraction |
 | Alexander boundary | Physically closed with PVT and fixed-code stress | Retiming and loop-filter interface |
-| Integrated Alexander front end | Representative schematic PVT closes 9/9 environments | Hierarchical layout/PEX, valid-window retimer, acquisition/tracking loop |
-| Dual-interleave phase-error combiner | Physically closed; extracted 108/108 cases and 9/9 calibrated environments | Vote retiming, accumulator/integrator, PI control encoding, closed-loop dynamics |
+| Integrated Alexander front end | Schematic 9/9; calibrated composition of extracted sampler/detector/combiner replays 36/36 across 9/9 environments | Hierarchical interconnect, valid-window retimer, acquisition/tracking loop |
+| Dual-interleave phase-error combiner | Physically closed; standalone extracted 108/108 and composed extracted replay 36/36 | Vote retiming, accumulator/integrator, PI control encoding, closed-loop dynamics |
 | Phase interpolator | Physically closed with phase-code PVT and stress | Control DAC, clock-tree/sampler composition, jitter/supply coupling |
 | CML-to-CMOS boundary | Physically closed with programmable-tail PVT and timing window | Denser composed timing/jitter matrix and clock distribution |
 | 1:2 deserializer | Physically closed alone and with extracted CML-to-CMOS front end | Parallel RX connection and clock/reset distribution |

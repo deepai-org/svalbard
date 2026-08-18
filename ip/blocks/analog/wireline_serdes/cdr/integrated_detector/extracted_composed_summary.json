@@ -1,0 +1,52 @@
+{
+  "calibration_sha256": "f1698827f0449be490fedbe5566ef1a5ad844fb6341bf5e23c11d8146e94a336",
+  "checks": {
+    "calibration.valid": true,
+    "composition.all_complete": true,
+    "composition.all_environments_calibrate": true,
+    "composition.error_bias_calibrated": true,
+    "composition.full_rc": true,
+    "error_calibration.valid": true,
+    "pex.all_full_rc": true
+  },
+  "composition_sha256": "b6d410ef45e8def96daaeed5ed52473941d3102a12e1a8e66af8b85eba0fccd6",
+  "error_calibration_sha256": "52c4fad1cd23ef7c11f31d6266c2b83a7dc5e5c743c01b7da93833c105b7b7cf",
+  "observed": {
+    "selected_error_bias_v": [
+      0.75,
+      1.05
+    ],
+    "selected_minimum_signed_error_v": 0.151789,
+    "selected_output_common_mode_v": [
+      2.2631,
+      3.18656
+    ],
+    "selected_supply_current_a": [
+      0.00709262,
+      0.0147685
+    ]
+  },
+  "pex": {
+    "detector": {
+      "capacitor_count": 178,
+      "resistor_count": 463,
+      "sha256": "b56da2335bd52714c70a7a49ff2604f076be78cb83f0d668e77810b9353bb936",
+      "valid": true
+    },
+    "error_combiner": {
+      "capacitor_count": 133,
+      "resistor_count": 330,
+      "sha256": "2587f550b8e2deff4a5542d8102f0825389153e45097b8cdcdd7ba35701712d5",
+      "valid": true
+    },
+    "sampler": {
+      "capacitor_count": 193,
+      "resistor_count": 480,
+      "sha256": "b068142d5a606b2a9d332012e9721e579b1f56b4cef27bfadf3ff38aafa5ce97",
+      "valid": true
+    }
+  },
+  "qualification": "experimental pre-silicon GF180 public-model evidence only",
+  "result": "pass",
+  "schema_version": 1
+}

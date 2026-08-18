@@ -32,6 +32,12 @@ def main() -> None:
         "schema_version": 1, "result": "pass" if passed else "fail", "checks": checks,
         "source_sha256": hashlib.sha256(args.input.read_bytes()).hexdigest(),
         "case_count": result.get("case_count"), "environment_count": len(groups),
+        "selected_settings": [
+            {"environment": group["environment"],
+             "phase_detector_bias_v": group["phase_detector_bias_v"],
+             **group["selected_setting"]}
+            for group in groups
+        ],
         "observed": {
             "valid_setting_count": [min(group["valid_setting_count"] for group in groups),
                                     max(group["valid_setting_count"] for group in groups)],

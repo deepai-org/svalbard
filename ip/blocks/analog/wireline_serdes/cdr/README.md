@@ -72,7 +72,10 @@ is now DRC-clean, uniquely LVS-matched, and full-RC closed across nine
 representative environments. It sums both detector lanes into a signed
 proportional error voltage while rejecting neutral and opposed votes. Vote
 retiming, integration/control encoding, and autonomous loop closure remain the
-next boundary.
+next boundary. A composition of two extracted samplers, two extracted detector
+boundaries, and the extracted combiner now closes all nine environments after
+post-layout sampler-bias and edge-phase calibration, with 151.8 mV minimum
+signed replay margin.
 
 The [aperture-qualified CML-to-CMOS front end](cml_to_cmos/README.md) now has a
 zero-DRC, uniquely LVS-matched layout and closes all nine nominal full-RC

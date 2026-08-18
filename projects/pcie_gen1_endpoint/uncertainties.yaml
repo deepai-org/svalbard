@@ -14,6 +14,19 @@
       "control": "swing, emphasis, termination, threshold, bandwidth and phase trims",
       "safe_fallback": "external clock and raw-symbol diagnostic modes",
       "silicon_measurement": "matched open-short-thru-load and exact local replicas"
+    },
+    {
+      "id": "pcie.uncertainty.gf180_dynamic_models",
+      "parameter": "high-frequency transistor/interconnect model validity and worst-case dynamic delay at 2.5 GT/s",
+      "available_evidence": "full-RC leaf PVT, aperture, phase, bandwidth and composed transient sweeps",
+      "validity_range": "public GF180 model and open extraction deck only",
+      "bound": null,
+      "claim_sensitivity": "existential for serializer, CDR, PLL and integrated transfer",
+      "correlated_blocks": ["serdes_tx", "serdes_rx", "serializer", "cdr", "phase_interpolator", "pll"],
+      "observable": "divided clocks, raw symbols, PRBS errors, eye-phase scan and on-die delay monitors",
+      "control": "external clock, bias, bandwidth, sample phase, VCO band and loop settings",
+      "safe_fallback": "reference-assisted or external-clock operation at characterized rates",
+      "silicon_measurement": "loaded inverter/CML delay chains, ring oscillators and exact clock/data-path replicas"
     }
   ]
 }

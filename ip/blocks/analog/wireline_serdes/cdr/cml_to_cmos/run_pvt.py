@@ -28,7 +28,7 @@ def main() -> None:
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--pex", type=Path)
     parser.add_argument("--eval-width-ps", type=int, default=575)
-    parser.add_argument("--regen-delay-ps", type=int, default=130,
+    parser.add_argument("--regen-delay-ps", type=int, default=10,
                         help="regeneration enable delay after sense-clock rise")
     parser.add_argument("--capture-delay-ps", type=int, default=200,
                         help="capture enable delay after sense-clock rise")
@@ -45,14 +45,14 @@ def main() -> None:
         parser.error("--jobs must be between 1 and 4")
     if not 450 <= args.eval_width_ps <= 650:
         parser.error("--eval-width-ps must be between 450 and 650")
-    if not 50 <= args.regen_delay_ps <= args.eval_width_ps - 100:
+    if not 10 <= args.regen_delay_ps <= args.eval_width_ps - 100:
         parser.error("--regen-delay-ps must leave at least 100 ps regeneration time")
     if args.capture_delay_ps < args.regen_delay_ps + 50:
         parser.error("--capture-delay-ps must follow regeneration by at least 50 ps")
     if args.capture_width_ps < 50:
         parser.error("--capture-width-ps must be at least 50 ps")
-    if args.capture_delay_ps + args.capture_width_ps > args.eval_width_ps - 25:
-        parser.error("capture must close at least 25 ps before sensor precharge")
+    if args.capture_delay_ps + args.capture_width_ps > args.eval_width_ps - 10:
+        parser.error("capture must close at least 10 ps before sensor precharge")
     args.work.mkdir(parents=True, exist_ok=True)
     if args.waveform_dir:
         args.waveform_dir.mkdir(parents=True, exist_ok=True)
@@ -104,7 +104,8 @@ def main() -> None:
                                 "MEASURES": "\n".join(measures),
                                 "WAVEFORM_COMMAND": (
                                     "wrdata " + str(args.waveform_dir / f"{case_id}.dat") +
-                                    " time v(xdut.xp) v(xdut.xn) v(xdut.ntail)"
+                                    " time v(xdut.sa) v(xdut.sb)"
+                                    " v(xdut.xp) v(xdut.xn) v(xdut.ntail)"
                                     " v(xdut.nregen) v(xdut.qp) v(xdut.qn)"
                                     " v(xdut.vregp) v(xdut.vregn)"
                                     " v(xdut.sxp) v(xdut.sxn)"

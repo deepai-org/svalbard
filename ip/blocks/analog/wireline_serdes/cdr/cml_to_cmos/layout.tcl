@@ -94,9 +94,30 @@ proc m2_to_m3 {x y} {
 # Reserve sparse body-tap columns before assigning signal escapes.  The tap
 # columns are intentionally regular so latch-up distance is a geometric
 # invariant rather than an accident of route-column allocation order.
-set used_route_columns {-84 -60 -36 -21 -12 0 12 21 36 60 84}
-proc route_column {preferred} {
-    global used_route_columns
+set used_route_columns {
+    -84.8 -84 -83.2 -60.8 -60 -59.2 -36.8 -36 -35.2
+    -21.8 -21 -20.2 -12.8 -12 -11.2 -0.8 0 0.8
+    11.2 12 12.8 20.2 21 21.8 35.2 36 36.8
+    59.2 60 60.8 83.2 84 84.8
+}
+array set net_route_columns {}
+proc route_column {preferred net {force_new 0}} {
+    global used_route_columns net_route_columns
+    # Reuse a nearby vertical escape for repeated terminals on the same net.
+    # This keeps same-row M2 terminal straps local instead of consuming a
+    # globally unique column and eventually crossing unrelated devices.
+    if {!$force_new && [info exists net_route_columns($net)]} {
+        set best {}
+        set best_distance 1e9
+        foreach column $net_route_columns($net) {
+            set distance [expr {abs($preferred-$column)}]
+            if {$distance < $best_distance} {
+                set best $column
+                set best_distance $distance
+            }
+        }
+        if {$best_distance <= 10.0} { return $best }
+    }
     for {set radius 0} {$radius < 400} {incr radius} {
         foreach sign {1 -1} {
             if {$radius == 0 && $sign < 0} { continue }
@@ -111,6 +132,7 @@ proc route_column {preferred} {
             }
             if {$available} {
                 lappend used_route_columns $candidate
+                lappend net_route_columns($net) $candidate
                 return $candidate
             }
         }
@@ -153,7 +175,7 @@ proc manual_gate_top {cx cy width nf} {
 
 array set tracks {
     VSS -30.0 INP -15.0 INN -13.6 SENSE_CLK -12.2
-    NTAIL -8.0 NREGEN 10.0
+    NTAIL -8.0 SA -5.2 SB -3.8 NREGEN 10.0
     SXP 14.0 SXN 15.4 MIP 16.2 MIN 18.2
     QPB 19.6 QNB 21.0 QP 22.4 QN 23.8
     XP 25.2 XN 26.6 OUTP 30.5 OUTN 31.9
@@ -223,23 +245,30 @@ proc draw_shared_mos {kind width nf cx cy} {
 
 # instance kind width fingers x y drain gate source
 set devices {
-    {XREGENP nfet_03v3 8 3 -15 8 XP XN NREGEN}
-    {XIP nfet_03v3 8 2 -9 8 XP INP NTAIL}
-    {XRTAIL nfet_03v3 8 8 -3 8 NREGEN REGEN_CLK VSS}
-    {XTAIL nfet_03v3 8 8 3 -6 NTAIL SENSE_CLK VSS}
-    {XIN nfet_03v3 8 2 9 8 XN INN NTAIL}
-    {XREGENN nfet_03v3 8 3 15 8 XN XP NREGEN}
+    {XACQP nfet_03v3 8 8 -30 8 XP SB NREGEN}
+    {XREGENP nfet_03v3 8 3 -21 8 XP XN NREGEN}
+    {XIP nfet_03v3 8 2 -15 8 SA INP NTAIL}
+    {XRTAIL nfet_03v3 8 8 -6 8 NREGEN REGEN_CLK VSS}
+    {XTAIL nfet_03v3 8 8 6 -6 NTAIL SENSE_CLK VSS}
+    {XIN nfet_03v3 8 2 15 8 SB INN NTAIL}
+    {XREGENN nfet_03v3 8 3 21 8 XN XP NREGEN}
+    {XACQN nfet_03v3 8 8 30 8 XN SA NREGEN}
 
     {XHP pfet_03v3 8 8 -24 74 VREGP REGEN_CLKB VDD}
     {XHN pfet_03v3 8 8 24 74 VREGN REGEN_CLKB VDD}
-    {XPREP  pfet_03v3 8 4 -12 37 XP SENSE_CLK VDD}
-    {XEQUAL pfet_03v3 8 4   0 37 XP SENSE_CLK XN}
-    {XPREN  pfet_03v3 8 4  12 37 XN SENSE_CLK VDD}
+    {XXPREP  pfet_03v3 8 8 -12 61 XP REGEN_CLK VDD}
+    {XXEQUAL pfet_03v3 8 8   0 61 XP REGEN_CLK XN}
+    {XXPREN  pfet_03v3 8 8  12 61 XN REGEN_CLK VDD}
+    {XALOADP pfet_03v3 8 1  -6 74 SA VSS VDD}
+    {XPREP  pfet_03v3 8 2 -12 37 SA SENSE_CLK VDD}
+    {XEQUAL pfet_03v3 8 2   0 37 SA SENSE_CLK SB}
+    {XPREN  pfet_03v3 8 2  12 37 SB SENSE_CLK VDD}
+    {XALOADN pfet_03v3 8 1   6 74 SB VSS VDD}
     {XLATP pfet_03v3 8 8 -18 49 XP XN VREGP}
     {XLATN pfet_03v3 8 8 18 49 XN XP VREGN}
 
     {XONP pfet_03v3 8 3 -78 37 OUTN QP VDD}
-    {XONN nfet_03v3 8 2 -81 22 OUTN QP VSS}
+    {XONN nfet_03v3 8 3 -81 14 OUTN QP VSS}
     {XBP pfet_03v3 8 2 -30 37 SXP XP VDD}
     {XBN nfet_03v3 8 2 -33 22 SXP XP VSS}
     {XTGIP pfet_03v3 8 4 -42 37 MIP CAPTURE_CLKB SXP}
@@ -262,7 +291,7 @@ set devices {
     {XDP pfet_03v3 8 2 30 37 SXN XN VDD}
     {XDN nfet_03v3 8 2 33 22 SXN XN VSS}
     {XOPP pfet_03v3 8 3 78 37 OUTP QN VDD}
-    {XOPN nfet_03v3 8 2 81 22 OUTP QN VSS}
+    {XOPN nfet_03v3 8 3 81 14 OUTP QN VSS}
 }
 
 crashbackups stop
@@ -281,7 +310,9 @@ foreach spec $devices {
     set drain_points {}
     set source_points {}
     set gate_points {}
-    set dual_gate [expr {[lsearch -exact {XHP XHN XLATP XLATN} $instance] >= 0}]
+    set dual_gate [expr {[lsearch -exact {
+        XACQP XACQN XHP XHN XXPREP XXPREN XXEQUAL XLATP XLATN
+    } $instance] >= 0}]
     foreach group [finger_groups $nf $cx] {
         lassign $group index gx group_nf
         set yoff [expr {max(0.70,$width/2.0-0.8)}]
@@ -320,14 +351,13 @@ foreach spec $devices {
     set drain_y [expr {$cy+$yoff}]
     set source_y [expr {$cy-$yoff}]
     set gate_y [expr {$cy-$width/2.0-0.70}]
-    set drain_route [route_column [expr {$cx-0.8}]]
-    set source_route [route_column [expr {$cx+0.8}]]
-    set gate_route [route_column $cx]
+    set drain_route [route_column [expr {$cx-0.8}] $drain]
+    set source_route [route_column [expr {$cx+0.8}] $source]
+    set gate_route [route_column $cx $gate]
     set source_routes [list $source_route]
     if {($source eq "VDD" || $source eq "VSS") && $nf >= 8} {
-        lappend source_routes [route_column [expr {$cx+2.4}]]
+        lappend source_routes [route_column [expr {$cx+2.4}] $source 1]
     }
-
     paint_rect metal2 [expr {min($drain_route,[lindex $drain_points 0])-0.38}] \
         [expr {$drain_y-0.38}] \
         [expr {max($drain_route,[lindex $drain_points end])+0.38}] \
@@ -378,15 +408,8 @@ foreach x [list $p_tap_left $p_tap_right] {
 paint_rect metal5 [expr {$p_tap_left-0.38}] -17.38 85.38 -16.62
 paint_rect metal5 84.62 -30.0 85.38 -16.62
 
-set p_upper_tap_columns {-21 0 21}
-foreach x $p_upper_tap_columns {
-    paint_rect psubdiff [expr {$x-0.32}] 14.63 [expr {$x+0.32}] 15.37
-    substrate_contact $x 15
-    stack_to $x 15 5
-}
-paint_rect metal5 -21.38 14.62 85.38 15.38
-paint_rect metal5 84.62 -17.38 85.38 15.38
-
+# Distributed n-well contacts join VDD on M5.  Their M3 columns have explicit
+# route-allocation keepouts, so signal escapes cannot touch the tap stacks.
 set nwell_tap_columns {-84 -60 -36 -12 12 36 60 84}
 foreach x $nwell_tap_columns {
     foreach y {44 55 67 82} {

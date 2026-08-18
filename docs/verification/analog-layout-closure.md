@@ -103,6 +103,14 @@ Do not rely on a via-stack helper blindly at route crossings. A stack to M5 also
 contains M4, M3, M2, and M1 shapes. Any lower-metal route passing through that
 location becomes electrically connected even if the visible top metals differ.
 
+Allocate vertical escape columns with net awareness, not only global spacing.
+Repeated terminals on the same net should reuse a nearby legal escape when that
+keeps their low-metal terminal straps local. Otherwise a globally unique-column
+allocator eventually pushes late devices far from their terminals; the long
+horizontal straps can cross or merge unrelated same-row nets even though every
+individual via landing is legal. Reserve body-tap columns first and permit a
+second forced supply escape only where current density requires it.
+
 ## 6. Close DRC and LVS incrementally
 
 Run Magic generation, DRC, and LVS after the first complete route. Interpret

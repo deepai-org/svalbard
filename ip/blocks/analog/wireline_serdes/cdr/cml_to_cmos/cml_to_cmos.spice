@@ -1,10 +1,20 @@
 * SPDX-License-Identifier: Apache-2.0
 * Clocked regenerative differential CML-to-CMOS sense amplifier.
 .subckt cml_to_cmos INP INN SENSE_CLK REGEN_CLK REGEN_CLKB CAPTURE_CLK CAPTURE_CLKB VDD VSS OUTP OUTN
-* Both internal nodes precharge high while SENSE_CLK is low.
-XPREP XP SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=4
-XPREN XN SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=4
-XEQUAL XP SENSE_CLK XN VDD pfet_03v3 w=8u l=0.28u m=4
+* A small first stage acquires the CML decision on SA/SB.  These nodes only
+* drive gates in the regenerative stage, isolating input sensing from the
+* larger reset and positive-feedback diffusion capacitance on XP/XN.
+XPREP SA SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XPREN SB SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XEQUAL SA SENSE_CLK SB VDD pfet_03v3 w=8u l=0.28u m=2
+XALOADP SA VSS VDD VDD pfet_03v3 w=8u l=0.28u m=1
+XALOADN SB VSS VDD VDD pfet_03v3 w=8u l=0.28u m=1
+
+* XP/XN have a separate, regeneration-clocked reset.  It remains active
+* throughout acquisition and releases only when the second stage evaluates.
+XXPREP XP REGEN_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XXPREN XN REGEN_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XXEQUAL XP REGEN_CLK XN VDD pfet_03v3 w=8u l=0.28u m=8
 
 * The complementary CDR clock disconnects PMOS regeneration throughout
 * precharge, so the previous decision cannot fight XP/XN equalization.  The
@@ -14,10 +24,12 @@ XHN VREGN REGEN_CLKB VDD VDD pfet_03v3 w=8u l=0.28u m=8
 XLATP XP XN VREGP VDD pfet_03v3 w=8u l=0.28u m=8
 XLATN XN XP VREGN VDD pfet_03v3 w=8u l=0.28u m=8
 
-* The input pair gets a 100 ps acquisition interval before a separately phased
-* regeneration tail and PMOS header enable positive feedback.
-XIP XP INP NTAIL VSS nfet_03v3 w=8u l=0.28u m=2
-XIN XN INN NTAIL VSS nfet_03v3 w=8u l=0.28u m=2
+* The input pair gets an acquisition interval before the separately phased
+* second-stage input pair and cross-coupled devices enable regeneration.
+XIP SA INP NTAIL VSS nfet_03v3 w=8u l=0.28u m=2
+XIN SB INN NTAIL VSS nfet_03v3 w=8u l=0.28u m=2
+XACQP XP SB NREGEN VSS nfet_03v3 w=8u l=0.28u m=8
+XACQN XN SA NREGEN VSS nfet_03v3 w=8u l=0.28u m=8
 XREGENP XP XN NREGEN VSS nfet_03v3 w=8u l=0.28u m=3
 XREGENN XN XP NREGEN VSS nfet_03v3 w=8u l=0.28u m=3
 XTAIL NTAIL SENSE_CLK VSS VSS nfet_03v3 w=8u l=0.28u m=8
@@ -53,11 +65,11 @@ XJN2 QN QNB VSS VSS nfet_03v3 w=8u l=0.28u m=2
 XTGGP MIN CAPTURE_CLK  QN VDD pfet_03v3 w=4u l=0.28u m=1
 XTGGN MIN CAPTURE_CLKB QN VSS nfet_03v3 w=4u l=0.28u m=1
 
-* Cross-connected output inverters preserve decision polarity.  The pull-down
-* devices use a modest width increase to close the 50 fF falling-edge load
-* without the latch loading of an additional full finger.
+* Cross-connected output inverters preserve decision polarity.  Balanced
+* three-finger pull-up/pull-down devices close the 50 fF extracted falling
+* edge without adding another buffering stage to the held latch.
 XOPP OUTP QN VDD VDD pfet_03v3 w=8u l=0.28u m=3
-XOPN OUTP QN VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XOPN OUTP QN VSS VSS nfet_03v3 w=8u l=0.28u m=3
 XONP OUTN QP VDD VDD pfet_03v3 w=8u l=0.28u m=3
-XONN OUTN QP VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XONN OUTN QP VSS VSS nfet_03v3 w=8u l=0.28u m=3
 .ends cml_to_cmos

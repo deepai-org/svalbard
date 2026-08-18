@@ -13,7 +13,8 @@ bias, threshold, and bandwidth controls; [`phase_interpolator`](phase_interpolat
 a programmable two-input CML phase interpolator for reference-assisted
 sampling; and [`cdr`](cdr/README.md), which contains both a dual-edge CML
 sampler and a half-rate Alexander phase-detector boundary with extracted PVT
-and bounded stress evidence. The [`deserializer`](deserializer/README.md) is a
+and bounded stress evidence, plus a physically extracted dual-interleave
+phase-error combiner. The [`deserializer`](deserializer/README.md) is a
 routed differential push-pull capture stage with local input restoration. It
 is DRC-clean, uniquely LVS-matched, and full-RC verified both alone and in the
 CML-to-CMOS-to-parallel-data composition across representative PVT. The routed

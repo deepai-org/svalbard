@@ -14,6 +14,7 @@ measured silicon.
 | Dual-edge CDR sampler | Physically closed with PVT, aperture, stress, and supply-injection evidence | Clock-tree loading, mismatch/metastability, integrated extraction |
 | Alexander boundary | Physically closed with PVT and fixed-code stress | Retiming and loop-filter interface |
 | Integrated Alexander front end | Representative schematic PVT closes 9/9 environments | Hierarchical layout/PEX, valid-window retimer, acquisition/tracking loop |
+| Dual-interleave phase-error combiner | Physically closed; extracted 108/108 cases and 9/9 calibrated environments | Vote retiming, accumulator/integrator, PI control encoding, closed-loop dynamics |
 | Phase interpolator | Physically closed with phase-code PVT and stress | Control DAC, clock-tree/sampler composition, jitter/supply coupling |
 | CML-to-CMOS boundary | Physically closed with programmable-tail PVT and timing window | Denser composed timing/jitter matrix and clock distribution |
 | 1:2 deserializer | Physically closed alone and with extracted CML-to-CMOS front end | Parallel RX connection and clock/reset distribution |
@@ -33,8 +34,9 @@ and analog-top verification as major work rather than treating them as wiring.
 
 ## Critical path
 
-1. Add valid-window retiming and a realizable loop-filter/control boundary to
-   the integrated Alexander detector; demonstrate reference-assisted tracking.
+1. Add valid-window retiming and a realizable accumulator/integrator and
+   phase-interpolator control encoding after the closed phase-error combiner;
+   demonstrate reference-assisted tracking.
 2. Build the PLL/VCO/divider with external-clock bypass and observable divided
    clock/lock outputs, then close startup, tuning range, jitter, and supply
    sensitivity through extraction.

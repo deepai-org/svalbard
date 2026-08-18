@@ -1,0 +1,22 @@
+* SPDX-License-Identifier: Apache-2.0
+* Dual-interleave CML Alexander error combiner with differential RC output.
+.subckt cml_phase_error_filter E0P E0N L0P L0N E1P E1N L1P L1N VBIAS VDD VSS ERRP ERRN
+XRP VDD ERRP VSS ppolyf_u r_width=2u r_length=4.00u
+XRN VDD ERRN VSS ppolyf_u r_width=2u r_length=4.00u
+
+* EARLY assertions raise ERRP; LATE assertions raise ERRN.  Equal EARLY/LATE
+* decisions and opposite interleave decisions cancel by construction.
+XE0P ERRN E0P TE0 VSS nfet_03v3 w=8u l=0.28u m=2
+XE0N ERRP E0N TE0 VSS nfet_03v3 w=8u l=0.28u m=2
+XL0P ERRP L0P TL0 VSS nfet_03v3 w=8u l=0.28u m=2
+XL0N ERRN L0N TL0 VSS nfet_03v3 w=8u l=0.28u m=2
+XE1P ERRN E1P TE1 VSS nfet_03v3 w=8u l=0.28u m=2
+XE1N ERRP E1N TE1 VSS nfet_03v3 w=8u l=0.28u m=2
+XL1P ERRP L1P TL1 VSS nfet_03v3 w=8u l=0.28u m=2
+XL1N ERRN L1N TL1 VSS nfet_03v3 w=8u l=0.28u m=2
+
+XTE0 TE0 VBIAS VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XTL0 TL0 VBIAS VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XTE1 TE1 VBIAS VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XTL1 TL1 VBIAS VSS VSS nfet_03v3 w=8u l=0.28u m=2
+.ends cml_phase_error_filter

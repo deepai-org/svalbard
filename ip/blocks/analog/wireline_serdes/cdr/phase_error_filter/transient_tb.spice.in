@@ -1,0 +1,39 @@
+* SPDX-License-Identifier: Apache-2.0
+* DUT SHA-256: @DUT_SHA256@
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include @DUT_PATH@
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VBIAS VBIAS 0 @VBIAS_V@
+VE0P E0P 0 PWL(@E0P_PWL@)
+VE0N E0N 0 PWL(@E0N_PWL@)
+VL0P L0P 0 PWL(@L0P_PWL@)
+VL0N L0N 0 PWL(@L0N_PWL@)
+VE1P E1P 0 PWL(@E1P_PWL@)
+VE1N E1N 0 PWL(@E1N_PWL@)
+VL1P L1P 0 PWL(@L1P_PWL@)
+VL1N L1N 0 PWL(@L1N_PWL@)
+
+XDUT E0P E0N L0P L0N E1P E1N L1P L1N VBIAS VDD 0 ERRP ERRN @DUT_SUBCKT@
+CERRP ERRP 0 50f
+CERRN ERRN 0 50f
+
+.control
+tran 2p 14n
+let err = v(ERRP)-v(ERRN)
+let cm = (v(ERRP)+v(ERRN))/2
+let isupply = -i(VDD)
+meas tran neutral0 avg err from=1.5n to=1.9n
+meas tran early_one avg err from=3.5n to=3.9n
+meas tran early_two avg err from=5.5n to=5.9n
+meas tran neutral1 avg err from=7.5n to=7.9n
+meas tran late_one avg err from=9.5n to=9.9n
+meas tran late_two avg err from=11.5n to=11.9n
+meas tran mixed avg err from=13.5n to=13.9n
+meas tran output_cm avg cm from=1.5n to=13.9n
+meas tran supply_current avg isupply from=1.5n to=13.9n
+.endc
+.end

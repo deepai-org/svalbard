@@ -67,6 +67,13 @@ sampler-bias and edge-phase calibration closes across representative schematic
 PVT; valid-window retiming, loop filtering, and autonomous closed-loop recovery
 remain in progress.
 
+The subsequent [dual-interleave phase-error combiner](phase_error_filter/README.md)
+is now DRC-clean, uniquely LVS-matched, and full-RC closed across nine
+representative environments. It sums both detector lanes into a signed
+proportional error voltage while rejecting neutral and opposed votes. Vote
+retiming, integration/control encoding, and autonomous loop closure remain the
+next boundary.
+
 The [aperture-qualified CML-to-CMOS front end](cml_to_cmos/README.md) now has a
 zero-DRC, uniquely LVS-matched layout and closes all nine nominal full-RC
 input/load cases at 800 ps throughput. Its programmable two-mode tail closes

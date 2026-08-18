@@ -2,7 +2,7 @@ PYTHON ?= python3
 COMPONENT ?= project.pcie_gen1_endpoint
 PROJECT ?=
 
-.PHONY: doctor check check-fast check-digital spec process-eligibility images-ready toolchain-readiness scratch-report repo-audit graph smoke toolchain-smoke analog-flow-preflight serdes-tx-smoke serdes-termination-smoke serdes-rx-smoke phase-interpolator-smoke cdr-sampler-smoke cdr-phase-detector-smoke cdr-phase-detector-schematic cdr-integrated-detector-schematic digital-image quaigh-image digital-pnr-smoke bfm-smoke bfm-history-audit verification-deps-fetch tool-artifacts-fetch pull
+.PHONY: doctor check check-fast check-digital spec process-eligibility images-ready toolchain-readiness scratch-report repo-audit graph smoke toolchain-smoke analog-flow-preflight serdes-tx-smoke serdes-termination-smoke serdes-rx-smoke phase-interpolator-smoke cdr-sampler-smoke cdr-phase-detector-smoke cdr-phase-detector-schematic cdr-integrated-detector-schematic cdr-phase-error-filter-smoke digital-image quaigh-image digital-pnr-smoke bfm-smoke bfm-history-audit verification-deps-fetch tool-artifacts-fetch pull
 
 doctor:
 	./bootstrap.sh doctor
@@ -54,6 +54,7 @@ analog-flow-preflight:
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/cdr/run.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/cdr/phase_detector/run.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/cdr/integrated_detector/run.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/cdr/phase_error_filter/run.sh
 
 serdes-tx-smoke:
 	./ip/blocks/analog/wireline_serdes/serdes_tx/run.sh
@@ -78,6 +79,9 @@ cdr-phase-detector-smoke:
 
 cdr-integrated-detector-schematic:
 	./ip/blocks/analog/wireline_serdes/cdr/integrated_detector/run.sh
+
+cdr-phase-error-filter-smoke:
+	./ip/blocks/analog/wireline_serdes/cdr/phase_error_filter/run.sh
 
 digital-image:
 	./env/images/librelane-gf180-canary/build.sh

@@ -158,6 +158,17 @@ write path and create stale-decision feedback. The contract must say whether a
 cell produces a held value or an aperture-qualified value; both are useful,
 but they are not interchangeable.
 
+Close the interface using the composed extracted cells, not two standalone
+load capacitors. A downstream differential write port can present several
+large NMOS and PMOS gate banks on each rail; this distributed nonlinear load is
+not equivalent to the nominal explicit capacitor used in either leaf test. If
+the boundary fails, add a local restoring stage or rebudget fanout, then verify
+its own extracted delay inside the aperture. Size the retaining latch and the
+write branches as a contention ratio: weakening both latch polarities
+symmetrically can improve writability without the skew caused by changing only
+one polarity. Keep the measurement before the next capture opening so a late
+pass cannot be caused by the following symbol.
+
 When one fixed device size cannot close two physically distinct operating
 regions, expose a small realizable trim before oversizing the whole path. The
 trim must correspond to actual placed devices, have a defined selection

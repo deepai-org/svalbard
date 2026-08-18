@@ -13,12 +13,12 @@ bias, threshold, and bandwidth controls; [`phase_interpolator`](phase_interpolat
 a programmable two-input CML phase interpolator for reference-assisted
 sampling; and [`cdr`](cdr/README.md), which contains both a dual-edge CML
 sampler and a half-rate Alexander phase-detector boundary with extracted PVT
-and bounded stress evidence. The new [`deserializer`](deserializer/README.md)
-contains a transistor-level differential capture stage whose schematic has
-been composed with the full-RC CML-to-CMOS boundary over representative PVT.
-The already-routed children are code-generated, DRC-clean, LVS-matched, and
-explicitly experimental pre-silicon evidence; the deserializer is not yet
-routed.
+and bounded stress evidence. The [`deserializer`](deserializer/README.md) is a
+routed differential push-pull capture stage with local input restoration. It
+is DRC-clean, uniquely LVS-matched, and full-RC verified both alone and in the
+CML-to-CMOS-to-parallel-data composition across representative PVT. The routed
+children are code-generated and remain explicitly experimental pre-silicon
+evidence rather than qualified PCIe macros.
 
 The repeatable method used to take these cells from an executable electrical
 contract through generated layout and full-RC evidence is documented in the

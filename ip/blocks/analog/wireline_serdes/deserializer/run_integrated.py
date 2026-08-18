@@ -20,7 +20,7 @@ ENVIRONMENTS = (
     ("ss", 2.97, 125, 0.60), ("ss", 2.97, 125, 0.80),
     ("ss", 3.63, -40, 0.60), ("ss", 3.63, -40, 0.80),
 )
-CAPTURE_CLOSE_PS = (820, 850, 880, 900)
+CAPTURE_CLOSE_PS = (950, 1000)
 OUTPUT_SETTLE_PS = 300
 SCALAR = re.compile(r"^(q_\d+|qb_\d+|supply_current)\s*=\s*([-+0-9.eE]+)",
                     re.MULTILINE)
@@ -57,29 +57,50 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", required=True, type=Path)
     parser.add_argument("--frontend-pex", required=True, type=Path)
+    parser.add_argument("--deserializer-pex", type=Path)
     parser.add_argument("--work", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--jobs", type=int, default=4)
     parser.add_argument("--timeout-s", type=int, default=300)
+    parser.add_argument("--output-settle-ps", type=int, default=OUTPUT_SETTLE_PS)
+    parser.add_argument("--smoke", action="store_true")
+    parser.add_argument("--capture-close-ps", type=int, action="append")
     args = parser.parse_args()
     if not 1 <= args.jobs <= 4:
         parser.error("--jobs must be between 1 and 4")
+    if not 100 <= args.output_settle_ps <= 450:
+        parser.error("--output-settle-ps must be between 100 and 450")
+    if args.capture_close_ps and any(not 820 <= value <= 1000
+                                     for value in args.capture_close_ps):
+        parser.error("--capture-close-ps must be between 820 and 1000")
     args.work.mkdir(parents=True, exist_ok=True)
-    deserializer = args.source / "deserializer.spice"
+    deserializer = (args.deserializer_pex if args.deserializer_pex
+                    else args.source / "deserializer.spice")
     template = (args.source / "integrated_tb.spice.in").read_text()
     frontend_sha256 = hashlib.sha256(args.frontend_pex.read_bytes()).hexdigest()
     deserializer_sha256 = hashlib.sha256(deserializer.read_bytes()).hexdigest()
     expected_scalars = 2 * len(SAMPLE_INDICES) + 1
+    environments = ENVIRONMENTS
+    capture_closes = CAPTURE_CLOSE_PS
+    if args.smoke:
+        environments = tuple(environment for environment in ENVIRONMENTS
+                             if environment in (ENVIRONMENTS[0], ENVIRONMENTS[1],
+                                                ENVIRONMENTS[5], ENVIRONMENTS[6]))
+        capture_closes = CAPTURE_CLOSE_PS
+    if args.capture_close_ps:
+        capture_closes = tuple(dict.fromkeys(args.capture_close_ps))
+    if max(capture_closes) + args.output_settle_ps > 1380:
+        parser.error("capture close plus output settle must not exceed 1380 ps")
     specifications = []
-    for mos, vdd, temp, common_mode_fraction in ENVIRONMENTS:
+    for mos, vdd, temp, common_mode_fraction in environments:
         common_mode = vdd * common_mode_fraction
-        for close_ps in CAPTURE_CLOSE_PS:
+        for close_ps in capture_closes:
             case_id = (f"{mos}_{vdd:.2f}_{temp:+d}_cm{common_mode_fraction:.2f}_"
                        f"close{close_ps}")
             case_id = case_id.replace("+", "p").replace("-", "m").replace(".", "p")
             measures = []
             for index in SAMPLE_INDICES:
-                time = index * 800e-12 + (close_ps + OUTPUT_SETTLE_PS) * 1e-12
+                time = index * 800e-12 + (close_ps + args.output_settle_ps) * 1e-12
                 measures.append(f"meas tran q_{index} find v(Q) at={time:.12g}")
                 measures.append(f"meas tran qb_{index} find v(QB) at={time:.12g}")
             values = {
@@ -87,6 +108,9 @@ def main() -> None:
                 "DESERIALIZER_SHA256": deserializer_sha256,
                 "FRONTEND_PATH": str(args.frontend_pex),
                 "DESERIALIZER_PATH": str(deserializer),
+                "DESERIALIZER_SUBCKT": ("deserializer_1to2_pex"
+                                          if args.deserializer_pex
+                                          else "deserializer_1to2"),
                 "MOS_CORNER": mos, "TEMP_C": str(temp), "VDD_V": f"{vdd:.2f}",
                 "INP_PWL": input_pwl(True, common_mode, 0.10),
                 "INN_PWL": input_pwl(False, common_mode, 0.10),
@@ -132,7 +156,7 @@ def main() -> None:
         return {
             "id": case_id, "environment": [mos, vdd, temp, common_mode_fraction],
             "capture_close_s": close_ps * 1e-12,
-            "output_sample_s": (close_ps + OUTPUT_SETTLE_PS) * 1e-12,
+            "output_sample_s": (close_ps + args.output_settle_ps) * 1e-12,
             "complete": complete, "logic_margin_v": margin,
             "supply_current_a": current, "result": "pass" if passed else "fail",
         }
@@ -154,10 +178,12 @@ def main() -> None:
     result = {
         "schema_version": 1, "frontend_pex_sha256": frontend_sha256,
         "deserializer_sha256": deserializer_sha256,
+        "mode": "smoke" if args.smoke else "full",
         "result": "pass" if complete_count == len(cases)
                   and passing_groups == len(groups) else "fail",
         "case_count": len(cases), "complete_case_count": complete_count,
         "group_count": len(groups), "passing_group_count": passing_groups,
+        "output_settle_s": args.output_settle_ps * 1e-12,
         "cases": cases, "groups": groups,
     }
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")

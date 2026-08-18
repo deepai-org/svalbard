@@ -22,7 +22,7 @@ ENVIRONMENTS = (
     ("ss", 3.63, -40), ("ss", 3.63, 125),
 )
 DATA_READY_PS = (680, 700)
-CAPTURE_CLOSE_PS = (820, 850, 880, 900)
+CAPTURE_CLOSE_PS = (950, 1000)
 LOADS_FF = (10, 50)
 OUTPUT_SETTLE_PS = 300
 SCALAR = re.compile(
@@ -58,27 +58,44 @@ def data_pwl(bits: tuple[int, ...], vdd: float, ready_ps: int) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", required=True, type=Path)
+    parser.add_argument("--pex", type=Path)
     parser.add_argument("--work", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--jobs", type=int, default=4)
     parser.add_argument("--timeout-s", type=int, default=60)
+    parser.add_argument("--output-settle-ps", type=int, default=OUTPUT_SETTLE_PS)
+    parser.add_argument("--capture-close-ps", type=int, action="append")
+    parser.add_argument("--smoke", action="store_true",
+                        help="run 700 ps ready and 50 fF at the contract closes")
     args = parser.parse_args()
     if not 1 <= args.jobs <= 4:
         parser.error("--jobs must be between 1 and 4")
+    if not 100 <= args.output_settle_ps <= 450:
+        parser.error("--output-settle-ps must be between 100 and 450")
+    if args.capture_close_ps and any(not 820 <= value <= 1000
+                                     for value in args.capture_close_ps):
+        parser.error("--capture-close-ps must be between 820 and 1000")
     args.work.mkdir(parents=True, exist_ok=True)
-    source = args.source / "deserializer.spice"
+    source = args.pex if args.pex else args.source / "deserializer.spice"
     template = (args.source / "capture_tb.spice.in").read_text()
     dut_sha256 = hashlib.sha256(source.read_bytes()).hexdigest()
     expected_scalars = 4 * len(SAMPLE_INDICES) + 1
     specifications = []
+    ready_values = (700,) if args.smoke else DATA_READY_PS
+    close_values = CAPTURE_CLOSE_PS
+    if args.capture_close_ps:
+        close_values = tuple(dict.fromkeys(args.capture_close_ps))
+    if max(close_values) + args.output_settle_ps > 1380:
+        parser.error("capture close plus output settle must not exceed 1380 ps")
+    load_values = (50,) if args.smoke else LOADS_FF
     for mos, vdd, temp in ENVIRONMENTS:
-        for ready_ps in DATA_READY_PS:
-            for close_ps in CAPTURE_CLOSE_PS:
-                for load_ff in LOADS_FF:
+        for ready_ps in ready_values:
+            for close_ps in close_values:
+                for load_ff in load_values:
                     case_id = (f"{mos}_{vdd:.2f}_{temp:+d}_ready{ready_ps}_"
                                f"close{close_ps}_load{load_ff}")
                     case_id = case_id.replace("+", "p").replace("-", "m").replace(".", "p")
-                    sample_delay = close_ps + OUTPUT_SETTLE_PS
+                    sample_delay = close_ps + args.output_settle_ps
                     measures = []
                     for index in SAMPLE_INDICES:
                         time = index * 800e-12 + sample_delay * 1e-12
@@ -89,6 +106,8 @@ def main() -> None:
                                 f"meas tran {lane}_qb_{index} find v({lane.upper()}_QB) at={time:.12g}")
                     values = {
                         "DUT_SHA256": dut_sha256, "DUT_PATH": str(source),
+                        "DUT_SUBCKT": ("deserializer_1to2_pex" if args.pex
+                                        else "deserializer_1to2"),
                         "MOS_CORNER": mos, "TEMP_C": str(temp), "VDD_V": f"{vdd:.2f}",
                         "EVEN_PWL": data_pwl(EVEN_BITS, vdd, ready_ps),
                         "EVENB_PWL": data_pwl(tuple(1 - bit for bit in EVEN_BITS),
@@ -166,7 +185,8 @@ def main() -> None:
     passing_groups = sum(group["result"] == "pass" for group in groups)
     result = {
         "schema_version": 1, "dut_sha256": dut_sha256,
-        "output_settle_s": OUTPUT_SETTLE_PS * 1e-12,
+        "mode": "smoke" if args.smoke else "matrix",
+        "output_settle_s": args.output_settle_ps * 1e-12,
         "result": "pass" if complete_count == len(cases)
                   and passing_groups == len(groups) else "fail",
         "case_count": len(cases), "complete_case_count": complete_count,

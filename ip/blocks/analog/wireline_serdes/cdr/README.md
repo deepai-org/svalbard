@@ -71,8 +71,10 @@ The [aperture-qualified CML-to-CMOS front end](cml_to_cmos/README.md) now has a
 zero-DRC, uniquely LVS-matched layout and closes all nine nominal full-RC
 input/load cases at 800 ps throughput. Its programmable two-mode tail closes
 all nine representative extracted PVT contract environments at 200 mV input;
-seven of nine paired 100 mV stress cases also pass. The next integration gate
-is composing its measured late-valid interval with a clocked deserializer rather
-than duplicating state retention inside the analog boundary. The first
-transistor-level composition now closes all nine representative environments;
-deserializer layout and extracted verification are next.
+seven of nine paired 100 mV stress cases also pass. The measured late-valid
+interval is now composed with the routed clocked deserializer rather than
+duplicating state retention inside the analog boundary. Both cells are full-RC
+extracted, and the 18-case composition closes all nine representative
+environments with a common 1000 ps capture close and measurement before the
+following capture opening. Parallel RX integration and autonomous closed-loop
+recovery are next.

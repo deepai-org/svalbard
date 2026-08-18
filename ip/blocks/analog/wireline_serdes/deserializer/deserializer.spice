@@ -1,18 +1,24 @@
 * SPDX-License-Identifier: Apache-2.0
 * Dual half-rate differential CMOS capture stage for the CDR output streams.
-.subckt cmos_differential_capture D DB CLK VDD VSS Q QB
+.subckt cmos_differential_capture D DB CLK CLKB VDD VSS Q QB
 * A static cross-coupled inverter pair owns state after capture.
-XLQP Q_INT QB_INT VDD VDD pfet_03v3 w=8u l=0.28u m=4
-XLQN Q_INT QB_INT VSS VSS nfet_03v3 w=8u l=0.28u m=4
-XLBP QB_INT Q_INT VDD VDD pfet_03v3 w=8u l=0.28u m=4
-XLBN QB_INT Q_INT VSS VSS nfet_03v3 w=8u l=0.28u m=4
+XLQP Q_INT QB_INT VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XLQN Q_INT QB_INT VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XLBP QB_INT Q_INT VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XLBN QB_INT Q_INT VSS VSS nfet_03v3 w=8u l=0.28u m=2
 
 * During capture, complementary series branches directly force one state node
 * low.  Positive feedback raises the other node without a request-gate delay.
-XSETD QB_INT D SET_TAIL VSS nfet_03v3 w=8u l=0.28u m=8
+XSETD QB_INT D SET_TAIL VSS nfet_03v3 w=8u l=0.28u m=4
 XSETC SET_TAIL CLK VSS VSS nfet_03v3 w=8u l=0.28u m=8
-XRSTD Q_INT DB RST_TAIL VSS nfet_03v3 w=8u l=0.28u m=8
+XRSTD Q_INT DB RST_TAIL VSS nfet_03v3 w=8u l=0.28u m=4
 XRSTC RST_TAIL CLK VSS VSS nfet_03v3 w=8u l=0.28u m=8
+
+* Complementary PMOS branches simultaneously drive the winning node high.
+XSETPD Q_INT DB PSET_TAIL VDD pfet_03v3 w=8u l=0.28u m=4
+XSETPC PSET_TAIL CLKB VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XRSTPD QB_INT D PRST_TAIL VDD pfet_03v3 w=8u l=0.28u m=4
+XRSTPC PRST_TAIL CLKB VDD VDD pfet_03v3 w=8u l=0.28u m=8
 
 * Tapered buffers isolate the retained state from external pin capacitance.
 XQBP QB_BUF Q_INT VDD VDD pfet_03v3 w=8u l=0.28u m=2
@@ -26,6 +32,18 @@ XBON QB Q_BUF VSS VSS nfet_03v3 w=8u l=0.28u m=6
 .ends cmos_differential_capture
 
 .subckt deserializer_1to2 EVEN_D EVEN_DB ODD_D ODD_DB CAPTURE_CLK CAPTURE_CLKB VDD VSS EVEN_Q EVEN_QB ODD_Q ODD_QB
-XEVEN EVEN_D EVEN_DB CAPTURE_CLK VDD VSS EVEN_Q EVEN_QB cmos_differential_capture
-XODD  ODD_D  ODD_DB  CAPTURE_CLK VDD VSS ODD_Q  ODD_QB  cmos_differential_capture
+* Per-lane restoring inverters isolate the CML front end from the large
+* complementary write-device gates.  Cross the two inverted outputs so the
+* capture core still receives the original D/DB polarity.
+XEDP EVEN_D_BUF EVEN_DB VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XEDN EVEN_D_BUF EVEN_DB VSS VSS nfet_03v3 w=8u l=0.28u m=4
+XEDBP EVEN_DB_BUF EVEN_D VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XEDBN EVEN_DB_BUF EVEN_D VSS VSS nfet_03v3 w=8u l=0.28u m=4
+XODP ODD_D_BUF ODD_DB VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XODN ODD_D_BUF ODD_DB VSS VSS nfet_03v3 w=8u l=0.28u m=4
+XODBP ODD_DB_BUF ODD_D VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XODBN ODD_DB_BUF ODD_D VSS VSS nfet_03v3 w=8u l=0.28u m=4
+
+XEVEN EVEN_D_BUF EVEN_DB_BUF CAPTURE_CLK CAPTURE_CLKB VDD VSS EVEN_Q EVEN_QB cmos_differential_capture
+XODD  ODD_D_BUF  ODD_DB_BUF  CAPTURE_CLK CAPTURE_CLKB VDD VSS ODD_Q  ODD_QB  cmos_differential_capture
 .ends deserializer_1to2

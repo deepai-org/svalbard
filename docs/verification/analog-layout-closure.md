@@ -87,6 +87,24 @@ ports. The recurring arrangement for current-steering cells is:
 6. explicit body connections, dense substrate/well contacts, and a guard ring;
 7. wide supply rails and via arrays at every current-carrying transition.
 
+Treat matching context as geometry, not only equal `W/L`.  Put correlated
+devices into one compact interdigitated or common-centroid array, add the PDK's
+legal dummy fingers at both array edges, keep active members equally distant
+from well/guard boundaries, and equalize contact count and orientation.  Use
+multifinger devices where extracted junction capacitance and gate resistance
+improve, but measure the benefit because diffusion sharing depends on the exact
+PCell topology.  Put differential routes side by side on the same layers with
+matched bends, via stacks, neighbors, and shielding; equal drawn length on
+different metals is not matched parasitic context.
+
+Plan density before final extraction.  Distribute substrate/well taps through
+large interiors, reserve symmetric quiet regions for intentional fill, and keep
+floating fill away from high-impedance nodes where the deck permits.  Local
+bias/reference decoupling must be symmetrically placed and explicitly simulated;
+extra MOS capacitance is not automatically benign.  Re-run DRC/LVS/PEX after
+dummy, tap, decap, or fill insertion because all four can alter connectivity or
+sensitive-node capacitance.
+
 Choose device ordering to equalize both electrical function and route span. A
 geometrically mirrored picture can still be electrically asymmetric when one
 output joins inner devices and the other joins outer devices with unequal wire.

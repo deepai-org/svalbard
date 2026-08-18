@@ -1,0 +1,51 @@
+* SPDX-License-Identifier: Apache-2.0
+* Matched dual 5-bit voltage-mode R-2R DAC for phase-interpolator tail controls.
+* Each bit and its complement are static full-supply one-hot controls.
+.subckt phase_control_dac A4 A4B A3 A3B A2 A2B A1 A1B A0 A0B B4 B4B B3 B3B B2 B2B B1 B1B B0 B0B VREFH VREFL VSS CTRL_A CTRL_B
+
+* Channel A: MSB shunt at CTRL_A, LSB shunt at AN4.
+XAR0 CTRL_A AN1 VSS ppolyf_u r_width=2u r_length=20.00u
+XAR1 AN1 AN2 VSS ppolyf_u r_width=2u r_length=20.00u
+XAR2 AN2 AN3 VSS ppolyf_u r_width=2u r_length=20.00u
+XAR3 AN3 AN4 VSS ppolyf_u r_width=2u r_length=20.00u
+XA4R CTRL_A AB4 VSS ppolyf_u r_width=2u r_length=40.00u
+XA3R AN1 AB3 VSS ppolyf_u r_width=2u r_length=40.00u
+XA2R AN2 AB2 VSS ppolyf_u r_width=2u r_length=40.00u
+XA1R AN3 AB1 VSS ppolyf_u r_width=2u r_length=40.00u
+XA0R AN4 AB0 VSS ppolyf_u r_width=2u r_length=40.00u
+XATR AN4 VREFL VSS ppolyf_u r_width=2u r_length=40.00u
+
+XA4H AB4 A4 VREFH VSS nfet_03v3 w=8u l=0.28u m=2
+XA4L AB4 A4B VREFL VSS nfet_03v3 w=8u l=0.28u m=2
+XA3H AB3 A3 VREFH VSS nfet_03v3 w=8u l=0.28u m=2
+XA3L AB3 A3B VREFL VSS nfet_03v3 w=8u l=0.28u m=2
+XA2H AB2 A2 VREFH VSS nfet_03v3 w=8u l=0.28u m=2
+XA2L AB2 A2B VREFL VSS nfet_03v3 w=8u l=0.28u m=2
+XA1H AB1 A1 VREFH VSS nfet_03v3 w=8u l=0.28u m=2
+XA1L AB1 A1B VREFL VSS nfet_03v3 w=8u l=0.28u m=2
+XA0H AB0 A0 VREFH VSS nfet_03v3 w=8u l=0.28u m=2
+XA0L AB0 A0B VREFL VSS nfet_03v3 w=8u l=0.28u m=2
+
+* Channel B is an exact independent mirror for arbitrary calibrated A/B pairs.
+XBR0 CTRL_B BN1 VSS ppolyf_u r_width=2u r_length=20.00u
+XBR1 BN1 BN2 VSS ppolyf_u r_width=2u r_length=20.00u
+XBR2 BN2 BN3 VSS ppolyf_u r_width=2u r_length=20.00u
+XBR3 BN3 BN4 VSS ppolyf_u r_width=2u r_length=20.00u
+XB4R CTRL_B BB4 VSS ppolyf_u r_width=2u r_length=40.00u
+XB3R BN1 BB3 VSS ppolyf_u r_width=2u r_length=40.00u
+XB2R BN2 BB2 VSS ppolyf_u r_width=2u r_length=40.00u
+XB1R BN3 BB1 VSS ppolyf_u r_width=2u r_length=40.00u
+XB0R BN4 BB0 VSS ppolyf_u r_width=2u r_length=40.00u
+XBTR BN4 VREFL VSS ppolyf_u r_width=2u r_length=40.00u
+
+XB4H BB4 B4 VREFH VSS nfet_03v3 w=8u l=0.28u m=2
+XB4L BB4 B4B VREFL VSS nfet_03v3 w=8u l=0.28u m=2
+XB3H BB3 B3 VREFH VSS nfet_03v3 w=8u l=0.28u m=2
+XB3L BB3 B3B VREFL VSS nfet_03v3 w=8u l=0.28u m=2
+XB2H BB2 B2 VREFH VSS nfet_03v3 w=8u l=0.28u m=2
+XB2L BB2 B2B VREFL VSS nfet_03v3 w=8u l=0.28u m=2
+XB1H BB1 B1 VREFH VSS nfet_03v3 w=8u l=0.28u m=2
+XB1L BB1 B1B VREFL VSS nfet_03v3 w=8u l=0.28u m=2
+XB0H BB0 B0 VREFH VSS nfet_03v3 w=8u l=0.28u m=2
+XB0L BB0 B0B VREFL VSS nfet_03v3 w=8u l=0.28u m=2
+.ends phase_control_dac

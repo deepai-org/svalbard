@@ -18,6 +18,12 @@ The characterized search uses 31 ordered `CTRL_A`/`CTRL_B` voltage pairs, fittin
 
 An additional 279 extracted simulations pass 9/9 stress groups spanning 1.0--1.5 GHz reference clocks, 100--300 mV input amplitude, 25--100 fF output load, and 75--105 degree input quadrature. The common-mode check is expressed as waveform headroom: the differential peaks must remain at least 250 mV above ground and 100 mV below VDD. This avoids rejecting a valid large-swing low-common-mode waveform while still enforcing device and sampler headroom.
 
-The analog controls provide calibration range for unknown silicon, temperature, supply, and extracted-interconnect behavior. They do not determine their own settings: integration still needs a phase detector or reference measurement, a calibration search, and retained control codes.
+The analog controls provide calibration range for unknown silicon, temperature,
+supply, and extracted-interconnect behavior. A placed dual five-bit R-2R DAC
+now realizes both controls, and the composed full-RC search completes
+2,367/2,367 cases and calibrates 31 ordered phase codes in 9/9 representative
+environments with 2.80 ps worst placement error. The controls still do not
+determine their own settings: integration needs a phase/reference measurement,
+a search controller, glitch-safe updating, and retained codes.
 
 This is pre-silicon public-model evidence, not a PCIe-qualified clocking macro. It still needs statistical mismatch with provider-approved models, supply-noise/jitter sensitivity, clock-tree and sampler co-simulation, post-fill extraction, EM/IR and reliability review, and silicon correlation before freeze.

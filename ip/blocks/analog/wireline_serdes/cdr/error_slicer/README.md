@@ -8,4 +8,12 @@ The final flow completes 972/972 schematic and 972/972 full-RC simulations and c
 
 ![GF180 programmable CML error slicer layout](layout.png)
 
+Physical-review note: this layout is electrically closed but still needs a
+matching/density hardening pass. Required changes include compact matched-load
+context, legal edge dummies, same-layer adjacent differential routing, interior
+substrate taps, and deliberate symmetric density/fill treatment, followed by
+fresh DRC/LVS/PEX and the complete regression. The NMOS PCells are already
+two-finger devices; any further fingering change must be justified by extracted
+capacitance and timing rather than the raster appearance alone.
+
 Run `./run.sh` for the bounded schematic calibration, symmetric layout generation, Magic DRC, unique Netgen LVS, full coupled-RC extraction, extracted calibration/timing sweep, and annotated layout render. Results are pre-silicon evidence from the public GF180 model set; they are not foundry qualification or measured silicon data.

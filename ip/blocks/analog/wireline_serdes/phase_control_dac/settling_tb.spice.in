@@ -1,0 +1,18 @@
+* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include @DUT_PATH@
+.temp @TEMP_C@
+VDD VDD 0 @VDD_V@
+VRH VREFH 0 1.333
+VRL VREFL 0 0.300
+@BIT_SOURCES@
+XDUT @DUT_PORTS@ VREFH VREFL 0 CTRL_A CTRL_B @DUT_SUBCKT@
+CA CTRL_A 0 250f
+CB CTRL_B 0 250f
+.control
+tran 10p 100n
+wrdata @WAVE_PATH@ v(CTRL_A) v(CTRL_B)
+.endc
+.end

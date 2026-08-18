@@ -10,7 +10,7 @@ not an end-to-end timing or model-validity claim.
 | RX amplifier | 108.53 ps worst crossing; 2.138--3.355 GHz selected high-mode bandwidth | Leaves about 91 ps from worst core crossing to a nominal 200 ps eye center before pad/channel/jitter allocation |
 | Dual-edge sampler | 2.5 GT/s decisions; common qualified transition displacement includes -80 to +80 ps | Demonstrates a useful aperture, not metastability-tail probability |
 | Phase interpolator + control DAC | 1.25 GHz PI; composed full-RC 2,367/2,367, 9/9 environments, 199.65--217.35 ps span, 2.80 ps worst calibrated error | DAC 1.21 ns worst carry settling is a slow-loop update bound; clock-tree and supply-jitter composition remain |
-| CDR error slicer | 61.96 ps worst selected full-RC assertion delay; 972/972 extracted cases complete and 9/9 environments calibrate with interior codes | Leaves substantial margin to its 300 ps local target; retiming and closed-loop dynamics remain absent |
+| CDR error slicer | Matching-hardened 62.33 ps worst selected full-RC assertion delay; 972/972 extracted cases complete and 9/9 environments calibrate with interior codes | 0.6% slower than the sparse predecessor and still far below its 300 ps local target; retiming and closed-loop dynamics remain absent |
 | TX-to-parallel receive boundary | Extracted CML-to-CMOS and deserializer composition closes its 18 representative cases | Does not yet include RX amplifier, channel, recovered clock, or protocol timing |
 | Autonomous clock source | PLL/VCO/divider not implemented | Principal unclosed transistor-speed and jitter risk |
 
@@ -25,7 +25,7 @@ flow retains a failure if no legal settings cover every declared offset.
 The next CDR boundary now has direct extracted speed evidence as well. Its
 programmable window slicer rejects 40 mV-or-smaller errors, asserts uniquely at
 150 mV and above, and selects only codes interior to both searched bias ranges.
-The 61.96 ps worst selected delay is 15.5% of one 400 ps UI; this does not yet
+The matching-hardened 62.33 ps worst selected delay is 15.6% of one 400 ps UI; this does not yet
 include the following retimer, accumulator, or clock tree.  The PI-control DAC
 is now extracted and composed with the PI: 31 retained phase codes calibrate in
 all nine mixed environments with 2.80 ps worst placement error.  Its 1.21 ns

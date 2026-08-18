@@ -5,6 +5,10 @@ XURP VDD UPP VSS ppolyf_u r_width=2u r_length=4.00u
 XURN VDD UPN VSS ppolyf_u r_width=2u r_length=4.00u
 XDRP VDD DNP VSS ppolyf_u r_width=2u r_length=4.00u
 XDRN VDD DNN VSS ppolyf_u r_width=2u r_length=4.00u
+* Edge dummies preserve the load-array process environment; both terminals are
+* tied to VDD so they carry no signal current.
+XLDL VDD VDD VSS ppolyf_u r_width=2u r_length=4.00u
+XLDR VDD VDD VSS ppolyf_u r_width=2u r_length=4.00u
 
 * UP main pair: ERRP > ERRN raises UPP-UPN.
 XUMP UPN ERRP UTM VSS nfet_03v3 w=8u l=0.28u m=2
@@ -24,4 +28,10 @@ XDMT DTM VBIAS_MAIN VSS VSS nfet_03v3 w=8u l=0.28u m=2
 XDTP DNP VREFP DTT VSS nfet_03v3 w=8u l=0.28u m=2
 XDTN DNN VREFN DTT VSS nfet_03v3 w=8u l=0.28u m=2
 XDTT DTT VBIAS_TH VSS VSS nfet_03v3 w=8u l=0.28u m=2
+
+* Tied-off edge dummies for the switching and tail rows.
+XDML VSS VSS VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XDMR VSS VSS VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XDTL VSS VSS VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XDTR VSS VSS VSS VSS nfet_03v3 w=8u l=0.28u m=2
 .ends cml_error_slicer

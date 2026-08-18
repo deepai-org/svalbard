@@ -18,7 +18,7 @@ tracked separately in [PCIe Gen1 analog speed checkpoint](pcie-analog-speed-budg
 | Alexander boundary | Physically closed with PVT and fixed-code stress | Retiming and loop-filter interface |
 | Integrated Alexander front end | Schematic 9/9; calibrated composition of extracted sampler/detector/combiner replays 36/36 across 9/9 environments | Hierarchical interconnect, valid-window retimer, acquisition/tracking loop |
 | Dual-interleave phase-error combiner | Physically closed; standalone extracted 108/108 and composed extracted replay 36/36 | Vote retiming, accumulator/integrator, PI control encoding, closed-loop dynamics |
-| Programmable CDR error slicer | Electrically/physically closed; schematic and full-RC 972/972, 9/9 calibrated with interior codes, 61.96 ps worst selected delay | Matching/dummy/density hardening after layout review; CML-to-CMOS retiming, accumulator, composed closed-loop dynamics |
+| Programmable CDR error slicer | Matching-hardened physical layout; schematic and full-RC 972/972, 9/9 calibrated with interior codes, 62.33 ps worst selected delay | Deck-driven density/fill and bias-noise study; CML-to-CMOS retiming, accumulator, composed closed-loop dynamics |
 | Phase interpolator + dual 5-bit control DAC | Both physically closed; composed full-RC 2,367/2,367 and 9/9 calibrated to 31 codes with 2.80 ps worst error | Calibration controller/storage, glitch-safe updates, clock-tree/sampler composition, jitter/supply coupling |
 | CML-to-CMOS boundary | Physically closed with programmable-tail PVT and timing window | Denser composed timing/jitter matrix and clock distribution |
 | 1:2 deserializer | Physically closed alone and with extracted CML-to-CMOS front end | Parallel RX connection and clock/reset distribution |
@@ -38,10 +38,9 @@ and analog-top verification as major work rather than treating them as wiring.
 
 ## Critical path
 
-1. Harden the error-slicer matching/density layout, then add valid-window
-   retiming and a realizable accumulator/integrator and calibration controller
-   for the closed phase-interpolator DAC;
-   demonstrate reference-assisted tracking.
+1. Add valid-window retiming, a realizable accumulator/integrator, and a
+   calibration controller for the closed phase-interpolator DAC; demonstrate
+   reference-assisted tracking.
 2. Build the PLL/VCO/divider with external-clock bypass and observable divided
    clock/lock outputs, then close startup, tuning range, jitter, and supply
    sensitivity through extraction.

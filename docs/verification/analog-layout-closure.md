@@ -117,6 +117,13 @@ geometry in small Tcl procedures for rectangles, via stacks, terminal straps,
 contacts, and ports. The generated MAG/GDS is disposable output; the Tcl source
 is the editable design.
 
+Keep stream hierarchy names independent of filesystem paths. In Magic, save the
+cell by its legal relative cell name while writing MAG/GDS artifacts to the
+working directory separately; an absolute `save` target can leak slashes and
+temporary-directory names into the GDS top-cell name even when DRC and LVS pass.
+Run a machine-readable off-grid, zero-area, cell-name, and pin-label precheck on
+the emitted stream before treating it as an integration macro.
+
 Prefer one repeated unit geometry inside a matching array when programmable
 tail current can express the required ratio. Besides reducing systematic
 mismatch, this prevents mixed-size parameterized cells from quietly moving

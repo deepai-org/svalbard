@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "result": "pass",
+  "qualification": "secondary read-only audit; not a GF180 signoff-deck substitute",
+  "tool": {
+    "name": "klayout-tools",
+    "version": "0.2.0",
+    "wheel_sha256": "07701e0f4d28fbf9e42230d29ebfcf5dfafc9bc90b106a4cd56bceb493312e4a",
+    "klayout_version": "0.30.9"
+  },
+  "input": {
+    "gds_sha256": "2215821e4974e13b60ed783a178b82f860c2560f1572631cee41a0339d2c708e",
+    "top_cell": "cml_error_slicer",
+    "dbu_um": 0.001,
+    "bbox_um": [-33.02, -29.02, 33.02, 30.02]
+  },
+  "precheck": {
+    "result": "pass",
+    "offgrid_5nm": 0,
+    "zero_area": 0,
+    "invalid_cell_names": 0,
+    "pin_labels_off_drawing": 0
+  },
+  "starter_drc": {
+    "result": "clean",
+    "violation_count": 0,
+    "checked_stream_layer_count": 9,
+    "unruled_stream_layer_count": 12,
+    "note": "Magic GF180 DRC remains the primary physical rule gate"
+  }
+}

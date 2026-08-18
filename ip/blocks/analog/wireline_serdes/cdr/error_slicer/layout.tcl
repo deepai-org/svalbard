@@ -77,18 +77,22 @@ set main_cell [magic::gencell_makecell gf180mcu::nfet_03v3 w 8 l 0.28 nf 2 guard
 set threshold_cell [magic::gencell_makecell gf180mcu::nfet_03v3 w 8 l 0.28 nf 2 guard 0 topc 0 botc 0 full_metal 0]
 set main_tail [magic::gencell_makecell gf180mcu::nfet_03v3 w 8 l 0.28 nf 2 guard 0 topc 0 botc 0 full_metal 0]
 set threshold_tail [magic::gencell_makecell gf180mcu::nfet_03v3 w 8 l 0.28 nf 2 guard 0 topc 0 botc 0 full_metal 0]
-set load_cell [magic::gencell_makecell gf180mcu::ppolyf_u w 2 l 4.00 guard 1 full_metal 1]
+set load_cell [magic::gencell_makecell gf180mcu::ppolyf_u w 2 l 4.00 guard 0 full_metal 1]
 
 units microns
 foreach {cell instance x y} [list \
-        $main_cell XUMP -26 5 $main_cell XUMN -20 5 \
-        $threshold_cell XUTP -14 5 $threshold_cell XUTN -8 5 \
-        $threshold_cell XDTN 8 5 $threshold_cell XDTP 14 5 \
-        $main_cell XDMN 20 5 $main_cell XDMP 26 5 \
-        $main_tail XUMT -23 -12 $threshold_tail XUTT -11 -12 \
-        $threshold_tail XDTT 11 -12 $main_tail XDMT 23 -12 \
-        $load_cell XURN -21 21 $load_cell XURP -7 21 \
-        $load_cell XDRP 7 21 $load_cell XDRN 21 21] {
+        $main_cell XDML -27 5 \
+        $main_cell XUMP -21 5 $main_cell XUMN -15 5 \
+        $threshold_cell XUTP -9 5 $threshold_cell XUTN -3 5 \
+        $threshold_cell XDTN 3 5 $threshold_cell XDTP 9 5 \
+        $main_cell XDMN 15 5 $main_cell XDMP 21 5 \
+        $main_cell XDMR 27 5 \
+        $main_tail XDTL -24 -12 $main_tail XUMT -18 -12 \
+        $threshold_tail XUTT -6 -12 $threshold_tail XDTT 6 -12 \
+        $main_tail XDMT 18 -12 $main_tail XDTR 24 -12 \
+        $load_cell XLDL -15 21 $load_cell XURN -9 21 \
+        $load_cell XURP -3 21 $load_cell XDRP 3 21 \
+        $load_cell XDRN 9 21 $load_cell XLDR 15 21] {
     getcell $cell child 0 0 parent $x $y
     identify $instance
 }
@@ -100,19 +104,19 @@ units microns
 paint_rect pwell -33 -29 33 30
 
 # Mirrored UP/main, UP/threshold, DOWN/threshold, DOWN/main device row.
-foreach x {-26 -20 -14 -8 8 14 20 26} {
+foreach x {-27 -21 -15 -9 -3 3 9 15 21 27} {
     mos_terminal_strap $x 5 2.25 {-0.8 0.8} 3
     mos_terminal_strap $x 5 -2.25 {0.0} 3
     manual_gate_bottom $x 0.65 0.55 {-0.4 0.4}
 }
-foreach x {-23 -11 11 23} {
+foreach x {-24 -18 -6 6 18 24} {
     mos_terminal_strap $x -12 2.25 {-0.8 0.8} 3
     mos_terminal_strap $x -12 -2.25 {0.0} 3
     manual_gate_bottom $x -16.35 0.55 {-0.4 0.4}
 }
 
 # Four compact pair-source nodes drop directly into their local tails.
-foreach cx {-23 -11 11 23} {
+foreach cx {-18 -6 6 18} {
     set left [expr {$cx-3}]
     set right [expr {$cx+3}]
     foreach x [list $left $right] { stack_from3_to $x 2.75 4 }
@@ -122,78 +126,88 @@ foreach cx {-23 -11 11 23} {
 }
 
 # Four separate output summing nets.  Alternating M4/M5 keeps crossings absent.
-# UPN: drains -26,-8 to load -21.
-foreach x {-26 -8} { stack_from3_to $x 7.25 5; paint_rect metal5 [expr {$x-0.38}] 7.25 [expr {$x+0.38}] 12.5 }
-paint_rect metal5 -26.38 12.12 -7.62 12.88
-paint_rect metal5 -21.38 12.5 -20.62 18.67
-stack_to -21 18.67 5
-# UPP: drains -20,-14 to load -7.
-foreach x {-20 -14} { stack_from3_to $x 7.25 4; paint_rect metal4 [expr {$x-0.38}] 7.25 [expr {$x+0.38}] 10.5 }
-paint_rect metal4 -20.38 10.12 -6.62 10.88
-paint_rect metal4 -7.38 10.5 -6.62 18.67
-stack_to -7 18.67 4
-# DNP: drains 14,20 to load 7.
-foreach x {14 20} { stack_from3_to $x 7.25 4; paint_rect metal4 [expr {$x-0.38}] 7.25 [expr {$x+0.38}] 10.5 }
-paint_rect metal4 6.62 10.12 20.38 10.88
-paint_rect metal4 6.62 10.5 7.38 18.67
-stack_to 7 18.67 4
-# DNN: drains 8,26 to load 21.
-foreach x {8 26} { stack_from3_to $x 7.25 5; paint_rect metal5 [expr {$x-0.38}] 7.25 [expr {$x+0.38}] 12.5 }
-paint_rect metal5 7.62 12.12 26.38 12.88
-paint_rect metal5 20.62 12.5 21.38 18.67
-stack_to 21 18.67 5
-make_port UPP 9 metal4 -7.45 14.0 -6.55 15.4
-make_port UPN 10 metal5 -21.45 14.0 -20.55 15.4
-make_port DNP 11 metal4 6.55 14.0 7.45 15.4
-make_port DNN 12 metal5 20.55 14.0 21.45 15.4
+# UPN: drains -21,-3 to load -9.
+foreach x {-21 -3} { stack_from3_to $x 7.25 5; paint_rect metal5 [expr {$x-0.38}] 7.25 [expr {$x+0.38}] 12.5 }
+paint_rect metal5 -21.38 12.12 -2.62 12.88
+paint_rect metal5 -9.38 12.5 -8.62 18.67
+stack_to -9 18.67 5
+# UPP: drains -15,-9 to load -3.
+foreach x {-15 -9} { stack_from3_to $x 7.25 4; paint_rect metal4 [expr {$x-0.38}] 7.25 [expr {$x+0.38}] 10.5 }
+paint_rect metal4 -15.38 10.12 -2.62 10.88
+paint_rect metal4 -3.38 10.5 -2.62 18.67
+stack_to -3 18.67 4
+# DNP: drains 9,15 to load 3.
+foreach x {9 15} { stack_from3_to $x 7.25 4; paint_rect metal4 [expr {$x-0.38}] 7.25 [expr {$x+0.38}] 10.5 }
+paint_rect metal4 2.62 10.12 15.38 10.88
+paint_rect metal4 2.62 10.5 3.38 18.67
+stack_to 3 18.67 4
+# DNN: drains 3,21 to load 9.
+foreach x {3 21} { stack_from3_to $x 7.25 5; paint_rect metal5 [expr {$x-0.38}] 7.25 [expr {$x+0.38}] 12.5 }
+paint_rect metal5 2.62 12.12 21.38 12.88
+paint_rect metal5 8.62 12.5 9.38 18.67
+stack_to 9 18.67 5
+make_port UPP 9 metal4 -3.45 14.0 -2.55 15.4
+make_port UPN 10 metal5 -9.45 14.0 -8.55 15.4
+make_port DNP 11 metal4 2.55 14.0 3.45 15.4
+make_port DNN 12 metal5 8.55 14.0 9.45 15.4
 
 # Load tops and a wide central VDD rail.
-foreach x {-21 -7 7 21} {
+foreach x {-15 -9 -3 3 9 15} {
     stack_to $x 23.33 5
     paint_rect metal5 [expr {$x-0.45}] 23.33 [expr {$x+0.45}] 27.0
+}
+# Dummy bottoms are shorted to their VDD-connected tops.
+foreach x {-15 15} {
+    stack_to $x 18.67 5
+    paint_rect metal5 [expr {$x-0.45}] 18.67 [expr {$x+0.45}] 23.33
 }
 paint_rect metal5 -30 26.55 30 27.45
 make_port VDD 7 metal5 -1 26.55 1 27.45
 
-# Equalized paired input/reference routes.  Orthogonal layer assignment avoids
-# silently shorting the four long matched nets at their crossings.
-foreach x {-26 20} {
-    stack_to $x 0.30 2
-    paint_rect metal2 [expr {$x-0.38}] -23.38 [expr {$x+0.38}] 0.68
+# Equalized paired error-input routes: both nets use adjacent M2 horizontal
+# rails, two matched M3 gate drops, and the same via count.  M3 drops cross the
+# opposite M2 rail without a via, avoiding the old M2-versus-M3 asymmetry.
+foreach x {-21 15} {
+    stack_to $x 0.30 3
+    paint_rect metal3 [expr {$x-0.38}] -23.38 [expr {$x+0.38}] 0.68
+    paint_rect metal3 [expr {$x-0.38}] -23.38 [expr {$x+0.38}] -22.62
+    via_at via2 $x -23.0
 }
-paint_rect metal2 -26.38 -23.38 20.38 -22.62
-make_port ERRP 1 metal2 -26.45 -23.45 -25.1 -22.55
-foreach x {-20 26} {
+paint_rect metal2 -29.0 -23.38 15.38 -22.62
+make_port ERRP 1 metal2 -29.0 -23.45 -27.2 -22.55
+foreach x {-15 21} {
     stack_to $x 0.30 3
     paint_rect metal3 [expr {$x-0.38}] -25.38 [expr {$x+0.38}] 0.68
+    paint_rect metal3 [expr {$x-0.38}] -25.38 [expr {$x+0.38}] -24.62
+    via_at via2 $x -25.0
 }
-paint_rect metal3 -20.38 -25.38 26.38 -24.62
-make_port ERRN 2 metal3 25.1 -25.45 26.45 -24.55
+paint_rect metal2 -15.38 -25.38 29.0 -24.62
+make_port ERRN 2 metal2 27.2 -25.45 29.0 -24.55
 
 # Reference routes remain above the tail-bias region and use different layers.
-foreach x {-14 14} {
+foreach x {-9 9} {
     stack_to $x 0.30 5
     paint_rect metal5 [expr {$x-0.38}] -2.38 [expr {$x+0.38}] 0.68
 }
-paint_rect metal5 -14.38 -2.38 14.38 -1.62
+paint_rect metal5 -9.38 -2.38 9.38 -1.62
 make_port VREFP 3 metal5 -0.9 -2.45 0.9 -1.55
-foreach x {-8 8} {
+foreach x {-3 3} {
     stack_to $x 0.30 3
     paint_rect metal3 [expr {$x-0.38}] -4.38 [expr {$x+0.38}] 0.68
 }
-paint_rect metal3 -8.38 -4.38 8.38 -3.62
+paint_rect metal3 -3.38 -4.38 3.38 -3.62
 make_port VREFN 4 metal3 -0.9 -4.45 0.9 -3.55
 
 # Independent main and threshold tail-bias rails provide silicon calibration.
-foreach x {-23 23} {
+foreach x {-18 18} {
     stack_to $x -16.70 4
     paint_rect metal4 [expr {$x-0.38}] -20.88 [expr {$x+0.38}] -16.70
 }
 paint_rect metal4 -29 -20.88 29 -20.12
 make_port VBIAS_MAIN 5 metal4 -29 -20.88 -27.2 -20.12
-foreach x {-11 11} { stack_to $x -16.70 5 }
-paint_rect metal5 -11.38 -19.08 11.38 -18.32
-foreach x {-11 11} { paint_rect metal5 [expr {$x-0.38}] -19.08 [expr {$x+0.38}] -16.70 }
+foreach x {-6 6} { stack_to $x -16.70 5 }
+paint_rect metal5 -6.38 -19.08 6.38 -18.32
+foreach x {-6 6} { paint_rect metal5 [expr {$x-0.38}] -19.08 [expr {$x+0.38}] -16.70 }
 make_port VBIAS_TH 6 metal5 -0.9 -19.08 0.9 -18.32
 
 # Contacted substrate guard ring and symmetric tail-source returns.
@@ -207,15 +221,41 @@ paint_rect metal1 -33 -29 33 -28.2
 paint_rect metal1 -33 29.2 33 30
 foreach x {-30 -24 -18 -12 -6 0 6 12 18 24 30} { substrate_contact $x -28.6; substrate_contact $x 29.6 }
 foreach y {-26 -20 -14 -8 -2 4 10 16 22 28} { substrate_contact -32.6 $y; substrate_contact 32.6 $y }
-foreach {x edge} {-23 -32.6 -11 -32.6 11 32.6 23 32.6} {
+# Interior taps shorten substrate return paths.  Their routes use layers that do
+# not join the nearby M4/M5 signal trunks.
+paint_rect psubdiff -0.35 -10.40 0.35 -9.60
+substrate_contact 0 -10
+stack_to 0 -10 5
+paint_rect metal5 -0.38 -10.38 32.98 -9.62
+stack_to 32.6 -10 5
+paint_rect psubdiff -0.35 14.60 0.35 15.40
+substrate_contact 0 15
+stack_to 0 15 3
+paint_rect metal3 -0.38 14.62 32.98 15.38
+stack_to 32.6 15 3
+foreach {x edge} {-18 -32.6 -6 -32.6 6 32.6 18 32.6} {
     stack_from3_to $x -14.25 4
     paint_rect metal4 [expr {min($x,$edge)-0.38}] -14.63 [expr {max($x,$edge)+0.38}] -13.87
     stack_to $edge -14.25 4
+}
+
+# Tie switching-row and tail-row edge dummies completely to the local guard.
+foreach {x edge} {-27 -32.6 27 32.6} {
+    stack_to $x 0.30 3
+    paint_rect metal3 [expr {$x-0.38}] 0.0 [expr {$x+0.38}] 7.63
+    paint_rect metal3 [expr {min($x,$edge)-0.38}] 3.62 [expr {max($x,$edge)+0.38}] 4.38
+    stack_to $edge 4.0 3
+}
+foreach {x edge} {-24 -32.6 24 32.6} {
+    stack_to $x -16.70 3
+    paint_rect metal3 [expr {$x-0.38}] -17.08 [expr {$x+0.38}] -9.37
+    paint_rect metal3 [expr {min($x,$edge)-0.38}] -14.63 [expr {max($x,$edge)+0.38}] -13.87
+    stack_to $edge -14.25 3
 }
 stack_to 32.6 -26.0 5
 paint_rect metal5 32.22 -26.0 32.98 -14.25
 make_port VSS 8 metal5 32.22 -26.0 32.98 -24.5
 
-save /work/cml_error_slicer
+save cml_error_slicer
 gds write /work/cml_error_slicer.gds
 quit -noprompt

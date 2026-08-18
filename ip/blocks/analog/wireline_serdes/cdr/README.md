@@ -70,5 +70,6 @@ remain in progress.
 The [held CML-to-CMOS retimer](cml_to_cmos/README.md) now has a zero-DRC,
 uniquely LVS-matched layout and passes all nine nominal full-RC input/load
 cases at 800 ps throughput. Its bounded extracted PVT smoke exposes reset
-memory at slow-slow, 2.97 V, 125 C, so it remains a development checkpoint
-rather than a PVT-closed integration boundary.
+memory at slow-slow, 2.97 V, 125 C and a marginal high-common-mode slow-slow
+cold case; six of nine contract environments pass. It therefore remains a
+development checkpoint rather than a PVT-closed integration boundary.

@@ -50,7 +50,12 @@ def main() -> None:
     parser.add_argument("--work", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--pex", type=Path)
-    parser.add_argument("--eval-width-ps", type=int, default=500)
+    parser.add_argument("--eval-width-ps", type=int, default=575)
+    parser.add_argument("--regen-delay-ps", type=int, default=130,
+                        help="regeneration enable delay after sense-clock rise")
+    parser.add_argument("--capture-delay-ps", type=int, default=200,
+                        help="capture enable delay after sense-clock rise")
+    parser.add_argument("--capture-width-ps", type=int, default=320)
     parser.add_argument("--timeout-s", type=int, default=90,
                         help="per-case ngspice timeout (increase for full-RC PEX)")
     parser.add_argument("--input-v", type=float, choices=(0.10, 0.20, 0.40))
@@ -68,6 +73,14 @@ def main() -> None:
         parser.error("--waveform requires --input-v and --load-ff")
     if not 450 <= args.eval_width_ps <= 650:
         parser.error("--eval-width-ps must be between 450 and 650")
+    if not 50 <= args.regen_delay_ps <= args.eval_width_ps - 100:
+        parser.error("--regen-delay-ps must leave at least 100 ps regeneration time")
+    if args.capture_delay_ps < args.regen_delay_ps + 50:
+        parser.error("--capture-delay-ps must follow regeneration by at least 50 ps")
+    if args.capture_width_ps < 50:
+        parser.error("--capture-width-ps must be at least 50 ps")
+    if args.capture_delay_ps + args.capture_width_ps > args.eval_width_ps - 25:
+        parser.error("capture must close at least 25 ps before sensor precharge")
     args.work.mkdir(parents=True, exist_ok=True)
     source_dir = (args.source / "cml_to_cmos" if
                   (args.source / "cml_to_cmos").is_dir() else args.source)
@@ -98,6 +111,10 @@ def main() -> None:
                 "DUT_INCLUDE": f".include {dut_path}",
                 "DUT_SUBCKT": "cml_to_cmos_pex" if args.pex else "cml_to_cmos",
                 "EVAL_WIDTH_S": f"{args.eval_width_ps}p",
+                "REGEN_DELAY_S": f"{50 + args.regen_delay_ps}p",
+                "REGEN_WIDTH_S": f"{args.eval_width_ps - args.regen_delay_ps}p",
+                "CAPTURE_DELAY_S": f"{50 + args.capture_delay_ps}p",
+                "CAPTURE_WIDTH_S": f"{args.capture_width_ps}p",
                 "INP_PWL": pwl(True, common_mode, peak, interval, edge),
                 "INN_PWL": pwl(False, common_mode, peak, interval, edge),
                 "CLOAD_F": f"{load_ff}f", "TSTOP_S": f"{len(BITS) * interval:.12g}",
@@ -105,7 +122,14 @@ def main() -> None:
                 "WAVEFORM_COMMAND": (
                     "wrdata " + str(args.waveform) +
                     " time v(xdut.xp) v(xdut.xn) v(xdut.ntail)"
+                    " v(xdut.nregen)"
                     " v(xdut.qp) v(xdut.qn)"
+                    " v(xdut.vregp) v(xdut.vregn)"
+                    " v(xdut.sxp) v(xdut.sxn)"
+                    " v(xdut.mip) v(xdut.min) v(xdut.qpb) v(xdut.qnb)"
+                    " v(sense_clk)"
+                    " v(regen_clk) v(regen_clkb)"
+                    " v(capture_clk) v(capture_clkb)"
                     " v(outp) v(outn)"
                     if args.waveform else "* waveform capture disabled"),
             }

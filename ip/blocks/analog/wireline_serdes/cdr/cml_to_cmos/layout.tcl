@@ -91,14 +91,17 @@ proc m2_to_m3 {x y} {
 
 # Allocate one globally unique M3 access column to each logical terminal.
 # A 0.8 um grid leaves 0.34 um between minimum legal Via3 landings.
-set used_route_columns {}
+# Reserve sparse body-tap columns before assigning signal escapes.  The tap
+# columns are intentionally regular so latch-up distance is a geometric
+# invariant rather than an accident of route-column allocation order.
+set used_route_columns {-84 -60 -36 -21 -12 0 12 21 36 60 84}
 proc route_column {preferred} {
     global used_route_columns
     for {set radius 0} {$radius < 400} {incr radius} {
         foreach sign {1 -1} {
             if {$radius == 0 && $sign < 0} { continue }
             set candidate [expr {round(($preferred+$sign*0.8*$radius)*10.0)/10.0}]
-            if {$candidate < -64.0 || $candidate > 64.0} { continue }
+            if {$candidate < -90.0 || $candidate > 90.0} { continue }
             set available 1
             foreach occupied $used_route_columns {
                 if {abs($candidate-$occupied) < 0.79} {
@@ -133,10 +136,30 @@ proc manual_gate {cx cy width nf} {
     return [expr {$gy-0.35}]
 }
 
+proc manual_gate_top {cx cy width nf} {
+    set contact_y [expr {$cy+$width/2.0+0.80}]
+    set route_y [expr {$cy+$width/2.0+0.70}]
+    foreach xoff [gate_offsets $nf] {
+        set x [expr {$cx+$xoff}]
+        paint_rect polysilicon [expr {$x-0.20}] [expr {$cy+$width/2.0+0.10}] \
+            [expr {$x+0.20}] [expr {$contact_y+0.180}]
+        paint_rect polycontact [expr {$x-0.115}] [expr {$contact_y-0.115}] \
+            [expr {$x+0.115}] [expr {$contact_y+0.115}]
+        paint_rect metal1 [expr {$x-0.30}] [expr {$route_y-0.30}] \
+            [expr {$x+0.30}] [expr {$route_y+0.30}]
+    }
+    return $route_y
+}
+
 array set tracks {
-    VSS -20.0 INP -3.6 INN -2.2 SENSE_CLK -0.8 NTAIL 0.6
-    XP 2.0 XN 3.4 QP 7.6 QN 9.0
-    OUTP 27.0 OUTN 28.4 VDD 67.0
+    VSS -30.0 INP -15.0 INN -13.6 SENSE_CLK -12.2
+    NTAIL -8.0 NREGEN 10.0
+    SXP 14.0 SXN 15.4 MIP 16.2 MIN 18.2
+    QPB 19.6 QNB 21.0 QP 22.4 QN 23.8
+    XP 25.2 XN 26.6 OUTP 30.5 OUTN 31.9
+    CAPTURE_CLK 34.0 CAPTURE_CLKB 35.4
+    REGEN_CLK 38.0 REGEN_CLKB 39.4
+    VREGP 55.0 VREGN 56.4 VDD 85.0
 }
 array set net_min {}
 array set net_max {}
@@ -145,14 +168,15 @@ proc connect_net {net x y} {
     global tracks net_min net_max
     set ty $tracks($net)
     set half_width [expr {$net eq "VDD" || $net eq "VSS" ? 0.23 : 0.14}]
+    set landing_half [expr {$net eq "VDD" || $net eq "VSS" ? 0.38 : 0.23}]
     paint_rect metal3 [expr {$x-$half_width}] [expr {min($y,$ty)-0.38}] \
         [expr {$x+$half_width}] [expr {max($y,$ty)+0.38}]
     # Via3 needs a legal Metal3 landing.  Keep the long access wire narrow,
     # but widen only at the M3/M4 transition instead of widening the full run.
     paint_rect metal3 [expr {$x-0.23}] [expr {$ty-0.23}] \
         [expr {$x+0.23}] [expr {$ty+0.23}]
-    paint_rect metal4 [expr {$x-0.38}] [expr {$ty-0.38}] \
-        [expr {$x+0.38}] [expr {$ty+0.38}]
+    paint_rect metal4 [expr {$x-$landing_half}] [expr {$ty-$landing_half}] \
+        [expr {$x+$landing_half}] [expr {$ty+$landing_half}]
     via_at via3 $x $ty
     if {![info exists net_min($net)] || $x < $net_min($net)} { set net_min($net) $x }
     if {![info exists net_max($net)] || $x > $net_max($net)} { set net_max($net) $x }
@@ -199,36 +223,53 @@ proc draw_shared_mos {kind width nf cx cy} {
 
 # instance kind width fingers x y drain gate source
 set devices {
-    {XOPP pfet_03v3 8 3 -50 35 OUTP QN VDD}
-    {XONP pfet_03v3 8 3  50 35 OUTN QP VDD}
-    {XPREP  pfet_03v3 8 4  -12 55 XP SENSE_CLK VDD}
-    {XPREN  pfet_03v3 8 4   12 55 XN SENSE_CLK VDD}
-    {XEQUAL pfet_03v3 8 4    0 55 XP SENSE_CLK XN}
-    {XLATP pfet_03v3 8 5 -12 45 XP XN VDD}
-    {XLATN pfet_03v3 8 5  12 45 XN XP VDD}
+    {XREGENP nfet_03v3 8 3 -15 8 XP XN NREGEN}
+    {XIP nfet_03v3 8 2 -9 8 XP INP NTAIL}
+    {XRTAIL nfet_03v3 8 8 -3 8 NREGEN REGEN_CLK VSS}
+    {XTAIL nfet_03v3 8 8 3 -6 NTAIL SENSE_CLK VSS}
+    {XIN nfet_03v3 8 2 9 8 XN INN NTAIL}
+    {XREGENN nfet_03v3 8 3 15 8 XN XP NREGEN}
 
-    {XLP pfet_03v3 4 1 -18 35 QP QN VDD}
-    {XRP pfet_03v3 4 1  18 35 QN QP VDD}
-    {XSP pfet_03v3 8 4 -28 35 QP XP VDD}
-    {XSN pfet_03v3 8 4  28 35 QN XN VDD}
+    {XHP pfet_03v3 8 8 -24 74 VREGP REGEN_CLKB VDD}
+    {XHN pfet_03v3 8 8 24 74 VREGN REGEN_CLKB VDD}
+    {XPREP  pfet_03v3 8 4 -12 37 XP SENSE_CLK VDD}
+    {XEQUAL pfet_03v3 8 4   0 37 XP SENSE_CLK XN}
+    {XPREN  pfet_03v3 8 4  12 37 XN SENSE_CLK VDD}
+    {XLATP pfet_03v3 8 8 -18 49 XP XN VREGP}
+    {XLATN pfet_03v3 8 8 18 49 XN XP VREGN}
 
-    {XIP nfet_03v3 8 2 -14 10 XP INP NTAIL}
-    {XIN nfet_03v3 8 2  14 10 XN INN NTAIL}
-    {XREGENP nfet_03v3 8 3 -24 10 XP XN NTAIL}
-    {XREGENN nfet_03v3 8 3  24 10 XN XP NTAIL}
-    {XTAIL nfet_03v3 8 8 0 10 NTAIL SENSE_CLK VSS}
-
-    {XLN nfet_03v3 4 1 -18 22 QP QN VSS}
-    {XRN nfet_03v3 4 1  18 22 QN QP VSS}
-    {XOPN nfet_03v3 8 1 -50 22 OUTP QN VSS}
-    {XONN nfet_03v3 8 1  50 22 OUTN QP VSS}
+    {XONP pfet_03v3 8 3 -78 37 OUTN QP VDD}
+    {XONN nfet_03v3 8 2 -81 22 OUTN QP VSS}
+    {XBP pfet_03v3 8 2 -30 37 SXP XP VDD}
+    {XBN nfet_03v3 8 2 -33 22 SXP XP VSS}
+    {XTGIP pfet_03v3 8 4 -42 37 MIP CAPTURE_CLKB SXP}
+    {XTGIN nfet_03v3 8 4 -45 22 MIP CAPTURE_CLK SXP}
+    {XIP1 pfet_03v3 8 2 -54 37 QPB MIP VDD}
+    {XIN1 nfet_03v3 8 2 -57 22 QPB MIP VSS}
+    {XTGFP pfet_03v3 4 1 -60 37 MIP CAPTURE_CLK QP}
+    {XTGFN nfet_03v3 4 1 -63 22 MIP CAPTURE_CLKB QP}
+    {XIP2 pfet_03v3 8 2 -66 37 QP QPB VDD}
+    {XIN2 nfet_03v3 8 2 -69 22 QP QPB VSS}
+    {XRPRE pfet_03v3 8 4 0 47 NREGEN REGEN_CLK VDD}
+    {XTGGP pfet_03v3 4 1 60 37 MIN CAPTURE_CLK QN}
+    {XTGGN nfet_03v3 4 1 63 22 MIN CAPTURE_CLKB QN}
+    {XJP2 pfet_03v3 8 2 66 37 QN QNB VDD}
+    {XJN2 nfet_03v3 8 2 69 22 QN QNB VSS}
+    {XJP1 pfet_03v3 8 2 54 37 QNB MIN VDD}
+    {XJN1 nfet_03v3 8 2 57 22 QNB MIN VSS}
+    {XTGJP pfet_03v3 8 4 42 37 MIN CAPTURE_CLKB SXN}
+    {XTGJN nfet_03v3 8 4 45 22 MIN CAPTURE_CLK SXN}
+    {XDP pfet_03v3 8 2 30 37 SXN XN VDD}
+    {XDN nfet_03v3 8 2 33 22 SXN XN VSS}
+    {XOPP pfet_03v3 8 3 78 37 OUTP QN VDD}
+    {XOPN nfet_03v3 8 2 81 22 OUTP QN VSS}
 }
 
 crashbackups stop
 load cml_to_cmos
 units microns
-paint_rect pwell -75 -70 75 29
-paint_rect nwell -75 30 75 90
+paint_rect pwell -95 -70 95 29
+paint_rect nwell -95 30 95 90
 
 foreach spec $devices {
     lassign $spec instance kind width nf cx cy drain gate source
@@ -240,6 +281,7 @@ foreach spec $devices {
     set drain_points {}
     set source_points {}
     set gate_points {}
+    set dual_gate [expr {[lsearch -exact {XHP XHN XLATP XLATN} $instance] >= 0}]
     foreach group [finger_groups $nf $cx] {
         lassign $group index gx group_nf
         set yoff [expr {max(0.70,$width/2.0-0.8)}]
@@ -267,6 +309,9 @@ foreach spec $devices {
             lappend source_points $source_x
         }
         set gate_y [manual_gate $gx $cy $width $group_nf]
+        if {$dual_gate} {
+            set top_gate_y [manual_gate_top $gx $cy $width $group_nf]
+        }
         foreach xoff [gate_offsets $group_nf] {
             lappend gate_points [expr {$gx+$xoff}]
         }
@@ -309,17 +354,62 @@ foreach spec $devices {
         [expr {max($gate_route,[lindex $gate_points end])+0.35}] \
         [expr {$gate_y+0.30}]
     stack_to $gate_route $gate_y 3
+    if {$dual_gate} {
+        paint_rect metal1 [expr {min($gate_route,[lindex $gate_points 0])-0.35}] \
+            [expr {$top_gate_y-0.30}] \
+            [expr {max($gate_route,[lindex $gate_points end])+0.35}] \
+            [expr {$top_gate_y+0.30}]
+        stack_to $gate_route $top_gate_y 3
+        paint_rect metal3 [expr {$gate_route-0.23}] [expr {$gate_y-0.23}] \
+            [expr {$gate_route+0.23}] [expr {$top_gate_y+0.23}]
+    }
     connect_net $gate $gate_route $gate_y
 }
 
+# Local body-tap columns keep every device inside the latch-up distance rule
+# without placing a conducting low-metal strap across signal escape routes.
+set p_tap_left -12
+set p_tap_right 12
+foreach x [list $p_tap_left $p_tap_right] {
+    paint_rect psubdiff [expr {$x-0.32}] -17.37 [expr {$x+0.32}] -16.63
+    substrate_contact $x -17
+    stack_to $x -17 5
+}
+paint_rect metal5 [expr {$p_tap_left-0.38}] -17.38 85.38 -16.62
+paint_rect metal5 84.62 -30.0 85.38 -16.62
+
+set p_upper_tap_columns {-21 0 21}
+foreach x $p_upper_tap_columns {
+    paint_rect psubdiff [expr {$x-0.32}] 14.63 [expr {$x+0.32}] 15.37
+    substrate_contact $x 15
+    stack_to $x 15 5
+}
+paint_rect metal5 -21.38 14.62 85.38 15.38
+paint_rect metal5 84.62 -17.38 85.38 15.38
+
+set nwell_tap_columns {-84 -60 -36 -12 12 36 60 84}
+foreach x $nwell_tap_columns {
+    foreach y {44 55 67 82} {
+        paint_rect nsubdiff [expr {$x-0.32}] [expr {$y-0.37}] \
+            [expr {$x+0.32}] [expr {$y+0.37}]
+        nwell_contact $x $y
+        stack_to $x $y 3
+    }
+    paint_rect metal3 [expr {$x-0.23}] 43.77 [expr {$x+0.23}] 82.23
+    stack_to $x 82 5
+}
+paint_rect metal5 -87.38 81.62 \
+    [expr {[lindex $nwell_tap_columns end]+0.38}] 82.38
+paint_rect metal5 -87.38 81.62 -86.62 88.85
+
 # External pins participate in the same compact M4 net buses.
-foreach {name number x} {INP 1 -73 INN 2 -71 SENSE_CLK 3 -69 OUTP 6 69 OUTN 7 71} {
+foreach {name number x} {INP 1 -93 INN 2 -91 SENSE_CLK 3 -89 REGEN_CLK 4 87 REGEN_CLKB 5 89 CAPTURE_CLK 6 91 CAPTURE_CLKB 7 93 OUTP 10 89 OUTN 11 -89} {
     connect_net $name $x $tracks($name)
     via_at via4 $x $tracks($name)
     make_port $name $number metal5 [expr {$x-0.45}] [expr {$tracks($name)-0.45}] \
         [expr {$x+0.45}] [expr {$tracks($name)+0.45}]
 }
-foreach {name number x} {VDD 4 -67 VSS 5 67} {
+foreach {name number x} {VDD 8 -87 VSS 9 85} {
     connect_net $name $x $tracks($name)
     via_at via4 $x $tracks($name)
     make_port $name $number metal5 [expr {$x-0.55}] [expr {$tracks($name)-0.55}] \
@@ -328,43 +418,44 @@ foreach {name number x} {VDD 4 -67 VSS 5 67} {
 
 foreach net [array names net_min] {
     set y $tracks($net)
-    paint_rect metal4 [expr {$net_min($net)-0.38}] [expr {$y-0.38}] \
-        [expr {$net_max($net)+0.38}] [expr {$y+0.38}]
+    set bus_half [expr {$net eq "VDD" || $net eq "VSS" ? 0.38 : 0.23}]
+    paint_rect metal4 [expr {$net_min($net)-0.38}] [expr {$y-$bus_half}] \
+        [expr {$net_max($net)+0.38}] [expr {$y+$bus_half}]
     box values [expr {$net_min($net)-0.20}] [expr {$y-0.20}] \
         [expr {$net_min($net)+0.20}] [expr {$y+0.20}]
     label $net FreeSans 0.30 0 0 0 c metal4
 }
 
 # Contact the common PMOS well frequently and tie it to the VDD port on M5.
-paint_rect nsubdiff -73 87.95 73 88.85
-paint_rect metal1 -73 87.95 73 88.85
-foreach x {-70 -54 -38 -22 -6 10 26 42 58 70} {
+paint_rect nsubdiff -93 87.95 93 88.85
+paint_rect metal1 -93 87.95 93 88.85
+foreach x {-90 -80 -70 -60 -50 -40 -30 -20 -10 0 10 20 30 40 50 60 70 80 90} {
     nwell_contact $x 88.4
     stack_to $x 88.4 5
 }
-paint_rect metal5 -73 87.95 73 88.85
-paint_rect metal5 -67.38 67.0 -66.62 88.85
+paint_rect metal5 -93 87.95 93 88.85
+paint_rect metal5 -87.38 85.0 -86.62 88.85
 
 # A contacted substrate guard ring provides explicit body and VSS return.
-paint_rect psubdiff -75 -70 -74.2 29
-paint_rect psubdiff 74.2 -70 75 29
-paint_rect psubdiff -75 -70 75 -69.2
-paint_rect psubdiff -75 28.2 75 29
-paint_rect metal1 -75 -70 -74.2 29
-paint_rect metal1 74.2 -70 75 29
-paint_rect metal1 -75 -70 75 -69.2
-paint_rect metal1 -75 28.2 75 29
-foreach x {-70 -54 -38 -22 -6 10 26 42 58 70} {
+paint_rect psubdiff -95 -70 -94.2 29
+paint_rect psubdiff 94.2 -70 95 29
+paint_rect psubdiff -95 -70 95 -69.2
+paint_rect psubdiff -95 28.2 95 29
+paint_rect metal1 -95 -70 -94.2 29
+paint_rect metal1 94.2 -70 95 29
+paint_rect metal1 -95 -70 95 -69.2
+paint_rect metal1 -95 28.2 95 29
+foreach x {-90 -80 -70 -60 -50 -40 -30 -20 -10 0 10 20 30 40 50 60 70 80 90} {
     substrate_contact $x -69.6
     substrate_contact $x 28.6
 }
-foreach y {-66 -54 -42 -30 -18 -6 6 18 27} {
-    substrate_contact -74.6 $y
-    substrate_contact 74.6 $y
+foreach y {-66 -56 -46 -36 -26 -16 -6 4 14 24 27} {
+    substrate_contact -94.6 $y
+    substrate_contact 94.6 $y
 }
-stack_to 74.6 -69.6 5
-paint_rect metal5 67.0 -69.98 74.98 -69.22
-paint_rect metal5 66.62 -69.6 67.38 -20.0
+stack_to 94.6 -69.6 5
+paint_rect metal5 85.0 -69.98 94.98 -69.22
+paint_rect metal5 84.62 -69.6 85.38 -30.0
 
 save /work/cml_to_cmos
 gds write /work/cml_to_cmos.gds

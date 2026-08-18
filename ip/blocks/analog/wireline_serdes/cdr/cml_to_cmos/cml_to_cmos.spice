@@ -1,37 +1,63 @@
 * SPDX-License-Identifier: Apache-2.0
 * Clocked regenerative differential CML-to-CMOS sense amplifier.
-.subckt cml_to_cmos INP INN SENSE_CLK VDD VSS OUTP OUTN
+.subckt cml_to_cmos INP INN SENSE_CLK REGEN_CLK REGEN_CLKB CAPTURE_CLK CAPTURE_CLKB VDD VSS OUTP OUTN
 * Both internal nodes precharge high while SENSE_CLK is low.
 XPREP XP SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=4
 XPREN XN SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=4
 XEQUAL XP SENSE_CLK XN VDD pfet_03v3 w=8u l=0.28u m=4
-XLATP XP XN VDD VDD pfet_03v3 w=8u l=0.28u m=5
-XLATN XN XP VDD VDD pfet_03v3 w=8u l=0.28u m=5
 
-* The high input discharges its node first.  Cross-coupled helpers regenerate
-* the differential decision after the clocked tail enables evaluation.
+* The complementary CDR clock disconnects PMOS regeneration throughout
+* precharge, so the previous decision cannot fight XP/XN equalization.  The
+* header and regeneration nodes are routed locally between adjacent rows.
+XHP VREGP REGEN_CLKB VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XHN VREGN REGEN_CLKB VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XLATP XP XN VREGP VDD pfet_03v3 w=8u l=0.28u m=8
+XLATN XN XP VREGN VDD pfet_03v3 w=8u l=0.28u m=8
+
+* The input pair gets a 100 ps acquisition interval before a separately phased
+* regeneration tail and PMOS header enable positive feedback.
 XIP XP INP NTAIL VSS nfet_03v3 w=8u l=0.28u m=2
 XIN XN INN NTAIL VSS nfet_03v3 w=8u l=0.28u m=2
-XREGENP XP XN NTAIL VSS nfet_03v3 w=8u l=0.28u m=3
-XREGENN XN XP NTAIL VSS nfet_03v3 w=8u l=0.28u m=3
+XREGENP XP XN NREGEN VSS nfet_03v3 w=8u l=0.28u m=3
+XREGENN XN XP NREGEN VSS nfet_03v3 w=8u l=0.28u m=3
 XTAIL NTAIL SENSE_CLK VSS VSS nfet_03v3 w=8u l=0.28u m=8
+XRTAIL NREGEN REGEN_CLK VSS VSS nfet_03v3 w=8u l=0.28u m=8
+XRPRE NREGEN REGEN_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=4
 
-* A cross-coupled inverter pair stores the decision.  A falling sense node
-* turns on one PMOS set device: XP sets QP high and XN sets QN high.  Once the
-* sense nodes precharge high, both set devices turn off and the inverter pair
-* retains its state.  Gate-only sensing prevents the held nodes from feeding
-* charge back into the dynamic sensor.
-XLP QP QN VDD VDD pfet_03v3 w=4u l=0.28u m=1
-XLN QP QN VSS VSS nfet_03v3 w=4u l=0.28u m=1
-XRP QN QP VDD VDD pfet_03v3 w=4u l=0.28u m=1
-XRN QN QP VSS VSS nfet_03v3 w=4u l=0.28u m=1
-XSP QP XP VDD VDD pfet_03v3 w=8u l=0.28u m=4
-XSN QN XN VDD VDD pfet_03v3 w=8u l=0.28u m=4
+* Small restoring inverters observe the dynamic nodes through gate capacitance
+* only.  A late, non-overlapping capture pulse connects their complementary
+* rail-level decisions to the static latch after regeneration has completed.
+XBP SXP XP VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XBN SXP XP VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XDP SXN XN VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XDN SXN XN VSS VSS nfet_03v3 w=8u l=0.28u m=2
 
-* Cross-connected output inverters preserve decision polarity in one stage:
-* QN low produces OUTP high and QP low produces OUTN high.
+* Two matched static transmission-gate D latches retain the complementary
+* restored decisions.  Their feedback paths open during capture, eliminating
+* the write contention of a directly forced cross-coupled latch.
+XTGIP MIP CAPTURE_CLKB SXP VDD pfet_03v3 w=8u l=0.28u m=4
+XTGIN MIP CAPTURE_CLK  SXP VSS nfet_03v3 w=8u l=0.28u m=4
+XIP1 QPB MIP VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XIN1 QPB MIP VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XIP2 QP QPB VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XIN2 QP QPB VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XTGFP MIP CAPTURE_CLK  QP VDD pfet_03v3 w=4u l=0.28u m=1
+XTGFN MIP CAPTURE_CLKB QP VSS nfet_03v3 w=4u l=0.28u m=1
+
+XTGJP MIN CAPTURE_CLKB SXN VDD pfet_03v3 w=8u l=0.28u m=4
+XTGJN MIN CAPTURE_CLK  SXN VSS nfet_03v3 w=8u l=0.28u m=4
+XJP1 QNB MIN VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XJN1 QNB MIN VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XJP2 QN QNB VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XJN2 QN QNB VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XTGGP MIN CAPTURE_CLK  QN VDD pfet_03v3 w=4u l=0.28u m=1
+XTGGN MIN CAPTURE_CLKB QN VSS nfet_03v3 w=4u l=0.28u m=1
+
+* Cross-connected output inverters preserve decision polarity.  The pull-down
+* devices use a modest width increase to close the 50 fF falling-edge load
+* without the latch loading of an additional full finger.
 XOPP OUTP QN VDD VDD pfet_03v3 w=8u l=0.28u m=3
-XOPN OUTP QN VSS VSS nfet_03v3 w=8u l=0.28u m=1
+XOPN OUTP QN VSS VSS nfet_03v3 w=8u l=0.28u m=2
 XONP OUTN QP VDD VDD pfet_03v3 w=8u l=0.28u m=3
-XONN OUTN QP VSS VSS nfet_03v3 w=8u l=0.28u m=1
+XONN OUTN QP VSS VSS nfet_03v3 w=8u l=0.28u m=2
 .ends cml_to_cmos

@@ -14,14 +14,15 @@ physical blocker.
   input and 10, 25, and 50 fF differential output loading.
 - Magic DRC: zero errors.
 - Netgen LVS: circuits match uniquely.
-- Full-RC PEX: 689 resistors and 434 capacitors.
+- Full-RC PEX: 1,465 distributed resistors and 967 capacitors.
 - Extracted nominal matrix: 9/9 pass. Minimum qualified logic margin is
-  310.66 mV at 100 mV differential input and 50 fF output loading.
-- Extracted average supply current: 5.09 to 5.83 mA, below the 20 mA ceiling.
+  41.44 mV at 100 mV differential input and 50 fF output loading.
+- Extracted average supply current: 6.77 to 7.80 mA, below the 20 mA ceiling.
 - Extracted PVT smoke: 18/18 simulations complete across nine representative
-  environments at 50 fF. Seven of nine 200 mV contract cases and five of nine
-  100 mV stress cases pass. Both contract failures are slow-slow, 2.97 V,
-  125 C reset-memory failures at the 0.60 and 0.80 VDD common-mode limits.
+  environments at 50 fF. Six of nine 200 mV contract cases and three of nine
+  100 mV stress cases pass. Two contract failures are slow-slow, 2.97 V,
+  125 C reset-memory failures at the 0.60 and 0.80 VDD common-mode limits. A
+  third slow-slow, 3.63 V, -40 C, 0.80 VDD common-mode case misses by 48.99 mV.
 
 The committed JSON files are the exact results behind this status. Both
 nominal summaries pass. `extracted_pvt_smoke_result.json` intentionally fails
@@ -29,11 +30,12 @@ and prevents this cell from being promoted as PVT-complete.
 
 ## Architecture
 
-The clocked differential pair precharges `XP`/`XN` high and regenerates the CML
-decision during evaluation. A falling sense node enables a PMOS set device on
-a compact cross-coupled inverter latch. Both set devices turn off when the
-sense nodes precharge, so the latch holds. Cross-connected, single-stage CMOS
-inverters drive `OUTP`/`OUTN` with the required polarity.
+The clocked differential pair first acquires the CML input, then separately
+phased NMOS and PMOS regeneration devices amplify the decision on `XP`/`XN`.
+Small restoring inverters drive two matched transmission-gate static latches;
+a late capture pulse updates them and their feedback paths hold between
+decisions. Cross-connected, single-stage CMOS inverters drive `OUTP`/`OUTN`
+with the required polarity.
 
 The layout generator uses legal 0.8 um-pitch shared-diffusion fingers, explicit
 body ties, a contacted substrate guard ring, matched high-metal buses, and a
@@ -55,11 +57,19 @@ sak-pex.sh -m 3 -t 0 -r 1 -y 0 -n cml_to_cmos_pex \
   -w /work/pex /work/cml_to_cmos.mag
 python3 run_nominal.py --source /src \
   --pex /work/pex/cml_to_cmos.pex.spice --work /work/extracted \
-  --output /work/extracted.json --eval-width-ps 500 --timeout-s 300
+  --output /work/extracted.json --eval-width-ps 575 \
+  --regen-delay-ps 130 --capture-delay-ps 200 \
+  --capture-width-ps 320 --timeout-s 300
 ```
 
+`run_pvt.py --waveform-dir <path>` records the internal sense, regeneration,
+restoration, latch, clock, and output nodes for selected cases. Extracted
+waveforms show that slow/hot failures retain differential charge into the next
+cycle. Directly enlarging precharge/equalization devices erases that memory but
+adds enough `XP`/`XN` capacitance to lose evaluation closure, so those sizing
+experiments were rejected.
+
 Next work is a reset-isolated regeneration topology that erases the previous
-decision at slow/hot corners without adding enough XP/XN capacitance to lose
-nominal closure. After that change, rerun the full 729-case extracted PVT
-matrix, bounded stress, and only then statistical and top-level integration
-work. The present smoke failure is not waived.
+decision without loading `XP`/`XN`. After that change, rerun the full 729-case
+extracted PVT matrix, bounded stress, and only then statistical and top-level
+integration work. The present smoke failures are not waived.

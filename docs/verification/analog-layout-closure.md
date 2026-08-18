@@ -134,6 +134,14 @@ reuse must include a SHA-256 of every externally included DUT netlist; comparing
 only the testbench text can silently reuse stale simulations after a layout or
 schematic change.
 
+For clocked dynamic cells, use an alternating-bit sequence and probe internal
+nodes through reset, acquisition, regeneration, capture, and hold. A repeated
+symbol can hide retained charge, while output-only samples cannot distinguish
+an incorrect sense decision from a correct decision lost at the latch. Change
+one physical mechanism at a time, regenerate DRC/LVS/PEX, and reject a larger
+reset device when its added sensitive-node capacitance costs more evaluation
+margin than its reset current gains.
+
 ## 8. Add stress dimensions in layers
 
 After extracted PVT closure, add tests according to the block's physical risks:

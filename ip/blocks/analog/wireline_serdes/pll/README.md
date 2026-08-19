@@ -10,8 +10,9 @@ is now qualified as the realizable main/regenerative bias source; the selected
 architecture uses one instance per independently power-gated VCO parent. The
 two-DAC/two-VCO/selector parent is now physically and deterministically
 electrically qualified as a system, including bounded supply/reference ripple.
-Its statistical/noise qualification, calibration controller, divider, loop,
-and analog-top integration remain open.
+Its statistical/noise qualification, calibration controller, remaining
+feedback-divider ratio, loop, and analog-top integration remain open. A first
+static differential CML divide-by-two stage is now physically closed.
 The earlier fixed-control and 2.5 GHz banks are retained as fallback/
 falsification evidence rather than selected implementation members.
 
@@ -230,8 +231,22 @@ cycle peak-to-peak variation is 16.96 ps, and worst median-frequency pushing is
 0.467%. These are deterministic public-model bounds, not random phase-noise or
 PDN signoff claims.
 
+`divider_layout.tcl` implements the first feedback-clock division stage as two
+opposite-phase static CML latches with complementary reset. The compact,
+left/right-symmetric cell uses one common 7.5 um load geometry and a
+programmable tail bias. It is zero-DRC, uniquely LVS-matched, and its exact
+full-RC extraction contains 510 resistors and 193 capacitors. A 25-case
+post-layout screen at a 1.25 GHz input has 19 passing bias points and finds a
+working code in 5/5 process/resistor/supply/temperature environments; every
+selected code produces 625 MHz, with 0.9 V selected in all five. This closes a
+divide-by-two primitive, not the complete ratio from the eventual PCIe
+reference, its loading on the VCO parent, phase detector, or loop dynamics.
+The usable checked-GDS image is `layout_divider.png`; numeric evidence is in
+`divider_extracted_result.json` and `divider_physical_result.json`.
+
 Phase noise, statistical noise/mismatch startup, combined PDN/aggressor stress,
-runtime band-selection control, divider loading, and loop dynamics remain open.
+runtime band-selection control, VCO/divider composition, remaining divider
+ratio, and loop dynamics remain open.
 
 The first safe-selection primitive is now physical and extracted. Rather than
 duplicate nearly identical circuitry, the closed phase-interpolator macro is
@@ -319,10 +334,14 @@ break-before-make handoff, inactive isolation, old-parent shutdown, one common
 PEX identity, selected-code rail margin, and 55 exact-parent VDD/reference
 ripple cases with individual-cycle measurements.
 
-`run_schematic.sh` runs the 12-environment adversarial screen and intentionally
+`run_divider_schematic.sh` screens four load geometries and five tail-bias
+codes over five environments; `run_divider_physical.sh` regenerates the cell,
+requires DRC/LVS/full-RC closure, renders the emitted GDS, and repeats the fixed
+geometry over 25 extracted cases. `run_schematic.sh` runs the 12-environment
+adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
 milestone is defensible mismatch/statistical startup and phase-noise analysis
-against the complete parent, followed by divider loading and loop integration.
-The
-divider, PFD, charge pump, loop filter, lock detector, and external-clock
-bypass remain separate unimplemented boundaries.
+against the complete parent, followed by VCO/divider composition and loop
+integration. The remaining feedback-divider ratio, PFD, charge pump, loop
+filter, lock detector, and external-clock bypass remain separate unimplemented
+boundaries.

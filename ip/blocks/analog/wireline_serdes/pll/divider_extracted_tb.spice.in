@@ -1,0 +1,37 @@
+* SPDX-License-Identifier: Apache-2.0
+* Static-CML divide-by-two schematic PVT and bias screen.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include @PEX_PATH@
+.temp @TEMP_C@
+
+VDD VDD 0 PWL(0 0 500p @VDD_V@)
+VBIAS VBIAS 0 PWL(0 0 500p @VBIAS_V@)
+VRESET RESET 0 PWL(0 0 500p @VDD_V@ 1.5n @VDD_V@ 1.6n 0)
+VCLKP CLK_P 0 SIN(@CLOCK_CM_V@ @CLOCK_PEAK_V@ 1.25g 500p 0 0)
+VCLKN CLK_N 0 SIN(@CLOCK_CM_V@ @CLOCK_PEAK_V@ 1.25g 500p 0 180)
+XDUT CLK_P CLK_N RESET VBIAS VDD 0 DIV_P DIV_N cml_divider_by_2_pex
+CLOADP DIV_P 0 50f
+CLOADN DIV_N 0 50f
+
+.control
+tran 2p 16n
+let vdiff = v(DIV_P)-v(DIV_N)
+let vcm = (v(DIV_P)+v(DIV_N))/2
+let isupply = -i(VDD)
+meas tran startup_time when vdiff=0 rise=1 td=1.6n
+meas tran period_early trig vdiff val=0 rise=2 td=2n
++ targ vdiff val=0 rise=3 td=2n
+meas tran period_late trig vdiff val=0 rise=1 td=10n
++ targ vdiff val=0 rise=2 td=10n
+meas tran high_time trig vdiff val=0 rise=1 td=10n
++ targ vdiff val=0 fall=1 td=10n
+meas tran diff_high max vdiff from=10n to=16n
+meas tran diff_low min vdiff from=10n to=16n
+meas tran output_cm avg vcm from=10n to=16n
+meas tran supply_current avg isupply from=10n to=16n
+print startup_time period_early period_late high_time diff_high diff_low
++ output_cm supply_current
+.endc
+.end

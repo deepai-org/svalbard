@@ -220,6 +220,17 @@ useful parent first--for example, one oscillator band containing its repeated
 delay cells, output buffer, and startup assist--then replicate that verified
 macro at the bank level.
 
+Treat a via stack as geometry on every intermediate metal, not as an abstract
+change from its first to last layer. A gate route that rises at the same x/y as
+a source contact can short through an otherwise invisible intermediate M3 or
+M4 square even when its visible trunk is on M5. Before drawing a long upper-
+metal route, escape the sensitive terminal on its existing low layer into a
+reserved open channel, then rise. Likewise, do not extend terminal metal over
+a guarded resistor merely to cure spacing: its guard metal may be the body/VSS
+connection. Use the already-connected upper terminal layer and start the next
+via stack there. DRC can accept both mistakes; pin-resolved LVS is the required
+connectivity test.
+
 For a short regenerative ring, prefer a folded column of repeated stages over
 a wide row when that keeps each stage-to-stage connection local. Put adjacent
 stages one pitch apart, escape both polarities on mirrored columns outside the

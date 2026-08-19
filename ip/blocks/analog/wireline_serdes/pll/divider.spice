@@ -1,0 +1,29 @@
+* SPDX-License-Identifier: Apache-2.0
+* Differential static-CML divide-by-two with an explicit deterministic reset.
+
+.subckt cml_divider_latch DATA_P DATA_N CLK_P CLK_N VBIAS VDD VSS Q_P Q_N
++ params: LOAD_L=7.5u
+XRP VDD Q_P VSS ppolyf_u r_width=2u r_length={LOAD_L}
+XRN VDD Q_N VSS ppolyf_u r_width=2u r_length={LOAD_L}
+XDP Q_N DATA_P NTRACK VSS nfet_03v3 w=6u l=0.28u m=2
+XDN Q_P DATA_N NTRACK VSS nfet_03v3 w=6u l=0.28u m=2
+XLP Q_P Q_N NHOLD VSS nfet_03v3 w=6u l=0.28u m=2
+XLN Q_N Q_P NHOLD VSS nfet_03v3 w=6u l=0.28u m=2
+XCT NTRACK CLK_P NCLK VSS nfet_03v3 w=8u l=0.28u m=2
+XCH NHOLD CLK_N NCLK VSS nfet_03v3 w=8u l=0.28u m=2
+XTAIL NCLK VBIAS VSS VSS nfet_03v3 w=10u l=0.28u m=4
+.ends cml_divider_latch
+
+.subckt cml_divider_by_2 CLK_P CLK_N RESET VBIAS VDD VSS DIV_P DIV_N
++ params: LOAD_L=7.5u
+* Master tracks while CLK_P is high; slave tracks while CLK_N is high.
+* Inverted slave feedback makes the two-latch DFF toggle once per input cycle.
+XMASTER DIV_N DIV_P CLK_P CLK_N VBIAS VDD VSS MASTER_P MASTER_N
++ cml_divider_latch params: LOAD_L={LOAD_L}
+XSLAVE MASTER_P MASTER_N CLK_N CLK_P VBIAS VDD VSS DIV_P DIV_N
++ cml_divider_latch params: LOAD_L={LOAD_L}
+
+* RESET establishes MASTER_P=1 and DIV_N=1, a state consistent with feedback.
+XRESET_MASTER MASTER_N RESET VSS VSS nfet_03v3 w=2u l=0.28u m=2
+XRESET_SLAVE DIV_P RESET VSS VSS nfet_03v3 w=2u l=0.28u m=2
+.ends cml_divider_by_2

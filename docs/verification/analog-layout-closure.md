@@ -255,14 +255,13 @@ For a physical tuning bank, preserve three different results in the evidence:
   low and high design limits, with useful distance from control and member
   endpoints.
 
-Do not collapse those into a single pass bit. The present eight-member VCO bank
-closes 5/5 declared target environments and has full aggregate +/-2% frequency
-guardband in 3/5; the regenerated slow-process/slow-resistor endpoint tiles
-span below 2.45 GHz and above 2.55 GHz. The other two environments remain
-margin-development results. The eventual selector also needs a safe transition
-contract (normally disable or break-before-make), deterministic power-up
-behavior, and verification that inactive members cannot disturb the active
-oscillator.
+Do not collapse those into a single pass bit. The present eleven-member VCO
+bank closes 5/5 declared target environments and has full aggregate +/-2%
+frequency guardband in 5/5. The added endpoint members are individually DRC
+clean, unique-LVS, full-RC tiles; the result is not inferred from perturbed
+screening decks. The eventual selector still needs a safe transition contract
+(normally disable or break-before-make), deterministic power-up behavior, and
+verification that inactive members cannot disturb the active oscillator.
 
 ### Proven physical iteration ladder
 

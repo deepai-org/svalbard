@@ -59,6 +59,14 @@ analog-flow-preflight:
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/cdr/integrated_detector/run_composed.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/cdr/phase_error_filter/run.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/cdr/error_slicer/run.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/pll/run_schematic.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/pll/run_physical.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/pll/run_active_screen.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/pll/run_cap_drc.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/pll/run_vco_active_physical.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/pll/run_guardband_screen.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/pll/run_guardband_physical.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/pll/run_vco_bank.sh
 
 serdes-tx-smoke:
 	./ip/blocks/analog/wireline_serdes/serdes_tx/run.sh

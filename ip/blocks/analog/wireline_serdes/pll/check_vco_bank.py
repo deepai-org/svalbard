@@ -9,7 +9,8 @@ import re
 from pathlib import Path
 
 VARIANTS = ("fast", "ultra_fast", "slow", "high_gain", "ss_ff", "ss_ss",
-            "margin_slow", "margin_fast")
+            "margin_slow", "margin_fast", "typ_margin_slow",
+            "ss_ff_margin_slow", "ss_ff_margin_fast")
 SCREENS = {
     "slow": ("slow-ring.json", 7),
     "fast": ("fast-ring.json", 7),
@@ -17,6 +18,9 @@ SCREENS = {
     "ss_ss": ("ss-ss-ring.json", 6),
     "margin_slow": ("margin-slow-ring.json", 55),
     "margin_fast": ("margin-fast-ring.json", 55),
+    "typ_margin_slow": ("typ-margin-slow-ring.json", 11),
+    "ss_ff_margin_slow": ("ss-ff-margin-slow-ring.json", 11),
+    "ss_ff_margin_fast": ("ss-ff-margin-fast-ring.json", 11),
 }
 
 

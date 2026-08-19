@@ -20,6 +20,15 @@ Turn these into measurements in the testbench. A passing waveform image is not
 an executable contract. Preserve failed out-of-envelope cases rather than
 moving limits after seeing results.
 
+Add a model-provenance contract beside the electrical one. Record which PDK
+models, extraction deck, simulator, pad/package/channel models, and variation
+dimensions support each claim. Public corner models can demonstrate that an
+architecture is plausible and expose speed or headroom failures early; they do
+not justify statistical yield, reliability, or foundry-signoff language. Check
+the likely device-speed budget with those models before investing in detailed
+layout, then repeat the budget with extracted loading as soon as one physical
+signal-path unit exists.
+
 Use a three-level requirement ladder:
 
 - **Required envelope:** the actual constrained product/interface requirement.
@@ -143,6 +152,13 @@ temporary-directory names into the GDS top-cell name even when DRC and LVS pass.
 Run a machine-readable off-grid, zero-area, cell-name, and pin-label precheck on
 the emitted stream before treating it as an integration macro.
 
+Keep generator helper names out of the layout tool's command namespace. A Tcl
+procedure named after a built-in command can make an otherwise sound generator
+fail only when that command is reached. Use narrow names such as `make_port`,
+run a minimal generation smoke test before the expensive physical flow, and
+make the preflight verify that every declared source and wrapper is present and
+executable.
+
 Use a second layout database/viewer when it adds independent evidence. KLayout
 is useful in batch mode for deterministic GDS/OASIS reads, hierarchy and layer
 inspection, renders, XOR/diff, net tracing, and custom geometry checks. In the
@@ -255,11 +271,15 @@ For a physical tuning bank, preserve three different results in the evidence:
   low and high design limits, with useful distance from control and member
   endpoints.
 
-Do not collapse those into a single pass bit. The present eleven-member VCO
-bank closes 5/5 declared target environments and has full aggregate +/-2%
-frequency guardband in 5/5. The added endpoint members are individually DRC
-clean, unique-LVS, full-RC tiles; the result is not inferred from perturbed
-screening decks. The eventual selector still needs a safe transition contract
+Do not collapse those into a single pass bit. The current VCO example contains
+one center tile plus eleven added variants: twelve physical layouts in total.
+The eleven added variants are individually DRC clean, unique-LVS, and full-RC
+extracted, and the aggregate bank closes 5/5 declared target environments with
+full +/-2% frequency guardband in 5/5. These counts come from the checked-in
+[VCO bank evidence](../../ip/blocks/analog/wireline_serdes/pll/vco_bank_result.json),
+not from the earlier perturbed-deck screen. Keep evolving project counts in
+machine-readable evidence and block status, not only in this workflow guide.
+The eventual selector still needs a safe transition contract
 (normally disable or break-before-make), deterministic power-up behavior, and
 verification that inactive members cannot disturb the active oscillator.
 
@@ -300,15 +320,34 @@ minimum and maximum frequency as well as the codes nearest the target. A target
 bracket is useful calibration evidence; it is not a substitute for explicit
 frequency headroom above and below the target.
 
-A seeded initial condition proves attraction to the oscillating trajectory but
-does not prove noise startup. Keep seeded startup, unseeded/noise-assisted
-startup, supply pushing, phase noise/jitter, mismatch, safe bank selection, and
-closed-loop PLL behavior as separate claims. Fit deliberate delay capacitance
-from at least two DRC/LVS/PEX-clean physical points; schematic-only capacitor
-scaling can miss routing delay by a large factor. Treat loss of loop gain and
-missed frequency range as different failures: the former needs restored
-transconductance/regeneration or less loading, while the latter may need a
-different legal capacitance or load member. Re-extract either change.
+A seeded initial condition proves attraction to the oscillating trajectory; it
+does not prove autonomous startup. Separate three increasingly strong claims:
+
+- **seeded trajectory:** a small `.ic` perturbation reaches stable oscillation;
+- **deterministic assisted startup:** an extracted, physically placed actuator
+  starts the ring during a real supply ramp without `.ic` or `uic`, then turns
+  fully off before steady-state measurements; and
+- **unassisted statistical startup:** valid device-noise and mismatch models
+  demonstrate startup probability and time with a declared confidence.
+
+For deterministic assistance, attach a symmetric matched device to each side
+of one differential node so normal-operation loading is balanced. Exercise
+both kick polarities, sweep pulse strength and timing, and verify the composed
+full-RC ring plus assist over every declared startup environment. Measure the
+startup deadline from the released kick, late-period drift, swing, current,
+frequency loading, and residual off-state disturbance. A no-kick run is a
+useful control but is not by itself statistical evidence: numerical asymmetry
+can start a mathematically symmetric oscillator. The assist also needs reset
+sequencing and a controller-visible completion or timeout contract.
+
+Keep startup, supply pushing, phase noise/jitter, mismatch, safe bank selection,
+and closed-loop PLL behavior as separate claims. Fit deliberate delay
+capacitance from at least two DRC/LVS/PEX-clean physical points;
+schematic-only capacitor scaling can miss routing delay by a large factor.
+Treat loss of loop gain and missed frequency range as different failures: the
+former needs restored transconductance/regeneration or less loading, while the
+latter may need a different legal capacitance or load member. Re-extract either
+change.
 
 Use the same fixed selected code throughout one stress environment unless the
 test is explicitly measuring recalibration. Otherwise the sweep can conceal a

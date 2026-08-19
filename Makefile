@@ -10,6 +10,7 @@ doctor:
 check: check-fast
 
 check-fast: smoke
+	$(PYTHON) scripts/test_analog_evidence.py
 	$(PYTHON) scripts/validate.py structure
 	$(PYTHON) scripts/validate.py repo-audit
 

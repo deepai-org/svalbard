@@ -27,19 +27,25 @@ contract through generated layout and full-RC evidence is documented in the
 All bounded host flows share `scripts/run_analog_flow.sh`; use
 `make analog-flow-preflight` to validate their pinned image, paths, and resource
 declarations without starting simulation.
+Analog evidence combiners share [`analog_evidence.py`](analog_evidence.py), a
+dependency-free fail-closed kernel for file identity, environment-set equality,
+unique physical-member hashes, connected interval unions, and point/band
+coverage. `make check-fast` runs its unit tests. Block-specific simulators keep
+their own electrical measurements and acceptance gates; they pass numeric
+evidence into this common composition layer.
 The current completion inventory and analog-top critical path are tracked in
 the [PCIe analog status](../../../../docs/verification/pcie-analog-status.md).
 
-The [`pll`](pll/README.md) directory contains the first transistor-level
-autonomous-clock experiment: a regenerative differential CML ring VCO with a
-physically extracted twelve-layout R/C/active-strength bank and a matched
-deterministic startup-assist cell. The sampled composed full-RC bank starts
-without initial conditions in 42/42 commanded cases and brackets 2.5 GHz in
-5/5 declared environments. The physically closed phase interpolator is reused
-as a calibrated two-input break-before-make selector and passes direct
-two-VCO isolation/handoff composition. A balanced physical selector hierarchy
-for all twelve bands plus four quiet spares now passes 0-DRC, unique LVS,
-full-RC all-leaf/PVT testing, and a full-depth nonoverlap handoff. Composition
-of one complete routed oscillator band now passes exact-PEX no-IC startup,
-selector-loading, and shutdown checks at 2.493 GHz. The other band parents,
-twelve-band power/start composition, and closed-loop PLL remain unfinished.
+The [`pll`](pll/README.md) directory contains a regenerative differential CML
+ring VCO with a matched deterministic startup assist. The dual-edge receiver
+requires a 1.25 GHz oscillator: ten complete folded parents are independently
+0-DRC, unique-LVS, and full-RC extracted. Their hash-bound 880-case bank
+evidence has 610 valid no-initial-condition cases and continuously covers the
+target plus the +/-2% design band in 5/5 public-model environments. The older
+twelve-parent 2.5 GHz bank is retained as a physically legal failed overspeed
+experiment because it covers only 2/5 environments. The phase interpolator is
+also qualified as a two-input break-before-make selector, and a balanced
+sixteen-leaf selector hierarchy is physically closed at its prior full-rate
+stress. Real dual-bias generation/calibration, half-rate bank power/selector
+composition, divider loading, phase noise, supply sensitivity, and the closed
+PLL remain unfinished.

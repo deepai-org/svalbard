@@ -3,27 +3,27 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 from pathlib import Path
+import sys
+
+SERDES_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(SERDES_ROOT))
+
+from analog_evidence import (  # noqa: E402
+    EvidenceError,
+    covers_band,
+    covers_value,
+    environment_index,
+    merge_intervals,
+    require_same_environment_keys,
+    require_unique_sha256,
+    sha256_file,
+)
 
 
 TARGET_HZ = 1.25e9
 GUARDBAND_HZ = (1.225e9, 1.275e9)
-
-
-def digest(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def merge(intervals: list[tuple[float, float]]) -> list[list[float]]:
-    output: list[list[float]] = []
-    for lower, upper in sorted(intervals):
-        if not output or lower > output[-1][1]:
-            output.append([lower, upper])
-        else:
-            output[-1][1] = max(output[-1][1], upper)
-    return output
 
 
 def main() -> None:
@@ -38,24 +38,29 @@ def main() -> None:
         raise SystemExit(f"expected three split-control members, got {len(splits)}")
 
     baseline_simulation = baseline["simulation"]
-    baseline_environment_keys = {
-        tuple(item["environment"])
-        for item in baseline_simulation["environments"]
-    }
-    split_environment_sets = [
-        {tuple(item["environment"]) for item in source["environments"]}
-        for _, source in splits
-    ]
-    if len(baseline_environment_keys) != 5 or any(
-        keys != baseline_environment_keys for keys in split_environment_sets
-    ):
-        raise SystemExit("baseline and split reports do not share five environments")
+    try:
+        baseline_environment_index = environment_index(
+            baseline_simulation["environments"]
+        )
+        split_environment_indexes = [
+            environment_index(source["environments"]) for _, source in splits
+        ]
+        baseline_environment_keys = require_same_environment_keys(
+            [baseline_environment_index, *split_environment_indexes],
+            expected_count=5,
+        )
+    except EvidenceError as error:
+        raise SystemExit(str(error)) from error
 
     baseline_hashes = [
         record["pex_sha256"] for record in baseline["physical"].values()
     ]
     split_hashes = [source["physical"]["pex_sha256"] for _, source in splits]
     all_hashes = baseline_hashes + split_hashes
+    try:
+        require_unique_sha256(all_hashes, expected_count=10)
+    except EvidenceError as error:
+        raise SystemExit(str(error)) from error
     baseline_physical_pass = (
         baseline["result"] == "pass"
         and baseline["required_target_result"] == "pass"
@@ -79,15 +84,11 @@ def main() -> None:
         baseline_physical_pass
         and split_physical_pass
         and len(baseline_hashes) == 7
-        and len(set(all_hashes)) == 10
     )
 
     environments = []
     for key in sorted(baseline_environment_keys):
-        baseline_environment = next(
-            item for item in baseline_simulation["environments"]
-            if tuple(item["environment"]) == key
-        )
+        baseline_environment = baseline_environment_index[key]
         intervals = [
             (float(lower), float(upper))
             for lower, upper in baseline_environment["continuous_bank_intervals_hz"]
@@ -98,11 +99,8 @@ def main() -> None:
                 "continuous_bank_intervals_hz"
             ],
         }]
-        for path, source in splits:
-            split_environment = next(
-                item for item in source["environments"]
-                if tuple(item["environment"]) == key
-            )
+        for index, (path, source) in enumerate(splits):
+            split_environment = split_environment_indexes[index][key]
             intervals.extend(
                 (float(lower), float(upper))
                 for lower, upper in split_environment["continuous_intervals_hz"]
@@ -114,12 +112,9 @@ def main() -> None:
                     "continuous_intervals_hz"
                 ],
             })
-        merged = merge(intervals)
-        target_covered = any(lower <= TARGET_HZ <= upper for lower, upper in merged)
-        guardband_covered = any(
-            lower <= GUARDBAND_HZ[0] and upper >= GUARDBAND_HZ[1]
-            for lower, upper in merged
-        )
+        merged = merge_intervals(intervals)
+        target_covered = covers_value(merged, TARGET_HZ)
+        guardband_covered = covers_band(merged, *GUARDBAND_HZ)
         environments.append({
             "environment": list(key),
             "continuous_intervals_hz": merged,
@@ -151,7 +146,7 @@ def main() -> None:
         "target_hz": TARGET_HZ,
         "design_band_hz": list(GUARDBAND_HZ),
         "member_count": len(all_hashes),
-        "unique_pex_count": len(set(all_hashes)),
+        "unique_pex_count": len(all_hashes),
         "case_count": case_count,
         "passing_case_count": passing_case_count,
         "environment_count": len(environments),
@@ -159,13 +154,17 @@ def main() -> None:
         "guardband_environment_count": guardband_count,
         "baseline_evidence": {
             "source": args.baseline.name,
-            "sha256": digest(args.baseline),
+            "sha256": sha256_file(args.baseline),
             "member_count": len(baseline_hashes),
             "case_count": baseline_simulation["case_count"],
         },
         "split_evidence_sha256": {
-            path.name: digest(path) for path, _ in splits
+            path.name: sha256_file(path) for path, _ in splits
         },
+        "combiner_source_sha256": sha256_file(Path(__file__)),
+        "shared_evidence_source_sha256": sha256_file(
+            SERDES_ROOT / "analog_evidence.py"
+        ),
         "split_members": [
             {
                 "source": path.name,

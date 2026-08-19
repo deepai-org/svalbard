@@ -53,6 +53,8 @@ def structure() -> None:
         "scripts/bfm_source_audit.py",
         "scripts/bfm_history_audit.py",
         "scripts/tool_artifacts.py",
+        "scripts/test_analog_evidence.py",
+        "ip/blocks/analog/wireline_serdes/analog_evidence.py",
         "flows/verification/pcie_bfms/run.sh",
         "flows/verification/pcie_bfms/container_smoke.sh",
         "flows/verification/pcie_bfms/check_results.py",

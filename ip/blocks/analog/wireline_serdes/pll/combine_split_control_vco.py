@@ -3,23 +3,23 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 from pathlib import Path
+import sys
 
+SERDES_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(SERDES_ROOT))
 
-def digest(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def merge(intervals: list[tuple[float, float]]) -> list[list[float]]:
-    output: list[list[float]] = []
-    for lower, upper in sorted(intervals):
-        if not output or lower > output[-1][1]:
-            output.append([lower, upper])
-        else:
-            output[-1][1] = max(output[-1][1], upper)
-    return output
+from analog_evidence import (  # noqa: E402
+    EvidenceError,
+    covers_band,
+    covers_value,
+    environment_index,
+    merge_intervals,
+    require_same_environment_keys,
+    require_unique_sha256,
+    sha256_file,
+)
 
 
 def main() -> None:
@@ -30,28 +30,19 @@ def main() -> None:
     sources = [(path, json.loads(path.read_text())) for path in args.inputs]
     if len(sources) != 3:
         raise SystemExit(f"expected exactly three physical candidates, got {len(sources)}")
-    environment_sets = [
-        {
-            tuple(environment["environment"])
-            for environment in source["environments"]
-        }
-        for _, source in sources
-    ]
-    if not environment_sets or any(keys != environment_sets[0] for keys in environment_sets):
-        raise SystemExit("candidate reports do not cover identical environment sets")
-    environment_keys = {
-        tuple(environment["environment"])
-        for _, source in sources for environment in source["environments"]
-    }
+    try:
+        environment_indexes = [
+            environment_index(source["environments"]) for _, source in sources
+        ]
+        environment_keys = require_same_environment_keys(environment_indexes)
+    except EvidenceError as error:
+        raise SystemExit(str(error)) from error
     environments = []
     for key in sorted(environment_keys):
         intervals: list[tuple[float, float]] = []
         contributors = []
-        for path, source in sources:
-            environment = next(
-                item for item in source["environments"]
-                if tuple(item["environment"]) == key
-            )
+        for index, (path, source) in enumerate(sources):
+            environment = environment_indexes[index][key]
             for lower, upper in environment["continuous_intervals_hz"]:
                 intervals.append((float(lower), float(upper)))
             contributors.append({
@@ -59,28 +50,31 @@ def main() -> None:
                 "pex_sha256": source["physical"]["pex_sha256"],
                 "continuous_intervals_hz": environment["continuous_intervals_hz"],
             })
-        merged = merge(intervals)
+        merged = merge_intervals(intervals)
         environments.append({
             "environment": list(key),
             "continuous_intervals_hz": merged,
-            "target_covered": any(lower <= 1.25e9 <= upper for lower, upper in merged),
-            "two_percent_guardband_covered": any(
-                lower <= 1.225e9 and upper >= 1.275e9 for lower, upper in merged
+            "target_covered": covers_value(merged, 1.25e9),
+            "two_percent_guardband_covered": covers_band(
+                merged, 1.225e9, 1.275e9
             ),
             "contributors": contributors,
         })
     pex_hashes = [source["physical"]["pex_sha256"] for _, source in sources]
+    try:
+        require_unique_sha256(pex_hashes, expected_count=3)
+    except EvidenceError as error:
+        raise SystemExit(str(error)) from error
     physical_pass = (
-        len(set(pex_hashes)) == len(pex_hashes)
-        and all(
-        source["physical"]["drc_error_count"] == 0
-        and source["physical"]["lvs_unique"]
-        and source["physical"]["pex_resistor_count"] >= 1000
-        and source["physical"]["pex_capacitor_count"] >= 280
-        and source["initial_condition"] == "none"
-        and not source["transient_uic"]
-        and source["result"] == "screen_complete"
-        for _, source in sources
+        all(
+            source["physical"]["drc_error_count"] == 0
+            and source["physical"]["lvs_unique"]
+            and source["physical"]["pex_resistor_count"] >= 1000
+            and source["physical"]["pex_capacitor_count"] >= 280
+            and source["initial_condition"] == "none"
+            and not source["transient_uic"]
+            and source["result"] == "screen_complete"
+            for _, source in sources
         )
     )
     target_count = sum(item["target_covered"] for item in environments)
@@ -93,14 +87,18 @@ def main() -> None:
     result = {
         "schema_version": 1,
         "claim": "three_complete_physical_split_control_vco_margin_candidates",
-        "limitation": "two-environment candidate screen; full five-environment qualification remains",
+        "limitation": "focused two-environment candidate; full qualification is separate",
         "member_count": len(sources),
         "case_count": sum(source["case_count"] for _, source in sources),
         "passing_case_count": sum(source["passing_case_count"] for _, source in sources),
         "target_environment_count": target_count,
         "guardband_environment_count": guardband_count,
         "unique_pex_count": len(set(pex_hashes)),
-        "input_sha256": {path.name: digest(path) for path, _ in sources},
+        "input_sha256": {path.name: sha256_file(path) for path, _ in sources},
+        "combiner_source_sha256": sha256_file(Path(__file__)),
+        "shared_evidence_source_sha256": sha256_file(
+            SERDES_ROOT / "analog_evidence.py"
+        ),
         "members": [
             {
                 "source": path.name,

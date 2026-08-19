@@ -9,8 +9,9 @@ their 293/400-case public-model PVT union covers the required target and the
 is now qualified as the realizable main/regenerative bias source; the selected
 architecture uses one instance per independently power-gated VCO parent. The
 two-DAC/two-VCO/selector parent is now physically and deterministically
-electrically qualified as a system. Its statistical/noise qualification,
-calibration controller, divider, loop, and analog-top integration remain open.
+electrically qualified as a system, including bounded supply/reference ripple.
+Its statistical/noise qualification, calibration controller, divider, loop,
+and analog-top integration remain open.
 The earlier fixed-control and 2.5 GHz banks are retained as fallback/
 falsification evidence rather than selected implementation members.
 
@@ -221,8 +222,15 @@ cases covering all five declared environments, and a live-parent handoff from
 output, reduces current by 2.96 mA, and old-parent DAC shutdown reduces current
 by 4.07 mA. `vco_bank_top_result.json` binds every component pass to one exact
 parent PEX hash and requires at least three codes of selected rail headroom.
+The same selected configurations pass 55/55 bounded disturbance cases spanning
+50 mV peak VDD ripple at 10 and 100 MHz, 25 mV at 625 MHz, and 20 mV peak
+reference ripple at 10 and 100 MHz, each at two phases. The worst displacement
+of any measured cycle from its same-environment baseline is 8.59 ps, worst
+cycle peak-to-peak variation is 16.96 ps, and worst median-frequency pushing is
+0.467%. These are deterministic public-model bounds, not random phase-noise or
+PDN signoff claims.
 
-Phase noise, statistical noise/mismatch startup, supply/reference pushing,
+Phase noise, statistical noise/mismatch startup, combined PDN/aggressor stress,
 runtime band-selection control, divider loading, and loop dynamics remain open.
 
 The first safe-selection primitive is now physical and extracted. Rather than
@@ -308,12 +316,13 @@ transients, and emits the environment-specific target-to-code map.
 two-DAC/two-VCO/selector parent, and requires zero DRC, unique LVS, full-RC
 extraction, a GDS-bound review image, realizable-code nominal/PVT calibration,
 break-before-make handoff, inactive isolation, old-parent shutdown, one common
-PEX identity, and selected-code rail margin.
+PEX identity, selected-code rail margin, and 55 exact-parent VDD/reference
+ripple cases with individual-cycle measurements.
 
 `run_schematic.sh` runs the 12-environment adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
-milestone is mismatch/statistical startup, supply/reference pushing, and phase-
-noise simulation against the complete parent, followed by divider loading and
-loop integration. The
+milestone is defensible mismatch/statistical startup and phase-noise analysis
+against the complete parent, followed by divider loading and loop integration.
+The
 divider, PFD, charge pump, loop filter, lock detector, and external-clock
 bypass remain separate unimplemented boundaries.

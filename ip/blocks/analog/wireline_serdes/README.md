@@ -55,6 +55,8 @@ the two selected parents. The routed two-DAC/two-VCO/selector parent is now
 zero-DRC, uniquely LVS-matched, and full-RC extracted. Its exact parent PEX now
 passes realizable-code nominal calibration, 5/5 deterministic PVT calibration,
 break-before-make handoff, inactive isolation, and old-parent shutdown with
-three selected DAC codes of rail headroom. Divider loading, statistical
-startup/mismatch, phase noise, supply/reference sensitivity, and the closed PLL
-remain unfinished.
+three selected DAC codes of rail headroom. A 55/55-case exact-parent ripple
+matrix bounds isolated VDD/reference sensitivity to 8.59 ps worst cycle
+displacement and 0.467% worst median-frequency pushing. Divider loading,
+statistical startup/mismatch, phase noise, combined PDN/aggressor sensitivity,
+and the closed PLL remain unfinished.

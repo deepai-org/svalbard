@@ -540,6 +540,18 @@ minimum and maximum frequency as well as the codes nearest the target. A target
 bracket is useful calibration evidence; it is not a substitute for explicit
 frequency headroom above and below the target.
 
+For oscillator supply/reference disturbance, measure consecutive output cycles
+rather than only an average period before and after injection. Use the selected
+realizable code for each PVT environment, compare every stressed cycle with a
+same-environment baseline median, and separately gate maximum cycle
+displacement, cycle peak-to-peak variation, and median-frequency pushing.
+Exercise low-frequency ripple at multiple phases because a short transient sees
+only part of its waveform, and include disturbance near important clock
+harmonics or divider rates. Bind the stress result to both the exact parent PEX
+and the PVT evidence that supplied its codes. Passing isolated ideal voltage-
+source injection is a local sensitivity bound; it does not replace extracted
+PDN, package, regulator, substrate-aggressor, or stochastic phase-noise work.
+
 Generate and extract every coarse member as its own complete parent. Deliberate
 capacitance changes move contacts, routes, and sometimes the legal placement
 window; substituting one leaf model inside a retained parent PEX does not

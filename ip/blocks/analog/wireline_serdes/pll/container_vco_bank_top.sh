@@ -56,6 +56,10 @@ python3 /src/pll/run_vco_bank_top_nominal.py --source /src/pll --pex "$pex" \
 python3 /src/pll/run_vco_bank_top_pvt.py --source /src/pll --pex "$pex" \
   --work /work/vco-bank-top-pvt-sim \
   --output /work/vco-bank-top-pvt-result.json
+python3 /src/pll/run_vco_bank_top_supply.py --source /src/pll --pex "$pex" \
+  --pvt /work/vco-bank-top-pvt-result.json \
+  --work /work/vco-bank-top-supply-sim \
+  --output /work/vco-bank-top-supply-result.json
 python3 /src/pll/run_vco_bank_top_sequence.py --source /src/pll --pex "$pex" \
   --work /work/vco-bank-top-sequence-sim \
   --output /work/vco-bank-top-sequence-result.json
@@ -64,5 +68,7 @@ python3 /src/pll/check_vco_bank_top_result.py \
   --bias-dac /src/pll/vco_bias_dac_result.json \
   --nominal /work/vco-bank-top-nominal-result.json \
   --pvt /work/vco-bank-top-pvt-result.json \
+  --supply /work/vco-bank-top-supply-result.json \
   --sequence /work/vco-bank-top-sequence-result.json \
   --output /work/vco-bank-top-result.json
+cp "$pex" /work/vco-bank-top.pex.spice

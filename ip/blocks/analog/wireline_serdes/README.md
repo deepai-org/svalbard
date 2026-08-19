@@ -51,6 +51,7 @@ sixteen-leaf selector hierarchy is physically closed at its prior full-rate
 stress but is no longer needed for the selected bank. The exact physical dual
 5-bit R-2R DAC is now extracted and qualified in the VCO-bias role across five
 environments; two instances provide independent main/regenerative controls for
-the two selected parents. Their top-level reference/power routing, calibration,
-half-rate bank/selector composition, divider loading, phase noise, supply
+the two selected parents. The routed two-DAC/two-VCO/selector parent is now
+zero-DRC, uniquely LVS-matched, and full-RC extracted; its electrical
+calibration/sequencing qualification, divider loading, phase noise, supply
 sensitivity, and the closed PLL remain unfinished.

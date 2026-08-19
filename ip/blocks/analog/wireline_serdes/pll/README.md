@@ -8,8 +8,9 @@ their 293/400-case public-model PVT union covers the required target and the
 +/-2% design band in 5/5 environments. A reused physical dual 5-bit R-2R DAC
 is now qualified as the realizable main/regenerative bias source; the selected
 architecture uses one instance per independently power-gated VCO parent. The
-two-DAC/two-VCO/selector parent, calibration controller, divider, loop, and
-analog-top integration remain open. The earlier fixed-control and 2.5 GHz
+two-DAC/two-VCO/selector parent is now physically closed but not yet
+electrically qualified as a system. Its calibration controller, divider, loop,
+and analog-top integration remain open. The earlier fixed-control and 2.5 GHz
 banks are retained as fallback/falsification evidence rather than selected
 implementation members.
 
@@ -203,6 +204,21 @@ review image. This proves a realizable bias primitive, not the routing,
 reference integrity, simultaneous behavior, or sequencing of the two-instance
 bank composition.
 
+`vco_bank_top_layout.tcl` realizes that selected composition rather than the
+obsolete sixteen-leaf bank. It places one dual-output DAC below each folded VCO
+parent and the reused two-input selector above them. Parent-owned main/regen
+bias routes remain local to each side; shared references cross only the quiet
+DAC gap; supplies use perimeter spines; and the four VCO-to-selector clock legs
+use separate M4 tracks with deliberate inner-leg detours for first-order
+differential length matching. The approximately 472 by 576 um parent is
+zero-DRC, uniquely
+LVS-matched to `vco_bank_top.spice`, and extracts to 3,773 resistors and 1,220
+capacitors. `vco_bank_top_physical_result.json` and
+`layout_vco_bank_top.png` bind the report and usable emitted-GDS image. This
+closes physical connectivity only; startup, calibration, selection, shutdown,
+handoff, reference disturbance, and output timing must now pass against the
+complete parent PEX.
+
 Phase noise, statistical noise/mismatch startup, supply pushing, safe band
 selection across the complete bank, inactive member loading, divider loading,
 and loop dynamics remain open.
@@ -286,13 +302,16 @@ identities, exactly 400 selected cases, and full target/design-band coverage in
 `run_vco_bias_dac.sh` regenerates and physically closes the reused dual R-2R
 DAC, runs 160 extracted DC cases plus five conservative 1 pF worst-carry
 transients, and emits the environment-specific target-to-code map.
+`run_vco_bank_top.sh` regenerates every selected leaf, routes the actual
+two-DAC/two-VCO/selector parent, and requires zero DRC, unique LVS, full-RC
+extraction, and a GDS-bound review image.
 
 `run_schematic.sh` runs the 12-environment adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
-physical milestone is to place and route two instances of the qualified bias
-DAC with the two qualified half-rate members and closed two-input selector,
-including power gating, reference distribution, and a controller that enforces
-the proven nonoverlap sequence. After that come
+milestone is to electrically qualify the complete parent PEX with realizable
+DAC codes, startup and shutdown, inactive-member isolation, reference loading,
+and a controller sequence that enforces the proven nonoverlap handoff. After
+that come
 mismatch/statistical startup, supply-pushing, and phase-noise simulations. The
 divider, PFD, charge pump, loop filter, lock detector, and external-clock
 bypass remain separate unimplemented boundaries.

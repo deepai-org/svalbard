@@ -94,6 +94,15 @@ trim code is evidence of a brittle nominal point, not calibration range. Use
 finer codes only when the eventual bias or control generator can implement them,
 and verify monotonicity in the polarity the controller will actually use.
 
+At a clock or data boundary, define function before defining amplitude. A
+divider output with large differential swing can be a self-oscillation or a
+wrong-rate lock. Measure the actual loaded input period and require the output
+period, phase sequence, duty cycle, and late-period drift appropriate to the
+intended function before applying swing or common-mode gates. Conversely, a
+correct zero-crossing ratio at millivolt amplitude is not useful regeneration.
+Both the functional relation and the electrical margins must pass in the same
+case.
+
 ## 3. Run schematic PVT as grouped calibration
 
 Treat one process/passive/supply/temperature/common-mode combination as an
@@ -156,6 +165,17 @@ regenerative loop, compact or integrate repeated stages, reduce high-swing
 route length, remove unnecessary via-stack capacitance, or revise the stage
 topology. Re-run the screen after each single-mechanism change, then realize the
 winner as legal geometry.
+
+Search already-realizable controls jointly across an extracted producer,
+optional restoring stage, and consumer before changing topology. Require a
+contiguous passing region in that multidimensional control space, not an
+isolated coordinate, and preserve enough distance from every control endpoint
+for calibration error and drift. Stop a sweep when the intended lever moves the
+limiting metric monotonically in the wrong direction; more current or gain in
+one stage can reduce its input headroom, load the producer, or overdrive a
+regenerative consumer. A programmable interface provides recoverable silicon
+margin only when a system-visible observable and search procedure can select
+the passing region.
 
 Use a modified full-RC deck only as a bounded candidate screen. Preserve every
 extracted routing resistor and capacitor, and when changing active width also
@@ -357,6 +377,13 @@ and coordinate that does not cross another stack. Re-run both DRC and LVS after
 every connectivity edit. The physical gate is zero DRC errors and a unique LVS
 match, not merely equal device counts.
 
+Resolve differential polarity at the circuit/layout boundary explicitly. If a
+symmetric stage is functionally polarity-insensitive, the physical ordering may
+legitimately invert its named pair, but the intended schematic, port contract,
+and downstream phase convention must be updated to describe that connectivity.
+Re-run unique pin-resolved LVS and electrical verification; do not hide a swap
+in measurement code or rely on graph symmetry to make ambiguous pins pass.
+
 ## 7. Extract distributed RC and re-simulate the actual cell
 
 Perform coupled full-RC extraction with a documented resistance threshold.
@@ -377,6 +404,15 @@ by the simulator. The physical checker and electrical checker must agree on the
 PEX hash. Copying or regenerating a similarly named extraction between those
 steps creates an unreviewable identity gap even when both checks pass.
 
+Preserve the exact extracted deck used by a composition run. Some extraction
+tools embed timestamps or other nondeterministic metadata, so regenerating
+unchanged geometry can change the byte hash. Do not weaken equality checks or
+silently substitute the new file. Either archive the checked deck with its
+physical result, or introduce and review an explicit canonicalization step that
+removes only proven-nonsemantic fields before hashing. A semantic comparison is
+useful as an additional diagnostic, but it does not identify the bytes a
+simulator actually included.
+
 For clocked dynamic cells, use an alternating-bit sequence and probe internal
 nodes through reset, acquisition, regeneration, capture, and hold. A repeated
 symbol can hide retained charge, while output-only samples cannot distinguish
@@ -393,13 +429,30 @@ write path and create stale-decision feedback. The contract must say whether a
 cell produces a held value or an aperture-qualified value; both are useful,
 but they are not interchangeable.
 
-Close the interface using the composed extracted cells, not two standalone
-load capacitors. A downstream differential write port can present several
-large NMOS and PMOS gate banks on each rail; this distributed nonlinear load is
-not equivalent to the nominal explicit capacitor used in either leaf test. If
-the boundary fails, add a local restoring stage or rebudget fanout, then verify
-its own extracted delay inside the aperture. Size the retaining latch and the
-write branches as a contention ratio: weakening both latch polarities
+Close every interface using the exact extracted producer and consumer, not an
+ideal source on one side and a standalone load capacitor on the other. Measure
+the producer's loaded amplitude, common mode, frequency or edge rate, startup,
+and current while the consumer presents its real distributed nonlinear input
+capacitance. A small loaded-frequency shift does not prove adequate drive: a
+clock can retain its frequency while losing the amplitude or slew required for
+downstream regeneration. Likewise, leaf PEX passes do not compose transitively;
+the boundary needs its own environment-by-environment calibration result.
+
+If that boundary fails, first classify whether the producer collapses, the
+consumer lacks regeneration, or the composed function locks incorrectly. Use
+existing legal bias controls and one-mechanism retained-RC screens before
+adding circuitry. Add a local limiting/restoring stage only after simpler
+levers fail, then physically close it and qualify its input loading, output
+amplitude and common mode, delay, current, and the downstream functional
+relationship in one exact-PEX composition. An ideal-wire composition of
+extracted children closes only that electrical boundary; the parent remains
+open until child placement and parent-owned interconnect are DRC/LVS/PEX clean
+and re-simulated.
+
+A downstream differential write port can present several large NMOS and PMOS
+gate banks on each rail; this distributed nonlinear load is not equivalent to
+the nominal explicit capacitor used in either leaf test. Size the retaining
+latch and write branches as a contention ratio: weakening both latch polarities
 symmetrically can improve writability without the skew caused by changing only
 one polarity. Keep the measurement before the next capture opening so a late
 pass cannot be caused by the following symbol.

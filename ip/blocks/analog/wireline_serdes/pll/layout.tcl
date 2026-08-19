@@ -130,16 +130,22 @@ proc manual_gate_top_single {cx cy width highest} {
 crashbackups stop
 set cell_name cml_vco_delay
 set cap_l 0.8
+set cap_w 4.0
 set load_l 5.25
 set main_tail_w 10.0
 set latch_tail_w 4.0
 if {[info exists ::env(VCO_CELL_NAME)]} { set cell_name $::env(VCO_CELL_NAME) }
 if {[info exists ::env(VCO_CAP_L)]} { set cap_l $::env(VCO_CAP_L) }
+if {[info exists ::env(VCO_CAP_W)]} { set cap_w $::env(VCO_CAP_W) }
 if {[info exists ::env(VCO_LOAD_L)]} { set load_l $::env(VCO_LOAD_L) }
 if {[info exists ::env(VCO_MAIN_TAIL_W)]} { set main_tail_w $::env(VCO_MAIN_TAIL_W) }
 if {[info exists ::env(VCO_LATCH_TAIL_W)]} { set latch_tail_w $::env(VCO_LATCH_TAIL_W) }
 set cap_left_xoff [expr {-$cap_l/2.0-0.44}]
 set cap_right_xoff [expr {$cap_l/2.0}]
+set cap_terminal_off [expr {$cap_w/2.0-1.0}]
+set cap_bottom_y [expr {11.0-$cap_terminal_off}]
+set cap_top_y [expr {11.0+$cap_terminal_off}]
+set cap_gate_y [expr {11.0-$cap_w/2.0-0.35}]
 set load_off [expr {$load_l/2.0-0.010}]
 set load_bottom_y [expr {23.0-$load_off}]
 set load_top_y [expr {23.0+$load_off}]
@@ -166,7 +172,7 @@ set input_tail [magic::gencell_makecell gf180mcu::nfet_03v3 \
 set latch_tail [magic::gencell_makecell gf180mcu::nfet_03v3 \
     w $latch_tail_w l 0.28 nf 2 guard 0 topc 0 botc 0 full_metal 0]
 set mos_cap [magic::gencell_makecell gf180mcu::nfet_03v3 \
-    w 4 l $cap_l nf 1 guard 0 topc 0 botc 0 full_metal 0]
+    w $cap_w l $cap_l nf 1 guard 0 topc 0 botc 0 full_metal 0]
 set load_cell [magic::gencell_makecell gf180mcu::ppolyf_u \
     w 2 l $load_l guard 1 full_metal 1]
 
@@ -251,9 +257,9 @@ paint_rect metal5 -11.38 8.62 5.38 9.38
 
 # MOS-cap gates attach to outputs; both diffusion terminals return to VSS.
 foreach {x out_x} [list -15 -15 15 15] {
-    terminal_strap $x 11 1.0 [list $cap_left_xoff] 3
-    terminal_strap $x 11 -1.0 [list $cap_right_xoff] 3
-    set gate_y [manual_gate_bottom $x 8.65 1.60 {0.0} 3]
+    terminal_strap $x 11 $cap_terminal_off [list $cap_left_xoff] 3
+    terminal_strap $x 11 [expr {-$cap_terminal_off}] [list $cap_right_xoff] 3
+    set gate_y [manual_gate_bottom $x $cap_gate_y 1.60 {0.0} 3]
     paint_rect metal3 [expr {$x-0.38}] 1.05 [expr {$x+0.38}] [expr {$gate_y+0.38}]
 }
 
@@ -302,11 +308,12 @@ paint_rect metal3 7.6 [expr {$latch_tail_bottom_y-0.45}] 26.6 [expr {$latch_tail
 foreach {x y} [list -26.6 $main_tail_bottom_y 26.6 $latch_tail_bottom_y] { stack_to $x $y 3 }
 
 # Each MOS-cap diffusion pair returns on its nearest guard side.
-paint_rect metal3 -26.6 9.55 -12.5 10.45
-paint_rect metal3 -26.6 11.55 -12.5 12.45
-paint_rect metal3 12.5 9.55 26.6 10.45
-paint_rect metal3 12.5 11.55 26.6 12.45
-foreach {x y} [list -26.6 10.0 -26.6 12.0 26.6 10.0 26.6 12.0] {
+paint_rect metal3 -26.6 [expr {$cap_bottom_y-0.45}] -12.5 [expr {$cap_bottom_y+0.45}]
+paint_rect metal3 -26.6 [expr {$cap_top_y-0.45}] -12.5 [expr {$cap_top_y+0.45}]
+paint_rect metal3 12.5 [expr {$cap_bottom_y-0.45}] 26.6 [expr {$cap_bottom_y+0.45}]
+paint_rect metal3 12.5 [expr {$cap_top_y-0.45}] 26.6 [expr {$cap_top_y+0.45}]
+foreach {x y} [list -26.6 $cap_bottom_y -26.6 $cap_top_y \
+        26.6 $cap_bottom_y 26.6 $cap_top_y] {
     stack_to $x $y 3
 }
 

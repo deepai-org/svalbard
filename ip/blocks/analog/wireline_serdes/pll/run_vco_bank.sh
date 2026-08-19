@@ -32,4 +32,15 @@ exec "$runner" --label cml-vco-bank \
   --copy cml_vco_delay_ss_ss.pex.spice:cml-vco-ss-ss-pex-last.spice \
   --copy cml_vco_delay_ss_ss-layout.png:cml-vco-ss-ss-layout-last.png \
   --copy ss-ss-ring.json:cml-vco-ss-ss-ring-last.json \
-  --copy vco-bank-result.json:cml-vco-bank-result-last.json
+  --copy cml_vco_delay_margin_slow-drc.rpt:cml-vco-margin-slow-drc-last.rpt \
+  --copy cml_vco_delay_margin_slow-lvs.out:cml-vco-margin-slow-lvs-last.out \
+  --copy cml_vco_delay_margin_slow.pex.spice:cml-vco-margin-slow-pex-last.spice \
+  --copy cml_vco_delay_margin_slow-layout.png:cml-vco-margin-slow-layout-last.png \
+  --copy margin-slow-ring.json:cml-vco-margin-slow-ring-last.json \
+  --copy cml_vco_delay_margin_fast-drc.rpt:cml-vco-margin-fast-drc-last.rpt \
+  --copy cml_vco_delay_margin_fast-lvs.out:cml-vco-margin-fast-lvs-last.out \
+  --copy cml_vco_delay_margin_fast.pex.spice:cml-vco-margin-fast-pex-last.spice \
+  --copy cml_vco_delay_margin_fast-layout.png:cml-vco-margin-fast-layout-last.png \
+  --copy margin-fast-ring.json:cml-vco-margin-fast-ring-last.json \
+  --copy vco-bank-result.json:cml-vco-bank-result-last.json \
+  --copy layout-vco-bank.png:cml-vco-bank-layout-last.png

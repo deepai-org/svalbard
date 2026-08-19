@@ -37,11 +37,13 @@ nominal public corner all 7/7 controls sustain oscillation; the frequency range
 is 2.459--2.709 GHz and 0.88--0.98 V brackets 2.5 GHz. The committed
 `layout.png` is rendered from the checked GDS rather than drawn separately.
 
-`layout.tcl` now generates six additional fixed geometries from the same
+`layout.tcl` now generates eight additional fixed geometries from the same
 topology: slow (2.40 um cap / 5.25 um load), fast (0.60/5.25), ultra-fast
 (0.50/4.25), high-gain (0.50/6.50), SS/fast-resistor (0.37/6.25 with
 15/5 um main/latch tails), and SS/slow-resistor (0.38/4.00 with 15/6 um
-tails). All six have zero Magic DRC errors, unique Netgen LVS, full-RC PEX,
+tails). Two SS/slow-resistor margin tiles retain the 15/6 um tails and 4.00 um
+load while using a 4.0 by 0.50 um low-end cap and a 3.2 by 0.37 um high-end
+cap. All eight have zero Magic DRC errors, unique Netgen LVS, full-RC PEX,
 and a KLayout GDS render. The slow tile covers
 FF/fast-resistor at 2.447--2.542 GHz; the fast tile covers FF/slow-resistor at
 2.478--2.543 GHz. The two active-tail tiles cover SS/fast-resistor at
@@ -54,25 +56,37 @@ failure identified the loop-gain boundary: reducing load further killed
 oscillation, while increasing VCTRL above the frequency peak slowed the ring.
 The active-strength screen then separated main-tail and latch-tail current and
 the physical generator moved every affected terminal, gate, source return, and
-VCTRL route. `vco_bank_result.json` records 6/6 added physical geometries and
-5/5 coverage; `layout_vco_bank.png` is the usable visual index.
+VCTRL route. A later cap-loading screen preserved active-device gain and made
+cap width a true geometry parameter: the PCell, terminal straps, gate contact,
+and both VSS returns move together. The legality sweep records 0.37 by 3.2 um
+as DRC clean and 0.37 by 2.8 um as the first rejected point with 18 errors.
+
+The two regenerated margin tiles close the desired SS/slow-resistor endpoint
+range at 2.97 V and 125 C. The low tile has two valid controls spanning
+2.432--2.444 GHz; the high tile has three spanning 2.545--2.567 GHz. Each
+extracted tile contains 274 resistors and 82 capacitors. This is an aggregate
+bank guardband, not one member with an excessively broad analog control.
+`vco_bank_result.json` records 8/8 added physical geometries, 5/5 required
+target environments, and a separate 2/5 environments with full +/-2% bank
+guardband. `layout_vco_bank.png` is the generated nine-layout visual index.
 
 This is target coverage, not robust PLL qualification. The SS/slow-resistor
-tile has only 3/6 electrical controls, a 17.3 MHz valid frequency span, and no
-candidate achieves the desired two-percent frequency guardband. Startup still
-uses a deterministic millivolt seed. Phase noise, unseeded/noise startup,
-supply pushing, mismatch, safe band selection, divider loading, and loop
-dynamics remain open.
+corner now has physical endpoint margin, but FF/slow-resistor,
+SS/fast-resistor, and typical environments do not yet have full +/-2% bank
+coverage. Startup still uses a deterministic millivolt seed. Phase noise,
+unseeded/noise startup, supply pushing, mismatch, safe band selection, inactive
+member loading, divider loading, and loop dynamics remain open.
 
 The bounded reproduction sequence is `run_active_screen.sh` for the
 parasitic-preserving active-width screen, `run_cap_drc.sh` for legal cap
-interpolation, `run_vco_active_physical.sh` for the two SS tiles, and
-`run_vco_bank.sh` for the complete 6/6-physical, 5/5-environment bank result.
+length/width boundaries, `run_vco_active_physical.sh` for the four active-tail
+tiles and endpoint checker, and `run_vco_bank.sh` for the complete
+8/8-physical, 5/5-target bank result and generated visual index.
 
 `run_schematic.sh` runs the 12-environment adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
-physical milestone is to improve SS/slow-resistor margin, implement safe
-selection and power gating, and run unseeded startup, tuning,
-supply-pushing, and phase-noise simulations. The
+physical milestone is to extend the explicit guardband to the remaining three
+environments, implement safe selection and power gating, and run unseeded
+startup, tuning, supply-pushing, and phase-noise simulations. The
 divider, PFD, charge pump, loop filter, lock detector, and external-clock bypass
 remain separate unimplemented boundaries.

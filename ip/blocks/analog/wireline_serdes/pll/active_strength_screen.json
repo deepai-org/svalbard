@@ -1,7 +1,28 @@
 {
-  "base_pex_sha256": "bf2604389c7ce8f1d8a6f9dd038a8a4d7cf47934f99dc5ccb8f3d7ffbcf69575",
-  "case_count": 16,
+  "base_pex_sha256": "3565946a702f093f400157f54ed0611f6a5f8cf25ba1af43525e17242913dd58",
+  "case_count": 40,
   "cases": [
+    {
+      "candidate": "gain_selected",
+      "control_v": 1.15,
+      "environment": [
+        "ss",
+        "res_ff",
+        2.97,
+        125
+      ],
+      "frequency_hz": 2471339871.5100975,
+      "observed": {
+        "diff_high": 0.05621393,
+        "diff_low": -0.0518423,
+        "output_cm": 2.053299,
+        "period": 4.046388e-10,
+        "period_late": 4.039896e-10,
+        "startup_time": 3.677884e-09,
+        "supply_current": 0.00733438
+      },
+      "result": "fail"
+    },
     {
       "candidate": "gain_selected",
       "control_v": 1.2,
@@ -87,88 +108,124 @@
       "result": "pass"
     },
     {
-      "candidate": "gain_fast_neighbor",
+      "candidate": "low_slow",
+      "control_v": 1.15,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 0.0,
+      "observed": {
+        "diff_high": 0.00339416,
+        "diff_low": 0.00267085,
+        "output_cm": 2.06004,
+        "supply_current": 0.00755119
+      },
+      "result": "fail"
+    },
+    {
+      "candidate": "low_slow",
       "control_v": 1.2,
       "environment": [
         "ss",
-        "res_ff",
+        "res_ss",
         2.97,
         125
       ],
-      "frequency_hz": 2509373136.0062675,
+      "frequency_hz": 2432607645.929092,
       "observed": {
-        "diff_high": 0.6207358,
-        "diff_low": -0.614881,
-        "output_cm": 1.98992,
-        "period": 3.985059e-10,
-        "period_late": 3.997879e-10,
-        "startup_time": 3.66115e-09,
-        "supply_current": 0.007845008
+        "diff_high": 0.1653711,
+        "diff_low": -0.163675,
+        "output_cm": 1.997172,
+        "period": 4.110815e-10,
+        "period_late": 4.102549e-10,
+        "startup_time": 4.556672e-09,
+        "supply_current": 0.00807302
       },
-      "result": "pass"
+      "result": "fail"
     },
     {
-      "candidate": "gain_fast_neighbor",
+      "candidate": "low_slow",
       "control_v": 1.25,
       "environment": [
         "ss",
-        "res_ff",
+        "res_ss",
         2.97,
         125
       ],
-      "frequency_hz": 2513570768.5795608,
+      "frequency_hz": 2446571765.77892,
       "observed": {
-        "diff_high": 0.790282,
-        "diff_low": -0.78417,
-        "output_cm": 1.947675,
-        "period": 3.978404e-10,
-        "period_late": 4.008873e-10,
-        "startup_time": 3.656569e-09,
-        "supply_current": 0.008186877
+        "diff_high": 0.6652216,
+        "diff_low": -0.658378,
+        "output_cm": 1.953623,
+        "period": 4.087352e-10,
+        "period_late": 4.095863e-10,
+        "startup_time": 4.153381e-09,
+        "supply_current": 0.008438995
       },
       "result": "pass"
     },
     {
-      "candidate": "gain_fast_neighbor",
+      "candidate": "low_slow",
       "control_v": 1.3,
       "environment": [
         "ss",
-        "res_ff",
+        "res_ss",
         2.97,
         125
       ],
-      "frequency_hz": 2488323541.7801967,
+      "frequency_hz": 2452579377.73156,
       "observed": {
-        "diff_high": 0.9077762,
-        "diff_low": -0.901458,
-        "output_cm": 1.916561,
-        "period": 4.01877e-10,
-        "period_late": 4.024639e-10,
-        "startup_time": 3.653904e-09,
-        "supply_current": 0.008439473
+        "diff_high": 0.7985137,
+        "diff_low": -0.791425,
+        "output_cm": 1.922831,
+        "period": 4.07734e-10,
+        "period_late": 4.122682e-10,
+        "startup_time": 4.153472e-09,
+        "supply_current": 0.008697674
       },
-      "result": "pass"
+      "result": "fail"
     },
     {
-      "candidate": "gain_fast_neighbor",
+      "candidate": "low_slow",
       "control_v": 1.35,
       "environment": [
         "ss",
-        "res_ff",
+        "res_ss",
         2.97,
         125
       ],
-      "frequency_hz": 2474756248.8832664,
+      "frequency_hz": 2447773688.6358433,
       "observed": {
-        "diff_high": 0.990725,
-        "diff_low": -0.984257,
-        "output_cm": 1.892827,
-        "period": 4.040802e-10,
-        "period_late": 4.041421e-10,
-        "startup_time": 3.651938e-09,
-        "supply_current": 0.008632256
+        "diff_high": 0.8838624,
+        "diff_low": -0.876598,
+        "output_cm": 1.900075,
+        "period": 4.085345e-10,
+        "period_late": 4.133905e-10,
+        "startup_time": 4.151615e-09,
+        "supply_current": 0.008888793
       },
-      "result": "pass"
+      "result": "fail"
+    },
+    {
+      "candidate": "low_selected",
+      "control_v": 1.15,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 0.0,
+      "observed": {
+        "diff_high": 0.0034846,
+        "diff_low": 0.00258154,
+        "output_cm": 2.06004,
+        "supply_current": 0.00755119
+      },
+      "result": "fail"
     },
     {
       "candidate": "low_selected",
@@ -255,7 +312,25 @@
       "result": "fail"
     },
     {
-      "candidate": "low_slow_neighbor",
+      "candidate": "low_cap037",
+      "control_v": 1.15,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 0.0,
+      "observed": {
+        "diff_high": 0.0034952,
+        "diff_low": 0.00257112,
+        "output_cm": 2.06004,
+        "supply_current": 0.00755119
+      },
+      "result": "fail"
+    },
+    {
+      "candidate": "low_cap037",
       "control_v": 1.2,
       "environment": [
         "ss",
@@ -263,20 +338,20 @@
         2.97,
         125
       ],
-      "frequency_hz": 2484335025.4967303,
+      "frequency_hz": 2500471964.083221,
       "observed": {
-        "diff_high": 0.2334714,
-        "diff_low": -0.233253,
-        "output_cm": 1.997127,
-        "period": 4.025222e-10,
-        "period_late": 4.016895e-10,
-        "startup_time": 4.063043e-09,
-        "supply_current": 0.008073471
+        "diff_high": 0.2656698,
+        "diff_low": -0.252508,
+        "output_cm": 1.997104,
+        "period": 3.999245e-10,
+        "period_late": 3.991127e-10,
+        "startup_time": 4.038708e-09,
+        "supply_current": 0.008073671
       },
       "result": "pass"
     },
     {
-      "candidate": "low_slow_neighbor",
+      "candidate": "low_cap037",
       "control_v": 1.25,
       "environment": [
         "ss",
@@ -284,20 +359,20 @@
         2.97,
         125
       ],
-      "frequency_hz": 2498731269.198065,
+      "frequency_hz": 2514809081.9815187,
       "observed": {
-        "diff_high": 0.6739923,
-        "diff_low": -0.667172,
-        "output_cm": 1.953511,
-        "period": 4.002031e-10,
-        "period_late": 4.014827e-10,
-        "startup_time": 4.070135e-09,
-        "supply_current": 0.008440288
+        "diff_high": 0.6765181,
+        "diff_low": -0.669687,
+        "output_cm": 1.953472,
+        "period": 3.976445e-10,
+        "period_late": 3.990449e-10,
+        "startup_time": 4.0451e-09,
+        "supply_current": 0.008440629
       },
       "result": "pass"
     },
     {
-      "candidate": "low_slow_neighbor",
+      "candidate": "low_cap037",
       "control_v": 1.3,
       "environment": [
         "ss",
@@ -305,20 +380,20 @@
         2.97,
         125
       ],
-      "frequency_hz": 2504192644.535113,
+      "frequency_hz": 2520074281.709528,
       "observed": {
-        "diff_high": 0.8053166,
-        "diff_low": -0.79824,
-        "output_cm": 1.922804,
-        "period": 3.993303e-10,
-        "period_late": 4.038177e-10,
-        "startup_time": 4.069625e-09,
-        "supply_current": 0.008698368
+        "diff_high": 0.8072791,
+        "diff_low": -0.800206,
+        "output_cm": 1.922754,
+        "period": 3.968137e-10,
+        "period_late": 4.012783e-10,
+        "startup_time": 4.044429e-09,
+        "supply_current": 0.008698637
       },
       "result": "fail"
     },
     {
-      "candidate": "low_slow_neighbor",
+      "candidate": "low_cap037",
       "control_v": 1.35,
       "environment": [
         "ss",
@@ -326,26 +401,428 @@
         2.97,
         125
       ],
-      "frequency_hz": 2496526083.954178,
+      "frequency_hz": 2511478713.4598684,
       "observed": {
-        "diff_high": 0.8896432,
-        "diff_low": -0.882392,
-        "output_cm": 1.900044,
-        "period": 4.005566e-10,
-        "period_late": 4.049165e-10,
-        "startup_time": 4.067628e-09,
-        "supply_current": 0.008889496
+        "diff_high": 0.8913078,
+        "diff_low": -0.884061,
+        "output_cm": 1.900004,
+        "period": 3.981718e-10,
+        "period_late": 4.023711e-10,
+        "startup_time": 4.042412e-09,
+        "supply_current": 0.008889758
+      },
+      "result": "fail"
+    },
+    {
+      "candidate": "low_capw090",
+      "control_v": 1.15,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 0.0,
+      "observed": {
+        "diff_high": 0.00353041,
+        "diff_low": 0.00251244,
+        "output_cm": 2.06004,
+        "supply_current": 0.00755119
+      },
+      "result": "fail"
+    },
+    {
+      "candidate": "low_capw090",
+      "control_v": 1.2,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 2528492954.986504,
+      "observed": {
+        "diff_high": 0.3001501,
+        "diff_low": -0.300414,
+        "output_cm": 1.99706,
+        "period": 3.954925e-10,
+        "period_late": 3.947115e-10,
+        "startup_time": 3.996995e-09,
+        "supply_current": 0.008074119
+      },
+      "result": "pass"
+    },
+    {
+      "candidate": "low_capw090",
+      "control_v": 1.25,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 2542759682.511026,
+      "observed": {
+        "diff_high": 0.6808554,
+        "diff_low": -0.674032,
+        "output_cm": 1.953412,
+        "period": 3.932735e-10,
+        "period_late": 3.948729e-10,
+        "startup_time": 4.002245e-09,
+        "supply_current": 0.008441169
+      },
+      "result": "pass"
+    },
+    {
+      "candidate": "low_capw090",
+      "control_v": 1.3,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 2547629850.782772,
+      "observed": {
+        "diff_high": 0.8106421,
+        "diff_low": -0.803575,
+        "output_cm": 1.922737,
+        "period": 3.925217e-10,
+        "period_late": 3.969376e-10,
+        "startup_time": 4.001401e-09,
+        "supply_current": 0.008698988
+      },
+      "result": "fail"
+    },
+    {
+      "candidate": "low_capw090",
+      "control_v": 1.35,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 2537372322.596442,
+      "observed": {
+        "diff_high": 0.89416,
+        "diff_low": -0.886901,
+        "output_cm": 1.9,
+        "period": 3.941085e-10,
+        "period_late": 3.98021e-10,
+        "startup_time": 3.99918e-09,
+        "supply_current": 0.008890085
+      },
+      "result": "pass"
+    },
+    {
+      "candidate": "low_capw080",
+      "control_v": 1.15,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 0.0,
+      "observed": {
+        "diff_high": 0.00359523,
+        "diff_low": 0.00247208,
+        "output_cm": 2.06004,
+        "supply_current": 0.00755119
+      },
+      "result": "fail"
+    },
+    {
+      "candidate": "low_capw080",
+      "control_v": 1.2,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 2557151701.234669,
+      "observed": {
+        "diff_high": 0.3469868,
+        "diff_low": -0.346733,
+        "output_cm": 1.997013,
+        "period": 3.910601e-10,
+        "period_late": 3.903133e-10,
+        "startup_time": 3.955075e-09,
+        "supply_current": 0.008074675
+      },
+      "result": "pass"
+    },
+    {
+      "candidate": "low_capw080",
+      "control_v": 1.25,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 2571324689.911099,
+      "observed": {
+        "diff_high": 0.6850339,
+        "diff_low": -0.678217,
+        "output_cm": 1.953416,
+        "period": 3.889046e-10,
+        "period_late": 3.906819e-10,
+        "startup_time": 3.959294e-09,
+        "supply_current": 0.008441578
+      },
+      "result": "pass"
+    },
+    {
+      "candidate": "low_capw080",
+      "control_v": 1.3,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 2576550606.8034334,
+      "observed": {
+        "diff_high": 0.8138958,
+        "diff_low": -0.806836,
+        "output_cm": 1.92274,
+        "period": 3.881158e-10,
+        "period_late": 3.925845e-10,
+        "startup_time": 3.56846e-09,
+        "supply_current": 0.008699302
+      },
+      "result": "fail"
+    },
+    {
+      "candidate": "low_capw080",
+      "control_v": 1.35,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 2570298301.109932,
+      "observed": {
+        "diff_high": 0.8969187,
+        "diff_low": -0.889686,
+        "output_cm": 1.899996,
+        "period": 3.890599e-10,
+        "period_late": 3.93667e-10,
+        "startup_time": 3.567066e-09,
+        "supply_current": 0.00889039
+      },
+      "result": "fail"
+    },
+    {
+      "candidate": "low_capw070",
+      "control_v": 1.15,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 0.0,
+      "observed": {
+        "diff_high": 0.00364073,
+        "diff_low": 0.00240121,
+        "output_cm": 2.06004,
+        "supply_current": 0.00755119
+      },
+      "result": "fail"
+    },
+    {
+      "candidate": "low_capw070",
+      "control_v": 1.2,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 2586437446.2344313,
+      "observed": {
+        "diff_high": 0.3888545,
+        "diff_low": -0.376827,
+        "output_cm": 1.996939,
+        "period": 3.866322e-10,
+        "period_late": 3.859163e-10,
+        "startup_time": 3.913032e-09,
+        "supply_current": 0.008075367
+      },
+      "result": "pass"
+    },
+    {
+      "candidate": "low_capw070",
+      "control_v": 1.25,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 2600095215.486791,
+      "observed": {
+        "diff_high": 0.6890758,
+        "diff_low": -0.682257,
+        "output_cm": 1.953359,
+        "period": 3.846013e-10,
+        "period_late": 3.862472e-10,
+        "startup_time": 3.529792e-09,
+        "supply_current": 0.008442011
+      },
+      "result": "pass"
+    },
+    {
+      "candidate": "low_capw070",
+      "control_v": 1.3,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 2605474832.1553116,
+      "observed": {
+        "diff_high": 0.817035,
+        "diff_low": -0.809982,
+        "output_cm": 1.922691,
+        "period": 3.838072e-10,
+        "period_late": 3.882368e-10,
+        "startup_time": 3.52966e-09,
+        "supply_current": 0.00869969
+      },
+      "result": "fail"
+    },
+    {
+      "candidate": "low_capw070",
+      "control_v": 1.35,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 2597681257.755702,
+      "observed": {
+        "diff_high": 0.8995751,
+        "diff_low": -0.892351,
+        "output_cm": 1.899939,
+        "period": 3.849587e-10,
+        "period_late": 3.893097e-10,
+        "startup_time": 3.528165e-09,
+        "supply_current": 0.008890816
+      },
+      "result": "fail"
+    },
+    {
+      "candidate": "low_load375",
+      "control_v": 1.15,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 0.0,
+      "observed": {
+        "diff_high": 0.00337865,
+        "diff_low": 0.00337825,
+        "output_cm": 2.03193,
+        "supply_current": 0.00824428
+      },
+      "result": "fail"
+    },
+    {
+      "candidate": "low_load375",
+      "control_v": 1.2,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 0.0,
+      "observed": {
+        "diff_high": 0.00363842,
+        "diff_low": 0.00361716,
+        "output_cm": 1.98186,
+        "supply_current": 0.00868434
+      },
+      "result": "fail"
+    },
+    {
+      "candidate": "low_load375",
+      "control_v": 1.25,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 0.0,
+      "observed": {
+        "diff_high": 0.00400759,
+        "diff_low": 0.00363495,
+        "output_cm": 1.94797,
+        "supply_current": 0.00898224
+      },
+      "result": "fail"
+    },
+    {
+      "candidate": "low_load375",
+      "control_v": 1.3,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 0.0,
+      "observed": {
+        "diff_high": 0.00529133,
+        "diff_low": 0.00264017,
+        "output_cm": 1.92375,
+        "supply_current": 0.00919514
+      },
+      "result": "fail"
+    },
+    {
+      "candidate": "low_load375",
+      "control_v": 1.35,
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "frequency_hz": 2544555160.8667774,
+      "observed": {
+        "diff_high": 0.01171684,
+        "diff_low": -0.00353169,
+        "output_cm": 1.905641,
+        "period": 3.92996e-10,
+        "period_late": 3.926309e-10,
+        "startup_time": 1.138118e-08,
+        "supply_current": 0.00935429
       },
       "result": "fail"
     }
   ],
   "groups": [
     {
+      "bank_maximum_hz": 2503222899.4830847,
+      "bank_minimum_hz": 2464333091.0893908,
       "candidates": [
         {
           "candidate": "gain_selected",
           "dimensions": {
             "cap_length_um": 0.37,
+            "cap_width_scale": 1.0,
             "input_width_scale": 1.0,
             "latch_tail_width_scale": 1.25,
             "latch_width_scale": 1.0,
@@ -372,35 +849,10 @@
           ],
           "two_percent_guardband": false,
           "valid_control_count": 4
-        },
-        {
-          "candidate": "gain_fast_neighbor",
-          "dimensions": {
-            "cap_length_um": 0.35,
-            "input_width_scale": 1.0,
-            "latch_tail_width_scale": 1.25,
-            "latch_width_scale": 1.0,
-            "load_length_um": 6.25,
-            "main_tail_width_scale": 1.5
-          },
-          "maximum_hz": 2513570768.5795608,
-          "minimum_hz": 2474756248.8832664,
-          "target_brackets_v": [
-            {
-              "controls_v": [
-                1.25,
-                1.3
-              ],
-              "kvco_polarity": "negative"
-            }
-          ],
-          "two_percent_guardband": false,
-          "valid_control_count": 4
         }
       ],
       "covering_candidates": [
-        "gain_selected",
-        "gain_fast_neighbor"
+        "gain_selected"
       ],
       "environment": [
         "ss",
@@ -408,14 +860,35 @@
         2.97,
         125
       ],
-      "guardband_candidates": []
+      "guardband_candidates": [],
+      "two_percent_bank_guardband": false
     },
     {
+      "bank_maximum_hz": 2600095215.486791,
+      "bank_minimum_hz": 2446571765.77892,
       "candidates": [
+        {
+          "candidate": "low_slow",
+          "dimensions": {
+            "cap_length_um": 0.5,
+            "cap_width_scale": 1.0,
+            "input_width_scale": 1.0,
+            "latch_tail_width_scale": 1.5,
+            "latch_width_scale": 1.0,
+            "load_length_um": 4.0,
+            "main_tail_width_scale": 1.5
+          },
+          "maximum_hz": 2446571765.77892,
+          "minimum_hz": 2446571765.77892,
+          "target_brackets_v": [],
+          "two_percent_guardband": false,
+          "valid_control_count": 1
+        },
         {
           "candidate": "low_selected",
           "dimensions": {
             "cap_length_um": 0.38,
+            "cap_width_scale": 1.0,
             "input_width_scale": 1.0,
             "latch_tail_width_scale": 1.5,
             "latch_width_scale": 1.0,
@@ -437,20 +910,89 @@
           "valid_control_count": 2
         },
         {
-          "candidate": "low_slow_neighbor",
+          "candidate": "low_cap037",
           "dimensions": {
-            "cap_length_um": 0.4,
+            "cap_length_um": 0.37,
+            "cap_width_scale": 1.0,
             "input_width_scale": 1.0,
             "latch_tail_width_scale": 1.5,
             "latch_width_scale": 1.0,
             "load_length_um": 4.0,
             "main_tail_width_scale": 1.5
           },
-          "maximum_hz": 2498731269.198065,
-          "minimum_hz": 2484335025.4967303,
+          "maximum_hz": 2514809081.9815187,
+          "minimum_hz": 2500471964.083221,
           "target_brackets_v": [],
           "two_percent_guardband": false,
           "valid_control_count": 2
+        },
+        {
+          "candidate": "low_capw090",
+          "dimensions": {
+            "cap_length_um": 0.37,
+            "cap_width_scale": 0.9,
+            "input_width_scale": 1.0,
+            "latch_tail_width_scale": 1.5,
+            "latch_width_scale": 1.0,
+            "load_length_um": 4.0,
+            "main_tail_width_scale": 1.5
+          },
+          "maximum_hz": 2542759682.511026,
+          "minimum_hz": 2528492954.986504,
+          "target_brackets_v": [],
+          "two_percent_guardband": false,
+          "valid_control_count": 3
+        },
+        {
+          "candidate": "low_capw080",
+          "dimensions": {
+            "cap_length_um": 0.37,
+            "cap_width_scale": 0.8,
+            "input_width_scale": 1.0,
+            "latch_tail_width_scale": 1.5,
+            "latch_width_scale": 1.0,
+            "load_length_um": 4.0,
+            "main_tail_width_scale": 1.5
+          },
+          "maximum_hz": 2571324689.911099,
+          "minimum_hz": 2557151701.234669,
+          "target_brackets_v": [],
+          "two_percent_guardband": false,
+          "valid_control_count": 2
+        },
+        {
+          "candidate": "low_capw070",
+          "dimensions": {
+            "cap_length_um": 0.37,
+            "cap_width_scale": 0.7,
+            "input_width_scale": 1.0,
+            "latch_tail_width_scale": 1.5,
+            "latch_width_scale": 1.0,
+            "load_length_um": 4.0,
+            "main_tail_width_scale": 1.5
+          },
+          "maximum_hz": 2600095215.486791,
+          "minimum_hz": 2586437446.2344313,
+          "target_brackets_v": [],
+          "two_percent_guardband": false,
+          "valid_control_count": 2
+        },
+        {
+          "candidate": "low_load375",
+          "dimensions": {
+            "cap_length_um": 0.37,
+            "cap_width_scale": 1.0,
+            "input_width_scale": 1.0,
+            "latch_tail_width_scale": 1.75,
+            "latch_width_scale": 1.0,
+            "load_length_um": 3.75,
+            "main_tail_width_scale": 1.75
+          },
+          "maximum_hz": 0,
+          "minimum_hz": 0,
+          "target_brackets_v": [],
+          "two_percent_guardband": false,
+          "valid_control_count": 0
         }
       ],
       "covering_candidates": [
@@ -462,12 +1004,13 @@
         2.97,
         125
       ],
-      "guardband_candidates": []
+      "guardband_candidates": [],
+      "two_percent_bank_guardband": true
     }
   ],
   "limitation": "screening only; regenerated layout parasitics required",
   "model": "full_rc_interconnect_with_perturbed_device_geometry",
-  "passing_case_count": 12,
+  "passing_case_count": 16,
   "result": "pass",
   "schema_version": 1
 }

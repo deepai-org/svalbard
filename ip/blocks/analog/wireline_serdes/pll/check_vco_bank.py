@@ -8,12 +8,15 @@ import json
 import re
 from pathlib import Path
 
-VARIANTS = ("fast", "ultra_fast", "slow", "high_gain", "ss_ff", "ss_ss")
+VARIANTS = ("fast", "ultra_fast", "slow", "high_gain", "ss_ff", "ss_ss",
+            "margin_slow", "margin_fast")
 SCREENS = {
     "slow": ("slow-ring.json", 7),
     "fast": ("fast-ring.json", 7),
     "ss_ff": ("ss-ff-ring.json", 6),
     "ss_ss": ("ss-ss-ring.json", 6),
+    "margin_slow": ("margin-slow-ring.json", 6),
+    "margin_fast": ("margin-fast-ring.json", 6),
 }
 
 
@@ -96,7 +99,20 @@ def main() -> None:
             })
             if group["target_brackets_v"]:
                 entry["covered_by"].append(member)
+    for entry in coverage.values():
+        valid_members = [member for member in entry["members"]
+                         if float(member["minimum_hz"]) > 0
+                         and float(member["maximum_hz"]) > 0]
+        entry["bank_minimum_hz"] = min(
+            (float(member["minimum_hz"]) for member in valid_members), default=0)
+        entry["bank_maximum_hz"] = max(
+            (float(member["maximum_hz"]) for member in valid_members), default=0)
+        entry["two_percent_bank_guardband"] = (
+            entry["bank_minimum_hz"] <= 2.45e9
+            and entry["bank_maximum_hz"] >= 2.55e9)
     covered = sum(bool(entry["covered_by"]) for entry in coverage.values())
+    guardband_covered = sum(bool(entry["two_percent_bank_guardband"])
+                            for entry in coverage.values())
     evidence_pass = (structural_pass and screen_integrity
                      and len(coverage) == 5 and covered == 5)
     result = {
@@ -104,8 +120,12 @@ def main() -> None:
         "cell_family": "cml_vco_delay_bank",
         "physical_result": "pass" if structural_pass else "fail",
         "screen_integrity_result": "pass" if screen_integrity else "fail",
-        "qualification_result": "partial" if evidence_pass and covered < len(coverage) else ("pass" if evidence_pass else "fail"),
+        "qualification_result": "pass" if evidence_pass else "fail",
+        "guardband_result": ("pass" if evidence_pass and guardband_covered == len(coverage)
+                             else "partial" if evidence_pass and guardband_covered
+                             else "fail"),
         "covered_environment_count": covered,
+        "guardband_environment_count": guardband_covered,
         "environment_count": len(coverage),
         "uncovered_environments": [key for key, value in coverage.items() if not value["covered_by"]],
         "physical": physical,

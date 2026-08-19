@@ -1,0 +1,45 @@
+{
+  "cell_family": "cml_vco_delay_margin_tiles",
+  "environment": [
+    "ss",
+    "res_ss",
+    2.97,
+    125
+  ],
+  "guardband_hz": [
+    2450000000.0,
+    2550000000.0
+  ],
+  "members": {
+    "margin_fast": {
+      "drc_error_count": 0,
+      "endpoint_direction": "at_or_above",
+      "endpoint_limit_hz": 2550000000.0,
+      "lvs_unique": true,
+      "maximum_hz": 2567293907.9142485,
+      "minimum_hz": 2545174946.4177046,
+      "pex_capacitor_count": 82,
+      "pex_resistor_count": 274,
+      "pex_sha256": "568c1e56fe2b10fb637312803e0fcd602cc832e03269049cc959e129c0939ec5",
+      "result": "pass",
+      "screen_sha256": "a9ba551bcd7c61230a9d34f57dc25e60662c3546e9b2063c1ad0185720f039e9",
+      "valid_control_count": 3
+    },
+    "margin_slow": {
+      "drc_error_count": 0,
+      "endpoint_direction": "at_or_below",
+      "endpoint_limit_hz": 2450000000.0,
+      "lvs_unique": true,
+      "maximum_hz": 2443624961.237999,
+      "minimum_hz": 2431694905.939609,
+      "pex_capacitor_count": 82,
+      "pex_resistor_count": 274,
+      "pex_sha256": "b5da9a8b170fff7d495af22c0a6e530187cadec55626c9c3a99e4bf7a84254ee",
+      "result": "pass",
+      "screen_sha256": "766e702a52d02996956147d0c51bd7e987a07d2613c07952e11b43ae3da71569",
+      "valid_control_count": 2
+    }
+  },
+  "result": "pass",
+  "schema_version": 1
+}

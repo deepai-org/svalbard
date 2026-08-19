@@ -2,6 +2,8 @@
   "cell_family": "cml_vco_delay_bank",
   "coverage": {
     "ff/res_ff/3.63/-40": {
+      "bank_maximum_hz": 3459899932.774144,
+      "bank_minimum_hz": 2447256124.1972694,
       "covered_by": [
         "slow"
       ],
@@ -35,9 +37,12 @@
           ],
           "valid_control_count": 7
         }
-      ]
+      ],
+      "two_percent_bank_guardband": true
     },
     "ff/res_ss/2.97/125": {
+      "bank_maximum_hz": 2543207182.6274533,
+      "bank_minimum_hz": 2370511407.019416,
       "covered_by": [
         "fast"
       ],
@@ -71,9 +76,12 @@
           ],
           "valid_control_count": 7
         }
-      ]
+      ],
+      "two_percent_bank_guardband": false
     },
     "ss/res_ff/2.97/125": {
+      "bank_maximum_hz": 2507535143.1050305,
+      "bank_minimum_hz": 2458276895.3929434,
       "covered_by": [
         "ss_ff"
       ],
@@ -100,9 +108,12 @@
           ],
           "valid_control_count": 5
         }
-      ]
+      ],
+      "two_percent_bank_guardband": false
     },
     "ss/res_ss/2.97/125": {
+      "bank_maximum_hz": 2567293907.9142485,
+      "bank_minimum_hz": 1981107367.6986785,
       "covered_by": [
         "ss_ss"
       ],
@@ -135,10 +146,27 @@
             }
           ],
           "valid_control_count": 3
+        },
+        {
+          "maximum_hz": 2443624961.237999,
+          "member": "margin_slow",
+          "minimum_hz": 2431694905.939609,
+          "target_brackets_v": [],
+          "valid_control_count": 2
+        },
+        {
+          "maximum_hz": 2567293907.9142485,
+          "member": "margin_fast",
+          "minimum_hz": 2545174946.4177046,
+          "target_brackets_v": [],
+          "valid_control_count": 3
         }
-      ]
+      ],
+      "two_percent_bank_guardband": true
     },
     "typical/res_typical/3.3/27": {
+      "bank_maximum_hz": 2708554644.8191037,
+      "bank_minimum_hz": 2458541612.78363,
       "covered_by": [
         "center"
       ],
@@ -154,11 +182,14 @@
           ],
           "valid_control_count": null
         }
-      ]
+      ],
+      "two_percent_bank_guardband": false
     }
   },
   "covered_environment_count": 5,
   "environment_count": 5,
+  "guardband_environment_count": 2,
+  "guardband_result": "partial",
   "physical": {
     "fast": {
       "drc_error_count": 0,
@@ -166,7 +197,7 @@
       "lvs_unique": true,
       "pex_capacitor_count": 77,
       "pex_resistor_count": 275,
-      "pex_sha256": "ebc0b7983cbb4faecaf161e3ef566af2264d909fa8db77e2c98788bf9290fcd7",
+      "pex_sha256": "7be8d79bf083c21b84aea91c6a32dcdea474acaa4cf10e9f701eaf0acdbf9129",
       "result": "pass"
     },
     "high_gain": {
@@ -175,7 +206,25 @@
       "lvs_unique": true,
       "pex_capacitor_count": 77,
       "pex_resistor_count": 275,
-      "pex_sha256": "d6a4d855a400805adbe4efaaeb3e38c4847613f1dec0097e37ea0274d42fed85",
+      "pex_sha256": "9b8f227af5cd58a7817b32d7cc16b1bc03b3678ec2c11fd8f3d3de99ae001241",
+      "result": "pass"
+    },
+    "margin_fast": {
+      "drc_error_count": 0,
+      "layout_image_sha256": "68b73511dfac093fd8a60c7502478520bb699087db19b5ae4aa5888fad688c89",
+      "lvs_unique": true,
+      "pex_capacitor_count": 82,
+      "pex_resistor_count": 274,
+      "pex_sha256": "8b49dd0f25a8d75eca60388ef948d4f34989d47b7f5c004bd6a67f18d46e9284",
+      "result": "pass"
+    },
+    "margin_slow": {
+      "drc_error_count": 0,
+      "layout_image_sha256": "67e45e61836ac1d66f45ceca6a8ae3177103594a914f3d6d892057ad549ec3f5",
+      "lvs_unique": true,
+      "pex_capacitor_count": 82,
+      "pex_resistor_count": 274,
+      "pex_sha256": "7429b5e79207781aa67c2c7e2d571e11ad571fa17e50bca6a4ff0ad6491ef9ad",
       "result": "pass"
     },
     "slow": {
@@ -184,7 +233,7 @@
       "lvs_unique": true,
       "pex_capacitor_count": 77,
       "pex_resistor_count": 275,
-      "pex_sha256": "c99a3506c22ac0b39613a139e35e50e9fa97e5e485118d730e19058e80411d8b",
+      "pex_sha256": "e1859404b291cebeadc1d7b3a76b77ed12414c2f2d37124475f1c08756b22ca0",
       "result": "pass"
     },
     "ss_ff": {
@@ -193,7 +242,7 @@
       "lvs_unique": true,
       "pex_capacitor_count": 80,
       "pex_resistor_count": 275,
-      "pex_sha256": "908cf5b73d990e062d3bbb7a4880865e8de0d3b7907fcbcf419276e3edcfafff",
+      "pex_sha256": "d50a1acd9611505d8ea53c9b496b5f2e25cc80791af1c82442b0c68e789433e7",
       "result": "pass"
     },
     "ss_ss": {
@@ -202,7 +251,7 @@
       "lvs_unique": true,
       "pex_capacitor_count": 82,
       "pex_resistor_count": 274,
-      "pex_sha256": "0656a1d63d1910b179a9ed26ae6054e271f36797418db1149ac6967b6c72ec5f",
+      "pex_sha256": "7c5b08e1a990be9a3270c96aa81aad0c54163f3e40dd8e004c0cadf987f9d067",
       "result": "pass"
     },
     "ultra_fast": {
@@ -211,7 +260,7 @@
       "lvs_unique": true,
       "pex_capacitor_count": 79,
       "pex_resistor_count": 275,
-      "pex_sha256": "33b80118b16569d269b69e06625462c7d55d13a043eb4a9bda39dfd1f853ee68",
+      "pex_sha256": "dbcba706c803cf9dcbf7c1e1d3b7904e329ec851ea94e58241f8d6b870848ced",
       "result": "pass"
     }
   },

@@ -19,17 +19,21 @@ WIDTH = re.compile(r"\bw=([0-9.]+)u\b")
 LENGTH = re.compile(r"\bl=([0-9.]+)u\b")
 LOAD_LENGTH = re.compile(r"\br_length=([0-9.]+)u\b")
 
-CONTROLS = (1.20, 1.25, 1.30, 1.35)
+CONTROLS = (1.15, 1.20, 1.25, 1.30, 1.35)
 ENVIRONMENTS = (
     ("ss", "res_ff", 2.97, 125),
     ("ss", "res_ss", 2.97, 125),
 )
 CANDIDATES = (
-    # name, load L, cap L, input, main tail, latch, latch tail width scales
-    ("low_selected", 4.00, 0.38, 1.00, 1.50, 1.00, 1.50),
-    ("low_slow_neighbor", 4.00, 0.40, 1.00, 1.50, 1.00, 1.50),
-    ("gain_selected", 6.25, 0.37, 1.00, 1.50, 1.00, 1.25),
-    ("gain_fast_neighbor", 6.25, 0.35, 1.00, 1.50, 1.00, 1.25),
+    # name, load L, cap L, cap W, input, main tail, latch, latch-tail scales
+    ("low_slow", 4.00, 0.50, 1.00, 1.00, 1.50, 1.00, 1.50),
+    ("low_selected", 4.00, 0.38, 1.00, 1.00, 1.50, 1.00, 1.50),
+    ("low_cap037", 4.00, 0.37, 1.00, 1.00, 1.50, 1.00, 1.50),
+    ("low_capw090", 4.00, 0.37, 0.90, 1.00, 1.50, 1.00, 1.50),
+    ("low_capw080", 4.00, 0.37, 0.80, 1.00, 1.50, 1.00, 1.50),
+    ("low_capw070", 4.00, 0.37, 0.70, 1.00, 1.50, 1.00, 1.50),
+    ("low_load375", 3.75, 0.37, 1.00, 1.00, 1.75, 1.00, 1.75),
+    ("gain_selected", 6.25, 0.37, 1.00, 1.00, 1.50, 1.00, 1.25),
 )
 
 
@@ -56,7 +60,8 @@ def scale_geometry(parameters: str, scale: float) -> str:
 
 
 def mutate_pex(base: str, candidate: tuple[object, ...]) -> tuple[str, dict[str, float]]:
-    name, load_l, cap_l, input_scale, main_tail_scale, latch_scale, latch_tail_scale = candidate
+    (name, load_l, cap_l, cap_width_scale, input_scale, main_tail_scale,
+     latch_scale, latch_tail_scale) = candidate
     scales = {
         "input": float(input_scale),
         "main_tail": float(main_tail_scale),
@@ -89,6 +94,8 @@ def mutate_pex(base: str, candidate: tuple[object, ...]) -> tuple[str, dict[str,
                     device_class = "latch_tail" if gate.startswith("VCTRL") else "latch"
                 elif abs(width - 4.0) < 1e-6 and length > 0.28:
                     line = scaled_number(line, LENGTH, float(cap_l))
+                    line = scaled_number(line, WIDTH, width * float(cap_width_scale))
+                    line = scale_geometry(line, float(cap_width_scale))
                     cap_count += 1
                 if device_class:
                     scale = scales[device_class]
@@ -103,6 +110,7 @@ def mutate_pex(base: str, candidate: tuple[object, ...]) -> tuple[str, dict[str,
     dimensions = {
         "load_length_um": float(load_l),
         "cap_length_um": float(cap_l),
+        "cap_width_scale": float(cap_width_scale),
         **{f"{key}_width_scale": value for key, value in scales.items()},
     }
     return "\n".join(output) + "\n", dimensions
@@ -217,8 +225,15 @@ def main() -> None:
                                     if candidate["target_brackets_v"]],
             "guardband_candidates": [candidate["candidate"] for candidate in candidates
                                      if candidate["two_percent_guardband"]],
+            "bank_minimum_hz": min((candidate["minimum_hz"] for candidate in candidates
+                                    if candidate["valid_control_count"]), default=0),
+            "bank_maximum_hz": max((candidate["maximum_hz"] for candidate in candidates), default=0),
             "candidates": candidates,
         })
+
+    for group in groups:
+        group["two_percent_bank_guardband"] = (
+            group["bank_minimum_hz"] <= 2.45e9 and group["bank_maximum_hz"] >= 2.55e9)
 
     passed = all(group["covering_candidates"] for group in groups)
     result = {

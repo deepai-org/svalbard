@@ -1,0 +1,83 @@
+{
+  "bias_reference_v": 2.0,
+  "claim": "physically_closed_realizable_selected_vco_bank_parent",
+  "common_parent_pex_sha256": "05504b0f370a6c02222f4a452fced2ce7947e5077eb6ace50a06bc98cd083745",
+  "component_results": {
+    "bias_dac": "pass",
+    "nominal": "pass",
+    "physical": "pass",
+    "pvt": "pass",
+    "sequence": "pass"
+  },
+  "minimum_selected_code_rail_headroom": 3,
+  "passing_pvt_environment_count": 5,
+  "result": "pass",
+  "schema_version": 1,
+  "selected_pvt_codes": [
+    {
+      "codes": {
+        "main": 15,
+        "regen": 20
+      },
+      "environment": [
+        "typical",
+        "res_typical",
+        3.3,
+        27
+      ],
+      "member": "fast"
+    },
+    {
+      "codes": {
+        "main": 18,
+        "regen": 22
+      },
+      "environment": [
+        "ff",
+        "res_ff",
+        3.63,
+        -40
+      ],
+      "member": "gain"
+    },
+    {
+      "codes": {
+        "main": 16,
+        "regen": 20
+      },
+      "environment": [
+        "ff",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "member": "fast"
+    },
+    {
+      "codes": {
+        "main": 26,
+        "regen": 23
+      },
+      "environment": [
+        "ss",
+        "res_ff",
+        2.97,
+        125
+      ],
+      "member": "gain"
+    },
+    {
+      "codes": {
+        "main": 28,
+        "regen": 26
+      },
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "member": "fast"
+    }
+  ]
+}

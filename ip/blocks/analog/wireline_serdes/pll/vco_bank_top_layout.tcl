@@ -88,7 +88,7 @@ foreach {instance x y cell} {
     XGDAC  140 -210 phase_control_dac
     XFAST -140    0 cml_vco_band_hr_split_fast
     XGAIN  140    0 cml_vco_band_hr_split_gain
-    XSEL     0  270 phase_interpolator
+    XSEL     0  270 vco_selector_unit
 } {
     getcell $cell child 0 0 parent $x $y
     identify $instance

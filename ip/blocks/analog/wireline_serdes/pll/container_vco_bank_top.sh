@@ -26,7 +26,7 @@ magic -dnull -noconsole -rcfile "$PDKPATH/libs.tech/magic/$PDK.magicrc" \
   /src/phase_control_dac/layout.tcl > /work/top-dac-layout.log 2>&1
 unset VCO_CELL_NAME VCO_BAND_DELAY_CELL VCO_BAND_CELL_NAME
 magic -dnull -noconsole -rcfile "$PDKPATH/libs.tech/magic/$PDK.magicrc" \
-  /src/phase_interpolator/layout.tcl > /work/top-selector-layout.log 2>&1
+  /src/pll/selector_unit_layout.tcl > /work/top-selector-layout.log 2>&1
 magic -dnull -noconsole -rcfile "$PDKPATH/libs.tech/magic/$PDK.magicrc" \
   /src/pll/vco_bank_top_layout.tcl > /work/vco-bank-top-layout.log 2>&1
 
@@ -50,3 +50,19 @@ python3 /src/pll/check_vco_bank_top.py --source /src/pll \
   --drc "$drc" --lvs "$lvs" --pex "$pex" --gds /work/vco_bank_top.gds \
   --render /work/layout-vco-bank-top.png \
   --output /work/vco-bank-top-physical-result.json
+python3 /src/pll/run_vco_bank_top_nominal.py --source /src/pll --pex "$pex" \
+  --work /work/vco-bank-top-nominal-sim \
+  --output /work/vco-bank-top-nominal-result.json
+python3 /src/pll/run_vco_bank_top_pvt.py --source /src/pll --pex "$pex" \
+  --work /work/vco-bank-top-pvt-sim \
+  --output /work/vco-bank-top-pvt-result.json
+python3 /src/pll/run_vco_bank_top_sequence.py --source /src/pll --pex "$pex" \
+  --work /work/vco-bank-top-sequence-sim \
+  --output /work/vco-bank-top-sequence-result.json
+python3 /src/pll/check_vco_bank_top_result.py \
+  --physical /work/vco-bank-top-physical-result.json \
+  --bias-dac /src/pll/vco_bias_dac_result.json \
+  --nominal /work/vco-bank-top-nominal-result.json \
+  --pvt /work/vco-bank-top-pvt-result.json \
+  --sequence /work/vco-bank-top-sequence-result.json \
+  --output /work/vco-bank-top-result.json

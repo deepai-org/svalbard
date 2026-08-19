@@ -52,6 +52,9 @@ stress but is no longer needed for the selected bank. The exact physical dual
 5-bit R-2R DAC is now extracted and qualified in the VCO-bias role across five
 environments; two instances provide independent main/regenerative controls for
 the two selected parents. The routed two-DAC/two-VCO/selector parent is now
-zero-DRC, uniquely LVS-matched, and full-RC extracted; its electrical
-calibration/sequencing qualification, divider loading, phase noise, supply
-sensitivity, and the closed PLL remain unfinished.
+zero-DRC, uniquely LVS-matched, and full-RC extracted. Its exact parent PEX now
+passes realizable-code nominal calibration, 5/5 deterministic PVT calibration,
+break-before-make handoff, inactive isolation, and old-parent shutdown with
+three selected DAC codes of rail headroom. Divider loading, statistical
+startup/mismatch, phase noise, supply/reference sensitivity, and the closed PLL
+remain unfinished.

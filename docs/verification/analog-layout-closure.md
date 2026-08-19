@@ -130,12 +130,17 @@ sources in a testbench prove controllability, not an implemented controller.
 
 Qualify the physical bias generator against the voltages the characterized
 load actually needs. Require monotonic transfer, safe off and high endpoints,
-a bounded maximum step, a nearest realizable code for every characterized
-control point, reference current or power, and worst-carry settling into an
-extracted or conservatively bounded gate load. A minimum code step is not a
+a nearest realizable code within the load's allowed bias error for every
+characterized control point, reference current or power, and worst-carry
+settling into an extracted or conservatively bounded gate load. Record minimum
+and maximum steps as diagnostics, but gate them only when the consumer really
+requires a uniform or bounded increment. A minimum code step is not a
 performance benefit by itself: rejecting a smaller step can discard improved
 resolution. Conversely, an endpoint span alone can hide coarse unreachable
-settings. Record the environment-specific target-to-code map so system
+settings; the target-error contract catches that directly. If two DAC channels
+are programmed independently, do not impose a complementary-sum invariant
+merely because a convenient sweep drives one code upward and the other
+downward. Record the environment-specific target-to-code map so system
 calibration can search real hardware rather than ideal voltage-source values.
 Derive the settling deadline from startup and lock sequencing with explicit
 margin; do not promote a convenient transient stop time into a requirement.

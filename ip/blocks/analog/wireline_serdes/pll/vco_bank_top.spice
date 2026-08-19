@@ -2,7 +2,7 @@
 * Selected two-member half-rate VCO bank with physical bias DACs and selector.
 .include /src/phase_control_dac/phase_control_dac.spice
 .include /src/pll/split_control_vco.spice
-.include /src/phase_interpolator/phase_interpolator.spice
+.include /src/pll/selector_unit.spice
 
 .subckt vco_bank_top VREFH VREFL VDD VSS
 + F_A4 F_A4B F_A3 F_A3B F_A2 F_A2B F_A1 F_A1B F_A0 F_A0B
@@ -24,5 +24,5 @@ XFAST F_MAIN FAST_KICKP FAST_KICKN VDD VSS FCLK_P FCLK_N F_REGEN
 XGAIN G_MAIN GAIN_KICKP GAIN_KICKN VDD VSS GCLK_P GCLK_N G_REGEN
 + cml_vco_band_hr_split_gain
 XSEL FCLK_P FCLK_N GCLK_P GCLK_N SEL_A SEL_B SEL_BUF VDD VSS
-+ CLK_P CLK_N phase_interpolator
++ CLK_P CLK_N vco_selector_unit
 .ends vco_bank_top

@@ -1,0 +1,48 @@
+* SPDX-License-Identifier: Apache-2.0
+* Exact parent-PEX two-live-VCO break-before-make and old-member shutdown.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.include @PEX_PATH@
+.temp 27
+
+VDD VDD 0 PWL(0 0 500p 3.3)
+VREFH VREFH 0 PWL(0 0 500p 2.0)
+VREFL VREFL 0 0
+@BIT_SOURCES@
+VFKP FAST_KICKP 0 PULSE(0 3.3 1n 20p 20p 250p 100n)
+VFKN FAST_KICKN 0 0
+VGKP GAIN_KICKP 0 0
+VGKN GAIN_KICKN 0 PULSE(0 3.3 1n 20p 20p 250p 100n)
+VSELA SEL_A 0 PWL(0 0 3n 0 3.1n 1.5 20n 1.5 20.1n 0)
+VSELB SEL_B 0 PWL(0 0 22n 0 22.1n 1.5)
+VSELBUF SEL_BUF 0 PWL(0 0 3n 0 3.1n 1.35 20n 1.35 20.1n 0
++ 22n 0 22.1n 1.35)
+
+XDUT VREFH VREFL VDD 0 @DUT_CODE_PORTS@ FAST_KICKP FAST_KICKN
++ GAIN_KICKP GAIN_KICKN SEL_A SEL_B SEL_BUF CLK_P CLK_N vco_bank_top_pex
+COUTP CLK_P 0 50f
+COUTN CLK_N 0 50f
+
+.control
+tran 5p 60n
+let vdiff = v(CLK_P)-v(CLK_N)
+let vabs = abs(vdiff)
+let isupply = -i(VDD)
+meas tran before_period trig vdiff val=0 rise=1 td=14n
++ targ vdiff val=0 rise=2 td=14n
+meas tran before_high max vdiff from=14n to=19n
+meas tran before_low min vdiff from=14n to=19n
+meas tran release_peak max vabs from=20.1n to=20.5n
+meas tran gap_peak max vabs from=20.5n to=21.8n
+meas tran gap_current avg isupply from=20.5n to=21.8n
+meas tran after_period trig vdiff val=0 rise=1 td=35n
++ targ vdiff val=0 rise=2 td=35n
+meas tran after_high max vdiff from=35n to=45n
+meas tran after_low min vdiff from=35n to=45n
+meas tran current_dual avg isupply from=14n to=19n
+meas tran current_gain_only avg isupply from=50n to=60n
+print before_period before_high before_low release_peak gap_peak gap_current after_period
++ after_high after_low current_dual current_gain_only
+.endc
+.end

@@ -32,6 +32,8 @@ def main() -> None:
         "selected_vco_members": ["split_fast", "split_gain"],
         "bias_dac_instance_count": 2,
         "selector_instance_count": 1,
+        "selector_cell": "vco_selector_unit",
+        "selector_signal_pair_copies": 2,
         "drc_error_count": int(count.group(1)) if count else -1,
         "lvs_unique": lvs.count("Final result: Circuits match uniquely.") == 1,
         "pex_resistor_count": len(re.findall(r"^R\d+\s", pex, re.MULTILINE)),

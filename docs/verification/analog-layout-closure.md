@@ -124,6 +124,14 @@ temporary-directory names into the GDS top-cell name even when DRC and LVS pass.
 Run a machine-readable off-grid, zero-area, cell-name, and pin-label precheck on
 the emitted stream before treating it as an integration macro.
 
+Use a second layout database/viewer when it adds independent evidence. KLayout
+is useful in batch mode for deterministic GDS/OASIS reads, hierarchy and layer
+inspection, renders, XOR/diff, net tracing, and custom geometry checks. In the
+current GF180 flow it renders the emitted GDS and makes generator variants easy
+to compare; Magic and Netgen remain the qualified DRC/LVS authorities until a
+reviewed GF180 KLayout deck is added. Do not call two tools independent when
+they merely wrap the same rule deck or extraction result.
+
 Prefer one repeated unit geometry inside a matching array when programmable
 tail current can express the required ratio. Besides reducing systematic
 mismatch, this prevents mixed-size parameterized cells from quietly moving

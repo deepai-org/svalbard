@@ -1,0 +1,163 @@
+{
+  "case_count": 7,
+  "cases": [
+    {
+      "control_v": 1.3,
+      "frequency_hz": 2394972091.3902187,
+      "id": "ss_res_ss_2.97_p125_1.30",
+      "mos_corner": "ss",
+      "observed": {
+        "diff_high": 0.7177246,
+        "diff_low": -0.712071,
+        "output_cm": 2.022386,
+        "period": 4.175414e-10,
+        "period_late": 4.215268e-10,
+        "startup_time": 3.838048e-09,
+        "supply_current": 0.007452304
+      },
+      "res_corner": "res_ss",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 1.4,
+      "frequency_hz": 2364911523.9300666,
+      "id": "ss_res_ss_2.97_p125_1.40",
+      "mos_corner": "ss",
+      "observed": {
+        "diff_high": 0.9424858,
+        "diff_low": -0.936416,
+        "output_cm": 1.95101,
+        "period": 4.228488e-10,
+        "period_late": 4.229229e-10,
+        "startup_time": 3.817104e-09,
+        "supply_current": 0.008020067
+      },
+      "res_corner": "res_ss",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 1.5,
+      "frequency_hz": 2352415342.452863,
+      "id": "ss_res_ss_2.97_p125_1.50",
+      "mos_corner": "ss",
+      "observed": {
+        "diff_high": 1.06294,
+        "diff_low": -1.05664,
+        "output_cm": 1.908041,
+        "period": 4.25095e-10,
+        "period_late": 4.250965e-10,
+        "startup_time": 3.805062e-09,
+        "supply_current": 0.008362631
+      },
+      "res_corner": "res_ss",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 1.65,
+      "frequency_hz": 2340209336.40556,
+      "id": "ss_res_ss_2.97_p125_1.65",
+      "mos_corner": "ss",
+      "observed": {
+        "diff_high": 1.160198,
+        "diff_low": -1.15369,
+        "output_cm": 1.868263,
+        "period": 4.273122e-10,
+        "period_late": 4.273122e-10,
+        "startup_time": 3.796469e-09,
+        "supply_current": 0.008678869
+      },
+      "res_corner": "res_ss",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 1.8,
+      "frequency_hz": 2332494257.399138,
+      "id": "ss_res_ss_2.97_p125_1.80",
+      "mos_corner": "ss",
+      "observed": {
+        "diff_high": 1.215758,
+        "diff_low": -1.20912,
+        "output_cm": 1.842925,
+        "period": 4.287256e-10,
+        "period_late": 4.287255e-10,
+        "startup_time": 3.792816e-09,
+        "supply_current": 0.008879982
+      },
+      "res_corner": "res_ss",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 2.0,
+      "frequency_hz": 2325740411.088572,
+      "id": "ss_res_ss_2.97_p125_2.00",
+      "mos_corner": "ss",
+      "observed": {
+        "diff_high": 1.261548,
+        "diff_low": -1.25482,
+        "output_cm": 1.82029,
+        "period": 4.299706e-10,
+        "period_late": 4.299706e-10,
+        "startup_time": 3.792002e-09,
+        "supply_current": 0.009058936
+      },
+      "res_corner": "res_ss",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 2.2,
+      "frequency_hz": 2321174402.8314614,
+      "id": "ss_res_ss_2.97_p125_2.20",
+      "mos_corner": "ss",
+      "observed": {
+        "diff_high": 1.291198,
+        "diff_low": -1.28433,
+        "output_cm": 1.804787,
+        "period": 4.308164e-10,
+        "period_late": 4.308164e-10,
+        "startup_time": 3.792687e-09,
+        "supply_current": 0.009181387
+      },
+      "res_corner": "res_ss",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    }
+  ],
+  "environment_count": 1,
+  "extraction": "four_instance_full_rc",
+  "groups": [
+    {
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "maximum_hz": 2394972091.3902187,
+      "minimum_hz": 2321174402.8314614,
+      "result": "fail",
+      "target_brackets_v": [],
+      "valid_control_count": 7
+    }
+  ],
+  "output_buffer": "full_delay_tile",
+  "passing_case_count": 7,
+  "passing_environment_count": 0,
+  "pex_sha256": "4d9e410f9b0f63d2a4d4dd02388ee67aabaecbcfe654c3bb06873cee42358782",
+  "pex_subckt": "cml_vco_delay_ultra_fast_pex",
+  "qualification": "nominal",
+  "result": "fail",
+  "schema_version": 1
+}

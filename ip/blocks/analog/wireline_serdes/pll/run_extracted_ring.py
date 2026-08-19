@@ -37,21 +37,44 @@ def main() -> None:
     parser.add_argument("--work", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--pvt", action="store_true")
+    parser.add_argument("--pex-subckt", default="cml_vco_delay_pex")
+    parser.add_argument("--environment-index", type=int, action="append")
+    parser.add_argument("--control", type=float, action="append")
+    parser.add_argument("--no-output-buffer", action="store_true")
     args = parser.parse_args()
     args.work.mkdir(parents=True, exist_ok=True)
     template = (args.source / "extracted_ring_tb.spice.in").read_text()
-    environments = ENVIRONMENTS if args.pvt else ENVIRONMENTS[:1]
-    specs = [(m, r, v, t, c) for m, r, v, t in environments for c in CONTROLS]
+    if args.environment_index:
+        environments = tuple(ENVIRONMENTS[index] for index in args.environment_index)
+    else:
+        environments = ENVIRONMENTS if args.pvt else ENVIRONMENTS[:1]
+    controls = tuple(args.control) if args.control else CONTROLS
+    specs = [(m, r, v, t, c) for m, r, v, t in environments for c in controls]
 
     def simulate(spec: tuple[str, str, float, int, float]) -> dict[str, object]:
         mos, resistor, supply, temperature, control = spec
         case_id = f"{mos}_{resistor}_{supply:.2f}_{temperature:+d}_{control:.2f}".replace("+", "p").replace("-", "m")
         deck = args.work / f"{case_id}.spice"
         log = args.work / f"{case_id}.log"
+        if args.no_output_buffer:
+            ring_instances = "\n".join((
+                f"X0 CLK_P CLK_N N0P N0N VCTRL VDD VSS {args.pex_subckt}",
+                f"X1 N0P N0N N1P N1N VCTRL VDD VSS {args.pex_subckt}",
+                f"X2 N1P N1N CLK_P CLK_N VCTRL VDD VSS {args.pex_subckt}",
+            ))
+        else:
+            ring_instances = "\n".join((
+                f"X0 N2P N2N N0P N0N VCTRL VDD VSS {args.pex_subckt}",
+                f"X1 N0P N0N N1P N1N VCTRL VDD VSS {args.pex_subckt}",
+                f"X2 N1P N1N N2P N2N VCTRL VDD VSS {args.pex_subckt}",
+                f"XBUF N2P N2N CLK_P CLK_N VCTRL VDD VSS {args.pex_subckt}",
+            ))
         deck.write_text(instantiate(template, {
             "MOS_CORNER": mos, "RES_CORNER": resistor, "TEMP_C": str(temperature),
             "VDD_V": f"{supply:.2f}", "VCTRL_V": f"{control:.2f}",
             "PEX_PATH": str(args.pex),
+            "PEX_SUBCKT": args.pex_subckt,
+            "RING_INSTANCES": ring_instances,
             "SEED_HIGH": f"{0.52*supply + 0.002:.6f}",
             "SEED_LOW": f"{0.52*supply - 0.002:.6f}",
         }))
@@ -91,6 +114,8 @@ def main() -> None:
                        "target_brackets_v": brackets, "result": "pass" if brackets else "fail"})
     passed = all(group["result"] == "pass" for group in groups)
     result = {"schema_version": 1, "extraction": "four_instance_full_rc",
+              "pex_subckt": args.pex_subckt,
+              "output_buffer": "omitted" if args.no_output_buffer else "full_delay_tile",
               "pex_sha256": hashlib.sha256(args.pex.read_bytes()).hexdigest(),
               "qualification": "pvt" if args.pvt else "nominal",
               "case_count": len(cases), "passing_case_count": sum(c["result"] == "pass" for c in cases),

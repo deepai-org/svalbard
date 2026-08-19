@@ -6,10 +6,7 @@
 .temp @TEMP_C@
 
 .subckt extracted_ring VCTRL VDD VSS CLK_P CLK_N
-X0 N2P N2N N0P N0N VCTRL VDD VSS cml_vco_delay_pex
-X1 N0P N0N N1P N1N VCTRL VDD VSS cml_vco_delay_pex
-X2 N1P N1N N2P N2N VCTRL VDD VSS cml_vco_delay_pex
-XBUF N2P N2N CLK_P CLK_N VCTRL VDD VSS cml_vco_delay_pex
+@RING_INSTANCES@
 .ends extracted_ring
 
 VDD VDD 0 @VDD_V@

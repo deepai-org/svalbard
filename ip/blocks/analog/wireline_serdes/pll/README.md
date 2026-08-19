@@ -1,8 +1,9 @@
 # PLL / VCO work in progress
 
 This directory starts the autonomous 2.5 GHz clock-source critical path with a
-real GF180 transistor-level VCO experiment. It is not yet a PLL macro and it
-is not physically closed.
+real GF180 transistor-level VCO experiment. It is not yet a PLL macro; the
+delay-tile family is physically checked, but the selectable bank and PLL are
+not physically integrated.
 
 `ring_vco.spice` is a three-stage differential CML ring followed by an
 isolating CML output buffer. Each delay cell has a driven differential pair, a
@@ -36,18 +37,27 @@ nominal public corner all 7/7 controls sustain oscillation; the frequency range
 is 2.459--2.709 GHz and 0.88--0.98 V brackets 2.5 GHz. The committed
 `layout.png` is rendered from the checked GDS rather than drawn separately.
 
-The same fixed tile covers only 1/5 extracted speed/gain environments. The
-fast-MOS/fast-resistor corner is too fast, the fast-MOS/slow-resistor corner is
-slightly slow, the slow-MOS/fast-resistor corner loses loop gain, and the
-slow-MOS/slow-resistor corner is slow. This is retained as a failing band-bank
-screen, not hidden by the nominal pass. It requires at least a slower
-high-capacitance band, a faster low-capacitance band, and a higher-gain load
-variant.
+`layout.tcl` now generates four additional fixed geometries from the same
+topology: slow (2.40 um cap / 5.25 um load), fast (0.60/5.25), ultra-fast
+(0.50/4.25), and high-gain (0.50/6.50). All four have zero Magic DRC errors,
+unique Netgen LVS, full-RC PEX, and a KLayout GDS render. The slow tile covers
+FF/fast-resistor at 2.447--2.542 GHz; the fast tile covers FF/slow-resistor at
+2.478--2.543 GHz. Together with the center tile this expands extracted
+coverage from 1/5 to 3/5 declared environments.
+
+The result remains deliberately partial. At 2.97 V and 125 C, the ultra-fast
+tile reaches only 2.395 GHz at SS/slow-resistor and the high-gain tile reaches
+2.358 GHz at SS/fast-resistor. Reducing load further was tested and approached
+the target, but crossed the loop-gain boundary and lost robust oscillation.
+Increasing VCTRL above 1.3 V also reduced frequency. The next design step is
+therefore an active-device-strength/topology change, not another passive-only
+trim. `vco_bank_result.json` records the 4/4 physical and 3/5 coverage result;
+`layout_vco_bank.png` is the usable visual index of the generated family.
 
 `run_schematic.sh` runs the 12-environment adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
-physical milestone is to generate and extract the additional band tiles,
-implement safe selection and power gating, and run startup, tuning,
+physical milestone is to close the two SS bands with stronger active cells,
+implement safe selection and power gating, and run unseeded startup, tuning,
 supply-pushing, and phase-noise simulations. The
 divider, PFD, charge pump, loop filter, lock detector, and external-clock bypass
 remain separate unimplemented boundaries.

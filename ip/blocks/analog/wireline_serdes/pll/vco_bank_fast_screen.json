@@ -1,0 +1,178 @@
+{
+  "case_count": 7,
+  "cases": [
+    {
+      "control_v": 0.88,
+      "frequency_hz": 2498045279.5687375,
+      "id": "ff_res_ss_2.97_p125_0.88",
+      "mos_corner": "ff",
+      "observed": {
+        "diff_high": 1.054711,
+        "diff_low": -1.05201,
+        "output_cm": 2.055828,
+        "period": 4.00313e-10,
+        "period_late": 4.00313e-10,
+        "startup_time": 3.517592e-09,
+        "supply_current": 0.005934383
+      },
+      "res_corner": "res_ss",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 0.98,
+      "frequency_hz": 2543207182.6274533,
+      "id": "ff_res_ss_2.97_p125_0.98",
+      "mos_corner": "ff",
+      "observed": {
+        "diff_high": 1.289945,
+        "diff_low": -1.28727,
+        "output_cm": 1.820793,
+        "period": 3.932043e-10,
+        "period_late": 3.932043e-10,
+        "startup_time": 3.447201e-09,
+        "supply_current": 0.007457906
+      },
+      "res_corner": "res_ss",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 1.08,
+      "frequency_hz": 2526047337.1166787,
+      "id": "ff_res_ss_2.97_p125_1.08",
+      "mos_corner": "ff",
+      "observed": {
+        "diff_high": 1.441289,
+        "diff_low": -1.43821,
+        "output_cm": 1.681662,
+        "period": 3.958754e-10,
+        "period_late": 3.958754e-10,
+        "startup_time": 3.462772e-09,
+        "supply_current": 0.008365323
+      },
+      "res_corner": "res_ss",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 1.18,
+      "frequency_hz": 2501913338.225408,
+      "id": "ff_res_ss_2.97_p125_1.18",
+      "mos_corner": "ff",
+      "observed": {
+        "diff_high": 1.513869,
+        "diff_low": -1.51038,
+        "output_cm": 1.619329,
+        "period": 3.996941e-10,
+        "period_late": 3.996939e-10,
+        "startup_time": 3.492008e-09,
+        "supply_current": 0.008768893
+      },
+      "res_corner": "res_ss",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 1.3,
+      "frequency_hz": 2488800398.2080636,
+      "id": "ff_res_ss_2.97_p125_1.30",
+      "mos_corner": "ff",
+      "observed": {
+        "diff_high": 1.556603,
+        "diff_low": -1.55278,
+        "output_cm": 1.578663,
+        "period": 4.018e-10,
+        "period_late": 4.018001e-10,
+        "startup_time": 3.512702e-09,
+        "supply_current": 0.009030671
+      },
+      "res_corner": "res_ss",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 1.4,
+      "frequency_hz": 2482705473.670412,
+      "id": "ff_res_ss_2.97_p125_1.40",
+      "mos_corner": "ff",
+      "observed": {
+        "diff_high": 1.577842,
+        "diff_low": -1.57382,
+        "output_cm": 1.556585,
+        "period": 4.027864e-10,
+        "period_late": 4.027865e-10,
+        "startup_time": 3.522449e-09,
+        "supply_current": 0.009171268
+      },
+      "res_corner": "res_ss",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 1.5,
+      "frequency_hz": 2478478749.3992786,
+      "id": "ff_res_ss_2.97_p125_1.50",
+      "mos_corner": "ff",
+      "observed": {
+        "diff_high": 1.592713,
+        "diff_low": -1.58852,
+        "output_cm": 1.540446,
+        "period": 4.034733e-10,
+        "period_late": 4.034733e-10,
+        "startup_time": 3.530429e-09,
+        "supply_current": 0.009273868
+      },
+      "res_corner": "res_ss",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    }
+  ],
+  "environment_count": 1,
+  "extraction": "four_instance_full_rc",
+  "groups": [
+    {
+      "environment": [
+        "ff",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "maximum_hz": 2543207182.6274533,
+      "minimum_hz": 2478478749.3992786,
+      "result": "pass",
+      "target_brackets_v": [
+        {
+          "controls_v": [
+            0.88,
+            0.98
+          ],
+          "kvco_polarity": "positive"
+        },
+        {
+          "controls_v": [
+            1.18,
+            1.3
+          ],
+          "kvco_polarity": "negative"
+        }
+      ],
+      "valid_control_count": 7
+    }
+  ],
+  "output_buffer": "full_delay_tile",
+  "passing_case_count": 7,
+  "passing_environment_count": 1,
+  "pex_sha256": "cd7bf0220f01a596e7f945f29a78e49e1608ffd4c2113e80184b02a53580cd0a",
+  "pex_subckt": "cml_vco_delay_fast_pex",
+  "qualification": "nominal",
+  "result": "pass",
+  "schema_version": 1
+}

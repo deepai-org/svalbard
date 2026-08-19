@@ -2,8 +2,8 @@
 
 This directory starts the autonomous 2.5 GHz clock-source critical path with a
 real GF180 transistor-level VCO experiment. It is not yet a PLL macro; the
-delay-tile family is physically checked, but the selectable bank and PLL are
-not physically integrated.
+delay-tile family and one complete oscillator-band boundary are physically
+checked, but the twelve-band bank and PLL are not physically integrated.
 
 `ring_vco.spice` is a three-stage differential CML ring followed by an
 isolating CML output buffer. Each delay cell has a driven differential pair, a
@@ -104,9 +104,31 @@ numerical asymmetry is not a statistical noise-startup model.
 `startup_composed_result.json` binds these cases to the assist and tile PEX
 hashes and records the physical checks.
 
+The first complete oscillator-band parent is now routed rather than assembled
+only as leaf PEX instances in a testbench. `vco_band_layout.tcl` places three
+delay stages, one isolating output buffer, and the matched startup assist, then
+owns the differential ring feedback, VDD, VSS, VCTRL, kick, and output routes.
+The initial center-tile parent was physically correct but slowed from the leaf
+composition to 1.94 GHz; that result was rejected instead of widening the
+frequency checker. A lower-capacitance, stronger-tail `margin_fast` member was
+regenerated as the parent child and reclosed against the matching schematic.
+
+The resulting band is 0-DRC, uniquely LVS-matched, and has 1,210 resistors and
+329 capacitors in full-RC PEX. At its realizable 1.08 V control it passes a
+2.45--2.55 GHz design window in 5/5 nominal transient cases: both no-IC/no-uic
+kick polarities with a 25 fF load, both polarities while driving the extracted
+high-gain selector input, and commanded shutdown under that nonlinear load.
+Frequency is 2.493 GHz, startup is 0.116--0.321 ns after kick release, selector
+loading shifts frequency by 0.0137%, and steady band current is 8.47 mA. After
+shutdown, differential residue is 1.54 uV and band current is 1.47 uA. The
+physical report, electrical result, and simulator all match the exact checked
+PEX hash in `vco_band_result.json`; `layout_vco_band.png` is the emitted-GDS
+review image. This closes one nominal band boundary, not all twelve bands or
+their PVT/statistical behavior.
+
 Phase noise, statistical noise/mismatch startup, supply pushing, safe band
-selection, inactive member loading, divider loading, and loop dynamics remain
-open.
+selection across the complete bank, inactive member loading, divider loading,
+and loop dynamics remain open.
 
 The first safe-selection primitive is now physical and extracted. Rather than
 duplicate nearly identical circuitry, the closed phase-interpolator macro is
@@ -167,13 +189,16 @@ cell types and runs the direct two-VCO composition.
 `run_selector_tree_gain_screen.sh` preserves the baseline tree's extracted
 routing RC while screening active geometry, `run_selector_tree_physical.sh`
 closes the regenerated hierarchy, and `run_selector_tree.sh` reruns physical
-closure plus the all-leaf/PVT/handoff matrix.
+closure plus the all-leaf/PVT/handoff matrix. `run_vco_band_physical.sh` closes
+the routed oscillator parent alone; `run_vco_band.sh` additionally regenerates
+the extracted selector load and proves startup, steady state, loading, shutdown,
+and exact PEX identity.
 
 `run_schematic.sh` runs the 12-environment adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
-physical milestone is to connect the twelve extracted VCO members and startup
-assists to the closed tree with realizable power gating and a controller that
-enforces the proven nonoverlap sequence, then run mismatch/statistical startup,
-supply-pushing, and phase-noise simulations. The divider, PFD, charge pump,
-loop filter, lock detector, and external-clock bypass remain separate
-unimplemented boundaries.
+physical milestone is to generate this parent for the other required coarse
+members, then connect all twelve physical bands to the closed tree with
+realizable power gating and a controller that enforces the proven nonoverlap
+sequence. After that come mismatch/statistical startup, supply-pushing, and
+phase-noise simulations. The divider, PFD, charge pump, loop filter, lock
+detector, and external-clock bypass remain separate unimplemented boundaries.

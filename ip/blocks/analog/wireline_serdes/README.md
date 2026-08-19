@@ -40,5 +40,6 @@ as a calibrated two-input break-before-make selector and passes direct
 two-VCO isolation/handoff composition. A balanced physical selector hierarchy
 for all twelve bands plus four quiet spares now passes 0-DRC, unique LVS,
 full-RC all-leaf/PVT testing, and a full-depth nonoverlap handoff. Composition
-of the twelve extracted oscillators, their power/start controls, and the
-closed-loop PLL remains unfinished.
+of one complete routed oscillator band now passes exact-PEX no-IC startup,
+selector-loading, and shutdown checks at 2.493 GHz. The other band parents,
+twelve-band power/start composition, and closed-loop PLL remain unfinished.

@@ -421,6 +421,15 @@ minimum and maximum frequency as well as the codes nearest the target. A target
 bracket is useful calibration evidence; it is not a substitute for explicit
 frequency headroom above and below the target.
 
+Expect the first routed regenerative-loop boundary to move the coarse-band
+assignment. In the current VCO work, parent feedback and supply routing moved a
+leaf-composed nominal ring far enough that it missed the 2.5 GHz contract even
+though DRC and LVS were clean. Do not widen the acceptance band or increase a
+control beyond its proven range. Select another already legal coarse geometry,
+regenerate its devices and every geometry-dependent strap, update the intended
+schematic, and repeat DRC/LVS/PEX. Parent interconnect is part of oscillator
+design, not a parasitic correction applied after band selection.
+
 A seeded initial condition proves attraction to the oscillating trajectory; it
 does not prove autonomous startup. Separate three increasingly strong claims:
 

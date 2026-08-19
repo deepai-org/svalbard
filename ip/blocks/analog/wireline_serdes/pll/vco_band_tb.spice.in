@@ -1,0 +1,35 @@
+* SPDX-License-Identifier: Apache-2.0
+* Supply-ramped full-RC physical VCO band with optional extracted selector load.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.include @BAND_PEX_PATH@
+.include @SELECTOR_PEX_PATH@
+.temp 27
+
+VBAND BAND_VDD 0 PWL(0 0 500p 3.3)
+VSELECT SELECT_VDD 0 PWL(0 0 500p 3.3)
+VCTRL VCTRL 0 @VCTRL_SOURCE@
+VKICKP KICKP 0 @KICKP_SOURCE@
+VKICKN KICKN 0 @KICKN_SOURCE@
+VSELA SELA 0 @SELA_SOURCE@
+VSELB SELB 0 0
+VSELBUF SELBUF 0 @SELBUF_SOURCE@
+VQUIETP QUIETP 0 2.15
+VQUIETN QUIETN 0 2.15
+
+XBAND VCTRL KICKP KICKN BAND_VDD 0 CLK_P CLK_N cml_vco_band_pex
+@LOAD_NETWORK@
+
+.control
+tran 2p 25n
+let band_diff = v(CLK_P)-v(CLK_N)
+let selected_diff = v(OUT_P)-v(OUT_N)
+let band_current = -i(VBAND)
+meas tran band_current_late avg band_current from=18n to=25n
+meas tran band_current_pre avg band_current from=6n to=11n
+wrdata @BAND_WAVE_PATH@ band_diff
+wrdata @SELECTED_WAVE_PATH@ selected_diff
+print band_current_late band_current_pre
+.endc
+.end

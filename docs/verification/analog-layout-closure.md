@@ -61,6 +61,13 @@ serving a 2.5 GT/s stream receives decisions at 1.25 Gupdates/s; 1.5--1.75
 Gupdates/s is a reasonable design target, while 2.5 Gupdates/s is a useful 2x
 overspeed stress rather than the primary PVT contract. Record all three levels
 so an aggressive failure is not mistaken for failure of the required function.
+Derive that rate from an executable clocking diagram, not from the serial bit
+rate by habit. In the present dual-edge PCIe receiver, the phase detector,
+phase interpolator, slicer timing, and deserializer are half-rate boundaries.
+A 2.5 GHz ring is therefore an architectural experiment; a 1.25 GHz clock with
+both edges qualified is the required clock contract. Changing that clocking
+choice changes every downstream aperture and phase relationship, so record it
+as a system revision rather than quietly relaxing an oscillator target.
 
 Do not turn "large margin" into indiscriminate area or current. Wider devices
 add input and output capacitance, longer resistors add RC delay, larger current
@@ -187,6 +194,19 @@ useful parent first--for example, one oscillator band containing its repeated
 delay cells, output buffer, and startup assist--then replicate that verified
 macro at the bank level.
 
+For a short regenerative ring, prefer a folded column of repeated stages over
+a wide row when that keeps each stage-to-stage connection local. Put adjacent
+stages one pitch apart, escape both polarities on mirrored columns outside the
+child guard rings, and run quiet supply/control spines on separately reserved
+columns. The useful comparison is extracted parent resistance, capacitance,
+and oscillation frequency—not bounding-box compactness. In the current GF180
+work, replacing an approximately 800 um row-spanning feedback path with a
+vertically folded parent materially reduced extracted routing resistance and
+improved nominal speed; a visually compact row whose routes crossed child
+interiors instead added capacitance and was slower. Compactness is valuable
+only when it shortens the electrically sensitive path without creating new
+crossings or dense via stacks.
+
 ## 5. Generate layout from parameterized devices
 
 Use the PDK's Magic parameterized cells for active devices and resistors, then
@@ -249,6 +269,17 @@ sweep and run DRC on every point. In the current GF180 capacitor geometry, for
 example, the smallest attempted interpolation violated local metal rules while
 nearby larger values were clean; a numerically plausible parameter is not proof
 that the PCell plus surrounding route is manufacturable.
+
+Do not infer a resized PCell terminal from its old center coordinate. Inspect
+the emitted geometry or query its ports, then express terminal locations as a
+function of the dimensions. The GF180 MOS cap used by the VCO, for example,
+moves its contacted diffusion approximately with `L/2` plus a fixed enclosure;
+a fixed hand strap was legal at short lengths and landed beside the wrong edge
+at longer lengths. Even the corrected strap can enter a reserved signal column
+for only a middle range of lengths, so parameterize placement or use a
+segmented cap array as well as parameterizing the strap. A generator's legal
+domain is the intersection of PCell legality, route-corridor legality, and LVS
+identity—not merely the PDK device's numeric parameter range.
 
 Do not rely on a via-stack helper blindly at route crossings. A stack to M5 also
 contains M4, M3, M2, and M1 shapes. Any lower-metal route passing through that
@@ -384,6 +415,16 @@ calling the coarse-member set closed. If coverage is lost only at this
 boundary, retarget the physical architecture or member geometries; do not cite
 the clean member count as evidence that the bank works.
 
+When a complete physical bank misses one side of PVT, first ask whether the
+requested rate belongs to the selected architecture. The folded full-rate VCO
+parents showed that legal geometry and reduced interconnect can improve the
+nominal result while slow-device/hot environments still remain fundamentally
+below 2.5 GHz. Increasing active width then raised capacitance and did not
+recover the corner. That combination is evidence to revisit the clocking
+architecture or stage topology, not justification for extrapolating another
+oversized member. Preserve the failed full-rate bank as falsification evidence
+and qualify the architecturally correct half-rate bank independently.
+
 Reuse a physically closed weighted-summing cell as a selector when its endpoint
 controls truly shut off the unselected tail and its output stage isolates the
 shared node. Qualify that role separately at the higher clock rate: keep the
@@ -451,6 +492,16 @@ differential swing, bounded current, and a startup deadline. Record the valid
 minimum and maximum frequency as well as the codes nearest the target. A target
 bracket is useful calibration evidence; it is not a substitute for explicit
 frequency headroom above and below the target.
+
+Generate and extract every coarse member as its own complete parent. Deliberate
+capacitance changes move contacts, routes, and sometimes the legal placement
+window; substituting one leaf model inside a retained parent PEX does not
+capture those changes. Require zero DRC, unique LVS, and an exact PEX identity
+for all members before launching the aggregate range sweep. Then test every
+member/control/environment point without `.ic` or `uic`, using a real supply
+ramp and the placed startup assist. A bank interval may be formed only between
+adjacent passing controls from the same physical member; overlapping intervals
+from different members can then be merged.
 
 Expect the first routed regenerative-loop boundary to move the coarse-band
 assignment. In the current VCO work, parent feedback and supply routing moved a

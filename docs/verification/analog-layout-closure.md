@@ -137,6 +137,16 @@ Choose device ordering to equalize both electrical function and route span. A
 geometrically mirrored picture can still be electrically asymmetric when one
 output joins inner devices and the other joins outer devices with unequal wire.
 
+Plan repeated analog hierarchy with the same care as a matched device array. A
+many-to-one clock selector should use a balanced full tree, padding unused
+leaves with electrically defined spares when the real leaf count is not a power
+of two. Every usable source then crosses the same number and type of selector
+stages; a ragged tree quietly creates source-dependent delay, loss, loading, and
+jitter. Make each parent sit over the center of its children, reserve distinct
+inter-level routing channels, and keep every spare input at a defined quiet
+voltage. The extra cells cost area and static current, so include them in the
+top-level budget instead of treating balance as free.
+
 ## 5. Generate layout from parameterized devices
 
 Use the PDK's Magic parameterized cells for active devices and resistors, then
@@ -151,6 +161,15 @@ working directory separately; an absolute `save` target can leak slashes and
 temporary-directory names into the GDS top-cell name even when DRC and LVS pass.
 Run a machine-readable off-grid, zero-area, cell-name, and pin-label precheck on
 the emitted stream before treating it as an integration macro.
+
+Set the layout tool's coordinate units before issuing any hierarchical
+placement. A generator can otherwise interpret intended micron coordinates in
+internal database units, overlap every child, and produce thousands of errors
+whose apparent cause is misleading. At the parent level, do not assume that a
+label alone creates connectivity: paint parent-owned conductor that overlaps
+the child port, place the label on that conductor, and prove the resulting pin
+order with unique LVS. Keep the repeated child cell immutable; correct assembly
+routing in the parent rather than editing fifteen nominally identical copies.
 
 Keep generator helper names out of the layout tool's command namespace. A Tcl
 procedure named after a built-in command can make an otherwise sound generator
@@ -187,6 +206,15 @@ that the PCell plus surrounding route is manufacturable.
 Do not rely on a via-stack helper blindly at route crossings. A stack to M5 also
 contains M4, M3, M2, and M1 shapes. Any lower-metal route passing through that
 location becomes electrically connected even if the visible top metals differ.
+This applies equally to power stacks inside a reused child: inspect all metal
+shapes in the landing, not merely the child's advertised top-layer terminal,
+before routing a parent bus across it.
+
+Merge or separate neighboring upper-metal transition pads deliberately. Two
+same-net pads that nearly touch can leave a narrow spacing notch which is still
+a DRC error; overlapping them into one legal shape is often cleaner. Different
+nets need independently allocated escape columns and spacing on every layer in
+their stacks. A rendered top-metal picture alone cannot establish either fact.
 
 Allocate vertical escape columns with net awareness, not only global spacing.
 Repeated terminals on the same net should reuse a nearby legal escape when that
@@ -279,10 +307,16 @@ full +/-2% frequency guardband in 5/5. These counts come from the checked-in
 [VCO bank evidence](../../ip/blocks/analog/wireline_serdes/pll/vco_bank_result.json),
 not from the earlier perturbed-deck screen. Keep evolving project counts in
 machine-readable evidence and block status, not only in this workflow guide.
-The eventual selector still needs a safe transition contract
-(normally disable or break-before-make), integration of the extracted
-deterministic-startup actuator into its controller sequence, and verification
-that inactive members cannot disturb the active oscillator.
+The physically extracted two-input selector primitive now has a safe
+break-before-make transition and has been composed directly with two complete
+extracted VCOs. The checked cases include powered-down and live-aggressor
+neighbors, both selected branches, and startup of a newly selected ring; the
+worst powered-down feedthrough is recorded in
+[selector composition evidence](../../ip/blocks/analog/wireline_serdes/pll/selector_vco_composed_result.json).
+That closes the primitive, not the bank. The complete twelve-source hierarchy,
+its routed interconnect and aggregate loading, all-leaf PVT behavior, and the
+controller sequence remain separate closure obligations until their own
+combined physical and extracted evidence is checked in.
 
 Reuse a physically closed weighted-summing cell as a selector when its endpoint
 controls truly shut off the unselected tail and its output stage isolates the
@@ -294,6 +328,18 @@ require explicit nonoverlap and disable the restoring output stage in the dead
 interval. A powered-down victim can still show a tiny capacitively injected
 sinusoid with many zero crossings; judge isolation by absolute amplitude and
 attenuation relative to the active clock, not by crossing count alone.
+
+When composing selectors hierarchically, verify more than the root waveform.
+Exercise every real leaf while all other leaves remain live at distinguishable
+frequencies, cover representative PVT environments and the complete input
+common-mode range, and measure accumulated swing, frequency error, cycle jitter,
+and total current. Switch between leaves whose paths diverge at the root so the
+handoff exercises every level. The controller must force all old-path stages
+off before enabling the new path, including output buffers; independent analog
+control pins are only hardware capability, not proof that forbidden overlap is
+unreachable. Preserve physical-only DRC/LVS/PEX evidence separately from the
+all-leaf extracted switching result so a simulation failure cannot be hidden by
+a clean layout—or vice versa.
 
 ### Proven physical iteration ladder
 

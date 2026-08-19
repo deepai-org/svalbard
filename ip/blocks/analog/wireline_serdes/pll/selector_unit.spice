@@ -1,0 +1,18 @@
+* SPDX-License-Identifier: Apache-2.0
+* Two-input CML selector with doubled signal-pair gm for hierarchical use.
+.subckt vco_selector_unit A_P A_N B_P B_N CTRL_A CTRL_B VBIAS_BUF VDD VSS CLK_P CLK_N
+XRL1P VDD N1P VSS ppolyf_u r_width=2u r_length=4.00u
+XRL1N VDD N1N VSS ppolyf_u r_width=2u r_length=4.00u
+XAP N1P A_P TA VSS nfet_03v3 w=5u l=0.28u m=4
+XAN N1N A_N TA VSS nfet_03v3 w=5u l=0.28u m=4
+XBP N1P B_P TB VSS nfet_03v3 w=5u l=0.28u m=4
+XBN N1N B_N TB VSS nfet_03v3 w=5u l=0.28u m=4
+XTAILA TA CTRL_A VSS VSS nfet_03v3 w=5u l=0.28u m=4
+XTAILB TB CTRL_B VSS VSS nfet_03v3 w=5u l=0.28u m=4
+
+XRL2P VDD CLK_P VSS ppolyf_u r_width=2u r_length=5.25u
+XRL2N VDD CLK_N VSS ppolyf_u r_width=2u r_length=5.25u
+XBUFP CLK_P N1P TBUF VSS nfet_03v3 w=5u l=0.28u m=4
+XBUFN CLK_N N1N TBUF VSS nfet_03v3 w=5u l=0.28u m=4
+XTAILBUF TBUF VBIAS_BUF VSS VSS nfet_03v3 w=10u l=0.28u m=4
+.ends vco_selector_unit

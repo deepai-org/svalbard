@@ -37,5 +37,8 @@ deterministic startup-assist cell. The sampled composed full-RC bank starts
 without initial conditions in 42/42 commanded cases and brackets 2.5 GHz in
 5/5 declared environments. The physically closed phase interpolator is reused
 as a calibrated two-input break-before-make selector and passes direct
-two-VCO isolation/handoff composition. The complete twelve-band selector tree
-and closed PLL remain unfinished.
+two-VCO isolation/handoff composition. A balanced physical selector hierarchy
+for all twelve bands plus four quiet spares now passes 0-DRC, unique LVS,
+full-RC all-leaf/PVT testing, and a full-depth nonoverlap handoff. Composition
+of the twelve extracted oscillators, their power/start controls, and the
+closed-loop PLL remains unfinished.

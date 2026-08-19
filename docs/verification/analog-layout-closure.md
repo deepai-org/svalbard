@@ -313,10 +313,13 @@ extracted VCOs. The checked cases include powered-down and live-aggressor
 neighbors, both selected branches, and startup of a newly selected ring; the
 worst powered-down feedthrough is recorded in
 [selector composition evidence](../../ip/blocks/analog/wireline_serdes/pll/selector_vco_composed_result.json).
-That closes the primitive, not the bank. The complete twelve-source hierarchy,
-its routed interconnect and aggregate loading, all-leaf PVT behavior, and the
-controller sequence remain separate closure obligations until their own
-combined physical and extracted evidence is checked in.
+That closes the primitive. The subsequent balanced twelve-used/four-spare tree
+is also physically closed and passes its extracted all-leaf/PVT and full-depth
+handoff contract; its checked result is
+[selector-tree evidence](../../ip/blocks/analog/wireline_serdes/pll/selector_tree_result.json).
+This still does not close the oscillator bank composition: the twelve extracted
+VCOs, startup assists, power controls, and sequencing controller must be wired
+to the tree and verified together.
 
 Reuse a physically closed weighted-summing cell as a selector when its endpoint
 controls truly shut off the unselected tail and its output stage isolates the

@@ -45,12 +45,12 @@ proc make_port {name number layer x1 y1 x2 y2} {
     port make $number
 }
 
-proc mos_terminal_strap {cx cy yoff xs highest} {
+proc mos_terminal_strap {cx cy yoff xs highest {pad_half 0.30}} {
     set y [expr {$cy+$yoff}]
     foreach xoff $xs {
         set x [expr {$cx+$xoff}]
-        paint_rect metal1 [expr {$x-0.30}] [expr {$y-0.30}] \
-            [expr {$x+0.30}] [expr {$y+0.30}]
+        paint_rect metal1 [expr {$x-$pad_half}] [expr {$y-$pad_half}] \
+            [expr {$x+$pad_half}] [expr {$y+$pad_half}]
         via_at via1 $x $y
         if {$highest >= 3} { via_at via2 $x $y }
     }
@@ -90,8 +90,48 @@ proc manual_gate_top {cx y half_width xs} {
         [expr {$cx+[lindex $xs end]+0.35}] [expr {$y+1.00}]
 }
 
+if {![info exists analog_cell_name]} { set analog_cell_name phase_interpolator }
+if {![info exists signal_pair_copies]} { set signal_pair_copies 1 }
+set signal_terminal_xs {-0.8 0.8}
+set signal_source_xs {0.0}
+set signal_gate_xs {-0.4 0.4}
+set signal_gate_half 0.55
+if {$signal_pair_copies == 1} {
+    set input_device_centers {-27 -19 -11 -3}
+    set buffer_device_centers {11 19}
+    set signal_placements [list \
+        XAP -27 XBP -19 XBN -11 XAN -3 XBUFP 11 XBUFN 19]
+    set stage_p_bounds {-28.2 -17.8}
+    set stage_n_bounds {-12.2 -1.8}
+    set source_a_bounds {-28.2 -1.8}
+    set source_b_bounds {-20.2 -9.8}
+    set source_a_centers {-27 -3}
+    set source_b_centers {-19 -11}
+    set buffer_source_bounds {9.8 20.2}
+    set buffer_p_bounds {9.8 12.2}
+    set buffer_n_bounds {17.8 20.2}
+} elseif {$signal_pair_copies == 2} {
+    set input_device_centers {-29 -25 -21 -17 -13 -9 -5 -1}
+    set buffer_device_centers {9 13 17 21}
+    set signal_placements [list \
+        XAP0 -29 XAP1 -25 XBP0 -21 XBP1 -17 \
+        XBN0 -13 XBN1 -9 XAN0 -5 XAN1 -1 \
+        XBUFP0 9 XBUFP1 13 XBUFN0 17 XBUFN1 21]
+    set stage_p_bounds {-30.2 -15.8}
+    set stage_n_bounds {-14.2 0.2}
+    set source_a_bounds {-30.2 0.2}
+    set source_b_bounds {-22.2 -7.8}
+    set source_a_centers {-29 -25 -5 -1}
+    set source_b_centers {-21 -17 -13 -9}
+    set buffer_source_bounds {7.8 22.2}
+    set buffer_p_bounds {7.8 14.2}
+    set buffer_n_bounds {15.8 22.2}
+} else {
+    error "signal_pair_copies must be 1 or 2"
+}
+
 crashbackups stop
-load phase_interpolator_hier
+load ${analog_cell_name}_hier
 
 set input_cell [magic::gencell_makecell gf180mcu::nfet_03v3 \
     w 5 l 0.28 nf 2 guard 0 topc 0 botc 0 full_metal 0]
@@ -105,48 +145,70 @@ set output_load [magic::gencell_makecell gf180mcu::ppolyf_u \
     w 2 l 5.25 guard 1 full_metal 1]
 
 units microns
-foreach {cell instance x y} [list \
-        $input_cell XAP -27 0 $input_cell XBP -19 0 \
-        $input_cell XBN -11 0 $input_cell XAN -3 0 \
+set placements {}
+foreach {instance x} $signal_placements {
+    lappend placements $input_cell $instance $x 0
+}
+set placements [concat $placements [list \
         $weight_tail_cell XTAILA -15 -12 $weight_tail_cell XTAILB -15 -22 \
-        $input_cell XBUFP 11 0 $input_cell XBUFN 19 0 \
         $buffer_tail_cell XTAILBUF 15 -12 \
         $interpolate_load XRL1P -23 18 $interpolate_load XRL1N -7 18 \
-        $output_load XRL2P 11 18 $output_load XRL2N 19 18] {
+        $output_load XRL2P 11 18 $output_load XRL2N 19 18]]
+foreach {cell instance x y} $placements {
     getcell $cell child 0 0 parent $x $y
     identify $instance
 }
 
 select top cell
-flatten phase_interpolator
-load phase_interpolator
+flatten $analog_cell_name
+load $analog_cell_name
 units microns
 paint_rect pwell -36 -29 29 27
 
 # The A/B input quartet uses a common-centroid AP/BP/BN/AN ordering.
-foreach x {-27 -19 -11 -3} {
-    mos_terminal_strap $x 0 1.5 {-0.8 0.8} 3
-    mos_terminal_strap $x 0 -1.5 {0.0} 2
+foreach x $input_device_centers {
+    mos_terminal_strap $x 0 1.5 $signal_terminal_xs 3
+    mos_terminal_strap $x 0 -1.5 $signal_source_xs 2
 }
-foreach x {11 19} {
-    mos_terminal_strap $x 0 1.5 {-0.8 0.8} 3
-    mos_terminal_strap $x 0 -1.5 {0.0} 3
+foreach x $buffer_device_centers {
+    mos_terminal_strap $x 0 1.5 $signal_terminal_xs 3
+    mos_terminal_strap $x 0 -1.5 $signal_source_xs 3
 }
-foreach x {-27 -19 -11 -3} { manual_gate_bottom $x -2.85 0.55 {-0.4 0.4} }
-foreach x {11 19} { manual_gate_top $x 2.60 0.55 {-0.4 0.4} }
+foreach x $input_device_centers {
+    manual_gate_bottom $x -2.85 $signal_gate_half $signal_gate_xs
+}
+foreach x $buffer_device_centers {
+    manual_gate_top $x 2.60 $signal_gate_half $signal_gate_xs
+}
+if {$signal_pair_copies == 2} {
+    foreach {left right} {-29 -25 -21 -17 -13 -9 -5 -1} {
+        paint_rect metal1 [expr {$left-0.35}] -3.50 \
+            [expr {$right+0.35}] -2.90
+    }
+    foreach {left right} {9 13 17 21} {
+        paint_rect metal1 [expr {$left-0.35}] 3.00 \
+            [expr {$right+0.35}] 3.60
+    }
+}
 
 # Summed first-stage drain nodes and their nearby loads.
-paint_rect metal3 -28.2 1.05 -17.8 1.95
-paint_rect metal3 -12.2 1.05 -1.8 1.95
+paint_rect metal3 [lindex $stage_p_bounds 0] 1.05 \
+    [lindex $stage_p_bounds 1] 1.95
+paint_rect metal3 [lindex $stage_n_bounds 0] 1.05 \
+    [lindex $stage_n_bounds 1] 1.95
 paint_rect metal3 -23.45 1.05 -22.55 16.6
 paint_rect metal3 -7.45 1.05 -6.55 16.6
 
 # A-tail source rail is on M5; the nested B-tail source rail is on M4.
-paint_rect metal5 -28.2 -1.95 -1.8 -1.05
-foreach x {-27 -3} { stack_to $x -1.5 5 }
+paint_rect metal5 [lindex $source_a_bounds 0] -1.95 \
+    [lindex $source_a_bounds 1] -1.05
+foreach x $source_a_centers {
+    stack_to $x -1.5 5
+}
 paint_rect metal5 -15.45 -10.5 -14.55 -1.05
-paint_rect metal4 -20.2 -1.95 -9.8 -1.05
-foreach x {-19 -11} {
+paint_rect metal4 [lindex $source_b_bounds 0] -1.95 \
+    [lindex $source_b_bounds 1] -1.05
+foreach x $source_b_centers {
     stack_to $x -1.5 4
 }
 paint_rect metal3 -16.5 -20.95 -12.62 -20.05
@@ -167,9 +229,10 @@ via_at via3 -15 -10.5
 via_at via4 -15 -10.5
 
 # Buffer pair, short shared source node, and directly adjacent tail.
-paint_rect metal3 9.8 -1.95 20.2 -1.05
+paint_rect metal3 [lindex $buffer_source_bounds 0] -1.95 \
+    [lindex $buffer_source_bounds 1] -1.05
 paint_rect metal3 14.55 -10.0 15.45 -1.05
-foreach x {11 19} { via_at via2 $x -1.5 }
+foreach x $buffer_device_centers { via_at via2 $x -1.5 }
 mos_terminal_strap 15 -12 4.0 {-1.6 0.0 1.6} 3
 mos_terminal_strap 15 -12 -4.0 {-0.8 0.8} 3
 manual_gate_bottom 15 -17.35 1.35 {-1.2 -0.4 0.4 1.2}
@@ -199,8 +262,10 @@ make_port VDD 8 metal5 -5 24.0 -3 24.8
 # Output drain trunks are offset outward from the buffer gate stacks.
 paint_rect metal3 8.85 1.05 9.95 15.955
 paint_rect metal3 20.05 1.05 21.15 15.955
-paint_rect metal3 8.85 1.05 12.2 1.95
-paint_rect metal3 17.8 1.05 21.15 1.95
+paint_rect metal3 [lindex $buffer_p_bounds 0] 1.05 \
+    [lindex $buffer_p_bounds 1] 1.95
+paint_rect metal3 [lindex $buffer_n_bounds 0] 1.05 \
+    [lindex $buffer_n_bounds 1] 1.95
 paint_rect metal3 8.85 15.505 11.45 16.405
 paint_rect metal3 18.55 15.505 21.15 16.405
 make_port CLK_P 10 metal3 8.85 13.5 9.95 15.0
@@ -251,6 +316,6 @@ paint_rect metal3 -35.6 -24.0 -13.0 -23.0
 paint_rect metal3 12.6 -16.5 28.6 -15.5
 foreach {x y} [list -35.6 -13.5 -35.6 -23.5 28.6 -16.0] { stack_to $x $y 3 }
 
-save /work/phase_interpolator
-gds write /work/phase_interpolator.gds
+save /work/$analog_cell_name
+gds write /work/${analog_cell_name}.gds
 quit -noprompt

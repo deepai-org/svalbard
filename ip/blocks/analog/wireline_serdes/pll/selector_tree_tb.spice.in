@@ -1,0 +1,25 @@
+* SPDX-License-Identifier: Apache-2.0
+* Full-RC balanced selector tree with twelve simultaneously active inputs.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include @TREE_PEX_PATH@
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+@INPUT_SOURCES@
+@CONTROL_SOURCES@
+@TREE_INSTANCE@
+COUTP OUTP 0 50f
+COUTN OUTN 0 50f
+
+.control
+tran 2p 20n
+let odiff = v(OUTP)-v(OUTN)
+let isupply = -i(VDD)
+meas tran current_late avg isupply from=10n to=20n
+meas tran current_max max isupply from=0 to=20n
+wrdata @WAVE_PATH@ odiff
+print current_late current_max
+.endc
+.end

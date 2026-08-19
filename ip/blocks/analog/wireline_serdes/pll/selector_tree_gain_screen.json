@@ -1,0 +1,576 @@
+{
+  "base_pex_sha256": "8cae46abb29097ba1e93e73f7f71b6f2f6915bfb03074b73c9742914ee5b99ed",
+  "candidates": [
+    {
+      "candidate": "base",
+      "dimensions": {
+        "input_pair_width_scale": 1.0,
+        "restoring_pair_width_scale": 1.0
+      },
+      "passing_case_count": 2,
+      "result": "fail"
+    },
+    {
+      "candidate": "restore_1p5",
+      "dimensions": {
+        "input_pair_width_scale": 1.0,
+        "restoring_pair_width_scale": 1.5
+      },
+      "passing_case_count": 2,
+      "result": "fail"
+    },
+    {
+      "candidate": "restore_2p0",
+      "dimensions": {
+        "input_pair_width_scale": 1.0,
+        "restoring_pair_width_scale": 2.0
+      },
+      "passing_case_count": 2,
+      "result": "fail"
+    },
+    {
+      "candidate": "pairs_1p5",
+      "dimensions": {
+        "input_pair_width_scale": 1.5,
+        "restoring_pair_width_scale": 1.5
+      },
+      "passing_case_count": 3,
+      "result": "pass"
+    },
+    {
+      "candidate": "pairs_2p0",
+      "dimensions": {
+        "input_pair_width_scale": 2.0,
+        "restoring_pair_width_scale": 2.0
+      },
+      "passing_case_count": 3,
+      "result": "pass"
+    },
+    {
+      "candidate": "pairs_2p5",
+      "dimensions": {
+        "input_pair_width_scale": 2.5,
+        "restoring_pair_width_scale": 2.5
+      },
+      "passing_case_count": 3,
+      "result": "pass"
+    }
+  ],
+  "cases": [
+    {
+      "candidate": "base",
+      "dimensions": {
+        "input_pair_width_scale": 1.0,
+        "restoring_pair_width_scale": 1.0
+      },
+      "environment": [
+        "typical",
+        "res_typical",
+        3.3,
+        27
+      ],
+      "observed": {
+        "current_late": 0.01038808,
+        "current_max": 0.01042022
+      },
+      "result": "pass",
+      "selected_leaf": 0,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 3.711721513843082e-12,
+        "differential_high_v": 0.911432536,
+        "differential_low_v": -0.891180453,
+        "differential_peak_v": 0.911432536,
+        "frequency_error_fraction": 5.340413178062439e-06,
+        "frequency_hz": 2499986648.967055
+      }
+    },
+    {
+      "candidate": "base",
+      "dimensions": {
+        "input_pair_width_scale": 1.0,
+        "restoring_pair_width_scale": 1.0
+      },
+      "environment": [
+        "ss",
+        "res_ff",
+        2.97,
+        125
+      ],
+      "observed": {
+        "current_late": 0.01064586,
+        "current_max": 0.01065006
+      },
+      "result": "fail",
+      "selected_leaf": 8,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 4.012125277359165e-12,
+        "differential_high_v": 0.0464477052,
+        "differential_low_v": -0.0401543492,
+        "differential_peak_v": 0.0464477052,
+        "frequency_error_fraction": 0.00021488307460536957,
+        "frequency_hz": 2500537207.6865134
+      }
+    },
+    {
+      "candidate": "base",
+      "dimensions": {
+        "input_pair_width_scale": 1.0,
+        "restoring_pair_width_scale": 1.0
+      },
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "observed": {
+        "current_late": 0.01022061,
+        "current_max": 0.0102396
+      },
+      "result": "pass",
+      "selected_leaf": 11,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 4.594287926174415e-12,
+        "differential_high_v": 0.234174288,
+        "differential_low_v": -0.217063041,
+        "differential_peak_v": 0.234174288,
+        "frequency_error_fraction": 0.0001529869155227661,
+        "frequency_hz": 2500382467.288807
+      }
+    },
+    {
+      "candidate": "restore_1p5",
+      "dimensions": {
+        "input_pair_width_scale": 1.0,
+        "restoring_pair_width_scale": 1.5
+      },
+      "environment": [
+        "typical",
+        "res_typical",
+        3.3,
+        27
+      ],
+      "observed": {
+        "current_late": 0.0104656,
+        "current_max": 0.01054015
+      },
+      "result": "pass",
+      "selected_leaf": 0,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 3.4497411516476913e-12,
+        "differential_high_v": 1.1714485,
+        "differential_low_v": -1.15951841,
+        "differential_peak_v": 1.1714485,
+        "frequency_error_fraction": 3.085600604057312e-06,
+        "frequency_hz": 2499992285.99849
+      }
+    },
+    {
+      "candidate": "restore_1p5",
+      "dimensions": {
+        "input_pair_width_scale": 1.0,
+        "restoring_pair_width_scale": 1.5
+      },
+      "environment": [
+        "ss",
+        "res_ff",
+        2.97,
+        125
+      ],
+      "observed": {
+        "current_late": 0.0107714,
+        "current_max": 0.01077743
+      },
+      "result": "fail",
+      "selected_leaf": 8,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 4.221980937125678e-12,
+        "differential_high_v": 0.109070953,
+        "differential_low_v": -0.0976082406,
+        "differential_peak_v": 0.109070953,
+        "frequency_error_fraction": 0.00022625456665172576,
+        "frequency_hz": 2500565636.4166293
+      }
+    },
+    {
+      "candidate": "restore_1p5",
+      "dimensions": {
+        "input_pair_width_scale": 1.0,
+        "restoring_pair_width_scale": 1.5
+      },
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "observed": {
+        "current_late": 0.01035561,
+        "current_max": 0.01040691
+      },
+      "result": "pass",
+      "selected_leaf": 11,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 4.7502857162059964e-12,
+        "differential_high_v": 0.42906971,
+        "differential_low_v": -0.397021035,
+        "differential_peak_v": 0.42906971,
+        "frequency_error_fraction": 0.00015133023892078398,
+        "frequency_hz": 2500378325.597302
+      }
+    },
+    {
+      "candidate": "restore_2p0",
+      "dimensions": {
+        "input_pair_width_scale": 1.0,
+        "restoring_pair_width_scale": 2.0
+      },
+      "environment": [
+        "typical",
+        "res_typical",
+        3.3,
+        27
+      ],
+      "observed": {
+        "current_late": 0.01050538,
+        "current_max": 0.01059279
+      },
+      "result": "pass",
+      "selected_leaf": 0,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 3.763312652647514e-12,
+        "differential_high_v": 1.16582829,
+        "differential_low_v": -1.15066515,
+        "differential_peak_v": 1.16582829,
+        "frequency_error_fraction": 1.4171733373069763e-05,
+        "frequency_hz": 2499964570.6665673
+      }
+    },
+    {
+      "candidate": "restore_2p0",
+      "dimensions": {
+        "input_pair_width_scale": 1.0,
+        "restoring_pair_width_scale": 2.0
+      },
+      "environment": [
+        "ss",
+        "res_ff",
+        2.97,
+        125
+      ],
+      "observed": {
+        "current_late": 0.01082975,
+        "current_max": 0.01084165
+      },
+      "result": "fail",
+      "selected_leaf": 8,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 4.634141590399536e-12,
+        "differential_high_v": 0.143223414,
+        "differential_low_v": -0.12534392,
+        "differential_peak_v": 0.143223414,
+        "frequency_error_fraction": 0.00024526903847465516,
+        "frequency_hz": 2500613172.5961866
+      }
+    },
+    {
+      "candidate": "restore_2p0",
+      "dimensions": {
+        "input_pair_width_scale": 1.0,
+        "restoring_pair_width_scale": 2.0
+      },
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "observed": {
+        "current_late": 0.01040874,
+        "current_max": 0.01049453
+      },
+      "result": "pass",
+      "selected_leaf": 11,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 5.113539447307535e-12,
+        "differential_high_v": 0.436656276,
+        "differential_low_v": -0.387937823,
+        "differential_peak_v": 0.436656276,
+        "frequency_error_fraction": 0.0001461758002840042,
+        "frequency_hz": 2500365439.50071
+      }
+    },
+    {
+      "candidate": "pairs_1p5",
+      "dimensions": {
+        "input_pair_width_scale": 1.5,
+        "restoring_pair_width_scale": 1.5
+      },
+      "environment": [
+        "typical",
+        "res_typical",
+        3.3,
+        27
+      ],
+      "observed": {
+        "current_late": 0.01052032,
+        "current_max": 0.01065002
+      },
+      "result": "pass",
+      "selected_leaf": 0,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 3.7775070764041925e-12,
+        "differential_high_v": 1.1936549,
+        "differential_low_v": -1.18392169,
+        "differential_peak_v": 1.1936549,
+        "frequency_error_fraction": 4.486437803268432e-06,
+        "frequency_hz": 2500011216.094508
+      }
+    },
+    {
+      "candidate": "pairs_1p5",
+      "dimensions": {
+        "input_pair_width_scale": 1.5,
+        "restoring_pair_width_scale": 1.5
+      },
+      "environment": [
+        "ss",
+        "res_ff",
+        2.97,
+        125
+      ],
+      "observed": {
+        "current_late": 0.01091111,
+        "current_max": 0.01092676
+      },
+      "result": "pass",
+      "selected_leaf": 8,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 5.091782205120099e-12,
+        "differential_high_v": 0.236143739,
+        "differential_low_v": -0.218074498,
+        "differential_peak_v": 0.236143739,
+        "frequency_error_fraction": 0.00027360577360572815,
+        "frequency_hz": 2500684014.4340143
+      }
+    },
+    {
+      "candidate": "pairs_1p5",
+      "dimensions": {
+        "input_pair_width_scale": 1.5,
+        "restoring_pair_width_scale": 1.5
+      },
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "observed": {
+        "current_late": 0.01062461,
+        "current_max": 0.01071574
+      },
+      "result": "pass",
+      "selected_leaf": 11,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 5.474136440008844e-12,
+        "differential_high_v": 0.720978757,
+        "differential_low_v": -0.680096422,
+        "differential_peak_v": 0.720978757,
+        "frequency_error_fraction": 0.0001758778592710495,
+        "frequency_hz": 2500439694.6481776
+      }
+    },
+    {
+      "candidate": "pairs_2p0",
+      "dimensions": {
+        "input_pair_width_scale": 2.0,
+        "restoring_pair_width_scale": 2.0
+      },
+      "environment": [
+        "typical",
+        "res_typical",
+        3.3,
+        27
+      ],
+      "observed": {
+        "current_late": 0.01058416,
+        "current_max": 0.01075862
+      },
+      "result": "pass",
+      "selected_leaf": 0,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 8.488798357978106e-12,
+        "differential_high_v": 1.16396998,
+        "differential_low_v": -1.15078796,
+        "differential_peak_v": 1.16396998,
+        "frequency_error_fraction": 0.00023759903316402436,
+        "frequency_hz": 2500593997.58291
+      }
+    },
+    {
+      "candidate": "pairs_2p0",
+      "dimensions": {
+        "input_pair_width_scale": 2.0,
+        "restoring_pair_width_scale": 2.0
+      },
+      "environment": [
+        "ss",
+        "res_ff",
+        2.97,
+        125
+      ],
+      "observed": {
+        "current_late": 0.01102896,
+        "current_max": 0.01107801
+      },
+      "result": "pass",
+      "selected_leaf": 8,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 1.0816434704200741e-11,
+        "differential_high_v": 0.383969736,
+        "differential_low_v": -0.345231305,
+        "differential_peak_v": 0.383969736,
+        "frequency_error_fraction": 0.0005804859166847229,
+        "frequency_hz": 2501451214.791712
+      }
+    },
+    {
+      "candidate": "pairs_2p0",
+      "dimensions": {
+        "input_pair_width_scale": 2.0,
+        "restoring_pair_width_scale": 2.0
+      },
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "observed": {
+        "current_late": 0.01080686,
+        "current_max": 0.01090225
+      },
+      "result": "pass",
+      "selected_leaf": 11,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 1.0777137610856218e-11,
+        "differential_high_v": 0.776433122,
+        "differential_low_v": -0.709337297,
+        "differential_peak_v": 0.776433122,
+        "frequency_error_fraction": 0.00028282028169250486,
+        "frequency_hz": 2500707050.7042313
+      }
+    },
+    {
+      "candidate": "pairs_2p5",
+      "dimensions": {
+        "input_pair_width_scale": 2.5,
+        "restoring_pair_width_scale": 2.5
+      },
+      "environment": [
+        "typical",
+        "res_typical",
+        3.3,
+        27
+      ],
+      "observed": {
+        "current_late": 0.01062658,
+        "current_max": 0.01083654
+      },
+      "result": "pass",
+      "selected_leaf": 0,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 1.0321451517249906e-11,
+        "differential_high_v": 1.14181743,
+        "differential_low_v": -1.12434714,
+        "differential_peak_v": 1.14181743,
+        "frequency_error_fraction": 0.000277910446913147,
+        "frequency_hz": 2500694776.117283
+      }
+    },
+    {
+      "candidate": "pairs_2p5",
+      "dimensions": {
+        "input_pair_width_scale": 2.5,
+        "restoring_pair_width_scale": 2.5
+      },
+      "environment": [
+        "ss",
+        "res_ff",
+        2.97,
+        125
+      ],
+      "observed": {
+        "current_late": 0.01110016,
+        "current_max": 0.01116554
+      },
+      "result": "pass",
+      "selected_leaf": 8,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 1.2686530344302696e-11,
+        "differential_high_v": 0.523231499,
+        "differential_low_v": -0.460166817,
+        "differential_peak_v": 0.523231499,
+        "frequency_error_fraction": 0.000661931696676445,
+        "frequency_hz": 2501654829.241691
+      }
+    },
+    {
+      "candidate": "pairs_2p5",
+      "dimensions": {
+        "input_pair_width_scale": 2.5,
+        "restoring_pair_width_scale": 2.5
+      },
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "observed": {
+        "current_late": 0.0109148,
+        "current_max": 0.01099782
+      },
+      "result": "pass",
+      "selected_leaf": 11,
+      "timing": {
+        "crossing_count": 25,
+        "cycle_jitter_pp_s": 1.201054425074858e-11,
+        "differential_high_v": 0.817793698,
+        "differential_low_v": -0.736888271,
+        "differential_peak_v": 0.817793698,
+        "frequency_error_fraction": 0.00027598925280303955,
+        "frequency_hz": 2500689973.1320076
+      }
+    }
+  ],
+  "claim": "selector_tree_active_gain_candidate_screen",
+  "limitation": "screening only; regenerate layout and repeat DRC/LVS/full-RC PEX",
+  "model": "full_rc_interconnect_with_perturbed_active_geometry",
+  "passing_candidates": [
+    "pairs_1p5",
+    "pairs_2p0",
+    "pairs_2p5"
+  ],
+  "result": "pass",
+  "schema_version": 1,
+  "selected_candidate": "pairs_1p5"
+}

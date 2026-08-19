@@ -130,6 +130,28 @@ results close the two-band primitive, not the complete twelve-band hierarchy or
 its extracted top-level interconnect. `selector_result.json` and
 `selector_vco_composed_result.json` retain the two evidence layers.
 
+The complete selector hierarchy is now physical as a balanced sixteen-leaf
+tree: twelve band inputs plus four defined quiet spares traverse four identical
+stages and fifteen selector instances. The first extracted tree passed handoff
+but only 14/16 static cases because the reused PI-sized signal pairs lost gain
+at slow/hot/low-supply corners. Maximum existing bias recovered one case but
+left `ss/res_ff` at 46 mV. A full-RC candidate screen rejected longer output
+loads because the opposite resistor corner lost headroom, then selected doubled
+input and restoring pairs. The physical selector realizes each logical device
+as two parallel, already-proven two-finger PCells; the attempted single
+four-finger routing was rejected by LVS rather than waived.
+
+The regenerated tree is 0-DRC, uniquely LVS-matched, and extracts to 6,947
+resistors and 3,061 capacitors. All twelve nominal leaves pass with every other
+input driven by a distinct live aggressor; four additional cases cover five
+total environments. The combined result is 16/16 plus a leaf-0-to-leaf-11
+0.95 ns break-before-make transition that changes every tree level. Worst
+static differential rail magnitude is 472 mV, worst cycle jitter is 6.02 ps,
+worst frequency error is 0.032%, and maximum supply current is 14.46 mA. The
+handoff dead interval has zero crossings and 28.3 mV peak residue. The checked
+numeric evidence and usable GDS render are `selector_tree_result.json` and
+`layout_selector_tree.png`.
+
 The bounded reproduction sequence is `run_active_screen.sh` for the
 parasitic-preserving active-width screen, `run_cap_drc.sh` for legal cap
 length/width boundaries, `run_vco_active_physical.sh` for the four active-tail
@@ -142,11 +164,16 @@ commanded-start proof. `layout_startup_assist.png` is the KLayout render of the
 checked startup cell. `run_selector.sh` qualifies the shared PI geometry in its
 2.5 GHz selector role; `run_selector_vco.sh` regenerates all three physical
 cell types and runs the direct two-VCO composition.
+`run_selector_tree_gain_screen.sh` preserves the baseline tree's extracted
+routing RC while screening active geometry, `run_selector_tree_physical.sh`
+closes the regenerated hierarchy, and `run_selector_tree.sh` reruns physical
+closure plus the all-leaf/PVT/handoff matrix.
 
 `run_schematic.sh` runs the 12-environment adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
-physical milestone is to compose and route a complete twelve-band selector tree
-with the controller's nonoverlap sequence, then run mismatch/statistical
-startup, supply-pushing, and phase-noise simulations. The divider, PFD, charge
-pump, loop filter, lock detector, and external-clock bypass remain separate
+physical milestone is to connect the twelve extracted VCO members and startup
+assists to the closed tree with realizable power gating and a controller that
+enforces the proven nonoverlap sequence, then run mismatch/statistical startup,
+supply-pushing, and phase-noise simulations. The divider, PFD, charge pump,
+loop filter, lock detector, and external-clock bypass remain separate
 unimplemented boundaries.

@@ -48,7 +48,9 @@ twelve-parent 2.5 GHz bank is retained as a physically legal failed overspeed
 experiment because it covers only 2/5 environments. The phase interpolator is
 also qualified as a two-input break-before-make selector, and a balanced
 sixteen-leaf selector hierarchy is physically closed at its prior full-rate
-stress but is no longer needed for the selected bank. Real dual-bias
-generation/calibration, half-rate bank power/selector
-composition, divider loading, phase noise, supply sensitivity, and the closed
-PLL remain unfinished.
+stress but is no longer needed for the selected bank. The exact physical dual
+5-bit R-2R DAC is now extracted and qualified in the VCO-bias role across five
+environments; two instances provide independent main/regenerative controls for
+the two selected parents. Their top-level reference/power routing, calibration,
+half-rate bank/selector composition, divider loading, phase noise, supply
+sensitivity, and the closed PLL remain unfinished.

@@ -128,6 +128,18 @@ over the complete environment set. Also budget the two realizable bias sources,
 their resolution and settling, and a calibration mapping; two ideal voltage
 sources in a testbench prove controllability, not an implemented controller.
 
+Qualify the physical bias generator against the voltages the characterized
+load actually needs. Require monotonic transfer, safe off and high endpoints,
+a bounded maximum step, a nearest realizable code for every characterized
+control point, reference current or power, and worst-carry settling into an
+extracted or conservatively bounded gate load. A minimum code step is not a
+performance benefit by itself: rejecting a smaller step can discard improved
+resolution. Conversely, an endpoint span alone can hide coarse unreachable
+settings. Record the environment-specific target-to-code map so system
+calibration can search real hardware rather than ideal voltage-source values.
+Derive the settling deadline from startup and lock sequencing with explicit
+margin; do not promote a convenient transient stop time into a requirement.
+
 Do not assume that additional active width can recover a routed speed miss.
 In a retained full-RC parent deck, scaling input, latch, and tail devices over a
 wide range increased current but reduced oscillation frequency in the limiting

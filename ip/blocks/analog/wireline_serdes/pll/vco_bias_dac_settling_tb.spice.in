@@ -1,0 +1,26 @@
+* SPDX-License-Identifier: Apache-2.0
+* Worst-carry settling of extracted VCO-bias DAC into conservative gate load.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include @PEX_PATH@
+.temp @TEMP_C@
+
+VDD VDD 0 PWL(0 0 500p @VDD_V@)
+VREFH VREFH 0 PWL(0 0 500p 1.800)
+VREFL VREFL 0 0
+@BIT_SOURCES@
+XDUT @DUT_PORTS@ VREFH VREFL 0 VCTRL_MAIN VCTRL_REGEN phase_control_dac_pex
+CMAIN VCTRL_MAIN 0 1p
+CREGEN VCTRL_REGEN 0 1p
+
+.control
+tran 25p 100n
+meas tran main_before avg v(VCTRL_MAIN) from=1.5n to=1.9n
+meas tran regen_before avg v(VCTRL_REGEN) from=1.5n to=1.9n
+meas tran main_at_50n find v(VCTRL_MAIN) at=50n
+meas tran regen_at_50n find v(VCTRL_REGEN) at=50n
+meas tran main_final avg v(VCTRL_MAIN) from=90n to=100n
+meas tran regen_final avg v(VCTRL_REGEN) from=90n to=100n
+.endc
+.end

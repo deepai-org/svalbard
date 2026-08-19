@@ -1,0 +1,25 @@
+* SPDX-License-Identifier: Apache-2.0
+* Extracted dual-DAC static transfer for VCO main/regenerative controls.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include @PEX_PATH@
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VREFH VREFH 0 1.800
+VREFL VREFL 0 0
+VS SWEEP 0 0
+@BIT_SOURCES@
+XDUT @DUT_PORTS@ VREFH VREFL 0 VCTRL_MAIN VCTRL_REGEN phase_control_dac_pex
+CMAIN VCTRL_MAIN 0 1p
+CREGEN VCTRL_REGEN 0 1p
+
+.control
+dc VS 0 1m 1m
+let ref_power = -i(VREFH)*1.8
+meas dc vctrl_main find v(VCTRL_MAIN) at=0
+meas dc vctrl_regen find v(VCTRL_REGEN) at=0
+meas dc reference_power find ref_power at=0
+.endc
+.end

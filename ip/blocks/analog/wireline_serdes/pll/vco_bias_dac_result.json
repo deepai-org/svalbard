@@ -1,0 +1,2783 @@
+{
+  "checker_source_sha256": "c0be7de1bda8efbdfec01abef74060b0d2885469d0496d0f36272564e653f421",
+  "claim": "physical_dual_5bit_vco_bias_dac",
+  "dac_layout_source_sha256": "466f4f29cbc5ee5fb2beef80da07ceff980051e7580c0e1884015a9b03087edc",
+  "dac_schematic_source_sha256": "041f51547899a3c18d292e240586364c2d308fd6d4b243a4d23f3af110308ac7",
+  "physical": {
+    "drc_error_count": 0,
+    "gds_sha256": "cdf08a5b067cae1fec3b36819396370cce9333ab341f83fbd836bd79ec800e19",
+    "layout_image_bytes": 64463,
+    "layout_image_sha256": "5a926f30a3190bb3d7c6e53b0c1222d190c12a5c02486d307c605c54f7bb40e1",
+    "lvs_unique": true,
+    "pex_capacitor_count": 265,
+    "pex_resistor_count": 640,
+    "pex_sha256": "c00109ba821125dd07e2f0dff005fe01a573d0370d47a7f1bf29a99e09000339"
+  },
+  "result": "pass",
+  "schema_version": 1,
+  "shared_evidence_source_sha256": "ca49d14d8017b6a9f71ab08515194d981ea93936ed0ab3c7d22a64841438ba58",
+  "simulation": {
+    "claim": "extracted_dual_5bit_vco_bias_dac_range_and_settling",
+    "dc_case_count": 160,
+    "dc_cases": [
+      {
+        "code": 0,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000294079,
+        "result": "complete",
+        "vctrl_main_v": 5.56495e-10,
+        "vctrl_regen_v": 1.73976
+      },
+      {
+        "code": 1,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000581472,
+        "result": "complete",
+        "vctrl_main_v": 0.0563461,
+        "vctrl_regen_v": 1.68151
+      },
+      {
+        "code": 2,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000723617,
+        "result": "complete",
+        "vctrl_main_v": 0.112227,
+        "vctrl_regen_v": 1.62373
+      },
+      {
+        "code": 3,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000722104,
+        "result": "complete",
+        "vctrl_main_v": 0.168891,
+        "vctrl_regen_v": 1.56625
+      },
+      {
+        "code": 4,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000788645,
+        "result": "complete",
+        "vctrl_main_v": 0.223352,
+        "vctrl_regen_v": 1.50975
+      },
+      {
+        "code": 5,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000926908,
+        "result": "complete",
+        "vctrl_main_v": 0.279964,
+        "vctrl_regen_v": 1.45214
+      },
+      {
+        "code": 6,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000920837,
+        "result": "complete",
+        "vctrl_main_v": 0.336274,
+        "vctrl_regen_v": 1.39526
+      },
+      {
+        "code": 7,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000770415,
+        "result": "complete",
+        "vctrl_main_v": 0.393286,
+        "vctrl_regen_v": 1.33833
+      },
+      {
+        "code": 8,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.00079569,
+        "result": "complete",
+        "vctrl_main_v": 0.444759,
+        "vctrl_regen_v": 1.28474
+      },
+      {
+        "code": 9,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.00100089,
+        "result": "complete",
+        "vctrl_main_v": 0.501332,
+        "vctrl_regen_v": 1.22712
+      },
+      {
+        "code": 10,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.00106139,
+        "result": "complete",
+        "vctrl_main_v": 0.557572,
+        "vctrl_regen_v": 1.17014
+      },
+      {
+        "code": 11,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000977955,
+        "result": "complete",
+        "vctrl_main_v": 0.614584,
+        "vctrl_regen_v": 1.11315
+      },
+      {
+        "code": 12,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000964722,
+        "result": "complete",
+        "vctrl_main_v": 0.669847,
+        "vctrl_regen_v": 1.05788
+      },
+      {
+        "code": 13,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.00102105,
+        "result": "complete",
+        "vctrl_main_v": 0.726793,
+        "vctrl_regen_v": 1.00078
+      },
+      {
+        "code": 14,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000933515,
+        "result": "complete",
+        "vctrl_main_v": 0.783641,
+        "vctrl_regen_v": 0.944498
+      },
+      {
+        "code": 15,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000701148,
+        "result": "complete",
+        "vctrl_main_v": 0.841114,
+        "vctrl_regen_v": 0.887935
+      },
+      {
+        "code": 16,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000701121,
+        "result": "complete",
+        "vctrl_main_v": 0.887934,
+        "vctrl_regen_v": 0.841119
+      },
+      {
+        "code": 17,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000933518,
+        "result": "complete",
+        "vctrl_main_v": 0.944499,
+        "vctrl_regen_v": 0.783649
+      },
+      {
+        "code": 18,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.00102103,
+        "result": "complete",
+        "vctrl_main_v": 1.00079,
+        "vctrl_regen_v": 0.726809
+      },
+      {
+        "code": 19,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000964746,
+        "result": "complete",
+        "vctrl_main_v": 1.05789,
+        "vctrl_regen_v": 0.669861
+      },
+      {
+        "code": 20,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000977928,
+        "result": "complete",
+        "vctrl_main_v": 1.11316,
+        "vctrl_regen_v": 0.614609
+      },
+      {
+        "code": 21,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.00106141,
+        "result": "complete",
+        "vctrl_main_v": 1.17016,
+        "vctrl_regen_v": 0.557597
+      },
+      {
+        "code": 22,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.00100089,
+        "result": "complete",
+        "vctrl_main_v": 1.22714,
+        "vctrl_regen_v": 0.501363
+      },
+      {
+        "code": 23,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.00079572,
+        "result": "complete",
+        "vctrl_main_v": 1.28477,
+        "vctrl_regen_v": 0.444777
+      },
+      {
+        "code": 24,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000770391,
+        "result": "complete",
+        "vctrl_main_v": 1.33834,
+        "vctrl_regen_v": 0.393324
+      },
+      {
+        "code": 25,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000920846,
+        "result": "complete",
+        "vctrl_main_v": 1.39529,
+        "vctrl_regen_v": 0.336309
+      },
+      {
+        "code": 26,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000926898,
+        "result": "complete",
+        "vctrl_main_v": 1.45218,
+        "vctrl_regen_v": 0.28001
+      },
+      {
+        "code": 27,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.00078867,
+        "result": "complete",
+        "vctrl_main_v": 1.50979,
+        "vctrl_regen_v": 0.223381
+      },
+      {
+        "code": 28,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000722089,
+        "result": "complete",
+        "vctrl_main_v": 1.56627,
+        "vctrl_regen_v": 0.168938
+      },
+      {
+        "code": 29,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000723633,
+        "result": "complete",
+        "vctrl_main_v": 1.62377,
+        "vctrl_regen_v": 0.11226
+      },
+      {
+        "code": 30,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000581472,
+        "result": "complete",
+        "vctrl_main_v": 1.68154,
+        "vctrl_regen_v": 0.0563819
+      },
+      {
+        "code": 31,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "reference_power_w": 0.000294091,
+        "result": "complete",
+        "vctrl_main_v": 1.7398,
+        "vctrl_regen_v": 5.61233e-10
+      },
+      {
+        "code": 0,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.000363818,
+        "result": "complete",
+        "vctrl_main_v": 1.81459e-11,
+        "vctrl_regen_v": 1.74126
+      },
+      {
+        "code": 1,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.000721258,
+        "result": "complete",
+        "vctrl_main_v": 0.0567325,
+        "vctrl_regen_v": 1.684
+      },
+      {
+        "code": 2,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.000898066,
+        "result": "complete",
+        "vctrl_main_v": 0.113055,
+        "vctrl_regen_v": 1.62697
+      },
+      {
+        "code": 3,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.000895105,
+        "result": "complete",
+        "vctrl_main_v": 0.169714,
+        "vctrl_regen_v": 1.57017
+      },
+      {
+        "code": 4,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.000978404,
+        "result": "complete",
+        "vctrl_main_v": 0.225083,
+        "vctrl_regen_v": 1.5139
+      },
+      {
+        "code": 5,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.00115047,
+        "result": "complete",
+        "vctrl_main_v": 0.281747,
+        "vctrl_regen_v": 1.457
+      },
+      {
+        "code": 6,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.00114247,
+        "result": "complete",
+        "vctrl_main_v": 0.338043,
+        "vctrl_regen_v": 1.40049
+      },
+      {
+        "code": 7,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.000954443,
+        "result": "complete",
+        "vctrl_main_v": 0.394724,
+        "vctrl_regen_v": 1.34394
+      },
+      {
+        "code": 8,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.000986707,
+        "result": "complete",
+        "vctrl_main_v": 0.448274,
+        "vctrl_regen_v": 1.28943
+      },
+      {
+        "code": 9,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.00124232,
+        "result": "complete",
+        "vctrl_main_v": 0.504894,
+        "vctrl_regen_v": 1.23251
+      },
+      {
+        "code": 10,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.00131766,
+        "result": "complete",
+        "vctrl_main_v": 0.561184,
+        "vctrl_regen_v": 1.17595
+      },
+      {
+        "code": 11,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.00121324,
+        "result": "complete",
+        "vctrl_main_v": 0.617876,
+        "vctrl_regen_v": 1.11933
+      },
+      {
+        "code": 12,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.00119651,
+        "result": "complete",
+        "vctrl_main_v": 0.673426,
+        "vctrl_regen_v": 1.06372
+      },
+      {
+        "code": 13,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.00126711,
+        "result": "complete",
+        "vctrl_main_v": 0.7301,
+        "vctrl_regen_v": 1.00703
+      },
+      {
+        "code": 14,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.0011579,
+        "result": "complete",
+        "vctrl_main_v": 0.786569,
+        "vctrl_regen_v": 0.950764
+      },
+      {
+        "code": 15,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.000868394,
+        "result": "complete",
+        "vctrl_main_v": 0.843406,
+        "vctrl_regen_v": 0.894265
+      },
+      {
+        "code": 16,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.000868353,
+        "result": "complete",
+        "vctrl_main_v": 0.894265,
+        "vctrl_regen_v": 0.843411
+      },
+      {
+        "code": 17,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.00115791,
+        "result": "complete",
+        "vctrl_main_v": 0.950768,
+        "vctrl_regen_v": 0.786578
+      },
+      {
+        "code": 18,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.00126708,
+        "result": "complete",
+        "vctrl_main_v": 1.00704,
+        "vctrl_regen_v": 0.730118
+      },
+      {
+        "code": 19,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.00119655,
+        "result": "complete",
+        "vctrl_main_v": 1.06374,
+        "vctrl_regen_v": 0.673442
+      },
+      {
+        "code": 20,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.0012132,
+        "result": "complete",
+        "vctrl_main_v": 1.11934,
+        "vctrl_regen_v": 0.617906
+      },
+      {
+        "code": 21,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.00131768,
+        "result": "complete",
+        "vctrl_main_v": 1.17598,
+        "vctrl_regen_v": 0.561214
+      },
+      {
+        "code": 22,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.00124231,
+        "result": "complete",
+        "vctrl_main_v": 1.23254,
+        "vctrl_regen_v": 0.504932
+      },
+      {
+        "code": 23,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.000986752,
+        "result": "complete",
+        "vctrl_main_v": 1.28947,
+        "vctrl_regen_v": 0.448297
+      },
+      {
+        "code": 24,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.000954405,
+        "result": "complete",
+        "vctrl_main_v": 1.34397,
+        "vctrl_regen_v": 0.394769
+      },
+      {
+        "code": 25,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.00114248,
+        "result": "complete",
+        "vctrl_main_v": 1.40053,
+        "vctrl_regen_v": 0.338087
+      },
+      {
+        "code": 26,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.00115046,
+        "result": "complete",
+        "vctrl_main_v": 1.45704,
+        "vctrl_regen_v": 0.281803
+      },
+      {
+        "code": 27,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.000978442,
+        "result": "complete",
+        "vctrl_main_v": 1.51395,
+        "vctrl_regen_v": 0.225118
+      },
+      {
+        "code": 28,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.000895082,
+        "result": "complete",
+        "vctrl_main_v": 1.5702,
+        "vctrl_regen_v": 0.169772
+      },
+      {
+        "code": 29,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.000898089,
+        "result": "complete",
+        "vctrl_main_v": 1.62703,
+        "vctrl_regen_v": 0.113096
+      },
+      {
+        "code": 30,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.000721259,
+        "result": "complete",
+        "vctrl_main_v": 1.68404,
+        "vctrl_regen_v": 0.056777
+      },
+      {
+        "code": 31,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "reference_power_w": 0.000363837,
+        "result": "complete",
+        "vctrl_main_v": 1.7413,
+        "vctrl_regen_v": 1.83316e-11
+      },
+      {
+        "code": 0,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000245907,
+        "result": "complete",
+        "vctrl_main_v": 2.02368e-06,
+        "vctrl_regen_v": 1.7384
+      },
+      {
+        "code": 1,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000484991,
+        "result": "complete",
+        "vctrl_main_v": 0.0560156,
+        "vctrl_regen_v": 1.67926
+      },
+      {
+        "code": 2,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000603229,
+        "result": "complete",
+        "vctrl_main_v": 0.11152,
+        "vctrl_regen_v": 1.62081
+      },
+      {
+        "code": 3,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000602512,
+        "result": "complete",
+        "vctrl_main_v": 0.168148,
+        "vctrl_regen_v": 1.56276
+      },
+      {
+        "code": 4,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000657601,
+        "result": "complete",
+        "vctrl_main_v": 0.221883,
+        "vctrl_regen_v": 1.50603
+      },
+      {
+        "code": 5,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000772549,
+        "result": "complete",
+        "vctrl_main_v": 0.278414,
+        "vctrl_regen_v": 1.44785
+      },
+      {
+        "code": 6,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000767724,
+        "result": "complete",
+        "vctrl_main_v": 0.334695,
+        "vctrl_regen_v": 1.39066
+      },
+      {
+        "code": 7,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00064308,
+        "result": "complete",
+        "vctrl_main_v": 0.391943,
+        "vctrl_regen_v": 1.33344
+      },
+      {
+        "code": 8,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000663692,
+        "result": "complete",
+        "vctrl_main_v": 0.441794,
+        "vctrl_regen_v": 1.28056
+      },
+      {
+        "code": 9,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000834178,
+        "result": "complete",
+        "vctrl_main_v": 0.498288,
+        "vctrl_regen_v": 1.22237
+      },
+      {
+        "code": 10,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000884442,
+        "result": "complete",
+        "vctrl_main_v": 0.554451,
+        "vctrl_regen_v": 1.16508
+      },
+      {
+        "code": 11,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00081536,
+        "result": "complete",
+        "vctrl_main_v": 0.611679,
+        "vctrl_regen_v": 1.10782
+      },
+      {
+        "code": 12,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000804485,
+        "result": "complete",
+        "vctrl_main_v": 0.666694,
+        "vctrl_regen_v": 1.05283
+      },
+      {
+        "code": 13,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000851074,
+        "result": "complete",
+        "vctrl_main_v": 0.723828,
+        "vctrl_regen_v": 0.99544
+      },
+      {
+        "code": 14,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000778433,
+        "result": "complete",
+        "vctrl_main_v": 0.78096,
+        "vctrl_regen_v": 0.939176
+      },
+      {
+        "code": 15,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000585404,
+        "result": "complete",
+        "vctrl_main_v": 0.838942,
+        "vctrl_regen_v": 0.882599
+      },
+      {
+        "code": 16,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000585385,
+        "result": "complete",
+        "vctrl_main_v": 0.882598,
+        "vctrl_regen_v": 0.838947
+      },
+      {
+        "code": 17,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000778435,
+        "result": "complete",
+        "vctrl_main_v": 0.939176,
+        "vctrl_regen_v": 0.780967
+      },
+      {
+        "code": 18,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000851062,
+        "result": "complete",
+        "vctrl_main_v": 0.995443,
+        "vctrl_regen_v": 0.723842
+      },
+      {
+        "code": 19,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000804501,
+        "result": "complete",
+        "vctrl_main_v": 1.05283,
+        "vctrl_regen_v": 0.666706
+      },
+      {
+        "code": 20,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000815342,
+        "result": "complete",
+        "vctrl_main_v": 1.10783,
+        "vctrl_regen_v": 0.611701
+      },
+      {
+        "code": 21,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000884453,
+        "result": "complete",
+        "vctrl_main_v": 1.16509,
+        "vctrl_regen_v": 0.554472
+      },
+      {
+        "code": 22,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000834174,
+        "result": "complete",
+        "vctrl_main_v": 1.22239,
+        "vctrl_regen_v": 0.498315
+      },
+      {
+        "code": 23,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000663712,
+        "result": "complete",
+        "vctrl_main_v": 1.28058,
+        "vctrl_regen_v": 0.44181
+      },
+      {
+        "code": 24,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000643063,
+        "result": "complete",
+        "vctrl_main_v": 1.33345,
+        "vctrl_regen_v": 0.391974
+      },
+      {
+        "code": 25,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00076773,
+        "result": "complete",
+        "vctrl_main_v": 1.39069,
+        "vctrl_regen_v": 0.334725
+      },
+      {
+        "code": 26,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000772542,
+        "result": "complete",
+        "vctrl_main_v": 1.44788,
+        "vctrl_regen_v": 0.278452
+      },
+      {
+        "code": 27,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000657618,
+        "result": "complete",
+        "vctrl_main_v": 1.50607,
+        "vctrl_regen_v": 0.221907
+      },
+      {
+        "code": 28,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000602502,
+        "result": "complete",
+        "vctrl_main_v": 1.56278,
+        "vctrl_regen_v": 0.168187
+      },
+      {
+        "code": 29,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00060324,
+        "result": "complete",
+        "vctrl_main_v": 1.62085,
+        "vctrl_regen_v": 0.111548
+      },
+      {
+        "code": 30,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000484992,
+        "result": "complete",
+        "vctrl_main_v": 1.67928,
+        "vctrl_regen_v": 0.0560454
+      },
+      {
+        "code": 31,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000245915,
+        "result": "complete",
+        "vctrl_main_v": 1.73843,
+        "vctrl_regen_v": 2.03852e-06
+      },
+      {
+        "code": 0,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000359313,
+        "result": "complete",
+        "vctrl_main_v": 3.11312e-08,
+        "vctrl_regen_v": 1.72687
+      },
+      {
+        "code": 1,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000697214,
+        "result": "complete",
+        "vctrl_main_v": 0.0542876,
+        "vctrl_regen_v": 1.66164
+      },
+      {
+        "code": 2,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000864753,
+        "result": "complete",
+        "vctrl_main_v": 0.107754,
+        "vctrl_regen_v": 1.59862
+      },
+      {
+        "code": 3,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000867625,
+        "result": "complete",
+        "vctrl_main_v": 0.163863,
+        "vctrl_regen_v": 1.53721
+      },
+      {
+        "code": 4,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00094381,
+        "result": "complete",
+        "vctrl_main_v": 0.213648,
+        "vctrl_regen_v": 1.47882
+      },
+      {
+        "code": 5,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00110535,
+        "result": "complete",
+        "vctrl_main_v": 0.269456,
+        "vctrl_regen_v": 1.41752
+      },
+      {
+        "code": 6,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00110003,
+        "result": "complete",
+        "vctrl_main_v": 0.325191,
+        "vctrl_regen_v": 1.35876
+      },
+      {
+        "code": 7,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000927725,
+        "result": "complete",
+        "vctrl_main_v": 0.383267,
+        "vctrl_regen_v": 1.30026
+      },
+      {
+        "code": 8,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000953798,
+        "result": "complete",
+        "vctrl_main_v": 0.424352,
+        "vctrl_regen_v": 1.25146
+      },
+      {
+        "code": 9,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00119246,
+        "result": "complete",
+        "vctrl_main_v": 0.480113,
+        "vctrl_regen_v": 1.19041
+      },
+      {
+        "code": 10,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00126291,
+        "result": "complete",
+        "vctrl_main_v": 0.535497,
+        "vctrl_regen_v": 1.13165
+      },
+      {
+        "code": 11,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00116771,
+        "result": "complete",
+        "vctrl_main_v": 0.593413,
+        "vctrl_regen_v": 1.07344
+      },
+      {
+        "code": 12,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00115305,
+        "result": "complete",
+        "vctrl_main_v": 0.646657,
+        "vctrl_regen_v": 1.02023
+      },
+      {
+        "code": 13,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.0012167,
+        "result": "complete",
+        "vctrl_main_v": 0.70441,
+        "vctrl_regen_v": 0.961782
+      },
+      {
+        "code": 14,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00111504,
+        "result": "complete",
+        "vctrl_main_v": 0.762759,
+        "vctrl_regen_v": 0.905993
+      },
+      {
+        "code": 15,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000844589,
+        "result": "complete",
+        "vctrl_main_v": 0.823303,
+        "vctrl_regen_v": 0.849788
+      },
+      {
+        "code": 16,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000844552,
+        "result": "complete",
+        "vctrl_main_v": 0.849781,
+        "vctrl_regen_v": 0.823317
+      },
+      {
+        "code": 17,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00111504,
+        "result": "complete",
+        "vctrl_main_v": 0.905983,
+        "vctrl_regen_v": 0.762777
+      },
+      {
+        "code": 18,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00121667,
+        "result": "complete",
+        "vctrl_main_v": 0.961776,
+        "vctrl_regen_v": 0.704438
+      },
+      {
+        "code": 19,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00115308,
+        "result": "complete",
+        "vctrl_main_v": 1.02023,
+        "vctrl_regen_v": 0.646681
+      },
+      {
+        "code": 20,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00116768,
+        "result": "complete",
+        "vctrl_main_v": 1.07344,
+        "vctrl_regen_v": 0.593453
+      },
+      {
+        "code": 21,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00126293,
+        "result": "complete",
+        "vctrl_main_v": 1.13166,
+        "vctrl_regen_v": 0.535534
+      },
+      {
+        "code": 22,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00119245,
+        "result": "complete",
+        "vctrl_main_v": 1.19043,
+        "vctrl_regen_v": 0.480157
+      },
+      {
+        "code": 23,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000953838,
+        "result": "complete",
+        "vctrl_main_v": 1.25148,
+        "vctrl_regen_v": 0.424378
+      },
+      {
+        "code": 24,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000927694,
+        "result": "complete",
+        "vctrl_main_v": 1.30027,
+        "vctrl_regen_v": 0.383316
+      },
+      {
+        "code": 25,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00110005,
+        "result": "complete",
+        "vctrl_main_v": 1.35879,
+        "vctrl_regen_v": 0.325237
+      },
+      {
+        "code": 26,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00110534,
+        "result": "complete",
+        "vctrl_main_v": 1.41755,
+        "vctrl_regen_v": 0.269514
+      },
+      {
+        "code": 27,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000943845,
+        "result": "complete",
+        "vctrl_main_v": 1.47887,
+        "vctrl_regen_v": 0.213684
+      },
+      {
+        "code": 28,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000867607,
+        "result": "complete",
+        "vctrl_main_v": 1.53724,
+        "vctrl_regen_v": 0.16392
+      },
+      {
+        "code": 29,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000864774,
+        "result": "complete",
+        "vctrl_main_v": 1.59867,
+        "vctrl_regen_v": 0.107795
+      },
+      {
+        "code": 30,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000697217,
+        "result": "complete",
+        "vctrl_main_v": 1.66168,
+        "vctrl_regen_v": 0.0543303
+      },
+      {
+        "code": 31,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000359331,
+        "result": "complete",
+        "vctrl_main_v": 1.72691,
+        "vctrl_regen_v": 3.1329e-08
+      },
+      {
+        "code": 0,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000242988,
+        "result": "complete",
+        "vctrl_main_v": 3.11511e-08,
+        "vctrl_regen_v": 1.73233
+      },
+      {
+        "code": 1,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000475283,
+        "result": "complete",
+        "vctrl_main_v": 0.054731,
+        "vctrl_regen_v": 1.66976
+      },
+      {
+        "code": 2,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000590406,
+        "result": "complete",
+        "vctrl_main_v": 0.108898,
+        "vctrl_regen_v": 1.60866
+      },
+      {
+        "code": 3,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000591134,
+        "result": "complete",
+        "vctrl_main_v": 0.165051,
+        "vctrl_regen_v": 1.54871
+      },
+      {
+        "code": 4,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000644173,
+        "result": "complete",
+        "vctrl_main_v": 0.21653,
+        "vctrl_regen_v": 1.49079
+      },
+      {
+        "code": 5,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000755518,
+        "result": "complete",
+        "vctrl_main_v": 0.27245,
+        "vctrl_regen_v": 1.43084
+      },
+      {
+        "code": 6,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000751384,
+        "result": "complete",
+        "vctrl_main_v": 0.328383,
+        "vctrl_regen_v": 1.37271
+      },
+      {
+        "code": 7,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000631692,
+        "result": "complete",
+        "vctrl_main_v": 0.386021,
+        "vctrl_regen_v": 1.3148
+      },
+      {
+        "code": 8,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000650706,
+        "result": "complete",
+        "vctrl_main_v": 0.431126,
+        "vctrl_regen_v": 1.26369
+      },
+      {
+        "code": 9,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000815533,
+        "result": "complete",
+        "vctrl_main_v": 0.487008,
+        "vctrl_regen_v": 1.20387
+      },
+      {
+        "code": 10,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00086421,
+        "result": "complete",
+        "vctrl_main_v": 0.542667,
+        "vctrl_regen_v": 1.14568
+      },
+      {
+        "code": 11,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000797995,
+        "result": "complete",
+        "vctrl_main_v": 0.600197,
+        "vctrl_regen_v": 1.08795
+      },
+      {
+        "code": 12,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000787689,
+        "result": "complete",
+        "vctrl_main_v": 0.654373,
+        "vctrl_regen_v": 1.03381
+      },
+      {
+        "code": 13,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000832168,
+        "result": "complete",
+        "vctrl_main_v": 0.711759,
+        "vctrl_regen_v": 0.975887
+      },
+      {
+        "code": 14,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000761925,
+        "result": "complete",
+        "vctrl_main_v": 0.76964,
+        "vctrl_regen_v": 0.919927
+      },
+      {
+        "code": 15,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000575249,
+        "result": "complete",
+        "vctrl_main_v": 0.829068,
+        "vctrl_regen_v": 0.863707
+      },
+      {
+        "code": 16,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000575232,
+        "result": "complete",
+        "vctrl_main_v": 0.863703,
+        "vctrl_regen_v": 0.829076
+      },
+      {
+        "code": 17,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000761926,
+        "result": "complete",
+        "vctrl_main_v": 0.919922,
+        "vctrl_regen_v": 0.769651
+      },
+      {
+        "code": 18,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000832157,
+        "result": "complete",
+        "vctrl_main_v": 0.975885,
+        "vctrl_regen_v": 0.711777
+      },
+      {
+        "code": 19,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000787704,
+        "result": "complete",
+        "vctrl_main_v": 1.03382,
+        "vctrl_regen_v": 0.654388
+      },
+      {
+        "code": 20,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000797979,
+        "result": "complete",
+        "vctrl_main_v": 1.08795,
+        "vctrl_regen_v": 0.600222
+      },
+      {
+        "code": 21,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00086422,
+        "result": "complete",
+        "vctrl_main_v": 1.14569,
+        "vctrl_regen_v": 0.542691
+      },
+      {
+        "code": 22,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00081553,
+        "result": "complete",
+        "vctrl_main_v": 1.20389,
+        "vctrl_regen_v": 0.487037
+      },
+      {
+        "code": 23,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000650725,
+        "result": "complete",
+        "vctrl_main_v": 1.26371,
+        "vctrl_regen_v": 0.431143
+      },
+      {
+        "code": 24,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000631677,
+        "result": "complete",
+        "vctrl_main_v": 1.31481,
+        "vctrl_regen_v": 0.386053
+      },
+      {
+        "code": 25,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.00075139,
+        "result": "complete",
+        "vctrl_main_v": 1.37273,
+        "vctrl_regen_v": 0.328414
+      },
+      {
+        "code": 26,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000755513,
+        "result": "complete",
+        "vctrl_main_v": 1.43086,
+        "vctrl_regen_v": 0.27249
+      },
+      {
+        "code": 27,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000644189,
+        "result": "complete",
+        "vctrl_main_v": 1.49082,
+        "vctrl_regen_v": 0.216554
+      },
+      {
+        "code": 28,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000591125,
+        "result": "complete",
+        "vctrl_main_v": 1.54873,
+        "vctrl_regen_v": 0.16509
+      },
+      {
+        "code": 29,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000590417,
+        "result": "complete",
+        "vctrl_main_v": 1.60869,
+        "vctrl_regen_v": 0.108926
+      },
+      {
+        "code": 30,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000475284,
+        "result": "complete",
+        "vctrl_main_v": 1.66979,
+        "vctrl_regen_v": 0.0547602
+      },
+      {
+        "code": 31,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "reference_power_w": 0.000242996,
+        "result": "complete",
+        "vctrl_main_v": 1.73235,
+        "vctrl_regen_v": 3.13489e-08
+      }
+    ],
+    "dc_testbench_sha256": "12f3c36268cfa039fed7ec0288325b0f1b63843289e04be69f77184a06b587e4",
+    "groups": [
+      {
+        "complement_sum_range_v": [
+          1.727573,
+          1.739800000561233
+        ],
+        "endpoint_high_v": 1.73976,
+        "endpoint_low_v": 5.61233e-10,
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "maximum_reference_power_w": 0.00106141,
+        "maximum_step_main_v": 0.05825999999999998,
+        "maximum_step_regen_v": 0.05824999999999991,
+        "maximum_target_error_v": 0.027120000000000033,
+        "minimum_step_main_v": 0.04681999999999997,
+        "minimum_step_regen_v": 0.04681600000000008,
+        "result": "pass",
+        "target_code_map": [
+          {
+            "absolute_error_v": 0.0036410000000000053,
+            "actual_v": 0.783641,
+            "code": 14,
+            "control": "main",
+            "target_v": 0.78
+          },
+          {
+            "absolute_error_v": 0.007933999999999997,
+            "actual_v": 0.887934,
+            "code": 16,
+            "control": "main",
+            "target_v": 0.88
+          },
+          {
+            "absolute_error_v": 0.020790000000000086,
+            "actual_v": 1.00079,
+            "code": 18,
+            "control": "main",
+            "target_v": 0.98
+          },
+          {
+            "absolute_error_v": 0.022110000000000074,
+            "actual_v": 1.05789,
+            "code": 19,
+            "control": "main",
+            "target_v": 1.08
+          },
+          {
+            "absolute_error_v": 0.009839999999999849,
+            "actual_v": 1.17016,
+            "code": 21,
+            "control": "main",
+            "target_v": 1.18
+          },
+          {
+            "absolute_error_v": 0.015230000000000077,
+            "actual_v": 1.28477,
+            "code": 23,
+            "control": "main",
+            "target_v": 1.3
+          },
+          {
+            "absolute_error_v": 0.004709999999999992,
+            "actual_v": 1.39529,
+            "code": 25,
+            "control": "main",
+            "target_v": 1.4
+          },
+          {
+            "absolute_error_v": 0.009789999999999965,
+            "actual_v": 1.50979,
+            "code": 27,
+            "control": "main",
+            "target_v": 1.5
+          },
+          {
+            "absolute_error_v": 0.027120000000000033,
+            "actual_v": 1.22712,
+            "code": 22,
+            "control": "regen",
+            "target_v": 1.2
+          },
+          {
+            "absolute_error_v": 0.009740000000000082,
+            "actual_v": 1.28474,
+            "code": 23,
+            "control": "regen",
+            "target_v": 1.275
+          },
+          {
+            "absolute_error_v": 0.01167000000000007,
+            "actual_v": 1.33833,
+            "code": 24,
+            "control": "regen",
+            "target_v": 1.35
+          },
+          {
+            "absolute_error_v": 0.009749999999999925,
+            "actual_v": 1.50975,
+            "code": 27,
+            "control": "regen",
+            "target_v": 1.5
+          },
+          {
+            "absolute_error_v": 0.026270000000000016,
+            "actual_v": 1.62373,
+            "code": 29,
+            "control": "regen",
+            "target_v": 1.65
+          }
+        ]
+      },
+      {
+        "complement_sum_range_v": [
+          1.73713,
+          1.7413000000183316
+        ],
+        "endpoint_high_v": 1.74126,
+        "endpoint_low_v": 1.83316e-11,
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "maximum_reference_power_w": 0.00131768,
+        "maximum_step_main_v": 0.05726000000000009,
+        "maximum_step_regen_v": 0.05726000000000009,
+        "maximum_target_error_v": 0.027039999999999953,
+        "minimum_step_main_v": 0.05085899999999999,
+        "minimum_step_regen_v": 0.050853999999999955,
+        "result": "pass",
+        "target_code_map": [
+          {
+            "absolute_error_v": 0.006568999999999936,
+            "actual_v": 0.786569,
+            "code": 14,
+            "control": "main",
+            "target_v": 0.78
+          },
+          {
+            "absolute_error_v": 0.014264999999999972,
+            "actual_v": 0.894265,
+            "code": 16,
+            "control": "main",
+            "target_v": 0.88
+          },
+          {
+            "absolute_error_v": 0.027039999999999953,
+            "actual_v": 1.00704,
+            "code": 18,
+            "control": "main",
+            "target_v": 0.98
+          },
+          {
+            "absolute_error_v": 0.016260000000000163,
+            "actual_v": 1.06374,
+            "code": 19,
+            "control": "main",
+            "target_v": 1.08
+          },
+          {
+            "absolute_error_v": 0.0040199999999999125,
+            "actual_v": 1.17598,
+            "code": 21,
+            "control": "main",
+            "target_v": 1.18
+          },
+          {
+            "absolute_error_v": 0.01053000000000015,
+            "actual_v": 1.28947,
+            "code": 23,
+            "control": "main",
+            "target_v": 1.3
+          },
+          {
+            "absolute_error_v": 0.0005300000000001415,
+            "actual_v": 1.40053,
+            "code": 25,
+            "control": "main",
+            "target_v": 1.4
+          },
+          {
+            "absolute_error_v": 0.013949999999999907,
+            "actual_v": 1.51395,
+            "code": 27,
+            "control": "main",
+            "target_v": 1.5
+          },
+          {
+            "absolute_error_v": 0.024049999999999905,
+            "actual_v": 1.17595,
+            "code": 21,
+            "control": "regen",
+            "target_v": 1.2
+          },
+          {
+            "absolute_error_v": 0.014430000000000165,
+            "actual_v": 1.28943,
+            "code": 23,
+            "control": "regen",
+            "target_v": 1.275
+          },
+          {
+            "absolute_error_v": 0.006060000000000176,
+            "actual_v": 1.34394,
+            "code": 24,
+            "control": "regen",
+            "target_v": 1.35
+          },
+          {
+            "absolute_error_v": 0.013900000000000023,
+            "actual_v": 1.5139,
+            "code": 27,
+            "control": "regen",
+            "target_v": 1.5
+          },
+          {
+            "absolute_error_v": 0.023029999999999884,
+            "actual_v": 1.62697,
+            "code": 29,
+            "control": "regen",
+            "target_v": 1.65
+          }
+        ]
+      },
+      {
+        "complement_sum_range_v": [
+          1.719268,
+          1.7384320385199998
+        ],
+        "endpoint_high_v": 1.7384,
+        "endpoint_low_v": 2.03852e-06,
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "maximum_reference_power_w": 0.000884453,
+        "maximum_step_main_v": 0.059149999999999814,
+        "maximum_step_regen_v": 0.05913999999999997,
+        "maximum_target_error_v": 0.029189999999999827,
+        "minimum_step_main_v": 0.04365600000000003,
+        "minimum_step_regen_v": 0.043652000000000024,
+        "result": "pass",
+        "target_code_map": [
+          {
+            "absolute_error_v": 0.0009599999999999609,
+            "actual_v": 0.78096,
+            "code": 14,
+            "control": "main",
+            "target_v": 0.78
+          },
+          {
+            "absolute_error_v": 0.002597999999999989,
+            "actual_v": 0.882598,
+            "code": 16,
+            "control": "main",
+            "target_v": 0.88
+          },
+          {
+            "absolute_error_v": 0.015442999999999985,
+            "actual_v": 0.995443,
+            "code": 18,
+            "control": "main",
+            "target_v": 0.98
+          },
+          {
+            "absolute_error_v": 0.02717000000000014,
+            "actual_v": 1.05283,
+            "code": 19,
+            "control": "main",
+            "target_v": 1.08
+          },
+          {
+            "absolute_error_v": 0.014909999999999979,
+            "actual_v": 1.16509,
+            "code": 21,
+            "control": "main",
+            "target_v": 1.18
+          },
+          {
+            "absolute_error_v": 0.019419999999999993,
+            "actual_v": 1.28058,
+            "code": 23,
+            "control": "main",
+            "target_v": 1.3
+          },
+          {
+            "absolute_error_v": 0.00930999999999993,
+            "actual_v": 1.39069,
+            "code": 25,
+            "control": "main",
+            "target_v": 1.4
+          },
+          {
+            "absolute_error_v": 0.00607000000000002,
+            "actual_v": 1.50607,
+            "code": 27,
+            "control": "main",
+            "target_v": 1.5
+          },
+          {
+            "absolute_error_v": 0.02237,
+            "actual_v": 1.22237,
+            "code": 22,
+            "control": "regen",
+            "target_v": 1.2
+          },
+          {
+            "absolute_error_v": 0.005560000000000009,
+            "actual_v": 1.28056,
+            "code": 23,
+            "control": "regen",
+            "target_v": 1.275
+          },
+          {
+            "absolute_error_v": 0.01656000000000013,
+            "actual_v": 1.33344,
+            "code": 24,
+            "control": "regen",
+            "target_v": 1.35
+          },
+          {
+            "absolute_error_v": 0.00602999999999998,
+            "actual_v": 1.50603,
+            "code": 27,
+            "control": "regen",
+            "target_v": 1.5
+          },
+          {
+            "absolute_error_v": 0.029189999999999827,
+            "actual_v": 1.62081,
+            "code": 29,
+            "control": "regen",
+            "target_v": 1.65
+          }
+        ]
+      },
+      {
+        "complement_sum_range_v": [
+          1.6661920000000001,
+          1.726910031329
+        ],
+        "endpoint_high_v": 1.72687,
+        "endpoint_low_v": 3.1329e-08,
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "maximum_reference_power_w": 0.00126293,
+        "maximum_step_main_v": 0.0652299999999999,
+        "maximum_step_regen_v": 0.0652299999999999,
+        "maximum_target_error_v": 0.02598299999999998,
+        "minimum_step_main_v": 0.026478,
+        "minimum_step_regen_v": 0.026471000000000022,
+        "result": "pass",
+        "target_code_map": [
+          {
+            "absolute_error_v": 0.017241000000000062,
+            "actual_v": 0.762759,
+            "code": 14,
+            "control": "main",
+            "target_v": 0.78
+          },
+          {
+            "absolute_error_v": 0.02598299999999998,
+            "actual_v": 0.905983,
+            "code": 17,
+            "control": "main",
+            "target_v": 0.88
+          },
+          {
+            "absolute_error_v": 0.018224000000000018,
+            "actual_v": 0.961776,
+            "code": 18,
+            "control": "main",
+            "target_v": 0.98
+          },
+          {
+            "absolute_error_v": 0.006560000000000121,
+            "actual_v": 1.07344,
+            "code": 20,
+            "control": "main",
+            "target_v": 1.08
+          },
+          {
+            "absolute_error_v": 0.010430000000000161,
+            "actual_v": 1.19043,
+            "code": 22,
+            "control": "main",
+            "target_v": 1.18
+          },
+          {
+            "absolute_error_v": 0.00026999999999999247,
+            "actual_v": 1.30027,
+            "code": 24,
+            "control": "main",
+            "target_v": 1.3
+          },
+          {
+            "absolute_error_v": 0.017550000000000177,
+            "actual_v": 1.41755,
+            "code": 26,
+            "control": "main",
+            "target_v": 1.4
+          },
+          {
+            "absolute_error_v": 0.021130000000000093,
+            "actual_v": 1.47887,
+            "code": 27,
+            "control": "main",
+            "target_v": 1.5
+          },
+          {
+            "absolute_error_v": 0.009589999999999987,
+            "actual_v": 1.19041,
+            "code": 22,
+            "control": "regen",
+            "target_v": 1.2
+          },
+          {
+            "absolute_error_v": 0.023539999999999894,
+            "actual_v": 1.25146,
+            "code": 23,
+            "control": "regen",
+            "target_v": 1.275
+          },
+          {
+            "absolute_error_v": 0.008759999999999879,
+            "actual_v": 1.35876,
+            "code": 25,
+            "control": "regen",
+            "target_v": 1.35
+          },
+          {
+            "absolute_error_v": 0.021179999999999977,
+            "actual_v": 1.47882,
+            "code": 27,
+            "control": "regen",
+            "target_v": 1.5
+          },
+          {
+            "absolute_error_v": 0.011640000000000095,
+            "actual_v": 1.66164,
+            "code": 30,
+            "control": "regen",
+            "target_v": 1.65
+          }
+        ]
+      },
+      {
+        "complement_sum_range_v": [
+          1.687646,
+          1.7323500313489
+        ],
+        "endpoint_high_v": 1.73233,
+        "endpoint_low_v": 3.13489e-08,
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "maximum_reference_power_w": 0.00086422,
+        "maximum_step_main_v": 0.06255999999999995,
+        "maximum_step_regen_v": 0.06257000000000001,
+        "maximum_target_error_v": 0.027269999999999905,
+        "minimum_step_main_v": 0.03463499999999997,
+        "minimum_step_regen_v": 0.03463099999999997,
+        "result": "pass",
+        "target_code_map": [
+          {
+            "absolute_error_v": 0.010360000000000036,
+            "actual_v": 0.76964,
+            "code": 14,
+            "control": "main",
+            "target_v": 0.78
+          },
+          {
+            "absolute_error_v": 0.016297000000000006,
+            "actual_v": 0.863703,
+            "code": 16,
+            "control": "main",
+            "target_v": 0.88
+          },
+          {
+            "absolute_error_v": 0.00411499999999998,
+            "actual_v": 0.975885,
+            "code": 18,
+            "control": "main",
+            "target_v": 0.98
+          },
+          {
+            "absolute_error_v": 0.007949999999999902,
+            "actual_v": 1.08795,
+            "code": 20,
+            "control": "main",
+            "target_v": 1.08
+          },
+          {
+            "absolute_error_v": 0.023889999999999967,
+            "actual_v": 1.20389,
+            "code": 22,
+            "control": "main",
+            "target_v": 1.18
+          },
+          {
+            "absolute_error_v": 0.01480999999999999,
+            "actual_v": 1.31481,
+            "code": 24,
+            "control": "main",
+            "target_v": 1.3
+          },
+          {
+            "absolute_error_v": 0.027269999999999905,
+            "actual_v": 1.37273,
+            "code": 25,
+            "control": "main",
+            "target_v": 1.4
+          },
+          {
+            "absolute_error_v": 0.009179999999999966,
+            "actual_v": 1.49082,
+            "code": 27,
+            "control": "main",
+            "target_v": 1.5
+          },
+          {
+            "absolute_error_v": 0.00387000000000004,
+            "actual_v": 1.20387,
+            "code": 22,
+            "control": "regen",
+            "target_v": 1.2
+          },
+          {
+            "absolute_error_v": 0.011309999999999931,
+            "actual_v": 1.26369,
+            "code": 23,
+            "control": "regen",
+            "target_v": 1.275
+          },
+          {
+            "absolute_error_v": 0.022710000000000008,
+            "actual_v": 1.37271,
+            "code": 25,
+            "control": "regen",
+            "target_v": 1.35
+          },
+          {
+            "absolute_error_v": 0.00920999999999994,
+            "actual_v": 1.49079,
+            "code": 27,
+            "control": "regen",
+            "target_v": 1.5
+          },
+          {
+            "absolute_error_v": 0.01976,
+            "actual_v": 1.66976,
+            "code": 30,
+            "control": "regen",
+            "target_v": 1.65
+          }
+        ]
+      }
+    ],
+    "output_load_f": 1e-12,
+    "passing_dc_environment_count": 5,
+    "passing_settling_case_count": 5,
+    "pex_sha256": "c00109ba821125dd07e2f0dff005fe01a573d0370d47a7f1bf29a99e09000339",
+    "reference_range_v": [
+      0.0,
+      1.8
+    ],
+    "result": "pass",
+    "schema_version": 1,
+    "settling_case_count": 5,
+    "settling_cases": [
+      {
+        "environment": [
+          "typical",
+          "res_typical",
+          3.3,
+          27
+        ],
+        "main_at_50n": 0.887932,
+        "main_before": 0.254165,
+        "main_error_at_50ns_v": 1.999999999946489e-06,
+        "main_final": 0.887934,
+        "regen_at_50n": 0.841118,
+        "regen_before": 0.275164,
+        "regen_error_at_50ns_v": 9.999999999177334e-07,
+        "regen_final": 0.841119,
+        "result": "pass"
+      },
+      {
+        "environment": [
+          "ff",
+          "res_ff",
+          3.63,
+          -40
+        ],
+        "main_at_50n": 0.894264,
+        "main_before": 0.307327,
+        "main_error_at_50ns_v": 1.0000000000287557e-06,
+        "main_final": 0.894265,
+        "regen_at_50n": 0.843411,
+        "regen_before": 0.332696,
+        "regen_error_at_50ns_v": 0.0,
+        "regen_final": 0.843411,
+        "result": "pass"
+      },
+      {
+        "environment": [
+          "ff",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "main_at_50n": 0.882582,
+        "main_before": 0.216632,
+        "main_error_at_50ns_v": 1.6000000000016e-05,
+        "main_final": 0.882598,
+        "regen_at_50n": 0.838934,
+        "regen_before": 0.235051,
+        "regen_error_at_50ns_v": 1.3000000000040757e-05,
+        "regen_final": 0.838947,
+        "result": "pass"
+      },
+      {
+        "environment": [
+          "ss",
+          "res_ff",
+          2.97,
+          125
+        ],
+        "main_at_50n": 0.849781,
+        "main_before": 0.290153,
+        "main_error_at_50ns_v": 0.0,
+        "main_final": 0.849781,
+        "regen_at_50n": 0.823317,
+        "regen_before": 0.302551,
+        "regen_error_at_50ns_v": 0.0,
+        "regen_final": 0.823317,
+        "result": "pass"
+      },
+      {
+        "environment": [
+          "ss",
+          "res_ss",
+          2.97,
+          125
+        ],
+        "main_at_50n": 0.863685,
+        "main_before": 0.20892,
+        "main_error_at_50ns_v": 1.799999999996249e-05,
+        "main_final": 0.863703,
+        "regen_at_50n": 0.829062,
+        "regen_before": 0.223707,
+        "regen_error_at_50ns_v": 1.4000000000069512e-05,
+        "regen_final": 0.829076,
+        "result": "pass"
+      }
+    ],
+    "settling_deadline_s": 5e-08,
+    "settling_error_limit_v": 0.005,
+    "settling_testbench_sha256": "4f0b4574b1299eefec3686605e8cb91c398acaaaa33dfff0c57231e2652142fc",
+    "shared_evidence_source_sha256": "ca49d14d8017b6a9f71ab08515194d981ea93936ed0ab3c7d22a64841438ba58",
+    "simulation_source_sha256": "d0b781b2a8740c143777782076d280b0f3f4bddb0d5b343825c0ebd0e1986b1f",
+    "target_error_limit_v": 0.04
+  },
+  "simulation_to_pex_identity": true
+}

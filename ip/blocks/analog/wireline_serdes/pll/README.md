@@ -5,10 +5,13 @@ receiver. The required oscillator rate is 1.25 GHz, not the 2.5 GT/s serial
 rate. It is not yet a PLL macro: the selected bank is now only two complete
 split-control half-rate oscillator parents. Both are physically closed, and
 their 293/400-case public-model PVT union covers the required target and the
-+/-2% design band in 5/5 environments. The two bias generators, calibration
-controller, selector composition, divider, loop, and analog-top integration
-remain open. The earlier fixed-control and 2.5 GHz banks are retained as
-fallback/falsification evidence rather than selected implementation members.
++/-2% design band in 5/5 environments. A reused physical dual 5-bit R-2R DAC
+is now qualified as the realizable main/regenerative bias source; the selected
+architecture uses one instance per independently power-gated VCO parent. The
+two-DAC/two-VCO/selector parent, calibration controller, divider, loop, and
+analog-top integration remain open. The earlier fixed-control and 2.5 GHz
+banks are retained as fallback/falsification evidence rather than selected
+implementation members.
 
 `ring_vco.spice` is a three-stage differential CML ring followed by an
 isolating CML output buffer. Each delay cell has a driven differential pair, a
@@ -182,8 +185,23 @@ and remains in `half_rate_vco_full_bank_result.json` as corroborating evidence,
 but it is not the selected implementation. Removing eight unnecessary parents
 reduces inactive loading, power-gating state, routing, and selector complexity;
 the already closed two-input selector is the correct next boundary. This closes
-bare-bank deterministic PVT range, not bias generation, selection loading,
-noise, or the PLL loop.
+bare-bank deterministic PVT range, not the two-instance bias/reference
+composition, selection loading, noise, or the PLL loop.
+
+The realizable bias source reuses the exact physically closed dual-channel
+5-bit R-2R phase-control DAC with 0 and 1.8 V references. A fresh VCO-role flow
+regenerates its layout and requires zero DRC, unique LVS, full-RC extraction,
+and simulation against the identical PEX. Across 160 DC cases in five VCO
+environments, all requested main-control points from 0.78 to 1.50 V and
+regenerative-control points from 1.20 to 1.65 V have a physical code within
+29.2 mV. The worst step is 65.3 mV, the lowest high endpoint is 1.7269 V, and
+maximum reference power is 1.318 mW. Five worst-carry transients into 1 pF per
+output settle within 18 uV of their final values by 50 ns. The physical PEX has
+640 resistors and 265 capacitors. `vco_bias_dac_result.json` retains the full
+code maps and exact identities; `layout_vco_bias_dac.png` is the emitted-GDS
+review image. This proves a realizable bias primitive, not the routing,
+reference integrity, simultaneous behavior, or sequencing of the two-instance
+bank composition.
 
 Phase noise, statistical noise/mismatch startup, supply pushing, safe band
 selection across the complete bank, inactive member loading, divider loading,
@@ -265,12 +283,16 @@ band subset, and also combines them by checked hash with the unchanged seven-
 parent evidence. Its primary selected-bank gate requires two unique PEX
 identities, exactly 400 selected cases, and full target/design-band coverage in
 5/5; the ten-parent 880-case aggregate is a corroborating output.
+`run_vco_bias_dac.sh` regenerates and physically closes the reused dual R-2R
+DAC, runs 160 extracted DC cases plus five conservative 1 pF worst-carry
+transients, and emits the environment-specific target-to-code map.
 
 `run_schematic.sh` runs the 12-environment adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
-physical milestone is to connect the two qualified half-rate members to the
-closed two-input selector with realizable bias generation, power gating, and a
-controller that enforces the proven nonoverlap sequence. After that come
+physical milestone is to place and route two instances of the qualified bias
+DAC with the two qualified half-rate members and closed two-input selector,
+including power gating, reference distribution, and a controller that enforces
+the proven nonoverlap sequence. After that come
 mismatch/statistical startup, supply-pushing, and phase-noise simulations. The
 divider, PFD, charge pump, loop filter, lock detector, and external-clock
 bypass remain separate unimplemented boundaries.

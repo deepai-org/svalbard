@@ -112,6 +112,18 @@ often slows a ring because intrinsic and junction capacitance rise along with
 transconductance; the extracted CML VCO work instead recovered the difficult
 corner with asymmetric tail-current allocation.
 
+Do not assume that additional active width can recover a routed speed miss.
+In a retained full-RC parent deck, scaling input, latch, and tail devices over a
+wide range increased current but reduced oscillation frequency in the limiting
+hot environments. That result is diagnostic, not a new physical qualification:
+it says that added device capacitance and the existing parent interconnect are
+dominant enough that brute-force transconductance is the wrong lever. When this
+happens, stop increasing width and compare structural alternatives: shorten the
+regenerative loop, compact or integrate repeated stages, reduce high-swing
+route length, remove unnecessary via-stack capacitance, or revise the stage
+topology. Re-run the screen after each single-mechanism change, then realize the
+winner as legal geometry.
+
 Use a modified full-RC deck only as a bounded candidate screen. Preserve every
 extracted routing resistor and capacitor, and when changing active width also
 scale explicit source/drain area and perimeter parameters. Such a deck answers
@@ -353,6 +365,25 @@ separate primitive isolation from hierarchy-level all-leaf and handoff checks.
 None of those leaf or selector claims alone closes a physically routed
 oscillator-bank boundary.
 
+Evaluate a tuning bank as a set of realizable points, not as the numeric span
+between its slowest and fastest passing samples. Within each physical member,
+form intervals only between adjacent control settings that both pass all
+electrical gates; merge overlapping intervals across members; then ask whether
+the union continuously covers the required and design bands. A global minimum
+below the target and a global maximum above it can still hide an unreachable
+frequency hole. Preserve the selected member and control at each boundary so a
+future calibration algorithm has an implementable mapping rather than an
+existence claim.
+
+Physical legality is necessary but orthogonal to electrical coverage. A bank
+whose every complete parent is independently zero-DRC, uniquely LVS-matched,
+and full-RC-extracted can still fail most PVT environments after parent-owned
+feedback, supply, startup, and selector-load parasitics are included. Therefore
+run the aggregate bank calibration against each complete parent PEX before
+calling the coarse-member set closed. If coverage is lost only at this
+boundary, retarget the physical architecture or member geometries; do not cite
+the clean member count as evidence that the bank works.
+
 Reuse a physically closed weighted-summing cell as a selector when its endpoint
 controls truly shut off the unselected tail and its output stage isolates the
 shared node. Qualify that role separately at the higher clock rate: keep the
@@ -429,6 +460,16 @@ control beyond its proven range. Select another already legal coarse geometry,
 regenerate its devices and every geometry-dependent strap, update the intended
 schematic, and repeat DRC/LVS/PEX. Parent interconnect is part of oscillator
 design, not a parasitic correction applied after band selection.
+
+When every legal coarse member shifts in the same direction at the complete
+parent boundary, treat that as an architectural placement/routing result rather
+than twelve independent sizing misses. Measure where extracted resistance and
+capacitance accumulated, and compare the delay of parent-owned feedback and
+stage-to-stage routes with the delay of the active tiles. Long detours on a
+different upper metal can be worse despite lower sheet resistance because via
+stacks, fringe capacitance, and total span also matter. Prefer a compact parent
+floorplan that keeps the regenerative path local; choose routing from extracted
+delay evidence, not from metal-number intuition.
 
 A seeded initial condition proves attraction to the oscillating trajectory; it
 does not prove autonomous startup. Separate three increasingly strong claims:

@@ -12,9 +12,15 @@ from pathlib import Path
 
 MAIN_CONTROLS = (0.78, 0.88, 0.98, 1.08, 1.18, 1.30, 1.40, 1.50)
 REGEN_CONTROLS = (1.20, 1.275, 1.35, 1.50, 1.65)
-ENVIRONMENTS = (
+FOCUSED_ENVIRONMENTS = (
     ("ss", "res_ff", 2.97, 125),
     ("ss", "res_ss", 2.97, 125),
+)
+FULL_ENVIRONMENTS = (
+    ("typical", "res_typical", 3.30, 27),
+    ("ff", "res_ff", 3.63, -40),
+    ("ff", "res_ss", 2.97, 125),
+    *FOCUSED_ENVIRONMENTS,
 )
 MEASURE_NAMES = (
     "startup_time", "period", "period_late", "diff_high", "diff_low",
@@ -59,12 +65,20 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--pex-subckt", required=True)
     parser.add_argument("--claim", required=True)
+    parser.add_argument(
+        "--environment-set", choices=("focused", "full"), default="focused",
+    )
     args = parser.parse_args()
+    environments_to_run = (
+        FULL_ENVIRONMENTS
+        if args.environment_set == "full"
+        else FOCUSED_ENVIRONMENTS
+    )
     args.work.mkdir(parents=True, exist_ok=True)
     template = (args.source / "split_control_vco_tb.spice.in").read_text()
     specs = [
         (environment, main_control, regen_control)
-        for environment in ENVIRONMENTS
+        for environment in environments_to_run
         for regen_control in REGEN_CONTROLS
         for main_control in MAIN_CONTROLS
     ]
@@ -121,7 +135,7 @@ def main() -> None:
         cases = list(executor.map(simulate, specs))
 
     environments = []
-    for environment in ENVIRONMENTS:
+    for environment in environments_to_run:
         all_intervals: list[tuple[float, float]] = []
         regen_slices = []
         for regen_control in REGEN_CONTROLS:
@@ -174,7 +188,12 @@ def main() -> None:
     result = {
         "schema_version": 1,
         "claim": args.claim,
-        "limitation": "candidate screen in two formerly open environments",
+        "environment_set": args.environment_set,
+        "limitation": (
+            "candidate screen in two formerly open environments"
+            if args.environment_set == "focused"
+            else "five-environment split-member qualification input"
+        ),
         "initial_condition": "none",
         "transient_uic": False,
         "case_count": len(cases),
@@ -190,6 +209,7 @@ def main() -> None:
         "parent_layout_source_sha256": digest(args.source / "vco_band_layout.tcl"),
         "schematic_source_sha256": digest(args.source / "split_control_vco.spice"),
         "testbench_source_sha256": digest(args.source / "split_control_vco_tb.spice.in"),
+        "simulation_source_sha256": digest(args.source / "screen_split_control_vco.py"),
         "result": "screen_complete" if physical_pass else "fail",
     }
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")

@@ -405,6 +405,17 @@ separate primitive isolation from hierarchy-level all-leaf and handoff checks.
 None of those leaf or selector claims alone closes a physically routed
 oscillator-bank boundary.
 
+Reuse an expensive unchanged qualification by hash when its scope still
+matches; do not rerun it merely to place every case in one process invocation.
+The composition checker must verify the source evidence hash, physical member
+count and status, PEX-to-simulation identities, initial-condition policy,
+environment-set equality, and exact expected case count before merging any
+intervals. Require all physical PEX identities across old and new evidence to
+be distinct. Raw extractor text can vary in harmless ordering or formatting
+between runs, so bind every simulation to the exact PEX from its own run and
+check repeated electrical cases semantically: classification, frequency,
+drift, startup, current, and bounded numeric tolerance on printed measurements.
+
 Evaluate a tuning bank as a set of realizable points, not as the numeric span
 between its slowest and fastest passing samples. Within each physical member,
 form intervals only between adjacent control settings that both pass all

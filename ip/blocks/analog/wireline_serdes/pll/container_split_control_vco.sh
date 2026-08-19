@@ -3,6 +3,11 @@ set -euo pipefail
 cd /work
 
 export VCO_SPLIT_CONTROL=1
+environment_set="${SPLIT_ENVIRONMENT_SET:-focused}"
+if [[ "$environment_set" != "focused" && "$environment_set" != "full" ]]; then
+  printf 'invalid SPLIT_ENVIRONMENT_SET: %s\n' "$environment_set" >&2
+  exit 2
+fi
 magic -dnull -noconsole -rcfile "$PDKPATH/libs.tech/magic/$PDK.magicrc" \
   /src/pll/startup_assist_layout.tcl > /work/split-assist-layout.log 2>&1
 
@@ -17,6 +22,10 @@ run_variant() {
   export VCO_MAIN_TAIL_W="$5"
   export VCO_LATCH_TAIL_W="$6"
   local tag="split${suffix:-_base}"
+  local report_suffix="screen"
+  if [[ "$environment_set" == "full" ]]; then
+    report_suffix="full-screen"
+  fi
   export VCO_BAND_RENDER_PATH="/work/layout-${tag}-control-vco.png"
 
   magic -dnull -noconsole -rcfile "$PDKPATH/libs.tech/magic/$PDK.magicrc" \
@@ -48,10 +57,11 @@ run_variant() {
     --pex "/work/${tag}-control-vco.pex.spice" \
     --pex-subckt "${VCO_BAND_CELL_NAME}_pex" \
     --claim "physical_${tag}_tail_control_vco_margin_screen" \
+    --environment-set "$environment_set" \
     --drc "/work/${tag}-control-vco-drc.rpt" \
     --lvs "/work/${tag}-control-vco-lvs.out" \
     --render "$VCO_BAND_RENDER_PATH" \
-    --output "/work/${tag}-control-vco-screen.json"
+    --output "/work/${tag}-control-vco-${report_suffix}.json"
 }
 
 # Slow-device/slow-resistor and slow-device/fast-resistor coarse topologies.
@@ -59,8 +69,17 @@ run_variant "" 4.75 3.2 4.0 15.0 6.0
 run_variant "_fast" 4.48 3.2 4.0 15.0 6.0
 run_variant "_gain" 3.45 4.0 6.5 10.0 4.0
 
-python3 /src/pll/combine_split_control_vco.py \
-  --inputs /work/split_base-control-vco-screen.json \
-    /work/split_fast-control-vco-screen.json \
-    /work/split_gain-control-vco-screen.json \
-  --output /work/split-control-bank-screen.json
+if [[ "$environment_set" == "focused" ]]; then
+  python3 /src/pll/combine_split_control_vco.py \
+    --inputs /work/split_base-control-vco-screen.json \
+      /work/split_fast-control-vco-screen.json \
+      /work/split_gain-control-vco-screen.json \
+    --output /work/split-control-bank-screen.json
+else
+  python3 /src/pll/combine_half_rate_vco_full_bank.py \
+    --baseline /src/pll/half_rate_vco_bank_result.json \
+    --split-inputs /work/split_base-control-vco-full-screen.json \
+      /work/split_fast-control-vco-full-screen.json \
+      /work/split_gain-control-vco-full-screen.json \
+    --output /work/half-rate-vco-full-bank-result.json
+fi

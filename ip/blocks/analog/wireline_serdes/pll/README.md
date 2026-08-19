@@ -2,14 +2,13 @@
 
 This directory develops the autonomous clock source for the dual-edge PCIe
 receiver. The required oscillator rate is 1.25 GHz, not the 2.5 GT/s serial
-rate. It is not yet a PLL macro: seven complete half-rate oscillator parents
-are physically closed and cover the required target in the public-model PVT
-set. Three additional split-control parents are physically closed and close
-the two previously missing design-margin environments in a focused screen;
-the full five-environment rerun, selector, divider, loop, and analog-top
-integration remain open. The earlier 2.5 GHz work is retained as an overspeed
-experiment and as evidence that GF180 parent interconnect and hot/slow device
-speed cannot be ignored.
+rate. It is not yet a PLL macro: ten complete half-rate oscillator parents are
+physically closed and their hash-bound 880-case public-model PVT evidence
+covers the required target and the +/-2% design band in 5/5 environments. The
+two bias generators, calibration controller, selector composition, divider,
+loop, and analog-top integration remain open. The earlier 2.5 GHz work is
+retained as an overspeed experiment and as evidence that GF180 parent
+interconnect and hot/slow device speed cannot be ignored.
 
 `ring_vco.spice` is a three-stage differential CML ring followed by an
 isolating CML output buffer. Each delay cell has a driven differential pair, a
@@ -161,12 +160,23 @@ and 336 capacitors. Their 240-case no-`.ic`, no-`uic` screen has 84 passing
 cases. The aggregate valid intervals cover 1.225--1.275 GHz in both formerly
 open 2.97 V, 125 C slow-device environments: slow/fast-resistor reaches
 1.2859 GHz and slow/slow-resistor reaches 1.2833 GHz. This establishes the
-physical margin mechanism, but it is explicitly a two-environment candidate
-screen; it does not upgrade the existing five-environment bank claim until the
-combined bank is rerun everywhere. `split_control_vco_result.json` binds the
-three distinct PEX and GDS-render hashes. The usable emitted-GDS images are
+physical margin mechanism. `split_control_vco_result.json` binds the three
+distinct PEX and GDS-render hashes for that focused milestone. The usable emitted-GDS images are
 `layout_split_control_vco.png`, `layout_split_fast_control_vco.png`, and
 `layout_split_gain_control_vco.png`.
+
+The subsequent full-PVT run freshly regenerated those three parents and ran
+200 extracted cases per member across all five environments. It reproduced all
+240 shared hot-corner classifications and frequencies from the focused run;
+only printed swing roundoff changed, by at most 1 uV. Hash-bound composition
+with the unchanged seven-parent 280-case result produces ten unique physical
+PEX identities and 610 passing cases out of 880. The realizable interval union
+covers 1.225--1.275 GHz in 5/5 environments. The two formerly limiting upper
+endpoints reach 1.2922 GHz for slow/fast-resistor and 1.2833 GHz for
+slow/slow-resistor. `half_rate_vco_full_bank_result.json` is the compact
+design-guardband qualification; the three `split_*full-screen.json` files
+retain every new numeric case. This closes bare-bank deterministic PVT range,
+not bias generation, selection loading, noise, or the PLL loop.
 
 Phase noise, statistical noise/mismatch startup, supply pushing, safe band
 selection across the complete bank, inactive member loading, divider loading,
@@ -242,14 +252,17 @@ checks every DRC/LVS/PEX identity, runs the 280-case matrix, and emits the
 numeric result plus visual index. `run_split_control_vco.sh` regenerates the
 three independently biased parents, closes each physical boundary, runs the
 focused 240-case hot-corner screen, and rejects duplicate PEX identities in
-its compact aggregate result.
+its compact aggregate result. `run_half_rate_vco_full_bank.sh` expands the
+three new parents to 600 five-environment cases and combines them by checked
+hash with the unchanged seven-parent result; its executable gate requires ten
+unique PEX identities, exactly 880 cases, and full target/design-band coverage
+in 5/5 environments.
 
 `run_schematic.sh` runs the 12-environment adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
-physical milestone is to rerun the winning split-control members with the
-complete five-environment bank, then connect the qualified half-rate members
-to the closed tree with realizable bias generation, power gating, and a
-controller that enforces the proven nonoverlap sequence. After that come
+physical milestone is to connect the qualified half-rate members to the closed
+tree with realizable bias generation, power gating, and a controller that
+enforces the proven nonoverlap sequence. After that come
 mismatch/statistical startup, supply-pushing, and phase-noise simulations. The
 divider, PFD, charge pump, loop filter, lock detector, and external-clock
 bypass remain separate unimplemented boundaries.

@@ -2,8 +2,17 @@
 
 This guide records the repeatable workflow used for the GF180 wireline SerDes
 cells. It is a practical pre-silicon method for turning behavioral intent into
-a transistor schematic, generated physical layout, and reviewable extracted
-evidence. It is not a substitute for provider signoff or measured silicon.
+an intended transistor/passive circuit, generated physical layout, and
+reviewable extracted evidence. It is not a substitute for provider signoff or
+measured silicon.
+
+Closure is always relative to a named physical boundary. A leaf can be closed
+while its parent remains only a schematic composition. Instantiating several
+leaf PEX subcircuits in SPICE proves an electrical composition under the stated
+interconnect model; it does not prove that a placed-and-routed parent exists.
+Call a hierarchy physically closed only after its actual parent-owned routes,
+ports, and shared resources pass DRC, unique pin-resolved LVS, full-RC
+extraction, and the boundary-level electrical contract.
 
 ## 1. Freeze an executable intent contract
 
@@ -19,6 +28,15 @@ Write the electrical contract before selecting dimensions or drawing layout:
 Turn these into measurements in the testbench. A passing waveform image is not
 an executable contract. Preserve failed out-of-envelope cases rather than
 moving limits after seeing results.
+
+Keep circuit intent separate from layout strategy. The circuit contract says
+which transistors and passives may be used, which topology or topology family
+is intended, what can be programmed, and which behavior must hold. The layout
+generator is free to optimize fingering, placement, matching pattern, routing,
+and legal passive geometry only inside those constraints. If layout-driven
+changes alter device count, connectivity, terminal order, or control semantics,
+they are circuit revisions and must re-enter schematic verification rather than
+being hidden as physical optimization.
 
 Add a model-provenance contract beside the electrical one. Record which PDK
 models, extraction deck, simulator, pad/package/channel models, and variation
@@ -147,6 +165,16 @@ inter-level routing channels, and keep every spare input at a defined quiet
 voltage. The extra cells cost area and static current, so include them in the
 top-level budget instead of treating balance as free.
 
+Make a physical boundary drawing before composing extracted children in a
+system testbench. It must show child origins, pin layers, differential escape
+tracks, every via-stack footprint on all intermediate metals, supply and bias
+spines, startup/reset devices, and the parent port order. This catches a common
+false milestone: a hierarchy whose leaf circuits work together in SPICE but
+whose real parent routes have never been drawn or extracted. Build the smallest
+useful parent first--for example, one oscillator band containing its repeated
+delay cells, output buffer, and startup assist--then replicate that verified
+macro at the bank level.
+
 ## 5. Generate layout from parameterized devices
 
 Use the PDK's Magic parameterized cells for active devices and resistors, then
@@ -171,6 +199,12 @@ the child port, place the label on that conductor, and prove the resulting pin
 order with unique LVS. Keep the repeated child cell immutable; correct assembly
 routing in the parent rather than editing fifteen nominally identical copies.
 
+Use the schematic hierarchy and physical hierarchy as one interface contract.
+Give each parent a single canonical pin order, instantiate the same child
+subcircuits used to generate the layout, and reject wrappers that silently
+rename, swap, or omit differential terminals. An LVS match against a convenient
+alternate schematic is not evidence for the circuit that is later simulated.
+
 Keep generator helper names out of the layout tool's command namespace. A Tcl
 procedure named after a built-in command can make an otherwise sound generator
 fail only when that command is reached. Use narrow names such as `make_port`,
@@ -178,12 +212,13 @@ run a minimal generation smoke test before the expensive physical flow, and
 make the preflight verify that every declared source and wrapper is present and
 executable.
 
-Use a second layout database/viewer when it adds independent evidence. KLayout
+Use a second layout database/viewer when it adds complementary evidence. KLayout
 is useful in batch mode for deterministic GDS/OASIS reads, hierarchy and layer
 inspection, renders, XOR/diff, net tracing, and custom geometry checks. In the
 current GF180 flow it renders the emitted GDS and makes generator variants easy
-to compare; Magic and Netgen remain the qualified DRC/LVS authorities until a
-reviewed GF180 KLayout deck is added. Do not call two tools independent when
+to compare; Magic and Netgen remain the project DRC/LVS authorities until a
+reviewed GF180 KLayout deck is added. None of these project checks is provider
+signoff. Do not call two tools independent when
 they merely wrap the same rule deck or extraction result.
 
 Prefer one repeated unit geometry inside a matching array when programmable
@@ -255,6 +290,13 @@ reuse must include a SHA-256 of every externally included DUT netlist; comparing
 only the testbench text can silently reuse stale simulations after a layout or
 schematic change.
 
+Bind the electrical result to the exact physical result. The checked summary
+should contain hashes of the generator sources, intended schematic, emitted
+layout or its deterministic physical report, and the precise PEX file included
+by the simulator. The physical checker and electrical checker must agree on the
+PEX hash. Copying or regenerating a similarly named extraction between those
+steps creates an unreviewable identity gap even when both checks pass.
+
 For clocked dynamic cells, use an alternating-bit sequence and probe internal
 nodes through reset, acquisition, regeneration, capture, and hold. A repeated
 symbol can hide retained charge, while output-only samples cannot distinguish
@@ -299,27 +341,17 @@ For a physical tuning bank, preserve three different results in the evidence:
   low and high design limits, with useful distance from control and member
   endpoints.
 
-Do not collapse those into a single pass bit. The current VCO example contains
-one center tile plus eleven added variants: twelve physical layouts in total.
-The eleven added variants are individually DRC clean, unique-LVS, and full-RC
-extracted, and the aggregate bank closes 5/5 declared target environments with
-full +/-2% frequency guardband in 5/5. These counts come from the checked-in
-[VCO bank evidence](../../ip/blocks/analog/wireline_serdes/pll/vco_bank_result.json),
-not from the earlier perturbed-deck screen. Keep evolving project counts in
-machine-readable evidence and block status, not only in this workflow guide.
-The physically extracted two-input selector primitive now has a safe
-break-before-make transition and has been composed directly with two complete
-extracted VCOs. The checked cases include powered-down and live-aggressor
-neighbors, both selected branches, and startup of a newly selected ring; the
-worst powered-down feedthrough is recorded in
-[selector composition evidence](../../ip/blocks/analog/wireline_serdes/pll/selector_vco_composed_result.json).
-That closes the primitive. The subsequent balanced twelve-used/four-spare tree
-is also physically closed and passes its extracted all-leaf/PVT and full-depth
-handoff contract; its checked result is
-[selector-tree evidence](../../ip/blocks/analog/wireline_serdes/pll/selector_tree_result.json).
-This still does not close the oscillator bank composition: the twelve extracted
-VCOs, startup assists, power controls, and sequencing controller must be wired
-to the tree and verified together.
+Do not collapse those into a single pass bit. Keep evolving member counts,
+corner counts, and measured extrema in machine-readable evidence and the
+[living analog status](pcie-analog-status.md), rather than copying numbers into
+this workflow where they become stale. For a concrete example, the checked-in
+[VCO bank evidence](../../ip/blocks/analog/wireline_serdes/pll/vco_bank_result.json)
+separates member legality from aggregate range, while the
+[selector composition evidence](../../ip/blocks/analog/wireline_serdes/pll/selector_vco_composed_result.json)
+and [selector-tree evidence](../../ip/blocks/analog/wireline_serdes/pll/selector_tree_result.json)
+separate primitive isolation from hierarchy-level all-leaf and handoff checks.
+None of those leaf or selector claims alone closes a physically routed
+oscillator-bank boundary.
 
 Reuse a physically closed weighted-summing cell as a selector when its endpoint
 controls truly shut off the unselected tail and its output stage isolates the
@@ -343,6 +375,14 @@ control pins are only hardware capability, not proof that forbidden overlap is
 unreachable. Preserve physical-only DRC/LVS/PEX evidence separately from the
 all-leaf extracted switching result so a simulation failure cannot be hidden by
 a clean layout—or vice versa.
+
+At each composed boundary, maintain a claim matrix rather than a single
+"validated" label. At minimum, distinguish topology/polarity, DRC, unique LVS,
+PEX identity, nominal function, PVT calibration range, startup/reset, shutdown,
+handoff, aggressor isolation, current/headroom, jitter/noise, and statistical or
+model-validity limits. Mark unrun rows as unrun. A lower-level pass can be cited
+as inherited evidence only when the parent preserves the relevant loading,
+supply, substrate, temperature, and control assumptions.
 
 ### Proven physical iteration ladder
 
@@ -401,6 +441,15 @@ useful control but is not by itself statistical evidence: numerical asymmetry
 can start a mathematically symmetric oscillator. The assist also needs reset
 sequencing and a controller-visible completion or timeout contract.
 
+Repeat startup at the first physically routed boundary that contains the whole
+regenerative loop. A startup assist proven beside an electrically composed loop
+is useful leaf evidence, but parent interconnect, output-buffer loading, power
+spines, and selector input loading can change both loop gain and the initial
+imbalance. At that boundary, ramp the real supplies without `.ic` or `uic`, test
+both kick polarities, verify the assist releases, measure late steady state, and
+command shutdown long enough to prove current and output activity decay to the
+declared safe state.
+
 Keep startup, supply pushing, phase noise/jitter, mismatch, safe bank selection,
 and closed-loop PLL behavior as separate claims. Fit deliberate delay
 capacitance from at least two DRC/LVS/PEX-clean physical points;
@@ -422,6 +471,12 @@ counts, but keep the drawing itself unobscured. Visual review catches long
 sensitive nodes, remote tails, sparse contacts, nonlocal loads, and asymmetries
 that netlist comparison intentionally ignores.
 
+Render during development as well as at the end. A quick image after placement,
+after sensitive-net escape, and after supply routing often exposes unit mistakes,
+overlapped hierarchy, excessive route span, or accidental asymmetry before an
+expensive extraction. The final committed image must come from the same emitted
+layout whose hashes and reports support the evidence.
+
 ## 10. Make the evidence reproducible and bounded
 
 Every committed flow should:
@@ -435,6 +490,7 @@ Every committed flow should:
 - retain failed scratch and delete successful intermediates only after copying a
   compact numeric summary and review image;
 - bind summaries to source and result hashes;
+- cross-check the physical and simulation records against the same PEX hash;
 - run repository validation before committing.
 
 Use `scripts/run_analog_flow.sh` for the common host boundary. A block wrapper

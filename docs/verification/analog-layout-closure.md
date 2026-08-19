@@ -590,6 +590,9 @@ Every committed flow should:
 - write generated decks, logs, PEX, GDS, and waveforms to scratch;
 - retain failed scratch and delete successful intermediates only after copying a
   compact numeric summary and review image;
+- snapshot or hash the mounted sources before launch and reject the result if
+  they change before completion; a read-only container bind does not stop the
+  host from changing a script while the shell is still reading it;
 - bind summaries to source and result hashes;
 - cross-check the physical and simulation records against the same PEX hash;
 - run repository validation before committing.

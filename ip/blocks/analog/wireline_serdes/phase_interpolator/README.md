@@ -26,4 +26,13 @@ environments with 2.80 ps worst placement error. The controls still do not
 determine their own settings: integration needs a phase/reference measurement,
 a search controller, glitch-safe updating, and retained codes.
 
+The same physical macro now has a separately tested endpoint role as the PLL
+bank's two-input CML selector. With one weighting tail at zero, the other at a
+calibrated bias, and the restoring buffer enabled, its extracted 2.5 GHz sweep
+passes both branches and three common modes in 5/5 environments despite a live
+2.0 GHz unselected aggressor. The PLL flow also proves a 0.95 ns
+break-before-make interval with the buffer disabled. This reuse does not turn
+the phase-interpolation contract into a selection proof; the independent
+selector evidence and sequencing constraints remain mandatory.
+
 This is pre-silicon public-model evidence, not a PCIe-qualified clocking macro. It still needs statistical mismatch with provider-approved models, supply-noise/jitter sensitivity, clock-tree and sampler co-simulation, post-fill extraction, EM/IR and reliability review, and silicon correlation before freeze.

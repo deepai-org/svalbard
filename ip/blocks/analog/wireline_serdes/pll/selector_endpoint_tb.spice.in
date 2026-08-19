@@ -1,0 +1,33 @@
+* SPDX-License-Identifier: Apache-2.0
+* Extracted phase-interpolator hardware used as a one-hot CML clock selector.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include @PEX_PATH@
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VA_P A_P 0 SIN(@VCM_V@ @INPUT_PEAK_V@ @A_FREQ_HZ@ 0 0 0)
+VA_N A_N 0 SIN(@VCM_V@ @INPUT_PEAK_V@ @A_FREQ_HZ@ 0 0 180)
+VB_P B_P 0 SIN(@VCM_V@ @INPUT_PEAK_V@ @B_FREQ_HZ@ 0 0 37)
+VB_N B_N 0 SIN(@VCM_V@ @INPUT_PEAK_V@ @B_FREQ_HZ@ 0 0 217)
+VCTRLA CTRL_A 0 @CTRL_A_V@
+VCTRLB CTRL_B 0 @CTRL_B_V@
+VBUF VBIAS_BUF 0 @VBIAS_BUF_V@
+XDUT A_P A_N B_P B_N CTRL_A CTRL_B VBIAS_BUF VDD 0 CLK_P CLK_N phase_interpolator_pex
+COUTP CLK_P 0 50f
+COUTN CLK_N 0 50f
+
+.control
+tran 2p 25n
+let vout = v(CLK_P)-v(CLK_N)
+let vcm = (v(CLK_P)+v(CLK_N))/2
+let isupply = -i(VDD)
+meas tran diff_high max vout from=15n to=25n
+meas tran diff_low min vout from=15n to=25n
+meas tran output_cm avg vcm from=15n to=25n
+meas tran supply_current avg isupply from=15n to=25n
+wrdata @WAVE_PATH@ vout
+print diff_high diff_low output_cm supply_current
+.endc
+.end

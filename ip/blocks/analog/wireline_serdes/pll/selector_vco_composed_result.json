@@ -1,0 +1,244 @@
+{
+  "claim": "physical_two_vco_selector_composition",
+  "physical": {
+    "selector": {
+      "drc_error_count": 0,
+      "lvs_unique": true,
+      "pex_capacitor_count": 137,
+      "pex_resistor_count": 356,
+      "pex_sha256": "9bc1c818b96a2a339f07f8f487f013e6aa31b086a524a3ed2fff70905614dfd4",
+      "result": "pass"
+    },
+    "startup_assist": {
+      "drc_error_count": 0,
+      "lvs_unique": true,
+      "pex_capacitor_count": 12,
+      "pex_resistor_count": 86,
+      "pex_sha256": "aa22a4872e8cc72adb48223bafb72fd8aa7c038fe425785efd73fd8dce1fef61",
+      "result": "pass"
+    },
+    "vco_delay": {
+      "drc_error_count": 0,
+      "lvs_unique": true,
+      "pex_capacitor_count": 77,
+      "pex_resistor_count": 275,
+      "pex_sha256": "43c4e49e0f6569390ef1b2937bed32c438f98dde0cf21c2d71af0b7bcbd337c6",
+      "result": "pass"
+    }
+  },
+  "result": "pass",
+  "schema_version": 1,
+  "simulation": {
+    "assist_pex_sha256": "aa22a4872e8cc72adb48223bafb72fd8aa7c038fe425785efd73fd8dce1fef61",
+    "case_count": 5,
+    "cases": [
+      {
+        "id": "select_a_b_powered_down",
+        "inactive_feedthrough_db": -30.935077719893297,
+        "inactive_feedthrough_ratio": 0.02839527728508285,
+        "observed": {
+          "current_late": 0.008437444,
+          "current_max": 0.01238498
+        },
+        "output": {
+          "crossing_count": 26,
+          "cycle_jitter_pp_s": 5.888149532838269e-17,
+          "differential_high_v": 0.974778295,
+          "differential_low_v": -0.969970666,
+          "differential_peak_v": 0.974778295,
+          "frequency_hz": 2577502237.157915
+        },
+        "output_frequency_error_fraction": 4.353212232720708e-08,
+        "result": "pass",
+        "selected": "a",
+        "selected_ring": {
+          "crossing_count": 26,
+          "cycle_jitter_pp_s": 1.626807177157424e-17,
+          "differential_high_v": 0.896450045,
+          "differential_low_v": -0.893637446,
+          "differential_peak_v": 0.896450045,
+          "frequency_hz": 2577502124.9537773
+        },
+        "unselected_powered_down": true,
+        "unselected_ring": {
+          "crossing_count": 25,
+          "cycle_jitter_pp_s": 1.0844841980609932e-15,
+          "differential_high_v": 0.025374022,
+          "differential_low_v": -0.0254549476,
+          "differential_peak_v": 0.0254549476,
+          "frequency_hz": 2577521067.45961
+        }
+      },
+      {
+        "id": "select_b_a_powered_down",
+        "inactive_feedthrough_db": -30.75543731711433,
+        "inactive_feedthrough_ratio": 0.028988659571180308,
+        "observed": {
+          "current_late": 0.008444838,
+          "current_max": 0.01238536
+        },
+        "output": {
+          "crossing_count": 26,
+          "cycle_jitter_pp_s": 8.280500124640454e-17,
+          "differential_high_v": 0.975152452,
+          "differential_low_v": -0.970782157,
+          "differential_peak_v": 0.975152452,
+          "frequency_hz": 2577677140.2683682
+        },
+        "output_frequency_error_fraction": 4.442913704539774e-08,
+        "result": "pass",
+        "selected": "b",
+        "selected_ring": {
+          "crossing_count": 25,
+          "cycle_jitter_pp_s": 8.244768569156123e-17,
+          "differential_high_v": 0.889082958,
+          "differential_low_v": -0.886190181,
+          "differential_peak_v": 0.889082958,
+          "frequency_hz": 2577677025.7444024
+        },
+        "unselected_powered_down": true,
+        "unselected_ring": {
+          "crossing_count": 26,
+          "cycle_jitter_pp_s": 3.30677049918111e-15,
+          "differential_high_v": 0.025729702,
+          "differential_low_v": -0.0257733232,
+          "differential_peak_v": 0.0257733232,
+          "frequency_hz": 2577691829.836616
+        }
+      },
+      {
+        "id": "select_a_live_b_aggressor",
+        "inactive_feedthrough_db": null,
+        "inactive_feedthrough_ratio": null,
+        "observed": {
+          "current_late": 0.01371059,
+          "current_max": 0.01442488
+        },
+        "output": {
+          "crossing_count": 24,
+          "cycle_jitter_pp_s": 2.978490981449816e-12,
+          "differential_high_v": 0.623219152,
+          "differential_low_v": -0.617661028,
+          "differential_peak_v": 0.623219152,
+          "frequency_hz": 2431673601.7506633
+        },
+        "output_frequency_error_fraction": 6.675392026595661e-05,
+        "result": "pass",
+        "selected": "a",
+        "selected_ring": {
+          "crossing_count": 24,
+          "cycle_jitter_pp_s": 1.1701834729900587e-12,
+          "differential_high_v": 0.476557307,
+          "differential_low_v": -0.474397562,
+          "differential_peak_v": 0.476557307,
+          "frequency_hz": 2431835936.332857
+        },
+        "unselected_powered_down": false,
+        "unselected_ring": {
+          "crossing_count": 26,
+          "cycle_jitter_pp_s": 4.0909468890130344e-13,
+          "differential_high_v": 1.35496158,
+          "differential_low_v": -1.35228794,
+          "differential_peak_v": 1.35496158,
+          "frequency_hz": 2647325939.0142703
+        }
+      },
+      {
+        "id": "select_b_live_a_aggressor",
+        "inactive_feedthrough_db": null,
+        "inactive_feedthrough_ratio": null,
+        "observed": {
+          "current_late": 0.01367513,
+          "current_max": 0.01442488
+        },
+        "output": {
+          "crossing_count": 27,
+          "cycle_jitter_pp_s": 6.114957366628604e-13,
+          "differential_high_v": 1.17849453,
+          "differential_low_v": -1.17490999,
+          "differential_peak_v": 1.17849453,
+          "frequency_hz": 2648692817.717491
+        },
+        "output_frequency_error_fraction": 5.105445745335404e-05,
+        "result": "pass",
+        "selected": "b",
+        "selected_ring": {
+          "crossing_count": 26,
+          "cycle_jitter_pp_s": 1.2940900068944714e-13,
+          "differential_high_v": 1.27152153,
+          "differential_low_v": -1.26833007,
+          "differential_peak_v": 1.27152153,
+          "frequency_hz": 2648828052.1965833
+        },
+        "unselected_powered_down": false,
+        "unselected_ring": {
+          "crossing_count": 24,
+          "cycle_jitter_pp_s": 3.9336863586451714e-12,
+          "differential_high_v": 0.52804306,
+          "differential_low_v": -0.526268855,
+          "differential_peak_v": 0.52804306,
+          "frequency_hz": 2430200822.4405823
+        }
+      },
+      {
+        "a_before": {
+          "crossing_count": 11,
+          "cycle_jitter_pp_s": 2.6393036266006053e-17,
+          "differential_high_v": 0.896445812,
+          "differential_low_v": -0.893623692,
+          "differential_peak_v": 0.896445812,
+          "frequency_hz": 2577502182.1791906
+        },
+        "after_frequency_error_fraction": 7.829581165202139e-08,
+        "b_after": {
+          "crossing_count": 26,
+          "cycle_jitter_pp_s": 7.034242980028991e-16,
+          "differential_high_v": 1.27039784,
+          "differential_low_v": -1.26709774,
+          "differential_peak_v": 1.27039784,
+          "frequency_hz": 2648823612.7276263
+        },
+        "before_frequency_error_fraction": 8.140043291637603e-08,
+        "gap": {
+          "crossing_count": 4,
+          "cycle_jitter_pp_s": 3.03751312323359e-10,
+          "differential_high_v": 0.00096575161,
+          "differential_low_v": -0.00116820999,
+          "differential_peak_v": 0.00116820999,
+          "frequency_hz": 2069564946.7128065
+        },
+        "id": "break_before_make_a_to_b",
+        "observed": {
+          "current_late": 0.01029187,
+          "current_max": 0.01238498
+        },
+        "output_after": {
+          "crossing_count": 27,
+          "cycle_jitter_pp_s": 2.008898779888886e-15,
+          "differential_high_v": 1.12588121,
+          "differential_low_v": -1.12281345,
+          "differential_peak_v": 1.12588121,
+          "frequency_hz": 2648823820.119421
+        },
+        "output_before": {
+          "crossing_count": 10,
+          "cycle_jitter_pp_s": 9.691718887875937e-17,
+          "differential_high_v": 0.974756547,
+          "differential_low_v": -0.969964176,
+          "differential_peak_v": 0.974756547,
+          "frequency_hz": 2577502391.988984
+        },
+        "result": "pass",
+        "selected": "b"
+      }
+    ],
+    "claim": "two_extracted_vcos_with_extracted_selector",
+    "initial_condition": "none",
+    "passing_case_count": 5,
+    "result": "pass",
+    "schema_version": 1,
+    "selector_pex_sha256": "9bc1c818b96a2a339f07f8f487f013e6aa31b086a524a3ed2fff70905614dfd4",
+    "tile_pex_sha256": "43c4e49e0f6569390ef1b2937bed32c438f98dde0cf21c2d71af0b7bcbd337c6",
+    "transient_uic": false
+  }
+}

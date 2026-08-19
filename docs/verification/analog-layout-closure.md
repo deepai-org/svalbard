@@ -284,6 +284,17 @@ The eventual selector still needs a safe transition contract
 deterministic-startup actuator into its controller sequence, and verification
 that inactive members cannot disturb the active oscillator.
 
+Reuse a physically closed weighted-summing cell as a selector when its endpoint
+controls truly shut off the unselected tail and its output stage isolates the
+shared node. Qualify that role separately at the higher clock rate: keep the
+unselected input toggling at a discriminating frequency, measure every selected
+cycle rather than only average frequency, and search one bias code that passes
+both branches and the complete input-common-mode envelope. During handoff,
+require explicit nonoverlap and disable the restoring output stage in the dead
+interval. A powered-down victim can still show a tiny capacitively injected
+sinusoid with many zero crossings; judge isolation by absolute amplitude and
+attenuation relative to the active clock, not by crossing count alone.
+
 ### Proven physical iteration ladder
 
 Use this order when an extracted cell misses a corner:

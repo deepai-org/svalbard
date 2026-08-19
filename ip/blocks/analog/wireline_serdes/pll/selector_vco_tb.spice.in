@@ -1,0 +1,51 @@
+* SPDX-License-Identifier: Apache-2.0
+* Two extracted VCOs driving one extracted isolated selector.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.include @TILE_PEX_PATH@
+.include @ASSIST_PEX_PATH@
+.include @SELECTOR_PEX_PATH@
+.temp 27
+
+VDD VDD 0 PWL(0 0 500p 3.3)
+VCTRLA VCTRLA 0 @VCTRLA_SOURCE@
+VCTRLB VCTRLB 0 @VCTRLB_SOURCE@
+VKICKAP KICKAP 0 @KICKAP_SOURCE@
+VKICKAN KICKAN 0 @KICKAN_SOURCE@
+VKICKBP KICKBP 0 @KICKBP_SOURCE@
+VKICKBN KICKBN 0 @KICKBN_SOURCE@
+VSELA SELA 0 @SELA_SOURCE@
+VSELB SELB 0 @SELB_SOURCE@
+VSELBUF SELBUF 0 @SELBUF_SOURCE@
+
+XA0 A2P A2N A0P A0N VCTRLA VDD 0 cml_vco_delay_pex
+XA1 A0P A0N A1P A1N VCTRLA VDD 0 cml_vco_delay_pex
+XA2 A1P A1N A2P A2N VCTRLA VDD 0 cml_vco_delay_pex
+XABUF A2P A2N ACLKP ACLKN VCTRLA VDD 0 cml_vco_delay_pex
+XASTART A0P A0N KICKAP KICKAN 0 cml_vco_startup_assist_pex
+
+XB0 B2P B2N B0P B0N VCTRLB VDD 0 cml_vco_delay_pex
+XB1 B0P B0N B1P B1N VCTRLB VDD 0 cml_vco_delay_pex
+XB2 B1P B1N B2P B2N VCTRLB VDD 0 cml_vco_delay_pex
+XBBUF B2P B2N BCLKP BCLKN VCTRLB VDD 0 cml_vco_delay_pex
+XBSTART B0P B0N KICKBP KICKBN 0 cml_vco_startup_assist_pex
+
+XSELECT ACLKP ACLKN BCLKP BCLKN SELA SELB SELBUF VDD 0 OUTP OUTN phase_interpolator_pex
+COUTP OUTP 0 50f
+COUTN OUTN 0 50f
+
+.control
+tran 2p 25n
+let adiff = v(ACLKP)-v(ACLKN)
+let bdiff = v(BCLKP)-v(BCLKN)
+let odiff = v(OUTP)-v(OUTN)
+let isupply = -i(VDD)
+meas tran current_late avg isupply from=15n to=25n
+meas tran current_max max isupply from=0 to=25n
+wrdata @A_WAVE_PATH@ adiff
+wrdata @B_WAVE_PATH@ bdiff
+wrdata @OUT_WAVE_PATH@ odiff
+print current_late current_max
+.endc
+.end

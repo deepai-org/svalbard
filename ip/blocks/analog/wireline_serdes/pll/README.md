@@ -108,6 +108,28 @@ Phase noise, statistical noise/mismatch startup, supply pushing, safe band
 selection, inactive member loading, divider loading, and loop dynamics remain
 open.
 
+The first safe-selection primitive is now physical and extracted. Rather than
+duplicate nearly identical circuitry, the closed phase-interpolator macro is
+used at its one-hot endpoints: one weighted input tail is biased, the other is
+off, and its second CML stage restores and isolates the clock. A seven-code
+paired tail/buffer-bias search runs 210 full-RC cases at 2.5 GHz with the
+unselected branch driven by a live 2.0 GHz aggressor. All 5/5 environments find
+an interior code that passes A and B selection at 0.55, 0.72, and 0.86 VDD
+input common mode. Across selected codes, minimum differential peak is 206 mV,
+worst cycle-period modulation is 5.33 ps, and worst frequency error is 0.029%.
+
+The extracted primitive also passes a 0.95 ns break-before-make handoff with
+both input clocks live: the output buffer is off during dead time, differential
+gap residue is 25.9 mV, and gap current is 33.9 uA. A separate fresh composition
+connects two complete extracted VCOs directly to the extracted selector. Its
+5/5 cases cover either powered-down neighbor, either different-frequency live
+aggressor, and an A-power-down/B-start/B-select sequence. Worst powered-down
+reverse feedthrough is 25.8 mV or -30.76 dB; worst selected-output cycle jitter
+with a live aggressor is 2.98 ps, and the handoff gap falls to 1.17 mV. These
+results close the two-band primitive, not the complete twelve-band hierarchy or
+its extracted top-level interconnect. `selector_result.json` and
+`selector_vco_composed_result.json` retain the two evidence layers.
+
 The bounded reproduction sequence is `run_active_screen.sh` for the
 parasitic-preserving active-width screen, `run_cap_drc.sh` for legal cap
 length/width boundaries, `run_vco_active_physical.sh` for the four active-tail
@@ -117,11 +139,14 @@ for the complete 11/11-physical, 5/5-target, 5/5-guardband result and generated
 visual index. `run_startup_assist_physical.sh` closes the assist alone and
 `run_startup_composed.sh` reproduces the eight-cell physical and 42-case
 commanded-start proof. `layout_startup_assist.png` is the KLayout render of the
-checked startup cell.
+checked startup cell. `run_selector.sh` qualifies the shared PI geometry in its
+2.5 GHz selector role; `run_selector_vco.sh` regenerates all three physical
+cell types and runs the direct two-VCO composition.
 
 `run_schematic.sh` runs the 12-environment adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
-physical milestone is to implement safe selection, power gating, and inactive
-isolation, then run mismatch/statistical startup, supply-pushing, and phase-noise
-simulations. The divider, PFD, charge pump, loop filter, lock detector, and
-external-clock bypass remain separate unimplemented boundaries.
+physical milestone is to compose and route a complete twelve-band selector tree
+with the controller's nonoverlap sequence, then run mismatch/statistical
+startup, supply-pushing, and phase-noise simulations. The divider, PFD, charge
+pump, loop filter, lock detector, and external-clock bypass remain separate
+unimplemented boundaries.

@@ -35,5 +35,7 @@ autonomous-clock experiment: a regenerative differential CML ring VCO with a
 physically extracted twelve-layout R/C/active-strength bank and a matched
 deterministic startup-assist cell. The sampled composed full-RC bank starts
 without initial conditions in 42/42 commanded cases and brackets 2.5 GHz in
-5/5 declared environments. It is still not a safely selected bank or a closed
-PLL.
+5/5 declared environments. The physically closed phase interpolator is reused
+as a calibrated two-input break-before-make selector and passes direct
+two-VCO isolation/handoff composition. The complete twelve-band selector tree
+and closed PLL remain unfinished.

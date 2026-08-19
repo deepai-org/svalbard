@@ -1,0 +1,38 @@
+* SPDX-License-Identifier: Apache-2.0
+* Extracted break-before-make handoff with both input clocks toggling.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.include @PEX_PATH@
+.temp 27
+
+VDD VDD 0 3.3
+VA_P A_P 0 SIN(2.4 0.4 2.4g 0 0 0)
+VA_N A_N 0 SIN(2.4 0.4 2.4g 0 0 180)
+VB_P B_P 0 SIN(2.4 0.4 2.6g 0 0 53)
+VB_N B_N 0 SIN(2.4 0.4 2.6g 0 0 233)
+VCTRLA CTRL_A 0 PWL(0 1.3 8n 1.3 8.05n 0)
+VCTRLB CTRL_B 0 PWL(0 0 9n 0 9.05n 1.3)
+VBUF VBIAS_BUF 0 PWL(0 1.15 8.05n 1.15 8.10n 0 9n 0 9.05n 1.15)
+XDUT A_P A_N B_P B_N CTRL_A CTRL_B VBIAS_BUF VDD 0 CLK_P CLK_N phase_interpolator_pex
+COUTP CLK_P 0 50f
+COUTN CLK_N 0 50f
+
+.control
+tran 1p 20n
+let vout = v(CLK_P)-v(CLK_N)
+let isupply = -i(VDD)
+meas tran pre_high max vout from=4n to=7.5n
+meas tran pre_low min vout from=4n to=7.5n
+meas tran gap_high max vout from=8.3n to=8.8n
+meas tran gap_low min vout from=8.3n to=8.8n
+meas tran post_high max vout from=12n to=20n
+meas tran post_low min vout from=12n to=20n
+meas tran current_pre avg isupply from=4n to=7.5n
+meas tran current_gap avg isupply from=8.3n to=8.8n
+meas tran current_post avg isupply from=12n to=20n
+meas tran current_max max isupply from=0 to=20n
+wrdata @WAVE_PATH@ vout
+print pre_high pre_low gap_high gap_low post_high post_low current_pre current_gap current_post current_max
+.endc
+.end

@@ -38,14 +38,17 @@ the [PCIe analog status](../../../../docs/verification/pcie-analog-status.md).
 
 The [`pll`](pll/README.md) directory contains a regenerative differential CML
 ring VCO with a matched deterministic startup assist. The dual-edge receiver
-requires a 1.25 GHz oscillator: ten complete folded parents are independently
-0-DRC, unique-LVS, and full-RC extracted. Their hash-bound 880-case bank
-evidence has 610 valid no-initial-condition cases and continuously covers the
-target plus the +/-2% design band in 5/5 public-model environments. The older
+requires a 1.25 GHz oscillator. A minimum-subset proof selects two complete
+split-control folded parents from three physical candidates. Their 293/400
+valid no-initial-condition cases continuously cover the target plus the +/-2%
+design band in 5/5 public-model environments; no single candidate covers more
+than 3/5. The older seven fixed-control half-rate parents remain corroborating
+evidence, while the
 twelve-parent 2.5 GHz bank is retained as a physically legal failed overspeed
 experiment because it covers only 2/5 environments. The phase interpolator is
 also qualified as a two-input break-before-make selector, and a balanced
 sixteen-leaf selector hierarchy is physically closed at its prior full-rate
-stress. Real dual-bias generation/calibration, half-rate bank power/selector
+stress but is no longer needed for the selected bank. Real dual-bias
+generation/calibration, half-rate bank power/selector
 composition, divider loading, phase noise, supply sensitivity, and the closed
 PLL remain unfinished.

@@ -426,6 +426,16 @@ frequency hole. Preserve the selected member and control at each boundary so a
 future calibration algorithm has an implementable mapping rather than an
 existence claim.
 
+After a candidate family closes, minimize the selected physical bank against
+the same connected-interval contract. Enumerate subsets from smallest to
+largest and accept the first whose realizable interval union covers the design
+band in every environment; a global endpoint test is still insufficient. Keep
+all rejected candidates as evidence, but do not pay their area, inactive
+loading, power-gating state, selector depth, and calibration complexity in the
+implementation. Re-run composition with the selected subset because removing
+members changes routing and shared loading even when bare-bank coverage is
+mathematically preserved.
+
 Physical legality is necessary but orthogonal to electrical coverage. A bank
 whose every complete parent is independently zero-DRC, uniquely LVS-matched,
 and full-RC-extracted can still fail most PVT environments after parent-owned

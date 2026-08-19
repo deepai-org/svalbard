@@ -6,6 +6,7 @@ exec "$runner" --label cml-half-rate-vco-full-bank \
   --timeout 150m --cpus 2 --memory 4g \
   --command /src/pll/container_half_rate_vco_full_bank.sh \
   --copy half-rate-vco-full-bank-result.json:half-rate-vco-full-bank-result.json \
+  --copy split-control-full-bank-result.json:split-control-full-bank-result.json \
   --copy split_base-control-vco-full-screen.json:split_base-control-vco-full-screen.json \
   --copy split_fast-control-vco-full-screen.json:split_fast-control-vco-full-screen.json \
   --copy split_gain-control-vco-full-screen.json:split_gain-control-vco-full-screen.json

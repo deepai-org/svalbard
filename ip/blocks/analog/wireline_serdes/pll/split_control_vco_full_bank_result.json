@@ -1,0 +1,259 @@
+{
+  "candidate_case_count": 600,
+  "candidate_member_count": 3,
+  "candidate_unique_pex_count": 3,
+  "candidates": [
+    {
+      "case_count": 200,
+      "claim": "physical_split_base_tail_control_vco_margin_screen",
+      "drc_error_count": 0,
+      "layout_image_sha256": "85c1623cfc97d76eed9d941108020ff3967f83236fd1b272e6cd4c78ee53e755",
+      "lvs_unique": true,
+      "passing_case_count": 134,
+      "pex_capacitor_count": 336,
+      "pex_resistor_count": 1116,
+      "pex_sha256": "ef23ec26d96c3e5cd1e1c02a970bfc0752c188ad71159f8c1df228501b195d93",
+      "selected": false,
+      "source": "split_base-control-vco-full-screen.json"
+    },
+    {
+      "case_count": 200,
+      "claim": "physical_split_fast_tail_control_vco_margin_screen",
+      "drc_error_count": 0,
+      "layout_image_sha256": "706e18dbb677e00659e437863e41e087abcf3c067f31bcbfb92f1d118d947af9",
+      "lvs_unique": true,
+      "passing_case_count": 135,
+      "pex_capacitor_count": 336,
+      "pex_resistor_count": 1116,
+      "pex_sha256": "23f68673391932345099e0243a6094a312ddf39bb1f38cf439b35efd3c623a07",
+      "selected": true,
+      "source": "split_fast-control-vco-full-screen.json"
+    },
+    {
+      "case_count": 200,
+      "claim": "physical_split_gain_tail_control_vco_margin_screen",
+      "drc_error_count": 0,
+      "layout_image_sha256": "6563acd413d4247cd743a22caf8cc6dc16744b6c903b17ebf6606287bb0f04e0",
+      "lvs_unique": true,
+      "passing_case_count": 158,
+      "pex_capacitor_count": 336,
+      "pex_resistor_count": 1120,
+      "pex_sha256": "bb69c23e8ab567ea97dd3ea975400102d1ff8c0c00defe99e9b7db683837aa2e",
+      "selected": true,
+      "source": "split_gain-control-vco-full-screen.json"
+    }
+  ],
+  "case_count": 400,
+  "claim": "minimum_physical_split_control_vco_bank_full_pvt_design_guardband",
+  "combiner_source_sha256": "99bbc191fbf329c4810a53998c0fd2357a3483e06ba56cb9c489165e2f838f25",
+  "environments": [
+    {
+      "continuous_intervals_hz": [
+        [
+          669639867.6791621,
+          2132216165.78066
+        ]
+      ],
+      "contributors": [
+        {
+          "continuous_intervals_hz": [
+            [
+              1287323200.640778,
+              2132216165.78066
+            ]
+          ],
+          "pex_sha256": "23f68673391932345099e0243a6094a312ddf39bb1f38cf439b35efd3c623a07",
+          "source": "split_fast-control-vco-full-screen.json"
+        },
+        {
+          "continuous_intervals_hz": [
+            [
+              669639867.6791621,
+              1748084274.4436374
+            ]
+          ],
+          "pex_sha256": "bb69c23e8ab567ea97dd3ea975400102d1ff8c0c00defe99e9b7db683837aa2e",
+          "source": "split_gain-control-vco-full-screen.json"
+        }
+      ],
+      "environment": [
+        "ff",
+        "res_ff",
+        3.63,
+        -40
+      ],
+      "target_covered": true,
+      "two_percent_guardband_covered": true
+    },
+    {
+      "continuous_intervals_hz": [
+        [
+          715844209.3930213,
+          1459515875.66501
+        ]
+      ],
+      "contributors": [
+        {
+          "continuous_intervals_hz": [
+            [
+              1099581268.4571588,
+              1459515875.66501
+            ]
+          ],
+          "pex_sha256": "23f68673391932345099e0243a6094a312ddf39bb1f38cf439b35efd3c623a07",
+          "source": "split_fast-control-vco-full-screen.json"
+        },
+        {
+          "continuous_intervals_hz": [
+            [
+              715844209.3930213,
+              1176462145.3893094
+            ]
+          ],
+          "pex_sha256": "bb69c23e8ab567ea97dd3ea975400102d1ff8c0c00defe99e9b7db683837aa2e",
+          "source": "split_gain-control-vco-full-screen.json"
+        }
+      ],
+      "environment": [
+        "ff",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "target_covered": true,
+      "two_percent_guardband_covered": true
+    },
+    {
+      "continuous_intervals_hz": [
+        [
+          1077517004.2958448,
+          1285881064.48835
+        ]
+      ],
+      "contributors": [
+        {
+          "continuous_intervals_hz": [],
+          "pex_sha256": "23f68673391932345099e0243a6094a312ddf39bb1f38cf439b35efd3c623a07",
+          "source": "split_fast-control-vco-full-screen.json"
+        },
+        {
+          "continuous_intervals_hz": [
+            [
+              1077517004.2958448,
+              1285881064.48835
+            ]
+          ],
+          "pex_sha256": "bb69c23e8ab567ea97dd3ea975400102d1ff8c0c00defe99e9b7db683837aa2e",
+          "source": "split_gain-control-vco-full-screen.json"
+        }
+      ],
+      "environment": [
+        "ss",
+        "res_ff",
+        2.97,
+        125
+      ],
+      "target_covered": true,
+      "two_percent_guardband_covered": true
+    },
+    {
+      "continuous_intervals_hz": [
+        [
+          740511456.4527428,
+          1075108706.9291294
+        ],
+        [
+          1171764643.5720448,
+          1283330499.311814
+        ]
+      ],
+      "contributors": [
+        {
+          "continuous_intervals_hz": [
+            [
+              1171764643.5720448,
+              1283330499.311814
+            ]
+          ],
+          "pex_sha256": "23f68673391932345099e0243a6094a312ddf39bb1f38cf439b35efd3c623a07",
+          "source": "split_fast-control-vco-full-screen.json"
+        },
+        {
+          "continuous_intervals_hz": [
+            [
+              740511456.4527428,
+              1075108706.9291294
+            ]
+          ],
+          "pex_sha256": "bb69c23e8ab567ea97dd3ea975400102d1ff8c0c00defe99e9b7db683837aa2e",
+          "source": "split_gain-control-vco-full-screen.json"
+        }
+      ],
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "target_covered": true,
+      "two_percent_guardband_covered": true
+    },
+    {
+      "continuous_intervals_hz": [
+        [
+          714694110.920526,
+          1719084711.1654036
+        ]
+      ],
+      "contributors": [
+        {
+          "continuous_intervals_hz": [
+            [
+              1040065074.7915996,
+              1719084711.1654036
+            ]
+          ],
+          "pex_sha256": "23f68673391932345099e0243a6094a312ddf39bb1f38cf439b35efd3c623a07",
+          "source": "split_fast-control-vco-full-screen.json"
+        },
+        {
+          "continuous_intervals_hz": [
+            [
+              714694110.920526,
+              1383877905.434364
+            ]
+          ],
+          "pex_sha256": "bb69c23e8ab567ea97dd3ea975400102d1ff8c0c00defe99e9b7db683837aa2e",
+          "source": "split_gain-control-vco-full-screen.json"
+        }
+      ],
+      "environment": [
+        "typical",
+        "res_typical",
+        3.3,
+        27
+      ],
+      "target_covered": true,
+      "two_percent_guardband_covered": true
+    }
+  ],
+  "guardband_environment_count": 5,
+  "input_sha256": {
+    "split_base-control-vco-full-screen.json": "635ad4392f65a7791d91afc299753b3e16dc1b489c9f40241fe84911fb4c77b7",
+    "split_fast-control-vco-full-screen.json": "44ae321b035c2eca07fdff059fabb07aa209d171361956cb4a7da9fe91622dcc",
+    "split_gain-control-vco-full-screen.json": "c4fa31de1083fe776e03f8ad00d6b8ab13c068fc9ccaab7016bebbc633fa27ab"
+  },
+  "member_count": 2,
+  "passing_case_count": 293,
+  "qualification": "design_guardband",
+  "result": "pass",
+  "schema_version": 1,
+  "scope": "full",
+  "selected_sources": [
+    "split_fast-control-vco-full-screen.json",
+    "split_gain-control-vco-full-screen.json"
+  ],
+  "shared_evidence_source_sha256": "ca49d14d8017b6a9f71ab08515194d981ea93936ed0ab3c7d22a64841438ba58",
+  "target_environment_count": 5,
+  "unique_pex_count": 2
+}

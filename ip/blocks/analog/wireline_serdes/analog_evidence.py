@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import itertools
 import math
 import re
 from collections.abc import Iterable, Mapping, Sequence
@@ -119,3 +120,35 @@ def require_unique_sha256(
     if len(set(values)) != len(values):
         raise EvidenceError("physical evidence contains duplicate SHA-256 identities")
     return values
+
+
+def minimum_covering_members(
+    members: Mapping[
+        str, Mapping[EnvironmentKey, Iterable[tuple[float, float]]]
+    ],
+    *,
+    lower: float,
+    upper: float,
+) -> tuple[str, ...]:
+    if not members:
+        raise EvidenceError("no bank members supplied")
+    names = tuple(members)
+    environment_keys = require_same_environment_keys(
+        [members[name] for name in names]
+    )
+    for count in range(1, len(names) + 1):
+        for selected in itertools.combinations(names, count):
+            if all(
+                covers_band(
+                    (
+                        interval
+                        for name in selected
+                        for interval in members[name][environment]
+                    ),
+                    lower,
+                    upper,
+                )
+                for environment in environment_keys
+            ):
+                return selected
+    raise EvidenceError("no member subset continuously covers the requested band")

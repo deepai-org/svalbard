@@ -76,6 +76,12 @@ if [[ "$environment_set" == "focused" ]]; then
       /work/split_gain-control-vco-screen.json \
     --output /work/split-control-bank-screen.json
 else
+  python3 /src/pll/combine_split_control_vco.py \
+    --scope full --minimize-members \
+    --inputs /work/split_base-control-vco-full-screen.json \
+      /work/split_fast-control-vco-full-screen.json \
+      /work/split_gain-control-vco-full-screen.json \
+    --output /work/split-control-full-bank-result.json
   python3 /src/pll/combine_half_rate_vco_full_bank.py \
     --baseline /src/pll/half_rate_vco_bank_result.json \
     --split-inputs /work/split_base-control-vco-full-screen.json \

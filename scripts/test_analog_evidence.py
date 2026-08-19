@@ -17,6 +17,7 @@ from analog_evidence import (  # noqa: E402
     covers_value,
     environment_index,
     merge_intervals,
+    minimum_covering_members,
     require_same_environment_keys,
     require_unique_sha256,
     sha256_file,
@@ -66,6 +67,20 @@ class AnalogEvidenceTests(unittest.TestCase):
     def test_file_digest(self) -> None:
         path = Path(__file__)
         self.assertEqual(sha256_file(path), hashlib.sha256(path.read_bytes()).hexdigest())
+
+    def test_minimum_covering_members(self) -> None:
+        environments = (("cold",), ("hot",))
+        members = {
+            "base": {environments[0]: [(0, 4)], environments[1]: [(0, 1)]},
+            "fast": {environments[0]: [(1, 3)], environments[1]: [(0, 2)]},
+            "gain": {environments[0]: [(0, 1)], environments[1]: [(2, 4)]},
+        }
+        self.assertEqual(
+            minimum_covering_members(members, lower=1.5, upper=2.5),
+            ("fast", "gain"),
+        )
+        with self.assertRaises(EvidenceError):
+            minimum_covering_members(members, lower=3.5, upper=4.5)
 
 
 if __name__ == "__main__":

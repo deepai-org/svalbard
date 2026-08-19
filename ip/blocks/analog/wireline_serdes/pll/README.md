@@ -2,13 +2,13 @@
 
 This directory develops the autonomous clock source for the dual-edge PCIe
 receiver. The required oscillator rate is 1.25 GHz, not the 2.5 GT/s serial
-rate. It is not yet a PLL macro: ten complete half-rate oscillator parents are
-physically closed and their hash-bound 880-case public-model PVT evidence
-covers the required target and the +/-2% design band in 5/5 environments. The
-two bias generators, calibration controller, selector composition, divider,
-loop, and analog-top integration remain open. The earlier 2.5 GHz work is
-retained as an overspeed experiment and as evidence that GF180 parent
-interconnect and hot/slow device speed cannot be ignored.
+rate. It is not yet a PLL macro: the selected bank is now only two complete
+split-control half-rate oscillator parents. Both are physically closed, and
+their 293/400-case public-model PVT union covers the required target and the
++/-2% design band in 5/5 environments. The two bias generators, calibration
+controller, selector composition, divider, loop, and analog-top integration
+remain open. The earlier fixed-control and 2.5 GHz banks are retained as
+fallback/falsification evidence rather than selected implementation members.
 
 `ring_vco.spice` is a three-stage differential CML ring followed by an
 isolating CML output buffer. Each delay cell has a driven differential pair, a
@@ -168,15 +168,22 @@ distinct PEX and GDS-render hashes for that focused milestone. The usable emitte
 The subsequent full-PVT run freshly regenerated those three parents and ran
 200 extracted cases per member across all five environments. It reproduced all
 240 shared hot-corner classifications and frequencies from the focused run;
-only printed swing roundoff changed, by at most 1 uV. Hash-bound composition
-with the unchanged seven-parent 280-case result produces ten unique physical
-PEX identities and 610 passing cases out of 880. The realizable interval union
-covers 1.225--1.275 GHz in 5/5 environments. The two formerly limiting upper
-endpoints reach 1.2922 GHz for slow/fast-resistor and 1.2833 GHz for
-slow/slow-resistor. `half_rate_vco_full_bank_result.json` is the compact
-design-guardband qualification; the three `split_*full-screen.json` files
-retain every new numeric case. This closes bare-bank deterministic PVT range,
-not bias generation, selection loading, noise, or the PLL loop.
+only printed swing roundoff changed, by at most 1 uV. A connected-interval
+minimum-cover search proves that the `fast` and `gain` members alone cover
+1.225--1.275 GHz in 5/5; no single member covers more than 3/5. The selected
+two-parent evidence has 293 passing cases out of 400. Its limiting upper
+endpoints are 1.2859 GHz for slow/fast-resistor and 1.2833 GHz for
+slow/slow-resistor. `split_control_vco_full_bank_result.json` records the
+minimum selected bank and all three candidate identities. The three
+`split_*full-screen.json` files retain every numeric case.
+
+The older hash-bound ten-parent union also passes 5/5 with 610/880 valid cases
+and remains in `half_rate_vco_full_bank_result.json` as corroborating evidence,
+but it is not the selected implementation. Removing eight unnecessary parents
+reduces inactive loading, power-gating state, routing, and selector complexity;
+the already closed two-input selector is the correct next boundary. This closes
+bare-bank deterministic PVT range, not bias generation, selection loading,
+noise, or the PLL loop.
 
 Phase noise, statistical noise/mismatch startup, supply pushing, safe band
 selection across the complete bank, inactive member loading, divider loading,
@@ -253,16 +260,17 @@ numeric result plus visual index. `run_split_control_vco.sh` regenerates the
 three independently biased parents, closes each physical boundary, runs the
 focused 240-case hot-corner screen, and rejects duplicate PEX identities in
 its compact aggregate result. `run_half_rate_vco_full_bank.sh` expands the
-three new parents to 600 five-environment cases and combines them by checked
-hash with the unchanged seven-parent result; its executable gate requires ten
-unique PEX identities, exactly 880 cases, and full target/design-band coverage
-in 5/5 environments.
+three new parents to 600 five-environment cases, proves the minimum connected-
+band subset, and also combines them by checked hash with the unchanged seven-
+parent evidence. Its primary selected-bank gate requires two unique PEX
+identities, exactly 400 selected cases, and full target/design-band coverage in
+5/5; the ten-parent 880-case aggregate is a corroborating output.
 
 `run_schematic.sh` runs the 12-environment adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
-physical milestone is to connect the qualified half-rate members to the closed
-tree with realizable bias generation, power gating, and a controller that
-enforces the proven nonoverlap sequence. After that come
+physical milestone is to connect the two qualified half-rate members to the
+closed two-input selector with realizable bias generation, power gating, and a
+controller that enforces the proven nonoverlap sequence. After that come
 mismatch/statistical startup, supply-pushing, and phase-noise simulations. The
 divider, PFD, charge pump, loop filter, lock detector, and external-clock
 bypass remain separate unimplemented boundaries.

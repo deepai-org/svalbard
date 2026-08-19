@@ -67,13 +67,16 @@ range at 2.97 V and 125 C. The low tile has two valid controls spanning
 extracted tile contains 274 resistors and 82 capacitors. This is an aggregate
 bank guardband, not one member with an excessively broad analog control.
 `vco_bank_result.json` records 8/8 added physical geometries, 5/5 required
-target environments, and a separate 2/5 environments with full +/-2% bank
-guardband. `layout_vco_bank.png` is the generated nine-layout visual index.
+target environments, and a separate 3/5 environments with full +/-2% bank
+guardband after both margin tiles are swept across all five environments and
+11 realizable controls. `layout_vco_bank.png` is the generated nine-layout
+visual index.
 
 This is target coverage, not robust PLL qualification. The SS/slow-resistor
-corner now has physical endpoint margin, but FF/slow-resistor,
-SS/fast-resistor, and typical environments do not yet have full +/-2% bank
-coverage. Startup still uses a deterministic millivolt seed. Phase noise,
+corner now has physical endpoint margin, and those members also close the
+FF/slow-resistor high endpoint. SS/fast-resistor and typical environments do
+not yet have full +/-2% bank coverage. Startup still uses a deterministic
+millivolt seed. Phase noise,
 unseeded/noise startup, supply pushing, mismatch, safe band selection, inactive
 member loading, divider loading, and loop dynamics remain open.
 
@@ -85,7 +88,7 @@ tiles and endpoint checker, and `run_vco_bank.sh` for the complete
 
 `run_schematic.sh` runs the 12-environment adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
-physical milestone is to extend the explicit guardband to the remaining three
+physical milestone is to extend the explicit guardband to the remaining two
 environments, implement safe selection and power gating, and run unseeded
 startup, tuning, supply-pushing, and phase-noise simulations. The
 divider, PFD, charge pump, loop filter, lock detector, and external-clock bypass

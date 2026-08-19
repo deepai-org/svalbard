@@ -50,12 +50,14 @@ python3 /src/run_extracted_ring.py --source /src \
   --control 1.15 --control 1.20 --control 1.25 --control 1.30 --control 1.35 --control 1.40 || true
 python3 /src/run_extracted_ring.py --source /src \
   --pex /work/cml_vco_delay_margin_slow.pex.spice --pex-subckt cml_vco_delay_margin_slow_pex \
-  --work /work/margin-slow-ring --output /work/margin-slow-ring.json --environment-index 4 \
-  --control 1.15 --control 1.20 --control 1.25 --control 1.30 --control 1.35 --control 1.40 || true
+  --work /work/margin-slow-ring --output /work/margin-slow-ring.json --pvt \
+  --control 0.88 --control 0.98 --control 1.08 --control 1.15 --control 1.18 \
+  --control 1.20 --control 1.25 --control 1.30 --control 1.35 --control 1.40 --control 1.50 || true
 python3 /src/run_extracted_ring.py --source /src \
   --pex /work/cml_vco_delay_margin_fast.pex.spice --pex-subckt cml_vco_delay_margin_fast_pex \
-  --work /work/margin-fast-ring --output /work/margin-fast-ring.json --environment-index 4 \
-  --control 1.15 --control 1.20 --control 1.25 --control 1.30 --control 1.35 --control 1.40 || true
+  --work /work/margin-fast-ring --output /work/margin-fast-ring.json --pvt \
+  --control 0.88 --control 0.98 --control 1.08 --control 1.15 --control 1.18 \
+  --control 1.20 --control 1.25 --control 1.30 --control 1.35 --control 1.40 --control 1.50 || true
 python3 /src/check_vco_bank.py --source /src --work /work \
   --output /work/vco-bank-result.json
 python3 /src/compose_layout_bank.py --source /src --work /work \

@@ -257,8 +257,8 @@ For a physical tuning bank, preserve three different results in the evidence:
 
 Do not collapse those into a single pass bit. The present eight-member VCO bank
 closes 5/5 declared target environments and has full aggregate +/-2% frequency
-guardband in 2/5; the regenerated slow-process/slow-resistor endpoint tiles
-span below 2.45 GHz and above 2.55 GHz. The other three environments remain
+guardband in 3/5; the regenerated slow-process/slow-resistor endpoint tiles
+span below 2.45 GHz and above 2.55 GHz. The other two environments remain
 margin-development results. The eventual selector also needs a safe transition
 contract (normally disable or break-before-make), deterministic power-up
 behavior, and verification that inactive members cannot disturb the active

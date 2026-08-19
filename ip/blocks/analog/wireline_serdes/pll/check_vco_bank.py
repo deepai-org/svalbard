@@ -15,8 +15,8 @@ SCREENS = {
     "fast": ("fast-ring.json", 7),
     "ss_ff": ("ss-ff-ring.json", 6),
     "ss_ss": ("ss-ss-ring.json", 6),
-    "margin_slow": ("margin-slow-ring.json", 6),
-    "margin_fast": ("margin-fast-ring.json", 6),
+    "margin_slow": ("margin-slow-ring.json", 55),
+    "margin_fast": ("margin-fast-ring.json", 55),
 }
 
 

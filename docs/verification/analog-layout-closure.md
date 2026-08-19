@@ -52,10 +52,13 @@ transient. A clean but inverted result is a circuit error; do not compensate in
 the checker.
 
 Sweep the control that is expected to absorb silicon variation. Require a
-contiguous passing window and select the best code away from both endpoints.
-One passing trim code is evidence of a brittle nominal point, not calibration
-range. Use finer codes only when the eventual bias or control generator can
-actually implement them.
+contiguous electrically valid window and select the best code away from both
+endpoints. Separately require that the realizable bank extends beyond the
+performance target by the declared design guardband. A pair of codes that only
+brackets the target proves interpolation, not useful tuning margin. One passing
+trim code is evidence of a brittle nominal point, not calibration range. Use
+finer codes only when the eventual bias or control generator can implement them,
+and verify monotonicity in the polarity the controller will actually use.
 
 ## 3. Run schematic PVT as grouped calibration
 
@@ -75,14 +78,20 @@ headroom usually point toward steering transconductance, while failures at low
 supply with collapsed output common-mode indicate stack headroom.
 
 When passive delay trimming approaches a target but loses oscillation as load
-resistance falls, treat it as a loop-gain boundary. Do not keep shaving the
-load. Separate the main signal-path tail from a regenerative latch tail and
-sweep them independently; strengthening every device often slows a ring by
-adding intrinsic and junction capacitance. A useful intermediate screen can
-perturb device width plus explicit junction area/perimeter in an existing
-full-RC deck while retaining routing parasitics. Label that result as screening
-only, interpolate no geometry below a DRC-proven PCell limit, and regenerate
-layout/LVS/PEX before accepting any bracket.
+resistance falls, classify the failure as loop gain rather than frequency range.
+Do not keep shaving the load. Separate signal-path and regenerative-tail
+strengths and sweep them independently. Uniformly strengthening every device
+often slows a ring because intrinsic and junction capacitance rise along with
+transconductance; the extracted CML VCO work instead recovered the difficult
+corner with asymmetric tail-current allocation.
+
+Use a modified full-RC deck only as a bounded candidate screen. Preserve every
+extracted routing resistor and capacitor, and when changing active width also
+scale explicit source/drain area and perimeter parameters. Such a deck answers
+"which legal geometry should be regenerated next?"; it is not PEX for the new
+geometry and cannot close a corner. Never interpolate below a DRC-proven PCell
+limit. Regenerate the parameterized layout and repeat DRC, unique LVS, and
+full-RC extraction before admitting a candidate to a qualified bank.
 
 ## 4. Plan the physical topology before writing geometry
 
@@ -148,6 +157,16 @@ mismatch, this prevents mixed-size parameterized cells from quietly moving
 their generated terminal/contact geometry relative to hand-authored straps.
 If mixed geometry is necessary, derive contacts from cell bounds or explicit
 ports and prove each device class with LVS before routing the full array.
+
+Treat every PCell dimension as a geometry dependency, not just a SPICE value.
+Derive terminal straps, gate contacts, source returns, route clearances, and
+labels from the same parameters or from queried PCell ports. A transistor can
+remain electrically legal while a hand-authored strap lands on the wrong part
+of its resized terminal. Before a broad simulation, generate a small legal-value
+sweep and run DRC on every point. In the current GF180 capacitor geometry, for
+example, the smallest attempted interpolation violated local metal rules while
+nearby larger values were clean; a numerically plausible parameter is not proof
+that the PCell plus surrounding route is manufacturable.
 
 Do not rely on a via-stack helper blindly at route crossings. A stack to M5 also
 contains M4, M3, M2, and M1 shapes. Any lower-metal route passing through that
@@ -226,6 +245,38 @@ observable, and be verified at each mode boundary. Record mode selection as an
 integration requirement rather than implying that a programmable device
 calibrates itself.
 
+For a physical tuning bank, preserve three different results in the evidence:
+
+- **member legality:** every selectable tile is independently DRC clean, has a
+  unique pin-resolved LVS match, and has its own full-RC extraction;
+- **environment coverage:** at least one electrically valid member and control
+  setting satisfies the required target in every declared environment;
+- **bank margin:** the aggregate valid range reaches the separately declared
+  low and high design limits, with useful distance from control and member
+  endpoints.
+
+Do not collapse those into a single pass bit. The present VCO bank closes its
+declared target environments, but its slow-process/slow-resistor edge has only
+a narrow target bracket and therefore remains a margin-development result, not
+guardband closure. The eventual selector also needs a safe transition contract
+(normally disable or break-before-make), deterministic power-up behavior, and
+verification that inactive members cannot disturb the active oscillator.
+
+### Proven physical iteration ladder
+
+Use this order when an extracted cell misses a corner:
+
+1. reproduce the miss with the checked-in extracted cell and classify it as
+   truth/polarity, headroom, loop gain, load, or range;
+2. screen one mechanism at a time while retaining the original distributed RC;
+3. reject parameter values outside a DRC-proven geometry interval;
+4. make every affected layout coordinate depend on the chosen parameter;
+5. regenerate each candidate and require DRC, unique LVS, and full-RC PEX;
+6. simulate the repeated or composed extracted structure, not a lumped proxy;
+7. report required-target coverage and design guardband independently; and
+8. keep the screening result only as provenance for why the physical candidate
+   was built, never as its qualification evidence.
+
 ## 8. Add stress dimensions in layers
 
 After extracted PVT closure, add tests according to the block's physical risks:
@@ -240,15 +291,23 @@ After extracted PVT closure, add tests according to the block's physical risks:
 - pad, ESD, bond, package, board, and channel models when selected.
 
 For an oscillator, compose the loop from repeated extracted delay tiles rather
-than adding a lumped estimate of one tile's parasitics. Require both early and
-late period measurements, a minimum sustained differential swing, bounded
-current, and a startup deadline. A seeded initial condition proves attraction
-to the oscillating trajectory but does not prove noise startup, so keep those
-claims separate. Fit deliberate delay capacitance from at least two extracted
-physical points; schematic-only capacitor scaling can miss routing delay by a
-large factor. Finally, treat loss of loop gain and missed frequency range as
-different band-design failures: the former needs gain/load resistance or
-regeneration, while the latter may need only capacitance.
+than adding a lumped estimate of one tile's parasitics. Sweep only realizable
+control values and require contiguous electrically valid codes, correct local
+tuning polarity, both early and late period measurements, sustained
+differential swing, bounded current, and a startup deadline. Record the valid
+minimum and maximum frequency as well as the codes nearest the target. A target
+bracket is useful calibration evidence; it is not a substitute for explicit
+frequency headroom above and below the target.
+
+A seeded initial condition proves attraction to the oscillating trajectory but
+does not prove noise startup. Keep seeded startup, unseeded/noise-assisted
+startup, supply pushing, phase noise/jitter, mismatch, safe bank selection, and
+closed-loop PLL behavior as separate claims. Fit deliberate delay capacitance
+from at least two DRC/LVS/PEX-clean physical points; schematic-only capacitor
+scaling can miss routing delay by a large factor. Treat loss of loop gain and
+missed frequency range as different failures: the former needs restored
+transconductance/regeneration or less loading, while the latter may need a
+different legal capacitance or load member. Re-extract either change.
 
 Use the same fixed selected code throughout one stress environment unless the
 test is explicitly measuring recalibration. Otherwise the sweep can conceal a

@@ -351,6 +351,16 @@ a DRC error; overlapping them into one legal shape is often cleaner. Different
 nets need independently allocated escape columns and spacing on every layer in
 their stacks. A rendered top-metal picture alone cannot establish either fact.
 
+Treat the parent power grid as an analog signal path. A narrow parent supply
+route can pass DRC and unique LVS yet add enough extracted resistance to
+collapse a downstream limiter or divider at a slow/high-temperature corner.
+Use short wide upper-metal overlays, continuous child-port overlap, legal via
+arrays, and explicit branch continuity; then re-run the complete parent PEX.
+DRC proves geometry and LVS proves topology, but neither proves that the
+delivered voltage/current preserves the calibrated operating window. Compare
+internal rails and function before and after a PDN revision so an apparent
+device-bias fix is not masking route resistance.
+
 Allocate vertical escape columns with net awareness, not only global spacing.
 Repeated terminals on the same net should reuse a nearby legal escape when that
 keeps their low-metal terminal straps local. Otherwise a globally unique-column

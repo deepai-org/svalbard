@@ -59,6 +59,10 @@ three selected DAC codes of rail headroom. A 55/55-case exact-parent ripple
 matrix bounds isolated VDD/reference sensitivity to 8.59 ps worst cycle
 displacement and 0.467% worst median-frequency pushing. A symmetric static-CML
 divide-by-two is also zero-DRC, uniquely LVS-matched, and full-RC qualified at
-1.25 GHz input across 5/5 environments, producing 625 MHz. VCO/divider loading,
-the remaining feedback ratio, statistical startup/mismatch, phase noise,
-combined PDN/aggressor sensitivity, and the closed PLL remain unfinished.
+1.25 GHz input across 5/5 environments, producing 625 MHz. The actual routed
+VCO-bank/two-stage-restorer/divider parent is zero-DRC, uniquely LVS-matched,
+extracts to 4,766R/1,580C, and passes exact-parent calibration in 5/5
+environments with five adjacent passing divider settings each. The remaining
+feedback ratio, statistical startup/mismatch, phase noise, combined
+PDN/aggressor sensitivity, realizable calibration control, and the closed PLL
+remain unfinished.

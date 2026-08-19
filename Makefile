@@ -93,6 +93,9 @@ analog-flow-preflight:
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/pll/run_vco_divider_clock_screen.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/pll/run_vco_divider_restorer_screen.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/pll/run_vco_divider_restorer_full.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/pll/run_pll_clock_path_physical.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/pll/run_pll_clock_path_screen.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/pll/run_pll_clock_path_pvt.sh
 
 serdes-tx-smoke:
 	./ip/blocks/analog/wireline_serdes/serdes_tx/run.sh

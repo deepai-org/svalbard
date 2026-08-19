@@ -1,0 +1,26 @@
+* SPDX-License-Identifier: Apache-2.0
+* Routed parent boundary from the selected VCO bank through the first divider.
+.include /src/pll/vco_bank_top.spice
+.include /src/pll/clock_restorer_cascade.spice
+.include /src/pll/divider.spice
+
+.subckt pll_clock_path VREFH VREFL VDD VSS
++ F_A4 F_A4B F_A3 F_A3B F_A2 F_A2B F_A1 F_A1B F_A0 F_A0B
++ F_B4 F_B4B F_B3 F_B3B F_B2 F_B2B F_B1 F_B1B F_B0 F_B0B
++ G_A4 G_A4B G_A3 G_A3B G_A2 G_A2B G_A1 G_A1B G_A0 G_A0B
++ G_B4 G_B4B G_B3 G_B3B G_B2 G_B2B G_B1 G_B1B G_B0 G_B0B
++ FAST_KICKP FAST_KICKN GAIN_KICKP GAIN_KICKN SEL_A SEL_B SEL_BUF
++ REST_BIAS DIV_RESET DIV_BIAS DIV_P DIV_N
+
+XBANK VREFH VREFL VDD VSS
++ F_A4 F_A4B F_A3 F_A3B F_A2 F_A2B F_A1 F_A1B F_A0 F_A0B
++ F_B4 F_B4B F_B3 F_B3B F_B2 F_B2B F_B1 F_B1B F_B0 F_B0B
++ G_A4 G_A4B G_A3 G_A3B G_A2 G_A2B G_A1 G_A1B G_A0 G_A0B
++ G_B4 G_B4B G_B3 G_B3B G_B2 G_B2B G_B1 G_B1B G_B0 G_B0B
++ FAST_KICKP FAST_KICKN GAIN_KICKP GAIN_KICKN SEL_A SEL_B SEL_BUF
++ BANK_CLK_P BANK_CLK_N vco_bank_top
+XREST BANK_CLK_P BANK_CLK_N REST_BIAS VDD VSS REST_CLK_P REST_CLK_N
++ cml_clock_restorer_cascade
+XDIV REST_CLK_P REST_CLK_N DIV_RESET DIV_BIAS VDD VSS DIV_P DIV_N
++ cml_divider_by_2
+.ends pll_clock_path

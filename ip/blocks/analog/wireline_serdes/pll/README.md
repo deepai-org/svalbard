@@ -15,7 +15,9 @@ feedback-divider ratio, loop, and analog-top integration remain open. A first
 static differential CML divide-by-two stage is now physically closed. A
 two-stage extracted CML clock restorer now closes the exact VCO-bank-to-divider
 electrical boundary across all five declared environments; the routed combined
-parent and remaining feedback ratio are still open.
+parent is now also zero-DRC, uniquely LVS-matched, full-RC extracted, and
+electrically qualified across all five environments. The remaining feedback
+ratio is still open.
 The earlier fixed-control and 2.5 GHz banks are retained as fallback/
 falsification evidence rather than selected implementation members.
 
@@ -264,14 +266,28 @@ points. Across passing cases the minimum restored differential rails are
 +0.591/-0.484 V, minimum divider rails are +0.286/-0.277 V, worst divide-ratio
 error is 0.258%, worst late-period drift is 0.453%, and maximum VCO frequency
 shift is 0.030%. This closes extracted children joined by ideal parent wires;
-it does not yet close the placed-and-routed combined parent. The review image
-is `layout_clock_restorer_cascade.png`, structural evidence is
+it was the design screen used before closing the placed-and-routed parent. The
+review image is `layout_clock_restorer_cascade.png`, structural evidence is
 `clock_restorer_cascade_physical_result.json`, and composition evidence is
 `vco_divider_restorer_full_result.json`.
 
+`pll_clock_path_layout.tcl` places the exact selected VCO bank, two-stage
+restorer, and divider and owns their differential interconnect and shared power
+routing. The hierarchy is zero-DRC, uniquely LVS-matched, and full-RC extracted
+to 4,766 resistors and 1,580 capacitors.
+Its exact parent PEX passes 43/50 calibration candidates and all 5/5 declared
+environments; every environment has five consecutive passing divider-bias
+points. Across passing cases the minimum VCO rails are +0.186/-0.162 V,
+minimum restored rails are +0.585/-0.468 V, and minimum divider rails are
++0.202/-0.199 V. Worst divide-ratio error is 0.509%, worst settled period
+drift is 0.425%, maximum VCO loading shift is 3.151%, maximum total current is
+21.27 mA, and maximum 2.0 V-reference power is 1.42 mW. The review image is
+`layout_pll_clock_path.png`; hash-bound physical and simulation evidence are
+`pll_clock_path_physical_result.json` and `pll_clock_path_pvt_result.json`.
+
 Phase noise, statistical noise/mismatch startup, combined PDN/aggressor stress,
-runtime band-selection control, routed VCO/restorer/divider composition,
-remaining divider ratio, and loop dynamics remain open.
+runtime band-selection and bias-generation control, remaining divider ratio,
+and loop dynamics remain open.
 
 The first safe-selection primitive is now physical and extracted. Rather than
 duplicate nearly identical circuitry, the closed phase-interpolator macro is
@@ -366,11 +382,14 @@ geometry over 25 extracted cases. `run_clock_restorer_cascade_physical.sh`
 regenerates the two-stage limiter hierarchy and requires DRC, unique LVS,
 full-RC extraction, and a GDS render. `run_vco_divider_restorer_full.sh` then
 composes the exact VCO-bank, limiter, and divider decks over the five selected
-VCO environments with an 8-worker bounded sweep. `run_schematic.sh` runs the 12-environment
-adversarial screen and intentionally
-returns failure until every environment has a bracketing band. The next
-milestone is defensible mismatch/statistical startup and phase-noise analysis
-against the complete parent, plus a routed VCO/restorer/divider parent and loop
+VCO environments with an 8-worker bounded sweep. `run_pll_clock_path_physical.sh`
+generates and closes the actual routed hierarchy, while
+`run_pll_clock_path_screen.sh` provides a focused slow-corner diagnostic and
+`run_pll_clock_path_pvt.sh` qualifies the exact parent PEX over its full
+five-environment calibration matrix. `run_schematic.sh` runs the 12-environment
+adversarial screen and intentionally returns failure until every environment
+has a bracketing band. The next milestone is defensible mismatch/statistical
+startup and phase-noise analysis against the complete parent, followed by loop
 integration. The remaining feedback-divider ratio, PFD, charge pump, loop
 filter, lock detector, and external-clock bypass remain separate unimplemented
 boundaries.

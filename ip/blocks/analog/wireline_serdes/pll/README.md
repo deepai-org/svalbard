@@ -1,9 +1,13 @@
 # PLL / VCO work in progress
 
-This directory starts the autonomous 2.5 GHz clock-source critical path with a
-real GF180 transistor-level VCO experiment. It is not yet a PLL macro; the
-delay-tile family and one complete oscillator-band boundary are physically
-checked, but the twelve-band bank and PLL are not physically integrated.
+This directory develops the autonomous clock source for the dual-edge PCIe
+receiver. The required oscillator rate is 1.25 GHz, not the 2.5 GT/s serial
+rate. It is not yet a PLL macro: seven complete half-rate oscillator parents
+are physically closed and cover the required target in the public-model PVT
+set, while their selector, divider, loop, and analog-top integration remain
+open. The earlier 2.5 GHz work is retained as an overspeed experiment and as
+evidence that GF180 parent interconnect and hot/slow device speed cannot be
+ignored.
 
 `ring_vco.spice` is a three-stage differential CML ring followed by an
 isolating CML output buffer. Each delay cell has a driven differential pair, a
@@ -104,7 +108,7 @@ numerical asymmetry is not a statistical noise-startup model.
 `startup_composed_result.json` binds these cases to the assist and tile PEX
 hashes and records the physical checks.
 
-The first complete oscillator-band parent is now routed rather than assembled
+The first complete full-rate oscillator-band parent was routed rather than assembled
 only as leaf PEX instances in a testbench. `vco_band_layout.tcl` places three
 delay stages, one isolating output buffer, and the matched startup assist, then
 owns the differential ring feedback, VDD, VSS, VCTRL, kick, and output routes.
@@ -123,8 +127,28 @@ loading shifts frequency by 0.0137%, and steady band current is 8.47 mA. After
 shutdown, differential residue is 1.54 uV and band current is 1.47 uA. The
 physical report, electrical result, and simulator all match the exact checked
 PEX hash in `vco_band_result.json`; `layout_vco_band.png` is the emitted-GDS
-review image. This closes one nominal band boundary, not all twelve bands or
-their PVT/statistical behavior.
+review image. This closed one nominal overspeed boundary, not its PVT behavior.
+Regenerating all twelve members in a much shorter vertically folded parent
+produced 12/12 zero-DRC, unique-LVS, exact-PEX layouts and improved nominal
+speed, but the complete 480-case bank covered 2.5 GHz in only 2/5 environments.
+The three hot environments topped out below target; active-width screens raised
+capacitance without recovering the slow-device cases. The full-rate
+architecture is therefore a retained failed experiment, not the current
+clock-source claim.
+
+The current half-rate bank uses the folded parent with three delay stages, one
+isolating output buffer, and the symmetric startup assist. Seven complete
+parents implement measured load/cap/tail points. Every member is zero-DRC,
+uniquely LVS-matched, and full-RC extracted with 1,118--1,122 resistors and
+325--333 capacitors. A 280-case no-`.ic`, no-`uic` sweep uses a supply ramp,
+physical startup assist, eight realizable controls, five mixed
+process/resistor/supply/temperature environments, swing/current/startup/drift
+gates, and exact PEX identity. It has 183 passing cases and continuous 1.25 GHz
+coverage in 5/5 environments. The deliberately tighter +/-2% design band is
+continuous in 3/5; slow-device/fast-resistor and slow-device/slow-resistor
+still need finer capacitance or independently controlled signal/regenerative
+tail bias. `half_rate_vco_bank_result.json` records both claims separately and
+`layout_half_rate_vco_bank.png` is the emitted-GDS visual index.
 
 Phase noise, statistical noise/mismatch startup, supply pushing, safe band
 selection across the complete bank, inactive member loading, divider loading,
@@ -193,12 +217,18 @@ closure plus the all-leaf/PVT/handoff matrix. `run_vco_band_physical.sh` closes
 the routed oscillator parent alone; `run_vco_band.sh` additionally regenerates
 the extracted selector load and proves startup, steady state, loading, shutdown,
 and exact PEX identity.
+`run_vco_band_bank.sh` reproduces the failed twelve-parent 2.5 GHz overspeed
+matrix. `run_half_rate_vco_screen.sh` is a candidate-only retained-RC cap
+screen; `run_half_rate_vco_bank.sh` regenerates all seven 1.25 GHz parents,
+checks every DRC/LVS/PEX identity, runs the 280-case matrix, and emits the
+numeric result plus visual index.
 
 `run_schematic.sh` runs the 12-environment adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
-physical milestone is to generate this parent for the other required coarse
-members, then connect all twelve physical bands to the closed tree with
-realizable power gating and a controller that enforces the proven nonoverlap
-sequence. After that come mismatch/statistical startup, supply-pushing, and
-phase-noise simulations. The divider, PFD, charge pump, loop filter, lock
-detector, and external-clock bypass remain separate unimplemented boundaries.
+physical milestone is to close the two missing half-rate design-guardband
+environments with finer capacitance or split signal/regenerative bias, then
+connect the qualified half-rate members to the closed tree with realizable
+power gating and a controller that enforces the proven nonoverlap sequence.
+After that come mismatch/statistical startup, supply-pushing, and phase-noise
+simulations. The divider, PFD, charge pump, loop filter, lock detector, and
+external-clock bypass remain separate unimplemented boundaries.

@@ -141,7 +141,16 @@ if {[info exists ::env(VCO_LOAD_L)]} { set load_l $::env(VCO_LOAD_L) }
 if {[info exists ::env(VCO_MAIN_TAIL_W)]} { set main_tail_w $::env(VCO_MAIN_TAIL_W) }
 if {[info exists ::env(VCO_LATCH_TAIL_W)]} { set latch_tail_w $::env(VCO_LATCH_TAIL_W) }
 set cap_left_xoff [expr {-$cap_l/2.0-0.44}]
-set cap_right_xoff [expr {$cap_l/2.0}]
+set cap_right_xoff [expr {$cap_l/2.0+0.44}]
+# The cap diffusion contact moves with channel length.  Keep it out of the
+# fixed x=+/-11 regenerative-output trunks: medium-long members move inward;
+# shorter and very-long members are already clear on opposite sides.
+set cap_center 15.0
+if {$cap_l > 5.8 && $cap_l < 8.5} { set cap_center 14.0 }
+set cap_left_center [expr {-$cap_center}]
+set cap_right_center $cap_center
+set cap_left_vss_end [expr {$cap_left_center+$cap_right_xoff+0.38}]
+set cap_right_vss_start [expr {$cap_right_center+$cap_left_xoff-0.38}]
 set cap_terminal_off [expr {$cap_w/2.0-1.0}]
 set cap_bottom_y [expr {11.0-$cap_terminal_off}]
 set cap_top_y [expr {11.0+$cap_terminal_off}]
@@ -183,7 +192,7 @@ foreach {cell instance x y} [list \
         $input_cell XMP -15 0 $latch_cell XLP -5 0 \
         $latch_cell XLN 5 0 $input_cell XMN 15 0 \
         $input_tail XMT -8 -13 $latch_tail XMLT 8 -13 \
-        $mos_cap XCP -15 11 $mos_cap XCN 15 11 \
+        $mos_cap XCP $cap_left_center 11 $mos_cap XCN $cap_right_center 11 \
         $load_cell XRP -15 23 $load_cell XRN 15 23] {
     getcell $cell child 0 0 parent $x $y
     identify $instance
@@ -256,7 +265,7 @@ paint_rect metal5 4.62 2.32 5.38 9.38
 paint_rect metal5 -11.38 8.62 5.38 9.38
 
 # MOS-cap gates attach to outputs; both diffusion terminals return to VSS.
-foreach {x out_x} [list -15 -15 15 15] {
+foreach x [list $cap_left_center $cap_right_center] {
     terminal_strap $x 11 $cap_terminal_off [list $cap_left_xoff] 3
     terminal_strap $x 11 [expr {-$cap_terminal_off}] [list $cap_right_xoff] 3
     set gate_y [manual_gate_bottom $x $cap_gate_y 1.60 {0.0} 3]
@@ -308,10 +317,14 @@ paint_rect metal3 7.6 [expr {$latch_tail_bottom_y-0.45}] 26.6 [expr {$latch_tail
 foreach {x y} [list -26.6 $main_tail_bottom_y 26.6 $latch_tail_bottom_y] { stack_to $x $y 3 }
 
 # Each MOS-cap diffusion pair returns on its nearest guard side.
-paint_rect metal3 -26.6 [expr {$cap_bottom_y-0.45}] -12.5 [expr {$cap_bottom_y+0.45}]
-paint_rect metal3 -26.6 [expr {$cap_top_y-0.45}] -12.5 [expr {$cap_top_y+0.45}]
-paint_rect metal3 12.5 [expr {$cap_bottom_y-0.45}] 26.6 [expr {$cap_bottom_y+0.45}]
-paint_rect metal3 12.5 [expr {$cap_top_y-0.45}] 26.6 [expr {$cap_top_y+0.45}]
+paint_rect metal3 -26.6 [expr {$cap_bottom_y-0.45}] $cap_left_vss_end \
+    [expr {$cap_bottom_y+0.45}]
+paint_rect metal3 -26.6 [expr {$cap_top_y-0.45}] $cap_left_vss_end \
+    [expr {$cap_top_y+0.45}]
+paint_rect metal3 $cap_right_vss_start [expr {$cap_bottom_y-0.45}] 26.6 \
+    [expr {$cap_bottom_y+0.45}]
+paint_rect metal3 $cap_right_vss_start [expr {$cap_top_y-0.45}] 26.6 \
+    [expr {$cap_top_y+0.45}]
 foreach {x y} [list -26.6 $cap_bottom_y -26.6 $cap_top_y \
         26.6 $cap_bottom_y 26.6 $cap_top_y] {
     stack_to $x $y 3

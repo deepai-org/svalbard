@@ -1,0 +1,150 @@
+* SPDX-License-Identifier: Apache-2.0
+* Seven physical delay members for the 1.25 GHz dual-edge PCIe clock.
+.include /src/pll/startup_assist.spice
+
+.subckt cml_vco_delay_hr_gain INP INN OUTP OUTN VCTRL VDD VSS
+XRP VDD OUTP VSS ppolyf_u r_width=2u r_length=6.5u
+XRN VDD OUTN VSS ppolyf_u r_width=2u r_length=6.5u
+XMP OUTP INP TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMN OUTN INN TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMT TAIL VCTRL VSS VSS nfet_03v3 w=10u l=0.28u m=4
+XLP OUTP OUTN LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XLN OUTN OUTP LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XMLT LTAIL VCTRL VSS VSS nfet_03v3 w=4u l=0.28u m=2
+XCP VSS OUTP VSS VSS nfet_03v3 w=4u l=3.45u m=1
+XCN VSS OUTN VSS VSS nfet_03v3 w=4u l=3.45u m=1
+.ends cml_vco_delay_hr_gain
+
+.subckt cml_vco_delay_hr_4p5 INP INN OUTP OUTN VCTRL VDD VSS
+XRP VDD OUTP VSS ppolyf_u r_width=2u r_length=4u
+XRN VDD OUTN VSS ppolyf_u r_width=2u r_length=4u
+XMP OUTP INP TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMN OUTN INN TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMT TAIL VCTRL VSS VSS nfet_03v3 w=15u l=0.28u m=4
+XLP OUTP OUTN LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XLN OUTN OUTP LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XMLT LTAIL VCTRL VSS VSS nfet_03v3 w=6u l=0.28u m=2
+XCP VSS OUTP VSS VSS nfet_03v3 w=3.2u l=4.5u m=1
+XCN VSS OUTN VSS VSS nfet_03v3 w=3.2u l=4.5u m=1
+.ends cml_vco_delay_hr_4p5
+
+.subckt cml_vco_delay_hr_4p75 INP INN OUTP OUTN VCTRL VDD VSS
+XRP VDD OUTP VSS ppolyf_u r_width=2u r_length=4u
+XRN VDD OUTN VSS ppolyf_u r_width=2u r_length=4u
+XMP OUTP INP TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMN OUTN INN TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMT TAIL VCTRL VSS VSS nfet_03v3 w=15u l=0.28u m=4
+XLP OUTP OUTN LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XLN OUTN OUTP LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XMLT LTAIL VCTRL VSS VSS nfet_03v3 w=6u l=0.28u m=2
+XCP VSS OUTP VSS VSS nfet_03v3 w=3.2u l=4.75u m=1
+XCN VSS OUTN VSS VSS nfet_03v3 w=3.2u l=4.75u m=1
+.ends cml_vco_delay_hr_4p75
+
+.subckt cml_vco_delay_hr_4p8 INP INN OUTP OUTN VCTRL VDD VSS
+XRP VDD OUTP VSS ppolyf_u r_width=2u r_length=4u
+XRN VDD OUTN VSS ppolyf_u r_width=2u r_length=4u
+XMP OUTP INP TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMN OUTN INN TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMT TAIL VCTRL VSS VSS nfet_03v3 w=15u l=0.28u m=4
+XLP OUTP OUTN LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XLN OUTN OUTP LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XMLT LTAIL VCTRL VSS VSS nfet_03v3 w=6u l=0.28u m=2
+XCP VSS OUTP VSS VSS nfet_03v3 w=3.2u l=4.8u m=1
+XCN VSS OUTN VSS VSS nfet_03v3 w=3.2u l=4.8u m=1
+.ends cml_vco_delay_hr_4p8
+
+.subckt cml_vco_delay_hr_5p8 INP INN OUTP OUTN VCTRL VDD VSS
+XRP VDD OUTP VSS ppolyf_u r_width=2u r_length=4u
+XRN VDD OUTN VSS ppolyf_u r_width=2u r_length=4u
+XMP OUTP INP TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMN OUTN INN TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMT TAIL VCTRL VSS VSS nfet_03v3 w=15u l=0.28u m=4
+XLP OUTP OUTN LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XLN OUTN OUTP LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XMLT LTAIL VCTRL VSS VSS nfet_03v3 w=6u l=0.28u m=2
+XCP VSS OUTP VSS VSS nfet_03v3 w=3.3u l=5.8u m=1
+XCN VSS OUTN VSS VSS nfet_03v3 w=3.3u l=5.8u m=1
+.ends cml_vco_delay_hr_5p8
+
+.subckt cml_vco_delay_hr_gain_fast INP INN OUTP OUTN VCTRL VDD VSS
+XRP VDD OUTP VSS ppolyf_u r_width=2u r_length=6.5u
+XRN VDD OUTN VSS ppolyf_u r_width=2u r_length=6.5u
+XMP OUTP INP TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMN OUTN INN TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMT TAIL VCTRL VSS VSS nfet_03v3 w=10u l=0.28u m=4
+XLP OUTP OUTN LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XLN OUTN OUTP LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XMLT LTAIL VCTRL VSS VSS nfet_03v3 w=4u l=0.28u m=2
+XCP VSS OUTP VSS VSS nfet_03v3 w=4u l=3.2u m=1
+XCN VSS OUTN VSS VSS nfet_03v3 w=4u l=3.2u m=1
+.ends cml_vco_delay_hr_gain_fast
+
+.subckt cml_vco_delay_hr_11p0 INP INN OUTP OUTN VCTRL VDD VSS
+XRP VDD OUTP VSS ppolyf_u r_width=2u r_length=4u
+XRN VDD OUTN VSS ppolyf_u r_width=2u r_length=4u
+XMP OUTP INP TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMN OUTN INN TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMT TAIL VCTRL VSS VSS nfet_03v3 w=15u l=0.28u m=4
+XLP OUTP OUTN LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XLN OUTN OUTP LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XMLT LTAIL VCTRL VSS VSS nfet_03v3 w=6u l=0.28u m=2
+XCP VSS OUTP VSS VSS nfet_03v3 w=3.2u l=11u m=1
+XCN VSS OUTN VSS VSS nfet_03v3 w=3.2u l=11u m=1
+.ends cml_vco_delay_hr_11p0
+
+.subckt cml_vco_band_hr_gain VCTRL KICKP KICKN VDD VSS CLK_P CLK_N
+X0 N2P N2N N0P N0N VCTRL VDD VSS cml_vco_delay_hr_gain
+X1 N0P N0N N1P N1N VCTRL VDD VSS cml_vco_delay_hr_gain
+X2 N1P N1N N2P N2N VCTRL VDD VSS cml_vco_delay_hr_gain
+XBUF N2P N2N CLK_P CLK_N VCTRL VDD VSS cml_vco_delay_hr_gain
+XSTART N0P N0N KICKP KICKN VSS cml_vco_startup_assist
+.ends cml_vco_band_hr_gain
+
+.subckt cml_vco_band_hr_4p5 VCTRL KICKP KICKN VDD VSS CLK_P CLK_N
+X0 N2P N2N N0P N0N VCTRL VDD VSS cml_vco_delay_hr_4p5
+X1 N0P N0N N1P N1N VCTRL VDD VSS cml_vco_delay_hr_4p5
+X2 N1P N1N N2P N2N VCTRL VDD VSS cml_vco_delay_hr_4p5
+XBUF N2P N2N CLK_P CLK_N VCTRL VDD VSS cml_vco_delay_hr_4p5
+XSTART N0P N0N KICKP KICKN VSS cml_vco_startup_assist
+.ends cml_vco_band_hr_4p5
+
+.subckt cml_vco_band_hr_4p75 VCTRL KICKP KICKN VDD VSS CLK_P CLK_N
+X0 N2P N2N N0P N0N VCTRL VDD VSS cml_vco_delay_hr_4p75
+X1 N0P N0N N1P N1N VCTRL VDD VSS cml_vco_delay_hr_4p75
+X2 N1P N1N N2P N2N VCTRL VDD VSS cml_vco_delay_hr_4p75
+XBUF N2P N2N CLK_P CLK_N VCTRL VDD VSS cml_vco_delay_hr_4p75
+XSTART N0P N0N KICKP KICKN VSS cml_vco_startup_assist
+.ends cml_vco_band_hr_4p75
+
+.subckt cml_vco_band_hr_4p8 VCTRL KICKP KICKN VDD VSS CLK_P CLK_N
+X0 N2P N2N N0P N0N VCTRL VDD VSS cml_vco_delay_hr_4p8
+X1 N0P N0N N1P N1N VCTRL VDD VSS cml_vco_delay_hr_4p8
+X2 N1P N1N N2P N2N VCTRL VDD VSS cml_vco_delay_hr_4p8
+XBUF N2P N2N CLK_P CLK_N VCTRL VDD VSS cml_vco_delay_hr_4p8
+XSTART N0P N0N KICKP KICKN VSS cml_vco_startup_assist
+.ends cml_vco_band_hr_4p8
+
+.subckt cml_vco_band_hr_5p8 VCTRL KICKP KICKN VDD VSS CLK_P CLK_N
+X0 N2P N2N N0P N0N VCTRL VDD VSS cml_vco_delay_hr_5p8
+X1 N0P N0N N1P N1N VCTRL VDD VSS cml_vco_delay_hr_5p8
+X2 N1P N1N N2P N2N VCTRL VDD VSS cml_vco_delay_hr_5p8
+XBUF N2P N2N CLK_P CLK_N VCTRL VDD VSS cml_vco_delay_hr_5p8
+XSTART N0P N0N KICKP KICKN VSS cml_vco_startup_assist
+.ends cml_vco_band_hr_5p8
+
+.subckt cml_vco_band_hr_gain_fast VCTRL KICKP KICKN VDD VSS CLK_P CLK_N
+X0 N2P N2N N0P N0N VCTRL VDD VSS cml_vco_delay_hr_gain_fast
+X1 N0P N0N N1P N1N VCTRL VDD VSS cml_vco_delay_hr_gain_fast
+X2 N1P N1N N2P N2N VCTRL VDD VSS cml_vco_delay_hr_gain_fast
+XBUF N2P N2N CLK_P CLK_N VCTRL VDD VSS cml_vco_delay_hr_gain_fast
+XSTART N0P N0N KICKP KICKN VSS cml_vco_startup_assist
+.ends cml_vco_band_hr_gain_fast
+
+.subckt cml_vco_band_hr_11p0 VCTRL KICKP KICKN VDD VSS CLK_P CLK_N
+X0 N2P N2N N0P N0N VCTRL VDD VSS cml_vco_delay_hr_11p0
+X1 N0P N0N N1P N1N VCTRL VDD VSS cml_vco_delay_hr_11p0
+X2 N1P N1N N2P N2N VCTRL VDD VSS cml_vco_delay_hr_11p0
+XBUF N2P N2N CLK_P CLK_N VCTRL VDD VSS cml_vco_delay_hr_11p0
+XSTART N0P N0N KICKP KICKN VSS cml_vco_startup_assist
+.ends cml_vco_band_hr_11p0

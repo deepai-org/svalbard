@@ -57,7 +57,7 @@ container_script="$source_dir/${container_command#/src/}"
 }
 
 free_kib() { df -Pk "$1" | awk 'NR == 2 { print $4 }'; }
-for command_name in docker flock timeout mktemp awk df; do
+for command_name in docker flock timeout mktemp awk df find sort xargs sha256sum; do
   command -v "$command_name" >/dev/null 2>&1 || {
     printf '%s: missing host command: %s\n' "$label" "$command_name" >&2
     exit 2
@@ -103,16 +103,33 @@ trap finish EXIT
 exec 9>"$scratch_root/heavy-job.lock"
 flock -n 9 || { printf '%s: another bounded heavy job is running\n' "$label" >&2; exit 2; }
 
+source_digest() {
+  (
+    cd "$source_dir"
+    find . -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum
+  ) | sha256sum | awk '{ print $1 }'
+}
+source_sha256_before="$(source_digest)"
+
+container_rc=0
 timeout --kill-after=30s "$flow_timeout" docker run --rm --platform linux/arm64 \
   --cpus="$cpus" --memory="$memory" --memory-swap="$memory" --pids-limit=256 \
   --network=none --read-only --cap-drop=ALL --security-opt=no-new-privileges \
   --user "$(id -u):$(id -g)" --env HOME=/tmp --env PDK=gf180mcuD \
+  --env ANALOG_SOURCE_SHA256="$source_sha256_before" \
   --env PDKPATH=/foss/pdks/gf180mcuD --workdir /work \
   --mount "type=bind,src=$source_dir,dst=/src,readonly" \
   --mount "type=bind,src=$run_dir,dst=/work" \
   --tmpfs /tmp:size=256m,mode=1777 \
   --tmpfs /headless/.data-default:size=16m,mode=0700,uid="$(id -u)",gid="$(id -g)" \
-  --entrypoint /bin/bash "$image_ref" -lc "$container_command"
+  --entrypoint /bin/bash "$image_ref" -lc "$container_command" || container_rc=$?
+
+source_sha256_after="$(source_digest)"
+[[ "$source_sha256_before" == "$source_sha256_after" ]] || {
+  printf '%s: source tree changed during the evidence run\n' "$label" >&2
+  exit 2
+}
+(( container_rc == 0 )) || exit "$container_rc"
 
 for mapping in "${copies[@]}"; do
   run_file="${mapping%%:*}"

@@ -1,0 +1,31 @@
+* SPDX-License-Identifier: Apache-2.0
+* Full-parent-PEX coarse-band startup and tuning screen.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include @BAND_PEX_PATH@
+.temp @TEMP_C@
+
+VDD VDD 0 PWL(0 0 500p @VDD_V@)
+VCTRL VCTRL 0 PWL(0 0 500p @VCTRL_V@)
+VKICKP KICKP 0 PULSE(0 @VDD_V@ 1n 20p 20p 250p 100n)
+VKICKN KICKN 0 0
+XDUT VCTRL KICKP KICKN VDD 0 CLK_P CLK_N @BAND_PEX_SUBCKT@
+CLOADP CLK_P 0 25f
+CLOADN CLK_N 0 25f
+
+.control
+tran 3p 14n
+let vdiff = v(CLK_P)-v(CLK_N)
+let vcm = (v(CLK_P)+v(CLK_N))/2
+let isupply = -i(VDD)
+meas tran startup_time when vdiff=0 rise=1 td=1.30n
+meas tran period trig vdiff val=0 rise=8 td=1.30n targ vdiff val=0 rise=9 td=1.30n
+meas tran period_late trig vdiff val=0 rise=1 td=10n targ vdiff val=0 rise=2 td=10n
+meas tran diff_high max vdiff from=10n to=14n
+meas tran diff_low min vdiff from=10n to=14n
+meas tran output_cm avg vcm from=10n to=14n
+meas tran supply_current avg isupply from=10n to=14n
+print startup_time period period_late diff_high diff_low output_cm supply_current
+.endc
+.end

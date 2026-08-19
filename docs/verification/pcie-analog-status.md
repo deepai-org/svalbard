@@ -22,7 +22,7 @@ tracked separately in [PCIe Gen1 analog speed checkpoint](pcie-analog-speed-budg
 | Phase interpolator + dual 5-bit control DAC | Both physically closed; composed full-RC 2,367/2,367 and 9/9 calibrated to 31 codes with 2.80 ps worst error | Calibration controller/storage, glitch-safe updates, clock-tree/sampler composition, jitter/supply coupling |
 | CML-to-CMOS boundary | Physically closed with programmable-tail PVT and timing window | Denser composed timing/jitter matrix and clock distribution |
 | 1:2 deserializer | Physically closed alone and with extracted CML-to-CMOS front end | Parallel RX connection and clock/reset distribution |
-| PLL/VCO/divider | Twelve delay-tile layouts have full physical closure and aggregate +/-2% margin in 5/5 environments; startup assist passes 42/42 commanded starts. One complete routed band (three stages, buffer, assist, and parent interconnect) is 0-DRC, unique-LVS, 1,210R/329C and passes 5/5 no-IC startup/selector-load/shutdown cases at 2.493 GHz. The two-input selector passes direct two-VCO isolation/handoff. A balanced twelve-used/four-spare tree is 0-DRC, unique-LVS, 6,947R/3,061C full-RC and passes 16/16 all-leaf/PVT cases plus full-depth nonoverlap handoff with 472 mV minimum rail magnitude and 6.02 ps worst cycle jitter | Generate and close the other coarse-band parents, then compose all twelve physical bands, power gating and the sequencing controller with the tree; statistical startup/mismatch, phase noise/supply sensitivity, divider and closed PLL |
+| PLL/VCO/divider | The dual-edge architecture requires a 1.25 GHz oscillator. Seven complete folded parents are each 0-DRC, unique-LVS and exact full-RC PEX (1,118--1,122R/325--333C). Their no-IC/no-uic 280-case calibration has 183 passing cases and continuous target coverage in 5/5 mixed environments; the tighter +/-2% design band is continuous in 3/5. A separate twelve-parent 2.5 GHz overspeed experiment is physically clean but covers only 2/5 environments and is retained as falsification evidence. The existing two-input selector and balanced sixteen-leaf selector tree remain physically closed at their previously tested full-rate stress | Close half-rate guardband holes in slow/fast and slow/slow, compose the selected half-rate parents with power gating and the selector tree, then close statistical startup/mismatch, phase noise/supply sensitivity, divider and closed PLL |
 | Serializer | Not implemented | Parallel-to-serial topology, clock phases, TX loading, layout, extraction |
 | PCIe receiver detect/electrical idle | Not implemented | Pad-aware circuits, safe clamps, protocol-visible controls |
 | Shared bias/reference/control DACs | PI control DAC physically closed; remaining biases/references not implemented as an analog top | Bandgap/reference choice, bias distribution, calibration observables and retained codes |
@@ -41,9 +41,9 @@ and analog-top verification as major work rather than treating them as wiring.
 1. Add valid-window retiming, a realizable accumulator/integrator, and a
    calibration controller for the closed phase-interpolator DAC; demonstrate
    reference-assisted tracking.
-2. Generate the remaining physical VCO-band parents; compose all twelve bands
-   and their startup/power controls with the closed balanced selector hierarchy,
-   then build the divider and PLL with
+2. Close the two half-rate VCO design-margin holes; compose the qualified
+   parents and their startup/power controls with the closed balanced selector
+   hierarchy, then build the divider and PLL with
    external-clock bypass and observable divided clock/lock outputs; close
    statistical startup, tuning, jitter, and supply sensitivity.
 3. Build and extract the serializer and compose it with the transmitter at

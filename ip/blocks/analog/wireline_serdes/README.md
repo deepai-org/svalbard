@@ -32,5 +32,8 @@ the [PCIe analog status](../../../../docs/verification/pcie-analog-status.md).
 
 The [`pll`](pll/README.md) directory contains the first transistor-level
 autonomous-clock experiment: a regenerative differential CML ring VCO with a
-screened coarse R/C bank. It is schematic architecture evidence only, not yet
-a routed VCO or a closed PLL.
+physically extracted twelve-layout R/C/active-strength bank and a matched
+deterministic startup-assist cell. The sampled composed full-RC bank starts
+without initial conditions in 42/42 commanded cases and brackets 2.5 GHz in
+5/5 declared environments. It is still not a safely selected bank or a closed
+PLL.

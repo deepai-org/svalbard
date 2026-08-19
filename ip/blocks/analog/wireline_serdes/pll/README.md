@@ -79,9 +79,34 @@ twelve-layout visual index.
 This is target coverage, not robust PLL qualification. The SS/slow-resistor
 corner has physical endpoint margin, those members also close the
 FF/slow-resistor high endpoint, and the three final tiles close typical and
-SS/fast-resistor. Startup still uses a deterministic millivolt seed. Phase
-noise, unseeded/noise startup, supply pushing, mismatch, safe band selection,
-inactive member loading, divider loading, and loop dynamics remain open.
+SS/fast-resistor. The tuning-bank sweep still uses a deterministic millivolt
+seed to isolate steady-state range from startup behavior.
+
+Startup now has a separate physical mechanism and proof. A matched pair of
+1 um NMOS devices can briefly pull either side of one internal differential
+node and is off after acquisition. `startup_assist_layout.tcl` generates the
+guarded symmetric cell; it has zero Magic DRC errors, a unique Netgen LVS
+match, and full-RC PEX with 86 resistors and 12 capacitors. The first 4 um
+version started every case but its off-state drain capacitance reduced four of
+five sampled target brackets, so it was rejected rather than accepted as a
+startup-only result. The regenerated 1 um pair restores all five brackets.
+
+`run_startup_composed.sh` freshly regenerates the assist and seven relevant VCO
+tiles, closes DRC/LVS/PEX on all eight cells, and composes four instances of
+each selected tile with the extracted assist. With a 500 ps supply/control
+ramp, no `.ic`, no `uic`, and a released 270 ps kick, all 42/42 commanded cases
+pass across five process/passive/supply/temperature environments and both kick
+polarities. All 5/5 environments bracket 2.5 GHz; worst commanded startup is
+0.410 ns after release, worst early/late period drift is 0.086%, minimum
+differential peak is 429 mV, and worst opposite-kick frequency mismatch is
+0.012%. The five no-kick controls are diagnostic only because deterministic
+numerical asymmetry is not a statistical noise-startup model.
+`startup_composed_result.json` binds these cases to the assist and tile PEX
+hashes and records the physical checks.
+
+Phase noise, statistical noise/mismatch startup, supply pushing, safe band
+selection, inactive member loading, divider loading, and loop dynamics remain
+open.
 
 The bounded reproduction sequence is `run_active_screen.sh` for the
 parasitic-preserving active-width screen, `run_cap_drc.sh` for legal cap
@@ -89,11 +114,14 @@ length/width boundaries, `run_vco_active_physical.sh` for the four active-tail
 tiles and endpoint checker, `run_guardband_screen.sh` and
 `run_guardband_physical.sh` for the remaining endpoints, and `run_vco_bank.sh`
 for the complete 11/11-physical, 5/5-target, 5/5-guardband result and generated
-visual index.
+visual index. `run_startup_assist_physical.sh` closes the assist alone and
+`run_startup_composed.sh` reproduces the eight-cell physical and 42-case
+commanded-start proof. `layout_startup_assist.png` is the KLayout render of the
+checked startup cell.
 
 `run_schematic.sh` runs the 12-environment adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
-physical milestone is to implement safe selection and power gating, then run
-unseeded startup, tuning, supply-pushing, and phase-noise simulations. The
-divider, PFD, charge pump, loop filter, lock detector, and external-clock bypass
-remain separate unimplemented boundaries.
+physical milestone is to implement safe selection, power gating, and inactive
+isolation, then run mismatch/statistical startup, supply-pushing, and phase-noise
+simulations. The divider, PFD, charge pump, loop filter, lock detector, and
+external-clock bypass remain separate unimplemented boundaries.

@@ -1,0 +1,41 @@
+* SPDX-License-Identifier: Apache-2.0
+* Supply-ramped extracted VCO with a released physical startup assist.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include @TILE_PEX_PATH@
+.include @ASSIST_PEX_PATH@
+.temp @TEMP_C@
+
+.subckt assisted_extracted_ring VCTRL VDD VSS KICKP KICKN CLK_P CLK_N
+X0 N2P N2N N0P N0N VCTRL VDD VSS @TILE_PEX_SUBCKT@
+X1 N0P N0N N1P N1N VCTRL VDD VSS @TILE_PEX_SUBCKT@
+X2 N1P N1N N2P N2N VCTRL VDD VSS @TILE_PEX_SUBCKT@
+XBUF N2P N2N CLK_P CLK_N VCTRL VDD VSS @TILE_PEX_SUBCKT@
+XSTART N0P N0N KICKP KICKN VSS cml_vco_startup_assist_pex
+.ends assisted_extracted_ring
+
+VDD VDD 0 PWL(0 0 500p @VDD_V@)
+VCTRL VCTRL 0 PWL(0 0 500p @VCTRL_V@)
+VKICKP KICKP 0 @KICKP_SOURCE@
+VKICKN KICKN 0 @KICKN_SOURCE@
+XDUT VCTRL VDD 0 KICKP KICKN CLK_P CLK_N assisted_extracted_ring
+CLOADP CLK_P 0 25f
+CLOADN CLK_N 0 25f
+
+.control
+tran 2p 30n
+let vdiff = v(CLK_P)-v(CLK_N)
+let vcm = (v(CLK_P)+v(CLK_N))/2
+let isupply = -i(VDD)
+meas tran startup_time when vdiff=0 rise=1 td=1.30n
+meas tran period trig vdiff val=0 rise=10 td=1.30n targ vdiff val=0 rise=11 td=1.30n
+meas tran period_late trig vdiff val=0 rise=45 td=1.30n targ vdiff val=0 rise=46 td=1.30n
+meas tran diff_high max vdiff from=20n to=30n
+meas tran diff_low min vdiff from=20n to=30n
+meas tran output_cm avg vcm from=20n to=30n
+meas tran supply_current avg isupply from=20n to=30n
+meas tran prekick_diff max vdiff from=600p to=900p
+print startup_time period period_late diff_high diff_low output_cm supply_current prekick_diff
+.endc
+.end

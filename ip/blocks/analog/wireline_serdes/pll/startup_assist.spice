@@ -1,0 +1,7 @@
+* SPDX-License-Identifier: Apache-2.0
+* Matched differential startup kick; both devices are off after acquisition.
+
+.subckt cml_vco_startup_assist NODEP NODEN KICKP KICKN VSS
+XKP NODEP KICKP VSS VSS nfet_03v3 w=1u l=0.28u m=1
+XKN NODEN KICKN VSS VSS nfet_03v3 w=1u l=0.28u m=1
+.ends cml_vco_startup_assist

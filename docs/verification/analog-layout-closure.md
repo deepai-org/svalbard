@@ -280,8 +280,9 @@ full +/-2% frequency guardband in 5/5. These counts come from the checked-in
 not from the earlier perturbed-deck screen. Keep evolving project counts in
 machine-readable evidence and block status, not only in this workflow guide.
 The eventual selector still needs a safe transition contract
-(normally disable or break-before-make), deterministic power-up behavior, and
-verification that inactive members cannot disturb the active oscillator.
+(normally disable or break-before-make), integration of the extracted
+deterministic-startup actuator into its controller sequence, and verification
+that inactive members cannot disturb the active oscillator.
 
 ### Proven physical iteration ladder
 

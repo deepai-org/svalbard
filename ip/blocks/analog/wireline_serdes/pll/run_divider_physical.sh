@@ -7,4 +7,5 @@ exec "$runner" --label cml-divider-physical \
   --command /src/pll/container_divider_physical.sh \
   --copy divider-extracted-result.json:divider-extracted-result.json \
   --copy divider-physical-result.json:divider-physical-result.json \
+  --copy divider.pex.spice:divider.pex.spice \
   --copy layout-divider.png:layout-divider.png

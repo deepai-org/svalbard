@@ -27,3 +27,4 @@ python3 /src/pll/check_divider_physical.py --source /src/pll \
   --render /work/layout-divider.png \
   --extracted /work/divider-extracted-result.json \
   --output /work/divider-physical-result.json
+cp "$pex" /work/divider.pex.spice

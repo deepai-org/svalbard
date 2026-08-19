@@ -1,0 +1,18 @@
+* SPDX-License-Identifier: Apache-2.0
+* Two-stage CML limiter candidate.  The first stage isolates the VCO; the
+* second stage restores enough slew to clock the static divider.
+
+.subckt cml_clock_restorer_stage IN_P IN_N VBIAS VDD VSS OUT_P OUT_N
++ params: LOAD_L=7.5u
+XRP VDD OUT_P VSS ppolyf_u r_width=2u r_length={LOAD_L}
+XRN VDD OUT_N VSS ppolyf_u r_width=2u r_length={LOAD_L}
+XIP OUT_P IN_P NTAIL VSS nfet_03v3 w=10u l=0.28u m=2
+XIN OUT_N IN_N NTAIL VSS nfet_03v3 w=10u l=0.28u m=2
+XTAIL NTAIL VBIAS VSS VSS nfet_03v3 w=12u l=0.28u m=4
+.ends cml_clock_restorer_stage
+
+.subckt cml_clock_restorer_cascade IN_P IN_N VBIAS VDD VSS OUT_P OUT_N
++ params: LOAD_L=7.5u
+XPRE IN_P IN_N VBIAS VDD VSS MID_P MID_N cml_clock_restorer_stage params: LOAD_L={LOAD_L}
+XDRV MID_P MID_N VBIAS VDD VSS OUT_P OUT_N cml_clock_restorer_stage params: LOAD_L={LOAD_L}
+.ends cml_clock_restorer_cascade

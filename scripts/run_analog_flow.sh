@@ -35,7 +35,8 @@ while (( $# )); do
 done
 
 [[ -n "$label" && -n "$source_rel" && -n "$flow_timeout" &&
-   "$cpus" =~ ^[1-4]$ && "$memory" =~ ^[1-8]g$ && ${#copies[@]} -gt 0 ]] || usage
+   "$cpus" =~ ^([1-9]|1[0-6])$ &&
+   "$memory" =~ ^([1-9]|[1-5][0-9]|60)g$ && ${#copies[@]} -gt 0 ]] || usage
 [[ "$label" =~ ^[a-z0-9][a-z0-9-]*$ && "$flow_timeout" =~ ^[1-9][0-9]*[smh]$ ]] || usage
 [[ "$source_rel" != /* && "$source_rel" != *..* ]] || usage
 [[ "$container_command" == /src/* ]] || usage

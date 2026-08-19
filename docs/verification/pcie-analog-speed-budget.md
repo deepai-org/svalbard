@@ -12,7 +12,7 @@ not an end-to-end timing or model-validity claim.
 | Phase interpolator + control DAC | 1.25 GHz PI; composed full-RC 2,367/2,367, 9/9 environments, 199.65--217.35 ps span, 2.80 ps worst calibrated error | DAC 1.21 ns worst carry settling is a slow-loop update bound; clock-tree and supply-jitter composition remain |
 | CDR error slicer | Matching-hardened 62.33 ps worst selected full-RC assertion delay; 972/972 extracted cases complete and 9/9 environments calibrate with interior codes | 0.6% slower than the sparse predecessor and still far below its 300 ps local target; retiming and closed-loop dynamics remain absent |
 | TX-to-parallel receive boundary | Extracted CML-to-CMOS and deserializer composition closes its 18 representative cases | Does not yet include RX amplifier, channel, recovered clock, or protocol timing |
-| Autonomous clock source | Differential CML ring-VCO schematic: 735 cases across tuning and gap-repair screens; six bounding environments have adjacent stable control points around 2.5 GHz | Parameter bank is not yet a switchable layout; broad PVT, PEX, startup without imposed seed, phase noise, supply pushing, divider and PLL remain the principal unclosed risks |
+| Autonomous clock source | First full-RC ring composition uses four extracted 54 x 56 um delay tiles: nominal 2.459--2.709 GHz with 7/7 valid controls and a 0.88--0.98 V target bracket | Fixed tile covers 1/5 extracted corner environments; physical bands, startup without imposed seed, phase noise, supply pushing, divider and PLL remain unclosed |
 
 The immediate speed gate is extracted composition, not a generic transistor
 frequency estimate. Schematic-calibrated sampler/detector phase settings failed

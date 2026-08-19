@@ -28,10 +28,26 @@ R/C points. This is deliberately weaker than a PVT closure claim: the broad
 choices must become a realizable break-before-make switch network or
 independently power-gated VCO variants.
 
+The first physical delay tile is now generated as a 54 by 56 um symmetric
+cell. It has zero Magic DRC errors, a unique pin-resolved Netgen LVS match, and
+full-RC extraction containing 275 resistors and 79 capacitors. Four instances
+of that extracted tile form the three-stage ring plus output buffer. At the
+nominal public corner all 7/7 controls sustain oscillation; the frequency range
+is 2.459--2.709 GHz and 0.88--0.98 V brackets 2.5 GHz. The committed
+`layout.png` is rendered from the checked GDS rather than drawn separately.
+
+The same fixed tile covers only 1/5 extracted speed/gain environments. The
+fast-MOS/fast-resistor corner is too fast, the fast-MOS/slow-resistor corner is
+slightly slow, the slow-MOS/fast-resistor corner loses loop gain, and the
+slow-MOS/slow-resistor corner is slow. This is retained as a failing band-bank
+screen, not hidden by the nominal pass. It requires at least a slower
+high-capacitance band, a faster low-capacitance band, and a higher-gain load
+variant.
+
 `run_schematic.sh` runs the 12-environment adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
-physical milestone is to prune the bank, implement safe selection and power
-gating, generate a symmetric three-stage layout, and run DRC, LVS, full-RC
-extraction, startup, tuning, supply-pushing, and phase-noise simulations. The
+physical milestone is to generate and extract the additional band tiles,
+implement safe selection and power gating, and run startup, tuning,
+supply-pushing, and phase-noise simulations. The
 divider, PFD, charge pump, loop filter, lock detector, and external-clock bypass
 remain separate unimplemented boundaries.

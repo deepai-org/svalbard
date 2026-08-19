@@ -22,7 +22,7 @@ tracked separately in [PCIe Gen1 analog speed checkpoint](pcie-analog-speed-budg
 | Phase interpolator + dual 5-bit control DAC | Both physically closed; composed full-RC 2,367/2,367 and 9/9 calibrated to 31 codes with 2.80 ps worst error | Calibration controller/storage, glitch-safe updates, clock-tree/sampler composition, jitter/supply coupling |
 | CML-to-CMOS boundary | Physically closed with programmable-tail PVT and timing window | Denser composed timing/jitter matrix and clock distribution |
 | 1:2 deserializer | Physically closed alone and with extracted CML-to-CMOS front end | Parallel RX connection and clock/reset distribution |
-| PLL/VCO/divider | Differential CML ring-VCO schematic architecture screened in 735 cases; R/C candidates cover six speed/gain bounds after calibration | Realize and prune the switched bands, rerun broad PVT, then layout/DRC/LVS/PEX, startup/noise/supply sensitivity, divider and closed PLL |
+| PLL/VCO/divider | First 54 x 56 um CML delay tile: 0 DRC, unique LVS, 275R/79C PEX; four extracted instances pass 7/7 nominal controls and bracket 2.5 GHz, while a 35-case screen covers only 1/5 environments | Add extracted fast/slow/high-gain band tiles and safe selection, then startup/noise/supply sensitivity, divider and closed PLL |
 | Serializer | Not implemented | Parallel-to-serial topology, clock phases, TX loading, layout, extraction |
 | PCIe receiver detect/electrical idle | Not implemented | Pad-aware circuits, safe clamps, protocol-visible controls |
 | Shared bias/reference/control DACs | PI control DAC physically closed; remaining biases/references not implemented as an analog top | Bandgap/reference choice, bias distribution, calibration observables and retained codes |

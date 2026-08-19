@@ -1,7 +1,7 @@
 * SPDX-License-Identifier: Apache-2.0
 * Three-stage differential CML ring VCO experiment for GF180MCU.
 
-.subckt cml_vco_delay INP INN OUTP OUTN VCTRL VDD VSS params: LOAD_L=5.25u CAP_W=4u CAP_L=3u
+.subckt cml_vco_delay INP INN OUTP OUTN VCTRL VDD VSS params: LOAD_L=5.25u CAP_W=4u CAP_L=0.8u
 XRP VDD OUTP VSS ppolyf_u r_width=2u r_length={LOAD_L}
 XRN VDD OUTN VSS ppolyf_u r_width=2u r_length={LOAD_L}
 XMP OUTP INP TAIL VSS nfet_03v3 w=5u l=0.28u m=2
@@ -19,7 +19,7 @@ XCP VSS OUTP VSS VSS nfet_03v3 w={CAP_W} l={CAP_L} m=1
 XCN VSS OUTN VSS VSS nfet_03v3 w={CAP_W} l={CAP_L} m=1
 .ends cml_vco_delay
 
-.subckt ring_vco VCTRL VDD VSS CLK_P CLK_N params: LOAD_L=5.25u CAP_W=4u CAP_L=3u
+.subckt ring_vco VCTRL VDD VSS CLK_P CLK_N params: LOAD_L=5.25u CAP_W=4u CAP_L=0.8u
 * Each CML cell is inverting.  Three inversions close an odd ring.
 X0 N2P N2N N0P N0N VCTRL VDD VSS cml_vco_delay LOAD_L={LOAD_L} CAP_W={CAP_W} CAP_L={CAP_L}
 X1 N0P N0N N1P N1N VCTRL VDD VSS cml_vco_delay LOAD_L={LOAD_L} CAP_W={CAP_W} CAP_L={CAP_L}

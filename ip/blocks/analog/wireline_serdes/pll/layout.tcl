@@ -1,0 +1,288 @@
+# SPDX-License-Identifier: Apache-2.0
+# Compact symmetric GF180 layout for one regenerative CML VCO delay tile.
+
+proc paint_rect {layer x1 y1 x2 y2} {
+    box values $x1 $y1 $x2 $y2
+    paint $layer
+}
+
+proc via_at {layer x y} {
+    paint_rect $layer [expr {$x-0.18}] [expr {$y-0.18}] \
+        [expr {$x+0.18}] [expr {$y+0.18}]
+}
+
+proc stack_to {x y highest} {
+    foreach layer {metal1 metal2} {
+        paint_rect $layer [expr {$x-0.38}] [expr {$y-0.38}] \
+            [expr {$x+0.38}] [expr {$y+0.38}]
+    }
+    via_at via1 $x $y
+    if {$highest >= 3} {
+        paint_rect metal3 [expr {$x-0.38}] [expr {$y-0.38}] \
+            [expr {$x+0.38}] [expr {$y+0.38}]
+        via_at via2 $x $y
+    }
+    if {$highest >= 4} {
+        paint_rect metal4 [expr {$x-0.38}] [expr {$y-0.38}] \
+            [expr {$x+0.38}] [expr {$y+0.38}]
+        via_at via3 $x $y
+    }
+    if {$highest >= 5} {
+        paint_rect metal5 [expr {$x-0.38}] [expr {$y-0.38}] \
+            [expr {$x+0.38}] [expr {$y+0.38}]
+        via_at via4 $x $y
+    }
+}
+
+proc make_port {name number layer x1 y1 x2 y2} {
+    box values $x1 $y1 $x2 $y2
+    label $name FreeSans 0.5 0 0 0 c $layer
+    port make $number
+}
+
+proc substrate_contact {x y} {
+    paint_rect psubdiffcont [expr {$x-0.25}] [expr {$y-0.30}] \
+        [expr {$x+0.25}] [expr {$y+0.30}]
+}
+
+proc terminal_strap {cx cy yoff xs highest} {
+    set y [expr {$cy+$yoff}]
+    foreach xoff $xs {
+        set x [expr {$cx+$xoff}]
+        paint_rect metal1 [expr {$x-0.28}] [expr {min($cy,$y)-0.28}] \
+            [expr {$x+0.28}] [expr {max($cy,$y)+0.28}]
+        via_at via1 $x $y
+        if {$highest >= 3} { via_at via2 $x $y }
+        if {$highest >= 4} { via_at via3 $x $y }
+        if {$highest >= 5} { via_at via4 $x $y }
+    }
+    paint_rect metal2 [expr {$cx+[lindex $xs 0]-0.38}] [expr {$y-0.38}] \
+        [expr {$cx+[lindex $xs end]+0.38}] [expr {$y+0.38}]
+    if {$highest >= 3} {
+        paint_rect metal3 [expr {$cx+[lindex $xs 0]-0.38}] [expr {$y-0.38}] \
+            [expr {$cx+[lindex $xs end]+0.38}] [expr {$y+0.38}]
+    }
+    if {$highest >= 4} {
+        paint_rect metal4 [expr {$cx+[lindex $xs 0]-0.38}] [expr {$y-0.38}] \
+            [expr {$cx+[lindex $xs end]+0.38}] [expr {$y+0.38}]
+    }
+    if {$highest >= 5} {
+        paint_rect metal5 [expr {$cx+[lindex $xs 0]-0.38}] [expr {$y-0.38}] \
+            [expr {$cx+[lindex $xs end]+0.38}] [expr {$y+0.38}]
+    }
+}
+
+proc manual_gate_bottom {cx y half_width xs highest} {
+    paint_rect polysilicon [expr {$cx-$half_width}] $y \
+        [expr {$cx+$half_width}] [expr {$y+0.25}]
+    foreach xoff $xs {
+        set x [expr {$cx+$xoff}]
+        paint_rect polysilicon [expr {$x-0.20}] [expr {$y-0.65}] \
+            [expr {$x+0.20}] [expr {$y+0.25}]
+        paint_rect polycontact [expr {$x-0.115}] [expr {$y-0.565}] \
+            [expr {$x+0.115}] [expr {$y-0.335}]
+        paint_rect metal1 [expr {$x-0.30}] [expr {$y-0.65}] \
+            [expr {$x+0.30}] [expr {$y-0.05}]
+    }
+    paint_rect metal1 [expr {$cx+[lindex $xs 0]-0.35}] [expr {$y-0.65}] \
+        [expr {$cx+[lindex $xs end]+0.35}] [expr {$y-0.05}]
+    paint_rect metal2 [expr {$cx+[lindex $xs 0]-0.35}] [expr {$y-0.65}] \
+        [expr {$cx+[lindex $xs end]+0.35}] [expr {$y-0.05}]
+    if {$highest >= 3} {
+        paint_rect metal3 [expr {$cx+[lindex $xs 0]-0.35}] [expr {$y-0.65}] \
+            [expr {$cx+[lindex $xs end]+0.35}] [expr {$y-0.05}]
+    }
+    via_at via1 $cx [expr {$y-0.35}]
+    if {$highest >= 3} { via_at via2 $cx [expr {$y-0.35}] }
+    return [expr {$y-0.35}]
+}
+
+proc manual_gate_top_single {cx cy width highest} {
+    set contact_y [expr {$cy+$width/2.0+0.80}]
+    set route_y [expr {$cy+$width/2.0+0.70}]
+    paint_rect polysilicon [expr {$cx-0.20}] [expr {$cy+$width/2.0+0.10}] \
+        [expr {$cx+0.20}] [expr {$contact_y+0.18}]
+    paint_rect polycontact [expr {$cx-0.115}] [expr {$contact_y-0.115}] \
+        [expr {$cx+0.115}] [expr {$contact_y+0.115}]
+    foreach layer {metal1 metal2} {
+        paint_rect $layer [expr {$cx-0.30}] [expr {$route_y-0.30}] \
+            [expr {$cx+0.30}] [expr {$route_y+0.30}]
+    }
+    via_at via1 $cx $route_y
+    if {$highest >= 3} {
+        paint_rect metal3 [expr {$cx-0.30}] [expr {$route_y-0.30}] \
+            [expr {$cx+0.30}] [expr {$route_y+0.30}]
+        via_at via2 $cx $route_y
+    }
+    if {$highest >= 4} {
+        paint_rect metal4 [expr {$cx-0.30}] [expr {$route_y-0.30}] \
+            [expr {$cx+0.30}] [expr {$route_y+0.30}]
+        via_at via3 $cx $route_y
+    }
+    if {$highest >= 5} {
+        paint_rect metal5 [expr {$cx-0.30}] [expr {$route_y-0.30}] \
+            [expr {$cx+0.30}] [expr {$route_y+0.30}]
+        via_at via4 $cx $route_y
+    }
+    return $route_y
+}
+
+crashbackups stop
+load cml_vco_delay_hier
+
+set input_cell [magic::gencell_makecell gf180mcu::nfet_03v3 \
+    w 5 l 0.28 nf 2 guard 0 topc 0 botc 0 full_metal 0]
+set latch_cell [magic::gencell_makecell gf180mcu::nfet_03v3 \
+    w 4 l 0.28 nf 1 guard 0 topc 0 botc 0 full_metal 0]
+set input_tail [magic::gencell_makecell gf180mcu::nfet_03v3 \
+    w 10 l 0.28 nf 4 guard 0 topc 0 botc 0 full_metal 0]
+set latch_tail [magic::gencell_makecell gf180mcu::nfet_03v3 \
+    w 4 l 0.28 nf 2 guard 0 topc 0 botc 0 full_metal 0]
+set mos_cap [magic::gencell_makecell gf180mcu::nfet_03v3 \
+    w 4 l 0.8 nf 1 guard 0 topc 0 botc 0 full_metal 0]
+set load_cell [magic::gencell_makecell gf180mcu::ppolyf_u \
+    w 2 l 5.25 guard 1 full_metal 1]
+
+units microns
+# The four switching devices are one mirror-symmetric row.  The driven pair
+# occupies the outer positions and the weaker regenerative pair the inner.
+foreach {cell instance x y} [list \
+        $input_cell XMP -15 0 $latch_cell XLP -5 0 \
+        $latch_cell XLN 5 0 $input_cell XMN 15 0 \
+        $input_tail XMT -8 -13 $latch_tail XMLT 8 -13 \
+        $mos_cap XCP -15 11 $mos_cap XCN 15 11 \
+        $load_cell XRP -15 23 $load_cell XRN 15 23] {
+    getcell $cell child 0 0 parent $x $y
+    identify $instance
+}
+
+select top cell
+flatten cml_vco_delay
+load cml_vco_delay
+units microns
+paint_rect pwell -27 -24 27 32
+
+# Switching drains form short, matched M3 output trunks to local loads/caps.
+foreach x {-15 15} {
+    terminal_strap $x 0 1.5 {-0.8 0.8} 3
+    terminal_strap $x 0 -1.5 {0.0} 5
+    manual_gate_bottom $x -2.85 0.55 {-0.4 0.4} 3
+}
+foreach x {-5 5} {
+    terminal_strap $x 0 1.0 {-0.4} 3
+    terminal_strap $x 0 -1.0 {0.4} 4
+}
+manual_gate_top_single -5 0 4 4
+manual_gate_top_single 5 0 4 5
+paint_rect metal3 -16.2 1.05 -3.8 1.95
+paint_rect metal3 3.8 1.05 16.2 1.95
+
+# Driven-pair sources share one nested M5 rail; regenerative sources share M4.
+paint_rect metal5 -16.2 -1.95 16.2 -1.05
+paint_rect metal4 -5.38 -1.38 8.38 -0.62
+
+# Tail devices sit directly below the switching row with independent drains.
+terminal_strap -8 -13 4.0 {-1.6 0.0 1.6} 5
+terminal_strap -8 -13 -4.0 {-0.8 0.8} 3
+manual_gate_bottom -8 -18.35 1.35 {-1.2 -0.4 0.4 1.2} 4
+paint_rect metal5 -8.38 -9.38 -7.62 -1.05
+
+terminal_strap 8 -13 1.0 {-0.8 0.8} 4
+terminal_strap 8 -13 -1.0 {0.0} 3
+manual_gate_bottom 8 -15.35 0.55 {-0.4 0.4} 4
+paint_rect metal4 7.62 -12.38 8.38 -0.62
+
+# Both tail gates share VCTRL on a quiet M4 track.
+stack_to -8 -18.70 4
+stack_to 8 -15.70 4
+paint_rect metal4 -24 -19.08 -7.62 -18.32
+paint_rect metal4 7.62 -19.08 8.38 -15.32
+paint_rect metal4 -8.38 -19.08 8.38 -18.32
+make_port VCTRL 5 metal4 -24 -19.08 -22.5 -18.32
+
+# Differential inputs enter on matched M5 drops at the outer device gates.
+foreach {x name number} [list -15 INP 1 15 INN 2] {
+    stack_to $x -3.20 5
+    paint_rect metal5 [expr {$x-0.38}] -22.0 [expr {$x+0.38}] -2.82
+    make_port $name $number metal5 [expr {$x-0.45}] -22.0 \
+        [expr {$x+0.45}] -20.8
+}
+
+# Cross-coupled latch gates use different upper metals so the two feedback
+# paths cross geometrically without becoming one net.
+stack_to -5 2.70 4
+stack_to 5 2.70 5
+stack_to -11 7.0 4
+stack_to 11 7.0 4
+stack_to -11 9.0 5
+paint_rect metal3 -11.38 1.05 -10.62 9.38
+paint_rect metal3 10.62 1.05 11.38 7.38
+paint_rect metal4 -5.38 2.32 -4.62 7.38
+paint_rect metal4 -5.38 6.62 11.38 7.38
+paint_rect metal5 4.62 2.32 5.38 9.38
+paint_rect metal5 -11.38 8.62 5.38 9.38
+
+# MOS-cap gates attach to outputs; both diffusion terminals return to VSS.
+foreach {x out_x} [list -15 -15 15 15] {
+    terminal_strap $x 11 1.0 {-0.84} 3
+    terminal_strap $x 11 -1.0 {0.40} 3
+    set gate_y [manual_gate_bottom $x 8.65 1.60 {0.0} 3]
+    paint_rect metal3 [expr {$x-0.38}] 1.05 [expr {$x+0.38}] [expr {$gate_y+0.38}]
+}
+
+# Loads are directly above their output devices and join a wide M5 VDD rail.
+foreach x {-15 15} {
+    stack_to $x 20.385 5
+    stack_to $x 25.615 5
+}
+stack_to -11 1.50 5
+stack_to 11 1.50 5
+paint_rect metal5 -15.38 20.005 -10.62 20.765
+paint_rect metal5 10.62 20.005 15.38 20.765
+paint_rect metal5 -11.38 1.12 -10.62 20.765
+paint_rect metal5 10.62 1.12 11.38 20.765
+paint_rect metal5 -23 25.20 23 26.03
+make_port VDD 6 metal5 -1 25.20 1 26.03
+
+# Output ports sit on the short drain trunks, before any upper-metal escape.
+make_port OUTP 3 metal3 -16.2 1.05 -12.5 1.95
+make_port OUTN 4 metal3 12.5 1.05 16.2 1.95
+
+# Contacted substrate guard is also the low-inductance VSS return.  Tail
+# sources and both terminals of each MOS cap meet it symmetrically on M3.
+paint_rect psubdiff -27 -24 -26.2 32
+paint_rect psubdiff 26.2 -24 27 32
+paint_rect psubdiff -27 -24 27 -23.2
+paint_rect psubdiff -27 31.2 27 32
+paint_rect metal1 -27 -24 -26.2 32
+paint_rect metal1 26.2 -24 27 32
+paint_rect metal1 -27 -24 27 -23.2
+paint_rect metal1 -27 31.2 27 32
+foreach x {-24 -18 -12 -6 0 6 12 18 24} {
+    substrate_contact $x -23.6
+    substrate_contact $x 31.6
+}
+foreach y {-21 -15 -9 -3 3 9 15 21 27} {
+    substrate_contact -26.6 $y
+    substrate_contact 26.6 $y
+}
+stack_to -26.5 -22.5 5
+make_port VSS 7 metal5 -26.95 -22.5 -26.05 -20.5
+
+# Tail sources return horizontally on M3.
+paint_rect metal3 -26.6 -17.45 -5.6 -16.55
+paint_rect metal3 7.6 -14.45 26.6 -13.55
+foreach {x y} [list -26.6 -17.0 26.6 -14.0] { stack_to $x $y 3 }
+
+# Each MOS-cap diffusion pair returns on its nearest guard side.
+paint_rect metal3 -26.6 9.55 -12.5 10.45
+paint_rect metal3 -26.6 11.55 -12.5 12.45
+paint_rect metal3 12.5 9.55 26.6 10.45
+paint_rect metal3 12.5 11.55 26.6 12.45
+foreach {x y} [list -26.6 10.0 -26.6 12.0 26.6 10.0 26.6 12.0] {
+    stack_to $x $y 3
+}
+
+save cml_vco_delay
+gds write /work/cml_vco_delay.gds
+quit -noprompt

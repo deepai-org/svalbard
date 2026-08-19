@@ -221,6 +221,17 @@ After extracted PVT closure, add tests according to the block's physical risks:
 - bounded device/passive variation or mismatch only when the model is valid;
 - pad, ESD, bond, package, board, and channel models when selected.
 
+For an oscillator, compose the loop from repeated extracted delay tiles rather
+than adding a lumped estimate of one tile's parasitics. Require both early and
+late period measurements, a minimum sustained differential swing, bounded
+current, and a startup deadline. A seeded initial condition proves attraction
+to the oscillating trajectory but does not prove noise startup, so keep those
+claims separate. Fit deliberate delay capacitance from at least two extracted
+physical points; schematic-only capacitor scaling can miss routing delay by a
+large factor. Finally, treat loss of loop gain and missed frequency range as
+different band-design failures: the former needs gain/load resistance or
+regeneration, while the latter may need only capacitance.
+
 Use the same fixed selected code throughout one stress environment unless the
 test is explicitly measuring recalibration. Otherwise the sweep can conceal a
 dynamic failure behind per-case retuning.

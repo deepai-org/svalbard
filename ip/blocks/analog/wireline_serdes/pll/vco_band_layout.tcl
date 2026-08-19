@@ -118,8 +118,19 @@ if {[info exists ::env(VCO_BAND_ROUTE_STYLE)]} {
 }
 set band_pitch 64.0
 set band_main_tail_w 15.0
+set band_latch_tail_w 6.0
+set band_split_control 0
 if {[info exists ::env(VCO_MAIN_TAIL_W)]} {
     set band_main_tail_w $::env(VCO_MAIN_TAIL_W)
+}
+if {[info exists ::env(VCO_LATCH_TAIL_W)]} {
+    set band_latch_tail_w $::env(VCO_LATCH_TAIL_W)
+}
+if {[info exists ::env(VCO_SPLIT_CONTROL)]} {
+    set band_split_control $::env(VCO_SPLIT_CONTROL)
+}
+if {$band_route_style == "legacy" && $band_split_control} {
+    error "split tail control is supported only by the folded column parent"
 }
 if {$band_route_style == "legacy"} {
     set placements [list \
@@ -218,6 +229,7 @@ if {$band_route_style == "legacy"} {
 } else {
     set band_ybuf [expr {3.0*$band_pitch}]
     set band_vctrl_y [expr {-13.70-$band_main_tail_w/2.0}]
+    set band_regen_y [expr {-13.70-$band_latch_tail_w/2.0}]
 
     # M4 VDD spine at the far left; each horizontal branch meets the child's
     # central M5 rail through one deliberate transition.
@@ -231,18 +243,37 @@ if {$band_route_style == "legacy"} {
     band_port VDD 4 metal4 -42.45 [expr {$band_pitch+24.0}] \
         -41.55 [expr {$band_pitch+30.0}]
 
-    # M5 VCTRL spine at the far right.  Its M4 branches cross the signal M5
-    # escapes without vias and overlap each child's existing VCTRL conductor.
+    # M5 main-tail-control spine at the far right.  Its M4 branches cross the
+    # signal M5 escapes without vias and meet each child's gate conductor.
     band_rect metal5 41.62 $band_vctrl_y 42.38 \
         [expr {$band_ybuf+$band_vctrl_y+0.38}]
     foreach y [list 0 $band_pitch [expr {2.0*$band_pitch}] $band_ybuf] {
         set control_y [expr {$y+$band_vctrl_y}]
-        band_rect metal4 7.62 [expr {$control_y-0.38}] 42.38 \
+        set control_start [expr {$band_split_control ? -8.38 : 7.62}]
+        band_rect metal4 $control_start [expr {$control_y-0.38}] 42.38 \
             [expr {$control_y+0.38}]
         band_transition_45 42.0 $control_y
     }
-    band_port VCTRL 1 metal5 41.55 [expr {$band_pitch+$band_vctrl_y-3.0}] \
+    set main_control_name [expr {$band_split_control ? "VCTRL_MAIN" : "VCTRL"}]
+    band_port $main_control_name 1 metal5 41.55 \
+        [expr {$band_pitch+$band_vctrl_y-3.0}] \
         42.45 [expr {$band_pitch+$band_vctrl_y+3.0}]
+
+    if {$band_split_control} {
+        # A second quiet spine independently biases the regenerative tails.
+        # M4 branches overlap the child's right-side VCTRL_REGEN landing.
+        band_rect metal5 36.62 $band_regen_y 37.38 \
+            [expr {$band_ybuf+$band_regen_y+0.38}]
+        foreach y [list 0 $band_pitch [expr {2.0*$band_pitch}] $band_ybuf] {
+            set regen_y [expr {$y+$band_regen_y}]
+            band_rect metal4 7.62 [expr {$regen_y-0.38}] 37.38 \
+                [expr {$regen_y+0.38}]
+            band_transition_45 37.0 $regen_y
+        }
+        band_port VCTRL_REGEN 8 metal5 36.55 \
+            [expr {$band_pitch+$band_regen_y-3.0}] 37.45 \
+            [expr {$band_pitch+$band_regen_y+3.0}]
+    }
 
     # M3 VSS spine at the far right.  Each branch reaches the child's physical
     # VSS landing; startup VSS joins on its own M3 branch below X0.

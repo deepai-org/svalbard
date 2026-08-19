@@ -134,12 +134,14 @@ set cap_w 4.0
 set load_l 5.25
 set main_tail_w 10.0
 set latch_tail_w 4.0
+set split_control 0
 if {[info exists ::env(VCO_CELL_NAME)]} { set cell_name $::env(VCO_CELL_NAME) }
 if {[info exists ::env(VCO_CAP_L)]} { set cap_l $::env(VCO_CAP_L) }
 if {[info exists ::env(VCO_CAP_W)]} { set cap_w $::env(VCO_CAP_W) }
 if {[info exists ::env(VCO_LOAD_L)]} { set load_l $::env(VCO_LOAD_L) }
 if {[info exists ::env(VCO_MAIN_TAIL_W)]} { set main_tail_w $::env(VCO_MAIN_TAIL_W) }
 if {[info exists ::env(VCO_LATCH_TAIL_W)]} { set latch_tail_w $::env(VCO_LATCH_TAIL_W) }
+if {[info exists ::env(VCO_SPLIT_CONTROL)]} { set split_control $::env(VCO_SPLIT_CONTROL) }
 set cap_left_xoff [expr {-$cap_l/2.0-0.44}]
 set cap_right_xoff [expr {$cap_l/2.0+0.44}]
 # The cap diffusion contact moves with channel length.  Keep it out of the
@@ -234,13 +236,31 @@ terminal_strap 8 -13 [expr {-$latch_tail_off}] {0.0} 3
 manual_gate_bottom 8 $latch_tail_gate_y 0.55 {-0.4 0.4} 4
 paint_rect metal4 7.62 [expr {$latch_tail_top_y-0.38}] 8.38 -0.62
 
-# Both tail gates share VCTRL on a quiet M4 track.
+# The normal cell shares one tail control.  The margin-study cell exposes the
+# driven-pair and regenerative tails independently so frequency can be tuned
+# without surrendering loop gain at slow/hot corners.
 stack_to -8 $main_tail_gate_stack_y 4
 stack_to 8 $latch_tail_gate_stack_y 4
-paint_rect metal4 -24 [expr {$vctrl_y-0.38}] -7.62 [expr {$vctrl_y+0.38}]
-paint_rect metal4 7.62 [expr {$vctrl_y-0.38}] 8.38 [expr {$latch_tail_gate_stack_y+0.38}]
-paint_rect metal4 -8.38 [expr {$vctrl_y-0.38}] 8.38 [expr {$vctrl_y+0.38}]
-make_port VCTRL 5 metal4 -24 [expr {$vctrl_y-0.38}] -22.5 [expr {$vctrl_y+0.38}]
+if {$split_control} {
+    paint_rect metal4 -24 [expr {$vctrl_y-0.38}] -7.62 \
+        [expr {$vctrl_y+0.38}]
+    make_port VCTRL_MAIN 5 metal4 -24 [expr {$vctrl_y-0.38}] \
+        -22.5 [expr {$vctrl_y+0.38}]
+    paint_rect metal4 7.62 [expr {$latch_tail_gate_stack_y-0.38}] 12.5 \
+        [expr {$latch_tail_gate_stack_y+0.38}]
+    make_port VCTRL_REGEN 8 metal4 11.0 \
+        [expr {$latch_tail_gate_stack_y-0.38}] 12.5 \
+        [expr {$latch_tail_gate_stack_y+0.38}]
+} else {
+    paint_rect metal4 -24 [expr {$vctrl_y-0.38}] -7.62 \
+        [expr {$vctrl_y+0.38}]
+    paint_rect metal4 7.62 [expr {$vctrl_y-0.38}] 8.38 \
+        [expr {$latch_tail_gate_stack_y+0.38}]
+    paint_rect metal4 -8.38 [expr {$vctrl_y-0.38}] 8.38 \
+        [expr {$vctrl_y+0.38}]
+    make_port VCTRL 5 metal4 -24 [expr {$vctrl_y-0.38}] \
+        -22.5 [expr {$vctrl_y+0.38}]
+}
 
 # Differential inputs enter on matched M5 drops at the outer device gates.
 foreach {x name number} [list -15 INP 1 15 INN 2] {

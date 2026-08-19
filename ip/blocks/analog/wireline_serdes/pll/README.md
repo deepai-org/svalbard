@@ -4,10 +4,12 @@ This directory develops the autonomous clock source for the dual-edge PCIe
 receiver. The required oscillator rate is 1.25 GHz, not the 2.5 GT/s serial
 rate. It is not yet a PLL macro: seven complete half-rate oscillator parents
 are physically closed and cover the required target in the public-model PVT
-set, while their selector, divider, loop, and analog-top integration remain
-open. The earlier 2.5 GHz work is retained as an overspeed experiment and as
-evidence that GF180 parent interconnect and hot/slow device speed cannot be
-ignored.
+set. Three additional split-control parents are physically closed and close
+the two previously missing design-margin environments in a focused screen;
+the full five-environment rerun, selector, divider, loop, and analog-top
+integration remain open. The earlier 2.5 GHz work is retained as an overspeed
+experiment and as evidence that GF180 parent interconnect and hot/slow device
+speed cannot be ignored.
 
 `ring_vco.spice` is a three-stage differential CML ring followed by an
 isolating CML output buffer. Each delay cell has a driven differential pair, a
@@ -150,6 +152,22 @@ still need finer capacitance or independently controlled signal/regenerative
 tail bias. `half_rate_vco_bank_result.json` records both claims separately and
 `layout_half_rate_vco_bank.png` is the emitted-GDS visual index.
 
+The focused split-control experiment replaces the shared tail-control net with
+independent `VCTRL_MAIN` and `VCTRL_REGEN` pins and routes both through each
+complete folded parent. Three legal coarse geometries were regenerated rather
+than editing active devices inside an old PEX deck. All three are 0-DRC,
+uniquely LVS-matched, and exact full-RC extracted with 1,116--1,120 resistors
+and 336 capacitors. Their 240-case no-`.ic`, no-`uic` screen has 84 passing
+cases. The aggregate valid intervals cover 1.225--1.275 GHz in both formerly
+open 2.97 V, 125 C slow-device environments: slow/fast-resistor reaches
+1.2859 GHz and slow/slow-resistor reaches 1.2833 GHz. This establishes the
+physical margin mechanism, but it is explicitly a two-environment candidate
+screen; it does not upgrade the existing five-environment bank claim until the
+combined bank is rerun everywhere. `split_control_vco_result.json` binds the
+three distinct PEX and GDS-render hashes. The usable emitted-GDS images are
+`layout_split_control_vco.png`, `layout_split_fast_control_vco.png`, and
+`layout_split_gain_control_vco.png`.
+
 Phase noise, statistical noise/mismatch startup, supply pushing, safe band
 selection across the complete bank, inactive member loading, divider loading,
 and loop dynamics remain open.
@@ -221,14 +239,17 @@ and exact PEX identity.
 matrix. `run_half_rate_vco_screen.sh` is a candidate-only retained-RC cap
 screen; `run_half_rate_vco_bank.sh` regenerates all seven 1.25 GHz parents,
 checks every DRC/LVS/PEX identity, runs the 280-case matrix, and emits the
-numeric result plus visual index.
+numeric result plus visual index. `run_split_control_vco.sh` regenerates the
+three independently biased parents, closes each physical boundary, runs the
+focused 240-case hot-corner screen, and rejects duplicate PEX identities in
+its compact aggregate result.
 
 `run_schematic.sh` runs the 12-environment adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
-physical milestone is to close the two missing half-rate design-guardband
-environments with finer capacitance or split signal/regenerative bias, then
-connect the qualified half-rate members to the closed tree with realizable
-power gating and a controller that enforces the proven nonoverlap sequence.
-After that come mismatch/statistical startup, supply-pushing, and phase-noise
-simulations. The divider, PFD, charge pump, loop filter, lock detector, and
-external-clock bypass remain separate unimplemented boundaries.
+physical milestone is to rerun the winning split-control members with the
+complete five-environment bank, then connect the qualified half-rate members
+to the closed tree with realizable bias generation, power gating, and a
+controller that enforces the proven nonoverlap sequence. After that come
+mismatch/statistical startup, supply-pushing, and phase-noise simulations. The
+divider, PFD, charge pump, loop filter, lock detector, and external-clock
+bypass remain separate unimplemented boundaries.

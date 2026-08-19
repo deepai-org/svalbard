@@ -1,0 +1,66 @@
+* SPDX-License-Identifier: Apache-2.0
+* Half-rate folded VCO candidate with independent signal/regenerative tails.
+.include /src/pll/startup_assist.spice
+
+.subckt cml_vco_delay_hr_split INP INN OUTP OUTN VCTRL_MAIN VDD VSS VCTRL_REGEN
+XRP VDD OUTP VSS ppolyf_u r_width=2u r_length=4u
+XRN VDD OUTN VSS ppolyf_u r_width=2u r_length=4u
+XMP OUTP INP TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMN OUTN INN TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMT TAIL VCTRL_MAIN VSS VSS nfet_03v3 w=15u l=0.28u m=4
+XLP OUTP OUTN LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XLN OUTN OUTP LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XMLT LTAIL VCTRL_REGEN VSS VSS nfet_03v3 w=6u l=0.28u m=2
+XCP VSS OUTP VSS VSS nfet_03v3 w=3.2u l=4.75u m=1
+XCN VSS OUTN VSS VSS nfet_03v3 w=3.2u l=4.75u m=1
+.ends cml_vco_delay_hr_split
+
+.subckt cml_vco_band_hr_split VCTRL_MAIN KICKP KICKN VDD VSS CLK_P CLK_N VCTRL_REGEN
+X0 N2P N2N N0P N0N VCTRL_MAIN VDD VSS VCTRL_REGEN cml_vco_delay_hr_split
+X1 N0P N0N N1P N1N VCTRL_MAIN VDD VSS VCTRL_REGEN cml_vco_delay_hr_split
+X2 N1P N1N N2P N2N VCTRL_MAIN VDD VSS VCTRL_REGEN cml_vco_delay_hr_split
+XBUF N2P N2N CLK_P CLK_N VCTRL_MAIN VDD VSS VCTRL_REGEN cml_vco_delay_hr_split
+XSTART N0P N0N KICKP KICKN VSS cml_vco_startup_assist
+.ends cml_vco_band_hr_split
+
+.subckt cml_vco_delay_hr_split_gain INP INN OUTP OUTN VCTRL_MAIN VDD VSS VCTRL_REGEN
+XRP VDD OUTP VSS ppolyf_u r_width=2u r_length=6.5u
+XRN VDD OUTN VSS ppolyf_u r_width=2u r_length=6.5u
+XMP OUTP INP TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMN OUTN INN TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMT TAIL VCTRL_MAIN VSS VSS nfet_03v3 w=10u l=0.28u m=4
+XLP OUTP OUTN LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XLN OUTN OUTP LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XMLT LTAIL VCTRL_REGEN VSS VSS nfet_03v3 w=4u l=0.28u m=2
+XCP VSS OUTP VSS VSS nfet_03v3 w=4u l=3.45u m=1
+XCN VSS OUTN VSS VSS nfet_03v3 w=4u l=3.45u m=1
+.ends cml_vco_delay_hr_split_gain
+
+.subckt cml_vco_band_hr_split_gain VCTRL_MAIN KICKP KICKN VDD VSS CLK_P CLK_N VCTRL_REGEN
+X0 N2P N2N N0P N0N VCTRL_MAIN VDD VSS VCTRL_REGEN cml_vco_delay_hr_split_gain
+X1 N0P N0N N1P N1N VCTRL_MAIN VDD VSS VCTRL_REGEN cml_vco_delay_hr_split_gain
+X2 N1P N1N N2P N2N VCTRL_MAIN VDD VSS VCTRL_REGEN cml_vco_delay_hr_split_gain
+XBUF N2P N2N CLK_P CLK_N VCTRL_MAIN VDD VSS VCTRL_REGEN cml_vco_delay_hr_split_gain
+XSTART N0P N0N KICKP KICKN VSS cml_vco_startup_assist
+.ends cml_vco_band_hr_split_gain
+
+.subckt cml_vco_delay_hr_split_fast INP INN OUTP OUTN VCTRL_MAIN VDD VSS VCTRL_REGEN
+XRP VDD OUTP VSS ppolyf_u r_width=2u r_length=4u
+XRN VDD OUTN VSS ppolyf_u r_width=2u r_length=4u
+XMP OUTP INP TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMN OUTN INN TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMT TAIL VCTRL_MAIN VSS VSS nfet_03v3 w=15u l=0.28u m=4
+XLP OUTP OUTN LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XLN OUTN OUTP LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XMLT LTAIL VCTRL_REGEN VSS VSS nfet_03v3 w=6u l=0.28u m=2
+XCP VSS OUTP VSS VSS nfet_03v3 w=3.2u l=4.48u m=1
+XCN VSS OUTN VSS VSS nfet_03v3 w=3.2u l=4.48u m=1
+.ends cml_vco_delay_hr_split_fast
+
+.subckt cml_vco_band_hr_split_fast VCTRL_MAIN KICKP KICKN VDD VSS CLK_P CLK_N VCTRL_REGEN
+X0 N2P N2N N0P N0N VCTRL_MAIN VDD VSS VCTRL_REGEN cml_vco_delay_hr_split_fast
+X1 N0P N0N N1P N1N VCTRL_MAIN VDD VSS VCTRL_REGEN cml_vco_delay_hr_split_fast
+X2 N1P N1N N2P N2N VCTRL_MAIN VDD VSS VCTRL_REGEN cml_vco_delay_hr_split_fast
+XBUF N2P N2N CLK_P CLK_N VCTRL_MAIN VDD VSS VCTRL_REGEN cml_vco_delay_hr_split_fast
+XSTART N0P N0N KICKP KICKN VSS cml_vco_startup_assist
+.ends cml_vco_band_hr_split_fast

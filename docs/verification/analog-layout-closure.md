@@ -119,6 +119,15 @@ often slows a ring because intrinsic and junction capacitance rise along with
 transconductance; the extracted CML VCO work instead recovered the difficult
 corner with asymmetric tail-current allocation.
 
+Once independent bias axes prove useful, they must become independent physical
+ports and routes in every repeated child and complete parent. Regenerate and
+extract that topology before crediting the extra degree of freedom. A focused
+screen can establish that the mechanism closes a known corner, but it does not
+inherit the original bank's other corners: rerun the combined physical members
+over the complete environment set. Also budget the two realizable bias sources,
+their resolution and settling, and a calibration mapping; two ideal voltage
+sources in a testbench prove controllability, not an implemented controller.
+
 Do not assume that additional active width can recover a routed speed miss.
 In a retained full-RC parent deck, scaling input, latch, and tail devices over a
 wide range increased current but reduced oscillation frequency in the limiting

@@ -1,0 +1,147 @@
+{
+  "case_count": 240,
+  "claim": "three_complete_physical_split_control_vco_margin_candidates",
+  "environments": [
+    {
+      "continuous_intervals_hz": [
+        [
+          1077517004.2958448,
+          1285881064.48835
+        ]
+      ],
+      "contributors": [
+        {
+          "continuous_intervals_hz": [],
+          "pex_sha256": "c78d3c939aabfdc102a035a9e80633d69b0dd79323abc9f7e7f934c769a30b36",
+          "source": "split-control-vco-screen.json"
+        },
+        {
+          "continuous_intervals_hz": [],
+          "pex_sha256": "0f236c2e975f67510308111611c344a1de04736ab34b14102ed09ad96afe7dad",
+          "source": "split-fast-control-vco-screen.json"
+        },
+        {
+          "continuous_intervals_hz": [
+            [
+              1077517004.2958448,
+              1285881064.48835
+            ]
+          ],
+          "pex_sha256": "a57b5ce84735181a8406acc6e716d483c2338a8c11c1f20e11244a15d3f2ee94",
+          "source": "split-gain-control-vco-screen.json"
+        }
+      ],
+      "environment": [
+        "ss",
+        "res_ff",
+        2.97,
+        125
+      ],
+      "target_covered": true,
+      "two_percent_guardband_covered": true
+    },
+    {
+      "continuous_intervals_hz": [
+        [
+          740511456.4527428,
+          1075108706.9291294
+        ],
+        [
+          1145379464.7893744,
+          1283330499.311814
+        ]
+      ],
+      "contributors": [
+        {
+          "continuous_intervals_hz": [
+            [
+              1145379464.7893744,
+              1254014885.4074929
+            ]
+          ],
+          "pex_sha256": "c78d3c939aabfdc102a035a9e80633d69b0dd79323abc9f7e7f934c769a30b36",
+          "source": "split-control-vco-screen.json"
+        },
+        {
+          "continuous_intervals_hz": [
+            [
+              1171764643.5720448,
+              1283330499.311814
+            ]
+          ],
+          "pex_sha256": "0f236c2e975f67510308111611c344a1de04736ab34b14102ed09ad96afe7dad",
+          "source": "split-fast-control-vco-screen.json"
+        },
+        {
+          "continuous_intervals_hz": [
+            [
+              740511456.4527428,
+              1075108706.9291294
+            ]
+          ],
+          "pex_sha256": "a57b5ce84735181a8406acc6e716d483c2338a8c11c1f20e11244a15d3f2ee94",
+          "source": "split-gain-control-vco-screen.json"
+        }
+      ],
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125
+      ],
+      "target_covered": true,
+      "two_percent_guardband_covered": true
+    }
+  ],
+  "guardband_environment_count": 2,
+  "input_sha256": {
+    "split-control-vco-screen.json": "ed5efe5e86bc12f531047b249e7c61a5bcb903295cd76bbce290010ca238210a",
+    "split-fast-control-vco-screen.json": "5bdbd3af18a08dee958de9077b120c6f4d074c64ecbc0257ce5d875fc3e978d7",
+    "split-gain-control-vco-screen.json": "2b10234b5509f30cb600cfdb73a73be6878c8d6a6405ea26ef8917ad99583ed0"
+  },
+  "limitation": "two-environment candidate screen; full five-environment qualification remains",
+  "member_count": 3,
+  "members": [
+    {
+      "case_count": 80,
+      "claim": "physical_split_base_tail_control_vco_margin_screen",
+      "drc_error_count": 0,
+      "layout_image_sha256": "85c1623cfc97d76eed9d941108020ff3967f83236fd1b272e6cd4c78ee53e755",
+      "lvs_unique": true,
+      "passing_case_count": 17,
+      "pex_capacitor_count": 336,
+      "pex_resistor_count": 1116,
+      "pex_sha256": "c78d3c939aabfdc102a035a9e80633d69b0dd79323abc9f7e7f934c769a30b36",
+      "source": "split-control-vco-screen.json"
+    },
+    {
+      "case_count": 80,
+      "claim": "physical_split_fast_tail_control_vco_margin_screen",
+      "drc_error_count": 0,
+      "layout_image_sha256": "706e18dbb677e00659e437863e41e087abcf3c067f31bcbfb92f1d118d947af9",
+      "lvs_unique": true,
+      "passing_case_count": 18,
+      "pex_capacitor_count": 336,
+      "pex_resistor_count": 1116,
+      "pex_sha256": "0f236c2e975f67510308111611c344a1de04736ab34b14102ed09ad96afe7dad",
+      "source": "split-fast-control-vco-screen.json"
+    },
+    {
+      "case_count": 80,
+      "claim": "physical_split_gain_tail_control_vco_margin_screen",
+      "drc_error_count": 0,
+      "layout_image_sha256": "6563acd413d4247cd743a22caf8cc6dc16744b6c903b17ebf6606287bb0f04e0",
+      "lvs_unique": true,
+      "passing_case_count": 49,
+      "pex_capacitor_count": 336,
+      "pex_resistor_count": 1120,
+      "pex_sha256": "a57b5ce84735181a8406acc6e716d483c2338a8c11c1f20e11244a15d3f2ee94",
+      "source": "split-gain-control-vco-screen.json"
+    }
+  ],
+  "passing_case_count": 84,
+  "result": "pass",
+  "schema_version": 1,
+  "target_environment_count": 2,
+  "unique_pex_count": 3
+}

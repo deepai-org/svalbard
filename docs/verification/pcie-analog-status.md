@@ -22,7 +22,7 @@ tracked separately in [PCIe Gen1 analog speed checkpoint](pcie-analog-speed-budg
 | Phase interpolator + dual 5-bit control DAC | Both physically closed; composed full-RC 2,367/2,367 and 9/9 calibrated to 31 codes with 2.80 ps worst error | Calibration controller/storage, glitch-safe updates, clock-tree/sampler composition, jitter/supply coupling |
 | CML-to-CMOS boundary | Physically closed with programmable-tail PVT and timing window | Denser composed timing/jitter matrix and clock distribution |
 | 1:2 deserializer | Physically closed alone and with extracted CML-to-CMOS front end | Parallel RX connection and clock/reset distribution |
-| PLL/VCO/divider | The dual-edge architecture requires a 1.25 GHz oscillator. Seven complete folded parents are each 0-DRC, unique-LVS and exact full-RC PEX (1,118--1,122R/325--333C). Their no-IC/no-uic 280-case calibration has 183 passing cases and continuous target coverage in 5/5 mixed environments; the tighter +/-2% design band is continuous in 3/5. A separate twelve-parent 2.5 GHz overspeed experiment is physically clean but covers only 2/5 environments and is retained as falsification evidence. The existing two-input selector and balanced sixteen-leaf selector tree remain physically closed at their previously tested full-rate stress | Close half-rate guardband holes in slow/fast and slow/slow, compose the selected half-rate parents with power gating and the selector tree, then close statistical startup/mismatch, phase noise/supply sensitivity, divider and closed PLL |
+| PLL/VCO/divider | The dual-edge architecture requires a 1.25 GHz oscillator. Seven complete folded parents are each 0-DRC, unique-LVS and exact full-RC PEX (1,118--1,122R/325--333C). Their no-IC/no-uic 280-case calibration has 183 passing cases and continuous target coverage in 5/5 mixed environments; the tighter +/-2% design band is continuous in 3/5. Three new split signal/regenerative-control parents are independently 0-DRC, unique-LVS and full-RC PEX (1,116--1,120R/336C). A focused 240-case no-IC/no-uic screen has 84 valid cases and covers the complete +/-2% band in both formerly open hot slow-device environments, establishing the physical margin mechanism but not yet a full-PVT bank claim. A separate twelve-parent 2.5 GHz overspeed experiment is physically clean but covers only 2/5 environments and is retained as falsification evidence. The existing two-input selector and balanced sixteen-leaf selector tree remain physically closed at their previously tested full-rate stress | Qualify the split-control bank across all five environments, realize its two bias controls and calibration mapping, compose selected parents with power gating and the selector tree, then close statistical startup/mismatch, phase noise/supply sensitivity, divider and closed PLL |
 | Serializer | Not implemented | Parallel-to-serial topology, clock phases, TX loading, layout, extraction |
 | PCIe receiver detect/electrical idle | Not implemented | Pad-aware circuits, safe clamps, protocol-visible controls |
 | Shared bias/reference/control DACs | PI control DAC physically closed; remaining biases/references not implemented as an analog top | Bandgap/reference choice, bias distribution, calibration observables and retained codes |
@@ -41,11 +41,12 @@ and analog-top verification as major work rather than treating them as wiring.
 1. Add valid-window retiming, a realizable accumulator/integrator, and a
    calibration controller for the closed phase-interpolator DAC; demonstrate
    reference-assisted tracking.
-2. Close the two half-rate VCO design-margin holes; compose the qualified
-   parents and their startup/power controls with the closed balanced selector
-   hierarchy, then build the divider and PLL with
-   external-clock bypass and observable divided clock/lock outputs; close
-   statistical startup, tuning, jitter, and supply sensitivity.
+2. Qualify the physically successful split-control half-rate VCO candidates
+   across the full five-environment bank; realize both bias controls and their
+   calibration mapping; compose the qualified parents and startup/power
+   controls with the closed balanced selector hierarchy, then build the divider
+   and PLL with external-clock bypass and observable divided clock/lock outputs;
+   close statistical startup, tuning, jitter, and supply sensitivity.
 3. Build and extract the serializer and compose it with the transmitter at
    2.5 GT/s, including emphasis and electrical-idle behavior.
 4. Add receiver detect, electrical idle, shared bias/reference generation,

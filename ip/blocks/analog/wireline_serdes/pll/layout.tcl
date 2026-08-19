@@ -131,14 +131,29 @@ crashbackups stop
 set cell_name cml_vco_delay
 set cap_l 0.8
 set load_l 5.25
+set main_tail_w 10.0
+set latch_tail_w 4.0
 if {[info exists ::env(VCO_CELL_NAME)]} { set cell_name $::env(VCO_CELL_NAME) }
 if {[info exists ::env(VCO_CAP_L)]} { set cap_l $::env(VCO_CAP_L) }
 if {[info exists ::env(VCO_LOAD_L)]} { set load_l $::env(VCO_LOAD_L) }
+if {[info exists ::env(VCO_MAIN_TAIL_W)]} { set main_tail_w $::env(VCO_MAIN_TAIL_W) }
+if {[info exists ::env(VCO_LATCH_TAIL_W)]} { set latch_tail_w $::env(VCO_LATCH_TAIL_W) }
 set cap_left_xoff [expr {-$cap_l/2.0-0.44}]
 set cap_right_xoff [expr {$cap_l/2.0}]
 set load_off [expr {$load_l/2.0-0.010}]
 set load_bottom_y [expr {23.0-$load_off}]
 set load_top_y [expr {23.0+$load_off}]
+set main_tail_off [expr {$main_tail_w/2.0-1.0}]
+set main_tail_top_y [expr {-13.0+$main_tail_off}]
+set main_tail_bottom_y [expr {-13.0-$main_tail_off}]
+set main_tail_gate_y [expr {-13.0-$main_tail_w/2.0-0.35}]
+set main_tail_gate_stack_y [expr {$main_tail_gate_y-0.35}]
+set latch_tail_off [expr {$latch_tail_w/2.0-1.0}]
+set latch_tail_top_y [expr {-13.0+$latch_tail_off}]
+set latch_tail_bottom_y [expr {-13.0-$latch_tail_off}]
+set latch_tail_gate_y [expr {-13.0-$latch_tail_w/2.0-0.35}]
+set latch_tail_gate_stack_y [expr {$latch_tail_gate_y-0.35}]
+set vctrl_y $main_tail_gate_stack_y
 
 load ${cell_name}_hier
 
@@ -147,9 +162,9 @@ set input_cell [magic::gencell_makecell gf180mcu::nfet_03v3 \
 set latch_cell [magic::gencell_makecell gf180mcu::nfet_03v3 \
     w 4 l 0.28 nf 1 guard 0 topc 0 botc 0 full_metal 0]
 set input_tail [magic::gencell_makecell gf180mcu::nfet_03v3 \
-    w 10 l 0.28 nf 4 guard 0 topc 0 botc 0 full_metal 0]
+    w $main_tail_w l 0.28 nf 4 guard 0 topc 0 botc 0 full_metal 0]
 set latch_tail [magic::gencell_makecell gf180mcu::nfet_03v3 \
-    w 4 l 0.28 nf 2 guard 0 topc 0 botc 0 full_metal 0]
+    w $latch_tail_w l 0.28 nf 2 guard 0 topc 0 botc 0 full_metal 0]
 set mos_cap [magic::gencell_makecell gf180mcu::nfet_03v3 \
     w 4 l $cap_l nf 1 guard 0 topc 0 botc 0 full_metal 0]
 set load_cell [magic::gencell_makecell gf180mcu::ppolyf_u \
@@ -194,23 +209,23 @@ paint_rect metal5 -16.2 -1.95 16.2 -1.05
 paint_rect metal4 -5.38 -1.38 8.38 -0.62
 
 # Tail devices sit directly below the switching row with independent drains.
-terminal_strap -8 -13 4.0 {-1.6 0.0 1.6} 5
-terminal_strap -8 -13 -4.0 {-0.8 0.8} 3
-manual_gate_bottom -8 -18.35 1.35 {-1.2 -0.4 0.4 1.2} 4
-paint_rect metal5 -8.38 -9.38 -7.62 -1.05
+terminal_strap -8 -13 $main_tail_off {-1.6 0.0 1.6} 5
+terminal_strap -8 -13 [expr {-$main_tail_off}] {-0.8 0.8} 3
+manual_gate_bottom -8 $main_tail_gate_y 1.35 {-1.2 -0.4 0.4 1.2} 4
+paint_rect metal5 -8.38 [expr {$main_tail_top_y-0.38}] -7.62 -1.05
 
-terminal_strap 8 -13 1.0 {-0.8 0.8} 4
-terminal_strap 8 -13 -1.0 {0.0} 3
-manual_gate_bottom 8 -15.35 0.55 {-0.4 0.4} 4
-paint_rect metal4 7.62 -12.38 8.38 -0.62
+terminal_strap 8 -13 $latch_tail_off {-0.8 0.8} 4
+terminal_strap 8 -13 [expr {-$latch_tail_off}] {0.0} 3
+manual_gate_bottom 8 $latch_tail_gate_y 0.55 {-0.4 0.4} 4
+paint_rect metal4 7.62 [expr {$latch_tail_top_y-0.38}] 8.38 -0.62
 
 # Both tail gates share VCTRL on a quiet M4 track.
-stack_to -8 -18.70 4
-stack_to 8 -15.70 4
-paint_rect metal4 -24 -19.08 -7.62 -18.32
-paint_rect metal4 7.62 -19.08 8.38 -15.32
-paint_rect metal4 -8.38 -19.08 8.38 -18.32
-make_port VCTRL 5 metal4 -24 -19.08 -22.5 -18.32
+stack_to -8 $main_tail_gate_stack_y 4
+stack_to 8 $latch_tail_gate_stack_y 4
+paint_rect metal4 -24 [expr {$vctrl_y-0.38}] -7.62 [expr {$vctrl_y+0.38}]
+paint_rect metal4 7.62 [expr {$vctrl_y-0.38}] 8.38 [expr {$latch_tail_gate_stack_y+0.38}]
+paint_rect metal4 -8.38 [expr {$vctrl_y-0.38}] 8.38 [expr {$vctrl_y+0.38}]
+make_port VCTRL 5 metal4 -24 [expr {$vctrl_y-0.38}] -22.5 [expr {$vctrl_y+0.38}]
 
 # Differential inputs enter on matched M5 drops at the outer device gates.
 foreach {x name number} [list -15 INP 1 15 INN 2] {
@@ -282,9 +297,9 @@ stack_to -26.5 -22.5 5
 make_port VSS 7 metal5 -26.95 -22.5 -26.05 -20.5
 
 # Tail sources return horizontally on M3.
-paint_rect metal3 -26.6 -17.45 -5.6 -16.55
-paint_rect metal3 7.6 -14.45 26.6 -13.55
-foreach {x y} [list -26.6 -17.0 26.6 -14.0] { stack_to $x $y 3 }
+paint_rect metal3 -26.6 [expr {$main_tail_bottom_y-0.45}] -5.6 [expr {$main_tail_bottom_y+0.45}]
+paint_rect metal3 7.6 [expr {$latch_tail_bottom_y-0.45}] 26.6 [expr {$latch_tail_bottom_y+0.45}]
+foreach {x y} [list -26.6 $main_tail_bottom_y 26.6 $latch_tail_bottom_y] { stack_to $x $y 3 }
 
 # Each MOS-cap diffusion pair returns on its nearest guard side.
 paint_rect metal3 -26.6 9.55 -12.5 10.45

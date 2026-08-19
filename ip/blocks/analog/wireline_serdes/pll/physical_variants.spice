@@ -52,3 +52,29 @@ XMLT LTAIL VCTRL VSS VSS nfet_03v3 w=4u l=0.28u m=2
 XCP VSS OUTP VSS VSS nfet_03v3 w=4u l=0.5u m=1
 XCN VSS OUTN VSS VSS nfet_03v3 w=4u l=0.5u m=1
 .ends cml_vco_delay_high_gain
+
+.subckt cml_vco_delay_ss_ff INP INN OUTP OUTN VCTRL VDD VSS
+XRP VDD OUTP VSS ppolyf_u r_width=2u r_length=6.25u
+XRN VDD OUTN VSS ppolyf_u r_width=2u r_length=6.25u
+XMP OUTP INP TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMN OUTN INN TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMT TAIL VCTRL VSS VSS nfet_03v3 w=15u l=0.28u m=4
+XLP OUTP OUTN LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XLN OUTN OUTP LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XMLT LTAIL VCTRL VSS VSS nfet_03v3 w=5u l=0.28u m=2
+XCP VSS OUTP VSS VSS nfet_03v3 w=4u l=0.37u m=1
+XCN VSS OUTN VSS VSS nfet_03v3 w=4u l=0.37u m=1
+.ends cml_vco_delay_ss_ff
+
+.subckt cml_vco_delay_ss_ss INP INN OUTP OUTN VCTRL VDD VSS
+XRP VDD OUTP VSS ppolyf_u r_width=2u r_length=4.0u
+XRN VDD OUTN VSS ppolyf_u r_width=2u r_length=4.0u
+XMP OUTP INP TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMN OUTN INN TAIL VSS nfet_03v3 w=5u l=0.28u m=2
+XMT TAIL VCTRL VSS VSS nfet_03v3 w=15u l=0.28u m=4
+XLP OUTP OUTN LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XLN OUTN OUTP LTAIL VSS nfet_03v3 w=4u l=0.28u m=1
+XMLT LTAIL VCTRL VSS VSS nfet_03v3 w=6u l=0.28u m=2
+XCP VSS OUTP VSS VSS nfet_03v3 w=4u l=0.38u m=1
+XCN VSS OUTN VSS VSS nfet_03v3 w=4u l=0.38u m=1
+.ends cml_vco_delay_ss_ss

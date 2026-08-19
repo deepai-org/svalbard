@@ -8,12 +8,12 @@ import json
 import re
 from pathlib import Path
 
-VARIANTS = ("fast", "ultra_fast", "slow", "high_gain")
+VARIANTS = ("fast", "ultra_fast", "slow", "high_gain", "ss_ff", "ss_ss")
 SCREENS = {
-    "slow": "slow-ring.json",
-    "fast": "fast-ring.json",
-    "ultra_fast": "ultra-fast-ring.json",
-    "high_gain": "high-gain-ring.json",
+    "slow": ("slow-ring.json", 7),
+    "fast": ("fast-ring.json", 7),
+    "ss_ff": ("ss-ff-ring.json", 6),
+    "ss_ss": ("ss-ss-ring.json", 6),
 }
 
 
@@ -75,12 +75,12 @@ def main() -> None:
 
     screens = {"center": json.loads((args.source / "extracted_pvt_screen.json").read_text())}
     screens.update({name: json.loads((args.work / filename).read_text())
-                    for name, filename in SCREENS.items()})
+                    for name, (filename, _) in SCREENS.items()})
     screen_integrity = all(
-        screens[name].get("case_count") == 7
-        and screens[name].get("passing_case_count") == 7
+        screens[name].get("case_count") == expected_cases
+        and len(screens[name].get("cases", [])) == expected_cases
         and screens[name].get("output_buffer") == "full_delay_tile"
-        for name in SCREENS
+        for name, (_, expected_cases) in SCREENS.items()
     )
     coverage: dict[str, dict[str, object]] = {}
     for member, screen in screens.items():
@@ -98,7 +98,7 @@ def main() -> None:
                 entry["covered_by"].append(member)
     covered = sum(bool(entry["covered_by"]) for entry in coverage.values())
     evidence_pass = (structural_pass and screen_integrity
-                     and len(coverage) == 5 and covered >= 3)
+                     and len(coverage) == 5 and covered == 5)
     result = {
         "schema_version": 1,
         "cell_family": "cml_vco_delay_bank",

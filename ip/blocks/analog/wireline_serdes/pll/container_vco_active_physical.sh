@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-variants=(fast ultra_fast slow high_gain ss_ff ss_ss)
-cap_lengths=(0.6 0.5 2.4 0.5 0.37 0.38)
-load_lengths=(5.25 4.25 5.25 6.5 6.25 4.00)
-main_tail_widths=(10.0 10.0 10.0 10.0 15.0 15.0)
-latch_tail_widths=(4.0 4.0 4.0 4.0 5.0 6.0)
+variants=(ss_ff ss_ss)
+cap_lengths=(0.37 0.38)
+load_lengths=(6.25 4.00)
+main_tail_widths=(15.0 15.0)
+latch_tail_widths=(5.0 6.0)
 
 for index in "${!variants[@]}"; do
   variant="${variants[$index]}"
@@ -33,18 +33,10 @@ for index in "${!variants[@]}"; do
 done
 
 python3 /src/run_extracted_ring.py --source /src \
-  --pex /work/cml_vco_delay_slow.pex.spice --pex-subckt cml_vco_delay_slow_pex \
-  --work /work/slow-ring --output /work/slow-ring.json --environment-index 1 || true
-python3 /src/run_extracted_ring.py --source /src \
-  --pex /work/cml_vco_delay_fast.pex.spice --pex-subckt cml_vco_delay_fast_pex \
-  --work /work/fast-ring --output /work/fast-ring.json --environment-index 2 || true
-python3 /src/run_extracted_ring.py --source /src \
   --pex /work/cml_vco_delay_ss_ff.pex.spice --pex-subckt cml_vco_delay_ss_ff_pex \
   --work /work/ss-ff-ring --output /work/ss-ff-ring.json --environment-index 3 \
-  --control 1.15 --control 1.20 --control 1.25 --control 1.30 --control 1.35 --control 1.40 || true
+  --control 1.15 --control 1.20 --control 1.25 --control 1.30 --control 1.35 --control 1.40
 python3 /src/run_extracted_ring.py --source /src \
   --pex /work/cml_vco_delay_ss_ss.pex.spice --pex-subckt cml_vco_delay_ss_ss_pex \
   --work /work/ss-ss-ring --output /work/ss-ss-ring.json --environment-index 4 \
-  --control 1.15 --control 1.20 --control 1.25 --control 1.30 --control 1.35 --control 1.40 || true
-python3 /src/check_vco_bank.py --source /src --work /work \
-  --output /work/vco-bank-result.json
+  --control 1.15 --control 1.20 --control 1.25 --control 1.30 --control 1.35 --control 1.40

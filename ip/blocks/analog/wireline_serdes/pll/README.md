@@ -37,27 +37,42 @@ nominal public corner all 7/7 controls sustain oscillation; the frequency range
 is 2.459--2.709 GHz and 0.88--0.98 V brackets 2.5 GHz. The committed
 `layout.png` is rendered from the checked GDS rather than drawn separately.
 
-`layout.tcl` now generates four additional fixed geometries from the same
+`layout.tcl` now generates six additional fixed geometries from the same
 topology: slow (2.40 um cap / 5.25 um load), fast (0.60/5.25), ultra-fast
-(0.50/4.25), and high-gain (0.50/6.50). All four have zero Magic DRC errors,
-unique Netgen LVS, full-RC PEX, and a KLayout GDS render. The slow tile covers
+(0.50/4.25), high-gain (0.50/6.50), SS/fast-resistor (0.37/6.25 with
+15/5 um main/latch tails), and SS/slow-resistor (0.38/4.00 with 15/6 um
+tails). All six have zero Magic DRC errors, unique Netgen LVS, full-RC PEX,
+and a KLayout GDS render. The slow tile covers
 FF/fast-resistor at 2.447--2.542 GHz; the fast tile covers FF/slow-resistor at
-2.478--2.543 GHz. Together with the center tile this expands extracted
-coverage from 1/5 to 3/5 declared environments.
+2.478--2.543 GHz. The two active-tail tiles cover SS/fast-resistor at
+2.458--2.508 GHz and SS/slow-resistor at 2.489--2.506 GHz. Together with the
+center tile this expands extracted coverage from 1/5 to 5/5 declared
+environments.
 
-The result remains deliberately partial. At 2.97 V and 125 C, the ultra-fast
-tile reaches only 2.395 GHz at SS/slow-resistor and the high-gain tile reaches
-2.358 GHz at SS/fast-resistor. Reducing load further was tested and approached
-the target, but crossed the loop-gain boundary and lost robust oscillation.
-Increasing VCTRL above 1.3 V also reduced frequency. The next design step is
-therefore an active-device-strength/topology change, not another passive-only
-trim. `vco_bank_result.json` records the 4/4 physical and 3/5 coverage result;
-`layout_vco_bank.png` is the usable visual index of the generated family.
+The old passive-only ultra-fast and high-gain tiles are retained because their
+failure identified the loop-gain boundary: reducing load further killed
+oscillation, while increasing VCTRL above the frequency peak slowed the ring.
+The active-strength screen then separated main-tail and latch-tail current and
+the physical generator moved every affected terminal, gate, source return, and
+VCTRL route. `vco_bank_result.json` records 6/6 added physical geometries and
+5/5 coverage; `layout_vco_bank.png` is the usable visual index.
+
+This is target coverage, not robust PLL qualification. The SS/slow-resistor
+tile has only 3/6 electrical controls, a 17.3 MHz valid frequency span, and no
+candidate achieves the desired two-percent frequency guardband. Startup still
+uses a deterministic millivolt seed. Phase noise, unseeded/noise startup,
+supply pushing, mismatch, safe band selection, divider loading, and loop
+dynamics remain open.
+
+The bounded reproduction sequence is `run_active_screen.sh` for the
+parasitic-preserving active-width screen, `run_cap_drc.sh` for legal cap
+interpolation, `run_vco_active_physical.sh` for the two SS tiles, and
+`run_vco_bank.sh` for the complete 6/6-physical, 5/5-environment bank result.
 
 `run_schematic.sh` runs the 12-environment adversarial screen and intentionally
 returns failure until every environment has a bracketing band. The next
-physical milestone is to close the two SS bands with stronger active cells,
-implement safe selection and power gating, and run unseeded startup, tuning,
+physical milestone is to improve SS/slow-resistor margin, implement safe
+selection and power gating, and run unseeded startup, tuning,
 supply-pushing, and phase-noise simulations. The
 divider, PFD, charge pump, loop filter, lock detector, and external-clock bypass
 remain separate unimplemented boundaries.

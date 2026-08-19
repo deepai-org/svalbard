@@ -1,0 +1,152 @@
+{
+  "case_count": 6,
+  "cases": [
+    {
+      "control_v": 1.15,
+      "frequency_hz": 2473710640.1715765,
+      "id": "ss_res_ff_2.97_p125_1.15",
+      "mos_corner": "ss",
+      "observed": {
+        "diff_high": 0.04766162,
+        "diff_low": -0.0430764,
+        "output_cm": 2.052957,
+        "period": 4.04251e-10,
+        "period_late": 4.035632e-10,
+        "startup_time": 4.075558e-09,
+        "supply_current": 0.007337307
+      },
+      "res_corner": "res_ff",
+      "result": "fail",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 1.2,
+      "frequency_hz": 2501631063.4533715,
+      "id": "ss_res_ff_2.97_p125_1.20",
+      "mos_corner": "ss",
+      "observed": {
+        "diff_high": 0.6172615,
+        "diff_low": -0.611399,
+        "output_cm": 1.989674,
+        "period": 3.997392e-10,
+        "period_late": 4.010104e-10,
+        "startup_time": 4.074779e-09,
+        "supply_current": 0.007847153
+      },
+      "res_corner": "res_ff",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 1.25,
+      "frequency_hz": 2507535143.1050305,
+      "id": "ss_res_ff_2.97_p125_1.25",
+      "mos_corner": "ss",
+      "observed": {
+        "diff_high": 0.7876139,
+        "diff_low": -0.781496,
+        "output_cm": 1.94747,
+        "period": 3.98798e-10,
+        "period_late": 4.02112e-10,
+        "startup_time": 3.669417e-09,
+        "supply_current": 0.008188771
+      },
+      "res_corner": "res_ff",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 1.3,
+      "frequency_hz": 2482222323.717535,
+      "id": "ss_res_ff_2.97_p125_1.30",
+      "mos_corner": "ss",
+      "observed": {
+        "diff_high": 0.9054892,
+        "diff_low": -0.899168,
+        "output_cm": 1.916371,
+        "period": 4.028648e-10,
+        "period_late": 4.03686e-10,
+        "startup_time": 3.667008e-09,
+        "supply_current": 0.008441217
+      },
+      "res_corner": "res_ff",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 1.35,
+      "frequency_hz": 2467486546.646476,
+      "id": "ss_res_ff_2.97_p125_1.35",
+      "mos_corner": "ss",
+      "observed": {
+        "diff_high": 0.9886499,
+        "diff_low": -0.982182,
+        "output_cm": 1.892595,
+        "period": 4.052707e-10,
+        "period_late": 4.053613e-10,
+        "startup_time": 3.664909e-09,
+        "supply_current": 0.008633953
+      },
+      "res_corner": "res_ff",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    },
+    {
+      "control_v": 1.4,
+      "frequency_hz": 2458276895.3929434,
+      "id": "ss_res_ff_2.97_p125_1.40",
+      "mos_corner": "ss",
+      "observed": {
+        "diff_high": 1.047971,
+        "diff_low": -1.0414,
+        "output_cm": 1.874133,
+        "period": 4.06789e-10,
+        "period_late": 4.068026e-10,
+        "startup_time": 3.663309e-09,
+        "supply_current": 0.008783628
+      },
+      "res_corner": "res_ff",
+      "result": "pass",
+      "supply_v": 2.97,
+      "temperature_c": 125
+    }
+  ],
+  "environment_count": 1,
+  "extraction": "four_instance_full_rc",
+  "groups": [
+    {
+      "environment": [
+        "ss",
+        "res_ff",
+        2.97,
+        125
+      ],
+      "maximum_hz": 2507535143.1050305,
+      "minimum_hz": 2458276895.3929434,
+      "result": "pass",
+      "target_brackets_v": [
+        {
+          "controls_v": [
+            1.25,
+            1.3
+          ],
+          "kvco_polarity": "negative"
+        }
+      ],
+      "valid_control_count": 5
+    }
+  ],
+  "output_buffer": "full_delay_tile",
+  "passing_case_count": 5,
+  "passing_environment_count": 1,
+  "pex_sha256": "908cf5b73d990e062d3bbb7a4880865e8de0d3b7907fcbcf419276e3edcfafff",
+  "pex_subckt": "cml_vco_delay_ss_ff_pex",
+  "qualification": "nominal",
+  "result": "pass",
+  "schema_version": 1
+}

@@ -74,6 +74,16 @@ the circuit. For example, failures confined to hot corners with adequate DC
 headroom usually point toward steering transconductance, while failures at low
 supply with collapsed output common-mode indicate stack headroom.
 
+When passive delay trimming approaches a target but loses oscillation as load
+resistance falls, treat it as a loop-gain boundary. Do not keep shaving the
+load. Separate the main signal-path tail from a regenerative latch tail and
+sweep them independently; strengthening every device often slows a ring by
+adding intrinsic and junction capacitance. A useful intermediate screen can
+perturb device width plus explicit junction area/perimeter in an existing
+full-RC deck while retaining routing parasitics. Label that result as screening
+only, interpolate no geometry below a DRC-proven PCell limit, and regenerate
+layout/LVS/PEX before accepting any bracket.
+
 ## 4. Plan the physical topology before writing geometry
 
 Draw a coordinate and layer plan for devices, sensitive nodes, crossings, and

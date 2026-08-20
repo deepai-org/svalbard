@@ -1,0 +1,35 @@
+* SPDX-License-Identifier: Apache-2.0
+* Changing-word test for the integrated half-rate serializer/TX stage.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include @DUT_PATH@
+.temp @TEMP_C@
+
+VDD VDD 0 PWL(0 0 500p @VDD_V@)
+VBIAS VBIAS 0 PWL(0 0 500p @VBIAS_V@)
+VEVEN_P EVEN_P 0 @EVEN_P_PWL@
+VEVEN_N EVEN_N 0 @EVEN_N_PWL@
+VODD_P ODD_P 0 @ODD_P_PWL@
+VODD_N ODD_N 0 @ODD_N_PWL@
+VCLK_P CLK_P 0 PULSE(0 @VDD_V@ @CLOCK_DELAY@ 20p 20p @UI@ @PERIOD@)
+VCLK_N CLK_N 0 PULSE(@VDD_V@ 0 @CLOCK_DELAY@ 20p 20p @UI@ @PERIOD@)
+VLOAD0 LOAD_EN0_N 0 0
+VLOAD1 LOAD_EN1_N 0 0
+VLOAD2 LOAD_EN2_N 0 @VDD_V@
+VLOAD3 LOAD_EN3_N 0 @VDD_V@
+
+XDUT EVEN_P EVEN_N ODD_P ODD_N CLK_P CLK_N VBIAS
++ LOAD_EN0_N LOAD_EN1_N LOAD_EN2_N LOAD_EN3_N VDD 0 OUTP OUTN @DUT_CELL@
+COUTP OUTP 0 50f
+COUTN OUTN 0 50f
+
+.control
+tran 2p @STOP_TIME@
+let tx_diff = v(OUTN)-v(OUTP)
+let isupply = -i(VDD)
+@MEASURE_LINES@
+meas tran supply_current avg isupply from=@MEASURE_START@ to=@STOP_TIME@
+@PRINT_LINES@
+.endc
+.end

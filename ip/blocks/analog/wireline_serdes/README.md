@@ -21,8 +21,12 @@ CML-to-CMOS-to-parallel-data composition across representative PVT. The routed
 [`serializer`](serializer/README.md) is a half-rate CML 2:1 mux core that is
 zero-DRC, uniquely LVS-matched, full-RC extracted, and composed with the actual
 TX input devices across five environments at both 1.25 GBd and 2.5 GT/s. Its
-current evidence uses an alternating word; changing-word setup/hold and the
-routed serializer-to-TX parent remain open. The routed
+static alternating-word result is retained as a test-structure milestone, but
+arbitrary changing words exposed a slow high-capacitance boundary.  The
+selected replacement integrates the half-rate mux into the programmable TX:
+its routed parent is zero-DRC, uniquely LVS-matched, extracts to 1,081R/614C,
+and passes 35/35 exact-PEX changing-word aperture cases in 5/5 environments at
+both 1.25 and 2.5 GT/s. The routed
 children are code-generated and remain explicitly experimental pre-silicon
 evidence rather than qualified PCIe macros.
 

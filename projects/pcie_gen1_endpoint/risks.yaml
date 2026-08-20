@@ -29,6 +29,66 @@
       "owner": "unassigned",
       "reviewer": "unassigned",
       "evidence": []
+    },
+    {
+      "id": "pcie.risk.io_boundary",
+      "failure_mode": "The selected pad, ESD, bond, package and board channel add more loss, capacitance, reflection or overshoot than the core lane can tolerate",
+      "local_effect": "TX eye closure, RX sensitivity loss or device overstress despite passing unloaded core simulations",
+      "system_effect": "No interoperable 2.5 GT/s package interface",
+      "criticality": "red",
+      "common_cause_id": "wireline.pad_package_channel_gap",
+      "observable": "open-short-thru-load structures, package loopback, PRBS errors, eye/phase scan and pad-node monitors",
+      "control_or_bypass": "swing, emphasis, termination, bandwidth and phase controls plus alternate bond and board options",
+      "fallback": "directly bonded short-reach diagnostic structures and externally clocked lower-rate operation",
+      "owner": "unassigned",
+      "reviewer": "unassigned",
+      "evidence": []
+    },
+    {
+      "id": "pcie.risk.static_cml_power",
+      "failure_mode": "The accumulated always-on CML clock, receive, recovery and retiming paths exceed the available power, thermal or bond-current budget",
+      "local_effect": "IR drop, bias displacement, jitter and temperature gradients couple formerly independent passing leaves",
+      "system_effect": "The full PHY cannot operate simultaneously or reliably",
+      "criticality": "red",
+      "common_cause_id": "wireline.power_architecture",
+      "observable": "per-domain current monitors, supply droop, temperature sensors, divided clocks and PRBS margin under simultaneous activity",
+      "control_or_bypass": "one early CML-to-CMOS boundary, power gating, independently enabled TX/RX/PLL/CDR and direct clock bypass",
+      "fallback": "externally clocked raw-PHY operation with autonomous blocks powered down",
+      "owner": "unassigned",
+      "reviewer": "unassigned",
+      "evidence": [
+        "docs/verification/pcie-architecture-checkpoint.md"
+      ]
+    },
+    {
+      "id": "pcie.risk.calibration_system_gap",
+      "failure_mode": "Leaf trim ranges exist but their references, observables, search algorithms, retained codes or safe reset states are not realizable together",
+      "local_effect": "A passing simulated code cannot be found or maintained on silicon",
+      "system_effect": "The PHY fails bring-up or operates at an unsafe trim rail",
+      "criticality": "red",
+      "common_cause_id": "analog.calibration_architecture",
+      "observable": "manual register readback, raw measurements, search traces, code-rail margin and reset-cause counters",
+      "control_or_bypass": "bounded searches, manual SPI/JTAG override, hardware clamps and conservative retained reset images",
+      "fallback": "manual characterization through direct clock and raw-symbol modes",
+      "owner": "unassigned",
+      "reviewer": "unassigned",
+      "evidence": []
+    },
+    {
+      "id": "pcie.risk.leaf_composition",
+      "failure_mode": "Independently passing analog leaves fail when connected through their real parasitic producer, consumer, clock, supply and substrate boundaries",
+      "local_effect": "recovery, fanout, loading, common-mode or aggressor failures appear only in the parent",
+      "system_effect": "End-to-end lane or autonomous clock recovery fails despite high apparent block completion",
+      "criticality": "red",
+      "common_cause_id": "analog.hierarchical_composition",
+      "observable": "exact-parent PEX waveforms, boundary envelopes, supply current and retained failed experiments",
+      "control_or_bypass": "integration-first milestones, checked behavioral envelopes and direct block bypasses",
+      "fallback": "independently enabled leaf test structures and external producer/consumer injection",
+      "owner": "unassigned",
+      "reviewer": "unassigned",
+      "evidence": [
+        "docs/verification/pcie-architecture-checkpoint.md"
+      ]
     }
   ]
 }

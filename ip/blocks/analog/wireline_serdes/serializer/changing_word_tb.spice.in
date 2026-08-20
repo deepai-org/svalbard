@@ -1,0 +1,46 @@
+* SPDX-License-Identifier: Apache-2.0
+* Changing-word aperture test for the extracted half-rate serializer and TX.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include @DUT_PATH@
+.include /src/serdes_tx/serdes_tx.spice
+@RESTORER_INCLUDE@
+.temp @TEMP_C@
+
+VSER VDD_SER 0 PWL(0 0 500p @VDD_V@)
+VTX VDD_TX 0 PWL(0 0 500p @VDD_V@)
+VBIAS_SER VBIAS_SER 0 PWL(0 0 500p @SER_BIAS_V@)
+VBIAS_TX VBIAS_TX 0 PWL(0 0 500p @TX_BIAS_V@)
+@RESTORER_SUPPLIES@
+VEVEN_P EVEN_P 0 @EVEN_P_PWL@
+VEVEN_N EVEN_N 0 @EVEN_N_PWL@
+VODD_P ODD_P 0 @ODD_P_PWL@
+VODD_N ODD_N 0 @ODD_N_PWL@
+VCLK_P CLK_P 0 PULSE(0 @VDD_V@ @CLOCK_DELAY@ 20p 20p @UI@ @PERIOD@)
+VCLK_N CLK_N 0 PULSE(@VDD_V@ 0 @CLOCK_DELAY@ 20p 20p @UI@ @PERIOD@)
+
+VLOAD0 LOAD_EN0_N 0 0
+VLOAD1 LOAD_EN1_N 0 0
+VLOAD2 LOAD_EN2_N 0 @VDD_V@
+VLOAD3 LOAD_EN3_N 0 @VDD_V@
+
+XSER EVEN_P EVEN_N ODD_P ODD_N CLK_P CLK_N VBIAS_SER VDD_SER 0 @SER_OUT_P@ @SER_OUT_N@
++ @DUT_CELL@ @DUT_PARAMS@
+@RESTORER_INSTANCE@
+XTX @TX_IN_P@ @TX_IN_N@ OUTP OUTN VBIAS_TX LOAD_EN0_N LOAD_EN1_N LOAD_EN2_N LOAD_EN3_N VDD_TX 0 serdes_tx
+COUTP OUTP 0 50f
+COUTN OUTN 0 50f
+
+.control
+tran 2p @STOP_TIME@
+let ser_diff = v(@TX_IN_P@)-v(@TX_IN_N@)
+let tx_diff = v(OUTN)-v(OUTP)
+let iser = -i(VSER)
+let itx = -i(VTX)
+@MEASURE_LINES@
+meas tran serializer_current avg iser from=@MEASURE_START@ to=@STOP_TIME@
+meas tran tx_current avg itx from=@MEASURE_START@ to=@STOP_TIME@
+@PRINT_LINES@
+.endc
+.end

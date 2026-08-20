@@ -25,15 +25,15 @@ The top-down component, assumption, power and sequencing audit is recorded in
 | CML-to-CMOS boundary | Physically closed with programmable-tail PVT and timing window | Denser composed timing/jitter matrix and clock distribution |
 | 1:2 deserializer | Physically closed alone and with extracted CML-to-CMOS front end | Parallel RX connection and clock/reset distribution |
 | PLL/VCO/divider | The dual-edge architecture requires a 1.25 GHz oscillator. A checked minimum-subset search selects the `fast` and `gain` split-control parents from three independently 0-DRC, unique-LVS, full-RC candidates. The physical dual 5-bit DAC uses a 2.0 V reference and passes 160/160 DC plus 5/5 settling cases. The selected two-DAC/two-VCO/high-gain-selector parent is zero-DRC, uniquely LVS-matched, and full-RC extracted with 3,872 resistors and 1,287 capacitors. Its exact PEX passes 4/7 nominal candidates, 10/35 PVT candidates covering 5/5 environments, break-before-make handoff, and 55/55 VDD/reference-ripple cases with 8.59 ps worst cycle displacement and 0.467% worst median-frequency pushing. A symmetric static-CML divide-by-two is zero-DRC, uniquely LVS-matched, extracts to 510R/193C, and passes 19/25 standalone post-layout bias cases. Direct VCO-to-divider composition exposed the need for a two-stage CML restorer. The final routed VCO-bank/restorer/divider parent is zero-DRC, uniquely LVS-matched, extracts to 4,766R/1,580C, and passes 43/50 exact-PEX calibration candidates covering 5/5 environments, with five consecutive passing divider-bias points in every environment, at least +0.585/-0.468 V restored rails, no more than 0.509% divide-ratio error, and no more than 3.151% VCO loading shift. The 2.5 GHz overspeed experiment remains failed falsification evidence | Implement the remaining reference ratio and realizable calibration controls, then close statistical startup/mismatch, phase noise, combined PDN/aggressor stress, and the PLL loop |
-| Serializer | Not implemented | Parallel-to-serial topology, clock phases, TX loading, layout, extraction |
+| Serializer | Half-rate 2:1 CML mux core is zero-DRC, uniquely LVS-matched, and full-RC extracted to 267R/85C. Exact PEX drives the real TX input devices in 5/5 environments at 1.25 GBd (36/45 passing bias cases, 56.92 ps worst selected delay) and at 2.5 GT/s stress (21/45, 50.77 ps), with a 0.7--1.5 V realizable bias search | Changing-word/setup-hold and jitter/mismatch tests, bias DAC/control, then routed serializer-to-TX parent and PRBS lane composition |
 | PCIe receiver detect/electrical idle | Not implemented | Pad-aware circuits, safe clamps, protocol-visible controls |
 | Shared bias/reference/control DACs | Dual 5-bit DAC physically closed for PI control and separately qualified as a VCO main/regenerative bias primitive across five environments; top-level references and distribution are not implemented | Bandgap/reference choice, two-instance VCO-bank distribution, calibration observables and retained codes |
 | Analog top, pads, PDN, package/channel | Not implemented | Hierarchical integration, selected qualified I/O, EM/IR, coupling, post-fill and provider precheck |
 
 At this checkpoint, most reusable signal-path leaf experiments exist and are
 physically extracted, but the full interface is not close to tapeout-ready.
-A reasonable planning estimate is roughly 60--70% of reusable leaf-circuit
-development, 20--30% of a functioning integrated PCIe analog interface, and
+A reasonable planning estimate is roughly 65--75% of reusable leaf-circuit
+development, 25--35% of a functioning integrated PCIe analog interface, and
 less than 20% of tapeout/signoff evidence. These ranges deliberately count
 PLL/autonomous-CDR closure, PCIe-specific detect/idle behavior, pads/package,
 serializer and end-to-end lane composition, power reconciliation, and
@@ -41,9 +41,10 @@ analog-top verification as major work rather than treating them as wiring.
 
 ## Critical path
 
-1. Freeze a bounded external-clock diagnostic contract, build and extract the
-   serializer, and compose an entire 1.25 GBd PRBS loopback lane. Reconcile
-   complete-path timing and power before extending more autonomous leaves.
+1. Qualify changing parallel words and setup/hold on the extracted serializer,
+   route its real TX boundary, and compose an entire externally clocked 1.25
+   GBd PRBS loopback lane. Reconcile complete-path timing and power before
+   extending more autonomous leaves.
 2. Repeat the integrated lane at externally clocked 2.5 GT/s, including the
    real producer/consumer loading and a declared provisional I/O boundary.
 3. Add valid-window retiming, a realizable accumulator/integrator, and a

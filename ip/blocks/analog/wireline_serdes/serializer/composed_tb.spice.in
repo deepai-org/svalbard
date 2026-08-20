@@ -1,0 +1,56 @@
+* SPDX-License-Identifier: Apache-2.0
+* Half-rate serializer driving the transistor-level TX input gates.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include @SERIALIZER_INCLUDE@
+.include /src/serdes_tx/serdes_tx.spice
+.temp @TEMP_C@
+
+VSER VDD_SER 0 PWL(0 0 500p @VDD_V@)
+VTX VDD_TX 0 PWL(0 0 500p @VDD_V@)
+VBIAS_SER VBIAS_SER 0 PWL(0 0 500p @SER_BIAS_V@)
+VBIAS_TX VBIAS_TX 0 PWL(0 0 500p @TX_BIAS_V@)
+
+* Static 1/0 parallel word must emerge as a serial 1010... pattern.
+VEVEN_P EVEN_P 0 PWL(0 0 500p @VDD_V@)
+VEVEN_N EVEN_N 0 0
+VODD_P ODD_P 0 0
+VODD_N ODD_N 0 PWL(0 0 500p @VDD_V@)
+VCLK_P CLK_P 0 PULSE(0 @VDD_V@ 1n 20p 20p @HALF_PERIOD@ @PERIOD@)
+VCLK_N CLK_N 0 PULSE(@VDD_V@ 0 1n 20p 20p @HALF_PERIOD@ @PERIOD@)
+
+* Typical provisional TX setting: two of four trim branches enabled.
+VLOAD0 LOAD_EN0_N 0 0
+VLOAD1 LOAD_EN1_N 0 0
+VLOAD2 LOAD_EN2_N 0 @VDD_V@
+VLOAD3 LOAD_EN3_N 0 @VDD_V@
+
+XSER EVEN_P EVEN_N ODD_P ODD_N CLK_P CLK_N VBIAS_SER VDD_SER 0 SER_P SER_N
++ @SERIALIZER_CELL@ @SERIALIZER_PARAMS@
+XTX SER_P SER_N OUTP OUTN VBIAS_TX LOAD_EN0_N LOAD_EN1_N LOAD_EN2_N LOAD_EN3_N VDD_TX 0 serdes_tx
+COUTP OUTP 0 50f
+COUTN OUTN 0 50f
+
+.control
+tran 2p 12n
+let ser_diff = v(SER_P)-v(SER_N)
+let ser_cm = (v(SER_P)+v(SER_N))/2
+let tx_diff = v(OUTN)-v(OUTP)
+let iser = -i(VSER)
+let itx = -i(VTX)
+meas tran ser_high max ser_diff from=6n to=12n
+meas tran ser_low min ser_diff from=6n to=12n
+meas tran ser_cm_avg avg ser_cm from=6n to=12n
+meas tran tx_high max tx_diff from=6n to=12n
+meas tran tx_low min tx_diff from=6n to=12n
+meas tran ser_period trig ser_diff val=0 rise=2 td=5n targ ser_diff val=0 rise=3 td=5n
+meas tran ser_high_time trig ser_diff val=0 rise=2 td=5n targ ser_diff val=0 fall=2 td=5n
+meas tran rise_delay trig ser_diff val=0 rise=2 td=5n targ tx_diff val=0 rise=2 td=5n
+meas tran fall_delay trig ser_diff val=0 fall=2 td=5n targ tx_diff val=0 fall=2 td=5n
+meas tran serializer_current avg iser from=6n to=12n
+meas tran tx_current avg itx from=6n to=12n
+print ser_high ser_low ser_cm_avg tx_high tx_low ser_period ser_high_time
++ rise_delay fall_delay serializer_current tx_current
+.endc
+.end

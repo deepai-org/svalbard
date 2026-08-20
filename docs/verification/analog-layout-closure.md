@@ -431,6 +431,16 @@ one physical mechanism at a time, regenerate DRC/LVS/PEX, and reject a larger
 reset device when its added sensitive-node capacitance costs more evaluation
 margin than its reset current gains.
 
+For a half-rate serializer, separate three claims that a static `10` word can
+otherwise blur: correct complementary clock selection, arbitrary changing-word
+serialization with each lane updated only in its unselected aperture, and the
+setup/hold window at the real loaded consumer. Re-run calibration at every
+claimed serial rate. The same extracted mux that had ample 1.25 GBd margin
+needed a substantially higher tail setting in slow environments at 2.5 GT/s;
+reusing the lower-rate code would have hidden a rate-dependent discharge and
+duty-cycle failure. Keep the harder rate gate and widen a realizable control
+range before changing device width or weakening the acceptance limit.
+
 Assign state retention to exactly one architectural stage. If the downstream
 deserializer is already clocked, qualify the analog front end over an explicit
 valid aperture and prove setup/hold composition there. Adding a second static

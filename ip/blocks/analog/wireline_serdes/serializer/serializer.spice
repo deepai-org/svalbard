@@ -1,0 +1,17 @@
+* SPDX-License-Identifier: Apache-2.0
+* Half-rate 2:1 CML serializer. CLK_P selects EVEN; CLK_N selects ODD.
+.subckt cml_serializer_2to1 EVEN_P EVEN_N ODD_P ODD_N CLK_P CLK_N VBIAS VDD VSS SER_P SER_N
++ params: LOAD_L=7.5u
+XRP VDD SER_P VSS ppolyf_u r_width=2u r_length={LOAD_L}
+XRN VDD SER_N VSS ppolyf_u r_width=2u r_length={LOAD_L}
+
+* Crossed drains make a high *_P input produce SER_P > SER_N.
+XEVEN_P SER_N EVEN_P EVEN_SRC VSS nfet_03v3 w=6u l=0.28u m=2
+XEVEN_N SER_P EVEN_N EVEN_SRC VSS nfet_03v3 w=6u l=0.28u m=2
+XODD_P  SER_N ODD_P  ODD_SRC  VSS nfet_03v3 w=6u l=0.28u m=2
+XODD_N  SER_P ODD_N  ODD_SRC  VSS nfet_03v3 w=6u l=0.28u m=2
+
+XSELECT_E EVEN_SRC CLK_P TAIL VSS nfet_03v3 w=8u l=0.28u m=2
+XSELECT_O ODD_SRC  CLK_N TAIL VSS nfet_03v3 w=8u l=0.28u m=2
+XTAIL TAIL VBIAS VSS VSS nfet_03v3 w=10u l=0.28u m=4
+.ends cml_serializer_2to1

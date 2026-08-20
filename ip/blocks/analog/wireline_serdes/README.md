@@ -18,6 +18,11 @@ phase-error combiner. The [`deserializer`](deserializer/README.md) is a
 routed differential push-pull capture stage with local input restoration. It
 is DRC-clean, uniquely LVS-matched, and full-RC verified both alone and in the
 CML-to-CMOS-to-parallel-data composition across representative PVT. The routed
+[`serializer`](serializer/README.md) is a half-rate CML 2:1 mux core that is
+zero-DRC, uniquely LVS-matched, full-RC extracted, and composed with the actual
+TX input devices across five environments at both 1.25 GBd and 2.5 GT/s. Its
+current evidence uses an alternating word; changing-word setup/hold and the
+routed serializer-to-TX parent remain open. The routed
 children are code-generated and remain explicitly experimental pre-silicon
 evidence rather than qualified PCIe macros.
 

@@ -8,6 +8,8 @@ measured silicon.
 
 The current rate/delay evidence and remaining model-validity boundary are
 tracked separately in [PCIe Gen1 analog speed checkpoint](pcie-analog-speed-budget.md).
+The top-down component, assumption, power and sequencing audit is recorded in
+[PCIe Gen1 architecture checkpoint](pcie-architecture-checkpoint.md).
 
 | Function | Current evidence | Next boundary |
 |---|---|---|
@@ -31,26 +33,29 @@ tracked separately in [PCIe Gen1 analog speed checkpoint](pcie-analog-speed-budg
 At this checkpoint, most reusable signal-path leaf experiments exist and are
 physically extracted, but the full interface is not close to tapeout-ready.
 A reasonable planning estimate is roughly 60--70% of reusable leaf-circuit
-development, 35--45% of a functioning integrated PCIe analog interface, and
-less than 25% of tapeout/signoff evidence. These ranges deliberately count
+development, 20--30% of a functioning integrated PCIe analog interface, and
+less than 20% of tapeout/signoff evidence. These ranges deliberately count
 PLL/autonomous-CDR closure, PCIe-specific detect/idle behavior, pads/package,
-and analog-top verification as major work rather than treating them as wiring.
+serializer and end-to-end lane composition, power reconciliation, and
+analog-top verification as major work rather than treating them as wiring.
 
 ## Critical path
 
-1. Add valid-window retiming, a realizable accumulator/integrator, and a
+1. Freeze a bounded external-clock diagnostic contract, build and extract the
+   serializer, and compose an entire 1.25 GBd PRBS loopback lane. Reconcile
+   complete-path timing and power before extending more autonomous leaves.
+2. Repeat the integrated lane at externally clocked 2.5 GT/s, including the
+   real producer/consumer loading and a declared provisional I/O boundary.
+3. Add valid-window retiming, a realizable accumulator/integrator, and a
    calibration controller for the closed phase-interpolator DAC; demonstrate
    reference-assisted tracking.
-2. Close statistical startup/mismatch, phase noise, and combined PDN/aggressor
-   sensitivity on the routed VCO-bank/restorer/divider parent; implement the
-   remaining reference ratio and calibration controls, and build the PLL with
-   external-clock bypass and observable divided clock/lock outputs.
-3. Build and extract the serializer and compose it with the transmitter at
-   2.5 GT/s, including emphasis and electrical-idle behavior.
-4. Add receiver detect, electrical idle, shared bias/reference generation,
+4. Freeze the external reference and power budget, then close the PLL ratio,
+   PFD/charge-pump/filter loop, statistical startup/mismatch, phase noise,
+   combined PDN/aggressor sensitivity, bypass and lock observability.
+5. Add receiver detect, electrical idle, shared bias/reference generation,
    control DACs, calibration state/observables, and safe reset clamps.
-5. Assemble the analog top and re-run hierarchical/flattened DRC/LVS/PEX with
+6. Assemble the analog top and re-run hierarchical/flattened DRC/LVS/PEX with
    clock, supply, substrate, thermal, and simultaneous-switching coupling.
-6. Select pad/ESD/package/channel models and complete post-fill, EM/IR,
+7. Select pad/ESD/package/channel models and complete post-fill, EM/IR,
    reliability, provider-qualified variation, independent correlation, and
    immutable release-candidate evidence.

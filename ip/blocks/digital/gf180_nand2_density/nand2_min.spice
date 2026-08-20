@@ -1,0 +1,8 @@
+* SPDX-License-Identifier: Apache-2.0
+* Minimum-geometry 3.3 V CMOS NAND2 used for physical density study.
+.subckt nand2_min_3v3 A1 A2 ZN VDD VNW VPW VSS
+XN1 ZN A2 NINT VPW nfet_03v3 w=0.42u l=0.28u
+XN2 NINT A1 VSS VPW nfet_03v3 w=0.42u l=0.28u
+XP1 ZN A1 VDD VNW pfet_03v3 w=0.42u l=0.28u
+XP2 ZN A2 VDD VNW pfet_03v3 w=0.42u l=0.28u
+.ends nand2_min_3v3

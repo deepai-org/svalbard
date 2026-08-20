@@ -1,0 +1,8 @@
+* SPDX-License-Identifier: Apache-2.0
+* Device-level view of gf180mcu_fd_sc_mcu7t5v0__nand2_1.
+.subckt nand2_std_5v A1 A2 ZN VDD VNW VPW VSS
+XN2 NINT A2 VSS VPW nfet_05v0 w=0.82u l=0.60u
+XN1 ZN A1 NINT VPW nfet_05v0 w=0.82u l=0.60u
+XP2 ZN A2 VDD VNW pfet_05v0 w=1.13u l=0.50u
+XP1 VDD A1 ZN VNW pfet_05v0 w=1.13u l=0.50u
+.ends nand2_std_5v

@@ -1,0 +1,9 @@
+* SPDX-License-Identifier: Apache-2.0
+* Fastest candidate not larger than the default NAND2 footprint in the
+* exact-PEX FO1 physical sweep (3.3 V, typical, 25 C).
+.subckt nand2_fast_3v3 A1 A2 ZN VDD VNW VPW VSS
+XN1 ZN A2 NINT VPW nfet_03v3 w=1.05u l=0.28u
+XN2 NINT A1 VSS VPW nfet_03v3 w=1.05u l=0.28u
+XP1 ZN A1 VDD VNW pfet_03v3 w=2.10u l=0.28u
+XP2 ZN A2 VDD VNW pfet_03v3 w=2.10u l=0.28u
+.ends nand2_fast_3v3

@@ -1,0 +1,79 @@
+{
+  "claim": "gf180_nand2_density_and_fo1_speed_study",
+  "default_candidate": {
+    "area_relative_to_default": 1.0,
+    "area_um2": 10.975999999999999,
+    "height_um": 3.92,
+    "nominal_worst_delay_s": 2.234998e-10,
+    "pex_capacitor_count": 37,
+    "pex_resistor_count": 26,
+    "pex_sha256": "b3bd2fe44eeddd72c30b75d25d71c5f29ab3c530db05edb79c494970e0703d05",
+    "pvt_worst_delay_s": 4.286519e-10,
+    "pvt_worst_transition_s": 4.104437e-10,
+    "result": "pass",
+    "width_um": 2.8
+  },
+  "fast_under_default_area_candidate": {
+    "area_relative_to_default": 0.9035714285714285,
+    "area_um2": 9.917599999999998,
+    "height_um": 5.06,
+    "nominal_worst_delay_s": 8.793276e-11,
+    "pex_capacitor_count": 34,
+    "pex_resistor_count": 19,
+    "pex_sha256": "788426d7b8821bb1285d04dec26b1de65cdb15bf91d64df19cb91344660037e7",
+    "pvt_worst_delay_s": 1.434269e-10,
+    "pvt_worst_transition_s": 1.433396e-10,
+    "result": "pass",
+    "width_um": 1.96
+  },
+  "fo1_definition": "middle of three identical exact-PEX NAND2 stages; output drives one identical input",
+  "minimum_candidate": {
+    "area_relative_to_default": 0.4910714285714286,
+    "area_um2": 5.39,
+    "height_um": 2.75,
+    "nominal_worst_delay_s": 1.310217e-10,
+    "pex_capacitor_count": 34,
+    "pex_resistor_count": 18,
+    "pex_sha256": "849ca9fe20644077121e8901bd55e78bfabc768312413128d9a45e49d3c29a42",
+    "pvt_worst_delay_s": 2.098972e-10,
+    "pvt_worst_transition_s": 2.110554e-10,
+    "result": "pass",
+    "width_um": 1.96
+  },
+  "minimum_search_domain": "four-transistor static CMOS, 3.3 V minimum-L PDK PCells, shared diffusion, one accessible pin per input/output",
+  "physical_sweep": {
+    "candidate_count": 23,
+    "fastest_unbounded_endpoint": "n420_p840",
+    "smallest": "n042_p042"
+  },
+  "render_sha256": "29b68baa1370b2d8af33f278249fdf8cb0d6ffc11e04ddda5416115f1158f65c",
+  "result": "pass",
+  "schema_version": 1,
+  "source_sha256": "26affa97cc571da109b0250619385ff50050c5f84a9f87aa664062289aba9870",
+  "verification": {
+    "nand2_fast_3v3": {
+      "drc_errors": 0,
+      "gds_sha256": "5d4b5a2f392a0bf11bb9bbd87e065404988d4e393432c7950095d433ae08b410",
+      "lvs_unique": true,
+      "pex_capacitors": 34,
+      "pex_resistors": 19,
+      "pex_sha256": "788426d7b8821bb1285d04dec26b1de65cdb15bf91d64df19cb91344660037e7"
+    },
+    "nand2_min_3v3": {
+      "drc_errors": 0,
+      "gds_sha256": "bee4ecfd0d1b6fff4c5cb380fff06519d95b6ee986063224bec802c08908aa91",
+      "lvs_unique": true,
+      "pex_capacitors": 34,
+      "pex_resistors": 18,
+      "pex_sha256": "849ca9fe20644077121e8901bd55e78bfabc768312413128d9a45e49d3c29a42"
+    },
+    "nand2_std_5v": {
+      "drc_errors": 0,
+      "gds_sha256": "bc00d1a2fd0f4fd8dbc408cae098185ca9c02a8fced1cfe659f58c6d6abd2b9e",
+      "lvs_unique": true,
+      "pex_capacitors": 37,
+      "pex_resistors": 26,
+      "pex_sha256": "b3bd2fe44eeddd72c30b75d25d71c5f29ab3c530db05edb79c494970e0703d05"
+    }
+  }
+}

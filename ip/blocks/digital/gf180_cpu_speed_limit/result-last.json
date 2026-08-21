@@ -1,0 +1,48 @@
+{
+  "intent": "optimistic transistor/model speed bound, not a realizable CPU timing claim",
+  "device": "nfet_03v3/pfet_03v3",
+  "limitations": [
+    "schematic only",
+    "ideal supplies",
+    "no extracted interconnect or junction-layout parasitics",
+    "ring has no external load or clock distribution"
+  ],
+  "results": [
+    {
+      "environment": "tt_3v30_25c",
+      "schematic_only": true,
+      "input_edge_ps": 5.0,
+      "fanout": 1,
+      "wn_um": 0.22,
+      "wp_um": 0.44,
+      "l_um": 0.28,
+      "worst_fo1_delay_ps": 42.8756,
+      "worst_20_80_transition_ps": 45.2232,
+      "unloaded_three_stage_ring_ghz": 4.324399124741618
+    },
+    {
+      "environment": "ff_3v63_n40c",
+      "schematic_only": true,
+      "input_edge_ps": 5.0,
+      "fanout": 1,
+      "wn_um": 0.22,
+      "wp_um": 0.44,
+      "l_um": 0.28,
+      "worst_fo1_delay_ps": 29.6828,
+      "worst_20_80_transition_ps": 31.8637,
+      "unloaded_three_stage_ring_ghz": 6.2111415457046855
+    },
+    {
+      "environment": "ss_2v97_125c",
+      "schematic_only": true,
+      "input_edge_ps": 5.0,
+      "fanout": 1,
+      "wn_um": 0.22,
+      "wp_um": 0.44,
+      "l_um": 0.28,
+      "worst_fo1_delay_ps": 68.2223,
+      "worst_20_80_transition_ps": 69.195,
+      "unloaded_three_stage_ring_ghz": 2.6920799009314598
+    }
+  ]
+}

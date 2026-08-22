@@ -452,6 +452,14 @@ write path and create stale-decision feedback. The contract must say whether a
 cell produces a held value or an aperture-qualified value; both are useful,
 but they are not interchangeable.
 
+For interleaved or dual-edge decisions, derive one validity interval per lane
+from the exact extracted parent before assigning a shared conversion or write
+clock. Opposite-edge decisions can have disjoint safe windows even when both
+leaves pass with ideal stimuli. If no common interval exists, keep the clocks
+independent through capture or retime each lane locally; changing a delay value
+cannot repair an architectural non-overlap. Exercise changing data in both
+lanes and sample each final retained output before claiming the composition.
+
 Close every interface using the exact extracted producer and consumer, not an
 ideal source on one side and a standalone load capacitor on the other. Measure
 the producer's loaded amplitude, common mode, frequency or edge rate, startup,

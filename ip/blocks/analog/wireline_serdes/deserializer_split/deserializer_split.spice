@@ -1,0 +1,41 @@
+* SPDX-License-Identifier: Apache-2.0
+* Dual differential capture with independently phased even and odd writes.
+.subckt cmos_differential_capture D DB CLK CLKB VDD VSS Q QB
+XLQP Q_INT QB_INT VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XLQN Q_INT QB_INT VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XLBP QB_INT Q_INT VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XLBN QB_INT Q_INT VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XSETD QB_INT D SET_TAIL VSS nfet_03v3 w=8u l=0.28u m=4
+XSETC SET_TAIL CLK VSS VSS nfet_03v3 w=8u l=0.28u m=8
+XRSTD Q_INT DB RST_TAIL VSS nfet_03v3 w=8u l=0.28u m=4
+XRSTC RST_TAIL CLK VSS VSS nfet_03v3 w=8u l=0.28u m=8
+XSETPD Q_INT DB PSET_TAIL VDD pfet_03v3 w=8u l=0.28u m=4
+XSETPC PSET_TAIL CLKB VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XRSTPD QB_INT D PRST_TAIL VDD pfet_03v3 w=8u l=0.28u m=4
+XRSTPC PRST_TAIL CLKB VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XQBP QB_BUF Q_INT VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XQBN QB_BUF Q_INT VSS VSS nfet_03v3 w=4u l=0.28u m=2
+XQOP Q QB_BUF VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XQON Q QB_BUF VSS VSS nfet_03v3 w=8u l=0.28u m=6
+XBBP Q_BUF QB_INT VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XBBN Q_BUF QB_INT VSS VSS nfet_03v3 w=4u l=0.28u m=2
+XBOP QB Q_BUF VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XBON QB Q_BUF VSS VSS nfet_03v3 w=8u l=0.28u m=6
+.ends cmos_differential_capture
+
+.subckt deserializer_split_capture EVEN_D EVEN_DB ODD_D ODD_DB
++ EVEN_CAPTURE_CLK EVEN_CAPTURE_CLKB ODD_CAPTURE_CLK ODD_CAPTURE_CLKB
++ VDD VSS EVEN_Q EVEN_QB ODD_Q ODD_QB
+XEDP EVEN_D_BUF EVEN_DB VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XEDN EVEN_D_BUF EVEN_DB VSS VSS nfet_03v3 w=8u l=0.28u m=4
+XEDBP EVEN_DB_BUF EVEN_D VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XEDBN EVEN_DB_BUF EVEN_D VSS VSS nfet_03v3 w=8u l=0.28u m=4
+XODP ODD_D_BUF ODD_DB VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XODN ODD_D_BUF ODD_DB VSS VSS nfet_03v3 w=8u l=0.28u m=4
+XODBP ODD_DB_BUF ODD_D VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XODBN ODD_DB_BUF ODD_D VSS VSS nfet_03v3 w=8u l=0.28u m=4
+XEVEN EVEN_D_BUF EVEN_DB_BUF EVEN_CAPTURE_CLK EVEN_CAPTURE_CLKB
++ VDD VSS EVEN_Q EVEN_QB cmos_differential_capture
+XODD ODD_D_BUF ODD_DB_BUF ODD_CAPTURE_CLK ODD_CAPTURE_CLKB
++ VDD VSS ODD_Q ODD_QB cmos_differential_capture
+.ends deserializer_split_capture

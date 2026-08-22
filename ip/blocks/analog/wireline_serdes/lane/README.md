@@ -41,7 +41,17 @@ amplifier, and sampler each have zero Magic DRC errors, one unique pin-resolved
 LVS match, and respectively 545R/276C, 442R/169C, and 480R/193C full-RC
 extractions. The serializer/TX uses its selected committed full-RC extraction.
 
-This closes the provisional external-clock TX-to-held-sampler spine, not the
-entire diagnostic lane. Two real CML-to-CMOS decisions, CMOS parallel capture,
-PRBS checking, channel-loss/jitter sweeps, simultaneous-supply aggression, and
-a selected pad/ESD/package/channel remain next.
+The sampler boundary is now extended through two exact-PEX CML-to-CMOS
+converters and the independently clocked exact-PEX dual capture cell. All four
+0--300 ps conversion offsets pass nominally, and the selected offset passes all
+five representative environments. Worst converter/capture signed margins are
+2.371/2.363 V and total composed current is 23.05--34.49 mA.
+The physical, nominal, and PVT records bind the same exact split-capture PEX;
+the preserved deck and matching image are
+`scratch/serdes-lane-capture-deserializer-last.pex.spice` and
+`scratch/serdes-lane-capture-layout-last.png`.
+
+This closes deterministic changing-word transfer to stable parallel CMOS under
+the provisional external clock and channel. A longer PRBS scoreboard,
+channel-loss/jitter sweeps, simultaneous-supply aggression, and a selected
+pad/ESD/package/channel remain next.

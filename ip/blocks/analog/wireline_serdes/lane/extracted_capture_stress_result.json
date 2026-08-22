@@ -1,0 +1,144 @@
+{
+  "case_count": 4,
+  "cases": [
+    {
+      "case_id": "prbs_base",
+      "channel_stress": {
+        "differential_shunt_capacitance_f": 0.0,
+        "series_resistance_ohm_per_leg": 0.0,
+        "topology": "symmetric_two_section_lumped_rc_proxy"
+      },
+      "evidence_sha256": "544aa670923eb604424c3ca1ba8e138a0315e8055978456ec171c270e5431d65",
+      "result": "pass",
+      "selected_case": {
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 3.16562,
+        "minimum_capture_odd_v": 3.21728,
+        "minimum_frontend_even_v": 2.97524,
+        "minimum_frontend_odd_v": 2.97518,
+        "result": "pass",
+        "supply_current_a": 0.0271343
+      },
+      "stimulus": {
+        "bit_count": 64,
+        "pattern": "prbs7",
+        "scored_pair_count": 28,
+        "simulation_timeout_s": 900,
+        "tx_clock_duty": 0.5,
+        "tx_clock_jitter_peak_s": 0.0
+      }
+    },
+    {
+      "case_id": "channel",
+      "channel_stress": {
+        "differential_shunt_capacitance_f": 1e-12,
+        "series_resistance_ohm_per_leg": 6.0,
+        "topology": "symmetric_two_section_lumped_rc_proxy"
+      },
+      "evidence_sha256": "2b0d9ee208831021848896d88c6b6a6948321a72941017aa52eae395e9ef632b",
+      "result": "pass",
+      "selected_case": {
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 3.16562,
+        "minimum_capture_odd_v": 3.21711,
+        "minimum_frontend_even_v": 2.97711,
+        "minimum_frontend_odd_v": 2.9769,
+        "result": "pass",
+        "supply_current_a": 0.0271146
+      },
+      "stimulus": {
+        "bit_count": 64,
+        "pattern": "prbs7",
+        "scored_pair_count": 28,
+        "simulation_timeout_s": 900,
+        "tx_clock_duty": 0.5,
+        "tx_clock_jitter_peak_s": 0.0
+      }
+    },
+    {
+      "case_id": "timing",
+      "channel_stress": {
+        "differential_shunt_capacitance_f": 0.0,
+        "series_resistance_ohm_per_leg": 0.0,
+        "topology": "symmetric_two_section_lumped_rc_proxy"
+      },
+      "evidence_sha256": "a7fdee7108c58a25fa670d586dc7e412fd5c4a78f0cbfd258962848490ea2e2f",
+      "result": "pass",
+      "selected_case": {
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 3.16561,
+        "minimum_capture_odd_v": 3.21727,
+        "minimum_frontend_even_v": 2.97494,
+        "minimum_frontend_odd_v": 2.9753,
+        "result": "pass",
+        "supply_current_a": 0.0271369
+      },
+      "stimulus": {
+        "bit_count": 64,
+        "pattern": "prbs7",
+        "scored_pair_count": 28,
+        "simulation_timeout_s": 900,
+        "tx_clock_duty": 0.47,
+        "tx_clock_jitter_peak_s": 4e-11
+      }
+    },
+    {
+      "case_id": "combined",
+      "channel_stress": {
+        "differential_shunt_capacitance_f": 1e-12,
+        "series_resistance_ohm_per_leg": 6.0,
+        "topology": "symmetric_two_section_lumped_rc_proxy"
+      },
+      "evidence_sha256": "10350c6747e427f1b7505d93f66c8d59fdf5c643ab2312cf8470ec6491634390",
+      "result": "pass",
+      "selected_case": {
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 3.16522,
+        "minimum_capture_odd_v": 3.21704,
+        "minimum_frontend_even_v": 2.97619,
+        "minimum_frontend_odd_v": 2.9769,
+        "result": "pass",
+        "supply_current_a": 0.0271197
+      },
+      "stimulus": {
+        "bit_count": 64,
+        "pattern": "prbs7",
+        "scored_pair_count": 28,
+        "simulation_timeout_s": 900,
+        "tx_clock_duty": 0.47,
+        "tx_clock_jitter_peak_s": 3e-11
+      }
+    }
+  ],
+  "claim": "bounded_extracted_1p25_gbd_lane_capture_stress",
+  "maximum_supply_current_a": 0.0271369,
+  "minimum_capture_margin_v": 3.16522,
+  "minimum_frontend_margin_v": 2.97494,
+  "minimum_supply_current_a": 0.0271146,
+  "passing_case_count": 4,
+  "pex_sha256": {
+    "deserializer_pex": "9f05af8a988b7918d8e3c38a96b892f07d3de1cc2d44813bc73e436d8e01a658",
+    "frontend_pex": "e1042f2fb62bb4c79c703c76561b87abe90491abfad82217b5bf8fdc2356beec",
+    "rx_pex": "1678a1a055afcb6fb6789d57aa396fc199a12cdb6dd846bf55b2bfd38fe01089",
+    "sampler_pex": "cbaa3e7f705035b67d7ec939aa55e4508b944055f6c658f19a0061e43e40a052",
+    "termination_pex": "2f1c8d24ff544355d1ea3ea7893ef4d06b20ca48eb9bb3091e9922ffe4e0a5e6",
+    "tx_pex": "37e60ad6d18ccc9cd62fbc6184aae7cda6ed391b59c8fc1f3181e61451dffb4b"
+  },
+  "physical_sha256": {
+    "deserializer_split": "5867c90961bda79a1f59cf71d712169f8733a8afc70c50038455b4c8e1241b75"
+  },
+  "result": "pass",
+  "schema_version": 1
+}

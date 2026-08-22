@@ -52,6 +52,26 @@ the preserved deck and matching image are
 `scratch/serdes-lane-capture-layout-last.png`.
 
 This closes deterministic changing-word transfer to stable parallel CMOS under
-the provisional external clock and channel. A longer PRBS scoreboard,
-channel-loss/jitter sweeps, simultaneous-supply aggression, and a selected
-pad/ESD/package/channel remain next.
+the provisional external clock and channel.
+
+`./run_capture_stress.sh` reuses one freshly checked extraction stack for four
+64-bit PRBS7-prefix cases, scoring 28 even/odd pairs (56 serial bits) after
+startup in each case. All four exact-PEX cases pass: baseline; a symmetric
+two-section channel proxy with 6 ohms series resistance per leg and 1 pF total
+differential shunt capacitance; 40 ps peak deterministic TX-edge jitter with a
+47% TX-clock duty cycle; and the channel proxy combined with 30 ps peak jitter
+and 47% duty. Across 224 scored serial bits, the worst converter and retained
+CMOS margins are 2.975 V and 3.165 V, and current is 27.11--27.14 mA.
+
+`capture_stack.sh` is the shared container-side primitive for both capture
+flows. It regenerates the termination, RX, sampler, converter, and split-capture
+views once, runs physical checks on the exact split-capture PEX, and exports one
+canonical argument vector so nominal, PVT, and stress flows cannot quietly use
+different leaf paths.
+
+For a matched 100-ohm differential reference, the declared RC proxy's ABCD
+network evaluates to approximately 0.68 dB insertion loss at the 625 MHz
+Nyquist frequency and 1.16 dB at 1.25 GHz. This is an explicit bounded lumped
+stress, not a transmission-line, return-loss, or selected-channel claim. A
+denser impairment/PVT matrix, simultaneous-supply aggression, and selected
+pad/ESD/package/S-parameter models remain next.

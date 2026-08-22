@@ -1,0 +1,105 @@
+* SPDX-License-Identifier: Apache-2.0
+* Externally clocked 1.25 GBd TX/channel/RX/sampler composition.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+@TX_INCLUDE@
+@TERM_INCLUDE@
+@RX_INCLUDE@
+@SAMPLER_INCLUDE@
+.temp @TEMP_C@
+
+* Initialize the coupling capacitors at the settled TX-to-RX common-mode
+* voltage while ramping device supplies. Startup/common-mode acquisition is a
+* separate, much longer time-scale test.
+VDD VDD 0 PWL(0 0 500p @VDD_V@)
+VVCM VCM 0 PWL(0 0 500p @RX_VCM_V@)
+VTXBIAS TX_BIAS_SRC 0 PWL(0 0 500p @TX_BIAS_V@)
+VRXBIAS RX_BIAS_SRC 0 PWL(0 0 500p @RX_BIAS_V@)
+VSAMPBIAS SAMP_BIAS_SRC 0 PWL(0 0 500p @SAMPLER_BIAS_V@)
+VTHP VTHP_SRC 0 PWL(0 0 500p @RX_VCM_V@)
+VTHN VTHN_SRC 0 PWL(0 0 500p @RX_VCM_V@)
+VBW RX_BW_EN_N_SRC 0 0
+R_TXBIAS TX_BIAS_SRC TX_BIAS 1
+R_RXBIAS RX_BIAS_SRC RX_BIAS 1
+R_SAMPBIAS SAMP_BIAS_SRC SAMP_BIAS 1
+R_VTHP VTHP_SRC VTHP 1
+R_VTHN VTHN_SRC VTHN 1
+R_BW RX_BW_EN_N_SRC RX_BW_EN_N 1
+
+VEVENP EVEN_P_SRC 0 @EVEN_P_PWL@
+VEVENN EVEN_N_SRC 0 @EVEN_N_PWL@
+VODDP ODD_P_SRC 0 @ODD_P_PWL@
+VODDN ODD_N_SRC 0 @ODD_N_PWL@
+VTXCLKP TX_CLK_P_SRC 0 PULSE(0 @VDD_V@ @CLOCK_DELAY@ 20p 20p @UI@ @PERIOD@)
+VTXCLKN TX_CLK_N_SRC 0 PULSE(@VDD_V@ 0 @CLOCK_DELAY@ 20p 20p @UI@ @PERIOD@)
+VLOAD0 LOAD_EN0_N_SRC 0 0
+VLOAD1 LOAD_EN1_N_SRC 0 0
+VLOAD2 LOAD_EN2_N_SRC 0 @VDD_V@
+VLOAD3 LOAD_EN3_N_SRC 0 @VDD_V@
+R_EVENP EVEN_P_SRC EVEN_P 1
+R_EVENN EVEN_N_SRC EVEN_N 1
+R_ODDP ODD_P_SRC ODD_P 1
+R_ODDN ODD_N_SRC ODD_N 1
+R_TXCLKP TX_CLK_P_SRC TX_CLK_P 1
+R_TXCLKN TX_CLK_N_SRC TX_CLK_N 1
+R_LOAD0 LOAD_EN0_N_SRC LOAD_EN0_N 1
+R_LOAD1 LOAD_EN1_N_SRC LOAD_EN1_N 1
+R_LOAD2 LOAD_EN2_N_SRC LOAD_EN2_N 1
+R_LOAD3 LOAD_EN3_N_SRC LOAD_EN3_N 1
+
+XTX EVEN_P EVEN_N ODD_P ODD_N TX_CLK_P TX_CLK_N TX_BIAS
++ LOAD_EN0_N LOAD_EN1_N LOAD_EN2_N LOAD_EN3_N VDD 0 TXP TXN @TX_CELL@
+
+* Provisional explicit die/package/AC-coupling boundary.  TXN is the logical
+* positive rail for this driver's established OUTN-OUTP polarity.
+CTX_P TXP 0 @TX_PAD_CAP@
+CTX_N TXN 0 @TX_PAD_CAP@
+CAC_P TXN PKG_P @AC_CAP@ IC=@AC_INITIAL_V@
+CAC_N TXP PKG_N @AC_CAP@ IC=@AC_INITIAL_V@
+RPKG_P PKG_P LP_P @PACKAGE_R@
+RPKG_N PKG_N LP_N @PACKAGE_R@
+LPKG_P LP_P RXP @PACKAGE_L@
+LPKG_N LP_N RXN @PACKAGE_L@
+CRX_P RXP 0 @RX_PAD_CAP@
+CRX_N RXN 0 @RX_PAD_CAP@
+RBIAS_P RXP VCM @BIAS_RETURN_R@
+RBIAS_N RXN VCM @BIAS_RETURN_R@
+
+@TERM_CONTROL_SOURCES@
+XTERM RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N
++ TERM_EN5_N TERM_EN6_N VDD 0 @TERM_CELL@
+
+XRX RXP RXN VTHP VTHN RX_BIAS RX_BW_EN_N VDD 0 RXOP RXON @RX_CELL@
+CRXOP RXOP 0 25f
+CRXON RXON 0 25f
+
+* Delay clock motion until after the DC solution; an undelayed sinusoid can
+* force an impractically small first transient step in ngspice.
+VSCLKP SAMP_CLK_P_SRC 0 SIN(@SAMPLE_CLOCK_CM@ @SAMPLE_CLOCK_PEAK@ @CLOCK_HZ@ 1n 0 @CLOCK_PHASE@)
+VSCLKN SAMP_CLK_N_SRC 0 SIN(@SAMPLE_CLOCK_CM@ @SAMPLE_CLOCK_PEAK@ @CLOCK_HZ@ 1n 0 @CLOCK_N_PHASE@)
+RCLKP SAMP_CLK_P_SRC SAMP_CLK_P 1
+RCLKN SAMP_CLK_N_SRC SAMP_CLK_N 1
+XSAMPLER RXOP RXON SAMP_CLK_P SAMP_CLK_N SAMP_BIAS VDD 0
++ SAMP_E_P SAMP_E_N SAMP_O_P SAMP_O_N @SAMPLER_CELL@
+CE_P SAMP_E_P 0 25f
+CE_N SAMP_E_N 0 25f
+CO_P SAMP_O_P 0 25f
+CO_N SAMP_O_N 0 25f
+
+.control
+tran 2p @STOP_TIME@ uic
+let tx_diff = v(TXN)-v(TXP)
+let pin_diff = v(RXP)-v(RXN)
+let rx_diff = v(RXOP)-v(RXON)
+let even_diff = v(SAMP_E_P)-v(SAMP_E_N)
+let odd_diff = v(SAMP_O_P)-v(SAMP_O_N)
+let rx_cm = (v(RXP)+v(RXN))/2
+let amp_cm = (v(RXOP)+v(RXON))/2
+let isupply = -i(VDD)
+@MEASURE_LINES@
+meas tran rx_cm_avg avg rx_cm from=@MEASURE_START@ to=@STOP_TIME@
+meas tran amp_cm_avg avg amp_cm from=@MEASURE_START@ to=@STOP_TIME@
+meas tran supply_current avg isupply from=@MEASURE_START@ to=@STOP_TIME@
+.endc
+.end

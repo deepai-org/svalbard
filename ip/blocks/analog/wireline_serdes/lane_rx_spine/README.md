@@ -23,7 +23,8 @@ the exact TX, termination, CML/CMOS converters, and split capture PEX. Its five
 representative environments retain the established PRBS7, 6-ohm-per-leg plus
 1-pF channel, 30-ps peak jitter, 47% duty cycle, and 20-mV rail-ripple stress.
 
-This closes parent-owned routing only from the RX amplifier through the sampler.
-Termination-to-RX, sampler-to-converter, clocks, bias, supply, pad, and substrate
-routing remain separate physical boundaries and must be absorbed by later
-parents.
+This parent closes routing only from the RX amplifier through the sampler. The
+next `../lane_rx_frontend` hierarchy now absorbs termination-to-RX and
+sampler-to-converter routing while retaining this cell and its evidence as a
+reproducible child milestone. Clocks, bias, pad, package, and substrate/PDN
+closure remain later integration boundaries.

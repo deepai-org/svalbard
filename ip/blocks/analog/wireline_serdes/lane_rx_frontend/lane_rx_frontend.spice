@@ -1,0 +1,25 @@
+* SPDX-License-Identifier: Apache-2.0
+* Routed termination through dual CML-to-CMOS receive front end.
+.include /src/termination/termination.spice
+.include /src/lane_rx_spine/lane_rx_spine.spice
+.include /src/cdr/cml_to_cmos/cml_to_cmos.spice
+
+.subckt lane_rx_frontend RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N
++ TERM_EN4_N TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N REST_BIAS
++ SAMP_CLK_P SAMP_CLK_N SAMP_BIAS E_SENSE_CLK E_REGEN_CLK E_REGEN_CLKB
++ E_CAPTURE_CLK E_CAPTURE_CLKB E_SENSE_BOOST O_SENSE_CLK O_REGEN_CLK
++ O_REGEN_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB O_SENSE_BOOST VDD VSS
++ RX_RAWP RX_RAWN RX_RESTP RX_RESTN SAMP_E_P SAMP_E_N SAMP_O_P SAMP_O_N
++ FE_E_P FE_E_N FE_O_P FE_O_N
+XTERM RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N
++ TERM_EN5_N TERM_EN6_N VDD VSS serdes_termination
+XSPINE RXP RXN VTHP VTHN RX_BIAS RX_BW_EN_N REST_BIAS
++ SAMP_CLK_P SAMP_CLK_N SAMP_BIAS VDD VSS RX_RAWP RX_RAWN RX_RESTP RX_RESTN
++ SAMP_E_P SAMP_E_N SAMP_O_P SAMP_O_N lane_rx_spine
+* The EVEN instance is mirrored physically. Swapping both differential sides
+* preserves logical polarity and permits uncrossed equal-length parent routes.
+XFE_E SAMP_E_N SAMP_E_P E_SENSE_CLK E_REGEN_CLK E_REGEN_CLKB E_CAPTURE_CLK
++ E_CAPTURE_CLKB VDD VSS FE_E_N FE_E_P E_SENSE_BOOST cml_to_cmos
+XFE_O SAMP_O_P SAMP_O_N O_SENSE_CLK O_REGEN_CLK O_REGEN_CLKB O_CAPTURE_CLK
++ O_CAPTURE_CLKB VDD VSS FE_O_P FE_O_N O_SENSE_BOOST cml_to_cmos
+.ends lane_rx_frontend

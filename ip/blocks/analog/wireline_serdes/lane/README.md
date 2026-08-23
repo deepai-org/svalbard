@@ -196,6 +196,18 @@ pin, raw-RX, restored, converter, final-capture, and current measurements of
 `check_routed_rx_evidence.py` rejects duplicate leaf composition and binds every
 physical record, PEX, testbench, runner, case, and aggregate hash.
 
-This is not yet a complete routed lane. The termination-to-RX,
-sampler-to-converter, converter-to-capture, clock, bias, and supply routes remain
-outside this parent and are the next physical composition boundaries.
+`run_capture_2p5_rx_frontend.sh` advances that hierarchy through the exact
+5,926R/3,405C `lane_rx_frontend/lane_rx_frontend.pex.spice` parent. It absorbs
+the programmable termination, termination-to-RX routes, receive spine, both
+sampler-to-converter boundaries, and the mirrored EVEN/ODD converter pair.
+All 5/5 environments pass the unchanged combined stress. Worst pin, raw-RX,
+restored, converter, final-capture, and current measurements are 104.159 mV,
+47.358 mV, 211.577 mV, 579.32 mV, 595.135 mV, and 53.581 mA. Fast/cold moves
+the realizable sampler phase to 45 degrees; fast/hot uses the independently
+exposed interleave clocks for -50 ps ODD sense/regeneration deskew.
+`check_rx_frontend_evidence.py` binds the exact parent and rejects fallback to
+separate termination, spine, or converter PEX instances.
+
+This is not yet a complete routed lane. Converter-to-capture, realized clock
+and bias trees, local decoupling, pad/ESD/package/channel, and full-chip supply
+and substrate routes remain the next physical composition boundaries.

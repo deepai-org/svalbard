@@ -575,6 +575,30 @@ parent PEX or its child PEX files, never both. Bind every retained historical
 result to its old runner hash when teaching the runner about the new hierarchy,
 then give the routed-parent result its own claim and evidence files.
 
+Do not infer transformed child-pin coordinates from a MAG file by dividing its
+database integers by an assumed micron scale. A child generated under a
+different Magic unit convention can appear at twice its emitted GDS size even
+though the parent transform itself is correct. Query the emitted hierarchy's
+recursive GDS labels and conductive shapes with their actual transforms, then
+verify the landing on every participating layer. A label identifies a net, not
+a safe via site: in the rotated termination, the visible metal3 RXP label lay
+under a metal4 enable route and seven metal5 enable trunks crossed the same
+bus. A full stack at the label shorted controls despite correct-looking
+coordinates. Escaping on the pin's native metal beyond the crossing bank and
+changing only to the consumer's native layer produced the shorter symmetric
+route and the unique LVS match. Preserve the failed LVS fragments because
+their device fanout is often the fastest way to identify which hidden layer
+was accidentally joined.
+
+When interleaves expose separate physical clock ports, keep their phase controls
+independent through parent validation. In the routed RX front end, a shared
+converter schedule had no passing fast/hot overlap even though each leaf was
+qualified. A bounded -50 ps ODD sense/regeneration deskew closed both converter
+and final-capture margins while zero or opposite capture-only skew did not.
+That result justifies a realizable deskew code; it does not justify an arbitrary
+per-corner delay unless the clock generator, observable, and calibration search
+are later implemented and extracted.
+
 A downstream differential write port can present several large NMOS and PMOS
 gate banks on each rail; this distributed nonlinear load is not equivalent to
 the nominal explicit capacitor used in either leaf test. Size the retaining

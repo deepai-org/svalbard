@@ -1,0 +1,127 @@
+{
+  "case_count": 1,
+  "case_id": "ff_hot",
+  "cases": [
+    {
+      "amplifier_common_mode_v": 2.10714,
+      "capture_close_s": 5.805000000000001e-09,
+      "complete": true,
+      "conversion_offset_s": 4e-10,
+      "id": "convert_400p",
+      "minimum_capture_even_v": 0.907819,
+      "minimum_capture_odd_v": 1.48199,
+      "minimum_frontend_even_v": 0.799615,
+      "minimum_frontend_odd_v": 1.3052,
+      "minimum_pin_even_v": 0.105408,
+      "minimum_pin_odd_v": 0.125711,
+      "minimum_restored_even_v": 0.52468,
+      "minimum_restored_odd_v": 0.348754,
+      "minimum_rx_even_v": 0.255599,
+      "minimum_rx_hold_even_v": 0.412663,
+      "minimum_rx_hold_odd_v": 0.385426,
+      "minimum_rx_odd_v": 0.210613,
+      "minimum_tx_even_v": 0.0849127,
+      "minimum_tx_odd_v": 0.0669535,
+      "restored_common_mode_v": 1.78486,
+      "result": "pass",
+      "rx_common_mode_v": 1.4546,
+      "supply_current_a": 0.0504297,
+      "tx_common_mode_v": 1.75453
+    }
+  ],
+  "channel_stress": {
+    "differential_shunt_capacitance_f": 1e-12,
+    "series_resistance_ohm_per_leg": 6.0,
+    "topology": "symmetric_two_section_lumped_rc_proxy"
+  },
+  "claim": "extracted_2p5_gts_lane_dual_cmos_capture",
+  "complete_case_count": 1,
+  "controls": {
+    "capture_delay_ps": 200,
+    "capture_width_ps": 380,
+    "frontend_sense_width_ps": 400,
+    "frontend_tail_boost": false,
+    "latency_ui": 0,
+    "odd_capture_skew_ps": 0,
+    "odd_frontend_skew_ps": -50,
+    "restorer_bias_v": 1.2,
+    "restorer_cell": null,
+    "restorer_mode": "data",
+    "rx_bandwidth_mode": "high",
+    "rx_bias_v": 1.2,
+    "rx_window_start_ps": 150,
+    "sampler_bias_v": 0.9,
+    "sampler_phase_deg": 16.875,
+    "termination_code": 3,
+    "tx_bias_v": 1.6,
+    "tx_load_code": 2
+  },
+  "environment": [
+    "ff",
+    "res_ss",
+    2.97,
+    125,
+    0.5
+  ],
+  "fixture_initialization": {
+    "ac_coupling_initial_voltage_v": 0.3,
+    "note": "settled TX-to-RX common-mode difference; not a hardware trim"
+  },
+  "passing_case_count": 1,
+  "pex_sha256": {
+    "deserializer_pex": "e398e9459c21531f4000a11f0b29ed0e184fc49892a5896aaba296c2a236e541",
+    "rx_frontend_parent_pex": "5d3b088785601b68de750e2da85c91687b024f26fb0eefcf756d4140731bb514",
+    "tx_pex": "9717e5af6b7a088810fa325a2bae044d3b58fbbd2e48867799cc80e03ffcb12c"
+  },
+  "physical_composition": "routed_termination_rx_spine_dual_converter_parent",
+  "physical_sha256": {
+    "deserializer_split": "3c6296e8345a4f9fc0585459bd969147a14230c3922a8f5ce85db3e89d5215be",
+    "rx_frontend_parent": "c550803f84ef5719e34fc8267a9329773f48a44b7c2dae9a803fee96c5013a44",
+    "tx": "670b59af3edc10622b59f61f8eea2d02effcef947b6aef6fa1a871e88675bb9a"
+  },
+  "result": "pass",
+  "schema_version": 1,
+  "selected_case": {
+    "amplifier_common_mode_v": 2.10714,
+    "capture_close_s": 5.805000000000001e-09,
+    "complete": true,
+    "conversion_offset_s": 4e-10,
+    "id": "convert_400p",
+    "minimum_capture_even_v": 0.907819,
+    "minimum_capture_odd_v": 1.48199,
+    "minimum_frontend_even_v": 0.799615,
+    "minimum_frontend_odd_v": 1.3052,
+    "minimum_pin_even_v": 0.105408,
+    "minimum_pin_odd_v": 0.125711,
+    "minimum_restored_even_v": 0.52468,
+    "minimum_restored_odd_v": 0.348754,
+    "minimum_rx_even_v": 0.255599,
+    "minimum_rx_hold_even_v": 0.412663,
+    "minimum_rx_hold_odd_v": 0.385426,
+    "minimum_rx_odd_v": 0.210613,
+    "minimum_tx_even_v": 0.0849127,
+    "minimum_tx_odd_v": 0.0669535,
+    "restored_common_mode_v": 1.78486,
+    "result": "pass",
+    "rx_common_mode_v": 1.4546,
+    "supply_current_a": 0.0504297,
+    "tx_common_mode_v": 1.75453
+  },
+  "source_sha256": {
+    "base_testbench": "fce3e458d266ecb41f1424b9580ba540b37be8df88cb8dab4c2d4ca62e161ac7",
+    "runner": "b22cda02884ec9d71be7ff39100258eac74c410f1c4a06bdbf378665ad3734b1"
+  },
+  "stimulus": {
+    "bit_count": 24,
+    "pattern": "prbs7",
+    "scored_pair_count": 8,
+    "serial_rate_hz": 2500000000.0,
+    "simulation_timeout_s": 900,
+    "tx_clock_duty": 0.47,
+    "tx_clock_jitter_peak_s": 3e-11
+  },
+  "supply_stress": {
+    "vdd_ripple_frequency_hz": 100000000.0,
+    "vdd_ripple_peak_v": 0.02
+  }
+}

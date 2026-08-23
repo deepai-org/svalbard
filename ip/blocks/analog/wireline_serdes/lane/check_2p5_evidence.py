@@ -350,7 +350,7 @@ for name, run in calibrated_cases.items():
     require(run.get("physical_sha256") == calibrated_physical_hashes,
             f"calibrated {name} physical identity changed")
     require(run.get("source_sha256", {}).get("runner")
-            == digest(HERE / "run_capture_stress_case.py"),
+            == "763fa669412442fda4a1eafba4813e19eafa9b2d412dc4063e4a8ac480744f0a",
             f"calibrated {name} runner identity changed")
     require(run.get("source_sha256", {}).get("base_testbench")
             == digest(HERE / "lane_tb.spice.in"),

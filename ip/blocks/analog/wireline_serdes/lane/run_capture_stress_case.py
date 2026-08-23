@@ -25,6 +25,13 @@ SCALAR = re.compile(
 )
 
 
+def replace_once(text: str, old: str, new: str, label: str) -> str:
+    """Replace one structural template fragment or fail closed."""
+    if text.count(old) != 1:
+        raise SystemExit(f"testbench {label} boundary changed")
+    return text.replace(old, new)
+
+
 def prbs7(count: int) -> tuple[int, ...]:
     """Return a deterministic maximal-length x^7+x^6+1 sequence."""
     state = 0x5D
@@ -85,8 +92,11 @@ def main() -> None:
     parser.add_argument("--tx-pex", required=True, type=Path)
     parser.add_argument("--tx-physical", type=Path)
     parser.add_argument("--term-pex", required=True, type=Path)
-    parser.add_argument("--rx-pex", required=True, type=Path)
-    parser.add_argument("--sampler-pex", required=True, type=Path)
+    parser.add_argument("--term-physical", type=Path)
+    parser.add_argument("--rx-pex", type=Path)
+    parser.add_argument("--sampler-pex", type=Path)
+    parser.add_argument("--rx-spine-pex", type=Path)
+    parser.add_argument("--rx-spine-physical", type=Path)
     parser.add_argument("--frontend-pex", required=True, type=Path)
     parser.add_argument("--frontend-physical", type=Path)
     parser.add_argument("--deserializer-pex", required=True, type=Path)
@@ -135,6 +145,7 @@ def main() -> None:
     parser.add_argument("--case-id", default="nominal")
     parser.add_argument("--simulation-timeout-s", type=int, default=600)
     args = parser.parse_args()
+    routed_rx_spine = args.rx_spine_pex is not None
     if not 1 <= args.jobs <= 4 or not 1 <= args.term_code <= 6:
         parser.error("jobs or termination code outside declared range")
     offsets = tuple(args.offset_ps) if args.offset_ps else DEFAULT_OFFSETS_PS
@@ -167,9 +178,19 @@ def main() -> None:
     if (args.frontend_sense_width_ps is not None
             and not 250 <= args.frontend_sense_width_ps <= 700):
         parser.error("front-end sense pulse width must be 250--700 ps")
-    if args.restorer_mode != "none" and not (
-            args.restorer_pex and args.restorer_physical):
+    if routed_rx_spine and args.restorer_mode != "data":
+        parser.error("routed RX spine requires --restorer-mode data")
+    if routed_rx_spine and not args.rx_spine_physical:
+        parser.error("routed RX spine requires its physical record")
+    if routed_rx_spine and not args.term_physical:
+        parser.error("routed RX spine requires termination physical evidence")
+    if not routed_rx_spine and not (args.rx_pex and args.sampler_pex):
+        parser.error("provide an RX-spine PEX or both RX and sampler PEX")
+    if (not routed_rx_spine and args.restorer_mode != "none" and not (
+            args.restorer_pex and args.restorer_physical)):
         parser.error("restorer mode requires its PEX and physical record")
+    if routed_rx_spine and args.base_physical is not None:
+        parser.error("base leaf physical record is invalid with routed RX spine")
     if args.restorer_cell is not None and not re.fullmatch(
             r"[A-Za-z][A-Za-z0-9_]*", args.restorer_cell):
         parser.error("invalid restorer cell name")
@@ -224,7 +245,29 @@ def main() -> None:
         "R_RXBIAS RX_BIAS_SRC RX_BIAS 1",
         "R_RXBIAS RX_BIAS_SRC RX_BIAS 1\n@RESTORER_BIAS_RESISTOR@",
     )
-    if args.restorer_mode != "none":
+    if routed_rx_spine:
+        template = replace_once(
+            template,
+            "XRX RXP RXN VTHP VTHN RX_BIAS RX_BW_EN_N VDD 0 RXOP RXON @RX_CELL@\n"
+            "CRXOP RXOP 0 25f\nCRXON RXON 0 25f",
+            "XRXSPINE RXP RXN VTHP VTHN RX_BIAS RX_BW_EN_N REST_BIAS\n"
+            "+ SAMP_CLK_P SAMP_CLK_N SAMP_BIAS VDD 0 RX_RAWP RX_RAWN\n"
+            "+ RXOP RXON SAMP_E_P SAMP_E_N SAMP_O_P SAMP_O_N lane_rx_spine_pex\n"
+            "CRXRAWP RX_RAWP 0 25f\nCRXRAWN RX_RAWN 0 25f\n"
+            "CRESTOP RXOP 0 25f\nCRESTON RXON 0 25f",
+            "RX instance",
+        )
+        template = replace_once(
+            template,
+            "XSAMPLER RXOP RXON SAMP_CLK_P SAMP_CLK_N SAMP_BIAS VDD 0\n"
+            "+ SAMP_E_P SAMP_E_N SAMP_O_P SAMP_O_N @SAMPLER_CELL@\n"
+            "CE_P SAMP_E_P 0 25f\nCE_N SAMP_E_N 0 25f\n"
+            "CO_P SAMP_O_P 0 25f\nCO_N SAMP_O_N 0 25f",
+            "CE_P SAMP_E_P 0 25f\nCE_N SAMP_E_N 0 25f\n"
+            "CO_P SAMP_O_P 0 25f\nCO_N SAMP_O_N 0 25f",
+            "sampler instance",
+        )
+    elif args.restorer_mode != "none":
         restorer_cell = {
             "single": "cml_clock_restorer_pex",
             "cascade": "cml_clock_restorer_cascade_pex",
@@ -244,6 +287,7 @@ def main() -> None:
             f"XREST RX_RAWP RX_RAWN REST_BIAS VDD 0 {restorer_outputs} {restorer_cell}\n"
             "CRESTOP RXOP 0 25f\nCRESTON RXON 0 25f",
         )
+    if args.restorer_mode != "none":
         template = template.replace(
             "let rx_diff = v(RXOP)-v(RXON)",
             "let rx_diff = v(RX_RAWP)-v(RX_RAWN)\n"
@@ -320,19 +364,26 @@ COQB ODD_QB 0 50f
         + (len(pair_indices) * 2 + 1 if args.restorer_mode != "none" else 0)
     pex_paths = {
         "tx_pex": args.tx_pex, "termination_pex": args.term_pex,
-        "rx_pex": args.rx_pex, "sampler_pex": args.sampler_pex,
         "frontend_pex": args.frontend_pex, "deserializer_pex": args.deserializer_pex,
     }
-    if args.restorer_mode != "none":
+    if routed_rx_spine:
+        pex_paths["rx_spine_pex"] = args.rx_spine_pex
+    else:
+        pex_paths.update({"rx_pex": args.rx_pex, "sampler_pex": args.sampler_pex})
+    if args.restorer_mode != "none" and not routed_rx_spine:
         pex_paths["restorer_pex"] = args.restorer_pex
     physical_paths = {"deserializer_split": args.deserializer_physical}
     if args.tx_physical is not None:
         physical_paths["tx"] = args.tx_physical
+    if args.term_physical is not None:
+        physical_paths["termination"] = args.term_physical
     if args.frontend_physical is not None:
         physical_paths["frontend"] = args.frontend_physical
-    if args.base_physical is not None:
+    if routed_rx_spine:
+        physical_paths["rx_spine"] = args.rx_spine_physical
+    elif args.base_physical is not None:
         physical_paths["base_lane"] = args.base_physical
-    if args.restorer_mode != "none":
+    if args.restorer_mode != "none" and not routed_rx_spine:
         physical_paths["restorer"] = args.restorer_physical
     deserializer_physical = json.loads(args.deserializer_physical.read_text())
     deserializer_pex_hash = spine.sha256(args.deserializer_pex)
@@ -344,6 +395,16 @@ COQB ODD_QB 0 50f
         if (tx_physical.get("result") != "pass"
                 or tx_physical.get("pex_sha256") != spine.sha256(args.tx_pex)):
             raise SystemExit("TX physical evidence does not bind exact simulation PEX")
+    if args.term_physical is not None:
+        term_physical = json.loads(args.term_physical.read_text())
+        term_record = term_physical.get("cells", {}).get(
+            "termination", term_physical)
+        if (term_physical.get("result") != "pass"
+                or term_record.get("drc_error_count") != 0
+                or term_record.get("lvs_unique") is not True
+                or term_record.get("pex_sha256") != spine.sha256(args.term_pex)):
+            raise SystemExit(
+                "termination physical evidence does not bind exact simulation PEX")
     if args.frontend_physical is not None:
         frontend_physical = json.loads(args.frontend_physical.read_text())
         if (frontend_physical.get("result") != "pass"
@@ -351,7 +412,16 @@ COQB ODD_QB 0 50f
                 != spine.sha256(args.frontend_pex)):
             raise SystemExit(
                 "front-end physical evidence does not bind exact simulation PEX")
-    if args.restorer_mode != "none":
+    if routed_rx_spine:
+        rx_spine_physical = json.loads(args.rx_spine_physical.read_text())
+        if (rx_spine_physical.get("result") != "pass"
+                or rx_spine_physical.get("drc_error_count") != 0
+                or rx_spine_physical.get("lvs_unique") is not True
+                or rx_spine_physical.get("pex_sha256")
+                != spine.sha256(args.rx_spine_pex)):
+            raise SystemExit(
+                "RX-spine physical evidence does not bind exact simulation PEX")
+    elif args.restorer_mode != "none":
         restorer_physical = json.loads(args.restorer_physical.read_text())
         if (restorer_physical.get("result") != "pass"
                 or restorer_physical.get("pex_sha256") != spine.sha256(args.restorer_pex)):
@@ -424,10 +494,13 @@ COQB ODD_QB 0 50f
         values = {
             "TX_INCLUDE": f".include {args.tx_pex}",
             "TERM_INCLUDE": f".include {args.term_pex}",
-            "RX_INCLUDE": f".include {args.rx_pex}",
-            "SAMPLER_INCLUDE": f".include {args.sampler_pex}",
+            "RX_INCLUDE": (f".include {args.rx_spine_pex}" if routed_rx_spine
+                           else f".include {args.rx_pex}"),
+            "SAMPLER_INCLUDE": ("" if routed_rx_spine
+                                else f".include {args.sampler_pex}"),
             "RESTORER_INCLUDE": (f".include {args.restorer_pex}"
-                                   if args.restorer_mode != "none" else ""),
+                                   if args.restorer_mode != "none"
+                                   and not routed_rx_spine else ""),
             "FRONTEND_PEX": str(args.frontend_pex),
             "DESERIALIZER_PEX": str(args.deserializer_pex),
             "TX_CELL": "serializer_tx_pex", "TERM_CELL": "serdes_termination_pex",
@@ -613,6 +686,8 @@ COQB ODD_QB 0 50f
                      "rx_window_start_ps": args.rx_window_start_ps,
                      "restorer_bias_v": (args.restorer_bias
                                           if args.restorer_mode != "none" else None)},
+        "physical_composition": ("routed_rx_restorer_sampler_parent"
+                                 if routed_rx_spine else "ideal_wire_leaf_stack"),
         "stimulus": {
             "pattern": args.pattern, "bit_count": len(bits),
             "serial_rate_hz": rate,

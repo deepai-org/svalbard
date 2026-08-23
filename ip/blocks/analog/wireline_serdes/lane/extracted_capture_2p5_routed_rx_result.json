@@ -1,0 +1,380 @@
+{
+  "case_count": 5,
+  "cases": [
+    {
+      "case_id": "tt",
+      "controls": {
+        "capture_delay_ps": null,
+        "capture_width_ps": 380,
+        "frontend_sense_width_ps": null,
+        "frontend_tail_boost": false,
+        "latency_ui": 0,
+        "restorer_bias_v": 1.3,
+        "restorer_cell": "cml_data_restorer_2p5_calibrated_pex",
+        "restorer_mode": "data",
+        "rx_bandwidth_mode": "high",
+        "rx_bias_v": 1.3,
+        "rx_window_start_ps": 100,
+        "sampler_bias_v": 1.1,
+        "sampler_phase_deg": 22.5,
+        "termination_code": 3,
+        "tx_bias_v": 1.5,
+        "tx_load_code": 2
+      },
+      "environment": [
+        "typical",
+        "res_typical",
+        3.3,
+        27,
+        0.5
+      ],
+      "evidence_sha256": "450a11aec3c081fae89c65c9bc663c2eddc81c125b937e360a5c78ff7535eab1",
+      "fixture_initialization": {
+        "ac_coupling_initial_voltage_v": 0.435,
+        "note": "settled TX-to-RX common-mode difference; not a hardware trim"
+      },
+      "measurements": {
+        "amplifier_common_mode_v": 2.53928,
+        "minimum_capture_even_v": 1.98295,
+        "minimum_capture_odd_v": 2.0494,
+        "minimum_frontend_even_v": 1.7246,
+        "minimum_frontend_odd_v": 1.59879,
+        "minimum_pin_even_v": 0.141196,
+        "minimum_pin_odd_v": 0.177308,
+        "minimum_restored_even_v": 1.04796,
+        "minimum_restored_odd_v": 1.14975,
+        "minimum_rx_even_v": 0.162933,
+        "minimum_rx_hold_even_v": 0.378815,
+        "minimum_rx_hold_odd_v": 0.40097,
+        "minimum_rx_odd_v": 0.202121,
+        "minimum_tx_even_v": 0.115588,
+        "minimum_tx_odd_v": 0.121161,
+        "restored_common_mode_v": 2.12674,
+        "result": "pass",
+        "rx_common_mode_v": 1.53857,
+        "supply_current_a": 0.0562728,
+        "tx_common_mode_v": 1.97323
+      },
+      "pex_sha256": {
+        "deserializer_pex": "e398e9459c21531f4000a11f0b29ed0e184fc49892a5896aaba296c2a236e541",
+        "frontend_pex": "50634576ecb39006767348fa8cd3bd75f331747e9d767107cffed1c2dcae8209",
+        "rx_spine_pex": "a4632726215c6bb0259b456a699f2a2107fd4d1a6a62e06ff5d82bd9268f089a",
+        "termination_pex": "50961746ab364326336a150ab38dc92d6b30c19108374add32b8ac72f84bd23b",
+        "tx_pex": "9717e5af6b7a088810fa325a2bae044d3b58fbbd2e48867799cc80e03ffcb12c"
+      },
+      "physical_sha256": {
+        "deserializer_split": "3c6296e8345a4f9fc0585459bd969147a14230c3922a8f5ce85db3e89d5215be",
+        "frontend": "4d6012c2fb24be62fea92c424d13ab9061e712d69a63002c4238b3b65877ec22",
+        "rx_spine": "a63b9e18a7bcbf7764933f348eb19cffff0f01ba50ec635121dcaadbebc10dda",
+        "termination": "ca3c3cbe3c7b4254f3af8b895981d1c599b471e62a12b8437caff50c505424de",
+        "tx": "670b59af3edc10622b59f61f8eea2d02effcef947b6aef6fa1a871e88675bb9a"
+      },
+      "result": "pass",
+      "source_sha256": {
+        "base_testbench": "fce3e458d266ecb41f1424b9580ba540b37be8df88cb8dab4c2d4ca62e161ac7",
+        "runner": "3efda271a2d29627af4ff6162baf3b9e3890f68445cae0db4d50674487726041"
+      }
+    },
+    {
+      "case_id": "ff_cold",
+      "controls": {
+        "capture_delay_ps": null,
+        "capture_width_ps": 380,
+        "frontend_sense_width_ps": null,
+        "frontend_tail_boost": false,
+        "latency_ui": 0,
+        "restorer_bias_v": 1.2,
+        "restorer_cell": "cml_data_restorer_2p5_calibrated_pex",
+        "restorer_mode": "data",
+        "rx_bandwidth_mode": "high",
+        "rx_bias_v": 1.2,
+        "rx_window_start_ps": 50,
+        "sampler_bias_v": 1.1,
+        "sampler_phase_deg": 67.5,
+        "termination_code": 3,
+        "tx_bias_v": 0.96,
+        "tx_load_code": 2
+      },
+      "environment": [
+        "ff",
+        "res_ff",
+        3.63,
+        -40,
+        0.5
+      ],
+      "evidence_sha256": "317482f865356d76a913bfd51828e361c181ccfc6ded28f64bb989ef2b86f46e",
+      "fixture_initialization": {
+        "ac_coupling_initial_voltage_v": 0.85,
+        "note": "settled TX-to-RX common-mode difference; not a hardware trim"
+      },
+      "measurements": {
+        "amplifier_common_mode_v": 2.91514,
+        "minimum_capture_even_v": 3.40264,
+        "minimum_capture_odd_v": 3.31387,
+        "minimum_frontend_even_v": 3.03318,
+        "minimum_frontend_odd_v": 3.02499,
+        "minimum_pin_even_v": 0.117197,
+        "minimum_pin_odd_v": 0.134706,
+        "minimum_restored_even_v": 0.217828,
+        "minimum_restored_odd_v": 0.340722,
+        "minimum_rx_even_v": 0.0512086,
+        "minimum_rx_hold_even_v": 0.252224,
+        "minimum_rx_hold_odd_v": 0.252148,
+        "minimum_rx_odd_v": 0.104686,
+        "minimum_tx_even_v": 0.130266,
+        "minimum_tx_odd_v": 0.10282,
+        "restored_common_mode_v": 2.47599,
+        "result": "pass",
+        "rx_common_mode_v": 1.87512,
+        "supply_current_a": 0.0588297,
+        "tx_common_mode_v": 2.7254
+      },
+      "pex_sha256": {
+        "deserializer_pex": "e398e9459c21531f4000a11f0b29ed0e184fc49892a5896aaba296c2a236e541",
+        "frontend_pex": "50634576ecb39006767348fa8cd3bd75f331747e9d767107cffed1c2dcae8209",
+        "rx_spine_pex": "a4632726215c6bb0259b456a699f2a2107fd4d1a6a62e06ff5d82bd9268f089a",
+        "termination_pex": "50961746ab364326336a150ab38dc92d6b30c19108374add32b8ac72f84bd23b",
+        "tx_pex": "9717e5af6b7a088810fa325a2bae044d3b58fbbd2e48867799cc80e03ffcb12c"
+      },
+      "physical_sha256": {
+        "deserializer_split": "3c6296e8345a4f9fc0585459bd969147a14230c3922a8f5ce85db3e89d5215be",
+        "frontend": "4d6012c2fb24be62fea92c424d13ab9061e712d69a63002c4238b3b65877ec22",
+        "rx_spine": "a63b9e18a7bcbf7764933f348eb19cffff0f01ba50ec635121dcaadbebc10dda",
+        "termination": "ca3c3cbe3c7b4254f3af8b895981d1c599b471e62a12b8437caff50c505424de",
+        "tx": "670b59af3edc10622b59f61f8eea2d02effcef947b6aef6fa1a871e88675bb9a"
+      },
+      "result": "pass",
+      "source_sha256": {
+        "base_testbench": "fce3e458d266ecb41f1424b9580ba540b37be8df88cb8dab4c2d4ca62e161ac7",
+        "runner": "3efda271a2d29627af4ff6162baf3b9e3890f68445cae0db4d50674487726041"
+      }
+    },
+    {
+      "case_id": "ff_hot",
+      "controls": {
+        "capture_delay_ps": null,
+        "capture_width_ps": 380,
+        "frontend_sense_width_ps": null,
+        "frontend_tail_boost": false,
+        "latency_ui": 0,
+        "restorer_bias_v": 1.2,
+        "restorer_cell": "cml_data_restorer_2p5_calibrated_pex",
+        "restorer_mode": "data",
+        "rx_bandwidth_mode": "high",
+        "rx_bias_v": 1.2,
+        "rx_window_start_ps": 100,
+        "sampler_bias_v": 0.9,
+        "sampler_phase_deg": 16.875,
+        "termination_code": 3,
+        "tx_bias_v": 1.6,
+        "tx_load_code": 2
+      },
+      "environment": [
+        "ff",
+        "res_ss",
+        2.97,
+        125,
+        0.5
+      ],
+      "evidence_sha256": "fa5d9f2f42fe49e35a9849308b7366ca49aa6fdaab0ea9b6d9654edac871fab1",
+      "fixture_initialization": {
+        "ac_coupling_initial_voltage_v": 0.3,
+        "note": "settled TX-to-RX common-mode difference; not a hardware trim"
+      },
+      "measurements": {
+        "amplifier_common_mode_v": 2.19176,
+        "minimum_capture_even_v": 0.939439,
+        "minimum_capture_odd_v": 1.03666,
+        "minimum_frontend_even_v": 1.27021,
+        "minimum_frontend_odd_v": 1.15809,
+        "minimum_pin_even_v": 0.103336,
+        "minimum_pin_odd_v": 0.122011,
+        "minimum_restored_even_v": 0.55776,
+        "minimum_restored_odd_v": 0.529353,
+        "minimum_rx_even_v": 0.0695978,
+        "minimum_rx_hold_even_v": 0.289715,
+        "minimum_rx_hold_odd_v": 0.286592,
+        "minimum_rx_odd_v": 0.0748329,
+        "minimum_tx_even_v": 0.0821746,
+        "minimum_tx_odd_v": 0.0620666,
+        "restored_common_mode_v": 1.84696,
+        "result": "pass",
+        "rx_common_mode_v": 1.45404,
+        "supply_current_a": 0.0506955,
+        "tx_common_mode_v": 1.75404
+      },
+      "pex_sha256": {
+        "deserializer_pex": "e398e9459c21531f4000a11f0b29ed0e184fc49892a5896aaba296c2a236e541",
+        "frontend_pex": "50634576ecb39006767348fa8cd3bd75f331747e9d767107cffed1c2dcae8209",
+        "rx_spine_pex": "a4632726215c6bb0259b456a699f2a2107fd4d1a6a62e06ff5d82bd9268f089a",
+        "termination_pex": "50961746ab364326336a150ab38dc92d6b30c19108374add32b8ac72f84bd23b",
+        "tx_pex": "9717e5af6b7a088810fa325a2bae044d3b58fbbd2e48867799cc80e03ffcb12c"
+      },
+      "physical_sha256": {
+        "deserializer_split": "3c6296e8345a4f9fc0585459bd969147a14230c3922a8f5ce85db3e89d5215be",
+        "frontend": "4d6012c2fb24be62fea92c424d13ab9061e712d69a63002c4238b3b65877ec22",
+        "rx_spine": "a63b9e18a7bcbf7764933f348eb19cffff0f01ba50ec635121dcaadbebc10dda",
+        "termination": "ca3c3cbe3c7b4254f3af8b895981d1c599b471e62a12b8437caff50c505424de",
+        "tx": "670b59af3edc10622b59f61f8eea2d02effcef947b6aef6fa1a871e88675bb9a"
+      },
+      "result": "pass",
+      "source_sha256": {
+        "base_testbench": "fce3e458d266ecb41f1424b9580ba540b37be8df88cb8dab4c2d4ca62e161ac7",
+        "runner": "3efda271a2d29627af4ff6162baf3b9e3890f68445cae0db4d50674487726041"
+      }
+    },
+    {
+      "case_id": "ss_hot",
+      "controls": {
+        "capture_delay_ps": 400,
+        "capture_width_ps": 380,
+        "frontend_sense_width_ps": 550,
+        "frontend_tail_boost": false,
+        "latency_ui": 1,
+        "restorer_bias_v": 1.5,
+        "restorer_cell": "cml_data_restorer_2p5_calibrated_pex",
+        "restorer_mode": "data",
+        "rx_bandwidth_mode": "high",
+        "rx_bias_v": 1.5,
+        "rx_window_start_ps": 250,
+        "sampler_bias_v": 1.2,
+        "sampler_phase_deg": 135.0,
+        "termination_code": 3,
+        "tx_bias_v": 1.7,
+        "tx_load_code": 4
+      },
+      "environment": [
+        "ss",
+        "res_ff",
+        2.97,
+        125,
+        0.5
+      ],
+      "evidence_sha256": "29952fa258083ee2e22a8ae47ba75837f48adc8985af3d034a9458ebf6f949e1",
+      "fixture_initialization": {
+        "ac_coupling_initial_voltage_v": 1.1,
+        "note": "settled TX-to-RX common-mode difference; not a hardware trim"
+      },
+      "measurements": {
+        "amplifier_common_mode_v": 2.38717,
+        "minimum_capture_even_v": 2.78671,
+        "minimum_capture_odd_v": 2.80037,
+        "minimum_frontend_even_v": 1.34995,
+        "minimum_frontend_odd_v": 1.30362,
+        "minimum_pin_even_v": 0.122472,
+        "minimum_pin_odd_v": 0.16026,
+        "minimum_restored_even_v": 0.360397,
+        "minimum_restored_odd_v": 0.25168,
+        "minimum_rx_even_v": 0.187777,
+        "minimum_rx_hold_even_v": 0.131363,
+        "minimum_rx_hold_odd_v": 0.192262,
+        "minimum_rx_odd_v": 0.198674,
+        "minimum_tx_even_v": 0.117014,
+        "minimum_tx_odd_v": 0.106837,
+        "restored_common_mode_v": 2.11213,
+        "result": "pass",
+        "rx_common_mode_v": 1.55541,
+        "supply_current_a": 0.0453279,
+        "tx_common_mode_v": 2.65574
+      },
+      "pex_sha256": {
+        "deserializer_pex": "e398e9459c21531f4000a11f0b29ed0e184fc49892a5896aaba296c2a236e541",
+        "frontend_pex": "50634576ecb39006767348fa8cd3bd75f331747e9d767107cffed1c2dcae8209",
+        "rx_spine_pex": "a4632726215c6bb0259b456a699f2a2107fd4d1a6a62e06ff5d82bd9268f089a",
+        "termination_pex": "50961746ab364326336a150ab38dc92d6b30c19108374add32b8ac72f84bd23b",
+        "tx_pex": "9717e5af6b7a088810fa325a2bae044d3b58fbbd2e48867799cc80e03ffcb12c"
+      },
+      "physical_sha256": {
+        "deserializer_split": "3c6296e8345a4f9fc0585459bd969147a14230c3922a8f5ce85db3e89d5215be",
+        "frontend": "4d6012c2fb24be62fea92c424d13ab9061e712d69a63002c4238b3b65877ec22",
+        "rx_spine": "a63b9e18a7bcbf7764933f348eb19cffff0f01ba50ec635121dcaadbebc10dda",
+        "termination": "ca3c3cbe3c7b4254f3af8b895981d1c599b471e62a12b8437caff50c505424de",
+        "tx": "670b59af3edc10622b59f61f8eea2d02effcef947b6aef6fa1a871e88675bb9a"
+      },
+      "result": "pass",
+      "source_sha256": {
+        "base_testbench": "fce3e458d266ecb41f1424b9580ba540b37be8df88cb8dab4c2d4ca62e161ac7",
+        "runner": "3efda271a2d29627af4ff6162baf3b9e3890f68445cae0db4d50674487726041"
+      }
+    },
+    {
+      "case_id": "ss_passive",
+      "controls": {
+        "capture_delay_ps": 400,
+        "capture_width_ps": 380,
+        "frontend_sense_width_ps": 550,
+        "frontend_tail_boost": false,
+        "latency_ui": 1,
+        "restorer_bias_v": 1.5,
+        "restorer_cell": "cml_data_restorer_2p5_calibrated_pex",
+        "restorer_mode": "data",
+        "rx_bandwidth_mode": "high",
+        "rx_bias_v": 1.5,
+        "rx_window_start_ps": 250,
+        "sampler_bias_v": 1.2,
+        "sampler_phase_deg": 135.0,
+        "termination_code": 3,
+        "tx_bias_v": 1.7,
+        "tx_load_code": 4
+      },
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125,
+        0.5
+      ],
+      "evidence_sha256": "fb90a11de49244379036d0ccbfb40718909a10fe7331204672453daad83b14fc",
+      "fixture_initialization": {
+        "ac_coupling_initial_voltage_v": 1.1,
+        "note": "settled TX-to-RX common-mode difference; not a hardware trim"
+      },
+      "measurements": {
+        "amplifier_common_mode_v": 2.24806,
+        "minimum_capture_even_v": 2.80169,
+        "minimum_capture_odd_v": 2.79736,
+        "minimum_frontend_even_v": 1.49153,
+        "minimum_frontend_odd_v": 1.52413,
+        "minimum_pin_even_v": 0.103002,
+        "minimum_pin_odd_v": 0.145058,
+        "minimum_restored_even_v": 0.956855,
+        "minimum_restored_odd_v": 0.780488,
+        "minimum_rx_even_v": 0.332412,
+        "minimum_rx_hold_even_v": 0.318256,
+        "minimum_rx_hold_odd_v": 0.410323,
+        "minimum_rx_odd_v": 0.357437,
+        "minimum_tx_even_v": 0.0987457,
+        "minimum_tx_odd_v": 0.105227,
+        "restored_common_mode_v": 2.05894,
+        "result": "pass",
+        "rx_common_mode_v": 1.48051,
+        "supply_current_a": 0.0429977,
+        "tx_common_mode_v": 2.58053
+      },
+      "pex_sha256": {
+        "deserializer_pex": "e398e9459c21531f4000a11f0b29ed0e184fc49892a5896aaba296c2a236e541",
+        "frontend_pex": "50634576ecb39006767348fa8cd3bd75f331747e9d767107cffed1c2dcae8209",
+        "rx_spine_pex": "a4632726215c6bb0259b456a699f2a2107fd4d1a6a62e06ff5d82bd9268f089a",
+        "termination_pex": "50961746ab364326336a150ab38dc92d6b30c19108374add32b8ac72f84bd23b",
+        "tx_pex": "9717e5af6b7a088810fa325a2bae044d3b58fbbd2e48867799cc80e03ffcb12c"
+      },
+      "physical_sha256": {
+        "deserializer_split": "3c6296e8345a4f9fc0585459bd969147a14230c3922a8f5ce85db3e89d5215be",
+        "frontend": "4d6012c2fb24be62fea92c424d13ab9061e712d69a63002c4238b3b65877ec22",
+        "rx_spine": "a63b9e18a7bcbf7764933f348eb19cffff0f01ba50ec635121dcaadbebc10dda",
+        "termination": "ca3c3cbe3c7b4254f3af8b895981d1c599b471e62a12b8437caff50c505424de",
+        "tx": "670b59af3edc10622b59f61f8eea2d02effcef947b6aef6fa1a871e88675bb9a"
+      },
+      "result": "pass",
+      "source_sha256": {
+        "base_testbench": "fce3e458d266ecb41f1424b9580ba540b37be8df88cb8dab4c2d4ca62e161ac7",
+        "runner": "3efda271a2d29627af4ff6162baf3b9e3890f68445cae0db4d50674487726041"
+      }
+    }
+  ],
+  "claim": "routed_rx_parent_extracted_2p5_gts_combined_stress_pvt",
+  "passing_case_count": 5,
+  "physical_composition": "routed_rx_restorer_sampler_parent",
+  "result": "pass",
+  "schema_version": 1
+}

@@ -228,6 +228,15 @@ PCell topology.  Put differential routes side by side on the same layers with
 matched bends, via stacks, neighbors, and shielding; equal drawn length on
 different metals is not matched parasitic context.
 
+Audit extracted coupling between every clock/output aggressor and nearby bias
+or reference net, not just coupling between the differential rails. A route on
+an adjacent metal can be electrically isolated yet broadside-coupled for its
+full length. Move a high-impedance bias escape to an orthogonal or separated
+track and compare the named coupling capacitors before and after regeneration;
+then simulate it with the realizable bias-distribution impedance. An ideal
+one-ohm testbench source can hide a layout coupling problem that a remote bias
+tree will expose.
+
 Plan density before final extraction.  Distribute substrate/well taps through
 large interiors, reserve symmetric quiet regions for intentional fill, and keep
 floating fill away from high-impedance nodes where the deck permits.  Local
@@ -553,6 +562,18 @@ relationship in one exact-PEX composition. An ideal-wire composition of
 extracted children closes only that electrical boundary; the parent remains
 open until child placement and parent-owned interconnect are DRC/LVS/PEX clean
 and re-simulated.
+
+Close a large signal path through successive physical parents, starting with
+the shortest bandwidth-critical chain whose child interfaces are already
+electrically qualified. Preserve natural internal nodes as explicit parent
+probe ports when stage-by-stage scoring is needed; do not add long observation
+stubs or active probe loads. In the current receive-spine closure, retaining the
+amplifier and restorer differential nodes made the old contract directly
+replayable after the amplifier, limiter, sampler, supplies, and their parent-
+owned routes became one extraction. The simulator must include either that
+parent PEX or its child PEX files, never both. Bind every retained historical
+result to its old runner hash when teaching the runner about the new hierarchy,
+then give the routed-parent result its own claim and evidence files.
 
 A downstream differential write port can present several large NMOS and PMOS
 gate banks on each rail; this distributed nonlinear load is not equivalent to

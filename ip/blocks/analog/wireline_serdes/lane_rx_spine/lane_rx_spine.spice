@@ -1,0 +1,15 @@
+* SPDX-License-Identifier: Apache-2.0
+* Routed receive spine from the differential amplifier through CML sampling.
+.include /src/serdes_rx/serdes_rx.spice
+.include /src/data_restorer/data_restorer_2p5_calibrated.spice
+.include /src/cdr/cdr_sampler.spice
+
+.subckt lane_rx_spine RXP RXN VTHP VTHN RX_BIAS RX_BW_EN_N REST_BIAS
++ SAMP_CLK_P SAMP_CLK_N SAMP_BIAS VDD VSS RX_RAWP RX_RAWN RX_RESTP RX_RESTN
++ EVEN_P EVEN_N ODD_P ODD_N
+XRX RXP RXN VTHP VTHN RX_BIAS RX_BW_EN_N VDD VSS RX_RAWP RX_RAWN serdes_rx
+XREST RX_RAWP RX_RAWN REST_BIAS VDD VSS RX_RESTP RX_RESTN
++ cml_data_restorer_2p5_calibrated
+XSAMP RX_RESTP RX_RESTN SAMP_CLK_P SAMP_CLK_N SAMP_BIAS VDD VSS
++ EVEN_P EVEN_N ODD_P ODD_N cdr_sampler
+.ends lane_rx_spine

@@ -184,3 +184,18 @@ rail ripple. Worst pin, restored-input, converter, final-capture, and current
 measurements are 103.180 mV, 237.084 mV, 1.20878 V, 958.544 mV, and 59.104 mA.
 The committed evidence binds zero-DRC, unique-LVS, exact full-RC records for
 the TX, termination/RX/sampler, restorer, converter, and capture cells.
+
+`run_capture_2p5_routed_rx.sh` replaces the separate RX, calibrated-restorer,
+and sampler PEX instances with the exact 1,309R/464C
+`lane_rx_spine/lane_rx_spine.pex.spice` physical parent. Diagnostic parent pins
+retain the raw-RX and restored measurements, so the same stage contracts remain
+visible without substituting ideal wires at either internal boundary. The
+routed parent passes the same five environments and combined stress with worst
+pin, raw-RX, restored, converter, final-capture, and current measurements of
+103.002 mV, 51.209 mV, 217.828 mV, 1.15809 V, 939.439 mV, and 58.830 mA.
+`check_routed_rx_evidence.py` rejects duplicate leaf composition and binds every
+physical record, PEX, testbench, runner, case, and aggregate hash.
+
+This is not yet a complete routed lane. The termination-to-RX,
+sampler-to-converter, converter-to-capture, clock, bias, and supply routes remain
+outside this parent and are the next physical composition boundaries.

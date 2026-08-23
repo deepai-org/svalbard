@@ -14,6 +14,8 @@ def digest(path: Path) -> str:
 parser = argparse.ArgumentParser()
 parser.add_argument("--case", action="append", required=True, type=Path)
 parser.add_argument("--output", required=True, type=Path)
+parser.add_argument("--claim", default="calibrated_extracted_2p5_gts_combined_stress_pvt")
+parser.add_argument("--physical-composition", default="ideal_wire_leaf_stack")
 args = parser.parse_args()
 documents = [json.loads(path.read_text()) for path in args.case]
 expected_ids = {"tt", "ff_cold", "ff_hot", "ss_hot", "ss_passive"}
@@ -44,6 +46,8 @@ complete = (
         "vdd_ripple_frequency_hz") == 100e6 for document in documents)
     and all(document.get("controls", {}).get("restorer_mode") == "data"
             for document in documents)
+    and all(document.get("physical_composition") == args.physical_composition
+            for document in documents)
     and all(document.get(field) == documents[0].get(field)
             for field in identity_fields for document in documents[1:])
 )
@@ -61,7 +65,8 @@ summary_keys = (
 )
 result = {
     "schema_version": 1,
-    "claim": "calibrated_extracted_2p5_gts_combined_stress_pvt",
+    "claim": args.claim,
+    "physical_composition": args.physical_composition,
     "case_count": len(documents),
     "passing_case_count": sum(document.get("result") == "pass"
                               for document in documents),

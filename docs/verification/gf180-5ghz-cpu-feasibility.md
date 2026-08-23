@@ -7,10 +7,11 @@ The 200 ps cycle fails before useful combinational logic is inserted. A 5 GHz
 ring, serial lane phase, or externally presented clock is a different and much
 weaker claim than advancing CPU state correctly five billion times per second.
 
-An aggressive tiny bit-serial core should initially target approximately
-1 GHz at the declared slow/high-temperature environment. A 1.5--2 GHz typical
-demonstrator may be possible with custom native-3.3 V sequential cells and a
-very shallow pipeline. These are design targets, not validated limits.
+Any future CPU experiment should initially target approximately 1 GHz at the
+declared slow/high-temperature environment. A 1.5--2 GHz typical demonstrator
+may be possible with custom native-3.3 V sequential cells and a very shallow
+pipeline. These are device-speed observations, not a proposed CPU architecture
+or validated limits.
 
 ## Sequential timing inequality
 
@@ -68,12 +69,11 @@ TT: 415 + 2*87.93  = 591 ps  -> 1.69 GHz before uncertainty
 SS: 558 + 2*143.43 = 845 ps  -> 1.18 GHz before uncertainty
 ```
 
-Two logic levels are already an austere budget for select/decode plus a one-bit
-ALU or next-state function. Reserving clock and wiring margin moves the first
-credible slow-corner target toward 0.8--1.0 GHz. A full parallel adder, register
-file read, or broad instruction decode would require more stages or a lower
-clock. Bit-serial arithmetic and a small local register bank are therefore the
-right architecture if density and maximum clock are the experiment's goals.
+Two logic levels are already an austere budget for select/decode plus a small
+next-state function. Reserving clock and wiring margin moves the first credible
+slow-corner target toward 0.8--1.0 GHz. A parallel adder, register-file read, or
+broad instruction decode would require more stages or a lower clock. No CPU
+microarchitecture is selected or implied by this timing experiment.
 
 ## Why a 10 Gb/s SerDes does not imply a 5 GHz CPU
 
@@ -91,8 +91,9 @@ that arbitrary synchronous standard-cell logic can run at the serial bit rate.
 
 1. Characterize a custom native-3.3 V pulsed latch and CML latch across extracted
    PVT, mismatch, clock slew, duty cycle, load, and supply noise.
-2. Synthesize a minimal bit-serial core at 0.8, 1.0, 1.25, 1.5, and 2.0 GHz using
-   characterized native cells; route it and measure worst path and clock power.
+2. If CPU work becomes an actual project requirement, select an architecture
+   from its workload and interface requirements before synthesizing frequency
+   targets with characterized native cells.
 3. Fabricate a canary containing inverter rings, loaded rings, latch chains,
    ripple/carry paths, and the same clock tree used by the core.
 4. Treat 5 GHz as a falsification experiment for a tiny CML/dynamic pipeline,

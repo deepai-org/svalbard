@@ -26,6 +26,7 @@ def require(condition: bool, message: str) -> None:
 
 
 release_paths = {
+    "tx_pex": SERDES / "serializer/integrated_serializer_tx.pex.spice",
     "termination_pex": HERE / "termination_2p5.pex.spice",
     "rx_pex": HERE / "rx_2p5.pex.spice",
     "sampler_pex": HERE / "sampler_2p5.pex.spice",
@@ -131,6 +132,91 @@ print(f"2.5 GT/s exact-PEX evidence: PASS; 16 nominal phases, "
       f"{nominal['passing_case_count']} pass; PVT 5/5; "
       f"worst selected sample margin {minimum_sample_mv:.3f} mV")
 
+fast_deserializer_path = HERE / "capture_2p5_fast_deserializer.pex.spice"
+fast_frontend_path = HERE / "capture_2p5_fast_frontend.pex.spice"
+fast_physical_path = HERE / "capture_2p5_fast_physical_result.json"
+fast_case_paths = {
+    name: HERE / f"extracted_capture_2p5_fast_{name}_result.json"
+    for name in ("ff_cold", "ff_hot")
+}
+fast_physical = load(fast_physical_path)
+require(fast_physical.get("result") == "pass", "fast-corner capture physical failed")
+require(fast_physical.get("drc_error_count") == 0,
+        "fast-corner capture is not zero-DRC")
+require(fast_physical.get("checks", {}).get("lvs_unique") is True,
+        "fast-corner capture lacks unique LVS")
+require(fast_physical.get("checks", {}).get("full_rc") is True,
+        "fast-corner capture lacks full-RC extraction")
+require(fast_physical.get("pex_sha256") == digest(fast_deserializer_path),
+        "fast-corner physical record does not bind the committed capture PEX")
+require(fast_physical.get("layout_source_sha256")
+        == digest(SERDES / "deserializer_split/layout.tcl"),
+        "fast-corner physical record does not bind the capture layout")
+require(fast_physical.get("schematic_source_sha256")
+        == digest(SERDES / "deserializer_split/deserializer_split.spice"),
+        "fast-corner physical record does not bind the capture schematic")
+
+fast_cases = {name: load(path) for name, path in fast_case_paths.items()}
+expected_fast_environments = {
+    "ff_cold": ("ff", "res_ff", 3.63, -40, 0.5),
+    "ff_hot": ("ff", "res_ss", 2.97, 125, 0.5),
+}
+expected_fast_controls = {
+    "ff_cold": {"tx_bias_v": 1.1, "sampler_phase_deg": 67.5,
+                "rx_window_start_ps": 50},
+    "ff_hot": {"tx_bias_v": 1.6, "sampler_phase_deg": 16.875,
+               "rx_window_start_ps": 100},
+}
+for name, run in fast_cases.items():
+    require(run.get("result") == "pass", f"2.5 GT/s {name} calibration failed")
+    require(run.get("claim") == "extracted_2p5_gts_lane_dual_cmos_capture",
+            f"2.5 GT/s {name} has the wrong claim")
+    require(tuple(run.get("environment", ())) == expected_fast_environments[name],
+            f"2.5 GT/s {name} environment changed")
+    require(run.get("complete_case_count") == 1
+            and run.get("passing_case_count") == 1,
+            f"2.5 GT/s {name} is not a complete passing single-point proof")
+    controls = run.get("controls", {})
+    require(controls.get("capture_width_ps") == 380
+            and controls.get("tx_load_code") == 2
+            and controls.get("latency_ui") == 0,
+            f"2.5 GT/s {name} structural controls changed")
+    for key, value in expected_fast_controls[name].items():
+        require(controls.get(key) == value,
+                f"2.5 GT/s {name} control {key} changed")
+    hashes = run.get("pex_sha256", {})
+    for key in ("tx_pex", "termination_pex", "rx_pex", "sampler_pex",
+                "restorer_pex"):
+        require(hashes.get(key) == expected_hashes[key],
+                f"2.5 GT/s {name} does not bind exact {key}")
+    require(hashes.get("frontend_pex") == digest(fast_frontend_path),
+            f"2.5 GT/s {name} does not bind the committed converter PEX")
+    require(hashes.get("deserializer_pex") == digest(fast_deserializer_path),
+            f"2.5 GT/s {name} does not bind the committed capture PEX")
+    physical_hashes = run.get("physical_sha256", {})
+    require(physical_hashes.get("base_lane") == expected_hashes["base_physical"]
+            and physical_hashes.get("restorer") == expected_hashes["restorer_physical"]
+            and physical_hashes.get("deserializer_split") == digest(fast_physical_path),
+            f"2.5 GT/s {name} physical evidence identity changed")
+    source_hashes = run.get("source_sha256", {})
+    require(source_hashes.get("runner") == digest(HERE / "run_capture_stress_case.py")
+            and source_hashes.get("base_testbench") == digest(HERE / "lane_tb.spice.in"),
+            f"2.5 GT/s {name} source identity changed")
+    measured = run.get("selected_case") or {}
+    require(measured.get("result") == "pass" and measured.get("complete") is True,
+            f"2.5 GT/s {name} selected measurement is incomplete")
+    require(min(measured.get("minimum_pin_even_v", 0),
+                measured.get("minimum_pin_odd_v", 0)) >= 0.10,
+            f"2.5 GT/s {name} violates the pin-eye contract")
+    require(min(measured.get("minimum_capture_even_v", 0),
+                measured.get("minimum_capture_odd_v", 0)) >= 0.50,
+            f"2.5 GT/s {name} violates the final-capture contract")
+    require(0.010 <= measured.get("supply_current_a", 0) <= 0.060,
+            f"2.5 GT/s {name} violates the current contract")
+
+print("2.5 GT/s fast-corner calibration: PASS; FF/cold and FF/hot close "
+      "through exact-PEX final capture")
+
 precal_path = HERE / "extracted_capture_2p5_stress_precal_result.json"
 precal = load(precal_path)
 precal_case_paths = {
@@ -166,8 +252,9 @@ for case in precal_cases.values():
     require(physical_hashes.get("restorer") == expected_hashes["restorer_physical"],
             "combined-stress pre-calibration does not bind restorer physical evidence")
     source_hashes = case.get("source_sha256", {})
-    require(source_hashes.get("runner") == digest(HERE / "run_capture_stress_case.py"),
-            "combined-stress pre-calibration runner changed")
+    require(source_hashes.get("runner")
+            == "f11e93fa80cee44bb95ddb6eb2bd231967889740693b809f7412b36618507f1f",
+            "combined-stress historical runner identity changed")
     require(source_hashes.get("base_testbench") == digest(HERE / "lane_tb.spice.in"),
             "combined-stress pre-calibration testbench changed")
 for name, path in precal_case_paths.items():

@@ -1,0 +1,125 @@
+{
+  "case_count": 1,
+  "case_id": "ff_hot",
+  "cases": [
+    {
+      "amplifier_common_mode_v": 2.23967,
+      "capture_close_s": 5.6250000000000016e-09,
+      "complete": true,
+      "conversion_offset_s": 3e-10,
+      "id": "convert_300p",
+      "minimum_capture_even_v": 2.70642,
+      "minimum_capture_odd_v": 1.12763,
+      "minimum_frontend_even_v": 1.28029,
+      "minimum_frontend_odd_v": 1.24105,
+      "minimum_pin_even_v": 0.103102,
+      "minimum_pin_odd_v": 0.12741,
+      "minimum_restored_even_v": 0.772528,
+      "minimum_restored_odd_v": 0.802549,
+      "minimum_rx_even_v": 0.0955539,
+      "minimum_rx_hold_even_v": 0.317098,
+      "minimum_rx_hold_odd_v": 0.330402,
+      "minimum_rx_odd_v": 0.124925,
+      "minimum_tx_even_v": 0.102728,
+      "minimum_tx_odd_v": 0.103154,
+      "restored_common_mode_v": 1.8675,
+      "result": "pass",
+      "rx_common_mode_v": 1.52363,
+      "supply_current_a": 0.0505452,
+      "tx_common_mode_v": 1.82389
+    }
+  ],
+  "channel_stress": {
+    "differential_shunt_capacitance_f": 1e-12,
+    "series_resistance_ohm_per_leg": 6.0,
+    "topology": "symmetric_two_section_lumped_rc_proxy"
+  },
+  "claim": "extracted_2p5_gts_lane_dual_cmos_capture",
+  "complete_case_count": 1,
+  "controls": {
+    "capture_width_ps": 380,
+    "latency_ui": 0,
+    "restorer_bias_v": 1.2,
+    "restorer_cell": "cml_data_restorer_2p5_pex",
+    "restorer_mode": "data",
+    "rx_bandwidth_mode": "high",
+    "rx_bias_v": 1.2,
+    "rx_window_start_ps": 100,
+    "sampler_bias_v": 0.9,
+    "sampler_phase_deg": 16.875,
+    "termination_code": 3,
+    "tx_bias_v": 1.6,
+    "tx_load_code": 2
+  },
+  "environment": [
+    "ff",
+    "res_ss",
+    2.97,
+    125,
+    0.5
+  ],
+  "fixture_initialization": {
+    "ac_coupling_initial_voltage_v": 0.3,
+    "note": "settled TX-to-RX common-mode difference; not a hardware trim"
+  },
+  "passing_case_count": 1,
+  "pex_sha256": {
+    "deserializer_pex": "6e7e4fd265b75a35f8076704a3c7a5368c3e268bcebdc120dfd74914178ed461",
+    "frontend_pex": "329d4c8ba11095febb027eac5cc14a874ac5b6201d95a291ff6cf28be6d56e86",
+    "restorer_pex": "1212f68a525053a24997da10832a2fe39fbf5803542479a689272d0d92015372",
+    "rx_pex": "15f248e59fd5969225dea71e25077c33b3843eaab11ae1de5c1122e5bb332ea7",
+    "sampler_pex": "398f5045ea193560a45da2890f11db916505fec3ee9a230004c4499674488879",
+    "termination_pex": "50961746ab364326336a150ab38dc92d6b30c19108374add32b8ac72f84bd23b",
+    "tx_pex": "37e60ad6d18ccc9cd62fbc6184aae7cda6ed391b59c8fc1f3181e61451dffb4b"
+  },
+  "physical_sha256": {
+    "base_lane": "ca3c3cbe3c7b4254f3af8b895981d1c599b471e62a12b8437caff50c505424de",
+    "deserializer_split": "f1b4b6c23d8ba96aa9e600ec662d70bb1576a3d1fcc56ba2adaedc4f34725811",
+    "restorer": "9c8865fc4c5693da9bccd3b80ce3cf763a3c31bab3203c71c02a9f434f7efccc"
+  },
+  "result": "pass",
+  "schema_version": 1,
+  "selected_case": {
+    "amplifier_common_mode_v": 2.23967,
+    "capture_close_s": 5.6250000000000016e-09,
+    "complete": true,
+    "conversion_offset_s": 3e-10,
+    "id": "convert_300p",
+    "minimum_capture_even_v": 2.70642,
+    "minimum_capture_odd_v": 1.12763,
+    "minimum_frontend_even_v": 1.28029,
+    "minimum_frontend_odd_v": 1.24105,
+    "minimum_pin_even_v": 0.103102,
+    "minimum_pin_odd_v": 0.12741,
+    "minimum_restored_even_v": 0.772528,
+    "minimum_restored_odd_v": 0.802549,
+    "minimum_rx_even_v": 0.0955539,
+    "minimum_rx_hold_even_v": 0.317098,
+    "minimum_rx_hold_odd_v": 0.330402,
+    "minimum_rx_odd_v": 0.124925,
+    "minimum_tx_even_v": 0.102728,
+    "minimum_tx_odd_v": 0.103154,
+    "restored_common_mode_v": 1.8675,
+    "result": "pass",
+    "rx_common_mode_v": 1.52363,
+    "supply_current_a": 0.0505452,
+    "tx_common_mode_v": 1.82389
+  },
+  "source_sha256": {
+    "base_testbench": "fce3e458d266ecb41f1424b9580ba540b37be8df88cb8dab4c2d4ca62e161ac7",
+    "runner": "f5ae81a280022a8a7dfbee5f592afeef8927170d09fc3b9edbcf90b5ef3dac0c"
+  },
+  "stimulus": {
+    "bit_count": 24,
+    "pattern": "prbs7",
+    "scored_pair_count": 8,
+    "serial_rate_hz": 2500000000.0,
+    "simulation_timeout_s": 900,
+    "tx_clock_duty": 0.47,
+    "tx_clock_jitter_peak_s": 3e-11
+  },
+  "supply_stress": {
+    "vdd_ripple_frequency_hz": 100000000.0,
+    "vdd_ripple_peak_v": 0.02
+  }
+}

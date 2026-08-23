@@ -101,7 +101,9 @@ def main() -> None:
     parser.add_argument("--jobs", type=int, default=4)
     parser.add_argument("--offset-ps", type=int, action="append")
     parser.add_argument("--sampler-phase", type=float, default=135.0)
+    parser.add_argument("--capture-width-ps", type=int, default=380)
     parser.add_argument("--tx-bias", type=float, default=1.1)
+    parser.add_argument("--tx-load-code", type=int, choices=range(5), default=2)
     parser.add_argument("--rx-bias", type=float, default=1.1)
     parser.add_argument("--sampler-bias", type=float, default=1.1)
     parser.add_argument("--restorer-bias", type=float, default=1.1)
@@ -131,8 +133,9 @@ def main() -> None:
     if not 1 <= args.jobs <= 4 or not 1 <= args.term_code <= 6:
         parser.error("jobs or termination code outside declared range")
     offsets = tuple(args.offset_ps) if args.offset_ps else DEFAULT_OFFSETS_PS
-    if any(offset < 0 or offset > 300 for offset in offsets):
-        parser.error("conversion offset must be 0--300 ps")
+    maximum_offset_ps = 300 if args.serial_rate_gbd == 1.25 else 700
+    if any(offset < 0 or offset > maximum_offset_ps for offset in offsets):
+        parser.error(f"conversion offset must be 0--{maximum_offset_ps} ps")
     if not 24 <= args.bit_count <= 128 or args.bit_count % 2:
         parser.error("bit count must be an even value from 24 through 128")
     if args.pattern == "changing24" and args.bit_count != len(spine.BITS):
@@ -151,6 +154,8 @@ def main() -> None:
         parser.error("VDD ripple frequency must be 1 MHz--1.25 GHz")
     if not 300 <= args.simulation_timeout_s <= 900:
         parser.error("simulation timeout must be 300--900 seconds")
+    if not 100 <= args.capture_width_ps <= 650:
+        parser.error("capture pulse width must be 100--650 ps")
     if args.restorer_mode != "none" and not (
             args.restorer_pex and args.restorer_physical):
         parser.error("restorer mode requires its PEX and physical record")
@@ -177,6 +182,13 @@ def main() -> None:
                         for index in range(1, len(odd_bits)))
     template_path = args.source / "lane" / "lane_tb.spice.in"
     template = template_path.read_text()
+    for index in range(4):
+        template = re.sub(
+            rf"VLOAD{index} LOAD_EN{index}_N_SRC 0 (?:0|@VDD_V@)",
+            f"VLOAD{index} LOAD_EN{index}_N_SRC 0 "
+            + ("0" if index < args.tx_load_code else "@VDD_V@"),
+            template,
+        )
     template = template.replace(
         "@SAMPLER_INCLUDE@",
         "@SAMPLER_INCLUDE@\n@RESTORER_INCLUDE@\n"
@@ -332,7 +344,8 @@ COQB ODD_QB 0 50f
             raise SystemExit("base physical evidence does not bind exact simulation PEX")
 
     def simulate(offset_ps: int) -> dict[str, object]:
-        even_base = clock_delay + ui + 50e-12 * timing_scale + offset_ps * 1e-12
+        even_base = (clock_delay + ui + 50e-12 * timing_scale
+                     + offset_ps * 1e-12)
         odd_base = even_base + ui
         capture_close = odd_base + 1.0e-9 * timing_scale
         measures = []
@@ -432,7 +445,7 @@ COQB ODD_QB 0 50f
             "REGEN_WIDTH": f"{565e-12 * timing_scale:.12g}",
             # The static CMOS write cell needs its characterized pulse width;
             # device delay does not scale with the serial unit interval.
-            "CAPTURE_WIDTH": "380e-12",
+            "CAPTURE_WIDTH": f"{args.capture_width_ps * 1e-12:.12g}",
             "E_SENSE_DELAY": f"{even_base:.12g}",
             "E_REGEN_DELAY": f"{even_base + 10e-12 * timing_scale:.12g}",
             "E_CAPTURE_DELAY": f"{even_base + 550e-12 * timing_scale:.12g}",
@@ -548,6 +561,8 @@ COQB ODD_QB 0 50f
         "case_id": args.case_id,
         "environment": [args.mos_corner, args.res_corner, args.vdd, args.temperature, 0.5],
         "controls": {"sampler_phase_deg": args.sampler_phase, "tx_bias_v": args.tx_bias,
+                     "tx_load_code": args.tx_load_code,
+                     "capture_width_ps": args.capture_width_ps,
                      "rx_bias_v": args.rx_bias, "sampler_bias_v": args.sampler_bias,
                      "termination_code": args.term_code,
                      "rx_bandwidth_mode": args.rx_bandwidth_mode,

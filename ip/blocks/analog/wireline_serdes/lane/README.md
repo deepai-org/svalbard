@@ -144,8 +144,8 @@ jitter/channel/supply stress matrix, mismatch, extracted parent routing,
 selected pads/package/S-parameters, or a recovered clock.
 
 `run_capture_2p5_precal.sh` extends that release stack through the two extracted
-CML-to-CMOS converters and the independently clocked 2,202R/1,570C capture
-parent under the complete 1.25-GBd stress bundle. Nominal TT closes after
+CML-to-CMOS converters and the independently clocked capture parent under the
+same combined channel/timing/supply stress bundle. Nominal TT closes after
 retaining the capture cell's characterized 380 ps write pulse: worst TX, pin,
 raw-RX start/hold, restored, converter, and final CMOS margins are
 139.812/132.707/180.873/397.333/1156.11/1659.46/763.159 mV. Total current is
@@ -158,3 +158,13 @@ restored amplitude but miss the converter schedule after their one-UI pipeline
 shift. `extracted_capture_2p5_stress_precal_result.json` preserves the measured
 stage-by-stage mechanisms. This is the next calibration/architecture target,
 not evidence that combined 2.5 GT/s stress is closed.
+
+The first physical correction retapers the capture output buffers for their
+actual 50 fF load, reducing the cell from 2,202R/1,570C to 1,957R/1,400C while
+remaining zero-DRC and uniquely LVS-matched. The retained 380 ps write pulse
+then closes both fast corners under the same combined stress. FF/hot reaches
+1.128 V worst final margin at 50.55 mA; FF/cold uses TX bias 1.1 V and a
+50--100 ps raw-RX contract window, reaching 3.093 V worst final margin at
+57.07 mA. `run_capture_2p5_fast_cal.sh` is fail-closed and preserves the exact
+capture and converter PEX used by both cases. The two slow/hot TX/channel
+failures remain open and are not hidden by this narrower 2/2 result.

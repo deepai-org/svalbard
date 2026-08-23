@@ -9,18 +9,26 @@ dual-lane capture topology.
 
 The generated 190 by 122 um cell has zero Magic DRC errors, one unique
 pin-resolved Netgen LVS match, and a coupled full-RC extraction containing
-2,202 resistors and 1,570 capacitors. `layout.tcl` is the editable geometry
+1,957 resistors and 1,400 capacitors. `layout.tcl` is the editable geometry
 source. `./run.sh` regenerates MAG/GDS, DRC, LVS, PEX, and a 1900 by 1300 PNG;
-the latest usable render is copied to
-`scratch/serdes-split-capture-layout-last.png`.
+the checked-in usable render is `layout.png`, and the latest regenerated render
+is copied to `scratch/serdes-split-capture-layout-last.png`.
 
-The extracted parent composition uses two routed CML-to-CMOS converters and
-this cell after the complete TX/channel/termination/RX/sampler spine. All four
-0--300 ps conversion offsets pass nominally. The selected case retains at
-least 2.975 V across either converter output and 3.165/3.217 V at the even/odd
-parallel outputs. The five representative environments all pass; their worst
-converter and capture margins are 2.371 V and 2.363 V, respectively, with
-23.05--34.49 mA total composed supply current.
+The output stage is deliberately tapered for its 50 fF boundary load rather
+than maximum raw width. The prior 64/48 um final inverter overloaded its 16/8
+um preceding inverter. The symmetric 32/24 um replacement reduces internal
+gate and routed capacitance. The complete 1.25-GBd extracted parent still
+passes five representative environments and 160/160 scored PRBS bits under
+simultaneous bounded channel, clock-jitter, duty-cycle, and rail-ripple stress.
+Worst converter and capture margins are 2.579 V and 2.807 V, respectively,
+with 26.07--41.03 mA total composed current.
+
+The same exact-PEX cell closes the previously failing 2.5-GT/s FF/hot final
+write at the original 380 ps pulse: the limiting captured differential rises
+from 0.289 V to 1.128 V. The calibrated FF/cold lane also passes at 57.07 mA
+with 101.8 mV worst pin margin. `../lane/run_capture_2p5_fast_cal.sh`
+regenerates one physical stack, runs both corners, and preserves its exact
+capture/converter PEX and physical evidence.
 
 The composed flow preserves its exact split-capture PEX as
 `scratch/serdes-lane-capture-deserializer-last.pex.spice` and its corresponding
@@ -30,6 +38,6 @@ is the physical record from that composed run rather than a separately
 regenerated extraction.
 
 This proves deterministic full-RC data transfer through the parallel CMOS
-boundary under the declared provisional channel. It does not close mismatch,
-metastability tails, clock jitter/duty distortion, supply/substrate aggression,
-post-fill extraction, EM/IR, or the selected pad/package/channel.
+boundary under the declared provisional channel and bounded timing/supply
+stress. It does not close mismatch, metastability tails, extracted parent
+aggressors, post-fill extraction, EM/IR, or the selected pad/package/channel.

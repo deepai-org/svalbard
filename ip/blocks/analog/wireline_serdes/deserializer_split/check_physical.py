@@ -23,7 +23,10 @@ capacitors = len(re.findall(r"^C\d+\s", pex, re.MULTILINE))
 checks = {
     "drc_zero": bool(count and int(count.group(1)) == 0),
     "lvs_unique": lvs.count("Final result: Circuits match uniquely.") == 1,
-    "full_rc": resistors >= 2000 and capacitors >= 1400,
+    # This cell's tapered output revision deliberately removes device fingers
+    # and their parasitics.  Keep a conservative guard against an empty or
+    # coupling-free extraction without encoding the obsolete device count.
+    "full_rc": resistors >= 1800 and capacitors >= 1300,
     "rendered": args.render.stat().st_size >= 10_000,
 }
 result = {

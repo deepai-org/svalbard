@@ -166,6 +166,18 @@ route length, remove unnecessary via-stack capacitance, or revise the stage
 topology. Re-run the screen after each single-mechanism change, then realize the
 winner as legal geometry.
 
+Size an inverter chain from both ends, not only from the final load. A large
+last stage can make the preceding stage the real bottleneck because its gate
+capacitance is charged before any of the advertised output strength is useful.
+In the dual-capture cell, a 16/8 um first inverter drove a 64/48 um output
+inverter even though the external load was only 50 fF. Halving the last stage
+reduced extracted parasitics from 2,202R/1,570C to 1,957R/1,400C and raised the
+limiting 2.5-GT/s FF/hot captured differential from 0.289 V to 1.128 V at the
+original 380 ps write pulse. Diagnose each internal transition in a tapered
+chain; sometimes removing downstream width improves both speed and current.
+Apply the change symmetrically, regenerate geometry, and replay the slower-rate
+and PVT parent contracts because a faster internal node alone is not closure.
+
 Search already-realizable controls jointly across an extracted producer,
 optional restoring stage, and consumer before changing topology. Require a
 contiguous passing region in that multidimensional control space, not an

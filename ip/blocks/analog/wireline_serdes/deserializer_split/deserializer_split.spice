@@ -15,12 +15,12 @@ XRSTPD QB_INT D PRST_TAIL VDD pfet_03v3 w=8u l=0.28u m=4
 XRSTPC PRST_TAIL CLKB VDD VDD pfet_03v3 w=8u l=0.28u m=8
 XQBP QB_BUF Q_INT VDD VDD pfet_03v3 w=8u l=0.28u m=2
 XQBN QB_BUF Q_INT VSS VSS nfet_03v3 w=4u l=0.28u m=2
-XQOP Q QB_BUF VDD VDD pfet_03v3 w=8u l=0.28u m=8
-XQON Q QB_BUF VSS VSS nfet_03v3 w=8u l=0.28u m=6
+XQOP Q QB_BUF VDD VDD pfet_03v3 w=8u l=0.28u m=4
+XQON Q QB_BUF VSS VSS nfet_03v3 w=8u l=0.28u m=3
 XBBP Q_BUF QB_INT VDD VDD pfet_03v3 w=8u l=0.28u m=2
 XBBN Q_BUF QB_INT VSS VSS nfet_03v3 w=4u l=0.28u m=2
-XBOP QB Q_BUF VDD VDD pfet_03v3 w=8u l=0.28u m=8
-XBON QB Q_BUF VSS VSS nfet_03v3 w=8u l=0.28u m=6
+XBOP QB Q_BUF VDD VDD pfet_03v3 w=8u l=0.28u m=4
+XBON QB Q_BUF VSS VSS nfet_03v3 w=8u l=0.28u m=3
 .ends cmos_differential_capture
 
 .subckt deserializer_split_capture EVEN_D EVEN_DB ODD_D ODD_DB

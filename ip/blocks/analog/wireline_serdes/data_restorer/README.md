@@ -45,7 +45,7 @@ gain claim. At the limiting slow/passive environment, sampler phases 67.5 and
 90 degrees both pass under simultaneous channel, jitter, duty-cycle, and rail
 ripple stress; the selected 78.75 degree phase lies between them. The final
 five-environment matrix uses restorer bias codes 1.2--1.4 V and retains at
-least 230.118 mV signed sampler-input margin and 2.73372 V final CMOS margin.
+least 230.118 mV signed sampler-input margin and 2.80740 V final CMOS margin.
 
 This is public-model pre-silicon evidence. Mismatch, extracted parent routing,
 selected pads/package/channel, PDN/substrate aggression, post-fill extraction,

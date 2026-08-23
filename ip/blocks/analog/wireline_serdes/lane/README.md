@@ -208,6 +208,18 @@ exposed interleave clocks for -50 ps ODD sense/regeneration deskew.
 `check_rx_frontend_evidence.py` binds the exact parent and rejects fallback to
 separate termination, spine, or converter PEX instances.
 
-This is not yet a complete routed lane. Converter-to-capture, realized clock
-and bias trees, local decoupling, pad/ESD/package/channel, and full-chip supply
-and substrate routes remain the next physical composition boundaries.
+`run_capture_2p5_rx_capture.sh` extends the physical hierarchy through the
+7,900R/4,804C `lane_rx_capture/lane_rx_capture.pex.spice` parent. It owns the
+four converter-to-capture data routes, shared capture clocks, and capture power
+branches instead of retaining a separate split-capture PEX. All 5/5
+environments pass the same combined stress. Worst pin, raw-RX, restored,
+converter, final-capture, and current measurements are 104.176 mV, 47.052 mV,
+209.582 mV, 558.084 mV, 623.576 mV, and 52.203 mA. The final output reaches its
+500 mV contract by 750 ps, retaining 50 ps before the next 800 ps
+same-interleave event. `check_rx_capture_evidence.py` rejects leaf fallback and
+binds the exact parent PEX, physical record, testbench, runner, five cases, and
+aggregate.
+
+This is not yet a complete routed lane. Realized upstream clock and bias trees,
+local decoupling, pad/ESD/package/channel, and full-chip supply and substrate
+routes remain the next physical composition boundaries.

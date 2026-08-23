@@ -599,6 +599,24 @@ That result justifies a realizable deskew code; it does not justify an arbitrary
 per-corner delay unless the clock generator, observable, and calibration search
 are later implemented and extracted.
 
+When a parent absorbs a clocked consumer, re-establish when its output becomes
+valid; do not reuse a leaf-era observation time by habit. Probe the exact parent
+at several times within the complete same-lane period, require the amplitude
+contract at the earliest selected point, and report the remaining time before
+the next event. A later passing sample proves settling, not throughput, unless
+that residual interval is sufficient for the realized downstream consumer. In
+the routed RX-through-capture parent, the legacy 720 ps observation missed two
+otherwise correct transitions; 750 ps passes all five environments and leaves
+50 ps before the next 800 ps same-interleave event. That 50 ps is now an open
+consumer/setup budget, not hidden margin.
+
+Top-level labels on a distributed clock or bias net also define where the
+testbench source enters its extracted resistance. Place the parent port at the
+intended distribution root and compare branch impedance to every load. Moving
+a label without changing conductive geometry may have no electrical effect if
+the extractor canonicalizes the terminal onto the same node, so treat DRC/LVS
+and exact-PEX simulation—not the visible label position—as authoritative.
+
 A downstream differential write port can present several large NMOS and PMOS
 gate banks on each rail; this distributed nonlinear load is not equivalent to
 the nominal explicit capacitor used in either leaf test. Size the retaining

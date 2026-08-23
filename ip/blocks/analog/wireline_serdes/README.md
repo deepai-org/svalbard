@@ -32,6 +32,12 @@ both 1.25 and 2.5 GT/s. The routed
 children are code-generated and remain explicitly experimental pre-silicon
 evidence rather than qualified PCIe macros.
 
+The receive hierarchy now continues through [`lane_rx_capture`](lane_rx_capture/README.md),
+a zero-DRC, unique-LVS, 7,900R/4,804C parent containing termination, RX,
+restoration, dual-edge sampling, two CML-to-CMOS converters, and independently
+clocked dual capture. Its exact PEX passes the five-environment 2.5 GT/s
+combined-stress matrix with at least 623.576 mV final output by 750 ps.
+
 The repeatable method used to take these cells from an executable electrical
 contract through generated layout and full-RC evidence is documented in the
 [analog layout closure workflow](../../../../docs/verification/analog-layout-closure.md).

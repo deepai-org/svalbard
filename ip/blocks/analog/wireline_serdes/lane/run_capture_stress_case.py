@@ -99,10 +99,12 @@ def main() -> None:
     parser.add_argument("--rx-spine-physical", type=Path)
     parser.add_argument("--rx-frontend-parent-pex", type=Path)
     parser.add_argument("--rx-frontend-parent-physical", type=Path)
+    parser.add_argument("--rx-capture-parent-pex", type=Path)
+    parser.add_argument("--rx-capture-parent-physical", type=Path)
     parser.add_argument("--frontend-pex", type=Path)
     parser.add_argument("--frontend-physical", type=Path)
-    parser.add_argument("--deserializer-pex", required=True, type=Path)
-    parser.add_argument("--deserializer-physical", required=True, type=Path)
+    parser.add_argument("--deserializer-pex", type=Path)
+    parser.add_argument("--deserializer-physical", type=Path)
     parser.add_argument("--base-physical", type=Path)
     parser.add_argument("--restorer-pex", type=Path)
     parser.add_argument("--restorer-physical", type=Path)
@@ -117,6 +119,8 @@ def main() -> None:
     parser.add_argument("--sampler-phase", type=float, default=135.0)
     parser.add_argument("--capture-width-ps", type=int, default=380)
     parser.add_argument("--capture-delay-ps", type=int)
+    parser.add_argument("--capture-output-delay-ps", type=int)
+    parser.add_argument("--even-capture-skew-ps", type=int, default=0)
     parser.add_argument("--odd-capture-skew-ps", type=int, default=0)
     parser.add_argument("--frontend-sense-width-ps", type=int)
     parser.add_argument("--odd-frontend-skew-ps", type=int, default=0)
@@ -151,8 +155,10 @@ def main() -> None:
     args = parser.parse_args()
     routed_rx_spine = args.rx_spine_pex is not None
     routed_rx_frontend = args.rx_frontend_parent_pex is not None
-    routed_rx = routed_rx_spine or routed_rx_frontend
-    if routed_rx_spine and routed_rx_frontend:
+    routed_rx_capture = args.rx_capture_parent_pex is not None
+    routed_front_parent = routed_rx_frontend or routed_rx_capture
+    routed_rx = routed_rx_spine or routed_front_parent
+    if sum((routed_rx_spine, routed_rx_frontend, routed_rx_capture)) > 1:
         parser.error("select one routed RX parent")
     if not 1 <= args.jobs <= 4 or not 1 <= args.term_code <= 6:
         parser.error("jobs or termination code outside declared range")
@@ -183,6 +189,11 @@ def main() -> None:
     if (args.capture_delay_ps is not None
             and not 200 <= args.capture_delay_ps <= 600):
         parser.error("capture pulse delay must be 200--600 ps")
+    if (args.capture_output_delay_ps is not None
+            and not 600 <= args.capture_output_delay_ps <= 790):
+        parser.error("capture output delay must be 600--790 ps")
+    if not -150 <= args.even_capture_skew_ps <= 150:
+        parser.error("even capture skew must be -150--150 ps")
     if not -150 <= args.odd_capture_skew_ps <= 150:
         parser.error("odd capture skew must be -150--150 ps")
     if (args.frontend_sense_width_ps is not None
@@ -198,6 +209,11 @@ def main() -> None:
         parser.error("routed RX spine requires termination physical evidence")
     if routed_rx_frontend and not args.rx_frontend_parent_physical:
         parser.error("routed RX front end requires its physical record")
+    if routed_rx_capture and not args.rx_capture_parent_physical:
+        parser.error("routed RX capture requires its physical record")
+    if not routed_rx_capture and not (
+            args.deserializer_pex and args.deserializer_physical):
+        parser.error("leaf capture requires its PEX and physical record")
     if not routed_rx and not (args.rx_pex and args.sampler_pex):
         parser.error("provide an RX-spine PEX or both RX and sampler PEX")
     if (not routed_rx and args.restorer_mode != "none" and not (
@@ -205,7 +221,7 @@ def main() -> None:
         parser.error("restorer mode requires its PEX and physical record")
     if routed_rx and args.base_physical is not None:
         parser.error("base leaf physical record is invalid with routed RX parent")
-    if not routed_rx_frontend and not (args.term_pex and args.frontend_pex):
+    if not routed_front_parent and not (args.term_pex and args.frontend_pex):
         parser.error("leaf composition requires termination and converter PEX")
     if args.restorer_cell is not None and not re.fullmatch(
             r"[A-Za-z][A-Za-z0-9_]*", args.restorer_cell):
@@ -240,7 +256,7 @@ def main() -> None:
     template = template.replace(
         "@SAMPLER_INCLUDE@",
         "@SAMPLER_INCLUDE@\n@RESTORER_INCLUDE@\n"
-        "@FRONTEND_INCLUDE@\n.include @DESERIALIZER_PEX@",
+        "@FRONTEND_INCLUDE@\n@DESERIALIZER_INCLUDE@",
     )
     template = template.replace(
         "VTXCLKP TX_CLK_P_SRC 0 PULSE(0 @VDD_V@ @CLOCK_DELAY@ 20p 20p @UI@ @PERIOD@)\n"
@@ -261,7 +277,7 @@ def main() -> None:
         "R_RXBIAS RX_BIAS_SRC RX_BIAS 1",
         "R_RXBIAS RX_BIAS_SRC RX_BIAS 1\n@RESTORER_BIAS_RESISTOR@",
     )
-    if routed_rx_frontend:
+    if routed_front_parent:
         template = replace_once(
             template,
             "XTERM RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N\n"
@@ -269,10 +285,16 @@ def main() -> None:
             "",
             "termination instance",
         )
-        template = replace_once(
-            template,
-            "XRX RXP RXN VTHP VTHN RX_BIAS RX_BW_EN_N VDD 0 RXOP RXON @RX_CELL@\n"
-            "CRXOP RXOP 0 25f\nCRXON RXON 0 25f",
+        parent_instance = (
+            "XRXCAP RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N\n"
+            "+ TERM_EN4_N TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N\n"
+            "+ REST_BIAS SAMP_CLK_P SAMP_CLK_N SAMP_BIAS E_SENSE_CLK\n"
+            "+ E_REGEN_CLK E_REGEN_CLKB E_CAPTURE_CLK E_CAPTURE_CLKB @E_SENSE_BOOST@\n"
+            "+ O_SENSE_CLK O_REGEN_CLK O_REGEN_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB\n"
+            "+ @O_SENSE_BOOST@ VDD 0 RX_RAWP RX_RAWN RXOP RXON SAMP_E_P SAMP_E_N\n"
+            "+ SAMP_O_P SAMP_O_N FE_E_P FE_E_N FE_O_P FE_O_N\n"
+            "+ EVEN_Q EVEN_QB ODD_Q ODD_QB lane_rx_capture_pex\n"
+            if routed_rx_capture else
             "XRXFRONT RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N\n"
             "+ TERM_EN4_N TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N\n"
             "+ REST_BIAS SAMP_CLK_P SAMP_CLK_N SAMP_BIAS E_SENSE_CLK\n"
@@ -280,6 +302,12 @@ def main() -> None:
             "+ O_SENSE_CLK O_REGEN_CLK O_REGEN_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB\n"
             "+ @O_SENSE_BOOST@ VDD 0 RX_RAWP RX_RAWN RXOP RXON SAMP_E_P SAMP_E_N\n"
             "+ SAMP_O_P SAMP_O_N FE_E_P FE_E_N FE_O_P FE_O_N lane_rx_frontend_pex\n"
+        )
+        template = replace_once(
+            template,
+            "XRX RXP RXN VTHP VTHN RX_BIAS RX_BW_EN_N VDD 0 RXOP RXON @RX_CELL@\n"
+            "CRXOP RXOP 0 25f\nCRXON RXON 0 25f",
+            parent_instance +
             "CRXRAWP RX_RAWP 0 25f\nCRXRAWN RX_RAWN 0 25f\n"
             "CRESTOP RXOP 0 25f\nCRESTON RXON 0 25f",
             "RX instance",
@@ -398,7 +426,7 @@ CEQB EVEN_QB 0 50f
 COQ ODD_Q 0 50f
 COQB ODD_QB 0 50f
 """
-    if routed_rx_frontend:
+    if routed_front_parent:
         downstream = replace_once(
             downstream,
             "XFE_E SAMP_E_P SAMP_E_N E_SENSE_CLK E_REGEN_CLK E_REGEN_CLKB E_CAPTURE_CLK E_CAPTURE_CLKB\n"
@@ -407,6 +435,15 @@ COQB ODD_QB 0 50f
             "+ VDD 0 FE_O_P FE_O_N @O_SENSE_BOOST@ cml_to_cmos_pex\n",
             "",
             "converter instances",
+        )
+    if routed_rx_capture:
+        downstream = replace_once(
+            downstream,
+            "XCAP FE_E_P FE_E_N FE_O_P FE_O_N\n"
+            "+ E_CAPTURE_CLK E_CAPTURE_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB VDD 0\n"
+            "+ EVEN_Q EVEN_QB ODD_Q ODD_QB deserializer_split_capture_pex\n",
+            "",
+            "capture instance",
         )
     template = template.replace("\n.control\n", downstream + "\n.control\n")
     template = template.replace(
@@ -421,45 +458,54 @@ COQB ODD_QB 0 50f
         if args.restorer_mode != "none" else ("tx", "pin", "rx", "fe", "q")
     expected_scalars = len(pair_indices) * len(scored_stages) * 2 + 4 \
         + (len(pair_indices) * 2 + 1 if args.restorer_mode != "none" else 0)
-    pex_paths = {"tx_pex": args.tx_pex,
-                 "deserializer_pex": args.deserializer_pex}
-    if routed_rx_frontend:
+    pex_paths = {"tx_pex": args.tx_pex}
+    if not routed_rx_capture:
+        pex_paths["deserializer_pex"] = args.deserializer_pex
+    if routed_rx_capture:
+        pex_paths["rx_capture_parent_pex"] = args.rx_capture_parent_pex
+    elif routed_rx_frontend:
         pex_paths["rx_frontend_parent_pex"] = args.rx_frontend_parent_pex
     else:
         pex_paths.update({"termination_pex": args.term_pex,
                           "frontend_pex": args.frontend_pex})
     if routed_rx_spine:
         pex_paths["rx_spine_pex"] = args.rx_spine_pex
-    elif not routed_rx_frontend:
+    elif not routed_front_parent:
         pex_paths.update({"rx_pex": args.rx_pex, "sampler_pex": args.sampler_pex})
     if args.restorer_mode != "none" and not routed_rx:
         pex_paths["restorer_pex"] = args.restorer_pex
-    physical_paths = {"deserializer_split": args.deserializer_physical}
+    physical_paths = {}
+    if not routed_rx_capture:
+        physical_paths["deserializer_split"] = args.deserializer_physical
     if args.tx_physical is not None:
         physical_paths["tx"] = args.tx_physical
-    if args.term_physical is not None and not routed_rx_frontend:
+    if args.term_physical is not None and not routed_front_parent:
         physical_paths["termination"] = args.term_physical
-    if args.frontend_physical is not None and not routed_rx_frontend:
+    if args.frontend_physical is not None and not routed_front_parent:
         physical_paths["frontend"] = args.frontend_physical
     if routed_rx_spine:
         physical_paths["rx_spine"] = args.rx_spine_physical
+    elif routed_rx_capture:
+        physical_paths["rx_capture_parent"] = args.rx_capture_parent_physical
     elif routed_rx_frontend:
         physical_paths["rx_frontend_parent"] = args.rx_frontend_parent_physical
     elif args.base_physical is not None:
         physical_paths["base_lane"] = args.base_physical
     if args.restorer_mode != "none" and not routed_rx:
         physical_paths["restorer"] = args.restorer_physical
-    deserializer_physical = json.loads(args.deserializer_physical.read_text())
-    deserializer_pex_hash = spine.sha256(args.deserializer_pex)
-    if (deserializer_physical.get("result") != "pass"
-            or deserializer_physical.get("pex_sha256") != deserializer_pex_hash):
-        raise SystemExit("split-capture physical evidence does not bind exact simulation PEX")
+    if not routed_rx_capture:
+        deserializer_physical = json.loads(args.deserializer_physical.read_text())
+        deserializer_pex_hash = spine.sha256(args.deserializer_pex)
+        if (deserializer_physical.get("result") != "pass"
+                or deserializer_physical.get("pex_sha256") != deserializer_pex_hash):
+            raise SystemExit(
+                "split-capture physical evidence does not bind exact simulation PEX")
     if args.tx_physical is not None:
         tx_physical = json.loads(args.tx_physical.read_text())
         if (tx_physical.get("result") != "pass"
                 or tx_physical.get("pex_sha256") != spine.sha256(args.tx_pex)):
             raise SystemExit("TX physical evidence does not bind exact simulation PEX")
-    if args.term_physical is not None and not routed_rx_frontend:
+    if args.term_physical is not None and not routed_front_parent:
         term_physical = json.loads(args.term_physical.read_text())
         term_record = term_physical.get("cells", {}).get(
             "termination", term_physical)
@@ -469,7 +515,7 @@ COQB ODD_QB 0 50f
                 or term_record.get("pex_sha256") != spine.sha256(args.term_pex)):
             raise SystemExit(
                 "termination physical evidence does not bind exact simulation PEX")
-    if args.frontend_physical is not None and not routed_rx_frontend:
+    if args.frontend_physical is not None and not routed_front_parent:
         frontend_physical = json.loads(args.frontend_physical.read_text())
         if (frontend_physical.get("result") != "pass"
                 or frontend_physical.get("pex_sha256")
@@ -485,6 +531,16 @@ COQB ODD_QB 0 50f
                 != spine.sha256(args.rx_spine_pex)):
             raise SystemExit(
                 "RX-spine physical evidence does not bind exact simulation PEX")
+    elif routed_rx_capture:
+        rx_capture_physical = json.loads(
+            args.rx_capture_parent_physical.read_text())
+        if (rx_capture_physical.get("result") != "pass"
+                or rx_capture_physical.get("drc_error_count") != 0
+                or rx_capture_physical.get("lvs_unique") is not True
+                or rx_capture_physical.get("pex_sha256")
+                != spine.sha256(args.rx_capture_parent_pex)):
+            raise SystemExit(
+                "RX-capture physical evidence does not bind exact simulation PEX")
     elif routed_rx_frontend:
         rx_frontend_physical = json.loads(
             args.rx_frontend_parent_physical.read_text())
@@ -532,8 +588,12 @@ COQB ODD_QB 0 50f
             odd_event = odd_base + pair * period
             even_eye = clock_delay + (2 * pair + 0.5) * ui
             odd_eye = clock_delay + (2 * pair + 1.5) * ui
-            output_delay = (1.28e-9 * timing_scale
-                            if args.serial_rate_gbd == 1.25 else 720e-12)
+            output_delay = (
+                args.capture_output_delay_ps * 1e-12
+                if args.capture_output_delay_ps is not None else
+                1.28e-9 * timing_scale
+                if args.serial_rate_gbd == 1.25 else 720e-12
+            )
             rx_shift = (args.rx_window_start_ps * 1e-12
                         if args.restorer_mode != "none" else 0.0)
             measures.extend((
@@ -567,9 +627,11 @@ COQB ODD_QB 0 50f
         )
         values = {
             "TX_INCLUDE": f".include {args.tx_pex}",
-            "TERM_INCLUDE": ("" if routed_rx_frontend
+            "TERM_INCLUDE": ("" if routed_front_parent
                              else f".include {args.term_pex}"),
-            "RX_INCLUDE": (f".include {args.rx_frontend_parent_pex}"
+            "RX_INCLUDE": (f".include {args.rx_capture_parent_pex}"
+                           if routed_rx_capture else
+                           f".include {args.rx_frontend_parent_pex}"
                            if routed_rx_frontend else
                            f".include {args.rx_spine_pex}" if routed_rx_spine
                            else f".include {args.rx_pex}"),
@@ -578,9 +640,10 @@ COQB ODD_QB 0 50f
             "RESTORER_INCLUDE": (f".include {args.restorer_pex}"
                                    if args.restorer_mode != "none"
                                    and not routed_rx else ""),
-            "FRONTEND_INCLUDE": ("" if routed_rx_frontend
+            "FRONTEND_INCLUDE": ("" if routed_front_parent
                                   else f".include {args.frontend_pex}"),
-            "DESERIALIZER_PEX": str(args.deserializer_pex),
+            "DESERIALIZER_INCLUDE": (
+                "" if routed_rx_capture else f".include {args.deserializer_pex}"),
             "TX_CELL": "serializer_tx_pex", "TERM_CELL": "serdes_termination_pex",
             "RX_CELL": "serdes_rx_pex", "SAMPLER_CELL": "cdr_sampler_pex",
             "MOS_CORNER": args.mos_corner, "RES_CORNER": args.res_corner,
@@ -637,7 +700,7 @@ COQB ODD_QB 0 50f
             "CAPTURE_WIDTH": f"{args.capture_width_ps * 1e-12:.12g}",
             "E_SENSE_DELAY": f"{even_base:.12g}",
             "E_REGEN_DELAY": f"{even_base + 10e-12 * timing_scale:.12g}",
-            "E_CAPTURE_DELAY": f"{even_base + capture_delay:.12g}",
+            "E_CAPTURE_DELAY": f"{even_base + capture_delay + args.even_capture_skew_ps * 1e-12:.12g}",
             "O_SENSE_DELAY": f"{odd_base + args.odd_frontend_skew_ps * 1e-12:.12g}",
             "O_REGEN_DELAY": f"{odd_base + 10e-12 * timing_scale + args.odd_frontend_skew_ps * 1e-12:.12g}",
             "O_CAPTURE_DELAY": f"{odd_base + capture_delay + args.odd_capture_skew_ps * 1e-12:.12g}",
@@ -753,6 +816,8 @@ COQB ODD_QB 0 50f
                      "tx_load_code": args.tx_load_code,
                      "capture_width_ps": args.capture_width_ps,
                      "capture_delay_ps": args.capture_delay_ps,
+                     "capture_output_delay_ps": args.capture_output_delay_ps,
+                     "even_capture_skew_ps": args.even_capture_skew_ps,
                      "odd_capture_skew_ps": args.odd_capture_skew_ps,
                      "frontend_sense_width_ps": args.frontend_sense_width_ps,
                      "odd_frontend_skew_ps": args.odd_frontend_skew_ps,
@@ -767,6 +832,8 @@ COQB ODD_QB 0 50f
                      "restorer_bias_v": (args.restorer_bias
                                           if args.restorer_mode != "none" else None)},
         "physical_composition": (
+            "routed_termination_rx_spine_dual_converter_capture_parent"
+            if routed_rx_capture else
             "routed_termination_rx_spine_dual_converter_parent"
             if routed_rx_frontend else
             "routed_rx_restorer_sampler_parent"

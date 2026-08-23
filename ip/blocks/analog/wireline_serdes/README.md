@@ -41,10 +41,13 @@ The next [`lane_rx_pi_capture`](lane_rx_pi_capture/README.md) parent physically
 integrates the phase interpolator and a two-stage clock restorer into that
 hierarchy. It is zero-DRC, uniquely LVS-matched, and extracts to 8,625R/5,034C.
 Its focused nonlinear clock-load chain passes, and calibrated sampler and
-converter boundaries work in the complete 2.5 GT/s transient, but the odd
-final capture reaches only about 0.41 V against a 0.50 V contract. It remains a
-physical-progress/falsification milestone pending odd-branch rebalancing and
-full PVT replay.
+converter boundaries work in the complete 2.5 GT/s transient. A corrected
+post-write observation closes adjacent 200 and 300 ps offsets in an eight-point
+24-bit nominal screen, with at least 1.269 V final margin. The five-environment
+replay still passes only nominal: FF/cold exposes post-write capture collapse,
+FF/hot fails long-pattern recurrence, and both SS cases lose dynamic decisions.
+It remains a physical-progress and falsification milestone pending capture and
+SS-boundary redesign.
 
 The repeatable method used to take these cells from an executable electrical
 contract through generated layout and full-RC evidence is documented in the

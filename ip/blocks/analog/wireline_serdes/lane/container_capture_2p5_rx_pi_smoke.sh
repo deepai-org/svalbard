@@ -12,14 +12,14 @@ python3 /src/lane/run_capture_stress_case.py \
   --channel-series-ohm-per-leg 6 --channel-shunt-cap-f 1e-12 \
   --tx-clock-jitter-ps 30 --tx-clock-duty 0.47 \
   --vdd-ripple-mv 20 --vdd-ripple-hz 100e6 \
-  --restorer-mode data --capture-width-ps 380 --capture-output-delay-ps 750 \
-  --odd-capture-skew-ps -200 --odd-capture-width-ps 500 \
+  --restorer-mode data --capture-delay-ps 550 --capture-width-ps 380 \
+  --capture-output-delay-ps 1050 \
   --tx-load-code 2 --tx-bias 1.5 --ac-initial-v 0.435 \
   --rx-bias 1.3 --restorer-bias 1.3 --sampler-bias 1.3 \
   --sampler-phase 22.5 --latency-ui 0 --rx-window-start-ps 100 \
   --pi-control-a 1.15 --pi-control-b 1.15 --pi-buffer-bias 1.15 \
   --clock-restorer-bias 1.15 \
   --pi-invert \
-  --offset-ps 200 --offset-ps 300 \
+  --offset-ps 100 --offset-ps 200 \
   --allow-fail --case-id tt_pi_smoke
-cp /work/rx-pi-smoke/convert_200p.log /work/rx-pi-smoke-convert-200p.log
+cp /work/rx-pi-smoke/convert_100p.log /work/rx-pi-smoke-convert-100p.log

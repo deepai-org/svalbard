@@ -14,25 +14,27 @@ At the selected 1.15 V restorer bias it produces about +2.19/-2.19 V
 differential clock extrema; the measured rising edge is 312.65 ps after the A
 input's rising edge for equal PI controls.
 
-The complete 2.5 GT/s smoke is intentionally retained as a failing integration
-result. After correcting a positional PEX port-order error, inverting the
-quadrature polarity, and raising sampler bias to 1.3 V, the exact parent reaches
-the following minimum boundaries under the combined channel/jitter/duty/ripple
-stress:
+The former smoke failure was caused by observing the output while the capture
+write pulse was still active. With a 550 ps event-relative opening, 380 ps
+write pulse, and 1050 ps observation, the capture has 120 ps to regenerate and
+300 ps before its next same-lane opening. The exact parent passes a 24-bit
+PRBS7 at adjacent 200 and 300 ps conversion offsets in an eight-point nominal
+screen. The selected 200 ps case retains 98.071 mV raw-RX, 367.009 mV restored,
+671.376 mV sampler, 400.615 mV converter, and 1.5155 V final-capture margin at
+50.815 mA. Restored-clock rise/fall times are measured directly in every case.
 
-- sampler differential margin: at least 0.73 V;
-- sampler common mode: approximately 2.53--2.60 V;
-- CML-to-CMOS output margin: at least 0.42 V;
-- even final capture: at least 1.72 V;
-- odd final capture: about 0.41 V, below the 0.50 V contract.
+This does not close PVT. The full five-environment replay passes only nominal.
+At FF/cold the sampler and converter retain at least 0.811 V and 2.327 V, but
+post-write capture collapses below 2 mV: this is a real regeneration failure,
+not an aperture setting. FF/hot passes the short diagnostic after raising
+sampler bias to 1.3 V but fails the 24-bit recurrence test. Both SS cases lose
+dynamic decisions even though the standalone extracted PI/restorer/sampler
+clock chain passes 4/4 restorer biases at SS/passive. The next circuit task is
+to strengthen and requalify held-state capture and then localize the SS dynamic
+data/clock boundary; no PVT-closed lane is claimed.
 
-Timing extension peaked with a -200 ps odd-capture skew and 500 ps odd pulse;
-stretching farther reduced margin. The next circuit task is therefore to
-rebalance or strengthen the odd capture branch, then replay the 24-bit offset
-screen and representative PVT. This milestone does not claim a passing routed
-PI-to-parallel-data path.
-
-Run `./run_physical.sh` for layout/DRC/LVS/PEX, `./run_clock_chain.sh` for the
-nonlinear clock-load screen, and the lane `run_capture_2p5_rx_pi_smoke.sh` or
-`run_capture_2p5_rx_pi_screen.sh` for composed transients. Generated logs and
-waveforms remain in scratch; the committed JSON records bind the exact PEX.
+Run `./run_physical.sh` for layout/DRC/LVS/PEX, `./run_clock_chain.sh` and
+`./run_clock_chain_ss.sh` for nonlinear clock-load checks, and the lane
+`run_capture_2p5_rx_pi_screen.sh` or `run_capture_2p5_rx_pi_pvt.sh` for composed
+transients. Generated logs and waveforms remain in scratch; the committed JSON
+records bind the exact parent PEX, physical record, testbench, and runner.

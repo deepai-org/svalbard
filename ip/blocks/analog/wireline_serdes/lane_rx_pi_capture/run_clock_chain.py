@@ -24,6 +24,15 @@ parser.add_argument("--output", required=True, type=Path)
 parser.add_argument("--pi-pex", required=True, type=Path)
 parser.add_argument("--restorer-pex", required=True, type=Path)
 parser.add_argument("--sampler-pex", required=True, type=Path)
+parser.add_argument("--case-id", default="tt")
+parser.add_argument("--mos-corner", default="typical")
+parser.add_argument("--res-corner", default="res_typical")
+parser.add_argument("--temperature", type=float, default=27.0)
+parser.add_argument("--vdd", type=float, default=3.3)
+parser.add_argument("--input-common-mode", type=float, default=1.65)
+parser.add_argument("--sampler-bias", type=float, default=1.10)
+parser.add_argument("--data-p", type=float, default=1.75)
+parser.add_argument("--data-n", type=float, default=1.55)
 args = parser.parse_args()
 args.work.mkdir(parents=True, exist_ok=True)
 template = (args.source / "clock_chain_tb.spice.in").read_text()
@@ -35,10 +44,12 @@ def sha256(path: Path) -> str:
 cases = []
 for rest_bias in (0.8, 1.0, 1.15, 1.3):
     values = {
-        "MOS_CORNER": "typical", "RES_CORNER": "res_typical", "TEMP_C": "27",
-        "VDD_V": "3.3", "INPUT_CM": "1.65", "CTRL_A": "1.15",
+        "MOS_CORNER": args.mos_corner, "RES_CORNER": args.res_corner,
+        "TEMP_C": str(args.temperature), "VDD_V": str(args.vdd),
+        "INPUT_CM": str(args.input_common_mode), "CTRL_A": "1.15",
         "CTRL_B": "1.15", "PI_BIAS": "1.15", "REST_BIAS": str(rest_bias),
-        "SAMP_BIAS": "1.10", "DATA_P": "1.75", "DATA_N": "1.55",
+        "SAMP_BIAS": str(args.sampler_bias), "DATA_P": str(args.data_p),
+        "DATA_N": str(args.data_n),
         "PI_PEX": str(args.pi_pex), "RESTORER_PEX": str(args.restorer_pex),
         "SAMPLER_PEX": str(args.sampler_pex),
     }
@@ -65,6 +76,11 @@ passing = [case for case in cases if case["result"] == "pass"]
 result = {
     "schema_version": 1,
     "claim": "extracted_pi_limiter_nonlinear_dual_sampler_clock_drive",
+    "case_id": args.case_id,
+    "environment": [args.mos_corner, args.res_corner, args.vdd, args.temperature],
+    "stimulus": {"input_common_mode_v": args.input_common_mode,
+                 "sampler_bias_v": args.sampler_bias,
+                 "data_p_v": args.data_p, "data_n_v": args.data_n},
     "case_count": len(cases),
     "passing_case_count": len(passing),
     "selected_case": max(passing, key=lambda case: min(

@@ -58,14 +58,18 @@ summary_keys = (
     "minimum_rx_even_v", "minimum_rx_odd_v",
     "minimum_rx_hold_even_v", "minimum_rx_hold_odd_v",
     "minimum_restored_even_v", "minimum_restored_odd_v",
+    "minimum_sampler_even_v", "minimum_sampler_odd_v",
+    "sampler_common_mode_min_v", "sampler_common_mode_max_v",
     "minimum_frontend_even_v", "minimum_frontend_odd_v",
     "minimum_capture_even_v", "minimum_capture_odd_v",
+    "pi_clock_rise_s", "pi_clock_fall_s",
     "tx_common_mode_v", "rx_common_mode_v", "amplifier_common_mode_v",
     "restored_common_mode_v", "supply_current_a", "result",
 )
 result = {
     "schema_version": 1,
     "claim": args.claim,
+    "aggregate_source_sha256": digest(Path(__file__)),
     "physical_composition": args.physical_composition,
     "case_count": len(documents),
     "passing_case_count": sum(document.get("result") == "pass"

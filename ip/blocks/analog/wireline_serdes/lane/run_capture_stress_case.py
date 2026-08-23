@@ -21,6 +21,7 @@ SCALAR = re.compile(
     r"samp_even_\d+|samp_odd_\d+|samp_even_cm_\d+|samp_odd_cm_\d+|"
     r"fe_even_\d+|fe_odd_\d+|q_even_\d+|q_odd_\d+|"
     r"rx_hold_even_\d+|rx_hold_odd_\d+|"
+    r"pi_clk_rise|pi_clk_fall|"
     r"tx_cm_avg|rx_cm_avg|amp_cm_avg|rest_cm_avg|"
     r"supply_current)\s*=\s*([-+0-9.eE]+)", re.MULTILINE,
 )
@@ -124,6 +125,7 @@ def main() -> None:
     parser.add_argument("--pi-control-b", type=float, default=1.15)
     parser.add_argument("--pi-buffer-bias", type=float, default=1.15)
     parser.add_argument("--clock-restorer-bias", type=float, default=1.15)
+    parser.add_argument("--pi-input-phase-deg", type=float, default=0.0)
     parser.add_argument("--pi-invert", action="store_true")
     parser.add_argument("--capture-width-ps", type=int, default=380)
     parser.add_argument("--odd-capture-width-ps", type=int)
@@ -205,8 +207,8 @@ def main() -> None:
             and not 200 <= args.capture_delay_ps <= 600):
         parser.error("capture pulse delay must be 200--600 ps")
     if (args.capture_output_delay_ps is not None
-            and not 600 <= args.capture_output_delay_ps <= 790):
-        parser.error("capture output delay must be 600--790 ps")
+            and not 600 <= args.capture_output_delay_ps <= 1200):
+        parser.error("capture output delay must be 600--1200 ps")
     if not -150 <= args.even_capture_skew_ps <= 150:
         parser.error("even capture skew must be -150--150 ps")
     if not -250 <= args.odd_capture_skew_ps <= 150:
@@ -252,6 +254,8 @@ def main() -> None:
             (args.pi_control_a, args.pi_control_b, args.pi_buffer_bias,
              args.clock_restorer_bias)):
         parser.error("PI controls must be between 0.25 V and 1.35 V")
+    if not 0.0 <= args.pi_input_phase_deg < 360.0:
+        parser.error("PI input phase must be in [0, 360) degrees")
     args.work.mkdir(parents=True, exist_ok=True)
 
     rate = args.serial_rate_gbd * 1e9
@@ -360,6 +364,10 @@ def main() -> None:
             phase_ap, phase_an, phase_bp, phase_bn = (
                 (180, 0, 90, 270) if args.pi_invert else (0, 180, 270, 90)
             )
+            phase_ap = (phase_ap + args.pi_input_phase_deg) % 360
+            phase_an = (phase_an + args.pi_input_phase_deg) % 360
+            phase_bp = (phase_bp + args.pi_input_phase_deg) % 360
+            phase_bn = (phase_bn + args.pi_input_phase_deg) % 360
             template = replace_once(
                 template,
                 "VSCLKP SAMP_CLK_P_SRC 0 SIN(@SAMPLE_CLOCK_CM@ @SAMPLE_CLOCK_PEAK@ @CLOCK_HZ@ 1n 0 @CLOCK_PHASE@)\n"
@@ -522,6 +530,8 @@ COQB ODD_QB 0 50f
         if args.restorer_mode != "none" else ("tx", "pin", "rx", "samp", "fe", "q")
     expected_scalars = len(pair_indices) * (len(scored_stages) * 2 + 2) + 4 \
         + (len(pair_indices) * 2 + 1 if args.restorer_mode != "none" else 0)
+    if routed_rx_pi_capture:
+        expected_scalars += 2
     pex_paths = {"tx_pex": args.tx_pex}
     if not routed_capture_parent:
         pex_paths["deserializer_pex"] = args.deserializer_pex
@@ -706,6 +716,13 @@ COQB ODD_QB 0 50f
                     f"meas tran rest_odd_{pair} find rest_diff "
                     f"at={odd_eye + restorer_eye_shift:.12g}",
                 ))
+        if routed_rx_pi_capture:
+            measures.extend((
+                "meas tran pi_clk_rise when v(PI_CLK_P)=v(PI_CLK_N) "
+                "rise=1 td=4n",
+                "meas tran pi_clk_fall when v(PI_CLK_P)=v(PI_CLK_N) "
+                "fall=1 td=4n",
+            ))
         term_sources = "\n".join(
             f"VTERM{index} TERM_EN{index}_N_SRC 0 "
             + ("0" if index < args.term_code else f"{args.vdd:.2f}")
@@ -897,6 +914,11 @@ COQB ODD_QB 0 50f
             "expected_scalar_count": expected_scalars,
             "result": "pass" if passed else "fail",
         }
+        if routed_rx_pi_capture:
+            result.update({
+                "pi_clock_rise_s": observed.get("pi_clk_rise"),
+                "pi_clock_fall_s": observed.get("pi_clk_fall"),
+            })
         if args.restorer_mode != "none":
             result.update({
             "minimum_restored_even_v": minima["rest_even"],
@@ -952,6 +974,8 @@ COQB ODD_QB 0 50f
                                             if routed_rx_pi_capture else None),
                      "clock_restorer_bias_v": (args.clock_restorer_bias
                                                  if routed_rx_pi_capture else None),
+                     "pi_input_phase_deg": (args.pi_input_phase_deg
+                                              if routed_rx_pi_capture else None),
                      "pi_input_polarity_inverted": (args.pi_invert
                                                        if routed_rx_pi_capture else None),
                      "tx_load_code": args.tx_load_code,

@@ -610,6 +610,18 @@ otherwise correct transitions; 750 ps passes all five environments and leaves
 50 ps before the next 800 ps same-interleave event. That 50 ps is now an open
 consumer/setup budget, not hidden margin.
 
+Also distinguish transparent output from retained output. In the PI-clocked
+RX parent, a 750 ps observation occurred 200 ps after capture opened but 180 ps
+before its 380 ps write pulse closed. It produced a plausible weak-polarity
+failure and encouraged an unnecessary output-restorer experiment. Observing at
+1050 ps instead gives 120 ps of post-write regeneration and still precedes the
+next same-lane opening by 300 ps; two adjacent nominal timing codes then pass.
+The same corrected observation exposes a real FF/cold failure: sampler and
+converter margins remain large while held capture collapses to millivolts.
+Always record open, close, observation, and next-open times, and require both a
+transparent/write contract and a separate retained-state contract when the
+consumer needs stored data.
+
 Top-level labels on a distributed clock or bias net also define where the
 testbench source enters its extracted resistance. Place the parent port at the
 intended distribution root and compare branch impedance to every load. Moving
@@ -852,6 +864,14 @@ diagnostic stimulus for calibration, but re-run the full pattern and PVT matrix
 before promotion. Stop extending pulse timing when margin peaks; a persistently
 weaker interleave then requires circuit/layout rebalancing rather than a looser
 deadline.
+
+For programmable clocking, record measured extracted edge times as well as the
+requested phase code. A PI-weight or quadrant sweep that changes measured clock
+edges but leaves one dynamic sampler interleave stuck has ruled out a missing
+phase command; it has not proved data-path correctness. Replay changing data,
+both polarities, both interleaves, and repeated overwrites. A constant-data
+nonlinear-load test is still valuable because it separates clock amplitude and
+device speed from data/clock alignment, but it cannot close dynamic capture.
 
 For an oscillator, compose the loop from repeated extracted delay tiles rather
 than adding a lumped estimate of one tile's parasitics. Sweep only realizable

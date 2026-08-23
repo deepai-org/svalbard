@@ -1,5 +1,6 @@
 {
   "case_count": 4,
+  "case_id": "tt",
   "cases": [
     {
       "complete": true,
@@ -83,10 +84,16 @@
     }
   ],
   "claim": "extracted_pi_limiter_nonlinear_dual_sampler_clock_drive",
+  "environment": [
+    "typical",
+    "res_typical",
+    3.3,
+    27.0
+  ],
   "passing_case_count": 4,
   "pex_sha256": {
     "clock_restorer_cascade": "8069138f6e0520487958cd221a70d50c64b434bf301939ebf956587cfd7c5639",
-    "phase_interpolator": "ff1e1b1befa021c67f726872b92e92e696bd32d301aad66e37d128187cb688c4",
+    "phase_interpolator": "83d1517d11978f08416e70c06134546b7ca7992d235c74d2d82b397ca228da9a",
     "sampler": "398f5045ea193560a45da2890f11db916505fec3ee9a230004c4499674488879"
   },
   "result": "pass",
@@ -112,7 +119,13 @@
     "result": "pass"
   },
   "source_sha256": {
-    "runner": "1464d8cf695c1d23a4bad732c3e7ae499b6e5c221424d47fae95cf53159ea1bd",
+    "runner": "9fbf5b68ce64a2541f3fdde4340f5966278a602a91b00ce1df3427fcb17b961d",
     "testbench": "98c39d2cd1929e8b2f03198d00835e135ece280dfc222ed0c7ccc87f80db4b3d"
+  },
+  "stimulus": {
+    "data_n_v": 1.55,
+    "data_p_v": 1.75,
+    "input_common_mode_v": 1.65,
+    "sampler_bias_v": 1.1
   }
 }

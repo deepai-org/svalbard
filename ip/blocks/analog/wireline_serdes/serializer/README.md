@@ -46,6 +46,16 @@ matrices include seven update offsets with at least 60 ps setup and hold.
 
 ![Integrated half-rate serializer/transmitter layout](layout_integrated_tx.png)
 
+The combined-stress 2.5 GT/s path uses a separately named physical variant.
+`serializer_tx_2p5` shortens the tail devices to 0.28 um and makes load code 4
+a nonlinear maximum-drive code with eight trim branches per side; codes 0--3
+retain the original weighting. The symmetric generated layout is zero-DRC,
+uniquely LVS-matched, and extracts to 1,506 resistors and 945 capacitors. Under
+the limiting `ss/res_ss`, 2.97 V, 125 C channel-stress case it retains
+103.180/145.250 mV pin margin at 43.106 mA composed current.
+
+![Rate-specialized 2.5 GT/s serializer/transmitter layout](layout_integrated_tx_2p5.png)
+
 Run `./run_schematic.sh` for the bounded schematic/load sweep and
 `./run_physical.sh` for layout generation, DRC, LVS, PEX, and both extracted
 rate matrices of the standalone test structure.  Run `./run_integrated_tx.sh`
@@ -53,3 +63,5 @@ for the selected topology's bounded schematic aperture matrix and
 `./run_integrated_tx_physical.sh` for layout, DRC, LVS, PEX and both exact-PEX
 changing-word matrices.  Clock jitter and duty distortion, mismatch, a
 realizable bias DAC, pad/ESD/package loading and full-lane PRBS remain open.
+Run `./run_integrated_tx_2p5_physical.sh` for the rate-specialized geometry,
+DRC, LVS, PEX, and render used by the calibrated composed-lane flow.

@@ -38,6 +38,14 @@ changes alter device count, connectivity, terminal order, or control semantics,
 they are circuit revisions and must re-enter schematic verification rather than
 being hidden as physical optimization.
 
+SPICE and layout have different jobs in this loop. The intended schematic is
+the source circuit for topology and pre-layout simulation; it is not generated
+from the drawing. The layout generator realizes that circuit as legal geometry,
+and extraction then generates a parasitic-rich SPICE view from the geometry.
+Schematic SPICE can reject a bad circuit before layout, while post-layout SPICE
+can reject a bad physical realization. Neither result substitutes for the
+other, and extraction does not repair an electrically wrong schematic.
+
 Add a model-provenance contract beside the electrical one. Record which PDK
 models, extraction deck, simulator, pad/package/channel models, and variation
 dimensions support each claim. Public corner models can demonstrate that an
@@ -426,6 +434,18 @@ by the simulator. The physical checker and electrical checker must agree on the
 PEX hash. Copying or regenerating a similarly named extraction between those
 steps creates an unreviewable identity gap even when both checks pass.
 
+Require that identity for every extracted leaf in a composed simulation. Small
+converters, restorers, bias cells, and clock helpers are not incidental plumbing:
+each needs a passing physical record whose PEX hash matches the bytes actually
+included by the parent test. Leaf DRC/LVS evidence without this hash join proves
+that some legal layout existed, not that the simulated composition used it.
+
+When a calibrated geometry would invalidate existing evidence, version the
+physical macro instead of silently replacing it. Keep the old schematic, PEX,
+physical record, and scoped claim immutable; give the revised circuit and PEX
+subcircuit a new cell name. This makes regressions and improvements comparable
+and prevents a new source hash from retroactively breaking an earlier release.
+
 Preserve the exact extracted deck used by a composition run. Some extraction
 tools embed timestamps or other nondeterministic metadata, so regenerating
 unchanged geometry can change the byte hash. Do not weaken equality checks or
@@ -507,9 +527,21 @@ Clock placement and repetition rate scale with the architecture, but a static
 CMOS write cell still needs its extracted transistor-level write duration. In
 the 2.5 GT/s capture composition, halving a previously qualified 380 ps write
 pulse left one retained lane wrong even though both converter outputs were
-strong. Restoring the physical write duration inside the 800 ps half-rate
-period closed nominal capture. Keep pulse width, setup, hold, recurrence, and
-observation time as separate contracts.
+strong. Keeping the physical write duration, and exposing sense width and
+capture delay independently, allowed the slow-device cases to settle within
+the 800 ps half-rate period. Keep acquisition width, delay, write width, setup,
+hold, recurrence, and observation time as separate contracts; prove that their
+actual pulses do not overlap the next half-rate cycle.
+
+Measure every interleaved output relative to the event that owns that lane. In
+the dual-edge receiver, scoring both outputs from the ODD event sampled the EVEN
+lane after its next capture had already started and produced a false failure.
+Event-relative measurements, not a shared convenient timestamp, are part of the
+executable timing specification. After this correction and physical timing
+calibration, the exact-PEX capture stack passed the five representative
+environments under the declared combined channel, jitter, duty-cycle, and rail-
+ripple stress; the numeric evidence belongs in the living status/results rather
+than being frozen into this workflow.
 
 If that boundary fails, first classify whether the producer collapses, the
 consumer lacks regeneration, or the composed function locks incorrectly. Use
@@ -668,6 +700,65 @@ After extracted PVT closure, add tests according to the block's physical risks:
 - bounded device/passive variation or mismatch only when the model is valid;
 - pad, ESD, bond, package, board, and channel models when selected.
 
+### Simulation escalation ladder
+
+Full-RC extracted SPICE is the central cell- and composition-level tool, not a
+universal physics proof. Escalate only the structures and mechanisms for which
+its lumped compact-model assumptions are weak:
+
+1. **Compact-model SPICE:** DC, transient, AC, corners, startup, calibration,
+   loading, and exact-RC post-layout composition. This remains the regression
+   foundation because it can exercise the complete transistor circuit.
+2. **Statistical circuit simulation:** global process plus local mismatch for
+   offset, gain, trim coverage, oscillator startup/frequency, and yield. Use
+   only provider-qualified statistical models and preserve sample count,
+   estimator uncertainty, and random seeds. Fixed `FF/SS` corners do not prove
+   matching yield; [GF's fixed-corner model guide](https://gf180mcu-pdk.readthedocs.io/en/latest/analog/model_parameters/HV/HV_2_4.html)
+   notes that those corners primarily bound static logic delay and cannot cover
+   every analog sensitivity. Its separate
+   [statistical-model guide](https://gf180mcu-pdk.readthedocs.io/en/latest/analog/model_parameters/LV/LV_9_1.html)
+   describes global manufacturing variation.
+3. **Noise and timing-tail analysis:** device noise for receiver input-referred
+   noise and slicer error, and periodic steady-state/phase-noise or sufficiently
+   long transient-noise analysis for PLL/CDR jitter. Deterministic jitter and
+   ripple injection are useful sensitivity tests, but they do not establish a
+   random-jitter distribution or BER tail by themselves.
+4. **2.5-D/3-D electromagnetic extraction:** solve pads, ESD structures,
+   package/bond wires, long top-metal differential routes, inductors, and other
+   electrically large or strongly coupled structures as frequency-dependent
+   S-parameters or broadband equivalent circuits. Compose the passive model
+   with the nonlinear transistor PEX in circuit simulation. For PCIe Gen1 the
+   1.25-GHz Nyquist frequency is not the EM cutoff: edge harmonics, return-path
+   discontinuities, mutual inductance, and resonances extend the required model
+   bandwidth well above Nyquist.
+5. **Power, substrate, and electrothermal analysis:** extracted transient PDN
+   impedance and EM/IR for shared rails; substrate-network or field-solver
+   coupling from the large-signal TX/clock blocks into the RX; and thermal maps
+   fed back into temperature-dependent circuit models when self-heating or
+   gradients are material. A uniform hot SPICE corner cannot represent a local
+   TX-to-RX temperature gradient.
+6. **Reliability and protection verification:** foundry current-density limits,
+   via/contact current, voltage overstress, aging where qualified models exist,
+   latch-up, antenna, density/fill, and ESD clamp/pad simulations plus the
+   provider's structural checks. Re-extract after final fill. Functional SPICE
+   success does not prove lifetime or protection robustness. Apply the actual
+   temperature-dependent line and via limits from the
+   [GF180 electromigration rules](https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_2.html),
+   not a generic current-density heuristic.
+7. **Device/structure TCAD:** reserve drift-diffusion or higher-order device
+   simulation for genuinely custom devices and poorly compact-modeled physics,
+   such as a novel high-voltage/ESD structure, avalanche behavior, or unusual
+   isolation. It is normally the wrong way to re-prove ordinary foundry MOSFETs:
+   calibrated foundry compact models are faster and more relevant to circuit
+   corners. TCAD without confidential process profiles can look more physical
+   while being less accurate.
+
+Close the loop with package/board measurements and silicon characterization.
+No amount of pre-silicon model depth establishes model error outside the data
+used to build the models. Treat simulation levels as complementary claims and
+record which one supports each top-level guarantee; do not replace a missing
+statistical, EM, or reliability result with a larger transient-SPICE margin.
+
 For an oscillator, compose the loop from repeated extracted delay tiles rather
 than adding a lumped estimate of one tile's parasitics. Sweep only realizable
 control values and require contiguous electrically valid codes, correct local
@@ -772,8 +863,11 @@ data. The extracted 7.5-um-load clock restorer produced large rails but retained
 wrong-bit history on PRBS runs. A dedicated shorter-load cell had to be laid
 out and extracted. Factor amplitude, polarity, settling, and aperture separately:
 first verify port polarity, then sweep physical load, bias, and sampling phase,
-and finally rerun the complete downstream chain. Preserve failed reuse screens;
-they distinguish insufficient gain from data-dependent settling.
+and finally rerun the complete downstream chain. The first 3.6-um data restorer
+closed the earlier boundary, while the combined slow/hot capture stack selected
+a separately versioned 4.2-um physical variant for more restored margin. Preserve
+both qualified variants and the failed reuse screens; they distinguish
+insufficient gain from data-dependent settling and keep old evidence reproducible.
 
 When process and passive corners push gain and bandwidth in opposite directions,
 one global analog code may be the wrong contract. Require a contiguous passing

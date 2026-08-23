@@ -1,0 +1,47 @@
+* SPDX-License-Identifier: Apache-2.0
+* Rate-specialized half-rate serializer/TX with a minimum-length tail device.
+.subckt serializer_tx_2p5 EVEN_P EVEN_N ODD_P ODD_N CLK_P CLK_N VBIAS
++ LOAD_EN0_N LOAD_EN1_N LOAD_EN2_N LOAD_EN3_N VDD VSS OUTP OUTN
+XBASE_P VDD OUTP VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_P0 OUTP P0 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_P1 OUTP P1 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_P2 OUTP P2 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_P3 OUTP P3 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_P4 OUTP P4 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_P5 OUTP P5 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_P6 OUTP P6 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_P7 OUTP P7 VSS ppolyf_u r_width=1u r_length=0.8u
+XSW_P0 P0 LOAD_EN0_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
+XSW_P1 P1 LOAD_EN1_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
+XSW_P2 P2 LOAD_EN2_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
+XSW_P3 P3 LOAD_EN3_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
+XSW_P4 P4 LOAD_EN3_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
+XSW_P5 P5 LOAD_EN3_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
+XSW_P6 P6 LOAD_EN3_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
+XSW_P7 P7 LOAD_EN3_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
+XBASE_N VDD OUTN VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_N0 OUTN N0 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_N1 OUTN N1 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_N2 OUTN N2 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_N3 OUTN N3 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_N4 OUTN N4 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_N5 OUTN N5 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_N6 OUTN N6 VSS ppolyf_u r_width=1u r_length=0.8u
+XTRIM_N7 OUTN N7 VSS ppolyf_u r_width=1u r_length=0.8u
+XSW_N0 N0 LOAD_EN0_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
+XSW_N1 N1 LOAD_EN1_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
+XSW_N2 N2 LOAD_EN2_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
+XSW_N3 N3 LOAD_EN3_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
+XSW_N4 N4 LOAD_EN3_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
+XSW_N5 N5 LOAD_EN3_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
+XSW_N6 N6 LOAD_EN3_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
+XSW_N7 N7 LOAD_EN3_N VDD VDD pfet_03v3 w=20u l=0.28u m=5
+
+XEVEN_P OUTP EVEN_P EVEN_SRC VSS nfet_03v3 w=20u l=0.28u m=5
+XEVEN_N OUTN EVEN_N EVEN_SRC VSS nfet_03v3 w=20u l=0.28u m=5
+XODD_P OUTP ODD_P ODD_SRC VSS nfet_03v3 w=20u l=0.28u m=5
+XODD_N OUTN ODD_N ODD_SRC VSS nfet_03v3 w=20u l=0.28u m=5
+XSELECT_E EVEN_SRC CLK_P TAIL VSS nfet_03v3 w=20u l=0.28u m=5
+XSELECT_O ODD_SRC CLK_N TAIL VSS nfet_03v3 w=20u l=0.28u m=5
+XTAIL TAIL VBIAS VSS VSS nfet_03v3 w=20u l=0.28u m=14
+.ends serializer_tx_2p5

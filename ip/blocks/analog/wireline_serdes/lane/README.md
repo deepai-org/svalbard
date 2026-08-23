@@ -167,4 +167,20 @@ then closes both fast corners under the same combined stress. FF/hot reaches
 50--100 ps raw-RX contract window, reaching 3.093 V worst final margin at
 57.07 mA. `run_capture_2p5_fast_cal.sh` is fail-closed and preserves the exact
 capture and converter PEX used by both cases. The two slow/hot TX/channel
-failures remain open and are not hidden by this narrower 2/2 result.
+failures remain preserved in that narrower historical 2/2 result.
+
+`run_capture_2p5_calibrated.sh` closes the complete representative matrix with
+one regenerated, hash-bound physical stack. It uses the rate-specialized
+minimum-length-tail TX, nonlinear load code 4 in the two slow environments,
+the separately versioned 4.2 um-load data restorer, and absolute 550 ps sense /
+400 ps capture-delay controls where slow-device settling requires them. The
+verifier samples EVEN and ODD capture outputs relative to their own half-rate
+events; sampling both at the ODD event had incorrectly scored the EVEN output
+after its next cycle began.
+
+All 5/5 environments pass 24-bit PRBS7 under simultaneous 6 ohm/leg plus 1 pF
+channel stress, 30 ps peak TX jitter, 47% duty cycle, and 20 mV peak 100 MHz
+rail ripple. Worst pin, restored-input, converter, final-capture, and current
+measurements are 103.180 mV, 237.084 mV, 1.20878 V, 958.544 mV, and 59.104 mA.
+The committed evidence binds zero-DRC, unique-LVS, exact full-RC records for
+the TX, termination/RX/sampler, restorer, converter, and capture cells.

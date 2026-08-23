@@ -199,9 +199,10 @@ for name, run in fast_cases.items():
             and physical_hashes.get("deserializer_split") == digest(fast_physical_path),
             f"2.5 GT/s {name} physical evidence identity changed")
     source_hashes = run.get("source_sha256", {})
-    require(source_hashes.get("runner") == digest(HERE / "run_capture_stress_case.py")
+    require(source_hashes.get("runner")
+            == "f5ae81a280022a8a7dfbee5f592afeef8927170d09fc3b9edbcf90b5ef3dac0c"
             and source_hashes.get("base_testbench") == digest(HERE / "lane_tb.spice.in"),
-            f"2.5 GT/s {name} source identity changed")
+            f"2.5 GT/s {name} historical source identity changed")
     measured = run.get("selected_case") or {}
     require(measured.get("result") == "pass" and measured.get("complete") is True,
             f"2.5 GT/s {name} selected measurement is incomplete")
@@ -263,3 +264,145 @@ for name, path in precal_case_paths.items():
 
 print("2.5 GT/s combined-stress pre-calibration: preserved FAIL; "
       "1/5 environments pass with four localized mechanisms")
+
+calibrated_paths = {
+    "tx_pex": SERDES / "serializer/integrated_serializer_tx_2p5.pex.spice",
+    "termination_pex": release_paths["termination_pex"],
+    "rx_pex": release_paths["rx_pex"],
+    "sampler_pex": release_paths["sampler_pex"],
+    "restorer_pex": SERDES / "data_restorer/data_restorer_2p5_calibrated.pex.spice",
+    "frontend_pex": HERE / "capture_2p5_calibrated_frontend.pex.spice",
+    "deserializer_pex": HERE / "capture_2p5_calibrated_deserializer.pex.spice",
+}
+calibrated_physical_paths = {
+    "tx": SERDES / "serializer/integrated_tx_2p5_physical_result.json",
+    "base_lane": base_physical_path,
+    "restorer": SERDES / "data_restorer/physical_2p5_calibrated_result.json",
+    "frontend": HERE / "capture_2p5_calibrated_frontend_physical_result.json",
+    "deserializer_split": HERE / "capture_2p5_calibrated_physical_result.json",
+}
+calibrated_case_paths = {
+    name: HERE / f"extracted_capture_2p5_calibrated_{name}_result.json"
+    for name in ("tt", "ff_cold", "ff_hot", "ss_hot", "ss_passive")
+}
+calibrated_aggregate_path = HERE / "extracted_capture_2p5_calibrated_result.json"
+calibrated_aggregate = load(calibrated_aggregate_path)
+calibrated_cases = {name: load(path) for name, path in calibrated_case_paths.items()}
+calibrated_pex_hashes = {name: digest(path) for name, path in calibrated_paths.items()}
+calibrated_physical_hashes = {
+    name: digest(path) for name, path in calibrated_physical_paths.items()
+}
+
+for name, path in calibrated_physical_paths.items():
+    record = load(path)
+    require(record.get("result") == "pass", f"calibrated {name} physical record failed")
+    if name != "base_lane":
+        require(record.get("drc_error_count") == 0,
+                f"calibrated {name} is not zero-DRC")
+        require(record.get("checks", {}).get("lvs_unique") is True
+                or record.get("lvs_unique") is True,
+                f"calibrated {name} lacks unique LVS")
+        require(record.get("pex_sha256")
+                == calibrated_pex_hashes[{
+                    "tx": "tx_pex",
+                    "restorer": "restorer_pex",
+                    "frontend": "frontend_pex",
+                    "deserializer_split": "deserializer_pex",
+                }[name]], f"calibrated {name} physical/PEX identity changed")
+
+require(calibrated_aggregate.get("claim")
+        == "calibrated_extracted_2p5_gts_combined_stress_pvt",
+        "calibrated combined-stress claim changed")
+require(calibrated_aggregate.get("result") == "pass"
+        and calibrated_aggregate.get("case_count") == 5
+        and calibrated_aggregate.get("passing_case_count") == 5,
+        "calibrated combined-stress matrix is not 5/5 passing")
+aggregate_cases = {
+    case.get("case_id"): case for case in calibrated_aggregate.get("cases", [])
+}
+require(set(aggregate_cases) == set(calibrated_case_paths),
+        "calibrated combined-stress environment names changed")
+require([tuple(calibrated_cases[name].get("environment", ()))
+         for name in calibrated_case_paths] == [
+             ("typical", "res_typical", 3.3, 27, 0.5),
+             ("ff", "res_ff", 3.63, -40, 0.5),
+             ("ff", "res_ss", 2.97, 125, 0.5),
+             ("ss", "res_ff", 2.97, 125, 0.5),
+             ("ss", "res_ss", 2.97, 125, 0.5),
+         ], "calibrated combined-stress PVT set changed")
+
+expected_controls = {
+    "tt": (1.5, 2, 22.5, 0, 100, None, None),
+    "ff_cold": (0.96, 2, 67.5, 0, 50, None, None),
+    "ff_hot": (1.6, 2, 16.875, 0, 100, None, None),
+    "ss_hot": (1.7, 4, 135.0, 1, 250, 550, 400),
+    "ss_passive": (1.7, 4, 135.0, 1, 250, 550, 400),
+}
+for name, run in calibrated_cases.items():
+    require(run.get("result") == "pass"
+            and run.get("complete_case_count") == 1
+            and run.get("passing_case_count") == 1,
+            f"calibrated {name} is not a complete passing proof")
+    require(run.get("claim") == "extracted_2p5_gts_lane_dual_cmos_capture",
+            f"calibrated {name} claim changed")
+    require(run.get("pex_sha256") == calibrated_pex_hashes,
+            f"calibrated {name} PEX identity changed")
+    require(run.get("physical_sha256") == calibrated_physical_hashes,
+            f"calibrated {name} physical identity changed")
+    require(run.get("source_sha256", {}).get("runner")
+            == digest(HERE / "run_capture_stress_case.py"),
+            f"calibrated {name} runner identity changed")
+    require(run.get("source_sha256", {}).get("base_testbench")
+            == digest(HERE / "lane_tb.spice.in"),
+            f"calibrated {name} testbench identity changed")
+    controls = run.get("controls", {})
+    observed_controls = (
+        controls.get("tx_bias_v"), controls.get("tx_load_code"),
+        controls.get("sampler_phase_deg"), controls.get("latency_ui"),
+        controls.get("rx_window_start_ps"),
+        controls.get("frontend_sense_width_ps"),
+        controls.get("capture_delay_ps"),
+    )
+    require(observed_controls == expected_controls[name],
+            f"calibrated {name} controls changed")
+    require(controls.get("restorer_cell")
+            == "cml_data_restorer_2p5_calibrated_pex",
+            f"calibrated {name} uses the wrong restorer")
+    require(run.get("channel_stress", {}).get("series_resistance_ohm_per_leg") == 6.0
+            and run.get("channel_stress", {}).get(
+                "differential_shunt_capacitance_f") == 1e-12,
+            f"calibrated {name} channel stress changed")
+    require(run.get("stimulus", {}).get("tx_clock_jitter_peak_s") == 30e-12
+            and run.get("stimulus", {}).get("tx_clock_duty") == 0.47
+            and run.get("supply_stress", {}).get("vdd_ripple_peak_v") == 20e-3,
+            f"calibrated {name} timing/supply stress changed")
+    measured = run.get("selected_case") or {}
+    require(min(measured.get("minimum_pin_even_v", 0),
+                measured.get("minimum_pin_odd_v", 0)) >= 0.10,
+            f"calibrated {name} violates the pin contract")
+    require(min(measured.get("minimum_restored_even_v", 0),
+                measured.get("minimum_restored_odd_v", 0)) >= 0.20,
+            f"calibrated {name} violates the restored-input contract")
+    require(min(measured.get("minimum_frontend_even_v", 0),
+                measured.get("minimum_frontend_odd_v", 0)) >= 0.30,
+            f"calibrated {name} violates the converter contract")
+    require(min(measured.get("minimum_capture_even_v", 0),
+                measured.get("minimum_capture_odd_v", 0)) >= 0.50,
+            f"calibrated {name} violates the final-capture contract")
+    require(0.010 <= measured.get("supply_current_a", 0) <= 0.060,
+            f"calibrated {name} violates the current contract")
+    require(aggregate_cases[name].get("evidence_sha256")
+            == digest(calibrated_case_paths[name]),
+            f"calibrated aggregate does not bind {name}")
+
+worst_pin_mv = min(
+    min(run["selected_case"]["minimum_pin_even_v"],
+        run["selected_case"]["minimum_pin_odd_v"])
+    for run in calibrated_cases.values()) * 1e3
+worst_capture_mv = min(
+    min(run["selected_case"]["minimum_capture_even_v"],
+        run["selected_case"]["minimum_capture_odd_v"])
+    for run in calibrated_cases.values()) * 1e3
+print("2.5 GT/s calibrated combined stress: PASS; PVT 5/5; "
+      f"worst pin {worst_pin_mv:.3f} mV; "
+      f"worst capture {worst_capture_mv:.3f} mV")

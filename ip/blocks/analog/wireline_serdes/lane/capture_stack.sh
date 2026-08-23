@@ -82,6 +82,50 @@ prepare_data_restorer_2p5() {
     --output /work/data-restorer-2p5-physical.json
 }
 
+prepare_data_restorer_2p5_calibrated() {
+  DATA_RESTORER_STAGE_CELL=cml_data_restorer_2p5_calibrated_stage \
+    DATA_RESTORER_LOAD_LENGTH=4.2 \
+    magic -dnull -noconsole -rcfile "$PDKPATH/libs.tech/magic/$PDK.magicrc" \
+    /src/data_restorer/stage_layout.tcl \
+    > /work/data-restorer-2p5-calibrated-stage.layout.log 2>&1
+  DATA_RESTORER_CELL=cml_data_restorer_2p5_calibrated \
+    DATA_RESTORER_STAGE_CELL=cml_data_restorer_2p5_calibrated_stage \
+    magic -dnull -noconsole -rcfile "$PDKPATH/libs.tech/magic/$PDK.magicrc" \
+    /src/data_restorer/layout.tcl \
+    > /work/data-restorer-2p5-calibrated.layout.log 2>&1
+  sak-drc.sh -m -w /work/cml_data_restorer_2p5_calibrated-drc \
+    /work/cml_data_restorer_2p5_calibrated.mag \
+    > /work/data-restorer-2p5-calibrated.drc.log 2>&1
+  sak-lvs.sh -m -w /work/cml_data_restorer_2p5_calibrated-lvs \
+    -s /src/data_restorer/data_restorer_2p5_calibrated.spice \
+    -l /work/cml_data_restorer_2p5_calibrated.mag \
+    -c cml_data_restorer_2p5_calibrated \
+    > /work/data-restorer-2p5-calibrated.lvs.log 2>&1
+  sak-pex.sh -m 3 -t 0 -r 1 -y 0 -n cml_data_restorer_2p5_calibrated_pex \
+    -w /work/cml_data_restorer_2p5_calibrated-pex \
+    /work/cml_data_restorer_2p5_calibrated.mag \
+    > /work/data-restorer-2p5-calibrated.pex.log 2>&1
+  canonicalize_capture_pex \
+    /work/cml_data_restorer_2p5_calibrated-pex/cml_data_restorer_2p5_calibrated.pex.spice
+
+  export VCO_BAND_CELL_NAME=cml_data_restorer_2p5_calibrated
+  export VCO_BAND_RENDER_PATH=/work/data-restorer-2p5-calibrated-layout.png
+  python3 /src/pll/render_vco_band.py \
+    > /work/data-restorer-2p5-calibrated-render.log 2>&1
+  python3 /src/pll/check_clock_restorer_physical.py \
+    --source /src/data_restorer \
+    --drc /work/cml_data_restorer_2p5_calibrated-drc/cml_data_restorer_2p5_calibrated.magic.drc/cml_data_restorer_2p5_calibrated.magic.drc.rpt \
+    --lvs /work/cml_data_restorer_2p5_calibrated-lvs/cml_data_restorer_2p5_calibrated.magic.lvs/cml_data_restorer_2p5_calibrated.lvs.out \
+    --pex /work/cml_data_restorer_2p5_calibrated-pex/cml_data_restorer_2p5_calibrated.pex.spice \
+    --gds /work/cml_data_restorer_2p5_calibrated.gds \
+    --render /work/data-restorer-2p5-calibrated-layout.png \
+    --claim data_restorer_2p5_calibrated_structural_physical_closure \
+    --layout-source layout.tcl \
+    --schematic-source data_restorer_2p5_calibrated.spice \
+    --minimum-resistors 40 --minimum-capacitors 10 \
+    --output /work/data-restorer-2p5-calibrated-physical.json
+}
+
 prepare_lane_frontend_stack() {
   prepare_lane_base_stack
   prepare_data_restorer_1p25
@@ -100,6 +144,17 @@ prepare_lane_frontend_stack() {
 prepare_capture_stack() {
   prepare_lane_frontend_stack
   extract_capture_cell cdr/cml_to_cmos cml_to_cmos cml_to_cmos.spice cml_to_cmos_pex
+  python3 /src/cdr/cml_to_cmos/render_layout.py \
+    > /work/cml-to-cmos-render.log 2>&1
+  python3 /src/cdr/cml_to_cmos/check_physical.py \
+    --drc /work/cml_to_cmos-drc/cml_to_cmos.magic.drc/cml_to_cmos.magic.drc.rpt \
+    --lvs /work/cml_to_cmos-lvs/cml_to_cmos.magic.lvs/cml_to_cmos.lvs.out \
+    --pex /work/cml_to_cmos-pex/cml_to_cmos.pex.spice \
+    --gds /work/cml_to_cmos.gds \
+    --render /work/cml_to_cmos-layout.png \
+    --layout /src/cdr/cml_to_cmos/layout.tcl \
+    --schematic /src/cdr/cml_to_cmos/cml_to_cmos.spice \
+    --output /work/cml-to-cmos-physical.json
   extract_capture_cell deserializer_split deserializer_split_capture \
     deserializer_split.spice deserializer_split_capture_pex
 
@@ -119,6 +174,7 @@ prepare_capture_stack() {
   capture_args=(
     "${lane_frontend_args[@]}"
     --frontend-pex /work/cml_to_cmos-pex/cml_to_cmos.pex.spice
+    --frontend-physical /work/cml-to-cmos-physical.json
     --deserializer-pex "$split_pex"
     --deserializer-physical /work/capture-physical.json
   )

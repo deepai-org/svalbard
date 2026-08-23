@@ -1,0 +1,130 @@
+{
+  "case_count": 1,
+  "case_id": "ss_hot",
+  "cases": [
+    {
+      "amplifier_common_mode_v": 2.40936,
+      "capture_close_s": 6.205000000000001e-09,
+      "complete": true,
+      "conversion_offset_s": 6e-10,
+      "id": "convert_600p",
+      "minimum_capture_even_v": 2.78911,
+      "minimum_capture_odd_v": 2.80059,
+      "minimum_frontend_even_v": 1.35585,
+      "minimum_frontend_odd_v": 1.30322,
+      "minimum_pin_even_v": 0.12262,
+      "minimum_pin_odd_v": 0.160398,
+      "minimum_restored_even_v": 0.356744,
+      "minimum_restored_odd_v": 0.237084,
+      "minimum_rx_even_v": 0.185798,
+      "minimum_rx_hold_even_v": 0.125277,
+      "minimum_rx_hold_odd_v": 0.190448,
+      "minimum_rx_odd_v": 0.196554,
+      "minimum_tx_even_v": 0.117167,
+      "minimum_tx_odd_v": 0.10699,
+      "restored_common_mode_v": 2.11598,
+      "result": "pass",
+      "rx_common_mode_v": 1.55541,
+      "supply_current_a": 0.04551,
+      "tx_common_mode_v": 2.65574
+    }
+  ],
+  "channel_stress": {
+    "differential_shunt_capacitance_f": 1e-12,
+    "series_resistance_ohm_per_leg": 6.0,
+    "topology": "symmetric_two_section_lumped_rc_proxy"
+  },
+  "claim": "extracted_2p5_gts_lane_dual_cmos_capture",
+  "complete_case_count": 1,
+  "controls": {
+    "capture_delay_ps": 400,
+    "capture_width_ps": 380,
+    "frontend_sense_width_ps": 550,
+    "frontend_tail_boost": false,
+    "latency_ui": 1,
+    "restorer_bias_v": 1.5,
+    "restorer_cell": "cml_data_restorer_2p5_calibrated_pex",
+    "restorer_mode": "data",
+    "rx_bandwidth_mode": "high",
+    "rx_bias_v": 1.5,
+    "rx_window_start_ps": 250,
+    "sampler_bias_v": 1.2,
+    "sampler_phase_deg": 135.0,
+    "termination_code": 3,
+    "tx_bias_v": 1.7,
+    "tx_load_code": 4
+  },
+  "environment": [
+    "ss",
+    "res_ff",
+    2.97,
+    125,
+    0.5
+  ],
+  "fixture_initialization": {
+    "ac_coupling_initial_voltage_v": 1.1,
+    "note": "settled TX-to-RX common-mode difference; not a hardware trim"
+  },
+  "passing_case_count": 1,
+  "pex_sha256": {
+    "deserializer_pex": "e398e9459c21531f4000a11f0b29ed0e184fc49892a5896aaba296c2a236e541",
+    "frontend_pex": "50634576ecb39006767348fa8cd3bd75f331747e9d767107cffed1c2dcae8209",
+    "restorer_pex": "530959948a32d7000ca0c6afc14a5c4eca164f9ff32db28e3875b105b748f794",
+    "rx_pex": "15f248e59fd5969225dea71e25077c33b3843eaab11ae1de5c1122e5bb332ea7",
+    "sampler_pex": "398f5045ea193560a45da2890f11db916505fec3ee9a230004c4499674488879",
+    "termination_pex": "50961746ab364326336a150ab38dc92d6b30c19108374add32b8ac72f84bd23b",
+    "tx_pex": "9717e5af6b7a088810fa325a2bae044d3b58fbbd2e48867799cc80e03ffcb12c"
+  },
+  "physical_sha256": {
+    "base_lane": "ca3c3cbe3c7b4254f3af8b895981d1c599b471e62a12b8437caff50c505424de",
+    "deserializer_split": "3c6296e8345a4f9fc0585459bd969147a14230c3922a8f5ce85db3e89d5215be",
+    "frontend": "4d6012c2fb24be62fea92c424d13ab9061e712d69a63002c4238b3b65877ec22",
+    "restorer": "9ae77de32456a52b33f9a3e91a5209fd42d719c6b70f7b10f2f6b8026d5ff93e",
+    "tx": "670b59af3edc10622b59f61f8eea2d02effcef947b6aef6fa1a871e88675bb9a"
+  },
+  "result": "pass",
+  "schema_version": 1,
+  "selected_case": {
+    "amplifier_common_mode_v": 2.40936,
+    "capture_close_s": 6.205000000000001e-09,
+    "complete": true,
+    "conversion_offset_s": 6e-10,
+    "id": "convert_600p",
+    "minimum_capture_even_v": 2.78911,
+    "minimum_capture_odd_v": 2.80059,
+    "minimum_frontend_even_v": 1.35585,
+    "minimum_frontend_odd_v": 1.30322,
+    "minimum_pin_even_v": 0.12262,
+    "minimum_pin_odd_v": 0.160398,
+    "minimum_restored_even_v": 0.356744,
+    "minimum_restored_odd_v": 0.237084,
+    "minimum_rx_even_v": 0.185798,
+    "minimum_rx_hold_even_v": 0.125277,
+    "minimum_rx_hold_odd_v": 0.190448,
+    "minimum_rx_odd_v": 0.196554,
+    "minimum_tx_even_v": 0.117167,
+    "minimum_tx_odd_v": 0.10699,
+    "restored_common_mode_v": 2.11598,
+    "result": "pass",
+    "rx_common_mode_v": 1.55541,
+    "supply_current_a": 0.04551,
+    "tx_common_mode_v": 2.65574
+  },
+  "source_sha256": {
+    "base_testbench": "fce3e458d266ecb41f1424b9580ba540b37be8df88cb8dab4c2d4ca62e161ac7",
+    "runner": "763fa669412442fda4a1eafba4813e19eafa9b2d412dc4063e4a8ac480744f0a"
+  },
+  "stimulus": {
+    "bit_count": 24,
+    "pattern": "prbs7",
+    "scored_pair_count": 8,
+    "serial_rate_hz": 2500000000.0,
+    "simulation_timeout_s": 900,
+    "tx_clock_duty": 0.47,
+    "tx_clock_jitter_peak_s": 3e-11
+  },
+  "supply_stress": {
+    "vdd_ripple_frequency_hz": 100000000.0,
+    "vdd_ripple_peak_v": 0.02
+  }
+}

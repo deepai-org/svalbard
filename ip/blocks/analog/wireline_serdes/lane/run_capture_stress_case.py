@@ -83,10 +83,12 @@ def main() -> None:
     parser.add_argument("--work", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--tx-pex", required=True, type=Path)
+    parser.add_argument("--tx-physical", type=Path)
     parser.add_argument("--term-pex", required=True, type=Path)
     parser.add_argument("--rx-pex", required=True, type=Path)
     parser.add_argument("--sampler-pex", required=True, type=Path)
     parser.add_argument("--frontend-pex", required=True, type=Path)
+    parser.add_argument("--frontend-physical", type=Path)
     parser.add_argument("--deserializer-pex", required=True, type=Path)
     parser.add_argument("--deserializer-physical", required=True, type=Path)
     parser.add_argument("--base-physical", type=Path)
@@ -102,11 +104,14 @@ def main() -> None:
     parser.add_argument("--offset-ps", type=int, action="append")
     parser.add_argument("--sampler-phase", type=float, default=135.0)
     parser.add_argument("--capture-width-ps", type=int, default=380)
+    parser.add_argument("--capture-delay-ps", type=int)
+    parser.add_argument("--frontend-sense-width-ps", type=int)
     parser.add_argument("--tx-bias", type=float, default=1.1)
     parser.add_argument("--tx-load-code", type=int, choices=range(5), default=2)
     parser.add_argument("--rx-bias", type=float, default=1.1)
     parser.add_argument("--sampler-bias", type=float, default=1.1)
     parser.add_argument("--restorer-bias", type=float, default=1.1)
+    parser.add_argument("--frontend-tail-boost", action="store_true")
     parser.add_argument("--term-code", type=int, default=3)
     parser.add_argument("--mos-corner", default="typical")
     parser.add_argument("--res-corner", default="res_typical")
@@ -156,6 +161,12 @@ def main() -> None:
         parser.error("simulation timeout must be 300--900 seconds")
     if not 100 <= args.capture_width_ps <= 650:
         parser.error("capture pulse width must be 100--650 ps")
+    if (args.capture_delay_ps is not None
+            and not 200 <= args.capture_delay_ps <= 600):
+        parser.error("capture pulse delay must be 200--600 ps")
+    if (args.frontend_sense_width_ps is not None
+            and not 250 <= args.frontend_sense_width_ps <= 700):
+        parser.error("front-end sense pulse width must be 250--700 ps")
     if args.restorer_mode != "none" and not (
             args.restorer_pex and args.restorer_physical):
         parser.error("restorer mode requires its PEX and physical record")
@@ -279,9 +290,9 @@ R_OCAPTUREB O_CAPTUREB_SRC O_CAPTURE_CLKB 1
 R_BOOST BOOST_SRC SENSE_BOOST 1
 
 XFE_E SAMP_E_P SAMP_E_N E_SENSE_CLK E_REGEN_CLK E_REGEN_CLKB E_CAPTURE_CLK E_CAPTURE_CLKB
-+ VDD 0 FE_E_P FE_E_N SENSE_BOOST cml_to_cmos_pex
++ VDD 0 FE_E_P FE_E_N @E_SENSE_BOOST@ cml_to_cmos_pex
 XFE_O SAMP_O_P SAMP_O_N O_SENSE_CLK O_REGEN_CLK O_REGEN_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB
-+ VDD 0 FE_O_P FE_O_N SENSE_BOOST cml_to_cmos_pex
++ VDD 0 FE_O_P FE_O_N @O_SENSE_BOOST@ cml_to_cmos_pex
 CFE_E_P FE_E_P 0 25f
 CFE_E_N FE_E_N 0 25f
 CFE_O_P FE_O_P 0 25f
@@ -315,6 +326,10 @@ COQB ODD_QB 0 50f
     if args.restorer_mode != "none":
         pex_paths["restorer_pex"] = args.restorer_pex
     physical_paths = {"deserializer_split": args.deserializer_physical}
+    if args.tx_physical is not None:
+        physical_paths["tx"] = args.tx_physical
+    if args.frontend_physical is not None:
+        physical_paths["frontend"] = args.frontend_physical
     if args.base_physical is not None:
         physical_paths["base_lane"] = args.base_physical
     if args.restorer_mode != "none":
@@ -324,6 +339,18 @@ COQB ODD_QB 0 50f
     if (deserializer_physical.get("result") != "pass"
             or deserializer_physical.get("pex_sha256") != deserializer_pex_hash):
         raise SystemExit("split-capture physical evidence does not bind exact simulation PEX")
+    if args.tx_physical is not None:
+        tx_physical = json.loads(args.tx_physical.read_text())
+        if (tx_physical.get("result") != "pass"
+                or tx_physical.get("pex_sha256") != spine.sha256(args.tx_pex)):
+            raise SystemExit("TX physical evidence does not bind exact simulation PEX")
+    if args.frontend_physical is not None:
+        frontend_physical = json.loads(args.frontend_physical.read_text())
+        if (frontend_physical.get("result") != "pass"
+                or frontend_physical.get("pex_sha256")
+                != spine.sha256(args.frontend_pex)):
+            raise SystemExit(
+                "front-end physical evidence does not bind exact simulation PEX")
     if args.restorer_mode != "none":
         restorer_physical = json.loads(args.restorer_physical.read_text())
         if (restorer_physical.get("result") != "pass"
@@ -347,7 +374,10 @@ COQB ODD_QB 0 50f
         even_base = (clock_delay + ui + 50e-12 * timing_scale
                      + offset_ps * 1e-12)
         odd_base = even_base + ui
-        capture_close = odd_base + 1.0e-9 * timing_scale
+        capture_delay = ((args.capture_delay_ps * 1e-12)
+                         if args.capture_delay_ps is not None
+                         else 550e-12 * timing_scale)
+        capture_close = odd_base + capture_delay + args.capture_width_ps * 1e-12
         measures = []
         restorer_eye_shift = (((135.0 - args.sampler_phase) % 360.0)
                               / 360.0 * period
@@ -358,8 +388,8 @@ COQB ODD_QB 0 50f
             odd_event = odd_base + pair * period
             even_eye = clock_delay + (2 * pair + 0.5) * ui
             odd_eye = clock_delay + (2 * pair + 1.5) * ui
-            output_time = odd_event + (1.28e-9 * timing_scale
-                                       if args.serial_rate_gbd == 1.25 else 720e-12)
+            output_delay = (1.28e-9 * timing_scale
+                            if args.serial_rate_gbd == 1.25 else 720e-12)
             rx_shift = (args.rx_window_start_ps * 1e-12
                         if args.restorer_mode != "none" else 0.0)
             measures.extend((
@@ -371,8 +401,8 @@ COQB ODD_QB 0 50f
                 f"meas tran rx_odd_{pair} find rx_diff at={odd_eye + rx_shift:.12g}",
                 f"meas tran fe_even_{pair} find fe_even_diff at={even_event + 750e-12 * timing_scale:.12g}",
                 f"meas tran fe_odd_{pair} find fe_odd_diff at={odd_event + 750e-12 * timing_scale:.12g}",
-                f"meas tran q_even_{pair} find q_even_diff at={output_time:.12g}",
-                f"meas tran q_odd_{pair} find q_odd_diff at={output_time:.12g}",
+                f"meas tran q_even_{pair} find q_even_diff at={even_event + output_delay:.12g}",
+                f"meas tran q_odd_{pair} find q_odd_diff at={odd_event + output_delay:.12g}",
             ))
             if args.restorer_mode != "none":
                 measures.extend((
@@ -432,6 +462,10 @@ COQB ODD_QB 0 50f
                                     args.vdd_ripple_hz),
             "RX_BW_EN_N_V": "0" if args.rx_bandwidth_mode == "high"
             else f"{args.vdd:.2f}",
+            "E_SENSE_BOOST": ("E_SENSE_CLK" if args.frontend_tail_boost
+                                else "SENSE_BOOST"),
+            "O_SENSE_BOOST": ("O_SENSE_CLK" if args.frontend_tail_boost
+                                else "SENSE_BOOST"),
             "TX_PAD_CAP": "300f", "RX_PAD_CAP": "500f", "AC_CAP": "100n",
             "AC_INITIAL_V": f"{(args.ac_initial_v if args.ac_initial_v is not None else args.vdd * 0.32):.6f}",
             "PACKAGE_R": "2", "PACKAGE_L": "1n", "BIAS_RETURN_R": "2k",
@@ -441,17 +475,21 @@ COQB ODD_QB 0 50f
             "CLOCK_HZ": f"{rate / 2:.12g}",
             "CLOCK_PHASE": f"{args.sampler_phase:.3f}",
             "CLOCK_N_PHASE": f"{args.sampler_phase + 180:.3f}",
-            "SENSE_WIDTH": f"{575e-12 * timing_scale:.12g}",
-            "REGEN_WIDTH": f"{565e-12 * timing_scale:.12g}",
+            "SENSE_WIDTH": f"{((args.frontend_sense_width_ps * 1e-12)
+                                  if args.frontend_sense_width_ps is not None
+                                  else 575e-12 * timing_scale):.12g}",
+            "REGEN_WIDTH": f"{((args.frontend_sense_width_ps - 10) * 1e-12
+                                  if args.frontend_sense_width_ps is not None
+                                  else 565e-12 * timing_scale):.12g}",
             # The static CMOS write cell needs its characterized pulse width;
             # device delay does not scale with the serial unit interval.
             "CAPTURE_WIDTH": f"{args.capture_width_ps * 1e-12:.12g}",
             "E_SENSE_DELAY": f"{even_base:.12g}",
             "E_REGEN_DELAY": f"{even_base + 10e-12 * timing_scale:.12g}",
-            "E_CAPTURE_DELAY": f"{even_base + 550e-12 * timing_scale:.12g}",
+            "E_CAPTURE_DELAY": f"{even_base + capture_delay:.12g}",
             "O_SENSE_DELAY": f"{odd_base:.12g}",
             "O_REGEN_DELAY": f"{odd_base + 10e-12 * timing_scale:.12g}",
-            "O_CAPTURE_DELAY": f"{odd_base + 550e-12 * timing_scale:.12g}",
+            "O_CAPTURE_DELAY": f"{odd_base + capture_delay:.12g}",
             "MEASURE_LINES": "\n".join(measures),
             "MEASURE_START": f"{odd_base + 2 * period:.12g}",
             "STOP_TIME": f"{stop_time:.12g}",
@@ -563,11 +601,14 @@ COQB ODD_QB 0 50f
         "controls": {"sampler_phase_deg": args.sampler_phase, "tx_bias_v": args.tx_bias,
                      "tx_load_code": args.tx_load_code,
                      "capture_width_ps": args.capture_width_ps,
+                     "capture_delay_ps": args.capture_delay_ps,
+                     "frontend_sense_width_ps": args.frontend_sense_width_ps,
                      "rx_bias_v": args.rx_bias, "sampler_bias_v": args.sampler_bias,
                      "termination_code": args.term_code,
                      "rx_bandwidth_mode": args.rx_bandwidth_mode,
                      "restorer_mode": args.restorer_mode,
                      "restorer_cell": args.restorer_cell,
+                     "frontend_tail_boost": args.frontend_tail_boost,
                      "latency_ui": args.latency_ui,
                      "rx_window_start_ps": args.rx_window_start_ps,
                      "restorer_bias_v": (args.restorer_bias

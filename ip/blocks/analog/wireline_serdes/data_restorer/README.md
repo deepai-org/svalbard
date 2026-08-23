@@ -32,13 +32,21 @@ match, and a full-RC extraction containing 366 resistors and 92 capacitors. The
 checked-in PEX and physical record are byte-bound. `layout.png` is rendered
 from the same generated GDS geometry.
 
-For 2.5 GT/s, `cml_data_restorer_2p5` keeps the same matched 20 um-per-side
-inputs and 48 um tails but shortens each p-poly load from 4.5 to 3.6 um. Exact
-full-RC screens rejected 3.0 um because the slow/fast-resistor case lost gain
-and rejected 3.75 um because the fast/hot case retained data too long. The
-3.6 um physical variant is zero-DRC, uniquely LVS-matched, and extracts to
-366 resistors and 92 capacitors. Its checked-in PEX and `physical_2p5_result.json`
-are byte-bound and used unchanged by nominal and PVT lane simulations.
+For the first 2.5 GT/s lane milestone, `cml_data_restorer_2p5` keeps the same
+matched 20 um-per-side inputs and 48 um tails but shortens each p-poly load
+from 4.5 to 3.6 um. That released physical variant remains immutable because
+the nominal, PVT, and pre-calibration records bind its exact PEX.
+
+The combined-stress capture closure uses the separately named
+`cml_data_restorer_2p5_calibrated` cell and
+`data_restorer_2p5_calibrated.spice`. Its 4.2 um loads recover the `ss/res_ff`
+gain floor without changing the matched topology or the earlier release. The
+generated layout is zero-DRC, uniquely LVS-matched, and extracts to 366
+resistors and 92 capacitors. `layout_2p5_calibrated.png`, the PEX, and
+`physical_2p5_calibrated_result.json` are byte-bound to the five-environment
+combined-stress simulation.
+
+![Generated calibrated 2.5 GT/s data-restorer layout](layout_2p5_calibrated.png)
 
 The exact PEX is qualified in the complete 1.25 GBd lane, not by a standalone
 gain claim. At the limiting slow/passive environment, sampler phases 67.5 and

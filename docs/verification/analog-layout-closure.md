@@ -822,6 +822,37 @@ used to build the models. Treat simulation levels as complementary claims and
 record which one supports each top-level guarantee; do not replace a missing
 statistical, EM, or reliability result with a larger transient-SPICE margin.
 
+### Loaded clock boundaries and positional interfaces
+
+A clock source qualified into one lumped capacitor is not qualified into a
+sampler. Clock-gate MOS capacitance is voltage-dependent, multiple steering
+gates share current and common-mode constraints, and parent wiring adds
+coupling. Compose the extracted clock producer, any limiter/buffer, and every
+real clock-gate consumer before accepting swing, phase, or current. The routed
+PI integration demonstrated this directly: direct drive failed, while the
+same PI followed by a two-stage CML restorer passed four bias points into the
+dual sampler load.
+
+Treat common mode as a first-class boundary measure alongside differential
+swing. A sampler can reproduce the correct bit polarity yet leave both outputs
+too near VDD for the following CML-to-CMOS converter. Compare the failing
+parent against a passing reference at the exact boundary, then tune bias or
+topology to recover both common-mode and differential envelopes.
+
+SPICE subcircuit calls are positional even when LVS reports named ports. A
+layout extractor may emit ports in label-creation order rather than schematic
+declaration order. Require an automated exact port-order comparison between
+the schematic contract and every promoted PEX; LVS connectivity alone does not
+protect a generated testbench from applying supplies or controls to the wrong
+positions.
+
+When an expensive parent transient fails, measure every compositional boundary
+in the same run and report plausible latency/lane mappings. Preserve a short
+diagnostic stimulus for calibration, but re-run the full pattern and PVT matrix
+before promotion. Stop extending pulse timing when margin peaks; a persistently
+weaker interleave then requires circuit/layout rebalancing rather than a looser
+deadline.
+
 For an oscillator, compose the loop from repeated extracted delay tiles rather
 than adding a lumped estimate of one tile's parasitics. Sweep only realizable
 control values and require contiguous electrically valid codes, correct local

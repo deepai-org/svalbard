@@ -37,6 +37,14 @@ a zero-DRC, unique-LVS, 7,900R/4,804C parent containing termination, RX,
 restoration, dual-edge sampling, two CML-to-CMOS converters, and independently
 clocked dual capture. Its exact PEX passes the five-environment 2.5 GT/s
 combined-stress matrix with at least 623.576 mV final output by 750 ps.
+The next [`lane_rx_pi_capture`](lane_rx_pi_capture/README.md) parent physically
+integrates the phase interpolator and a two-stage clock restorer into that
+hierarchy. It is zero-DRC, uniquely LVS-matched, and extracts to 8,625R/5,034C.
+Its focused nonlinear clock-load chain passes, and calibrated sampler and
+converter boundaries work in the complete 2.5 GT/s transient, but the odd
+final capture reaches only about 0.41 V against a 0.50 V contract. It remains a
+physical-progress/falsification milestone pending odd-branch rebalancing and
+full PVT replay.
 
 The repeatable method used to take these cells from an executable electrical
 contract through generated layout and full-RC evidence is documented in the

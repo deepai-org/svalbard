@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+python3 /src/lane/run_capture_stress_case.py \
+  --source /src --work /work/rx-pi-smoke --output /work/rx-pi-smoke.json \
+  --jobs 2 --serial-rate-gbd 2.5 \
+  --tx-pex /src/serializer/integrated_serializer_tx_2p5.pex.spice \
+  --tx-physical /src/serializer/integrated_tx_2p5_physical_result.json \
+  --rx-pi-capture-parent-pex /src/lane_rx_pi_capture/lane_rx_pi_capture.pex.spice \
+  --rx-pi-capture-parent-physical /src/lane_rx_pi_capture/physical_result.json \
+  --pattern prbs7 --bit-count 12 --simulation-timeout-s 600 \
+  --channel-series-ohm-per-leg 6 --channel-shunt-cap-f 1e-12 \
+  --tx-clock-jitter-ps 30 --tx-clock-duty 0.47 \
+  --vdd-ripple-mv 20 --vdd-ripple-hz 100e6 \
+  --restorer-mode data --capture-width-ps 380 --capture-output-delay-ps 750 \
+  --odd-capture-skew-ps -200 --odd-capture-width-ps 500 \
+  --tx-load-code 2 --tx-bias 1.5 --ac-initial-v 0.435 \
+  --rx-bias 1.3 --restorer-bias 1.3 --sampler-bias 1.3 \
+  --sampler-phase 22.5 --latency-ui 0 --rx-window-start-ps 100 \
+  --pi-control-a 1.15 --pi-control-b 1.15 --pi-buffer-bias 1.15 \
+  --clock-restorer-bias 1.15 \
+  --pi-invert \
+  --offset-ps 200 --offset-ps 300 \
+  --allow-fail --case-id tt_pi_smoke
+cp /work/rx-pi-smoke/convert_200p.log /work/rx-pi-smoke-convert-200p.log

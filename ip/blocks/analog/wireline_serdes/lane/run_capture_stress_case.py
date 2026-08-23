@@ -18,6 +18,7 @@ DEFAULT_OFFSETS_PS = (0, 100, 200, 300)
 SCALAR = re.compile(
     r"^(tx_even_\d+|tx_odd_\d+|pin_even_\d+|pin_odd_\d+|"
     r"rx_even_\d+|rx_odd_\d+|rest_even_\d+|rest_odd_\d+|"
+    r"samp_even_\d+|samp_odd_\d+|samp_even_cm_\d+|samp_odd_cm_\d+|"
     r"fe_even_\d+|fe_odd_\d+|q_even_\d+|q_odd_\d+|"
     r"rx_hold_even_\d+|rx_hold_odd_\d+|"
     r"tx_cm_avg|rx_cm_avg|amp_cm_avg|rest_cm_avg|"
@@ -101,6 +102,8 @@ def main() -> None:
     parser.add_argument("--rx-frontend-parent-physical", type=Path)
     parser.add_argument("--rx-capture-parent-pex", type=Path)
     parser.add_argument("--rx-capture-parent-physical", type=Path)
+    parser.add_argument("--rx-pi-capture-parent-pex", type=Path)
+    parser.add_argument("--rx-pi-capture-parent-physical", type=Path)
     parser.add_argument("--frontend-pex", type=Path)
     parser.add_argument("--frontend-physical", type=Path)
     parser.add_argument("--deserializer-pex", type=Path)
@@ -117,7 +120,13 @@ def main() -> None:
     parser.add_argument("--jobs", type=int, default=4)
     parser.add_argument("--offset-ps", type=int, action="append")
     parser.add_argument("--sampler-phase", type=float, default=135.0)
+    parser.add_argument("--pi-control-a", type=float, default=1.15)
+    parser.add_argument("--pi-control-b", type=float, default=1.15)
+    parser.add_argument("--pi-buffer-bias", type=float, default=1.15)
+    parser.add_argument("--clock-restorer-bias", type=float, default=1.15)
+    parser.add_argument("--pi-invert", action="store_true")
     parser.add_argument("--capture-width-ps", type=int, default=380)
+    parser.add_argument("--odd-capture-width-ps", type=int)
     parser.add_argument("--capture-delay-ps", type=int)
     parser.add_argument("--capture-output-delay-ps", type=int)
     parser.add_argument("--even-capture-skew-ps", type=int, default=0)
@@ -156,9 +165,12 @@ def main() -> None:
     routed_rx_spine = args.rx_spine_pex is not None
     routed_rx_frontend = args.rx_frontend_parent_pex is not None
     routed_rx_capture = args.rx_capture_parent_pex is not None
-    routed_front_parent = routed_rx_frontend or routed_rx_capture
+    routed_rx_pi_capture = args.rx_pi_capture_parent_pex is not None
+    routed_capture_parent = routed_rx_capture or routed_rx_pi_capture
+    routed_front_parent = routed_rx_frontend or routed_capture_parent
     routed_rx = routed_rx_spine or routed_front_parent
-    if sum((routed_rx_spine, routed_rx_frontend, routed_rx_capture)) > 1:
+    if sum((routed_rx_spine, routed_rx_frontend, routed_rx_capture,
+            routed_rx_pi_capture)) > 1:
         parser.error("select one routed RX parent")
     if not 1 <= args.jobs <= 4 or not 1 <= args.term_code <= 6:
         parser.error("jobs or termination code outside declared range")
@@ -166,8 +178,8 @@ def main() -> None:
     maximum_offset_ps = 300 if args.serial_rate_gbd == 1.25 else 700
     if any(offset < 0 or offset > maximum_offset_ps for offset in offsets):
         parser.error(f"conversion offset must be 0--{maximum_offset_ps} ps")
-    if not 24 <= args.bit_count <= 128 or args.bit_count % 2:
-        parser.error("bit count must be an even value from 24 through 128")
+    if not 12 <= args.bit_count <= 128 or args.bit_count % 2:
+        parser.error("bit count must be an even value from 12 through 128")
     if args.pattern == "changing24" and args.bit_count != len(spine.BITS):
         parser.error("changing24 has exactly 24 bits")
     if not 0.40 <= args.tx_clock_duty <= 0.60:
@@ -186,6 +198,9 @@ def main() -> None:
         parser.error("simulation timeout must be 300--900 seconds")
     if not 100 <= args.capture_width_ps <= 650:
         parser.error("capture pulse width must be 100--650 ps")
+    if (args.odd_capture_width_ps is not None
+            and not 100 <= args.odd_capture_width_ps <= 650):
+        parser.error("odd capture pulse width must be 100--650 ps")
     if (args.capture_delay_ps is not None
             and not 200 <= args.capture_delay_ps <= 600):
         parser.error("capture pulse delay must be 200--600 ps")
@@ -194,8 +209,8 @@ def main() -> None:
         parser.error("capture output delay must be 600--790 ps")
     if not -150 <= args.even_capture_skew_ps <= 150:
         parser.error("even capture skew must be -150--150 ps")
-    if not -150 <= args.odd_capture_skew_ps <= 150:
-        parser.error("odd capture skew must be -150--150 ps")
+    if not -250 <= args.odd_capture_skew_ps <= 150:
+        parser.error("odd capture skew must be -250--150 ps")
     if (args.frontend_sense_width_ps is not None
             and not 250 <= args.frontend_sense_width_ps <= 700):
         parser.error("front-end sense pulse width must be 250--700 ps")
@@ -211,7 +226,9 @@ def main() -> None:
         parser.error("routed RX front end requires its physical record")
     if routed_rx_capture and not args.rx_capture_parent_physical:
         parser.error("routed RX capture requires its physical record")
-    if not routed_rx_capture and not (
+    if routed_rx_pi_capture and not args.rx_pi_capture_parent_physical:
+        parser.error("routed RX PI capture requires its physical record")
+    if not routed_capture_parent and not (
             args.deserializer_pex and args.deserializer_physical):
         parser.error("leaf capture requires its PEX and physical record")
     if not routed_rx and not (args.rx_pex and args.sampler_pex):
@@ -230,6 +247,11 @@ def main() -> None:
         parser.error("RX hold window must start between 0 and 250 ps")
     if args.ac_initial_v is not None and not 0.0 <= args.ac_initial_v <= 2.5:
         parser.error("AC-coupling initial voltage must be between 0 and 2.5 V")
+    if routed_rx_pi_capture and not all(
+            0.25 <= value <= 1.35 for value in
+            (args.pi_control_a, args.pi_control_b, args.pi_buffer_bias,
+             args.clock_restorer_bias)):
+        parser.error("PI controls must be between 0.25 V and 1.35 V")
     args.work.mkdir(parents=True, exist_ok=True)
 
     rate = args.serial_rate_gbd * 1e9
@@ -286,6 +308,18 @@ def main() -> None:
             "termination instance",
         )
         parent_instance = (
+            "XRXPICAP RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N\n"
+            "+ TERM_EN4_N TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N\n"
+            "+ REST_BIAS SAMP_BIAS E_SENSE_CLK E_REGEN_CLK\n"
+            "+ E_REGEN_CLKB E_CAPTURE_CLK E_CAPTURE_CLKB @E_SENSE_BOOST@\n"
+            "+ O_SENSE_CLK O_REGEN_CLK O_REGEN_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB\n"
+            "+ @O_SENSE_BOOST@ VDD 0 PHASE_A_P PHASE_A_N PHASE_B_P PHASE_B_N\n"
+            "+ PI_CTRL_A PI_CTRL_B PI_BUF_BIAS CLK_REST_BIAS PI_RAW_P PI_RAW_N\n"
+            "+ PI_CLK_P PI_CLK_N\n"
+            "+ RX_RAWP RX_RAWN RXOP RXON\n"
+            "+ SAMP_E_P SAMP_E_N SAMP_O_P SAMP_O_N FE_E_P FE_E_N FE_O_P FE_O_N\n"
+            "+ EVEN_Q EVEN_QB ODD_Q ODD_QB lane_rx_pi_capture_pex\n"
+            if routed_rx_pi_capture else
             "XRXCAP RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N\n"
             "+ TERM_EN4_N TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N\n"
             "+ REST_BIAS SAMP_CLK_P SAMP_CLK_N SAMP_BIAS E_SENSE_CLK\n"
@@ -322,6 +356,34 @@ def main() -> None:
             "CO_P SAMP_O_P 0 25f\nCO_N SAMP_O_N 0 25f",
             "sampler instance",
         )
+        if routed_rx_pi_capture:
+            phase_ap, phase_an, phase_bp, phase_bn = (
+                (180, 0, 90, 270) if args.pi_invert else (0, 180, 270, 90)
+            )
+            template = replace_once(
+                template,
+                "VSCLKP SAMP_CLK_P_SRC 0 SIN(@SAMPLE_CLOCK_CM@ @SAMPLE_CLOCK_PEAK@ @CLOCK_HZ@ 1n 0 @CLOCK_PHASE@)\n"
+                "VSCLKN SAMP_CLK_N_SRC 0 SIN(@SAMPLE_CLOCK_CM@ @SAMPLE_CLOCK_PEAK@ @CLOCK_HZ@ 1n 0 @CLOCK_N_PHASE@)\n"
+                "RCLKP SAMP_CLK_P_SRC SAMP_CLK_P 1\n"
+                "RCLKN SAMP_CLK_N_SRC SAMP_CLK_N 1",
+                f"VPHASEAP PHASE_A_P_SRC 0 SIN(@PI_INPUT_CM@ 0.20 @CLOCK_HZ@ 1n 0 {phase_ap})\n"
+                f"VPHASEAN PHASE_A_N_SRC 0 SIN(@PI_INPUT_CM@ 0.20 @CLOCK_HZ@ 1n 0 {phase_an})\n"
+                f"VPHASEBP PHASE_B_P_SRC 0 SIN(@PI_INPUT_CM@ 0.20 @CLOCK_HZ@ 1n 0 {phase_bp})\n"
+                f"VPHASEBN PHASE_B_N_SRC 0 SIN(@PI_INPUT_CM@ 0.20 @CLOCK_HZ@ 1n 0 {phase_bn})\n"
+                "VPICTRLA PI_CTRL_A_SRC 0 PWL(0 0 500p @PI_CTRL_A_V@)\n"
+                "VPICTRLB PI_CTRL_B_SRC 0 PWL(0 0 500p @PI_CTRL_B_V@)\n"
+                "VPIBUF PI_BUF_BIAS_SRC 0 PWL(0 0 500p @PI_BUF_BIAS_V@)\n"
+                "VCLKREST CLK_REST_BIAS_SRC 0 PWL(0 0 500p @CLK_REST_BIAS_V@)\n"
+                "RPHASEAP PHASE_A_P_SRC PHASE_A_P 1\n"
+                "RPHASEAN PHASE_A_N_SRC PHASE_A_N 1\n"
+                "RPHASEBP PHASE_B_P_SRC PHASE_B_P 1\n"
+                "RPHASEBN PHASE_B_N_SRC PHASE_B_N 1\n"
+                "RPICTRLA PI_CTRL_A_SRC PI_CTRL_A 1\n"
+                "RPICTRLB PI_CTRL_B_SRC PI_CTRL_B 1\n"
+                "RPIBUF PI_BUF_BIAS_SRC PI_BUF_BIAS 1\n"
+                "RCLKREST CLK_REST_BIAS_SRC CLK_REST_BIAS 1",
+                "sampler clock sources",
+            )
     elif routed_rx_spine:
         template = replace_once(
             template,
@@ -395,8 +457,8 @@ VECLKB E_CAPTUREB_SRC 0 PULSE(@VDD_V@ 0 @E_CAPTURE_DELAY@ 20p 20p @CAPTURE_WIDTH
 VOSENSE O_SENSE_SRC 0 PULSE(0 @VDD_V@ @O_SENSE_DELAY@ 20p 20p @SENSE_WIDTH@ @PERIOD@)
 VOREGEN O_REGEN_SRC 0 PULSE(0 @VDD_V@ @O_REGEN_DELAY@ 20p 20p @REGEN_WIDTH@ @PERIOD@)
 VOREGENB O_REGENB_SRC 0 PULSE(@VDD_V@ 0 @O_REGEN_DELAY@ 20p 20p @REGEN_WIDTH@ @PERIOD@)
-VOCLK O_CAPTURE_SRC 0 PULSE(0 @VDD_V@ @O_CAPTURE_DELAY@ 20p 20p @CAPTURE_WIDTH@ @PERIOD@)
-VOCLKB O_CAPTUREB_SRC 0 PULSE(@VDD_V@ 0 @O_CAPTURE_DELAY@ 20p 20p @CAPTURE_WIDTH@ @PERIOD@)
+VOCLK O_CAPTURE_SRC 0 PULSE(0 @VDD_V@ @O_CAPTURE_DELAY@ 20p 20p @O_CAPTURE_WIDTH@ @PERIOD@)
+VOCLKB O_CAPTUREB_SRC 0 PULSE(@VDD_V@ 0 @O_CAPTURE_DELAY@ 20p 20p @O_CAPTURE_WIDTH@ @PERIOD@)
 VBOOST BOOST_SRC 0 0
 R_ESENSE E_SENSE_SRC E_SENSE_CLK 1
 R_EREGEN E_REGEN_SRC E_REGEN_CLK 1
@@ -436,7 +498,7 @@ COQB ODD_QB 0 50f
             "",
             "converter instances",
         )
-    if routed_rx_capture:
+    if routed_capture_parent:
         downstream = replace_once(
             downstream,
             "XCAP FE_E_P FE_E_N FE_O_P FE_O_N\n"
@@ -449,19 +511,23 @@ COQB ODD_QB 0 50f
     template = template.replace(
         "let odd_diff = v(SAMP_O_P)-v(SAMP_O_N)",
         "let odd_diff = v(SAMP_O_P)-v(SAMP_O_N)\n"
+        "let even_cm = (v(SAMP_E_P)+v(SAMP_E_N))/2\n"
+        "let odd_cm = (v(SAMP_O_P)+v(SAMP_O_N))/2\n"
         "let fe_even_diff = v(FE_E_P)-v(FE_E_N)\n"
         "let fe_odd_diff = v(FE_O_P)-v(FE_O_N)\n"
         "let q_even_diff = v(EVEN_Q)-v(EVEN_QB)\n"
         "let q_odd_diff = v(ODD_Q)-v(ODD_QB)",
     )
-    scored_stages = ("tx", "pin", "rx", "rest", "fe", "q") \
-        if args.restorer_mode != "none" else ("tx", "pin", "rx", "fe", "q")
-    expected_scalars = len(pair_indices) * len(scored_stages) * 2 + 4 \
+    scored_stages = ("tx", "pin", "rx", "rest", "samp", "fe", "q") \
+        if args.restorer_mode != "none" else ("tx", "pin", "rx", "samp", "fe", "q")
+    expected_scalars = len(pair_indices) * (len(scored_stages) * 2 + 2) + 4 \
         + (len(pair_indices) * 2 + 1 if args.restorer_mode != "none" else 0)
     pex_paths = {"tx_pex": args.tx_pex}
-    if not routed_rx_capture:
+    if not routed_capture_parent:
         pex_paths["deserializer_pex"] = args.deserializer_pex
-    if routed_rx_capture:
+    if routed_rx_pi_capture:
+        pex_paths["rx_pi_capture_parent_pex"] = args.rx_pi_capture_parent_pex
+    elif routed_rx_capture:
         pex_paths["rx_capture_parent_pex"] = args.rx_capture_parent_pex
     elif routed_rx_frontend:
         pex_paths["rx_frontend_parent_pex"] = args.rx_frontend_parent_pex
@@ -475,7 +541,7 @@ COQB ODD_QB 0 50f
     if args.restorer_mode != "none" and not routed_rx:
         pex_paths["restorer_pex"] = args.restorer_pex
     physical_paths = {}
-    if not routed_rx_capture:
+    if not routed_capture_parent:
         physical_paths["deserializer_split"] = args.deserializer_physical
     if args.tx_physical is not None:
         physical_paths["tx"] = args.tx_physical
@@ -485,6 +551,8 @@ COQB ODD_QB 0 50f
         physical_paths["frontend"] = args.frontend_physical
     if routed_rx_spine:
         physical_paths["rx_spine"] = args.rx_spine_physical
+    elif routed_rx_pi_capture:
+        physical_paths["rx_pi_capture_parent"] = args.rx_pi_capture_parent_physical
     elif routed_rx_capture:
         physical_paths["rx_capture_parent"] = args.rx_capture_parent_physical
     elif routed_rx_frontend:
@@ -493,7 +561,7 @@ COQB ODD_QB 0 50f
         physical_paths["base_lane"] = args.base_physical
     if args.restorer_mode != "none" and not routed_rx:
         physical_paths["restorer"] = args.restorer_physical
-    if not routed_rx_capture:
+    if not routed_capture_parent:
         deserializer_physical = json.loads(args.deserializer_physical.read_text())
         deserializer_pex_hash = spine.sha256(args.deserializer_pex)
         if (deserializer_physical.get("result") != "pass"
@@ -531,6 +599,16 @@ COQB ODD_QB 0 50f
                 != spine.sha256(args.rx_spine_pex)):
             raise SystemExit(
                 "RX-spine physical evidence does not bind exact simulation PEX")
+    elif routed_rx_pi_capture:
+        rx_pi_capture_physical = json.loads(
+            args.rx_pi_capture_parent_physical.read_text())
+        if (rx_pi_capture_physical.get("result") != "pass"
+                or rx_pi_capture_physical.get("drc_error_count") != 0
+                or rx_pi_capture_physical.get("lvs_unique") is not True
+                or rx_pi_capture_physical.get("pex_sha256")
+                != spine.sha256(args.rx_pi_capture_parent_pex)):
+            raise SystemExit(
+                "RX-PI-capture physical evidence does not bind exact simulation PEX")
     elif routed_rx_capture:
         rx_capture_physical = json.loads(
             args.rx_capture_parent_physical.read_text())
@@ -577,7 +655,12 @@ COQB ODD_QB 0 50f
         capture_delay = ((args.capture_delay_ps * 1e-12)
                          if args.capture_delay_ps is not None
                          else 550e-12 * timing_scale)
-        capture_close = odd_base + capture_delay + args.capture_width_ps * 1e-12
+        odd_capture_width_ps = (args.odd_capture_width_ps
+                                if args.odd_capture_width_ps is not None
+                                else args.capture_width_ps)
+        capture_close = (odd_base + capture_delay
+                         + args.odd_capture_skew_ps * 1e-12
+                         + odd_capture_width_ps * 1e-12)
         measures = []
         restorer_eye_shift = (((135.0 - args.sampler_phase) % 360.0)
                               / 360.0 * period
@@ -603,6 +686,10 @@ COQB ODD_QB 0 50f
                 f"meas tran tx_odd_{pair} find tx_diff at={odd_eye:.12g}",
                 f"meas tran pin_odd_{pair} find pin_diff at={odd_eye:.12g}",
                 f"meas tran rx_odd_{pair} find rx_diff at={odd_eye + rx_shift:.12g}",
+                f"meas tran samp_even_{pair} find even_diff at={even_event + 100e-12:.12g}",
+                f"meas tran samp_odd_{pair} find odd_diff at={odd_event + 100e-12:.12g}",
+                f"meas tran samp_even_cm_{pair} find even_cm at={even_event + 100e-12:.12g}",
+                f"meas tran samp_odd_cm_{pair} find odd_cm at={odd_event + 100e-12:.12g}",
                 f"meas tran fe_even_{pair} find fe_even_diff at={even_event + 750e-12 * timing_scale:.12g}",
                 f"meas tran fe_odd_{pair} find fe_odd_diff at={odd_event + 750e-12 * timing_scale:.12g}",
                 f"meas tran q_even_{pair} find q_even_diff at={even_event + output_delay:.12g}",
@@ -629,7 +716,9 @@ COQB ODD_QB 0 50f
             "TX_INCLUDE": f".include {args.tx_pex}",
             "TERM_INCLUDE": ("" if routed_front_parent
                              else f".include {args.term_pex}"),
-            "RX_INCLUDE": (f".include {args.rx_capture_parent_pex}"
+            "RX_INCLUDE": (f".include {args.rx_pi_capture_parent_pex}"
+                           if routed_rx_pi_capture else
+                           f".include {args.rx_capture_parent_pex}"
                            if routed_rx_capture else
                            f".include {args.rx_frontend_parent_pex}"
                            if routed_rx_frontend else
@@ -643,7 +732,7 @@ COQB ODD_QB 0 50f
             "FRONTEND_INCLUDE": ("" if routed_front_parent
                                   else f".include {args.frontend_pex}"),
             "DESERIALIZER_INCLUDE": (
-                "" if routed_rx_capture else f".include {args.deserializer_pex}"),
+                "" if routed_capture_parent else f".include {args.deserializer_pex}"),
             "TX_CELL": "serializer_tx_pex", "TERM_CELL": "serdes_termination_pex",
             "RX_CELL": "serdes_rx_pex", "SAMPLER_CELL": "cdr_sampler_pex",
             "MOS_CORNER": args.mos_corner, "RES_CORNER": args.res_corner,
@@ -686,6 +775,11 @@ COQB ODD_QB 0 50f
             "CHANNEL_HALF_R": f"{max(args.channel_series_ohm_per_leg / 2, 1e-3):.12g}",
             "CHANNEL_HALF_C": f"{max(args.channel_shunt_cap_f / 2, 1e-18):.12g}",
             "SAMPLE_CLOCK_CM": f"{args.vdd * 2 / 3:.6f}", "SAMPLE_CLOCK_PEAK": "0.45",
+            "PI_INPUT_CM": f"{args.vdd * 0.5:.6f}",
+            "PI_CTRL_A_V": f"{args.pi_control_a:.6f}",
+            "PI_CTRL_B_V": f"{args.pi_control_b:.6f}",
+            "PI_BUF_BIAS_V": f"{args.pi_buffer_bias:.6f}",
+            "CLK_REST_BIAS_V": f"{args.clock_restorer_bias:.6f}",
             "CLOCK_HZ": f"{rate / 2:.12g}",
             "CLOCK_PHASE": f"{args.sampler_phase:.3f}",
             "CLOCK_N_PHASE": f"{args.sampler_phase + 180:.3f}",
@@ -698,6 +792,7 @@ COQB ODD_QB 0 50f
             # The static CMOS write cell needs its characterized pulse width;
             # device delay does not scale with the serial unit interval.
             "CAPTURE_WIDTH": f"{args.capture_width_ps * 1e-12:.12g}",
+            "O_CAPTURE_WIDTH": f"{odd_capture_width_ps * 1e-12:.12g}",
             "E_SENSE_DELAY": f"{even_base:.12g}",
             "E_REGEN_DELAY": f"{even_base + 10e-12 * timing_scale:.12g}",
             "E_CAPTURE_DELAY": f"{even_base + capture_delay + args.even_capture_skew_ps * 1e-12:.12g}",
@@ -737,7 +832,7 @@ COQB ODD_QB 0 50f
             for stage in scored_stages:
                 for lane_name in ("even", "odd"):
                     key = f"{stage}_{lane_name}"
-                    signs = (output_signs if stage in ("rest", "fe", "q")
+                    signs = (output_signs if stage in ("samp", "fe", "q")
                              else input_signs)
                     margins[key].append(observed.get(f"{key}_{pair}", 0.0)
                                         * signs[lane_name])
@@ -751,6 +846,10 @@ COQB ODD_QB 0 50f
         hold_minima = {name: min(values_) for name, values_ in hold_margins.items()} \
             if args.restorer_mode != "none" else {}
         complete = return_code == 0 and len(observed) == expected_scalars
+        sampler_common_modes = [
+            observed.get(f"samp_{lane_name}_cm_{pair}", 0.0)
+            for pair in pair_indices for lane_name in ("even", "odd")
+        ]
         current = observed.get("supply_current", 0.0)
         # Without a restorer, RXOP/RXON is the sampler contract and retains the
         # original 80 mV signed floor.  With a physical limiter inserted it is
@@ -764,6 +863,7 @@ COQB ODD_QB 0 50f
                        or min(hold_minima["even"], hold_minima["odd"]) >= rx_floor)
                   and (args.restorer_mode == "none"
                        or min(minima["rest_even"], minima["rest_odd"]) >= 0.20)
+                  and min(minima["samp_even"], minima["samp_odd"]) >= 0.08
                   and min(minima["fe_even"], minima["fe_odd"]) >= 0.30
                   and min(minima["q_even"], minima["q_odd"]) >= 0.50
                   and args.vdd * 0.5 - 0.25 <= observed.get("rx_cm_avg", 0.0)
@@ -771,7 +871,7 @@ COQB ODD_QB 0 50f
                   and 0.50 <= observed.get("amp_cm_avg", 0.0) <= args.vdd - 0.10
                   and (args.restorer_mode == "none"
                        or 0.50 <= observed.get("rest_cm_avg", 0.0) <= args.vdd - 0.10)
-                  and 0.010 <= current <= 0.060)
+                  and 0.010 <= current <= (0.075 if routed_rx_pi_capture else 0.060))
         result = {
             "id": case_id, "conversion_offset_s": offset_ps * 1e-12,
             "capture_close_s": capture_close, "complete": complete,
@@ -781,6 +881,10 @@ COQB ODD_QB 0 50f
             "minimum_pin_odd_v": minima["pin_odd"],
             "minimum_rx_even_v": minima["rx_even"],
             "minimum_rx_odd_v": minima["rx_odd"],
+            "minimum_sampler_even_v": minima["samp_even"],
+            "minimum_sampler_odd_v": minima["samp_odd"],
+            "sampler_common_mode_min_v": min(sampler_common_modes),
+            "sampler_common_mode_max_v": max(sampler_common_modes),
             "minimum_frontend_even_v": minima["fe_even"],
             "minimum_frontend_odd_v": minima["fe_odd"],
             "minimum_capture_even_v": minima["q_even"],
@@ -788,16 +892,43 @@ COQB ODD_QB 0 50f
             "rx_common_mode_v": observed.get("rx_cm_avg"),
             "tx_common_mode_v": observed.get("tx_cm_avg"),
             "amplifier_common_mode_v": observed.get("amp_cm_avg"),
-            "supply_current_a": current, "result": "pass" if passed else "fail",
+            "supply_current_a": current,
+            "observed_scalar_count": len(observed),
+            "expected_scalar_count": expected_scalars,
+            "result": "pass" if passed else "fail",
         }
         if args.restorer_mode != "none":
             result.update({
-                "minimum_restored_even_v": minima["rest_even"],
+            "minimum_restored_even_v": minima["rest_even"],
                 "minimum_restored_odd_v": minima["rest_odd"],
                 "minimum_rx_hold_even_v": hold_minima["even"],
                 "minimum_rx_hold_odd_v": hold_minima["odd"],
                 "restored_common_mode_v": observed.get("rest_cm_avg"),
             })
+        alignment_scan = []
+        for latency in range(-3, 4):
+            for swap_lanes in (False, True):
+                stage_minima = {}
+                for stage in ("samp", "fe", "q"):
+                    signed = []
+                    for pair in pair_indices:
+                        even_sign = 1 if bits[2 * pair - latency] else -1
+                        odd_sign = 1 if bits[2 * pair + 1 - latency] else -1
+                        if swap_lanes:
+                            even_sign, odd_sign = odd_sign, even_sign
+                        signed.extend((
+                            observed.get(f"{stage}_even_{pair}", 0.0) * even_sign,
+                            observed.get(f"{stage}_odd_{pair}", 0.0) * odd_sign,
+                        ))
+                    stage_minima[stage] = min(signed)
+                alignment_scan.append({
+                    "latency_ui": latency,
+                    "swap_lanes": swap_lanes,
+                    "minimum_sampler_v": stage_minima["samp"],
+                    "minimum_frontend_v": stage_minima["fe"],
+                    "minimum_capture_v": stage_minima["q"],
+                })
+        result["alignment_scan"] = alignment_scan
         return result
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as executor:
@@ -813,8 +944,19 @@ COQB ODD_QB 0 50f
         "case_id": args.case_id,
         "environment": [args.mos_corner, args.res_corner, args.vdd, args.temperature, 0.5],
         "controls": {"sampler_phase_deg": args.sampler_phase, "tx_bias_v": args.tx_bias,
+                     "pi_control_a_v": (args.pi_control_a
+                                          if routed_rx_pi_capture else None),
+                     "pi_control_b_v": (args.pi_control_b
+                                          if routed_rx_pi_capture else None),
+                     "pi_buffer_bias_v": (args.pi_buffer_bias
+                                            if routed_rx_pi_capture else None),
+                     "clock_restorer_bias_v": (args.clock_restorer_bias
+                                                 if routed_rx_pi_capture else None),
+                     "pi_input_polarity_inverted": (args.pi_invert
+                                                       if routed_rx_pi_capture else None),
                      "tx_load_code": args.tx_load_code,
                      "capture_width_ps": args.capture_width_ps,
+                     "odd_capture_width_ps": args.odd_capture_width_ps,
                      "capture_delay_ps": args.capture_delay_ps,
                      "capture_output_delay_ps": args.capture_output_delay_ps,
                      "even_capture_skew_ps": args.even_capture_skew_ps,
@@ -832,6 +974,8 @@ COQB ODD_QB 0 50f
                      "restorer_bias_v": (args.restorer_bias
                                           if args.restorer_mode != "none" else None)},
         "physical_composition": (
+            "routed_phase_interpolator_termination_rx_dual_capture_parent"
+            if routed_rx_pi_capture else
             "routed_termination_rx_spine_dual_converter_capture_parent"
             if routed_rx_capture else
             "routed_termination_rx_spine_dual_converter_parent"

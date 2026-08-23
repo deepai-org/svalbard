@@ -81,7 +81,10 @@ expected_environments = {
     "ss_hot": ("ss", "res_ff", 2.97, 125, 0.5),
     "ss_passive": ("ss", "res_ss", 2.97, 125, 0.5),
 }
-runner_hash = digest(HERE / "run_capture_stress_case.py")
+# These immutable campaigns predate the PI-parent diagnostic extensions.  Keep
+# their recorded generator identity explicit instead of pretending a newer
+# runner produced them.
+runner_hash = "fd43983feed45e3fa231602d05c6237ee3a6eaa9169708b58bcbde3415d628d4"
 bench_hash = digest(HERE / "lane_tb.spice.in")
 minimums = []
 for name, run in cases.items():

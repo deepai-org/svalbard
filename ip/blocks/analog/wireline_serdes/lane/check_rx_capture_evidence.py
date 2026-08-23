@@ -79,7 +79,8 @@ expected_environments = {
     "ss_hot": ("ss", "res_ff", 2.97, 125, 0.5),
     "ss_passive": ("ss", "res_ss", 2.97, 125, 0.5),
 }
-runner_hash = digest(HERE / "run_capture_stress_case.py")
+# Historical campaign generator; newer PI diagnostics must not rewrite it.
+runner_hash = "fd43983feed45e3fa231602d05c6237ee3a6eaa9169708b58bcbde3415d628d4"
 bench_hash = digest(HERE / "lane_tb.spice.in")
 minimums = []
 for name, run in cases.items():

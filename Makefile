@@ -15,6 +15,7 @@ check-fast: smoke
 	$(PYTHON) ip/blocks/analog/wireline_serdes/lane/check_routed_rx_evidence.py
 	$(PYTHON) ip/blocks/analog/wireline_serdes/lane/check_rx_frontend_evidence.py
 	$(PYTHON) ip/blocks/analog/wireline_serdes/lane/check_rx_capture_evidence.py
+	$(PYTHON) ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/check_evidence.py
 	$(PYTHON) scripts/validate.py structure
 	$(PYTHON) scripts/validate.py repo-audit
 
@@ -83,6 +84,11 @@ analog-flow-preflight:
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_frontend.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane_rx_capture/run_physical.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_capture.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/run_physical.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/run_clock_chain.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_pi_smoke.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_pi_screen.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_clock_boundary_compare.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/data_restorer/run.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/phase_interpolator/run.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/phase_control_dac/run.sh

@@ -1,0 +1,52 @@
+* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include @PI_PEX@
+.include @RESTORER_PEX@
+.include @SAMPLER_PEX@
+.temp @TEMP_C@
+
+VDD VDD 0 PWL(0 0 500p @VDD_V@)
+VAP A_P 0 SIN(@INPUT_CM@ 0.20 1.25g 1n 0 0)
+VAN A_N 0 SIN(@INPUT_CM@ 0.20 1.25g 1n 0 180)
+VBP B_P 0 SIN(@INPUT_CM@ 0.20 1.25g 1n 0 270)
+VBN B_N 0 SIN(@INPUT_CM@ 0.20 1.25g 1n 0 90)
+VCTRLA CTRL_A 0 PWL(0 0 500p @CTRL_A@)
+VCTRLB CTRL_B 0 PWL(0 0 500p @CTRL_B@)
+VPIBIAS PI_BIAS 0 PWL(0 0 500p @PI_BIAS@)
+VRESTBIAS REST_BIAS 0 PWL(0 0 500p @REST_BIAS@)
+VSAMPBIAS SAMP_BIAS 0 PWL(0 0 500p @SAMP_BIAS@)
+VDP DATA_P 0 PWL(0 0 500p @DATA_P@)
+VDN DATA_N 0 PWL(0 0 500p @DATA_N@)
+
+XPI A_P A_N B_P B_N CTRL_A CTRL_B PI_BIAS VDD 0 RAW_P RAW_N
++ phase_interpolator_pex
+XREST RAW_P RAW_N REST_BIAS VDD 0 CLK_P CLK_N
++ cml_clock_restorer_cascade_pex
+XSAMP DATA_P DATA_N CLK_P CLK_N SAMP_BIAS VDD 0 EVEN_P EVEN_N ODD_P ODD_N
++ cdr_sampler_pex
+
+.control
+tran 2p 8n uic
+let raw_diff = v(RAW_P)-v(RAW_N)
+let clk_diff = v(CLK_P)-v(CLK_N)
+let clk_cm = (v(CLK_P)+v(CLK_N))/2
+let even_diff = v(EVEN_P)-v(EVEN_N)
+let odd_diff = v(ODD_P)-v(ODD_N)
+let isupply = -i(VDD)
+meas tran raw_high max raw_diff from=4n to=8n
+meas tran raw_low min raw_diff from=4n to=8n
+meas tran clk_high max clk_diff from=4n to=8n
+meas tran clk_low min clk_diff from=4n to=8n
+meas tran clk_cm_avg avg clk_cm from=4n to=8n
+meas tran phase_a_rise when v(A_P)=v(A_N) rise=1 td=4n
+meas tran raw_rise when v(RAW_P)=v(RAW_N) rise=1 td=4n
+meas tran clk_rise when v(CLK_P)=v(CLK_N) rise=1 td=4n
+meas tran even_high max even_diff from=4n to=8n
+meas tran even_low min even_diff from=4n to=8n
+meas tran odd_high max odd_diff from=4n to=8n
+meas tran odd_low min odd_diff from=4n to=8n
+meas tran supply_current avg isupply from=4n to=8n
+.endc
+.end

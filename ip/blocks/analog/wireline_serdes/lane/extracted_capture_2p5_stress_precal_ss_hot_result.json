@@ -1,0 +1,98 @@
+{
+  "case_count": 1,
+  "case_id": "ss_hot",
+  "cases": [
+    {
+      "amplifier_common_mode_v": 2.41409,
+      "capture_close_s": 5.4250000000000014E-9,
+      "complete": true,
+      "conversion_offset_s": 1E-10,
+      "id": "convert_100p",
+      "minimum_capture_even_v": -0.0123623,
+      "minimum_capture_odd_v": -0.0438478,
+      "minimum_frontend_even_v": -0.0788996,
+      "minimum_frontend_odd_v": -0.0406977,
+      "minimum_pin_even_v": 0.0647436,
+      "minimum_pin_odd_v": 0.0883245,
+      "minimum_restored_even_v": 0.348314,
+      "minimum_restored_odd_v": 0.234747,
+      "minimum_rx_even_v": 0.199196,
+      "minimum_rx_hold_even_v": 0.163695,
+      "minimum_rx_hold_odd_v": 0.232354,
+      "minimum_rx_odd_v": 0.206849,
+      "minimum_tx_even_v": 0.0595727,
+      "minimum_tx_odd_v": 0.0624558,
+      "restored_common_mode_v": 2.16409,
+      "result": "fail",
+      "rx_common_mode_v": 1.58709,
+      "supply_current_a": 0.0388648,
+      "tx_common_mode_v": 2.22254
+    }
+  ],
+  "channel_stress": {
+    "differential_shunt_capacitance_f": 1E-12,
+    "series_resistance_ohm_per_leg": 6.0,
+    "topology": "symmetric_two_section_lumped_rc_proxy"
+  },
+  "claim": "extracted_2p5_gts_lane_dual_cmos_capture",
+  "complete_case_count": 1,
+  "controls": {
+    "latency_ui": 1,
+    "restorer_bias_v": 1.5,
+    "restorer_cell": "cml_data_restorer_2p5_pex",
+    "restorer_mode": "data",
+    "rx_bandwidth_mode": "high",
+    "rx_bias_v": 1.5,
+    "rx_window_start_ps": 250,
+    "sampler_bias_v": 1.2,
+    "sampler_phase_deg": 135.0,
+    "termination_code": 3,
+    "tx_bias_v": 1.6
+  },
+  "environment": [
+    "ss",
+    "res_ff",
+    2.97,
+    125,
+    0.5
+  ],
+  "fixture_initialization": {
+    "ac_coupling_initial_voltage_v": 0.635,
+    "note": "settled TX-to-RX common-mode difference; not a hardware trim"
+  },
+  "passing_case_count": 0,
+  "pex_sha256": {
+    "deserializer_pex": "7510696a7dde5fe5b93786260e14f963edb40363aaebb182461772cea875c59d",
+    "frontend_pex": "bb2729d61ecd32581053d349db0a8a690c48e871092fe0ed02e14f2889e92182",
+    "restorer_pex": "1212f68a525053a24997da10832a2fe39fbf5803542479a689272d0d92015372",
+    "rx_pex": "15f248e59fd5969225dea71e25077c33b3843eaab11ae1de5c1122e5bb332ea7",
+    "sampler_pex": "398f5045ea193560a45da2890f11db916505fec3ee9a230004c4499674488879",
+    "termination_pex": "50961746ab364326336a150ab38dc92d6b30c19108374add32b8ac72f84bd23b",
+    "tx_pex": "37e60ad6d18ccc9cd62fbc6184aae7cda6ed391b59c8fc1f3181e61451dffb4b"
+  },
+  "physical_sha256": {
+    "base_lane": "ca3c3cbe3c7b4254f3af8b895981d1c599b471e62a12b8437caff50c505424de",
+    "deserializer_split": "b51fa51b871a1761f1f0afd692f1cae6034f060dc933e79f52f588ee8922378c",
+    "restorer": "9c8865fc4c5693da9bccd3b80ce3cf763a3c31bab3203c71c02a9f434f7efccc"
+  },
+  "result": "fail",
+  "schema_version": 1,
+  "selected_case": null,
+  "source_sha256": {
+    "base_testbench": "fce3e458d266ecb41f1424b9580ba540b37be8df88cb8dab4c2d4ca62e161ac7",
+    "runner": "f11e93fa80cee44bb95ddb6eb2bd231967889740693b809f7412b36618507f1f"
+  },
+  "stimulus": {
+    "bit_count": 24,
+    "pattern": "prbs7",
+    "scored_pair_count": 8,
+    "serial_rate_hz": 2500000000.0,
+    "simulation_timeout_s": 900,
+    "tx_clock_duty": 0.47,
+    "tx_clock_jitter_peak_s": 3E-11
+  },
+  "supply_stress": {
+    "vdd_ripple_frequency_hz": 100000000.0,
+    "vdd_ripple_peak_v": 0.02
+  }
+}

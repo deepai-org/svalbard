@@ -130,3 +130,49 @@ minimum_sample_mv = min(run["selected_case"]["minimum_signed_sample_v"] for run 
 print(f"2.5 GT/s exact-PEX evidence: PASS; 16 nominal phases, "
       f"{nominal['passing_case_count']} pass; PVT 5/5; "
       f"worst selected sample margin {minimum_sample_mv:.3f} mV")
+
+precal_path = HERE / "extracted_capture_2p5_stress_precal_result.json"
+precal = load(precal_path)
+precal_case_paths = {
+    name: HERE / f"extracted_capture_2p5_stress_precal_{name}_result.json"
+    for name in ("tt", "ff_cold", "ff_hot", "ss_hot", "ss_passive")
+}
+require(precal.get("claim") == "precalibration_2p5_gts_combined_stress_pvt",
+        "combined-stress pre-calibration claim changed")
+require(precal.get("result") == "fail" and precal.get("passing_case_count") == 1,
+        "combined-stress pre-calibration no longer records the expected 1/5 result")
+precal_cases = {case.get("case_id"): case for case in precal.get("cases", [])}
+require(set(precal_cases) == {"tt", "ff_cold", "ff_hot", "ss_hot", "ss_passive"},
+        "combined-stress pre-calibration environment set changed")
+require(precal_cases["tt"].get("result") == "pass",
+        "combined-stress nominal environment regressed")
+require(precal_cases["ff_cold"]["measurements"].get("supply_current_a", 0) > 0.060,
+        "FF/cold failure mechanism is no longer the recorded current overrun")
+require(precal_cases["ff_hot"]["measurements"].get("minimum_capture_odd_v", 1) < 0.50,
+        "FF/hot failure mechanism is no longer the recorded odd capture margin")
+for case_id in ("ss_hot", "ss_passive"):
+    require(precal_cases[case_id]["measurements"].get(
+        "minimum_frontend_even_v", 1) < 0.0,
+        f"{case_id} failure mechanism is no longer the converter schedule")
+for case in precal_cases.values():
+    hashes = case.get("pex_sha256", {})
+    for key, value in expected_hashes.items():
+        if key.endswith("_pex"):
+            require(hashes.get(key) == value,
+                    f"combined-stress pre-calibration does not bind exact {key}")
+    physical_hashes = case.get("physical_sha256", {})
+    require(physical_hashes.get("base_lane") == expected_hashes["base_physical"],
+            "combined-stress pre-calibration does not bind base physical evidence")
+    require(physical_hashes.get("restorer") == expected_hashes["restorer_physical"],
+            "combined-stress pre-calibration does not bind restorer physical evidence")
+    source_hashes = case.get("source_sha256", {})
+    require(source_hashes.get("runner") == digest(HERE / "run_capture_stress_case.py"),
+            "combined-stress pre-calibration runner changed")
+    require(source_hashes.get("base_testbench") == digest(HERE / "lane_tb.spice.in"),
+            "combined-stress pre-calibration testbench changed")
+for name, path in precal_case_paths.items():
+    require(precal_cases[name].get("evidence_sha256") == digest(path),
+            f"combined-stress pre-calibration does not bind {name} evidence")
+
+print("2.5 GT/s combined-stress pre-calibration: preserved FAIL; "
+      "1/5 environments pass with four localized mechanisms")

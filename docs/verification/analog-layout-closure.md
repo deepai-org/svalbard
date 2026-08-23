@@ -490,6 +490,15 @@ settling interval before sampling the consumer. Normalize phase modulo one full
 cycle. A link aligner can absorb a deterministic whole-UI delay; it cannot absorb
 wrong polarity, data-dependent latency, or a fractional aperture failure.
 
+Do not scale every downstream pulse width merely because the serial UI shrinks.
+Clock placement and repetition rate scale with the architecture, but a static
+CMOS write cell still needs its extracted transistor-level write duration. In
+the 2.5 GT/s capture composition, halving a previously qualified 380 ps write
+pulse left one retained lane wrong even though both converter outputs were
+strong. Restoring the physical write duration inside the 800 ps half-rate
+period closed nominal capture. Keep pulse width, setup, hold, recurrence, and
+observation time as separate contracts.
+
 If that boundary fails, first classify whether the producer collapses, the
 consumer lacks regeneration, or the composed function locks incorrectly. Use
 existing legal bias controls and one-mechanism retained-RC screens before

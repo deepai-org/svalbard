@@ -142,3 +142,19 @@ all release PEX and physical hashes, phase counts, environment identities, and
 interface margins. This milestone does not yet include the 1.25-GBd combined
 jitter/channel/supply stress matrix, mismatch, extracted parent routing,
 selected pads/package/S-parameters, or a recovered clock.
+
+`run_capture_2p5_precal.sh` extends that release stack through the two extracted
+CML-to-CMOS converters and the independently clocked 2,202R/1,570C capture
+parent under the complete 1.25-GBd stress bundle. Nominal TT closes after
+retaining the capture cell's characterized 380 ps write pulse: worst TX, pin,
+raw-RX start/hold, restored, converter, and final CMOS margins are
+139.812/132.707/180.873/397.333/1156.11/1659.46/763.159 mV. Total current is
+56.167 mA.
+
+The first representative PVT replay deliberately remains a checked failure at
+1/5 environments. FF/cold exceeds the 60 mA current ceiling and its raw valid
+window moves; FF/hot loses odd capture margin; the two slow/hot cases retain
+restored amplitude but miss the converter schedule after their one-UI pipeline
+shift. `extracted_capture_2p5_stress_precal_result.json` preserves the measured
+stage-by-stage mechanisms. This is the next calibration/architecture target,
+not evidence that combined 2.5 GT/s stress is closed.

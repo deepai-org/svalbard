@@ -19,7 +19,8 @@ SCALAR = re.compile(
     r"^(tx_even_\d+|tx_odd_\d+|pin_even_\d+|pin_odd_\d+|"
     r"rx_even_\d+|rx_odd_\d+|rest_even_\d+|rest_odd_\d+|"
     r"fe_even_\d+|fe_odd_\d+|q_even_\d+|q_odd_\d+|"
-    r"rx_cm_avg|amp_cm_avg|rest_cm_avg|"
+    r"rx_hold_even_\d+|rx_hold_odd_\d+|"
+    r"tx_cm_avg|rx_cm_avg|amp_cm_avg|rest_cm_avg|"
     r"supply_current)\s*=\s*([-+0-9.eE]+)", re.MULTILINE,
 )
 
@@ -88,8 +89,15 @@ def main() -> None:
     parser.add_argument("--frontend-pex", required=True, type=Path)
     parser.add_argument("--deserializer-pex", required=True, type=Path)
     parser.add_argument("--deserializer-physical", required=True, type=Path)
+    parser.add_argument("--base-physical", type=Path)
     parser.add_argument("--restorer-pex", type=Path)
     parser.add_argument("--restorer-physical", type=Path)
+    parser.add_argument("--restorer-cell")
+    parser.add_argument("--serial-rate-gbd", type=float,
+                        choices=(1.25, 2.5), default=1.25)
+    parser.add_argument("--latency-ui", type=int, choices=range(-3, 4), default=0)
+    parser.add_argument("--rx-window-start-ps", type=int, default=0)
+    parser.add_argument("--ac-initial-v", type=float)
     parser.add_argument("--jobs", type=int, default=4)
     parser.add_argument("--offset-ps", type=int, action="append")
     parser.add_argument("--sampler-phase", type=float, default=135.0)
@@ -146,10 +154,19 @@ def main() -> None:
     if args.restorer_mode != "none" and not (
             args.restorer_pex and args.restorer_physical):
         parser.error("restorer mode requires its PEX and physical record")
+    if args.restorer_cell is not None and not re.fullmatch(
+            r"[A-Za-z][A-Za-z0-9_]*", args.restorer_cell):
+        parser.error("invalid restorer cell name")
+    if not 0 <= args.rx_window_start_ps <= 250:
+        parser.error("RX hold window must start between 0 and 250 ps")
+    if args.ac_initial_v is not None and not 0.0 <= args.ac_initial_v <= 2.5:
+        parser.error("AC-coupling initial voltage must be between 0 and 2.5 V")
     args.work.mkdir(parents=True, exist_ok=True)
 
-    ui = 1 / 1.25e9
+    rate = args.serial_rate_gbd * 1e9
+    ui = 1 / rate
     period = 2 * ui
+    timing_scale = 1.25e9 / rate
     clock_delay = 4e-9
     bits = spine.BITS if args.pattern == "changing24" else prbs7(args.bit_count)
     even_bits, odd_bits = bits[0::2], bits[1::2]
@@ -190,6 +207,8 @@ def main() -> None:
             "cascade": "cml_clock_restorer_cascade_pex",
             "data": "cml_data_restorer_pex",
         }[args.restorer_mode]
+        if args.restorer_cell is not None:
+            restorer_cell = args.restorer_cell
         # One differential stage inverts; the two-stage cascade does not.
         restorer_outputs = ("RXON RXOP" if args.restorer_mode == "cascade"
                             else "RXOP RXON")
@@ -224,16 +243,16 @@ def main() -> None:
         "CCH_O RXP RXN @CHANNEL_HALF_C@",
     )
     downstream = """
-VESENSE E_SENSE_SRC 0 PULSE(0 @VDD_V@ @E_SENSE_DELAY@ 20p 20p 575p @PERIOD@)
-VEREGEN E_REGEN_SRC 0 PULSE(0 @VDD_V@ @E_REGEN_DELAY@ 20p 20p 565p @PERIOD@)
-VEREGENB E_REGENB_SRC 0 PULSE(@VDD_V@ 0 @E_REGEN_DELAY@ 20p 20p 565p @PERIOD@)
-VECLK E_CAPTURE_SRC 0 PULSE(0 @VDD_V@ @E_CAPTURE_DELAY@ 20p 20p 380p @PERIOD@)
-VECLKB E_CAPTUREB_SRC 0 PULSE(@VDD_V@ 0 @E_CAPTURE_DELAY@ 20p 20p 380p @PERIOD@)
-VOSENSE O_SENSE_SRC 0 PULSE(0 @VDD_V@ @O_SENSE_DELAY@ 20p 20p 575p @PERIOD@)
-VOREGEN O_REGEN_SRC 0 PULSE(0 @VDD_V@ @O_REGEN_DELAY@ 20p 20p 565p @PERIOD@)
-VOREGENB O_REGENB_SRC 0 PULSE(@VDD_V@ 0 @O_REGEN_DELAY@ 20p 20p 565p @PERIOD@)
-VOCLK O_CAPTURE_SRC 0 PULSE(0 @VDD_V@ @O_CAPTURE_DELAY@ 20p 20p 380p @PERIOD@)
-VOCLKB O_CAPTUREB_SRC 0 PULSE(@VDD_V@ 0 @O_CAPTURE_DELAY@ 20p 20p 380p @PERIOD@)
+VESENSE E_SENSE_SRC 0 PULSE(0 @VDD_V@ @E_SENSE_DELAY@ 20p 20p @SENSE_WIDTH@ @PERIOD@)
+VEREGEN E_REGEN_SRC 0 PULSE(0 @VDD_V@ @E_REGEN_DELAY@ 20p 20p @REGEN_WIDTH@ @PERIOD@)
+VEREGENB E_REGENB_SRC 0 PULSE(@VDD_V@ 0 @E_REGEN_DELAY@ 20p 20p @REGEN_WIDTH@ @PERIOD@)
+VECLK E_CAPTURE_SRC 0 PULSE(0 @VDD_V@ @E_CAPTURE_DELAY@ 20p 20p @CAPTURE_WIDTH@ @PERIOD@)
+VECLKB E_CAPTUREB_SRC 0 PULSE(@VDD_V@ 0 @E_CAPTURE_DELAY@ 20p 20p @CAPTURE_WIDTH@ @PERIOD@)
+VOSENSE O_SENSE_SRC 0 PULSE(0 @VDD_V@ @O_SENSE_DELAY@ 20p 20p @SENSE_WIDTH@ @PERIOD@)
+VOREGEN O_REGEN_SRC 0 PULSE(0 @VDD_V@ @O_REGEN_DELAY@ 20p 20p @REGEN_WIDTH@ @PERIOD@)
+VOREGENB O_REGENB_SRC 0 PULSE(@VDD_V@ 0 @O_REGEN_DELAY@ 20p 20p @REGEN_WIDTH@ @PERIOD@)
+VOCLK O_CAPTURE_SRC 0 PULSE(0 @VDD_V@ @O_CAPTURE_DELAY@ 20p 20p @CAPTURE_WIDTH@ @PERIOD@)
+VOCLKB O_CAPTUREB_SRC 0 PULSE(@VDD_V@ 0 @O_CAPTURE_DELAY@ 20p 20p @CAPTURE_WIDTH@ @PERIOD@)
 VBOOST BOOST_SRC 0 0
 R_ESENSE E_SENSE_SRC E_SENSE_CLK 1
 R_EREGEN E_REGEN_SRC E_REGEN_CLK 1
@@ -274,8 +293,8 @@ COQB ODD_QB 0 50f
     )
     scored_stages = ("tx", "pin", "rx", "rest", "fe", "q") \
         if args.restorer_mode != "none" else ("tx", "pin", "rx", "fe", "q")
-    expected_scalars = len(pair_indices) * len(scored_stages) * 2 + 3 \
-        + (1 if args.restorer_mode != "none" else 0)
+    expected_scalars = len(pair_indices) * len(scored_stages) * 2 + 4 \
+        + (len(pair_indices) * 2 + 1 if args.restorer_mode != "none" else 0)
     pex_paths = {
         "tx_pex": args.tx_pex, "termination_pex": args.term_pex,
         "rx_pex": args.rx_pex, "sampler_pex": args.sampler_pex,
@@ -284,6 +303,8 @@ COQB ODD_QB 0 50f
     if args.restorer_mode != "none":
         pex_paths["restorer_pex"] = args.restorer_pex
     physical_paths = {"deserializer_split": args.deserializer_physical}
+    if args.base_physical is not None:
+        physical_paths["base_lane"] = args.base_physical
     if args.restorer_mode != "none":
         physical_paths["restorer"] = args.restorer_physical
     deserializer_physical = json.loads(args.deserializer_physical.read_text())
@@ -296,13 +317,27 @@ COQB ODD_QB 0 50f
         if (restorer_physical.get("result") != "pass"
                 or restorer_physical.get("pex_sha256") != spine.sha256(args.restorer_pex)):
             raise SystemExit("restorer physical evidence does not bind exact simulation PEX")
+    if args.base_physical is not None:
+        base_physical = json.loads(args.base_physical.read_text())
+        expected = {
+            "termination": spine.sha256(args.term_pex),
+            "rx": spine.sha256(args.rx_pex),
+            "sampler": spine.sha256(args.sampler_pex),
+        }
+        observed_hashes = {
+            name: base_physical.get("cells", {}).get(name, {}).get("pex_sha256")
+            for name in expected
+        }
+        if base_physical.get("result") != "pass" or observed_hashes != expected:
+            raise SystemExit("base physical evidence does not bind exact simulation PEX")
 
     def simulate(offset_ps: int) -> dict[str, object]:
-        even_base = clock_delay + ui + 50e-12 + offset_ps * 1e-12
+        even_base = clock_delay + ui + 50e-12 * timing_scale + offset_ps * 1e-12
         odd_base = even_base + ui
-        capture_close = odd_base + 1.0e-9
+        capture_close = odd_base + 1.0e-9 * timing_scale
         measures = []
-        restorer_eye_shift = ((135.0 - args.sampler_phase) / 360.0 * period
+        restorer_eye_shift = (((135.0 - args.sampler_phase) % 360.0)
+                              / 360.0 * period
                               if args.restorer_mode != "none" else 0.0)
         stop_time = odd_base + (max(pair_indices) + 2) * period
         for pair in pair_indices:
@@ -310,21 +345,28 @@ COQB ODD_QB 0 50f
             odd_event = odd_base + pair * period
             even_eye = clock_delay + (2 * pair + 0.5) * ui
             odd_eye = clock_delay + (2 * pair + 1.5) * ui
-            output_time = odd_event + 1.28e-9
+            output_time = odd_event + (1.28e-9 * timing_scale
+                                       if args.serial_rate_gbd == 1.25 else 720e-12)
+            rx_shift = (args.rx_window_start_ps * 1e-12
+                        if args.restorer_mode != "none" else 0.0)
             measures.extend((
                 f"meas tran tx_even_{pair} find tx_diff at={even_eye:.12g}",
                 f"meas tran pin_even_{pair} find pin_diff at={even_eye:.12g}",
-                f"meas tran rx_even_{pair} find rx_diff at={even_eye:.12g}",
+                f"meas tran rx_even_{pair} find rx_diff at={even_eye + rx_shift:.12g}",
                 f"meas tran tx_odd_{pair} find tx_diff at={odd_eye:.12g}",
                 f"meas tran pin_odd_{pair} find pin_diff at={odd_eye:.12g}",
-                f"meas tran rx_odd_{pair} find rx_diff at={odd_eye:.12g}",
-                f"meas tran fe_even_{pair} find fe_even_diff at={even_event + 750e-12:.12g}",
-                f"meas tran fe_odd_{pair} find fe_odd_diff at={odd_event + 750e-12:.12g}",
+                f"meas tran rx_odd_{pair} find rx_diff at={odd_eye + rx_shift:.12g}",
+                f"meas tran fe_even_{pair} find fe_even_diff at={even_event + 750e-12 * timing_scale:.12g}",
+                f"meas tran fe_odd_{pair} find fe_odd_diff at={odd_event + 750e-12 * timing_scale:.12g}",
                 f"meas tran q_even_{pair} find q_even_diff at={output_time:.12g}",
                 f"meas tran q_odd_{pair} find q_odd_diff at={output_time:.12g}",
             ))
             if args.restorer_mode != "none":
                 measures.extend((
+                    f"meas tran rx_hold_even_{pair} find rx_diff "
+                    f"at={even_eye + rx_shift + 50e-12:.12g}",
+                    f"meas tran rx_hold_odd_{pair} find rx_diff "
+                    f"at={odd_eye + rx_shift + 50e-12:.12g}",
                     f"meas tran rest_even_{pair} find rest_diff "
                     f"at={even_eye + restorer_eye_shift:.12g}",
                     f"meas tran rest_odd_{pair} find rest_diff "
@@ -378,19 +420,25 @@ COQB ODD_QB 0 50f
             "RX_BW_EN_N_V": "0" if args.rx_bandwidth_mode == "high"
             else f"{args.vdd:.2f}",
             "TX_PAD_CAP": "300f", "RX_PAD_CAP": "500f", "AC_CAP": "100n",
-            "AC_INITIAL_V": f"{args.vdd * 0.32:.6f}",
+            "AC_INITIAL_V": f"{(args.ac_initial_v if args.ac_initial_v is not None else args.vdd * 0.32):.6f}",
             "PACKAGE_R": "2", "PACKAGE_L": "1n", "BIAS_RETURN_R": "2k",
             "CHANNEL_HALF_R": f"{max(args.channel_series_ohm_per_leg / 2, 1e-3):.12g}",
             "CHANNEL_HALF_C": f"{max(args.channel_shunt_cap_f / 2, 1e-18):.12g}",
             "SAMPLE_CLOCK_CM": f"{args.vdd * 2 / 3:.6f}", "SAMPLE_CLOCK_PEAK": "0.45",
-            "CLOCK_HZ": "625e6", "CLOCK_PHASE": f"{args.sampler_phase:.3f}",
+            "CLOCK_HZ": f"{rate / 2:.12g}",
+            "CLOCK_PHASE": f"{args.sampler_phase:.3f}",
             "CLOCK_N_PHASE": f"{args.sampler_phase + 180:.3f}",
+            "SENSE_WIDTH": f"{575e-12 * timing_scale:.12g}",
+            "REGEN_WIDTH": f"{565e-12 * timing_scale:.12g}",
+            # The static CMOS write cell needs its characterized pulse width;
+            # device delay does not scale with the serial unit interval.
+            "CAPTURE_WIDTH": "380e-12",
             "E_SENSE_DELAY": f"{even_base:.12g}",
-            "E_REGEN_DELAY": f"{even_base + 10e-12:.12g}",
-            "E_CAPTURE_DELAY": f"{even_base + 550e-12:.12g}",
+            "E_REGEN_DELAY": f"{even_base + 10e-12 * timing_scale:.12g}",
+            "E_CAPTURE_DELAY": f"{even_base + 550e-12 * timing_scale:.12g}",
             "O_SENSE_DELAY": f"{odd_base:.12g}",
-            "O_REGEN_DELAY": f"{odd_base + 10e-12:.12g}",
-            "O_CAPTURE_DELAY": f"{odd_base + 550e-12:.12g}",
+            "O_REGEN_DELAY": f"{odd_base + 10e-12 * timing_scale:.12g}",
+            "O_CAPTURE_DELAY": f"{odd_base + 550e-12 * timing_scale:.12g}",
             "MEASURE_LINES": "\n".join(measures),
             "MEASURE_START": f"{odd_base + 2 * period:.12g}",
             "STOP_TIME": f"{stop_time:.12g}",
@@ -413,14 +461,30 @@ COQB ODD_QB 0 50f
         margins = {f"{stage}_{lane_name}": []
                    for stage in scored_stages
                    for lane_name in ("even", "odd")}
+        hold_margins = {"even": [], "odd": []}
         for pair in pair_indices:
-            signs = {"even": 1 if even_bits[pair] else -1,
-                     "odd": 1 if odd_bits[pair] else -1}
+            input_signs = {"even": 1 if even_bits[pair] else -1,
+                           "odd": 1 if odd_bits[pair] else -1}
+            output_signs = {
+                "even": 1 if bits[2 * pair - args.latency_ui] else -1,
+                "odd": 1 if bits[2 * pair + 1 - args.latency_ui] else -1,
+            }
             for stage in scored_stages:
                 for lane_name in ("even", "odd"):
                     key = f"{stage}_{lane_name}"
-                    margins[key].append(observed.get(f"{key}_{pair}", 0.0) * signs[lane_name])
+                    signs = (output_signs if stage in ("rest", "fe", "q")
+                             else input_signs)
+                    margins[key].append(observed.get(f"{key}_{pair}", 0.0)
+                                        * signs[lane_name])
+            if args.restorer_mode != "none":
+                for lane_name in ("even", "odd"):
+                    hold_margins[lane_name].append(
+                        observed.get(f"rx_hold_{lane_name}_{pair}", 0.0)
+                        * input_signs[lane_name]
+                    )
         minima = {name: min(values_) for name, values_ in margins.items()}
+        hold_minima = {name: min(values_) for name, values_ in hold_margins.items()} \
+            if args.restorer_mode != "none" else {}
         complete = return_code == 0 and len(observed) == expected_scalars
         current = observed.get("supply_current", 0.0)
         # Without a restorer, RXOP/RXON is the sampler contract and retains the
@@ -431,6 +495,8 @@ COQB ODD_QB 0 50f
         passed = (complete and min(minima["tx_even"], minima["tx_odd"]) >= 0.05
                   and min(minima["pin_even"], minima["pin_odd"]) >= 0.10
                   and min(minima["rx_even"], minima["rx_odd"]) >= rx_floor
+                  and (args.restorer_mode == "none"
+                       or min(hold_minima["even"], hold_minima["odd"]) >= rx_floor)
                   and (args.restorer_mode == "none"
                        or min(minima["rest_even"], minima["rest_odd"]) >= 0.20)
                   and min(minima["fe_even"], minima["fe_odd"]) >= 0.30
@@ -455,6 +521,7 @@ COQB ODD_QB 0 50f
             "minimum_capture_even_v": minima["q_even"],
             "minimum_capture_odd_v": minima["q_odd"],
             "rx_common_mode_v": observed.get("rx_cm_avg"),
+            "tx_common_mode_v": observed.get("tx_cm_avg"),
             "amplifier_common_mode_v": observed.get("amp_cm_avg"),
             "supply_current_a": current, "result": "pass" if passed else "fail",
         }
@@ -462,6 +529,8 @@ COQB ODD_QB 0 50f
             result.update({
                 "minimum_restored_even_v": minima["rest_even"],
                 "minimum_restored_odd_v": minima["rest_odd"],
+                "minimum_rx_hold_even_v": hold_minima["even"],
+                "minimum_rx_hold_odd_v": hold_minima["odd"],
                 "restored_common_mode_v": observed.get("rest_cm_avg"),
             })
         return result
@@ -473,7 +542,9 @@ COQB ODD_QB 0 50f
                                                   case["minimum_capture_odd_v"])) if passing else None
     result = {
         "schema_version": 1,
-        "claim": "extracted_1p25_gbd_lane_dual_cmos_capture",
+        "claim": ("extracted_1p25_gbd_lane_dual_cmos_capture"
+                  if args.serial_rate_gbd == 1.25 else
+                  "extracted_2p5_gts_lane_dual_cmos_capture"),
         "case_id": args.case_id,
         "environment": [args.mos_corner, args.res_corner, args.vdd, args.temperature, 0.5],
         "controls": {"sampler_phase_deg": args.sampler_phase, "tx_bias_v": args.tx_bias,
@@ -481,10 +552,14 @@ COQB ODD_QB 0 50f
                      "termination_code": args.term_code,
                      "rx_bandwidth_mode": args.rx_bandwidth_mode,
                      "restorer_mode": args.restorer_mode,
+                     "restorer_cell": args.restorer_cell,
+                     "latency_ui": args.latency_ui,
+                     "rx_window_start_ps": args.rx_window_start_ps,
                      "restorer_bias_v": (args.restorer_bias
                                           if args.restorer_mode != "none" else None)},
         "stimulus": {
             "pattern": args.pattern, "bit_count": len(bits),
+            "serial_rate_hz": rate,
             "scored_pair_count": len(pair_indices),
             "tx_clock_jitter_peak_s": args.tx_clock_jitter_ps * 1e-12,
             "tx_clock_duty": args.tx_clock_duty,
@@ -498,6 +573,13 @@ COQB ODD_QB 0 50f
         "supply_stress": {
             "vdd_ripple_peak_v": args.vdd_ripple_mv * 1e-3,
             "vdd_ripple_frequency_hz": args.vdd_ripple_hz,
+        },
+        "fixture_initialization": {
+            "ac_coupling_initial_voltage_v": (
+                args.ac_initial_v if args.ac_initial_v is not None
+                else args.vdd * 0.32
+            ),
+            "note": "settled TX-to-RX common-mode difference; not a hardware trim",
         },
         "case_count": len(cases), "complete_case_count": sum(case["complete"] for case in cases),
         "passing_case_count": len(passing), "selected_case": selected, "cases": cases,

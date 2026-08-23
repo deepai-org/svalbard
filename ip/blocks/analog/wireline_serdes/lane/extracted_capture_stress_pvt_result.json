@@ -1,0 +1,276 @@
+{
+  "cases": [
+    {
+      "case_id": "tt",
+      "controls": {
+        "restorer_bias_v": 1.3,
+        "restorer_mode": "data",
+        "rx_bandwidth_mode": "high",
+        "rx_bias_v": 1.1,
+        "sampler_bias_v": 1.1,
+        "sampler_phase_deg": 78.75,
+        "termination_code": 3,
+        "tx_bias_v": 1.1
+      },
+      "environment": [
+        "typical",
+        "res_typical",
+        3.3,
+        27,
+        0.5
+      ],
+      "evidence_sha256": "b2edf436b730bbaf7a6a0f6e3be09c66841cae82896acb18d4c81c2927c164ba",
+      "observed_case": {
+        "amplifier_common_mode_v": 2.86417,
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 3.14479,
+        "minimum_capture_odd_v": 3.19634,
+        "minimum_frontend_even_v": 2.96779,
+        "minimum_frontend_odd_v": 2.96928,
+        "minimum_pin_even_v": 0.18435,
+        "minimum_pin_odd_v": 0.205995,
+        "minimum_restored_even_v": 0.800016,
+        "minimum_restored_odd_v": 0.866839,
+        "minimum_rx_even_v": 0.163103,
+        "minimum_rx_odd_v": 0.213541,
+        "minimum_tx_even_v": 0.106608,
+        "minimum_tx_odd_v": 0.120085,
+        "restored_common_mode_v": 2.05488,
+        "result": "pass",
+        "rx_common_mode_v": 1.74063,
+        "supply_current_a": 0.0326975
+      },
+      "result": "pass"
+    },
+    {
+      "case_id": "ff_cold",
+      "controls": {
+        "restorer_bias_v": 1.3,
+        "restorer_mode": "data",
+        "rx_bandwidth_mode": "high",
+        "rx_bias_v": 1.1,
+        "sampler_bias_v": 1.1,
+        "sampler_phase_deg": 78.75,
+        "termination_code": 3,
+        "tx_bias_v": 1.0
+      },
+      "environment": [
+        "ff",
+        "res_ff",
+        3.63,
+        -40,
+        0.5
+      ],
+      "evidence_sha256": "ed057cf40f2b96df22b876fc489d57ecd8be360aabec898e50d2a3551748e206",
+      "observed_case": {
+        "amplifier_common_mode_v": 3.11322,
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 3.57011,
+        "minimum_capture_odd_v": 3.57819,
+        "minimum_frontend_even_v": 3.23639,
+        "minimum_frontend_odd_v": 3.23542,
+        "minimum_pin_even_v": 0.207021,
+        "minimum_pin_odd_v": 0.224118,
+        "minimum_restored_even_v": 0.762861,
+        "minimum_restored_odd_v": 0.793549,
+        "minimum_rx_even_v": 0.275202,
+        "minimum_rx_odd_v": 0.321918,
+        "minimum_tx_even_v": 0.126756,
+        "minimum_tx_odd_v": 0.138509,
+        "restored_common_mode_v": 2.14816,
+        "result": "pass",
+        "rx_common_mode_v": 1.96127,
+        "supply_current_a": 0.0414415
+      },
+      "result": "pass"
+    },
+    {
+      "case_id": "ff_hot",
+      "controls": {
+        "restorer_bias_v": 1.2,
+        "restorer_mode": "data",
+        "rx_bandwidth_mode": "high",
+        "rx_bias_v": 1.1,
+        "sampler_bias_v": 1.1,
+        "sampler_phase_deg": 78.75,
+        "termination_code": 3,
+        "tx_bias_v": 0.9
+      },
+      "environment": [
+        "ff",
+        "res_ss",
+        2.97,
+        125,
+        0.5
+      ],
+      "evidence_sha256": "9821c99ad0add3987a7f1f6d4b138b8ba2508fe1143619e8dc6723e2502f22a7",
+      "observed_case": {
+        "amplifier_common_mode_v": 2.30972,
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 2.80608,
+        "minimum_capture_odd_v": 2.85974,
+        "minimum_frontend_even_v": 2.67837,
+        "minimum_frontend_odd_v": 2.68174,
+        "minimum_pin_even_v": 0.147603,
+        "minimum_pin_odd_v": 0.168887,
+        "minimum_restored_even_v": 0.349671,
+        "minimum_restored_odd_v": 0.405967,
+        "minimum_rx_even_v": 0.132001,
+        "minimum_rx_odd_v": 0.197219,
+        "minimum_tx_even_v": 0.0786809,
+        "minimum_tx_odd_v": 0.0928783,
+        "restored_common_mode_v": 1.95325,
+        "result": "pass",
+        "rx_common_mode_v": 1.5705,
+        "supply_current_a": 0.0314657
+      },
+      "result": "pass"
+    },
+    {
+      "case_id": "ss_hot",
+      "controls": {
+        "restorer_bias_v": 1.4,
+        "restorer_mode": "data",
+        "rx_bandwidth_mode": "high",
+        "rx_bias_v": 1.1,
+        "sampler_bias_v": 1.1,
+        "sampler_phase_deg": 78.75,
+        "termination_code": 3,
+        "tx_bias_v": 1.3
+      },
+      "environment": [
+        "ss",
+        "res_ff",
+        2.97,
+        125,
+        0.5
+      ],
+      "evidence_sha256": "b0420b4c097aca3c318d6c56aa291dda088d7b267b98b7e813a520be47888546",
+      "observed_case": {
+        "amplifier_common_mode_v": 2.69501,
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 2.87,
+        "minimum_capture_odd_v": 2.73372,
+        "minimum_frontend_even_v": 2.57862,
+        "minimum_frontend_odd_v": 2.60761,
+        "minimum_pin_even_v": 0.201243,
+        "minimum_pin_odd_v": 0.22368,
+        "minimum_restored_even_v": 0.230118,
+        "minimum_restored_odd_v": 0.25108,
+        "minimum_rx_even_v": 0.0725808,
+        "minimum_rx_odd_v": 0.0936915,
+        "minimum_tx_even_v": 0.141224,
+        "minimum_tx_odd_v": 0.154404,
+        "restored_common_mode_v": 2.12206,
+        "result": "pass",
+        "rx_common_mode_v": 1.49911,
+        "supply_current_a": 0.0294159
+      },
+      "result": "pass"
+    },
+    {
+      "case_id": "ss_passive",
+      "controls": {
+        "restorer_bias_v": 1.3,
+        "restorer_mode": "data",
+        "rx_bandwidth_mode": "high",
+        "rx_bias_v": 1.1,
+        "sampler_bias_v": 1.1,
+        "sampler_phase_deg": 78.75,
+        "termination_code": 3,
+        "tx_bias_v": 1.2
+      },
+      "environment": [
+        "ss",
+        "res_ss",
+        2.97,
+        125,
+        0.5
+      ],
+      "evidence_sha256": "9b7da9edf2b934d859f2a8c1eb6c403667a0476a0b483c821e88979a1dd148c4",
+      "observed_case": {
+        "amplifier_common_mode_v": 2.60365,
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 2.87898,
+        "minimum_capture_odd_v": 2.77421,
+        "minimum_frontend_even_v": 2.58749,
+        "minimum_frontend_odd_v": 2.65983,
+        "minimum_pin_even_v": 0.154629,
+        "minimum_pin_odd_v": 0.180523,
+        "minimum_restored_even_v": 0.333687,
+        "minimum_restored_odd_v": 0.422987,
+        "minimum_rx_even_v": 0.0506744,
+        "minimum_rx_odd_v": 0.0919228,
+        "minimum_tx_even_v": 0.0819919,
+        "minimum_tx_odd_v": 0.0976269,
+        "restored_common_mode_v": 1.98422,
+        "result": "pass",
+        "rx_common_mode_v": 1.51975,
+        "supply_current_a": 0.0263832
+      },
+      "result": "pass"
+    }
+  ],
+  "channel_stress": {
+    "differential_shunt_capacitance_f": 1e-12,
+    "series_resistance_ohm_per_leg": 6.0,
+    "topology": "symmetric_two_section_lumped_rc_proxy"
+  },
+  "claim": "combined_pvt_channel_timing_supply_extracted_lane_stress",
+  "environment_count": 5,
+  "maximum_supply_current_a": 0.0414415,
+  "minimum_capture_margin_v": 2.73372,
+  "minimum_frontend_margin_v": 2.57862,
+  "minimum_pin_margin_v": 0.147603,
+  "minimum_restored_margin_v": 0.230118,
+  "minimum_rx_margin_v": 0.0506744,
+  "minimum_supply_current_a": 0.0263832,
+  "minimum_tx_margin_v": 0.0786809,
+  "passing_environment_count": 5,
+  "pex_sha256": {
+    "deserializer_pex": "317a49060cce76cd424d7139bddf56f723425521fe0df278e46cad1be50b956b",
+    "frontend_pex": "15a9fdc3d2438f98c5a0e3506479cd96a1dfc23a93e287f9e9a73d1c1d952321",
+    "restorer_pex": "34e1a5b403da8f556608dd24aa80191de2f05eae653ff76c1faf34292c3f29f7",
+    "rx_pex": "b3ab8cd0f0302fd341e7af9f944ec2d5e5a34b153b90fa6659e3a09325cbaed2",
+    "sampler_pex": "e66850c48d74d93769f9a4cf640ab0c03b5dcc1bcd239a9a72f95676ae61ba97",
+    "termination_pex": "60204e3701d79b5e6d096613718007f62df74f05e68349dc77259188041c4b18",
+    "tx_pex": "37e60ad6d18ccc9cd62fbc6184aae7cda6ed391b59c8fc1f3181e61451dffb4b"
+  },
+  "physical_sha256": {
+    "deserializer_split": "2bfaca0bfe3fc7443e6ba33e8b255337c434fcd300cdda23a1b613e25f18245f",
+    "restorer": "96ad99676cc00635e93bdacb75f78c7236717f7c9f706be815d000336782fb1c"
+  },
+  "result": "pass",
+  "schema_version": 1,
+  "source_sha256": {
+    "base_testbench": "b1520c8b46b5a6819d9c226d419f01e42c11b6625d2151abb0eab3750cc84c98",
+    "runner": "6218a7c3f88f93d76d33e0aedfde6e51c8295eb8623cff5b9776b590bf55d2ca"
+  },
+  "stimulus": {
+    "bit_count": 40,
+    "pattern": "prbs7",
+    "scored_pair_count": 16,
+    "simulation_timeout_s": 900,
+    "tx_clock_duty": 0.47,
+    "tx_clock_jitter_peak_s": 3e-11
+  },
+  "supply_stress": {
+    "vdd_ripple_frequency_hz": 100000000.0,
+    "vdd_ripple_peak_v": 0.02
+  }
+}

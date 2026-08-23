@@ -1,0 +1,193 @@
+{
+  "case_count": 4,
+  "cases": [
+    {
+      "case_id": "baseline",
+      "channel_stress": {
+        "differential_shunt_capacitance_f": 0.0,
+        "series_resistance_ohm_per_leg": 0.0,
+        "topology": "symmetric_two_section_lumped_rc_proxy"
+      },
+      "electrical_result": "pass",
+      "evidence_sha256": "d9c2dedf8f97a4ea3a05254d467663e972c817ae1e11ab340d60583c24c93320",
+      "observed_case": {
+        "amplifier_common_mode_v": 2.60187,
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 2.89571,
+        "minimum_capture_odd_v": 2.80368,
+        "minimum_frontend_even_v": 2.65985,
+        "minimum_frontend_odd_v": 2.6635,
+        "minimum_pin_even_v": 0.251459,
+        "minimum_pin_odd_v": 0.253167,
+        "minimum_rx_even_v": 0.181215,
+        "minimum_rx_odd_v": 0.183953,
+        "minimum_tx_even_v": 0.153623,
+        "minimum_tx_odd_v": 0.155199,
+        "result": "pass",
+        "rx_common_mode_v": 1.51841,
+        "supply_current_a": 0.0223474
+      },
+      "stimulus": {
+        "bit_count": 40,
+        "pattern": "prbs7",
+        "scored_pair_count": 16,
+        "simulation_timeout_s": 900,
+        "tx_clock_duty": 0.5,
+        "tx_clock_jitter_peak_s": 0.0
+      },
+      "supply_stress": {
+        "vdd_ripple_frequency_hz": 100000000.0,
+        "vdd_ripple_peak_v": 0.0
+      }
+    },
+    {
+      "case_id": "channel",
+      "channel_stress": {
+        "differential_shunt_capacitance_f": 1e-12,
+        "series_resistance_ohm_per_leg": 6.0,
+        "topology": "symmetric_two_section_lumped_rc_proxy"
+      },
+      "electrical_result": "fail",
+      "evidence_sha256": "d259d07cb37f36db97dc7c47bf0683175b67cab73abeaff47c8301f90f9fae03",
+      "observed_case": {
+        "amplifier_common_mode_v": 2.602,
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": -2.84518,
+        "minimum_capture_odd_v": -0.0249553,
+        "minimum_frontend_even_v": 0.0372581,
+        "minimum_frontend_odd_v": 0.0473566,
+        "minimum_pin_even_v": 0.167435,
+        "minimum_pin_odd_v": 0.170101,
+        "minimum_rx_even_v": 0.0646301,
+        "minimum_rx_odd_v": 0.0674661,
+        "minimum_tx_even_v": 0.0862411,
+        "minimum_tx_odd_v": 0.0884768,
+        "result": "fail",
+        "rx_common_mode_v": 1.51832,
+        "supply_current_a": 0.0224774
+      },
+      "stimulus": {
+        "bit_count": 40,
+        "pattern": "prbs7",
+        "scored_pair_count": 16,
+        "simulation_timeout_s": 900,
+        "tx_clock_duty": 0.5,
+        "tx_clock_jitter_peak_s": 0.0
+      },
+      "supply_stress": {
+        "vdd_ripple_frequency_hz": 100000000.0,
+        "vdd_ripple_peak_v": 0.0
+      }
+    },
+    {
+      "case_id": "timing",
+      "channel_stress": {
+        "differential_shunt_capacitance_f": 0.0,
+        "series_resistance_ohm_per_leg": 0.0,
+        "topology": "symmetric_two_section_lumped_rc_proxy"
+      },
+      "electrical_result": "pass",
+      "evidence_sha256": "c7b48f3bc706077d826d95cbc52191ea57bc0be4279abc8e6f2f8b4692ad9ce6",
+      "observed_case": {
+        "amplifier_common_mode_v": 2.60187,
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 2.89571,
+        "minimum_capture_odd_v": 2.80652,
+        "minimum_frontend_even_v": 2.65464,
+        "minimum_frontend_odd_v": 2.66886,
+        "minimum_pin_even_v": 0.249247,
+        "minimum_pin_odd_v": 0.257401,
+        "minimum_rx_even_v": 0.163609,
+        "minimum_rx_odd_v": 0.196875,
+        "minimum_tx_even_v": 0.151328,
+        "minimum_tx_odd_v": 0.158829,
+        "result": "pass",
+        "rx_common_mode_v": 1.51839,
+        "supply_current_a": 0.0223353
+      },
+      "stimulus": {
+        "bit_count": 40,
+        "pattern": "prbs7",
+        "scored_pair_count": 16,
+        "simulation_timeout_s": 900,
+        "tx_clock_duty": 0.47,
+        "tx_clock_jitter_peak_s": 3e-11
+      },
+      "supply_stress": {
+        "vdd_ripple_frequency_hz": 100000000.0,
+        "vdd_ripple_peak_v": 0.0
+      }
+    },
+    {
+      "case_id": "ripple",
+      "channel_stress": {
+        "differential_shunt_capacitance_f": 0.0,
+        "series_resistance_ohm_per_leg": 0.0,
+        "topology": "symmetric_two_section_lumped_rc_proxy"
+      },
+      "electrical_result": "pass",
+      "evidence_sha256": "901064eb828b6bb931d0d24df543e4d2e1ee42361e24d1cab4a66ec0f8df9fe3",
+      "observed_case": {
+        "amplifier_common_mode_v": 2.60353,
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 2.8794,
+        "minimum_capture_odd_v": 2.78237,
+        "minimum_frontend_even_v": 2.63934,
+        "minimum_frontend_odd_v": 2.65133,
+        "minimum_pin_even_v": 0.251519,
+        "minimum_pin_odd_v": 0.253252,
+        "minimum_rx_even_v": 0.180929,
+        "minimum_rx_odd_v": 0.183528,
+        "minimum_tx_even_v": 0.153324,
+        "minimum_tx_odd_v": 0.155015,
+        "result": "pass",
+        "rx_common_mode_v": 1.51986,
+        "supply_current_a": 0.0223648
+      },
+      "stimulus": {
+        "bit_count": 40,
+        "pattern": "prbs7",
+        "scored_pair_count": 16,
+        "simulation_timeout_s": 900,
+        "tx_clock_duty": 0.5,
+        "tx_clock_jitter_peak_s": 0.0
+      },
+      "supply_stress": {
+        "vdd_ripple_frequency_hz": 100000000.0,
+        "vdd_ripple_peak_v": 0.02
+      }
+    }
+  ],
+  "claim": "completed_exact_pex_lane_impairment_factor_screen",
+  "completed_case_count": 4,
+  "electrical_passing_case_count": 3,
+  "pex_sha256": {
+    "deserializer_pex": "a44be441143fddbf1db0c2ccf040a1f7e4ceb14665df5643586b16967bf42e0f",
+    "frontend_pex": "9020657086fa6ab1ae2e609b5afc23bc170532bc7b7857b320fccef6a1680991",
+    "rx_pex": "167dbcfb92d93a72365054464c9994927b28fcb88a4ac26d953b587969295580",
+    "sampler_pex": "e308d85bd40ad846c29e4cc8d5ffc50496d2992d09a2fb4c4b6b0457adb32968",
+    "termination_pex": "a58d8fb54efa2bb6529e4788d098286388618916f2aad38b5c39525175ac1bcd",
+    "tx_pex": "37e60ad6d18ccc9cd62fbc6184aae7cda6ed391b59c8fc1f3181e61451dffb4b"
+  },
+  "physical_sha256": {
+    "deserializer_split": "ae6ca99ceb2daaadc154b438074b410fe0505d88df301996bd6b8b124209470f"
+  },
+  "result": "pass",
+  "schema_version": 1,
+  "source_sha256": {
+    "base_testbench": "b1520c8b46b5a6819d9c226d419f01e42c11b6625d2151abb0eab3750cc84c98",
+    "runner": "7c9e8ef8d4eb371ad544dcbde0a15809ae3a63ad1096a42f821791ad3dd99140"
+  }
+}

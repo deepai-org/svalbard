@@ -20,6 +20,23 @@ prepare_capture_stack() {
   extract_capture_cell cdr/cml_to_cmos cml_to_cmos cml_to_cmos.spice cml_to_cmos_pex
   extract_capture_cell deserializer_split deserializer_split_capture \
     deserializer_split.spice deserializer_split_capture_pex
+  magic -dnull -noconsole -rcfile "$PDKPATH/libs.tech/magic/$PDK.magicrc" \
+    /src/data_restorer/stage_layout.tcl > /work/data-restorer-stage.layout.log 2>&1
+  extract_capture_cell data_restorer cml_data_restorer \
+    data_restorer.spice cml_data_restorer_pex
+
+  export VCO_BAND_CELL_NAME=cml_data_restorer
+  export VCO_BAND_RENDER_PATH=/work/data-restorer-layout.png
+  python3 /src/pll/render_vco_band.py > /work/data-restorer-render.log 2>&1
+  python3 /src/pll/check_clock_restorer_physical.py --source /src/data_restorer \
+    --drc /work/cml_data_restorer-drc/cml_data_restorer.magic.drc/cml_data_restorer.magic.drc.rpt \
+    --lvs /work/cml_data_restorer-lvs/cml_data_restorer.magic.lvs/cml_data_restorer.lvs.out \
+    --pex /work/cml_data_restorer-pex/cml_data_restorer.pex.spice \
+    --gds /work/cml_data_restorer.gds --render /work/data-restorer-layout.png \
+    --claim data_restorer_structural_physical_closure \
+    --layout-source layout.tcl --schematic-source data_restorer.spice \
+    --minimum-resistors 40 --minimum-capacitors 10 \
+    --output /work/data-restorer-physical.json
 
   split_pex=/work/deserializer_split_capture-pex/deserializer_split_capture.pex.spice
   SPLIT_CAPTURE_PEX="$split_pex" \
@@ -40,6 +57,8 @@ prepare_capture_stack() {
     --term-pex /work/serdes_termination-pex/serdes_termination.pex.spice
     --rx-pex /work/serdes_rx-pex/serdes_rx.pex.spice
     --sampler-pex /work/cdr_sampler-pex/cdr_sampler.pex.spice
+    --restorer-pex /work/cml_data_restorer-pex/cml_data_restorer.pex.spice
+    --restorer-physical /work/data-restorer-physical.json
     --frontend-pex /work/cml_to_cmos-pex/cml_to_cmos.pex.spice
     --deserializer-pex "$split_pex"
     --deserializer-physical /work/capture-physical.json

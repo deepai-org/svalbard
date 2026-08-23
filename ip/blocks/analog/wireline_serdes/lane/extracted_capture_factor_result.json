@@ -1,0 +1,174 @@
+{
+  "case_count": 4,
+  "cases": [
+    {
+      "case_id": "baseline",
+      "channel_stress": {
+        "differential_shunt_capacitance_f": 0.0,
+        "series_resistance_ohm_per_leg": 0.0,
+        "topology": "symmetric_two_section_lumped_rc_proxy"
+      },
+      "electrical_result": "pass",
+      "evidence_sha256": "e22182aa829b178f8fd2921039fa2969f01a12511f5d9e3350f8d9ed3d36b574",
+      "selected_case": {
+        "amplifier_common_mode_v": 2.86228,
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 3.16562,
+        "minimum_capture_odd_v": 3.21775,
+        "minimum_frontend_even_v": 2.97524,
+        "minimum_frontend_odd_v": 2.97552,
+        "minimum_pin_even_v": 0.261086,
+        "minimum_pin_odd_v": 0.261967,
+        "minimum_rx_even_v": 0.318202,
+        "minimum_rx_odd_v": 0.321463,
+        "minimum_tx_even_v": 0.157802,
+        "minimum_tx_odd_v": 0.158826,
+        "result": "pass",
+        "rx_common_mode_v": 1.73943,
+        "supply_current_a": 0.0269564
+      },
+      "stimulus": {
+        "bit_count": 40,
+        "pattern": "prbs7",
+        "scored_pair_count": 16,
+        "simulation_timeout_s": 900,
+        "tx_clock_duty": 0.5,
+        "tx_clock_jitter_peak_s": 0.0
+      },
+      "supply_stress": {
+        "vdd_ripple_frequency_hz": 100000000.0,
+        "vdd_ripple_peak_v": 0.0
+      }
+    },
+    {
+      "case_id": "channel",
+      "channel_stress": {
+        "differential_shunt_capacitance_f": 2e-12,
+        "series_resistance_ohm_per_leg": 10.0,
+        "topology": "symmetric_two_section_lumped_rc_proxy"
+      },
+      "electrical_result": "fail",
+      "evidence_sha256": "916f939cff6fa101db3d559417c5d2907b1707e6f8a8c659e164ee97e40e892a",
+      "selected_case": null,
+      "stimulus": {
+        "bit_count": 40,
+        "pattern": "prbs7",
+        "scored_pair_count": 16,
+        "simulation_timeout_s": 900,
+        "tx_clock_duty": 0.5,
+        "tx_clock_jitter_peak_s": 0.0
+      },
+      "supply_stress": {
+        "vdd_ripple_frequency_hz": 100000000.0,
+        "vdd_ripple_peak_v": 0.0
+      }
+    },
+    {
+      "case_id": "timing",
+      "channel_stress": {
+        "differential_shunt_capacitance_f": 0.0,
+        "series_resistance_ohm_per_leg": 0.0,
+        "topology": "symmetric_two_section_lumped_rc_proxy"
+      },
+      "electrical_result": "pass",
+      "evidence_sha256": "764328345237d1a9c4779fd7d0902bbe327f651797ab63fc79bb1eff9592e11c",
+      "selected_case": {
+        "amplifier_common_mode_v": 2.86228,
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 3.16562,
+        "minimum_capture_odd_v": 3.21772,
+        "minimum_frontend_even_v": 2.97496,
+        "minimum_frontend_odd_v": 2.97542,
+        "minimum_pin_even_v": 0.259997,
+        "minimum_pin_odd_v": 0.264486,
+        "minimum_rx_even_v": 0.303149,
+        "minimum_rx_odd_v": 0.331862,
+        "minimum_tx_even_v": 0.156581,
+        "minimum_tx_odd_v": 0.160426,
+        "result": "pass",
+        "rx_common_mode_v": 1.73942,
+        "supply_current_a": 0.0269589
+      },
+      "stimulus": {
+        "bit_count": 40,
+        "pattern": "prbs7",
+        "scored_pair_count": 16,
+        "simulation_timeout_s": 900,
+        "tx_clock_duty": 0.47,
+        "tx_clock_jitter_peak_s": 3e-11
+      },
+      "supply_stress": {
+        "vdd_ripple_frequency_hz": 100000000.0,
+        "vdd_ripple_peak_v": 0.0
+      }
+    },
+    {
+      "case_id": "ripple",
+      "channel_stress": {
+        "differential_shunt_capacitance_f": 0.0,
+        "series_resistance_ohm_per_leg": 0.0,
+        "topology": "symmetric_two_section_lumped_rc_proxy"
+      },
+      "electrical_result": "pass",
+      "evidence_sha256": "f8b4ea1c67bd41341bf27199ba20fa24fae26ecb12bed577c6ff9974d2d8ea24",
+      "selected_case": {
+        "amplifier_common_mode_v": 2.86392,
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 3.14496,
+        "minimum_capture_odd_v": 3.19717,
+        "minimum_frontend_even_v": 2.95852,
+        "minimum_frontend_odd_v": 2.96585,
+        "minimum_pin_even_v": 0.261148,
+        "minimum_pin_odd_v": 0.262066,
+        "minimum_rx_even_v": 0.318337,
+        "minimum_rx_odd_v": 0.321289,
+        "minimum_tx_even_v": 0.157505,
+        "minimum_tx_odd_v": 0.158691,
+        "result": "pass",
+        "rx_common_mode_v": 1.7409,
+        "supply_current_a": 0.0269747
+      },
+      "stimulus": {
+        "bit_count": 40,
+        "pattern": "prbs7",
+        "scored_pair_count": 16,
+        "simulation_timeout_s": 900,
+        "tx_clock_duty": 0.5,
+        "tx_clock_jitter_peak_s": 0.0
+      },
+      "supply_stress": {
+        "vdd_ripple_frequency_hz": 100000000.0,
+        "vdd_ripple_peak_v": 0.02
+      }
+    }
+  ],
+  "claim": "completed_exact_pex_lane_impairment_factor_screen",
+  "completed_case_count": 4,
+  "electrical_passing_case_count": 3,
+  "pex_sha256": {
+    "deserializer_pex": "650a0fc7bd6af42ea25e8270793a10428a7b427ff591f7335c7e167f3b84fec5",
+    "frontend_pex": "be2cd96e51e9d73c9a426bdec1400f920f876fc673cfec07278d384f0a338371",
+    "rx_pex": "fff639d7d0a9d4f4d28707def91a3285e2345195ed4f437ecdd72b21e138cf9b",
+    "sampler_pex": "42f38218d1d505546f4605ac1bfaf2e620dec2ef3b966d1e63649c4f44a49d06",
+    "termination_pex": "e5aeac313b837965b92f4812964681e748b094b7b4451d517511461771972168",
+    "tx_pex": "37e60ad6d18ccc9cd62fbc6184aae7cda6ed391b59c8fc1f3181e61451dffb4b"
+  },
+  "physical_sha256": {
+    "deserializer_split": "7d99172899c0015adf682390a8e11ed65f0b4a588b254c26530f3e1ec98cb661"
+  },
+  "result": "pass",
+  "schema_version": 1,
+  "source_sha256": {
+    "base_testbench": "b1520c8b46b5a6819d9c226d419f01e42c11b6625d2151abb0eab3750cc84c98",
+    "runner": "7c9e8ef8d4eb371ad544dcbde0a15809ae3a63ad1096a42f821791ad3dd99140"
+  }
+}

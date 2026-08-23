@@ -58,6 +58,16 @@ analog-flow-preflight:
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/deserializer_split/run.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_stress.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_stress_pvt.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_factor.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_channel_sweep.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_rx_bias_sweep.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_factor_worst.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_bandwidth_mode.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_restorer_sweep.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_restorer_ff_bias.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_restorer_ss_bias.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/data_restorer/run.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/phase_interpolator/run.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/phase_control_dac/run.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/phase_control_integration/run.sh

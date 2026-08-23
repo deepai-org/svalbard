@@ -9,7 +9,9 @@ transistor-level CML transmitter with extracted simulations at 1.25 and 2.5
 GT/s; [`termination`](termination/README.md), a seven-branch programmable
 differential termination with calibrated schematic and full-RC PVT matrices;
 [`serdes_rx`](serdes_rx/README.md), a two-stage static CML receiver core with
-bias, threshold, and bandwidth controls; [`phase_interpolator`](phase_interpolator/README.md),
+bias, threshold, and bandwidth controls; [`data_restorer`](data_restorer/README.md),
+a dedicated extracted two-stage limiter that closes the RX-to-sampler input
+contract under the combined 1.25-GBd lane matrix; [`phase_interpolator`](phase_interpolator/README.md),
 a programmable two-input CML phase interpolator for reference-assisted
 sampling; and [`cdr`](cdr/README.md), which contains both a dual-edge CML
 sampler and a half-rate Alexander phase-detector boundary with extracted PVT

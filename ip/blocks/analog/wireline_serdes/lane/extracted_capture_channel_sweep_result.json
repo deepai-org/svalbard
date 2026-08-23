@@ -1,0 +1,145 @@
+{
+  "case_count": 4,
+  "cases": [
+    {
+      "case_id": "ch6",
+      "channel_stress": {
+        "differential_shunt_capacitance_f": 1e-12,
+        "series_resistance_ohm_per_leg": 6.0,
+        "topology": "symmetric_two_section_lumped_rc_proxy"
+      },
+      "electrical_result": "pass",
+      "evidence_sha256": "5d3d997cab63c5f629b8cf5f5cc7e03f0b18f6f015ec662db03416b076afafed",
+      "observed_case": {
+        "amplifier_common_mode_v": 2.86254,
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 3.16562,
+        "minimum_capture_odd_v": 3.2176,
+        "minimum_frontend_even_v": 2.97711,
+        "minimum_frontend_odd_v": 2.97707,
+        "minimum_pin_even_v": 0.195675,
+        "minimum_pin_odd_v": 0.197693,
+        "minimum_rx_even_v": 0.179811,
+        "minimum_rx_odd_v": 0.183628,
+        "minimum_tx_even_v": 0.110041,
+        "minimum_tx_odd_v": 0.111769,
+        "result": "pass",
+        "rx_common_mode_v": 1.73918,
+        "supply_current_a": 0.0269385
+      }
+    },
+    {
+      "case_id": "ch7",
+      "channel_stress": {
+        "differential_shunt_capacitance_f": 1.25e-12,
+        "series_resistance_ohm_per_leg": 7.0,
+        "topology": "symmetric_two_section_lumped_rc_proxy"
+      },
+      "electrical_result": "pass",
+      "evidence_sha256": "658b3a45447886b3b9894b38b43a6ba093471b79a3f84bb640f89f2ebc4921af",
+      "observed_case": {
+        "amplifier_common_mode_v": 2.86259,
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 3.16546,
+        "minimum_capture_odd_v": 3.21745,
+        "minimum_frontend_even_v": 2.97754,
+        "minimum_frontend_odd_v": 2.97745,
+        "minimum_pin_even_v": 0.174548,
+        "minimum_pin_odd_v": 0.17669,
+        "minimum_rx_even_v": 0.145931,
+        "minimum_rx_odd_v": 0.149728,
+        "minimum_tx_even_v": 0.0936041,
+        "minimum_tx_odd_v": 0.0955329,
+        "result": "pass",
+        "rx_common_mode_v": 1.73914,
+        "supply_current_a": 0.0269345
+      }
+    },
+    {
+      "case_id": "ch8",
+      "channel_stress": {
+        "differential_shunt_capacitance_f": 1.5e-12,
+        "series_resistance_ohm_per_leg": 8.0,
+        "topology": "symmetric_two_section_lumped_rc_proxy"
+      },
+      "electrical_result": "pass",
+      "evidence_sha256": "44d701727c1c5b8625e0c45a07164fbc85df7fdaa57fae25e07144e6878c5c29",
+      "observed_case": {
+        "amplifier_common_mode_v": 2.86264,
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": 3.16385,
+        "minimum_capture_odd_v": 3.21691,
+        "minimum_frontend_even_v": 2.97783,
+        "minimum_frontend_odd_v": 2.97762,
+        "minimum_pin_even_v": 0.153712,
+        "minimum_pin_odd_v": 0.155982,
+        "minimum_rx_even_v": 0.114072,
+        "minimum_rx_odd_v": 0.117814,
+        "minimum_tx_even_v": 0.0771089,
+        "minimum_tx_odd_v": 0.0792182,
+        "result": "pass",
+        "rx_common_mode_v": 1.7391,
+        "supply_current_a": 0.0269421
+      }
+    },
+    {
+      "case_id": "ch9",
+      "channel_stress": {
+        "differential_shunt_capacitance_f": 1.75e-12,
+        "series_resistance_ohm_per_leg": 9.0,
+        "topology": "symmetric_two_section_lumped_rc_proxy"
+      },
+      "electrical_result": "fail",
+      "evidence_sha256": "77d13e7f3f2874dabe2124a1678c05317ab188134fc697b5ed20ecc149285d52",
+      "observed_case": {
+        "amplifier_common_mode_v": 2.86269,
+        "capture_close_s": 6.649999999999999e-09,
+        "complete": true,
+        "conversion_offset_s": 0.0,
+        "id": "convert_000p",
+        "minimum_capture_even_v": -3.19287,
+        "minimum_capture_odd_v": -3.26288,
+        "minimum_frontend_even_v": -3.15617,
+        "minimum_frontend_odd_v": -2.95823,
+        "minimum_pin_even_v": 0.133577,
+        "minimum_pin_odd_v": 0.136006,
+        "minimum_rx_even_v": 0.0844676,
+        "minimum_rx_odd_v": 0.0881374,
+        "minimum_tx_even_v": 0.0610629,
+        "minimum_tx_odd_v": 0.0633303,
+        "result": "fail",
+        "rx_common_mode_v": 1.73906,
+        "supply_current_a": 0.0267412
+      }
+    }
+  ],
+  "claim": "completed_exact_pex_lane_rc_channel_boundary_sweep",
+  "completed_case_count": 4,
+  "electrical_passing_case_count": 3,
+  "pex_sha256": {
+    "deserializer_pex": "e80179d3c74129135ca5b2cc5e91fb2eb90eae57095606c0741488fbfd1bac98",
+    "frontend_pex": "a362552a85fd2fcb9efccc669b0fd00e461dfc825bf2b6ebf0ce5c39966bdf77",
+    "rx_pex": "2d446f5ea00dd27a5105309e1c126bd927da103749e10fca5c03add2cef82fa5",
+    "sampler_pex": "34472a012014a12e3c3706e1e8b094a593da2d401fb82f02f17a557834e2fd47",
+    "termination_pex": "0ee74dbec0c943c5dd058a3aca08ff0e9c53973f6e7730fe7df8b9b6591c4c97",
+    "tx_pex": "37e60ad6d18ccc9cd62fbc6184aae7cda6ed391b59c8fc1f3181e61451dffb4b"
+  },
+  "physical_sha256": {
+    "deserializer_split": "b371ee1d25f95c278208ff49c34b9c486b63d66ac90f9ab5f3b338f83943ccef"
+  },
+  "result": "pass",
+  "schema_version": 1,
+  "source_sha256": {
+    "base_testbench": "b1520c8b46b5a6819d9c226d419f01e42c11b6625d2151abb0eab3750cc84c98",
+    "runner": "7c9e8ef8d4eb371ad544dcbde0a15809ae3a63ad1096a42f821791ad3dd99140"
+  }
+}

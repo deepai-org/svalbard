@@ -75,3 +75,40 @@ Nyquist frequency and 1.16 dB at 1.25 GHz. This is an explicit bounded lumped
 stress, not a transmission-line, return-loss, or selected-channel claim. A
 denser impairment/PVT matrix, simultaneous-supply aggression, and selected
 pad/ESD/package/S-parameter models remain next.
+
+## Combined extracted stress and data restoration
+
+The denser matrix now measures every scored TX, receiver pin, receiver output,
+sampler input, CML-to-CMOS output, and retained CMOS output. An initial 5-case
+run with 7 ohms/leg and 1.25 pF localized the failure to receiver dynamic
+margin. A one-factor screen showed that 30 ps peak jitter, 47% duty cycle, and
+20 mV peak 100 MHz supply ripple each passed at the limiting slow/passive
+environment; the provisional RC channel was the controlling mechanism. The
+6-ohm/leg plus 1-pF point is the selected bounded proxy. The observed
+7-ohm/leg plus 1.25-pF failure preceded the data-restorer redesign, so it is
+mechanism evidence, not a post-redesign channel limit or guardband claim.
+
+The original receiver output could still produce correct final data but fell
+below the sampler's independently qualified 200 mV input contract. Reusing the
+physical 7.5-um-load clock restorer failed arbitrary PRBS settling, so a new
+two-stage 4.5-um-load `data_restorer` was laid out, checked, and extracted. Its
+exact PEX passes at adjacent 67.5 and 90 degree sampler phases in the limiting
+environment; 78.75 degrees is selected between them. Mixed process/passive
+corners use restorer bias codes supported by adjacent-code screens rather than
+waiving the interface floor.
+
+The permanent calibration targets are `run_capture_restorer_sweep.sh` for the
+final-geometry phase window, `run_capture_restorer_ff_bias.sh` for the
+fast-device/slow-passive corner, and `run_capture_restorer_ss_bias.sh` for the
+slow-device/fast-passive corner. They share the exact extraction stack,
+stimulus runner, and parameterized fail-closed evidence merger.
+
+`./run_capture_stress_pvt.sh` now passes 5/5 representative environments and
+160/160 scored serial bits with one exact extraction stack under simultaneous
+6-ohm/leg plus 1-pF channel stress, 30-ps peak deterministic TX jitter, 47%
+duty cycle, and 20-mV peak 100-MHz rail ripple. Worst signed margins at the TX,
+pin, raw RX, restored sampler input, converter, and final capture are
+78.681/147.603/50.674/230.118/2578.62/2733.72 mV. Total composed current is
+26.383--41.442 mA. This closes the bounded low-loss proxy matrix; it does not
+close mismatch, substrate/PDN coupling, 2.5 GT/s, or the selected physical I/O
+and channel.

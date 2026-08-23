@@ -1,0 +1,15 @@
+* SPDX-License-Identifier: Apache-2.0
+* Two-stage wideband CML limiter for the RX-to-sampler data boundary.
+
+.subckt cml_data_restorer_stage IN_P IN_N VBIAS VDD VSS OUT_P OUT_N
+XRP VDD OUT_P VSS ppolyf_u r_width=2u r_length=4.5u
+XRN VDD OUT_N VSS ppolyf_u r_width=2u r_length=4.5u
+XIP OUT_P IN_P NTAIL VSS nfet_03v3 w=10u l=0.28u m=2
+XIN OUT_N IN_N NTAIL VSS nfet_03v3 w=10u l=0.28u m=2
+XTAIL NTAIL VBIAS VSS VSS nfet_03v3 w=12u l=0.28u m=4
+.ends cml_data_restorer_stage
+
+.subckt cml_data_restorer IN_P IN_N VBIAS VDD VSS OUT_P OUT_N
+XPRE IN_P IN_N VBIAS VDD VSS MID_P MID_N cml_data_restorer_stage
+XDRV MID_P MID_N VBIAS VDD VSS OUT_P OUT_N cml_data_restorer_stage
+.ends cml_data_restorer

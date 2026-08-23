@@ -718,6 +718,28 @@ Use the same fixed selected code throughout one stress environment unless the
 test is explicitly measuring recalibration. Otherwise the sweep can conceal a
 dynamic failure behind per-case retuning.
 
+At a composed analog boundary, gate both the producer output and the consumer's
+declared input assumption. Correct final bits do not prove that an intermediate
+contract has margin. In the lane work, the raw RX repeatedly drove the sampler
+to correct rail-to-rail CMOS results while falling below the sampler's 200 mV
+qualified input floor. The right response was a physical data restorer and a
+new sampler-phase search, not lowering the floor.
+
+Do not assume a limiter proven on a periodic clock is suitable for arbitrary
+data. The extracted 7.5-um-load clock restorer produced large rails but retained
+wrong-bit history on PRBS runs. A dedicated shorter-load cell had to be laid
+out and extracted. Factor amplitude, polarity, settling, and aperture separately:
+first verify port polarity, then sweep physical load, bias, and sampling phase,
+and finally rerun the complete downstream chain. Preserve failed reuse screens;
+they distinguish insufficient gain from data-dependent settling.
+
+When process and passive corners push gain and bandwidth in opposite directions,
+one global analog code may be the wrong contract. Require a contiguous passing
+code window in each representative environment, choose an interior code, and
+record the calibration table. This is legitimate programmability only if a
+future observable and search algorithm can select the code on silicon; a
+per-corner simulator choice alone is not a completed calibration system.
+
 ## 9. Render and inspect the real GDS
 
 Generate a full-resolution raster from the emitted GDS and inspect it after

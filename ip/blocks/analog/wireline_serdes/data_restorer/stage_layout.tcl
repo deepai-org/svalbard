@@ -85,13 +85,24 @@ proc manual_gate_bottom {cx y half_width xs} {
 }
 
 crashbackups stop
-load cml_data_restorer_stage_hier
+set stage_cell_name cml_data_restorer_stage
+set load_length 4.50
+if {[info exists ::env(DATA_RESTORER_STAGE_CELL)]} {
+    set stage_cell_name $::env(DATA_RESTORER_STAGE_CELL)
+}
+if {[info exists ::env(DATA_RESTORER_LOAD_LENGTH)]} {
+    set load_length $::env(DATA_RESTORER_LOAD_LENGTH)
+}
+if {$load_length < 2.0 || $load_length > 6.0} {
+    error "data-restorer load length must be between 2 and 6 um"
+}
+load ${stage_cell_name}_hier
 set pair_cell [magic::gencell_makecell gf180mcu::nfet_03v3 \
     w 10 l 0.28 nf 2 guard 0 topc 0 botc 0 full_metal 0]
 set tail_cell [magic::gencell_makecell gf180mcu::nfet_03v3 \
     w 12 l 0.28 nf 4 guard 0 topc 0 botc 0 full_metal 0]
 set load_cell [magic::gencell_makecell gf180mcu::ppolyf_u \
-    w 2 l 4.50 guard 1 full_metal 1]
+    w 2 l $load_length guard 1 full_metal 1]
 units microns
 foreach {cell instance x y} [list \
         $pair_cell XIP -4 2 $pair_cell XIN 4 2 \
@@ -101,8 +112,8 @@ foreach {cell instance x y} [list \
     identify $instance
 }
 select top cell
-flatten cml_data_restorer_stage
-load cml_data_restorer_stage
+flatten $stage_cell_name
+load $stage_cell_name
 units microns
 paint_rect pwell -14 -22 14 24
 
@@ -119,11 +130,14 @@ mos_terminal_strap 0 -11 -4.75 {-0.8 0.8} 3
 manual_gate_bottom 0 -17.35 1.35 {-1.2 -0.4 0.4 1.2}
 paint_rect metal3 -2.4 -16.20 2.4 -15.30
 
-# Adjacent 4.5 um loads balance slow-corner gain and arbitrary-data settling.
+# Adjacent loads use a generated length so rate-specific physical variants can
+# trade gain for settling without changing matched routing topology.
+set load_bottom [expr {16.0-$load_length/2.0}]
+set load_top [expr {16.0+$load_length/2.0}]
 foreach x {-4 4} {
-    foreach y {13.75 18.25} { stack_to $x $y 3 }
-    paint_rect metal3 [expr {$x-0.45}] 4.30 [expr {$x+0.45}] 13.75
-    paint_rect metal3 [expr {$x-0.45}] 18.25 [expr {$x+0.45}] 22.0
+    foreach y [list $load_bottom $load_top] { stack_to $x $y 3 }
+    paint_rect metal3 [expr {$x-0.45}] 4.30 [expr {$x+0.45}] $load_bottom
+    paint_rect metal3 [expr {$x-0.45}] $load_top [expr {$x+0.45}] 22.0
     stack_from3_to $x 21.5 5
 }
 paint_rect metal5 -10 21.1 10 22.0
@@ -166,6 +180,6 @@ stack_to -13.5 -20.5 5
 paint_rect metal5 -13.95 -20.5 -13.05 2.0
 make_port VSS 5 metal5 -13.95 -2.0 -13.05 0.0
 
-save /work/cml_data_restorer_stage
-gds write /work/cml_data_restorer_stage.gds
+save /work/$stage_cell_name
+gds write /work/${stage_cell_name}.gds
 quit -noprompt

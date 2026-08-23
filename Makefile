@@ -11,6 +11,7 @@ check: check-fast
 
 check-fast: smoke
 	$(PYTHON) scripts/test_analog_evidence.py
+	$(PYTHON) ip/blocks/analog/wireline_serdes/lane/check_2p5_evidence.py
 	$(PYTHON) scripts/validate.py structure
 	$(PYTHON) scripts/validate.py repo-audit
 
@@ -67,6 +68,8 @@ analog-flow-preflight:
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_restorer_sweep.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_restorer_ff_bias.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_restorer_ss_bias.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_extracted_2p5.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_extracted_2p5_pvt.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/data_restorer/run.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/phase_interpolator/run.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/phase_control_dac/run.sh

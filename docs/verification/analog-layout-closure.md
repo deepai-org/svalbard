@@ -423,6 +423,14 @@ removes only proven-nonsemantic fields before hashing. A semantic comparison is
 useful as an additional diagnostic, but it does not identify the bytes a
 simulator actually included.
 
+Timestamp removal may still be insufficient: the current extractor can reorder
+parasitic elements and internal node names between unchanged runs. In that case,
+promote one DRC/LVS-bound PEX to an immutable release input and make every
+electrical run hash those exact bytes. Regenerate geometry separately to prove
+that the generator still reaches zero DRC and unique LVS, and report both the
+fresh extraction hash and simulated-release hash. Do not claim byte-deterministic
+extraction when only the electrical topology appears equivalent.
+
 For clocked dynamic cells, use an alternating-bit sequence and probe internal
 nodes through reset, acquisition, regeneration, capture, and hold. A repeated
 symbol can hide retained charge, while output-only samples cannot distinguish
@@ -468,6 +476,19 @@ capacitance. A small loaded-frequency shift does not prove adequate drive: a
 clock can retain its frequency while losing the amplitude or slew required for
 downstream regeneration. Likewise, leaf PEX passes do not compose transitively;
 the boundary needs its own environment-by-environment calibration result.
+
+For an AC-coupled differential boundary, initialize the coupling capacitor from
+the settled producer-minus-consumer common-mode difference for that environment.
+A fixed fraction of VDD can inject a fictitious startup transient or hide a real
+one as common mode moves across PVT. Label this initial state as a fixture
+condition, never as a hardware trim unless a circuit actually controls it.
+
+When a restoring chain crosses a unit-interval boundary, score integer latency
+explicitly. Search a small bounded set of whole-UI alignments, require the raw
+producer to hold signed margin for a declared interval, and leave a declared
+settling interval before sampling the consumer. Normalize phase modulo one full
+cycle. A link aligner can absorb a deterministic whole-UI delay; it cannot absorb
+wrong polarity, data-dependent latency, or a fractional aperture failure.
 
 If that boundary fails, first classify whether the producer collapses, the
 consumer lacks regeneration, or the composed function locks incorrectly. Use

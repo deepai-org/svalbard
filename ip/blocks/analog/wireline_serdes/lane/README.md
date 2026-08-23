@@ -6,6 +6,12 @@ differential termination, limiting amplifier, and dual-edge sampler.  The
 initial rate is 1.25 GBd.  This is a bounded integration experiment, not a PCIe
 pad, channel, compliance, or tapeout claim.
 
+The same harness now has an externally clocked 2.5 GT/s mode. It uses a
+rate-specialized physical data restorer and one committed exact-PEX release
+stack for the termination, RX, restorer, and sampler. Fresh regeneration still
+proves DRC and unique LVS, while every nominal and PVT electrical result hashes
+the exact release bytes it actually simulated.
+
 The provisional low-loss boundary deliberately names every currently modeled
 element: 300 fF TX and 500 fF RX capacitance per pin, 100 nF external AC
 coupling, 2 ohm and 1 nH package series parasitics per leg, 2 kohm receiver bias
@@ -110,5 +116,29 @@ duty cycle, and 20-mV peak 100-MHz rail ripple. Worst signed margins at the TX,
 pin, raw RX, restored sampler input, converter, and final capture are
 78.681/147.603/50.674/230.118/2578.62/2733.72 mV. Total composed current is
 26.383--41.442 mA. This closes the bounded low-loss proxy matrix; it does not
-close mismatch, substrate/PDN coupling, 2.5 GT/s, or the selected physical I/O
-and channel.
+close mismatch, substrate/PDN coupling, equivalent combined stress at 2.5 GT/s,
+or the selected physical I/O and channel.
+
+## Externally clocked 2.5 GT/s milestone
+
+Run `./run_extracted_2p5.sh` for fresh geometry checks plus the exhaustive
+16-phase exact-PEX nominal sweep. Six phases pass; the selected 22.5-degree,
+zero-latency case retains 175.376 mV at the TX, 222.785 mV at the pin,
+274.850 mV across the selected 50 ps raw-RX hold interval, 1.33849 V after
+restoration, and 649.090 mV at the sampler.
+
+Run `./run_extracted_2p5_pvt.sh` for the five representative mixed MOS,
+resistor, supply, and temperature environments. All five pass with at least
+one of three searched phases. Worst selected raw-RX hold, restored, and sampler
+margins are 169.915, 376.508, and 137.055 mV. The two slow/hot cases add one
+whole UI of deterministic pipeline latency; the other three and nominal use
+zero. Integer latency is scored explicitly because word alignment can absorb
+it, while wrong polarity or fractional aperture error cannot.
+
+The AC-coupling initial condition is the settled measured TX-to-RX common-mode
+difference for each environment. It is a fixture state, not a programmable
+silicon control. `check_2p5_evidence.py`, included in `make check-fast`, binds
+all release PEX and physical hashes, phase counts, environment identities, and
+interface margins. This milestone does not yet include the 1.25-GBd combined
+jitter/channel/supply stress matrix, mismatch, extracted parent routing,
+selected pads/package/S-parameters, or a recovered clock.

@@ -16,15 +16,23 @@ proc make_port {name number layer x1 y1 x2 y2} {
 }
 
 crashbackups stop
-load cml_data_restorer_hier
+set restorer_cell_name cml_data_restorer
+set stage_cell_name cml_data_restorer_stage
+if {[info exists ::env(DATA_RESTORER_CELL)]} {
+    set restorer_cell_name $::env(DATA_RESTORER_CELL)
+}
+if {[info exists ::env(DATA_RESTORER_STAGE_CELL)]} {
+    set stage_cell_name $::env(DATA_RESTORER_STAGE_CELL)
+}
+load ${restorer_cell_name}_hier
 units microns
-getcell cml_data_restorer_stage child 0 0 parent 0 0
+getcell $stage_cell_name child 0 0 parent 0 0
 identify XPRE
-getcell cml_data_restorer_stage child 0 0 parent 0 47
+getcell $stage_cell_name child 0 0 parent 0 47
 identify XDRV
 select top cell
-flatten cml_data_restorer
-load cml_data_restorer
+flatten $restorer_cell_name
+load $restorer_cell_name
 units microns
 
 # Child pin labels are implementation details at this flattened boundary.
@@ -60,6 +68,6 @@ make_port VSS 5 metal5 -13.95 -2.0 -13.05 0.0
 make_port OUT_P 6 metal3 -4.45 56.5 -3.55 58.0
 make_port OUT_N 7 metal3 3.55 56.5 4.45 58.0
 
-save /work/cml_data_restorer
-gds write /work/cml_data_restorer.gds
+save /work/$restorer_cell_name
+gds write /work/${restorer_cell_name}.gds
 quit -noprompt

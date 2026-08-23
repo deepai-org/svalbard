@@ -1,5 +1,5 @@
 * SPDX-License-Identifier: Apache-2.0
-* Externally clocked 1.25 GBd TX/channel/RX/sampler composition.
+* Externally clocked TX/channel/RX/sampler composition.
 .include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
 .lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
 .lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
@@ -90,6 +90,7 @@ CO_N SAMP_O_N 0 25f
 .control
 tran 2p @STOP_TIME@ uic
 let tx_diff = v(TXN)-v(TXP)
+let tx_cm = (v(TXP)+v(TXN))/2
 let pin_diff = v(RXP)-v(RXN)
 let rx_diff = v(RXOP)-v(RXON)
 let even_diff = v(SAMP_E_P)-v(SAMP_E_N)
@@ -98,6 +99,7 @@ let rx_cm = (v(RXP)+v(RXN))/2
 let amp_cm = (v(RXOP)+v(RXON))/2
 let isupply = -i(VDD)
 @MEASURE_LINES@
+meas tran tx_cm_avg avg tx_cm from=@MEASURE_START@ to=@STOP_TIME@
 meas tran rx_cm_avg avg rx_cm from=@MEASURE_START@ to=@STOP_TIME@
 meas tran amp_cm_avg avg amp_cm from=@MEASURE_START@ to=@STOP_TIME@
 meas tran supply_current avg isupply from=@MEASURE_START@ to=@STOP_TIME@

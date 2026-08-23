@@ -8,6 +8,11 @@ correct final bits while violating the sampler's independently qualified
 
 ![Generated GF180 data-restorer layout](layout.png)
 
+The 2.5 GT/s lane uses a separately generated fixed geometry rather than
+forcing one compromise cell across both rates:
+
+![Generated GF180 2.5 GT/s data-restorer layout](layout_2p5.png)
+
 Each stage uses a matched 20 um-per-side NMOS input pair, a local 48 um tail,
 and adjacent 4.5 um by 2 um unsalicided p-poly loads. The two stages have
 independent contacted guards, short local source/tail nodes, and symmetric
@@ -26,6 +31,14 @@ The selected layout has zero Magic DRC errors, a unique pin-resolved Netgen LVS
 match, and a full-RC extraction containing 366 resistors and 92 capacitors. The
 checked-in PEX and physical record are byte-bound. `layout.png` is rendered
 from the same generated GDS geometry.
+
+For 2.5 GT/s, `cml_data_restorer_2p5` keeps the same matched 20 um-per-side
+inputs and 48 um tails but shortens each p-poly load from 4.5 to 3.6 um. Exact
+full-RC screens rejected 3.0 um because the slow/fast-resistor case lost gain
+and rejected 3.75 um because the fast/hot case retained data too long. The
+3.6 um physical variant is zero-DRC, uniquely LVS-matched, and extracts to
+366 resistors and 92 capacitors. Its checked-in PEX and `physical_2p5_result.json`
+are byte-bound and used unchanged by nominal and PVT lane simulations.
 
 The exact PEX is qualified in the complete 1.25 GBd lane, not by a standalone
 gain claim. At the limiting slow/passive environment, sampler phases 67.5 and

@@ -1,0 +1,31 @@
+* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.include /src/clock_level_converter.spice
+.temp @TEMP_C@
+
+VDD VDD 0 PWL(0 0 500p @VDD_V@)
+VBIAS VBIAS 0 PWL(0 0 500p 1.15)
+VINP INP 0 PULSE(@INPUT_LOW@ @INPUT_HIGH@ 1n 30p 30p 370p 800p)
+VINN INN 0 PULSE(@INPUT_HIGH@ @INPUT_LOW@ 1n 30p 30p 370p 800p)
+XDUT INP INN VBIAS VDD 0 OUTP OUTN clock_level_converter
+CLOADP OUTP 0 100f
+CLOADN OUTN 0 100f
+
+.control
+tran 2p 8n uic
+let isupply = -i(VDD)
+meas tran outp_high max v(OUTP) from=4n to=8n
+meas tran outp_low min v(OUTP) from=4n to=8n
+meas tran outn_high max v(OUTN) from=4n to=8n
+meas tran outn_low min v(OUTN) from=4n to=8n
+meas tran outp_rise when v(OUTP)=@OUTPUT_MID@ rise=1 td=4n
+meas tran outp_fall when v(OUTP)=@OUTPUT_MID@ fall=1 td=4n
+meas tran outp_rise_next when v(OUTP)=@OUTPUT_MID@ rise=2 td=4n
+meas tran outn_rise when v(OUTN)=@OUTPUT_MID@ rise=1 td=4n
+meas tran outn_fall when v(OUTN)=@OUTPUT_MID@ fall=1 td=4n
+meas tran inp_rise when v(INP)=@INPUT_MID@ rise=1 td=4n
+meas tran inp_fall when v(INP)=@INPUT_MID@ fall=1 td=4n
+meas tran supply_current avg isupply from=4n to=8n
+.endc
+.end

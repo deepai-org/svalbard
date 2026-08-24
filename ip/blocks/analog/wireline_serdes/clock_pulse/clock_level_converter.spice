@@ -1,0 +1,29 @@
+* SPDX-License-Identifier: Apache-2.0
+* Symmetric CML-clock to CMOS-clock converter.  Two matched differential
+* receivers avoid depending on a CMOS inverter threshold at the CML input.
+.subckt clock_level_converter INP INN VBIAS VDD VSS OUTP OUTN
+* INP-high makes AP low; the output inverter therefore makes OUTP high.
+XAPN AP INP TP VSS nfet_03v3 w=8u l=0.28u m=2
+XADN AD INN TP VSS nfet_03v3 w=8u l=0.28u m=2
+XATP TP VBIAS VSS VSS nfet_03v3 w=10u l=0.28u m=4
+XADP AD AD VDD VDD pfet_03v3 w=4u l=0.28u m=2
+XAPP AP AD VDD VDD pfet_03v3 w=4u l=0.28u m=2
+
+* Swapped replica gives a structurally matched complementary output.
+XANN AN INN TN VSS nfet_03v3 w=8u l=0.28u m=2
+XBDN BD INP TN VSS nfet_03v3 w=8u l=0.28u m=2
+XATN TN VBIAS VSS VSS nfet_03v3 w=10u l=0.28u m=4
+XBDP BD BD VDD VDD pfet_03v3 w=4u l=0.28u m=2
+XANP AN BD VDD VDD pfet_03v3 w=4u l=0.28u m=2
+
+* Small isolation inverters keep the mirror-node capacitance low.  The two
+* inversions preserve the mirror-node polarity, so the replica outputs cross.
+XAPP1 AB AP VDD VDD pfet_03v3 w=4u l=0.28u m=1
+XAPN1 AB AP VSS VSS nfet_03v3 w=2u l=0.28u m=1
+XANP1 NB AN VDD VDD pfet_03v3 w=4u l=0.28u m=1
+XANN1 NB AN VSS VSS nfet_03v3 w=2u l=0.28u m=1
+XOPP OUTP NB VDD VDD pfet_03v3 w=12u l=0.28u m=2
+XOPN OUTP NB VSS VSS nfet_03v3 w=6u l=0.28u m=2
+XONP OUTN AB VDD VDD pfet_03v3 w=12u l=0.28u m=2
+XONN OUTN AB VSS VSS nfet_03v3 w=6u l=0.28u m=2
+.ends clock_level_converter

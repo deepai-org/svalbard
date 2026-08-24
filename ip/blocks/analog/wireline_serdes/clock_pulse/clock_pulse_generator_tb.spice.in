@@ -1,0 +1,113 @@
+* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.include @DUT_PATH@
+.temp @TEMP_C@
+
+VDD VDD 0 PWL(0 0 500p @VDD_V@)
+VSEL0 SEL0 0 PWL(0 0 500p @SEL0_V@)
+VSEL1 SEL1 0 PWL(0 0 500p @SEL1_V@)
+VSEL2 SEL2 0 PWL(0 0 500p @SEL2_V@)
+VSEL3 SEL3 0 PWL(0 0 500p @SEL3_V@)
+VCLKP CLKP 0 PULSE(0 @VDD_V@ 1n 20p 20p 380p 800p)
+VCLKN CLKN 0 PULSE(@VDD_V@ 0 1n 20p 20p 380p 800p)
+XDUT CLKP CLKN SEL0 SEL1 SEL2 SEL3 VDD 0
++ ES ER ERB EW EWB OS OR ORB OW OWB @DUT_SUBCKT@
+
+* Approximate the aggregate gates of one extracted regenerative interleave.
+CES ES 0 350f
+CER ER 0 350f
+CERB ERB 0 350f
+CEW EW 0 500f
+CEWB EWB 0 500f
+COS OS 0 350f
+COR OR 0 350f
+CORB ORB 0 350f
+COW OW 0 500f
+COWB OWB 0 500f
+
+.control
+tran 2p 12n uic
+let isupply = -i(VDD)
+meas tran clk_rise when v(CLKP)=@VMID@ rise=1 td=8n
+meas tran es_rise when v(ES)=@VMID@ rise=1 td=8n
+meas tran es_fall when v(ES)=@VMID@ fall=1 td=8n
+meas tran ew_rise when v(EW)=@VMID@ rise=1 td=8n
+meas tran ew_fall when v(EW)=@VMID@ fall=1 td=8n
+meas tran os_rise when v(OS)=@VMID@ rise=1 td=8n
+meas tran os_fall when v(OS)=@VMID@ fall=1 td=8n
+meas tran ow_rise when v(OW)=@VMID@ rise=1 td=8n
+meas tran ow_fall when v(OW)=@VMID@ fall=1 td=8n
+meas tran es_high max v(ES) from=8n to=12n
+meas tran es_low min v(ES) from=8n to=12n
+meas tran ew_high max v(EW) from=8n to=12n
+meas tran ew_low min v(EW) from=8n to=12n
+meas tran er_high max v(ER) from=8n to=12n
+meas tran erb_low min v(ERB) from=8n to=12n
+meas tran os_high max v(OS) from=8n to=12n
+meas tran os_low min v(OS) from=8n to=12n
+meas tran ow_high max v(OW) from=8n to=12n
+meas tran ow_low min v(OW) from=8n to=12n
+* @DEBUG_BEGIN@
+meas tran dbg_d08_high max v(XDUT.DBG_E_D08) from=8n to=12n
+meas tran dbg_d08_low min v(XDUT.DBG_E_D08) from=8n to=12n
+meas tran dbg_d09_high max v(XDUT.DBG_E_D09) from=8n to=12n
+meas tran dbg_d09_low min v(XDUT.DBG_E_D09) from=8n to=12n
+meas tran dbg_wsels_high max v(XDUT.DBG_E_WSTART_SEL) from=8n to=12n
+meas tran dbg_wsels_low min v(XDUT.DBG_E_WSTART_SEL) from=8n to=12n
+meas tran dbg_wsele_high max v(XDUT.DBG_E_WEND_SEL) from=8n to=12n
+meas tran dbg_wsele_low min v(XDUT.DBG_E_WEND_SEL) from=8n to=12n
+meas tran dbg_wst_high max v(XDUT.DBG_E_WST) from=8n to=12n
+meas tran dbg_wst_low min v(XDUT.DBG_E_WST) from=8n to=12n
+meas tran dbg_wet_high max v(XDUT.DBG_E_WET) from=8n to=12n
+meas tran dbg_wet_low min v(XDUT.DBG_E_WET) from=8n to=12n
+meas tran dbg_wcoreb_high max v(XDUT.DBG_E_WCOREB) from=8n to=12n
+meas tran dbg_wcoreb_low min v(XDUT.DBG_E_WCOREB) from=8n to=12n
+meas tran dbg_wb0_high max v(XDUT.DBG_E_WB0) from=8n to=12n
+meas tran dbg_wb0_low min v(XDUT.DBG_E_WB0) from=8n to=12n
+meas tran dbg_wb1_high max v(XDUT.DBG_E_WB1) from=8n to=12n
+meas tran dbg_wb1_low min v(XDUT.DBG_E_WB1) from=8n to=12n
+meas tran dbg_ssel_high max v(XDUT.DBG_E_SSEL) from=8n to=12n
+meas tran dbg_ssel_low min v(XDUT.DBG_E_SSEL) from=8n to=12n
+meas tran dbg_ct_high max v(XDUT.DBG_E_CT) from=8n to=12n
+meas tran dbg_ct_low min v(XDUT.DBG_E_CT) from=8n to=12n
+meas tran dbg_st_high max v(XDUT.DBG_E_ST) from=8n to=12n
+meas tran dbg_st_low min v(XDUT.DBG_E_ST) from=8n to=12n
+meas tran dbg_sn0_high max v(XDUT.DBG_E_SN0) from=8n to=12n
+meas tran dbg_sn0_low min v(XDUT.DBG_E_SN0) from=8n to=12n
+meas tran dbg_pclk_high max v(XDUT.DBG_E_PCLK) from=8n to=12n
+meas tran dbg_pclk_low min v(XDUT.DBG_E_PCLK) from=8n to=12n
+meas tran dbg_p08_high max v(XDUT.DBG_E_P08) from=8n to=12n
+meas tran dbg_p08_low min v(XDUT.DBG_E_P08) from=8n to=12n
+meas tran dbg_p09_high max v(XDUT.DBG_E_P09) from=8n to=12n
+meas tran dbg_p09_low min v(XDUT.DBG_E_P09) from=8n to=12n
+meas tran dbg_ctsel_high max v(XDUT.DBG_E_CTSEL) from=8n to=12n
+meas tran dbg_ctsel_low min v(XDUT.DBG_E_CTSEL) from=8n to=12n
+meas tran dbg_ctb0_high max v(XDUT.DBG_E_CTB0) from=8n to=12n
+meas tran dbg_ctb0_low min v(XDUT.DBG_E_CTB0) from=8n to=12n
+meas tran dbg_ctb1_high max v(XDUT.DBG_E_CTB1) from=8n to=12n
+meas tran dbg_ctb1_low min v(XDUT.DBG_E_CTB1) from=8n to=12n
+meas tran dbg_ctb2_high max v(XDUT.DBG_E_CTB2) from=8n to=12n
+meas tran dbg_ctb2_low min v(XDUT.DBG_E_CTB2) from=8n to=12n
+meas tran dbg_stb0_high max v(XDUT.DBG_E_STB0) from=8n to=12n
+meas tran dbg_stb0_low min v(XDUT.DBG_E_STB0) from=8n to=12n
+meas tran dbg_stb1_high max v(XDUT.DBG_E_STB1) from=8n to=12n
+meas tran dbg_stb1_low min v(XDUT.DBG_E_STB1) from=8n to=12n
+meas tran dbg_stb2_high max v(XDUT.DBG_E_STB2) from=8n to=12n
+meas tran dbg_stb2_low min v(XDUT.DBG_E_STB2) from=8n to=12n
+meas tran dbg_wstb0_high max v(XDUT.DBG_E_WSTB0) from=8n to=12n
+meas tran dbg_wstb0_low min v(XDUT.DBG_E_WSTB0) from=8n to=12n
+meas tran dbg_wstb1_high max v(XDUT.DBG_E_WSTB1) from=8n to=12n
+meas tran dbg_wstb1_low min v(XDUT.DBG_E_WSTB1) from=8n to=12n
+meas tran dbg_wstb2_high max v(XDUT.DBG_E_WSTB2) from=8n to=12n
+meas tran dbg_wstb2_low min v(XDUT.DBG_E_WSTB2) from=8n to=12n
+meas tran dbg_wetb0_high max v(XDUT.DBG_E_WETB0) from=8n to=12n
+meas tran dbg_wetb0_low min v(XDUT.DBG_E_WETB0) from=8n to=12n
+meas tran dbg_wetb1_high max v(XDUT.DBG_E_WETB1) from=8n to=12n
+meas tran dbg_wetb1_low min v(XDUT.DBG_E_WETB1) from=8n to=12n
+meas tran dbg_wetb2_high max v(XDUT.DBG_E_WETB2) from=8n to=12n
+meas tran dbg_wetb2_low min v(XDUT.DBG_E_WETB2) from=8n to=12n
+* @DEBUG_END@
+meas tran supply_current avg isupply from=8n to=12n
+.endc
+.end

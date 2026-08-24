@@ -1,0 +1,135 @@
+* SPDX-License-Identifier: Apache-2.0
+* Calibrated dual-edge sense/write pulse generator for the regenerative RX.
+
+.subckt cp_inv A Y VDD VSS params: WP=1.2u WN=0.6u MP=1 MN=1
+XP Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+.ends cp_inv
+
+.subckt cp_nand2 A B Y VDD VSS params: WP=1.6u WN=1.2u MP=1 MN=1
+XP0 Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XP1 Y B VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XN0 Y A NS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+XN1 NS B VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+.ends cp_nand2
+
+.subckt cp_nor2 A B Y VDD VSS params: WP=8u WN=8u MP=12 MN=4
+XP0 NP A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XP1 Y B NP VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XN0 Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+XN1 Y B VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+.ends cp_nor2
+
+.subckt cp_delay_unit A Y VDD VSS
+XD0 A DI VDD VSS cp_inv WP=2.4u WN=1.2u
+XD1 DI Y VDD VSS cp_inv WP=2.4u WN=1.2u
+.ends cp_delay_unit
+
+.subckt cp_tap_buffer A Y VDD VSS params: WN0=1u WP1=4u WN1=2u
+XI0 A B0 VDD VSS cp_inv WP=2u WN={WN0}
+XI1 B0 B1 VDD VSS cp_inv WP={WP1} WN={WN1}
+XI2 B1 B2 VDD VSS cp_inv WP=8u WN=6u MP=3 MN=2
+XI3 B2 Y VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4
+.ends cp_tap_buffer
+
+.subckt cp_select_prebuffer A Y VDD VSS
+XI0 A B0 VDD VSS cp_inv WP=2u WN=1u
+XI1 B0 Y VDD VSS cp_inv WP=8u WN=4u
+.ends cp_select_prebuffer
+
+.subckt cp_tg A Y EN ENB VDD VSS
+XN Y EN A VSS nfet_03v3 w=4u l=0.28u m=2
+XP Y ENB A VDD pfet_03v3 w=4u l=0.28u m=2
+.ends cp_tg
+
+* Active-low pulse while the earlier tap A is high and later tap B is low.
+.subckt cp_rise_b A B YB VDD VSS
+XI B BN VDD VSS cp_inv WP=8u WN=8u MP=2 MN=1
+XN A BN YB VDD VSS cp_nand2 WP=8u WN=8u MP=8 MN=6
+.ends cp_rise_b
+
+.subckt cp_phase CLK SEL0 SEL1 SEL2 SEL3 VDD VSS
++ SENSE REGEN REGENB WRITE WRITEB
+* Twelve matched non-inverting delay units provide digitally selectable taps.
+* Four one-hot profiles select tap triplets retained by PVT screening. The
+* transmission gates are part of the simulated circuit, not netlist rewrites.
+* interval. Total transport delay remains below one recovered-clock period.
+XD01 CLK D01 VDD VSS cp_delay_unit
+XD02 D01 D02 VDD VSS cp_delay_unit
+XD03 D02 D03 VDD VSS cp_delay_unit
+XD04 D03 D04 VDD VSS cp_delay_unit
+XD05 D04 D05 VDD VSS cp_delay_unit
+XD06 D05 D06 VDD VSS cp_delay_unit
+XD07 D06 D07 VDD VSS cp_delay_unit
+XD08 D07 D08 VDD VSS cp_delay_unit
+XD09 D08 D09 VDD VSS cp_delay_unit
+XD10 D09 D10 VDD VSS cp_delay_unit
+XD11 D10 D11 VDD VSS cp_delay_unit
+* Terminate D11 with the same first-inverter gate load seen by internal taps.
+* The unused second half of a full delay unit would only burn switching power.
+XD12T D11 D12 VDD VSS cp_inv WP=2.4u WN=1.2u
+
+* Four calibrated profiles select complete sense/start/end triplets. Controls
+* are static one-hot during operation and only change while the lane is reset.
+XI0 SEL0 SEL0B VDD VSS cp_inv WP=4u WN=2u
+XI1 SEL1 SEL1B VDD VSS cp_inv WP=4u WN=2u
+XI2 SEL2 SEL2B VDD VSS cp_inv WP=4u WN=2u
+XI3 SEL3 SEL3B VDD VSS cp_inv WP=4u WN=2u
+XPC CLK PCLK VDD VSS cp_select_prebuffer
+XP02 D02 P02 VDD VSS cp_select_prebuffer
+XP05 D05 P05 VDD VSS cp_select_prebuffer
+XP06 D06 P06 VDD VSS cp_select_prebuffer
+XP07 D07 P07 VDD VSS cp_select_prebuffer
+XP08 D08 P08 VDD VSS cp_select_prebuffer
+XP09 D09 P09 VDD VSS cp_select_prebuffer
+XP10 D10 P10 VDD VSS cp_select_prebuffer
+XP11 D11 P11 VDD VSS cp_select_prebuffer
+XP01 D01 P01 VDD VSS cp_select_prebuffer
+XSM0 P01 SSEL SEL0 SEL0B VDD VSS cp_tg
+XSM1 P02 SSEL SEL0B SEL0 VDD VSS cp_tg
+XWM0 P05 WSTART_SEL SEL0 SEL0B VDD VSS cp_tg
+XWM1 P08 WSTART_SEL SEL1 SEL1B VDD VSS cp_tg
+XWM2 P07 WSTART_SEL SEL2 SEL2B VDD VSS cp_tg
+XWM3 P10 WSTART_SEL SEL3 SEL3B VDD VSS cp_tg
+XWE0 P06 WEND_SEL SEL0 SEL0B VDD VSS cp_tg
+XWE1 P09 WEND_SEL SEL1 SEL1B VDD VSS cp_tg
+XWE2 P08 WEND_SEL SEL2 SEL2B VDD VSS cp_tg
+XWE3 P11 WEND_SEL SEL3 SEL3B VDD VSS cp_tg
+
+* SENSE = CLK OR the selected sense tap. WRITE is high between the selected
+* start and end tap. Matched tap buffers keep the large logic gates off the
+* transport-delay nodes. The direct path crosses one enabled TG plus one quiet
+* dummy TG, matching the two-branch sense selector's delay and diffusion load.
+* These buffers preserve the intentionally short inactive and write intervals
+* under the large regenerative-gate capacitances.
+XCM0 PCLK CTSEL VDD VSS VDD VSS cp_tg
+XCM1 VSS CTSEL VSS VDD VDD VSS cp_tg
+XCT CTSEL CT VDD VSS cp_tap_buffer
+XST SSEL ST VDD VSS cp_tap_buffer
+XWST WSTART_SEL WST VDD VSS cp_tap_buffer WN0=2u WP1=4.6u WN1=2.3u
+XWET WEND_SEL WET VDD VSS cp_tap_buffer WN0=2u WP1=4.6u WN1=2.3u
+XSN CT ST SN0 VDD VSS cp_nor2
+XWN WST WET WCOREB VDD VSS cp_rise_b
+XSB0 SN0 SB0 VDD VSS cp_inv WP=8u WN=8u MP=2 MN=1
+XSB1 SB0 SB1 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4
+XSB2 SB1 SENSE VDD VSS cp_inv WP=8u WN=8u MP=16 MN=5
+XRB0 SN0 RB0 VDD VSS cp_inv WP=8u WN=4u
+XRB1 RB0 RB1 VDD VSS cp_inv WP=8u WN=6u MP=3 MN=2
+XRB2 RB1 REGEN VDD VSS cp_inv WP=8u WN=8u MP=4 MN=4
+XRBI SN0 RBT VDD VSS cp_inv WP=8u WN=4u
+XRBB RBT REGENB VDD VSS cp_inv WP=8u WN=8u MP=4 MN=4
+XWB0 WCOREB WB0 VDD VSS cp_inv WP=8u WN=8u MP=4 MN=2
+XWB1 WB0 WB1 VDD VSS cp_inv WP=8u WN=8u MP=12 MN=6
+XWB2 WB1 WRITE VDD VSS cp_inv WP=8u WN=8u MP=20 MN=20
+XWBI WCOREB WBT VDD VSS cp_inv WP=8u WN=8u
+XWBB WBT WRITEB VDD VSS cp_inv WP=8u WN=8u MP=20 MN=20
+.ends cp_phase
+
+.subckt clock_pulse_generator CLKP CLKN SEL0 SEL1 SEL2 SEL3 VDD VSS
++ E_SENSE E_REGEN E_REGENB E_WRITE E_WRITEB
++ O_SENSE O_REGEN O_REGENB O_WRITE O_WRITEB
+XE CLKP SEL0 SEL1 SEL2 SEL3 VDD VSS
++ E_SENSE E_REGEN E_REGENB E_WRITE E_WRITEB cp_phase
+XO CLKN SEL0 SEL1 SEL2 SEL3 VDD VSS
++ O_SENSE O_REGEN O_REGENB O_WRITE O_WRITEB cp_phase
+.ends clock_pulse_generator

@@ -293,6 +293,22 @@ interiors instead added capacitance and was slower. Compactness is valuable
 only when it shortens the electrically sensitive path without creating new
 crossings or dense via stacks.
 
+Apply the same locality rule to complementary phases. A side-by-side EVEN/ODD
+macro can make each phase internally compact yet force one phase's output across
+the full width of the other. Stack the phases on separate vertical bands when
+that keeps phase-local delay, selector, pulse-logic, and output nets short, and
+give each band its own local power rails. Re-check the shared top-level controls,
+power trunks, taps, wells, and guard geometry across both bands; phase stacking
+is a routing transformation, not permission to assume connectivity is preserved.
+
+Place programmable muxes by physical consumer, not only by schematic depth.
+For several selected taps, arrange each prebuffer beside the mux branch it
+drives, place a tap used by two branches between them, and give matched start/end
+selector banks comparable spans and surroundings. A one-hot control proves only
+which branch conducts. The unselected branch diffusion, shared selector wire,
+and downstream gate capacitance remain real loads and can move pulse width or
+even another calibrated path through supply and delay-line coupling.
+
 ## 5. Generate layout from parameterized devices
 
 Use the PDK's Magic parameterized cells for active devices and resistors, then
@@ -398,6 +414,15 @@ horizontal straps can cross or merge unrelated same-row nets even though every
 individual via landing is legal. Reserve body-tap columns first and permit a
 second forced supply escape only where current density requires it.
 
+Make routing legality aware of intended nets before handing geometry to DRC.
+Track every low-metal access rectangle and upper-metal interval in the generator,
+reject overlaps between different logical nets, and allow same-net reuse only
+deliberately. A geometric DRC engine sees two touching same-layer rectangles as
+one legal conductor; it cannot know that the generator intended different nets.
+Use exact interval-conflict repair rather than a bounded heuristic that can
+oscillate between tracks, and reserve body-tap and power-stack footprints before
+allocating signal escapes.
+
 ## 6. Close DRC and LVS incrementally
 
 Run Magic generation, DRC, and LVS after the first complete route. Interpret
@@ -430,6 +455,22 @@ Check the extracted subcircuit pin order and count the generated resistors and
 capacitors. Start with the nominal truth/timing sweep; if polarity, settling, or
 the calibrated window changes materially, fix layout before running a full
 matrix.
+
+When nominal PEX fails, retain the same extracted active devices and run two
+diagnostic variants: scale only explicit routing resistance toward zero, then
+scale only explicit parasitic capacitance toward zero. This is not qualification,
+but it cleanly separates a resistive-delivery problem from a capacitive loading
+problem before resizing devices. Add internal measurements at every delay tap,
+selector output, restoration stage, pulse-logic node, and final driver. A final
+stuck output can otherwise hide that the transport delay is healthy and only one
+partially settled selector node fails to cross the next stage's threshold.
+
+Do not accept topology-only LVS when parameterized hierarchy emits property
+warnings. Netgen may flatten or compare forwarded defaults differently from the
+source hierarchy; a unique pin-resolved graph match is valuable but does not by
+itself prove every width, length, and multiplicity. Preserve the warnings, add a
+generated flat device/property manifest or other independent size comparison,
+and call the block property-clean only when that check agrees with extraction.
 
 Then repeat the same grouped PVT search against the extracted netlist. Cache
 reuse must include a SHA-256 of every externally included DUT netlist; comparing

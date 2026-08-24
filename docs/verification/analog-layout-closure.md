@@ -1070,6 +1070,31 @@ record the calibration table. This is legitimate programmability only if a
 future observable and search algorithm can select the code on silicon; a
 per-corner simulator choice alone is not a completed calibration system.
 
+Treat recovered-clock level conversion as an analog boundary, not as an
+ordinary CMOS buffer. A standalone rail converter driven by ideal pulses can
+pass broad common-mode limits while missing the smaller differential swing of
+the exact extracted phase-interpolator/restorer chain. Measure the producer's
+common mode and differential extrema at every composed PVT corner, then replay
+that exact producer into the extracted converter and its declared load. Gate
+the PI output, restorer output, CMOS rails, period, duty, complementary crossing
+skew, and total current together.
+
+Do not hang the final clock driver directly on a high-impedance mirror node.
+The extracted gate and route capacitance can collapse a schematic-only bias
+window even when DRC and LVS are clean. Use a small first isolation inverter,
+a matched intermediate stage, and a separate final driver. A weak symmetric
+regenerative assist can widen the conversion margin, but it must be placed
+locally on the differential nodes; long assist routes add exactly the
+capacitance the feedback was meant to overcome.
+
+Reserve body-tap and external-pin escape columns before automatic route
+allocation. A same-net vertical route may be reused only when its occupied
+interval cannot collide with another landing. Also handle minimum-width MOS
+gate contacts separately: a generic gate escape sized for wider devices can
+overlap the source strap or violate local Metal1/Metal2 spacing. Zero DRC and
+unique LVS after every placement change are mandatory before interpreting a
+timing result.
+
 ## 9. Render and inspect the real GDS
 
 Generate a full-resolution raster from the emitted GDS and inspect it after

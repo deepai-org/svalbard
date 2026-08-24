@@ -59,6 +59,17 @@ matrix, and 5/5 additional SS/hot phase offsets pass. The next hierarchy must
 compose this data path with the phase interpolator and clock restorer and
 physically realize the non-overlapping pulse schedule.
 
+The recovered-clock boundary now also has a physically closed
+[`clock_pulse`](clock_pulse/README.md) rail converter. Its compact symmetric
+dual-mirror receiver, local regenerative assist, and tapered CMOS restoration
+chain are zero-DRC, uniquely LVS-matched, and 540R/267C full-RC extracted. It
+passes standalone 5/5 PVT and an exact composition using the routed phase
+interpolator and clock-restorer extraction. The slow/hot composition has
+adjacent passing converter-bias codes, with a second passing restorer code;
+the remaining clock-path task is the programmable 550 ps sense / 150 ps write
+non-overlap generator and its physical composition with the regenerative
+capture gates.
+
 The repeatable method used to take these cells from an executable electrical
 contract through generated layout and full-RC evidence is documented in the
 [analog layout closure workflow](../../../../docs/verification/analog-layout-closure.md).

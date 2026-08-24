@@ -1,14 +1,14 @@
 * SPDX-License-Identifier: Apache-2.0
 .include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
 .lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
-.include /src/clock_level_converter.spice
+.include @DUT_PATH@
 .temp @TEMP_C@
 
 VDD VDD 0 PWL(0 0 500p @VDD_V@)
-VBIAS VBIAS 0 PWL(0 0 500p 1.15)
+VBIAS VBIAS 0 PWL(0 0 500p @VBIAS_V@)
 VINP INP 0 PULSE(@INPUT_LOW@ @INPUT_HIGH@ 1n 30p 30p 370p 800p)
 VINN INN 0 PULSE(@INPUT_HIGH@ @INPUT_LOW@ 1n 30p 30p 370p 800p)
-XDUT INP INN VBIAS VDD 0 OUTP OUTN clock_level_converter
+XDUT INP INN VBIAS VDD 0 OUTP OUTN @DUT_SUBCKT@
 CLOADP OUTP 0 100f
 CLOADN OUTN 0 100f
 

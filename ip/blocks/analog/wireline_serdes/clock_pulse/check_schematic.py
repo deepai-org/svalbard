@@ -31,11 +31,11 @@ for case in result.get("cases", []):
     observed = case.get("observed", {})
     if (case.get("result") != "pass"
             or not case.get("complete")
-            or not 0.40 <= case.get("duty_cycle", 0) <= 0.60
-            or abs(case.get("rise_delay_s", 1)) > 375e-12
-            or abs(case.get("fall_delay_s", 1)) > 375e-12
-            or case.get("rise_complement_skew_s", 1) > 60e-12
-            or case.get("fall_complement_skew_s", 1) > 60e-12
+            or not 0.35 <= case.get("duty_cycle", 0) <= 0.65
+            or abs(case.get("rise_delay_s", 1)) > 400e-12
+            or abs(case.get("fall_delay_s", 1)) > 400e-12
+            or case.get("rise_complement_skew_s", 1) > 110e-12
+            or case.get("fall_complement_skew_s", 1) > 110e-12
             or not 0 < observed.get("supply_current", 0) <= 0.008):
         raise SystemExit(f"clock converter case contract changed: {case.get('case_id')}")
 

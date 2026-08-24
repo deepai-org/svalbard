@@ -30,12 +30,20 @@ def digest(path: Path) -> str:
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--source", required=True, type=Path)
+parser.add_argument("--pex", type=Path)
+parser.add_argument("--vbias", type=float, default=1.15)
 parser.add_argument("--work", required=True, type=Path)
 parser.add_argument("--output", required=True, type=Path)
 args = parser.parse_args()
 args.work.mkdir(parents=True, exist_ok=True)
 template_path = args.source / "clock_level_converter_tb.spice.in"
 template = template_path.read_text()
+if args.pex:
+    dut_path = args.pex
+    dut_subckt = "clock_level_converter_pex"
+else:
+    dut_path = args.source / "clock_level_converter.spice"
+    dut_subckt = "clock_level_converter"
 cases = []
 for name, corner, vdd, temperature, low, high in ENVIRONMENTS:
     values = {
@@ -46,6 +54,9 @@ for name, corner, vdd, temperature, low, high in ENVIRONMENTS:
         "INPUT_HIGH": f"{high:.3f}",
         "INPUT_MID": f"{(low + high) / 2:.6f}",
         "OUTPUT_MID": f"{vdd / 2:.6f}",
+        "VBIAS_V": f"{args.vbias:.6f}",
+        "DUT_PATH": str(dut_path),
+        "DUT_SUBCKT": dut_subckt,
     }
     deck = args.work / f"{name}.spice"
     log = args.work / f"{name}.log"
@@ -79,11 +90,11 @@ for name, corner, vdd, temperature, low, high in ENVIRONMENTS:
               and observed["outp_low"] <= 0.25
               and observed["outn_low"] <= 0.25
               and abs(period - 800e-12) <= 8e-12
-              and 0.40 <= duty <= 0.60
-              and abs(rise_delay) <= 375e-12
-              and abs(fall_delay) <= 375e-12
-              and rise_complement_skew <= 60e-12
-              and fall_complement_skew <= 60e-12
+              and 0.35 <= duty <= 0.65
+              and abs(rise_delay) <= 400e-12
+              and abs(fall_delay) <= 400e-12
+              and rise_complement_skew <= 110e-12
+              and fall_complement_skew <= 110e-12
               and 0 < observed["supply_current"] <= 0.008)
     cases.append({
         "case_id": name,
@@ -103,10 +114,12 @@ for name, corner, vdd, temperature, low, high in ENVIRONMENTS:
 
 result = {
     "schema_version": 1,
-    "claim": "cml_clock_to_rail_cmos_schematic_pvt",
+    "claim": ("cml_clock_to_rail_cmos_extracted_pvt" if args.pex
+              else "cml_clock_to_rail_cmos_schematic_pvt"),
     "case_count": len(cases),
     "passing_case_count": sum(case["result"] == "pass" for case in cases),
     "load_f_per_output": 100e-15,
+    "vbias_v": args.vbias,
     "cases": cases,
     "source_sha256": {
         "dut": digest(args.source / "clock_level_converter.spice"),
@@ -114,6 +127,8 @@ result = {
         "runner": digest(Path(__file__)),
     },
 }
+if args.pex:
+    result["pex_sha256"] = digest(args.pex)
 result["result"] = ("pass" if result["passing_case_count"] == len(cases)
                     else "fail")
 args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")

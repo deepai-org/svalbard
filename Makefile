@@ -18,6 +18,8 @@ check-fast: smoke
 	$(PYTHON) ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/check_evidence.py
 	$(PYTHON) ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/check_fast_schematic.py --dut ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/cml_to_cmos_fast.spice --result ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/fast_schematic_probe_result.json
 	$(PYTHON) ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/check_fast_release.py --physical ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/fast_physical_result.json --timing ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/fast_extracted_result.json --pex ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/cml_to_cmos_fast.pex.spice --render ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/fast_layout.png --layout ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/layout_fast.tcl --layout-core ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/layout.tcl --schematic ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/cml_to_cmos_fast.spice
+	$(PYTHON) ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/check_fast_timing_grid.py --current ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/fast_timing_grid_current_result.json --previous ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/fast_timing_grid_previous_result.json
+	$(PYTHON) ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/check_fast_checkpoint.py --aggregate ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/fast_capture_pvt_result.json --physical ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/fast_physical_result.json --pex ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/lane_rx_pi_capture_fast.pex.spice --runner ip/blocks/analog/wireline_serdes/lane/run_capture_stress_case.py --merger ip/blocks/analog/wireline_serdes/lane/merge_capture_2p5_calibrated.py --testbench ip/blocks/analog/wireline_serdes/lane/lane_tb.spice.in --render ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/fast_layout.png --top-schematic ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/lane_rx_pi_capture_fast.spice --capture-schematic ip/blocks/analog/wireline_serdes/lane_rx_capture/lane_rx_capture_fast.spice --frontend-schematic ip/blocks/analog/wireline_serdes/lane_rx_frontend/lane_rx_frontend_fast.spice --converter-schematic ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/cml_to_cmos_fast.spice --top-layout ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/layout.tcl --capture-layout ip/blocks/analog/wireline_serdes/lane_rx_capture/layout.tcl --frontend-layout ip/blocks/analog/wireline_serdes/lane_rx_frontend/layout_fast.tcl --frontend-base-layout ip/blocks/analog/wireline_serdes/lane_rx_frontend/layout.tcl --converter-layout ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/layout.tcl --case ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/fast_capture_pvt_tt_result.json --case ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/fast_capture_pvt_ff_cold_result.json --case ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/fast_capture_pvt_ff_hot_result.json --case ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/fast_capture_pvt_ss_hot_result.json --case ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/fast_capture_pvt_ss_passive_result.json
 	$(PYTHON) scripts/validate.py structure
 	$(PYTHON) scripts/validate.py repo-audit
 
@@ -89,11 +91,20 @@ analog-flow-preflight:
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/run_physical.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/run_clock_chain.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/run_clock_chain_ss.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/run_fast_physical.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/run_fast_probe.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/run_fast_physical.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/run_fast_timing_grid.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_pi_smoke.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_pi_screen.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_pi_pvt.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_pi_fast_smoke.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_pi_fast_pvt.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_pi_fast_ss_scan.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_pi_fast_ss_hot_scan.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_pi_fast_ss_phase_scan.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_pi_fast_ss_odd_scan.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_pi_fast_window_scan.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_clock_boundary_compare.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/data_restorer/run.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/phase_interpolator/run.sh

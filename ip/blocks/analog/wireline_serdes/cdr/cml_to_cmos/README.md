@@ -30,7 +30,7 @@ The committed JSON files are the exact numeric results behind this status.
 Passing this bounded smoke is a physical integration gate, not PCIe compliance
 or final silicon qualification.
 
-## Sub-400 ps replacement checkpoint
+## Low-input-loading replacement checkpoint
 
 The composed 2.5 GT/s routed lane exposed a contract error in this cell: its
 700--900 ps valid delay is longer than one 400 ps serial UI.  At SS/hot with
@@ -42,17 +42,24 @@ window; delaying conversion merely duplicated the following serial bit.
 `cml_to_cmos_fast.spice` is the resulting StrongARM-style replacement. At its
 measured one-lane-cycle pipeline latency, all ten representative 200 mV / 50 fF
 MOS, voltage, temperature, and input-common-mode cases pass at a fixed 120 ps
-qualification point. The final schematic matrix has 592.51 mV minimum logic
-margin and 7.396 mA maximum average supply current.
+qualification point. The final schematic matrix has 592.65 mV minimum logic
+margin and 7.182 mA maximum average supply current.
 
 The coded fast layout is independently zero-DRC and uniquely LVS-matched. Its
-coupled full-RC extraction contains 2,172 resistors and 1,311 capacitors. The
-same ten cases all pass exact PEX with 546.42 mV minimum logic margin and
-9.964 mA maximum average supply current. `fast_physical_result.json` binds the
+coupled full-RC extraction contains 2,087 resistors and 1,256 capacitors. The
+same ten cases all pass exact PEX with 510.34 mV minimum logic margin and
+9.592 mA maximum average supply current. `fast_physical_result.json` binds the
 schematic, both layout-generator sources, rendered GDS, exact PEX, and timing
-summary by SHA-256. This closes the fast leaf macro under its bounded public-
-model contract; the routed PI/RX parent still uses the old converter until it
-is regenerated and replayed.
+summary by SHA-256.
+
+The independent data-age grid prevents the fixed 120 ps point from being
+misread as current-decision latency. Across three limiting exact-PEX
+environments, the held previous decision remains valid through 500 ps. All
+three resolve the newly acquired decision by 760 ps and have at least 150 mV
+logic margin by 770 ps, only 30 ps before the next 800 ps same-lane event. The
+leaf is therefore closed as a low-loading one-lane-cycle converter, not as a
+sub-400 ps combinational boundary. Parent integration and retiming remain part
+of its contract.
 
 ![Physically closed fast replacement](fast_layout.png)
 
@@ -117,7 +124,8 @@ nodes for selected cases. `run_fast_probe.sh` reproduces the schematic gate and
 `run_fast_physical.sh` performs layout, DRC, LVS, PEX, the ten-case exact-PEX
 matrix, rendering, and evidence binding inside the bounded container. Both
 runners mark 200 mV and above as the required sensitivity contract and retain
-100 mV separately as exploratory stress.
+100 mV separately as exploratory stress. `run_fast_timing_grid.sh` separately
+replays current- and previous-decision scoring around the 800 ps handoff.
 
 ## Remaining boundary
 

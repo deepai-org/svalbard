@@ -62,6 +62,7 @@ summary_keys = (
     "minimum_restored_even_v", "minimum_restored_odd_v",
     "minimum_sampler_even_v", "minimum_sampler_odd_v",
     "sampler_common_mode_min_v", "sampler_common_mode_max_v",
+    "sampler_supply_overshoot_max_v",
     "minimum_frontend_even_v", "minimum_frontend_odd_v",
     "minimum_frontend_write_even_v", "minimum_frontend_write_odd_v",
     "frontend_write_common_mode_min_v", "frontend_write_common_mode_max_v",

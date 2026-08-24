@@ -155,6 +155,12 @@ def main() -> None:
     parser.add_argument("--serial-rate-gbd", type=float,
                         choices=(1.25, 2.5), default=1.25)
     parser.add_argument("--latency-ui", type=int, choices=range(-3, 4), default=0)
+    parser.add_argument("--sampler-latency-ui", type=int, choices=range(-3, 4))
+    parser.add_argument("--frontend-latency-ui", type=int, choices=range(-3, 4))
+    parser.add_argument("--frontend-write-latency-ui", type=int,
+                        choices=range(-3, 4))
+    parser.add_argument("--capture-latency-ui", type=int, choices=range(-3, 4))
+    parser.add_argument("--sampler-overshoot-limit-mv", type=float, default=50.0)
     parser.add_argument("--rx-window-start-ps", type=int, default=0)
     parser.add_argument("--ac-initial-v", type=float)
     parser.add_argument("--jobs", type=int, default=4)
@@ -176,6 +182,7 @@ def main() -> None:
     parser.add_argument("--even-capture-skew-ps", type=int, default=0)
     parser.add_argument("--odd-capture-skew-ps", type=int, default=0)
     parser.add_argument("--frontend-sense-width-ps", type=int)
+    parser.add_argument("--odd-frontend-sense-width-ps", type=int)
     parser.add_argument("--even-frontend-skew-ps", type=int, default=0)
     parser.add_argument("--odd-frontend-skew-ps", type=int, default=0)
     parser.add_argument("--tx-bias", type=float, default=1.1)
@@ -184,6 +191,8 @@ def main() -> None:
     parser.add_argument("--sampler-bias", type=float, default=1.1)
     parser.add_argument("--restorer-bias", type=float, default=1.1)
     parser.add_argument("--frontend-tail-boost", action="store_true")
+    parser.add_argument("--even-frontend-tail-boost", action="store_true")
+    parser.add_argument("--odd-frontend-tail-boost", action="store_true")
     parser.add_argument("--term-code", type=int, default=3)
     parser.add_argument("--mos-corner", default="typical")
     parser.add_argument("--res-corner", default="res_typical")
@@ -259,10 +268,13 @@ def main() -> None:
     if (args.frontend_sense_width_ps is not None
             and not 250 <= args.frontend_sense_width_ps <= 700):
         parser.error("front-end sense pulse width must be 250--700 ps")
+    if (args.odd_frontend_sense_width_ps is not None
+            and not 250 <= args.odd_frontend_sense_width_ps <= 700):
+        parser.error("odd front-end sense pulse width must be 250--700 ps")
     if not -150 <= args.even_frontend_skew_ps <= 450:
         parser.error("even front-end skew must be -150--450 ps")
-    if not -150 <= args.odd_frontend_skew_ps <= 150:
-        parser.error("odd front-end skew must be -150--150 ps")
+    if not -150 <= args.odd_frontend_skew_ps <= 450:
+        parser.error("odd front-end skew must be -150--450 ps")
     if routed_rx and args.restorer_mode != "data":
         parser.error("routed RX parent requires --restorer-mode data")
     if routed_rx_spine and not args.rx_spine_physical:
@@ -305,6 +317,8 @@ def main() -> None:
         parser.error("PI output clock override requires the routed PI parent")
     if not -160.0 <= args.pi_output_edge_skew_ps <= 160.0:
         parser.error("PI output edge skew must be between -160 and 160 ps")
+    if not 0.0 <= args.sampler_overshoot_limit_mv <= 200.0:
+        parser.error("sampler overshoot limit must be between 0 and 200 mV")
     if args.pi_output_edge_skew_ps and not args.pi_output_clock_override:
         parser.error("PI output edge skew requires the diagnostic clock override")
     if not 1.0 <= args.diagnostic_sampler_load_scale <= 2.5:
@@ -312,6 +326,19 @@ def main() -> None:
     if args.diagnostic_sampler_load_scale != 1.0 and not routed_rx_pi_capture:
         parser.error("diagnostic sampler load scaling requires the routed PI parent")
     args.work.mkdir(parents=True, exist_ok=True)
+
+    sampler_latency_ui = (args.sampler_latency_ui
+                          if args.sampler_latency_ui is not None
+                          else args.latency_ui)
+    frontend_latency_ui = (args.frontend_latency_ui
+                           if args.frontend_latency_ui is not None
+                           else args.latency_ui)
+    frontend_write_latency_ui = (
+        args.frontend_write_latency_ui
+        if args.frontend_write_latency_ui is not None else args.latency_ui)
+    capture_latency_ui = (args.capture_latency_ui
+                          if args.capture_latency_ui is not None
+                          else args.latency_ui)
 
     rx_pi_include = args.rx_pi_capture_parent_pex
     if args.diagnostic_sampler_load_scale != 1.0:
@@ -533,9 +560,9 @@ VEREGEN E_REGEN_SRC 0 PULSE(0 @VDD_V@ @E_REGEN_DELAY@ 20p 20p @REGEN_WIDTH@ @PER
 VEREGENB E_REGENB_SRC 0 PULSE(@VDD_V@ 0 @E_REGEN_DELAY@ 20p 20p @REGEN_WIDTH@ @PERIOD@)
 VECLK E_CAPTURE_SRC 0 PULSE(0 @VDD_V@ @E_CAPTURE_DELAY@ 20p 20p @CAPTURE_WIDTH@ @PERIOD@)
 VECLKB E_CAPTUREB_SRC 0 PULSE(@VDD_V@ 0 @E_CAPTURE_DELAY@ 20p 20p @CAPTURE_WIDTH@ @PERIOD@)
-VOSENSE O_SENSE_SRC 0 PULSE(0 @VDD_V@ @O_SENSE_DELAY@ 20p 20p @SENSE_WIDTH@ @PERIOD@)
-VOREGEN O_REGEN_SRC 0 PULSE(0 @VDD_V@ @O_REGEN_DELAY@ 20p 20p @REGEN_WIDTH@ @PERIOD@)
-VOREGENB O_REGENB_SRC 0 PULSE(@VDD_V@ 0 @O_REGEN_DELAY@ 20p 20p @REGEN_WIDTH@ @PERIOD@)
+VOSENSE O_SENSE_SRC 0 PULSE(0 @VDD_V@ @O_SENSE_DELAY@ 20p 20p @O_SENSE_WIDTH@ @PERIOD@)
+VOREGEN O_REGEN_SRC 0 PULSE(0 @VDD_V@ @O_REGEN_DELAY@ 20p 20p @O_REGEN_WIDTH@ @PERIOD@)
+VOREGENB O_REGENB_SRC 0 PULSE(@VDD_V@ 0 @O_REGEN_DELAY@ 20p 20p @O_REGEN_WIDTH@ @PERIOD@)
 VOCLK O_CAPTURE_SRC 0 PULSE(0 @VDD_V@ @O_CAPTURE_DELAY@ 20p 20p @O_CAPTURE_WIDTH@ @PERIOD@)
 VOCLKB O_CAPTUREB_SRC 0 PULSE(@VDD_V@ 0 @O_CAPTURE_DELAY@ 20p 20p @O_CAPTURE_WIDTH@ @PERIOD@)
 VBOOST BOOST_SRC 0 0
@@ -879,9 +906,11 @@ COQB ODD_QB 0 50f
                                     args.vdd_ripple_hz),
             "RX_BW_EN_N_V": "0" if args.rx_bandwidth_mode == "high"
             else f"{args.vdd:.2f}",
-            "E_SENSE_BOOST": ("E_SENSE_CLK" if args.frontend_tail_boost
+            "E_SENSE_BOOST": ("E_SENSE_CLK" if (args.frontend_tail_boost
+                                                    or args.even_frontend_tail_boost)
                                 else "SENSE_BOOST"),
-            "O_SENSE_BOOST": ("O_SENSE_CLK" if args.frontend_tail_boost
+            "O_SENSE_BOOST": ("O_SENSE_CLK" if (args.frontend_tail_boost
+                                                    or args.odd_frontend_tail_boost)
                                 else "SENSE_BOOST"),
             "TX_PAD_CAP": "300f", "RX_PAD_CAP": "500f", "AC_CAP": "100n",
             "AC_INITIAL_V": f"{(args.ac_initial_v if args.ac_initial_v is not None else args.vdd * 0.32):.6f}",
@@ -910,6 +939,16 @@ COQB ODD_QB 0 50f
             "REGEN_WIDTH": f"{((args.frontend_sense_width_ps - 10) * 1e-12
                                   if args.frontend_sense_width_ps is not None
                                   else 565e-12 * timing_scale):.12g}",
+            "O_SENSE_WIDTH": f"{((args.odd_frontend_sense_width_ps * 1e-12)
+                                    if args.odd_frontend_sense_width_ps is not None
+                                    else (args.frontend_sense_width_ps * 1e-12)
+                                    if args.frontend_sense_width_ps is not None
+                                    else 575e-12 * timing_scale):.12g}",
+            "O_REGEN_WIDTH": f"{(((args.odd_frontend_sense_width_ps - 10) * 1e-12)
+                                    if args.odd_frontend_sense_width_ps is not None
+                                    else ((args.frontend_sense_width_ps - 10) * 1e-12)
+                                    if args.frontend_sense_width_ps is not None
+                                    else 565e-12 * timing_scale):.12g}",
             # The static CMOS write cell needs its characterized pulse width;
             # device delay does not scale with the serial unit interval.
             "CAPTURE_WIDTH": f"{args.capture_width_ps * 1e-12:.12g}",
@@ -946,15 +985,18 @@ COQB ODD_QB 0 50f
         for pair in pair_indices:
             input_signs = {"even": 1 if even_bits[pair] else -1,
                            "odd": 1 if odd_bits[pair] else -1}
-            output_signs = {
-                "even": 1 if bits[2 * pair - args.latency_ui] else -1,
-                "odd": 1 if bits[2 * pair + 1 - args.latency_ui] else -1,
-            }
+            stage_signs = {}
+            for stage, latency in (("samp", sampler_latency_ui),
+                                   ("fe", frontend_latency_ui),
+                                   ("q", capture_latency_ui)):
+                stage_signs[stage] = {
+                    "even": 1 if bits[2 * pair - latency] else -1,
+                    "odd": 1 if bits[2 * pair + 1 - latency] else -1,
+                }
             for stage in scored_stages:
                 for lane_name in ("even", "odd"):
                     key = f"{stage}_{lane_name}"
-                    signs = (output_signs if stage in ("samp", "fe", "q")
-                             else input_signs)
+                    signs = stage_signs.get(stage, input_signs)
                     margins[key].append(observed.get(f"{key}_{pair}", 0.0)
                                         * signs[lane_name])
             if args.restorer_mode != "none":
@@ -982,9 +1024,9 @@ COQB ODD_QB 0 50f
             for pair in pair_indices:
                 signed_setup.extend((
                     observed[f"samp_setup_{setup_tag}_even_{pair}"]
-                    * (1 if bits[2 * pair - args.latency_ui] else -1),
+                    * (1 if bits[2 * pair - sampler_latency_ui] else -1),
                     observed[f"samp_setup_{setup_tag}_odd_{pair}"]
-                    * (1 if bits[2 * pair + 1 - args.latency_ui] else -1),
+                    * (1 if bits[2 * pair + 1 - sampler_latency_ui] else -1),
                 ))
             sampler_setup_scan.append({
                 "setup_ps": setup_ps,
@@ -1010,14 +1052,20 @@ COQB ODD_QB 0 50f
                   # not the final pipeline latency. Their scan stays visible;
                   # converter qualification/write and held output own polarity.
                   and min(sampler_common_modes) >= 0.50
-                  and max(sampler_common_modes) <= args.vdd - 0.10
+                  # This clocked, capacitively kicked node can approach the
+                  # rail. Bound absolute overshoot rather than impose DC
+                  # headroom that the sampler output does not need.
+                  and max(sampler_common_modes)
+                  <= args.vdd + args.sampler_overshoot_limit_mv * 1e-3
                   and min(minima["fe_even"], minima["fe_odd"]) >= 0.30
                   and min(
                       min(observed[f"fe_write_even_{pair}"]
-                          * (1 if bits[2 * pair - args.latency_ui] else -1)
+                          * (1 if bits[2 * pair - frontend_write_latency_ui]
+                             else -1)
                           for pair in pair_indices),
                       min(observed[f"fe_write_odd_{pair}"]
-                          * (1 if bits[2 * pair + 1 - args.latency_ui] else -1)
+                          * (1 if bits[2 * pair + 1
+                                      - frontend_write_latency_ui] else -1)
                           for pair in pair_indices)) >= 0.30
                   and min(minima["q_even"], minima["q_odd"]) >= 0.50
                   and args.vdd * 0.5 - 0.25 <= observed.get("rx_cm_avg", 0.0)
@@ -1041,15 +1089,17 @@ COQB ODD_QB 0 50f
             "sampler_setup_scan": sampler_setup_scan,
             "sampler_common_mode_min_v": min(sampler_common_modes),
             "sampler_common_mode_max_v": max(sampler_common_modes),
+            "sampler_supply_overshoot_max_v": max(
+                0.0, max(sampler_common_modes) - args.vdd),
             "minimum_frontend_even_v": minima["fe_even"],
             "minimum_frontend_odd_v": minima["fe_odd"],
             "minimum_frontend_write_even_v": min(
                 observed[f"fe_write_even_{pair}"]
-                * (1 if bits[2 * pair - args.latency_ui] else -1)
+                * (1 if bits[2 * pair - frontend_write_latency_ui] else -1)
                 for pair in pair_indices),
             "minimum_frontend_write_odd_v": min(
                 observed[f"fe_write_odd_{pair}"]
-                * (1 if bits[2 * pair + 1 - args.latency_ui] else -1)
+                * (1 if bits[2 * pair + 1 - frontend_write_latency_ui] else -1)
                 for pair in pair_indices),
             "frontend_write_common_mode_min_v": min(frontend_write_common_modes),
             "frontend_write_common_mode_max_v": max(frontend_write_common_modes),
@@ -1154,6 +1204,8 @@ COQB ODD_QB 0 50f
                      "even_capture_skew_ps": args.even_capture_skew_ps,
                      "odd_capture_skew_ps": args.odd_capture_skew_ps,
                      "frontend_sense_width_ps": args.frontend_sense_width_ps,
+                     "odd_frontend_sense_width_ps":
+                         args.odd_frontend_sense_width_ps,
                      "even_frontend_skew_ps": args.even_frontend_skew_ps,
                      "odd_frontend_skew_ps": args.odd_frontend_skew_ps,
                      "rx_bias_v": args.rx_bias, "sampler_bias_v": args.sampler_bias,
@@ -1162,7 +1214,14 @@ COQB ODD_QB 0 50f
                      "restorer_mode": args.restorer_mode,
                      "restorer_cell": args.restorer_cell,
                      "frontend_tail_boost": args.frontend_tail_boost,
+                     "even_frontend_tail_boost":
+                         args.even_frontend_tail_boost,
+                     "odd_frontend_tail_boost": args.odd_frontend_tail_boost,
                      "latency_ui": args.latency_ui,
+                     "sampler_latency_ui": sampler_latency_ui,
+                     "frontend_latency_ui": frontend_latency_ui,
+                     "frontend_write_latency_ui": frontend_write_latency_ui,
+                     "capture_latency_ui": capture_latency_ui,
                      "rx_window_start_ps": args.rx_window_start_ps,
                      "restorer_bias_v": (args.restorer_bias
                                           if args.restorer_mode != "none" else None)},
@@ -1193,6 +1252,10 @@ COQB ODD_QB 0 50f
         "supply_stress": {
             "vdd_ripple_peak_v": args.vdd_ripple_mv * 1e-3,
             "vdd_ripple_frequency_hz": args.vdd_ripple_hz,
+        },
+        "acceptance_limits": {
+            "sampler_supply_overshoot_max_v":
+                args.sampler_overshoot_limit_mv * 1e-3,
         },
         "fixture_initialization": {
             "ac_coupling_initial_voltage_v": (

@@ -345,8 +345,8 @@ if {$fast_converter} {
 set devices {
     {XTAIL nfet_03v3 10 5 -2 -12 NTAIL SENSE_CLK VSS}
     {XRNP nfet_03v3 8 12 -25 8 XP XN NIP}
-    {XIP nfet_03v3 8 12 -8 8 NIP INP NTAIL}
-    {XIN nfet_03v3 8 12 8 8 NIN INN NTAIL}
+    {XIP nfet_03v3 8 8 -8 8 NIP INP NTAIL}
+    {XIN nfet_03v3 8 8 8 8 NIN INN NTAIL}
     {XRNN nfet_03v3 8 12 25 8 XN XP NIN}
 
     {XOPN nfet_03v3 8 4 -68 20 OUTP H VSS}

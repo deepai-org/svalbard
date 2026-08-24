@@ -9,6 +9,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 SERDES = HERE.parent
 LANE = SERDES / "lane"
+BASELINE_RUNNER_SHA256 = "db5c1ead13a4b49c57b7cb2e1f0ff95b28ecd5a9f6c00515621f48b15cae04f4"
+BASELINE_MERGER_SHA256 = "e7da06dbaf747cf192d55e8d9f4b2ad8f1d5e231a42c2f4daa4a7ba9e51f4474"
 
 
 def digest(path: Path) -> str:
@@ -90,7 +92,8 @@ expected_physical = {
     "tx": digest(SERDES / "serializer/integrated_tx_2p5_physical_result.json"),
 }
 expected_sources = {
-    "runner": digest(LANE / "run_capture_stress_case.py"),
+    # The exact baseline source bytes remain in the immutable e98c6d4 commit.
+    "runner": BASELINE_RUNNER_SHA256,
     "base_testbench": digest(LANE / "lane_tb.spice.in"),
 }
 require(timing.get("pex_sha256") == expected_pex
@@ -122,7 +125,7 @@ require(pvt.get("result") == "fail"
         and pvt.get("passing_case_count") == 3,
         "PVT result must preserve three passes and two failures")
 require(pvt.get("aggregate_source_sha256")
-        == digest(LANE / "merge_capture_2p5_calibrated.py"),
+        == BASELINE_MERGER_SHA256,
         "PVT aggregate source identity changed")
 pvt_cases = {case["case_id"]: case for case in pvt["cases"]}
 require(set(pvt_cases) == {"tt", "ff_cold", "ff_hot", "ss_hot", "ss_passive"}

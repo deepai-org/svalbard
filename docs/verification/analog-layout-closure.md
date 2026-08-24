@@ -591,6 +591,45 @@ extracted children closes only that electrical boundary; the parent remains
 open until child placement and parent-owned interconnect are DRC/LVS/PEX clean
 and re-simulated.
 
+Treat an ideal voltage source at a leaf input as a stimulus, not an input-load
+qualification.  The fast CML-to-CMOS leaf initially used twelve 8 um input
+fingers per side and passed its isolated exact-PEX timing because the source
+had zero impedance.  In the routed parent that gate load collapsed one
+sampler interleave before conversion.  Reducing the pair to six fingers
+restored the producer but missed the leaf's 0.5 V extracted logic guardband;
+eight fingers per side was the smallest tested point that retained both the
+producer and leaf contracts.  At every high-speed boundary, therefore measure
+the producer with the consumer's nonlinear extracted input attached and keep
+the isolated leaf result only as one side of that load-line search.
+
+The smaller input pair also changed regeneration timing.  Its exact-PEX
+data-age grid retained the previous decision through 500 ps but did not resolve
+the new decision in every limiting environment until 760 ps of the 800 ps
+lane cycle.  A fixed 120 ps sample with one-cycle expected latency and a
+current-decision delay sweep answer different questions; require both.  When a
+low-loading replacement leaves only tens of picoseconds before the next event,
+move the storage boundary or reschedule clocks instead of calling the leaf
+"fast" from its topology or isolated fixed-point pass.
+
+Child power meshes can invalidate otherwise retained parent signal routes even
+when cell outlines and pin coordinates are unchanged.  Replacing the converter
+introduced a full-width metal-5 VSS mesh beneath two historical metal-5 data
+trunks.  The rebuilt parent remained DRC-clean because the overlap was legal
+geometry, but LVS correctly exposed the same-layer short.  Version the parent
+route, move only the colliding trunks, and require a unique parent LVS before
+electrical replay; never infer connectivity safety from outline compatibility
+or zero DRC alone.
+
+A regenerative boundary may expose different data ownership at its input,
+qualification output, write point, and held output.  Score each stage against
+an explicitly declared integer-UI latency rather than selecting one latency
+that makes the final output look correct.  Also distinguish dynamic internal
+common mode from DC amplifier headroom: a capacitively kicked sampler node may
+approach a rail or overshoot it briefly.  Bound its absolute overshoot and
+device-voltage exposure directly, while retaining differential-polarity and
+minimum-common-mode checks; a blanket `VDD - headroom` rule is not a physical
+contract for that node.
+
 Close a large signal path through successive physical parents, starting with
 the shortest bandwidth-critical chain whose child interfaces are already
 electrically qualified. Preserve natural internal nodes as explicit parent

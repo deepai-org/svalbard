@@ -10,8 +10,8 @@ XPREIN NIN SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=4
 
 * The input pair selects an intermediate node; the cross-coupled devices then
 * regenerate that small timing difference on XP/XN.
-XIP NIP INP NTAIL VSS nfet_03v3 w=8u l=0.28u m=12
-XIN NIN INN NTAIL VSS nfet_03v3 w=8u l=0.28u m=12
+XIP NIP INP NTAIL VSS nfet_03v3 w=8u l=0.28u m=8
+XIN NIN INN NTAIL VSS nfet_03v3 w=8u l=0.28u m=8
 XTAIL NTAIL SENSE_CLK VSS VSS nfet_03v3 w=10u l=0.28u m=5
 XTAILBOOST NTAIL SENSE_BOOST_CLK VSS VSS nfet_03v3 w=10u l=0.28u m=24
 XRNP XP XN NIP VSS nfet_03v3 w=8u l=0.28u m=12

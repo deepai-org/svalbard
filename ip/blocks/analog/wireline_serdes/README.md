@@ -39,15 +39,16 @@ clocked dual capture. Its exact PEX passes the five-environment 2.5 GT/s
 combined-stress matrix with at least 623.576 mV final output by 750 ps.
 The next [`lane_rx_pi_capture`](lane_rx_pi_capture/README.md) parent physically
 integrates the phase interpolator and a two-stage clock restorer into that
-hierarchy. It is zero-DRC, uniquely LVS-matched, and extracts to 8,625R/5,034C.
-Its focused nonlinear clock-load chain passes, and calibrated sampler and
-converter boundaries work in the complete 2.5 GT/s transient. A corrected
-post-write observation closes adjacent 200 and 300 ps offsets in an eight-point
-24-bit nominal screen, with at least 1.269 V final margin. The five-environment
-replay still passes only nominal: FF/cold exposes post-write capture collapse,
-FF/hot fails long-pattern recurrence, and both SS cases lose dynamic decisions.
-It remains a physical-progress and falsification milestone pending capture and
-SS-boundary redesign.
+hierarchy. Its retained baseline is zero-DRC, uniquely LVS-matched, and
+8,625R/5,034C full-RC extracted. A versioned parent replaces both converters
+with the lower-input-capacitance StrongARM-style macro and minimally reroutes
+the two data trunks that collided with the child's metal-5 power mesh. The new
+parent is independently zero-DRC, unique-LVS, and 8,717R/4,874C extracted. Its
+24-bit combined-stress replay passes TT, FF/cold, FF/hot, and SS/passive with
+685.201 mV worst passing final capture margin. SS/hot remains failed because
+the two interleaves deliver the requested word at different integer data ages;
+the next task is an explicit valid-window retimer or revised non-overlapping
+acquisition/write schedule, not score-side lane alignment.
 
 The repeatable method used to take these cells from an executable electrical
 contract through generated layout and full-RC evidence is documented in the

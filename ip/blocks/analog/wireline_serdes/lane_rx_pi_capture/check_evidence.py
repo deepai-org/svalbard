@@ -64,6 +64,7 @@ for name, environment in (
 
 timing = load("capture_timing_result.json")
 require(timing.get("result") == "pass"
+        and timing.get("evidence_class") == "exact_pex"
         and timing.get("case_count") == 8
         and timing.get("complete_case_count") == 8
         and timing.get("passing_case_count") == 2,
@@ -109,6 +110,8 @@ for case in timing["cases"]:
                     case["minimum_sampler_odd_v"]) >= 0.50
             and min(case["minimum_frontend_even_v"],
                     case["minimum_frontend_odd_v"]) >= 0.30
+            and min(case["minimum_frontend_write_even_v"],
+                    case["minimum_frontend_write_odd_v"]) >= 0.30
             and min(case["minimum_capture_even_v"],
                     case["minimum_capture_odd_v"]) >= 1.20,
             f"nominal passing margin changed in {case.get('id')}")
@@ -116,32 +119,47 @@ for case in timing["cases"]:
 pvt = load("capture_pvt_result.json")
 require(pvt.get("result") == "fail"
         and pvt.get("case_count") == 5
-        and pvt.get("passing_case_count") == 1,
-        "PVT result must preserve one pass and four failures")
+        and pvt.get("passing_case_count") == 3,
+        "PVT result must preserve three passes and two failures")
 require(pvt.get("aggregate_source_sha256")
         == digest(LANE / "merge_capture_2p5_calibrated.py"),
         "PVT aggregate source identity changed")
 pvt_cases = {case["case_id"]: case for case in pvt["cases"]}
 require(set(pvt_cases) == {"tt", "ff_cold", "ff_hot", "ss_hot", "ss_passive"}
         and pvt_cases["tt"]["result"] == "pass"
+        and pvt_cases["ff_cold"]["result"] == "pass"
+        and pvt_cases["ss_passive"]["result"] == "pass"
         and all(pvt_cases[name]["result"] == "fail"
-                for name in ("ff_cold", "ff_hot", "ss_hot", "ss_passive")),
+                for name in ("ff_hot", "ss_hot")),
         "PVT case classification changed")
 for name, case in pvt_cases.items():
-    require(case.get("pex_sha256") == expected_pex
+    require(case.get("evidence_class") == "exact_pex"
+            and case.get("pex_sha256") == expected_pex
             and case.get("physical_sha256") == expected_physical
             and case.get("source_sha256") == expected_sources,
             f"PVT identity changed in {name}")
-ff_cold = pvt_cases["ff_cold"]["measurements"]
-require(min(ff_cold["minimum_frontend_even_v"],
-            ff_cold["minimum_frontend_odd_v"]) >= 2.30
-        and max(ff_cold["minimum_capture_even_v"],
-                ff_cold["minimum_capture_odd_v"]) < 0.01,
-        "FF/cold capture-regeneration localization changed")
-ss_passive = pvt_cases["ss_passive"]["measurements"]
-require(min(ss_passive["minimum_frontend_even_v"],
-            ss_passive["minimum_frontend_odd_v"]) < -2.0,
-        "SS/passive dynamic-decision failure localization changed")
+for name in ("tt", "ff_cold", "ss_passive"):
+    measurements = pvt_cases[name]["measurements"]
+    require(min(measurements["minimum_pin_even_v"],
+                measurements["minimum_pin_odd_v"]) >= 0.10
+            and min(measurements["minimum_frontend_even_v"],
+                    measurements["minimum_frontend_odd_v"]) >= 0.30
+            and min(measurements["minimum_frontend_write_even_v"],
+                    measurements["minimum_frontend_write_odd_v"]) >= 0.30
+            and min(measurements["minimum_capture_even_v"],
+                    measurements["minimum_capture_odd_v"]) >= 0.50,
+            f"passing PVT margin changed in {name}")
+ff_hot = pvt_cases["ff_hot"]["measurements"]
+require(min(ff_hot["minimum_frontend_even_v"],
+            ff_hot["minimum_frontend_odd_v"]) < -0.25
+        and min(ff_hot["minimum_capture_even_v"],
+                ff_hot["minimum_capture_odd_v"]) >= 0.90,
+        "FF/hot qualification failure localization changed")
+ss_hot = pvt_cases["ss_hot"]["measurements"]
+require(ss_hot["minimum_frontend_even_v"] < 0.10
+        and min(ss_hot["minimum_capture_even_v"],
+                ss_hot["minimum_capture_odd_v"]) < 0.01,
+        "SS/hot converter/capture failure localization changed")
 
 print("routed PI/RX parent: physical PASS; TT/SS clock load 4/4 PASS; "
-      "nominal timing 2/8 PASS; composed PVT 1/5 PASS (open)")
+      "nominal timing 2/8 PASS; composed PVT 3/5 PASS (FF/SS hot open)")

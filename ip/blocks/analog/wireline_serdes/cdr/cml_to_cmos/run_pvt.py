@@ -10,7 +10,7 @@ import json
 import subprocess
 from pathlib import Path
 
-from run_nominal import (BITS, PIPELINE_LATENCY_UI, SAMPLE_DELAYS_S,
+from run_nominal import (BITS, SAMPLE_DELAYS_S,
                          SAMPLE_INDICES, SCALAR, instantiate, pwl)
 
 MOS_CORNERS = ("typical", "ff", "ss")
@@ -27,12 +27,15 @@ def main() -> None:
     parser.add_argument("--work", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--pex", type=Path)
+    parser.add_argument("--dut", type=Path,
+                        help="alternate schematic with a cml_to_cmos subcircuit")
     parser.add_argument("--eval-width-ps", type=int, default=575)
     parser.add_argument("--regen-delay-ps", type=int, default=10,
                         help="regeneration enable delay after sense-clock rise")
     parser.add_argument("--capture-delay-ps", type=int, default=200,
                         help="capture enable delay after sense-clock rise")
     parser.add_argument("--capture-width-ps", type=int, default=320)
+    parser.add_argument("--pipeline-latency-ui", type=int, choices=(0, 1), default=0)
     parser.add_argument("--jobs", type=int, default=2)
     parser.add_argument("--timeout-s", type=int, default=90,
                         help="per-case ngspice timeout")
@@ -45,8 +48,8 @@ def main() -> None:
     args = parser.parse_args()
     if not 1 <= args.jobs <= 4:
         parser.error("--jobs must be between 1 and 4")
-    if not 450 <= args.eval_width_ps <= 650:
-        parser.error("--eval-width-ps must be between 450 and 650")
+    if not 100 <= args.eval_width_ps <= 650:
+        parser.error("--eval-width-ps must be between 100 and 650")
     if not 10 <= args.regen_delay_ps <= args.eval_width_ps - 100:
         parser.error("--regen-delay-ps must leave at least 100 ps regeneration time")
     if args.capture_delay_ps < args.regen_delay_ps + 50:
@@ -67,7 +70,9 @@ def main() -> None:
     source_dir = (args.source / "cml_to_cmos" if
                   (args.source / "cml_to_cmos").is_dir() else args.source)
     template = (source_dir / "transient_tb.spice.in").read_text()
-    dut_path = args.pex if args.pex else source_dir / "cml_to_cmos.spice"
+    if args.pex and args.dut:
+        parser.error("select either --pex or --dut")
+    dut_path = args.pex or args.dut or source_dir / "cml_to_cmos.spice"
     dut_sha256 = hashlib.sha256(dut_path.read_bytes()).hexdigest()
     interval, edge = 800e-12, 20e-12
     measures = []
@@ -115,11 +120,7 @@ def main() -> None:
                                 "MEASURES": "\n".join(measures),
                                 "WAVEFORM_COMMAND": (
                                     "wrdata " + str(args.waveform_dir / f"{case_id}.dat") +
-                                    " time v(xdut.sa) v(xdut.sb)"
-                                    " v(xdut.xp) v(xdut.xn) v(xdut.ntail)"
-                                    " v(xdut.nregen) v(xdut.vregp) v(xdut.vregn)"
-                                    " v(xdut.sxp) v(xdut.sxn)"
-                                    " v(xdut.bp) v(xdut.bn)"
+                                    " time v(xdut.xp) v(xdut.xn)"
                                     " v(sense_clk) v(regen_clk) v(regen_clkb)"
                                     " v(capture_clk) v(capture_clkb)"
                                     " v(outp) v(outn)"
@@ -157,7 +158,7 @@ def main() -> None:
         vdd = float(environment[1])
         margins_by_delay = {round(delay / 1e-12): [] for delay in sample_delays_s}
         for index in SAMPLE_INDICES:
-            expected = BITS[index - PIPELINE_LATENCY_UI]
+            expected = BITS[index - args.pipeline_latency_ui]
             for delay in sample_delays_s:
                 delay_ps = round(delay / 1e-12)
                 high = observed.get(
@@ -229,7 +230,7 @@ def main() -> None:
     passing_groups = sum(group["result"] == "pass" for group in groups)
     passed = complete_count == len(cases) and passing_groups == len(groups)
     result = {"schema_version": 1, "dut_sha256": dut_sha256,
-              "pipeline_latency_ui": PIPELINE_LATENCY_UI,
+              "pipeline_latency_ui": args.pipeline_latency_ui,
               "sample_delays_s": sample_delays_s,
               "delay_summary": delay_summary,
               "result": "pass" if passed else "fail",

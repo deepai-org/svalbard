@@ -15,11 +15,15 @@ import run_lane as spine
 
 
 DEFAULT_OFFSETS_PS = (0, 100, 200, 300)
+SAMPLER_SETUP_PS = (-200, -150, -100, -50, 0)
 SCALAR = re.compile(
     r"^(tx_even_\d+|tx_odd_\d+|pin_even_\d+|pin_odd_\d+|"
     r"rx_even_\d+|rx_odd_\d+|rest_even_\d+|rest_odd_\d+|"
     r"samp_even_\d+|samp_odd_\d+|samp_even_cm_\d+|samp_odd_cm_\d+|"
     r"fe_even_\d+|fe_odd_\d+|q_even_\d+|q_odd_\d+|"
+    r"fe_write_even_\d+|fe_write_odd_\d+|"
+    r"fe_write_even_cm_\d+|fe_write_odd_cm_\d+|"
+    r"samp_setup_m?\d+_(?:even|odd)_\d+|"
     r"rx_hold_even_\d+|rx_hold_odd_\d+|"
     r"pi_clk_rise|pi_clk_fall|"
     r"tx_cm_avg|rx_cm_avg|amp_cm_avg|rest_cm_avg|"
@@ -63,6 +67,41 @@ def clock_pwl(supply: float, delay: float, period: float, duty: float,
             points.extend(((edge - 10e-12, before), (edge + 10e-12, after)))
             edge_index += 1
         cycle += 1
+    return "PWL(" + " ".join(
+        f"{time:.12g} {voltage:.6f}" for time, voltage in points
+    ) + ")"
+
+
+def differential_clock_pwl(common_mode: float, peak: float, frequency: float,
+                           delay: float, phase_deg: float, edge_skew_s: float,
+                           stop: float, inverted: bool) -> str:
+    """Create a differential clock with independently displaced edge classes.
+
+    Positive edge skew delays P-over-N crossings and advances N-over-P
+    crossings by equal amounts.  Thus the average phase is unchanged while
+    the two half-cycle widths change by ``edge_skew_s``.
+    """
+    period = 1 / frequency
+    low, high = common_mode - peak, common_mode + peak
+    edges = []
+    for cycle in range(-4, math.ceil((stop - delay) / period) + 5):
+        rise = delay + period * (cycle - phase_deg / 360.0)
+        fall = delay + period * (cycle + 0.5 - phase_deg / 360.0)
+        edges.extend(((rise + edge_skew_s / 2, True),
+                      (fall - edge_skew_s / 2, False)))
+    edges = sorted(edge for edge in edges if 0.5e-9 <= edge[0] <= stop + period)
+    if not edges:
+        raise ValueError("differential clock has no edges in simulation window")
+    state_high = not edges[0][1]
+    initial = high if state_high else low
+    points = [(0.0, initial), (edges[0][0] - 30e-12, initial)]
+    for edge, high_after in edges:
+        before = high if state_high else low
+        state_high = high_after
+        after = high if state_high else low
+        points.extend(((edge - 10e-12, before), (edge + 10e-12, after)))
+    if inverted:
+        points = [(time, 2 * common_mode - voltage) for time, voltage in points]
     return "PWL(" + " ".join(
         f"{time:.12g} {voltage:.6f}" for time, voltage in points
     ) + ")"
@@ -127,6 +166,9 @@ def main() -> None:
     parser.add_argument("--clock-restorer-bias", type=float, default=1.15)
     parser.add_argument("--pi-input-phase-deg", type=float, default=0.0)
     parser.add_argument("--pi-invert", action="store_true")
+    parser.add_argument("--pi-output-clock-override", action="store_true")
+    parser.add_argument("--pi-output-edge-skew-ps", type=float, default=0.0)
+    parser.add_argument("--diagnostic-sampler-load-scale", type=float, default=1.0)
     parser.add_argument("--capture-width-ps", type=int, default=380)
     parser.add_argument("--odd-capture-width-ps", type=int)
     parser.add_argument("--capture-delay-ps", type=int)
@@ -134,6 +176,7 @@ def main() -> None:
     parser.add_argument("--even-capture-skew-ps", type=int, default=0)
     parser.add_argument("--odd-capture-skew-ps", type=int, default=0)
     parser.add_argument("--frontend-sense-width-ps", type=int)
+    parser.add_argument("--even-frontend-skew-ps", type=int, default=0)
     parser.add_argument("--odd-frontend-skew-ps", type=int, default=0)
     parser.add_argument("--tx-bias", type=float, default=1.1)
     parser.add_argument("--tx-load-code", type=int, choices=range(5), default=2)
@@ -209,13 +252,15 @@ def main() -> None:
     if (args.capture_output_delay_ps is not None
             and not 600 <= args.capture_output_delay_ps <= 1200):
         parser.error("capture output delay must be 600--1200 ps")
-    if not -150 <= args.even_capture_skew_ps <= 150:
-        parser.error("even capture skew must be -150--150 ps")
+    if not -150 <= args.even_capture_skew_ps <= 450:
+        parser.error("even capture skew must be -150--450 ps")
     if not -250 <= args.odd_capture_skew_ps <= 150:
         parser.error("odd capture skew must be -250--150 ps")
     if (args.frontend_sense_width_ps is not None
             and not 250 <= args.frontend_sense_width_ps <= 700):
         parser.error("front-end sense pulse width must be 250--700 ps")
+    if not -150 <= args.even_frontend_skew_ps <= 450:
+        parser.error("even front-end skew must be -150--450 ps")
     if not -150 <= args.odd_frontend_skew_ps <= 150:
         parser.error("odd front-end skew must be -150--150 ps")
     if routed_rx and args.restorer_mode != "data":
@@ -256,7 +301,32 @@ def main() -> None:
         parser.error("PI controls must be between 0.25 V and 1.35 V")
     if not 0.0 <= args.pi_input_phase_deg < 360.0:
         parser.error("PI input phase must be in [0, 360) degrees")
+    if args.pi_output_clock_override and not routed_rx_pi_capture:
+        parser.error("PI output clock override requires the routed PI parent")
+    if not -160.0 <= args.pi_output_edge_skew_ps <= 160.0:
+        parser.error("PI output edge skew must be between -160 and 160 ps")
+    if args.pi_output_edge_skew_ps and not args.pi_output_clock_override:
+        parser.error("PI output edge skew requires the diagnostic clock override")
+    if not 1.0 <= args.diagnostic_sampler_load_scale <= 2.5:
+        parser.error("diagnostic sampler load scale must be between 1.0 and 2.5")
+    if args.diagnostic_sampler_load_scale != 1.0 and not routed_rx_pi_capture:
+        parser.error("diagnostic sampler load scaling requires the routed PI parent")
     args.work.mkdir(parents=True, exist_ok=True)
+
+    rx_pi_include = args.rx_pi_capture_parent_pex
+    if args.diagnostic_sampler_load_scale != 1.0:
+        source_pex = args.rx_pi_capture_parent_pex.read_text()
+        load_pattern = re.compile(
+            r"^(X\S+ VDD\.t\d+ SAMP_[EO]_[PN]\.t\d+ VSS\.t\d+ "
+            r"ppolyf_u r_width=2u r_length=)5u$", re.MULTILINE)
+        replacement_length = 5 * args.diagnostic_sampler_load_scale
+        modified_pex, replacement_count = load_pattern.subn(
+            lambda match: f"{match.group(1)}{replacement_length:.6g}u", source_pex)
+        if replacement_count != 4:
+            raise SystemExit(
+                "diagnostic sampler load boundary no longer contains four loads")
+        rx_pi_include = args.work / "diagnostic_sampler_load_parent.pex.spice"
+        rx_pi_include.write_text(modified_pex)
 
     rate = args.serial_rate_gbd * 1e9
     ui = 1 / rate
@@ -389,7 +459,8 @@ def main() -> None:
                 "RPICTRLA PI_CTRL_A_SRC PI_CTRL_A 1\n"
                 "RPICTRLB PI_CTRL_B_SRC PI_CTRL_B 1\n"
                 "RPIBUF PI_BUF_BIAS_SRC PI_BUF_BIAS 1\n"
-                "RCLKREST CLK_REST_BIAS_SRC CLK_REST_BIAS 1",
+                "RCLKREST CLK_REST_BIAS_SRC CLK_REST_BIAS 1\n"
+                "@PI_OUTPUT_CLOCK_OVERRIDE@",
                 "sampler clock sources",
             )
     elif routed_rx_spine:
@@ -523,6 +594,8 @@ COQB ODD_QB 0 50f
         "let odd_cm = (v(SAMP_O_P)+v(SAMP_O_N))/2\n"
         "let fe_even_diff = v(FE_E_P)-v(FE_E_N)\n"
         "let fe_odd_diff = v(FE_O_P)-v(FE_O_N)\n"
+        "let fe_even_cm = (v(FE_E_P)+v(FE_E_N))/2\n"
+        "let fe_odd_cm = (v(FE_O_P)+v(FE_O_N))/2\n"
         "let q_even_diff = v(EVEN_Q)-v(EVEN_QB)\n"
         "let q_odd_diff = v(ODD_Q)-v(ODD_QB)",
     )
@@ -530,6 +603,8 @@ COQB ODD_QB 0 50f
         if args.restorer_mode != "none" else ("tx", "pin", "rx", "samp", "fe", "q")
     expected_scalars = len(pair_indices) * (len(scored_stages) * 2 + 2) + 4 \
         + (len(pair_indices) * 2 + 1 if args.restorer_mode != "none" else 0)
+    expected_scalars += len(pair_indices) * 4
+    expected_scalars += len(pair_indices) * 2 * len(SAMPLER_SETUP_PS)
     if routed_rx_pi_capture:
         expected_scalars += 2
     pex_paths = {"tx_pex": args.tx_pex}
@@ -681,6 +756,7 @@ COQB ODD_QB 0 50f
             odd_event = odd_base + pair * period
             even_eye = clock_delay + (2 * pair + 0.5) * ui
             odd_eye = clock_delay + (2 * pair + 1.5) * ui
+            qualification_delay = 750e-12 * timing_scale
             output_delay = (
                 args.capture_output_delay_ps * 1e-12
                 if args.capture_output_delay_ps is not None else
@@ -689,6 +765,12 @@ COQB ODD_QB 0 50f
             )
             rx_shift = (args.rx_window_start_ps * 1e-12
                         if args.restorer_mode != "none" else 0.0)
+            even_write_mid = (even_event + capture_delay
+                              + args.even_capture_skew_ps * 1e-12
+                              + args.capture_width_ps * 0.5e-12)
+            odd_write_mid = (odd_event + capture_delay
+                             + args.odd_capture_skew_ps * 1e-12
+                             + odd_capture_width_ps * 0.5e-12)
             measures.extend((
                 f"meas tran tx_even_{pair} find tx_diff at={even_eye:.12g}",
                 f"meas tran pin_even_{pair} find pin_diff at={even_eye:.12g}",
@@ -696,15 +778,30 @@ COQB ODD_QB 0 50f
                 f"meas tran tx_odd_{pair} find tx_diff at={odd_eye:.12g}",
                 f"meas tran pin_odd_{pair} find pin_diff at={odd_eye:.12g}",
                 f"meas tran rx_odd_{pair} find rx_diff at={odd_eye + rx_shift:.12g}",
-                f"meas tran samp_even_{pair} find even_diff at={even_event + 100e-12:.12g}",
-                f"meas tran samp_odd_{pair} find odd_diff at={odd_event + 100e-12:.12g}",
-                f"meas tran samp_even_cm_{pair} find even_cm at={even_event + 100e-12:.12g}",
-                f"meas tran samp_odd_cm_{pair} find odd_cm at={odd_event + 100e-12:.12g}",
-                f"meas tran fe_even_{pair} find fe_even_diff at={even_event + 750e-12 * timing_scale:.12g}",
-                f"meas tran fe_odd_{pair} find fe_odd_diff at={odd_event + 750e-12 * timing_scale:.12g}",
-                f"meas tran q_even_{pair} find q_even_diff at={even_event + output_delay:.12g}",
+                f"meas tran samp_even_{pair} find even_diff at={even_event - 10e-12:.12g}",
+                f"meas tran samp_odd_{pair} find odd_diff at={odd_event - 10e-12:.12g}",
+                f"meas tran samp_even_cm_{pair} find even_cm at={even_event - 10e-12:.12g}",
+                f"meas tran samp_odd_cm_{pair} find odd_cm at={odd_event - 10e-12:.12g}",
+                f"meas tran fe_even_{pair} find fe_even_diff "
+                f"at={even_event + qualification_delay + args.even_frontend_skew_ps * 1e-12:.12g}",
+                f"meas tran fe_odd_{pair} find fe_odd_diff "
+                f"at={odd_event + qualification_delay + args.odd_frontend_skew_ps * 1e-12:.12g}",
+                f"meas tran fe_write_even_{pair} find fe_even_diff at={even_write_mid:.12g}",
+                f"meas tran fe_write_odd_{pair} find fe_odd_diff at={odd_write_mid:.12g}",
+                f"meas tran fe_write_even_cm_{pair} find fe_even_cm at={even_write_mid:.12g}",
+                f"meas tran fe_write_odd_cm_{pair} find fe_odd_cm at={odd_write_mid:.12g}",
+                f"meas tran q_even_{pair} find q_even_diff "
+                f"at={even_event + output_delay + args.even_capture_skew_ps * 1e-12:.12g}",
                 f"meas tran q_odd_{pair} find q_odd_diff at={odd_event + output_delay:.12g}",
             ))
+            for setup_ps in SAMPLER_SETUP_PS:
+                setup_tag = f"m{abs(setup_ps)}" if setup_ps < 0 else str(setup_ps)
+                measures.extend((
+                    f"meas tran samp_setup_{setup_tag}_even_{pair} find even_diff "
+                    f"at={even_event + setup_ps * 1e-12:.12g}",
+                    f"meas tran samp_setup_{setup_tag}_odd_{pair} find odd_diff "
+                    f"at={odd_event + setup_ps * 1e-12:.12g}",
+                ))
             if args.restorer_mode != "none":
                 measures.extend((
                     f"meas tran rx_hold_even_{pair} find rx_diff "
@@ -733,7 +830,7 @@ COQB ODD_QB 0 50f
             "TX_INCLUDE": f".include {args.tx_pex}",
             "TERM_INCLUDE": ("" if routed_front_parent
                              else f".include {args.term_pex}"),
-            "RX_INCLUDE": (f".include {args.rx_pi_capture_parent_pex}"
+            "RX_INCLUDE": (f".include {rx_pi_include}"
                            if routed_rx_pi_capture else
                            f".include {args.rx_capture_parent_pex}"
                            if routed_rx_capture else
@@ -797,6 +894,13 @@ COQB ODD_QB 0 50f
             "PI_CTRL_B_V": f"{args.pi_control_b:.6f}",
             "PI_BUF_BIAS_V": f"{args.pi_buffer_bias:.6f}",
             "CLK_REST_BIAS_V": f"{args.clock_restorer_bias:.6f}",
+            "PI_OUTPUT_CLOCK_OVERRIDE": (
+                f"VPIOVRP PI_CLK_P_OVR 0 {differential_clock_pwl(args.vdd * 2 / 3, 0.45, rate / 2, 1e-9, args.sampler_phase, args.pi_output_edge_skew_ps * 1e-12, stop_time, False)}\n"
+                f"VPIOVRN PI_CLK_N_OVR 0 {differential_clock_pwl(args.vdd * 2 / 3, 0.45, rate / 2, 1e-9, args.sampler_phase, args.pi_output_edge_skew_ps * 1e-12, stop_time, True)}\n"
+                "RPIOVRP PI_CLK_P_OVR PI_CLK_P 1\n"
+                "RPIOVRN PI_CLK_N_OVR PI_CLK_N 1"
+                if args.pi_output_clock_override else ""
+            ),
             "CLOCK_HZ": f"{rate / 2:.12g}",
             "CLOCK_PHASE": f"{args.sampler_phase:.3f}",
             "CLOCK_N_PHASE": f"{args.sampler_phase + 180:.3f}",
@@ -810,8 +914,8 @@ COQB ODD_QB 0 50f
             # device delay does not scale with the serial unit interval.
             "CAPTURE_WIDTH": f"{args.capture_width_ps * 1e-12:.12g}",
             "O_CAPTURE_WIDTH": f"{odd_capture_width_ps * 1e-12:.12g}",
-            "E_SENSE_DELAY": f"{even_base:.12g}",
-            "E_REGEN_DELAY": f"{even_base + 10e-12 * timing_scale:.12g}",
+            "E_SENSE_DELAY": f"{even_base + args.even_frontend_skew_ps * 1e-12:.12g}",
+            "E_REGEN_DELAY": f"{even_base + 10e-12 * timing_scale + args.even_frontend_skew_ps * 1e-12:.12g}",
             "E_CAPTURE_DELAY": f"{even_base + capture_delay + args.even_capture_skew_ps * 1e-12:.12g}",
             "O_SENSE_DELAY": f"{odd_base + args.odd_frontend_skew_ps * 1e-12:.12g}",
             "O_REGEN_DELAY": f"{odd_base + 10e-12 * timing_scale + args.odd_frontend_skew_ps * 1e-12:.12g}",
@@ -867,6 +971,30 @@ COQB ODD_QB 0 50f
             observed.get(f"samp_{lane_name}_cm_{pair}", 0.0)
             for pair in pair_indices for lane_name in ("even", "odd")
         ]
+        sampler_magnitudes = [
+            abs(observed.get(f"samp_{lane_name}_{pair}", 0.0))
+            for pair in pair_indices for lane_name in ("even", "odd")
+        ]
+        sampler_setup_scan = []
+        for setup_ps in SAMPLER_SETUP_PS:
+            setup_tag = f"m{abs(setup_ps)}" if setup_ps < 0 else str(setup_ps)
+            signed_setup = []
+            for pair in pair_indices:
+                signed_setup.extend((
+                    observed[f"samp_setup_{setup_tag}_even_{pair}"]
+                    * (1 if bits[2 * pair - args.latency_ui] else -1),
+                    observed[f"samp_setup_{setup_tag}_odd_{pair}"]
+                    * (1 if bits[2 * pair + 1 - args.latency_ui] else -1),
+                ))
+            sampler_setup_scan.append({
+                "setup_ps": setup_ps,
+                "minimum_signed_v": min(signed_setup),
+                "minimum_magnitude_v": min(abs(value) for value in signed_setup),
+            })
+        frontend_write_common_modes = [
+            observed.get(f"fe_write_{lane_name}_cm_{pair}", 0.0)
+            for pair in pair_indices for lane_name in ("even", "odd")
+        ]
         current = observed.get("supply_current", 0.0)
         # Without a restorer, RXOP/RXON is the sampler contract and retains the
         # original 80 mV signed floor.  With a physical limiter inserted it is
@@ -878,10 +1006,19 @@ COQB ODD_QB 0 50f
                   and min(minima["rx_even"], minima["rx_odd"]) >= rx_floor
                   and (args.restorer_mode == "none"
                        or min(hold_minima["even"], hold_minima["odd"]) >= rx_floor)
-                  and (args.restorer_mode == "none"
-                       or min(minima["rest_even"], minima["rest_odd"]) >= 0.20)
-                  and min(minima["samp_even"], minima["samp_odd"]) >= 0.08
+                  # Restorer and sampler probes are dynamic internal states,
+                  # not the final pipeline latency. Their scan stays visible;
+                  # converter qualification/write and held output own polarity.
+                  and min(sampler_common_modes) >= 0.50
+                  and max(sampler_common_modes) <= args.vdd - 0.10
                   and min(minima["fe_even"], minima["fe_odd"]) >= 0.30
+                  and min(
+                      min(observed[f"fe_write_even_{pair}"]
+                          * (1 if bits[2 * pair - args.latency_ui] else -1)
+                          for pair in pair_indices),
+                      min(observed[f"fe_write_odd_{pair}"]
+                          * (1 if bits[2 * pair + 1 - args.latency_ui] else -1)
+                          for pair in pair_indices)) >= 0.30
                   and min(minima["q_even"], minima["q_odd"]) >= 0.50
                   and args.vdd * 0.5 - 0.25 <= observed.get("rx_cm_avg", 0.0)
                   <= args.vdd * 0.5 + 0.25
@@ -900,10 +1037,22 @@ COQB ODD_QB 0 50f
             "minimum_rx_odd_v": minima["rx_odd"],
             "minimum_sampler_even_v": minima["samp_even"],
             "minimum_sampler_odd_v": minima["samp_odd"],
+            "minimum_sampler_observed_magnitude_v": min(sampler_magnitudes),
+            "sampler_setup_scan": sampler_setup_scan,
             "sampler_common_mode_min_v": min(sampler_common_modes),
             "sampler_common_mode_max_v": max(sampler_common_modes),
             "minimum_frontend_even_v": minima["fe_even"],
             "minimum_frontend_odd_v": minima["fe_odd"],
+            "minimum_frontend_write_even_v": min(
+                observed[f"fe_write_even_{pair}"]
+                * (1 if bits[2 * pair - args.latency_ui] else -1)
+                for pair in pair_indices),
+            "minimum_frontend_write_odd_v": min(
+                observed[f"fe_write_odd_{pair}"]
+                * (1 if bits[2 * pair + 1 - args.latency_ui] else -1)
+                for pair in pair_indices),
+            "frontend_write_common_mode_min_v": min(frontend_write_common_modes),
+            "frontend_write_common_mode_max_v": max(frontend_write_common_modes),
             "minimum_capture_even_v": minima["q_even"],
             "minimum_capture_odd_v": minima["q_odd"],
             "rx_common_mode_v": observed.get("rx_cm_avg"),
@@ -932,23 +1081,32 @@ COQB ODD_QB 0 50f
             for swap_lanes in (False, True):
                 stage_minima = {}
                 for stage in ("samp", "fe", "q"):
-                    signed = []
+                    signed_by_lane = {"even": [], "odd": []}
                     for pair in pair_indices:
                         even_sign = 1 if bits[2 * pair - latency] else -1
                         odd_sign = 1 if bits[2 * pair + 1 - latency] else -1
                         if swap_lanes:
                             even_sign, odd_sign = odd_sign, even_sign
-                        signed.extend((
-                            observed.get(f"{stage}_even_{pair}", 0.0) * even_sign,
-                            observed.get(f"{stage}_odd_{pair}", 0.0) * odd_sign,
-                        ))
-                    stage_minima[stage] = min(signed)
+                        signed_by_lane["even"].append(
+                            observed.get(f"{stage}_even_{pair}", 0.0) * even_sign)
+                        signed_by_lane["odd"].append(
+                            observed.get(f"{stage}_odd_{pair}", 0.0) * odd_sign)
+                    stage_minima[stage] = {
+                        lane_name: min(lane_values)
+                        for lane_name, lane_values in signed_by_lane.items()
+                    }
                 alignment_scan.append({
                     "latency_ui": latency,
                     "swap_lanes": swap_lanes,
-                    "minimum_sampler_v": stage_minima["samp"],
-                    "minimum_frontend_v": stage_minima["fe"],
-                    "minimum_capture_v": stage_minima["q"],
+                    "minimum_sampler_v": min(stage_minima["samp"].values()),
+                    "minimum_sampler_even_v": stage_minima["samp"]["even"],
+                    "minimum_sampler_odd_v": stage_minima["samp"]["odd"],
+                    "minimum_frontend_v": min(stage_minima["fe"].values()),
+                    "minimum_frontend_even_v": stage_minima["fe"]["even"],
+                    "minimum_frontend_odd_v": stage_minima["fe"]["odd"],
+                    "minimum_capture_v": min(stage_minima["q"].values()),
+                    "minimum_capture_even_v": stage_minima["q"]["even"],
+                    "minimum_capture_odd_v": stage_minima["q"]["odd"],
                 })
         result["alignment_scan"] = alignment_scan
         return result
@@ -960,6 +1118,9 @@ COQB ODD_QB 0 50f
                                                   case["minimum_capture_odd_v"])) if passing else None
     result = {
         "schema_version": 1,
+        "evidence_class": ("diagnostic_modified_pex"
+                           if args.diagnostic_sampler_load_scale != 1.0
+                           or args.pi_output_clock_override else "exact_pex"),
         "claim": ("extracted_1p25_gbd_lane_dual_cmos_capture"
                   if args.serial_rate_gbd == 1.25 else
                   "extracted_2p5_gts_lane_dual_cmos_capture"),
@@ -978,6 +1139,13 @@ COQB ODD_QB 0 50f
                                               if routed_rx_pi_capture else None),
                      "pi_input_polarity_inverted": (args.pi_invert
                                                        if routed_rx_pi_capture else None),
+                     "pi_output_clock_override": (args.pi_output_clock_override
+                                                     if routed_rx_pi_capture else None),
+                     "pi_output_edge_skew_ps": (args.pi_output_edge_skew_ps
+                                                   if routed_rx_pi_capture else None),
+                     "diagnostic_sampler_load_scale": (
+                         args.diagnostic_sampler_load_scale
+                         if routed_rx_pi_capture else None),
                      "tx_load_code": args.tx_load_code,
                      "capture_width_ps": args.capture_width_ps,
                      "odd_capture_width_ps": args.odd_capture_width_ps,
@@ -986,6 +1154,7 @@ COQB ODD_QB 0 50f
                      "even_capture_skew_ps": args.even_capture_skew_ps,
                      "odd_capture_skew_ps": args.odd_capture_skew_ps,
                      "frontend_sense_width_ps": args.frontend_sense_width_ps,
+                     "even_frontend_skew_ps": args.even_frontend_skew_ps,
                      "odd_frontend_skew_ps": args.odd_frontend_skew_ps,
                      "rx_bias_v": args.rx_bias, "sampler_bias_v": args.sampler_bias,
                      "termination_code": args.term_code,
@@ -998,6 +1167,8 @@ COQB ODD_QB 0 50f
                      "restorer_bias_v": (args.restorer_bias
                                           if args.restorer_mode != "none" else None)},
         "physical_composition": (
+            "diagnostic_modified_sampler_load_parent"
+            if routed_rx_pi_capture and args.diagnostic_sampler_load_scale != 1.0 else
             "routed_phase_interpolator_termination_rx_dual_capture_parent"
             if routed_rx_pi_capture else
             "routed_termination_rx_spine_dual_converter_capture_parent"

@@ -30,6 +30,25 @@ The committed JSON files are the exact numeric results behind this status.
 Passing this bounded smoke is a physical integration gate, not PCIe compliance
 or final silicon qualification.
 
+## Sub-400 ps replacement checkpoint
+
+The composed 2.5 GT/s routed lane exposed a contract error in this cell: its
+700--900 ps valid delay is longer than one 400 ps serial UI.  At SS/hot with
+fast resistors the odd lane resolves, while the even lane has to be converted
+before its sampler becomes transparent again.  Clock, offset, bias, stronger
+sampler-hold, and modified-load diagnostics did not create a valid common
+window; delaying conversion merely duplicated the following serial bit.
+
+`cml_to_cmos_fast.spice` is the resulting schematic replacement.  It uses a
+StrongARM input stage, a small isolated active-low SR latch, and separate CMOS
+output drivers.  At its measured one-lane-cycle pipeline latency, ten
+representative 200 mV / 50 fF MOS, voltage, temperature, and input-common-mode
+cases all produce a rail-qualified result at a fixed 120 ps point.  Minimum
+logic margin is 527.35 mV and maximum average supply current is 7.202 mA.  The
+numeric result is in `fast_schematic_probe_result.json` and is hash-bound to
+the schematic.  This is a schematic architecture gate only: the fast cell
+does not yet have DRC/LVS/PEX evidence and is not used by the routed parent.
+
 ## Architecture and calibration
 
 A small differential pair first acquires the CML decision on `SA`/`SB`. Those

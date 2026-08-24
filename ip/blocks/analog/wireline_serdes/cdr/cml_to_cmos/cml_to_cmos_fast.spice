@@ -1,0 +1,38 @@
+* SPDX-License-Identifier: Apache-2.0
+* Compact dynamic CML-to-CMOS latch for a sub-400 ps sampler hold interval.
+.subckt cml_to_cmos INP INN SENSE_CLK REGEN_CLK REGEN_CLKB CAPTURE_CLK CAPTURE_CLKB VDD VSS OUTP OUTN SENSE_BOOST_CLK
+* Precharge the regenerative and input nodes while SENSE_CLK is low.
+XPREP XP SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XPREN XN SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XEQUAL XP SENSE_CLK XN VDD pfet_03v3 w=8u l=0.28u m=1
+XPREIP NIP SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=1
+XPREIN NIN SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=1
+
+* The input pair selects an intermediate node; the cross-coupled devices then
+* regenerate that small timing difference on XP/XN.
+XIP NIP INP NTAIL VSS nfet_03v3 w=8u l=0.28u m=8
+XIN NIN INN NTAIL VSS nfet_03v3 w=8u l=0.28u m=8
+XTAIL NTAIL SENSE_CLK VSS VSS nfet_03v3 w=10u l=0.28u m=16
+XRNP XP XN NIP VSS nfet_03v3 w=8u l=0.28u m=8
+XRNN XN XP NIN VSS nfet_03v3 w=8u l=0.28u m=8
+XRPP XP XN VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XRPN XN XP VDD VDD pfet_03v3 w=8u l=0.28u m=2
+
+* Cross-coupled NANDs form an active-low SR latch.  The first dynamic node
+* that falls sets a complementary rail-level result; when XP/XN precharge
+* high again the latch retains it for the rest of the 800 ps lane cycle.
+XQPX Q XP VDD VDD pfet_03v3 w=8u l=0.28u m=16
+XQPQ Q QB VDD VDD pfet_03v3 w=8u l=0.28u m=1
+XQNX Q XP NQ VSS nfet_03v3 w=8u l=0.28u m=1
+XQNQ NQ QB VSS VSS nfet_03v3 w=8u l=0.28u m=1
+XBPX QB XN VDD VDD pfet_03v3 w=8u l=0.28u m=16
+XBPQ QB Q VDD VDD pfet_03v3 w=8u l=0.28u m=1
+XBNX QB XN NB VSS nfet_03v3 w=8u l=0.28u m=1
+XBNQ NB Q VSS VSS nfet_03v3 w=8u l=0.28u m=1
+
+* Output loads are isolated from the regenerative loop.
+XOPP OUTP QB VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XOPN OUTP QB VSS VSS nfet_03v3 w=8u l=0.28u m=4
+XONP OUTN Q VDD VDD pfet_03v3 w=8u l=0.28u m=8
+XONN OUTN Q VSS VSS nfet_03v3 w=8u l=0.28u m=4
+.ends cml_to_cmos

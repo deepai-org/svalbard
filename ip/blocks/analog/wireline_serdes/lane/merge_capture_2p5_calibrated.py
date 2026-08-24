@@ -46,6 +46,8 @@ complete = (
         "vdd_ripple_frequency_hz") == 100e6 for document in documents)
     and all(document.get("controls", {}).get("restorer_mode") == "data"
             for document in documents)
+    and all(document.get("evidence_class") == "exact_pex"
+            for document in documents)
     and all(document.get("physical_composition") == args.physical_composition
             for document in documents)
     and all(document.get(field) == documents[0].get(field)
@@ -61,6 +63,8 @@ summary_keys = (
     "minimum_sampler_even_v", "minimum_sampler_odd_v",
     "sampler_common_mode_min_v", "sampler_common_mode_max_v",
     "minimum_frontend_even_v", "minimum_frontend_odd_v",
+    "minimum_frontend_write_even_v", "minimum_frontend_write_odd_v",
+    "frontend_write_common_mode_min_v", "frontend_write_common_mode_max_v",
     "minimum_capture_even_v", "minimum_capture_odd_v",
     "pi_clock_rise_s", "pi_clock_fall_s",
     "tx_common_mode_v", "rx_common_mode_v", "amplifier_common_mode_v",
@@ -77,6 +81,7 @@ result = {
     "cases": [
         {
             "case_id": document.get("case_id"),
+            "evidence_class": document.get("evidence_class"),
             "environment": document.get("environment"),
             "controls": document.get("controls"),
             "fixture_initialization": document.get("fixture_initialization"),

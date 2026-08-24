@@ -33,33 +33,34 @@ run_case ff_cold --mos-corner ff --res-corner res_ff \
   --vdd 3.63 --temperature -40 --tx-load-code 2 --tx-bias 0.96 \
   --ac-initial-v 0.850 --rx-bias 1.2 --restorer-bias 1.2 \
   --sampler-bias 1.3 --sampler-phase 45 --latency-ui 0 \
-  --rx-window-start-ps 50 --capture-delay-ps 550 \
-  --capture-output-delay-ps 1050 --offset-ps 100 & p2=$!
+  --rx-window-start-ps 50 --capture-delay-ps 200 \
+  --capture-output-delay-ps 900 --offset-ps 100 & p2=$!
 wait "$p1" "$p2"
 
 run_case ff_hot --mos-corner ff --res-corner res_ss \
   --vdd 2.97 --temperature 125 --tx-load-code 2 --tx-bias 1.6 \
   --ac-initial-v 0.300 --rx-bias 1.2 --restorer-bias 1.2 \
-  --sampler-bias 1.3 --sampler-phase 16.875 --latency-ui 0 \
-  --rx-window-start-ps 150 --frontend-sense-width-ps 400 \
-  --odd-frontend-skew-ps -50 --capture-delay-ps 200 \
-  --capture-output-delay-ps 750 --offset-ps 400 & p3=$!
+  --sampler-bias 0.9 --sampler-phase 16.875 --latency-ui 0 \
+  --rx-window-start-ps 150 --frontend-sense-width-ps 550 \
+  --odd-frontend-skew-ps -150 --capture-delay-ps 200 \
+  --capture-output-delay-ps 900 --pi-input-phase-deg 5 \
+  --offset-ps 300 & p3=$!
 run_case ss_hot --mos-corner ss --res-corner res_ff \
   --vdd 2.97 --temperature 125 --tx-load-code 4 --tx-bias 1.7 \
   --ac-initial-v 1.100 --rx-bias 1.5 --restorer-bias 1.5 \
-  --sampler-bias 1.3 --sampler-phase 135 --latency-ui 1 \
+  --sampler-bias 1.2 --sampler-phase 135 --latency-ui 1 \
   --rx-window-start-ps 250 --frontend-sense-width-ps 550 \
-  --capture-delay-ps 400 --capture-output-delay-ps 1050 \
-  --offset-ps 600 & p4=$!
+  --capture-delay-ps 200 --capture-output-delay-ps 900 \
+  --clock-restorer-bias 1.3 --pi-input-phase-deg 135 --offset-ps 600 & p4=$!
 wait "$p3" "$p4"
 
 run_case ss_passive --mos-corner ss --res-corner res_ss \
   --vdd 2.97 --temperature 125 --tx-load-code 4 --tx-bias 1.7 \
   --ac-initial-v 1.100 --rx-bias 1.5 --restorer-bias 1.5 \
-  --sampler-bias 1.3 --sampler-phase 135 --latency-ui 1 \
+  --sampler-bias 1.2 --sampler-phase 135 --latency-ui 1 \
   --rx-window-start-ps 250 --frontend-sense-width-ps 550 \
-  --capture-delay-ps 400 --capture-output-delay-ps 1050 \
-  --offset-ps 600
+  --capture-delay-ps 200 --capture-output-delay-ps 900 \
+  --clock-restorer-bias 1.3 --pi-input-phase-deg 135 --offset-ps 600
 
 python3 /src/lane/merge_capture_2p5_calibrated.py \
   --case /work/capture-2p5-rx-pi-tt.json \

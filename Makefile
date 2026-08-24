@@ -16,6 +16,7 @@ check-fast: smoke
 	$(PYTHON) ip/blocks/analog/wireline_serdes/lane/check_rx_frontend_evidence.py
 	$(PYTHON) ip/blocks/analog/wireline_serdes/lane/check_rx_capture_evidence.py
 	$(PYTHON) ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/check_evidence.py
+	$(PYTHON) ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/check_fast_schematic.py --dut ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/cml_to_cmos_fast.spice --result ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/fast_schematic_probe_result.json
 	$(PYTHON) scripts/validate.py structure
 	$(PYTHON) scripts/validate.py repo-audit
 
@@ -87,6 +88,7 @@ analog-flow-preflight:
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/run_physical.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/run_clock_chain.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane_rx_pi_capture/run_clock_chain_ss.sh
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/cdr/cml_to_cmos/run_fast_probe.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_pi_smoke.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_pi_screen.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/lane/run_capture_2p5_rx_pi_pvt.sh

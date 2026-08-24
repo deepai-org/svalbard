@@ -23,15 +23,25 @@ screen. The selected 200 ps case retains 98.071 mV raw-RX, 367.009 mV restored,
 671.376 mV sampler, 400.615 mV converter, and 1.5155 V final-capture margin at
 50.815 mA. Restored-clock rise/fall times are measured directly in every case.
 
-This does not close PVT. The full five-environment replay passes only nominal.
-At FF/cold the sampler and converter retain at least 0.811 V and 2.327 V, but
-post-write capture collapses below 2 mV: this is a real regeneration failure,
-not an aperture setting. FF/hot passes the short diagnostic after raising
-sampler bias to 1.3 V but fails the 24-bit recurrence test. Both SS cases lose
-dynamic decisions even though the standalone extracted PI/restorer/sampler
-clock chain passes 4/4 restorer biases at SS/passive. The next circuit task is
-to strengthen and requalify held-state capture and then localize the SS dynamic
-data/clock boundary; no PVT-closed lane is claimed.
+This does not close PVT. Corrected per-lane qualification and write-time
+scoring passes 3/5 exact-parent environments: TT, FF/cold, and SS/passive.
+FF/hot reaches 199/221 mV worst signed write margin on the two lanes, with one
+polarity wrong, despite 932 mV/2.048 V final held outputs. SS/hot is weaker:
+the even converter reaches only 57 mV at qualification and 61 mV at write,
+then both final outputs remain within 10 mV of an invalid decision. Clock-edge
+skew, larger sampler loads, tail boost, and independent lane delays were useful
+diagnostics but did not produce a common correct window. Delaying the even
+conversion by 400 ps makes its output strong only by capturing the same serial
+bit as the odd lane. The physical converter's 700--900 ps useful window is
+therefore structurally incompatible with a 400 ps serial UI at this boundary.
+
+A separate StrongARM-style schematic replacement now passes 10/10 targeted
+contract environments with one 800 ps lane-cycle pipeline latency, a fixed
+120 ps qualification point, at least 527 mV logic margin, and at most 7.202 mA
+average current for 200 mV differential input and 50 fF output loading. It has
+no layout, DRC, LVS, or PEX evidence yet and is not substituted into this
+parent. The next physical task is to lay it out, qualify its extraction, and
+rebuild this exact routed hierarchy before any PVT-closed lane is claimed.
 
 Run `./run_physical.sh` for layout/DRC/LVS/PEX, `./run_clock_chain.sh` and
 `./run_clock_chain_ss.sh` for nonlinear clock-load checks, and the lane

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-"""Render the routed aperture-qualified CML-to-CMOS front end."""
+"""Render either physical CML-to-CMOS implementation from its exact GDS."""
 
+import os
+import re
 import pya
 from PIL import Image, ImageDraw, ImageFont
 
@@ -11,8 +13,12 @@ COLORS = [
     (61, 214, 255, 100), (147, 220, 132, 90), (255, 151, 112, 100),
 ]
 
+variant = os.environ.get("CML_TO_CMOS_RENDER_VARIANT", "legacy")
+gds_path = os.environ.get("CML_TO_CMOS_RENDER_GDS", "/work/cml_to_cmos.gds")
+output_path = os.environ.get(
+    "CML_TO_CMOS_RENDER_PATH", "/work/cml_to_cmos-layout.png")
 layout = pya.Layout()
-layout.read("/work/cml_to_cmos.gds")
+layout.read(gds_path)
 top = layout.top_cell()
 bbox = top.bbox()
 scale = min((WIDTH - 2 * MARGIN) / bbox.width(), (HEIGHT - 2 * MARGIN) / bbox.height())
@@ -49,10 +55,18 @@ draw = ImageDraw.Draw(canvas)
 font = ImageFont.load_default()
 draw.rounded_rectangle((18, 14, 1250, 54), radius=8, fill=(5, 8, 12, 225),
                        outline=(92, 116, 145, 255), width=1)
-draw.text((32, 27),
-          f"GF180 CML-to-CMOS front end | {bbox.width() * layout.dbu:.1f} x "
-          f"{bbox.height() * layout.dbu:.1f} um | DRC/LVS clean | PEX: 2048 R / 1340 C",
-          font=font, fill=(239, 244, 250, 255))
+if variant == "fast":
+    pex_text = open(os.environ["CML_TO_CMOS_RENDER_PEX"], encoding="utf-8").read()
+    pex_counts = (len(re.findall(r"^R\d+\s", pex_text, re.MULTILINE)),
+                  len(re.findall(r"^C\d+\s", pex_text, re.MULTILINE)))
+    title = (f"GF180 fast CML-to-CMOS | {bbox.width() * layout.dbu:.1f} x "
+             f"{bbox.height() * layout.dbu:.1f} um | DRC/LVS clean | "
+             f"PEX: {pex_counts[0]} R / {pex_counts[1]} C")
+else:
+    title = (f"GF180 CML-to-CMOS front end | {bbox.width() * layout.dbu:.1f} x "
+             f"{bbox.height() * layout.dbu:.1f} um | DRC/LVS clean | "
+             "PEX: 2048 R / 1340 C")
+draw.text((32, 27), title, font=font, fill=(239, 244, 250, 255))
 
 
 def annotate(text, x_um, y_um, color):
@@ -63,10 +77,22 @@ def annotate(text, x_um, y_um, color):
     draw.text((x, y), text, font=font, fill=(245, 248, 252, 255), anchor="mm")
 
 
-annotate("isolated reset + regenerative PMOS", 0, 63, (245, 166, 35, 255))
-annotate("acquisition loads + restoring inverters", 0, 39, (80, 227, 194, 255))
-annotate("two-stage sense + programmable tail", 0, 10, (189, 103, 217, 255))
-annotate("matched two-stage CMOS outputs", 56, 25, (61, 214, 255, 255))
+if variant == "fast":
+    annotate("symmetric precharge + equalization", 0, 49,
+             (245, 166, 35, 255))
+    annotate("cross-coupled regeneration", 0, 61,
+             (80, 227, 194, 255))
+    annotate("adjacent input pair + programmable tail", 0, 5,
+             (189, 103, 217, 255))
+    annotate("same-side held outputs + power mesh", 58, 26,
+             (61, 214, 255, 255))
+else:
+    annotate("isolated reset + regenerative PMOS", 0, 63, (245, 166, 35, 255))
+    annotate("acquisition loads + restoring inverters", 0, 39,
+             (80, 227, 194, 255))
+    annotate("two-stage sense + programmable tail", 0, 10,
+             (189, 103, 217, 255))
+    annotate("matched two-stage CMOS outputs", 56, 25, (61, 214, 255, 255))
 annotate("contacted substrate guard ring", 0, -69.6, (255, 92, 92, 255))
 
-canvas.convert("RGB").save("/work/cml_to_cmos-layout.png", quality=94)
+canvas.convert("RGB").save(output_path, quality=94)

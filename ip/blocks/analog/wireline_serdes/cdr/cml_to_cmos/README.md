@@ -39,17 +39,24 @@ before its sampler becomes transparent again.  Clock, offset, bias, stronger
 sampler-hold, and modified-load diagnostics did not create a valid common
 window; delaying conversion merely duplicated the following serial bit.
 
-`cml_to_cmos_fast.spice` is the resulting schematic replacement.  It uses a
-StrongARM input stage, a small isolated active-low SR latch, and separate CMOS
-output drivers.  At its measured one-lane-cycle pipeline latency, ten
-representative 200 mV / 50 fF MOS, voltage, temperature, and input-common-mode
-cases all produce a rail-qualified result at a fixed 120 ps point.  Minimum
-logic margin is 527.35 mV and maximum average supply current is 7.202 mA.  The
-numeric result is in `fast_schematic_probe_result.json` and is hash-bound to
-the schematic.  This is a schematic architecture gate only: the fast cell
-does not yet have DRC/LVS/PEX evidence and is not used by the routed parent.
+`cml_to_cmos_fast.spice` is the resulting StrongARM-style replacement. At its
+measured one-lane-cycle pipeline latency, all ten representative 200 mV / 50 fF
+MOS, voltage, temperature, and input-common-mode cases pass at a fixed 120 ps
+qualification point. The final schematic matrix has 592.51 mV minimum logic
+margin and 7.396 mA maximum average supply current.
 
-## Architecture and calibration
+The coded fast layout is independently zero-DRC and uniquely LVS-matched. Its
+coupled full-RC extraction contains 2,172 resistors and 1,311 capacitors. The
+same ten cases all pass exact PEX with 546.42 mV minimum logic margin and
+9.964 mA maximum average supply current. `fast_physical_result.json` binds the
+schematic, both layout-generator sources, rendered GDS, exact PEX, and timing
+summary by SHA-256. This closes the fast leaf macro under its bounded public-
+model contract; the routed PI/RX parent still uses the old converter until it
+is regenerated and replayed.
+
+![Physically closed fast replacement](fast_layout.png)
+
+## Legacy-cell architecture
 
 A small differential pair first acquires the CML decision on `SA`/`SB`. Those
 nodes drive only second-stage gates, isolating the input from the larger reset
@@ -59,20 +66,32 @@ two-stage non-inverting buffers deliver rail-level `OUTP`/`OUTN` for the
 deserializer to sample. `CAPTURE_CLK/CLKB` remain reserved interface pins and
 do not control devices in this revision.
 
-No one fixed tail size closed both ends of the 0.60--0.80 VDD input
-common-mode design envelope after extraction. The layout therefore contains a
-two-finger base tail plus a six-finger parallel boost tail. Assert
-`SENSE_BOOST_CLK` with `SENSE_CLK` for the effective eight-finger low/mid
-common-mode mode; hold it low for the two-finger high-common-mode mode. The
-test flow selects boost at common-mode fractions up to 0.70. Integration must
-calibrate or otherwise derive that mode from an observable; the cell does not
-autonomously know its input common mode.
+## Fast-cell architecture and calibration
 
-The generated 190 by 160 um layout contains 35 logical MOS instances. It uses
-legal 0.8 um-pitch shared-diffusion fingers, explicit body ties, a contacted
-substrate guard ring, matched high-metal buses, local tails, and net-aware
-escape-column reuse. `layout.tcl` is the editable geometry source; the rendered
-image comes from the exact GDS used for extraction.
+The fast circuit precharges and equalizes `XP`/`XN`, resolves through a matched
+input/regeneration core, restores active-high `DP`/`DN` decisions, and writes a
+weakly held cross-coupled state. A selected low dynamic node also activates a
+small PMOS pull-up assist. The internal state encoding is deliberately reversed
+so each active pull-down and final output inverter stays on its own physical
+side; this removed the long cross-cell output-gate routes. A full-width M4/M5
+power mesh with distributed vias prevents local rail resistance from being
+mistaken for inadequate output-device strength.
+
+No one tail setting closes the entire public-model envelope with the same
+margin and current. The fast layout therefore contains a five-finger base tail
+and a 24-finger parallel boost tail. The retained simulation policy asserts
+boost only for slow-model, low/mid-common-mode cases. This demonstrates a legal
+trim solution, not an autonomous calibration implementation: parent integration
+must provide an observable bring-up search and store the selected trim without
+using a hidden process-corner oracle.
+
+The generated 190 by 160 um fast layout contains 29 logical MOS instances. It
+uses legal one-micron escape spacing, multi-finger shared diffusion, explicit
+body ties, distributed well/substrate contacts, a contacted substrate guard
+ring, paired high-metal signal buses, local tails, and the symmetric power
+mesh. `layout_fast.tcl` selects the fast variant and sources the common
+`layout.tcl` generator; both files are hash-bound in the physical record. The
+rendered image comes from the exact GDS used for extraction.
 
 ## Reproducing the checks
 
@@ -93,7 +112,10 @@ python3 run_nominal.py --source /src \
 ```
 
 `run_pvt.py --waveform-dir <path>` can preserve internal acquisition,
-regeneration, restoration, clock, and output nodes for selected cases. Both
+regeneration, restoration, held-state, input-branch, tail, clock, and output
+nodes for selected cases. `run_fast_probe.sh` reproduces the schematic gate and
+`run_fast_physical.sh` performs layout, DRC, LVS, PEX, the ten-case exact-PEX
+matrix, rendering, and evidence binding inside the bounded container. Both
 runners mark 200 mV and above as the required sensitivity contract and retain
 100 mV separately as exploratory stress.
 
@@ -105,10 +127,10 @@ there, peaks at 439.9 mV at 870 ps, and remains 370.5 mV at 900 ps. This
 sampled late-valid interval is now explicitly composed with the downstream
 deserializer aperture; it remains subject to unmodeled clock-distribution skew.
 
-The routed transistor-level deserializer now composes successfully with this
-full-RC front end in all nine representative environments. Both cells are
-extracted; their common verified close is 1000 ps, with output measurement
-before the next capture opening. A denser timing/PVT matrix,
-provider-qualified mismatch/noise and metastability-tail analysis, post-fill
-extraction, EM/IR, thermal/substrate coupling, and pad/package/board/channel
-co-simulation remain open.
+The routed transistor-level deserializer composes successfully with the older
+full-RC front end in all nine representative environments, but that result does
+not transfer automatically to the fast replacement. Regenerate the routed
+parent with this exact macro and replay its PI-clocked PVT boundary next. A
+denser PVT/load/input matrix, provider-qualified mismatch/noise and metastability
+tails, post-fill extraction, EM/IR, thermal/substrate coupling, and
+pad/package/board/channel co-simulation remain open.

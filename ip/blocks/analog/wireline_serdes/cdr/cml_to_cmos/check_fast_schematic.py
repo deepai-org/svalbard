@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail closed on the sub-400 ps converter schematic checkpoint."""
+"""Fail closed on the current-cycle converter schematic checkpoint."""
 
 import argparse
 import hashlib
@@ -20,6 +20,8 @@ checks = (
     result.get("dut_sha256") == digest,
     result.get("pipeline_latency_ui") == 1,
     result.get("sample_delays_s") == [120e-12],
+    result.get("boost_policy") == "calibrated",
+    result.get("boost_fraction") == 1.0,
     result.get("case_count") == result.get("complete_case_count") == 10,
     result.get("passing_contract_case_count") == 10,
     result.get("group_count") == result.get("passing_group_count") == 10,

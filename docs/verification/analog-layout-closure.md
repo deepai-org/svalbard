@@ -480,6 +480,34 @@ one physical mechanism at a time, regenerate DRC/LVS/PEX, and reject a larger
 reset device when its added sensitive-node capacitance costs more evaluation
 margin than its reset current gains.
 
+Measure the residual differential at the instant the next evaluation begins,
+not only whether both dynamic nodes eventually approach a rail. In the fast
+CML-to-CMOS work, hundreds of millivolts of inherited `XP`/`XN` state made an
+otherwise correct high-common-mode input appear to resolve with the wrong
+polarity. Moving the reset bank closer helped; tripling the equalizer did not,
+because its diffusion capacitance cost more than its extra reset current. A
+smaller always-on tail plus a separately programmable boost closed the two
+common-mode regimes. Treat a simulator-selected process-dependent boost as an
+existence proof for a trim, not as completed calibration: silicon still needs
+an observable search, safe codes, and retained state.
+
+Use internal polarity as a physical optimization variable. If a complementary
+held state feeds complementary outputs, choose which state is called true so
+the active pull-down, held devices, and large output gate remain on the same
+side. This can remove long cross-cell routes without changing the external
+truth table. In the same converter, a local polarity remap outperformed an
+extra buffer stage: the buffer restored rails but added enough slow-corner
+depth to lose two environments.
+
+When outputs plateau instead of continuing to settle, probe local extracted
+rail nodes before resizing transistors. A narrow one-sided M4 return raised one
+low output by roughly 0.2 V and also made source-measured current look smaller.
+Parallel full-width M4/M5 rails with distributed vias moved all outputs to
+within tens of millivolts of the rails and exposed the true delivered current.
+Only then was device tapering meaningful. Treat improved current after adding
+rail resistance as a measurement artifact, not a power optimization; margin,
+local rail bounce, and current must close against the same extracted PDN.
+
 For a half-rate serializer, separate three claims that a static `10` word can
 otherwise blur: correct complementary clock selection, arbitrary changing-word
 serialization with each lane updated only in its unselected aperture, and the

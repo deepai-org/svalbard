@@ -2,37 +2,50 @@
 * Compact dynamic CML-to-CMOS latch for a sub-400 ps sampler hold interval.
 .subckt cml_to_cmos INP INN SENSE_CLK REGEN_CLK REGEN_CLKB CAPTURE_CLK CAPTURE_CLKB VDD VSS OUTP OUTN SENSE_BOOST_CLK
 * Precharge the regenerative and input nodes while SENSE_CLK is low.
-XPREP XP SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=2
-XPREN XN SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=2
-XEQUAL XP SENSE_CLK XN VDD pfet_03v3 w=8u l=0.28u m=1
-XPREIP NIP SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=1
-XPREIN NIN SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=1
+XPREP XP SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=10
+XPREN XN SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=10
+XEQUAL XP SENSE_CLK XN VDD pfet_03v3 w=8u l=0.28u m=8
+XPREIP NIP SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=4
+XPREIN NIN SENSE_CLK VDD VDD pfet_03v3 w=8u l=0.28u m=4
 
 * The input pair selects an intermediate node; the cross-coupled devices then
 * regenerate that small timing difference on XP/XN.
-XIP NIP INP NTAIL VSS nfet_03v3 w=8u l=0.28u m=8
-XIN NIN INN NTAIL VSS nfet_03v3 w=8u l=0.28u m=8
-XTAIL NTAIL SENSE_CLK VSS VSS nfet_03v3 w=10u l=0.28u m=16
-XRNP XP XN NIP VSS nfet_03v3 w=8u l=0.28u m=8
-XRNN XN XP NIN VSS nfet_03v3 w=8u l=0.28u m=8
+XIP NIP INP NTAIL VSS nfet_03v3 w=8u l=0.28u m=12
+XIN NIN INN NTAIL VSS nfet_03v3 w=8u l=0.28u m=12
+XTAIL NTAIL SENSE_CLK VSS VSS nfet_03v3 w=10u l=0.28u m=5
+XTAILBOOST NTAIL SENSE_BOOST_CLK VSS VSS nfet_03v3 w=10u l=0.28u m=24
+XRNP XP XN NIP VSS nfet_03v3 w=8u l=0.28u m=12
+XRNN XN XP NIN VSS nfet_03v3 w=8u l=0.28u m=12
 XRPP XP XN VDD VDD pfet_03v3 w=8u l=0.28u m=2
 XRPN XN XP VDD VDD pfet_03v3 w=8u l=0.28u m=2
 
-* Cross-coupled NANDs form an active-low SR latch.  The first dynamic node
-* that falls sets a complementary rail-level result; when XP/XN precharge
-* high again the latch retains it for the rest of the 800 ps lane cycle.
-XQPX Q XP VDD VDD pfet_03v3 w=8u l=0.28u m=16
-XQPQ Q QB VDD VDD pfet_03v3 w=8u l=0.28u m=1
-XQNX Q XP NQ VSS nfet_03v3 w=8u l=0.28u m=1
-XQNQ NQ QB VSS VSS nfet_03v3 w=8u l=0.28u m=1
-XBPX QB XN VDD VDD pfet_03v3 w=8u l=0.28u m=16
-XBPQ QB Q VDD VDD pfet_03v3 w=8u l=0.28u m=1
-XBNX QB XN NB VSS nfet_03v3 w=8u l=0.28u m=1
-XBNQ NB Q VSS VSS nfet_03v3 w=8u l=0.28u m=1
+* Small local inverters restore the dynamic nodes without making the large
+* capture devices part of the StrongARM load.  Cross-feeding their outputs
+* preserves H=1 for INP>INN.
+XPD DP XP VDD VDD pfet_03v3 w=8u l=0.28u m=4
+XND DP XP VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XPN DN XN VDD VDD pfet_03v3 w=8u l=0.28u m=4
+XNN DN XN VSS VSS nfet_03v3 w=8u l=0.28u m=2
 
-* Output loads are isolated from the regenerative loop.
-XOPP OUTP QB VDD VDD pfet_03v3 w=8u l=0.28u m=8
-XOPN OUTP QB VSS VSS nfet_03v3 w=8u l=0.28u m=4
-XONP OUTN Q VDD VDD pfet_03v3 w=8u l=0.28u m=8
-XONN OUTN Q VSS VSS nfet_03v3 w=8u l=0.28u m=4
+* DP/DN are active-high set/reset pulses.  Strong pull-down devices overwrite
+* a weaker cross-coupled inverter pair; with both pulses low the pair holds.
+XHPF H HB VDD VDD pfet_03v3 w=8u l=0.28u m=4
+XHNF H HB VSS VSS nfet_03v3 w=8u l=0.28u m=1
+XHNR H DP VSS VSS nfet_03v3 w=8u l=0.28u m=8
+XBPF HB H VDD VDD pfet_03v3 w=8u l=0.28u m=4
+XBNF HB H VSS VSS nfet_03v3 w=8u l=0.28u m=1
+XBNR HB DN VSS VSS nfet_03v3 w=8u l=0.28u m=8
+* A selected low dynamic node also drives the corresponding held node high.
+* These devices are off while XP/XN precharge and avoid waiting for the weak
+* cross-coupled feedback PMOS to slew the full extracted held-node load.
+XHUP H XN VDD VDD pfet_03v3 w=8u l=0.28u m=4
+XBUP HB XP VDD VDD pfet_03v3 w=8u l=0.28u m=4
+
+* H is the complement of the selected data and HB is the true value.  Each
+* single-stage output inverter and active pull-down therefore stays on its
+* own physical side; only the smaller pull-up assist crosses the center.
+XOPP OUTP H VDD VDD pfet_03v3 w=8u l=0.28u m=3
+XOPN OUTP H VSS VSS nfet_03v3 w=8u l=0.28u m=4
+XONP OUTN HB VDD VDD pfet_03v3 w=8u l=0.28u m=3
+XONN OUTN HB VSS VSS nfet_03v3 w=8u l=0.28u m=4
 .ends cml_to_cmos

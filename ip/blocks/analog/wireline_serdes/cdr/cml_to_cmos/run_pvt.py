@@ -36,6 +36,12 @@ def main() -> None:
                         help="capture enable delay after sense-clock rise")
     parser.add_argument("--capture-width-ps", type=int, default=320)
     parser.add_argument("--pipeline-latency-ui", type=int, choices=(0, 1), default=0)
+    parser.add_argument("--boost-policy",
+                        choices=("common-mode", "calibrated", "slow-corner",
+                                 "slow-low-hot", "always", "never"),
+                        default="common-mode")
+    parser.add_argument("--boost-fraction", type=float, default=1.0,
+                        help="enabled boost high level as a fraction of VDD")
     parser.add_argument("--jobs", type=int, default=2)
     parser.add_argument("--timeout-s", type=int, default=90,
                         help="per-case ngspice timeout")
@@ -48,6 +54,8 @@ def main() -> None:
     args = parser.parse_args()
     if not 1 <= args.jobs <= 4:
         parser.error("--jobs must be between 1 and 4")
+    if not 0.0 < args.boost_fraction <= 1.0:
+        parser.error("--boost-fraction must be in (0, 1]")
     if not 100 <= args.eval_width_ps <= 650:
         parser.error("--eval-width-ps must be between 100 and 650")
     if not 10 <= args.regen_delay_ps <= args.eval_width_ps - 100:
@@ -98,6 +106,16 @@ def main() -> None:
                                 f"{mos}_{vdd:.2f}_{temperature:+d}_cm{common_mode_fraction:.2f}_"
                                 f"in{differential_input:.2f}_load{load_ff}"
                             ).replace("+", "p").replace("-", "m").replace(".", "p")
+                            boost_enabled = {
+                                "common-mode": common_mode_fraction <= 0.70,
+                                "calibrated": (mos == "ss"
+                                               and common_mode_fraction <= 0.70),
+                                "slow-corner": mos == "ss",
+                                "slow-low-hot": (mos == "ss" and vdd <= 3.0
+                                                 and temperature >= 100),
+                                "always": True,
+                                "never": False,
+                            }[args.boost_policy]
                             values = {
                                 "MOS_CORNER": mos, "TEMP_C": str(temperature),
                                 "DUT_SHA256": dut_sha256,
@@ -105,9 +123,9 @@ def main() -> None:
                                 "DUT_SUBCKT": ("cml_to_cmos_pex" if args.pex else
                                                 "cml_to_cmos"),
                                 "EVAL_WIDTH_S": f"{args.eval_width_ps}p",
-                                "BOOST_CLOCK": (f"PULSE(0 {vdd:.2f} 50p 20p 20p "
+                                "BOOST_CLOCK": (f"PULSE(0 {vdd * args.boost_fraction:.6g} 50p 20p 20p "
                                                 f"{args.eval_width_ps}p 800p)"
-                                                if common_mode_fraction <= 0.70 else "0"),
+                                                if boost_enabled else "0"),
                                 "REGEN_DELAY_S": f"{50 + args.regen_delay_ps}p",
                                 "REGEN_WIDTH_S": f"{args.eval_width_ps - args.regen_delay_ps}p",
                                 "CAPTURE_DELAY_S": f"{50 + args.capture_delay_ps}p",
@@ -123,7 +141,9 @@ def main() -> None:
                                     " time v(xdut.xp) v(xdut.xn)"
                                     " v(sense_clk) v(regen_clk) v(regen_clkb)"
                                     " v(capture_clk) v(capture_clkb)"
-                                    " v(outp) v(outn)"
+                                    " v(outp) v(outn) v(xdut.h) v(xdut.hb)"
+                                    " v(xdut.dp) v(xdut.dn)"
+                                    " v(xdut.nip) v(xdut.nin) v(xdut.ntail)"
                                     if args.waveform_dir else
                                     "* waveform capture disabled"
                                 ),
@@ -175,7 +195,17 @@ def main() -> None:
                   and 0.00001 <= observed["supply_current"] <= 0.020)
         return {"id": case_id, "environment": list(environment),
                 "differential_input_v": differential_input, "load_ff": load_ff,
-                "tail_boost_enabled": float(environment[3]) <= 0.70,
+                "tail_boost_enabled": {
+                    "common-mode": float(environment[3]) <= 0.70,
+                    "calibrated": (environment[0] == "ss"
+                                   and float(environment[3]) <= 0.70),
+                    "slow-corner": environment[0] == "ss",
+                    "slow-low-hot": (environment[0] == "ss"
+                                      and float(environment[1]) <= 3.0
+                                      and int(environment[2]) >= 100),
+                    "always": True,
+                    "never": False,
+                }[args.boost_policy],
                 "role": "contract" if differential_input >= 0.20 else "stress",
                 "complete": complete,
                 "early_logic_margin_v": early_margin,
@@ -230,6 +260,8 @@ def main() -> None:
     passing_groups = sum(group["result"] == "pass" for group in groups)
     passed = complete_count == len(cases) and passing_groups == len(groups)
     result = {"schema_version": 1, "dut_sha256": dut_sha256,
+              "boost_policy": args.boost_policy,
+              "boost_fraction": args.boost_fraction,
               "pipeline_latency_ui": args.pipeline_latency_ui,
               "sample_delays_s": sample_delays_s,
               "delay_summary": delay_summary,

@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # Symmetric held CML-to-CMOS retimer layout for GF180MCU.
 
+set fast_converter [info exists ::env(CML_TO_CMOS_FAST_LAYOUT)]
+
 proc paint_rect {layer x1 y1 x2 y2} {
     box values $x1 $y1 $x2 $y2
     paint $layer
@@ -94,15 +96,28 @@ proc m2_to_m3 {x y} {
 # Reserve sparse body-tap columns before assigning signal escapes.  The tap
 # columns are intentionally regular so latch-up distance is a geometric
 # invariant rather than an accident of route-column allocation order.
+set route_pitch 0.8
 set used_route_columns {
     -84.8 -84 -83.2 -60.8 -60 -59.2 -36.8 -36 -35.2
     -21.8 -21 -20.2 -12.8 -12 -11.2 -0.8 0 0.8
     11.2 12 12.8 20.2 21 21.8 35.2 36 36.8
     -56.8 59.2 60 60.8 63.2 83.2 84 84.8
 }
+if {$fast_converter} {
+    # One-micron escape pitch gives the large one-finger SR-stack devices
+    # enough diagonal clearance between their M3 gate and diffusion landings.
+    set route_pitch 1.0
+    set used_route_columns {
+        -85.2 -84 -82.8 -61.2 -60 -58.8 -37.2 -36 -34.8
+        -13.2 -12 -10.8 10.8 12 13.2 34.8 36 37.2
+        58.8 60 61.2 82.8 84 85.2
+    }
+}
 array set net_route_columns {}
+array set gate_route_columns {}
+set route_occupancies {}
 proc route_column {preferred net {force_new 0}} {
-    global used_route_columns net_route_columns
+    global used_route_columns net_route_columns route_pitch
     # Reuse a nearby vertical escape for repeated terminals on the same net.
     # This keeps same-row M2 terminal straps local instead of consuming a
     # globally unique column and eventually crossing unrelated devices.
@@ -121,11 +136,11 @@ proc route_column {preferred net {force_new 0}} {
     for {set radius 0} {$radius < 400} {incr radius} {
         foreach sign {1 -1} {
             if {$radius == 0 && $sign < 0} { continue }
-            set candidate [expr {round(($preferred+$sign*0.8*$radius)*10.0)/10.0}]
+            set candidate [expr {round(($preferred+$sign*$route_pitch*$radius)*10.0)/10.0}]
             if {$candidate < -90.0 || $candidate > 90.0} { continue }
             set available 1
             foreach occupied $used_route_columns {
-                if {abs($candidate-$occupied) < 0.79} {
+                if {abs($candidate-$occupied) < $route_pitch-0.01} {
                     set available 0
                     break
                 }
@@ -138,6 +153,64 @@ proc route_column {preferred net {force_new 0}} {
         }
     }
     error "No legal M3 access column near $preferred"
+}
+
+proc route_column_at {preferred net y {force_new 0} {extent_y ""}
+                      {reuse_gate 0}} {
+    global fast_converter tracks used_route_columns net_route_columns
+    global gate_route_columns route_occupancies route_pitch
+    if {!$fast_converter} { return [route_column $preferred $net $force_new] }
+
+    if {$extent_y eq ""} { set extent_y $y }
+    set ymin [expr {min($y,$extent_y,$tracks($net))-0.5}]
+    set ymax [expr {max($y,$extent_y,$tracks($net))+0.5}]
+    if {$reuse_gate && [info exists gate_route_columns($net)]} {
+        set candidate $gate_route_columns($net)
+        lappend route_occupancies [list $candidate $ymin $ymax $net]
+        return $candidate
+    }
+    for {set radius 0} {$radius < 400} {incr radius} {
+        foreach sign {1 -1} {
+            if {$radius == 0 && $sign < 0} { continue }
+            set candidate [expr {
+                round(($preferred+$sign*$route_pitch*$radius)*10.0)/10.0}]
+            if {$candidate < -90.0 || $candidate > 90.0} { continue }
+            set available 1
+            foreach occupied $used_route_columns {
+                if {abs($candidate-$occupied) < $route_pitch-0.01} {
+                    set available 0
+                    break
+                }
+            }
+            if {!$available} { continue }
+            foreach occupancy $route_occupancies {
+                lassign $occupancy column other_min other_max other_net
+                if {abs($candidate-$column) < $route_pitch-0.01
+                        && $ymin < $other_max && $ymax > $other_min} {
+                    set available 0
+                    break
+                }
+            }
+            if {$available} {
+                lappend net_route_columns($net) $candidate
+                lappend route_occupancies \
+                    [list $candidate $ymin $ymax $net]
+                if {$reuse_gate} { set gate_route_columns($net) $candidate }
+                return $candidate
+            }
+        }
+    }
+    error "No legal interval-aware M3 access column near $preferred"
+}
+
+proc claim_route_column {column net y {extent_y ""}} {
+    global tracks net_route_columns route_occupancies
+    if {$extent_y eq ""} { set extent_y $y }
+    lappend net_route_columns($net) $column
+    lappend route_occupancies [list $column \
+        [expr {min($y,$extent_y,$tracks($net))-0.5}] \
+        [expr {max($y,$extent_y,$tracks($net))+0.5}] $net]
+    return $column
 }
 
 proc manual_gate {cx cy width nf} {
@@ -173,25 +246,48 @@ proc manual_gate_top {cx cy width nf} {
     return $route_y
 }
 
-array set tracks {
-    VSS -30.0 INP -15.0 INN -13.6 SENSE_CLK -12.2 SENSE_BOOST_CLK -10.8
-    NTAIL -8.0 SA -5.2 SB -3.8 NREGEN 10.0
-    SXP 14.0 SXN 15.4
-    XP 25.2 XN 26.6 BP 28.0 BN 29.4 OUTP 30.8 OUTN 32.2
-    CAPTURE_CLK 34.0 CAPTURE_CLKB 35.4
-    REGEN_CLK 38.0 REGEN_CLKB 39.4
-    VREGP 55.0 VREGN 56.4 VDD 85.0
+if {$fast_converter} {
+    # Preserve the old macro's external pin tracks for drop-in parent
+    # replacement. Internal state tracks are kept adjacent in differential
+    # pairs and away from the output buses.
+    array set tracks {
+        VSS -30.0 INP -15.0 INN -13.6 SENSE_CLK -12.2
+        SENSE_BOOST_CLK -10.8 NTAIL -8.0 NIP -5.2 NIN -3.8
+        DP 14.0 DN 15.4 H 19.6 HB 21.0
+        XP 25.2 XN 26.6 OUTP 30.8 OUTN 32.2
+        CAPTURE_CLK 34.0 CAPTURE_CLKB 35.4
+        REGEN_CLK 38.0 REGEN_CLKB 39.4 VDD 85.0
+    }
+} else {
+    array set tracks {
+        VSS -30.0 INP -15.0 INN -13.6 SENSE_CLK -12.2 SENSE_BOOST_CLK -10.8
+        NTAIL -8.0 SA -5.2 SB -3.8 NREGEN 10.0
+        SXP 14.0 SXN 15.4
+        XP 25.2 XN 26.6 BP 28.0 BN 29.4 OUTP 30.8 OUTN 32.2
+        CAPTURE_CLK 34.0 CAPTURE_CLKB 35.4
+        REGEN_CLK 38.0 REGEN_CLKB 39.4
+        VREGP 55.0 VREGN 56.4 VDD 85.0
+    }
 }
 array set net_min {}
 array set net_max {}
 
 proc connect_net {net x y} {
-    global tracks net_min net_max
+    global tracks net_min net_max fast_converter
     set ty $tracks($net)
-    set half_width [expr {$net eq "VDD" || $net eq "VSS" ? 0.23 : 0.14}]
+    # The fast cell's one-micron escape grid can carry full via-landing-width
+    # M3 trunks.  Avoid narrow-stem reentrant notches at the M3/M4 landing.
+    set half_width [expr {$fast_converter || $net eq "VDD" || $net eq "VSS"
+        ? 0.23 : 0.14}]
     set landing_half [expr {$net eq "VDD" || $net eq "VSS" ? 0.38 : 0.23}]
     paint_rect metal3 [expr {$x-$half_width}] [expr {min($y,$ty)-0.38}] \
         [expr {$x+$half_width}] [expr {max($y,$ty)+0.38}]
+    if {$fast_converter && abs($y-$ty) < 0.8} {
+        # Merge nearby terminal and track via landings without a narrow M3
+        # neck that would create two sub-rule re-entrant notches.
+        paint_rect metal3 [expr {$x-0.23}] [expr {min($y,$ty)-0.23}] \
+            [expr {$x+0.23}] [expr {max($y,$ty)+0.23}]
+    }
     # Via3 needs a legal Metal3 landing.  Keep the long access wire narrow,
     # but widen only at the M3/M4 transition instead of widening the full run.
     paint_rect metal3 [expr {$x-0.23}] [expr {$ty-0.23}] \
@@ -243,6 +339,46 @@ proc draw_shared_mos {kind width nf cx cy} {
 }
 
 # instance kind width fingers x y drain gate source
+if {$fast_converter} {
+# The high-current reset bank occupies the lowest available PMOS row because
+# the exact-PEX reset interval is only 230 ps.
+set devices {
+    {XTAIL nfet_03v3 10 5 -2 -12 NTAIL SENSE_CLK VSS}
+    {XRNP nfet_03v3 8 12 -25 8 XP XN NIP}
+    {XIP nfet_03v3 8 12 -8 8 NIP INP NTAIL}
+    {XIN nfet_03v3 8 12 8 8 NIN INN NTAIL}
+    {XRNN nfet_03v3 8 12 25 8 XN XP NIN}
+
+    {XOPN nfet_03v3 8 4 -68 20 OUTP H VSS}
+    {XND nfet_03v3 8 2 -34 20 DP XP VSS}
+    {XNN nfet_03v3 8 2 34 20 DN XN VSS}
+    {XONN nfet_03v3 8 4 68 20 OUTN HB VSS}
+
+    {XOPP pfet_03v3 8 3 -68 37 OUTP H VDD}
+    {XPD pfet_03v3 8 4 -34 37 DP XP VDD}
+    {XRPP pfet_03v3 8 2 -10 61 XP XN VDD}
+    {XRPN pfet_03v3 8 2 10 61 XN XP VDD}
+    {XHUP pfet_03v3 8 4 -28 61 H XN VDD}
+    {XBUP pfet_03v3 8 4 28 61 HB XP VDD}
+    {XPN pfet_03v3 8 4 34 37 DN XN VDD}
+    {XONP pfet_03v3 8 3 68 37 OUTN HB VDD}
+
+    {XPREP pfet_03v3 8 10 -36 49 XP SENSE_CLK VDD}
+    {XPREIP pfet_03v3 8 4 -18 49 NIP SENSE_CLK VDD}
+    {XEQUAL pfet_03v3 8 8 0 49 XP SENSE_CLK XN}
+    {XPREIN pfet_03v3 8 4 18 49 NIN SENSE_CLK VDD}
+    {XPREN pfet_03v3 8 10 36 49 XN SENSE_CLK VDD}
+
+    {XHNR nfet_03v3 8 8 -50 20 H DP VSS}
+    {XHNF nfet_03v3 8 1 -42 20 H HB VSS}
+    {XBNF nfet_03v3 8 1 42 20 HB H VSS}
+    {XBNR nfet_03v3 8 8 50 20 HB DN VSS}
+    {XHPF pfet_03v3 8 4 -44 37 H HB VDD}
+    {XBPF pfet_03v3 8 4 44 37 HB H VDD}
+
+    {XTAILBOOST nfet_03v3 10 24 30 -12 NTAIL SENSE_BOOST_CLK VSS}
+}
+} else {
 set devices {
     {XACQP nfet_03v3 8 8 -30 8 XP SB NREGEN}
     {XREGENP nfet_03v3 8 3 -21 8 XP XN NREGEN}
@@ -282,6 +418,7 @@ set devices {
     {XONP pfet_03v3 8 8 78 37 OUTN BN VDD}
     {XONN nfet_03v3 8 6 81 14 OUTN BN VSS}
 }
+}
 
 crashbackups stop
 load cml_to_cmos
@@ -299,9 +436,13 @@ foreach spec $devices {
     set drain_points {}
     set source_points {}
     set gate_points {}
-    set dual_gate [expr {[lsearch -exact {
-        XACQP XACQN XHP XHN XXPREP XXPREN XXEQUAL XLATP XLATN
-    } $instance] >= 0}]
+    if {$fast_converter} {
+        set dual_gate [expr {$nf >= 8}]
+    } else {
+        set dual_gate [expr {[lsearch -exact {
+            XACQP XACQN XHP XHN XXPREP XXPREN XXEQUAL XLATP XLATN
+        } $instance] >= 0}]
+    }
     foreach group [finger_groups $nf $cx] {
         lassign $group index gx group_nf
         set yoff [expr {max(0.70,$width/2.0-0.8)}]
@@ -340,16 +481,40 @@ foreach spec $devices {
     set drain_y [expr {$cy+$yoff}]
     set source_y [expr {$cy-$yoff}]
     set gate_y [expr {$cy-$width/2.0-0.70}]
-    set drain_route [route_column [expr {$cx-0.8}] $drain]
+    set drain_preferred [expr {$cx-0.8}]
+    if {$fast_converter && $instance eq "XPREIP"} {
+        # Keep the NIP precharge escape clear of the equalizer's center
+        # diffusion landing; the generic nearest-column search otherwise
+        # leaves a sub-rule M2 notch between the two same-row devices.
+        set drain_preferred -18.8
+    }
+    if {$fast_converter && $instance eq "XPREIP"} {
+        set drain_route [claim_route_column $drain_preferred $drain $drain_y]
+    } else {
+        set drain_route [route_column_at $drain_preferred $drain $drain_y]
+    }
     set local_reset_supply [expr {$instance eq "XRPREP" || $instance eq "XRPREN"}]
-    set source_route [route_column [expr {$cx+0.8}] $source $local_reset_supply]
-    set gate_route [route_column $cx $gate]
+    set source_route [route_column_at [expr {$cx+0.8}] $source $source_y \
+        $local_reset_supply]
+    # Never share a local M1 gate landing between devices.  All copies of a
+    # clock meet on their named M4 bus after independent M3 escapes.
+    set reuse_gate 0
+    set gate_extent [expr {$dual_gate ? $top_gate_y : $gate_y}]
+    if {$fast_converter && $instance eq "XNN"} {
+        # Keep the local-restorer gate strap clear of the adjacent capture
+        # device now that both sit in the compact NMOS row.
+        set gate_route [claim_route_column 31.0 $gate $gate_y $gate_extent]
+    } else {
+        set gate_route [route_column_at $cx $gate $gate_y 0 \
+            $gate_extent $reuse_gate]
+    }
     set source_routes [list $source_route]
     if {[info exists ::env(LAYOUT_ROUTE_DEBUG)]} {
         puts "ROUTE $instance d=$drain:$drain_route g=$gate:$gate_route s=$source:$source_route"
     }
     if {($source eq "VDD" || $source eq "VSS") && $nf >= 8} {
-        lappend source_routes [route_column [expr {$cx+2.4}] $source 1]
+        lappend source_routes \
+            [route_column_at [expr {$cx+2.4}] $source $source_y 1]
     }
     paint_rect metal2 [expr {min($drain_route,[lindex $drain_points 0])-0.38}] \
         [expr {$drain_y-0.38}] \
@@ -404,14 +569,23 @@ paint_rect metal5 84.62 -30.0 85.38 -16.62
 # Distributed n-well contacts join VDD on M5.  Their M3 columns have explicit
 # route-allocation keepouts, so signal escapes cannot touch the tap stacks.
 set nwell_tap_columns {-84 -60 -36 -12 12 36 60 84}
+set nwell_tap_rows {44 55 67 82}
+if {$fast_converter} {
+    # The fast cell uses PMOS rows at y=37, 49, and 67 um. Put the well taps
+    # in the open gaps rather than through the wide SR-latch and precharge
+    # arrays.
+    set nwell_tap_rows {43 55 68 82}
+}
 foreach x $nwell_tap_columns {
-    foreach y {44 55 67 82} {
+    foreach y $nwell_tap_rows {
         paint_rect nsubdiff [expr {$x-0.32}] [expr {$y-0.37}] \
             [expr {$x+0.32}] [expr {$y+0.37}]
         nwell_contact $x $y
         stack_to $x $y 3
     }
-    paint_rect metal3 [expr {$x-0.23}] 43.77 [expr {$x+0.23}] 82.23
+    paint_rect metal3 [expr {$x-0.23}] \
+        [expr {[lindex $nwell_tap_rows 0]-0.23}] \
+        [expr {$x+0.23}] 82.23
     stack_to $x 82 5
 }
 paint_rect metal5 -87.38 81.62 \
@@ -440,6 +614,22 @@ foreach net [array names net_min] {
     box values [expr {$net_min($net)-0.20}] [expr {$y-0.20}] \
         [expr {$net_min($net)+0.20}] [expr {$y+0.20}]
     label $net FreeSans 0.30 0 0 0 c metal4
+}
+
+if {$fast_converter} {
+    # The converter's left and right output banks must not share a long,
+    # sub-micron M4 return to a single edge port.  Parallel full-width M4/M5
+    # rails and distributed Via4 landings bound local rail bounce in exact
+    # extraction while also giving the symmetric device rows equal supply
+    # impedance.  The existing named VDD/VSS buses and ports remain unchanged.
+    paint_rect metal4 -90 -30.60 90 -29.40
+    paint_rect metal5 -90 -30.60 90 -29.40
+    paint_rect metal4 -90 84.40 90 85.60
+    paint_rect metal5 -90 84.40 90 85.60
+    foreach x {-88 -76 -64 -52 -40 -28 -16 -4 8 20 32 44 56 68 80 88} {
+        via_at via4 $x -30.0
+        via_at via4 $x 85.0
+    }
 }
 
 # Contact the common PMOS well frequently and tie it to the VDD port on M5.

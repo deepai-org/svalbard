@@ -35,13 +35,14 @@ conversion by 400 ps makes its output strong only by capturing the same serial
 bit as the odd lane. The physical converter's 700--900 ps useful window is
 therefore structurally incompatible with a 400 ps serial UI at this boundary.
 
-A separate StrongARM-style schematic replacement now passes 10/10 targeted
+A separate StrongARM-style replacement now passes 10/10 targeted exact-PEX
 contract environments with one 800 ps lane-cycle pipeline latency, a fixed
-120 ps qualification point, at least 527 mV logic margin, and at most 7.202 mA
-average current for 200 mV differential input and 50 fF output loading. It has
-no layout, DRC, LVS, or PEX evidence yet and is not substituted into this
-parent. The next physical task is to lay it out, qualify its extraction, and
-rebuild this exact routed hierarchy before any PVT-closed lane is claimed.
+120 ps qualification point, 546.42 mV minimum logic margin, and 9.964 mA
+maximum average current for 200 mV differential input and 50 fF output loading.
+Its 190 x 160 um layout is zero-DRC, uniquely LVS-matched, and extracted to
+2,172 resistors and 1,311 capacitors. It is not yet substituted into this
+parent. The next physical task is to rebuild this exact routed hierarchy with
+both fast instances before any PVT-closed PI-clocked lane is claimed.
 
 Run `./run_physical.sh` for layout/DRC/LVS/PEX, `./run_clock_chain.sh` and
 `./run_clock_chain_ss.sh` for nonlinear clock-load checks, and the lane

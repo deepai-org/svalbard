@@ -1,0 +1,22 @@
+* SPDX-License-Identifier: Apache-2.0
+* Direct regenerative 2.5-GT/s RX front end with independent interleave clocks.
+.include /src/termination/termination.spice
+.include /src/serdes_rx/serdes_rx.spice
+.include /src/cdr/cml_to_cmos/cml_to_cmos_fast.spice
+
+.subckt lane_rx_regenerative_frontend RXP RXN
++ TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N TERM_EN5_N TERM_EN6_N
++ VTHP VTHN RX_BIAS RX_BW_EN_N
++ E_SENSE_CLK E_REGEN_CLK E_REGEN_CLKB E_CAPTURE_CLK E_CAPTURE_CLKB E_SENSE_BOOST
++ O_SENSE_CLK O_REGEN_CLK O_REGEN_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB O_SENSE_BOOST
++ VDD VSS RX_RAWP RX_RAWN FE_E_P FE_E_N FE_O_P FE_O_N
+XTERM RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N
++ TERM_EN5_N TERM_EN6_N VDD VSS serdes_termination
+XRX RXP RXN VTHP VTHN RX_BIAS RX_BW_EN_N VDD VSS RX_RAWP RX_RAWN serdes_rx
+* EVEN is mirrored in layout. Swapping both differential interfaces preserves
+* polarity while keeping its two local data routes uncrossed.
+XFE_E RX_RAWN RX_RAWP E_SENSE_CLK E_REGEN_CLK E_REGEN_CLKB E_CAPTURE_CLK
++ E_CAPTURE_CLKB VDD VSS FE_E_N FE_E_P E_SENSE_BOOST cml_to_cmos
+XFE_O RX_RAWP RX_RAWN O_SENSE_CLK O_REGEN_CLK O_REGEN_CLKB O_CAPTURE_CLK
++ O_CAPTURE_CLKB VDD VSS FE_O_P FE_O_N O_SENSE_BOOST cml_to_cmos
+.ends lane_rx_regenerative_frontend

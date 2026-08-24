@@ -125,6 +125,106 @@ def supply_pwl(supply: float, stop: float, ripple_v: float,
     ) + ")"
 
 
+def duplicate_sampler_hold_devices(pex: str) -> tuple[str, int]:
+    """Double only the extracted sampler cross-coupled hold devices."""
+    output = []
+    count = 0
+    sampler_node = re.compile(r"SAMP_([EO])_([PN])\.t\d+")
+    for line in pex.splitlines():
+        output.append(line)
+        tokens = line.split()
+        if (len(tokens) < 7 or not tokens[0].startswith("X")
+                or "nfet_03v3" not in tokens or "w=6u" not in tokens):
+            continue
+        outputs = [sampler_node.fullmatch(node) for node in tokens[1:4]]
+        outputs = [match for match in outputs if match]
+        if (len(outputs) != 2 or outputs[0].group(1) != outputs[1].group(1)
+                or outputs[0].group(2) == outputs[1].group(2)
+                or not any(node.startswith("a_") for node in tokens[1:4])):
+            continue
+        output.append(" ".join([f"XDIAG_HOLD_{count}"] + tokens[1:]))
+        count += 1
+    return "\n".join(output) + "\n", count
+
+
+def insert_diagnostic_decision_retimer(pex: str) -> tuple[str, int]:
+    """Insert full-cycle CML follower latches ahead of the converters.
+
+    This deliberately produces a mixed schematic/PEX diagnostic, not physical
+    qualification.  Only the 32 converter input-gate fingers are disconnected
+    from the routed sampler nets.  The retained parent still supplies all
+    upstream devices and parasitics, while two complementary-phase CML latches
+    load and capture the real extracted sampler outputs.
+    """
+    output = []
+    replacement_count = 0
+    sampler_gate = re.compile(r"SAMP_([EO])_([PN])\.t\d+")
+    for line in pex.splitlines():
+        tokens = line.split()
+        if (len(tokens) >= 7 and tokens[0].startswith("X")
+                and "nfet_03v3" in tokens
+                and any(f"XFE_{lane}.{device}" in " ".join(tokens[1:4])
+                        for lane in "EO" for device in ("NIP", "NIN"))):
+            match = sampler_gate.fullmatch(tokens[2])
+            if match:
+                tokens[2] = f"RET_{match.group(1)}_{match.group(2)}"
+                line = " ".join(tokens)
+                replacement_count += 1
+        output.append(line)
+    if replacement_count != 32:
+        return pex, replacement_count
+    end_indices = [index for index, line in enumerate(output)
+                   if line.strip() == ".ends"]
+    if len(end_indices) != 1 or any(line.strip()
+                                    for line in output[end_indices[0] + 1:]):
+        raise SystemExit("diagnostic retimer parent boundary changed")
+    end_index = end_indices[0]
+    output[end_index:end_index] = [
+        "* Diagnostic full-cycle decision retimers; not extracted layout.",
+        "XDIAG_RETIME_E SAMP_E_P SAMP_E_N PI_CLK_N PI_CLK_P SAMP_BIAS VDD VSS",
+        "+ RET_E_P RET_E_N cml_sampler_latch",
+        "XDIAG_RETIME_O SAMP_O_P SAMP_O_N PI_CLK_P PI_CLK_N SAMP_BIAS VDD VSS",
+        "+ RET_O_P RET_O_N cml_sampler_latch",
+    ]
+    return "\n".join(output) + "\n", replacement_count
+
+
+def rewire_direct_regenerative_sampler(pex: str) -> tuple[str, dict[str, int]]:
+    """Feed both extracted StrongARM converters directly from the RX output.
+
+    The modified netlist retains the routed receiver, converter, capture, clock,
+    supply, and parasitic networks.  It disconnects the obsolete restorer and
+    level-sensitive sampler input gates and changes only the converter input
+    gates to the corresponding RX output.  This is a mechanism diagnostic;
+    the eventual parent must physically route and extract the same topology.
+    """
+    counts = {"converter": 0, "sampler": 0, "restorer": 0}
+    output = []
+    converter_gate = re.compile(r"SAMP_([EO])_([PN])\.t\d+")
+    sampler_gate = re.compile(r"RX_REST([PN])\.t\d+")
+    restorer_gate = re.compile(r"RX_RAW[PN]\.t\d+")
+    for line in pex.splitlines():
+        tokens = line.split()
+        if (len(tokens) >= 7 and tokens[0].startswith("X")
+                and "nfet_03v3" in tokens):
+            match = converter_gate.fullmatch(tokens[2])
+            if (match and "w=8u" in tokens
+                    and "XRX.XFRONT.XFE_" in " ".join(tokens[1:4])):
+                tokens[2] = f"RX_RAW{match.group(2)}"
+                counts["converter"] += 1
+                line = " ".join(tokens)
+            elif sampler_gate.fullmatch(tokens[2]) and "w=6u" in tokens:
+                tokens[2] = "VSS"
+                counts["sampler"] += 1
+                line = " ".join(tokens)
+            elif restorer_gate.fullmatch(tokens[2]) and "w=10u" in tokens:
+                tokens[2] = "VSS"
+                counts["restorer"] += 1
+                line = " ".join(tokens)
+        output.append(line)
+    return "\n".join(output) + "\n", counts
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", required=True, type=Path)
@@ -144,6 +244,8 @@ def main() -> None:
     parser.add_argument("--rx-capture-parent-physical", type=Path)
     parser.add_argument("--rx-pi-capture-parent-pex", type=Path)
     parser.add_argument("--rx-pi-capture-parent-physical", type=Path)
+    parser.add_argument("--rx-regenerative-capture-parent-pex", type=Path)
+    parser.add_argument("--rx-regenerative-capture-parent-physical", type=Path)
     parser.add_argument("--frontend-pex", type=Path)
     parser.add_argument("--frontend-physical", type=Path)
     parser.add_argument("--deserializer-pex", type=Path)
@@ -175,6 +277,17 @@ def main() -> None:
     parser.add_argument("--pi-output-clock-override", action="store_true")
     parser.add_argument("--pi-output-edge-skew-ps", type=float, default=0.0)
     parser.add_argument("--diagnostic-sampler-load-scale", type=float, default=1.0)
+    parser.add_argument("--diagnostic-sampler-hold-scale", type=int,
+                        choices=(1, 2), default=1)
+    parser.add_argument("--diagnostic-decision-retimer", action="store_true")
+    parser.add_argument("--diagnostic-restorer-load-length-um", type=float,
+                        default=4.2)
+    parser.add_argument("--diagnostic-restorer-bypass", action="store_true")
+    parser.add_argument("--diagnostic-rx-single-stage", action="store_true")
+    parser.add_argument("--diagnostic-direct-regenerative-sampler",
+                        action="store_true")
+    parser.add_argument("--sampler-observation-load-ff", type=float,
+                        default=25.0)
     parser.add_argument("--capture-width-ps", type=int, default=380)
     parser.add_argument("--odd-capture-width-ps", type=int)
     parser.add_argument("--capture-delay-ps", type=int)
@@ -220,11 +333,14 @@ def main() -> None:
     routed_rx_frontend = args.rx_frontend_parent_pex is not None
     routed_rx_capture = args.rx_capture_parent_pex is not None
     routed_rx_pi_capture = args.rx_pi_capture_parent_pex is not None
-    routed_capture_parent = routed_rx_capture or routed_rx_pi_capture
+    routed_rx_regenerative_capture = (
+        args.rx_regenerative_capture_parent_pex is not None)
+    routed_capture_parent = (routed_rx_capture or routed_rx_pi_capture
+                             or routed_rx_regenerative_capture)
     routed_front_parent = routed_rx_frontend or routed_capture_parent
     routed_rx = routed_rx_spine or routed_front_parent
     if sum((routed_rx_spine, routed_rx_frontend, routed_rx_capture,
-            routed_rx_pi_capture)) > 1:
+            routed_rx_pi_capture, routed_rx_regenerative_capture)) > 1:
         parser.error("select one routed RX parent")
     if not 1 <= args.jobs <= 4 or not 1 <= args.term_code <= 6:
         parser.error("jobs or termination code outside declared range")
@@ -273,10 +389,13 @@ def main() -> None:
         parser.error("odd front-end sense pulse width must be 250--700 ps")
     if not -150 <= args.even_frontend_skew_ps <= 450:
         parser.error("even front-end skew must be -150--450 ps")
-    if not -150 <= args.odd_frontend_skew_ps <= 450:
-        parser.error("odd front-end skew must be -150--450 ps")
-    if routed_rx and args.restorer_mode != "data":
+    if not -450 <= args.odd_frontend_skew_ps <= 450:
+        parser.error("odd front-end skew must be -450--450 ps")
+    if (routed_rx and not routed_rx_regenerative_capture
+            and args.restorer_mode != "data"):
         parser.error("routed RX parent requires --restorer-mode data")
+    if routed_rx_regenerative_capture and args.restorer_mode != "none":
+        parser.error("regenerative RX parent requires --restorer-mode none")
     if routed_rx_spine and not args.rx_spine_physical:
         parser.error("routed RX spine requires its physical record")
     if routed_rx_spine and not args.term_physical:
@@ -287,6 +406,9 @@ def main() -> None:
         parser.error("routed RX capture requires its physical record")
     if routed_rx_pi_capture and not args.rx_pi_capture_parent_physical:
         parser.error("routed RX PI capture requires its physical record")
+    if (routed_rx_regenerative_capture
+            and not args.rx_regenerative_capture_parent_physical):
+        parser.error("routed regenerative capture requires its physical record")
     if not routed_capture_parent and not (
             args.deserializer_pex and args.deserializer_physical):
         parser.error("leaf capture requires its PEX and physical record")
@@ -315,8 +437,8 @@ def main() -> None:
         parser.error("PI input phase must be in [0, 360) degrees")
     if args.pi_output_clock_override and not routed_rx_pi_capture:
         parser.error("PI output clock override requires the routed PI parent")
-    if not -160.0 <= args.pi_output_edge_skew_ps <= 160.0:
-        parser.error("PI output edge skew must be between -160 and 160 ps")
+    if not -320.0 <= args.pi_output_edge_skew_ps <= 320.0:
+        parser.error("PI output edge skew must be between -320 and 320 ps")
     if not 0.0 <= args.sampler_overshoot_limit_mv <= 200.0:
         parser.error("sampler overshoot limit must be between 0 and 200 mV")
     if args.pi_output_edge_skew_ps and not args.pi_output_clock_override:
@@ -325,6 +447,29 @@ def main() -> None:
         parser.error("diagnostic sampler load scale must be between 1.0 and 2.5")
     if args.diagnostic_sampler_load_scale != 1.0 and not routed_rx_pi_capture:
         parser.error("diagnostic sampler load scaling requires the routed PI parent")
+    if args.diagnostic_sampler_hold_scale != 1 and not routed_rx_pi_capture:
+        parser.error("diagnostic sampler hold scaling requires the routed PI parent")
+    if args.diagnostic_decision_retimer and not routed_rx_pi_capture:
+        parser.error("diagnostic decision retimer requires the routed PI parent")
+    if not 2.0 <= args.diagnostic_restorer_load_length_um <= 4.2:
+        parser.error("diagnostic restorer load length must be 2.0--4.2 um")
+    if (args.diagnostic_restorer_load_length_um != 4.2
+            and not routed_rx_pi_capture):
+        parser.error("diagnostic restorer load change requires the routed PI parent")
+    if args.diagnostic_restorer_bypass and not routed_rx_pi_capture:
+        parser.error("diagnostic restorer bypass requires the routed PI parent")
+    if args.diagnostic_rx_single_stage and not args.diagnostic_restorer_bypass:
+        parser.error("diagnostic single-stage RX requires restorer bypass")
+    if (args.diagnostic_direct_regenerative_sampler
+            and not routed_rx_pi_capture):
+        parser.error("direct regenerative sampler requires the routed PI parent")
+    if (args.diagnostic_direct_regenerative_sampler
+            and (args.diagnostic_restorer_bypass
+                 or args.diagnostic_rx_single_stage
+                 or args.diagnostic_decision_retimer)):
+        parser.error("direct regenerative sampler is exclusive with other rewires")
+    if not 0.01 <= args.sampler_observation_load_ff <= 100.0:
+        parser.error("sampler observation load must be 0.01--100 fF per rail")
     args.work.mkdir(parents=True, exist_ok=True)
 
     sampler_latency_ui = (args.sampler_latency_ui
@@ -341,18 +486,96 @@ def main() -> None:
                           else args.latency_ui)
 
     rx_pi_include = args.rx_pi_capture_parent_pex
+    modified_pex = (args.rx_pi_capture_parent_pex.read_text()
+                    if routed_rx_pi_capture else "")
     if args.diagnostic_sampler_load_scale != 1.0:
-        source_pex = args.rx_pi_capture_parent_pex.read_text()
         load_pattern = re.compile(
             r"^(X\S+ VDD\.t\d+ SAMP_[EO]_[PN]\.t\d+ VSS\.t\d+ "
             r"ppolyf_u r_width=2u r_length=)5u$", re.MULTILINE)
         replacement_length = 5 * args.diagnostic_sampler_load_scale
         modified_pex, replacement_count = load_pattern.subn(
-            lambda match: f"{match.group(1)}{replacement_length:.6g}u", source_pex)
+            lambda match: f"{match.group(1)}{replacement_length:.6g}u", modified_pex)
         if replacement_count != 4:
             raise SystemExit(
                 "diagnostic sampler load boundary no longer contains four loads")
-        rx_pi_include = args.work / "diagnostic_sampler_load_parent.pex.spice"
+    if args.diagnostic_sampler_hold_scale == 2:
+        modified_pex, replacement_count = duplicate_sampler_hold_devices(
+            modified_pex)
+        if replacement_count != 8:
+            raise SystemExit(
+                "diagnostic sampler boundary no longer contains eight hold fingers")
+    if args.diagnostic_decision_retimer:
+        modified_pex, replacement_count = insert_diagnostic_decision_retimer(
+            modified_pex)
+        if replacement_count != 32:
+            raise SystemExit(
+                "diagnostic converter boundary no longer contains 32 input fingers")
+    if args.diagnostic_restorer_load_length_um != 4.2:
+        load_pattern = re.compile(
+            r"^(X\S+ \S+ \S+ \S+ ppolyf_u r_width=2u r_length=)4\.2u$",
+            re.MULTILINE)
+        modified_pex, replacement_count = load_pattern.subn(
+            lambda match: (f"{match.group(1)}"
+                           f"{args.diagnostic_restorer_load_length_um:.6g}u"),
+            modified_pex)
+        if replacement_count != 4:
+            raise SystemExit(
+                "diagnostic restorer boundary no longer contains four loads")
+    if args.diagnostic_restorer_bypass:
+        sampler_input = re.compile(r"RX_REST([PN])\.t\d+")
+        output = []
+        sampler_replacement_count = 0
+        restorer_replacement_count = 0
+        for line in modified_pex.splitlines():
+            tokens = line.split()
+            if (len(tokens) >= 7 and tokens[0].startswith("X")
+                    and "nfet_03v3" in tokens):
+                match = sampler_input.fullmatch(tokens[2])
+                if match and "w=6u" in tokens:
+                    if args.diagnostic_rx_single_stage:
+                        # The first RX stage is inverting.  Swap its two
+                        # extracted output nets to preserve top-level polarity.
+                        tokens[2] = ({"P": "a_n3600_5641.n2",
+                                      "N": "a_n6572_3500.n2"}
+                                     [match.group(1)])
+                    else:
+                        tokens[2] = f"RX_RAW{match.group(1)}"
+                    line = " ".join(tokens)
+                    sampler_replacement_count += 1
+                elif re.fullmatch(r"RX_RAW[PN]\.t\d+", tokens[2]) \
+                        and "w=10u" in tokens:
+                    tokens[2] = "VSS"
+                    line = " ".join(tokens)
+                    restorer_replacement_count += 1
+                elif (args.diagnostic_rx_single_stage and "w=5u" in tokens
+                      and re.fullmatch(
+                          r"a_n(?:6572_3500|3600_5641)\.t[67]", tokens[2])):
+                    tokens[2] = "VSS"
+                    line = " ".join(tokens)
+                    restorer_replacement_count += 1
+            output.append(line)
+        expected_removed_inputs = 8 if args.diagnostic_rx_single_stage else 4
+        if (sampler_replacement_count != 8
+                or restorer_replacement_count != expected_removed_inputs):
+            raise SystemExit(
+                "diagnostic bypass boundary input-finger count changed")
+        modified_pex = "\n".join(output) + "\n"
+    if args.diagnostic_direct_regenerative_sampler:
+        modified_pex, replacement_counts = rewire_direct_regenerative_sampler(
+            modified_pex)
+        if replacement_counts != {"converter": 32, "sampler": 8,
+                                   "restorer": 4}:
+            raise SystemExit(
+                "diagnostic direct-sampler boundary changed: "
+                f"{replacement_counts}")
+    if (args.diagnostic_sampler_load_scale != 1.0
+            or args.diagnostic_sampler_hold_scale != 1
+            or args.diagnostic_decision_retimer
+            or args.diagnostic_restorer_load_length_um != 4.2
+            or args.diagnostic_restorer_bypass
+            or args.diagnostic_rx_single_stage
+            or args.diagnostic_direct_regenerative_sampler):
+        rx_pi_include = args.work / "diagnostic_sampler_parent.pex.spice"
         rx_pi_include.write_text(modified_pex)
 
     rate = args.serial_rate_gbd * 1e9
@@ -421,6 +644,14 @@ def main() -> None:
             "+ SAMP_E_P SAMP_E_N SAMP_O_P SAMP_O_N FE_E_P FE_E_N FE_O_P FE_O_N\n"
             "+ EVEN_Q EVEN_QB ODD_Q ODD_QB lane_rx_pi_capture_pex\n"
             if routed_rx_pi_capture else
+            "XREGENCAP RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N\n"
+            "+ TERM_EN4_N TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N\n"
+            "+ E_SENSE_CLK E_REGEN_CLK E_REGEN_CLKB E_CAPTURE_CLK\n"
+            "+ E_CAPTURE_CLKB @E_SENSE_BOOST@ O_SENSE_CLK O_REGEN_CLK\n"
+            "+ O_REGEN_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB @O_SENSE_BOOST@\n"
+            "+ VDD 0 RXOP RXON FE_E_P FE_E_N FE_O_P FE_O_N\n"
+            "+ EVEN_Q EVEN_QB ODD_Q ODD_QB lane_rx_regenerative_capture_pex\n"
+            if routed_rx_regenerative_capture else
             "XRXCAP RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N\n"
             "+ TERM_EN4_N TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N\n"
             "+ REST_BIAS SAMP_CLK_P SAMP_CLK_N SAMP_BIAS E_SENSE_CLK\n"
@@ -442,9 +673,11 @@ def main() -> None:
             template,
             "XRX RXP RXN VTHP VTHN RX_BIAS RX_BW_EN_N VDD 0 RXOP RXON @RX_CELL@\n"
             "CRXOP RXOP 0 25f\nCRXON RXON 0 25f",
-            parent_instance +
-            "CRXRAWP RX_RAWP 0 25f\nCRXRAWN RX_RAWN 0 25f\n"
-            "CRESTOP RXOP 0 25f\nCRESTON RXON 0 25f",
+            parent_instance + (
+                "CRXOP RXOP 0 25f\nCRXON RXON 0 25f"
+                if routed_rx_regenerative_capture else
+                "CRXRAWP RX_RAWP 0 25f\nCRXRAWN RX_RAWN 0 25f\n"
+                "CRESTOP RXOP 0 25f\nCRESTON RXON 0 25f"),
             "RX instance",
         )
         template = replace_once(
@@ -532,6 +765,14 @@ def main() -> None:
             f"XREST RX_RAWP RX_RAWN REST_BIAS VDD 0 {restorer_outputs} {restorer_cell}\n"
             "CRESTOP RXOP 0 25f\nCRESTON RXON 0 25f",
         )
+    template = template.replace(
+        "CE_P SAMP_E_P 0 25f\nCE_N SAMP_E_N 0 25f\n"
+        "CO_P SAMP_O_P 0 25f\nCO_N SAMP_O_N 0 25f",
+        f"CE_P SAMP_E_P 0 {args.sampler_observation_load_ff:.6g}f\n"
+        f"CE_N SAMP_E_N 0 {args.sampler_observation_load_ff:.6g}f\n"
+        f"CO_P SAMP_O_P 0 {args.sampler_observation_load_ff:.6g}f\n"
+        f"CO_N SAMP_O_N 0 {args.sampler_observation_load_ff:.6g}f",
+    )
     if args.restorer_mode != "none":
         template = template.replace(
             "let rx_diff = v(RXOP)-v(RXON)",
@@ -626,6 +867,32 @@ COQB ODD_QB 0 50f
         "let q_even_diff = v(EVEN_Q)-v(EVEN_QB)\n"
         "let q_odd_diff = v(ODD_Q)-v(ODD_QB)",
     )
+    if routed_rx_regenerative_capture:
+        template = replace_once(
+            template,
+            "let even_diff = v(SAMP_E_P)-v(SAMP_E_N)\n"
+            "let odd_diff = v(SAMP_O_P)-v(SAMP_O_N)\n"
+            "let even_cm = (v(SAMP_E_P)+v(SAMP_E_N))/2\n"
+            "let odd_cm = (v(SAMP_O_P)+v(SAMP_O_N))/2",
+            "let even_diff = v(RXOP)-v(RXON)\n"
+            "let odd_diff = v(RXOP)-v(RXON)\n"
+            "let even_cm = (v(RXOP)+v(RXON))/2\n"
+            "let odd_cm = (v(RXOP)+v(RXON))/2",
+            "regenerative parent probes",
+        )
+    if args.diagnostic_direct_regenerative_sampler:
+        template = replace_once(
+            template,
+            "let even_diff = v(SAMP_E_P)-v(SAMP_E_N)\n"
+            "let odd_diff = v(SAMP_O_P)-v(SAMP_O_N)\n"
+            "let even_cm = (v(SAMP_E_P)+v(SAMP_E_N))/2\n"
+            "let odd_cm = (v(SAMP_O_P)+v(SAMP_O_N))/2",
+            "let even_diff = v(RX_RAWP)-v(RX_RAWN)\n"
+            "let odd_diff = v(RX_RAWP)-v(RX_RAWN)\n"
+            "let even_cm = (v(RX_RAWP)+v(RX_RAWN))/2\n"
+            "let odd_cm = (v(RX_RAWP)+v(RX_RAWN))/2",
+            "direct regenerative sampler probes",
+        )
     scored_stages = ("tx", "pin", "rx", "rest", "samp", "fe", "q") \
         if args.restorer_mode != "none" else ("tx", "pin", "rx", "samp", "fe", "q")
     expected_scalars = len(pair_indices) * (len(scored_stages) * 2 + 2) + 4 \
@@ -639,6 +906,11 @@ COQB ODD_QB 0 50f
         pex_paths["deserializer_pex"] = args.deserializer_pex
     if routed_rx_pi_capture:
         pex_paths["rx_pi_capture_parent_pex"] = args.rx_pi_capture_parent_pex
+        if rx_pi_include != args.rx_pi_capture_parent_pex:
+            pex_paths["diagnostic_rx_pi_capture_parent_pex"] = rx_pi_include
+    elif routed_rx_regenerative_capture:
+        pex_paths["rx_regenerative_capture_parent_pex"] = (
+            args.rx_regenerative_capture_parent_pex)
     elif routed_rx_capture:
         pex_paths["rx_capture_parent_pex"] = args.rx_capture_parent_pex
     elif routed_rx_frontend:
@@ -665,6 +937,9 @@ COQB ODD_QB 0 50f
         physical_paths["rx_spine"] = args.rx_spine_physical
     elif routed_rx_pi_capture:
         physical_paths["rx_pi_capture_parent"] = args.rx_pi_capture_parent_physical
+    elif routed_rx_regenerative_capture:
+        physical_paths["rx_regenerative_capture_parent"] = (
+            args.rx_regenerative_capture_parent_physical)
     elif routed_rx_capture:
         physical_paths["rx_capture_parent"] = args.rx_capture_parent_physical
     elif routed_rx_frontend:
@@ -721,6 +996,16 @@ COQB ODD_QB 0 50f
                 != spine.sha256(args.rx_pi_capture_parent_pex)):
             raise SystemExit(
                 "RX-PI-capture physical evidence does not bind exact simulation PEX")
+    elif routed_rx_regenerative_capture:
+        physical = json.loads(
+            args.rx_regenerative_capture_parent_physical.read_text())
+        if (physical.get("result") != "pass"
+                or physical.get("drc_error_count") != 0
+                or physical.get("lvs_unique") is not True
+                or physical.get("pex_sha256")
+                != spine.sha256(args.rx_regenerative_capture_parent_pex)):
+            raise SystemExit(
+                "regenerative capture evidence does not bind exact PEX")
     elif routed_rx_capture:
         rx_capture_physical = json.loads(
             args.rx_capture_parent_physical.read_text())
@@ -859,13 +1144,16 @@ COQB ODD_QB 0 50f
                              else f".include {args.term_pex}"),
             "RX_INCLUDE": (f".include {rx_pi_include}"
                            if routed_rx_pi_capture else
+                           f".include {args.rx_regenerative_capture_parent_pex}"
+                           if routed_rx_regenerative_capture else
                            f".include {args.rx_capture_parent_pex}"
                            if routed_rx_capture else
                            f".include {args.rx_frontend_parent_pex}"
                            if routed_rx_frontend else
                            f".include {args.rx_spine_pex}" if routed_rx_spine
                            else f".include {args.rx_pex}"),
-            "SAMPLER_INCLUDE": ("" if routed_rx
+            "SAMPLER_INCLUDE": (f".include {args.source / 'cdr' / 'cdr_sampler.spice'}"
+                                if args.diagnostic_decision_retimer else "" if routed_rx
                                 else f".include {args.sampler_pex}"),
             "RESTORER_INCLUDE": (f".include {args.restorer_pex}"
                                    if args.restorer_mode != "none"
@@ -1045,12 +1333,22 @@ COQB ODD_QB 0 50f
         rx_floor = 0.04 if args.restorer_mode != "none" else 0.08
         passed = (complete and min(minima["tx_even"], minima["tx_odd"]) >= 0.05
                   and min(minima["pin_even"], minima["pin_odd"]) >= 0.10
-                  and min(minima["rx_even"], minima["rx_odd"]) >= rx_floor
-                  and (args.restorer_mode == "none"
+                  and (routed_rx_regenerative_capture
+                       or args.diagnostic_rx_single_stage
+                       or min(minima["rx_even"], minima["rx_odd"]) >= rx_floor)
+                  and (args.diagnostic_rx_single_stage
+                       or args.restorer_mode == "none"
                        or min(hold_minima["even"], hold_minima["odd"]) >= rx_floor)
+                  and (args.diagnostic_rx_single_stage
+                       or args.restorer_mode == "none"
+                       or args.diagnostic_restorer_bypass
+                       or args.diagnostic_direct_regenerative_sampler
+                       or min(minima["rest_even"], minima["rest_odd"]) >= 0.20)
                   # Restorer and sampler probes are dynamic internal states,
                   # not the final pipeline latency. Their scan stays visible;
                   # converter qualification/write and held output own polarity.
+                  and (not routed_rx_regenerative_capture
+                       or min(minima["samp_even"], minima["samp_odd"]) >= 0.04)
                   and min(sampler_common_modes) >= 0.50
                   # This clocked, capacitively kicked node can approach the
                   # rail. Bound absolute overshoot rather than impose DC
@@ -1070,8 +1368,11 @@ COQB ODD_QB 0 50f
                   and min(minima["q_even"], minima["q_odd"]) >= 0.50
                   and args.vdd * 0.5 - 0.25 <= observed.get("rx_cm_avg", 0.0)
                   <= args.vdd * 0.5 + 0.25
-                  and 0.50 <= observed.get("amp_cm_avg", 0.0) <= args.vdd - 0.10
-                  and (args.restorer_mode == "none"
+                  and (args.diagnostic_rx_single_stage
+                       or 0.50 <= observed.get("amp_cm_avg", 0.0) <= args.vdd - 0.10)
+                  and (args.diagnostic_rx_single_stage
+                       or args.restorer_mode == "none"
+                       or args.diagnostic_direct_regenerative_sampler
                        or 0.50 <= observed.get("rest_cm_avg", 0.0) <= args.vdd - 0.10)
                   and 0.010 <= current <= (0.075 if routed_rx_pi_capture else 0.060))
         result = {
@@ -1170,7 +1471,16 @@ COQB ODD_QB 0 50f
         "schema_version": 1,
         "evidence_class": ("diagnostic_modified_pex"
                            if args.diagnostic_sampler_load_scale != 1.0
-                           or args.pi_output_clock_override else "exact_pex"),
+                           or args.diagnostic_sampler_hold_scale != 1
+                           or args.diagnostic_decision_retimer
+                           or args.diagnostic_restorer_load_length_um != 4.2
+                           or args.diagnostic_restorer_bypass
+                           or args.diagnostic_rx_single_stage
+                           or args.diagnostic_direct_regenerative_sampler
+                           else "diagnostic_fixture"
+                           if args.pi_output_clock_override
+                           or args.sampler_observation_load_ff != 25.0
+                           else "exact_pex"),
         "claim": ("extracted_1p25_gbd_lane_dual_cmos_capture"
                   if args.serial_rate_gbd == 1.25 else
                   "extracted_2p5_gts_lane_dual_cmos_capture"),
@@ -1196,6 +1506,26 @@ COQB ODD_QB 0 50f
                      "diagnostic_sampler_load_scale": (
                          args.diagnostic_sampler_load_scale
                          if routed_rx_pi_capture else None),
+                     "diagnostic_sampler_hold_scale": (
+                         args.diagnostic_sampler_hold_scale
+                         if routed_rx_pi_capture else None),
+                     "diagnostic_decision_retimer": (
+                         args.diagnostic_decision_retimer
+                         if routed_rx_pi_capture else None),
+                     "diagnostic_restorer_load_length_um": (
+                         args.diagnostic_restorer_load_length_um
+                         if routed_rx_pi_capture else None),
+                     "diagnostic_restorer_bypass": (
+                         args.diagnostic_restorer_bypass
+                         if routed_rx_pi_capture else None),
+                     "diagnostic_rx_single_stage": (
+                         args.diagnostic_rx_single_stage
+                         if routed_rx_pi_capture else None),
+                     "diagnostic_direct_regenerative_sampler": (
+                         args.diagnostic_direct_regenerative_sampler
+                         if routed_rx_pi_capture else None),
+                     "sampler_observation_load_ff":
+                         args.sampler_observation_load_ff,
                      "tx_load_code": args.tx_load_code,
                      "capture_width_ps": args.capture_width_ps,
                      "odd_capture_width_ps": args.odd_capture_width_ps,
@@ -1226,10 +1556,19 @@ COQB ODD_QB 0 50f
                      "restorer_bias_v": (args.restorer_bias
                                           if args.restorer_mode != "none" else None)},
         "physical_composition": (
-            "diagnostic_modified_sampler_load_parent"
-            if routed_rx_pi_capture and args.diagnostic_sampler_load_scale != 1.0 else
+            "diagnostic_modified_sampler_boundary_parent"
+            if routed_rx_pi_capture and (args.diagnostic_sampler_load_scale != 1.0
+                                         or args.diagnostic_sampler_hold_scale != 1
+                                         or args.diagnostic_decision_retimer
+                                         or args.diagnostic_restorer_load_length_um
+                                         != 4.2
+                                         or args.diagnostic_restorer_bypass
+                                         or args.diagnostic_rx_single_stage
+                                         or args.diagnostic_direct_regenerative_sampler) else
             "routed_phase_interpolator_termination_rx_dual_capture_parent"
             if routed_rx_pi_capture else
+            "routed_termination_rx_dual_regenerative_sampler_capture_parent"
+            if routed_rx_regenerative_capture else
             "routed_termination_rx_spine_dual_converter_capture_parent"
             if routed_rx_capture else
             "routed_termination_rx_spine_dual_converter_parent"

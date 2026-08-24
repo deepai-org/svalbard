@@ -47,8 +47,17 @@ parent is independently zero-DRC, unique-LVS, and 8,717R/4,874C extracted. Its
 24-bit combined-stress replay passes TT, FF/cold, FF/hot, and SS/passive with
 685.201 mV worst passing final capture margin. SS/hot remains failed because
 the two interleaves deliver the requested word at different integer data ages;
-the next task is an explicit valid-window retimer or revised non-overlapping
-acquisition/write schedule, not score-side lane alignment.
+that result remains falsification evidence rather than the selected data path.
+The replacement
+[`lane_rx_regenerative_capture`](lane_rx_regenerative_capture/README.md)
+removes the restorer and level-sensitive sampler, places two independently
+clocked StrongARM cells directly on the routed RX output, and feeds the existing
+static split capture. It is zero-DRC, unique-LVS, and 7,108R/4,348C full-RC
+extracted. A 150 ps non-overlapping write pulse closes a common two-UI final
+latency in 5/5 exact-parent environments under the full 24-bit combined-stress
+matrix, and 5/5 additional SS/hot phase offsets pass. The next hierarchy must
+compose this data path with the phase interpolator and clock restorer and
+physically realize the non-overlapping pulse schedule.
 
 The repeatable method used to take these cells from an executable electrical
 contract through generated layout and full-RC evidence is documented in the

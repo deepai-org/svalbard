@@ -630,6 +630,19 @@ device-voltage exposure directly, while retaining differential-polarity and
 minimum-common-mode checks; a blanket `VDD - headroom` rule is not a physical
 contract for that node.
 
+Do not leave a static capture latch transparent while its dynamic resolver is
+allowed to change ownership. The apparent safe overlap can reverse across PVT:
+a fast/cold resolver may overwrite the retained decision before the latch
+closes, while a slow/hot resolver still presents the previous decision. In the
+direct-regenerative 2.5-GT/s parent, a 200 ps capture pulse beginning 200 ps
+after sense passed four environments but failed FF/cold despite more than 1 V
+of correctly signed input at the nominal write midpoint. A bounded pulse-width
+scan showed a 100--175 ps passing interval; selecting 150 ps restored one common
+two-UI held-output latency in all five environments. Measure resolver polarity
+at the latch's actual write point as well as its later qualification point, and
+require a non-overlap interval whose two edges have margin. A per-corner score
+latency is diagnostic evidence, not a realizable clocking solution.
+
 Close a large signal path through successive physical parents, starting with
 the shortest bandwidth-critical chain whose child interfaces are already
 electrically qualified. Preserve natural internal nodes as explicit parent

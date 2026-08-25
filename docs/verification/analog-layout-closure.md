@@ -939,8 +939,8 @@ short local node; the long connection then ended at the prebuffer's gate input.
 The pulse-generator work subsequently separated selector restoration, interval
 storage, qualification, and output drive. A reset-dominant cross-coupled-NOR
 latch driven by the full-width start/end clocks replaced the filtered
-combinational write glitch. The retained 422-device, 498.0 by 285 um checkpoint
-is zero-DRC, uniquely LVS-matched, and extracts to 9,320R/6,057C. Dedicated
+combinational write glitch. The retained 424-device, 498.0 by 285 um checkpoint
+is zero-DRC, uniquely LVS-matched, and extracts to 9,278R/6,039C. Dedicated
 parent-strapped source-supply pins let the final write and sense banks attach to
 the eventual local grid without pretending that all current enters through one
 left-edge port. Its nominal exact PEX now passes timing, rail, phase-spacing,
@@ -950,6 +950,23 @@ failure; they did not solve fast/hot and slow-corner event loss or FF/cold
 current. Probe and close selector, restoration, interval storage, overlap
 qualification, pulse preservation, output drive, and local PDN as distinct
 boundaries, and never promote a nominal pass to PVT closure.
+
+When a corner-specific profile exists because a global delayed tap stops
+crossing threshold, do not keep deriving that profile from the failed tap. Give
+it a physically separate parent-strapped clock terminal and route it locally to
+the profile gate, while making the new parent assumption explicit. In the pulse
+macro, `CLKP_H`/`CLKN_H` moved the profile-3 restored node to 2.234/2.245 V at
+FF/hot and 1.946/1.953 V at SS/hot exact PEX. The composed pulse contract still
+failed downstream, so retain both facts: the source-path hypothesis was
+validated, but the macro was not corner-closed.
+
+Adding or removing even an inactive branch can recolor interval-routed tracks
+and invalidate previously passing exact timing. Preserve top-level port order,
+reserve special nets outside the existing allocator, merge same-net via access
+columns deliberately, and use a minimum legal route anchor when an endpoint is
+needed only for deterministic geometry. Re-run DRC, unique LVS, and the nominal
+exact electrical gate after every such structural change; schematic inactivity
+does not imply post-layout invariance.
 
 Measure extracted resistance to the actual selected device terminals, not just
 the total resistance stamped on a logical net. A multi-source Dijkstra report

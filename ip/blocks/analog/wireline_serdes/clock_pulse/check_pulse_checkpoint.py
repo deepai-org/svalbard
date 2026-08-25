@@ -34,10 +34,10 @@ require(physical.get("physical_legality_result") == "pass"
         and physical.get("lvs_unique_pin_resolved") is True,
         "pulse physical checkpoint classification changed")
 require((physical.get("device_count"), physical.get("layout_width_um"),
-         physical.get("layout_height_um")) == (422, 498.0, 285.0),
+         physical.get("layout_height_um")) == (424, 498.0, 285.0),
         "pulse checkpoint geometry changed")
 require((physical.get("pex_resistor_count"),
-         physical.get("pex_capacitor_count")) == (9320, 6057),
+         physical.get("pex_capacitor_count")) == (9278, 6039),
         "pulse checkpoint extracted element count changed")
 require(physical.get("schematic_source_sha256")
         == digest("clock_pulse_generator.spice")
@@ -59,8 +59,11 @@ require(physical.get("schematic_source_sha256")
 
 require(schematic.get("result") == "fail"
         and schematic.get("case_count") == 20
-        and schematic.get("passing_case_count") == 0
-        and not any(schematic.get("environment_coverage", {}).values()),
+        and schematic.get("passing_case_count") == 1
+        and schematic.get("environment_coverage") == {
+            "tt": [], "ff_cold": [], "ff_hot": [[2, 8, 9]],
+            "ss_cold": [], "ss_hot": [],
+        },
         "pulse schematic failure matrix changed; regenerate and review it")
 
 require(nominal.get("result") == "pass"
@@ -101,5 +104,5 @@ require(timing_pass and rail_pass
         and physical.get("nominal_rail_limits_pass") is True,
         "pulse nominal timing/rail boundary changed")
 
-print("pulse checkpoint: PASS identity; 0 DRC, unique LVS, 9320R/6057C, "
-      "nominal contract closed, exact PVT 1/5 and schematic coverage open")
+print("pulse checkpoint: PASS identity; 0 DRC, unique LVS, 9278R/6039C, "
+      "nominal contract closed, exact PVT 1/5 and schematic FF/hot profile open")

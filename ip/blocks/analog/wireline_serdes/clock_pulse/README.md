@@ -45,14 +45,14 @@ physical sizing parameters: EVEN has a direct profile-2 reset branch, while
 ODD uses a stronger local delayed-end stage. Programmability provides
 calibration choices; it does not make a failing code acceptable.
 
-The current 20-case schematic screen is retained as a failure. None of the
-four profiles covers all limits in any declared environment. TT spans
-73.31--76.42 mA, FF/cold reaches 81.68--85.49 mA, and the present fast/hot and
-slow-corner interval choices lose events or miss width and delay. This
-supersedes the earlier schematic-coverage claim; exact extraction is screened
-separately rather than inferred from this ideal-interconnect matrix.
+The current 20-case schematic screen is retained as a failure. The dedicated
+profile-3 input-clock path now closes the FF/hot schematic case, so the matrix
+passes 1/20 cases and covers FF/hot only. TT, FF/cold, and both slow corners
+still lose events or miss width, delay, rail, or current limits. Exact
+extraction is screened separately rather than inferred from this
+ideal-interconnect result.
 
-`generate_pulse_layout.py` flattens the parameterized circuit into 422 MOS
+`generate_pulse_layout.py` flattens the parameterized circuit into 424 MOS
 devices, resolves forwarded sizing parameters, aligns complementary devices as
 CMOS cells, routes phase-local nets in functional bands, and stacks EVEN and
 ODD vertically. The current 498.0 by 285 um candidate is zero-DRC and uniquely
@@ -65,16 +65,26 @@ global supplies by the parent; device bodies remain on the continuous global
 well/substrate rails. Hierarchical power-grid attachment is therefore explicit
 instead of assuming all pulse current enters one left-edge pin.
 
-Its 9,320-resistor/6,057-capacitor exact nominal extraction passes the complete
-contract. EVEN/ODD sense widths are 576.84/581.83 ps, write widths are
-218.29/110.83 ps, write delay is 657.45 ps, non-overlap is 80.61 ps, phase
-spacing is 395.18 ps, and current is 74.697 mA. Sense highs are 3.144/3.123 V
-with 0.127/0.174 V lows; WRITE highs are 3.065/3.266 V with 0.189/0.214 V lows.
+Its 9,278-resistor/6,039-capacitor exact nominal extraction passes the complete
+contract. EVEN/ODD sense widths are 573.54/584.08 ps, write widths are
+210.12/134.72 ps, write delay is 669.94 ps, non-overlap is 96.40 ps, phase
+spacing is 391.30 ps, and current is 74.514 mA. Sense highs are 3.149/3.122 V
+with 0.130/0.192 V lows; WRITE highs are 3.127/3.264 V with 0.186/0.215 V lows.
 The full exact 20-case campaign passes only TT profile `[0,8,9]`, however:
 FF/cold exceeds current or width/delay limits, fast/hot and SS/hot lose restored
 events, and SS/cold loses one or both WRITE events. This is a nominally closed
 physical checkpoint with exact-PVT coverage of 1/5 environments, not a released
 pulse macro.
+
+Profile 3 no longer depends on delayed node `D06`, which stopped reaching a
+valid threshold at hot corners. Parent-strapped `CLKP_H`/`CLKN_H` ports feed a
+short local Metal5 clock path into the profile gate; a minimum 0.4 um route
+anchor preserves deterministic D06 routing without materially loading the
+delay line. In exact PEX the profile-3 restored tap now reaches 2.234/2.245 V
+at FF/hot and 1.946/1.953 V at SS/hot, versus a dead sub-threshold path before.
+That does not close the composed corner: downstream sense/write restoration is
+now the limiting boundary. The local tap improvement is therefore retained as
+diagnostic progress, not reported as new environment coverage.
 
 `scripts/analyze_pex_net.py` now traces shortest extracted resistance from a
 named root to device terminals selected by gate/model patterns. Counterfactual

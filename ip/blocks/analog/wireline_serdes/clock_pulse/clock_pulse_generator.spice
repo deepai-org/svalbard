@@ -108,6 +108,13 @@ XN1 N EN VSS VSS nfet_03v3 w={WE} l=0.28u m={M}
 XN VSS A VSS VSS nfet_03v3 w={W} l=0.28u m=1
 .ends cp_gate_cap
 
+* Minimum-size all-diffusion/gate route anchor.  Drain, gate, and source share
+* the signal, while the well remains at VSS; this preserves a geometric route
+* endpoint without needing a competing local VSS access segment.
+.subckt cp_route_anchor A VSS params: W=0.4u
+XN A A A VSS nfet_03v3 w={W} l=0.28u m=1
+.ends cp_route_anchor
+
 * Restore each tap before the selector so an analog pass node never has to
 * drive four branches plus a threshold-sensitive receiver.  Start and end use
 * the same stages; their selected tap spacing, not ratioed thresholds, defines
@@ -150,9 +157,9 @@ XQ R QB Q VDD VSS cp_nor2 WP=8u WN=8u MP=3 MN=2
 XQB S Q QB VDD VSS cp_nor2 WP=8u WN=8u MP=3 MN=4
 .ends cp_write_latch
 
-.subckt cp_phase CLK SEL0 SEL1 SEL2 SEL3 Q2RESET VDD VDDW VSS VSSS
+.subckt cp_phase CLK HCLK SEL0 SEL1 SEL2 SEL3 Q2RESET VDD VDDW VSS VSSS
 + SENSE BOOST WRITE
-+ params: MID_WP0=4u MID_WN0=2u MID_MPP=2 MID_MNN=3 P08_MPP=4 P08_MNN=5 WQ2_W=4u WQD_W=8u WQD_M=1 SB2_WN=8u SB2_MN=8 WB1_M=7 WB2_MP=14 WB2_MN=14 WB3_WP=8u WB3_MP=30 WB3_MN=20
++ params: MID_WP0=4u MID_WN0=2u MID_MPP=2 MID_MNN=3 P08_MPP=4 P08_MNN=5 WQ2_W=4u WQD_W=8u WQD_M=1 SB2_WN=8u SB2_MN=8 WB1_MP=7 WB1_M=7 WB2_MP=14 WB2_MN=14 WB3_WP=8u WB3_MP=30 WB3_MN=20
 * Twelve matched non-inverting delay units provide digitally selectable taps.
 * Four one-hot profiles select tap triplets retained by PVT screening. The
 * transmission gates are part of the simulated circuit, not netlist rewrites.
@@ -220,10 +227,13 @@ XPMD P09D P10M VDD VSS cp_delay_unit WP=17u WN=8.5u
 XWE1 P10M WEND_SEL WMID WMIDB VDD VSS cp_tg W=8u M=2
 XPLD P10C P10D VDD VSS cp_delay_unit WP=12u WN=8u
 XWE3 P10D WEND_SEL SEL0 WSEL0B VDD VSS cp_tg W=8u M=2
-* Slow/hot uses a restored D06 replica with a separately sized end delay.
-* A static-CMOS gate, rather than an analog pass/clamp node, guarantees a
-* restored clock at SS/hot and a rail-valued quiet zero in every other profile.
-XPG3N D06 SEL3 P06B VDD VSS cp_nand2 WP=6u WN=7u MP=2 MN=2
+* Slow/hot uses a separately gated copy of the full-swing input clock.  D06
+* stops crossing a valid logic threshold in exact SS/hot extraction, so using
+* it as the source made the supposedly slow-corner profile structurally
+* incapable of recovery.  The local static-CMOS gate is quiet in every other
+* profile; downstream physical delay, rather than the failed global tap,
+* defines this profile's start/end interval.
+XPG3N HCLK SEL3 P06B VDD VSS cp_nand2 WP=6u WN=7u MP=2 MN=2
 XPG3I P06B P06S VDD VSS cp_inv WP=8u WN=6u MP=2 MN=3
 XPMD3 P06S P09S VDD VSS cp_delay_unit WP=15.5u WN=8.75u
 XWM3A P06S WSTART_SEL SEL3 WSEL3B VDD VSS cp_tg W=8u M=2
@@ -263,17 +273,21 @@ XWQ3 WB0 WET SEL3 VSS cp_cond_npd WG=12u WE=12u M=1
 * driven pull-up/pull-down banks. Its roughly 2x stage ratios support the
 * larger final PMOS without placing that full gate load on a small predriver.
 XWB0 WB0 WB1 VDD VSS cp_inv WP=8u WN=8u MP=3 MN=3
-XWB1 WB1 WB2 VDD VSS cp_inv WP=8u WN=8u MP={WB1_M} MN={WB1_M}
+XWB1 WB1 WB2 VDD VSS cp_inv WP=8u WN=8u MP={WB1_MP} MN={WB1_M}
 XWB2 WB2 WB3 VDD VSS cp_inv WP=8u WN=8u MP={WB2_MP} MN={WB2_MN}
 XWB3 WB3 WRITE VDD VDDW VSS cp_final_inv WP={WB3_WP} WN=8u MP={WB3_MP} MN={WB3_MN}
+* Keep the former D06 route endpoint so the deterministic physical router
+* preserves the already-proven write-path topology.  Minimum legal width
+* makes this a geometric anchor rather than a meaningful delay-line load.
+XLEGACY D06 VSS cp_route_anchor W=0.4u
 .ends cp_phase
 
 .subckt clock_pulse_generator CLKP CLKN SEL0 SEL1 SEL2 SEL3 VDD VSS
-+ VDD_WE VDD_WO VSS_SE VSS_SO
++ VDD_WE VDD_WO VSS_SE VSS_SO CLKP_H CLKN_H
 + E_SENSE E_BOOST E_WRITE
 + O_SENSE O_BOOST O_WRITE
-XE CLKP SEL0 SEL1 SEL2 SEL3 SEL2 VDD VDD_WE VSS VSS_SE
-+ E_SENSE E_BOOST E_WRITE cp_phase WQ2_W=6.2u WQD_W=8u SB2_WN=6.5u SB2_MN=7 WB1_M=7 WB2_MP=14 WB2_MN=14 WB3_WP=8u WB3_MP=28 WB3_MN=20
-XO CLKN SEL0 SEL1 SEL2 SEL3 VSS VDD VDD_WO VSS VSS_SO
-+ O_SENSE O_BOOST O_WRITE cp_phase WQ2_W=8u WQD_W=8u SB2_WN=6.5u SB2_MN=7 WB1_M=7 WB2_MP=13 WB2_MN=14 WB3_WP=8u WB3_MP=28 WB3_MN=20
+XE CLKP CLKP_H SEL0 SEL1 SEL2 SEL3 SEL2 VDD VDD_WE VSS VSS_SE
++ E_SENSE E_BOOST E_WRITE cp_phase WQ2_W=6.2u WQD_W=7u SB2_WN=6.5u SB2_MN=7 WB1_M=7 WB2_MP=14 WB2_MN=14 WB3_WP=8u WB3_MP=28 WB3_MN=20
+XO CLKN CLKN_H SEL0 SEL1 SEL2 SEL3 VSS VDD VDD_WO VSS VSS_SO
++ O_SENSE O_BOOST O_WRITE cp_phase WQ2_W=1u WQD_W=9u SB2_WN=6.5u SB2_MN=7 WB1_MP=7 WB1_M=7 WB2_MP=7 WB2_MN=14 WB3_WP=8u WB3_MP=28 WB3_MN=20
 .ends clock_pulse_generator

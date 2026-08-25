@@ -167,13 +167,13 @@ def group_depths(groups: dict[str, Group], phase: str) -> dict[str, int]:
               "cp_nand2": ("A", "B"),
               "cp_nor2": ("A", "B"), "cp_tg": ("A", "EN", "ENB"),
               "cp_cond_npd": ("G", "EN"),
-              "cp_gate_cap": ("A",)}
+              "cp_gate_cap": ("A",), "cp_route_anchor": ("A",)}
     inputs["cp_tristate_inv"] = ("A", "EN", "ENB")
     outputs = {"cp_inv": "Y", "cp_final_inv": "Y",
                "cp_sense_final_inv": "Y",
                "cp_nand2": "Y", "cp_nor2": "Y",
                "cp_tg": "Y", "cp_cond_npd": "D",
-               "cp_gate_cap": None}
+               "cp_gate_cap": None, "cp_route_anchor": None}
     outputs["cp_tristate_inv"] = "Y"
     local = [group for group in groups.values() if group.phase == phase]
     clock = "CLKP" if phase == "E" else "CLKN"
@@ -250,6 +250,8 @@ def functional_lane(group: Group) -> int:
         return 1
     if (root in ("XP08", "XPMD", "XPMD3", "XPLC", "XPLD")
             or root.startswith("XPMD3")):
+        return 3
+    if root == "XLEGACY":
         return 3
     if root.startswith("XW"):
         return 3
@@ -359,19 +361,21 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
             # long RC route and reduced the extracted restorer input below a
             # valid CMOS level despite a full-swing schematic source.
             selector_rank = {
-                "XP08": 0,
+                "XLEGACY": 0,
+                "XP08": 1,
                 # Align each dynamic cluster below its tap-local prebuffer.
-                "XWM3A": 1, "XPMD3": 2, "XWE3A": 3,
-                "XWM1": 4, "XWST": 5,
-                "XPMD": 6, "XWE1": 7,
-                "XPLC": 8, "XWM3": 9,
-                "XWET": 10,
-                "XPLD": 11, "XWE3": 12,
+                "XWM3A": 2, "XPMD3": 3, "XWE3A": 4,
+                "XWM1": 5, "XWST": 6,
+                "XPMD": 7, "XWE1": 8,
+                "XPLC": 9, "XWM3": 10,
+                "XWET": 11,
+                "XPLD": 12, "XWE3": 13,
                 # Static one-hot decode may sit after the dynamic edge path.
-                "XWC0": 13, "XWC3": 14,
-                "XWMCB": 15, "XWMCI": 16,
+                "XWC0": 14, "XWC3": 15,
+                "XWMCB": 16, "XWMCI": 17,
             }
-            selector_min_x = {"XWM3A": 145.0, "XWM1": 205.0,
+            selector_min_x = {"XLEGACY": 130.0,
+                              "XWM3A": 145.0, "XWM1": 205.0,
                               "XPLC": 236.0}
 
             def write_order(group: Group) -> tuple[int, int, int, str]:
@@ -775,6 +779,14 @@ def emit(source: Path, output: Path) -> None:
         for lane in range(LANE_COUNT)
         for rail, rail_offset in (("VSS", -8.0), ("VDD", 21.0))
     }
+    # Reserve the added hierarchical hot-clock taps outside the allocator's
+    # existing lane-1 signal slots.  Letting these two nets participate in the
+    # interval coloring reshuffled otherwise unchanged write routes and erased
+    # the previously proven nominal PEX behavior.
+    special_signal_tracks = {"CLKP_H", "CLKN_H"}
+    # Center these just above each phase's lane-0 VSS rail.
+    special_tracks.update({"CLKP_H": -4.0,
+                           "CLKN_H": -4.0 + PHASE_Y_SHIFT})
     # The write-selector outputs switch in opposite directions and are both
     # degraded by an enabled transmission gate.  Keep their long metal4 runs
     # at opposite edges of the lane instead of on adjacent tracks; extraction
@@ -874,6 +886,11 @@ def emit(source: Path, output: Path) -> None:
     port_xs.update({"VSS_SE": xmax + 4.0, "VSS_SO": xmax + 4.0})
     port_xs.update({port: xmax + 2.0 + 2.0 * index
                     for index, port in enumerate(output_ports)})
+    # The slow-profile clock taps are parent-strapped copies of CLKP/CLKN.
+    # Place them beside the profile gate rather than forcing that extra clock
+    # load through the macro's long primary-clock route.
+    hot_clock_x = group_x["XE__XPG3N"] - 10.0
+    port_xs.update({"CLKP_H": hot_clock_x, "CLKN_H": hot_clock_x})
     output_drivers = {
         "E_SENSE": "XE__XSB2", "E_BOOST": "XE__XRB2",
         "E_WRITE": "XE__XWB3", "O_SENSE": "XO__XSB2",
@@ -892,7 +909,7 @@ def emit(source: Path, output: Path) -> None:
             approximate_bounds[key][1] = max(approximate_bounds[key][1], endpoint)
     even_keys = [key for key in signal_keys
                  if not (key.startswith("XO") or key.startswith("O:")
-                         or key == "CLKN" or key.startswith("O_")
+                         or key in ("CLKN", "CLKN_H") or key.startswith("O_")
                          or key in ("VDD_WO", "VSS_SO"))]
     odd_keys = [key for key in signal_keys if key not in even_keys]
     key_groups = {key: min(key_lane_sets[key]) for key in signal_keys}
@@ -940,6 +957,14 @@ def emit(source: Path, output: Path) -> None:
     even_lanes, odd_lanes, tracks = assign_tracks(approximate_bounds)
     for _ in range(32):
         columns = route_columns(devices, tap_xs, tracks)
+        # The PMOS/NMOS input gates of the local hot-clock NAND are vertically
+        # aligned and carry the same net.  Share their Metal3 access column;
+        # the generic collision allocator intentionally does not assume
+        # same-net merging and otherwise puts the second access needlessly
+        # close to an unrelated lane-0 Metal4 route.
+        for device in devices:
+            if device.nodes[1] in ("CLKP_H", "CLKN_H"):
+                columns[(device.name, "G")] = device.cx
         bounds = exact_bounds(columns)
         moved = False
         for phase_lanes in (even_lanes, odd_lanes):
@@ -1092,11 +1117,32 @@ def emit(source: Path, output: Path) -> None:
         y = tracks[key]
         half = (2.00 if key.endswith((":VDD", ":VSS")) else
                 0.75 if key in ("VSS_SE", "VSS_SO")
+                else 0.38 if key in special_signal_tracks
                 else 0.23)
-        if key in special_tracks:
+        if key in special_tracks and key not in special_signal_tracks:
             x1 = min(x1, tap_xs[0])
             x2 = max(x2, tap_xs[-1])
-        lines.append(f"rect metal4 {x1-0.38:.3f} {y-half:.3f} {x2+0.38:.3f} {y+half:.3f}\n")
+        layer = "metal5" if key in special_signal_tracks else "metal4"
+        lines.append(f"rect {layer} {x1-0.38:.3f} {y-half:.3f} "
+                     f"{x2+0.38:.3f} {y+half:.3f}\n")
+        if key in special_signal_tracks:
+            access_columns = []
+            for device in devices:
+                for terminal, net in zip(("D", "G", "S"), device.nodes[:3]):
+                    if route_key(device, net) == key:
+                        access_columns.append(columns[(device.name, terminal)])
+                        lines.append(
+                            f"stack45 {columns[(device.name, terminal)]:.3f} "
+                            f"{y:.3f}\n")
+            # Merge only the nearby gate-access Metal4 enclosures.  Extending
+            # this lower-metal strap back to the top-level Metal5 port would
+            # approach an unrelated lane-0 signal; the port itself needs no
+            # layer transition.
+            if access_columns:
+                lines.append(
+                    f"rect metal4 {min(access_columns)-0.38:.3f} "
+                    f"{y-0.38:.3f} {max(access_columns)+0.38:.3f} "
+                    f"{y+0.38:.3f}\n")
         if key in debug_labels:
             label_x = (x1 + x2) / 2.0
             lines.append(f"box values {label_x-0.2:.3f} {y-0.2:.3f} "
@@ -1104,6 +1150,8 @@ def emit(source: Path, output: Path) -> None:
             lines.append(f"label {debug_labels[key]} FreeSans 0.4 0 0 0 c metal4\n")
 
     for key in special_tracks:
+        if key in special_signal_tracks:
+            continue
         y = tracks[key]
         # Six-micron top-metal rails and matching port spines reduce the
         # shared supply impedance identified by exact-PEX counterfactuals.
@@ -1156,7 +1204,8 @@ def emit(source: Path, output: Path) -> None:
             if port in output_ports:
                 lines.append(f"make_port4 {port} {index} {x:.3f} {port_y:.3f}\n")
                 continue
-            lines.append(f"stack45 {x:.3f} {port_y:.3f}\n")
+            if port not in special_signal_tracks:
+                lines.append(f"stack45 {x:.3f} {port_y:.3f}\n")
         if port in ("VDD", "VSS", "VDD_WE", "VDD_WO", "VSS_SE", "VSS_SO"):
             lines.append(f"make_supply_port {port} {index} {x:.3f} {port_y:.3f}\n")
         else:

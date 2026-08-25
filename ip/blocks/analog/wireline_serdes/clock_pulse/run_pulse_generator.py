@@ -41,8 +41,27 @@ if args.pex_resistance_scale < 0 or args.pex_capacitance_scale < 0:
 args.work.mkdir(parents=True, exist_ok=True)
 template = (args.source / "clock_pulse_generator_tb.spice.in").read_text()
 if not args.pex:
-    template = re.sub(r"\* @DEBUG_BEGIN@.*?\* @DEBUG_END@\n", "", template,
-                      flags=re.DOTALL)
+    schematic_debug = {
+        "D08": "D08", "D09": "D09", "WSTART_SEL": "WSTART_SEL",
+        "WEND_SEL": "WEND_SEL", "WST": "WST", "WET": "WET",
+        "WCOREB": "WCOREB", "WB0": "WB0", "WB1": "WB1",
+        "SSEL": "SSEL", "CT": "CT", "ST": "ST", "CTD": "CTD",
+        "STD": "STD", "SN0": "SN0",
+        "PCLK": "PCLK", "P08": "P08", "P09": "P09",
+        "CTSEL": "CTSEL",
+        "CTB0": "XCT.B0", "CTB1": "XCT.B1", "CTB2": "XCT.B2",
+        "STB0": "XST.B0", "STB1": "XST.B1", "STB2": "XST.B2",
+        "WSTB0": "XWST.B0", "WSTB1": "XWST.B1",
+        "WSTB2": "XWST.B2", "WETB0": "XWET.B0",
+        "WETB1": "XWET.B1", "WETB2": "XWET.B2",
+    }
+    for phase, instance in (("E", "XE"), ("O", "XO")):
+        for label in sorted(schematic_debug, key=len, reverse=True):
+            node = schematic_debug[label]
+            template = template.replace(f"XDUT.DBG_{phase}_{label}",
+                                        f"XDUT.{instance}.{node}")
+    template = template.replace("* @DEBUG_BEGIN@\n", "")
+    template = template.replace("* @DEBUG_END@\n", "")
 cases = []
 dut_path = args.pex or args.source / "clock_pulse_generator.spice"
 if args.pex and (args.pex_resistance_scale != 1.0
@@ -67,12 +86,12 @@ selected_environments = tuple(
 fractions = tuple(args.fraction) if args.fraction else (0.70,)
 tap_codes = []
 profiles = {
-    (1, 5, 6): 0,
+    (1, 5, 7): 0,
     (2, 8, 9): 1,
-    (2, 7, 8): 2,
+    (1, 7, 8): 2,
     (2, 10, 11): 3,
 }
-for encoded in args.tap_code or ("1,5,6", "2,8,9", "2,7,8", "2,10,11"):
+for encoded in args.tap_code or ("1,5,7", "2,8,9", "1,7,8", "2,10,11"):
     try:
         sense_tap, write_start_tap, write_end_tap = (
             int(part) for part in encoded.split(","))

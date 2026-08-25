@@ -46,6 +46,33 @@ Schematic SPICE can reject a bad circuit before layout, while post-layout SPICE
 can reject a bad physical realization. Neither result substitutes for the
 other, and extraction does not repair an electrically wrong schematic.
 
+Use deeper physics at the boundary where the compact circuit abstraction stops
+being credible; do not substitute one expensive simulator for the whole
+verification stack. The practical hierarchy is:
+
+- foundry compact-model SPICE for device behavior, corners, noise, mismatch,
+  and transient function;
+- layout extraction plus SPICE for local interconnect resistance and
+  capacitance, which remains the primary leaf-cell closure loop;
+- a calibrated 2D/3D electromagnetic solver for pads, package structures,
+  transmission-line-like differential routes, inductors, transformers, and
+  strongly coupled conductors; import its multiport result into the circuit
+  simulation rather than double-counting extracted parasitics;
+- static and dynamic EM/IR, substrate-coupling, and electrothermal analysis for
+  assembled lanes where shared supply, ground, substrate, and temperature make
+  nominal leaf simulations optimistic;
+- device TCAD only for a genuinely custom device whose field distribution is
+  not covered by the foundry model, notably novel high-voltage or ESD
+  structures. TCAD is not a more accurate replacement for characterized PDK
+  models of ordinary transistors.
+
+For protection structures, simulation is necessary but insufficient. Foundry
+reliability rules and silicon characterization such as TLP/VF-TLP and system
+ESD tests remain required. Likewise, an electromagnetic model is only as good
+as its stackup, material, boundary, port, and package assumptions; preserve
+those inputs beside the resulting S-parameters and qualify passivity,
+causality, and bandwidth before circuit use.
+
 Add a model-provenance contract beside the electrical one. Record which PDK
 models, extraction deck, simulator, pad/package/channel models, and variation
 dimensions support each claim. Public corner models can demonstrate that an
@@ -185,6 +212,16 @@ original 380 ps write pulse. Diagnose each internal transition in a tapered
 chain; sometimes removing downstream width improves both speed and current.
 Apply the change symmetrically, regenerate geometry, and replay the slower-rate
 and PVT parent contracts because a faster internal node alone is not closure.
+
+A transmission-gate selector followed by a ratioed static restorer deserves
+internal full-RC probes on both phases. Schematic rails can become an extracted
+intermediate eye that never crosses the first inverter's effective threshold;
+strong final drivers cannot repair that failure. Measure the selector input,
+selector output, and every restoration stage before resizing anything. Treat a
+cross-coupled keeper as a state element, not a free level-restoration aid: it
+can recover nominal rails while making startup, PVT coverage, and the trim-code
+map depend on history. Only keep it if those state-dependent contracts are
+explicitly verified.
 
 Search already-realizable controls jointly across an extracted producer,
 optional restoring stage, and consumer before changing topology. Require a

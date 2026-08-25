@@ -12,6 +12,7 @@ from pathlib import Path
 
 SCALE = {"t": 1e12, "g": 1e9, "meg": 1e6, "k": 1e3,
          "m": 1e-3, "u": 1e-6, "n": 1e-9, "p": 1e-12, "f": 1e-15}
+LANE_COUNT = 4
 PHASE_Y_SHIFT = 160.0
 
 
@@ -154,9 +155,11 @@ def flatten(subckts: dict[str, Subckt], top: str) -> tuple[list[Device], dict[st
 
 def group_depths(groups: dict[str, Group], phase: str) -> dict[str, int]:
     inputs = {"cp_inv": ("A",), "cp_nand2": ("A", "B"),
-              "cp_nor2": ("A", "B"), "cp_tg": ("A", "EN", "ENB")}
+              "cp_nor2": ("A", "B"), "cp_tg": ("A", "EN", "ENB"),
+              "cp_cond_npd": ("G", "EN"), "cp_gate_cap": ("A",)}
     outputs = {"cp_inv": "Y", "cp_nand2": "Y", "cp_nor2": "Y",
-               "cp_tg": "Y"}
+               "cp_tg": "Y", "cp_cond_npd": "D",
+               "cp_gate_cap": None}
     local = [group for group in groups.values() if group.phase == phase]
     clock = "CLKP" if phase == "E" else "CLKN"
     net_depth = {clock: 0, "SEL0": 0, "SEL1": 0, "SEL2": 0, "SEL3": 0,
@@ -184,6 +187,20 @@ def group_depths(groups: dict[str, Group], phase: str) -> dict[str, int]:
 
 def device_span(device: Device) -> float:
     return 0.8 * device.mult + 0.36
+
+
+def gate_extra(device: Device) -> float:
+    """Return extra poly-contact clearance below narrow device diffusion."""
+    # The deliberately minimum-size P11 trim capacitor has only 0.3 um of
+    # diffusion width.  Move its gate contact far enough below the source
+    # access that the two different-net metal2 straps retain spacing; the
+    # generic narrow-device clearance leaves their enclosures overlapping.
+    if "__XP11L__" in device.name:
+        return 0.85
+    if ("__XBA__" in device.name or "__XNA__" in device.name) \
+            and device.name.endswith("XN0"):
+        return 0.75
+    return 0.45 if device.width_um < 2.0 else 0.0
 
 
 def device_column(device: Device) -> int:
@@ -240,7 +257,7 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
     ordered = sorted(even, key=lambda group: (place_depth[group.name], group.name))
     group_x: dict[str, float] = {}
     lane_ends = []
-    for lane in range(4):
+    for lane in range(LANE_COUNT):
         cursor = 200.0 if lane == 3 else 12.0
         selected = [group for group in ordered if functional_lane(group) == lane]
         if lane == 1:
@@ -249,8 +266,11 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
             # P06/P09/P11 travel 80--160 um to the end-selector bank.  The
             # order below follows the physical start/end mux positions; P08,
             # which serves both banks, sits between them.
-            write_taps = ("XP05", "XP06", "XP08", "XP09",
-                          "XP07", "XP10", "XP11")
+            # P08 drives two selector gates and was the limiting extracted
+            # node.  Put its output between those consumers; P09 has only one
+            # local consumer and can tolerate the preceding slot.
+            write_taps = ("XP05", "XP09", "XP08", "XP07", "XP10",
+                          "XP11", "XP11L")
             write_rank = {name: rank for rank, name in enumerate(write_taps)}
 
             def lane_one_order(group: Group) -> tuple[int, int, int, str]:
@@ -262,20 +282,54 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
                 return (0, place_depth[group.name], 0, group.name)
 
             selected.sort(key=lane_one_order)
+        if lane == 2:
+            # The CT/ST paths form a matched differential timing boundary.
+            # Interleave equal restoration stages and put both matched delay
+            # elements immediately before the NOR.  Depth/name ordering used
+            # to leave CTD roughly 50 um farther from XSN than STD.
+            sense_rank = {
+                "XPC": 0, "XCM0": 1, "XCM1": 2,
+                "XSM0": 3, "XSM1": 4,
+                "XCT": 5, "XST": 6,
+                "XCTD": 7, "XSTD": 8, "XSN": 9,
+                "XSB0": 10, "XRB0": 11, "XRBI": 12,
+                "XSB1": 13, "XRB1": 14, "XRBB": 15,
+                "XSB2": 16, "XRB2": 17,
+            }
+
+            def sense_order(group: Group) -> tuple[int, int, int, str]:
+                parts = group.name.split("__")
+                root = parts[1]
+                stage = int(parts[2].removeprefix("XI")) \
+                    if len(parts) > 2 and parts[2].startswith("XI") else 0
+                # Interleave corresponding XCT/XST stages rather than placing
+                # each complete taper as a separate physical island.
+                if root in ("XCT", "XST"):
+                    return (5, 2 * stage + int(root == "XST"), 0, group.name)
+                return (sense_rank.get(root, 18), 0, place_depth[group.name],
+                        group.name)
+
+            selected.sort(key=sense_order)
         if lane == 3:
             # Interleave corresponding start/end selector cells so both mux
-            # outputs see the same span and environment.  Put their matched
-            # restoration buffers next to one another after the bank.
+            # outputs see the same span and environment.  Interleave the
+            # matched restoration stages after the selector bank.
             selector_rank = {
                 "XWM0": 0, "XWE0": 1, "XWM1": 2, "XWE1": 3,
                 "XWM2": 4, "XWE2": 5, "XWM3": 6, "XWE3": 7,
-                "XWST": 8, "XWET": 9,
             }
 
-            def write_order(group: Group) -> tuple[int, int, str]:
-                root = group.name.split("__")[1]
-                return (selector_rank.get(root, 10), place_depth[group.name],
-                        group.name)
+            def write_order(group: Group) -> tuple[int, int, int, str]:
+                parts = group.name.split("__")
+                root = parts[1]
+                if root in selector_rank:
+                    return (0, selector_rank[root], 0, group.name)
+                if root in ("XWST", "XWET"):
+                    stage = (int(parts[2].removeprefix("XI"))
+                             if parts[2].startswith("XI") else 1.5)
+                    return (1, 2 * stage + int(root == "XWET"), 0,
+                            group.name)
+                return (2, place_depth[group.name], 0, group.name)
 
             selected.sort(key=write_order)
         for group in selected:
@@ -294,11 +348,16 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
                                  if device.name.startswith("XO") else device.name)
                     device.cx = x + offsets_by_name[even_name]
                     base = 32.0 * lane
-                    device.cy = base + (12.0 if device.kind.startswith("pfet") else 0.0)
+                    if group.primitive == "cp_cond_npd":
+                        device.cy = base + (-5.0 if device.name.endswith("XN0")
+                                            else 3.0)
+                    else:
+                        device.cy = base + (12.0 if device.kind.startswith("pfet")
+                                            else 0.0)
             # The logic/mux lanes are dominated by local RC, so use a compact
             # standard-cell-like channel.  Delay/prebuffer lanes retain the
             # wider channel needed by their many cross-lane tap routes.
-            gap = 4.0 if lane in (2, 3) else 8.0
+            gap = 4.0 if lane >= 2 else 8.0
             cursor = x + width + gap
         lane_ends.append(cursor)
     phase_width = max(lane_ends) + 10.0
@@ -378,8 +437,7 @@ proc draw_mos {kind width nf cx cy} {
         rect metal1 [expr {$x-0.18}] [expr {$cy-$width/2.0}] [expr {$x+0.18}] [expr {$cy+$width/2.0}]
     }
 }
-proc manual_gate {cx cy width nf} {
-    set extra [expr {$width < 2.0 ? 0.45 : 0.0}]
+proc manual_gate {cx cy width nf extra} {
     set y [expr {$cy-$width/2.0-0.70-$extra}]
     set xs [gate_offsets $nf]
     set half [expr {$nf == 1 ? 0.22 : 0.4*$nf-0.25}]
@@ -413,7 +471,8 @@ def route_columns(devices: list[Device], reserved: list[float],
     for phase in ("E", "O"):
         phase_offset = PHASE_Y_SHIFT if phase == "O" else 0.0
         for x in reserved:
-            for lane, base in enumerate((0.0, 32.0, 64.0, 96.0)):
+            for lane in range(LANE_COUNT):
+                base = 32.0 * lane
                 base += phase_offset
                 occupied[phase].append(
                     (x, min(base - 6.0, tracks[f"{phase}{lane}:VSS"]) - 0.28,
@@ -437,8 +496,7 @@ def route_columns(devices: list[Device], reserved: list[float],
         width = device.width_um
         terminal_y = {
             "D": device.cy + max(0.70, width / 2.0 - 0.8),
-            "G": (device.cy - width / 2.0 - 0.70
-                  - (0.45 if width < 2.0 else 0.0)),
+            "G": device.cy - width / 2.0 - 0.70 - gate_extra(device),
             "S": device.cy - max(0.70, width / 2.0 - 0.8),
         }
         terminal_points = {
@@ -489,7 +547,32 @@ def route_columns(devices: list[Device], reserved: list[float],
                     answer[key] = chosen
                     break
             else:
-                raise RuntimeError(f"no access column for {device.name} {terminal}")
+                candidate = preferred[terminal]
+                points = terminal_points[terminal]
+                half_metal2 = 0.28 if terminal == "G" else 0.38
+                candidate_metal2 = (
+                    min(candidate, points[0]) - half_metal2,
+                    terminal_y[terminal] - half_metal2,
+                    max(candidate, points[-1]) + half_metal2,
+                    terminal_y[terminal] + half_metal2)
+                column_blockers = [
+                    (round(old_x, 3), old_net)
+                    for old_x, old_low_y, old_high_y, old_net in phase_columns
+                    if old_net != net and abs(candidate - old_x) < 0.86
+                    and high_y + 0.40 > old_low_y
+                    and old_high_y + 0.40 > low_y][:6]
+                metal2_blockers = [old_net for old_x1, old_y1, old_x2,
+                                   old_y2, old_net
+                                   in metal2_occupied[device.phase]
+                                   if old_net != net
+                                   and candidate_metal2[2] + 0.28 > old_x1
+                                   and old_x2 + 0.28 > candidate_metal2[0]
+                                   and candidate_metal2[3] + 0.28 > old_y1
+                                   and old_y2 + 0.28 > candidate_metal2[1]][:6]
+                raise RuntimeError(
+                    f"no access column for {device.name} {terminal}; "
+                    f"preferred column blockers={column_blockers}, "
+                    f"metal2 blockers={metal2_blockers}")
     return answer
 
 
@@ -511,8 +594,7 @@ def validate_metal2_access(devices: list[Device],
             rectangles.append((min(route_x, points[0]) - 0.38, y - 0.38,
                                max(route_x, points[-1]) + 0.38, y + 0.38,
                                net, f"{device.name}:{terminal}"))
-        gate_y = (device.cy - width / 2.0 - 0.70
-                  - (0.45 if width < 2.0 else 0.0))
+        gate_y = device.cy - width / 2.0 - 0.70 - gate_extra(device)
         route_x = columns[(device.name, "G")]
         gates = [device.cx + x for x in gate_offsets(nf)]
         rectangles.append((min(route_x, gates[0]) - 0.28, gate_y - 0.28,
@@ -567,14 +649,18 @@ def emit(source: Path, output: Path) -> None:
             first_seen.setdefault(key, len(first_seen))
             key_lane_sets.setdefault(key, set()).add(device.lane)
     special_tracks = {
-        "E0:VSS": -8.0, "E0:VDD": 21.0,
-        "E1:VSS": 24.0, "E1:VDD": 53.0,
-        "E2:VSS": 56.0, "E2:VDD": 85.0,
-        "E3:VSS": 88.0, "E3:VDD": 117.0,
-        "O0:VSS": 152.0, "O0:VDD": 181.0,
-        "O1:VSS": 184.0, "O1:VDD": 213.0,
-        "O2:VSS": 216.0, "O2:VDD": 245.0,
-        "O3:VSS": 248.0, "O3:VDD": 277.0,
+        f"{phase}{lane}:{rail}": offset + 32.0 * lane + rail_offset
+        for phase, offset in (("E", 0.0), ("O", PHASE_Y_SHIFT))
+        for lane in range(LANE_COUNT)
+        for rail, rail_offset in (("VSS", -8.0), ("VDD", 21.0))
+    }
+    # The write-selector outputs switch in opposite directions and are both
+    # degraded by an enabled transmission gate.  Keep their long metal4 runs
+    # at opposite edges of the lane instead of on adjacent tracks; extraction
+    # of the adjacent version showed 5.14 fF of mutual capacitance.
+    fixed_signal_tracks = {
+        "XE__WSTART_SEL": 89.5, "XE__WEND_SEL": 114.5,
+        "XO__WSTART_SEL": 249.5, "XO__WEND_SEL": 274.5,
     }
     signal_keys = [key for key in first_seen if key not in special_tracks]
     approximate_bounds: dict[str, list[float]] = {
@@ -588,6 +674,7 @@ def emit(source: Path, output: Path) -> None:
         "XE__WCOREB": "DBG_E_WCOREB", "XE__WB0": "DBG_E_WB0",
         "XE__WB1": "DBG_E_WB1", "XE__SSEL": "DBG_E_SSEL",
         "XE__CT": "DBG_E_CT", "XE__ST": "DBG_E_ST",
+        "XE__CTD": "DBG_E_CTD", "XE__STD": "DBG_E_STD",
         "XE__SN0": "DBG_E_SN0", "XE__SB0": "DBG_E_SB0",
         "XE__SB1": "DBG_E_SB1",
         "XE__PCLK": "DBG_E_PCLK", "XE__P08": "DBG_E_P08",
@@ -598,6 +685,13 @@ def emit(source: Path, output: Path) -> None:
         "XE__XWST__B0": "DBG_E_WSTB0", "XE__XWST__B1": "DBG_E_WSTB1",
         "XE__XWST__B2": "DBG_E_WSTB2", "XE__XWET__B0": "DBG_E_WETB0",
         "XE__XWET__B1": "DBG_E_WETB1", "XE__XWET__B2": "DBG_E_WETB2",
+        "XO__P08": "DBG_O_P08", "XO__P09": "DBG_O_P09",
+        "XO__WSTART_SEL": "DBG_O_WSTART_SEL",
+        "XO__WEND_SEL": "DBG_O_WEND_SEL",
+        "XO__WST": "DBG_O_WST", "XO__WET": "DBG_O_WET",
+        "XO__XWST__B0": "DBG_O_WSTB0", "XO__XWST__B1": "DBG_O_WSTB1",
+        "XO__XWST__B2": "DBG_O_WSTB2", "XO__XWET__B0": "DBG_O_WETB0",
+        "XO__XWET__B1": "DBG_O_WETB1", "XO__XWET__B2": "DBG_O_WETB2",
     }
     for device in devices:
         span = device_span(device) + 2.0
@@ -613,7 +707,8 @@ def emit(source: Path, output: Path) -> None:
     for port in top_ports:
         if port in ("VDD", "VSS"):
             top_keys[port] = [f"{phase}{lane}:{port}"
-                              for phase in ("E", "O") for lane in range(4)]
+                              for phase in ("E", "O")
+                              for lane in range(LANE_COUNT)]
         elif port in ("SEL0", "SEL1", "SEL2", "SEL3"):
             top_keys[port] = [f"E:{port}", f"O:{port}"]
         else:
@@ -636,7 +731,7 @@ def emit(source: Path, output: Path) -> None:
 
     def grouped_lanes(keys: list[str], routing_bounds: dict[str, list[float]]):
         answer = {}
-        for group in range(4):
+        for group in range(LANE_COUNT):
             grouped_keys = [key for key in keys if key_groups[key] == group]
             local = interval_lanes(grouped_keys, routing_bounds)
             answer.update({key: 100 * group + lane for key, lane in local.items()})
@@ -655,6 +750,7 @@ def emit(source: Path, output: Path) -> None:
         assigned = dict(special_tracks)
         assigned.update({key: track_y(code, False) for key, code in even.items()})
         assigned.update({key: track_y(code, True) for key, code in odd.items()})
+        assigned.update(fixed_signal_tracks)
         return even, odd, assigned
 
     def exact_bounds(columns: dict[tuple[str, str], float]):
@@ -707,6 +803,7 @@ def emit(source: Path, output: Path) -> None:
                        for key, code in even_lanes.items()})
         tracks.update({key: track_y(code, True)
                        for key, code in odd_lanes.items()})
+        tracks.update(fixed_signal_tracks)
     else:
         raise RuntimeError("exact signal routing did not converge")
     validate_metal2_access(devices, columns)
@@ -715,7 +812,8 @@ def emit(source: Path, output: Path) -> None:
 
     lines = [tcl_header()]
     for phase_offset in (0.0, PHASE_Y_SHIFT):
-        for base in (0.0, 32.0, 64.0, 96.0):
+        for lane in range(LANE_COUNT):
+            base = 32.0 * lane
             base += phase_offset
             lines.append(f"rect pwell 2 {base-8:.3f} {xmax:.3f} {base+6:.3f}\n")
             lines.append(f"rect nwell 2 {base+7:.3f} {xmax:.3f} {base+20:.3f}\n")
@@ -729,7 +827,7 @@ def emit(source: Path, output: Path) -> None:
         s_y = device.cy - max(0.70, width / 2.0 - 0.8)
         d_points = [device.cx + x for x in offsets(nf, 0)]
         s_points = [device.cx + x for x in offsets(nf, 1)]
-        gate_y = device.cy - width / 2.0 - 0.70 - (0.45 if width < 2.0 else 0.0)
+        gate_y = device.cy - width / 2.0 - 0.70 - gate_extra(device)
         for terminal, net, y, points in (("D", device.nodes[0], d_y, d_points),
                                          ("S", device.nodes[2], s_y, s_points)):
             route_x = columns[(device.name, terminal)]
@@ -747,7 +845,7 @@ def emit(source: Path, output: Path) -> None:
         route_x = columns[(device.name, "G")]
         gates = [device.cx + x for x in gate_offsets(nf)]
         lines.append(f"set _gy [manual_gate {device.cx:.3f} {device.cy:.3f} "
-                     f"{width:.6f} {nf}]\n")
+                     f"{width:.6f} {nf} {gate_extra(device):.3f}]\n")
         lines.append(f"full_stack {device.cx:.3f} {gate_y:.3f} 2\n")
         lines.append(f"rect metal2 {min(route_x,gates[0])-0.28:.3f} {gate_y-0.28:.3f} "
                      f"{max(route_x,gates[-1])+0.28:.3f} {gate_y+0.28:.3f}\n")
@@ -777,8 +875,8 @@ def emit(source: Path, output: Path) -> None:
             lines.append(f"stack45 {x:.3f} {y:.3f}\n")
 
     for phase, phase_offset in (("E", 0.0), ("O", PHASE_Y_SHIFT)):
-        for lane, phase_y in enumerate((0.0, 32.0, 64.0, 96.0)):
-            phase_y += phase_offset
+        for lane in range(LANE_COUNT):
+            phase_y = 32.0 * lane + phase_offset
             vss_y = tracks[f"{phase}{lane}:VSS"]
             vdd_y = tracks[f"{phase}{lane}:VDD"]
             for x in tap_xs:

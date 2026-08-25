@@ -13,7 +13,7 @@ XN0 Y A NS VSS nfet_03v3 w={WN} l=0.28u m={MN}
 XN1 NS B VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
 .ends cp_nand2
 
-.subckt cp_nor2 A B Y VDD VSS params: WP=8u WN=8u MP=12 MN=4
+.subckt cp_nor2 A B Y VDD VSS params: WP=8u WN=8u MP=6 MN=2
 XP0 NP A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
 XP1 Y B NP VDD pfet_03v3 w={WP} l=0.28u m={MP}
 XN0 Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
@@ -25,21 +25,54 @@ XD0 A DI VDD VSS cp_inv WP=2.4u WN=1.2u
 XD1 DI Y VDD VSS cp_inv WP=2.4u WN=1.2u
 .ends cp_delay_unit
 
-.subckt cp_tap_buffer A Y VDD VSS params: WN0=1u WP1=4u WN1=2u
-XI0 A B0 VDD VSS cp_inv WP=2u WN={WN0}
+.subckt cp_tap_buffer A Y VDD VSS params: WP0=2u WN0=1u WP1=4u WN1=2u MN2=2
+XI0 A B0 VDD VSS cp_inv WP={WP0} WN={WN0}
 XI1 B0 B1 VDD VSS cp_inv WP={WP1} WN={WN1}
-XI2 B1 B2 VDD VSS cp_inv WP=8u WN=6u MP=3 MN=2
+XI2 B1 B2 VDD VSS cp_inv WP=8u WN=6u MP=3 MN={MN2}
 XI3 B2 Y VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4
 .ends cp_tap_buffer
 
-.subckt cp_select_prebuffer A Y VDD VSS
+.subckt cp_cond_npd D G EN VSS params: WG=0.6u WE=3u M=1
+XN0 D G N VSS nfet_03v3 w={WG} l=0.28u m={M}
+XN1 N EN VSS VSS nfet_03v3 w={WE} l=0.28u m={M}
+.ends cp_cond_npd
+
+.subckt cp_gate_cap A VSS params: W=0.4u
+XN VSS A VSS VSS nfet_03v3 w={W} l=0.28u m=1
+.ends cp_gate_cap
+
+* Profile 2 sees a transmission-gate output whose extracted low level can be
+* above an ordinary inverter threshold.  The p-skewed first inverter accepts
+* that smaller input eye. XNA restores full-rail profile timing when profile 2
+* is not selected, while XBA assists the second stage only in profile 2.
+.subckt cp_start_buffer A Y BOOST BOOSTB VDD VSS
+XI0 A B0 VDD VSS cp_inv WP=8u WN=1.5u
+XNA B0 A BOOSTB VSS cp_cond_npd WG=1u WE=3u
+XI1 B0 B1 VDD VSS cp_inv WP=4.6u WN=4.6u
+XBA B1 B0 BOOST VSS cp_cond_npd
+XI2 B1 B2 VDD VSS cp_inv WP=8u WN=6u MP=3 MN=2
+XI3 B2 Y VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4
+.ends cp_start_buffer
+
+* Profile-2 assist lowers the first-stage transition threshold only when
+* that physical profile is selected.
+.subckt cp_end_buffer A Y BOOST VDD VSS
+XI0 A B0 VDD VSS cp_inv WP=4u WN=1.7u
+XDL B0 VSS cp_gate_cap W=3u
+XBA B0 A BOOST VSS cp_cond_npd
+XI1 B0 B1 VDD VSS cp_inv WP=4.6u WN=4.6u
+XI2 B1 B2 VDD VSS cp_inv WP=8u WN=6u MP=3 MN=2
+XI3 B2 Y VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4
+.ends cp_end_buffer
+
+.subckt cp_select_prebuffer A Y VDD VSS params: WP1=8u WN1=4u MPP=1 MNN=1
 XI0 A B0 VDD VSS cp_inv WP=2u WN=1u
-XI1 B0 Y VDD VSS cp_inv WP=8u WN=4u
+XI1 B0 Y VDD VSS cp_inv WP={WP1} WN={WN1} MP={MPP} MN={MNN}
 .ends cp_select_prebuffer
 
-.subckt cp_tg A Y EN ENB VDD VSS
-XN Y EN A VSS nfet_03v3 w=4u l=0.28u m=2
-XP Y ENB A VDD pfet_03v3 w=4u l=0.28u m=2
+.subckt cp_tg A Y EN ENB VDD VSS params: W=4u M=2
+XN Y EN A VSS nfet_03v3 w={W} l=0.28u m={M}
+XP Y ENB A VDD pfet_03v3 w={W} l=0.28u m={M}
 .ends cp_tg
 
 * Active-low pulse while the earlier tap A is high and later tap B is low.
@@ -77,24 +110,26 @@ XI2 SEL2 SEL2B VDD VSS cp_inv WP=4u WN=2u
 XI3 SEL3 SEL3B VDD VSS cp_inv WP=4u WN=2u
 XPC CLK PCLK VDD VSS cp_select_prebuffer
 XP02 D02 P02 VDD VSS cp_select_prebuffer
-XP05 D05 P05 VDD VSS cp_select_prebuffer
-XP06 D06 P06 VDD VSS cp_select_prebuffer
-XP07 D07 P07 VDD VSS cp_select_prebuffer
-XP08 D08 P08 VDD VSS cp_select_prebuffer
-XP09 D09 P09 VDD VSS cp_select_prebuffer
+XP05 D05 P05 VDD VSS cp_select_prebuffer MPP=3
+XP07 D07 P07 VDD VSS cp_select_prebuffer MPP=2
+XP08 D08 P08 VDD VSS cp_select_prebuffer MPP=4 MNN=3
+XP09 D09 P09 VDD VSS cp_select_prebuffer MPP=2 MNN=2
 XP10 D10 P10 VDD VSS cp_select_prebuffer
 XP11 D11 P11 VDD VSS cp_select_prebuffer
+XP11L P11 VSS cp_gate_cap
 XP01 D01 P01 VDD VSS cp_select_prebuffer
-XSM0 P01 SSEL SEL0 SEL0B VDD VSS cp_tg
-XSM1 P02 SSEL SEL0B SEL0 VDD VSS cp_tg
-XWM0 P05 WSTART_SEL SEL0 SEL0B VDD VSS cp_tg
-XWM1 P08 WSTART_SEL SEL1 SEL1B VDD VSS cp_tg
-XWM2 P07 WSTART_SEL SEL2 SEL2B VDD VSS cp_tg
-XWM3 P10 WSTART_SEL SEL3 SEL3B VDD VSS cp_tg
-XWE0 P06 WEND_SEL SEL0 SEL0B VDD VSS cp_tg
-XWE1 P09 WEND_SEL SEL1 SEL1B VDD VSS cp_tg
-XWE2 P08 WEND_SEL SEL2 SEL2B VDD VSS cp_tg
-XWE3 P11 WEND_SEL SEL3 SEL3B VDD VSS cp_tg
+XSCB SEL1 SEL3 STAP2B VDD VSS cp_nor2 WP=4u WN=4u MP=2 MN=1
+XSCI STAP2B STAP2 VDD VSS cp_inv WP=4u WN=2u
+XSM0 P01 SSEL STAP2B STAP2 VDD VSS cp_tg
+XSM1 P02 SSEL STAP2 STAP2B VDD VSS cp_tg
+XWM0 P05 WSTART_SEL SEL0 SEL0B VDD VSS cp_tg M=2
+XWM1 P08 WSTART_SEL SEL1 SEL1B VDD VSS cp_tg M=2
+XWM2 P07 WSTART_SEL SEL2 SEL2B VDD VSS cp_tg M=2
+XWM3 P10 WSTART_SEL SEL3 SEL3B VDD VSS cp_tg M=2
+XWE0 P07 WEND_SEL SEL0 SEL0B VDD VSS cp_tg M=2
+XWE1 P09 WEND_SEL SEL1 SEL1B VDD VSS cp_tg M=2
+XWE2 P08 WEND_SEL SEL2 SEL2B VDD VSS cp_tg M=2
+XWE3 P11 WEND_SEL SEL3 SEL3B VDD VSS cp_tg M=2
 
 * SENSE = CLK OR the selected sense tap. WRITE is high between the selected
 * start and end tap. Matched tap buffers keep the large logic gates off the
@@ -106,23 +141,25 @@ XCM0 PCLK CTSEL VDD VSS VDD VSS cp_tg
 XCM1 VSS CTSEL VSS VDD VDD VSS cp_tg
 XCT CTSEL CT VDD VSS cp_tap_buffer
 XST SSEL ST VDD VSS cp_tap_buffer
-XWST WSTART_SEL WST VDD VSS cp_tap_buffer WN0=2u WP1=4.6u WN1=2.3u
-XWET WEND_SEL WET VDD VSS cp_tap_buffer WN0=2u WP1=4.6u WN1=2.3u
-XSN CT ST SN0 VDD VSS cp_nor2
+XWST WSTART_SEL WST SEL2 SEL2B VDD VSS cp_start_buffer
+XWET WEND_SEL WET SEL2 VDD VSS cp_end_buffer
+XCTD CT CTD VDD VSS VDD VSS cp_tg W=8u M=4
+XSTD ST STD VDD VSS VDD VSS cp_tg W=8u M=4
+XSN CTD STD SN0 VDD VSS cp_nor2
 XWN WST WET WCOREB VDD VSS cp_rise_b
 XSB0 SN0 SB0 VDD VSS cp_inv WP=8u WN=8u MP=2 MN=1
 XSB1 SB0 SB1 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4
-XSB2 SB1 SENSE VDD VSS cp_inv WP=8u WN=8u MP=16 MN=5
+XSB2 SB1 SENSE VDD VSS cp_inv WP=8u WN=8u MP=10 MN=6
 XRB0 SN0 RB0 VDD VSS cp_inv WP=8u WN=4u
 XRB1 RB0 RB1 VDD VSS cp_inv WP=8u WN=6u MP=3 MN=2
-XRB2 RB1 REGEN VDD VSS cp_inv WP=8u WN=8u MP=4 MN=4
+XRB2 RB1 REGEN VDD VSS cp_inv WP=8u WN=8u MP=3 MN=3
 XRBI SN0 RBT VDD VSS cp_inv WP=8u WN=4u
-XRBB RBT REGENB VDD VSS cp_inv WP=8u WN=8u MP=4 MN=4
+XRBB RBT REGENB VDD VSS cp_inv WP=8u WN=8u MP=3 MN=3
 XWB0 WCOREB WB0 VDD VSS cp_inv WP=8u WN=8u MP=4 MN=2
 XWB1 WB0 WB1 VDD VSS cp_inv WP=8u WN=8u MP=12 MN=6
-XWB2 WB1 WRITE VDD VSS cp_inv WP=8u WN=8u MP=20 MN=20
+XWB2 WB1 WRITE VDD VSS cp_inv WP=8u WN=8u MP=18 MN=14
 XWBI WCOREB WBT VDD VSS cp_inv WP=8u WN=8u
-XWBB WBT WRITEB VDD VSS cp_inv WP=8u WN=8u MP=20 MN=20
+XWBB WBT WRITEB VDD VSS cp_inv WP=8u WN=8u MP=14 MN=18
 .ends cp_phase
 
 .subckt clock_pulse_generator CLKP CLKN SEL0 SEL1 SEL2 SEL3 VDD VSS

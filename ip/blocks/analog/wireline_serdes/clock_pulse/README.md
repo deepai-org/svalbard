@@ -43,15 +43,23 @@ realized one-hot sense/start/end profiles for both recovered-clock phases. The
 TT, FF/cold, FF/hot, SS/cold, and SS/hot environment under the fixed pulse,
 rail, and 75 mA limits.
 
-`generate_pulse_layout.py` flattens the parameterized circuit into 372 MOS
+`generate_pulse_layout.py` flattens the parameterized circuit into 400 MOS
 devices, aligns complementary devices as CMOS cells, routes phase-local nets in
 functional bands, and stacks the EVEN and ODD phases vertically. The current
-approximately 479 by 285 um candidate is zero-DRC and uniquely pin-resolved
-LVS-matched. Its exact nominal full-RC run is deliberately not promoted: the
-selected write nodes reach only about 1.8 V, the first restoration node does not
-cross cleanly, and the final pulse widths fail the unchanged contract. Netgen
-also reports hierarchical property warnings, so an independent flattened
-device-size check remains required even though topology and pins match uniquely.
+approximately 530 by 285 um candidate is zero-DRC and uniquely pin-resolved
+LVS-matched. The start/end selector banks and restoration stages are more
+compact and separately probed, and the long WSTART/WEND routes no longer run as
+an adjacent coupled pair.
+
+Its exact nominal full-RC run is deliberately retained as a failure rather than
+promoted as closure. Both selected start nodes have an intermediate extracted
+range of roughly 1.56--2.70 V; the first ratioed restoration nodes then reach
+only 0.22--0.79 V. Consequently neither final write pulse toggles. The even and
+odd sense widths are also asymmetric at 194 ps and 557 ps. This localizes the
+next revision to the extracted selector/restorer boundary and phase-parasitic
+symmetry rather than the final output drivers. Netgen still reports flattened
+device-property warnings, so an independent device-size comparison remains
+required even though topology, device count, and pins match uniquely.
 
 The review render is [clock-pulse-generator-layout.png](../../../../../docs/images/clock-pulse-generator-layout.png).
 The checked [schematic matrix](pulse_schematic_result.json), retained

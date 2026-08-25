@@ -21,11 +21,11 @@ grep -q '^\* PEX produced using ' "$pex"
 python3 /src/clock_pulse/run_pulse_generator.py \
   --source /src/clock_pulse --pex "$pex" --work /work/pex-cases \
   --output /work/pulse-pex-nominal-result.json \
-  --environment tt --tap-code 2,8,9
+  --environment tt --tap-code 1,7,8
 python3 /src/clock_pulse/run_pulse_generator.py \
   --source /src/clock_pulse --pex "$pex" --work /work/pex-cases \
   --output /work/pulse-pex-result.json \
-  --tap-code 1,5,6 --tap-code 2,8,9 \
-  --tap-code 2,7,8 --tap-code 2,10,11
+  --tap-code 1,5,7 --tap-code 2,8,9 \
+  --tap-code 1,7,8 --tap-code 2,10,11
 cp "$pex" /work/clock_pulse_generator.pex.spice
 printf '{"result":"pass"}\n' > /work/pulse-physical-smoke.json

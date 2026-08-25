@@ -50,6 +50,15 @@ XD0 A DI VDD VSS cp_inv WP={WP} WN={WN} MP={MP} MN={MN}
 XD1 DI Y VDD VSS cp_inv WP={WP} WN={WN} MP={MP} MN={MN}
 .ends cp_delay_unit
 
+* Profile-3 needs less end-path delay after the slow-corner source has been
+* restored.  Keep the first-stage input load unchanged and double only the
+* second-stage drive so the start/end spacing shrinks without moving the
+* upstream source threshold or changing other calibration profiles.
+.subckt cp_profile3_delay A Y VDD VSS
+XD0 A DI VDD VSS cp_inv WP=15.5u WN=8.75u
+XD1 DI Y VDD VSS cp_inv WP=15.5u WN=8.75u MP=2 MN=2
+.ends cp_profile3_delay
+
 * Non-inverting edge shaper.  The falling output edge is deliberately slower
 * than the rising edge, moving the SENSE leading edge later without consuming
 * its recovery interval or changing logic thresholds.
@@ -131,10 +140,19 @@ XI0 A B0 VDD VSS cp_inv WP={WP0} WN={WN0}
 XI1 B0 Y VDD VSS cp_inv WP={WP1} WN={WN1} MP={MPP} MN={MNN}
 .ends cp_select_prebuffer
 
-.subckt cp_write_restore A Y VDD VSS params: MP0=2 MN0=2 MP1=3 MN1=4
-XI0 A B1 VDD VSS cp_inv WP=8u WN=4u MP={MP0} MN={MN0}
+.subckt cp_write_restore A Y VDD VSS params: WP0=8u MP0=2 MN0=2 MP1=3 MN1=4
+XI0 A B1 VDD VSS cp_inv WP={WP0} WN=4u MP={MP0} MN={MN0}
 XI1 B1 Y VDD VSS cp_inv WP=8u WN=6u MP={MP1} MN={MN1}
 .ends cp_write_restore
+
+* Profile-qualified end-restorer branch.  Besides reinforcing B1 when the
+* selected slow-corner edge is valid, its realized input/diffusion load is
+* part of the calibrated nominal write interval and is retained in extraction.
+.subckt cp_profile_write_restore A FAST Y VDD VSS
+XI0 A B1 VDD VSS cp_inv WP=8u WN=4u MP=2 MN=2
+XI1 B1 Y VDD VSS cp_inv WP=8u WN=6u MP=3 MN=4
+XNF B1 A FAST VSS cp_cond_npd WG=2u WE=8u M=1
+.ends cp_profile_write_restore
 
 .subckt cp_tg A Y EN ENB VDD VSS params: W=4u M=2
 XN Y EN A VSS nfet_03v3 w={W} l=0.28u m={M}
@@ -234,8 +252,8 @@ XWE3 P10D WEND_SEL SEL0 WSEL0B VDD VSS cp_tg W=8u M=2
 * profile; downstream physical delay, rather than the failed global tap,
 * defines this profile's start/end interval.
 XPG3N HCLK SEL3 P06B VDD VSS cp_nand2 WP=6u WN=7u MP=2 MN=2
-XPG3I P06B P06S VDD VSS cp_inv WP=8u WN=6u MP=2 MN=3
-XPMD3 P06S P09S VDD VSS cp_delay_unit WP=15.5u WN=8.75u
+XPG3I P06B P06S VDD VSS cp_inv WP=16u WN=6u MP=2 MN=3
+XPMD3 P06S P09S VDD VSS cp_profile3_delay
 XWM3A P06S WSTART_SEL SEL3 WSEL3B VDD VSS cp_tg W=8u M=2
 XWE3A P09S WEND_SEL SEL3 WSEL3B VDD VSS cp_tg W=8u M=2
 
@@ -246,7 +264,7 @@ XWE3A P09S WEND_SEL SEL3 WSEL3B VDD VSS cp_tg W=8u M=2
 * These buffers preserve the intentionally short inactive and write intervals
 * under the large regenerative-gate capacitances.
 XWST WSTART_SEL WST VDD VSS cp_write_restore
-XWET WEND_SEL WET VDD VSS cp_write_restore
+XWET WEND_SEL SEL3 WET VDD VSS cp_profile_write_restore
 * Restore both full-width timing replicas locally before pulse formation.  The
 * former failing path put transmission gates and long routes ahead of these
 * buffers; here each long route terminates at a first-stage gate and the
@@ -289,5 +307,5 @@ XLEGACY D06 VSS cp_route_anchor W=0.4u
 XE CLKP CLKP_H SEL0 SEL1 SEL2 SEL3 SEL2 VDD VDD_WE VSS VSS_SE
 + E_SENSE E_BOOST E_WRITE cp_phase WQ2_W=6.2u WQD_W=7u SB2_WN=6.5u SB2_MN=7 WB1_M=7 WB2_MP=14 WB2_MN=14 WB3_WP=8u WB3_MP=28 WB3_MN=20
 XO CLKN CLKN_H SEL0 SEL1 SEL2 SEL3 VSS VDD VDD_WO VSS VSS_SO
-+ O_SENSE O_BOOST O_WRITE cp_phase WQ2_W=1u WQD_W=9u SB2_WN=6.5u SB2_MN=7 WB1_MP=7 WB1_M=7 WB2_MP=7 WB2_MN=14 WB3_WP=8u WB3_MP=28 WB3_MN=20
++ O_SENSE O_BOOST O_WRITE cp_phase WQ2_W=1u WQD_W=8u SB2_WN=6.5u SB2_MN=7 WB1_MP=7 WB1_M=7 WB2_MP=5 WB2_MN=14 WB3_WP=8u WB3_MP=30 WB3_MN=20
 .ends clock_pulse_generator

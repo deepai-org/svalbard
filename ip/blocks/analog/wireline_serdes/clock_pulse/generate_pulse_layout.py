@@ -167,13 +167,17 @@ def group_depths(groups: dict[str, Group], phase: str) -> dict[str, int]:
               "cp_nand2": ("A", "B"),
               "cp_nor2": ("A", "B"), "cp_tg": ("A", "EN", "ENB"),
               "cp_cond_npd": ("G", "EN"),
-              "cp_gate_cap": ("A",), "cp_route_anchor": ("A",)}
+              "cp_gate_cap": ("A",), "cp_route_anchor": ("A",),
+              "cp_profile3_delay": ("A",),
+              "cp_profile_write_restore": ("A", "FAST")}
     inputs["cp_tristate_inv"] = ("A", "EN", "ENB")
     outputs = {"cp_inv": "Y", "cp_final_inv": "Y",
                "cp_sense_final_inv": "Y",
                "cp_nand2": "Y", "cp_nor2": "Y",
                "cp_tg": "Y", "cp_cond_npd": "D",
-               "cp_gate_cap": None, "cp_route_anchor": None}
+               "cp_gate_cap": None, "cp_route_anchor": None,
+               "cp_profile3_delay": "Y",
+               "cp_profile_write_restore": "Y"}
     outputs["cp_tristate_inv"] = "Y"
     local = [group for group in groups.values() if group.phase == phase]
     clock = "CLKP" if phase == "E" else "CLKN"
@@ -248,8 +252,7 @@ def functional_lane(group: Group) -> int:
     root = group.name.removeprefix("XE").removeprefix("XO").split("__")[1]
     if root in ("XP06S", "XP09M", "XP10"):
         return 1
-    if (root in ("XP08", "XPMD", "XPMD3", "XPLC", "XPLD")
-            or root.startswith("XPMD3")):
+    if root in ("XP08", "XPMD", "XPLC", "XPLD"):
         return 3
     if root == "XLEGACY":
         return 3
@@ -299,15 +302,18 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
             # P08 drives two selector gates and was the limiting extracted
             # node.  Put its output between those consumers; P09 has only one
             # local consumer and can tolerate the preceding slot.
-            write_taps = ("XPG3N", "XPG3I", "XP09M", "XP10")
+            write_taps = ("XPG3N", "XPG3I", "XPMD3", "XP09M", "XP10")
             write_rank = {name: rank for rank, name in enumerate(write_taps)}
             write_min_x = {"XPG3N": 130.0, "XPG3I": 140.0,
+                           "XPMD3": 153.68,
                            "XP09M": 198.0, "XP10": 226.0}
 
             def lane_one_order(group: Group) -> tuple[int, int, int, str]:
                 parts = group.name.split("__")
                 root = parts[1]
-                stage = int(parts[2].removeprefix("XI")) if len(parts) > 2 else 0
+                stage = (int(parts[2][2:])
+                         if len(parts) > 2
+                         and re.fullmatch(r"X[ID]\d+", parts[2]) else 0)
                 if root in write_rank:
                     return (1, write_rank[root], stage, group.name)
                 return (0, place_depth[group.name], 0, group.name)
@@ -364,7 +370,7 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
                 "XLEGACY": 0,
                 "XP08": 1,
                 # Align each dynamic cluster below its tap-local prebuffer.
-                "XWM3A": 2, "XPMD3": 3, "XWE3A": 4,
+                "XWM3A": 2, "XWE3A": 3,
                 "XWM1": 5, "XWST": 6,
                 "XPMD": 7, "XWE1": 8,
                 "XPLC": 9, "XWM3": 10,
@@ -375,12 +381,18 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
                 "XWMCB": 16, "XWMCI": 17,
             }
             selector_min_x = {"XLEGACY": 130.0,
-                              "XWM3A": 145.0, "XWM1": 205.0,
+                              "XWM3A": 145.0, "XWE3A": 161.28,
+                              "XWM1": 205.0,
                               "XPLC": 236.0}
 
             def write_order(group: Group) -> tuple[int, int, int, str]:
                 parts = group.name.split("__")
                 root = parts[1]
+                if (root == "XWET" and len(parts) > 2
+                        and parts[2] == "XNF"):
+                    # Preserve the calibrated XWET pair and downstream x
+                    # coordinates by using the reserved selector whitespace.
+                    return (0, 4 * 4, 0, group.name)
                 if root in selector_rank:
                     stage = (int(parts[2].removeprefix((
                         "XI" if parts[2].startswith("XI") else "XD")))
@@ -746,13 +758,28 @@ def route_key(device: Device, net: str) -> str:
     return net
 
 
-def interval_lanes(keys: list[str], bounds: dict[str, list[float]]) -> dict[str, int]:
-    lane_ends: list[float] = []
+def interval_lanes(keys: list[str], bounds: dict[str, list[float]],
+                   fixed: dict[str, int] | None = None) -> dict[str, int]:
+    fixed = fixed or {}
+    fixed_intervals: dict[int, list[tuple[float, float]]] = {}
+    for key, lane in fixed.items():
+        fixed_intervals.setdefault(lane, []).append(tuple(bounds[key]))
+    lane_ends: list[float] = [-math.inf] * (
+        max(fixed.values(), default=-1) + 1)
     answer: dict[str, int] = {}
     for key in sorted(keys, key=lambda item: (bounds[item][0], bounds[item][1])):
         start, end = bounds[key]
-        lane = next((index for index, old_end in enumerate(lane_ends)
-                     if old_end + 1.4 <= start), len(lane_ends))
+        lane = fixed.get(key)
+        if lane is not None and lane_ends[lane] + 1.4 > start:
+            raise RuntimeError(f"fixed route lane conflict at {key}")
+        if lane is None:
+            lane = next((index for index, old_end in enumerate(lane_ends)
+                         if old_end + 1.4 <= start
+                         and all(end + 1.4 <= fixed_start
+                                 or fixed_end + 1.4 <= start
+                                 for fixed_start, fixed_end
+                                 in fixed_intervals.get(index, []))),
+                        len(lane_ends))
         if lane == len(lane_ends):
             lane_ends.append(end)
         else:
@@ -801,6 +828,14 @@ def emit(source: Path, output: Path) -> None:
                             + PHASE_Y_SHIFT),
         "XO__WEND_SEL": (LANE_PITCH * (LANE_COUNT - 1) + 18.0
                           + PHASE_Y_SHIFT),
+        # XPMD3 restores locally in lane 1, but its output runs on the proven
+        # lane-3 ordinate shared (over disjoint x intervals) with WMID.
+        "XE__P09S": 109.0,
+        "XO__P09S": 109.0 + PHASE_Y_SHIFT,
+        "XE__WMID": 109.0, "XE__WMIDB": 106.9, "XE__WB0": 111.1,
+        "XO__WMID": 109.0 + PHASE_Y_SHIFT,
+        "XO__WMIDB": 106.9 + PHASE_Y_SHIFT,
+        "XO__WB0": 111.1 + PHASE_Y_SHIFT,
         # Dedicated final-sense ground tracks occupy the otherwise empty
         # boundary below lane 2.  Keeping them off the global VSS ordinate
         # preserves separate LVS nets while allowing a 3-um M4 path.
@@ -808,6 +843,12 @@ def emit(source: Path, output: Path) -> None:
         "VSS_SO": LANE_PITCH * 2 - 11.5 + PHASE_Y_SHIFT,
     }
     signal_keys = [key for key in first_seen if key not in special_tracks]
+    precolored_local_lanes = {
+        "XE__P09S": 3, "XO__P09S": 3,
+        "XE__WMID": 3, "XO__WMID": 3,
+        "XE__WMIDB": 2, "XO__WMIDB": 2,
+        "XE__WB0": 4, "XO__WB0": 4,
+    }
     approximate_bounds: dict[str, list[float]] = {
         key: [math.inf, -math.inf]
         for key in set(special_tracks) | set(first_seen)}
@@ -918,7 +959,10 @@ def emit(source: Path, output: Path) -> None:
         answer = {}
         for group in range(LANE_COUNT):
             grouped_keys = [key for key in keys if key_groups[key] == group]
-            local = interval_lanes(grouped_keys, routing_bounds)
+            local = interval_lanes(
+                grouped_keys, routing_bounds,
+                {key: lane for key, lane in precolored_local_lanes.items()
+                 if key in grouped_keys})
             answer.update({key: 100 * group + lane for key, lane in local.items()})
         return answer
 
@@ -982,6 +1026,7 @@ def emit(source: Path, output: Path) -> None:
                     else:
                         previous = key
                         previous_end = bounds[key][1]
+            move_keys.difference_update(precolored_local_lanes)
             for key in sorted(move_keys):
                 group = phase_lanes[key] // 100
                 next_local = 1 + max(
@@ -1113,7 +1158,12 @@ def emit(source: Path, output: Path) -> None:
                      f"{route_x+0.28:.3f} {max(gate_y,ty)+0.28:.3f}\n")
         lines.append(f"stack34 {route_x:.3f} {ty:.3f}\n")
 
-    for key, (x1, x2) in bounds.items():
+    # exact_bounds is intentionally assembled from sets because it is used as
+    # a lookup table.  Never let that hash-random insertion order leak into
+    # the generated layout source: identical geometry must be byte-for-byte
+    # reproducible across Python processes and container hash seeds.
+    for key in sorted(bounds, key=lambda item: (first_seen.get(item, -1), item)):
+        x1, x2 = bounds[key]
         y = tracks[key]
         half = (2.00 if key.endswith((":VDD", ":VSS")) else
                 0.75 if key in ("VSS_SE", "VSS_SO")

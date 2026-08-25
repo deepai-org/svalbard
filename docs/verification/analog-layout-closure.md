@@ -939,8 +939,8 @@ short local node; the long connection then ended at the prebuffer's gate input.
 The pulse-generator work subsequently separated selector restoration, interval
 storage, qualification, and output drive. A reset-dominant cross-coupled-NOR
 latch driven by the full-width start/end clocks replaced the filtered
-combinational write glitch. The retained 424-device, 498.0 by 285 um checkpoint
-is zero-DRC, uniquely LVS-matched, and extracts to 9,278R/6,039C. Dedicated
+combinational write glitch. The retained 428-device, 499.6 by 285 um checkpoint
+is zero-DRC, uniquely LVS-matched, and extracts to 9,344R/6,103C. Dedicated
 parent-strapped source-supply pins let the final write and sense banks attach to
 the eventual local grid without pretending that all current enters through one
 left-edge port. Its nominal exact PEX now passes timing, rail, phase-spacing,
@@ -955,10 +955,28 @@ When a corner-specific profile exists because a global delayed tap stops
 crossing threshold, do not keep deriving that profile from the failed tap. Give
 it a physically separate parent-strapped clock terminal and route it locally to
 the profile gate, while making the new parent assumption explicit. In the pulse
-macro, `CLKP_H`/`CLKN_H` moved the profile-3 restored node to 2.234/2.245 V at
-FF/hot and 1.946/1.953 V at SS/hot exact PEX. The composed pulse contract still
-failed downstream, so retain both facts: the source-path hypothesis was
-validated, but the macro was not corner-closed.
+macro, `CLKP_H`/`CLKN_H`, a local delay pair, and a wider upstream PMOS moved
+the EVEN profile-3 `P06S/P09S` nodes to 2.649/2.622 V at FF/hot and
+2.644/2.652 V at SS/hot exact PEX. FF/hot then produced both rail-level write
+events and SS/hot produced one. The sense and width contracts still failed, so
+retain both facts: the source/restoration hypothesis was validated, but the
+macro was not corner-closed.
+
+When changing drive in a coordinate-sensitive generated layout, distinguish
+finger width from finger count. Adding parallel fingers widens a placement
+group, shifts every later group, and can recolor routes even if the added logic
+is inactive. Increasing finger width can add vertical drive while preserving
+x-coordinates, provided well enclosure, diffusion spacing, and access-column
+DRC remain legal. The pulse macro recovered its hot source without destroying
+nominal timing only after making that distinction and re-running exact PEX.
+
+Generated layout source is evidence and must be deterministic. Set-derived
+dictionaries may contain the same rectangles but emit them in a different
+order under another Python hash seed, changing source hashes and making review
+needlessly ambiguous. Sort nets and instances at the emission boundary, then
+generate twice under different hash seeds and require byte identity before
+attaching hashes to a checkpoint. Geometric equivalence is not a substitute
+for reproducible provenance.
 
 Adding or removing even an inactive branch can recolor interval-routed tracks
 and invalidate previously passing exact timing. Preserve top-level port order,

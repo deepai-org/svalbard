@@ -937,10 +937,26 @@ long wire. In a programmable high-speed selector, moving a tap prebuffer into
 the selector row changed a restored output from a long cross-row RC node into a
 short local node; the long connection then ended at the prebuffer's gate input.
 The pulse-generator extraction reduced the critical P08 grounded capacitance
-from 36.87 fF to 24.15 fF and recovered full start/end switching. This did not
-close the entire macro—the following output taper still filtered the short
-pulse—but it cleanly separated selector closure from driver closure. Optimize
-and probe those boundaries independently.
+from 36.87 fF to 24.15 fF and recovered full start/end switching. Per-phase
+restoration then fixed the complementary edge, and a separately retapered write
+path raised the extracted final outputs to 2.52 V and 1.87 V. The macro still
+failed for a different reason: no existing selector code produced the required
+450--650 ps sense window in exact PEX. Probe and close selector, restoration,
+window formation, and output drive as distinct boundaries; progress at one is
+not evidence that the others close.
+
+When a tristate stack is disabled, put the device controlled by the static
+enable immediately next to the high-capacitance output. That placement isolates
+the output from input feedthrough through the internal stack node. Verify the
+choice in extraction: schematic equivalence does not imply equal off-state
+coupling or equal short-pulse preservation.
+
+Do not assume complementary phase replicas can share transistor sizes after
+several asymmetric logic and routing stages. Duty-cycle distortion accumulates,
+and one polarity may need its own restoration strength or finger count. Keep
+per-phase sizing explicit in both the circuit parameters and the layout
+generator, then require the same rail, width, delay, and current contracts for
+each phase separately.
 
 ### Proven physical iteration ladder
 

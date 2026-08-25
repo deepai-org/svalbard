@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1050" viewBox="0 0 1600 1050">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b1220"/><stop offset="1" stop-color="#172033"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="7" stdDeviation="8" flood-color="#000" flood-opacity=".35"/></filter>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#a9bad5"/></marker>
+    <style>
+      .title{font:700 38px system-ui,sans-serif;fill:#f5f7fb}.sub{font:20px system-ui,sans-serif;fill:#bdc8d9}.label{font:700 21px system-ui,sans-serif;fill:#fff}.small{font:16px system-ui,sans-serif;fill:#e8edf5}.tiny{font:14px system-ui,sans-serif;fill:#cbd5e1}.box{stroke-width:3;rx:14;filter:url(#shadow)}.route{fill:none;stroke:#a9bad5;stroke-width:4;marker-end:url(#arrow)}.clock{fill:none;stroke:#c9a7ff;stroke-width:4;stroke-dasharray:11 8;marker-end:url(#arrow)}.missing{fill:#342c22;stroke:#f2b84b;stroke-width:3;stroke-dasharray:12 7;rx:14}
+    </style>
+  </defs>
+  <rect width="1600" height="1050" fill="url(#bg)"/>
+  <text x="70" y="70" class="title">PCIe Gen1 analog top — integration floorplan proposal</text>
+  <text x="70" y="106" class="sub">Planning render · not a placed/routed analog-top cell · macro sizes are schematic, not to scale</text>
+  <rect x="55" y="145" width="1490" height="800" rx="32" fill="#111a2a" stroke="#53647d" stroke-width="4"/>
+  <text x="75" y="178" class="tiny">candidate analog island / guard-ring boundary</text>
+
+  <rect x="80" y="220" width="125" height="155" class="box" fill="#264e63" stroke="#52c7dc"/>
+  <text x="142" y="268" text-anchor="middle" class="label">TX pads</text><text x="142" y="296" text-anchor="middle" class="small">ESD + AC</text><text x="142" y="320" text-anchor="middle" class="small">coupling</text>
+  <rect x="80" y="555" width="125" height="155" class="box" fill="#264e63" stroke="#52c7dc"/>
+  <text x="142" y="603" text-anchor="middle" class="label">RX pads</text><text x="142" y="631" text-anchor="middle" class="small">ESD + AC</text><text x="142" y="655" text-anchor="middle" class="small">coupling</text>
+
+  <rect x="280" y="215" width="315" height="165" class="box" fill="#3a315f" stroke="#9d86ed"/>
+  <text x="437" y="265" text-anchor="middle" class="label">Integrated 2:1 serializer / TX</text>
+  <text x="437" y="296" text-anchor="middle" class="small">routed parent · exact PEX 5/5</text><text x="437" y="324" text-anchor="middle" class="tiny">pad/package/EM still open</text>
+  <path d="M280 297H213" class="route"/>
+
+  <rect x="280" y="515" width="420" height="235" class="box" fill="#244d44" stroke="#65d6ac"/>
+  <text x="490" y="560" text-anchor="middle" class="label">Routed RX → regenerative capture parent</text>
+  <text x="490" y="591" text-anchor="middle" class="small">termination · RX amp · dual StrongARM · 1:2 capture</text>
+  <text x="490" y="619" text-anchor="middle" class="small">exact parent PEX 5/5 under bounded stress</text>
+  <line x1="330" y1="656" x2="650" y2="656" stroke="#65d6ac" stroke-width="2"/><text x="490" y="687" text-anchor="middle" class="tiny">keep pad-to-input route short and differential</text>
+  <path d="M213 632H280" class="route"/>
+
+  <rect x="820" y="210" width="370" height="205" class="box" fill="#46305a" stroke="#d09bea"/>
+  <text x="1005" y="257" text-anchor="middle" class="label">1.25 GHz clock-source island</text>
+  <text x="1005" y="287" text-anchor="middle" class="small">dual DAC · VCO bank · selector</text><text x="1005" y="315" text-anchor="middle" class="small">restorer · first ÷2</text>
+  <text x="1005" y="350" text-anchor="middle" class="tiny">routed/extracted; closed PLL is still missing</text>
+
+  <rect x="785" y="505" width="270" height="150" class="box" fill="#3d3765" stroke="#a995ff"/>
+  <text x="920" y="548" text-anchor="middle" class="label">Phase control</text><text x="920" y="579" text-anchor="middle" class="small">PI + dual 5-bit DAC</text><text x="920" y="607" text-anchor="middle" class="tiny">physically closed leaves</text>
+
+  <rect x="1090" y="495" width="375" height="175" class="box" fill="#633c31" stroke="#ff9b70"/>
+  <text x="1277" y="538" text-anchor="middle" class="label">Sense/write pulse generator</text><text x="1277" y="569" text-anchor="middle" class="small">0 DRC · unique LVS · exact PEX open</text>
+  <text x="1277" y="598" text-anchor="middle" class="tiny">sense window needs architectural extension</text><text x="1277" y="625" text-anchor="middle" class="tiny">current leaf ≈ 546 × 285 µm</text>
+
+  <rect x="770" y="735" width="305" height="145" class="box" fill="#29465e" stroke="#67b7e8"/>
+  <text x="922" y="778" text-anchor="middle" class="label">CDR decision path</text><text x="922" y="809" text-anchor="middle" class="small">sampler · Alexander · slicer</text><text x="922" y="837" text-anchor="middle" class="tiny">closed leaves; loop/retiming open</text>
+
+  <rect x="1220" y="215" width="245" height="190" class="missing"/>
+  <text x="1342" y="258" text-anchor="middle" class="label">Missing shared top</text><text x="1342" y="291" text-anchor="middle" class="small">reference + bias tree</text><text x="1342" y="319" text-anchor="middle" class="small">PDN + decoupling</text><text x="1342" y="347" text-anchor="middle" class="small">reset / calibration</text><text x="1342" y="375" text-anchor="middle" class="small">RX detect / idle</text>
+
+  <path d="M820 310H625Q610 310 610 297H595" class="clock"/><path d="M1005 415V470H920V505" class="clock"/><path d="M1055 580H1090" class="clock"/><path d="M1090 625H700" class="clock"/><path d="M785 805H700V705" class="route"/><path d="M700 585H760Q780 585 780 605V735" class="route"/><path d="M1220 335H1190" class="route"/>
+
+  <rect x="280" y="805" width="420" height="75" rx="14" fill="#243246" stroke="#7184a1" stroke-width="3"/>
+  <text x="490" y="837" text-anchor="middle" class="label">Digital PHY boundary</text><text x="490" y="862" text-anchor="middle" class="tiny">parallel TX/RX · controls · status · calibration storage</text>
+  <path d="M490 750V805" class="route"/><path d="M437 380V805" class="route"/>
+
+  <rect x="70" y="975" width="22" height="22" rx="4" fill="#244d44" stroke="#65d6ac" stroke-width="2"/><text x="105" y="992" class="tiny">routed parent evidence exists</text>
+  <rect x="360" y="975" width="22" height="22" rx="4" fill="#633c31" stroke="#ff9b70" stroke-width="2"/><text x="395" y="992" class="tiny">physical checkpoint, performance open</text>
+  <rect x="720" y="975" width="22" height="22" rx="4" fill="#342c22" stroke="#f2b84b" stroke-width="2" stroke-dasharray="6 4"/><text x="755" y="992" class="tiny">not implemented</text>
+  <text x="1130" y="992" class="tiny">Keep TX/clock aggressors away from RX; shorten pad and capture paths</text>
+</svg>

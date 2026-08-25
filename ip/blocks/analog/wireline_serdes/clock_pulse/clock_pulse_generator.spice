@@ -48,8 +48,8 @@ XN VSS A VSS VSS nfet_03v3 w={W} l=0.28u m=1
 .subckt cp_tristate_inv A Y EN ENB VDD VSS params: WP=8u WN=4u M=2
 XP0 NP A VDD VDD pfet_03v3 w={WP} l=0.28u m={M}
 XP1 Y ENB NP VDD pfet_03v3 w={WP} l=0.28u m={M}
-XN0 Y A NN VSS nfet_03v3 w={WN} l=0.28u m={M}
-XN1 NN EN VSS VSS nfet_03v3 w={WN} l=0.28u m={M}
+XN0 NN A VSS VSS nfet_03v3 w={WN} l=0.28u m={M}
+XN1 Y EN NN VSS nfet_03v3 w={WN} l=0.28u m={M}
 .ends cp_tristate_inv
 
 .subckt cp_write_buffer B0 Y VDD VSS
@@ -58,8 +58,8 @@ XI2 B1 B2 VDD VSS cp_inv WP=8u WN=6u MP=3 MN=2
 XI3 B2 Y VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4
 .ends cp_write_buffer
 
-.subckt cp_select_prebuffer A Y VDD VSS params: WP1=8u WN1=4u MPP=1 MNN=1
-XI0 A B0 VDD VSS cp_inv WP=2u WN=1u
+.subckt cp_select_prebuffer A Y VDD VSS params: WP0=2u WN0=1u WP1=8u WN1=4u MPP=1 MNN=1
+XI0 A B0 VDD VSS cp_inv WP={WP0} WN={WN0}
 XI1 B0 Y VDD VSS cp_inv WP={WP1} WN={WN1} MP={MPP} MN={MNN}
 .ends cp_select_prebuffer
 
@@ -76,6 +76,7 @@ XN A BN YB VDD VSS cp_nand2 WP=8u WN=8u MP=8 MN=6
 
 .subckt cp_phase CLK SEL0 SEL1 SEL2 SEL3 VDD VSS
 + SENSE REGEN REGENB WRITE WRITEB
++ params: MID_WP0=2u MID_WN0=1u MID_MPP=1 MID_MNN=1 P08_MPP=4 P08_MNN=3
 * Twelve matched non-inverting delay units provide digitally selectable taps.
 * Four one-hot profiles select tap triplets retained by PVT screening. The
 * transmission gates are part of the simulated circuit, not netlist rewrites.
@@ -102,12 +103,10 @@ XI1 SEL1 SEL1B VDD VSS cp_inv WP=4u WN=2u
 XI2 SEL2 SEL2B VDD VSS cp_inv WP=4u WN=2u
 XI3 SEL3 SEL3B VDD VSS cp_inv WP=4u WN=2u
 XPC CLK PCLK VDD VSS cp_select_prebuffer
-XP02 D02 P02 VDD VSS cp_select_prebuffer
-XP08 D08 P08 VDD VSS cp_select_prebuffer MPP=4 MNN=3
-XP09 D09 P09 VDD VSS cp_select_prebuffer MPP=2 MNN=2
+XP02 D02 P02 VDD VSS cp_select_prebuffer WP0={MID_WP0} WN0={MID_WN0} MPP={MID_MPP} MNN={MID_MNN}
+XP08 D08 P08 VDD VSS cp_select_prebuffer WP0={MID_WP0} WN0={MID_WN0} MPP={P08_MPP} MNN={P08_MNN}
+XP09L D09 VSS cp_gate_cap W=3u
 XP10 D10 P10 VDD VSS cp_select_prebuffer
-XP11 D11 P11 VDD VSS cp_select_prebuffer
-XP11L P11 VSS cp_gate_cap
 XP01L D01 VSS cp_gate_cap W=3u
 XP05L D05 VSS cp_gate_cap W=3u
 XP07L D07 VSS cp_gate_cap W=3u
@@ -121,9 +120,10 @@ XSM0 PCLK SSEL STAP2B STAP2 VDD VSS cp_tg W=3u
 XSM1 P02 SSEL STAP2 STAP2B VDD VSS cp_tg W=6u
 XWM1 P08 WSTART_SEL MID MIDB VDD VSS cp_tristate_inv
 XWM3 P10 WSTART_SEL LATE LATEB VDD VSS cp_tristate_inv
-XPMD P08 P09W VDD VSS cp_delay_unit WP=6u WN=3u
+XPMD P08 P09W VDD VSS cp_delay_unit WP=7u WN=3.5u
 XWE1 P09W WEND_SEL MID MIDB VDD VSS cp_tristate_inv
-XWE3 P11 WEND_SEL LATE LATEB VDD VSS cp_tristate_inv
+XPLD P10 P10D VDD VSS cp_delay_unit WP=12u WN=8u
+XWE3 P10D WEND_SEL LATE LATEB VDD VSS cp_tristate_inv
 
 * SENSE = CLK OR the selected sense tap. WRITE is high between the selected
 * start and end tap. Matched tap buffers keep the large logic gates off the
@@ -141,7 +141,8 @@ XCTD CT CTD VDD VSS VDD VSS cp_tg W=8u M=4
 XSTD ST STD VDD VSS VDD VSS cp_tg W=8u M=4
 XSN CTD STD SN0 VDD VSS cp_nor2
 XWN WST WET WCOREB VDD VSS cp_rise_b
-XWPD WCOREB WCOREBD VDD VSS VDD VSS cp_tg W=2.8u M=2
+XWPD0 WCOREB WPD0 VDD VSS cp_inv WP=8u WN=8u MP=1 MN=1
+XWPD1 WPD0 WCOREBD VDD VSS cp_inv WP=7.5u WN=7.5u MP=3 MN=3
 XSB0 SN0 SB0 VDD VSS cp_inv WP=8u WN=8u MP=2 MN=1
 XSB1 SB0 SB1 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4
 XSB2 SB1 SENSE VDD VSS cp_inv WP=8u WN=8u MP=10 MN=5
@@ -151,10 +152,10 @@ XRB2 RB1 REGEN VDD VSS cp_inv WP=8u WN=8u MP=3 MN=3
 XRBI SN0 RBT VDD VSS cp_inv WP=8u WN=4u
 XRBB RBT REGENB VDD VSS cp_inv WP=8u WN=8u MP=3 MN=3
 XWB0 WCOREBD WB0 VDD VSS cp_inv WP=8u WN=8u MP=4 MN=2
-XWB1 WB0 WB1 VDD VSS cp_inv WP=8u WN=8u MP=12 MN=10
-XWB2 WB1 WRITE VDD VSS cp_inv WP=8u WN=8u MP=22 MN=14
+XWB1 WB0 WB1 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=6
+XWB2 WB1 WRITE VDD VSS cp_inv WP=8u WN=8u MP=23 MN=14
 XWBI WCOREBD WBT VDD VSS cp_inv WP=8u WN=8u
-XWBB WBT WRITEB VDD VSS cp_inv WP=8u WN=8u MP=14 MN=18
+XWBB WBT WRITEB VDD VSS cp_inv WP=8u WN=8u MP=18 MN=22
 .ends cp_phase
 
 .subckt clock_pulse_generator CLKP CLKN SEL0 SEL1 SEL2 SEL3 VDD VSS
@@ -164,4 +165,5 @@ XE CLKP SEL0 SEL1 SEL2 SEL3 VDD VSS
 + E_SENSE E_REGEN E_REGENB E_WRITE E_WRITEB cp_phase
 XO CLKN SEL0 SEL1 SEL2 SEL3 VDD VSS
 + O_SENSE O_REGEN O_REGENB O_WRITE O_WRITEB cp_phase
++ MID_WP0=4u MID_WN0=2u MID_MPP=2 MID_MNN=3 P08_MPP=4 P08_MNN=5
 .ends clock_pulse_generator

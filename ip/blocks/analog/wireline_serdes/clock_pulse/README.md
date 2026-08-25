@@ -50,10 +50,10 @@ delay produces the mid-profile end edge. The revised 20-case schematic matrix
 still passes every declared environment while avoiding the incompatible
 start/end restoration apertures found in the previous extracted circuit.
 
-`generate_pulse_layout.py` flattens the parameterized circuit into 396 MOS
+`generate_pulse_layout.py` flattens the parameterized circuit into 392 MOS
 devices, resolves forwarded sizing parameters, aligns complementary devices as
 CMOS cells, routes phase-local nets in functional bands, and stacks the EVEN
-and ODD phases vertically. The current approximately 544 by 285 um candidate
+and ODD phases vertically. The current approximately 546 by 285 um candidate
 is zero-DRC and uniquely pin-resolved LVS-matched. Critical tap prebuffers now
 sit in the selector row so their restored outputs are local; the longer
 cross-row connections terminate on gate inputs. The router also reserves fixed
@@ -61,13 +61,16 @@ critical tracks explicitly, after a DRC-clean coordinate collision was caught
 by LVS.
 
 Its exact nominal full-RC run is deliberately retained as a failure rather than
-promoted as closure. The placement revision reduced even-phase P08 capacitance
-from 36.87 fF to 24.15 fF and restored the selected start/end nodes to about
-2.97/0.60 V and 3.01/0.49 V. WST and WET now switch, but the roughly 115 ps
-internal write interval does not propagate through the extracted output taper:
-WB0 reaches only 1.40 V and WRITE reaches only 0.49 V. The next revision is
-therefore localized to the write-core/output taper and its distributed gate
-loading, not the selector topology. Netgen still reports flattened
+promoted as closure. Per-phase tap-restorer sizing now accounts for accumulated
+rise/fall distortion: odd P08 improves from 3.01/1.17 V to 2.80/0.29 V, and
+both odd selector outputs switch. Rebalancing the write taper reduces WB0
+grounded capacitance to 20.06 fF and raises WB0 to 2.56 V; exact PEX now crosses
+the final write threshold on both phases, reaching 2.52 V even and 1.87 V odd.
+The result still fails the fixed rail and timing contract: even/odd sense widths
+are 147.57/217.06 ps and even/odd write widths are 224.10/23.74 ps. An extracted
+all-profile scan confirms that no existing code closes the 450--650 ps sense
+window, so the next revision must replace or extend the physical sense-window
+architecture rather than retune a code. Netgen still reports flattened
 device-property warnings, so an independent device-size comparison remains
 required even though topology, device count, and pins match uniquely.
 

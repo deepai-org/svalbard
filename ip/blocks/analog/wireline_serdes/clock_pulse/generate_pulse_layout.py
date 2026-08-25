@@ -240,7 +240,7 @@ def group_geometry(group: Group) -> tuple[float, dict[str, float]]:
 
 def functional_lane(group: Group) -> int:
     root = group.name.removeprefix("XE").removeprefix("XO").split("__")[1]
-    if root in ("XP08", "XP10", "XP11", "XP11L", "XPMD"):
+    if root in ("XP08", "XP10", "XPMD", "XPLD"):
         return 3
     if root.startswith("XW"):
         return 3
@@ -324,15 +324,15 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
             # Interleave the active restoring start/end selector cells.  Keep
             # the local P08-to-P09W delay directly between the mid-profile
             # cells, then place the matched restoration stages together.
-            selector_rank = {"XWM1": 4, "XWM3": 5, "XPMD": 7,
-                             "XWE1": 9, "XP11L": 12, "XWE3": 13}
+            selector_rank = {"XPMD": 2, "XWM1": 4, "XWM3": 7,
+                             "XPLD": 9, "XWE3": 11, "XWE1": 12}
 
             def write_order(group: Group) -> tuple[int, int, int, str]:
                 parts = group.name.split("__")
                 root = parts[1]
-                if root in ("XP08", "XP10", "XP11"):
+                if root in ("XP08", "XP10"):
                     stage = int(parts[2].removeprefix("XI"))
-                    base = {"XP08": 0, "XP10": 2, "XP11": 10}[root]
+                    base = {"XP08": 0, "XP10": 5}[root]
                     return (0, base + stage, 0, group.name)
                 if root in selector_rank:
                     return (0, selector_rank[root], 0, group.name)
@@ -342,7 +342,7 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
                     if stage == 1:
                         # Terminate each critical selector output locally:
                         # WST immediately after XWM3, WET after XWE3.
-                        return (0, 6 + 8 * int(root == "XWET"), 0,
+                        return (0, 8 + 5 * int(root == "XWET"), 0,
                                 group.name)
                     return (1, 2 * stage + int(root == "XWET"), 0,
                             group.name)
@@ -357,19 +357,28 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
             width, offsets_by_name = group_geometry(group)
             group_x[group.name] = x
             odd_name = "XO" + group.name.removeprefix("XE")
+            odd_width, odd_offsets_by_name = group_geometry(groups[odd_name])
+            width = max(width, odd_width)
             group_x[odd_name] = x
             for phase_name in (group.name, odd_name):
                 for device in groups[phase_name].devices:
                     device.lane = lane
                     even_name = ("XE" + device.name.removeprefix("XO")
                                  if device.name.startswith("XO") else device.name)
-                    device.cx = x + offsets_by_name[even_name]
+                    offsets = (odd_offsets_by_name if phase_name == odd_name
+                               else offsets_by_name)
+                    lookup_name = (device.name if phase_name == odd_name
+                                   else even_name)
+                    device.cx = x + offsets[lookup_name]
                     base = 32.0 * lane
                     if group.primitive == "cp_cond_npd":
                         device.cy = base + (-5.0 if device.name.endswith("XN0")
                                             else 3.0)
                     else:
-                        device.cy = base + (12.0 if device.kind.startswith("pfet")
+                        p_shift = (max(0.0, (device.width_um - 10.0) / 2.0)
+                                   if device.kind.startswith("pfet") else 0.0)
+                        device.cy = base + (12.0 + p_shift
+                                            if device.kind.startswith("pfet")
                                             else 0.0)
             # The logic/mux lanes are dominated by local RC, so use a compact
             # standard-cell-like channel.  Delay/prebuffer lanes retain the
@@ -691,24 +700,27 @@ def emit(source: Path, output: Path) -> None:
         "XE__WSTART_SEL": "DBG_E_WSTART_SEL",
         "XE__WEND_SEL": "DBG_E_WEND_SEL",
         "XE__WST": "DBG_E_WST", "XE__WET": "DBG_E_WET",
-        "XE__WCOREB": "DBG_E_WCOREB", "XE__WB0": "DBG_E_WB0",
+        "XE__WCOREB": "DBG_E_WCOREB", "XE__WCOREBD": "DBG_E_WCOREBD",
+        "XE__WB0": "DBG_E_WB0",
         "XE__WB1": "DBG_E_WB1", "XE__SSEL": "DBG_E_SSEL",
         "XE__CT": "DBG_E_CT", "XE__ST": "DBG_E_ST",
         "XE__CTD": "DBG_E_CTD", "XE__STD": "DBG_E_STD",
         "XE__SN0": "DBG_E_SN0", "XE__SB0": "DBG_E_SB0",
         "XE__SB1": "DBG_E_SB1",
         "XE__PCLK": "DBG_E_PCLK", "XE__P08": "DBG_E_P08",
-        "XE__P09": "DBG_E_P09", "XE__CTSEL": "DBG_E_CTSEL",
+        "XE__CTSEL": "DBG_E_CTSEL",
         "XE__XCT__B0": "DBG_E_CTB0", "XE__XCT__B1": "DBG_E_CTB1",
         "XE__XCT__B2": "DBG_E_CTB2", "XE__XST__B0": "DBG_E_STB0",
         "XE__XST__B1": "DBG_E_STB1", "XE__XST__B2": "DBG_E_STB2",
         "XE__XWST__B1": "DBG_E_WSTB1",
         "XE__XWST__B2": "DBG_E_WSTB2",
         "XE__XWET__B1": "DBG_E_WETB1", "XE__XWET__B2": "DBG_E_WETB2",
-        "XO__P08": "DBG_O_P08", "XO__P09": "DBG_O_P09",
+        "XO__P08": "DBG_O_P08",
+        "XO__D08": "DBG_O_D08",
         "XO__WSTART_SEL": "DBG_O_WSTART_SEL",
         "XO__WEND_SEL": "DBG_O_WEND_SEL",
         "XO__WST": "DBG_O_WST", "XO__WET": "DBG_O_WET",
+        "XO__WCOREBD": "DBG_O_WCOREBD",
         "XO__XWST__B1": "DBG_O_WSTB1",
         "XO__XWST__B2": "DBG_O_WSTB2",
         "XO__XWET__B1": "DBG_O_WETB1", "XO__XWET__B2": "DBG_O_WETB2",
@@ -836,7 +848,10 @@ def emit(source: Path, output: Path) -> None:
             base = 32.0 * lane
             base += phase_offset
             lines.append(f"rect pwell 2 {base-8:.3f} {xmax:.3f} {base+6:.3f}\n")
-            lines.append(f"rect nwell 2 {base+7:.3f} {xmax:.3f} {base+20:.3f}\n")
+            # Enclose the widest (10 um) local-delay PMOS diffusion by at
+            # least 0.43 um.  The earlier +7.0 boundary touched its lower
+            # diffusion edge and violated GF180 DF.7.
+            lines.append(f"rect nwell 2 {base+6.4:.3f} {xmax:.3f} {base+20:.3f}\n")
     for device in devices:
         lines.append(f"draw_mos {device.kind} {device.width_um:.6f} {device.mult} "
                      f"{device.cx:.3f} {device.cy:.3f}\n")

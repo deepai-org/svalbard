@@ -69,6 +69,8 @@ meas tran dbg_wet_rise when v(XDUT.DBG_E_WET)=@VMID@ rise=1 td=8n
 meas tran dbg_wet_fall when v(XDUT.DBG_E_WET)=@VMID@ fall=1 td=8n
 meas tran dbg_wcoreb_high max v(XDUT.DBG_E_WCOREB) from=8n to=12n
 meas tran dbg_wcoreb_low min v(XDUT.DBG_E_WCOREB) from=8n to=12n
+meas tran dbg_wcorebd_high max v(XDUT.DBG_E_WCOREBD) from=8n to=12n
+meas tran dbg_wcorebd_low min v(XDUT.DBG_E_WCOREBD) from=8n to=12n
 meas tran dbg_wb0_high max v(XDUT.DBG_E_WB0) from=8n to=12n
 meas tran dbg_wb0_low min v(XDUT.DBG_E_WB0) from=8n to=12n
 meas tran dbg_wb1_high max v(XDUT.DBG_E_WB1) from=8n to=12n
@@ -89,8 +91,6 @@ meas tran dbg_pclk_high max v(XDUT.DBG_E_PCLK) from=8n to=12n
 meas tran dbg_pclk_low min v(XDUT.DBG_E_PCLK) from=8n to=12n
 meas tran dbg_p08_high max v(XDUT.DBG_E_P08) from=8n to=12n
 meas tran dbg_p08_low min v(XDUT.DBG_E_P08) from=8n to=12n
-meas tran dbg_p09_high max v(XDUT.DBG_E_P09) from=8n to=12n
-meas tran dbg_p09_low min v(XDUT.DBG_E_P09) from=8n to=12n
 meas tran dbg_ctsel_high max v(XDUT.DBG_E_CTSEL) from=8n to=12n
 meas tran dbg_ctsel_low min v(XDUT.DBG_E_CTSEL) from=8n to=12n
 meas tran dbg_ctb0_high max v(XDUT.DBG_E_CTB0) from=8n to=12n
@@ -119,8 +119,8 @@ meas tran dbg_wetb2_high max v(XDUT.DBG_E_WETB2) from=8n to=12n
 meas tran dbg_wetb2_low min v(XDUT.DBG_E_WETB2) from=8n to=12n
 meas tran dbg_o_p08_high max v(XDUT.DBG_O_P08) from=8n to=12n
 meas tran dbg_o_p08_low min v(XDUT.DBG_O_P08) from=8n to=12n
-meas tran dbg_o_p09_high max v(XDUT.DBG_O_P09) from=8n to=12n
-meas tran dbg_o_p09_low min v(XDUT.DBG_O_P09) from=8n to=12n
+meas tran dbg_o_d08_high max v(XDUT.DBG_O_D08) from=8n to=12n
+meas tran dbg_o_d08_low min v(XDUT.DBG_O_D08) from=8n to=12n
 meas tran dbg_o_wsels_high max v(XDUT.DBG_O_WSTART_SEL) from=8n to=12n
 meas tran dbg_o_wsels_low min v(XDUT.DBG_O_WSTART_SEL) from=8n to=12n
 meas tran dbg_o_wsels_rise when v(XDUT.DBG_O_WSTART_SEL)=@VMID@ rise=1 td=8n
@@ -147,6 +147,8 @@ meas tran dbg_o_wetb1_high max v(XDUT.DBG_O_WETB1) from=8n to=12n
 meas tran dbg_o_wetb1_low min v(XDUT.DBG_O_WETB1) from=8n to=12n
 meas tran dbg_o_wetb2_high max v(XDUT.DBG_O_WETB2) from=8n to=12n
 meas tran dbg_o_wetb2_low min v(XDUT.DBG_O_WETB2) from=8n to=12n
+meas tran dbg_o_wcorebd_high max v(XDUT.DBG_O_WCOREBD) from=8n to=12n
+meas tran dbg_o_wcorebd_low min v(XDUT.DBG_O_WCOREBD) from=8n to=12n
 * @DEBUG_END@
 meas tran supply_current avg isupply from=8n to=12n
 .endc

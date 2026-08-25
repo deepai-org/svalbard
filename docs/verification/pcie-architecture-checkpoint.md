@@ -7,6 +7,12 @@ path, but the endpoint contract, I/O environment, power budget, clock plan and
 calibration system are not frozen.  Until those are resolved, the repository
 contains experimental SerDes components, not a composable PCIe macro.
 
+The [analog-top integration floorplan proposal](../images/pcie-analog-floorplan-proposal.svg)
+shows the current placement intent and, just as importantly, the missing shared
+infrastructure. It is a planning render rather than a placed/routed cell:
+dimensions other than the annotated pulse-generator checkpoint are schematic,
+and it carries no top-level DRC, LVS, PEX, EM/IR, substrate, or package claim.
+
 ## Architecture decision
 
 Continue toward the full Gen1 x1 endpoint, but make it a ladder instead of an

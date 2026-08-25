@@ -46,10 +46,11 @@ if not args.pex:
     schematic_debug = {
         "D08": "D08", "D09": "D09", "WSTART_SEL": "WSTART_SEL",
         "WEND_SEL": "WEND_SEL", "WST": "WST", "WET": "WET",
-        "WCOREB": "WCOREB", "WB0": "WB0", "WB1": "WB1",
+        "WCOREB": "WCOREB", "WCOREBD": "WCOREBD",
+        "WB0": "WB0", "WB1": "WB1",
         "SSEL": "SSEL", "CT": "CT", "ST": "ST", "CTD": "CTD",
         "STD": "STD", "SN0": "SN0",
-        "PCLK": "PCLK", "P08": "P08", "P09": "P09",
+        "PCLK": "PCLK", "P08": "P08", "D08": "D08",
         "CTSEL": "CTSEL",
         "CTB0": "XCT.B0", "CTB1": "XCT.B1", "CTB2": "XCT.B2",
         "STB0": "XST.B0", "STB1": "XST.B1", "STB2": "XST.B2",

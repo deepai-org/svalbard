@@ -15,7 +15,7 @@ MEASURE = re.compile(
 REQUIRED = {
     "clk_rise", "es_rise", "es_fall", "ew_rise", "ew_fall",
     "os_rise", "os_fall", "ow_rise", "ow_fall", "es_high", "es_low",
-    "ew_high", "ew_low", "er_high", "erb_low", "supply_current",
+    "ew_high", "ew_low", "eb_high", "supply_current", "ob_high",
 }
 ENVIRONMENTS = (
     ("tt", "typical", 3.30, 27),
@@ -46,8 +46,11 @@ if not args.pex:
     schematic_debug = {
         "D08": "D08", "D09": "D09", "WSTART_SEL": "WSTART_SEL",
         "WEND_SEL": "WEND_SEL", "WST": "WST", "WET": "WET",
-        "WCOREB": "WCOREB", "WCOREBD": "WCOREBD",
+        "WCOREB": "WCOREB",
         "WB0": "WB0", "WB1": "WB1",
+        "P06G": "P06_G", "P06S": "P06S", "P09S": "P09S",
+        "P09M": "P09M", "P10M": "P10M",
+        "WMID": "WMID", "WMIDB": "WMIDB",
         "SSEL": "SSEL", "CT": "CT", "ST": "ST", "CTD": "CTD",
         "STD": "STD", "SN0": "SN0", "SND": "SND",
         "SB0": "SB0", "SB1": "SB1",
@@ -55,8 +58,7 @@ if not args.pex:
         "CTSEL": "CTSEL",
         "CTB0": "XCT.B0", "CTB1": "XCT.B1", "CTB2": "XCT.B2",
         "STB0": "XST.B0", "STB1": "XST.B1", "STB2": "XST.B2",
-        "WSTB1": "XWST.B1", "WSTB2": "XWST.B2",
-        "WETB1": "XWET.B1", "WETB2": "XWET.B2",
+        "WSTB1": "XWST.B1", "WETB1": "XWET.B1",
     }
     for phase, instance in (("E", "XE"), ("O", "XO")):
         for label in sorted(schematic_debug, key=len, reverse=True):
@@ -92,9 +94,9 @@ profiles = {
     (0, 10, 11): 0,
     (1, 8, 9): 1,
     (0, 8, 9): 2,
-    (2, 10, 11): 3,
+    (2, 8, 9): 3,
 }
-for encoded in args.tap_code or ("0,10,11", "1,8,9", "0,8,9", "2,10,11"):
+for encoded in args.tap_code or ("0,10,11", "1,8,9", "0,8,9", "2,8,9"):
     try:
         sense_tap, write_start_tap, write_end_tap = (
             int(part) for part in encoded.split(","))
@@ -164,8 +166,8 @@ for sense_tap, write_start_tap, write_end_tap in tap_codes:
                   and observed["ow_high"] >= vdd - 0.25
                   and observed["os_low"] <= 0.25
                   and observed["ow_low"] <= 0.25
-                  and observed["er_high"] >= vdd - 0.25
-                  and observed["erb_low"] <= 0.25
+                  and observed["eb_high"] >= vdd - 0.25
+                  and observed["ob_high"] >= vdd - 0.25
                   and 0 < observed["supply_current"] <= 0.075)
         cases.append({
             "case_id": stem,

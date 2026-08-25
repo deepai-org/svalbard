@@ -13,7 +13,8 @@ from pathlib import Path
 SCALE = {"t": 1e12, "g": 1e9, "meg": 1e6, "k": 1e3,
          "m": 1e-3, "u": 1e-6, "n": 1e-9, "p": 1e-12, "f": 1e-15}
 LANE_COUNT = 4
-PHASE_Y_SHIFT = 160.0
+LANE_PITCH = 36.0
+PHASE_Y_SHIFT = 176.0
 
 
 @dataclass
@@ -163,7 +164,8 @@ def flatten(subckts: dict[str, Subckt], top: str) -> tuple[list[Device], dict[st
 def group_depths(groups: dict[str, Group], phase: str) -> dict[str, int]:
     inputs = {"cp_inv": ("A",), "cp_nand2": ("A", "B"),
               "cp_nor2": ("A", "B"), "cp_tg": ("A", "EN", "ENB"),
-              "cp_cond_npd": ("G", "EN"), "cp_gate_cap": ("A",)}
+              "cp_cond_npd": ("G", "EN"),
+              "cp_gate_cap": ("A",)}
     inputs["cp_tristate_inv"] = ("A", "EN", "ENB")
     outputs = {"cp_inv": "Y", "cp_nand2": "Y", "cp_nor2": "Y",
                "cp_tg": "Y", "cp_cond_npd": "D",
@@ -240,7 +242,10 @@ def group_geometry(group: Group) -> tuple[float, dict[str, float]]:
 
 def functional_lane(group: Group) -> int:
     root = group.name.removeprefix("XE").removeprefix("XO").split("__")[1]
-    if root in ("XP08", "XP10", "XPMD", "XPLC", "XPLS", "XPLD"):
+    if root in ("XP06S", "XP09M", "XP10"):
+        return 1
+    if (root in ("XP08", "XPMD", "XPMD3", "XPLC", "XPLD")
+            or root.startswith("XPMD3")):
         return 3
     if root.startswith("XW"):
         return 3
@@ -270,10 +275,14 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
     group_x: dict[str, float] = {}
     lane_ends = []
     for lane in range(LANE_COUNT):
-        # Keep the write lane off the 7+28n um global strap grid.  The second
-        # late-delay cell otherwise centers a diffusion access on x=287 um,
-        # creating an unavoidable metal2/VDD barrier in the local router.
-        cursor = 202.0 if lane == 3 else 12.0
+        # Offset the write lane from the 7+28n um global strap grid while
+        # keeping its delay producers, selectors, and restorers compact.  An
+        # earlier 202-um lead-in added roughly 190 um of needless timing-net
+        # route before the first device and dominated exact extracted RC.
+        # Offset the compact sense lane from the 7+28n um rail-via grid.  The
+        # strengthened profile-3 selector otherwise spans the x=91 um strap,
+        # leaving no legal metal2 drain-access segment.
+        cursor = 34.0 if lane == 3 else (14.0 if lane == 2 else 12.0)
         selected = [group for group in ordered if functional_lane(group) == lane]
         if lane == 1:
             # Keep each write-tap prebuffer beside the mux input it drives.
@@ -284,8 +293,10 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
             # P08 drives two selector gates and was the limiting extracted
             # node.  Put its output between those consumers; P09 has only one
             # local consumer and can tolerate the preceding slot.
-            write_taps = ("XP05", "XP09", "XP07")
+            write_taps = ("XPG3N", "XPG3I", "XP09M", "XP10")
             write_rank = {name: rank for rank, name in enumerate(write_taps)}
+            write_min_x = {"XPG3N": 130.0, "XPG3I": 140.0,
+                           "XP09M": 198.0, "XP10": 226.0}
 
             def lane_one_order(group: Group) -> tuple[int, int, int, str]:
                 parts = group.name.split("__")
@@ -306,21 +317,31 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
                 "XSM2A": 3, "XSM2B": 4,
                 "XSM3A": 5, "XSM3B": 6, "XSM3C": 7,
                 "XSMR": 8,
-                "XCT": 7, "XST": 8, "XSN": 9, "XSD0": 10,
-                "XSB0": 11, "XRB0": 12, "XRBI": 13,
-                "XSB1": 14, "XRB1": 15, "XRBB": 16,
-                "XSB2": 17, "XRB2": 18,
+                "XSN": 10, "XSD0": 11,
+                "XSB0": 12, "XRB0": 13, "XRBI": 14,
+                "XSB1": 15, "XRB1": 16, "XRBB": 17,
+                "XSB2": 18, "XRB2": 19,
             }
 
             def sense_order(group: Group) -> tuple[int, int, int, str]:
                 parts = group.name.split("__")
                 root = parts[1]
                 stage = int(parts[2].removeprefix("XI")) \
-                    if len(parts) > 2 and parts[2].startswith("XI") else 0
-                if root in ("XCT", "XST"):
-                    return (7, 2 * stage + int(root == "XST"), 0,
-                            group.name)
-                return (sense_rank.get(root, 19), 0, place_depth[group.name],
+                    if len(parts) > 2 and re.fullmatch(r"XI\d+", parts[2]) else 0
+                if root.startswith("XCT"):
+                    block = {"XCTP": 0, "XCTA": 2, "XCTB": 4}.get(root, 0)
+                    return (9, block + stage, 0, group.name)
+                if root == "XST":
+                    # Keep the compact restored path together and put its
+                    # final driver immediately before the local NOR.
+                    substage = {"XI0": 4, "XC": 5, "XI1": 6}.get(
+                        parts[2], 5)
+                    return (9, substage, 0, group.name)
+                if root == "XSN":
+                    substage = {"XIA": 0, "XIB": 1, "XN": 2,
+                                "XIY": 3}.get(parts[2], 4)
+                    return (10, substage, 0, group.name)
+                return (sense_rank.get(root, 20), 0, place_depth[group.name],
                         group.name)
 
             selected.sort(key=sense_order)
@@ -328,19 +349,37 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
             # Interleave the active restoring start/end selector cells.  Keep
             # the local P08-to-P09W delay directly between the mid-profile
             # cells, then place the matched restoration stages together.
-            selector_rank = {"XPMD": 2, "XWM1": 4, "XPLC": 7,
-                             "XPLS": 9, "XWM3": 11, "XPLD": 12,
-                             "XWE3": 14, "XWE1": 15}
+            # Place the delay producers first, then make each shared TG node a
+            # compact local cluster with its restoring buffer.  Spreading the
+            # three start drivers around the delay cells left WSTART_SEL on a
+            # long RC route and reduced the extracted restorer input below a
+            # valid CMOS level despite a full-swing schematic source.
+            selector_rank = {
+                "XP08": 0,
+                # Align each dynamic cluster below its tap-local prebuffer.
+                "XWM3A": 1, "XPMD3": 2, "XWE3A": 3,
+                "XWM1": 4, "XWST": 5,
+                "XPMD": 6, "XWE1": 7,
+                "XPLC": 8, "XWM3": 9,
+                "XWET": 10,
+                "XPLD": 11, "XWE3": 12,
+                # Static one-hot decode may sit after the dynamic edge path.
+                "XWC0": 13, "XWC3": 14,
+                "XWMCB": 15, "XWMCI": 16,
+            }
+            selector_min_x = {"XWM3A": 145.0, "XWM1": 205.0,
+                              "XPLC": 236.0}
 
             def write_order(group: Group) -> tuple[int, int, int, str]:
                 parts = group.name.split("__")
                 root = parts[1]
-                if root in ("XP08", "XP10"):
-                    stage = int(parts[2].removeprefix("XI"))
-                    base = {"XP08": 0, "XP10": 5}[root]
-                    return (0, base + stage, 0, group.name)
                 if root in selector_rank:
-                    return (0, selector_rank[root], 0, group.name)
+                    stage = (int(parts[2].removeprefix((
+                        "XI" if parts[2].startswith("XI") else "XD")))
+                        if len(parts) > 2 and parts[2].startswith(("XI", "XD"))
+                        else 0)
+                    return (0, 4 * selector_rank[root] + stage, 0,
+                            group.name)
                 delay_match = re.fullmatch(r"XW([SE])D([0-5])", root)
                 if delay_match:
                     pair = int(delay_match.group(2))
@@ -361,7 +400,15 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
         for group in selected:
             root = group.name.split("__")[1]
             if lane == 1 and root in write_rank:
-                cursor = max(cursor, 177.0)
+                cursor = max(cursor, write_min_x[root])
+            if lane == 3 and root in selector_min_x:
+                cursor = max(cursor, selector_min_x[root])
+            if lane == 3 and root == "XPLC":
+                cursor += 4.0
+            if lane == 3 and root == "XPMD":
+                cursor += 2.0
+            if lane == 3 and root == "XWST":
+                cursor += 2.0
             x = cursor
             width, offsets_by_name = group_geometry(group)
             group_x[group.name] = x
@@ -379,10 +426,13 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
                     lookup_name = (device.name if phase_name == odd_name
                                    else even_name)
                     device.cx = x + offsets[lookup_name]
-                    base = 32.0 * lane
+                    base = LANE_PITCH * lane
                     if group.primitive == "cp_cond_npd":
-                        device.cy = base + (-5.0 if device.name.endswith("XN0")
-                                            else 3.0)
+                        # Keep wide conditional pull-downs below the pwell/
+                        # nwell boundary while preserving the common top edge
+                        # used by their Metal2 access pattern.
+                        device.cy = base - max(0.0,
+                                               (device.width_um - 10.0) / 2.0)
                     else:
                         p_shift = (max(0.0, (device.width_um - 10.0) / 2.0)
                                    if device.kind.startswith("pfet") else 0.0)
@@ -392,7 +442,7 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
             # The logic/mux lanes are dominated by local RC, so use a compact
             # standard-cell-like channel.  Delay/prebuffer lanes retain the
             # wider channel needed by their many cross-lane tap routes.
-            gap = 4.0 if lane >= 2 else 8.0
+            gap = 1.0 if lane == 3 else (2.0 if lane == 2 else 4.0)
             cursor = x + width + gap
         lane_ends.append(cursor)
     phase_width = max(lane_ends) + 10.0
@@ -425,6 +475,20 @@ proc stack45 {x y} {
     rect metal4 [expr {$x-0.38}] [expr {$y-0.38}] [expr {$x+0.38}] [expr {$y+0.38}]
     rect metal5 [expr {$x-0.38}] [expr {$y-0.38}] [expr {$x+0.38}] [expr {$y+0.38}]
     via_at via4 $x $y
+}
+proc supply_stack34 {x y} {
+    rect metal3 [expr {$x-0.70}] [expr {$y-0.70}] [expr {$x+0.70}] [expr {$y+0.70}]
+    rect metal4 [expr {$x-0.70}] [expr {$y-0.70}] [expr {$x+0.70}] [expr {$y+0.70}]
+    foreach dx {-0.30 0.30} {
+        foreach dy {-0.30 0.30} { via_at via3 [expr {$x+$dx}] [expr {$y+$dy}] }
+    }
+}
+proc supply_stack45 {x y} {
+    rect metal4 [expr {$x-0.70}] [expr {$y-0.70}] [expr {$x+0.70}] [expr {$y+0.70}]
+    rect metal5 [expr {$x-0.80}] [expr {$y-0.80}] [expr {$x+0.80}] [expr {$y+0.80}]
+    foreach dx {-0.30 0.30} {
+        foreach dy {-0.30 0.30} { via_at via4 [expr {$x+$dx}] [expr {$y+$dy}] }
+    }
 }
 proc full_stack {x y highest} {
     rect metal1 [expr {$x-0.38}] [expr {$y-0.38}] [expr {$x+0.38}] [expr {$y+0.38}]
@@ -491,6 +555,18 @@ proc make_port {name number x y} {
     label $name FreeSans 0.5 0 0 0 c metal5
     port make $number
 }
+proc make_port4 {name number x y} {
+    rect metal4 [expr {$x-0.48}] [expr {$y-0.48}] [expr {$x+0.48}] [expr {$y+0.48}]
+    box values [expr {$x-0.48}] [expr {$y-0.48}] [expr {$x+0.48}] [expr {$y+0.48}]
+    label $name FreeSans 0.5 0 0 0 c metal4
+    port make $number
+}
+proc make_supply_port {name number x y} {
+    rect metal5 [expr {$x-2.50}] [expr {$y-2.50}] [expr {$x+2.50}] [expr {$y+2.50}]
+    box values [expr {$x-2.50}] [expr {$y-2.50}] [expr {$x+2.50}] [expr {$y+2.50}]
+    label $name FreeSans 0.5 0 0 0 c metal5
+    port make $number
+}
 crashbackups stop
 load clock_pulse_generator
 units microns
@@ -507,7 +583,7 @@ def route_columns(devices: list[Device], reserved: list[float],
         phase_offset = PHASE_Y_SHIFT if phase == "O" else 0.0
         for x in reserved:
             for lane in range(LANE_COUNT):
-                base = 32.0 * lane
+                base = LANE_PITCH * lane
                 base += phase_offset
                 occupied[phase].append(
                     (x, min(base - 6.0, tracks[f"{phase}{lane}:VSS"]) - 0.28,
@@ -674,7 +750,7 @@ def interval_lanes(keys: list[str], bounds: dict[str, list[float]]) -> dict[str,
 def emit(source: Path, output: Path) -> None:
     subckts = parse(source)
     devices, groups = flatten(subckts, "clock_pulse_generator")
-    xmax, _ = place(devices, groups)
+    xmax, group_x = place(devices, groups)
     tap_xs = list(frange(7.0, xmax - 4.0, 28.0))
     first_seen: dict[str, int] = {}
     key_lane_sets: dict[str, set[int]] = {}
@@ -684,7 +760,7 @@ def emit(source: Path, output: Path) -> None:
             first_seen.setdefault(key, len(first_seen))
             key_lane_sets.setdefault(key, set()).add(device.lane)
     special_tracks = {
-        f"{phase}{lane}:{rail}": offset + 32.0 * lane + rail_offset
+        f"{phase}{lane}:{rail}": offset + LANE_PITCH * lane + rail_offset
         for phase, offset in (("E", 0.0), ("O", PHASE_Y_SHIFT))
         for lane in range(LANE_COUNT)
         for rail, rail_offset in (("VSS", -8.0), ("VDD", 21.0))
@@ -697,8 +773,12 @@ def emit(source: Path, output: Path) -> None:
         # Avoid 89.5/249.5: those are also the allocator's lane-3 track zero.
         # Reusing that ordinate can create a DRC-clean electrical short when
         # a different local net happens to receive slot zero.
-        "XE__WSTART_SEL": 90.5, "XE__WEND_SEL": 114.5,
-        "XO__WSTART_SEL": 250.5, "XO__WEND_SEL": 274.5,
+        "XE__WSTART_SEL": LANE_PITCH * (LANE_COUNT - 1) - 10.0,
+        "XE__WEND_SEL": LANE_PITCH * (LANE_COUNT - 1) + 18.5,
+        "XO__WSTART_SEL": (LANE_PITCH * (LANE_COUNT - 1) - 10.0
+                            + PHASE_Y_SHIFT),
+        "XO__WEND_SEL": (LANE_PITCH * (LANE_COUNT - 1) + 18.5
+                          + PHASE_Y_SHIFT),
     }
     signal_keys = [key for key in first_seen if key not in special_tracks]
     approximate_bounds: dict[str, list[float]] = {
@@ -709,9 +789,13 @@ def emit(source: Path, output: Path) -> None:
         "XE__WSTART_SEL": "DBG_E_WSTART_SEL",
         "XE__WEND_SEL": "DBG_E_WEND_SEL",
         "XE__WST": "DBG_E_WST", "XE__WET": "DBG_E_WET",
-        "XE__WCOREB": "DBG_E_WCOREB", "XE__WCOREBD": "DBG_E_WCOREBD",
+        "XE__WCOREB": "DBG_E_WCOREB",
         "XE__WB0": "DBG_E_WB0",
         "XE__WB1": "DBG_E_WB1", "XE__SSEL": "DBG_E_SSEL",
+        "XE__P06_G": "DBG_E_P06G", "XE__P06S": "DBG_E_P06S",
+        "XE__P09S": "DBG_E_P09S",
+        "XE__P09M": "DBG_E_P09M", "XE__P10M": "DBG_E_P10M",
+        "XE__WMID": "DBG_E_WMID", "XE__WMIDB": "DBG_E_WMIDB",
         "XE__CT": "DBG_E_CT", "XE__ST": "DBG_E_ST",
         "XE__CTD": "DBG_E_CTD", "XE__STD": "DBG_E_STD",
         "XE__SN0": "DBG_E_SN0", "XE__SND": "DBG_E_SND",
@@ -723,14 +807,15 @@ def emit(source: Path, output: Path) -> None:
         "XE__XCT__B2": "DBG_E_CTB2", "XE__XST__B0": "DBG_E_STB0",
         "XE__XST__B1": "DBG_E_STB1", "XE__XST__B2": "DBG_E_STB2",
         "XE__XWST__B1": "DBG_E_WSTB1",
-        "XE__XWST__B2": "DBG_E_WSTB2",
-        "XE__XWET__B1": "DBG_E_WETB1", "XE__XWET__B2": "DBG_E_WETB2",
+        "XE__XWET__B1": "DBG_E_WETB1",
         "XO__P08": "DBG_O_P08",
+        "XO__PCLK": "DBG_O_PCLK",
         "XO__D08": "DBG_O_D08",
         "XO__WSTART_SEL": "DBG_O_WSTART_SEL",
         "XO__WEND_SEL": "DBG_O_WEND_SEL",
         "XO__WST": "DBG_O_WST", "XO__WET": "DBG_O_WET",
-        "XO__WCOREBD": "DBG_O_WCOREBD",
+        "XO__WCOREB": "DBG_O_WCOREB", "XO__WB0": "DBG_O_WB0",
+        "XO__WB1": "DBG_O_WB1",
         "XO__SSEL": "DBG_O_SSEL", "XO__CT": "DBG_O_CT",
         "XO__ST": "DBG_O_ST", "XO__CTD": "DBG_O_CTD",
         "XO__STD": "DBG_O_STD",
@@ -738,8 +823,11 @@ def emit(source: Path, output: Path) -> None:
         "XO__SB0": "DBG_O_SB0",
         "XO__SB1": "DBG_O_SB1",
         "XO__XWST__B1": "DBG_O_WSTB1",
-        "XO__XWST__B2": "DBG_O_WSTB2",
-        "XO__XWET__B1": "DBG_O_WETB1", "XO__XWET__B2": "DBG_O_WETB2",
+        "XO__XWET__B1": "DBG_O_WETB1",
+        "XO__P06_G": "DBG_O_P06G", "XO__P06S": "DBG_O_P06S",
+        "XO__P09S": "DBG_O_P09S",
+        "XO__P09M": "DBG_O_P09M", "XO__P10M": "DBG_O_P10M",
+        "XO__WMID": "DBG_O_WMID", "XO__WMIDB": "DBG_O_WMIDB",
     }
     for device in devices:
         span = device_span(device) + 2.0
@@ -764,8 +852,18 @@ def emit(source: Path, output: Path) -> None:
     input_ports = [port for port in top_ports if not port.startswith(("E_", "O_"))]
     output_ports = [port for port in top_ports if port.startswith(("E_", "O_"))]
     port_xs = {port: -2.0 - 2.0 * index for index, port in enumerate(input_ports)}
+    # Give the high-current supply spines enough separation for 5-um Metal3.
+    port_xs.update({"VDD": -20.0, "VSS": -28.0})
     port_xs.update({port: xmax + 2.0 + 2.0 * index
                     for index, port in enumerate(output_ports)})
+    output_drivers = {
+        "E_SENSE": "XE__XSB2", "E_BOOST": "XE__XRB2",
+        "E_WRITE": "XE__XWB1", "O_SENSE": "XO__XSB2",
+        "O_BOOST": "XO__XRB2", "O_WRITE": "XO__XWB1",
+    }
+    for port, driver in output_drivers.items():
+        width, _ = group_geometry(groups[driver])
+        port_xs[port] = group_x[driver] + width + 2.0
     for port, keys in top_keys.items():
         endpoint = port_xs[port]
         for key in keys:
@@ -789,7 +887,7 @@ def emit(source: Path, output: Path) -> None:
         group, local_lane = divmod(code, 100)
         if local_lane >= 13:
             raise RuntimeError(f"routing band {group} exceeds 13 tracks per phase")
-        return (-6.5 + 32.0 * group + 2.1 * local_lane
+        return (-6.5 + LANE_PITCH * group + 2.1 * local_lane
                 + PHASE_Y_SHIFT * int(odd_phase))
 
     def assign_tracks(routing_bounds: dict[str, list[float]]):
@@ -861,16 +959,14 @@ def emit(source: Path, output: Path) -> None:
     lines = [tcl_header()]
     for phase_offset in (0.0, PHASE_Y_SHIFT):
         for lane in range(LANE_COUNT):
-            base = 32.0 * lane
+            base = LANE_PITCH * lane
             base += phase_offset
             lines.append(f"rect pwell 2 {base-8:.3f} {xmax:.3f} {base+6:.3f}\n")
-            # Enclose the widest (10 um) local-delay PMOS diffusion by at
-            # least 0.43 um.  The earlier +7.0 boundary touched its lower
-            # diffusion edge and violated GF180 DF.7.
-            # The fast sense-delay PMOS uses 14 um fingers shifted upward to
-            # preserve the common source/drain channel.  Enclose its 85 um
-            # diffusion edge with more than the 0.43 um DF.7 requirement.
-            lines.append(f"rect nwell 2 {base+6.4:.3f} {xmax:.3f} {base+22:.3f}\n")
+            # Wide PMOS fingers are shifted upward to preserve the common
+            # source/drain channel.  A 16 um finger reaches base+23.0; retain
+            # 0.50 um of N-well enclosure, above the 0.43 um DF.7 minimum,
+            # while leaving 0.50 um before the next lane's P-well band.
+            lines.append(f"rect nwell 2 {base+6.4:.3f} {xmax:.3f} {base+24.5:.3f}\n")
     for device in devices:
         lines.append(f"draw_mos {device.kind} {device.width_um:.6f} {device.mult} "
                      f"{device.cx:.3f} {device.cy:.3f}\n")
@@ -911,7 +1007,7 @@ def emit(source: Path, output: Path) -> None:
 
     for key, (x1, x2) in bounds.items():
         y = tracks[key]
-        half = 0.38 if key.endswith((":VDD", ":VSS")) else 0.23
+        half = 0.60 if key.endswith((":VDD", ":VSS")) else 0.23
         if key in special_tracks:
             x1 = min(x1, tap_xs[0])
             x2 = max(x2, tap_xs[-1])
@@ -924,13 +1020,13 @@ def emit(source: Path, output: Path) -> None:
 
     for key in special_tracks:
         y = tracks[key]
-        lines.append(f"rect metal5 2.000 {y-0.75:.3f} {xmax:.3f} {y+0.75:.3f}\n")
+        lines.append(f"rect metal5 2.000 {y-2.50:.3f} {xmax:.3f} {y+2.50:.3f}\n")
         for x in tap_xs:
-            lines.append(f"stack45 {x:.3f} {y:.3f}\n")
+            lines.append(f"supply_stack45 {x:.3f} {y:.3f}\n")
 
     for phase, phase_offset in (("E", 0.0), ("O", PHASE_Y_SHIFT)):
         for lane in range(LANE_COUNT):
-            phase_y = 32.0 * lane + phase_offset
+            phase_y = LANE_PITCH * lane + phase_offset
             vss_y = tracks[f"{phase}{lane}:VSS"]
             vdd_y = tracks[f"{phase}{lane}:VDD"]
             for x in tap_xs:
@@ -952,18 +1048,24 @@ def emit(source: Path, output: Path) -> None:
             ys = [tracks[key] for key in keys]
             port_y = sum(ys) / len(ys)
             if port in ("VDD", "VSS"):
-                lines.append(f"rect metal3 {x-0.75:.3f} {min(ys)-0.38:.3f} {x+0.75:.3f} {max(ys)+0.38:.3f}\n")
+                lines.append(f"rect metal3 {x-2.50:.3f} {min(ys)-0.70:.3f} {x+2.50:.3f} {max(ys)+0.70:.3f}\n")
                 for y in ys:
-                    lines.append(f"stack34 {x:.3f} {y:.3f}\n")
-                lines.append(f"stack34 {x:.3f} {port_y:.3f}\nstack45 {x:.3f} {port_y:.3f}\n")
+                    lines.append(f"supply_stack34 {x:.3f} {y:.3f}\n")
+                lines.append(f"supply_stack34 {x:.3f} {port_y:.3f}\nsupply_stack45 {x:.3f} {port_y:.3f}\n")
             else:
                 lines.append(f"rect metal5 {x-0.38:.3f} {min(ys)-0.38:.3f} {x+0.38:.3f} {max(ys)+0.38:.3f}\n")
                 for y in ys:
                     lines.append(f"stack45 {x:.3f} {y:.3f}\n")
         else:
             port_y = tracks[keys[0]]
+            if port in output_ports:
+                lines.append(f"make_port4 {port} {index} {x:.3f} {port_y:.3f}\n")
+                continue
             lines.append(f"stack45 {x:.3f} {port_y:.3f}\n")
-        lines.append(f"make_port {port} {index} {x:.3f} {port_y:.3f}\n")
+        if port in ("VDD", "VSS"):
+            lines.append(f"make_supply_port {port} {index} {x:.3f} {port_y:.3f}\n")
+        else:
+            lines.append(f"make_port {port} {index} {x:.3f} {port_y:.3f}\n")
 
     lines.append("save /work/clock_pulse_generator\n")
     lines.append("gds write /work/clock_pulse_generator.gds\n")

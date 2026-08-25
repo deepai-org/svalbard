@@ -936,14 +936,32 @@ Place restoration at the consumer boundary according to which side can bear a
 long wire. In a programmable high-speed selector, moving a tap prebuffer into
 the selector row changed a restored output from a long cross-row RC node into a
 short local node; the long connection then ended at the prebuffer's gate input.
-The later pulse-generator revision replaced its threshold-losing transmission
-gate with static restoring tri-state branches and restored CT/ST to full swing
-in both phases. That did not close the macro: the exact even NOR pulse still
-produced only about 332 ps at the final sense output, the odd NOR pulse reached
-only 1.085 V, and both write pulses were filtered by their first buffers. Probe
-and close selector, restoration, window formation, pulse preservation, and
-output drive as distinct boundaries; progress at one is not evidence that the
-others close.
+The pulse-generator work subsequently separated selector restoration, interval
+storage, qualification, and output drive. A reset-dominant cross-coupled-NOR
+latch driven by the full-width start/end clocks replaced the filtered
+combinational write glitch. Its DRC-clean, unique-LVS, 8,021R/5,459C extraction
+recovers a real 2.857 V nominal write pulse and a rail-valid 563.10 ps sense
+pulse, but the 258.23 ps write width and early overlap remain outside contract.
+This is evidence that regeneration solves event loss, not that it automatically
+solves timing or rail charge. Probe and close selector, restoration, interval
+storage, overlap qualification, pulse preservation, and output drive as
+distinct boundaries.
+
+Treat a cross-coupled set/reset latch's two outputs according to its overlap
+truth table, not as unconditional complements. With NOR storage, both nodes are
+low while set and reset are simultaneously high. Driving the nominally
+complementary node directly therefore produced a half-cycle pulse; qualifying
+that node with reset recovered the intended start-to-end interval. Exercise all
+four input phases—idle, set-only, overlap, and reset-only—before connecting a
+power taper.
+
+Do not assume a switched MOS gate-capacitor bank is an effective sub-UI delay
+trim merely because it is physical and monotonic in schematic capacitance. In
+the retained pulse macro, six enabled 8 um gate capacitors behind a real
+transmission gate moved the exact extracted leading edge by only about 1 ps and
+reduced latch recovery headroom. Keep falsification evidence, remove the failed
+lever, and measure edge sensitivity on the extracted node before multiplying
+the bank or spending area on control codes.
 
 Do not represent a stacked tri-state path as one `M > 1` device per level unless
 the layout deliberately shares every corresponding internal diffusion node.

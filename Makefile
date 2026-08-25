@@ -11,6 +11,7 @@ check: check-fast
 
 check-fast: smoke
 	$(PYTHON) scripts/test_analog_evidence.py
+	$(PYTHON) scripts/test_analyze_pex_net.py
 	$(PYTHON) ip/blocks/analog/wireline_serdes/lane/check_2p5_evidence.py
 	$(PYTHON) ip/blocks/analog/wireline_serdes/lane/check_routed_rx_evidence.py
 	$(PYTHON) ip/blocks/analog/wireline_serdes/lane/check_rx_frontend_evidence.py
@@ -23,6 +24,7 @@ check-fast: smoke
 	$(PYTHON) ip/blocks/analog/wireline_serdes/lane_rx_regenerative_capture/check_evidence.py
 	$(PYTHON) ip/blocks/analog/wireline_serdes/clock_pulse/check_schematic.py
 	$(PYTHON) ip/blocks/analog/wireline_serdes/clock_pulse/check_release.py
+	$(PYTHON) ip/blocks/analog/wireline_serdes/clock_pulse/check_pulse_checkpoint.py
 	$(PYTHON) scripts/validate.py structure
 	$(PYTHON) scripts/validate.py repo-audit
 

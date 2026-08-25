@@ -556,8 +556,8 @@ proc make_port {name number x y} {
     port make $number
 }
 proc make_port4 {name number x y} {
-    rect metal4 [expr {$x-0.48}] [expr {$y-0.48}] [expr {$x+0.48}] [expr {$y+0.48}]
-    box values [expr {$x-0.48}] [expr {$y-0.48}] [expr {$x+0.48}] [expr {$y+0.48}]
+    rect metal4 [expr {$x-0.38}] [expr {$y-0.38}] [expr {$x+0.38}] [expr {$y+0.38}]
+    box values [expr {$x-0.38}] [expr {$y-0.38}] [expr {$x+0.38}] [expr {$y+0.38}]
     label $name FreeSans 0.5 0 0 0 c metal4
     port make $number
 }
@@ -773,11 +773,11 @@ def emit(source: Path, output: Path) -> None:
         # Avoid 89.5/249.5: those are also the allocator's lane-3 track zero.
         # Reusing that ordinate can create a DRC-clean electrical short when
         # a different local net happens to receive slot zero.
-        "XE__WSTART_SEL": LANE_PITCH * (LANE_COUNT - 1) - 10.0,
-        "XE__WEND_SEL": LANE_PITCH * (LANE_COUNT - 1) + 18.5,
-        "XO__WSTART_SEL": (LANE_PITCH * (LANE_COUNT - 1) - 10.0
+        "XE__WSTART_SEL": LANE_PITCH * (LANE_COUNT - 1) - 11.0,
+        "XE__WEND_SEL": LANE_PITCH * (LANE_COUNT - 1) + 18.0,
+        "XO__WSTART_SEL": (LANE_PITCH * (LANE_COUNT - 1) - 11.0
                             + PHASE_Y_SHIFT),
-        "XO__WEND_SEL": (LANE_PITCH * (LANE_COUNT - 1) + 18.5
+        "XO__WEND_SEL": (LANE_PITCH * (LANE_COUNT - 1) + 18.0
                           + PHASE_Y_SHIFT),
     }
     signal_keys = [key for key in first_seen if key not in special_tracks]
@@ -791,7 +791,8 @@ def emit(source: Path, output: Path) -> None:
         "XE__WST": "DBG_E_WST", "XE__WET": "DBG_E_WET",
         "XE__WCOREB": "DBG_E_WCOREB",
         "XE__WB0": "DBG_E_WB0",
-        "XE__WB1": "DBG_E_WB1", "XE__SSEL": "DBG_E_SSEL",
+        "XE__WB1": "DBG_E_WB1", "XE__WB2": "DBG_E_WB2",
+        "XE__WB3": "DBG_E_WB3", "XE__SSEL": "DBG_E_SSEL",
         "XE__P06_G": "DBG_E_P06G", "XE__P06S": "DBG_E_P06S",
         "XE__P09S": "DBG_E_P09S",
         "XE__P09M": "DBG_E_P09M", "XE__P10M": "DBG_E_P10M",
@@ -815,7 +816,8 @@ def emit(source: Path, output: Path) -> None:
         "XO__WEND_SEL": "DBG_O_WEND_SEL",
         "XO__WST": "DBG_O_WST", "XO__WET": "DBG_O_WET",
         "XO__WCOREB": "DBG_O_WCOREB", "XO__WB0": "DBG_O_WB0",
-        "XO__WB1": "DBG_O_WB1",
+        "XO__WB1": "DBG_O_WB1", "XO__WB2": "DBG_O_WB2",
+        "XO__WB3": "DBG_O_WB3",
         "XO__SSEL": "DBG_O_SSEL", "XO__CT": "DBG_O_CT",
         "XO__ST": "DBG_O_ST", "XO__CTD": "DBG_O_CTD",
         "XO__STD": "DBG_O_STD",
@@ -858,8 +860,8 @@ def emit(source: Path, output: Path) -> None:
                     for index, port in enumerate(output_ports)})
     output_drivers = {
         "E_SENSE": "XE__XSB2", "E_BOOST": "XE__XRB2",
-        "E_WRITE": "XE__XWB1", "O_SENSE": "XO__XSB2",
-        "O_BOOST": "XO__XRB2", "O_WRITE": "XO__XWB1",
+        "E_WRITE": "XE__XWB3", "O_SENSE": "XO__XSB2",
+        "O_BOOST": "XO__XRB2", "O_WRITE": "XO__XWB3",
     }
     for port, driver in output_drivers.items():
         width, _ = group_geometry(groups[driver])
@@ -887,7 +889,7 @@ def emit(source: Path, output: Path) -> None:
         group, local_lane = divmod(code, 100)
         if local_lane >= 13:
             raise RuntimeError(f"routing band {group} exceeds 13 tracks per phase")
-        return (-6.5 + LANE_PITCH * group + 2.1 * local_lane
+        return (-5.3 + LANE_PITCH * group + 2.1 * local_lane
                 + PHASE_Y_SHIFT * int(odd_phase))
 
     def assign_tracks(routing_bounds: dict[str, list[float]]):
@@ -970,6 +972,22 @@ def emit(source: Path, output: Path) -> None:
     for device in devices:
         lines.append(f"draw_mos {device.kind} {device.width_um:.6f} {device.mult} "
                      f"{device.cx:.3f} {device.cy:.3f}\n")
+    group_route_columns = {
+        group: [columns[(member.name, terminal)]
+                for member in devices if member.group == group
+                for terminal in ("D", "G", "S")]
+        for group in {device.group for device in devices}
+    }
+    group_source_samples = {
+        group: [point
+                for member in devices if member.group == group
+                for points in [[member.cx + x for x in offsets(member.mult, 1)]]
+                for index in sorted({round(i * (len(points) - 1) / 4)
+                                     for i in range(5)})
+                for point in [points[index]]]
+        for group in {device.group for device in devices}
+    }
+    drain_access_columns: dict[str, list[float]] = {}
     for device in devices:
         width = device.width_um
         nf = device.mult
@@ -978,8 +996,11 @@ def emit(source: Path, output: Path) -> None:
         d_points = [device.cx + x for x in offsets(nf, 0)]
         s_points = [device.cx + x for x in offsets(nf, 1)]
         gate_y = device.cy - width / 2.0 - 0.70 - gate_extra(device)
+        source_access_columns: list[float] = []
         for terminal, net, y, points in (("D", device.nodes[0], d_y, d_points),
                                          ("S", device.nodes[2], s_y, s_points)):
+            distributed_columns = (drain_access_columns.setdefault(device.group, [])
+                                   if terminal == "D" else source_access_columns)
             route_x = columns[(device.name, terminal)]
             for x in points:
                 lines.append(f"rect metal1 {x-0.28:.3f} {min(device.cy,y)-0.28:.3f} "
@@ -992,6 +1013,40 @@ def emit(source: Path, output: Path) -> None:
             lines.append(f"rect metal3 {route_x-0.28:.3f} {min(y,ty)-0.28:.3f} "
                          f"{route_x+0.28:.3f} {max(y,ty)+0.28:.3f}\n")
             lines.append(f"stack34 {route_x:.3f} {ty:.3f}\n")
+            root = device.group.split("__")[1]
+            if (terminal == "S" and root == "XWB3"
+                    and min(abs(route_x - tap_x) for tap_x in tap_xs) >= 1.2):
+                lines.append(f"supply_stack45 {route_x:.3f} {ty:.3f}\n")
+            if terminal in ("D", "S") and root == "XWB3" and len(points) >= 5:
+                # The loaded write banks cannot funnel their current through
+                # one minimum-width Metal3 access. Fan the already-connected
+                # Metal2 diffusion straps into independent columns.
+                sample_indices = (list(range(len(points))) if terminal == "D"
+                                  else sorted({round(i * (len(points) - 1) / 4)
+                                               for i in range(5)}))
+                blocked = ([*group_route_columns[device.group],
+                            *group_source_samples[device.group], *tap_xs]
+                           if terminal == "D" else
+                           [columns[(device.name, "D")],
+                            columns[(device.name, "G")],
+                            columns[(device.name, "S")],
+                            *drain_access_columns[device.group]])
+                blocked.extend([route_x, *distributed_columns])
+                for access_x in (points[i] for i in sample_indices):
+                    if any(abs(access_x - old_x) < 0.86 for old_x in blocked):
+                        continue
+                    lines.append(f"stack23 {access_x:.3f} {y:.3f}\n")
+                    lines.append(f"rect metal3 {access_x-0.28:.3f} "
+                                 f"{min(y,ty)-0.28:.3f} "
+                                 f"{access_x+0.28:.3f} "
+                                 f"{max(y,ty)+0.28:.3f}\n")
+                    lines.append(f"stack34 {access_x:.3f} {ty:.3f}\n")
+                    if (terminal == "S"
+                            and min(abs(access_x - tap_x)
+                                    for tap_x in tap_xs) >= 1.2):
+                        lines.append(f"supply_stack45 {access_x:.3f} {ty:.3f}\n")
+                    blocked.append(access_x)
+                    distributed_columns.append(access_x)
         route_x = columns[(device.name, "G")]
         gates = [device.cx + x for x in gate_offsets(nf)]
         lines.append(f"set _gy [manual_gate {device.cx:.3f} {device.cy:.3f} "
@@ -1007,7 +1062,7 @@ def emit(source: Path, output: Path) -> None:
 
     for key, (x1, x2) in bounds.items():
         y = tracks[key]
-        half = 0.60 if key.endswith((":VDD", ":VSS")) else 0.23
+        half = 2.00 if key.endswith((":VDD", ":VSS")) else 0.23
         if key in special_tracks:
             x1 = min(x1, tap_xs[0])
             x2 = max(x2, tap_xs[-1])
@@ -1020,7 +1075,8 @@ def emit(source: Path, output: Path) -> None:
 
     for key in special_tracks:
         y = tracks[key]
-        lines.append(f"rect metal5 2.000 {y-2.50:.3f} {xmax:.3f} {y+2.50:.3f}\n")
+        lines.append(f"rect metal5 2.000 {y-2.50:.3f} "
+                     f"{xmax:.3f} {y+2.50:.3f}\n")
         for x in tap_xs:
             lines.append(f"supply_stack45 {x:.3f} {y:.3f}\n")
 

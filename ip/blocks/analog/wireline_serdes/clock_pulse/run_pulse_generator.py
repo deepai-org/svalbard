@@ -33,6 +33,10 @@ parser.add_argument("--output", type=Path, required=True)
 parser.add_argument("--pex", type=Path)
 parser.add_argument("--pex-resistance-scale", type=float, default=1.0)
 parser.add_argument("--pex-capacitance-scale", type=float, default=1.0)
+parser.add_argument(
+    "--pex-resistance-net-scale", action="append", default=[],
+    metavar="NET=SCALE",
+    help="multiply extracted resistors wholly inside a named net")
 parser.add_argument("--environment", action="append")
 parser.add_argument("--fraction", action="append", type=float)
 parser.add_argument("--tap-code", action="append",
@@ -40,6 +44,16 @@ parser.add_argument("--tap-code", action="append",
 args = parser.parse_args()
 if args.pex_resistance_scale < 0 or args.pex_capacitance_scale < 0:
     parser.error("PEX scales must be nonnegative")
+net_resistance_scales = {}
+for encoded in args.pex_resistance_net_scale:
+    try:
+        net, scale_text = encoded.rsplit("=", 1)
+        scale = float(scale_text)
+    except ValueError:
+        parser.error(f"invalid resistance-net scale: {encoded}")
+    if not net or scale < 0:
+        parser.error(f"invalid resistance-net scale: {encoded}")
+    net_resistance_scales[net] = scale
 args.work.mkdir(parents=True, exist_ok=True)
 template = (args.source / "clock_pulse_generator_tb.spice.in").read_text()
 if not args.pex:
@@ -47,7 +61,7 @@ if not args.pex:
         "D08": "D08", "D09": "D09", "WSTART_SEL": "WSTART_SEL",
         "WEND_SEL": "WEND_SEL", "WST": "WST", "WET": "WET",
         "WCOREB": "WCOREB",
-        "WB0": "WB0", "WB1": "WB1",
+        "WB0": "WB0", "WB1": "WB1", "WB2": "WB2", "WB3": "WB3",
         "P06G": "P06_G", "P06S": "P06S", "P09S": "P09S",
         "P09M": "P09M", "P10M": "P10M",
         "WMID": "WMID", "WMIDB": "WMIDB",
@@ -70,18 +84,26 @@ if not args.pex:
 cases = []
 dut_path = args.pex or args.source / "clock_pulse_generator.spice"
 if args.pex and (args.pex_resistance_scale != 1.0
-                 or args.pex_capacitance_scale != 1.0):
+                 or args.pex_capacitance_scale != 1.0
+                 or net_resistance_scales):
     scaled_lines = []
     parasitic = re.compile(
-        r"^([RC]\S+\s+\S+\s+\S+\s+)([-+0-9.eE]+)(meg|[tgkmunpf])?(\s*)$",
+        r"^([RC]\S+)\s+(\S+)\s+(\S+)\s+([-+0-9.eE]+)"
+        r"(meg|[tgkmunpf])?(\s*)$",
         re.IGNORECASE)
     for line in args.pex.read_text().splitlines():
         match = parasitic.match(line)
         if match:
             scale = (args.pex_resistance_scale if line.startswith("R")
                      else args.pex_capacitance_scale)
-            line = (match.group(1) + f"{float(match.group(2)) * scale:.12g}"
-                    + (match.group(3) or "") + match.group(4))
+            if line.startswith("R"):
+                for net, net_scale in net_resistance_scales.items():
+                    inside = lambda node: node == net or node.startswith(net + ".")
+                    if inside(match.group(2)) and inside(match.group(3)):
+                        scale *= net_scale
+            line = (f"{match.group(1)} {match.group(2)} {match.group(3)} "
+                    f"{float(match.group(4)) * scale:.12g}"
+                    + (match.group(5) or "") + match.group(6))
         scaled_lines.append(line)
     dut_path = args.work / "scaled-clock-pulse-generator.pex.spice"
     dut_path.write_text("\n".join(scaled_lines) + "\n")

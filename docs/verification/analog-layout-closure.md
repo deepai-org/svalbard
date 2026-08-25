@@ -939,13 +939,41 @@ short local node; the long connection then ended at the prebuffer's gate input.
 The pulse-generator work subsequently separated selector restoration, interval
 storage, qualification, and output drive. A reset-dominant cross-coupled-NOR
 latch driven by the full-width start/end clocks replaced the filtered
-combinational write glitch. Its DRC-clean, unique-LVS, 8,021R/5,459C extraction
-recovers a real 2.857 V nominal write pulse and a rail-valid 563.10 ps sense
-pulse, but the 258.23 ps write width and early overlap remain outside contract.
-This is evidence that regeneration solves event loss, not that it automatically
-solves timing or rail charge. Probe and close selector, restoration, interval
-storage, overlap qualification, pulse preservation, and output drive as
-distinct boundaries.
+combinational write glitch. The later 422-device, 499.6 by 285 um checkpoint is
+zero-DRC, uniquely LVS-matched, and extracts to 9,045R/6,110C. Its nominal exact
+PEX passes every sense/write width, delay, non-overlap, phase-spacing, and
+current limit, but WRITE peaks at only 3.002/2.906 V and the sense lows reach
+0.253/0.313 V. This is evidence that regeneration solves event loss and can
+close timing without automatically closing rail charge. Probe and close
+selector, restoration, interval storage, overlap qualification, pulse
+preservation, output drive, and local PDN as distinct boundaries.
+
+Measure extracted resistance to the actual selected device terminals, not just
+the total resistance stamped on a logical net. A multi-source Dijkstra report
+from the supply port to PMOS source terminals, selected by gate and model, made
+the remaining pulse limitation concrete: the worst final-bank source path was
+32.15 ohm, with single 10.96 and 5.51 ohm segments. Wider M4 rails, local M4/M5
+via arrays, five source accesses, and route-aware drain access reduced the worst
+path to 27.98 ohm and raised both WRITE peaks, but did not close the rails.
+Keep the before/after path distribution, largest edges, waveform, timing, and
+current together; a lower scalar resistance is useful only if the complete
+extracted contract improves.
+
+Additional access columns are real routing resources, not harmless duplicate
+vias. A drain column can approach the complementary device's source route or
+land on an unrelated signal's via even when the raw metal rectangles are DRC
+clean. Reserve every normal device column, future source-access sample, supply
+tap, and previously selected access before choosing another column, then require
+unique LVS. In the retained pulse work, DRC caught sub-rule same-layer gaps and
+LVS caught gate/output and signal/output merges that DRC could not classify.
+
+Do not enlarge a final PMOS bank without retapering and re-extracting its gate
+driver. Increasing the pulse bank from 30 to 36/48 fingers lowered the exact
+output peak because WB3 slewed more slowly; stronger predrivers then raised
+schematic current above 75 mA and destabilized odd width. The correct comparison
+is delivered charge at the loaded port versus internal gate slew, extracted
+source/output resistance, pulse width, and supply current—not nominal transistor
+width in isolation.
 
 Treat a cross-coupled set/reset latch's two outputs according to its overlap
 truth table, not as unconditional complements. With NOR storage, both nodes are

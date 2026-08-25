@@ -223,6 +223,26 @@ can recover nominal rails while making startup, PVT coverage, and the trim-code
 map depend on history. Only keep it if those state-dependent contracts are
 explicitly verified.
 
+Do not accept a replacement selector merely because it restores DC rails. In a
+retained pulse-generator experiment, a one-hot static NAND selector eliminated
+the pass-gate intermediate level but compressed a 198--293 ps slow/hot phase
+fragment below the following buffer's aperture. A four-device series stack was
+strongly edge-asymmetric; a balanced two-stack tree improved symmetry but its
+logic depth still filtered the narrow state. Probe rise and fall times at the
+selector input and output as well as voltage extrema. For pulse paths, rail
+validity and minimum high/low duration are separate interface contracts.
+
+Separating global pulse placement from a local programmable width delay remains
+the preferred architectural direction, but the local bank needs an explicit
+delay-resolution budget before implementation. Two ordinary inverter stages
+cost roughly 400 ps in the explored GF180 slow/hot case, which is too coarse for
+a 100--220 ps output contract. A ratioed one-inverter detector showed a sharp
+pulse-filtering threshold once the 500 fF output taper was included. Future
+revisions should characterize a small physical delay primitive and its loaded
+rise/fall asymmetry first, then compose start selection, width selection, edge
+detection, and the output taper. A schematic-only code that crosses this sharp
+threshold is not a robust calibration window.
+
 Search already-realizable controls jointly across an extracted producer,
 optional restoring stage, and consumer before changing topology. Require a
 contiguous passing region in that multidimensional control space, not an

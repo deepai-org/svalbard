@@ -9,7 +9,9 @@ import subprocess
 from pathlib import Path
 
 
-MEASURE = re.compile(r"^(\w+)\s*=\s*([-+0-9.eE]+)", re.MULTILINE)
+MEASURE = re.compile(
+    r"^(\w+)\s*=\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?)",
+    re.MULTILINE)
 REQUIRED = {
     "clk_rise", "es_rise", "es_fall", "ew_rise", "ew_fall",
     "os_rise", "os_fall", "ow_rise", "ow_fall", "es_high", "es_low",

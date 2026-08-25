@@ -77,6 +77,8 @@ meas tran dbg_wb1_high max v(XDUT.DBG_E_WB1) from=8n to=12n
 meas tran dbg_wb1_low min v(XDUT.DBG_E_WB1) from=8n to=12n
 meas tran dbg_ssel_high max v(XDUT.DBG_E_SSEL) from=8n to=12n
 meas tran dbg_ssel_low min v(XDUT.DBG_E_SSEL) from=8n to=12n
+meas tran dbg_ssel_rise when v(XDUT.DBG_E_SSEL)=@VMID@ rise=1 td=8n
+meas tran dbg_ssel_fall when v(XDUT.DBG_E_SSEL)=@VMID@ fall=1 td=8n
 meas tran dbg_ct_high max v(XDUT.DBG_E_CT) from=8n to=12n
 meas tran dbg_ct_low min v(XDUT.DBG_E_CT) from=8n to=12n
 meas tran dbg_st_high max v(XDUT.DBG_E_ST) from=8n to=12n
@@ -87,8 +89,18 @@ meas tran dbg_std_high max v(XDUT.DBG_E_STD) from=8n to=12n
 meas tran dbg_std_low min v(XDUT.DBG_E_STD) from=8n to=12n
 meas tran dbg_sn0_high max v(XDUT.DBG_E_SN0) from=8n to=12n
 meas tran dbg_sn0_low min v(XDUT.DBG_E_SN0) from=8n to=12n
+meas tran dbg_sn0_rise when v(XDUT.DBG_E_SN0)=@VMID@ rise=1 td=8n
+meas tran dbg_sn0_fall when v(XDUT.DBG_E_SN0)=@VMID@ fall=1 td=8n
+meas tran dbg_snd_high max v(XDUT.DBG_E_SND) from=8n to=12n
+meas tran dbg_snd_low min v(XDUT.DBG_E_SND) from=8n to=12n
+meas tran dbg_sb0_high max v(XDUT.DBG_E_SB0) from=8n to=12n
+meas tran dbg_sb0_low min v(XDUT.DBG_E_SB0) from=8n to=12n
+meas tran dbg_sb1_high max v(XDUT.DBG_E_SB1) from=8n to=12n
+meas tran dbg_sb1_low min v(XDUT.DBG_E_SB1) from=8n to=12n
 meas tran dbg_pclk_high max v(XDUT.DBG_E_PCLK) from=8n to=12n
 meas tran dbg_pclk_low min v(XDUT.DBG_E_PCLK) from=8n to=12n
+meas tran dbg_pclk_rise when v(XDUT.DBG_E_PCLK)=@VMID@ rise=1 td=8n
+meas tran dbg_pclk_fall when v(XDUT.DBG_E_PCLK)=@VMID@ fall=1 td=8n
 meas tran dbg_p08_high max v(XDUT.DBG_E_P08) from=8n to=12n
 meas tran dbg_p08_low min v(XDUT.DBG_E_P08) from=8n to=12n
 meas tran dbg_ctsel_high max v(XDUT.DBG_E_CTSEL) from=8n to=12n
@@ -149,6 +161,26 @@ meas tran dbg_o_wetb2_high max v(XDUT.DBG_O_WETB2) from=8n to=12n
 meas tran dbg_o_wetb2_low min v(XDUT.DBG_O_WETB2) from=8n to=12n
 meas tran dbg_o_wcorebd_high max v(XDUT.DBG_O_WCOREBD) from=8n to=12n
 meas tran dbg_o_wcorebd_low min v(XDUT.DBG_O_WCOREBD) from=8n to=12n
+meas tran dbg_o_ssel_high max v(XDUT.DBG_O_SSEL) from=8n to=12n
+meas tran dbg_o_ssel_low min v(XDUT.DBG_O_SSEL) from=8n to=12n
+meas tran dbg_o_ct_high max v(XDUT.DBG_O_CT) from=8n to=12n
+meas tran dbg_o_ct_low min v(XDUT.DBG_O_CT) from=8n to=12n
+meas tran dbg_o_st_high max v(XDUT.DBG_O_ST) from=8n to=12n
+meas tran dbg_o_st_low min v(XDUT.DBG_O_ST) from=8n to=12n
+meas tran dbg_o_ctd_high max v(XDUT.DBG_O_CTD) from=8n to=12n
+meas tran dbg_o_ctd_low min v(XDUT.DBG_O_CTD) from=8n to=12n
+meas tran dbg_o_std_high max v(XDUT.DBG_O_STD) from=8n to=12n
+meas tran dbg_o_std_low min v(XDUT.DBG_O_STD) from=8n to=12n
+meas tran dbg_o_sn0_high max v(XDUT.DBG_O_SN0) from=8n to=12n
+meas tran dbg_o_sn0_low min v(XDUT.DBG_O_SN0) from=8n to=12n
+meas tran dbg_o_sn0_rise when v(XDUT.DBG_O_SN0)=@VMID@ rise=1 td=8n
+meas tran dbg_o_sn0_fall when v(XDUT.DBG_O_SN0)=@VMID@ fall=1 td=8n
+meas tran dbg_o_snd_high max v(XDUT.DBG_O_SND) from=8n to=12n
+meas tran dbg_o_snd_low min v(XDUT.DBG_O_SND) from=8n to=12n
+meas tran dbg_o_sb0_high max v(XDUT.DBG_O_SB0) from=8n to=12n
+meas tran dbg_o_sb0_low min v(XDUT.DBG_O_SB0) from=8n to=12n
+meas tran dbg_o_sb1_high max v(XDUT.DBG_O_SB1) from=8n to=12n
+meas tran dbg_o_sb1_low min v(XDUT.DBG_O_SB1) from=8n to=12n
 * @DEBUG_END@
 meas tran supply_current avg isupply from=8n to=12n
 .endc

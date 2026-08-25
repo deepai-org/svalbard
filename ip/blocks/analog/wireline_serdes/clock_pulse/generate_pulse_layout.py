@@ -240,7 +240,7 @@ def group_geometry(group: Group) -> tuple[float, dict[str, float]]:
 
 def functional_lane(group: Group) -> int:
     root = group.name.removeprefix("XE").removeprefix("XO").split("__")[1]
-    if root in ("XP08", "XP10", "XPMD", "XPLD"):
+    if root in ("XP08", "XP10", "XPMD", "XPLC", "XPLS", "XPLD"):
         return 3
     if root.startswith("XW"):
         return 3
@@ -260,7 +260,8 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
     cluster_depth = {}
     for prefix in ("XCM", "XSM", "XWM", "XWE"):
         selected = [group for group in even
-                    if re.fullmatch(prefix + r"[0-3]", group.name.split("__")[1])]
+                    if re.fullmatch(prefix + r"[0-3](?:[A-C])?",
+                                    group.name.split("__")[1])]
         target = max((even_depth[group.name] for group in selected), default=0)
         cluster_depth.update({group.name: target for group in selected})
     place_depth = {group.name: cluster_depth.get(group.name, even_depth[group.name])
@@ -269,7 +270,10 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
     group_x: dict[str, float] = {}
     lane_ends = []
     for lane in range(LANE_COUNT):
-        cursor = 200.0 if lane == 3 else 12.0
+        # Keep the write lane off the 7+28n um global strap grid.  The second
+        # late-delay cell otherwise centers a diffusion access on x=287 um,
+        # creating an unavoidable metal2/VDD barrier in the local router.
+        cursor = 202.0 if lane == 3 else 12.0
         selected = [group for group in ordered if functional_lane(group) == lane]
         if lane == 1:
             # Keep each write-tap prebuffer beside the mux input it drives.
@@ -293,18 +297,19 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
 
             selected.sort(key=lane_one_order)
         if lane == 2:
-            # The CT/ST paths form a matched differential timing boundary.
-            # Interleave equal restoration stages and put both matched delay
-            # elements immediately before the NOR.  Depth/name ordering used
-            # to leave CTD roughly 50 um farther from XSN than STD.
+            # PCLK and the selected delayed replica feed a small local NOR;
+            # the following taper, not either timing net, drives the large
+            # regenerative gate load.
             sense_rank = {
-                "XPC": 0, "XCM0": 1, "XCM1": 2,
-                "XSM0": 3, "XSM1": 4,
-                "XCT": 5, "XST": 6,
-                "XCTD": 7, "XSTD": 8, "XSN": 9,
-                "XSB0": 10, "XRB0": 11, "XRBI": 12,
-                "XSB1": 13, "XRB1": 14, "XRBB": 15,
-                "XSB2": 16, "XRB2": 17,
+                "XPC": 0,
+                "XSM0A": 1, "XSM0B": 2,
+                "XSM2A": 3, "XSM2B": 4,
+                "XSM3A": 5, "XSM3B": 6, "XSM3C": 7,
+                "XSMR": 8,
+                "XCT": 7, "XST": 8, "XSN": 9, "XSD0": 10,
+                "XSB0": 11, "XRB0": 12, "XRBI": 13,
+                "XSB1": 14, "XRB1": 15, "XRBB": 16,
+                "XSB2": 17, "XRB2": 18,
             }
 
             def sense_order(group: Group) -> tuple[int, int, int, str]:
@@ -312,11 +317,10 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
                 root = parts[1]
                 stage = int(parts[2].removeprefix("XI")) \
                     if len(parts) > 2 and parts[2].startswith("XI") else 0
-                # Interleave corresponding XCT/XST stages rather than placing
-                # each complete taper as a separate physical island.
                 if root in ("XCT", "XST"):
-                    return (5, 2 * stage + int(root == "XST"), 0, group.name)
-                return (sense_rank.get(root, 18), 0, place_depth[group.name],
+                    return (7, 2 * stage + int(root == "XST"), 0,
+                            group.name)
+                return (sense_rank.get(root, 19), 0, place_depth[group.name],
                         group.name)
 
             selected.sort(key=sense_order)
@@ -324,8 +328,9 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
             # Interleave the active restoring start/end selector cells.  Keep
             # the local P08-to-P09W delay directly between the mid-profile
             # cells, then place the matched restoration stages together.
-            selector_rank = {"XPMD": 2, "XWM1": 4, "XWM3": 7,
-                             "XPLD": 9, "XWE3": 11, "XWE1": 12}
+            selector_rank = {"XPMD": 2, "XWM1": 4, "XPLC": 7,
+                             "XPLS": 9, "XWM3": 11, "XPLD": 12,
+                             "XWE3": 14, "XWE1": 15}
 
             def write_order(group: Group) -> tuple[int, int, int, str]:
                 parts = group.name.split("__")
@@ -336,17 +341,21 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
                     return (0, base + stage, 0, group.name)
                 if root in selector_rank:
                     return (0, selector_rank[root], 0, group.name)
+                delay_match = re.fullmatch(r"XW([SE])D([0-5])", root)
+                if delay_match:
+                    pair = int(delay_match.group(2))
+                    side = int(delay_match.group(1) == "E")
+                    stage = int(parts[2].removeprefix("XD"))
+                    # Interleave corresponding start/end delay cells so the
+                    # six-unit transport paths see the same gradient and wire
+                    # environment.
+                    return (1, 4 * pair + 2 * side + stage, 0, group.name)
                 if root in ("XWST", "XWET"):
                     stage = (int(parts[2].removeprefix("XI"))
                              if parts[2].startswith("XI") else 1.5)
-                    if stage == 1:
-                        # Terminate each critical selector output locally:
-                        # WST immediately after XWM3, WET after XWE3.
-                        return (0, 8 + 5 * int(root == "XWET"), 0,
-                                group.name)
-                    return (1, 2 * stage + int(root == "XWET"), 0,
+                    return (2, 2 * stage + int(root == "XWET"), 0,
                             group.name)
-                return (2, place_depth[group.name], 0, group.name)
+                return (3, place_depth[group.name], 0, group.name)
 
             selected.sort(key=write_order)
         for group in selected:
@@ -705,7 +714,8 @@ def emit(source: Path, output: Path) -> None:
         "XE__WB1": "DBG_E_WB1", "XE__SSEL": "DBG_E_SSEL",
         "XE__CT": "DBG_E_CT", "XE__ST": "DBG_E_ST",
         "XE__CTD": "DBG_E_CTD", "XE__STD": "DBG_E_STD",
-        "XE__SN0": "DBG_E_SN0", "XE__SB0": "DBG_E_SB0",
+        "XE__SN0": "DBG_E_SN0", "XE__SND": "DBG_E_SND",
+        "XE__SB0": "DBG_E_SB0",
         "XE__SB1": "DBG_E_SB1",
         "XE__PCLK": "DBG_E_PCLK", "XE__P08": "DBG_E_P08",
         "XE__CTSEL": "DBG_E_CTSEL",
@@ -721,6 +731,12 @@ def emit(source: Path, output: Path) -> None:
         "XO__WEND_SEL": "DBG_O_WEND_SEL",
         "XO__WST": "DBG_O_WST", "XO__WET": "DBG_O_WET",
         "XO__WCOREBD": "DBG_O_WCOREBD",
+        "XO__SSEL": "DBG_O_SSEL", "XO__CT": "DBG_O_CT",
+        "XO__ST": "DBG_O_ST", "XO__CTD": "DBG_O_CTD",
+        "XO__STD": "DBG_O_STD",
+        "XO__SN0": "DBG_O_SN0", "XO__SND": "DBG_O_SND",
+        "XO__SB0": "DBG_O_SB0",
+        "XO__SB1": "DBG_O_SB1",
         "XO__XWST__B1": "DBG_O_WSTB1",
         "XO__XWST__B2": "DBG_O_WSTB2",
         "XO__XWET__B1": "DBG_O_WETB1", "XO__XWET__B2": "DBG_O_WETB2",
@@ -851,7 +867,10 @@ def emit(source: Path, output: Path) -> None:
             # Enclose the widest (10 um) local-delay PMOS diffusion by at
             # least 0.43 um.  The earlier +7.0 boundary touched its lower
             # diffusion edge and violated GF180 DF.7.
-            lines.append(f"rect nwell 2 {base+6.4:.3f} {xmax:.3f} {base+20:.3f}\n")
+            # The fast sense-delay PMOS uses 14 um fingers shifted upward to
+            # preserve the common source/drain channel.  Enclose its 85 um
+            # diffusion edge with more than the 0.43 um DF.7 requirement.
+            lines.append(f"rect nwell 2 {base+6.4:.3f} {xmax:.3f} {base+22:.3f}\n")
     for device in devices:
         lines.append(f"draw_mos {device.kind} {device.width_um:.6f} {device.mult} "
                      f"{device.cx:.3f} {device.cy:.3f}\n")

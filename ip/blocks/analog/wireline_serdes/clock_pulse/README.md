@@ -50,10 +50,10 @@ delay produces the mid-profile end edge. The revised 20-case schematic matrix
 still passes every declared environment while avoiding the incompatible
 start/end restoration apertures found in the previous extracted circuit.
 
-`generate_pulse_layout.py` flattens the parameterized circuit into 392 MOS
+`generate_pulse_layout.py` flattens the parameterized circuit into 446 MOS
 devices, resolves forwarded sizing parameters, aligns complementary devices as
 CMOS cells, routes phase-local nets in functional bands, and stacks the EVEN
-and ODD phases vertically. The current approximately 546 by 285 um candidate
+and ODD phases vertically. The current 580.8 by 285 um candidate
 is zero-DRC and uniquely pin-resolved LVS-matched. Critical tap prebuffers now
 sit in the selector row so their restored outputs are local; the longer
 cross-row connections terminate on gate inputs. The router also reserves fixed
@@ -61,18 +61,21 @@ critical tracks explicitly, after a DRC-clean coordinate collision was caught
 by LVS.
 
 Its exact nominal full-RC run is deliberately retained as a failure rather than
-promoted as closure. Per-phase tap-restorer sizing now accounts for accumulated
-rise/fall distortion: odd P08 improves from 3.01/1.17 V to 2.80/0.29 V, and
-both odd selector outputs switch. Rebalancing the write taper reduces WB0
-grounded capacitance to 20.06 fF and raises WB0 to 2.56 V; exact PEX now crosses
-the final write threshold on both phases, reaching 2.52 V even and 1.87 V odd.
-The result still fails the fixed rail and timing contract: even/odd sense widths
-are 147.57/217.06 ps and even/odd write widths are 224.10/23.74 ps. An extracted
-all-profile scan confirms that no existing code closes the 450--650 ps sense
-window, so the next revision must replace or extend the physical sense-window
-architecture rather than retune a code. Netgen still reports flattened
-device-property warnings, so an independent device-size comparison remains
-required even though topology, device count, and pins match uniquely.
+promoted as closure. The revised selector uses explicit parallel one-finger
+tri-state stacks, avoiding the ambiguous internal-node sharing produced by a
+multi-finger stacked device. Static restoration now gives full-swing CT and ST
+tap signals in both phases. The latest 7,872-resistor/5,263-capacitor extraction
+shows that the remaining failure is dynamic: the even NOR pulse reaches full
+swing and propagates through the sense taper, but its final sense width is only
+about 332 ps; the odd NOR pulse peaks at only 1.085 V and never propagates.
+Both selected write-edge pulses are filtered before the final write outputs,
+which therefore do not cross threshold. The physical contract remains open at
+nominal despite zero DRC and unique LVS. Probe-only label changes preserve the
+same geometry but perturb this marginal odd dynamic node enough to change its
+peak materially, further evidence that it has no acceptable robustness margin.
+The next revision must stabilize the NOR/edge storage and retaper the first
+write buffers before running full extracted PVT or composing this leaf with the
+rail converter and real capture gates.
 
 The review render is [clock-pulse-generator-layout.png](../../../../../docs/images/clock-pulse-generator-layout.png).
 The checked [schematic matrix](pulse_schematic_result.json), retained

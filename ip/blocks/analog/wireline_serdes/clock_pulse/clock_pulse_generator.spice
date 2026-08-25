@@ -25,11 +25,19 @@ XD0 A DI VDD VSS cp_inv WP={WP} WN={WN}
 XD1 DI Y VDD VSS cp_inv WP={WP} WN={WN}
 .ends cp_delay_unit
 
+* Non-inverting edge shaper.  The falling output edge is deliberately slower
+* than the rising edge, moving the SENSE leading edge later without consuming
+* its recovery interval or changing logic thresholds.
+.subckt cp_sense_edge_delay A Y VDD VSS
+XD0 A DI VDD VSS cp_inv WP=4.5u WN=3.5u
+XD1 DI Y VDD VSS cp_inv WP=7u WN=2.25u
+.ends cp_sense_edge_delay
+
 .subckt cp_tap_buffer A Y VDD VSS params: WP0=2u WN0=1u WP1=4u WN1=2u MN2=2
 XI0 A B0 VDD VSS cp_inv WP={WP0} WN={WN0}
 XI1 B0 B1 VDD VSS cp_inv WP={WP1} WN={WN1}
-XI2 B1 B2 VDD VSS cp_inv WP=8u WN=6u MP=3 MN={MN2}
-XI3 B2 Y VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4
+XI2 B1 B2 VDD VSS cp_inv WP=8u WN=6u MP=2 MN={MN2}
+XI3 B2 Y VDD VSS cp_inv WP=8u WN=8u MP=4 MN=3
 .ends cp_tap_buffer
 
 .subckt cp_cond_npd D G EN VSS params: WG=0.6u WE=3u M=1
@@ -103,26 +111,37 @@ XI1 SEL1 SEL1B VDD VSS cp_inv WP=4u WN=2u
 XI2 SEL2 SEL2B VDD VSS cp_inv WP=4u WN=2u
 XI3 SEL3 SEL3B VDD VSS cp_inv WP=4u WN=2u
 XPC CLK PCLK VDD VSS cp_select_prebuffer
-XP02 D02 P02 VDD VSS cp_select_prebuffer WP0={MID_WP0} WN0={MID_WN0} MPP={MID_MPP} MNN={MID_MNN}
+XP02L D02 VSS cp_gate_cap W=3u
 XP08 D08 P08 VDD VSS cp_select_prebuffer WP0={MID_WP0} WN0={MID_WN0} MPP={P08_MPP} MNN={P08_MNN}
 XP09L D09 VSS cp_gate_cap W=3u
 XP10 D10 P10 VDD VSS cp_select_prebuffer
 XP01L D01 VSS cp_gate_cap W=3u
 XP05L D05 VSS cp_gate_cap W=3u
 XP07L D07 VSS cp_gate_cap W=3u
-XSCB SEL1 SEL3 STAP2B VDD VSS cp_nor2 WP=4u WN=4u MP=2 MN=1
-XSCI STAP2B STAP2 VDD VSS cp_inv WP=4u WN=2u
+XSCB SEL0 SEL1 STDB VDD VSS cp_nor2 WP=4u WN=4u MP=2 MN=1
+XSCI STDB STDEN VDD VSS cp_inv WP=4u WN=2u
 XLCB SEL0 SEL3 LATEB VDD VSS cp_nor2 WP=4u WN=4u MP=2 MN=1
 XLCI LATEB LATE VDD VSS cp_inv WP=4u WN=2u
 XMCB SEL1 SEL2 MIDB VDD VSS cp_nor2 WP=4u WN=4u MP=2 MN=1
 XMCI MIDB MID VDD VSS cp_inv WP=4u WN=2u
-XSM0 PCLK SSEL STAP2B STAP2 VDD VSS cp_tg W=3u
-XSM1 P02 SSEL STAP2 STAP2B VDD VSS cp_tg W=6u
+* Select direct restored-clock paths with two physical drive strengths.  This
+* calibrates the selector delay exposed by extraction without leaving large
+* unused delay chains switching on every clock edge.
+XSM0A PCLK SSELB STDEN STDB VDD VSS cp_tristate_inv WP=6u WN=3u M=1
+XSM0B PCLK SSELB STDEN STDB VDD VSS cp_tristate_inv WP=6u WN=3u M=1
+XSM2A PCLK SSELB SEL2 SEL2B VDD VSS cp_tristate_inv WP=6u WN=3u M=1
+XSM2B PCLK SSELB SEL2 SEL2B VDD VSS cp_tristate_inv WP=6u WN=3u M=1
+XSM3A PCLK SSELB SEL3 SEL3B VDD VSS cp_tristate_inv WP=7u WN=3.5u M=1
+XSM3B PCLK SSELB SEL3 SEL3B VDD VSS cp_tristate_inv WP=7u WN=3.5u M=1
+XSM3C PCLK SSELB SEL3 SEL3B VDD VSS cp_tristate_inv WP=7u WN=3.5u M=1
+XSMR SSELB SSEL VDD VSS cp_inv WP=8u WN=8u MP=4 MN=8
 XWM1 P08 WSTART_SEL MID MIDB VDD VSS cp_tristate_inv
-XWM3 P10 WSTART_SEL LATE LATEB VDD VSS cp_tristate_inv
+XPLC P10 P10C VDD VSS cp_delay_unit WP=8u WN=5u
+XPLS P10C P10S VDD VSS cp_delay_unit WP=12u WN=8u
+XWM3 P10S WSTART_SEL LATE LATEB VDD VSS cp_tristate_inv
 XPMD P08 P09W VDD VSS cp_delay_unit WP=7u WN=3.5u
 XWE1 P09W WEND_SEL MID MIDB VDD VSS cp_tristate_inv
-XPLD P10 P10D VDD VSS cp_delay_unit WP=12u WN=8u
+XPLD P10S P10D VDD VSS cp_delay_unit WP=12u WN=8u
 XWE3 P10D WEND_SEL LATE LATEB VDD VSS cp_tristate_inv
 
 * SENSE = CLK OR the selected sense tap. WRITE is high between the selected
@@ -131,21 +150,22 @@ XWE3 P10D WEND_SEL LATE LATEB VDD VSS cp_tristate_inv
 * dummy TG, matching the two-branch sense selector's delay and diffusion load.
 * These buffers preserve the intentionally short inactive and write intervals
 * under the large regenerative-gate capacitances.
-XCM0 PCLK CTSEL VDD VSS VDD VSS cp_tg
-XCM1 VSS CTSEL VSS VDD VDD VSS cp_tg
-XCT CTSEL CT VDD VSS cp_tap_buffer
-XST SSEL ST VDD VSS cp_tap_buffer WP0=4u WN0=2u WP1=8u WN1=4u
 XWST WSTART_SEL WST VDD VSS cp_write_buffer
 XWET WEND_SEL WET VDD VSS cp_write_buffer
-XCTD CT CTD VDD VSS VDD VSS cp_tg W=8u M=4
-XSTD ST STD VDD VSS VDD VSS cp_tg W=8u M=4
-XSN CTD STD SN0 VDD VSS cp_nor2
+* Restore both full-width timing replicas locally before pulse formation.  The
+* former failing path put transmission gates and long routes ahead of these
+* buffers; here each long route terminates at a first-stage gate and the
+* restored CT/ST outputs sit immediately beside the NOR.
+XCT PCLK CT VDD VSS cp_tap_buffer
+XST SSEL ST VDD VSS cp_tap_buffer
+XSN CT ST SN0 VDD VSS cp_nor2
+XSD0 SN0 SND VDD VSS cp_sense_edge_delay
 XWN WST WET WCOREB VDD VSS cp_rise_b
 XWPD0 WCOREB WPD0 VDD VSS cp_inv WP=8u WN=8u MP=1 MN=1
 XWPD1 WPD0 WCOREBD VDD VSS cp_inv WP=7.5u WN=7.5u MP=3 MN=3
-XSB0 SN0 SB0 VDD VSS cp_inv WP=8u WN=8u MP=2 MN=1
+XSB0 SND SB0 VDD VSS cp_inv WP=8u WN=8u MP=2 MN=1
 XSB1 SB0 SB1 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4
-XSB2 SB1 SENSE VDD VSS cp_inv WP=8u WN=8u MP=10 MN=5
+XSB2 SB1 SENSE VDD VSS cp_inv WP=8u WN=8u MP=10 MN=6
 XRB0 SN0 RB0 VDD VSS cp_inv WP=8u WN=4u
 XRB1 RB0 RB1 VDD VSS cp_inv WP=8u WN=6u MP=3 MN=2
 XRB2 RB1 REGEN VDD VSS cp_inv WP=8u WN=8u MP=3 MN=3

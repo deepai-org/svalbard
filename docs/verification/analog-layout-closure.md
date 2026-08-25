@@ -936,14 +936,29 @@ Place restoration at the consumer boundary according to which side can bear a
 long wire. In a programmable high-speed selector, moving a tap prebuffer into
 the selector row changed a restored output from a long cross-row RC node into a
 short local node; the long connection then ended at the prebuffer's gate input.
-The pulse-generator extraction reduced the critical P08 grounded capacitance
-from 36.87 fF to 24.15 fF and recovered full start/end switching. Per-phase
-restoration then fixed the complementary edge, and a separately retapered write
-path raised the extracted final outputs to 2.52 V and 1.87 V. The macro still
-failed for a different reason: no existing selector code produced the required
-450--650 ps sense window in exact PEX. Probe and close selector, restoration,
-window formation, and output drive as distinct boundaries; progress at one is
-not evidence that the others close.
+The later pulse-generator revision replaced its threshold-losing transmission
+gate with static restoring tri-state branches and restored CT/ST to full swing
+in both phases. That did not close the macro: the exact even NOR pulse still
+produced only about 332 ps at the final sense output, the odd NOR pulse reached
+only 1.085 V, and both write pulses were filtered by their first buffers. Probe
+and close selector, restoration, window formation, pulse preservation, and
+output drive as distinct boundaries; progress at one is not evidence that the
+others close.
+
+Do not represent a stacked tri-state path as one `M > 1` device per level unless
+the layout deliberately shares every corresponding internal diffusion node.
+Fingering each level independently can create one shared schematic intermediate
+node but several separate physical intermediate nodes. The pulse generator only
+became structurally faithful after it expressed each complete one-finger stack
+as an explicit parallel branch. Require unique LVS on that exact representation
+before using the extracted selector behavior.
+
+Probe labels should not alter geometry, but adding labels can change extracted
+node partition names and the simulator's numerical path. A healthy design is
+insensitive to that bookkeeping. If a label-only regeneration materially moves
+a dynamic-node peak, first confirm geometry equality with a label/timestamp-
+independent comparison, then treat the electrical variation as evidence of a
+marginal or metastable path—not as a new passing or failing layout candidate.
 
 When a tristate stack is disabled, put the device controlled by the static
 enable immediately next to the high-capacitance output. That placement isolates

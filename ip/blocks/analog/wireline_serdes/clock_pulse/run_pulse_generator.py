@@ -49,7 +49,8 @@ if not args.pex:
         "WCOREB": "WCOREB", "WCOREBD": "WCOREBD",
         "WB0": "WB0", "WB1": "WB1",
         "SSEL": "SSEL", "CT": "CT", "ST": "ST", "CTD": "CTD",
-        "STD": "STD", "SN0": "SN0",
+        "STD": "STD", "SN0": "SN0", "SND": "SND",
+        "SB0": "SB0", "SB1": "SB1",
         "PCLK": "PCLK", "P08": "P08", "D08": "D08",
         "CTSEL": "CTSEL",
         "CTB0": "XCT.B0", "CTB1": "XCT.B1", "CTB2": "XCT.B2",
@@ -89,11 +90,11 @@ fractions = tuple(args.fraction) if args.fraction else (0.70,)
 tap_codes = []
 profiles = {
     (0, 10, 11): 0,
-    (2, 8, 9): 1,
+    (1, 8, 9): 1,
     (0, 8, 9): 2,
     (2, 10, 11): 3,
 }
-for encoded in args.tap_code or ("0,10,11", "2,8,9", "0,8,9", "2,10,11"):
+for encoded in args.tap_code or ("0,10,11", "1,8,9", "0,8,9", "2,10,11"):
     try:
         sense_tap, write_start_tap, write_end_tap = (
             int(part) for part in encoded.split(","))

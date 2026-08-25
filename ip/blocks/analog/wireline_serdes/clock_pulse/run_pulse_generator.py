@@ -36,7 +36,7 @@ parser.add_argument("--pex-capacitance-scale", type=float, default=1.0)
 parser.add_argument("--environment", action="append")
 parser.add_argument("--fraction", action="append", type=float)
 parser.add_argument("--tap-code", action="append",
-                    help="realized sense,start,end profile, for example 2,9,10")
+                    help="realized sense,start,end profile, for example 2,8,9")
 args = parser.parse_args()
 if args.pex_resistance_scale < 0 or args.pex_capacitance_scale < 0:
     parser.error("PEX scales must be nonnegative")
@@ -53,8 +53,7 @@ if not args.pex:
         "CTSEL": "CTSEL",
         "CTB0": "XCT.B0", "CTB1": "XCT.B1", "CTB2": "XCT.B2",
         "STB0": "XST.B0", "STB1": "XST.B1", "STB2": "XST.B2",
-        "WSTB0": "XWST.B0", "WSTB1": "XWST.B1",
-        "WSTB2": "XWST.B2", "WETB0": "XWET.B0",
+        "WSTB1": "XWST.B1", "WSTB2": "XWST.B2",
         "WETB1": "XWET.B1", "WETB2": "XWET.B2",
     }
     for phase, instance in (("E", "XE"), ("O", "XO")):
@@ -88,12 +87,12 @@ selected_environments = tuple(
 fractions = tuple(args.fraction) if args.fraction else (0.70,)
 tap_codes = []
 profiles = {
-    (1, 5, 7): 0,
+    (0, 10, 11): 0,
     (2, 8, 9): 1,
-    (1, 7, 8): 2,
+    (0, 8, 9): 2,
     (2, 10, 11): 3,
 }
-for encoded in args.tap_code or ("1,5,7", "2,8,9", "1,7,8", "2,10,11"):
+for encoded in args.tap_code or ("0,10,11", "2,8,9", "0,8,9", "2,10,11"):
     try:
         sense_tap, write_start_tap, write_end_tap = (
             int(part) for part in encoded.split(","))
@@ -159,6 +158,10 @@ for sense_tap, write_start_tap, write_end_tap in tap_codes:
                   and observed["ew_high"] >= vdd - 0.25
                   and observed["es_low"] <= 0.25
                   and observed["ew_low"] <= 0.25
+                  and observed["os_high"] >= vdd - 0.25
+                  and observed["ow_high"] >= vdd - 0.25
+                  and observed["os_low"] <= 0.25
+                  and observed["ow_low"] <= 0.25
                   and observed["er_high"] >= vdd - 0.25
                   and observed["erb_low"] <= 0.25
                   and 0 < observed["supply_current"] <= 0.075)

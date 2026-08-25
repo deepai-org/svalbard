@@ -144,7 +144,14 @@ def flatten(subckts: dict[str, Subckt], top: str) -> tuple[list[Device], dict[st
             actual = tokens[1:child_index]
             child_map = {port: net(value) for port, value in zip(child.ports, actual)}
             child_params = dict(local_params)
-            child_params.update(assignments(tokens[child_index + 1:]))
+            # Resolve forwarded parameters in the parent's scope before the
+            # child's identically named default shadows them.  For example,
+            # cp_delay_unit passes WP={WP} to cp_inv; retaining the literal
+            # expression here creates a self-reference during flattening.
+            forwarded = assignments(tokens[child_index + 1:])
+            for key, value in forwarded.items():
+                reference = value.strip("{}").upper()
+                child_params[key] = local_params.get(reference, value)
             descend(child_name, child_map, child_params,
                     safe(path + "__" + tokens[0]) if path else safe(tokens[0]))
 
@@ -157,9 +164,11 @@ def group_depths(groups: dict[str, Group], phase: str) -> dict[str, int]:
     inputs = {"cp_inv": ("A",), "cp_nand2": ("A", "B"),
               "cp_nor2": ("A", "B"), "cp_tg": ("A", "EN", "ENB"),
               "cp_cond_npd": ("G", "EN"), "cp_gate_cap": ("A",)}
+    inputs["cp_tristate_inv"] = ("A", "EN", "ENB")
     outputs = {"cp_inv": "Y", "cp_nand2": "Y", "cp_nor2": "Y",
                "cp_tg": "Y", "cp_cond_npd": "D",
                "cp_gate_cap": None}
+    outputs["cp_tristate_inv"] = "Y"
     local = [group for group in groups.values() if group.phase == phase]
     clock = "CLKP" if phase == "E" else "CLKN"
     net_depth = {clock: 0, "SEL0": 0, "SEL1": 0, "SEL2": 0, "SEL3": 0,
@@ -231,6 +240,8 @@ def group_geometry(group: Group) -> tuple[float, dict[str, float]]:
 
 def functional_lane(group: Group) -> int:
     root = group.name.removeprefix("XE").removeprefix("XO").split("__")[1]
+    if root in ("XP08", "XP10", "XP11", "XP11L", "XPMD"):
+        return 3
     if root.startswith("XW"):
         return 3
     if root.startswith(("XSM", "XST", "XSN", "XSB", "XRB", "XRBI",
@@ -269,8 +280,7 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
             # P08 drives two selector gates and was the limiting extracted
             # node.  Put its output between those consumers; P09 has only one
             # local consumer and can tolerate the preceding slot.
-            write_taps = ("XP05", "XP09", "XP08", "XP07", "XP10",
-                          "XP11", "XP11L")
+            write_taps = ("XP05", "XP09", "XP07")
             write_rank = {name: rank for rank, name in enumerate(write_taps)}
 
             def lane_one_order(group: Group) -> tuple[int, int, int, str]:
@@ -311,22 +321,29 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
 
             selected.sort(key=sense_order)
         if lane == 3:
-            # Interleave corresponding start/end selector cells so both mux
-            # outputs see the same span and environment.  Interleave the
-            # matched restoration stages after the selector bank.
-            selector_rank = {
-                "XWM0": 0, "XWE0": 1, "XWM1": 2, "XWE1": 3,
-                "XWM2": 4, "XWE2": 5, "XWM3": 6, "XWE3": 7,
-            }
+            # Interleave the active restoring start/end selector cells.  Keep
+            # the local P08-to-P09W delay directly between the mid-profile
+            # cells, then place the matched restoration stages together.
+            selector_rank = {"XWM1": 4, "XWM3": 5, "XPMD": 7,
+                             "XWE1": 9, "XP11L": 12, "XWE3": 13}
 
             def write_order(group: Group) -> tuple[int, int, int, str]:
                 parts = group.name.split("__")
                 root = parts[1]
+                if root in ("XP08", "XP10", "XP11"):
+                    stage = int(parts[2].removeprefix("XI"))
+                    base = {"XP08": 0, "XP10": 2, "XP11": 10}[root]
+                    return (0, base + stage, 0, group.name)
                 if root in selector_rank:
                     return (0, selector_rank[root], 0, group.name)
                 if root in ("XWST", "XWET"):
                     stage = (int(parts[2].removeprefix("XI"))
                              if parts[2].startswith("XI") else 1.5)
+                    if stage == 1:
+                        # Terminate each critical selector output locally:
+                        # WST immediately after XWM3, WET after XWE3.
+                        return (0, 6 + 8 * int(root == "XWET"), 0,
+                                group.name)
                     return (1, 2 * stage + int(root == "XWET"), 0,
                             group.name)
                 return (2, place_depth[group.name], 0, group.name)
@@ -659,8 +676,11 @@ def emit(source: Path, output: Path) -> None:
     # at opposite edges of the lane instead of on adjacent tracks; extraction
     # of the adjacent version showed 5.14 fF of mutual capacitance.
     fixed_signal_tracks = {
-        "XE__WSTART_SEL": 89.5, "XE__WEND_SEL": 114.5,
-        "XO__WSTART_SEL": 249.5, "XO__WEND_SEL": 274.5,
+        # Avoid 89.5/249.5: those are also the allocator's lane-3 track zero.
+        # Reusing that ordinate can create a DRC-clean electrical short when
+        # a different local net happens to receive slot zero.
+        "XE__WSTART_SEL": 90.5, "XE__WEND_SEL": 114.5,
+        "XO__WSTART_SEL": 250.5, "XO__WEND_SEL": 274.5,
     }
     signal_keys = [key for key in first_seen if key not in special_tracks]
     approximate_bounds: dict[str, list[float]] = {
@@ -682,15 +702,15 @@ def emit(source: Path, output: Path) -> None:
         "XE__XCT__B0": "DBG_E_CTB0", "XE__XCT__B1": "DBG_E_CTB1",
         "XE__XCT__B2": "DBG_E_CTB2", "XE__XST__B0": "DBG_E_STB0",
         "XE__XST__B1": "DBG_E_STB1", "XE__XST__B2": "DBG_E_STB2",
-        "XE__XWST__B0": "DBG_E_WSTB0", "XE__XWST__B1": "DBG_E_WSTB1",
-        "XE__XWST__B2": "DBG_E_WSTB2", "XE__XWET__B0": "DBG_E_WETB0",
+        "XE__XWST__B1": "DBG_E_WSTB1",
+        "XE__XWST__B2": "DBG_E_WSTB2",
         "XE__XWET__B1": "DBG_E_WETB1", "XE__XWET__B2": "DBG_E_WETB2",
         "XO__P08": "DBG_O_P08", "XO__P09": "DBG_O_P09",
         "XO__WSTART_SEL": "DBG_O_WSTART_SEL",
         "XO__WEND_SEL": "DBG_O_WEND_SEL",
         "XO__WST": "DBG_O_WST", "XO__WET": "DBG_O_WET",
-        "XO__XWST__B0": "DBG_O_WSTB0", "XO__XWST__B1": "DBG_O_WSTB1",
-        "XO__XWST__B2": "DBG_O_WSTB2", "XO__XWET__B0": "DBG_O_WETB0",
+        "XO__XWST__B1": "DBG_O_WSTB1",
+        "XO__XWST__B2": "DBG_O_WSTB2",
         "XO__XWET__B1": "DBG_O_WETB1", "XO__XWET__B2": "DBG_O_WETB2",
     }
     for device in devices:

@@ -43,21 +43,31 @@ realized one-hot sense/start/end profiles for both recovered-clock phases. The
 TT, FF/cold, FF/hot, SS/cold, and SS/hot environment under the fixed pulse,
 rail, and 75 mA limits.
 
-`generate_pulse_layout.py` flattens the parameterized circuit into 400 MOS
-devices, aligns complementary devices as CMOS cells, routes phase-local nets in
-functional bands, and stacks the EVEN and ODD phases vertically. The current
-approximately 530 by 285 um candidate is zero-DRC and uniquely pin-resolved
-LVS-matched. The start/end selector banks and restoration stages are more
-compact and separately probed, and the long WSTART/WEND routes no longer run as
-an adjacent coupled pair.
+The selector now uses restoring tri-state inverter branches rather than an
+analog transmission-gate node followed by a ratioed restorer. Two physical
+write profiles are shared by the four one-hot control codes, and a local sized
+delay produces the mid-profile end edge. The revised 20-case schematic matrix
+still passes every declared environment while avoiding the incompatible
+start/end restoration apertures found in the previous extracted circuit.
+
+`generate_pulse_layout.py` flattens the parameterized circuit into 396 MOS
+devices, resolves forwarded sizing parameters, aligns complementary devices as
+CMOS cells, routes phase-local nets in functional bands, and stacks the EVEN
+and ODD phases vertically. The current approximately 544 by 285 um candidate
+is zero-DRC and uniquely pin-resolved LVS-matched. Critical tap prebuffers now
+sit in the selector row so their restored outputs are local; the longer
+cross-row connections terminate on gate inputs. The router also reserves fixed
+critical tracks explicitly, after a DRC-clean coordinate collision was caught
+by LVS.
 
 Its exact nominal full-RC run is deliberately retained as a failure rather than
-promoted as closure. Both selected start nodes have an intermediate extracted
-range of roughly 1.56--2.70 V; the first ratioed restoration nodes then reach
-only 0.22--0.79 V. Consequently neither final write pulse toggles. The even and
-odd sense widths are also asymmetric at 194 ps and 557 ps. This localizes the
-next revision to the extracted selector/restorer boundary and phase-parasitic
-symmetry rather than the final output drivers. Netgen still reports flattened
+promoted as closure. The placement revision reduced even-phase P08 capacitance
+from 36.87 fF to 24.15 fF and restored the selected start/end nodes to about
+2.97/0.60 V and 3.01/0.49 V. WST and WET now switch, but the roughly 115 ps
+internal write interval does not propagate through the extracted output taper:
+WB0 reaches only 1.40 V and WRITE reaches only 0.49 V. The next revision is
+therefore localized to the write-core/output taper and its distributed gate
+loading, not the selector topology. Netgen still reports flattened
 device-property warnings, so an independent device-size comparison remains
 required even though topology, device count, and pins match uniquely.
 

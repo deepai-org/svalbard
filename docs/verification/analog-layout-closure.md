@@ -925,6 +925,23 @@ model-validity limits. Mark unrun rows as unrun. A lower-level pass can be cited
 as inherited evidence only when the parent preserves the relevant loading,
 supply, substrate, temperature, and control assumptions.
 
+Treat fixed-route coordinates as reserved resources in an automatic router.
+A fixed critical net can silently reuse a dynamically allocated track: the
+shapes remain DRC-clean because they are legal metal, but extraction merges two
+logical nets and LVS is the first tool to expose the short. Seed the allocator
+with every fixed track or assert geometric uniqueness before emitting shapes;
+never infer connectivity correctness from DRC alone.
+
+Place restoration at the consumer boundary according to which side can bear a
+long wire. In a programmable high-speed selector, moving a tap prebuffer into
+the selector row changed a restored output from a long cross-row RC node into a
+short local node; the long connection then ended at the prebuffer's gate input.
+The pulse-generator extraction reduced the critical P08 grounded capacitance
+from 36.87 fF to 24.15 fF and recovered full start/end switching. This did not
+close the entire macro—the following output taper still filtered the short
+pulse—but it cleanly separated selector closure from driver closure. Optimize
+and probe those boundaries independently.
+
 ### Proven physical iteration ladder
 
 Use this order when an extracted cell misses a corner:

@@ -6,6 +6,21 @@ XP Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
 XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
 .ends cp_inv
 
+* The final write bank has a dedicated hierarchical VDD pin.  The parent
+* straps VDDW to VDD, but the macro does not force pulse current through its
+* single left-edge logic-supply access.
+.subckt cp_final_inv A Y VDD VDDW VSS params: WP=8u WN=8u MP=30 MN=20
+XP Y A VDDW VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+.ends cp_final_inv
+
+* The final sense pull-down likewise exposes a local ground pin while keeping
+* the NMOS body on the continuous global-VSS substrate connection.
+.subckt cp_sense_final_inv A Y VDD VSS VSSS params: WP=8u WN=8u MP=10 MN=8
+XP Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XN Y A VSSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+.ends cp_sense_final_inv
+
 .subckt cp_nand2 A B Y VDD VSS params: WP=1.6u WN=1.2u MP=1 MN=1
 XP0 Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
 XP1 Y B VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
@@ -135,9 +150,9 @@ XQ R QB Q VDD VSS cp_nor2 WP=8u WN=8u MP=3 MN=2
 XQB S Q QB VDD VSS cp_nor2 WP=8u WN=8u MP=3 MN=4
 .ends cp_write_latch
 
-.subckt cp_phase CLK SEL0 SEL1 SEL2 SEL3 Q2RESET VDD VSS
+.subckt cp_phase CLK SEL0 SEL1 SEL2 SEL3 Q2RESET VDD VDDW VSS VSSS
 + SENSE BOOST WRITE
-+ params: MID_WP0=4u MID_WN0=2u MID_MPP=2 MID_MNN=3 P08_MPP=4 P08_MNN=5 WQ2_W=4u WQD_W=8u WQD_M=1 WB1_M=7 WB2_M=14 WB3_MP=30 WB3_MN=20
++ params: MID_WP0=4u MID_WN0=2u MID_MPP=2 MID_MNN=3 P08_MPP=4 P08_MNN=5 WQ2_W=4u WQD_W=8u WQD_M=1 SB2_WN=8u SB2_MN=8 WB1_M=7 WB2_MP=14 WB2_MN=14 WB3_WP=8u WB3_MP=30 WB3_MN=20
 * Twelve matched non-inverting delay units provide digitally selectable taps.
 * Four one-hot profiles select tap triplets retained by PVT screening. The
 * transmission gates are part of the simulated circuit, not netlist rewrites.
@@ -233,7 +248,7 @@ XSN CT ST SN0 VDD VSS cp_nor_fast
 XWL WST WET WCORE WCOREB VDD VSS cp_write_latch
 XSB0 SN0 SB0 VDD VSS cp_inv WP=8u WN=8u MP=2 MN=2
 XSB1 SB0 SB1 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4
-XSB2 SB1 SENSE VDD VSS cp_inv WP=8u WN=8u MP=10 MN=8
+XSB2 SB1 SENSE VDD VSS VSSS cp_sense_final_inv WP=8u WN={SB2_WN} MP=10 MN={SB2_MN}
 XRB0 SN0 RB0 VDD VSS cp_inv WP=8u WN=4u
 XRB1 RB0 RB1 VDD VSS cp_inv WP=8u WN=6u MP=3 MN=2
 XRB2 RB1 BOOST VDD VSS cp_inv WP=8u WN=8u MP=5 MN=3
@@ -249,15 +264,16 @@ XWQ3 WB0 WET SEL3 VSS cp_cond_npd WG=12u WE=12u M=1
 * larger final PMOS without placing that full gate load on a small predriver.
 XWB0 WB0 WB1 VDD VSS cp_inv WP=8u WN=8u MP=3 MN=3
 XWB1 WB1 WB2 VDD VSS cp_inv WP=8u WN=8u MP={WB1_M} MN={WB1_M}
-XWB2 WB2 WB3 VDD VSS cp_inv WP=8u WN=8u MP={WB2_M} MN={WB2_M}
-XWB3 WB3 WRITE VDD VSS cp_inv WP=8u WN=8u MP={WB3_MP} MN={WB3_MN}
+XWB2 WB2 WB3 VDD VSS cp_inv WP=8u WN=8u MP={WB2_MP} MN={WB2_MN}
+XWB3 WB3 WRITE VDD VDDW VSS cp_final_inv WP={WB3_WP} WN=8u MP={WB3_MP} MN={WB3_MN}
 .ends cp_phase
 
 .subckt clock_pulse_generator CLKP CLKN SEL0 SEL1 SEL2 SEL3 VDD VSS
++ VDD_WE VDD_WO VSS_SE VSS_SO
 + E_SENSE E_BOOST E_WRITE
 + O_SENSE O_BOOST O_WRITE
-XE CLKP SEL0 SEL1 SEL2 SEL3 SEL2 VDD VSS
-+ E_SENSE E_BOOST E_WRITE cp_phase WQ2_W=8u WQD_W=8u WB1_M=7 WB2_M=14 WB3_MP=30 WB3_MN=20
-XO CLKN SEL0 SEL1 SEL2 SEL3 VSS VDD VSS
-+ O_SENSE O_BOOST O_WRITE cp_phase WQ2_W=8u WQD_W=10u WB1_M=7 WB2_M=14 WB3_MP=30 WB3_MN=20
+XE CLKP SEL0 SEL1 SEL2 SEL3 SEL2 VDD VDD_WE VSS VSS_SE
++ E_SENSE E_BOOST E_WRITE cp_phase WQ2_W=6.2u WQD_W=8u SB2_WN=6.5u SB2_MN=7 WB1_M=7 WB2_MP=14 WB2_MN=14 WB3_WP=8u WB3_MP=28 WB3_MN=20
+XO CLKN SEL0 SEL1 SEL2 SEL3 VSS VDD VDD_WO VSS VSS_SO
++ O_SENSE O_BOOST O_WRITE cp_phase WQ2_W=8u WQD_W=8u SB2_WN=6.5u SB2_MN=7 WB1_M=7 WB2_MP=13 WB2_MN=14 WB3_WP=8u WB3_MP=28 WB3_MN=20
 .ends clock_pulse_generator

@@ -2,6 +2,7 @@
 """Screen the calibrated dual-edge pulse generator over PVT and delay bias."""
 
 import argparse
+import concurrent.futures
 import hashlib
 import json
 import re
@@ -38,12 +39,16 @@ parser.add_argument(
     metavar="NET=SCALE",
     help="multiply extracted resistors wholly inside a named net")
 parser.add_argument("--environment", action="append")
+parser.add_argument("--jobs", type=int, default=1,
+                    help="independent ngspice cases to run concurrently")
 parser.add_argument("--fraction", action="append", type=float)
 parser.add_argument("--tap-code", action="append",
                     help="realized sense,start,end profile, for example 2,8,9")
 args = parser.parse_args()
 if args.pex_resistance_scale < 0 or args.pex_capacitance_scale < 0:
     parser.error("PEX scales must be nonnegative")
+if not 1 <= args.jobs <= 16:
+    parser.error("--jobs must be between 1 and 16")
 net_resistance_scales = {}
 for encoded in args.pex_resistance_net_scale:
     try:
@@ -127,11 +132,20 @@ for encoded in args.tap_code or ("0,10,11", "1,8,9", "0,8,9", "2,8,9"):
     if (sense_tap, write_start_tap, write_end_tap) not in profiles:
         parser.error(f"tap code is not a realized profile: {encoded}")
     tap_codes.append((sense_tap, write_start_tap, write_end_tap))
-for sense_tap, write_start_tap, write_end_tap in tap_codes:
-    code = f"s{sense_tap:02d}_w{write_start_tap:02d}_{write_end_tap:02d}"
-    profile = profiles[(sense_tap, write_start_tap, write_end_tap)]
-    for env_name, corner, vdd, temperature in selected_environments:
-      for fraction in fractions:
+case_specs = [
+    (sense_tap, write_start_tap, write_end_tap,
+     env_name, corner, vdd, temperature, fraction)
+    for sense_tap, write_start_tap, write_end_tap in tap_codes
+    for env_name, corner, vdd, temperature in selected_environments
+    for fraction in fractions
+]
+
+
+def run_case(spec):
+        (sense_tap, write_start_tap, write_end_tap,
+         env_name, corner, vdd, temperature, fraction) = spec
+        code = f"s{sense_tap:02d}_w{write_start_tap:02d}_{write_end_tap:02d}"
+        profile = profiles[(sense_tap, write_start_tap, write_end_tap)]
         values = {
             "MOS_CORNER": corner,
             "TEMP_C": str(temperature),
@@ -150,13 +164,17 @@ for sense_tap, write_start_tap, write_end_tap in tap_codes:
         deck = args.work / f"{stem}.spice"
         log = args.work / f"{stem}.log"
         deck.write_text(text)
-        with log.open("w") as output:
-            run = subprocess.run(["ngspice", "-b", str(deck)], stdout=output,
-                                 stderr=subprocess.STDOUT, timeout=240,
-                                 check=False)
+        try:
+            with log.open("w") as output:
+                run = subprocess.run(
+                    ["ngspice", "-b", str(deck)], stdout=output,
+                    stderr=subprocess.STDOUT, timeout=240, check=False)
+            returncode = run.returncode
+        except subprocess.TimeoutExpired:
+            returncode = -1
         observed = {key: float(value)
                     for key, value in MEASURE.findall(log.read_text())}
-        complete = run.returncode == 0 and REQUIRED <= observed.keys()
+        complete = returncode == 0 and REQUIRED <= observed.keys()
         def cycle_delta(later: str, earlier: str) -> float:
             delta = observed.get(later, 0) - observed.get(earlier, 0)
             while delta < 0:
@@ -191,7 +209,7 @@ for sense_tap, write_start_tap, write_end_tap in tap_codes:
                   and observed["eb_high"] >= vdd - 0.25
                   and observed["ob_high"] >= vdd - 0.25
                   and 0 < observed["supply_current"] <= 0.075)
-        cases.append({
+        return {
             "case_id": stem,
             "environment": [corner, vdd, temperature],
             "control_fraction": fraction,
@@ -206,7 +224,14 @@ for sense_tap, write_start_tap, write_end_tap in tap_codes:
             "dead_time_s": dead_time,
             "observed": observed,
             "result": "pass" if passed else "fail",
-        })
+        }
+
+
+if args.jobs == 1:
+    cases = [run_case(spec) for spec in case_specs]
+else:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as executor:
+        cases = list(executor.map(run_case, case_specs))
 
 coverage = {}
 for env_name, corner, vdd, temperature in selected_environments:

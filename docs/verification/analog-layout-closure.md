@@ -939,14 +939,17 @@ short local node; the long connection then ended at the prebuffer's gate input.
 The pulse-generator work subsequently separated selector restoration, interval
 storage, qualification, and output drive. A reset-dominant cross-coupled-NOR
 latch driven by the full-width start/end clocks replaced the filtered
-combinational write glitch. The later 422-device, 499.6 by 285 um checkpoint is
-zero-DRC, uniquely LVS-matched, and extracts to 9,045R/6,110C. Its nominal exact
-PEX passes every sense/write width, delay, non-overlap, phase-spacing, and
-current limit, but WRITE peaks at only 3.002/2.906 V and the sense lows reach
-0.253/0.313 V. This is evidence that regeneration solves event loss and can
-close timing without automatically closing rail charge. Probe and close
-selector, restoration, interval storage, overlap qualification, pulse
-preservation, output drive, and local PDN as distinct boundaries.
+combinational write glitch. The retained 422-device, 498.0 by 285 um checkpoint
+is zero-DRC, uniquely LVS-matched, and extracts to 9,320R/6,057C. Dedicated
+parent-strapped source-supply pins let the final write and sense banks attach to
+the eventual local grid without pretending that all current enters through one
+left-edge port. Its nominal exact PEX now passes timing, rail, phase-spacing,
+and current limits, but the 20-case matrix passes only one TT profile and just
+1/5 environments. Regeneration and local supply access solved the nominal
+failure; they did not solve fast/hot and slow-corner event loss or FF/cold
+current. Probe and close selector, restoration, interval storage, overlap
+qualification, pulse preservation, output drive, and local PDN as distinct
+boundaries, and never promote a nominal pass to PVT closure.
 
 Measure extracted resistance to the actual selected device terminals, not just
 the total resistance stamped on a logical net. A multi-source Dijkstra report
@@ -958,6 +961,29 @@ path to 27.98 ohm and raised both WRITE peaks, but did not close the rails.
 Keep the before/after path distribution, largest edges, waveform, timing, and
 current together; a lower scalar resistance is useful only if the complete
 extracted contract improves.
+
+Model a local high-current supply attachment as a real hierarchical port, not
+as an internal short to the distant global pin. Tie the ports together in the
+parent testbench and eventual PDN, while keeping PMOS bodies on the continuous
+global well supply and NMOS bodies on the continuous substrate supply. LVS
+caught an early version that moved a body connection with the switched source;
+electrical equivalence at the testbench boundary does not excuse a different
+device body topology. In the retained pulse layout, final-bank write-source
+paths are about 19.34 ohm and dedicated sense-ground paths about 32.60 ohm.
+
+Supply-track placement must be checked against every existing fixed route, not
+only against same-net rails. An early sense-ground track at 59 um landed on a
+reserved VDD signal lane and created a real extracted short. Moving it to a
+legal 60.5 um channel and limiting the port to a 1.5-um M4 track preserved
+separation from adjacent VDD/VSS rails. This is another case where unique LVS,
+not a clean-looking render, established connectivity.
+
+Independent PVT/profile simulations are safe to run concurrently when each
+case has its own netlist, raw output, timeout, and deterministic result slot.
+Expose an explicit job bound and keep the container CPU and memory limits at
+least as strict; the pulse matrix uses four workers on four CPUs with 12 GiB.
+Parallel execution changes turnaround time, not the electrical acceptance
+contract or the requirement to retain every failed case.
 
 Additional access columns are real routing resources, not harmless duplicate
 vias. A drain column can approach the complementary device's source route or

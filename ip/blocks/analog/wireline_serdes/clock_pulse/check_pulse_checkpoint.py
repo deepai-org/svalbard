@@ -25,7 +25,8 @@ def require(condition: bool, message: str) -> None:
 
 physical = load("pulse_physical_checkpoint.json")
 schematic = load("pulse_schematic_result.json")
-nominal = load("pulse_pex_nominal_failed.json")
+nominal = load("pulse_pex_nominal_result.json")
+pvt = load("pulse_pex_pvt_result.json")
 
 require(physical.get("physical_legality_result") == "pass"
         and physical.get("result") == "fail"
@@ -33,10 +34,10 @@ require(physical.get("physical_legality_result") == "pass"
         and physical.get("lvs_unique_pin_resolved") is True,
         "pulse physical checkpoint classification changed")
 require((physical.get("device_count"), physical.get("layout_width_um"),
-         physical.get("layout_height_um")) == (422, 499.6, 285.0),
+         physical.get("layout_height_um")) == (422, 498.0, 285.0),
         "pulse checkpoint geometry changed")
 require((physical.get("pex_resistor_count"),
-         physical.get("pex_capacitor_count")) == (9045, 6110),
+         physical.get("pex_capacitor_count")) == (9320, 6057),
         "pulse checkpoint extracted element count changed")
 require(physical.get("schematic_source_sha256")
         == digest("clock_pulse_generator.spice")
@@ -51,7 +52,9 @@ require(physical.get("schematic_source_sha256")
         and physical.get("schematic_evidence_sha256")
         == digest("pulse_schematic_result.json")
         and physical.get("pex_nominal_evidence_sha256")
-        == digest("pulse_pex_nominal_failed.json"),
+        == digest("pulse_pex_nominal_result.json")
+        and physical.get("pex_pvt_evidence_sha256")
+        == digest("pulse_pex_pvt_result.json"),
         "pulse checkpoint source/evidence identity changed")
 
 require(schematic.get("result") == "fail"
@@ -60,11 +63,20 @@ require(schematic.get("result") == "fail"
         and not any(schematic.get("environment_coverage", {}).values()),
         "pulse schematic failure matrix changed; regenerate and review it")
 
-require(nominal.get("result") == "fail"
+require(nominal.get("result") == "pass"
         and nominal.get("case_count") == 1
-        and nominal.get("passing_case_count") == 0
+        and nominal.get("passing_case_count") == 1
         and nominal.get("pex_sha256") == physical.get("pex_sha256"),
         "pulse nominal PEX identity/classification changed")
+require(pvt.get("result") == "fail"
+        and pvt.get("case_count") == 20
+        and pvt.get("passing_case_count") == 1
+        and pvt.get("environment_coverage") == {
+            "tt": [[0, 8, 9]], "ff_cold": [], "ff_hot": [],
+            "ss_cold": [], "ss_hot": [],
+        }
+        and pvt.get("pex_sha256") == physical.get("pex_sha256"),
+        "pulse exact-PVT failure matrix changed")
 case = nominal["cases"][0]
 observed = case["observed"]
 timing_pass = (
@@ -84,10 +96,10 @@ rail_pass = (
     and max(observed[name] for name in ("es_low", "os_low", "ew_low", "ow_low"))
     <= 0.25
 )
-require(timing_pass and not rail_pass
+require(timing_pass and rail_pass
         and physical.get("nominal_timing_limits_pass") is True
-        and physical.get("nominal_rail_limits_pass") is False,
+        and physical.get("nominal_rail_limits_pass") is True,
         "pulse nominal timing/rail boundary changed")
 
-print("pulse checkpoint: PASS identity; 0 DRC, unique LVS, 9045R/6110C, "
-      "nominal timing closed, rails and schematic profile coverage open")
+print("pulse checkpoint: PASS identity; 0 DRC, unique LVS, 9320R/6057C, "
+      "nominal contract closed, exact PVT 1/5 and schematic coverage open")

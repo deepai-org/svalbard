@@ -162,12 +162,16 @@ def flatten(subckts: dict[str, Subckt], top: str) -> tuple[list[Device], dict[st
 
 
 def group_depths(groups: dict[str, Group], phase: str) -> dict[str, int]:
-    inputs = {"cp_inv": ("A",), "cp_nand2": ("A", "B"),
+    inputs = {"cp_inv": ("A",), "cp_final_inv": ("A",),
+              "cp_sense_final_inv": ("A",),
+              "cp_nand2": ("A", "B"),
               "cp_nor2": ("A", "B"), "cp_tg": ("A", "EN", "ENB"),
               "cp_cond_npd": ("G", "EN"),
               "cp_gate_cap": ("A",)}
     inputs["cp_tristate_inv"] = ("A", "EN", "ENB")
-    outputs = {"cp_inv": "Y", "cp_nand2": "Y", "cp_nor2": "Y",
+    outputs = {"cp_inv": "Y", "cp_final_inv": "Y",
+               "cp_sense_final_inv": "Y",
+               "cp_nand2": "Y", "cp_nor2": "Y",
                "cp_tg": "Y", "cp_cond_npd": "D",
                "cp_gate_cap": None}
     outputs["cp_tristate_inv"] = "Y"
@@ -562,9 +566,15 @@ proc make_port4 {name number x y} {
     port make $number
 }
 proc make_supply_port {name number x y} {
-    rect metal5 [expr {$x-2.50}] [expr {$y-2.50}] [expr {$x+2.50}] [expr {$y+2.50}]
-    box values [expr {$x-2.50}] [expr {$y-2.50}] [expr {$x+2.50}] [expr {$y+2.50}]
+    rect metal5 [expr {$x-3.00}] [expr {$y-3.00}] [expr {$x+3.00}] [expr {$y+3.00}]
+    box values [expr {$x-3.00}] [expr {$y-3.00}] [expr {$x+3.00}] [expr {$y+3.00}]
     label $name FreeSans 0.5 0 0 0 c metal5
+    port make $number
+}
+proc make_supply_port4 {name number x y} {
+    rect metal4 [expr {$x-0.75}] [expr {$y-0.75}] [expr {$x+0.75}] [expr {$y+0.75}]
+    box values [expr {$x-0.75}] [expr {$y-0.75}] [expr {$x+0.75}] [expr {$y+0.75}]
+    label $name FreeSans 0.5 0 0 0 c metal4
     port make $number
 }
 crashbackups stop
@@ -779,6 +789,11 @@ def emit(source: Path, output: Path) -> None:
                             + PHASE_Y_SHIFT),
         "XO__WEND_SEL": (LANE_PITCH * (LANE_COUNT - 1) + 18.0
                           + PHASE_Y_SHIFT),
+        # Dedicated final-sense ground tracks occupy the otherwise empty
+        # boundary below lane 2.  Keeping them off the global VSS ordinate
+        # preserves separate LVS nets while allowing a 3-um M4 path.
+        "VSS_SE": LANE_PITCH * 2 - 11.5,
+        "VSS_SO": LANE_PITCH * 2 - 11.5 + PHASE_Y_SHIFT,
     }
     signal_keys = [key for key in first_seen if key not in special_tracks]
     approximate_bounds: dict[str, list[float]] = {
@@ -856,6 +871,7 @@ def emit(source: Path, output: Path) -> None:
     port_xs = {port: -2.0 - 2.0 * index for index, port in enumerate(input_ports)}
     # Give the high-current supply spines enough separation for 5-um Metal3.
     port_xs.update({"VDD": -20.0, "VSS": -28.0})
+    port_xs.update({"VSS_SE": xmax + 4.0, "VSS_SO": xmax + 4.0})
     port_xs.update({port: xmax + 2.0 + 2.0 * index
                     for index, port in enumerate(output_ports)})
     output_drivers = {
@@ -866,6 +882,9 @@ def emit(source: Path, output: Path) -> None:
     for port, driver in output_drivers.items():
         width, _ = group_geometry(groups[driver])
         port_xs[port] = group_x[driver] + width + 2.0
+    write_driver_width, _ = group_geometry(groups["XE__XWB3"])
+    write_supply_x = group_x["XE__XWB3"] + write_driver_width / 2.0
+    port_xs.update({"VDD_WE": write_supply_x, "VDD_WO": write_supply_x})
     for port, keys in top_keys.items():
         endpoint = port_xs[port]
         for key in keys:
@@ -873,7 +892,8 @@ def emit(source: Path, output: Path) -> None:
             approximate_bounds[key][1] = max(approximate_bounds[key][1], endpoint)
     even_keys = [key for key in signal_keys
                  if not (key.startswith("XO") or key.startswith("O:")
-                         or key == "CLKN" or key.startswith("O_"))]
+                         or key == "CLKN" or key.startswith("O_")
+                         or key in ("VDD_WO", "VSS_SO"))]
     odd_keys = [key for key in signal_keys if key not in even_keys]
     key_groups = {key: min(key_lane_sets[key]) for key in signal_keys}
 
@@ -991,8 +1011,17 @@ def emit(source: Path, output: Path) -> None:
     for device in devices:
         width = device.width_um
         nf = device.mult
+        root = device.group.split("__")[1]
         d_y = device.cy + max(0.70, width / 2.0 - 0.8)
-        s_y = device.cy - max(0.70, width / 2.0 - 0.8)
+        # The final PMOS bank formerly picked every source up near the lower
+        # edge of its 8-um diffusion stripe.  Exact PEX attributed about
+        # 10.9 ohm of the port-to-source path to the resulting two local
+        # access segments.  Land this high-current source strap at the device
+        # center; it crosses alternating drain Metal1 without contacting it
+        # and reaches each source diffusion through its own via1.
+        s_y = (device.cy if ((root == "XWB3" and device.kind.startswith("pfet"))
+                             or (root == "XSB2" and device.kind.startswith("nfet")))
+               else device.cy - max(0.70, width / 2.0 - 0.8))
         d_points = [device.cx + x for x in offsets(nf, 0)]
         s_points = [device.cx + x for x in offsets(nf, 1)]
         gate_y = device.cy - width / 2.0 - 0.70 - gate_extra(device)
@@ -1013,8 +1042,7 @@ def emit(source: Path, output: Path) -> None:
             lines.append(f"rect metal3 {route_x-0.28:.3f} {min(y,ty)-0.28:.3f} "
                          f"{route_x+0.28:.3f} {max(y,ty)+0.28:.3f}\n")
             lines.append(f"stack34 {route_x:.3f} {ty:.3f}\n")
-            root = device.group.split("__")[1]
-            if (terminal == "S" and root == "XWB3"
+            if (terminal == "S" and root == "XWB3" and net == "VDD"
                     and min(abs(route_x - tap_x) for tap_x in tap_xs) >= 1.2):
                 lines.append(f"supply_stack45 {route_x:.3f} {ty:.3f}\n")
             if terminal in ("D", "S") and root == "XWB3" and len(points) >= 5:
@@ -1041,7 +1069,7 @@ def emit(source: Path, output: Path) -> None:
                                  f"{access_x+0.28:.3f} "
                                  f"{max(y,ty)+0.28:.3f}\n")
                     lines.append(f"stack34 {access_x:.3f} {ty:.3f}\n")
-                    if (terminal == "S"
+                    if (terminal == "S" and net == "VDD"
                             and min(abs(access_x - tap_x)
                                     for tap_x in tap_xs) >= 1.2):
                         lines.append(f"supply_stack45 {access_x:.3f} {ty:.3f}\n")
@@ -1062,7 +1090,9 @@ def emit(source: Path, output: Path) -> None:
 
     for key, (x1, x2) in bounds.items():
         y = tracks[key]
-        half = 2.00 if key.endswith((":VDD", ":VSS")) else 0.23
+        half = (2.00 if key.endswith((":VDD", ":VSS")) else
+                0.75 if key in ("VSS_SE", "VSS_SO")
+                else 0.23)
         if key in special_tracks:
             x1 = min(x1, tap_xs[0])
             x2 = max(x2, tap_xs[-1])
@@ -1075,8 +1105,12 @@ def emit(source: Path, output: Path) -> None:
 
     for key in special_tracks:
         y = tracks[key]
-        lines.append(f"rect metal5 2.000 {y-2.50:.3f} "
-                     f"{xmax:.3f} {y+2.50:.3f}\n")
+        # Six-micron top-metal rails and matching port spines reduce the
+        # shared supply impedance identified by exact-PEX counterfactuals.
+        # Adjacent VDD/VSS rail centers remain 7 um apart at the tightest
+        # lane boundary, leaving 1 um of same-layer spacing.
+        lines.append(f"rect metal5 2.000 {y-3.00:.3f} "
+                     f"{xmax:.3f} {y+3.00:.3f}\n")
         for x in tap_xs:
             lines.append(f"supply_stack45 {x:.3f} {y:.3f}\n")
 
@@ -1104,7 +1138,8 @@ def emit(source: Path, output: Path) -> None:
             ys = [tracks[key] for key in keys]
             port_y = sum(ys) / len(ys)
             if port in ("VDD", "VSS"):
-                lines.append(f"rect metal3 {x-2.50:.3f} {min(ys)-0.70:.3f} {x+2.50:.3f} {max(ys)+0.70:.3f}\n")
+                lines.append(f"rect metal3 {x-3.00:.3f} {min(ys)-0.70:.3f} "
+                             f"{x+3.00:.3f} {max(ys)+0.70:.3f}\n")
                 for y in ys:
                     lines.append(f"supply_stack34 {x:.3f} {y:.3f}\n")
                 lines.append(f"supply_stack34 {x:.3f} {port_y:.3f}\nsupply_stack45 {x:.3f} {port_y:.3f}\n")
@@ -1114,11 +1149,15 @@ def emit(source: Path, output: Path) -> None:
                     lines.append(f"stack45 {x:.3f} {y:.3f}\n")
         else:
             port_y = tracks[keys[0]]
+            if port in ("VSS_SE", "VSS_SO"):
+                lines.append(f"make_supply_port4 {port} {index} "
+                             f"{x:.3f} {port_y:.3f}\n")
+                continue
             if port in output_ports:
                 lines.append(f"make_port4 {port} {index} {x:.3f} {port_y:.3f}\n")
                 continue
             lines.append(f"stack45 {x:.3f} {port_y:.3f}\n")
-        if port in ("VDD", "VSS"):
+        if port in ("VDD", "VSS", "VDD_WE", "VDD_WO", "VSS_SE", "VSS_SO"):
             lines.append(f"make_supply_port {port} {index} {x:.3f} {port_y:.3f}\n")
         else:
             lines.append(f"make_port {port} {index} {x:.3f} {port_y:.3f}\n")

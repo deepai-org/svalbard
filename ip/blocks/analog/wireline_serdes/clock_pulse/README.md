@@ -46,44 +46,53 @@ ODD uses a stronger local delayed-end stage. Programmability provides
 calibration choices; it does not make a failing code acceptable.
 
 The current 20-case schematic screen is retained as a failure. None of the
-four profiles covers all limits in any declared environment: nominal profiles
-miss non-overlap or the 75 mA limit, FF/cold reaches roughly 83--87 mA, and the
-present slow-corner interval choices either lose the event or miss width and
-delay. This supersedes the earlier schematic-coverage claim and must be fixed
-before a full extracted PVT campaign is meaningful.
+four profiles covers all limits in any declared environment. TT spans
+73.31--76.42 mA, FF/cold reaches 81.68--85.49 mA, and the present fast/hot and
+slow-corner interval choices lose events or miss width and delay. This
+supersedes the earlier schematic-coverage claim; exact extraction is screened
+separately rather than inferred from this ideal-interconnect matrix.
 
 `generate_pulse_layout.py` flattens the parameterized circuit into 422 MOS
 devices, resolves forwarded sizing parameters, aligns complementary devices as
 CMOS cells, routes phase-local nets in functional bands, and stacks EVEN and
-ODD vertically. The current 499.6 by 285 um candidate is zero-DRC and uniquely
-pin-resolved LVS-matched. Four-micron M4 supply tracks, full-width M5 rails,
-local M4/M5 via arrays, five source accesses, and route-aware distributed drain
-accesses reduce final-bank current funneling without crossing reserved gate,
-supply-tap, or complementary-device columns.
+ODD vertically. The current 498.0 by 285 um candidate is zero-DRC and uniquely
+pin-resolved LVS-matched. Four-micron M4 logic-supply tracks, six-micron M5
+rails, centered high-current source pickup, and route-aware distributed
+drain/source accesses reduce current funneling without crossing reserved gate,
+supply-tap, or complementary-device columns. Dedicated `VDD_WE`/`VDD_WO`
+write-source pins and `VSS_SE`/`VSS_SO` sense-source pins are tied to the same
+global supplies by the parent; device bodies remain on the continuous global
+well/substrate rails. Hierarchical power-grid attachment is therefore explicit
+instead of assuming all pulse current enters one left-edge pin.
 
-Its 9,045-resistor/6,110-capacitor exact nominal extraction passes every timing
-limit: EVEN/ODD sense widths are 574.57/602.71 ps, write widths are
-215.74/198.40 ps, write delay is 677.64 ps, non-overlap is 103.07 ps, and phase
-spacing is 380.72 ps at 68.61 mA. It is still an electrical failure. EVEN/ODD
-WRITE peaks are 3.002/2.906 V rather than at least 3.05 V; sense lows are
-0.253/0.313 V rather than at most 0.25 V. The evidence is therefore a timing-
-closed nominal physical checkpoint, not a closed pulse macro.
+Its 9,320-resistor/6,057-capacitor exact nominal extraction passes the complete
+contract. EVEN/ODD sense widths are 576.84/581.83 ps, write widths are
+218.29/110.83 ps, write delay is 657.45 ps, non-overlap is 80.61 ps, phase
+spacing is 395.18 ps, and current is 74.697 mA. Sense highs are 3.144/3.123 V
+with 0.127/0.174 V lows; WRITE highs are 3.065/3.266 V with 0.189/0.214 V lows.
+The full exact 20-case campaign passes only TT profile `[0,8,9]`, however:
+FF/cold exceeds current or width/delay limits, fast/hot and SS/hot lose restored
+events, and SS/cold loses one or both WRITE events. This is a nominally closed
+physical checkpoint with exact-PVT coverage of 1/5 environments, not a released
+pulse macro.
 
 `scripts/analyze_pex_net.py` now traces shortest extracted resistance from a
-named root to device terminals selected by gate/model patterns. On this exact
-PEX the worst final-PMOS source path is 27.98 ohm; the preceding two-access
-layout was 32.15 ohm. The retained resistance experiment and larger-final-bank
-experiments show that blindly adding width increases gate capacitance and can
-lower the output peak. The next revision must remove the remaining dominant
-source/output access segments or add a genuinely local rail-restoring topology,
-then rebuild profile coverage and re-run full schematic and extracted PVT.
+named root to device terminals selected by gate/model patterns. Counterfactual
+scaling localized the former rail failure to supply delivery rather than output
+routing. The dedicated write pins reduce the port-to-final-source path to
+19.34 ohm; the dedicated sense grounds use legal 1.5-um M4 channels and extract
+to 32.60 ohm worst path. Larger final banks and an early feed-forward pull-up
+both reduced, rather than improved, delivered peak voltage. The next revision
+must add realizable fast/hot and slow-corner profiles and reduce FF/cold current
+while preserving the narrow nominal margins.
 
 The local review render is `pulse_layout.png`; the documentation copy is
 [clock-pulse-generator-layout.png](../../../../../docs/images/clock-pulse-generator-layout.png).
 The checked failing [schematic matrix](pulse_schematic_result.json), retained
-[nominal PEX checkpoint](pulse_pex_nominal_failed.json), and
+[passing nominal PEX checkpoint](pulse_pex_nominal_result.json), full
+[exact-PVT matrix](pulse_pex_pvt_result.json), and
 [physical checkpoint](pulse_physical_checkpoint.json) keep circuit coverage,
-electrical failure, and physical legality as separate claims.
+nominal closure, PVT failure, and physical legality as separate claims.
 Run `run_pulse_generator.sh` for the schematic matrix and
 `run_pulse_physical.sh` for generation, render, DRC, LVS, full-RC extraction,
 and the nominal electrical gate. A failed physical run retains its complete

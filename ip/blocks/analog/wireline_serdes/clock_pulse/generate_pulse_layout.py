@@ -871,6 +871,11 @@ def emit(source: Path, output: Path) -> None:
         "XO__WMID": 109.0 + PHASE_Y_SHIFT,
         "XO__WMIDB": 106.9 + PHASE_Y_SHIFT,
         "XO__WB0": 111.1 + PHASE_Y_SHIFT,
+        # The final inverter has NMOS diffusion stacks on the generic 104.8
+        # ordinate. Keep its gate net on the adjacent track; WB2 occupies the
+        # same ordinate only over a disjoint x interval.
+        "XE__WB4": 113.0,
+        "XO__WB4": 113.0 + PHASE_Y_SHIFT,
         # Dedicated final-sense ground tracks occupy the otherwise empty
         # boundary below lane 2.  Keeping them off the global VSS ordinate
         # preserves separate LVS nets while allowing a 3-um M4 path.
@@ -897,6 +902,7 @@ def emit(source: Path, output: Path) -> None:
         "XE__WMID": 3, "XO__WMID": 3,
         "XE__WMIDB": 2, "XO__WMIDB": 2,
         "XE__WB0": 4, "XO__WB0": 4,
+        "XE__WB4": 0, "XO__WB4": 0,
     }
     approximate_bounds: dict[str, list[float]] = {
         key: [math.inf, -math.inf]

@@ -232,16 +232,34 @@ logic depth still filtered the narrow state. Probe rise and fall times at the
 selector input and output as well as voltage extrema. For pulse paths, rail
 validity and minimum high/low duration are separate interface contracts.
 
-Separating global pulse placement from a local programmable width delay remains
-the preferred architectural direction, but the local bank needs an explicit
-delay-resolution budget before implementation. Two ordinary inverter stages
-cost roughly 400 ps in the explored GF180 slow/hot case, which is too coarse for
-a 100--220 ps output contract. A ratioed one-inverter detector showed a sharp
-pulse-filtering threshold once the 500 fF output taper was included. Future
-revisions should characterize a small physical delay primitive and its loaded
-rise/fall asymmetry first, then compose start selection, width selection, edge
-detection, and the output taper. A schematic-only code that crosses this sharp
-threshold is not a robust calibration window.
+Separate global pulse placement from local interval formation, and transport a
+full-width state rather than a narrow pulse through every slow or programmable
+boundary. In the compact GF180 pulse macro, restoring the incoming SENSE step,
+delaying the start once, deriving a separately loaded end edge, and forming the
+active-low interval locally reduced extracted nominal WRITE from roughly
+340 ps to 207--214 ps and produced a complete TT contract pass. Selecting an
+already-formed narrow pulse with transmission gates or static logic instead
+attenuated or erased it. Apply PVT profile selection to the step, delay, or
+drive strength before the interval detector; do not mux the local event after
+formation.
+
+Treat the final output gate as a load on the pulse generator, not as an
+independent strength knob. In the same macro, adding final PMOS width increased
+the preceding-stage gate capacitance and lowered the peak reached during a
+roughly 200 ps event. Reducing final NMOS load recovered fast/hot peak voltage
+but slowed the falling edge enough to violate the 220 ps width limit. Sweep the
+source interval and final pull-up/pull-down loads jointly, measure both edge
+times and peak rails, and keep only regenerated DRC/LVS/PEX candidates. A
+profile is useful only if it acts on a full-width internal state and the same
+realizable profile covers both complementary phases.
+
+The remaining slow/hot failure is also a reminder that a nominally valid
+inverter cascade may be a pulse filter at PVT. Probe every restoration stage:
+an intermediate node that never crosses the next effective threshold cannot be
+repaired by a larger final driver. For the next revision, characterize a small
+physical profile-controlled delay or assist primitive at the full-step node,
+require a contiguous passing code region, and then replay the entire extracted
+macro rather than extrapolating from one modified deck.
 
 Search already-realizable controls jointly across an extracted producer,
 optional restoring stage, and consumer before changing topology. Require a

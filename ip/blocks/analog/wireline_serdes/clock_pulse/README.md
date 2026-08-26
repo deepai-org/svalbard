@@ -54,26 +54,30 @@ resources.
 complementary devices as CMOS cells, routes phase-local nets in functional
 bands, and stacks EVEN and ODD vertically. The current 175.4 by 285 um
 candidate is zero-DRC, uniquely pin-resolved LVS-matched, and extracts to 3,408
-resistors plus 2,477 capacitors. Substrate-tap columns are filtered against
+resistors plus 2,477 capacitors in the retained earlier checkpoint. The current
+delayed-step revision extracts to 3,492 resistors plus 2,531 capacitors.
+Substrate-tap columns are filtered against
 complete multi-finger device spans, fixed HCLK landing intervals block the
 automatic M4 allocator, and route comments make emitted nets inspectable.
 Dedicated `VDD_WE`/`VDD_WO` and `VSS_SE`/`VSS_SO` pins retain explicit
 parent-grid attachment.
 
-Exact PEX produces complete dual-phase waveforms in all three focused
-environments. TT sense widths are 598.30/590.88 ps and write widths are
-336.47/349.55 ps at 41.172 mA. FF/125 C gives 597.39/589.16 ps sense and
-336.93/349.84 ps write at 38.354 mA. SS/125 C gives 543.55/539.69 ps sense and
-119.84/123.13 ps write at 23.501 mA. This is a major topology and area
-improvement, but no case passes the complete contract: TT/FF write is wider
-than the 100--220 ps limit and begins before the external SENSE fall; SS/hot
-WRITE reaches only 1.922/1.926 V and its modulo-cycle delay is too early. The
-full 20-case campaign is not promoted until those failures are corrected.
+The current extracted candidate passes the complete focused TT contract:
+591.87/583.98 ps SENSE, 206.87/213.84 ps WRITE, 605.54 ps write delay,
+13.67 ps non-overlap, valid rails, and 40.669 mA. FF/125 C gives
+592.74/583.02 ps SENSE and 202.82/207.82 ps WRITE with valid timing and SENSE
+rails, but WRITE reaches only 2.687/2.692 V against a 2.72 V minimum. SS/125 C
+retains valid 540.98/540.58 ps SENSE pulses, but the write restoration chain
+does not propagate a complete pulse. Focused coverage is therefore 1/3, not
+closure, and the full 20-case campaign is not promoted.
 
-The central retained lesson is that a narrow pulse must not be transported
-through a slow restoration chain. The robust write topology transports the
-full-swing `WSB` step, delays that step physically, forms the interval locally,
-and only then drives the output taper. A minimum-load receiver failed because
+The central retained lesson is that a narrow pulse must not be selected or
+transported through a slow restoration chain. The improved write topology
+restores the full-swing `WSB` step, delays the start once, derives a separately
+loaded end edge, forms the active-low interval locally, and only then drives the
+output taper. This change reduced nominal write width from roughly 340 ps to
+207--214 ps and produced the first exact-PEX TT pass on the compact macro. A
+minimum-load receiver failed because
 its 0.6 um device could not charge even a short extracted route; sizing must
 include route/via capacitance and the parallel gate loads of both detector
 branches. Attempts to mux narrow active-low pulses through transmission gates
@@ -86,9 +90,12 @@ scaling localized the former rail failure to supply delivery rather than output
 routing. The dedicated write pins reduce the port-to-final-source path to
 19.34 ohm; the dedicated sense grounds use legal 1.5-um M4 channels and extract
 to 32.60 ohm worst path. Larger final banks and an early feed-forward pull-up
-both reduced, rather than improved, delivered peak voltage. The next revision
-must add realizable fast/hot and slow-corner profiles and reduce FF/cold current
-while preserving the narrow nominal margins.
+both reduced, rather than improved, delivered peak voltage. A stronger final
+PMOS increased the preceding stage's gate load and lowered the short-pulse
+peak; reducing final NMOS load recovered FF/hot swing but lengthened WRITE
+beyond 220 ps. The next revision must apply the existing profile controls to a
+full-width state before interval formation, especially for SS/hot, and recover
+the remaining 28--33 mV FF/hot WRITE swing without losing nominal width margin.
 
 The local review render is `pulse_layout.png`; the documentation copy is
 [clock-pulse-generator-layout.png](../../../../../docs/images/clock-pulse-generator-layout.png).
@@ -97,10 +104,11 @@ The checked failing [schematic matrix](pulse_schematic_result.json), retained
 [exact-PVT matrix](pulse_pex_pvt_result.json), and
 [physical checkpoint](pulse_physical_checkpoint.json) keep circuit coverage,
 nominal closure, PVT failure, and physical legality as separate claims.
-The newer compact candidate has separate, explicitly failing
+The newer compact candidate has separate
 [nominal](pulse_candidate_nominal_result.json) and
-[hot-corner](pulse_candidate_hot_result.json) records so it cannot overwrite
-the older nominally passing checkpoint.
+[hot-corner](pulse_candidate_hot_result.json) records. The former passes and
+the latter explicitly fails, so neither overwrites the older checkpoint or
+implies complete PVT closure.
 Run `run_pulse_generator.sh` for the schematic matrix and
 `run_pulse_physical.sh` for generation, render, DRC, LVS, full-RC extraction,
 the nominal electrical gate, and the full PVT matrix. Expected failing matrices

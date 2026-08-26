@@ -67,6 +67,14 @@ XD0 A DI VDD VSS cp_inv WP=4u WN=2u MP=2 MN=2
 XD1 DI Y VDD VSS cp_inv WP=4u WN=1.3u MP=2 MN=2
 .ends cp_sense_tail_delay
 
+* Write interval termination keeps a normal first-stage input load and adds
+* only one PMOS finger to the second stage, advancing the delayed rising edge
+* without moving the restored start edge.
+.subckt cp_write_end_delay A Y VDD VSS
+XD0 A DI VDD VSS cp_inv WP=4u WN=2u MP=2 MN=2
+XD1 DI Y VDD VSS cp_inv WP=4u WN=2u MP=3 MN=2
+.ends cp_write_end_delay
+
 * Non-inverting edge shaper.  The falling output edge is deliberately slower
 * than the rising edge, moving the SENSE leading edge later without consuming
 * its recovery interval or changing logic thresholds.
@@ -228,14 +236,14 @@ XRB2 RB1 BOOST VDD VSS cp_inv WP=8u WN=8u MP=5 MN=3
 XWISO0 SENSE WSIB VDD VSS cp_inv WP=4u WN=4u
 XWISO1 WSIB WSA VDD VSS cp_inv WP=2u WN=6u
 XWISO2 WSA WSB VDD VSS cp_inv WP=6u WN=4u MP=2 MN=1
-XWSD0 WSB WSM0 VDD VSS cp_delay_unit WP=4u WN=2u MP=2 MN=2
-XWSD1 WSM0 WSD VDD VSS cp_delay_unit WP=4u WN=2u MP=2 MN=2
-XWPN WSB WSD WPN VDD VSS cp_rise_b_small
+XWBASE WSB WBA VDD VSS cp_delay_unit WP=4u WN=2u MP=2 MN=2
+XWSD0 WBA WSD VDD VSS cp_write_end_delay
+XWPN WBA WSD WPN VDD VSS cp_rise_b_small
 XWB0 WPN WB1 VDD VSS cp_inv WP=4u WN=4u MP=2 MN=2
 XWB1 WB1 WB2 VDD VSS cp_inv WP=4u WN=4u MP=4 MN=4
 XWB2 WB2 WB3 VDD VSS cp_inv WP=8u WN=8u MP=4 MN=4
 XWB3 WB3 WB4 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=8
-XWB4 WB4 WRITE VDD VDDW VSS cp_final_inv WP=8u WN=8u MP=28 MN=20
+XWB4 WB4 WRITE VDD VDDW VSS cp_final_inv WP=8u WN=8u MP=28 MN=22
 * Preserve the parent interface while calibration is being migrated upward to
 * bias/supply controls. These minimum gate capacitors are route anchors, not
 * timing elements.
@@ -252,7 +260,7 @@ XAQ2 Q2RESET VSS cp_gate_cap W=0.4u
 + E_SENSE E_BOOST E_WRITE
 + O_SENSE O_BOOST O_WRITE
 XE CLKP CLKP_H SEL0 SEL1 SEL2 SEL3 SEL2 VDD VDD_WE VSS VSS_SE
-+ E_SENSE E_BOOST E_WRITE cp_phase SB2_WN=6.5u SB2_MN=7
++ E_SENSE E_BOOST E_WRITE cp_phase SB2_WN=6.5u SB2_MN=8
 XO CLKN CLKN_H SEL0 SEL1 SEL2 SEL3 VSS VDD VDD_WO VSS VSS_SO
-+ O_SENSE O_BOOST O_WRITE cp_phase SB2_WN=6.5u SB2_MN=7
++ O_SENSE O_BOOST O_WRITE cp_phase SB2_WN=6.5u SB2_MN=8
 .ends clock_pulse_generator

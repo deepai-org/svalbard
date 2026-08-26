@@ -169,6 +169,7 @@ def group_depths(groups: dict[str, Group], phase: str) -> dict[str, int]:
               "cp_cond_npd": ("G", "EN"),
               "cp_gate_cap": ("A",), "cp_route_anchor": ("A",),
               "cp_profile3_delay": ("A",),
+              "cp_sense_tail_delay": ("A",),
               "cp_profile_write_restore": ("A", "FAST")}
     inputs["cp_tristate_inv"] = ("A", "EN", "ENB")
     outputs = {"cp_inv": "Y", "cp_final_inv": "Y",
@@ -177,6 +178,7 @@ def group_depths(groups: dict[str, Group], phase: str) -> dict[str, int]:
                "cp_tg": "Y", "cp_cond_npd": "D",
                "cp_gate_cap": None, "cp_route_anchor": None,
                "cp_profile3_delay": "Y",
+               "cp_sense_tail_delay": "Y",
                "cp_profile_write_restore": "Y"}
     outputs["cp_tristate_inv"] = "Y"
     local = [group for group in groups.values() if group.phase == phase]
@@ -219,6 +221,19 @@ def gate_extra(device: Device) -> float:
     if ("__XBA__" in device.name or "__XNA__" in device.name) \
             and device.name.endswith("XN0"):
         return 0.75
+    # Keep the first middle-profile PMOS gate strap below the nearby SEL3
+    # access rectangle when later sense groups deepen the placement graph.
+    # The contact remains on the same poly gate; only its Metal2 landing moves.
+    if "__XWMCB__" in device.name \
+            and device.name.endswith(("XP0", "XN0")):
+        return 2.0
+    # Keep the SENSE receiver gate landing clear of the same device's supply
+    # landing. Moving only the contact along existing poly preserves the
+    # electrical input load.
+    if re.search(r"__XWISO[0-3]__", device.name):
+        return 1.0
+    if re.search(r"__XA(?:CLK|SEL[0-3]|Q2)__", device.name):
+        return 1.0
     return 0.45 if device.width_um < 2.0 else 0.0
 
 
@@ -329,10 +344,10 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
                 "XSM2A": 3, "XSM2B": 4,
                 "XSM3A": 5, "XSM3B": 6, "XSM3C": 7,
                 "XSMR": 8,
-                "XSN": 10, "XSD0": 11,
-                "XSB0": 12, "XRB0": 13, "XRBI": 14,
-                "XSB1": 15, "XRB1": 16, "XRBB": 17,
-                "XSB2": 18, "XRB2": 19,
+                "XSN": 10, "XHSD0": 11, "XHSD1": 12,
+                "XHSN": 13, "XSB0": 14, "XRB0": 15, "XRBI": 16,
+                "XSB1": 17, "XRB1": 18, "XRBB": 19,
+                "XSB2": 20, "XRB2": 21,
             }
 
             def sense_order(group: Group) -> tuple[int, int, int, str]:
@@ -456,9 +471,11 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
                     else:
                         p_shift = (max(0.0, (device.width_um - 10.0) / 2.0)
                                    if device.kind.startswith("pfet") else 0.0)
+                        n_shift = (max(0.0, (device.width_um - 10.0) / 2.0)
+                                   if device.kind.startswith("nfet") else 0.0)
                         device.cy = base + (12.0 + p_shift
                                             if device.kind.startswith("pfet")
-                                            else 0.0)
+                                            else -n_shift)
             # The logic/mux lanes are dominated by local RC, so use a compact
             # standard-cell-like channel.  Delay/prebuffer lanes retain the
             # wider channel needed by their many cross-lane tap routes.
@@ -627,8 +644,9 @@ def route_columns(devices: list[Device], reserved: list[float],
     for device in devices:
         phase_columns = occupied[device.phase]
         span = device_span(device)
+        gate_x_nudge = 0.1 if "__XWB4__" in device.name else 0.0
         preferred = {"D": device.cx - span / 2.0 - 0.75,
-                     "G": device.cx,
+                     "G": device.cx + gate_x_nudge,
                      "S": device.cx + span / 2.0 + 0.75}
         width = device.width_um
         terminal_y = {
@@ -759,8 +777,11 @@ def route_key(device: Device, net: str) -> str:
 
 
 def interval_lanes(keys: list[str], bounds: dict[str, list[float]],
-                   fixed: dict[str, int] | None = None) -> dict[str, int]:
+                   fixed: dict[str, int] | None = None,
+                   blocked: dict[int, list[tuple[float, float]]] | None = None
+                   ) -> dict[str, int]:
     fixed = fixed or {}
+    blocked = blocked or {}
     fixed_intervals: dict[int, list[tuple[float, float]]] = {}
     for key, lane in fixed.items():
         fixed_intervals.setdefault(lane, []).append(tuple(bounds[key]))
@@ -778,7 +799,11 @@ def interval_lanes(keys: list[str], bounds: dict[str, list[float]],
                          and all(end + 1.4 <= fixed_start
                                  or fixed_end + 1.4 <= start
                                  for fixed_start, fixed_end
-                                 in fixed_intervals.get(index, []))),
+                                 in fixed_intervals.get(index, []))
+                         and all(end + 1.4 <= blocked_start
+                                 or blocked_end + 1.4 <= start
+                                 for blocked_start, blocked_end
+                                 in blocked.get(index, []))),
                         len(lane_ends))
         if lane == len(lane_ends):
             lane_ends.append(end)
@@ -792,7 +817,11 @@ def emit(source: Path, output: Path) -> None:
     subckts = parse(source)
     devices, groups = flatten(subckts, "clock_pulse_generator")
     xmax, group_x = place(devices, groups)
-    tap_xs = list(frange(7.0, xmax - 4.0, 28.0))
+    tap_xs = [x for x in frange(7.0, xmax - 4.0, 28.0)
+              if all(abs(x - device.cx) >= device_span(device) / 2.0 + 1.2
+                     for device in devices)]
+    if not tap_xs:
+        raise RuntimeError("placement leaves no legal substrate-tap column")
     first_seen: dict[str, int] = {}
     key_lane_sets: dict[str, set[int]] = {}
     for device in devices:
@@ -819,6 +848,12 @@ def emit(source: Path, output: Path) -> None:
     # at opposite edges of the lane instead of on adjacent tracks; extraction
     # of the adjacent version showed 5.14 fF of mutual capacitance.
     fixed_signal_tracks = {
+        "E:SEL3": 30.7, "E:SEL2": 32.8,
+        "E:SEL1": 34.9, "E:SEL0": 39.1,
+        "O:SEL3": 30.7 + PHASE_Y_SHIFT,
+        "O:SEL2": 32.8 + PHASE_Y_SHIFT,
+        "O:SEL1": 34.9 + PHASE_Y_SHIFT,
+        "O:SEL0": 39.1 + PHASE_Y_SHIFT,
         # Avoid 89.5/249.5: those are also the allocator's lane-3 track zero.
         # Reusing that ordinate can create a DRC-clean electrical short when
         # a different local net happens to receive slot zero.
@@ -841,9 +876,23 @@ def emit(source: Path, output: Path) -> None:
         # preserves separate LVS nets while allowing a 3-um M4 path.
         "VSS_SE": LANE_PITCH * 2 - 11.5,
         "VSS_SO": LANE_PITCH * 2 - 11.5 + PHASE_Y_SHIFT,
+        # Keep the local final-stage supply clear of the large NMOS drain
+        # contact array. The generic allocator can otherwise choose 111.1 um,
+        # placing the supply route directly beside an output contact stack.
+        "VDD_WE": 115.3,
+        "VDD_WO": 115.3 + PHASE_Y_SHIFT,
     }
     signal_keys = [key for key in first_seen if key not in special_tracks]
     precolored_local_lanes = {
+        "E:SEL3": 0, "O:SEL3": 0,
+        "E:SEL2": 1, "O:SEL2": 1,
+        "E:SEL1": 2, "O:SEL1": 2,
+        "E:SEL0": 4, "O:SEL0": 4,
+        # Keep the long D08 write epoch clear of the expanded HCLK Metal5
+        # landing set.  Local lane 3 is disjoint from the other group-0 route
+        # over D08's exact x interval.
+        "XE__D08": 3, "XO__D08": 3,
+        "XE__D10": 5, "XO__D10": 5,
         "XE__P09S": 3, "XO__P09S": 3,
         "XE__WMID": 3, "XO__WMID": 3,
         "XE__WMIDB": 2, "XO__WMIDB": 2,
@@ -868,6 +917,11 @@ def emit(source: Path, output: Path) -> None:
         "XE__CT": "DBG_E_CT", "XE__ST": "DBG_E_ST",
         "XE__CTD": "DBG_E_CTD", "XE__STD": "DBG_E_STD",
         "XE__SN0": "DBG_E_SN0", "XE__SND": "DBG_E_SND",
+        "XE__HSD": "DBG_E_HSD", "XE__HSN": "DBG_E_HSN",
+        "XE__WGS": "DBG_E_WGS", "XE__WWE": "DBG_E_WWE",
+        "XE__WSIB": "DBG_E_WSIB", "XE__WSA": "DBG_E_WSA",
+        "XE__WSB": "DBG_E_WSB", "XE__WSR": "DBG_E_WSR",
+        "XE__WSD": "DBG_E_WSD", "XE__WPN": "DBG_E_WPN",
         "XE__SB0": "DBG_E_SB0",
         "XE__SB1": "DBG_E_SB1",
         "XE__PCLK": "DBG_E_PCLK", "XE__P08": "DBG_E_P08",
@@ -890,6 +944,11 @@ def emit(source: Path, output: Path) -> None:
         "XO__ST": "DBG_O_ST", "XO__CTD": "DBG_O_CTD",
         "XO__STD": "DBG_O_STD",
         "XO__SN0": "DBG_O_SN0", "XO__SND": "DBG_O_SND",
+        "XO__HSD": "DBG_O_HSD", "XO__HSN": "DBG_O_HSN",
+        "XO__WGS": "DBG_O_WGS", "XO__WWE": "DBG_O_WWE",
+        "XO__WSIB": "DBG_O_WSIB", "XO__WSA": "DBG_O_WSA",
+        "XO__WSB": "DBG_O_WSB", "XO__WSR": "DBG_O_WSR",
+        "XO__WSD": "DBG_O_WSD", "XO__WPN": "DBG_O_WPN",
         "XO__SB0": "DBG_O_SB0",
         "XO__SB1": "DBG_O_SB1",
         "XO__XWST__B1": "DBG_O_WSTB1",
@@ -927,21 +986,23 @@ def emit(source: Path, output: Path) -> None:
     port_xs.update({"VSS_SE": xmax + 4.0, "VSS_SO": xmax + 4.0})
     port_xs.update({port: xmax + 2.0 + 2.0 * index
                     for index, port in enumerate(output_ports)})
-    # The slow-profile clock taps are parent-strapped copies of CLKP/CLKN.
-    # Place them beside the profile gate rather than forcing that extra clock
-    # load through the macro's long primary-clock route.
-    hot_clock_x = group_x["XE__XPG3N"] - 10.0
+    # The dedicated full-swing clock taps are parent-strapped copies of
+    # CLKP/CLKN. Place them beside the first HCLK delay receiver rather than
+    # forcing that clock load through the macro's long legacy-clock route.
+    hclk_receiver = "XE__XPG3N" if "XE__XPG3N" in group_x \
+        else "XE__XHSD0__XD0"
+    hot_clock_x = group_x[hclk_receiver] - 10.0
     port_xs.update({"CLKP_H": hot_clock_x, "CLKN_H": hot_clock_x})
     output_drivers = {
         "E_SENSE": "XE__XSB2", "E_BOOST": "XE__XRB2",
-        "E_WRITE": "XE__XWB3", "O_SENSE": "XO__XSB2",
-        "O_BOOST": "XO__XRB2", "O_WRITE": "XO__XWB3",
+        "E_WRITE": "XE__XWB4", "O_SENSE": "XO__XSB2",
+        "O_BOOST": "XO__XRB2", "O_WRITE": "XO__XWB4",
     }
     for port, driver in output_drivers.items():
         width, _ = group_geometry(groups[driver])
         port_xs[port] = group_x[driver] + width + 2.0
-    write_driver_width, _ = group_geometry(groups["XE__XWB3"])
-    write_supply_x = group_x["XE__XWB3"] + write_driver_width / 2.0
+    write_driver_width, _ = group_geometry(groups["XE__XWB4"])
+    write_supply_x = group_x["XE__XWB4"] + write_driver_width / 2.0
     port_xs.update({"VDD_WE": write_supply_x, "VDD_WO": write_supply_x})
     for port, keys in top_keys.items():
         endpoint = port_xs[port]
@@ -955,14 +1016,24 @@ def emit(source: Path, output: Path) -> None:
     odd_keys = [key for key in signal_keys if key not in even_keys]
     key_groups = {key: min(key_lane_sets[key]) for key in signal_keys}
 
-    def grouped_lanes(keys: list[str], routing_bounds: dict[str, list[float]]):
+    hclk_landing_blocks = {
+        phase: [(device.cx - 8.0, device.cx + 8.0)
+                for device in devices
+                if device.phase == phase
+                and device.nodes[1] in ("CLKP_H", "CLKN_H")]
+        for phase in ("E", "O")
+    }
+
+    def grouped_lanes(keys: list[str], routing_bounds: dict[str, list[float]],
+                      phase: str):
         answer = {}
         for group in range(LANE_COUNT):
             grouped_keys = [key for key in keys if key_groups[key] == group]
             local = interval_lanes(
                 grouped_keys, routing_bounds,
                 {key: lane for key, lane in precolored_local_lanes.items()
-                 if key in grouped_keys})
+                 if key in grouped_keys},
+                {1: hclk_landing_blocks[phase]} if group == 0 else None)
             answer.update({key: 100 * group + lane for key, lane in local.items()})
         return answer
 
@@ -974,8 +1045,8 @@ def emit(source: Path, output: Path) -> None:
                 + PHASE_Y_SHIFT * int(odd_phase))
 
     def assign_tracks(routing_bounds: dict[str, list[float]]):
-        even = grouped_lanes(even_keys, routing_bounds)
-        odd = grouped_lanes(odd_keys, routing_bounds)
+        even = grouped_lanes(even_keys, routing_bounds, "E")
+        odd = grouped_lanes(odd_keys, routing_bounds, "O")
         assigned = dict(special_tracks)
         assigned.update({key: track_y(code, False) for key, code in even.items()})
         assigned.update({key: track_y(code, True) for key, code in odd.items()})
@@ -1007,7 +1078,8 @@ def emit(source: Path, output: Path) -> None:
         # same-net merging and otherwise puts the second access needlessly
         # close to an unrelated lane-0 Metal4 route.
         for device in devices:
-            if device.nodes[1] in ("CLKP_H", "CLKN_H"):
+            if "__XPG3N__" in device.name \
+                    and device.nodes[1] in ("CLKP_H", "CLKN_H"):
                 columns[(device.name, "G")] = device.cx
         bounds = exact_bounds(columns)
         moved = False
@@ -1089,7 +1161,7 @@ def emit(source: Path, output: Path) -> None:
         # access segments.  Land this high-current source strap at the device
         # center; it crosses alternating drain Metal1 without contacting it
         # and reaches each source diffusion through its own via1.
-        s_y = (device.cy if ((root == "XWB3" and device.kind.startswith("pfet"))
+        s_y = (device.cy if ((root == "XWB4" and device.kind.startswith("pfet"))
                              or (root == "XSB2" and device.kind.startswith("nfet")))
                else device.cy - max(0.70, width / 2.0 - 0.8))
         d_points = [device.cx + x for x in offsets(nf, 0)]
@@ -1112,10 +1184,10 @@ def emit(source: Path, output: Path) -> None:
             lines.append(f"rect metal3 {route_x-0.28:.3f} {min(y,ty)-0.28:.3f} "
                          f"{route_x+0.28:.3f} {max(y,ty)+0.28:.3f}\n")
             lines.append(f"stack34 {route_x:.3f} {ty:.3f}\n")
-            if (terminal == "S" and root == "XWB3" and net == "VDD"
+            if (terminal == "S" and root == "XWB4" and net == "VDD"
                     and min(abs(route_x - tap_x) for tap_x in tap_xs) >= 1.2):
                 lines.append(f"supply_stack45 {route_x:.3f} {ty:.3f}\n")
-            if terminal in ("D", "S") and root == "XWB3" and len(points) >= 5:
+            if terminal in ("D", "S") and root == "XWB4" and len(points) >= 5:
                 # The loaded write banks cannot funnel their current through
                 # one minimum-width Metal3 access. Fan the already-connected
                 # Metal2 diffusion straps into independent columns.
@@ -1167,14 +1239,23 @@ def emit(source: Path, output: Path) -> None:
         y = tracks[key]
         half = (2.00 if key.endswith((":VDD", ":VSS")) else
                 0.75 if key in ("VSS_SE", "VSS_SO")
+                else 0.38 if key in ("VDD_WE", "VDD_WO")
                 else 0.38 if key in special_signal_tracks
                 else 0.23)
         if key in special_tracks and key not in special_signal_tracks:
             x1 = min(x1, tap_xs[0])
             x2 = max(x2, tap_xs[-1])
+        if key in ("VDD_WE", "VDD_WO"):
+            # Put the large Metal4/5 port stack inside, rather than exactly on
+            # the end of, its M4 strap. Coincident strap/landing boundaries
+            # leave a sub-minimum notch in Magic's unioned polygon.
+            x1 -= 1.0
+            x2 += 1.0
         layer = "metal5" if key in special_signal_tracks else "metal4"
-        lines.append(f"rect {layer} {x1-0.38:.3f} {y-half:.3f} "
-                     f"{x2+0.38:.3f} {y+half:.3f}\n")
+        x_pad = 0.38
+        lines.append(f"# route {key}\n")
+        lines.append(f"rect {layer} {x1-x_pad:.3f} {y-half:.3f} "
+                     f"{x2+x_pad:.3f} {y+half:.3f}\n")
         if key in special_signal_tracks:
             access_columns = []
             for device in devices:
@@ -1184,15 +1265,25 @@ def emit(source: Path, output: Path) -> None:
                         lines.append(
                             f"stack45 {columns[(device.name, terminal)]:.3f} "
                             f"{y:.3f}\n")
-            # Merge only the nearby gate-access Metal4 enclosures.  Extending
-            # this lower-metal strap back to the top-level Metal5 port would
-            # approach an unrelated lane-0 signal; the port itself needs no
-            # layer transition.
-            if access_columns:
-                lines.append(
-                    f"rect metal4 {min(access_columns)-0.38:.3f} "
-                    f"{y-0.38:.3f} {max(access_columns)+0.38:.3f} "
-                    f"{y+0.38:.3f}\n")
+            # Each access gets its own stack45 landing.  Metal5 connects the
+            # clock fanout; a lower-metal strap spanning all accesses becomes
+            # a spacing hazard as new parent-clock consumers are added.
+            access_columns = sorted(set(access_columns))
+            cluster: list[float] = []
+            clusters: list[list[float]] = []
+            for access_x in access_columns:
+                if cluster and access_x - cluster[-1] >= 1.60:
+                    clusters.append(cluster)
+                    cluster = []
+                cluster.append(access_x)
+            if cluster:
+                clusters.append(cluster)
+            for local_cluster in clusters:
+                if len(local_cluster) > 1:
+                    lines.append(
+                        f"rect metal4 {local_cluster[0]-0.38:.3f} "
+                        f"{y-0.38:.3f} {local_cluster[-1]+0.38:.3f} "
+                        f"{y+0.38:.3f}\n")
         if key in debug_labels:
             label_x = (x1 + x2) / 2.0
             lines.append(f"box values {label_x-0.2:.3f} {y-0.2:.3f} "

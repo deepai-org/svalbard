@@ -933,34 +933,29 @@ with every fixed track or assert geometric uniqueness before emitting shapes;
 never infer connectivity correctness from DRC alone.
 
 Place restoration at the consumer boundary according to which side can bear a
-long wire. In a programmable high-speed selector, moving a tap prebuffer into
-the selector row changed a restored output from a long cross-row RC node into a
-short local node; the long connection then ended at the prebuffer's gate input.
-The pulse-generator work subsequently separated selector restoration, interval
-storage, qualification, and output drive. A reset-dominant cross-coupled-NOR
-latch driven by the full-width start/end clocks replaced the filtered
-combinational write glitch. The retained 428-device, 499.6 by 285 um checkpoint
-is zero-DRC, uniquely LVS-matched, and extracts to 9,344R/6,103C. Dedicated
-parent-strapped source-supply pins let the final write and sense banks attach to
-the eventual local grid without pretending that all current enters through one
-left-edge port. Its nominal exact PEX now passes timing, rail, phase-spacing,
-and current limits, but the 20-case matrix passes only one TT profile and just
-1/5 environments. Regeneration and local supply access solved the nominal
-failure; they did not solve fast/hot and slow-corner event loss or FF/cold
-current. Probe and close selector, restoration, interval storage, overlap
-qualification, pulse preservation, output drive, and local PDN as distinct
-boundaries, and never promote a nominal pass to PVT closure.
+long wire. More strongly, do not transport a narrow event through a slow chain
+at all. The pulse-generator investigation replaced a 428-device global
+tap-selector/latch network with a 128-device HCLK source. It transports a
+full-swing step, delays that step, forms the write interval locally, and then
+uses a geometric taper. The 175.4 by 285 um result is zero-DRC, uniquely
+LVS-matched, and 3,408R/2,477C extracted. Exact PEX produces complete dual-phase
+waveforms at TT, FF/hot, and SS/hot with 23.501--41.172 mA, but still fails the
+write-window contract: fast/nominal pulses are too broad and slow/hot amplitude
+is marginal. Treat selector, step restoration, interval formation, output
+drive, and local PDN as distinct measured boundaries, and never promote
+"complete waveform" or nominal success to PVT closure.
 
 When a corner-specific profile exists because a global delayed tap stops
 crossing threshold, do not keep deriving that profile from the failed tap. Give
-it a physically separate parent-strapped clock terminal and route it locally to
-the profile gate, while making the new parent assumption explicit. In the pulse
-macro, `CLKP_H`/`CLKN_H`, a local delay pair, and a wider upstream PMOS moved
-the EVEN profile-3 `P06S/P09S` nodes to 2.649/2.622 V at FF/hot and
-2.644/2.652 V at SS/hot exact PEX. FF/hot then produced both rail-level write
-events and SS/hot produced one. The sense and width contracts still failed, so
-retain both facts: the source/restoration hypothesis was validated, but the
-macro was not corner-closed.
+the macro a physically separate parent-strapped clock terminal and route it
+locally, while making the new parent assumption explicit. The HCLK-derived
+sense source survived TT, FF/hot, and SS/hot extraction after the obsolete
+source network was removed. Attempts to select already-narrow active-low pulses
+through transmission gates or a static three-NOR mux were rejected because
+extracted loading attenuated or erased an event. Prefer selecting full-width
+states or delay parameters before interval formation, then regenerate the pulse
+locally; calibration hardware is useful only when every selectable boundary is
+itself restored and extracted.
 
 When changing drive in a coordinate-sensitive generated layout, distinguish
 finger width from finger count. Adding parallel fingers widens a placement

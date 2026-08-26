@@ -37,56 +37,48 @@ package/pad/channel effects.
 ## Programmable pulse-generator checkpoint
 
 `clock_pulse_generator.spice` is the current transistor-level implementation,
-not a behavioral delay source. Twelve non-inverting delay units feed four
-realized one-hot sense/start/end profiles for both recovered-clock phases. The
-write event is stored by a reset-dominant cross-coupled-NOR interval latch and
-then driven by a four-stage geometric taper. The two phases have explicit
-physical sizing parameters: EVEN has a direct profile-2 reset branch, while
-ODD uses a stronger local delayed-end stage. Programmability provides
-calibration choices; it does not make a failing code acceptable.
+not a behavioral delay source. Each phase starts from its dedicated full-swing
+`CLKP_H`/`CLKN_H` parent clock. One physical falling-edge interval drives
+SENSE/BOOST. WRITE is derived from the restored SENSE boundary through a
+four-inverter receiver, a rising-edge interval detector, and a five-stage
+geometric taper. Exact PEX rejected and removed the old global delay line,
+pass-gate selector, and reset-dominant write latch.
 
-The current 20-case schematic screen is retained as a failure with no passing
-case. The profile-3 path is calibrated against realized interconnect, so its
-ideal-interconnect timing is not used as a substitute for PEX. Exact
-extraction is screened separately and remains the authoritative electrical
-checkpoint.
+The ideal-interconnect screen remains a failure and is not substituted for
+PEX: extracted interconnect changes narrow-pulse behavior materially.
+`run_pulse_hot_probe.sh` performs layout, DRC, unique LVS, exact full-RC
+extraction, and TT plus FF/125 C and SS/125 C electrical probes with bounded
+resources.
 
-`generate_pulse_layout.py` flattens the parameterized circuit into 428 MOS
-devices, resolves forwarded sizing parameters, aligns complementary devices as
-CMOS cells, routes phase-local nets in functional bands, and stacks EVEN and
-ODD vertically. The current 499.6 by 285 um candidate is zero-DRC and uniquely
-pin-resolved LVS-matched. Four-micron M4 logic-supply tracks, six-micron M5
-rails, centered high-current source pickup, and route-aware distributed
-drain/source accesses reduce current funneling without crossing reserved gate,
-supply-tap, or complementary-device columns. Dedicated `VDD_WE`/`VDD_WO`
-write-source pins and `VSS_SE`/`VSS_SO` sense-source pins are tied to the same
-global supplies by the parent; device bodies remain on the continuous global
-well/substrate rails. Hierarchical power-grid attachment is therefore explicit
-instead of assuming all pulse current enters one left-edge pin.
+`generate_pulse_layout.py` flattens the circuit into 128 MOS devices, aligns
+complementary devices as CMOS cells, routes phase-local nets in functional
+bands, and stacks EVEN and ODD vertically. The current 175.4 by 285 um
+candidate is zero-DRC, uniquely pin-resolved LVS-matched, and extracts to 3,408
+resistors plus 2,477 capacitors. Substrate-tap columns are filtered against
+complete multi-finger device spans, fixed HCLK landing intervals block the
+automatic M4 allocator, and route comments make emitted nets inspectable.
+Dedicated `VDD_WE`/`VDD_WO` and `VSS_SE`/`VSS_SO` pins retain explicit
+parent-grid attachment.
 
-Its 9,344-resistor/6,103-capacitor exact nominal extraction passes the complete
-contract. EVEN/ODD sense widths are 563.33/596.37 ps, write widths are
-168.31/174.38 ps, write delay is 680.76 ps, non-overlap is 117.43 ps, phase
-spacing is 370.16 ps, and current is 70.080 mA. Sense highs are 3.158/3.127 V
-with 0.105/0.175 V lows; WRITE highs are 3.128/3.133 V with 0.171/0.182 V lows.
-The full exact 20-case campaign passes only TT profile `[0,8,9]`, however:
-FF/cold exceeds current or width/delay limits, hot profiles miss sense/timing
-limits, and SS/cold remains too wide or over-current. This is a nominally closed
-physical checkpoint with exact-PVT coverage of 1/5 environments, not a released
-pulse macro.
+Exact PEX produces complete dual-phase waveforms in all three focused
+environments. TT sense widths are 598.30/590.88 ps and write widths are
+336.47/349.55 ps at 41.172 mA. FF/125 C gives 597.39/589.16 ps sense and
+336.93/349.84 ps write at 38.354 mA. SS/125 C gives 543.55/539.69 ps sense and
+119.84/123.13 ps write at 23.501 mA. This is a major topology and area
+improvement, but no case passes the complete contract: TT/FF write is wider
+than the 100--220 ps limit and begins before the external SENSE fall; SS/hot
+WRITE reaches only 1.922/1.926 V and its modulo-cycle delay is too early. The
+full 20-case campaign is not promoted until those failures are corrected.
 
-Profile 3 no longer depends on delayed node `D06`, which stopped reaching a
-valid threshold at hot corners. Parent-strapped `CLKP_H`/`CLKN_H` ports feed a
-short local Metal5 clock path into the profile gate; a minimum 0.4 um route
-anchor preserves deterministic D06 routing without materially loading the
-delay line. The profile delay pair now sits beside that gate, uses a stronger
-second stage, and has fixed route colors so unrelated edits cannot silently
-recolor its timing nets. In exact PEX the EVEN profile-3 `P06S/P09S` nodes now
-reach 2.649/2.622 V at FF/hot and 2.644/2.652 V at SS/hot. Both FF/hot write
-outputs reach rail, while SS/hot produces a full-swing ODD write event. Sense
-events and pulse widths still fail the composed contract, so this is retained
-as a real downstream-boundary improvement rather than new environment
-coverage.
+The central retained lesson is that a narrow pulse must not be transported
+through a slow restoration chain. The robust write topology transports the
+full-swing `WSB` step, delays that step physically, forms the interval locally,
+and only then drives the output taper. A minimum-load receiver failed because
+its 0.6 um device could not charge even a short extracted route; sizing must
+include route/via capacitance and the parallel gate loads of both detector
+branches. Attempts to mux narrow active-low pulses through transmission gates
+or a three-NOR selector were rejected after exact PEX attenuated or erased the
+selected event.
 
 `scripts/analyze_pex_net.py` now traces shortest extracted resistance from a
 named root to device terminals selected by gate/model patterns. Counterfactual
@@ -105,6 +97,10 @@ The checked failing [schematic matrix](pulse_schematic_result.json), retained
 [exact-PVT matrix](pulse_pex_pvt_result.json), and
 [physical checkpoint](pulse_physical_checkpoint.json) keep circuit coverage,
 nominal closure, PVT failure, and physical legality as separate claims.
+The newer compact candidate has separate, explicitly failing
+[nominal](pulse_candidate_nominal_result.json) and
+[hot-corner](pulse_candidate_hot_result.json) records so it cannot overwrite
+the older nominally passing checkpoint.
 Run `run_pulse_generator.sh` for the schematic matrix and
 `run_pulse_physical.sh` for generation, render, DRC, LVS, full-RC extraction,
 the nominal electrical gate, and the full PVT matrix. Expected failing matrices

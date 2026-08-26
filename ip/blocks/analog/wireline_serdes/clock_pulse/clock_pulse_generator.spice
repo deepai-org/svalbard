@@ -59,6 +59,14 @@ XD0 A DI VDD VSS cp_inv WP=15.5u WN=8.75u
 XD1 DI Y VDD VSS cp_inv WP=15.5u WN=8.75u MP=2 MN=2
 .ends cp_profile3_delay
 
+* Four-inverter HCLK sense delay with a selectively slower final falling edge.
+* The 1.3-um final NMOS interpolates between the extracted four-inverter pulse
+* (too short to restore) and six-inverter pulse (about 50 ps too wide).
+.subckt cp_sense_tail_delay A Y VDD VSS
+XD0 A DI VDD VSS cp_inv WP=4u WN=2u MP=2 MN=2
+XD1 DI Y VDD VSS cp_inv WP=4u WN=1.3u MP=2 MN=2
+.ends cp_sense_tail_delay
+
 * Non-inverting edge shaper.  The falling output edge is deliberately slower
 * than the rising edge, moving the SENSE leading edge later without consuming
 * its recovery interval or changing logic thresholds.
@@ -165,6 +173,25 @@ XI B BN VDD VSS cp_inv WP=8u WN=9u MP=2 MN=2
 XN A BN YB VDD VSS cp_nand2 WP=8u WN=8u MP=9 MN=7
 .ends cp_rise_b
 
+* Compact active-low interval detector for two rising, full-swing timing
+* edges. YB falls when A has risen but its delayed replica B has not, then
+* returns high when B rises. It feeds an inverting three-stage output taper.
+.subckt cp_rise_b_small A B YB VDD VSS
+XI B BN VDD VSS cp_inv WP=4u WN=4u MP=2 MN=2
+XN A BN YB VDD VSS cp_nand2 WP=4u WN=4u MP=2 MN=4
+.ends cp_rise_b_small
+
+* High only between the falling edges of an early full-width clock A and its
+* later replica B.  Both inputs first feed ordinary static CMOS gates; this is
+* deliberately not a simulator delay or a thresholded behavioral source.
+* Profile 3 uses it because the legacy D03 timing node does not cross a valid
+* logic threshold at SS/hot, while the separately restored P06S/P09S path does.
+.subckt cp_fall_pulse A B Y VDD VSS
+XIA A AB VDD VSS cp_inv WP=8u WN=8u
+XN B AB YB VDD VSS cp_nand2 WP=8u WN=8u MP=3 MN=3
+XIY YB Y VDD VSS cp_inv WP=8u WN=8u MP=4 MN=3
+.ends cp_fall_pulse
+
 * Reset-dominant interval latch. S rises before R and sets Q; when R rises the
 * latch resets even though S remains high. S then falls before R, returning the
 * cross-coupled NOR pair to its unique Q=0, QB=1 idle state. Unlike a narrow
@@ -177,127 +204,47 @@ XQB S Q QB VDD VSS cp_nor2 WP=8u WN=8u MP=3 MN=4
 
 .subckt cp_phase CLK HCLK SEL0 SEL1 SEL2 SEL3 Q2RESET VDD VDDW VSS VSSS
 + SENSE BOOST WRITE
-+ params: MID_WP0=4u MID_WN0=2u MID_MPP=2 MID_MNN=3 P08_MPP=4 P08_MNN=5 WQ2_W=4u WQD_W=8u WQD_M=1 SB2_WN=8u SB2_MN=8 WB1_MP=7 WB1_M=7 WB2_MP=14 WB2_MN=14 WB3_WP=8u WB3_MP=30 WB3_MN=20
-* Twelve matched non-inverting delay units provide digitally selectable taps.
-* Four one-hot profiles select tap triplets retained by PVT screening. The
-* transmission gates are part of the simulated circuit, not netlist rewrites.
-* interval. Total transport delay remains below one recovered-clock period.
-XD01 CLK D01 VDD VSS cp_delay_unit
-XD02 D01 D02 VDD VSS cp_delay_unit
-XD03 D02 D03 VDD VSS cp_delay_unit
-XD04 D03 D04 VDD VSS cp_delay_unit
-XD05 D04 D05 VDD VSS cp_delay_unit
-XD06 D05 D06 VDD VSS cp_delay_unit
-XD07 D06 D07 VDD VSS cp_delay_unit
-XD08 D07 D08 VDD VSS cp_delay_unit
-XD09 D08 D09 VDD VSS cp_delay_unit
-XD10 D09 D10 VDD VSS cp_delay_unit
-* D10 needs the same 3.3-um gate load as the first inverter of an internal
-* delay unit, but no later tap is selected.  A gate-only dummy preserves that
-* transport-line load without charging an otherwise unused inverter output.
-XD11L D10 VSS cp_gate_cap W=3.3u
-
-* Four calibrated profiles select complete sense/start/end triplets. Controls
-* are static one-hot during operation and only change while the lane is reset.
-XI0 SEL0 SEL0B VDD VSS cp_inv WP=4u WN=2u
-XI1 SEL1 SEL1B VDD VSS cp_inv WP=4u WN=2u
-XI2 SEL2 SEL2B VDD VSS cp_inv WP=4u WN=2u
-XI3 SEL3 SEL3B VDD VSS cp_inv WP=4u WN=2u
-XPC CLK PCLK VDD VSS cp_tap_buffer
-+ WP0=4u WN0=2u WP1=8u WN1=4u MN2=4
-* D08 is the calibrated common write epoch.  An older standalone P08 replica
-* switched every cycle but no longer drove any selector; removing it recovers
-* fast/cold current without changing a functional node.
-XP09M D08 P09M VDD VSS cp_tap_buffer
-+ WP0=4u WN0=2u WP1=8u WN1=4u MN2=4
-XP10 D10 P10 VDD VSS cp_select_prebuffer
-XSCB SEL0 SEL1 STDB VDD VSS cp_nor2 WP=4u WN=4u MP=2 MN=1
-XSCI STDB STDEN VDD VSS cp_inv WP=4u WN=2u
-* Select direct restored-clock paths with two physical drive strengths.  This
-* calibrates the selector delay exposed by extraction without leaving large
-* unused delay chains switching on every clock edge.
-* Complementary pass gates preserve both clock rails under extracted load.
-* The former stacked tri-state inverter bank could not recharge its shared
-* node, leaving SSEL permanently high and suppressing the sense pulse.
-XSM0A PCLK SSEL_RAW STDEN STDB VDD VSS cp_tg W=8u M=2
-XSM0B PCLK SSEL_RAW STDEN STDB VDD VSS cp_tg W=8u M=2
-XSM2A PCLK SSEL_RAW SEL2 SEL2B VDD VSS cp_tg W=8u M=2
-XSM3A PCLK SSEL_RAW SEL3 SEL3B VDD VSS cp_tg W=8u M=2
-XSM3B PCLK SSEL_RAW SEL3 SEL3B VDD VSS cp_tg W=8u M=2
-XSM3C PCLK SSEL_RAW SEL3 SEL3B VDD VSS cp_tg W=8u M=2
-XSMR SSEL_RAW SSEL VDD VSS cp_write_restore
-* Select full-width write timing replicas through complementary pass gates and
-* restore them before forming a narrow pulse.  The former stacked tri-state
-* selector took about 300 ps to pull one extracted edge high, turning a
-* nominal full-width replica into a 54 ps glitch before the write logic.
-* Generate write-selector complements locally.  The small shared complement
-* inverters formerly drove pass-gate banks across the cell; extracted RC left
-* the gates partly enabled and reduced WSTART_SEL to an analog mid-rail node.
-XWC0 SEL0 WSEL0B VDD VSS cp_inv WP=8u WN=8u MP=2 MN=2
-XWC3 SEL3 WSEL3B VDD VSS cp_inv WP=8u WN=8u MP=2 MN=2
-XWMCB SEL1 SEL2 WMIDB VDD VSS cp_nor2 WP=8u WN=8u MP=4 MN=2
-XWMCI WMIDB WMID VDD VSS cp_inv WP=8u WN=8u MP=2 MN=2
-XPLC P10 P10C VDD VSS cp_delay_unit WP=8u WN=5u
-XWM3 P10C WSTART_SEL SEL0 WSEL0B VDD VSS cp_tg W=8u M=2
-XP09D P09M P09D VDD VSS cp_fast_delay
-XWM1 P09D WSTART_SEL WMID WMIDB VDD VSS cp_tg W=8u M=2
-XPMD P09D P10M VDD VSS cp_delay_unit WP=17u WN=8.5u
-XWE1 P10M WEND_SEL WMID WMIDB VDD VSS cp_tg W=8u M=2
-XPLD P10C P10D VDD VSS cp_delay_unit WP=12u WN=8u
-XWE3 P10D WEND_SEL SEL0 WSEL0B VDD VSS cp_tg W=8u M=2
-* Slow/hot uses a separately gated copy of the full-swing input clock.  D06
-* stops crossing a valid logic threshold in exact SS/hot extraction, so using
-* it as the source made the supposedly slow-corner profile structurally
-* incapable of recovery.  The local static-CMOS gate is quiet in every other
-* profile; downstream physical delay, rather than the failed global tap,
-* defines this profile's start/end interval.
-XPG3N HCLK SEL3 P06B VDD VSS cp_nand2 WP=6u WN=7u MP=2 MN=2
-XPG3I P06B P06S VDD VSS cp_inv WP=16u WN=6u MP=2 MN=3
-XPMD3 P06S P09S VDD VSS cp_profile3_delay
-XWM3A P06S WSTART_SEL SEL3 WSEL3B VDD VSS cp_tg W=8u M=2
-XWE3A P09S WEND_SEL SEL3 WSEL3B VDD VSS cp_tg W=8u M=2
-
-* SENSE = CLK OR the selected sense tap. WRITE is high between the selected
-* start and end tap. Matched tap buffers keep the large logic gates off the
-* transport-delay nodes. The direct path crosses one enabled TG plus one quiet
-* dummy TG, matching the two-branch sense selector's delay and diffusion load.
-* These buffers preserve the intentionally short inactive and write intervals
-* under the large regenerative-gate capacitances.
-XWST WSTART_SEL WST VDD VSS cp_write_restore
-XWET WEND_SEL SEL3 WET VDD VSS cp_profile_write_restore
-* Restore both full-width timing replicas locally before pulse formation.  The
-* former failing path put transmission gates and long routes ahead of these
-* buffers; here each long route terminates at a first-stage gate and the
-* restored CT/ST outputs sit immediately beside the NOR.
-XCTA D03 CTM VDD VSS cp_fast_tap_buffer
-XCTB CTM SEL0B CT VDD VSS cp_profile_tap_buffer
-XST SSEL ST VDD VSS cp_sense_tap_buffer
-XSN CT ST SN0 VDD VSS cp_nor_fast
-XWL WST WET WCORE WCOREB VDD VSS cp_write_latch
-XSB0 SN0 SB0 VDD VSS cp_inv WP=8u WN=8u MP=2 MN=2
++ params: SB2_WN=8u SB2_MN=8
+* SENSE and BOOST use the dedicated full-swing parent clock rather than the
+* legacy selectable delay line. A physical two-unit delay defines the
+* falling-edge interval, and WRITE is timed from the restored SENSE boundary.
+XHSD0 HCLK HSM VDD VSS cp_delay_unit WP=4u WN=2u MP=2 MN=2
+XHSD1 HSM HSD VDD VSS cp_sense_tail_delay
+XHSN HCLK HSD HSN VDD VSS cp_fall_pulse
+XSB0 HSN SB0 VDD VSS cp_inv WP=8u WN=10u MP=2 MN=2
 XSB1 SB0 SB1 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4
 XSB2 SB1 SENSE VDD VSS VSSS cp_sense_final_inv WP=8u WN={SB2_WN} MP=10 MN={SB2_MN}
-XRB0 SN0 RB0 VDD VSS cp_inv WP=8u WN=4u
+XRB0 HSN RB0 VDD VSS cp_inv WP=8u WN=4u
 XRB1 RB0 RB1 VDD VSS cp_inv WP=8u WN=6u MP=3 MN=2
 XRB2 RB1 BOOST VDD VSS cp_inv WP=8u WN=8u MP=5 MN=3
-* During the legal S/R overlap both latch nodes are low. Qualifying QB with a
-* locally delayed end clock creates a regenerated interval long enough for the
-* 650-fF output taper, independent of when S later falls.
-XWQD WET WETD VDD VSS cp_delay_unit WP={WQD_W} WN={WQD_W} MP={WQD_M} MN={WQD_M}
-XWG WCOREB WETD WB0 VDD VSS cp_nor2 WP=8u WN=8u MP=8 MN=7
-XWQ2 WB0 WET Q2RESET VSS cp_cond_npd WG={WQ2_W} WE={WQ2_W} M=1
-XWQ3 WB0 WET SEL3 VSS cp_cond_npd WG=12u WE=12u M=1
 * The shared-gate taper avoids the shoot-through interval of independently
 * driven pull-up/pull-down banks. Its roughly 2x stage ratios support the
 * larger final PMOS without placing that full gate load on a small predriver.
-XWB0 WB0 WB1 VDD VSS cp_inv WP=8u WN=8u MP=3 MN=3
-XWB1 WB1 WB2 VDD VSS cp_inv WP=8u WN=8u MP={WB1_MP} MN={WB1_M}
-XWB2 WB2 WB3 VDD VSS cp_inv WP=8u WN=8u MP={WB2_MP} MN={WB2_MN}
-XWB3 WB3 WRITE VDD VDDW VSS cp_final_inv WP={WB3_WP} WN=8u MP={WB3_MP} MN={WB3_MN}
-* Keep the former D06 route endpoint so the deterministic physical router
-* preserves the already-proven write-path topology.  Minimum legal width
-* makes this a geometric anchor rather than a meaningful delay-line load.
-XLEGACY D06 VSS cp_route_anchor W=0.4u
+* Derive WRITE from the already restored SENSE boundary, never from the
+* high-impedance HSN source. Three receiver stages taper from the external
+* sense boundary to a full-swing rising step. Four physical delay inverters and
+* a local rising-edge detector form an active-low interval; five taper
+* inversions produce the requested high pulse into the 650-fF write load.
+XWISO0 SENSE WSIB VDD VSS cp_inv WP=4u WN=4u
+XWISO1 WSIB WSA VDD VSS cp_inv WP=2u WN=6u
+XWISO2 WSA WSB VDD VSS cp_inv WP=6u WN=4u MP=2 MN=1
+XWSD0 WSB WSM0 VDD VSS cp_delay_unit WP=4u WN=2u MP=2 MN=2
+XWSD1 WSM0 WSD VDD VSS cp_delay_unit WP=4u WN=2u MP=2 MN=2
+XWPN WSB WSD WPN VDD VSS cp_rise_b_small
+XWB0 WPN WB1 VDD VSS cp_inv WP=4u WN=4u MP=2 MN=2
+XWB1 WB1 WB2 VDD VSS cp_inv WP=4u WN=4u MP=4 MN=4
+XWB2 WB2 WB3 VDD VSS cp_inv WP=8u WN=8u MP=4 MN=4
+XWB3 WB3 WB4 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=8
+XWB4 WB4 WRITE VDD VDDW VSS cp_final_inv WP=8u WN=8u MP=28 MN=20
+* Preserve the parent interface while calibration is being migrated upward to
+* bias/supply controls. These minimum gate capacitors are route anchors, not
+* timing elements.
+XACLK CLK VSS cp_gate_cap W=0.4u
+XASEL0 SEL0 VSS cp_gate_cap W=0.4u
+XASEL1 SEL1 VSS cp_gate_cap W=0.4u
+XASEL2 SEL2 VSS cp_gate_cap W=0.4u
+XASEL3 SEL3 VSS cp_gate_cap W=0.4u
+XAQ2 Q2RESET VSS cp_gate_cap W=0.4u
 .ends cp_phase
 
 .subckt clock_pulse_generator CLKP CLKN SEL0 SEL1 SEL2 SEL3 VDD VSS
@@ -305,7 +252,7 @@ XLEGACY D06 VSS cp_route_anchor W=0.4u
 + E_SENSE E_BOOST E_WRITE
 + O_SENSE O_BOOST O_WRITE
 XE CLKP CLKP_H SEL0 SEL1 SEL2 SEL3 SEL2 VDD VDD_WE VSS VSS_SE
-+ E_SENSE E_BOOST E_WRITE cp_phase WQ2_W=6.2u WQD_W=7u SB2_WN=6.5u SB2_MN=7 WB1_M=7 WB2_MP=14 WB2_MN=14 WB3_WP=8u WB3_MP=28 WB3_MN=20
++ E_SENSE E_BOOST E_WRITE cp_phase SB2_WN=6.5u SB2_MN=7
 XO CLKN CLKN_H SEL0 SEL1 SEL2 SEL3 VSS VDD VDD_WO VSS VSS_SO
-+ O_SENSE O_BOOST O_WRITE cp_phase WQ2_W=1u WQD_W=8u SB2_WN=6.5u SB2_MN=7 WB1_MP=7 WB1_M=7 WB2_MP=5 WB2_MN=14 WB3_WP=8u WB3_MP=30 WB3_MN=20
++ O_SENSE O_BOOST O_WRITE cp_phase SB2_WN=6.5u SB2_MN=7
 .ends clock_pulse_generator

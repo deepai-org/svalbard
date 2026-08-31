@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "contract_id": "pcie_hclk_selectable_write_window_v1",
+  "unit_interval_s": 8e-10,
+  "environments": [
+    {"id": "tt", "mos_corner": "typical", "vdd_v": 3.3, "temperature_c": 27},
+    {"id": "ff_cold", "mos_corner": "ff", "vdd_v": 3.63, "temperature_c": -40},
+    {"id": "ff_hot", "mos_corner": "ff", "vdd_v": 2.97, "temperature_c": 125},
+    {"id": "ss_hot", "mos_corner": "ss", "vdd_v": 2.97, "temperature_c": 125},
+    {"id": "ss_cold", "mos_corner": "ss", "vdd_v": 3.63, "temperature_c": -40}
+  ],
+  "control_codes": [0, 1],
+  "candidates": [
+    {
+      "id": "start_1x_end_x4",
+      "replacements": {
+        "START0_WP": "8u", "START0_WN": "4u", "START0_MP": "2", "START0_MN": "2",
+        "START1_WP": "8u", "START1_WN": "6u", "START1_MP": "3", "START1_MN": "2",
+        "EXTRA_W": "8u", "EXTRA_N": "4u", "EXTRA_MP": "4", "EXTRA_MN": "4"
+      }
+    },
+    {
+      "id": "start_0p5x_end_x4",
+      "replacements": {
+        "START0_WP": "4u", "START0_WN": "2u", "START0_MP": "2", "START0_MN": "2",
+        "START1_WP": "4u", "START1_WN": "3u", "START1_MP": "3", "START1_MN": "2",
+        "EXTRA_W": "8u", "EXTRA_N": "4u", "EXTRA_MP": "4", "EXTRA_MN": "4"
+      }
+    },
+    {
+      "id": "start_0p25x_end_x4",
+      "replacements": {
+        "START0_WP": "4u", "START0_WN": "2u", "START0_MP": "1", "START0_MN": "1",
+        "START1_WP": "2u", "START1_WN": "1.5u", "START1_MP": "3", "START1_MN": "2",
+        "EXTRA_W": "8u", "EXTRA_N": "4u", "EXTRA_MP": "4", "EXTRA_MN": "4"
+      }
+    },
+    {
+      "id": "start_0p125x_end_x4",
+      "replacements": {
+        "START0_WP": "2u", "START0_WN": "1u", "START0_MP": "1", "START0_MN": "1",
+        "START1_WP": "1u", "START1_WN": "0.75u", "START1_MP": "3", "START1_MN": "2",
+        "EXTRA_W": "8u", "EXTRA_N": "4u", "EXTRA_MP": "4", "EXTRA_MN": "4"
+      }
+    }
+  ],
+  "thresholds": {
+    "write_width_s": [1e-10, 2.2e-10],
+    "write_delay_from_hclk_fall_s": [8e-11, 6.5e-10],
+    "logic_rail_margin_v": 0.25,
+    "average_supply_current_a": [0.0, 0.075]
+  },
+  "structural_contract": {
+    "subckt": "hclk_select_window",
+    "instances": {
+      "XSTR0": {"nodes": ["S0A", "STR0", "VDD", "VSS"], "cell": "cp_inv"},
+      "XSTR1": {"nodes": ["STR0", "START", "VDD", "VSS"], "cell": "cp_inv"},
+      "XEND1B": {"nodes": ["E1A", "E1", "VDD", "VSS"], "cell": "cp_delay"},
+      "XTG0": {"nodes": ["E0", "EMUX", "SELB", "SEL", "VDD", "VSS"], "cell": "cp_tg"},
+      "XTG1": {"nodes": ["E1", "EMUX", "SEL", "SELB", "VDD", "VSS"], "cell": "cp_tg"},
+      "XER0": {"nodes": ["EMUX", "ER0", "VDD", "VSS"], "cell": "cp_inv"},
+      "XER1": {"nodes": ["ER0", "END", "VDD", "VSS"], "cell": "cp_inv"},
+      "XDET": {"nodes": ["START", "END", "WIN", "VDD", "VSS"], "cell": "cp_fall_window"},
+      "XWPN": {"nodes": ["WIN", "WPN", "VDD", "VSS"], "cell": "cp_inv"}
+    }
+  }
+}

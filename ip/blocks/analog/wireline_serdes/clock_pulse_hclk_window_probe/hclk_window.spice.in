@@ -56,8 +56,8 @@ XI_SEL SEL SELB VDD VSS cp_inv WP=4u WN=2u MP=2 MN=2
 * accidentally charged to the window budget.
 XST0 HCLK S0A VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2
 XST1 HCLK S1A VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2
-XSTR0 S0A STR0 VDD VSS cp_inv WP=8u WN=4u MP=2 MN=2
-XSTR1 STR0 START VDD VSS cp_inv WP=8u WN=6u MP=3 MN=2
+XSTR0 S0A STR0 VDD VSS cp_inv WP=@START0_WP@ WN=@START0_WN@ MP=@START0_MP@ MN=@START0_MN@
+XSTR1 STR0 START VDD VSS cp_inv WP=@START1_WP@ WN=@START1_WN@ MP=@START1_MP@ MN=@START1_MN@
 XEND0 S0A E0 VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2
 XEND1A S1A E1A VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2
 XEND1B E1A E1 VDD VSS cp_delay WP=@EXTRA_W@ WN=@EXTRA_N@ MP=@EXTRA_MP@ MN=@EXTRA_MN@
@@ -70,7 +70,10 @@ XTG1 E1 EMUX SEL SELB VDD VSS cp_tg
 XER0 EMUX ER0 VDD VSS cp_inv WP=8u WN=4u MP=2 MN=2
 XER1 ER0 END VDD VSS cp_inv WP=8u WN=6u MP=3 MN=2
 
-XDET S0A END WIN VDD VSS cp_fall_window
+* Compare the matched, restored START state to the selected restored END
+* state.  Do not bypass START with raw S0A: that would silently add the
+* selection restorer latency to the interval being calibrated.
+XDET START END WIN VDD VSS cp_fall_window
 XWPN WIN WPN VDD VSS cp_inv WP=4u WN=4u MP=2 MN=2
 XWB0 WPN WB1 VDD VSS cp_inv WP=4u WN=4u MP=2 MN=2
 XWB1 WB1 WB2 VDD VSS cp_inv WP=4u WN=4u MP=4 MN=4

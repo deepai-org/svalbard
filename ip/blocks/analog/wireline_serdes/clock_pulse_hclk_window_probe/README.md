@@ -41,3 +41,27 @@ or otherwise shorten this **full-swing** timing separation by roughly
 That is a necessary schematic refinement only.  A candidate that clears it
 must still be laid out, DRC/LVS checked, RC extracted, and composed with the
 actual capture boundary before it changes PCIe status.
+
+## First contract-driven refinement
+
+The probe now reads [`hclk_window_contract.json`](hclk_window_contract.json)
+rather than hard-coding its candidates, environments and thresholds in the
+runner.  The same contract binds the semantic instances between HCLK, the
+restored `START`, selected `END`, detector `WIN`, and `WPN`.  Its focused unit
+test proves that the earlier raw-`S0A` detector bypass and a selector-polarity
+swap both fail before SPICE is launched.
+
+Candidate coverage is also fail-closed: a `candidate_id` denotes one circuit
+that would be fixed at fabrication, while only its static code may vary after
+fabrication.  Results from different transistor choices can no longer be
+combined across PVT to manufacture a false calibration pass.
+
+The first four-candidate campaign is retained in
+[`restored_start_screen_result.json`](restored_start_screen_result.json).  A
+quarter-strength restored START with the x4 selected END covers four of five
+environments using its real code.  At FF/cold, both codes have valid
+104.19/140.81-ps widths and full rails, but arrive only 21.98/22.21 ps after
+the HCLK falling edge versus the declared 80-ps minimum.  This candidate is
+therefore rejected before layout.  The next bounded family adds delay only to
+the common full-swing HCLK epoch so it does not retune the already valid
+START/END interval.

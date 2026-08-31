@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "claim": "pcie_hclk_restored_start_candidate_screen",
+  "scope": "schematic necessary-condition candidate-family screen",
+  "identity": {
+    "netlist_sha256": "8973648ee4feb565e8cf3937c1559a734c30135f95aae3a90b2c2d9db5f9a2f5",
+    "contract_sha256": "b6bfc497ac1bb25f85c7994b346b57c24044812d58a770d9be697d8c349c4dc9",
+    "runner_sha256": "23fb4a606e099abbbc912ff9bc9147b983b4f46d07fb70871a480bb96d53338b",
+    "raw_result_sha256": "da67854744cdb35945c4826f970ca81151a5ecb49b02a97f42d59a76ef5aa3b0",
+    "raw_result_location": "scratch/pcie-hclk-write-window-last.json"
+  },
+  "structural_contract": {
+    "result": "pass",
+    "checked_instances": ["XSTR0", "XSTR1", "XEND1B", "XTG0", "XTG1", "XER0", "XER1", "XDET", "XWPN"],
+    "critical_binding": "XDET START END WIN VDD VSS cp_fall_window"
+  },
+  "campaign": {
+    "physically_distinct_candidates": 4,
+    "post_fabrication_codes_per_candidate": 2,
+    "environments": 5,
+    "case_count": 40,
+    "passing_case_count": 9,
+    "qualifying_candidates": []
+  },
+  "closest_candidate": {
+    "id": "start_0p25x_end_x4",
+    "candidate_coverage": {
+      "tt": [0, 1],
+      "ff_cold": [],
+      "ff_hot": [0, 1],
+      "ss_hot": [0],
+      "ss_cold": [0, 1]
+    },
+    "cases": {
+      "tt_code0": {"write_width_ps": 146.57, "delay_from_hclk_fall_ps": 210.59, "write_high_v": 3.276},
+      "ff_cold_code0": {"write_width_ps": 104.19, "delay_from_hclk_fall_ps": 21.98, "write_high_v": 3.585},
+      "ff_cold_code1": {"write_width_ps": 140.81, "delay_from_hclk_fall_ps": 22.21, "write_high_v": 3.692},
+      "ff_hot_code0": {"write_width_ps": 152.77, "delay_from_hclk_fall_ps": 241.68, "write_high_v": 2.898},
+      "ss_hot_code0": {"write_width_ps": 211.73, "delay_from_hclk_fall_ps": 566.03, "write_high_v": 2.93},
+      "ss_cold_code0": {"write_width_ps": 144.27, "delay_from_hclk_fall_ps": 204.79, "write_high_v": 3.639}
+    }
+  },
+  "compiler_workflow_value": [
+    "the structural contract rejects the previously observed raw-S0A bypass before simulation",
+    "candidate coverage is evaluated per physically fixed circuit, so different fabrication choices cannot be combined across PVT",
+    "post-fabrication control codes remain separately selectable within each fixed candidate"
+  ],
+  "conclusion": "No physically fixed candidate covers all five environments. The quarter-strength restored START candidate clears width, rails, WPN, and current at FF/cold but its pulse begins only 22 ps after HCLK fall, below the declared 80 ps epoch bound. Reject before layout.",
+  "next_candidate_requirement": "Delay the common full-swing HCLK epoch ahead of both START and END without changing their selected interval, then repeat candidate-level five-environment coverage. A passing necessary screen still requires SENSE composition and physical DRC/LVS/PEX.",
+  "not_a_claim": [
+    "complete_pcie_pulse_generator",
+    "physical_layout_or_pex",
+    "sense_to_write_timing_closure",
+    "capture_or_cdr_closure",
+    "calibration_algorithm_or_silicon_yield"
+  ],
+  "result": "rejected_before_physical_implementation"
+}

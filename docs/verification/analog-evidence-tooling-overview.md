@@ -18,6 +18,7 @@ standalone general-purpose analog compiler.
 | Reproducible EDA host boundary | [`scripts/run_analog_flow.sh`](../../scripts/run_analog_flow.sh) | Pins the analog container image, prevents source changes during a run, bounds CPU/RAM/time, runs without network, and copies named outputs | It does not make a simulation signoff-quality or supply missing models. |
 | Layout verification | Native Magic DRC/extraction and Netgen LVS invoked by physical block flows | Generated geometry, zero-DRC/unique-LVS gates, and RC extraction when a flow calls for it | It is public-PDK pre-silicon evidence, not foundry signoff, post-fill, EM/IR, package, or silicon correlation. |
 | Circuit/PVT campaigns | Native ngspice decks and product-specific Python runners | Declared PVT sweeps, transient/AC/DC measurements, and failed-case capture | Not generic yield, BER confidence, phase noise, RF regulatory, or model-validation analysis. |
+| First closure manifest | [`clock_pulse_hclk_window_probe/hclk_window_contract.json`](../../ip/blocks/analog/wireline_serdes/clock_pulse_hclk_window_probe/hclk_window_contract.json) | For one active PCIe candidate family, declares physically fixed variants, post-fabrication codes, PVT environments, thresholds, and semantic netlist bindings; its tests catch a disconnected timing state before SPICE | This is one product-specific thin slice, not a shared circuit/layout IR or general analog compiler. |
 | Evidence integrity helpers | [`ip/blocks/analog/wireline_serdes/analog_evidence.py`](../../ip/blocks/analog/wireline_serdes/analog_evidence.py), [`scripts/test_analog_evidence.py`](../../scripts/test_analog_evidence.py), machine-readable result JSON | Environment identity checks, interval coverage helpers, SHA-256 joins, and durable pass/fail/rejection records | The helper is deliberately small; result semantics remain specific to each active circuit. |
 | PEX inspection | [`scripts/analyze_pex_net.py`](../../scripts/analyze_pex_net.py) | Resistance/capacitance and terminal-path reports for named extracted nets | It aids localization; it is not an automatic analog optimizer or a full parasitic-signoff engine. |
 | Tool artifact pinning | [`env/tool_artifacts.lock`](../../env/tool_artifacts.lock), [`scripts/tool_artifacts.py`](../../scripts/tool_artifacts.py) | Checksum-locked acquisition/verification of small auxiliary tools | The main physical flow uses the separately pinned OSIC image. |
@@ -47,8 +48,10 @@ It has supported real engineering decisions rather than only produced reports.
   The active blocker is the extracted pulse-to-bridge-to-capture boundary,
   which presently passes three of five declared corners. The latest
   source-level selectable-HCLK timing probe retained explicit negative
-  evidence rather than advancing to layout when its 40 PVT/code cases had no
-  environment coverage. This is not an integrated PCIe PHY claim.
+  evidence rather than advancing to layout. Its first contract-driven search
+  found one physically fixed candidate with selectable-code coverage in four
+  of five environments; FF/cold fails only its timing-epoch bound. This is not
+  an integrated PCIe PHY claim.
 - **Wi-Fi:** the routed LNA/mixer parent has DRC/LVS/full-RC PEX evidence, but
   its two-tone result exposed an unfiltered nearby blocker. This selected a
   real-IF ADC/DSP architecture rather than pretending a broad RF preselector

@@ -777,11 +777,18 @@ Execution order is deliberately narrow:
    environment coverage because its detector interval remained 179--423 ps.
    Its closest code needs a 45--80 ps shorter full-state separation, so it is
    [rejected before layout](../../ip/blocks/analog/wireline_serdes/clock_pulse_hclk_window_probe/README.md),
-   not a calibration claim. The next candidate must preserve the compact
-   PEX-proven write timing source until its replacement covers every PVT
-   environment with an observed selected code, include an observable
-   correlated with timing/drive margin and safe code endpoints, and use a
-   bounded selection procedure. Do not build a general calibration synthesizer.
+   not a calibration claim. The first product-specific closure manifest then
+   made candidate identity, code identity, environments, predicates and
+   semantic START/END bindings executable. Its quarter-strength restored-START
+   candidate covers 4/5 environments; FF/cold width/rails pass but the selected
+   pulse begins 22 ps after HCLK fall, below its declared 80-ps epoch bound.
+   The next bounded family may shift only the common full-swing HCLK epoch
+   before START/END formation. It must preserve the compact PEX-proven write
+   timing source until its replacement covers every PVT environment with one
+   physically fixed candidate and an observed selected code, include an
+   observable correlated with timing/drive margin and safe code endpoints, and
+   use a bounded selection procedure. Do not build a general calibration
+   synthesizer.
 2. Use that one real control to repair the two exact extracted failures in the
    already physical pulse-to-bridge-to-direct-regenerative-capture boundary:
    FF/cold bridge-drive margin and SS/hot pulse reset. Preserve the current

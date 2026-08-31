@@ -1,0 +1,41 @@
+{
+  "claim": "wifi_if_class_ab_source_follower_output_primitive_screen",
+  "conclusion": "A complementary source-follower output primitive can meet the 0.378649-ohm, 100-MHz small-signal impedance requirement in all five public PVT cases under independently imposed gate biases. The smallest fixed all-corner configuration is 20-mm effective NMOS width with a 2.6-V gate separation, whose worst impedance is 0.327912 ohm. It is not a viable complete driver: that fixed bias consumes up to 0.991389 A per output and has up to 155.777 mV output common-mode error. Retain the topology only as an output-stage primitive for a low-quiescent-current, calibrated class-AB / CMFB driver search.",
+  "evidence": {
+    "raw_result_sha256": "ee233ea0dd4d582ecd555dd671186c01ba65a9f004586cded1e9af3a640c7903",
+    "source_sha256": "dc7ff240b5883c80ed61c25619409fd9c738acc2db119afce70f93f6207ce093",
+    "runner_sha256": "d43330479655c11c59a55b1c424ba3267d8ea46e5ca6d04c5cde4905214ad9e1",
+    "case_count": 120,
+    "complete_case_count": 120,
+    "qualifying_case_count": 76,
+    "fixed_all_corner_candidate": {
+      "effective_nmos_width_um": 20000.0,
+      "effective_pmos_width_um": 40000.0,
+      "gate_separation_v": 2.6,
+      "maximum_output_impedance_ohm": 0.32791157284571065,
+      "maximum_output_common_mode_error_from_vdd_half_v": 0.15577700000000005,
+      "maximum_average_supply_draw_a_per_output": 0.991389,
+      "per_corner": {
+        "ff_cold": {"output_impedance_ohm": 0.12243651850629858, "common_mode_error_v": 0.15112199999999998, "supply_draw_a": 0.90688},
+        "ff_hot": {"output_impedance_ohm": 0.15898207694800504, "common_mode_error_v": 0.12118699999999993, "supply_draw_a": 0.991389},
+        "ss_cold": {"output_impedance_ohm": 0.32791157284571065, "common_mode_error_v": 0.15577700000000005, "supply_draw_a": 0.122018},
+        "ss_hot": {"output_impedance_ohm": 0.29127937754789224, "common_mode_error_v": 0.13629899999999995, "supply_draw_a": 0.29807},
+        "tt": {"output_impedance_ohm": 0.18746280668938814, "common_mode_error_v": 0.1450950000000002, "supply_draw_a": 0.489773}
+      }
+    }
+  },
+  "next_required_topology": "low_quiescent_current_compensated_differential_error_amplifier_with_explicit_cmfb_and_calibratable_class_ab_source_follower_bias_plus_tapered_or_distributed_gate_drive",
+  "not_a_claim": [
+    "implemented_if_driver",
+    "class_ab_bias_generation",
+    "common_mode_feedback",
+    "gate_drive",
+    "large_signal_current",
+    "output_settling",
+    "physical_layout",
+    "adc_enob",
+    "integrated_wifi_receiver"
+  ],
+  "result": "source_follower_output_impedance_possible_under_ideal_bias_only",
+  "schema_version": 1
+}

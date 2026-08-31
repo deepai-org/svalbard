@@ -896,7 +896,11 @@ Execution order is likewise tied to the next receiver claim:
    error, and 3.156 A maximum average draw). It is rejected rather than tuned.
    The successor needs a compensated differential error amplifier, explicit
    CMFB, and current-limited class-AB or source-follower output stage with
-   gate distribution. Do not reuse the
+   gate distribution. A follow-up ideal-bias source-follower primitive does
+   pass 0.328 ohm worst output impedance at 20-mm effective NMOS width, but
+   its one fixed all-corner bias draws up to 0.991 A per output and leaves
+   155.777 mV common-mode error. It is a usable output-stage direction, not a
+   driver solution. Do not reuse the
    PCIe CML error slicer: its extracted 40--150-mV window is hundreds of times
    coarser than the roughly 122-uV 12-bit code step. A failed sampler may justify
    a simplified frequency plan; it does not justify starting a generic ADC

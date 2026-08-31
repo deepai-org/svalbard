@@ -1,0 +1,12 @@
+* SPDX-License-Identifier: Apache-2.0
+* Complementary source-follower output primitive for the Wi-Fi IF-driver path.
+*
+* Positive common gate-control motion turns the high-side NMOS further on and
+* the low-side PMOS further off, sourcing current into OUT. The two independent
+* DC gate biases are an intentional characterization boundary: a later driver
+* must synthesize their class-AB separation and common-mode control.
+
+.subckt wifi_if_complementary_source_follower GN GP OUT VDD VSS params: M=1
+MN VDD GN OUT VSS nfet_03v3 w=4u l=0.28u m={M}
+MP VSS GP OUT VDD pfet_03v3 w=8u l=0.28u m={M}
+.ends wifi_if_complementary_source_follower

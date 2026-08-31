@@ -65,7 +65,10 @@ It has supported real engineering decisions rather than only produced reports.
   That first feedback topology was promptly rejected in all five PVT cases for
   settling, common-mode error, and multi-ampere static draw; the next real
   circuit must use explicit CMFB and a compensated, current-limited output
-  architecture.
+  architecture. A separately biased source-follower primitive can achieve the
+  output-impedance target, but only at up to 0.99 A/output and with substantial
+  common-mode error, so it is evidence for an output-stage family rather than
+  a complete receiver-driver claim.
 
 These findings are useful precisely because a negative result blocks an
 unjustified layout branch early. They are not evidence of PCI-SIG compliance,

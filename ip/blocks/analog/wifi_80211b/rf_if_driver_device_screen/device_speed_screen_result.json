@@ -1,0 +1,39 @@
+{
+  "claim": "wifi_if_driver_raw_device_speed_necessary_screen",
+  "conclusion": "All ten compact-model raw-device cases cross unity current gain at least 8.037 GHz, or 8.126 times the 989.056-MHz sampled-input single-pole settling requirement. This is sufficient only to authorize a closed-loop IF-driver schematic search; it does not prove that the large, distributed output bank can be driven or settled.",
+  "evidence": {
+    "raw_result_sha256": "f1781395f6b4c4cba7c8e7cba83d24a34c193576534e5ee1a5761203665864d8",
+    "runner_sha256": "01831363b57741c940d3dbc61865c76d16a51a94fb838c43c8f8e6f46c1d58a2",
+    "case_count": 10,
+    "complete_case_count": 10,
+    "minimum_unity_current_gain_crossing_hz": 8036624368.096978,
+    "minimum_headroom_to_required_settling_bandwidth": 8.125549252793824,
+    "limiting_case": "ss_hot_pmos",
+    "per_device_unity_current_gain_crossing_hz": {
+      "ff_cold_nmos": 35916240350.234314,
+      "ff_cold_pmos": 17396956307.113155,
+      "ff_hot_nmos": 25217571097.27566,
+      "ff_hot_pmos": 11416716141.490625,
+      "ss_cold_nmos": 25576885931.08488,
+      "ss_cold_pmos": 13003668809.507017,
+      "ss_hot_nmos": 16645521014.162674,
+      "ss_hot_pmos": 8036624368.096978,
+      "tt_nmos": 26257705062.446507,
+      "tt_pmos": 12403033238.876049
+    }
+  },
+  "minimum_required_transit_headroom": 5.0,
+  "next_required_topology": "closed-loop_multistage_differential_if_power_buffer_with_explicit_cmfb_tapered_or_distributed_output-bank_gate_drive_stability_linearity_power_and_425pf_per_leg_sampled_load",
+  "not_a_claim": [
+    "implemented_if_driver",
+    "output_bank_gate_distribution",
+    "closed_loop_stability",
+    "output_settling",
+    "physical_layout",
+    "adc_enob",
+    "integrated_wifi_receiver",
+    "gf180_high_frequency_model_validity"
+  ],
+  "result": "necessary_raw_device_speed_screen_passed_before_driver_schematic",
+  "schema_version": 1
+}

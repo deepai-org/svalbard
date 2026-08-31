@@ -48,6 +48,11 @@ def main() -> None:
     required_input_sine_current_peak_a = (
         2.0 * math.pi * 100e6 * minimum_hold_capacitance_f
         * PER_LEG_FULL_SCALE_PEAK_V)
+    required_full_scale_step_current_per_leg_a = (
+        minimum_hold_capacitance_f * PER_LEG_FULL_SCALE_PEAK_V / TRACK_TIME_S)
+    required_single_pole_settling_bandwidth_hz = 1.0 / (
+        2.0 * math.pi * max_total_acquisition_resistance_ohm
+        * minimum_hold_capacitance_f)
 
     require(data.get("result") == "5pf_boundary_rejected_before_sampler_layout",
             "thermal/settling decision changed")
@@ -63,6 +68,11 @@ def main() -> None:
           max_total_acquisition_resistance_ohm, "maximum acquisition resistance")
     close(calculation.get("required_100mhz_input_sine_current_peak_a"),
           required_input_sine_current_peak_a, "required input current")
+    close(calculation.get("required_full_scale_step_current_per_leg_a"),
+          required_full_scale_step_current_per_leg_a, "required step current")
+    close(calculation.get("required_single_pole_settling_bandwidth_hz"),
+          required_single_pole_settling_bandwidth_hz,
+          "required single-pole settling bandwidth")
     require(data.get("thermal_model") == (
         "independent kT/C noise on two equal hold capacitors; no switch, "
         "buffer, mismatch, jitter, reference, or ADC noise credited"),

@@ -1,9 +1,9 @@
 {
   "claim": "wifi_real_if_push_pull_output_stage_100mhz_feasibility",
-  "conclusion": "A bare balanced CMOS push-pull stage is not a complete IF driver and does not meet the 0.378649-ohm 100-MHz output-impedance target within the screened 20-mm effective NMOS width. A later multistage feedback driver must model its output-stage gate drive, power, linearity, common-mode control, and stability before sampler layout.",
+  "conclusion": "A bare balanced CMOS push-pull stage is not a complete IF driver and does not meet the 0.378649-ohm 100-MHz output-impedance target within the screened 20-mm effective NMOS width. Its 20-mm bank also presents 78.009 pF at the SS/hot DC trip point; the same linear width extrapolation reaches 903.394 pF. A later multistage feedback driver must therefore model its output-stage gate drive and distribution, power, linearity, common-mode control, and stability before sampler layout.",
   "evidence": {
-    "result_sha256": "da8d3c9f8ad19078a9c336418991172b6dd2c9824e842a393a31500269099642",
-    "runner_sha256": "fa8922157a3d1ac558eebf802314df69ef4a958217786c0a084af1e6b53fbd00",
+    "result_sha256": "7cb30a89e810403e353b3fc5bdbd116c33d1a44086d62277fa1eae9c70acebde",
+    "runner_sha256": "4f1d7041e1304bede0ec5edc62a25eca75f55104b47adee36b6a9e302dcda4bf",
     "source_sha256": "4a3e4ac5e682de62937421670b7d16c568ccbf8b7ba8575e6664085ffee03d01",
     "actual_screen": "45 complete small-signal AC simulations at the individual DC trip point; widths use 4-um NMOS / 8-um PMOS fingers with multiplicity",
     "effective_20mm_nmos_width": {
@@ -19,6 +19,23 @@
       "ss_cold_required_effective_nmos_width_mm": 144.04314142261566,
       "ss_hot_required_effective_nmos_width_mm": 231.61299244669254,
       "tt_required_effective_nmos_width_mm": 130.35436528585717
+    },
+    "gate_drive_load_at_100mhz_with_output_ac_clamped_at_dc_trip": {
+      "scope": "small-signal total common gate capacitance of the balanced PMOS/NMOS output bank; it is an output-stage gate-drive load, not a required gate-swing or gate-drive-current claim",
+      "effective_20mm_nmos_width": {
+        "ff_cold_gate_input_capacitance_pf": 74.75399165186124,
+        "ff_hot_gate_input_capacitance_pf": 74.07832162265664,
+        "ss_cold_gate_input_capacitance_pf": 78.9061922833131,
+        "ss_hot_gate_input_capacitance_pf": 78.00888658176745,
+        "tt_gate_input_capacitance_pf": 76.51330169280002
+      },
+      "linear_width_extrapolation_only_not_a_layout_claim": {
+        "ff_cold_required_bank_gate_capacitance_pf": 307.9672992405239,
+        "ff_hot_required_bank_gate_capacitance_pf": 437.8119152144464,
+        "ss_cold_required_bank_gate_capacitance_pf": 568.2947907092686,
+        "ss_hot_required_bank_gate_capacitance_pf": 903.3935829318899,
+        "tt_required_bank_gate_capacitance_pf": 498.6921439045123
+      }
     }
   },
   "maximum_output_impedance_ohm": 0.37864900487166514,

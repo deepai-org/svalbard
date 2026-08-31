@@ -878,10 +878,20 @@ Execution order is likewise tied to the next receiver claim:
    settling, hold error, clock feedthrough and input loading. A five-corner
    100-MHz push-pull output-stage coupon now shows that a bare inverter bank
    reaches 4.385 ohm even at 20-mm effective NMOS width in SS/hot (about
-   232-mm linear-width extrapolation to the 0.379-ohm target). The IF driver
-   must therefore be a closed-loop multistage power buffer whose gate-drive
-   power, stability, common mode, and linearity are explicit; do not lay out a
-   switch-only solution. Do not reuse the
+   232-mm linear-width extrapolation to the 0.379-ohm target). That bank's
+   measured small-signal common gate load is already 78.009 pF at its DC trip
+   point (903.394 pF under the same width extrapolation). The IF driver must
+   therefore be a closed-loop multistage power buffer whose gate-drive
+   distribution, power, stability, common mode, and linearity are explicit;
+   do not lay out a switch-only solution. The thermal-floor 424.974-pF leg
+   also makes the 1.45-ns, 0.25-LSB settling requirement a 989.056-MHz
+   single-pole bandwidth and 36.636-mA full-scale-step-current requirement
+   per leg before additional error sources. A ten-case raw-device
+   drain-current/gate-current crossing screen does clear its deliberately
+   limited necessary speed gate: its worst SS/hot PMOS is 8.037 GHz, or 8.126
+   times the required bandwidth. It neither solves the 903-pF extrapolated
+   output-bank gate load nor proves a feedback loop; now build that complete
+   schematic, not a layout. Do not reuse the
    PCIe CML error slicer: its extracted 40--150-mV window is hundreds of times
    coarser than the roughly 122-uV 12-bit code step. A failed sampler may justify
    a simplified frequency plan; it does not justify starting a generic ADC

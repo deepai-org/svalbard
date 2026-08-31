@@ -58,7 +58,11 @@ It has supported real engineering decisions rather than only produced reports.
   [`ip/blocks/analog/wifi_80211b/rf_if_output_stage_probe`](../../ip/blocks/analog/wifi_80211b/rf_if_output_stage_probe):
   all 45 small-signal PVT cases complete but none meet its 0.379-ohm,
   100-MHz target. It motivates a closed-loop multistage IF driver; it is not
-  a completed driver, sampler, ADC, or receiver.
+  a completed driver, sampler, ADC, or receiver. A subsequent raw-device
+  compact-model speed screen does pass its limited necessary gate (8.037 GHz
+  worst current-gain crossing versus a 989.056-MHz settling requirement), so
+  the justified next work is a complete driver schematic rather than a
+  switch-only layout.
 
 These findings are useful precisely because a negative result blocks an
 unjustified layout branch early. They are not evidence of PCI-SIG compliance,

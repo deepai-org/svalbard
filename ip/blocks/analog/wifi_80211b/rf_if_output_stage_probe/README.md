@@ -17,6 +17,14 @@ is not a layout estimate or an IF-buffer rejection; it rules out using an
 unmodelled single inverter as the required driver. The byte-bound result is
 [`output_stage_coupon_result.json`](output_stage_coupon_result.json).
 
+The same run measures the common input-gate load with the output AC-clamped at
+its DC trip point. The 20-mm SS/hot bank is 78.009 pF; the same linear
+output-impedance extrapolation corresponds to 903.394 pF. This is not a
+gate-drive current estimate because a real feedback driver determines its own
+gate swing and switching waveform. It does establish that a complete candidate
+needs explicit tapered/distributed gate drive rather than treating the output
+bank as a lumped transistor symbol.
+
 Run the PVT coupon with:
 
 ```sh

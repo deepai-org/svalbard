@@ -79,6 +79,28 @@ quit
 """
 
 
+def gate_ac_deck(source: Path, corner: str, vdd: float, temp: int,
+                 width_um: float, gate_mid: float, data: Path) -> str:
+    return f"""* Wi-Fi IF driver output-stage gate-admittance probe.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice {corner}
+.include {source}
+.temp {temp}
+VDD VDD 0 {vdd:.12g}
+VOUT OUT 0 dc {vdd / 2.0:.12g} ac 0
+VGATE GATE 0 dc {gate_mid:.12g} ac 1
+XDUT GATE OUT VDD 0 wifi_if_push_pull_output M={width_um / 4.0:.12g}
+.control
+ac lin 3 {TARGET_FREQUENCY_HZ * 0.99:.12g} {TARGET_FREQUENCY_HZ * 1.01:.12g}
+set wr_singlescale
+set wr_vecnames
+wrdata {data} i(VGATE)
+quit
+.endc
+.end
+"""
+
+
 def ac_magnitude(data: Path) -> float:
     rows = []
     for line in data.read_text().splitlines():
@@ -92,6 +114,21 @@ def ac_magnitude(data: Path) -> float:
     if len(row) >= 3:
         return math.hypot(row[-2], row[-1])
     return abs(row[-1]) if len(row) >= 2 else math.nan
+
+
+def ac_complex(data: Path) -> complex:
+    rows = []
+    for line in data.read_text().splitlines():
+        try:
+            rows.append([float(field) for field in line.split()])
+        except ValueError:
+            continue
+    if not rows:
+        return complex(math.nan, math.nan)
+    row = min(rows, key=lambda values: abs(values[0] - TARGET_FREQUENCY_HZ))
+    if len(row) < 3:
+        return complex(math.nan, math.nan)
+    return complex(row[-2], row[-1])
 
 
 def main() -> None:
@@ -122,6 +159,9 @@ def main() -> None:
         ac_values: dict[str, float] = {}
         ac_returncode = -1
         ac_tail: list[str] = []
+        gate_ac_returncode = -1
+        gate_ac_tail: list[str] = []
+        gate_input_admittance = complex(math.nan, math.nan)
         if math.isfinite(gate_mid):
             ac = root / "ac.spice"
             ac_log = root / "ac.log"
@@ -135,10 +175,28 @@ def main() -> None:
             ac_returncode = ac_run.returncode
             ac_values = values(ac_log)
             ac_tail = log_tail(ac_log)
+            gate_ac = root / "gate_ac.spice"
+            gate_ac_log = root / "gate_ac.log"
+            gate_ac_data = root / "gate_ac.dat"
+            gate_ac.write_text(gate_ac_deck(source, corner, vdd, temp, width_um,
+                                             gate_mid, gate_ac_data))
+            with gate_ac_log.open("w") as output:
+                gate_ac_run = subprocess.run(["ngspice", "-b", str(gate_ac)],
+                                             stdout=output, stderr=subprocess.STDOUT,
+                                             timeout=240, check=False)
+            gate_ac_returncode = gate_ac_run.returncode
+            gate_ac_tail = log_tail(gate_ac_log)
+            if gate_ac_returncode == 0 and gate_ac_data.exists():
+                gate_input_admittance = ac_complex(gate_ac_data)
         output_impedance = ac_magnitude(ac_data) if math.isfinite(gate_mid) \
             and ac_returncode == 0 and ac_data.exists() else math.nan
+        gate_input_capacitance = (-gate_input_admittance.imag
+                                  / (2.0 * math.pi * TARGET_FREQUENCY_HZ))
         complete = (dc_run.returncode == 0 and ac_returncode == 0
-                    and math.isfinite(gate_mid) and math.isfinite(output_impedance))
+                    and gate_ac_returncode == 0 and math.isfinite(gate_mid)
+                    and math.isfinite(output_impedance)
+                    and math.isfinite(gate_input_capacitance)
+                    and gate_input_capacitance > 0.0)
         return {
             "case_id": f"{name}_{width_um:g}um",
             "environment": [corner, vdd, temp],
@@ -151,6 +209,10 @@ def main() -> None:
             "output_impedance_ohm": output_impedance,
             "ac_returncode": ac_returncode,
             "ac_log_tail": ac_tail,
+            "gate_ac_returncode": gate_ac_returncode,
+            "gate_ac_log_tail": gate_ac_tail,
+            "gate_input_conductance_s": gate_input_admittance.real,
+            "gate_input_capacitance_f": gate_input_capacitance,
             "complete": complete,
             "result": "pass" if complete and output_impedance <= MAX_OUTPUT_IMPEDANCE_OHM else "fail",
         }

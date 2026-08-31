@@ -746,6 +746,14 @@ not establish qualified RF noise, matching, linearity, package/antenna EM, an
 on-die bias, or an 802.11 receiver. The next steps below are product gates, not
 tool milestones.
 
+The first die-side open/short/thru/load coupon at
+[`ip/blocks/analog/wifi_80211b/rf_ostl_coupon`](../../ip/blocks/analog/wifi_80211b/rf_ostl_coupon)
+is also zero-DRC, uniquely LVS-matched, and 2R/4C full-RC extracted. Its source
+and measurement plan preserve the PDK's floating poly-body condition and name
+the required 0.1--6 GHz wafer/OTSC measurements. It is a test artifact that
+closes no RF-model-validity claim until measured network data, a reviewed
+probe/pad/package boundary, and passivity/causality checks are available.
+
 - Freeze a modest 2.4 GHz 802.11b front-end boundary and external passive,
   crystal, package, and antenna assumptions.
 - Build only the RF characterization structures and first active macro needed

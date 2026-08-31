@@ -38,11 +38,19 @@ conversion is -3.402 dB at SS/125 C. Its source, bias, drain load, LO and IF
 loads are still deliberately external; this is a routed feasibility parent,
 not a receiver noise, linearity, sensitivity, or compliance claim.
 
+The first die-side RF model-validity artifact is
+[`rf_ostl_coupon`](../../ip/blocks/analog/wifi_80211b/rf_ostl_coupon). It
+implements comparable M5 G-S-G landing geometry for open, short, thru and a
+P+ poly load. Its native run is 0-DRC, uniquely LVS-matched, and 2R/4C
+full-RC extracted. This is a silicon-characterization coupon: it preserves its
+floating poly-body terminal and 0.1--6 GHz OTSC measurement plan rather than
+inventing an RF de-embedding or pad/package qualification from lumped PEX.
+
 The next product work is deliberately small and sequential:
 
-1. Add transistor/open-short/de-embedding and passive test structures, then
-   establish an RF/EM model-validity boundary for the actual package and
-   antenna/matching network.
+1. Add the active transistor and selected passive structures beside the OSTL
+   coupon, then measure/qualify the actual probe, pad, package and
+   antenna/matching boundary with reviewed S-parameter/EM evidence.
 2. Expand the routed parent with noise, linearity, isolation and blocker
    screens, then add the selected IF/baseband boundary.
 3. Only after those gates, add an on-die bias/reference and the minimum

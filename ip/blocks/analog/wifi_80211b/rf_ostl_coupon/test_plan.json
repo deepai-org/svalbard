@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "claim": "wifi_2p4g_die_side_ostl_characterization_coupon",
+  "measurement_boundary": "die-side M5 G-S-G landing geometry; no qualified I/O pad, package, board, probe, antenna or EM solution is imported",
+  "frequency_hz": {
+    "start": 100000000,
+    "stop": 6000000000,
+    "center": 2400000000
+  },
+  "standards": [
+    {
+      "id": "open",
+      "datum": "OPEN",
+      "purpose": "landing and local coupling parasitics"
+    },
+    {
+      "id": "short",
+      "datum": "SHORT",
+      "purpose": "reference-plane inductance and return-path parasitics"
+    },
+    {
+      "id": "thru",
+      "datums": ["THRU_A", "THRU_B"],
+      "purpose": "two-port route and transition de-embedding"
+    },
+    {
+      "id": "load",
+      "datum": "LOAD",
+      "purpose": "poly load impedance and floating-body characterization"
+    }
+  ],
+  "required_measurements": [
+    "calibrated S-parameters at every declared datum",
+    "open-short-thru-load de-embedding validity residual",
+    "passivity and causality checks on exported network data",
+    "repeatable DC resistance of the LOAD standard and floating-body dependence",
+    "stackup, probe, pad, package and temperature provenance"
+  ],
+  "not_proven": [
+    "GF180 RF model validity",
+    "qualified production pad or ESD behavior",
+    "package or antenna network",
+    "Wi-Fi receiver performance or compliance"
+  ]
+}

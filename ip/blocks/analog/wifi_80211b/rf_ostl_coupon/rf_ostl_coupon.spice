@@ -1,0 +1,20 @@
+* SPDX-License-Identifier: Apache-2.0
+* Passive RF open/short/thru/load calibration coupon for the Wi-Fi die side.
+*
+* THRU_A, THRU_B, and SHORT are labelled probe landing datums rather than
+* independent circuit ports: a thru or short intentionally joins its two probe
+* landings.  OPEN and LOAD are the electrical ports that require an LVS-visible
+* circuit relationship.  VSS is the common on-die reference plane.
+*
+* This coupon deliberately has no I/O pad or package model.  It supports
+* wafer/die-side de-embedding after a qualified pad/probe/package boundary has
+* been selected; it does not qualify that boundary itself.
+
+.subckt wifi_rf_ostl_coupon OPEN LOAD VSS
+* A 2 um by 40 um P+ poly load uses the same well/contact construction
+* as the checked wireline calibration DAC. The model's third terminal is kept
+* as an explicit floating-body condition for characterization: this early
+* coupon must measure that condition rather than hide it behind an assumed VSS
+* tie. Its impedance is characterized, not assumed to be a calibrated RF load.
+XLOAD LOAD VSS RES_BODY ppolyf_u r_width=2u r_length=40u
+.ends wifi_rf_ostl_coupon

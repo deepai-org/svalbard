@@ -88,6 +88,23 @@ module wifi_80211b_rx : radio_receiver in physical_environment {
     }
   }
 
+  module die_side_ostl_coupon : rf_characterization_coupon {
+    terminal open, load, vss : electrical;
+    implementation intent {
+      source "ip/blocks/analog/wifi_80211b/rf_ostl_coupon/rf_ostl_coupon.spice";
+      physical "ip/blocks/analog/wifi_80211b/rf_ostl_coupon/layout.tcl";
+      measurement_plan "ip/blocks/analog/wifi_80211b/rf_ostl_coupon/test_plan.json";
+      standards { open, short, thru, poly_load };
+    }
+    guarantee checked_extracted_structure {
+      source "ip/blocks/analog/wifi_80211b/rf_ostl_coupon/run_coupon_physical.sh";
+      drc_clean and lvs_matches_intended_circuit and full_rc_pex;
+      preserve floating_poly_body_as_measurement_obligation;
+      not_claim { calibrated_load_impedance, rf_deembedding_validity,
+                  production_pad, package_or_antenna_qualification };
+    }
+  }
+
   module external_lo_rx_parent : routed_receive_parent {
     terminal rf_gate, mix_rf, lna_source, lo, lob, ifp, ifn, vss : electrical;
     implementation intent {
@@ -120,6 +137,7 @@ module wifi_80211b_rx : radio_receiver in physical_environment {
   obligation before wifi_80211b_rx.integration_claim {
     prove noise_figure, conversion_gain, i_q_balance, dc_offset,
           blocker_tolerance, phase_noise, and receive_sensitivity;
+    measure die_side_ostl_coupon plus transistor_and_passive_replicas;
     import package_network and antenna_network with non_double_counted_em_ports;
     implement on_die_bias_reference_and_calibration with observable search;
     compose external_lo_rx_parent plus baseband through a routed physical parent;
@@ -129,6 +147,7 @@ module wifi_80211b_rx : radio_receiver in physical_environment {
   guarantee current_status {
     lna_core.checked_full_rc_pvt;
     external_lo_mixer_core.checked_full_rc_pvt;
+    die_side_ostl_coupon.checked_extracted_structure;
     external_lo_rx_parent.checked_full_rc_pvt;
     not_claim { integrated_receiver, ieee_80211_compliance,
                 interoperability, yield, silicon_qualification };

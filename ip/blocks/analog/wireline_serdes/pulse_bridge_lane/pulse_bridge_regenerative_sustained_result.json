@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "claim": "extracted_pulse_bridge_regenerative_lane_static_input_sustained",
+  "result": "fail",
+  "evidence_class": "composed_leaf_pex_with_unrouted_parent_interconnect",
+  "source_tree_sha256": "7d9533c5e65f192e2ed0b2c9a313a67f92b69b37b99e3b1b637a8f63851205fb",
+  "boundary": {
+    "ideal_sources_retained": [
+      "upstream recovered rail-clock",
+      "static receiver input"
+    ],
+    "ideal_timing_sources_removed": [
+      "sense",
+      "boost",
+      "write",
+      "capture clock",
+      "capture clock complement"
+    ]
+  },
+  "screen": {
+    "settling_window_ns": [5, 8],
+    "requires_successive_capture_edges": 2,
+    "period_limit_ps": [700, 900],
+    "rail_headroom_v": 0.25,
+    "complementary_skew_limit_ps": 125,
+    "output_differential_limit_v": 0.5,
+    "supply_current_limit_a": 0.1
+  },
+  "physical_inputs": {
+    "pulse_pex_sha256": "961affea446c5c8cb6643fb53625d2c7733bb10802790614368f769cd948eddd",
+    "pulse_physical_sha256": "15683c6868a1aa07155892b78ae90113b70604e1870aa2988f562768573fabfd",
+    "bridge_pex_sha256": "d2868772b9a302ad7c291f7ca024c73ec8391e5ae6da4d56dc1b218498634614",
+    "bridge_physical_sha256": "eef2894d7ad8757aa2143b7edfbb12bc077ab55a961c33f079bbd0d2155d18b9",
+    "lane_pex_sha256": "f8fdcb7cdcc486c6ac868f476dd7a85bcaaa3ee02ec77caaf835c6107519b1df",
+    "lane_physical_sha256": "29b8766349f9c7321d2ec59a62600fd5379c33414a2dabc6e72ffd4f08eadf71"
+  },
+  "passing_case_count": 3,
+  "case_count": 5,
+  "cases": [
+    {
+      "id": "tt",
+      "environment": ["typical", "res_typical", 3.3, 27],
+      "result": "pass",
+      "write_high_v": [3.23991, 3.24117],
+      "capture_high_v": [3.13783, 3.15094],
+      "period_ps": [801.07, 800.89],
+      "worst_skew_ps": 82.57
+    },
+    {
+      "id": "ff_cold",
+      "environment": ["ff", "res_ff", 3.63, -40],
+      "result": "fail",
+      "write_high_v": [3.37947, 3.3961],
+      "capture_high_v": [3.31106, 3.29635],
+      "failure": "capture-clock high rail is below VDD - 250 mV"
+    },
+    {
+      "id": "ff_hot",
+      "environment": ["ff", "res_ss", 2.97, 125],
+      "result": "pass",
+      "write_high_v": [2.83171, 2.83123],
+      "capture_high_v": [2.78371, 2.78731],
+      "period_ps": [800.77, 800.76],
+      "worst_skew_ps": 84.84
+    },
+    {
+      "id": "ss_hot",
+      "environment": ["ss", "res_ff", 2.97, 125],
+      "result": "fail",
+      "write_high_v": [0.04904, 0.06011],
+      "capture_high_v": [0.00431, 0.00486],
+      "failure": "no settled periodic write/capture events"
+    },
+    {
+      "id": "ss_cold",
+      "environment": ["ss", "res_ss", 3.63, -40],
+      "result": "pass",
+      "write_high_v": [3.61575, 3.61257],
+      "capture_high_v": [3.4775, 3.4984],
+      "period_ps": [801, 800.79],
+      "worst_skew_ps": 84.83
+    }
+  ],
+  "limitations": [
+    "Static receiver input only; this is not PRBS, channel, BER, or PCIe-compliance evidence.",
+    "Leaf PEX is byte-bound, but the parent interconnect is not yet routed or extracted.",
+    "SEL0..SEL3 are pin-load anchors in the current pulse topology, not implemented calibration choices."
+  ]
+}

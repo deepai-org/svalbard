@@ -265,6 +265,11 @@ def group_geometry(group: Group) -> tuple[float, dict[str, float]]:
 
 def functional_lane(group: Group) -> int:
     root = group.name.removeprefix("XE").removeprefix("XO").split("__")[1]
+    # The WRITE timing source is a local replica of SENSE's final restored
+    # state.  Place it beside the SENSE taper so only its high-impedance
+    # isolated output crosses to the write lane.
+    if root.startswith("XWSRC"):
+        return 2
     if root in ("XP06S", "XP09M", "XP10"):
         return 1
     if root in ("XP08", "XPMD", "XPLC", "XPLD"):
@@ -347,7 +352,7 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
                 "XSN": 10, "XHSD0": 11, "XHSD1": 12,
                 "XHSN": 13, "XSB0": 14, "XRB0": 15, "XRBI": 16,
                 "XSB1": 17, "XRB1": 18, "XRBB": 19,
-                "XSB2": 20, "XRB2": 21,
+                "XSB2": 20, "XRB2": 21, "XWSRC": 22, "XWSRCC": 23,
             }
 
             def sense_order(group: Group) -> tuple[int, int, int, str]:

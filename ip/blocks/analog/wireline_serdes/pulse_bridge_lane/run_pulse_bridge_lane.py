@@ -22,6 +22,7 @@ ENVIRONMENTS = (
 REQUIRED = {
     "e_sense_high", "o_sense_high", "e_write_high", "o_write_high",
     "e_clk_high", "o_clk_high", "e_clkb_low", "o_clkb_low",
+    "e_clk_rise_first", "o_clk_rise_first",
     "e_clk_rise", "e_clkb_fall", "e_clk_fall", "e_clkb_rise",
     "o_clk_rise", "o_clkb_fall", "o_clk_fall", "o_clkb_rise",
     "e_q_diff", "o_q_diff", "supply_current",
@@ -87,6 +88,12 @@ for case_id, mos, res, vdd, temperature, rx_bias in ENVIRONMENTS:
         "odd_entry_ps": (observed.get("o_clk_rise", 0) - observed.get("o_clkb_fall", 0)) * 1e12,
         "odd_exit_ps": (observed.get("o_clkb_rise", 0) - observed.get("o_clk_fall", 0)) * 1e12,
     }
+    clock_period_ps = {
+        "even": (observed.get("e_clk_rise", 0)
+                 - observed.get("e_clk_rise_first", 0)) * 1e12,
+        "odd": (observed.get("o_clk_rise", 0)
+                - observed.get("o_clk_rise_first", 0)) * 1e12,
+    }
     rails = all(observed.get(key, 0.0) >= vdd - 0.25 for key in
                 ("e_sense_high", "o_sense_high", "e_write_high", "o_write_high",
                  "e_clk_high", "o_clk_high")) and all(
@@ -96,10 +103,13 @@ for case_id, mos, res, vdd, temperature, rx_bias in ENVIRONMENTS:
                 and abs(observed.get("o_q_diff", 0.0)) >= 0.50)
     passed = (complete and rails and resolved
               and all(abs(value) <= 125.0 for value in skew.values())
+              and all(700.0 <= value <= 900.0
+                      for value in clock_period_ps.values())
               and 0 < observed.get("supply_current", 0.0) <= 0.100)
     cases.append({
         "id": case_id, "environment": [mos, res, vdd, temperature],
         "complete": complete, "observed": observed, "clock_skew_ps": skew,
+        "clock_period_ps": clock_period_ps,
         "result": "pass" if passed else "fail",
     })
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Screen the calibrated dual-edge pulse generator over PVT and delay bias."""
+"""Screen the current static-control dual-edge pulse generator over PVT."""
 
 import argparse
 import concurrent.futures
@@ -43,7 +43,9 @@ parser.add_argument("--jobs", type=int, default=1,
                     help="independent ngspice cases to run concurrently")
 parser.add_argument("--fraction", action="append", type=float)
 parser.add_argument("--tap-code", action="append",
-                    help="realized sense,start,end profile, for example 2,8,9")
+                    help=("legacy named control vector, for example 0,8,9; "
+                          "the current reduced topology treats these pins as "
+                          "static loads, not realized calibration profiles"))
 args = parser.parse_args()
 if args.pex_resistance_scale < 0 or args.pex_capacitance_scale < 0:
     parser.error("PEX scales must be nonnegative")
@@ -120,20 +122,20 @@ selected_environments = tuple(
     if not args.environment or env[0] in args.environment)
 fractions = tuple(args.fraction) if args.fraction else (0.70,)
 tap_codes = []
-profiles = {
+control_vectors = {
     (0, 10, 11): 0,
     (1, 8, 9): 1,
     (0, 8, 9): 2,
     (2, 8, 9): 3,
 }
-for encoded in args.tap_code or ("0,10,11", "1,8,9", "0,8,9", "2,8,9"):
+for encoded in args.tap_code or ("0,8,9",):
     try:
         sense_tap, write_start_tap, write_end_tap = (
             int(part) for part in encoded.split(","))
     except (TypeError, ValueError):
         parser.error(f"invalid tap code: {encoded}")
-    if (sense_tap, write_start_tap, write_end_tap) not in profiles:
-        parser.error(f"tap code is not a realized profile: {encoded}")
+    if (sense_tap, write_start_tap, write_end_tap) not in control_vectors:
+        parser.error(f"unknown named control vector: {encoded}")
     tap_codes.append((sense_tap, write_start_tap, write_end_tap))
 case_specs = [
     (sense_tap, write_start_tap, write_end_tap,
@@ -148,7 +150,7 @@ def run_case(spec):
         (sense_tap, write_start_tap, write_end_tap,
          env_name, corner, vdd, temperature, fraction) = spec
         code = f"s{sense_tap:02d}_w{write_start_tap:02d}_{write_end_tap:02d}"
-        profile = profiles[(sense_tap, write_start_tap, write_end_tap)]
+        control_index = control_vectors[(sense_tap, write_start_tap, write_end_tap)]
         values = {
             "MOS_CORNER": corner,
             "TEMP_C": str(temperature),
@@ -157,7 +159,7 @@ def run_case(spec):
             "DUT_PATH": str(dut_path),
             "DUT_SUBCKT": "clock_pulse_generator_pex" if args.pex
                            else "clock_pulse_generator",
-            **{f"SEL{index}_V": f"{vdd if index == profile else 0:.6f}"
+            **{f"SEL{index}_V": f"{vdd if index == control_index else 0:.6f}"
                for index in range(4)},
         }
         text = template
@@ -217,6 +219,7 @@ def run_case(spec):
             "environment": [corner, vdd, temperature],
             "control_fraction": fraction,
             "tap_code": [sense_tap, write_start_tap, write_end_tap],
+            "control_index": control_index,
             "complete": complete,
             "sense_width_s": es_width,
             "write_width_s": ew_width,
@@ -244,9 +247,15 @@ for env_name, corner, vdd, temperature in selected_environments:
     coverage[env_name] = [case["tap_code"] for case in selected]
 result = {
     "schema_version": 1,
-    "claim": ("calibrated_dual_edge_sense_write_pulse_full_rc"
+    "claim": ("static_control_dual_edge_sense_write_pulse_full_rc"
               if args.pex else
-              "calibrated_dual_edge_sense_write_pulse_schematic"),
+              "static_control_dual_edge_sense_write_pulse_schematic"),
+    "control_semantics": {
+        "functional_calibration": False,
+        "meaning": ("SEL0..SEL3 retain physical pin/gate loading only in the "
+                    "current reduced pulse topology; repeated vectors are not "
+                    "independent calibration coverage"),
+    },
     "case_count": len(cases),
     "passing_case_count": sum(case["result"] == "pass" for case in cases),
     "environment_coverage": coverage,

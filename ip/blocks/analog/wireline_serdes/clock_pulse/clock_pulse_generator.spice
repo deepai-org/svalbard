@@ -129,8 +129,8 @@ XN0 D G N VSS nfet_03v3 w={WG} l=0.28u m={M}
 XN1 N EN VSS VSS nfet_03v3 w={WE} l=0.28u m={M}
 .ends cp_cond_npd
 
-.subckt cp_gate_cap A VSS params: W=0.4u
-XN VSS A VSS VSS nfet_03v3 w={W} l=0.28u m=1
+.subckt cp_gate_cap A VSS params: W=0.4u M=1
+XN VSS A VSS VSS nfet_03v3 w={W} l=0.28u m={M}
 .ends cp_gate_cap
 
 * Minimum-size all-diffusion/gate route anchor.  Drain, gate, and source share
@@ -228,12 +228,23 @@ XRB2 RB1 BOOST VDD VSS cp_inv WP=8u WN=8u MP=5 MN=3
 * The shared-gate taper avoids the shoot-through interval of independently
 * driven pull-up/pull-down banks. Its roughly 2x stage ratios support the
 * larger final PMOS without placing that full gate load on a small predriver.
-* Derive WRITE from the already restored SENSE boundary, never from the
-* high-impedance HSN source. Three receiver stages taper from the external
-* sense boundary to a full-swing rising step. Four physical delay inverters and
-* a local rising-edge detector form an active-low interval; five taper
-* inversions produce the requested high pulse into the 650-fF write load.
-XWISO0 SENSE WSIB VDD VSS cp_inv WP=4u WN=4u
+* Derive WRITE from a local replica of the restored SENSE boundary, never from
+* the externally loaded SENSE net or the high-impedance HSN source.  The
+* actual direct-regenerative SENSE/BOOST PEX previously left SENSE high yet
+* erased WRITE through this shared timing input.  This small local replica
+* preserves the same logical boundary while isolating the interval generator
+* from its consumer's dynamic input network.  Its physical route is deliberately
+* kept after the SENSE final driver so the isolated path retains non-overlap.
+* This isolated replica drives its calibrated local load, not the lane.  Its
+* modestly larger final bank is deliberately before the isolated boundary, so
+* any future PVT benefit does not increase the external SENSE driver's lane
+* coupling.
+XWSRC SB1 WSRC VDD VSS cp_inv WP=8u WN=8u MP=2 MN=2
+* Recreate the removed consumer-side timing load locally.  This explicit MOS
+* gate capacitance keeps the isolated edge out of the SENSE aperture without
+* reconnecting the interval generator to the downstream lane's PEX network.
+XWSRCC WSRC VSS cp_gate_cap W=10u M=7
+XWISO0 WSRC WSIB VDD VSS cp_inv WP=4u WN=4u
 XWISO1 WSIB WSA VDD VSS cp_inv WP=2u WN=6u
 XWISO2 WSA WSB VDD VSS cp_inv WP=6u WN=4u MP=2 MN=1
 XWBASE WSB WBA VDD VSS cp_delay_unit WP=4u WN=2u MP=2 MN=2
@@ -244,9 +255,10 @@ XWB1 WB1 WB2 VDD VSS cp_inv WP=4u WN=4u MP=4 MN=4
 XWB2 WB2 WB3 VDD VSS cp_inv WP=8u WN=8u MP=4 MN=4
 XWB3 WB3 WB4 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=8
 XWB4 WB4 WRITE VDD VDDW VSS cp_final_inv WP=8u WN=8u MP=28 MN=22
-* Preserve the parent interface while calibration is being migrated upward to
-* bias/supply controls. These minimum gate capacitors are route anchors, not
-* timing elements.
+* Preserve the parent interface while a real calibration path is designed.
+* These minimum gate capacitors are route anchors, not timing elements: SEL
+* codes must not be reported as calibration coverage until a physical path
+* changes the emitted timing/drive behavior.
 XACLK CLK VSS cp_gate_cap W=0.4u
 XASEL0 SEL0 VSS cp_gate_cap W=0.4u
 XASEL1 SEL1 VSS cp_gate_cap W=0.4u

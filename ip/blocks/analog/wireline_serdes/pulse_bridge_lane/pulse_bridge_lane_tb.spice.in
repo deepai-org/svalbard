@@ -77,32 +77,34 @@ COQ ODD_Q 0 50f
 COQB ODD_QB 0 50f
 
 .control
-tran 2p 5n uic
+* Link bring-up is not a five-nanosecond contract.  Score the settled 5--8 ns
+* interval and require two successive capture edges there; the runner checks
+* their 800-ps cadence rather than accepting a single late pulse.
+tran 2p 8n uic
 let isupply = -i(VDD)
 let e_q_diff = v(EVEN_Q)-v(EVEN_QB)
 let o_q_diff = v(ODD_Q)-v(ODD_QB)
-meas tran e_sense_high max v(E_SENSE_CLK) from=3n to=5n
-meas tran o_sense_high max v(O_SENSE_CLK) from=3n to=5n
-meas tran e_write_high max v(E_WRITE) from=3n to=5n
-meas tran o_write_high max v(O_WRITE) from=3n to=5n
-meas tran e_clk_high max v(E_CAPTURE_CLK) from=3n to=5n
-meas tran o_clk_high max v(O_CAPTURE_CLK) from=3n to=5n
-meas tran e_clkb_low min v(E_CAPTURE_CLKB) from=3n to=5n
-meas tran o_clkb_low min v(O_CAPTURE_CLKB) from=3n to=5n
-* Two complete edges are guaranteed in the 2--5 ns observation interval for
-* both interleaves.  Higher ordinal counts made a healthy TT event look like
-* a simulator failure merely because the final falling edge lay beyond 5 ns.
-meas tran e_clk_rise when v(E_CAPTURE_CLK)=@VMID@ rise=2 td=2n
-meas tran e_clkb_fall when v(E_CAPTURE_CLKB)=@VMID@ fall=2 td=2n
-meas tran e_clk_fall when v(E_CAPTURE_CLK)=@VMID@ fall=2 td=2n
-meas tran e_clkb_rise when v(E_CAPTURE_CLKB)=@VMID@ rise=2 td=2n
-meas tran o_clk_rise when v(O_CAPTURE_CLK)=@VMID@ rise=2 td=2n
-meas tran o_clkb_fall when v(O_CAPTURE_CLKB)=@VMID@ fall=2 td=2n
-meas tran o_clk_fall when v(O_CAPTURE_CLK)=@VMID@ fall=2 td=2n
-meas tran o_clkb_rise when v(O_CAPTURE_CLKB)=@VMID@ rise=2 td=2n
-meas tran e_q_diff find e_q_diff at=4.55n
-meas tran o_q_diff find o_q_diff at=4.75n
-meas tran supply_current avg isupply from=3n to=5n
+meas tran e_sense_high max v(E_SENSE_CLK) from=5n to=8n
+meas tran o_sense_high max v(O_SENSE_CLK) from=5n to=8n
+meas tran e_write_high max v(E_WRITE) from=5n to=8n
+meas tran o_write_high max v(O_WRITE) from=5n to=8n
+meas tran e_clk_high max v(E_CAPTURE_CLK) from=5n to=8n
+meas tran o_clk_high max v(O_CAPTURE_CLK) from=5n to=8n
+meas tran e_clkb_low min v(E_CAPTURE_CLKB) from=5n to=8n
+meas tran o_clkb_low min v(O_CAPTURE_CLKB) from=5n to=8n
+meas tran e_clk_rise_first when v(E_CAPTURE_CLK)=@VMID@ rise=1 td=5n
+meas tran o_clk_rise_first when v(O_CAPTURE_CLK)=@VMID@ rise=1 td=5n
+meas tran e_clk_rise when v(E_CAPTURE_CLK)=@VMID@ rise=2 td=5n
+meas tran e_clkb_fall when v(E_CAPTURE_CLKB)=@VMID@ fall=2 td=5n
+meas tran e_clk_fall when v(E_CAPTURE_CLK)=@VMID@ fall=2 td=5n
+meas tran e_clkb_rise when v(E_CAPTURE_CLKB)=@VMID@ rise=2 td=5n
+meas tran o_clk_rise when v(O_CAPTURE_CLK)=@VMID@ rise=2 td=5n
+meas tran o_clkb_fall when v(O_CAPTURE_CLKB)=@VMID@ fall=2 td=5n
+meas tran o_clk_fall when v(O_CAPTURE_CLK)=@VMID@ fall=2 td=5n
+meas tran o_clkb_rise when v(O_CAPTURE_CLKB)=@VMID@ rise=2 td=5n
+meas tran e_q_diff find e_q_diff at=7.55n
+meas tran o_q_diff find o_q_diff at=7.75n
+meas tran supply_current avg isupply from=5n to=8n
 quit
 .endc
 .end

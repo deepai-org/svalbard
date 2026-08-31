@@ -94,10 +94,22 @@ TT and SS/125-C result identity is recorded in `pulse_tt_replay_checkpoint.json`
 
 The pulse PEX is now composed with the physical complementary capture-clock
 bridge and the physical direct-regenerative lane without an ideal source at any
-SENSE, BOOST, WRITE, or capture-clock pin. The retained
-[`../pulse_bridge_lane/README.md`](../pulse_bridge_lane/README.md) result passes
-only TT and SS/cold. In FF/cold, FF/hot, and SS/hot the WRITE rail collapses to
-30--57 mV and the capture bridge output to 3--10 mV.
+SENSE, BOOST, WRITE, or capture-clock pin. A fresh 193.3-um-wide local-replica
+revision is zero-DRC, uniquely LVS-matched, and passes its exact nominal PEX
+gate. Its sustained composed screen is 3/5: TT, FF/hot, and SS/cold pass.
+FF/cold reaches 3.379/3.396 V WRITE but only 3.311/3.296 V at the bridge
+outputs against the conservative 3.380 V criterion; SS/hot still
+loses periodic WRITE regeneration (49/60 mV). The byte-bound result is
+[`../pulse_bridge_lane/pulse_bridge_regenerative_sustained_result.json`](../pulse_bridge_lane/pulse_bridge_regenerative_sustained_result.json).
+
+An extracted 12-um final-SENSE-NMOS counterfactual was rejected: it lowered
+the local SENSE low voltage but its added preceding-stage gate load erased
+WRITE at multiple corners. Fixed drive growth is not the remedy. Also,
+`SEL0..SEL3` are only physical pin-load anchors in this reduced topology, so
+the former four-vector PVT campaign was repeated static-control evidence, not
+calibration coverage. The checked runner now uses one static state. A future
+calibration claim requires an actual circuit path whose code is observed to
+change this composed behavior.
 
 An FF/cold counterfactual separates the immediate mechanisms. The current
 `(0,8,9)` profile reaches only 3.184/3.204 V WRITE even with its historical

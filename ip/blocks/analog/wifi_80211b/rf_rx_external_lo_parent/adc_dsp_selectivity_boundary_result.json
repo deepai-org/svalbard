@@ -1,11 +1,12 @@
 {
   "claim": "wifi_real_if_adc_dsp_selectivity_architecture_boundary",
   "converter_requirements": {
+    "input_full_scale_definition": "differential peak",
     "input_full_scale_peak_v": 0.25,
     "minimum_effective_bits": 12,
     "minimum_quantization_snr_db_for_current_desired_tone": 20.0,
     "minimum_sample_rate_hz": 320000000.0,
-    "notes": "These are deliberately conservative architectural requirements derived from the current two-tone PEX output, not an implemented ADC specification or a GF180 feasibility claim.",
+    "notes": "These are deliberately conservative architectural requirements derived from the current two-tone PEX output, not an implemented ADC specification or a GF180 feasibility claim. The first physical converter leaf is a 0.25 V differential-peak, 320 MS/s sampled-input interface against a declared 5 pF per-leg future CDAC load and 0.25-LSB settling allocation; it must pass full-RC PEX before an ADC topology is promoted.",
     "required_headroom_ratio": 2.0
   },
   "digital_filter_requirements": {
@@ -74,7 +75,7 @@
   ],
   "pex_sha256": "16556b3ae3061a8ed1ba14117832e1b8834253639bd98176058afdbea48911ba",
   "physical_sha256": "82b64954daa030e464e0ae4af920940c2958e872322e3a433e2e1a2a190ae4a0",
-  "plan_sha256": "f5ea0d3c78ace5b6856e675de225ea4b0653c0aa98104dac12889cfb80d36aa8",
+  "plan_sha256": "7e1c02b331aa77632151c961aa76259fb3bac91753297636690c1dadf18ede71",
   "result": "pass",
   "schema_version": 1,
   "selected_path": "real_if_adc_and_digital_channel_filter",

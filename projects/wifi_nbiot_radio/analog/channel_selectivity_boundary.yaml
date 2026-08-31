@@ -74,8 +74,29 @@ architecture_decision:
   alternative_path_two:
     name: real_if_adc_dsp_channel_selection
     status: selected_not_implemented
+    first_physical_gate:
+      name: differential_sampled_input_interface
+      reason: >-
+        It is the lowest-risk executable converter boundary. The existing PCIe
+        CML window slicer has an extracted 40--150 mV input contract and cannot
+        be promoted to a 12-bit converter comparator with an approximately
+        122 uV code step.
+      declared_boundary:
+        differential_full_scale_peak_v: 0.25
+        sample_rate_hz: 320000000
+        future_converter_load_per_leg_pf: 5
+        settling_allocation_lsb: 0.25
+      pass_condition: >-
+        A layout-extracted PVT screen must bound switch/input-buffer settling,
+        hold error, clock feedthrough, and loading at the declared boundary.
+        A simple transmission gate is a candidate, not a promised topology.
+      failure_action: >-
+        Select a bootstrapped or cancellation topology only if the PEX evidence
+        identifies a specific limitation; otherwise revisit the receiver
+        frequency plan before creating a larger converter project.
     required_evidence:
       - analog_chain_iip3_compression_and_noise
+      - extracted_differential_sampling_interface
       - adc_input_range_noise_and_sampling_plan
       - digital_filter_response_and_fixed_point_error
       - end_to_end_blocker_headroom_and_evm

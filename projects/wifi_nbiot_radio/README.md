@@ -79,18 +79,31 @@ testable decision record is
 and the byte-bound PEX budget is
 [`adc_dsp_selectivity_plan.json`](../../ip/blocks/analog/wifi_80211b/rf_rx_external_lo_parent/adc_dsp_selectivity_plan.json).
 
-The remaining product work is deliberately small and sequential:
+The remaining product work is deliberately small and sequential.  In
+particular, this track must not turn an unimplemented 12-bit converter into a
+large generic-ADC project:
 
-1. Implement the selected IF buffer/sampling interface, ADC and fixed-point
-   channel filter against the frozen two-tone headroom/filter budget; then
-   compose it with the routed parent and rerun two-tone, noise, linearity,
-   compression and calibration screens.
-2. Bind a measured/vendor RF preselector and matching network for its distinct
+1. Close one physical **differential sampled-input interface** first.  Its
+   declared test boundary is 0.25 V differential peak full scale, 320 MS/s,
+   a 5 pF per-leg future converter/CDAC load, and a 0.25-LSB settling/noise
+   allocation.  DRC/LVS/full-RC PEX must show the actual switch, clock feed,
+   input buffer/loading, hold error, and PVT behavior at that boundary.  If a
+   simple transmission gate cannot meet it, the evidence determines whether a
+   bootstrapped/cancelled switch is warranted or whether the receiver frequency
+   plan must be simplified before more converter work is started.
+2. Only after that interface passes, implement a bounded converter architecture
+   and its calibration observables, followed by the fixed-point channel filter
+   against the frozen two-tone headroom/filter budget.  The existing PCIe CML
+   error slicer is not a substitute: its demonstrated 40--150 mV window is
+   hundreds of times coarser than the roughly 122 uV 12-bit code step here.
+   Then compose the actual blocks with the routed parent and rerun two-tone,
+   noise, linearity, compression and calibration screens.
+3. Bind a measured/vendor RF preselector and matching network for its distinct
    antenna/package/out-of-band role, then measure the active transistor and
    selected passive structures alongside the
    OSTL coupon, then qualify the actual probe, pad, package and antenna/matching
    boundary with reviewed S-parameter/EM evidence.
-3. Only after those gates, add an on-die bias/reference and the minimum
+4. Only after those gates, add an on-die bias/reference and the minimum
    calibration/control path needed by the selected 802.11b receiver boundary.
 
 The top-level intended behavior and explicit blockers are in

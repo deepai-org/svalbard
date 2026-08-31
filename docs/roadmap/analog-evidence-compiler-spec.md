@@ -847,10 +847,19 @@ Execution order is likewise tied to the next receiver claim:
 1. The receiver decision is frozen as a real-IF ADC/DSP path because a normal
    wide Wi-Fi RF preselector cannot honestly claim 25 MHz adjacent-tone
    separation. Use the existing PEX two-tone measurements only to hold the
-   ADC full-scale/ENOB/sample-rate and digital-filter requirements accountable;
-   then implement the IF buffer, converter and fixed-point filter. This is a
-   product architecture decision, not an opportunity to build an RF optimizer
-   or to call the current scalar budget an implemented receiver.
+   ADC full-scale/ENOB/sample-rate and digital-filter requirements accountable.
+   First close only a 0.25-V differential-peak, 320-MS/s **sampled-input
+   interface** with a declared 5-pF-per-leg future converter load and a
+   0.25-LSB settling allocation. Its extracted PVT screen must measure switch
+   settling, hold error, clock feedthrough and input loading. Do not reuse the
+   PCIe CML error slicer: its extracted 40--150-mV window is hundreds of times
+   coarser than the roughly 122-uV 12-bit code step. A failed simple-switch
+   screen may justify a bootstrapped/cancelled topology or a simplified
+   frequency plan; it does not justify starting a generic ADC framework. Only
+   after the interface passes should a bounded converter and fixed-point filter
+   be built and composed. This is a product architecture decision, not an
+   opportunity to build an RF optimizer or to call the current scalar budget an
+   implemented receiver.
 2. Preserve the OSTL and active-NFET coupons as tapeout/measurement obligations.
    When calibrated wafer data exists, bind the exact de-embedded S-parameters,
    noise and bias range into the model registry before promoting any RF gain,
@@ -888,10 +897,11 @@ or prevents a previously observed false claim in both projects.
 ### Immediate execution policy
 
 The PCIe clock/capture bench now removes ideal timing sources at its immediate
-boundary but passes only 3/5 corners; the Wi-Fi receiver has neither a bound
-selectivity network nor an ADC/DSP alternative. Until those two product gates
-advance, the repository is **not** building a general analog compiler. The
-allowed shared work is limited to a defect already encountered in both products:
+boundary but passes only 3/5 corners; the Wi-Fi receiver has a byte-bound
+ADC/DSP selectivity architecture but no implemented sampled-input interface.
+Until those two product gates advance, the repository is **not** building a
+general analog compiler. The allowed shared work is limited to a defect already
+encountered in both products:
 
 - source/layout/PEX/testbench/result identity and invalidation;
 - resource-bounded, resumable PVT or characterization runners;

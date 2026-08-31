@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Verify identity and the deliberately open pulse-generator checkpoint."""
+"""Verify the deliberately open historical pulse-generator checkpoint."""
 from __future__ import annotations
 
 import hashlib
 import json
 from pathlib import Path
+import subprocess
 
 
 HERE = Path(__file__).resolve().parent
@@ -12,6 +13,19 @@ HERE = Path(__file__).resolve().parent
 
 def digest(name: str) -> str:
     return hashlib.sha256((HERE / name).read_bytes()).hexdigest()
+
+
+def historical_digest(revision: str, name: str) -> str:
+    """Hash the exact source revision that produced retained evidence."""
+    relative = f"ip/blocks/analog/wireline_serdes/clock_pulse/{name}"
+    try:
+        source = subprocess.check_output(
+            ["git", "show", f"{revision}:{relative}"], cwd=HERE,
+            stderr=subprocess.DEVNULL)
+    except (OSError, subprocess.CalledProcessError) as error:
+        raise SystemExit(
+            f"historical checkpoint source unavailable: {revision}:{relative}") from error
+    return hashlib.sha256(source).hexdigest()
 
 
 def load(name: str) -> dict:
@@ -27,6 +41,13 @@ physical = load("pulse_physical_checkpoint.json")
 schematic = load("pulse_schematic_result.json")
 nominal = load("pulse_pex_nominal_result.json")
 pvt = load("pulse_pex_pvt_result.json")
+historical_revision = physical.get("historical_source_revision")
+
+require(historical_revision == "2a35009b3715ea6d41081c5e338e197b08a4893e"
+        and physical.get("historical_source_status")
+        == ("source and layout generator are reconstructed from the retained Git "
+            "revision; the raw PEX/GDS bytes were not versioned"),
+        "pulse checkpoint historical provenance changed")
 
 require(physical.get("physical_legality_result") == "pass"
         and physical.get("result") == "fail"
@@ -40,15 +61,16 @@ require((physical.get("pex_resistor_count"),
          physical.get("pex_capacitor_count")) == (9344, 6103),
         "pulse checkpoint extracted element count changed")
 require(physical.get("schematic_source_sha256")
-        == digest("clock_pulse_generator.spice")
+        == historical_digest(historical_revision, "clock_pulse_generator.spice")
         and physical.get("layout_source_sha256")
-        == digest("generate_pulse_layout.py")
+        == historical_digest(historical_revision, "generate_pulse_layout.py")
         and physical.get("layout_image") == "pulse_layout.png"
-        and physical.get("layout_image_sha256") == digest("pulse_layout.png")
+        and physical.get("layout_image_sha256")
+        == historical_digest(historical_revision, "pulse_layout.png")
         and physical.get("testbench_source_sha256")
-        == digest("clock_pulse_generator_tb.spice.in")
+        == historical_digest(historical_revision, "clock_pulse_generator_tb.spice.in")
         and physical.get("runner_source_sha256")
-        == digest("run_pulse_generator.py")
+        == historical_digest(historical_revision, "run_pulse_generator.py")
         and physical.get("schematic_evidence_sha256")
         == digest("pulse_schematic_result.json")
         and physical.get("pex_nominal_evidence_sha256")
@@ -104,5 +126,6 @@ require(timing_pass and rail_pass
         and physical.get("nominal_rail_limits_pass") is True,
         "pulse nominal timing/rail boundary changed")
 
-print("pulse checkpoint: PASS identity; 0 DRC, unique LVS, 9344R/6103C, "
-      "nominal contract closed, exact PVT 1/5 and schematic 0/5")
+print("pulse historical checkpoint: PASS provenance; 0 DRC, unique LVS, "
+      "9344R/6103C, nominal contract closed, exact PVT 1/5 and schematic 0/5; "
+      "raw historical PEX/GDS not versioned")

@@ -5,7 +5,19 @@ set -euo pipefail
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 image_ref="docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3"
 expected_image_id="sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305"
-minimum_free_kib=$((100 * 1024 * 1024))
+# Physical-layout jobs in this repository keep their generated work directory
+# bounded and retain it only after a failure.  Historical full-RC runs occupy
+# hundreds of MiB rather than tens of GiB.  Keep a substantial 32-GiB reserve
+# for the PDK image, Docker overlay, and an interrupted run, but do not reject
+# a reproducible evidence job merely because the host lacks an unrelated
+# 100-GiB cushion.  Operators with a tighter local policy can raise this
+# without editing a checked-in flow.
+minimum_free_gib="${SVALBARD_ANALOG_MIN_FREE_GIB:-32}"
+[[ "$minimum_free_gib" =~ ^[1-9][0-9]*$ ]] || {
+  printf 'analog flow: SVALBARD_ANALOG_MIN_FREE_GIB must be a positive integer\n' >&2
+  exit 2
+}
+minimum_free_kib=$((minimum_free_gib * 1024 * 1024))
 minimum_available_memory_kib=$((8 * 1024 * 1024))
 
 label=""
@@ -66,7 +78,7 @@ for command_name in docker flock timeout mktemp awk df find sort xargs sha256sum
 done
 for checked_path in "$repo_root" "$(docker info --format '{{.DockerRootDir}}')"; do
   (( $(free_kib "$checked_path") >= minimum_free_kib )) || {
-    printf '%s: less than 100 GiB free at %s\n' "$label" "$checked_path" >&2
+    printf '%s: less than %s GiB free at %s\n' "$label" "$minimum_free_gib" "$checked_path" >&2
     exit 2
   }
 done

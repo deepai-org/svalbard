@@ -97,6 +97,25 @@ beyond 220 ps. The next revision must apply the existing profile controls to a
 full-width state before interval formation, especially for SS/hot, and recover
 the remaining 28--33 mV FF/hot WRITE swing without losing nominal width margin.
 
+`screen_wb0_drive.py` is a deliberately non-promotable PEX counterfactual for
+this failure. It changes only a named active portion of the write taper and
+labels its output as diagnostic because diffusion and gate parasitics remain
+unscaled. A 1.10x first-stage PMOS screen cleared FF/hot rail amplitude but
+expanded WRITE to 228/234 ps; a 1.25x active-taper screen still did not
+regenerate SS/hot. This rejects brute-force taper widening as the next layout
+revision. Any profile solution must instead select or adjust a deterministic,
+fully restored delayed step before `WPN` formation, then be regenerated through
+DRC, unique LVS, full-RC PEX, and the complete PVT matrix. A local S/R latch
+and a shared tristate full-step selector were also screened at schematic level
+and rejected for PVT-dependent state and unresolved-delay behavior,
+respectively.
+
+A fresh regeneration produced byte-identical generated Tcl but different Magic
+GDS/PEX internal names and byte hashes. This is extractor nondeterminism, not
+evidence that either PEX deck can be substituted for the other. Each promoted
+simulation must keep and hash its own DRC/LVS-bound PEX deck, as described in
+the analog-layout closure workflow.
+
 The local review render is `pulse_layout.png`; the documentation copy is
 [clock-pulse-generator-layout.png](../../../../../docs/images/clock-pulse-generator-layout.png).
 The checked failing [schematic matrix](pulse_schematic_result.json), retained

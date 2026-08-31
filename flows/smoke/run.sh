@@ -6,7 +6,15 @@ source_dir="$repo_root/flows/smoke/inverter"
 scratch_root="${SVALBARD_SCRATCH:-$repo_root/scratch}"
 image_ref="hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3"
 expected_image_id="sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305"
-minimum_free_kib=$((100 * 1024 * 1024))
+# This two-CPU smoke test writes only a bounded temporary work directory.  A
+# 32-GiB reserve is ample for the image and a failed retained run; callers may
+# raise the site policy without modifying the flow.
+minimum_free_gib="${SVALBARD_MIN_FREE_GIB:-32}"
+[[ "$minimum_free_gib" =~ ^[1-9][0-9]*$ ]] || {
+  printf 'smoke: SVALBARD_MIN_FREE_GIB must be a positive integer\n' >&2
+  exit 2
+}
+minimum_free_kib=$((minimum_free_gib * 1024 * 1024))
 minimum_available_memory_kib=$((8 * 1024 * 1024))
 
 free_kib() {
@@ -19,8 +27,8 @@ require_headroom() {
   local available
   available="$(free_kib "$path")"
   if (( available < minimum_free_kib )); then
-    printf 'smoke: insufficient %s space: %s KiB available, %s KiB required\n' \
-      "$label" "$available" "$minimum_free_kib" >&2
+    printf 'smoke: insufficient %s space: %s KiB available, %s GiB required\n' \
+      "$label" "$available" "$minimum_free_gib" >&2
     exit 2
   fi
 }

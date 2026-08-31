@@ -694,7 +694,12 @@ structure needed to proceed.
 
 ## 17. Product-driven implementation plan
 
-### Slice 0: thin upstream evaluation
+### Slice 0: zero-blocking upstream qualification
+
+This is not a prerequisite project and does not own an engineering milestone.
+An upstream component is evaluated only when the next PCIe or Wi-Fi gate needs
+it and the native flow cannot already perform the work. No active circuit
+change waits for this slice.
 
 - Pin OpenADA, Cascode, CACE, OpenFASoC/gLayout, and ALIGN revisions in an
   evaluation manifest; do not vendor or fork them yet.
@@ -705,9 +710,9 @@ structure needed to proceed.
 - Test whether Cascode can losslessly represent one existing transistor leaf and
   bench. Stop the language integration if it creates a second source of truth.
 
-Exit criterion: a short adoption report chooses, rejects, or defers each
-upstream with a reproducing command and a concrete PCIe/Wi-Fi use. No production
-design work waits for this report.
+Exit criterion: each *actually used* upstream capability has a short adoption
+record, a reproducing command, and a concrete PCIe/Wi-Fi use. There is no
+global evaluation-report deliverable.
 
 ### Slice 1: finish the PCIe clock/capture boundary
 
@@ -715,13 +720,27 @@ design work waits for this report.
 - Automate only the repeated work already observed: exact input identity,
   environment/profile scheduling, internal-stage measurements, first failing
   threshold, RC/supply counterfactuals, and concise comparison of candidates.
-- Use that loop to close the pulse generator over the full required PVT/profile
-  set rather than building a general optimizer first.
-- Generate the actual converter + pulse + regenerative-capture parent with
-  parent-owned signal, supply, substrate, and bias routes.
-- Run DRC, unique LVS, PEX, and the composed capture contract. Import operation
-  evidence through OpenADA where supported and retain the existing checked
-  result format elsewhere.
+
+Execution order is deliberately narrow:
+
+1. Close the pulse generator's first failing **extracted TT** case. The current
+   fast-detector candidate fails this gate, so it MUST NOT consume a full PVT
+   campaign. Each proposed circuit change gets one source hash, internal-node
+   measurement, legal regenerated layout, DRC, unique LVS and full-RC TT replay
+   before it earns PVT runtime.
+2. Implement the real clock-consumer boundary. The generator's SENSE/BOOST/
+   WRITE outputs are not a pin-compatible substitute for the capture macro's
+   SENSE/REGEN/REGENB/CAPTURE/CAPTUREB/BOOST controls. The required level,
+   polarity, phase and load mapping must therefore be a transistor/layout
+   implementation (or an explicitly redesigned integrated gate), never ideal
+   `PULSE` sources in the parent bench.
+3. Only after those two gates pass, generate the converter + pulse +
+   regenerative-capture parent with parent-owned signal, supply, substrate,
+   and bias routes, then run DRC, unique LVS, PEX and the composed capture
+   contract.
+
+OpenADA is imported only where it can carry a result unchanged; the checked
+native result format remains authoritative elsewhere.
 
 Exit criterion: the PCIe parent is physically real and either passes its exact
 declared environments or has a machine-localized blocker that requires new
@@ -770,17 +789,23 @@ desired 100-MHz component changes by no less than +0.065 dB, but the unfiltered
 failure localization--the next receiver candidate needs actual IF/baseband
 selectivity--not a blocker, linearity, RF-model, or compliance claim.
 
-- Freeze a modest 2.4 GHz 802.11b front-end boundary and external passive,
-  crystal, package, and antenna assumptions.
-- Build only the RF characterization structures and first active macro needed
-  to answer GF180 feasibility: transistor/de-embedding structures plus a
-  probeable LNA/mixer or VCO path with external-LO/IQ fallback.
-- Use CACE for ordinary PVT/Monte Carlo campaigns it can express; use explicit
-  RF/EM runners for S-parameters, noise, linearity, passivity, causality, and
-  matching-network composition.
-- Generate layout with the smallest qualified choice among gLayout/OpenFASoC,
-  ALIGN, and a block-specific generator. Exact DRC/LVS/PEX/EM evidence remains
-  authoritative regardless of generator.
+Execution order is likewise tied to the next receiver claim:
+
+1. Add the smallest real IF/baseband filter or selectable-channel boundary
+   needed to reject the demonstrated 125-MHz adjacent IF component. Re-run the
+   routed two-tone parent; do not call its present finite conversion gain a
+   receiver result.
+2. Preserve the OSTL and active-NFET coupons as tapeout/measurement obligations.
+   When calibrated wafer data exists, bind the exact de-embedded S-parameters,
+   noise and bias range into the model registry before promoting any RF gain,
+   NF, linearity, matching, `fT`, or `fMAX` claim.
+3. Add EM only at a defined distributed boundary--pads, package, antenna/match,
+   inductors or long RF routing--and import a reviewed network without
+   double-counting its parasitics. Do not run generic EM campaigns before a
+   geometry and a decision they can change are available.
+4. Use CACE for campaigns it directly represents and a qualified layout backend
+   only if the block-specific generator cannot produce legal geometry. DRC/LVS/
+   PEX/EM evidence remains authoritative regardless of the generator.
 
 Exit criterion: the macro has a reproducible evidence package that either
 supports the next integrated Wi-Fi receiver step or identifies the specific
@@ -801,6 +826,23 @@ provider/silicon characterization missing from GF180.
 
 Exit criterion: the shared layer demonstrably reduces elapsed engineering work
 or prevents a previously observed false claim in both projects.
+
+### Immediate execution policy
+
+Until the PCIe clock/capture parent no longer relies on ideal timing sources and
+the Wi-Fi receiver has a measured-model path plus an IF-selectivity answer, the
+repository is **not** building a general analog compiler. The allowed shared
+work is limited to a defect already encountered in both products:
+
+- source/layout/PEX/testbench/result identity and invalidation;
+- resource-bounded, resumable PVT or characterization runners;
+- semantic measurements and first-failure localization; and
+- model-validity labels, measurement obligations, and parent-versus-leaf claim
+  boundaries.
+
+All other proposals need a one-line answer to: “Which active PCIe or Wi-Fi
+gate does this retire before the next circuit experiment?” If there is no
+answer, record it as deferred research rather than implementing it.
 
 ### Deferred until demanded by a chip milestone
 

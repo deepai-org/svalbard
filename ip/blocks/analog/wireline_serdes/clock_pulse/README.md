@@ -88,6 +88,15 @@ schematic-only improvement is parasitic-sensitive; the next revision must add
 the needed calibration at a fully restored step and close this first extracted
 TT case before spending time on its full PVT matrix.
 
+On 2026-08-31, a schematic-only wiring probe connected `SEL3` through the
+existing `cp_profile_write_restore` element at the restored `WSA`--`WSB` step.
+It was intentionally not laid out or promoted: FF/hot instead produced roughly
+470 ps SENSE, 150 ps WRITE, 350 ps write delay and 681 ps dead time, while
+SS/hot still had no complete WRITE pulse. The probe was reverted after the
+20-case schematic screen. This rules out that one simple selector insertion;
+it does not establish an extracted calibration solution or replace the
+first-extracted-TT gate above.
+
 The central retained lesson is that a narrow pulse must not be selected or
 transported through a slow restoration chain. The improved write topology
 restores the full-swing `WSB` step, delays the start once, derives a separately

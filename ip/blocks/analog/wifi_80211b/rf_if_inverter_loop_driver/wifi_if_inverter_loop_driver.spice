@@ -1,0 +1,36 @@
+* SPDX-License-Identifier: Apache-2.0
+* First actual-circuit screen for the Wi-Fi thermal-floor IF-driver boundary.
+*
+* Five tapered inverter stages make each signal path inverting. Equal direct
+* output feedback therefore closes a negative differential loop with nominal
+* gain -1. The following sampler may swap differential polarity if this
+* topology earns a more complete implementation. Common mode is presently
+* established only by the symmetric input/feedback network; it is deliberately
+* not represented as an implemented CMFB solution.
+
+.subckt wifi_if_cmos_inv IN OUT VDD VSS params: M=1
+MP OUT IN VDD VDD pfet_03v3 w=8u l=0.28u m={M}
+MN OUT IN VSS VSS nfet_03v3 w=4u l=0.28u m={M}
+.ends wifi_if_cmos_inv
+
+.subckt wifi_if_inverter_loop_driver INP INN OUTP OUTN VDD VSS
+* Equal input/feedback resistors implement each half of the differential error
+* summation. The direct feedback is negative because each path has five
+* inversions. These are genuine circuit elements, not behavioral feedback.
+RINP INP XP 4k
+RFBP OUTP XP 4k
+RINN INN XN 4k
+RFBN OUTN XN 4k
+
+X1P XP P1 VDD VSS wifi_if_cmos_inv M=1
+X2P P1 P2 VDD VSS wifi_if_cmos_inv M=16
+X3P P2 P3 VDD VSS wifi_if_cmos_inv M=256
+X4P P3 P4 VDD VSS wifi_if_cmos_inv M=2048
+X5P P4 OUTP VDD VSS wifi_if_cmos_inv M=5000
+
+X1N XN N1 VDD VSS wifi_if_cmos_inv M=1
+X2N N1 N2 VDD VSS wifi_if_cmos_inv M=16
+X3N N2 N3 VDD VSS wifi_if_cmos_inv M=256
+X4N N3 N4 VDD VSS wifi_if_cmos_inv M=2048
+X5N N4 OUTN VDD VSS wifi_if_cmos_inv M=5000
+.ends wifi_if_inverter_loop_driver

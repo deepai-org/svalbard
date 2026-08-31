@@ -890,8 +890,13 @@ Execution order is likewise tied to the next receiver claim:
    drain-current/gate-current crossing screen does clear its deliberately
    limited necessary speed gate: its worst SS/hot PMOS is 8.037 GHz, or 8.126
    times the required bandwidth. It neither solves the 903-pF extrapolated
-   output-bank gate load nor proves a feedback loop; now build that complete
-   schematic, not a layout. Do not reuse the
+   output-bank gate load nor proves a feedback loop. The first actual feedback
+   schematic, a five-stage inverter chain with equal direct resistive feedback,
+   now fails every PVT step case (239.354 mV best error, 1.809 V common-mode
+   error, and 3.156 A maximum average draw). It is rejected rather than tuned.
+   The successor needs a compensated differential error amplifier, explicit
+   CMFB, and current-limited class-AB or source-follower output stage with
+   gate distribution. Do not reuse the
    PCIe CML error slicer: its extracted 40--150-mV window is hundreds of times
    coarser than the roughly 122-uV 12-bit code step. A failed sampler may justify
    a simplified frequency plan; it does not justify starting a generic ADC

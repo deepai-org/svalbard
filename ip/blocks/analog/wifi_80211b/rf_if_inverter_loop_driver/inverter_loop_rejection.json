@@ -1,0 +1,57 @@
+{
+  "claim": "wifi_closed_loop_inverter_chain_if_driver_step_screen",
+  "conclusion": "The first actual closed-loop topology is rejected before layout. Its five-stage, direct-resistive-feedback inverter chains fail all five PVT step-settling cases into the 424.974-pF-per-leg thermal-floor load. The smallest measured differential error is 239.354 mV against a 30.518-uV allocation; common-mode error reaches 1.809 V and average supply draw reaches 3.156 A. Do not tune inverter multiplicities as a driver solution.",
+  "evidence": {
+    "raw_result_sha256": "408f8cddae27cf165f557382260c26e28e7689942792f703ba4ddd0b52096308",
+    "source_sha256": "f2ec20aa5aba4a6419489ab5504424ab7385c37020d88229a1cba3243b7ccd9d",
+    "testbench_sha256": "9be1779d81418e262dfd9daa26915804628d4b66007b74a44530194362c50c70",
+    "runner_sha256": "ce984cabcc71c50db3801b422c44970f81f97cb61e0fac201208c84140bc8217",
+    "case_count": 5,
+    "complete_case_count": 5,
+    "passing_case_count": 0,
+    "accuracy_limit_v": 3.0517578125e-05,
+    "maximum_differential_step_error_v": 3.8810590973,
+    "minimum_differential_step_error_v": 0.2393543549999997,
+    "maximum_common_mode_error_from_vdd_half_v": 1.8094624375,
+    "maximum_average_supply_draw_a": 3.15575,
+    "per_corner": {
+      "ff_cold": {
+        "average_supply_draw_a": 3.15575,
+        "common_mode_error_from_vdd_half_v": 1.8094624375,
+        "differential_step_error_v": 0.2393543549999997
+      },
+      "ff_hot": {
+        "average_supply_draw_a": 1.75229,
+        "common_mode_error_from_vdd_half_v": 1.485970005,
+        "differential_step_error_v": 0.24956252
+      },
+      "ss_cold": {
+        "average_supply_draw_a": 2.08621,
+        "common_mode_error_from_vdd_half_v": 0.0007625336499998969,
+        "differential_step_error_v": 3.8810590973
+      },
+      "ss_hot": {
+        "average_supply_draw_a": 1.43184,
+        "common_mode_error_from_vdd_half_v": 0.6894692143132501,
+        "differential_step_error_v": 1.3427775786265
+      },
+      "tt": {
+        "average_supply_draw_a": 1.87638,
+        "common_mode_error_from_vdd_half_v": 0.03273127283574984,
+        "differential_step_error_v": 3.4842553656715
+      }
+    }
+  },
+  "next_required_topology": "compensated_differential_error_amplifier_with_explicit_cmfb_and_current_limited_class_ab_or_source_follower_output_stage_plus_tapered_or_distributed_gate_drive",
+  "not_a_claim": [
+    "implemented_if_driver",
+    "closed_loop_stability",
+    "physical_layout",
+    "noise",
+    "linearity",
+    "adc_enob",
+    "integrated_wifi_receiver"
+  ],
+  "result": "inverter_chain_feedback_topology_rejected_before_layout",
+  "schema_version": 1
+}

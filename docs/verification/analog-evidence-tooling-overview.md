@@ -61,8 +61,11 @@ It has supported real engineering decisions rather than only produced reports.
   a completed driver, sampler, ADC, or receiver. A subsequent raw-device
   compact-model speed screen does pass its limited necessary gate (8.037 GHz
   worst current-gain crossing versus a 989.056-MHz settling requirement), so
-  the justified next work is a complete driver schematic rather than a
-  switch-only layout.
+  a complete driver schematic was justified rather than a switch-only layout.
+  That first feedback topology was promptly rejected in all five PVT cases for
+  settling, common-mode error, and multi-ampere static draw; the next real
+  circuit must use explicit CMFB and a compensated, current-limited output
+  architecture.
 
 These findings are useful precisely because a negative result blocks an
 unjustified layout branch early. They are not evidence of PCI-SIG compliance,

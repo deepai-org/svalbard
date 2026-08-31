@@ -1,0 +1,26 @@
+* Schematic PVT step-settling screen for the inverter-loop IF-driver candidate.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.include @DUT_INCLUDE@
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+* A full-scale differential transition is deliberately stronger than the
+* 100-MHz sinusoid. Each leg moves 125 mV around the external VDD/2 input CM.
+VINP INP 0 PULSE(@INP_INITIAL_V@ @INP_FINAL_V@ 10n 10p 10p 30n 60n)
+VINN INN 0 PULSE(@INN_INITIAL_V@ @INN_FINAL_V@ 10n 10p 10p 30n 60n)
+CHOLDP OUTP 0 @HOLD_CAPACITANCE_F@
+CHOLDN OUTN 0 @HOLD_CAPACITANCE_F@
+XDUT INP INN OUTP OUTN VDD 0 wifi_if_inverter_loop_driver
+
+.control
+set wr_singlescale
+set wr_vecnames
+tran @MAX_STEP_S@ @STOP_TIME_S@
+meas tran supply_current_a avg i(VDD) from=11n to=@STOP_TIME_S@
+wrdata @INP_DATA@ v(INP)
+wrdata @INN_DATA@ v(INN)
+wrdata @OUTP_DATA@ v(OUTP)
+wrdata @OUTN_DATA@ v(OUTN)
+.endc
+.end

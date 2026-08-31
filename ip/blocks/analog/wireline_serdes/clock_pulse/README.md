@@ -111,6 +111,20 @@ calibration coverage. The checked runner now uses one static state. A future
 calibration claim requires an actual circuit path whose code is observed to
 change this composed behavior.
 
+A second 2026-08-31 physical selector probe was rejected and reverted before
+promotion. It used `SEL3` to enable a two-delay-unit, full-swing `WSD` hold-low
+branch ahead of `WPN`; this intentionally avoided loading the narrow event and
+the WRITE taper. The two-finger implementation was zero-DRC but LVS-invalid,
+which caught a generated series-device connectivity error. The corrected
+single-finger version was zero-DRC, uniquely LVS-matched, and full-RC extracted,
+but its exact TT screen passed neither state: even the disabled branch's `WSD`
+drain capacitance widened WRITE to 265.72 ps (from the 220 ps limit), while
+enabled `SEL3` widened it to 379.21 ps. This rules out attaching the first
+physical profile branch directly to `WSD`, not just attaching it to `WPN` or a
+taper stage. The retained raw DRC/LVS/PEX and two-mode result are in
+`scratch/serdes-clock-pulse-generator-physical.sM2xDfqt/`; they are diagnostic
+only because the source was reverted.
+
 An FF/cold counterfactual separates the immediate mechanisms. The current
 `(0,8,9)` profile reaches only 3.184/3.204 V WRITE even with its historical
 placeholder load, 3.374/3.387 V with the extracted bridge, and 40/54 mV when

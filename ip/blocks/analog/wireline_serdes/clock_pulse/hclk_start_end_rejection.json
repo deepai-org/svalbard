@@ -1,0 +1,45 @@
+{
+  "candidate": "static one-hot SEL2/SEL3 selection between independently regenerated HCLK-derived WRITE start/end paths; SEL2 has one end delay and SEL3 adds a short second end delay",
+  "claim": "pcie_pulse_hclk_start_end_rejection",
+  "conclusion": "The selected full-swing paths are physically realized but do not meet the extracted pulse contract. Revert this topology; do not promote it as calibration or PCIe clock/capture closure.",
+  "evidence": {
+    "schematic_selected_sel3": {
+      "result_sha256": "dabb45c0df7728982c01a44321ea52bc4d1684f1611de8853a06a868982106f8",
+      "source_sha256": "63140b6657aacf51787fd1f6614e92595b4cbb1b3ce3e1e218f8e747c7ef62d4",
+      "ss_hot_wpn_range_v": [-0.1154, 3.0991],
+      "ss_hot_write_width_ps": 377.93,
+      "note": "The fully regenerated selected path creates a real SS/hot WPN low crossing, but its WRITE width is outside the 100--220 ps contract."
+    },
+    "physical_sel2": {
+      "layout_generator_sha256": "731a6ef3e38ca8a62435e6a7d48a0d8a7bd55ea919821ebd316fd6011f8fd4a1",
+      "layout_image_sha256": "19d4079a510e4033b5d83b3304ec6c2c3bd85401081b3ecc47c57e9e205404e0",
+      "physical_checks": "220-device, 291.0-um layout; zero DRC, uniquely LVS-matched, full-RC PEX",
+      "pex_sha256": "aa8e16717cf8e67e580cf6078550edbee8773105ff0eb1f09c2d299b9453e0a1",
+      "result_sha256": "1d0ff0f0be96ef5d41d80a55036f822fce8c967211742d9f7a5b075af07d9d2e",
+      "passing_cases": 1,
+      "case_count": 5,
+      "tt": {
+        "result": "pass",
+        "write_width_ps": 206.62,
+        "write_delay_ps": 612.36,
+        "wpn_range_v": [0.0828, 3.2651]
+      },
+      "ss_hot": {
+        "result": "fail",
+        "write_high_v": 0.0820,
+        "wpn_range_v": [0.2721, 3.0668],
+        "failure": "WPN remains 22.1 mV above the 250 mV logic-low predicate and no periodic WRITE event is emitted."
+      }
+    },
+    "selected_sel3_pex": "not claimed: the focused hot-code wrapper could not retain a selected-code result after the candidate's nominal check failed. Do not infer extracted SEL3 behavior from schematic evidence."
+  },
+  "next_candidate_requirement": "Start from an extracted full-swing state with an explicitly measured timing observable, but preserve the current baseline's compact PEX-proven write path until a replacement passes both selected states' schematic endpoint predicates before physical extraction.",
+  "not_a_claim": [
+    "calibrated_pcie_pulse_generator",
+    "passing_pcie_clock_capture_boundary",
+    "routed_parent_closure",
+    "package_channel_or_cdr_closure"
+  ],
+  "result": "rejected_before_promotion",
+  "schema_version": 1
+}

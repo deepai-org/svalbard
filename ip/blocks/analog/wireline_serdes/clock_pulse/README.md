@@ -140,6 +140,19 @@ Do not enlarge this branch again; the next selector must choose a fully
 regenerated start/end configuration and prove the selected `WPN` logic window
 before another layout iteration.
 
+That next experiment was also completed and rejected on 2026-08-31. It used
+static one-hot `SEL2`/`SEL3` to choose independently regenerated, full-swing
+`HCLK` start/end paths, with no disabled diffusion on `WBA`, `WSD`, or `WPN`.
+The 220-device, 291.0-um layout was zero-DRC, uniquely LVS-matched, and
+full-RC extracted. The `SEL2` state passed TT (206.62 ps WRITE and
+0.083 V `WPN` low), but only 1/5 extracted corners passed; at SS/hot `WPN`
+stopped at 0.272 V and no periodic WRITE was emitted. The selected `SEL3`
+schematic state did cross `WPN` low at SS/hot, but its 377.93 ps WRITE interval
+was itself invalid. The exact rejection record is
+[`hclk_start_end_rejection.json`](hclk_start_end_rejection.json). The source
+was reverted: a full-swing source alone does not repair the composed timing
+budget, and this topology must not be promoted as calibration.
+
 An FF/cold counterfactual separates the immediate mechanisms. The current
 `(0,8,9)` profile reaches only 3.184/3.204 V WRITE even with its historical
 placeholder load, 3.374/3.387 V with the extracted bridge, and 40/54 mV when

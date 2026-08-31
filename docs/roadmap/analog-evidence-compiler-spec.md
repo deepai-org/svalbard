@@ -764,11 +764,15 @@ Execution order is deliberately narrow:
    only terminate in physical load anchors, so static code sweeps are not a
    calibration result. A physical `SEL3` current-starved end-delay probe did
    change a real internal state but still produced only 50/62 mV WRITE at
-   SS/hot; it is rejected and must not be enlarged. The next candidate must
-   select a full regenerated start/end configuration, demonstrate a selected
-   `WPN` logic-low interval at SS/hot before layout, include an observable
-   correlated with timing/drive margin and safe code endpoints, and use a
-   bounded selection procedure. Do not build a general calibration
+   SS/hot; it is rejected and must not be enlarged. A subsequent full-swing
+   `HCLK`-derived SEL2/SEL3 start/end configuration did create the required
+   schematic `WPN` low crossing, and was zero-DRC/unique-LVS/full-RC
+   extracted, but only passed TT: its selected SS/hot `WPN` stopped at
+   272 mV and WRITE disappeared. It too is rejected. The next candidate must
+   preserve the compact PEX-proven write timing source until its replacement
+   passes both selected states' schematic endpoint predicates, include an
+   observable correlated with timing/drive margin and safe code endpoints,
+   and use a bounded selection procedure. Do not build a general calibration
    synthesizer.
 2. Use that one real control to repair the two exact extracted failures in the
    already physical pulse-to-bridge-to-direct-regenerative-capture boundary:

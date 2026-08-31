@@ -1,0 +1,28 @@
+* SPDX-License-Identifier: Apache-2.0
+* Die-side RF characterization replica for the 16-finger Wi-Fi LNA device.
+*
+* This circuit deliberately preserves the same explicit 4 um / 0.28 um NFET
+* fingers and alternating diffusion orientation used by wifi_lna_cs_core.  It
+* exposes gate, drain, and source separately so a wafer campaign can obtain
+* bias-dependent multi-port data without guessing RF compact-model validity.
+* VSS is the explicit p-substrate/body reference.  This is a characterization
+* macro, not a qualified probe pad or a receiver-performance claim.
+
+.subckt wifi_rf_nfet_array_coupon GATE DRAIN SOURCE VSS
+X0  SOURCE GATE DRAIN  VSS nfet_03v3 w=4u l=0.28u
+X1  DRAIN  GATE SOURCE VSS nfet_03v3 w=4u l=0.28u
+X2  SOURCE GATE DRAIN  VSS nfet_03v3 w=4u l=0.28u
+X3  SOURCE GATE DRAIN  VSS nfet_03v3 w=4u l=0.28u
+X4  DRAIN  GATE SOURCE VSS nfet_03v3 w=4u l=0.28u
+X5  DRAIN  GATE SOURCE VSS nfet_03v3 w=4u l=0.28u
+X6  DRAIN  GATE SOURCE VSS nfet_03v3 w=4u l=0.28u
+X7  SOURCE GATE DRAIN  VSS nfet_03v3 w=4u l=0.28u
+X8  DRAIN  GATE SOURCE VSS nfet_03v3 w=4u l=0.28u
+X9  SOURCE GATE DRAIN  VSS nfet_03v3 w=4u l=0.28u
+X10 SOURCE GATE DRAIN  VSS nfet_03v3 w=4u l=0.28u
+X11 DRAIN  GATE SOURCE VSS nfet_03v3 w=4u l=0.28u
+X12 SOURCE GATE DRAIN  VSS nfet_03v3 w=4u l=0.28u
+X13 SOURCE GATE DRAIN  VSS nfet_03v3 w=4u l=0.28u
+X14 DRAIN  GATE SOURCE VSS nfet_03v3 w=4u l=0.28u
+X15 DRAIN  GATE SOURCE VSS nfet_03v3 w=4u l=0.28u
+.ends wifi_rf_nfet_array_coupon

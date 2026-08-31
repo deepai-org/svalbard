@@ -754,6 +754,14 @@ the required 0.1--6 GHz wafer/OTSC measurements. It is a test artifact that
 closes no RF-model-validity claim until measured network data, a reviewed
 probe/pad/package boundary, and passivity/causality checks are available.
 
+The companion active-device coupon at
+[`ip/blocks/analog/wifi_80211b/rf_nfet_array_coupon`](../../ip/blocks/analog/wifi_80211b/rf_nfet_array_coupon)
+is a 0-DRC, uniquely LVS-matched, 390R/72C full-RC extracted replica of the
+LNA's exact sixteen 4-um/0.28-um NFET fingers. It deliberately captures the
+array's device identity and measurement geometry, while reserving all RF-model,
+noise, `fT`/`fMAX`, linearity, pad and package claims for a calibrated
+bias-dependent wafer campaign plus the OSTL residual check.
+
 - Freeze a modest 2.4 GHz 802.11b front-end boundary and external passive,
   crystal, package, and antenna assumptions.
 - Build only the RF characterization structures and first active macro needed

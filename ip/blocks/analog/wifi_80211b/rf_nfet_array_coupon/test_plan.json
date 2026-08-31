@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "claim": "wifi_2p4g_lna_nfet_array_characterization_coupon",
+  "measurement_boundary": "die-side M5 signal landings with adjacent die-side grounds; no qualified I/O pad, package, board, probe, antenna or EM solution is imported",
+  "device_under_test": {
+    "model": "nfet_03v3",
+    "finger_count": 16,
+    "finger_width_um": 4.0,
+    "gate_length_um": 0.28,
+    "finger_order": "exact 16-finger LNA-core alternating source/drain orientation"
+  },
+  "frequency_hz": {
+    "start": 100000000,
+    "stop": 6000000000,
+    "center": 2400000000
+  },
+  "ports": [
+    {"id": "GATE", "purpose": "distributed gate terminal"},
+    {"id": "DRAIN", "purpose": "combined drain terminal"},
+    {"id": "SOURCE", "purpose": "combined source terminal"},
+    {"id": "VSS", "purpose": "explicit p-substrate/body and local return"}
+  ],
+  "required_measurements": [
+    "calibrated multi-port S-parameters at declared die-side datums over 0.1 to 6 GHz",
+    "bias sweeps with VGS and VDS recorded at the actual die-side terminals, including the LNA external-bias operating region",
+    "DC ID-VGS and ID-VDS curves and small-signal Y or S parameters with SOURCE and VSS return conditions recorded",
+    "open-short-thru-load de-embedding residual using the companion coupon",
+    "passivity and causality checks on every exported network and a stated bias/temperature/stackup/probe provenance",
+    "comparison of measured and public-model gain, capacitance, access resistance and stability over the declared validity region"
+  ],
+  "required_followup": [
+    "bind approved measured/model-correction data to the LNA and mixer simulations",
+    "re-run receiver noise, gain, linearity and blocker screens at the qualified RF boundary"
+  ],
+  "not_proven": [
+    "GF180 RF compact-model validity before measurement",
+    "qualified probe pad, ESD, package or antenna behavior",
+    "noise parameters, fT, fMAX, linearity or stability from lumped PEX alone",
+    "Wi-Fi receiver performance or IEEE 802.11 compliance"
+  ]
+}

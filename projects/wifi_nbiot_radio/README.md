@@ -46,10 +46,19 @@ full-RC extracted. This is a silicon-characterization coupon: it preserves its
 floating poly-body terminal and 0.1--6 GHz OTSC measurement plan rather than
 inventing an RF de-embedding or pad/package qualification from lumped PEX.
 
+The companion active-device artifact is
+[`rf_nfet_array_coupon`](../../ip/blocks/analog/wifi_80211b/rf_nfet_array_coupon).
+It physically reproduces the LNA's explicit sixteen 4-um/0.28-um NFET fingers
+and exposes GATE, DRAIN, SOURCE and VSS at die-side M5 landings. Its native run
+is 0-DRC, uniquely LVS-matched and 390R/72C full-RC extracted; the extracted
+identity check proves the intended 16 devices, not RF compact-model accuracy.
+Its required 0.1--6 GHz bias/S-parameter campaign is deliberately the input to
+later LNA/mixer qualification, rather than a fabricated pre-silicon RF result.
+
 The next product work is deliberately small and sequential:
 
-1. Add the active transistor and selected passive structures beside the OSTL
-   coupon, then measure/qualify the actual probe, pad, package and
+1. Measure the active transistor and selected passive structures alongside the
+   OSTL coupon, then qualify the actual probe, pad, package and
    antenna/matching boundary with reviewed S-parameter/EM evidence.
 2. Expand the routed parent with noise, linearity, isolation and blocker
    screens, then add the selected IF/baseband boundary.

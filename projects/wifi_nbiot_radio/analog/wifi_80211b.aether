@@ -105,6 +105,24 @@ module wifi_80211b_rx : radio_receiver in physical_environment {
     }
   }
 
+  module lna_nfet_array_coupon : active_rf_characterization_coupon {
+    terminal gate, drain, source, vss : electrical;
+    implementation intent {
+      source "ip/blocks/analog/wifi_80211b/rf_nfet_array_coupon/rf_nfet_array_coupon.spice";
+      physical "ip/blocks/analog/wifi_80211b/rf_nfet_array_coupon/layout.tcl";
+      measurement_plan "ip/blocks/analog/wifi_80211b/rf_nfet_array_coupon/test_plan.json";
+      replica { nfet_03v3, 16 fingers, 4 um width, 0.28 um length,
+                lna_core.source_drain_order };
+    }
+    guarantee checked_extracted_identity {
+      source "ip/blocks/analog/wifi_80211b/rf_nfet_array_coupon/run_coupon_physical.sh";
+      drc_clean and lvs_matches_intended_circuit and full_rc_pex;
+      extracted_count(nfet_03v3, width = 4 um, length = 0.28 um) == 16;
+      not_claim { rf_compact_model_validity, noise_parameters, ft_fmax,
+                  linearity, production_pad, package_or_antenna_qualification };
+    }
+  }
+
   module external_lo_rx_parent : routed_receive_parent {
     terminal rf_gate, mix_rf, lna_source, lo, lob, ifp, ifn, vss : electrical;
     implementation intent {
@@ -137,7 +155,8 @@ module wifi_80211b_rx : radio_receiver in physical_environment {
   obligation before wifi_80211b_rx.integration_claim {
     prove noise_figure, conversion_gain, i_q_balance, dc_offset,
           blocker_tolerance, phase_noise, and receive_sensitivity;
-    measure die_side_ostl_coupon plus transistor_and_passive_replicas;
+    measure die_side_ostl_coupon plus lna_nfet_array_coupon
+            plus selected_passive_replicas;
     import package_network and antenna_network with non_double_counted_em_ports;
     implement on_die_bias_reference_and_calibration with observable search;
     compose external_lo_rx_parent plus baseband through a routed physical parent;
@@ -148,6 +167,7 @@ module wifi_80211b_rx : radio_receiver in physical_environment {
     lna_core.checked_full_rc_pvt;
     external_lo_mixer_core.checked_full_rc_pvt;
     die_side_ostl_coupon.checked_extracted_structure;
+    lna_nfet_array_coupon.checked_extracted_identity;
     external_lo_rx_parent.checked_full_rc_pvt;
     not_claim { integrated_receiver, ieee_80211_compliance,
                 interoperability, yield, silicon_qualification };

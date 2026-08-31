@@ -43,9 +43,15 @@ the physical checkpoint.
 ## Deliberate limits and next product experiment
 
 The screen uses ideal WRITE sources solely to isolate this newly physical clock
-consumer.  It does not prove that the currently failing slow/hot pulse
-generator can drive the bridge's real input capacitance, nor that the data-age,
-clock-recovery, power, substrate, mismatch, fill, package, or EM/IR behavior
-of a routed lane is acceptable.  The next PCIe experiment must compose the
-exact pulse PEX, this exact bridge PEX, and the actual direct-regenerative lane
-parent without an ideal timing source at that boundary.
+consumer. It does not prove that the pulse generator can drive the actual lane,
+nor that the data-age, clock-recovery, power, substrate, mismatch, fill,
+package, or EM/IR behavior of a routed lane is acceptable.
+
+That next experiment is now recorded in
+[`../pulse_bridge_lane/README.md`](../pulse_bridge_lane/README.md). Fresh pulse
+PEX plus this bridge and the actual direct-regenerative lane PEX passes only
+TT and SS/cold; FF/cold, FF/hot, and SS/hot collapse at the pulse WRITE output.
+A direct counterfactual shows that the actual lane SENSE/BOOST PEX reproduces
+the FF/cold collapse even without this bridge's capture outputs. This leaves
+the bridge qualified as an isolated consumer but makes the producer/lane
+interface the active PCIe circuit problem.

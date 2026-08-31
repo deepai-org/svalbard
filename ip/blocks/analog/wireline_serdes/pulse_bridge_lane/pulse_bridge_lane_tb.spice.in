@@ -1,0 +1,108 @@
+* SPDX-License-Identifier: Apache-2.0
+* Product-specific extracted pulse -> bridge -> regenerative-lane smoke bench.
+*
+* The ideal sources end at two legitimate external boundaries: a recovered
+* rail-clock input and a static differential receiver stimulus.  No ideal
+* timing source drives SENSE, BOOST, WRITE, or either capture-clock pin.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @RES_CORNER@
+.include @PULSE_PEX@
+.include @BRIDGE_PEX@
+.include @LANE_PEX@
+.temp @TEMP_C@
+
+VDD VDD 0 PWL(0 0 500p @VDD_V@)
+VRXP RXP_SRC 0 PWL(0 0 500p @RXP_V@)
+VRXN RXN_SRC 0 PWL(0 0 500p @RXN_V@)
+RRXP RXP_SRC RXP 1
+RRXN RXN_SRC RXN 1
+VRXBIAS RX_BIAS_SRC 0 PWL(0 0 500p @RX_BIAS_V@)
+VTHP VTHP_SRC 0 PWL(0 0 500p @VMID@)
+VTHN VTHN_SRC 0 PWL(0 0 500p @VMID@)
+VBW RX_BW_EN_N_SRC 0 0
+RRXBIAS RX_BIAS_SRC RX_BIAS 1
+RVTHP VTHP_SRC VTHP 1
+RVTHN VTHN_SRC VTHN 1
+RBW RX_BW_EN_N_SRC RX_BW_EN_N 1
+
+VTERM0 TERM_EN0_N_SRC 0 0
+VTERM1 TERM_EN1_N_SRC 0 0
+VTERM2 TERM_EN2_N_SRC 0 0
+VTERM3 TERM_EN3_N_SRC 0 @VDD_V@
+VTERM4 TERM_EN4_N_SRC 0 @VDD_V@
+VTERM5 TERM_EN5_N_SRC 0 @VDD_V@
+VTERM6 TERM_EN6_N_SRC 0 @VDD_V@
+RTERM0 TERM_EN0_N_SRC TERM_EN0_N 1
+RTERM1 TERM_EN1_N_SRC TERM_EN1_N 1
+RTERM2 TERM_EN2_N_SRC TERM_EN2_N 1
+RTERM3 TERM_EN3_N_SRC TERM_EN3_N 1
+RTERM4 TERM_EN4_N_SRC TERM_EN4_N 1
+RTERM5 TERM_EN5_N_SRC TERM_EN5_N 1
+RTERM6 TERM_EN6_N_SRC TERM_EN6_N 1
+
+* This is the upstream recovered rail-clock boundary, not a substitute for
+* a downstream control clock.  The pulse PEX generates all following events.
+VCPCLKP CP_CLKP 0 PULSE(0 @VDD_V@ 1n 20p 20p 380p 800p)
+VCPCLKN CP_CLKN 0 PULSE(@VDD_V@ 0 1n 20p 20p 380p 800p)
+VSEL0 SEL0 0 0
+VSEL1 SEL1 0 0
+VSEL2 SEL2 0 PWL(0 0 500p @VDD_V@)
+VSEL3 SEL3 0 0
+
+XPULSE CP_CLKP CP_CLKN SEL0 SEL1 SEL2 SEL3 VDD 0 VDD VDD 0 0
++ CP_CLKP CP_CLKN E_SENSE_CLK E_SENSE_BOOST E_WRITE
++ O_SENSE_CLK O_SENSE_BOOST O_WRITE clock_pulse_generator_pex
+XBRIDGE E_WRITE O_WRITE E_CAPTURE_CLK E_CAPTURE_CLKB
++ O_CAPTURE_CLK O_CAPTURE_CLKB VDD 0 capture_clock_bridge_pex
+
+* The current direct-regenerative front end does not consume its retained
+* REGEN compatibility pins.  Tie them to the physical VSS node, rather than
+* driving them with timing sources.
+REREGEN E_REGEN_CLK 0 1m
+REREGENB E_REGEN_CLKB 0 1m
+ROREGEN O_REGEN_CLK 0 1m
+ROREGENB O_REGEN_CLKB 0 1m
+
+XREGENCAP RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N
++ TERM_EN4_N TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N
++ E_SENSE_CLK E_REGEN_CLK E_REGEN_CLKB E_CAPTURE_CLK
++ E_CAPTURE_CLKB E_SENSE_BOOST O_SENSE_CLK O_REGEN_CLK
++ O_REGEN_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB O_SENSE_BOOST
++ VDD 0 RXOP RXON FE_E_P FE_E_N FE_O_P FE_O_N
++ EVEN_Q EVEN_QB ODD_Q ODD_QB lane_rx_regenerative_capture_pex
+CEQ EVEN_Q 0 50f
+CEQB EVEN_QB 0 50f
+COQ ODD_Q 0 50f
+COQB ODD_QB 0 50f
+
+.control
+tran 2p 5n uic
+let isupply = -i(VDD)
+let e_q_diff = v(EVEN_Q)-v(EVEN_QB)
+let o_q_diff = v(ODD_Q)-v(ODD_QB)
+meas tran e_sense_high max v(E_SENSE_CLK) from=3n to=5n
+meas tran o_sense_high max v(O_SENSE_CLK) from=3n to=5n
+meas tran e_write_high max v(E_WRITE) from=3n to=5n
+meas tran o_write_high max v(O_WRITE) from=3n to=5n
+meas tran e_clk_high max v(E_CAPTURE_CLK) from=3n to=5n
+meas tran o_clk_high max v(O_CAPTURE_CLK) from=3n to=5n
+meas tran e_clkb_low min v(E_CAPTURE_CLKB) from=3n to=5n
+meas tran o_clkb_low min v(O_CAPTURE_CLKB) from=3n to=5n
+* Two complete edges are guaranteed in the 2--5 ns observation interval for
+* both interleaves.  Higher ordinal counts made a healthy TT event look like
+* a simulator failure merely because the final falling edge lay beyond 5 ns.
+meas tran e_clk_rise when v(E_CAPTURE_CLK)=@VMID@ rise=2 td=2n
+meas tran e_clkb_fall when v(E_CAPTURE_CLKB)=@VMID@ fall=2 td=2n
+meas tran e_clk_fall when v(E_CAPTURE_CLK)=@VMID@ fall=2 td=2n
+meas tran e_clkb_rise when v(E_CAPTURE_CLKB)=@VMID@ rise=2 td=2n
+meas tran o_clk_rise when v(O_CAPTURE_CLK)=@VMID@ rise=2 td=2n
+meas tran o_clkb_fall when v(O_CAPTURE_CLKB)=@VMID@ fall=2 td=2n
+meas tran o_clk_fall when v(O_CAPTURE_CLK)=@VMID@ fall=2 td=2n
+meas tran o_clkb_rise when v(O_CAPTURE_CLKB)=@VMID@ rise=2 td=2n
+meas tran e_q_diff find e_q_diff at=4.55n
+meas tran o_q_diff find o_q_diff at=4.75n
+meas tran supply_current avg isupply from=3n to=5n
+quit
+.endc
+.end

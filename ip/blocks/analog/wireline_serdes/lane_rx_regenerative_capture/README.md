@@ -34,3 +34,11 @@ model evidence, not PCIe compliance or provider signoff. The pulse generator,
 PI/clock-restorer composition, statistical noise/mismatch/metastability,
 pad/package/channel EM, substrate/PDN coupling, post-fill extraction, and
 reliability remain open.
+
+The first no-ideal-control composition with the real pulse generator and local
+capture-clock bridge is recorded in
+[`../pulse_bridge_lane/README.md`](../pulse_bridge_lane/README.md). It fails
+three of five PVT cases before a complete capture event because the actual
+extracted SENSE/BOOST network collapses the producer's WRITE restoration. This
+does not weaken this lane's independently clocked PRBS evidence; it establishes
+the pulse/direct-lane interface as the next integration fix.

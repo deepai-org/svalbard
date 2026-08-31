@@ -90,6 +90,23 @@ matrix is 1/20; a fresh broad PVT invocation currently stops before emitting
 its result JSON, so it is not treated as interchangeable evidence. The fresh
 TT and SS/125-C result identity is recorded in `pulse_tt_replay_checkpoint.json`.
 
+### Actual-consumer composition (current blocker)
+
+The pulse PEX is now composed with the physical complementary capture-clock
+bridge and the physical direct-regenerative lane without an ideal source at any
+SENSE, BOOST, WRITE, or capture-clock pin. The retained
+[`../pulse_bridge_lane/README.md`](../pulse_bridge_lane/README.md) result passes
+only TT and SS/cold. In FF/cold, FF/hot, and SS/hot the WRITE rail collapses to
+30--57 mV and the capture bridge output to 3--10 mV.
+
+An FF/cold counterfactual separates the immediate mechanisms. The current
+`(0,8,9)` profile reaches only 3.184/3.204 V WRITE even with its historical
+placeholder load, 3.374/3.387 V with the extracted bridge, and 40/54 mV when
+the placeholder SENSE/BOOST capacitors are replaced by the actual extracted
+direct-regenerative parent. The next accepted revision must therefore be sized
+and isolated against that real PEX load; a nominal or bridge-only recovery is
+not sufficient.
+
 ### Superseded fast-detector characterization candidate
 
 `pulse_fast_path_checkpoint.json` retains the later reduced-depth

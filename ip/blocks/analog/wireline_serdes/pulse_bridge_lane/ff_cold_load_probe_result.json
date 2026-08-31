@@ -1,0 +1,52 @@
+{
+  "bridge_pex_sha256": "d2868772b9a302ad7c291f7ca024c73ec8391e5ae6da4d56dc1b218498634614",
+  "bridge_physical_sha256": "eef2894d7ad8757aa2143b7edfbb12bc077ab55a961c33f079bbd0d2155d18b9",
+  "cases": [
+    {
+      "complete": true,
+      "consumer": "placeholder_caps",
+      "observed": {
+        "e_sense_high": 3.55562,
+        "e_write_high": 3.18377,
+        "o_sense_high": 3.5407,
+        "o_write_high": 3.2039,
+        "supply_current": 0.0455795
+      },
+      "result": "fail"
+    },
+    {
+      "complete": true,
+      "consumer": "bridge_pex",
+      "observed": {
+        "e_sense_high": 3.55298,
+        "e_write_high": 3.37384,
+        "o_sense_high": 3.54151,
+        "o_write_high": 3.38736,
+        "supply_current": 0.0545331
+      },
+      "result": "fail"
+    },
+    {
+      "complete": true,
+      "consumer": "lane_sense_pex",
+      "observed": {
+        "e_sense_high": 3.60261,
+        "e_write_high": 0.0397522,
+        "o_sense_high": 3.59624,
+        "o_write_high": 0.0541341,
+        "supply_current": 0.042166
+      },
+      "result": "fail"
+    }
+  ],
+  "claim": "ff_cold_pulse_write_load_localization",
+  "environment": ["ff", "res_ff", 3.63, -40],
+  "lane_pex_sha256": "f8fdcb7cdcc486c6ac868f476dd7a85bcaaa3ee02ec77caaf835c6107519b1df",
+  "lane_physical_sha256": "29b8766349f9c7321d2ec59a62600fd5379c33414a2dabc6e72ffd4f08eadf71",
+  "profile": [0, 8, 9],
+  "pulse_pex_sha256": "e2770ee7dcec768ef42e4d5e4ef0cc6b0c26f0bda540478d2f916cd6fcffa5a2",
+  "pulse_physical_sha256": "c7e291ddf65e1057404cf8094f6ff850f2608ff4e831f668a26b905efe788826",
+  "result": "fail",
+  "schema_version": 1,
+  "scope": "counterfactual diagnostic; not PCIe lane closure"
+}

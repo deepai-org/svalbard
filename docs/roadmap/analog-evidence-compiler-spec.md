@@ -209,6 +209,23 @@ Do not begin with a broad Rust rewrite. A Rust component is admitted only with
 a real design fixture, a compatible serialized boundary, and a measured reason
 that the smaller Python/upstream solution is inadequate.
 
+### 3.8 Delivery order: chips first
+
+AEC is a means of getting two products through their next physical-evidence
+gate. It is not an independently funded platform. The active delivery order is:
+
+| Priority | Product gate | Direct engineering work | Permitted supporting tooling | Done means |
+|---|---|---|---|---|
+| 1 | PCIe recovered-clock/capture boundary | Make the slow/hot pulse path and its clock-consumer interface real, then extract and verify the routed parent | Reproducible PVT scheduling, internal-node measurements, artifact identity, and PEX failure probes | No ideal timing source remains at that boundary; the extracted parent has a passing matrix or one localized, authority-bound blocker |
+| 2 | Wi-Fi receiver selectivity boundary | Bind a real external preselector/match or an ADC/DSP headroom model, then rerun the routed two-tone parent | S-parameter import checks, model-validity labels, and the existing PEX campaign runner | The next receiver decision is supported by a reproducible composed result, or the missing measurement/model is named precisely |
+| 3 | Shared only after repetition | Extract a helper only after it has removed the same failure mode in both tracks, or twice in one track | Small scripts/schemas with native files and commands retained as the source of truth | The helper demonstrably saves time or prevents an observed false claim without creating a second design flow |
+
+The following are explicitly **not** current deliverables: a new language,
+general topology synthesis, a universal optimizer/router, a GUI, a distributed
+service, broad upstream tool surveys, or a Rust core. They become candidates
+only when one of the two product gates above cannot proceed without them and a
+smaller adapter or direct circuit experiment is demonstrably insufficient.
+
 ## 4. Input language and semantic kernel
 
 The front end SHOULD retain the Aether concepts already exercised by the PCIe
@@ -694,25 +711,21 @@ structure needed to proceed.
 
 ## 17. Product-driven implementation plan
 
-### Slice 0: zero-blocking upstream qualification
+### Slice 0: no standalone tool project
 
-This is not a prerequisite project and does not own an engineering milestone.
-An upstream component is evaluated only when the next PCIe or Wi-Fi gate needs
-it and the native flow cannot already perform the work. No active circuit
-change waits for this slice.
+There is no proactive upstream-qualification milestone. Do not evaluate,
+integrate, pin, wrap, fork, or port OpenADA, Cascode, CACE, OpenFASoC/gLayout,
+or ALIGN merely to prepare for a future compiler.
 
-- Pin OpenADA, Cascode, CACE, OpenFASoC/gLayout, and ALIGN revisions in an
-  evaluation manifest; do not vendor or fork them yet.
-- Run one tiny public fixture for each claimed capability and record what is
-  implemented versus roadmap-only.
-- Map one existing Svalbard pulse result into an OpenADA-compatible or AEC
-  wrapper envelope without changing its source bytes or verdict.
-- Test whether Cascode can losslessly represent one existing transistor leaf and
-  bench. Stop the language integration if it creates a second source of truth.
+Use one only when a named next PCIe or Wi-Fi gate cannot be closed with the
+existing native flow. In that event, adopt the smallest capability that removes
+the blocker, preserve the native source/artifacts as authoritative, exercise it
+on that exact product case, and retain a one-page adoption note with the command
+and result. Reject the adoption if it creates a second source of truth or costs
+more than the direct product experiment it replaces.
 
-Exit criterion: each *actually used* upstream capability has a short adoption
-record, a reproducing command, and a concrete PCIe/Wi-Fi use. There is no
-global evaluation-report deliverable.
+Exit criterion: none. This section must never delay a circuit, layout, model,
+or measurement decision in Slices 1 or 2.
 
 ### Slice 1: finish the PCIe clock/capture boundary
 
@@ -821,10 +834,10 @@ provider/silicon characterization missing from GF180.
 
 ### Slice 3: extract only proven shared tooling
 
-- Compare the two completed vertical slices and promote only mechanisms used by
-  both: artifact identity, resource-bounded parallel jobs, model validity,
-  semantic measurement bindings, claim dependencies, and physical-boundary
-  labels.
+- Promote a mechanism only after it has removed the same observed pain twice in
+  PCIe, twice in Wi-Fi, or once in each. Candidates are artifact identity,
+  resource-bounded parallel jobs, model validity, semantic measurement
+  bindings, claim dependencies, and physical-boundary labels.
 - Introduce a Rust core only for a demonstrated correctness, concurrency,
   geometry, or scale bottleneck. Keep Python orchestration otherwise.
 - Upstream generally useful operation profiles, fixtures, generators, or fixes

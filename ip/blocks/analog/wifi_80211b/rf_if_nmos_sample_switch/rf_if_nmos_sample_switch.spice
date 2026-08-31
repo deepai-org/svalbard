@@ -1,0 +1,28 @@
+* SPDX-License-Identifier: Apache-2.0
+* Differential NMOS sampling-switch baseline for the selected real-IF path.
+*
+* This is intentionally the smallest physical sampling experiment: two matched
+* four-finger 3.3-V NMOS pass switches.  The CDAC/hold capacitor and the IF
+* buffer are explicit testbench boundaries, not silently idealized on die.
+* It is a topology probe for the 12-bit ADC path, not a converter claim.
+.subckt wifi_if_nmos_sample_switch INP INN HOLDP HOLDN CLK VSS
+* Each path is an explicit eight-finger 4-um array.  Alternating terminal
+* order mirrors the physical diffusion orientation instead of hiding it in an
+* `m` multiplier.
+XSP0 INP   CLK HOLDP VSS nfet_03v3 w=4u l=0.28u
+XSP1 HOLDP CLK INP   VSS nfet_03v3 w=4u l=0.28u
+XSP2 INP   CLK HOLDP VSS nfet_03v3 w=4u l=0.28u
+XSP3 INP   CLK HOLDP VSS nfet_03v3 w=4u l=0.28u
+XSP4 HOLDP CLK INP   VSS nfet_03v3 w=4u l=0.28u
+XSP5 HOLDP CLK INP   VSS nfet_03v3 w=4u l=0.28u
+XSP6 HOLDP CLK INP   VSS nfet_03v3 w=4u l=0.28u
+XSP7 INP   CLK HOLDP VSS nfet_03v3 w=4u l=0.28u
+XSN0 INN   CLK HOLDN VSS nfet_03v3 w=4u l=0.28u
+XSN1 HOLDN CLK INN   VSS nfet_03v3 w=4u l=0.28u
+XSN2 INN   CLK HOLDN VSS nfet_03v3 w=4u l=0.28u
+XSN3 INN   CLK HOLDN VSS nfet_03v3 w=4u l=0.28u
+XSN4 HOLDN CLK INN   VSS nfet_03v3 w=4u l=0.28u
+XSN5 HOLDN CLK INN   VSS nfet_03v3 w=4u l=0.28u
+XSN6 HOLDN CLK INN   VSS nfet_03v3 w=4u l=0.28u
+XSN7 INN   CLK HOLDN VSS nfet_03v3 w=4u l=0.28u
+.ends wifi_if_nmos_sample_switch

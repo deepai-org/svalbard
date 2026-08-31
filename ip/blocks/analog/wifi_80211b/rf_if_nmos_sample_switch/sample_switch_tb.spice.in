@@ -1,0 +1,31 @@
+* SPDX-License-Identifier: Apache-2.0
+* Exact-PEX transient probe for the real-IF NMOS sampling-switch baseline.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.include @DUT_INCLUDE@
+.temp @TEMP_C@
+
+* The IF buffer and CDAC are declared bench boundaries for this first switch
+* experiment.  The 10-ohm source is intentionally finite and the 5-pF capacitors
+* are intentionally large enough to be a real acquisition load.
+BIP SRC_P 0 V=@INPUT_COMMON_MODE_V@+@INPUT_HALF_PEAK_V@*sin(2*3.141592653589793*@IF_HZ@*time)
+BIN SRC_N 0 V=@INPUT_COMMON_MODE_V@-@INPUT_HALF_PEAK_V@*sin(2*3.141592653589793*@IF_HZ@*time)
+RINP SRC_P INP @INPUT_SOURCE_RESISTANCE_OHM@
+RINN SRC_N INN @INPUT_SOURCE_RESISTANCE_OHM@
+VCLK_DRV CLK_DRV 0 PULSE(0 @VDD_V@ 0 @CLOCK_EDGE_S@ @CLOCK_EDGE_S@ @TRACK_TIME_S@ @SAMPLE_PERIOD_S@)
+RCLK CLK_DRV CLK @CLOCK_SOURCE_RESISTANCE_OHM@
+CHOLDP HOLDP 0 @HOLD_CAPACITANCE_F@
+CHOLDN HOLDN 0 @HOLD_CAPACITANCE_F@
+XDUT INP INN HOLDP HOLDN CLK 0 @DUT_SUBCKT@
+
+.control
+set wr_singlescale
+set wr_vecnames
+tran @MAX_STEP_S@ @STOP_TIME_S@
+wrdata @INP_DATA@ v(INP)
+wrdata @INN_DATA@ v(INN)
+wrdata @HOLDP_DATA@ v(HOLDP)
+wrdata @HOLDN_DATA@ v(HOLDN)
+wrdata @CLK_DATA@ v(CLK)
+.endc
+.end

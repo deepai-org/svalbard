@@ -1,0 +1,75 @@
+{
+  "cases": [
+    {
+      "case_id": "tt",
+      "pex_worst_aperture_and_hold_error_abs_v": 0.1076745827831922,
+      "pex_worst_track_error_abs_v": 0.10494001090707972,
+      "schematic_worst_aperture_and_hold_error_abs_v": 0.09048993962703888,
+      "schematic_worst_track_error_abs_v": 0.08531457302416912
+    },
+    {
+      "case_id": "ff_cold",
+      "pex_worst_aperture_and_hold_error_abs_v": 0.07620439566142467,
+      "pex_worst_track_error_abs_v": 0.06475010034867923,
+      "schematic_worst_aperture_and_hold_error_abs_v": 0.05116505583490838,
+      "schematic_worst_track_error_abs_v": 0.04373592889873423
+    },
+    {
+      "case_id": "ff_hot",
+      "pex_worst_aperture_and_hold_error_abs_v": 0.13993047148494853,
+      "pex_worst_track_error_abs_v": 0.13650230457450463,
+      "schematic_worst_aperture_and_hold_error_abs_v": 0.12438580167303726,
+      "schematic_worst_track_error_abs_v": 0.12395678748301053
+    },
+    {
+      "case_id": "ss_hot",
+      "pex_worst_aperture_and_hold_error_abs_v": 0.1778911224350559,
+      "pex_worst_track_error_abs_v": 0.18227588912185544,
+      "schematic_worst_aperture_and_hold_error_abs_v": 0.17109834793791845,
+      "schematic_worst_track_error_abs_v": 0.17610717526616804
+    },
+    {
+      "case_id": "ss_cold",
+      "pex_worst_aperture_and_hold_error_abs_v": 0.08901159489237642,
+      "pex_worst_track_error_abs_v": 0.0800432223333627,
+      "schematic_worst_aperture_and_hold_error_abs_v": 0.06637399559025092,
+      "schematic_worst_track_error_abs_v": 0.06072452456267641
+    }
+  ],
+  "claim": "wifi_real_if_nmos_switch_12bit_sample_interface_rejection",
+  "declared_boundary": {
+    "accuracy_limit_v": 3.0517578125e-05,
+    "bits": 12,
+    "clock_source_resistance_ohm": 10.0,
+    "differential_full_scale_peak_v": 0.25,
+    "hold_capacitance_per_leg_f": 5e-12,
+    "if_hz": 100000000.0,
+    "input_common_mode_v": 1.65,
+    "input_source_resistance_ohm": 10.0,
+    "lsb_v": 0.0001220703125,
+    "measurement": "absolute differential tracking error 200 ps before actual extracted clock-midpoint fall and absolute aperture/hold error 100 ps after it",
+    "sample_rate_hz": 320000000.0,
+    "track_time_s": 1.45e-09
+  },
+  "next_required_topology": "matched_transmission_gate_with_complementary_nonoverlap_clocking",
+  "not_a_claim": [
+    "working_12bit_sampler",
+    "adc_enob",
+    "thermal_noise",
+    "mismatch_yield",
+    "clock_jitter_tolerance",
+    "implemented_if_buffer",
+    "integrated_wifi_receiver"
+  ],
+  "pex_probe_sha256": "aa35dcfb433607536742f96b7db2b6890fd023640fcb2aadd23a8e91310176ea",
+  "pex_sha256": "b4346964628abf1669ad3073e36cc0a0d63f7e4fa48e0384ccfa422c006da5c3",
+  "physical_result_sha256": "9c266d9d8826c7eb5733cc1efea3f7b34a260d5fef3b6de0779f2b8f40ea277b",
+  "quarter_lsb_accuracy_limit_v": 3.0517578125e-05,
+  "reason": "The physical NMOS-only switch fails the declared 12-bit sampling allocation in every complete PVT case, and the schematic baseline fails likewise; do not spend further effort tuning this topology.",
+  "result": "rejected",
+  "schema_version": 1,
+  "schematic_probe_sha256": "f0bda4951932909fd34cf6eddf85ea5de802e42d975e059b291dc02825f14ff4",
+  "worst_pex_aperture_and_hold_error_abs_v": 0.1778911224350559,
+  "worst_pex_error_over_quarter_lsb": 5829.1362999519115,
+  "worst_schematic_aperture_and_hold_error_abs_v": 0.17109834793791845
+}

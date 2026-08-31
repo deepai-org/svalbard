@@ -850,16 +850,21 @@ Execution order is likewise tied to the next receiver claim:
    ADC full-scale/ENOB/sample-rate and digital-filter requirements accountable.
    First close only a 0.25-V differential-peak, 320-MS/s **sampled-input
    interface** with a declared 5-pF-per-leg future converter load and a
-   0.25-LSB settling allocation. Its extracted PVT screen must measure switch
-   settling, hold error, clock feedthrough and input loading. Do not reuse the
-   PCIe CML error slicer: its extracted 40--150-mV window is hundreds of times
-   coarser than the roughly 122-uV 12-bit code step. A failed simple-switch
-   screen may justify a bootstrapped/cancelled topology or a simplified
-   frequency plan; it does not justify starting a generic ADC framework. Only
-   after the interface passes should a bounded converter and fixed-point filter
-   be built and composed. This is a product architecture decision, not an
-   opportunity to build an RF optimizer or to call the current scalar budget an
-   implemented receiver.
+   0.25-LSB settling allocation. The first 0-DRC, unique-LVS 113R/86C NMOS-only
+   implementation now completes all five full-RC corners but is explicitly
+   rejected: its 177.891-mV worst aperture/hold error is 5,829 times the
+   allocation, and its schematic baseline fails likewise. Do not tune it.
+   The immediate candidate is a matched transmission gate with complementary
+   non-overlap clocks; its extracted PVT screen must measure switch settling,
+   hold error, clock feedthrough and input loading. Do not reuse the PCIe CML
+   error slicer: its extracted 40--150-mV window is hundreds of times coarser
+   than the roughly 122-uV 12-bit code step. A failed transmission-gate screen
+   may justify bootstrapping/cancellation or a simplified frequency plan; it
+   does not justify starting a generic ADC framework. Only after the interface
+   passes should a bounded converter and fixed-point filter be built and
+   composed. This is a product architecture decision, not an opportunity to
+   build an RF optimizer or to call the current scalar budget an implemented
+   receiver.
 2. Preserve the OSTL and active-NFET coupons as tapeout/measurement obligations.
    When calibrated wafer data exists, bind the exact de-embedded S-parameters,
    noise and bias range into the model registry before promoting any RF gain,

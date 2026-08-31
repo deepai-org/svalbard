@@ -79,11 +79,23 @@ testable decision record is
 and the byte-bound PEX budget is
 [`adc_dsp_selectivity_plan.json`](../../ip/blocks/analog/wifi_80211b/rf_rx_external_lo_parent/adc_dsp_selectivity_plan.json).
 
+The first physical sampling experiment is now complete and rejected:
+[`rf_if_nmos_sample_switch`](../../ip/blocks/analog/wifi_80211b/rf_if_nmos_sample_switch)
+is 0-DRC, uniquely LVS-matched and full-RC extracted, but its five-corner
+5-pF/leg, 320-MS/s accuracy probe fails by up to 5,829 times the declared
+quarter-LSB allocation.  Its schematic probe fails likewise, so this is a
+topology decision rather than a layout-tuning backlog.  The next bounded
+candidate is a complementary-clocked matched transmission gate; it must earn
+its own PEX evidence before any converter is designed around it.
+
 The remaining product work is deliberately small and sequential.  In
 particular, this track must not turn an unimplemented 12-bit converter into a
 large generic-ADC project:
 
-1. Close one physical **differential sampled-input interface** first.  Its
+1. Close one physical **differential sampled-input interface** first.  The
+   NMOS-only baseline has already been physically rejected, so the immediate
+   candidate is a matched transmission gate with complementary non-overlap
+   clocking.  Its
    declared test boundary is 0.25 V differential peak full scale, 320 MS/s,
    a 5 pF per-leg future converter/CDAC load, and a 0.25-LSB settling/noise
    allocation.  DRC/LVS/full-RC PEX must show the actual switch, clock feed,

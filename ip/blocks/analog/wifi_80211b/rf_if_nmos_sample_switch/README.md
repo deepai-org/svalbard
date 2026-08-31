@@ -26,7 +26,7 @@ or a tuning target for the failure.
 binds the exact layout/PEX/testbench/runner evidence and makes the resulting
 decision explicit: do not continue tuning the NMOS-only switch.  The next
 physical candidate is a matched transmission gate with complementary,
-non-overlapping clocking; its topology, clock feedthrough, common-mode range,
+overlap-controlled clocks; its topology, clock feedthrough, common-mode range,
 noise, mismatch and calibration must be screened anew.  This baseline does not
 establish 12-bit sampling accuracy, ADC ENOB, thermal noise, mismatch yield,
 clock-jitter tolerance, an IF buffer, or an integrated receiver.

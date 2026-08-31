@@ -854,8 +854,8 @@ Execution order is likewise tied to the next receiver claim:
    implementation now completes all five full-RC corners but is explicitly
    rejected: its 177.891-mV worst aperture/hold error is 5,829 times the
    allocation, and its schematic baseline fails likewise. Do not tune it.
-   The immediate candidate is a matched transmission gate with complementary
-   non-overlap clocks; its extracted PVT screen must measure switch settling,
+   The immediate candidate is a matched transmission gate with complementary,
+   overlap-controlled clocks; its extracted PVT screen must measure switch settling,
    hold error, clock feedthrough and input loading. Do not reuse the PCIe CML
    error slicer: its extracted 40--150-mV window is hundreds of times coarser
    than the roughly 122-uV 12-bit code step. A failed transmission-gate screen

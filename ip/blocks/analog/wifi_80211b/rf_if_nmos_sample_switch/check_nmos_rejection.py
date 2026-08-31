@@ -96,7 +96,7 @@ def main() -> None:
             "The physical NMOS-only switch fails the declared 12-bit sampling "
             "allocation in every complete PVT case, and the schematic baseline "
             "fails likewise; do not spend further effort tuning this topology."),
-        "next_required_topology": "matched_transmission_gate_with_complementary_nonoverlap_clocking",
+        "next_required_topology": "matched_transmission_gate_with_complementary_overlap_controlled_clocks",
         "declared_boundary": pex_result["declared_boundary"],
         "quarter_lsb_accuracy_limit_v": limit,
         "worst_schematic_aperture_and_hold_error_abs_v": worst_schematic,

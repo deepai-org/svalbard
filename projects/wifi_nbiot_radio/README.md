@@ -94,8 +94,8 @@ large generic-ADC project:
 
 1. Close one physical **differential sampled-input interface** first.  The
    NMOS-only baseline has already been physically rejected, so the immediate
-   candidate is a matched transmission gate with complementary non-overlap
-   clocking.  Its
+   candidate is a matched transmission gate with complementary,
+   overlap-controlled clocks.  Its
    declared test boundary is 0.25 V differential peak full scale, 320 MS/s,
    a 5 pF per-leg future converter/CDAC load, and a 0.25-LSB settling/noise
    allocation.  DRC/LVS/full-RC PEX must show the actual switch, clock feed,

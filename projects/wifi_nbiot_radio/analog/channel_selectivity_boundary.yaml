@@ -104,7 +104,7 @@ architecture_decision:
           five corners but reaches 177.891 mV worst aperture/hold error against
           the 30.518 uV allocation. The analogous schematic probe is also
           rejected, so do not tune this topology further.
-        next_candidate: matched_transmission_gate_with_complementary_nonoverlap_clocking
+        next_candidate: matched_transmission_gate_with_complementary_overlap_controlled_clocks
     required_evidence:
       - analog_chain_iip3_compression_and_noise
       - extracted_differential_sampling_interface

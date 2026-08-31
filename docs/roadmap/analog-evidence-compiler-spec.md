@@ -734,10 +734,14 @@ Current state: the first active macro is the routed 16-finger NFET LNA core at
 Its current native flow has clean DRC and LVS and a full-RC PEX AC screen at
 2.4 GHz over five public PVT environments using one fixed **external** 1.5 V
 bias. A separate five-PVT narrowband noise screen at the same bias records a
-worst bench-relative estimate of 10.283 dB. It establishes only a small-signal
-core feasibility boundary; that number does not establish qualified RF noise,
-matching, linearity, package/antenna EM, an on-die bias, or an 802.11 receiver.
-The next steps below are product gates, not tool milestones.
+worst bench-relative estimate of 10.283 dB. A second, independently routed
+two-bank NFET switching-mixer core is DRC/LVS/PEX checked and produces a finite
+100 MHz differential IF component across five PVT environments from an external
+2.3 GHz complementary LO and a 2.4 GHz external RF source; the weakest screen
+is -0.664 dB conversion. These establish only leaf feasibility boundaries;
+those numbers do not establish qualified RF noise, matching, linearity,
+package/antenna EM, an on-die bias, or an 802.11 receiver. The next steps below
+are product gates, not tool milestones.
 
 - Freeze a modest 2.4 GHz 802.11b front-end boundary and external passive,
   crystal, package, and antenna assumptions.

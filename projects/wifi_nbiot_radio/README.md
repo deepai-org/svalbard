@@ -21,13 +21,22 @@ boundary.
 The checked layout render is
 [`wifi-lna-cs-core-layout.png`](../../docs/images/wifi-lna-cs-core-layout.png).
 
+The second executable primitive is the physically checked
+[`rf_switch_mixer`](../../ip/blocks/analog/wifi_80211b/rf_switch_mixer): a
+two-bank, external-LO differential switching core. Its exact full-RC PEX
+transient screen passes the five public PVT cases with a 2.4 GHz RF source,
+2.3 GHz complementary LO, and a measured 100 MHz differential IF component.
+The weakest observed conversion is -0.664 dB. This is a bounded leaf screen,
+not an LNA-to-mixer routed parent or a mixer performance qualification.
+
 The next product work is deliberately small and sequential:
 
 1. Add transistor/open-short/de-embedding and passive test structures, then
    establish an RF/EM model-validity boundary for the actual package and
    antenna/matching network.
-2. Compose a probeable mixer path with external LO/IQ and verify its routed
-   parent, including noise, conversion gain, linearity, and blocker screens.
+2. Compose the LNA and the physical mixer through a routed parent with
+   external LO/IQ, then verify noise, conversion gain, linearity, and blocker
+   screens.
 3. Only after those gates, add an on-die bias/reference and the minimum
    calibration/control path needed by the selected 802.11b receiver boundary.
 

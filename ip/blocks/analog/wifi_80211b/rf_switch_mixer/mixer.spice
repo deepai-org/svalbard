@@ -1,0 +1,28 @@
+* SPDX-License-Identifier: Apache-2.0
+* First externally driven differential switching-mixer feasibility core.
+*
+* RF_IN is commutated between IFP and IFN by complementary externally supplied
+* LO rails.  The core intentionally excludes a local oscillator, balun, RF/IF
+* matching, load/filter, reference, calibration and baseband amplifier.
+* It is a physical 2.4 GHz mixer-path risk macro, not a receiver claim.
+
+.subckt wifi_rf_switch_mixer RF_IN LO LOB IFP IFN VSS
+* Positive LO switch bank.  Explicit fingers preserve the physical array.
+XP0 RF_IN LO  IFP VSS nfet_03v3 w=4u l=0.28u
+XP1 IFP   LO  RF_IN VSS nfet_03v3 w=4u l=0.28u
+XP2 RF_IN LO  IFP VSS nfet_03v3 w=4u l=0.28u
+XP3 RF_IN LO  IFP VSS nfet_03v3 w=4u l=0.28u
+XP4 IFP   LO  RF_IN VSS nfet_03v3 w=4u l=0.28u
+XP5 IFP   LO  RF_IN VSS nfet_03v3 w=4u l=0.28u
+XP6 IFP   LO  RF_IN VSS nfet_03v3 w=4u l=0.28u
+XP7 RF_IN LO  IFP VSS nfet_03v3 w=4u l=0.28u
+* Complementary LO switch bank.
+XN0 RF_IN LOB IFN VSS nfet_03v3 w=4u l=0.28u
+XN1 IFN   LOB RF_IN VSS nfet_03v3 w=4u l=0.28u
+XN2 RF_IN LOB IFN VSS nfet_03v3 w=4u l=0.28u
+XN3 RF_IN LOB IFN VSS nfet_03v3 w=4u l=0.28u
+XN4 IFN   LOB RF_IN VSS nfet_03v3 w=4u l=0.28u
+XN5 IFN   LOB RF_IN VSS nfet_03v3 w=4u l=0.28u
+XN6 IFN   LOB RF_IN VSS nfet_03v3 w=4u l=0.28u
+XN7 RF_IN LOB IFN VSS nfet_03v3 w=4u l=0.28u
+.ends wifi_rf_switch_mixer

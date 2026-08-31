@@ -64,6 +64,30 @@ module wifi_80211b_rx : radio_receiver in physical_environment {
     }
   }
 
+  module external_lo_mixer_core : differential_switching_mixer {
+    terminal rf_in, lo, lob, ifp, ifn, vss : electrical;
+    implementation intent {
+      source "ip/blocks/analog/wifi_80211b/rf_switch_mixer/mixer.spice";
+      physical "ip/blocks/analog/wifi_80211b/rf_switch_mixer/layout.tcl";
+      degree_of_freedom { finger_order, multiplicity, placement, routing };
+      forbid { topology_change, terminal_reordering };
+    }
+    assume bench_boundary {
+      external_50ohm_rf_source;
+      complementary_external_lo = 2.3 GHz;
+      external_differential_if_load;
+    }
+    guarantee checked_full_rc_pvt {
+      source "ip/blocks/analog/wifi_80211b/rf_switch_mixer/run_mixer_physical.sh";
+      drc_clean and lvs_matches_intended_circuit;
+      for every public_pvt_case {
+        finite_differential_conversion(rf_center - 2.3 GHz);
+      }
+      not_claim { mixer_noise_figure, linearity, isolation, i_q_balance,
+                  local_oscillator, integrated_receiver };
+    }
+  }
+
   // The staged receiver has no top-level 802.11 performance guarantee yet.
   // The following conditions are hard release blockers rather than silently
   // optimistic assumptions.
@@ -72,12 +96,14 @@ module wifi_80211b_rx : radio_receiver in physical_environment {
           blocker_tolerance, phase_noise, and receive_sensitivity;
     import package_network and antenna_network with non_double_counted_em_ports;
     implement on_die_bias_reference_and_calibration with observable search;
-    compose lna_core plus mixer plus baseband through a routed physical parent;
+    compose lna_core plus external_lo_mixer_core plus baseband through a
+            routed physical parent;
     verify 80211b_evm, spectral_mask, startup, and coexistence_aggressors;
   }
 
   guarantee current_status {
     lna_core.checked_full_rc_pvt;
+    external_lo_mixer_core.checked_full_rc_pvt;
     not_claim { integrated_receiver, ieee_80211_compliance,
                 interoperability, yield, silicon_qualification };
   }

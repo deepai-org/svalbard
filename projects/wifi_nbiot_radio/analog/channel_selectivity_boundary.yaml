@@ -7,13 +7,13 @@ owner_boundary: board_or_package_input_before_die_lna
 applies_to:
   parent: ip/blocks/analog/wifi_80211b/rf_rx_external_lo_parent
   test: parent_blocker_tb.spice.in
-  desired_rf_hz: 2.400e9
-  aggressor_rf_hz: 2.425e9
+  desired_rf_hz: 2400000000
+  aggressor_rf_hz: 2425000000
   desired_input_peak_v: 1.0e-3
   aggressor_input_peak_v: 1.0e-1
-  external_lo_hz: 2.300e9
-  desired_if_hz: 1.00e8
-  aggressor_if_hz: 1.25e8
+  external_lo_hz: 2300000000
+  desired_if_hz: 100000000
+  aggressor_if_hz: 125000000
 observed_unfiltered_parent:
   evidence: full_rc_pex_fixed_two_tone_diagnostic
   pvt_cases: 5
@@ -24,7 +24,7 @@ observed_unfiltered_parent:
     blocker-tolerance, or IEEE 802.11 requirement.
 existing_bench_load:
   topology: 1 kohm shunt resistor plus 1 pF shunt capacitor per IF leg
-  one_pole_corner_hz: 1.59154943e8
+  one_pole_corner_hz: 159154943
   analytic_loss_at_desired_if_db: -1.445
   analytic_loss_at_aggressor_if_db: -2.087
   analytic_relative_aggressor_rejection_db: 0.642

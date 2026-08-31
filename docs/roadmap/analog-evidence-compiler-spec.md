@@ -834,20 +834,23 @@ desired 100-MHz component changes by no less than +0.065 dB, but the unfiltered
 125-MHz aggressor component is no less than 39.872 dB larger. This is useful
 failure localization, but it changes the next task: 100 and 125 MHz are too
 close for a low-order on-die RC stage to remove tens of dB of aggression while
-preserving a wide 802.11b channel. The next receiver candidate needs a bound
-external RF preselector/matching network ahead of the LNA, or a proven ADC/DSP
-headroom-and-channel-filter path--not a generic IF-filter generator. The
-unbound product handoff is
-[`channel_selectivity_boundary.yaml`](../../projects/wifi_nbiot_radio/analog/channel_selectivity_boundary.yaml).
+preserving a wide 802.11b channel. The selected next receiver boundary is a
+real-IF ADC/DSP headroom-and-channel-filter path; a normal broad Wi-Fi RF
+preselector remains required for out-of-band/package control but cannot claim
+this 25 MHz separation. The product handoff is
+[`channel_selectivity_boundary.yaml`](../../projects/wifi_nbiot_radio/analog/channel_selectivity_boundary.yaml)
+and its byte-bound PEX input budget is
+[`adc_dsp_selectivity_plan.json`](../../ip/blocks/analog/wifi_80211b/rf_rx_external_lo_parent/adc_dsp_selectivity_plan.json).
 
 Execution order is likewise tied to the next receiver claim:
 
-1. Choose one receiver decision: bind a concrete measured/vendor S-parameter
-   RF preselector/matching network at the antenna-to-LNA port, or freeze an
-   ADC/DSP dynamic-range and channel-filter model. This is a product
-   architecture choice, not an opportunity to build an RF optimizer. Route its
-   die-side landing and rerun the routed two-tone, noise and linearity parent;
-   do not call present finite conversion gain a receiver result.
+1. The receiver decision is frozen as a real-IF ADC/DSP path because a normal
+   wide Wi-Fi RF preselector cannot honestly claim 25 MHz adjacent-tone
+   separation. Use the existing PEX two-tone measurements only to hold the
+   ADC full-scale/ENOB/sample-rate and digital-filter requirements accountable;
+   then implement the IF buffer, converter and fixed-point filter. This is a
+   product architecture decision, not an opportunity to build an RF optimizer
+   or to call the current scalar budget an implemented receiver.
 2. Preserve the OSTL and active-NFET coupons as tapeout/measurement obligations.
    When calibrated wafer data exists, bind the exact de-embedded S-parameters,
    noise and bias range into the model registry before promoting any RF gain,

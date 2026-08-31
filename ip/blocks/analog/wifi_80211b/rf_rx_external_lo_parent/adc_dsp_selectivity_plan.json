@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "status": "architecture_selected_not_implemented",
+  "selected_path": "real_if_adc_and_digital_channel_filter",
+  "applies_to": {
+    "parent": "rf_rx_external_lo_parent",
+    "rf_desired_hz": 2400000000.0,
+    "rf_blocker_hz": 2425000000.0,
+    "external_lo_hz": 2300000000.0,
+    "if_desired_hz": 100000000.0,
+    "if_blocker_hz": 125000000.0
+  },
+  "decision": {
+    "reason": "The existing full-RC parent observes a 40 dB input-amplitude blocker only 25 MHz from the desired RF tone. A normal Wi-Fi RF preselector is useful for out-of-band energy but cannot be credited with this adjacent-channel separation while retaining a wide 2.4 GHz Wi-Fi passband.",
+    "external_rf_preselector_role": "required_later_for_antenna, out-of-band, image, package, and matching control; not the credited 25 MHz channel-selection mechanism",
+    "external_if_filter_role": "optional later board-level relief path only after a measured network and a die/package port boundary are selected"
+  },
+  "converter_requirements": {
+    "input_full_scale_peak_v": 0.25,
+    "required_headroom_ratio": 2.0,
+    "minimum_effective_bits": 12,
+    "minimum_sample_rate_hz": 320000000.0,
+    "minimum_quantization_snr_db_for_current_desired_tone": 20.0,
+    "notes": "These are deliberately conservative architectural requirements derived from the current two-tone PEX output, not an implemented ADC specification or a GF180 feasibility claim."
+  },
+  "digital_filter_requirements": {
+    "passband_low_hz": 88000000.0,
+    "passband_high_hz": 112000000.0,
+    "required_at_blocker_hz_attenuation_db": 65.0,
+    "maximum_residual_blocker_to_desired_db_for_current_tone": -20.0,
+    "notes": "A later fixed-point filter, clock plan, group-delay budget, and modulation/EVM verification must replace this scalar tone requirement."
+  },
+  "required_next_implementations": [
+    "differential IF buffer or sampling interface with the declared 0.25 V peak full-scale range",
+    "12-ENOB-or-better 320 MS/s-or-faster converter evidence across its own declared environment",
+    "digital channel-filter response, fixed-point error, and clock-jitter evidence",
+    "analog blocker compression, noise, LO spur, and IF/baseband coupling evidence",
+    "measured/vendor antenna, package, matching, and preselector networks at explicit ports"
+  ],
+  "not_a_claim": [
+    "implemented_adc",
+    "implemented_dsp_filter",
+    "adc_power_or_area",
+    "gf180_adc_feasibility",
+    "ieee80211b_adjacent_channel_rejection",
+    "receiver_sensitivity",
+    "rf_model_qualification",
+    "integrated_wifi_receiver"
+  ]
+}

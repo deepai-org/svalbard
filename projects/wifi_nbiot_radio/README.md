@@ -67,18 +67,27 @@ The next product work is deliberately small and sequential. The two-tone
 result makes one architectural choice before another transistor/layout loop:
 with the present 2.300 GHz LO, 2.400 and 2.425 GHz become 100 and 125 MHz.
 A low-order on-die RC filter cannot create tens of dB of rejection over that
-spacing while passing a wide 802.11b channel. The next boundary is therefore a
-real external RF preselector/matching network ahead of the LNA, or a demonstrated
-ADC/DSP dynamic-range path—not an arbitrary on-die “IF filter.” The unbound,
-testable handoff is recorded in
-[`channel_selectivity_boundary.yaml`](analog/channel_selectivity_boundary.yaml).
+spacing while passing a wide 802.11b channel. A normal broad Wi-Fi RF
+preselector is still necessary for antenna/package and out-of-band control,
+but cannot honestly be credited with this 25 MHz separation. The selected
+channel-selection boundary is consequently a real-IF ADC/DSP path, with an
+explicit 0.25 V peak, 12-ENOB, 320 MS/s input budget and a 65 dB digital
+125 MHz attenuation requirement. It is a requirement for the next physical
+IF/baseband work, not a claim that the ADC, DSP, or receiver exists. The
+testable decision record is
+[`channel_selectivity_boundary.yaml`](analog/channel_selectivity_boundary.yaml)
+and the byte-bound PEX budget is
+[`adc_dsp_selectivity_plan.json`](../../ip/blocks/analog/wifi_80211b/rf_rx_external_lo_parent/adc_dsp_selectivity_plan.json).
 
 The remaining product work is deliberately small and sequential:
 
-1. Select and bind a measured/vendor S-parameter RF preselector and matching
-   network, or freeze an ADC/DSP headroom plan; then compose it with the routed
-   parent and rerun the two-tone, noise and linearity screens.
-2. Measure the active transistor and selected passive structures alongside the
+1. Implement the selected IF buffer/sampling interface, ADC and fixed-point
+   channel filter against the frozen two-tone headroom/filter budget; then
+   compose it with the routed parent and rerun two-tone, noise, linearity,
+   compression and calibration screens.
+2. Bind a measured/vendor RF preselector and matching network for its distinct
+   antenna/package/out-of-band role, then measure the active transistor and
+   selected passive structures alongside the
    OSTL coupon, then qualify the actual probe, pad, package and antenna/matching
    boundary with reviewed S-parameter/EM evidence.
 3. Only after those gates, add an on-die bias/reference and the minimum

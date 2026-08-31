@@ -10,5 +10,6 @@ exec "$repo_root/scripts/run_analog_flow.sh" \
   --copy parent-physical-result.json:wifi-rx-parent-physical-last.json \
   --copy parent-pex-result.json:wifi-rx-parent-pex-last.json \
   --copy parent-blocker-result.json:wifi-rx-parent-blocker-last.json \
+  --copy parent-adc-dsp-boundary-result.json:wifi-rx-parent-adc-dsp-boundary-last.json \
   --copy wifi-rx-external-lo-parent-layout.png:wifi-rx-parent-layout-last.png \
   --copy wifi_rx_external_lo_parent.pex.spice:wifi-rx-parent-last.pex.spice

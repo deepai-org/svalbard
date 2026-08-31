@@ -1,8 +1,9 @@
 # SPDX-License-Identifier: Apache-2.0
-# Product decision record for the first Wi-Fi receiver candidate. This is an
-# unbound integration contract, not a component model or a receiver claim.
+# Product decision record for the first Wi-Fi receiver candidate. This freezes
+# an unimplemented architecture requirement, not a component model or receiver
+# claim.
 schema_version: 1
-status: unbound_requires_measured_or_vendor_network
+status: adc_dsp_architecture_selected_not_implemented
 owner_boundary: board_or_package_input_before_die_lna
 applies_to:
   parent: ip/blocks/analog/wifi_80211b/rf_rx_external_lo_parent
@@ -32,6 +33,24 @@ existing_bench_load:
     This load is a termination/observation condition, not a channel filter;
     its ideal one-pole discrimination is far below the observed ~40 dB excess.
 architecture_decision:
+  selected_path:
+    name: real_if_adc_and_digital_channel_filter
+    plan: >-
+      ip/blocks/analog/wifi_80211b/rf_rx_external_lo_parent/
+      adc_dsp_selectivity_plan.json
+    current_byte_bound_budget: >-
+      The full-RC PEX two-tone parent fits a 0.25 V peak, 12-ENOB, 320 MS/s
+      real-IF converter requirement with 2x blocker headroom. A 65 dB digital
+      attenuation requirement at 125 MHz leaves at most -25.103 dB of the
+      current blocker relative to desired. This is a budget check, not an ADC
+      or DSP implementation result.
+    reason: >-
+      A normal 2.4 GHz Wi-Fi preselector is deliberately wide enough to pass
+      the band: for example, Murata LFB2H2G45SG7A158 is specified around
+      2450 MHz with a +/-50 MHz bandwidth. It cannot be credited with rejecting
+      the 2425 MHz tone while preserving the intended Wi-Fi passband. It still
+      remains required later for out-of-band, image, antenna, package and
+      matching control.
   rejected_for_this_candidate:
     - >-
       Treating the existing 1 kohm/1 pF differential bench load as a channel
@@ -42,7 +61,7 @@ architecture_decision:
       two-tone plot. It would not yield a credible 802.11b channel-selectivity
       claim and would hide the actual input-network decision.
   required_path_one:
-    name: external_rf_preselector_and_matching
+    name: external_rf_preselector_and_matching_support
     insertion_point: antenna_50ohm -> RF_GATE
     bind: measured_or_vendor_s_parameter_network
     required_evidence:
@@ -53,19 +72,21 @@ architecture_decision:
       - package_and_die_side_deembedding_boundary
       - passivity_and_causality_check_before_transient_or_noise_use
   alternative_path_two:
-    name: adc_dsp_channel_selection
+    name: real_if_adc_dsp_channel_selection
+    status: selected_not_implemented
     required_evidence:
       - analog_chain_iip3_compression_and_noise
       - adc_input_range_noise_and_sampling_plan
       - digital_filter_response_and_fixed_point_error
       - end_to_end_blocker_headroom_and_evm
   acceptance_before_receiver_level_rerun:
-    - Bind one concrete network or digitizer/DSP model with immutable identity.
-    - Route the selected die-side landing in the composed parent.
-    - Re-run desired plus aggressor PEX, noise, linearity, and calibration tests.
-    - Keep external network loss/noise separate from on-die PEX and RF coupons.
+    - Implement the declared IF buffer/sampling interface and converter, then bind their exact PEX evidence.
+    - Implement the fixed-point digital filter and bind response, quantization, jitter, and group-delay evidence.
+    - Re-run desired plus aggressor PEX, noise, linearity, compression, and calibration tests through the actual IF/baseband parent.
+    - Bind a later measured/vendor RF preselector/matching network separately; keep its loss/noise and port de-embedding outside on-die PEX.
 not_a_claim:
-  - selected_component
+  - implemented_adc_or_dsp
+  - selected_external_component
   - ieee80211b_adjacent_channel_rejection
   - receiver_sensitivity
   - qualified_rf_model

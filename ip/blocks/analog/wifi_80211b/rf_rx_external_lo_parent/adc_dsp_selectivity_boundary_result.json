@@ -1,0 +1,83 @@
+{
+  "claim": "wifi_real_if_adc_dsp_selectivity_architecture_boundary",
+  "converter_requirements": {
+    "input_full_scale_peak_v": 0.25,
+    "minimum_effective_bits": 12,
+    "minimum_quantization_snr_db_for_current_desired_tone": 20.0,
+    "minimum_sample_rate_hz": 320000000.0,
+    "notes": "These are deliberately conservative architectural requirements derived from the current two-tone PEX output, not an implemented ADC specification or a GF180 feasibility claim.",
+    "required_headroom_ratio": 2.0
+  },
+  "digital_filter_requirements": {
+    "maximum_residual_blocker_to_desired_db_for_current_tone": -20.0,
+    "notes": "A later fixed-point filter, clock plan, group-delay budget, and modulation/EVM verification must replace this scalar tone requirement.",
+    "passband_high_hz": 112000000.0,
+    "passband_low_hz": 88000000.0,
+    "required_at_blocker_hz_attenuation_db": 65.0
+  },
+  "not_a_claim": [
+    "implemented_adc",
+    "implemented_dsp_filter",
+    "adc_power_or_area",
+    "gf180_adc_feasibility",
+    "ieee80211b_adjacent_channel_rejection",
+    "receiver_sensitivity",
+    "rf_model_qualification",
+    "integrated_wifi_receiver"
+  ],
+  "observations": [
+    {
+      "adc_headroom_limit_peak_v": 0.125,
+      "blocker_if_peak_v": 0.06807347378010886,
+      "case_id": "tt",
+      "desired_if_peak_v": 0.0006895539674843728,
+      "quantization_snr_db": 22.8206766087095,
+      "residual_blocker_to_desired_db_after_required_filter": -25.11180696906944,
+      "result": "pass"
+    },
+    {
+      "adc_headroom_limit_peak_v": 0.125,
+      "blocker_if_peak_v": 0.06776672239496638,
+      "case_id": "ff_cold",
+      "desired_if_peak_v": 0.0006857308464429051,
+      "quantization_snr_db": 22.77238509462919,
+      "residual_blocker_to_desired_db_after_required_filter": -25.102744096902832,
+      "result": "pass"
+    },
+    {
+      "adc_headroom_limit_peak_v": 0.125,
+      "blocker_if_peak_v": 0.06737901770835579,
+      "case_id": "ff_hot",
+      "desired_if_peak_v": 0.0006829756341878821,
+      "quantization_snr_db": 22.737415578169312,
+      "residual_blocker_to_desired_db_after_required_filter": -25.117610695970072,
+      "result": "pass"
+    },
+    {
+      "adc_headroom_limit_peak_v": 0.125,
+      "blocker_if_peak_v": 0.06719420828224214,
+      "case_id": "ss_hot",
+      "desired_if_peak_v": 0.0006819412346389881,
+      "quantization_snr_db": 22.72425040709021,
+      "residual_blocker_to_desired_db_after_required_filter": -25.12830220628676,
+      "result": "pass"
+    },
+    {
+      "adc_headroom_limit_peak_v": 0.125,
+      "blocker_if_peak_v": 0.06838399477074128,
+      "case_id": "ss_cold",
+      "desired_if_peak_v": 0.0006925622689908164,
+      "quantization_snr_db": 22.858487923644102,
+      "residual_blocker_to_desired_db_after_required_filter": -25.110087201694704,
+      "result": "pass"
+    }
+  ],
+  "pex_sha256": "16556b3ae3061a8ed1ba14117832e1b8834253639bd98176058afdbea48911ba",
+  "physical_sha256": "82b64954daa030e464e0ae4af920940c2958e872322e3a433e2e1a2a190ae4a0",
+  "plan_sha256": "f5ea0d3c78ace5b6856e675de225ea4b0653c0aa98104dac12889cfb80d36aa8",
+  "result": "pass",
+  "schema_version": 1,
+  "selected_path": "real_if_adc_and_digital_channel_filter",
+  "two_tone_result_sha256": "cf140dd51c8dad42c8528261be5149e30d90fb07d8ddf2029bb466c923cdccc2",
+  "verification_level": "byte_bound_pex_input_budget_not_adc_or_dsp_implementation"
+}

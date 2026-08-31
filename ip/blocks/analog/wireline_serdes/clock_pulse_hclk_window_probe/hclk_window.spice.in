@@ -1,0 +1,110 @@
+* SPDX-License-Identifier: Apache-2.0
+* Necessary-condition screen for a selectable HCLK-derived WRITE window.
+*
+* This is intentionally a self-contained source-level probe.  It does not
+* claim the complete pulse generator or its parent interconnect.  It proves
+* only whether a static one-bit code can select between two *full-swing*
+* HCLK-derived end states before narrow-pulse formation and still drive the
+* existing 650-fF WRITE boundary at every declared PVT condition.
+
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.temp @TEMP_C@
+
+.subckt cp_inv A Y VDD VSS params: WP=4u WN=2u MP=1 MN=1
+XP Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+.ends cp_inv
+
+.subckt cp_delay A Y VDD VSS params: WP=4u WN=2u MP=2 MN=2
+XI0 A D0 VDD VSS cp_inv WP={WP} WN={WN} MP={MP} MN={MN}
+XI1 D0 Y VDD VSS cp_inv WP={WP} WN={WN} MP={MP} MN={MN}
+.ends cp_delay
+
+* A complementary transmission gate is permitted only here, while its
+* signal is a long full-swing clock state.  Each selected state is restored
+* by two CMOS stages before it is compared to the start state.
+.subckt cp_tg A Y EN ENB VDD VSS params: W=8u M=2
+XN Y EN A VSS nfet_03v3 w={W} l=0.28u m={M}
+XP Y ENB A VDD pfet_03v3 w={W} l=0.28u m={M}
+.ends cp_tg
+
+.subckt cp_fall_window A B Y VDD VSS
+XI B BN VDD VSS cp_inv WP=8u WN=8u MP=2 MN=2
+XP0 YB A VDD VDD pfet_03v3 w=8u l=0.28u m=3
+XP1 YB BN VDD VDD pfet_03v3 w=8u l=0.28u m=3
+XN0 YB A NS VSS nfet_03v3 w=8u l=0.28u m=3
+XN1 NS BN VSS VSS nfet_03v3 w=8u l=0.28u m=3
+XIY YB Y VDD VSS cp_inv WP=8u WN=8u MP=4 MN=3
+.ends cp_fall_window
+
+.subckt cp_final_inv A Y VDD VSS params: WP=8u WN=8u MP=28 MN=22
+XP Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+.ends cp_final_inv
+
+* SEL=0 selects the base end state.  SEL=1 selects the same regenerated
+* state followed by one additional, physically realizable delay pair.  The
+* state selection happens before the detector, so disabled diffusion never
+* touches the WPN or WRITE narrow-event nets.
+.subckt hclk_select_window HCLK SEL VDD VSS WRITE WPN
+XI_SEL SEL SELB VDD VSS cp_inv WP=4u WN=2u MP=2 MN=2
+
+* Matched full-swing source/selection paths: START is the reference edge;
+* END0 and END1 differ solely by the calibrated extra delay state.  START
+* includes a matched restoring pair, so the selection-restorer latency is not
+* accidentally charged to the window budget.
+XST0 HCLK S0A VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2
+XST1 HCLK S1A VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2
+XSTR0 S0A STR0 VDD VSS cp_inv WP=8u WN=4u MP=2 MN=2
+XSTR1 STR0 START VDD VSS cp_inv WP=8u WN=6u MP=3 MN=2
+XEND0 S0A E0 VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2
+XEND1A S1A E1A VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2
+XEND1B E1A E1 VDD VSS cp_delay WP=@EXTRA_W@ WN=@EXTRA_N@ MP=@EXTRA_MP@ MN=@EXTRA_MN@
+
+* The unselected end's pass-device diffusion is isolated by the common
+* restoring pair.  START is deliberately unselected: it gives both codes a
+* fixed reference and makes the code's timing effect explicit and measurable.
+XTG0 E0 EMUX SELB SEL VDD VSS cp_tg
+XTG1 E1 EMUX SEL SELB VDD VSS cp_tg
+XER0 EMUX ER0 VDD VSS cp_inv WP=8u WN=4u MP=2 MN=2
+XER1 ER0 END VDD VSS cp_inv WP=8u WN=6u MP=3 MN=2
+
+XDET S0A END WIN VDD VSS cp_fall_window
+XWPN WIN WPN VDD VSS cp_inv WP=4u WN=4u MP=2 MN=2
+XWB0 WPN WB1 VDD VSS cp_inv WP=4u WN=4u MP=2 MN=2
+XWB1 WB1 WB2 VDD VSS cp_inv WP=4u WN=4u MP=4 MN=4
+XWB2 WB2 WB3 VDD VSS cp_inv WP=8u WN=8u MP=4 MN=4
+XWB3 WB3 WB4 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=8
+XWB4 WB4 WRITE VDD VSS cp_final_inv
+.ends hclk_select_window
+
+VDD VDD 0 PWL(0 0 500p @VDD_V@)
+VSEL SEL 0 PWL(0 0 500p @SEL_V@)
+* This is the full-swing parent HCLK contract used by the pulse macro.  The
+* normal high state is 380 ps at the 800-ps unit interval; no behavioral
+* delay source is used to form the selected narrow interval.
+VHCLK HCLK 0 PULSE(0 @VDD_V@ 1n 20p 20p 380p 800p)
+XDUT HCLK SEL VDD 0 WRITE WPN hclk_select_window
+CWRITE WRITE 0 650f
+
+.control
+* The third post-ramp clock is sufficient for this entirely combinational
+* probe; keeping the run short lets every PVT/code candidate be evaluated in
+* one bounded campaign rather than silently sampling a subset.
+tran 1p 3.6n uic
+let isupply = -i(VDD)
+meas tran hclk_fall when v(HCLK)=@VMID@ fall=1 td=2.8n
+meas tran write_rise when v(WRITE)=@VMID@ rise=1 td=2.8n
+meas tran write_fall when v(WRITE)=@VMID@ fall=1 td=2.8n
+meas tran win_rise when v(XDUT.WIN)=@VMID@ rise=1 td=2.8n
+meas tran win_fall when v(XDUT.WIN)=@VMID@ fall=1 td=2.8n
+meas tran wpn_fall when v(WPN)=@VMID@ fall=1 td=2.8n
+meas tran wpn_rise when v(WPN)=@VMID@ rise=1 td=2.8n
+meas tran write_high max v(WRITE) from=2.8n to=3.6n
+meas tran write_low min v(WRITE) from=2.8n to=3.6n
+meas tran wpn_high max v(WPN) from=2.8n to=3.6n
+meas tran wpn_low min v(WPN) from=2.8n to=3.6n
+meas tran supply_current avg isupply from=2.8n to=3.6n
+.endc
+.end

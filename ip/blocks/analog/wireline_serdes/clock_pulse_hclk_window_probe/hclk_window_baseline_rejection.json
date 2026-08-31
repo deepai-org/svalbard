@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "claim": "pcie_selectable_full_swing_hclk_write_window_baseline_rejection",
+  "candidate": "one-bit static selector between two full-swing HCLK-derived end states; complementary transmission-gate selection and two CMOS restoring stages precede a local falling-edge window detector and the 650-fF WRITE taper",
+  "scope": "schematic necessary-condition screen only",
+  "source": {
+    "netlist_sha256": "fe96c581dc81cd9e2169ff3e53d4ed4d4fc3507279d630ea0175da2a858b0936",
+    "runner_sha256": "6bde0ada77afa6e43c7502aaebebcf76b910b27213cc909737bff647f207dfeb",
+    "raw_result_sha256": "42789b49b46120890d8ba9703235acdfdbdfdb046c13f5944c4bcaa99deb6799",
+    "raw_result_location": "scratch/pcie-hclk-write-window-last.json"
+  },
+  "matrix": {
+    "case_count": 40,
+    "corners": ["tt", "ff_cold", "ff_hot", "ss_hot", "ss_cold"],
+    "codes": [0, 1],
+    "extra_delay_strengths": ["x1", "x2", "x4", "x8"],
+    "environment_coverage": {
+      "tt": [],
+      "ff_cold": [],
+      "ff_hot": [],
+      "ss_hot": [],
+      "ss_cold": []
+    },
+    "passing_case_count": 0
+  },
+  "observations": {
+    "all_cases": {
+      "write_width_ps_range": [188.49, 441.24],
+      "detector_window_width_ps_range": [179.48, 422.98],
+      "write_high_v_range": [3.03169, 3.72314],
+      "write_low_v_range": [-0.063175, -0.050483],
+      "wpn_low_v_range": [-0.203625, -0.102548],
+      "average_supply_current_ma_range": [11.7338, 19.5113]
+    },
+    "closest_selected_code": {
+      "extra_delay_strength": "x4",
+      "code": 1,
+      "tt": {"write_width_ps": 278.45, "detector_window_ps": 265.17, "delay_from_hclk_fall_ps": 149.76},
+      "ff_cold": {"write_width_ps": 188.49, "detector_window_ps": 179.48, "delay_from_hclk_fall_ps": 779.63},
+      "ff_hot": {"write_width_ps": 294.41, "detector_window_ps": 280.66, "delay_from_hclk_fall_ps": 176.32},
+      "ss_hot": {"write_width_ps": 307.87, "detector_window_ps": 299.4, "delay_from_hclk_fall_ps": 511.31},
+      "ss_cold": {"write_width_ps": 274.47, "detector_window_ps": 261.65, "delay_from_hclk_fall_ps": 144.82}
+    }
+  },
+  "conclusion": "Rejected before layout. The selected full-swing architecture restores rails and WPN logic but does not make a 100--220 ps WRITE window in every declared environment. The timing excess is already present at the detector/window boundary; do not resize the output taper as the next action.",
+  "next_candidate_requirement": "Adjust a full-swing START/END timing state by about 45--80 ps, retain an observed selectable code, and repeat the complete five-corner screen before physical implementation.",
+  "not_a_claim": [
+    "complete_pcie_pulse_generator",
+    "physical_layout_or_pex",
+    "pcie_capture_bridge_or_cdr_closure",
+    "calibration_algorithm",
+    "silicon_or_pcie_compliance"
+  ],
+  "result": "rejected_before_physical_implementation"
+}

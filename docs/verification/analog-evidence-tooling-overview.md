@@ -45,8 +45,10 @@ It has supported real engineering decisions rather than only produced reports.
   PVT environments. The current status, including both passed and rejected
   compositions, is maintained in [PCIe Gen1 analog status](pcie-analog-status.md).
   The active blocker is the extracted pulse-to-bridge-to-capture boundary,
-  which presently passes three of five declared corners; it is not an
-  integrated PCIe PHY claim.
+  which presently passes three of five declared corners. The latest
+  source-level selectable-HCLK timing probe retained explicit negative
+  evidence rather than advancing to layout when its 40 PVT/code cases had no
+  environment coverage. This is not an integrated PCIe PHY claim.
 - **Wi-Fi:** the routed LNA/mixer parent has DRC/LVS/full-RC PEX evidence, but
   its two-tone result exposed an unfiltered nearby blocker. This selected a
   real-IF ADC/DSP architecture rather than pretending a broad RF preselector

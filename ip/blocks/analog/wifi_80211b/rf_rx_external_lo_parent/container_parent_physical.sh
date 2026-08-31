@@ -29,4 +29,9 @@ python3 /src/rf_rx_external_lo_parent/run_parent.py --source /src/rf_rx_external
   --pex "$pex" --work /work/parent-cases --output /work/parent-pex-result.json --jobs 2
 python3 /src/rf_rx_external_lo_parent/check_parent.py --result /work/parent-pex-result.json \
   --physical /work/parent-physical-result.json --source /src/rf_rx_external_lo_parent --pex "$pex"
+python3 /src/rf_rx_external_lo_parent/run_parent_blocker.py --source /src/rf_rx_external_lo_parent \
+  --pex "$pex" --work /work/parent-blocker-cases --output /work/parent-blocker-result.json --jobs 2
+python3 /src/rf_rx_external_lo_parent/check_parent_blocker.py \
+  --result /work/parent-blocker-result.json --physical /work/parent-physical-result.json \
+  --source /src/rf_rx_external_lo_parent --pex "$pex"
 printf '{"result":"pass"}\n' > /work/parent-physical-smoke.json

@@ -147,6 +147,17 @@ module wifi_80211b_rx : radio_receiver in physical_environment {
       not_claim { receiver_noise_figure, linearity, isolation, i_q_balance,
                   local_oscillator, integrated_receiver };
     }
+    guarantee checked_fixed_two_tone_diagnostic {
+      source "ip/blocks/analog/wifi_80211b/rf_rx_external_lo_parent/run_parent_physical.sh";
+      for every public_pvt_case {
+        observe desired = 1 mV at 2.400 GHz;
+        observe aggressor = 100 mV at 2.425 GHz;
+        through external_50ohm_source and external_lo = 2.300 GHz;
+        measure if_desired = 100 MHz and if_aggressor = 125 MHz;
+      }
+      not_claim { ieee80211_blocker_tolerance, adjacent_channel_rejection,
+                  receiver_linearity, receiver_sensitivity };
+    }
   }
 
   // The staged receiver has no top-level 802.11 performance guarantee yet.
@@ -169,6 +180,7 @@ module wifi_80211b_rx : radio_receiver in physical_environment {
     die_side_ostl_coupon.checked_extracted_structure;
     lna_nfet_array_coupon.checked_extracted_identity;
     external_lo_rx_parent.checked_full_rc_pvt;
+    external_lo_rx_parent.checked_fixed_two_tone_diagnostic;
     not_claim { integrated_receiver, ieee_80211_compliance,
                 interoperability, yield, silicon_qualification };
   }

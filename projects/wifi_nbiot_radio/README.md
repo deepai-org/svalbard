@@ -38,6 +38,14 @@ conversion is -3.402 dB at SS/125 C. Its source, bias, drain load, LO and IF
 loads are still deliberately external; this is a routed feasibility parent,
 not a receiver noise, linearity, sensitivity, or compliance claim.
 
+That parent also now has a fixed two-tone full-RC PEX diagnostic: 1 mV at
+2.400 GHz plus a 100 mV 2.425 GHz aggressor through its unchanged external
+50-ohm source and 2.300 GHz LO. All five PVT cases complete. The desired 100
+MHz component changes by at least +0.065 dB, but the 125 MHz aggressor component
+is at least 39.872 dB larger. This records that the unfiltered parent contains
+no adjacent-channel selectivity; it is not a blocker-tolerance or receiver
+linearity result and points directly to the required IF/baseband boundary.
+
 The first die-side RF model-validity artifact is
 [`rf_ostl_coupon`](../../ip/blocks/analog/wifi_80211b/rf_ostl_coupon). It
 implements comparable M5 G-S-G landing geometry for open, short, thru and a
@@ -60,8 +68,9 @@ The next product work is deliberately small and sequential:
 1. Measure the active transistor and selected passive structures alongside the
    OSTL coupon, then qualify the actual probe, pad, package and
    antenna/matching boundary with reviewed S-parameter/EM evidence.
-2. Expand the routed parent with noise, linearity, isolation and blocker
-   screens, then add the selected IF/baseband boundary.
+2. Add the selected IF/baseband boundary; its qualified filtering, noise,
+   linearity, isolation and blocker screens must turn the parent diagnostic
+   into a receiver-level result.
 3. Only after those gates, add an on-die bias/reference and the minimum
    calibration/control path needed by the selected 802.11b receiver boundary.
 

@@ -762,6 +762,14 @@ array's device identity and measurement geometry, while reserving all RF-model,
 noise, `fT`/`fMAX`, linearity, pad and package claims for a calibrated
 bias-dependent wafer campaign plus the OSTL residual check.
 
+The routed receive parent also now has a full-RC PEX fixed two-tone diagnostic
+at the same five public PVT cases: a 1-mV 2.400-GHz desired tone and a 100-mV
+2.425-GHz aggressor share the external 50-ohm source and a 2.300-GHz LO. The
+desired 100-MHz component changes by no less than +0.065 dB, but the unfiltered
+125-MHz aggressor component is no less than 39.872 dB larger. This is useful
+failure localization--the next receiver candidate needs actual IF/baseband
+selectivity--not a blocker, linearity, RF-model, or compliance claim.
+
 - Freeze a modest 2.4 GHz 802.11b front-end boundary and external passive,
   crystal, package, and antenna assumptions.
 - Build only the RF characterization structures and first active macro needed

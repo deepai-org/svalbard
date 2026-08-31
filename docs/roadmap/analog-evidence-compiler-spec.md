@@ -5,6 +5,7 @@
 - Working name: `aec`
 - Initial process target: GF180MCU
 - Initial applications: PCIe Gen1 wireline PHY and 2.4 GHz Wi-Fi radio
+- Delivery strategy: integration-first over reviewed open-source components
 
 ## 1. Purpose
 
@@ -20,12 +21,21 @@ physical constraints, and a system-level behavioral contract into:
 The compiler is successful only when it shortens the complete circuit-to-evidence
 loop. Automatic placement without extracted verification is not sufficient, and
 a large simulation launcher without physical synthesis is not sufficient.
+Its success metrics are PCIe and Wi-Fi closure milestones, not language
+features, supported operation counts, generated-layout counts, or framework
+completeness. AEC work that does not unblock an active chip claim is deferred.
 
 The existing whole-interface Aether source at
 `projects/pcie_gen1_endpoint/analog/pcie_gen1_x1.aether` is an example front-end
 contract. This specification defines the system required to execute such a
 contract. The front-end syntax may evolve; its semantics and evidence rules are
 the stable interface.
+
+AEC is not a ground-up replacement for the open analog ecosystem. Its primary
+job is to supply the missing system semantics, identity, optimization,
+calibration, hierarchy, and claim-refinement layer while adapting reviewed
+upstream projects for circuit representation, characterization, physical
+synthesis, and deterministic EDA evidence.
 
 Normative terms **MUST**, **SHOULD**, and **MAY** describe required, preferred,
 and optional behavior respectively.
@@ -67,6 +77,8 @@ The compiler MUST NOT:
 - accept an ideal voltage source, ideal bias, or simulator-selected trim code as
   an implemented calibration mechanism;
 - silently modify circuit connectivity as a layout optimization;
+- fork or reimplement a suitable upstream capability without a recorded
+  semantic, technical, licensing, or maintenance reason;
 - replace provider signoff or measured silicon.
 
 ## 3. Governing principles
@@ -115,6 +127,87 @@ is verified adversarially over intervals. Statistically distributed behavior is
 verified statistically only when the distribution has approved provenance.
 Unavailable behavior remains an explicit open obligation and SHOULD cause the
 compiler to propose silicon test structures and observables.
+
+### 3.5 Integration-first architecture
+
+The initial architecture assigns narrow responsibilities to existing projects:
+
+| Layer | Preferred upstream | AEC responsibility |
+|---|---|---|
+| Whole-system intent | Aether contract in this repository | Composition, ensembles, budgets, calibration, refinement |
+| Circuit and bench language | [Cascode](https://github.com/daniellovell/cascode) | Import/export adapter and semantic extensions, not a competing low-level syntax by default |
+| Deterministic EDA evidence | [OpenADA](https://github.com/simra-tech/OpenADA) | Compose operation evidence into hierarchical claims and fill unsupported profile gaps explicitly |
+| Characterization campaigns | [CACE](https://github.com/efabless/cace) | Generate campaign intent, bind exact artifacts, and import checked results |
+| Generator-based layout | [OpenFASoC/gLayout](https://github.com/idea-fasoc/OpenFASOC) | Supply topology/physical intent and verify emitted geometry |
+| General constrained layout | [ALIGN](https://github.com/ALIGN-analoglayout/ALIGN-public) | Translate constraints, qualify PDK support, and verify emitted geometry |
+| Full-chip flow reference | [IHP AMS chip template](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template) | Reuse assembly, padframe, DRC/LVS/PEX, and release patterns where portable |
+| Native tools | ngspice, Xyce, Magic, Netgen, KLayout, openEMS and later qualified solvers | Select through capability profiles and preserve native artifacts |
+
+These are capability assignments, not unconditional dependencies. Every adapter
+MUST pin an upstream revision, license, runtime, supported semantic subset, and
+conformance fixtures. A roadmap feature in an upstream project is unavailable
+until its exact revision passes an AEC fixture. In particular, Cascode's
+topology-synthesis and physical-layout stages are currently roadmap concepts;
+OpenADA's typed profiles are intentionally narrower than AEC's eventual
+analysis set; and OpenFASoC, gLayout, and ALIGN support only qualified topology
+and PDK domains.
+
+OpenADA evidence envelopes SHOULD be retained intact inside Evidence IR rather
+than normalized a second time. AEC adds system claim identity, hierarchy,
+dependency/refinement edges, model scope, and release policy above that narrow
+execution boundary. When OpenADA lacks an operation, AEC SHOULD first propose a
+versioned upstream profile or an independently installable conforming provider.
+A private adapter is permitted only as an explicitly scoped interim capability.
+
+Cascode SHOULD be the first candidate representation for elaborated leaf
+circuits and reusable benches. Aether remains the whole-system contract because
+it must express quantified environments, shared conservation nodes, temporal
+and ensemble measures, budget allocation, calibration, and application-level
+guarantees beyond the present Cascode language. The integration study MUST
+determine whether to compile an Aether circuit subset to Cascode, import linked
+Cascode artifacts into Circuit IR, or support both without semantic duplication.
+
+### 3.6 Product-first delivery rules
+
+The following rules override architectural elegance:
+
+1. Every tooling task MUST name the PCIe or Wi-Fi claim it unblocks and the
+   manual step, runtime, error class, or evidence gap it removes.
+2. New infrastructure MUST be exercised immediately on an active design. A
+   synthetic example is useful for unit testing but cannot justify the work.
+3. Prefer a thin adapter to an upstream project over a new framework. Prefer an
+   existing repository script over an adapter until repetition or correctness
+   risk makes the adapter worthwhile.
+4. Preserve the current working flow as a fallback until the replacement
+   reproduces its passing and failing evidence.
+5. Generalize a mechanism only after it is needed by two real blocks or by both
+   applications. The first implementation MAY be deliberately specific.
+6. Stop or simplify a tool branch when it consumes more effort than the next
+   direct circuit/layout experiment it was intended to save.
+7. Do not implement unrestricted topology synthesis, a distributed service, a
+   graphical IDE, or a new numerical solver before the two vertical slices in
+   Section 17 pass their declared exits.
+
+The semantic kernel in this document is a compatibility target and guardrail,
+not a requirement to implement every abstraction before useful work resumes.
+Initially, Aether MAY remain a reviewed specification, Cascode MAY remain an
+external leaf format, and OpenADA/CACE MAY be invoked as pinned subprocesses
+through their native JSON/filesystem contracts.
+
+### 3.7 Implementation-language policy
+
+Use the languages of the adopted components and minimize glue. The first
+integration SHOULD use Python, schemas, and subprocess adapters because the
+existing Svalbard flows, OpenADA, CACE, OpenFASoC, gLayout, and ALIGN are already
+accessible that way. Cascode remains an external .NET tool behind a deterministic
+artifact boundary.
+
+Rust remains the preferred implementation language for a stable AEC core when
+profiling or failure history demonstrates a need for stronger type enforcement,
+parallel scheduling, geometry performance, or long-lived dependency identity.
+Do not begin with a broad Rust rewrite. A Rust component is admitted only with
+a real design fixture, a compatible serialized boundary, and a measured reason
+that the smaller Python/upstream solution is inadequate.
 
 ## 4. Input language and semantic kernel
 
@@ -230,18 +323,41 @@ Contains claims, obligations, results, counterexamples, model scope,
 dependencies, tool versions, hashes, commands, resource use, waivers, owners,
 and expiration/invalidation rules.
 
+### 5.7 Upstream representation policy
+
+IRs are logical contracts, not necessarily new file formats. The first
+implementation SHOULD map:
+
+- Cascode linked artifacts and SPICE/device manifests into Circuit IR;
+- OpenFASoC/gLayout/ALIGN constraints and outputs into Physical-intent and
+  Realized-physical IR;
+- CACE datasheets, campaign conditions, and results into Contract/Evidence IR;
+- complete OpenADA request/result envelopes and native artifacts into Evidence
+  IR; and
+- existing Svalbard JSON checkpoints into the same claim graph without
+  rewriting or weakening their historical meaning.
+
+AEC MUST preserve each upstream artifact intact and add an adapter-versioned
+semantic mapping. It MUST NOT create a second nominally authoritative copy of
+the same circuit, measurement, or result merely to satisfy an internal schema.
+
 ## 6. Compiler pipeline
 
 The default pipeline is:
 
 1. Parse, type-check, and elaborate the top-level contract.
-2. Resolve all required evidence and model provenance.
+2. Resolve all required evidence, model provenance, and pinned upstream
+   capability profiles.
 3. Partition system budgets while preserving the composed guarantee.
 4. Select a reviewed topology or elaborate the intended circuit.
 5. Close DC operation, polarity, truth, startup, and basic stability.
-6. Search schematic PVT and realizable calibration controls.
-7. Generate physical intent and candidate placement/routing.
-8. Run generator prechecks, DRC, property comparison, and pin-resolved LVS.
+6. Search schematic PVT and realizable calibration controls, using CACE when
+   its campaign semantics cover the required measure and the existing focused
+   runner otherwise.
+7. Generate physical intent and candidate placement/routing through the
+   smallest qualified backend or block-specific generator.
+8. Run generator prechecks, DRC, property comparison, and pin-resolved LVS,
+   retaining complete OpenADA evidence when a conforming profile exists.
 9. Extract distributed RC/coupling and replay focused limiting cases.
 10. Diagnose failures and iterate one declared mechanism at a time.
 11. Run complete extracted environments and calibration searches.
@@ -335,6 +451,14 @@ The scheduler SHOULD use cheap models to reject candidates and full models to
 qualify survivors. Cache keys MUST include every semantically relevant input,
 including externally included DUTs, models, extraction, measurements, and tool
 configuration.
+
+OpenADA is the preferred native-operation evidence boundary where its pinned
+profile covers the task. CACE is the preferred reusable characterization
+campaign engine where its datasheet/testbench model expresses the contract.
+AEC schedules and composes these operations; it does not reparse their native
+logs into a competing pass/fail decision. Existing Svalbard runners remain
+authoritative for analyses not yet covered, and SHOULD become conformance
+fixtures for any replacement adapter.
 
 Resource limits, timeouts, convergence status, and incomplete measures are
 part of the result. A simulator exit without every required measure is a failed
@@ -545,73 +669,109 @@ without pretending unavailable GF180 RF model accuracy is known. Early outputs
 must include de-embedding, open/short/thru/load, transistor, passive, LNA, mixer,
 VCO, and PA test structures plus external-LO and external-I/Q fallback paths.
 
-## 16. Implementation plan
+## 16. Feasibility and research boundary
 
-### Phase 0: evidence runner
+There is a credible path, but the deliverable is a progressively more capable
+closure assistant rather than a complete solver for arbitrary analog design.
 
-- Implement Contract IR and Evidence IR.
-- Wrap existing SPICE, Magic, Netgen, extraction, KLayout rendering, and current
-  simulation scripts behind deterministic adapters.
-- Add content-addressed inputs, result schemas, resource limits, and claim
-  invalidation.
-- Ingest existing PCIe leaf evidence without changing its claims.
+| Missing capability | Pragmatic attainable result | Classification |
+|---|---|---|
+| Whole-system contract and budget partition | Executable top-level constraints plus conservative human/LLM-proposed budgets checked by numerical search | Useful now; automatic partition is bounded research |
+| Conservation-node and ensemble semantics | Reuse established across/through equations and explicit enumerated/interval/statistical environments | Straightforward engineering |
+| Circuit/layout/calibration IR identity | Hash-joined upstream artifacts, semantic mappings, and invalidation edges | Straightforward engineering; highest priority |
+| Joint topology/sizing/layout/control optimization | Hierarchical search: reviewed topology proposals, numerical sizing/control search, backend layout, exact verification | Useful with no global-optimum claim; continuing research |
+| Automatic PEX failure localization | Semantic node maps, first-failure probes, RC counterfactuals, and ranked hypotheses | High-confidence near-term feature |
+| Real routed-parent composition | Explicit macro placement, parent-owned routing, shared PDN/substrate, DRC/LVS/PEX | Existing tools prove feasibility; application engineering remains hard |
+| Calibration hardware and algorithm synthesis | Generate searches/controllers for user-declared controls and observables; later propose new trim structures | Algorithm generation is near-term; hardware invention is research |
+| RF/EM partitioning | Explicit reviewed ports, EM jobs, network qualification, and non-double-counted circuit import | Established engineering with process/model dependencies |
+| Model validity and unavailable physics | Machine-enforced validity domains, bounds, stopped claims, and test-structure obligations | Straightforward tracking; missing physics itself cannot be compiled away |
+| Claim refinement through package/system | Conservative assume/guarantee checks and merged simulation when abstraction is unsafe | Useful bounded calculus; complete nonlinear/stochastic proof is research |
 
-Exit criterion: one command reproduces and audits an existing physical leaf
-checkpoint, or explains every identity gap preventing reproduction.
+The project MUST prefer a conservative incomplete answer over a broad unsound
+one. `Unknown because RF transistor data is unavailable` is a successful tool
+result when it prevents a false Wi-Fi claim and emits the exact characterization
+structure needed to proceed.
 
-### Phase 1: circuit and diagnostic core
+## 17. Product-driven implementation plan
 
-- Implement Circuit IR and generated schematic/LVS/device manifests.
-- Implement typed measures, grouped environment/calibration search, semantic
-  internal probes, and extracted RC counterfactual diagnosis.
-- Use the PCIe pulse macro as the primary benchmark.
+### Slice 0: thin upstream evaluation
 
-Exit criterion: the tool classifies the retained TT, FF/hot, and SS/hot pulse
-results correctly and produces a useful ranked diagnosis without manual log
-parsing.
+- Pin OpenADA, Cascode, CACE, OpenFASoC/gLayout, and ALIGN revisions in an
+  evaluation manifest; do not vendor or fork them yet.
+- Run one tiny public fixture for each claimed capability and record what is
+  implemented versus roadmap-only.
+- Map one existing Svalbard pulse result into an OpenADA-compatible or AEC
+  wrapper envelope without changing its source bytes or verdict.
+- Test whether Cascode can losslessly represent one existing transistor leaf and
+  bench. Stop the language integration if it creates a second source of truth.
 
-### Phase 2: constrained physical synthesis
+Exit criterion: a short adoption report chooses, rejects, or defers each
+upstream with a reproducing command and a concrete PCIe/Wi-Fi use. No production
+design work waits for this report.
 
-- Implement Physical-intent IR, matched placement primitives, device access,
-  net-aware routing, supplies, taps/guards, and layout semantic checks.
-- First support inverter chains, differential pairs, CML stages, current mirrors,
-  resistor/capacitor banks, and simple RF transconductors.
+### Slice 1: finish the PCIe clock/capture boundary
 
-Exit criterion: generated variants are DRC clean, uniquely pin-resolved LVS
-matched, property checked, extractable, and deterministically mapped to Circuit
-IR across a legal parameter sweep.
+- Keep the current SPICE/layout generators and focused PEX runners working.
+- Automate only the repeated work already observed: exact input identity,
+  environment/profile scheduling, internal-stage measurements, first failing
+  threshold, RC/supply counterfactuals, and concise comparison of candidates.
+- Use that loop to close the pulse generator over the full required PVT/profile
+  set rather than building a general optimizer first.
+- Generate the actual converter + pulse + regenerative-capture parent with
+  parent-owned signal, supply, substrate, and bias routes.
+- Run DRC, unique LVS, PEX, and the composed capture contract. Import operation
+  evidence through OpenADA where supported and retain the existing checked
+  result format elsewhere.
 
-### Phase 3: calibration and parent assembly
+Exit criterion: the PCIe parent is physically real and either passes its exact
+declared environments or has a machine-localized blocker that requires new
+device/model authority rather than more manual log archaeology.
 
-- Implement Calibration IR and controller/reference-algorithm generation.
-- Implement physical hierarchy, parent-owned routes, shared power/substrate,
-  composed evidence, and boundary-aware floorplan rendering.
+### Slice 2: build the Wi-Fi RF risk macro
 
-Exit criterion: converter + pulse + capture is one routed, DRC/LVS/PEX parent,
-and every passing environment has a realizable calibration path and observable.
+- Freeze a modest 2.4 GHz 802.11b front-end boundary and external passive,
+  crystal, package, and antenna assumptions.
+- Build only the RF characterization structures and first active macro needed
+  to answer GF180 feasibility: transistor/de-embedding structures plus a
+  probeable LNA/mixer or VCO path with external-LO/IQ fallback.
+- Use CACE for ordinary PVT/Monte Carlo campaigns it can express; use explicit
+  RF/EM runners for S-parameters, noise, linearity, passivity, causality, and
+  matching-network composition.
+- Generate layout with the smallest qualified choice among gLayout/OpenFASoC,
+  ALIGN, and a block-specific generator. Exact DRC/LVS/PEX/EM evidence remains
+  authoritative regardless of generator.
 
-### Phase 4: RF/EM extension
+Exit criterion: the macro has a reproducible evidence package that either
+supports the next integrated Wi-Fi receiver step or identifies the specific
+provider/silicon characterization missing from GF180.
 
-- Add S-parameter quantities and measures, RF analyses, EM partitioning,
-  passivity/causality checks, package/board matching networks, and model-domain
-  enforcement.
-- Generate Wi-Fi risk-macro test structures and fallback interfaces.
+### Slice 3: extract only proven shared tooling
 
-Exit criterion: an LNA/mixer/PLL or PA risk macro has a complete, honest evidence
-package whose unsupported RF assumptions are machine-visible and cannot be
-promoted to a product claim.
+- Compare the two completed vertical slices and promote only mechanisms used by
+  both: artifact identity, resource-bounded parallel jobs, model validity,
+  semantic measurement bindings, claim dependencies, and physical-boundary
+  labels.
+- Introduce a Rust core only for a demonstrated correctness, concurrency,
+  geometry, or scale bottleneck. Keep Python orchestration otherwise.
+- Upstream generally useful operation profiles, fixtures, generators, or fixes
+  when their project accepts the required semantics.
+- Add calibration-controller generation, broader optimization, and contract
+  refinement incrementally as the next PCIe or Wi-Fi block demands them.
 
-### Phase 5: joint system optimization
+Exit criterion: the shared layer demonstrably reduces elapsed engineering work
+or prevents a previously observed false claim in both projects.
 
-- Add contract-driven budget partition and hierarchical robust optimization.
-- Add behavioral-twin generation with checked validity domains.
-- Close progressively larger PCIe and Wi-Fi composed boundaries.
+### Deferred until demanded by a chip milestone
 
-Exit criterion: the optimizer makes and records at least one legitimate
-cross-block trade that improves a top-level guarantee and is confirmed in a
-regenerated extracted physical parent.
+- unrestricted natural-language or image-to-topology synthesis;
+- a comprehensive new analog language implementation;
+- distributed/cloud scheduling beyond one bounded workstation;
+- a custom GUI or waveform database;
+- a general-purpose analog router replacing all upstream backends;
+- global-optimal joint analog synthesis; and
+- formal proof over arbitrary nonlinear stochastic systems.
 
-## 17. Acceptance criteria
+## 18. Acceptance criteria
 
 The compiler is useful when all of the following are true:
 
@@ -626,12 +786,17 @@ The compiler is useful when all of the following are true:
 7. RF/EM and lumped-circuit domains meet at explicit, non-double-counted ports.
 8. Missing fabrication data produces bounded assumptions or characterization
    obligations, never invented confidence.
-9. PCIe and Wi-Fi use the same kernel, evidence store, physical engine, and
-   verification scheduler; application-specific behavior lives in contracts,
-   measures, topology libraries, and model bundles.
+9. PCIe and Wi-Fi use compatible contract/evidence semantics, artifact identity,
+   and resource controls while remaining free to select different qualified
+   physical and analysis backends.
 10. A reviewer can reproduce every promoted claim from immutable inputs and can
     inspect every failed or waived obligation.
+11. The PCIe clock/capture parent and Wi-Fi RF risk macro advance measurably
+    sooner or with fewer repeated errors than they would under the retained
+    manual flows.
+12. Any compiler feature that fails to demonstrate such value can be removed
+    without invalidating the native design sources or their evidence.
 
-The long-term success metric is not the number of layouts generated. It is the
-reduction in human time from a system contract to a physically composed,
-calibratable design with trustworthy evidence and clearly bounded uncertainty.
+The success metric is not the number of compiler features or layouts generated.
+It is delivery of physically composed PCIe and Wi-Fi silicon candidates with
+less repeated human work, trustworthy evidence, and clearly bounded uncertainty.

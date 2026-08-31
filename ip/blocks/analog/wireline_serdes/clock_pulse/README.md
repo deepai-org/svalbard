@@ -124,6 +124,15 @@ layout were reverted. This rejects simple first-stage threshold skew as the
 slow/hot fix; an accepted change must preserve the full timing budget, not
 merely restore output amplitude.
 
+One extracted-layout co-optimization paired a 10% first-stage PMOS increase
+with an unintended faster sense-tail pull-down: a duplicated `XD0` instance
+name made the initial edit land in the SENSE cell rather than the intended
+write-end cell. Its TT PEX point passed at 213/218 ps WRITE and 522/514 ps
+SENSE, but FF/125 C WRITE rails fell to 2.527/2.375 V and SS/125 C still did
+not regenerate WRITE. It was reverted and is not evidence about write-end
+control. The next candidate must introduce a calibrated full-state timing/drive
+mode rather than use one fixed taper compromise across all corners.
+
 On 2026-08-31, a schematic-only wiring probe connected `SEL3` through the
 existing `cp_profile_write_restore` element at the restored `WSA`--`WSB` step.
 It was intentionally not laid out or promoted: FF/hot instead produced roughly

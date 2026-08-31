@@ -63,14 +63,24 @@ identity check proves the intended 16 devices, not RF compact-model accuracy.
 Its required 0.1--6 GHz bias/S-parameter campaign is deliberately the input to
 later LNA/mixer qualification, rather than a fabricated pre-silicon RF result.
 
-The next product work is deliberately small and sequential:
+The next product work is deliberately small and sequential. The two-tone
+result makes one architectural choice before another transistor/layout loop:
+with the present 2.300 GHz LO, 2.400 and 2.425 GHz become 100 and 125 MHz.
+A low-order on-die RC filter cannot create tens of dB of rejection over that
+spacing while passing a wide 802.11b channel. The next boundary is therefore a
+real external RF preselector/matching network ahead of the LNA, or a demonstrated
+ADC/DSP dynamic-range path—not an arbitrary on-die “IF filter.” The unbound,
+testable handoff is recorded in
+[`channel_selectivity_boundary.yaml`](analog/channel_selectivity_boundary.yaml).
 
-1. Measure the active transistor and selected passive structures alongside the
-   OSTL coupon, then qualify the actual probe, pad, package and
-   antenna/matching boundary with reviewed S-parameter/EM evidence.
-2. Add the selected IF/baseband boundary; its qualified filtering, noise,
-   linearity, isolation and blocker screens must turn the parent diagnostic
-   into a receiver-level result.
+The remaining product work is deliberately small and sequential:
+
+1. Select and bind a measured/vendor S-parameter RF preselector and matching
+   network, or freeze an ADC/DSP headroom plan; then compose it with the routed
+   parent and rerun the two-tone, noise and linearity screens.
+2. Measure the active transistor and selected passive structures alongside the
+   OSTL coupon, then qualify the actual probe, pad, package and antenna/matching
+   boundary with reviewed S-parameter/EM evidence.
 3. Only after those gates, add an on-die bias/reference and the minimum
    calibration/control path needed by the selected 802.11b receiver boundary.
 

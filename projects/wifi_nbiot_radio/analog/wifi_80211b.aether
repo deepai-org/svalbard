@@ -34,7 +34,13 @@ module wifi_80211b_rx : radio_receiver in physical_environment {
   output recovered_bits, rx_ready, diagnostic_fault : event;
 
   assume early_risk_boundary {
-    external antenna_50ohm through qualified_filter_and_matching_network;
+    // Channel selection is deliberately outside this first die macro. At the
+    // present 2.300-GHz LO, a 2.400/2.425-GHz pair becomes 100/125 MHz: a
+    // low-order on-die RC filter cannot reject the measured 40-dB aggressor
+    // without also corrupting a wide 802.11b channel. A real receiver must
+    // bind either a measured external RF preselector/matching network before
+    // the LNA, or an ADC/DSP dynamic-range and channel-filtering proof.
+    external antenna_50ohm through bound_channel_selectivity_network;
     external reference and LO/IQ through qualified_reference_chain;
     package, bond, and board networks are explicit imported two_port_models;
     // No on-die PA, antenna switch, crystal, bias/reference, or calibration is
@@ -168,6 +174,10 @@ module wifi_80211b_rx : radio_receiver in physical_environment {
           blocker_tolerance, phase_noise, and receive_sensitivity;
     measure die_side_ostl_coupon plus lna_nfet_array_coupon
             plus selected_passive_replicas;
+    bind channel_selectivity_network from measured_or_vendor_s_parameters
+         at antenna_50ohm -> external_lo_rx_parent.rf_gate;
+    prove it does not double_count package_or_die_side_parasitics;
+    prove either analog_blocker_headroom or adc_dsp_dynamic_range_and_filtering;
     import package_network and antenna_network with non_double_counted_em_ports;
     implement on_die_bias_reference_and_calibration with observable search;
     compose external_lo_rx_parent plus baseband through a routed physical parent;

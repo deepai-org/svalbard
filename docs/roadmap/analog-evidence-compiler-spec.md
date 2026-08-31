@@ -786,15 +786,21 @@ at the same five public PVT cases: a 1-mV 2.400-GHz desired tone and a 100-mV
 2.425-GHz aggressor share the external 50-ohm source and a 2.300-GHz LO. The
 desired 100-MHz component changes by no less than +0.065 dB, but the unfiltered
 125-MHz aggressor component is no less than 39.872 dB larger. This is useful
-failure localization--the next receiver candidate needs actual IF/baseband
-selectivity--not a blocker, linearity, RF-model, or compliance claim.
+failure localization, but it changes the next task: 100 and 125 MHz are too
+close for a low-order on-die RC stage to remove tens of dB of aggression while
+preserving a wide 802.11b channel. The next receiver candidate needs a bound
+external RF preselector/matching network ahead of the LNA, or a proven ADC/DSP
+headroom-and-channel-filter path--not a generic IF-filter generator. The
+unbound product handoff is
+[`channel_selectivity_boundary.yaml`](../../projects/wifi_nbiot_radio/analog/channel_selectivity_boundary.yaml).
 
 Execution order is likewise tied to the next receiver claim:
 
-1. Add the smallest real IF/baseband filter or selectable-channel boundary
-   needed to reject the demonstrated 125-MHz adjacent IF component. Re-run the
-   routed two-tone parent; do not call its present finite conversion gain a
-   receiver result.
+1. Bind a concrete measured/vendor S-parameter RF preselector/matching network
+   at the declared antenna-to-LNA port, or freeze an ADC/DSP dynamic-range and
+   channel-filter model. Route its die-side landing and rerun the routed
+   two-tone, noise and linearity parent; do not call present finite conversion
+   gain a receiver result.
 2. Preserve the OSTL and active-NFET coupons as tapeout/measurement obligations.
    When calibrated wafer data exists, bind the exact de-embedded S-parameters,
    noise and bias range into the model registry before promoting any RF gain,

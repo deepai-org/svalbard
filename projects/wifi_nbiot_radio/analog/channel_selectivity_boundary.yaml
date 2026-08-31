@@ -1,0 +1,71 @@
+# SPDX-License-Identifier: Apache-2.0
+# Product decision record for the first Wi-Fi receiver candidate. This is an
+# unbound integration contract, not a component model or a receiver claim.
+schema_version: 1
+status: unbound_requires_measured_or_vendor_network
+owner_boundary: board_or_package_input_before_die_lna
+applies_to:
+  parent: ip/blocks/analog/wifi_80211b/rf_rx_external_lo_parent
+  test: parent_blocker_tb.spice.in
+  desired_rf_hz: 2.400e9
+  aggressor_rf_hz: 2.425e9
+  desired_input_peak_v: 1.0e-3
+  aggressor_input_peak_v: 1.0e-1
+  external_lo_hz: 2.300e9
+  desired_if_hz: 1.00e8
+  aggressor_if_hz: 1.25e8
+observed_unfiltered_parent:
+  evidence: full_rc_pex_fixed_two_tone_diagnostic
+  pvt_cases: 5
+  minimum_aggressor_to_desired_if_ratio_db: 39.872
+  interpretation: >-
+    The current routed LNA/mixer parent has no meaningful adjacent-channel
+    selectivity. This number is a compact-model observation, not a linearity,
+    blocker-tolerance, or IEEE 802.11 requirement.
+existing_bench_load:
+  topology: 1 kohm shunt resistor plus 1 pF shunt capacitor per IF leg
+  one_pole_corner_hz: 1.59154943e8
+  analytic_loss_at_desired_if_db: -1.445
+  analytic_loss_at_aggressor_if_db: -2.087
+  analytic_relative_aggressor_rejection_db: 0.642
+  conclusion: >-
+    This load is a termination/observation condition, not a channel filter;
+    its ideal one-pole discrimination is far below the observed ~40 dB excess.
+architecture_decision:
+  rejected_for_this_candidate:
+    - >-
+      Treating the existing 1 kohm/1 pF differential bench load as a channel
+      filter. Its roughly 159 MHz one-pole corner cannot discriminate 100 MHz
+      from 125 MHz by tens of dB.
+    - >-
+      Adding an arbitrary on-die low-order RC IF filter solely to improve the
+      two-tone plot. It would not yield a credible 802.11b channel-selectivity
+      claim and would hide the actual input-network decision.
+  required_path_one:
+    name: external_rf_preselector_and_matching
+    insertion_point: antenna_50ohm -> RF_GATE
+    bind: measured_or_vendor_s_parameter_network
+    required_evidence:
+      - network_reference_impedance_and_ports
+      - desired-band insertion_loss_and_return_loss
+      - aggressor-band attenuation
+      - process_temperature_and_assembly_scope
+      - package_and_die_side_deembedding_boundary
+      - passivity_and_causality_check_before_transient_or_noise_use
+  alternative_path_two:
+    name: adc_dsp_channel_selection
+    required_evidence:
+      - analog_chain_iip3_compression_and_noise
+      - adc_input_range_noise_and_sampling_plan
+      - digital_filter_response_and_fixed_point_error
+      - end_to_end_blocker_headroom_and_evm
+  acceptance_before_receiver_level_rerun:
+    - Bind one concrete network or digitizer/DSP model with immutable identity.
+    - Route the selected die-side landing in the composed parent.
+    - Re-run desired plus aggressor PEX, noise, linearity, and calibration tests.
+    - Keep external network loss/noise separate from on-die PEX and RF coupons.
+not_a_claim:
+  - selected_component
+  - ieee80211b_adjacent_channel_rejection
+  - receiver_sensitivity
+  - qualified_rf_model

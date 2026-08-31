@@ -92,16 +92,19 @@ There are three deliberately separate roles:
 | Numerical/search engine | Explore declared continuous sizes, integer fingers, control codes, placements, and reviewed topology families using measured margins and surrogate models | Bypass regeneration or use a schematic score as physical proof |
 | Designer or LLM assistant | Partition budgets, choose topology families, explain mechanisms, rank experiments, and recognize when missing physics or architecture is the blocker | Be the source of truth for connectivity, measurements, or signoff |
 
-The current pulse-path flow is the first real fixture for this loop. It already
-has a closure manifest, deterministic source lowering, schematic campaigns,
-DRC/LVS/PEX, semantic node labels, exact replay, and RC counterfactuals. The
-remaining manual seam is the important one: measurements and counterfactuals
-do not yet automatically identify the first failed internal state and emit a
-machine-readable next-experiment record. The next justified shared extraction
-is therefore a small first-failure/candidate-comparison layer exercised on this
-PCIe failure, then reused on the Wi-Fi IF driver if it removes the same log and
-waveform archaeology there. It is not yet a reason to build a new language,
-general router, or global topology synthesizer.
+The current pulse-path flow is the first real fixture for this loop. It has a
+closure manifest, deterministic source lowering, schematic campaigns,
+DRC/LVS/PEX, semantic node labels, exact replay, and RC counterfactuals. Its
+three-control recovery manifest now declares causal internal paths, and the
+PEX runner distinguishes midrail transition propagation from strict output
+rail compliance and records the first lost stage per phase. This localized an
+SS/hot BOOST failure to `RB0`, then showed the failure move to final drive and
+shared-state loading under bounded revisions. Candidate generation and
+cross-candidate margin comparison remain manual. The next justified shared
+extraction is therefore a small candidate-comparison record exercised here,
+then reused on the Wi-Fi IF driver if it removes the same log and waveform
+archaeology there. It is not yet a reason to build a new language, general
+router, or global topology synthesizer.
 
 ## What this tooling has productively done
 
@@ -130,9 +133,14 @@ It has supported real engineering decisions rather than only produced reports.
   DRC/LVS, but moves its schedule outside the composed window. Exact-PEX RC
   counterfactuals reproduce identically and show that neither WRITE-path nor
   SENSE/BOOST-path idealization closes representative TT and SS/hot cases.
-  The workflow therefore escalates to a three-control circuit revision and a
-  BOOST topology change instead of continuing placement-only tuning. This is
-  useful physical rejection evidence, not pulse or integrated PCIe closure.
+  The resulting independent SENSE/interval/epoch source and direct full-width
+  BOOST branch retain 5/5 schematic coverage and generate a zero-DRC,
+  unique-LVS 216-device macro. Semantic PEX probes prove the earlier `RB0`
+  pulse filter is gone and improve SS/hot BOOST low to 0.12--0.46 V, but the
+  shared-state load regresses SENSE and the complete targeted TT/SS-hot PEX
+  gate remains 0/2; WRITE drive and epoch are also still wrong. This is useful
+  physical rejection and automated failure-movement evidence, not pulse or
+  integrated PCIe closure.
 - **Wi-Fi:** the routed LNA/mixer parent has DRC/LVS/full-RC PEX evidence, but
   its two-tone result exposed an unfiltered nearby blocker. This selected a
   real-IF ADC/DSP architecture rather than pretending a broad RF preselector
@@ -178,10 +186,10 @@ failing cases.
 
 ## Current priorities and rule for adding tooling
 
-1. **PCIe:** implement the localized pulse-path circuit revision: independent
-   SENSE assist, WRITE interval, and WRITE epoch codes plus BOOST restoration
-   from a full-width state. Require schematic coverage, regenerated DRC/LVS,
-   and 5/5 dual-phase PEX before replaying the capture boundary.
+1. **PCIe:** isolate or strengthen the loaded full-width SENSE/BOOST branch and
+   repair WRITE drive/epoch without losing the three independent controls.
+   Require schematic coverage, regenerated DRC/LVS, and 5/5 dual-phase PEX
+   before replaying the capture boundary.
 2. **Wi-Fi:** design and screen the closed-loop differential IF driver and
    thermal-floor hold-capacitor boundary before authorizing a new sampler
    layout.

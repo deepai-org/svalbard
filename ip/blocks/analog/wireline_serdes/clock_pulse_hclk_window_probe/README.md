@@ -184,3 +184,41 @@ is not authorized. The diagnostic conclusion in
 [`selected_pex_localization_result.json`](selected_pex_localization_result.json)
 escalates to a circuit revision: separate SENSE edge assist from WRITE
 interval/epoch control and derive BOOST from a restored full-width state.
+
+## Three-control recovery and semantic first-failure probe
+
+The recovery source now gives SENSE assist, WRITE interval, and WRITE epoch
+three independent static controls. Its manifest also declares causal semantic
+paths rather than leaving the runner to infer them from net names. The exact
+40-case dual-phase schematic covers 5/5 environments with ten passing cases;
+selected SENSE widths are 481.13--627.96 ps, WRITE widths are 127.33--193.28
+ps, SENSE-rise-to-WRITE delays are 552.47--638.19 ps, and dead times are
+10.23--79.91 ps.
+
+`./run_recovery_physical_probe.sh` regenerates layout, DRC, LVS and PEX, then
+measures both rail compliance and midrail transition propagation at the
+manifest-declared internal stages. This distinction matters: a stage can
+propagate a valid digital event without meeting the stricter external rail
+contract. The first extracted recovery topology proved that `SB0` crossed at
+SS/hot while its small `RB0` predriver peaked at only 1.46/1.38 V, below the
+1.485 V switching level. A balanced predriver repaired that lost transition;
+increasing its final pull-down improved BOOST but reloaded the predriver.
+
+The retained topology removes that filter and drives BOOST directly from the
+full-width `SB1` state. Its generated 216-device macro is zero-DRC, uniquely
+LVS-matched, and extracts to 5,898 resistors plus 4,351 capacitors. It remains
+0/2 in the targeted TT and SS/hot PEX probe. BOOST improves materially to
+0.12--0.46 V low at SS/hot, and no causal stage loses its midrail transition,
+but the shared `SB1` load regresses SENSE. The representative SS/hot selected
+branch has 0.303/0.600 V SENSE lows and 2.350/2.095 V WRITE highs; its WRITE
+arrives only 191/339 ps after SENSE rather than 500--700 ps. TT misses minimum
+SENSE width by as little as 5.59 ps and its interval-1 WRITE is too wide and
+scheduled in the wrong epoch.
+
+The exact hashes and representative diagnostics are retained in
+[`three_control_recovery_result.json`](three_control_recovery_result.json).
+This is useful compiler-loop evidence--manifest elaboration, cheap schematic
+promotion, deterministic physical lowering, and semantic failure movement--but
+it is still a rejected pulse source. The next circuit revision must isolate or
+strengthen the shared full-width branch and repair WRITE drive/epoch separately
+before capture replay.

@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "claim": "three-control pulse recovery and direct full-width BOOST experiment",
+  "result": "physical_rejection",
+  "schematic": {
+    "result": "pass",
+    "case_count": 40,
+    "passing_case_count": 10,
+    "environment_coverage": "5/5",
+    "source_sha256": "8ead9a5f239c6a8a27ee88428dfad47b1a34375d5d1273318a4ae14b529aea0b",
+    "contract_sha256": "f3a37e94ffc90c915ac400b4ed38b144a7115c7714733ddf6fd38c64d41e2c92",
+    "selected_metric_ranges_s": {
+      "sense_width": [4.8113e-10, 6.2796e-10],
+      "write_width": [1.2733e-10, 1.9328e-10],
+      "write_delay_from_sense_rise": [5.5247e-10, 6.3819e-10],
+      "dead_time": [1.023e-11, 7.991e-11]
+    }
+  },
+  "physical": {
+    "drc": "clean",
+    "lvs": "unique_match",
+    "logical_devices": 216,
+    "extracted_resistors": 5898,
+    "extracted_capacitors": 4351,
+    "tested_environments": ["tt", "ss_hot"],
+    "environment_coverage": "0/2",
+    "gds_sha256": "7a92459ae6298e7cfa3d900985fd2e913be70ece878942b50ebf22412c7c87e4",
+    "pex_sha256": "cd95e76c3424c2e69aaca3a214609280243e43f73c2566c57eb8216cc4ca8006",
+    "result_sha256": "419752d9d731215c0d43985b0670530a41e4fc579440f751ca01110fe39b054f"
+  },
+  "localization": {
+    "semantic_paths_from_manifest": {
+      "sense": ["hsn", "sb0", "sb1", "sense"],
+      "boost": ["hsn", "sb0", "sb1", "boost"]
+    },
+    "transition_criterion": "both midrail transitions observed",
+    "tt_representative": {
+      "case": "sense0_interval1_epoch0",
+      "first_failed_transition_stage": null,
+      "sense_width_ps": [441.75, 444.41],
+      "write_width_ps": [258.73, 258.30],
+      "write_delay_ps": [11.00, 32.92]
+    },
+    "ss_hot_representative": {
+      "case": "sense1_interval0_epoch0",
+      "first_failed_transition_stage": null,
+      "sb1_high_v": [2.14661, 1.99742],
+      "boost_low_v": [0.199717, 0.357182],
+      "sense_low_v": [0.30256, 0.600055],
+      "write_high_v": [2.35028, 2.09460],
+      "sense_width_ps": [508.82, 663.95],
+      "write_delay_ps": [190.54, 339.02]
+    }
+  },
+  "conclusion": "Independent SENSE, WRITE-interval and WRITE-epoch controls preserve 5/5 schematic coverage. Direct SB1-to-BOOST removes the earlier RB0 pulse-filter failure and materially improves extracted BOOST swing, but loads the shared SB1 state enough to regress SENSE. TT also misses SENSE width and WRITE timing, while SS/hot retains SENSE/BOOST rail, WRITE amplitude and scheduling failures. The physical pulse source remains rejected; the next revision must isolate or strengthen the shared full-width branch and independently repair the WRITE taper/epoch.",
+  "not_a_claim": [
+    "five-corner PEX closure",
+    "capture-boundary closure",
+    "calibration implementation",
+    "PCIe compliance",
+    "foundry signoff or silicon behavior"
+  ]
+}

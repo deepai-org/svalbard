@@ -133,6 +133,13 @@ not regenerate WRITE. It was reverted and is not evidence about write-end
 control. The next candidate must introduce a calibrated full-state timing/drive
 mode rather than use one fixed taper compromise across all corners.
 
+An attempted `SEL3`-controlled first-stage PMOS assist was rejected before hot
+promotion: while electrically off in nominal mode, its output diffusion still
+loaded narrow `WB1`, reducing extracted TT WRITE rails to 2.882/2.904 V. It was
+reverted. This is a physical-layout constraint, not merely a schematic one:
+calibration hardware must attach before the narrow interval or behind a
+regenerating isolation boundary, never as disabled diffusion directly on it.
+
 On 2026-08-31, a schematic-only wiring probe connected `SEL3` through the
 existing `cp_profile_write_restore` element at the restored `WSA`--`WSB` step.
 It was intentionally not laid out or promoted: FF/hot instead produced roughly

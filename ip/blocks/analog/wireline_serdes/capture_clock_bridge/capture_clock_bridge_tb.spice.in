@@ -1,0 +1,54 @@
+* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.include @BRIDGE_PATH@
+.include @CAPTURE_PEX@
+.temp @TEMP_C@
+
+VDD VDD 0 PWL(0 0 500p @VDD_V@)
+VEWRITE E_WRITE 0 PULSE(0 @VDD_V@ 1n 20p 20p @WRITE_WIDTH@ 800p)
+VOWRITE O_WRITE 0 PULSE(0 @VDD_V@ 1.4n 20p 20p @WRITE_WIDTH@ 800p)
+
+* Alternate decisions while each interleave is inactive.  These sources are
+* converter-output boundary stimuli, not substitute capture clocks.
+VED EVEN_D 0 PWL(0 0 900p 0 920p @VDD_V@ 1.68n @VDD_V@ 1.70n 0 2.48n 0 2.50n @VDD_V@ 3.28n @VDD_V@)
+VEDB EVEN_DB 0 PWL(0 @VDD_V@ 900p @VDD_V@ 920p 0 1.68n 0 1.70n @VDD_V@ 2.48n @VDD_V@ 2.50n 0 3.28n 0)
+VOD ODD_D 0 PWL(0 @VDD_V@ 1.30n @VDD_V@ 1.32n 0 2.10n 0 2.12n @VDD_V@ 2.90n @VDD_V@ 2.92n 0 3.70n 0)
+VODB ODD_DB 0 PWL(0 0 1.30n 0 1.32n @VDD_V@ 2.10n @VDD_V@ 2.12n 0 2.90n 0 2.92n @VDD_V@ 3.70n @VDD_V@)
+
+XBRIDGE E_WRITE O_WRITE E_CAPTURE_CLK E_CAPTURE_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB VDD 0 @BRIDGE_SUBCKT@
+XCAP EVEN_D EVEN_DB ODD_D ODD_DB E_CAPTURE_CLK E_CAPTURE_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB VDD 0 EVEN_Q EVEN_QB ODD_Q ODD_QB deserializer_split_capture_pex
+CEQ EVEN_Q 0 50f
+CEQB EVEN_QB 0 50f
+COQ ODD_Q 0 50f
+COQB ODD_QB 0 50f
+
+.control
+tran 2p 4.2n uic
+let isupply = -i(VDD)
+* Pair like edges of the same pulse after the supply/initial-state boundary.
+* EVEN has three complete pulses after 800 ps; ODD has two.
+meas tran e_clk_rise when v(E_CAPTURE_CLK)=@VMID@ rise=3 td=800p
+meas tran e_clkb_fall when v(E_CAPTURE_CLKB)=@VMID@ fall=3 td=800p
+meas tran e_clk_fall when v(E_CAPTURE_CLK)=@VMID@ fall=3 td=800p
+meas tran e_clkb_rise when v(E_CAPTURE_CLKB)=@VMID@ rise=3 td=800p
+meas tran o_clk_rise when v(O_CAPTURE_CLK)=@VMID@ rise=2 td=800p
+meas tran o_clkb_fall when v(O_CAPTURE_CLKB)=@VMID@ fall=2 td=800p
+meas tran o_clk_fall when v(O_CAPTURE_CLK)=@VMID@ fall=2 td=800p
+meas tran o_clkb_rise when v(O_CAPTURE_CLKB)=@VMID@ rise=2 td=800p
+meas tran e_clk_high max v(E_CAPTURE_CLK) from=2n to=4n
+meas tran e_clk_low min v(E_CAPTURE_CLK) from=2n to=4n
+meas tran e_clkb_high max v(E_CAPTURE_CLKB) from=2n to=4n
+meas tran e_clkb_low min v(E_CAPTURE_CLKB) from=2n to=4n
+meas tran o_clk_high max v(O_CAPTURE_CLK) from=2n to=4n
+meas tran o_clk_low min v(O_CAPTURE_CLK) from=2n to=4n
+meas tran o_clkb_high max v(O_CAPTURE_CLKB) from=2n to=4n
+meas tran o_clkb_low min v(O_CAPTURE_CLKB) from=2n to=4n
+let e_q_diff_vec = v(EVEN_Q)-v(EVEN_QB)
+let o_q_diff_vec = v(ODD_Q)-v(ODD_QB)
+meas tran e_q_diff find e_q_diff_vec at=3.55n
+meas tran o_q_diff find o_q_diff_vec at=3.95n
+meas tran supply_current avg isupply from=2n to=4n
+quit
+.endc
+.end

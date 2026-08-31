@@ -1,0 +1,31 @@
+* SPDX-License-Identifier: Apache-2.0
+* Local complementary clock bridge for one static CMOS capture interleave.
+*
+* WRITE is the wide, routed pulse-generator output.  CLKB is regenerated
+* locally at the PMOS-clock gates; a second local inverter regenerates CLK at
+* the NFET-clock gates.  The capture cell is deliberately tolerant of the
+* short PMOS-first/NMOS-last sequencing this topology creates: each half of
+* the complementary write path reinforces the same selected latch state.
+*
+* This is a product-specific boundary, not a general clock-tree primitive.
+
+.subckt ccb_inv A Y VDD VSS params: WP=8u WN=4u MP=1 MN=1
+XP Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+.ends ccb_inv
+
+.subckt capture_clock_phase WRITE CLK CLKB VDD VSS
+* The first inverter drives the large PMOS capture-gate bank and the input of
+* the NFET-clock inverter.  Its stronger pull-down keeps CLKB near VSS at the
+* slow/hot, low-supply corner without increasing WRITE's PMOS gate load.
+XCLKB WRITE CLKB VDD VSS ccb_inv WP=8u WN=10u MP=8 MN=8
+* The final stage is intentionally PMOS-skewed: the capture NFET gate load
+* needs a full high level within the bounded write pulse at slow/hot PVT.
+XCLK CLKB CLK VDD VSS ccb_inv WP=12u WN=5u MP=16 MN=16
+.ends capture_clock_phase
+
+.subckt capture_clock_bridge E_WRITE O_WRITE
++ E_CAPTURE_CLK E_CAPTURE_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB VDD VSS
+XE E_WRITE E_CAPTURE_CLK E_CAPTURE_CLKB VDD VSS capture_clock_phase
+XO O_WRITE O_CAPTURE_CLK O_CAPTURE_CLKB VDD VSS capture_clock_phase
+.ends capture_clock_bridge

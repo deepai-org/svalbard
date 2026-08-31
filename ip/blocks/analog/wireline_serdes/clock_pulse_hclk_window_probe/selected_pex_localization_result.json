@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "claim": "selected_pulse_pex_rc_counterfactual_localization",
+  "scope": "diagnostic-only exact-PEX variants at representative TT and SS/hot failures",
+  "baseline_repeat": {
+    "tt_interval1_epoch0_maximum_absolute_numeric_delta": 0.0,
+    "ss_hot_interval0_epoch0_maximum_absolute_numeric_delta": 0.0,
+    "same_results": true,
+    "same_violation_counts": true,
+    "repeat_result_sha256": "098c6c714704e887a4eb49b5cc8dbc49251001322fae08206486402fe1b193a7"
+  },
+  "findings": [
+    "Near-zeroing all extracted resistance removes six representative violations, but neither representative case passes.",
+    "Removing only WRITE-path capacitance or resistance does not close either representative case.",
+    "Combined idealization of the named SENSE/BOOST RC removes only two violations; SS/hot BOOST still fails to regenerate.",
+    "Combined idealization of the named WRITE RC does not close either case, so placement-only repair is not authorized.",
+    "The hierarchy-aware lowering reduces HEMUX, HBASE, and WIN capacitance and restores WRITE amplitude, but shifts the schedule outside the composed contract."
+  ],
+  "escalation": "Revise circuit/control architecture: separate the SENSE edge-assist code from WRITE interval/epoch selection, restore BOOST from a full-width state, then rerun schematic and regenerated physical gates.",
+  "not_a_claim": [
+    "modified_netlist_physical_qualification",
+    "regenerated_recovery_topology",
+    "five_environment_closure"
+  ],
+  "result": "diagnostic"
+}

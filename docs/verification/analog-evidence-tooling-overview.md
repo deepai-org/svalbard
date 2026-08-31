@@ -20,7 +20,7 @@ standalone general-purpose analog compiler.
 | Circuit/PVT campaigns | Native ngspice decks and product-specific Python runners | Declared PVT sweeps, transient/AC/DC measurements, and failed-case capture | Not generic yield, BER confidence, phase noise, RF regulatory, or model-validation analysis. |
 | First closure manifest and physical lowering | [`clock_pulse_hclk_window_probe/hclk_window_contract.json`](../../ip/blocks/analog/wireline_serdes/clock_pulse_hclk_window_probe/hclk_window_contract.json), [`compile_selected_physical_source.py`](../../ip/blocks/analog/wireline_serdes/clock_pulse_hclk_window_probe/compile_selected_physical_source.py) | Declares fixed variants, post-fabrication codes, PVT environments, thresholds and semantic bindings, then resolves one selected identity into the exact schematic consumed by layout/LVS/PEX | This is one product-specific thin slice, not a shared circuit/layout IR or general analog compiler. |
 | Evidence integrity helpers | [`ip/blocks/analog/wireline_serdes/analog_evidence.py`](../../ip/blocks/analog/wireline_serdes/analog_evidence.py), [`scripts/test_analog_evidence.py`](../../scripts/test_analog_evidence.py), machine-readable result JSON | Environment identity checks, interval coverage helpers, SHA-256 joins, and durable pass/fail/rejection records | The helper is deliberately small; result semantics remain specific to each active circuit. |
-| PEX inspection | [`scripts/analyze_pex_net.py`](../../scripts/analyze_pex_net.py) | Resistance/capacitance and terminal-path reports for named extracted nets | It aids localization; it is not an automatic analog optimizer or a full parasitic-signoff engine. |
+| PEX inspection and bounded counterfactuals | [`scripts/analyze_pex_net.py`](../../scripts/analyze_pex_net.py), [`clock_pulse_hclk_window_probe/localize_selected_pex.py`](../../ip/blocks/analog/wireline_serdes/clock_pulse_hclk_window_probe/localize_selected_pex.py) | Named-net RC/path reports plus product-specific resistance/capacitance suppression on an exact PEX, with byte-identical baseline replay | Counterfactuals rank hypotheses only; modified PEX never qualifies geometry, and the localizer is not yet generic. |
 | Tool artifact pinning | [`env/tool_artifacts.lock`](../../env/tool_artifacts.lock), [`scripts/tool_artifacts.py`](../../scripts/tool_artifacts.py) | Checksum-locked acquisition/verification of small auxiliary tools | The main physical flow uses the separately pinned OSIC image. |
 
 The testable shared helpers are intentionally modest. Run them with:
@@ -59,8 +59,14 @@ It has supported real engineering decisions rather than only produced reports.
   and shown zero-DRC/unique-LVS with 5,780R/4,083C extraction. Replaying the
   same dual-phase contract separates abstraction failure cleanly: the exact
   schematic covers 5/5 environments but its full-RC PEX covers 0/5, dominated
-  by WRITE peak loss and followed by SENSE/timing failures. This is useful
-  physical rejection evidence, not pulse or integrated PCIe closure.
+  by WRITE peak loss and followed by SENSE/timing failures. Hierarchy-aware
+  lowering then restores much of the WRITE amplitude while preserving
+  DRC/LVS, but moves its schedule outside the composed window. Exact-PEX RC
+  counterfactuals reproduce identically and show that neither WRITE-path nor
+  SENSE/BOOST-path idealization closes representative TT and SS/hot cases.
+  The workflow therefore escalates to a three-control circuit revision and a
+  BOOST topology change instead of continuing placement-only tuning. This is
+  useful physical rejection evidence, not pulse or integrated PCIe closure.
 - **Wi-Fi:** the routed LNA/mixer parent has DRC/LVS/full-RC PEX evidence, but
   its two-tone result exposed an unfiltered nearby blocker. This selected a
   real-IF ADC/DSP architecture rather than pretending a broad RF preselector
@@ -106,10 +112,10 @@ failing cases.
 
 ## Current priorities and rule for adding tooling
 
-1. **PCIe:** localize the selected pulse macro's schematic-to-PEX regression,
-   regenerate only ranked remedies, and require 5/5 dual-phase composed PEX
-   before replaying the capture boundary. DRC/LVS/extraction already pass and
-   must remain invariant gates on every revision.
+1. **PCIe:** implement the localized pulse-path circuit revision: independent
+   SENSE assist, WRITE interval, and WRITE epoch codes plus BOOST restoration
+   from a full-width state. Require schematic coverage, regenerated DRC/LVS,
+   and 5/5 dual-phase PEX before replaying the capture boundary.
 2. **Wi-Fi:** design and screen the closed-loop differential IF driver and
    thermal-floor hold-capacitor boundary before authorizing a new sampler
    layout.

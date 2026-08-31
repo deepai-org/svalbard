@@ -56,6 +56,15 @@ to its peer while remaining DRC-clean. A provenance assertion now rejects any
 unsplit signal consumed by both phases. This is why DRC, unique pin-resolved
 LVS, and behavioral replay are separate mandatory gates.
 
+Hierarchy wrappers must not erase functional instance identity. The selected
+pulse parent inserted `XWRITE` above a previously characterized timing macro;
+the first lowering consequently saw every nested group as `XWRITE`, bypassed
+the child-specific clustering and final-driver current-access rules, and still
+produced legal, LVS-equivalent geometry. Preserve both the ownership path and
+the wrapper-independent functional path in the IR. Regression-test that a
+nested `XE__XWRITE__XWB4` is placed/routed as `XWB4`, while its phase and parent
+ownership remain available for domain checks.
+
 SPICE and layout have different jobs in this loop. The intended schematic is
 the source circuit for topology and pre-layout simulation; it is not generated
 from the drawing. The layout generator realizes that circuit as legal geometry,
@@ -308,6 +317,17 @@ and representative first failures: here WRITE peak loss occurs in all 40
 phase/case observations, followed by SENSE-width and relative-timing misses,
 while SS/hot also loses regeneration. Use those rankings to choose RC
 counterfactuals and the next geometry; do not relax thresholds after PEX.
+
+Require a byte-identical baseline repeat inside a counterfactual campaign.
+Small naming or extraction-order changes can move a marginal narrow-pulse
+solution enough to suggest a false remedy; a repeat with the same PEX must have
+the same completion state, violations, and numeric measures before sensitivity
+rankings are actionable. Counterfactual bounds must also know when to escalate:
+if idealizing all named RC in the suspected path does not close the first
+failure, stop proposing placement-only changes and return to circuit/control
+architecture. In the selected pulse macro, neither idealized WRITE-path RC nor
+idealized SENSE/BOOST-path RC closes representative TT and SS/hot cases, so the
+next authorized work is independent controls and a restored BOOST source.
 
 ## 4. Plan the physical topology before writing geometry
 

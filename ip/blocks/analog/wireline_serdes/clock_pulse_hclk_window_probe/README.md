@@ -154,3 +154,33 @@ SENSE width, dead time, WRITE timing, and slow/hot regeneration also fail. At
 SS/hot the loaded WRITE outputs never cross midrail. The next revision is an
 RC-localized regenerated layout/circuit change, not a widened contract or a
 capture integration attempt.
+
+## Hierarchy-aware lowering and escalation
+
+The first physical lowering treated every nested group below `XWRITE` as the
+same functional instance. That silently disabled the established placement
+ordering and the final `XWB4` multi-access routing rules. The generator now
+carries a wrapper-independent instance path, keeps the complete child in the
+WRITE lane, and applies placement/routing rules to the actual child roots. A
+regression test binds `XE__XWRITE__XWB4` back to `XWB4`.
+
+The regenerated revision remains zero-DRC and uniquely LVS-equivalent. It
+reduces the routing allocation from ten to eight tracks per phase and lowers
+the extracted HEMUX, HBASE and WIN capacitances. WRITE amplitude improves
+materially, including 3.073 V at the selected TT case and 2.105 V at the
+representative SS/hot case. However, the complete PEX gate remains 0/5: WRITE
+is now scheduled outside the SENSE-relative window, SENSE remains too narrow
+in four environments, and SS/hot BOOST does not regenerate. The exact rejected
+checkpoint is
+[`hierarchy_lowering_physical_rejection.json`](hierarchy_lowering_physical_rejection.json).
+
+[`localize_selected_pex.py`](localize_selected_pex.py) performs bounded
+counterfactuals without changing devices: it can suppress capacitance or
+near-zero resistance on named output, SENSE/BOOST, clock/control, and WRITE
+state groups, and it repeats the byte-identical baseline as an integrity gate.
+The retained repeat has zero numeric delta. Neither idealized WRITE RC nor
+idealized SENSE/BOOST RC closes TT plus SS/hot, so further placement-only work
+is not authorized. The diagnostic conclusion in
+[`selected_pex_localization_result.json`](selected_pex_localization_result.json)
+escalates to a circuit revision: separate SENSE edge assist from WRITE
+interval/epoch control and derive BOOST from a restored full-width state.

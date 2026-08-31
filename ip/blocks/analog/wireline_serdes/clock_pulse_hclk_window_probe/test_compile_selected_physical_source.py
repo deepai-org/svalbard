@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 import unittest
+import sys
+from pathlib import Path
 
 import compile_selected_physical_source as physical
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "clock_pulse"))
+import generate_pulse_layout as layout  # noqa: E402
 
 
 class CompileSelectedPhysicalSourceTest(unittest.TestCase):
@@ -20,6 +25,12 @@ class CompileSelectedPhysicalSourceTest(unittest.TestCase):
         self.assertIn("PMP=12 BASE_MN=4 EXTRA_W=8u EXTRA_M=4", source)
         self.assertIn("XNE0 Y A EN VSS cp_cond_npd_comp", source)
         self.assertIn("XNE1 Y A EN VSS cp_cond_npd_comp", source)
+
+    def test_physical_lowering_sees_through_write_wrapper(self) -> None:
+        self.assertEqual(layout.instance_path("XE__XWRITE__XWB4"), ["XWB4"])
+        self.assertEqual(layout.instance_root("XO__XWRITE__XDET__XIY"), "XDET")
+        wrapped = layout.Group("XE__XWRITE__XSLOW0__XI0", "cp_inv", "E", {})
+        self.assertEqual(layout.functional_lane(wrapped), 3)
 
 
 if __name__ == "__main__":

@@ -280,8 +280,29 @@ def group_geometry(group: Group) -> tuple[float, dict[str, float]]:
     return cursor + 1.5, offsets_by_name
 
 
+def instance_path(name: str) -> list[str]:
+    """Return functional instance tokens below phase and optional wrappers."""
+    parts = name.split("__")[1:]
+    if parts and parts[0] == "XWRITE":
+        parts = parts[1:]
+    return parts
+
+
+def instance_root(name: str) -> str:
+    parts = instance_path(name)
+    if not parts:
+        raise ValueError(f"cannot find functional instance root: {name}")
+    return parts[0]
+
+
 def functional_lane(group: Group) -> int:
-    root = group.name.removeprefix("XE").removeprefix("XO").split("__")[1]
+    raw_path = group.name.split("__")[1:]
+    # The selected dual-phase parent wraps the complete timing macro in
+    # XWRITE. Keep that local state machine in the write lane while still
+    # exposing its child identity to ordering and current-routing rules.
+    if raw_path and raw_path[0] == "XWRITE":
+        return 3
+    root = instance_root(group.name)
     # The WRITE timing source is a local replica of SENSE's final restored
     # state.  Place it beside the SENSE taper so only its high-impedance
     # isolated output crosses to the write lane.
@@ -313,7 +334,7 @@ def place(devices: list[Device], groups: dict[str, Group],
     for prefix in ("XCM", "XSM", "XWM", "XWE"):
         selected = [group for group in even
                     if re.fullmatch(prefix + r"[0-3](?:[A-C])?",
-                                    group.name.split("__")[1])]
+                                    instance_root(group.name))]
         target = max((even_depth[group.name] for group in selected), default=0)
         cluster_depth.update({group.name: target for group in selected})
     place_depth = {group.name: cluster_depth.get(group.name, even_depth[group.name])
@@ -347,11 +368,11 @@ def place(devices: list[Device], groups: dict[str, Group],
                            "XP09M": 198.0, "XP10": 226.0}
 
             def lane_one_order(group: Group) -> tuple[int, int, int, str]:
-                parts = group.name.split("__")
-                root = parts[1]
-                stage = (int(parts[2][2:])
-                         if len(parts) > 2
-                         and re.fullmatch(r"X[ID]\d+", parts[2]) else 0)
+                parts = instance_path(group.name)
+                root = parts[0]
+                stage = (int(parts[1][2:])
+                         if len(parts) > 1
+                         and re.fullmatch(r"X[ID]\d+", parts[1]) else 0)
                 if root in write_rank:
                     return (1, write_rank[root], stage, group.name)
                 return (0, place_depth[group.name], 0, group.name)
@@ -374,10 +395,10 @@ def place(devices: list[Device], groups: dict[str, Group],
             }
 
             def sense_order(group: Group) -> tuple[int, int, int, str]:
-                parts = group.name.split("__")
-                root = parts[1]
-                stage = int(parts[2].removeprefix("XI")) \
-                    if len(parts) > 2 and re.fullmatch(r"XI\d+", parts[2]) else 0
+                parts = instance_path(group.name)
+                root = parts[0]
+                stage = int(parts[1].removeprefix("XI")) \
+                    if len(parts) > 1 and re.fullmatch(r"XI\d+", parts[1]) else 0
                 if root.startswith("XCT"):
                     block = {"XCTP": 0, "XCTA": 2, "XCTB": 4}.get(root, 0)
                     return (9, block + stage, 0, group.name)
@@ -385,11 +406,11 @@ def place(devices: list[Device], groups: dict[str, Group],
                     # Keep the compact restored path together and put its
                     # final driver immediately before the local NOR.
                     substage = {"XI0": 4, "XC": 5, "XI1": 6}.get(
-                        parts[2], 5)
+                        parts[1], 5)
                     return (9, substage, 0, group.name)
                 if root == "XSN":
                     substage = {"XIA": 0, "XIB": 1, "XN": 2,
-                                "XIY": 3}.get(parts[2], 4)
+                                "XIY": 3}.get(parts[1], 4)
                     return (10, substage, 0, group.name)
                 return (sense_rank.get(root, 20), 0, place_depth[group.name],
                         group.name)
@@ -417,6 +438,20 @@ def place(devices: list[Device], groups: dict[str, Group],
                 # Static one-hot decode may sit after the dynamic edge path.
                 "XWC0": 14, "XWC3": 15,
                 "XWMCB": 16, "XWMCI": 17,
+                # Selected hierarchical HCLK implementation. Each producer is
+                # immediately followed by its consumer so HEMUX, HBASE, WIN,
+                # and the taper inputs do not span the whole write lane.
+                "XI_SEL": 0, "XI_ESEL": 1,
+                "XSLOW0": 2, "XSLOW1": 3,
+                "XETG0": 4, "XETG1": 5, "XEPOCHR": 6,
+                "XBTG0": 7, "XBTG1": 8,
+                "XST0": 9, "XST1": 10,
+                "XSTR0": 11, "XSTR1": 12,
+                "XEND0": 13, "XEND1A": 14, "XEND1B": 15,
+                "XTG0": 16, "XTG1": 17, "XENDR": 18,
+                "XDET": 19,
+                "XWB0": 20, "XWB1": 21, "XWB2": 22,
+                "XWB3": 23, "XWB4": 24,
             }
             selector_min_x = {"XLEGACY": 130.0,
                               "XWM3A": 145.0, "XWE3A": 161.28,
@@ -424,39 +459,43 @@ def place(devices: list[Device], groups: dict[str, Group],
                               "XPLC": 236.0}
 
             def write_order(group: Group) -> tuple[int, int, int, str]:
-                parts = group.name.split("__")
-                root = parts[1]
-                if (root == "XWET" and len(parts) > 2
-                        and parts[2] == "XNF"):
+                parts = instance_path(group.name)
+                root = parts[0]
+                if (root == "XWET" and len(parts) > 1
+                        and parts[1] == "XNF"):
                     # Preserve the calibrated XWET pair and downstream x
                     # coordinates by using the reserved selector whitespace.
                     return (0, 4 * 4, 0, group.name)
                 if root in selector_rank:
-                    stage = (int(parts[2].removeprefix((
-                        "XI" if parts[2].startswith("XI") else "XD")))
-                        if len(parts) > 2 and parts[2].startswith(("XI", "XD"))
-                        else 0)
+                    numeric_stage = (re.fullmatch(r"X(?:I|D)(\d+)", parts[1])
+                                     if len(parts) > 1 else None)
+                    named_stage = {"XIA": 0, "XIB": 1, "XN": 2,
+                                   "XIY": 3, "XN0": 0, "XN1": 1}
+                    stage = (int(numeric_stage.group(1)) if numeric_stage
+                             else named_stage.get(parts[1], 0)
+                             if len(parts) > 1 else 0)
                     return (0, 4 * selector_rank[root] + stage, 0,
                             group.name)
                 delay_match = re.fullmatch(r"XW([SE])D([0-5])", root)
                 if delay_match:
                     pair = int(delay_match.group(2))
                     side = int(delay_match.group(1) == "E")
-                    stage = int(parts[2].removeprefix("XD"))
+                    stage = int(parts[1].removeprefix("XD"))
                     # Interleave corresponding start/end delay cells so the
                     # six-unit transport paths see the same gradient and wire
                     # environment.
                     return (1, 4 * pair + 2 * side + stage, 0, group.name)
                 if root in ("XWST", "XWET"):
-                    stage = (int(parts[2].removeprefix("XI"))
-                             if parts[2].startswith("XI") else 1.5)
+                    stage = (int(parts[1].removeprefix("XI"))
+                             if len(parts) > 1 and parts[1].startswith("XI")
+                             else 1.5)
                     return (2, 2 * stage + int(root == "XWET"), 0,
                             group.name)
                 return (3, place_depth[group.name], 0, group.name)
 
             selected.sort(key=write_order)
         for group in selected:
-            root = group.name.split("__")[1]
+            root = instance_root(group.name)
             if lane == 1 and root in write_rank:
                 cursor = max(cursor, write_min_x[root])
             if lane == 3 and root in selector_min_x:
@@ -970,7 +1009,9 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
         "XE__CT": "DBG_E_CT", "XE__ST": "DBG_E_ST",
         "XE__CTD": "DBG_E_CTD", "XE__STD": "DBG_E_STD",
         "XE__SN0": "DBG_E_SN0", "XE__SND": "DBG_E_SND",
-        "XE__HSD": "DBG_E_HSD", "XE__HSN": "DBG_E_HSN",
+        "XE__HSM": "DBG_E_HSM", "XE__HSD": "DBG_E_HSD",
+        "XE__HSDX": "DBG_E_HSDX", "XE__HSN": "DBG_E_HSN",
+        "XE__RB0": "DBG_E_RB0", "XE__RB1": "DBG_E_RB1",
         "XE__WGS": "DBG_E_WGS", "XE__WWE": "DBG_E_WWE",
         "XE__WSIB": "DBG_E_WSIB", "XE__WSA": "DBG_E_WSA",
         "XE__WSB": "DBG_E_WSB", "XE__WSR": "DBG_E_WSR",
@@ -997,7 +1038,9 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
         "XO__ST": "DBG_O_ST", "XO__CTD": "DBG_O_CTD",
         "XO__STD": "DBG_O_STD",
         "XO__SN0": "DBG_O_SN0", "XO__SND": "DBG_O_SND",
-        "XO__HSD": "DBG_O_HSD", "XO__HSN": "DBG_O_HSN",
+        "XO__HSM": "DBG_O_HSM", "XO__HSD": "DBG_O_HSD",
+        "XO__HSDX": "DBG_O_HSDX", "XO__HSN": "DBG_O_HSN",
+        "XO__RB0": "DBG_O_RB0", "XO__RB1": "DBG_O_RB1",
         "XO__WGS": "DBG_O_WGS", "XO__WWE": "DBG_O_WWE",
         "XO__WSIB": "DBG_O_WSIB", "XO__WSA": "DBG_O_WSA",
         "XO__WSB": "DBG_O_WSB", "XO__WSR": "DBG_O_WSR",
@@ -1011,6 +1054,30 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
         "XO__P09M": "DBG_O_P09M", "XO__P10M": "DBG_O_P10M",
         "XO__WMID": "DBG_O_WMID", "XO__WMIDB": "DBG_O_WMIDB",
     }
+
+    def semantic_debug_label(key: str) -> str | None:
+        """Return a stable extracted name for contract-relevant timing nets."""
+        if key in debug_labels:
+            return debug_labels[key]
+        if key == "__E_WPN":
+            return "DBG_E_WPN"
+        if key == "__O_WPN":
+            return "DBG_O_WPN"
+        for prefix, label_prefix in (("XE__XWRITE__", "DBG_EW_"),
+                                     ("XO__XWRITE__", "DBG_OW_")):
+            if key.startswith(prefix):
+                tail = key.removeprefix(prefix)
+                # Label the parent-visible state path, not every private node
+                # inside a primitive.  These names are the schematic/PEX join
+                # used by counterfactual localization.
+                if "__" not in tail and tail in {
+                    "HSM", "HSLOW", "HEMUX", "HEPOCH", "HBASE",
+                    "S0A", "S1A", "STR0", "START", "E0", "E1A",
+                    "E1", "EMUX", "END", "WIN", "WB0", "WB1",
+                    "WB2", "WB3",
+                }:
+                    return label_prefix + tail
+        return None
     for device in devices:
         span = device_span(device) + 2.0
         for net in device.nodes[:3]:
@@ -1237,7 +1304,7 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
     for device in devices:
         width = device.width_um
         nf = device.mult
-        root = device.group.split("__")[1]
+        root = instance_root(device.group)
         d_y = device.cy + max(0.70, width / 2.0 - 0.8)
         # The final PMOS bank formerly picked every source up near the lower
         # edge of its 8-um diffusion stripe.  Exact PEX attributed about
@@ -1368,11 +1435,12 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
                         f"rect metal4 {local_cluster[0]-0.38:.3f} "
                         f"{y-0.38:.3f} {local_cluster[-1]+0.38:.3f} "
                         f"{y+0.38:.3f}\n")
-        if key in debug_labels:
+        debug_label = semantic_debug_label(key)
+        if debug_label is not None:
             label_x = (x1 + x2) / 2.0
             lines.append(f"box values {label_x-0.2:.3f} {y-0.2:.3f} "
                          f"{label_x+0.2:.3f} {y+0.2:.3f}\n")
-            lines.append(f"label {debug_labels[key]} FreeSans 0.4 0 0 0 c metal4\n")
+            lines.append(f"label {debug_label} FreeSans 0.4 0 0 0 c metal4\n")
 
     for key in special_tracks:
         if key in special_signal_tracks:

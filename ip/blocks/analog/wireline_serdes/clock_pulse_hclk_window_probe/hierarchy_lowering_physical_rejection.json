@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "claim": "hierarchy_aware_selected_pulse_physical_replay",
+  "scope": "selected dual-phase source after wrapper-aware placement and final-driver routing lowering",
+  "physical": {
+    "drc_stage_result": "pass",
+    "lvs_stage_result": "pass",
+    "pex_stage_result": "pass",
+    "pex_resistor_count": 5902,
+    "pex_capacitor_count": 4335,
+    "identity": {
+      "schematic_sha256": "0499015dfeefe86e1c3eb9287389651f46e0928fff9e64407cda9490415df112",
+      "layout_tcl_sha256": "29cb4558ae61e058ec3742610238d8bb01ee8b6c37d6c8575db0f740d8080c0e",
+      "mag_sha256": "1e3d15d98d4c74da21b82211a3e99a6f7f31e8cb34bc5f08528f40cb3360a6e4",
+      "gds_sha256": "a48b05769880409e025ed956a780dee400eb33fe597b0757ab2f22b2c20fe4c5",
+      "pex_sha256": "092129052aa9174852d0cb6035cd1a79ac3ff61f0f299a5d181c068207370ccd",
+      "layout_png_sha256": "6eddbb5be3bb571ac888a9491037cd43d24d77e90013f0834fabb960b076dd6d"
+    }
+  },
+  "timing": {
+    "case_count": 20,
+    "passing_case_count": 0,
+    "environment_code_coverage": {
+      "tt": [],
+      "ff_cold": [],
+      "ff_hot": [],
+      "ss_hot": [],
+      "ss_cold": []
+    },
+    "ranked_violation_counts": [
+      ["write_high_v", 37],
+      ["dead_time_s", 36],
+      ["sense_width_s", 32],
+      ["write_delay_from_sense_rise_s", 28],
+      ["write_width_s", 23],
+      ["boost_low_v", 14],
+      ["measurement_complete", 7],
+      ["sense_low_v", 4]
+    ],
+    "representative_cases": {
+      "tt_interval1_epoch0": {
+        "sense_width_ps": 369.66,
+        "write_width_ps": 258.95,
+        "sense_to_write_ps": 28.13,
+        "dead_time_ps": 458.47,
+        "write_high_v": 3.07339
+      },
+      "ss_hot_interval0_epoch0": {
+        "sense_width_ps": 584.63,
+        "write_width_ps": 162.78,
+        "sense_to_write_ps": 227.98,
+        "dead_time_ps": 443.35,
+        "sense_low_v": 0.741113,
+        "boost_low_v": 2.47673,
+        "write_high_v": 2.10498
+      }
+    },
+    "raw_result_sha256": "14cf85b3a501f562b5c8d8c6cb499d607b770799add0dbc6057ad71d651bfc86",
+    "raw_result_location": "scratch/pcie-selected-dual-control-pulse-physical.o7A1mp3w/selected-dual-control-pex.json"
+  },
+  "conclusion": "Wrapper-aware lowering materially restores WRITE amplitude but does not close the physical contract. WRITE scheduling moves outside the composed window, SENSE remains narrow in four environments, and SS/hot BOOST regeneration remains invalid.",
+  "not_a_claim": [
+    "physical_timing_closure",
+    "capture_or_cdr_closure",
+    "provider_signoff_or_silicon_yield"
+  ],
+  "result": "fail"
+}

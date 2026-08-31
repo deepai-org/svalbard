@@ -200,16 +200,6 @@ XN B AB YB VDD VSS cp_nand2 WP=8u WN=8u MP=3 MN=3
 XIY YB Y VDD VSS cp_inv WP=8u WN=8u MP=4 MN=3
 .ends cp_fall_pulse
 
-* The reduced-depth form implements Y = !A & B directly as NOR(A, !B).
-* It avoids the input inverter, NAND, and output inverter sequence above:
-* the critical falling-edge interval must be regenerated fast enough for the
-* loaded SENSE taper at the low-voltage slow corner.  Both inputs and output
-* remain ordinary full-swing static-CMOS nodes.
-.subckt cp_fall_pulse_fast A B Y VDD VSS
-XIB B BB VDD VSS cp_inv WP=8u WN=8u MP=2 MN=2
-XN A BB Y VDD VSS cp_nor2 WP=8u WN=8u MP=6 MN=4
-.ends cp_fall_pulse_fast
-
 * Reset-dominant interval latch. S rises before R and sets Q; when R rises the
 * latch resets even though S remains high. S then falls before R, returning the
 * cross-coupled NOR pair to its unique Q=0, QB=1 idle state. Unlike a narrow
@@ -228,7 +218,7 @@ XQB S Q QB VDD VSS cp_nor2 WP=8u WN=8u MP=3 MN=4
 * falling-edge interval, and WRITE is timed from the restored SENSE boundary.
 XHSD0 HCLK HSM VDD VSS cp_delay_unit WP=4u WN=2u MP=2 MN=2
 XHSD1 HSM HSD VDD VSS cp_sense_tail_delay
-XHSN HCLK HSD HSN VDD VSS cp_fall_pulse_fast
+XHSN HCLK HSD HSN VDD VSS cp_fall_pulse
 XSB0 HSN SB0 VDD VSS cp_inv WP=8u WN=10u MP=2 MN=2
 XSB1 SB0 SB1 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4
 XSB2 SB1 SENSE VDD VSS VSSS cp_sense_final_inv WP=8u WN={SB2_WN} MP=10 MN={SB2_MN}
@@ -246,16 +236,7 @@ XRB2 RB1 BOOST VDD VSS cp_inv WP=8u WN=8u MP=5 MN=3
 XWISO0 SENSE WSIB VDD VSS cp_inv WP=4u WN=4u
 XWISO1 WSIB WSA VDD VSS cp_inv WP=2u WN=6u
 XWISO2 WSA WSB VDD VSS cp_inv WP=6u WN=4u MP=2 MN=1
-* Six restored delay units form a full-swing baseline that keeps WRITE after
-* the completed SENSE aperture. This is a PVT characterization checkpoint;
-* the next revision must turn its delay spread into a physical calibration
-* control without reintroducing an unresolved shared timing node.
-XWBASE0 WSB WBA1 VDD VSS cp_delay_unit WP=4u WN=2u MP=2 MN=2
-XWBASE1 WBA1 WBA2 VDD VSS cp_delay_unit WP=4u WN=2u MP=2 MN=2
-XWBASE2 WBA2 WBA3 VDD VSS cp_delay_unit WP=4u WN=2u MP=2 MN=2
-XWBASE3 WBA3 WBA4 VDD VSS cp_delay_unit WP=4u WN=2u MP=2 MN=2
-XWBASE4 WBA4 WBA5 VDD VSS cp_delay_unit WP=4u WN=2u MP=2 MN=2
-XWBASE5 WBA5 WBA VDD VSS cp_delay_unit WP=4u WN=2u MP=2 MN=2
+XWBASE WSB WBA VDD VSS cp_delay_unit WP=4u WN=2u MP=2 MN=2
 XWSD0 WBA WSD VDD VSS cp_write_end_delay
 XWPN WBA WSD WPN VDD VSS cp_rise_b_small
 XWB0 WPN WB1 VDD VSS cp_inv WP=4u WN=4u MP=2 MN=2

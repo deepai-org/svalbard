@@ -723,9 +723,11 @@ global evaluation-report deliverable.
 
 Execution order is deliberately narrow:
 
-1. Close the pulse generator's first failing **extracted TT** case. The current
-   fast-detector candidate fails this gate, so it MUST NOT consume a full PVT
-   campaign. Each proposed circuit change gets one source hash, internal-node
+1. Close the pulse generator's slow/hot restoration failure without losing its
+   fresh extracted TT pass. The current delayed-step baseline is zero-DRC,
+   uniquely LVS-matched and passes one exact TT PEX contract, but SS/125 C
+   collapses WRITE; the later fast-detector candidate is historical and
+   rejected. Each proposed circuit change gets one source hash, internal-node
    measurement, legal regenerated layout, DRC, unique LVS and full-RC TT replay
    before it earns PVT runtime.
 2. Implement the real clock-consumer boundary. The generator's SENSE/BOOST/

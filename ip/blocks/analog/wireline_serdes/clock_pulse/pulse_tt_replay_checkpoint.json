@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "claim": "clock_pulse_delayed_step_tt_replay",
+  "classification": "physically_legal_tt_pex_pass_pvt_open",
+  "release_eligible": false,
+  "source_revision": "823f747",
+  "source_sha256": "c61218ad7917a5f0eba1a4337b7651e92d208226a45d90e902c817ef320afef9",
+  "layout_generator_sha256": "6579626f9c0719443518758c274c1853e1c786d53aeeb244a575344a0d725825",
+  "testbench_sha256": "b8e79e9333ac42d3363598f2a8b76fb01ff432738764eb227b68d78156d63545",
+  "runner_sha256": "f14b334aaa2afde5c35b0febebc730757d76835479716b4034e41610de0f55a3",
+  "fresh_physical": {
+    "device_count": 128,
+    "group_count": 66,
+    "width_um": 175.4,
+    "drc_error_count": 0,
+    "lvs_result": "unique_match",
+    "gds_sha256": "ae958f5fb33ec887d5cec7cbf8023077775a1404f93ec96bdcbc4c23f312e9e4",
+    "layout_render_sha256": "e7bc4704b540da57062408a6be534720d462d40b3a1f532e8490a1878ef64cd3",
+    "pex_sha256": "e9e3294a684b0adb8e0b6210e27441af0d4fafcdab59b14ed9c164126a78cbcd"
+  },
+  "fresh_nominal_full_rc_pex": {
+    "result": "pass",
+    "tap_code": [0, 8, 9],
+    "even_sense_width_ps": 591.87,
+    "odd_sense_width_ps": 583.98,
+    "even_write_width_ps": 206.87,
+    "odd_write_width_ps": 213.84,
+    "write_delay_ps": 605.54,
+    "dead_time_ps": 13.67,
+    "even_write_high_v": 3.10279,
+    "odd_write_high_v": 3.11443,
+    "supply_current_ma": 40.6695
+  },
+  "fresh_ss_hot_full_rc_pex": {
+    "result": "fail",
+    "tap_code": [0, 8, 9],
+    "even_sense_width_ps": 540.98,
+    "odd_sense_width_ps": 540.58,
+    "even_write_width_ps": 0.0,
+    "odd_write_width_ps": 0.0,
+    "write_delay_ps": 51.45,
+    "dead_time_ps": 310.47,
+    "even_write_high_v": 0.04813,
+    "odd_write_high_v": 0.05862
+  },
+  "full_pvt_status": {
+    "historical_matrix": "1/20 extracted PVT cases passed",
+    "fresh_matrix": "not emitted by the broad runner; do not promote or merge with historical evidence"
+  },
+  "required_followup": [
+    "Close the slow-hot restored write path before any full PVT promotion.",
+    "Add a physical calibration control on a fully restored timing state.",
+    "Make the complete extracted PVT runner emit a bounded evidence matrix.",
+    "Drive the actual capture-control consumer from a physically routed parent."
+  ]
+}

@@ -71,24 +71,35 @@ retains valid 540.98/540.58 ps SENSE pulses, but the write restoration chain
 does not propagate a complete pulse. Focused coverage is therefore 1/3, not
 closure, and the full 20-case campaign is not promoted.
 
-### Current fast-detector characterization candidate
+### Current reproducible delayed-step baseline
 
-The working source now contains a reduced-depth static-CMOS falling-edge
-detector (`cp_fall_pulse_fast`) and six full-swing write-delay units. This is a
-strictly unpromoted candidate, recorded in
-`pulse_fast_path_checkpoint.json`. The prior 12/20 schematic record is
-historical only; a fresh current-runtime replay is 0/20 and cannot be used as
-release evidence. The current 164-device, 226.2-um-wide layout is zero-DRC and
-uniquely LVS-matched. It compacts the restored `WISO`--`WBASE`--`WSD`--`WPN`--
-`WB` dependency chain so `WSD0` no longer sits more than 90 um from its driver
-and consumer. Fresh nominal full-RC PEX still fails: EVEN `WPN` reaches only
-0.950 V, ODD `WPN` 1.531 V, the corresponding first-taper peaks are 0.696 V
-and 0.270 V, and WRITE reaches only 98/120 mV. The exact generated PEX/GDS are
-intentionally not promoted or substituted for other evidence decks. This
-candidate establishes that the detector remains parasitic-sensitive even after
-the gross physical locality error is removed; the next revision must form the
-interval from a robust restored state and close its first extracted TT case
-before spending time on a full PVT matrix.
+The checked-in source and layout generator are the exact netlist/layout pair
+from `823f747`, the last compact candidate with an extracted TT pass. A fresh
+2026-08-31 replay produced a 128-device, 175.4-um-wide layout with zero DRC,
+unique LVS, and full-RC PEX. Its exact fresh TT PEX contract passes with
+591.87/583.98 ps SENSE, 206.87/213.84 ps WRITE, 605.54 ps write delay,
+13.67 ps non-overlap, valid rails, and 40.669 mA. The generated current layout
+render is [clock-pulse-generator-layout.png](../../../../../docs/images/clock-pulse-generator-layout.png).
+
+This is deliberately only a TT gate, not pulse-generator closure. A fresh
+single-case extracted SS/125 C replay on the same source gives 540.98/540.58 ps
+SENSE, but no complete WRITE pulse (48/59 mV output peaks, 51 ps apparent
+write delay and 310 ps dead time). The retained FF/125 C candidate record also
+misses the 2.72 V WRITE rail limit by about 28--33 mV. The historical full PVT
+matrix is 1/20; a fresh broad PVT invocation currently stops before emitting
+its result JSON, so it is not treated as interchangeable evidence. The fresh
+TT and SS/125-C result identity is recorded in `pulse_tt_replay_checkpoint.json`.
+
+### Superseded fast-detector characterization candidate
+
+`pulse_fast_path_checkpoint.json` retains the later reduced-depth
+`cp_fall_pulse_fast` plus six-delay experiment as a rejected historical
+candidate. It had a 164-device, 226.2-um-wide zero-DRC, uniquely
+LVS-matched layout, but fresh nominal full-RC PEX reached only 98/120 mV at
+WRITE. Compacting its `WISO`--`WBASE`--`WSD`--`WPN`--`WB` dependency chain
+removed a gross locality error but did not make the narrow detector robust.
+The prior 12/20 schematic record is historical only; its current-runtime replay
+was 0/20 and it cannot be used as release evidence.
 
 Two 2026-08-31 extracted-TT sizing probes of `cp_rise_b_small` were rejected
 and reverted. Doubling its NMOS finger count moved the generated chain and
@@ -97,14 +108,14 @@ placement but increased timing-state gate load and gave 1.576 V `WPN`. Neither
 is a layout or PVT solution.
 
 A separate 2026-08-31 topology probe was also rejected and reverted before
-layout: it inverted the restored `WBA` and `WSD` states, used the existing
-`cp_fall_pulse_fast` detector to regenerate a positive interval, then inverted
-that result into the unchanged active-low `WPN` taper interface. Its fresh
-schematic matrix was 0/20: WRITE remained at 0--2 mV in the nominal profile.
-The added state inversions/detector latency did not produce a usable taper
-input. This rules out that direct detector substitution; a next candidate must
-change the end-to-end timing budget and output-taper interface together, not
-only re-encode the local interval.
+layout: it inverted the restored `WBA` and `WSD` states, used the fast detector
+to regenerate a positive interval, then inverted that result into the
+unchanged active-low `WPN` taper interface. Its fresh schematic matrix was
+0/20: WRITE remained at 0--2 mV in the nominal profile. The added state
+inversions/detector latency did not produce a usable taper input. This rules
+out that direct detector substitution; a next candidate must change the
+end-to-end timing budget and output-taper interface together, not only
+re-encode the local interval.
 
 On 2026-08-31, a schematic-only wiring probe connected `SEL3` through the
 existing `cp_profile_write_restore` element at the restored `WSA`--`WSB` step.

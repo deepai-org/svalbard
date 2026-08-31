@@ -6,8 +6,9 @@
     "minimum_effective_bits": 12,
     "minimum_quantization_snr_db_for_current_desired_tone": 20.0,
     "minimum_sample_rate_hz": 320000000.0,
-    "notes": "These are deliberately conservative architectural requirements derived from the current two-tone PEX output, not an implemented ADC specification or a GF180 feasibility claim. The first physical converter leaf is a 0.25 V differential-peak, 320 MS/s sampled-input interface against a declared 5 pF per-leg future CDAC load and 0.25-LSB settling allocation; it must pass full-RC PEX before an ADC topology is promoted.",
-    "required_headroom_ratio": 2.0
+    "notes": "These are deliberately conservative architectural requirements derived from the current two-tone PEX output, not an implemented ADC specification or a GF180 feasibility claim. The former 5-pF-per-leg, 10-ohm sampled-input leaf is rejected before a new switch layout: at 125 C its six-sigma differential kT/C noise alone exceeds the 0.25-LSB allocation. A replacement must provide at least the thermal-only capacitor floor and extracted IF-driver settling budget recorded in sampler_thermal_settling_budget.json before an ADC topology is promoted.",
+    "required_headroom_ratio": 2.0,
+    "sampled_input_thermal_settling_budget": "sampler_thermal_settling_budget.json"
   },
   "digital_filter_requirements": {
     "maximum_residual_blocker_to_desired_db_for_current_tone": -20.0,
@@ -75,7 +76,7 @@
   ],
   "pex_sha256": "16556b3ae3061a8ed1ba14117832e1b8834253639bd98176058afdbea48911ba",
   "physical_sha256": "82b64954daa030e464e0ae4af920940c2958e872322e3a433e2e1a2a190ae4a0",
-  "plan_sha256": "7e1c02b331aa77632151c961aa76259fb3bac91753297636690c1dadf18ede71",
+  "plan_sha256": "354230fb0422994541f96ef6a59a581a0e694d2cfc9360bb3c2f24b32dcd5996",
   "result": "pass",
   "schema_version": 1,
   "selected_path": "real_if_adc_and_digital_channel_filter",

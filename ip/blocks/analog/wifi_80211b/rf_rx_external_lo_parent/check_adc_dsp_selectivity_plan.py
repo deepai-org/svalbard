@@ -55,11 +55,20 @@ def main() -> None:
     converter = plan["converter_requirements"]
     filter_requirements = plan["digital_filter_requirements"]
     applied = plan["applies_to"]
+    budget_path = args.plan.parent / converter.get(
+        "sampled_input_thermal_settling_budget", "")
+    require(budget_path.is_file(), "sampled-input feasibility budget is missing")
+    sampled_input_budget = json.loads(budget_path.read_text())
 
     require(plan.get("schema_version") == 1
-            and plan.get("status") == "architecture_selected_not_implemented"
+            and plan.get("status") == "architecture_selected_sampled_input_repartition_required"
             and plan.get("selected_path") == "real_if_adc_and_digital_channel_filter",
             "unexpected Wi-Fi selectivity-plan identity")
+    require(sampled_input_budget.get("result")
+            == "5pf_boundary_rejected_before_sampler_layout"
+            and sampled_input_budget.get("claim")
+            == "wifi_real_if_sampled_input_thermal_settling_feasibility",
+            "sampled-input feasibility decision changed")
     require(physical.get("result") == "pass" and physical.get("drc_error_count") == 0
             and physical.get("lvs_unique") is True
             and physical.get("pex_sha256") == digest(args.pex),

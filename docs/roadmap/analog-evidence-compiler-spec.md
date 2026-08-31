@@ -856,18 +856,22 @@ Execution order is likewise tied to the next receiver claim:
    wide Wi-Fi RF preselector cannot honestly claim 25 MHz adjacent-tone
    separation. Use the existing PEX two-tone measurements only to hold the
    ADC full-scale/ENOB/sample-rate and digital-filter requirements accountable.
-   First close only a 0.25-V differential-peak, 320-MS/s **sampled-input
-   interface** with a declared 5-pF-per-leg future converter load and a
-   0.25-LSB settling allocation. The first 0-DRC, unique-LVS 113R/86C NMOS-only
+   The former 0.25-V differential-peak, 320-MS/s **sampled-input interface**
+   with a 5-pF-per-leg future converter load is rejected before another switch
+   layout: its 125-C six-sigma differential kT/C noise is 281 uV, above the
+   30.5-uV quarter-LSB allocation before switching error. The first 0-DRC,
+   unique-LVS 113R/86C NMOS-only
    implementation now completes all five full-RC corners but is explicitly
    rejected: its 177.891-mV worst aperture/hold error is 5,829 times the
    allocation, and its schematic baseline fails likewise. Do not tune it.
    A complementary-clocked simple transmission gate was then screened before
    layout and rejected: its best bounded high-IF sizing retains 79.206 mV worst
    aperture/hold error, while a deliberately easier 10-MHz/80-MS/s screen still
-   retains 17.003 mV.  The next candidate must state its explicit
-   charge-injection-cancellation or bottom-plate-sampling mechanism and the
-   control timing it needs; only then may it earn an extracted PVT screen for
+   retains 17.003 mV.  The next candidate must first bind an extracted IF
+   driver and a hold capacitor meeting the thermal-only floor and acquisition
+   resistance in `sampler_thermal_settling_budget.json`; then it must state its
+   explicit charge-injection-cancellation or bottom-plate-sampling mechanism
+   and control timing. Only then may it earn an extracted PVT screen for
    settling, hold error, clock feedthrough and input loading. Do not reuse the
    PCIe CML error slicer: its extracted 40--150-mV window is hundreds of times
    coarser than the roughly 122-uV 12-bit code step. A failed sampler may justify
@@ -915,11 +919,13 @@ or prevents a previously observed false claim in both projects.
 ### Immediate execution policy
 
 The PCIe clock/capture bench now removes ideal timing sources at its immediate
-boundary but passes only 3/5 corners.  The Wi-Fi receiver has a byte-bound
-ADC/DSP selectivity architecture, but both its physical NMOS-only sampler and
-its schematic simple transmission-gate screen are rejected; the next circuit
-must explicitly cancel charge injection or implement bottom-plate sampling
-before a new layout is authorized.  Until those two product gates advance, the
+boundary but passes only 3/5 corners. The Wi-Fi receiver has a byte-bound
+ADC/DSP selectivity architecture, but its former 5-pF sampled-input boundary
+is thermally infeasible for the stated 12-bit allocation, and both its physical
+NMOS-only sampler and schematic simple transmission-gate screen are rejected.
+An extracted IF driver/hold-capacitor boundary must now exist before a
+bottom-plate or charge-cancellation layout is authorized. Until those two
+product gates advance, the
 repository is **not** building a general analog compiler.  The allowed shared
 work is limited to an already-encountered defect in both products:
 

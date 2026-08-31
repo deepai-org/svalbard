@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "architecture_selected_not_implemented",
+  "status": "architecture_selected_sampled_input_repartition_required",
   "selected_path": "real_if_adc_and_digital_channel_filter",
   "applies_to": {
     "parent": "rf_rx_external_lo_parent",
@@ -22,7 +22,8 @@
     "minimum_effective_bits": 12,
     "minimum_sample_rate_hz": 320000000.0,
     "minimum_quantization_snr_db_for_current_desired_tone": 20.0,
-    "notes": "These are deliberately conservative architectural requirements derived from the current two-tone PEX output, not an implemented ADC specification or a GF180 feasibility claim. The first physical converter leaf is a 0.25 V differential-peak, 320 MS/s sampled-input interface against a declared 5 pF per-leg future CDAC load and 0.25-LSB settling allocation; it must pass full-RC PEX before an ADC topology is promoted."
+    "sampled_input_thermal_settling_budget": "sampler_thermal_settling_budget.json",
+    "notes": "These are deliberately conservative architectural requirements derived from the current two-tone PEX output, not an implemented ADC specification or a GF180 feasibility claim. The former 5-pF-per-leg, 10-ohm sampled-input leaf is rejected before a new switch layout: at 125 C its six-sigma differential kT/C noise alone exceeds the 0.25-LSB allocation. A replacement must provide at least the thermal-only capacitor floor and extracted IF-driver settling budget recorded in sampler_thermal_settling_budget.json before an ADC topology is promoted."
   },
   "digital_filter_requirements": {
     "passband_low_hz": 88000000.0,
@@ -32,6 +33,7 @@
     "notes": "A later fixed-point filter, clock plan, group-delay budget, and modulation/EVM verification must replace this scalar tone requirement."
   },
   "required_next_implementations": [
+    "real IF driver/buffer plus hold-capacitor/settling closure at the thermal-only floor recorded in sampler_thermal_settling_budget.json",
     "differential IF sampler with explicit charge-injection cancellation or bottom-plate sampling and declared control timing, after the physical NMOS-only baseline and schematic simple transmission-gate screen were rejected",
     "12-ENOB-or-better 320 MS/s-or-faster converter evidence across its own declared environment",
     "digital channel-filter response, fixed-point error, and clock-jitter evidence",

@@ -1,0 +1,39 @@
+{
+  "assumptions": {
+    "bits": 12,
+    "differential_full_scale_span_v": 0.5,
+    "existing_hold_capacitance_per_leg_f": 5e-12,
+    "existing_source_resistance_ohm": 10.0,
+    "maximum_temperature_k": 398.15,
+    "per_leg_full_scale_peak_v": 0.125,
+    "sample_rate_hz": 320000000.0,
+    "six_sigma_thermal_margin": 6.0,
+    "track_time_s": 1.45e-09
+  },
+  "calculation": {
+    "existing_5pf_differential_thermal_sigma_v": 4.689159410171508e-05,
+    "lsb_v": 0.0001220703125,
+    "maximum_total_acquisition_resistance_ohm": 0.37864900487166514,
+    "minimum_hold_capacitance_per_leg_f": 4.2497400827571653e-10,
+    "quarter_lsb_allocation_v": 3.0517578125e-05,
+    "required_100mhz_input_sine_current_peak_a": 0.033377380559139976
+  },
+  "claim": "wifi_real_if_sampled_input_thermal_settling_feasibility",
+  "conclusion": "The existing 5-pF-per-leg, 10-ohm sampled-input boundary cannot support a deterministic 12-bit quarter-LSB allocation: six-sigma differential kT/C noise alone is 281.35 uV. A switch topology cannot repair this allocation.",
+  "required_before_next_sampler_layout": [
+    "A real IF driver/buffer whose extracted output resistance, current delivery, noise, linearity, and stability are verified against the selected capacitor load.",
+    "At least 424.974 pF per differential hold leg for the stated six-sigma thermal-only limit; additional capacitor or a repartitioned error budget is required for switch, reference, mismatch, jitter, and ADC errors.",
+    "An explicit differential bottom-plate or charge-injection-cancellation sampler whose non-overlap timing is checked with that driver and capacitor, not the rejected 5-pF boundary."
+  ],
+  "result": "5pf_boundary_rejected_before_sampler_layout",
+  "schema_version": 1,
+  "thermal_model": "independent kT/C noise on two equal hold capacitors; no switch, buffer, mismatch, jitter, reference, or ADC noise credited",
+  "not_a_claim": [
+    "implemented_if_buffer",
+    "implemented_sampler",
+    "implemented_adc",
+    "adc_enob",
+    "receiver_sensitivity",
+    "integrated_wifi_receiver"
+  ]
+}

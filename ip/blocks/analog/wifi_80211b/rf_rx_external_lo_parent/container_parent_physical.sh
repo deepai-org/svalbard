@@ -34,6 +34,7 @@ python3 /src/rf_rx_external_lo_parent/run_parent_blocker.py --source /src/rf_rx_
 python3 /src/rf_rx_external_lo_parent/check_parent_blocker.py \
   --result /work/parent-blocker-result.json --physical /work/parent-physical-result.json \
   --source /src/rf_rx_external_lo_parent --pex "$pex"
+python3 /src/rf_rx_external_lo_parent/check_sampler_thermal_settling_budget.py
 python3 /src/rf_rx_external_lo_parent/check_adc_dsp_selectivity_plan.py \
   --plan /src/rf_rx_external_lo_parent/adc_dsp_selectivity_plan.json \
   --result /work/parent-blocker-result.json --physical /work/parent-physical-result.json \

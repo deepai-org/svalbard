@@ -32,10 +32,14 @@ channel filter**, not as a claim that a broad 2.4 GHz preselector solves a
 [`adc_dsp_selectivity_plan.json`](adc_dsp_selectivity_plan.json) uses the exact
 five-corner two-tone PEX amplitudes to require a 0.25 V peak, 12-ENOB, at least
 320 MS/s converter with two-times blocker headroom and at least 65 dB of
-125 MHz digital attenuation. The product-specific checker is invoked by the
-existing physical-parent runner; it verifies this input budget but explicitly
-does not claim an implemented converter, filter, receiver, sensitivity, or RF
-model qualification. An external RF preselector/match remains a later
-out-of-band/package/antenna requirement, and a measured external IF filter may
-eventually reduce converter requirements only after its port and S-parameters
-are bound.
+125 MHz digital attenuation. The original 5-pF sampled-input leaf is now
+rejected on first principles as well as its switch screens: six-sigma
+differential kT/C noise at 125 C is 281 uV, far above its 30.5-uV quarter-LSB
+allocation. [`sampler_thermal_settling_budget.json`](sampler_thermal_settling_budget.json)
+therefore binds the required IF-driver/hold-capacitor repartition before a new
+sampler layout is authorized. The product-specific checker verifies this input
+budget but explicitly does not claim an implemented converter, filter,
+receiver, sensitivity, or RF model qualification. An external RF
+preselector/match remains a later out-of-band/package/antenna requirement, and
+a measured external IF filter may eventually reduce converter requirements only
+after its port and S-parameters are bound.

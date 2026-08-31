@@ -1,0 +1,37 @@
+* SPDX-License-Identifier: Apache-2.0
+* Narrowband noise screen for the externally matched GF180 LNA core.
+*
+* The source, matching/coupling capacitors, degeneration, load and mixer input
+* remain external bench elements.  This deck is a compact-model + lumped-PEX
+* feasibility measurement, not a qualified RF/noise-figure signoff model.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.include @DUT_INCLUDE@
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VBIAS BIAS 0 @VBIAS_V@
+RB GATE BIAS 1meg
+VSIG SIG 0 DC 0 AC 1
+RSIG SIG RF_SOURCE_EXT 50
+CCIN RF_SOURCE_EXT GATE 20p
+RD VDD DRAIN 300
+RSOURCE SOURCE 0 82
+CCOUT DRAIN OUT 20p
+RLOAD OUT 0 5k
+XDUT GATE DRAIN SOURCE 0 @DUT_SUBCKT@
+
+.control
+set wr_singlescale
+set wr_vecnames
+op
+ac dec 80 2.2gig 2.6gig
+let gain = v(OUT)
+wrdata @AC_DATA@ gain
+noise v(OUT) VSIG dec 80 2.2gig 2.6gig
+* This deck has one noise analysis.  Keep the plot name explicit so the
+* following wrdata operation cannot accidentally read the preceding AC plot.
+setplot noise1
+wrdata @NOISE_DATA@ onoise_spectrum inoise_spectrum
+.endc
+.end

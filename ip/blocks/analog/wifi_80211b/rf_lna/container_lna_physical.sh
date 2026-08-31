@@ -15,4 +15,8 @@ cp "$pex" /work/wifi_lna_cs_core.pex.spice
 python3 /src/rf_lna/run_lna_ac.py --source /src/rf_lna --pex "$pex" \
   --work /work/pex-cases --output /work/lna-pex-result.json --jobs 2 \
   || test -s /work/lna-pex-result.json
+python3 /src/rf_lna/run_lna_noise.py --source /src/rf_lna --pex "$pex" \
+  --work /work/noise-cases --output /work/lna-noise-result.json --jobs 2
+python3 /src/rf_lna/check_lna_noise.py --result /work/lna-noise-result.json \
+  --source /src/rf_lna --pex "$pex"
 printf '{"result":"pass"}\n' > /work/lna-physical-smoke.json

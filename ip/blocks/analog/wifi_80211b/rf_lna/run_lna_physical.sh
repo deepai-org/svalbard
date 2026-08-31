@@ -8,5 +8,6 @@ exec "$repo_root/scripts/run_analog_flow.sh" \
   --timeout 20m --cpus 2 --memory 8g \
   --copy lna-physical-smoke.json:wifi-lna-physical-smoke-last.json \
   --copy lna-pex-result.json:wifi-lna-pex-last.json \
+  --copy lna-noise-result.json:wifi-lna-noise-last.json \
   --copy wifi-lna-cs-core-layout.png:wifi-lna-layout-last.png \
   --copy wifi_lna_cs_core.pex.spice:wifi-lna-last.pex.spice

@@ -11,9 +11,12 @@ The current executable evidence is
 creates a GF180 layout, runs DRC and LVS, extracts full RC, and tests a fixed
 external 1.5 V gate bias across five public PVT environments.  The passing
 claim is restricted to loaded small-signal voltage gain at 2.4 GHz, a valid DC
-point, input delivery, and supply current.  Matching, source degeneration,
-drain load, mixer load, bias source, antenna/filter, package, and reference are
-outside the core's physical boundary.
+point, input delivery, and supply current. A second full-RC PEX narrowband
+noise screen completes all five cases, with a worst bench-relative estimate of
+10.283 dB. It is not a qualified RF noise figure or receive-sensitivity claim.
+Matching, source degeneration, drain load, mixer load, bias source,
+antenna/filter, package, and reference are outside the core's physical
+boundary.
 
 The checked layout render is
 [`wifi-lna-cs-core-layout.png`](../../docs/images/wifi-lna-cs-core-layout.png).

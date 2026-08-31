@@ -1,16 +1,30 @@
-# Analog Evidence Compiler specification
+# Product-first analog evidence plan
 
-- Status: proposed implementation specification
+- Status: active product roadmap; long-range architecture reference
 - Date: 2026-08-31
-- Working name: `aec`
+- Working name: `aec` (a label for narrowly scoped helpers, not a current
+  standalone compiler deliverable)
 - Initial process target: GF180MCU
 - Initial applications: PCIe Gen1 wireline PHY and 2.4 GHz Wi-Fi radio
 - Delivery strategy: integration-first over reviewed open-source components
 
 ## 1. Purpose
 
-Build a compiler and verifier that turns an intended transistor/passive circuit,
-physical constraints, and a system-level behavioral contract into:
+The deliverable is not an analog compiler. The deliverables are a physically
+verified PCIe interface and a Wi-Fi receiver/transmitter path with an honest
+model and measurement boundary. This document permits a small evidence toolchain
+only when it gets one of those products through its next physical decision.
+
+The current toolchain starts with the repository's SPICE/layout generators,
+native DRC/LVS/PEX runners, focused checkers, and immutable result records. A
+new helper is justified only if it removes a repeated, observed product cost:
+for example, lost source/PEX identity, manual PVT scheduling, ambiguous failed
+internal nodes, or an unlabelled RF model boundary. It is not justified merely
+because it resembles part of a future compiler.
+
+At the point a promoted product claim needs it, the toolchain should turn an
+intended transistor/passive circuit, physical constraints, and a system-level
+behavioral contract into:
 
 1. a manufacturable physical implementation;
 2. calibration and test mechanisms needed to make that implementation robust;
@@ -18,33 +32,35 @@ physical constraints, and a system-level behavioral contract into:
 4. a content-addressed evidence package stating exactly what is proven, failed,
    assumed, bounded, or unavailable.
 
-The compiler is successful only when it shortens the complete circuit-to-evidence
-loop. Automatic placement without extracted verification is not sufficient, and
-a large simulation launcher without physical synthesis is not sufficient.
-Its success metrics are PCIe and Wi-Fi closure milestones, not language
-features, supported operation counts, generated-layout counts, or framework
-completeness. AEC work that does not unblock an active chip claim is deferred.
+The toolchain is successful only when it shortens the complete
+circuit-to-evidence loop for PCIe or Wi-Fi. Its success metrics are product
+closure milestones, not language features, supported operation counts,
+generated-layout counts, or framework completeness. `aec` work that does not
+unblock an active chip claim is deferred.
 
 The existing whole-interface Aether source at
 `projects/pcie_gen1_endpoint/analog/pcie_gen1_x1.aether` is an example front-end
-contract. This specification defines the system required to execute such a
-contract. The front-end syntax may evolve; its semantics and evidence rules are
-the stable interface.
+contract. The rest of this document records desired evidence semantics and a
+possible future architecture. **Only Section 17 authorizes active implementation
+work.** Sections 4--16 are checklists for deciding whether a product claim is
+sound; they are not a backlog to implement a language, solver, optimizer,
+router, or service.
 
-AEC is not a ground-up replacement for the open analog ecosystem. Its primary
-job is to supply the missing system semantics, identity, optimization,
-calibration, hierarchy, and claim-refinement layer while adapting reviewed
-upstream projects for circuit representation, characterization, physical
-synthesis, and deterministic EDA evidence.
+AEC is not a ground-up replacement for the open analog ecosystem. If a narrow
+gap repeatedly blocks a product claim, it may supply that one missing semantic,
+identity, calibration, hierarchy, or claim-refinement function while adapting
+reviewed upstream projects. It must not become a parallel product.
 
 Normative terms **MUST**, **SHOULD**, and **MAY** describe required, preferred,
-and optional behavior respectively.
+and optional behavior for a claim that is being promoted. They do not authorize
+proactive implementation of a general capability.
 
 ## 2. Product boundary
 
-### 2.1 In scope
+### 2.1 Claim capabilities, only when a product gate needs them
 
-The compiler MUST support:
+The product toolchain MUST support the following only to the extent required by
+the active PCIe or Wi-Fi gate:
 
 - transistor, passive, behavioral, package, channel, and thermal models;
 - user-selected circuits and bounded topology families;
@@ -59,7 +75,7 @@ The compiler MUST support:
 - deterministic builds, cache identity, immutable evidence, and claim tracking;
 - both time-domain wireline circuits and frequency-domain/RF circuits.
 
-### 2.2 Not initially in scope
+### 2.2 Not an active deliverable
 
 Version 1 MUST NOT claim unrestricted synthesis from prose into an invented
 analog topology. It starts from an intended circuit, a library topology, or an
@@ -711,6 +727,13 @@ structure needed to proceed.
 
 ## 17. Product-driven implementation plan
 
+This is the authoritative active roadmap. Work elsewhere in this document is
+permitted only if it is the smallest way to retire one of the gates below. The
+decision order is always: make the direct circuit/layout experiment; add a thin
+checker or adapter only when that experiment exposes repeated manual work or an
+evidence error; then generalize only after the same need recurs in a second real
+block or product.
+
 ### Slice 0: no standalone tool project
 
 There is no proactive upstream-qualification milestone. Do not evaluate,
@@ -736,30 +759,38 @@ or measurement decision in Slices 1 or 2.
 
 Execution order is deliberately narrow:
 
-1. Close the pulse generator's slow/hot restoration failure without losing its
-   fresh extracted TT pass. The current delayed-step baseline is zero-DRC,
-   uniquely LVS-matched and passes one exact TT PEX contract, but SS/125 C
-   collapses WRITE; the later fast-detector candidate is historical and
-   rejected. Each proposed circuit change gets one source hash, internal-node
-   measurement, legal regenerated layout, DRC, unique LVS and full-RC TT replay
-   before it earns PVT runtime.
-2. Implement the real clock-consumer boundary. The generator's SENSE/BOOST/
-   WRITE outputs are not a pin-compatible substitute for the capture macro's
-   SENSE/REGEN/REGENB/CAPTURE/CAPTUREB/BOOST controls. The required level,
-   polarity, phase and load mapping must therefore be a transistor/layout
-   implementation (or an explicitly redesigned integrated gate), never ideal
-   `PULSE` sources in the parent bench.
-3. Only after those two gates pass, generate the converter + pulse +
-   regenerative-capture parent with parent-owned signal, supply, substrate,
-   and bias routes, then run DRC, unique LVS, PEX and the composed capture
-   contract.
+1. Make the pulse leaf's corner control physically effective at a full-swing
+   state before the narrow interval is formed. The present `SEL0..SEL3` pins
+   only terminate in physical load anchors, so static code sweeps are not a
+   calibration result. The next candidate must contain a real selected path,
+   an observable correlated with its timing/drive margin, safe code endpoints,
+   and a bounded selection procedure. Do not build a general calibration
+   synthesizer.
+2. Use that one real control to repair the two exact extracted failures in the
+   already physical pulse-to-bridge-to-direct-regenerative-capture boundary:
+   FF/cold bridge-drive margin and SS/hot pulse reset. Preserve the current
+   three passing corners and reject a candidate promptly when its TT replay or
+   a known rail/reset predicate regresses. The rejected fixed 12-um final-NMOS
+   enlargement is diagnostic evidence, not a candidate to revive.
+3. For each promising circuit revision, run the existing short sequence only:
+   schematic measurement of the changed semantic nodes, regenerated legal
+   layout, DRC, unique LVS, exact TT PEX, then the five-corner composed PEX
+   screen. Record source/layout/PEX/testbench hashes and the first failed
+   predicate. A profile scheduler or node-probe helper is allowed only if it
+   removes this repeated work.
+4. After the boundary passes its declared five-corner screen, route the actual
+   converter + pulse + bridge + regenerative-capture parent with parent-owned
+   signal, supply, substrate, and bias routes, then run DRC, unique LVS, PEX
+   and the composed capture contract. PRBS/channel and CDR-loop work remain
+   downstream of this gate; they must not obscure it.
 
 OpenADA is imported only where it can carry a result unchanged; the checked
 native result format remains authoritative elsewhere.
 
-Exit criterion: the PCIe parent is physically real and either passes its exact
-declared environments or has a machine-localized blocker that requires new
-device/model authority rather than more manual log archaeology.
+Exit criterion: the PCIe clock/capture parent is physically real and either
+passes its exact declared environments with a realizable control/selection
+mechanism or has one localized blocker that needs new device/model authority,
+not more manual log archaeology.
 
 ### Slice 2: build the Wi-Fi RF risk macro
 
@@ -811,11 +842,12 @@ unbound product handoff is
 
 Execution order is likewise tied to the next receiver claim:
 
-1. Bind a concrete measured/vendor S-parameter RF preselector/matching network
-   at the declared antenna-to-LNA port, or freeze an ADC/DSP dynamic-range and
-   channel-filter model. Route its die-side landing and rerun the routed
-   two-tone, noise and linearity parent; do not call present finite conversion
-   gain a receiver result.
+1. Choose one receiver decision: bind a concrete measured/vendor S-parameter
+   RF preselector/matching network at the antenna-to-LNA port, or freeze an
+   ADC/DSP dynamic-range and channel-filter model. This is a product
+   architecture choice, not an opportunity to build an RF optimizer. Route its
+   die-side landing and rerun the routed two-tone, noise and linearity parent;
+   do not call present finite conversion gain a receiver result.
 2. Preserve the OSTL and active-NFET coupons as tapeout/measurement obligations.
    When calibrated wafer data exists, bind the exact de-embedded S-parameters,
    noise and bias range into the model registry before promoting any RF gain,
@@ -824,9 +856,11 @@ Execution order is likewise tied to the next receiver claim:
    inductors or long RF routing--and import a reviewed network without
    double-counting its parasitics. Do not run generic EM campaigns before a
    geometry and a decision they can change are available.
-4. Use CACE for campaigns it directly represents and a qualified layout backend
-   only if the block-specific generator cannot produce legal geometry. DRC/LVS/
-   PEX/EM evidence remains authoritative regardless of the generator.
+4. Add only one thin S-parameter import/validity check if the chosen network
+   cannot be bound safely with the native deck. Use CACE for campaigns it
+   directly represents and a qualified layout backend only if the block-specific
+   generator cannot produce legal geometry. DRC/LVS/PEX/EM evidence remains
+   authoritative regardless of the generator.
 
 Exit criterion: the macro has a reproducible evidence package that either
 supports the next integrated Wi-Fi receiver step or identifies the specific
@@ -850,10 +884,11 @@ or prevents a previously observed false claim in both projects.
 
 ### Immediate execution policy
 
-Until the PCIe clock/capture parent no longer relies on ideal timing sources and
-the Wi-Fi receiver has a measured-model path plus an IF-selectivity answer, the
-repository is **not** building a general analog compiler. The allowed shared
-work is limited to a defect already encountered in both products:
+The PCIe clock/capture bench now removes ideal timing sources at its immediate
+boundary but passes only 3/5 corners; the Wi-Fi receiver has neither a bound
+selectivity network nor an ADC/DSP alternative. Until those two product gates
+advance, the repository is **not** building a general analog compiler. The
+allowed shared work is limited to a defect already encountered in both products:
 
 - source/layout/PEX/testbench/result identity and invalidation;
 - resource-bounded, resumable PVT or characterization runners;

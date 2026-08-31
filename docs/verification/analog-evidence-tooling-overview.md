@@ -37,6 +37,72 @@ Run a product experiment through that product block's documented `run_*.sh`
 wrapper. Do not invoke a result checker alone as a substitute for regenerating
 the circuit or physical evidence it checks.
 
+## The repeatable compiler loop we are moving toward
+
+The useful near-term meaning of "compiler" is not unrestricted topology
+invention. It is a deterministic closure loop around an intended circuit and a
+bounded set of legal implementation choices. One versioned **closure manifest**
+should name the circuit revision, topology identity, allowed sizing and layout
+degrees of freedom, realizable control codes, environments, loads, semantic
+nodes, predicates, models, generators, and tool profiles. A run should then
+perform the following state machine without hand-edited intermediate files:
+
+1. **Elaborate.** Resolve the manifest to one exact transistor/passive netlist,
+   testbench family, and physical constraint set. Reject ambiguous device,
+   terminal, control, or model identity before simulation.
+2. **Screen cheaply.** Run structural checks and the smallest schematic PVT
+   campaign that can reject the candidate. Record every case, not only the
+   selected code or best waveform.
+3. **Lower physically.** Generate deterministic devices, matching arrays,
+   placement, routes, taps, guard structures, vias, and deliberate fill. A
+   topology or connectivity change creates a new circuit revision; it is not a
+   hidden placement optimization.
+4. **Establish physical identity.** Require DRC and unique LVS before electrical
+   promotion. Join the generated layout and extracted netlist back to the exact
+   circuit and manifest hashes.
+5. **Escalate evidence.** Run TT extracted-RC first, then the declared PVT set,
+   then routed-parent, package/EM, statistical, or unavailable-physics checks
+   only when the preceding boundary passes and the product claim needs them.
+6. **Localize the first failure.** Report the earliest failed semantic state,
+   its quantitative margin, the responsible physical path, and ranked bounded
+   counterfactuals such as removing one net's R/C, strengthening one stage, or
+   changing one realizable code. Preserve the failed candidate as evidence.
+7. **Generate the next bounded experiment.** Search only declared parameters
+   and reviewed topology alternatives. Select candidates for information gain
+   and worst-case margin, not nominal score alone. Any topology proposal goes
+   back through schematic screening; any geometry proposal regenerates
+   DRC/LVS/PEX.
+8. **Promote or stop.** Promote only the byte-identified candidate that satisfies
+   every required case. Otherwise emit a rejection record or a named model,
+   package, EM, foundry, or silicon-measurement obligation rather than widening
+   the claim.
+
+This makes each iteration a reproducible transition, for example
+`schematic_pass -> physical_legal -> pex_fail(BOOST_low_margin) -> circuit_revision`,
+instead of a directory of waveforms plus a designer's memory. It also makes
+resumption and parallel execution safe: cases are content-addressed, cached
+only when all dependencies match, resource bounded, and merged into one
+deterministic result independent of completion order.
+
+There are three deliberately separate roles:
+
+| Role | Allowed to do | Not allowed to do |
+|---|---|---|
+| Deterministic evidence kernel | Elaborate identities, schedule tools, evaluate typed measurements, invalidate dependencies, and promote/reject claims | Change requirements or infer that an unrun analysis passed |
+| Numerical/search engine | Explore declared continuous sizes, integer fingers, control codes, placements, and reviewed topology families using measured margins and surrogate models | Bypass regeneration or use a schematic score as physical proof |
+| Designer or LLM assistant | Partition budgets, choose topology families, explain mechanisms, rank experiments, and recognize when missing physics or architecture is the blocker | Be the source of truth for connectivity, measurements, or signoff |
+
+The current pulse-path flow is the first real fixture for this loop. It already
+has a closure manifest, deterministic source lowering, schematic campaigns,
+DRC/LVS/PEX, semantic node labels, exact replay, and RC counterfactuals. The
+remaining manual seam is the important one: measurements and counterfactuals
+do not yet automatically identify the first failed internal state and emit a
+machine-readable next-experiment record. The next justified shared extraction
+is therefore a small first-failure/candidate-comparison layer exercised on this
+PCIe failure, then reused on the Wi-Fi IF driver if it removes the same log and
+waveform archaeology there. It is not yet a reason to build a new language,
+general router, or global topology synthesizer.
+
 ## What this tooling has productively done
 
 It has supported real engineering decisions rather than only produced reports.

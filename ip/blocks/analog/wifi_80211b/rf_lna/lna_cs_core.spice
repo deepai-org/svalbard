@@ -1,0 +1,30 @@
+* SPDX-License-Identifier: Apache-2.0
+* First 2.4 GHz Wi-Fi risk macro: externally matched common-source LNA core.
+*
+* RF_IN, RF_OUT, and RF_SOURCE intentionally expose the transistor terminals.
+* The first GF180 feasibility step keeps matching, DC bias, load, balun, ESD,
+* package, and antenna external and explicit in the characterization bench.
+* This is not a claim of a 50-ohm matched, noise-qualified, or regulatory-ready
+* 802.11 receiver.
+
+.subckt wifi_lna_cs_core RF_IN RF_OUT RF_SOURCE VSS
+* Each explicit finger preserves the alternating extracted source/drain
+* orientation. This avoids treating a routed RF multi-finger geometry as an
+* ideal multiplicity and lets LVS/PEX retain asymmetric junction parasitics.
+X0  RF_SOURCE RF_IN RF_OUT    VSS nfet_03v3 w=4u l=0.28u
+X1  RF_OUT    RF_IN RF_SOURCE VSS nfet_03v3 w=4u l=0.28u
+X2  RF_SOURCE RF_IN RF_OUT    VSS nfet_03v3 w=4u l=0.28u
+X3  RF_SOURCE RF_IN RF_OUT    VSS nfet_03v3 w=4u l=0.28u
+X4  RF_OUT    RF_IN RF_SOURCE VSS nfet_03v3 w=4u l=0.28u
+X5  RF_OUT    RF_IN RF_SOURCE VSS nfet_03v3 w=4u l=0.28u
+X6  RF_OUT    RF_IN RF_SOURCE VSS nfet_03v3 w=4u l=0.28u
+X7  RF_SOURCE RF_IN RF_OUT    VSS nfet_03v3 w=4u l=0.28u
+X8  RF_OUT    RF_IN RF_SOURCE VSS nfet_03v3 w=4u l=0.28u
+X9  RF_SOURCE RF_IN RF_OUT    VSS nfet_03v3 w=4u l=0.28u
+X10 RF_SOURCE RF_IN RF_OUT    VSS nfet_03v3 w=4u l=0.28u
+X11 RF_OUT    RF_IN RF_SOURCE VSS nfet_03v3 w=4u l=0.28u
+X12 RF_SOURCE RF_IN RF_OUT    VSS nfet_03v3 w=4u l=0.28u
+X13 RF_SOURCE RF_IN RF_OUT    VSS nfet_03v3 w=4u l=0.28u
+X14 RF_OUT    RF_IN RF_SOURCE VSS nfet_03v3 w=4u l=0.28u
+X15 RF_OUT    RF_IN RF_SOURCE VSS nfet_03v3 w=4u l=0.28u
+.ends wifi_lna_cs_core

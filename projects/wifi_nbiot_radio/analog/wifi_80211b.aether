@@ -1,0 +1,84 @@
+// SPDX-License-Identifier: Apache-2.0
+// Product contract for the staged 2.4 GHz Wi-Fi receive path.  Aether syntax is
+// a design intent and evidence contract, not an implemented radio compiler.
+
+language Aether 0.1;
+
+quantity rf_center = 2.4 GHz;
+quantity vdd_io    in interval [2.97 V, 3.63 V];
+quantity temp      in interval [-40 degC, 125 degC];
+
+discipline electrical { across voltage: V; through current: A; }
+discipline thermal    { across temperature: K; through heat: W; }
+
+ensemble gf180_public_pvt {
+  process_corner in { tt, ff, ss };
+  supply in vdd_io;
+  temperature in temp;
+
+  // These terms lack provider-qualified RF evidence.  They are obligations,
+  // not invented statistical distributions.
+  rf_device_error  unavailable "provider RF model validity";
+  passive_q        unavailable "on-die and external passive characterization";
+  substrate_noise  unavailable "mixed-signal aggressor/victim characterization";
+  package_network  unavailable "bond/package S-parameters";
+  antenna_network  unavailable "antenna, filter, and matching S-parameters";
+}
+
+module wifi_80211b_rx : radio_receiver in physical_environment {
+  terminal antenna_50ohm, ext_lo, ext_i, ext_q : electrical;
+  terminal vdd_rf, vss, substrate : electrical;
+  terminal die_thermal : thermal;
+
+  input enable, rx_data : event;
+  output recovered_bits, rx_ready, diagnostic_fault : event;
+
+  assume early_risk_boundary {
+    external antenna_50ohm through qualified_filter_and_matching_network;
+    external reference and LO/IQ through qualified_reference_chain;
+    package, bond, and board networks are explicit imported two_port_models;
+    // No on-die PA, antenna switch, crystal, bias/reference, or calibration is
+    // present in the first receive-path risk macro.
+  }
+
+  module lna_core : common_source_nfet_array {
+    terminal rf_in, rf_out, rf_source, vss : electrical;
+    implementation intent {
+      source "ip/blocks/analog/wifi_80211b/rf_lna/lna_cs_core.spice";
+      physical "ip/blocks/analog/wifi_80211b/rf_lna/layout.tcl";
+      degree_of_freedom { finger_order, multiplicity, placement, routing };
+      forbid { topology_change, terminal_reordering };
+    }
+    assume bench_boundary {
+      external_50ohm_source_and_matching;
+      external_bias = 1.5 V;
+      external_source_degeneration_and_drain_load;
+      high_impedance_external_mixer_load;
+    }
+    guarantee checked_full_rc_pvt {
+      source "ip/blocks/analog/wifi_80211b/rf_lna/run_lna_physical.sh";
+      drc_clean and lvs_matches_intended_circuit;
+      for every public_pvt_case { voltage_gain(rf_center) >= 1.0; }
+      0.4 V <= drain_dc <= vdd_rf - 0.4 V;
+      0.1 mA <= supply_current <= 20 mA;
+    }
+  }
+
+  // The staged receiver has no top-level 802.11 performance guarantee yet.
+  // The following conditions are hard release blockers rather than silently
+  // optimistic assumptions.
+  obligation before wifi_80211b_rx.integration_claim {
+    prove noise_figure, conversion_gain, i_q_balance, dc_offset,
+          blocker_tolerance, phase_noise, and receive_sensitivity;
+    import package_network and antenna_network with non_double_counted_em_ports;
+    implement on_die_bias_reference_and_calibration with observable search;
+    compose lna_core plus mixer plus baseband through a routed physical parent;
+    verify 80211b_evm, spectral_mask, startup, and coexistence_aggressors;
+  }
+
+  guarantee current_status {
+    lna_core.checked_full_rc_pvt;
+    not_claim { integrated_receiver, ieee_80211_compliance,
+                interoperability, yield, silicon_qualification };
+  }
+}

@@ -729,6 +729,15 @@ device/model authority rather than more manual log archaeology.
 
 ### Slice 2: build the Wi-Fi RF risk macro
 
+Current state: the first active macro is the routed 16-finger NFET LNA core at
+[`ip/blocks/analog/wifi_80211b/rf_lna`](../../ip/blocks/analog/wifi_80211b/rf_lna).
+Its current native flow has clean DRC and LVS and a full-RC PEX AC screen at
+2.4 GHz over five public PVT environments using one fixed **external** 1.5 V
+bias.  It establishes only a small-signal core feasibility boundary; it does
+not establish noise, matching, linearity, package/antenna EM, an on-die bias,
+or an 802.11 receiver.  The next steps below are product gates, not tool
+milestones.
+
 - Freeze a modest 2.4 GHz 802.11b front-end boundary and external passive,
   crystal, package, and antenna assumptions.
 - Build only the RF characterization structures and first active macro needed

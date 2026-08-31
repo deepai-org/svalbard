@@ -1,0 +1,35 @@
+* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+@DUT_INCLUDE@
+.temp @TEMP_C@
+
+* External-passive feasibility boundary. The 50-ohm source represents an
+* external antenna/matching network. The high-impedance output represents an
+* external mixer input; no output match, NF, linearity, EVM, or emissions claim
+* is made by this voltage-gain test.
+VDD VDD 0 @VDD_V@
+VBIAS BIAS 0 @VBIAS_V@
+RB GATE BIAS 1meg
+VSIG SIG 0 DC 0 AC 1
+RSIG SIG RF_SOURCE_EXT 50
+CCIN RF_SOURCE_EXT GATE 20p
+RD VDD DRAIN 300
+RSOURCE SOURCE 0 82
+CCOUT DRAIN OUT 20p
+RLOAD OUT 0 5k
+XDUT GATE DRAIN SOURCE 0 @DUT_SUBCKT@
+
+.control
+op
+let output_dc = v(DRAIN)
+let supply_current = -i(VDD)
+print output_dc supply_current
+ac dec 40 100meg 5gig
+let input_mag = mag(v(GATE))
+let gain = mag(v(OUT))
+meas ac gain_2p4g find gain at=2.4gig
+meas ac input_mag_2p4g find input_mag at=2.4gig
+print gain_2p4g input_mag_2p4g
+.endc
+.end

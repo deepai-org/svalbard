@@ -2,14 +2,14 @@ PYTHON ?= python3
 COMPONENT ?= project.pcie_gen1_endpoint
 PROJECT ?=
 
-.PHONY: doctor check check-fast check-digital spec process-eligibility images-ready toolchain-readiness scratch-report repo-audit graph smoke toolchain-smoke analog-flow-preflight serdes-tx-smoke serdes-termination-smoke serdes-rx-smoke phase-interpolator-smoke phase-control-dac-smoke phase-control-integration-smoke cdr-sampler-smoke cdr-phase-detector-smoke cdr-phase-detector-schematic cdr-integrated-detector-schematic cdr-integrated-error-smoke cdr-phase-error-filter-smoke cdr-error-slicer-smoke digital-image quaigh-image digital-pnr-smoke bfm-smoke bfm-history-audit verification-deps-fetch tool-artifacts-fetch pull
+.PHONY: doctor check check-fast check-digital spec process-eligibility images-ready toolchain-readiness scratch-report repo-audit graph smoke toolchain-smoke analog-flow-preflight serdes-tx-smoke serdes-termination-smoke serdes-rx-smoke wifi-lna-smoke phase-interpolator-smoke phase-control-dac-smoke phase-control-integration-smoke cdr-sampler-smoke cdr-phase-detector-smoke cdr-phase-detector-schematic cdr-integrated-detector-schematic cdr-integrated-error-smoke cdr-phase-error-filter-smoke cdr-error-slicer-smoke digital-image quaigh-image digital-pnr-smoke bfm-smoke bfm-history-audit verification-deps-fetch tool-artifacts-fetch pull
 
 doctor:
 	./bootstrap.sh doctor
 
 check: check-fast
 
-check-fast: smoke
+check-fast: smoke wifi-lna-smoke
 	$(PYTHON) scripts/test_analog_evidence.py
 	$(PYTHON) scripts/test_analyze_pex_net.py
 	$(PYTHON) ip/blocks/analog/wireline_serdes/lane/check_2p5_evidence.py
@@ -62,6 +62,7 @@ toolchain-smoke:
 	./flows/smoke/digital/run.sh
 
 analog-flow-preflight:
+	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wifi_80211b/rf_lna/run_lna_physical.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/serdes_tx/run.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/termination/run.sh
 	ANALOG_FLOW_CHECK_ONLY=1 ./ip/blocks/analog/wireline_serdes/serdes_rx/run.sh
@@ -173,6 +174,9 @@ serdes-termination-smoke:
 
 serdes-rx-smoke:
 	./ip/blocks/analog/wireline_serdes/serdes_rx/run.sh
+
+wifi-lna-smoke:
+	./ip/blocks/analog/wifi_80211b/rf_lna/run_lna_physical.sh
 
 phase-interpolator-smoke:
 	./ip/blocks/analog/wireline_serdes/phase_interpolator/run.sh

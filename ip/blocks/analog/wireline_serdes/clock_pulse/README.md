@@ -117,6 +117,13 @@ out that direct detector substitution; a next candidate must change the
 end-to-end timing budget and output-taper interface together, not only
 re-encode the local interval.
 
+An extracted-layout 2026-08-31 threshold probe also halved only the first
+write-taper inverter's NMOS multiplicity. It regenerated full TT WRITE rails,
+but widened the pulse to 299/307 ps against the 220 ps maximum. The source and
+layout were reverted. This rejects simple first-stage threshold skew as the
+slow/hot fix; an accepted change must preserve the full timing budget, not
+merely restore output amplitude.
+
 On 2026-08-31, a schematic-only wiring probe connected `SEL3` through the
 existing `cp_profile_write_restore` element at the restored `WSA`--`WSB` step.
 It was intentionally not laid out or promoted: FF/hot instead produced roughly

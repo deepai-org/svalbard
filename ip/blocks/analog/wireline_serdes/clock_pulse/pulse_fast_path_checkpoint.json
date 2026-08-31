@@ -4,7 +4,7 @@
   "classification": "failed_nonpromotable_characterization",
   "release_eligible": false,
   "source_sha256": "c09091869efbb5b741676e11cfca112df6cbaa117ca5b80146db457d4b6b1c60",
-  "layout_generator_sha256": "6579626f9c0719443518758c274c1853e1c786d53aeeb244a575344a0d725825",
+  "layout_generator_sha256": "1ef639c23bcb3afbc0c899980601b86ab8c41c01f3becdf80def4a0d7b93c459",
   "testbench_sha256": "b8e79e9333ac42d3363598f2a8b76fb01ff432738764eb227b68d78156d63545",
   "runner_sha256": "f14b334aaa2afde5c35b0febebc730757d76835479716b4034e41610de0f55a3",
   "layout": {
@@ -13,26 +13,32 @@
     "width_um": 226.2,
     "drc_error_count": 0,
     "lvs_result": "unique_match",
-    "gds_sha256": "5942e12f944c082dbb6542ab7072d5a63ba2e49c2e20afb0ae48de1fa3c08f83",
-    "pex_sha256": "a41731940f1882d059e227c0cd0cc8c2968cce7a787fb00ffed9e40e96b5c822"
+    "gds_sha256": "4bf8e17af672d06e5235f4db1fbce8c548689d92a0870119df86c978725ce2db",
+    "pex_sha256": "17fcf1a43382ea565067c192362b57aad0f9db302374505e3691a209f57b3cfc"
   },
   "schematic": {
     "case_count": 20,
-    "passing_case_count": 12,
-    "covered_environments": ["tt", "ff_hot", "ss_cold"],
-    "uncovered_environments": ["ff_cold", "ss_hot"]
+    "passing_case_count": 0,
+    "covered_environments": [],
+    "uncovered_environments": ["tt", "ff_cold", "ff_hot", "ss_cold", "ss_hot"],
+    "note": "Fresh unpromoted current-runtime replay. The earlier 12/20 record is historical and not interchangeable evidence."
   },
   "nominal_full_rc_pex": {
     "result": "fail",
     "complete": false,
-    "sense_width_ps": 383.62,
+    "even_sense_width_ps": 379.51,
+    "odd_sense_width_ps": 377.72,
     "write_width_ps": 0.0,
-    "write_delay_ps": 258.98,
-    "wpn_min_v": 1.33489,
-    "wb1_max_v": 0.336539,
-    "write_max_v": 0.0938513
+    "write_delay_ps": 254.04,
+    "even_wpn_min_v": 0.949838,
+    "odd_wpn_min_v": 1.53068,
+    "even_wb1_max_v": 0.696282,
+    "odd_wb1_max_v": 0.269899,
+    "even_write_max_v": 0.097949,
+    "odd_write_max_v": 0.120224
   },
   "required_followup": [
+    "Replace the narrow combinational WPN interval with interval formation from a restored, physically local timing state.",
     "Realize profile control at a fully restored timing step.",
     "Close fresh nominal full-RC PEX before running or promoting full PVT.",
     "Bind each promoted simulation to its own DRC/LVS-checked PEX deck."

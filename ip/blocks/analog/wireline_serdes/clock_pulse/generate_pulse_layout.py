@@ -403,6 +403,34 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
             def write_order(group: Group) -> tuple[int, int, int, str]:
                 parts = group.name.split("__")
                 root = parts[1]
+                # Current fast-detector implementation: retain the full-swing
+                # write chain as one physical row.  The generic depth order
+                # formerly placed XWSD0 at the beginning of lane 3, more than
+                # 90 um from WBA (its driver) and WPN (its consumer).  Exact
+                # PEX then measured 85--93 ohm root-to-gate paths on those
+                # narrow-event nodes and WPN never reached a valid low level.
+                # This is a pure placement change: WISO restores the SENSE
+                # edge, WBASE creates a full-width delayed step, WSD supplies
+                # the local end edge, WPN forms the interval, and WB0--WB4
+                # restore/buffer it.  Keep each such dependency adjacent;
+                # calibration belongs on a full-width state, not by moving a
+                # narrow pulse through a long route.
+                fast_write_rank = {
+                    "XWISO0": 0, "XWISO1": 1, "XWISO2": 2,
+                    "XWBASE0": 3, "XWBASE1": 4, "XWBASE2": 5,
+                    "XWBASE3": 6, "XWBASE4": 7, "XWBASE5": 8,
+                    "XWSD0": 9, "XWPN": 10,
+                    "XWB0": 11, "XWB1": 12, "XWB2": 13,
+                    "XWB3": 14, "XWB4": 15,
+                }
+                if root in fast_write_rank:
+                    stage_name = parts[2] if len(parts) > 2 else ""
+                    stage_suffix = (stage_name[2:]
+                                    if stage_name.startswith(("XI", "XD"))
+                                    else "")
+                    stage = int(stage_suffix) if stage_suffix.isdigit() else 0
+                    return (0, 4 * fast_write_rank[root] + stage, 0,
+                            group.name)
                 if (root == "XWET" and len(parts) > 2
                         and parts[2] == "XNF"):
                     # Preserve the calibrated XWET pair and downstream x

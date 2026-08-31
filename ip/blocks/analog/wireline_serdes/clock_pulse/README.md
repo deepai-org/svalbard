@@ -76,17 +76,25 @@ closure, and the full 20-case campaign is not promoted.
 The working source now contains a reduced-depth static-CMOS falling-edge
 detector (`cp_fall_pulse_fast`) and six full-swing write-delay units. This is a
 strictly unpromoted candidate, recorded in
-`pulse_fast_path_checkpoint.json`. Its schematic campaign covers TT, FF/hot,
-and SS/cold (12/20 cases); FF/cold has insufficient write placement, while
-SS/hot has an insufficient sense aperture and no complete write pulse. Its
-fresh 164-device, 226.2-um-wide layout is zero-DRC and uniquely LVS-matched,
-but its fresh nominal full-RC PEX fails: the write detector never discharges
-far enough (`WPN` minimum 1.335 V), `WB1` reaches only 337 mV, and WRITE reaches
-only 94 mV. The exact generated PEX/GDS are intentionally not promoted or
-substituted for other evidence decks. This candidate establishes that the
-schematic-only improvement is parasitic-sensitive; the next revision must add
-the needed calibration at a fully restored step and close this first extracted
-TT case before spending time on its full PVT matrix.
+`pulse_fast_path_checkpoint.json`. The prior 12/20 schematic record is
+historical only; a fresh current-runtime replay is 0/20 and cannot be used as
+release evidence. The current 164-device, 226.2-um-wide layout is zero-DRC and
+uniquely LVS-matched. It compacts the restored `WISO`--`WBASE`--`WSD`--`WPN`--
+`WB` dependency chain so `WSD0` no longer sits more than 90 um from its driver
+and consumer. Fresh nominal full-RC PEX still fails: EVEN `WPN` reaches only
+0.950 V, ODD `WPN` 1.531 V, the corresponding first-taper peaks are 0.696 V
+and 0.270 V, and WRITE reaches only 98/120 mV. The exact generated PEX/GDS are
+intentionally not promoted or substituted for other evidence decks. This
+candidate establishes that the detector remains parasitic-sensitive even after
+the gross physical locality error is removed; the next revision must form the
+interval from a robust restored state and close its first extracted TT case
+before spending time on a full PVT matrix.
+
+Two 2026-08-31 extracted-TT sizing probes of `cp_rise_b_small` were rejected
+and reverted. Doubling its NMOS finger count moved the generated chain and
+gave 1.502 V `WPN`; doubling each NMOS finger width retained the horizontal
+placement but increased timing-state gate load and gave 1.576 V `WPN`. Neither
+is a layout or PVT solution.
 
 On 2026-08-31, a schematic-only wiring probe connected `SEL3` through the
 existing `cp_profile_write_restore` element at the restored `WSA`--`WSB` step.

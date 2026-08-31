@@ -21,6 +21,20 @@ frontend_latencies = {"tt": 2, "ff_cold": 0, "ff_hot": 2,
                       "ss_hot": 2, "ss_passive": 2}
 composition = "routed_termination_rx_dual_regenerative_sampler_capture_parent"
 identity_fields = ("pex_sha256", "physical_sha256", "source_sha256")
+package_boundary = {
+    "topology": "per_leg_pad_ac_coupling_series_rl_with_rx_bias_returns",
+    "tx_pad_capacitance_f": 300e-15,
+    "rx_pad_capacitance_f": 500e-15,
+    "ac_coupling_capacitance_f": 100e-9,
+    "series_resistance_ohm_per_leg": 2.0,
+    "series_inductance_h_per_leg": 1e-9,
+    "bias_return_resistance_ohm_per_leg": 2e3,
+    "model_status": "explicit_unqualified_lumped_screen_assumption",
+    "unmodeled": [
+        "pad_esd_nonlinearity", "bond_mutual_inductance",
+        "package_s_parameters", "board_connector_channel", "em_and_ir",
+    ],
+}
 complete = (
     len(documents) == 5
     and {document.get("case_id") for document in documents} == expected_ids
@@ -35,6 +49,8 @@ complete = (
         "series_resistance_ohm_per_leg") == 6.0 for document in documents)
     and all(document.get("channel_stress", {}).get(
         "differential_shunt_capacitance_f") == 1e-12 for document in documents)
+    and all(document.get("package_boundary", {}) == package_boundary
+            for document in documents)
     and all(document.get("stimulus", {}).get(
         "tx_clock_jitter_peak_s") == 30e-12
         and document.get("stimulus", {}).get("tx_clock_duty") == 0.47
@@ -71,6 +87,7 @@ result = {
     "claim": "routed_regenerative_rx_capture_extracted_2p5_gts_combined_stress_pvt",
     "aggregate_source_sha256": digest(Path(__file__)),
     "physical_composition": composition,
+    "package_boundary": package_boundary,
     "case_count": len(documents),
     "passing_case_count": sum(document.get("result") == "pass"
                               for document in documents),

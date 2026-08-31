@@ -1292,6 +1292,23 @@
     "ac_coupling_initial_voltage_v": 1.1,
     "note": "settled TX-to-RX common-mode difference; not a hardware trim"
   },
+  "package_boundary": {
+    "ac_coupling_capacitance_f": 1e-07,
+    "bias_return_resistance_ohm_per_leg": 2000.0,
+    "model_status": "explicit_unqualified_lumped_screen_assumption",
+    "rx_pad_capacitance_f": 5e-13,
+    "series_inductance_h_per_leg": 1e-09,
+    "series_resistance_ohm_per_leg": 2.0,
+    "topology": "per_leg_pad_ac_coupling_series_rl_with_rx_bias_returns",
+    "tx_pad_capacitance_f": 3e-13,
+    "unmodeled": [
+      "pad_esd_nonlinearity",
+      "bond_mutual_inductance",
+      "package_s_parameters",
+      "board_connector_channel",
+      "em_and_ir"
+    ]
+  },
   "passing_case_count": 5,
   "pex_sha256": {
     "rx_regenerative_capture_parent_pex": "f8fdcb7cdcc486c6ac868f476dd7a85bcaaa3ee02ec77caaf835c6107519b1df",
@@ -1550,7 +1567,7 @@
   },
   "source_sha256": {
     "base_testbench": "fce3e458d266ecb41f1424b9580ba540b37be8df88cb8dab4c2d4ca62e161ac7",
-    "runner": "0a72ab0ee5d0369cac9fad3d445ce64f572afcdc5f96abc56717b83589af09d2"
+    "runner": "09f94f3a8b3ceca5f75752523ab859051c54a02003b4b6d52bcfae6b8ea00f3a"
   },
   "stimulus": {
     "bit_count": 16,

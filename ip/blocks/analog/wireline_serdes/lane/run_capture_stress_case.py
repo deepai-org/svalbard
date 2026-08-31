@@ -318,6 +318,13 @@ def main() -> None:
     parser.add_argument("--tx-clock-duty", type=float, default=0.5)
     parser.add_argument("--channel-series-ohm-per-leg", type=float, default=0.0)
     parser.add_argument("--channel-shunt-cap-f", type=float, default=0.0)
+    parser.add_argument("--tx-pad-cap-f", type=float, default=300e-15)
+    parser.add_argument("--rx-pad-cap-f", type=float, default=500e-15)
+    parser.add_argument("--ac-coupling-cap-f", type=float, default=100e-9)
+    parser.add_argument("--package-series-ohm-per-leg", type=float, default=2.0)
+    parser.add_argument("--package-series-inductance-h-per-leg", type=float,
+                        default=1e-9)
+    parser.add_argument("--bias-return-ohm-per-leg", type=float, default=2e3)
     parser.add_argument("--vdd-ripple-mv", type=float, default=0.0)
     parser.add_argument("--vdd-ripple-hz", type=float, default=100e6)
     parser.add_argument("--rx-bandwidth-mode", choices=("low", "high"),
@@ -360,6 +367,18 @@ def main() -> None:
         parser.error("channel series loss proxy must be 0--25 ohm per leg")
     if not 0.0 <= args.channel_shunt_cap_f <= 4e-12:
         parser.error("channel differential capacitance must be 0--4 pF")
+    if not 0.0 <= args.tx_pad_cap_f <= 5e-12:
+        parser.error("TX pad capacitance must be 0--5 pF")
+    if not 0.0 <= args.rx_pad_cap_f <= 5e-12:
+        parser.error("RX pad capacitance must be 0--5 pF")
+    if not 1e-9 <= args.ac_coupling_cap_f <= 10e-6:
+        parser.error("AC coupling capacitance must be 1 nF--10 uF")
+    if not 0.0 <= args.package_series_ohm_per_leg <= 25.0:
+        parser.error("package series resistance must be 0--25 ohm per leg")
+    if not 0.0 <= args.package_series_inductance_h_per_leg <= 10e-9:
+        parser.error("package series inductance must be 0--10 nH per leg")
+    if not 100.0 <= args.bias_return_ohm_per_leg <= 100e3:
+        parser.error("bias-return resistance must be 100 ohm--100 kohm per leg")
     if not 0.0 <= args.vdd_ripple_mv <= 100.0:
         parser.error("VDD ripple must be 0--100 mV peak")
     if not 1e6 <= args.vdd_ripple_hz <= 1.25e9:
@@ -1200,9 +1219,13 @@ COQB ODD_QB 0 50f
             "O_SENSE_BOOST": ("O_SENSE_CLK" if (args.frontend_tail_boost
                                                     or args.odd_frontend_tail_boost)
                                 else "SENSE_BOOST"),
-            "TX_PAD_CAP": "300f", "RX_PAD_CAP": "500f", "AC_CAP": "100n",
+            "TX_PAD_CAP": f"{args.tx_pad_cap_f:.12g}",
+            "RX_PAD_CAP": f"{args.rx_pad_cap_f:.12g}",
+            "AC_CAP": f"{args.ac_coupling_cap_f:.12g}",
             "AC_INITIAL_V": f"{(args.ac_initial_v if args.ac_initial_v is not None else args.vdd * 0.32):.6f}",
-            "PACKAGE_R": "2", "PACKAGE_L": "1n", "BIAS_RETURN_R": "2k",
+            "PACKAGE_R": f"{args.package_series_ohm_per_leg:.12g}",
+            "PACKAGE_L": f"{args.package_series_inductance_h_per_leg:.12g}",
+            "BIAS_RETURN_R": f"{args.bias_return_ohm_per_leg:.12g}",
             "CHANNEL_HALF_R": f"{max(args.channel_series_ohm_per_leg / 2, 1e-3):.12g}",
             "CHANNEL_HALF_C": f"{max(args.channel_shunt_cap_f / 2, 1e-18):.12g}",
             "SAMPLE_CLOCK_CM": f"{args.vdd * 2 / 3:.6f}", "SAMPLE_CLOCK_PEAK": "0.45",
@@ -1587,6 +1610,20 @@ COQB ODD_QB 0 50f
             "series_resistance_ohm_per_leg": args.channel_series_ohm_per_leg,
             "differential_shunt_capacitance_f": args.channel_shunt_cap_f,
             "topology": "symmetric_two_section_lumped_rc_proxy",
+        },
+        "package_boundary": {
+            "topology": "per_leg_pad_ac_coupling_series_rl_with_rx_bias_returns",
+            "tx_pad_capacitance_f": args.tx_pad_cap_f,
+            "rx_pad_capacitance_f": args.rx_pad_cap_f,
+            "ac_coupling_capacitance_f": args.ac_coupling_cap_f,
+            "series_resistance_ohm_per_leg": args.package_series_ohm_per_leg,
+            "series_inductance_h_per_leg": args.package_series_inductance_h_per_leg,
+            "bias_return_resistance_ohm_per_leg": args.bias_return_ohm_per_leg,
+            "model_status": "explicit_unqualified_lumped_screen_assumption",
+            "unmodeled": [
+                "pad_esd_nonlinearity", "bond_mutual_inductance",
+                "package_s_parameters", "board_connector_channel", "em_and_ir",
+            ],
         },
         "supply_stress": {
             "vdd_ripple_peak_v": args.vdd_ripple_mv * 1e-3,

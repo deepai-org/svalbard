@@ -77,6 +77,20 @@ expected_environments = {
 expected_frontend_latencies = {
     "tt": 2, "ff_cold": 0, "ff_hot": 2, "ss_hot": 2, "ss_passive": 2,
 }
+expected_package_boundary = {
+    "topology": "per_leg_pad_ac_coupling_series_rl_with_rx_bias_returns",
+    "tx_pad_capacitance_f": 300e-15,
+    "rx_pad_capacitance_f": 500e-15,
+    "ac_coupling_capacitance_f": 100e-9,
+    "series_resistance_ohm_per_leg": 2.0,
+    "series_inductance_h_per_leg": 1e-9,
+    "bias_return_resistance_ohm_per_leg": 2e3,
+    "model_status": "explicit_unqualified_lumped_screen_assumption",
+    "unmodeled": [
+        "pad_esd_nonlinearity", "bond_mutual_inductance",
+        "package_s_parameters", "board_connector_channel", "em_and_ir",
+    ],
+}
 pex_hashes = {
     "tx_pex": digest(tx_pex),
     "rx_regenerative_capture_parent_pex": digest(parent_pex),
@@ -98,6 +112,8 @@ require(aggregate.get("claim") ==
         "routed_regenerative_rx_capture_extracted_2p5_gts_combined_stress_pvt"
         and aggregate.get("physical_composition") == composition,
         "regenerative capture aggregate claim changed")
+require(aggregate.get("package_boundary") == expected_package_boundary,
+        "regenerative capture aggregate package boundary changed")
 require(aggregate.get("aggregate_source_sha256") == digest(merger),
         "regenerative capture merger identity changed")
 aggregate_cases = {case.get("case_id"): case
@@ -118,6 +134,8 @@ for name, run in cases.items():
     require(run.get("evidence_class") == "exact_pex"
             and run.get("physical_composition") == composition,
             f"{name} is not exact routed-parent evidence")
+    require(run.get("package_boundary") == expected_package_boundary,
+            f"{name} package boundary changed")
     require(run.get("pex_sha256") == pex_hashes
             and run.get("physical_sha256") == physical_hashes
             and run.get("source_sha256") == source_hashes,
@@ -181,6 +199,8 @@ require(tuple(aperture.get("environment", ())) == expected_environments["ss_hot"
         and aperture.get("physical_composition") == composition
         and aperture.get("evidence_class") == "exact_pex",
         "SS/hot aperture environment or composition changed")
+require(aperture.get("package_boundary") == expected_package_boundary,
+        "SS/hot aperture package boundary changed")
 require(aperture.get("pex_sha256") == pex_hashes
         and aperture.get("physical_sha256") == physical_hashes
         and aperture.get("source_sha256") == source_hashes,

@@ -24,7 +24,12 @@ all-or-nothing result:
    automatic calibration.
 2. **Primary analog milestone:** an extracted, externally clocked 2.5 GT/s lane
    over one declared pad/package/channel envelope, with measured eye and power
-   margin.  Reference-assisted sampling is the preferred first recovery mode.
+   margin.  The current evidence screen declares 300 fF TX pad capacitance,
+   100 nF AC coupling, 2 ohm and 1 nH per package leg, 500 fF RX pad
+   capacitance, 2 kohm RX bias returns, and 6 ohm/leg plus 1 pF channel stress.
+   It is deliberately *not* a qualified pad/ESD, bond, package, board, or
+   connector model.  Reference-assisted sampling is the preferred first
+   recovery mode.
 3. **Autonomous-PHY milestone:** a closed PLL and CDR acquire and track that
    same lane, with bypass, lock metrics and bounded calibration searches.
 4. **Endpoint milestone:** the digital endpoint trains, enumerates and transfers

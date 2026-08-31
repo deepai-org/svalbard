@@ -8,6 +8,9 @@
 - Initial applications: PCIe Gen1 wireline PHY and 2.4 GHz Wi-Fi radio
 - Delivery strategy: integration-first over reviewed open-source components
 
+For the executable current-state inventory, commands, and active product
+gates, see [analog evidence tooling overview](../verification/analog-evidence-tooling-overview.md).
+
 ## 1. Purpose
 
 The deliverable is not an analog compiler. The deliverables are a physically
@@ -872,7 +875,13 @@ Execution order is likewise tied to the next receiver claim:
    resistance in `sampler_thermal_settling_budget.json`; then it must state its
    explicit charge-injection-cancellation or bottom-plate-sampling mechanism
    and control timing. Only then may it earn an extracted PVT screen for
-   settling, hold error, clock feedthrough and input loading. Do not reuse the
+   settling, hold error, clock feedthrough and input loading. A five-corner
+   100-MHz push-pull output-stage coupon now shows that a bare inverter bank
+   reaches 4.385 ohm even at 20-mm effective NMOS width in SS/hot (about
+   232-mm linear-width extrapolation to the 0.379-ohm target). The IF driver
+   must therefore be a closed-loop multistage power buffer whose gate-drive
+   power, stability, common mode, and linearity are explicit; do not lay out a
+   switch-only solution. Do not reuse the
    PCIe CML error slicer: its extracted 40--150-mV window is hundreds of times
    coarser than the roughly 122-uV 12-bit code step. A failed sampler may justify
    a simplified frequency plan; it does not justify starting a generic ADC

@@ -1,0 +1,39 @@
+{
+  "claim": "wifi_real_if_push_pull_output_stage_100mhz_feasibility",
+  "conclusion": "A bare balanced CMOS push-pull stage is not a complete IF driver and does not meet the 0.378649-ohm 100-MHz output-impedance target within the screened 20-mm effective NMOS width. A later multistage feedback driver must model its output-stage gate drive, power, linearity, common-mode control, and stability before sampler layout.",
+  "evidence": {
+    "result_sha256": "da8d3c9f8ad19078a9c336418991172b6dd2c9824e842a393a31500269099642",
+    "runner_sha256": "fa8922157a3d1ac558eebf802314df69ef4a958217786c0a084af1e6b53fbd00",
+    "source_sha256": "4a3e4ac5e682de62937421670b7d16c568ccbf8b7ba8575e6664085ffee03d01",
+    "actual_screen": "45 complete small-signal AC simulations at the individual DC trip point; widths use 4-um NMOS / 8-um PMOS fingers with multiplicity",
+    "effective_20mm_nmos_width": {
+      "ff_cold_output_impedance_ohm": 1.5599369185997878,
+      "ff_hot_output_impedance_ohm": 2.2378617979677,
+      "ss_cold_output_impedance_ohm": 2.727089607913097,
+      "ss_hot_output_impedance_ohm": 4.385001455264431,
+      "tt_output_impedance_ohm": 2.4679275348083674
+    },
+    "linear_width_extrapolation_only_not_a_layout_claim": {
+      "ff_cold_required_effective_nmos_width_mm": 82.39487750025883,
+      "ff_hot_required_effective_nmos_width_mm": 118.20243915476154,
+      "ss_cold_required_effective_nmos_width_mm": 144.04314142261566,
+      "ss_hot_required_effective_nmos_width_mm": 231.61299244669254,
+      "tt_required_effective_nmos_width_mm": 130.35436528585717
+    }
+  },
+  "maximum_output_impedance_ohm": 0.37864900487166514,
+  "next_required_topology": "closed-loop, multistage differential IF power buffer with a separately characterized large output bank and explicit common-mode feedback, gate-drive power, linearity, stability, and 425-pF-or-larger sampled-load PEX",
+  "not_a_claim": [
+    "implemented_if_buffer",
+    "output_swing",
+    "output_linearity",
+    "common_mode_control",
+    "loop_stability",
+    "physical_layout",
+    "sampled_input_settling",
+    "adc_enob",
+    "integrated_wifi_receiver"
+  ],
+  "result": "direct_output_stage_insufficient_before_buffer_design",
+  "schema_version": 1
+}

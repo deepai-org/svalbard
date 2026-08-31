@@ -1,0 +1,11 @@
+* SPDX-License-Identifier: Apache-2.0
+* Product-specific CMOS output-stage coupon for the Wi-Fi real-IF driver.
+*
+* This is not a complete IF buffer: there is no input stage, feedback,
+* common-mode feedback, bias generator, or sampled-capacitor interface. It
+* exposes the push-pull stage alone so a PVT AC screen can determine whether a
+* sub-ohm output target is physically plausible before those blocks are drawn.
+.subckt wifi_if_push_pull_output GATE OUT VDD VSS params: M=1
+XP OUT GATE VDD VDD pfet_03v3 w=8u l=0.28u m={M}
+XN OUT GATE VSS VSS nfet_03v3 w=4u l=0.28u m={M}
+.ends wifi_if_push_pull_output

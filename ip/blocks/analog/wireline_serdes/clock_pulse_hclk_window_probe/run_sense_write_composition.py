@@ -91,14 +91,15 @@ def source_prefix() -> str:
 
 
 def compile_deck(write_candidate: dict[str, Any], sense_candidate: dict[str, Any],
-                 environment: dict[str, Any], code: int) -> str:
+                 environment: dict[str, Any], code: dict[str, Any]) -> str:
     vdd = float(environment["vdd_v"])
     replacements = {
         "MOS_CORNER": environment["mos_corner"],
         "TEMP_C": str(environment["temperature_c"]),
         "VDD_V": f"{vdd:.6f}",
         "VMID": f"{vdd / 2:.6f}",
-        "SEL_V": f"{vdd if code else 0:.6f}",
+        "SEL_V": f"{vdd if code['sel'] else 0:.6f}",
+        "ESEL_V": f"{vdd if code['epoch'] else 0:.6f}",
         **write_candidate["replacements"],
         **sense_candidate["replacements"],
     }
@@ -110,10 +111,10 @@ def compile_deck(write_candidate: dict[str, Any], sense_candidate: dict[str, Any
     return text
 
 
-def run_case(spec: tuple[dict[str, Any], dict[str, Any], dict[str, Any], int]) -> dict[str, Any]:
+def run_case(spec: tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]]) -> dict[str, Any]:
     write_candidate, sense_candidate, environment, code = spec
     joint_id = f"{write_candidate['id']}__{sense_candidate['id']}"
-    stem = f"{joint_id}_{environment['id']}_sel{code}"
+    stem = f"{joint_id}_{environment['id']}_{code['id']}"
     deck = WORK / f"{stem}.spice"
     log = WORK / f"{stem}.log"
     deck.write_text(compile_deck(write_candidate, sense_candidate,
@@ -158,7 +159,9 @@ def run_case(spec: tuple[dict[str, Any], dict[str, Any], dict[str, Any], int]) -
             "environment_id": environment["id"],
             "environment": [environment["mos_corner"], vdd,
                             environment["temperature_c"]],
-            "code": code, "complete": complete,
+            "code_id": code["id"],
+            "control": {"sel": code["sel"], "epoch": code["epoch"]},
+            "complete": complete,
             "sense_width_s": sense_width, "write_width_s": write_width,
             "write_delay_from_sense_rise_s": write_delay,
             "dead_time_s": dead_time, "observed": observed,
@@ -179,7 +182,7 @@ def main() -> None:
                  for sense_candidate in SENSE_CANDIDATES]
     coverage = {
         joint_id: {
-            environment["id"]: [case["code"] for case in cases
+            environment["id"]: [case["code_id"] for case in cases
                                 if case["joint_candidate_id"] == joint_id
                                 and case["environment_id"] == environment["id"]
                                 and case["result"] == "pass"]
@@ -192,7 +195,7 @@ def main() -> None:
         "claim": "selected_sense_write_schematic_composition",
         "scope": "schematic composition with declared capacitive boundaries",
         "write_candidate_ids": [candidate["id"] for candidate in WRITE_CANDIDATES],
-        "candidate_selection_semantics": "one fixed circuit; only static code may vary by environment",
+        "candidate_selection_semantics": "one fixed circuit; only the two-bit static code may vary by environment",
         "source_sha256": {"hclk_template": digest(base.TEMPLATE_PATH),
                           "hclk_contract": digest(base.CONTRACT_PATH),
                           "composition": digest(APPEND_PATH),

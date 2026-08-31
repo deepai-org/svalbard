@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "claim": "dual_control_sense_write_composed_schematic_qualification",
+  "scope": "schematic SENSE/BOOST/WRITE composition with declared capacitive boundaries and two realized static controls",
+  "identity": {
+    "hclk_template_sha256": "f0a520768d99f1166e490a1452f456ca95459392e6f13899f8d8e60260f861f1",
+    "hclk_contract_sha256": "227638033966118a0944ca97a3425e166c640bdd94272e4a4815be3a7c6430e6",
+    "hclk_runner_sha256": "07cc6be72de9b602834da4d5bad720ca35cbfb9577c12c1e8e8907e0cc4fcafd",
+    "hclk_raw_result_sha256": "44e51e4867e1a535a2e26446fb6b2d3251f04f904d6b12653d972de8324e9069",
+    "composition_sha256": "0d4116afa8695707f7560d798117b99e02d4ff30086cc493b6b5687271a34fe0",
+    "composition_contract_sha256": "89dd056c0fe286049a2ba8c5a5a9ecd0f90844dcd84ecea353aceb9ce3e9c4cb",
+    "composition_runner_sha256": "fbe0e92eb314b476799ed60a70562726c96c5b0e1cb8de7965f1ce275a6bf485",
+    "composition_raw_result_sha256": "de5c78fb413507af0938cdcbebfdc8722a1b992be9c5811a6345960ae5114da2",
+    "raw_result_locations": ["scratch/pcie-hclk-write-window-last.json", "scratch/pcie-sense-write-composition-last.json"]
+  },
+  "campaign": {
+    "physically_distinct_joint_candidates": 4,
+    "static_codes_per_candidate": 4,
+    "environments": 5,
+    "leaf_case_count": 80,
+    "composition_case_count": 80,
+    "qualifying_joint_candidates": 4
+  },
+  "selected_candidate": {
+    "write": "hier_epoch_extra_2x_start_0p85x",
+    "sense": "sense_edge_pm12_base4_extra64",
+    "selection_reason": "same 26.35 ps global worst timing margin as extra-1x, but 50.94 ps versus 33.35 ps nearest FF/cold schedule margin for only 0.09 mA more maximum current",
+    "selected_cases": {
+      "tt": {"code_id": "interval1_epoch0", "sense_width_ps": 514.49, "write_width_ps": 185.24, "sense_to_write_ps": 582.61, "dead_time_ps": 68.12, "write_high_v": 3.358, "current_ma": 26.17},
+      "ff_cold": {"code_id": "interval1_epoch1", "sense_width_ps": 595.67, "write_width_ps": 127.32, "sense_to_write_ps": 646.61, "dead_time_ps": 50.94, "write_high_v": 3.673, "current_ma": 29.75},
+      "ff_hot": {"code_id": "interval1_epoch0", "sense_width_ps": 500.77, "write_width_ps": 193.28, "sense_to_write_ps": 591.60, "dead_time_ps": 90.83, "write_high_v": 2.996, "current_ma": 24.38},
+      "ss_hot": {"code_id": "interval0_epoch0", "sense_width_ps": 476.35, "write_width_ps": 177.36, "sense_to_write_ps": 569.80, "dead_time_ps": 93.45, "write_high_v": 2.791, "current_ma": 22.30},
+      "ss_cold": {"code_id": "interval1_epoch0", "sense_width_ps": 514.02, "write_width_ps": 185.56, "sense_to_write_ps": 578.96, "dead_time_ps": 64.94, "write_high_v": 3.711, "current_ma": 28.59}
+    }
+  },
+  "declared_bounds": {
+    "sense_width_ps": [450.0, 650.0],
+    "write_width_ps": [100.0, 220.0],
+    "sense_to_write_ps": [500.0, 700.0],
+    "dead_time_ps": [0.0, 150.0],
+    "logic_rail_margin_v": 0.25,
+    "maximum_average_current_ma": 75.0
+  },
+  "conclusion": "One fixed two-bit circuit covers all five declared schematic environments. This authorizes physical implementation of only the selected candidate; it does not establish PEX or capture closure.",
+  "next_gate": "Generate the selected geometry, run DRC and unique LVS, extract full RC, replay TT, then require five-environment composed PEX before routed-parent integration.",
+  "not_a_claim": ["physical_layout_or_pex", "capture_or_cdr_closure", "calibration_algorithm_or_silicon_yield"],
+  "result": "passes_composed_schematic_gate"
+}

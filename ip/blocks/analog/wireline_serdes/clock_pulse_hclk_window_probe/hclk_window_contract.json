@@ -9,13 +9,18 @@
     {"id": "ss_hot", "mos_corner": "ss", "vdd_v": 2.97, "temperature_c": 125},
     {"id": "ss_cold", "mos_corner": "ss", "vdd_v": 3.63, "temperature_c": -40}
   ],
-  "control_codes": [0, 1],
+  "control_codes": [
+    {"id": "interval0_epoch0", "sel": 0, "epoch": 0},
+    {"id": "interval0_epoch1", "sel": 0, "epoch": 1},
+    {"id": "interval1_epoch0", "sel": 1, "epoch": 0},
+    {"id": "interval1_epoch1", "sel": 1, "epoch": 1}
+  ],
   "candidates": [
     {
-      "id": "epoch_slow_extra_8x_start_0p85x",
+      "id": "hier_epoch_extra_1x_start_0p85x",
       "replacements": {
         "BASE_WP": "4u", "BASE_WN": "2u", "BASE_MP": "2", "BASE_MN": "2",
-        "SLOW_WP": "4u", "SLOW_WN": "2u", "SLOW_MP": "16", "SLOW_MN": "16",
+        "SLOW_WP": "4u", "SLOW_WN": "2u", "SLOW_MP": "2", "SLOW_MN": "2",
         "TG_W": "4u", "TG_M": "2",
         "START0_WP": "3.4u", "START0_WN": "1.7u", "START0_MP": "1", "START0_MN": "1",
         "START1_WP": "1.7u", "START1_WN": "1.275u", "START1_MP": "3", "START1_MN": "2",
@@ -23,18 +28,7 @@
       }
     },
     {
-      "id": "epoch_slow_extra_4x_start_0p85x",
-      "replacements": {
-        "BASE_WP": "4u", "BASE_WN": "2u", "BASE_MP": "2", "BASE_MN": "2",
-        "SLOW_WP": "4u", "SLOW_WN": "2u", "SLOW_MP": "8", "SLOW_MN": "8",
-        "TG_W": "4u", "TG_M": "2",
-        "START0_WP": "3.4u", "START0_WN": "1.7u", "START0_MP": "1", "START0_MN": "1",
-        "START1_WP": "1.7u", "START1_WN": "1.275u", "START1_MP": "3", "START1_MN": "2",
-        "EXTRA_W": "8u", "EXTRA_N": "4u", "EXTRA_MP": "4", "EXTRA_MN": "4"
-      }
-    },
-    {
-      "id": "epoch_slow_extra_2x_start_0p85x",
+      "id": "hier_epoch_extra_2x_start_0p85x",
       "replacements": {
         "BASE_WP": "4u", "BASE_WN": "2u", "BASE_MP": "2", "BASE_MN": "2",
         "SLOW_WP": "4u", "SLOW_WN": "2u", "SLOW_MP": "4", "SLOW_MN": "4",
@@ -45,10 +39,21 @@
       }
     },
     {
-      "id": "epoch_slow_extra_1x_start_0p85x",
+      "id": "hier_epoch_extra_4x_start_0p85x",
       "replacements": {
         "BASE_WP": "4u", "BASE_WN": "2u", "BASE_MP": "2", "BASE_MN": "2",
-        "SLOW_WP": "4u", "SLOW_WN": "2u", "SLOW_MP": "2", "SLOW_MN": "2",
+        "SLOW_WP": "4u", "SLOW_WN": "2u", "SLOW_MP": "8", "SLOW_MN": "8",
+        "TG_W": "4u", "TG_M": "2",
+        "START0_WP": "3.4u", "START0_WN": "1.7u", "START0_MP": "1", "START0_MN": "1",
+        "START1_WP": "1.7u", "START1_WN": "1.275u", "START1_MP": "3", "START1_MN": "2",
+        "EXTRA_W": "8u", "EXTRA_N": "4u", "EXTRA_MP": "4", "EXTRA_MN": "4"
+      }
+    },
+    {
+      "id": "hier_epoch_extra_6x_start_0p85x",
+      "replacements": {
+        "BASE_WP": "4u", "BASE_WN": "2u", "BASE_MP": "2", "BASE_MN": "2",
+        "SLOW_WP": "4u", "SLOW_WN": "2u", "SLOW_MP": "12", "SLOW_MN": "12",
         "TG_W": "4u", "TG_M": "2",
         "START0_WP": "3.4u", "START0_WN": "1.7u", "START0_MP": "1", "START0_MN": "1",
         "START1_WP": "1.7u", "START1_WN": "1.275u", "START1_MP": "3", "START1_MN": "2",
@@ -67,8 +72,11 @@
     "instances": {
       "XSLOW0": {"nodes": ["HCLK", "HSM", "VDD", "VSS"], "cell": "cp_delay"},
       "XSLOW1": {"nodes": ["HSM", "HSLOW", "VDD", "VSS"], "cell": "cp_delay"},
+      "XETG0": {"nodes": ["HCLK", "HEMUX", "ESELB", "ESEL", "VDD", "VSS"], "cell": "cp_tg"},
+      "XETG1": {"nodes": ["HSLOW", "HEMUX", "ESEL", "ESELB", "VDD", "VSS"], "cell": "cp_tg"},
+      "XEPOCHR": {"nodes": ["HEMUX", "HEPOCH", "VDD", "VSS"], "cell": "cp_delay"},
       "XBTG0": {"nodes": ["HCLK", "HBASE", "SELB", "SEL", "VDD", "VSS"], "cell": "cp_tg"},
-      "XBTG1": {"nodes": ["HSLOW", "HBASE", "SEL", "SELB", "VDD", "VSS"], "cell": "cp_tg"},
+      "XBTG1": {"nodes": ["HEPOCH", "HBASE", "SEL", "SELB", "VDD", "VSS"], "cell": "cp_tg"},
       "XST0": {"nodes": ["HBASE", "S0A", "VDD", "VSS"], "cell": "cp_delay"},
       "XST1": {"nodes": ["HBASE", "S1A", "VDD", "VSS"], "cell": "cp_delay"},
       "XSTR0": {"nodes": ["S0A", "STR0", "VDD", "VSS"], "cell": "cp_inv"},

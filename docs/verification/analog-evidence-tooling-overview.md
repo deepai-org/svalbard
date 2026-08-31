@@ -52,10 +52,11 @@ It has supported real engineering decisions rather than only produced reports.
   selectable-code coverage in all five environments. This is a necessary
   HCLK-to-WRITE schematic pass, then used the same manifest identity in a full
   SENSE/WRITE composition. That stronger gate rejects every one-bit joint
-  candidate: final-edge SENSE control reaches 4/5, but FF/cold and FF/hot need
-  the same interval code with different epochs. The next architecture has two
-  orthogonal static controls; no candidate is authorized for layout. This is
-  not an integrated PCIe PHY claim.
+  candidate: final-edge SENSE control reached 4/5 and proved that FF/cold and
+  FF/hot need the same interval code with different epochs. A restored two-bit
+  hierarchy now passes 5/5 in the stronger 80-case SENSE/WRITE composition;
+  one exact candidate is authorized for physical implementation, not yet PEX
+  or capture closure. This is not an integrated PCIe PHY claim.
 - **Wi-Fi:** the routed LNA/mixer parent has DRC/LVS/full-RC PEX evidence, but
   its two-tone result exposed an unfiltered nearby blocker. This selected a
   real-IF ADC/DSP architecture rather than pretending a broad RF preselector
@@ -101,9 +102,9 @@ failing cases.
 
 ## Current priorities and rule for adding tooling
 
-1. **PCIe:** realize and screen orthogonal interval/edge and epoch controls in
-   the existing SENSE/WRITE composition. Physically implement only a fixed
-   joint candidate that clears all five environments.
+1. **PCIe:** physically implement only the selected two-bit SENSE/WRITE
+   candidate, require DRC/unique-LVS/full-RC and five-corner composed PEX, then
+   replay the capture boundary.
 2. **Wi-Fi:** design and screen the closed-loop differential IF driver and
    thermal-floor hold-capacitor boundary before authorizing a new sampler
    layout.

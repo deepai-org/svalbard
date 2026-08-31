@@ -31,7 +31,7 @@ REQUIRED_MEASURES = {
     "supply_current",
 }
 RUNTIME_PLACEHOLDERS = {
-    "MOS_CORNER", "TEMP_C", "VDD_V", "VMID", "SEL_V",
+    "MOS_CORNER", "TEMP_C", "VDD_V", "VMID", "SEL_V", "ESEL_V",
 }
 
 
@@ -155,10 +155,19 @@ def load_contract() -> dict[str, Any]:
             "environment ids must be unique")
 
     codes = contract.get("control_codes")
-    require(isinstance(codes, list) and codes
-            and all(isinstance(code, int) and code in (0, 1) for code in codes),
-            "control_codes must contain static binary values")
-    require(len(codes) == len(set(codes)), "control codes must be unique")
+    require(isinstance(codes, list) and codes,
+            "control_codes must be a non-empty list")
+    code_ids: list[str] = []
+    for code in codes:
+        require(isinstance(code, dict), "control code must be an object")
+        identifier = code.get("id")
+        require(isinstance(identifier, str)
+                and SAFE_ID.fullmatch(identifier) is not None,
+                "control code id is invalid")
+        require(code.get("sel") in (0, 1) and code.get("epoch") in (0, 1),
+                f"control code {identifier} must bind binary sel and epoch")
+        code_ids.append(identifier)
+    require(len(code_ids) == len(set(code_ids)), "control code ids must be unique")
 
     candidates = contract.get("candidates")
     require(isinstance(candidates, list) and candidates,
@@ -213,7 +222,7 @@ def cyclic_delta(later: float, earlier: float) -> float:
     return delta
 
 
-def run_case(spec: tuple[dict[str, Any], dict[str, Any], int]) -> dict[str, Any]:
+def run_case(spec: tuple[dict[str, Any], dict[str, Any], dict[str, Any]]) -> dict[str, Any]:
     candidate, environment, code = spec
     vdd = float(environment["vdd_v"])
     replacements = {
@@ -221,7 +230,8 @@ def run_case(spec: tuple[dict[str, Any], dict[str, Any], int]) -> dict[str, Any]
         "TEMP_C": str(environment["temperature_c"]),
         "VDD_V": f"{vdd:.6f}",
         "VMID": f"{vdd / 2:.6f}",
-        "SEL_V": f"{vdd if code else 0:.6f}",
+        "SEL_V": f"{vdd if code['sel'] else 0:.6f}",
+        "ESEL_V": f"{vdd if code['epoch'] else 0:.6f}",
         **candidate["replacements"],
     }
     text = TEMPLATE
@@ -230,7 +240,7 @@ def run_case(spec: tuple[dict[str, Any], dict[str, Any], int]) -> dict[str, Any]
     unresolved = sorted(set(PLACEHOLDER.findall(text)))
     require(not unresolved, f"unresolved netlist placeholders: {unresolved}")
 
-    stem = f"{candidate['id']}_{environment['id']}_sel{code}"
+    stem = f"{candidate['id']}_{environment['id']}_{code['id']}"
     deck = WORK / f"{stem}.spice"
     log = WORK / f"{stem}.log"
     deck.write_text(text)
@@ -269,7 +279,8 @@ def run_case(spec: tuple[dict[str, Any], dict[str, Any], int]) -> dict[str, Any]
         "candidate_id": candidate["id"],
         "environment_id": environment["id"],
         "environment": [environment["mos_corner"], vdd, environment["temperature_c"]],
-        "code": code,
+        "code_id": code["id"],
+        "control": {"sel": code["sel"], "epoch": code["epoch"]},
         "complete": complete,
         "write_width_s": width,
         "detector_window_width_s": window_width,
@@ -296,7 +307,7 @@ def main() -> None:
         by_environment: dict[str, list[int]] = {}
         for environment in CONTRACT["environments"]:
             by_environment[environment["id"]] = [
-                case["code"] for case in cases
+                case["code_id"] for case in cases
                 if case["candidate_id"] == candidate["id"]
                 and case["environment_id"] == environment["id"]
                 and case["result"] == "pass"
@@ -308,7 +319,7 @@ def main() -> None:
     ]
     aggregate_environment_coverage = {
         environment["id"]: [
-            {"candidate_id": case["candidate_id"], "code": case["code"]}
+            {"candidate_id": case["candidate_id"], "code_id": case["code_id"]}
             for case in cases
             if case["environment_id"] == environment["id"]
             and case["result"] == "pass"
@@ -324,7 +335,7 @@ def main() -> None:
         ),
         "candidate_selection_semantics": (
             "candidate_id is a fabrication-time circuit choice and cannot vary "
-            "by environment; code is a realized static post-fabrication control"
+            "by environment; code_id binds two realized static post-fabrication controls"
         ),
         "not_a_claim": [
             "complete_pcie_pulse_generator",

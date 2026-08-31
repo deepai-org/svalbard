@@ -47,21 +47,24 @@ XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
 * state followed by one additional, physically realizable delay pair.  The
 * state selection happens before the detector, so disabled diffusion never
 * touches the WPN or WRITE narrow-event nets.
-.subckt hclk_select_window HCLK SEL VDD VSS WRITE WPN
+.subckt hclk_select_window HCLK SEL ESEL VDD VSS WRITE WPN
 XI_SEL SEL SELB VDD VSS cp_inv WP=4u WN=2u MP=2 MN=2
+XI_ESEL ESEL ESELB VDD VSS cp_inv WP=4u WN=2u MP=2 MN=2
 
 * Matched full-swing source/selection paths: START is the reference edge;
 * END0 and END1 differ solely by the calibrated extra delay state.  START
 * includes a matched restoring pair, so the selection-restorer latency is not
 * accidentally charged to the window budget.
-* The same static code selects a fast/short or delayed/long full-swing epoch.
-* Both choices are made before START/END formation.  The selected HBASE node
-* immediately enters the static-CMOS XST0/XST1 restorers; no narrow pulse is
-* transported through the transmission gates.
+* A restored hierarchy keeps only two pass-device diffusions on HBASE. ESEL
+* first selects a short or long full-swing state and restores it. SEL then
+* selects raw HCLK for SS/hot or the restored epoch for the other corners.
 XSLOW0 HCLK HSM VDD VSS cp_delay WP=@BASE_WP@ WN=@BASE_WN@ MP=@BASE_MP@ MN=@BASE_MN@
 XSLOW1 HSM HSLOW VDD VSS cp_delay WP=@SLOW_WP@ WN=@SLOW_WN@ MP=@SLOW_MP@ MN=@SLOW_MN@
+XETG0 HCLK HEMUX ESELB ESEL VDD VSS cp_tg W=@TG_W@ M=@TG_M@
+XETG1 HSLOW HEMUX ESEL ESELB VDD VSS cp_tg W=@TG_W@ M=@TG_M@
+XEPOCHR HEMUX HEPOCH VDD VSS cp_delay WP=4u WN=2u MP=8 MN=8
 XBTG0 HCLK HBASE SELB SEL VDD VSS cp_tg W=@TG_W@ M=@TG_M@
-XBTG1 HSLOW HBASE SEL SELB VDD VSS cp_tg W=@TG_W@ M=@TG_M@
+XBTG1 HEPOCH HBASE SEL SELB VDD VSS cp_tg W=@TG_W@ M=@TG_M@
 XST0 HBASE S0A VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2
 XST1 HBASE S1A VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2
 XSTR0 S0A STR0 VDD VSS cp_inv WP=@START0_WP@ WN=@START0_WN@ MP=@START0_MP@ MN=@START0_MN@
@@ -92,11 +95,12 @@ XWB4 WB4 WRITE VDD VSS cp_final_inv
 
 VDD VDD 0 PWL(0 0 500p @VDD_V@)
 VSEL SEL 0 PWL(0 0 500p @SEL_V@)
+VESEL ESEL 0 PWL(0 0 500p @ESEL_V@)
 * This is the full-swing parent HCLK contract used by the pulse macro.  The
 * normal high state is 380 ps at the 800-ps unit interval; no behavioral
 * delay source is used to form the selected narrow interval.
 VHCLK HCLK 0 PULSE(0 @VDD_V@ 1n 20p 20p 380p 800p)
-XDUT HCLK SEL VDD 0 WRITE WPN hclk_select_window
+XDUT HCLK SEL ESEL VDD 0 WRITE WPN hclk_select_window
 CWRITE WRITE 0 650f
 
 .control

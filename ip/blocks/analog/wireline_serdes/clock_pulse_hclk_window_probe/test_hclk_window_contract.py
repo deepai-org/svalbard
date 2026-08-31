@@ -41,6 +41,15 @@ class HclkWindowContractTest(unittest.TestCase):
         with self.assertRaisesRegex(ContractError, "connectivity mismatch at XST0"):
             validate_structural_contract(broken, CONTRACT)
 
+    def test_long_epoch_enable_swap_is_rejected(self) -> None:
+        broken = TEMPLATE.replace(
+            "XETG1 HSLOW HEMUX ESEL ESELB VDD VSS cp_tg",
+            "XETG1 HSLOW HEMUX ESELB ESEL VDD VSS cp_tg",
+        )
+        with self.assertRaisesRegex(ContractError,
+                                    "connectivity mismatch at XETG1"):
+            validate_structural_contract(broken, CONTRACT)
+
 
 if __name__ == "__main__":
     unittest.main()

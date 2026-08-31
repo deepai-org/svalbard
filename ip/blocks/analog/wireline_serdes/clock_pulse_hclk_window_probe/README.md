@@ -110,3 +110,18 @@ The next circuit needs two orthogonal static controls: interval/edge code 1 for
 both FF environments, plus a separate long/short epoch bit that distinguishes
 FF/cold from FF/hot. This is a bounded architectural change, not permission for
 another unconstrained sizing sweep or physical implementation.
+
+## Two-bit composed qualification
+
+The restored hierarchical selector now implements that separation without a
+three-way pass node: `ESEL` chooses short/long full-swing epoch and restores it,
+then `SEL` chooses raw SS/hot timing or the restored epoch. Four fixed extra-
+delay strengths all pass the 80-case leaf campaign and the 80-case composed
+campaign. The selected `extra_2x` candidate is retained in
+[`dual_control_composed_qualified_result.json`](dual_control_composed_qualified_result.json).
+
+Its selected SENSE widths are 476.35--595.67 ps, WRITE widths are
+127.32--193.28 ps, SENSE-to-WRITE delays are 569.80--646.61 ps, dead times are
+50.94--93.45 ps, and current is at most 29.75 mA. This clears the declared
+schematic gate and authorizes physical implementation of that exact candidate
+only. It is not PEX or capture closure.

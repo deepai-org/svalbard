@@ -785,11 +785,12 @@ Execution order is deliberately narrow:
    family now covers 5/5 environments in this necessary schematic screen, with
    selected 108.05--192.00 ps WRITE widths and 137.89--647.22 ps proxy delays.
    Full SENSE/WRITE composition then rejected the one-bit architecture before
-   layout. Final-edge SENSE control reaches 4/5, but FF/cold requires a long
-   code-1 WRITE epoch that violates FF/hot delay/dead time; both environments
-   require the same interval code. The next bounded step is a second,
-   orthogonal static epoch bit, followed by the same composed five-environment
-   gate, not layout.
+   layout. Final-edge SENSE control reached 4/5 and proved that FF/cold requires
+   a long epoch while FF/hot needs a short epoch with the same interval code.
+   The resulting restored two-bit hierarchy now passes both its 80-case leaf
+   screen and 80-case composed SENSE/WRITE screen. The selected extra-2x
+   candidate has at least 26.35 ps timing margin and at most 29.75 mA current.
+   Physical implementation of that exact candidate is now the bounded step.
    It must preserve the compact PEX-proven write
    timing source until its replacement covers every PVT environment with one
    physically fixed candidate and an observed selected code, include an

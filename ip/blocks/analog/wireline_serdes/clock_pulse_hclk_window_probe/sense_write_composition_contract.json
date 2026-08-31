@@ -2,10 +2,10 @@
   "schema_version": 1,
   "contract_id": "pcie_sense_write_composition_v1",
   "candidate_ids": [
-    "epoch_slow_extra_8x_start_0p85x",
-    "epoch_slow_extra_4x_start_0p85x",
-    "epoch_slow_extra_2x_start_0p85x",
-    "epoch_slow_extra_1x_start_0p85x"
+    "hier_epoch_extra_1x_start_0p85x",
+    "hier_epoch_extra_2x_start_0p85x",
+    "hier_epoch_extra_4x_start_0p85x",
+    "hier_epoch_extra_6x_start_0p85x"
   ],
   "unit_interval_s": 8e-10,
   "sense_candidates": [
@@ -27,7 +27,7 @@
       "XHSD2": {"nodes": ["HSD", "HSDX", "VDD", "VSS"], "cell": "cp_delay"},
       "XHSN": {"nodes": ["HCLK", "HSDX", "HSN", "VDD", "VSS"], "cell": "cp_fall_pulse"},
       "XSB2": {"nodes": ["SB1", "SEL", "SENSE", "VDD", "VSS"], "cell": "cp_sense_final_select"},
-      "XWRITE": {"nodes": ["HCLK", "SEL", "VDD", "VSS", "WRITE", "WPN"], "cell": "hclk_select_window"}
+      "XWRITE": {"nodes": ["HCLK", "SEL", "ESEL", "VDD", "VSS", "WRITE", "WPN"], "cell": "hclk_select_window"}
     }
   }
 }

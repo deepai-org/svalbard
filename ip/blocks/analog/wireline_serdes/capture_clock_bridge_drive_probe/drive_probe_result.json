@@ -1,0 +1,37 @@
+{
+  "claim": "pcie_capture_clock_bridge_final_pmos_strength_screen",
+  "conclusion": "Do not create a larger bridge-output layout to repair the composed FF/cold rail loss. With the exact extracted capture load and an ideal 200-ps WRITE source, the existing final PMOS strength already passes all five environments; doubling it also passes, while 3x and above progressively fail complementary-skew limits. The composed FF/cold rail loss is therefore producer/WRITE-waveform or parent-interface work, not an isolated final bridge pull-up sizing problem.",
+  "evidence": {
+    "raw_result_sha256": "7e46d83ea7682c49c1f786382ceeff43b4c5450002a25b7803fae4485c6f39c8",
+    "base_bridge_source_sha256": "860b53a537db95b73259203907be0120ca48559eaacfa290665026cd753ae4fc",
+    "testbench_sha256": "ed3d43746552b82fee373c9e27aa7b57867bc39cd61e47ec869eee740ad6be3d",
+    "runner_sha256": "d1591fe4c8a4b8280f8588c3e989c0ac7f80abbebb5f4d40accceb41f1900eac",
+    "capture_pex_sha256": "f8fdcb7cdcc486c6ac868f476dd7a85bcaaa3ee02ec77caaf835c6107519b1df",
+    "case_count": 30,
+    "complete_case_count": 30,
+    "passing_cases_by_final_pmos_multiplier": {
+      "1": 5,
+      "2": 5,
+      "3": 4,
+      "4": 3,
+      "6": 0,
+      "8": 0
+    },
+    "qualifying_multipliers": [1, 2],
+    "baseline_ff_cold": {
+      "even_capture_high_v": 3.72608,
+      "odd_capture_high_v": 3.72405,
+      "supply_current_a": 0.0182948
+    }
+  },
+  "next_required_owner": "pulse_generator_selected_write_waveform_and_real_producer_to_bridge_to_lane_parent_interface",
+  "not_a_claim": [
+    "physical_bridge_candidate",
+    "pulse_bridge_lane_closure",
+    "calibrated_pcie_clock_path",
+    "routed_parent_closure",
+    "pcie_compliance"
+  ],
+  "result": "bridge_final_pullup_enlargement_rejected_before_layout",
+  "schema_version": 1
+}

@@ -49,9 +49,10 @@ package, or EM/IR behavior of a routed lane is acceptable.
 
 That next experiment is now recorded in
 [`../pulse_bridge_lane/README.md`](../pulse_bridge_lane/README.md). Fresh pulse
-PEX plus this bridge and the actual direct-regenerative lane PEX passes only
-TT and SS/cold; FF/cold, FF/hot, and SS/hot collapse at the pulse WRITE output.
-A direct counterfactual shows that the actual lane SENSE/BOOST PEX reproduces
-the FF/cold collapse even without this bridge's capture outputs. This leaves
-the bridge qualified as an isolated consumer but makes the producer/lane
-interface the active PCIe circuit problem.
+PEX plus this bridge and the actual direct-regenerative lane PEX passes TT,
+FF/hot, and SS/cold. FF/cold reaches valid WRITE rails but loses 69--84 mV of
+capture-clock high rail; SS/hot collapses at the pulse WRITE output and emits
+no sustained capture event. A direct counterfactual shows that the actual lane
+SENSE/BOOST PEX reproduces the FF/cold producer-side sensitivity even without
+this bridge's capture outputs. This leaves the bridge qualified as an isolated
+consumer but makes the producer/lane interface the active PCIe circuit problem.

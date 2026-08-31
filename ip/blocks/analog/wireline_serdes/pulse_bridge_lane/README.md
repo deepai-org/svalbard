@@ -44,6 +44,14 @@ pin-load anchors, not functional timing profiles; repeated control vectors are
 therefore not calibration coverage.  The FF/cold bridge rail loss and SS/hot
 periodic-reset loss are separate failure mechanisms.
 
+A fresh final-bridge pull-up sweep against the exact extracted capture load
+does **not** authorize a bridge enlargement: its existing PMOS strength and a
+2x variant both pass all five isolated consumer cases, while 3x and above
+regress complementary skew. The baseline reaches 3.726/3.724 V in FF/cold
+under its 200-ps ideal WRITE source, compared with 3.311/3.296 V in this
+composed screen. The FF/cold owner is consequently the actual pulse/WRITE
+waveform and interface, alongside the independent SS/hot reset failure.
+
 Only after a 5/5 result should work move to a routed parent, PRBS/channel, or
 CDR/system closure.  Run the failure-preserving screen with:
 

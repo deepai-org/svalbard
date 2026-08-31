@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "claim": "selected_dual_control_pulse_full_rc_pvt",
+  "scope": "full-RC extracted dual-phase macro with 350 fF SENSE/BOOST and 650 fF WRITE loads per phase",
+  "selected_write_candidate": "hier_epoch_extra_2x_start_0p85x",
+  "selected_sense_candidate": "sense_edge_pm12_base4_extra64_folded",
+  "case_count": 20,
+  "passing_case_count": 0,
+  "environment_code_coverage": {
+    "tt": [],
+    "ff_cold": [],
+    "ff_hot": [],
+    "ss_hot": [],
+    "ss_cold": []
+  },
+  "ranked_violation_counts": [
+    ["write_high_v", 40],
+    ["sense_width_s", 32],
+    ["dead_time_s", 26],
+    ["write_delay_from_sense_rise_s", 24],
+    ["write_width_s", 24],
+    ["boost_low_v", 14],
+    ["sense_low_v", 5],
+    ["measurement_complete", 4]
+  ],
+  "representative_failures": {
+    "tt_interval0_epoch0": {
+      "even_sense_width_ps": 426.11,
+      "even_write_width_ps": 146.57,
+      "even_write_high_v": 2.54243,
+      "odd_write_high_v": 2.56185
+    },
+    "ss_hot_interval0_epoch0": {
+      "even_sense_low_v": 0.771742,
+      "even_boost_low_v": 2.52813,
+      "even_write_high_v": 0.303195,
+      "odd_write_high_v": 0.345482,
+      "write_crossing_complete": false
+    }
+  },
+  "identity": {
+    "schematic_sha256": "0499015dfeefe86e1c3eb9287389651f46e0928fff9e64407cda9490415df112",
+    "pex_sha256": "cf900f6f526cad4adf66846f5c052ef11af68df6e6a17bb0c76d1e6860241872",
+    "raw_failure_result_sha256": "707b845a5e82dd455829f968099cef8aca13005eaa415a137a627116e48a48bb",
+    "raw_failure_result_location": "scratch/pcie-selected-dual-control-pulse-physical.0XwzYTkM/selected-dual-control-pex.json"
+  },
+  "conclusion": "The selected circuit is physically legal and LVS-equivalent but is not post-layout timing qualified. The same dual-phase verifier covers all five environments on the selected schematic and none on full-RC PEX, so the next step is parasitic failure localization and regenerated geometry, not contract relaxation.",
+  "not_a_claim": [
+    "physical_timing_closure",
+    "capture_or_cdr_closure",
+    "package_or_channel_closure",
+    "provider_signoff_or_silicon_yield"
+  ],
+  "result": "fail"
+}

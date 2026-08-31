@@ -120,8 +120,37 @@ delay strengths all pass the 80-case leaf campaign and the 80-case composed
 campaign. The selected `extra_2x` candidate is retained in
 [`dual_control_composed_qualified_result.json`](dual_control_composed_qualified_result.json).
 
-Its selected SENSE widths are 476.35--595.67 ps, WRITE widths are
+Its selected SENSE widths are 473.15--595.02 ps, WRITE widths are
 127.32--193.28 ps, SENSE-to-WRITE delays are 569.80--646.61 ps, dead times are
-50.94--93.45 ps, and current is at most 29.75 mA. This clears the declared
+52.36--97.64 ps, and current is at most 29.66 mA. This clears the declared
 schematic gate and authorizes physical implementation of that exact candidate
 only. It is not PEX or capture closure.
+
+## Exact physical implementation and extracted rejection
+
+[`compile_selected_physical_source.py`](compile_selected_physical_source.py)
+now resolves the selected manifest identities into one checked-in dual-phase
+SPICE source. The conditional 64-um SENSE pull-down is explicitly lowered into
+two matched 8-um x 4-finger banks: the GF180 LVS model distinguishes those
+banks, so an implicit 8-finger physical fold is not treated as interchangeable
+IR. The layout generator also classifies routes from flattened phase ownership,
+not instance-name prefixes; this caught and removed a DRC-clean short between
+the even and odd internal WPN nets.
+
+`./run_selected_physical.sh` regenerates that exact source and layout, renders
+it, and runs native Magic DRC, Netgen LVS, full-RC extraction, then the selected
+dual-phase PVT contract. The physical-legality checkpoint in
+[`selected_physical_legality_result.json`](selected_physical_legality_result.json)
+is zero-DRC, uniquely LVS-equivalent at 224 logical devices, and extracts to
+5,780 resistors plus 4,083 capacitors.
+
+That is not timing closure. The same verifier covers 5/5 environments on the
+exact generated schematic, as recorded in
+[`selected_schematic_replay_result.json`](selected_schematic_replay_result.json),
+but 0/5 on full-RC PEX. The retained
+[`selected_pex_failure_result.json`](selected_pex_failure_result.json) shows
+that WRITE fails its high-rail criterion in all 40 phase/case observations;
+SENSE width, dead time, WRITE timing, and slow/hot regeneration also fail. At
+SS/hot the loaded WRITE outputs never cross midrail. The next revision is an
+RC-localized regenerated layout/circuit change, not a widened contract or a
+capture integration attempt.

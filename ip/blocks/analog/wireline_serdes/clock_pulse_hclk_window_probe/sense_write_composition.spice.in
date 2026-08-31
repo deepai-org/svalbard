@@ -25,10 +25,15 @@ XN0 D G N VSS nfet_03v3 w={W} l=0.28u m={M}
 XN1 N EN VSS VSS nfet_03v3 w={W} l=0.28u m={M}
 .ends cp_cond_npd_comp
 
-.subckt cp_sense_final_select A EN Y VDD VSS params: PMP=12 BASE_MN=5 EXTRA_W=32u EXTRA_M=2
+.subckt cp_sense_final_select A EN Y VDD VSS params: PMP=12 BASE_MN=5 EXTRA_W=32u EXTRA_M=1
 XP Y A VDD VDD pfet_03v3 w=8u l=0.28u m={PMP}
 XN Y A VSS VSS nfet_03v3 w=6.5u l=0.28u m={BASE_MN}
-XNE Y A EN VSS cp_cond_npd_comp W={EXTRA_W} M={EXTRA_M}
+* Keep the conditional 64-um branch as two explicit, matched banks.  GF180
+* LVS decomposes an eight-finger series device into two distinguishable
+* four-finger devices; carrying that fold in the circuit IR keeps schematic,
+* generated layout, and LVS device identity aligned.
+XNE0 Y A EN VSS cp_cond_npd_comp W={EXTRA_W} M={EXTRA_M}
+XNE1 Y A EN VSS cp_cond_npd_comp W={EXTRA_W} M={EXTRA_M}
 .ends cp_sense_final_select
 
 .subckt sense_write_phase HCLK SEL ESEL VDD VSS SENSE BOOST WRITE WPN

@@ -7,10 +7,10 @@
     "hclk_contract_sha256": "227638033966118a0944ca97a3425e166c640bdd94272e4a4815be3a7c6430e6",
     "hclk_runner_sha256": "07cc6be72de9b602834da4d5bad720ca35cbfb9577c12c1e8e8907e0cc4fcafd",
     "hclk_raw_result_sha256": "44e51e4867e1a535a2e26446fb6b2d3251f04f904d6b12653d972de8324e9069",
-    "composition_sha256": "0d4116afa8695707f7560d798117b99e02d4ff30086cc493b6b5687271a34fe0",
-    "composition_contract_sha256": "89dd056c0fe286049a2ba8c5a5a9ecd0f90844dcd84ecea353aceb9ce3e9c4cb",
+    "composition_sha256": "57e7517bd136e504abadbe346a29de95847d8113dc637e77fb4ea8e659ee9576",
+    "composition_contract_sha256": "65b411790cad1e374e8d1b28007369d102ab074c84a9e0f10c6537b502aa594f",
     "composition_runner_sha256": "fbe0e92eb314b476799ed60a70562726c96c5b0e1cb8de7965f1ce275a6bf485",
-    "composition_raw_result_sha256": "de5c78fb413507af0938cdcbebfdc8722a1b992be9c5811a6345960ae5114da2",
+    "composition_raw_result_sha256": "39c97b92185a384b9753e54e4cd8dcd0066a27ba5d0a9dbdfdc1ce9adff5314e",
     "raw_result_locations": ["scratch/pcie-hclk-write-window-last.json", "scratch/pcie-sense-write-composition-last.json"]
   },
   "campaign": {
@@ -23,14 +23,14 @@
   },
   "selected_candidate": {
     "write": "hier_epoch_extra_2x_start_0p85x",
-    "sense": "sense_edge_pm12_base4_extra64",
+    "sense": "sense_edge_pm12_base4_extra64_folded",
     "selection_reason": "same 26.35 ps global worst timing margin as extra-1x, but 50.94 ps versus 33.35 ps nearest FF/cold schedule margin for only 0.09 mA more maximum current",
     "selected_cases": {
-      "tt": {"code_id": "interval1_epoch0", "sense_width_ps": 514.49, "write_width_ps": 185.24, "sense_to_write_ps": 582.61, "dead_time_ps": 68.12, "write_high_v": 3.358, "current_ma": 26.17},
-      "ff_cold": {"code_id": "interval1_epoch1", "sense_width_ps": 595.67, "write_width_ps": 127.32, "sense_to_write_ps": 646.61, "dead_time_ps": 50.94, "write_high_v": 3.673, "current_ma": 29.75},
-      "ff_hot": {"code_id": "interval1_epoch0", "sense_width_ps": 500.77, "write_width_ps": 193.28, "sense_to_write_ps": 591.60, "dead_time_ps": 90.83, "write_high_v": 2.996, "current_ma": 24.38},
-      "ss_hot": {"code_id": "interval0_epoch0", "sense_width_ps": 476.35, "write_width_ps": 177.36, "sense_to_write_ps": 569.80, "dead_time_ps": 93.45, "write_high_v": 2.791, "current_ma": 22.30},
-      "ss_cold": {"code_id": "interval1_epoch0", "sense_width_ps": 514.02, "write_width_ps": 185.56, "sense_to_write_ps": 578.96, "dead_time_ps": 64.94, "write_high_v": 3.711, "current_ma": 28.59}
+      "tt": {"code_id": "interval1_epoch0", "sense_width_ps": 513.66, "write_width_ps": 185.24, "sense_to_write_ps": 583.88, "dead_time_ps": 70.22, "write_high_v": 3.358, "current_ma": 26.09},
+      "ff_cold": {"code_id": "interval1_epoch1", "sense_width_ps": 595.02, "write_width_ps": 127.32, "sense_to_write_ps": 647.38, "dead_time_ps": 52.36, "write_high_v": 3.673, "current_ma": 29.66},
+      "ff_hot": {"code_id": "interval1_epoch0", "sense_width_ps": 499.73, "write_width_ps": 193.28, "sense_to_write_ps": 592.72, "dead_time_ps": 92.99, "write_high_v": 2.996, "current_ma": 24.30},
+      "ss_hot": {"code_id": "interval0_epoch0", "sense_width_ps": 473.15, "write_width_ps": 177.36, "sense_to_write_ps": 570.79, "dead_time_ps": 97.64, "write_high_v": 2.791, "current_ma": 22.24},
+      "ss_cold": {"code_id": "interval1_epoch0", "sense_width_ps": 513.38, "write_width_ps": 185.56, "sense_to_write_ps": 580.42, "dead_time_ps": 67.04, "write_high_v": 3.711, "current_ma": 28.49}
     }
   },
   "declared_bounds": {

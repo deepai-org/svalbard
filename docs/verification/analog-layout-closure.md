@@ -38,6 +38,24 @@ changes alter device count, connectivity, terminal order, or control semantics,
 they are circuit revisions and must re-enter schematic verification rather than
 being hidden as physical optimization.
 
+Make physical lowering rules explicit where the PDK does not preserve a naive
+schematic multiplicity. In the selected GF180 pulse macro, an 8-um x 8 series
+device was one line in the intended circuit and one eight-finger array in the
+first generated geometry, but the LVS model decomposed it into two
+distinguishable four-finger devices. The repeatable repair was not an LVS
+waiver: lower the intended 64-um branch into two explicit matched 8-um x 4
+banks in the circuit IR, rerun the full schematic matrix, then generate those
+same banks. Require the compiler to reject or lower unsupported multiplicities
+before placement.
+
+Do not infer electrical ownership from instance or net spelling. Carry phase,
+domain, discipline, and hierarchy provenance on every flattened net and use it
+for routing classes. A top-local odd-phase net named `__O_WPN` did not match the
+legacy `XO`/`O_` string heuristic, so it was routed in the even band and shorted
+to its peer while remaining DRC-clean. A provenance assertion now rejects any
+unsplit signal consumed by both phases. This is why DRC, unique pin-resolved
+LVS, and behavioral replay are separate mandatory gates.
+
 SPICE and layout have different jobs in this loop. The intended schematic is
 the source circuit for topology and pre-layout simulation; it is not generated
 from the drawing. The layout generator realizes that circuit as legal geometry,
@@ -279,6 +297,17 @@ scale explicit source/drain area and perimeter parameters. Such a deck answers
 geometry and cannot close a corner. Never interpolate below a DRC-proven PCell
 limit. Regenerate the parameterized layout and repeat DRC, unique LVS, and
 full-RC extraction before admitting a candidate to a qualified bank.
+
+Use the same measurement implementation on the selected schematic and exact
+PEX whenever possible. The selected dual-phase pulse source covers all five
+declared environments under the same loads and code-search rule used by its
+physical gate, while its LVS-equivalent 5,780R/4,083C extraction covers none.
+That A/B result localizes the regression to physical realization without
+confusing a changed testbench with parasitics. Preserve ranked violation counts
+and representative first failures: here WRITE peak loss occurs in all 40
+phase/case observations, followed by SENSE-width and relative-timing misses,
+while SS/hot also loses regeneration. Use those rankings to choose RC
+counterfactuals and the next geometry; do not relax thresholds after PEX.
 
 ## 4. Plan the physical topology before writing geometry
 

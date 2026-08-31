@@ -117,7 +117,12 @@ def flatten(subckts: dict[str, Subckt], top: str) -> tuple[list[Device], dict[st
                 return netmap[local]
             return f"{path}__{safe(local)}"
 
-        direct_mos = all(any(model in line for model in ("nfet_03v3", "pfet_03v3"))
+        # A physical primitive may combine direct MOS devices with a child
+        # helper (for example a base inverter plus a conditional series
+        # branch). Keep its direct devices in one group and descend into the
+        # child normally; the old all-or-nothing test lost the parent group.
+        direct_mos = any(any(model in line
+                             for model in ("nfet_03v3", "pfet_03v3"))
                          for line in subckt.lines)
         if direct_mos:
             phase = "E" if path.startswith("XE") else "O"
@@ -171,6 +176,12 @@ def group_depths(groups: dict[str, Group], phase: str) -> dict[str, int]:
               "cp_profile3_delay": ("A",),
               "cp_sense_tail_delay": ("A",),
               "cp_profile_write_restore": ("A", "FAST")}
+    inputs.update({
+        "cp_nand2_comp": ("A", "B"),
+        "cp_cond_npd_comp": ("G", "EN"),
+        "cp_sense_final_select": ("A", "EN"),
+        "cp_fall_window": ("A", "B"),
+    })
     inputs["cp_tristate_inv"] = ("A", "EN", "ENB")
     outputs = {"cp_inv": "Y", "cp_final_inv": "Y",
                "cp_sense_final_inv": "Y",
@@ -180,6 +191,12 @@ def group_depths(groups: dict[str, Group], phase: str) -> dict[str, int]:
                "cp_profile3_delay": "Y",
                "cp_sense_tail_delay": "Y",
                "cp_profile_write_restore": "Y"}
+    outputs.update({
+        "cp_nand2_comp": "Y",
+        "cp_cond_npd_comp": "D",
+        "cp_sense_final_select": "Y",
+        "cp_fall_window": "Y",
+    })
     outputs["cp_tristate_inv"] = "Y"
     local = [group for group in groups.values() if group.phase == phase]
     clock = "CLKP" if phase == "E" else "CLKN"
@@ -288,7 +305,8 @@ def functional_lane(group: Group) -> int:
     return 2
 
 
-def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[str, float]]:
+def place(devices: list[Device], groups: dict[str, Group],
+          expanded_local_spacing: bool = False) -> tuple[float, dict[str, float]]:
     even_depth = group_depths(groups, "E")
     even = [group for group in groups.values() if group.phase == "E"]
     cluster_depth = {}
@@ -467,7 +485,7 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
                                    else even_name)
                     device.cx = x + offsets[lookup_name]
                     base = LANE_PITCH * lane
-                    if group.primitive == "cp_cond_npd":
+                    if group.primitive in ("cp_cond_npd", "cp_cond_npd_comp"):
                         # Keep wide conditional pull-downs below the pwell/
                         # nwell boundary while preserving the common top edge
                         # used by their Metal2 access pattern.
@@ -484,7 +502,10 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
             # The logic/mux lanes are dominated by local RC, so use a compact
             # standard-cell-like channel.  Delay/prebuffer lanes retain the
             # wider channel needed by their many cross-lane tap routes.
-            gap = 1.0 if lane == 3 else (2.0 if lane == 2 else 4.0)
+            if expanded_local_spacing:
+                gap = 2.5 if lane == 3 else (3.0 if lane == 2 else 4.0)
+            else:
+                gap = 1.0 if lane == 3 else (2.0 if lane == 2 else 4.0)
             cursor = x + width + gap
         lane_ends.append(cursor)
     phase_width = max(lane_ends) + 10.0
@@ -494,7 +515,7 @@ def place(devices: list[Device], groups: dict[str, Group]) -> tuple[float, dict[
     return phase_width, group_x
 
 
-def tcl_header() -> str:
+def tcl_header(cell_name: str) -> str:
     return r'''# SPDX-License-Identifier: Apache-2.0
 proc rect {layer x1 y1 x2 y2} {
     box values $x1 $y1 $x2 $y2
@@ -616,13 +637,15 @@ proc make_supply_port4 {name number x y} {
     port make $number
 }
 crashbackups stop
-load clock_pulse_generator
+load @CELL_NAME@
 units microns
-'''
+'''.replace("@CELL_NAME@", cell_name)
 
 
 def route_columns(devices: list[Device], reserved: list[float],
-                  tracks: dict[str, float]) -> dict[tuple[str, str], float]:
+                  tracks: dict[str, float], min_column_spacing: float = 0.86,
+                  reserve_tap_columns_globally: bool = False
+                  ) -> dict[tuple[str, str], float]:
     occupied: dict[str, list[tuple[float, float, float, str]]] = {
         phase: [] for phase in ("E", "O")}
     metal2_occupied: dict[str, list[tuple[float, float, float, float, str]]] = {
@@ -630,6 +653,11 @@ def route_columns(devices: list[Device], reserved: list[float],
     for phase in ("E", "O"):
         phase_offset = PHASE_Y_SHIFT if phase == "O" else 0.0
         for x in reserved:
+            if reserve_tap_columns_globally:
+                occupied[phase].append(
+                    (x, phase_offset - 10.0,
+                     phase_offset + LANE_PITCH * LANE_COUNT + 26.0,
+                     "__TAP_RESERVED__"))
             for lane in range(LANE_COUNT):
                 base = LANE_PITCH * lane
                 base += phase_offset
@@ -650,6 +678,13 @@ def route_columns(devices: list[Device], reserved: list[float],
         phase_columns = occupied[device.phase]
         span = device_span(device)
         gate_x_nudge = 0.1 if "__XWB4__" in device.name else 0.0
+        # Transmission-gate PMOS/NMOS gates are complementary nets. Their
+        # devices are deliberately vertically aligned, so give the two gate
+        # access columns opposite horizontal nudges in the new nested WRITE
+        # hierarchy instead of stacking different nets on one column.
+        if ("__XWRITE__" in device.name
+                and re.search(r"__X(?:B|E)?TG\d+__", device.name)):
+            gate_x_nudge = 0.9 if device.kind.startswith("pfet") else -0.9
         preferred = {"D": device.cx - span / 2.0 - 0.75,
                      "G": device.cx + gate_x_nudge,
                      "S": device.cx + span / 2.0 + 0.75}
@@ -683,7 +718,8 @@ def route_columns(devices: list[Device], reserved: list[float],
                         max(candidate, points[-1]) + half_metal2,
                         terminal_y[terminal] + half_metal2)
                     column_legal = all(
-                        abs(candidate - old_x) >= 0.86
+                        (old_net == net and abs(candidate - old_x) < 1e-6)
+                        or abs(candidate - old_x) >= min_column_spacing
                         or high_y + 0.40 <= old_low_y
                         or old_high_y + 0.40 <= low_y
                         for old_x, old_low_y, old_high_y, old_net
@@ -818,10 +854,14 @@ def interval_lanes(keys: list[str], bounds: dict[str, list[float]],
     return answer
 
 
-def emit(source: Path, output: Path) -> None:
+def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") -> None:
     subckts = parse(source)
-    devices, groups = flatten(subckts, "clock_pulse_generator")
-    xmax, group_x = place(devices, groups)
+    if top_name not in subckts:
+        raise ValueError(f"top subcircuit {top_name!r} not found")
+    devices, groups = flatten(subckts, top_name)
+    xmax, group_x = place(
+        devices, groups,
+        expanded_local_spacing=(top_name != "clock_pulse_generator"))
     tap_xs = [x for x in frange(7.0, xmax - 4.0, 28.0)
               if all(abs(x - device.cx) >= device_span(device) / 2.0 + 1.2
                      for device in devices)]
@@ -829,11 +869,13 @@ def emit(source: Path, output: Path) -> None:
         raise RuntimeError("placement leaves no legal substrate-tap column")
     first_seen: dict[str, int] = {}
     key_lane_sets: dict[str, set[int]] = {}
+    key_phase_sets: dict[str, set[str]] = {}
     for device in devices:
         for net in device.nodes[:3]:
             key = route_key(device, net)
             first_seen.setdefault(key, len(first_seen))
             key_lane_sets.setdefault(key, set()).add(device.lane)
+            key_phase_sets.setdefault(key, set()).add(device.phase)
     special_tracks = {
         f"{phase}{lane}:{rail}": offset + LANE_PITCH * lane + rail_offset
         for phase, offset in (("E", 0.0), ("O", PHASE_Y_SHIFT))
@@ -978,7 +1020,7 @@ def emit(source: Path, output: Path) -> None:
             approximate_bounds[key][1] = max(approximate_bounds[key][1],
                                              device.cx + span)
 
-    top_ports = subckts["clock_pulse_generator"].ports
+    top_ports = subckts[top_name].ports
     top_keys: dict[str, list[str]] = {}
     for port in top_ports:
         if port in ("VDD", "VSS"):
@@ -1000,31 +1042,58 @@ def emit(source: Path, output: Path) -> None:
     # The dedicated full-swing clock taps are parent-strapped copies of
     # CLKP/CLKN. Place them beside the first HCLK delay receiver rather than
     # forcing that clock load through the macro's long legacy-clock route.
-    hclk_receiver = "XE__XPG3N" if "XE__XPG3N" in group_x \
-        else "XE__XHSD0__XD0"
+    if "XE__XPG3N" in group_x:
+        hclk_receiver = "XE__XPG3N"
+    else:
+        hclk_candidates = sorted(
+            name for name in group_x if name.startswith("XE__XHSD0__"))
+        if not hclk_candidates:
+            raise RuntimeError("cannot locate even-phase HCLK receiver")
+        hclk_receiver = hclk_candidates[0]
     hot_clock_x = group_x[hclk_receiver] - 10.0
     port_xs.update({"CLKP_H": hot_clock_x, "CLKN_H": hot_clock_x})
+    def driver(phase: str, instance: str) -> str:
+        candidates = [name for name in groups
+                      if name.startswith(phase) and name.endswith("__" + instance)]
+        if len(candidates) != 1:
+            raise RuntimeError(
+                f"expected one {phase} {instance} driver, got {candidates}")
+        return candidates[0]
+
     output_drivers = {
-        "E_SENSE": "XE__XSB2", "E_BOOST": "XE__XRB2",
-        "E_WRITE": "XE__XWB4", "O_SENSE": "XO__XSB2",
-        "O_BOOST": "XO__XRB2", "O_WRITE": "XO__XWB4",
+        "E_SENSE": driver("XE", "XSB2"),
+        "E_BOOST": driver("XE", "XRB2"),
+        "E_WRITE": driver("XE", "XWB4"),
+        "O_SENSE": driver("XO", "XSB2"),
+        "O_BOOST": driver("XO", "XRB2"),
+        "O_WRITE": driver("XO", "XWB4"),
     }
     for port, driver in output_drivers.items():
         width, _ = group_geometry(groups[driver])
         port_xs[port] = group_x[driver] + width + 2.0
-    write_driver_width, _ = group_geometry(groups["XE__XWB4"])
-    write_supply_x = group_x["XE__XWB4"] + write_driver_width / 2.0
+    even_write_driver = output_drivers["E_WRITE"]
+    write_driver_width, _ = group_geometry(groups[even_write_driver])
+    write_supply_x = group_x[even_write_driver] + write_driver_width / 2.0
     port_xs.update({"VDD_WE": write_supply_x, "VDD_WO": write_supply_x})
     for port, keys in top_keys.items():
         endpoint = port_xs[port]
         for key in keys:
             approximate_bounds[key][0] = min(approximate_bounds[key][0], endpoint)
             approximate_bounds[key][1] = max(approximate_bounds[key][1], endpoint)
+    # Phase is semantic provenance, not a naming convention.  In particular,
+    # a top-local odd net is flattened as ``__O_WPN`` and does not start with
+    # any of the historical XO/O_ prefixes.  Classifying it by spelling put
+    # its Metal4 route in the even band and produced a DRC-clean phase short.
+    mixed_signal_keys = sorted(
+        key for key in signal_keys if len(key_phase_sets[key]) != 1)
+    if mixed_signal_keys:
+        raise RuntimeError(
+            "cross-phase signal keys must be split by route_key: "
+            f"{mixed_signal_keys}")
     even_keys = [key for key in signal_keys
-                 if not (key.startswith("XO") or key.startswith("O:")
-                         or key in ("CLKN", "CLKN_H") or key.startswith("O_")
-                         or key in ("VDD_WO", "VSS_SO"))]
-    odd_keys = [key for key in signal_keys if key not in even_keys]
+                 if key_phase_sets[key] == {"E"}]
+    odd_keys = [key for key in signal_keys
+                if key_phase_sets[key] == {"O"}]
     key_groups = {key: min(key_lane_sets[key]) for key in signal_keys}
 
     hclk_landing_blocks = {
@@ -1081,8 +1150,12 @@ def emit(source: Path, output: Path) -> None:
         return answer
 
     even_lanes, odd_lanes, tracks = assign_tracks(approximate_bounds)
+    new_top = top_name != "clock_pulse_generator"
     for _ in range(32):
-        columns = route_columns(devices, tap_xs, tracks)
+        columns = route_columns(
+            devices, tap_xs, tracks,
+            min_column_spacing=(1.10 if new_top else 0.86),
+            reserve_tap_columns_globally=new_top)
         # The PMOS/NMOS input gates of the local hot-clock NAND are vertically
         # aligned and carry the same net.  Share their Metal3 access column;
         # the generic collision allocator intentionally does not assume
@@ -1131,7 +1204,7 @@ def emit(source: Path, output: Path) -> None:
     lanes = dict(even_lanes)
     lanes.update(odd_lanes)
 
-    lines = [tcl_header()]
+    lines = [tcl_header(top_name)]
     for phase_offset in (0.0, PHASE_Y_SHIFT):
         for lane in range(LANE_COUNT):
             base = LANE_PITCH * lane
@@ -1363,8 +1436,8 @@ def emit(source: Path, output: Path) -> None:
         else:
             lines.append(f"make_port {port} {index} {x:.3f} {port_y:.3f}\n")
 
-    lines.append("save /work/clock_pulse_generator\n")
-    lines.append("gds write /work/clock_pulse_generator.gds\n")
+    lines.append(f"save /work/{top_name}\n")
+    lines.append(f"gds write /work/{top_name}.gds\n")
     lines.append("quit -noprompt\n")
     output.write_text("".join(lines))
     even_track_count = max((code % 100 for code in even_lanes.values()), default=-1) + 1
@@ -1393,8 +1466,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--top", default="clock_pulse_generator")
     args = parser.parse_args()
-    emit(args.source, args.output)
+    emit(args.source, args.output, args.top)
 
 
 if __name__ == "__main__":

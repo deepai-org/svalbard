@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "claim": "selected_dual_control_pulse_dual_phase_schematic_replay",
+  "scope": "the same dual-phase verifier and declared loads used by the PEX gate, applied to the exact generated schematic",
+  "case_count": 20,
+  "passing_case_count": 6,
+  "environment_code_coverage": {
+    "tt": ["interval1_epoch0"],
+    "ff_cold": ["interval1_epoch1"],
+    "ff_hot": ["interval1_epoch0"],
+    "ss_hot": ["interval0_epoch0", "interval0_epoch1"],
+    "ss_cold": ["interval1_epoch0"]
+  },
+  "identity": {
+    "schematic_sha256": "0499015dfeefe86e1c3eb9287389651f46e0928fff9e64407cda9490415df112",
+    "contract_sha256": "5a187623fa2236a4a4732837436b11251577bdfde996d8998b4016b06e84e434",
+    "runner_sha256": "ab6521c0d0536492846b059dd0efff848cddc248665aeee24b4ec6f64e6b6248",
+    "raw_result_sha256": "482c48d17c89bad38ee979dc7d7880b2ebe8302a43351f88bad2cb9fc27ee2a5",
+    "raw_result_location": "scratch/pcie-selected-dual-control-schematic-replay-last.json"
+  },
+  "result": "pass"
+}

@@ -21,12 +21,12 @@ Run the bounded PVT/code screen with:
 
 The screen uses the five declared public-PDK environments (TT, FF/cold,
 FF/hot, SS/hot, SS/cold), two static control codes, and four realizable
-two-inverter extra-delay strengths.  It accepts an environment only when at
+START-restorer strengths around one selectable-epoch topology. It accepts an environment only when at
 least one selected state has a 100--220 ps WRITE pulse, 80--650 ps delay from
 the HCLK falling edge, logic rails within 250 mV of their supplies, a valid
 `WPN` low, and no more than 75 mA average supply current.
 
-## Current result
+## Retained rejected families
 
 [`hclk_window_baseline_rejection.json`](hclk_window_baseline_rejection.json)
 records the 40-case baseline screen.  All candidates restored `WPN` and
@@ -62,6 +62,29 @@ quarter-strength restored START with the x4 selected END covers four of five
 environments using its real code.  At FF/cold, both codes have valid
 104.19/140.81-ps widths and full rails, but arrive only 21.98/22.21 ps after
 the HCLK falling edge versus the declared 80-ps minimum.  This candidate is
-therefore rejected before layout.  The next bounded family adds delay only to
-the common full-swing HCLK epoch so it does not retune the already valid
-START/END interval.
+therefore rejected before layout.
+
+The fixed common-epoch sweep in
+[`common_epoch_delay_rejection.json`](common_epoch_delay_rejection.json) then
+proved that one delay strength cannot satisfy both FF/cold's 80-ps minimum and
+SS/hot's 650-ps maximum. The first coherent fast/short versus delayed/long
+selector in
+[`selectable_epoch_initial_result.json`](selectable_epoch_initial_result.json)
+covered four environments and missed only SS/hot width by 16.46 ps. These are
+falsification records, not candidate passes.
+
+## Current result
+
+[`selectable_epoch_qualified_result.json`](selectable_epoch_qualified_result.json)
+records the resulting 40-case bounded screen. One physically fixed candidate,
+`epoch_slow_1x_tg_1x_start_0p85x`, covers 5/5 environments using its realized
+one-bit code. Selected WRITE widths are 108.05--192.00 ps, selected HCLK-fall
+to-WRITE delays are 137.89--647.22 ps, and average currents are 12.77--17.12
+mA. FF/cold and FF/hot select the delayed/long state; SS/hot selects the
+fast/short state.
+
+This is deliberately only a necessary source-level pass. SS/hot has just
+2.78 ps margin to the proxy epoch ceiling, and the probe does not contain the
+real SENSE path or extracted consumers. The next gate composes this exact
+candidate with SENSE, checks non-overlap and actual SENSE-to-WRITE timing over
+5/5 environments, and authorizes layout only if that stronger contract passes.

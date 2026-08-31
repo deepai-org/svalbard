@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "claim": "pcie_hclk_selectable_epoch_initial_screen",
+  "scope": "schematic necessary-condition candidate-family screen",
+  "identity": {
+    "netlist_sha256": "c13e36b17d135c234192dc5f84fb34b7a0250265f1bbe10258d9be5620ea3ab0",
+    "contract_sha256": "5ada84375592d51fd16c6d2068bf04a9315b9415969c55359a356218652b636b",
+    "runner_sha256": "23fb4a606e099abbbc912ff9bc9147b983b4f46d07fb70871a480bb96d53338b",
+    "raw_result_sha256": "9ec6b435c9412977404927f20f95e86f9adf8ad18215432a3623161a828982cc",
+    "raw_result_location": "scratch/pcie-hclk-write-window-last.json"
+  },
+  "candidate": "epoch_slow_1x_tg_1x",
+  "candidate_coverage": {"tt": [0, 1], "ff_cold": [1], "ff_hot": [0, 1], "ss_hot": [], "ss_cold": [0, 1]},
+  "limiting_case": {"environment": "ss_hot", "code": 0, "write_width_ps": 236.46, "maximum_write_width_ps": 220.0, "delay_from_hclk_fall_ps": 628.6},
+  "conclusion": "The coherent fast/short versus delayed/long epoch selector repairs FF/cold without exceeding the SS/hot epoch bound, but the fast-mode SS/hot pulse is 16.46 ps too wide. Retain the topology and sweep only START-restorer strength.",
+  "not_a_claim": ["complete_pcie_pulse_generator", "physical_layout_or_pex", "sense_to_write_timing_closure", "capture_or_cdr_closure", "calibration_algorithm_or_silicon_yield"],
+  "result": "rejected_before_physical_implementation"
+}

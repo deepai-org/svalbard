@@ -779,11 +779,14 @@ Execution order is deliberately narrow:
    [rejected before layout](../../ip/blocks/analog/wireline_serdes/clock_pulse_hclk_window_probe/README.md),
    not a calibration claim. The first product-specific closure manifest then
    made candidate identity, code identity, environments, predicates and
-   semantic START/END bindings executable. Its quarter-strength restored-START
-   candidate covers 4/5 environments; FF/cold width/rails pass but the selected
-   pulse begins 22 ps after HCLK fall, below its declared 80-ps epoch bound.
-   The next bounded family may shift only the common full-swing HCLK epoch
-   before START/END formation. It must preserve the compact PEX-proven write
+   semantic START/END bindings executable. It retained a 4/5 restored-START
+   result and then proved that no single common delay meets both FF/cold and
+   SS/hot epoch bounds. A coherent one-bit fast/short versus delayed/long epoch
+   family now covers 5/5 environments in this necessary schematic screen, with
+   selected 108.05--192.00 ps WRITE widths and 137.89--647.22 ps proxy delays.
+   Because SS/hot has only 2.78 ps epoch margin and the probe omits SENSE, the
+   next bounded step is full SENSE/WRITE schematic composition, not layout.
+   It must preserve the compact PEX-proven write
    timing source until its replacement covers every PVT environment with one
    physically fixed candidate and an observed selected code, include an
    observable correlated with timing/drive margin and safe code endpoints, and

@@ -54,8 +54,15 @@ XI_SEL SEL SELB VDD VSS cp_inv WP=4u WN=2u MP=2 MN=2
 * END0 and END1 differ solely by the calibrated extra delay state.  START
 * includes a matched restoring pair, so the selection-restorer latency is not
 * accidentally charged to the window budget.
-XST0 HCLK S0A VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2
-XST1 HCLK S1A VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2
+* The same static code selects a fast/short or delayed/long full-swing epoch.
+* Both choices are made before START/END formation.  The selected HBASE node
+* immediately enters the static-CMOS XST0/XST1 restorers; no narrow pulse is
+* transported through the transmission gates.
+XSLOW HCLK HSLOW VDD VSS cp_delay WP=@BASE_WP@ WN=@BASE_WN@ MP=@BASE_MP@ MN=@BASE_MN@
+XBTG0 HCLK HBASE SELB SEL VDD VSS cp_tg W=@TG_W@ M=@TG_M@
+XBTG1 HSLOW HBASE SEL SELB VDD VSS cp_tg W=@TG_W@ M=@TG_M@
+XST0 HBASE S0A VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2
+XST1 HBASE S1A VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2
 XSTR0 S0A STR0 VDD VSS cp_inv WP=@START0_WP@ WN=@START0_WN@ MP=@START0_MP@ MN=@START0_MN@
 XSTR1 STR0 START VDD VSS cp_inv WP=@START1_WP@ WN=@START1_WN@ MP=@START1_MP@ MN=@START1_MN@
 XEND0 S0A E0 VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2

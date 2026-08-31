@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "claim": "pcie_hclk_fixed_common_epoch_delay_rejection",
+  "scope": "schematic necessary-condition candidate-family screen",
+  "identity": {
+    "netlist_sha256": "d2ea1b70cc0643d1fa664a1b1be987b4b01c3682b221ec011c7dad0d92f075ef",
+    "contract_sha256": "09c2389146f6674eed4c056c3d268716c4ae208014bec851514fe8ebce43eb79",
+    "runner_sha256": "23fb4a606e099abbbc912ff9bc9147b983b4f46d07fb70871a480bb96d53338b",
+    "raw_result_sha256": "e8436b5f224259418331527ec8ca2b3a48bdc9f337d28741f17dca33e816de62",
+    "raw_result_location": "scratch/pcie-hclk-write-window-last.json"
+  },
+  "fixed_interval": "quarter-strength restored START, x4 END, code 0",
+  "candidate_tradeoff": {
+    "base_4x": {"ff_cold_delay_ps": 65.1, "ss_hot_delay_ps": 663.01},
+    "base_2x": {"ff_cold_delay_ps": 72.44, "ss_hot_delay_ps": 679.83},
+    "base_1x": {"ff_cold_delay_ps": 86.77, "ss_hot_delay_ps": 711.75},
+    "base_0p5x": {"ff_cold_delay_ps": 114.27, "ss_hot_delay_ps": 769.57}
+  },
+  "required_delay_bounds_ps": [80.0, 650.0],
+  "candidate_coverage": {
+    "base_4x_start_0p25x_end_x4": ["tt", "ff_hot", "ss_cold"],
+    "base_2x_start_0p25x_end_x4": ["tt", "ff_hot", "ss_cold"],
+    "base_1x_start_0p25x_end_x4": ["tt", "ff_cold", "ff_hot", "ss_cold"],
+    "base_0p5x_start_0p25x_end_x4": ["tt", "ff_cold", "ff_hot", "ss_cold"]
+  },
+  "conclusion": "No fixed common-delay strength can satisfy both the FF/cold minimum epoch and SS/hot maximum epoch. Reject fixed epoch delay before layout.",
+  "next_candidate_requirement": "Use the existing static code to select a restored fast/short HCLK epoch at SS/hot and a restored delayed/long epoch at FF/cold, entirely before START/END pulse formation.",
+  "not_a_claim": [
+    "complete_pcie_pulse_generator",
+    "physical_layout_or_pex",
+    "sense_to_write_timing_closure",
+    "capture_or_cdr_closure",
+    "calibration_algorithm_or_silicon_yield"
+  ],
+  "result": "rejected_before_physical_implementation"
+}

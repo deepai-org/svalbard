@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "claim": "pcie_hclk_selectable_epoch_necessary_screen",
+  "scope": "schematic necessary condition only; one physically fixed candidate covers every declared environment through a realized static code",
+  "identity": {
+    "netlist_sha256": "c13e36b17d135c234192dc5f84fb34b7a0250265f1bbe10258d9be5620ea3ab0",
+    "contract_sha256": "b0f8d96885e58ba319350b8cf84433283a11461cf768b730708e3c1052849bb5",
+    "runner_sha256": "23fb4a606e099abbbc912ff9bc9147b983b4f46d07fb70871a480bb96d53338b",
+    "raw_result_sha256": "0524c29176fb715954cdd73362e00d1b41a17eabf70b7c5533086d62cfbc9789",
+    "raw_result_location": "scratch/pcie-hclk-write-window-last.json"
+  },
+  "structural_contract": {
+    "result": "pass",
+    "critical_bindings": ["XBTG0 HCLK HBASE SELB SEL VDD VSS cp_tg", "XBTG1 HSLOW HBASE SEL SELB VDD VSS cp_tg", "XDET START END WIN VDD VSS cp_fall_window"]
+  },
+  "campaign": {"physically_distinct_candidates": 4, "post_fabrication_codes_per_candidate": 2, "environments": 5, "case_count": 40, "passing_case_count": 21, "qualifying_candidates": ["epoch_slow_1x_tg_1x_start_0p85x"]},
+  "selected_candidate": {
+    "id": "epoch_slow_1x_tg_1x_start_0p85x",
+    "candidate_coverage": {"tt": [0, 1], "ff_cold": [1], "ff_hot": [1], "ss_hot": [0], "ss_cold": [0, 1]},
+    "selected_cases": {
+      "tt_code0": {"write_width_ps": 112.22, "delay_from_hclk_fall_ps": 258.92, "write_high_v": 3.0616, "average_current_ma": 14.3281},
+      "ff_cold_code1": {"write_width_ps": 127.37, "delay_from_hclk_fall_ps": 137.89, "write_high_v": 3.67316, "average_current_ma": 17.1225},
+      "ff_hot_code1": {"write_width_ps": 192.0, "delay_from_hclk_fall_ps": 423.94, "write_high_v": 2.99435, "average_current_ma": 14.3275},
+      "ss_hot_code0": {"write_width_ps": 184.8, "delay_from_hclk_fall_ps": 647.22, "write_high_v": 2.82742, "average_current_ma": 12.7708},
+      "ss_cold_code0": {"write_width_ps": 108.05, "delay_from_hclk_fall_ps": 252.78, "write_high_v": 3.39809, "average_current_ma": 15.5588}
+    }
+  },
+  "declared_bounds": {"write_width_ps": [100.0, 220.0], "delay_from_hclk_fall_ps": [80.0, 650.0], "logic_rail_margin_v": 0.25, "maximum_average_current_ma": 75.0},
+  "conclusion": "One fixed one-bit-selectable circuit clears the declared five-environment HCLK-to-WRITE necessary screen. The SS/hot delay has only 2.78 ps schematic margin, so this authorizes only full SENSE/WRITE schematic composition, not layout or PCIe closure.",
+  "next_gate": "Compose this exact selected circuit with the real SENSE path and actual pulse consumers, measure SENSE width, SENSE-to-WRITE delay, non-overlap and rails over all five environments, then authorize physical implementation only if that composed schematic contract passes.",
+  "not_a_claim": ["complete_pcie_pulse_generator", "physical_layout_or_pex", "sense_to_write_timing_closure", "capture_or_cdr_closure", "calibration_algorithm_or_silicon_yield"],
+  "result": "passes_necessary_screen_only"
+}

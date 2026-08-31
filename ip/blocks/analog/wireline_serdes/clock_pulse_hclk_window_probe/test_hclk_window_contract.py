@@ -33,6 +33,14 @@ class HclkWindowContractTest(unittest.TestCase):
         with self.assertRaisesRegex(ContractError, "connectivity mismatch at XTG1"):
             validate_structural_contract(broken, CONTRACT)
 
+    def test_common_epoch_bypass_is_rejected(self) -> None:
+        broken = TEMPLATE.replace(
+            "XST0 HBASE S0A VDD VSS cp_delay",
+            "XST0 HCLK S0A VDD VSS cp_delay",
+        )
+        with self.assertRaisesRegex(ContractError, "connectivity mismatch at XST0"):
+            validate_structural_contract(broken, CONTRACT)
+
 
 if __name__ == "__main__":
     unittest.main()

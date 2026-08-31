@@ -12,34 +12,42 @@
   "control_codes": [0, 1],
   "candidates": [
     {
-      "id": "start_1x_end_x4",
+      "id": "epoch_slow_1x_tg_1x_start_1x",
       "replacements": {
-        "START0_WP": "8u", "START0_WN": "4u", "START0_MP": "2", "START0_MN": "2",
-        "START1_WP": "8u", "START1_WN": "6u", "START1_MP": "3", "START1_MN": "2",
-        "EXTRA_W": "8u", "EXTRA_N": "4u", "EXTRA_MP": "4", "EXTRA_MN": "4"
-      }
-    },
-    {
-      "id": "start_0p5x_end_x4",
-      "replacements": {
-        "START0_WP": "4u", "START0_WN": "2u", "START0_MP": "2", "START0_MN": "2",
-        "START1_WP": "4u", "START1_WN": "3u", "START1_MP": "3", "START1_MN": "2",
-        "EXTRA_W": "8u", "EXTRA_N": "4u", "EXTRA_MP": "4", "EXTRA_MN": "4"
-      }
-    },
-    {
-      "id": "start_0p25x_end_x4",
-      "replacements": {
+        "BASE_WP": "4u", "BASE_WN": "2u", "BASE_MP": "2", "BASE_MN": "2",
+        "TG_W": "4u", "TG_M": "2",
         "START0_WP": "4u", "START0_WN": "2u", "START0_MP": "1", "START0_MN": "1",
         "START1_WP": "2u", "START1_WN": "1.5u", "START1_MP": "3", "START1_MN": "2",
         "EXTRA_W": "8u", "EXTRA_N": "4u", "EXTRA_MP": "4", "EXTRA_MN": "4"
       }
     },
     {
-      "id": "start_0p125x_end_x4",
+      "id": "epoch_slow_1x_tg_1x_start_0p85x",
       "replacements": {
-        "START0_WP": "2u", "START0_WN": "1u", "START0_MP": "1", "START0_MN": "1",
-        "START1_WP": "1u", "START1_WN": "0.75u", "START1_MP": "3", "START1_MN": "2",
+        "BASE_WP": "4u", "BASE_WN": "2u", "BASE_MP": "2", "BASE_MN": "2",
+        "TG_W": "4u", "TG_M": "2",
+        "START0_WP": "3.4u", "START0_WN": "1.7u", "START0_MP": "1", "START0_MN": "1",
+        "START1_WP": "1.7u", "START1_WN": "1.275u", "START1_MP": "3", "START1_MN": "2",
+        "EXTRA_W": "8u", "EXTRA_N": "4u", "EXTRA_MP": "4", "EXTRA_MN": "4"
+      }
+    },
+    {
+      "id": "epoch_slow_1x_tg_1x_start_0p75x",
+      "replacements": {
+        "BASE_WP": "4u", "BASE_WN": "2u", "BASE_MP": "2", "BASE_MN": "2",
+        "TG_W": "4u", "TG_M": "2",
+        "START0_WP": "3u", "START0_WN": "1.5u", "START0_MP": "1", "START0_MN": "1",
+        "START1_WP": "1.5u", "START1_WN": "1.125u", "START1_MP": "3", "START1_MN": "2",
+        "EXTRA_W": "8u", "EXTRA_N": "4u", "EXTRA_MP": "4", "EXTRA_MN": "4"
+      }
+    },
+    {
+      "id": "epoch_slow_1x_tg_1x_start_0p65x",
+      "replacements": {
+        "BASE_WP": "4u", "BASE_WN": "2u", "BASE_MP": "2", "BASE_MN": "2",
+        "TG_W": "4u", "TG_M": "2",
+        "START0_WP": "2.6u", "START0_WN": "1.3u", "START0_MP": "1", "START0_MN": "1",
+        "START1_WP": "1.3u", "START1_WN": "0.975u", "START1_MP": "3", "START1_MN": "2",
         "EXTRA_W": "8u", "EXTRA_N": "4u", "EXTRA_MP": "4", "EXTRA_MN": "4"
       }
     }
@@ -53,6 +61,11 @@
   "structural_contract": {
     "subckt": "hclk_select_window",
     "instances": {
+      "XSLOW": {"nodes": ["HCLK", "HSLOW", "VDD", "VSS"], "cell": "cp_delay"},
+      "XBTG0": {"nodes": ["HCLK", "HBASE", "SELB", "SEL", "VDD", "VSS"], "cell": "cp_tg"},
+      "XBTG1": {"nodes": ["HSLOW", "HBASE", "SEL", "SELB", "VDD", "VSS"], "cell": "cp_tg"},
+      "XST0": {"nodes": ["HBASE", "S0A", "VDD", "VSS"], "cell": "cp_delay"},
+      "XST1": {"nodes": ["HBASE", "S1A", "VDD", "VSS"], "cell": "cp_delay"},
       "XSTR0": {"nodes": ["S0A", "STR0", "VDD", "VSS"], "cell": "cp_inv"},
       "XSTR1": {"nodes": ["STR0", "START", "VDD", "VSS"], "cell": "cp_inv"},
       "XEND1B": {"nodes": ["E1A", "E1", "VDD", "VSS"], "cell": "cp_delay"},

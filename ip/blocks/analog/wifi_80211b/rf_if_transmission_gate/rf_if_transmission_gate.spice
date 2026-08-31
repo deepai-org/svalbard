@@ -1,0 +1,59 @@
+* SPDX-License-Identifier: Apache-2.0
+* Differential real-IF transmission-gate sampling candidate.
+*
+* Each side uses 8 x 4 um NMOS plus 16 x 4 um PMOS fingers.  The larger PMOS
+* bank compensates lower hole mobility.  Fingers and alternating drain/source
+* orientation are explicit because the eventual layout must preserve them.
+.subckt wifi_if_transmission_gate INP INN HOLDP HOLDN CLK CLKB VDD VSS
+* Positive held leg: NMOS bank.
+XNP0 INP   CLK HOLDP VSS nfet_03v3 w=4u l=0.28u
+XNP1 HOLDP CLK INP   VSS nfet_03v3 w=4u l=0.28u
+XNP2 INP   CLK HOLDP VSS nfet_03v3 w=4u l=0.28u
+XNP3 INP   CLK HOLDP VSS nfet_03v3 w=4u l=0.28u
+XNP4 HOLDP CLK INP   VSS nfet_03v3 w=4u l=0.28u
+XNP5 HOLDP CLK INP   VSS nfet_03v3 w=4u l=0.28u
+XNP6 HOLDP CLK INP   VSS nfet_03v3 w=4u l=0.28u
+XNP7 INP   CLK HOLDP VSS nfet_03v3 w=4u l=0.28u
+* Positive held leg: PMOS bank.
+XPP0 INP   CLKB HOLDP VDD pfet_03v3 w=4u l=0.28u
+XPP1 HOLDP CLKB INP   VDD pfet_03v3 w=4u l=0.28u
+XPP2 INP   CLKB HOLDP VDD pfet_03v3 w=4u l=0.28u
+XPP3 INP   CLKB HOLDP VDD pfet_03v3 w=4u l=0.28u
+XPP4 HOLDP CLKB INP   VDD pfet_03v3 w=4u l=0.28u
+XPP5 HOLDP CLKB INP   VDD pfet_03v3 w=4u l=0.28u
+XPP6 HOLDP CLKB INP   VDD pfet_03v3 w=4u l=0.28u
+XPP7 INP   CLKB HOLDP VDD pfet_03v3 w=4u l=0.28u
+XPP8 HOLDP CLKB INP   VDD pfet_03v3 w=4u l=0.28u
+XPP9 INP   CLKB HOLDP VDD pfet_03v3 w=4u l=0.28u
+XPP10 INP  CLKB HOLDP VDD pfet_03v3 w=4u l=0.28u
+XPP11 HOLDP CLKB INP  VDD pfet_03v3 w=4u l=0.28u
+XPP12 INP  CLKB HOLDP VDD pfet_03v3 w=4u l=0.28u
+XPP13 INP  CLKB HOLDP VDD pfet_03v3 w=4u l=0.28u
+XPP14 HOLDP CLKB INP  VDD pfet_03v3 w=4u l=0.28u
+XPP15 HOLDP CLKB INP  VDD pfet_03v3 w=4u l=0.28u
+* Negative held leg: exact mirror.
+XNN0 INN   CLK HOLDN VSS nfet_03v3 w=4u l=0.28u
+XNN1 HOLDN CLK INN   VSS nfet_03v3 w=4u l=0.28u
+XNN2 INN   CLK HOLDN VSS nfet_03v3 w=4u l=0.28u
+XNN3 INN   CLK HOLDN VSS nfet_03v3 w=4u l=0.28u
+XNN4 HOLDN CLK INN   VSS nfet_03v3 w=4u l=0.28u
+XNN5 HOLDN CLK INN   VSS nfet_03v3 w=4u l=0.28u
+XNN6 HOLDN CLK INN   VSS nfet_03v3 w=4u l=0.28u
+XNN7 INN   CLK HOLDN VSS nfet_03v3 w=4u l=0.28u
+XPN0 INN   CLKB HOLDN VDD pfet_03v3 w=4u l=0.28u
+XPN1 HOLDN CLKB INN   VDD pfet_03v3 w=4u l=0.28u
+XPN2 INN   CLKB HOLDN VDD pfet_03v3 w=4u l=0.28u
+XPN3 INN   CLKB HOLDN VDD pfet_03v3 w=4u l=0.28u
+XPN4 HOLDN CLKB INN   VDD pfet_03v3 w=4u l=0.28u
+XPN5 HOLDN CLKB INN   VDD pfet_03v3 w=4u l=0.28u
+XPN6 HOLDN CLKB INN   VDD pfet_03v3 w=4u l=0.28u
+XPN7 INN   CLKB HOLDN VDD pfet_03v3 w=4u l=0.28u
+XPN8 HOLDN CLKB INN   VDD pfet_03v3 w=4u l=0.28u
+XPN9 INN   CLKB HOLDN VDD pfet_03v3 w=4u l=0.28u
+XPN10 INN  CLKB HOLDN VDD pfet_03v3 w=4u l=0.28u
+XPN11 HOLDN CLKB INN  VDD pfet_03v3 w=4u l=0.28u
+XPN12 INN  CLKB HOLDN VDD pfet_03v3 w=4u l=0.28u
+XPN13 INN  CLKB HOLDN VDD pfet_03v3 w=4u l=0.28u
+XPN14 HOLDN CLKB INN  VDD pfet_03v3 w=4u l=0.28u
+XPN15 HOLDN CLKB INN  VDD pfet_03v3 w=4u l=0.28u
+.ends wifi_if_transmission_gate

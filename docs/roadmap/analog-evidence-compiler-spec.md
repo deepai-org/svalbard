@@ -232,8 +232,8 @@ gate. It is not an independently funded platform. The active delivery order is:
 
 | Priority | Product gate | Direct engineering work | Permitted supporting tooling | Done means |
 |---|---|---|---|---|
-| 1 | PCIe recovered-clock/capture boundary | Make the slow/hot pulse path and its clock-consumer interface real, then extract and verify the routed parent | Reproducible PVT scheduling, internal-node measurements, artifact identity, and PEX failure probes | No ideal timing source remains at that boundary; the extracted parent has a passing matrix or one localized, authority-bound blocker |
-| 2 | Wi-Fi receiver selectivity boundary | Bind a real external preselector/match or an ADC/DSP headroom model, then rerun the routed two-tone parent | S-parameter import checks, model-validity labels, and the existing PEX campaign runner | The next receiver decision is supported by a reproducible composed result, or the missing measurement/model is named precisely |
+| 1 | PCIe recovered-clock/capture boundary | Add one real selected pulse-control path, then rerun the already-real pulse/bridge/capture parent over its five PVT cases | Existing PVT runner, node probes, artifact identity, and PEX failure reports | A physical parent passes, or the first remaining failed physical predicate has a concrete circuit/model owner |
+| 2 | Wi-Fi sampled-input boundary | Specify and screen one differential sampler with explicit charge-injection cancellation or bottom-plate timing; only lay it out after the schematic screen earns that work | Existing transient/PVT runner, hashes, and first-failure checker | The 0.25-V/320-MS/s/5-pF sampled-input interface passes extracted PVT, or the evidence forces a narrower frequency-plan decision |
 | 3 | Shared only after repetition | Extract a helper only after it has removed the same failure mode in both tracks, or twice in one track | Small scripts/schemas with native files and commands retained as the source of truth | The helper demonstrably saves time or prevents an observed false claim without creating a second design flow |
 
 The following are explicitly **not** current deliverables: a new language,
@@ -854,17 +854,20 @@ Execution order is likewise tied to the next receiver claim:
    implementation now completes all five full-RC corners but is explicitly
    rejected: its 177.891-mV worst aperture/hold error is 5,829 times the
    allocation, and its schematic baseline fails likewise. Do not tune it.
-   The immediate candidate is a matched transmission gate with complementary,
-   overlap-controlled clocks; its extracted PVT screen must measure switch settling,
-   hold error, clock feedthrough and input loading. Do not reuse the PCIe CML
-   error slicer: its extracted 40--150-mV window is hundreds of times coarser
-   than the roughly 122-uV 12-bit code step. A failed transmission-gate screen
-   may justify bootstrapping/cancellation or a simplified frequency plan; it
-   does not justify starting a generic ADC framework. Only after the interface
-   passes should a bounded converter and fixed-point filter be built and
-   composed. This is a product architecture decision, not an opportunity to
-   build an RF optimizer or to call the current scalar budget an implemented
-   receiver.
+   A complementary-clocked simple transmission gate was then screened before
+   layout and rejected: its best bounded high-IF sizing retains 79.206 mV worst
+   aperture/hold error, while a deliberately easier 10-MHz/80-MS/s screen still
+   retains 17.003 mV.  The next candidate must state its explicit
+   charge-injection-cancellation or bottom-plate-sampling mechanism and the
+   control timing it needs; only then may it earn an extracted PVT screen for
+   settling, hold error, clock feedthrough and input loading. Do not reuse the
+   PCIe CML error slicer: its extracted 40--150-mV window is hundreds of times
+   coarser than the roughly 122-uV 12-bit code step. A failed sampler may justify
+   a simplified frequency plan; it does not justify starting a generic ADC
+   framework. Only after the interface passes should a bounded converter and
+   fixed-point filter be built and composed. This is a product architecture
+   decision, not an opportunity to build an RF optimizer or to call the current
+   scalar budget an implemented receiver.
 2. Preserve the OSTL and active-NFET coupons as tapeout/measurement obligations.
    When calibrated wafer data exists, bind the exact de-embedded S-parameters,
    noise and bias range into the model registry before promoting any RF gain,
@@ -883,18 +886,20 @@ Exit criterion: the macro has a reproducible evidence package that either
 supports the next integrated Wi-Fi receiver step or identifies the specific
 provider/silicon characterization missing from GF180.
 
-### Slice 3: extract only proven shared tooling
+### Slice 3: extract only delivery-critical shared utilities
 
-- Promote a mechanism only after it has removed the same observed pain twice in
-  PCIe, twice in Wi-Fi, or once in each. Candidates are artifact identity,
-  resource-bounded parallel jobs, model validity, semantic measurement
-  bindings, claim dependencies, and physical-boundary labels.
-- Introduce a Rust core only for a demonstrated correctness, concurrency,
-  geometry, or scale bottleneck. Keep Python orchestration otherwise.
-- Upstream generally useful operation profiles, fixtures, generators, or fixes
-  when their project accepts the required semantics.
-- Add calibration-controller generation, broader optimization, and contract
-  refinement incrementally as the next PCIe or Wi-Fi block demands them.
+- Keep only utilities that are already on the direct delivery path: artifact
+  identity/invalidation, resource-bounded PVT runners, declared measurements,
+  first-failure reports, and model-validity labels.  They must run in the next
+  PCIe or Wi-Fi experiment, with native source and artifacts still authoritative.
+- Extract a shared helper after it prevents the same false claim or removes the
+  same manual burden twice.  A one-off helper is allowed only when it is smaller
+  than repeating the immediate product experiment and is deleted or absorbed if
+  that experiment makes it unnecessary.
+- Do not begin Rust, upstream qualification, generalized layout generation,
+  calibration synthesis, or optimization work as a roadmap item.  Each becomes
+  eligible only after a named chip gate cannot move without it and a smaller
+  direct circuit/layout experiment is demonstrably insufficient.
 
 Exit criterion: the shared layer demonstrably reduces elapsed engineering work
 or prevents a previously observed false claim in both projects.
@@ -902,11 +907,13 @@ or prevents a previously observed false claim in both projects.
 ### Immediate execution policy
 
 The PCIe clock/capture bench now removes ideal timing sources at its immediate
-boundary but passes only 3/5 corners; the Wi-Fi receiver has a byte-bound
-ADC/DSP selectivity architecture but no implemented sampled-input interface.
-Until those two product gates advance, the repository is **not** building a
-general analog compiler. The allowed shared work is limited to a defect already
-encountered in both products:
+boundary but passes only 3/5 corners.  The Wi-Fi receiver has a byte-bound
+ADC/DSP selectivity architecture, but both its physical NMOS-only sampler and
+its schematic simple transmission-gate screen are rejected; the next circuit
+must explicitly cancel charge injection or implement bottom-plate sampling
+before a new layout is authorized.  Until those two product gates advance, the
+repository is **not** building a general analog compiler.  The allowed shared
+work is limited to an already-encountered defect in both products:
 
 - source/layout/PEX/testbench/result identity and invalidation;
 - resource-bounded, resumable PVT or characterization runners;

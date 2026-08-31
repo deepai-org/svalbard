@@ -84,25 +84,30 @@ The first physical sampling experiment is now complete and rejected:
 is 0-DRC, uniquely LVS-matched and full-RC extracted, but its five-corner
 5-pF/leg, 320-MS/s accuracy probe fails by up to 5,829 times the declared
 quarter-LSB allocation.  Its schematic probe fails likewise, so this is a
-topology decision rather than a layout-tuning backlog.  The next bounded
-candidate is a complementary-clocked matched transmission gate; it must earn
-its own PEX evidence before any converter is designed around it.
+topology decision rather than a layout-tuning backlog.  A complementary-clocked
+matched transmission-gate screen is now rejected before layout as well: its
+best high-IF sizing has 79.206 mV worst aperture/hold error, while a deliberately
+easier 10-MHz IF / 80-MS/s screen still has 17.003 mV hold error.  Both miss the
+30.518-uV allocation by orders of magnitude.  The next candidate must make its
+charge-injection-cancellation or bottom-plate-sampling mechanism and control
+timing explicit before it earns physical-layout effort.
 
 The remaining product work is deliberately small and sequential.  In
 particular, this track must not turn an unimplemented 12-bit converter into a
 large generic-ADC project:
 
 1. Close one physical **differential sampled-input interface** first.  The
-   NMOS-only baseline has already been physically rejected, so the immediate
-   candidate is a matched transmission gate with complementary,
-   overlap-controlled clocks.  Its
+   NMOS-only baseline is physically rejected and the simple matched transmission
+   gate is rejected at schematic level, so the immediate candidate must include
+   explicit charge-injection cancellation or bottom-plate sampling with declared
+   control timing.  Its
    declared test boundary is 0.25 V differential peak full scale, 320 MS/s,
    a 5 pF per-leg future converter/CDAC load, and a 0.25-LSB settling/noise
    allocation.  DRC/LVS/full-RC PEX must show the actual switch, clock feed,
    input buffer/loading, hold error, and PVT behavior at that boundary.  If a
-   simple transmission gate cannot meet it, the evidence determines whether a
-   bootstrapped/cancelled switch is warranted or whether the receiver frequency
-   plan must be simplified before more converter work is started.
+   next sampler cannot meet it, the evidence determines whether a bootstrapped
+   or cancelled switch is warranted or whether the receiver frequency plan must
+   be simplified before more converter work is started.
 2. Only after that interface passes, implement a bounded converter architecture
    and its calibration observables, followed by the fixed-point channel filter
    against the frozen two-tone headroom/filter budget.  The existing PCIe CML

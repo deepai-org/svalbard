@@ -50,19 +50,19 @@ PEX: extracted interconnect changes narrow-pulse behavior materially.
 extraction, and TT plus FF/125 C and SS/125 C electrical probes with bounded
 resources.
 
-`generate_pulse_layout.py` flattens the circuit into 128 MOS devices, aligns
-complementary devices as CMOS cells, routes phase-local nets in functional
-bands, and stacks EVEN and ODD vertically. The current 175.4 by 285 um
-candidate is zero-DRC, uniquely pin-resolved LVS-matched, and extracts to 3,408
-resistors plus 2,477 capacitors in the retained earlier checkpoint. The current
-delayed-step revision extracts to 3,492 resistors plus 2,531 capacitors.
+`generate_pulse_layout.py` aligns complementary devices as CMOS cells, routes
+phase-local nets in functional bands, and stacks EVEN and ODD vertically. The
+retained 128-device compact candidate is 175.4 by 285 um, zero-DRC, uniquely
+pin-resolved LVS-matched, and extracts to 3,408 resistors plus 2,477 capacitors
+in the earlier checkpoint. Its delayed-step revision extracts to 3,492
+resistors plus 2,531 capacitors.
 Substrate-tap columns are filtered against
 complete multi-finger device spans, fixed HCLK landing intervals block the
 automatic M4 allocator, and route comments make emitted nets inspectable.
 Dedicated `VDD_WE`/`VDD_WO` and `VSS_SE`/`VSS_SO` pins retain explicit
 parent-grid attachment.
 
-The current extracted candidate passes the complete focused TT contract:
+The retained delayed-step candidate passes the complete focused TT contract:
 591.87/583.98 ps SENSE, 206.87/213.84 ps WRITE, 605.54 ps write delay,
 13.67 ps non-overlap, valid rails, and 40.669 mA. FF/125 C gives
 592.74/583.02 ps SENSE and 202.82/207.82 ps WRITE with valid timing and SENSE
@@ -70,6 +70,23 @@ rails, but WRITE reaches only 2.687/2.692 V against a 2.72 V minimum. SS/125 C
 retains valid 540.98/540.58 ps SENSE pulses, but the write restoration chain
 does not propagate a complete pulse. Focused coverage is therefore 1/3, not
 closure, and the full 20-case campaign is not promoted.
+
+### Current fast-detector characterization candidate
+
+The working source now contains a reduced-depth static-CMOS falling-edge
+detector (`cp_fall_pulse_fast`) and six full-swing write-delay units. This is a
+strictly unpromoted candidate, recorded in
+`pulse_fast_path_checkpoint.json`. Its schematic campaign covers TT, FF/hot,
+and SS/cold (12/20 cases); FF/cold has insufficient write placement, while
+SS/hot has an insufficient sense aperture and no complete write pulse. Its
+fresh 164-device, 226.2-um-wide layout is zero-DRC and uniquely LVS-matched,
+but its fresh nominal full-RC PEX fails: the write detector never discharges
+far enough (`WPN` minimum 1.335 V), `WB1` reaches only 337 mV, and WRITE reaches
+only 94 mV. The exact generated PEX/GDS are intentionally not promoted or
+substituted for other evidence decks. This candidate establishes that the
+schematic-only improvement is parasitic-sensitive; the next revision must add
+the needed calibration at a fully restored step and close this first extracted
+TT case before spending time on its full PVT matrix.
 
 The central retained lesson is that a narrow pulse must not be selected or
 transported through a slow restoration chain. The improved write topology

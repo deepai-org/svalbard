@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "claim": "clock_pulse_fast_detector_characterization_candidate",
+  "classification": "failed_nonpromotable_characterization",
+  "release_eligible": false,
+  "source_sha256": "c09091869efbb5b741676e11cfca112df6cbaa117ca5b80146db457d4b6b1c60",
+  "layout_generator_sha256": "6579626f9c0719443518758c274c1853e1c786d53aeeb244a575344a0d725825",
+  "testbench_sha256": "b8e79e9333ac42d3363598f2a8b76fb01ff432738764eb227b68d78156d63545",
+  "runner_sha256": "f14b334aaa2afde5c35b0febebc730757d76835479716b4034e41610de0f55a3",
+  "layout": {
+    "device_count": 164,
+    "group_count": 84,
+    "width_um": 226.2,
+    "drc_error_count": 0,
+    "lvs_result": "unique_match",
+    "gds_sha256": "5942e12f944c082dbb6542ab7072d5a63ba2e49c2e20afb0ae48de1fa3c08f83",
+    "pex_sha256": "a41731940f1882d059e227c0cd0cc8c2968cce7a787fb00ffed9e40e96b5c822"
+  },
+  "schematic": {
+    "case_count": 20,
+    "passing_case_count": 12,
+    "covered_environments": ["tt", "ff_hot", "ss_cold"],
+    "uncovered_environments": ["ff_cold", "ss_hot"]
+  },
+  "nominal_full_rc_pex": {
+    "result": "fail",
+    "complete": false,
+    "sense_width_ps": 383.62,
+    "write_width_ps": 0.0,
+    "write_delay_ps": 258.98,
+    "wpn_min_v": 1.33489,
+    "wb1_max_v": 0.336539,
+    "write_max_v": 0.0938513
+  },
+  "required_followup": [
+    "Realize profile control at a fully restored timing step.",
+    "Close fresh nominal full-RC PEX before running or promoting full PVT.",
+    "Bind each promoted simulation to its own DRC/LVS-checked PEX deck."
+  ]
+}

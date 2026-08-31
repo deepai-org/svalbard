@@ -1,0 +1,12 @@
+* SPDX-License-Identifier: Apache-2.0
+* Routed parent of the externally biased LNA core and external-LO mixer core.
+.include /src/rf_lna/lna_cs_core.spice
+.include /src/rf_switch_mixer/mixer.spice
+
+* MIX_RF is deliberately a parent port as well as the routed LNA-drain/mixer-RF
+* node. The early feasibility bench attaches its external drain load there;
+* later RF matching/load implementation must replace that boundary explicitly.
+.subckt wifi_rx_external_lo_parent RF_GATE MIX_RF LNA_SOURCE LO LOB IFP IFN VSS
+XLNA RF_GATE MIX_RF LNA_SOURCE VSS wifi_lna_cs_core
+XMIX MIX_RF LO LOB IFP IFN VSS wifi_rf_switch_mixer
+.ends wifi_rx_external_lo_parent

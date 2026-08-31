@@ -88,6 +88,32 @@ module wifi_80211b_rx : radio_receiver in physical_environment {
     }
   }
 
+  module external_lo_rx_parent : routed_receive_parent {
+    terminal rf_gate, mix_rf, lna_source, lo, lob, ifp, ifn, vss : electrical;
+    implementation intent {
+      source "ip/blocks/analog/wifi_80211b/rf_rx_external_lo_parent/rf_rx_external_lo_parent.spice";
+      physical "ip/blocks/analog/wifi_80211b/rf_rx_external_lo_parent/layout.tcl";
+      children { lna_core, external_lo_mixer_core };
+      parent_owned_route { lna_core.rf_out -> external_lo_mixer_core.rf_in };
+    }
+    assume bench_boundary {
+      external_50ohm_source_and_matching;
+      external_lna_bias = 1.5 V;
+      external_drain_load_and_source_degeneration;
+      complementary_external_lo = 2.3 GHz;
+      external_differential_if_load;
+    }
+    guarantee checked_full_rc_pvt {
+      source "ip/blocks/analog/wifi_80211b/rf_rx_external_lo_parent/run_parent_physical.sh";
+      drc_clean and lvs_matches_intended_circuit;
+      for every public_pvt_case {
+        finite_differential_conversion(rf_center - 2.3 GHz);
+      }
+      not_claim { receiver_noise_figure, linearity, isolation, i_q_balance,
+                  local_oscillator, integrated_receiver };
+    }
+  }
+
   // The staged receiver has no top-level 802.11 performance guarantee yet.
   // The following conditions are hard release blockers rather than silently
   // optimistic assumptions.
@@ -96,14 +122,14 @@ module wifi_80211b_rx : radio_receiver in physical_environment {
           blocker_tolerance, phase_noise, and receive_sensitivity;
     import package_network and antenna_network with non_double_counted_em_ports;
     implement on_die_bias_reference_and_calibration with observable search;
-    compose lna_core plus external_lo_mixer_core plus baseband through a
-            routed physical parent;
+    compose external_lo_rx_parent plus baseband through a routed physical parent;
     verify 80211b_evm, spectral_mask, startup, and coexistence_aggressors;
   }
 
   guarantee current_status {
     lna_core.checked_full_rc_pvt;
     external_lo_mixer_core.checked_full_rc_pvt;
+    external_lo_rx_parent.checked_full_rc_pvt;
     not_claim { integrated_receiver, ieee_80211_compliance,
                 interoperability, yield, silicon_qualification };
   }

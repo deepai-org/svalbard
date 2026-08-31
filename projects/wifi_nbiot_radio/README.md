@@ -29,14 +29,22 @@ transient screen passes the five public PVT cases with a 2.4 GHz RF source,
 The weakest observed conversion is -0.664 dB. This is a bounded leaf screen,
 not an LNA-to-mixer routed parent or a mixer performance qualification.
 
+The current composed evidence is
+[`rf_rx_external_lo_parent`](../../ip/blocks/analog/wifi_80211b/rf_rx_external_lo_parent).
+It physically places and routes the LNA-to-mixer RF net, includes an owned
+ground connection, and passes 0-DRC, unique-LVS, 219R/168C full-RC PEX plus
+five PVT external-LO conversion cases. The worst observed 100 MHz differential
+conversion is -3.402 dB at SS/125 C. Its source, bias, drain load, LO and IF
+loads are still deliberately external; this is a routed feasibility parent,
+not a receiver noise, linearity, sensitivity, or compliance claim.
+
 The next product work is deliberately small and sequential:
 
 1. Add transistor/open-short/de-embedding and passive test structures, then
    establish an RF/EM model-validity boundary for the actual package and
    antenna/matching network.
-2. Compose the LNA and the physical mixer through a routed parent with
-   external LO/IQ, then verify noise, conversion gain, linearity, and blocker
-   screens.
+2. Expand the routed parent with noise, linearity, isolation and blocker
+   screens, then add the selected IF/baseband boundary.
 3. Only after those gates, add an on-die bias/reference and the minimum
    calibration/control path needed by the selected 802.11b receiver boundary.
 

@@ -1,0 +1,33 @@
+* SPDX-License-Identifier: Apache-2.0
+* Routed LNA-plus-external-LO-mixer parent screen with external RF passives.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice @MOS_CORNER@
+.include @DUT_INCLUDE@
+.temp @TEMP_C@
+
+VDD VDD 0 @VDD_V@
+VBIAS BIAS 0 1.50
+RB RF_GATE BIAS 1meg
+VRF RF_SRC 0 SIN(0 10m 2.4gig)
+RSIG RF_SRC RF_PAD 50
+CCIN RF_PAD RF_GATE 20p
+RD VDD MIX_RF 300
+RSOURCE LNA_SOURCE 0 82
+VLO LO_DRV 0 PULSE(0 @LO_HIGH_V@ 0 10p 10p 207p 434.783p)
+VLOB LOB_DRV 0 PULSE(0 @LO_HIGH_V@ 217.391p 10p 10p 207p 434.783p)
+RLO LO_DRV LO 10
+RLOB LOB_DRV LOB 10
+RIFP IFP 0 1k
+RIFN IFN 0 1k
+CIFP IFP 0 1p
+CIFN IFN 0 1p
+XDUT RF_GATE MIX_RF LNA_SOURCE LO LOB IFP IFN 0 @DUT_SUBCKT@
+
+.control
+set wr_singlescale
+set wr_vecnames
+tran 1p 80n 40n
+let if_diff = v(IFP)-v(IFN)
+wrdata @WAVE_DATA@ if_diff
+.endc
+.end

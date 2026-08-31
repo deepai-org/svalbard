@@ -738,10 +738,13 @@ worst bench-relative estimate of 10.283 dB. A second, independently routed
 two-bank NFET switching-mixer core is DRC/LVS/PEX checked and produces a finite
 100 MHz differential IF component across five PVT environments from an external
 2.3 GHz complementary LO and a 2.4 GHz external RF source; the weakest screen
-is -0.664 dB conversion. These establish only leaf feasibility boundaries;
-those numbers do not establish qualified RF noise, matching, linearity,
-package/antenna EM, an on-die bias, or an 802.11 receiver. The next steps below
-are product gates, not tool milestones.
+is -0.664 dB conversion. The first routed LNA/mixer parent is also zero-DRC,
+uniquely LVS-matched and 219R/168C full-RC extracted; it passes the same five
+PVT environments with -3.402 dB worst conversion through its parent-owned RF
+route. These establish only bounded feasibility boundaries; those numbers do
+not establish qualified RF noise, matching, linearity, package/antenna EM, an
+on-die bias, or an 802.11 receiver. The next steps below are product gates, not
+tool milestones.
 
 - Freeze a modest 2.4 GHz 802.11b front-end boundary and external passive,
   crystal, package, and antenna assumptions.

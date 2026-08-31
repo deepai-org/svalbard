@@ -96,6 +96,16 @@ gave 1.502 V `WPN`; doubling each NMOS finger width retained the horizontal
 placement but increased timing-state gate load and gave 1.576 V `WPN`. Neither
 is a layout or PVT solution.
 
+A separate 2026-08-31 topology probe was also rejected and reverted before
+layout: it inverted the restored `WBA` and `WSD` states, used the existing
+`cp_fall_pulse_fast` detector to regenerate a positive interval, then inverted
+that result into the unchanged active-low `WPN` taper interface. Its fresh
+schematic matrix was 0/20: WRITE remained at 0--2 mV in the nominal profile.
+The added state inversions/detector latency did not produce a usable taper
+input. This rules out that direct detector substitution; a next candidate must
+change the end-to-end timing budget and output-taper interface together, not
+only re-encode the local interval.
+
 On 2026-08-31, a schematic-only wiring probe connected `SEL3` through the
 existing `cp_profile_write_restore` element at the restored `WSA`--`WSB` step.
 It was intentionally not laid out or promoted: FF/hot instead produced roughly

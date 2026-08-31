@@ -125,6 +125,21 @@ taper stage. The retained raw DRC/LVS/PEX and two-mode result are in
 `scratch/serdes-clock-pulse-generator-physical.sM2xDfqt/`; they are diagnostic
 only because the source was reverted.
 
+A third 2026-08-31 `SEL3` profile candidate was also physically rejected and
+reverted. It placed a current-starved PMOS assist only on the internal `DI`
+state of the full-swing `WBA`--`WSD` end-delay cell, deliberately avoiding
+direct diffusion on `WSD` or `WPN`. Both 2/4-um and 4/16-um series-PMOS
+strengths were zero-DRC, uniquely LVS-matched, and full-RC extracted. The
+stronger revision preserved the normal 3/5 composed matrix and improved
+FF/cold capture rails to 3.371/3.363 V, but selected SS/hot still reached only
+50/62 mV WRITE and 5/6 mV capture clocks. The control changed a real physical
+state, yet did not drive `WPN` through a logic-low interval. The byte-bound
+rejection record is
+[`profiled_end_delay_rejection.json`](profiled_end_delay_rejection.json).
+Do not enlarge this branch again; the next selector must choose a fully
+regenerated start/end configuration and prove the selected `WPN` logic window
+before another layout iteration.
+
 An FF/cold counterfactual separates the immediate mechanisms. The current
 `(0,8,9)` profile reaches only 3.184/3.204 V WRITE even with its historical
 placeholder load, 3.374/3.387 V with the extracted bridge, and 40/54 mV when

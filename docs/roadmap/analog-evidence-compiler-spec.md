@@ -762,9 +762,13 @@ Execution order is deliberately narrow:
 1. Make the pulse leaf's corner control physically effective at a full-swing
    state before the narrow interval is formed. The present `SEL0..SEL3` pins
    only terminate in physical load anchors, so static code sweeps are not a
-   calibration result. The next candidate must contain a real selected path,
-   an observable correlated with its timing/drive margin, safe code endpoints,
-   and a bounded selection procedure. Do not build a general calibration
+   calibration result. A physical `SEL3` current-starved end-delay probe did
+   change a real internal state but still produced only 50/62 mV WRITE at
+   SS/hot; it is rejected and must not be enlarged. The next candidate must
+   select a full regenerated start/end configuration, demonstrate a selected
+   `WPN` logic-low interval at SS/hot before layout, include an observable
+   correlated with timing/drive margin and safe code endpoints, and use a
+   bounded selection procedure. Do not build a general calibration
    synthesizer.
 2. Use that one real control to repair the two exact extracted failures in the
    already physical pulse-to-bridge-to-direct-regenerative-capture boundary:

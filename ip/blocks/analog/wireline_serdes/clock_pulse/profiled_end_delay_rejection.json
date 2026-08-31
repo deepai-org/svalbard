@@ -1,0 +1,50 @@
+{
+  "candidate": "SEL3-controlled current-starved PMOS branch at the internal DI state of the WBA-to-WSD end-delay stage",
+  "claim": "pcie_pulse_profiled_end_delay_rejection",
+  "conclusion": "The profile state is physically real but does not create the required SS/hot WPN logic interval or periodic WRITE/capture event. Do not retain this branch or increase it further.",
+  "evidence": {
+    "first_strength_wg_2um_we_4um": {
+      "candidate_schematic_sha256": "e2972f012ecef17c78986dcb694b3c9f6db50e064bd108158949a65ec9cbd797",
+      "nominal_composed_result_sha256": "08c323726974f5af5bf97a193229971ec4ca9957f460314ad74fc9e18108b8ca",
+      "physical_result_sha256": "62cb48c0b6096b8a5f4ebd61c7e264dbd54412913aa55ed74fb1a58db0cc4062",
+      "pulse_pex_sha256": "e5f926cf7a223242394de78b0051da653aa9144b76f89d79beb00c2f88dfc69a",
+      "selected_failure_result_sha256": "5882a23d1bfad8b5eb0ed7bbb14d609dd0b570025c35448e9717ae9147ee85d8",
+      "physical_checks": "zero DRC, unique LVS, full-RC PEX",
+      "normal_profile": {
+        "passing_cases": 3,
+        "ff_cold_capture_high_v": [3.35818, 3.34835],
+        "ss_hot_write_high_v": [0.0423483, 0.0524328]
+      },
+      "selected_profile": {
+        "ff_cold_capture_high_v": [3.38476, 3.37785],
+        "ss_hot_write_high_v": [0.0445273, 0.0554089]
+      }
+    },
+    "second_strength_wg_4um_we_16um": {
+      "candidate_schematic_sha256": "f1c729ea11491a2238270d01a1b6c28fa163091ff1bd38d93ff560101e230fa7",
+      "nominal_composed_result_sha256": "58d90c7622db9b8d8f8b1631e0cc6de1b463fdc4836f42f826a2bf3415329d91",
+      "physical_result_sha256": "27e06bff8b7837492633b643a26ce4e8da8f449879b964e089a67dfc734b50c6",
+      "pulse_pex_sha256": "44b592453106dc01522eded50e035f7ac6c2901b46d51daeae9c7a68a4d3ceaa",
+      "selected_failure_result_sha256": "838b8f9d00115623e2e3c206a3e19027a958a02a08d56938c22f453aa698ed57",
+      "physical_checks": "zero DRC, unique LVS, full-RC PEX",
+      "normal_profile": {
+        "passing_cases": 3,
+        "ff_cold_capture_high_v": [3.37124, 3.36303],
+        "ss_hot_write_high_v": [0.0423218, 0.0523359]
+      },
+      "selected_profile": {
+        "ss_hot_write_high_v": [0.0497566, 0.0616664],
+        "ss_hot_capture_high_v": [0.0050994, 0.00587897]
+      }
+    }
+  },
+  "next_candidate_requirement": "Select a full regenerated start/end configuration that demonstrably drives WPN through a logic-low interval at SS/hot before another physical-layout iteration.",
+  "not_a_claim": [
+    "calibrated_pcie_pulse_generator",
+    "passing_pcie_clock_capture_boundary",
+    "routed_parent_closure",
+    "package_channel_or_cdr_closure"
+  ],
+  "result": "rejected_before_promotion",
+  "schema_version": 1
+}

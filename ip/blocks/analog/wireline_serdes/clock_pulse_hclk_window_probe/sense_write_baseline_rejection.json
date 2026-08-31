@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "claim": "selected_write_with_authoritative_sense_baseline",
+  "scope": "schematic SENSE/WRITE composition with declared capacitive boundaries",
+  "identity": {
+    "hclk_template_sha256": "c13e36b17d135c234192dc5f84fb34b7a0250265f1bbe10258d9be5620ea3ab0",
+    "hclk_contract_sha256": "b0f8d96885e58ba319350b8cf84433283a11461cf768b730708e3c1052849bb5",
+    "composition_sha256": "9803247ab64dc1343db01223f80dda62dc04eeab446d9f5c43cba1af83857643",
+    "composition_contract_sha256": "a6a9a3372a44fbbcaa654bdfa1d81607157d447cc2e4df0604bed9c834f693cd",
+    "runner_sha256": "d25a908c0939b6320ebc92e0842e5bb93ae5927e9bb452664169e6cb1134dfbb",
+    "raw_result_sha256": "bf0408942f2f3063c3605b748521730877252dae6325fc34bf7742c9d5842b76",
+    "raw_result_location": "scratch/pcie-sense-write-composition-last.json"
+  },
+  "write_candidate": "epoch_slow_1x_tg_1x_start_0p85x",
+  "environment_coverage": {"tt": [], "ff_cold": [], "ff_hot": [], "ss_hot": [], "ss_cold": []},
+  "localization": {
+    "tt": "SENSE never crosses low; WRITE code 0 remains 112.22 ps with valid rails",
+    "ff_cold": "SENSE inactive-high interval is 715.3 ps, above 650 ps; WRITE code 1 remains 127.37 ps with valid rails",
+    "ff_hot": "SENSE never crosses low; WRITE code 1 remains 191.99 ps with valid rails",
+    "ss_hot": "SENSE never crosses low; WRITE code 0 remains 178.49 ps with valid rails",
+    "ss_cold": "SENSE never crosses low; WRITE code 0 remains 108.05 ps with valid rails"
+  },
+  "conclusion": "Reject physical implementation. The exact qualifying WRITE topology survives composition, but the authoritative SENSE path is the first failed semantic block: its HCLK-derived active interval is too short to restore in four environments and leaves only an 84.7 ps active-low event at FF/cold.",
+  "next_candidate_requirement": "Sweep only a physically realizable full-swing SENSE-tail delay family while preserving the selected WRITE candidate and its one-bit code semantics.",
+  "not_a_claim": ["physical_layout_or_pex", "capture_or_cdr_closure", "calibration_algorithm_or_silicon_yield"],
+  "result": "rejected_before_physical_implementation"
+}

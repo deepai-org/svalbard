@@ -58,7 +58,8 @@ XI_SEL SEL SELB VDD VSS cp_inv WP=4u WN=2u MP=2 MN=2
 * Both choices are made before START/END formation.  The selected HBASE node
 * immediately enters the static-CMOS XST0/XST1 restorers; no narrow pulse is
 * transported through the transmission gates.
-XSLOW HCLK HSLOW VDD VSS cp_delay WP=@BASE_WP@ WN=@BASE_WN@ MP=@BASE_MP@ MN=@BASE_MN@
+XSLOW0 HCLK HSM VDD VSS cp_delay WP=@BASE_WP@ WN=@BASE_WN@ MP=@BASE_MP@ MN=@BASE_MN@
+XSLOW1 HSM HSLOW VDD VSS cp_delay WP=@SLOW_WP@ WN=@SLOW_WN@ MP=@SLOW_MP@ MN=@SLOW_MN@
 XBTG0 HCLK HBASE SELB SEL VDD VSS cp_tg W=@TG_W@ M=@TG_M@
 XBTG1 HSLOW HBASE SEL SELB VDD VSS cp_tg W=@TG_W@ M=@TG_M@
 XST0 HBASE S0A VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2

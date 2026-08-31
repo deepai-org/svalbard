@@ -1,0 +1,76 @@
+
+* Established full-width SENSE/BOOST path composed with the selected WRITE
+* candidate. This file is appended to the candidate definitions by the runner;
+* it never duplicates or rewrites the selected HCLK-to-WRITE implementation.
+.subckt cp_sense_tail_delay A Y VDD VSS
+XD0 A DI VDD VSS cp_inv WP=4u WN=2u MP=2 MN=2
+XD1 DI Y VDD VSS cp_inv WP=4u WN=1.3u MP=2 MN=2
+.ends cp_sense_tail_delay
+
+.subckt cp_nand2_comp A B Y VDD VSS params: WP=8u WN=8u MP=3 MN=3
+XP0 Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XP1 Y B VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XN0 Y A NS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+XN1 NS B VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+.ends cp_nand2_comp
+
+.subckt cp_fall_pulse A B Y VDD VSS
+XIA A AB VDD VSS cp_inv WP=8u WN=8u
+XN B AB YB VDD VSS cp_nand2_comp WP=8u WN=8u MP=3 MN=3
+XIY YB Y VDD VSS cp_inv WP=8u WN=8u MP=4 MN=3
+.ends cp_fall_pulse
+
+.subckt cp_cond_npd_comp D G EN VSS params: W=16u M=2
+XN0 D G N VSS nfet_03v3 w={W} l=0.28u m={M}
+XN1 N EN VSS VSS nfet_03v3 w={W} l=0.28u m={M}
+.ends cp_cond_npd_comp
+
+.subckt cp_sense_final_select A EN Y VDD VSS params: PMP=12 BASE_MN=5 EXTRA_W=32u EXTRA_M=2
+XP Y A VDD VDD pfet_03v3 w=8u l=0.28u m={PMP}
+XN Y A VSS VSS nfet_03v3 w=6.5u l=0.28u m={BASE_MN}
+XNE Y A EN VSS cp_cond_npd_comp W={EXTRA_W} M={EXTRA_M}
+.ends cp_sense_final_select
+
+.subckt sense_write_phase HCLK SEL VDD VSS SENSE BOOST WRITE WPN
+XHSD0 HCLK HSM VDD VSS cp_delay WP=4u WN=2u MP=2 MN=2
+XHSD1 HSM HSD VDD VSS cp_sense_tail_delay
+XHSD2 HSD HSDX VDD VSS cp_delay WP=2u WN=1u MP=2 MN=2
+XHSN HCLK HSDX HSN VDD VSS cp_fall_pulse
+XSB0 HSN SB0 VDD VSS cp_inv WP=8u WN=10u MP=2 MN=2
+XSB1 SB0 SB1 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4
+* Code 0 uses only the weakened base pull-down, widening SENSE at SS/hot.
+* Code 1 enables a parallel series branch that advances only the SENSE falling
+* edge needed to remove FF/cold overlap; the event source and rising edge stay fixed.
+XSB2 SB1 SEL SENSE VDD VSS cp_sense_final_select PMP=@SENSE_PM@ BASE_MN=@SENSE_BASE_MN@ EXTRA_W=@SENSE_EXTRA_W@ EXTRA_M=@SENSE_EXTRA_M@
+XRB0 HSN RB0 VDD VSS cp_inv WP=8u WN=4u
+XRB1 RB0 RB1 VDD VSS cp_inv WP=8u WN=6u MP=3 MN=2
+XRB2 RB1 BOOST VDD VSS cp_inv WP=8u WN=8u MP=5 MN=3
+XWRITE HCLK SEL VDD VSS WRITE WPN hclk_select_window
+.ends sense_write_phase
+
+VDD VDD 0 PWL(0 0 500p @VDD_V@)
+VSEL SEL 0 PWL(0 0 500p @SEL_V@)
+VHCLK HCLK 0 PULSE(0 @VDD_V@ 1n 20p 20p 380p 800p)
+XDUT HCLK SEL VDD 0 SENSE BOOST WRITE WPN sense_write_phase
+CSENSE SENSE 0 350f
+CBOOST BOOST 0 350f
+CWRITE WRITE 0 650f
+
+.control
+* Match the established pulse-generator settling window. The large SENSE
+* taper can remain in its supply-ramp state for several early cycles.
+tran 1p 12n uic
+let isupply = -i(VDD)
+meas tran sense_rise when v(SENSE)=@VMID@ rise=1 td=8n
+meas tran sense_fall when v(SENSE)=@VMID@ fall=1 td=8n
+meas tran write_rise when v(WRITE)=@VMID@ rise=1 td=8n
+meas tran write_fall when v(WRITE)=@VMID@ fall=1 td=8n
+meas tran sense_high max v(SENSE) from=8n to=12n
+meas tran sense_low min v(SENSE) from=8n to=12n
+meas tran boost_high max v(BOOST) from=8n to=12n
+meas tran boost_low min v(BOOST) from=8n to=12n
+meas tran write_high max v(WRITE) from=8n to=12n
+meas tran write_low min v(WRITE) from=8n to=12n
+meas tran supply_current avg isupply from=8n to=12n
+.endc
+.end

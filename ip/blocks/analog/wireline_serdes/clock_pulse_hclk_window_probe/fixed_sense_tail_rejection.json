@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "claim": "fixed_sense_tail_candidate_family",
+  "scope": "schematic SENSE/WRITE composition with one fixed added SENSE delay pair",
+  "identity": {
+    "composition_sha256": "3941fbbbcfac3747a086b8b79063876a2be11a0bc3a3ca6175b6d6f5480d7ea2",
+    "composition_contract_sha256": "e597bec894d55f69c113bd49d06ebb780eefce87b7ab633f426d97aecb076e95",
+    "runner_sha256": "d810a04538cdf627363c8853778b381b52f2fdd79747d9d10dbae61d67c7def9",
+    "raw_result_sha256": "ef89366815bbcaf70dcd3427bbd71740a457889f9cfa57f74454b31e5dc7bac7",
+    "raw_result_location": "scratch/pcie-sense-write-composition-last.json"
+  },
+  "candidate_coverage": {
+    "sense_extra_4x": ["tt", "ff_hot", "ss_cold"],
+    "sense_extra_2x": ["tt", "ff_hot", "ss_cold"],
+    "sense_extra_1x": ["tt", "ff_hot", "ss_cold"],
+    "sense_extra_0p5x": ["tt", "ff_hot", "ss_cold"]
+  },
+  "limiting_tradeoff": {
+    "ff_cold": "code 1 has valid 127.37 ps WRITE and 517.26--545.24 ps SENSE-to-WRITE delay, but WRITE begins 74.56--82.74 ps before SENSE ends",
+    "ss_hot": "code 0 has valid 178.49 ps WRITE, but SENSE is 383.04--425.65 ps versus the 450 ps minimum and dead time is 155.55--171.01 ps versus the 150 ps maximum"
+  },
+  "conclusion": "No fixed added SENSE delay covers all environments. FF/cold needs a longer active-low SENSE event while SS/hot needs a shorter one; reuse the existing static code to select those full-swing interval states before pulse restoration.",
+  "result": "rejected_before_physical_implementation"
+}

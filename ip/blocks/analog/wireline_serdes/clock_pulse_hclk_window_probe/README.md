@@ -88,3 +88,25 @@ This is deliberately only a necessary source-level pass. SS/hot has just
 real SENSE path or extracted consumers. The next gate composes this exact
 candidate with SENSE, checks non-overlap and actual SENSE-to-WRITE timing over
 5/5 environments, and authorizes layout only if that stronger contract passes.
+
+## Full SENSE/WRITE composition
+
+The same command now also compiles the manifest-selected WRITE circuit with
+the authoritative SENSE/BOOST path and its 350-fF/350-fF/650-fF boundaries.
+[`sense_write_composition_contract.json`](sense_write_composition_contract.json)
+checks SENSE and WRITE widths, SENSE-to-WRITE delay, non-overlap, rails, and
+current per physically fixed joint candidate. Its structural test rejects a
+bypassed SENSE-tail stage before simulation.
+
+This stronger gate rejects the one-bit architecture before layout. The
+baseline, fixed SENSE-tail, selectable SENSE-tail, upstream `SB1` assist, and
+joint epoch sweeps are retained as separate falsification records. Final-edge
+SENSE control repairs SS/hot and reaches 4/5 environments. A longer WRITE epoch
+then repairs FF/cold, but the same setting violates FF/hot delay and dead time.
+The exact final result is
+[`joint_sense_write_epoch_rejection.json`](joint_sense_write_epoch_rejection.json).
+
+The next circuit needs two orthogonal static controls: interval/edge code 1 for
+both FF environments, plus a separate long/short epoch bit that distinguishes
+FF/cold from FF/hot. This is a bounded architectural change, not permission for
+another unconstrained sizing sweep or physical implementation.

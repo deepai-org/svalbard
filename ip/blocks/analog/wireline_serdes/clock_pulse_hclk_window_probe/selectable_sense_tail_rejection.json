@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "claim": "selectable_sense_tail_epoch_family",
+  "scope": "schematic SENSE/WRITE composition with full-swing tail selection before pulse formation",
+  "identity": {
+    "composition_sha256": "574a028a73276c1e475089a07316d10069ac3b7cffb59ddd29c1775f140328a7",
+    "composition_contract_sha256": "0d01a10e381bb3b495529e1db6e500c35aa341d1f6c7042df7216ff3bcab1927",
+    "runner_sha256": "d810a04538cdf627363c8853778b381b52f2fdd79747d9d10dbae61d67c7def9",
+    "raw_result_sha256": "5961d094516787ba0b8695d7f74603f8580fdbafe08bb891879a58ce3fce58df",
+    "raw_result_location": "scratch/pcie-sense-write-composition-last.json"
+  },
+  "candidate_coverage": "0/5 for all four common-restorer strengths",
+  "localization": "The selector/restorer moves SENSE rise as well as fall. At FF/cold code 1, SENSE-to-WRITE delay falls to 323.2--427.3 ps versus the 500 ps minimum; at SS/hot code 0, width remains only 335.6--361.7 ps.",
+  "conclusion": "Reject tail-epoch selection. Preserve the event start and make only the SENSE final falling edge code-dependent.",
+  "result": "rejected_before_physical_implementation"
+}

@@ -12,19 +12,10 @@
   "control_codes": [0, 1],
   "candidates": [
     {
-      "id": "epoch_slow_1x_tg_1x_start_1x",
+      "id": "epoch_slow_extra_8x_start_0p85x",
       "replacements": {
         "BASE_WP": "4u", "BASE_WN": "2u", "BASE_MP": "2", "BASE_MN": "2",
-        "TG_W": "4u", "TG_M": "2",
-        "START0_WP": "4u", "START0_WN": "2u", "START0_MP": "1", "START0_MN": "1",
-        "START1_WP": "2u", "START1_WN": "1.5u", "START1_MP": "3", "START1_MN": "2",
-        "EXTRA_W": "8u", "EXTRA_N": "4u", "EXTRA_MP": "4", "EXTRA_MN": "4"
-      }
-    },
-    {
-      "id": "epoch_slow_1x_tg_1x_start_0p85x",
-      "replacements": {
-        "BASE_WP": "4u", "BASE_WN": "2u", "BASE_MP": "2", "BASE_MN": "2",
+        "SLOW_WP": "4u", "SLOW_WN": "2u", "SLOW_MP": "16", "SLOW_MN": "16",
         "TG_W": "4u", "TG_M": "2",
         "START0_WP": "3.4u", "START0_WN": "1.7u", "START0_MP": "1", "START0_MN": "1",
         "START1_WP": "1.7u", "START1_WN": "1.275u", "START1_MP": "3", "START1_MN": "2",
@@ -32,22 +23,35 @@
       }
     },
     {
-      "id": "epoch_slow_1x_tg_1x_start_0p75x",
+      "id": "epoch_slow_extra_4x_start_0p85x",
       "replacements": {
         "BASE_WP": "4u", "BASE_WN": "2u", "BASE_MP": "2", "BASE_MN": "2",
+        "SLOW_WP": "4u", "SLOW_WN": "2u", "SLOW_MP": "8", "SLOW_MN": "8",
         "TG_W": "4u", "TG_M": "2",
-        "START0_WP": "3u", "START0_WN": "1.5u", "START0_MP": "1", "START0_MN": "1",
-        "START1_WP": "1.5u", "START1_WN": "1.125u", "START1_MP": "3", "START1_MN": "2",
+        "START0_WP": "3.4u", "START0_WN": "1.7u", "START0_MP": "1", "START0_MN": "1",
+        "START1_WP": "1.7u", "START1_WN": "1.275u", "START1_MP": "3", "START1_MN": "2",
         "EXTRA_W": "8u", "EXTRA_N": "4u", "EXTRA_MP": "4", "EXTRA_MN": "4"
       }
     },
     {
-      "id": "epoch_slow_1x_tg_1x_start_0p65x",
+      "id": "epoch_slow_extra_2x_start_0p85x",
       "replacements": {
         "BASE_WP": "4u", "BASE_WN": "2u", "BASE_MP": "2", "BASE_MN": "2",
+        "SLOW_WP": "4u", "SLOW_WN": "2u", "SLOW_MP": "4", "SLOW_MN": "4",
         "TG_W": "4u", "TG_M": "2",
-        "START0_WP": "2.6u", "START0_WN": "1.3u", "START0_MP": "1", "START0_MN": "1",
-        "START1_WP": "1.3u", "START1_WN": "0.975u", "START1_MP": "3", "START1_MN": "2",
+        "START0_WP": "3.4u", "START0_WN": "1.7u", "START0_MP": "1", "START0_MN": "1",
+        "START1_WP": "1.7u", "START1_WN": "1.275u", "START1_MP": "3", "START1_MN": "2",
+        "EXTRA_W": "8u", "EXTRA_N": "4u", "EXTRA_MP": "4", "EXTRA_MN": "4"
+      }
+    },
+    {
+      "id": "epoch_slow_extra_1x_start_0p85x",
+      "replacements": {
+        "BASE_WP": "4u", "BASE_WN": "2u", "BASE_MP": "2", "BASE_MN": "2",
+        "SLOW_WP": "4u", "SLOW_WN": "2u", "SLOW_MP": "2", "SLOW_MN": "2",
+        "TG_W": "4u", "TG_M": "2",
+        "START0_WP": "3.4u", "START0_WN": "1.7u", "START0_MP": "1", "START0_MN": "1",
+        "START1_WP": "1.7u", "START1_WN": "1.275u", "START1_MP": "3", "START1_MN": "2",
         "EXTRA_W": "8u", "EXTRA_N": "4u", "EXTRA_MP": "4", "EXTRA_MN": "4"
       }
     }
@@ -61,7 +65,8 @@
   "structural_contract": {
     "subckt": "hclk_select_window",
     "instances": {
-      "XSLOW": {"nodes": ["HCLK", "HSLOW", "VDD", "VSS"], "cell": "cp_delay"},
+      "XSLOW0": {"nodes": ["HCLK", "HSM", "VDD", "VSS"], "cell": "cp_delay"},
+      "XSLOW1": {"nodes": ["HSM", "HSLOW", "VDD", "VSS"], "cell": "cp_delay"},
       "XBTG0": {"nodes": ["HCLK", "HBASE", "SELB", "SEL", "VDD", "VSS"], "cell": "cp_tg"},
       "XBTG1": {"nodes": ["HSLOW", "HBASE", "SEL", "SELB", "VDD", "VSS"], "cell": "cp_tg"},
       "XST0": {"nodes": ["HBASE", "S0A", "VDD", "VSS"], "cell": "cp_delay"},

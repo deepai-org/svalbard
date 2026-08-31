@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "claim": "code_selected_sense_sb1_assist_family",
+  "identity": {
+    "composition_sha256": "a9349e4505cf57d382b5dca819961c0ac96c9f17237746c89099ce7508ac4c4c",
+    "composition_contract_sha256": "4063309b283973527f7b089ae7131552391f7f196507b4e0a70e987fc3996f57",
+    "runner_sha256": "56f3edc52b79c6a729d598fcfb30f154492871d4be9cb684d6190e264ae17d30",
+    "raw_result_sha256": "e19058d2a134b44c79a5957bd4d4843bb75bb996dd62eb38834d01af0112e42b"
+  },
+  "best_coverage": ["tt", "ff_hot", "ss_cold"],
+  "localization": "The smallest assist gives FF/cold code-1 width 570.1 ps but reduces SENSE-to-WRITE delay to 491.3 ps; larger assists reduce both further. Its off-state diffusion also erodes SS/hot width.",
+  "conclusion": "Reject upstream SENSE assist. Retain the 4/5 final-edge SENSE candidate and spend the remaining FF/cold timing budget by delaying only the code-1 WRITE epoch.",
+  "result": "rejected_before_physical_implementation"
+}

@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "claim": "joint_sense_write_one_bit_candidate_family",
+  "scope": "schematic SENSE/WRITE composition with one shared static control bit",
+  "identity": {
+    "hclk_template_sha256": "4eb6fdb76aa2ce9903043f522dcc48ab0ad5db57979018dd8457467d1ab9e5c6",
+    "hclk_contract_sha256": "42ad4c427dc1388aaa86b0cc6f18cbf634c72b78a78c521e80b6eb46306c78af",
+    "composition_sha256": "427f990ab1ac68a82fa12c031cb80703171fd16ae8dbc627e15d8c39c8aefc99",
+    "composition_contract_sha256": "ef0740262a32298ffbb53ed9afe80b27351f0a0c27f4ed7536e1ef8a38e2fff3",
+    "runner_sha256": "06eba5ddfea6232198f30f6ed0a3ea9eecfe67321d38b34e26031b463aa8dc49",
+    "raw_result_sha256": "3771ccb9fa54d48509036231c62be40282f18523e6ac93379f0d57b278a79ed2",
+    "raw_result_location": "scratch/pcie-sense-write-composition-last.json"
+  },
+  "leaf_screen": {
+    "raw_result_sha256": "6c7e33df059d7cc954c63ca37cf5bb960ace007d1e5e7d4635ac5510bc57f377",
+    "qualifying_write_candidates": ["extra_1x", "extra_2x", "extra_4x", "extra_8x"]
+  },
+  "joint_coverage": {
+    "extra_1x": ["tt", "ss_hot", "ss_cold"],
+    "extra_2x": ["tt", "ss_hot", "ss_cold"],
+    "extra_4x": ["tt", "ss_hot", "ss_cold"],
+    "extra_8x": ["ff_cold", "ss_hot"]
+  },
+  "limiting_incompatibility": {
+    "ff_cold": "requires the extra-8x code-1 epoch: 595.7 ps SENSE, 127.3 ps WRITE, 620.7 ps SENSE-to-WRITE delay, 25.1 ps dead time",
+    "ff_hot": "extra-8x gives 736.9 ps SENSE-to-WRITE delay and 236.1 ps dead time; the closest extra-2x gives 654.3 ps and 153.5 ps",
+    "shared_bit_problem": "the same bit currently chooses pulse interval/edge behavior and epoch, but FF/cold and FF/hot need the same interval code with different epochs"
+  },
+  "conclusion": "Reject all one-bit joint candidates before layout. Add an orthogonal static epoch bit: retain interval/edge code 1 for both FF environments, choose a long epoch at FF/cold and a short epoch at FF/hot, and retain code 0 at SS/hot.",
+  "not_a_claim": ["physical_layout_or_pex", "capture_or_cdr_closure", "calibration_algorithm_or_silicon_yield"],
+  "result": "rejected_before_physical_implementation"
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "contract_id": "pcie_sense_write_composition_v1",
+  "candidate_ids": [
+    "epoch_slow_extra_8x_start_0p85x",
+    "epoch_slow_extra_4x_start_0p85x",
+    "epoch_slow_extra_2x_start_0p85x",
+    "epoch_slow_extra_1x_start_0p85x"
+  ],
+  "unit_interval_s": 8e-10,
+  "sense_candidates": [
+    {"id": "sense_edge_pm12_base4_extra64", "replacements": {"SENSE_PM": "12", "SENSE_BASE_MN": "4", "SENSE_EXTRA_W": "32u", "SENSE_EXTRA_M": "2"}}
+  ],
+  "thresholds": {
+    "sense_width_s": [4.5e-10, 6.5e-10],
+    "write_width_s": [1e-10, 2.2e-10],
+    "write_delay_from_sense_rise_s": [5e-10, 7e-10],
+    "dead_time_s": [0.0, 1.5e-10],
+    "logic_rail_margin_v": 0.25,
+    "average_supply_current_a": [0.0, 0.075]
+  },
+  "structural_contract": {
+    "subckt": "sense_write_phase",
+    "instances": {
+      "XHSD0": {"nodes": ["HCLK", "HSM", "VDD", "VSS"], "cell": "cp_delay"},
+      "XHSD1": {"nodes": ["HSM", "HSD", "VDD", "VSS"], "cell": "cp_sense_tail_delay"},
+      "XHSD2": {"nodes": ["HSD", "HSDX", "VDD", "VSS"], "cell": "cp_delay"},
+      "XHSN": {"nodes": ["HCLK", "HSDX", "HSN", "VDD", "VSS"], "cell": "cp_fall_pulse"},
+      "XSB2": {"nodes": ["SB1", "SEL", "SENSE", "VDD", "VSS"], "cell": "cp_sense_final_select"},
+      "XWRITE": {"nodes": ["HCLK", "SEL", "VDD", "VSS", "WRITE", "WPN"], "cell": "hclk_select_window"}
+    }
+  }
+}

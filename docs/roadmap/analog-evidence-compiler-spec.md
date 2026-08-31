@@ -784,8 +784,12 @@ Execution order is deliberately narrow:
    SS/hot epoch bounds. A coherent one-bit fast/short versus delayed/long epoch
    family now covers 5/5 environments in this necessary schematic screen, with
    selected 108.05--192.00 ps WRITE widths and 137.89--647.22 ps proxy delays.
-   Because SS/hot has only 2.78 ps epoch margin and the probe omits SENSE, the
-   next bounded step is full SENSE/WRITE schematic composition, not layout.
+   Full SENSE/WRITE composition then rejected the one-bit architecture before
+   layout. Final-edge SENSE control reaches 4/5, but FF/cold requires a long
+   code-1 WRITE epoch that violates FF/hot delay/dead time; both environments
+   require the same interval code. The next bounded step is a second,
+   orthogonal static epoch bit, followed by the same composed five-environment
+   gate, not layout.
    It must preserve the compact PEX-proven write
    timing source until its replacement covers every PVT environment with one
    physically fixed candidate and an observed selected code, include an

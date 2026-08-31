@@ -50,9 +50,12 @@ It has supported real engineering decisions rather than only produced reports.
   source-level selectable-HCLK timing probe retained two explicit rejected
   families, then found one physically fixed one-bit candidate with
   selectable-code coverage in all five environments. This is a necessary
-  HCLK-to-WRITE schematic pass with only 2.78 ps SS/hot epoch margin; it still
-  requires full SENSE/WRITE composition before layout and is not an integrated
-  PCIe PHY claim.
+  HCLK-to-WRITE schematic pass, then used the same manifest identity in a full
+  SENSE/WRITE composition. That stronger gate rejects every one-bit joint
+  candidate: final-edge SENSE control reaches 4/5, but FF/cold and FF/hot need
+  the same interval code with different epochs. The next architecture has two
+  orthogonal static controls; no candidate is authorized for layout. This is
+  not an integrated PCIe PHY claim.
 - **Wi-Fi:** the routed LNA/mixer parent has DRC/LVS/full-RC PEX evidence, but
   its two-tone result exposed an unfiltered nearby blocker. This selected a
   real-IF ADC/DSP architecture rather than pretending a broad RF preselector
@@ -98,9 +101,9 @@ failing cases.
 
 ## Current priorities and rule for adding tooling
 
-1. **PCIe:** compose the selected one-bit timing family with the real SENSE
-   path, then physically implement and pass its five-corner extracted capture
-   boundary only if the stronger schematic contract clears.
+1. **PCIe:** realize and screen orthogonal interval/edge and epoch controls in
+   the existing SENSE/WRITE composition. Physically implement only a fixed
+   joint candidate that clears all five environments.
 2. **Wi-Fi:** design and screen the closed-loop differential IF driver and
    thermal-floor hold-capacitor boundary before authorizing a new sampler
    layout.

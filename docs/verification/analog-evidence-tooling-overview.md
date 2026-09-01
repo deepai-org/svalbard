@@ -97,10 +97,13 @@ closure manifest, deterministic source lowering, schematic campaigns,
 DRC/LVS/PEX, semantic node labels, exact replay, and RC counterfactuals. Its
 three-control recovery manifest now declares causal internal paths, and the
 PEX runner distinguishes midrail transition propagation from strict output
-rail compliance and records the first lost stage per phase. This localized an
-SS/hot BOOST failure to `RB0`, then showed the failure move to final drive and
-shared-state loading under bounded revisions. Candidate generation and
-cross-candidate margin comparison remain manual. The next justified shared
+rail compliance and records both first failures per active control path. This
+localized an SS/hot BOOST failure to `RB0`, then traced WRITE degradation from
+`E0`/`EMUX` to the first lost odd-phase `END` transition. A baseline-checked
+semantic RC campaign and eight explicit schematic revisions showed that route
+R/C, taper depth, isolation, and final drive cannot close the retained timing
+contract independently. Candidate generation and cross-candidate margin
+comparison remain manual. The next justified shared
 extraction is therefore a small candidate-comparison record exercised here,
 then reused on the Wi-Fi IF driver if it removes the same log and waveform
 archaeology there. It is not yet a reason to build a new language, general
@@ -136,14 +139,18 @@ It has supported real engineering decisions rather than only produced reports.
   The resulting independent SENSE/interval/epoch source and direct full-width
   BOOST branch retain 5/5 schematic coverage and generate a zero-DRC,
   unique-LVS 216-device macro. Semantic PEX probes prove the earlier `RB0`
-  pulse filter is gone and improve SS/hot BOOST low to 0.12--0.46 V, but the
-  shared-state load regresses SENSE and the complete targeted TT/SS-hot PEX
-  gate remains 0/2; WRITE drive and epoch are also still wrong. This is useful
+  pulse filter is gone, but the shared-state load regresses SENSE and the
+  complete targeted TT/SS-hot PEX gate remains 0/2. Manifest-declared WRITE
+  paths now show rail degradation at `HBASE`/`START` at TT and at `E0`/`EMUX`
+  before odd-phase `END` stops crossing at SS/hot. Exact semantic R/C
+  counterfactuals and eight bounded schematic revisions pass neither TT plus
+  SS/hot, closing local route, taper, isolation, and final-drive work. This is useful
   physical rejection and automated failure-movement evidence, not pulse or
   integrated PCIe closure. Follow-up isolated-taper and strengthened-shared-
   state layouts are also clean/unique-LVS but remain 0/2, closing the local
-  SENSE/BOOST sizing branch and moving the diagnostic to WRITE semantics and
-  event-source architecture.
+  SENSE/BOOST sizing branch. The authorized next circuit work is a retimed
+  full-swing event source whose delay states and detector/load drive are
+  independent.
 - **Wi-Fi:** the routed LNA/mixer parent has DRC/LVS/full-RC PEX evidence, but
   its two-tone result exposed an unfiltered nearby blocker. This selected a
   real-IF ADC/DSP architecture rather than pretending a broad RF preselector
@@ -189,11 +196,10 @@ failing cases.
 
 ## Current priorities and rule for adding tooling
 
-1. **PCIe:** add manifest-declared WRITE causal stages and localize its first
-   extracted failure, then replace the coupled SENSE/BOOST event source rather
-   than continuing the now-rejected local taper sweep. Preserve the three
-   independent controls and require regenerated DRC/LVS plus 5/5 dual-phase
-   PEX before replaying the capture boundary.
+1. **PCIe:** replace the coupled pulse event source with explicitly retimed
+   full-swing states; keep detector and load drive outside the delay mechanism.
+   Preserve the three independent controls and require regenerated DRC/LVS plus
+   5/5 dual-phase PEX before replaying the capture boundary.
 2. **Wi-Fi:** design and screen the closed-loop differential IF driver and
    thermal-floor hold-capacitor boundary before authorizing a new sampler
    layout.

@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "contract_id": "pcie_pulse_recovery_three_control_v1",
   "top": "recovery_dual_control_pulse",
   "control_semantics": {
@@ -7,10 +7,52 @@
     "SEL1": "WRITE interval family",
     "SEL2": "WRITE epoch family"
   },
-  "internal_probe_nodes": ["hsn", "sb0", "sb1"],
+  "internal_probes": {
+    "hsn": "DBG_{phase}_HSN",
+    "sb0": "DBG_{phase}_SB0",
+    "sb1": "DBG_{phase}_SB1",
+    "w_hsm": "DBG_{phase}W_HSM",
+    "w_hslow": "DBG_{phase}W_HSLOW",
+    "w_hemux": "DBG_{phase}W_HEMUX",
+    "w_hepoch": "DBG_{phase}W_HEPOCH",
+    "w_hbase": "DBG_{phase}W_HBASE",
+    "w_s0a": "DBG_{phase}W_S0A",
+    "w_s1a": "DBG_{phase}W_S1A",
+    "w_str0": "DBG_{phase}W_STR0",
+    "w_start": "DBG_{phase}W_START",
+    "w_e0": "DBG_{phase}W_E0",
+    "w_e1a": "DBG_{phase}W_E1A",
+    "w_e1": "DBG_{phase}W_E1",
+    "w_emux": "DBG_{phase}W_EMUX",
+    "w_end": "DBG_{phase}W_END",
+    "w_win": "DBG_{phase}W_WIN",
+    "w_wpn": "DBG_{phase}_WPN",
+    "w_wb1": "DBG_{phase}W_WB1",
+    "w_wb2": "DBG_{phase}W_WB2",
+    "w_wb3": "DBG_{phase}W_WB3",
+    "w_wb4": "DBG_{phase}W_WB4"
+  },
   "semantic_paths": {
-    "sense": ["hsn", "sb0", "sb1", "sense"],
-    "boost": ["hsn", "sb0", "sb1", "boost"]
+    "sense": {"stages": ["hsn", "sb0", "sb1", "sense"]},
+    "boost": {"stages": ["hsn", "sb0", "sb1", "boost"]},
+    "write_epoch": {
+      "stages": ["w_hsm", "w_hslow", "w_hemux", "w_hepoch", "w_hbase"],
+      "active_when": {"interval": 1}
+    },
+    "write_start": {
+      "stages": ["w_hbase", "w_s0a", "w_str0", "w_start"]
+    },
+    "write_end0": {
+      "stages": ["w_hbase", "w_s0a", "w_e0", "w_emux", "w_end"],
+      "active_when": {"interval": 0}
+    },
+    "write_end1": {
+      "stages": ["w_hbase", "w_s1a", "w_e1a", "w_e1", "w_emux", "w_end"],
+      "active_when": {"interval": 1}
+    },
+    "write_taper": {
+      "stages": ["w_start", "w_end", "w_win", "w_wpn", "w_wb1", "w_wb2", "w_wb3", "w_wb4", "write"]
+    }
   },
   "unit_interval_s": 8e-10,
   "external_load_f": {

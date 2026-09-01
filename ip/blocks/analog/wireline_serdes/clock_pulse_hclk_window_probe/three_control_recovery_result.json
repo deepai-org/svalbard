@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "claim": "three-control pulse recovery and direct full-width BOOST experiment",
   "result": "physical_rejection",
   "schematic": {
@@ -8,7 +8,8 @@
     "passing_case_count": 10,
     "environment_coverage": "5/5",
     "source_sha256": "8ead9a5f239c6a8a27ee88428dfad47b1a34375d5d1273318a4ae14b529aea0b",
-    "contract_sha256": "f3a37e94ffc90c915ac400b4ed38b144a7115c7714733ddf6fd38c64d41e2c92",
+    "contract_sha256": "15b728e476186c63b3c48310c9936d2cad5c0fd0dca65b68e0c5341e7474592e",
+    "result_sha256": "0be5f3b58dec0ea04e9e215dd3138342528ff02394eb3a49e275720f723885da",
     "selected_metric_ranges_s": {
       "sense_width": [4.8113e-10, 6.2796e-10],
       "write_width": [1.2733e-10, 1.9328e-10],
@@ -20,36 +21,58 @@
     "drc": "clean",
     "lvs": "unique_match",
     "logical_devices": 216,
-    "extracted_resistors": 5898,
-    "extracted_capacitors": 4351,
+    "extracted_resistors": 5900,
+    "extracted_capacitors": 4369,
     "tested_environments": ["tt", "ss_hot"],
     "environment_coverage": "0/2",
-    "gds_sha256": "e4802fe42242456935de30417aebd4eb5c2fd6c70bed6015953fe11db7b97d4a",
-    "pex_sha256": "ef4ca5cfcaa9ccb47f32de448ecd6ea023d87bf93a08d87612182d890bf782e4",
-    "result_sha256": "a0449b7627d9ee5c1668d973eef7e062294f61c96cdf81e264653349f35f61de"
+    "gds_sha256": "5343d972a8ed3f2a97f535abc04313e5604f7260472a1450b7b394fe23c6c21f",
+    "pex_sha256": "6d61f34a9afd7bb0f640d475a955f82e8aa3466f833de4e97ec97a5c1d848a71",
+    "result_sha256": "327c5423a81f399dda3b988c78e3848013ccc89e2ae68eaca540b5434e19345b"
   },
   "localization": {
     "semantic_paths_from_manifest": {
       "sense": ["hsn", "sb0", "sb1", "sense"],
-      "boost": ["hsn", "sb0", "sb1", "boost"]
+      "boost": ["hsn", "sb0", "sb1", "boost"],
+      "write_epoch": ["w_hsm", "w_hslow", "w_hemux", "w_hepoch", "w_hbase"],
+      "write_start": ["w_hbase", "w_s0a", "w_str0", "w_start"],
+      "write_end0": ["w_hbase", "w_s0a", "w_e0", "w_emux", "w_end"],
+      "write_end1": ["w_hbase", "w_s1a", "w_e1a", "w_e1", "w_emux", "w_end"],
+      "write_taper": ["w_start", "w_end", "w_win", "w_wpn", "w_wb1", "w_wb2", "w_wb3", "w_wb4", "write"]
     },
-    "transition_criterion": "both midrail transitions observed",
+    "criteria": {
+      "transition": "both midrail transitions observed",
+      "rail": "high >= VDD-margin and low <= margin"
+    },
     "tt_representative": {
       "case": "sense0_interval1_epoch0",
-      "first_failed_transition_stage": null,
-      "sense_width_ps": [441.75, 444.41],
-      "write_width_ps": [258.73, 258.30],
-      "write_delay_ps": [11.00, 32.92]
+      "first_failed_write_transition_stage": [null, null],
+      "first_failed_write_rail_stage": ["w_hbase", "w_hbase"],
+      "sense_width_ps": [441.90, 444.74],
+      "write_width_ps": [257.17, 256.03],
+      "write_delay_ps": [21.64, 44.41],
+      "write_high_v": [3.04503, 3.00012]
     },
     "ss_hot_representative": {
       "case": "sense1_interval0_epoch0",
-      "first_failed_transition_stage": null,
-      "sb1_high_v": [2.14661, 1.99742],
-      "boost_low_v": [0.199717, 0.357182],
-      "sense_low_v": [0.30256, 0.600055],
-      "write_high_v": [2.35028, 2.09460],
-      "sense_width_ps": [508.82, 663.95],
-      "write_delay_ps": [190.54, 339.02]
+      "first_failed_write_transition_stage": [null, "w_end"],
+      "first_failed_write_rail_stage": ["w_start", "w_start"],
+      "first_failed_end_rail_stage": ["w_e0", "w_e0"],
+      "boost_low_v": [0.195165, 0.337773],
+      "sense_low_v": [0.297055, 0.549206],
+      "write_high_v": [2.21403, 1.64582],
+      "sense_width_ps": [507.95, 665.17],
+      "write_width_ps": [190.77, 86.30],
+      "write_delay_ps": [202.05, 367.42]
+    },
+    "rc_counterfactuals": {
+      "source_pex_sha256": "6d61f34a9afd7bb0f640d475a955f82e8aa3466f833de4e97ec97a5c1d848a71",
+      "result_sha256": "99e98bb9ca7653bfd016b8fced5f81bc06307f4393818a308bad2f4d61c76ab0",
+      "baseline_repeat_identical": true,
+      "passing_variants": 0,
+      "near_zero_all_write_resistance_summed_write_high_gain_v": 0.58570,
+      "near_zero_all_write_resistance_ss_hot_first_transition_failure": "w_end",
+      "all_write_capacitance_removed_summed_write_high_gain_v": -0.46175,
+      "interpretation": "Neither idealized WRITE routing resistance nor removed WRITE capacitance closes TT and SS/hot. Capacitance changes event epoch and width non-monotonically; a regenerated event-source retime is required."
     }
   },
   "follow_up_rejections": [
@@ -88,7 +111,61 @@
       "first_failure": "Increasing shared SB1 drive and SENSE PMOS size passes schematic but adds enough SB0 load and physical span to reduce SS/hot SB1 to 1.56--2.13 V; most SENSE outputs never cross. A still larger 2x SB1 variant was already rejected schematically because SENSE width collapsed to 346--399 ps."
     }
   ],
-  "conclusion": "Independent SENSE, WRITE-interval and WRITE-epoch controls preserve 5/5 schematic coverage. Direct SB1-to-BOOST removes the earlier RB0 pulse-filter failure and materially improves extracted BOOST swing, but loads the shared SB1 state enough to regress SENSE. An isolated taper filters the event, while strengthening the shared restorer loads its producer and regresses more severely. No further local SENSE/BOOST taper sweep is authorized. The physical pulse source remains rejected; next localize the independent WRITE state path, then revise the event-source architecture rather than resizing this shared branch again.",
+  "write_event_schematic_rejections": {
+    "scope": "complete code cube at TT and SS/hot; no physical claim",
+    "contract_sha256": "15b728e476186c63b3c48310c9936d2cad5c0fd0dca65b68e0c5341e7474592e",
+    "candidates": [
+      {
+        "id": "balanced_event",
+        "source_sha256": "4d55048cc0314e780ec0898d62c73e0a53e2e03c4b518489d894761ddb564d45",
+        "environment_coverage": "0/2",
+        "interpretation": "Making both START and END restorers full strength destroys the calibrated interval and epoch."
+      },
+      {
+        "id": "compact_taper",
+        "source_sha256": "3551cec0d1788583d910a686b2decb588711f67bd0a7987b8ef138eff3a0d63d",
+        "environment_coverage": "1/2",
+        "passing_case_count": 1,
+        "interpretation": "Four taper stages preserve one TT code but no SS/hot code."
+      },
+      {
+        "id": "balanced_compact",
+        "source_sha256": "43d2672802bda67270b52c0d66cb2989a3087d103b850f302d650c2a79f82e0d",
+        "environment_coverage": "0/2"
+      },
+      {
+        "id": "isolated_event",
+        "source_sha256": "bf391173030cceb39025ee53ba6eee4127ae80b1aacffd5713adb2fd62687163",
+        "environment_coverage": "0/2",
+        "interpretation": "Identical two-stage detector-input restorers add too much unbudgeted latency."
+      },
+      {
+        "id": "isolated_compact",
+        "source_sha256": "67d3a646f215e3e1a8956b41288a1744e3587ec06aa2c1fb11976823adf835b0",
+        "environment_coverage": "1/2",
+        "passing_case_count": 2
+      },
+      {
+        "id": "final_drive_4_3",
+        "source_sha256": "c1b31d5f396b39551ec1f8ea644daf84563fda6e5951f52f34e36d889e94083d",
+        "environment_coverage": "1/2",
+        "passing_case_count": 2
+      },
+      {
+        "id": "split_final_drive",
+        "source_sha256": "010ba011402f40216edd5dcb56ebfd628250788c2309b2240d4e4aec06eff935",
+        "environment_coverage": "0/2"
+      },
+      {
+        "id": "end_final_drive",
+        "source_sha256": "ef5c0c7e7b96f077b5e70ace404259e9c60b522de36602fe59b1a24016310668",
+        "environment_coverage": "1/2",
+        "passing_case_count": 2
+      }
+    ],
+    "conclusion": "The WRITE failure is not closed by local START/END strength, equal isolation, taper depth, idealized route resistance, or idealized capacitance. Retiming must use explicit full-swing event states and then size detector/output drive independently."
+  },
+  "conclusion": "Independent SENSE, WRITE-interval and WRITE-epoch controls preserve 5/5 schematic coverage, and the retained 216-device geometry remains clean DRC and unique LVS. Schema-v2 semantic probes show TT rail degradation begins at the selected HCLK/START path even though every stage crosses; at SS/hot the interval-0 E0/EMUX path degrades until odd-phase END no longer crosses, leaving WRITE at only 1.646 V. Exact-PEX RC counterfactuals and eight bounded schematic revisions close the local routing, taper, isolation, and final-drive branches without a passing replacement. The physical pulse source remains rejected. The next candidate must retime the event source with explicit full-swing delay states while keeping detector and load drive out of the timing mechanism.",
   "not_a_claim": [
     "five-corner PEX closure",
     "capture-boundary closure",

@@ -1085,7 +1085,7 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
                     "HSM", "HSLOW", "HEMUX", "HEPOCH", "HBASE",
                     "S0A", "S1A", "STR0", "START", "E0", "E1A",
                     "E1", "EMUX", "END", "WIN", "WB0", "WB1",
-                    "WB2", "WB3",
+                    "WB2", "WB3", "WB4",
                 }:
                     return label_prefix + tail
         return None

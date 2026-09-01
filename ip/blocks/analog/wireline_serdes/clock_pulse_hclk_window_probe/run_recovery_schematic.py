@@ -21,9 +21,9 @@ CONTRACT_PATH = ROOT / "recovery_contract.json"
 CONTRACT = json.loads(CONTRACT_PATH.read_text())
 PHASES = ("e", "o")
 SIGNALS = ("sense", "boost", "write")
-INTERNAL_STAGES = tuple(CONTRACT["internal_probe_nodes"])
-INTERNAL_PATHS = {name: tuple(stages)
-                  for name, stages in CONTRACT["semantic_paths"].items()}
+INTERNAL_PROBES = dict(CONTRACT["internal_probes"])
+INTERNAL_STAGES = tuple(INTERNAL_PROBES)
+INTERNAL_PATHS = dict(CONTRACT["semantic_paths"])
 CONTROLS = [
     {"id": f"sense{sense}_interval{interval}_epoch{epoch}",
      "sense": sense, "interval": interval, "epoch": epoch}
@@ -37,19 +37,27 @@ def require(condition: bool, message: str) -> None:
 
 
 def validate_contract() -> None:
-    require(CONTRACT.get("schema_version") == 1, "unsupported recovery schema")
+    require(CONTRACT.get("schema_version") == 2, "unsupported recovery schema")
     require(CONTRACT.get("top") == recovery.TOP, "recovery top mismatch")
     require(CONTRACT.get("unit_interval_s") == base.CONTRACT["unit_interval_s"],
             "recovery unit interval mismatch")
     require(CONTRACT.get("thresholds") == verifier.CONTRACT["thresholds"],
             "recovery and selected PEX thresholds differ")
-    require(set(INTERNAL_PATHS) == {"sense", "boost"},
-            "recovery semantic paths must name SENSE and BOOST")
-    require(all(path[-1] == name for name, path in INTERNAL_PATHS.items()),
-            "recovery semantic paths must terminate at their named output")
-    require(set(stage for path in INTERNAL_PATHS.values() for stage in path[:-1])
-            <= set(INTERNAL_STAGES),
+    require({"sense", "boost", "write_taper"} <= set(INTERNAL_PATHS),
+            "recovery semantic paths must cover SENSE, BOOST and WRITE")
+    require(all(isinstance(binding, str)
+                and binding.count("{phase}") == 1
+                for binding in INTERNAL_PROBES.values()),
+            "each recovery internal probe needs one phase placeholder")
+    allowed_stages = set(INTERNAL_STAGES) | set(SIGNALS)
+    require(all(isinstance(spec, dict) and spec.get("stages")
+                and set(spec["stages"]) <= allowed_stages
+                for spec in INTERNAL_PATHS.values()),
             "recovery semantic paths reference an undeclared internal probe")
+    require(all(set(spec.get("active_when", {})) <= {"sense", "interval", "epoch"}
+                and set(spec.get("active_when", {}).values()) <= {0, 1}
+                for spec in INTERNAL_PATHS.values()),
+            "recovery semantic path activation is invalid")
 
 
 validate_contract()
@@ -79,7 +87,8 @@ def compile_deck(source: Path, top: str, environment: dict[str, Any],
     if internal_probes:
         for phase in PHASES:
             for stage in INTERNAL_STAGES:
-                node = f"xdut.DBG_{phase.upper()}_{stage.upper()}"
+                node = "xdut." + INTERNAL_PROBES[stage].format(
+                    phase=phase.upper())
                 measures.extend([
                     f"meas tran {phase}_dbg_{stage}_high max v({node}) from=8n to=12.8n",
                     f"meas tran {phase}_dbg_{stage}_low min v({node}) from=8n to=12.8n",
@@ -117,7 +126,7 @@ def cyclic_delta(later: float, earlier: float) -> float:
 
 
 def stage_diagnostics(observed: dict[str, float], phase: str, vdd: float,
-                      margin: float) -> dict[str, Any]:
+                      margin: float, control: dict[str, Any]) -> dict[str, Any]:
     stages: dict[str, Any] = {}
     for stage in (*INTERNAL_STAGES, *SIGNALS):
         prefix = (f"{phase}_dbg_{stage}" if stage in INTERNAL_STAGES
@@ -143,12 +152,32 @@ def stage_diagnostics(observed: dict[str, float], phase: str, vdd: float,
                                 and transition_low_margin >= 0),
         }
     paths = {}
-    for path, order in INTERNAL_PATHS.items():
-        first_failed = next((stage for stage in order
-                             if not stages[stage]["transition_pass"]), None)
+    for path, spec in INTERNAL_PATHS.items():
+        order = spec["stages"]
+        active_when = spec.get("active_when", {})
+        active = all(control[key] == value
+                     for key, value in active_when.items())
+        first_failed_transition = (next(
+            (stage for stage in order
+             if not stages[stage]["transition_pass"]), None)
+            if active else None)
+        first_failed_rail = (next(
+            (stage for stage in order
+             if not stages[stage]["rail_pass"]), None)
+            if active else None)
         paths[path] = {"stage_order": list(order),
-                       "criterion": "both midrail transitions observed",
-                       "first_failed_stage": first_failed}
+                       "active_when": active_when,
+                       "active": active,
+                       "transition_criterion":
+                           "both midrail transitions observed",
+                       "rail_criterion":
+                           "high >= VDD-margin and low <= margin",
+                       # Preserve the original field while consumers migrate
+                       # to the explicit transition/rail distinction.
+                       "first_failed_stage": first_failed_transition,
+                       "first_failed_transition_stage":
+                           first_failed_transition,
+                       "first_failed_rail_stage": first_failed_rail}
     return {"stages": stages, "paths": paths}
 
 
@@ -216,7 +245,7 @@ def run_case(spec: tuple[Path, str, Path, dict[str, Any], dict[str, Any], bool])
             "result": "pass" if passed else "fail"}
     if internal_probes:
         result["internal_stage_diagnostics"] = {
-            phase: stage_diagnostics(observed, phase, vdd, margin)
+            phase: stage_diagnostics(observed, phase, vdd, margin, control)
             for phase in PHASES
         }
     return result

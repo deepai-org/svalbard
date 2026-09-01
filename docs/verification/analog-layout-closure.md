@@ -240,6 +240,18 @@ chain; sometimes removing downstream width improves both speed and current.
 Apply the change symmetrically, regenerate geometry, and replay the slower-rate
 and PVT parent contracts because a faster internal node alone is not closure.
 
+Do not use a deliberately weak detector driver as both the timing element and
+the load driver. The extracted PCIe pulse path made this coupling explicit:
+`START` and `END` strengths that passed schematic timing lost rail margin under
+detector loading, but even a moderate final-driver increase removed every
+SS/hot passing code. A shorter output taper and equal post-timing restorers also
+failed because their latency was not budgeted in the event source. Declare the
+timing states, detector drive, and external-load taper as separate semantic
+paths. First record the earliest rail failure and the earliest lost midrail
+transition; then retime explicit full-swing states as a unit instead of trying
+to recover a fragile interval with downstream strength. Any added restoration
+latency must re-enter the schematic PVT/code contract before layout.
+
 A transmission-gate selector followed by a ratioed static restorer deserves
 internal full-RC probes on both phases. Schematic rails can become an extracted
 intermediate eye that never crosses the first inverter's effective threshold;

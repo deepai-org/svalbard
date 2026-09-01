@@ -20,6 +20,7 @@ sak-pex.sh -m 3 -t 0 -r 1 -y 0 -n recovery_dual_control_pulse_pex \
   > /work/pex-stage.log 2>&1
 cp /work/pex/recovery_dual_control_pulse.pex.spice \
   /work/recovery_dual_control_pulse.pex.spice
+recovery_rc=0
 python3 /src/clock_pulse_hclk_window_probe/run_recovery_schematic.py \
   --source /work/recovery_dual_control_pulse.pex.spice \
   --top recovery_dual_control_pulse_pex \
@@ -27,4 +28,13 @@ python3 /src/clock_pulse_hclk_window_probe/run_recovery_schematic.py \
   --internal-probes \
   --environment-ids tt ss_hot \
   --work /work/recovery-pex-cases \
-  --output /work/recovery-physical-probe.json
+  --output /work/recovery-physical-probe.json || recovery_rc=$?
+# A complete electrical rejection is the expected diagnostic result here.
+# Tool/deck failures use a different exit status and remain fatal.
+if [[ "$recovery_rc" -ne 0 && "$recovery_rc" -ne 1 ]]; then
+  exit "$recovery_rc"
+fi
+python3 /src/clock_pulse_hclk_window_probe/localize_recovery_pex.py \
+  --pex /work/recovery_dual_control_pulse.pex.spice \
+  --work /work/recovery-pex-localization \
+  --output /work/recovery-pex-localization.json

@@ -790,12 +790,19 @@ Execution order is deliberately narrow:
    The resulting restored two-bit hierarchy now passes both its 80-case leaf
    screen and 80-case composed SENSE/WRITE screen. The selected extra-2x
    candidate has at least 26.35 ps timing margin and at most 29.75 mA current.
-   Physical implementation of that exact candidate is now the bounded step.
-   It must preserve the compact PEX-proven write
-   timing source until its replacement covers every PVT environment with one
-   physically fixed candidate and an observed selected code, include an
-   observable correlated with timing/drive margin and safe code endpoints, and
-   use a bounded selection procedure. Do not build a general calibration
+   Physical implementation then separated SENSE assist, WRITE interval, and
+   WRITE epoch into three controls and retained 5/5 schematic coverage. Its
+   current 216-device layout is clean DRC, unique LVS, and full-RC extracted,
+   but targeted TT/SS-hot PEX remains 0/2. Schema-v2 semantic paths now show
+   TT rail degradation at selected `HBASE`/`START` and SS/hot interval-0
+   degradation through `E0`/`EMUX` until odd-phase `END` stops crossing.
+   Baseline-checked R/C counterfactuals and eight bounded schematic revisions
+   reject local routing, taper depth, matched isolation, and final-driver
+   strength as independent remedies. The bounded next step is therefore a
+   retimed full-swing event source whose delay states do not depend on detector
+   or output drive. Preserve the three controls, include an observable
+   correlated with timing/drive margin and safe code endpoints, and use a
+   bounded selection procedure. Do not build a general calibration
    synthesizer.
 2. Use that one real control to repair the two exact extracted failures in the
    already physical pulse-to-bridge-to-direct-regenerative-capture boundary:

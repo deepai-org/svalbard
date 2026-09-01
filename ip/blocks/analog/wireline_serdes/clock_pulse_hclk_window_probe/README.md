@@ -206,22 +206,36 @@ increasing its final pull-down improved BOOST but reloaded the predriver.
 
 The retained topology removes that filter and drives BOOST directly from the
 full-width `SB1` state. Its generated 216-device macro is zero-DRC, uniquely
-LVS-matched, and extracts to 5,898 resistors plus 4,351 capacitors. It remains
-0/2 in the targeted TT and SS/hot PEX probe. BOOST improves materially to
-0.12--0.46 V low at SS/hot, and no causal stage loses its midrail transition,
-but the shared `SB1` load regresses SENSE. The representative SS/hot selected
-branch has 0.303/0.600 V SENSE lows and 2.350/2.095 V WRITE highs; its WRITE
-arrives only 191/339 ps after SENSE rather than 500--700 ps. TT misses minimum
-SENSE width by as little as 5.59 ps and its interval-1 WRITE is too wide and
-scheduled in the wrong epoch.
+LVS-matched, and the schema-v2 labeled extraction contains 5,900 resistors plus
+4,369 capacitors. It remains 0/2 in the targeted TT and SS/hot PEX probe.
+BOOST improves materially, but the shared `SB1` load regresses SENSE. The
+representative SS/hot selected branch has 0.297/0.549 V SENSE lows and
+2.214/1.646 V WRITE highs; its WRITE arrives only 202/367 ps after SENSE
+rather than 500--700 ps. TT has no lost WRITE transition, but rail degradation
+starts at selected `HBASE` and `START`; its interval-1 WRITE is 256--257 ps
+wide and scheduled in the wrong epoch.
+
+The manifest now binds every WRITE semantic stage explicitly, including the
+nonuniform `DBG_EW_*`, `DBG_OW_*`, and `DBG_E_WPN` extracted labels. For each
+active control path the result records both the first lost midrail transition
+and the first strict rail-compliance failure. At SS/hot interval 0, `E0` and
+`EMUX` lose rail margin before odd-phase `END` peaks at only 1.137 V and becomes
+the first true transition loss. This distinguishes an event-source failure
+from a final-load-only failure.
+
+[`localize_recovery_pex.py`](localize_recovery_pex.py) repeats the exact
+baseline and applies separate diagnostic-only R/C counterfactuals to declared
+epoch, START, END, taper, and combined WRITE paths. The repeat is identical.
+Near-zero resistance across the entire WRITE path improves summed WRITE-high
+amplitude by 0.586 V but does not restore SS/hot `END`; removing all WRITE
+capacitance changes epoch and width non-monotonically and also passes neither
+representative case. Modified PEX is never treated as physical evidence.
 
 The exact hashes and representative diagnostics are retained in
 [`three_control_recovery_result.json`](three_control_recovery_result.json).
 This is useful compiler-loop evidence--manifest elaboration, cheap schematic
 promotion, deterministic physical lowering, and semantic failure movement--but
-it is still a rejected pulse source. The next circuit revision must isolate or
-strengthen the shared full-width branch and repair WRITE drive/epoch separately
-before capture replay.
+it is still a rejected pulse source.
 
 Two follow-up physical experiments now bound that branch choice. A small
 three-stage `SB1` isolation taper retains 5/5 schematic coverage and is
@@ -233,6 +247,15 @@ coverage and is zero-DRC/unique-LVS, but its extra upstream load reduces
 extracted SS/hot `SB1` to 1.56--2.13 V and prevents most SENSE crossings. A 2x
 driver had already been rejected schematically at 346--399 ps SENSE width.
 Exact hashes are appended to the result JSON. These results close the local
-BOOST/SENSE taper sweep; the next bounded diagnostic is the independent WRITE
-semantic path, followed by an event-source architectural revision rather than
-more resizing of the shared state.
+BOOST/SENSE taper sweep.
+
+The independent WRITE diagnostic is now complete as well. Eight bounded
+schematic revisions cover matched strong START/END restoration, a four-stage
+taper, their combination, identical two-stage detector-input isolation, and
+three final-driver strength splits. None covers both TT and SS/hot; the best
+retain only TT codes. Local drive was part of the implicit delay budget, so
+strengthening it cannot be separated from retiming. This closes local routing,
+taper, isolation, and final-driver sweeps. The next candidate must create
+explicit full-swing event-delay states and retime them as a unit, then size the
+detector and load drivers independently before regenerated DRC/LVS/PEX and
+five-environment capture replay.

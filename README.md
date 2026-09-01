@@ -12,6 +12,9 @@ fabricated-silicon correlation, PCI-SIG compliance, or Wi-Fi interoperability.
 |---|---|
 | Portfolio scope and repository policy | [`plan.md`](plan.md) |
 | Active projects and dependency roots | [`portfolio.yaml`](portfolio.yaml) |
+| Project directory index | [`projects/README.md`](projects/README.md) |
+| Documentation index | [`docs/README.md`](docs/README.md) |
+| Analog block directory index | [`ip/blocks/analog/README.md`](ip/blocks/analog/README.md) |
 | PCIe product overview | [`projects/pcie_gen1_endpoint/README.md`](projects/pcie_gen1_endpoint/README.md) |
 | PCIe analog implementation status | [`docs/verification/pcie-analog-status.md`](docs/verification/pcie-analog-status.md) |
 | Wi-Fi product/evidence overview | [`projects/wifi_nbiot_radio/README.md`](projects/wifi_nbiot_radio/README.md) |

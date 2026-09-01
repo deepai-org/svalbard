@@ -181,6 +181,7 @@ def group_depths(groups: dict[str, Group], phase: str) -> dict[str, int]:
         "cp_cond_npd_comp": ("G", "EN"),
         "cp_sense_final_select": ("A", "EN"),
         "cp_fall_window": ("A", "B"),
+        "cp_dynamic_event_state": ("SETB", "RESET"),
     })
     inputs["cp_tristate_inv"] = ("A", "EN", "ENB")
     outputs = {"cp_inv": "Y", "cp_final_inv": "Y",
@@ -196,6 +197,7 @@ def group_depths(groups: dict[str, Group], phase: str) -> dict[str, int]:
         "cp_cond_npd_comp": "D",
         "cp_sense_final_select": "Y",
         "cp_fall_window": "Y",
+        "cp_dynamic_event_state": "Q",
     })
     outputs["cp_tristate_inv"] = "Y"
     local = [group for group in groups.values() if group.phase == phase]

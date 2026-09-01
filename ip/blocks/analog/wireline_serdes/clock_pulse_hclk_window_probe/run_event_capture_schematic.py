@@ -250,6 +250,11 @@ def main() -> None:
     implementation.add_argument("--combined-pex", type=Path)
     parser.add_argument("--bridge", type=Path)
     parser.add_argument("--combined-physical", type=Path)
+    parser.add_argument(
+        "--combined-schematic",
+        type=Path,
+        help="exact schematic lowered into --combined-pex; defaults to the selected source",
+    )
     parser.add_argument("--capture-pex", type=Path, required=True)
     parser.add_argument("--capture-physical", type=Path, required=True)
     parser.add_argument("--work", type=Path, required=True)
@@ -269,8 +274,11 @@ def main() -> None:
         require(combined_physical.get("identity", {}).get("pex_sha256")
                 == digest(args.combined_pex),
                 "combined PEX is not byte-bound to its physical record")
-        expected_schematic = hashlib.sha256(
-            physical_source.compile_source().encode()).hexdigest()
+        expected_schematic = (
+            digest(args.combined_schematic)
+            if args.combined_schematic is not None
+            else hashlib.sha256(physical_source.compile_source().encode()).hexdigest()
+        )
         require(combined_physical.get("identity", {}).get("schematic_sha256")
                 == expected_schematic,
                 "combined physical record is not the selected circuit")
@@ -281,6 +289,8 @@ def main() -> None:
         require(args.bridge is not None, "schematic source requires --bridge")
         require(args.combined_physical is None,
                 "schematic source cannot use a combined physical record")
+        require(args.combined_schematic is None,
+                "schematic source cannot use --combined-schematic")
         source = args.source
     physical = json.loads(args.capture_physical.read_text())
     require(physical.get("result") == "pass", "capture physical record failed")

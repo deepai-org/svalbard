@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "contract_id": "pcie_event_to_regenerative_lane_v1",
+  "event_source_revision": "retimed_joint_long_6_3_active_low_nand_state",
+  "boundary": {
+    "ideal_sources_retained": [
+      "upstream recovered rail clock",
+      "static differential receiver input",
+      "static bias and configuration controls"
+    ],
+    "ideal_timing_sources_removed": [
+      "sense",
+      "sense boost",
+      "capture clock",
+      "capture clock complement"
+    ],
+    "regen_compatibility_pins": "tied to physical VSS because the selected fast regenerative front end does not consume them"
+  },
+  "thresholds": {
+    "logic_rail_margin_v": 0.25,
+    "frontend_differential_v": 0.3,
+    "capture_differential_v": 0.5,
+    "average_supply_current_a": [0.0, 0.15]
+  },
+  "rx_bias_v": {
+    "tt": 1.3,
+    "ff_cold": 1.2,
+    "ff_hot": 1.2,
+    "ss_hot": 1.5,
+    "ss_cold": 1.5
+  },
+  "res_corner": {
+    "tt": "res_typical",
+    "ff_cold": "res_ff",
+    "ff_hot": "res_ss",
+    "ss_hot": "res_ff",
+    "ss_cold": "res_ss"
+  },
+  "candidate_scope": "one fixed extracted event/bridge macro and one fixed extracted routed regenerative RX/capture parent; only the event source's three realizable static control bits may vary by environment",
+  "not_a_claim": [
+    "routed event-to-lane parent",
+    "dynamic PRBS capture under generated clocks",
+    "closed CDR",
+    "PCIe compliance",
+    "provider signoff or silicon yield"
+  ]
+}

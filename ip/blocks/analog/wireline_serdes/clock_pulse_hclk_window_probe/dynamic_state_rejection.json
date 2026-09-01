@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "claim": "pcie_event_capture_dynamic_state_rejection",
+  "architecture": "contention-free two-device dynamic state: an HSN-controlled PMOS sets SB1 and an HCLK-controlled NMOS resets it, followed by the retained SENSE taper and direct BOOST inverter",
+  "schematic_admission": {
+    "source_revision": "retimed_joint_long_6_3_active_low_dynamic_state",
+    "source_sha256": "4ce1d3c54c5523a096b48767b670eb842a5134b4177bbbe6e4ff9cd14010e2ef",
+    "result_sha256": "8d856c06e1702ce77dafa67ffee569fc9e2df952bb61d18cf4dde97cc886d44b",
+    "case_count": 40,
+    "passing_case_count": 16,
+    "covered_environment_count": 5,
+    "result": "pass"
+  },
+  "physical": {
+    "logical_device_count": 192,
+    "width_um": 303.7,
+    "drc_stage_result": "pass",
+    "lvs_stage_result": "pass",
+    "pex_stage_result": "pass",
+    "pex_resistor_count": 4886,
+    "pex_capacitor_count": 3577,
+    "schematic_sha256": "334ea644c2f23eb7735bc1c3b873acf5ed74d37fd93db61a00e0fb2ad59e00cc",
+    "pex_sha256": "efacf3810aeac793d93d9ea1a250918f980bc116ccc4778c49c87df75ec91444",
+    "result_sha256": "277c4a262ee4cbb1fb204046dbcc0b650acfcd64a8512d40e8fef0d694be80c9",
+    "layout_png_sha256": "040d5cfe53d67edc0b0fbb198185fcd0026a28c27add4ce64a423f78f178adf4"
+  },
+  "targeted_pex": {
+    "case_count": 8,
+    "passing_case_count": 0,
+    "environment_code_coverage": {"tt": [], "ss_hot": []},
+    "capture_polarity_pass_count": 8,
+    "result_sha256": "43772a8e4dbc38c21e397a320bc55c3433b75bf04a1d9808fd41b89d6ff3fbe3",
+    "tt_first_failure": "SB1 now swings below 18 mV but peaks at only 2.698--2.729 V; SENSE/BOOST switch and the extracted capture resolves, but retained phase and rail predicates fail",
+    "ss_hot_first_failure": "HSN spans 0.412--2.963 V, but extracted SB1 peaks at only 0.665--0.689 V; SENSE and BOOST remain high"
+  },
+  "real_lane_composition": {
+    "scope": "unrouted composition of the exact event/bridge PEX and exact routed regenerative RX/capture parent PEX under static differential input",
+    "case_count": 2,
+    "passing_case_count": 0,
+    "environment_code_coverage": {"tt": [], "ss_hot": []},
+    "frontend_pass_count": 2,
+    "capture_pass_count": 2,
+    "control_rail_pass_count": 0,
+    "result_sha256": "1268001e51b0e1efe56467dd668b1b9c1d89090a8dd8e52558ca86bd2ec796f0",
+    "lane_pex_sha256": "f8fdcb7cdcc486c6ac868f476dd7a85bcaaa3ee02ec77caaf835c6107519b1df",
+    "interpretation": "the TT receiver resolves despite marginal controls; the SS/hot Q state is static initialization because no SENSE/BOOST event occurs, so it is not dynamic capture evidence"
+  },
+  "tooling_finding": "Exact-PEX runners now accept an explicit candidate schematic and revision, verify them against the physical record, and preserve the selected circuit as the default. This allows bounded alternatives to be evaluated without weakening circuit/layout/PEX identity.",
+  "conclusion": "reject the separate dynamic SB1 state and retain the active-low NAND state, whose exact PEX preserves one TT passing code; separate-state device-family substitution is closed, so the next architecture must merge event storage into the capture cell",
+  "not_a_claim": [
+    "five_environment_exact_pex_closure",
+    "routed_event_bridge_capture_parent",
+    "dynamic_data_or_prbs_capture",
+    "closed_cdr_or_pcie_compliance",
+    "provider_signoff_or_silicon_yield"
+  ],
+  "result": "rejected"
+}

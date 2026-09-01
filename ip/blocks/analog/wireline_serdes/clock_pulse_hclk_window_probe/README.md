@@ -382,6 +382,35 @@ This closes a local NAND-latch strength/reset/SENSE-edge branch; the next
 architecture must merge state into the capture cell or change the event-state
 device family rather than tune this latch locally.
 
+The selected active-low source has also been connected directly to the exact
+routed regenerative RX/capture parent, removing the earlier 350-fF SENSE and
+BOOST proxy loads. At TT the frontend and Q/QB resolve with more than 3.05 V
+differential magnitude; the sole rail miss is odd BOOST at 3.03362 V versus a
+3.05 V conservative threshold. At SS/hot `SB1` reaches at most 1.17102 V and
+SENSE stays between 2.864 and 2.895 V, so the resolved static Q state is not a
+capture event. The hash-bound focused checkpoint is
+[`event_lane_focused_result.json`](event_lane_focused_result.json). It sharpens
+the boundary but does not promote the source.
+
+The bounded device-family change is now also complete and rejected. A
+contention-free dynamic state uses one `HSN`-controlled PMOS to set `SB1` and
+one `HCLK`-controlled NMOS to reset it, eliminating static contention and
+retaining the 192-device footprint. It passes 16/40 schematic cases covering
+5/5 environments, and its generated 303.7-um-wide macro is zero-DRC,
+unique-LVS, and 4,886R/3,577C extracted. Exact PEX is nevertheless 0/8. At
+SS/hot, `HSN` makes a 0.412--2.963 V transition but `SB1` peaks at only
+0.665--0.689 V, so neither SENSE nor BOOST switches. At TT `SB1` restores only
+to 2.698--2.729 V and the controls miss the retained rail/phase contract.
+
+A stronger two-case composition connects that exact event/bridge PEX directly
+to the exact routed regenerative RX/capture parent. The frontend and Q/QB are
+resolved in both cases, but neither passes the generated-control rails. The
+SS/hot Q state is static initialization—there is no SENSE/BOOST event—so it is
+not capture evidence. [`dynamic_state_rejection.json`](dynamic_state_rejection.json)
+retains the identities and interpretation. This closes separate-state device
+family substitution as well as local inverter/latch tuning. The next circuit
+must merge the event state into the capture cell.
+
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail
 margin.  Second, simply placing `XHSD2` beside its detector improved TT width

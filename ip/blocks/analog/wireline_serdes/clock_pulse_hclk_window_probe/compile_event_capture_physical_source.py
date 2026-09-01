@@ -21,8 +21,8 @@ def replace_once(text: str, old: str, new: str) -> str:
     return text.replace(old, new, 1)
 
 
-def compile_source() -> str:
-    source = event_source.compile_source()
+def compile_source(source: str | None = None) -> str:
+    source = event_source.compile_source() if source is None else source
     bridge_sha256 = hashlib.sha256(BRIDGE.read_bytes()).hexdigest()
 
     old_phase = ".subckt sense_write_phase HCLK SSEL WSEL ESEL VDD VSS SENSE BOOST START END"

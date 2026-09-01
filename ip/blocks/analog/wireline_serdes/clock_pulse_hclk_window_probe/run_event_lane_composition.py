@@ -1,0 +1,297 @@
+#!/usr/bin/env python3
+"""Compose extracted events with the extracted regenerative RX/capture parent."""
+
+from __future__ import annotations
+
+import argparse
+import concurrent.futures
+import hashlib
+import json
+import re
+import subprocess
+from pathlib import Path
+from typing import Any
+
+import compile_event_capture_source as event_source
+import compile_event_capture_physical_source as event_physical_source
+import run_event_capture_schematic as event_runner
+import run_hclk_window_probe as base
+
+
+ROOT = Path(__file__).resolve().parent
+CONTRACT_PATH = ROOT / "event_lane_contract.json"
+CONTRACT = json.loads(CONTRACT_PATH.read_text())
+MEASURE = re.compile(r"^(\w+)\s*=\s*([-+0-9.eE]+)", re.MULTILINE)
+PHASES = ("e", "o")
+DEBUG_STAGES = ("hsn", "sb1", "sib", "sdrv")
+
+
+def digest(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise ValueError(message)
+
+
+def require_physical_pex(pex: Path, physical_path: Path, nested: bool) -> dict:
+    physical = json.loads(physical_path.read_text())
+    recorded = (physical.get("identity", {}).get("pex_sha256") if nested
+                else physical.get("pex_sha256"))
+    require(physical.get("result") == "pass", f"{physical_path}: not passing")
+    require(recorded == digest(pex), f"{pex}: physical identity mismatch")
+    return physical
+
+
+def compile_deck(event_pex: Path, lane_pex: Path, environment: dict[str, Any],
+                 control: dict[str, Any]) -> str:
+    vdd = float(environment["vdd_v"])
+    vmid = vdd / 2
+    rx_bias = float(CONTRACT["rx_bias_v"][environment["id"]])
+    measures = []
+    for phase in PHASES:
+        upper = phase.upper()
+        for signal in ("sense", "boost", "clk", "clkb"):
+            node = f"{upper}_{signal.upper()}"
+            measures.extend([
+                f"meas tran {phase}_{signal}_high max v({node}) from=8n to=12.8n",
+                f"meas tran {phase}_{signal}_low min v({node}) from=8n to=12.8n",
+            ])
+        measures.extend([
+            f"meas tran {phase}_fe_diff find {phase}_fe_diff_vec "
+            f"at={'12.55n' if phase == 'e' else '12.75n'}",
+            f"meas tran {phase}_q_diff find {phase}_q_diff_vec "
+            f"at={'12.55n' if phase == 'e' else '12.75n'}",
+        ])
+        for stage in DEBUG_STAGES:
+            node = f"xevent.DBG_{upper}_{stage.upper()}"
+            measures.extend([
+                f"meas tran {phase}_dbg_{stage}_high max v({node}) from=8n to=12.8n",
+                f"meas tran {phase}_dbg_{stage}_low min v({node}) from=8n to=12.8n",
+            ])
+    return f"""* SPDX-License-Identifier: Apache-2.0
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice {environment['mos_corner']}
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice {CONTRACT['res_corner'][environment['id']]}
+.temp {environment['temperature_c']}
+.include {event_pex}
+.include {lane_pex}
+VDD VDD 0 PWL(0 0 500p {vdd:.6f})
+VCLKP CLKP_H 0 PULSE(0 {vdd:.6f} 1n 20p 20p 380p 800p)
+VCLKN CLKN_H 0 PULSE(0 {vdd:.6f} 1.4n 20p 20p 380p 800p)
+VSEL0 SEL0 0 PWL(0 0 500p {vdd if control['sense'] else 0:.6f})
+VSEL1 SEL1 0 PWL(0 0 500p {vdd if control['interval'] else 0:.6f})
+VSEL2 SEL2 0 PWL(0 0 500p {vdd if control['epoch'] else 0:.6f})
+VRXP RXP_SRC 0 PWL(0 0 500p {vmid + 0.10:.6f})
+VRXN RXN_SRC 0 PWL(0 0 500p {vmid - 0.10:.6f})
+RRXP RXP_SRC RXP 1
+RRXN RXN_SRC RXN 1
+VRXBIAS RX_BIAS_SRC 0 PWL(0 0 500p {rx_bias:.6f})
+RRXBIAS RX_BIAS_SRC RX_BIAS 1
+VTHP VTHP_SRC 0 PWL(0 0 500p {vmid:.6f})
+VTHN VTHN_SRC 0 PWL(0 0 500p {vmid:.6f})
+RVTHP VTHP_SRC VTHP 1
+RVTHN VTHN_SRC VTHN 1
+VBW RX_BW_EN_N_SRC 0 0
+RBW RX_BW_EN_N_SRC RX_BW_EN_N 1
+VTERM0 TERM_EN0_N_SRC 0 0
+VTERM1 TERM_EN1_N_SRC 0 0
+VTERM2 TERM_EN2_N_SRC 0 0
+VTERM3 TERM_EN3_N_SRC 0 {vdd:.6f}
+VTERM4 TERM_EN4_N_SRC 0 {vdd:.6f}
+VTERM5 TERM_EN5_N_SRC 0 {vdd:.6f}
+VTERM6 TERM_EN6_N_SRC 0 {vdd:.6f}
+RTERM0 TERM_EN0_N_SRC TERM_EN0_N 1
+RTERM1 TERM_EN1_N_SRC TERM_EN1_N 1
+RTERM2 TERM_EN2_N_SRC TERM_EN2_N 1
+RTERM3 TERM_EN3_N_SRC TERM_EN3_N 1
+RTERM4 TERM_EN4_N_SRC TERM_EN4_N 1
+RTERM5 TERM_EN5_N_SRC TERM_EN5_N 1
+RTERM6 TERM_EN6_N_SRC TERM_EN6_N 1
+XEVENT CLKP_H CLKN_H SEL0 SEL1 SEL2 VDD 0 E_SENSE E_BOOST E_CLK E_CLKB
++ O_SENSE O_BOOST O_CLK O_CLKB retimed_event_capture_bridge_pex
+REREGEN E_REGEN_CLK 0 1m
+REREGENB E_REGEN_CLKB 0 1m
+ROREGEN O_REGEN_CLK 0 1m
+ROREGENB O_REGEN_CLKB 0 1m
+XLANE RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N
++ TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N
++ E_SENSE E_REGEN_CLK E_REGEN_CLKB E_CLK E_CLKB E_BOOST
++ O_SENSE O_REGEN_CLK O_REGEN_CLKB O_CLK O_CLKB O_BOOST
++ VDD 0 RX_RAWP RX_RAWN FE_E_P FE_E_N FE_O_P FE_O_N
++ EVEN_Q EVEN_QB ODD_Q ODD_QB lane_rx_regenerative_capture_pex
+CEQ EVEN_Q 0 50f
+CEQB EVEN_QB 0 50f
+COQ ODD_Q 0 50f
+COQB ODD_QB 0 50f
+.control
+tran 1p 12.8n uic
+let isupply = -i(VDD)
+let e_fe_diff_vec = v(FE_E_P)-v(FE_E_N)
+let o_fe_diff_vec = v(FE_O_P)-v(FE_O_N)
+let e_q_diff_vec = v(EVEN_Q)-v(EVEN_QB)
+let o_q_diff_vec = v(ODD_Q)-v(ODD_QB)
+{chr(10).join(measures)}
+meas tran supply_current avg isupply from=8n to=12.8n
+.endc
+.end
+"""
+
+
+def run_case(spec: tuple[Path, Path, Path, dict, dict]) -> dict:
+    event_pex, lane_pex, work, environment, control = spec
+    stem = f"{environment['id']}_{control['id']}"
+    deck = work / f"{stem}.spice"
+    log = work / f"{stem}.log"
+    deck.write_text(compile_deck(event_pex, lane_pex, environment, control))
+    try:
+        with log.open("w") as output:
+            run = subprocess.run(["ngspice", "-b", str(deck)], stdout=output,
+                                 stderr=subprocess.STDOUT, timeout=900,
+                                 check=False)
+        returncode = run.returncode
+    except subprocess.TimeoutExpired:
+        returncode = 124
+    log_text = log.read_text()
+    observed = {key: float(value)
+                for key, value in MEASURE.findall(log_text)}
+    required = {"supply_current"}
+    for phase in PHASES:
+        required |= {f"{phase}_{signal}_{bound}"
+                     for signal in ("sense", "boost", "clk", "clkb")
+                     for bound in ("high", "low")}
+        required |= {f"{phase}_fe_diff", f"{phase}_q_diff"}
+        required |= {f"{phase}_dbg_{stage}_{bound}"
+                     for stage in DEBUG_STAGES for bound in ("high", "low")}
+    complete = returncode == 0 and required <= observed.keys()
+    vdd = float(environment["vdd_v"])
+    margin = float(CONTRACT["thresholds"]["logic_rail_margin_v"])
+    rails = all(
+        observed.get(f"{phase}_{signal}_high", 0) >= vdd - margin
+        and observed.get(f"{phase}_{signal}_low", vdd) <= margin
+        for phase in PHASES for signal in ("sense", "boost", "clk", "clkb")
+    )
+    frontend = all(abs(observed.get(f"{phase}_fe_diff", 0)) >=
+                   CONTRACT["thresholds"]["frontend_differential_v"]
+                   for phase in PHASES)
+    capture = all(abs(observed.get(f"{phase}_q_diff", 0)) >=
+                  CONTRACT["thresholds"]["capture_differential_v"]
+                  for phase in PHASES)
+    current = observed.get("supply_current")
+    current_bounds = CONTRACT["thresholds"]["average_supply_current_a"]
+    passed = (complete and rails and frontend and capture and current is not None
+              and current_bounds[0] < current <= current_bounds[1])
+    return {"case_id": stem, "environment_id": environment["id"],
+            "code_id": control["id"], "control": control,
+            "returncode": returncode,
+            "diagnostic_log_tail": [] if complete else log_text.splitlines()[-40:],
+            "complete": complete, "rails_pass": rails,
+            "frontend_pass": frontend, "capture_pass": capture,
+            "observed": observed, "result": "pass" if passed else "fail"}
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--event-pex", required=True, type=Path)
+    parser.add_argument("--event-physical", required=True, type=Path)
+    parser.add_argument(
+        "--event-schematic",
+        type=Path,
+        help="exact schematic lowered into the event PEX; requires --event-source-revision",
+    )
+    parser.add_argument("--event-source-revision")
+    parser.add_argument("--lane-pex", required=True, type=Path)
+    parser.add_argument("--lane-physical", required=True, type=Path)
+    parser.add_argument("--environment-ids", nargs="+")
+    parser.add_argument("--control-ids", nargs="+")
+    parser.add_argument("--case-ids", nargs="+",
+                        help="explicit ENVIRONMENT:CONTROL pairs")
+    parser.add_argument("--jobs", type=int, default=1)
+    parser.add_argument("--work", required=True, type=Path)
+    parser.add_argument("--output", required=True, type=Path)
+    args = parser.parse_args()
+    require(1 <= args.jobs <= 8, "jobs must be 1--8")
+    require((args.event_schematic is None) == (args.event_source_revision is None),
+            "event schematic and source revision must be supplied together")
+    event_physical = require_physical_pex(args.event_pex, args.event_physical, True)
+    if args.event_schematic is None:
+        expected_revision = CONTRACT["event_source_revision"]
+        expected_schematic_sha256 = hashlib.sha256(
+            event_physical_source.compile_source().encode()).hexdigest()
+    else:
+        expected_revision = args.event_source_revision
+        expected_schematic_sha256 = digest(args.event_schematic)
+    require(event_physical.get("source_revision") == expected_revision,
+            "event physical source revision mismatch")
+    require(event_physical.get("identity", {}).get("schematic_sha256")
+            == expected_schematic_sha256,
+            "event physical schematic identity mismatch")
+    lane_physical = require_physical_pex(args.lane_pex, args.lane_physical, False)
+    environments = list(base.CONTRACT["environments"])
+    controls = list(event_runner.CONTROLS)
+    require(not args.case_ids or not (args.environment_ids or args.control_ids),
+            "case-ids cannot be combined with environment/control filters")
+    if args.environment_ids:
+        wanted = set(args.environment_ids)
+        require(wanted <= {item["id"] for item in environments},
+                "unknown environment id")
+        environments = [item for item in environments if item["id"] in wanted]
+    if args.control_ids:
+        wanted = set(args.control_ids)
+        require(wanted <= {item["id"] for item in controls}, "unknown control id")
+        controls = [item for item in controls if item["id"] in wanted]
+    args.work.mkdir(parents=True, exist_ok=True)
+    if args.case_ids:
+        environment_by_id = {item["id"]: item for item in environments}
+        control_by_id = {item["id"]: item for item in controls}
+        pairs = []
+        for case_id in args.case_ids:
+            require(case_id.count(":") == 1, "case id must be ENVIRONMENT:CONTROL")
+            environment_id, control_id = case_id.split(":")
+            require(environment_id in environment_by_id, "unknown case environment")
+            require(control_id in control_by_id, "unknown case control")
+            pairs.append((environment_by_id[environment_id], control_by_id[control_id]))
+        require(len(pairs) == len(set(args.case_ids)), "duplicate case id")
+        environments = [environment_by_id[item]
+                        for item in dict.fromkeys(env for env, _ in
+                                                 (case_id.split(":") for case_id in args.case_ids))]
+    else:
+        pairs = [(environment, control)
+                 for environment in environments for control in controls]
+    specs = [(args.event_pex, args.lane_pex, args.work, environment, control)
+             for environment, control in pairs]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as executor:
+        cases = list(executor.map(run_case, specs))
+    coverage = {environment["id"]: [case["code_id"] for case in cases
+                                     if case["environment_id"] == environment["id"]
+                                     and case["result"] == "pass"]
+                for environment in environments}
+    result = {
+        "schema_version": 1,
+        "claim": "extracted_event_bridge_into_routed_regenerative_lane_static_input",
+        "scope": "unrouted composition of two exact physically bound PEX macros",
+        "contract_sha256": digest(CONTRACT_PATH),
+        "event_pex_sha256": digest(args.event_pex),
+        "event_physical_sha256": digest(args.event_physical),
+        "lane_pex_sha256": digest(args.lane_pex),
+        "lane_physical_sha256": digest(args.lane_physical),
+        "event_source_revision": event_physical["source_revision"],
+        "lane_claim": lane_physical["claim"],
+        "case_count": len(cases),
+        "passing_case_count": sum(case["result"] == "pass" for case in cases),
+        "environment_code_coverage": coverage,
+        "cases": cases,
+        "not_a_claim": CONTRACT["not_a_claim"],
+        "result": "pass" if coverage and all(coverage.values()) else "fail",
+    }
+    args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+    print(json.dumps({"result": result["result"],
+                      "passing_case_count": result["passing_case_count"],
+                      "environment_code_coverage": coverage}, sort_keys=True))
+    if result["result"] != "pass":
+        raise SystemExit(1)
+
+
+if __name__ == "__main__":
+    main()

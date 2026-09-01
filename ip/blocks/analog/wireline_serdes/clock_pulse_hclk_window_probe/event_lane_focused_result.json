@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "claim": "selected_event_bridge_into_routed_regenerative_lane_focused_checkpoint",
+  "scope": "unrouted composition of the selected exact event/bridge PEX and exact routed regenerative RX/capture parent PEX under static differential input",
+  "identity": {
+    "contract_sha256": "8d79a120f8bc36505ed7beb6ac5f92d87d55f8705059216386d94594543cce9e",
+    "event_pex_sha256": "192a1b7d9119b915baef7461925af3b17cc98835654412f7d6a11adeebe6efa9",
+    "event_physical_sha256": "beb01331e9c07dec405c1c03b6e1efa80b23b5075024ea8472dc17506a027066",
+    "lane_pex_sha256": "f8fdcb7cdcc486c6ac868f476dd7a85bcaaa3ee02ec77caaf835c6107519b1df",
+    "lane_physical_sha256": "29b8766349f9c7321d2ec59a62600fd5379c33414a2dabc6e72ffd4f08eadf71",
+    "raw_result_sha256": "ec9dae228f0bf994a64035efb88a31c708107520909716e54cbe1944cb1a85fa"
+  },
+  "case_count": 2,
+  "passing_case_count": 0,
+  "cases": {
+    "tt:sense1_interval0_epoch0": {
+      "complete": true,
+      "control_rails_pass": false,
+      "frontend_pass": true,
+      "capture_pass": true,
+      "minimum_frontend_differential_v": 3.05894,
+      "minimum_capture_differential_v": 3.14403,
+      "limiting_control": "odd BOOST high is 3.03362 V versus the conservative 3.05 V threshold"
+    },
+    "ss_hot:sense0_interval0_epoch0": {
+      "complete": true,
+      "control_rails_pass": false,
+      "frontend_pass": true,
+      "capture_pass": true,
+      "maximum_sb1_v": 1.17102,
+      "sense_ranges_v": {"even": [2.8764, 2.89501], "odd": [2.8642, 2.8829]},
+      "interpretation": "no SENSE event occurs; resolved frontend and Q values under a static input are initialization and cannot establish capture"
+    }
+  },
+  "conclusion": "the real-lane boundary confirms a near-rail TT event and the same SS/hot SB1 mechanism as the proxy; it does not promote the selected event source",
+  "not_a_claim": [
+    "routed_event_to_lane_parent",
+    "dynamic_data_or_prbs_capture",
+    "closed_cdr_or_pcie_compliance",
+    "provider_signoff_or_silicon_yield"
+  ],
+  "result": "partial"
+}

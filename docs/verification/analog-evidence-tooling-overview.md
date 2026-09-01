@@ -132,7 +132,13 @@ nor schematic SS/hot admission. A subsequent cross-coupled NAND state covers
 5/5 environments schematically and generates a 208-device zero-DRC,
 unique-LVS 5,610R/4,170C macro, but exact PEX is 0/8. At SS/hot feedback leaves
 `SB1` below 0.961 V; at TT `SB1` restores but BOOST misses high rail. The
-smaller 1/8 active-low state therefore remains selected. This is executable
+contention-free dynamic-state followup is also physically legal and covers
+5/5 schematically, but is 0/8 exact PEX because SS/hot `SB1` reaches only
+0.665--0.689 V. Exact candidate replay now accepts an explicitly named
+schematic/revision while verifying it against the physical record, and an
+exact composition into the routed regenerative lane distinguishes static Q
+initialization from a real generated capture event. The smaller 1/8 active-low
+state therefore remains selected. This is executable
 evidence for identity,
 staged admission, and first-failure movement, not a generic optimizer or
 completed PCIe clock path.
@@ -253,9 +259,9 @@ failing cases.
 ## Current priorities and rule for adding tooling
 
 1. **PCIe:** the active-low detector state advances SS/hot failure to loaded
-   `SB1`; local strength, BOOST-load splitting, and a physically realized
-   cross-coupled NAND replacement are now closed as negative evidence. Merge
-   the state into the capture cell or change its device family while preserving
+   `SB1`; local strength, BOOST-load splitting, cross-coupled NAND, and a
+   contention-free dynamic-state replacement are now closed as negative
+   evidence. Merge the state into the capture cell while preserving
    full-duty START/END, the
    direct-END bridge, three controls, and exact capture load; require
    regenerated DRC/LVS and five-environment PEX before routed-parent replay.

@@ -13,7 +13,7 @@ import run_event_capture_schematic as runner
 import run_hclk_window_probe as base
 
 
-NODES = ("hsn", "estate", "ls0", "ls1", "sib", "sdrv", "lb0", "lb1")
+NODES = ("hsn", "estate", "lcb", "lstate", "sib", "sdrv")
 MEASURE = re.compile(r"^(\w+)\s*=\s*([-+0-9.eE]+)", re.MULTILINE)
 
 

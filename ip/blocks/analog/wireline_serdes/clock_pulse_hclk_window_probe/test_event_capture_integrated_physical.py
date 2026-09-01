@@ -31,7 +31,7 @@ class IntegratedEventPhysicalTest(unittest.TestCase):
     def test_state_and_local_tapers_have_causal_order(self) -> None:
         devices, groups = self.flatten()
         _, group_x = layout.place(devices, groups, expanded_local_spacing=True)
-        names = ("XE__XHSN__XN", "XE__XSTATE", "XE__XLS0", "XE__XLS1",
+        names = ("XE__XHSN__XN", "XE__XSTATE", "XE__XLC0", "XE__XLC1",
                  "XE__XLS2", "XE__XLS3", "XE__XSB2")
         positions = [group_x[name] for name in names]
         self.assertEqual(positions, sorted(positions))

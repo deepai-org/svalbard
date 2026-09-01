@@ -11,7 +11,7 @@ import compile_event_capture_source as selected
 
 
 TOP = selected.TOP
-SOURCE_REVISION = "retimed_joint_long_6_3_capture_integrated_dynamic_state_v1"
+SOURCE_REVISION = "retimed_joint_long_6_3_capture_integrated_shared_predriver_v2"
 
 
 def replace_once(text: str, old: str, new: str) -> str:
@@ -30,23 +30,19 @@ def compile_source() -> str:
         "* HSN sets only the small stored node.  The reset edge is separated\n"
         "* by the full-duty HCLK state; neither device directly drives a clock load.\n"
         "XSTATE HSN HCLK ESTATE VDD VSS cp_capture_event_state WP=8u WN=4u MP=4 MN=1\n"
-        "* Four local taper stages preserve ESTATE polarity at SDRV while keeping\n"
-        "* the storage-node gate load small.  These drivers belong to the capture\n"
-        "* consumer and are placed with its clock gates in the physical parent.\n"
-        "XLS0 ESTATE LS0 VDD VSS cp_inv WP=4u WN=2u MP=4 MN=4\n"
-        "XLS1 LS0 LS1 VDD VSS cp_inv WP=6u WN=3u MP=6 MN=6\n"
-        "XLS2 LS1 SIB VDD VSS cp_inv WP=8u WN=8u MP=8 MN=8\n"
+        "* One capture-local predriver serves both consumers, halving ESTATE\n"
+        "* gate load. The robust LSTATE node, not the dynamic state, fans out.\n"
+        "XLC0 ESTATE LCB VDD VSS cp_inv WP=4u WN=2u MP=4 MN=4\n"
+        "XLC1 LCB LSTATE VDD VSS cp_inv WP=6u WN=3u MP=6 MN=6\n"
+        "XLS2 LSTATE SIB VDD VSS cp_inv WP=8u WN=8u MP=8 MN=8\n"
         "XLS3 SIB SDRV VDD VSS cp_inv WP=8u WN=8u MP=12 MN=16",
     )
     source = replace_once(
         source,
         "* Restore BOOST directly from the full-width SB1 state.\n"
         "XRB2 SB1 BOOST VDD VSS cp_inv WP=8u WN=8u MP=5 MN=8",
-        "* BOOST is restored from the held local state through its own taper; it\n"
-        "* cannot capacitively disturb ESTATE or the SENSE branch.\n"
-        "XLB0 ESTATE LB0 VDD VSS cp_inv WP=4u WN=2u MP=4 MN=4\n"
-        "XLB1 LB0 LB1 VDD VSS cp_inv WP=6u WN=3u MP=6 MN=6\n"
-        "XLB2 LB1 BOOST VDD VSS cp_inv WP=8u WN=8u MP=5 MN=8",
+        "* BOOST splits only after the shared full-swing local predriver.\n"
+        "XLB2 LSTATE BOOST VDD VSS cp_inv WP=8u WN=8u MP=5 MN=8",
     )
     source = replace_once(
         source,

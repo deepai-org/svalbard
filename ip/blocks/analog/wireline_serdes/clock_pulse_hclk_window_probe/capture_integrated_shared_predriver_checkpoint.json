@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "claim": "capture_integrated_shared_predriver_checkpoint",
+  "source_revision": "retimed_joint_long_6_3_capture_integrated_shared_predriver_v2",
+  "source_sha256": "e673cc822bca39ae46e6c64dcd1d7bc3871f690b11878907b79b505fdb0b5fe3",
+  "schematic": {
+    "case_count": 40,
+    "passing_case_count": 16,
+    "environment_coverage": ["ff_cold", "ff_hot", "ss_cold", "ss_hot", "tt"],
+    "result": "pass",
+    "result_sha256": "51a41f1dad68608db3c7b8dc5f36cfb5610de9cf463a507a5a5cc86cd5397c2f"
+  },
+  "physical": {
+    "device_count": 200,
+    "width_um": 303.7,
+    "drc": "pass",
+    "lvs": "pass_unique",
+    "pex_resistor_count": 5184,
+    "pex_capacitor_count": 3855,
+    "physical_result_sha256": "9892793415d26220f1556065c14c13db1056954fd50fa044e94b7cd829da2324",
+    "pex_sha256": "905ea1e47205b204b7d9c7ba094008a6238a30131466eaa0e67e19d9615a2095",
+    "render_sha256": "aed259bf454ea16a82815d208d93b129f1e8be3caccefdcb7b77df6d239fd30a"
+  },
+  "targeted_exact_pex": {
+    "case_count": 4,
+    "passing_case_count": 0,
+    "environments": ["tt", "ss_hot"],
+    "result": "fail",
+    "result_sha256": "7a72e75758768bb3a610f953f899e28eed846e34525958ed99f31103c15d6663"
+  },
+  "localization": {
+    "result": "complete",
+    "tt_estate_range_v": [-0.0554131, 3.18137],
+    "ss_hot_estate_range_v": [0.372891, 2.498],
+    "ss_hot_lcb_range_v": [0.39308, 2.92868],
+    "ss_hot_lstate_range_v": [0.0764108, 1.57074],
+    "first_failure": "slow-hot shared LSTATE high-rail loss after improved ESTATE/LCB; TT BOOST high-rail and selected-code timing margins",
+    "probe_result_sha256": "59ae62ad65356c85259ffedb130e0bb49311f6525f8d8131b390f38dc3685790"
+  },
+  "comparison_to_v1": {
+    "device_delta": -8,
+    "pex_resistor_delta": -330,
+    "pex_capacitor_delta": -259,
+    "failure_movement": "slow-hot first major rail collapse moved from ESTATE to LSTATE"
+  },
+  "rejected_followups": [
+    "v3 sized shared pull-up/pull-down: focused schematic 1/8, no slow-hot code",
+    "v4 pull-up-only shared driver: focused schematic 1/8, no slow-hot code"
+  ],
+  "decision": "retain as improved physically legal negative checkpoint; do not promote",
+  "next_boundary": "replace monolithic shared fanout with timing-preserving branch restoration or a capture-clock primitive that does not require a dynamic CMOS state to drive both branches",
+  "not_a_claim": [
+    "five-environment exact-PEX closure",
+    "routed event/bridge/capture parent closure",
+    "closed CDR or PCIe link",
+    "provider signoff or silicon behavior"
+  ]
+}

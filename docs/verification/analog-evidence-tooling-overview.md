@@ -155,6 +155,17 @@ evidence no longer prints an overall pass. This is a small but important
 compiler-style property: physical legality, simulation completion, and
 contract admission are distinct machine-checked states.
 
+The next compiler-style iteration used those probes to change structure rather
+than sweep device ratios: two identical capture-local predrivers were merged
+ahead of fanout. Structural tests caught an invalid default placement order
+before layout. The admitted v2 covers 5/5 schematically, remains DRC/LVS clean,
+and removes 8 devices, 330 extracted resistors, and 259 extracted capacitors.
+Exact PEX remains 0/4, but semantic probes show the first major SS/hot rail
+collapse moved from `ESTATE` to the combined `LSTATE` fanout. Two obvious
+driver-sizing repairs were rejected at focused schematic admission. This is a
+repeatable propose → admit → lower → extract → localize loop; topology proposal
+is still human/LLM-guided rather than synthesized.
+
 ## Portability beyond PCIe and Wi-Fi
 
 The repository has a portable **execution shell**, not yet a portable analog

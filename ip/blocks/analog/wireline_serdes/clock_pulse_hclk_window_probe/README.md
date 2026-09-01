@@ -436,6 +436,21 @@ must reduce and explicitly budget the state-to-local-driver route/load or
 change the capture-owned event mechanism while preserving the proven event
 timing.
 
+A shared-predriver v2 then removes the duplicated first two local stages and
+fans out only after a buffered `LSTATE` node. It retains 16/40 schematic
+passes covering 5/5 environments and reduces the generated parent from 208 to
+200 devices, 5,514 to 5,184 extracted resistors, and 4,114 to 3,855 extracted
+capacitors while remaining zero-DRC and unique-LVS. Exact PEX is still 0/4,
+but failure movement is measurable: at SS/hot `ESTATE` improves to about
+0.37--2.50 V and `LCB` to 0.39--2.93 V before the combined fanout collapses
+`LSTATE` high to 1.42--1.57 V. At TT the full chain switches; BOOST high rail
+and selected-code timing remain outside the retained contract. Broadly sizing
+both shared-driver devices and strengthening only its pull-up each reduced the
+focused schematic campaign to 1/8 with no SS/hot code, so those local sizing
+branches are rejected before layout. The byte-bound result is
+[`capture_integrated_shared_predriver_checkpoint.json`](capture_integrated_shared_predriver_checkpoint.json),
+with a [review render](../../../../../docs/images/pcie-event-capture-shared-predriver-layout.png).
+
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail
 margin.  Second, simply placing `XHSD2` beside its detector improved TT width

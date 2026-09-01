@@ -36,15 +36,15 @@ class EventCapturePhysicalSourceTest(unittest.TestCase):
                 layout.parse(Path(handle.name)), compiler.TOP)
         # The generator represents each explicit MOS statement once; SPICE
         # multiplicity is retained on that device rather than expanded here.
-        self.assertEqual(len(devices), 208)
+        self.assertEqual(len(devices), 192)
         self.assertEqual(
             sorted(group.name.removeprefix("XE") for group in groups.values()
                    if group.phase == "E"),
             sorted(group.name.removeprefix("XO") for group in groups.values()
                    if group.phase == "O"),
         )
-        self.assertEqual(sum(device.phase == "E" for device in devices), 104)
-        self.assertEqual(sum(device.phase == "O" for device in devices), 104)
+        self.assertEqual(sum(device.phase == "E" for device in devices), 96)
+        self.assertEqual(sum(device.phase == "O" for device in devices), 96)
 
     def test_final_sense_delay_is_adjacent_to_detector(self) -> None:
         with tempfile.NamedTemporaryFile("w", suffix=".spice") as handle:
@@ -55,7 +55,7 @@ class EventCapturePhysicalSourceTest(unittest.TestCase):
         _, group_x = layout.place(devices, groups, expanded_local_spacing=True)
         ordered = [group_x[f"XE__{name}"] for name in (
             "XHSD1__XD1", "XHSD2__XI0", "XHSD2__XI1",
-            "XHSD3__XI0", "XHSD3__XI1", "XHSN__XIA")]
+            "XHSN__XIA", "XHSN__XN")]
         self.assertEqual(ordered, sorted(ordered))
         self.assertLess(ordered[-1] - ordered[0], 50.0)
 

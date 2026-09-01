@@ -822,9 +822,14 @@ Execution order is deliberately narrow:
    clean DRC, unique LVS, and 5,200R/3,863C extracted but passes 0/8 targeted
    cases: isolation delay loses TT and its roughly 1-V SS/hot detector pulse is
    not recognized. A lower-trip isolator covers only FF/cold schematically and
-   is rejected before layout. This closes scalar delay/inverter-strength work;
-   the next candidate must co-design detector recognition and restored-state
-   timing.
+   is rejected before layout. A subsequent active-low NAND state removes two
+   restoration stages, passes 15/40 schematic cases over 5/5 environments,
+   and produces a 192-device, zero-DRC/unique-LVS, 4,886R/3,577C macro. It
+   retains one TT exact-PEX pass and moves SS/hot failure to loaded `SB1` after
+   a real `HSN` transition. Strength rebalance loses TT BOOST rail; a split
+   BOOST path loses SS/hot schematically. This closes local
+   delay/inverter/load-partition work; the next candidate must place the state
+   in a contention-free regenerative element or the capture cell.
 3. For each promising circuit revision, run the existing short sequence only:
    schematic measurement of the changed semantic nodes, regenerated legal
    layout, DRC, unique LVS, exact TT PEX, then the five-corner composed PEX
@@ -992,10 +997,11 @@ The PCIe clock/capture bench now removes ideal timing sources at its immediate
 boundary. Its selected full-duty event/bridge schematic covers 5/5 public-model
 environments, the generated macro is zero-DRC/unique-LVS/full-RC extracted,
 and targeted exact PEX passes TT but not SS/hot; the latter is localized to an
-over-delayed explicit SENSE detector state. A bounded intermediate-delay
-alternative remained physically legal but lost TT to isolation delay and
-SS/hot to an unrecognized roughly 1-V pulse; its low-trip derivative was
-rejected schematically in four environments. The Wi-Fi receiver has a byte-bound
+over-delayed explicit SENSE detector state. Bounded intermediate-delay and
+low-trip alternatives were rejected. The selected active-low NAND state
+retains the TT pass with 16 fewer devices and advances SS/hot failure to loaded
+`SB1`; strength and split-load followups do not improve coverage. The Wi-Fi
+receiver has a byte-bound
 ADC/DSP selectivity architecture, but its former 5-pF sampled-input boundary
 is thermally infeasible for the stated 12-bit allocation, and both its physical
 NMOS-only sampler and schematic simple transmission-gate screen are rejected.

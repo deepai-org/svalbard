@@ -16,7 +16,7 @@ import compile_recovery_physical_source as recovery
 
 
 TOP = "retimed_capture_events"
-SOURCE_REVISION = "retimed_joint_long_6_3_explicit_sense_delay_2p1_1p07"
+SOURCE_REVISION = "retimed_joint_long_6_3_active_low_nand_state"
 BASE_REVISION = "retimed_joint_long_6_3"
 
 
@@ -50,10 +50,20 @@ def compile_source() -> str:
     text = replace_once(
         text,
         "XHSD2 HSD HSDX VDD VSS cp_delay WP=2u WN=1u MP=2 MN=2\n"
-        "XHSN HCLK HSDX HSN VDD VSS cp_fall_pulse",
+        "XHSN HCLK HSDX HSN VDD VSS cp_fall_pulse\n"
+        "XSB0 HSN SB0 VDD VSS cp_inv WP=8u WN=10u MP=2 MN=2\n"
+        "XSB1 SB0 SB1 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4",
         "XHSD2 HSD HSDX VDD VSS cp_delay WP=2u WN=1u MP=2 MN=2\n"
-        "XHSD3 HSDX HSDY VDD VSS cp_delay WP=2.1u WN=1.07u MP=2 MN=2\n"
-        "XHSN HCLK HSDY HSN VDD VSS cp_fall_pulse")
+        "XHSN HCLK HSDX HSN VDD VSS cp_fall_nand_bar\n"
+        "XSB1 HSN SB1 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4")
+    text = replace_once(
+        text,
+        ".subckt cp_fall_pulse A B Y VDD VSS",
+        ".subckt cp_fall_nand_bar A B YB VDD VSS\n"
+        "XIA A AB VDD VSS cp_inv WP=8u WN=8u\n"
+        "XN B AB YB VDD VSS cp_nand2_comp WP=8u WN=8u MP=3 MN=3\n"
+        ".ends cp_fall_nand_bar\n\n"
+        ".subckt cp_fall_pulse A B Y VDD VSS")
     text = replace_once(
         text,
         ".subckt hclk_select_window HCLK SEL ESEL VDD VSS WRITE WPN",

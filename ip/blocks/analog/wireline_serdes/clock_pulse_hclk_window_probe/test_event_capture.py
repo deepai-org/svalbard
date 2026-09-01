@@ -26,8 +26,12 @@ class EventCaptureTest(unittest.TestCase):
         self.assertIn("XSB2 SDRV SSEL SENSE VDD VSS cp_sense_final_select PMP=12 BASE_MN=4 EXTRA_W=8u EXTRA_M=4", source)
         self.assertEqual(source.count("PMP="), 2)
         self.assertIn("XHSD2 HSD HSDX VDD VSS cp_delay WP=2u WN=1u MP=2 MN=2", source)
-        self.assertIn("XHSD3 HSDX HSDY VDD VSS cp_delay WP=2.1u WN=1.07u MP=2 MN=2", source)
-        self.assertIn("XHSN HCLK HSDY HSN VDD VSS cp_fall_pulse", source)
+        self.assertIn(".subckt cp_fall_nand_bar A B YB VDD VSS", source)
+        self.assertIn("XHSN HCLK HSDX HSN VDD VSS cp_fall_nand_bar", source)
+        self.assertIn("XSB1 HSN SB1 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4", source)
+        self.assertIn("XRB2 SB1 BOOST VDD VSS cp_inv WP=8u WN=8u MP=5 MN=8", source)
+        self.assertNotIn("XSB0 HSN SB0", source)
+        self.assertNotIn("XHSD3 ", source)
         self.assertIn("XNE0 Y A EN VSS", source)
         self.assertNotIn("XDET START END WIN", source)
         self.assertNotIn("XWB4 ", source)
@@ -37,6 +41,10 @@ class EventCaptureTest(unittest.TestCase):
         self.assertEqual(len({item["id"] for item in runner.CONTROLS}), 8)
         self.assertEqual(runner.CONTRACT["source_revision"],
                          compiler.SOURCE_REVISION)
+        self.assertEqual(
+            runner.INTERNAL_STAGES,
+            ("hsdx", "hsn", "sb1", "sib", "sdrv", "start", "startb", "end"),
+        )
 
     def test_combined_pex_deck_has_no_schematic_bridge(self) -> None:
         environment = runner.base.CONTRACT["environments"][0]

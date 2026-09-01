@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "contract_id": "pcie_full_duty_event_capture_v1",
-  "source_revision": "retimed_joint_long_6_3_explicit_sense_delay_2p1_1p07",
+  "source_revision": "retimed_joint_long_6_3_active_low_nand_state",
   "control_semantics": {
     "SEL0": "SENSE falling-edge assist",
     "SEL1": "event interval and long-epoch qualifier",
@@ -22,6 +22,16 @@
     "average_supply_current_a": [0.0, 0.15]
   },
   "candidate_scope": "one fixed event source and bridge; only three static control bits may vary by environment",
+  "internal_stages": [
+    "hsdx",
+    "hsn",
+    "sb1",
+    "sib",
+    "sdrv",
+    "start",
+    "startb",
+    "end"
+  ],
   "not_a_claim": [
     "event-source layout or PEX",
     "routed event-source/bridge/capture parent",

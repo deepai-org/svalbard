@@ -314,30 +314,34 @@ lowers those states together with a direct-END complementary capture-clock
 bridge.  The actual byte-bound direct-regenerative capture PEX is the load and
 consumer in both schematic and extracted campaigns.
 
-The selected source makes SENSE timing explicit with a local two-inverter
-delay pair (`WP=2.1 um`, `WN=1.07 um`, two devices of each polarity per stage).
-This replaced an accidental dependency on the placement and route of `XHSD2`.
+The selected source now keeps the fall detector's strong active-low NAND state
+and feeds it directly into `SB1`. This removes the detector output inverter,
+`SB0`, and the over-delayed extra pair while retaining a static-CMOS state and
+the existing SENSE/BOOST consumers. Required PEX probes come from the versioned
+contract, so removed topology nodes can no longer create a false incomplete
+result.
+
 The complete 40-case schematic campaign in
 [`event_capture_schematic_result.json`](event_capture_schematic_result.json)
-passes 5/5 environments with ten valid codes.  TT, FF/hot, SS/cold, and SS/hot
-share `sense0_interval0_epoch1`; FF/cold has three valid alternatives.  The
-source is SHA-256 `ce31c2f1...`.
+passes 5/5 environments with 15 valid codes. FF/cold selects
+`sense1_interval1_epoch0`; SS/hot has both SENSE-control settings at
+`interval0_epoch0`; TT, FF/hot, and SS/cold each have four alternatives. The
+exact source is SHA-256 `eae37c75...`.
 
-The generated 208-device, 303.7-um-wide event/bridge macro is zero-DRC,
-uniquely LVS-equivalent, and extracts to 4,964 resistors plus 3,713 capacitors.
+The generated 192-device, 303.7-um-wide event/bridge macro is zero-DRC,
+uniquely LVS-equivalent, and extracts to 4,886 resistors plus 3,577 capacitors.
 Its exact identities and public-model boundaries are retained in
 [`event_capture_physical_result.json`](event_capture_physical_result.json),
 with the review render in [`event_capture_layout.png`](event_capture_layout.png).
 
-This is not yet five-corner electrical closure.  The targeted eight-case exact
-PEX replay in [`event_capture_pex_result.json`](event_capture_pex_result.json)
-passes TT with `sense0_interval0_epoch1`, the first extracted pass for this
-full-duty branch, but covers no SS/hot code.  Capture polarity passes all eight
-cases.  At SS/hot, `HSDX` and the explicit `HSDY` state both cross, but their
-separation is too large: `HSN` never switches and SENSE remains high.  The
-next bounded experiment is an intermediate, strongly restored delay element
-between the rejected adjacent/no-delay and full extra-pair implementations.
-It is not another bridge enlargement, capture change, or relaxed threshold.
+This is still not five-corner electrical closure. The targeted eight-case
+exact PEX replay in
+[`event_capture_pex_result.json`](event_capture_pex_result.json) passes TT with
+`sense1_interval0_epoch0` and covers no SS/hot code; capture polarity passes
+all eight cases. The failure has moved forward: at SS/hot `HSN` now makes a
+0.753--2.945 V active-low transition, but loaded `SB1` peaks at only
+1.100--1.195 V and never crosses. That is stronger evidence than the prior
+explicit-delay checkpoint, where `HSN` did not switch at all.
 
 That experiment is now complete and rejected. A single restored inversion
 plus a polarity-aware NOR retained 5/5 schematic coverage, and a two-inverter
@@ -352,10 +356,14 @@ A follow-up low-trip isolator was rejected before layout: its complete 40-case
 schematic cube covers only FF/cold. The exact identities, physical hashes,
 rail observations, and negative conclusion are retained in
 [`intermediate_sense_delay_rejection.json`](intermediate_sense_delay_rejection.json).
-The prior explicit-delay revision remains the selected reproducible checkpoint
-because it retains the only exact-PEX pass. The next circuit experiment must
-co-design event detection and restored-state timing; another scalar inverter
-strength or trip-point sweep is not authorized by this evidence.
+The active-low state supersedes that explicit-delay checkpoint because it
+retains one exact TT pass with 16 fewer devices and advances the SS/hot first
+failure. Two bounded followups are also closed. Strengthening `SB1` while
+shrinking BOOST increased detector loading, lost TT BOOST rail, and passed 0/8
+PEX cases. A separate BOOST predriver then lost SS/hot in the schematic cube
+and was rejected before layout. Exact identities and diagnostics are retained
+in [`active_low_nand_state_result.json`](active_low_nand_state_result.json).
+Another local inverter or taper sweep is not authorized by this evidence.
 
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail
@@ -364,7 +372,7 @@ but removed route delay and eliminated SS/hot SENSE.  Causal placement is
 necessary, but every timing quantity consumed by the circuit must also be an
 explicit circuit/physical-intent object rather than an undocumented wire.
 [`event_capture_candidate_comparison.json`](event_capture_candidate_comparison.json)
-is the hash-bound summary of eight distinct schematic campaign identities;
+is the hash-bound summary of nine distinct schematic campaign identities;
 [`summarize_event_capture_candidates.py`](summarize_event_capture_candidates.py)
 regenerates the compact coverage table instead of relying on filenames or log
 memory.  Its immutable inputs are retained under

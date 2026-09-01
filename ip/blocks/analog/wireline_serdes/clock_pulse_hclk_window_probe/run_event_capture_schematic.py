@@ -28,8 +28,7 @@ CONTROLS = [
     for sense in (0, 1) for interval in (0, 1) for epoch in (0, 1)
 ]
 MEASURE = re.compile(r"^(\w+)\s*=\s*([-+0-9.eE]+)", re.MULTILINE)
-INTERNAL_STAGES = ("hsdx", "hsdy", "hsn", "sb0", "sb1", "sib", "sdrv", "start",
-                   "startb", "end")
+INTERNAL_STAGES = tuple(CONTRACT["internal_stages"])
 
 
 def digest(path: Path) -> str:
@@ -47,6 +46,10 @@ def validate_contract() -> None:
             "event source revision mismatch")
     require(set(CONTRACT["control_semantics"]) == {"SEL0", "SEL1", "SEL2"},
             "event contract must bind three controls")
+    require(len(INTERNAL_STAGES) == len(set(INTERNAL_STAGES))
+            and all(re.fullmatch(r"[a-z][a-z0-9_]*", stage)
+                    for stage in INTERNAL_STAGES),
+            "event contract internal stages must be unique semantic names")
 
 
 validate_contract()

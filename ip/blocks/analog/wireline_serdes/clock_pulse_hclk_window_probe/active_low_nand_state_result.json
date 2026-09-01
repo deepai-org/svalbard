@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "claim": "pcie_event_capture_active_low_nand_state_checkpoint",
+  "selected_candidate": {
+    "source_revision": "retimed_joint_long_6_3_active_low_nand_state",
+    "architecture": "retain the detector's active-low static-CMOS NAND state and feed it directly into SB1, eliminating the detector output inverter and SB0",
+    "schematic": {
+      "case_count": 40,
+      "passing_case_count": 15,
+      "covered_environment_count": 5,
+      "source_sha256": "eae37c759ffae9a54420f41a2471fae317bb3b7aebed6dde29cc58d15586b476",
+      "result_sha256": "3ca11176ec716d692ecab461ee19be8b313b49a5c82fcf49ae355bffbafa32a9"
+    },
+    "physical": {
+      "logical_device_count": 192,
+      "drc_stage_result": "pass",
+      "lvs_stage_result": "pass",
+      "pex_stage_result": "pass",
+      "pex_resistor_count": 4886,
+      "pex_capacitor_count": 3577,
+      "result_sha256": "beb01331e9c07dec405c1c03b6e1efa80b23b5075024ea8472dc17506a027066",
+      "identity": {
+        "schematic_sha256": "e7d2561efd00c85de8b36e6c32f8c8c9ebf8b4a6ad55daa2f126be790a8ff676",
+        "gds_sha256": "1026c6e456b8cbf214245fb5d320cde51cfa7ed3c2cff339edaf7c687b247f4c",
+        "pex_sha256": "192a1b7d9119b915baef7461925af3b17cc98835654412f7d6a11adeebe6efa9",
+        "layout_png_sha256": "39583aa63ef5a39b48144eceab057b9a221e84187b7083359944f7d7cbdea84c"
+      }
+    },
+    "targeted_pex": {
+      "case_count": 8,
+      "passing_case_count": 1,
+      "environment_code_coverage": {
+        "tt": ["sense1_interval0_epoch0"],
+        "ss_hot": []
+      },
+      "capture_polarity_pass_count": 8,
+      "result_sha256": "56067cca95f057ef70f1a04edb502a40226c02141c12f777e08becf2c9a2054f",
+      "ss_hot_first_failure": "HSN makes a 0.753--2.945 V active-low transition, but loaded SB1 peaks at only 1.100--1.195 V and does not cross"
+    }
+  },
+  "rejected_followups": [
+    {
+      "source_revision": "retimed_joint_long_6_3_active_low_nand_rebalanced_sb1",
+      "change": "increase SB1 PMOS multiplicity from 8 to 12 and reduce direct BOOST inverter from MP5/MN8 to MP3/MN4",
+      "schematic_case_count": 40,
+      "schematic_passing_case_count": 16,
+      "schematic_covered_environment_count": 5,
+      "source_sha256": "a9f1105da2a2c94a9f1ffed0387eb2e86577d0bb35756f8eed0648302be33483",
+      "physical": {
+        "logical_device_count": 192,
+        "drc_stage_result": "pass",
+        "lvs_stage_result": "pass",
+        "pex_resistor_count": 4784,
+        "pex_capacitor_count": 3547,
+        "pex_sha256": "8799cd8336f1282ed8d92b94a380ace5b359610f3825016ce5e9780903409cf0"
+      },
+      "targeted_pex_passing_case_count": 0,
+      "conclusion": "extra detector load raises the SS/hot HSN low to 0.959--1.022 V, while the reduced BOOST driver loses TT high-rail compliance"
+    },
+    {
+      "source_revision": "retimed_joint_long_6_3_active_low_nand_split_boost",
+      "change": "restore SB1 and give BOOST a separate HSN predriver plus the original final driver",
+      "case_count": 40,
+      "passing_case_count": 13,
+      "source_sha256": "dd07a48b97ec0a836b33b22d06474e5df131e789d29e9ce9319bedd2df7c0eab",
+      "raw_result_sha256": "ea0ae6f0632e4ab93ff852d04fa745e44cbd9ee12a9649bdf38136c81dddac4c",
+      "missing_environment": "ss_hot",
+      "result": "rejected_before_physical_implementation"
+    }
+  ],
+  "tooling_finding": "Required internal probes now come from the versioned event contract. This removed a false 0/8 result caused by requiring HSDY and SB0 after the topology intentionally removed those nodes; replay of the same candidate then recovered its TT pass.",
+  "conclusion": "Promote the active-low NAND state over the explicit-delay checkpoint because it preserves one exact TT pass with fewer devices and moves the SS/hot failure from absent HSN generation to loaded SB1 restoration. The two bounded local strength/load-partition followups do not improve extracted coverage, so another local inverter/taper sweep is not justified.",
+  "not_a_claim": [
+    "five_environment_exact_pex_closure",
+    "routed_capture_parent_or_cdr_closure",
+    "automatic_topology_generation",
+    "PCIe compliance",
+    "provider_signoff_or_silicon_yield"
+  ],
+  "result": "partial"
+}

@@ -109,7 +109,7 @@ the active schema-v2 contract; it shows that the new event states survive and
 taper capacitance dominates the remaining WRITE collapse. Compact, lean, and
 simple stateful output branches are retained as explicit schematic
 rejections. Candidate generation and waveform-level margin interpretation
-remain manual. A first small candidate-comparison record now hash-binds eight
+remain manual. A first small candidate-comparison record now hash-binds nine
 event/capture campaigns and summarizes their environment/code coverage. It
 must be reused on the Wi-Fi IF driver before it is promoted into shared IR; it
 is not yet a reason to build a new language, general router, or global topology
@@ -118,18 +118,19 @@ synthesizer.
 The newer full-duty event/capture fixture caught a silent duplicate SPICE
 parameter lowering before layout, proved that a compact selector reduced
 parasitics but lost SS/hot rail margin, and showed that shortening a causal
-route removed delay the circuit had accidentally consumed.  The selected
-revision turns that wire delay into an explicit inverter-pair state, passes a
-40-case five-environment schematic campaign, generates a zero-DRC/unique-LVS
-4,964R/3,713C macro, and earns the first TT exact-PEX capture pass. SS/hot is
-still rejected at `HSDY -> HSN`. The subsequent bounded intermediate branch
-added a polarity-aware detector and isolation taper. It remained physically
-legal at 204 devices and 5,200R/3,863C, but exact PEX fell to 0/8: TT paid too
-much isolation delay and SS/hot produced only a roughly 1-V detector pulse.
-A low-trip follow-up then covered only FF/cold schematically and was rejected
-before layout. This is executable evidence for identity, staged admission,
-and first-failure movement, not a generic optimizer or completed PCIe clock
-path.
+route removed delay the circuit had accidentally consumed. An explicit
+inverter-pair checkpoint earned the first TT exact-PEX capture pass but lost
+SS/hot before `HSN`; its intermediate NOR/isolation and low-trip derivatives
+were rejected. The selected active-low NAND state now removes two restoration
+stages, passes 15/40 schematic cases covering 5/5 environments, and generates
+a 192-device zero-DRC/unique-LVS 4,886R/3,577C macro. It retains one TT PEX
+pass and advances the SS/hot failure to loaded `SB1`, which peaks at
+1.100--1.195 V after `HSN` makes a real transition. Contract-declared semantic
+probes also prevented removed nodes from manufacturing a false incomplete
+result. Two bounded drive/load followups improved neither extracted coverage
+nor schematic SS/hot admission. This is executable evidence for identity,
+staged admission, and first-failure movement, not a generic optimizer or
+completed PCIe clock path.
 
 ## Portability beyond PCIe and Wi-Fi
 
@@ -194,9 +195,11 @@ It has supported real engineering decisions rather than only produced reports.
   integrated PCIe closure. Follow-up isolated-taper and strengthened-shared-
   state layouts are also clean/unique-LVS but remain 0/2, closing the local
   SENSE/BOOST sizing branch. The retimed full-swing source and direct-END
-  bridge are now implemented; the authorized next experiment is an
-  intermediate, strongly restored SENSE delay between the rejected
-  adjacent/no-delay and full-pair cases, followed by regenerated PEX.
+  bridge are implemented. Subsequent explicit-delay and intermediate branches
+  led to the selected active-low NAND state; its exact PEX retains TT and moves
+  SS/hot failure to loaded `SB1`. Local strength and BOOST-load partitioning
+  are now closed, so the authorized next experiment moves the state boundary
+  into a contention-free regenerative element or the capture cell.
 - **Wi-Fi:** the routed LNA/mixer parent has DRC/LVS/full-RC PEX evidence, but
   its two-tone result exposed an unfiltered nearby blocker. This selected a
   real-IF ADC/DSP architecture rather than pretending a broad RF preselector
@@ -242,11 +245,12 @@ failing cases.
 
 ## Current priorities and rule for adding tooling
 
-1. **PCIe:** the bounded intermediate-delay and low-trip-isolator branches are
-   now closed as negative evidence. Co-design the detector and restored-state
-   timing while preserving full-duty START/END, the direct-END bridge, three
-   controls, and exact capture load; require regenerated DRC/LVS and
-   five-environment PEX before routed-parent replay.
+1. **PCIe:** the active-low detector state advances SS/hot failure to loaded
+   `SB1`; local strength and BOOST-load splitting are now closed as negative
+   evidence. Move the state boundary into a contention-free regenerative
+   element or the capture cell while preserving full-duty START/END, the
+   direct-END bridge, three controls, and exact capture load; require
+   regenerated DRC/LVS and five-environment PEX before routed-parent replay.
 2. **Wi-Fi:** design and screen the closed-loop differential IF driver and
    thermal-floor hold-capacitor boundary before authorizing a new sampler
    layout.

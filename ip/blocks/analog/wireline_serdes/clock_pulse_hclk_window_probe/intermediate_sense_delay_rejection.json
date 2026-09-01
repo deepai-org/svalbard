@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "claim": "pcie_event_capture_intermediate_sense_delay_rejection",
+  "scope": "bounded single-inverter/polarity-aware-NOR SENSE-delay alternatives with the exact direct-END bridge and capture load",
+  "fast_isolation_physical_candidate": {
+    "source_revision": "retimed_joint_long_6_3_single_inv_nor_delay_fast_isolation",
+    "schematic_screen": {
+      "case_count": 40,
+      "passing_case_count": 10,
+      "covered_environment_count": 5,
+      "source_sha256": "0dee09d9ef17438649f222548ca1875bbfd3ec3ee64f6163e95417ae9c9cbd91"
+    },
+    "physical": {
+      "logical_device_count": 204,
+      "drc_stage_result": "pass",
+      "lvs_stage_result": "pass",
+      "pex_stage_result": "pass",
+      "pex_resistor_count": 5200,
+      "pex_capacitor_count": 3863,
+      "identity": {
+        "schematic_sha256": "3eef476edd8c805bac9b237130bb5f977d59755532d9524784f86d4e4339c3c3",
+        "gds_sha256": "ac05561ac424f1719c2325375a44af3d7bb7a432603a03f536270b9e11200785",
+        "pex_sha256": "fd49ec0b5305df3cdb68d0c6e2d5758afb30a0a0ff93f9d690d2cc4fd4f6f675",
+        "layout_png_sha256": "5106d93f819c8f8b04df9b99fd7dec41dda3ae02869be5e2fca78f49c831cb18"
+      }
+    },
+    "targeted_pex": {
+      "case_count": 8,
+      "passing_case_count": 0,
+      "environment_code_coverage": {"tt": [], "ss_hot": []},
+      "capture_polarity_pass_count": 8,
+      "raw_result_sha256": "b6444e40faae6727123ca83ca75d614103a3dfa1535d56d56275fc6dc7491993",
+      "representative_diagnostics": {
+        "tt": "HSN, HSNI, and HSNDRV all switch, but the added isolation delay violates both phase predicates",
+        "ss_hot": "HSN peaks at 0.983--1.040 V; HSNI remains at 2.822--3.028 V and HSNDRV remains below 0.148 V"
+      }
+    }
+  },
+  "low_trip_isolation_schematic_candidate": {
+    "source_revision": "retimed_joint_long_6_3_single_inv_nor_delay_low_trip_isolation",
+    "change": "reverse the first isolation-inverter strength ratio from effective P8/N4 to P4/N8 without increasing total gate width",
+    "case_count": 40,
+    "passing_case_count": 4,
+    "environment_code_coverage": {
+      "ff_cold": [
+        "sense0_interval1_epoch0",
+        "sense0_interval1_epoch1",
+        "sense1_interval1_epoch0",
+        "sense1_interval1_epoch1"
+      ],
+      "ff_hot": [],
+      "ss_cold": [],
+      "ss_hot": [],
+      "tt": []
+    },
+    "source_sha256": "06bfe08d3408476cb18e75e94725b302ab9603218f47a324456eaf31e246b074",
+    "contract_sha256": "65c2d8a90ea0c96e6e9a6fd5b250118da35711abe0da091eaff9986030c4c586",
+    "raw_result_sha256": "49c42bb204e09905fbd01634a489999994a115ec352aa7f8e1a4ce0d464846c7",
+    "result": "rejected_before_physical_implementation"
+  },
+  "conclusion": "The bounded intermediate-delay branch does not close the exact extracted boundary. Output isolation repairs loading at TT but adds disqualifying phase delay; SS/hot still needs a detector/restorer that recognizes a roughly 1-V pulse. Lowering the first inverter trip point alone destroys four-corner schematic coverage. Restore the prior one-corner-promoted explicit-delay source as the selected identity and escalate to a jointly timed detector/state element rather than another scalar inverter sizing sweep.",
+  "compiler_loop_value": "The full-cube schematic screen rejected the low-trip branch before layout, while semantic PEX probes localized the physically legal branch to two distinct mechanisms instead of treating 0/8 as an opaque failure.",
+  "not_a_claim": [
+    "five_environment_physical_closure",
+    "automatic_topology_generation",
+    "generic_analog_compiler",
+    "routed_capture_parent_or_cdr_closure",
+    "provider_signoff_or_silicon_yield"
+  ],
+  "result": "rejected"
+}

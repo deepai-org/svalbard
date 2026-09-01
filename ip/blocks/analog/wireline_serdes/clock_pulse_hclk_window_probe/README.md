@@ -339,6 +339,24 @@ next bounded experiment is an intermediate, strongly restored delay element
 between the rejected adjacent/no-delay and full extra-pair implementations.
 It is not another bridge enlargement, capture change, or relaxed threshold.
 
+That experiment is now complete and rejected. A single restored inversion
+plus a polarity-aware NOR retained 5/5 schematic coverage, and a two-inverter
+isolation taper prevented the NOR output from directly driving the existing
+SENSE chain. Its 204-device layout is zero-DRC, unique-LVS, and extracts to
+5,200 resistors plus 3,863 capacitors. Exact PEX nevertheless passes 0/8
+targeted cases. At TT the new stages all switch but their added delay violates
+both phase predicates. At SS/hot the NOR output peaks at only 0.983--1.040 V,
+the first isolator never recognizes it, and SENSE remains asserted.
+
+A follow-up low-trip isolator was rejected before layout: its complete 40-case
+schematic cube covers only FF/cold. The exact identities, physical hashes,
+rail observations, and negative conclusion are retained in
+[`intermediate_sense_delay_rejection.json`](intermediate_sense_delay_rejection.json).
+The prior explicit-delay revision remains the selected reproducible checkpoint
+because it retains the only exact-PEX pass. The next circuit experiment must
+co-design event detection and restored-state timing; another scalar inverter
+strength or trip-point sweep is not authorized by this evidence.
+
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail
 margin.  Second, simply placing `XHSD2` beside its detector improved TT width

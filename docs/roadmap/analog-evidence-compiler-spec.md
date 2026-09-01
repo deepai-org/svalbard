@@ -816,7 +816,15 @@ Execution order is deliberately narrow:
    FF/cold bridge-drive margin and SS/hot pulse reset. Preserve the current
    three passing corners and reject a candidate promptly when its TT replay or
    a known rail/reset predicate regresses. The rejected fixed 12-um final-NMOS
-   enlargement is diagnostic evidence, not a candidate to revive.
+   enlargement is diagnostic evidence, not a candidate to revive. The newer
+   full-duty event/bridge/capture boundary has since earned one TT exact-PEX
+   pass. Its first intermediate single-inversion/NOR/isolation alternative is
+   clean DRC, unique LVS, and 5,200R/3,863C extracted but passes 0/8 targeted
+   cases: isolation delay loses TT and its roughly 1-V SS/hot detector pulse is
+   not recognized. A lower-trip isolator covers only FF/cold schematically and
+   is rejected before layout. This closes scalar delay/inverter-strength work;
+   the next candidate must co-design detector recognition and restored-state
+   timing.
 3. For each promising circuit revision, run the existing short sequence only:
    schematic measurement of the changed semantic nodes, regenerated legal
    layout, DRC, unique LVS, exact TT PEX, then the five-corner composed PEX
@@ -984,7 +992,10 @@ The PCIe clock/capture bench now removes ideal timing sources at its immediate
 boundary. Its selected full-duty event/bridge schematic covers 5/5 public-model
 environments, the generated macro is zero-DRC/unique-LVS/full-RC extracted,
 and targeted exact PEX passes TT but not SS/hot; the latter is localized to an
-over-delayed explicit SENSE detector state. The Wi-Fi receiver has a byte-bound
+over-delayed explicit SENSE detector state. A bounded intermediate-delay
+alternative remained physically legal but lost TT to isolation delay and
+SS/hot to an unrecognized roughly 1-V pulse; its low-trip derivative was
+rejected schematically in four environments. The Wi-Fi receiver has a byte-bound
 ADC/DSP selectivity architecture, but its former 5-pF sampled-input boundary
 is thermally infeasible for the stated 12-bit allocation, and both its physical
 NMOS-only sampler and schematic simple transmission-gate screen are rejected.

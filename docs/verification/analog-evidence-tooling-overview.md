@@ -121,9 +121,36 @@ parasitics but lost SS/hot rail margin, and showed that shortening a causal
 route removed delay the circuit had accidentally consumed.  The selected
 revision turns that wire delay into an explicit inverter-pair state, passes a
 40-case five-environment schematic campaign, generates a zero-DRC/unique-LVS
-4,964R/3,713C macro, and earns the first TT exact-PEX capture pass.  SS/hot is
-still rejected at `HSDY -> HSN`.  This is executable evidence for identity and
-first-failure movement, not a generic optimizer or completed PCIe clock path.
+4,964R/3,713C macro, and earns the first TT exact-PEX capture pass. SS/hot is
+still rejected at `HSDY -> HSN`. The subsequent bounded intermediate branch
+added a polarity-aware detector and isolation taper. It remained physically
+legal at 204 devices and 5,200R/3,863C, but exact PEX fell to 0/8: TT paid too
+much isolation delay and SS/hot produced only a roughly 1-V detector pulse.
+A low-trip follow-up then covered only FF/cold schematically and was rejected
+before layout. This is executable evidence for identity, staged admission,
+and first-failure movement, not a generic optimizer or completed PCIe clock
+path.
+
+## Portability beyond PCIe and Wi-Fi
+
+The repository has a portable **execution shell**, not yet a portable analog
+compiler. Its maturity separates cleanly by layer:
+
+| Layer | Current portability | Evidence |
+|---|---|---|
+| Resource-bounded tool execution | Demonstrated across two product families | The same pinned, source-hash-checked host runner is used by 131 wireline and 10 Wi-Fi flow wrappers. |
+| Small evidence primitives | Reusable but incompletely adopted | Hash, environment-set, interval, and minimum-cover helpers are unit tested; most Wi-Fi result schemas do not yet consume the same helper layer. |
+| Candidate admission loop | Demonstrated in one demanding fixture | PCIe event/capture now performs structural checks, full-cube schematic rejection, deterministic layout, DRC/LVS/PEX promotion, and semantic failure reporting without hand-editing generated geometry. Candidate proposal remains manual. |
+| Circuit/performance IR | Absent | Aether contracts are reviewed documents; there is no parser/elaborator that produces the SPICE, measurements, and constraints. |
+| Generic physical synthesis | Absent | Existing generators understand particular topology families and GF180 geometry. They cannot accept an arbitrary transistor/passive netlist plus constraints. |
+| Cross-domain claim refinement | Absent | Leaf-to-parent and package/system claims are recorded manually, with no executable refinement proof. |
+
+No application outside PCIe/Wi-Fi has yet exercised the flow, so generality
+beyond those domains is unproven. A sensible third portability fixture would
+be a small non-communications macro such as an op-amp or sensor front end, but
+only after the shared manifest/evidence schema has actually been reused by the
+active Wi-Fi IF-driver work. Until then, adding a third demo would test the
+wrappers more than the missing compiler core.
 
 ## What this tooling has productively done
 
@@ -215,11 +242,11 @@ failing cases.
 
 ## Current priorities and rule for adding tooling
 
-1. **PCIe:** replace the SS/hot-overdelayed SENSE pair with one bounded
-   intermediate, strongly restored delay element. Preserve full-duty
-   START/END, the direct-END bridge, three controls, and exact capture load;
-   require regenerated DRC/LVS and five-environment PEX before routed-parent
-   replay.
+1. **PCIe:** the bounded intermediate-delay and low-trip-isolator branches are
+   now closed as negative evidence. Co-design the detector and restored-state
+   timing while preserving full-duty START/END, the direct-END bridge, three
+   controls, and exact capture load; require regenerated DRC/LVS and
+   five-environment PEX before routed-parent replay.
 2. **Wi-Fi:** design and screen the closed-loop differential IF driver and
    thermal-floor hold-capacitor boundary before authorizing a new sampler
    layout.

@@ -42,6 +42,10 @@ scripts/     Shared validation, evidence, and bounded-flow helpers
 scratch/     Ignored disposable/candidate run output; never an authoritative tracked claim
 ```
 
+Local indexes describe the shared [`processes/`](processes/README.md),
+[`schemas/`](schemas/README.md), [`evidence/`](evidence/README.md), and
+[`scripts/`](scripts/README.md) directories.
+
 Circuit-specific commands live beside their blocks. Shared entry points include:
 
 ```sh

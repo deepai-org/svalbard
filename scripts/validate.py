@@ -37,6 +37,7 @@ def structure() -> None:
         "docs/roadmap/public_source_audit.yaml",
         "docs/verification/gf180-digital-canary.md",
         "projects/pcie_gen1_endpoint/component.yaml",
+        "projects/wifi_nbiot_radio/component.yaml",
         "projects/pcie_gen1_endpoint/spec/spec.yaml",
         "projects/pcie_gen1_endpoint/interfaces.yaml",
         "projects/pcie_gen1_endpoint/verification/bfm_candidates.yaml",
@@ -46,6 +47,7 @@ def structure() -> None:
         "projects/pcie_gen1_endpoint/uncertainties.yaml",
         "projects/pcie_gen1_endpoint/claims.yaml",
         "ip/blocks/analog/wireline_serdes/component.yaml",
+        "ip/blocks/analog/wifi_80211b/component.yaml",
         "ip/blocks/analog/wireline_serdes/spec.yaml",
         "schemas/pcie_gen1_endpoint_spec.schema.json",
         "scripts/image_lock.py",
@@ -103,6 +105,13 @@ def structure() -> None:
     component = documents["projects/pcie_gen1_endpoint/component.yaml"]
     if component["id"] != "project.pcie_gen1_endpoint":
         fail("PCIe component ID is not canonical")
+    wifi_component = documents["projects/wifi_nbiot_radio/component.yaml"]
+    if wifi_component["id"] != "project.wifi_nbiot_radio":
+        fail("Wi-Fi component ID is not canonical")
+    active_projects = set(documents["portfolio.yaml"].get("active_projects", []))
+    expected_active = {component["id"], wifi_component["id"]}
+    if active_projects != expected_active:
+        fail("portfolio active projects differ from instantiated product manifests")
     risks = documents["projects/pcie_gen1_endpoint/risks.yaml"]["risks"]
     fmea_fields = {
         "failure_mode", "local_effect", "system_effect", "criticality",
@@ -287,14 +296,50 @@ def repo_audit() -> None:
 
 
 def graph() -> None:
-    project = load("projects/pcie_gen1_endpoint/component.yaml")
-    serdes = load("ip/blocks/analog/wireline_serdes/component.yaml")
-    known = {project["id"], serdes["id"]}
-    unknown = [dep for doc in (project, serdes) for dep in doc["dependencies"] if dep not in known]
+    paths = sorted(ROOT.glob("projects/*/component.yaml"))
+    paths += sorted(ROOT.glob("ip/**/component.yaml"))
+    documents: dict[str, tuple[Path, dict]] = {}
+    for path in paths:
+        relative = path.relative_to(ROOT)
+        document = load(str(relative))
+        component_id = document.get("id")
+        if not isinstance(component_id, str) or not component_id:
+            fail(f"component manifest lacks canonical ID: {relative}")
+        if component_id in documents:
+            fail(f"duplicate component ID: {component_id}")
+        documents[component_id] = (relative, document)
+    unknown = sorted({
+        dependency
+        for _, document in documents.values()
+        for dependency in document.get("dependencies", [])
+        if dependency not in documents
+    })
     if unknown:
         fail("unknown dependencies: " + ", ".join(unknown))
-    print(f"{project['id']} -> {serdes['id']}")
-    print("graph: PASS (acyclic)")
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(component_id: str) -> None:
+        if component_id in visiting:
+            fail(f"dependency cycle includes {component_id}")
+        if component_id in visited:
+            return
+        visiting.add(component_id)
+        for dependency in documents[component_id][1].get("dependencies", []):
+            visit(dependency)
+        visiting.remove(component_id)
+        visited.add(component_id)
+
+    for component_id in documents:
+        visit(component_id)
+    edges = sorted(
+        (component_id, dependency)
+        for component_id, (_, document) in documents.items()
+        for dependency in document.get("dependencies", [])
+    )
+    for component_id, dependency in edges:
+        print(f"{component_id} -> {dependency}")
+    print(f"graph: PASS ({len(documents)} components, {len(edges)} edges, acyclic)")
 
 
 COMMANDS = {

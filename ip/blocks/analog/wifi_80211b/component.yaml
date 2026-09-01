@@ -1,0 +1,31 @@
+{
+  "id": "block.analog.wifi_80211b",
+  "kind": "block",
+  "owner": "unassigned",
+  "independent_reviewer": "unassigned",
+  "lifecycle": "experimental",
+  "process_compatibility": ["process.gf180"],
+  "license": "unresolved",
+  "dependencies": [],
+  "public_interfaces": [],
+  "verification_targets": [
+    "wifi-lna-smoke",
+    "wifi-mixer-smoke",
+    "wifi-rx-parent-smoke",
+    "wifi-ostl-coupon-smoke",
+    "wifi-nfet-array-coupon-smoke"
+  ],
+  "children": [
+    "rf_lna",
+    "rf_switch_mixer",
+    "rf_rx_external_lo_parent",
+    "rf_ostl_coupon",
+    "rf_nfet_array_coupon",
+    "rf_if_driver_device_screen",
+    "rf_if_output_stage_probe",
+    "rf_if_inverter_loop_driver",
+    "rf_if_source_follower_output_probe",
+    "rf_if_nmos_sample_switch",
+    "rf_if_transmission_gate"
+  ]
+}

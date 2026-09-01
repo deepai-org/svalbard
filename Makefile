@@ -2,7 +2,20 @@ PYTHON ?= python3
 COMPONENT ?= project.pcie_gen1_endpoint
 PROJECT ?=
 
-.PHONY: doctor check check-fast check-digital spec process-eligibility images-ready toolchain-readiness scratch-report repo-audit graph smoke toolchain-smoke analog-flow-preflight serdes-tx-smoke serdes-termination-smoke serdes-rx-smoke wifi-lna-smoke wifi-mixer-smoke wifi-rx-parent-smoke wifi-ostl-coupon-smoke wifi-nfet-array-coupon-smoke phase-interpolator-smoke phase-control-dac-smoke phase-control-integration-smoke cdr-sampler-smoke cdr-phase-detector-smoke cdr-phase-detector-schematic cdr-integrated-detector-schematic cdr-integrated-error-smoke cdr-phase-error-filter-smoke cdr-error-slicer-smoke digital-image quaigh-image digital-pnr-smoke bfm-smoke bfm-history-audit verification-deps-fetch tool-artifacts-fetch pull
+.PHONY: help doctor check check-fast check-digital spec process-eligibility images-ready toolchain-readiness scratch-report repo-audit graph smoke toolchain-smoke analog-flow-preflight serdes-tx-smoke serdes-termination-smoke serdes-rx-smoke wifi-lna-smoke wifi-mixer-smoke wifi-rx-parent-smoke wifi-ostl-coupon-smoke wifi-nfet-array-coupon-smoke phase-interpolator-smoke phase-control-dac-smoke phase-control-integration-smoke cdr-sampler-smoke cdr-phase-detector-smoke cdr-phase-detector-schematic cdr-integrated-detector-schematic cdr-integrated-error-smoke cdr-phase-error-filter-smoke cdr-error-slicer-smoke digital-image quaigh-image digital-pnr-smoke bfm-smoke bfm-history-audit verification-deps-fetch tool-artifacts-fetch pull
+
+help:
+	@printf '%s\n' \
+	  'SVALBARD common targets:' \
+	  '  doctor                  inspect host/tool prerequisites' \
+	  '  graph                   validate component dependencies' \
+	  '  repo-audit              check tracked-source health budgets' \
+	  '  check-fast              run the broad retained fast evidence suite' \
+	  '  check-digital           run digital toolchain/PnR/BFM checks' \
+	  '  analog-flow-preflight   validate all analog wrapper/container boundaries' \
+	  '  scratch-report          report ignored local run storage' \
+	  '' \
+	  'See README.md and block-local README/run_*.sh files for scoped flows.'
 
 doctor:
 	./bootstrap.sh doctor

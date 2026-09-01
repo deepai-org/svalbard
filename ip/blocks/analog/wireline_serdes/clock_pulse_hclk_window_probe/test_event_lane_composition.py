@@ -42,6 +42,7 @@ class EventLaneCompositionTest(unittest.TestCase):
         self.assertIn("--event-source-revision", source)
         self.assertIn("event physical schematic identity mismatch", source)
         self.assertIn("--skip-debug-stages", source)
+        self.assertIn("--interface-debug-stages", source)
 
     def test_topology_independent_deck_omits_only_internal_probes(self) -> None:
         environment = composition.base.CONTRACT["environments"][0]

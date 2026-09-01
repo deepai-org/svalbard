@@ -29,17 +29,39 @@
     "frontend_and_capture_pass_count": 2, "result": "fail",
     "result_sha256": "7118f39babf158ab74424c807dbacfcad5a4b4b3435e670f29748dbc04d7b598"
   },
+  "physical_local_interface_v4": {
+    "source_revision": "retimed_joint_long_6_3_capture_owned_start_v3_physical_lane_interface_v4",
+    "device_count": 184,
+    "generated_width_um": 356.0,
+    "drc": "pass",
+    "lvs": "pass_unique",
+    "pex_resistor_count": 6252,
+    "pex_capacitor_count": 4521,
+    "physical_result_sha256": "777c0668b56942a68ce35cef594d5dd43d8b72a21fc681acf6a34d9ad21a933a",
+    "pex_sha256": "afa8ef90a9f8d0c9cc6d4cd9df8bf65ea78cdcf6623f3ea17f3f7234e56fa0bd",
+    "layout_png_sha256": "3ac3fd9d4793c9f391a36a941cb6453437a0ae06e083b2cbbf7bd7f8b144c55d",
+    "composition_result_sha256": "92672b8af4fa7d6132d8f74eb992950ed4729bd64389d167281ed793543a0c31",
+    "case_count": 2,
+    "passing_case_count": 0,
+    "frontend_and_capture_pass_count": 2,
+    "result": "fail"
+  },
   "localization": {
-    "tt": "all event-source and lane-side interface rails pass",
+    "schematic_buffer_tt": "all event-source and lane-side interface rails pass",
     "ss_hot_event_sense_source_low_v": [0.243613, 0.275806],
     "ss_hot_lane_sense_low_v": [1.66218, 1.82231],
     "ss_hot_other_buffered_interfaces": "BOOST, CLK, and CLKB pass rail screens on both phases",
-    "ss_hot_failure": "lane-side SENSE discharge only; event source, other buffered rails, front end, capture polarity, and supply-current screen pass"
+    "ss_hot_failure": "schematic buffer: lane-side SENSE discharge only; event source, other buffered rails, front end, capture polarity, and supply-current screen pass",
+    "physical_v4_tt_sense_low_v": [0.306, 0.332],
+    "physical_v4_tt_odd_sense_high_v": 2.987,
+    "physical_v4_ss_hot_sense_source_low_v": [0.422, 0.462],
+    "physical_v4_ss_hot_sense_midpoint_high_v": [1.531, 1.469],
+    "physical_v4_ss_hot_lane_sense_low_v": [2.086, 2.214],
+    "physical_v4_failure": "TT narrowly misses the 250-mV rail screen; slow/hot pulse reaches the event source but is not restored through the two-stage physical buffer"
   },
-  "decision": "retain the local-buffer architecture as positive TT evidence, but do not promote it until a laid-out and extracted consumer-local SENSE solution closes slow/hot and then all five environments",
-  "next_boundary": "realize the interface buffer in the routed parent and co-design the SENSE final stage or assertion window with the regenerative consumer; extract the routed parent before expanding the corner matrix",
+  "decision": "schematic TT closure did not survive physical extraction; retain v4 as compact, fully physical negative evidence and stop unconstrained interface sizing",
+  "next_boundary": "make the SENSE assertion-duration requirement explicit and co-design the event window with the regenerative consumer before another physical lowering; only then extract a routed event-to-lane parent",
   "not_a_claim": [
-    "physical implementation or extraction of the local interface buffers",
     "routed event-to-lane parent", "dynamic PRBS capture under generated clocks",
     "five-environment closure", "closed CDR or PCIe compliance",
     "provider signoff or silicon behavior"

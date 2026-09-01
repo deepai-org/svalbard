@@ -501,12 +501,27 @@ not yet a physical block.
 The slow/hot failure is localized to lane-side SENSE. Its event-side low is
 0.244--0.276 V, and the other three buffered interfaces pass, but SENSE at the
 extracted consumer only falls to 1.662--1.822 V. The next change is therefore
-a laid-out consumer-local SENSE driver/assertion-window solution followed by
-routed-parent PEX, not another unconstrained remote driver sweep. The proxy
+a consumer-local SENSE driver/assertion-window solution followed by
+routed-parent PEX, not another unconstrained remote driver sweep.
+
+The buffer has now been physically lowered. Four bounded physical tapers were
+used to distinguish output strength, source loading, and propagation depth.
+The retained v4 is a 184-device, 356.0-um, zero-DRC, unique-LVS macro extracting
+to 6,252 resistors and 4,521 capacitors. It preserves front-end and capture
+polarity in TT and slow/hot but passes neither complete rail screen. TT is
+close (SENSE low 0.306/0.332 V and odd high 2.987 V against a 250-mV screen);
+slow/hot SENSE source falls to 0.422/0.462 V, its predriver rises only to
+1.531/1.469 V, and the consumer falls only to 2.086/2.214 V. A four-stage
+logical-effort variant improved source loading but lost the short event before
+its final predriver. This closes the sizing experiment as negative evidence:
+the next refinement must make assertion duration an explicit composed
+contract, not enlarge the same interface again. The proxy
 checkpoint is [`capture_state_free_checkpoint.json`](capture_state_free_checkpoint.json),
 and the exact-consumer checkpoint is
 [`capture_state_free_lane_consumer_checkpoint.json`](capture_state_free_lane_consumer_checkpoint.json),
-with a [review render](../../../../../docs/images/pcie-event-capture-state-free-layout.png).
+with [unbuffered](../../../../../docs/images/pcie-event-capture-state-free-layout.png)
+and [physical-buffer](../../../../../docs/images/pcie-event-capture-state-free-buffered-layout.png)
+review renders.
 
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail

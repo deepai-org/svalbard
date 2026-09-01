@@ -24,6 +24,10 @@ CONTRACT = json.loads(CONTRACT_PATH.read_text())
 MEASURE = re.compile(r"^(\w+)\s*=\s*([-+0-9.eE]+)", re.MULTILINE)
 PHASES = ("e", "o")
 DEBUG_STAGES = ("hsn", "sb1", "sib", "sdrv")
+INTERFACE_DEBUG_STAGES = (
+    "if_sense_src", "if_sense_b", "if_boost_src", "if_boost_b",
+    "if_clk_src", "if_clk_b", "if_clkb_src", "if_clkb_b",
+)
 
 
 def digest(path: Path) -> str:
@@ -259,6 +263,10 @@ def main() -> None:
         help="omit topology-specific internal probes; functional checks remain unchanged",
     )
     parser.add_argument(
+        "--interface-debug-stages", action="store_true",
+        help="probe physically labeled source and midpoint interface-buffer nodes",
+    )
+    parser.add_argument(
         "--local-interface-buffer", action="store_true",
         help="insert a realizable two-stage CMOS buffer at each lane control input",
     )
@@ -313,7 +321,10 @@ def main() -> None:
     else:
         pairs = [(environment, control)
                  for environment in environments for control in controls]
-    debug_stages = () if args.skip_debug_stages else DEBUG_STAGES
+    require(not (args.skip_debug_stages and args.interface_debug_stages),
+            "cannot skip and request interface debug stages together")
+    debug_stages = (INTERFACE_DEBUG_STAGES if args.interface_debug_stages else
+                    (() if args.skip_debug_stages else DEBUG_STAGES))
     specs = [(args.event_pex, args.lane_pex, args.work, environment, control,
               debug_stages, args.local_interface_buffer)
              for environment, control in pairs]

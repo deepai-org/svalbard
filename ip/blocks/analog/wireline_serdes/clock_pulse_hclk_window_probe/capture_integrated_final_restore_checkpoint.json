@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "claim": "capture_integrated_final_restore_checkpoint",
+  "source_revision": "retimed_joint_long_6_3_capture_integrated_final_restore_v7",
+  "source_sha256": "db89f4b73f5b2a27e2563a64fc9106d565425018ff319f84cba811f523361a73",
+  "schematic": {
+    "case_count": 40,
+    "passing_case_count": 14,
+    "environment_coverage": ["ff_cold", "ff_hot", "ss_cold", "ss_hot", "tt"],
+    "result": "pass",
+    "result_sha256": "9e593e783a1dddd6606336a1ad6535693c0d75903dada6f012090e01594c0281"
+  },
+  "physical": {
+    "device_count": 208,
+    "width_um": 303.7,
+    "drc": "pass",
+    "lvs": "pass_unique",
+    "pex_resistor_count": 6198,
+    "pex_capacitor_count": 4578,
+    "physical_result_sha256": "aeb81f2f29c2a3aebbb5c19a30c99bb334717f8703e90fd16e8a15c474aa7935",
+    "pex_sha256": "aee3982402bd80d1740d55e133abef50b8cdd5e75d7e1c4a0aea15b0021cebca",
+    "render_sha256": "f49fd56c43bd376ce9f8915e6f20cfe60d87eae3db299eab1822af9f3cdda077"
+  },
+  "expanded_exact_pex": {
+    "case_count": 8,
+    "passing_case_count": 0,
+    "environments": ["tt", "ss_hot"],
+    "control_scope": "all four epoch-1 codes admitted at TT; includes the sole admitted ss_hot code",
+    "result": "fail",
+    "result_sha256": "6fb19f6eec880053ee320125b31d7d504ee5e12bd7c8bcf9334717f5f5d90d7e"
+  },
+  "localization": {
+    "result": "complete",
+    "tt_boost_high_min_v": 3.07252,
+    "tt_remaining_failure": "SENSE width and event-to-capture timing",
+    "ss_hot_lstate_high_range_v": [2.385, 2.537],
+    "ss_hot_sdrv_high_range_v": [2.075, 2.475],
+    "ss_hot_remaining_failure": "odd/even SDRV and final SENSE low rail plus timing",
+    "probe_result_sha256": "c508cb90da70d134b6d6a418856e0c3b7b2c1d2cbe60f8324e8c9eb70e9e83a5"
+  },
+  "closed_local_branches": [
+    "duplicated independent local tapers",
+    "shared two-stage predriver",
+    "broad shared-driver sizing",
+    "pull-up-only shared-driver sizing",
+    "split second-stage restoration",
+    "four-stage geometric shared taper",
+    "localized SDRV and BOOST pull-up strengthening"
+  ],
+  "decision": "terminal negative checkpoint for the dynamic CMOS event-state/taper family; do not promote",
+  "next_boundary": "use a different capture-owned event/clock primitive that does not transport a dynamic CMOS state through a large fanout tree",
+  "not_a_claim": [
+    "five-environment exact-PEX closure",
+    "routed event/bridge/capture parent closure",
+    "closed CDR or PCIe link",
+    "provider signoff or silicon behavior"
+  ]
+}

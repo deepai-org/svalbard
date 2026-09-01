@@ -451,6 +451,25 @@ branches are rejected before layout. The byte-bound result is
 [`capture_integrated_shared_predriver_checkpoint.json`](capture_integrated_shared_predriver_checkpoint.json),
 with a [review render](../../../../../docs/images/pcie-event-capture-shared-predriver-layout.png).
 
+The remaining dynamic-CMOS fanout branch is now closed. Split second-stage
+restoration preserves 16/40 schematic coverage and is physically legal, but
+its doubled first-stage load moves SS/hot failure back to `LCB`. A four-stage
+geometric taper restores switching through `LSTATE`, BOOST, and nearly through
+SENSE while retaining 16/40 and 5/5 schematic coverage. Localized final
+restoration then clears TT BOOST rail—the limiting TT BOOST high is 3.07252 V—
+and retains 14/40 schematic passes over 5/5 environments. Its 208-device
+parent is zero-DRC, unique-LVS, and 6,198R/4,578C extracted. Nevertheless, an
+expanded eight-case exact PEX gate covering all four TT-admitted epoch-1 codes
+and the sole SS/hot-admitted code passes 0/8. TT now fails SENSE width/timing;
+at SS/hot `LSTATE` high is 2.385--2.537 V and `SDRV` high is only
+2.075--2.475 V, leaving final SENSE rail and timing failures. More local taper
+or ratio sweeping is not supported by this evidence. The next architecture
+must use a different capture-owned event/clock primitive rather than transport
+a dynamic CMOS state through a large fanout tree. The terminal byte-bound
+record is
+[`capture_integrated_final_restore_checkpoint.json`](capture_integrated_final_restore_checkpoint.json),
+with a [review render](../../../../../docs/images/pcie-event-capture-final-restore-layout.png).
+
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail
 margin.  Second, simply placing `XHSD2` beside its detector improved TT width

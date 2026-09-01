@@ -166,6 +166,17 @@ driver-sizing repairs were rejected at focused schematic admission. This is a
 repeatable propose → admit → lower → extract → localize loop; topology proposal
 is still human/LLM-guided rather than synthesized.
 
+That loop then closed the remaining local fanout family rather than stopping
+at its first negative layout. Split restoration, a four-stage geometric taper,
+and localized final restoration were each admitted or rejected at the proper
+stage. Terminal v7 is DRC/LVS clean and full-RC extracted; it clears the prior
+TT BOOST rail failure, but an expanded exact gate over every TT-admitted
+epoch-1 code plus the only SS/hot-admitted code remains 0/8. Semantic probes
+move the SS/hot first failure through `LCB`, `LSTATE`, and finally `SDRV`, while
+TT ends at SENSE width/timing. This is automatic PEX failure movement and
+bounded branch closure—the tool does not yet synthesize the different capture
+primitive now required.
+
 ## Portability beyond PCIe and Wi-Fi
 
 The repository has a portable **execution shell**, not yet a portable analog

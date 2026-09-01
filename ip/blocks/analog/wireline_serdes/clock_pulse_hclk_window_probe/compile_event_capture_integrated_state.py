@@ -11,7 +11,7 @@ import compile_event_capture_source as selected
 
 
 TOP = selected.TOP
-SOURCE_REVISION = "retimed_joint_long_6_3_capture_integrated_shared_predriver_v2"
+SOURCE_REVISION = "retimed_joint_long_6_3_capture_integrated_final_restore_v7"
 
 
 def replace_once(text: str, old: str, new: str) -> str:
@@ -30,19 +30,21 @@ def compile_source() -> str:
         "* HSN sets only the small stored node.  The reset edge is separated\n"
         "* by the full-duty HCLK state; neither device directly drives a clock load.\n"
         "XSTATE HSN HCLK ESTATE VDD VSS cp_capture_event_state WP=8u WN=4u MP=4 MN=1\n"
-        "* One capture-local predriver serves both consumers, halving ESTATE\n"
-        "* gate load. The robust LSTATE node, not the dynamic state, fans out.\n"
-        "XLC0 ESTATE LCB VDD VSS cp_inv WP=4u WN=2u MP=4 MN=4\n"
-        "XLC1 LCB LSTATE VDD VSS cp_inv WP=6u WN=3u MP=6 MN=6\n"
+        "* A geometric capture-local taper keeps one small gate on ESTATE and\n"
+        "* presents a strong full-swing LSTATE node to the two large branches.\n"
+        "XLC0 ESTATE LC0B VDD VSS cp_inv WP=4u WN=2u MP=4 MN=4\n"
+        "XLC1 LC0B LC1 VDD VSS cp_inv WP=6u WN=3u MP=6 MN=6\n"
+        "XLC2 LC1 LC2B VDD VSS cp_inv WP=8u WN=4u MP=8 MN=8\n"
+        "XLC3 LC2B LSTATE VDD VSS cp_inv WP=8u WN=4u MP=16 MN=16\n"
         "XLS2 LSTATE SIB VDD VSS cp_inv WP=8u WN=8u MP=8 MN=8\n"
-        "XLS3 SIB SDRV VDD VSS cp_inv WP=8u WN=8u MP=12 MN=16",
+        "XLS3 SIB SDRV VDD VSS cp_inv WP=8u WN=8u MP=20 MN=16",
     )
     source = replace_once(
         source,
         "* Restore BOOST directly from the full-width SB1 state.\n"
         "XRB2 SB1 BOOST VDD VSS cp_inv WP=8u WN=8u MP=5 MN=8",
-        "* BOOST splits only after the shared full-swing local predriver.\n"
-        "XLB2 LSTATE BOOST VDD VSS cp_inv WP=8u WN=8u MP=5 MN=8",
+        "* BOOST splits from the restored full-swing shared taper output.\n"
+        "XLB2 LSTATE BOOST VDD VSS cp_inv WP=8u WN=8u MP=7 MN=8",
     )
     source = replace_once(
         source,

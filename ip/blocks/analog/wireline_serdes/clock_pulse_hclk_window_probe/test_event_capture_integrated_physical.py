@@ -32,7 +32,8 @@ class IntegratedEventPhysicalTest(unittest.TestCase):
         devices, groups = self.flatten()
         _, group_x = layout.place(devices, groups, expanded_local_spacing=True)
         names = ("XE__XHSN__XN", "XE__XSTATE", "XE__XLC0", "XE__XLC1",
-                 "XE__XLS2", "XE__XLS3", "XE__XSB2")
+                 "XE__XLC2", "XE__XLC3", "XE__XLS2", "XE__XLS3",
+                 "XE__XSB2")
         positions = [group_x[name] for name in names]
         self.assertEqual(positions, sorted(positions))
 

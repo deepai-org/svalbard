@@ -65,6 +65,14 @@ class EventLaneCompositionTest(unittest.TestCase):
         self.assertIn("meas tran e_sense_src_high", deck)
         self.assertIn("E_SENSE_SRC E_BOOST_SRC", deck)
 
+    def test_schematic_debug_nodes_are_explicit_measures(self) -> None:
+        environment = composition.base.CONTRACT["environments"][0]
+        control = composition.event_runner.CONTROLS[4]
+        deck = composition.compile_deck(
+            Path("event.spice"), Path("lane.spice"), environment, control,
+            (), False, (("e_sfdrv", "xevent.xe.SFDRV"),))
+        self.assertIn("meas tran sch_e_sfdrv_high max v(xevent.xe.SFDRV)", deck)
+
     def test_selected_physical_source_identity_matches_record(self) -> None:
         physical = json.loads((ROOT / "event_capture_physical_result.json").read_text())
         expected = hashlib.sha256(

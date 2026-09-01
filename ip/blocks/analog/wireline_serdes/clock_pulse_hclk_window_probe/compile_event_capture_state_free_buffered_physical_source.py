@@ -31,8 +31,7 @@ XWCLKBIF1 CLKB_B CLKB VDD VSS cp_inv WP=8u WN=8u MP=16 MN=16
 """
 
 
-def compile_source() -> str:
-    source = base.compile_source()
+def add_physical_interface(source: str, top_name: str = TOP) -> str:
     top = """.subckt retimed_event_capture_bridge CLKP_H CLKN_H SEL0 SEL1 SEL2 VDD VSS
 + E_SENSE E_BOOST E_CAPTURE_CLK E_CAPTURE_CLKB
 + O_SENSE O_BOOST O_CAPTURE_CLK O_CAPTURE_CLKB
@@ -59,7 +58,15 @@ XO_IF O_SENSE_SRC O_BOOST_SRC O_CAPTURE_CLK_SRC O_CAPTURE_CLKB_SRC
 + O_SENSE O_BOOST O_CAPTURE_CLK O_CAPTURE_CLKB VDD VSS cp_lane_if_buffer
 .ends retimed_event_capture_bridge
 """
-    return source.replace(top, BUFFER + "\n" + buffered_top, 1)
+    result = source.replace(top, BUFFER + "\n" + buffered_top, 1)
+    if top_name != TOP:
+        result = result.replace(f".subckt {TOP} ", f".subckt {top_name} ", 1)
+        result = result.replace(f".ends {TOP}\n", f".ends {top_name}\n", 1)
+    return result
+
+
+def compile_source() -> str:
+    return add_physical_interface(base.compile_source())
 
 
 def main() -> None:

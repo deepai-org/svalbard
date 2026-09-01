@@ -46,6 +46,18 @@
     "frontend_and_capture_pass_count": 2,
     "result": "fail"
   },
+  "assertion_duration_screen": {
+    "source_revision": "retimed_capture_owned_start_stretched_v2",
+    "scope": "programmable schematic event/interface candidate into exact lane PEX",
+    "candidate_count": 2,
+    "environments": ["tt", "ss_hot"],
+    "zero_delay_environment_coverage": ["tt"],
+    "one_delay_environment_coverage": [],
+    "result": "fail",
+    "result_sha256": "1db97102b7df053612d78876c2bb54bcda3e99e58b5e337dc19cd82adc27829d",
+    "localization": "a full-cycle replica consumes the reset/high interval; zero delay passes TT but reaches only 1.401--1.406 V SENSE high at slow/hot, while one delay loses slow/hot SENSE entirely",
+    "decision": "reject full-cycle delayed-replica stretching before layout; synthesize an edge-selective release path"
+  },
   "localization": {
     "schematic_buffer_tt": "all event-source and lane-side interface rails pass",
     "ss_hot_event_sense_source_low_v": [0.243613, 0.275806],
@@ -60,7 +72,7 @@
     "physical_v4_failure": "TT narrowly misses the 250-mV rail screen; slow/hot pulse reaches the event source but is not restored through the two-stage physical buffer"
   },
   "decision": "schematic TT closure did not survive physical extraction; retain v4 as compact, fully physical negative evidence and stop unconstrained interface sizing",
-  "next_boundary": "make the SENSE assertion-duration requirement explicit and co-design the event window with the regenerative consumer before another physical lowering; only then extract a routed event-to-lane parent",
+  "next_boundary": "synthesize an edge-selective SENSE release path that preserves direct assertion and reset restoration, measure both pulse intervals explicitly, and screen it against the exact consumer before physical lowering",
   "not_a_claim": [
     "routed event-to-lane parent", "dynamic PRBS capture under generated clocks",
     "five-environment closure", "closed CDR or PCIe compliance",

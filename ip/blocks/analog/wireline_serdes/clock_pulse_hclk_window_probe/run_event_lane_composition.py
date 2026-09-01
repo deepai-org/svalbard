@@ -51,7 +51,8 @@ def require_physical_pex(pex: Path, physical_path: Path, nested: bool) -> dict:
 def compile_deck(event_pex: Path, lane_pex: Path, environment: dict[str, Any],
                  control: dict[str, Any],
                  debug_stages: tuple[str, ...] = DEBUG_STAGES,
-                 local_interface_buffer: bool = False) -> str:
+                 local_interface_buffer: bool = False,
+                 schematic_debug_nodes: tuple[tuple[str, str], ...] = ()) -> str:
     vdd = float(environment["vdd_v"])
     vmid = vdd / 2
     rx_bias = float(CONTRACT["rx_bias_v"][environment["id"]])
@@ -106,6 +107,11 @@ XOB_B O_BOOST_SRC O_BOOST VDD 0 lane_if_buffer
 XOB_C O_CLK_SRC O_CLK VDD 0 lane_if_buffer
 XOB_CB O_CLKB_SRC O_CLKB VDD 0 lane_if_buffer
 """
+    for label, node in schematic_debug_nodes:
+        measures.extend([
+            f"meas tran sch_{label}_high max v({node}) from=8n to=12.8n",
+            f"meas tran sch_{label}_low min v({node}) from=8n to=12.8n",
+        ])
     return f"""* SPDX-License-Identifier: Apache-2.0
 .include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
 .lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice {environment['mos_corner']}
@@ -177,14 +183,16 @@ meas tran supply_current avg isupply from=8n to=12.8n
 """
 
 
-def run_case(spec: tuple[Path, Path, Path, dict, dict, tuple[str, ...], bool]) -> dict:
+def run_case(spec: tuple) -> dict:
     (event_pex, lane_pex, work, environment, control, debug_stages,
-     local_interface_buffer) = spec
+     local_interface_buffer, *optional) = spec
+    schematic_debug_nodes = optional[0] if optional else ()
     stem = f"{environment['id']}_{control['id']}"
     deck = work / f"{stem}.spice"
     log = work / f"{stem}.log"
     deck.write_text(compile_deck(event_pex, lane_pex, environment, control,
-                                 debug_stages, local_interface_buffer))
+                                 debug_stages, local_interface_buffer,
+                                 schematic_debug_nodes))
     try:
         with log.open("w") as output:
             run = subprocess.run(["ngspice", "-b", str(deck)], stdout=output,
@@ -197,6 +205,8 @@ def run_case(spec: tuple[Path, Path, Path, dict, dict, tuple[str, ...], bool]) -
     observed = {key: float(value)
                 for key, value in MEASURE.findall(log_text)}
     required = {"supply_current"}
+    required |= {f"sch_{label}_{bound}" for label, _ in schematic_debug_nodes
+                 for bound in ("high", "low")}
     for phase in PHASES:
         required |= {f"{phase}_{signal}_{bound}"
                      for signal in ("sense", "boost", "clk", "clkb")

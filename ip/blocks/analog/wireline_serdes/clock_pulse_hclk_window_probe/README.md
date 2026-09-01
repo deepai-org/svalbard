@@ -523,6 +523,19 @@ with [unbuffered](../../../../../docs/images/pcie-event-capture-state-free-layou
 and [physical-buffer](../../../../../docs/images/pcie-event-capture-state-free-buffered-layout.png)
 review renders.
 
+The first assertion-duration synthesis experiment is also closed negative
+evidence. A programmable transmission-gate enables either the direct state or
+a full-cycle delayed replica, and a restored static OR/NOR path generates
+SENSE. The byte-bound screen hashes each realizable schematic identity into
+the exact lane PEX and preserves optional hierarchical node probes. Zero delay
+passes TT but slow/hot SENSE high reaches only 1.401--1.406 V; one delay loses
+the slow/hot reset interval entirely. The earlier direct stacked-PMOS NOR and
+NAND-enable forms were rejected by the same probes before being retained.
+[`capture_assertion_duration_screen.json`](capture_assertion_duration_screen.json)
+records the surviving zero/one-delay comparison. A full-cycle replica is the
+wrong semantic primitive: the next circuit must delay only the release edge
+while retaining direct assertion and reset restoration.
+
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail
 margin.  Second, simply placing `XHSD2` beside its detector improved TT width

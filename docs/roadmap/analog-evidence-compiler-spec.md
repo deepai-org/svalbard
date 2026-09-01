@@ -827,9 +827,13 @@ Execution order is deliberately narrow:
    and produces a 192-device, zero-DRC/unique-LVS, 4,886R/3,577C macro. It
    retains one TT exact-PEX pass and moves SS/hot failure to loaded `SB1` after
    a real `HSN` transition. Strength rebalance loses TT BOOST rail; a split
-   BOOST path loses SS/hot schematically. This closes local
-   delay/inverter/load-partition work; the next candidate must place the state
-   in a contention-free regenerative element or the capture cell.
+   BOOST path loses SS/hot schematically. A cross-coupled NAND replacement
+   then covers 5/5 schematically and is zero-DRC/unique-LVS with 5,610R/4,170C
+   extraction, but passes 0/8 targeted exact-PEX cases: it does not regenerate
+   `SB1` at SS/hot and misses BOOST high rail at TT. This closes local
+   delay/inverter/load-partition and NAND-latch reset/strength/edge work; the
+   next candidate must merge state into the capture cell or use a different
+   state device family.
 3. For each promising circuit revision, run the existing short sequence only:
    schematic measurement of the changed semantic nodes, regenerated legal
    layout, DRC, unique LVS, exact TT PEX, then the five-corner composed PEX
@@ -1000,7 +1004,9 @@ and targeted exact PEX passes TT but not SS/hot; the latter is localized to an
 over-delayed explicit SENSE detector state. Bounded intermediate-delay and
 low-trip alternatives were rejected. The selected active-low NAND state
 retains the TT pass with 16 fewer devices and advances SS/hot failure to loaded
-`SB1`; strength and split-load followups do not improve coverage. The Wi-Fi
+`SB1`; strength and split-load followups do not improve coverage. A physically
+legal cross-coupled NAND replacement covers 5/5 schematically but regresses to
+0/8 exact PEX, so its local reset/strength/SENSE-edge branch is closed. The Wi-Fi
 receiver has a byte-bound
 ADC/DSP selectivity architecture, but its former 5-pF sampled-input boundary
 is thermally infeasible for the stated 12-bit allocation, and both its physical

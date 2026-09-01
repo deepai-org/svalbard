@@ -408,7 +408,11 @@ def place(devices: list[Device], groups: dict[str, Group],
                 "XSM3A": 5, "XSM3B": 6, "XSM3C": 7,
                 "XSMR": 8,
                 "XSN": 10, "XHSD0": 11, "XHSD1": 12, "XHSD2": 13,
-                "XHSD3": 14, "XHSN": 15, "XSB0": 16,
+                # Keep an optional reset inverter and cross-coupled state
+                # immediately after their active-low event producer. Rejected
+                # circuit identities retain this ordering for exact replay.
+                "XHSD3": 14, "XHSN": 15, "XHSR": 16, "XHSL": 17,
+                "XSB0": 16,
                 "XRB0": 17, "XRBI": 18, "XSB1": 19,
                 "XSI0": 20, "XSI1": 21, "XSB2": 22,
                 "XRB1": 20, "XRBB": 21,

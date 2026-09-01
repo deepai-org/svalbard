@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import hashlib
+import json
 import unittest
 from pathlib import Path
 
@@ -8,6 +10,29 @@ import summarize_event_capture_candidates as candidate_summary
 
 
 class EventCaptureTest(unittest.TestCase):
+    def test_regenerative_rejection_artifacts_match_recorded_identity(self) -> None:
+        root = Path(__file__).resolve().parent
+        record = json.loads((root / "regenerative_state_rejection.json").read_text())
+        rejected = root / "event_capture_rejected_regenerative"
+        campaign = root / "event_capture_candidate_results"
+        paths = {
+            record["schematic_admission"]["result_sha256"]:
+                campaign / "pcie-full-duty-event-capture-nand-sr-fast-reset-rise-assist-20-full-last.json",
+            record["schematic_admission"]["source_sha256"]:
+                campaign / "pcie-full-duty-event-capture-nand-sr-fast-reset-rise-assist-20-full-last.spice",
+            record["bounded_predecessor"]["result_sha256"]:
+                campaign / "pcie-full-duty-event-capture-nand-sr-fast-reset-rise-assist-full-last.json",
+            record["bounded_predecessor"]["source_sha256"]:
+                campaign / "pcie-full-duty-event-capture-nand-sr-fast-reset-rise-assist-full-last.spice",
+            record["physical"]["result_sha256"]: rejected / "physical_result.json",
+            record["physical"]["pex_sha256"]: rejected / "event_capture.pex.spice",
+            record["physical"]["schematic_sha256"]: rejected / "event_capture.spice",
+            record["physical"]["layout_png_sha256"]: rejected / "layout.png",
+            record["targeted_pex"]["result_sha256"]: rejected / "targeted_pex_result.json",
+        }
+        for expected, path in paths.items():
+            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), expected)
+
     def test_candidate_summary_rejects_non_campaign_record(self) -> None:
         import tempfile
         with tempfile.TemporaryDirectory() as directory:

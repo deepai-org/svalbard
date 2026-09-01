@@ -128,7 +128,12 @@ pass and advances the SS/hot failure to loaded `SB1`, which peaks at
 1.100--1.195 V after `HSN` makes a real transition. Contract-declared semantic
 probes also prevented removed nodes from manufacturing a false incomplete
 result. Two bounded drive/load followups improved neither extracted coverage
-nor schematic SS/hot admission. This is executable evidence for identity,
+nor schematic SS/hot admission. A subsequent cross-coupled NAND state covers
+5/5 environments schematically and generates a 208-device zero-DRC,
+unique-LVS 5,610R/4,170C macro, but exact PEX is 0/8. At SS/hot feedback leaves
+`SB1` below 0.961 V; at TT `SB1` restores but BOOST misses high rail. The
+smaller 1/8 active-low state therefore remains selected. This is executable
+evidence for identity,
 staged admission, and first-failure movement, not a generic optimizer or
 completed PCIe clock path.
 
@@ -198,8 +203,10 @@ It has supported real engineering decisions rather than only produced reports.
   bridge are implemented. Subsequent explicit-delay and intermediate branches
   led to the selected active-low NAND state; its exact PEX retains TT and moves
   SS/hot failure to loaded `SB1`. Local strength and BOOST-load partitioning
-  are now closed, so the authorized next experiment moves the state boundary
-  into a contention-free regenerative element or the capture cell.
+  are now closed. A physically legal cross-coupled NAND replacement then
+  regressed to 0/8 exact PEX, closing its reset/strength/SENSE-edge branch; the
+  authorized next experiment merges state into the capture cell or changes the
+  state device family.
 - **Wi-Fi:** the routed LNA/mixer parent has DRC/LVS/full-RC PEX evidence, but
   its two-tone result exposed an unfiltered nearby blocker. This selected a
   real-IF ADC/DSP architecture rather than pretending a broad RF preselector
@@ -246,9 +253,10 @@ failing cases.
 ## Current priorities and rule for adding tooling
 
 1. **PCIe:** the active-low detector state advances SS/hot failure to loaded
-   `SB1`; local strength and BOOST-load splitting are now closed as negative
-   evidence. Move the state boundary into a contention-free regenerative
-   element or the capture cell while preserving full-duty START/END, the
+   `SB1`; local strength, BOOST-load splitting, and a physically realized
+   cross-coupled NAND replacement are now closed as negative evidence. Merge
+   the state into the capture cell or change its device family while preserving
+   full-duty START/END, the
    direct-END bridge, three controls, and exact capture load; require
    regenerated DRC/LVS and five-environment PEX before routed-parent replay.
 2. **Wi-Fi:** design and screen the closed-loop differential IF driver and

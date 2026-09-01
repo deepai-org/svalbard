@@ -1,5 +1,5 @@
 {
-  "candidate_count": 9,
+  "candidate_count": 11,
   "candidates": [
     {
       "bridge_sha256": "cb8cb075d50af470b3578cdcdb03ce6e21812bf15dc4f96db39e58da3be68f45",
@@ -291,6 +291,77 @@
     {
       "bridge_sha256": "cb8cb075d50af470b3578cdcdb03ce6e21812bf15dc4f96db39e58da3be68f45",
       "case_count": 40,
+      "contract_sha256": "7c8bb1735b0343d3be06cf1ea120c9d4d5e957c0ceeb5d39b6f6571a430b15aa",
+      "covered_environment_count": 5,
+      "environment_code_coverage": {
+        "ff_cold": [
+          "sense0_interval1_epoch1"
+        ],
+        "ff_hot": [
+          "sense0_interval0_epoch1"
+        ],
+        "ss_cold": [
+          "sense0_interval0_epoch0",
+          "sense0_interval0_epoch1",
+          "sense0_interval1_epoch0",
+          "sense0_interval1_epoch1"
+        ],
+        "ss_hot": [
+          "sense0_interval0_epoch0",
+          "sense1_interval0_epoch0"
+        ],
+        "tt": [
+          "sense0_interval0_epoch0",
+          "sense0_interval0_epoch1",
+          "sense0_interval1_epoch0",
+          "sense0_interval1_epoch1"
+        ]
+      },
+      "environment_count": 5,
+      "id": "pcie-full-duty-event-capture-nand-sr-fast-reset-rise-assist-20-full-last",
+      "input_sha256": "1e3a4218c54170904a8a03c8048ae8f030f3d58da08e4b565e5fb72e836a88bd",
+      "passing_case_count": 12,
+      "result": "pass",
+      "source_sha256": "3ebb965e346bdcced936aa8b5d0852fd2825dc9ba5770ac9b47c01046d42aca0"
+    },
+    {
+      "bridge_sha256": "cb8cb075d50af470b3578cdcdb03ce6e21812bf15dc4f96db39e58da3be68f45",
+      "case_count": 40,
+      "contract_sha256": "e0c00073095ffbedabffde36a2cbcc97b5e65635cd0e597c807af720ad46859f",
+      "covered_environment_count": 4,
+      "environment_code_coverage": {
+        "ff_cold": [],
+        "ff_hot": [
+          "sense0_interval0_epoch0",
+          "sense0_interval0_epoch1",
+          "sense0_interval1_epoch0"
+        ],
+        "ss_cold": [
+          "sense0_interval0_epoch0",
+          "sense0_interval0_epoch1",
+          "sense0_interval1_epoch0"
+        ],
+        "ss_hot": [
+          "sense0_interval0_epoch0",
+          "sense0_interval0_epoch1",
+          "sense1_interval0_epoch0"
+        ],
+        "tt": [
+          "sense0_interval0_epoch0",
+          "sense0_interval0_epoch1",
+          "sense0_interval1_epoch0"
+        ]
+      },
+      "environment_count": 5,
+      "id": "pcie-full-duty-event-capture-nand-sr-fast-reset-rise-assist-full-last",
+      "input_sha256": "d6781bcdd0573fca5e80350c33302702801e2873e88b717724d223b53728689b",
+      "passing_case_count": 12,
+      "result": "fail",
+      "source_sha256": "c91f4187c1e3281842d5cd27f727f1c13a3e522eb1e2f01d218a64c868fa64d5"
+    },
+    {
+      "bridge_sha256": "cb8cb075d50af470b3578cdcdb03ce6e21812bf15dc4f96db39e58da3be68f45",
+      "case_count": 40,
       "contract_sha256": "09a9a06f55fe68145ce92bb4347a8270ae2953bdc83bbfcaa64221e97a671bc5",
       "covered_environment_count": 5,
       "environment_code_coverage": {
@@ -374,5 +445,5 @@
   ],
   "result": "recorded",
   "schema_version": 1,
-  "unique_circuit_identity_count": 9
+  "unique_circuit_identity_count": 11
 }

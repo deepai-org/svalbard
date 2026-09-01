@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "claim": "pcie_event_capture_nand_sr_state_rejection",
+  "architecture": "active-low set/reset cross-coupled NAND state between HSN and SB1, reset from inverted HCLK, followed by the retained SENSE taper and direct BOOST inverter",
+  "schematic_admission": {
+    "source_revision": "retimed_joint_long_6_3_active_low_nand_sr_fast_reset_rise_assist_20",
+    "source_sha256": "3ebb965e346bdcced936aa8b5d0852fd2825dc9ba5770ac9b47c01046d42aca0",
+    "result_sha256": "1e3a4218c54170904a8a03c8048ae8f030f3d58da08e4b565e5fb72e836a88bd",
+    "case_count": 40,
+    "passing_case_count": 12,
+    "covered_environment_count": 5,
+    "result": "pass"
+  },
+  "bounded_predecessor": {
+    "source_revision": "retimed_joint_long_6_3_active_low_nand_sr_fast_reset_rise_assist",
+    "source_sha256": "c91f4187c1e3281842d5cd27f727f1c13a3e522eb1e2f01d218a64c868fa64d5",
+    "result_sha256": "d6781bcdd0573fca5e80350c33302702801e2873e88b717724d223b53728689b",
+    "case_count": 40,
+    "passing_case_count": 12,
+    "covered_environment_count": 4,
+    "ff_cold_best_sense_width_ps": 447.64,
+    "ff_cold_minimum_sense_width_ps": 450.0,
+    "conclusion": "increasing final SENSE PMOS multiplicity from 16 to 20 was admitted because it monotonically retired the isolated 2.36 ps FF/cold deficit"
+  },
+  "physical": {
+    "logical_device_count": 208,
+    "width_um": 303.7,
+    "drc_stage_result": "pass",
+    "lvs_stage_result": "pass",
+    "pex_stage_result": "pass",
+    "pex_resistor_count": 5610,
+    "pex_capacitor_count": 4170,
+    "schematic_sha256": "2dfd302d601f6c1abee81a94579d14a76da99e8d315ee6b7ed12120ff2ad345e",
+    "pex_sha256": "30d9ce7c378ddd728b6c2fe7384175bc4b2f2174bf9c070df61d8e38e5a2ac0f",
+    "result_sha256": "70a02f9c4801ca7d2e16fe1ef29b15369327e5981a0c9a853513eea41da50257",
+    "layout_png_sha256": "452eaa1bcbe65c044cef82253b562ec9667481e905113d12b09356b92ec58afa"
+  },
+  "targeted_pex": {
+    "case_count": 8,
+    "passing_case_count": 0,
+    "environment_code_coverage": {
+      "tt": [],
+      "ss_hot": []
+    },
+    "capture_polarity_pass_count": 8,
+    "result_sha256": "2ebae43f2925c91e1c16db65eed89b08ba1826f7320ad7c44e1c345edb7c0f87",
+    "tt_first_failure": "the latch restores SB1 to 2.739--2.785 V, but BOOST peaks at only 2.894--2.918 V and misses the 3.05 V high-rail threshold",
+    "ss_hot_first_failure": "HSN spans 0.681--2.935 V, but the cross-coupled state does not regenerate: SB1 peaks at only 0.893--0.961 V and SENSE remains high"
+  },
+  "conclusion": "reject this cross-coupled NAND boundary and retain the smaller active-low NAND state, whose exact PEX preserves one TT passing code; another local reset, latch-strength, or SENSE-edge sweep is not authorized",
+  "not_a_claim": [
+    "five_environment_exact_pex_closure",
+    "routed_event_bridge_capture_parent",
+    "closed_cdr_or_pcie_compliance",
+    "provider_signoff_or_silicon_yield"
+  ],
+  "result": "rejected"
+}

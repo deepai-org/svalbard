@@ -59,6 +59,17 @@ class EventCapturePhysicalSourceTest(unittest.TestCase):
         self.assertEqual(ordered, sorted(ordered))
         self.assertLess(ordered[-1] - ordered[0], 50.0)
 
+    def test_rejected_regenerative_source_retains_causal_placement(self) -> None:
+        source = ROOT / "event_capture_rejected_regenerative" / "event_capture.spice"
+        devices, groups = layout.flatten(layout.parse(source), compiler.TOP)
+        self.assertEqual(len(devices), 208)
+        _, group_x = layout.place(devices, groups, expanded_local_spacing=True)
+        ordered = [group_x[f"XE__{name}"] for name in (
+            "XHSN__XIA", "XHSN__XN", "XHSR", "XHSL__XQ",
+            "XHSL__XQB", "XSI0", "XSI1")]
+        self.assertEqual(ordered, sorted(ordered))
+        self.assertLess(ordered[-1] - ordered[0], 110.0)
+
 
 if __name__ == "__main__":
     unittest.main()

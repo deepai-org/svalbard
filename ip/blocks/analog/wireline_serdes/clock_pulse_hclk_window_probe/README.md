@@ -365,6 +365,23 @@ and was rejected before layout. Exact identities and diagnostics are retained
 in [`active_low_nand_state_result.json`](active_low_nand_state_result.json).
 Another local inverter or taper sweep is not authorized by this evidence.
 
+The next contention-free regenerative experiment is also complete and
+rejected. A cross-coupled NAND set/reset state with edge-specific reset and a
+bounded SENSE rise assist reaches 12/40 schematic passes with one realizable
+code in all five environments. Its 208-device, 303.7-um-wide generated macro
+is zero-DRC, unique-LVS, and extracts to 5,610 resistors plus 4,170 capacitors.
+Exact PEX nevertheless passes 0/8 targeted TT/SS-hot cases. At TT the latch
+restores `SB1` to 2.739--2.785 V, but BOOST peaks at only 2.894--2.918 V. At
+SS/hot `HSN` spans 0.681--2.935 V while latch feedback leaves `SB1` below
+0.961 V and SENSE never switches. All eight cases still capture the expected
+polarity, separating data-path integrity from event-state failure. The exact
+schematic campaigns, physical source/PEX/results, and review render are
+retained in [`regenerative_state_rejection.json`](regenerative_state_rejection.json)
+and [`event_capture_rejected_regenerative`](event_capture_rejected_regenerative).
+This closes a local NAND-latch strength/reset/SENSE-edge branch; the next
+architecture must merge state into the capture cell or change the event-state
+device family rather than tune this latch locally.
+
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail
 margin.  Second, simply placing `XHSD2` beside its detector improved TT width
@@ -372,7 +389,7 @@ but removed route delay and eliminated SS/hot SENSE.  Causal placement is
 necessary, but every timing quantity consumed by the circuit must also be an
 explicit circuit/physical-intent object rather than an undocumented wire.
 [`event_capture_candidate_comparison.json`](event_capture_candidate_comparison.json)
-is the hash-bound summary of nine distinct schematic campaign identities;
+is the hash-bound summary of eleven distinct schematic campaign identities;
 [`summarize_event_capture_candidates.py`](summarize_event_capture_candidates.py)
 regenerates the compact coverage table instead of relying on filenames or log
 memory.  Its immutable inputs are retained under

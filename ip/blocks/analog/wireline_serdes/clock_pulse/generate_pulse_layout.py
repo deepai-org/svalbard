@@ -229,6 +229,12 @@ def device_span(device: Device) -> float:
 
 def gate_extra(device: Device) -> float:
     """Return extra poly-contact clearance below narrow device diffusion."""
+    # Keep the selected base transmission-gate PMOS clear of the long SEL1
+    # access rectangle. A compact neighboring lane can change legal tap
+    # columns enough to expose this overlap; moving the contact along the same
+    # poly is topology preserving. The observed collision requires 0.84 um.
+    if "__XWRITE__XBTG1__XP" in device.name:
+        return 1.0
     # The deliberately minimum-size P11 trim capacitor has only 0.3 um of
     # diffusion width.  Move its gate contact far enough below the source
     # access that the two different-net metal2 straps retain spacing; the
@@ -796,7 +802,10 @@ def route_columns(devices: list[Device], reserved: list[float],
                     if old_net != net and abs(candidate - old_x) < 0.86
                     and high_y + 0.40 > old_low_y
                     and old_high_y + 0.40 > low_y][:6]
-                metal2_blockers = [old_net for old_x1, old_y1, old_x2,
+                metal2_blockers = [(old_net, tuple(round(value, 3) for value
+                                                   in (old_x1, old_y1,
+                                                       old_x2, old_y2)))
+                                   for old_x1, old_y1, old_x2,
                                    old_y2, old_net
                                    in metal2_occupied[device.phase]
                                    if old_net != net
@@ -806,6 +815,8 @@ def route_columns(devices: list[Device], reserved: list[float],
                                    and old_y2 + 0.28 > candidate_metal2[1]][:6]
                 raise RuntimeError(
                     f"no access column for {device.name} {terminal}; "
+                    f"terminal_y={terminal_y[terminal]:.3f}, "
+                    f"points={[round(point, 3) for point in points]}, "
                     f"preferred column blockers={column_blockers}, "
                     f"metal2 blockers={metal2_blockers}")
     return answer

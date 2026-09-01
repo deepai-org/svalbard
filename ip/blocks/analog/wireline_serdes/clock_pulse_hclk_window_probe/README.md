@@ -222,3 +222,17 @@ promotion, deterministic physical lowering, and semantic failure movement--but
 it is still a rejected pulse source. The next circuit revision must isolate or
 strengthen the shared full-width branch and repair WRITE drive/epoch separately
 before capture replay.
+
+Two follow-up physical experiments now bound that branch choice. A small
+three-stage `SB1` isolation taper retains 5/5 schematic coverage and is
+zero-DRC/unique-LVS at 224 devices, but SS/hot `RB0` falls only to 0.61--0.73 V
+and `RB1` reaches only 1.50--1.85 V; the taper filters BOOST even though the
+selected SENSE branch improves to 450.02 ps and 0.129 V low. A balanced 1.5x
+shared-`SB1` driver plus stronger SENSE PMOS also retains 5/5 schematic
+coverage and is zero-DRC/unique-LVS, but its extra upstream load reduces
+extracted SS/hot `SB1` to 1.56--2.13 V and prevents most SENSE crossings. A 2x
+driver had already been rejected schematically at 346--399 ps SENSE width.
+Exact hashes are appended to the result JSON. These results close the local
+BOOST/SENSE taper sweep; the next bounded diagnostic is the independent WRITE
+semantic path, followed by an event-source architectural revision rather than
+more resizing of the shared state.

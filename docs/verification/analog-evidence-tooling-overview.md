@@ -1,6 +1,6 @@
 # Analog evidence tooling: current operating overview
 
-Last reviewed: 2026-08-31
+Last reviewed: 2026-09-01
 
 This page is the short operational companion to the longer
 [product-first analog evidence plan](../roadmap/analog-evidence-compiler-spec.md).
@@ -140,7 +140,10 @@ It has supported real engineering decisions rather than only produced reports.
   shared-state load regresses SENSE and the complete targeted TT/SS-hot PEX
   gate remains 0/2; WRITE drive and epoch are also still wrong. This is useful
   physical rejection and automated failure-movement evidence, not pulse or
-  integrated PCIe closure.
+  integrated PCIe closure. Follow-up isolated-taper and strengthened-shared-
+  state layouts are also clean/unique-LVS but remain 0/2, closing the local
+  SENSE/BOOST sizing branch and moving the diagnostic to WRITE semantics and
+  event-source architecture.
 - **Wi-Fi:** the routed LNA/mixer parent has DRC/LVS/full-RC PEX evidence, but
   its two-tone result exposed an unfiltered nearby blocker. This selected a
   real-IF ADC/DSP architecture rather than pretending a broad RF preselector
@@ -186,10 +189,11 @@ failing cases.
 
 ## Current priorities and rule for adding tooling
 
-1. **PCIe:** isolate or strengthen the loaded full-width SENSE/BOOST branch and
-   repair WRITE drive/epoch without losing the three independent controls.
-   Require schematic coverage, regenerated DRC/LVS, and 5/5 dual-phase PEX
-   before replaying the capture boundary.
+1. **PCIe:** add manifest-declared WRITE causal stages and localize its first
+   extracted failure, then replace the coupled SENSE/BOOST event source rather
+   than continuing the now-rejected local taper sweep. Preserve the three
+   independent controls and require regenerated DRC/LVS plus 5/5 dual-phase
+   PEX before replaying the capture boundary.
 2. **Wi-Fi:** design and screen the closed-loop differential IF driver and
    thermal-floor hold-capacitor boundary before authorizing a new sampler
    layout.

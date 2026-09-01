@@ -1090,6 +1090,18 @@ tap, and previously selected access before choosing another column, then require
 unique LVS. In the retained pulse work, DRC caught sub-rule same-layer gaps and
 LVS caught gate/output and signal/output merges that DRC could not classify.
 
+A column search cannot repair an overlap when the device's contact landing
+itself intersects an existing same-layer access rectangle. A later isolated
+BOOST experiment shifted the legal tap set until the first `XBTG1` PMOS gate
+finger overlapped the long SEL1 Metal2 landing by 0.22 um; trying columns for
+200 um in either direction still crossed the same obstacle. Failure reports
+must therefore include the terminal ordinate, finger points, and blocking
+rectangle, not merely “no route.” Moving that contact 1 um along its existing
+poly cleared the measured 0.84-um spacing requirement without changing the
+device. Because even a contact-only move changes extracted parasitics, the
+retained direct topology was regenerated through DRC, LVS, and PEX and received
+new physical hashes rather than inheriting its earlier result.
+
 Do not enlarge a final PMOS bank without retapering and re-extracting its gate
 driver. Increasing the pulse bank from 30 to 36/48 fingers lowered the exact
 output peak because WB3 slewed more slowly; stronger predrivers then raised

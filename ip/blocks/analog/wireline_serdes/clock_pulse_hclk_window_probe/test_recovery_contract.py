@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
+import sys
 import unittest
 from pathlib import Path
 
 import compile_recovery_physical_source as compile_recovery
 import run_recovery_schematic as recovery
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "clock_pulse"))
+import generate_pulse_layout as layout  # noqa: E402
 
 
 class RecoveryContractTest(unittest.TestCase):
@@ -11,6 +15,8 @@ class RecoveryContractTest(unittest.TestCase):
         source = compile_recovery.compile_source()
         self.assertIn("XSB2 SB1 SSEL SENSE", source)
         self.assertIn("XWRITE HCLK WSEL ESEL", source)
+        self.assertIn("XSB1 SB0 SB1 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=4", source)
+        self.assertIn("cp_sense_final_select PMP=12 BASE_MN=4", source)
         self.assertIn("XRB2 SB1 BOOST", source)
         self.assertNotIn("XRB0 ", source)
 
@@ -47,6 +53,11 @@ class RecoveryContractTest(unittest.TestCase):
         self.assertEqual(
             diagnostic["paths"]["boost"]["first_failed_stage"], "sb0")
 
+    def test_base_selector_gate_has_robust_metal2_clearance(self) -> None:
+        device = layout.Device(
+            "XE__XWRITE__XBTG1__XP", "XE__XWRITE__XBTG1", "E",
+            "pfet_03v3", ("D", "G", "S", "VDD"), 8.0, 1)
+        self.assertGreaterEqual(layout.gate_extra(device), 0.84)
 
 if __name__ == "__main__":
     unittest.main()

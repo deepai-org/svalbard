@@ -24,9 +24,9 @@
     "extracted_capacitors": 4351,
     "tested_environments": ["tt", "ss_hot"],
     "environment_coverage": "0/2",
-    "gds_sha256": "7a92459ae6298e7cfa3d900985fd2e913be70ece878942b50ebf22412c7c87e4",
-    "pex_sha256": "cd95e76c3424c2e69aaca3a214609280243e43f73c2566c57eb8216cc4ca8006",
-    "result_sha256": "419752d9d731215c0d43985b0670530a41e4fc579440f751ca01110fe39b054f"
+    "gds_sha256": "e4802fe42242456935de30417aebd4eb5c2fd6c70bed6015953fe11db7b97d4a",
+    "pex_sha256": "ef4ca5cfcaa9ccb47f32de448ecd6ea023d87bf93a08d87612182d890bf782e4",
+    "result_sha256": "a0449b7627d9ee5c1668d973eef7e062294f61c96cdf81e264653349f35f61de"
   },
   "localization": {
     "semantic_paths_from_manifest": {
@@ -52,7 +52,43 @@
       "write_delay_ps": [190.54, 339.02]
     }
   },
-  "conclusion": "Independent SENSE, WRITE-interval and WRITE-epoch controls preserve 5/5 schematic coverage. Direct SB1-to-BOOST removes the earlier RB0 pulse-filter failure and materially improves extracted BOOST swing, but loads the shared SB1 state enough to regress SENSE. TT also misses SENSE width and WRITE timing, while SS/hot retains SENSE/BOOST rail, WRITE amplitude and scheduling failures. The physical pulse source remains rejected; the next revision must isolate or strengthen the shared full-width branch and independently repair the WRITE taper/epoch.",
+  "follow_up_rejections": [
+    {
+      "id": "isolated_three_stage_sb1_boost",
+      "source_sha256": "6381852692ada4539e2beb4ac0867e55937330bb48c0c327e4d52c5785728c2e",
+      "schematic_environment_coverage": "5/5",
+      "physical": {
+        "drc": "clean",
+        "lvs": "unique_match",
+        "logical_devices": 224,
+        "extracted_resistors": 6022,
+        "extracted_capacitors": 4473,
+        "tested_environment_coverage": "0/2",
+        "gds_sha256": "cdfbe6c30d52ec9b8b12825dd4c78e7549130508d48feb296d46f60a07b0d796",
+        "pex_sha256": "6dff2e138ee2fcb47ccdc0ae95cfbd24e4deb171de89f4a3c3d2fb1344f855c9",
+        "result_sha256": "326ddad4122264c094ceda4fbb7e9da525b350aa44a2b53b119bcb5373324d91"
+      },
+      "first_failure": "The small isolation inverter does not restore at SS/hot: RB0 falls only to 0.61--0.73 V and RB1 peaks at 1.50--1.85 V, so the three-stage branch filters BOOST. The selected SENSE branch itself improves to 450.02 ps and 0.129 V low."
+    },
+    {
+      "id": "balanced_strengthened_shared_sb1",
+      "source_sha256": "096450612b8bf241c643209f91a694843bedd26b71a9a95ce52b0515411b8479",
+      "schematic_environment_coverage": "5/5",
+      "physical": {
+        "drc": "clean",
+        "lvs": "unique_match",
+        "logical_devices": 216,
+        "extracted_resistors": 6150,
+        "extracted_capacitors": 4507,
+        "tested_environment_coverage": "0/2",
+        "gds_sha256": "cb98b836cf765bf198bf61ec762cdc01fbc0ddee9021c1e8a07e546bf6e6fff3",
+        "pex_sha256": "af585480c66c5cf0a2806da304d7a786f520e66069e01edce6c0c91ab23f7b18",
+        "result_sha256": "b795847713d16d4cb2ea42bd679df13dc47a3faf56d3f5e342da3009d86a3502"
+      },
+      "first_failure": "Increasing shared SB1 drive and SENSE PMOS size passes schematic but adds enough SB0 load and physical span to reduce SS/hot SB1 to 1.56--2.13 V; most SENSE outputs never cross. A still larger 2x SB1 variant was already rejected schematically because SENSE width collapsed to 346--399 ps."
+    }
+  ],
+  "conclusion": "Independent SENSE, WRITE-interval and WRITE-epoch controls preserve 5/5 schematic coverage. Direct SB1-to-BOOST removes the earlier RB0 pulse-filter failure and materially improves extracted BOOST swing, but loads the shared SB1 state enough to regress SENSE. An isolated taper filters the event, while strengthening the shared restorer loads its producer and regresses more severely. No further local SENSE/BOOST taper sweep is authorized. The physical pulse source remains rejected; next localize the independent WRITE state path, then revise the event-source architecture rather than resizing this shared branch again.",
   "not_a_claim": [
     "five-corner PEX closure",
     "capture-boundary closure",

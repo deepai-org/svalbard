@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "contract_id": "pcie_full_duty_event_capture_v1",
+  "source_revision": "retimed_joint_long_6_3_explicit_sense_delay_2p1_1p07",
+  "control_semantics": {
+    "SEL0": "SENSE falling-edge assist",
+    "SEL1": "event interval and long-epoch qualifier",
+    "SEL2": "short/normal epoch; SEL1=SEL2=1 selects the long epoch"
+  },
+  "loads": {
+    "sense_f": 3.5e-13,
+    "boost_f": 3.5e-13,
+    "capture_output_f": 5e-14
+  },
+  "thresholds": {
+    "logic_rail_margin_v": 0.25,
+    "entry_skew_s": [0.0, 2.2e-10],
+    "exit_skew_s": [0.0, 2.2e-10],
+    "capture_overlap_s": [8e-11, 3.8e-10],
+    "clock_period_s": [7e-10, 9e-10],
+    "capture_differential_v": 0.5,
+    "average_supply_current_a": [0.0, 0.15]
+  },
+  "candidate_scope": "one fixed event source and bridge; only three static control bits may vary by environment",
+  "not_a_claim": [
+    "event-source layout or PEX",
+    "routed event-source/bridge/capture parent",
+    "dynamic-data capture",
+    "closed CDR",
+    "PCIe compliance",
+    "foundry signoff or silicon behavior"
+  ]
+}

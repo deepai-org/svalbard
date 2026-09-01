@@ -1,0 +1,21 @@
+* SPDX-License-Identifier: Apache-2.0
+* Full-duty event bridge with a physically plausible START taper and direct
+* inverting END output.  The removed XCK0/XCK1 stages added delay and input
+* capacitance but no state or required polarity.
+
+.subckt ecb_inv A Y VDD VSS params: WP=8u WN=4u MP=1 MN=1
+XP Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+.ends ecb_inv
+
+.subckt event_capture_phase START END CLK CLKB VDD VSS
+XCB0 START STARTB VDD VSS ecb_inv WP=5u WN=2.75u MP=4 MN=4
+XCLKB STARTB CLKB VDD VSS ecb_inv WP=8u WN=10u MP=8 MN=8
+XCLK END CLK VDD VSS ecb_inv WP=12u WN=5u MP=8 MN=8
+.ends event_capture_phase
+
+.subckt event_capture_bridge E_START E_END O_START O_END
++ E_CAPTURE_CLK E_CAPTURE_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB VDD VSS
+XE E_START E_END E_CAPTURE_CLK E_CAPTURE_CLKB VDD VSS event_capture_phase
+XO O_START O_END O_CAPTURE_CLK O_CAPTURE_CLKB VDD VSS event_capture_phase
+.ends event_capture_bridge

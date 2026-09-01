@@ -981,7 +981,10 @@ or prevents a previously observed false claim in both projects.
 ### Immediate execution policy
 
 The PCIe clock/capture bench now removes ideal timing sources at its immediate
-boundary but passes only 3/5 corners. The Wi-Fi receiver has a byte-bound
+boundary. Its selected full-duty event/bridge schematic covers 5/5 public-model
+environments, the generated macro is zero-DRC/unique-LVS/full-RC extracted,
+and targeted exact PEX passes TT but not SS/hot; the latter is localized to an
+over-delayed explicit SENSE detector state. The Wi-Fi receiver has a byte-bound
 ADC/DSP selectivity architecture, but its former 5-pF sampled-input boundary
 is thermally infeasible for the stated 12-bit allocation, and both its physical
 NMOS-only sampler and schematic simple transmission-gate screen are rejected.

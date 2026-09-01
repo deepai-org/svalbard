@@ -1,0 +1,24 @@
+* SPDX-License-Identifier: Apache-2.0
+* Full-duty event bridge with independently trimmed START assertion/release.
+*
+* XCB0 WP=6u delays CLKB assertion into the entry-skew window. XCB0 WN=3u
+* separately delays CLKB release into the exit-skew window. END/CLK is unchanged.
+
+.subckt ecb_inv A Y VDD VSS params: WP=8u WN=4u MP=1 MN=1
+XP Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+.ends ecb_inv
+
+.subckt event_capture_phase START END CLK CLKB VDD VSS
+XCB0 START STARTB VDD VSS ecb_inv WP=6u WN=3u MP=2 MN=2
+XCLKB STARTB CLKB VDD VSS ecb_inv WP=8u WN=10u MP=8 MN=8
+XCK0 END ENDB VDD VSS ecb_inv WP=8u WN=4u MP=2 MN=2
+XCK1 ENDB ENDR VDD VSS ecb_inv WP=8u WN=5u MP=6 MN=6
+XCLK ENDR CLK VDD VSS ecb_inv WP=12u WN=5u MP=16 MN=16
+.ends event_capture_phase
+
+.subckt event_capture_bridge E_START E_END O_START O_END
++ E_CAPTURE_CLK E_CAPTURE_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB VDD VSS
+XE E_START E_END E_CAPTURE_CLK E_CAPTURE_CLKB VDD VSS event_capture_phase
+XO O_START O_END O_CAPTURE_CLK O_CAPTURE_CLKB VDD VSS event_capture_phase
+.ends event_capture_bridge

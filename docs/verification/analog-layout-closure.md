@@ -1496,6 +1496,17 @@ Commit and push at meaningful gates: schematic PVT closure, physical DRC/LVS
 closure, and extracted/stress closure. Do not present a schematic checkpoint as
 a finished macro or a core-only result as a complete PCIe interface.
 
+Treat delay consumed by functional logic as circuit intent, not as a side
+effect of placement. A timing path can appear to improve when a producer and
+consumer become adjacent yet stop functioning because the old route supplied
+unrecorded delay. Retain that placement as rejection evidence, identify the
+last full-swing semantic states on both sides, and add a strongly restored,
+explicitly sized delay element or qualified passive. Do not freeze a long route
+as the timing element. Sweep only the smallest causal degrees of freedom,
+require a complete schematic control/environment gate, then regenerate
+DRC/LVS/PEX; a schematic delay source or modified PEX is not a physical
+implementation.
+
 ## Remaining signoff boundary
 
 This workflow produces disciplined public-model pre-silicon evidence. Final

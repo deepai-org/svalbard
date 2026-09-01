@@ -18,7 +18,7 @@ standalone general-purpose analog compiler.
 | Reproducible EDA host boundary | [`scripts/run_analog_flow.sh`](../../scripts/run_analog_flow.sh) | Pins the analog container image, prevents source changes during a run, bounds CPU/RAM/time, runs without network, and copies named outputs | It does not make a simulation signoff-quality or supply missing models. |
 | Layout verification | Native Magic DRC/extraction and Netgen LVS invoked by physical block flows | Generated geometry, zero-DRC/unique-LVS gates, and RC extraction when a flow calls for it | It is public-PDK pre-silicon evidence, not foundry signoff, post-fill, EM/IR, package, or silicon correlation. |
 | Circuit/PVT campaigns | Native ngspice decks and product-specific Python runners | Declared PVT sweeps, transient/AC/DC measurements, and failed-case capture | Not generic yield, BER confidence, phase noise, RF regulatory, or model-validation analysis. |
-| First closure manifest and physical lowering | [`clock_pulse_hclk_window_probe/hclk_window_contract.json`](../../ip/blocks/analog/wireline_serdes/clock_pulse_hclk_window_probe/hclk_window_contract.json), [`compile_selected_physical_source.py`](../../ip/blocks/analog/wireline_serdes/clock_pulse_hclk_window_probe/compile_selected_physical_source.py) | Declares fixed variants, post-fabrication codes, PVT environments, thresholds and semantic bindings, then resolves one selected identity into the exact schematic consumed by layout/LVS/PEX | This is one product-specific thin slice, not a shared circuit/layout IR or general analog compiler. |
+| Closure manifests and physical lowering | [`hclk_window_contract.json`](../../ip/blocks/analog/wireline_serdes/clock_pulse_hclk_window_probe/hclk_window_contract.json), [`event_capture_contract.json`](../../ip/blocks/analog/wireline_serdes/clock_pulse_hclk_window_probe/event_capture_contract.json), and their `compile_*_source.py` lowerings | Declares fixed variants, realizable codes, PVT environments, thresholds and semantic bindings, then resolves one selected identity into the exact schematic consumed by layout/LVS/PEX | These are product-specific thin slices, not a shared circuit/layout IR or general analog compiler. |
 | Evidence integrity helpers | [`ip/blocks/analog/wireline_serdes/analog_evidence.py`](../../ip/blocks/analog/wireline_serdes/analog_evidence.py), [`scripts/test_analog_evidence.py`](../../scripts/test_analog_evidence.py), machine-readable result JSON | Environment identity checks, interval coverage helpers, SHA-256 joins, and durable pass/fail/rejection records | The helper is deliberately small; result semantics remain specific to each active circuit. |
 | PEX inspection and bounded counterfactuals | [`scripts/analyze_pex_net.py`](../../scripts/analyze_pex_net.py), [`clock_pulse_hclk_window_probe/localize_selected_pex.py`](../../ip/blocks/analog/wireline_serdes/clock_pulse_hclk_window_probe/localize_selected_pex.py) | Named-net RC/path reports plus product-specific resistance/capacitance suppression on an exact PEX, with byte-identical baseline replay | Counterfactuals rank hypotheses only; modified PEX never qualifies geometry, and the localizer is not yet generic. |
 | Tool artifact pinning | [`env/tool_artifacts.lock`](../../env/tool_artifacts.lock), [`scripts/tool_artifacts.py`](../../scripts/tool_artifacts.py) | Checksum-locked acquisition/verification of small auxiliary tools | The main physical flow uses the separately pinned OSIC image. |
@@ -108,12 +108,22 @@ contract independently. The replacement full-swing tap-chain source covers
 the active schema-v2 contract; it shows that the new event states survive and
 taper capacitance dominates the remaining WRITE collapse. Compact, lean, and
 simple stateful output branches are retained as explicit schematic
-rejections. Candidate generation and cross-candidate margin comparison remain
-manual. The next justified shared
-extraction is therefore a small candidate-comparison record exercised here,
-then reused on the Wi-Fi IF driver if it removes the same log and waveform
-archaeology there. It is not yet a reason to build a new language, general
-router, or global topology synthesizer.
+rejections. Candidate generation and waveform-level margin interpretation
+remain manual. A first small candidate-comparison record now hash-binds eight
+event/capture campaigns and summarizes their environment/code coverage. It
+must be reused on the Wi-Fi IF driver before it is promoted into shared IR; it
+is not yet a reason to build a new language, general router, or global topology
+synthesizer.
+
+The newer full-duty event/capture fixture caught a silent duplicate SPICE
+parameter lowering before layout, proved that a compact selector reduced
+parasitics but lost SS/hot rail margin, and showed that shortening a causal
+route removed delay the circuit had accidentally consumed.  The selected
+revision turns that wire delay into an explicit inverter-pair state, passes a
+40-case five-environment schematic campaign, generates a zero-DRC/unique-LVS
+4,964R/3,713C macro, and earns the first TT exact-PEX capture pass.  SS/hot is
+still rejected at `HSDY -> HSN`.  This is executable evidence for identity and
+first-failure movement, not a generic optimizer or completed PCIe clock path.
 
 ## What this tooling has productively done
 
@@ -123,9 +133,11 @@ It has supported real engineering decisions rather than only produced reports.
   layouts, passed DRC/LVS, been RC extracted, and been screened over declared
   PVT environments. The current status, including both passed and rejected
   compositions, is maintained in [PCIe Gen1 analog status](pcie-analog-status.md).
-  The active blocker is the extracted pulse-to-bridge-to-capture boundary,
-  which presently passes three of five declared corners. The latest
-  source-level selectable-HCLK timing probe retained two explicit rejected
+  The active blocker is the extracted full-duty event-to-bridge-to-capture
+  boundary. Its exact schematic covers 5/5 environments, its generated
+  event/bridge macro is physically legal, and targeted exact PEX now passes TT
+  but not SS/hot. The retained history leading to it begins with a
+  source-level selectable-HCLK timing probe that retained two explicit rejected
   families, then found one physically fixed one-bit candidate with
   selectable-code coverage in all five environments. This is a necessary
   HCLK-to-WRITE schematic pass, then used the same manifest identity in a full
@@ -154,9 +166,10 @@ It has supported real engineering decisions rather than only produced reports.
   physical rejection and automated failure-movement evidence, not pulse or
   integrated PCIe closure. Follow-up isolated-taper and strengthened-shared-
   state layouts are also clean/unique-LVS but remain 0/2, closing the local
-  SENSE/BOOST sizing branch. The authorized next circuit work is a retimed
-  full-swing event source whose delay states and detector/load drive are
-  independent.
+  SENSE/BOOST sizing branch. The retimed full-swing source and direct-END
+  bridge are now implemented; the authorized next experiment is an
+  intermediate, strongly restored SENSE delay between the rejected
+  adjacent/no-delay and full-pair cases, followed by regenerated PEX.
 - **Wi-Fi:** the routed LNA/mixer parent has DRC/LVS/full-RC PEX evidence, but
   its two-tone result exposed an unfiltered nearby blocker. This selected a
   real-IF ADC/DSP architecture rather than pretending a broad RF preselector
@@ -202,10 +215,11 @@ failing cases.
 
 ## Current priorities and rule for adding tooling
 
-1. **PCIe:** carry independently buffered full-duty set/reset events into a
-   contention-free WRITE state machine, or merge that state into the capture
-   cell. Preserve the three independent controls and require regenerated
-   DRC/LVS plus 5/5 dual-phase PEX before replaying the capture boundary.
+1. **PCIe:** replace the SS/hot-overdelayed SENSE pair with one bounded
+   intermediate, strongly restored delay element. Preserve full-duty
+   START/END, the direct-END bridge, three controls, and exact capture load;
+   require regenerated DRC/LVS and five-environment PEX before routed-parent
+   replay.
 2. **Wi-Fi:** design and screen the closed-loop differential IF driver and
    thermal-floor hold-capacitor boundary before authorizing a new sampler
    layout.

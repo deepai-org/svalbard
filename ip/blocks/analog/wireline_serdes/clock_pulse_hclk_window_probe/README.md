@@ -1,4 +1,4 @@
-# Selectable full-swing HCLK WRITE-window probe
+# Selectable HCLK timing and full-duty event/capture fixture
 
 This is a deliberately narrow schematic prerequisite for the PCIe pulse-path
 blocker.  It asks whether a static one-bit control can choose between two
@@ -303,3 +303,61 @@ candidate should transport separate full-duty set/reset events into a
 contention-free output state machine, or move that state into the capture
 cell.  It should not propagate the final 100--220 ps WRITE pulse through
 another large inverter taper.
+
+## Full-duty event/bridge/capture checkpoint
+
+The narrow WRITE transport has now been removed from the immediate capture
+boundary.  [`compile_event_capture_source.py`](compile_event_capture_source.py)
+exports independent full-duty START and END states, and
+[`compile_event_capture_physical_source.py`](compile_event_capture_physical_source.py)
+lowers those states together with a direct-END complementary capture-clock
+bridge.  The actual byte-bound direct-regenerative capture PEX is the load and
+consumer in both schematic and extracted campaigns.
+
+The selected source makes SENSE timing explicit with a local two-inverter
+delay pair (`WP=2.1 um`, `WN=1.07 um`, two devices of each polarity per stage).
+This replaced an accidental dependency on the placement and route of `XHSD2`.
+The complete 40-case schematic campaign in
+[`event_capture_schematic_result.json`](event_capture_schematic_result.json)
+passes 5/5 environments with ten valid codes.  TT, FF/hot, SS/cold, and SS/hot
+share `sense0_interval0_epoch1`; FF/cold has three valid alternatives.  The
+source is SHA-256 `ce31c2f1...`.
+
+The generated 208-device, 303.7-um-wide event/bridge macro is zero-DRC,
+uniquely LVS-equivalent, and extracts to 4,964 resistors plus 3,713 capacitors.
+Its exact identities and public-model boundaries are retained in
+[`event_capture_physical_result.json`](event_capture_physical_result.json),
+with the review render in [`event_capture_layout.png`](event_capture_layout.png).
+
+This is not yet five-corner electrical closure.  The targeted eight-case exact
+PEX replay in [`event_capture_pex_result.json`](event_capture_pex_result.json)
+passes TT with `sense0_interval0_epoch1`, the first extracted pass for this
+full-duty branch, but covers no SS/hot code.  Capture polarity passes all eight
+cases.  At SS/hot, `HSDX` and the explicit `HSDY` state both cross, but their
+separation is too large: `HSN` never switches and SENSE remains high.  The
+next bounded experiment is an intermediate, strongly restored delay element
+between the rejected adjacent/no-delay and full extra-pair implementations.
+It is not another bridge enlargement, capture change, or relaxed threshold.
+
+Two negative results matter to the physical compiler workflow.  First, a
+compact selector reduced extracted parasitic count but lost SS/hot output-rail
+margin.  Second, simply placing `XHSD2` beside its detector improved TT width
+but removed route delay and eliminated SS/hot SENSE.  Causal placement is
+necessary, but every timing quantity consumed by the circuit must also be an
+explicit circuit/physical-intent object rather than an undocumented wire.
+[`event_capture_candidate_comparison.json`](event_capture_candidate_comparison.json)
+is the hash-bound summary of eight distinct schematic campaign identities;
+[`summarize_event_capture_candidates.py`](summarize_event_capture_candidates.py)
+regenerates the compact coverage table instead of relying on filenames or log
+memory.  Its immutable inputs are retained under
+[`event_capture_candidate_results`](event_capture_candidate_results).  Regenerate
+it with:
+
+```sh
+python3 summarize_event_capture_candidates.py \
+  --output event_capture_candidate_comparison.json \
+  event_capture_candidate_results/*.json
+```
+
+It compares already generated candidates only and makes no optimality or
+physical-closure claim.

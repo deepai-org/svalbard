@@ -229,6 +229,12 @@ def device_span(device: Device) -> float:
 
 def gate_extra(device: Device) -> float:
     """Return extra poly-contact clearance below narrow device diffusion."""
+    # In the isolated SENSE selector, XOFF's ENB gate and VSS source pickups
+    # otherwise overlap in Metal2.  Magic DRC sees one legal polygon, while
+    # LVS correctly reports ENB shorted to VSS.  Move only the gate landing
+    # along its existing poly; the transistor geometry is unchanged.
+    if device.name.endswith("__XOFF"):
+        return 1.0
     # Keep the selected base transmission-gate PMOS clear of the long SEL1
     # access rectangle. A compact neighboring lane can change legal tap
     # columns enough to expose this overlap; moving the contact along the same
@@ -262,9 +268,16 @@ def gate_extra(device: Device) -> float:
 
 def device_column(device: Device) -> int:
     match = re.search(r"__(?:XP|XN)(\d*)$", device.name)
-    if not match:
-        raise ValueError(f"cannot assign primitive column: {device.name}")
-    return int(match.group(1) or 0)
+    if match:
+        return int(match.group(1) or 0)
+    # The isolated SENSE selector has two intentionally named direct NFETs in
+    # addition to its aligned base XP/XN pair.  Give those series/control
+    # devices stable adjacent columns without changing legacy primitive order.
+    if device.name.endswith("__XOFF"):
+        return 1
+    if device.name.endswith("__XNEX"):
+        return 2
+    raise ValueError(f"cannot assign primitive column: {device.name}")
 
 
 def group_geometry(group: Group) -> tuple[float, dict[str, float]]:
@@ -394,10 +407,12 @@ def place(devices: list[Device], groups: dict[str, Group],
                 "XSM2A": 3, "XSM2B": 4,
                 "XSM3A": 5, "XSM3B": 6, "XSM3C": 7,
                 "XSMR": 8,
-                "XSN": 10, "XHSD0": 11, "XHSD1": 12,
-                "XHSN": 13, "XSB0": 14, "XRB0": 15, "XRBI": 16,
-                "XSB1": 17, "XRB1": 18, "XRBB": 19,
-                "XSB2": 20, "XRB2": 21, "XWSRC": 22, "XWSRCC": 23,
+                "XSN": 10, "XHSD0": 11, "XHSD1": 12, "XHSD2": 13,
+                "XHSD3": 14, "XHSN": 15, "XSB0": 16,
+                "XRB0": 17, "XRBI": 18, "XSB1": 19,
+                "XSI0": 20, "XSI1": 21, "XSB2": 22,
+                "XRB1": 20, "XRBB": 21,
+                "XRB2": 23, "XWSRC": 24, "XWSRCC": 25,
             }
 
             def sense_order(group: Group) -> tuple[int, int, int, str]:
@@ -1039,7 +1054,8 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
         "XE__CTD": "DBG_E_CTD", "XE__STD": "DBG_E_STD",
         "XE__SN0": "DBG_E_SN0", "XE__SND": "DBG_E_SND",
         "XE__HSM": "DBG_E_HSM", "XE__HSD": "DBG_E_HSD",
-        "XE__HSDX": "DBG_E_HSDX", "XE__HSN": "DBG_E_HSN",
+        "XE__HSDX": "DBG_E_HSDX", "XE__HSDY": "DBG_E_HSDY",
+        "XE__HSN": "DBG_E_HSN",
         "XE__RB0": "DBG_E_RB0", "XE__RB1": "DBG_E_RB1",
         "XE__WGS": "DBG_E_WGS", "XE__WWE": "DBG_E_WWE",
         "XE__WSIB": "DBG_E_WSIB", "XE__WSA": "DBG_E_WSA",
@@ -1047,6 +1063,10 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
         "XE__WSD": "DBG_E_WSD", "XE__WPN": "DBG_E_WPN",
         "XE__SB0": "DBG_E_SB0",
         "XE__SB1": "DBG_E_SB1",
+        "XE__SIB": "DBG_E_SIB", "XE__SDRV": "DBG_E_SDRV",
+        "XE__START": "DBG_E_START", "XE__END": "DBG_E_END",
+        "XE__STARTB": "DBG_E_STARTB", "XE__ENDB": "DBG_E_ENDB",
+        "XE__ENDR": "DBG_E_ENDR",
         "XE__PCLK": "DBG_E_PCLK", "XE__P08": "DBG_E_P08",
         "XE__CTSEL": "DBG_E_CTSEL",
         "XE__XCT__B0": "DBG_E_CTB0", "XE__XCT__B1": "DBG_E_CTB1",
@@ -1068,7 +1088,8 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
         "XO__STD": "DBG_O_STD",
         "XO__SN0": "DBG_O_SN0", "XO__SND": "DBG_O_SND",
         "XO__HSM": "DBG_O_HSM", "XO__HSD": "DBG_O_HSD",
-        "XO__HSDX": "DBG_O_HSDX", "XO__HSN": "DBG_O_HSN",
+        "XO__HSDX": "DBG_O_HSDX", "XO__HSDY": "DBG_O_HSDY",
+        "XO__HSN": "DBG_O_HSN",
         "XO__RB0": "DBG_O_RB0", "XO__RB1": "DBG_O_RB1",
         "XO__WGS": "DBG_O_WGS", "XO__WWE": "DBG_O_WWE",
         "XO__WSIB": "DBG_O_WSIB", "XO__WSA": "DBG_O_WSA",
@@ -1076,6 +1097,10 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
         "XO__WSD": "DBG_O_WSD", "XO__WPN": "DBG_O_WPN",
         "XO__SB0": "DBG_O_SB0",
         "XO__SB1": "DBG_O_SB1",
+        "XO__SIB": "DBG_O_SIB", "XO__SDRV": "DBG_O_SDRV",
+        "XO__START": "DBG_O_START", "XO__END": "DBG_O_END",
+        "XO__STARTB": "DBG_O_STARTB", "XO__ENDB": "DBG_O_ENDB",
+        "XO__ENDR": "DBG_O_ENDR",
         "XO__XWST__B1": "DBG_O_WSTB1",
         "XO__XWET__B1": "DBG_O_WETB1",
         "XO__P06_G": "DBG_O_P06G", "XO__P06S": "DBG_O_P06S",
@@ -1158,21 +1183,33 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
                 f"expected one {phase} {instance} driver, got {candidates}")
         return candidates[0]
 
+    # Keep output ports beside their physical drivers.  Select only outputs
+    # present on this top so the same deterministic lowering can serve the
+    # earlier narrow-WRITE macro and the full-duty capture-clock successor.
+    output_driver_instances = {
+        "E_SENSE": ("XE", "XSB2"),
+        "E_BOOST": ("XE", "XRB2"),
+        "E_WRITE": ("XE", "XWB4"),
+        "E_CAPTURE_CLK": ("XE", "XWCLK"),
+        "E_CAPTURE_CLKB": ("XE", "XWCLKB"),
+        "O_SENSE": ("XO", "XSB2"),
+        "O_BOOST": ("XO", "XRB2"),
+        "O_WRITE": ("XO", "XWB4"),
+        "O_CAPTURE_CLK": ("XO", "XWCLK"),
+        "O_CAPTURE_CLKB": ("XO", "XWCLKB"),
+    }
     output_drivers = {
-        "E_SENSE": driver("XE", "XSB2"),
-        "E_BOOST": driver("XE", "XRB2"),
-        "E_WRITE": driver("XE", "XWB4"),
-        "O_SENSE": driver("XO", "XSB2"),
-        "O_BOOST": driver("XO", "XRB2"),
-        "O_WRITE": driver("XO", "XWB4"),
+        port: driver(*output_driver_instances[port])
+        for port in output_ports if port in output_driver_instances
     }
     for port, driver in output_drivers.items():
         width, _ = group_geometry(groups[driver])
         port_xs[port] = group_x[driver] + width + 2.0
-    even_write_driver = output_drivers["E_WRITE"]
-    write_driver_width, _ = group_geometry(groups[even_write_driver])
-    write_supply_x = group_x[even_write_driver] + write_driver_width / 2.0
-    port_xs.update({"VDD_WE": write_supply_x, "VDD_WO": write_supply_x})
+    if "E_WRITE" in output_drivers:
+        even_write_driver = output_drivers["E_WRITE"]
+        write_driver_width, _ = group_geometry(groups[even_write_driver])
+        write_supply_x = group_x[even_write_driver] + write_driver_width / 2.0
+        port_xs.update({"VDD_WE": write_supply_x, "VDD_WO": write_supply_x})
     for port, keys in top_keys.items():
         endpoint = port_xs[port]
         for key in keys:

@@ -424,6 +424,10 @@ def place(devices: list[Device], groups: dict[str, Group],
                 "XSI0": 20, "XSI1": 21,
                 "XRB1": 20, "XRBB": 21,
                 "XRB2": 23, "XWSRC": 24, "XWSRCC": 25,
+                # Capture-owned START assists occupy the adjacent physical
+                # lane but are x-aligned with the write-lane START restorer.
+                "XSF0": 30, "XSF1": 31,
+                "XBOOST": 32, "XSENSE": 33,
             }
 
             def sense_order(group: Group) -> tuple[int, int, int, str]:
@@ -546,6 +550,8 @@ def place(devices: list[Device], groups: dict[str, Group],
             selected.sort(key=write_order)
         for group in selected:
             root = instance_root(group.name)
+            if lane == 2 and root == "XSF0":
+                cursor = max(cursor, 194.0)
             if lane == 1 and root in write_rank:
                 cursor = max(cursor, write_min_x[root])
             if lane == 3 and root in selector_min_x:
@@ -1193,6 +1199,17 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
     else:
         hclk_candidates = sorted(
             name for name in group_x if name.startswith("XE__XHSD0__"))
+        if not hclk_candidates:
+            # State-free capture variants remove the legacy HSD/HSN pulse
+            # path. Locate the leftmost real even-phase primitive connected
+            # to the flattened hot-clock net instead of requiring a retired
+            # instance name.
+            hclk_candidates = sorted(
+                (name for name, group in groups.items()
+                 if group.phase == "E" and name in group_x
+                 and "CLKP_H" in group.ports.values()),
+                key=lambda name: (group_x[name], name),
+            )
         if not hclk_candidates:
             raise RuntimeError("cannot locate even-phase HCLK receiver")
         hclk_receiver = hclk_candidates[0]

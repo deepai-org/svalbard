@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "claim": "capture_state_free_start_assist_checkpoint",
+  "source_revision": "retimed_joint_long_6_3_capture_owned_start_v3",
+  "source_sha256": "6772802d31f2be5c3ff0a60e109985417878d47cf8b00c1d7058922ed1433e39",
+  "schematic": {
+    "case_count": 40,
+    "passing_case_count": 18,
+    "environment_coverage": ["ff_cold", "ff_hot", "ss_cold", "ss_hot", "tt"],
+    "result": "pass",
+    "result_sha256": "83219941b21ee7449fe9a4b8f8524feb30e701a73ff938d6087a7ac84434abe8"
+  },
+  "physical": {
+    "device_count": 152,
+    "width_um": 303.7,
+    "drc": "pass",
+    "lvs": "pass_unique",
+    "pex_resistor_count": 4062,
+    "pex_capacitor_count": 2943,
+    "physical_result_sha256": "ba788f910dad41ab8a0146c3da6abdd47065a6c3d02277b1f4ce0a40b1f27b21",
+    "pex_sha256": "76283a6c3c3746eb65b1920eef350f6b00a4034fb2874fd500e588c6f0878f6f",
+    "render_sha256": "d4bb974e94d0b13d6b3469c7f1a1ecb505c4025117d7929a265014419a238c38"
+  },
+  "targeted_exact_pex": {
+    "case_count": 10,
+    "passing_case_count": 1,
+    "environments": ["tt", "ss_hot"],
+    "passing_code": "tt/sense1_interval0_epoch0",
+    "all_cases_capture_expected_polarity": true,
+    "result": "fail",
+    "result_sha256": "3f7da4ed981d65e8ae4721ba04a12d26039c03813f7a70b839fb67e57d9cc1fd"
+  },
+  "localization": {
+    "tt_passing_sense_width_ps": [509.73, 510.82],
+    "tt_passing_sense_low_v": [0.180372, 0.204458],
+    "ss_hot_candidate_sense_width_ps": [627.86, 638.36],
+    "ss_hot_candidate_sense_low_v": [0.9654, 1.03227],
+    "ss_hot_candidate_boost_high_v": [2.72292, 2.73789],
+    "ss_hot_failure": "local SENSE discharge and BOOST high rail; capture and timing remain valid"
+  },
+  "rejected_followup": {
+    "source_revision": "retimed_joint_long_6_3_capture_owned_start_v4",
+    "change": "fourfold selectable SENSE branch plus one BOOST PMOS finger",
+    "schematic_result": "fail",
+    "environment_coverage": ["ff_cold", "ss_cold", "ss_hot", "tt"],
+    "reason": "lost all ff_hot codes before layout"
+  },
+  "decision": "retain as the first state-free exact-PEX TT closure; do not promote until SS/hot closes",
+  "next_boundary": "compose this source with the actual routed regenerative lane SENSE/BOOST consumers, then redesign the consumer-local assist if SS/hot remains rail-limited",
+  "not_a_claim": [
+    "five-environment exact-PEX closure",
+    "routed event/bridge/capture parent closure",
+    "closed CDR or PCIe link",
+    "provider signoff or silicon behavior"
+  ]
+}

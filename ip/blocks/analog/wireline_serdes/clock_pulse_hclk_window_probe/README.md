@@ -470,6 +470,34 @@ record is
 [`capture_integrated_final_restore_checkpoint.json`](capture_integrated_final_restore_checkpoint.json),
 with a [review render](../../../../../docs/images/pcie-event-capture-final-restore-layout.png).
 
+## Capture-owned state-free START assist
+
+The next architecture removes the dynamic stored state entirely. The existing
+restored full-duty `START` state now feeds two capture-local restoration stages
+and the programmable SENSE/BOOST outputs; `END` remains independent and owns
+only the later capture-clock edge. This makes SENSE invariant to the interval
+choice and eliminates the high-fanout `ESTATE/LSTATE/SDRV` transport chain.
+
+Revision v3 passes 18/40 schematic cases with realizable codes in all five
+declared environments. Its 152-device, 303.7-um generated parent is zero-DRC,
+uniquely LVS-equivalent, and extracts to 4,062 resistors plus 2,943 capacitors.
+Targeted exact PEX improves from the dynamic family's 0/8 to 1/10: TT code
+`sense1_interval0_epoch0` passes both phases into the exact capture PEX, with
+509.73--510.82 ps SENSE width and 0.180--0.204 V SENSE low. All ten cases
+still capture the expected polarity.
+
+SS/hot does not close. The same code retains valid capture and timing
+(627.86--638.36 ps SENSE width), but SENSE low is 0.965--1.032 V and BOOST
+high is 2.723--2.738 V. A fourfold selectable pull-down and slightly stronger
+BOOST follow-up repaired that local hot drive but eliminated every FF/hot
+schematic code, so it was rejected before layout. Further final-ratio search
+is not authorized. The next experiment composes v3 with the actual routed
+regenerative-lane SENSE/BOOST consumers, replacing the 350-fF proxy boundary;
+if SS/hot remains limited, the assist must move into or be redesigned with its
+real consumer. The byte-bound result is
+[`capture_state_free_checkpoint.json`](capture_state_free_checkpoint.json),
+with a [review render](../../../../../docs/images/pcie-event-capture-state-free-layout.png).
+
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail
 margin.  Second, simply placing `XHSD2` beside its detector improved TT width

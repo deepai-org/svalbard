@@ -23,24 +23,43 @@ import run_recovery_schematic as recovery
 PHASES = ("E", "O")
 
 
-def phase_nets(*names: str) -> set[str]:
-    return {f"DBG_{phase}W_{name}" for phase in PHASES for name in names}
+def stage_nets(stage: str) -> set[str]:
+    """Resolve a semantic stage through the active closure contract."""
+    if stage in recovery.INTERNAL_PROBES:
+        binding = recovery.INTERNAL_PROBES[stage]
+        return {binding.format(phase=phase) for phase in PHASES}
+    if stage in recovery.SIGNALS:
+        return {f"{phase}_{stage.upper()}" for phase in PHASES}
+    raise ValueError(f"semantic stage has no extracted binding: {stage}")
 
 
-WRITE_EPOCH = phase_nets("HSM", "HSLOW", "HEMUX", "HEPOCH", "HBASE")
-WRITE_START = phase_nets("HBASE", "S0A", "STR0", "START")
-WRITE_END = phase_nets(
-    "HBASE", "S0A", "S1A", "E0", "E1A", "E1", "EMUX", "END")
-WRITE_TAPER = (phase_nets(
-    "START", "END", "WIN", "WB1", "WB2", "WB3", "WB4")
-    | {f"DBG_{phase}_WPN" for phase in PHASES}
-    | {f"{phase}_WRITE" for phase in PHASES})
+def semantic_path_nets(*path_names: str) -> set[str]:
+    stages = {
+        stage
+        for name in path_names
+        if name in recovery.INTERNAL_PATHS
+        for stage in recovery.INTERNAL_PATHS[name]["stages"]
+    }
+    return set().union(*(stage_nets(stage) for stage in stages)) if stages else set()
+
+
+WRITE_EPOCH = semantic_path_nets(*(
+    name for name in recovery.INTERNAL_PATHS if name.startswith("write_epoch")))
+WRITE_START = semantic_path_nets("write_start")
+WRITE_END = semantic_path_nets(*(
+    name for name in recovery.INTERNAL_PATHS if name.startswith("write_end")))
+WRITE_TAPER = semantic_path_nets("write_taper")
 WRITE_ALL = WRITE_EPOCH | WRITE_START | WRITE_END | WRITE_TAPER
+SENSE = semantic_path_nets("sense")
+BOOST = semantic_path_nets("boost")
+SENSE_BOOST = SENSE | BOOST
 
-REPRESENTATIVE = (
-    ("tt", "sense0_interval1_epoch0"),
-    ("ss_hot", "sense1_interval0_epoch0"),
-)
+REPRESENTATIVE = tuple(
+    (item["environment_id"], item["code_id"])
+    for item in recovery.CONTRACT.get("diagnostic_cases", (
+        {"environment_id": "tt", "code_id": "sense0_interval1_epoch0"},
+        {"environment_id": "ss_hot", "code_id": "sense1_interval0_epoch0"},
+    )))
 
 
 def by_id(items: list[dict[str, Any]], identifier: str) -> dict[str, Any]:
@@ -53,6 +72,9 @@ def by_id(items: list[dict[str, Any]], identifier: str) -> dict[str, Any]:
 def variants(source: str) -> dict[str, str]:
     answer = {"baseline": source, "baseline_repeat": source}
     for name, nodes in (
+        ("sense", SENSE),
+        ("boost", BOOST),
+        ("sense_boost", SENSE_BOOST),
         ("epoch", WRITE_EPOCH),
         ("start", WRITE_START),
         ("end", WRITE_END),

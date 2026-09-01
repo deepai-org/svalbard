@@ -1,0 +1,85 @@
+{
+  "schema_version": 2,
+  "contract_id": "pcie_pulse_retimed_full_swing_v1",
+  "claim": "retimed_full_swing_three_control_pulse",
+  "top": "recovery_dual_control_pulse",
+  "control_semantics": {
+    "SEL0": "SENSE falling-edge assist",
+    "SEL1": "WRITE interval family and long-epoch qualifier",
+    "SEL2": "WRITE short/normal epoch family; SEL1=SEL2=1 selects the explicit long tap"
+  },
+  "internal_probes": {
+    "hsn": "DBG_{phase}_HSN",
+    "sb0": "DBG_{phase}_SB0",
+    "sb1": "DBG_{phase}_SB1",
+    "w_edl": "DBG_{phase}W_EDL",
+    "w_edl2": "DBG_{phase}W_EDL2",
+    "w_emux": "DBG_{phase}W_EMUX",
+    "w_eb0": "DBG_{phase}W_EB0",
+    "w_ebase": "DBG_{phase}W_EBASE",
+    "w_t0": "DBG_{phase}W_T0",
+    "w_t1": "DBG_{phase}W_T1",
+    "w_t2": "DBG_{phase}W_T2",
+    "w_endmux": "DBG_{phase}W_ENDMUX",
+    "w_sr0": "DBG_{phase}W_SR0",
+    "w_start": "DBG_{phase}W_START",
+    "w_er0": "DBG_{phase}W_ER0",
+    "w_end": "DBG_{phase}W_END",
+    "w_win": "DBG_{phase}W_WIN",
+    "w_wpn": "DBG_{phase}_WPN",
+    "w_wb1": "DBG_{phase}W_WB1",
+    "w_wb2": "DBG_{phase}W_WB2",
+    "w_wb3": "DBG_{phase}W_WB3",
+    "w_wb4": "DBG_{phase}W_WB4"
+  },
+  "semantic_paths": {
+    "sense": {"stages": ["hsn", "sb0", "sb1", "sense"]},
+    "boost": {"stages": ["hsn", "sb0", "sb1", "boost"]},
+    "write_epoch_short": {
+      "stages": ["w_emux", "w_eb0", "w_ebase"],
+      "active_when": {"epoch": 0}
+    },
+    "write_epoch_normal": {
+      "stages": ["w_edl", "w_emux", "w_eb0", "w_ebase"],
+      "active_when": {"interval": 0, "epoch": 1}
+    },
+    "write_epoch_long": {
+      "stages": ["w_edl", "w_edl2", "w_emux", "w_eb0", "w_ebase"],
+      "active_when": {"interval": 1, "epoch": 1}
+    },
+    "write_start": {
+      "stages": ["w_ebase", "w_t0", "w_sr0", "w_start"]
+    },
+    "write_end0": {
+      "stages": ["w_ebase", "w_t0", "w_t1", "w_endmux", "w_er0", "w_end"],
+      "active_when": {"interval": 0}
+    },
+    "write_end1": {
+      "stages": ["w_ebase", "w_t0", "w_t1", "w_t2", "w_endmux", "w_er0", "w_end"],
+      "active_when": {"interval": 1}
+    },
+    "write_taper": {
+      "stages": ["w_start", "w_end", "w_win", "w_wpn", "w_wb1", "w_wb2", "w_wb3", "w_wb4", "write"]
+    }
+  },
+  "unit_interval_s": 8e-10,
+  "external_load_f": {
+    "sense": 3.5e-13,
+    "boost": 3.5e-13,
+    "write": 6.5e-13
+  },
+  "thresholds": {
+    "sense_width_s": [4.5e-10, 6.5e-10],
+    "write_width_s": [1e-10, 2.2e-10],
+    "write_delay_from_sense_rise_s": [5e-10, 7e-10],
+    "dead_time_s": [0.0, 1.5e-10],
+    "logic_rail_margin_v": 0.25,
+    "dual_phase_average_supply_current_a": [0.0, 0.15]
+  },
+  "candidate_scope": "one fixed retimed full-swing circuit; only the three static control bits may vary by environment",
+  "diagnostic_cases": [
+    {"environment_id": "tt", "code_id": "sense0_interval0_epoch0"},
+    {"environment_id": "ss_hot", "code_id": "sense0_interval0_epoch0"},
+    {"environment_id": "ss_hot", "code_id": "sense1_interval0_epoch1"}
+  ]
+}

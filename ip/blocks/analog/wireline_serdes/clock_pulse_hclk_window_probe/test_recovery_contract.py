@@ -52,6 +52,72 @@ class RecoveryContractTest(unittest.TestCase):
                       split)
         self.assertIn("XER1 ER0 END VDD VSS cp_inv WP=8u WN=6u MP=6 MN=4",
                       split)
+        retimed = compile_recovery.compile_source("retimed_tap_chain")
+        self.assertIn("XTD0 EBASE T0", retimed)
+        self.assertIn("XTD2 T1 T2", retimed)
+        self.assertIn("XTG0 T1 ENDMUX", retimed)
+        self.assertIn("XSR1 SR0 START", retimed)
+        self.assertIn("XER1 ER0 END", retimed)
+        self.assertNotIn("XEND0 S0A E0", retimed)
+        self.assertIn("XTD1 T0 T1 VDD VSS cp_delay WP=8u WN=4u MP=4 MN=4",
+                      compile_recovery.compile_source("retimed_tap_fast2"))
+        self.assertIn("XTD1 T0 T1 VDD VSS cp_delay WP=8u WN=4u MP=8 MN=8",
+                      compile_recovery.compile_source("retimed_tap_fast4"))
+        self.assertIn("XTD1 T0 T1 VDD VSS cp_delay WP=8u WN=4u MP=5 MN=5",
+                      compile_recovery.compile_source("retimed_tap_m5"))
+        self.assertIn("XTD1 T0 T1 VDD VSS cp_delay WP=8u WN=4u MP=5 MN=4",
+                      compile_recovery.compile_source("retimed_tap_p5n4"))
+        self.assertIn("XTD1 T0 T1 VDD VSS cp_delay WP=8u WN=4u MP=4 MN=5",
+                      compile_recovery.compile_source("retimed_tap_p4n5"))
+        self.assertIn("EXTRA_W=16u EXTRA_M=4",
+                      compile_recovery.compile_source("retimed_p5n4_sense2"))
+        self.assertIn("EXTRA_W=24u EXTRA_M=4",
+                      compile_recovery.compile_source("retimed_p5n4_sense3"))
+        isolated_sense = compile_recovery.compile_source(
+            "retimed_p5n4_isolated_sense")
+        self.assertIn("XTG A XG EN ENB", isolated_sense)
+        self.assertIn("XNEX Y XG VSS VSS", isolated_sense)
+        self.assertNotIn("XNE0 Y A EN VSS", isolated_sense)
+        self.assertIn("EXTRA_W=8u EXTRA_M=8", compile_recovery.compile_source(
+            "retimed_p5n4_isolated_sense2"))
+        joint = compile_recovery.compile_source("retimed_joint_long")
+        self.assertIn("XED1 EDL EDL2", joint)
+        self.assertIn("XLN ESEL SEL LONGB", joint)
+        self.assertIn("XNN ESEL SELB NORMB", joint)
+        self.assertIn("XETG2 EDL2 EMUX LONG LONGB", joint)
+        self.assertNotIn("EMUX0", joint)
+        self.assertIn("XTD1 T0 T1 VDD VSS cp_delay WP=8u WN=4u MP=5 MN=4",
+                      joint)
+        self.assertIn("XED1 EDL EDL2 VDD VSS cp_delay WP=6u WN=3u MP=2 MN=2",
+                      compile_recovery.compile_source("retimed_joint_long_6_3"))
+        retimed_compact = compile_recovery.compile_source(
+            "retimed_joint_long_6_3_compact")
+        self.assertIn("XED1 EDL EDL2 VDD VSS cp_delay WP=6u WN=3u MP=2 MN=2",
+                      retimed_compact)
+        self.assertIn("XWB4 WB2 WRITE VDD VSS cp_final_inv", retimed_compact)
+        self.assertNotIn("XWB3 ", retimed_compact)
+        retimed_lean = compile_recovery.compile_source(
+            "retimed_joint_long_6_3_lean")
+        self.assertIn("XWPN WIN WPN VDD VSS cp_inv WP=2u WN=2u MP=2 MN=2",
+                      retimed_lean)
+        self.assertIn("XWB2 WB2 WB3 VDD VSS cp_inv WP=6u WN=6u MP=4 MN=4",
+                      retimed_lean)
+        self.assertIn("XWB3 WB3 WB4 VDD VSS cp_inv WP=8u WN=8u MP=8 MN=8",
+                      retimed_lean)
+        retimed_latched = compile_recovery.compile_source(
+            "retimed_joint_long_6_3_latched")
+        self.assertIn(".subckt cp_output_nor_latch S R Q QB", retimed_latched)
+        self.assertIn("XLAT SET RESET WRITE WPN VDD VSS cp_output_nor_latch",
+                      retimed_latched)
+        self.assertNotIn("XWB4 ", retimed_latched)
+        retimed_latched_strong = compile_recovery.compile_source(
+            "retimed_joint_long_6_3_latched_strong")
+        self.assertIn("XPQ0 PQ R VDD VDD pfet_03v3 w=8u l=0.28u m=112",
+                      retimed_latched_strong)
+        self.assertIn("XNQ0 Q R VSS VSS nfet_03v3 w=8u l=0.28u m=44",
+                      retimed_latched_strong)
+        self.assertIn("XPB0 PB S VDD VDD pfet_03v3 w=8u l=0.28u m=28",
+                      retimed_latched_strong)
 
     def test_pex_internal_probes_are_explicit_and_diagnostic(self) -> None:
         environment = recovery.base.CONTRACT["environments"][0]
@@ -62,6 +128,8 @@ class RecoveryContractTest(unittest.TestCase):
         self.assertIn("v(xdut.DBG_O_SB1)", deck)
         self.assertIn("v(xdut.DBG_EW_HBASE)", deck)
         self.assertIn("v(xdut.DBG_OW_WB4)", deck)
+        self.assertIn("e_dbg_w_hbase_rise when v(xdut.DBG_EW_HBASE)", deck)
+        self.assertIn("o_dbg_w_wb4_fall when v(xdut.DBG_OW_WB4)", deck)
         self.assertNotIn("DBG_E_RB0", deck)
         observed = {
             "e_dbg_hsn_high": 3.3, "e_dbg_hsn_low": 0.0,

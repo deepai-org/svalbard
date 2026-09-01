@@ -259,3 +259,47 @@ taper, isolation, and final-driver sweeps. The next candidate must create
 explicit full-swing event-delay states and retime them as a unit, then size the
 detector and load drivers independently before regenerated DRC/LVS/PEX and
 five-environment capture replay.
+
+## Retimed full-swing event source
+
+The next revision implements the authorized architectural change rather than
+another local sizing sweep.  Epoch selection occurs only between continuous
+full-duty HCLK states.  One restored state then feeds a compact `T0/T1/T2`
+tap chain; interval selection chooses a full-swing tap before matched START and
+END restorers and the local detector.  A decoded third long-epoch state is a
+real circuit path, not an ideal testbench delay.  The independent SENSE,
+interval, and epoch controls remain realizable static bits.
+
+`./run_retimed_recovery_schematic.sh` reproduces source hash
+`7ec5ca1c...` and covers 5/5 environments with eight passing control cases.
+Selected SENSE widths are 481.13--591.34 ps, WRITE widths are
+131.40--215.12 ps, SENSE-rise-to-WRITE delays are 595.89--627.90 ps, and dead
+times are 4.55--126.62 ps.  This exact schematic, not a nearby sizing point,
+earned physical lowering.
+
+`./run_retimed_recovery_physical_probe.sh` generates a 220-device dual-phase
+macro.  Native Magic DRC is clean, Netgen finds one LVS-equivalent solution,
+and full-RC extraction contains 5,494 resistors and 4,069 capacitors.  The
+targeted TT/SS-hot electrical replay remains 0/2.  Unlike the previous
+topology, all SS/hot interval-0 event states through `WIN` and `WPN` cross and
+reach 2.92--2.96 V and 2.86--2.88 V respectively; the loaded WRITE output then
+peaks at only 1.10--1.46 V.  This localizes the new abstraction loss after
+full-swing event formation.
+
+The PEX localizer now derives node groups and representative cases from the
+active contract instead of hard-coded historical labels.  Its exact baseline
+repeat is identical.  Removing taper capacitance adds 6.097 V of summed
+WRITE-high recovery across the six representative phase outputs, versus only
+0.768 V for near-zero taper resistance, but no counterfactual passes all
+required timing and rail predicates.  Modified PEX remains diagnostic only.
+
+Three regenerated schematic branches bound the immediate remedy.  A literal
+four-stage taper covers 0/5 and filters short intervals; a monotonic lower-C
+six-stage taper reaches 4/5 but loses FF/hot rail; and an over-sized NOR-latch
+output covers 0/5 because its both-asserted interval does not provide the
+required deterministic reset.  The exact identities and hashes are in
+[`retimed_recovery_result.json`](retimed_recovery_result.json).  The next
+candidate should transport separate full-duty set/reset events into a
+contention-free output state machine, or move that state into the capture
+cell.  It should not propagate the final 100--220 ps WRITE pulse through
+another large inverter taper.

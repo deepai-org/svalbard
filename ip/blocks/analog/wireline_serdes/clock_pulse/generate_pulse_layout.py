@@ -459,6 +459,24 @@ def place(devices: list[Device], groups: dict[str, Group],
                 "XWB0": 20, "XWB1": 21, "XWB2": 22,
                 "XWB3": 23, "XWB4": 24,
             }
+            if any(instance_root(group.name) == "XTD0" for group in selected):
+                # Retimed full-swing implementation. Decode is outside the
+                # event path; full-duty epoch states, compact taps, matched
+                # restorers, and taper remain in causal order. Keep this
+                # topology-local so historical layout hashes do not move.
+                selector_rank.update({
+                    "XLN": 2, "XLI": 3, "XNN": 4, "XNI": 5,
+                    "XED0": 6, "XED1": 7,
+                    "XETG0": 8, "XETG1": 9, "XETG2": 10,
+                    "XEB0": 11, "XEB1": 12,
+                    "XTD0": 13, "XSR0": 14, "XSR1": 15,
+                    "XTD1": 16, "XTD2": 17,
+                    "XTG0": 18, "XTG1": 19,
+                    "XER0": 20, "XER1": 21,
+                    "XDET": 22, "XWPN": 23,
+                    "XWB0": 24, "XWB1": 25, "XWB2": 26,
+                    "XWB3": 27, "XWB4": 28,
+                })
             selector_min_x = {"XLEGACY": 130.0,
                               "XWM3A": 145.0, "XWE3A": 161.28,
                               "XWM1": 205.0,
@@ -1085,7 +1103,9 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
                     "HSM", "HSLOW", "HEMUX", "HEPOCH", "HBASE",
                     "S0A", "S1A", "STR0", "START", "E0", "E1A",
                     "E1", "EMUX", "END", "WIN", "WB0", "WB1",
-                    "WB2", "WB3", "WB4",
+                    "WB2", "WB3", "WB4", "EDL", "EDL2", "EB0",
+                    "EBASE", "T0", "T1", "T2", "ENDMUX", "SR0",
+                    "ER0",
                 }:
                     return label_prefix + tail
         return None

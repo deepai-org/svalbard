@@ -7,6 +7,7 @@ import argparse
 import concurrent.futures
 import hashlib
 import json
+import os
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -17,7 +18,8 @@ import run_selected_pex as verifier
 
 
 ROOT = Path(__file__).resolve().parent
-CONTRACT_PATH = ROOT / "recovery_contract.json"
+CONTRACT_PATH = Path(os.environ.get(
+    "RECOVERY_CONTRACT_PATH", ROOT / "recovery_contract.json"))
 CONTRACT = json.loads(CONTRACT_PATH.read_text())
 PHASES = ("e", "o")
 SIGNALS = ("sense", "boost", "write")
@@ -92,6 +94,10 @@ def compile_deck(source: Path, top: str, environment: dict[str, Any],
                 measures.extend([
                     f"meas tran {phase}_dbg_{stage}_high max v({node}) from=8n to=12.8n",
                     f"meas tran {phase}_dbg_{stage}_low min v({node}) from=8n to=12.8n",
+                    f"meas tran {phase}_dbg_{stage}_rise when v({node})={vdd / 2:.6f} "
+                    f"rise=1 td=8n",
+                    f"meas tran {phase}_dbg_{stage}_fall when v({node})={vdd / 2:.6f} "
+                    f"fall=1 td=8n",
                 ])
     return f"""* SPDX-License-Identifier: Apache-2.0
 .include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
@@ -133,6 +139,8 @@ def stage_diagnostics(observed: dict[str, float], phase: str, vdd: float,
                   else f"{phase}_{stage}")
         high = observed.get(f"{prefix}_high")
         low = observed.get(f"{prefix}_low")
+        rise = observed.get(f"{prefix}_rise")
+        fall = observed.get(f"{prefix}_fall")
         high_margin = None if high is None else high - (vdd - margin)
         low_margin = None if low is None else margin - low
         transition_high_margin = None if high is None else high - vdd / 2
@@ -140,6 +148,8 @@ def stage_diagnostics(observed: dict[str, float], phase: str, vdd: float,
         stages[stage] = {
             "high_v": high,
             "low_v": low,
+            "first_rise_s": rise,
+            "first_fall_s": fall,
             "high_margin_v": high_margin,
             "low_margin_v": low_margin,
             "rail_pass": (high_margin is not None and low_margin is not None
@@ -260,6 +270,8 @@ def main() -> None:
     parser.add_argument("--netlist-kind", choices=("schematic", "full_rc_pex"),
                         default="schematic")
     parser.add_argument("--environment-ids", nargs="+")
+    parser.add_argument("--control-ids", nargs="+",
+                        help="run a declared subset; omitted means full cube")
     parser.add_argument("--internal-probes", action="store_true",
                         help="measure semantic nodes retained in flattened PEX")
     args = parser.parse_args()
@@ -271,10 +283,16 @@ def main() -> None:
         require(not unknown, f"unknown recovery environments: {unknown}")
         environments = [item for item in environments
                         if item["id"] in args.environment_ids]
+    controls = CONTROLS
+    if args.control_ids:
+        unknown = sorted(set(args.control_ids)
+                         - {item["id"] for item in CONTROLS})
+        require(not unknown, f"unknown recovery controls: {unknown}")
+        controls = [item for item in CONTROLS if item["id"] in args.control_ids]
     specs = [(args.source, args.top, args.work, environment, control,
               args.internal_probes)
              for environment in environments
-             for control in CONTROLS]
+             for control in controls]
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
         cases = list(executor.map(run_case, specs))
     coverage = {
@@ -284,7 +302,8 @@ def main() -> None:
         for environment in environments
     }
     result = {"schema_version": 1,
-              "claim": "three_control_full_width_boost_schematic",
+              "claim": CONTRACT.get(
+                  "claim", "three_control_full_width_boost_schematic"),
               "scope": ("exact dual-phase schematic with declared loads"
                         if args.netlist_kind == "schematic" else
                         "full-RC extracted dual-phase macro with declared loads"),

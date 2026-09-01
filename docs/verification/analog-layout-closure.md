@@ -330,6 +330,21 @@ phase/case observations, followed by SENSE-width and relative-timing misses,
 while SS/hot also loses regeneration. Use those rankings to choose RC
 counterfactuals and the next geometry; do not relax thresholds after PEX.
 
+Retiming full-swing states does not by itself authorize a conventional output
+taper. In the later three-control source, every SS/hot state through the local
+window and predriver still crossed, yet the 100--220 ps event fell from
+2.86--2.96 V internally to only 1.10--1.46 V at the 650 fF output. Removing
+declared taper capacitance moved summed output-high voltage by 6.10 V across
+six observations, while near-zero taper resistance moved it by only 0.77 V.
+The real four-stage taper then failed 0/5 schematically and a lower-C six-stage
+taper failed FF/hot, so counterfactual direction was useful without making
+either altered deck a solution. When output state is proposed instead, define
+the overlap truth table first: a simple NOR SR latch charged the load after
+over-sizing but could not reset deterministically while set and reset were
+simultaneously asserted. Carry separate full-duty set/reset events into a
+contention-free state machine, or put that state in the consumer; do not call
+an invalid latch state a pulse stretcher.
+
 Require a byte-identical baseline repeat inside a counterfactual campaign.
 Small naming or extraction-order changes can move a marginal narrow-pulse
 solution enough to suggest a false remedy; a repeat with the same PEX must have

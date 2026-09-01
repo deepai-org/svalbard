@@ -102,8 +102,14 @@ localized an SS/hot BOOST failure to `RB0`, then traced WRITE degradation from
 `E0`/`EMUX` to the first lost odd-phase `END` transition. A baseline-checked
 semantic RC campaign and eight explicit schematic revisions showed that route
 R/C, taper depth, isolation, and final drive cannot close the retained timing
-contract independently. Candidate generation and cross-candidate margin
-comparison remain manual. The next justified shared
+contract independently. The replacement full-swing tap-chain source covers
+5/5 schematically and is clean DRC/unique LVS, but its 5,494R/4,069C PEX is
+0/2. The localizer now resolves semantic groups and representative cases from
+the active schema-v2 contract; it shows that the new event states survive and
+taper capacitance dominates the remaining WRITE collapse. Compact, lean, and
+simple stateful output branches are retained as explicit schematic
+rejections. Candidate generation and cross-candidate margin comparison remain
+manual. The next justified shared
 extraction is therefore a small candidate-comparison record exercised here,
 then reused on the Wi-Fi IF driver if it removes the same log and waveform
 archaeology there. It is not yet a reason to build a new language, general
@@ -196,10 +202,10 @@ failing cases.
 
 ## Current priorities and rule for adding tooling
 
-1. **PCIe:** replace the coupled pulse event source with explicitly retimed
-   full-swing states; keep detector and load drive outside the delay mechanism.
-   Preserve the three independent controls and require regenerated DRC/LVS plus
-   5/5 dual-phase PEX before replaying the capture boundary.
+1. **PCIe:** carry independently buffered full-duty set/reset events into a
+   contention-free WRITE state machine, or merge that state into the capture
+   cell. Preserve the three independent controls and require regenerated
+   DRC/LVS plus 5/5 dual-phase PEX before replaying the capture boundary.
 2. **Wi-Fi:** design and screen the closed-loop differential IF driver and
    thermal-floor hold-capacitor boundary before authorizing a new sampler
    layout.

@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "claim": "retimed full-swing three-control pulse-source experiment",
+  "result": "physical_rejection",
+  "contract": {
+    "id": "pcie_pulse_retimed_full_swing_v1",
+    "sha256": "4f72dde177b58f291f9cbf1ee0df39ed11fa411685035746f4ff6d97e15fb885"
+  },
+  "retained_candidate": {
+    "revision": "retimed_joint_long_6_3",
+    "source_sha256": "7ec5ca1c86193f266208826a336bd4d0d1ba487ad13478f513667fc79e7c606c",
+    "schematic": {
+      "result": "pass",
+      "case_count": 40,
+      "passing_case_count": 8,
+      "environment_coverage": "5/5",
+      "result_sha256": "5b34d7b37ac5926399f8e057b6e9f3abb35de402aa341ec78d7ef9f330b78f43",
+      "selected_metric_ranges_ps": {
+        "sense_width": [481.13, 591.34],
+        "write_width": [131.40, 215.12],
+        "write_delay_from_sense_rise": [595.89, 627.90],
+        "dead_time": [4.55, 126.62]
+      }
+    },
+    "physical": {
+      "drc": "clean",
+      "lvs": "unique_match",
+      "logical_devices": 220,
+      "extracted_resistors": 5494,
+      "extracted_capacitors": 4069,
+      "tested_environments": ["tt", "ss_hot"],
+      "environment_coverage": "0/2",
+      "pex_sha256": "bf15056ed2966c0e84bae95d96749a79d1caf50a7a513498fb9929f9b2083e1c",
+      "result_sha256": "eb5a038fa44b5ebdb22eac4b5d3d695a711493c375e9c684408d3f24ae636ff0"
+    }
+  },
+  "localization": {
+    "result_sha256": "782292bc5995b13e15c8e5eb9252ab3b4d933b102e20e094e7c74e8354693b57",
+    "baseline_repeat_identical": true,
+    "representative_case_count": 3,
+    "counterfactual_case_count": 54,
+    "passing_counterfactual_variants": 0,
+    "ss_hot_interval0": {
+      "write_window_high_v": [2.95733, 2.92372],
+      "write_predriver_high_v": [2.88123, 2.85807],
+      "write_output_high_v": [1.46254, 1.09953],
+      "first_lost_write_transition": ["write", "write"]
+    },
+    "capacitance_removed_taper_summed_write_high_gain_v": 6.096504,
+    "resistance_near_zero_taper_summed_write_high_gain_v": 0.768384,
+    "interpretation": "The full-swing epoch and tap states survive to the local window and WPN nodes. Extracted taper capacitance, rather than route resistance, dominates WRITE amplitude recovery, but idealizing it also moves width and epoch and closes none of the three representative cases. A real circuit/layout revision is required."
+  },
+  "bounded_follow_up_rejections": [
+    {
+      "revision": "retimed_joint_long_6_3_compact",
+      "source_sha256": "ff8e5dc4278e9c518e9e45bb69d2ee9935d1f3cfe399665eb99445a7cb67ab0c",
+      "schematic_environment_coverage": "0/5",
+      "result_sha256": "4d81a5d1a40047ec5519b00f9f0c2cf2f614f0af6af3ae12e2810f1e48d8a13a",
+      "interpretation": "Deleting two inversions filters the short interval to 1.48--2.15 V in multiple corners."
+    },
+    {
+      "revision": "retimed_joint_long_6_3_lean",
+      "source_sha256": "5003254c883c9b2287271d2dcfa3f9580741bb637d1525e8792a10be6d83d4de",
+      "schematic_environment_coverage": "4/5",
+      "result_sha256": "ac13d4339343f035529017aaaad47451647e0f222661863ce9ec9721f945569d",
+      "interpretation": "Six lower-capacitance monotonic stages preserve four corners but lose FF/hot output rail."
+    },
+    {
+      "revision": "retimed_joint_long_6_3_latched_strong",
+      "source_sha256": "d7c6dbdc58a842d34fcab3639322c2007774e6ebd96aa56641f1c400cf5359d2",
+      "schematic_environment_coverage": "0/5",
+      "result_sha256": "d8e5908b649ec0a15a85da3f70815ad199a535fe9c6789e1c160e60a1c3a728a",
+      "interpretation": "A direct loaded NOR-latch Q charges with over-sized devices but cannot resolve the both-asserted overlap into the required reset timing."
+    }
+  ],
+  "conclusion": "Explicit full-swing retiming fixes the prior loss inside selected epoch and END formation, and the exact candidate remains 5/5 at schematic level. Its clean, uniquely matched physical implementation is nevertheless 0/2 because narrow-pulse delivery through the loaded taper and the inherited SENSE/BOOST restoration lack extracted margin. Compact, lean, and simple stateful-output branches do not supply a physically promotable replacement. The next circuit should use independently buffered full-duty set/reset events and a contention-free output state machine, or move the write state into the capture cell, rather than propagating a 100--220 ps pulse through a large inverter tree.",
+  "not_a_claim": [
+    "five-corner PEX closure",
+    "capture-boundary closure",
+    "calibration implementation",
+    "PCIe compliance",
+    "foundry signoff or silicon behavior"
+  ]
+}

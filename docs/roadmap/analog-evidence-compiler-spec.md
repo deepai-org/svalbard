@@ -798,11 +798,18 @@ Execution order is deliberately narrow:
    degradation through `E0`/`EMUX` until odd-phase `END` stops crossing.
    Baseline-checked R/C counterfactuals and eight bounded schematic revisions
    reject local routing, taper depth, matched isolation, and final-driver
-   strength as independent remedies. The bounded next step is therefore a
-   retimed full-swing event source whose delay states do not depend on detector
-   or output drive. Preserve the three controls, include an observable
-   correlated with timing/drive margin and safe code endpoints, and use a
-   bounded selection procedure. Do not build a general calibration
+   strength as independent remedies. A retimed source now selects only
+   full-duty epoch states, restores them into a `T0/T1/T2` chain, and preserves
+   5/5 schematic coverage. Its 220-device layout is clean DRC/unique LVS and
+   extracts to 5,494R/4,069C, but remains 0/2 at TT/SS-hot. Contract-derived
+   localization proves that the full-swing states survive through `WIN/WPN`
+   and that taper capacitance dominates the final WRITE collapse. Four-stage,
+   lean six-stage, and simple NOR-latch output branches fail schematic gates.
+   The bounded next step is therefore to transport independent full-duty
+   set/reset events into a contention-free output state machine, or merge that
+   state into the capture cell. Preserve the three controls, include an
+   observable correlated with timing/drive margin and safe code endpoints, and
+   use a bounded selection procedure. Do not build a general calibration
    synthesizer.
 2. Use that one real control to repair the two exact extracted failures in the
    already physical pulse-to-bridge-to-direct-regenerative-capture boundary:

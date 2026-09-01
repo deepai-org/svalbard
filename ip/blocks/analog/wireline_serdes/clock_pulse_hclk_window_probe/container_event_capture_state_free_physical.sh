@@ -42,3 +42,32 @@ python3 /src/clock_pulse_hclk_window_probe/run_event_capture_schematic.py \
 if [[ "$rc" -ne 0 && "$rc" -ne 1 ]]; then
   exit "$rc"
 fi
+lane_rc=0
+python3 /src/clock_pulse_hclk_window_probe/run_event_lane_composition.py \
+  --event-pex /work/retimed_event_capture_bridge.pex.spice \
+  --event-physical /work/retimed-event-capture-physical.json \
+  --event-schematic /work/retimed_event_capture_bridge.spice \
+  --event-source-revision retimed_joint_long_6_3_capture_owned_start_v3 \
+  --lane-pex /src/lane_rx_regenerative_capture/lane_rx_regenerative_capture.pex.spice \
+  --lane-physical /src/lane_rx_regenerative_capture/physical_result.json \
+  --case-ids tt:sense1_interval0_epoch0 ss_hot:sense1_interval0_epoch0 \
+  --skip-debug-stages --jobs 2 \
+  --work /work/lane-cases --output /work/lane-result.json || lane_rc=$?
+if [[ "$lane_rc" -ne 0 && "$lane_rc" -ne 1 ]]; then
+  exit "$lane_rc"
+fi
+buffered_lane_rc=0
+python3 /src/clock_pulse_hclk_window_probe/run_event_lane_composition.py \
+  --event-pex /work/retimed_event_capture_bridge.pex.spice \
+  --event-physical /work/retimed-event-capture-physical.json \
+  --event-schematic /work/retimed_event_capture_bridge.spice \
+  --event-source-revision retimed_joint_long_6_3_capture_owned_start_v3 \
+  --lane-pex /src/lane_rx_regenerative_capture/lane_rx_regenerative_capture.pex.spice \
+  --lane-physical /src/lane_rx_regenerative_capture/physical_result.json \
+  --case-ids tt:sense1_interval0_epoch0 ss_hot:sense1_interval0_epoch0 \
+  --skip-debug-stages --local-interface-buffer --jobs 2 \
+  --work /work/lane-buffered-cases --output /work/lane-buffered-result.json \
+  || buffered_lane_rc=$?
+if [[ "$buffered_lane_rc" -ne 0 && "$buffered_lane_rc" -ne 1 ]]; then
+  exit "$buffered_lane_rc"
+fi

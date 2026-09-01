@@ -41,6 +41,28 @@ class EventLaneCompositionTest(unittest.TestCase):
         self.assertIn("--event-schematic", source)
         self.assertIn("--event-source-revision", source)
         self.assertIn("event physical schematic identity mismatch", source)
+        self.assertIn("--skip-debug-stages", source)
+
+    def test_topology_independent_deck_omits_only_internal_probes(self) -> None:
+        environment = composition.base.CONTRACT["environments"][0]
+        control = composition.event_runner.CONTROLS[4]
+        deck = composition.compile_deck(Path("event.pex.spice"),
+                                        Path("lane.pex.spice"),
+                                        environment, control, ())
+        self.assertNotIn("dbg_sb1", deck)
+        self.assertIn("meas tran e_q_diff", deck)
+        self.assertIn("meas tran e_sense_high", deck)
+
+    def test_local_interface_buffer_is_explicit_and_checks_both_sides(self) -> None:
+        environment = composition.base.CONTRACT["environments"][0]
+        control = composition.event_runner.CONTROLS[4]
+        deck = composition.compile_deck(Path("event.pex.spice"),
+                                        Path("lane.pex.spice"),
+                                        environment, control, (), True)
+        self.assertIn(".subckt lane_if_buffer", deck)
+        self.assertIn("XEB_S E_SENSE_SRC E_SENSE", deck)
+        self.assertIn("meas tran e_sense_src_high", deck)
+        self.assertIn("E_SENSE_SRC E_BOOST_SRC", deck)
 
     def test_selected_physical_source_identity_matches_record(self) -> None:
         physical = json.loads((ROOT / "event_capture_physical_result.json").read_text())

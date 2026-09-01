@@ -45,7 +45,9 @@ def require_physical_pex(pex: Path, physical_path: Path, nested: bool) -> dict:
 
 
 def compile_deck(event_pex: Path, lane_pex: Path, environment: dict[str, Any],
-                 control: dict[str, Any]) -> str:
+                 control: dict[str, Any],
+                 debug_stages: tuple[str, ...] = DEBUG_STAGES,
+                 local_interface_buffer: bool = False) -> str:
     vdd = float(environment["vdd_v"])
     vmid = vdd / 2
     rx_bias = float(CONTRACT["rx_bias_v"][environment["id"]])
@@ -58,18 +60,48 @@ def compile_deck(event_pex: Path, lane_pex: Path, environment: dict[str, Any],
                 f"meas tran {phase}_{signal}_high max v({node}) from=8n to=12.8n",
                 f"meas tran {phase}_{signal}_low min v({node}) from=8n to=12.8n",
             ])
+            if local_interface_buffer:
+                source_node = f"{upper}_{signal.upper()}_SRC"
+                measures.extend([
+                    f"meas tran {phase}_{signal}_src_high max v({source_node}) from=8n to=12.8n",
+                    f"meas tran {phase}_{signal}_src_low min v({source_node}) from=8n to=12.8n",
+                ])
         measures.extend([
             f"meas tran {phase}_fe_diff find {phase}_fe_diff_vec "
             f"at={'12.55n' if phase == 'e' else '12.75n'}",
             f"meas tran {phase}_q_diff find {phase}_q_diff_vec "
             f"at={'12.55n' if phase == 'e' else '12.75n'}",
         ])
-        for stage in DEBUG_STAGES:
+        for stage in debug_stages:
             node = f"xevent.DBG_{upper}_{stage.upper()}"
             measures.extend([
                 f"meas tran {phase}_dbg_{stage}_high max v({node}) from=8n to=12.8n",
                 f"meas tran {phase}_dbg_{stage}_low min v({node}) from=8n to=12.8n",
             ])
+    buffer_subckt = "" if not local_interface_buffer else """
+.subckt lane_if_inv A Y VDD VSS params: MP=1 MN=1
+XP Y A VDD VDD pfet_03v3 w=8u l=0.28u m={MP}
+XN Y A VSS VSS nfet_03v3 w=8u l=0.28u m={MN}
+.ends lane_if_inv
+.subckt lane_if_buffer A Y VDD VSS
+XI0 A B VDD VSS lane_if_inv MP=4 MN=4
+XI1 B Y VDD VSS lane_if_inv MP=16 MN=16
+.ends lane_if_buffer
+"""
+    event_outputs = ("E_SENSE_SRC E_BOOST_SRC E_CLK_SRC E_CLKB_SRC "
+                     "O_SENSE_SRC O_BOOST_SRC O_CLK_SRC O_CLKB_SRC"
+                     if local_interface_buffer else
+                     "E_SENSE E_BOOST E_CLK E_CLKB O_SENSE O_BOOST O_CLK O_CLKB")
+    buffer_instances = "" if not local_interface_buffer else """
+XEB_S E_SENSE_SRC E_SENSE VDD 0 lane_if_buffer
+XEB_B E_BOOST_SRC E_BOOST VDD 0 lane_if_buffer
+XEB_C E_CLK_SRC E_CLK VDD 0 lane_if_buffer
+XEB_CB E_CLKB_SRC E_CLKB VDD 0 lane_if_buffer
+XOB_S O_SENSE_SRC O_SENSE VDD 0 lane_if_buffer
+XOB_B O_BOOST_SRC O_BOOST VDD 0 lane_if_buffer
+XOB_C O_CLK_SRC O_CLK VDD 0 lane_if_buffer
+XOB_CB O_CLKB_SRC O_CLKB VDD 0 lane_if_buffer
+"""
     return f"""* SPDX-License-Identifier: Apache-2.0
 .include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
 .lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice {environment['mos_corner']}
@@ -77,6 +109,7 @@ def compile_deck(event_pex: Path, lane_pex: Path, environment: dict[str, Any],
 .temp {environment['temperature_c']}
 .include {event_pex}
 .include {lane_pex}
+{buffer_subckt}
 VDD VDD 0 PWL(0 0 500p {vdd:.6f})
 VCLKP CLKP_H 0 PULSE(0 {vdd:.6f} 1n 20p 20p 380p 800p)
 VCLKN CLKN_H 0 PULSE(0 {vdd:.6f} 1.4n 20p 20p 380p 800p)
@@ -109,8 +142,9 @@ RTERM3 TERM_EN3_N_SRC TERM_EN3_N 1
 RTERM4 TERM_EN4_N_SRC TERM_EN4_N 1
 RTERM5 TERM_EN5_N_SRC TERM_EN5_N 1
 RTERM6 TERM_EN6_N_SRC TERM_EN6_N 1
-XEVENT CLKP_H CLKN_H SEL0 SEL1 SEL2 VDD 0 E_SENSE E_BOOST E_CLK E_CLKB
-+ O_SENSE O_BOOST O_CLK O_CLKB retimed_event_capture_bridge_pex
+XEVENT CLKP_H CLKN_H SEL0 SEL1 SEL2 VDD 0 {event_outputs}
++ retimed_event_capture_bridge_pex
+{buffer_instances}
 REREGEN E_REGEN_CLK 0 1m
 REREGENB E_REGEN_CLKB 0 1m
 ROREGEN O_REGEN_CLK 0 1m
@@ -139,12 +173,14 @@ meas tran supply_current avg isupply from=8n to=12.8n
 """
 
 
-def run_case(spec: tuple[Path, Path, Path, dict, dict]) -> dict:
-    event_pex, lane_pex, work, environment, control = spec
+def run_case(spec: tuple[Path, Path, Path, dict, dict, tuple[str, ...], bool]) -> dict:
+    (event_pex, lane_pex, work, environment, control, debug_stages,
+     local_interface_buffer) = spec
     stem = f"{environment['id']}_{control['id']}"
     deck = work / f"{stem}.spice"
     log = work / f"{stem}.log"
-    deck.write_text(compile_deck(event_pex, lane_pex, environment, control))
+    deck.write_text(compile_deck(event_pex, lane_pex, environment, control,
+                                 debug_stages, local_interface_buffer))
     try:
         with log.open("w") as output:
             run = subprocess.run(["ngspice", "-b", str(deck)], stdout=output,
@@ -161,9 +197,13 @@ def run_case(spec: tuple[Path, Path, Path, dict, dict]) -> dict:
         required |= {f"{phase}_{signal}_{bound}"
                      for signal in ("sense", "boost", "clk", "clkb")
                      for bound in ("high", "low")}
+        if local_interface_buffer:
+            required |= {f"{phase}_{signal}_src_{bound}"
+                         for signal in ("sense", "boost", "clk", "clkb")
+                         for bound in ("high", "low")}
         required |= {f"{phase}_fe_diff", f"{phase}_q_diff"}
         required |= {f"{phase}_dbg_{stage}_{bound}"
-                     for stage in DEBUG_STAGES for bound in ("high", "low")}
+                     for stage in debug_stages for bound in ("high", "low")}
     complete = returncode == 0 and required <= observed.keys()
     vdd = float(environment["vdd_v"])
     margin = float(CONTRACT["thresholds"]["logic_rail_margin_v"])
@@ -172,6 +212,12 @@ def run_case(spec: tuple[Path, Path, Path, dict, dict]) -> dict:
         and observed.get(f"{phase}_{signal}_low", vdd) <= margin
         for phase in PHASES for signal in ("sense", "boost", "clk", "clkb")
     )
+    if local_interface_buffer:
+        rails &= all(
+            observed.get(f"{phase}_{signal}_src_high", 0) >= vdd - margin
+            and observed.get(f"{phase}_{signal}_src_low", vdd) <= margin
+            for phase in PHASES for signal in ("sense", "boost", "clk", "clkb")
+        )
     frontend = all(abs(observed.get(f"{phase}_fe_diff", 0)) >=
                    CONTRACT["thresholds"]["frontend_differential_v"]
                    for phase in PHASES)
@@ -208,6 +254,14 @@ def main() -> None:
     parser.add_argument("--case-ids", nargs="+",
                         help="explicit ENVIRONMENT:CONTROL pairs")
     parser.add_argument("--jobs", type=int, default=1)
+    parser.add_argument(
+        "--skip-debug-stages", action="store_true",
+        help="omit topology-specific internal probes; functional checks remain unchanged",
+    )
+    parser.add_argument(
+        "--local-interface-buffer", action="store_true",
+        help="insert a realizable two-stage CMOS buffer at each lane control input",
+    )
     parser.add_argument("--work", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
@@ -259,7 +313,9 @@ def main() -> None:
     else:
         pairs = [(environment, control)
                  for environment in environments for control in controls]
-    specs = [(args.event_pex, args.lane_pex, args.work, environment, control)
+    debug_stages = () if args.skip_debug_stages else DEBUG_STAGES
+    specs = [(args.event_pex, args.lane_pex, args.work, environment, control,
+              debug_stages, args.local_interface_buffer)
              for environment, control in pairs]
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as executor:
         cases = list(executor.map(run_case, specs))
@@ -278,6 +334,8 @@ def main() -> None:
         "lane_physical_sha256": digest(args.lane_physical),
         "event_source_revision": event_physical["source_revision"],
         "lane_claim": lane_physical["claim"],
+        "debug_stages": list(debug_stages),
+        "local_interface_buffer": args.local_interface_buffer,
         "case_count": len(cases),
         "passing_case_count": sum(case["result"] == "pass" for case in cases),
         "environment_code_coverage": coverage,

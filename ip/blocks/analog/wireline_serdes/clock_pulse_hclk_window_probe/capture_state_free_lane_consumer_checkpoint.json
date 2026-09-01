@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "claim": "state_free_event_to_regenerative_lane_consumer_checkpoint",
+  "scope": "unrouted composition of two exact physically bound PEX macros",
+  "event": {
+    "source_revision": "retimed_joint_long_6_3_capture_owned_start_v3",
+    "physical_sha256": "4ebafa71ecf288c729720398129725cbcf3f492ad13e1e84d3c287491ba29bbf",
+    "pex_sha256": "e752223cfcfed263dd70b8235955fef91e2b7e9193ce7be2221ab2e44fc18c2e"
+  },
+  "lane": {
+    "claim": "routed_termination_rx_dual_regenerative_sampler_capture",
+    "physical_sha256": "29b8766349f9c7321d2ec59a62600fd5379c33414a2dabc6e72ffd4f08eadf71",
+    "pex_sha256": "f8fdcb7cdcc486c6ac868f476dd7a85bcaaa3ee02ec77caaf835c6107519b1df"
+  },
+  "actual_consumer_load_audit": {
+    "sense_clk_per_phase": {"resistor_count": 198, "resistance_sum_ohm": 9326.6, "maximum_root_to_terminal_resistance_ohm": 189.8, "terminal_count": 41, "ground_capacitance_ff": 62.403, "coupling_capacitance_ff": 55.010},
+    "sense_boost_per_phase": {"resistor_count": 136, "resistance_sum_ohm": 7639.7, "maximum_root_to_terminal_resistance_ohm": 196.6, "terminal_count": 24, "ground_capacitance_ff": 26.666, "coupling_capacitance_ff": 12.255},
+    "note": "PEX net audit excludes intrinsic MOS gate capacitance; values are routing and extracted explicit parasitics"
+  },
+  "direct_composition": {
+    "case_count": 2, "passing_case_count": 0, "environments": ["tt", "ss_hot"],
+    "frontend_and_capture_pass_count": 2, "result": "fail",
+    "result_sha256": "63f200514e578e70864ce08a2ffe8494e407dcf608daf5c449fad9c7eb53b20d"
+  },
+  "schematic_local_interface_buffer": {
+    "implementation": "two polarity-preserving inverter stages per SENSE, BOOST, CLK, and CLKB phase; first-stage W=8 um with four PMOS and four NMOS fingers, final-stage W=8 um with sixteen PMOS and sixteen NMOS fingers",
+    "case_count": 2, "passing_case_count": 1,
+    "passing_case": "tt/sense1_interval0_epoch0",
+    "frontend_and_capture_pass_count": 2, "result": "fail",
+    "result_sha256": "7118f39babf158ab74424c807dbacfcad5a4b4b3435e670f29748dbc04d7b598"
+  },
+  "localization": {
+    "tt": "all event-source and lane-side interface rails pass",
+    "ss_hot_event_sense_source_low_v": [0.243613, 0.275806],
+    "ss_hot_lane_sense_low_v": [1.66218, 1.82231],
+    "ss_hot_other_buffered_interfaces": "BOOST, CLK, and CLKB pass rail screens on both phases",
+    "ss_hot_failure": "lane-side SENSE discharge only; event source, other buffered rails, front end, capture polarity, and supply-current screen pass"
+  },
+  "decision": "retain the local-buffer architecture as positive TT evidence, but do not promote it until a laid-out and extracted consumer-local SENSE solution closes slow/hot and then all five environments",
+  "next_boundary": "realize the interface buffer in the routed parent and co-design the SENSE final stage or assertion window with the regenerative consumer; extract the routed parent before expanding the corner matrix",
+  "not_a_claim": [
+    "physical implementation or extraction of the local interface buffers",
+    "routed event-to-lane parent", "dynamic PRBS capture under generated clocks",
+    "five-environment closure", "closed CDR or PCIe compliance",
+    "provider signoff or silicon behavior"
+  ]
+}

@@ -490,12 +490,22 @@ SS/hot does not close. The same code retains valid capture and timing
 (627.86--638.36 ps SENSE width), but SENSE low is 0.965--1.032 V and BOOST
 high is 2.723--2.738 V. A fourfold selectable pull-down and slightly stronger
 BOOST follow-up repaired that local hot drive but eliminated every FF/hot
-schematic code, so it was rejected before layout. Further final-ratio search
-is not authorized. The next experiment composes v3 with the actual routed
-regenerative-lane SENSE/BOOST consumers, replacing the 350-fF proxy boundary;
-if SS/hot remains limited, the assist must move into or be redesigned with its
-real consumer. The byte-bound result is
-[`capture_state_free_checkpoint.json`](capture_state_free_checkpoint.json),
+schematic code, so it was rejected before layout. Further remote final-ratio
+search is not authorized. Direct composition with the actual routed
+regenerative-lane consumer, rather than the 350-fF proxy, fails TT and SS/hot.
+A bounded schematic consumer-local experiment adds two polarity-preserving
+inverter stages at each SENSE/BOOST/CLK/CLKB boundary. It closes TT while
+preserving the front end and expected capture polarity in both cases, but is
+not yet a physical block.
+
+The slow/hot failure is localized to lane-side SENSE. Its event-side low is
+0.244--0.276 V, and the other three buffered interfaces pass, but SENSE at the
+extracted consumer only falls to 1.662--1.822 V. The next change is therefore
+a laid-out consumer-local SENSE driver/assertion-window solution followed by
+routed-parent PEX, not another unconstrained remote driver sweep. The proxy
+checkpoint is [`capture_state_free_checkpoint.json`](capture_state_free_checkpoint.json),
+and the exact-consumer checkpoint is
+[`capture_state_free_lane_consumer_checkpoint.json`](capture_state_free_lane_consumer_checkpoint.json),
 with a [review render](../../../../../docs/images/pcie-event-capture-state-free-layout.png).
 
 Two negative results matter to the physical compiler workflow.  First, a

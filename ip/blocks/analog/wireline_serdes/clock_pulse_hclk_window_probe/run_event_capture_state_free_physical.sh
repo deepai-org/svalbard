@@ -11,4 +11,6 @@ exec "$repo_root/scripts/run_analog_flow.sh" \
   --copy retimed_event_capture_bridge.pex.spice:pcie-event-capture-state-free-pex-last.spice \
   --copy retimed-event-capture-physical.json:pcie-event-capture-state-free-physical-last.json \
   --copy pex-result.json:pcie-event-capture-state-free-pex-last.json \
+  --copy lane-result.json:pcie-event-capture-state-free-lane-last.json \
+  --copy lane-buffered-result.json:pcie-event-capture-state-free-lane-buffered-last.json \
   --copy retimed_event_capture_bridge-layout.png:pcie-event-capture-state-free-layout-last.png

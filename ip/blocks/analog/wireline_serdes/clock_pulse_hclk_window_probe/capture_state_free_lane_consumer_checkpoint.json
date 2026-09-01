@@ -58,6 +58,21 @@
     "localization": "a full-cycle replica consumes the reset/high interval; zero delay passes TT but reaches only 1.401--1.406 V SENSE high at slow/hot, while one delay loses slow/hot SENSE entirely",
     "decision": "reject full-cycle delayed-replica stretching before layout; synthesize an edge-selective release path"
   },
+  "edge_selective_release_screen": {
+    "source_revision": "retimed_capture_owned_start_edge_hold_v1",
+    "scope": "direct SENSE assertion plus delayed conditional pull-down into exact lane PEX",
+    "contract": "each final 800-ps UI must contain 150--650 ps at both the <=250-mV and >=VDD-250-mV SENSE rails",
+    "screened_hold_width_um": [0.5, 1.0, 1.5, 2.0, 4.0, 6.0, 8.0],
+    "screened_delay_multiplier": [8, 16],
+    "best_candidate": "hold_m1_w0.5_delay_m16",
+    "best_tt_high_rail_time_ps": [208.1, 207.9],
+    "best_ss_hot_high_rail_time_ps": [147.5, 146.2],
+    "best_ss_hot_low_rail_time_ps": [224.3, 225.9],
+    "best_result_sha256": "ec5c6e243eaaa523176791bba4c39c808f7ba4c000d3b945b546586f7ee4596d",
+    "delay8_result_sha256": "1cbb400d04dd4b6c4a82056a6c9fd876e8523e8161ea6fc7e1aa07f88aa19d3d",
+    "result": "fail",
+    "decision": "reject before layout: every candidate passes TT and preserves rails/front-end/capture, but every slow/hot case violates the minimum high-rail reset duration"
+  },
   "localization": {
     "schematic_buffer_tt": "all event-source and lane-side interface rails pass",
     "ss_hot_event_sense_source_low_v": [0.243613, 0.275806],
@@ -71,8 +86,8 @@
     "physical_v4_ss_hot_lane_sense_low_v": [2.086, 2.214],
     "physical_v4_failure": "TT narrowly misses the 250-mV rail screen; slow/hot pulse reaches the event source but is not restored through the two-stage physical buffer"
   },
-  "decision": "schematic TT closure did not survive physical extraction; retain v4 as compact, fully physical negative evidence and stop unconstrained interface sizing",
-  "next_boundary": "synthesize an edge-selective SENSE release path that preserves direct assertion and reset restoration, measure both pulse intervals explicitly, and screen it against the exact consumer before physical lowering",
+  "decision": "retain physical v4 and both bounded assertion-duration families as negative evidence; neither full-cycle stretching nor a delayed conditional release hold meets the explicit composed interval contract",
+  "next_boundary": "replace the contention-based hold with a regenerated set/reset event primitive whose assertion and reset durations are independently controlled, then screen TT and slow/hot against the exact consumer before physical lowering",
   "not_a_claim": [
     "routed event-to-lane parent", "dynamic PRBS capture under generated clocks",
     "five-environment closure", "closed CDR or PCIe compliance",

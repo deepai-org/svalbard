@@ -536,6 +536,22 @@ records the surviving zero/one-delay comparison. A full-cycle replica is the
 wrong semantic primitive: the next circuit must delay only the release edge
 while retaining direct assertion and reset restoration.
 
+That edge-selective experiment is now also closed. The composed contract
+measures actual threshold crossings and requires each final 800-ps UI to spend
+150--650 ps at both valid SENSE rails. A direct assertion path plus delayed
+conditional pull-down preserves rail amplitude, front-end behavior, and
+capture polarity in TT and slow/hot. Seven hold widths from 0.5 to 8 um and
+both supported replica delays were bounded before layout. Every point passes
+TT, but every slow/hot point has too little valid-high reset time. The best
+point, delay-16/W0.5, supplies 224.3/225.9 ps valid low and 147.5/146.2 ps
+valid high, missing the 150-ps reset contract by 2.5/3.8 ps. Delay 8 regresses
+the high interval further. The exact records are
+[`capture_edge_hold_best_screen.json`](capture_edge_hold_best_screen.json) and
+[`capture_edge_hold_delay8_screen.json`](capture_edge_hold_delay8_screen.json).
+No layout was generated for this failing candidate. The next primitive must
+regenerate independently controlled set and reset events rather than trade the
+two intervals through contention.
+
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail
 margin.  Second, simply placing `XHSD2` beside its detector improved TT width

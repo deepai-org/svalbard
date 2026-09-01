@@ -53,6 +53,8 @@ class EventLaneCompositionTest(unittest.TestCase):
         self.assertNotIn("dbg_sb1", deck)
         self.assertIn("meas tran e_q_diff", deck)
         self.assertIn("meas tran e_sense_high", deck)
+        self.assertIn("meas tran e_sense_low_exit when v(E_SENSE)=0.25 rise=1 td=12n", deck)
+        self.assertIn("meas tran e_sense_high_enter when v(E_SENSE)=3.050000 rise=1 td=12n", deck)
 
     def test_local_interface_buffer_is_explicit_and_checks_both_sides(self) -> None:
         environment = composition.base.CONTRACT["environments"][0]

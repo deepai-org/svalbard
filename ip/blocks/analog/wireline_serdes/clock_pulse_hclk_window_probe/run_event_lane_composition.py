@@ -77,6 +77,12 @@ def compile_deck(event_pex: Path, lane_pex: Path, environment: dict[str, Any],
             f"meas tran {phase}_q_diff find {phase}_q_diff_vec "
             f"at={'12.55n' if phase == 'e' else '12.75n'}",
         ])
+        measures.extend([
+            f"meas tran {phase}_sense_low_exit when v({upper}_SENSE)={CONTRACT['thresholds']['logic_rail_margin_v']} rise=1 td=12n",
+            f"meas tran {phase}_sense_high_enter when v({upper}_SENSE)={vdd - CONTRACT['thresholds']['logic_rail_margin_v']:.6f} rise=1 td=12n",
+            f"meas tran {phase}_sense_high_exit when v({upper}_SENSE)={vdd - CONTRACT['thresholds']['logic_rail_margin_v']:.6f} fall=1 td=12n",
+            f"meas tran {phase}_sense_low_enter when v({upper}_SENSE)={CONTRACT['thresholds']['logic_rail_margin_v']} fall=1 td=12n",
+        ])
         for stage in debug_stages:
             node = f"xevent.DBG_{upper}_{stage.upper()}"
             measures.extend([
@@ -204,6 +210,15 @@ def run_case(spec: tuple) -> dict:
     log_text = log.read_text()
     observed = {key: float(value)
                 for key, value in MEASURE.findall(log_text)}
+    for phase in PHASES:
+        low_enter = observed.get(f"{phase}_sense_low_enter")
+        low_exit = observed.get(f"{phase}_sense_low_exit")
+        high_enter = observed.get(f"{phase}_sense_high_enter")
+        high_exit = observed.get(f"{phase}_sense_high_exit")
+        if low_enter is not None and low_exit is not None:
+            observed[f"{phase}_sense_low_rail_time"] = (low_exit - low_enter) % 8e-10
+        if high_enter is not None and high_exit is not None:
+            observed[f"{phase}_sense_high_rail_time"] = (high_exit - high_enter) % 8e-10
     required = {"supply_current"}
     required |= {f"sch_{label}_{bound}" for label, _ in schematic_debug_nodes
                  for bound in ("high", "low")}
@@ -216,6 +231,11 @@ def run_case(spec: tuple) -> dict:
                          for signal in ("sense", "boost", "clk", "clkb")
                          for bound in ("high", "low")}
         required |= {f"{phase}_fe_diff", f"{phase}_q_diff"}
+        required |= {f"{phase}_sense_{edge}" for edge in
+                     ("low_enter", "low_exit", "high_enter", "high_exit")}
+        required |= {
+                     f"{phase}_sense_low_rail_time",
+                     f"{phase}_sense_high_rail_time"}
         required |= {f"{phase}_dbg_{stage}_{bound}"
                      for stage in debug_stages for bound in ("high", "low")}
     complete = returncode == 0 and required <= observed.keys()
@@ -232,6 +252,12 @@ def run_case(spec: tuple) -> dict:
             and observed.get(f"{phase}_{signal}_src_low", vdd) <= margin
             for phase in PHASES for signal in ("sense", "boost", "clk", "clkb")
         )
+    intervals = all(
+        CONTRACT["thresholds"][f"sense_{state}_rail_time_s"][0]
+        <= observed.get(f"{phase}_sense_{state}_rail_time", -1)
+        <= CONTRACT["thresholds"][f"sense_{state}_rail_time_s"][1]
+        for phase in PHASES for state in ("low", "high")
+    )
     frontend = all(abs(observed.get(f"{phase}_fe_diff", 0)) >=
                    CONTRACT["thresholds"]["frontend_differential_v"]
                    for phase in PHASES)
@@ -240,13 +266,14 @@ def run_case(spec: tuple) -> dict:
                   for phase in PHASES)
     current = observed.get("supply_current")
     current_bounds = CONTRACT["thresholds"]["average_supply_current_a"]
-    passed = (complete and rails and frontend and capture and current is not None
+    passed = (complete and rails and intervals and frontend and capture and current is not None
               and current_bounds[0] < current <= current_bounds[1])
     return {"case_id": stem, "environment_id": environment["id"],
             "code_id": control["id"], "control": control,
             "returncode": returncode,
             "diagnostic_log_tail": [] if complete else log_text.splitlines()[-40:],
             "complete": complete, "rails_pass": rails,
+            "sense_intervals_pass": intervals,
             "frontend_pass": frontend, "capture_pass": capture,
             "observed": observed, "result": "pass" if passed else "fail"}
 

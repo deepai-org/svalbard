@@ -27,9 +27,10 @@ cpus=""
 memory=""
 container_command="/src/container_flow.sh"
 declare -a copies=()
+result_json=""
 
 usage() {
-  printf 'usage: %s --label NAME --source-rel PATH --timeout DURATION --cpus N --memory SIZE [--command PATH] --copy RUN_FILE:SCRATCH_FILE ...\n' "$0" >&2
+  printf 'usage: %s --label NAME --source-rel PATH --timeout DURATION --cpus N --memory SIZE [--command PATH] [--require-result-json RUN_FILE] --copy RUN_FILE:SCRATCH_FILE ...\n' "$0" >&2
   exit 2
 }
 
@@ -41,6 +42,7 @@ while (( $# )); do
     --cpus) cpus="${2-}"; shift 2 ;;
     --memory) memory="${2-}"; shift 2 ;;
     --command) container_command="${2-}"; shift 2 ;;
+    --require-result-json) result_json="${2-}"; shift 2 ;;
     --copy) copies+=("${2-}"); shift 2 ;;
     *) usage ;;
   esac
@@ -52,6 +54,7 @@ done
 [[ "$label" =~ ^[a-z0-9][a-z0-9-]*$ && "$flow_timeout" =~ ^[1-9][0-9]*[smh]$ ]] || usage
 [[ "$source_rel" != /* && "$source_rel" != *..* ]] || usage
 [[ "$container_command" == /src/* ]] || usage
+[[ -z "$result_json" || ("$result_json" != /* && "$result_json" != *..*) ]] || usage
 for mapping in "${copies[@]}"; do
   run_file="${mapping%%:*}"
   scratch_file="${mapping#*:}"
@@ -70,7 +73,7 @@ container_script="$source_dir/${container_command#/src/}"
 }
 
 free_kib() { df -Pk "$1" | awk 'NR == 2 { print $4 }'; }
-for command_name in docker flock timeout mktemp awk df find sort xargs sha256sum; do
+for command_name in docker flock timeout mktemp awk df find sort xargs sha256sum python3; do
   command -v "$command_name" >/dev/null 2>&1 || {
     printf '%s: missing host command: %s\n' "$label" "$command_name" >&2
     exit 2
@@ -154,6 +157,25 @@ for mapping in "${copies[@]}"; do
   cp "$run_dir/$run_file" "$scratch_root/$scratch_file"
   chmod 600 "$scratch_root/$scratch_file"
 done
+
+if [[ -n "$result_json" ]]; then
+  [[ -f "$run_dir/$result_json" ]] || {
+    printf '%s: required result missing: %s\n' "$label" "$result_json" >&2
+    exit 2
+  }
+  result_value="$(python3 - "$run_dir/$result_json" <<'PY'
+import json
+import sys
+print(json.load(open(sys.argv[1])).get("result", "missing"))
+PY
+)"
+  if [[ "$result_value" != "pass" ]]; then
+    completed=1
+    printf '%s: FAIL (required %s has result=%s; requested outputs copied)\n' \
+      "$label" "$result_json" "$result_value" >&2
+    exit 1
+  fi
+fi
 
 completed=1
 printf '%s: PASS\n' "$label"

@@ -411,6 +411,31 @@ retains the identities and interpretation. This closes separate-state device
 family substitution as well as local inverter/latch tuning. The next circuit
 must merge the event state into the capture cell.
 
+The first capture-integrated implementation is now an explicit physical
+checkpoint, not a promotion. It replaces loaded `SB1` with a small dynamic
+`ESTATE` node and gives SENSE and BOOST independent capture-local tapers. The
+exact source hash `8cf5925d80d2016596e121a2ce5f50855b82fc4eaef490e04c4b939e66ee3a47`
+passes 17/40 schematic cases with realizable settings in all five declared
+environments. Its generated 208-device event/bridge parent is zero-DRC,
+unique-LVS, and full-RC extracted. Targeted exact PEX remains 0/4, however.
+At TT the state and tapers switch, but SENSE width/rail margins miss the
+retained contract. At SS/hot `HSN` switches while `ESTATE` spans only about
+0.7--2.4 V; its local tapers consequently lose full CMOS rails. Candidate-
+specific extracted probes establish that first failure without pretending the
+removed `SB1` node still exists.
+The corresponding review render is [available here](../../../../../docs/images/pcie-event-capture-integrated-layout.png).
+
+Two bounded regenerative corrections were rejected before layout because
+they passed 0/8 focused schematic cases: a cross-coupled NAND state changed
+overlap/release timing, and a weak static keeper delayed the dynamic edge.
+Increasing both dynamic event devices retained 5/5 schematic programmability
+but made extracted SS/hot contention worse by strengthening reset relative to
+set; gating reset until `HSN` release also passed 0/8 schematically. Those
+results close blind local latch/ratio/reset sweeps. The next physical iteration
+must reduce and explicitly budget the state-to-local-driver route/load or
+change the capture-owned event mechanism while preserving the proven event
+timing.
+
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail
 margin.  Second, simply placing `XHSD2` beside its detector improved TT width

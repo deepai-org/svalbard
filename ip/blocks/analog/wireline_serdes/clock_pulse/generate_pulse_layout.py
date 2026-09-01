@@ -182,6 +182,7 @@ def group_depths(groups: dict[str, Group], phase: str) -> dict[str, int]:
         "cp_sense_final_select": ("A", "EN"),
         "cp_fall_window": ("A", "B"),
         "cp_dynamic_event_state": ("SETB", "RESET"),
+        "cp_capture_event_state": ("SETB", "RESET"),
     })
     inputs["cp_tristate_inv"] = ("A", "EN", "ENB")
     outputs = {"cp_inv": "Y", "cp_final_inv": "Y",
@@ -198,6 +199,7 @@ def group_depths(groups: dict[str, Group], phase: str) -> dict[str, int]:
         "cp_sense_final_select": "Y",
         "cp_fall_window": "Y",
         "cp_dynamic_event_state": "Q",
+        "cp_capture_event_state": "Q",
     })
     outputs["cp_tristate_inv"] = "Y"
     local = [group for group in groups.values() if group.phase == phase]
@@ -1069,6 +1071,9 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
         "XE__WSD": "DBG_E_WSD", "XE__WPN": "DBG_E_WPN",
         "XE__SB0": "DBG_E_SB0",
         "XE__SB1": "DBG_E_SB1",
+        "XE__ESTATE": "DBG_E_ESTATE",
+        "XE__LS0": "DBG_E_LS0", "XE__LS1": "DBG_E_LS1",
+        "XE__LB0": "DBG_E_LB0", "XE__LB1": "DBG_E_LB1",
         "XE__SIB": "DBG_E_SIB", "XE__SDRV": "DBG_E_SDRV",
         "XE__START": "DBG_E_START", "XE__END": "DBG_E_END",
         "XE__STARTB": "DBG_E_STARTB", "XE__ENDB": "DBG_E_ENDB",
@@ -1103,6 +1108,9 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
         "XO__WSD": "DBG_O_WSD", "XO__WPN": "DBG_O_WPN",
         "XO__SB0": "DBG_O_SB0",
         "XO__SB1": "DBG_O_SB1",
+        "XO__ESTATE": "DBG_O_ESTATE",
+        "XO__LS0": "DBG_O_LS0", "XO__LS1": "DBG_O_LS1",
+        "XO__LB0": "DBG_O_LB0", "XO__LB1": "DBG_O_LB1",
         "XO__SIB": "DBG_O_SIB", "XO__SDRV": "DBG_O_SDRV",
         "XO__START": "DBG_O_START", "XO__END": "DBG_O_END",
         "XO__STARTB": "DBG_O_STARTB", "XO__ENDB": "DBG_O_ENDB",
@@ -1181,12 +1189,36 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
         hclk_receiver = hclk_candidates[0]
     hot_clock_x = group_x[hclk_receiver] - 10.0
     port_xs.update({"CLKP_H": hot_clock_x, "CLKN_H": hot_clock_x})
-    def driver(phase: str, instance: str) -> str:
+    def named_driver(phase: str, instance: str) -> str:
         candidates = [name for name in groups
                       if name.startswith(phase) and name.endswith("__" + instance)]
         if len(candidates) != 1:
             raise RuntimeError(
                 f"expected one {phase} {instance} driver, got {candidates}")
+        return candidates[0]
+
+    def net_driver(port: str) -> str:
+        """Find the physical primitive that semantically drives a top output."""
+        phase = "E" if port.startswith("E_") else "O"
+        candidates = [
+            group.name for group in groups.values()
+            if group.phase == phase
+            and any(group.ports.get(pin) == port for pin in ("Y", "D", "Q"))
+        ]
+        # Composite primitives can contain child devices tied directly to the
+        # same output. The outermost physical group owns placement of that
+        # port; select it only when it is the unique ancestor candidate.
+        outer = [candidate for candidate in candidates
+                 if not any(other != candidate
+                            and candidate.startswith(other + "__")
+                            for other in candidates)]
+        if len(outer) == 1:
+            return outer[0]
+        if not candidates:
+            raise KeyError(port)
+        if len(candidates) != 1:
+            raise RuntimeError(
+                f"expected one {phase} driver of {port}, got {candidates}")
         return candidates[0]
 
     # Keep output ports beside their physical drivers.  Select only outputs
@@ -1204,10 +1236,17 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
         "O_CAPTURE_CLK": ("XO", "XWCLK"),
         "O_CAPTURE_CLKB": ("XO", "XWCLKB"),
     }
-    output_drivers = {
-        port: driver(*output_driver_instances[port])
-        for port in output_ports if port in output_driver_instances
-    }
+    output_drivers = {}
+    for port in output_ports:
+        try:
+            output_drivers[port] = net_driver(port)
+        except KeyError:
+            # A few legacy parents expose an output through a non-driving
+            # route anchor. Retain their explicit mapping while new
+            # topologies use net identity instead of instance spelling.
+            if port not in output_driver_instances:
+                raise
+            output_drivers[port] = named_driver(*output_driver_instances[port])
     for port, driver in output_drivers.items():
         width, _ = group_geometry(groups[driver])
         port_xs[port] = group_x[driver] + width + 2.0

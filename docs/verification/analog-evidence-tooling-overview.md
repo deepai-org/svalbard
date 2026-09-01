@@ -143,6 +143,18 @@ evidence for identity,
 staged admission, and first-failure movement, not a generic optimizer or
 completed PCIe clock path.
 
+The subsequent capture-integrated checkpoint demonstrates the same staged
+loop on a topology that removes a contract-declared internal node. Its exact
+source covers 5/5 schematically and its generated 208-device parent passes
+DRC/LVS/full-RC extraction, but targeted exact PEX is 0/4. A candidate-specific
+probe manifest localizes slow/hot failure to `ESTATE` (about 0.7--2.4 V) and
+the local tapers rather than manufacturing an incomplete result for deleted
+`SB1`. The shared host runner can now require `result == pass` in a copied JSON
+artifact, so a completed container that intentionally records negative
+evidence no longer prints an overall pass. This is a small but important
+compiler-style property: physical legality, simulation completion, and
+contract admission are distinct machine-checked states.
+
 ## Portability beyond PCIe and Wi-Fi
 
 The repository has a portable **execution shell**, not yet a portable analog

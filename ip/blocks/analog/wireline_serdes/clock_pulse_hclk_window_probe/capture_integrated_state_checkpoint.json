@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "claim": "capture_integrated_event_state_checkpoint",
+  "source_revision": "retimed_joint_long_6_3_capture_integrated_dynamic_state_v1",
+  "source_sha256": "8cf5925d80d2016596e121a2ce5f50855b82fc4eaef490e04c4b939e66ee3a47",
+  "schematic": {
+    "case_count": 40,
+    "passing_case_count": 17,
+    "environment_coverage": ["ff_cold", "ff_hot", "ss_cold", "ss_hot", "tt"],
+    "result": "pass",
+    "result_sha256": "f222ef5b3a319645d3cd4768fc9b065c2072606081d05e4c91023c65fac317b0"
+  },
+  "physical": {
+    "device_count": 208,
+    "width_um": 303.7,
+    "drc": "pass",
+    "lvs": "pass_unique",
+    "pex_resistor_count": 5514,
+    "pex_capacitor_count": 4114,
+    "physical_result_sha256": "39853982828cc85f114f7d41c8070cac21677d07b81e52e98c2fe060ebc21f06",
+    "pex_sha256": "9c186d23a7475da35cb56f4049672ee16cb2dfd040ff1d3f6c03a2c6e81d54dd",
+    "render_sha256": "61a9c410fdac5f2d18e72fe5f5c13ee9a62ac04d9e9e2bf034d2d9a3a9a42812"
+  },
+  "targeted_exact_pex": {
+    "case_count": 4,
+    "passing_case_count": 0,
+    "environments": ["tt", "ss_hot"],
+    "result": "fail",
+    "result_sha256": "fb7dbd6529e3dff56bcdfc8c54a39de234bb8eb535ea8b0d3231264d28957f0d"
+  },
+  "localization": {
+    "result": "complete",
+    "tt_estate_range_v": [0.259317, 3.12958],
+    "ss_hot_estate_range_v": [0.677753, 2.41937],
+    "first_failure": "slow-hot extracted ESTATE and local taper rail loss; TT SENSE width and rail margin",
+    "probe_result_sha256": "10e3bf445effc853c81e98ef906b597bf8abe4d6a5d2c23fc99794a9877f8893"
+  },
+  "decision": "retain as physically legal negative checkpoint; do not promote",
+  "next_boundary": "reduce and budget capture-local state route/load or change the capture-owned event mechanism without weakening timing predicates",
+  "not_a_claim": [
+    "five-environment exact-PEX closure",
+    "routed event/bridge/capture parent closure",
+    "closed CDR or PCIe link",
+    "provider signoff or silicon behavior"
+  ]
+}

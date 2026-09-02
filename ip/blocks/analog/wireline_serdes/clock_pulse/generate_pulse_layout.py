@@ -330,6 +330,12 @@ def functional_lane(group: Group) -> int:
     if raw_path and raw_path[0] == "XWRITE":
         return 3
     root = instance_root(group.name)
+    if root == "XSENSESR":
+        parts = instance_path(group.name)
+        if len(parts) > 1 and parts[1] in {
+                "XIS", "XIE", "XSETB", "XRESETB", "XQ", "XQB"}:
+            return 3
+        return 2
     # The WRITE timing source is a local replica of SENSE's final restored
     # state.  Place it beside the SENSE taper so only its high-impedance
     # isolated output crosses to the write lane.
@@ -431,11 +437,12 @@ def place(devices: list[Device], groups: dict[str, Group],
                 # Capture-owned START assists occupy the adjacent physical
                 # lane but are x-aligned with the write-lane START restorer.
                 "XSF0": 30, "XSF1": 31,
-                "XBOOST": 32, "XSENSE": 33,
+                "XSENSESR": 32,
+                "XBOOST": 44, "XSENSE": 45,
                 # Optional physically owned lane-interface restoration stays
                 # immediately after its source rather than on a remote lane.
-                "XBOOSTIF0": 34, "XBOOSTIF1": 35,
-                "XSENSEIF0": 36, "XSENSEIF1": 37,
+                "XBOOSTIF0": 46, "XBOOSTIF1": 47,
+                "XSENSEIF0": 48, "XSENSEIF1": 49,
             }
 
             def sense_order(group: Group) -> tuple[int, int, int, str]:
@@ -456,6 +463,11 @@ def place(devices: list[Device], groups: dict[str, Group],
                     substage = {"XIA": 0, "XIB": 1, "XN": 2,
                                 "XIY": 3}.get(parts[1], 4)
                     return (10, substage, 0, group.name)
+                if root == "XSENSESR":
+                    substage = {
+                        "XO0": 0, "XO1": 1, "XO2": 2, "XO3": 3,
+                    }.get(parts[1], 10)
+                    return (32, substage, 0, group.name)
                 return (sense_rank.get(root, 20), 0, place_depth[group.name],
                         group.name)
 
@@ -525,6 +537,19 @@ def place(devices: list[Device], groups: dict[str, Group],
             def write_order(group: Group) -> tuple[int, int, int, str]:
                 parts = instance_path(group.name)
                 root = parts[0]
+                if root == "XSENSESR":
+                    # Keep the full SR core in the timing lane. START is
+                    # restored at XSR1; END at XER1. Only the retained QB
+                    # state, never narrow SETB/RESETB, crosses to lane 2.
+                    sr_rank = {
+                        "XIS": 4 * 15 + 1,
+                        "XIE": 4 * 21 + 1,
+                        "XSETB": 4 * 21 + 2,
+                        "XRESETB": 4 * 21 + 3,
+                        "XQ": 4 * 22,
+                        "XQB": 4 * 22 + 1,
+                    }
+                    return (0, sr_rank[parts[1]], 0, group.name)
                 if (root == "XWET" and len(parts) > 1
                         and parts[1] == "XNF"):
                     # Preserve the calibrated XWET pair and downstream x
@@ -1098,6 +1123,13 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
         "XE__LB0": "DBG_E_LB0", "XE__LB1": "DBG_E_LB1",
         "XE__SIB": "DBG_E_SIB", "XE__SDRV": "DBG_E_SDRV",
         "XE__START": "DBG_E_START", "XE__END": "DBG_E_END",
+        "XE__XSENSESR__SETB": "DBG_E_SR_SETB",
+        "XE__XSENSESR__RESETB": "DBG_E_SR_RESETB",
+        "XE__XSENSESR__Q": "DBG_E_SR_Q",
+        "XE__XSENSESR__QB": "DBG_E_SR_QB",
+        "XE__XSENSESR__O0": "DBG_E_SR_O0",
+        "XE__XSENSESR__O1": "DBG_E_SR_O1",
+        "XE__XSENSESR__O2": "DBG_E_SR_O2",
         "XE__STARTB": "DBG_E_STARTB", "XE__ENDB": "DBG_E_ENDB",
         "XE__ENDR": "DBG_E_ENDR",
         "XE__PCLK": "DBG_E_PCLK", "XE__P08": "DBG_E_P08",
@@ -1154,6 +1186,13 @@ def emit(source: Path, output: Path, top_name: str = "clock_pulse_generator") ->
         "XO__LB0": "DBG_O_LB0", "XO__LB1": "DBG_O_LB1",
         "XO__SIB": "DBG_O_SIB", "XO__SDRV": "DBG_O_SDRV",
         "XO__START": "DBG_O_START", "XO__END": "DBG_O_END",
+        "XO__XSENSESR__SETB": "DBG_O_SR_SETB",
+        "XO__XSENSESR__RESETB": "DBG_O_SR_RESETB",
+        "XO__XSENSESR__Q": "DBG_O_SR_Q",
+        "XO__XSENSESR__QB": "DBG_O_SR_QB",
+        "XO__XSENSESR__O0": "DBG_O_SR_O0",
+        "XO__XSENSESR__O1": "DBG_O_SR_O1",
+        "XO__XSENSESR__O2": "DBG_O_SR_O2",
         "XO__STARTB": "DBG_O_STARTB", "XO__ENDB": "DBG_O_ENDB",
         "XO__ENDR": "DBG_O_ENDR",
         "XO__XWST__B1": "DBG_O_WSTB1",

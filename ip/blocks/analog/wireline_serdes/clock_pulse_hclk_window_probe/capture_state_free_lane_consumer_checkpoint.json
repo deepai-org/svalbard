@@ -73,6 +73,24 @@
     "result": "fail",
     "decision": "reject before layout: every candidate passes TT and preserves rails/front-end/capture, but every slow/hot case violates the minimum high-rail reset duration"
   },
+  "independent_start_end_sr": {
+    "architecture": "non-overlapping START/END-derived SETB and RESETB drive a static cross-coupled NAND state; only restored QB crosses to the SENSE taper",
+    "selected_control": "sense1_interval1_epoch0",
+    "schematic_result": "pass_tt_and_ss_hot_into_exact_lane_pex",
+    "set_strength_screen_sha256": "bdedf01f5b596272c60c7a47890b215ae703a0f46cdb8d414d6c5a78d6b88e2c",
+    "physical_source_revision": "retimed_capture_owned_start_end_sr_v7_timing_lane_core",
+    "physical_device_count": 232,
+    "physical_width_um": 432.6,
+    "physical_drc": "pass",
+    "physical_lvs": "pass_unique",
+    "physical_pex_resistor_count": 6720,
+    "physical_pex_capacitor_count": 4931,
+    "physical_result_sha256": "532aea370878ec645cede128c4b2de8d8662ceffe7376f2e762669a02254cc68",
+    "composition_result_sha256": "65dfb875e656f0032db11a2cc3f474ad49e0d989c8736058b956c0ff18aac9df",
+    "composition_result": "fail_0_of_2",
+    "localization": "RESETB is valid at slow/hot, but SETB falls only to 1.119/1.514 V; QB reaches only 0.431/0.283 V high and SENSE remains low. Moving the state core into the timing lane improves SETB versus the generic placement but does not close it.",
+    "decision": "retain as the first independently timed, fully physical SR checkpoint; do not claim functional PEX closure"
+  },
   "localization": {
     "schematic_buffer_tt": "all event-source and lane-side interface rails pass",
     "ss_hot_event_sense_source_low_v": [0.243613, 0.275806],
@@ -86,8 +104,8 @@
     "physical_v4_ss_hot_lane_sense_low_v": [2.086, 2.214],
     "physical_v4_failure": "TT narrowly misses the 250-mV rail screen; slow/hot pulse reaches the event source but is not restored through the two-stage physical buffer"
   },
-  "decision": "retain physical v4 and both bounded assertion-duration families as negative evidence; neither full-cycle stretching nor a delayed conditional release hold meets the explicit composed interval contract",
-  "next_boundary": "replace the contention-based hold with a regenerated set/reset event primitive whose assertion and reset durations are independently controlled, then screen TT and slow/hot against the exact consumer before physical lowering",
+  "decision": "independent set/reset semantics close the limiting schematic composition, but exact physical extraction localizes the remaining failure to the short SETB event rather than the interface taper",
+  "next_boundary": "screen one bounded combination of timing-lane placement and stronger SETB pull-down, then physically lower only if the unchanged TT/slow-hot schematic contract passes; otherwise replace narrow SETB transport with a full-duty set state",
   "not_a_claim": [
     "routed event-to-lane parent", "dynamic PRBS capture under generated clocks",
     "five-environment closure", "closed CDR or PCIe compliance",

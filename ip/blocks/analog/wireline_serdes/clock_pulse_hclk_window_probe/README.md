@@ -552,6 +552,29 @@ No layout was generated for this failing candidate. The next primitive must
 regenerate independently controlled set and reset events rather than trade the
 two intervals through contention.
 
+The resulting START/END SR primitive is the first version to close the limiting
+schematic composition. Non-overlapping active-low SETB and RESETB windows from
+the existing full-duty START and programmable END states drive a static NAND
+latch; a four-stage taper isolates QB. With the longer-END control
+`sense1_interval1_epoch0`, the selected circuit passes TT and slow/hot against
+the exact lane PEX. A targeted fourfold SETB pull-down variant also passes the
+same schematic gate and is recorded in
+[`capture_start_end_sr_set_strength_screen.json`](capture_start_end_sr_set_strength_screen.json).
+
+Physical extraction does not yet preserve that result. The retained v7 layout
+puts START inversion beside its restorer, END inversion beside its restorer,
+and SETB/RESETB/Q/QB together in the timing lane; only full-duty QB crosses to
+the SENSE lane. The 232-device, 432.6-um parent is zero-DRC, uniquely
+LVS-equivalent, and extracts to 6,720 resistors plus 4,931 capacitors. Exact
+composition remains 0/2. RESETB is valid at slow/hot, but SETB reaches only
+1.119/1.514 V low, QB only 0.431/0.283 V high, and final SENSE stays low.
+The [physical record](capture_start_end_sr_physical.json),
+[exact composition](capture_start_end_sr_lane_result.json), and
+[review render](../../../../../docs/images/pcie-event-capture-start-end-sr-layout.png)
+are retained. The next bounded experiment combines this timing-lane placement
+with the already-screened stronger SETB pull-down; if that does not close, the
+short SET event must be replaced by a transported full-duty state.
+
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail
 margin.  Second, simply placing `XHSD2` beside its detector improved TT width

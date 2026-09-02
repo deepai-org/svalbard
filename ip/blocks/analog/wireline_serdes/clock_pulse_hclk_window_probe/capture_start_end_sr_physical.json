@@ -1,0 +1,34 @@
+{
+  "claim": "start_end_sr_event_physical_legality",
+  "drc_stage_result": "pass",
+  "identity": {
+    "gds_sha256": "793df3511d1a7547add8d4d4d8c8e60442991f2793eddb0771454b5430faa471",
+    "layout_png_sha256": "9b197983e8465335f12ed00783fd0383fabb913331758923fcbeb2a2ad255f35",
+    "layout_tcl_sha256": "3450fb4d089295e402282296c845930cf10f08d1795639dcfd0049e78d214b1b",
+    "mag_sha256": "668a43480d353957db02b069fd93ca22468aa28be3f615db827685413c360b22",
+    "pex_sha256": "e11ebd91735cbb1c0e6c05773786b72b461c2705482196cfe827c2c4725cd938",
+    "schematic_sha256": "64945e1989c6ea3c68bfebd102fcb372b0bb17289b35c1917f94cc0b2898735e"
+  },
+  "lvs_stage_result": "pass_unique",
+  "not_a_claim": [
+    "routed event-to-lane parent",
+    "five-environment timing closure",
+    "closed CDR or PCIe link",
+    "provider signoff or silicon yield"
+  ],
+  "pex_capacitor_count": 4931,
+  "pex_resistor_count": 6720,
+  "pex_stage_result": "pass",
+  "result": "pass",
+  "schema_version": 1,
+  "scope": "generated START/END SR event and physical lane-interface buffers; native Magic DRC, Netgen LVS, full-RC extraction, and review render",
+  "selected_candidate": {
+    "control_id": "sense1_interval1_epoch0",
+    "latch_mult": 2,
+    "output_mult": 8,
+    "pre_mult": 4,
+    "set_mult": 2
+  },
+  "source_revision": "retimed_capture_owned_start_end_sr_v7_timing_lane_core",
+  "top": "retimed_event_capture_bridge"
+}

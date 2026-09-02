@@ -27,6 +27,7 @@ DEBUG_STAGES = ("hsn", "sb1", "sib", "sdrv")
 INTERFACE_DEBUG_STAGES = (
     "if_sense_src", "if_sense_b", "if_boost_src", "if_boost_b",
     "if_clk_src", "if_clk_b", "if_clkb_src", "if_clkb_b",
+    "sr_setb", "sr_resetb", "sr_q", "sr_qb", "sr_o0", "sr_o1", "sr_o2",
 )
 
 

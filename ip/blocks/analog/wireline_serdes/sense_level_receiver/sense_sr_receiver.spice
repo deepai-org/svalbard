@@ -1,0 +1,35 @@
+* SPDX-License-Identifier: Apache-2.0
+* Stateful full-swing SENSE restoration for degraded active-high clock levels.
+.subckt sense_sr_inv A Y VDD VSS params: WP=4u WN=2u MP=1 MN=1
+XP Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+.ends sense_sr_inv
+
+.subckt sense_sr_nand A B Y VDD VSS params: MP=1 MN=8
+XPA Y A VDD VDD pfet_03v3 w=8u l=0.28u m={MP}
+XPB Y B VDD VDD pfet_03v3 w=8u l=0.28u m={MP}
+XNA Y A NS VSS nfet_03v3 w=6u l=0.28u m={MN}
+XNB NS B VSS VSS nfet_03v3 w=6u l=0.28u m={MN}
+.ends sense_sr_nand
+
+.subckt sense_sr_core IN REF VBIAS VDD VSS OUTP OUTN params: LATCH_MP=1 LATCH_MN=8
+* A high-threshold first stage recognizes 1.2 V as low at SS/125 C.
+XSETB IN SETB VDD VSS sense_sr_inv WP=8u WN=2u MP=4 MN=1
+XRESETB SETB RESETB VDD VSS sense_sr_inv WP=8u WN=4u MP=2 MN=2
+* Active-low NAND latch: input high sets Q, input low resets Q.
+XSET SETB QB Q VDD VSS sense_sr_nand MP={LATCH_MP} MN={LATCH_MN}
+XRESET RESETB Q QB VDD VSS sense_sr_nand MP={LATCH_MP} MN={LATCH_MN}
+* Two stages isolate the latch from the exact StrongARM gate bank.
+XBUF0 Q B0 VDD VSS sense_sr_inv WP=8u WN=6u MP=4 MN=4
+XBUF1 B0 OUTN VDD VSS sense_sr_inv WP=8u WN=6u MP=8 MN=8
+XUNUSED B0 OUTP VDD VSS sense_sr_inv WP=4u WN=2u MP=1 MN=1
+.ends sense_sr_core
+
+* Retained bracketing variants: neither is a qualified implementation.
+.subckt sense_sr_receiver IN REF VBIAS VDD VSS OUTP OUTN
+XCORE IN REF VBIAS VDD VSS OUTP OUTN sense_sr_core LATCH_MP=1 LATCH_MN=8
+.ends sense_sr_receiver
+
+.subckt sense_sr_receiver_mid IN REF VBIAS VDD VSS OUTP OUTN
+XCORE IN REF VBIAS VDD VSS OUTP OUTN sense_sr_core LATCH_MP=2 LATCH_MN=4
+.ends sense_sr_receiver_mid

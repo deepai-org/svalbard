@@ -7,7 +7,9 @@ XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
 
 .subckt sense_cmos_noninv IN REF VBIAS VDD VSS OUTP OUTN
 * REF and VBIAS are retained only for parent-interface compatibility.
-XIN IN B VDD VSS sense_noninv_inv WP=8u WN=2u MP=4 MN=1
-XOUT B OUTN VDD VSS sense_noninv_inv WP=8u WN=6u MP=8 MN=6
-XUNUSED B OUTP VDD VSS sense_noninv_inv WP=4u WN=2u MP=1 MN=1
+XIN IN B VDD VSS sense_noninv_inv WP=8u WN=2u MP=6 MN=1
+XPRE B C VDD VSS sense_noninv_inv WP=4u WN=2u MP=2 MN=2
+XMID C D VDD VSS sense_noninv_inv WP=8u WN=6u MP=8 MN=4
+XOUT D OUTN VDD VSS sense_noninv_inv WP=8u WN=6u MP=8 MN=12
+XUNUSED D OUTP VDD VSS sense_noninv_inv WP=4u WN=2u MP=1 MN=1
 .ends sense_cmos_noninv

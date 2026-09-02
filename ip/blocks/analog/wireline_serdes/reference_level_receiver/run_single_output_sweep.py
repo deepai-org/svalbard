@@ -36,9 +36,13 @@ parser.add_argument("--environment-ids", nargs="+")
 parser.add_argument("--pulse-high-ps", type=float, default=510.0)
 parser.add_argument("--minimum-duty", type=float, default=0.20)
 parser.add_argument("--maximum-duty", type=float, default=0.60)
+parser.add_argument("--diagnostic-nodes", nargs="+", default=())
 parser.add_argument("--work", required=True, type=Path)
 parser.add_argument("--output", required=True, type=Path)
 args = parser.parse_args()
+if any(not re.fullmatch(r"[A-Za-z][A-Za-z0-9_.]*", node)
+       for node in args.diagnostic_nodes):
+    raise ValueError("diagnostic nodes must be hierarchical SPICE identifiers")
 args.work.mkdir(parents=True, exist_ok=True)
 environments = tuple(item for item in ENVIRONMENTS
                      if not args.environment_ids or item[0] in args.environment_ids)
@@ -66,6 +70,14 @@ for bias, reference_offset in control_pairs:
         consumer = ("XLOAD LOAD_INP LOAD_INN OUTN 0 0 0 0 VDD 0 LOADP LOADN VDD cml_to_cmos_pex\n"
                     "CLOADP2 LOADP 0 50f\nCLOADN2 LOADN 0 50f"
                     if args.consumer_pex else "CLOADN OUTN 0 100f")
+        consumer_measures = (f"""meas tran load_xp_high max v(XLOAD.XP) from=4n to=8n
+meas tran load_xn_high max v(XLOAD.XN) from=4n to=8n
+meas tran load_xp_low min v(XLOAD.XP) from=4n to=8n
+meas tran load_xn_low min v(XLOAD.XN) from=4n to=8n"""
+                             if args.consumer_pex else "")
+        diagnostic_measures = "\n".join(
+            f"meas tran diag_{node.lower().replace('.', '_')}_{bound} {bound} v(XDUT.{node}) from=4n to=8n"
+            for node in args.diagnostic_nodes for bound in ("max", "min"))
         midpoint = (low + high) / 2
         reference = midpoint + reference_offset
         deck.write_text(f"""* SPDX-License-Identifier: Apache-2.0
@@ -92,6 +104,8 @@ meas tran outn_rise when v(OUTN)={vdd/2} rise=1 td=4n
 meas tran outn_fall when v(OUTN)={vdd/2} fall=1 td=4n
 meas tran outn_rise_next when v(OUTN)={vdd/2} rise=2 td=4n
 meas tran supply_current avg isupply from=4n to=8n
+{consumer_measures}
+{diagnostic_measures}
 .endc
 .end
 """)
@@ -108,13 +122,20 @@ meas tran supply_current avg isupply from=4n to=8n
             high_time += period
         duty = high_time / period if period > 0 else 0
         current_limit = 0.025 if args.consumer_pex else 0.008
+        consumer_dynamic = (not args.consumer_pex or (
+            observed.get("load_xp_high", 0) >= vdd - 0.25
+            and observed.get("load_xn_high", 0) >= vdd - 0.25
+            and min(observed.get("load_xp_low", vdd),
+                    observed.get("load_xn_low", vdd)) <= 0.50))
         passed = (complete and observed["outn_high"] >= vdd - 0.25
                   and observed["outn_low"] <= 0.25
                   and abs(period - 800e-12) <= 8e-12
                   and args.minimum_duty <= duty <= args.maximum_duty
-                  and 0 < observed["supply_current"] <= current_limit)
+                  and 0 < observed["supply_current"] <= current_limit
+                  and consumer_dynamic)
         cases.append({"case_id": case_id, "environment": [corner, vdd, temperature],
                       "complete": complete, "period_s": period, "duty_cycle": duty,
+                      "consumer_dynamic_pass": consumer_dynamic,
                       "observed": observed, "result": "pass" if passed else "fail"})
     runs.append({"bias_v": bias, "reference_offset_v": reference_offset,
                  "cases": cases,

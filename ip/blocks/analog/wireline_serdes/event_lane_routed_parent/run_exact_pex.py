@@ -156,6 +156,8 @@ def run_case(pex: Path, work: Path, environment: dict, timeout: int,
     # event/lane contract, whose capture requirement is differential voltage.
     passed = complete and frontend and capture and current_ok
     return {"environment_id": stem, "control": CONTROL, "returncode": returncode,
+            "deck_sha256": digest(deck) if deck.is_file() else None,
+            "log_sha256": digest(log),
             "complete": complete, "frontend_pass": frontend,
             "capture_pass": capture, "output_rails_pass": rails,
             "current_pass": current_ok, "observed": observed,

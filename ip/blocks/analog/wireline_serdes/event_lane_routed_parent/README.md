@@ -49,13 +49,17 @@ and changes layers only beyond the child supply geometry.  Future generated
 macros should publish pin-access shapes and per-layer obstructions, and parent
 route admission should check extracted connectivity after every new escape.
 
-`run_exact_pex.sh` replays the single, hash-bound parent PEX.  The initial
-TT/slow-hot result passes 2/2 against the established static-input contract:
-at least 0.3 V front-end differential, 0.5 V captured differential, and no
-more than 150 mA average supply current.  A deliberately tighter 250 mV
-single-ended output-rail diagnostic is reported separately; TT's held-low
-capture output is 315 mV and misses that optional diagnostic by about 65 mV.
-This is still not dynamic-PRBS, BER, or closed-CDR evidence.
+`run_exact_pex.py` replays the single, hash-bound parent PEX.  The initial
+TT/slow-hot campaign and a disjoint three-corner continuation are composed by
+`combine_exact_pex.py`, which fails closed on PEX/physical identity, duplicate
+cases, failed inputs, or an incomplete environment set.  The promoted result
+passes 5/5 against the established static-input contract: at least 0.3 V
+front-end differential, 0.5 V captured differential, and no more than 150 mA
+average supply current.  Observed worst cases are 2.384 V at the front end,
+2.408 V captured differential, and 103.18 mA.
 
-The next gate is expansion of this exact routed parent to 5/5 PVT, followed by
-dynamic data and closed-loop clock-recovery checks.
+A deliberately tighter 250 mV single-ended output-rail diagnostic is reported
+separately and passes only SS/hot; it was never part of the differential
+contract and is not used to relabel the result.  The next gate is dynamic data
+and closed-loop recovered-clock checks.  The current evidence is not
+dynamic-PRBS, BER, or closed-CDR evidence.

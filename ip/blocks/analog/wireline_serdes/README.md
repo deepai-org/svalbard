@@ -74,8 +74,8 @@ That composition now has a first routed-parent checkpoint in
 [`event_lane_routed_parent`](event_lane_routed_parent/README.md): one
 namespace-safe 390-device layout passes zero DRC and unique LVS, extracts to
 14,796R/9,649C, and its single hash-bound full-RC PEX passes the established
-static differential-input capture contract at TT and SS/hot. Five-corner and
-dynamic-data closure remain open.
+static differential-input capture contract in 5/5 public-model environments.
+Dynamic-data and recovered-clock closure remain open.
 
 The repeatable method used to take these cells from an executable electrical
 contract through generated layout and full-RC evidence is documented in the

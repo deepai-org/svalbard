@@ -188,14 +188,19 @@ roughly 1.39 GB per worker to about 75--83 MB for exact V8--V10 PEX. It enabled
 complete results: V8 and V9 narrowly regress the selected V7 low interval, and
 V10's extra taper stages regress both intervals decisively.
 
-The next routed-parent lowering also has an explicit semantic prerequisite.
+Routed-parent lowering also has an explicit semantic prerequisite.
 The event, fanout, and lane leaf sources reuse generic internal subcircuit
 names such as `cp_inv`; textual inclusion can therefore bind a parent's LVS
 source to the wrong leaf definition. Parent compilation must namespace every
 internal definition and call while preserving each public top name and its
 physical identity. This is a concrete circuit/layout-IR identity obligation,
 not a cosmetic naming cleanup; routing the parent before it is satisfied would
-produce ambiguous evidence.
+produce ambiguous evidence. The generic `spice_namespace.py` lowerer now
+resolves a confined include closure, rejects cycles/escapes/duplicate
+definitions, preserves declared public tops, and deterministically namespaces
+internal definitions and calls. The retained PCIe event/fanout/lane parent
+source is self-contained and instance-closure checked. Physical co-placement,
+routing, DRC/LVS/PEX, and replay remain outstanding.
 
 ## Portability beyond PCIe and Wi-Fi
 

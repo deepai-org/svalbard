@@ -63,3 +63,20 @@ separately and passes only SS/hot; it was never part of the differential
 contract and is not used to relabel the result.  The next gate is dynamic data
 and closed-loop recovered-clock checks.  The current evidence is not
 dynamic-PRBS, BER, or closed-CDR evidence.
+
+## Dynamic-data checkpoint
+
+`run_dynamic_tt.sh` replaces the static receiver input with 2.5-GT/s PRBS7
+and scores ten event-relative samples per interleave.  A passing result requires
+one unique common integer-UI latency for both phases at 0.5 V differential
+margin; independently fitting the two phases is diagnostic only.  The first
+exact-parent TT screen completes but fails: EVEN_Q−EVEN_QB remains between
+−2.789 and −2.798 V and ODD_Q−ODD_QB between −2.702 and −2.713 V throughout
+the scored PRBS interval.  Neither phase has a passing latency.  The retained
+`dynamic_tt_screen_result.json` is therefore falsification evidence, not a
+dynamic capture claim.
+
+The next localization must measure the dynamic top-level front-end
+differentials and representative extracted event/sense/capture-clock nodes.
+That separates a receiver/front-end tracking failure from a clock-event or
+capture-reset failure before any sizing or routing change is attempted.

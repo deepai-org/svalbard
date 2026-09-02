@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "contract": "consumer_local_segmented_clock_floorplan",
+  "source_revision": "distributed_v3_consumer_local_final_segments",
+  "layout_compiler": {
+    "generator": "../clock_pulse/generate_pulse_layout.py",
+    "phase_y_shift_um": 48.0,
+    "generated_final_output_pin_um": {
+      "sampler_final": [42.96, 30.7],
+      "capture_final": [23.76, 30.7]
+    }
+  },
+  "lane_consumer_pins_um": {
+    "E_SENSE_CLK": [-13.0, 97.8],
+    "O_SENSE_CLK": [45.0, 97.8],
+    "E_CAPTURE_CLK": [-193.0, 144.0],
+    "E_CAPTURE_CLKB": [-195.0, 145.4],
+    "O_CAPTURE_CLK": [225.0, 144.0],
+    "O_CAPTURE_CLKB": [227.0, 145.4]
+  },
+  "requirements": {
+    "final_output_route_delay_budget_s": 1.92e-11,
+    "place_final_adjacent_to_consumer": true,
+    "route_only_predriver_to_final_gate_over_distance": true,
+    "no_geometry_overlap_with_lane_children": true,
+    "all_six_paths_in_one_parent_pex": true,
+    "post_route_minimum_low_valid_time_s": 1.5e-10,
+    "post_route_minimum_high_valid_time_s": 1.5e-10
+  },
+  "admission_order": [
+    "child_obstruction_and_pin_access_audit",
+    "drc_and_unique_property_clean_lvs",
+    "tt_and_ss_hot_exact_parent_pex",
+    "five_environment_exact_parent_pex",
+    "dynamic_prbs"
+  ],
+  "not_a_claim": [
+    "selected legal placement",
+    "routed parent timing",
+    "PCIe compliance"
+  ]
+}

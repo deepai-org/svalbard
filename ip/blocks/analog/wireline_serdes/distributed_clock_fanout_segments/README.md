@@ -17,3 +17,9 @@ complete predriver/final paths behind the established fanout interface.
 `run_composed_screen.sh` then reuses the exact event/lane TT and SS/hot gate.
 Its isolated inter-segment connection is deliberately not routed-RC evidence;
 a pass only admits the hierarchy cut to parent placement.
+
+`floorplan_contract.json` captures the generated final-stage output pin
+coordinates, the six exact lane consumer landings, and the inherited 19.2 ps
+output-route budget. It intentionally contains no selected placement yet: a
+placement becomes admissible only after obstruction-aware overlap checks and
+one parent DRC/LVS/PEX, not from coordinate alignment alone.

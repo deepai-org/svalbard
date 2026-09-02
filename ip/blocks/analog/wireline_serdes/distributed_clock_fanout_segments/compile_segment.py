@@ -18,9 +18,9 @@ SOURCE_REVISION = "distributed_v3_consumer_local_final_segments"
 
 def devices(kind: str, flat: bool) -> list[str]:
     _, stages = KINDS[kind]
-    result, source = [], "A"
+    result, source = [], "CLKP_H"
     for index, mult in enumerate(stages):
-        target = "Y" if index == len(stages) - 1 else f"B{index}"
+        target = "E_Y" if index == len(stages) - 1 else f"B{index}"
         if flat:
             width = 8 * mult
             result.extend([
@@ -32,9 +32,9 @@ def devices(kind: str, flat: bool) -> list[str]:
                 f"XES__XI{index} {source} {target} VDD VSS cp_inv MP={mult} MN={mult}")
         source = target
     # Explicit tied-off placer dummy; never connected to functional Y.
-    source = "DUMMY_A"
+    source = "CLKN_H"
     for index in range(len(stages)):
-        target = "DUMMY_Y" if index == len(stages) - 1 else f"DB{index}"
+        target = "O_DUMMY" if index == len(stages) - 1 else f"DB{index}"
         if flat:
             result.extend([
                 f"XP_O{index} {target} {source} VDD VDD pfet_03v3 w=8u l=0.28u",
@@ -59,7 +59,7 @@ XN Y A VSS VSS nfet_03v3 w=8u l=0.28u m={MN}
 * source_revision: {SOURCE_REVISION}
 * segment: {kind}
 {primitive}
-.subckt {top} A DUMMY_A VDD VSS Y DUMMY_Y
+.subckt {top} CLKP_H CLKN_H VDD VSS E_Y O_DUMMY
 {chr(10).join(devices(kind, flat_for_lvs))}
 .ends {top}
 """

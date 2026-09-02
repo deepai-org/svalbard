@@ -183,9 +183,19 @@ screen exposed why this belongs in the evidence compiler: two parallel
 ngspice workers each reached roughly 1.39 GB of waveform vectors and terminated
 before measurement, which the result schema records as incomplete. The
 corrected wrapper serializes these cases and retains only contract-observable
-voltages plus supply current. V8 itself is physically closed, but remains
-electrically unadmitted until that corrected replay can run with a safe host
-scratch reserve.
+voltages plus supply current. That reduced live ngspice memory from a failed
+roughly 1.39 GB per worker to about 75--83 MB for exact V8--V10 PEX. It enabled
+complete results: V8 and V9 narrowly regress the selected V7 low interval, and
+V10's extra taper stages regress both intervals decisively.
+
+The next routed-parent lowering also has an explicit semantic prerequisite.
+The event, fanout, and lane leaf sources reuse generic internal subcircuit
+names such as `cp_inv`; textual inclusion can therefore bind a parent's LVS
+source to the wrong leaf definition. Parent compilation must namespace every
+internal definition and call while preserving each public top name and its
+physical identity. This is a concrete circuit/layout-IR identity obligation,
+not a cosmetic naming cleanup; routing the parent before it is satisfied would
+produce ambiguous evidence.
 
 ## Portability beyond PCIe and Wi-Fi
 

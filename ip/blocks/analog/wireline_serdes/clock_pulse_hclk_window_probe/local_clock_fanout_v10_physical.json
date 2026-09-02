@@ -1,0 +1,45 @@
+{
+  "claim": "local_clock_fanout_physical_legality",
+  "drc_stage_result": "pass",
+  "identity": {
+    "gds_sha256": "ed583df0f60a08f8e7bfeb92de8d5c32bd14f3cf3177c5097ff6f2eb5f988fe0",
+    "layout_png_sha256": "2e7db61783aaf9e1baa1439d75575758e0e7498300cde49ec11a21979683ca8b",
+    "layout_tcl_sha256": "ab9fc8e465ee45b301333da15765f6430b5fa24f6af9a7c04f774b7a1f65acd4",
+    "mag_sha256": "660303406c602dd78f1493f14b64164d409a3ee0aa465bede8b7207c127694e8",
+    "pex_sha256": "9ed43c9e77e4ac0bb3e5d1d725c5264ad5141cbd2f60ce441266b4305a406ff8",
+    "schematic_sha256": "291a90ea9e068f3236a4285cc4e861d1100be744fe20f21e0f875d89258987c9"
+  },
+  "logical_mos_count": 36,
+  "lvs_stage_result": "pass_unique",
+  "not_a_claim": [
+    "event-to-lane routed parent",
+    "post-layout composed timing",
+    "five-environment closure",
+    "closed CDR or PCIe link",
+    "provider signoff or silicon yield"
+  ],
+  "pex_capacitor_count": 3477,
+  "pex_resistor_count": 5134,
+  "pex_stage_result": "pass",
+  "raw_finger_count": 592,
+  "result": "pass",
+  "schema_version": 1,
+  "scope": "six-branch static-CMOS fanout; DRC, unique LVS, full-RC extraction, and exact review render",
+  "selected_candidate": {
+    "branch_count": 6,
+    "capture_output_mult": 8,
+    "capture_pre_mult": 4,
+    "sampler_final_n_mult": 64,
+    "sampler_final_p_mult": 64,
+    "sampler_input": "complementary_capture_clock",
+    "sampler_stage_mults": [
+      4,
+      8,
+      16,
+      32,
+      64
+    ]
+  },
+  "source_revision": "local_clock_fanout_v10_sampler_clkb_4_8_16_32_64_capture4_8",
+  "top": "local_clock_fanout"
+}

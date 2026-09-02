@@ -690,13 +690,28 @@ V7 misses only 2.8--10.4 ps of slow/hot low time. V8 implements the bounded
 8x/24x taper into the same balanced final stage; source loading remains equal
 to the already rail-valid v1 aggregate input load. Its 352-finger, 143.9-um
 macro is zero-DRC, uniquely LVS-matched, and extracts to 3,026R/2,058C. The
-first exact TT/slow-hot replay is retained as
+first attempted TT/slow-hot replay is retained as
 [`capture_local_clock_fanout_v8_resource_failure.json`](capture_local_clock_fanout_v8_resource_failure.json):
 both ngspice workers exhausted waveform memory before producing measurements,
 so it is infrastructure evidence, not an electrical pass or failure. The deck
 compiler now emits a minimal `.save` set and the bounded wrapper runs these
-large PEX cases serially. Replaying that corrected job is the next gate; only
-an actual 2/2 result may admit V8 to the five-environment screen.
+large PEX cases serially. Corrected exact replay passes TT, but slow/hot remains
+short at 138/146 ps low while both high intervals pass at 153/152 ps; see
+[`capture_local_clock_fanout_v8_pex_screen.json`](capture_local_clock_fanout_v8_pex_screen.json).
+V9 increases the final pair symmetrically to 36x. Its 368-finger, 147.1-um,
+3,170R/2,154C physical macro is clean, but reflected load reduces slow/hot low
+time further to 125/133 ps. V10 tests the structural alternative: a five-stage
+4x/8x/16x/32x/64x taper that isolates the source. It is also physically clean
+(592 fingers, 206.6 um, 5,134R/3,477C), but accumulated extracted RC compresses
+TT rail-valid intervals to 49--57 ps and slow/hot intervals to 21--94 ps.
+The exact negative records are
+[`capture_local_clock_fanout_v9_pex_screen.json`](capture_local_clock_fanout_v9_pex_screen.json)
+and [`capture_local_clock_fanout_v10_pex_screen.json`](capture_local_clock_fanout_v10_pex_screen.json).
+V7 is therefore restored as the selected leaf. The next change is not another
+size candidate: namespace the event, fanout, and lane circuit IRs, co-place the
+V7 final drivers beside their sampler gates, route one parent, and extract it
+once. This removes duplicated leaf-pin routing that isolated PEX composition
+cannot optimize.
 
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail

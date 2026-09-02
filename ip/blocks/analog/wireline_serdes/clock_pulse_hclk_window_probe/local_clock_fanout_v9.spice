@@ -1,5 +1,5 @@
 * SPDX-License-Identifier: Apache-2.0
-* source_revision: local_clock_fanout_v7_sampler_clkb_6_16_32_p32_capture4_8
+* source_revision: local_clock_fanout_v9_sampler_clkb_8_24_36_p36_capture4_8
 .subckt cp_inv A Y VDD VSS params: MP=1 MN=1
 XP Y A VDD VDD pfet_03v3 w=8u l=0.28u m={MP}
 XN Y A VSS VSS nfet_03v3 w=8u l=0.28u m={MN}
@@ -11,9 +11,9 @@ XI1 B Y VDD VSS cp_inv MP={OUT} MN={OUT}
 .ends clock_fanout_buffer
 
 .subckt clock_fanout_sampler A Y VDD VSS
-XI0 A B0 VDD VSS cp_inv MP=6 MN=6
-XI1 B0 B1 VDD VSS cp_inv MP=16 MN=16
-XI2 B1 Y VDD VSS cp_inv MP=32 MN=32
+XI0 A B0 VDD VSS cp_inv MP=8 MN=8
+XI1 B0 B1 VDD VSS cp_inv MP=24 MN=24
+XI2 B1 Y VDD VSS cp_inv MP=36 MN=36
 .ends clock_fanout_sampler
 
 .subckt local_clock_fanout CLKP_H CLKP_HB CLKN_H CLKN_HB VDD VSS

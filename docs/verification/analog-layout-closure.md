@@ -783,6 +783,19 @@ extracted children closes only that electrical boundary; the parent remains
 open until child placement and parent-owned interconnect are DRC/LVS/PEX clean
 and re-simulated.
 
+A static differential-input replay is not a repetitive-reset qualification.
+One routed regenerative parent captured its startup value across five corners
+while its PRBS replay held that value indefinitely.  First-failure probes
+showed rail-valid event-generator outputs, but the remote monolithic fanout and
+parent interconnect left the six consumer clocks 0.51--0.77 V above ground.
+Its extracted consumer networks added up to roughly 2x the isolated fanout
+capacitance and hundreds of ohms to the farthest device terminal.  For narrow
+high-speed pulses, place the final driver beside each consumer group, publish
+pin obstructions/access, and gate promotion on repeated assert/reset cycles.
+Report isolated-versus-parent shunt capacitance and worst terminal resistance;
+do not respond by blindly enlarging a remote driver whose added input load may
+shorten the pulse at its source.
+
 Treat an ideal voltage source at a leaf input as a stimulus, not an input-load
 qualification.  The fast CML-to-CMOS leaf initially used twelve 8 um input
 fingers per side and passed its isolated exact-PEX timing because the source

@@ -80,3 +80,18 @@ The next localization must measure the dynamic top-level front-end
 differentials and representative extracted event/sense/capture-clock nodes.
 That separates a receiver/front-end tracking failure from a clock-event or
 capture-reset failure before any sizing or routing change is attempted.
+
+That localization is now retained in `dynamic_localize_tt_result.json` and
+`pex_path_localization.json`.  The event SENSE nodes still reach 39--125 mV
+low and about 3.13 V high.  After the fanout and parent interconnect, the six
+consumer clocks fall only to 0.51--0.77 V, so the regenerative/capture devices
+do not reliably reset.  The extracted consumer networks have 236--340 ohm
+worst series resistance.  Their shunt capacitance is 1.16--1.98 times the
+isolated fanout value; complementary capture clocks are the largest relative
+load increase.  The monolithic fanout at the left of the lane and long
+parent-owned routes are therefore the first causal boundary.
+
+The next implementation should distribute capture-owned final drivers beside
+the six consumer pin groups rather than enlarge the remote monolithic outputs.
+It must re-close parent DRC/LVS/PEX and first prove repetitive reset/PRBS at TT;
+the static 5/5 result alone is no longer an admissible promotion gate.

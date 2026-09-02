@@ -20,6 +20,18 @@ UI_S = 400e-12
 DATA_START_S = 500e-12
 SAMPLE_START = {"e": 8.55e-9, "o": 8.75e-9}
 PHASE_POLARITY = {"e": 1, "o": -1}
+INTERNAL_PROBES = {
+    "event_e_sense": "xparent.XEVENT.E_SENSE.t0",
+    "event_o_sense": "xparent.XEVENT.O_SENSE.t0",
+    "fanout_e_sense": "xparent.XFANOUT.E_SENSE",
+    "fanout_o_sense": "xparent.XFANOUT.O_SENSE",
+    "lane_e_sense": "xparent.XLANE.XFRONT.XFE_E.SENSE_CLK",
+    "lane_o_sense": "xparent.XLANE.O_SENSE_CLK.n102",
+    "fanout_e_capture_clk": "xparent.XFANOUT.E_CAPTURE_CLK",
+    "fanout_o_capture_clk": "xparent.XFANOUT.O_CAPTURE_CLK",
+    "fanout_e_capture_clkb": "xparent.XFANOUT.E_CAPTURE_CLKB",
+    "fanout_o_capture_clkb": "xparent.XFANOUT.O_CAPTURE_CLKB",
+}
 
 
 def prbs7(count: int, seed: int = 0x5D) -> list[int]:
@@ -64,6 +76,15 @@ def compile_deck(pex: Path, environment: dict, symbols: list[int],
             instant = SAMPLE_START[phase] + index * 800e-12
             dynamic_measures.append(
                 f"meas tran dyn_{phase}_{index} find {phase}_q_diff_vec at={instant:.12g}")
+            dynamic_measures.append(
+                f"meas tran diag_fe_{phase}_{index} find {phase}_fe_diff_vec at={instant:.12g}")
+    for label, node in INTERNAL_PROBES.items():
+        dynamic_measures.extend([
+            f"meas tran diag_{label}_high max v({node}) from=8n to={stop:.12g}",
+            f"meas tran diag_{label}_low min v({node}) from=8n to={stop:.12g}",
+        ])
+    internal_saves = " ".join(f"v({node})" for node in INTERNAL_PROBES.values())
+    deck = re.sub(r"(?m)^(\.save .*?)$", rf"\1 {internal_saves}", deck)
     marker = "meas tran supply_current avg isupply from=8n to=12.8n"
     deck = deck.replace(marker, "\n".join(dynamic_measures) + "\n" + marker)
     return deck
@@ -160,6 +181,8 @@ def main() -> None:
                            "sample_count_per_phase": args.sample_count},
               "fixed_phase_polarity": PHASE_POLARITY, "returncode": returncode,
               "complete": complete, "score": scored,
+              "diagnostic": {key: value for key, value in observed.items()
+                             if key.startswith("diag_")},
               "diagnostic_log_tail": [] if complete else text.splitlines()[-40:],
               "not_a_claim": ["channel/package closure", "BER", "closed CDR",
                               "PCIe compliance or silicon yield"],

@@ -90,7 +90,9 @@ identify XFANOUT
 getcell lane_rx_regenerative_capture child 0 0 parent 0 0
 identify XLANE
 getcell clock_level_converter child 0 0 parent -500 375
-identify XLEVEL_S
+identify XLEVEL_SE
+getcell clock_level_converter child 0 0 parent -660 375
+identify XLEVEL_SO
 getcell clock_level_converter child 0 0 parent -140 375
 identify XLEVEL_E
 getcell clock_level_converter child 0 0 parent 20 375
@@ -370,8 +372,8 @@ ep_rect metal4 -286.36 206.42 -264.72 206.98
 ep_transition_45 -265.0 206.70
 ep_rect metal5 -265.38 206.32 -261.62 207.08
 ep_transition_45 -262.0 206.70
-ep_route_43_34 -262.0 206.70 -576.0 352.6 467.0
-ep_rect metal5 -576.38 352.22 -557.62 352.98
+ep_route_43_34 -262.0 206.70 -738.0 351.0 467.0
+ep_rect metal5 -738.38 350.62 -719.62 351.38
 
 # Restored SENSE outputs to the lane's light inputs.
 ep_rect metal5 -442.38 396.22 -424.62 396.98
@@ -379,9 +381,9 @@ ep_transition_45 -425.0 396.6
 ep_route_45 -425.0 396.6 -243.0 97.8 443.0
 ep_rect metal5 -260.38 97.42 -242.62 98.18
 ep_m5_bridge_x -260.38 -12.62 97.8 -230.0 -220.0
-ep_rect metal5 -440.38 394.62 -422.62 395.38
-ep_transition_45 -423.0 395.0
-ep_route_45 -423.0 395.0 -237.0 103.0 445.0
+ep_rect metal5 -602.38 396.22 -589.62 396.98
+ep_transition_45 -590.0 396.6
+ep_route_45 -590.0 396.6 -237.0 103.0 445.0
 ep_rect metal5 -260.38 102.62 -236.62 103.38
 ep_m5_bridge_x -260.38 45.38 103.0 -230.0 -220.0
 ep_rect metal5 44.62 97.42 45.38 103.38
@@ -398,11 +400,13 @@ ep_route_43_34 -258.5 42.0 -215.0 351.0 457.0
 ep_rect metal5 -215.38 350.62 -199.62 351.38
 
 ep_rect metal4 -353.24 38.82 -352.68 45.28
+if {0} {
 ep_transition_45 -352.96 45.0
 ep_rect metal5 -353.34 44.62 -256.62 45.38
 ep_transition_45 -257.0 45.0
 ep_route_43_34 -257.0 45.0 -213.0 352.6 459.0
 ep_rect metal5 -213.38 352.22 -197.62 352.98
+}
 
 ep_transition_34 -339.20 206.70
 ep_transition_23 -339.20 206.70
@@ -415,6 +419,7 @@ ep_route_43_34 -255.0 204.50 -55.0 351.0 461.0
 ep_rect metal5 -55.38 350.62 -39.62 351.38
 
 ep_rect metal4 -353.24 214.82 -352.68 217.78
+if {0} {
 ep_transition_34 -352.96 217.50
 ep_transition_23 -352.96 217.50
 ep_rect metal2 -353.24 217.22 -252.22 217.78
@@ -423,11 +428,24 @@ ep_transition_34 -252.5 217.50
 ep_transition_45 -252.5 217.50
 ep_route_43_34 -252.5 217.50 -53.0 352.6 463.0
 ep_rect metal5 -53.38 352.22 -37.62 352.98
+}
+
+# A routed mid-supply reference drives only converter input gates.  Each pin
+# first escapes its child on Metal5; the shared bus stays above all macros.
+foreach {pin escape} {-718 -735 -558 -575 -198 -213 -38 -53} {
+    ep_rect metal5 [expr {min($pin,$escape)-0.38}] 352.22 \
+        [expr {max($pin,$escape)+0.38}] 352.98
+    ep_transition_45 $escape 352.6
+    ep_rect metal4 [expr {$escape-0.28}] 352.32 \
+        [expr {$escape+0.28}] 482.28
+    ep_transition_45 $escape 482.0
+}
+ep_rect metal5 -735.38 481.62 -52.62 482.38
 
 # Converter bias distribution is a parent-owned top-metal bus.  Keeping it a
 # distinct port makes the shared/calibrated resource explicit and avoids an
 # illegal route through the lane macro's interior RX_BIAS landing.
-foreach {pin escape} {-556 -570 -196 -210 -36 -50} {
+foreach {pin escape} {-716 -730 -556 -570 -196 -210 -36 -50} {
     ep_rect metal5 [expr {min($pin,$escape)-0.38}] 353.82 \
         [expr {max($pin,$escape)+0.38}] 354.58
     ep_transition_45 $escape 354.2
@@ -435,7 +453,7 @@ foreach {pin escape} {-556 -570 -196 -210 -36 -50} {
         [expr {$escape+0.28}] 479.28
     ep_transition_45 $escape 479.0
 }
-ep_rect metal5 -570.38 478.62 -49.62 479.38
+ep_rect metal5 -730.38 478.62 -49.62 479.38
 
 # Rail-restored converter outputs to the actual capture-clock landings.
 ep_rect metal5 -82.38 396.22 -69.62 396.98
@@ -514,11 +532,11 @@ foreach x {-160 -50 60} {
 }
 }
 if {$ep_route_level_power} {
-# Converter VSS pins at (-440,341), (-80,341), and (80,341).
+# Converter VSS pins at (-600,341), (-440,341), (-80,341), and (80,341).
 ep_rect metal4 -217.38 -181 -216.62 341.38
 ep_transition_34 -217.0 341.0
-ep_rect metal3 -440.28 340.72 80.28 341.28
-foreach x {-440 -80 80} {
+ep_rect metal3 -600.28 340.72 80.28 341.28
+foreach x {-600 -440 -80 80} {
     ep_transition_34 $x 341.0
     ep_transition_45 $x 341.0
 }
@@ -542,6 +560,7 @@ ep_port VTHP metal5 -23 33.5 0.8
 ep_port VTHN metal5 -19 33.5 0.8
 ep_port RX_BIAS metal4 -3 -44.75 0.8
 ep_port LEVEL_BIAS metal5 -116 479.0 0.8
+ep_port LEVEL_REF metal5 -116 482.0 0.8
 ep_port RX_BW_EN_N metal4 -3 23.3 0.8
 ep_port E_REGEN_CLK metal5 -189 148.0 0.9
 ep_port E_REGEN_CLKB metal5 -191 149.4 0.9

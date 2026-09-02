@@ -26,14 +26,14 @@ class RoutedParentSourceTest(unittest.TestCase):
         source = compiler.compile_source()
         self.assertIn("XEVENT CLKP_H CLKN_H SEL0 SEL1 SEL2", source)
         self.assertIn("XFANOUT E_CLK E_CLKB O_CLK O_CLKB", source)
-        for instance in ("XLEVEL_S", "XLEVEL_E", "XLEVEL_O"):
+        for instance in ("XLEVEL_SE", "XLEVEL_SO", "XLEVEL_E", "XLEVEL_O"):
             self.assertIn(instance + " ", source)
         self.assertIn(
-            "E_CAPTURE_CLK_PRE E_CAPTURE_CLKB_PRE LEVEL_BIAS VDD VSS",
+            "E_CAPTURE_CLK_PRE LEVEL_REF LEVEL_BIAS VDD VSS",
             source,
         )
         self.assertIn(
-            "O_CAPTURE_CLK_PRE O_CAPTURE_CLKB_PRE LEVEL_BIAS VDD VSS",
+            "O_CAPTURE_CLK_PRE LEVEL_REF LEVEL_BIAS VDD VSS",
             source,
         )
         self.assertIn(

@@ -1,7 +1,7 @@
 # Routed event-to-lane parent
 
 This boundary composes the selected event generator, V7 local clock fanout,
-three symmetric differential level converters, and direct-regenerative
+four reference-driven differential level converters, and direct-regenerative
 RX/capture as one namespace-safe transistor-intent source. `compile_source.py`
 resolves the include closure, preserves only the public leaf tops, and
 deterministically namespaces every internal subcircuit before adding parent
@@ -22,7 +22,7 @@ The routed parent now has promoted physical-legality evidence:
 - unique LVS against the compiled transistor intent;
 - distinct VDD and VSS networks;
 - all six fanout-to-lane signal routes physically present; and
-- full-RC extraction with 16,477 resistors and 10,544 capacitors.
+- full-RC extraction with 17,042 resistors and 10,803 capacitors.
 
 The immutable record is `physical_result.json`; the retained source,
 `event_lane_routed_parent.pex.spice`, and the rendered layout are tied to it by
@@ -90,14 +90,11 @@ isolated fanout value; complementary capture clocks are the largest relative
 load increase.  The monolithic fanout at the left of the lane and long
 parent-owned routes are therefore the first causal boundary.
 
-The v3 parent replaces those bridges with three already-qualified differential
-level converters and gives their bias an explicit `LEVEL_BIAS` port.  It is
-zero-DRC, uniquely LVS-matched, and full-RC extracted.  This is also a completed
-falsification experiment: at the converter's qualified 1.15 V TT bias, every
-converter settles to one state under the fanout waveforms, so both captures
-remain held.  The standalone converter contract assumed continuously
-differential CML input; independently timed single-ended fanout nodes do not
-satisfy that assumption merely because they are named CLK/CLKB or EVEN/ODD.
-The next receiver must compare each weak node against an explicit reference
-(or otherwise carry a proven differential-overlap contract), then repeat
-physical closure and the hash-bound PRBS screen.
+The v4 parent gives four independently timed weak nodes their own converter and
+an explicit `LEVEL_REF`.  It is zero-DRC, uniquely LVS-matched, and full-RC
+extracted to 17,042R/10,803C.  Its complete hash-bound TT PRBS run still fails:
+the reused CML converters remain fixed even with a static reference because
+their large regenerative input presents excessive load to the fanout.  A new
+4-µm-input, non-regenerative `reference_level_receiver` now passes 5/5
+schematic PVT cases.  It must next receive DRC/LVS/PEX closure and replace the
+four converter instances before another parent PRBS claim is attempted.

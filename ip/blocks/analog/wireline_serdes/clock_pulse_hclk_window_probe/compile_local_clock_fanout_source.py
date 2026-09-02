@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 TOP = "local_clock_fanout"
-SOURCE_REVISION = "local_clock_fanout_v5_sampler_clkb_4_12_16_p32_capture4_8"
+SOURCE_REVISION = "local_clock_fanout_v7_sampler_clkb_6_16_32_p32_capture4_8"
 
 
 def compile_source() -> str:
@@ -33,9 +33,9 @@ XI1 B Y VDD VSS cp_inv MP={{OUT}} MN={{OUT}}
 .ends clock_fanout_buffer
 
 .subckt clock_fanout_sampler A Y VDD VSS
-XI0 A B0 VDD VSS cp_inv MP=4 MN=4
-XI1 B0 B1 VDD VSS cp_inv MP=12 MN=12
-XI2 B1 Y VDD VSS cp_inv MP=32 MN=16
+XI0 A B0 VDD VSS cp_inv MP=6 MN=6
+XI1 B0 B1 VDD VSS cp_inv MP=16 MN=16
+XI2 B1 Y VDD VSS cp_inv MP=32 MN=32
 .ends clock_fanout_sampler
 
 .subckt {TOP} CLKP_H CLKP_HB CLKN_H CLKN_HB VDD VSS

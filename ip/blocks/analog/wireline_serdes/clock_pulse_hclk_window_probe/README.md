@@ -677,6 +677,19 @@ and [`capture_local_clock_fanout_v5_pex_screen.json`](capture_local_clock_fanout
 The next bounded candidate keeps the v5 taper and balances the final NFET to
 32x; it is an edge-strength correction, not an unconstrained size sweep.
 
+V6 and V7 complete that balance audit. V6 changes only the final NFET to 32x;
+its 288-finger, 2,482R/1,686C physical macro passes TT and reaches
+137--145 ps low plus 132--134 ps high at slow/hot. V7 strengthens only the
+upstream taper to 6x/16x. Its 312-finger, 135.9-um, 2,714R/1,834C macro is
+zero-DRC and unique-LVS; exact replay passes TT and reaches 140/147 ps low
+plus 153/152 ps high at slow/hot. Rails, frontend decisions, held data, and
+current remain within contract. Exact records are
+[`capture_local_clock_fanout_v6_pex_screen.json`](capture_local_clock_fanout_v6_pex_screen.json)
+and [`capture_local_clock_fanout_v7_pex_screen.json`](capture_local_clock_fanout_v7_pex_screen.json).
+V7 misses only 2.8--10.4 ps of slow/hot low time. The next candidate uses an
+8x/24x taper into the same balanced final stage; source loading remains equal
+to the already rail-valid v1 aggregate input load.
+
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail
 margin.  Second, simply placing `XHSD2` beside its detector improved TT width

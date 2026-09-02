@@ -627,6 +627,25 @@ fanout or routed-parent claim. The next gate is to lower the six local buffer
 branches into a matched physical fanout, prove DRC/LVS/PEX, and replay these
 same two cases with that extracted fanout before expanding to 5/5 PVT.
 
+The v1 physical fanout is now retained as bounded negative evidence. Its 24
+logical MOS instances (192 raw fingers) lower to a 104.6-um-wide generated
+cell that is zero-DRC, uniquely LVS-equivalent, and extracts to 1,644
+resistors plus 1,121 capacitors. The exact layout used for extraction is
+[rendered here](../../../../../docs/images/pcie-local-clock-fanout-layout.png),
+and [`local_clock_fanout_physical.json`](local_clock_fanout_physical.json)
+binds its schematic, layout source, MAG, GDS, PEX, and image identities.
+
+Replacing all six schematic branches with that exact PEX preserves a complete
+TT pass and rail-level slow/hot clocks and data. It does not preserve the
+slow/hot sampler interval: extracted fanout RC reduces valid-low time from at
+least 206 ps schematically to 64.5/58.3 ps for even/odd, below the 150-ps
+contract. Slow/hot still produces 2.904/2.817 V held differential magnitude,
+so this is localized clock-edge loss rather than sampler data failure. The
+exact composed record is
+[`capture_local_clock_fanout_pex_screen.json`](capture_local_clock_fanout_pex_screen.json).
+The next physical candidate should strengthen and compact only the 8x/16x
+sampler branches; the 4x/8x capture/complement branches already meet rails.
+
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail
 margin.  Second, simply placing `XHSD2` beside its detector improved TT width

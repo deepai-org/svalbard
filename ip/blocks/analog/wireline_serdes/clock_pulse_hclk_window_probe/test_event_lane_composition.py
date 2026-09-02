@@ -113,6 +113,19 @@ class EventLaneCompositionTest(unittest.TestCase):
         self.assertIn("E_SAMPLER_CLK E_REGEN_CLK E_REGEN_CLKB E_CAPTURE_CLK E_CAPTURE_CLKB VDD", deck)
         self.assertIn("meas tran e_clkb_high max v(E_CAPTURE_CLKB)", deck)
 
+    def test_exact_physical_fanout_replaces_schematic_buffers(self) -> None:
+        environment = composition.base.CONTRACT["environments"][0]
+        control = composition.event_runner.CONTROLS[4]
+        deck = composition.compile_deck(
+            Path("event.pex.spice"), Path("lane.pex.spice"), environment,
+            control, (), False, (), False, (8, 16), "on", (4, 8),
+            Path("fanout.pex.spice"))
+        self.assertIn(".include fanout.pex.spice", deck)
+        self.assertIn("XFANOUT E_CLK E_CLKB O_CLK O_CLKB VDD 0 E_SAMPLER_CLK", deck)
+        self.assertIn("local_clock_fanout_pex", deck)
+        self.assertNotIn(".subckt sampler_clock_buffer", deck)
+        self.assertNotIn(".subckt capture_clock_buffer", deck)
+
     def test_schematic_debug_nodes_are_explicit_measures(self) -> None:
         environment = composition.base.CONTRACT["environments"][0]
         control = composition.event_runner.CONTROLS[4]

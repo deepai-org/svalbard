@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+"""Compile the selected local sampler/capture clock fanout schematic."""
+
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+
+TOP = "local_clock_fanout"
+SOURCE_REVISION = "local_clock_fanout_v1_sampler8_16_capture4_8"
+
+
+def compile_source() -> str:
+    branches = []
+    for phase, clock, clockb in (("E", "CLKP_H", "CLKP_HB"),
+                                  ("O", "CLKN_H", "CLKN_HB")):
+        branches.extend([
+            f"X{phase}S {clock} {phase}_SENSE VDD VSS clock_fanout_buffer PRE=8 OUT=16",
+            f"X{phase}C {clock} {phase}_CAPTURE_CLK VDD VSS clock_fanout_buffer PRE=4 OUT=8",
+            f"X{phase}CB {clockb} {phase}_CAPTURE_CLKB VDD VSS clock_fanout_buffer PRE=4 OUT=8",
+        ])
+    return f"""* SPDX-License-Identifier: Apache-2.0
+* source_revision: {SOURCE_REVISION}
+.subckt cp_inv A Y VDD VSS params: MP=1 MN=1
+XP Y A VDD VDD pfet_03v3 w=8u l=0.28u m={{MP}}
+XN Y A VSS VSS nfet_03v3 w=8u l=0.28u m={{MN}}
+.ends cp_inv
+
+.subckt clock_fanout_buffer A Y VDD VSS params: PRE=4 OUT=8
+XI0 A B VDD VSS cp_inv MP={{PRE}} MN={{PRE}}
+XI1 B Y VDD VSS cp_inv MP={{OUT}} MN={{OUT}}
+.ends clock_fanout_buffer
+
+.subckt {TOP} CLKP_H CLKP_HB CLKN_H CLKN_HB VDD VSS
++ E_SENSE E_CAPTURE_CLK E_CAPTURE_CLKB
++ O_SENSE O_CAPTURE_CLK O_CAPTURE_CLKB
+{chr(10).join(branches)}
+.ends {TOP}
+"""
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output", required=True, type=Path)
+    args = parser.parse_args()
+    args.output.write_text(compile_source())
+
+
+if __name__ == "__main__":
+    main()

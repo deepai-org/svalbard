@@ -57,14 +57,16 @@ def compile_deck(event_pex: Path, lane_pex: Path, environment: dict[str, Any],
                  direct_sampler_clock: bool = False,
                  sampler_clock_buffer: tuple[int, int] | None = None,
                  sampler_boost_mode: str = "event",
-                 capture_clock_buffer: tuple[int, int] | None = None) -> str:
+                 capture_clock_buffer: tuple[int, int] | None = None,
+                 clock_fanout_pex: Path | None = None) -> str:
     vdd = float(environment["vdd_v"])
     vmid = vdd / 2
     rx_bias = float(CONTRACT["rx_bias_v"][environment["id"]])
     measures = []
     for phase in PHASES:
         upper = phase.upper()
-        sense_node = (f"{upper}_SAMPLER_CLK" if sampler_clock_buffer else
+        sense_node = (f"{upper}_SAMPLER_CLK" if (sampler_clock_buffer or
+                      clock_fanout_pex) else
                       f"{upper}_{'CLK' if direct_sampler_clock else 'SENSE'}")
         boost_node = ({"event": f"{upper}_BOOST", "on": "VDD",
                        "off": "0"}[sampler_boost_mode])
@@ -76,7 +78,8 @@ def compile_deck(event_pex: Path, lane_pex: Path, environment: dict[str, Any],
             elif signal == "boost":
                 node = boost_node
             else:
-                node = (clock_nodes[signal] if capture_clock_buffer else
+                node = (clock_nodes[signal] if (capture_clock_buffer or
+                        clock_fanout_pex) else
                         f"{upper}_{signal.upper()}")
             measures.extend([
                 f"meas tran {phase}_{signal}_high max v({node}) from=8n to=12.8n",
@@ -106,8 +109,9 @@ def compile_deck(event_pex: Path, lane_pex: Path, environment: dict[str, Any],
                 f"meas tran {phase}_dbg_{stage}_high max v({node}) from=8n to=12.8n",
                 f"meas tran {phase}_dbg_{stage}_low min v({node}) from=8n to=12.8n",
             ])
-    buffer_subckt = "" if not (local_interface_buffer or sampler_clock_buffer or
-                                capture_clock_buffer) else """
+    buffer_subckt = "" if not (local_interface_buffer or
+                                (sampler_clock_buffer and not clock_fanout_pex) or
+                                (capture_clock_buffer and not clock_fanout_pex)) else """
 .subckt lane_if_inv A Y VDD VSS params: MP=1 MN=1
 XP Y A VDD VDD pfet_03v3 w=8u l=0.28u m={MP}
 XN Y A VSS VSS nfet_03v3 w=8u l=0.28u m={MN}
@@ -120,7 +124,7 @@ XI0 A B VDD VSS lane_if_inv MP=4 MN=4
 XI1 B Y VDD VSS lane_if_inv MP=16 MN=16
 .ends lane_if_buffer
 """
-    if sampler_clock_buffer:
+    if sampler_clock_buffer and not clock_fanout_pex:
         sampler_pre_mult, sampler_out_mult = sampler_clock_buffer
         buffer_subckt += f"""
 .subckt sampler_clock_buffer A Y VDD VSS
@@ -128,7 +132,7 @@ XI0 A B VDD VSS lane_if_inv MP={sampler_pre_mult} MN={sampler_pre_mult}
 XI1 B Y VDD VSS lane_if_inv MP={sampler_out_mult} MN={sampler_out_mult}
 .ends sampler_clock_buffer
 """
-    if capture_clock_buffer:
+    if capture_clock_buffer and not clock_fanout_pex:
         capture_pre_mult, capture_out_mult = capture_clock_buffer
         buffer_subckt += f"""
 .subckt capture_clock_buffer A Y VDD VSS
@@ -150,20 +154,25 @@ XOB_B O_BOOST_SRC O_BOOST VDD 0 lane_if_buffer
 XOB_C O_CLK_SRC O_CLK VDD 0 lane_if_buffer
 XOB_CB O_CLKB_SRC O_CLKB VDD 0 lane_if_buffer
 """
-    sampler_buffer_instances = "" if not sampler_clock_buffer else """
+    sampler_buffer_instances = "" if not sampler_clock_buffer or clock_fanout_pex else """
 XESB E_CLK E_SAMPLER_CLK VDD 0 sampler_clock_buffer
 XOSB O_CLK O_SAMPLER_CLK VDD 0 sampler_clock_buffer
 """
-    capture_buffer_instances = "" if not capture_clock_buffer else """
+    capture_buffer_instances = "" if not capture_clock_buffer or clock_fanout_pex else """
 XECB E_CLK E_CAPTURE_CLK VDD 0 capture_clock_buffer
 XECBB E_CLKB E_CAPTURE_CLKB VDD 0 capture_clock_buffer
 XOCB O_CLK O_CAPTURE_CLK VDD 0 capture_clock_buffer
 XOCBB O_CLKB O_CAPTURE_CLKB VDD 0 capture_clock_buffer
 """
-    e_capture_clk = "E_CAPTURE_CLK" if capture_clock_buffer else "E_CLK"
-    e_capture_clkb = "E_CAPTURE_CLKB" if capture_clock_buffer else "E_CLKB"
-    o_capture_clk = "O_CAPTURE_CLK" if capture_clock_buffer else "O_CLK"
-    o_capture_clkb = "O_CAPTURE_CLKB" if capture_clock_buffer else "O_CLKB"
+    physical_fanout_instance = "" if not clock_fanout_pex else """
+XFANOUT E_CLK E_CLKB O_CLK O_CLKB VDD 0 E_SAMPLER_CLK E_CAPTURE_CLK
++ E_CAPTURE_CLKB O_SAMPLER_CLK O_CAPTURE_CLK O_CAPTURE_CLKB local_clock_fanout_pex
+"""
+    use_capture_fanout = bool(capture_clock_buffer or clock_fanout_pex)
+    e_capture_clk = "E_CAPTURE_CLK" if use_capture_fanout else "E_CLK"
+    e_capture_clkb = "E_CAPTURE_CLKB" if use_capture_fanout else "E_CLKB"
+    o_capture_clk = "O_CAPTURE_CLK" if use_capture_fanout else "O_CLK"
+    o_capture_clkb = "O_CAPTURE_CLKB" if use_capture_fanout else "O_CLKB"
     for label, node in schematic_debug_nodes:
         measures.extend([
             f"meas tran sch_{label}_high max v({node}) from=8n to=12.8n",
@@ -176,11 +185,11 @@ XOCBB O_CLKB O_CAPTURE_CLKB VDD 0 capture_clock_buffer
                 f"meas tran sch_{label}_high_exit when v({node})={vdd - CONTRACT['thresholds']['logic_rail_margin_v']:.6f} fall=1 td=12n",
                 f"meas tran sch_{label}_low_enter when v({node})={CONTRACT['thresholds']['logic_rail_margin_v']} fall=1 td=12n",
             ])
-    e_sampler_sense = ("E_SAMPLER_CLK" if sampler_clock_buffer else
+    e_sampler_sense = ("E_SAMPLER_CLK" if (sampler_clock_buffer or clock_fanout_pex) else
                        "E_CLK" if direct_sampler_clock else "E_SENSE")
     e_sampler_boost = {"event": "E_BOOST", "on": "VDD", "off": "0"}[
         sampler_boost_mode]
-    o_sampler_sense = ("O_SAMPLER_CLK" if sampler_clock_buffer else
+    o_sampler_sense = ("O_SAMPLER_CLK" if (sampler_clock_buffer or clock_fanout_pex) else
                        "O_CLK" if direct_sampler_clock else "O_SENSE")
     o_sampler_boost = {"event": "O_BOOST", "on": "VDD", "off": "0"}[
         sampler_boost_mode]
@@ -191,6 +200,7 @@ XOCBB O_CLKB O_CAPTURE_CLKB VDD 0 capture_clock_buffer
 .temp {environment['temperature_c']}
 .include {event_pex}
 .include {lane_pex}
+{f'.include {clock_fanout_pex}' if clock_fanout_pex else ''}
 {buffer_subckt}
 VDD VDD 0 PWL(0 0 500p {vdd:.6f})
 VCLKP CLKP_H 0 PULSE(0 {vdd:.6f} 1n 20p 20p 380p 800p)
@@ -229,6 +239,7 @@ XEVENT CLKP_H CLKN_H SEL0 SEL1 SEL2 VDD 0 {event_outputs}
 {buffer_instances}
 {sampler_buffer_instances}
 {capture_buffer_instances}
+{physical_fanout_instance}
 REREGEN E_REGEN_CLK 0 1m
 REREGENB E_REGEN_CLKB 0 1m
 ROREGEN O_REGEN_CLK 0 1m
@@ -265,6 +276,7 @@ def run_case(spec: tuple) -> dict:
     sampler_clock_buffer = optional[2] if len(optional) > 2 else None
     sampler_boost_mode = optional[3] if len(optional) > 3 else "event"
     capture_clock_buffer = optional[4] if len(optional) > 4 else None
+    clock_fanout_pex = optional[5] if len(optional) > 5 else None
     stem = f"{environment['id']}_{control['id']}"
     deck = work / f"{stem}.spice"
     log = work / f"{stem}.log"
@@ -272,7 +284,7 @@ def run_case(spec: tuple) -> dict:
                                  debug_stages, local_interface_buffer,
                                  schematic_debug_nodes, direct_sampler_clock,
                                  sampler_clock_buffer, sampler_boost_mode,
-                                 capture_clock_buffer))
+                                 capture_clock_buffer, clock_fanout_pex))
     try:
         with log.open("w") as output:
             run = subprocess.run(["ngspice", "-b", str(deck)], stdout=output,
@@ -418,10 +430,16 @@ def main() -> None:
         "--capture-clock-buffer", nargs=2, type=int, metavar=("PRE", "OUT"),
         help="restore both extracted capture-clock polarities with local two-stage buffers",
     )
+    parser.add_argument("--clock-fanout-pex", type=Path,
+                        help="exact extracted six-branch local clock fanout")
+    parser.add_argument("--clock-fanout-physical", type=Path,
+                        help="hash-bound physical record for --clock-fanout-pex")
     parser.add_argument("--work", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
     require(1 <= args.jobs <= 8, "jobs must be 1--8")
+    require((args.clock_fanout_pex is None) == (args.clock_fanout_physical is None),
+            "clock fanout PEX and physical record must be supplied together")
     require(not (args.direct_sampler_clock and args.sampler_clock_buffer),
             "direct sampler clock and sampler clock buffer are mutually exclusive")
     if args.sampler_clock_buffer:
@@ -446,6 +464,16 @@ def main() -> None:
             == expected_schematic_sha256,
             "event physical schematic identity mismatch")
     lane_physical = require_physical_pex(args.lane_pex, args.lane_physical, False)
+    fanout_physical = None
+    if args.clock_fanout_pex:
+        fanout_physical = require_physical_pex(
+            args.clock_fanout_pex, args.clock_fanout_physical, True)
+        require(fanout_physical.get("top") == "local_clock_fanout",
+                "unexpected clock fanout physical top")
+        require(args.sampler_clock_buffer == [8, 16],
+                "physical fanout requires sampler buffer 8 16")
+        require(args.capture_clock_buffer == [4, 8],
+                "physical fanout requires capture buffer 4 8")
     environments = list(base.CONTRACT["environments"])
     controls = list(event_runner.CONTROLS)
     require(not args.case_ids or not (args.environment_ids or args.control_ids),
@@ -486,7 +514,8 @@ def main() -> None:
               args.direct_sampler_clock,
               tuple(args.sampler_clock_buffer) if args.sampler_clock_buffer else None,
               args.sampler_boost_mode,
-              tuple(args.capture_clock_buffer) if args.capture_clock_buffer else None)
+              tuple(args.capture_clock_buffer) if args.capture_clock_buffer else None,
+              args.clock_fanout_pex)
              for environment, control in pairs]
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as executor:
         cases = list(executor.map(run_case, specs))
@@ -503,6 +532,10 @@ def main() -> None:
         "event_physical_sha256": digest(args.event_physical),
         "lane_pex_sha256": digest(args.lane_pex),
         "lane_physical_sha256": digest(args.lane_physical),
+        "clock_fanout_pex_sha256": (digest(args.clock_fanout_pex)
+                                     if args.clock_fanout_pex else None),
+        "clock_fanout_physical_sha256": (digest(args.clock_fanout_physical)
+                                          if args.clock_fanout_physical else None),
         "event_source_revision": event_physical["source_revision"],
         "lane_claim": lane_physical["claim"],
         "debug_stages": list(debug_stages),
@@ -511,6 +544,8 @@ def main() -> None:
         "sampler_clock_buffer": args.sampler_clock_buffer,
         "sampler_boost_mode": args.sampler_boost_mode,
         "capture_clock_buffer": args.capture_clock_buffer,
+        "clock_fanout_claim": (fanout_physical["claim"]
+                                if fanout_physical else None),
         "case_count": len(cases),
         "passing_case_count": sum(case["result"] == "pass" for case in cases),
         "environment_code_coverage": coverage,

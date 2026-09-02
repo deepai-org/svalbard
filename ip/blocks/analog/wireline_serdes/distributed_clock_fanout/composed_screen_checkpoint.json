@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "claim": "isolated_distributed_fanout_exact_pex_admission",
+  "case_count": 2,
+  "passing_case_count": 2,
+  "environment_ids": ["tt", "ss_hot"],
+  "control_id": "sense1_interval0_epoch0",
+  "minimum_observed": {
+    "sense_low_rail_valid_time_s": 1.5559999999999975e-10,
+    "sense_high_rail_valid_time_s": 1.867999999999994e-10,
+    "frontend_differential_v": 2.74555,
+    "held_data_differential_v": 2.80598
+  },
+  "maximum_observed": {
+    "average_supply_current_a": 0.112436
+  },
+  "identity": {
+    "composed_fanout_pex_sha256": "51dd5366216c4854f0cc660076ba8777b578e4443ddcebe9e33d2c11c48fdc43",
+    "event_pex_sha256": "192a1b7d9119b915baef7461925af3b17cc98835654412f7d6a11adeebe6efa9",
+    "lane_pex_sha256": "f8fdcb7cdcc486c6ac868f476dd7a85bcaaa3ee02ec77caaf835c6107519b1df",
+    "composition_contract_sha256": "8a4ab5d2e71f476739d26ac14bef491905c17a94178c2378aad88eef8ffe0efd"
+  },
+  "result": "pass",
+  "not_a_claim": [
+    "routed distributed parent",
+    "dynamic PRBS capture",
+    "closed CDR",
+    "PCIe compliance"
+  ]
+}

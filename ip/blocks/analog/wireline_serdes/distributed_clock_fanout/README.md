@@ -26,3 +26,18 @@ DRC errors and unique, property-clean LVS. `physical_result.json` retains the
 artifact identities. `partition_contract.json` binds the existing 150 ps
 high/low rail-valid composition requirement to the placement rule and forbids
 reintroducing an interposed level receiver.
+
+`run_composed_screen.sh` regenerates both leaves, verifies their identities,
+wraps one sampler pair plus two capture pairs behind the established six-clock
+interface, and substitutes that exact isolated PEX composition between the
+extracted event and lane parents. This is the TT/SS-hot electrical admission
+gate for a routed distributed parent; the wrapper explicitly makes no placed-
+interconnect claim.
+
+The first exact screen passes 2/2. TT has at least 199.6 ps high and 213.7 ps
+low rail-valid time. SS/125 C has at least 186.8 ps high and 155.6 ps low;
+held-data differential is at least 2.806 V and maximum current is 112.4 mA.
+The slow/hot low interval therefore has only 5.6 ps margin to the 150 ps
+contract. `composed_screen_checkpoint.json` retains the exact PEX identities
+and limiting measurements. This authorizes a compact routed-parent attempt,
+not expansion to five PVT environments yet.

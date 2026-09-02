@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "contract": "distributed_full_duty_clock_fanout",
+  "derived_from": {
+    "composition_contract": "../clock_pulse_hclk_window_probe/event_lane_contract.json",
+    "passing_schematic_evidence": "../clock_pulse_hclk_window_probe/capture_local_clock_fanout_screen.json",
+    "monolithic_pex_rejection": "../clock_pulse_hclk_window_probe/capture_local_clock_fanout_v7_pex_screen.json"
+  },
+  "assume": {
+    "inputs": ["CLKP_H", "CLKN_H", "CLKP_HB", "CLKN_HB"],
+    "event_clock_period_s": 8e-10,
+    "remote_route_terminates_only_on": "first_stage_gate"
+  },
+  "guarantee": {
+    "logic_rail_margin_v": 0.25,
+    "minimum_low_rail_valid_time_s": 1.5e-10,
+    "minimum_high_rail_valid_time_s": 1.5e-10,
+    "minimum_held_data_differential_v": 0.5,
+    "maximum_composed_average_current_a": 0.15
+  },
+  "physical_intent": {
+    "sampler_pair_count": 1,
+    "capture_pair_count": 2,
+    "place_final_stage_beside_consumer": true,
+    "extract_routed_parent_once": true,
+    "forbid_interposed_level_receiver": true
+  },
+  "qualification_order": [
+    "tt_and_ss_hot_exact_composed_pex",
+    "five_environment_exact_composed_pex",
+    "dynamic_tt_prbs",
+    "dynamic_five_environment_prbs"
+  ],
+  "not_a_claim": [
+    "closed CDR",
+    "PCIe compliance",
+    "mismatch yield",
+    "provider signoff"
+  ]
+}

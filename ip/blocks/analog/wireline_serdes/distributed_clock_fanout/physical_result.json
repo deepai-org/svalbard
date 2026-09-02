@@ -1,0 +1,40 @@
+{
+  "branches": {
+    "capture": {
+      "drc_errors": 0,
+      "identity": {
+        "layout_tcl_sha256": "0ec1dfb0f4155b9485a2fbb9b49f2a713ba02bd3e3c56334545ac66f17e13a6d",
+        "lvs_view_sha256": "649bb7bdf33d24f496adfe033da676e4b71a62a1d37b60af2a464f080b9db74b",
+        "mag_sha256": "24a37735c9d1034d1f1f199da33f4909df41b8669426b591898b561e301d2056",
+        "pex_sha256": "90c56aeaa1e1d7fa0a092ee9760fbbc49e26417f8bbae3c32b4bc14db74b57ed",
+        "source_sha256": "946a99ccb36a4799a6889fc661bf16591ca56136ab46f8cab0fc87e7ffaaa9f6"
+      },
+      "lvs_result": "pass_unique",
+      "pex_capacitor_count": 285,
+      "pex_resistor_count": 446,
+      "stage_multiplicities": [4, 8],
+      "top": "distributed_capture_pair"
+    },
+    "sampler": {
+      "drc_errors": 0,
+      "identity": {
+        "layout_tcl_sha256": "d39fb5367181d7d72a4dc57fa836dc697cbf656fcb073d9454b53d742d967b13",
+        "lvs_view_sha256": "83a3aad629966c6bcddbef8790ae794d8090e760b9c7c3b36c4e85048b354a85",
+        "mag_sha256": "7d8afedc308c7f46677608a410bba155b6d3728659bc0c7bde84cbaae7273af4",
+        "pex_sha256": "df1c1c91e7cd3b4a42fbeb9e15237df596bc42a7b1dba56602f08e0cc99edbb4",
+        "source_sha256": "d2ae58294c96de882f20e9b3aff03c0a9b53b5598743c244c989871e734fefae"
+      },
+      "lvs_result": "pass_unique",
+      "pex_capacitor_count": 1272,
+      "pex_resistor_count": 1900,
+      "stage_multiplicities": [6, 16, 32],
+      "top": "distributed_sampler_pair"
+    }
+  },
+  "claim": "distributed_clock_fanout_branch_physical_legality",
+  "not_a_claim": ["placed parent", "composed PEX timing", "PCIe compliance"],
+  "physical_intent": "three pair macros placed beside their consumers; remote nets terminate only on first-stage gates",
+  "result": "pass",
+  "schema_version": 1,
+  "source_revision": "distributed_v1_preserve_v7_branch_ratios"
+}

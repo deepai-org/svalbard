@@ -2,12 +2,12 @@
   "claim": "local_clock_fanout_physical_legality",
   "drc_stage_result": "pass",
   "identity": {
-    "gds_sha256": "a51f681552f24dbd14e3bd60bb4e0253c47d49681bfb5da029b9caf7abc13973",
-    "layout_png_sha256": "1d59d038808102f68c3d516055c782a9fe074190b9a39a73b0901f4cc642f83d",
-    "layout_tcl_sha256": "bea025c2392e0d8f20dc97f6e60175a41d60b8619e285261d1f772cc3c0474eb",
-    "mag_sha256": "a3a1cded27bf632986ccbbce3ffa5f995256d995b9f2e748460baa7d16495fc1",
-    "pex_sha256": "6fdfaab0641af0e31e0f06e8b05917df8e97ec3c1ab92e296d339c2aa663089e",
-    "schematic_sha256": "4869309fcc0bae2a2286b7c2298a60f488118c6aea73db5fe5481b23c522383a"
+    "gds_sha256": "775d490123742bfd60f4d69413f78ee0ed68821227d94bead710a9eba2b1ca0b",
+    "layout_png_sha256": "1fc998cf17146dabd4f88ac93beb071812232efb52a2d77bae15f733f24f863f",
+    "layout_tcl_sha256": "40c35f5c20de04652f592b48eb5dcdf4a10944938f11d9996050aa81baf367fe",
+    "mag_sha256": "b6ccfaa9da111cceef7553633df61cbfa25e74a2b0c5725408a79e9650c8dbc5",
+    "pex_sha256": "a51c7d8bcdb17492224ed38c3d17c7bc236f39fd3b4ed785dcf526219492c4c9",
+    "schematic_sha256": "f05f5428bb9b96b96213988a226881b4b50498e041150d745e1125e5ec7422aa"
   },
   "logical_mos_count": 28,
   "lvs_stage_result": "pass_unique",
@@ -18,10 +18,10 @@
     "closed CDR or PCIe link",
     "provider signoff or silicon yield"
   ],
-  "pex_capacitor_count": 1526,
-  "pex_resistor_count": 2194,
+  "pex_capacitor_count": 1148,
+  "pex_resistor_count": 1662,
   "pex_stage_result": "pass",
-  "raw_finger_count": 256,
+  "raw_finger_count": 200,
   "result": "pass",
   "schema_version": 1,
   "scope": "six-branch static-CMOS fanout; DRC, unique LVS, full-RC extraction, and exact review render",
@@ -29,14 +29,13 @@
     "branch_count": 6,
     "capture_output_mult": 8,
     "capture_pre_mult": 4,
-    "sampler_final_p_mult": 32,
     "sampler_input": "complementary_capture_clock",
     "sampler_stage_mults": [
-      4,
-      12,
+      2,
+      8,
       16
     ]
   },
-  "source_revision": "local_clock_fanout_v5_sampler_clkb_4_12_16_p32_capture4_8",
+  "source_revision": "local_clock_fanout_v3_sampler_clkb_2_8_16_capture4_8",
   "top": "local_clock_fanout"
 }

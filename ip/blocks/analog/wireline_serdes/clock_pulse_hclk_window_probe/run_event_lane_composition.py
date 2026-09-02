@@ -423,6 +423,12 @@ def main() -> None:
         help="branch the extracted capture clock through a local two-stage sampler buffer",
     )
     parser.add_argument(
+        "--sampler-clock-stages", nargs="+", type=int,
+        help="record the stage multipliers of an exact physical sampler fanout",
+    )
+    parser.add_argument("--sampler-final-p-mult", type=int,
+                        help="record an asymmetric final PMOS multiplier")
+    parser.add_argument(
         "--sampler-boost-mode", choices=("event", "on", "off"), default="event",
         help="use the event BOOST waveform or a static rail trim at the sampler",
     )
@@ -445,6 +451,12 @@ def main() -> None:
     if args.sampler_clock_buffer:
         require(all(1 <= value <= 64 for value in args.sampler_clock_buffer),
                 "sampler clock buffer multipliers must be 1--64")
+    if args.sampler_clock_stages:
+        require(all(1 <= value <= 64 for value in args.sampler_clock_stages),
+                "sampler clock stage multipliers must be 1--64")
+    if args.sampler_final_p_mult is not None:
+        require(1 <= args.sampler_final_p_mult <= 64,
+                "sampler final PMOS multiplier must be 1--64")
     if args.capture_clock_buffer:
         require(all(1 <= value <= 64 for value in args.capture_clock_buffer),
                 "capture clock buffer multipliers must be 1--64")
@@ -471,9 +483,17 @@ def main() -> None:
         require(fanout_physical.get("top") == "local_clock_fanout",
                 "unexpected clock fanout physical top")
         selected = fanout_physical.get("selected_candidate", {})
-        require(args.sampler_clock_buffer == [selected.get("sampler_pre_mult"),
-                                               selected.get("sampler_output_mult")],
-                "physical fanout sampler-buffer identity mismatch")
+        if "sampler_stage_mults" in selected:
+            require(args.sampler_clock_stages == selected["sampler_stage_mults"],
+                    "physical fanout sampler-stage identity mismatch")
+            require(args.sampler_clock_buffer is None,
+                    "physical staged fanout cannot also declare a two-stage buffer")
+            require(args.sampler_final_p_mult == selected.get("sampler_final_p_mult"),
+                    "physical fanout final-PMOS identity mismatch")
+        else:
+            require(args.sampler_clock_buffer == [selected.get("sampler_pre_mult"),
+                                                   selected.get("sampler_output_mult")],
+                    "physical fanout sampler-buffer identity mismatch")
         require(args.capture_clock_buffer == [selected.get("capture_pre_mult"),
                                                selected.get("capture_output_mult")],
                 "physical fanout capture-buffer identity mismatch")
@@ -545,6 +565,8 @@ def main() -> None:
         "local_interface_buffer": args.local_interface_buffer,
         "direct_sampler_clock": args.direct_sampler_clock,
         "sampler_clock_buffer": args.sampler_clock_buffer,
+        "sampler_clock_stages": args.sampler_clock_stages,
+        "sampler_final_p_mult": args.sampler_final_p_mult,
         "sampler_boost_mode": args.sampler_boost_mode,
         "capture_clock_buffer": args.capture_clock_buffer,
         "clock_fanout_claim": (fanout_physical["claim"]

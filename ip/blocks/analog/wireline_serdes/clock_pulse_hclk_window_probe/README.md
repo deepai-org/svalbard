@@ -651,14 +651,31 @@ controlling source load and layout capacitance. It doubles only the sampler
 branch to 16x/32x, retains the 4x/8x capture branches, and is independently
 zero-DRC and unique-LVS. Its 123.8-um layout contains 288 raw fingers and
 extracts to 2,544 resistors plus 1,710 capacitors; the exact current render is
-[here](../../../../../docs/images/pcie-local-clock-fanout-layout.png) and its
-[physical identity](local_clock_fanout_physical.json) is retained. Exact
+[here](../../../../../docs/images/pcie-local-clock-fanout-v2-layout.png) and its
+[physical identity](local_clock_fanout_v2_physical.json) is retained. Exact
 composition regresses to 0/2: TT valid-low time falls to 139.3/136.5 ps, and
 slow/hot sampler lows stop at 0.322/0.353 V so no valid-low interval exists.
 Frontend and held-data decisions remain strong in both cases. The
 [v2 composed record](capture_local_clock_fanout_v2_pex_screen.json) therefore
 rejects brute-force width. V3 must use a smaller source-facing stage and a
 different taper/placement that keeps the final sampler driver local.
+
+V3--V5 then isolate the two sampler edges with physical, not schematic,
+iterations while retaining the passing capture branches. V3 uses the
+complementary input clock and an odd 2x/8x/16x taper; its 200-finger,
+1,662R/1,148C layout restores 234--243 ps of slow/hot valid-low time but leaves
+only 31--39 ps valid-high. V4 changes only the final PMOS from 16x to 32x; its
+232-finger, 1,982R/1,382C layout passes TT and improves slow/hot high time to
+134--138 ps, with low time at 119--130 ps. V5 rebalances the upstream taper to
+4x/12x and retains the 32P/16N final stage. Its 256-finger,
+2,194R/1,526C layout passes TT and raises slow/hot high time to 176--178 ps,
+but low time is 107--114 ps. All retain rail-level clocks and strong captured
+data. Exact records are
+[`capture_local_clock_fanout_v3_pex_screen.json`](capture_local_clock_fanout_v3_pex_screen.json),
+[`capture_local_clock_fanout_v4_pex_screen.json`](capture_local_clock_fanout_v4_pex_screen.json),
+and [`capture_local_clock_fanout_v5_pex_screen.json`](capture_local_clock_fanout_v5_pex_screen.json).
+The next bounded candidate keeps the v5 taper and balances the final NFET to
+32x; it is an edge-strength correction, not an unconstrained size sweep.
 
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail

@@ -12,12 +12,18 @@ from pathlib import Path
 
 
 PAIRS = {
-    "e_sense": ("XFANOUT.E_SENSE", "XLANE.E_SENSE_CLK."),
-    "o_sense": ("XFANOUT.O_SENSE", "XLANE.O_SENSE_CLK."),
-    "e_capture_clk": ("XFANOUT.E_CAPTURE_CLK", "XLANE.E_CAPTURE_CLK."),
-    "o_capture_clk": ("XFANOUT.O_CAPTURE_CLK", "XLANE.O_CAPTURE_CLK."),
-    "e_capture_clkb": ("XFANOUT.E_CAPTURE_CLKB", "XLANE.E_CAPTURE_CLKB."),
-    "o_capture_clkb": ("XFANOUT.O_CAPTURE_CLKB", "XLANE.O_CAPTURE_CLKB."),
+    "e_sense_input": ("XLEVEL_SE.IN", "E_SENSE"),
+    "o_sense_input": ("XLEVEL_SO.IN", "O_SENSE"),
+    "e_capture_input": ("XLEVEL_E.IN", "E_CAPTURE_CLK"),
+    "o_capture_input": ("XLEVEL_O.IN", "O_CAPTURE_CLK"),
+}
+OUTPUTS = {
+    "e_sense_output": "XLEVEL_SE.OUTP",
+    "o_sense_output": "XLEVEL_SO.OUTP",
+    "e_capture_clk_output": "XLEVEL_E.OUTP",
+    "e_capture_clkb_output": "XLEVEL_E.OUTN",
+    "o_capture_clk_output": "XLEVEL_O.OUTP",
+    "o_capture_clkb_output": "XLEVEL_O.OUTN",
 }
 NUMBER = re.compile(r"^([-+0-9.eE]+)([fpnumk]?)$")
 SCALE = {"": 1.0, "f": 1e-15, "p": 1e-12, "n": 1e-9,
@@ -85,8 +91,15 @@ def path_stats(graph, caps, start: str, prefix: str) -> dict:
         raise ValueError(f"no consumer nodes matching {prefix}")
     paths = []
     for target in targets:
-        resistance, nodes = shortest(graph, start, target)
+        try:
+            resistance, nodes = shortest(graph, start, target)
+        except ValueError:
+            # Extracted hierarchical prefixes can include capacitively coupled
+            # terminals that are not in the driver's conductive component.
+            continue
         paths.append((resistance, target, len(nodes) - 1))
+    if not paths:
+        raise ValueError(f"no conductive consumer nodes matching {prefix} from {start}")
     paths.sort()
     capacitance, node_count = component_capacitance(graph, caps, start)
     worst = paths[-1]
@@ -101,22 +114,65 @@ def path_stats(graph, caps, start: str, prefix: str) -> dict:
             "worst_rc_product_s": worst[0] * capacitance}
 
 
+def prefix_component_stats(graph, caps, prefix: str) -> dict:
+    """Summarize a flattened routed net whose canonical name is a child pin."""
+    candidates = sorted(node for node in graph if node.startswith(prefix))
+    if not candidates:
+        raise ValueError(f"no routed nodes matching {prefix}")
+    components = []
+    remaining = set(candidates)
+    while remaining:
+        root = min(remaining)
+        seen, queue = set(), deque([root])
+        while queue:
+            node = queue.popleft()
+            if node in seen:
+                continue
+            seen.add(node)
+            queue.extend(neighbor for neighbor, _, _ in graph.get(node, []))
+        members = sorted(remaining & seen)
+        remaining -= set(members)
+        components.append((members, seen))
+    members, seen = max(components, key=lambda item: len(item[0]))
+    pairs = []
+    for start in members:
+        for finish in members:
+            if start < finish:
+                resistance, nodes = shortest(graph, start, finish)
+                pairs.append((resistance, start, finish, len(nodes) - 1))
+    worst = max(pairs) if pairs else (0.0, members[0], members[0], 0)
+    capacitance = sum(caps[node] for node in seen)
+    return {
+        "canonical_prefix": prefix,
+        "terminal_node_count": len(members),
+        "resistor_component_node_count": len(seen),
+        "maximum_terminal_pair_resistance_ohm": worst[0],
+        "worst_terminal_pair": [worst[1], worst[2]],
+        "worst_resistor_segment_count": worst[3],
+        "component_shunt_capacitance_f": capacitance,
+        "worst_rc_product_s": worst[0] * capacitance,
+    }
+
+
 def localize(path: Path, baseline_path: Path | None = None) -> dict:
     graph, caps = parse(path)
     baseline = parse(baseline_path) if baseline_path else None
     routes = {}
-    for label, (start, prefix) in PAIRS.items():
-        routes[label] = path_stats(graph, caps, start, prefix)
+    for label, (prefix, baseline_output) in PAIRS.items():
+        routes[label] = prefix_component_stats(graph, caps, prefix)
         if baseline:
-            output = start.removeprefix("XFANOUT.")
-            baseline_stats = path_stats(baseline[0], baseline[1], output, output + ".")
+            baseline_stats = prefix_component_stats(
+                baseline[0], baseline[1], baseline_output)
             routes[label]["isolated_fanout_baseline"] = baseline_stats
             routes[label]["shunt_capacitance_increase_ratio"] = (
                 routes[label]["component_shunt_capacitance_f"] /
                 baseline_stats["component_shunt_capacitance_f"])
+    output_loads = {}
+    for label, start in OUTPUTS.items():
+        output_loads[label] = prefix_component_stats(graph, caps, start)
     return {"schema_version": 1,
             "claim": "routed_parent_clock_path_parasitic_localization",
-            "pex": path.name, "routes": routes,
+            "pex": path.name, "routes": routes, "receiver_output_loads": output_loads,
             "result": "pass"}
 
 
@@ -128,7 +184,7 @@ def main() -> None:
     args = parser.parse_args()
     result = localize(args.pex, args.baseline_pex)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
-    print(json.dumps({label: round(item["maximum_series_resistance_ohm"], 3)
+    print(json.dumps({label: round(item["maximum_terminal_pair_resistance_ohm"], 3)
                       for label, item in result["routes"].items()}, sort_keys=True))
 
 

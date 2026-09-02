@@ -89,6 +89,12 @@ def compile_deck(pex: Path, environment: dict, symbols: list[int],
             f"meas tran diag_{label}_high max v({node}) from=8n to={stop:.12g}",
             f"meas tran diag_{label}_low min v({node}) from=8n to={stop:.12g}",
         ])
+        if label.endswith("_inp"):
+            reference = base.LEVEL_REF_V[environment["id"]]
+            dynamic_measures.append(
+                f"meas tran diag_{label}_below_ref_width "
+                f"trig v({node}) val={reference:.6g} fall=1 td=8n "
+                f"targ v({node}) val={reference:.6g} rise=1 td=8n")
     internal_saves = " ".join(f"v({node})" for node in INTERNAL_PROBES.values())
     deck = re.sub(r"(?m)^(\.save .*?)$", rf"\1 {internal_saves}", deck)
     marker = "meas tran supply_current avg isupply from=8n to=12.8n"

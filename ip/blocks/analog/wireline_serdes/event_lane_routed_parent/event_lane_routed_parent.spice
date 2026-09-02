@@ -423,9 +423,12 @@ XDPL VDD VDD VDD VDD pfet_03v3 w=8u l=0.28u m=1
 XDPR VDD VDD VDD VDD pfet_03v3 w=8u l=0.28u m=1
 * N2 follows IN>REF.  A restoration taper provides both output polarities.
 XISO N2 A VDD VSS event_level__rlr_inv WP=4u WN=2u MP=1 MN=1
-XGAIN A MIDP VDD VSS event_level__rlr_inv WP=12u WN=6u MP=1 MN=1
-XNEG MIDP OUTN VDD VSS event_level__rlr_inv WP=8u WN=6u MP=2 MN=1
-XPOS OUTN OUTP VDD VSS event_level__rlr_inv WP=8u WN=6u MP=2 MN=1
+XGAIN A MIDP VDD VSS event_level__rlr_inv WP=8u WN=6u MP=2 MN=2
+* Generate phase internally, then drive both external loads in parallel.  OUTN
+* no longer sits in the control path of OUTP.
+XPHASE MIDP MIDN VDD VSS event_level__rlr_inv WP=8u WN=4u MP=1 MN=1
+XOUTN MIDP OUTN VDD VSS event_level__rlr_inv WP=8u WN=6u MP=3 MN=2
+XOUTP MIDN OUTP VDD VSS event_level__rlr_inv WP=8u WN=6u MP=3 MN=2
 .ends reference_level_receiver
 
 * Namespace-safe composed transistor intent. Regenerative and BOOST controls

@@ -1,157 +1,139 @@
 {
   "claim": "routed_parent_clock_path_parasitic_localization",
   "pex": "event_lane_routed_parent.pex.spice",
+  "receiver_output_loads": {
+    "e_capture_clk_output": {
+      "canonical_prefix": "XLEVEL_E.OUTP",
+      "component_shunt_capacitance_f": 1.0984143000000002e-13,
+      "maximum_terminal_pair_resistance_ohm": 288.24749999999995,
+      "resistor_component_node_count": 58,
+      "terminal_node_count": 58,
+      "worst_rc_product_s": 3.1661517593925e-11,
+      "worst_resistor_segment_count": 15,
+      "worst_terminal_pair": [
+        "XLEVEL_E.OUTP.t10",
+        "XLEVEL_E.OUTP.t18"
+      ]
+    },
+    "e_capture_clkb_output": {
+      "canonical_prefix": "XLEVEL_E.OUTN",
+      "component_shunt_capacitance_f": 1.1342877000000001e-13,
+      "maximum_terminal_pair_resistance_ohm": 279.9654,
+      "resistor_component_node_count": 59,
+      "terminal_node_count": 59,
+      "worst_rc_product_s": 3.1756130964558004e-11,
+      "worst_resistor_segment_count": 16,
+      "worst_terminal_pair": [
+        "XLEVEL_E.OUTN.t15",
+        "XLEVEL_E.OUTN.t7"
+      ]
+    },
+    "e_sense_output": {
+      "canonical_prefix": "XLEVEL_SE.OUTP",
+      "component_shunt_capacitance_f": 1.5162101000000002e-13,
+      "maximum_terminal_pair_resistance_ohm": 330.6761512,
+      "resistor_component_node_count": 154,
+      "terminal_node_count": 154,
+      "worst_rc_product_s": 5.013745202785672e-11,
+      "worst_resistor_segment_count": 18,
+      "worst_terminal_pair": [
+        "XLEVEL_SE.OUTP.t38",
+        "XLEVEL_SE.OUTP.t7"
+      ]
+    },
+    "o_capture_clk_output": {
+      "canonical_prefix": "XLEVEL_O.OUTP",
+      "component_shunt_capacitance_f": 9.382316e-14,
+      "maximum_terminal_pair_resistance_ohm": 290.67409999999995,
+      "resistor_component_node_count": 59,
+      "terminal_node_count": 59,
+      "worst_rc_product_s": 2.7271962592155994e-11,
+      "worst_resistor_segment_count": 16,
+      "worst_terminal_pair": [
+        "XLEVEL_O.OUTP.t10",
+        "XLEVEL_O.OUTP.t18"
+      ]
+    },
+    "o_capture_clkb_output": {
+      "canonical_prefix": "XLEVEL_O.OUTN",
+      "component_shunt_capacitance_f": 1.0025446000000001e-13,
+      "maximum_terminal_pair_resistance_ohm": 279.9654,
+      "resistor_component_node_count": 60,
+      "terminal_node_count": 60,
+      "worst_rc_product_s": 2.8067779995684002e-11,
+      "worst_resistor_segment_count": 16,
+      "worst_terminal_pair": [
+        "XLEVEL_O.OUTN.t15",
+        "XLEVEL_O.OUTN.t7"
+      ]
+    },
+    "o_sense_output": {
+      "canonical_prefix": "XLEVEL_SO.OUTP",
+      "component_shunt_capacitance_f": 1.8992035000000001e-13,
+      "maximum_terminal_pair_resistance_ohm": 330.6761512,
+      "resistor_component_node_count": 155,
+      "terminal_node_count": 155,
+      "worst_rc_product_s": 6.280213037255692e-11,
+      "worst_resistor_segment_count": 18,
+      "worst_terminal_pair": [
+        "XLEVEL_SO.OUTP.t17",
+        "XLEVEL_SO.OUTP.t7"
+      ]
+    }
+  },
   "result": "pass",
   "routes": {
-    "e_capture_clk": {
-      "component_shunt_capacitance_f": 4.9874940000000007e-14,
-      "consumer_node_count": 79,
-      "consumer_prefix": "XLANE.E_CAPTURE_CLK.",
-      "driver_node": "XFANOUT.E_CAPTURE_CLK",
-      "isolated_fanout_baseline": {
-        "component_shunt_capacitance_f": 2.864998e-14,
-        "consumer_node_count": 31,
-        "consumer_prefix": "E_CAPTURE_CLK.",
-        "driver_node": "E_CAPTURE_CLK",
-        "maximum_series_resistance_ohm": 20.828331999999996,
-        "minimum_series_resistance_ohm": 7.98157,
-        "resistor_component_node_count": 32,
-        "worst_consumer_node": "E_CAPTURE_CLK.t4",
-        "worst_rc_product_s": 5.967312952333599e-13,
-        "worst_resistor_segment_count": 6
-      },
-      "maximum_series_resistance_ohm": 251.41921460000003,
-      "minimum_series_resistance_ohm": 0.0455,
-      "resistor_component_node_count": 82,
-      "shunt_capacitance_increase_ratio": 1.7408368173380926,
-      "worst_consumer_node": "XLANE.E_CAPTURE_CLK.t21",
-      "worst_rc_product_s": 1.2539518243022127e-11,
-      "worst_resistor_segment_count": 15
+    "e_capture_input": {
+      "canonical_prefix": "XLEVEL_E.IN",
+      "component_shunt_capacitance_f": 9.355928000000001e-14,
+      "maximum_terminal_pair_resistance_ohm": 181.478832,
+      "resistor_component_node_count": 34,
+      "terminal_node_count": 34,
+      "worst_rc_product_s": 1.6979028857160963e-11,
+      "worst_resistor_segment_count": 8,
+      "worst_terminal_pair": [
+        "XLEVEL_E.IN.t16",
+        "XLEVEL_E.IN.t7"
+      ]
     },
-    "e_capture_clkb": {
-      "component_shunt_capacitance_f": 5.3447320000000005e-14,
-      "consumer_node_count": 80,
-      "consumer_prefix": "XLANE.E_CAPTURE_CLKB.",
-      "driver_node": "XFANOUT.E_CAPTURE_CLKB",
-      "isolated_fanout_baseline": {
-        "component_shunt_capacitance_f": 2.692848e-14,
-        "consumer_node_count": 31,
-        "consumer_prefix": "E_CAPTURE_CLKB.",
-        "driver_node": "E_CAPTURE_CLKB",
-        "maximum_series_resistance_ohm": 19.478331999999998,
-        "minimum_series_resistance_ohm": 6.63157,
-        "resistor_component_node_count": 32,
-        "worst_consumer_node": "E_CAPTURE_CLKB.t1",
-        "worst_rc_product_s": 5.2452187369536e-13,
-        "worst_resistor_segment_count": 6
-      },
-      "maximum_series_resistance_ohm": 254.95581460000002,
-      "minimum_series_resistance_ohm": 0.0455,
-      "resistor_component_node_count": 83,
-      "shunt_capacitance_increase_ratio": 1.9847878528606147,
-      "worst_consumer_node": "XLANE.E_CAPTURE_CLKB.t26",
-      "worst_rc_product_s": 1.3626705008786875e-11,
-      "worst_resistor_segment_count": 15
+    "e_sense_input": {
+      "canonical_prefix": "XLEVEL_SE.IN",
+      "component_shunt_capacitance_f": 1.8660390999999997e-13,
+      "maximum_terminal_pair_resistance_ohm": 187.46955,
+      "resistor_component_node_count": 129,
+      "terminal_node_count": 129,
+      "worst_rc_product_s": 3.49825510359405e-11,
+      "worst_resistor_segment_count": 19,
+      "worst_terminal_pair": [
+        "XLEVEL_SE.IN.t31",
+        "XLEVEL_SE.IN.t64"
+      ]
     },
-    "e_sense": {
-      "component_shunt_capacitance_f": 1.1773520000000002e-13,
-      "consumer_node_count": 270,
-      "consumer_prefix": "XLANE.E_SENSE_CLK.",
-      "driver_node": "XFANOUT.E_SENSE",
-      "isolated_fanout_baseline": {
-        "component_shunt_capacitance_f": 1.0015651000000001e-13,
-        "consumer_node_count": 127,
-        "consumer_prefix": "E_SENSE.",
-        "driver_node": "E_SENSE",
-        "maximum_series_resistance_ohm": 26.86454999999999,
-        "minimum_series_resistance_ohm": 11.7381,
-        "resistor_component_node_count": 128,
-        "worst_consumer_node": "E_SENSE.t46",
-        "worst_rc_product_s": 2.6906595707204994e-12,
-        "worst_resistor_segment_count": 18
-      },
-      "maximum_series_resistance_ohm": 236.26029760000003,
-      "minimum_series_resistance_ohm": 11.6931,
-      "resistor_component_node_count": 272,
-      "shunt_capacitance_increase_ratio": 1.1755122058466294,
-      "worst_consumer_node": "XLANE.E_SENSE_CLK.t66",
-      "worst_rc_product_s": 2.7816153389995528e-11,
-      "worst_resistor_segment_count": 10
+    "o_capture_input": {
+      "canonical_prefix": "XLEVEL_O.IN",
+      "component_shunt_capacitance_f": 8.630054000000002e-14,
+      "maximum_terminal_pair_resistance_ohm": 181.433332,
+      "resistor_component_node_count": 33,
+      "terminal_node_count": 33,
+      "worst_rc_product_s": 1.5657794525599286e-11,
+      "worst_resistor_segment_count": 7,
+      "worst_terminal_pair": [
+        "XLEVEL_O.IN.t16",
+        "XLEVEL_O.IN.t7"
+      ]
     },
-    "o_capture_clk": {
-      "component_shunt_capacitance_f": 4.033979e-14,
-      "consumer_node_count": 79,
-      "consumer_prefix": "XLANE.O_CAPTURE_CLK.",
-      "driver_node": "XFANOUT.O_CAPTURE_CLK",
-      "isolated_fanout_baseline": {
-        "component_shunt_capacitance_f": 2.864998e-14,
-        "consumer_node_count": 31,
-        "consumer_prefix": "O_CAPTURE_CLK.",
-        "driver_node": "O_CAPTURE_CLK",
-        "maximum_series_resistance_ohm": 20.828331999999996,
-        "minimum_series_resistance_ohm": 7.98157,
-        "resistor_component_node_count": 32,
-        "worst_consumer_node": "O_CAPTURE_CLK.t11",
-        "worst_rc_product_s": 5.967312952333599e-13,
-        "worst_resistor_segment_count": 6
-      },
-      "maximum_series_resistance_ohm": 313.8194304,
-      "minimum_series_resistance_ohm": 7.93657,
-      "resistor_component_node_count": 82,
-      "shunt_capacitance_increase_ratio": 1.4080215762803325,
-      "worst_consumer_node": "XLANE.O_CAPTURE_CLK.t21",
-      "worst_rc_product_s": 1.2659409920255616e-11,
-      "worst_resistor_segment_count": 12
-    },
-    "o_capture_clkb": {
-      "component_shunt_capacitance_f": 5.3127440000000003e-14,
-      "consumer_node_count": 81,
-      "consumer_prefix": "XLANE.O_CAPTURE_CLKB.",
-      "driver_node": "XFANOUT.O_CAPTURE_CLKB",
-      "isolated_fanout_baseline": {
-        "component_shunt_capacitance_f": 2.692848e-14,
-        "consumer_node_count": 31,
-        "consumer_prefix": "O_CAPTURE_CLKB.",
-        "driver_node": "O_CAPTURE_CLKB",
-        "maximum_series_resistance_ohm": 19.478331999999998,
-        "minimum_series_resistance_ohm": 6.63157,
-        "resistor_component_node_count": 32,
-        "worst_consumer_node": "O_CAPTURE_CLKB.t12",
-        "worst_rc_product_s": 5.2452187369536e-13,
-        "worst_resistor_segment_count": 6
-      },
-      "maximum_series_resistance_ohm": 340.0519404,
-      "minimum_series_resistance_ohm": 0.0455,
-      "resistor_component_node_count": 84,
-      "shunt_capacitance_increase_ratio": 1.9729089796379151,
-      "worst_consumer_node": "XLANE.O_CAPTURE_CLKB.t26",
-      "worst_rc_product_s": 1.8066089060484577e-11,
-      "worst_resistor_segment_count": 14
-    },
-    "o_sense": {
-      "component_shunt_capacitance_f": 1.1666011000000002e-13,
-      "consumer_node_count": 271,
-      "consumer_prefix": "XLANE.O_SENSE_CLK.",
-      "driver_node": "XFANOUT.O_SENSE",
-      "isolated_fanout_baseline": {
-        "component_shunt_capacitance_f": 1.0015651000000001e-13,
-        "consumer_node_count": 127,
-        "consumer_prefix": "O_SENSE.",
-        "driver_node": "O_SENSE",
-        "maximum_series_resistance_ohm": 26.86454999999999,
-        "minimum_series_resistance_ohm": 11.7381,
-        "resistor_component_node_count": 128,
-        "worst_consumer_node": "O_SENSE.t3",
-        "worst_rc_product_s": 2.6906595707204994e-12,
-        "worst_resistor_segment_count": 18
-      },
-      "maximum_series_resistance_ohm": 245.49311060000002,
-      "minimum_series_resistance_ohm": 11.6931,
-      "resistor_component_node_count": 273,
-      "shunt_capacitance_increase_ratio": 1.1647781057866335,
-      "worst_consumer_node": "XLANE.O_SENSE_CLK.t66",
-      "worst_rc_product_s": 2.8639253286838173e-11,
-      "worst_resistor_segment_count": 11
+    "o_sense_input": {
+      "canonical_prefix": "XLEVEL_SO.IN",
+      "component_shunt_capacitance_f": 1.7580946e-13,
+      "maximum_terminal_pair_resistance_ohm": 187.46955,
+      "resistor_component_node_count": 129,
+      "terminal_node_count": 129,
+      "worst_rc_product_s": 3.2958920351943e-11,
+      "worst_resistor_segment_count": 19,
+      "worst_terminal_pair": [
+        "XLEVEL_SO.IN.t31",
+        "XLEVEL_SO.IN.t64"
+      ]
     }
   },
   "schema_version": 1

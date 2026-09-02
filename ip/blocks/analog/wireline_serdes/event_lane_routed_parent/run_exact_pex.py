@@ -21,8 +21,10 @@ PHASES = (("e", "FE_E_P", "FE_E_N", "EVEN_Q", "EVEN_QB", "12.55n"),
           ("o", "FE_O_P", "FE_O_N", "ODD_Q", "ODD_QB", "12.75n"))
 # Selected from the physical reference-level receiver's retained six-code
 # calibration set.  These are realizable shared bias values, not fitted ideals.
-LEVEL_BIAS_V = {"tt": 1.20, "ff_cold": 1.00, "ff_hot": 0.90,
+LEVEL_BIAS_V = {"tt": 1.40, "ff_cold": 1.00, "ff_hot": 0.90,
                 "ss_hot": 1.08, "ss_cold": 1.20}
+LEVEL_REF_V = {"tt": 1.90, "ff_cold": 1.90, "ff_hot": 1.825,
+               "ss_hot": 1.825, "ss_cold": 1.825}
 
 
 def digest(path: Path) -> str:
@@ -40,6 +42,7 @@ def compile_deck(pex: Path, environment: dict) -> str:
     env_id = environment["id"]
     bias = EVENT_CONTRACT["rx_bias_v"][env_id]
     level_bias = LEVEL_BIAS_V[env_id]
+    level_ref = LEVEL_REF_V[env_id]
     measures: list[str] = []
     saves = ["i(VDD)"]
     for phase, fp, fn, q, qb, instant in PHASES:
@@ -72,7 +75,7 @@ VRXBIAS RX_BIAS_SRC 0 PWL(0 0 500p {bias})
 RRXBIAS RX_BIAS_SRC RX_BIAS 1
 VLEVELBIAS LEVEL_BIAS_SRC 0 PWL(0 0 500p {level_bias})
 RLEVELBIAS LEVEL_BIAS_SRC LEVEL_BIAS 1
-VLEVELREF LEVEL_REF_SRC 0 PWL(0 0 500p {vmid})
+VLEVELREF LEVEL_REF_SRC 0 PWL(0 0 500p {level_ref})
 RLEVELREF LEVEL_REF_SRC LEVEL_REF 1
 VTHP VTHP_SRC 0 PWL(0 0 500p {vmid})
 VTHN VTHN_SRC 0 PWL(0 0 500p {vmid})

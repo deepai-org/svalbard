@@ -114,7 +114,7 @@ proc manual_gate {cx cy width nf} {
 
 array set tracks {
     VSS -34.0 IN -24.0 REF -22.4 VBIAS -20.8
-    TAIL -16.0 N1 -12.8 N2 9.6 A 11.2 MIDP 12.8
+    TAIL -16.0 N1 -12.8 N2 9.6 A 11.2 MIDP 12.8 MIDN 14.4
     OUTN 20.0 OUTP 21.6 VDD 72.0
 }
 array set net_min {}
@@ -187,18 +187,20 @@ set devices {
     {XDNR nfet_03v3 8 1 18 0 VSS VSS VSS}
     {XTAIL nfet_03v3 12 2 0 -18 TAIL VBIAS VSS}
     {XISO_N nfet_03v3 2 1 -46 18 A N2 VSS}
-    {XGAIN_N nfet_03v3 6 1 -38 18 MIDP A VSS}
-    {XNEG_N nfet_03v3 6 1 30 18 OUTN MIDP VSS}
-    {XPOS_N nfet_03v3 6 1 38 18 OUTP OUTN VSS}
+    {XGAIN_N nfet_03v3 6 2 -38 18 MIDP A VSS}
+    {XPHASE_N nfet_03v3 4 1 28 18 MIDN MIDP VSS}
+    {XOUTN_N nfet_03v3 6 2 40 18 OUTN MIDP VSS}
+    {XOUTP_N nfet_03v3 6 2 52 18 OUTP MIDN VSS}
 
     {XDPL pfet_03v3 8 1 -18 48 VDD VDD VDD}
     {XPL pfet_03v3 8 1 -6 48 N1 N1 VDD}
     {XPR pfet_03v3 8 1 6 48 N2 N1 VDD}
     {XDPR pfet_03v3 8 1 18 48 VDD VDD VDD}
     {XISO_P pfet_03v3 4 1 -46 58 A N2 VDD}
-    {XGAIN_P pfet_03v3 12 1 -38 58 MIDP A VDD}
-    {XNEG_P pfet_03v3 8 2 30 58 OUTN MIDP VDD}
-    {XPOS_P pfet_03v3 8 2 38 62 OUTP OUTN VDD}
+    {XGAIN_P pfet_03v3 8 2 -38 58 MIDP A VDD}
+    {XPHASE_P pfet_03v3 8 1 28 58 MIDN MIDP VDD}
+    {XOUTN_P pfet_03v3 8 3 40 58 OUTN MIDP VDD}
+    {XOUTP_P pfet_03v3 8 3 52 58 OUTP MIDN VDD}
 }
 
 crashbackups stop

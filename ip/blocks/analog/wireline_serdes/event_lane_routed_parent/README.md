@@ -115,3 +115,34 @@ preserves the previous topology's result.
 The next receiver contract must include the parent-observed assertion duration
 and routed source impedance, then requalify leaf and parent.  Standalone
 voltage-extrema coverage is not sufficient for this pulse interface.
+
+The v5 localization measures 386.6 ps below the qualified reference on the
+even capture input and 290.6--293.0 ps on the two SENSE inputs.  It also exposed
+an integration error: the leaf's TT reference was 1.90 V, while the first
+parent runs used VDD/2 = 1.65 V.  Correcting the realizable reference code to
+1.90 V improves capture OUTN excursion to 1.17--1.21 V but still does not
+restore rail-valid complements.  The updated PEX path report measures
+181--187 ohm worst input-net terminal resistance, 86--187 fF input-net shunt
+capacitance, and 93--189 fF receiver-output net capacitance.  A focused exact
+leaf matrix proves the first coverage loss is the shortened low interval
+(5/5 to 3/5); source resistance does not reduce it further, while the full
+parent load reduces it to 0/5 for the original serial-output receiver.
+
+The v6 receiver instead creates its complement internally and drives the two
+external outputs with parallel buffers.  It is independently zero-DRC,
+unique-LVS and full-RC closed at 28 MOS, 389R/172C.  A corrected exact envelope
+matrix uses the measured asymmetric loads rather than assigning the largest
+single-ended load to both outputs: nominal covers 5/5 environments, while the
+short-SENSE, capture-parent and SENSE-parent profiles each cover 4/5 and miss
+only SS/125 C.  Capture and SENSE have a shared TT code at 1.40 V.
+
+The regenerated v6 parent remains zero-DRC and uniquely LVS-matched and now
+extracts to 16,426R/10,423C.  Its complete ten-sample TT PRBS run still has no
+passing latency.  The capture receivers improve materially—OUTN reaches
+2.121/2.375 V and OUTP falls to 1.042/0.810 V—but the downstream capture state
+remains fixed.  More decisively, the two SENSE receiver OUTP nodes remain above
+3.072/3.128 V even though their inputs traverse 0.594--3.221 V with measured
+below-reference widths of 287--290 ps.  The scalar envelope therefore omitted
+a relevant waveform polarity/history/internal-state condition.  The next
+bounded experiment is an exact parent-waveform replay at the leaf boundary,
+followed by a polarity/timing correction before another full parent run.

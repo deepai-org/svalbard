@@ -907,17 +907,17 @@ assumption, treat the leaf claim as inapplicable and synthesize or qualify a
 new interface rather than citing its standalone pass.
 
 The routed PCIe event parent exposed a sharper version of this rule.  A compact
-reference receiver passed all five schematic and exact-leaf PVT environments
-with a realizable six-code bias set and 370 ps leaf pulses.  Four drop-in
-instances reduced the routed parent from 17,042R/10,803C to 16,172R/10,247C
-while preserving zero DRC and unique LVS.  Exact TT PRBS still failed at two
-adjacent qualified bias codes: parent input extrema were stronger than the
-leaf envelope, but the receivers never completed restoration during the
-routed assertion.  Therefore an input contract must be a trajectory envelope,
-not a rectangle of voltage extrema.  The compiler admission record should bind
-at least threshold-crossing pulse width, edge slew, Thevenin/source impedance,
-input capacitance, repetition history, and output load, then emit measures for
-those quantities in the first composed replay.
+reference receiver passed all five schematic and exact-leaf PVT environments.
+A second campaign then reproduced measured threshold-crossing widths, source
+resistance, and asymmetric output loads; the TT capture and SENSE cases shared
+a passing bias.  Yet the regenerated exact parent left both SENSE outputs in
+one state.  Scalar width/R/C matching was therefore still insufficient: pulse
+polarity, edge shape, pre-pulse state, repetition history, and the internal
+node trajectory can distinguish two waveforms with the same extrema and
+crossing width.  The compiler admission record should bind those quantities
+and support replaying a measured parent PWL waveform directly at the leaf
+boundary.  Only after that waveform replay agrees should a costly full-parent
+run be used as the next qualification gate.
 
 Also distinguish transparent output from retained output. In the PI-clocked
 RX parent, a 750 ps observation occurred 200 ps after capture opened but 180 ps

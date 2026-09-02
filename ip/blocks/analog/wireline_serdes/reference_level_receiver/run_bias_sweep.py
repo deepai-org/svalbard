@@ -18,6 +18,11 @@ parser.add_argument("--dut-subckt", required=True)
 parser.add_argument("--work", required=True, type=Path)
 parser.add_argument("--output", required=True, type=Path)
 parser.add_argument("--biases", nargs="+", type=float, required=True)
+parser.add_argument("--pulse-high-ps", type=float, default=370.0)
+parser.add_argument("--source-resistance-ohm", type=float, default=0.0)
+parser.add_argument("--load-f", type=float, default=100e-15)
+parser.add_argument("--load-p-f", type=float)
+parser.add_argument("--load-n-f", type=float)
 args = parser.parse_args()
 args.work.mkdir(parents=True, exist_ok=True)
 
@@ -31,7 +36,14 @@ for bias in args.biases:
         "--dut-subckt", args.dut_subckt, "--reference-input",
         "--vbias", f"{bias:.6f}", "--work", str(args.work / tag),
         "--output", str(output),
+        "--pulse-high-ps", f"{args.pulse_high_ps:.9g}",
+        "--source-resistance-ohm", f"{args.source_resistance_ohm:.9g}",
+        "--load-f", f"{args.load_f:.12g}",
     ]
+    if args.load_p_f is not None:
+        command.extend(["--load-p-f", f"{args.load_p_f:.12g}"])
+    if args.load_n_f is not None:
+        command.extend(["--load-n-f", f"{args.load_n_f:.12g}"])
     command.extend((["--pex", str(args.pex)] if args.pex else
                     ["--dut-source", str(args.dut_source)]))
     subprocess.run(command, check=False)
@@ -56,6 +68,11 @@ result = {
               ("extracted" if args.pex else "schematic") +
               "_pvt_programmable_bias"),
     "biases_v": args.biases,
+    "pulse_high_s": args.pulse_high_ps * 1e-12,
+    "source_resistance_ohm": args.source_resistance_ohm,
+    "load_f_per_output": args.load_f,
+    "load_p_f": args.load_p_f if args.load_p_f is not None else args.load_f,
+    "load_n_f": args.load_n_f if args.load_n_f is not None else args.load_f,
     "case_count": len(case_ids),
     "covered_case_count": sum(item["result"] == "pass"
                               for item in windows.values()),

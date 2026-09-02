@@ -53,15 +53,19 @@ def compile_deck(event_pex: Path, lane_pex: Path, environment: dict[str, Any],
                  control: dict[str, Any],
                  debug_stages: tuple[str, ...] = DEBUG_STAGES,
                  local_interface_buffer: bool = False,
-                 schematic_debug_nodes: tuple[tuple[str, str], ...] = ()) -> str:
+                 schematic_debug_nodes: tuple[tuple[str, str], ...] = (),
+                 direct_sampler_clock: bool = False) -> str:
     vdd = float(environment["vdd_v"])
     vmid = vdd / 2
     rx_bias = float(CONTRACT["rx_bias_v"][environment["id"]])
     measures = []
     for phase in PHASES:
         upper = phase.upper()
+        sense_node = f"{upper}_{'CLK' if direct_sampler_clock else 'SENSE'}"
+        boost_node = f"{upper}_BOOST"
         for signal in ("sense", "boost", "clk", "clkb"):
-            node = f"{upper}_{signal.upper()}"
+            node = ({"sense": sense_node, "boost": boost_node}.get(
+                signal, f"{upper}_{signal.upper()}"))
             measures.extend([
                 f"meas tran {phase}_{signal}_high max v({node}) from=8n to=12.8n",
                 f"meas tran {phase}_{signal}_low min v({node}) from=8n to=12.8n",
@@ -79,10 +83,10 @@ def compile_deck(event_pex: Path, lane_pex: Path, environment: dict[str, Any],
             f"at={'12.55n' if phase == 'e' else '12.75n'}",
         ])
         measures.extend([
-            f"meas tran {phase}_sense_low_exit when v({upper}_SENSE)={CONTRACT['thresholds']['logic_rail_margin_v']} rise=1 td=12n",
-            f"meas tran {phase}_sense_high_enter when v({upper}_SENSE)={vdd - CONTRACT['thresholds']['logic_rail_margin_v']:.6f} rise=1 td=12n",
-            f"meas tran {phase}_sense_high_exit when v({upper}_SENSE)={vdd - CONTRACT['thresholds']['logic_rail_margin_v']:.6f} fall=1 td=12n",
-            f"meas tran {phase}_sense_low_enter when v({upper}_SENSE)={CONTRACT['thresholds']['logic_rail_margin_v']} fall=1 td=12n",
+            f"meas tran {phase}_sense_low_exit when v({sense_node})={CONTRACT['thresholds']['logic_rail_margin_v']} rise=1 td=12n",
+            f"meas tran {phase}_sense_high_enter when v({sense_node})={vdd - CONTRACT['thresholds']['logic_rail_margin_v']:.6f} rise=1 td=12n",
+            f"meas tran {phase}_sense_high_exit when v({sense_node})={vdd - CONTRACT['thresholds']['logic_rail_margin_v']:.6f} fall=1 td=12n",
+            f"meas tran {phase}_sense_low_enter when v({sense_node})={CONTRACT['thresholds']['logic_rail_margin_v']} fall=1 td=12n",
         ])
         for stage in debug_stages:
             node = f"xevent.DBG_{upper}_{stage.upper()}"
@@ -126,6 +130,10 @@ XOB_CB O_CLKB_SRC O_CLKB VDD 0 lane_if_buffer
                 f"meas tran sch_{label}_high_exit when v({node})={vdd - CONTRACT['thresholds']['logic_rail_margin_v']:.6f} fall=1 td=12n",
                 f"meas tran sch_{label}_low_enter when v({node})={CONTRACT['thresholds']['logic_rail_margin_v']} fall=1 td=12n",
             ])
+    e_sampler_sense = "E_CLK" if direct_sampler_clock else "E_SENSE"
+    e_sampler_boost = "E_BOOST"
+    o_sampler_sense = "O_CLK" if direct_sampler_clock else "O_SENSE"
+    o_sampler_boost = "O_BOOST"
     return f"""* SPDX-License-Identifier: Apache-2.0
 .include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
 .lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice {environment['mos_corner']}
@@ -175,8 +183,8 @@ ROREGEN O_REGEN_CLK 0 1m
 ROREGENB O_REGEN_CLKB 0 1m
 XLANE RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N
 + TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N
-+ E_SENSE E_REGEN_CLK E_REGEN_CLKB E_CLK E_CLKB E_BOOST
-+ O_SENSE O_REGEN_CLK O_REGEN_CLKB O_CLK O_CLKB O_BOOST
++ {e_sampler_sense} E_REGEN_CLK E_REGEN_CLKB E_CLK E_CLKB {e_sampler_boost}
++ {o_sampler_sense} O_REGEN_CLK O_REGEN_CLKB O_CLK O_CLKB {o_sampler_boost}
 + VDD 0 RX_RAWP RX_RAWN FE_E_P FE_E_N FE_O_P FE_O_N
 + EVEN_Q EVEN_QB ODD_Q ODD_QB lane_rx_regenerative_capture_pex
 CEQ EVEN_Q 0 50f
@@ -201,12 +209,13 @@ def run_case(spec: tuple) -> dict:
     (event_pex, lane_pex, work, environment, control, debug_stages,
      local_interface_buffer, *optional) = spec
     schematic_debug_nodes = optional[0] if optional else ()
+    direct_sampler_clock = optional[1] if len(optional) > 1 else False
     stem = f"{environment['id']}_{control['id']}"
     deck = work / f"{stem}.spice"
     log = work / f"{stem}.log"
     deck.write_text(compile_deck(event_pex, lane_pex, environment, control,
                                  debug_stages, local_interface_buffer,
-                                 schematic_debug_nodes))
+                                 schematic_debug_nodes, direct_sampler_clock))
     try:
         with log.open("w") as output:
             run = subprocess.run(["ngspice", "-b", str(deck)], stdout=output,
@@ -328,6 +337,10 @@ def main() -> None:
         "--local-interface-buffer", action="store_true",
         help="insert a realizable two-stage CMOS buffer at each lane control input",
     )
+    parser.add_argument(
+        "--direct-sampler-clock", action="store_true",
+        help="drive sampler sense directly from its extracted full-duty capture clock",
+    )
     parser.add_argument("--work", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
@@ -384,7 +397,8 @@ def main() -> None:
     debug_stages = (INTERFACE_DEBUG_STAGES if args.interface_debug_stages else
                     (() if args.skip_debug_stages else DEBUG_STAGES))
     specs = [(args.event_pex, args.lane_pex, args.work, environment, control,
-              debug_stages, args.local_interface_buffer)
+              debug_stages, args.local_interface_buffer, (),
+              args.direct_sampler_clock)
              for environment, control in pairs]
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as executor:
         cases = list(executor.map(run_case, specs))
@@ -405,6 +419,7 @@ def main() -> None:
         "lane_claim": lane_physical["claim"],
         "debug_stages": list(debug_stages),
         "local_interface_buffer": args.local_interface_buffer,
+        "direct_sampler_clock": args.direct_sampler_clock,
         "case_count": len(cases),
         "passing_case_count": sum(case["result"] == "pass" for case in cases),
         "environment_code_coverage": coverage,

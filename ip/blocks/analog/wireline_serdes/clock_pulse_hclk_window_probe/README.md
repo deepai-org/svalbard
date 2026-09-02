@@ -596,6 +596,22 @@ system boundary should remove that event and drive a revised regenerative
 sampler directly from the existing full-duty complementary capture clocks,
 retaining a separate BOOST only if exact composition proves it necessary.
 
+That direct-clock boundary has now been screened against the exact extracted
+event bridge and exact extracted RX/capture parent. The retained experiment
+drives only the sampler precharge/base-evaluation gates from the full-duty
+clock and leaves BOOST on its independent physical event net. Both TT and
+slow/hot resolve the frontend and held outputs by 2.82 V or more of
+differential magnitude, but the shared physical clock misses its rail
+contract: TT spans only 0.332--3.046 V and slow/hot only 0.509--2.673 V.
+This candidate is rejected before parent layout despite functional static-data
+capture. The exact record is
+[`capture_direct_clock_sampler_screen.json`](capture_direct_clock_sampler_screen.json),
+and `--direct-sampler-clock` in
+[`run_event_lane_composition.py`](run_event_lane_composition.py) makes the
+load experiment repeatable. The next bounded experiment is a local sampler
+clock buffer or a lower-clock-capacitance sampler; it must restore consumer
+clock rails before any routed-parent claim.
+
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail
 margin.  Second, simply placing `XHSD2` beside its detector improved TT width

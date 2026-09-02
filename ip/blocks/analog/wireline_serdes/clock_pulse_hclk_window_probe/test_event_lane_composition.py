@@ -67,6 +67,17 @@ class EventLaneCompositionTest(unittest.TestCase):
         self.assertIn("meas tran e_sense_src_high", deck)
         self.assertIn("E_SENSE_SRC E_BOOST_SRC", deck)
 
+    def test_direct_sampler_clock_reuses_extracted_capture_clock(self) -> None:
+        environment = composition.base.CONTRACT["environments"][0]
+        control = composition.event_runner.CONTROLS[4]
+        deck = composition.compile_deck(
+            Path("event.pex.spice"), Path("lane.pex.spice"), environment,
+            control, (), False, (), True)
+        self.assertIn("E_CLK E_REGEN_CLK E_REGEN_CLKB E_CLK E_CLKB E_BOOST", deck)
+        self.assertIn("O_CLK O_REGEN_CLK O_REGEN_CLKB O_CLK O_CLKB O_BOOST", deck)
+        self.assertIn("meas tran e_sense_low_exit when v(E_CLK)=0.25", deck)
+        self.assertNotIn("E_SENSE E_REGEN_CLK", deck)
+
     def test_schematic_debug_nodes_are_explicit_measures(self) -> None:
         environment = composition.base.CONTRACT["environments"][0]
         control = composition.event_runner.CONTROLS[4]

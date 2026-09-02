@@ -11,3 +11,9 @@ the current two-phase placer. Simulation and parameter-free aggregate-width
 LVS views derive from the same stage tuple. Physical legality of all four
 segments is only the first gate; exact extracted recomposition must match the
 compact whole-branch reference before routed-parent placement is authorized.
+
+`combine_pex.py` verifies all four extracted identities and constructs six
+complete predriver/final paths behind the established fanout interface.
+`run_composed_screen.sh` then reuses the exact event/lane TT and SS/hot gate.
+Its isolated inter-segment connection is deliberately not routed-RC evidence;
+a pass only admits the hierarchy cut to parent placement.

@@ -578,6 +578,24 @@ The next circuit must put START/END-controlled write devices directly inside a
 compact static latch so only full-duty states cross into the cell and no narrow
 SETB or RESETB net is routed.
 
+That local direct-write experiment is also closed before layout. Full-duty
+START/END states and their local complements drive series write devices
+directly on cross-coupled Q/QB, so no narrow set/reset net exists. A bounded
+ratio progression proves that the state changes, then restores slow/hot QB to
+2.983 V after PMOS skew. Threshold-crossing probes reveal the actual blocker:
+with the longer END interval, QB is valid high for 210.5 ps at TT but only
+79.2 ps at slow/hot. Epoch 1 gives 206.8/78.1 ps and does not change the
+conclusion. Two-, three-, and four-stage tapers cannot repair a state interval
+that already violates the 150-ps contract. Exact records are
+[`capture_direct_write_sr_epoch0_screen.json`](capture_direct_write_sr_epoch0_screen.json)
+and [`capture_direct_write_sr_epoch1_screen.json`](capture_direct_write_sr_epoch1_screen.json).
+
+No physical layout is warranted for this family. The accumulated evidence no
+longer supports synthesizing another rail-to-rail 3.3-V SENSE pulse. The next
+system boundary should remove that event and drive a revised regenerative
+sampler directly from the existing full-duty complementary capture clocks,
+retaining a separate BOOST only if exact composition proves it necessary.
+
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail
 margin.  Second, simply placing `XHSD2` beside its detector improved TT width

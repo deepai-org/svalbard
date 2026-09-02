@@ -91,6 +91,17 @@
     "localization": "With timing-lane placement and set_mult=8, RESETB remains valid and slow/hot SETB improves to 0.342/0.582 V, but QB reaches only 2.185/1.553 V high and SENSE remains low. Added SET capacitance also leaves TT without a complete valid-low interval.",
     "decision": "reject routed narrow-SET transport after the bounded placement-plus-strength experiment; retain as fully physical negative evidence and replace SETB with local latch write devices controlled only by full-duty states"
   },
+  "direct_write_start_end_sr": {
+    "architecture": "full-duty START/END and local complements directly control series write devices on cross-coupled Q/QB; no SETB or RESETB timing net exists",
+    "selected_ratio": {"latch_mult": 2, "write_mult": 8, "latch_p_width_um": 8},
+    "screened_controls": ["sense1_interval1_epoch0", "sense1_interval1_epoch1"],
+    "epoch0_result_sha256": "da8fbb4fe9914cadf74a40389a2186879b87469b3cb5abe4931555be481714ac",
+    "epoch1_result_sha256": "2546d198740aea40bf45a547179af2c1d12cf3534ce8356af2983c888ee3435b",
+    "tt_qb_valid_high_time_ps": [210.5, 206.8],
+    "ss_hot_qb_valid_high_time_ps": [79.2, 78.1],
+    "result": "fail_before_layout",
+    "decision": "reject direct-write rail-to-rail storage before physical lowering: under slow/hot, the retained state itself cannot satisfy the 150-ps minimum valid-high contract, independent of taper depth"
+  },
   "localization": {
     "schematic_buffer_tt": "all event-source and lane-side interface rails pass",
     "ss_hot_event_sense_source_low_v": [0.243613, 0.275806],
@@ -104,8 +115,8 @@
     "physical_v4_ss_hot_lane_sense_low_v": [2.086, 2.214],
     "physical_v4_failure": "TT narrowly misses the 250-mV rail screen; slow/hot pulse reaches the event source but is not restored through the two-stage physical buffer"
   },
-  "decision": "independent set/reset semantics close the limiting schematic composition, but both bounded physical remedies prove that transporting a narrow SETB event is not robust enough",
-  "next_boundary": "integrate START/END-controlled write devices directly into a compact static latch so only full-duty states enter the cell and no narrow set/reset net is routed",
+  "decision": "both routed-pulse and local direct-write rail-to-rail state generation fail the slow/hot duration contract; further SENSE pulse synthesis in this 3.3-V CMOS family is not supported by evidence",
+  "next_boundary": "remove the synthesized SENSE-pulse boundary and screen a regenerative sampler driven directly by the already-physical full-duty complementary capture clocks; retain BOOST only if the exact lane requires it",
   "not_a_claim": [
     "routed event-to-lane parent", "dynamic PRBS capture under generated clocks",
     "five-environment closure", "closed CDR or PCIe compliance",

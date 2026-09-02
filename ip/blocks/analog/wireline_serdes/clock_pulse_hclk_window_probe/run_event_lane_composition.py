@@ -119,6 +119,13 @@ XOB_CB O_CLKB_SRC O_CLKB VDD 0 lane_if_buffer
             f"meas tran sch_{label}_high max v({node}) from=8n to=12.8n",
             f"meas tran sch_{label}_low min v({node}) from=8n to=12.8n",
         ])
+        if label.endswith(("_q", "_qb")):
+            measures.extend([
+                f"meas tran sch_{label}_low_exit when v({node})={CONTRACT['thresholds']['logic_rail_margin_v']} rise=1 td=12n",
+                f"meas tran sch_{label}_high_enter when v({node})={vdd - CONTRACT['thresholds']['logic_rail_margin_v']:.6f} rise=1 td=12n",
+                f"meas tran sch_{label}_high_exit when v({node})={vdd - CONTRACT['thresholds']['logic_rail_margin_v']:.6f} fall=1 td=12n",
+                f"meas tran sch_{label}_low_enter when v({node})={CONTRACT['thresholds']['logic_rail_margin_v']} fall=1 td=12n",
+            ])
     return f"""* SPDX-License-Identifier: Apache-2.0
 .include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
 .lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice {environment['mos_corner']}
@@ -223,6 +230,9 @@ def run_case(spec: tuple) -> dict:
     required = {"supply_current"}
     required |= {f"sch_{label}_{bound}" for label, _ in schematic_debug_nodes
                  for bound in ("high", "low")}
+    required |= {f"sch_{label}_{edge}" for label, _ in schematic_debug_nodes
+                 if label.endswith(("_q", "_qb"))
+                 for edge in ("low_exit", "high_enter", "high_exit", "low_enter")}
     for phase in PHASES:
         required |= {f"{phase}_{signal}_{bound}"
                      for signal in ("sense", "boost", "clk", "clkb")
@@ -240,6 +250,16 @@ def run_case(spec: tuple) -> dict:
         required |= {f"{phase}_dbg_{stage}_{bound}"
                      for stage in debug_stages for bound in ("high", "low")}
     complete = returncode == 0 and required <= observed.keys()
+    for label, _ in schematic_debug_nodes:
+        if label.endswith(("_q", "_qb")) and all(
+                f"sch_{label}_{edge}" in observed for edge in
+                ("low_exit", "high_enter", "high_exit", "low_enter")):
+            observed[f"sch_{label}_low_rail_time"] = (
+                observed[f"sch_{label}_low_exit"]
+                - observed[f"sch_{label}_low_enter"]) % 8e-10
+            observed[f"sch_{label}_high_rail_time"] = (
+                observed[f"sch_{label}_high_exit"]
+                - observed[f"sch_{label}_high_enter"]) % 8e-10
     vdd = float(environment["vdd_v"])
     margin = float(CONTRACT["thresholds"]["logic_rail_margin_v"])
     rails = all(

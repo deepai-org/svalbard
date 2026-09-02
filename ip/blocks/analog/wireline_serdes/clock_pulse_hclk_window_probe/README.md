@@ -612,6 +612,21 @@ load experiment repeatable. The next bounded experiment is a local sampler
 clock buffer or a lower-clock-capacitance sampler; it must restore consumer
 clock rails before any routed-parent claim.
 
+A separated local fanout now passes that schematic insertion gate. Each phase
+uses an 8x/16x two-inverter branch for sampler evaluation and independent
+4x/8x branches for capture clock and complement; BOOST is an explicit static
+high trim rather than a timing event. Inserted between the exact event PEX and
+exact routed RX/capture PEX, this architecture passes both TT and slow/hot.
+Slow/hot sampler clocks span -43 mV to 3.045 V, capture clocks span -70 mV to
+3.055 V, sampler low/high rail-valid intervals are at least 206/327 ps, held
+data differential is at least 2.801 V, and average current is 68.224 mA. TT
+also passes, at 97.767 mA. The exact record is
+[`capture_local_clock_fanout_screen.json`](capture_local_clock_fanout_screen.json).
+This is an unrouted composition with schematic fanout devices, not a physical
+fanout or routed-parent claim. The next gate is to lower the six local buffer
+branches into a matched physical fanout, prove DRC/LVS/PEX, and replay these
+same two cases with that extracted fanout before expanding to 5/5 PVT.
+
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail
 margin.  Second, simply placing `XHSD2` beside its detector improved TT width

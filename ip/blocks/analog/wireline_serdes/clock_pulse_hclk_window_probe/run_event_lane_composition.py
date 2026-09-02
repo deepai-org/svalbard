@@ -54,18 +54,30 @@ def compile_deck(event_pex: Path, lane_pex: Path, environment: dict[str, Any],
                  debug_stages: tuple[str, ...] = DEBUG_STAGES,
                  local_interface_buffer: bool = False,
                  schematic_debug_nodes: tuple[tuple[str, str], ...] = (),
-                 direct_sampler_clock: bool = False) -> str:
+                 direct_sampler_clock: bool = False,
+                 sampler_clock_buffer: tuple[int, int] | None = None,
+                 sampler_boost_mode: str = "event",
+                 capture_clock_buffer: tuple[int, int] | None = None) -> str:
     vdd = float(environment["vdd_v"])
     vmid = vdd / 2
     rx_bias = float(CONTRACT["rx_bias_v"][environment["id"]])
     measures = []
     for phase in PHASES:
         upper = phase.upper()
-        sense_node = f"{upper}_{'CLK' if direct_sampler_clock else 'SENSE'}"
-        boost_node = f"{upper}_BOOST"
+        sense_node = (f"{upper}_SAMPLER_CLK" if sampler_clock_buffer else
+                      f"{upper}_{'CLK' if direct_sampler_clock else 'SENSE'}")
+        boost_node = ({"event": f"{upper}_BOOST", "on": "VDD",
+                       "off": "0"}[sampler_boost_mode])
+        clock_nodes = {"clk": f"{upper}_CAPTURE_CLK",
+                       "clkb": f"{upper}_CAPTURE_CLKB"}
         for signal in ("sense", "boost", "clk", "clkb"):
-            node = ({"sense": sense_node, "boost": boost_node}.get(
-                signal, f"{upper}_{signal.upper()}"))
+            if signal == "sense":
+                node = sense_node
+            elif signal == "boost":
+                node = boost_node
+            else:
+                node = (clock_nodes[signal] if capture_clock_buffer else
+                        f"{upper}_{signal.upper()}")
             measures.extend([
                 f"meas tran {phase}_{signal}_high max v({node}) from=8n to=12.8n",
                 f"meas tran {phase}_{signal}_low min v({node}) from=8n to=12.8n",
@@ -94,15 +106,35 @@ def compile_deck(event_pex: Path, lane_pex: Path, environment: dict[str, Any],
                 f"meas tran {phase}_dbg_{stage}_high max v({node}) from=8n to=12.8n",
                 f"meas tran {phase}_dbg_{stage}_low min v({node}) from=8n to=12.8n",
             ])
-    buffer_subckt = "" if not local_interface_buffer else """
+    buffer_subckt = "" if not (local_interface_buffer or sampler_clock_buffer or
+                                capture_clock_buffer) else """
 .subckt lane_if_inv A Y VDD VSS params: MP=1 MN=1
 XP Y A VDD VDD pfet_03v3 w=8u l=0.28u m={MP}
 XN Y A VSS VSS nfet_03v3 w=8u l=0.28u m={MN}
 .ends lane_if_inv
+"""
+    if local_interface_buffer:
+        buffer_subckt += """
 .subckt lane_if_buffer A Y VDD VSS
 XI0 A B VDD VSS lane_if_inv MP=4 MN=4
 XI1 B Y VDD VSS lane_if_inv MP=16 MN=16
 .ends lane_if_buffer
+"""
+    if sampler_clock_buffer:
+        sampler_pre_mult, sampler_out_mult = sampler_clock_buffer
+        buffer_subckt += f"""
+.subckt sampler_clock_buffer A Y VDD VSS
+XI0 A B VDD VSS lane_if_inv MP={sampler_pre_mult} MN={sampler_pre_mult}
+XI1 B Y VDD VSS lane_if_inv MP={sampler_out_mult} MN={sampler_out_mult}
+.ends sampler_clock_buffer
+"""
+    if capture_clock_buffer:
+        capture_pre_mult, capture_out_mult = capture_clock_buffer
+        buffer_subckt += f"""
+.subckt capture_clock_buffer A Y VDD VSS
+XI0 A B VDD VSS lane_if_inv MP={capture_pre_mult} MN={capture_pre_mult}
+XI1 B Y VDD VSS lane_if_inv MP={capture_out_mult} MN={capture_out_mult}
+.ends capture_clock_buffer
 """
     event_outputs = ("E_SENSE_SRC E_BOOST_SRC E_CLK_SRC E_CLKB_SRC "
                      "O_SENSE_SRC O_BOOST_SRC O_CLK_SRC O_CLKB_SRC"
@@ -118,6 +150,20 @@ XOB_B O_BOOST_SRC O_BOOST VDD 0 lane_if_buffer
 XOB_C O_CLK_SRC O_CLK VDD 0 lane_if_buffer
 XOB_CB O_CLKB_SRC O_CLKB VDD 0 lane_if_buffer
 """
+    sampler_buffer_instances = "" if not sampler_clock_buffer else """
+XESB E_CLK E_SAMPLER_CLK VDD 0 sampler_clock_buffer
+XOSB O_CLK O_SAMPLER_CLK VDD 0 sampler_clock_buffer
+"""
+    capture_buffer_instances = "" if not capture_clock_buffer else """
+XECB E_CLK E_CAPTURE_CLK VDD 0 capture_clock_buffer
+XECBB E_CLKB E_CAPTURE_CLKB VDD 0 capture_clock_buffer
+XOCB O_CLK O_CAPTURE_CLK VDD 0 capture_clock_buffer
+XOCBB O_CLKB O_CAPTURE_CLKB VDD 0 capture_clock_buffer
+"""
+    e_capture_clk = "E_CAPTURE_CLK" if capture_clock_buffer else "E_CLK"
+    e_capture_clkb = "E_CAPTURE_CLKB" if capture_clock_buffer else "E_CLKB"
+    o_capture_clk = "O_CAPTURE_CLK" if capture_clock_buffer else "O_CLK"
+    o_capture_clkb = "O_CAPTURE_CLKB" if capture_clock_buffer else "O_CLKB"
     for label, node in schematic_debug_nodes:
         measures.extend([
             f"meas tran sch_{label}_high max v({node}) from=8n to=12.8n",
@@ -130,10 +176,14 @@ XOB_CB O_CLKB_SRC O_CLKB VDD 0 lane_if_buffer
                 f"meas tran sch_{label}_high_exit when v({node})={vdd - CONTRACT['thresholds']['logic_rail_margin_v']:.6f} fall=1 td=12n",
                 f"meas tran sch_{label}_low_enter when v({node})={CONTRACT['thresholds']['logic_rail_margin_v']} fall=1 td=12n",
             ])
-    e_sampler_sense = "E_CLK" if direct_sampler_clock else "E_SENSE"
-    e_sampler_boost = "E_BOOST"
-    o_sampler_sense = "O_CLK" if direct_sampler_clock else "O_SENSE"
-    o_sampler_boost = "O_BOOST"
+    e_sampler_sense = ("E_SAMPLER_CLK" if sampler_clock_buffer else
+                       "E_CLK" if direct_sampler_clock else "E_SENSE")
+    e_sampler_boost = {"event": "E_BOOST", "on": "VDD", "off": "0"}[
+        sampler_boost_mode]
+    o_sampler_sense = ("O_SAMPLER_CLK" if sampler_clock_buffer else
+                       "O_CLK" if direct_sampler_clock else "O_SENSE")
+    o_sampler_boost = {"event": "O_BOOST", "on": "VDD", "off": "0"}[
+        sampler_boost_mode]
     return f"""* SPDX-License-Identifier: Apache-2.0
 .include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
 .lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice {environment['mos_corner']}
@@ -177,14 +227,16 @@ RTERM6 TERM_EN6_N_SRC TERM_EN6_N 1
 XEVENT CLKP_H CLKN_H SEL0 SEL1 SEL2 VDD 0 {event_outputs}
 + retimed_event_capture_bridge_pex
 {buffer_instances}
+{sampler_buffer_instances}
+{capture_buffer_instances}
 REREGEN E_REGEN_CLK 0 1m
 REREGENB E_REGEN_CLKB 0 1m
 ROREGEN O_REGEN_CLK 0 1m
 ROREGENB O_REGEN_CLKB 0 1m
 XLANE RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N
 + TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N
-+ {e_sampler_sense} E_REGEN_CLK E_REGEN_CLKB E_CLK E_CLKB {e_sampler_boost}
-+ {o_sampler_sense} O_REGEN_CLK O_REGEN_CLKB O_CLK O_CLKB {o_sampler_boost}
++ {e_sampler_sense} E_REGEN_CLK E_REGEN_CLKB {e_capture_clk} {e_capture_clkb} {e_sampler_boost}
++ {o_sampler_sense} O_REGEN_CLK O_REGEN_CLKB {o_capture_clk} {o_capture_clkb} {o_sampler_boost}
 + VDD 0 RX_RAWP RX_RAWN FE_E_P FE_E_N FE_O_P FE_O_N
 + EVEN_Q EVEN_QB ODD_Q ODD_QB lane_rx_regenerative_capture_pex
 CEQ EVEN_Q 0 50f
@@ -210,12 +262,17 @@ def run_case(spec: tuple) -> dict:
      local_interface_buffer, *optional) = spec
     schematic_debug_nodes = optional[0] if optional else ()
     direct_sampler_clock = optional[1] if len(optional) > 1 else False
+    sampler_clock_buffer = optional[2] if len(optional) > 2 else None
+    sampler_boost_mode = optional[3] if len(optional) > 3 else "event"
+    capture_clock_buffer = optional[4] if len(optional) > 4 else None
     stem = f"{environment['id']}_{control['id']}"
     deck = work / f"{stem}.spice"
     log = work / f"{stem}.log"
     deck.write_text(compile_deck(event_pex, lane_pex, environment, control,
                                  debug_stages, local_interface_buffer,
-                                 schematic_debug_nodes, direct_sampler_clock))
+                                 schematic_debug_nodes, direct_sampler_clock,
+                                 sampler_clock_buffer, sampler_boost_mode,
+                                 capture_clock_buffer))
     try:
         with log.open("w") as output:
             run = subprocess.run(["ngspice", "-b", str(deck)], stdout=output,
@@ -271,11 +328,19 @@ def run_case(spec: tuple) -> dict:
                 - observed[f"sch_{label}_high_enter"]) % 8e-10
     vdd = float(environment["vdd_v"])
     margin = float(CONTRACT["thresholds"]["logic_rail_margin_v"])
+    dynamic_signals = ("sense", "clk", "clkb") + (("boost",)
+                      if sampler_boost_mode == "event" else ())
     rails = all(
         observed.get(f"{phase}_{signal}_high", 0) >= vdd - margin
         and observed.get(f"{phase}_{signal}_low", vdd) <= margin
-        for phase in PHASES for signal in ("sense", "boost", "clk", "clkb")
+        for phase in PHASES for signal in dynamic_signals
     )
+    if sampler_boost_mode == "on":
+        rails &= all(observed.get(f"{phase}_boost_low", 0) >= vdd - margin
+                     for phase in PHASES)
+    elif sampler_boost_mode == "off":
+        rails &= all(observed.get(f"{phase}_boost_high", vdd) <= margin
+                     for phase in PHASES)
     if local_interface_buffer:
         rails &= all(
             observed.get(f"{phase}_{signal}_src_high", 0) >= vdd - margin
@@ -341,10 +406,30 @@ def main() -> None:
         "--direct-sampler-clock", action="store_true",
         help="drive sampler sense directly from its extracted full-duty capture clock",
     )
+    parser.add_argument(
+        "--sampler-clock-buffer", nargs=2, type=int, metavar=("PRE", "OUT"),
+        help="branch the extracted capture clock through a local two-stage sampler buffer",
+    )
+    parser.add_argument(
+        "--sampler-boost-mode", choices=("event", "on", "off"), default="event",
+        help="use the event BOOST waveform or a static rail trim at the sampler",
+    )
+    parser.add_argument(
+        "--capture-clock-buffer", nargs=2, type=int, metavar=("PRE", "OUT"),
+        help="restore both extracted capture-clock polarities with local two-stage buffers",
+    )
     parser.add_argument("--work", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
     require(1 <= args.jobs <= 8, "jobs must be 1--8")
+    require(not (args.direct_sampler_clock and args.sampler_clock_buffer),
+            "direct sampler clock and sampler clock buffer are mutually exclusive")
+    if args.sampler_clock_buffer:
+        require(all(1 <= value <= 64 for value in args.sampler_clock_buffer),
+                "sampler clock buffer multipliers must be 1--64")
+    if args.capture_clock_buffer:
+        require(all(1 <= value <= 64 for value in args.capture_clock_buffer),
+                "capture clock buffer multipliers must be 1--64")
     require((args.event_schematic is None) == (args.event_source_revision is None),
             "event schematic and source revision must be supplied together")
     event_physical = require_physical_pex(args.event_pex, args.event_physical, True)
@@ -398,7 +483,10 @@ def main() -> None:
                     (() if args.skip_debug_stages else DEBUG_STAGES))
     specs = [(args.event_pex, args.lane_pex, args.work, environment, control,
               debug_stages, args.local_interface_buffer, (),
-              args.direct_sampler_clock)
+              args.direct_sampler_clock,
+              tuple(args.sampler_clock_buffer) if args.sampler_clock_buffer else None,
+              args.sampler_boost_mode,
+              tuple(args.capture_clock_buffer) if args.capture_clock_buffer else None)
              for environment, control in pairs]
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as executor:
         cases = list(executor.map(run_case, specs))
@@ -420,6 +508,9 @@ def main() -> None:
         "debug_stages": list(debug_stages),
         "local_interface_buffer": args.local_interface_buffer,
         "direct_sampler_clock": args.direct_sampler_clock,
+        "sampler_clock_buffer": args.sampler_clock_buffer,
+        "sampler_boost_mode": args.sampler_boost_mode,
+        "capture_clock_buffer": args.capture_clock_buffer,
         "case_count": len(cases),
         "passing_case_count": sum(case["result"] == "pass" for case in cases),
         "environment_code_coverage": coverage,

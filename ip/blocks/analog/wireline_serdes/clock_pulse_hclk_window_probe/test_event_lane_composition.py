@@ -78,6 +78,41 @@ class EventLaneCompositionTest(unittest.TestCase):
         self.assertIn("meas tran e_sense_low_exit when v(E_CLK)=0.25", deck)
         self.assertNotIn("E_SENSE E_REGEN_CLK", deck)
 
+    def test_local_sampler_buffer_isolates_capture_clock_load(self) -> None:
+        environment = composition.base.CONTRACT["environments"][0]
+        control = composition.event_runner.CONTROLS[4]
+        deck = composition.compile_deck(
+            Path("event.pex.spice"), Path("lane.pex.spice"), environment,
+            control, (), False, (), False, (4, 16))
+        self.assertIn(".subckt sampler_clock_buffer A Y VDD VSS", deck)
+        self.assertIn("XI0 A B VDD VSS lane_if_inv MP=4 MN=4", deck)
+        self.assertIn("XI1 B Y VDD VSS lane_if_inv MP=16 MN=16", deck)
+        self.assertIn("XESB E_CLK E_SAMPLER_CLK VDD 0 sampler_clock_buffer", deck)
+        self.assertIn("E_SAMPLER_CLK E_REGEN_CLK E_REGEN_CLKB E_CLK E_CLKB E_BOOST", deck)
+        self.assertIn("meas tran e_sense_high max v(E_SAMPLER_CLK)", deck)
+
+    def test_static_sampler_boost_is_an_explicit_rail_trim(self) -> None:
+        environment = composition.base.CONTRACT["environments"][0]
+        control = composition.event_runner.CONTROLS[4]
+        deck = composition.compile_deck(
+            Path("event.pex.spice"), Path("lane.pex.spice"), environment,
+            control, (), False, (), False, (8, 16), "on")
+        self.assertIn("E_SAMPLER_CLK E_REGEN_CLK E_REGEN_CLKB E_CLK E_CLKB VDD", deck)
+        self.assertIn("O_SAMPLER_CLK O_REGEN_CLK O_REGEN_CLKB O_CLK O_CLKB VDD", deck)
+        self.assertIn("meas tran e_boost_low min v(VDD)", deck)
+
+    def test_capture_clock_buffers_restore_both_polarities(self) -> None:
+        environment = composition.base.CONTRACT["environments"][0]
+        control = composition.event_runner.CONTROLS[4]
+        deck = composition.compile_deck(
+            Path("event.pex.spice"), Path("lane.pex.spice"), environment,
+            control, (), False, (), False, (8, 16), "on", (4, 8))
+        self.assertIn(".subckt capture_clock_buffer A Y VDD VSS", deck)
+        self.assertIn("XECB E_CLK E_CAPTURE_CLK VDD 0 capture_clock_buffer", deck)
+        self.assertIn("XECBB E_CLKB E_CAPTURE_CLKB VDD 0 capture_clock_buffer", deck)
+        self.assertIn("E_SAMPLER_CLK E_REGEN_CLK E_REGEN_CLKB E_CAPTURE_CLK E_CAPTURE_CLKB VDD", deck)
+        self.assertIn("meas tran e_clkb_high max v(E_CAPTURE_CLKB)", deck)
+
     def test_schematic_debug_nodes_are_explicit_measures(self) -> None:
         environment = composition.base.CONTRACT["environments"][0]
         control = composition.event_runner.CONTROLS[4]

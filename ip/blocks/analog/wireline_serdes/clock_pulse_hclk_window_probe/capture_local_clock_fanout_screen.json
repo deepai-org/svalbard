@@ -1,0 +1,152 @@
+{
+  "capture_clock_buffer": [
+    4,
+    8
+  ],
+  "case_count": 2,
+  "cases": [
+    {
+      "capture_pass": true,
+      "case_id": "tt_sense1_interval0_epoch0",
+      "code_id": "sense1_interval0_epoch0",
+      "complete": true,
+      "control": {
+        "epoch": 0,
+        "id": "sense1_interval0_epoch0",
+        "interval": 0,
+        "sense": 1
+      },
+      "diagnostic_log_tail": [],
+      "environment_id": "tt",
+      "frontend_pass": true,
+      "observed": {
+        "e_boost_high": 3.3,
+        "e_boost_low": 3.3,
+        "e_clk_high": 3.37791,
+        "e_clk_low": -0.0652878,
+        "e_clkb_high": 3.39363,
+        "e_clkb_low": -0.0644383,
+        "e_fe_diff": 2.99757,
+        "e_q_diff": 3.12048,
+        "e_sense_high": 3.37492,
+        "e_sense_high_enter": 1.27776e-08,
+        "e_sense_high_exit": 1.23034e-08,
+        "e_sense_high_rail_time": 3.2579999999999933e-10,
+        "e_sense_low": -0.0540772,
+        "e_sense_low_enter": 1.2377e-08,
+        "e_sense_low_exit": 1.26639e-08,
+        "e_sense_low_rail_time": 2.868999999999991e-10,
+        "o_boost_high": 3.3,
+        "o_boost_low": 3.3,
+        "o_clk_high": 3.3832,
+        "o_clk_low": -0.0638023,
+        "o_clkb_high": 3.39209,
+        "o_clkb_low": -0.0636969,
+        "o_fe_diff": 3.1714,
+        "o_q_diff": 3.1982,
+        "o_sense_high": 3.37918,
+        "o_sense_high_enter": 1.23904e-08,
+        "o_sense_high_exit": 1.27182e-08,
+        "o_sense_high_rail_time": 3.277999999999988e-10,
+        "o_sense_low": -0.0529337,
+        "o_sense_low_enter": 1.27924e-08,
+        "o_sense_low_exit": 1.22768e-08,
+        "o_sense_low_rail_time": 2.844000000000007e-10,
+        "supply_current": 0.0977667
+      },
+      "rails_pass": true,
+      "result": "pass",
+      "returncode": 0,
+      "sense_intervals_pass": true
+    },
+    {
+      "capture_pass": true,
+      "case_id": "ss_hot_sense1_interval0_epoch0",
+      "code_id": "sense1_interval0_epoch0",
+      "complete": true,
+      "control": {
+        "epoch": 0,
+        "id": "sense1_interval0_epoch0",
+        "interval": 0,
+        "sense": 1
+      },
+      "diagnostic_log_tail": [],
+      "environment_id": "ss_hot",
+      "frontend_pass": true,
+      "observed": {
+        "e_boost_high": 2.97,
+        "e_boost_low": 2.97,
+        "e_clk_high": 3.05486,
+        "e_clk_low": -0.0703053,
+        "e_clkb_high": 3.05363,
+        "e_clkb_low": -0.0677867,
+        "e_fe_diff": 2.83786,
+        "e_q_diff": 2.8494,
+        "e_sense_high": 3.04434,
+        "e_sense_high_enter": 1.24278e-08,
+        "e_sense_high_exit": 1.27549e-08,
+        "e_sense_high_rail_time": 3.2710000000000066e-10,
+        "e_sense_low": -0.0428308,
+        "e_sense_low_enter": 1.20586e-08,
+        "e_sense_low_exit": 1.22686e-08,
+        "e_sense_low_rail_time": 2.099999999999999e-10,
+        "o_boost_high": 2.97,
+        "o_boost_low": 2.97,
+        "o_clk_high": 3.05431,
+        "o_clk_low": -0.0691557,
+        "o_clkb_high": 3.05241,
+        "o_clkb_low": -0.0667501,
+        "o_fe_diff": 2.7507,
+        "o_q_diff": 2.80075,
+        "o_sense_high": 3.04481,
+        "o_sense_high_enter": 1.20408e-08,
+        "o_sense_high_exit": 1.23709e-08,
+        "o_sense_high_rail_time": 3.3010000000000075e-10,
+        "o_sense_low": -0.0406368,
+        "o_sense_low_enter": 1.24747e-08,
+        "o_sense_low_exit": 1.26809e-08,
+        "o_sense_low_rail_time": 2.062000000000012e-10,
+        "supply_current": 0.068224
+      },
+      "rails_pass": true,
+      "result": "pass",
+      "returncode": 0,
+      "sense_intervals_pass": true
+    }
+  ],
+  "claim": "extracted_event_bridge_into_routed_regenerative_lane_static_input",
+  "contract_sha256": "8a4ab5d2e71f476739d26ac14bef491905c17a94178c2378aad88eef8ffe0efd",
+  "debug_stages": [],
+  "direct_sampler_clock": false,
+  "environment_code_coverage": {
+    "ss_hot": [
+      "sense1_interval0_epoch0"
+    ],
+    "tt": [
+      "sense1_interval0_epoch0"
+    ]
+  },
+  "event_pex_sha256": "192a1b7d9119b915baef7461925af3b17cc98835654412f7d6a11adeebe6efa9",
+  "event_physical_sha256": "beb01331e9c07dec405c1c03b6e1efa80b23b5075024ea8472dc17506a027066",
+  "event_source_revision": "retimed_joint_long_6_3_active_low_nand_state",
+  "lane_claim": "routed_termination_rx_dual_regenerative_sampler_capture",
+  "lane_pex_sha256": "f8fdcb7cdcc486c6ac868f476dd7a85bcaaa3ee02ec77caaf835c6107519b1df",
+  "lane_physical_sha256": "29b8766349f9c7321d2ec59a62600fd5379c33414a2dabc6e72ffd4f08eadf71",
+  "local_interface_buffer": false,
+  "not_a_claim": [
+    "routed event-to-lane parent",
+    "dynamic PRBS capture under generated clocks",
+    "closed CDR",
+    "PCIe compliance",
+    "provider signoff or silicon yield"
+  ],
+  "passing_case_count": 2,
+  "result": "pass",
+  "sampler_boost_mode": "on",
+  "sampler_clock_buffer": [
+    8,
+    16
+  ],
+  "schema_version": 1,
+  "scope": "unrouted composition of two exact physically bound PEX macros"
+}

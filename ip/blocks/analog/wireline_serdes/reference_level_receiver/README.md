@@ -34,3 +34,25 @@ pulse width, lumped source resistance, and lumped output capacitance still do
 not capture the relevant polarity, history, or internal-node trajectory.  The
 next leaf contract must replay the measured parent waveform (or a bounded PWL
 envelope), not only its scalar extrema.
+
+## Exact consumer-load checkpoint
+
+The v7 parent exposes the missing dimension more precisely. Its corrected
+active-high SENSE path uses `OUTN`; an exact-leaf polarity screen with the
+measured asymmetric lumped load passes TT at 1.40 and 1.60 V and covers 4/5
+environments. A 10 ps sampled parent waveform then traverses 0.657--3.149 V,
+but the parent `OUTN` remains at 0.592--0.607 V. Replaying those same 81 points
+against the receiver PEX and 190 fF capacitor produces full rails. Replacing
+that capacitor with the exact StrongARM PEX reproduces the loss at
+0.551--2.617 V. Explicit extracted capacitors therefore omitted the consumer's
+nonlinear MOS gate load.
+
+`run_parent_waveform_replay.sh` is the fast exact leaf-plus-consumer gate, and
+`run_output_sizing.sh` searches a bounded taper family against it. Two
+schematic candidates pass TT, but their physical implementations are retained
+as rejections: both are zero-DRC and unique-LVS yet cover only 4/5 of the prior
+all-output exact-PVT contract because SS/125 C develops an extra crossing or
+fails to toggle. The promoted 28-MOS leaf is intentionally unchanged. The next
+implementation should split the SENSE-only and complementary-capture roles,
+then qualify each against its exact consumer rather than enlarging one shared
+cell until a scalar-load test passes.

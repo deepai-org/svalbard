@@ -26,9 +26,14 @@ INTERNAL_PROBES = {
     "level_se_inp": "xparent.XLEVEL_SE.IN",
     "level_se_ref": "xparent.XLEVEL_SE.REF",
     "level_se_outp": "xparent.XLEVEL_SE.OUTP",
+    "level_se_outn": "xparent.XLEVEL_SE.OUTN",
+    "level_se_n2": "xparent.XLEVEL_SE.N2",
+    "level_se_midp": "xparent.XLEVEL_SE.MIDP",
+    "level_se_midn": "xparent.XLEVEL_SE.MIDN",
     "level_so_inp": "xparent.XLEVEL_SO.IN",
     "level_so_ref": "xparent.XLEVEL_SO.REF",
     "level_so_outp": "xparent.XLEVEL_SO.OUTP",
+    "level_so_outn": "xparent.XLEVEL_SO.OUTN",
     "level_e_inp": "xparent.XLEVEL_E.IN",
     "level_e_inn": "xparent.XLEVEL_E.REF",
     "level_e_outp": "xparent.XLEVEL_E.OUTP",
@@ -66,7 +71,7 @@ def source_pwl(symbols: list[int], vdd: float, positive: bool) -> str:
 
 
 def compile_deck(pex: Path, environment: dict, symbols: list[int],
-                 sample_count: int) -> str:
+                 sample_count: int, waveform_step_ps: float = 0.0) -> str:
     deck = base.compile_deck(pex, environment)
     deck = re.sub(r"VRXP RXP_SRC 0 PWL\([^\n]+\)",
                   f"VRXP RXP_SRC 0 PWL({source_pwl(symbols, environment['vdd_v'], True)})",
@@ -95,6 +100,20 @@ def compile_deck(pex: Path, environment: dict, symbols: list[int],
                 f"meas tran diag_{label}_below_ref_width "
                 f"trig v({node}) val={reference:.6g} fall=1 td=8n "
                 f"targ v({node}) val={reference:.6g} rise=1 td=8n")
+    if waveform_step_ps:
+        waveform_nodes = {
+            "se_in": INTERNAL_PROBES["level_se_inp"],
+            "se_outn": INTERNAL_PROBES["level_se_outn"],
+            "se_n2": INTERNAL_PROBES["level_se_n2"],
+            "se_midp": INTERNAL_PROBES["level_se_midp"],
+            "se_midn": INTERNAL_PROBES["level_se_midn"],
+        }
+        step_s = waveform_step_ps * 1e-12
+        for index in range(math.floor(800e-12 / step_s) + 1):
+            instant = 8e-9 + index * step_s
+            for label, node in waveform_nodes.items():
+                dynamic_measures.append(
+                    f"meas tran wave_{label}_{index} find v({node}) at={instant:.12g}")
     internal_saves = " ".join(f"v({node})" for node in INTERNAL_PROBES.values())
     deck = re.sub(r"(?m)^(\.save .*?)$", rf"\1 {internal_saves}", deck)
     marker = "meas tran supply_current avg isupply from=8n to=12.8n"
@@ -153,8 +172,11 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--timeout", type=int, default=1800)
     parser.add_argument("--allow-fail", action="store_true")
+    parser.add_argument("--waveform-step-ps", type=float, default=0.0)
     args = parser.parse_args()
     base.require(4 <= args.sample_count <= 16, "sample count must be 4--16")
+    base.require(args.waveform_step_ps == 0 or 5 <= args.waveform_step_ps <= 100,
+                 "waveform step must be zero or 5--100 ps")
     physical = json.loads(args.physical.read_text())
     base.require(physical.get("result") == "pass" and physical.get("lvs_unique") is True,
                  "physical evidence is not passing unique LVS")
@@ -167,7 +189,7 @@ def main() -> None:
     args.work.mkdir(parents=True, exist_ok=True)
     deck_path, log_path = args.work / "dynamic.spice", args.work / "dynamic.log"
     deck_path.write_text(compile_deck(args.pex.resolve(), environment, symbols,
-                                      args.sample_count))
+                                      args.sample_count, args.waveform_step_ps))
     try:
         with log_path.open("w") as output:
             proc = subprocess.run(["ngspice", "-b", str(deck_path)], stdout=output,
@@ -195,6 +217,8 @@ def main() -> None:
               "complete": complete, "score": scored,
               "diagnostic": {key: value for key, value in observed.items()
                              if key.startswith("diag_")},
+              "waveform_samples": {key: value for key, value in observed.items()
+                                   if key.startswith("wave_")},
               "diagnostic_log_tail": [] if complete else text.splitlines()[-40:],
               "not_a_claim": ["channel/package closure", "BER", "closed CDR",
                               "PCIe compliance or silicon yield"],

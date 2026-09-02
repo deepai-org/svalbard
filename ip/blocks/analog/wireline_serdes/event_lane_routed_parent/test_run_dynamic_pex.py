@@ -15,10 +15,11 @@ class DynamicPexTest(unittest.TestCase):
 
     def test_deck_contains_first_failure_probes(self):
         env = next(x for x in target.base.HCLK_CONTRACT["environments"] if x["id"] == "tt")
-        deck = target.compile_deck(Path("parent.pex"), env, target.prbs7(48), 4)
+        deck = target.compile_deck(Path("parent.pex"), env, target.prbs7(48), 4, 10)
         self.assertIn("diag_fe_e_0", deck)
         self.assertIn("xparent.XEVENT.E_SENSE.t0", deck)
         self.assertIn("diag_level_o_outn_low", deck)
+        self.assertIn("wave_se_outn_0", deck)
 
     def test_common_latency_requires_both_phases(self):
         symbols = target.prbs7(48)

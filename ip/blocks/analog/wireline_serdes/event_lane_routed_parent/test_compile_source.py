@@ -28,6 +28,8 @@ class RoutedParentSourceTest(unittest.TestCase):
         self.assertIn("XFANOUT E_CLK E_CLKB O_CLK O_CLKB", source)
         for instance in ("XLEVEL_SE", "XLEVEL_SO", "XLEVEL_E", "XLEVEL_O"):
             self.assertIn(instance + " ", source)
+        self.assertIn("E_SENSE_UNUSED E_SENSE reference_level_receiver", source)
+        self.assertIn("O_SENSE_UNUSED O_SENSE reference_level_receiver", source)
         self.assertIn(
             "E_CAPTURE_CLK_PRE LEVEL_REF LEVEL_BIAS VDD VSS",
             source,

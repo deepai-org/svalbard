@@ -919,6 +919,15 @@ and support replaying a measured parent PWL waveform directly at the leaf
 boundary.  Only after that waveform replay agrees should a costly full-parent
 run be used as the next qualification gate.
 
+Do not reduce a transistor input port to the explicit capacitors reported on
+its extracted net.  MOS gate capacitance is voltage-dependent and remains
+inside the consumer devices; a net-capacitance sum can omit the dominant load.
+The PCIe SENSE receiver drove a 190 fF capacitor to full rails under the exact
+sampled parent waveform, but reached only 0.551--2.617 V when that capacitor
+was replaced by the exact StrongARM PEX.  Use exact leaf-plus-consumer replay
+as the admission test for high-fanout or large-gate boundaries.  Lumped C is a
+localizer and early sizing proxy, not composition evidence.
+
 Also distinguish transparent output from retained output. In the PI-clocked
 RX parent, a 750 ps observation occurred 200 ps after capture opened but 180 ps
 before its 380 ps write pulse closed. It produced a plausible weak-polarity

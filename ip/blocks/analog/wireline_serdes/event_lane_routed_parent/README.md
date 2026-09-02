@@ -146,3 +146,14 @@ below-reference widths of 287--290 ps.  The scalar envelope therefore omitted
 a relevant waveform polarity/history/internal-state condition.  The next
 bounded experiment is an exact parent-waveform replay at the leaf boundary,
 followed by a polarity/timing correction before another full parent run.
+
+The v7 structural audit found that the fanout supplies an active-low SENSE
+interval while the StrongARM evaluates with `SENSE_CLK` high. The parent now
+routes the receiver's complementary `OUTN` to SENSE and remains zero-DRC,
+unique-LVS and 16,426R/10,423C extracted. Exact ten-sample TT PRBS still has no
+passing latency: both front ends resolve once and remain fixed. A shorter
+hash-bound run samples one full period every 10 ps. The corrected SENSE output
+stays at 0.592--0.607 V despite a 0.657--3.149 V input. Exact leaf replay proves
+the waveform itself is sufficient; exact leaf-plus-StrongARM replay reproduces
+the failure. The remaining boundary is therefore nonlinear consumer loading,
+not polarity, lumped RC, or input waveform shape.

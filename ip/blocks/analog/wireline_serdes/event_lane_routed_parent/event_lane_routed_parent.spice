@@ -447,9 +447,9 @@ XFANOUT E_CLK E_CLKB O_CLK O_CLKB VDD VSS
 * Each independently timed weak node is compared with an explicit reference;
 * complementary outputs are generated locally rather than assumed upstream.
 XLEVEL_SE E_SENSE_PRE LEVEL_REF LEVEL_BIAS VDD VSS
-+ E_SENSE E_SENSE_UNUSED reference_level_receiver
++ E_SENSE_UNUSED E_SENSE reference_level_receiver
 XLEVEL_SO O_SENSE_PRE LEVEL_REF LEVEL_BIAS VDD VSS
-+ O_SENSE O_SENSE_UNUSED reference_level_receiver
++ O_SENSE_UNUSED O_SENSE reference_level_receiver
 XLEVEL_E E_CAPTURE_CLK_PRE LEVEL_REF LEVEL_BIAS VDD VSS
 + E_CAPTURE_CLK E_CAPTURE_CLKB reference_level_receiver
 XLEVEL_O O_CAPTURE_CLK_PRE LEVEL_REF LEVEL_BIAS VDD VSS

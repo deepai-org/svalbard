@@ -376,14 +376,14 @@ ep_route_43_34 -262.0 206.70 -738.0 351.0 467.0
 ep_rect metal5 -738.38 350.62 -719.62 351.38
 
 # Restored SENSE outputs to the lane's light inputs.
-ep_rect metal5 -442.38 396.22 -424.62 396.98
-ep_transition_45 -425.0 396.6
-ep_route_45 -425.0 396.6 -243.0 97.8 443.0
+ep_rect metal5 -440.38 394.62 -424.62 395.38
+ep_transition_45 -425.0 395.0
+ep_route_45 -425.0 395.0 -243.0 97.8 443.0
 ep_rect metal5 -260.38 97.42 -242.62 98.18
 ep_m5_bridge_x -260.38 -12.62 97.8 -230.0 -220.0
-ep_rect metal5 -602.38 396.22 -589.62 396.98
-ep_transition_45 -590.0 396.6
-ep_route_45 -590.0 396.6 -237.0 103.0 445.0
+ep_rect metal5 -600.38 394.62 -589.62 395.38
+ep_transition_45 -590.0 395.0
+ep_route_45 -590.0 395.0 -237.0 103.0 445.0
 ep_rect metal5 -260.38 102.62 -236.62 103.38
 ep_m5_bridge_x -260.38 45.38 103.0 -230.0 -220.0
 ep_rect metal5 44.62 97.42 45.38 103.38

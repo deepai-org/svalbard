@@ -1,0 +1,189 @@
+{
+  "candidate_count": 4,
+  "candidates": [
+    {
+      "candidate_id": "baseline",
+      "evidence": {
+        "claim": "schematic_leaf_replay_of_sampled_parent_sense_waveform",
+        "complete": true,
+        "consumer": "exact_cml_to_cmos_fast_pex",
+        "consumer_pex_sha256": "47d6a8389db9a49ef700eeb21bc41e5ed726f62847d15d3740014f7871183139",
+        "deck_sha256": "58118fdd4625e6e3945e268f7ddadbcb5d0ee5069c4c73a3a44b27a83350483e",
+        "dut_kind": "schematic",
+        "dut_sha256": "38bba19c91fbeb1f0cb4d61fa8e3a4fb50d88b1b7036c702264c4036705c7579",
+        "load_p_f": 5e-14,
+        "log_sha256": "2be4c73ace9f0ba0d58a527e35f940a9c104156790932636d60d82b1532877a4",
+        "not_a_claim": [
+          "routed-parent closure",
+          "PVT coverage",
+          "PCIe compliance"
+        ],
+        "observed": {
+          "input_high": 3.14873,
+          "input_low": 0.656533,
+          "outn_fall": 4.35178e-09,
+          "outn_high": 2.68357,
+          "outn_low": 0.230735,
+          "outn_rise": 4.03752e-09,
+          "outn_rise_next": 4.83742e-09,
+          "supply_current": 0.0150837
+        },
+        "parent_result_sha256": "5c0523ff9bc187f0920aebb170173684226fbf4496415b363fc8ac4b7006cee7",
+        "result": "fail",
+        "sample_count": 81,
+        "sample_step_s": 1e-11,
+        "schema_version": 1,
+        "scope": "TT, one measured parent period repeated at the exact leaf boundary",
+        "supply_current_limit_a": 0.025
+      },
+      "final_mn": 2,
+      "final_mp": 3,
+      "gain_mn": 2,
+      "gain_mp": 2,
+      "phase_mn": 1,
+      "phase_mp": 1,
+      "result": "fail"
+    },
+    {
+      "candidate_id": "sense_2x",
+      "evidence": {
+        "claim": "schematic_leaf_replay_of_sampled_parent_sense_waveform",
+        "complete": true,
+        "consumer": "exact_cml_to_cmos_fast_pex",
+        "consumer_pex_sha256": "47d6a8389db9a49ef700eeb21bc41e5ed726f62847d15d3740014f7871183139",
+        "deck_sha256": "5c12b7ecf9d6ffca5c1d03697ef5a9f778163ed7299bfd3cbea4fbc81fa30e6d",
+        "dut_kind": "schematic",
+        "dut_sha256": "9c0301fc751fd7e75f36698a42d35b2cc82b55a65a42e4232620015bd552f2fc",
+        "load_p_f": 5e-14,
+        "log_sha256": "c74e95ef3187057b3a73af767d8bb47fecfc1211f3d8189d47a20a3f216b144e",
+        "not_a_claim": [
+          "routed-parent closure",
+          "PVT coverage",
+          "PCIe compliance"
+        ],
+        "observed": {
+          "input_high": 3.14873,
+          "input_low": 0.656533,
+          "outn_fall": 4.35923e-09,
+          "outn_high": 3.1402,
+          "outn_low": 0.00538745,
+          "outn_rise": 4.04437e-09,
+          "outn_rise_next": 4.84436e-09,
+          "supply_current": 0.0170709
+        },
+        "parent_result_sha256": "5c0523ff9bc187f0920aebb170173684226fbf4496415b363fc8ac4b7006cee7",
+        "result": "pass",
+        "sample_count": 81,
+        "sample_step_s": 1e-11,
+        "schema_version": 1,
+        "scope": "TT, one measured parent period repeated at the exact leaf boundary",
+        "supply_current_limit_a": 0.025
+      },
+      "final_mn": 4,
+      "final_mp": 6,
+      "gain_mn": 4,
+      "gain_mp": 4,
+      "phase_mn": 1,
+      "phase_mp": 1,
+      "result": "pass"
+    },
+    {
+      "candidate_id": "balanced_2x",
+      "evidence": {
+        "claim": "schematic_leaf_replay_of_sampled_parent_sense_waveform",
+        "complete": true,
+        "consumer": "exact_cml_to_cmos_fast_pex",
+        "consumer_pex_sha256": "47d6a8389db9a49ef700eeb21bc41e5ed726f62847d15d3740014f7871183139",
+        "deck_sha256": "9efde1585670cc722047200f5b87cb67e15ad0a8d18acbd9e56ffaaa0a69f7ba",
+        "dut_kind": "schematic",
+        "dut_sha256": "3b7c4e01ed83ed87c771fd009d444cd552f57953e7a60241cb9fe862cfb01bf2",
+        "load_p_f": 5e-14,
+        "log_sha256": "2f041339dcf7fa74e32724bcd1ed7388e848e9d237fa861bf5a5215489f6ca73",
+        "not_a_claim": [
+          "routed-parent closure",
+          "PVT coverage",
+          "PCIe compliance"
+        ],
+        "observed": {
+          "input_high": 3.14873,
+          "input_low": 0.656533,
+          "outn_fall": 4.36569e-09,
+          "outn_high": 3.1339,
+          "outn_low": 0.00808545,
+          "outn_rise": 4.04921e-09,
+          "outn_rise_next": 4.8492e-09,
+          "supply_current": 0.0170042
+        },
+        "parent_result_sha256": "5c0523ff9bc187f0920aebb170173684226fbf4496415b363fc8ac4b7006cee7",
+        "result": "pass",
+        "sample_count": 81,
+        "sample_step_s": 1e-11,
+        "schema_version": 1,
+        "scope": "TT, one measured parent period repeated at the exact leaf boundary",
+        "supply_current_limit_a": 0.025
+      },
+      "final_mn": 4,
+      "final_mp": 6,
+      "gain_mn": 4,
+      "gain_mp": 4,
+      "phase_mn": 2,
+      "phase_mp": 2,
+      "result": "pass"
+    },
+    {
+      "candidate_id": "balanced_3x",
+      "evidence": {
+        "claim": "schematic_leaf_replay_of_sampled_parent_sense_waveform",
+        "complete": true,
+        "consumer": "exact_cml_to_cmos_fast_pex",
+        "consumer_pex_sha256": "47d6a8389db9a49ef700eeb21bc41e5ed726f62847d15d3740014f7871183139",
+        "deck_sha256": "f9d670dd63bb2a9aa5d064f7ebf5f74c26b997d4fa38cc80e1ea95861e4cb407",
+        "dut_kind": "schematic",
+        "dut_sha256": "a6582fe3d6a587dd1bd2828c47c9e36878e519c9828caff8b85431537f2655cc",
+        "load_p_f": 5e-14,
+        "log_sha256": "6518a69950fc7f05ff2218e002da9325b2d22967ec1d49a058e227369eeb7ef7",
+        "not_a_claim": [
+          "routed-parent closure",
+          "PVT coverage",
+          "PCIe compliance"
+        ],
+        "observed": {
+          "input_high": 3.14873,
+          "input_low": 0.656533,
+          "outn_fall": 4.2868e-09,
+          "outn_high": 2.73674,
+          "outn_low": -0.0208946,
+          "outn_rise": 4.09915e-09,
+          "outn_rise_next": 4.89866e-09,
+          "supply_current": 0.0182137
+        },
+        "parent_result_sha256": "5c0523ff9bc187f0920aebb170173684226fbf4496415b363fc8ac4b7006cee7",
+        "result": "fail",
+        "sample_count": 81,
+        "sample_step_s": 1e-11,
+        "schema_version": 1,
+        "scope": "TT, one measured parent period repeated at the exact leaf boundary",
+        "supply_current_limit_a": 0.025
+      },
+      "final_mn": 6,
+      "final_mp": 9,
+      "gain_mn": 6,
+      "gain_mp": 6,
+      "phase_mn": 3,
+      "phase_mp": 3,
+      "result": "fail"
+    }
+  ],
+  "claim": "bounded_sense_output_taper_search",
+  "not_a_claim": [
+    "physical closure",
+    "PVT coverage",
+    "routed-parent closure"
+  ],
+  "passing_candidates": [
+    "sense_2x",
+    "balanced_2x"
+  ],
+  "result": "pass",
+  "schema_version": 1
+}

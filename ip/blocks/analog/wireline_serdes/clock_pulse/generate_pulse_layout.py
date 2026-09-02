@@ -1735,11 +1735,19 @@ def frange(start: float, stop: float, step: float):
 
 
 def main() -> None:
+    global PHASE_Y_SHIFT
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--top", default="clock_pulse_generator")
+    parser.add_argument(
+        "--phase-y-shift", type=float, default=PHASE_Y_SHIFT,
+        help="physical even/odd phase pitch in microns (default: 176)",
+    )
     args = parser.parse_args()
+    if not 48.0 <= args.phase_y_shift <= 400.0:
+        parser.error("--phase-y-shift must be between 48 and 400 microns")
+    PHASE_Y_SHIFT = args.phase_y_shift
     emit(args.source, args.output, args.top)
 
 

@@ -14,6 +14,7 @@ for kind in sampler capture; do
     --kind "$kind" --flatten-for-lvs --output "/work/$kind-lvs.spice"
   python3 /src/clock_pulse/generate_pulse_layout.py \
     --source "/work/$kind.spice" --top "$top" \
+    --phase-y-shift 72 \
     --output "/work/$kind-layout.tcl"
   magic -dnull -noconsole -rcfile "$PDKPATH/libs.tech/magic/$PDK.magicrc" \
     "/work/$kind-layout.tcl" > "/work/$kind-layout.log" 2>&1

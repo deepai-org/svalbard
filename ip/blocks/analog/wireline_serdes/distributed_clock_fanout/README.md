@@ -39,10 +39,18 @@ extracted event and lane parents. This is the TT/SS-hot electrical admission
 gate for a routed distributed parent; the wrapper explicitly makes no placed-
 interconnect claim.
 
-The corrected v2 exact screen passes 2/2. TT has at least 206.6 ps high and
-221.1 ps low rail-valid time. SS/125 C has at least 193.2 ps high and 165.0 ps
+The compact 72-um-pitch v2 exact screen passes 2/2. TT has at least 209.5 ps
+high and 225.0 ps low rail-valid time. SS/125 C has at least 196.2 ps high and 169.2 ps
 low; held-data differential is at least 2.806 V and maximum current is
-113.1 mA. The slow/hot low interval therefore has 15.0 ps margin to the 150 ps
+113.3 mA. The slow/hot low interval therefore has 19.2 ps margin to the 150 ps
 contract. `composed_screen_checkpoint.json` retains the exact PEX identities
 and limiting measurements. This authorizes a compact routed-parent attempt,
 not expansion to five PVT environments yet.
+
+Publishing exact MAG pins also exposed the next partition boundary: an entire
+sampler branch still overlaps the receiver banks when its output is aligned to
+the StrongARM gate. The routed parent must therefore split the 6x/16x
+predriver from the 32x final inverter (and the 4x from the 8x capture final),
+placing only the final stage at the consumer. The compact whole-branch result
+is the electrical reference for that cut, not a claim that parent placement is
+already feasible.

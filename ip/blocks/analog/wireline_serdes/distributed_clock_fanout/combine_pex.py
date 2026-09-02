@@ -28,9 +28,12 @@ if leaf["branches"]["capture"]["identity"]["pex_sha256"] != digest(args.capture)
 wrapper = """
 .subckt local_clock_fanout_pex CLKP_H CLKP_HB CLKN_H CLKN_HB VDD VSS
 + E_SENSE E_CAPTURE_CLK E_CAPTURE_CLKB O_SENSE O_CAPTURE_CLK O_CAPTURE_CLKB
-XS CLKP_HB CLKN_HB VDD VSS E_SENSE O_SENSE distributed_sampler_pair_pex
-XC CLKP_H CLKN_H VDD VSS E_CAPTURE_CLK O_CAPTURE_CLK distributed_capture_pair_pex
-XCB CLKP_HB CLKN_HB VDD VSS E_CAPTURE_CLKB O_CAPTURE_CLKB distributed_capture_pair_pex
+XSE CLKP_HB 0 VDD VSS E_SENSE NCD0 distributed_sampler_branch_pex
+XSO CLKN_HB 0 VDD VSS O_SENSE NCD1 distributed_sampler_branch_pex
+XCE CLKP_H 0 VDD VSS E_CAPTURE_CLK NCD2 distributed_capture_branch_pex
+XCO CLKN_H 0 VDD VSS O_CAPTURE_CLK NCD3 distributed_capture_branch_pex
+XCBE CLKP_HB 0 VDD VSS E_CAPTURE_CLKB NCD4 distributed_capture_branch_pex
+XCBO CLKN_HB 0 VDD VSS O_CAPTURE_CLKB NCD5 distributed_capture_branch_pex
 .ends local_clock_fanout_pex
 """
 args.output.write_text(args.sampler.read_text() + "\n" + args.capture.read_text() + wrapper)

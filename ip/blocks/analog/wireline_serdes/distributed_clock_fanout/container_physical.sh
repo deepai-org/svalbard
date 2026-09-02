@@ -4,9 +4,9 @@ cd /work
 
 for kind in sampler capture; do
   if [[ "$kind" == sampler ]]; then
-    top=distributed_sampler_pair
+    top=distributed_sampler_branch
   else
-    top=distributed_capture_pair
+    top=distributed_capture_branch
   fi
   python3 /src/distributed_clock_fanout/compile_branch.py \
     --kind "$kind" --output "/work/$kind.spice"

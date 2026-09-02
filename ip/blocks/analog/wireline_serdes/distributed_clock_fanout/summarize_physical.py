@@ -51,7 +51,7 @@ result = {
     "schema_version": 1,
     "claim": "distributed_clock_fanout_branch_physical_legality",
     "source_revision": SOURCE_REVISION,
-    "physical_intent": "three pair macros placed beside their consumers; remote nets terminate only on first-stage gates",
+    "physical_intent": "six functional branch macros placed beside their consumers; remote nets terminate only on first-stage gates",
     "branches": branches,
     "result": "pass",
     "not_a_claim": ["placed parent", "composed PEX timing", "PCIe compliance"],

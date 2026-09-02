@@ -564,16 +564,19 @@ same schematic gate and is recorded in
 Physical extraction does not yet preserve that result. The retained v7 layout
 puts START inversion beside its restorer, END inversion beside its restorer,
 and SETB/RESETB/Q/QB together in the timing lane; only full-duty QB crosses to
-the SENSE lane. The 232-device, 432.6-um parent is zero-DRC, uniquely
-LVS-equivalent, and extracts to 6,720 resistors plus 4,931 capacitors. Exact
-composition remains 0/2. RESETB is valid at slow/hot, but SETB reaches only
-1.119/1.514 V low, QB only 0.431/0.283 V high, and final SENSE stays low.
+the SENSE lane. The retained fourfold-SET experiment is a 232-device,
+442.2-um parent, is zero-DRC, uniquely LVS-equivalent, and extracts to 6,948
+resistors plus 5,069 capacitors. Exact composition remains 0/2. RESETB is
+valid at slow/hot, and stronger SET drive improves SETB from 1.119/1.514 V to
+0.342/0.582 V low, but QB reaches only 2.185/1.553 V high and final SENSE stays
+low. Added SET capacitance also removes a complete TT valid-low interval.
 The [physical record](capture_start_end_sr_physical.json),
 [exact composition](capture_start_end_sr_lane_result.json), and
 [review render](../../../../../docs/images/pcie-event-capture-start-end-sr-layout.png)
-are retained. The next bounded experiment combines this timing-lane placement
-with the already-screened stronger SETB pull-down; if that does not close, the
-short SET event must be replaced by a transported full-duty state.
+are retained. This closes routed narrow-SET transport as negative evidence.
+The next circuit must put START/END-controlled write devices directly inside a
+compact static latch so only full-duty states cross into the cell and no narrow
+SETB or RESETB net is routed.
 
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail

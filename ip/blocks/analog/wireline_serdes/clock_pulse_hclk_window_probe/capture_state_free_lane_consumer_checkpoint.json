@@ -80,16 +80,16 @@
     "set_strength_screen_sha256": "bdedf01f5b596272c60c7a47890b215ae703a0f46cdb8d414d6c5a78d6b88e2c",
     "physical_source_revision": "retimed_capture_owned_start_end_sr_v7_timing_lane_core",
     "physical_device_count": 232,
-    "physical_width_um": 432.6,
+    "physical_width_um": 442.2,
     "physical_drc": "pass",
     "physical_lvs": "pass_unique",
-    "physical_pex_resistor_count": 6720,
-    "physical_pex_capacitor_count": 4931,
-    "physical_result_sha256": "532aea370878ec645cede128c4b2de8d8662ceffe7376f2e762669a02254cc68",
-    "composition_result_sha256": "65dfb875e656f0032db11a2cc3f474ad49e0d989c8736058b956c0ff18aac9df",
+    "physical_pex_resistor_count": 6948,
+    "physical_pex_capacitor_count": 5069,
+    "physical_result_sha256": "48d8c5b32b5925f03e4618ca00796486de571b6a814f2310839d32f69f1504c6",
+    "composition_result_sha256": "6dccd998e4fe91bebab99d74dc34dfc94b6dbde4bdc3385fc52d3fa63670ac34",
     "composition_result": "fail_0_of_2",
-    "localization": "RESETB is valid at slow/hot, but SETB falls only to 1.119/1.514 V; QB reaches only 0.431/0.283 V high and SENSE remains low. Moving the state core into the timing lane improves SETB versus the generic placement but does not close it.",
-    "decision": "retain as the first independently timed, fully physical SR checkpoint; do not claim functional PEX closure"
+    "localization": "With timing-lane placement and set_mult=8, RESETB remains valid and slow/hot SETB improves to 0.342/0.582 V, but QB reaches only 2.185/1.553 V high and SENSE remains low. Added SET capacitance also leaves TT without a complete valid-low interval.",
+    "decision": "reject routed narrow-SET transport after the bounded placement-plus-strength experiment; retain as fully physical negative evidence and replace SETB with local latch write devices controlled only by full-duty states"
   },
   "localization": {
     "schematic_buffer_tt": "all event-source and lane-side interface rails pass",
@@ -104,8 +104,8 @@
     "physical_v4_ss_hot_lane_sense_low_v": [2.086, 2.214],
     "physical_v4_failure": "TT narrowly misses the 250-mV rail screen; slow/hot pulse reaches the event source but is not restored through the two-stage physical buffer"
   },
-  "decision": "independent set/reset semantics close the limiting schematic composition, but exact physical extraction localizes the remaining failure to the short SETB event rather than the interface taper",
-  "next_boundary": "screen one bounded combination of timing-lane placement and stronger SETB pull-down, then physically lower only if the unchanged TT/slow-hot schematic contract passes; otherwise replace narrow SETB transport with a full-duty set state",
+  "decision": "independent set/reset semantics close the limiting schematic composition, but both bounded physical remedies prove that transporting a narrow SETB event is not robust enough",
+  "next_boundary": "integrate START/END-controlled write devices directly into a compact static latch so only full-duty states enter the cell and no narrow set/reset net is routed",
   "not_a_claim": [
     "routed event-to-lane parent", "dynamic PRBS capture under generated clocks",
     "five-environment closure", "closed CDR or PCIe compliance",

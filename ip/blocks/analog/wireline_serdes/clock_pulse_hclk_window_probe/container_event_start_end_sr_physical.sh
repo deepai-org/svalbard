@@ -2,7 +2,7 @@
 set -euo pipefail
 python3 /src/clock_pulse_hclk_window_probe/test_event_start_end_sr_physical.py
 python3 /src/clock_pulse_hclk_window_probe/compile_event_capture_state_free_sr_source.py \
-  --latch-mult 2 --pre-mult 4 --output-mult 8 --set-mult 2 \
+  --latch-mult 2 --pre-mult 4 --output-mult 8 --set-mult 8 \
   --output /work/retimed_event_capture_bridge.spice
 python3 /src/clock_pulse/generate_pulse_layout.py \
   --source /work/retimed_event_capture_bridge.spice \

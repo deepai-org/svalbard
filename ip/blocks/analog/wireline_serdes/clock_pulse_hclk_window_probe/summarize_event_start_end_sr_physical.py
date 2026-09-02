@@ -34,7 +34,7 @@ result = {
     "source_revision": compiler.SOURCE_REVISION,
     "selected_candidate": {
         "latch_mult": 2, "pre_mult": 4, "output_mult": 8,
-        "set_mult": 2,
+        "set_mult": 8,
         "control_id": "sense1_interval1_epoch0",
     },
     "drc_stage_result": "pass",

@@ -16,7 +16,7 @@ class StartEndSrPhysicalTest(unittest.TestCase):
     def test_selected_identity_flattens_for_layout(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             source = Path(directory) / "source.spice"
-            source.write_text(compiler.compile_source(2, 4, 8))
+            source.write_text(compiler.compile_source(2, 4, 8, set_mult=8))
             devices, groups = flatten(parse(source), compiler.TOP)
             _, group_x = place(devices, groups)
         names = set(groups)

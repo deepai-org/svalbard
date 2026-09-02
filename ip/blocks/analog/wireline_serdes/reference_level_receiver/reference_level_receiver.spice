@@ -7,15 +7,18 @@ XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
 
 .subckt reference_level_receiver IN REF VBIAS VDD VSS OUTP OUTN
 * Small matched input pair: 8x less signal-gate width than clock_level_converter.
-XIS N1 IN TAIL VSS nfet_03v3 w=4u l=0.28u m=1
-XIR N2 REF TAIL VSS nfet_03v3 w=4u l=0.28u m=1
-XTAIL TAIL VBIAS VSS VSS nfet_03v3 w=6u l=0.28u m=2
-XPL N1 N1 VDD VDD pfet_03v3 w=4u l=0.28u m=1
-XPR N2 N1 VDD VDD pfet_03v3 w=4u l=0.28u m=1
-* N2 follows IN>REF.  A minimum-load isolation stage preserves mirror gain;
-* the following taper provides both output polarities.
-XISO N2 A VDD VSS rlr_inv WP=2u WN=1u MP=1 MN=1
-XGAIN A MIDP VDD VSS rlr_inv WP=6u WN=3u MP=1 MN=1
-XNEG MIDP OUTN VDD VSS rlr_inv WP=12u WN=6u MP=1 MN=1
-XPOS OUTN OUTP VDD VSS rlr_inv WP=13u WN=6u MP=1 MN=1
+XDNL VSS VSS VSS VSS nfet_03v3 w=8u l=0.28u m=1
+XIS N1 IN TAIL VSS nfet_03v3 w=8u l=0.28u m=1
+XIR N2 REF TAIL VSS nfet_03v3 w=8u l=0.28u m=1
+XDNR VSS VSS VSS VSS nfet_03v3 w=8u l=0.28u m=1
+XTAIL TAIL VBIAS VSS VSS nfet_03v3 w=12u l=0.28u m=2
+XPL N1 N1 VDD VDD pfet_03v3 w=8u l=0.28u m=1
+XPR N2 N1 VDD VDD pfet_03v3 w=8u l=0.28u m=1
+XDPL VDD VDD VDD VDD pfet_03v3 w=8u l=0.28u m=1
+XDPR VDD VDD VDD VDD pfet_03v3 w=8u l=0.28u m=1
+* N2 follows IN>REF.  A restoration taper provides both output polarities.
+XISO N2 A VDD VSS rlr_inv WP=4u WN=2u MP=1 MN=1
+XGAIN A MIDP VDD VSS rlr_inv WP=12u WN=6u MP=1 MN=1
+XNEG MIDP OUTN VDD VSS rlr_inv WP=8u WN=6u MP=2 MN=1
+XPOS OUTN OUTP VDD VSS rlr_inv WP=8u WN=6u MP=2 MN=1
 .ends reference_level_receiver

@@ -404,46 +404,29 @@ XCAP FE_E_P FE_E_N FE_O_P FE_O_N E_CAPTURE_CLK E_CAPTURE_CLKB
 .ends lane_rx_regenerative_capture
 * end resolved include: lane_rx_regenerative_capture/lane_rx_regenerative_capture.spice
 * SPDX-License-Identifier: Apache-2.0
-* Symmetric regenerative CML-clock to CMOS-clock converter.
-.subckt clock_level_converter INP INN VBIAS VDD VSS OUTP OUTN
-XDNL VSS VSS VSS VSS nfet_03v3 w=8u l=0.28u m=2
-XDNR VSS VSS VSS VSS nfet_03v3 w=8u l=0.28u m=2
-XDPL VDD VDD VDD VDD pfet_03v3 w=4u l=0.28u m=2
-XDPR VDD VDD VDD VDD pfet_03v3 w=4u l=0.28u m=2
+* Low-input-capacitance single-ended threshold receiver for routed clock/event nodes.
+.subckt event_level__rlr_inv A Y VDD VSS params: WP=4u WN=2u MP=1 MN=1
+XP Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+.ends event_level__rlr_inv
 
-* Two input-swapped differential receivers keep CML loading symmetric.
-XAPN AP INP TP VSS nfet_03v3 w=8u l=0.28u m=2
-XADN AD INN TP VSS nfet_03v3 w=8u l=0.28u m=2
-XATP TP VBIAS VSS VSS nfet_03v3 w=10u l=0.28u m=4
-XADP AD AD VDD VDD pfet_03v3 w=4u l=0.28u m=2
-XAPP AP AD VDD VDD pfet_03v3 w=4u l=0.28u m=2
-XANN AN INN TN VSS nfet_03v3 w=8u l=0.28u m=2
-XBDN BD INP TN VSS nfet_03v3 w=8u l=0.28u m=2
-XATN TN VBIAS VSS VSS nfet_03v3 w=10u l=0.28u m=4
-XBDP BD BD VDD VDD pfet_03v3 w=4u l=0.28u m=2
-XANP AN BD VDD VDD pfet_03v3 w=4u l=0.28u m=2
-
-* A deliberately weak, symmetric cross-coupled pair reinforces the two mirror
-* outputs after the input stages establish their polarity.
-XFPAP AP AN VDD VDD pfet_03v3 w=3u l=0.28u m=1
-XFNAP AP AN VSS VSS nfet_03v3 w=1u l=0.28u m=1
-XFPAN AN AP VDD VDD pfet_03v3 w=3u l=0.28u m=1
-XFNAN AN AP VSS VSS nfet_03v3 w=1u l=0.28u m=1
-
-* Isolation stages keep high-impedance mirror-node capacitance small.
-XAPP1 AB AP VDD VDD pfet_03v3 w=4u l=0.28u m=1
-XAPN1 AB AP VSS VSS nfet_03v3 w=2u l=0.28u m=1
-XANP1 NB AN VDD VDD pfet_03v3 w=4u l=0.28u m=1
-XANN1 NB AN VSS VSS nfet_03v3 w=2u l=0.28u m=1
-XAMP AC AB VDD VDD pfet_03v3 w=8u l=0.28u m=1
-XAMN AC AB VSS VSS nfet_03v3 w=4u l=0.28u m=1
-XNMP NC NB VDD VDD pfet_03v3 w=8u l=0.28u m=1
-XNMN NC NB VSS VSS nfet_03v3 w=4u l=0.28u m=1
-XOPP OUTP AC VDD VDD pfet_03v3 w=12u l=0.28u m=2
-XOPN OUTP AC VSS VSS nfet_03v3 w=6u l=0.28u m=2
-XONP OUTN NC VDD VDD pfet_03v3 w=12u l=0.28u m=2
-XONN OUTN NC VSS VSS nfet_03v3 w=6u l=0.28u m=2
-.ends clock_level_converter
+.subckt reference_level_receiver IN REF VBIAS VDD VSS OUTP OUTN
+* Small matched input pair: 8x less signal-gate width than clock_level_converter.
+XDNL VSS VSS VSS VSS nfet_03v3 w=8u l=0.28u m=1
+XIS N1 IN TAIL VSS nfet_03v3 w=8u l=0.28u m=1
+XIR N2 REF TAIL VSS nfet_03v3 w=8u l=0.28u m=1
+XDNR VSS VSS VSS VSS nfet_03v3 w=8u l=0.28u m=1
+XTAIL TAIL VBIAS VSS VSS nfet_03v3 w=12u l=0.28u m=2
+XPL N1 N1 VDD VDD pfet_03v3 w=8u l=0.28u m=1
+XPR N2 N1 VDD VDD pfet_03v3 w=8u l=0.28u m=1
+XDPL VDD VDD VDD VDD pfet_03v3 w=8u l=0.28u m=1
+XDPR VDD VDD VDD VDD pfet_03v3 w=8u l=0.28u m=1
+* N2 follows IN>REF.  A restoration taper provides both output polarities.
+XISO N2 A VDD VSS event_level__rlr_inv WP=4u WN=2u MP=1 MN=1
+XGAIN A MIDP VDD VSS event_level__rlr_inv WP=12u WN=6u MP=1 MN=1
+XNEG MIDP OUTN VDD VSS event_level__rlr_inv WP=8u WN=6u MP=2 MN=1
+XPOS OUTN OUTP VDD VSS event_level__rlr_inv WP=8u WN=6u MP=2 MN=1
+.ends reference_level_receiver
 
 * Namespace-safe composed transistor intent. Regenerative and BOOST controls
 * remain explicit so package-level calibration or static straps are realizable.
@@ -461,13 +444,13 @@ XFANOUT E_CLK E_CLKB O_CLK O_CLKB VDD VSS
 * Each independently timed weak node is compared with an explicit reference;
 * complementary outputs are generated locally rather than assumed upstream.
 XLEVEL_SE E_SENSE_PRE LEVEL_REF LEVEL_BIAS VDD VSS
-+ E_SENSE E_SENSE_UNUSED clock_level_converter
++ E_SENSE E_SENSE_UNUSED reference_level_receiver
 XLEVEL_SO O_SENSE_PRE LEVEL_REF LEVEL_BIAS VDD VSS
-+ O_SENSE O_SENSE_UNUSED clock_level_converter
++ O_SENSE O_SENSE_UNUSED reference_level_receiver
 XLEVEL_E E_CAPTURE_CLK_PRE LEVEL_REF LEVEL_BIAS VDD VSS
-+ E_CAPTURE_CLK E_CAPTURE_CLKB clock_level_converter
++ E_CAPTURE_CLK E_CAPTURE_CLKB reference_level_receiver
 XLEVEL_O O_CAPTURE_CLK_PRE LEVEL_REF LEVEL_BIAS VDD VSS
-+ O_CAPTURE_CLK O_CAPTURE_CLKB clock_level_converter
++ O_CAPTURE_CLK O_CAPTURE_CLKB reference_level_receiver
 XLANE RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N
 + TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N
 + E_SENSE E_REGEN_CLK E_REGEN_CLKB E_CAPTURE_CLK E_CAPTURE_CLKB E_SENSE_BOOST

@@ -19,8 +19,10 @@ MEASURE = re.compile(r"^(\w+)\s*=\s*([-+0-9.eE]+)", re.MULTILINE)
 CONTROL = {"id": "sense1_interval0_epoch0", "sense": 1, "interval": 0, "epoch": 0}
 PHASES = (("e", "FE_E_P", "FE_E_N", "EVEN_Q", "EVEN_QB", "12.55n"),
           ("o", "FE_O_P", "FE_O_N", "ODD_Q", "ODD_QB", "12.75n"))
-LEVEL_BIAS_V = {"tt": 1.15, "ff_cold": 1.15, "ff_hot": 1.15,
-                "ss_hot": 1.00, "ss_cold": 1.15}
+# Selected from the physical reference-level receiver's retained six-code
+# calibration set.  These are realizable shared bias values, not fitted ideals.
+LEVEL_BIAS_V = {"tt": 1.20, "ff_cold": 1.00, "ff_hot": 0.90,
+                "ss_hot": 1.08, "ss_cold": 1.20}
 
 
 def digest(path: Path) -> str:

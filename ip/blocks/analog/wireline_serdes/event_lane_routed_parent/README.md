@@ -1,7 +1,7 @@
 # Routed event-to-lane parent
 
 This boundary composes the selected event generator, V7 local clock fanout,
-four reference-driven differential level converters, and direct-regenerative
+four reference-driven non-regenerative level receivers, and direct-regenerative
 RX/capture as one namespace-safe transistor-intent source. `compile_source.py`
 resolves the include closure, preserves only the public leaf tops, and
 deterministically namespaces every internal subcircuit before adding parent
@@ -22,7 +22,7 @@ The routed parent now has promoted physical-legality evidence:
 - unique LVS against the compiled transistor intent;
 - distinct VDD and VSS networks;
 - all six fanout-to-lane signal routes physically present; and
-- full-RC extraction with 17,042 resistors and 10,803 capacitors.
+- full-RC extraction with 16,172 resistors and 10,247 capacitors.
 
 The immutable record is `physical_result.json`; the retained source,
 `event_lane_routed_parent.pex.spice`, and the rendered layout are tied to it by
@@ -90,11 +90,28 @@ isolated fanout value; complementary capture clocks are the largest relative
 load increase.  The monolithic fanout at the left of the lane and long
 parent-owned routes are therefore the first causal boundary.
 
-The v4 parent gives four independently timed weak nodes their own converter and
+The v4 parent gave four independently timed weak nodes their own converter and
 an explicit `LEVEL_REF`.  It is zero-DRC, uniquely LVS-matched, and full-RC
 extracted to 17,042R/10,803C.  Its complete hash-bound TT PRBS run still fails:
 the reused CML converters remain fixed even with a static reference because
-their large regenerative input presents excessive load to the fanout.  A new
-4-µm-input, non-regenerative `reference_level_receiver` now passes 5/5
-schematic PVT cases.  It must next receive DRC/LVS/PEX closure and replace the
-four converter instances before another parent PRBS claim is attempted.
+their large regenerative input presents excessive load to the fanout.  The
+replacement non-regenerative `reference_level_receiver` is zero-DRC,
+uniquely LVS-matched, parameter-audited, 327R/128C full-RC extracted, and covers
+5/5 PVT environments with a six-code bias set.
+
+The v5 parent replaces all four converter instances without changing the
+published footprint or pin accesses.  It is zero-DRC, uniquely LVS-matched,
+and extracts to 16,172R/10,247C.  The exact ten-sample TT PRBS run at the
+leaf-qualified 1.20 V bias code nevertheless fails with no common or
+independent passing latency.  The event sources remain healthy (39--121 mV
+lows and 3.125--3.135 V highs), and receiver inputs reach 0.556--3.247 V, but
+capture-clock receiver OUTN rises only to 0.858/0.918 V and OUTP remains above
+3.083 V.  Both capture outputs consequently remain fixed near 3.01 V
+differential.  The retained `dynamic_tt_screen_result.json` is hash-bound v5
+falsification evidence; `dynamic_tt_v5_bias1p08_result.json` retains the same
+failure at the adjacent 1.08 V code, while `dynamic_tt_v4_result.json`
+preserves the previous topology's result.
+
+The next receiver contract must include the parent-observed assertion duration
+and routed source impedance, then requalify leaf and parent.  Standalone
+voltage-extrema coverage is not sufficient for this pulse interface.

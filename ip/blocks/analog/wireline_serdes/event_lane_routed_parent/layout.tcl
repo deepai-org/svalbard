@@ -89,13 +89,13 @@ getcell local_clock_fanout child 0 0 parent -410 0
 identify XFANOUT
 getcell lane_rx_regenerative_capture child 0 0 parent 0 0
 identify XLANE
-getcell clock_level_converter child 0 0 parent -500 375
+getcell reference_level_receiver child 0 0 parent -500 375
 identify XLEVEL_SE
-getcell clock_level_converter child 0 0 parent -660 375
+getcell reference_level_receiver child 0 0 parent -660 375
 identify XLEVEL_SO
-getcell clock_level_converter child 0 0 parent -140 375
+getcell reference_level_receiver child 0 0 parent -140 375
 identify XLEVEL_E
-getcell clock_level_converter child 0 0 parent 20 375
+getcell reference_level_receiver child 0 0 parent 20 375
 identify XLEVEL_O
 select top cell
 load event_lane_routed_parent_hier

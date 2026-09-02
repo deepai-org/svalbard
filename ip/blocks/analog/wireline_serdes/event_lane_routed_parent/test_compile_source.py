@@ -17,7 +17,7 @@ class RoutedParentSourceTest(unittest.TestCase):
         self.assertEqual(source.count(f".subckt {compiler.EVENT_TOP} "), 1)
         self.assertEqual(source.count(f".subckt {compiler.FANOUT_TOP} "), 1)
         self.assertEqual(source.count(f".subckt {compiler.LANE_TOP} "), 1)
-        self.assertEqual(source.count(".subckt clock_level_converter "), 1)
+        self.assertEqual(source.count(".subckt reference_level_receiver "), 1)
         self.assertIn(".subckt event__cp_inv ", source)
         self.assertIn(".subckt fanout__cp_inv ", source)
         self.assertNotIn(".subckt cp_inv ", source)

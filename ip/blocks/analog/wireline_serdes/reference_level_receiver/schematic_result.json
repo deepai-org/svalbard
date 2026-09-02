@@ -1,182 +1,1146 @@
 {
+  "biases_v": [
+    0.85,
+    0.9,
+    1.0,
+    1.08,
+    1.2,
+    1.4
+  ],
+  "calibration_windows": {
+    "ff_cold": {
+      "maximum_v": 1.4,
+      "minimum_v": 0.85,
+      "passing_biases_v": [
+        0.85,
+        0.9,
+        1.0,
+        1.08,
+        1.2,
+        1.4
+      ],
+      "result": "pass"
+    },
+    "ff_hot": {
+      "maximum_v": 1.08,
+      "minimum_v": 0.85,
+      "passing_biases_v": [
+        0.85,
+        0.9,
+        1.0,
+        1.08
+      ],
+      "result": "pass"
+    },
+    "ss_cold": {
+      "maximum_v": 1.4,
+      "minimum_v": 1.08,
+      "passing_biases_v": [
+        1.08,
+        1.2,
+        1.4
+      ],
+      "result": "pass"
+    },
+    "ss_hot": {
+      "maximum_v": 1.2,
+      "minimum_v": 1.0,
+      "passing_biases_v": [
+        1.0,
+        1.08,
+        1.2
+      ],
+      "result": "pass"
+    },
+    "tt": {
+      "maximum_v": 1.4,
+      "minimum_v": 0.9,
+      "passing_biases_v": [
+        0.9,
+        1.0,
+        1.08,
+        1.2,
+        1.4
+      ],
+      "result": "pass"
+    }
+  },
   "case_count": 5,
-  "cases": [
+  "claim": "single_ended_reference_schematic_pvt_programmable_bias",
+  "covered_case_count": 5,
+  "dut_sha256": "c241826be3b8b6dc4d17e9dc80fd3abbcabf50161e30a5373d1b526abefc2e71",
+  "result": "pass",
+  "runs": [
     {
-      "case_id": "tt",
-      "complement_skew_limit_s": 2e-10,
-      "complete": true,
-      "duty_cycle": 0.5004749999999999,
-      "environment": [
-        "typical",
-        3.3,
-        27
+      "case_count": 5,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.675125,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "fall_complement_skew_s": 1.0133000000000052e-10,
+          "fall_delay_s": -3.035099999999999e-10,
+          "input_high_v": 3.0,
+          "input_low_v": 0.8,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.47915e-09,
+            "outn_high": 3.28143,
+            "outn_low": -0.0445515,
+            "outn_rise": 4.21016e-09,
+            "outp_fall": 4.31149e-09,
+            "outp_high": 3.35866,
+            "outp_low": 0.0134602,
+            "outp_rise": 4.57139e-09,
+            "outp_rise_next": 5.37139e-09,
+            "supply_current": 0.00186854
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "fail",
+          "rise_complement_skew_s": 9.22400000000005e-11,
+          "rise_delay_s": 3.5639000000000026e-10
+        },
+        {
+          "case_id": "ff_cold",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.5865249999999999,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "fall_complement_skew_s": 7.314000000000002e-11,
+          "fall_delay_s": 3.225999999999997e-10,
+          "input_high_v": 3.0,
+          "input_low_v": 0.8,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.4041e-09,
+            "outn_high": 3.69272,
+            "outn_low": -0.0416867,
+            "outn_rise": 4.06446e-09,
+            "outp_fall": 4.1376e-09,
+            "outp_high": 3.68556,
+            "outp_low": -0.0363911,
+            "outp_rise": 4.46838e-09,
+            "outp_rise_next": 5.26838e-09,
+            "supply_current": 0.00228694
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 6.428000000000053e-11,
+          "rise_delay_s": 2.533800000000002e-10
+        },
+        {
+          "case_id": "ff_hot",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.5164874999999995,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "fall_complement_skew_s": 1.0711999999999994e-10,
+          "fall_delay_s": -3.9772000000000057e-10,
+          "input_high_v": 2.55,
+          "input_low_v": 1.1,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.50715e-09,
+            "outn_high": 3.00652,
+            "outn_low": -0.0224192,
+            "outn_rise": 4.11016e-09,
+            "outp_fall": 4.21728e-09,
+            "outp_high": 3.01184,
+            "outp_low": -0.0262627,
+            "outp_rise": 4.60409e-09,
+            "outp_rise_next": 5.40409e-09,
+            "supply_current": 0.00211391
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 9.693999999999987e-11,
+          "rise_delay_s": 3.8908999999999995e-10
+        },
+        {
+          "case_id": "ss_hot",
+          "complement_skew_limit_s": 2e-10,
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "fall_complement_skew_s": 0,
+          "fall_delay_s": -4.615e-09,
+          "input_high_v": 2.45,
+          "input_low_v": 1.2,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_high": 1.41243,
+            "outn_low": -0.0457033,
+            "outp_high": 3.02475,
+            "outp_low": 2.77719,
+            "supply_current": 0.000843445
+          },
+          "period_s": 0,
+          "result": "fail",
+          "rise_complement_skew_s": 0,
+          "rise_delay_s": -4.215e-09
+        },
+        {
+          "case_id": "ss_cold",
+          "complement_skew_limit_s": 2e-10,
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "fall_complement_skew_s": 0,
+          "fall_delay_s": -4.615e-09,
+          "input_high_v": 2.45,
+          "input_low_v": 1.2,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_high": 3.9987e-05,
+            "outn_low": -1.97137e-05,
+            "outp_high": 3.63,
+            "outp_low": 3.63,
+            "supply_current": 7.17962e-05
+          },
+          "period_s": 0,
+          "result": "fail",
+          "rise_complement_skew_s": 0,
+          "rise_delay_s": -4.215e-09
+        }
       ],
-      "fall_complement_skew_s": 1.0357000000000071e-10,
-      "fall_delay_s": 3.9613999999999983e-10,
-      "input_high_v": 3.0,
-      "input_low_v": 0.8,
-      "observed": {
-        "inp_fall": 4.615e-09,
-        "inp_rise": 4.215e-09,
-        "outn_fall": 4.50604e-09,
-        "outn_high": 3.32667,
-        "outn_low": -0.0287197,
-        "outn_rise": 4.10757e-09,
-        "outp_fall": 4.21114e-09,
-        "outp_high": 3.33887,
-        "outp_low": -0.0327125,
-        "outp_rise": 4.61076e-09,
-        "outp_rise_next": 5.41076e-09,
-        "supply_current": 0.0017633
+      "claim": "single_ended_reference_to_rail_cmos_schematic_pvt",
+      "input_mode": "single_ended_reference",
+      "load_f_per_output": 1e-13,
+      "passing_case_count": 2,
+      "result": "fail",
+      "schema_version": 1,
+      "source_sha256": {
+        "dut": "c241826be3b8b6dc4d17e9dc80fd3abbcabf50161e30a5373d1b526abefc2e71",
+        "runner": "437e4686897d74e37477d9df29aa0e12f15de94cc92e389d0d5e938915718807",
+        "testbench": "cd3d6086bb1f3fa7d504420e586cded06ff088272771d7c5ae57caec31d847c4"
       },
-      "period_s": 7.999999999999997e-10,
-      "result": "pass",
-      "rise_complement_skew_s": 1.0472000000000003e-10,
-      "rise_delay_s": 3.957600000000003e-10
+      "vbias_v": 0.85
     },
     {
-      "case_id": "ff_cold",
-      "complement_skew_limit_s": 2e-10,
-      "complete": true,
-      "duty_cycle": 0.5042875000000009,
-      "environment": [
-        "ff",
-        3.63,
-        -40
+      "case_count": 5,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.6121999999999994,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "fall_complement_skew_s": 1.0130000000000005e-10,
+          "fall_delay_s": -3.524900000000003e-10,
+          "input_high_v": 3.0,
+          "input_low_v": 0.8,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.47998e-09,
+            "outn_high": 3.33226,
+            "outn_low": -0.0454964,
+            "outn_rise": 4.16121e-09,
+            "outp_fall": 4.26251e-09,
+            "outp_high": 3.35879,
+            "outp_low": -0.0265833,
+            "outp_rise": 4.57275e-09,
+            "outp_rise_next": 5.37275e-09,
+            "supply_current": 0.00195564
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 9.27700000000007e-11,
+          "rise_delay_s": 3.5775000000000034e-10
+        },
+        {
+          "case_id": "ff_cold",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.5569875000000011,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "fall_complement_skew_s": 7.314000000000002e-11,
+          "fall_delay_s": 2.9827000000000046e-10,
+          "input_high_v": 3.0,
+          "input_low_v": 0.8,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.4034e-09,
+            "outn_high": 3.69337,
+            "outn_low": -0.0427955,
+            "outn_rise": 4.04013e-09,
+            "outp_fall": 4.11327e-09,
+            "outp_high": 3.68574,
+            "outp_low": -0.0365771,
+            "outp_rise": 4.46768e-09,
+            "outp_rise_next": 5.26768e-09,
+            "supply_current": 0.00239965
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 6.42799999999997e-11,
+          "rise_delay_s": 2.526799999999996e-10
+        },
+        {
+          "case_id": "ff_hot",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.4935874999999995,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "fall_complement_skew_s": 1.0708999999999947e-10,
+          "fall_delay_s": 3.908599999999992e-10,
+          "input_high_v": 2.55,
+          "input_low_v": 1.1,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.51403e-09,
+            "outn_high": 3.00961,
+            "outn_low": -0.0172885,
+            "outn_rise": 4.09877e-09,
+            "outp_fall": 4.20586e-09,
+            "outp_high": 3.00968,
+            "outp_low": -0.0281627,
+            "outp_rise": 4.61099e-09,
+            "outp_rise_next": 5.41099e-09,
+            "supply_current": 0.00221387
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 9.695999999999963e-11,
+          "rise_delay_s": 3.9599e-10
+        },
+        {
+          "case_id": "ss_hot",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.769375,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "fall_complement_skew_s": 1.5642999999999963e-10,
+          "fall_delay_s": -1.1461000000000029e-10,
+          "input_high_v": 2.45,
+          "input_low_v": 1.2,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.58681e-09,
+            "outn_high": 2.60959,
+            "outn_low": -0.039996,
+            "outn_rise": 4.34396e-09,
+            "outp_fall": 4.50039e-09,
+            "outp_high": 3.0273,
+            "outp_low": 0.813981,
+            "outp_rise": 4.68489e-09,
+            "outp_rise_next": 5.48489e-09,
+            "supply_current": 0.00146018
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "fail",
+          "rise_complement_skew_s": 9.808000000000014e-11,
+          "rise_delay_s": -3.301099999999998e-10
+        },
+        {
+          "case_id": "ss_cold",
+          "complement_skew_limit_s": 2e-10,
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "fall_complement_skew_s": 0,
+          "fall_delay_s": -4.615e-09,
+          "input_high_v": 2.45,
+          "input_low_v": 1.2,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_high": 0.000152705,
+            "outn_low": -0.000516876,
+            "outp_high": 3.63003,
+            "outp_low": 3.62996,
+            "supply_current": 0.000176851
+          },
+          "period_s": 0,
+          "result": "fail",
+          "rise_complement_skew_s": 0,
+          "rise_delay_s": -4.215e-09
+        }
       ],
-      "fall_complement_skew_s": 7.43799999999999e-11,
-      "fall_delay_s": 2.798800000000005e-10,
-      "input_high_v": 3.0,
-      "input_low_v": 0.8,
-      "observed": {
-        "inp_fall": 4.615e-09,
-        "inp_rise": 4.215e-09,
-        "outn_fall": 4.41842e-09,
-        "outn_high": 3.67441,
-        "outn_low": -0.035778,
-        "outn_rise": 4.0205e-09,
-        "outp_fall": 4.09488e-09,
-        "outp_high": 3.67266,
-        "outp_low": -0.0320706,
-        "outp_rise": 4.49145e-09,
-        "outp_rise_next": 5.29145e-09,
-        "supply_current": 0.00214517
+      "claim": "single_ended_reference_to_rail_cmos_schematic_pvt",
+      "input_mode": "single_ended_reference",
+      "load_f_per_output": 1e-13,
+      "passing_case_count": 3,
+      "result": "fail",
+      "schema_version": 1,
+      "source_sha256": {
+        "dut": "c241826be3b8b6dc4d17e9dc80fd3abbcabf50161e30a5373d1b526abefc2e71",
+        "runner": "437e4686897d74e37477d9df29aa0e12f15de94cc92e389d0d5e938915718807",
+        "testbench": "cd3d6086bb1f3fa7d504420e586cded06ff088272771d7c5ae57caec31d847c4"
       },
-      "period_s": 8.000000000000005e-10,
-      "result": "pass",
-      "rise_complement_skew_s": 7.30299999999997e-11,
-      "rise_delay_s": 2.764499999999998e-10
+      "vbias_v": 0.9
     },
     {
-      "case_id": "ff_hot",
-      "complement_skew_limit_s": 2e-10,
-      "complete": true,
-      "duty_cycle": 0.36021249999999944,
-      "environment": [
-        "ff",
-        2.97,
-        125
+      "case_count": 5,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.5392500000000001,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "fall_complement_skew_s": 1.012800000000003e-10,
+          "fall_delay_s": 3.9259999999999966e-10,
+          "input_high_v": 3.0,
+          "input_low_v": 0.8,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.48332e-09,
+            "outn_high": 3.35794,
+            "outn_low": -0.0449886,
+            "outn_rise": 4.10632e-09,
+            "outp_fall": 4.2076e-09,
+            "outp_high": 3.35834,
+            "outp_low": -0.0363635,
+            "outp_rise": 4.5762e-09,
+            "outp_rise_next": 5.3762e-09,
+            "supply_current": 0.00211939
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 9.28800000000002e-11,
+          "rise_delay_s": 3.6119999999999995e-10
+        },
+        {
+          "case_id": "ff_cold",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.5207500000000002,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "fall_complement_skew_s": 7.312999999999931e-11,
+          "fall_delay_s": 2.7049999999999984e-10,
+          "input_high_v": 3.0,
+          "input_low_v": 0.8,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.40462e-09,
+            "outn_high": 3.69375,
+            "outn_low": -0.0441182,
+            "outn_rise": 4.01237e-09,
+            "outp_fall": 4.0855e-09,
+            "outp_high": 3.68584,
+            "outp_low": -0.0365453,
+            "outp_rise": 4.4689e-09,
+            "outp_rise_next": 5.2689e-09,
+            "supply_current": 0.00263488
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 6.42799999999997e-11,
+          "rise_delay_s": 2.538999999999997e-10
+        },
+        {
+          "case_id": "ff_hot",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.4486624999999993,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "fall_complement_skew_s": 1.0691e-10,
+          "fall_delay_s": 3.755999999999994e-10,
+          "input_high_v": 2.55,
+          "input_low_v": 1.1,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.53468e-09,
+            "outn_high": 3.01147,
+            "outn_low": -0.00111024,
+            "outn_rise": 4.08369e-09,
+            "outp_fall": 4.1906e-09,
+            "outp_high": 3.00159,
+            "outp_low": -0.0299686,
+            "outp_rise": 4.63167e-09,
+            "outp_rise_next": 5.43167e-09,
+            "supply_current": 0.00240678
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 9.69900000000001e-11,
+          "rise_delay_s": -3.8332999999999934e-10
+        },
+        {
+          "case_id": "ss_hot",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.5536249999999999,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "fall_complement_skew_s": 1.5448000000000007e-10,
+          "fall_delay_s": -1.9590000000000012e-10,
+          "input_high_v": 2.45,
+          "input_low_v": 1.2,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.63342e-09,
+            "outn_high": 2.92173,
+            "outn_low": 0.00666122,
+            "outn_rise": 4.26462e-09,
+            "outp_fall": 4.4191e-09,
+            "outp_high": 3.00239,
+            "outp_low": 0.0523044,
+            "outp_rise": 4.7762e-09,
+            "outp_rise_next": 5.5762e-09,
+            "supply_current": 0.00177115
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 1.427800000000002e-10,
+          "rise_delay_s": -2.3879999999999963e-10
+        },
+        {
+          "case_id": "ss_cold",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.6582499999999994,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "fall_complement_skew_s": 1.0057999999999967e-10,
+          "fall_delay_s": -2.965500000000006e-10,
+          "input_high_v": 2.45,
+          "input_low_v": 1.2,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.50085e-09,
+            "outn_high": 3.64877,
+            "outn_low": -0.0521872,
+            "outn_rise": 4.21787e-09,
+            "outp_fall": 4.31845e-09,
+            "outp_high": 3.69834,
+            "outp_low": -0.0225408,
+            "outp_rise": 4.59185e-09,
+            "outp_rise_next": 5.39185e-09,
+            "supply_current": 0.00199778
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "fail",
+          "rise_complement_skew_s": 9.099999999999979e-11,
+          "rise_delay_s": 3.7685e-10
+        }
       ],
-      "fall_complement_skew_s": 1.0585000000000042e-10,
-      "fall_delay_s": 3.8994999999999947e-10,
-      "input_high_v": 2.55,
-      "input_low_v": 1.1,
-      "observed": {
-        "inp_fall": 4.615e-09,
-        "inp_rise": 4.215e-09,
-        "outn_fall": 4.60667e-09,
-        "outn_high": 2.9898,
-        "outn_low": 0.0755011,
-        "outn_rise": 4.0991e-09,
-        "outp_fall": 4.20495e-09,
-        "outp_high": 2.86778,
-        "outp_low": -0.0261713,
-        "outp_rise": 4.71678e-09,
-        "outp_rise_next": 5.51678e-09,
-        "supply_current": 0.00183648
+      "claim": "single_ended_reference_to_rail_cmos_schematic_pvt",
+      "input_mode": "single_ended_reference",
+      "load_f_per_output": 1e-13,
+      "passing_case_count": 4,
+      "result": "fail",
+      "schema_version": 1,
+      "source_sha256": {
+        "dut": "c241826be3b8b6dc4d17e9dc80fd3abbcabf50161e30a5373d1b526abefc2e71",
+        "runner": "437e4686897d74e37477d9df29aa0e12f15de94cc92e389d0d5e938915718807",
+        "testbench": "cd3d6086bb1f3fa7d504420e586cded06ff088272771d7c5ae57caec31d847c4"
       },
-      "period_s": 7.999999999999997e-10,
-      "result": "pass",
-      "rise_complement_skew_s": 1.1011000000000015e-10,
-      "rise_delay_s": -2.982199999999994e-10
+      "vbias_v": 1.0
     },
     {
-      "case_id": "ss_hot",
-      "complement_skew_limit_s": 2e-10,
-      "complete": true,
-      "duty_cycle": 0.4573625,
-      "environment": [
-        "ss",
-        2.97,
-        125
+      "case_count": 5,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.5036250000000001,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "fall_complement_skew_s": 1.0127000000000042e-10,
+          "fall_delay_s": 3.696299999999997e-10,
+          "input_high_v": 3.0,
+          "input_low_v": 0.8,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.48883e-09,
+            "outn_high": 3.36231,
+            "outn_low": -0.042591,
+            "outn_rise": 4.08336e-09,
+            "outp_fall": 4.18463e-09,
+            "outp_high": 3.35748,
+            "outp_low": -0.0375049,
+            "outp_rise": 4.58173e-09,
+            "outp_rise_next": 5.38173e-09,
+            "supply_current": 0.00225616
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 9.289999999999996e-11,
+          "rise_delay_s": 3.6673000000000004e-10
+        },
+        {
+          "case_id": "ff_cold",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.5021625000000007,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "fall_complement_skew_s": 7.313000000000014e-11,
+          "fall_delay_s": 2.587800000000002e-10,
+          "input_high_v": 3.0,
+          "input_low_v": 0.8,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.40776e-09,
+            "outn_high": 3.69278,
+            "outn_low": -0.0444777,
+            "outn_rise": 4.80065e-09,
+            "outp_fall": 4.07378e-09,
+            "outp_high": 3.68579,
+            "outp_low": -0.0365753,
+            "outp_rise": 4.47205e-09,
+            "outp_rise_next": 5.27205e-09,
+            "supply_current": 0.00283186
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 6.428999999999958e-11,
+          "rise_delay_s": 2.5704999999999964e-10
+        },
+        {
+          "case_id": "ff_hot",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.4025749999999996,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "fall_complement_skew_s": 1.0649000000000012e-10,
+          "fall_delay_s": 3.6560999999999953e-10,
+          "input_high_v": 2.55,
+          "input_low_v": 1.1,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.56153e-09,
+            "outn_high": 3.00967,
+            "outn_low": 0.0262753,
+            "outn_rise": 4.07412e-09,
+            "outp_fall": 4.18061e-09,
+            "outp_high": 2.98285,
+            "outp_low": -0.0304938,
+            "outp_rise": 4.65855e-09,
+            "outp_rise_next": 5.45855e-09,
+            "supply_current": 0.00255054
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 9.702000000000056e-11,
+          "rise_delay_s": -3.5644999999999953e-10
+        },
+        {
+          "case_id": "ss_hot",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.4808000000000007,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "fall_complement_skew_s": 1.5268000000000035e-10,
+          "fall_delay_s": -2.3075000000000026e-10,
+          "input_high_v": 2.45,
+          "input_low_v": 1.2,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.65487e-09,
+            "outn_high": 2.96987,
+            "outn_low": 0.050162,
+            "outn_rise": 4.23157e-09,
+            "outp_fall": 4.38425e-09,
+            "outp_high": 2.95793,
+            "outp_low": -0.00737102,
+            "outp_rise": 4.79961e-09,
+            "outp_rise_next": 5.59961e-09,
+            "supply_current": 0.00189118
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 1.4473999999999965e-10,
+          "rise_delay_s": -2.1539000000000085e-10
+        },
+        {
+          "case_id": "ss_cold",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.5705749999999995,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "fall_complement_skew_s": 1.0055999999999991e-10,
+          "fall_delay_s": -3.7413000000000065e-10,
+          "input_high_v": 2.45,
+          "input_low_v": 1.2,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.49325e-09,
+            "outn_high": 3.6958,
+            "outn_low": -0.0535811,
+            "outn_rise": 4.14031e-09,
+            "outp_fall": 4.24087e-09,
+            "outp_high": 3.69843,
+            "outp_low": -0.0400349,
+            "outp_rise": 4.58441e-09,
+            "outp_rise_next": 5.38441e-09,
+            "supply_current": 0.00218466
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 9.115999999999951e-11,
+          "rise_delay_s": 3.6940999999999986e-10
+        }
       ],
-      "fall_complement_skew_s": 1.515900000000003e-10,
-      "fall_delay_s": -2.0128000000000036e-10,
-      "input_high_v": 2.45,
-      "input_low_v": 1.2,
-      "observed": {
-        "inp_fall": 4.615e-09,
-        "inp_rise": 4.215e-09,
-        "outn_fall": 4.68625e-09,
-        "outn_high": 2.88537,
-        "outn_low": 0.0831626,
-        "outn_rise": 4.26213e-09,
-        "outp_fall": 4.41372e-09,
-        "outp_high": 2.83387,
-        "outp_low": -0.00264614,
-        "outp_rise": 4.04783e-09,
-        "outp_rise_next": 4.84783e-09,
-        "supply_current": 0.00146064
-      },
-      "period_s": 8.000000000000005e-10,
+      "claim": "single_ended_reference_to_rail_cmos_schematic_pvt",
+      "input_mode": "single_ended_reference",
+      "load_f_per_output": 1e-13,
+      "passing_case_count": 5,
       "result": "pass",
-      "rise_complement_skew_s": 1.6158000000000018e-10,
-      "rise_delay_s": -1.6717000000000036e-10
+      "schema_version": 1,
+      "source_sha256": {
+        "dut": "c241826be3b8b6dc4d17e9dc80fd3abbcabf50161e30a5373d1b526abefc2e71",
+        "runner": "437e4686897d74e37477d9df29aa0e12f15de94cc92e389d0d5e938915718807",
+        "testbench": "cd3d6086bb1f3fa7d504420e586cded06ff088272771d7c5ae57caec31d847c4"
+      },
+      "vbias_v": 1.08
     },
     {
-      "case_id": "ss_cold",
-      "complement_skew_limit_s": 2e-10,
-      "complete": true,
-      "duty_cycle": 0.5517874999999994,
-      "environment": [
-        "ss",
-        3.63,
-        -40
+      "case_count": 5,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.4673499999999996,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "fall_complement_skew_s": 1.0123000000000007e-10,
+          "fall_delay_s": 3.536499999999995e-10,
+          "input_high_v": 3.0,
+          "input_low_v": 0.8,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.50186e-09,
+            "outn_high": 3.36307,
+            "outn_low": -0.0374133,
+            "outn_rise": 4.06742e-09,
+            "outp_fall": 4.16865e-09,
+            "outp_high": 3.35547,
+            "outp_low": -0.0378464,
+            "outp_rise": 4.59477e-09,
+            "outp_rise_next": 5.39477e-09,
+            "supply_current": 0.00246405
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 9.291000000000066e-11,
+          "rise_delay_s": 3.7977000000000023e-10
+        },
+        {
+          "case_id": "ff_cold",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.4839500000000009,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "fall_complement_skew_s": 7.314000000000085e-11,
+          "fall_delay_s": 2.511700000000005e-10,
+          "input_high_v": 3.0,
+          "input_low_v": 0.8,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.41473e-09,
+            "outn_high": 3.69113,
+            "outn_low": -0.0444994,
+            "outn_rise": 4.79303e-09,
+            "outp_fall": 4.06617e-09,
+            "outp_high": 3.68566,
+            "outp_low": -0.0364884,
+            "outp_rise": 4.47901e-09,
+            "outp_rise_next": 5.27901e-09,
+            "supply_current": 0.00312733
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 6.42799999999997e-11,
+          "rise_delay_s": 2.640099999999998e-10
+        },
+        {
+          "case_id": "ff_hot",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.29335000000000067,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "fall_complement_skew_s": 1.0160999999999961e-10,
+          "fall_delay_s": 3.3987e-10,
+          "input_high_v": 2.55,
+          "input_low_v": 1.1,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.62322e-09,
+            "outn_high": 3.00249,
+            "outn_low": 0.157389,
+            "outn_rise": 4.05326e-09,
+            "outp_fall": 4.15487e-09,
+            "outp_high": 2.82516,
+            "outp_low": -0.0299982,
+            "outp_rise": 4.72019e-09,
+            "outp_rise_next": 5.52019e-09,
+            "supply_current": 0.00269313
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "fail",
+          "rise_complement_skew_s": 9.696999999999951e-11,
+          "rise_delay_s": -2.9481000000000097e-10
+        },
+        {
+          "case_id": "ss_hot",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.3791875,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "fall_complement_skew_s": 1.4330999999999958e-10,
+          "fall_delay_s": -2.727100000000004e-10,
+          "input_high_v": 2.45,
+          "input_low_v": 1.2,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.6943e-09,
+            "outn_high": 3.00585,
+            "outn_low": 0.149798,
+            "outn_rise": 4.19898e-09,
+            "outp_fall": 4.34229e-09,
+            "outp_high": 2.79541,
+            "outp_low": -0.0324317,
+            "outp_rise": 4.03894e-09,
+            "outp_rise_next": 4.83894e-09,
+            "supply_current": 0.00201314
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 1.4464000000000003e-10,
+          "rise_delay_s": -1.7606000000000032e-10
+        },
+        {
+          "case_id": "ss_cold",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.5148875000000003,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "fall_complement_skew_s": 1.0055000000000003e-10,
+          "fall_delay_s": 3.8157999999999983e-10,
+          "input_high_v": 2.45,
+          "input_low_v": 1.2,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.49351e-09,
+            "outn_high": 3.70478,
+            "outn_low": -0.0528519,
+            "outn_rise": 4.09603e-09,
+            "outp_fall": 4.19658e-09,
+            "outp_high": 3.69815,
+            "outp_low": -0.0412031,
+            "outp_rise": 4.58467e-09,
+            "outp_rise_next": 5.38467e-09,
+            "supply_current": 0.00245507
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 9.116000000000033e-11,
+          "rise_delay_s": 3.6967000000000003e-10
+        }
       ],
-      "fall_complement_skew_s": 1.0307000000000014e-10,
-      "fall_delay_s": -3.6915000000000053e-10,
-      "input_high_v": 2.45,
-      "input_low_v": 1.2,
-      "observed": {
-        "inp_fall": 4.615e-09,
-        "inp_rise": 4.215e-09,
-        "outn_fall": 4.50216e-09,
-        "outn_high": 3.65589,
-        "outn_low": -0.0414655,
-        "outn_rise": 4.14278e-09,
-        "outp_fall": 4.24585e-09,
-        "outp_high": 3.6829,
-        "outp_low": -0.0357898,
-        "outp_rise": 4.60442e-09,
-        "outp_rise_next": 5.40442e-09,
-        "supply_current": 0.00180095
+      "claim": "single_ended_reference_to_rail_cmos_schematic_pvt",
+      "input_mode": "single_ended_reference",
+      "load_f_per_output": 1e-13,
+      "passing_case_count": 4,
+      "result": "fail",
+      "schema_version": 1,
+      "source_sha256": {
+        "dut": "c241826be3b8b6dc4d17e9dc80fd3abbcabf50161e30a5373d1b526abefc2e71",
+        "runner": "437e4686897d74e37477d9df29aa0e12f15de94cc92e389d0d5e938915718807",
+        "testbench": "cd3d6086bb1f3fa7d504420e586cded06ff088272771d7c5ae57caec31d847c4"
       },
-      "period_s": 7.999999999999997e-10,
-      "result": "pass",
-      "rise_complement_skew_s": 1.0226000000000002e-10,
-      "rise_delay_s": 3.894200000000001e-10
+      "vbias_v": 1.2
+    },
+    {
+      "case_count": 5,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.4125499999999999,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "fall_complement_skew_s": 1.0107000000000036e-10,
+          "fall_delay_s": 3.424299999999996e-10,
+          "input_high_v": 3.0,
+          "input_low_v": 0.8,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.53446e-09,
+            "outn_high": 3.35984,
+            "outn_low": -0.0204769,
+            "outn_rise": 4.05636e-09,
+            "outp_fall": 4.15743e-09,
+            "outp_high": 3.34719,
+            "outp_low": -0.0379044,
+            "outp_rise": 4.62739e-09,
+            "outp_rise_next": 5.42739e-09,
+            "supply_current": 0.00274229
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 9.293000000000042e-11,
+          "rise_delay_s": -3.8760999999999966e-10
+        },
+        {
+          "case_id": "ff_cold",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.4576500000000001,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "fall_complement_skew_s": 7.314000000000002e-11,
+          "fall_delay_s": 2.464599999999996e-10,
+          "input_high_v": 3.0,
+          "input_low_v": 0.8,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.43106e-09,
+            "outn_high": 3.68675,
+            "outn_low": -0.0441243,
+            "outn_rise": 4.78832e-09,
+            "outp_fall": 4.06146e-09,
+            "outp_high": 3.68576,
+            "outp_low": -0.0363765,
+            "outp_rise": 4.49534e-09,
+            "outp_rise_next": 5.29534e-09,
+            "supply_current": 0.00354355
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 6.42799999999997e-11,
+          "rise_delay_s": 2.803399999999999e-10
+        },
+        {
+          "case_id": "ff_hot",
+          "complement_skew_limit_s": 2e-10,
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "fall_complement_skew_s": 0,
+          "fall_delay_s": -4.615e-09,
+          "input_high_v": 2.55,
+          "input_low_v": 1.1,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_high": 2.98537,
+            "outn_low": 2.92911,
+            "outp_high": 0.00051282,
+            "outp_low": -0.00153837,
+            "supply_current": 0.00170754
+          },
+          "period_s": 0,
+          "result": "fail",
+          "rise_complement_skew_s": 0,
+          "rise_delay_s": -4.215e-09
+        },
+        {
+          "case_id": "ss_hot",
+          "complement_skew_limit_s": 2e-10,
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "fall_complement_skew_s": 4.09223e-09,
+          "fall_delay_s": -4.615e-09,
+          "input_high_v": 2.45,
+          "input_low_v": 1.2,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.77843e-09,
+            "outn_high": 3.02619,
+            "outn_low": 1.06571,
+            "outn_rise": 4.09223e-09,
+            "outp_high": 0.590414,
+            "outp_low": -0.0387803,
+            "supply_current": 0.00168781
+          },
+          "period_s": 0,
+          "result": "fail",
+          "rise_complement_skew_s": 4.77843e-09,
+          "rise_delay_s": -4.215e-09
+        },
+        {
+          "case_id": "ss_cold",
+          "complement_skew_limit_s": 2e-10,
+          "complete": true,
+          "duty_cycle": 0.48172499999999935,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "fall_complement_skew_s": 1.0053999999999932e-10,
+          "fall_delay_s": 3.6769999999999905e-10,
+          "input_high_v": 2.45,
+          "input_low_v": 1.2,
+          "observed": {
+            "inp_fall": 4.615e-09,
+            "inp_rise": 4.215e-09,
+            "outn_fall": 4.50615e-09,
+            "outn_high": 3.70477,
+            "outn_low": -0.0506668,
+            "outn_rise": 4.08216e-09,
+            "outp_fall": 4.1827e-09,
+            "outp_high": 3.69753,
+            "outp_low": -0.0412978,
+            "outp_rise": 4.59732e-09,
+            "outp_rise_next": 5.39732e-09,
+            "supply_current": 0.00285707
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass",
+          "rise_complement_skew_s": 9.117000000000021e-11,
+          "rise_delay_s": 3.8232e-10
+        }
+      ],
+      "claim": "single_ended_reference_to_rail_cmos_schematic_pvt",
+      "input_mode": "single_ended_reference",
+      "load_f_per_output": 1e-13,
+      "passing_case_count": 3,
+      "result": "fail",
+      "schema_version": 1,
+      "source_sha256": {
+        "dut": "c241826be3b8b6dc4d17e9dc80fd3abbcabf50161e30a5373d1b526abefc2e71",
+        "runner": "437e4686897d74e37477d9df29aa0e12f15de94cc92e389d0d5e938915718807",
+        "testbench": "cd3d6086bb1f3fa7d504420e586cded06ff088272771d7c5ae57caec31d847c4"
+      },
+      "vbias_v": 1.4
     }
   ],
-  "claim": "single_ended_reference_to_rail_cmos_schematic_pvt",
-  "input_mode": "single_ended_reference",
-  "load_f_per_output": 1e-13,
-  "passing_case_count": 5,
-  "result": "pass",
   "schema_version": 1,
-  "source_sha256": {
-    "dut": "69cd47ab6cab6f93ca1c2273063eb8d9a278476750b7d79be92669c119925420",
-    "runner": "437e4686897d74e37477d9df29aa0e12f15de94cc92e389d0d5e938915718807",
-    "testbench": "cd3d6086bb1f3fa7d504420e586cded06ff088272771d7c5ae57caec31d847c4"
-  },
-  "vbias_v": 1.15
+  "sweep_runner_sha256": "a3e58ffdf2c48fcbaf907136598b39690c308ef294e49a24db0dcb45b86d6205"
 }

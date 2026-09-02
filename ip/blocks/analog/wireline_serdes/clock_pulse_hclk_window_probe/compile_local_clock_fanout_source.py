@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 TOP = "local_clock_fanout"
-SOURCE_REVISION = "local_clock_fanout_v1_sampler8_16_capture4_8"
+SOURCE_REVISION = "local_clock_fanout_v2_sampler16_32_capture4_8"
 
 
 def compile_source() -> str:
@@ -16,7 +16,7 @@ def compile_source() -> str:
     for phase, clock, clockb in (("E", "CLKP_H", "CLKP_HB"),
                                   ("O", "CLKN_H", "CLKN_HB")):
         branches.extend([
-            f"X{phase}S {clock} {phase}_SENSE VDD VSS clock_fanout_buffer PRE=8 OUT=16",
+            f"X{phase}S {clock} {phase}_SENSE VDD VSS clock_fanout_buffer PRE=16 OUT=32",
             f"X{phase}C {clock} {phase}_CAPTURE_CLK VDD VSS clock_fanout_buffer PRE=4 OUT=8",
             f"X{phase}CB {clockb} {phase}_CAPTURE_CLKB VDD VSS clock_fanout_buffer PRE=4 OUT=8",
         ])

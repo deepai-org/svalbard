@@ -631,8 +631,8 @@ The v1 physical fanout is now retained as bounded negative evidence. Its 24
 logical MOS instances (192 raw fingers) lower to a 104.6-um-wide generated
 cell that is zero-DRC, uniquely LVS-equivalent, and extracts to 1,644
 resistors plus 1,121 capacitors. The exact layout used for extraction is
-[rendered here](../../../../../docs/images/pcie-local-clock-fanout-layout.png),
-and [`local_clock_fanout_physical.json`](local_clock_fanout_physical.json)
+[rendered here](../../../../../docs/images/pcie-local-clock-fanout-v1-layout.png),
+and [`local_clock_fanout_v1_physical.json`](local_clock_fanout_v1_physical.json)
 binds its schematic, layout source, MAG, GDS, PEX, and image identities.
 
 Replacing all six schematic branches with that exact PEX preserves a complete
@@ -645,6 +645,20 @@ exact composed record is
 [`capture_local_clock_fanout_pex_screen.json`](capture_local_clock_fanout_pex_screen.json).
 The next physical candidate should strengthen and compact only the 8x/16x
 sampler branches; the 4x/8x capture/complement branches already meet rails.
+
+The bounded v2 width experiment proves that strength cannot be added without
+controlling source load and layout capacitance. It doubles only the sampler
+branch to 16x/32x, retains the 4x/8x capture branches, and is independently
+zero-DRC and unique-LVS. Its 123.8-um layout contains 288 raw fingers and
+extracts to 2,544 resistors plus 1,710 capacitors; the exact current render is
+[here](../../../../../docs/images/pcie-local-clock-fanout-layout.png) and its
+[physical identity](local_clock_fanout_physical.json) is retained. Exact
+composition regresses to 0/2: TT valid-low time falls to 139.3/136.5 ps, and
+slow/hot sampler lows stop at 0.322/0.353 V so no valid-low interval exists.
+Frontend and held-data decisions remain strong in both cases. The
+[v2 composed record](capture_local_clock_fanout_v2_pex_screen.json) therefore
+rejects brute-force width. V3 must use a smaller source-facing stage and a
+different taper/placement that keeps the final sampler driver local.
 
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail

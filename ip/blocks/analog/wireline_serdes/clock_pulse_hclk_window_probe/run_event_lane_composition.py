@@ -470,10 +470,13 @@ def main() -> None:
             args.clock_fanout_pex, args.clock_fanout_physical, True)
         require(fanout_physical.get("top") == "local_clock_fanout",
                 "unexpected clock fanout physical top")
-        require(args.sampler_clock_buffer == [8, 16],
-                "physical fanout requires sampler buffer 8 16")
-        require(args.capture_clock_buffer == [4, 8],
-                "physical fanout requires capture buffer 4 8")
+        selected = fanout_physical.get("selected_candidate", {})
+        require(args.sampler_clock_buffer == [selected.get("sampler_pre_mult"),
+                                               selected.get("sampler_output_mult")],
+                "physical fanout sampler-buffer identity mismatch")
+        require(args.capture_clock_buffer == [selected.get("capture_pre_mult"),
+                                               selected.get("capture_output_mult")],
+                "physical fanout capture-buffer identity mismatch")
     environments = list(base.CONTRACT["environments"])
     controls = list(event_runner.CONTROLS)
     require(not args.case_ids or not (args.environment_ids or args.control_ids),

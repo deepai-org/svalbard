@@ -31,6 +31,9 @@ def compile_source() -> str:
         SERDES / "lane_rx_regenerative_capture/lane_rx_regenerative_capture.spice",
         SERDES)
     lane, _ = namespace_source(lane_closure, "lane", {LANE_TOP})
+    restore, _ = namespace_source(
+        (SERDES / "capture_clock_bridge/capture_clock_bridge.spice").read_text(),
+        "restore", {"capture_clock_bridge"})
     parent = f"""
 * Namespace-safe composed transistor intent. Regenerative and BOOST controls
 * remain explicit so package-level calibration or static straps are realizable.
@@ -43,8 +46,14 @@ XEVENT CLKP_H CLKN_H SEL0 SEL1 SEL2 VDD VSS
 + E_EVENT_SENSE E_EVENT_BOOST E_CLK E_CLKB
 + O_EVENT_SENSE O_EVENT_BOOST O_CLK O_CLKB {EVENT_TOP}
 XFANOUT E_CLK E_CLKB O_CLK O_CLKB VDD VSS
-+ E_SENSE E_CAPTURE_CLK E_CAPTURE_CLKB
-+ O_SENSE O_CAPTURE_CLK O_CAPTURE_CLKB {FANOUT_TOP}
++ E_SENSE_PRE E_CAPTURE_CLK_PRE E_CAPTURE_CLKB_PRE
++ O_SENSE_PRE O_CAPTURE_CLK_PRE O_CAPTURE_CLKB_PRE {FANOUT_TOP}
+XRESTORE_S E_SENSE_PRE O_SENSE_PRE E_SENSE E_SENSE_UNUSED
++ O_SENSE O_SENSE_UNUSED VDD VSS capture_clock_bridge
+XRESTORE_C E_CAPTURE_CLK_PRE O_CAPTURE_CLK_PRE E_CAPTURE_CLK E_CAPTURE_CLK_UNUSED
++ O_CAPTURE_CLK O_CAPTURE_CLK_UNUSED VDD VSS capture_clock_bridge
+XRESTORE_CB E_CAPTURE_CLKB_PRE O_CAPTURE_CLKB_PRE E_CAPTURE_CLKB E_CAPTURE_CLKB_UNUSED
++ O_CAPTURE_CLKB O_CAPTURE_CLKB_UNUSED VDD VSS capture_clock_bridge
 XLANE RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N
 + TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N
 + E_SENSE E_REGEN_CLK E_REGEN_CLKB E_CAPTURE_CLK E_CAPTURE_CLKB E_SENSE_BOOST
@@ -53,7 +62,8 @@ XLANE RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N
 + EVEN_Q EVEN_QB ODD_Q ODD_QB {LANE_TOP}
 .ends {TOP}
 """
-    return "* SPDX-License-Identifier: Apache-2.0\n" + event + fanout + lane + parent
+    return ("* SPDX-License-Identifier: Apache-2.0\n" + event + fanout + lane
+            + restore + parent)
 
 
 def main() -> None:

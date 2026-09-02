@@ -403,6 +403,37 @@ XCAP FE_E_P FE_E_N FE_O_P FE_O_N E_CAPTURE_CLK E_CAPTURE_CLKB
 + lane__deserializer_split_capture
 .ends lane_rx_regenerative_capture
 * end resolved include: lane_rx_regenerative_capture/lane_rx_regenerative_capture.spice
+* SPDX-License-Identifier: Apache-2.0
+* Local complementary clock bridge for one static CMOS capture interleave.
+*
+* WRITE is the wide, routed pulse-generator output.  CLKB is regenerated
+* locally at the PMOS-clock gates; a second local inverter regenerates CLK at
+* the NFET-clock gates.  The capture cell is deliberately tolerant of the
+* short PMOS-first/NMOS-last sequencing this topology creates: each half of
+* the complementary write path reinforces the same selected latch state.
+*
+* This is a product-specific boundary, not a general clock-tree primitive.
+
+.subckt restore__ccb_inv A Y VDD VSS params: WP=8u WN=4u MP=1 MN=1
+XP Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+.ends restore__ccb_inv
+
+.subckt restore__capture_clock_phase WRITE CLK CLKB VDD VSS
+* The first inverter drives the large PMOS capture-gate bank and the input of
+* the NFET-clock inverter.  Its stronger pull-down keeps CLKB near VSS at the
+* slow/hot, low-supply corner without increasing WRITE's PMOS gate load.
+XCLKB WRITE CLKB VDD VSS restore__ccb_inv WP=8u WN=10u MP=8 MN=8
+* The final stage is intentionally PMOS-skewed: the capture NFET gate load
+* needs a full high level within the bounded write pulse at slow/hot PVT.
+XCLK CLKB CLK VDD VSS restore__ccb_inv WP=12u WN=5u MP=16 MN=16
+.ends restore__capture_clock_phase
+
+.subckt capture_clock_bridge E_WRITE O_WRITE
++ E_CAPTURE_CLK E_CAPTURE_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB VDD VSS
+XE E_WRITE E_CAPTURE_CLK E_CAPTURE_CLKB VDD VSS restore__capture_clock_phase
+XO O_WRITE O_CAPTURE_CLK O_CAPTURE_CLKB VDD VSS restore__capture_clock_phase
+.ends capture_clock_bridge
 
 * Namespace-safe composed transistor intent. Regenerative and BOOST controls
 * remain explicit so package-level calibration or static straps are realizable.
@@ -415,8 +446,14 @@ XEVENT CLKP_H CLKN_H SEL0 SEL1 SEL2 VDD VSS
 + E_EVENT_SENSE E_EVENT_BOOST E_CLK E_CLKB
 + O_EVENT_SENSE O_EVENT_BOOST O_CLK O_CLKB retimed_event_capture_bridge
 XFANOUT E_CLK E_CLKB O_CLK O_CLKB VDD VSS
-+ E_SENSE E_CAPTURE_CLK E_CAPTURE_CLKB
-+ O_SENSE O_CAPTURE_CLK O_CAPTURE_CLKB local_clock_fanout
++ E_SENSE_PRE E_CAPTURE_CLK_PRE E_CAPTURE_CLKB_PRE
++ O_SENSE_PRE O_CAPTURE_CLK_PRE O_CAPTURE_CLKB_PRE local_clock_fanout
+XRESTORE_S E_SENSE_PRE O_SENSE_PRE E_SENSE E_SENSE_UNUSED
++ O_SENSE O_SENSE_UNUSED VDD VSS capture_clock_bridge
+XRESTORE_C E_CAPTURE_CLK_PRE O_CAPTURE_CLK_PRE E_CAPTURE_CLK E_CAPTURE_CLK_UNUSED
++ O_CAPTURE_CLK O_CAPTURE_CLK_UNUSED VDD VSS capture_clock_bridge
+XRESTORE_CB E_CAPTURE_CLKB_PRE O_CAPTURE_CLKB_PRE E_CAPTURE_CLKB E_CAPTURE_CLKB_UNUSED
++ O_CAPTURE_CLKB O_CAPTURE_CLKB_UNUSED VDD VSS capture_clock_bridge
 XLANE RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N
 + TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N
 + E_SENSE E_REGEN_CLK E_REGEN_CLKB E_CAPTURE_CLK E_CAPTURE_CLKB E_SENSE_BOOST

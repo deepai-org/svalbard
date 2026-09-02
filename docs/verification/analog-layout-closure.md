@@ -895,6 +895,17 @@ otherwise correct transitions; 750 ps passes all five environments and leaves
 50 ps before the next 800 ps same-interleave event. That 50 ps is now an open
 consumer/setup budget, not hidden margin.
 
+Do not reuse a physically qualified buffer outside its input-waveform
+contract. A two-inverter capture bridge qualified against a full-swing 200 ps
+WRITE source remained DRC/LVS/PEX clean when inserted beside a weak remote
+fanout, but its 144-um aggregate first-stage gate width loaded the predriver to
+0.63--0.80 V low and its same-polarity output reached only 1.00--1.80 V low.
+The routed parent still failed repetitive reset. At every composition boundary,
+bind minimum pulse width, input-high/input-low rails, source impedance, input
+capacitance, and output load to the leaf evidence. If the parent violates any
+assumption, treat the leaf claim as inapplicable and synthesize or qualify a
+new interface rather than citing its standalone pass.
+
 Also distinguish transparent output from retained output. In the PI-clocked
 RX parent, a 750 ps observation occurred 200 ps after capture opened but 180 ps
 before its 380 ps write pulse closed. It produced a plausible weak-polarity

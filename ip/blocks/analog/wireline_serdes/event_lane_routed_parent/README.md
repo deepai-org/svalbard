@@ -1,10 +1,11 @@
 # Routed event-to-lane parent
 
 This boundary composes the selected event generator, V7 local clock fanout,
-and direct-regenerative RX/capture as one namespace-safe transistor-intent
-source. `compile_source.py` resolves the lane include closure, preserves only
-the three public leaf tops, and deterministically namespaces every internal
-subcircuit before adding parent connectivity.
+three capture-owned local restoration bridges, and direct-regenerative
+RX/capture as one namespace-safe transistor-intent source. `compile_source.py`
+resolves the include closure, preserves only the public leaf tops, and
+deterministically namespaces every internal subcircuit before adding parent
+connectivity.
 
 `run_physical.sh` now generates the three child layouts, co-places them, and
 routes the event clocks, V7 fanout outputs, supplies, and lane clocks in one
@@ -18,10 +19,10 @@ unrouted static connection.
 The routed parent now has promoted physical-legality evidence:
 
 - zero Magic DRC errors;
-- unique LVS with 390/390 devices and 204/204 nets;
+- unique LVS with 414/414 devices and 216/216 nets;
 - distinct VDD and VSS networks;
 - all six fanout-to-lane signal routes physically present; and
-- full-RC extraction with 14,796 resistors and 9,649 capacitors.
+- full-RC extraction with 17,567 resistors and 11,458 capacitors.
 
 The immutable record is `physical_result.json`; the retained source,
 `event_lane_routed_parent.pex.spice`, and the rendered layout are tied to it by
@@ -49,14 +50,12 @@ and changes layers only beyond the child supply geometry.  Future generated
 macros should publish pin-access shapes and per-layer obstructions, and parent
 route admission should check extracted connectivity after every new escape.
 
-`run_exact_pex.py` replays the single, hash-bound parent PEX.  The initial
-TT/slow-hot campaign and a disjoint three-corner continuation are composed by
-`combine_exact_pex.py`, which fails closed on PEX/physical identity, duplicate
-cases, failed inputs, or an incomplete environment set.  The promoted result
-passes 5/5 against the established static-input contract: at least 0.3 V
-front-end differential, 0.5 V captured differential, and no more than 150 mA
-average supply current.  Observed worst cases are 2.384 V at the front end,
-2.408 V captured differential, and 103.18 mA.
+`run_exact_pex.py` replays the single, hash-bound parent PEX.  The v2 TT and
+slow/hot diagnostic both pass the established static-input contract, but their
+outer harness correctly refused promotion because the source tree changed
+during that long run.  They must be rerun without concurrent edits before a
+new static result is promoted.  Historical v1 five-environment results are not
+evidence for the v2 PEX.
 
 A deliberately tighter 250 mV single-ended output-rail diagnostic is reported
 separately and passes only SS/hot; it was never part of the differential
@@ -81,7 +80,7 @@ differentials and representative extracted event/sense/capture-clock nodes.
 That separates a receiver/front-end tracking failure from a clock-event or
 capture-reset failure before any sizing or routing change is attempted.
 
-That localization is now retained in `dynamic_localize_tt_result.json` and
+The v1 localization is retained in `dynamic_localize_tt_result.json` and
 `pex_path_localization.json`.  The event SENSE nodes still reach 39--125 mV
 low and about 3.13 V high.  After the fanout and parent interconnect, the six
 consumer clocks fall only to 0.51--0.77 V, so the regenerative/capture devices
@@ -91,7 +90,12 @@ isolated fanout value; complementary capture clocks are the largest relative
 load increase.  The monolithic fanout at the left of the lane and long
 parent-owned routes are therefore the first causal boundary.
 
-The next implementation should distribute capture-owned final drivers beside
-the six consumer pin groups rather than enlarge the remote monolithic outputs.
-It must re-close parent DRC/LVS/PEX and first prove repetitive reset/PRBS at TT;
-the static 5/5 result alone is no longer an admissible promotion gate.
+The v2 parent implements that distributed repair with three local bridges and
+is physically closed.  Its new TT PRBS screen still fails, but at a narrower
+boundary: bridge inputs fall to 0.63--0.80 V while their same-polarity
+second-stage outputs fall only to 1.00--1.80 V.  The front end remains static
+and both captures remain held.  The isolated bridge's five-corner evidence
+assumed full-swing 200 ps WRITE sources, so it did not qualify the bridge as a
+weak-level restorer.  The next experiment should use the first inverted bridge
+outputs with the complementary predriver pair, or synthesize a tapered
+low-input-capacitance restorer, then re-close physical identity and TT PRBS.

@@ -23,14 +23,18 @@ PHASE_POLARITY = {"e": 1, "o": -1}
 INTERNAL_PROBES = {
     "event_e_sense": "xparent.XEVENT.E_SENSE.t0",
     "event_o_sense": "xparent.XEVENT.O_SENSE.t0",
-    "fanout_e_sense": "xparent.XFANOUT.E_SENSE",
-    "fanout_o_sense": "xparent.XFANOUT.O_SENSE",
-    "lane_e_sense": "xparent.XLANE.XFRONT.XFE_E.SENSE_CLK",
-    "lane_o_sense": "xparent.XLANE.O_SENSE_CLK.n102",
-    "fanout_e_capture_clk": "xparent.XFANOUT.E_CAPTURE_CLK",
-    "fanout_o_capture_clk": "xparent.XFANOUT.O_CAPTURE_CLK",
-    "fanout_e_capture_clkb": "xparent.XFANOUT.E_CAPTURE_CLKB",
-    "fanout_o_capture_clkb": "xparent.XFANOUT.O_CAPTURE_CLKB",
+    "restore_s_e_input": "xparent.XRESTORE_S.E_WRITE",
+    "restore_s_o_input": "xparent.XRESTORE_S.O_WRITE",
+    "restore_s_e_output": "xparent.XRESTORE_S.E_CAPTURE_CLK",
+    "restore_s_o_output": "xparent.XRESTORE_S.O_CAPTURE_CLK",
+    "restore_c_e_input": "xparent.XRESTORE_C.E_WRITE",
+    "restore_c_o_input": "xparent.XRESTORE_C.O_WRITE",
+    "restore_c_e_output": "xparent.XRESTORE_C.E_CAPTURE_CLK",
+    "restore_c_o_output": "xparent.XRESTORE_C.O_CAPTURE_CLK",
+    "restore_cb_e_input": "xparent.XRESTORE_CB.E_WRITE",
+    "restore_cb_o_input": "xparent.XRESTORE_CB.O_WRITE",
+    "restore_cb_e_output": "xparent.XRESTORE_CB.E_CAPTURE_CLK",
+    "restore_cb_o_output": "xparent.XRESTORE_CB.O_CAPTURE_CLK",
 }
 
 

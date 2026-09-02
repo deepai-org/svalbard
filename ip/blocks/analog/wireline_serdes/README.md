@@ -70,6 +70,13 @@ the remaining clock-path task is the programmable 550 ps sense / 150 ps write
 non-overlap generator and its physical composition with the regenerative
 capture gates.
 
+That composition now has a first routed-parent checkpoint in
+[`event_lane_routed_parent`](event_lane_routed_parent/README.md): one
+namespace-safe 390-device layout passes zero DRC and unique LVS, extracts to
+14,796R/9,649C, and its single hash-bound full-RC PEX passes the established
+static differential-input capture contract at TT and SS/hot. Five-corner and
+dynamic-data closure remain open.
+
 The repeatable method used to take these cells from an executable electrical
 contract through generated layout and full-RC evidence is documented in the
 [analog layout closure workflow](../../../../docs/verification/analog-layout-closure.md).

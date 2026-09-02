@@ -404,11 +404,12 @@ XCAP FE_E_P FE_E_N FE_O_P FE_O_N E_CAPTURE_CLK E_CAPTURE_CLKB
 .ends lane_rx_regenerative_capture
 * end resolved include: lane_rx_regenerative_capture/lane_rx_regenerative_capture.spice
 
-* Namespace-safe composed transistor intent. Regenerative clock ports are
-* intentionally tied inactive; static BOOST is the selected measured trim.
+* Namespace-safe composed transistor intent. Regenerative and BOOST controls
+* remain explicit so package-level calibration or static straps are realizable.
 .subckt event_lane_routed_parent CLKP_H CLKN_H SEL0 SEL1 SEL2 RXP RXN
 + TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N TERM_EN5_N TERM_EN6_N
-+ VTHP VTHN RX_BIAS RX_BW_EN_N VDD VSS
++ VTHP VTHN RX_BIAS RX_BW_EN_N E_REGEN_CLK E_REGEN_CLKB E_SENSE_BOOST
++ O_REGEN_CLK O_REGEN_CLKB O_SENSE_BOOST VDD VSS
 + RX_RAWP RX_RAWN FE_E_P FE_E_N FE_O_P FE_O_N EVEN_Q EVEN_QB ODD_Q ODD_QB
 XEVENT CLKP_H CLKN_H SEL0 SEL1 SEL2 VDD VSS
 + E_EVENT_SENSE E_EVENT_BOOST E_CLK E_CLKB
@@ -418,8 +419,8 @@ XFANOUT E_CLK E_CLKB O_CLK O_CLKB VDD VSS
 + O_SENSE O_CAPTURE_CLK O_CAPTURE_CLKB local_clock_fanout
 XLANE RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N
 + TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N
-+ E_SENSE VSS VSS E_CAPTURE_CLK E_CAPTURE_CLKB VDD
-+ O_SENSE VSS VSS O_CAPTURE_CLK O_CAPTURE_CLKB VDD
++ E_SENSE E_REGEN_CLK E_REGEN_CLKB E_CAPTURE_CLK E_CAPTURE_CLKB E_SENSE_BOOST
++ O_SENSE O_REGEN_CLK O_REGEN_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB O_SENSE_BOOST
 + VDD VSS RX_RAWP RX_RAWN FE_E_P FE_E_N FE_O_P FE_O_N
 + EVEN_Q EVEN_QB ODD_Q ODD_QB lane_rx_regenerative_capture
 .ends event_lane_routed_parent

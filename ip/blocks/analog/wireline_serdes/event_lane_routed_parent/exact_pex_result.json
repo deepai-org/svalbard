@@ -1,0 +1,88 @@
+{
+  "case_count": 2,
+  "cases": [
+    {
+      "capture_pass": true,
+      "complete": true,
+      "control": {
+        "epoch": 0,
+        "id": "sense1_interval0_epoch0",
+        "interval": 0,
+        "sense": 1
+      },
+      "current_pass": true,
+      "diagnostic_log_tail": [],
+      "environment_id": "tt",
+      "frontend_pass": true,
+      "observed": {
+        "e_fe_diff": 2.78673,
+        "e_q_diff": 2.80106,
+        "e_q_high": 3.17702,
+        "e_q_low": 3.1255,
+        "e_qb_high": 0.44996,
+        "e_qb_low": 0.317587,
+        "o_fe_diff": -2.68237,
+        "o_q_diff": -2.70635,
+        "o_q_high": 0.444415,
+        "o_q_low": 0.315054,
+        "o_qb_high": 3.18631,
+        "o_qb_low": 3.12261,
+        "supply_current": 0.0834857
+      },
+      "output_rails_pass": false,
+      "result": "pass",
+      "returncode": 0
+    },
+    {
+      "capture_pass": true,
+      "complete": true,
+      "control": {
+        "epoch": 0,
+        "id": "sense1_interval0_epoch0",
+        "interval": 0,
+        "sense": 1
+      },
+      "current_pass": true,
+      "diagnostic_log_tail": [],
+      "environment_id": "ss_hot",
+      "frontend_pass": true,
+      "observed": {
+        "e_fe_diff": 2.66145,
+        "e_q_diff": 2.69239,
+        "e_q_high": 2.8923,
+        "e_q_low": 2.86374,
+        "e_qb_high": 0.265214,
+        "e_qb_low": 0.185483,
+        "o_fe_diff": -2.61293,
+        "o_q_diff": -2.63721,
+        "o_q_high": 0.262071,
+        "o_q_low": 0.182172,
+        "o_qb_high": 2.90262,
+        "o_qb_low": 2.86078,
+        "supply_current": 0.0534708
+      },
+      "output_rails_pass": true,
+      "result": "pass",
+      "returncode": 0
+    }
+  ],
+  "claim": "exact_routed_parent_static_differential_capture_replay",
+  "control": {
+    "epoch": 0,
+    "id": "sense1_interval0_epoch0",
+    "interval": 0,
+    "sense": 1
+  },
+  "not_a_claim": [
+    "dynamic PRBS BER",
+    "closed CDR",
+    "PCIe compliance",
+    "provider signoff or silicon yield"
+  ],
+  "passing_case_count": 2,
+  "pex_sha256": "5a5c96610f406692a2011b7bfca30191080dd2617b93a49cb5b1e38aa8be46a1",
+  "physical_sha256": "5051fdce17b7b07c48f807f8433096bdab4ba4857b8e7d6db9d9991d28f3a24e",
+  "result": "pass",
+  "schema_version": 1,
+  "scope": "single hash-bound full-RC parent PEX; static differential input"
+}

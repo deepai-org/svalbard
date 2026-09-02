@@ -1,0 +1,61 @@
+{
+  "biases_v": [
+    1.0
+  ],
+  "calibration_windows": {
+    "ss_hot": {
+      "passing_controls": [],
+      "result": "fail"
+    }
+  },
+  "case_count": 1,
+  "claim": "active_high_sense_output_programmable_pvt",
+  "consumer_pex_sha256": "47d6a8389db9a49ef700eeb21bc41e5ed726f62847d15d3740014f7871183139",
+  "control_plan_sha256": null,
+  "covered_case_count": 0,
+  "dut_sha256": "54e19c4433decf6a2d86abe6f3143136ca6627ed90ab0140bc1f551600282e4e",
+  "duty_limits": [
+    0.55,
+    0.85
+  ],
+  "not_a_claim": [
+    "mismatch yield",
+    "parent closure",
+    "PCIe compliance"
+  ],
+  "pulse_high_s": 5.82e-10,
+  "reference_offsets_v": [
+    0.0
+  ],
+  "result": "fail",
+  "runs": [
+    {
+      "bias_v": 1.0,
+      "cases": [
+        {
+          "case_id": "ss_hot",
+          "complete": true,
+          "duty_cycle": 0.2369442288502049,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_fall": 4.18386e-09,
+            "outn_high": 2.89106,
+            "outn_low": 0.422474,
+            "outn_rise": 4.0129e-09,
+            "outn_rise_next": 4.73442e-09,
+            "supply_current": 0.00754195
+          },
+          "period_s": 7.215200000000006e-10,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 0,
+      "reference_offset_v": 0.0
+    }
+  ],
+  "schema_version": 1
+}

@@ -1,0 +1,13 @@
+* SPDX-License-Identifier: Apache-2.0
+* Full-swing event restorer preserving the active-high evaluation interval.
+.subckt sense_noninv_inv A Y VDD VSS params: WP=4u WN=2u MP=1 MN=1
+XP Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+.ends sense_noninv_inv
+
+.subckt sense_cmos_noninv IN REF VBIAS VDD VSS OUTP OUTN
+* REF and VBIAS are retained only for parent-interface compatibility.
+XIN IN B VDD VSS sense_noninv_inv WP=8u WN=2u MP=4 MN=1
+XOUT B OUTN VDD VSS sense_noninv_inv WP=8u WN=6u MP=8 MN=6
+XUNUSED B OUTP VDD VSS sense_noninv_inv WP=4u WN=2u MP=1 MN=1
+.ends sense_cmos_noninv

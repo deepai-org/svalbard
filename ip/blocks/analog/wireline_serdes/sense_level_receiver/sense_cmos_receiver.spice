@@ -1,0 +1,16 @@
+* SPDX-License-Identifier: Apache-2.0
+* Full-swing active-low event input to active-high StrongARM SENSE drive.
+.subckt sense_cmos_inv A Y VDD VSS params: WP=4u WN=2u MP=1 MN=1
+XP Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
+XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
+.ends sense_cmos_inv
+
+.subckt sense_cmos_receiver IN REF VBIAS VDD VSS OUTP OUTN
+* REF and VBIAS remain pins for parent-interface compatibility but are unused.
+* Three inversions make OUTN active high while IN is in its active-low interval.
+XIN IN B VDD VSS sense_cmos_inv WP=4u WN=2u MP=1 MN=1
+XMID B C VDD VSS sense_cmos_inv WP=8u WN=6u MP=2 MN=2
+XOUT C OUTN VDD VSS sense_cmos_inv WP=8u WN=6u MP=6 MN=4
+* OUTP is explicitly driven but outside the SENSE role contract.
+XUNUSED C OUTP VDD VSS sense_cmos_inv WP=4u WN=2u MP=1 MN=1
+.ends sense_cmos_receiver

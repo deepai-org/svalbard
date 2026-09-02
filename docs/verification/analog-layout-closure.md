@@ -928,6 +928,15 @@ was replaced by the exact StrongARM PEX.  Use exact leaf-plus-consumer replay
 as the admission test for high-fanout or large-gate boundaries.  Lumped C is a
 localizer and early sizing proxy, not composition evidence.
 
+Do not transfer a measured trajectory from one PVT environment to another.
+The routed PCIe SENSE input stayed below its reference for 283 ps at TT but only
+218 ps at SS/125 C, even though the upstream event block reported a much wider
+logical SENSE interval. Device delay, threshold, slew, route, and receiver
+loading redefine the waveform at the actual port. A compiler should either
+sample every required parent environment or carry a proved transformation from
+the producer contract to the consumer-port trajectory; substituting one
+corner's pulse width into every leaf case is not conservative by construction.
+
 Also distinguish transparent output from retained output. In the PI-clocked
 RX parent, a 750 ps observation occurred 200 ps after capture opened but 180 ps
 before its 380 ps write pulse closed. It produced a plausible weak-polarity

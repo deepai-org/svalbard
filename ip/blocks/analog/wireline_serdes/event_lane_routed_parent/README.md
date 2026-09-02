@@ -157,3 +157,11 @@ stays at 0.592--0.607 V despite a 0.657--3.149 V input. Exact leaf replay proves
 the waveform itself is sufficient; exact leaf-plus-StrongARM replay reproduces
 the failure. The remaining boundary is therefore nonlinear consumer loading,
 not polarity, lumped RC, or input waveform shape.
+
+The same waveform probe has now been run at SS/125 C. The routed SENSE input
+spans 0.816--2.865 V but remains below its 1.825 V reference for only 218 ps,
+versus 283 ps at TT. This is authoritative evidence that a TT pulse width is
+not a conservative PVT envelope. The role-specific SENSE receiver and several
+bounded alternatives remain failed at this corner; the next parent revision
+must store/stretch the event locally or deliver a stronger producer-side pulse
+before another full PRBS campaign.

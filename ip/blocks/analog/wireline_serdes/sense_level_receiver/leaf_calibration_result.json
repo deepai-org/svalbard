@@ -1,0 +1,3219 @@
+{
+  "biases_v": [
+    0.85,
+    0.9,
+    1.0,
+    1.08,
+    1.2,
+    1.4,
+    1.6,
+    1.8
+  ],
+  "calibration_windows": {
+    "ff_cold": {
+      "passing_controls": [
+        {
+          "bias_v": 1.08,
+          "reference_offset_v": 0.0
+        },
+        {
+          "bias_v": 1.08,
+          "reference_offset_v": 0.1
+        },
+        {
+          "bias_v": 1.08,
+          "reference_offset_v": 0.2
+        },
+        {
+          "bias_v": 1.08,
+          "reference_offset_v": 0.3
+        },
+        {
+          "bias_v": 1.2,
+          "reference_offset_v": 0.0
+        },
+        {
+          "bias_v": 1.2,
+          "reference_offset_v": 0.1
+        },
+        {
+          "bias_v": 1.2,
+          "reference_offset_v": 0.2
+        },
+        {
+          "bias_v": 1.2,
+          "reference_offset_v": 0.3
+        },
+        {
+          "bias_v": 1.4,
+          "reference_offset_v": 0.0
+        },
+        {
+          "bias_v": 1.4,
+          "reference_offset_v": 0.1
+        },
+        {
+          "bias_v": 1.4,
+          "reference_offset_v": 0.2
+        },
+        {
+          "bias_v": 1.4,
+          "reference_offset_v": 0.3
+        },
+        {
+          "bias_v": 1.6,
+          "reference_offset_v": 0.0
+        },
+        {
+          "bias_v": 1.6,
+          "reference_offset_v": 0.1
+        },
+        {
+          "bias_v": 1.8,
+          "reference_offset_v": 0.0
+        },
+        {
+          "bias_v": 1.8,
+          "reference_offset_v": 0.1
+        }
+      ],
+      "result": "pass"
+    },
+    "ff_hot": {
+      "passing_controls": [
+        {
+          "bias_v": 1.0,
+          "reference_offset_v": 0.2
+        }
+      ],
+      "result": "pass"
+    },
+    "ss_cold": {
+      "passing_controls": [
+        {
+          "bias_v": 1.4,
+          "reference_offset_v": 0.3
+        },
+        {
+          "bias_v": 1.6,
+          "reference_offset_v": 0.2
+        },
+        {
+          "bias_v": 1.8,
+          "reference_offset_v": 0.1
+        }
+      ],
+      "result": "pass"
+    },
+    "ss_hot": {
+      "passing_controls": [],
+      "result": "fail"
+    },
+    "tt": {
+      "passing_controls": [
+        {
+          "bias_v": 1.2,
+          "reference_offset_v": 0.3
+        },
+        {
+          "bias_v": 1.4,
+          "reference_offset_v": 0.0
+        },
+        {
+          "bias_v": 1.4,
+          "reference_offset_v": 0.1
+        },
+        {
+          "bias_v": 1.6,
+          "reference_offset_v": 0.0
+        }
+      ],
+      "result": "pass"
+    }
+  },
+  "case_count": 5,
+  "claim": "active_high_sense_output_programmable_pvt",
+  "consumer_pex_sha256": null,
+  "control_plan_sha256": null,
+  "covered_case_count": 4,
+  "dut_sha256": "2d5956bf1fa39b7274eaaf76a60b7c4ebc1310eb7e1b689c5d518174e253b732",
+  "not_a_claim": [
+    "mismatch yield",
+    "parent closure",
+    "PCIe compliance"
+  ],
+  "reference_offsets_v": [
+    0.0,
+    0.1,
+    0.2,
+    0.3
+  ],
+  "result": "fail",
+  "runs": [
+    {
+      "bias_v": 0.85,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.0036078,
+            "outn_low": 0.0013348,
+            "supply_current": 0.000358387
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.00889402,
+            "outn_low": 0.00293949,
+            "supply_current": 0.000762545
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.0167409,
+            "outn_low": 0.00250816,
+            "supply_current": 0.00111461
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.00209319,
+            "outn_low": 0.000839773,
+            "supply_current": 0.00022229
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.00101419,
+            "outn_low": 1.23777e-05,
+            "supply_current": 7.31477e-05
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 0,
+      "reference_offset_v": 0.0
+    },
+    {
+      "bias_v": 0.85,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.0036371,
+            "outn_low": 0.00134906,
+            "supply_current": 0.000364263
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.011361,
+            "outn_low": 0.00296538,
+            "supply_current": 0.000818037
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.0196074,
+            "outn_low": 0.00211587,
+            "supply_current": 0.00122424
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.00205676,
+            "outn_low": 0.000865713,
+            "supply_current": 0.00022422
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.000980517,
+            "outn_low": 1.47775e-05,
+            "supply_current": 7.32984e-05
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 0,
+      "reference_offset_v": 0.1
+    },
+    {
+      "bias_v": 0.85,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.00367758,
+            "outn_low": 0.00136829,
+            "supply_current": 0.00037158
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.0133044,
+            "outn_low": 0.00299832,
+            "supply_current": 0.000865288
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.0230123,
+            "outn_low": 0.00169234,
+            "supply_current": 0.00135196
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.00203574,
+            "outn_low": 0.000903847,
+            "supply_current": 0.000227192
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.000934501,
+            "outn_low": 1.9682e-05,
+            "supply_current": 7.36261e-05
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 0,
+      "reference_offset_v": 0.2
+    },
+    {
+      "bias_v": 0.85,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.00372837,
+            "outn_low": 0.00139547,
+            "supply_current": 0.000380591
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.014928,
+            "outn_low": 0.00303818,
+            "supply_current": 0.000908233
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.0312235,
+            "outn_low": 0.000905588,
+            "supply_current": 0.00154029
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.00204524,
+            "outn_low": 0.0009596,
+            "supply_current": 0.00023282
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.000887106,
+            "outn_low": 2.80961e-05,
+            "supply_current": 7.41742e-05
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 0,
+      "reference_offset_v": 0.3
+    },
+    {
+      "bias_v": 0.9,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.00493144,
+            "outn_low": 0.00197513,
+            "supply_current": 0.000493516
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.0272412,
+            "outn_low": 0.00388179,
+            "supply_current": 0.00130836
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.0243352,
+            "outn_low": 0.00196692,
+            "supply_current": 0.00140688
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.00264762,
+            "outn_low": 0.00129395,
+            "supply_current": 0.000295934
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.00146149,
+            "outn_low": 0.000350641,
+            "supply_current": 0.000133523
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 0,
+      "reference_offset_v": 0.0
+    },
+    {
+      "bias_v": 0.9,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.00501279,
+            "outn_low": 0.002009,
+            "supply_current": 0.00050636
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.0296699,
+            "outn_low": 0.00392993,
+            "supply_current": 0.00136914
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.0347451,
+            "outn_low": 0.000775796,
+            "supply_current": 0.00158344
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.00266803,
+            "outn_low": 0.00133933,
+            "supply_current": 0.000301991
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.00140147,
+            "outn_low": 0.000356342,
+            "supply_current": 0.000134236
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 0,
+      "reference_offset_v": 0.1
+    },
+    {
+      "bias_v": 0.9,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.00508984,
+            "outn_low": 0.00205384,
+            "supply_current": 0.000520717
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.0322821,
+            "outn_low": 0.0039998,
+            "supply_current": 0.00143082
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.0821326,
+            "outn_low": -0.00098628,
+            "supply_current": 0.0018552
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.00270978,
+            "outn_low": 0.00140668,
+            "supply_current": 0.000311329
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.0013467,
+            "outn_low": 0.000365921,
+            "supply_current": 0.00013515
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 0,
+      "reference_offset_v": 0.2
+    },
+    {
+      "bias_v": 0.9,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.00514296,
+            "outn_low": 0.00211189,
+            "supply_current": 0.000534446
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.0351591,
+            "outn_low": 0.00407767,
+            "supply_current": 0.00149656
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.573118,
+            "outn_low": -0.0039563,
+            "supply_current": 0.00276604
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.00280574,
+            "outn_low": 0.00153857,
+            "supply_current": 0.000329019
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.00129839,
+            "outn_low": 0.000382941,
+            "supply_current": 0.000136333
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 0,
+      "reference_offset_v": 0.3
+    },
+    {
+      "bias_v": 1.0,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.011501,
+            "outn_low": 0.00329754,
+            "supply_current": 0.000909479
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.061212500000000586,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.40207e-09,
+            "outn_high": 2.15407,
+            "outn_low": -0.00735225,
+            "outn_rise": 4.3531e-09,
+            "outn_rise_next": 5.1531e-09,
+            "supply_current": 0.00355621
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.109433,
+            "outn_low": -0.000731107,
+            "supply_current": 0.00207682
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.00432887,
+            "outn_low": 0.00249931,
+            "supply_current": 0.000495737
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.00276874,
+            "outn_low": 0.0014261,
+            "supply_current": 0.00032099
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 0,
+      "reference_offset_v": 0.0
+    },
+    {
+      "bias_v": 1.0,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.0127619,
+            "outn_low": 0.00317057,
+            "supply_current": 0.000951171
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.1230624999999998,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.43496e-09,
+            "outn_high": 2.94309,
+            "outn_low": -0.00730922,
+            "outn_rise": 4.33651e-09,
+            "outn_rise_next": 5.13651e-09,
+            "supply_current": 0.00401176
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 1.2693,
+            "outn_low": -0.00403492,
+            "supply_current": 0.00321228
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.0044896,
+            "outn_low": 0.00270231,
+            "supply_current": 0.000518324
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.00280832,
+            "outn_low": 0.0014484,
+            "supply_current": 0.000327244
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 0,
+      "reference_offset_v": 0.1
+    },
+    {
+      "bias_v": 1.0,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.0140204,
+            "outn_low": 0.00307451,
+            "supply_current": 0.00099772
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.15677499999999925,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.45373e-09,
+            "outn_high": 3.2358,
+            "outn_low": -0.00719005,
+            "outn_rise": 4.32831e-09,
+            "outn_rise_next": 5.12831e-09,
+            "supply_current": 0.00438928
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": true,
+          "duty_cycle": 0.5753545658123915,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_fall": 4.00153e-09,
+            "outn_high": 2.95362,
+            "outn_low": -0.00141353,
+            "outn_rise": 4.34286e-09,
+            "outn_rise_next": 5.14666e-09,
+            "supply_current": 0.0044469
+          },
+          "period_s": 8.038000000000001e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.00462142,
+            "outn_low": 0.00299106,
+            "supply_current": 0.000541682
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.00286913,
+            "outn_low": 0.00148892,
+            "supply_current": 0.000336793
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 1,
+      "reference_offset_v": 0.2
+    },
+    {
+      "bias_v": 1.0,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.0152904,
+            "outn_low": 0.00298948,
+            "supply_current": 0.00105134
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.18371249999999983,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.46944e-09,
+            "outn_high": 3.38919,
+            "outn_low": -0.00700464,
+            "outn_rise": 4.32247e-09,
+            "outn_rise_next": 5.12247e-09,
+            "supply_current": 0.00457237
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96066,
+            "outn_low": 2.94599,
+            "supply_current": 0.0016968
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.00489195,
+            "outn_low": 0.00275192,
+            "supply_current": 0.000591185
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.00296308,
+            "outn_low": 0.00155442,
+            "supply_current": 0.000352542
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 0,
+      "reference_offset_v": 0.3
+    },
+    {
+      "bias_v": 1.08,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.0258022,
+            "outn_low": 0.00246122,
+            "supply_current": 0.00143365
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.21867499999999984,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.47574e-09,
+            "outn_high": 3.52051,
+            "outn_low": -0.00980489,
+            "outn_rise": 4.3008e-09,
+            "outn_rise_next": 5.1008e-09,
+            "supply_current": 0.0048188
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": true,
+          "duty_cycle": 0.1303849343806411,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_fall": 4.57499e-09,
+            "outn_high": 1.90351,
+            "outn_low": -0.00353651,
+            "outn_rise": 4.46809e-09,
+            "outn_rise_next": 5.28797e-09,
+            "supply_current": 0.00356439
+          },
+          "period_s": 8.198800000000007e-10,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.00560229,
+            "outn_low": 0.00377217,
+            "supply_current": 0.00067644
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.00507367,
+            "outn_low": 0.00261461,
+            "supply_current": 0.000572225
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 1,
+      "reference_offset_v": 0.0
+    },
+    {
+      "bias_v": 1.08,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.0294438,
+            "outn_low": 0.00214207,
+            "supply_current": 0.0015278
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.24087500000000003,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.48849e-09,
+            "outn_high": 3.5602,
+            "outn_low": -0.0104493,
+            "outn_rise": 4.29579e-09,
+            "outn_rise_next": 5.09579e-09,
+            "supply_current": 0.00488192
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": true,
+          "duty_cycle": 0.6778756870614333,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_fall": 4.04416e-09,
+            "outn_high": 2.95804,
+            "outn_low": 0.024839,
+            "outn_rise": 4.30261e-09,
+            "outn_rise_next": 5.10494e-09,
+            "supply_current": 0.00450815
+          },
+          "period_s": 8.023299999999996e-10,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.00655348,
+            "outn_low": 0.00317416,
+            "supply_current": 0.00074068
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.00523508,
+            "outn_low": 0.00268927,
+            "supply_current": 0.000596899
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 1,
+      "reference_offset_v": 0.1
+    },
+    {
+      "bias_v": 1.08,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.0347522,
+            "outn_low": 0.00148422,
+            "supply_current": 0.00163132
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.26306249999999937,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.50199e-09,
+            "outn_high": 3.58474,
+            "outn_low": -0.0109244,
+            "outn_rise": 4.29154e-09,
+            "outn_rise_next": 5.09154e-09,
+            "supply_current": 0.0049358
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.95819,
+            "outn_low": 2.94973,
+            "supply_current": 0.00170365
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.0110172,
+            "outn_low": 0.00195774,
+            "supply_current": 0.000899364
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.00589227,
+            "outn_low": 0.00280685,
+            "supply_current": 0.000634564
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 1,
+      "reference_offset_v": 0.2
+    },
+    {
+      "bias_v": 1.08,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.048672,
+            "outn_low": -0.001616,
+            "supply_current": 0.00176848
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.28670000000000045,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.51699e-09,
+            "outn_high": 3.60137,
+            "outn_low": -0.0113513,
+            "outn_rise": 4.28763e-09,
+            "outn_rise_next": 5.08763e-09,
+            "supply_current": 0.00498477
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96207,
+            "outn_low": 2.95184,
+            "supply_current": 0.00134507
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.98557,
+            "outn_low": 2.92547,
+            "supply_current": 0.0012611
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.0085323,
+            "outn_low": 0.003015,
+            "supply_current": 0.000728409
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 1,
+      "reference_offset_v": 0.3
+    },
+    {
+      "bias_v": 1.2,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.209198,
+            "outn_low": -0.0107565,
+            "supply_current": 0.00229058
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.2901000000000007,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.51075e-09,
+            "outn_high": 3.60109,
+            "outn_low": -0.0118763,
+            "outn_rise": 4.27867e-09,
+            "outn_rise_next": 5.07867e-09,
+            "supply_current": 0.00525845
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": true,
+          "duty_cycle": 0.8129008864827018,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_fall": 4.10044e-09,
+            "outn_high": 2.95576,
+            "outn_low": 0.483974,
+            "outn_rise": 4.25008e-09,
+            "outn_rise_next": 5.04987e-09,
+            "supply_current": 0.00417029
+          },
+          "period_s": 7.997899999999998e-10,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.0103366,
+            "outn_low": 0.0037514,
+            "supply_current": 0.00099788
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.0203864,
+            "outn_low": 0.00343357,
+            "supply_current": 0.00124533
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 1,
+      "reference_offset_v": 0.0
+    },
+    {
+      "bias_v": 1.2,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 0.868035,
+            "outn_low": -0.014647,
+            "supply_current": 0.00289689
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.3201624999999998,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.52776e-09,
+            "outn_high": 3.6128,
+            "outn_low": -0.0118529,
+            "outn_rise": 4.27163e-09,
+            "outn_rise_next": 5.07163e-09,
+            "supply_current": 0.00530499
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.95866,
+            "outn_low": 2.94982,
+            "supply_current": 0.00169376
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": true,
+          "duty_cycle": 0.6271759519229619,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_fall": 4.15559e-09,
+            "outn_high": 2.97426,
+            "outn_low": -0.0161289,
+            "outn_rise": 4.46764e-09,
+            "outn_rise_next": 5.30463e-09,
+            "supply_current": 0.0031865
+          },
+          "period_s": 8.369899999999996e-10,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.0259,
+            "outn_low": 0.00308357,
+            "supply_current": 0.00141033
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 1,
+      "reference_offset_v": 0.1
+    },
+    {
+      "bias_v": 1.2,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": true,
+          "duty_cycle": 0.21912246070812855,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_fall": 4.58601e-09,
+            "outn_high": 2.94184,
+            "outn_low": -0.017353,
+            "outn_rise": 4.41062e-09,
+            "outn_rise_next": 5.21104e-09,
+            "supply_current": 0.00399821
+          },
+          "period_s": 8.004199999999996e-10,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.3502375000000002,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.54582e-09,
+            "outn_high": 3.61872,
+            "outn_low": -0.0118417,
+            "outn_rise": 4.26563e-09,
+            "outn_rise_next": 5.06563e-09,
+            "supply_current": 0.0053449
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96169,
+            "outn_low": 2.95028,
+            "supply_current": 0.00147724
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96552,
+            "outn_low": 2.95703,
+            "supply_current": 0.000925048
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.0320455,
+            "outn_low": 0.00272466,
+            "supply_current": 0.00156847
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 1,
+      "reference_offset_v": 0.2
+    },
+    {
+      "bias_v": 1.2,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": true,
+          "duty_cycle": 0.3676553301586107,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_fall": 4.67138e-09,
+            "outn_high": 3.27478,
+            "outn_low": -0.0196292,
+            "outn_rise": 4.37723e-09,
+            "outn_rise_next": 5.1773e-09,
+            "supply_current": 0.00443247
+          },
+          "period_s": 8.000700000000005e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.3823000000000006,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.56605e-09,
+            "outn_high": 3.62143,
+            "outn_low": -0.0118285,
+            "outn_rise": 4.26021e-09,
+            "outn_rise_next": 5.06021e-09,
+            "supply_current": 0.00538251
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96192,
+            "outn_low": 2.9504,
+            "supply_current": 0.00144779
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96603,
+            "outn_low": 2.95777,
+            "supply_current": 0.000846508
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.0500077,
+            "outn_low": -0.00403993,
+            "supply_current": 0.0017648
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 2,
+      "reference_offset_v": 0.3
+    },
+    {
+      "bias_v": 1.4,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": true,
+          "duty_cycle": 0.31669040657720454,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_fall": 4.63411e-09,
+            "outn_high": 3.22649,
+            "outn_low": -0.0176497,
+            "outn_rise": 4.38065e-09,
+            "outn_rise_next": 5.18099e-09,
+            "supply_current": 0.00464009
+          },
+          "period_s": 8.003400000000006e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.3689625,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.55965e-09,
+            "outn_high": 3.61166,
+            "outn_low": -0.0117474,
+            "outn_rise": 4.26448e-09,
+            "outn_rise_next": 5.06448e-09,
+            "supply_current": 0.0058192
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.95724,
+            "outn_low": 2.94828,
+            "supply_current": 0.00185315
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.98003,
+            "outn_low": 2.92718,
+            "supply_current": 0.00160647
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.0409852,
+            "outn_low": 0.00448592,
+            "supply_current": 0.00204395
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 2,
+      "reference_offset_v": 0.0
+    },
+    {
+      "bias_v": 1.4,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": true,
+          "duty_cycle": 0.5402825267676644,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_fall": 4.75904e-09,
+            "outn_high": 3.30332,
+            "outn_low": -0.0208799,
+            "outn_rise": 4.32609e-09,
+            "outn_rise_next": 5.12743e-09,
+            "supply_current": 0.00481887
+          },
+          "period_s": 8.0134e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.418575,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.58899e-09,
+            "outn_high": 3.61345,
+            "outn_low": -0.0116916,
+            "outn_rise": 4.25413e-09,
+            "outn_rise_next": 5.05413e-09,
+            "supply_current": 0.00588677
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96105,
+            "outn_low": 2.9482,
+            "supply_current": 0.00161062
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96473,
+            "outn_low": 2.95561,
+            "supply_current": 0.00105411
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.262121,
+            "outn_low": -0.0150671,
+            "supply_current": 0.00261556
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 2,
+      "reference_offset_v": 0.1
+    },
+    {
+      "bias_v": 1.4,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 3.30393,
+            "outn_low": 3.1791,
+            "supply_current": 0.0025799
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.47781250000000014,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.62525e-09,
+            "outn_high": 3.61234,
+            "outn_low": -0.0115054,
+            "outn_rise": 4.243e-09,
+            "outn_rise_next": 5.043e-09,
+            "supply_current": 0.00596032
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.9613,
+            "outn_low": 2.94829,
+            "supply_current": 0.00158063
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.965,
+            "outn_low": 2.95584,
+            "supply_current": 0.00101191
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": true,
+          "duty_cycle": 0.18935199650065576,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.57526e-09,
+            "outn_high": 3.14048,
+            "outn_low": -0.0216842,
+            "outn_rise": 4.42375e-09,
+            "outn_rise_next": 5.2239e-09,
+            "supply_current": 0.00407749
+          },
+          "period_s": 8.001499999999996e-10,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 1,
+      "reference_offset_v": 0.2
+    },
+    {
+      "bias_v": 1.4,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 3.29598,
+            "outn_low": 3.27635,
+            "supply_current": 0.00170078
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.56015,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.67607e-09,
+            "outn_high": 3.60934,
+            "outn_low": -0.0110744,
+            "outn_rise": 4.22795e-09,
+            "outn_rise_next": 5.02795e-09,
+            "supply_current": 0.00605551
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96137,
+            "outn_low": 2.94835,
+            "supply_current": 0.00156732
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96506,
+            "outn_low": 2.95595,
+            "supply_current": 0.000994261
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": true,
+          "duty_cycle": 0.37652014148408325,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.67755e-09,
+            "outn_high": 3.63449,
+            "outn_low": -0.025302,
+            "outn_rise": 4.3763e-09,
+            "outn_rise_next": 5.17639e-09,
+            "supply_current": 0.00477775
+          },
+          "period_s": 8.000899999999995e-10,
+          "result": "pass"
+        }
+      ],
+      "passing_case_count": 2,
+      "reference_offset_v": 0.3
+    },
+    {
+      "bias_v": 1.6,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": true,
+          "duty_cycle": 0.5427430425558462,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_fall": 4.76141e-09,
+            "outn_high": 3.30039,
+            "outn_low": -0.0206572,
+            "outn_rise": 4.32651e-09,
+            "outn_rise_next": 5.12781e-09,
+            "supply_current": 0.00494896
+          },
+          "period_s": 8.013000000000005e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.4241500000000002,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.59601e-09,
+            "outn_high": 3.60881,
+            "outn_low": -0.0116052,
+            "outn_rise": 4.25669e-09,
+            "outn_rise_next": 5.05669e-09,
+            "supply_current": 0.00611425
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.95999,
+            "outn_low": 2.94739,
+            "supply_current": 0.00173423
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.9635,
+            "outn_low": 2.9544,
+            "supply_current": 0.00117222
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.0804207,
+            "outn_low": -0.00425633,
+            "supply_current": 0.00252419
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 2,
+      "reference_offset_v": 0.0
+    },
+    {
+      "bias_v": 1.6,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 3.2965,
+            "outn_low": 3.25295,
+            "supply_current": 0.00253236
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.5057499999999997,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.64511e-09,
+            "outn_high": 3.60621,
+            "outn_low": -0.0113408,
+            "outn_rise": 4.24051e-09,
+            "outn_rise_next": 5.04051e-09,
+            "supply_current": 0.00625044
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.9608,
+            "outn_low": 2.94726,
+            "supply_current": 0.00166089
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.9644,
+            "outn_low": 2.95459,
+            "supply_current": 0.00110535
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": true,
+          "duty_cycle": 0.12513741754947086,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.54787e-09,
+            "outn_high": 2.47692,
+            "outn_low": -0.0180164,
+            "outn_rise": 4.4477e-09,
+            "outn_rise_next": 5.24818e-09,
+            "supply_current": 0.00401245
+          },
+          "period_s": 8.004800000000005e-10,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 1,
+      "reference_offset_v": 0.1
+    },
+    {
+      "bias_v": 1.6,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 3.29624,
+            "outn_low": 3.27356,
+            "supply_current": 0.00181131
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.6397875000000006,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.72328e-09,
+            "outn_high": 3.60062,
+            "outn_low": -0.00899222,
+            "outn_rise": 4.21145e-09,
+            "outn_rise_next": 5.01145e-09,
+            "supply_current": 0.0064354
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96093,
+            "outn_low": 2.94732,
+            "supply_current": 0.00164165
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96455,
+            "outn_low": 2.95469,
+            "supply_current": 0.00107984
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": true,
+          "duty_cycle": 0.4323588546024455,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.71228e-09,
+            "outn_high": 3.64036,
+            "outn_low": -0.0245343,
+            "outn_rise": 4.36606e-09,
+            "outn_rise_next": 5.16683e-09,
+            "supply_current": 0.0051379
+          },
+          "period_s": 8.007699999999995e-10,
+          "result": "pass"
+        }
+      ],
+      "passing_case_count": 1,
+      "reference_offset_v": 0.2
+    },
+    {
+      "bias_v": 1.6,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 3.29725,
+            "outn_low": 3.2734,
+            "supply_current": 0.00173255
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 3.6179,
+            "outn_low": 3.46439,
+            "supply_current": 0.00399222
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96098,
+            "outn_low": 2.94737,
+            "supply_current": 0.00163143
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96458,
+            "outn_low": 2.95472,
+            "supply_current": 0.00107118
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": true,
+          "duty_cycle": 0.8669453978159133,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.10391e-09,
+            "outn_high": 3.64788,
+            "outn_low": 0.833751,
+            "outn_rise": 4.21052e-09,
+            "outn_rise_next": 5.01177e-09,
+            "supply_current": 0.00417024
+          },
+          "period_s": 8.012500000000003e-10,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 0,
+      "reference_offset_v": 0.3
+    },
+    {
+      "bias_v": 1.8,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": true,
+          "duty_cycle": 0.7432033983008494,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_fall": 4.05853e-09,
+            "outn_high": 3.2994,
+            "outn_low": 0.0407299,
+            "outn_rise": 4.26407e-09,
+            "outn_rise_next": 5.06447e-09,
+            "supply_current": 0.00487148
+          },
+          "period_s": 8.003999999999998e-10,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.45980000000000054,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.6191e-09,
+            "outn_high": 3.60633,
+            "outn_low": -0.0114807,
+            "outn_rise": 4.25126e-09,
+            "outn_rise_next": 5.05126e-09,
+            "supply_current": 0.00626188
+          },
+          "period_s": 8.000000000000005e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96014,
+            "outn_low": 2.94666,
+            "supply_current": 0.00173896
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96381,
+            "outn_low": 2.95392,
+            "supply_current": 0.0011832
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 0.165634,
+            "outn_low": -0.00819563,
+            "supply_current": 0.00284491
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 1,
+      "reference_offset_v": 0.0
+    },
+    {
+      "bias_v": 1.8,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 3.29327,
+            "outn_low": 3.27299,
+            "supply_current": 0.00210687
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.5694875000000003,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.6839e-09,
+            "outn_high": 3.60173,
+            "outn_low": -0.0107633,
+            "outn_rise": 4.22831e-09,
+            "outn_rise_next": 5.02831e-09,
+            "supply_current": 0.00643941
+          },
+          "period_s": 7.999999999999997e-10,
+          "result": "pass"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96057,
+            "outn_low": 2.94668,
+            "supply_current": 0.00169668
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96415,
+            "outn_low": 2.95399,
+            "supply_current": 0.00113928
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": true,
+          "duty_cycle": 0.28468857699415573,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.63549e-09,
+            "outn_high": 3.53727,
+            "outn_low": -0.0196496,
+            "outn_rise": 4.4075e-09,
+            "outn_rise_next": 5.20834e-09,
+            "supply_current": 0.00506657
+          },
+          "period_s": 8.008400000000003e-10,
+          "result": "pass"
+        }
+      ],
+      "passing_case_count": 2,
+      "reference_offset_v": 0.1
+    },
+    {
+      "bias_v": 1.8,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 3.29687,
+            "outn_low": 3.27219,
+            "supply_current": 0.00183048
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": true,
+          "duty_cycle": 0.8034448708173448,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.00895e-09,
+            "outn_high": 3.59371,
+            "outn_low": 0.068556,
+            "outn_rise": 4.1662e-09,
+            "outn_rise_next": 4.96623e-09,
+            "supply_current": 0.00653279
+          },
+          "period_s": 8.000300000000002e-10,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96066,
+            "outn_low": 2.94674,
+            "supply_current": 0.00168117
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96425,
+            "outn_low": 2.95404,
+            "supply_current": 0.00112195
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": true,
+          "duty_cycle": 0.6341633814062576,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_fall": 4.01894e-09,
+            "outn_high": 3.64556,
+            "outn_low": -0.0253136,
+            "outn_rise": 4.31218e-09,
+            "outn_rise_next": 5.11374e-09,
+            "supply_current": 0.00524938
+          },
+          "period_s": 8.015599999999999e-10,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 0,
+      "reference_offset_v": 0.2
+    },
+    {
+      "bias_v": 1.8,
+      "cases": [
+        {
+          "case_id": "tt",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "typical",
+            3.3,
+            27
+          ],
+          "observed": {
+            "outn_high": 3.2973,
+            "outn_low": 3.27229,
+            "supply_current": 0.00178082
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 3.62412,
+            "outn_low": 3.58563,
+            "supply_current": 0.00309682
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ff_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ff",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96071,
+            "outn_low": 2.94677,
+            "supply_current": 0.00167238
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 2.96427,
+            "outn_low": 2.95406,
+            "supply_current": 0.00111615
+          },
+          "period_s": 0,
+          "result": "fail"
+        },
+        {
+          "case_id": "ss_cold",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            3.63,
+            -40
+          ],
+          "observed": {
+            "outn_high": 3.61701,
+            "outn_low": 3.60157,
+            "supply_current": 0.00239317
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 0,
+      "reference_offset_v": 0.3
+    }
+  ],
+  "schema_version": 1
+}

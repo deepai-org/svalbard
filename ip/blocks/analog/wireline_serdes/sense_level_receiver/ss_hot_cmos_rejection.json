@@ -1,0 +1,54 @@
+{
+  "biases_v": [
+    1.0
+  ],
+  "calibration_windows": {
+    "ss_hot": {
+      "passing_controls": [],
+      "result": "fail"
+    }
+  },
+  "case_count": 1,
+  "claim": "active_high_sense_output_programmable_pvt",
+  "consumer_pex_sha256": "47d6a8389db9a49ef700eeb21bc41e5ed726f62847d15d3740014f7871183139",
+  "control_plan_sha256": null,
+  "covered_case_count": 0,
+  "dut_sha256": "2375f57fea641284e80b356e0585bbfa39eec8f1560ab17eaabdded96723452a",
+  "not_a_claim": [
+    "mismatch yield",
+    "parent closure",
+    "PCIe compliance"
+  ],
+  "pulse_high_s": 5.82e-10,
+  "reference_offsets_v": [
+    0.0
+  ],
+  "result": "fail",
+  "runs": [
+    {
+      "bias_v": 1.0,
+      "cases": [
+        {
+          "case_id": "ss_hot",
+          "complete": false,
+          "duty_cycle": 0,
+          "environment": [
+            "ss",
+            2.97,
+            125
+          ],
+          "observed": {
+            "outn_high": 0.000465416,
+            "outn_low": -0.000935989,
+            "supply_current": 0.00868496
+          },
+          "period_s": 0,
+          "result": "fail"
+        }
+      ],
+      "passing_case_count": 0,
+      "reference_offset_v": 0.0
+    }
+  ],
+  "schema_version": 1
+}

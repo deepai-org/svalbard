@@ -125,6 +125,13 @@ class EventLaneCompositionTest(unittest.TestCase):
         self.assertIn("local_clock_fanout_pex", deck)
         self.assertNotIn(".subckt sampler_clock_buffer", deck)
         self.assertNotIn(".subckt capture_clock_buffer", deck)
+        save_line = next(line for line in deck.splitlines()
+                         if line.startswith(".save "))
+        self.assertIn("i(VDD)", save_line)
+        self.assertIn("v(E_SAMPLER_CLK)", save_line)
+        self.assertIn("v(FE_E_P)", save_line)
+        self.assertIn("v(EVEN_Q)", save_line)
+        self.assertNotIn("xevent.", save_line)
 
     def test_schematic_debug_nodes_are_explicit_measures(self) -> None:
         environment = composition.base.CONTRACT["environments"][0]

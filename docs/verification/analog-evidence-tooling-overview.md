@@ -177,6 +177,16 @@ TT ends at SENSE width/timing. This is automatic PEX failure movement and
 bounded branch closure—the tool does not yet synthesize the different capture
 primitive now required.
 
+Large composed-PEX decks now derive an explicit `.save` set from their
+measures instead of retaining every internal RC node. The event-to-lane V8
+screen exposed why this belongs in the evidence compiler: two parallel
+ngspice workers each reached roughly 1.39 GB of waveform vectors and terminated
+before measurement, which the result schema records as incomplete. The
+corrected wrapper serializes these cases and retains only contract-observable
+voltages plus supply current. V8 itself is physically closed, but remains
+electrically unadmitted until that corrected replay can run with a safe host
+scratch reserve.
+
 ## Portability beyond PCIe and Wi-Fi
 
 The repository has a portable **execution shell**, not yet a portable analog

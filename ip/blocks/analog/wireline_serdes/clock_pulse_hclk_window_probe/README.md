@@ -686,9 +686,17 @@ plus 153/152 ps high at slow/hot. Rails, frontend decisions, held data, and
 current remain within contract. Exact records are
 [`capture_local_clock_fanout_v6_pex_screen.json`](capture_local_clock_fanout_v6_pex_screen.json)
 and [`capture_local_clock_fanout_v7_pex_screen.json`](capture_local_clock_fanout_v7_pex_screen.json).
-V7 misses only 2.8--10.4 ps of slow/hot low time. The next candidate uses an
+V7 misses only 2.8--10.4 ps of slow/hot low time. V8 implements the bounded
 8x/24x taper into the same balanced final stage; source loading remains equal
-to the already rail-valid v1 aggregate input load.
+to the already rail-valid v1 aggregate input load. Its 352-finger, 143.9-um
+macro is zero-DRC, uniquely LVS-matched, and extracts to 3,026R/2,058C. The
+first exact TT/slow-hot replay is retained as
+[`capture_local_clock_fanout_v8_resource_failure.json`](capture_local_clock_fanout_v8_resource_failure.json):
+both ngspice workers exhausted waveform memory before producing measurements,
+so it is infrastructure evidence, not an electrical pass or failure. The deck
+compiler now emits a minimal `.save` set and the bounded wrapper runs these
+large PEX cases serially. Replaying that corrected job is the next gate; only
+an actual 2/2 result may admit V8 to the five-environment screen.
 
 Two negative results matter to the physical compiler workflow.  First, a
 compact selector reduced extracted parasitic count but lost SS/hot output-rail

@@ -22,9 +22,9 @@ class LocalClockFanoutSourceTest(unittest.TestCase):
             devices, groups = flatten(parse(source), compiler.TOP)
         self.assertEqual(len(groups), 14)
         self.assertEqual(len(devices), 28)
-        self.assertEqual(sum(device.mult for device in devices), 312)
-        self.assertEqual(sum(device.mult for device in devices if device.phase == "E"), 156)
-        self.assertEqual(sum(device.mult for device in devices if device.phase == "O"), 156)
+        self.assertEqual(sum(device.mult for device in devices), 352)
+        self.assertEqual(sum(device.mult for device in devices if device.phase == "E"), 176)
+        self.assertEqual(sum(device.mult for device in devices if device.phase == "O"), 176)
         for phase in ("E", "O"):
             for branch in ("S", "C", "CB"):
                 self.assertIn(f"X{phase}{branch}__XI0", groups)
@@ -41,8 +41,8 @@ class LocalClockFanoutSourceTest(unittest.TestCase):
         self.assertIn("XES CLKP_HB E_SENSE", source)
         self.assertIn("XOS CLKN_HB O_SENSE", source)
         self.assertIn("XI2 B1 Y VDD VSS cp_inv MP=32 MN=32", source)
-        self.assertIn("XI0 A B0 VDD VSS cp_inv MP=6 MN=6", source)
-        self.assertIn("XI1 B0 B1 VDD VSS cp_inv MP=16 MN=16", source)
+        self.assertIn("XI0 A B0 VDD VSS cp_inv MP=8 MN=8", source)
+        self.assertIn("XI1 B0 B1 VDD VSS cp_inv MP=24 MN=24", source)
 
     def test_retained_physical_identity_matches_replay_artifacts(self) -> None:
         physical = json.loads((ROOT / "local_clock_fanout_physical.json").read_text())

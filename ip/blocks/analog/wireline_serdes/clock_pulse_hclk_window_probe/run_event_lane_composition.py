@@ -63,6 +63,7 @@ def compile_deck(event_pex: Path, lane_pex: Path, environment: dict[str, Any],
     vmid = vdd / 2
     rx_bias = float(CONTRACT["rx_bias_v"][environment["id"]])
     measures = []
+    save_vectors = ["i(VDD)"]
     for phase in PHASES:
         upper = phase.upper()
         sense_node = (f"{upper}_SAMPLER_CLK" if (sampler_clock_buffer or
@@ -81,12 +82,14 @@ def compile_deck(event_pex: Path, lane_pex: Path, environment: dict[str, Any],
                 node = (clock_nodes[signal] if (capture_clock_buffer or
                         clock_fanout_pex) else
                         f"{upper}_{signal.upper()}")
+            save_vectors.append(f"v({node})")
             measures.extend([
                 f"meas tran {phase}_{signal}_high max v({node}) from=8n to=12.8n",
                 f"meas tran {phase}_{signal}_low min v({node}) from=8n to=12.8n",
             ])
             if local_interface_buffer:
                 source_node = f"{upper}_{signal.upper()}_SRC"
+                save_vectors.append(f"v({source_node})")
                 measures.extend([
                     f"meas tran {phase}_{signal}_src_high max v({source_node}) from=8n to=12.8n",
                     f"meas tran {phase}_{signal}_src_low min v({source_node}) from=8n to=12.8n",
@@ -103,8 +106,14 @@ def compile_deck(event_pex: Path, lane_pex: Path, environment: dict[str, Any],
             f"meas tran {phase}_sense_high_exit when v({sense_node})={vdd - CONTRACT['thresholds']['logic_rail_margin_v']:.6f} fall=1 td=12n",
             f"meas tran {phase}_sense_low_enter when v({sense_node})={CONTRACT['thresholds']['logic_rail_margin_v']} fall=1 td=12n",
         ])
+        save_vectors.extend([
+            f"v(FE_{upper}_P)", f"v(FE_{upper}_N)",
+            f"v({'EVEN' if phase == 'e' else 'ODD'}_Q)",
+            f"v({'EVEN' if phase == 'e' else 'ODD'}_QB)",
+        ])
         for stage in debug_stages:
             node = f"xevent.DBG_{upper}_{stage.upper()}"
+            save_vectors.append(f"v({node})")
             measures.extend([
                 f"meas tran {phase}_dbg_{stage}_high max v({node}) from=8n to=12.8n",
                 f"meas tran {phase}_dbg_{stage}_low min v({node}) from=8n to=12.8n",
@@ -254,6 +263,7 @@ CEQ EVEN_Q 0 50f
 CEQB EVEN_QB 0 50f
 COQ ODD_Q 0 50f
 COQB ODD_QB 0 50f
+.save {' '.join(dict.fromkeys(save_vectors))}
 .control
 tran 1p 12.8n uic
 let isupply = -i(VDD)

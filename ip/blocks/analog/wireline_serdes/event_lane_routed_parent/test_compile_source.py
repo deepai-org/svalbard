@@ -17,8 +17,7 @@ class RoutedParentSourceTest(unittest.TestCase):
         self.assertEqual(source.count(f".subckt {compiler.EVENT_TOP} "), 1)
         self.assertEqual(source.count(f".subckt {compiler.FANOUT_TOP} "), 1)
         self.assertEqual(source.count(f".subckt {compiler.LANE_TOP} "), 1)
-        self.assertEqual(source.count(".subckt capture_clock_bridge "), 1)
-        self.assertIn(".subckt restore__ccb_inv ", source)
+        self.assertEqual(source.count(".subckt clock_level_converter "), 1)
         self.assertIn(".subckt event__cp_inv ", source)
         self.assertIn(".subckt fanout__cp_inv ", source)
         self.assertNotIn(".subckt cp_inv ", source)
@@ -27,10 +26,16 @@ class RoutedParentSourceTest(unittest.TestCase):
         source = compiler.compile_source()
         self.assertIn("XEVENT CLKP_H CLKN_H SEL0 SEL1 SEL2", source)
         self.assertIn("XFANOUT E_CLK E_CLKB O_CLK O_CLKB", source)
-        for instance in ("XRESTORE_S", "XRESTORE_C", "XRESTORE_CB"):
+        for instance in ("XLEVEL_S", "XLEVEL_E", "XLEVEL_O"):
             self.assertIn(instance + " ", source)
         self.assertIn(
-            "E_SENSE_PRE O_SENSE_PRE E_SENSE E_SENSE_UNUSED", source)
+            "E_CAPTURE_CLK_PRE E_CAPTURE_CLKB_PRE LEVEL_BIAS VDD VSS",
+            source,
+        )
+        self.assertIn(
+            "O_CAPTURE_CLK_PRE O_CAPTURE_CLKB_PRE LEVEL_BIAS VDD VSS",
+            source,
+        )
         self.assertIn(
             "E_SENSE E_REGEN_CLK E_REGEN_CLKB E_CAPTURE_CLK E_CAPTURE_CLKB E_SENSE_BOOST",
             source,

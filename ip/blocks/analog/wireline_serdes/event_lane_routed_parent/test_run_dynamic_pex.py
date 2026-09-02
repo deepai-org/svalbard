@@ -18,7 +18,7 @@ class DynamicPexTest(unittest.TestCase):
         deck = target.compile_deck(Path("parent.pex"), env, target.prbs7(48), 4)
         self.assertIn("diag_fe_e_0", deck)
         self.assertIn("xparent.XEVENT.E_SENSE.t0", deck)
-        self.assertIn("diag_restore_cb_o_output_low", deck)
+        self.assertIn("diag_level_o_outn_low", deck)
 
     def test_common_latency_requires_both_phases(self):
         symbols = target.prbs7(48)

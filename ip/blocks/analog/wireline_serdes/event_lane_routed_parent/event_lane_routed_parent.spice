@@ -404,42 +404,52 @@ XCAP FE_E_P FE_E_N FE_O_P FE_O_N E_CAPTURE_CLK E_CAPTURE_CLKB
 .ends lane_rx_regenerative_capture
 * end resolved include: lane_rx_regenerative_capture/lane_rx_regenerative_capture.spice
 * SPDX-License-Identifier: Apache-2.0
-* Local complementary clock bridge for one static CMOS capture interleave.
-*
-* WRITE is the wide, routed pulse-generator output.  CLKB is regenerated
-* locally at the PMOS-clock gates; a second local inverter regenerates CLK at
-* the NFET-clock gates.  The capture cell is deliberately tolerant of the
-* short PMOS-first/NMOS-last sequencing this topology creates: each half of
-* the complementary write path reinforces the same selected latch state.
-*
-* This is a product-specific boundary, not a general clock-tree primitive.
+* Symmetric regenerative CML-clock to CMOS-clock converter.
+.subckt clock_level_converter INP INN VBIAS VDD VSS OUTP OUTN
+XDNL VSS VSS VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XDNR VSS VSS VSS VSS nfet_03v3 w=8u l=0.28u m=2
+XDPL VDD VDD VDD VDD pfet_03v3 w=4u l=0.28u m=2
+XDPR VDD VDD VDD VDD pfet_03v3 w=4u l=0.28u m=2
 
-.subckt restore__ccb_inv A Y VDD VSS params: WP=8u WN=4u MP=1 MN=1
-XP Y A VDD VDD pfet_03v3 w={WP} l=0.28u m={MP}
-XN Y A VSS VSS nfet_03v3 w={WN} l=0.28u m={MN}
-.ends restore__ccb_inv
+* Two input-swapped differential receivers keep CML loading symmetric.
+XAPN AP INP TP VSS nfet_03v3 w=8u l=0.28u m=2
+XADN AD INN TP VSS nfet_03v3 w=8u l=0.28u m=2
+XATP TP VBIAS VSS VSS nfet_03v3 w=10u l=0.28u m=4
+XADP AD AD VDD VDD pfet_03v3 w=4u l=0.28u m=2
+XAPP AP AD VDD VDD pfet_03v3 w=4u l=0.28u m=2
+XANN AN INN TN VSS nfet_03v3 w=8u l=0.28u m=2
+XBDN BD INP TN VSS nfet_03v3 w=8u l=0.28u m=2
+XATN TN VBIAS VSS VSS nfet_03v3 w=10u l=0.28u m=4
+XBDP BD BD VDD VDD pfet_03v3 w=4u l=0.28u m=2
+XANP AN BD VDD VDD pfet_03v3 w=4u l=0.28u m=2
 
-.subckt restore__capture_clock_phase WRITE CLK CLKB VDD VSS
-* The first inverter drives the large PMOS capture-gate bank and the input of
-* the NFET-clock inverter.  Its stronger pull-down keeps CLKB near VSS at the
-* slow/hot, low-supply corner without increasing WRITE's PMOS gate load.
-XCLKB WRITE CLKB VDD VSS restore__ccb_inv WP=8u WN=10u MP=8 MN=8
-* The final stage is intentionally PMOS-skewed: the capture NFET gate load
-* needs a full high level within the bounded write pulse at slow/hot PVT.
-XCLK CLKB CLK VDD VSS restore__ccb_inv WP=12u WN=5u MP=16 MN=16
-.ends restore__capture_clock_phase
+* A deliberately weak, symmetric cross-coupled pair reinforces the two mirror
+* outputs after the input stages establish their polarity.
+XFPAP AP AN VDD VDD pfet_03v3 w=3u l=0.28u m=1
+XFNAP AP AN VSS VSS nfet_03v3 w=1u l=0.28u m=1
+XFPAN AN AP VDD VDD pfet_03v3 w=3u l=0.28u m=1
+XFNAN AN AP VSS VSS nfet_03v3 w=1u l=0.28u m=1
 
-.subckt capture_clock_bridge E_WRITE O_WRITE
-+ E_CAPTURE_CLK E_CAPTURE_CLKB O_CAPTURE_CLK O_CAPTURE_CLKB VDD VSS
-XE E_WRITE E_CAPTURE_CLK E_CAPTURE_CLKB VDD VSS restore__capture_clock_phase
-XO O_WRITE O_CAPTURE_CLK O_CAPTURE_CLKB VDD VSS restore__capture_clock_phase
-.ends capture_clock_bridge
+* Isolation stages keep high-impedance mirror-node capacitance small.
+XAPP1 AB AP VDD VDD pfet_03v3 w=4u l=0.28u m=1
+XAPN1 AB AP VSS VSS nfet_03v3 w=2u l=0.28u m=1
+XANP1 NB AN VDD VDD pfet_03v3 w=4u l=0.28u m=1
+XANN1 NB AN VSS VSS nfet_03v3 w=2u l=0.28u m=1
+XAMP AC AB VDD VDD pfet_03v3 w=8u l=0.28u m=1
+XAMN AC AB VSS VSS nfet_03v3 w=4u l=0.28u m=1
+XNMP NC NB VDD VDD pfet_03v3 w=8u l=0.28u m=1
+XNMN NC NB VSS VSS nfet_03v3 w=4u l=0.28u m=1
+XOPP OUTP AC VDD VDD pfet_03v3 w=12u l=0.28u m=2
+XOPN OUTP AC VSS VSS nfet_03v3 w=6u l=0.28u m=2
+XONP OUTN NC VDD VDD pfet_03v3 w=12u l=0.28u m=2
+XONN OUTN NC VSS VSS nfet_03v3 w=6u l=0.28u m=2
+.ends clock_level_converter
 
 * Namespace-safe composed transistor intent. Regenerative and BOOST controls
 * remain explicit so package-level calibration or static straps are realizable.
 .subckt event_lane_routed_parent CLKP_H CLKN_H SEL0 SEL1 SEL2 RXP RXN
 + TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N TERM_EN5_N TERM_EN6_N
-+ VTHP VTHN RX_BIAS RX_BW_EN_N E_REGEN_CLK E_REGEN_CLKB E_SENSE_BOOST
++ VTHP VTHN RX_BIAS LEVEL_BIAS RX_BW_EN_N E_REGEN_CLK E_REGEN_CLKB E_SENSE_BOOST
 + O_REGEN_CLK O_REGEN_CLKB O_SENSE_BOOST VDD VSS
 + RX_RAWP RX_RAWN FE_E_P FE_E_N FE_O_P FE_O_N EVEN_Q EVEN_QB ODD_Q ODD_QB
 XEVENT CLKP_H CLKN_H SEL0 SEL1 SEL2 VDD VSS
@@ -448,12 +458,14 @@ XEVENT CLKP_H CLKN_H SEL0 SEL1 SEL2 VDD VSS
 XFANOUT E_CLK E_CLKB O_CLK O_CLKB VDD VSS
 + E_SENSE_PRE E_CAPTURE_CLK_PRE E_CAPTURE_CLKB_PRE
 + O_SENSE_PRE O_CAPTURE_CLK_PRE O_CAPTURE_CLKB_PRE local_clock_fanout
-XRESTORE_S E_SENSE_PRE O_SENSE_PRE E_SENSE E_SENSE_UNUSED
-+ O_SENSE O_SENSE_UNUSED VDD VSS capture_clock_bridge
-XRESTORE_C E_CAPTURE_CLK_PRE O_CAPTURE_CLK_PRE E_CAPTURE_CLK E_CAPTURE_CLK_UNUSED
-+ O_CAPTURE_CLK O_CAPTURE_CLK_UNUSED VDD VSS capture_clock_bridge
-XRESTORE_CB E_CAPTURE_CLKB_PRE O_CAPTURE_CLKB_PRE E_CAPTURE_CLKB E_CAPTURE_CLKB_UNUSED
-+ O_CAPTURE_CLKB O_CAPTURE_CLKB_UNUSED VDD VSS capture_clock_bridge
+* Interpret every weak fanout boundary differentially.  E/O SENSE are the
+* complementary half-rate pair; each capture phase already has CLK/CLKB.
+XLEVEL_S E_SENSE_PRE O_SENSE_PRE LEVEL_BIAS VDD VSS
++ E_SENSE O_SENSE clock_level_converter
+XLEVEL_E E_CAPTURE_CLK_PRE E_CAPTURE_CLKB_PRE LEVEL_BIAS VDD VSS
++ E_CAPTURE_CLK E_CAPTURE_CLKB clock_level_converter
+XLEVEL_O O_CAPTURE_CLK_PRE O_CAPTURE_CLKB_PRE LEVEL_BIAS VDD VSS
++ O_CAPTURE_CLK O_CAPTURE_CLKB clock_level_converter
 XLANE RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N TERM_EN3_N TERM_EN4_N
 + TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N
 + E_SENSE E_REGEN_CLK E_REGEN_CLKB E_CAPTURE_CLK E_CAPTURE_CLKB E_SENSE_BOOST

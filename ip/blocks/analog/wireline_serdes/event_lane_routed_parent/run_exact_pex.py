@@ -19,6 +19,8 @@ MEASURE = re.compile(r"^(\w+)\s*=\s*([-+0-9.eE]+)", re.MULTILINE)
 CONTROL = {"id": "sense1_interval0_epoch0", "sense": 1, "interval": 0, "epoch": 0}
 PHASES = (("e", "FE_E_P", "FE_E_N", "EVEN_Q", "EVEN_QB", "12.55n"),
           ("o", "FE_O_P", "FE_O_N", "ODD_Q", "ODD_QB", "12.75n"))
+LEVEL_BIAS_V = {"tt": 1.15, "ff_cold": 1.15, "ff_hot": 1.15,
+                "ss_hot": 1.00, "ss_cold": 1.15}
 
 
 def digest(path: Path) -> str:
@@ -35,6 +37,7 @@ def compile_deck(pex: Path, environment: dict) -> str:
     vmid = vdd / 2
     env_id = environment["id"]
     bias = EVENT_CONTRACT["rx_bias_v"][env_id]
+    level_bias = LEVEL_BIAS_V[env_id]
     measures: list[str] = []
     saves = ["i(VDD)"]
     for phase, fp, fn, q, qb, instant in PHASES:
@@ -65,6 +68,8 @@ RRXP RXP_SRC RXP 1
 RRXN RXN_SRC RXN 1
 VRXBIAS RX_BIAS_SRC 0 PWL(0 0 500p {bias})
 RRXBIAS RX_BIAS_SRC RX_BIAS 1
+VLEVELBIAS LEVEL_BIAS_SRC 0 PWL(0 0 500p {level_bias})
+RLEVELBIAS LEVEL_BIAS_SRC LEVEL_BIAS 1
 VTHP VTHP_SRC 0 PWL(0 0 500p {vmid})
 VTHN VTHN_SRC 0 PWL(0 0 500p {vmid})
 RVTHP VTHP_SRC VTHP 1
@@ -92,7 +97,7 @@ VOREGENB O_REGEN_CLKB 0 0
 VEBOOST E_SENSE_BOOST 0 {vdd}
 VOBOOST O_SENSE_BOOST 0 {vdd}
 XPARENT CLKP_H CLKN_H SEL0 SEL1 SEL2 RXP RXN TERM_EN0_N TERM_EN1_N TERM_EN2_N
-+ TERM_EN3_N TERM_EN4_N TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS RX_BW_EN_N
++ TERM_EN3_N TERM_EN4_N TERM_EN5_N TERM_EN6_N VTHP VTHN RX_BIAS LEVEL_BIAS RX_BW_EN_N
 + E_REGEN_CLK E_REGEN_CLKB E_SENSE_BOOST O_REGEN_CLK O_REGEN_CLKB O_SENSE_BOOST
 + VDD 0 RX_RAWP RX_RAWN FE_E_P FE_E_N FE_O_P FE_O_N EVEN_Q EVEN_QB ODD_Q ODD_QB
 + event_lane_routed_parent_pex

@@ -29,7 +29,7 @@ unset CML_TO_CMOS_FAST_LAYOUT
 magic_run /src/lane_rx_regenerative_frontend/layout.tcl /work/parent-front.log
 magic_run /src/deserializer_split/layout.tcl /work/parent-capture.log
 magic_run /src/lane_rx_regenerative_capture/layout.tcl /work/parent-lane.log
-magic_run /src/capture_clock_bridge/layout.tcl /work/parent-local-restore.log
+magic_run /src/clock_pulse/layout.tcl /work/parent-event-level.log
 magic_run /src/event_lane_routed_parent/layout.tcl /work/parent-layout.log
 
 sak-drc.sh -m -w /work/parent-drc /work/event_lane_routed_parent.mag \

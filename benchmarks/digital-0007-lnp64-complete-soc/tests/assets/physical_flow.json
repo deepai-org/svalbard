@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "flow": "LibreLane Classic through OpenROAD.STAPostPNR",
+  "pdk": "GF180MCU/gf180mcuD",
+  "standard_cell_library": "gf180mcu_fd_sc_mcu9t5v0",
+  "setup_corner": "ss_125C_4v50",
+  "librelane_metrics_corner": "nom_ss_125C_4v50",
+  "top": "lnp64_soc",
+  "period_ns": {"core": 5.0, "pipe": 8.0, "jtag": 40.0},
+  "generated_clocks": {"sdram": "core/2", "sd": "core/8"},
+  "max_routing_layer": "Metal5",
+  "approved_macros": [
+    "lnp64_sram_64x4096_1rw",
+    "lnp64_sram_512x1024_1rw"
+  ],
+  "eligibility": {
+    "hierarchy_check": true,
+    "inferred_latches": 0,
+    "combinational_check": "yosys check -assert",
+    "route_drc_errors": 0,
+    "setup_wns_min_ns": 0.0,
+    "setup_violation_count": 0,
+    "mapped_smoke": "reserved boot rejection and JTAG IDCODE/status on the unmodified synthesis-mapped netlist"
+  },
+  "reported_quality": {
+    "fmax": "derived from aggregate setup WNS at the frozen corner",
+    "area": "placed standard-cell area plus SRAM macro outlines",
+    "power": "OpenROAD total-power estimate at the frozen corner"
+  },
+  "sram_reference": {
+    "repository": "https://github.com/deepai-org/gf180mcu-kianv-rv32ima-sv32.git",
+    "commit": "2cf0ca4e3359b3fb70075578f3b598ccdad9e873",
+    "primitive": "gf180mcu_fd_ip_sram__sram512x8m8wm1"
+  },
+  "mapped_sram_model": "pin-compatible functional model; physical timing remains governed by the pinned liberty"
+}

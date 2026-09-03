@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "identity": "lnp64-complete-soc-gf180-v1",
+  "machine": {"cores": 4, "contexts_per_core": 4, "vlen_bits": 512},
+  "clocks_hz": {"core": 200000000, "sdram": 100000000, "sram_max": 50000000, "pcie_pipe": 125000000},
+  "memory_map": {
+    "jtag_zero_page_alias": {"base": "0x00000000", "bytes": 4096, "physical_alias_of": "on_chip_sram[0:4096]", "boot_paths": ["JTAG"]},
+    "boot_rom": {"base": "0x00001000", "bytes": 16384},
+    "on_chip_sram": {"base": "0x00010000", "bytes": 65536},
+    "sdr_sdram": {"base": "0x40000000", "bytes": 67108864},
+    "devices": {"base": "0x10000000", "bytes": 16777216},
+    "pcie_outbound_window": {"base": "0x50000000", "bytes": 268435456}
+  },
+  "sdram": {"data_bits": 32, "row_bits": 13, "column_bits": 10, "banks": 4, "byte_address_bits": {"byte":"1:0","column":"11:2","bank":"13:12","row":"26:14"}, "physical_capacity_bytes": 134217728, "mapped_bytes": 67108864, "burst_length":1, "cas_latency": 2, "timing_cycles_100mhz":{"powerup":20000,"tRCD":2,"tRP":2,"tRAS":5,"tRC":7,"tWR":2,"tRFC":7,"tMRD":2,"max_refresh_gap":781}, "refresh_rows": 8192, "refresh_window_ns": 64000000, "average_refresh_interval_ns": 7812.5},
+  "pcie": {"base_spec_revision": "1.1", "pipe_spec_revision": "2.0", "generation": 1, "lanes": 1, "boundary": "PIPE", "pipe_data_bits": 16, "pipe_clock_hz": 125000000, "pipe_controls":["RxPolarity","TxCompliance","TxDetectRx/Loopback","TxElecIdle","PowerDown","Rate","Reset#"], "perst_separate_from_soc_reset": true, "endpoint": true, "host_bar0": {"bytes":65536,"address_bits":32,"prefetchable":false}, "msi_vectors":1, "max_payload_bytes":128, "dma": true, "iommu": "LNP64 authority and epoch enforced"},
+  "uart": {"baud":115200,"baud_tolerance_percent":2.0,"data_bits":8,"parity":"none","stop_bits":1},
+  "sdhc": {"protocol":"SD Physical Layer Specification 2.00, native SD mode","card_type":"SDHC","data_bits":4,"identification_clock_hz":400000,"transfer_clock_hz":25000000,"high_capacity_block_bytes":512},
+  "jtag": {
+    "standard":"IEEE 1149.1-2013","tck_max_hz":25000000,
+    "ir_bits":5,
+    "instructions":{"IDCODE":1,"HALT":2,"RESUME":3,"CORESEL":4,"REGADDR":5,"REGDATA":6,"MEMADDR":7,"MEMDATA":8,"STATUS":9,"BYPASS":31},
+    "core_select_bits":2,"context_select_bits":2,"register_address_bits":17,"register_data_bits":512,"memory_address_bits":65,"memory_data_bits":64,"memory_autoincrement_bytes":8
+  },
+  "entropy": {"input_clock":"core","sample_bits":1,"handshake":"valid/ready","accepted_stream_bits":384,"accepted_bit_order":"first bit becomes seed_material[383]","drbg":"NIST SP 800-90A Rev. 1 Hash_DRBG using SHA-256","security_strength_bits":256,"seed_material":"entropy_input[255:0] || nonce[127:0]","personalization":"empty","deterministic_test_stream_hex":"6971c1321a8fe6d42d566c4c73f8b09c741491cb152903b18b77799fc7f6fc8d08863e5d5c39c836512ccf1259f290b7"},
+  "reset": {"rst_ni":"asynchronous assertion; internally synchronized release","pcie_perst_ni":"independent asynchronous PCIe fundamental reset"},
+  "pin_conventions": {"suffix_no_or_ni":"active low","split_io":"oe_o=1 drives the corresponding output; oe_o=0 releases it","sdram_dq_oe_o":"one active-high enable per byte lane","uart_idle":1},
+  "status_outputs": {"boot_done_o":"sticky after first domain publication and entry-PC load","boot_error_o":"sticky after fatal boot rejection; mutually exclusive with boot_done_o","core_alive_o":"bit i is sticky after core i joins coherence and scheduling; all bits remain zero after fatal boot rejection","clear":"rst_ni assertion","reserved_boot_error_max_core_cycles":32},
+  "boot_sequence": {"reset_vector":"0x00001000","boot_selector":"sample boot_sel_i on the first core-clock edge after synchronized reset release and hold until reset","initial_executor":"core 0 context 0","secondary_cores":"held until successful first-domain publication","first_domain_publication":"after image validation for SDHC/UART; immediately from the reset grant for JTAG; never for reserved or invalid boot","jtag_selection":"zero on-chip SRAM, map the flat-exec zero-page, text, data, and stack windows to that SRAM, publish the reset-granted first domain, expose all 16 resident contexts as independent debug-stopped targets, and initialize core 0 context 0 at the reset vector","pcie_perst_scope":"PCIe endpoint only"},
+  "boot_image": {"header_bytes": 64, "magic_ascii": "LNP64IMG", "version": 1, "byte_order": "little", "flags_allowed_mask":0, "page_bytes":4096, "segments":"payload[0:exec_bytes] RX; payload[exec_bytes:] plus zeroed bss_bytes RW", "payload_load_start":"0x40000000", "payload_load_end_exclusive":"0x44000000", "crc":{"name":"CRC-32/ISO-HDLC","polynomial":"0x04C11DB7","init":"0xFFFFFFFF","reflect_input":true,"reflect_output":true,"xor_output":"0xFFFFFFFF"}, "sd_start_lba": 2048, "sd_trailing_block_bytes":"ignored", "uart_sync_ascii": "LNPB", "uart_frame":"sync[4], image_bytes:u32le, image[image_bytes], image_crc32:u32le", "invalid_image_error_max_core_cycles_after_complete_input":4096},
+  "hard_physical": {"core_period_ns": 5.0, "setup_wns_min_ns": 0.0, "unapproved_blackboxes": 0, "latches": 0, "combinational_loops": 0},
+  "performance_targets": {
+    "integer_alu_latency_cycles": 1,
+    "integer_issue_per_cycle": 6,
+    "l1_load_latency_cycles": 4,
+    "l1_loads_per_cycle": 3,
+    "fp_add_mul_fma_latency_cycles": 4,
+    "vector_pipes": 2,
+    "warm_gate_roundtrip_cycles": 30,
+    "resident_context_switch_cycles": 20
+  }
+}

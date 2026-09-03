@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "byte_order": "little",
+  "mmio_access": {"width_bits": 32, "alignment_bytes": 4, "memory_type": "device_ordered", "undefined_offset": "bus fault", "reserved_write_bits": "must be zero"},
+  "reset_grant": {
+    "first_domain_cap_slots": [
+      {"slot": 0, "class": "MachineView", "object": "physical_machine_view", "rights": ["READ", "GRANT/DUP", "REVOKE", "INSPECT"]},
+      {"slot": 1, "class": "ClockView", "object": "physical_clock_view", "rights": ["READ", "CONTROL", "GRANT/DUP", "REVOKE"]},
+      {"slot": 2, "class": "Device", "object": "platform", "profile": 4096, "rights": ["READ", "CONTROL", "GRANT/DUP", "REVOKE", "DMA", "BIND_IRQ", "ADMIN", "INSPECT"]},
+      {"slot": 3, "class": "PagedBacking", "object": "sdram", "range": ["0x40000000", "0x44000000"], "rights": ["READ", "WRITE", "EXECUTE/CALL", "MAP", "GRANT/DUP", "REVOKE", "DMA", "CHARGE"]},
+      {"slot": 4, "class": "PagedBacking", "object": "on_chip_sram", "range": ["0x00010000", "0x00020000"], "rights": ["READ", "WRITE", "EXECUTE/CALL", "MAP", "GRANT/DUP", "REVOKE", "DMA", "CHARGE"]},
+      {"slot": 5, "class": "PagedBacking", "object": "boot_rom", "range": ["0x00001000", "0x00005000"], "rights": ["READ", "EXECUTE/CALL", "MAP", "GRANT/DUP", "REVOKE"]}
+    ],
+    "handle_encoding": "slot << 39 | 1",
+    "budgets": {"MEMORY_BYTES": 67190784, "OBJECT_COUNT": 65536, "CAP_SLOTS": 65536, "TELEMETRY_QUOTA": 1048576},
+    "placement_tiles": [0, 1, 2, 3],
+    "startup_metadata_ptr": 0,
+    "initial_state": {"pc": "validated image entry for SDHC/UART; 0x00001000 for JTAG", "r31_sp": "0x00020000 for SDHC/UART; 0x0001f000 for JTAG", "r30_tp": 0, "other_gprs": 0, "fp_vector_mask_state": 0},
+    "initial_mappings": [
+      {"base": "0x00010000", "bytes": 65536, "protection": "RW", "backing_slot": 4, "backing_offset": 0, "boot_paths": ["SDHC", "UART"], "use": "bootstrap data and downward-growing stack"},
+      {"base": "load_address", "bytes": "exec_bytes", "protection": "RX", "backing_slot": 3, "boot_paths": ["SDHC", "UART"]},
+      {"base": "load_address + exec_bytes", "bytes": "round_up(payload_bytes - exec_bytes + bss_bytes, 4096); omit when zero", "protection": "RW", "backing_slot": 3, "boot_paths": ["SDHC", "UART"]},
+      {"base": "0x10000000", "bytes": 12288, "protection": "RW device_ordered", "device_slot": 2, "boot_paths": ["SDHC", "UART", "JTAG"], "use": "UART, SDHC, and PCIe register BARs"},
+      {"base": "0x00000000", "bytes": 4096, "protection": "RW", "backing_slot": 4, "backing_offset": 0, "boot_paths": ["JTAG"], "use": "flat-exec zero page"},
+      {"base": "0x00001000", "bytes": 8192, "protection": "RWX", "backing_slot": 4, "backing_offset": 4096, "boot_paths": ["JTAG"], "use": "flat-exec text loaded by debug"},
+      {"base": "0x00010000", "bytes": 4096, "protection": "RW", "backing_slot": 4, "backing_offset": 12288, "boot_paths": ["JTAG"], "use": "flat-exec data"},
+      {"base": "0x0001e000", "bytes": 4096, "protection": "RW", "backing_slot": 4, "backing_offset": 16384, "boot_paths": ["JTAG"], "use": "flat-exec downward-growing stack"}
+    ],
+    "discovery": "enumerate CAPS; the only class-21 reset-granted entry is slot 2; obtain child Devices by device.get using the profile registry below"
+  },
+  "profiles": {
+    "4096": {"name": "lnp64.platform.v1", "roles": {"1": {"name": "uart", "kind": "capability", "class": "Device", "profile": 4097}, "2": {"name": "sdhc", "kind": "capability", "class": "Device", "profile": 4098}, "3": {"name": "pcie_endpoint", "kind": "capability", "class": "Device", "profile": 4099}, "4": {"name": "core_clock_hz", "kind": "scalar", "value": 200000000}}},
+    "4097": {"name": "lnp64.uart16550-lite.v1", "roles": {"1": {"name": "register_bar", "kind": "capability", "class": "Capability", "range": ["0x10000000", "0x10001000"], "memory_types": ["device_ordered"]}, "2": {"name": "interrupt", "kind": "capability", "class": "InterruptSource"}, "3": {"name": "input_clock_hz", "kind": "scalar", "value": 200000000}}},
+    "4098": {"name": "lnp64.sdhc.v1", "roles": {"1": {"name": "register_bar", "kind": "capability", "class": "Capability", "range": ["0x10001000", "0x10002000"], "memory_types": ["device_ordered"]}, "2": {"name": "interrupt", "kind": "capability", "class": "InterruptSource"}, "3": {"name": "block_bytes", "kind": "scalar", "value": 512}}},
+    "4099": {"name": "lnp64.pcie-gen1-endpoint.v1", "roles": {"1": {"name": "register_bar", "kind": "capability", "class": "Capability", "range": ["0x10002000", "0x10003000"], "memory_types": ["device_ordered"]}, "2": {"name": "interrupt", "kind": "capability", "class": "InterruptSource"}, "3": {"name": "requester_id", "kind": "scalar", "value": 0}, "4": {"name": "host_bar0_bytes", "kind": "scalar", "value": 65536}}}
+  },
+  "registers": {
+    "uart": {
+      "base": "0x10000000",
+      "offsets": {"0x00": "DATA[7:0] R=pop RX/W=push TX", "0x04": "STATUS R: bit0 RX_VALID, bit1 TX_READY, bit2 RX_OVERRUN, bit3 FRAME_ERROR", "0x08": "CONTROL RW: bit0 ENABLE, bit1 RX_IRQ_EN, bit2 TX_IRQ_EN; reset 0", "0x0c": "BAUD_DIV RW: baud=200000000/(div+1); reset 1735", "0x10": "IRQ_STATUS W1C: bit0 RX, bit1 TX, bit2 ERROR"},
+      "fifo_bytes": 16
+    },
+    "sdhc": {
+      "base": "0x10001000",
+      "offsets": {"0x00": "ARG RW", "0x04": "CMD W: bit31 START, bit8 DATA_PRESENT, bits5:0 INDEX", "0x08": "RESP0 R", "0x0c": "RESP1 R", "0x10": "RESP2 R", "0x14": "RESP3 R", "0x18": "DATA R/W: one FIFO word", "0x1c": "BLOCK RW: bits31:16 COUNT, bits15:0 BYTES; reset bytes=512", "0x20": "STATUS R: bit0 CMD_BUSY, bit1 DATA_BUSY, bit2 RX_READY, bit3 TX_READY, bit4 CARD_PRESENT", "0x24": "CONTROL RW: bit0 ENABLE, bit1 DATA_4BIT, bit2 HIGH_SPEED; reset 0", "0x28": "CLOCK_DIV RW: sd_clk=200000000/(2*(div+1)); reset 249", "0x2c": "IRQ_STATUS W1C: bit0 CMD_DONE, bit1 DATA_DONE, bit2 TIMEOUT, bit3 CRC_ERROR"},
+      "fifo_bytes": 512
+    },
+    "pcie": {
+      "base": "0x10002000",
+      "offsets": {"0x00": "STATUS R: bit0 LINK_UP, bit1 BUS_MASTER_EN, bit2 MSI_EN, bit3 DMA_BUSY, bit4 DMA_FAULT", "0x04": "CONTROL RW: bit0 ENDPOINT_ENABLE, bit1 DMA_ABORT", "0x08": "REQUESTER_ID R: bits15:0 BDF assigned by root complex", "0x0c": "MSI W: bit0 SEND vector 0", "0x10": "DMA_IOVA_LO RW", "0x14": "DMA_IOVA_HI RW", "0x18": "DMA_HOST_ADDR_LO RW", "0x1c": "DMA_HOST_ADDR_HI RW", "0x20": "DMA_LENGTH RW; 1..16777216", "0x24": "DMA_COMMAND W: bit0 START, bit1 HOST_TO_SOC; all other bits zero", "0x28": "DMA_STATUS R/W1C: bit0 DONE, bit1 DENIED, bit2 MALFORMED, bit3 ABORTED", "0x2c": "DMA_BYTES_DONE R", "0x30": "IOMMU_EPOCH R: current requester-window epoch"},
+      "host_bar0": {"bytes": 65536, "offsets": {"0x0000": "DOORBELL W", "0x0004": "COMPLETION R/W1C", "0x0008": "SCRATCH RW"}, "other_offsets": "read zero; writes ignored"}
+    }
+  },
+  "jtag": {
+    "bit_order": "LSB first",
+    "idcode": "0x0e64964d",
+    "selected_target_reset": {"core": 0, "context": 0},
+    "instructions": {
+      "IDCODE": {"ir": 1, "dr_bits": 32, "capture": "idcode"},
+      "HALT": {"ir": 2, "dr_bits": 1, "update": "value 1 requests a bounded halt of selected target"},
+      "RESUME": {"ir": 3, "dr_bits": 1, "update": "value 1 resumes selected target and clears single-step-complete"},
+      "CORESEL": {"ir": 4, "dr_bits": 4, "layout": "[1:0] core, [3:2] context"},
+      "REGADDR": {"ir": 5, "dr_bits": 17, "layout": "[15:0] register address, [16] arm one REGDATA write"},
+      "REGDATA": {"ir": 6, "dr_bits": 512, "capture": "read selected register, zero-extended", "update": "write only when armed; arm clears after update"},
+      "MEMADDR": {"ir": 7, "dr_bits": 65, "layout": "[63:0] virtual byte address, [64] arm one MEMDATA write"},
+      "MEMDATA": {"ir": 8, "dr_bits": 64, "capture": "when unarmed, read 8 bytes through selected target translation; when armed, capture zero", "update": "when armed, write the shifted 8 bytes; arm clears after update", "autoincrement": "8 bytes on Update-DR after a successful unarmed read or armed write"},
+      "STATUS": {"ir": 9, "dr_bits": 32, "layout": "bit0 HALTED, bit1 HALT_PENDING, bit2 STEP_COMPLETE, bit3 ERROR, bits5:4 core, bits7:6 context; remaining zero"},
+      "BYPASS": {"ir": 31, "dr_bits": 1}
+    },
+    "register_addresses": {"0x0000-0x001f": "r0-r31, 64 bits", "0x0040": "pc, 64 bits", "0x0041": "fcsr, 32 bits", "0x0042": "stop cause: 0 running, 1 requested halt, 2 architectural exit, 3 unhandled precise fault", "0x0043": "architectural exit value, 64 bits; zero unless stop cause is 2", "0x0044": "precise fault code, 64 bits; zero unless stop cause is 3", "0x0045": "current domain errno, 64 bits", "0x0080-0x009f": "f0-f31, 64 bits", "0x0100-0x011f": "v0-v31, 512 bits", "0x0140-0x014f": "m0-m15, 64 bits", "0x0200-0x023f": "PCR selector 0-63, 64 bits"},
+    "access_rule": "REGDATA and MEMDATA require the selected target to be halted, exited, or stopped by an unhandled precise fault; exit and fault preserve a readable final architectural snapshot until reset or the next debug write; invalid address, failed target translation, or access while running sets STATUS.ERROR and returns zero without architectural effect"
+  }
+}

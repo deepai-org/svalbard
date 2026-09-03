@@ -1,0 +1,28 @@
+schema_version = "1.4"
+artifacts = [
+  "/app/output/rtl/lnp64_soc_pkg.sv",
+  "/app/output/rtl/lnp64_soc.sv",
+  "/app/output/integration/soc_manifest.json",
+]
+
+[task]
+name = "circuitbench-digital/6045-lnp64-complete-soc"
+description = "Implement a complete four-core LNP64 SoC with coherent SMP, all architectural engines, SDR SDRAM, SDHC, UART, JTAG, and a PCIe Gen1 endpoint."
+
+[agent]
+timeout_sec = 259200
+user = "agent"
+
+[verifier]
+timeout_sec = 86400
+user = "root"
+network_mode = "no-network"
+
+[environment]
+os = "linux"
+build_timeout_sec = 18000.0
+network_mode = "no-network"
+cpus = 16
+memory_mb = 65536
+storage_mb = 131072
+pdk = "GF180MCU/gf180mcuD"

@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "requirements": [
+    {"id":"ISA-001","text":"Execute all 619 active instruction identities."},
+    {"id":"ISA-002","text":"Return -UNSUPPORTED for the three assigned-dark identities."},
+    {"id":"ISA-003","text":"Match the consensus oracle produced by the soc, bare, and hosted-dev profiles."},
+    {"id":"ISA-004","text":"Implement scalar binary32/binary64 FP and the VLEN=512 vector/mask profile."},
+    {"id":"ENG-001","text":"Implement every instruction-exposed engine protocol and object class."},
+    {"id":"SMP-001","text":"Expose four cores with four resident contexts each."},
+    {"id":"SMP-002","text":"Preserve coherent atomics, futex wakeup, and forward progress across sixteen threads."},
+    {"id":"BOOT-001","text":"Accept valid UART images and reject invalid UART images before execution."},
+    {"id":"BOOT-002","text":"Accept valid SDHC images from LBA 2048 and reject corrupted images."},
+    {"id":"BOOT-003","text":"Enter JTAG halt for boot selection 2 and reject reserved boot selection 3."},
+    {"id":"DEV-001","text":"Initialize, read, write, and refresh the external SDR SDRAM."},
+    {"id":"DEV-002","text":"Transmit and receive UART frames at the specified baud rate."},
+    {"id":"DEV-003","text":"Operate the native four-bit SDHC command and data interface."},
+    {"id":"DEV-004","text":"Train and enumerate PCIe, expose BAR0 and MSI, and perform authorized bidirectional DMA."},
+    {"id":"DEV-005","text":"Reject DMA after acknowledged IOMMU revocation without modifying host memory."},
+    {"id":"DEV-006","text":"Implement timer, interrupt/event, conditioned-entropy, and Hash_DRBG semantics."},
+    {"id":"DEV-007","text":"Implement JTAG target selection, halt/resume, register access, and memory access for all sixteen contexts."},
+    {"id":"PHY-001","text":"Elaborate with no unresolved hierarchy, inferred latches, or Yosys structural errors."},
+    {"id":"PHY-002","text":"Complete GF180MCU placement and routing with zero detailed-routing DRC errors."},
+    {"id":"PHY-003","text":"Report no setup violations under the frozen multi-clock SDC."},
+    {"id":"PHY-004","text":"Pass reserved-boot and JTAG checks on the unmodified mapped netlist."},
+    {"id":"EVD-001","text":"Fail closed on missing gates, malformed RewardKit output, and incomplete candidates."}
+  ],
+  "scenarios": [
+    {"id":"T-ISA","requirements":["ISA-001","ISA-002","ISA-003","ISA-004","ENG-001","DEV-006"],"stimulus":"All 459 frozen program/data pairs, covering every active and assigned-dark identity.","observations":["exit or fault","r3-r6","errno","zero-page word","data word"],"oracle":"three-profile emulator consensus plus the guest assertions in each microprogram"},
+    {"id":"T-SMP","requirements":["SMP-001","SMP-002"],"stimulus":"Sixteen threads rendezvous, use release/acquire operations, futexes, and coherent AMOs, then exit.","observations":["all target identities","wake results","final coherent counter","completion"],"oracle":"directed 4x4 SMP program and frozen three-profile reference run"},
+    {"id":"T-JTAG","requirements":["BOOT-003","DEV-007"],"stimulus":"Select all four cores and four contexts; halt, write/read registers and memory, resume, and inspect status.","observations":["IDCODE","selected target","register data","memory data","halt and exit state"],"oracle":"platform JTAG data-register contract"},
+    {"id":"T-UART-SDRAM","requirements":["BOOT-001","DEV-001","DEV-002"],"stimulus":"Boot a valid framed UART image, reject an invalid image, execute SDRAM traffic, and transmit a result byte.","observations":["boot status","SDRAM command sequence and data","maximum refresh gap","UART byte"],"oracle":"boot-image module, pin-level UART peer, and cycle-checked SDRAM model"},
+    {"id":"T-SDHC","requirements":["BOOT-002","DEV-003"],"stimulus":"Read one valid and one CRC-corrupted boot sector through native four-bit SD mode.","observations":["commands","responses","four-bit data","boot or error status"],"oracle":"pin-level SDHC card model and boot-image module"},
+    {"id":"T-PCIE","requirements":["DEV-004","DEV-005"],"stimulus":"Train Gen1 x1, enumerate configuration space, probe/program BAR0, enable MSI and bus mastering, run both DMA directions, revoke the IOVA, and retry DMA.","observations":["PIPE traffic","configuration and BAR transactions","host memory","MSI write","DMA status and byte count"],"oracle":"pinned public PCIe root model plus the directed LNP64 IOMMU program"},
+    {"id":"T-PHYSICAL","requirements":["PHY-001","PHY-002","PHY-003","PHY-004"],"stimulus":"Run the frozen Yosys and LibreLane GF180 flow through post-route STA, then simulate the mapped netlist.","observations":["hierarchy and structural checks","routed views and DRC count","setup WNS and violation count","mapped boot/JTAG behavior","area and power"],"oracle":"strict release-flow exit status and parsed tool metrics"},
+    {"id":"T-RELEASE","requirements":["EVD-001"],"stimulus":"Mutate RewardKit outputs and run the intentionally incomplete mini candidate.","observations":["final reward","verifier-error flag","functional rejection"],"oracle":"fail-closed finalizer and negative-control assertions"}
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "process": "GF180MCU",
+  "node": "gf180mcuD",
+  "feature_size_nm": 180,
+  "process_options": ["METAL5"],
+  "open_pdks_repository": "https://github.com/fossi-foundation/open-pdks.git",
+  "open_pdks_build_version": "1.0.605",
+  "open_pdks_build_commit": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7d",
+  "open_pdks_reference_commit": "d658698bd8bcf4e05fc7b5991a701247ba0d744c",
+  "gf180mcu_pdk_repository": "https://github.com/google/gf180mcu-pdk.git",
+  "gf180mcu_pdk_reference_commit": "a897aa30369d3bcec87d9d50ce9b01f320f854ef",
+  "standard_cell_library": {
+    "name": "gf180mcu_fd_sc_mcu9t5v0",
+    "revision": "02b7af3f8d88c0b014d9af3db6a17f02aa983305",
+    "setup_corner": "ss_125C_4v50",
+    "nominal_voltage_v": 5.0,
+    "tech_lef_sha256": "80bf186e7fcc2c4b1bae9b8ee0e67100acf4f643e71a58daadc3f354f0836508",
+    "cell_lef_sha256": "38afbef95529165e1d8999d5b5613c4aec9869df8c1ce6b5555e74586ba4c826",
+    "liberty_sha256": "7a6499b8e1d6417a6e0a82193b9027e68af9eb72ddb6161d6d03a8ff6fa8fa0e"
+  },
+  "sram_macro": {
+    "name": "gf180mcu_fd_ip_sram__sram512x8m8wm1",
+    "setup_corner": "ss_125C_4v50",
+    "clock_max_hz": 50000000,
+    "lef_sha256": "f30453be8a3919de697ad6f9828cc0e31602ed5ad7cc462dd85b7d54e47872af",
+    "liberty_sha256": "bf411ffa77f14d92e0c1e9023521d3b30551547ddc8e09b9a8458dcc17f19e36"
+  },
+  "source_container_repository": "https://hub.docker.com/r/hpretl/iic-osic-tools",
+  "source_container": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3"
+}

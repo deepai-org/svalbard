@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "hard_gates": [
+    "fixed interface and candidate safety",
+    "619 of 619 instruction identities match the frozen three-profile consensus oracle",
+    "three of three assigned-dark identities return -UNSUPPORTED",
+    "complete engine, SMP, boot, and device scenario passage",
+    "no unapproved black boxes, latches, or combinational loops",
+    "routed GF180MCU implementation with setup WNS >= 0 at 200 MHz",
+    "mapped-netlist smoke passage"
+  ],
+  "criterion_weights": {"architecture":0.50,"physical":0.20,"quality":0.30},
+  "quality_weights": {"fmax":0.40,"area":0.30,"power":0.30},
+  "normalization": {
+    "fmax": {"unit":"MHz","full_credit":250,"method":"min(measured/full_credit, 1)"},
+    "area": {"unit":"mm2","full_credit":100,"method":"min(full_credit/measured, 1)","includes":"standard cells and SRAM macro outlines"},
+    "power": {"unit":"W","full_credit":5,"method":"min(full_credit/measured, 1)","includes":"internal, switching, and leakage"}
+  },
+  "aggregation": "RewardKit weighted arithmetic sum after all hard gates pass",
+  "rule": "Any failed hard gate makes reward zero. Eligible designs are ranked only by measured evidence."
+}

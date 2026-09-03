@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "transport": "JTAG",
+  "boot_sel": 2,
+  "target": {"core": 0, "context": 0},
+  "flat_exec": {
+    "entry": "0x00001000",
+    "text_base": "0x00001000",
+    "text_bytes": 8192,
+    "zero_page_base": "0x00000000",
+    "zero_page_bytes": 4096,
+    "data_base": "0x00010000",
+    "data_bytes": 4096,
+    "stack_base": "0x0001e000",
+    "stack_bytes": 4096,
+    "stack_top": "0x0001f000",
+    "initial_gprs": 0,
+    "initial_fprs_vectors_masks": 0,
+    "result_sentinel": "0x0000000013579bdf"
+  },
+  "load": "halted JTAG writes text, zero page, and data; writes PC; then RESUME",
+  "completion": "the verifier resumes the target and polls STATUS until architectural exit or an unhandled precise fault debug-stops it; the final corpse or fault snapshot remains readable until reset or the next debug write",
+  "oracle": "compare exit value, r3-r6, errno, zero-page word 0, data word 0, and fault outcome against isa_conformance_report.json; guest assertions inside isolated generated microtests provide the semantic check for every instruction identity",
+  "candidate_visibility": "black-box top-level pins only; no participant-authored simulation adapter"
+}

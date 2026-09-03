@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "clock_max_hz": 50000000,
+  "read_latency_sram_cycles": 1,
+  "write_latency_sram_cycles": 1,
+  "minimum_core_cycles_per_access": 4,
+  "clock_relationship": "clk_i is a phase-stable core clock divided by 4; all wrapper instances share that 50 MHz domain",
+  "write_granularity_bits": 8,
+  "read_during_write": "rdata_o holds its previous value",
+  "physical_leaf": "gf180mcu_fd_ip_sram__sram512x8m8wm1",
+  "physical_leaf_corner": "ss_125C_4v50",
+  "modules": {
+    "lnp64_sram_64x4096_1rw": {"width":64,"depth":4096,"leaf_instances":64,"bank_bits":3,"physical_geometry":{"columns":8,"rows":8,"leaf_outline_area_total_um2":13401617.7152}},
+    "lnp64_sram_512x1024_1rw": {"width":512,"depth":1024,"leaf_instances":128,"bank_bits":1,"physical_geometry":{"columns":16,"rows":8,"leaf_outline_area_total_um2":26803235.4304}}
+  }
+}

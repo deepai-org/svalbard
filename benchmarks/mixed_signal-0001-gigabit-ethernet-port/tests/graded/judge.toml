@@ -1,0 +1,7 @@
+[programmatic]
+engine = "python"
+entrypoint = "verifier_plan.py"
+criteria = ["mac", "pcs", "mapped_digital", "analog", "pex_physical", "end_to_end", "power_area"]
+weights = [1.5, 1.5, 1.0, 2.0, 1.5, 1.5, 1.0]
+deterministic = true
+requires_network = false

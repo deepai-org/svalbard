@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "crosscheck_status": "passed",
+  "litex": {
+    "commit": "86f29574801fe861ee598e8f179a78dfa381c70a",
+    "implementation": "litex/soc/cores/code_8b10b.py",
+    "known_answers": "test/cores/test_code_8b10b.py",
+    "license": "BSD-2-Clause"
+  },
+  "liteeth": {
+    "commit": "8c9150ff121cb3148d8ea26ce3b1c5200479848d",
+    "implementation": "liteeth/phy/pcs_1000basex.py",
+    "tests": "test/test_pcs_1000basex.py",
+    "license": "BSD-2-Clause"
+  },
+  "encoding_comparison": {
+    "data_entries": 512,
+    "control_entries": 24,
+    "mismatches": 0,
+    "canonical_table_sha256": "252162d1cc6766995a7f492b8526df5fd9c02536f53f3283ed62ea7b5d370c36"
+  },
+  "wire_convention": "reverse conventional 10-bit notation so integer bit 0 transmits first",
+  "legal_control_octets_hex": ["1c", "3c", "5c", "7c", "9c", "bc", "dc", "f7", "fb", "fc", "fd", "fe"],
+  "ordered_symbols": {
+    "comma": "K28.5/0xbc",
+    "idle_preserve": "D5.6/0xc5",
+    "idle_flip": "D16.2/0x50",
+    "start": "K27.7/0xfb",
+    "terminate": "K29.7/0xfd",
+    "carrier_extend": "K23.7/0xf7"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "identity": "svalbard_gf180_gigabit_ethernet_port_v1",
+  "status": "authored_unpiloted",
+  "claim": "benchmark-specific packet-to-pins behavior; not IEEE compliance",
+  "protocol": {
+    "line_profile": "benchmark-owned 1000BASE-X subset",
+    "line_rate_baud": 1250000000,
+    "unit_interval_ps": 800,
+    "host_clock_hz": 125000000,
+    "host_frame": "destination-through-payload bytes; excludes preamble, SFD, padding, and FCS",
+    "minimum_host_frame_bytes": 14,
+    "minimum_transmitted_frame_without_fcs_bytes": 60,
+    "maximum_host_frame_bytes": 1514,
+    "interpacket_gap_host_cycles": 12,
+    "jumbo_frames": false,
+    "duplex": "full",
+    "link_mode": "fixed; no auto-negotiation"
+  },
+  "digital_phy_boundary": {
+    "width_bits": 10,
+    "rate_hz": 125000000,
+    "encoding": "complete benchmark 8b/10b table",
+    "serial_bit_order": "code-group bit 0 first",
+    "serializer_owner": "analog PHY",
+    "deserializer_and_cdr_owner": "analog PHY"
+  },
+  "pcs_profile": {
+    "comma": "K28.5",
+    "idle_second_symbol": "D5.6 when post-comma RD is negative; otherwise D16.2",
+    "start": "K27.7",
+    "preamble_after_start": "six D0x55 symbols followed by D0xd5",
+    "terminate": "K29.7",
+    "carrier_extend": "exactly one K23.7 after terminate",
+    "configuration_ordered_sets": false
+  },
+  "electrical_fixture": {
+    "analog_nominal_supply_v": 3.3,
+    "differential_termination_ohm": 100,
+    "series_resistance_per_leg_ohm": 6,
+    "shunt_capacitance_per_leg_pf": 1.0,
+    "injected_clock_jitter_peak_ps": 30,
+    "supply_ripple_peak_mv": 20,
+    "supply_ripple_frequency_mhz": 100
+  },
+  "mandatory_pvt": [
+    {"id": "tt_nominal", "mos": "typical", "resistor": "typical", "vdd_v": 3.3, "temperature_c": 27},
+    {"id": "ss_low_hot", "mos": "ss", "resistor": "ss", "vdd_v": 2.97, "temperature_c": 125},
+    {"id": "ss_high_cold", "mos": "ss", "resistor": "ff", "vdd_v": 3.63, "temperature_c": -40},
+    {"id": "ff_high_cold", "mos": "ff", "resistor": "ff", "vdd_v": 3.63, "temperature_c": -40},
+    {"id": "ff_low_hot", "mos": "ff", "resistor": "ss", "vdd_v": 2.97, "temperature_c": 125}
+  ],
+  "hard_limits": {
+    "tx_differential_pp_min_mv": 400,
+    "tx_differential_pp_max_mv": 1200,
+    "tx_common_mode_min_v": 0.6,
+    "tx_common_mode_max_v": 2.7,
+    "tx_rise_fall_max_ps": 300,
+    "tx_crossing_imbalance_max_ps": 50,
+    "post_fixture_eye_height_min_mv": 200,
+    "post_fixture_eye_width_min_ui": 0.55,
+    "rx_input_differential_pp_min_mv": 200,
+    "cdr_frequency_offset_abs_max_ppm": 100,
+    "cdr_acquisition_max_ui": 8192,
+    "post_lock_test_bits_per_case": 32768,
+    "post_lock_bit_errors_max": 0,
+    "complete_port_power_max_mw": 500,
+    "complete_layout_area_max_mm2": 4.0
+  },
+  "stretch_targets": {
+    "post_fixture_eye_height_mv": 300,
+    "post_fixture_eye_width_ui": 0.65,
+    "complete_port_power_mw": 250,
+    "complete_layout_area_mm2": 2.0
+  },
+  "runtime_limits": {
+    "visible_seconds": 300,
+    "digital_graded_seconds": 1800,
+    "analog_schematic_seconds": 10800,
+    "physical_and_pex_seconds": 43200
+  }
+}

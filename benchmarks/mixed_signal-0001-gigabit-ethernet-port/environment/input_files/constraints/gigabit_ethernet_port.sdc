@@ -1,0 +1,5 @@
+create_clock -name clk_125 -period 8.000 [get_ports clk_125_i]
+create_clock -name refclk -period 8.000 [get_ports refclk_i]
+set_clock_uncertainty 0.100 [get_clocks {clk_125 refclk}]
+set_input_delay 0.500 -clock clk_125 [get_ports {tx_data_i[*] tx_valid_i tx_last_i tx_user_i rx_ready_i control_i[*]}]
+set_output_delay 0.500 -clock clk_125 [get_ports {tx_ready_o rx_data_o[*] rx_valid_o rx_last_o rx_user_o status_o[*]}]

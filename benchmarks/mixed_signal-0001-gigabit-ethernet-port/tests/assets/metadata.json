@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "name": "complete-gigabit-ethernet-port",
+  "category": "mixed-signal-design",
+  "difficulty": "research",
+  "status": "authored_unpiloted",
+  "top_module": "gigabit_ethernet_port",
+  "analog_subckt": "gigabit_ethernet_phy",
+  "process": "GF180MCU/gf180mcuD",
+  "endpoint": "host packet stream through mapped MAC/PCS and extracted integrated 1.25-GBd SerDes PHY",
+  "solution_included": false,
+  "requirements": 42,
+  "verification_scenarios": 17,
+  "feasibility_basis": [
+    "125-MHz digital MAC/PCS timing is modest for the selected standard-cell flow",
+    "Svalbard has a zero-DRC, unique-LVS, full-RC 1.25-GBd externally clocked lane passing five bounded environments",
+    "the benchmark uses the same bounded 6-ohm-per-leg plus 1-pF-per-leg fixture, 30-ps jitter, and 20-mV ripple scale"
+  ],
+  "uncalibrated_risks": [
+    "complete Ethernet MAC/PCS has no benchmark pilot submission",
+    "autonomous CDR and reference clock composition are not closed",
+    "selected pad/ESD and correlated package models are unavailable",
+    "full runtime and score discrimination have not been calibrated"
+  ]
+}

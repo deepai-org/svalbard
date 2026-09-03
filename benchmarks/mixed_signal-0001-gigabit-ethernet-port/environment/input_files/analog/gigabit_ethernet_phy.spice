@@ -1,0 +1,9 @@
+* Non-working interface scaffold for the complete integrated SerDes PHY.
+* Candidate must preserve the subcircuit name and pin order.
+.subckt gigabit_ethernet_phy TXD0 TXD1 TXD2 TXD3 TXD4 TXD5 TXD6 TXD7 TXD8 TXD9
++ TX_ENABLE RXD0 RXD1 RXD2 RXD3 RXD4 RXD5 RXD6 RXD7 RXD8 RXD9 RX_VALID LOCK
++ TXP TXN RXP RXN REFCLK VDD VSS CTRL0 CTRL1 CTRL2 CTRL3
+* TODO: transmitter, receiver, CDR/clocking, termination and calibration.
+Rsafe_txp TXP VSS 1G
+Rsafe_txn TXN VSS 1G
+.ends gigabit_ethernet_phy

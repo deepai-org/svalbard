@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "top_rtl": "gigabit_ethernet_port",
+  "phy_subckt": "gigabit_ethernet_phy",
+  "line_rate_baud": 1250000000,
+  "host_clock_hz": 125000000,
+  "pdk": "GF180MCU/gf180mcuD",
+  "pdk_lock_sha256": "d9186ead57749a247212bc125e2a9485376d29dbab4cd21ba3dcb4d49c80a9ae",
+  "benchmark_profile_sha256": "f81126703b4b3b05a611666b7decd986450636b01b4ba97647168d11529c0f8e",
+  "views": {
+    "rtl": "rtl/gigabit_ethernet_port.sv",
+    "schematic": "analog/gigabit_ethernet_phy.spice",
+    "layout": "layout/gigabit_ethernet_port.gds"
+  },
+  "digital_phy_boundary": {
+    "tx": "one 10-bit 8b/10b code group per clk_125_i cycle",
+    "rx": "one 10-bit recovered code group when phy_rx_code_valid_i is asserted",
+    "serializer_and_cdr_owner": "gigabit_ethernet_phy"
+  },
+  "electrical_boundary": "die-side TXP/TXN/RXP/RXN; verifier owns pad/package/channel fixture",
+  "diagnostic_observation_points": [
+    "pcs_tx_symbol",
+    "pcs_rx_symbol",
+    "running_disparity",
+    "cdr_lock",
+    "rx_word_alignment"
+  ],
+  "claim_limit": "benchmark simulation contract only; not standards compliance"
+}

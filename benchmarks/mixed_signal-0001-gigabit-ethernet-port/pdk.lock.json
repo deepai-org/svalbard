@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "purpose": "frozen benchmark simulation environment; not provider signoff",
+  "process": "GF180MCU",
+  "node": "gf180mcuD",
+  "feature_size_nm": 180,
+  "process_options": ["MIM_2P0", "METAL5"],
+  "open_pdks_build_version": "1.0.605",
+  "open_pdks_build_commit": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7d",
+  "open_pdks_reference_commit": "d658698bd8bcf4e05fc7b5991a701247ba0d744c",
+  "gf180mcu_pdk_reference_commit": "a897aa30369d3bcec87d9d50ce9b01f320f854ef",
+  "primitive_library_revision": "b6866b82e2bd560a29f3576c19106ff7b8b41b10",
+  "physical_verification_revision": "e766ad1974edf7712ebd4729e40037f24d9232cb",
+  "io_library_revision": "40cdef6d74ec5c9b7d596c147df94c98366afc5b",
+  "standard_cell_library": {
+    "name": "gf180mcu_fd_sc_mcu7t5v0",
+    "revision": "0ef8889a8df0acf959683fbe73013f342a2206a2",
+    "nominal_voltage_v": 5.0
+  },
+  "analog_device_family": "gf180mcu 3.3-V MOS and supported passive primitives",
+  "analog_nominal_supply_v": 3.3,
+  "source_container": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "status": "candidate_not_provider_accepted",
+  "unavailable_qualifications": [
+    "fabrication-provider deck acceptance",
+    "1.25-GBd transistor-model silicon correlation",
+    "high-speed pad and ESD qualification",
+    "package and board model correlation",
+    "production mismatch and yield distributions",
+    "aging and lifetime qualification"
+  ]
+}

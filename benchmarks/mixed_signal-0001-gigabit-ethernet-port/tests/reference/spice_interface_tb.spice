@@ -1,0 +1,14 @@
+* Elaboration-only known-answer fixture for the shipped non-working PHY shell.
+.include ../../environment/input_files/analog/gigabit_ethernet_phy.spice
+
+VDD vdd 0 3.3
+XPHY 0 0 0 0 0 0 0 0 0 0
++ 0
++ 0 0 0 0 0 0 0 0 0 0
++ 0 0
++ txp txn 0 0 0 vdd 0 0 0 0 0
++ gigabit_ethernet_phy
+
+.op
+.print op v(txp) v(txn)
+.end

@@ -1,0 +1,28 @@
+schema_version = "1.4"
+artifacts = [
+  "/app/output/analog/dco4.spice",
+  "/app/output/layout/dco4.gds",
+  "/app/output/integration/dco4.json",
+]
+
+[task]
+name = "circuitbench-mixed-signal/0002-gf180-4bit-dco"
+description = "Design, lay out, extract, and characterize a 4-bit digitally controlled ring oscillator in GF180MCU."
+
+[agent]
+timeout_sec = 14400
+user = "agent"
+
+[verifier]
+timeout_sec = 7200
+user = "root"
+network_mode = "no-network"
+
+[environment]
+os = "linux"
+build_timeout_sec = 18000.0
+network_mode = "no-network"
+cpus = 4
+memory_mb = 12288
+storage_mb = 30720
+pdk = "GF180MCU/gf180mcuD"

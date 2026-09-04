@@ -1,0 +1,5 @@
+create_clock -name clk_i -period 10.000 [get_ports clk_i]
+set_clock_uncertainty 0.100 [get_clocks clk_i]
+set_input_delay 0.500 -clock clk_i [get_ports {req_valid_i req_write_i req_addr_i[*] req_wdata_i[*] req_wstrb_i[*] rsp_ready_i sdram_dq_io[*]}]
+set_output_delay 0.500 -clock clk_i [get_ports {req_ready_o rsp_valid_o rsp_rdata_o[*] rsp_corrected_o rsp_uncorrectable_o init_done_o sdram_cke_o sdram_cs_no sdram_ras_no sdram_cas_no sdram_we_no sdram_ba_o[*] sdram_a_o[*] sdram_dqm_o[*] sdram_dq_io[*]}]
+set_false_path -from [get_ports rst_ni]

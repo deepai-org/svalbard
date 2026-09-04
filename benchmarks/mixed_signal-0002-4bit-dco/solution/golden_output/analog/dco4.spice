@@ -1,0 +1,40 @@
+* GF180MCU 16-tap delay-line ring oscillator with divided digital output.
+* External verifier supplies the GF180 standard-cell SPICE library.
+.subckt dco4 EN CTRL0 CTRL1 CTRL2 CTRL3 OUT VDD VSS
+XG FB EN R0 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__nand2_4
+XD00 R0 D0 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyb_4
+XD01 D0 D1 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyb_4
+XD02 D1 D2 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyb_4
+XD03 D2 D3 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyb_4
+XD04 D3 D4 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyb_4
+XD05 D4 D5 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyb_4
+XD06 D5 D6 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyb_4
+XD07 D6 D7 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyb_4
+XD08 D7 D8 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyb_4
+XD09 D8 D9 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyb_4
+XD10 D9 D10 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyb_4
+XD11 D10 D11 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyb_4
+XD12 D11 D12 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyb_4
+XD13 D12 D13 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyb_4
+XD14 D13 D14 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyb_4
+XD15 D14 D15 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyb_4
+XM00 D0 D1 CTRL0 L00 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__mux2_1
+XM01 D2 D3 CTRL0 L01 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__mux2_1
+XM02 D4 D5 CTRL0 L02 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__mux2_1
+XM03 D6 D7 CTRL0 L03 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__mux2_1
+XM04 D8 D9 CTRL0 L04 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__mux2_1
+XM05 D10 D11 CTRL0 L05 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__mux2_1
+XM06 D12 D13 CTRL0 L06 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__mux2_1
+XM07 D14 D15 CTRL0 L07 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__mux2_1
+XM10 L00 L01 CTRL1 L10 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__mux2_1
+XM11 L02 L03 CTRL1 L11 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__mux2_1
+XM12 L04 L05 CTRL1 L12 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__mux2_1
+XM13 L06 L07 CTRL1 L13 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__mux2_1
+XM20 L10 L11 CTRL2 L20 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__mux2_1
+XM21 L12 L13 CTRL2 L21 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__mux2_1
+XM30 L20 L21 CTRL3 FB VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__mux2_1
+XCLK FB CLKD VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__buf_1
+XQI Q QB VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__inv_1
+XDIV QB EN CLKD Q VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dffrnq_2
+XOB Q OUT VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__buf_4
+.ends dco4

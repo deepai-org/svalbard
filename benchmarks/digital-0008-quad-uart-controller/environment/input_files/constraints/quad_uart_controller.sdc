@@ -1,0 +1,5 @@
+create_clock -name clk_i -period 10.000 [get_ports clk_i]
+set_clock_uncertainty 0.100 [get_clocks clk_i]
+set_input_delay 0.250 -clock clk_i [get_ports {enable_i[*] baud_div_i[*] tx_data_i[*] tx_valid_i[*] rx_ready_i[*] uart_rx_i[*] error_clear_i[*]}]
+set_output_delay 0.250 -clock clk_i [get_ports {tx_ready_o[*] rx_data_o[*] rx_valid_o[*] uart_tx_o[*] framing_error_o[*] overrun_error_o[*]}]
+set_false_path -from [get_ports rst_ni]

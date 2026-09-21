@@ -1,0 +1,231 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2250" height="1980" viewBox="0 0 2250 1980" role="img" aria-labelledby="title desc"><title id="title">Svalbard full-chip block diagram with tentative physical placement</title><desc id="desc">Portrait die with RF on the west, wired PHY on the east, quiet clock circuits on the north and digital transport on the south. Fifty edge terminals remain allocated. Block sizes and pad locations are provisional.</desc><defs><marker id="arr" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L8 4 L0 8" fill="#436b77"/></marker></defs><rect width="2250" height="1980" fill="white"/><g font-family="DejaVu Sans, sans-serif">
+<text x="65" y="55" font-size="32" fill="#283d50" font-weight="600" text-anchor="start">SVALBARD  /  FULL-CHIP BLOCK DIAGRAM</text>
+<text x="65" y="91" font-size="22" fill="#283d50" font-weight="400" text-anchor="start">Refinement 1 · short sensitive nets, local clocks / references, separated aggressors</text>
+<rect x="180" y="160" width="1200" height="1563.36" rx="10" fill="#f5f7fa" stroke="#576c7c" stroke-width="2"/>
+<rect x="314.35" y="294.35" width="931.3" height="1294.66" rx="10" fill="#fff" stroke="#a2b1be" stroke-width="2" stroke-dasharray="8 5"/>
+<text x="780" y="145" font-size="20" fill="#283d50" font-weight="600" text-anchor="middle">3.93 mm die width</text>
+<text x="780" y="276" font-size="18" fill="#283d50" font-weight="400" text-anchor="middle">Nominal 3.05 × 4.24 mm core envelope · 12.92 mm² ceiling</text>
+<text x="780" y="1700" font-size="17" fill="#283d50" font-weight="400" text-anchor="middle">Custom pad / ESD / seal-ring region — fit and actual core boundary unproven</text>
+<rect x="500" y="177" width="560" height="70" rx="10" fill="#fff" stroke="#456077" stroke-width="2"/>
+<text x="780.0" y="204" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">REF_IN  +  PLL VDD / VSS</text>
+<text x="780.0" y="230" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">3 terminals · quiet reference entry</text>
+<rect x="335" y="320" width="330" height="170" rx="10" fill="#eee8f8" stroke="#a08abb" stroke-width="2"/>
+<text x="500.0" y="347" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">RF PLL + quadrature</text>
+<text x="500.0" y="373" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">PFD / pump / R-C filter</text>
+<text x="500.0" y="396" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">VCO / feedback divider</text>
+<text x="500.0" y="419" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Local I/Q LO buffers</text>
+<text x="500.0" y="442" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Keep VCO / filter nodes short</text>
+<rect x="695" y="320" width="180" height="170" rx="10" fill="#fbf0dd" stroke="#b9a071" stroke-width="2"/>
+<text x="785.0" y="347" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">Reference tree</text>
+<text x="785.0" y="373" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Input receiver</text>
+<text x="785.0" y="396" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Quiet clock split</text>
+<text x="785.0" y="419" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Master bias</text>
+<text x="785.0" y="442" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Startup / trim</text>
+<rect x="905" y="320" width="315" height="170" rx="10" fill="#eee8f8" stroke="#a08abb" stroke-width="2"/>
+<text x="1062.5" y="347" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">Wired TX PLL</text>
+<text x="1062.5" y="373" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">PFD / pump / R-C filter</text>
+<text x="1062.5" y="396" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">VCO / divider / buffers</text>
+<text x="1062.5" y="419" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Local serializer clock</text>
+<text x="1062.5" y="442" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Separate RX recovery</text>
+<path d="M 780,247 L 780,320" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<path d="M 695,385 L 665,385" fill="none" stroke="#8c73b0" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#arr)"/>
+<path d="M 875,385 L 905,385" fill="none" stroke="#8c73b0" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#arr)"/>
+<rect x="880" y="525" width="18" height="580" rx="10" fill="#f1f1e7" stroke="#d6d5bd" stroke-width="2" stroke-dasharray="8 5"/>
+
+<text x="1060" y="542" font-size="22" fill="#283d50" font-weight="600" text-anchor="middle">WIRED ISLAND</text>
+<rect x="335" y="590" width="150" height="145" rx="10" fill="#e4f3ef" stroke="#79a89a" stroke-width="2"/>
+<text x="410.0" y="617" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">RF input</text>
+<text x="410.0" y="643" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">ESD / bias</text>
+<text x="410.0" y="666" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">LNA / gain</text>
+<text x="410.0" y="689" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">RX matching</text>
+<rect x="505" y="590" width="150" height="145" rx="10" fill="#e4f3ef" stroke="#79a89a" stroke-width="2"/>
+<text x="580.0" y="617" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">I/Q RX</text>
+<text x="580.0" y="643" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Mixers</text>
+<text x="580.0" y="666" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">PGA / op-amps</text>
+<text x="580.0" y="689" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">R/C filters</text>
+<rect x="680" y="590" width="180" height="145" rx="10" fill="#e4f3ef" stroke="#79a89a" stroke-width="2"/>
+<text x="770.0" y="617" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">I + Q ADCs</text>
+<text x="770.0" y="643" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Sample / hold</text>
+<text x="770.0" y="666" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">CDAC / SAR</text>
+<text x="770.0" y="689" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Comparators</text>
+<path d="M 300,655 L 335,655" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<path d="M 485,655 L 505,655" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<path d="M 655,655 L 680,655" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="335" y="825" width="150" height="145" rx="10" fill="#e4f3ef" stroke="#79a89a" stroke-width="2"/>
+<text x="410.0" y="852" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">RF output</text>
+<text x="410.0" y="878" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Driver / ESD</text>
+<text x="410.0" y="901" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Summing</text>
+<text x="410.0" y="924" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Local TX bias</text>
+<rect x="505" y="825" width="150" height="145" rx="10" fill="#e4f3ef" stroke="#79a89a" stroke-width="2"/>
+<text x="580.0" y="852" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">I/Q TX</text>
+<text x="580.0" y="878" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Upmixers</text>
+<text x="580.0" y="901" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Reconstruction</text>
+<text x="580.0" y="924" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Gain / R-C LPF</text>
+<rect x="680" y="825" width="180" height="145" rx="10" fill="#e4f3ef" stroke="#79a89a" stroke-width="2"/>
+<text x="770.0" y="852" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">I + Q DACs</text>
+<text x="770.0" y="878" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Current cells</text>
+<text x="770.0" y="901" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Update latches</text>
+<text x="770.0" y="924" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Output buffers</text>
+<path d="M 680,892 L 655,892" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<path d="M 505,892 L 485,892" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<path d="M 335,892 L 300,892" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<path d="M 580,490 L 580,567 L 575,567 L 575,590" fill="none" stroke="#8c73b0" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#arr)"/>
+<path d="M 640,490 L 640,560 L 665,560 L 665,795 L 575,795 L 575,825" fill="none" stroke="#8c73b0" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#arr)"/>
+<text x="490" y="784" font-size="16" fill="#8061a5" font-weight="400" text-anchor="middle">Matched local I/Q routing</text>
+<rect x="335" y="1000" width="320" height="100" rx="10" fill="#e4f3ef" stroke="#79a89a" stroke-width="2"/>
+<text x="495.0" y="1027" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">Local tiles / trim / monitors</text>
+<text x="495.0" y="1053" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Switches, gm / current weights</text>
+<text x="495.0" y="1076" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">DC servos / buffered slow probes</text>
+<rect x="680" y="1000" width="180" height="100" rx="10" fill="#fbf0dd" stroke="#b9a071" stroke-width="2"/>
+<text x="770.0" y="1027" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">ADC / DAC refs</text>
+<text x="770.0" y="1053" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Error amps / buffers</text>
+<text x="770.0" y="1076" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Local reservoirs</text>
+<path d="M 770,1000 L 770,970" fill="none" stroke="#8c73b0" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#arr)"/>
+<path d="M 860,1040 L 870,1040 L 870,760 L 770,760 L 770,735" fill="none" stroke="#8c73b0" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#arr)"/>
+<rect x="1075" y="590" width="145" height="145" rx="10" fill="#e8eefb" stroke="#859bc1" stroke-width="2"/>
+<text x="1147.5" y="617" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">RX front end</text>
+<text x="1147.5" y="643" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">ESD / term.</text>
+<text x="1147.5" y="666" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">CTLE / gain</text>
+<text x="1147.5" y="689" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">CM bias</text>
+<rect x="910" y="590" width="145" height="145" rx="10" fill="#e8eefb" stroke="#859bc1" stroke-width="2"/>
+<text x="982.5" y="617" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">RX samplers</text>
+<text x="982.5" y="643" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Slicers / latches</text>
+<text x="982.5" y="666" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Phase taps</text>
+<text x="982.5" y="689" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Offset trim</text>
+<path d="M 1260,655 L 1220,655" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<path d="M 1075,655 L 1055,655" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="910" y="765" width="310" height="105" rx="10" fill="#e8eefb" stroke="#859bc1" stroke-width="2"/>
+<text x="1065.0" y="792" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">RX CDR + deserializer</text>
+<text x="1065.0" y="818" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Detector / filter / phase control</text>
+<text x="1065.0" y="841" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Alignment / elastic buffer / loopback</text>
+<path d="M 982,735 L 982,765" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<path d="M 1100,765 L 1100,750 L 1040,750 L 1040,735" fill="none" stroke="#8c73b0" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#arr)"/>
+<rect x="910" y="930" width="145" height="145" rx="10" fill="#e8eefb" stroke="#859bc1" stroke-width="2"/>
+<text x="982.5" y="957" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">Serializer</text>
+<text x="982.5" y="983" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Retiming mux</text>
+<text x="982.5" y="1006" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Word staging</text>
+<text x="982.5" y="1029" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">CLK-W</text>
+<rect x="1075" y="930" width="145" height="145" rx="10" fill="#e8eefb" stroke="#859bc1" stroke-width="2"/>
+<text x="1147.5" y="957" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">TX driver</text>
+<text x="1147.5" y="983" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Swing / FIR</text>
+<text x="1147.5" y="1006" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Idle / detect</text>
+<text x="1147.5" y="1029" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">ESD / bias</text>
+<path d="M 1055,996 L 1075,996" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<path d="M 1220,996 L 1260,996" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<path d="M 1205,490 L 1233,490 L 1233,900 L 983,900 L 983,930" fill="none" stroke="#8c73b0" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#arr)"/>
+<rect x="335" y="1140" width="525" height="130" rx="10" fill="#edf0f4" stroke="#97a6b7" stroke-width="2"/>
+<text x="597.5" y="1167" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">Converter digital + local memory</text>
+<text x="597.5" y="1193" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Sample clock dividers / update timing / CDC</text>
+<text x="597.5" y="1216" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Capture / playback banks · per-stream queues</text>
+<text x="597.5" y="1239" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Digital outputs face inward / south</text>
+<rect x="910" y="1140" width="310" height="130" rx="10" fill="#edf0f4" stroke="#97a6b7" stroke-width="2"/>
+<text x="1065.0" y="1167" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">Wired digital + test</text>
+<text x="1065.0" y="1193" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Gearbox / queue / PRBS</text>
+<text x="1065.0" y="1216" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Raw / optional coding bypass</text>
+<text x="1065.0" y="1239" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">RX idle / TX detect status</text>
+<path d="M 850,735 L 865,735 L 865,1120 L 795,1120 L 795,1140" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<path d="M 730,1140 L 730,1115 L 665,1115 L 665,982 L 720,982 L 720,970" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<path d="M 1210,870 L 1230,870 L 1230,1120 L 1140,1120 L 1140,1140" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<path d="M 950,1140 L 950,1075" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="335" y="1300" width="885" height="95" rx="10" fill="#edf0f4" stroke="#97a6b7" stroke-width="2"/>
+<text x="777.5" y="1327" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">Shared transport / arbitration / management</text>
+<text x="777.5" y="1353" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Framing / packing / CDC · bounded queues · calibration / resource ownership · reset / faults</text>
+<path d="M 600,1270 L 600,1300" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<path d="M 1060,1270 L 1060,1300" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="335" y="1425" width="405" height="135" rx="10" fill="#edf0f4" stroke="#97a6b7" stroke-width="2"/>
+<text x="537.5" y="1452" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">HOST_A local I/O + deskew</text>
+<text x="537.5" y="1478" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">D2H[4:0] / H2D[4:0]</text>
+<text x="537.5" y="1501" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">SPI / reset pad circuits on this domain</text>
+<text x="537.5" y="1524" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Nearby DDR registers and local returns</text>
+<rect x="765" y="1425" width="455" height="135" rx="10" fill="#edf0f4" stroke="#97a6b7" stroke-width="2"/>
+<text x="992.5" y="1452" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">HOST_B local I/O + deskew</text>
+<text x="992.5" y="1478" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">D2H[9:5] / H2D[9:5] + both clocks</text>
+<text x="992.5" y="1501" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Clock-capable pads beside data group</text>
+<text x="992.5" y="1524" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Check skew across HOST_A / B boundary</text>
+<path d="M 535,1395 L 535,1425" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<path d="M 992,1395 L 992,1425" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="80" y="595" width="220" height="100" rx="10" fill="#fff" stroke="#456077" stroke-width="2"/>
+<text x="190.0" y="622" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">RF_RX_P / N</text>
+<text x="190.0" y="648" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">2 terminals</text>
+<text x="190.0" y="671" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">RF RX pad cluster</text>
+<rect x="80" y="735" width="220" height="70" rx="10" fill="#fff" stroke="#456077" stroke-width="2"/>
+<text x="190.0" y="762" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">RF VDD / VSS</text>
+<text x="190.0" y="788" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">2 terminals</text>
+<rect x="80" y="840" width="220" height="100" rx="10" fill="#fff" stroke="#456077" stroke-width="2"/>
+<text x="190.0" y="867" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">RF_TX_P / N</text>
+<text x="190.0" y="893" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">2 terminals</text>
+<text x="190.0" y="916" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">RF TX pad cluster</text>
+<rect x="80" y="1305" width="220" height="100" rx="10" fill="#fff" stroke="#456077" stroke-width="2"/>
+<text x="190.0" y="1332" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">SPI + RESET_N</text>
+<text x="190.0" y="1358" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">5 terminals</text>
+<text x="190.0" y="1381" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">Controller / recovery</text>
+<path d="M 300,1353 L 335,1353" fill="none" stroke="#436b77" stroke-width="3" marker-end="url(#arr)"/>
+<rect x="80" y="1460" width="220" height="80" rx="10" fill="#fff" stroke="#456077" stroke-width="2"/>
+<text x="190.0" y="1487" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">CORE VDD / VSS</text>
+<text x="190.0" y="1513" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">2 terminals</text>
+<rect x="1260" y="595" width="220" height="100" rx="10" fill="#fff" stroke="#456077" stroke-width="2"/>
+<text x="1370.0" y="622" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">WIRE_RX_P / N</text>
+<text x="1370.0" y="648" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">2 terminals</text>
+<text x="1370.0" y="671" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">RX pad cluster</text>
+<rect x="1260" y="750" width="220" height="80" rx="10" fill="#fff" stroke="#456077" stroke-width="2"/>
+<text x="1370.0" y="777" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">WIRE_RX supply</text>
+<text x="1370.0" y="803" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">VDD / VSS · 2 terminals</text>
+<rect x="1260" y="945" width="220" height="100" rx="10" fill="#fff" stroke="#456077" stroke-width="2"/>
+<text x="1370.0" y="972" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">WIRE_TX_P / N</text>
+<text x="1370.0" y="998" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">2 terminals</text>
+<text x="1370.0" y="1021" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">TX pad cluster</text>
+<rect x="1260" y="1080" width="220" height="80" rx="10" fill="#fff" stroke="#456077" stroke-width="2"/>
+<text x="1370.0" y="1107" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">WIRE_TX supply</text>
+<text x="1370.0" y="1133" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">VDD / VSS · 2 terminals</text>
+<rect x="335" y="1610" width="405" height="70" rx="10" fill="#fff" stroke="#456077" stroke-width="2"/>
+<text x="537.5" y="1637" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">HOST_A: 10 data + VDD / VSS</text>
+<text x="537.5" y="1663" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">12 terminals · bottom edge</text>
+<rect x="765" y="1610" width="455" height="70" rx="10" fill="#fff" stroke="#456077" stroke-width="2"/>
+<text x="992.5" y="1637" font-size="19" fill="#283d50" font-weight="600" text-anchor="middle">HOST_B: 10 data + 2 clocks + VDD / VSS</text>
+<text x="992.5" y="1663" font-size="16" fill="#283d50" font-weight="400" text-anchor="middle">14 terminals · bottom edge</text>
+<path d="M 535,1560 L 535,1610" fill="none" stroke="#436b77" stroke-width="3"/>
+<path d="M 992,1560 L 992,1610" fill="none" stroke="#436b77" stroke-width="3"/>
+<text x="1540" y="190" font-size="26" fill="#283d50" font-weight="600" text-anchor="start">PLACEMENT REASONING</text>
+<text x="1540" y="240" font-size="22" fill="#283d50" font-weight="600" text-anchor="start">01  Keep the GHz paths at their pads</text>
+<text x="1540" y="274" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">RF on the west; wired on the east. Put ESD,</text>
+<text x="1540" y="301" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">input matching / termination and output drivers</text>
+<text x="1540" y="328" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">at the boundary. No long raw RF or line nets.</text>
+<text x="1540" y="435" font-size="22" fill="#283d50" font-weight="600" text-anchor="start">02  Keep each clock loop compact</text>
+<text x="1540" y="469" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">RF PLL above the mixers; wired PLL above the</text>
+<text x="1540" y="496" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">lane. Keep loop filters beside pump / VCO.</text>
+<text x="1540" y="523" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">Route buffered reference clocks between islands;</text>
+<text x="1540" y="550" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">do not share high-impedance tuning nodes.</text>
+<text x="1540" y="630" font-size="22" fill="#283d50" font-weight="600" text-anchor="start">03  Converters form the analog / digital seam</text>
+<text x="1540" y="664" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">Place I/Q pairs together with symmetric loads.</text>
+<text x="1540" y="691" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">Face analog terminals toward baseband; route</text>
+<text x="1540" y="718" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">codes south. Reference buffers and reservoirs</text>
+<text x="1540" y="745" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">stay local to the conversion load.</text>
+<text x="1540" y="825" font-size="22" fill="#283d50" font-weight="600" text-anchor="start">04  Put switching activity toward the south</text>
+<text x="1540" y="859" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">Host pads sit beside their DDR registers.</text>
+<text x="1540" y="886" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">Keep A / B supply segments and local returns.</text>
+<text x="1540" y="913" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">Memory and gearboxes sit between host and</text>
+<text x="1540" y="940" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">analog islands; avoid digital routes over VCOs.</text>
+<text x="1540" y="1020" font-size="22" fill="#283d50" font-weight="600" text-anchor="start">05  Keep room for the real implementation</text>
+<text x="1540" y="1054" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">Blank lanes reserve routing / decoupling space.</text>
+<text x="1540" y="1081" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">Isolation structures are not designed here.</text>
+<text x="1540" y="1108" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">Bias trunks feed local buffers; diagnostics use</text>
+<text x="1540" y="1135" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">only isolated, low-bandwidth routes.</text>
+<text x="1540" y="1215" font-size="22" fill="#283d50" font-weight="600" text-anchor="start">06  Preserve the existing boundary</text>
+<text x="1540" y="1249" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">North: 3 terminals. West: 13. East: 8.</text>
+<text x="1540" y="1276" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">South: 26. Total: 50 (36 signals + 14 power).</text>
+<text x="1540" y="1303" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">No added monitor, loop-filter or supply pins.</text>
+<rect x="1530" y="1450" width="655" height="275" rx="10" fill="#fff6e8" stroke="#c5ab7b" stroke-width="2"/>
+<text x="1550" y="1485" font-size="22" fill="#283d50" font-weight="600" text-anchor="start">WHAT THIS PASS DOES NOT ESTABLISH</text>
+<text x="1550" y="1520" font-size="19" fill="#283d50" font-weight="400" text-anchor="start">Block areas are illustrative, not sized macros.</text>
+<text x="1550" y="1547" font-size="19" fill="#283d50" font-weight="400" text-anchor="start">Die / nominal core aspect ratios follow the plan.</text>
+<text x="1550" y="1574" font-size="19" fill="#283d50" font-weight="400" text-anchor="start">Custom pads may change the usable boundary.</text>
+<text x="1550" y="1601" font-size="19" fill="#283d50" font-weight="400" text-anchor="start">Bond-wire, thermal and substrate coupling can</text>
+<text x="1550" y="1628" font-size="19" fill="#283d50" font-weight="400" text-anchor="start">change the preferred placement. Package/PEX</text>
+<text x="1550" y="1655" font-size="19" fill="#283d50" font-weight="400" text-anchor="start">must decide between candidate layouts.</text>
+<text x="1550" y="1682" font-size="19" fill="#283d50" font-weight="400" text-anchor="start">Narrow operating range does not remove these risks.</text>
+<text x="65" y="1785" font-size="23" fill="#283d50" font-weight="600" text-anchor="start">Reading the view</text>
+<text x="65" y="1820" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">Solid arrows: selected local data paths. Dashed purple: selected clock / reference paths. Shared-service fanout is omitted for legibility.</text>
+<text x="65" y="1855" font-size="20" fill="#283d50" font-weight="400" text-anchor="start">Blocks include local bias / decoupling obligations; no blanket on-chip LDO or shielding topology is assumed. RF receive and transmit remain separate chains.</text>
+<text x="65" y="1900" font-size="21" fill="#283d50" font-weight="600" text-anchor="start">Next physical decision: size actual macros, trial a custom pad ring, then compare extracted clock/RF coupling and package return paths.</text>
+<text x="65" y="1940" font-size="19" fill="#657486" font-weight="400" text-anchor="start">Conceptual placement only — this diagram does not start transistor layout or bypass mathematical and schematic closure.</text>
+</g></svg>

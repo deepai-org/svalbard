@@ -1,5 +1,7 @@
 # SVALBARD
 
+[Programmable transceiver — full-chip block diagram](projects/programmable_transceiver_platform/docs/diagrams/README.md)
+
 SVALBARD is a GF180 source monorepo for physically verified mixed-signal
 experiments and product designs. The active product tracks are a PCIe Gen1 x1
 endpoint and an 802.11b Wi-Fi receiver/radio path. All present electrical and

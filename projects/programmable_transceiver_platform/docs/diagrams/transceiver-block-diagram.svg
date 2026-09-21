@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2600" height="2180" viewBox="0 0 2600 2180" role="img" aria-labelledby="title desc"><title id="title">Svalbard circuit-block schematic and approximate placement</title><desc id="desc">Explicit RF I and Q mixer, gain, filter and converter paths; PLL feedback loops; wired equalizer, sampler, CDR and serializer; programmable analog tiles; references and host control. All external terminals are at the perimeter. Intended circuits, not a completed transistor schematic.</desc><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L9 4 L0 8" fill="#233e50"/></marker></defs><rect width="2600" height="2180" fill="white"/><g font-family="DejaVu Sans,sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="2600" height="2340" viewBox="0 0 2600 2340" role="img" aria-labelledby="title desc"><title id="title">Svalbard circuit-block schematic and approximate placement</title><desc id="desc">Explicit RF I and Q mixer, gain, filter and converter paths; PLL feedback loops; wired equalizer, sampler, CDR and serializer; programmable analog tiles; references and host control. All external terminals are at the perimeter. Intended circuits, not a completed transistor schematic.</desc><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L9 4 L0 8" fill="#233e50"/></marker></defs><rect width="2600" height="2340" fill="white"/><g font-family="DejaVu Sans,sans-serif">
 <text x="55" y="48" font-size="32" font-weight="600" text-anchor="start" fill="#172a3a">SVALBARD / CIRCUIT-BLOCK SCHEMATIC</text>
 <text x="55" y="80" font-size="21" font-weight="400" text-anchor="start" fill="#172a3a">Proposed connectivity with RF west, wired east, clocks north and digital south</text>
 <text x="2540" y="48" font-size="25" font-weight="600" text-anchor="end" fill="#172a3a">50 TERMINALS</text>
 <text x="2540" y="80" font-size="19" font-weight="400" text-anchor="end" fill="#172a3a">36 signal + 14 supply / return</text>
-<rect x="200" y="190" width="2200" height="1760" fill="#fcfdfe" stroke="#8196a6" stroke-width="2"/>
+<rect x="120" y="190" width="2280" height="1920" fill="#fcfdfe" stroke="#8196a6" stroke-width="2"/>
 <rect x="1100" y="110" width="270" height="65" fill="#f7f9fb" stroke="#233e50" stroke-width="2"/>
 <text x="1235.0" y="142.5" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">REF_IN</text>
 <text x="1235.0" y="166.5" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">1 terminal</text>
@@ -302,16 +302,16 @@
 <path d="M 2360,1240 L 2360,1375 L 2340,1375" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
 <circle cx="2360" cy="1240" r="4" fill="#233e50"/>
 <text x="1540" y="1420" font-size="15" font-weight="400" text-anchor="start" fill="#172a3a">Idle gates driver bias; detect current senses the output load</text>
+<g transform="translate(0,160)">
 <rect x="230" y="1480" width="700" height="205" fill="#fbf8ed" stroke="#b5c3ce" stroke-width="2" stroke-dasharray="8 6"/>
 <text x="248" y="1509" font-size="22" font-weight="600" text-anchor="start" fill="#172a3a">LOCAL ANALOG TILE / SLOW DIAGNOSTICS</text>
-<circle cx="263" cy="1575" r="4" fill="#233e50"/>
-<circle cx="307" cy="1575" r="4" fill="#233e50"/>
-<path d="M 263,1575 L 300,1557" fill="none" stroke="#233e50" stroke-width="2.5"/>
-<path d="M 255,1575 L 263,1575" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="303" cy="1575" r="4" fill="#233e50"/>
+<circle cx="347" cy="1575" r="4" fill="#233e50"/>
+<path d="M 303,1575 L 340,1557" fill="none" stroke="#233e50" stroke-width="2.5"/>
+<path d="M 347,1575 L 350,1575" fill="none" stroke="#233e50" stroke-width="2.5"/>
 <polygon points="350,1537 350,1613 450,1575" fill="white" stroke="#233e50" stroke-width="2.5"/>
 <text x="386" y="1582" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">gm</text>
 <text x="400" y="1641" font-size="16" font-weight="400" text-anchor="middle" fill="#172a3a">Weight / sign</text>
-<path d="M 307,1575 L 350,1575" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
 <circle cx="525" cy="1575" r="28" fill="white" stroke="#233e50" stroke-width="2.5"/>
 <text x="525" y="1585" font-size="32" font-weight="400" text-anchor="middle" fill="#172a3a">Σ</text>
 <path d="M 450,1575 L 497,1575" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
@@ -323,7 +323,7 @@
 <text x="806" y="1582" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">±</text>
 <text x="820" y="1641" font-size="16" font-weight="400" text-anchor="middle" fill="#172a3a">Compare / sample</text>
 <path d="M 705,1575 L 770,1575" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="575" y="1661" font-size="16" font-weight="400" text-anchor="middle" fill="#172a3a">Local topology switches; buffered diagnostic mux → shared ADC by ownership</text>
+<text x="595" y="1653" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">Programmable local chain → diagnostic mux</text>
 <rect x="960" y="1480" width="730" height="205" fill="#fbf8ed" stroke="#b5c3ce" stroke-width="2" stroke-dasharray="8 6"/>
 <text x="978" y="1509" font-size="22" font-weight="600" text-anchor="start" fill="#172a3a">BIAS / CONVERTER REFERENCE SERVICES</text>
 <rect x="982" y="1540" width="145" height="70" fill="white" stroke="#233e50" stroke-width="2"/>
@@ -348,7 +348,7 @@
 <path d="M 1490,1575 L 1490,1518 L 1220,1518 L 1220,1537" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
 <circle cx="1490" cy="1575" r="4" fill="#233e50"/>
 <text x="1580" y="1545" font-size="18" font-weight="600" text-anchor="middle" fill="#172a3a">VREF</text>
-<text x="1515" y="1662" font-size="16" font-weight="400" text-anchor="middle" fill="#172a3a">Local copies / RC decoupling</text>
+<text x="1505" y="1622" font-size="14" font-weight="400" text-anchor="middle" fill="#172a3a">Local copies / RC decoupling</text>
 <rect x="1720" y="1480" width="650" height="205" fill="#f8f3fc" stroke="#b5c3ce" stroke-width="2" stroke-dasharray="8 6"/>
 <text x="1738" y="1509" font-size="22" font-weight="600" text-anchor="start" fill="#172a3a">CLOCK / SAFETY / OBSERVATION</text>
 <rect x="1740" y="1540" width="170" height="70" fill="white" stroke="#233e50" stroke-width="2"/>
@@ -360,7 +360,7 @@
 <rect x="2145" y="1540" width="200" height="70" fill="white" stroke="#233e50" stroke-width="2"/>
 <text x="2245.0" y="1575.0" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">Slow monitor mux</text>
 <text x="2245.0" y="1599.0" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">idle / amplitude / trim</text>
-<text x="2040" y="1658" font-size="16" font-weight="400" text-anchor="middle" fill="#172a3a">Named clock nets are buffered locally; no global GHz analog crossbar</text>
+<text x="2040" y="1624" font-size="14" font-weight="400" text-anchor="middle" fill="#172a3a">Buffered clocks / isolated observations</text>
 <rect x="230" y="1730" width="550" height="175" fill="#f0f3f7" stroke="#233e50" stroke-width="2"/>
 <text x="505.0" y="1817.5" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">RF data / memory / CDC</text>
 <text x="505.0" y="1841.5" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">I/Q queues · capture / playback · update sequencing</text>
@@ -370,12 +370,6 @@
 <rect x="1540" y="1730" width="830" height="175" fill="#f0f3f7" stroke="#233e50" stroke-width="2"/>
 <text x="1955.0" y="1817.5" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">Wired words / GPIO PHY / clock alignment</text>
 <text x="1955.0" y="1841.5" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">Queues · raw/bypass · DDR capture / launch · local HOST_A / HOST_B rails</text>
-<text x="505" y="1712" font-size="18" font-weight="600" text-anchor="middle" fill="#172a3a">RX-I / RX-Q ↓    TX-I / TX-Q ↑</text>
-<path d="M 1540,825 L 1470,825" fill="none" stroke="#233e50" stroke-width="2.5"/>
-<text x="1460" y="805" font-size="16" font-weight="600" text-anchor="middle" fill="#172a3a">RX-W</text>
-<text x="1600" y="1100" font-size="16" font-weight="600" text-anchor="middle" fill="#172a3a">TX-W</text>
-<path d="M 1600,1105 L 1600,1130" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="1940" y="1712" font-size="18" font-weight="600" text-anchor="middle" fill="#172a3a">RX-W ↓    TX-W ↑     H2D / D2H</text>
 <path d="M 780,1820 L 810,1820" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
 <path d="M 1510,1820 L 1540,1820" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
 <rect x="250" y="1970" width="525" height="65" fill="#f7f9fb" stroke="#233e50" stroke-width="2"/>
@@ -390,12 +384,103 @@
 <rect x="1900" y="1970" width="475" height="65" fill="#f7f9fb" stroke="#233e50" stroke-width="2"/>
 <text x="2137.5" y="2002.5" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">SUPPLIES / RETURNS</text>
 <text x="2137.5" y="2026.5" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">14 terminals · 7 local supply / return pairs</text>
-<path d="M 510,1970 L 510,1930" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="510" y="1924" font-size="16" font-weight="600" text-anchor="middle" fill="#172a3a">H2D → GPIO PHY</text>
-<path d="M 1100,1930 L 1100,1970" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="1100" y="1924" font-size="16" font-weight="600" text-anchor="middle" fill="#172a3a">D2H ← GPIO PHY</text>
+<path d="M 510,1970 L 510,1945 L 1730,1945 L 1730,1905" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 1820,1905 L 1820,1957 L 1100,1957 L 1100,1970" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
 <path d="M 1625,1970 L 1625,1930 L 1250,1930 L 1250,1905" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 1300,1905 L 1300,1920 L 1660,1920 L 1660,1970" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
 <text x="55" y="2080" font-size="19" font-weight="400" text-anchor="start" fill="#172a3a">Symbols: G/A = gain/error amplifier; × = mixer; Σ = sum; ∫ = integration; ± = comparator; D/Q = sampling latch.</text>
-<text x="55" y="2115" font-size="18" font-weight="400" text-anchor="start" fill="#172a3a">Differential pairs use one line; I/Q paths remain separate. Matching RX/TX and clock labels connect nets. No wire crossing implies a connection without a dot.</text>
-<text x="55" y="2150" font-size="18" font-weight="400" text-anchor="start" fill="#172a3a">Intended architecture, not a wired transistor schematic or area proof. Placement is approximate; supplies fan out locally. PA, antenna and protocol/modem logic remain external.</text>
+<text x="55" y="2115" font-size="18" font-weight="400" text-anchor="start" fill="#172a3a">Differential pairs and digital words use bundled lines. Junction dots connect; crossings without dots do not. Purple: clocks. Orange: reference. Blue: control.</text>
+<text x="55" y="2150" font-size="18" font-weight="400" text-anchor="start" fill="#172a3a">Panel service ports distribute configuration, bias and supply locally to their enclosed circuits. No implied global analog crossbar. This is not a transistor netlist or layout.</text>
+</g>
+<path d="M 1310,695 L 1365,695 L 1365,1490 L 145,1490 L 145,1850 L 350,1850 L 350,1890" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="320" y="1484" font-size="15" font-weight="600" text-anchor="start" fill="#172a3a">RX-I sample bus</text>
+<path d="M 1310,905 L 1380,905 L 1380,1510 L 160,1510 L 160,1860 L 450,1860 L 450,1890" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="320" y="1504" font-size="15" font-weight="600" text-anchor="start" fill="#172a3a">RX-Q sample bus</text>
+<path d="M 550,1890 L 550,1870 L 175,1870 L 175,1530 L 1395,1530 L 1395,1150 L 1320,1150" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="320" y="1524" font-size="15" font-weight="600" text-anchor="start" fill="#172a3a">TX-I sample bus</text>
+<path d="M 650,1890 L 650,1880 L 190,1880 L 190,1550 L 1410,1550 L 1410,1350 L 1320,1350" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="320" y="1544" font-size="15" font-weight="600" text-anchor="start" fill="#172a3a">TX-Q sample bus</text>
+<path d="M 1540,825 L 1460,825 L 1460,1590 L 1705,1590 L 1705,1870 L 1800,1870 L 1800,1890" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 1850,1890 L 1850,1880 L 2385,1880 L 2385,1110 L 1600,1110 L 1600,1130" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 1160,446 L 1160,565 L 1356,565 L 1356,620 L 595,620 L 595,1025 L 1372,1025 L 1372,1111 L 675,1111" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4"/>
+<path d="M 595,655 L 640,655" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4"/>
+<circle cx="595" cy="655" r="4" fill="#233e50"/>
+<path d="M 1270,446 L 1270,575 L 1360,575 L 1360,632 L 605,632 L 605,1030 L 1378,1030 L 1378,1311 L 675,1311" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4"/>
+<path d="M 605,865 L 640,865" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4"/>
+<circle cx="605" cy="865" r="4" fill="#233e50"/>
+<path d="M 2320,470 L 2395,470 L 2395,1025 L 1840,1025 L 1840,1105" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4"/>
+<path d="M 1325,239 L 1440,239 L 1440,1615 L 1825,1615 L 1825,1700" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4" marker-end="url(#arrow)"/>
+<text x="1750" y="1605" font-size="16" font-weight="400" text-anchor="middle" fill="#172a3a">REF → sample-clock divider</text>
+<path d="M 1825,1770 L 1825,1815 L 1430,1815 L 1430,1020 L 1090,1020 L 1090,640" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4"/>
+<path d="M 1090,640 L 1040,640 L 1040,677" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4" marker-end="url(#arrow)"/>
+<circle cx="1090" cy="640" r="4" fill="#233e50"/>
+<path d="M 1090,850 L 1040,850 L 1040,887" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4" marker-end="url(#arrow)"/>
+<circle cx="1090" cy="850" r="4" fill="#233e50"/>
+<path d="M 1430,1020 L 1335,1020 L 1335,1405" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4"/>
+<path d="M 1335,1188 L 1200,1188 L 1200,1180" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4" marker-end="url(#arrow)"/>
+<circle cx="1335" cy="1188" r="4" fill="#233e50"/>
+<path d="M 1335,1388 L 1200,1388 L 1200,1380" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4" marker-end="url(#arrow)"/>
+<circle cx="1335" cy="1388" r="4" fill="#233e50"/>
+<circle cx="1430" cy="1020" r="4" fill="#233e50"/>
+<path d="M 1620,1735 L 1680,1735 L 1680,1627 L 1347,1627 L 1347,645" fill="none" stroke="#b47a20" stroke-width="2.5"/>
+<path d="M 1347,651 L 1180,651 L 1180,658" fill="none" stroke="#b47a20" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="1347" cy="651" r="4" fill="#233e50"/>
+<path d="M 1347,861 L 1180,861 L 1180,868" fill="none" stroke="#b47a20" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="1347" cy="861" r="4" fill="#233e50"/>
+<path d="M 1347,1106 L 1180,1106 L 1180,1113" fill="none" stroke="#b47a20" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="1347" cy="1106" r="4" fill="#233e50"/>
+<path d="M 1347,1306 L 1180,1306 L 1180,1313" fill="none" stroke="#b47a20" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="1347" cy="1306" r="4" fill="#233e50"/>
+<path d="M 1460,1890 L 1460,1865 L 2418,1865 L 2418,275 L 225,275 L 225,1865 L 850,1865 L 850,1890" fill="none" stroke="#386991" stroke-width="2.5"/>
+<path d="M 225,520 L 230,520" fill="none" stroke="#386991" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="225" cy="520" r="4" fill="#233e50"/>
+<text x="238" y="511" font-size="13" font-weight="600" text-anchor="start" fill="#386991">CTRL / BIAS</text>
+<path d="M 225,995 L 230,995" fill="none" stroke="#386991" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="225" cy="995" r="4" fill="#233e50"/>
+<text x="238" y="986" font-size="13" font-weight="600" text-anchor="start" fill="#386991">CTRL / BIAS</text>
+<path d="M 225,1430 L 230,1430" fill="none" stroke="#386991" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="225" cy="1430" r="4" fill="#233e50"/>
+<text x="238" y="1421" font-size="13" font-weight="600" text-anchor="start" fill="#386991">CTRL / BIAS</text>
+<path d="M 2418,520 L 2370,520" fill="none" stroke="#386991" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="2418" cy="520" r="4" fill="#233e50"/>
+<text x="2362" y="511" font-size="13" font-weight="600" text-anchor="end" fill="#386991">CTRL / BIAS</text>
+<path d="M 2418,995 L 2370,995" fill="none" stroke="#386991" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="2418" cy="995" r="4" fill="#233e50"/>
+<text x="2362" y="986" font-size="13" font-weight="600" text-anchor="end" fill="#386991">CTRL / BIAS</text>
+<path d="M 2418,1430 L 2370,1430" fill="none" stroke="#386991" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="2418" cy="1430" r="4" fill="#233e50"/>
+<text x="2362" y="1421" font-size="13" font-weight="600" text-anchor="end" fill="#386991">CTRL / BIAS</text>
+<text x="1520" y="273" font-size="16" font-weight="600" text-anchor="start" fill="#172a3a">CONFIGURATION / TRIM / ENABLE / STATUS BUS</text>
+<path d="M 2135,2130 L 2135,2080 L 2460,2080 L 2460,255 L 210,255 L 210,1600" fill="none" stroke="#233e50" stroke-width="2.5"/>
+<text x="1810" y="248" font-size="15" font-weight="600" text-anchor="start" fill="#172a3a">7 SUPPLY / RETURN PAIRS → LOCAL DOMAIN FEEDS</text>
+<path d="M 210,535 L 230,535" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="210" cy="535" r="4" fill="#233e50"/>
+<path d="M 2460,535 L 2370,535" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="2460" cy="535" r="4" fill="#233e50"/>
+<path d="M 210,1008 L 230,1008" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="210" cy="1008" r="4" fill="#233e50"/>
+<path d="M 2460,1008 L 2370,1008" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="2460" cy="1008" r="4" fill="#233e50"/>
+<path d="M 210,1445 L 230,1445" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="210" cy="1445" r="4" fill="#233e50"/>
+<path d="M 2460,1445 L 2370,1445" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="2460" cy="1445" r="4" fill="#233e50"/>
+<path d="M 210,1600 L 1050,1600 L 1050,1700" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 2280,1407 L 2280,1580 L 2320,1580 L 2320,1700" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="2268" y="1570" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">Buffered TX sense</text>
+<path d="M 1070,1350 L 1070,1465 L 960,1465 L 960,1605 L 250,1605 L 190,1605 L 190,1735 L 200,1735" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="1070" cy="1350" r="4" fill="#233e50"/>
+<polygon points="200,1697 200,1773 300,1735" fill="white" stroke="#233e50" stroke-width="2.5"/>
+<text x="236" y="1742" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">1</text>
+<text x="250" y="1801" font-size="16" font-weight="400" text-anchor="middle" fill="#172a3a">Probe buffer</text>
+<path d="M 300,1735 L 303,1735" fill="none" stroke="#233e50" stroke-width="2.5"/>
+<path d="M 870,1735 L 945,1735 L 945,1620 L 2260,1620 L 2260,1700" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 2345,1735 L 2360,1735 L 2360,1853 L 1400,1853 L 1400,1890" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M 2030,1770 L 2030,1830 L 1340,1830 L 1340,1890" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="2160" y="1845" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">MON / LOCK status</text>
+<path d="M 2145,1750 L 2125,1750 L 2125,1638 L 1420,1638 L 1420,805 L 1000,805 L 1000,715" fill="none" stroke="#a06b20" stroke-width="2.5"/>
+<path d="M 1000,715 L 1000,695" fill="none" stroke="#a06b20" stroke-width="2.5"/>
+<rect x="989" y="684" width="22" height="22" fill="white" stroke="#a06b20" stroke-width="2"/>
+<text x="1000" y="701" font-size="14" font-weight="600" text-anchor="middle" fill="#172a3a">S</text>
+<text x="1090" y="817" font-size="14" font-weight="400" text-anchor="middle" fill="#172a3a">S: RF-I / diagnostic select</text>
 </g></svg>

@@ -2,6 +2,7 @@
 from pathlib import Path
 from html import escape
 A=[]
+WIRE_COLOR=None
 def put(s): A.append(s)
 def label(x,y,s,n=19,bold=False,anchor='middle',color='#172a3a'):
     put(f'<text x="{x}" y="{y}" font-size="{n}" font-weight="{600 if bold else 400}" text-anchor="{anchor}" fill="{color}">{escape(s)}</text>')
@@ -9,7 +10,7 @@ def rect(x,y,w,h,fill='white',stroke='#233e50',dash=False):
     put(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{fill}" stroke="{stroke}" stroke-width="2"'+(' stroke-dasharray="8 6"' if dash else '')+'/>')
 def wire(points,arrow=True,clock=False):
     d='M '+' L '.join(f'{x},{y}' for x,y in points)
-    put(f'<path d="{d}" fill="none" stroke="{"#80549c" if clock else "#233e50"}" stroke-width="2.5"'+(' stroke-dasharray="7 4"' if clock else '')+(' marker-end="url(#arrow)"' if arrow else '')+'/>')
+    put(f'<path d="{d}" fill="none" stroke="{WIRE_COLOR or ("#80549c" if clock else "#233e50")}" stroke-width="2.5"'+(' stroke-dasharray="7 4"' if clock else '')+(' marker-end="url(#arrow)"' if arrow else '')+'/>')
 def dot(x,y):put(f'<circle cx="{x}" cy="{y}" r="4" fill="#233e50"/>')
 def block(x,y,w,h,title,sub='',fill='white'):
     rect(x,y,w,h,fill);label(x+w/2,y+h/2+(0 if sub else 6),title,20,True)
@@ -44,11 +45,11 @@ def pin(x,y,w,name,count):
     block(x,y,w,65,name,count,'#f7f9fb')
 def panel(x,y,w,h,title,fill):
     rect(x,y,w,h,fill,'#b5c3ce',True);label(x+18,y+29,title,22,True,'start')
-put('''<svg xmlns="http://www.w3.org/2000/svg" width="2600" height="2180" viewBox="0 0 2600 2180" role="img" aria-labelledby="title desc"><title id="title">Svalbard circuit-block schematic and approximate placement</title><desc id="desc">Explicit RF I and Q mixer, gain, filter and converter paths; PLL feedback loops; wired equalizer, sampler, CDR and serializer; programmable analog tiles; references and host control. All external terminals are at the perimeter. Intended circuits, not a completed transistor schematic.</desc><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L9 4 L0 8" fill="#233e50"/></marker></defs><rect width="2600" height="2180" fill="white"/><g font-family="DejaVu Sans,sans-serif">''')
+put('''<svg xmlns="http://www.w3.org/2000/svg" width="2600" height="2340" viewBox="0 0 2600 2340" role="img" aria-labelledby="title desc"><title id="title">Svalbard circuit-block schematic and approximate placement</title><desc id="desc">Explicit RF I and Q mixer, gain, filter and converter paths; PLL feedback loops; wired equalizer, sampler, CDR and serializer; programmable analog tiles; references and host control. All external terminals are at the perimeter. Intended circuits, not a completed transistor schematic.</desc><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L9 4 L0 8" fill="#233e50"/></marker></defs><rect width="2600" height="2340" fill="white"/><g font-family="DejaVu Sans,sans-serif">''')
 label(55,48,'SVALBARD / CIRCUIT-BLOCK SCHEMATIC',32,True,'start')
 label(55,80,'Proposed connectivity with RF west, wired east, clocks north and digital south',21,anchor='start')
 label(2540,48,'50 TERMINALS',25,True,'end');label(2540,80,'36 signal + 14 supply / return',19,anchor='end')
-rect(200,190,2200,1760,'#fcfdfe','#8196a6')
+rect(120,190,2280,1920,'#fcfdfe','#8196a6')
 # external ref and split
 pin(1100,110,270,'REF_IN','1 terminal')
 block(1145,210,180,58,'REF buffer')
@@ -148,12 +149,14 @@ amp(2290,1240,'G','Line driver');wire([(2208,1240),(2240,1240)]);wire([(2340,124
 block(2220,1343,120,64,'Sense / idle','detect current')
 wire([(2360,1240),(2360,1375),(2340,1375)]);dot(2360,1240)
 label(1540,1420,'Idle gates driver bias; detect current senses the output load',15,anchor='start')
+# Extra routing band separates high-speed circuits from shared services.
+put('<g transform="translate(0,160)">')
 # lower analog services
 panel(230,1480,700,205,'LOCAL ANALOG TILE / SLOW DIAGNOSTICS','#fbf8ed')
-switch(285,1575);wire([(255,1575),(263,1575)]);amp(400,1575,'gm','Weight / sign');wire([(307,1575),(350,1575)])
+switch(325,1575);wire([(347,1575),(350,1575)],False);amp(400,1575,'gm','Weight / sign');
 circ(525,1575,'Σ');wire([(450,1575),(497,1575)]);amp(655,1575,'∫','C integration');wire([(553,1575),(605,1575)])
 amp(820,1575,'±','Compare / sample');wire([(705,1575),(770,1575)])
-label(575,1661,'Local topology switches; buffered diagnostic mux → shared ADC by ownership',16)
+label(595,1653,'Programmable local chain → diagnostic mux',15)
 panel(960,1480,730,205,'BIAS / CONVERTER REFERENCE SERVICES','#fbf8ed')
 block(982,1540,145,70,'V / I ref','startup + trim')
 amp(1220,1575,'A','Error amp');wire([(1127,1575),(1170,1575)])
@@ -161,32 +164,105 @@ block(1320,1540,135,70,'Source / sink','buffer')
 wire([(1270,1575),(1320,1575)]);wire([(1455,1575),(1620,1575)])
 cap(1530,1610);dot(1530,1575);wire([(1530,1575),(1530,1592)],False)
 wire([(1490,1575),(1490,1518),(1220,1518),(1220,1537)]);dot(1490,1575)
-label(1580,1545,'VREF',18,True);label(1515,1662,'Local copies / RC decoupling',16)
+label(1580,1545,'VREF',18,True);label(1505,1622,'Local copies / RC decoupling',14)
 panel(1720,1480,650,205,'CLOCK / SAFETY / OBSERVATION','#f8f3fc')
 block(1740,1540,170,70,'÷ / phase','ADC / DAC clocks')
 block(1940,1540,175,70,'Lock / reset','gating / release')
 block(2145,1540,200,70,'Slow monitor mux','idle / amplitude / trim')
-label(2040,1658,'Named clock nets are buffered locally; no global GHz analog crossbar',16)
+label(2040,1624,'Buffered clocks / isolated observations',14)
 # digital along bottom
 block(230,1730,550,175,'RF data / memory / CDC','I/Q queues · capture / playback · update sequencing','#f0f3f7')
 block(810,1730,700,175,'Shared control / framing / resource ownership','SPI · calibration · atomic run / stop · fault / epoch recovery','#f0f3f7')
 block(1540,1730,830,175,'Wired words / GPIO PHY / clock alignment','Queues · raw/bypass · DDR capture / launch · local HOST_A / HOST_B rails','#f0f3f7')
-# Matched net labels keep digital buses distinct and off sensitive analog nodes.
-label(505,1712,'RX-I / RX-Q ↓    TX-I / TX-Q ↑',18,True)
-wire([(1540,825),(1470,825)],False);label(1460,805,'RX-W',16,True)
-label(1600,1100,'TX-W',16,True);wire([(1600,1105),(1600,1130)])
-label(1940,1712,'RX-W ↓    TX-W ↑     H2D / D2H',18,True)
+# Local word ports connect to the detailed buses drawn below.
+
+
+
+
 wire([(780,1820),(810,1820)]);wire([(1510,1820),(1540,1820)])
 # external pins bottom for 22 host + 5 ctl + 14power =41, plus8analog+1ref=50
 pin(250,1970,525,'H2D_D[9:0] + H2D_CLK','11 terminals → input capture / DDR')
 pin(825,1970,525,'D2H_D[9:0] + D2H_CLK','11 terminals ← launch / DDR')
 pin(1400,1970,450,'SPI (4) + RESET_N (1)','5 terminals · independent recovery')
 pin(1900,1970,475,'SUPPLIES / RETURNS','14 terminals · 7 local supply / return pairs')
-wire([(510,1970),(510,1930)]);label(510,1924,'H2D → GPIO PHY',16,True)
-wire([(1100,1930),(1100,1970)]);label(1100,1924,'D2H ← GPIO PHY',16,True)
+wire([(510,1970),(510,1945),(1730,1945),(1730,1905)])
+wire([(1820,1905),(1820,1957),(1100,1957),(1100,1970)])
 wire([(1625,1970),(1625,1930),(1250,1930),(1250,1905)])
+wire([(1300,1905),(1300,1920),(1660,1920),(1660,1970)])
 label(55,2080,'Symbols: G/A = gain/error amplifier; × = mixer; Σ = sum; ∫ = integration; ± = comparator; D/Q = sampling latch.',19,anchor='start')
-label(55,2115,'Differential pairs use one line; I/Q paths remain separate. Matching RX/TX and clock labels connect nets. No wire crossing implies a connection without a dot.',18,anchor='start')
-label(55,2150,'Intended architecture, not a wired transistor schematic or area proof. Placement is approximate; supplies fan out locally. PA, antenna and protocol/modem logic remain external.',18,anchor='start')
+label(55,2115,'Differential pairs and digital words use bundled lines. Junction dots connect; crossings without dots do not. Purple: clocks. Orange: reference. Blue: control.',18,anchor='start')
+label(55,2150,'Panel service ports distribute configuration, bias and supply locally to their enclosed circuits. No implied global analog crossbar. This is not a transistor netlist or layout.',18,anchor='start')
+put('</g>')
+# Explicit buses, each with its own track; no I/Q shorts.
+for y,track,rail,left,foot,port,rx,name in [
+    (695,1365,1490,145,1850,350,True,'RX-I'),
+    (905,1380,1510,160,1860,450,True,'RX-Q'),
+    (1150,1395,1530,175,1870,550,False,'TX-I'),
+    (1350,1410,1550,190,1880,650,False,'TX-Q')]:
+    points=[(1310 if rx else 1320,y),(track,y),(track,rail),(left,rail),(left,foot),(port,foot),(port,1890)]
+    wire(points if rx else list(reversed(points)))
+    label(320,rail-6,name+' sample bus',15,True,anchor='start')
+wire([(1540,825),(1460,825),(1460,1590),(1705,1590),(1705,1870),(1800,1870),(1800,1890)])
+wire([(1850,1890),(1850,1880),(2385,1880),(2385,1110),(1600,1110),(1600,1130)])
+# Shared LO distribution, with distinct I/Q branches to both RF mixers.
+for source,trunk,rx_y,tx_y in [(1160,595,655,1111),(1270,605,865,1311)]:
+    outer=1356 if source==1160 else 1360; shelf=620 if source==1160 else 632
+    wire([(source,446),(source,565 if source==1160 else 575),(outer,565 if source==1160 else 575),(outer,shelf),(trunk,shelf),(trunk,1025 if source==1160 else 1030),(1372 if source==1160 else 1378,1025 if source==1160 else 1030),(1372 if source==1160 else 1378,tx_y),(675,tx_y)],False,True)
+    wire([(trunk,rx_y),(640,rx_y)],False,True);dot(trunk,rx_y)
+# TX serializer clock from its PLL; distribute outside the wired island.
+wire([(2320,470),(2395,470),(2395,1025),(1840,1025),(1840,1105)],False,True)
+# Buffered master reference to sample-clock generation (service strip).
+wire([(1325,239),(1440,239),(1440,1615),(1825,1615),(1825,1700)],True,True)
+label(1750,1605,'REF → sample-clock divider',16)
+# Sample clocks split to ADC sampling switches and DAC update latches.
+wire([(1825,1770),(1825,1815),(1430,1815),(1430,1020),(1090,1020),(1090,640)],False,True)
+for y in (695,905):
+    wire([(1090,y-55),(1040,y-55),(1040,y-18)],True,True);dot(1090,y-55)
+wire([(1430,1020),(1335,1020),(1335,1405)],False,True)
+for y in (1150,1350):
+    wire([(1335,y+38),(1200,y+38),(1200,y+30)],True,True);dot(1335,y+38)
+dot(1430,1020)
+# VREF fanout to separate ADC and DAC reference terminals.
+WIRE_COLOR='#b47a20'
+wire([(1620,1735),(1680,1735),(1680,1627),(1347,1627),(1347,645)],False)
+for y in (695,905,1150,1350):
+    wire([(1347,y-44),(1180,y-44),(1180,y-37)]);dot(1347,y-44)
+WIRE_COLOR=None
+# Each island has an explicit service port. A bundled configuration bus avoids
+# pretending that all trim bits and supply nets are one electrical conductor.
+WIRE_COLOR='#386991'
+wire([(1460,1890),(1460,1865),(2418,1865),(2418,275),(225,275),(225,1865),(850,1865),(850,1890)],False)
+for x,y,edge in [(230,520,225),(230,995,225),(230,1430,225),(2370,520,2418),(2370,995,2418),(2370,1430,2418)]:
+    wire([(edge,y),(x,y)]);dot(edge,y)
+    label(x+8 if edge==225 else x-8,y-9,'CTRL / BIAS',13,True,'start' if edge==225 else 'end',color='#386991')
+label(1520,273,'CONFIGURATION / TRIM / ENABLE / STATUS BUS',16,True,anchor='start')
+WIRE_COLOR=None
+# Supply terminal bundle feeds a local-domain distribution bar, never the data bus.
+wire([(2135,2130),(2135,2080),(2460,2080),(2460,255),(210,255),(210,1600)],False)
+label(1810,248,'7 SUPPLY / RETURN PAIRS → LOCAL DOMAIN FEEDS',15,True,anchor='start')
+for y in (535,1008,1445):
+    wire([(210,y),(230,y)]);dot(210,y)
+    wire([(2460,y),(2370,y)]);dot(2460,y)
+wire([(210,1600),(1050,1600),(1050,1700)])
+# Diagnostic source selection is analog; status output is a separate digital port.
+wire([(2280,1407),(2280,1580),(2320,1580),(2320,1700)])
+label(2268,1570,'Buffered TX sense',15)
+# Local programmable tile receives a selected DAC observation through a buffer.
+wire([(1070,1350),(1070,1465),(960,1465),(960,1605),(250,1605),(190,1605),(190,1735),(200,1735)]);dot(1070,1350)
+amp(250,1735,'1','Probe buffer')
+wire([(300,1735),(303,1735)],False)
+# Tile comparator output to slow monitor mux; its decision also has a status path.
+wire([(870,1735),(945,1735),(945,1620),(2260,1620),(2260,1700)])
+wire([(2345,1735),(2360,1735),(2360,1853),(1400,1853),(1400,1890)])
+wire([(2030,1770),(2030,1830),(1340,1830),(1340,1890)])
+label(2160,1845,'MON / LOCK status',15)
+# Analog diagnostic output is routed to an explicit source-selection switch
+# ahead of the I-channel sample/hold; selection excludes simultaneous RF-I use.
+WIRE_COLOR='#a06b20'
+wire([(2145,1750),(2125,1750),(2125,1638),(1420,1638),(1420,805),(1000,805),(1000,715)],False)
+wire([(1000,715),(1000,695)],False)
+rect(989,684,22,22,'white','#a06b20');label(1000,701,'S',14,True)
+label(1090,817,'S: RF-I / diagnostic select',14)
+WIRE_COLOR=None
 put('</g></svg>')
 Path(__file__).with_name('transceiver-block-diagram.svg').write_text('\n'.join(A)+'\n')

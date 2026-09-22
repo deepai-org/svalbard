@@ -3,8 +3,7 @@ import cmath
 import math
 from tx_services import FastTxServiceChip
 from tx_output_stage import output_envelope
-from shared_tx_detector import SharedAdcLoadedTxChip
-from buffered_shared_detector import BufferedSharedDetector
+from detector_readout_settling import BufferedSharedDetector, sample_shared_detector
 from output_loopback import connect
 
 class TransceiverChip(FastTxServiceChip):
@@ -26,7 +25,7 @@ class TransceiverChip(FastTxServiceChip):
         # Explicit None retains the single-pole diagnostic comparison.
         if rx_filter is not None:self.tx.set_butterworth(*rx_filter)
         connect(self)
-    _sample_detector=SharedAdcLoadedTxChip._sample_detector
+    _sample_detector=sample_shared_detector
     def execute_management(self,operation,payload,time):
         if operation=='tx_cal_start' and (self.adc_pending or self.maintenance_pending is not None):
             raise ValueError('Existing ADC conversion pending')

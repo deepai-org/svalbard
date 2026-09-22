@@ -35,3 +35,42 @@ class SettlingDetector(VectorPowerDetector):
             raise ValueError('Invalid readout state')
         super().advance(time,terms)
         self.readout_value=max(0.,float(readout.real))
+
+
+# Shared ADC protocol helpers live beside detector state, not chip compositions.
+from chip_model import decode_iq
+
+def read_shared_detector(self):
+    if self.pending is None or self.time<self.pending[0]:raise ValueError('ADC result not ready')
+    _,epoch,power,invalid=self.pending;self.pending=None
+    if epoch!=self.epoch:raise ValueError('Stale ADC result')
+    return dict(epoch=epoch,power=power,overflow=invalid)
+
+def sample_shared_detector(self,power,time):
+    if time!=self.time or time!=self.tx.time:raise ValueError('ADC sample time mismatch')
+    if not self.tx_cal.busy or not self.quiet() or self.adc_pending or self.maintenance_pending is not None:
+        raise ValueError('Shared ADC not exclusively available')
+    # Declared analog scaling: detector fullscale -> +0.8 normalized ADC input.
+    scale=.8/self.tx_detector.fullscale
+    had=hasattr(self,'bits');previous=getattr(self,'bits',None)
+    clipped=self.adc_diagnostics['clipped_samples'];self.bits=12
+    try:word=self.convert_adc(complex(power*scale,0.))
+    finally:
+        if had:self.bits=previous
+        else:del self.bits
+    value=decode_iq(word,12).real/scale
+    self.tx_adc_samples+=1
+    invalid=(power<0 or power>self.tx_detector.fullscale or
+             self.adc_diagnostics['clipped_samples']>clipped)
+    return value,invalid
+
+class BufferedSharedDetector(SettlingDetector):
+    signed_observations=True
+    read=read_shared_detector
+    def __init__(self,sample,**kwargs):
+        super().__init__(**kwargs);self.sample=sample
+    def request(self):
+        if self.pending is not None:raise ValueError('ADC busy')
+        power,invalid=self.sample(self.readout_value,self.time)
+        self.pending=(self.time+self.latency,self.epoch,power,invalid)
+

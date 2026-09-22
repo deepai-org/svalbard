@@ -65,3 +65,23 @@ The fast-model README is now a focused composition/command/limitations guide
 instead of a 608-line chronological journal.
 
 All three consolidated variants passed (8 case rows total), with exact serialized case equality against the originals in Git. Source hashes were verified before removing the three superseded runners.
+
+## Remove incidental model imports
+
+The common chip previously imported a loaded-chip class solely to borrow its
+shared-ADC sampling method, and imported a detector class from a module that
+also imported an entire historical chip composition. The sampling/read helpers
+and buffered detector now live in `connected/detector_readout_settling.py`;
+legacy compositions import those same definitions. No circuit model was deleted.
+
+A fresh `import chip` now loads 92 project modules instead of 121. The 29 removed
+incidental imports include historical fractional/pulse PLL, coarse acquisition,
+loaded-network and host-activation compositions. Explicit loaded-output adapters
+still import the finite network they actually use.
+
+Both shared-ADC recovery case records match the pre-refactor records exactly.
+Moved helper ASTs are identical apart from function names. Independent detector
+readout ODE checks pass at 5 ns, 20 ns and 500 ns settling constants (maximum
+error 4.95e-14). The full common aggregate was not rerun for this extraction;
+its previous source hashes are historical and must not be presented as fresh
+qualification for this source snapshot.

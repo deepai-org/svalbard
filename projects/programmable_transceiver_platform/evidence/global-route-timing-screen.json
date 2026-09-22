@@ -1,0 +1,125 @@
+{
+  "scope": "Global-route signal-RC estimate on wider-grid candidate with nominal cells and ideal clocks; no extracted signoff",
+  "worst_slacks_ns": {
+    "host_tx_clk": {
+      "asynchronous": -5.3964,
+      "host_tx_clk": -11.7277
+    },
+    "host_rx_clk": {
+      "asynchronous": -4.8442,
+      "host_rx_clk": -11.9146
+    },
+    "wire_rx_clk": {
+      "asynchronous": 2.0872,
+      "wire_rx_clk": -7.7964
+    },
+    "wire_tx_clk": {
+      "asynchronous": 0.6683,
+      "wire_tx_clk": -6.1818
+    },
+    "rf_rx_clk": {
+      "asynchronous": 48.1295,
+      "rf_rx_clk": 39.8622
+    },
+    "rf_tx_clk": {
+      "asynchronous": 48.0455,
+      "rf_tx_clk": 38.6376
+    },
+    "host_sclk": {
+      "host_sclk": 34.4712
+    },
+    "ref_clk": {
+      "ref_clk": 17.3629
+    }
+  },
+  "critical_register_outputs": {
+    "host_tx_clk": {
+      "start_Q": "\\core.wire_in.rb [5]",
+      "end_Q": "\\core.stream_v2.frame_tx.payload.stage_data [4]"
+    },
+    "host_rx_clk": {
+      "start_Q": "\\core.iq_receive.rp [3]",
+      "end_Q": "\\core.unpacker.bits [24]"
+    },
+    "wire_rx_clk": {
+      "start_Q": "\\core.wire_in.wg [3]",
+      "end_Q": "\\core.wire_in.mem[4] [3]"
+    },
+    "wire_tx_clk": {
+      "start_Q": "\\core.wire_out.rb [1]",
+      "end_Q": "\\core.wire_out.rg [6]"
+    },
+    "rf_rx_clk": {
+      "start_Q": "\\memory.s0.q",
+      "end_Q": "\\memory.capture[9] [17]"
+    },
+    "rf_tx_clk": {
+      "start_Q": "\\core.rf_out.rb [0]",
+      "end_Q": "\\core.rf_out.rg [5]"
+    },
+    "host_sclk": {
+      "start_Q": "\\memory.index [4]",
+      "end_Q": "\\control.spi.read_value [5]"
+    },
+    "ref_clk": {
+      "start_Q": "\\calibration.bitpos [2]",
+      "end_Q": "\\calibration.settle [2]"
+    }
+  },
+  "electrical_violation_rows": 0,
+  "spef_component_counts": {
+    "nets": 26498,
+    "resistors": 353217,
+    "capacitors": 280180
+  },
+  "previous_placement_slacks_ns": {
+    "host_tx_clk": {
+      "asynchronous": -5.3528,
+      "host_tx_clk": -10.6511
+    },
+    "host_rx_clk": {
+      "asynchronous": -4.5825,
+      "host_rx_clk": -11.1665
+    },
+    "wire_rx_clk": {
+      "asynchronous": 2.1496,
+      "wire_rx_clk": -7.2036
+    },
+    "wire_tx_clk": {
+      "asynchronous": 0.7307,
+      "wire_tx_clk": -5.7924
+    },
+    "rf_rx_clk": {
+      "asynchronous": 48.1953,
+      "rf_rx_clk": 40.343
+    },
+    "rf_tx_clk": {
+      "asynchronous": 48.1113,
+      "rf_tx_clk": 38.8671
+    },
+    "host_sclk": {
+      "host_sclk": 35.132
+    },
+    "ref_clk": {
+      "ref_clk": 17.7121
+    }
+  },
+  "input_database_sha256": "fa8af34f45359939a65fef747a542310d317bb9b0835ca5b23fcaae1f896609c",
+  "artifact_sha256": {
+    "timing.log": "410d0c8f8f410e3b485c5c58c190d773b3e11281872188dd17f7fc78d4062c68",
+    "routes.guide": "5458f0a5a78d342864337c66b490bc1003504eb3cacc69184466e311c7a936c5",
+    "estimated.spef": "04f18363c3c390319149296d3293f67a1ee009be1408c5f63067c4780416c7f6"
+  },
+  "source_sha256": {
+    "global_route_timing.tcl": "81e2fcccfc2aa768179bd64010318ece860dc8b29ebbe06905ae8556285f4144",
+    "run_global_route_timing.sh": "7b6f8ee7053b3f23402e4a20f28be09a873d7a8e3c94794da9ef4c391d9e5477",
+    "report_global_route_timing.py": "3f548c963cc6e94fecf74c69310cb38f36f90ce7e5362c5d1aefef69a69ab807"
+  },
+  "limitations": [
+    "Global-route RC estimates, not detailed routed geometry or coupling/corner extraction.",
+    "Nominal TT 25C 3.3V cells do not account for computed spatial supply loss.",
+    "Eight clocks defined after routing and kept ideal; no CTS, propagated skew/jitter or clock-current qualification.",
+    "External IO remains unconstrained; CDC/reset and protocol latency are not closed.",
+    "Zero global overflow or electrical violations does not imply setup/hold closure or full-chip signoff."
+  ]
+}

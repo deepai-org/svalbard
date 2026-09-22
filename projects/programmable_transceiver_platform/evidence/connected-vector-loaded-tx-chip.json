@@ -1,0 +1,44 @@
+{
+  "status": "passed",
+  "probe_powers": [
+    0.0,
+    0.003616813294232649,
+    0.00332355816226784,
+    0.00332355816226784,
+    0.00332355816226784,
+    0.00664711632453568,
+    0.007135874877810362,
+    0.006842619745845552,
+    0.006451612903225807
+  ],
+  "correction": {
+    "gain_policy": "relative",
+    "matrix": [
+      [
+        0.989013671875,
+        0.0322265625
+      ],
+      [
+        0.0,
+        1.01123046875
+      ]
+    ],
+    "offset": [
+      -0.0029296875,
+      0.000244140625
+    ],
+    "fractional_bits": 12,
+    "fit_rms": 1.436815092356122e-05,
+    "condition": 1.0813741079854013
+  },
+  "before_stop_pad_magnitude": 0.04719082307147659,
+  "after_stop_pad_magnitude": 9.804654663197438e-07,
+  "dac_updates": 3,
+  "limitations": [
+    "Experimental fixed2412MHz network; LO phase/noise through network and retuning not integrated.",
+    "Source is prescribed Thevenin envelope; no chip DC current feedback or physical qualification.",
+    "Managed commands and finite internal queue playback; no full host/wired quality screen.",
+    "Detector remains physically connected; shared ADC resource allocation still unresolved."
+  ],
+  "scalar_comparison": "Matching probe codes, coefficients, updates and pad endpoints; archived scalar run"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "combined-programmable-phy-candidate",
+  "scope": "Declared mathematical assumptions, not qualified GF180 specifications",
+  "rf_filter": {"order": 5, "cutoff_hz": 9157407.055691985},
+  "converter_latency_periods": {"adc": 2, "dac": 1.5},
+  "shared_reference": {"resistance_ohm": 1000, "capacitance_f": 1e-10, "adc_load_f": 1e-12, "dac_load_f": 2e-12},
+  "host_switching_charge_c": {"h2d": 1e-13, "d2h": 5e-14},
+  "signed_coupling": {"rx_gain_per_v": 1, "dac_gain_per_v": 1, "wired_phase_ui_per_v": 0.02, "rf_cubic": 0.05, "iq_gain_error": 0.03, "iq_phase_error_rad": 0.03},
+  "frontend": {"saturation": 0.8, "noise_rms": 0.001, "seed": 800},
+  "blockers": [[0.1, 20000000], [0.1, 30000000]],
+  "rf_phase_fixture": {"scale": 0.5, "seed": 800},
+  "traffic": {"source_ppm": 100, "host_ppm": -100, "pause_frame": 48, "pause_word_periods": 16, "waveform_seed": 804},
+  "quality_budget_relative_rms": 0.1,
+  "open_functions": ["independent external RF source", "autonomous RF and wired TX oscillator qualification", "wired TX swing/EQ and receiver detect", "timed hardware management mapping", "complete converter clipping/validity diagnostics"]
+}

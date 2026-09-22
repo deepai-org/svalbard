@@ -1,0 +1,59 @@
+{
+  "status": "terminal_without_waveform",
+  "completed": false,
+  "limitations": [
+    "Seeded zero-RF test, ideal biases/supplies and absent ADC/interface loads.",
+    "No cold startup, noise, modulation or lock qualification."
+  ],
+  "provenance": {
+    "returncode": -9,
+    "timed_out": false,
+    "source_sha256_before": {
+      "/baseline/latest.spice": "76d4482cc6dcd5521377a2493e3f625099f36ce7594ebefa8606f4bf437c74dd",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+      "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/reference_input_buffer.spice": "e9922aa2757ca9ece9eea717cc27b090920c522fd7f1ea7f25d0ce98f5c78e76",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/screen/quadrature/lo_final_stage.spice": "3f234838df5453d1c5f69d1f7f3c753da87e17052d979147a6d6e05fa418ca9f",
+      "/screen/quadrature/rc_split.spice": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+      "/screen/reference/buffer_scaled.spice": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/vco/divider.spice": "1e007f6d40d8678192a090ed1906fd27f6834dfec6983a35f15ffb8f1a3e364b",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+    },
+    "source_sha256_after": {
+      "/baseline/latest.spice": "76d4482cc6dcd5521377a2493e3f625099f36ce7594ebefa8606f4bf437c74dd",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+      "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/reference_input_buffer.spice": "e9922aa2757ca9ece9eea717cc27b090920c522fd7f1ea7f25d0ce98f5c78e76",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/screen/quadrature/lo_final_stage.spice": "3f234838df5453d1c5f69d1f7f3c753da87e17052d979147a6d6e05fa418ca9f",
+      "/screen/quadrature/rc_split.spice": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+      "/screen/reference/buffer_scaled.spice": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/vco/divider.spice": "1e007f6d40d8678192a090ed1906fd27f6834dfec6983a35f15ffb8f1a3e364b",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+    },
+    "deck_unchanged": true,
+    "artifacts_sha256": {
+      ".spice": "76d4482cc6dcd5521377a2493e3f625099f36ce7594ebefa8606f4bf437c74dd",
+      ".log": "8ba340ca6a25a4c1c7a702fe857a39aad680a7c352c9981faa7bea80e127788f"
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "status": "wired_framer_reset_with_shared_transport",
+  "cases": [
+    {
+      "mode": 0,
+      "clock_tracker_reset": false,
+      "discarded_partial_payload_bits": 7,
+      "complete_pre_reset_words": 3,
+      "post_retraining_words": 256,
+      "rf_samples_preserved": 250,
+      "transport": {
+        "adc_samples_returned": 250,
+        "wired_words_returned": 259,
+        "payload_errors": 0,
+        "peak_ingress_bits": {
+          "wire": 320,
+          "iq": 272
+        },
+        "maximum_adc_to_host_delay_ticks": 140.5,
+        "minimum_adc_to_host_delay_ticks": 126.75,
+        "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+      }
+    },
+    {
+      "mode": 1,
+      "clock_tracker_reset": false,
+      "discarded_partial_payload_bits": 7,
+      "complete_pre_reset_words": 3,
+      "post_retraining_words": 256,
+      "rf_samples_preserved": 250,
+      "transport": {
+        "adc_samples_returned": 250,
+        "wired_words_returned": 259,
+        "payload_errors": 0,
+        "peak_ingress_bits": {
+          "wire": 520,
+          "iq": 88
+        },
+        "maximum_adc_to_host_delay_ticks": 154.0,
+        "minimum_adc_to_host_delay_ticks": 124.5,
+        "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+      }
+    }
+  ],
+  "source_hashes": {
+    "system_model/connected/reset_retraining.py": "f5486411acece4c671a19a8dc81230d40ea6c1b4f7bd3aebf34fd1926224ce4c",
+    "system_model/connected/framing.py": "31b48aa47ff0e290c66ed422874d6e21fb44e833b11d5f982548b18a2ff4985b",
+    "system_model/connected/recovered_clock.py": "98b9feadbf511e008b7fb47d0333041af60d83ff842f79b29fc72de1b495aef9",
+    "system_model/connected/loopback_return.py": "6ac6f3c1c92aa8524ab9cb72e0a3897a9b85c12bebd1a1b9af65ed64424ab3de",
+    "system_model/clock_tracking_screen.py": "7a93ec5775824e3472f951aac6d2d6af0e3026cb6d5ab6dc6a2297afbd3e5ac0",
+    "system_model/wired_screen.py": "145cf7cdea4b862f6f54f6cfa0b6a475ab10588d367173dfb3c48f26a8c20a79",
+    "verification/stream_codec.py": "4515bf61e3c83f041eee97740e61c075dca1681da388dc651117cdd10d1a0088",
+    "verification/transport_model.py": "fb93356b2851ee253d3f8e49bb25b2018e22175500ec3d14b8ebaa78814da09d"
+  },
+  "limitations": [
+    "Reset trigger is a testbench request after37 received payload bits, not automatic fault detection.",
+    "Channel state persists; CDR state resets only in --reset-clock mode. This is not analog oscillator/pad reset.",
+    "Complete accepted words drain unchanged; only the incomplete seven-bit word is discarded.",
+    "RF continuity tests sample payloads and shared queues, not RF analog reset/supply coupling.",
+    "No host-visible reset epoch/discard-status protocol is implemented yet."
+  ]
+}

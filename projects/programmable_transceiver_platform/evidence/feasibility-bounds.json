@@ -1,0 +1,295 @@
+{
+  "status": "conditional_analytic_scenarios_not_qualification",
+  "temperature_k": 300.15,
+  "lo_residual_phase_scenarios": [
+    {
+      "total_evm_db": -20,
+      "phase_only_rms_rad": 0.05,
+      "equivalent_time_rms_ps": 3.315727981081153
+    },
+    {
+      "total_evm_db": -25,
+      "phase_only_rms_rad": 0.028117066259517456,
+      "equivalent_time_rms_ps": 1.8645708668518963
+    },
+    {
+      "total_evm_db": -30,
+      "phase_only_rms_rad": 0.015811388300841896,
+      "equivalent_time_rms_ps": 1.0485252521768134
+    },
+    {
+      "total_evm_db": -35,
+      "phase_only_rms_rad": 0.008891397050194615,
+      "equivalent_time_rms_ps": 0.5896290798046542
+    }
+  ],
+  "baseband_aperture_jitter_scenarios": [
+    {
+      "baseband_input_hz": 5000000.0,
+      "snr_db": 40,
+      "aperture_jitter_rms_ps": 318.30988618379064
+    },
+    {
+      "baseband_input_hz": 5000000.0,
+      "snr_db": 50,
+      "aperture_jitter_rms_ps": 100.65842420897408
+    },
+    {
+      "baseband_input_hz": 5000000.0,
+      "snr_db": 60,
+      "aperture_jitter_rms_ps": 31.830988618379063
+    },
+    {
+      "baseband_input_hz": 5000000.0,
+      "snr_db": 70,
+      "aperture_jitter_rms_ps": 10.065842420897408
+    },
+    {
+      "baseband_input_hz": 10000000.0,
+      "snr_db": 40,
+      "aperture_jitter_rms_ps": 159.15494309189532
+    },
+    {
+      "baseband_input_hz": 10000000.0,
+      "snr_db": 50,
+      "aperture_jitter_rms_ps": 50.32921210448704
+    },
+    {
+      "baseband_input_hz": 10000000.0,
+      "snr_db": 60,
+      "aperture_jitter_rms_ps": 15.915494309189532
+    },
+    {
+      "baseband_input_hz": 10000000.0,
+      "snr_db": 70,
+      "aperture_jitter_rms_ps": 5.032921210448704
+    }
+  ],
+  "converter_thermal_lower_bounds": [
+    {
+      "bits": 6,
+      "full_scale_diff_vpp": 1,
+      "ideal_full_scale_sine_sqnr_db": 37.884512069,
+      "quantization_rms_v": 0.004510548978043952,
+      "diff_sampling_cap_per_leg_pf": 0.0016294941714677757
+    },
+    {
+      "bits": 8,
+      "full_scale_diff_vpp": 1,
+      "ideal_full_scale_sine_sqnr_db": 49.925711895,
+      "quantization_rms_v": 0.001127637244510988,
+      "diff_sampling_cap_per_leg_pf": 0.026071906743484412
+    },
+    {
+      "bits": 10,
+      "full_scale_diff_vpp": 1,
+      "ideal_full_scale_sine_sqnr_db": 61.966911720999995,
+      "quantization_rms_v": 0.000281909311127747,
+      "diff_sampling_cap_per_leg_pf": 0.4171505078957506
+    },
+    {
+      "bits": 12,
+      "full_scale_diff_vpp": 1,
+      "ideal_full_scale_sine_sqnr_db": 74.008111547,
+      "quantization_rms_v": 7.047732778193675e-05,
+      "diff_sampling_cap_per_leg_pf": 6.674408126332009
+    }
+  ],
+  "thermal_noise_20mhz_dbm": -100.81548373965893,
+  "receiver_sensitivity_scenarios": [
+    {
+      "noise_figure_db": 5,
+      "required_snr_db": 10,
+      "sensitivity_dbm": -85.81548373965893
+    },
+    {
+      "noise_figure_db": 5,
+      "required_snr_db": 20,
+      "sensitivity_dbm": -75.81548373965893
+    },
+    {
+      "noise_figure_db": 5,
+      "required_snr_db": 30,
+      "sensitivity_dbm": -65.81548373965893
+    },
+    {
+      "noise_figure_db": 10,
+      "required_snr_db": 10,
+      "sensitivity_dbm": -80.81548373965893
+    },
+    {
+      "noise_figure_db": 10,
+      "required_snr_db": 20,
+      "sensitivity_dbm": -70.81548373965893
+    },
+    {
+      "noise_figure_db": 10,
+      "required_snr_db": 30,
+      "sensitivity_dbm": -60.81548373965893
+    },
+    {
+      "noise_figure_db": 15,
+      "required_snr_db": 10,
+      "sensitivity_dbm": -75.81548373965893
+    },
+    {
+      "noise_figure_db": 15,
+      "required_snr_db": 20,
+      "sensitivity_dbm": -65.81548373965893
+    },
+    {
+      "noise_figure_db": 15,
+      "required_snr_db": 30,
+      "sensitivity_dbm": -55.81548373965893
+    }
+  ],
+  "planning_current_a": {
+    "core": 0.048,
+    "host": 0.11,
+    "wired": 0.096,
+    "rf": 0.048,
+    "pll": 0.048
+  },
+  "sum_planning_current_a": 0.35,
+  "sum_planning_power_at_3p3_v_w": 1.1549999999999998,
+  "thermal_scenarios": [
+    {
+      "theta_ja_k_per_w": 10,
+      "rise_k": 11.549999999999997
+    },
+    {
+      "theta_ja_k_per_w": 30,
+      "rise_k": 34.64999999999999
+    },
+    {
+      "theta_ja_k_per_w": 60,
+      "rise_k": 69.29999999999998
+    },
+    {
+      "theta_ja_k_per_w": 100,
+      "rise_k": 115.49999999999999
+    }
+  ],
+  "supply_inductance_scenarios": [
+    {
+      "inductance_nh": 0.2,
+      "step_ma": 5,
+      "edge_ps": 100,
+      "unmitigated_bounce_v": 0.010000000000000004
+    },
+    {
+      "inductance_nh": 0.2,
+      "step_ma": 5,
+      "edge_ps": 500,
+      "unmitigated_bounce_v": 0.0020000000000000005
+    },
+    {
+      "inductance_nh": 0.2,
+      "step_ma": 20,
+      "edge_ps": 100,
+      "unmitigated_bounce_v": 0.040000000000000015
+    },
+    {
+      "inductance_nh": 0.2,
+      "step_ma": 20,
+      "edge_ps": 500,
+      "unmitigated_bounce_v": 0.008000000000000002
+    },
+    {
+      "inductance_nh": 1,
+      "step_ma": 5,
+      "edge_ps": 100,
+      "unmitigated_bounce_v": 0.05
+    },
+    {
+      "inductance_nh": 1,
+      "step_ma": 5,
+      "edge_ps": 500,
+      "unmitigated_bounce_v": 0.01
+    },
+    {
+      "inductance_nh": 1,
+      "step_ma": 20,
+      "edge_ps": 100,
+      "unmitigated_bounce_v": 0.2
+    },
+    {
+      "inductance_nh": 1,
+      "step_ma": 20,
+      "edge_ps": 500,
+      "unmitigated_bounce_v": 0.04
+    },
+    {
+      "inductance_nh": 2,
+      "step_ma": 5,
+      "edge_ps": 100,
+      "unmitigated_bounce_v": 0.1
+    },
+    {
+      "inductance_nh": 2,
+      "step_ma": 5,
+      "edge_ps": 500,
+      "unmitigated_bounce_v": 0.02
+    },
+    {
+      "inductance_nh": 2,
+      "step_ma": 20,
+      "edge_ps": 100,
+      "unmitigated_bounce_v": 0.4
+    },
+    {
+      "inductance_nh": 2,
+      "step_ma": 20,
+      "edge_ps": 500,
+      "unmitigated_bounce_v": 0.08
+    }
+  ],
+  "ideal_local_reservoir_scenarios": [
+    {
+      "step_ma": 5,
+      "interval_ns": 0.1,
+      "droop_mv": 20,
+      "ideal_cap_pf": 25.000000000000004
+    },
+    {
+      "step_ma": 5,
+      "interval_ns": 0.5,
+      "droop_mv": 20,
+      "ideal_cap_pf": 125.00000000000001
+    },
+    {
+      "step_ma": 5,
+      "interval_ns": 1,
+      "droop_mv": 20,
+      "ideal_cap_pf": 250.00000000000003
+    },
+    {
+      "step_ma": 20,
+      "interval_ns": 0.1,
+      "droop_mv": 20,
+      "ideal_cap_pf": 100.00000000000001
+    },
+    {
+      "step_ma": 20,
+      "interval_ns": 0.5,
+      "droop_mv": 20,
+      "ideal_cap_pf": 500.00000000000006
+    },
+    {
+      "step_ma": 20,
+      "interval_ns": 1,
+      "droop_mv": 20,
+      "ideal_cap_pf": 1000.0000000000001
+    }
+  ],
+  "assumptions": [
+    "EVM values, NF, required SNR, package inductance and thetaJA are exploratory scenarios, not frozen specs or validated bounds.",
+    "LO phase allocation uses 25% of total EVM power; equivalent time is not a full phase-noise mask or PLL requirement.",
+    "Aperture jitter evaluated at baseband frequency, not the RF carrier; independent sampling and LO error budgets.",
+    "Sampling C assumes two independent kT/C legs and thermal RMS <= half quantization RMS. Other circuit noise and settling excluded.",
+    "350 mA is a sum of unqualified planning ceilings, not measured current or safe pad/package capacity.",
+    "L di/dt omits decoupling/resonance; I dt/C omits ESR/ESL. Neither predicts the actual PDN.",
+    "No finite sensitivity sweep proves tolerance of an unknown physical quantity with no justified bound."
+  ],
+  "source_sha256": "9adae013588776c4e9401c642d8b848527eb36a9a01836f4a1802d594dc5c7ae"
+}

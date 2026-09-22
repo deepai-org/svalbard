@@ -1,0 +1,96 @@
+{
+  "status": "fixed_code_linear_impedance_diagnostic",
+  "sources_sha256": {
+    "adc-cdac-load-matrix.json": "ce2979299b6a4705df85412e031324d510266cf98c3764503a46ee748a5b3db4",
+    "adc-top-load-matrix.json": "e65333f4d1d22f1a0c59d7c6f6e9ad5f24e574060814fe980d7d5b2b1129ccaa"
+  },
+  "results": [
+    {
+      "port": 0,
+      "low_frequency_series_resistance_ohm": 5.046510193511876,
+      "low_frequency_series_capacitance_f": 1.1349398113977218e-11,
+      "frequencies_hz": [
+        1000000.0,
+        2154434.69,
+        4641588.83,
+        10000000.0,
+        21544346.9,
+        46415888.3,
+        100000000.0,
+        215443469.0,
+        464158883.0,
+        1000000000.0
+      ],
+      "relative_admittance_error": [
+        1.9004990955566124e-16,
+        1.1149276395399995e-07,
+        6.17199404741176e-07,
+        2.9779697268095223e-06,
+        1.3931659808270877e-05,
+        6.475397267799573e-05,
+        0.0003004738551693354,
+        0.001390353059009289,
+        0.006360590797879611,
+        0.02773792553786946
+      ],
+      "effective_capacitance_f": [
+        1.1349396644169644e-11,
+        1.1349390026364703e-11,
+        1.1349359443243023e-11,
+        1.134921733846005e-11,
+        1.1348557847717785e-11,
+        1.1345498186080915e-11,
+        1.1331324159681524e-11,
+        1.1266129445392664e-11,
+        1.0975776247857494e-11,
+        9.845670650571482e-12
+      ]
+    },
+    {
+      "port": 1,
+      "low_frequency_series_resistance_ohm": 5.051474727891008,
+      "low_frequency_series_capacitance_f": 1.1349398116870507e-11,
+      "frequencies_hz": [
+        1000000.0,
+        2154434.69,
+        4641588.83,
+        10000000.0,
+        21544346.9,
+        46415888.3,
+        100000000.0,
+        215443469.0,
+        464158883.0,
+        1000000000.0
+      ],
+      "relative_admittance_error": [
+        0.0,
+        1.1056443311813772e-07,
+        6.180045454503711e-07,
+        2.9835840262786925e-06,
+        1.3956810720994598e-05,
+        6.489136113495362e-05,
+        0.00030110580031921566,
+        0.0013932789272844575,
+        0.006373899568920238,
+        0.02779456320143975
+      ],
+      "effective_capacitance_f": [
+        1.1349396644169644e-11,
+        1.1349390026364703e-11,
+        1.1349359374665238e-11,
+        1.1349216988319178e-11,
+        1.134855622250781e-11,
+        1.1345490402502187e-11,
+        1.1331288190664385e-11,
+        1.1265964782072956e-11,
+        1.0975059918592258e-11,
+        9.843145386835926e-12
+      ]
+    }
+  ],
+  "limitations": [
+    "Subtracting independent load assumes unchanged AC bias; only fixed-code ideal-rail fixture tested.",
+    "Single RC identified at first frequency; high-frequency discrepancy remains explicit.",
+    "No claim that this RC predicts switching charge, nonlinear conduction or reference feedback."
+  ]
+}

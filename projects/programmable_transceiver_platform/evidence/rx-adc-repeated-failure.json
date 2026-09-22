@@ -1,0 +1,90 @@
+{
+  "status": "two_terminal_failures_at_repeated_clock_update_boundary",
+  "completed": false,
+  "cases": [
+    {
+      "case": "baseline",
+      "actual_failure_ns": 478.49999999999994,
+      "node": "v.xadc.vrefl_res#branch",
+      "events": [
+        {
+          "source": "VUPDATE",
+          "time_ns": 478.5,
+          "voltage_v": 3.3,
+          "preceding_knot": [
+            477.6,
+            3.3
+          ],
+          "following_knot": [
+            478.6,
+            0.0
+          ]
+        },
+        {
+          "source": "VC",
+          "time_ns": 478.5,
+          "voltage_v": 0.0,
+          "preceding_knot": [
+            478.4,
+            3.3
+          ],
+          "following_knot": [
+            480.5,
+            0.0
+          ]
+        }
+      ],
+      "artifacts_sha256": {
+        ".spice": "f7385bc1309e682e27a0fc5fec69e0698275fc50637a2ee52d1f807ddcf3b090",
+        ".log": "82f633fa05f514931490dfec4e56815d78457764eef82a0a8008cf39efa0ae40",
+        ".dat": "f6bb05d783ae8aecf0855a940ec9124197a174aa6c9982389cc3d773ce097bee"
+      }
+    },
+    {
+      "case": "early",
+      "actual_failure_ns": 528.5,
+      "node": "v.xadc.vrefl_res#branch",
+      "events": [
+        {
+          "source": "VUPDATE",
+          "time_ns": 528.5,
+          "voltage_v": 3.3,
+          "preceding_knot": [
+            527.6,
+            3.3
+          ],
+          "following_knot": [
+            528.6,
+            0.0
+          ]
+        },
+        {
+          "source": "VC",
+          "time_ns": 528.5,
+          "voltage_v": 0.0,
+          "preceding_knot": [
+            528.4,
+            3.3
+          ],
+          "following_knot": [
+            530.5,
+            0.0
+          ]
+        }
+      ],
+      "artifacts_sha256": {
+        ".spice": "30457202a9791ac42fbea9717682a77b11b68205743cb369809496d806684d70",
+        ".log": "20fe9bd53cc3fd534d33e7a88a341a23ad000bb99193ba357d8e1044113933ed",
+        ".dat": "385dc6f7904dc3f9c688326866bafb528b56784269df968ecdd8272ef00db5ee"
+      }
+    }
+  ],
+  "interpretation": "Shifting one UPDATE fall by -10ps allowed advancement to the same clock/update boundary in the next frame. Supports event sensitivity; no physical repair or root-cause proof.",
+  "next": "Wait for existing +10ps run; if consistent, test a declared schedule-wide separation with unchanged circuit and quantify its timing effect.",
+  "limitations": [
+    "Earlier run remains failed; crossing first frame end does not verify code or acquisition accuracy.",
+    "Same reported trouble node does not uniquely identify the cause.",
+    "The isolated control already failed the original boundary, so receiver back-loading is not necessary for that failure.",
+    "A global event change would alter real timing and needs a new schedule audit and connected comparison."
+  ]
+}

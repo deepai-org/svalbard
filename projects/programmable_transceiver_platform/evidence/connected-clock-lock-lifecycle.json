@@ -1,0 +1,69 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "initial_phase_cycles": -0.25,
+      "initial_frequency_hz": -40000,
+      "acquired_s": 1.4749999999999999e-06,
+      "loss_detected_s": 5.025e-06
+    },
+    {
+      "mode": 0,
+      "initial_phase_cycles": -0.25,
+      "initial_frequency_hz": 40000,
+      "acquired_s": 1.4749999999999999e-06,
+      "loss_detected_s": 5.025e-06
+    },
+    {
+      "mode": 0,
+      "initial_phase_cycles": 0.25,
+      "initial_frequency_hz": -40000,
+      "acquired_s": 1.4749999999999999e-06,
+      "loss_detected_s": 5.025e-06
+    },
+    {
+      "mode": 0,
+      "initial_phase_cycles": 0.25,
+      "initial_frequency_hz": 40000,
+      "acquired_s": 1.4749999999999999e-06,
+      "loss_detected_s": 5.025e-06
+    },
+    {
+      "mode": 1,
+      "initial_phase_cycles": -0.25,
+      "initial_frequency_hz": -40000,
+      "acquired_s": 1.4749999999999999e-06,
+      "loss_detected_s": 5.025e-06
+    },
+    {
+      "mode": 1,
+      "initial_phase_cycles": -0.25,
+      "initial_frequency_hz": 40000,
+      "acquired_s": 1.4749999999999999e-06,
+      "loss_detected_s": 5.025e-06
+    },
+    {
+      "mode": 1,
+      "initial_phase_cycles": 0.25,
+      "initial_frequency_hz": -40000,
+      "acquired_s": 1.4749999999999999e-06,
+      "loss_detected_s": 5.025e-06
+    },
+    {
+      "mode": 1,
+      "initial_phase_cycles": 0.25,
+      "initial_frequency_hz": 40000,
+      "acquired_s": 1.4749999999999999e-06,
+      "loss_detected_s": 5.025e-06
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "assumptions": [
+    "Critically damped linear phase-error dynamics with1MHz natural frequency; near-lock approximation, not nonlinear PLL capture.",
+    "40MHz ideal reference and eight consecutive samples within.01cycle/4kHz qualify lock.",
+    "Phase/frequency state gates lifecycle but does not yet modulate payload clock edges.",
+    "No phase wrapping, tuning saturation, divider quantization, reference noise or physical loop calibration."
+  ]
+}

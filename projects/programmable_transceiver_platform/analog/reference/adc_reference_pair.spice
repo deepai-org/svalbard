@@ -1,0 +1,7 @@
+* Driver pair only: targets and bias currents remain external testbench sources.
+.include /screen/reference/buffer_scaled.spice
+.include /screen/reference/buffer_complement.spice
+.subckt pt_adc_reference_pair HIGH_TARGET LOW_TARGET VH VL BN BP VDD VSS
+XHIGH HIGH_TARGET VH BN BP VDD VSS pt_reference_buffer_complement S=4
+XLOW LOW_TARGET VL BN BP VDD VSS pt_reference_buffer_scaled S=4
+.ends

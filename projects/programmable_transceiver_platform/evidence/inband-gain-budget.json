@@ -1,0 +1,92 @@
+{
+  "status": "conditional_budget_not_receiver_noise_measurement",
+  "sources_sha256": {
+    "bb-inband.json": "5ce55fea5b9fcd85bfe86a23f5921fe85ed00d584f5f409100d788bf7aa5977a",
+    "bb-noise.json": "ba7728b94b5a47f50fd4dc861f0db8dc24d7e67e8ecac4ce977a72f0db6e21c3"
+  },
+  "nominal_adc_step_v": 0.0078125,
+  "ideal_quantization_rms_v": 0.002255274489021976,
+  "cases": [
+    {
+      "channel": "i",
+      "measured_peak_v": 0.007182309550070261,
+      "nominal_adc_peak_steps": 0.9193356224089934,
+      "illustrative_output_targets": [
+        {
+          "target_peak_v": 0.125,
+          "required_post_filter_gain": 17.403872546648618,
+          "ideal_adc_only_sine_snr_db": 31.86391215695493
+        },
+        {
+          "target_peak_v": 0.25,
+          "required_post_filter_gain": 34.807745093297235,
+          "ideal_adc_only_sine_snr_db": 37.88451207023456
+        },
+        {
+          "target_peak_v": 0.5,
+          "required_post_filter_gain": 69.61549018659447,
+          "ideal_adc_only_sine_snr_db": 43.90511198351418
+        }
+      ],
+      "noise_scenarios": [
+        {
+          "noise_fixture": "filter_f0",
+          "assumed_noise_rms_v": 0.00026925716524742546,
+          "conditional_signal_to_filter_fixture_noise_db": 25.51163703589983,
+          "gain_to_make_ideal_adc_quantization_rms_equal_assumed_filter_noise": 8.375912622230729
+        },
+        {
+          "noise_fixture": "filter_f1",
+          "assumed_noise_rms_v": 0.00034361541360390267,
+          "conditional_signal_to_filter_fixture_noise_db": 23.393529683966506,
+          "gain_to_make_ideal_adc_quantization_rms_equal_assumed_filter_noise": 6.563368230104219
+        }
+      ]
+    },
+    {
+      "channel": "q",
+      "measured_peak_v": 0.008066296267658538,
+      "nominal_adc_peak_steps": 1.032485922260293,
+      "illustrative_output_targets": [
+        {
+          "target_peak_v": 0.125,
+          "required_post_filter_gain": 15.496579328629675,
+          "ideal_adc_only_sine_snr_db": 31.86391215695493
+        },
+        {
+          "target_peak_v": 0.25,
+          "required_post_filter_gain": 30.99315865725935,
+          "ideal_adc_only_sine_snr_db": 37.88451207023456
+        },
+        {
+          "target_peak_v": 0.5,
+          "required_post_filter_gain": 61.9863173145187,
+          "ideal_adc_only_sine_snr_db": 43.90511198351418
+        }
+      ],
+      "noise_scenarios": [
+        {
+          "noise_fixture": "filter_f0",
+          "assumed_noise_rms_v": 0.00026925716524742546,
+          "conditional_signal_to_filter_fixture_noise_db": 26.51983804326868,
+          "gain_to_make_ideal_adc_quantization_rms_equal_assumed_filter_noise": 8.375912622230729
+        },
+        {
+          "noise_fixture": "filter_f1",
+          "assumed_noise_rms_v": 0.00034361541360390267,
+          "conditional_signal_to_filter_fixture_noise_db": 24.40173069133536,
+          "gain_to_make_ideal_adc_quantization_rms_equal_assumed_filter_noise": 6.563368230104219
+        }
+      ]
+    }
+  ],
+  "decision": "Allocate gain placement and input-referred noise together; post-filter gain alone cannot improve existing analog SNR.",
+  "limitations": [
+    "Tone and noise are different fixtures: RF-driven time-varying receiver versus DC-linearized filter atCM0.9V and1kohm noisy source legs.",
+    "1kHz\u201320MHz noise integration is diagnostic, not qualified sampling bandwidth or an alias/noise-folding calculation.",
+    "The two model-noise options are scenarios, not bounds or measured silicon.",
+    "ADC quantization formula assumes an ideal uniform converter with uncorrelated quantization error; not valid measured SNR for current sub-LSB coherent input.",
+    "Illustrative output targets are design scenarios, not adopted requirements; gain headroom, compression, bandwidth, added noise and power remain unverified.",
+    "Matched receiver zero control pending; complete receiver noise includes other missing sources."
+  ]
+}

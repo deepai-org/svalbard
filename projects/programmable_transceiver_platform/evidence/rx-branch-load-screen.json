@@ -1,0 +1,130 @@
+{
+  "status": "simulation_completed_not_receiver_qualified",
+  "process": "typical",
+  "temperature_c": 27,
+  "supply_v": 3.3,
+  "rf_hz": 2410000000.0,
+  "lo_hz": 2400000000.0,
+  "if_hz": 10000000.0,
+  "max_step_s": 2e-12,
+  "changed_element": "Only Q mixer instance removed; Q external loads and LO sources retained.",
+  "cases": [
+    {
+      "branches": 1,
+      "input_peak_v": 0,
+      "phasors_v": [
+        [
+          -9.589675040655016e-10,
+          -3.0076429297606215e-11
+        ],
+        [
+          -9.542394510435403e-10,
+          -2.9854653570169467e-11
+        ]
+      ],
+      "drain_range_v": [
+        1.412402773545322,
+        1.673190668337406
+      ],
+      "average_vdd_current_a": 0.006032710377047632,
+      "deck_sha256": "718f9b414fb7a6b30626de51cd8f25ca24c1a6aca44a27ccce5e5899b6774e30",
+      "core_sha256": "1286a1faa4893b5389da7cd179f1967c629b56e2ecf245f81820207eb75e6b4d"
+    },
+    {
+      "branches": 1,
+      "input_peak_v": 0.001,
+      "phasors_v": [
+        [
+          -0.0008230811620371078,
+          9.69482969157905e-05
+        ],
+        [
+          -0.0008230979764644721,
+          9.694827705930784e-05
+        ]
+      ],
+      "drain_range_v": [
+        1.41185945856503,
+        1.673865573450844
+      ],
+      "average_vdd_current_a": 0.006032710374274647,
+      "deck_sha256": "2d59c2fe2f835b47b2484b24775436ba50a1669a0696076199a43f1853fa4e6b",
+      "core_sha256": "1286a1faa4893b5389da7cd179f1967c629b56e2ecf245f81820207eb75e6b4d"
+    },
+    {
+      "branches": 2,
+      "input_peak_v": 0,
+      "phasors_v": [
+        [
+          -6.611375974921709e-11,
+          -6.110240505826902e-12
+        ],
+        [
+          -6.581004776756325e-11,
+          -6.027779347520168e-12
+        ]
+      ],
+      "drain_range_v": [
+        1.051540557551974,
+        1.203836130262595
+      ],
+      "average_vdd_current_a": 0.007254182006905626,
+      "deck_sha256": "5bc5d4b5fee007f08ced7751153c9724c5c008fc38747cb6568a8b4a1e0e74fc",
+      "core_sha256": "a29f6f9aa546ae08d029e4f00cd9ab99592fb902e023657e28c46574704a77ed"
+    },
+    {
+      "branches": 2,
+      "input_peak_v": 0.001,
+      "phasors_v": [
+        [
+          -0.00031631140199309463,
+          -6.299105330574221e-06
+        ],
+        [
+          -0.0003163109992154317,
+          -6.299323089416961e-06
+        ]
+      ],
+      "drain_range_v": [
+        1.05120672635719,
+        1.204141988679998
+      ],
+      "average_vdd_current_a": 0.007254182038335616,
+      "deck_sha256": "18b4bcb8006ff2e15f0c2927ec652fec6880299ca27dd01c76c37a5ce78f2cb7",
+      "core_sha256": "a29f6f9aa546ae08d029e4f00cd9ab99592fb902e023657e28c46574704a77ed"
+    }
+  ],
+  "summaries": [
+    {
+      "branches": 1,
+      "baseline_if_peak_v": 9.5470635813724e-10,
+      "gain_i_v_per_v": 0.8287868738156875,
+      "window_change_relative": 2.028801326361425e-05
+    },
+    {
+      "branches": 2,
+      "baseline_if_peak_v": 6.608552421696711e-11,
+      "gain_i_v_per_v": 0.31637365248583554,
+      "window_change_relative": 1.4472576036608832e-06
+    }
+  ],
+  "two_to_one_gain_ratio": 0.3817310124969394,
+  "two_to_one_gain_change_db": -8.364851115444461,
+  "analytic_projection_relative_error": 5.535428593780485e-13,
+  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "source_sha256": {
+    "/screen/rx_branch_load_screen.py": "c693880d9c9635c9a8fe2f6b7bdf0085010428cc54f5bea25a0e93bd003000f0",
+    "/screen/rf_measure.py": "52ef509fa92a061ee285bf215b556ad0af2f09c09c8b16fe598f2a9763833384",
+    "/screen/rx_branch_load_tb.spice.in": "2bf02380d97051e8f4d5e39b5bc5dc508fe135823580e6483aafedaf4d8f612c",
+    "/screen/rx_iq_core.spice": "a29f6f9aa546ae08d029e4f00cd9ab99592fb902e023657e28c46574704a77ed",
+    "/src/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+    "/src/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+  },
+  "limitations": [
+    "Schematic compact-model experiment with ideal external bias, passives and LO.",
+    "No mismatch, PEX, noise qualification, RF differential front end or ADC.",
+    "VDD current excludes external LO and bias power.",
+    "Magnitude change includes bias and periodic loading; not a capacitance-only effect.",
+    "No receiver acceptance threshold or tapeout claim."
+  ]
+}

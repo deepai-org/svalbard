@@ -1,0 +1,12 @@
+* One-pole per-leg diagnostic filter; ideal R/C pending PDK passive layout.
+* Unloaded ideal-input pole ~32.15 MHz; actual mixer/sampler loading changes it.
+.subckt pt_iq_rc_filter IP IN QP QN OP ON OQP OQN VSS
+RIP IP OP 330
+RIN IN ON 330
+RQP QP OQP 330
+RQN QN OQN 330
+CIP OP VSS 15p
+CIN ON VSS 15p
+CQP OQP VSS 15p
+CQN OQN VSS 15p
+.ends pt_iq_rc_filter

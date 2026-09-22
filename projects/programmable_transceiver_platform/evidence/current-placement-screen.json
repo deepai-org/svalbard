@@ -1,0 +1,188 @@
+{
+  "scope": "Current pass-41 accepted RTL diagnostic placement and signal-RC timing; no tapeout/signoff claim",
+  "placement": {
+    "scope": "Digital-region placement of sized netlist; not routed/full-chip/timing signoff",
+    "characterization_sha256": "63981e021c71c37e560a8e0f4f43233c7fe0b141c3432a765c4ce2402f7896bd",
+    "instances": 26429,
+    "unplaced": 0,
+    "cell_area_um2": 967053.6512,
+    "row_area_um2": 2286832.0384,
+    "row_utilization": 0.42287917737789205,
+    "checks": [
+      "OpenROAD check_placement",
+      "independent row/boundary/site/orientation/overlap checks",
+      "three deliberately invalid geometry controls rejected",
+      "cell count/area matches characterized sizing netlist"
+    ],
+    "pdk_sha256": [
+      "842b186318d53844561af4ec530b4e30d8ba519bcc58d512a363ef255acc7abd  /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/techlef/gf180mcu_fd_sc_mcu7t5v0__nom.tlef",
+      "47dadf84c21b20f558d043c36271632f07b1c2c2a595b118e2e1050ebb74349b  /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/lef/gf180mcu_fd_sc_mcu7t5v0.lef",
+      "f9dee07cf158324934b0c59144d970a2e8313f43533ede6283ec3c136f82fe53  /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/lib/gf180mcu_fd_sc_mcu7t5v0__tt_025C_3v30.lib"
+    ],
+    "artifact_sha256": {
+      "input.v": "27a680c81c80403e2a244eee608f86c6de35e52534b5f61757addbad35992c0c",
+      "digital.def": "cdf03a5052fd5ad4b2bd88b4bb4f2f826c1bbd78d43fb3f0130752ebc4b9dc60",
+      "digital.odb": "a7c71ab3a9409dee65f0afbdf97ce36c2a51d52ebc93df8611927a904ab6feb3",
+      "cells.tsv": "c6a88602ba8e7b7fcd694b750fe68b634e71bfd0bd0cfa14cf1ccb3221cb4486",
+      "placement.log": "b01d67ed95f1fd57875860bf827ed51a9081af41b7157c09495108fb6e62adfa"
+    },
+    "source_sha256": {
+      "placement_screen.tcl": "afcd234aef7babad1104803f0c40bbf467487a2893dc1abb250d4a78b2e303bc",
+      "run_placement_screen.sh": "dfb337eea76bf13a707ea56cae6c68067dc0a4609b24e24f1cfef042d2ce5bcb",
+      "check_placement_screen.py": "0883d5a26df1dafde21d60de92fd2e22eef0ec90dee0ad7a7bd1fe70d6f26304"
+    },
+    "limitations": [
+      "Abstract digital-region boundaries/pins; no analog macros or full-chip padframe.",
+      "No PDN/taps/decaps/fillers, clock tree, reset repair, routing or extracted parasitics.",
+      "No physical timing repair or post-placement timing claim; previous setup/recovery failures remain.",
+      "No routability/congestion or final area/power/DRC/LVS qualification."
+    ]
+  },
+  "timing": {
+    "scope": "High-rate nominal placed timing with ideal clocks; no routed or extracted timing qualification",
+    "cases": [
+      {
+        "estimated_signal_parasitics": false,
+        "worst_slacks_ns": {
+          "host_tx_clk": {
+            "asynchronous": -2.0595,
+            "host_tx_clk": -6.0369
+          },
+          "host_rx_clk": {
+            "asynchronous": -2.5086,
+            "host_rx_clk": -6.9512
+          },
+          "wire_rx_clk": {
+            "asynchronous": 2.2659,
+            "wire_rx_clk": -5.0503
+          },
+          "wire_tx_clk": {
+            "asynchronous": 1.2933,
+            "wire_tx_clk": -3.8959
+          },
+          "rf_rx_clk": {
+            "asynchronous": 48.2783,
+            "rf_rx_clk": 42.194
+          },
+          "rf_tx_clk": {
+            "asynchronous": 48.2324,
+            "rf_tx_clk": 42.5074
+          },
+          "host_sclk": {
+            "host_sclk": 41.2069
+          },
+          "ref_clk": {
+            "ref_clk": 18.2468
+          }
+        },
+        "electrical_violation_rows": 0,
+        "log_sha256": "37de2f19965e5f846a0792135111f0c5d165075dcc95f5e51a06e6e458ec71cf"
+      },
+      {
+        "estimated_signal_parasitics": true,
+        "worst_slacks_ns": {
+          "host_tx_clk": {
+            "asynchronous": -5.3528,
+            "host_tx_clk": -10.6511
+          },
+          "host_rx_clk": {
+            "asynchronous": -4.5825,
+            "host_rx_clk": -11.1665
+          },
+          "wire_rx_clk": {
+            "asynchronous": 2.1496,
+            "wire_rx_clk": -7.2036
+          },
+          "wire_tx_clk": {
+            "asynchronous": 0.7307,
+            "wire_tx_clk": -5.7924
+          },
+          "rf_rx_clk": {
+            "asynchronous": 48.1953,
+            "rf_rx_clk": 40.343
+          },
+          "rf_tx_clk": {
+            "asynchronous": 48.1113,
+            "rf_tx_clk": 38.8671
+          },
+          "host_sclk": {
+            "host_sclk": 35.132
+          },
+          "ref_clk": {
+            "ref_clk": 17.7121
+          }
+        },
+        "electrical_violation_rows": 25,
+        "log_sha256": "82116affa26aa6a876b1b5e615333ea019d947923b34d27b2bb7282e44326685"
+      }
+    ],
+    "database_sha256": "a7c71ab3a9409dee65f0afbdf97ce36c2a51d52ebc93df8611927a904ab6feb3",
+    "rc_assumption": "OpenROAD placement estimate using nominal technology LEF Metal3 for all signal nets; not actual layer assignment or coupled extraction",
+    "source_sha256": {
+      "placed_timing_screen.tcl": "846e12b3a19a350d281e4f966a367a8e7d4ab17fb06d6436a0f8631139f508d2",
+      "run_placed_timing.sh": "e88dac97b254b9a70af19dd0ebee62d61b94f16ae28572f367a8303195de255a",
+      "report_placed_timing.py": "d690648375c98a18b88aca79d6ff8221ded9786649a72bd55394f20db04ff79c"
+    },
+    "limitations": [
+      "Ideal clocks; no CTS, propagated skew/jitter or reset distribution repair.",
+      "No routed geometry, coupling, vias or qualified RC corners; selected Metal3 estimate is not a proven lower/upper bound.",
+      "No external IO timing closure; inherited interface warnings remain.",
+      "Electrical violations can cause library extrapolation; negative slacks are diagnostic, not precise achievable-frequency limits."
+    ]
+  },
+  "previous_placed_timing": {
+    "estimated_signal_parasitics": true,
+    "worst_slacks_ns": {
+      "host_tx_clk": {
+        "asynchronous": -6.1974,
+        "host_tx_clk": -16.245
+      },
+      "host_rx_clk": {
+        "asynchronous": -4.6833,
+        "host_rx_clk": -12.2338
+      },
+      "wire_rx_clk": {
+        "asynchronous": 2.1277,
+        "wire_rx_clk": -8.0626
+      },
+      "wire_tx_clk": {
+        "asynchronous": 0.5068,
+        "wire_tx_clk": -6.5463
+      },
+      "rf_rx_clk": {
+        "asynchronous": 48.0917,
+        "rf_rx_clk": 39.5516
+      },
+      "rf_tx_clk": {
+        "asynchronous": 48.1005,
+        "rf_tx_clk": 38.3291
+      },
+      "host_sclk": {
+        "host_sclk": 36.7149
+      },
+      "ref_clk": {
+        "ref_clk": 17.303
+      }
+    },
+    "electrical_violation_rows": 4,
+    "log_sha256": "61acc5e51cbd21fd6cd7c1a3d0257ff795acf390d4be9463ce0592981312c781"
+  },
+  "characterization_sha256": "63981e021c71c37e560a8e0f4f43233c7fe0b141c3432a765c4ce2402f7896bd",
+  "checks": [
+    "Source and netlist hashes match characterized accepted RTL",
+    "Same PDK and realized row area as previous placement",
+    "Independent geometry checks and three negative controls pass",
+    "Zero-RC placed timing reproduces every characterized domain/group within 0.0002 ns"
+  ],
+  "source_sha256": {
+    "run_current_placement.sh": "67cd414645789139ce46ee0ac711936cffc1e22e161a4e04e392d5dfdcae5527",
+    "report_current_placement.py": "bcab8f2394966975352ac69b2590d4854f9f4227b1779c3dd9092b52328a7e40"
+  },
+  "limitations": [
+    "Current mapped candidate has not undergone whole-design formal equivalence. Prior mapped proof does not apply.",
+    "No CTS, propagated clocks, reset repair, PDN, analog macros, routing or extracted coupling.",
+    "Metal3 uniform-layer placement RC is illustrative, not a proven uncertainty bound.",
+    "External IO remains unconstrained. Electrical violations can cause extrapolation.",
+    "No routability, total-power, full-chip DRC/LVS or protocol qualification."
+  ]
+}

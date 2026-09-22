@@ -1,0 +1,70 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "offset_ticks": -4,
+      "tx_start_s": 0.00048210000000000006,
+      "rx_start_s": 0.000482,
+      "samples": 32
+    },
+    {
+      "mode": 0,
+      "offset_ticks": 0,
+      "tx_start_s": 0.00048210000000000006,
+      "rx_start_s": 0.00048210000000000006,
+      "samples": 32
+    },
+    {
+      "mode": 0,
+      "offset_ticks": 4,
+      "tx_start_s": 0.00048210000000000006,
+      "rx_start_s": 0.0004822,
+      "samples": 32
+    },
+    {
+      "mode": 1,
+      "offset_ticks": -4,
+      "tx_start_s": 0.00048210000000000006,
+      "rx_start_s": 0.000482,
+      "samples": 32
+    },
+    {
+      "mode": 1,
+      "offset_ticks": 0,
+      "tx_start_s": 0.00048210000000000006,
+      "rx_start_s": 0.00048210000000000006,
+      "samples": 32
+    },
+    {
+      "mode": 1,
+      "offset_ticks": 4,
+      "tx_start_s": 0.00048210000000000006,
+      "rx_start_s": 0.0004822,
+      "samples": 32
+    }
+  ],
+  "invalid_start": [
+    {
+      "mode": 0,
+      "rejection": "Capture requires idle active stream and future start",
+      "atomic": true
+    },
+    {
+      "mode": 1,
+      "rejection": "Capture requires idle active stream and future start",
+      "atomic": true
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "contract": [
+    "Signed16-bit relative RX offset in control-clock periods, configured while disarmed; upper16 bits reserved.",
+    "Default remains10ns for prior profiles; an explicit zero setting means simultaneous converter deadlines.",
+    "Both directions are preflighted atomically, including future-start validity."
+  ],
+  "limitations": [
+    "Control-period resolution is a mathematical scheduling contract, not a verified clock-phase implementation.",
+    "External trigger routing and continuous run control remain open."
+  ]
+}

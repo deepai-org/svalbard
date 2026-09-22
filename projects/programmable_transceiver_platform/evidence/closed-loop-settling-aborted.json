@@ -1,0 +1,86 @@
+{
+  "status": "aborted_transient_partial_evidence_not_settling_pass",
+  "requested_stop_ns": 3201,
+  "actual_last_time_ns": 2762.5,
+  "failure": "ngspice timestep too small at vregen#branch; no physical-failure conclusion",
+  "windows": [
+    {
+      "window_ns": [
+        1100,
+        1200
+      ],
+      "vco_frequency_hz": 2488501767.304626,
+      "control_range_v": [
+        1.028570632310054,
+        1.107348510463038
+      ],
+      "gate_range_v": [
+        1.491420842191838,
+        1.512190965820391
+      ],
+      "pump_charge_fc": -456.56402105833104
+    },
+    {
+      "window_ns": [
+        2000,
+        2100
+      ],
+      "vco_frequency_hz": 2481916991.4586887,
+      "control_range_v": [
+        1.059684819411599,
+        1.077108608694345
+      ],
+      "gate_range_v": [
+        1.492025481511813,
+        1.511334746681243
+      ],
+      "pump_charge_fc": -31.21366463047322
+    },
+    {
+      "window_ns": [
+        2500,
+        2600
+      ],
+      "vco_frequency_hz": 2498493113.128991,
+      "control_range_v": [
+        1.072866617875074,
+        1.091293394084903
+      ],
+      "gate_range_v": [
+        1.491161814118231,
+        1.512540990342893
+      ],
+      "pump_charge_fc": 35.73913984450487
+    }
+  ],
+  "prefix_max_absolute_errors_by_column": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "artifacts_sha256": {
+    ".spice": "8b097a2ac8dcb5922ccaa4f44cfa78dee5fbe5a52464a2f6ba69e02c7cf301d6",
+    ".dat": "764404164375e5b787e967752296764491a3779bc4dbd275266e756652890c8b",
+    ".log": "2ab809211fe30d55af4bac7c46d9ba4319bf30b9a886c5218c5acaf2edf0cdfa"
+  },
+  "pll_lock_established": false,
+  "limitations": [
+    "Run aborted before requested horizon; investigate numerical cause and rerun before qualification.",
+    "Only windows ending at or before 2600ns summarized; no inference from tiny-step failure neighborhood.",
+    "Nominal seeded/prebiased circuit with ideal external biases; no noise/startup/process or package evidence."
+  ]
+}

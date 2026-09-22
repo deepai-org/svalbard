@@ -1,0 +1,62 @@
+{
+  "status": "observed_transition_driver_comparison",
+  "source_sha256": {
+    "projects/programmable_transceiver_platform/analog/adc/comparator.spice": "a41ecccf87f625bbddca6139730c5e8500529c5acb2f05a5052f9049e8ee74a0",
+    "projects/programmable_transceiver_platform/analog/adc/cdac8_mim.spice": "532e86fc11da6f695d092dd06c0508cbb363f49c4c2b070c78683c7d5bf85e14",
+    "projects/programmable_transceiver_platform/analog/adc/cdac8_scaled.spice": "4006f42115b3a5a30b9ad74626ef0c084655bf0cdc2f1d1cc8bd32f65e351fd2",
+    "ip/blocks/analog/wifi_80211b/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+    "projects/programmable_transceiver_platform/analog/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+    "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_complement_output2.spice": "990e4bdc4c080d64c67053ccf629447b7bfae66e921cb8191da964b08c5b17f2",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_scaled_output2.spice": "fa991a36d9ac893aaf786ee57f3a5f19f009ffb00818c67b77c44a849c809c86",
+    "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair.spice": "041cc2507332035bcef9925f485ca4208ac4a37771a391d8a9853fcec6fb8048",
+    "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair_output2.spice": "46ce833ed2bd78bad164bd3a85accaca24f66449610589a4363fff394d61bd8f",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_scaled.spice": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_complement.spice": "b21147fcdd7c13e4c7359fb966319a70badbb6a12c0de0064926b73be10602b4",
+    "projects/programmable_transceiver_platform/analog/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81"
+  },
+  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "parent_sha256": "cf6059c01cbad861098a48e8a5932ca1da079032608932700ffa6272d22dda38",
+  "cases": [
+    {
+      "name": "ideal",
+      "physical_drivers": false,
+      "reference_span_range_v": [
+        0.8577717499999999,
+        1.0310349799999998
+      ],
+      "net_high_charge_c": 8.648674727833732e-12,
+      "net_low_charge_c": -8.892987820834321e-12,
+      "settled_differential_v": -0.46771195499999996,
+      "artifacts_sha256": {
+        ".spice": "f816746c0c83dcb2ec48daa4c798c5d1bc338d9fa5590c64de13aaba7821c788",
+        ".log": "fade0a86dfc31b1e3207fd1246d592197d9969cec16a6c9cf84f04fcb29ed11e",
+        ".dat": "685b5f254da608cc483756147e41d72380a9e82c320afe7081719431a0f9c031"
+      }
+    },
+    {
+      "name": "physical",
+      "physical_drivers": true,
+      "reference_span_range_v": [
+        0.8557062200000001,
+        1.0270260900000001
+      ],
+      "net_high_charge_c": 8.703341192232736e-12,
+      "net_low_charge_c": -8.929113301639815e-12,
+      "settled_differential_v": -0.46227636000000005,
+      "artifacts_sha256": {
+        ".spice": "fc07dfe6c0c504176601f00d5c3825c2c6ef48b1cd4c4a28df935e7e4ee80109",
+        ".log": "9b1f329a472b9a84cee94a041d8f1b6026df0d70fa52a441f376cdbf6211e3e5",
+        ".dat": "cafd5017beef1c98214441eff2c361365df795cd2d856fb5dc28503df285e6ab"
+      }
+    }
+  ],
+  "limitations": [
+    "Observed command pair only; command waveform and isolated history are synthetic, not closed SAR replay.",
+    "Reference biases/supply and external command edges remain ideal; comparator held reset.",
+    "Signed load probes retained, but prior reproduction scope was a different transition.",
+    "One direction, nominal process; not complete conversion or throughput qualification."
+  ]
+}

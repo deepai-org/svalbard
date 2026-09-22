@@ -1,0 +1,106 @@
+{
+  "scope": "Aligned RX block algorithm/reference comparison; no RTL, gearbox, timing, CDC or protocol-latency qualification",
+  "cases": [
+    {
+      "mode": 0,
+      "words_per_block": 2,
+      "frames": 884,
+      "blocks": 28288,
+      "peak_payload_words_per_block": {
+        "wire": 2,
+        "iq": 1
+      },
+      "core_clock_mhz": 125.0,
+      "block_period_ns": 8,
+      "max_collection_delay_ns": 4,
+      "header_collection_delay_after_word4_ns": 4
+    },
+    {
+      "mode": 0,
+      "words_per_block": 4,
+      "frames": 884,
+      "blocks": 14144,
+      "peak_payload_words_per_block": {
+        "wire": 3,
+        "iq": 2
+      },
+      "core_clock_mhz": 62.5,
+      "block_period_ns": 16,
+      "max_collection_delay_ns": 12,
+      "header_collection_delay_after_word4_ns": 12
+    },
+    {
+      "mode": 0,
+      "words_per_block": 8,
+      "frames": 884,
+      "blocks": 7072,
+      "peak_payload_words_per_block": {
+        "wire": 5,
+        "iq": 4
+      },
+      "core_clock_mhz": 31.25,
+      "block_period_ns": 32,
+      "max_collection_delay_ns": 28,
+      "header_collection_delay_after_word4_ns": 12
+    },
+    {
+      "mode": 1,
+      "words_per_block": 2,
+      "frames": 424,
+      "blocks": 13568,
+      "peak_payload_words_per_block": {
+        "wire": 2,
+        "iq": 1
+      },
+      "core_clock_mhz": 156.25,
+      "block_period_ns": 6.4,
+      "max_collection_delay_ns": 3.2,
+      "header_collection_delay_after_word4_ns": 3.2
+    },
+    {
+      "mode": 1,
+      "words_per_block": 4,
+      "frames": 424,
+      "blocks": 6784,
+      "peak_payload_words_per_block": {
+        "wire": 4,
+        "iq": 1
+      },
+      "core_clock_mhz": 78.125,
+      "block_period_ns": 12.8,
+      "max_collection_delay_ns": 9.600000000000001,
+      "header_collection_delay_after_word4_ns": 9.600000000000001
+    },
+    {
+      "mode": 1,
+      "words_per_block": 8,
+      "frames": 424,
+      "blocks": 3392,
+      "peak_payload_words_per_block": {
+        "wire": 7,
+        "iq": 1
+      },
+      "core_clock_mhz": 39.0625,
+      "block_period_ns": 25.6,
+      "max_collection_delay_ns": 22.400000000000002,
+      "header_collection_delay_after_word4_ns": 9.600000000000001
+    }
+  ],
+  "checks": [
+    "All 1308 legal frame count pairs at each of three widths",
+    "Continuous sequence wraps and source ordering",
+    "All 50 single header-bit flips per mode/width suppress effects and latch fault"
+  ],
+  "source_sha256": {
+    "block_receiver_model.py": "379156e53201e40bde148e1b3bb22eaf2dd2dff5fd74e1e0a241217805550189",
+    "check_block_receiver.py": "1cf93dc5c41fe3d1fe53e57c23509768476236aaa0405e9ae65f32d25a7331e3",
+    "stream_codec.py": "4515bf61e3c83f041eee97740e61c075dca1681da388dc651117cdd10d1a0088",
+    "transport_model.py": "fb93356b2851ee253d3f8e49bb25b2018e22175500ec3d14b8ebaa78814da09d"
+  },
+  "limitations": [
+    "No bit/word alignment acquisition, source drift, backpressure or physical clock model.",
+    "Parallel outputs require multi-enqueue storage; existing single-word FIFOs cannot accept these blocks directly.",
+    "Collection delays exclude gearbox handoff, processing, CDC and output serialization.",
+    "Does not preserve scalar word-cycle event timing or validate end-to-end PCIe latency."
+  ]
+}

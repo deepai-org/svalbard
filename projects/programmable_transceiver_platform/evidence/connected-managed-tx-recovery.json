@@ -1,0 +1,56 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "initial_mode": 0,
+      "recovered_mode": 1,
+      "epoch": 1,
+      "first": {
+        "consumed": 3,
+        "updated": 3,
+        "cancelled": 0,
+        "pending": 0,
+        "latency_s": 2e-08,
+        "capacity": 4
+      },
+      "second": {
+        "consumed": 6,
+        "updated": 6,
+        "cancelled": 0,
+        "pending": 0,
+        "latency_s": 2e-08,
+        "capacity": 4
+      },
+      "calibration_generation": 4,
+      "retained_filter_norm": 0.5611212277057126
+    },
+    {
+      "initial_mode": 1,
+      "recovered_mode": 0,
+      "epoch": 1,
+      "first": {
+        "consumed": 3,
+        "updated": 3,
+        "cancelled": 0,
+        "pending": 0,
+        "latency_s": 2e-08,
+        "capacity": 4
+      },
+      "second": {
+        "consumed": 6,
+        "updated": 6,
+        "cancelled": 0,
+        "pending": 0,
+        "latency_s": 2e-08,
+        "capacity": 4
+      },
+      "calibration_generation": 4,
+      "retained_filter_norm": 0.5679819676873821
+    }
+  ],
+  "limitations": [
+    "Finite RF playback/capture and host training; no full four-path modulation-quality check after recovery.",
+    "Default noiseless recovery fixture; full loaded/noisy quality and SPI-only unification remain open.",
+    "Internal sample queue injection tests DAC lifecycle; framed payload codec covered separately."
+  ]
+}

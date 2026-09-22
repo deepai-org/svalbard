@@ -1,0 +1,44 @@
+{
+  "status": "passed",
+  "connected": false,
+  "physical_qualification": false,
+  "cases": [
+    {
+      "terms_ohm": [
+        75,
+        75
+      ],
+      "decision": "present",
+      "repeated": true
+    },
+    {
+      "terms_ohm": [
+        100000000.0,
+        100000000.0
+      ],
+      "decision": "absent",
+      "repeated": true
+    },
+    {
+      "terms_ohm": [
+        75,
+        100000000.0
+      ],
+      "decision": "indeterminate",
+      "repeated": true
+    }
+  ],
+  "abort_preserves_capacitors": true,
+  "release_required_before_result": true,
+  "source_sha256": "c8c466a90b24b7f90654abb59dffe00da8d9a6e5209172c4dd00d17d16d2ada2",
+  "dependency_hashes": {
+    "receiver_detect_release_screen.py": "753bf2b36c2f72a4dbea1997beb2503295e93f075bd0c2a6584bffb1dee496af",
+    "receiver_detect_load_screen.py": "d4e3693d9049402a567ef817f0a7e7c605b6265114f6912db2f778e9dd2d448a"
+  },
+  "limitations": [
+    "Staged standalone controller, not yet connected to real chip scheduler, queues, management or supply loading.",
+    "Three nominal two-leg cases; earlier load/sensor uncertainty tests do not automatically qualify the complete sequence.",
+    "Post-abort recovery/rearm policy remains to be integrated; abort deliberately does not clear analog state.",
+    "Active baseline restoration needs a physical driver and release-current budget."
+  ]
+}

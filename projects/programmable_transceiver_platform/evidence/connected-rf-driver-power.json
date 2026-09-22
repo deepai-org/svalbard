@@ -1,0 +1,89 @@
+{
+  "status": "passed",
+  "steady_cases": [
+    {
+      "output_on": false,
+      "dummy_on": true,
+      "source_power_w": 0.00048214811532966705,
+      "resistor_losses_w": {
+        "source_resistor": 0.00023284554327212596,
+        "pad": 1.5395211281381655e-10,
+        "monitor": 7.525811875443609e-07,
+        "dummy": 0.0002219407602384661,
+        "output_switch": 1.342459029108645e-08,
+        "dummy_switch": 2.219916070901935e-05,
+        "monitor_tap": 4.396491380107263e-06
+      },
+      "stored_energy_rate_w": 6.8940096437243e-20,
+      "balance_error_w": 3.9480120811307447e-20
+    },
+    {
+      "output_on": true,
+      "dummy_on": false,
+      "source_power_w": 0.0004838639612578622,
+      "resistor_losses_w": {
+        "source_resistor": 0.00023532196240420495,
+        "pad": 0.00022114139547190664,
+        "monitor": 7.499041362635505e-07,
+        "dummy": 1.5356134914779723e-08,
+        "output_switch": 2.2241116225361735e-05,
+        "dummy_switch": 1.337452594892432e-08,
+        "monitor_tap": 4.38085235926143e-06
+      },
+      "stored_energy_rate_w": 2.4613356386227695e-19,
+      "balance_error_w": -2.9293129365176067e-20
+    },
+    {
+      "output_on": false,
+      "dummy_on": false,
+      "source_power_w": 2.3242520397789428e-05,
+      "resistor_losses_w": {
+        "source_resistor": 4.718350046584981e-06,
+        "pad": 5.49329436342563e-10,
+        "monitor": 2.6853480085442407e-06,
+        "dummy": 5.498911703275099e-08,
+        "output_switch": 4.790140572251065e-08,
+        "dummy_switch": 4.789313044880303e-08,
+        "monitor_tap": 1.5687489360019443e-05
+      },
+      "stored_energy_rate_w": 1.249855049043228e-19,
+      "balance_error_w": 2.3076833294248336e-19
+    },
+    {
+      "output_on": true,
+      "dummy_on": true,
+      "source_power_w": 0.0006484024542887431,
+      "resistor_losses_w": {
+        "source_resistor": 0.0004207027703616631,
+        "pad": 0.00010238997125031916,
+        "monitor": 3.472107191359147e-07,
+        "dummy": 0.00010239454857942097,
+        "output_switch": 1.029778819126204e-05,
+        "dummy_switch": 1.0241800727364103e-05,
+        "monitor_tap": 2.0283644595778745e-06
+      },
+      "stored_energy_rate_w": -7.772887560390743e-19,
+      "balance_error_w": 6.688685387905239e-19
+    }
+  ],
+  "max_balance_error_w": 2.7755575615628914e-17,
+  "energy_return_case": {
+    "source_power_w": -0.0018000000000000004,
+    "resistor_losses_w": {
+      "source_resistor": 0.016200000000000003,
+      "pad": 0.0,
+      "monitor": 0.0,
+      "dummy": 0.0,
+      "output_switch": 1e-06,
+      "dummy_switch": 0.2,
+      "monitor_tap": 0.001
+    },
+    "stored_energy_rate_w": -0.21900100000000006,
+    "balance_error_w": 5.551115123125783e-17
+  },
+  "limitations": [
+    "Power accounting on existing linear RMS-envelope RC network; not active-driver/DC feedback.",
+    "Ideal source can absorb transient energy; a physical output stage needs an explicit dissipation/return law.",
+    "Resistance and capacitance assumptions are unchanged; no physical efficiency or power budget claim."
+  ]
+}

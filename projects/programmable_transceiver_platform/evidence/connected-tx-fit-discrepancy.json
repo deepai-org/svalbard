@@ -1,0 +1,56 @@
+{
+  "status": "characterized",
+  "half_lsb": 4.887585532746823e-05,
+  "training_max_affine_discrepancy": 0.004198642310422232,
+  "independent_max_fit_residual": 0.0008254588899750047,
+  "quantization_only": {
+    "coefficient_error_bounds": [
+      0.004337859814385704,
+      0.0010844649535964273,
+      0.004337859814385702,
+      0.00016279458249537755,
+      0.00016279458249537744,
+      9.232106006299551e-05
+    ],
+    "hessian_spectral_error_bound": 0.0063234629760664,
+    "corrected_gram_eigenvalue_bounds": [
+      1.1898945164883206,
+      1.2034552642550849
+    ],
+    "robust_positive_definite": true,
+    "relative_axis_spread_bound": 0.0028330285683949488,
+    "residual_output_offset_bound": 0.0003419321639759746,
+    "waveform_verified": false,
+    "scope": "Affine model and declared per-probe error only; residual offset is in monitor-scaled amplitude units."
+  },
+  "quantization_only_contains_true_gram": false,
+  "diagnostic_inflated": {
+    "coefficient_error_bounds": [
+      0.37697833088813437,
+      0.09424458272203368,
+      0.37697833088813404,
+      0.01414753648405507,
+      0.014147536484055062,
+      0.008023089868638318
+    ],
+    "hessian_spectral_error_bound": 0.5495356282019462,
+    "corrected_gram_eigenvalue_bounds": [
+      0.6205009984557395,
+      1.772848782287666
+    ],
+    "robust_positive_definite": true,
+    "relative_axis_spread_bound": 0.25658935882694944,
+    "residual_output_offset_bound": 0.02807317721802489,
+    "waveform_verified": false,
+    "scope": "Affine model and declared per-probe error only; residual offset is in monitor-scaled amplitude units."
+  },
+  "true_corrected_gram_eigenvalues": [
+    1.0968939683455723,
+    1.101828526325626
+  ],
+  "limitations": [
+    "Truth-assisted assumption audit only; no detector error bound established by finite probes.",
+    "Independent probes test different amplitudes/phases but cannot exclude arbitrary unobserved nonlinearity.",
+    "One reconstruction, dwell and transfer setting; full operating-envelope bounds remain open."
+  ]
+}

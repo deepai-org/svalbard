@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "error_sign": -1,
+      "first_dac_edge_error_s": 7.31600555046411e-14,
+      "rf_samples": 3,
+      "wired_words": 3
+    },
+    {
+      "mode": 0,
+      "error_sign": 1,
+      "first_dac_edge_error_s": -7.316011733804625e-14,
+      "rf_samples": 3,
+      "wired_words": 3
+    },
+    {
+      "mode": 1,
+      "error_sign": -1,
+      "first_dac_edge_error_s": 1.7974787494345152e-13,
+      "rf_samples": 3,
+      "wired_words": 3
+    },
+    {
+      "mode": 1,
+      "error_sign": 1,
+      "first_dac_edge_error_s": -1.7974825187311305e-13,
+      "rf_samples": 3,
+      "wired_words": 3
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Undisturbed linear near-lock trajectory is snapshotted when scheduling; later disturbances require invalidating pending deadlines.",
+    "Phase expressed in40MHz reference cycles maps to shared absolute time error for ADC/DAC; divider and separate PLL effects absent.",
+    "Wired serializer and host edge clocks remain independent ideal clocks.",
+    "Local quarter-period root bracket does not establish nonlinear acquisition or cycle-slip behavior."
+  ]
+}

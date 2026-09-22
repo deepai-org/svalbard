@@ -1,0 +1,163 @@
+{
+  "status": "conditional_averaged_model_not_loop_qualification",
+  "effective_pump_current_a": 2.0250493213333867e-05,
+  "divider": 128,
+  "cases": [
+    {
+      "control_interval_v": [
+        0.98,
+        1.02
+      ],
+      "vco_secant_gain_hz_per_v": 2636913932.517419,
+      "unity_gain_hz": 699010.72810512,
+      "phase_margin_deg": 60.68896438122103,
+      "closed_loop_poles_per_s": [
+        [
+          -47820511.931821495,
+          0.0
+        ],
+        [
+          -2089744.034089238,
+          2087295.7135355917
+        ],
+        [
+          -2089744.034089238,
+          -2087295.7135355917
+        ]
+      ],
+      "all_poles_left_half_plane": true
+    },
+    {
+      "control_interval_v": [
+        1.02,
+        1.06
+      ],
+      "vco_secant_gain_hz_per_v": 2308921484.969769,
+      "unity_gain_hz": 625458.0368968883,
+      "phase_margin_deg": 58.70553850393996,
+      "closed_loop_poles_per_s": [
+        [
+          -48380940.326635785,
+          0.0
+        ],
+        [
+          -1809529.8366820929,
+          2067809.7657495097
+        ],
+        [
+          -1809529.8366820929,
+          -2067809.7657495097
+        ]
+      ],
+      "all_poles_left_half_plane": true
+    },
+    {
+      "control_interval_v": [
+        1.06,
+        1.08
+      ],
+      "vco_secant_gain_hz_per_v": 2072979960.4159336,
+      "unity_gain_hz": 572805.80021172,
+      "phase_margin_deg": 56.97967740215846,
+      "closed_loop_poles_per_s": [
+        [
+          -48775949.06330989,
+          0.0
+        ],
+        [
+          -1612025.468345044,
+          2031053.2630657796
+        ],
+        [
+          -1612025.468345044,
+          -2031053.2630657796
+        ]
+      ],
+      "all_poles_left_half_plane": true
+    },
+    {
+      "control_interval_v": [
+        1.08,
+        1.16
+      ],
+      "vco_secant_gain_hz_per_v": 1697522820.4234452,
+      "unity_gain_hz": 489411.4967800469,
+      "phase_margin_deg": 53.57600770645004,
+      "closed_loop_poles_per_s": [
+        [
+          -49391395.97030413,
+          0.0
+        ],
+        [
+          -1304302.014847922,
+          1932919.9778447861
+        ],
+        [
+          -1304302.014847922,
+          -1932919.9778447861
+        ]
+      ],
+      "all_poles_left_half_plane": true
+    },
+    {
+      "control_interval_v": [
+        1.16,
+        1.24
+      ],
+      "vco_secant_gain_hz_per_v": 992912647.9328445,
+      "unity_gain_hz": 332516.71353024215,
+      "phase_margin_deg": 43.94970385036308,
+      "closed_loop_poles_per_s": [
+        [
+          -50506475.76546826,
+          0.0
+        ],
+        [
+          -746762.1172658743,
+          1597671.937911298
+        ],
+        [
+          -746762.1172658743,
+          -1597671.937911298
+        ]
+      ],
+      "all_poles_left_half_plane": true
+    },
+    {
+      "control_interval_v": [
+        1.24,
+        1.3
+      ],
+      "vco_secant_gain_hz_per_v": 500778222.88866794,
+      "unity_gain_hz": 215911.4554047683,
+      "phase_margin_deg": 32.65484131697815,
+      "closed_loop_poles_per_s": [
+        [
+          -51257322.88872437,
+          0.0
+        ],
+        [
+          -371338.5556378223,
+          1186495.6323017797
+        ],
+        [
+          -371338.5556378223,
+          -1186495.6323017797
+        ]
+      ],
+      "all_poles_left_half_plane": true
+    }
+  ],
+  "inputs_sha256": {
+    "evidence/pump-follower-phase.json": "23ebb8454d178e18d449420e17fbf694df269c1cd20810892c5471b8ceb3af08",
+    "evidence/vco-split-lower.json": "0752dbbe2f653fd1ed09c3c64a75082c390056643b079423e76739d2b2ead116",
+    "evidence/vco-split-tuning.json": "297c153b53cd036fe509e6c688613d4809deb074c1ae026ced0e5843f61dc8ea",
+    "analog/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca"
+  },
+  "limitations": [
+    "Pump slope is a two-point clamped-output measurement; follower variant includes real driver but ideal bias currents.",
+    "VCO slopes are secants from older loaded fixtures, not derivatives of the final connected circuit.",
+    "Model omits sampling delay, nonlinear acquisition, pump compliance/offset, follower input loading, noise, process and parasitics.",
+    "Stable averaged poles do not prove transistor-loop stability, lock or cold startup."
+  ]
+}

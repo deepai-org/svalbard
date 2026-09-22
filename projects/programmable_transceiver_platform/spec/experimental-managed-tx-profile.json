@@ -1,0 +1,32 @@
+{
+  "status": "experimental_not_promoted",
+  "rf_pulse_bandwidth_hz": 300000,
+  "rf_fast_fraction": 0.3,
+  "tx_reconstruction": "elliptic",
+  "managed_tx_calibration": true,
+  "managed_host_activation": true,
+  "preparation_window_s": 0.0001,
+  "supported_evidence": {
+    "connected-fractional-grid-fraction30.json": {
+      "sha256": "56ec671e115ed95aed54474f392a3c4d790b5ce2637b43c2933cf333bc8fd45e",
+      "status": "characterized"
+    },
+    "connected-managed-tx-fraction30-mode0.json": {
+      "sha256": "5b454d5680a5aef51180afa2f305a287d62f4dbf58200b5760e4c2cf6650b414",
+      "status": "passed"
+    },
+    "connected-managed-tx-fraction30-mode1.json": {
+      "sha256": "c18bc81892afacfd0635d66c8ade1839af5bf41efef77362976fe080e4704bf4",
+      "status": "passed"
+    }
+  },
+  "scope": "Both finite quality cases plus nominal tuning grid; not complete operating envelope",
+  "outstanding": [
+    "noise and startup state coverage",
+    "unified reference loss and retune recovery",
+    "monitor uncertainty and supply/loading",
+    "RF output isolation",
+    "current aggregate regression",
+    "physical area/power and transistor qualification"
+  ]
+}

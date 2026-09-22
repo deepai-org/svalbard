@@ -1,0 +1,142 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "rt": 40.0,
+      "cc": 1e-08,
+      "rs": 100.0,
+      "decision": "present",
+      "ready_s": 4.2e-06,
+      "hidden_remote_voltage_v": 6.112351803289422e-08
+    },
+    {
+      "rt": 40.0,
+      "cc": 1e-08,
+      "rs": 1000.0,
+      "decision": "present",
+      "ready_s": 4.2e-06,
+      "hidden_remote_voltage_v": 1.0355666054604415e-07
+    },
+    {
+      "rt": 40.0,
+      "cc": 1e-07,
+      "rs": 100.0,
+      "decision": "present",
+      "ready_s": 4.2e-06,
+      "hidden_remote_voltage_v": 8.525496693234147e-08
+    },
+    {
+      "rt": 40.0,
+      "cc": 1e-07,
+      "rs": 1000.0,
+      "decision": "present",
+      "ready_s": 4.2e-06,
+      "hidden_remote_voltage_v": 1.4786226644756636e-08
+    },
+    {
+      "rt": 100.0,
+      "cc": 1e-08,
+      "rs": 100.0,
+      "decision": "present",
+      "ready_s": 4.2e-06,
+      "hidden_remote_voltage_v": 2.572888892644065e-07
+    },
+    {
+      "rt": 100.0,
+      "cc": 1e-08,
+      "rs": 1000.0,
+      "decision": "present",
+      "ready_s": 4.2e-06,
+      "hidden_remote_voltage_v": 2.5007524822536454e-07
+    },
+    {
+      "rt": 100.0,
+      "cc": 1e-07,
+      "rs": 100.0,
+      "decision": "present",
+      "ready_s": 4.2e-06,
+      "hidden_remote_voltage_v": 1.628823964121801e-07
+    },
+    {
+      "rt": 100.0,
+      "cc": 1e-07,
+      "rs": 1000.0,
+      "decision": "present",
+      "ready_s": 4.2e-06,
+      "hidden_remote_voltage_v": 3.502082668001311e-08
+    },
+    {
+      "rt": 100000.0,
+      "cc": 1e-08,
+      "rs": 100.0,
+      "decision": "absent",
+      "ready_s": 4.2e-06,
+      "hidden_remote_voltage_v": 4.161914100967205e-06
+    },
+    {
+      "rt": 100000.0,
+      "cc": 1e-08,
+      "rs": 1000.0,
+      "decision": "absent",
+      "ready_s": 4.2e-06,
+      "hidden_remote_voltage_v": 4.1160640392940254e-06
+    },
+    {
+      "rt": 100000.0,
+      "cc": 1e-07,
+      "rs": 100.0,
+      "decision": "absent",
+      "ready_s": 4.2e-06,
+      "hidden_remote_voltage_v": 4.1848934021605563e-07
+    },
+    {
+      "rt": 100000.0,
+      "cc": 1e-07,
+      "rs": 1000.0,
+      "decision": "absent",
+      "ready_s": 4.2e-06,
+      "hidden_remote_voltage_v": 4.1385602555322936e-07
+    },
+    {
+      "rt": 100000000.0,
+      "cc": 1e-08,
+      "rs": 100.0,
+      "decision": "absent",
+      "ready_s": 4.2e-06,
+      "hidden_remote_voltage_v": 3.982966123371422e-08
+    },
+    {
+      "rt": 100000000.0,
+      "cc": 1e-08,
+      "rs": 1000.0,
+      "decision": "absent",
+      "ready_s": 4.2e-06,
+      "hidden_remote_voltage_v": 3.979324892873896e-08
+    },
+    {
+      "rt": 100000000.0,
+      "cc": 1e-07,
+      "rs": 100.0,
+      "decision": "absent",
+      "ready_s": 4.2e-06,
+      "hidden_remote_voltage_v": 3.986570546773316e-09
+    },
+    {
+      "rt": 100000000.0,
+      "cc": 1e-07,
+      "rs": 1000.0,
+      "decision": "absent",
+      "ready_s": 4.2e-06,
+      "hidden_remote_voltage_v": 3.982926110936968e-09
+    }
+  ],
+  "stuck_monitor_fault": true,
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Fixed4us minimum dwell plus local5mV monitor criterion is a candidate policy, not a proven full-envelope bound.",
+    "Sixteen zero-initial-state paired load cases; arbitrary precharged remote networks are not qualified.",
+    "Hidden remote voltage is inspected only by the test, never by the controller.",
+    "Real monitor noise/offset, timing accuracy and output compliance still require joint coverage."
+  ]
+}

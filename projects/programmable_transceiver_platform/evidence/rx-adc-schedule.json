@@ -1,0 +1,49 @@
+{
+  "parent_deck_sha256": "d6fa7306f974a1377423f283a58b061a17478e14e4da32138807d78287a4b5a6",
+  "loaded_deck_sha256": "f7385bc1309e682e27a0fc5fec69e0698275fc50637a2ee52d1f807ddcf3b090",
+  "seven_source_shift_verified": true,
+  "complementary_sampler_verified": true,
+  "frames": [
+    {
+      "hold_start_ns": 470.0,
+      "switch_off_end_ns": 470.1,
+      "track_start_end_ns": 0,
+      "fully_on_track_ns": 470.0,
+      "first_comparator_edge_ns": [
+        470.5,
+        470.6
+      ],
+      "release_to_compare_gap_ns": 0.39999999999997726,
+      "reset_release_before_hold_ns": 401.1
+    },
+    {
+      "hold_start_ns": 520.0,
+      "switch_off_end_ns": 520.1,
+      "track_start_end_ns": 510.1,
+      "fully_on_track_ns": 9.899999999999977,
+      "first_comparator_edge_ns": [
+        520.5,
+        520.6
+      ],
+      "release_to_compare_gap_ns": 0.39999999999997726,
+      "reset_release_before_hold_ns": 511.1
+    },
+    {
+      "hold_start_ns": 570.0,
+      "switch_off_end_ns": 570.1,
+      "track_start_end_ns": 560.1,
+      "fully_on_track_ns": 9.899999999999977,
+      "first_comparator_edge_ns": [
+        570.5,
+        570.6
+      ],
+      "release_to_compare_gap_ns": 0.39999999999997726,
+      "reset_release_before_hold_ns": 561.1
+    }
+  ],
+  "limitations": [
+    "Ideal source schedule only; actual FET clock arrival/skew and analog settling remain unverified.",
+    "First470ns tracking interval is startup; subsequent fully-on tracking is9.9ns, not470ns.",
+    "400ns pre-conversion allowance does not prove UIC bias settling."
+  ]
+}

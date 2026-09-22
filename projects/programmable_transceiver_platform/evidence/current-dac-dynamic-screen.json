@@ -1,0 +1,227 @@
+{
+  "status": "major_carry_dynamic_audited",
+  "cases": [
+    {
+      "name": "c32_skew-0.2",
+      "load_units": 32,
+      "msb_skew_ns": -0.2,
+      "transitions": [
+        {
+          "edge_ns": 30,
+          "old_code": 127,
+          "new_code": 128,
+          "peak_error_mv": 352.48367258231997,
+          "signed_error_area_mv_ns": 102.27848176683774,
+          "absolute_error_area_mv_ns": 126.86547407192938,
+          "late_mean_error_mv": 0.00025094388186224295,
+          "late_half_lsb_band_pass": true,
+          "last_half_lsb_violation_after_edge_ns": 2.057499999999628
+        },
+        {
+          "edge_ns": 55,
+          "old_code": 128,
+          "new_code": 127,
+          "peak_error_mv": 337.581478939452,
+          "signed_error_area_mv_ns": -90.93052852988876,
+          "absolute_error_area_mv_ns": 120.55853596419993,
+          "late_mean_error_mv": -0.00042210787189796845,
+          "late_half_lsb_band_pass": true,
+          "last_half_lsb_violation_after_edge_ns": 2.027499999999648
+        }
+      ],
+      "driver_peak_current_ma": 92.06107691688716,
+      "artifacts_sha256": {
+        ".spice": "788e7292b83d2cd64a96060b127632539a005e10131a400bc8e519151e9a8617",
+        ".dat": "385d8695dbc2f968fea0b01abc2deb96c1cbd94b8236bb8cc47323426305316e",
+        ".log": "8d2a37f73aaf4fc00db3091aafc2b5e68f643e4b4d8fc44ddc29ab298dcfdd2e"
+      }
+    },
+    {
+      "name": "c32_skew0",
+      "load_units": 32,
+      "msb_skew_ns": 0,
+      "transitions": [
+        {
+          "edge_ns": 30,
+          "old_code": 127,
+          "new_code": 128,
+          "peak_error_mv": 92.90424118066198,
+          "signed_error_area_mv_ns": 0.3503047716748804,
+          "absolute_error_area_mv_ns": 7.972900999894029,
+          "late_mean_error_mv": 0.00017818908362460945,
+          "late_half_lsb_band_pass": true,
+          "last_half_lsb_violation_after_edge_ns": null
+        },
+        {
+          "edge_ns": 55,
+          "old_code": 128,
+          "new_code": 127,
+          "peak_error_mv": 102.10805312678617,
+          "signed_error_area_mv_ns": 4.6325521680670505,
+          "absolute_error_area_mv_ns": 8.739345284679805,
+          "late_mean_error_mv": -0.0002827490525013354,
+          "late_half_lsb_band_pass": true,
+          "last_half_lsb_violation_after_edge_ns": 0.48249999999993776
+        }
+      ],
+      "driver_peak_current_ma": 163.01211462275862,
+      "artifacts_sha256": {
+        ".spice": "08e248633e9c4ca95dd3c8f100e9ddfa0c17ec933c4e461529fbd3f8691fd5c3",
+        ".dat": "cb2893c2b0e9ae5677c5e11869d2cf3b1f6609ddd6a1f00d00f4781ddb73000f",
+        ".log": "f6968528a78623cf648757648a0647ae85b5246b35f440a4e4f52ed5853b964a"
+      }
+    },
+    {
+      "name": "c32_skew0.2",
+      "load_units": 32,
+      "msb_skew_ns": 0.2,
+      "transitions": [
+        {
+          "edge_ns": 30,
+          "old_code": 127,
+          "new_code": 128,
+          "peak_error_mv": 345.31193795067304,
+          "signed_error_area_mv_ns": -95.45633859245241,
+          "absolute_error_area_mv_ns": 122.99413691041728,
+          "late_mean_error_mv": 0.00027937149989221144,
+          "late_half_lsb_band_pass": true,
+          "last_half_lsb_violation_after_edge_ns": 2.2374999999996277
+        },
+        {
+          "edge_ns": 55,
+          "old_code": 128,
+          "new_code": 127,
+          "peak_error_mv": 360.0430435246751,
+          "signed_error_area_mv_ns": 106.8383600425805,
+          "absolute_error_area_mv_ns": 129.69386609490672,
+          "late_mean_error_mv": -0.0004115461016722041,
+          "late_half_lsb_band_pass": true,
+          "last_half_lsb_violation_after_edge_ns": 2.2674999999996217
+        }
+      ],
+      "driver_peak_current_ma": 92.77203557815616,
+      "artifacts_sha256": {
+        ".spice": "60621bab9d9dfdf0ccc5470d358e684aa1d4e4bc81c36cf9143f124c4e3c0ab2",
+        ".dat": "0d37df56c7614394ebaf4f0e443fa43fc865d3d484c15d615feb4610ea271d21",
+        ".log": "6a8ca6efcaf2f53fdd305f6da2aede448b4b3622a833527795960dc0c5626e3b"
+      }
+    },
+    {
+      "name": "c128_skew-0.2",
+      "load_units": 128,
+      "msb_skew_ns": -0.2,
+      "transitions": [
+        {
+          "edge_ns": 30,
+          "old_code": 127,
+          "new_code": 128,
+          "peak_error_mv": 141.94761650270203,
+          "signed_error_area_mv_ns": 106.36844414022548,
+          "absolute_error_area_mv_ns": 117.38731187350383,
+          "late_mean_error_mv": 0.00021828331602316564,
+          "late_half_lsb_band_pass": true,
+          "last_half_lsb_violation_after_edge_ns": 3.5624999999993534
+        },
+        {
+          "edge_ns": 55,
+          "old_code": 128,
+          "new_code": 127,
+          "peak_error_mv": 124.73303479402497,
+          "signed_error_area_mv_ns": -88.36456201196856,
+          "absolute_error_area_mv_ns": 103.91971677038852,
+          "late_mean_error_mv": -0.00034334266244993514,
+          "late_half_lsb_band_pass": true,
+          "last_half_lsb_violation_after_edge_ns": 3.44749999999938
+        }
+      ],
+      "driver_peak_current_ma": 91.97572733311995,
+      "artifacts_sha256": {
+        ".spice": "fc44c1b3a3a71a95d3aa25e93d4eb8d262fe44c2826b1f394fddb086cd1cedff",
+        ".dat": "037c9c432b5f82bcefbf51b5d44b581b2da479a719ce40d89f3e419933630dd5",
+        ".log": "7ea700551095bc267f001a2eff1a28f2dea58ce87ea675e2b2948c2b414e576a"
+      }
+    },
+    {
+      "name": "c128_skew0",
+      "load_units": 128,
+      "msb_skew_ns": 0,
+      "transitions": [
+        {
+          "edge_ns": 30,
+          "old_code": 127,
+          "new_code": 128,
+          "peak_error_mv": 35.67753747100411,
+          "signed_error_area_mv_ns": 3.0649560029960154,
+          "absolute_error_area_mv_ns": 5.371618767253075,
+          "late_mean_error_mv": 0.0001899931156151835,
+          "late_half_lsb_band_pass": true,
+          "last_half_lsb_violation_after_edge_ns": 0.5824999999999108
+        },
+        {
+          "edge_ns": 55,
+          "old_code": 128,
+          "new_code": 127,
+          "peak_error_mv": 44.25357072114111,
+          "signed_error_area_mv_ns": 10.93722332355418,
+          "absolute_error_area_mv_ns": 11.6115147065408,
+          "late_mean_error_mv": -0.0003004758315468606,
+          "late_half_lsb_band_pass": true,
+          "last_half_lsb_violation_after_edge_ns": 1.5824999999997331
+        }
+      ],
+      "driver_peak_current_ma": 163.0899412904419,
+      "artifacts_sha256": {
+        ".spice": "182fbf01e1974146199f5fe3fb59bffeeb0e97b82064e8d9f2785cd5581253bd",
+        ".dat": "50b05957234097da365958285fe3dd7506854d2f5ca83b4c748fd06fef1675d5",
+        ".log": "571489eb0ef9575d6204c6325baa3d1796d054a29f7ffa02c63a07bed105a73a"
+      }
+    },
+    {
+      "name": "c128_skew0.2",
+      "load_units": 128,
+      "msb_skew_ns": 0.2,
+      "transitions": [
+        {
+          "edge_ns": 30,
+          "old_code": 127,
+          "new_code": 128,
+          "peak_error_mv": 132.58986500746016,
+          "signed_error_area_mv_ns": -96.35126652767012,
+          "absolute_error_area_mv_ns": 109.45421470911273,
+          "late_mean_error_mv": 0.00021807819962360586,
+          "late_half_lsb_band_pass": true,
+          "last_half_lsb_violation_after_edge_ns": 3.6974999999993514
+        },
+        {
+          "edge_ns": 55,
+          "old_code": 128,
+          "new_code": 127,
+          "peak_error_mv": 149.74549161980087,
+          "signed_error_area_mv_ns": 114.36865390635657,
+          "absolute_error_area_mv_ns": 123.59661041878202,
+          "late_mean_error_mv": -0.00034381916765371945,
+          "late_half_lsb_band_pass": true,
+          "last_half_lsb_violation_after_edge_ns": 3.8074999999993295
+        }
+      ],
+      "driver_peak_current_ma": 92.6860737800036,
+      "artifacts_sha256": {
+        ".spice": "44c2c2be17f954f44659eee973e33ad72796875b1e2c4cdbc5207cd4bb467027",
+        ".dat": "5303cf06bf3f88f226f8687111a0d2aede8abf0920cc3e905cef7c85ea984944",
+        ".log": "b91c257a0731fecaa2d5701c8dafeed89a5f88bec33efda3b6a3ab7a803e32ec"
+      }
+    }
+  ],
+  "pending": [],
+  "dc_targets_v": {
+    "127": -0.0020465993093490287,
+    "128": 0.0020465825935240822
+  },
+  "endpoint_lsb_v": 0.00409268084597651,
+  "qualified_radio_DAC": false,
+  "limitations": [
+    "Half-LSB is an exploratory8-bit settling diagnostic, not an allocated RF/SFDR requirement.",
+    "Ideal transition used for error area occurs at command midpoint; area depends on this convention.",
+    "5ps timestep, finite selected transitions and load/skew scenarios; no noise/mismatch or numerical convergence qualification."
+  ]
+}

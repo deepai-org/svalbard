@@ -1,0 +1,138 @@
+{
+  "pass": 89,
+  "temperature_C": 27,
+  "supply_V": 3.3,
+  "external_bias_V": 1.5,
+  "results": [
+    {
+      "process": "typical",
+      "load_fF": 0,
+      "output_dc": 2.179151,
+      "supply_current": 0.003736162,
+      "gain_2p4g": 1.347455,
+      "input_mag_2p4g": 0.993482
+    },
+    {
+      "process": "typical",
+      "load_fF": 50,
+      "output_dc": 2.179151,
+      "supply_current": 0.003736162,
+      "gain_2p4g": 1.283545,
+      "input_mag_2p4g": 0.9920479
+    },
+    {
+      "process": "typical",
+      "load_fF": 200,
+      "output_dc": 2.179151,
+      "supply_current": 0.003736162,
+      "gain_2p4g": 0.9819596,
+      "input_mag_2p4g": 0.9908388
+    },
+    {
+      "process": "typical",
+      "load_fF": 500,
+      "output_dc": 2.179151,
+      "supply_current": 0.003736162,
+      "gain_2p4g": 0.5704811,
+      "input_mag_2p4g": 0.9924552
+    },
+    {
+      "process": "typical",
+      "load_fF": 1000,
+      "output_dc": 2.179151,
+      "supply_current": 0.003736162,
+      "gain_2p4g": 0.3170388,
+      "input_mag_2p4g": 0.9940827
+    },
+    {
+      "process": "ff",
+      "load_fF": 0,
+      "output_dc": 1.95277,
+      "supply_current": 0.004490766,
+      "gain_2p4g": 1.415477,
+      "input_mag_2p4g": 0.994304
+    },
+    {
+      "process": "ff",
+      "load_fF": 50,
+      "output_dc": 1.95277,
+      "supply_current": 0.004490766,
+      "gain_2p4g": 1.350399,
+      "input_mag_2p4g": 0.9929794
+    },
+    {
+      "process": "ff",
+      "load_fF": 200,
+      "output_dc": 1.95277,
+      "supply_current": 0.004490766,
+      "gain_2p4g": 1.038647,
+      "input_mag_2p4g": 0.9917776
+    },
+    {
+      "process": "ff",
+      "load_fF": 500,
+      "output_dc": 1.95277,
+      "supply_current": 0.004490766,
+      "gain_2p4g": 0.6061486,
+      "input_mag_2p4g": 0.9931866
+    },
+    {
+      "process": "ff",
+      "load_fF": 1000,
+      "output_dc": 1.95277,
+      "supply_current": 0.004490766,
+      "gain_2p4g": 0.3373314,
+      "input_mag_2p4g": 0.9946754
+    },
+    {
+      "process": "ss",
+      "load_fF": 0,
+      "output_dc": 2.392621,
+      "supply_current": 0.003024598,
+      "gain_2p4g": 1.258909,
+      "input_mag_2p4g": 0.9925726
+    },
+    {
+      "process": "ss",
+      "load_fF": 50,
+      "output_dc": 2.392621,
+      "supply_current": 0.003024598,
+      "gain_2p4g": 1.197462,
+      "input_mag_2p4g": 0.991066
+    },
+    {
+      "process": "ss",
+      "load_fF": 200,
+      "output_dc": 2.392621,
+      "supply_current": 0.003024598,
+      "gain_2p4g": 0.9120001,
+      "input_mag_2p4g": 0.9899013
+    },
+    {
+      "process": "ss",
+      "load_fF": 500,
+      "output_dc": 2.392621,
+      "supply_current": 0.003024598,
+      "gain_2p4g": 0.5280565,
+      "input_mag_2p4g": 0.991713
+    },
+    {
+      "process": "ss",
+      "load_fF": 1000,
+      "output_dc": 2.392621,
+      "supply_current": 0.003024598,
+      "gain_2p4g": 0.2932053,
+      "input_mag_2p4g": 0.9934554
+    }
+  ],
+  "scope": "Schematic GF180 transistor-level AC/DC LNA core reuse screen. Ideal external bias, resistors/coupling and lumped output load; no PEX, RF model qualification, matching/noise/linearity or complete receiver proof.",
+  "source_sha256": {
+    "lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+    "lna_ac_tb.spice.in": "7ee07ad0f7b4c1ead8541d85628edba944af32a21694f113576af12f8845b9c8"
+  },
+  "runner_sha256": {
+    "analog/lna_load_screen.py": "ad6e1d4b545672548e5389578b851725ddad514d66231c4f9e3371a25ae1c7d0",
+    "verification/run_lna_load_screen.sh": "e202c14a5f237041850c0a8e5286487d63be975d3971c1faa734798cff8e5a90"
+  },
+  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305"
+}

@@ -1,0 +1,78 @@
+{
+  "quantized": [
+    {
+      "bits": 8,
+      "power_verified": false,
+      "worst_relative_power_error_bound": 0.05024509803921603,
+      "leakage_power_bound": 0.00019607843137254904,
+      "waveform_verified": false,
+      "scope": "Radial power only; cannot detect phase-only distortion or I/Q conjugation."
+    },
+    {
+      "bits": 10,
+      "power_verified": true,
+      "worst_relative_power_error_bound": 0.015701368523949533,
+      "leakage_power_bound": 4.887585532746823e-05,
+      "waveform_verified": false,
+      "scope": "Radial power only; cannot detect phase-only distortion or I/Q conjugation."
+    },
+    {
+      "bits": 12,
+      "power_verified": true,
+      "worst_relative_power_error_bound": 0.006028693528693645,
+      "leakage_power_bound": 1.221001221001221e-05,
+      "waveform_verified": false,
+      "scope": "Radial power only; cannot detect phase-only distortion or I/Q conjugation."
+    }
+  ],
+  "status": "passed",
+  "corrected": {
+    "power_verified": true,
+    "worst_relative_power_error_bound": 0.004807135400491917,
+    "leakage_power_bound": 1.0015602781735203e-05,
+    "waveform_verified": false,
+    "scope": "Radial power only; cannot detect phase-only distortion or I/Q conjugation."
+  },
+  "uncorrected": {
+    "power_verified": false,
+    "worst_relative_power_error_bound": 0.34131280630665467,
+    "leakage_power_bound": 0.000135,
+    "waveform_verified": false,
+    "scope": "Radial power only; cannot detect phase-only distortion or I/Q conjugation."
+  },
+  "uncertain": {
+    "power_verified": false,
+    "worst_relative_power_error_bound": 0.1594946354004919,
+    "leakage_power_bound": 0.0010000156027817353,
+    "waveform_verified": false,
+    "scope": "Radial power only; cannot detect phase-only distortion or I/Q conjugation."
+  },
+  "radial_nonlinearity": {
+    "power_verified": false,
+    "worst_relative_power_error_bound": 0.14611688443664822,
+    "leakage_power_bound": 1.0015602781004862e-05,
+    "waveform_verified": false,
+    "scope": "Radial power only; cannot detect phase-only distortion or I/Q conjugation."
+  },
+  "blind_spots": {
+    "conjugation": {
+      "power_verified": true,
+      "worst_relative_power_error_bound": 0.0,
+      "leakage_power_bound": 0.0,
+      "waveform_verified": false,
+      "scope": "Radial power only; cannot detect phase-only distortion or I/Q conjugation."
+    },
+    "amplitude_dependent_phase": {
+      "power_verified": true,
+      "worst_relative_power_error_bound": 8.131516293641286e-16,
+      "leakage_power_bound": 0.0,
+      "waveform_verified": false,
+      "scope": "Radial power only; cannot detect phase-only distortion or I/Q conjugation."
+    }
+  },
+  "limitations": [
+    "Instantaneous synthetic verification measurements, not yet timed chip observations.",
+    "Power verification is necessary under this candidate contract but not sufficient for modulation quality.",
+    "1e-5 absolute observer bound and 4% radial-power limit are provisional assumptions."
+  ]
+}

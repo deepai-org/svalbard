@@ -1,0 +1,148 @@
+{
+  "status": "complete_reduced_active_diagnostic",
+  "cases": [
+    {
+      "name": "pulse_skew-10",
+      "kind": "pulse",
+      "feedback_skew_ns": -10,
+      "returncode": 0,
+      "artifacts_sha256": {
+        ".spice": "fe9c65006c1e7e2ea9f6134f82e908a2acafb09459f4b45091bb97d974a16a7d",
+        ".log": "3611a944c911e4f01d51ca0a8332cbdce6153117fda6d95f93f8b705a6285619"
+      },
+      "completed_requested_horizon": true,
+      "final_control_v": 2.23438,
+      "min_control_v": 1.07904,
+      "max_control_v": 2.23438,
+      "first_feedback_edge_interval_ns": [
+        90,
+        90.1
+      ],
+      "reset_release_interval_ns": [
+        90,
+        90.1
+      ],
+      "first_feedback_overlaps_reset_release": true
+    },
+    {
+      "name": "pulse_skew0",
+      "kind": "pulse",
+      "feedback_skew_ns": 0,
+      "returncode": 0,
+      "artifacts_sha256": {
+        ".spice": "98fe4b1a6ed2ca26c01e407cf246ca2556bfb7814cff94f1397813f5c0556282",
+        ".log": "98cafaf2472def97b3aa20c858f81ff8aa9780f0ab492506b39eebdeb570aa3b"
+      },
+      "completed_requested_horizon": true,
+      "final_control_v": 1.10858,
+      "min_control_v": 1.07547,
+      "max_control_v": 1.1259,
+      "first_feedback_edge_interval_ns": [
+        100,
+        100.1
+      ],
+      "reset_release_interval_ns": [
+        90,
+        90.1
+      ],
+      "first_feedback_overlaps_reset_release": false
+    },
+    {
+      "name": "pulse_skew10",
+      "kind": "pulse",
+      "feedback_skew_ns": 10,
+      "returncode": 0,
+      "artifacts_sha256": {
+        ".spice": "5c2a5de96e6b966f14cd4ee0249e331591c401e7d9e2f4e4a1b039c03aa7ff01",
+        ".log": "d358c40d9772cdffa04a90b85749c4a7ec132e1b5f40d9d96baae1dde65eff4e"
+      },
+      "completed_requested_horizon": true,
+      "final_control_v": 1.38059,
+      "min_control_v": 1.07904,
+      "max_control_v": 1.43946,
+      "first_feedback_edge_interval_ns": [
+        110,
+        110.1
+      ],
+      "reset_release_interval_ns": [
+        90,
+        90.1
+      ],
+      "first_feedback_overlaps_reset_release": false
+    },
+    {
+      "name": "pwl_skew-10",
+      "kind": "pwl",
+      "feedback_skew_ns": -10,
+      "returncode": 0,
+      "artifacts_sha256": {
+        ".spice": "b2474f21e73f632a418c9506b54dc95f09e360d862794363f982b0b6025e2d0f",
+        ".log": "a8bd760a77609cc7f6f5ff5858d256dc6d27cd64dbab1000562c79378fd8b0a8"
+      },
+      "completed_requested_horizon": true,
+      "final_control_v": 2.23438,
+      "min_control_v": 1.07904,
+      "max_control_v": 2.23438,
+      "first_feedback_edge_interval_ns": [
+        90,
+        90.1
+      ],
+      "reset_release_interval_ns": [
+        90,
+        90.1
+      ],
+      "first_feedback_overlaps_reset_release": true
+    },
+    {
+      "name": "pwl_skew0",
+      "kind": "pwl",
+      "feedback_skew_ns": 0,
+      "returncode": 1,
+      "artifacts_sha256": {
+        ".spice": "b574b3484c066556f1e4e0b0ef7738546b82a4b9076944461190c2a4247c12a8",
+        ".log": "ae357edf441b139a3923549ff957499e1613439b6a5cff2bada58d4e7f9c492c"
+      },
+      "completed_requested_horizon": false,
+      "failure_time_ns": 637.7,
+      "first_feedback_edge_interval_ns": [
+        100,
+        100.1
+      ],
+      "reset_release_interval_ns": [
+        90,
+        90.1
+      ],
+      "first_feedback_overlaps_reset_release": false
+    },
+    {
+      "name": "pwl_skew10",
+      "kind": "pwl",
+      "feedback_skew_ns": 10,
+      "returncode": 0,
+      "artifacts_sha256": {
+        ".spice": "d22fa0a69e1993e92a8e0154676ad76534631bf90d554cc34e56f48e7d5124ba",
+        ".log": "f53082e02f075a58d5c757f47fd983ea5b0b9b4b4b5c44912f40b6c3806317f9"
+      },
+      "completed_requested_horizon": true,
+      "final_control_v": 1.38059,
+      "min_control_v": 1.07904,
+      "max_control_v": 1.43946,
+      "first_feedback_edge_interval_ns": [
+        110,
+        110.1
+      ],
+      "reset_release_interval_ns": [
+        90,
+        90.1
+      ],
+      "first_feedback_overlaps_reset_release": false
+    }
+  ],
+  "full_PLL_qualified": false,
+  "limitations": [
+    "Ideal feedback clocks replace divider/VCO, removing their loading and supply activity.",
+    "Completion only diagnoses numerical behavior; no closed-loop dynamics, lock, jitter, phase-noise or startup proof.",
+    "Fixed phase offsets, precharged filter, ideal bias currents and supplies; no physical uncertainty coverage.",
+    "The -10ns first feedback rising edge overlaps reset release. Its phase branch is not a clean lead/lag polarity test."
+  ]
+}

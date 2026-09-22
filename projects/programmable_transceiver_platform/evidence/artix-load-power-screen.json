@@ -1,0 +1,22 @@
+{
+  "scope": "nominal 8 pF current extrapolation; not bank or package simulation",
+  "rows": [
+    {
+      "segment": "HOST_A",
+      "scaled_average_ma": 41.02371483572284,
+      "with_existing_allowances_ma": 53.27964354465355,
+      "planning_budget_ma": 55,
+      "within_planning_budget": true
+    },
+    {
+      "segment": "HOST_B",
+      "scaled_average_ma": 49.22845780286741,
+      "with_existing_allowances_ma": 63.53557225358426,
+      "planning_budget_ma": 55,
+      "within_planning_budget": false
+    }
+  ],
+  "within_planning_budget": false,
+  "waveform_archive_sha256": "2e46cc54c1714454ee7b5be3f44662f967598448ba7fd318b52a3dd677d2a01d",
+  "execution_note": "Both SPICE cases and archive completed. Initial harness rejected absent result field after copying outputs; characterization wrapper now omits signoff-style result requirement. No simulation rerun claimed."
+}

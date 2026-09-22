@@ -1,0 +1,69 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "phase_ui": -0.3,
+      "discarded_partial_bits": 3,
+      "disabled_launches": 27,
+      "disabled_samples": 0,
+      "reset_state": 0.9568145954144229,
+      "new_frame_initial_state": -1.0,
+      "returned_words": [
+        801,
+        298,
+        23
+      ]
+    },
+    {
+      "mode": 0,
+      "phase_ui": 0.3,
+      "discarded_partial_bits": 3,
+      "disabled_launches": 27,
+      "disabled_samples": 0,
+      "reset_state": 0.9568099094160835,
+      "new_frame_initial_state": -1.0,
+      "returned_words": [
+        801,
+        298,
+        23
+      ]
+    },
+    {
+      "mode": 1,
+      "phase_ui": -0.3,
+      "discarded_partial_bits": 3,
+      "disabled_launches": 27,
+      "disabled_samples": 0,
+      "reset_state": 0.9568145954141356,
+      "new_frame_initial_state": -1.0,
+      "returned_words": [
+        801,
+        298,
+        23
+      ]
+    },
+    {
+      "mode": 1,
+      "phase_ui": 0.3,
+      "discarded_partial_bits": 3,
+      "disabled_launches": 27,
+      "disabled_samples": 0,
+      "reset_state": 0.9568099094162271,
+      "new_frame_initial_state": -1.0,
+      "returned_words": [
+        801,
+        298,
+        23
+      ]
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "External fixture holds its last symbol after end; electrical idle is a separate unimplemented contract.",
+    "Peer explicitly transmits new training/marker after recovery; arbitrary mid-payload restart is not guaranteed.",
+    "Only digital tracking/framing reset is modeled; physical termination/bias changes could alter channel state.",
+    "No clock lock qualification or protocol-specific link training is implied."
+  ]
+}

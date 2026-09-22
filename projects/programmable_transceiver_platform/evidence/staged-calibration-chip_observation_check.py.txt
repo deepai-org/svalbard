@@ -1,0 +1,60 @@
+"""Staged connection of settled trim residual to the existing diagnostic ADC route."""
+import sys,json
+from pathlib import Path
+ROOT=Path('/home/ubuntu/svalbard/projects/programmable_transceiver_platform')
+sys.path.insert(0,str(ROOT/'system_model/connected'))
+from programmable_chip import ProgrammableChip
+from chip_model import decode_iq
+from trim_calibration import Calibration
+from sensitivity_check import SwitchingPlant
+from verification import assess
+
+class CalibrationObservationChip(ProgrammableChip):
+    def __init__(self,plant,**kwargs):
+        self.trim_plant=plant
+        super().__init__(**kwargs)
+    def receiver_value(self):
+        if self.diagnostic_selected:
+            # Independent zero-input observation after the trim actuator. No
+            # calibration-switch mismatch is included in this separate path.
+            return complex(self.trim_plant.apply(self.tx.time,0.),0.)
+        return super().receiver_value()
+
+rows=[]
+for mode in (0,1):
+ for mismatch in (0.,.002):
+    plant=SwitchingPlant(.07,tau_s=100e-9,comparator_offset_v=.002,switch_offset_v=mismatch)
+    c=CalibrationObservationChip(plant,load_capacitance=0.,adc_latency_s=30e-9,watchdog_s=1e-3)
+    c.select_diagnostic(True)
+    # Advance the same chip time with each controller trial. This remains a
+    # direct scratch controller, not a serialized calibration command yet.
+    def write(t,code):
+        c.advance(t);plant.write(t,code)
+    def compare(t,polarity):
+        c.advance(t);return plant.above(t,polarity)
+    a=Calibration(write,lambda t:compare(t,1),12e-6/9).run(0.)
+    b=Calibration(write,lambda t:not compare(t,-1),12e-6/9).run(a['done_at'])
+    limited=a['range_limited'] or b['range_limited']
+    write(b['done_at'],2048 if limited else (a['code']+b['code']+1)//2)
+    c.configure(mode,c.time);c.advance(c.time+8e-6)
+    start=c.time+100e-9;c.capture(8,start)
+    c.advance(start+3e-6);c.host_decoder.finish()
+    assert c.host_samples==c.adc_words and len(c.host_samples)==8
+    values=[decode_iq(w,c.bits).real for w in c.host_samples]
+    # Actual codec resolution: range [-1,1], half-LSB = 1/2**bits.
+    # With zero ADC reference loading the independent observer has this bound;
+    # add a declared 20uV offset allowance, not hidden plant residual knowledge.
+    result=assess(done=True,range_limited=limited,observation_v=values[-1],
+       error_bound_v=1/(2**c.bits)+20e-6,tolerance_v=.5/4095,
+       quiet=True,epoch=0,observation_epoch=0)
+    assert not result['valid'] # Existing ADC cannot certify this fine tolerance.
+    if mode==0 and mismatch:assert result['accuracy']=='failed'
+    rows.append(dict(mode=mode,switch_offset_v=mismatch,bits=c.bits,
+       transported_values_v=values,result=result,calibration_duration_s=b['done_at']))
+report=dict(status='passed',cases=rows,complete_architecture=False,
+ limitations=['Direct controller; no serialized start/status/abort yet.',
+ 'Independent zero-input diagnostic path is an assumed topology, not transistor-qualified.',
+ 'ADC reference loading disabled; loaded observation needs a larger justified error bound.',
+ 'Epoch values are fixtures; full lifecycle ownership and invalidation remain to connect.'])
+Path('/tmp/svalbard-calibration-pass877/chip-observation-report.json').write_text(json.dumps(report,indent=2)+'\n')
+print(json.dumps(rows,indent=2))

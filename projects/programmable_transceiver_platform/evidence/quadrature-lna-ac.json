@@ -1,0 +1,195 @@
+{
+  "completed": true,
+  "status": "terminal",
+  "cases": [
+    {
+      "name": "zero",
+      "completed": true,
+      "actual_stop_ns": 201.0,
+      "ring_frequency_hz": 2495422367.8638134,
+      "late_ranges_v": {
+        "OIP": [
+          0.35891051349626,
+          2.800178351047693
+        ],
+        "OIN": [
+          0.3589108267801461,
+          2.800177761592251
+        ],
+        "OQP": [
+          0.2671850018686797,
+          2.901239099279728
+        ],
+        "OQN": [
+          0.2671850407390343,
+          2.90123903086647
+        ],
+        "RF": [
+          2.172839428182523,
+          2.179213069648308
+        ],
+        "MIP": [
+          -0.02137198889426371,
+          0.02474621611367836
+        ],
+        "MIN": [
+          -0.02137197924671823,
+          0.02474621803797515
+        ],
+        "MQP": [
+          -0.02464817217787966,
+          0.02531237574690021
+        ],
+        "MQN": [
+          -0.02464816657016051,
+          0.02531237145158911
+        ]
+      },
+      "mixer_input_range_v": [
+        0.01003091181999785,
+        0.01641103436065125
+      ],
+      "buffer_supply_power_w": 0.05867837427369225,
+      "ring_supply_power_w": 0.027743830924521817,
+      "lo_q_lead_phase_deg_range": [
+        92.7897537965508,
+        92.79182249613508
+      ],
+      "lna_gate_range_v": [
+        1.502710633967982,
+        1.502935633675617
+      ],
+      "lna_source_range_v": [
+        0.3074188423223916,
+        0.3075706897277639
+      ],
+      "representative_forward_finger_min_vds_minus_vdsat_v": 1.4675962688573185,
+      "representative_forward_finger_negative_vds_samples": 0,
+      "lna_supply_power_w": 0.012373792217634565
+    },
+    {
+      "name": "tone",
+      "completed": true,
+      "actual_stop_ns": 201.0,
+      "ring_frequency_hz": 2495422359.171633,
+      "late_ranges_v": {
+        "OIP": [
+          0.3588847228047304,
+          2.800198757194477
+        ],
+        "OIN": [
+          0.3588865330821145,
+          2.800200466430945
+        ],
+        "OQP": [
+          0.267177220219575,
+          2.901253812641982
+        ],
+        "OQN": [
+          0.2671768428825717,
+          2.901254287939045
+        ],
+        "RF": [
+          2.172670202303049,
+          2.179413472869193
+        ],
+        "MIP": [
+          -0.02148312787715408,
+          0.02484601689014497
+        ],
+        "MIN": [
+          -0.02148323866851559,
+          0.02484603820884564
+        ],
+        "MQP": [
+          -0.02475859466958861,
+          0.02541645423545576
+        ],
+        "MQN": [
+          -0.02475853808709451,
+          0.02541641033108678
+        ]
+      },
+      "mixer_input_range_v": [
+        0.00987312770897577,
+        0.01660209154725582
+      ],
+      "buffer_supply_power_w": 0.05867837395870113,
+      "ring_supply_power_w": 0.027743830771962127,
+      "lo_q_lead_phase_deg_range": [
+        92.788290289557,
+        92.79379813014701
+      ],
+      "lna_gate_range_v": [
+        1.50171580835531,
+        1.503929315203384
+      ],
+      "lna_source_range_v": [
+        0.3070035265496902,
+        0.3079861239810508
+      ],
+      "representative_forward_finger_min_vds_minus_vdsat_v": 1.4667687460378416,
+      "representative_forward_finger_negative_vds_samples": 0,
+      "lna_supply_power_w": 0.012373791207263856
+    }
+  ],
+  "limitations": [
+    "Actual LNA with prebiased gate and seeded ring, I/Q mixers; ideal supplies/bias/passives; no ADC/PLL or cold startup. Only one forward-oriented LNA finger is device-probed.",
+    "Completion and voltage ranges do not establish conversion quality; conversion/no-tone comparison still required.",
+    "Power excludes control/regeneration and common-mode source delivery."
+  ],
+  "provenance": {
+    "cases": [
+      {
+        "name": "zero",
+        "amplitude_v": 0,
+        "returncode": 0,
+        "timed_out": false,
+        "deck_sha256_before": "0e5312259e2443e8f594685f3ff3bc7f3a2664ef1ea649018088a17623c63408",
+        "artifacts_sha256": {
+          ".spice": "0e5312259e2443e8f594685f3ff3bc7f3a2664ef1ea649018088a17623c63408",
+          ".log": "86eebdd00b86227b67a007c1a182ba68042869a9b7deb78858e2cbd4418c0fb8",
+          ".dat": "6552dfd16e55f874eb4387ebaa68e058eeb3af4339511cb6fb08eb45f76a57b5"
+        }
+      },
+      {
+        "name": "tone",
+        "amplitude_v": 0.001,
+        "returncode": 0,
+        "timed_out": false,
+        "deck_sha256_before": "d704c2ad222b4d149f67bb69f796b4c1266de75731a21150237beddeb516eae7",
+        "artifacts_sha256": {
+          ".spice": "d704c2ad222b4d149f67bb69f796b4c1266de75731a21150237beddeb516eae7",
+          ".log": "caf65a6d8b60f3fda248ffba3164b577905bafa0d5e07a9958373f10199ee008",
+          ".dat": "1c66342e726eee47391707ce3896006ed7c6ad721e085106c317f874e64a8c5d"
+        }
+      }
+    ],
+    "source_sha256_before": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/quadrature/rc_split.spice": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+      "/screen/quadrature/lo_final_stage.spice": "3f234838df5453d1c5f69d1f7f3c753da87e17052d979147a6d6e05fa418ca9f"
+    },
+    "source_sha256_after": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/quadrature/rc_split.spice": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+      "/screen/quadrature/lo_final_stage.spice": "3f234838df5453d1c5f69d1f7f3c753da87e17052d979147a6d6e05fa418ca9f"
+    }
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "rows": [
+    {
+      "stimulus": "reference-bias-observation",
+      "rail": "xhigh",
+      "interval_s": [
+        7e-08,
+        2.09e-07
+      ],
+      "drain": {
+        "minimum_v": 2.088071103066659,
+        "maximum_v": 2.205106800412834,
+        "minimum_time_s": 2.089868750000025e-07,
+        "maximum_time_s": 1.192231249999789e-07,
+        "full_run_minimum_v": 2.088071103066659,
+        "full_run_maximum_v": 2.205106800412834
+      },
+      "gate": {
+        "minimum_v": 0.7924157406062212,
+        "maximum_v": 0.7997313275133199,
+        "minimum_time_s": 2.089493750000022e-07,
+        "maximum_time_s": 1.185631249999814e-07,
+        "full_run_minimum_v": 0.7924157406062212,
+        "full_run_maximum_v": 0.7997313275133199
+      }
+    },
+    {
+      "stimulus": "reference-bias-observation",
+      "rail": "xlow",
+      "interval_s": [
+        7e-08,
+        2.09e-07
+      ],
+      "drain": {
+        "minimum_v": 1.097017978354666,
+        "maximum_v": 1.210440273338627,
+        "minimum_time_s": 1.134990624999981e-07,
+        "maximum_time_s": 1.089443749999986e-07,
+        "full_run_minimum_v": 1.097017978354666,
+        "full_run_maximum_v": 1.210440273338627
+      },
+      "gate": {
+        "minimum_v": 2.270373844587145,
+        "maximum_v": 2.275491539039052,
+        "minimum_time_s": 1.129656249999985e-07,
+        "maximum_time_s": 1.088893749999988e-07,
+        "full_run_minimum_v": 2.270373844587145,
+        "full_run_maximum_v": 2.275491539039052
+      }
+    },
+    {
+      "stimulus": "reference-charge-validation",
+      "rail": "xhigh",
+      "interval_s": [
+        7e-08,
+        2.09e-07
+      ],
+      "drain": {
+        "minimum_v": 2.067301469597433,
+        "maximum_v": 2.214444620772701,
+        "minimum_time_s": 2.089643750000023e-07,
+        "maximum_time_s": 1.192956249999793e-07,
+        "full_run_minimum_v": 2.067301469597433,
+        "full_run_maximum_v": 2.214444620772701
+      },
+      "gate": {
+        "minimum_v": 0.7913859509340783,
+        "maximum_v": 0.8004286948021464,
+        "minimum_time_s": 2.089306250000021e-07,
+        "maximum_time_s": 1.188118749999804e-07,
+        "full_run_minimum_v": 0.7913859509340783,
+        "full_run_maximum_v": 0.8004286948021464
+      }
+    },
+    {
+      "stimulus": "reference-charge-validation",
+      "rail": "xlow",
+      "interval_s": [
+        7e-08,
+        2.09e-07
+      ],
+      "drain": {
+        "minimum_v": 1.080768834425693,
+        "maximum_v": 1.23557507338842,
+        "minimum_time_s": 1.138106249999991e-07,
+        "maximum_time_s": 2.08919375000002e-07,
+        "full_run_minimum_v": 1.080768834425693,
+        "full_run_maximum_v": 1.23557507338842
+      },
+      "gate": {
+        "minimum_v": 2.2696880810046,
+        "maximum_v": 2.276458789608496,
+        "minimum_time_s": 1.133081249999971e-07,
+        "maximum_time_s": 1.088718749999989e-07,
+        "full_run_minimum_v": 2.2696880810046,
+        "full_run_maximum_v": 2.276458789608496
+      }
+    }
+  ],
+  "proposed_independent_sweep": [
+    {
+      "rail": "xhigh",
+      "drain_bounds_v": [
+        2.05,
+        2.23
+      ],
+      "gate_bounds_v": [
+        0.79,
+        0.802
+      ]
+    },
+    {
+      "rail": "xlow",
+      "drain_bounds_v": [
+        1.07,
+        1.25
+      ],
+      "gate_bounds_v": [
+        2.2680000000000002,
+        2.278
+      ]
+    }
+  ],
+  "waveform_hashes": {
+    "reference-bias-observation": "b262e8507a5ff614b4d53bbc4686141722d33fcb6ab509feb5c2ec237d53c32b",
+    "reference-charge-validation": "dee4411a983611356e94f3f705ee1c1a1a8a6ad90b00405457971c39b336fe3c"
+  },
+  "source_hashes": {
+    "reference_load_bias_envelope.py": "e78569aec796e31ad4cb2b6c34d8e8b7d287daf48de2c3f49dcdb7e80a3905ac",
+    "check_sar_balance_refinement.py": "d3f455660fc4224a57d6002302a2e1c57ba4b58f9bc2a0d407b349625e63dd7b"
+  },
+  "physical_qualification": false,
+  "limitations": [
+    "Envelope covers two simulated stimuli at one corner and temperature, not all code histories.",
+    "Proposed sweep rectangle includes unobserved drain/gate combinations as conservative coverage.",
+    "Rounded bounds include guard margins, not a process, mismatch or package uncertainty bound.",
+    "Operating interval excludes startup; full-run extrema are reported separately."
+  ]
+}

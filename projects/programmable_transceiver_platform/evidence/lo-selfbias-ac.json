@@ -1,0 +1,71 @@
+{
+  "completed": true,
+  "provenance": {
+    "cases": [
+      {
+        "name": "ac",
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "988952c0a2c1b67685cc507f1d284493fadeaa29414cd1a2d7789136d6969b99",
+          ".log": "f0f2e747071fecbd536a2822b3a17510cfbcc390b29783fce2f5908df0c87a67",
+          ".dat": "1f3b1727e484b4d1f9dc8475ca73999e0bcfc49ab2e427abf48264e7a0402660"
+        }
+      }
+    ],
+    "sources_before": {
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/quadrature/lo_final_stage.spice": "3f234838df5453d1c5f69d1f7f3c753da87e17052d979147a6d6e05fa418ca9f",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/screen/quadrature/lo_selfbias_ac.py": "86254dd2fc326146e74766cd7e67fc51005e84171a89b8ea68200454e6e2bc97",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24"
+    },
+    "sources_after": {
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/quadrature/lo_final_stage.spice": "3f234838df5453d1c5f69d1f7f3c753da87e17052d979147a6d6e05fa418ca9f",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/screen/quadrature/lo_selfbias_ac.py": "86254dd2fc326146e74766cd7e67fc51005e84171a89b8ea68200454e6e2bc97",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24"
+    },
+    "op_sha256": "b6cb351d4ce05aef04b2f9fab2f9140387fbbc215717ad6a486cc252cb0e4a0d"
+  },
+  "operating_point": {
+    "v(in)": 1.530317700898016,
+    "v(xb.mid)": 1.530317700898017,
+    "v(pre)": 1.530317700898005,
+    "v(out)": 1.530317700898242,
+    "i(vdd)": -0.004569484012201039
+  },
+  "response": [
+    {
+      "frequency_hz": 1000000.0,
+      "input_gain": 0.006274928640321615,
+      "input_phase_deg": 90.3558542617521
+    },
+    {
+      "frequency_hz": 19531250.0,
+      "input_gain": 0.13272700539687116,
+      "input_phase_deg": 95.71794245891242
+    },
+    {
+      "frequency_hz": 100000000.0,
+      "input_gain": 1.053680370947237,
+      "input_phase_deg": 50.59182201370921
+    },
+    {
+      "frequency_hz": 2500000000.0,
+      "input_gain": 0.9206770087735205,
+      "input_phase_deg": 0.8632789659488618
+    }
+  ],
+  "limitations": [
+    "Linearization about static self-bias with actual coupling MIM and100k feedback; not periodic RF transfer, envelope response or settling proof.",
+    "Final stage50fF only; actual mixer loading and source impedance absent.",
+    "DC operating point does not restore missing transient capacitor state in receiver replay."
+  ]
+}

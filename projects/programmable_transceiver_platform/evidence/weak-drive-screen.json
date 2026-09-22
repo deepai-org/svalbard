@@ -1,0 +1,200 @@
+{
+  "scope": "nominal 8 mA native driver characterization, not signoff",
+  "results": [
+    {
+      "case": "typical_25_8_alternating_drive8",
+      "mos_corner": "typical",
+      "passive_corners": [
+        "res_typical",
+        "diode_typical",
+        "moscap_typical"
+      ],
+      "drive_strength_ma": 8,
+      "vdd_v": 3.3,
+      "temperature_c": 25,
+      "external_lumped_capacitance_pf_per_output": 8,
+      "pattern": "alternating",
+      "sampled_bits": 20,
+      "aperture_ns": 0.4,
+      "thresholds_fraction": [
+        0.3,
+        0.7
+      ],
+      "minimum_aperture_voltage_margin_v": 0.7157452746748274,
+      "threshold_failures": 0,
+      "clock_edge_delay_min_ns": 3.1106811292555085,
+      "clock_edge_delay_max_ns": 3.168786923028351,
+      "two_pad_dvdd_average_a": 0.012600868155873595,
+      "two_pad_core_vdd_average_a": 2.8755902169026765e-05,
+      "deck_sha256": "9a83bcda613cb5752eeedafd19a500fafbb2948f93414e1e8a1dffce4f6024a2",
+      "waveform_sha256": "615b42e0eb8d7c986c3d4dfdd724220c100d93b3f2ec8d4310ea12888b3a2170",
+      "log_sha256": "b49ef64fd4465b59c8473f2f301d1ac8d2ac1f2b2b551316b6437ae348552399",
+      "host_threshold_screen": {
+        "sampled_bits": 20,
+        "minimum_margin_v": 0.7373975615532388,
+        "failures": 0,
+        "vil_max_v": 0.8,
+        "vih_min_v": 2.0,
+        "clock_measurement_reference_v": 1.65,
+        "assumed_aperture_ns": 0.4,
+        "qualified": false
+      },
+      "host_power_extrapolation": [
+        {
+          "segment": "HOST_A",
+          "with_allowances_ma": 41.377712987104985,
+          "budget_ma": 55,
+          "within_budget": true
+        },
+        {
+          "segment": "HOST_B",
+          "with_allowances_ma": 49.253255584525974,
+          "budget_ma": 55,
+          "within_budget": true
+        }
+      ]
+    },
+    {
+      "case": "typical_25_8_prbs7_drive8",
+      "mos_corner": "typical",
+      "passive_corners": [
+        "res_typical",
+        "diode_typical",
+        "moscap_typical"
+      ],
+      "drive_strength_ma": 8,
+      "vdd_v": 3.3,
+      "temperature_c": 25,
+      "external_lumped_capacitance_pf_per_output": 8,
+      "pattern": "prbs7",
+      "sampled_bits": 20,
+      "aperture_ns": 0.4,
+      "thresholds_fraction": [
+        0.3,
+        0.7
+      ],
+      "minimum_aperture_voltage_margin_v": 0.703532791911595,
+      "threshold_failures": 0,
+      "clock_edge_delay_min_ns": 3.1107175119657082,
+      "clock_edge_delay_max_ns": 3.1687862592575993,
+      "two_pad_dvdd_average_a": 0.008898545301084922,
+      "two_pad_core_vdd_average_a": 2.0135158320256942e-05,
+      "deck_sha256": "cd3fd36f8989f31c5e41c17eef1fbba28392ecb1d053bf0ed1db254ea78aee12",
+      "waveform_sha256": "6056942d088bba16eb53088c50822729cf7690170b3fe3d469db0e0cf81ddc06",
+      "log_sha256": "45db6803dce285bb8ff55a48901f91392e3a04ede536aedf642544696a89cd86",
+      "host_threshold_screen": {
+        "sampled_bits": 20,
+        "minimum_margin_v": 0.7196846973775959,
+        "failures": 0,
+        "vil_max_v": 0.8,
+        "vih_min_v": 2.0,
+        "clock_measurement_reference_v": 1.65,
+        "assumed_aperture_ns": 0.4,
+        "qualified": false
+      }
+    },
+    {
+      "case": "typical_25_10_alternating_drive8",
+      "mos_corner": "typical",
+      "passive_corners": [
+        "res_typical",
+        "diode_typical",
+        "moscap_typical"
+      ],
+      "drive_strength_ma": 8,
+      "vdd_v": 3.3,
+      "temperature_c": 25,
+      "external_lumped_capacitance_pf_per_output": 10,
+      "pattern": "alternating",
+      "sampled_bits": 20,
+      "aperture_ns": 0.4,
+      "thresholds_fraction": [
+        0.3,
+        0.7
+      ],
+      "minimum_aperture_voltage_margin_v": 0.5667837383660497,
+      "threshold_failures": 0,
+      "clock_edge_delay_min_ns": 3.1611043232069487,
+      "clock_edge_delay_max_ns": 3.3597636216639817,
+      "two_pad_dvdd_average_a": 0.01381349298290508,
+      "two_pad_core_vdd_average_a": 2.8755941959358307e-05,
+      "deck_sha256": "a9cbcd2e029d786234a3d16d0fb433986e4422e98651ede156c2638bd944e86e",
+      "waveform_sha256": "db7c5fed726db8bdc3404724eb0741f77040358b020372bea3c7733fcd50a3e7",
+      "log_sha256": "01fd9eda5b6c421fca1e69a1a18695077c18f632657901ff64e0a6b480db84c1",
+      "host_threshold_screen": {
+        "sampled_bits": 20,
+        "minimum_margin_v": 0.7057305165279111,
+        "failures": 0,
+        "vil_max_v": 0.8,
+        "vih_min_v": 2.0,
+        "clock_measurement_reference_v": 1.65,
+        "assumed_aperture_ns": 0.4,
+        "qualified": false
+      },
+      "host_power_extrapolation": [
+        {
+          "segment": "HOST_A",
+          "with_allowances_ma": 45.16716557157838,
+          "budget_ma": 55,
+          "within_budget": true
+        },
+        {
+          "segment": "HOST_B",
+          "with_allowances_ma": 53.800598685894045,
+          "budget_ma": 55,
+          "within_budget": true
+        }
+      ]
+    },
+    {
+      "case": "typical_25_10_prbs7_drive8",
+      "mos_corner": "typical",
+      "passive_corners": [
+        "res_typical",
+        "diode_typical",
+        "moscap_typical"
+      ],
+      "drive_strength_ma": 8,
+      "vdd_v": 3.3,
+      "temperature_c": 25,
+      "external_lumped_capacitance_pf_per_output": 10,
+      "pattern": "prbs7",
+      "sampled_bits": 20,
+      "aperture_ns": 0.4,
+      "thresholds_fraction": [
+        0.3,
+        0.7
+      ],
+      "minimum_aperture_voltage_margin_v": 0.5277301734079489,
+      "threshold_failures": 0,
+      "clock_edge_delay_min_ns": 3.16113856503432,
+      "clock_edge_delay_max_ns": 3.3597635614930113,
+      "two_pad_dvdd_average_a": 0.009790237894622187,
+      "two_pad_core_vdd_average_a": 2.013528540143772e-05,
+      "deck_sha256": "f1ce7c0597905f133d720a752f0acf63fd9310f86b02172e007a2fc975b97c69",
+      "waveform_sha256": "5cdb7a66f5fd6769c157095ea43c0a26a3cd703597954be15d0d12ec02d9f821",
+      "log_sha256": "52794442d2a3f42443fe163b0ee9d21e2f1211bd35f0686a6673794a73a50115",
+      "host_threshold_screen": {
+        "sampled_bits": 20,
+        "minimum_margin_v": 0.6608079124385479,
+        "failures": 0,
+        "vil_max_v": 0.8,
+        "vih_min_v": 2.0,
+        "clock_measurement_reference_v": 1.65,
+        "assumed_aperture_ns": 0.4,
+        "qualified": false
+      }
+    }
+  ],
+  "pad_spice_sha256": "710732fd6a69e165caa2c29e4cdf81b11af41da32705fcd860b7ecfb09630dd1",
+  "script_sha256": "3057c3d79c1a4b5106e99a0215182157dd9cd73561b9c1610ebf5a31a253334e",
+  "runner_sha256": "63f5726bcaeccd57e16bb8df52c198ca046ed0776d378c6219dfdd46f6c8ab93",
+  "contract_sha256": "99ffc14cf44c82a953a1c7409f043bf83c42b39b0b0ee9fec049d834082e34f8",
+  "host_threshold_source": "AMD DS181 v1.27.1 Tables 8 and 19; see spec/artix-host-load-screen.md",
+  "limitations": [
+    "10 pF is a selected lumped-load stress, not a characterized package/PCB.",
+    "Assumed aperture and clock reference are not receiver setup/hold closure.",
+    "Ideal supplies; no SSO, jitter, mismatch, process spread or H2D.",
+    "Twenty measured bits per pattern; no BER or interoperability qualification."
+  ]
+}

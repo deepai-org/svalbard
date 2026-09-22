@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "step_s": 1e-09,
+      "substeps": 107,
+      "pump_boundaries": 0,
+      "max_phase_residual": 1.9247602267569164e-07,
+      "detector_power": 0.00043012917734440697,
+      "final_clock_phase": 218.39809863199864
+    },
+    {
+      "step_s": 2.5e-10,
+      "substeps": 407,
+      "pump_boundaries": 0,
+      "max_phase_residual": 1.2029843787786376e-08,
+      "detector_power": 0.0004301291773939896,
+      "final_clock_phase": 218.39809863199864
+    }
+  ],
+  "max_pad_difference": 1.4260431594665892e-12,
+  "limitations": [
+    "Startup trajectory with direct diagnostic probe; not managed calibration or full traffic quality.",
+    "Fixed2412MHz network frame; carrier retarget guard still applies.",
+    "Actual autonomous noisy LO drives the network; physical driver supply feedback remains absent.",
+    "Finite step comparison, not universal interpolation-error bound."
+  ]
+}

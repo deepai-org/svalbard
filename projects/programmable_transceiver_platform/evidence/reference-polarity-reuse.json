@@ -1,0 +1,105 @@
+{
+  "status": "historical_DC_evidence_and_transistor_topology_audited",
+  "cases": [
+    {
+      "topology": "buffer_scaled",
+      "direction": 1,
+      "measurements": [
+        {
+          "load_ma": -3.0,
+          "error_mv": -20.559322398455038
+        },
+        {
+          "load_ma": 0,
+          "error_mv": -64.04978114610493
+        },
+        {
+          "load_ma": 3.0,
+          "error_mv": -185.90897403656294
+        }
+      ]
+    },
+    {
+      "topology": "buffer_scaled",
+      "direction": -1,
+      "measurements": [
+        {
+          "load_ma": -3.0,
+          "error_mv": -20.561527555734926
+        },
+        {
+          "load_ma": 0,
+          "error_mv": -64.05070338986407
+        },
+        {
+          "load_ma": 3.0,
+          "error_mv": -185.8533749421889
+        }
+      ]
+    },
+    {
+      "topology": "buffer_complement",
+      "direction": 1,
+      "measurements": [
+        {
+          "load_ma": -3.0,
+          "error_mv": 17.464074386277062
+        },
+        {
+          "load_ma": 0,
+          "error_mv": 13.147592818884224
+        },
+        {
+          "load_ma": 3.0,
+          "error_mv": 9.721367962741034
+        }
+      ]
+    },
+    {
+      "topology": "buffer_complement",
+      "direction": -1,
+      "measurements": [
+        {
+          "load_ma": -3.0,
+          "error_mv": 17.46437881076801
+        },
+        {
+          "load_ma": 0,
+          "error_mv": 13.147599980059876
+        },
+        {
+          "load_ma": 3.0,
+          "error_mv": 9.72136878588925
+        }
+      ]
+    }
+  ],
+  "inputs_sha256": {
+    "projects/programmable_transceiver_platform/evidence/reference-buffer-dc-screen.json": "afe6e9b360a5f6154ae9d970c1ccc475b98710c6c1cf60ce468bf40de18c78f3",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_scaled.spice": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+    "scratch/transceiver-reference-buffer-dc/v2.15_s4_d1.spice": "5bdc492d18ae5dea69b2b6129001995265d3ff5d28c484c57303cc215b7b7470",
+    "scratch/transceiver-reference-buffer-dc/v2.15_s4_d1.dat": "a896477cb7f61c7392daca49b79070caef7b4e1ab757763fd75948a547243859",
+    "scratch/transceiver-reference-buffer-dc/v2.15_s4_d1.log": "88e3954b0893ea824cc1fbc99d1f656dedc61b6cbd2f790d5e637702be370932",
+    "scratch/transceiver-reference-buffer-dc/v2.15_s4_d-1.spice": "b74ca70f5bc767947f8b6261947cf4d6676c18f03b61750d8fc27189023f77cd",
+    "scratch/transceiver-reference-buffer-dc/v2.15_s4_d-1.dat": "95f5fd0ce49539625ccac8a4aef58f2e4b0367da6331f43d8840f170e851624a",
+    "scratch/transceiver-reference-buffer-dc/v2.15_s4_d-1.log": "87cafa042587da34e15888202cb35f759eff1ac7820359a519565dcb56d52bae",
+    "projects/programmable_transceiver_platform/evidence/reference-buffer-complement-dc-screen.json": "066c6b185ca02f0891bb2a19a531dd1027517d9ef4382c557411407c47aa808f",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_complement.spice": "b21147fcdd7c13e4c7359fb966319a70badbb6a12c0de0064926b73be10602b4",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+    "scratch/transceiver-reference-buffer-complement-dc/v2.15_s4_d1.spice": "5b720b3918173b3bcc5331f69bc988176ae80321fa6714f4083167372b234dcf",
+    "scratch/transceiver-reference-buffer-complement-dc/v2.15_s4_d1.dat": "46029e99da662d82845eb7929d144d52f91c7faac88d7ebc3f49d674f665d3ec",
+    "scratch/transceiver-reference-buffer-complement-dc/v2.15_s4_d1.log": "190502ec844d6e7916fa7d39fdefc81e7b7387a5a56d3be223da5bba6566e0cb",
+    "scratch/transceiver-reference-buffer-complement-dc/v2.15_s4_d-1.spice": "97240ce55199521e67464476b3624378db36d498826b59aba59d6889a14dcbd9",
+    "scratch/transceiver-reference-buffer-complement-dc/v2.15_s4_d-1.dat": "31705af3a7992fa5bf29b4cc48b3afec83f59177f8e44710911213bdde7eb645",
+    "scratch/transceiver-reference-buffer-complement-dc/v2.15_s4_d-1.log": "774de6f1d3b1091096e1876ea808f0824ea3b316ecdcd443e91bdc58ccd038fc"
+  },
+  "decision": "Do not repeat the unchanged NMOS-input/output buffer as a direct high-reference replacement.",
+  "next_question": "Can input-stage headroom and bidirectional output regulation be improved together without excessive power or unstable reservoir loading?",
+  "limitations": [
+    "Compensation changes do not change ideal DC equations; dynamic behavior is not equivalent.",
+    "Historical source hashes were recorded after simulation, not a full before/after model provenance chain.",
+    "Ideal targets and bias currents; no mismatch, noise, startup or parasitic qualification.",
+    "This rejects reuse of this existing topology at these conditions, not all NMOS-input amplifier designs."
+  ]
+}

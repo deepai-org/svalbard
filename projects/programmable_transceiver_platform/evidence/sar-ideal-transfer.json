@@ -1,0 +1,381 @@
+{
+  "source_sha256": "876615c9650860763eaaf849fb7acf150c366990a0776a2a8f73809344aaf238",
+  "topology_sha256": "532e86fc11da6f695d092dd06c0508cbb363f49c4c2b070c78683c7d5bf85e14",
+  "track_mask_sha256": "6e8cc546f93cc22d25b6b293f2539d4e640917f2a84fe53cb6411ee2d33ea1d9",
+  "formula": "floor(128 - 128*input_differential/reference_span), clipped 0..255; ties keep",
+  "differential_input_lsb_v": 0.0078125,
+  "results": [
+    {
+      "variant": "baseline",
+      "hold_ns": 70,
+      "input_target_v": 0.4,
+      "measured_first_residue_v": 0.39550519282794716,
+      "actual_code": 78,
+      "ideal_source_code": 76,
+      "source_code_difference": 2,
+      "ideal_held_anchor_code": 77,
+      "held_anchor_code_difference": 1,
+      "ideal_held_steps": [
+        {
+          "bit": 7,
+          "trial": 128,
+          "residue_v": 0.39550519282794716,
+          "keep": false
+        },
+        {
+          "bit": 6,
+          "trial": 64,
+          "residue_v": -0.10449480717205284,
+          "keep": true
+        },
+        {
+          "bit": 5,
+          "trial": 96,
+          "residue_v": 0.14550519282794716,
+          "keep": false
+        },
+        {
+          "bit": 4,
+          "trial": 80,
+          "residue_v": 0.02050519282794716,
+          "keep": false
+        },
+        {
+          "bit": 3,
+          "trial": 72,
+          "residue_v": -0.04199480717205284,
+          "keep": true
+        },
+        {
+          "bit": 2,
+          "trial": 76,
+          "residue_v": -0.01074480717205284,
+          "keep": true
+        },
+        {
+          "bit": 1,
+          "trial": 78,
+          "residue_v": 0.004880192827947161,
+          "keep": false
+        },
+        {
+          "bit": 0,
+          "trial": 77,
+          "residue_v": -0.0029323071720528393,
+          "keep": true
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "hold_ns": 120,
+      "input_target_v": -0.4,
+      "measured_first_residue_v": -0.39697166563503994,
+      "actual_code": 178,
+      "ideal_source_code": 179,
+      "source_code_difference": -1,
+      "ideal_held_anchor_code": 178,
+      "held_anchor_code_difference": 0,
+      "ideal_held_steps": [
+        {
+          "bit": 7,
+          "trial": 128,
+          "residue_v": -0.39697166563503994,
+          "keep": true
+        },
+        {
+          "bit": 6,
+          "trial": 192,
+          "residue_v": 0.10302833436496006,
+          "keep": false
+        },
+        {
+          "bit": 5,
+          "trial": 160,
+          "residue_v": -0.14697166563503994,
+          "keep": true
+        },
+        {
+          "bit": 4,
+          "trial": 176,
+          "residue_v": -0.02197166563503994,
+          "keep": true
+        },
+        {
+          "bit": 3,
+          "trial": 184,
+          "residue_v": 0.04052833436496006,
+          "keep": false
+        },
+        {
+          "bit": 2,
+          "trial": 180,
+          "residue_v": 0.009278334364960061,
+          "keep": false
+        },
+        {
+          "bit": 1,
+          "trial": 178,
+          "residue_v": -0.006346665635039939,
+          "keep": true
+        },
+        {
+          "bit": 0,
+          "trial": 179,
+          "residue_v": 0.0014658343649600614,
+          "keep": false
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "hold_ns": 170,
+      "input_target_v": 0.4,
+      "measured_first_residue_v": 0.39607568488108,
+      "actual_code": 78,
+      "ideal_source_code": 76,
+      "source_code_difference": 2,
+      "ideal_held_anchor_code": 77,
+      "held_anchor_code_difference": 1,
+      "ideal_held_steps": [
+        {
+          "bit": 7,
+          "trial": 128,
+          "residue_v": 0.39607568488108,
+          "keep": false
+        },
+        {
+          "bit": 6,
+          "trial": 64,
+          "residue_v": -0.10392431511891997,
+          "keep": true
+        },
+        {
+          "bit": 5,
+          "trial": 96,
+          "residue_v": 0.14607568488108003,
+          "keep": false
+        },
+        {
+          "bit": 4,
+          "trial": 80,
+          "residue_v": 0.021075684881080026,
+          "keep": false
+        },
+        {
+          "bit": 3,
+          "trial": 72,
+          "residue_v": -0.041424315118919974,
+          "keep": true
+        },
+        {
+          "bit": 2,
+          "trial": 76,
+          "residue_v": -0.010174315118919974,
+          "keep": true
+        },
+        {
+          "bit": 1,
+          "trial": 78,
+          "residue_v": 0.005450684881080026,
+          "keep": false
+        },
+        {
+          "bit": 0,
+          "trial": 77,
+          "residue_v": -0.0023618151189199743,
+          "keep": true
+        }
+      ]
+    },
+    {
+      "variant": "double",
+      "hold_ns": 70,
+      "input_target_v": 0.4,
+      "measured_first_residue_v": 0.39565485602081485,
+      "actual_code": 78,
+      "ideal_source_code": 76,
+      "source_code_difference": 2,
+      "ideal_held_anchor_code": 77,
+      "held_anchor_code_difference": 1,
+      "ideal_held_steps": [
+        {
+          "bit": 7,
+          "trial": 128,
+          "residue_v": 0.39565485602081485,
+          "keep": false
+        },
+        {
+          "bit": 6,
+          "trial": 64,
+          "residue_v": -0.10434514397918515,
+          "keep": true
+        },
+        {
+          "bit": 5,
+          "trial": 96,
+          "residue_v": 0.14565485602081485,
+          "keep": false
+        },
+        {
+          "bit": 4,
+          "trial": 80,
+          "residue_v": 0.02065485602081485,
+          "keep": false
+        },
+        {
+          "bit": 3,
+          "trial": 72,
+          "residue_v": -0.04184514397918515,
+          "keep": true
+        },
+        {
+          "bit": 2,
+          "trial": 76,
+          "residue_v": -0.010595143979185151,
+          "keep": true
+        },
+        {
+          "bit": 1,
+          "trial": 78,
+          "residue_v": 0.005029856020814849,
+          "keep": false
+        },
+        {
+          "bit": 0,
+          "trial": 77,
+          "residue_v": -0.002782643979185151,
+          "keep": true
+        }
+      ]
+    },
+    {
+      "variant": "double",
+      "hold_ns": 120,
+      "input_target_v": -0.4,
+      "measured_first_residue_v": -0.396610582191367,
+      "actual_code": 177,
+      "ideal_source_code": 179,
+      "source_code_difference": -2,
+      "ideal_held_anchor_code": 178,
+      "held_anchor_code_difference": -1,
+      "ideal_held_steps": [
+        {
+          "bit": 7,
+          "trial": 128,
+          "residue_v": -0.396610582191367,
+          "keep": true
+        },
+        {
+          "bit": 6,
+          "trial": 192,
+          "residue_v": 0.10338941780863298,
+          "keep": false
+        },
+        {
+          "bit": 5,
+          "trial": 160,
+          "residue_v": -0.14661058219136702,
+          "keep": true
+        },
+        {
+          "bit": 4,
+          "trial": 176,
+          "residue_v": -0.021610582191367023,
+          "keep": true
+        },
+        {
+          "bit": 3,
+          "trial": 184,
+          "residue_v": 0.04088941780863298,
+          "keep": false
+        },
+        {
+          "bit": 2,
+          "trial": 180,
+          "residue_v": 0.009639417808632977,
+          "keep": false
+        },
+        {
+          "bit": 1,
+          "trial": 178,
+          "residue_v": -0.005985582191367023,
+          "keep": true
+        },
+        {
+          "bit": 0,
+          "trial": 179,
+          "residue_v": 0.0018269178086329774,
+          "keep": false
+        }
+      ]
+    },
+    {
+      "variant": "double",
+      "hold_ns": 170,
+      "input_target_v": 0.4,
+      "measured_first_residue_v": 0.39596105067268894,
+      "actual_code": 78,
+      "ideal_source_code": 76,
+      "source_code_difference": 2,
+      "ideal_held_anchor_code": 77,
+      "held_anchor_code_difference": 1,
+      "ideal_held_steps": [
+        {
+          "bit": 7,
+          "trial": 128,
+          "residue_v": 0.39596105067268894,
+          "keep": false
+        },
+        {
+          "bit": 6,
+          "trial": 64,
+          "residue_v": -0.10403894932731106,
+          "keep": true
+        },
+        {
+          "bit": 5,
+          "trial": 96,
+          "residue_v": 0.14596105067268894,
+          "keep": false
+        },
+        {
+          "bit": 4,
+          "trial": 80,
+          "residue_v": 0.02096105067268894,
+          "keep": false
+        },
+        {
+          "bit": 3,
+          "trial": 72,
+          "residue_v": -0.04153894932731106,
+          "keep": true
+        },
+        {
+          "bit": 2,
+          "trial": 76,
+          "residue_v": -0.010288949327311059,
+          "keep": true
+        },
+        {
+          "bit": 1,
+          "trial": 78,
+          "residue_v": 0.005336050672688941,
+          "keep": false
+        },
+        {
+          "bit": 0,
+          "trial": 77,
+          "residue_v": -0.002476449327311059,
+          "keep": true
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Nominal matched capacitors, ideal switches, constant1V span, zero comparator offset and noise.",
+    "Held anchor removes acquisition and initial reference/bottom-state errors; it is not an independent accuracy measurement.",
+    "Real input parasitic attenuation and subsequent switching injection omitted; no fitted correction.",
+    "Two levels and three frames do not establish INL/DNL, ENOB or a calibrated transfer."
+  ]
+}

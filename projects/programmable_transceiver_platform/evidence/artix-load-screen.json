@@ -1,0 +1,92 @@
+{
+  "scope": "nominal native-pad 8 pF load screen, not FPGA electrical/timing qualification",
+  "source_url": "https://docs.amd.com/v/u/en-US/ds181_Artix_7_Data_Sheet",
+  "source_revision": "DS181 v1.27.1, July 3 2024",
+  "source_pdf_sha256": "3f0cb482d645e217ae834e9370c1320300abb85a8046287250f9a48856aed070",
+  "script_sha256": "179172ed2ef5955d86f23ec46599b0dd02f3f19ae030577223b905a15fe3692a",
+  "native_runner_sha256": "13365df0625d8efcea4c02ab8009868e2916331e173d677a5aea3c8dd9184121",
+  "results": [
+    {
+      "case": "typical_25_8_alternating",
+      "mos_corner": "typical",
+      "passive_corners": [
+        "res_typical",
+        "diode_typical",
+        "moscap_typical"
+      ],
+      "vdd_v": 3.3,
+      "temperature_c": 25,
+      "external_lumped_capacitance_pf_per_output": 8,
+      "pattern": "alternating",
+      "sampled_bits": 20,
+      "aperture_ns": 0.4,
+      "thresholds_fraction": [
+        0.3,
+        0.7
+      ],
+      "minimum_aperture_voltage_margin_v": 0.9831225299373609,
+      "threshold_failures": 0,
+      "clock_edge_delay_min_ns": 2.615365792468608,
+      "clock_edge_delay_max_ns": 2.6506207388179632,
+      "two_pad_dvdd_average_a": 0.016409485934289137,
+      "two_pad_core_vdd_average_a": 2.8756582162945357e-05,
+      "deck_sha256": "6bd91677d114a1fb432ddccfbecd2e3714d9358b5cc62c61684fd5372cd9bc35",
+      "waveform_sha256": "c8f54fa89a12c6cd765915fda4f66e7d9ea46ba92d8bbedbb370fd3ac8b2cb12",
+      "log_sha256": "a5a933defbfb6185a87c7a0ee90ff3031fbef62296a1f8d209797adb56cf4d4c",
+      "host_threshold_screen": {
+        "vil_max_v": 0.8,
+        "vih_min_v": 2.0,
+        "clock_reference_v": 1.65,
+        "assumed_aperture_ns": 0.4,
+        "minimum_margin_v": 0.799205494120783,
+        "failures": 0,
+        "sampled_bits": 20,
+        "qualified": false
+      }
+    },
+    {
+      "case": "typical_25_8_prbs7",
+      "mos_corner": "typical",
+      "passive_corners": [
+        "res_typical",
+        "diode_typical",
+        "moscap_typical"
+      ],
+      "vdd_v": 3.3,
+      "temperature_c": 25,
+      "external_lumped_capacitance_pf_per_output": 8,
+      "pattern": "prbs7",
+      "sampled_bits": 20,
+      "aperture_ns": 0.4,
+      "thresholds_fraction": [
+        0.3,
+        0.7
+      ],
+      "minimum_aperture_voltage_margin_v": 0.9830593048725369,
+      "threshold_failures": 0,
+      "clock_edge_delay_min_ns": 2.615319493427747,
+      "clock_edge_delay_max_ns": 2.6506347020539387,
+      "two_pad_dvdd_average_a": 0.011506253076030735,
+      "two_pad_core_vdd_average_a": 2.014062097117851e-05,
+      "deck_sha256": "3c0afe221035d5ed1067424f6afd7859ccf03475339ed1c199bad3054e413dda",
+      "waveform_sha256": "953c0ed51e318eb2da365ded8275357378609a8f888e6130f02a34843028e6f8",
+      "log_sha256": "3098b5a7c12050050ea15c931b39e9bb56a98032767447156d79416caf4d5c2f",
+      "host_threshold_screen": {
+        "vil_max_v": 0.8,
+        "vih_min_v": 2.0,
+        "clock_reference_v": 1.65,
+        "assumed_aperture_ns": 0.4,
+        "minimum_margin_v": 0.7992055041508206,
+        "failures": 0,
+        "sampled_bits": 20,
+        "qualified": false
+      }
+    }
+  ],
+  "limitations": [
+    "8 pF covers specified FPGA die capacitance only, no package/PCB.",
+    "Assumed aperture is not Artix pin setup/hold closure.",
+    "Only nominal GF180 process, 3.3 V and 25 C; ideal supplies.",
+    "No H2D, SSO, extracted routing, host implementation or interoperability proof."
+  ]
+}

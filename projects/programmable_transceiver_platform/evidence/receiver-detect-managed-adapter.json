@@ -1,0 +1,52 @@
+{
+  "status": "passed",
+  "staged_adapter": true,
+  "physical_qualification": false,
+  "cases": [
+    {
+      "mode": 0,
+      "start_applied_s": 1.4449999999999999e-05,
+      "status": {
+        "token": 1,
+        "operation": "detect_status",
+        "applied_at": 2.73e-05,
+        "epoch": 0,
+        "generation": 0,
+        "accepted": true,
+        "value": 259
+      },
+      "stale_command_rejected": true,
+      "reset_rearm_clears_result": true,
+      "other_mode_redetection": true
+    },
+    {
+      "mode": 1,
+      "start_applied_s": 1.4449999999999999e-05,
+      "status": {
+        "token": 1,
+        "operation": "detect_status",
+        "applied_at": 2.73e-05,
+        "epoch": 0,
+        "generation": 0,
+        "accepted": true,
+        "value": 259
+      },
+      "stale_command_rejected": true,
+      "reset_rearm_clears_result": true,
+      "other_mode_redetection": true
+    }
+  ],
+  "source_sha256": "21b3558ed81e4577c294505d6c1e8cbf86a3cd341e22842fd8e687e485c9082f",
+  "dependencies": {
+    "receiver_detect_chip_adapter.py": "d6c1a9e0960cb57522524b6601a380152eaea4044b142c47dc65b4164cf70e53",
+    "receiver_detect_rearm_screen.py": "6079440ee8e93e73eccd3ee5695636c72d26518b874500148d8e4bdd048077a2",
+    "receiver_detect_probe_sequence.py": "c8c466a90b24b7f90654abb59dffe00da8d9a6e5209172c4dd00d17d16d2ada2",
+    "receiver_detect_release_screen.py": "753bf2b36c2f72a4dbea1997beb2503295e93f075bd0c2a6584bffb1dee496af",
+    "receiver_detect_load_screen.py": "d4e3693d9049402a567ef817f0a7e7c605b6265114f6912db2f778e9dd2d448a"
+  },
+  "limitations": [
+    "Staged named command adapter, not a frozen hardware register ABI or registered aggregate scenario.",
+    "Probe source/sink load remains uncoupled from chip supply; resource-discovery integration remains pending.",
+    "Nominal two-leg present load for these management tests; other decision cases were tested separately."
+  ]
+}

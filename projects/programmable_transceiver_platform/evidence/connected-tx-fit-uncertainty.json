@@ -1,0 +1,85 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "bits": 10,
+      "gain": 0.003,
+      "bound": {
+        "coefficient_error_bounds": [
+          0.004344520473552732,
+          0.0010861301183881832,
+          0.004344520473552735,
+          0.00016291951775822752,
+          0.00016291951775822738,
+          9.232106006299558e-05
+        ],
+        "hessian_spectral_error_bound": 0.006333172471864129,
+        "corrected_gram_eigenvalue_bounds": [
+          -0.006074032734262725,
+          0.010280514948872926
+        ],
+        "robust_positive_definite": false,
+        "relative_axis_spread_bound": null,
+        "residual_output_offset_bound": null,
+        "waveform_verified": false,
+        "scope": "Affine model and declared per-probe error only; residual offset is in monitor-scaled amplitude units."
+      },
+      "corners": 512
+    },
+    {
+      "bits": 10,
+      "gain": 0.56,
+      "bound": {
+        "coefficient_error_bounds": [
+          0.004344520473552732,
+          0.0010861301183881832,
+          0.004344520473552735,
+          0.00016291951775822752,
+          0.00016291951775822738,
+          9.232106006299558e-05
+        ],
+        "hessian_spectral_error_bound": 0.006333172471864129,
+        "corrected_gram_eigenvalue_bounds": [
+          0.551695182141091,
+          0.5659468702989872
+        ],
+        "robust_positive_definite": true,
+        "relative_axis_spread_bound": 0.006376042988821889,
+        "residual_output_offset_bound": 0.00041418765477693487,
+        "waveform_verified": false,
+        "scope": "Affine model and declared per-probe error only; residual offset is in monitor-scaled amplitude units."
+      },
+      "corners": 512
+    },
+    {
+      "bits": 12,
+      "gain": 0.56,
+      "bound": {
+        "coefficient_error_bounds": [
+          0.0010853344186677522,
+          0.00027133360466693806,
+          0.0010853344186677527,
+          4.0700040700040716e-05,
+          4.070004070004069e-05,
+          2.3063356396689734e-05
+        ],
+        "hessian_spectral_error_bound": 0.0015821331962678886,
+        "corrected_gram_eigenvalue_bounds": [
+          0.5562777281660589,
+          0.5599143013271211
+        ],
+        "robust_positive_definite": true,
+        "relative_axis_spread_bound": 0.0016290130709084988,
+        "residual_output_offset_bound": 0.00012032162366148778,
+        "waveform_verified": false,
+        "scope": "Affine model and declared per-probe error only; residual offset is in monitor-scaled amplitude units."
+      },
+      "corners": 512
+    }
+  ],
+  "limitations": [
+    "Error-box corners verify linear coefficient enclosures; not transistor uncertainty or RF waveform certification.",
+    "Settling, readout curvature, additive detector noise and model discrepancy must be included in the declared observation bounds.",
+    "No managed acceptance gate yet; a defensible total error allocation is still required."
+  ]
+}

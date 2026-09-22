@@ -1,0 +1,150 @@
+{
+  "status": "terminal",
+  "completed": true,
+  "cases": [
+    {
+      "name": "early",
+      "completed": true,
+      "actual_stop_ns": 800.0000000000001,
+      "reference_minus_feedback_ps": [
+        299.9999999999961,
+        299.99999999991667,
+        300.0000000000755,
+        300.00000000002257,
+        299.99999999991667,
+        300.00000000002257,
+        300.00000000002257,
+        300.00000000002257,
+        300.00000000002257,
+        299.99999999991667,
+        300.00000000002257,
+        300.00000000002257
+      ],
+      "cycle_charge_c": [
+        -1.0532494653370614e-14,
+        -1.0532493796807309e-14,
+        -1.0532493811744486e-14,
+        -1.0532493811545315e-14,
+        -1.0532493811550056e-14,
+        -1.0532493811500659e-14,
+        -1.0532493811420285e-14,
+        -1.053249381142362e-14,
+        -1.0532493811423808e-14,
+        -1.0532493811421369e-14,
+        -1.0532493811423139e-14
+      ],
+      "mean_charge_per_cycle_c": -1.0532493886693697e-14,
+      "mean_pump_current_a": -2.0571277122448623e-07,
+      "correction_sign_consistent_with_positive_vco_gain": true,
+      "dummy_voltage_range_v": [
+        1.060217635626469,
+        1.079171450541981
+      ],
+      "driver_supply_power_w": 0.0004671615843238013
+    },
+    {
+      "name": "late",
+      "completed": true,
+      "actual_stop_ns": 800.0000000000001,
+      "reference_minus_feedback_ps": [
+        -300.0000000001019,
+        -299.9999999999696,
+        -299.9999999999696,
+        -300.0000000000755,
+        -299.9999999999696,
+        -300.00000000002257,
+        -300.00000000002257,
+        -300.00000000002257,
+        -300.00000000002257,
+        -300.0000000001284,
+        -300.00000000002257,
+        -300.00000000002257
+      ],
+      "cycle_charge_c": [
+        1.6178012532869705e-15,
+        1.6178021295130202e-15,
+        1.6178021189220793e-15,
+        1.6178021190185138e-15,
+        1.617802119017013e-15,
+        1.6178021190165772e-15,
+        1.6178021191245184e-15,
+        1.617802119120477e-15,
+        1.617802119118651e-15,
+        1.6178021191218779e-15,
+        1.617802119119291e-15
+      ],
+      "mean_charge_per_cycle_c": 1.6178020413071808e-15,
+      "mean_pump_current_a": 3.159769611928087e-08,
+      "correction_sign_consistent_with_positive_vco_gain": true,
+      "dummy_voltage_range_v": [
+        1.054548340892437,
+        1.07621394839099
+      ],
+      "driver_supply_power_w": 0.0004671615129058164
+    }
+  ],
+  "limitations": [
+    "Ideal clocks and clamped output; follower variant has actual dummy driver but ideal bias currents; original variant has ideal dummy clamp.",
+    "Signed phase scenarios are not process/jitter bounds.",
+    "Measured charge sign is not lock/acquisition proof."
+  ],
+  "provenance": {
+    "baseline_deck_sha256": "dbffc8b3e41f42e14e886a8c7ca08ac9b467d58f34bfb3d46bc6d4a3c777a1b1",
+    "source_sha256_before": {
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/screen/reference/buffer_scaled.spice": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+      "/screen/pll/pump_follower_screen.py": "477be55ea871991ab5164fbe94b84d89529c3dbfc708114d8c58bf818f6700fa"
+    },
+    "source_sha256_after": {
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/screen/reference/buffer_scaled.spice": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+      "/screen/pll/pump_follower_screen.py": "477be55ea871991ab5164fbe94b84d89529c3dbfc708114d8c58bf818f6700fa"
+    },
+    "cases": [
+      {
+        "name": "early",
+        "delay": "99.7n",
+        "returncode": 0,
+        "timed_out": false,
+        "artifacts_sha256": {
+          ".spice": "3069cfffa974fd5c389618b9a88c4ac5d52134cbc32f286ede1563570bfd15a3",
+          ".log": "a59d877f4947f6cb49691d697cefd4f6f6ea207f7dfe099b4e5754000abe4f4c",
+          ".dat": "b56c2552a0607f0d3e53c03b53d2412e218ed569457d0edc7effcd893da6e779"
+        }
+      },
+      {
+        "name": "late",
+        "delay": "100.3n",
+        "returncode": 0,
+        "timed_out": false,
+        "artifacts_sha256": {
+          ".spice": "1047cc1d8be992b528da8f7176fe30ae52ae00e756362ecaa28e20dfbf319354",
+          ".log": "85a2d0ca939961041d9cdd593c863da67aca2f35e5ff51d47265e05f78782cdb",
+          ".dat": "efe71574ad1a57c41406523a0560457790fb9603888490ced8431cc5b4e12c9d"
+        }
+      }
+    ]
+  }
+}

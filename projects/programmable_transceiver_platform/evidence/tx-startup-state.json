@@ -1,0 +1,271 @@
+{
+  "status": "completed_startup_state_diagnostic",
+  "cases": [
+    {
+      "name": "ideal_uic",
+      "completed": true,
+      "late_node_ranges_v": {
+        "v(code)": [
+          255.0,
+          255.0
+        ],
+        "v(bn)": [
+          0.3160541019111555,
+          0.3650043058769376
+        ],
+        "v(d0)": [
+          3.3,
+          3.3
+        ],
+        "v(d1)": [
+          3.3,
+          3.3
+        ],
+        "v(d2)": [
+          3.3,
+          3.3
+        ],
+        "v(d3)": [
+          3.3,
+          3.3
+        ],
+        "v(d4)": [
+          3.3,
+          3.3
+        ],
+        "v(d5)": [
+          3.3,
+          3.3
+        ],
+        "v(d6)": [
+          3.3,
+          3.3
+        ],
+        "v(d7)": [
+          3.3,
+          3.3
+        ],
+        "v(xd.l0)": [
+          3.299463589430068,
+          3.300706651785294
+        ],
+        "v(xd.l0b)": [
+          -0.0002358905477481295,
+          0.0004022517376696874
+        ],
+        "v(xd.h1)": [
+          3.299463614082319,
+          3.300706492421508
+        ],
+        "v(xd.h1b)": [
+          -0.000235880525085445,
+          0.0004022395308895689
+        ],
+        "v(xd.h15)": [
+          3.29946361408225,
+          3.300706492421509
+        ],
+        "v(xd.h15b)": [
+          -0.0002358805250841446,
+          0.0004022395309286156
+        ],
+        "v(xd.xcl0.t)": [
+          2.092750512269236,
+          2.099662160997619
+        ],
+        "v(xd.xch1.t)": [
+          2.092750525255271,
+          2.099662189272538
+        ]
+      },
+      "rf_peak_to_peak_v": 0.0025588209786688854,
+      "dac_mean_differential_v": -0.000618188707179012
+    },
+    {
+      "name": "ring_probe",
+      "completed": true,
+      "original_vectors_bit_identical": true,
+      "late_node_ranges_v": {
+        "v(code)": [
+          255.0,
+          255.0
+        ],
+        "v(bn)": [
+          0.3187401402734893,
+          0.3676510700976079
+        ],
+        "v(d0)": [
+          3.3,
+          3.3
+        ],
+        "v(d1)": [
+          3.3,
+          3.3
+        ],
+        "v(d2)": [
+          3.3,
+          3.3
+        ],
+        "v(d3)": [
+          3.3,
+          3.3
+        ],
+        "v(d4)": [
+          3.3,
+          3.3
+        ],
+        "v(d5)": [
+          3.3,
+          3.3
+        ],
+        "v(d6)": [
+          3.3,
+          3.3
+        ],
+        "v(d7)": [
+          3.3,
+          3.3
+        ],
+        "v(xd.l0)": [
+          3.299641555162391,
+          3.300316448634883
+        ],
+        "v(xd.l0b)": [
+          -0.0002186081974358256,
+          0.0001296064061610052
+        ],
+        "v(xd.h1)": [
+          3.299641666423785,
+          3.300316445763909
+        ],
+        "v(xd.h1b)": [
+          -0.0002185989782864483,
+          0.0001296087653823165
+        ],
+        "v(xd.h15)": [
+          3.29964166642376,
+          3.300316445763961
+        ],
+        "v(xd.h15b)": [
+          -0.0002185989783006968,
+          0.0001296087653917325
+        ],
+        "v(xd.xcl0.t)": [
+          2.130786298079677,
+          2.134568167016682
+        ],
+        "v(xd.xch1.t)": [
+          2.130786287642027,
+          2.134568161131321
+        ]
+      },
+      "rf_peak_to_peak_v": 0.00018680653812008785,
+      "dac_mean_differential_v": 9.998889691091535e-05
+    }
+  ],
+  "provenance": {
+    "cases": [
+      {
+        "name": "ideal_uic",
+        "returncode": 0,
+        "timed_out": false,
+        "elapsed_seconds": 21.904598380438983,
+        "source_sha256_before": {
+          "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+          "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+          "/screen/dac/segmented8.spice": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+          "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+          "/screen/tx/commutator.spice": "89cb009a303ded0120ce8536abe86174045bb73ed27b1ec3272f0cdfdef8ad6b",
+          "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+          "/screen/tx/commutator_tg.spice": "3d28ec375da796cf1333da9d085caab5cd74bcda44a835f0e7cf72f06433a304",
+          "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275"
+        },
+        "source_sha256_after": {
+          "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+          "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+          "/screen/dac/segmented8.spice": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+          "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+          "/screen/tx/commutator.spice": "89cb009a303ded0120ce8536abe86174045bb73ed27b1ec3272f0cdfdef8ad6b",
+          "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+          "/screen/tx/commutator_tg.spice": "3d28ec375da796cf1333da9d085caab5cd74bcda44a835f0e7cf72f06433a304",
+          "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275"
+        },
+        "artifacts_sha256": {
+          ".spice": "031ad023c690fc68a72ba7d0b1935221f29392e49e9c59b1e88ac750ceb22d69",
+          ".log": "af0a797eff5f600b3e868f5d887c76158fc6f721ab99bd69bbf57d987fa73ca8",
+          ".dat": "74278c4f28e7195df769ad69d6a5c35792cb88297bccbe6018349748a3495365"
+        }
+      },
+      {
+        "name": "ring_probe",
+        "returncode": 0,
+        "timed_out": false,
+        "elapsed_seconds": 23.343350866809487,
+        "source_sha256_before": {
+          "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+          "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+          "/screen/dac/segmented8.spice": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+          "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+          "/screen/tx/commutator.spice": "89cb009a303ded0120ce8536abe86174045bb73ed27b1ec3272f0cdfdef8ad6b",
+          "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+          "/screen/tx/commutator_tg.spice": "3d28ec375da796cf1333da9d085caab5cd74bcda44a835f0e7cf72f06433a304",
+          "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+          "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4"
+        },
+        "source_sha256_after": {
+          "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+          "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+          "/screen/dac/segmented8.spice": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+          "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+          "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+          "/screen/tx/commutator.spice": "89cb009a303ded0120ce8536abe86174045bb73ed27b1ec3272f0cdfdef8ad6b",
+          "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+          "/screen/tx/commutator_tg.spice": "3d28ec375da796cf1333da9d085caab5cd74bcda44a835f0e7cf72f06433a304",
+          "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+          "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4"
+        },
+        "artifacts_sha256": {
+          ".spice": "c012d7b4b4d54b304ca770ca9385999be884cb2c78f72ea4cda048122b647da4",
+          ".log": "de3aa8c86545ec9f9542bc753ee3000acffa1bdda0329d079460c6b9bbe0e605",
+          ".dat": "273e56ea0d7f757f65bd367c2f9de1ac4985b095ccfbb45afa8ca1ca4f9d2820"
+        }
+      }
+    ]
+  },
+  "limitations": [
+    "Ideal-clock replay changes UIC and duration, not a supply-ramp/cold-start qualification.",
+    "Ring replay is observation-only; exact numerical reproduction checked.",
+    "Selected logic nodes do not constitute complete decoder proof; no noise/modulation qualification."
+  ]
+}

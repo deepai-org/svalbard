@@ -1,0 +1,65 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "dummy_feedthrough_f": 1e-15,
+      "sequence": "break_before_make",
+      "internal_peak_during_transition": 0.9805037503901605,
+      "initial_internal_amplitude": 0.5182176003828057,
+      "final_internal_amplitude": 0.5174289759767808,
+      "final_pad_amplitude": 0.47037859474727145,
+      "energy_balance_error": 4.417621069237666e-29
+    },
+    {
+      "dummy_feedthrough_f": 1e-15,
+      "sequence": "overlap",
+      "internal_peak_during_transition": 0.5182176003828057,
+      "initial_internal_amplitude": 0.5182176003828057,
+      "final_internal_amplitude": 0.5174289759767808,
+      "final_pad_amplitude": 0.47037859474727145,
+      "energy_balance_error": 2.461246024289557e-28
+    },
+    {
+      "dummy_feedthrough_f": 1e-14,
+      "sequence": "break_before_make",
+      "internal_peak_during_transition": 0.980062576024202,
+      "initial_internal_amplitude": 0.5182174375807823,
+      "final_internal_amplitude": 0.5172949254424217,
+      "final_pad_amplitude": 0.4702567335742324,
+      "energy_balance_error": 4.417621069237666e-29
+    },
+    {
+      "dummy_feedthrough_f": 1e-14,
+      "sequence": "overlap",
+      "internal_peak_during_transition": 0.5182174375807823,
+      "initial_internal_amplitude": 0.5182174375807823,
+      "final_internal_amplitude": 0.5172949254424217,
+      "final_pad_amplitude": 0.4702567335742324,
+      "energy_balance_error": 1.7788813412733816e-28
+    },
+    {
+      "dummy_feedthrough_f": 5e-14,
+      "sequence": "break_before_make",
+      "internal_peak_during_transition": 0.9765443717544985,
+      "initial_internal_amplitude": 0.5182164815787843,
+      "final_internal_amplitude": 0.51632624567453,
+      "final_pad_amplitude": 0.46937613691433155,
+      "energy_balance_error": 2.082592789783471e-28
+    },
+    {
+      "dummy_feedthrough_f": 5e-14,
+      "sequence": "overlap",
+      "internal_peak_during_transition": 0.5182164815787843,
+      "initial_internal_amplitude": 0.5182164815787843,
+      "final_internal_amplitude": 0.51632624567453,
+      "final_pad_amplitude": 0.46937613691433155,
+      "energy_balance_error": 4.867271785213643e-28
+    }
+  ],
+  "limitations": [
+    "Exploratory linear R/C network; no MOS gate charge injection, nonlinear R/C, supply coupling or package inductance.",
+    "100ps sequencing example, not a timing specification; control resistance changes abruptly but capacitor charge persists.",
+    "Fixed carrier and source; continuous detector/live full-chip integration remains open.",
+    "Node shunt and switch feedthrough capacitances are declared assumptions."
+  ]
+}

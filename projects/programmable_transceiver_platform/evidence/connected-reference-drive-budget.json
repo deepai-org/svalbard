@@ -1,0 +1,53 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "resistance_ohm": 50.0,
+      "capacitance_f": 1e-10,
+      "load_f": 2e-12,
+      "max_sample_gain": 1.0240458772056236,
+      "last_sample_gain": 1.0240458772056236,
+      "fixed_rail_periodic_gain": 1.023951860750776,
+      "fixed_rail_approximation_error": 9.401645484752308e-05,
+      "min_reference_v": 0.9584531531714956,
+      "min_rail_v": 3.0684265458528523,
+      "mean_conversion_current_a": 0.00011870446314451308,
+      "max_observed_post_event_buffer_current_a": 0.000599363482422941,
+      "numerical_difference": 1.008343408770429e-09
+    },
+    {
+      "resistance_ohm": 200.0,
+      "capacitance_f": 1e-10,
+      "load_f": 2e-12,
+      "max_sample_gain": 1.0363071985339887,
+      "last_sample_gain": 1.0363071985339884,
+      "fixed_rail_periodic_gain": 1.0362290723308016,
+      "fixed_rail_approximation_error": 7.81262031868124e-05,
+      "min_reference_v": 0.9471129809659513,
+      "min_rail_v": 3.0657593481636134,
+      "mean_conversion_current_a": 0.00011729998234211777,
+      "max_observed_post_event_buffer_current_a": 0.00020587493221114694,
+      "numerical_difference": 9.87862236456749e-10
+    },
+    {
+      "resistance_ohm": 1000.0,
+      "capacitance_f": 1e-10,
+      "load_f": 2e-12,
+      "max_sample_gain": 1.1322037986327602,
+      "last_sample_gain": 1.1322037986327602,
+      "fixed_rail_periodic_gain": 1.132185475661113,
+      "fixed_rail_approximation_error": 1.8322971647277697e-05,
+      "min_reference_v": 0.8668933995675081,
+      "min_rail_v": 3.065067693731157,
+      "mean_conversion_current_a": 0.00010736478842136435,
+      "max_observed_post_event_buffer_current_a": 0.00012135998511904977,
+      "numerical_difference": 1.5633734307129998e-09
+    }
+  ],
+  "limitations": [
+    "Convergence and independent periodic recurrence checked, not system quality or physical feasibility.",
+    "Buffer resistance changes at fixed assumed bias; achievable impedance/current/bandwidth/power tradeoff is unqualified.",
+    "Observed post-event current is not a bound on all transient or SAR bit-trial current.",
+    "64 direct paired events, held RF source; no full host or autonomous PLL in this local screen."
+  ]
+}

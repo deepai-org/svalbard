@@ -1,0 +1,107 @@
+{
+  "scope": "Independent nominal exported-resistance DC solve, uniformly distributed explicit fixed currents and one ideal feed per rail; sensitivity only",
+  "rails": {
+    "VDD_CORE": {
+      "resistors": 283311,
+      "ideal_source": [
+        "V0",
+        "Node_Metal5_47160_123520",
+        "0",
+        "DC",
+        "3.300000"
+      ],
+      "cases": [
+        {
+          "assumed_current_ma": 24,
+          "max_cell_rail_drop_v": 0.0874634450050113,
+          "source_current_a": 0.02400000001491294,
+          "max_kcl_residual_a": 2.4418749543963147e-13
+        },
+        {
+          "assumed_current_ma": 48,
+          "max_cell_rail_drop_v": 0.1749268900100226,
+          "source_current_a": 0.04800000002982588,
+          "max_kcl_residual_a": 4.883749908792629e-13
+        }
+      ]
+    },
+    "VSS_CORE": {
+      "resistors": 265336,
+      "ideal_source": [
+        "V0",
+        "Node_Metal5_40160_43520",
+        "0",
+        "DC",
+        "0.000000"
+      ],
+      "cases": [
+        {
+          "assumed_current_ma": 24,
+          "max_cell_rail_drop_v": 0.08248956492209945,
+          "source_current_a": 0.02400000001659989,
+          "max_kcl_residual_a": 1.905637233502364e-13
+        },
+        {
+          "assumed_current_ma": 48,
+          "max_cell_rail_drop_v": 0.1649791298441989,
+          "source_current_a": 0.04800000003319978,
+          "max_kcl_residual_a": 3.811274467004728e-13
+        }
+      ]
+    }
+  },
+  "combined": [
+    {
+      "assumed_current_ma": 24,
+      "minimum_cell_supply_v": 3.1300547928772113,
+      "maximum_cell_supply_v": 3.255563569995788,
+      "worst_instance": "_21561_"
+    },
+    {
+      "assumed_current_ma": 48,
+      "minimum_cell_supply_v": 2.9601095857544224,
+      "maximum_cell_supply_v": 3.2111271399915755,
+      "worst_instance": "_21561_"
+    }
+  ],
+  "rejected_tool_load_assumption": {
+    "VDD_CORE": {
+      "requested_tool_current_a": 0.048,
+      "exported_current_sum_a": 0.082110272,
+      "requested_24ma_exported_current_sum_a": 0.0581065407
+    },
+    "VSS_CORE": {
+      "requested_tool_current_a": 0.048,
+      "exported_current_sum_a": 0.082110272,
+      "requested_24ma_exported_current_sum_a": 0.0581065407
+    }
+  },
+  "scipy_version": "1.18.0",
+  "checks": [
+    "Analytic series resistor solution",
+    "KCL residual and source-current balance",
+    "One voltage source per rail",
+    "All 26438 current sources mapped to instance pins",
+    "24-to-48mA exact linear scaling"
+  ],
+  "artifact_sha256": {
+    "VDD_CORE.spice": "931595d3b0699926552f9f72f18a03327ed1ecb150c2707325f0f234d6ac7247",
+    "VSS_CORE.spice": "082813ad8d76eaf6184b2008f92c1af2d8589a3dcd04443bb914e5df6c62873c",
+    "VDD_CORE-voltage.csv": "a978c0cb5a5626053a0732430697d117a01ee929bf15229b3e0f6babe1e4b245",
+    "VSS_CORE-voltage.csv": "324dfb4f1e9bda346597921b358049fe6986a4d3efe32b746e50594efee926aa",
+    "ir.log": "102150932e55a384e3d9f3341be5cd2b240fb6a1f437a8c6f83c5decff6e523c"
+  },
+  "source_sha256": {
+    "solve_pdn_resistance.py": "4799097146c059f35479220ab405ce1de5de1bb4874f04cc6f4da50f1a8737f9",
+    "pdn_ir_screen.tcl": "cdd737557feb16f920d93f337b9ac46536ac0e7d59bdd87c239b4839f0558784",
+    "run_pdn_ir.sh": "8a7a63a08542ad031804e6c55f340fb200496c868ff8b90278126d9b5e81b383"
+  },
+  "input_database_sha256": "7e1568f37bd6ed03ab1e036b737e9e8a637da9f30724f6e5867834565859d5dd",
+  "limitations": [
+    "Uniform current and ideal local feed are assumptions, not measured activity or worst-case bounds.",
+    "PDNSim exported-current discrepancy remains unexplained; its direct voltage results are not accepted as requested-load results.",
+    "No package/feed resistance or inductance, dynamic supply noise, process resistance corners or electromigration qualification.",
+    "Resistor topology/models are tool-generated, not independently extracted foundry signoff.",
+    "Nominal 3.3V timing cannot be applied directly at the resulting local voltages."
+  ]
+}

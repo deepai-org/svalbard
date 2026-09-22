@@ -1,0 +1,148 @@
+{
+  "disposition": "Diagnostic only: wider high input pair does not restore reported tail saturation margin; retained baseline unchanged.",
+  "completed": true,
+  "exact_declared_changes_verified": true,
+  "cases": [
+    {
+      "rail": "VH",
+      "values": [
+        {
+          "case": "baseline",
+          "error_v": 0.013147609705061125,
+          "mirror_current_difference_a": 2.185525481742572e-05,
+          "tail_margin_v": -0.15311027831907548,
+          "tail_margin_sweep_min_v": -0.16019034876525318,
+          "tail_margin_sweep_max_v": -0.1457377591283757,
+          "supply_power_w": 0.04245098314360869
+        },
+        {
+          "case": "candidate",
+          "error_v": 0.010150923062929085,
+          "mirror_current_difference_a": 2.5701953253825475e-05,
+          "tail_margin_v": -0.1153331521111484,
+          "tail_margin_sweep_min_v": -0.12495041571249842,
+          "tail_margin_sweep_max_v": -0.1053693724574134,
+          "supply_power_w": 0.04312997631720076
+        }
+      ]
+    },
+    {
+      "rail": "VL",
+      "values": [
+        {
+          "case": "baseline",
+          "error_v": -0.010478373839788002,
+          "mirror_current_difference_a": 2.1440923732202232e-05,
+          "tail_margin_v": 0.08586626768018302,
+          "tail_margin_sweep_min_v": 0.07123711286792639,
+          "tail_margin_sweep_max_v": 0.10059097368322789,
+          "supply_power_w": 0.04245098314296731
+        },
+        {
+          "case": "candidate",
+          "error_v": -0.010478373839778898,
+          "mirror_current_difference_a": 2.1440923732203858e-05,
+          "tail_margin_v": 0.0858662676801856,
+          "tail_margin_sweep_min_v": 0.0712371128679199,
+          "tail_margin_sweep_max_v": 0.10059097368323261,
+          "supply_power_w": 0.04312997631654785
+        }
+      ]
+    }
+  ],
+  "provenance": [
+    {
+      "cases": [
+        {
+          "name": "VH",
+          "target_v": 2.15,
+          "returncode": 0,
+          "artifacts_sha256": {
+            ".spice": "0919c2036d9e69d48d4f18618fbffa79358d16178c89a48e8b02f11834031ba9",
+            ".dat": "93b5358be6a397f68aa5ebf143bd162cc872a29c9afc23d3bcbfafcb27446759",
+            ".log": "3090a079abd6071175d27f5619d4d4773d459f99c39c73b357abd15026166c2e"
+          }
+        },
+        {
+          "name": "VL",
+          "target_v": 1.15,
+          "returncode": 0,
+          "artifacts_sha256": {
+            ".spice": "781c770e31e18e2ca4e236357af4238e1f3e257d32a5c71369ccea02e8abb3e9",
+            ".dat": "f0a2be364e32b7c761f3d3d9673a697b93d991755d19778bdc0b7978905bca57",
+            ".log": "3090a079abd6071175d27f5619d4d4773d459f99c39c73b357abd15026166c2e"
+          }
+        }
+      ],
+      "sources_before": {
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/screen/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+        "/screen/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+        "/screen/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+        "/screen/reference/pair_device_dc.py": "099891f93fe0dcc34743c24459951c6b8f41dedb568d0d3f025fa946e6a86cb0"
+      },
+      "sources_after": {
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/screen/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+        "/screen/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+        "/screen/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+        "/screen/reference/pair_device_dc.py": "099891f93fe0dcc34743c24459951c6b8f41dedb568d0d3f025fa946e6a86cb0"
+      }
+    },
+    {
+      "cases": [
+        {
+          "name": "VH",
+          "target_v": 2.15,
+          "returncode": 0,
+          "artifacts_sha256": {
+            ".spice": "55310f8ac0b124e4683b786631e006d6dc57eb84e7e9ff6781e2c227e5107700",
+            ".dat": "10fd5f92f5c14d4b01d4bda39709470e9dbd2e168b3adf157a8c24247eb53535",
+            ".log": "3090a079abd6071175d27f5619d4d4773d459f99c39c73b357abd15026166c2e"
+          }
+        },
+        {
+          "name": "VL",
+          "target_v": 1.15,
+          "returncode": 0,
+          "artifacts_sha256": {
+            ".spice": "efbdbf5beeddddd8212ca553dac929c03a992146a853e339bffa1f12cca6e2e4",
+            ".dat": "54cb1ca544cd4f844caeb365ea0278fcdbcd4fa417274c85c6e1b40b23c9ee1e",
+            ".log": "3090a079abd6071175d27f5619d4d4773d459f99c39c73b357abd15026166c2e"
+          }
+        }
+      ],
+      "sources_before": {
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/screen/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+        "/screen/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+        "/screen/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+        "/screen/reference/pair_wide_input_dc.py": "0832b60c80c5b9875cff984556663a80eea0d6cc89e9dbcda57c2fc5b04fca38"
+      },
+      "sources_after": {
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/screen/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+        "/screen/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+        "/screen/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+        "/screen/reference/pair_wide_input_dc.py": "0832b60c80c5b9875cff984556663a80eea0d6cc89e9dbcda57c2fc5b04fca38"
+      }
+    }
+  ],
+  "limitations": [
+    "DC only; Wider input devices increase capacitance and area; compensation and connected dynamics must be rechecked.",
+    "Widening input FETs changes operating current and capacitance as well as headroom; not a unique causal proof.",
+    "Ideal target/bias and zero external load remain."
+  ]
+}

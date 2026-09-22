@@ -1,0 +1,95 @@
+{
+  "status": "connected_pfd_charge_pump_clamped_output_not_pll",
+  "cases": [
+    {
+      "charge_per_cycle_c": -7.893568037467224e-14,
+      "feedback_delay_ns": -5,
+      "equivalent_high_time_s": [
+        5.5387985975152705e-09,
+        4.059166216707989e-08
+      ],
+      "up_minus_down_s": -3.505286356956462e-08,
+      "reset_output_max_v": 1.085634052548531e-08,
+      "artifacts_sha256": {
+        ".spice": "3b836332a0d25d383e1f8253cd3a070b98b7056d303369d231cbe3e4eff7dc2f",
+        ".dat": "384262da35356f36c22b156842c22cd5962af8847f5d43b3a08b89cbaa68998e",
+        ".log": "72735a7c4a0b53ddc06fae1789a2914e4e0ac6bdf3a43f6b69aebc4eaf6b8c1b"
+      },
+      "exact_window_cycle_charges_c": [
+        -7.893568037468356e-14,
+        -7.893568037469232e-14,
+        -7.89356803746836e-14,
+        -7.893568037466635e-14,
+        -7.893568037466095e-14,
+        -7.893568037466006e-14,
+        -7.893568037465816e-14
+      ],
+      "mean_charge_c": -7.893568037467215e-14,
+      "cycle_charge_spread_c": 3.4154521752448927e-26
+    },
+    {
+      "charge_per_cycle_c": 2.241730425757452e-14,
+      "feedback_delay_ns": 0,
+      "equivalent_high_time_s": [
+        5.866542369698779e-09,
+        5.9006400369991324e-09
+      ],
+      "up_minus_down_s": -3.409766730035367e-11,
+      "reset_output_max_v": 1.085634052548531e-08,
+      "artifacts_sha256": {
+        ".spice": "7443153adf534b4b979eb18c296bb085014ee1c7ae7d69d20acf45fb89aef3f5",
+        ".dat": "f9cb8217a93c857e810f7edd70c9f47251435503e1bf324fa1619a4279d056d0",
+        ".log": "c17fae8bc446f38e8f4c61079bdd967c48dd91581f1db185a5dc4f0888f5d242"
+      },
+      "exact_window_cycle_charges_c": [
+        2.2417304257564742e-14,
+        2.2417304257561473e-14,
+        2.241730425756582e-14,
+        2.2417304257586426e-14,
+        2.2417304257581356e-14,
+        2.241730425757919e-14,
+        2.2417304257582646e-14
+      ],
+      "mean_charge_c": 2.241730425757452e-14,
+      "cycle_charge_spread_c": 2.4953248153951045e-26
+    },
+    {
+      "charge_per_cycle_c": 1.3025389657611797e-13,
+      "feedback_delay_ns": 5,
+      "equivalent_high_time_s": [
+        4.059306267146737e-08,
+        5.601851104289643e-09
+      ],
+      "up_minus_down_s": 3.4991211567177725e-08,
+      "reset_output_max_v": 1.085634052548531e-08,
+      "artifacts_sha256": {
+        ".spice": "f81d0af260898e654ab838af602b635359c7513dbcb73054bcf5ca2742bc115c",
+        ".dat": "c517bea4fa7f70093727a9850a182eb31199bb8c32a1e1498cdabcceaef6f570",
+        ".log": "514e1559418ad6e13eea5d3c5d0ab2fe2319429e005422127b86876344498b52"
+      },
+      "exact_window_cycle_charges_c": [
+        1.3025389657611164e-13,
+        1.3025389657609427e-13,
+        1.3025389657610568e-13,
+        1.3025389657613105e-13,
+        1.3025389657612315e-13,
+        1.302538965761323e-13,
+        1.3025389657612777e-13
+      ],
+      "mean_charge_c": 1.3025389657611797e-13,
+      "cycle_charge_spread_c": 3.8042028293378073e-26
+    }
+  ],
+  "source_sha256": {
+    "pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+    "charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff"
+  },
+  "limitations": [
+    "25MHz, TT 3.3V 27C, 50fF output loads plus actual charge-pump gates; output clamped at 1.08V.",
+    "No frequency acquisition, dead-zone sweep, mismatch, supply perturbation or extracted timing.",
+    "Aligned charge offset is preserved, not passed as matching; static clamp does not establish loop ripple or phase-noise performance."
+  ],
+  "aligned_mean_current_a": 5.604326064393631e-07,
+  "aligned_equivalent_20ua_pulse_s": 1.1208652128787259e-09,
+  "direction_checks_pass": true
+}

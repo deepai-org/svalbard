@@ -1,0 +1,58 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "reply": {
+        "token": 35,
+        "operation": "start_local",
+        "applied_at": 0.0004562,
+        "epoch": 0,
+        "generation": 0,
+        "accepted": true,
+        "value": 196640
+      },
+      "played": 32,
+      "captured": 32
+    },
+    {
+      "mode": 1,
+      "reply": {
+        "token": 35,
+        "operation": "start_local",
+        "applied_at": 0.0004562,
+        "epoch": 0,
+        "generation": 0,
+        "accepted": true,
+        "value": 196640
+      },
+      "played": 32,
+      "captured": 32
+    }
+  ],
+  "atomic_rejection_cases": [
+    {
+      "mode": 0,
+      "rejected": "Capture requires idle active stream and future start",
+      "tx_started": false
+    },
+    {
+      "mode": 1,
+      "rejected": "Capture requires idle active stream and future start",
+      "tx_started": false
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "contract": [
+    "Payload:bits1:0 TX/RX direction mask,bits17:2 sample count,bits31:18 start delay in control-clock periods.",
+    "Current local memory operation requires32 samples; selected TX/RX clocks start from command execution time plus the declared delay.",
+    "Both selected engines are preflighted together; rejection commits no scheduling state."
+  ],
+  "limitations": [
+    "Finite32-sample local-memory operation only; continuous streaming/run-stop controls remain open.",
+    "RX defaults to10ns after TX; configure_local_timing selects a signed control-period offset. General trigger routing remains open.",
+    "Staging relies on schedule/capture methods assigning new timing/codec objects without advancing shared analog state.",
+    "Packed operation still requires multiword hardware management implementation."
+  ]
+}

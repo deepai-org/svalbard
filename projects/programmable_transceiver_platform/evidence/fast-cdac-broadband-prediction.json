@@ -1,0 +1,55 @@
+{
+  "status": "independent_fixture_prediction_comparison",
+  "source_sha256": {
+    "adc-kickback-fine-clamped.json": "865c7a5d060dc14a3fb4cd1f463f8d2114bf2d4884121449a66d3d0c54f04c0f",
+    "adc-cdac-kickback.json": "8728f04dd7c8e3bfac4eaa57c69ecbc2606d79c7039ca982b92aadf4f2cf4d92",
+    "adc-top-load-matrix.json": "e65333f4d1d22f1a0c59d7c6f6e9ad5f24e574060814fe980d7d5b2b1129ccaa",
+    "adc-top-load.json": "c140b4b3b1c598421e046f0b7da4bc9bd9f237146f0214e1bb8b4d08586c56f2",
+    "fast-cdac-passive-fit.json": "6c30db408c4e070f48ee944d06753a730a1b09b72ea3539d561b1686d38d4969"
+  },
+  "script_sha256": "c6a235cc66f42f09bb42b63ae9c174fc48c7256044ae061c1390356780f64951",
+  "results": [
+    {
+      "input_differential_v": -0.001,
+      "metrics": {
+        "differential": {
+          "predicted_peak_v": 0.00022207552798431725,
+          "observed_peak_v": 0.00022170999999993057,
+          "max_error_v": 1.5177575758305514e-06,
+          "time_weighted_rms_error_v": 2.2753254463440347e-07
+        },
+        "common_mode": {
+          "predicted_peak_v": 0.0026747999878300953,
+          "observed_peak_v": 0.0026733700000001193,
+          "max_error_v": 1.433528555546456e-05,
+          "time_weighted_rms_error_v": 1.0489701405317687e-06
+        }
+      },
+      "step_refinement_max_port_difference_v": 8.347025011283538e-10
+    },
+    {
+      "input_differential_v": 0.001,
+      "metrics": {
+        "differential": {
+          "predicted_peak_v": 0.00022207552798913805,
+          "observed_peak_v": 0.00022169999999999135,
+          "max_error_v": 1.4931376322614709e-06,
+          "time_weighted_rms_error_v": 2.557157082407078e-07
+        },
+        "common_mode": {
+          "predicted_peak_v": 0.0026747999878300593,
+          "observed_peak_v": 0.0026733799999999475,
+          "max_error_v": 1.432778555563374e-05,
+          "time_weighted_rms_error_v": 1.0535820629748031e-06
+        }
+      },
+      "step_refinement_max_port_difference_v": 8.347024868168851e-10
+    }
+  ],
+  "limitations": [
+    "No fitted voltage gain or time shift; current sign and timing use SPICE source conventions.",
+    "Passive AC-fit modal network; omitted modal coupling, nonlinear switching and reference dynamics.",
+    "Clamped and floating input trajectories differ, including sampler-induced initial bias.",
+    "Two nominal inputs with fixed-code127 transistor CDAC and ideal rails; not full SAR or new process conditions."
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "status": "experimental_targeted_lifecycle_passed",
+  "class_name": "PhaseLoadedTxChip",
+  "network_frame_hz": 2412000000,
+  "phase_max_step_s": 1e-09,
+  "phase_event_alignment": "forecast charge-pump transitions",
+  "detector": "always-connected loaded network monitor; calibration owns sampled readout",
+  "calibration": "relative correction, actual timed probes",
+  "test": "connected-phase-loaded-calibration.json",
+  "launch": "phase-loaded-calibration-launch.json",
+  "not_yet_verified": [
+    "Sustained retuned lock, calibrated recovery and retuned pad quality",
+    "Mode1 and retuned/recovered independent loaded-pad quality",
+    "Shared detector ADC resource allocation",
+    "DC supply/power feedback and physical loading uncertainties",
+    "Recovery reopening and phase-step convergence over complete run"
+  ],
+  "retuning_candidate": "RetunableLoadedTxChip",
+  "retuning_evidence": "connected-retunable-loaded-tx.json",
+  "loaded_pad_quality_evidence": "connected-loaded-pad-quality-mode0.json"
+}

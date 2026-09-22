@@ -1,0 +1,82 @@
+{
+  "completed": true,
+  "source_evidence_sha256": "26156d75e176ba4fd3de38972bbc309488379d938b928a638f6675b686fc4b36",
+  "window_ns": [
+    7424,
+    7936
+  ],
+  "nodes": {
+    "v(oip)": {
+      "rises": 0,
+      "min_v": 1.523288955190168,
+      "max_v": 1.540947133266078,
+      "max_period_ps": null,
+      "min_period_ps": null,
+      "intervals_over_800ps": 0
+    },
+    "v(oin)": {
+      "rises": 0,
+      "min_v": 1.51031233674214,
+      "max_v": 1.543950919165386,
+      "max_period_ps": null,
+      "min_period_ps": null,
+      "intervals_over_800ps": 0
+    },
+    "v(oqp)": {
+      "rises": 0,
+      "min_v": 1.518882685747665,
+      "max_v": 1.539526599147787,
+      "max_period_ps": null,
+      "min_period_ps": null,
+      "intervals_over_800ps": 0
+    },
+    "v(oqn)": {
+      "rises": 0,
+      "min_v": 1.505045298849844,
+      "max_v": 1.558049073066364,
+      "max_period_ps": null,
+      "min_period_ps": null,
+      "intervals_over_800ps": 0
+    },
+    "v(fb)": {
+      "rises": 32,
+      "min_v": 0.02679540291819734,
+      "max_v": 3.261046845873672,
+      "max_period_ps": 24187.70644809292,
+      "min_period_ps": 7811.0178643554045,
+      "intervals_over_800ps": null
+    },
+    "v(ref)": {
+      "rises": 10,
+      "min_v": -0.06207829948926104,
+      "max_v": 3.383913803662905,
+      "max_period_ps": 51200.00003910966,
+      "min_period_ps": 51199.999964375944,
+      "intervals_over_800ps": null
+    }
+  },
+  "baseband": {
+    "i": {
+      "mean_v": -0.0004641620182066216,
+      "peak_to_peak_v": 7.007829350147432e-07,
+      "reference_fundamental_peak_v": 2.107187382994739e-08
+    },
+    "q": {
+      "mean_v": -0.001742838102240874,
+      "peak_to_peak_v": 5.746709090814761e-07,
+      "reference_fundamental_peak_v": 2.406162972983558e-09
+    }
+  },
+  "currents": {
+    "i(vbuf)": -0.01827795728346493,
+    "i(vpll)": -0.001571121016759516
+  },
+  "limitations": [
+    "Seeded deterministic zero-input waveform; period modulation is not intrinsic jitter or phase noise.",
+    "Crossing counts and voltage ranges do not establish cold-start, lock robustness or mixer acceptance."
+  ],
+  "control_range_v": [
+    -0.0004884163629853678,
+    0.07412367860161229
+  ]
+}

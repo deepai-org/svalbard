@@ -1,0 +1,36 @@
+"""Bounded gain-assisted residual measurement using the actual IQ codec."""
+import sys,json,math
+from pathlib import Path
+sys.path.insert(0,'/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected')
+from chip_model import encode_iq,decode_iq
+
+def interval(reading,bits,gain,gain_error,offset_bound):
+    # Endpoint codes cannot supply a finite two-sided interval under saturation.
+    q=1/(2**bits)
+    if reading<=-1+2*q or reading>=1-4*q:return None
+    lo=reading-q;hi=reading+q
+    endpoints=[v/g for v in (lo,hi) for g in (gain*(1-gain_error),gain*(1+gain_error))]
+    return [min(endpoints)-offset_bound,max(endpoints)+offset_bound]
+
+rows=[];tol=.5/4095
+for bits in (8,12):
+ for gain in (1,4,16,64,128):
+  for residual in (-.2,-.03,-.002,-250e-6,-120e-6,-60e-6,0.,60e-6,120e-6,250e-6,.002,.03,.2):
+   for error in (-.02,0.,.02):
+    for offset in (-20e-6,0.,20e-6):
+     reading=decode_iq(encode_iq(complex(gain*(1+error)*(residual+offset),0),bits),bits).real
+     bounds=interval(reading,bits,gain,.02,20e-6)
+     state='unverified' if bounds is None else ('verified' if bounds[0]>=-tol and bounds[1]<=tol else ('failed' if bounds[0]>tol or bounds[1]<-tol else 'unverified'))
+     if bounds is not None:assert bounds[0]-1e-14<=residual<=bounds[1]+1e-14,(bits,gain,residual,bounds)
+     assert state!='verified' or abs(residual)<=tol
+     assert state!='failed' or abs(residual)>tol
+     rows.append(dict(bits=bits,gain=gain,residual_v=residual,actual_gain_error=error,actual_offset_v=offset,reading_v=reading,interval_v=bounds,accuracy=state))
+summary=[]
+for bits in (8,12):
+ for gain in (1,4,16,64,128):
+  good=[r for r in rows if r['bits']==bits and r['gain']==gain and abs(r['residual_v'])<=60e-6]
+  summary.append(dict(bits=bits,gain=gain,small_residual_verified=sum(r['accuracy']=='verified' for r in good),small_residual_cases=len(good),nominal_input_headroom_v=1/gain))
+report=dict(status='passed',summary=summary,cases=rows,physical_qualification=False,
+ assumptions='Static independent observer, +/-2% gain, +/-20uV input-referred offset, ideal codec, fixed reference. Saturated readings are unverified; no hidden residual is used in the decision.')
+Path('/tmp/svalbard-calibration-pass877/gain-observer-report.json').write_text(json.dumps(report,indent=2)+'\n')
+print(json.dumps(summary,indent=2))

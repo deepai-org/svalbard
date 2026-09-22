@@ -1,0 +1,104 @@
+{
+  "completed": true,
+  "cases": [
+    {
+      "case": "baseline",
+      "points": [
+        {
+          "hz": 1000000.0,
+          "source_gain": 6.681771995754111,
+          "terminal_gain": 10.248410190443627,
+          "input_differential_transfer": 0.6519813192083869
+        },
+        {
+          "hz": 5000000.0,
+          "source_gain": 6.873399627473534,
+          "terminal_gain": 10.198471356349474,
+          "input_differential_transfer": 0.673963713512243
+        },
+        {
+          "hz": 10000000.0,
+          "source_gain": 7.14537533368543,
+          "terminal_gain": 9.146927513276697,
+          "input_differential_transfer": 0.7811776493597408
+        },
+        {
+          "hz": 20000000.0,
+          "source_gain": 4.580307231844294,
+          "terminal_gain": 4.372430908612147,
+          "input_differential_transfer": 1.0475425061200405
+        }
+      ],
+      "output_cm_v": 1.087233585516873,
+      "supply_mw": 14.20857739994227,
+      "reported_device_margins_v": {
+        "xa.xip": 1.0249313967079114,
+        "xa.xin": 1.0249313967079137,
+        "xa.xtail": 0.5491818529229539,
+        "xb.xip": 0.9247697713013662,
+        "xb.xin": 0.9247697713013833,
+        "xb.xtail": 0.6263057788660923
+      },
+      "peak_gain": 7.14537533368543,
+      "peak_hz": 10000000.0,
+      "artifacts_sha256": {
+        ".spice": "53d6695781d73cf83443f9c3c8e531b4db526b388d07008f192586c0a3a1d37e",
+        ".log": "a8dd772b7e723603d026322889ddf059ce89c303f953178676e2b02097ae45d2",
+        ".dat": "bd5c215b255ec13eff50a2afbfa99e77f872719ae7fcb790cc3aaf028efd69dd",
+        "-op.dat": "085438037ab4dccb04bcec377bbf3d3209a4090aa95fd40cac9591d38571b772"
+      }
+    },
+    {
+      "case": "candidate",
+      "points": [
+        {
+          "hz": 1000000.0,
+          "source_gain": 6.879616370897318,
+          "terminal_gain": 10.695951669942762,
+          "input_differential_transfer": 0.6431981541418215
+        },
+        {
+          "hz": 5000000.0,
+          "source_gain": 7.154611183687662,
+          "terminal_gain": 10.71529989394738,
+          "input_differential_transfer": 0.667700508105144
+        },
+        {
+          "hz": 10000000.0,
+          "source_gain": 7.64167119732761,
+          "terminal_gain": 9.584321196732429,
+          "input_differential_transfer": 0.7973095893252071
+        },
+        {
+          "hz": 20000000.0,
+          "source_gain": 4.616279967433922,
+          "terminal_gain": 4.295252171313281,
+          "input_differential_transfer": 1.0747401510590437
+        }
+      ],
+      "output_cm_v": 1.0906187541079095,
+      "supply_mw": 14.057265739460433,
+      "reported_device_margins_v": {
+        "xa.xip": 1.1941180298760807,
+        "xa.xin": 1.194118029876079,
+        "xa.xtail": 0.40628818756716717,
+        "xb.xip": 0.8992739561451959,
+        "xb.xin": 0.899273956145193,
+        "xb.xtail": 0.6469715192943861
+      },
+      "peak_gain": 7.64167119732761,
+      "peak_hz": 10000000.0,
+      "artifacts_sha256": {
+        ".spice": "09d135f8de1ab3f34d298c3a87bdc15bd0d6ac2e721a45a5792da4b6a597b2d7",
+        ".log": "a8dd772b7e723603d026322889ddf059ce89c303f953178676e2b02097ae45d2",
+        ".dat": "2c8c34db1008158dd1ae75ee486f61368da019ce37965a98031974ba459876eb",
+        "-op.dat": "9408356c795993a338d593424fbb670f15912ac4452d2ccf7989a5fa8b46e55b"
+      }
+    }
+  ],
+  "disposition": "Unadopted: dynamic loading, stability, swing and connected conversion still required.",
+  "limitations": [
+    "Nominal stationary small-signal fixture with ideal1kohm source legs, bias and supplies.",
+    "Gain curve is not a return-ratio stability measurement; input transfer is not general switched-source impedance."
+  ]
+}

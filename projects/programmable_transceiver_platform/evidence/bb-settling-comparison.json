@@ -1,0 +1,91 @@
+{
+  "completed": true,
+  "declared_change": "201 ns to 401 ns horizon only",
+  "provenance": {
+    "bb-connected": {
+      "audit_sha256": "07018b9454c627ce239a9b5fca86520e56a7ebd78b02f9b7a8ef73928e05dc5f",
+      "analysis_sha256": "2bb5a98ae26e815ff1d9e2ee8ce263fe1775e4a8278982ffc3650d69d8df988a"
+    },
+    "bb-connected-settling": {
+      "audit_sha256": "07bee27ac22022da1a3f13cb9654ddb2bb428ab73838badff3fb1e89f7ffcf01",
+      "analysis_sha256": "cf16f9b51f15186cf30d4f72b91d3bb99f4eb9f6c2067b60d9b55d974b7c6920"
+    }
+  },
+  "cases": [
+    {
+      "name": "zero",
+      "horizon_extension_same_window_delta": {
+        "filter_i_peak_v": 0.0,
+        "filter_q_peak_v": 0.0,
+        "filter_i_residual_rms_v": 0.0,
+        "filter_q_residual_rms_v": 0.0
+      },
+      "late_window_delta": {
+        "filter_i_peak_v": -1.2443598593601631e-07,
+        "filter_q_peak_v": 1.9045242821931418e-08,
+        "filter_i_residual_rms_v": 1.2467930587570728e-08,
+        "filter_q_residual_rms_v": -1.1094075479989021e-08
+      },
+      "last_window": {
+        "filter_i_peak_v": 3.674013796463184e-07,
+        "filter_q_peak_v": 1.857861571049241e-07,
+        "filter_i_residual_rms_v": 2.968992869388018e-07,
+        "filter_q_residual_rms_v": 3.957285670538386e-08,
+        "filter_q_over_i": null,
+        "filter_q_phase_deg": null
+      },
+      "combined_late_window": {
+        "filter_i_peak_v": 2.887947579859403e-07,
+        "filter_q_peak_v": 1.0456135639078078e-07,
+        "filter_i_residual_rms_v": 3.8275303737856276e-07,
+        "filter_q_residual_rms_v": 1.0784929930078504e-07,
+        "filter_q_over_i": null,
+        "filter_q_phase_deg": null
+      }
+    },
+    {
+      "name": "tone",
+      "horizon_extension_same_window_delta": {
+        "filter_i_peak_v": 0.0,
+        "filter_q_peak_v": 0.0,
+        "filter_i_residual_rms_v": 0.0,
+        "filter_q_residual_rms_v": 0.0,
+        "filter_q_over_i": 0.0,
+        "filter_q_phase_deg": 0.0
+      },
+      "late_window_delta": {
+        "filter_i_peak_v": 4.838041958912104e-07,
+        "filter_q_peak_v": -1.567025316581358e-07,
+        "filter_i_residual_rms_v": -5.6229515103926346e-08,
+        "filter_q_residual_rms_v": -1.6688325740873942e-08,
+        "filter_q_over_i": -0.0003782644898866483,
+        "filter_q_phase_deg": 0.018543770158998996
+      },
+      "last_window": {
+        "filter_i_peak_v": 0.001848930041329101,
+        "filter_q_peak_v": 0.0020732411653249043,
+        "filter_i_residual_rms_v": 2.8637924029425395e-07,
+        "filter_q_residual_rms_v": 2.6642063811932396e-08,
+        "filter_q_over_i": 1.1213194220342473,
+        "filter_q_phase_deg": -93.47861614079554
+      },
+      "combined_late_window": {
+        "filter_i_peak_v": 0.0018486516664971324,
+        "filter_q_peak_v": 0.0020733088466653653,
+        "filter_i_residual_rms_v": 4.2680954851770563e-07,
+        "filter_q_residual_rms_v": 8.807982301250661e-08,
+        "filter_q_over_i": 1.1215248844547974,
+        "filter_q_phase_deg": -93.4873424592669
+      },
+      "late_amplitude_change_fraction": {
+        "i": 0.00026173560592246403,
+        "q": -7.557764676402456e-05
+      }
+    }
+  ],
+  "limitations": [
+    "Diagnostic window sensitivity only; no requirement-derived settling limit allocated.",
+    "No-tone fitted components and deterministic residuals are not intrinsic noise.",
+    "Seeded/prebiased nominal circuit; no ADC load, autonomous PLL, startup or receiver qualification."
+  ]
+}

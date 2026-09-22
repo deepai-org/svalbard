@@ -1,0 +1,71 @@
+{
+  "status": "device_probe_conventions_verified_at_selected_DC_points",
+  "cases": [
+    {
+      "type": "n",
+      "multiplicity": 1,
+      "drain_source_branch_current_a": -0.0001121539683750696,
+      "reported_id_a": 0.0001121539672018136,
+      "reported_vds_v": 1.15,
+      "reported_vgs_v": 1.0,
+      "reported_vdsat_v": 0.280757334156135
+    },
+    {
+      "type": "n",
+      "multiplicity": 4,
+      "drain_source_branch_current_a": -0.0004486158735002785,
+      "reported_id_a": 0.0004486158688072543,
+      "reported_vds_v": 1.15,
+      "reported_vgs_v": 1.0,
+      "reported_vdsat_v": 0.280757334156135
+    },
+    {
+      "type": "p",
+      "multiplicity": 1,
+      "drain_source_branch_current_a": 1.638069184629524e-05,
+      "reported_id_a": 1.638069068629501e-05,
+      "reported_vds_v": 1.15,
+      "reported_vgs_v": 1.0,
+      "reported_vdsat_v": 0.2147022988950081
+    },
+    {
+      "type": "p",
+      "multiplicity": 4,
+      "drain_source_branch_current_a": 6.552276738518094e-05,
+      "reported_id_a": 6.552276274518003e-05,
+      "reported_vds_v": 1.15,
+      "reported_vgs_v": 1.0,
+      "reported_vdsat_v": 0.2147022988950081
+    }
+  ],
+  "source_sha256_before": {
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+  },
+  "source_sha256_after": {
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+  },
+  "artifacts_sha256": {
+    ".spice": "b63129ebc6241f3eb3520fe05c15fdd3fdbde7c3fdfa07eec2b47dd1db883aac",
+    ".log": "ff7c0c29cd2a45b636b71834f61ebc7c809ec08ae2565c0b24c9bbc76ba511b8",
+    ".dat": "20bac1f1a25a67f84df3862fec638d94771ceb239a9e41026f6f51829d838953"
+  },
+  "limitations": [
+    "Selected forward-conduction nominal DC points, not reverse conduction or every transient operating region.",
+    "Reported ID already includes multiplicity; do not multiply again.",
+    "At these points PMOS VDS/VGS are positive magnitudes, not signed external terminal differences."
+  ]
+}

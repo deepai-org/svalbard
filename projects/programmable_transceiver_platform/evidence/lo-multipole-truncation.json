@@ -1,0 +1,67 @@
+{
+  "status": "completed",
+  "numerical_checks": "passed",
+  "approximation_screen_pass": true,
+  "source_sha256": {
+    "verification/lo_multipole_truncation.py": "a95b71b5155dedfe71ac0f1d1d24ff05c8af3a10b8fae83caa71c79189e27b78",
+    "system_model/architecture_fast/lo_drive.py": "daf0061acb6daaeb4526ffe26a20c2b1a56889a153396acef58ee7a1c4902a8b"
+  },
+  "cases": [
+    {
+      "coarse": {
+        "missing_i_period": 8,
+        "subdivision": 1,
+        "truncations": [
+          {
+            "sidebands_each_side": 0,
+            "relative_rms_error": 6.138247624212199e-07
+          },
+          {
+            "sidebands_each_side": 3,
+            "relative_rms_error": 2.856305095751524e-07
+          },
+          {
+            "sidebands_each_side": 7,
+            "relative_rms_error": 2.2629811077357757e-07
+          }
+        ],
+        "approximation_budget": 0.003,
+        "approximation_screen_pass": true
+      },
+      "fine": {
+        "missing_i_period": 8,
+        "subdivision": 2,
+        "truncations": [
+          {
+            "sidebands_each_side": 0,
+            "relative_rms_error": 6.138089427276408e-07
+          },
+          {
+            "sidebands_each_side": 3,
+            "relative_rms_error": 2.856253545963711e-07
+          },
+          {
+            "sidebands_each_side": 7,
+            "relative_rms_error": 2.262940115328938e-07
+          }
+        ],
+        "approximation_budget": 0.003,
+        "approximation_screen_pass": true
+      },
+      "subdivision_max_error": 1.8169127273651512e-12
+    }
+  ],
+  "carrier_hz": 2400000000.0,
+  "cutoff_hz": 9157407.055691985,
+  "filter_order": 5,
+  "tone_count": 50,
+  "tone_spacing_hz": 312500,
+  "seed": 804,
+  "duration_s": 3.2e-06,
+  "physical_qualification": false,
+  "limitations": [
+    "Fixed multitone symbol, not changing OFDM symbols or Wi-Fi compliance.",
+    "Fifth-order Butterworth filter, normalized switching drive; no gate-voltage mapping.",
+    "Errors measure envelope truncation, not total RF quality or noise."
+  ]
+}

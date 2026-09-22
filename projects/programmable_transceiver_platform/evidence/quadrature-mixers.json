@@ -1,0 +1,149 @@
+{
+  "completed": true,
+  "status": "terminal",
+  "cases": [
+    {
+      "name": "zero",
+      "completed": true,
+      "actual_stop_ns": 201.0,
+      "ring_frequency_hz": 2495422464.2324524,
+      "late_ranges_v": {
+        "OIP": [
+          1.083937526874495,
+          1.960903262827922
+        ],
+        "OIN": [
+          1.083937604392684,
+          1.960903518516278
+        ],
+        "OQP": [
+          1.012022791175686,
+          2.036343289524541
+        ],
+        "OQN": [
+          1.012022780888508,
+          2.036343300731366
+        ],
+        "RF": [
+          0.8045030991263932,
+          0.8270839181681792
+        ],
+        "MIP": [
+          0.5163251699829706,
+          0.6192080870250177
+        ],
+        "MIN": [
+          0.5163252026421908,
+          0.6192080675529202
+        ],
+        "MQP": [
+          0.5226527676658317,
+          0.6309441860748036
+        ],
+        "MQN": [
+          0.5226527524893811,
+          0.6309441817611213
+        ]
+      }
+    },
+    {
+      "name": "tone",
+      "completed": true,
+      "actual_stop_ns": 201.0,
+      "ring_frequency_hz": 2495422464.3012085,
+      "late_ranges_v": {
+        "OIP": [
+          1.08354043915174,
+          1.961414811455451
+        ],
+        "OIN": [
+          1.083537977516332,
+          1.961415653919148
+        ],
+        "OQP": [
+          1.0115919814981,
+          2.036865650821266
+        ],
+        "OQN": [
+          1.011592592526696,
+          2.036862626815999
+        ],
+        "RF": [
+          0.8005239021602054,
+          0.831618329150642
+        ],
+        "MIP": [
+          0.5153873829155492,
+          0.6206374417201759
+        ],
+        "MIN": [
+          0.5153883210249389,
+          0.6206386571803894
+        ],
+        "MQP": [
+          0.5215346188596857,
+          0.6325992512704193
+        ],
+        "MQN": [
+          0.5215348040536308,
+          0.6325989945946748
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "Seeded ring and two mixers; ideal RF source/bias and output terminations, no LNA/ADC or PLL.",
+    "Completion and voltage ranges do not establish conversion quality; conversion/no-tone comparison still required.",
+    "Power excludes control/regeneration and common-mode source delivery."
+  ],
+  "provenance": {
+    "cases": [
+      {
+        "name": "zero",
+        "amplitude_v": 0,
+        "returncode": 0,
+        "timed_out": false,
+        "deck_sha256_before": "31b9655ab861f15af9ee716cec9aed8555078eb63074d281b3a41a7134aca79b",
+        "artifacts_sha256": {
+          ".spice": "31b9655ab861f15af9ee716cec9aed8555078eb63074d281b3a41a7134aca79b",
+          ".log": "55717ca2e8cd8f71dee52436e5e83dc0cb7fef0f7f9975a0adf6f265b2d0ce73",
+          ".dat": "bdf4ef804b1d88eb6f838ae27e1a277d927ccf000036f641d9308ac50a0a1101"
+        }
+      },
+      {
+        "name": "tone",
+        "amplitude_v": 0.01,
+        "returncode": 0,
+        "timed_out": false,
+        "deck_sha256_before": "76f1914bb0d4056480f640562846d5dd3cd3e14a17cfa7764a3ff640045ed4d1",
+        "artifacts_sha256": {
+          ".spice": "76f1914bb0d4056480f640562846d5dd3cd3e14a17cfa7764a3ff640045ed4d1",
+          ".log": "76a92657bae286c63b41afb55f7edb08e0a847eab04d5a4daa6d9a525673d464",
+          ".dat": "9ff8cc176b32e2328d51b3a3acedf5c33997d4b099f41904efd961d6e77a39bc"
+        }
+      }
+    ],
+    "source_sha256_before": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/quadrature/rc_split.spice": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+    },
+    "source_sha256_after": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/quadrature/rc_split.spice": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+    }
+  }
+}

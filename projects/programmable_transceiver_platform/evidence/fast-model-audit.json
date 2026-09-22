@@ -1,0 +1,60 @@
+{
+  "status": "completed",
+  "evidence": [
+    {
+      "evidence": "fast-common-acceptance.json",
+      "status": "passed",
+      "source_mismatches": [],
+      "result_mismatches": [],
+      "current": true,
+      "sha256": "3cf3f7b1b58e827ba4eab8964f0eba716bd244c4476269569b2bacbe22793af3"
+    },
+    {
+      "evidence": "fast-blocker-quality.json",
+      "status": "passed",
+      "source_mismatches": [],
+      "result_mismatches": [],
+      "current": true,
+      "sha256": "28596680b92ab5a13cee75767c3f0b68c30ca9db89b1d491bdb27c14162282ff"
+    },
+    {
+      "evidence": "fast-profile-load-quality.json",
+      "status": "passed",
+      "source_mismatches": [],
+      "result_mismatches": [],
+      "current": true,
+      "sha256": "d9fc78da0d15e5adba26bf04a84a891c7116f37a96956b3da5683296776c166b"
+    },
+    {
+      "evidence": "fast-signed-coupling-quality.json",
+      "status": "passed",
+      "source_mismatches": [],
+      "result_mismatches": [],
+      "current": true,
+      "sha256": "4c9504c913e778a28ab2925292861052b0d051e9cd80771c9e356cfb93f0cb19"
+    }
+  ],
+  "observed_common_configuration": {
+    "receiver_filter_order": 5,
+    "receiver_cutoff_hz": 9157407.055691985,
+    "shared_reference": true,
+    "finite_loaded_tx_network_instantiated": false,
+    "adc_latency_s": 3e-08
+  },
+  "mathematical_closure": false,
+  "transistor_schematic_complete": false,
+  "layout_gate_open": false,
+  "next_priority": "Integrate phase-aware finite TX output network into common chip, detector, loopback and independent pad observation; requalify transport and quality.",
+  "remaining": [
+    "Finite output loading/current and supply interaction are not represented by memoryless output observation.",
+    "Warm coarse clocks are a tested subclass, not the default common composition.",
+    "Pin-level management/RTL agreement, general service and configuration envelopes remain open.",
+    "Reference current/bandwidth limits and all physical block parameters need circuit evidence."
+  ],
+  "implementation_sources": {
+    "verification/fast_model_audit.py": "f239be5158fa570fe60f9566a7a6d0ba9d6ae9f7135027b13e76c85bb72d3b3d",
+    "system_model/architecture_fast/chip.py": "2e57fdff7c04afd66cce7c8167bce093373d8c5c6e2e6aa9d50bde3725bdde83",
+    "system_model/architecture_fast/output_loopback.py": "f1a4ca8f2f921018865f37aee78b3a68a9c4cf99bae3238c10953661ee9323e5",
+    "system_model/connected/loaded_tx_chip.py": "7a92c8e3d4cff825d32f36159dd4feb2f9c18e679c3bdf54547f2984dbf7637d"
+  }
+}

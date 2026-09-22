@@ -1,0 +1,168 @@
+{
+  "completed": true,
+  "cases": [
+    {
+      "case": "baseline",
+      "events": [
+        {
+          "edge_ns": 20,
+          "source_target_v": 0.05,
+          "dc_target_v": 0.33325460322376477,
+          "response_min_v": -6.428769430133485e-07,
+          "response_max_v": 0.37115322019825014,
+          "windows": [
+            {
+              "window_ns": [
+                60,
+                70
+              ],
+              "max_dc_error_v": 0.03673004825041404
+            },
+            {
+              "window_ns": [
+                80,
+                90
+              ],
+              "max_dc_error_v": 0.0037668024584500692
+            }
+          ]
+        },
+        {
+          "edge_ns": 120,
+          "source_target_v": -0.05,
+          "dc_target_v": -0.3332546033980821,
+          "response_min_v": -0.40875844957656016,
+          "response_max_v": 0.33325789470551703,
+          "windows": [
+            {
+              "window_ns": [
+                160,
+                170
+              ],
+              "max_dc_error_v": 0.07341665939502395
+            },
+            {
+              "window_ns": [
+                180,
+                190
+              ],
+              "max_dc_error_v": 0.0074291898668479295
+            }
+          ]
+        },
+        {
+          "edge_ns": 220,
+          "source_target_v": 0,
+          "dc_target_v": -6.745182190570631e-11,
+          "response_min_v": -0.3332439106022058,
+          "response_max_v": 0.03838672176813085,
+          "windows": [
+            {
+              "window_ns": [
+                260,
+                270
+              ],
+              "max_dc_error_v": 0.03706682347061885
+            },
+            {
+              "window_ns": [
+                280,
+                290
+              ],
+              "max_dc_error_v": 0.003940988228652076
+            }
+          ]
+        }
+      ],
+      "artifacts_sha256": {
+        ".spice": "a5a445fcf98bb07bdc50beb1d3d0cf97b6b459aa0c872cf3c14db01a18f31e38",
+        ".dat": "df97cd10c44d3e25542dd0cd3ac0937c9d2e4fd2980834ca22aaded6ed89e2c9",
+        ".log": "b903bdcb32c364f5b488cb9eae9c3cd69c809786b10b50c2ca44cd29d5585ba9"
+      }
+    },
+    {
+      "case": "candidate",
+      "events": [
+        {
+          "edge_ns": 20,
+          "source_target_v": 0.05,
+          "dc_target_v": 0.3429650853202191,
+          "response_min_v": -7.705419549086656e-07,
+          "response_max_v": 0.390794664981406,
+          "windows": [
+            {
+              "window_ns": [
+                60,
+                70
+              ],
+              "max_dc_error_v": 0.047506494002361066
+            },
+            {
+              "window_ns": [
+                80,
+                90
+              ],
+              "max_dc_error_v": 0.006555985990565616
+            }
+          ]
+        },
+        {
+          "edge_ns": 120,
+          "source_target_v": -0.05,
+          "dc_target_v": -0.342965085446842,
+          "response_min_v": -0.4381582217576626,
+          "response_max_v": 0.3426587635647027,
+          "windows": [
+            {
+              "window_ns": [
+                160,
+                170
+              ],
+              "max_dc_error_v": 0.09471660382306946
+            },
+            {
+              "window_ns": [
+                180,
+                190
+              ],
+              "max_dc_error_v": 0.013682872827368464
+            }
+          ]
+        },
+        {
+          "edge_ns": 220,
+          "source_target_v": 0,
+          "dc_target_v": -4.391709218509732e-11,
+          "response_min_v": -0.34235285924014713,
+          "response_max_v": 0.04844080222594016,
+          "windows": [
+            {
+              "window_ns": [
+                260,
+                270
+              ],
+              "max_dc_error_v": 0.04806049513098709
+            },
+            {
+              "window_ns": [
+                280,
+                290
+              ],
+              "max_dc_error_v": 0.006247384123442057
+            }
+          ]
+        }
+      ],
+      "artifacts_sha256": {
+        ".spice": "5415767c22708a8ced3d640e54aa816951d03647d09efcbe02693003a2578ca2",
+        ".dat": "ba53274b81f71feaff89620b0bbc8f315e5b5ce5067b79076f8e50287dd58cc8",
+        ".log": "3cf54508d22787fc416efa5af38ecdd8857f4fd34988468d2f9fffd92d8ac00f"
+      }
+    }
+  ],
+  "limitations": [
+    "Selected zero/positive/negative steps with1kohm source legs only; no actual mixer or ADC loading.",
+    "Errors relative to circuit-specific DC target isolate dynamics, not overall gain accuracy.",
+    "No allocated settling threshold, return-ratio stability margin, noise or PVT qualification."
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "status": "passed",
+  "calibration_peak_pad_magnitude": 0.0002172251555731998,
+  "cases": [
+    {
+      "cause": "stop",
+      "measurements": [
+        {
+          "delay": 2e-08,
+          "transfer": 0.3685115617304612,
+          "pad_magnitude": 0.06700803107740755
+        },
+        {
+          "delay": 2e-07,
+          "transfer": 0.0010453545298327114,
+          "pad_magnitude": 1.2357095520602067e-05
+        },
+        {
+          "delay": 2e-06,
+          "transfer": 0.001,
+          "pad_magnitude": 2.4951591896716043e-06
+        },
+        {
+          "delay": 1e-05,
+          "transfer": 0.001,
+          "pad_magnitude": 2.4999990625e-06
+        }
+      ]
+    },
+    {
+      "cause": "reference_loss",
+      "measurements": [
+        {
+          "delay": 2e-08,
+          "transfer": 0.3685115617304612,
+          "pad_magnitude": 0.06700803107740755
+        },
+        {
+          "delay": 2e-07,
+          "transfer": 0.0010453545298327114,
+          "pad_magnitude": 1.2357095520602067e-05
+        },
+        {
+          "delay": 2e-06,
+          "transfer": 0.001,
+          "pad_magnitude": 2.4951591896716047e-06
+        },
+        {
+          "delay": 1e-05,
+          "transfer": 0.001,
+          "pad_magnitude": 2.4999990625000006e-06
+        }
+      ]
+    },
+    {
+      "cause": "tx_cal_abort",
+      "measurements": [
+        {
+          "delay": 2e-08,
+          "transfer": 0.3685115617304612,
+          "pad_magnitude": 0.06700803107740755
+        },
+        {
+          "delay": 2e-07,
+          "transfer": 0.0010453545298327114,
+          "pad_magnitude": 1.2357095520602067e-05
+        },
+        {
+          "delay": 2e-06,
+          "transfer": 0.001,
+          "pad_magnitude": 2.4951591896716043e-06
+        },
+        {
+          "delay": 1e-05,
+          "transfer": 0.001,
+          "pad_magnitude": 2.4999990625e-06
+        }
+      ]
+    }
+  ],
+  "assumptions": {
+    "off_amplitude": 0.001,
+    "on_amplitude": 1.0,
+    "tau_s": 2e-08
+  },
+  "limitations": [
+    "Experimental subclass only; default/full-chain quality profiles not promoted.",
+    "Detector is upstream of isolation, unlike a pad-side detector; topology is explicit but unqualified.",
+    "No additive bypass leakage, charge injection, impedance, package coupling or supply-current model.",
+    "First DAC completion opens the gate; startup waveform quality and recovery reopening remain untested.",
+    "60dB off attenuation and20ns time constant are declared sensitivity assumptions, not GF180 evidence."
+  ]
+}

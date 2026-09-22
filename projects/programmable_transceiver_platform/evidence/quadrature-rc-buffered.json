@@ -1,0 +1,72 @@
+{
+  "completed": true,
+  "provenance": {
+    "cases": [
+      {
+        "name": "load25",
+        "load_f": 2.5e-14,
+        "q_load_f": 2.5e-14,
+        "returncode": 0,
+        "deck_sha256_before": "33935e8ed8dbc890f8f2a5855b9f432dc53e395cec90bb2f3e35edd461b846de",
+        "artifacts_sha256": {
+          ".spice": "33935e8ed8dbc890f8f2a5855b9f432dc53e395cec90bb2f3e35edd461b846de",
+          ".log": "8855f4d3188eda8e07935cb2f54e223ffc9c8b14c08254dc4260259aa5f7ce67",
+          ".dat": "636e307a68b363c2b9c2f149b351d97b7b3fe7260e9be2ec667391ca5f0c496d",
+          "-bias.dat": "9f35d1215258bb0ece33f6d4345b404b0356c8f4df66b6b7095b11d0ba49b815"
+        }
+      }
+    ],
+    "source_sha256_before": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/quadrature/rc_split.spice": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5"
+    },
+    "source_sha256_after": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/quadrature/rc_split.spice": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5"
+    }
+  },
+  "bias_input_v": [
+    1.530317700898016,
+    1.530317700898016,
+    1.530317700898016,
+    1.530317700898016
+  ],
+  "buffer_supply_current_a": 0.01015440891600231,
+  "at_2p5ghz": {
+    "rc_nodes": {
+      "i_gain": 0.5329464412446897,
+      "q_gain": 0.6242211739656883,
+      "q_over_i": 1.1712643629026356,
+      "q_lead_degrees": 90.00000000000001,
+      "phase_range_deg": [
+        89.99999999999996,
+        90.00000000000009
+      ]
+    },
+    "buffer_outputs": {
+      "i_gain": 2.6534779725974644,
+      "q_gain": 3.1079241870505467,
+      "q_over_i": 1.1712643629026356,
+      "q_lead_degrees": 90.00000000000001,
+      "phase_range_deg": [
+        89.99999999999996,
+        90.00000000000009
+      ]
+    }
+  },
+  "limitations": [
+    "Small-signal AC about DC self-bias; not large-signal clock edges, limiting, startup or mixer drive.",
+    "Ideal source/common-mode/supply,100k feedback resistors and50fF output loads; PDK MIM coupling and actual16 buffer FETs.",
+    "Matched branches only; process/mismatch/noise and oscillator integration remain open."
+  ]
+}

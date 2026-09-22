@@ -1,0 +1,3602 @@
+{
+  "completed": true,
+  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "model_sha256": {
+    "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+    "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24"
+  },
+  "nfet_wrapper": {
+    "first_line": 46931,
+    "last_line": 46944,
+    "text": ".subckt nfet_03v3 d g s b w=1e-5 l=2.8e-7 nf=1 m=1 as=0 ad=0 ps=0 pd=0 nrd=0 nrs=0 par=1 dtemp=0 sa=0 sb=0 sd=0\n.param par_vth=0.007148\n.param par_k=0.007008\n.param par_l=1.5e-7\n.param par_w=-1e-7\n.param par_leff='l-par_l'\n.param par_weff='par*(w-par_w)'\n.param p_sqrtarea='sqrt((par_leff)*(par_weff))'\n.param var_k='0.7071*par_k*1e-06/p_sqrtarea'\n.param mis_k='agauss(0,var_k,1)'\n.param var_vth='0.7071*par_vth*1e-06/p_sqrtarea'\n.param mis_vth='agauss(0,var_vth,1)'\nm0 d g s b nfet_03v3 ad=ad as=as delvto='mis_vth*sw_stat_mismatch' l=l m=m mulu0='1-mis_k*sw_stat_mismatch' nf=nf nrd=nrd nrs=nrs pd=pd ps=ps sa=sa sb=sb sd=sd w=w\n.ends nfet_03v3"
+  },
+  "load_resistor_wrapper": {
+    "first_line": 38723,
+    "last_line": 38743,
+    "text": ".subckt ppolyf_u 1 2 3 r_length=l r_width=w dtemp=0 par=1 s=1 r_rsh0='rsh_ppolyf_u*(1+mc_rsh_ppolyf_u/(rsh_ppolyf_u)*res_mc_skew*sw_stat_global)' r_dw='2.55e-8*(1+mc_dw_ppolyf_u*res_mc_skew*sw_stat_global)' r_dl=2e-11 r_vc1=0 r_vc2=0 r_tc1=-0.9e-4 r_tc2=7e-7 r_tnom=25 r_l='s*(r_length-2*r_dl)' r_w='r_width-2*r_dw' r_n='r_l/r_w' r_temp='1+r_tc1*(temper+dtemp-r_tnom)+r_tc2*(temper+dtemp-r_tnom)*(temper+dtemp-r_tnom)' mis_r=0\n.model ppolyf_u_body r\n+ af=1.79\n+ kf=2.4e-23\n+ noise=1\n.model ppolyf_u_t r\n+ af=1.79\n+ kf=2.4e-23\n+ noise=1\n+ rsh='60+mc_rt_ppolyf_u*res_mc_skew*sw_stat_global'\n+ tc1=-1.47e-3\n+ tc2=0.82e-6\n+ tnom=25\n.model fox_sub c\n+ cox=8.85e-05\nrt1 1 11 ppolyf_u_t dtemp=dtemp l='s*1u' w=r_w\nc1 1 3 fox_sub dtemp=dtemp l='r_l/2' w=r_w\nrb 11 21 ppolyf_u_body r='(r_temp*r_n*(r_rsh0+r_vc1*abs(v(11,21))/r_n+r_vc2*abs(v(11,21))*abs(v(11,21))/r_n/r_n))*(1+mis_r*sw_stat_mismatch)' w=r_w l=r_l dtemp=dtemp\nrt2 21 2 ppolyf_u_t dtemp=dtemp l='s*1u' w=r_w\nc2 2 3 fox_sub dtemp=dtemp l='r_l/2' w=r_w\n.ends ppolyf_u"
+  },
+  "noise_parameter_excerpts": [
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice",
+      "line": 52,
+      "text": "**        \"fnoicor\" switch is added for user to select between the best- or worst-case",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice",
+      "line": 54,
+      "text": "**         fnoicor = 0  : (default) as-extracted simulation",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice",
+      "line": 55,
+      "text": "**         fnoicor = 1  : worst case simulation",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice",
+      "line": 71,
+      "text": ".param fnoicor=0",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 676,
+      "text": ".param nfet_03v3_noia='(fnoicor==0)*3.2e+041+(fnoicor==1)*3.5e+042'",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 677,
+      "text": ".param nfet_03v3_noib='(fnoicor==0)*1.2e+020+(fnoicor==1)*1.2e+020'",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 678,
+      "text": ".param nfet_03v3_noic='(fnoicor==0)*6.0e+008+(fnoicor==1)*6.0e+008'",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 679,
+      "text": ".param pfet_03v3_noia='(fnoicor==0)*3.2e+041+(fnoicor==1)*4.0e+042'",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 680,
+      "text": ".param pfet_03v3_noib='(fnoicor==0)*1.8e+020+(fnoicor==1)*1.8e+020'",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 681,
+      "text": ".param pfet_03v3_noic='(fnoicor==0)*3.0e+009+(fnoicor==1)*6.0e+009'",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 682,
+      "text": ".param nfet_06v0_noia='(fnoicor==0)*1.998e+041+(fnoicor==1)*8e+041'",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 683,
+      "text": ".param nfet_06v0_noib='(fnoicor==0)*1e+025+(fnoicor==1)*4e+025'",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 684,
+      "text": ".param nfet_06v0_noic='(fnoicor==0)*5e+008+(fnoicor==1)*2e+009'",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 685,
+      "text": ".param pfet_06v0_noia='(fnoicor==0)*6e+040+(fnoicor==1)*2e+043'",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 686,
+      "text": ".param pfet_06v0_noib='(fnoicor==0)*1.5945e+025+(fnoicor==1)*1.5945e+025'",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 687,
+      "text": ".param pfet_06v0_noic='(fnoicor==0)*1.0499e+009+(fnoicor==1)*1.0499e+009'",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 688,
+      "text": ".param nfet_06v0_nvt_noia='(fnoicor==0)*5.5e+040+(fnoicor==1)*1e+041'",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 689,
+      "text": ".param nfet_06v0_nvt_noib='(fnoicor==0)*2.5e+025+(fnoicor==1)*9.5e+025'",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 690,
+      "text": ".param nfet_06v0_nvt_noic='(fnoicor==0)*1e+007+(fnoicor==1)*2e+007'",
+      "model": null
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 763,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 770,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 835,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 836,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 837,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 892,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1007,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1014,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1079,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1080,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1081,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1135,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1250,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1257,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1319,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1320,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1321,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1372,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1485,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1492,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1536,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1537,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1538,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1574,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1686,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1693,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1756,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1757,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1758,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1811,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1925,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1932,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1997,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1998,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 1999,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2053,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2168,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2175,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2240,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2241,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2242,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2294,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2406,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2413,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2457,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2458,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2459,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2495,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2603,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2610,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2675,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2676,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2677,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2732,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2849,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2856,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2919,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2920,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2921,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 2972,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3084,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3091,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3159,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3160,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3161,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3215,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3329,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3336,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3380,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3381,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3382,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3418,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3529,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3536,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3599,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3600,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3601,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3640,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3739,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3746,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3807,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3808,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3809,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3845,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3941,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 3948,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4015,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4016,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4017,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4053,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4149,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4156,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4200,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4201,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4202,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4238,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4371,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4378,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4443,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4444,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4445,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4500,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4615,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4622,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4687,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4688,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4689,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4743,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4858,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4865,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4927,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4928,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4929,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 4980,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5093,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5100,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5144,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5145,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5146,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5182,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5294,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5301,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5364,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5365,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5366,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5419,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5533,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5540,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5605,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5606,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5607,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5661,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5776,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5783,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5848,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5849,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5850,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 5902,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6014,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6021,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6065,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6066,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6067,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6103,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6211,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6218,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6283,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6284,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6285,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6340,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6457,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6464,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6527,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6528,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6529,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6580,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6692,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6699,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6767,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6768,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6769,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6823,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6937,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6944,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6988,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6989,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 6990,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7026,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7137,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7144,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7207,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7208,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7209,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7248,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7347,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7354,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7415,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7416,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7417,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7453,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7549,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7556,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7623,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7624,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7625,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7661,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7757,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7764,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7808,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7809,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7810,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7846,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7979,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 7986,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8051,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8052,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8053,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8108,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8223,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8230,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8295,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8296,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8297,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8351,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8466,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8473,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8535,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8536,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8537,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8588,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8701,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8708,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8752,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8753,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8754,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8790,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8902,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8909,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8972,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8973,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 8974,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9027,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9141,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9148,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9213,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9214,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9215,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9269,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9384,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9391,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9456,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9457,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9458,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9510,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9622,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9629,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9673,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9674,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9675,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9711,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9819,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9826,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9891,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9892,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9893,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 9948,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10065,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10072,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10135,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10136,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10137,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10188,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10300,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10307,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10375,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10376,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10377,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10431,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10545,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10552,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10596,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10597,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10598,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10634,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10745,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10752,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10815,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10816,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10817,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10856,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10955,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 10962,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11023,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11024,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11025,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11061,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11157,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11164,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11231,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11232,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11233,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11269,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11365,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11372,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11416,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11417,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11418,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11454,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11587,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11594,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11659,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11660,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11661,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11716,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11831,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11838,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11903,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11904,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11905,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 11959,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12074,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12081,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12143,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12144,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12145,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12196,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12309,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12316,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12360,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12361,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12362,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12398,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12510,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12517,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12580,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12581,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12582,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12635,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12749,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12756,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12821,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12822,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12823,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12877,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12992,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 12999,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13064,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13065,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13066,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13118,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13230,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13237,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13281,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13282,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13283,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13319,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13427,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13434,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13499,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13500,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13501,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13556,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13673,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13680,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13743,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13744,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13745,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13796,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13908,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13915,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13983,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13984,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 13985,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14039,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14153,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14160,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14204,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14205,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14206,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14242,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14353,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14360,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14423,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14424,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14425,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14464,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14563,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14570,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14631,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14632,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14633,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14669,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14765,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14772,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14839,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14840,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14841,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14877,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14973,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 14980,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15024,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15025,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15026,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15062,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15195,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15202,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15267,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15268,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15269,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15324,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15439,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15446,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15511,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15512,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15513,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15567,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15682,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15689,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15751,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15752,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15753,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15804,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15917,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15924,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15968,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15969,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 15970,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16006,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16118,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16125,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16188,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16189,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16190,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16243,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16357,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16364,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16429,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16430,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16431,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16485,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16600,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16607,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16672,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16673,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16674,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16726,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16838,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16845,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16889,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16890,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16891,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 16927,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17035,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17042,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17107,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17108,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17109,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17164,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17281,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17288,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17351,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17352,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17353,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17404,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17516,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17523,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17591,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17592,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17593,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17647,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17761,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17768,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17812,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17813,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17814,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17850,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17961,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 17968,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18031,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18032,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18033,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18072,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18171,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18178,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18239,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18240,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18241,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18277,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18373,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18380,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18447,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18448,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18449,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18485,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18581,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18588,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18632,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18633,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18634,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 18670,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39160,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39167,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39232,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39233,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39234,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39289,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.0 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39404,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39411,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39476,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39477,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39478,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39532,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.1 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39647,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39654,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39716,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39717,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39718,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39769,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.2 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39882,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39889,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39933,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39934,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39935,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 39971,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.3 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40083,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40090,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40153,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40154,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40155,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40208,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.4 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40322,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40329,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40394,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40395,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40396,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40450,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.5 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40565,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40572,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40637,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40638,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40639,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40691,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.6 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40803,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40810,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40854,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40855,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40856,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 40892,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.7 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41000,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41007,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41072,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41073,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41074,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41129,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.8 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41246,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41253,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41316,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41317,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41318,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41369,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.9 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41481,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41488,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41556,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41557,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41558,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41612,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.10 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41726,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41733,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41777,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41778,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41779,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41815,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.11 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41926,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41933,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41996,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41997,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 41998,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42037,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.12 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42136,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42143,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42204,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42205,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42206,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42242,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.13 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42338,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42345,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42412,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42413,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42414,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42450,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.14 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42546,
+      "text": "+ ef=0.95",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42553,
+      "text": "+ fnoimod=1",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42597,
+      "text": "+ noia='nfet_03v3_noia'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42598,
+      "text": "+ noib='nfet_03v3_noib'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42599,
+      "text": "+ noic='nfet_03v3_noic'",
+      "model": ".model nfet_03v3.15 nmos"
+    },
+    {
+      "path": "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice",
+      "line": 42635,
+      "text": "+ tnoimod=0",
+      "model": ".model nfet_03v3.15 nmos"
+    }
+  ],
+  "load_resistor_internal_elements": [
+    "rt1",
+    "rb",
+    "rt2"
+  ],
+  "expanded_resistive_elements_for_eight_loads": 24,
+  "limitations": [
+    "Source inspection only; simulator noise contributions and effective active-bin coefficients still need measurement.",
+    "Each external load contains three resistive elements and substrate capacitors; one external pulse does not automatically reproduce all internal-source transfer functions.",
+    "Model noise settings are not measured silicon guarantees or complete unknown bounds.",
+    "No oscillator phase-noise PSD or jitter result."
+  ]
+}

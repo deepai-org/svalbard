@@ -1,0 +1,61 @@
+{
+  "status": "rail_probe_reproduction_checked",
+  "voltage_tolerance_v": 1e-05,
+  "source_sha256": {
+    "projects/programmable_transceiver_platform/analog/adc/comparator.spice": "a41ecccf87f625bbddca6139730c5e8500529c5acb2f05a5052f9049e8ee74a0",
+    "projects/programmable_transceiver_platform/analog/adc/cdac8_mim.spice": "532e86fc11da6f695d092dd06c0508cbb363f49c4c2b070c78683c7d5bf85e14",
+    "projects/programmable_transceiver_platform/analog/adc/cdac8_scaled.spice": "4006f42115b3a5a30b9ad74626ef0c084655bf0cdc2f1d1cc8bd32f65e351fd2",
+    "ip/blocks/analog/wifi_80211b/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+    "projects/programmable_transceiver_platform/analog/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+    "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_complement_output2.spice": "990e4bdc4c080d64c67053ccf629447b7bfae66e921cb8191da964b08c5b17f2",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_scaled_output2.spice": "fa991a36d9ac893aaf786ee57f3a5f19f009ffb00818c67b77c44a849c809c86",
+    "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair.spice": "041cc2507332035bcef9925f485ca4208ac4a37771a391d8a9853fcec6fb8048",
+    "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair_output2.spice": "46ce833ed2bd78bad164bd3a85accaca24f66449610589a4363fff394d61bd8f",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_scaled.spice": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_complement.spice": "b21147fcdd7c13e4c7359fb966319a70badbb6a12c0de0064926b73be10602b4"
+  },
+  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "parent_report_sha256": "7c2b46a59b11df65a5597de49f7651b6dc6bb9fb9e8e23c31e70ff8e8d775195",
+  "cases": [
+    {
+      "name": "code127_delay100",
+      "parent_sha256": "aad1ca4ebf369ecb40a3accef6de049d7660125264a0758e6e915a4e41e32130",
+      "max_voltage_difference_v": {
+        "1": 4.2000000011199745e-07,
+        "2": 4.1000000017277216e-07,
+        "6": 2.000000032253979e-08,
+        "7": 5.000000014021566e-08
+      },
+      "voltage_reproduction_pass": true,
+      "artifacts_sha256": {
+        ".spice": "6d13c15f58361094c3520a41d4dca0df6fff4cb05ce717b343d2b27dc1d1ce0a",
+        ".log": "5bb0c5953252cf00aa5bbdf051a72fbf2e8734d61dd42991072424929ccde631",
+        ".dat": "d41554fdd283df5abaf4df4619d52b79d59df576fb3971c0ae67d6944734b696"
+      }
+    },
+    {
+      "name": "code128_delay100",
+      "parent_sha256": "d5d51ac02766879e268d207585af18663539475bc80c385c965b3568cfddef27",
+      "max_voltage_difference_v": {
+        "1": 4.1000000017277216e-07,
+        "2": 4.2000000011199745e-07,
+        "6": 2.000000032253979e-08,
+        "7": 5.000000014021566e-08
+      },
+      "voltage_reproduction_pass": true,
+      "artifacts_sha256": {
+        ".spice": "cf6059c01cbad861098a48e8a5932ca1da079032608932700ffa6272d22dda38",
+        ".log": "36306955f106f4826887ebf4f5d45c56af97ca0c89e5c9c3f408c547e51ce847",
+        ".dat": "491b2ab11902f74d2cbc392d26bd582d16894d3c8b1156b43a4693e9cfa941c4"
+      }
+    }
+  ],
+  "limitations": [
+    "10uV reproduction threshold declared before run; diagnostic scope2\u20134.4ns only.",
+    "Positive probe current means reference rail into CDAC; supply current is a different quantity.",
+    "Do not attribute currents to unprobed baseline if voltage reproduction fails."
+  ]
+}

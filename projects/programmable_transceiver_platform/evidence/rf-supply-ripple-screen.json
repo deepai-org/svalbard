@@ -1,0 +1,93 @@
+{
+  "status": "supply_to_clock_timing_diagnostic_not_intrinsic_phase_noise",
+  "cases": [
+    {
+      "maximum_step_ps": 2,
+      "clock_modulation_peak_ps": {
+        "cml_differential": 0.4185201165240637,
+        "lo": 11.067301998713496,
+        "lob": 11.06772718377397
+      },
+      "raw_result": {
+        "status": "deterministic_100MHz_supply_ripple_transfer_not_phase_noise",
+        "ripple_peak_v": 0.01,
+        "ripple_hz": 100000000.0,
+        "reference": {
+          "edges": 103,
+          "fit_timing_sin_s": 1.1070578570957108e-15,
+          "fit_timing_cos_s": -6.346744121846047e-16,
+          "fitted_period_s": 3.999333949499572e-10,
+          "residual_rms_s": 1.862533665278288e-15
+        },
+        "ripple": {
+          "edges": 103,
+          "fit_timing_sin_s": -1.0751927380717266e-11,
+          "fit_timing_cos_s": -2.6193030179718475e-12,
+          "fitted_period_s": 3.9993337733359896e-10,
+          "residual_rms_s": 8.424975253151667e-14
+        },
+        "baseline_subtracted_timing_peak_s": 1.1067301998713497e-11,
+        "timing_peak_s_per_supply_peak_v": 1.1067301998713497e-09,
+        "artifacts_sha256": {
+          ".spice": "19dbb47c0d86ff711189e10f11ba213daa23ec3bcd5ead33cd982f6c6ada45b2",
+          ".dat": "429e69dc5e1fc5f49df8b489c43858a221ca4fcbede669bb69ddfc5b75ff7760",
+          ".log": "b7236bac23c5057e2eca9d7b0f0f48b2e22d0fc04c5b7d65bbc13e5572dffb6d"
+        },
+        "reference_wave_sha256": "6e066e4799152a81cded0292fd959c469ce10b337e35ef04900ed8b30ef0fd5c",
+        "limitations": [
+          "Four late ripple cycles; 2ps maximum integration step; interpolation uncertainty not yet converged.",
+          "Oscillator rail only, ideal RF buffer rail and tuning bias.",
+          "Deterministic supply-induced timing; not device phase noise, total jitter or PLL rejection."
+        ]
+      }
+    },
+    {
+      "maximum_step_ps": 0.5,
+      "clock_modulation_peak_ps": {
+        "cml_differential": 0.4186093699014462,
+        "lo": 11.067742068590173,
+        "lob": 11.068388346284008
+      },
+      "raw_result": {
+        "status": "deterministic_100MHz_supply_ripple_transfer_not_phase_noise",
+        "maximum_timestep_ps": 0.5,
+        "ripple_peak_v": 0.01,
+        "ripple_hz": 100000000.0,
+        "reference": {
+          "edges": 103,
+          "fit_timing_sin_s": 1.1070578570957108e-15,
+          "fit_timing_cos_s": -6.346744121846047e-16,
+          "fitted_period_s": 3.999333949499572e-10,
+          "residual_rms_s": 1.862533665278288e-15
+        },
+        "ripple": {
+          "edges": 103,
+          "fit_timing_sin_s": -1.0751957141600508e-11,
+          "fit_timing_cos_s": -2.6210401428814965e-12,
+          "fitted_period_s": 3.9990243018479143e-10,
+          "residual_rms_s": 8.533118016222123e-14
+        },
+        "baseline_subtracted_timing_peak_s": 1.1067742068590172e-11,
+        "timing_peak_s_per_supply_peak_v": 1.1067742068590172e-09,
+        "artifacts_sha256": {
+          ".spice": "10e6f1327179635da219bb57a3b558a7da480f7e5d4c69268661526174611adf",
+          ".dat": "a7ff5b05da68cd7bcc4b1c943fb80bd3997417d488ed5150d425c5632103b419",
+          ".log": "1fa104cf842e2d84eb33e506e0d31a07d4e282575ee57c2ac3fdbde890b8af23"
+        },
+        "reference_wave_sha256": "6e066e4799152a81cded0292fd959c469ce10b337e35ef04900ed8b30ef0fd5c",
+        "limitations": [
+          "Four late ripple cycles; compare recorded timestep variants for numerical sensitivity.",
+          "Oscillator rail only, ideal RF buffer rail and tuning bias.",
+          "Deterministic supply-induced timing; not device phase noise, total jitter or PLL rejection."
+        ]
+      }
+    }
+  ],
+  "interpretation": "Large timing modulation develops at conversion to single-ended CMOS; differential CML edge modulation is much smaller. Mechanism needs isolation; do not attribute all LO timing error to oscillator phase.",
+  "limitations": [
+    "Only one ripple frequency/amplitude; four late cycles; no PLL.",
+    "Fine ripple run compared to same 2ps reference; reference fit amplitude is about 0.0013ps.",
+    "Not mismatch, stochastic noise, full RF rail disturbance or PEX."
+  ],
+  "interpretation_correction_pass124": "UIC transient leaves LNA gate near 20mV rather than intended 1.5V within 301ns (1Mohm bias/20pF coupling). Raw results retained. Receiver useful-gain and loading conclusions cannot be extrapolated to a correctly biased receiver. Clock results describe this underbiased load only; recheck with corrected bias."
+}

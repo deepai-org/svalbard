@@ -1,0 +1,70 @@
+{
+  "status": "repeated_step_comparison_complete",
+  "rows": [
+    {
+      "step_s": 1e-10,
+      "steps": 100,
+      "routes": {
+        "analytic": 100
+      },
+      "reference_seconds": 0.05836829077452421,
+      "guarded_seconds": 0.05381569266319275,
+      "speed_ratio": 1.084596107306916,
+      "max_voltage_error_v": 7.598088824778415e-16,
+      "integrated_voltage_error_vs": 4.988933069460448e-24,
+      "max_energy_error_j": 5.081373565271283e-30
+    },
+    {
+      "step_s": 1e-09,
+      "steps": 100,
+      "routes": {
+        "analytic": 100
+      },
+      "reference_seconds": 0.18434438295662403,
+      "guarded_seconds": 0.05336594581604004,
+      "speed_ratio": 3.4543449036223435,
+      "max_voltage_error_v": 2.8275992658421956e-16,
+      "integrated_voltage_error_vs": 2.5642598989143858e-23,
+      "max_energy_error_j": 1.9315259264336474e-27
+    },
+    {
+      "step_s": 1e-08,
+      "steps": 100,
+      "routes": {
+        "radau_boundary_fallback": 100
+      },
+      "reference_seconds": 1.1997477291151881,
+      "guarded_seconds": 1.1876669088378549,
+      "speed_ratio": 1.0101718926303627,
+      "max_voltage_error_v": 0.0,
+      "integrated_voltage_error_vs": 0.0,
+      "max_energy_error_j": 0.0
+    }
+  ],
+  "limitations": [
+    "Fixed synthetic pump commands, not autonomous clock or full-chip traffic.",
+    "Timing is machine/load dependent and includes no performance guarantee.",
+    "No live-model substitution performed."
+  ],
+  "source_sha256": {
+    "verification/thermal_filter_batched_benchmark.py": "ea7e15509e2bdc47fd434a606e68877def0caf2a8c383d53fb9a2b64e8f10879",
+    "verification/thermal_filter_guard_screen.py": "c3f84e21d9234fe1d759758e2f0d2e746aa5876dd10d35d2508ffb36d089df4e",
+    "verification/thermal_filter_batched.py": "1c69aef555a8b43e8e30d97ec2fe06f0b30eefcd5b4f4da97de68c06f2ee81d1",
+    "verification/thermal_filter_energy_screen.py": "f6370aa3c43c9f34d5c90f39e4e5c34f5108b133ee77db014f23da1cc8b4cc61",
+    "verification/thermal_filter_exact_step_screen.py": "5ab379d94fcff360b2768c7031436749792270669e05a8bc19b9447e37442565",
+    "system_model/connected/three_cap_acquisition_screen.py": "3f9564fd73d5827f7e585ba2d315c01863dc517ee2546c6efab90b51a043e26a",
+    "system_model/connected/three_cap_exact_centering.py": "64d5c9bc445725cefd22115c5b5c6ccf74aa776a7aadcf6be157fa5f66ebed03",
+    "system_model/connected/three_cap_centering_screen.py": "969fed82fe3ae8feabec7d985e8b7b22625feac248ccb403979ac3f4766e96a3",
+    "system_model/connected/three_cap_pll.py": "41e9db2ef26b1905f0d107c08f786a1f5b014883e275d9c8aedfad1cb2a53c23",
+    "system_model/connected/three_cap_retuning_clock.py": "3bc54afca9412324498e9624f21049e1e7a1fd88b727e8de3de60f6ea680bac7",
+    "system_model/connected/three_cap_centering.py": "877346a77069846e12bbce59a0155d68858e3470563b757f0f51457165b57a79",
+    "system_model/connected/three_cap_pad_quality.py": "744c76edaf070bab954c8db95c6f943a4fa64ef56056aa90088aa53dbcb74508",
+    "system_model/connected/three_cap_retuning_screen.py": "cdbb9bcd1c231f7ef2b50e3886a47264156bd21bb69fe1126f49b89d31e23c80",
+    "system_model/connected/three_cap_managed_chip.py": "fc861ebf068f4f6a0514bcc9444109e24888513f8710f1da2e81d8db966d91d8",
+    "system_model/connected/three_cap_filter_screen.py": "46318c5aa15606d2040641e7918619f156a35377a43ac5aefc09af1b5e5324ee",
+    "system_model/connected/three_cap_pll_screen.py": "53e4c64067bba4cc4b2dd798716fb596ca9b634ba531a6f4341e84c2db50cf4e",
+    "system_model/connected/three_cap_resistor_noise.py": "187c062bb6323b5a7907693a19af0aa2762ae4d3d1490ecc0eba62bf9d8f16d4",
+    "system_model/connected/three_cap_exact_centering_screen.py": "674b18d1f22b0bc2eb48c729ae59b57a54dc61b9f13d7a8a21c964c4853a51fb",
+    "system_model/connected/three_cap_filter.py": "715f0edcd40bfe90b00f8497f81226b01d4c95e2254c4cbcf6e4c0149b9790e9"
+  }
+}

@@ -1,0 +1,9 @@
+* Experimental shared-LNA quadrature composition, schematic only.
+* Bias, drain/source load, LO generation and output loads remain external.
+.include /src/rf_lna/lna_cs_core.spice
+.include /src/rf_switch_mixer/mixer.spice
+.subckt pt_rx_iq_core RF_GATE MIX_RF LNA_SOURCE LOI LOIB LOQ LOQB IP IN QP QN VSS
+XLNA RF_GATE MIX_RF LNA_SOURCE VSS wifi_lna_cs_core
+XIMIX MIX_RF LOI LOIB IP IN VSS wifi_rf_switch_mixer
+XQMIX MIX_RF LOQ LOQB QP QN VSS wifi_rf_switch_mixer
+.ends pt_rx_iq_core

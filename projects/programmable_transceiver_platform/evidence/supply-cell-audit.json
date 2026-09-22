@@ -1,0 +1,27 @@
+{
+  "scope": "native supply/breaker formal-pin audit only",
+  "image_id": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "source": "/foss/pdks/gf180mcuD/libs.ref/gf180mcu_fd_io/spice/gf180mcu_fd_io.spice",
+  "source_sha256": "710732fd6a69e165caa2c29e4cdf81b11af41da32705fcd860b7ecfb09630dd1",
+  "cells": {
+    "gf180mcu_fd_io__dvdd": [
+      "DVDD",
+      "DVSS",
+      "VSS"
+    ],
+    "gf180mcu_fd_io__dvss": [
+      "DVDD",
+      "DVSS",
+      "VDD"
+    ],
+    "gf180mcu_fd_io__brk2": [
+      "VSS"
+    ],
+    "gf180mcu_fd_io__brk5": [
+      "VSS"
+    ]
+  },
+  "limitations": [
+    "No GDS/LEF rail continuity, current sharing, clamp response or ESD verification."
+  ]
+}

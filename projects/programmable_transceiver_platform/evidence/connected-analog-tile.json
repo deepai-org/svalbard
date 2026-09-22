@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "leakage_s": 0.0,
+      "sign": -1,
+      "analytic_voltage_v": -0.15,
+      "subdivision_error_v": 0.0
+    },
+    {
+      "leakage_s": 0.0,
+      "sign": 1,
+      "analytic_voltage_v": 0.15,
+      "subdivision_error_v": 0.0
+    },
+    {
+      "leakage_s": 1e-07,
+      "sign": -1,
+      "analytic_voltage_v": -0.1427438729460606,
+      "subdivision_error_v": 2.220446049250313e-16
+    },
+    {
+      "leakage_s": 1e-07,
+      "sign": 1,
+      "analytic_voltage_v": 0.1427438729460606,
+      "subdivision_error_v": 2.220446049250313e-16
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Standalone tile is not yet connected to diagnostic selection or converter ownership.",
+    "Held inputs, hard voltage bounds and ideal current weights omit bandwidth, slew, noise and switch charge.",
+    "Comparator reports endpoint state; asynchronous threshold-crossing event delivery remains open."
+  ]
+}

@@ -1,0 +1,352 @@
+{
+  "status": "scoped_reference_replay_audit",
+  "original_global_gate": false,
+  "scoped_current_diagnostic_valid": true,
+  "replay_evidence_sha256": "16b8182082a6fe2f15478f41d23c22f09831324524cdffc7821965472feb06b3",
+  "failed_global_vectors": [
+    {
+      "node": "v(qp)",
+      "time_ns": 201.3875000000009,
+      "max_error": 4.3085770736972506e-05,
+      "replay_value": 1.221216830694647,
+      "baseline_value": 1.221259916465384
+    },
+    {
+      "node": "v(qn)",
+      "time_ns": 201.4075000000009,
+      "max_error": 6.193286623679128e-05,
+      "replay_value": 2.519944332164096,
+      "baseline_value": 2.519882399297859
+    },
+    {
+      "node": "i(vlog)",
+      "time_ns": 123.5175,
+      "max_error": 3.011857017632888e-07,
+      "replay_value": -0.006781856752368952,
+      "baseline_value": -0.006781555566667189
+    },
+    {
+      "node": "i(vdrv)",
+      "time_ns": 208.2125000000003,
+      "max_error": 1.331336164429875e-06,
+      "replay_value": -0.01271872935617931,
+      "baseline_value": -0.01271739802001488
+    },
+    {
+      "node": "v(keepp)",
+      "time_ns": 201.422500000001,
+      "max_error": 0.0010699685348078969,
+      "replay_value": 1.164822168974211,
+      "baseline_value": 1.165892137509019
+    },
+    {
+      "node": "v(keepn)",
+      "time_ns": 206.28750000000082,
+      "max_error": 2.0816477185992e-05,
+      "replay_value": 2.798136447941459,
+      "baseline_value": 2.798115631464273
+    },
+    {
+      "node": "v(q_qp)",
+      "time_ns": 201.3875000000009,
+      "max_error": 4.3085724712010887e-05,
+      "replay_value": 1.22121683063004,
+      "baseline_value": 1.221259916354752
+    },
+    {
+      "node": "v(q_qn)",
+      "time_ns": 201.4075000000009,
+      "max_error": 6.193279993693679e-05,
+      "replay_value": 2.519944332256435,
+      "baseline_value": 2.519882399456498
+    }
+  ],
+  "analog_max_errors_v": {
+    "v(hp)": 1.3515742010028475e-06,
+    "v(hn)": 1.46723410598959e-06,
+    "v(q_hp)": 1.3515744028413934e-06,
+    "v(q_hn)": 1.467234232999104e-06,
+    "v(ip)": 7.974339411020992e-08,
+    "v(in)": 2.6372174821709393e-07,
+    "v(vh)": 1.0016005003166129e-07,
+    "v(vl)": 1.735995411866753e-07,
+    "v(xd.xp7.bot)": 1.9187374040718908e-06,
+    "v(xd.xn7.bot)": 2.049133158044114e-06,
+    "v(xref.xhigh.x)": 1.0335766309488292e-07,
+    "v(xref.xlow.x)": 1.4627729094662811e-07
+  },
+  "current_max_errors_a": {
+    "i(vlog)": 3.011857017632888e-07,
+    "i(vdrv)": 1.331336164429875e-06,
+    "i(vbuf)": 3.1577034364030365e-09,
+    "i(vrefsup)": 4.237308880508661e-09
+  },
+  "capture_checks": [
+    {
+      "hold_ns": 70,
+      "channel": "i",
+      "codes": [
+        177
+      ]
+    },
+    {
+      "hold_ns": 70,
+      "channel": "q_",
+      "codes": [
+        177
+      ]
+    },
+    {
+      "hold_ns": 120,
+      "channel": "i",
+      "codes": [
+        78
+      ]
+    },
+    {
+      "hold_ns": 120,
+      "channel": "q_",
+      "codes": [
+        78
+      ]
+    },
+    {
+      "hold_ns": 170,
+      "channel": "i",
+      "codes": [
+        178
+      ]
+    },
+    {
+      "hold_ns": 170,
+      "channel": "q_",
+      "codes": [
+        178
+      ]
+    }
+  ],
+  "logic_edge_checks": [
+    {
+      "node": "v(keepp)",
+      "rising": true,
+      "count": 12,
+      "max_time_difference_ps": 0.00017978552238158343
+    },
+    {
+      "node": "v(keepp)",
+      "rising": false,
+      "count": 12,
+      "max_time_difference_ps": 0.009584710740724908
+    },
+    {
+      "node": "v(keepn)",
+      "rising": true,
+      "count": 12,
+      "max_time_difference_ps": 0.000707023615619746
+    },
+    {
+      "node": "v(keepn)",
+      "rising": false,
+      "count": 12,
+      "max_time_difference_ps": 0.0020176638999881307
+    },
+    {
+      "node": "v(d0)",
+      "rising": true,
+      "count": 3,
+      "max_time_difference_ps": 8.735027268559972e-10
+    },
+    {
+      "node": "v(d0)",
+      "rising": false,
+      "count": 3,
+      "max_time_difference_ps": 7.464477847678522e-09
+    },
+    {
+      "node": "v(d1)",
+      "rising": true,
+      "count": 3,
+      "max_time_difference_ps": 8.205631676526035e-10
+    },
+    {
+      "node": "v(d1)",
+      "rising": false,
+      "count": 2,
+      "max_time_difference_ps": 2.7396221887756277e-09
+    },
+    {
+      "node": "v(d2)",
+      "rising": true,
+      "count": 3,
+      "max_time_difference_ps": 1.879354351720479e-09
+    },
+    {
+      "node": "v(d2)",
+      "rising": false,
+      "count": 3,
+      "max_time_difference_ps": 1.2970192004831474e-09
+    },
+    {
+      "node": "v(d3)",
+      "rising": true,
+      "count": 3,
+      "max_time_difference_ps": 1.5881867761018131e-09
+    },
+    {
+      "node": "v(d3)",
+      "rising": false,
+      "count": 3,
+      "max_time_difference_ps": 4.2351647362715017e-10
+    },
+    {
+      "node": "v(d4)",
+      "rising": true,
+      "count": 3,
+      "max_time_difference_ps": 1.6940658945086007e-09
+    },
+    {
+      "node": "v(d4)",
+      "rising": false,
+      "count": 2,
+      "max_time_difference_ps": 7.0409613740513716e-09
+    },
+    {
+      "node": "v(d5)",
+      "rising": true,
+      "count": 3,
+      "max_time_difference_ps": 1.852884572118782e-09
+    },
+    {
+      "node": "v(d5)",
+      "rising": false,
+      "count": 2,
+      "max_time_difference_ps": 7.014491594449675e-09
+    },
+    {
+      "node": "v(d6)",
+      "rising": true,
+      "count": 3,
+      "max_time_difference_ps": 6.617444900424221e-11
+    },
+    {
+      "node": "v(d6)",
+      "rising": false,
+      "count": 3,
+      "max_time_difference_ps": 2.3822801641527197e-10
+    },
+    {
+      "node": "v(d7)",
+      "rising": true,
+      "count": 3,
+      "max_time_difference_ps": 1.5833064104877503e-08
+    },
+    {
+      "node": "v(d7)",
+      "rising": false,
+      "count": 2,
+      "max_time_difference_ps": 2.9116757561866574e-10
+    },
+    {
+      "node": "v(q_d0)",
+      "rising": true,
+      "count": 3,
+      "max_time_difference_ps": 8.735027268559972e-10
+    },
+    {
+      "node": "v(q_d0)",
+      "rising": false,
+      "count": 3,
+      "max_time_difference_ps": 7.464477847678522e-09
+    },
+    {
+      "node": "v(q_d1)",
+      "rising": true,
+      "count": 3,
+      "max_time_difference_ps": 8.205631676526035e-10
+    },
+    {
+      "node": "v(q_d1)",
+      "rising": false,
+      "count": 2,
+      "max_time_difference_ps": 2.7396221887756277e-09
+    },
+    {
+      "node": "v(q_d2)",
+      "rising": true,
+      "count": 3,
+      "max_time_difference_ps": 1.879354351720479e-09
+    },
+    {
+      "node": "v(q_d2)",
+      "rising": false,
+      "count": 3,
+      "max_time_difference_ps": 1.2970192004831474e-09
+    },
+    {
+      "node": "v(q_d3)",
+      "rising": true,
+      "count": 3,
+      "max_time_difference_ps": 1.5881867761018131e-09
+    },
+    {
+      "node": "v(q_d3)",
+      "rising": false,
+      "count": 3,
+      "max_time_difference_ps": 4.2351647362715017e-10
+    },
+    {
+      "node": "v(q_d4)",
+      "rising": true,
+      "count": 3,
+      "max_time_difference_ps": 1.6940658945086007e-09
+    },
+    {
+      "node": "v(q_d4)",
+      "rising": false,
+      "count": 2,
+      "max_time_difference_ps": 7.0409613740513716e-09
+    },
+    {
+      "node": "v(q_d5)",
+      "rising": true,
+      "count": 3,
+      "max_time_difference_ps": 1.852884572118782e-09
+    },
+    {
+      "node": "v(q_d5)",
+      "rising": false,
+      "count": 2,
+      "max_time_difference_ps": 7.014491594449675e-09
+    },
+    {
+      "node": "v(q_d6)",
+      "rising": true,
+      "count": 3,
+      "max_time_difference_ps": 6.617444900424221e-11
+    },
+    {
+      "node": "v(q_d6)",
+      "rising": false,
+      "count": 3,
+      "max_time_difference_ps": 2.3822801641527197e-10
+    },
+    {
+      "node": "v(q_d7)",
+      "rising": true,
+      "count": 3,
+      "max_time_difference_ps": 1.5833064104877503e-08
+    },
+    {
+      "node": "v(q_d7)",
+      "rising": false,
+      "count": 2,
+      "max_time_difference_ps": 2.9116757561866574e-10
+    }
+  ],
+  "scope": "Original10uV/10nA tolerances retained for listed analog nodes and reference/input-buffer supply currents; digital supply currents explicitly excluded from scoped equivalence; identical captured codes; logic crossing changes below1ps diagnostic limit (100x smaller than tested100ps sampler shifts).",
+  "limitations": [
+    "Scoped diagnostic permission only; not bit-identical replay or ADC qualification. Digital switching supply currents differ and cannot be treated as matched power evidence.",
+    "1ps criterion is an explicitly added diagnostic criterion after locating transition-local differences, not original global acceptance.",
+    "New branch-current accuracy still needs timestep/convention checks before precision claims."
+  ]
+}

@@ -1,0 +1,779 @@
+{
+  "status": "passed",
+  "modulated_input": [
+    {
+      "service_pauses": [],
+      "visibility_edges": 0,
+      "source_phase_edges": 0,
+      "matched_reference": true,
+      "host_service_ppm": -100,
+      "adc_sha256": "9ff43077681075e46419ed7b5e0fcdacd8d2b18098a19ab75da23da97e6b5783",
+      "adc_checksum": 105969207935,
+      "reference_metrics": {
+        "adc_quantization": {
+          "conversions": 164,
+          "clipped_samples": 0,
+          "i_low": 0,
+          "i_high": 0,
+          "q_low": 0,
+          "q_high": 0
+        },
+        "dac_reference": {
+          "enabled": false,
+          "shared": true,
+          "minimum_span_v": 0.9811600578881836,
+          "updates": 0,
+          "charge_c": 0.0,
+          "load_capacitance_f": null
+        },
+        "minimum_span_v": 0.9811600578881836,
+        "total_load_charge_c": 5.598635160514544e-11,
+        "conversions": 164,
+        "resistance_ohm": 1000,
+        "capacitance_f": 1e-10,
+        "load_capacitance_f": 1e-12,
+        "frontend": {
+          "samples": 164,
+          "relative_rms_error": 0.0,
+          "gain_error": 0,
+          "phase_error_rad": 0,
+          "saturation": null,
+          "noise_rms_per_component": 0
+        },
+        "dac_supply": {
+          "coupling_per_v": 0,
+          "updates": 164,
+          "gain_min": 1.0,
+          "gain_max": 1.0
+        },
+        "supply": {
+          "minimum_delta_v": -0.02535720124647812,
+          "total_charge_c": 6.024000000000018e-10,
+          "transitions": 6024,
+          "return_transitions": 7378,
+          "return_charge_c": 0.0,
+          "coupling_per_v": 0,
+          "gain_min": 1.0,
+          "gain_max": 1.0
+        },
+        "capture": {
+          "enabled": true,
+          "done": true,
+          "count": 32,
+          "data_sha256": "2fadeae20e4b686755cb2b13d8d00cdef058cd866f648f863abe04c43688b618"
+        },
+        "rf_lo_events": [],
+        "wired_clock_impulses": {
+          "ui_per_v": 0.0,
+          "count": 0,
+          "max_abs_ui": 0.0,
+          "total_signed_ui": 0.0
+        }
+      },
+      "controller": "AutonomousRFChip",
+      "interventions": [],
+      "mode": 0,
+      "ppm": 100,
+      "duration_s": 4.095590440955904e-06,
+      "source_frames": 16,
+      "transmitted_frames": 17,
+      "rf_samples_each_direction": 164,
+      "wired_words_each_direction": 512,
+      "observed_queue_peaks": {
+        "rf_tx": 21,
+        "wire_tx": 65,
+        "rf_return": 26,
+        "wire_return": 32,
+        "source_iq": 27,
+        "source_wire": 32
+      },
+      "rf_accounting": {
+        "accepted": 164,
+        "consumed": 164,
+        "discarded": 0,
+        "pending": 0,
+        "rejected": 0,
+        "underflows": 0
+      },
+      "wire_accounting": {
+        "completed_words": 512,
+        "partial_words_discarded": 0,
+        "serializing": 0,
+        "accepted": 512,
+        "consumed": 512,
+        "discarded": 0,
+        "pending": 0,
+        "underflows": 0
+      },
+      "external_source": {
+        "seed": 828,
+        "fft_size": 128,
+        "cyclic_prefix_samples": 32,
+        "active_subcarriers": 50,
+        "spacing_hz": 312500,
+        "edge_hz": 7812500,
+        "useful_symbol_s": 3.2e-06,
+        "prefix_s": 8e-07,
+        "generated_blocks": 5,
+        "sample_count": 800,
+        "peak_envelope": 0.6251533828047882,
+        "rms_envelope": 0.24388062448014947,
+        "waveform_sha256": "d132d386ccbb891253518176e057488e10da5a53be42d75b4baa9ca6380fc3c7"
+      },
+      "external_updates": 374,
+      "external_carrier_offset_hz": 250000.0,
+      "tx_changed": false
+    },
+    {
+      "service_pauses": [],
+      "visibility_edges": 0,
+      "source_phase_edges": 0,
+      "matched_reference": true,
+      "host_service_ppm": -100,
+      "adc_sha256": "9ff43077681075e46419ed7b5e0fcdacd8d2b18098a19ab75da23da97e6b5783",
+      "adc_checksum": 105969207935,
+      "reference_metrics": {
+        "adc_quantization": {
+          "conversions": 164,
+          "clipped_samples": 0,
+          "i_low": 0,
+          "i_high": 0,
+          "q_low": 0,
+          "q_high": 0
+        },
+        "dac_reference": {
+          "enabled": false,
+          "shared": true,
+          "minimum_span_v": 0.9811600578881836,
+          "updates": 0,
+          "charge_c": 0.0,
+          "load_capacitance_f": null
+        },
+        "minimum_span_v": 0.9811600578881836,
+        "total_load_charge_c": 5.598635160514544e-11,
+        "conversions": 164,
+        "resistance_ohm": 1000,
+        "capacitance_f": 1e-10,
+        "load_capacitance_f": 1e-12,
+        "frontend": {
+          "samples": 164,
+          "relative_rms_error": 0.0,
+          "gain_error": 0,
+          "phase_error_rad": 0,
+          "saturation": null,
+          "noise_rms_per_component": 0
+        },
+        "dac_supply": {
+          "coupling_per_v": 0,
+          "updates": 164,
+          "gain_min": 1.0,
+          "gain_max": 1.0
+        },
+        "supply": {
+          "minimum_delta_v": -0.023905231573590528,
+          "total_charge_c": 5.964000000000021e-10,
+          "transitions": 5964,
+          "return_transitions": 7378,
+          "return_charge_c": 0.0,
+          "coupling_per_v": 0,
+          "gain_min": 1.0,
+          "gain_max": 1.0
+        },
+        "capture": {
+          "enabled": true,
+          "done": true,
+          "count": 32,
+          "data_sha256": "2fadeae20e4b686755cb2b13d8d00cdef058cd866f648f863abe04c43688b618"
+        },
+        "rf_lo_events": [],
+        "wired_clock_impulses": {
+          "ui_per_v": 0.0,
+          "count": 0,
+          "max_abs_ui": 0.0,
+          "total_signed_ui": 0.0
+        }
+      },
+      "controller": "AutonomousRFChip",
+      "interventions": [],
+      "mode": 0,
+      "ppm": 100,
+      "duration_s": 4.095590440955904e-06,
+      "source_frames": 16,
+      "transmitted_frames": 17,
+      "rf_samples_each_direction": 164,
+      "wired_words_each_direction": 512,
+      "observed_queue_peaks": {
+        "rf_tx": 21,
+        "wire_tx": 65,
+        "rf_return": 26,
+        "wire_return": 32,
+        "source_iq": 27,
+        "source_wire": 32
+      },
+      "rf_accounting": {
+        "accepted": 164,
+        "consumed": 164,
+        "discarded": 0,
+        "pending": 0,
+        "rejected": 0,
+        "underflows": 0
+      },
+      "wire_accounting": {
+        "completed_words": 512,
+        "partial_words_discarded": 0,
+        "serializing": 0,
+        "accepted": 512,
+        "consumed": 512,
+        "discarded": 0,
+        "pending": 0,
+        "underflows": 0
+      },
+      "external_source": {
+        "seed": 828,
+        "fft_size": 128,
+        "cyclic_prefix_samples": 32,
+        "active_subcarriers": 50,
+        "spacing_hz": 312500,
+        "edge_hz": 7812500,
+        "useful_symbol_s": 3.2e-06,
+        "prefix_s": 8e-07,
+        "generated_blocks": 5,
+        "sample_count": 800,
+        "peak_envelope": 0.6251533828047882,
+        "rms_envelope": 0.24388062448014947,
+        "waveform_sha256": "d132d386ccbb891253518176e057488e10da5a53be42d75b4baa9ca6380fc3c7"
+      },
+      "external_updates": 374,
+      "external_carrier_offset_hz": 250000.0,
+      "tx_changed": true
+    },
+    {
+      "service_pauses": [],
+      "visibility_edges": 0,
+      "source_phase_edges": 0,
+      "matched_reference": true,
+      "host_service_ppm": -100,
+      "adc_sha256": "8a396b66df54860a3420e7530c1ee6b96d34d7232a0669f500d88042b50e1739",
+      "adc_checksum": 65759224,
+      "reference_metrics": {
+        "adc_quantization": {
+          "conversions": 66,
+          "clipped_samples": 0,
+          "i_low": 0,
+          "i_high": 0,
+          "q_low": 0,
+          "q_high": 0
+        },
+        "dac_reference": {
+          "enabled": false,
+          "shared": true,
+          "minimum_span_v": 0.98926612851689,
+          "updates": 0,
+          "charge_c": 0.0,
+          "load_capacitance_f": null
+        },
+        "minimum_span_v": 0.98926612851689,
+        "total_load_charge_c": 2.2454146033185378e-11,
+        "conversions": 66,
+        "resistance_ohm": 1000,
+        "capacitance_f": 1e-10,
+        "load_capacitance_f": 1e-12,
+        "frontend": {
+          "samples": 66,
+          "relative_rms_error": 0.0,
+          "gain_error": 0,
+          "phase_error_rad": 0,
+          "saturation": null,
+          "noise_rms_per_component": 0
+        },
+        "dac_supply": {
+          "coupling_per_v": 0,
+          "updates": 66,
+          "gain_min": 1.0,
+          "gain_max": 1.0
+        },
+        "supply": {
+          "minimum_delta_v": -0.029691004499259176,
+          "total_charge_c": 6.208000000000022e-10,
+          "transitions": 6208,
+          "return_transitions": 7677,
+          "return_charge_c": 0.0,
+          "coupling_per_v": 0,
+          "gain_min": 1.0,
+          "gain_max": 1.0
+        },
+        "capture": {
+          "enabled": true,
+          "done": true,
+          "count": 32,
+          "data_sha256": "3196ef9d9945aa3852c898fd835161e4fef06ce982cf9a9ecc6000e3efb052e4"
+        },
+        "rf_lo_events": [],
+        "wired_clock_impulses": {
+          "ui_per_v": 0.0,
+          "count": 0,
+          "max_abs_ui": 0.0,
+          "total_signed_ui": 0.0
+        }
+      },
+      "controller": "AutonomousRFChip",
+      "interventions": [],
+      "mode": 1,
+      "ppm": 100,
+      "duration_s": 3.2764723527647233e-06,
+      "source_frames": 16,
+      "transmitted_frames": 17,
+      "rf_samples_each_direction": 66,
+      "wired_words_each_direction": 819,
+      "observed_queue_peaks": {
+        "rf_tx": 9,
+        "wire_tx": 103,
+        "rf_return": 8,
+        "wire_return": 51,
+        "source_iq": 8,
+        "source_wire": 52
+      },
+      "rf_accounting": {
+        "accepted": 66,
+        "consumed": 66,
+        "discarded": 0,
+        "pending": 0,
+        "rejected": 0,
+        "underflows": 0
+      },
+      "wire_accounting": {
+        "completed_words": 819,
+        "partial_words_discarded": 0,
+        "serializing": 0,
+        "accepted": 819,
+        "consumed": 819,
+        "discarded": 0,
+        "pending": 0,
+        "underflows": 0
+      },
+      "external_source": {
+        "seed": 828,
+        "fft_size": 128,
+        "cyclic_prefix_samples": 32,
+        "active_subcarriers": 50,
+        "spacing_hz": 312500,
+        "edge_hz": 7812500,
+        "useful_symbol_s": 3.2e-06,
+        "prefix_s": 8e-07,
+        "generated_blocks": 5,
+        "sample_count": 800,
+        "peak_envelope": 0.6251533828047882,
+        "rms_envelope": 0.24388062448014947,
+        "waveform_sha256": "d132d386ccbb891253518176e057488e10da5a53be42d75b4baa9ca6380fc3c7"
+      },
+      "external_updates": 335,
+      "external_carrier_offset_hz": 250000.0,
+      "tx_changed": false
+    },
+    {
+      "service_pauses": [],
+      "visibility_edges": 0,
+      "source_phase_edges": 0,
+      "matched_reference": true,
+      "host_service_ppm": -100,
+      "adc_sha256": "8a396b66df54860a3420e7530c1ee6b96d34d7232a0669f500d88042b50e1739",
+      "adc_checksum": 65759224,
+      "reference_metrics": {
+        "adc_quantization": {
+          "conversions": 66,
+          "clipped_samples": 0,
+          "i_low": 0,
+          "i_high": 0,
+          "q_low": 0,
+          "q_high": 0
+        },
+        "dac_reference": {
+          "enabled": false,
+          "shared": true,
+          "minimum_span_v": 0.98926612851689,
+          "updates": 0,
+          "charge_c": 0.0,
+          "load_capacitance_f": null
+        },
+        "minimum_span_v": 0.98926612851689,
+        "total_load_charge_c": 2.2454146033185378e-11,
+        "conversions": 66,
+        "resistance_ohm": 1000,
+        "capacitance_f": 1e-10,
+        "load_capacitance_f": 1e-12,
+        "frontend": {
+          "samples": 66,
+          "relative_rms_error": 0.0,
+          "gain_error": 0,
+          "phase_error_rad": 0,
+          "saturation": null,
+          "noise_rms_per_component": 0
+        },
+        "dac_supply": {
+          "coupling_per_v": 0,
+          "updates": 66,
+          "gain_min": 1.0,
+          "gain_max": 1.0
+        },
+        "supply": {
+          "minimum_delta_v": -0.029739429245142272,
+          "total_charge_c": 6.236000000000021e-10,
+          "transitions": 6236,
+          "return_transitions": 7677,
+          "return_charge_c": 0.0,
+          "coupling_per_v": 0,
+          "gain_min": 1.0,
+          "gain_max": 1.0
+        },
+        "capture": {
+          "enabled": true,
+          "done": true,
+          "count": 32,
+          "data_sha256": "3196ef9d9945aa3852c898fd835161e4fef06ce982cf9a9ecc6000e3efb052e4"
+        },
+        "rf_lo_events": [],
+        "wired_clock_impulses": {
+          "ui_per_v": 0.0,
+          "count": 0,
+          "max_abs_ui": 0.0,
+          "total_signed_ui": 0.0
+        }
+      },
+      "controller": "AutonomousRFChip",
+      "interventions": [],
+      "mode": 1,
+      "ppm": 100,
+      "duration_s": 3.2764723527647233e-06,
+      "source_frames": 16,
+      "transmitted_frames": 17,
+      "rf_samples_each_direction": 66,
+      "wired_words_each_direction": 819,
+      "observed_queue_peaks": {
+        "rf_tx": 9,
+        "wire_tx": 103,
+        "rf_return": 8,
+        "wire_return": 51,
+        "source_iq": 8,
+        "source_wire": 52
+      },
+      "rf_accounting": {
+        "accepted": 66,
+        "consumed": 66,
+        "discarded": 0,
+        "pending": 0,
+        "rejected": 0,
+        "underflows": 0
+      },
+      "wire_accounting": {
+        "completed_words": 819,
+        "partial_words_discarded": 0,
+        "serializing": 0,
+        "accepted": 819,
+        "consumed": 819,
+        "discarded": 0,
+        "pending": 0,
+        "underflows": 0
+      },
+      "external_source": {
+        "seed": 828,
+        "fft_size": 128,
+        "cyclic_prefix_samples": 32,
+        "active_subcarriers": 50,
+        "spacing_hz": 312500,
+        "edge_hz": 7812500,
+        "useful_symbol_s": 3.2e-06,
+        "prefix_s": 8e-07,
+        "generated_blocks": 5,
+        "sample_count": 800,
+        "peak_envelope": 0.6251533828047882,
+        "rms_envelope": 0.24388062448014947,
+        "waveform_sha256": "d132d386ccbb891253518176e057488e10da5a53be42d75b4baa9ca6380fc3c7"
+      },
+      "external_updates": 335,
+      "external_carrier_offset_hz": 250000.0,
+      "tx_changed": true
+    }
+  ],
+  "convergence": [
+    {
+      "step_s": 2.5e-08,
+      "waveform_error": 6.8548600124740975e-06,
+      "phase_continuity_error_rad": 7.105427357601002e-15
+    },
+    {
+      "step_s": 1.25e-08,
+      "waveform_error": 1.8974716328612102e-06,
+      "phase_continuity_error_rad": 1.4210854715202004e-14
+    },
+    {
+      "step_s": 6.25e-09,
+      "waveform_error": 4.862915039562728e-07,
+      "phase_continuity_error_rad": 1.4210854715202004e-14
+    }
+  ],
+  "independent_input": [
+    {
+      "mode": 0,
+      "sign": -1,
+      "changed_adc_samples": 31,
+      "maximum_phase_discontinuity_rad": 7.105427357601002e-15,
+      "loopback_cancels": true
+    },
+    {
+      "mode": 0,
+      "sign": 1,
+      "changed_adc_samples": 32,
+      "maximum_phase_discontinuity_rad": 7.105427357601002e-15,
+      "loopback_cancels": true
+    },
+    {
+      "mode": 1,
+      "sign": -1,
+      "changed_adc_samples": 12,
+      "maximum_phase_discontinuity_rad": 7.105427357601002e-15,
+      "loopback_cancels": true
+    },
+    {
+      "mode": 1,
+      "sign": 1,
+      "changed_adc_samples": 13,
+      "maximum_phase_discontinuity_rad": 7.105427357601002e-15,
+      "loopback_cancels": true
+    }
+  ],
+  "controls": [
+    {
+      "mode": 0,
+      "outside_range_blocks_arm": true,
+      "timed_configuration": true,
+      "reference_loss_and_recovery": true
+    },
+    {
+      "mode": 1,
+      "outside_range_blocks_arm": true,
+      "timed_configuration": true,
+      "reference_loss_and_recovery": true
+    }
+  ],
+  "sustained": [
+    {
+      "service_pauses": [],
+      "visibility_edges": 0,
+      "source_phase_edges": 0,
+      "matched_reference": true,
+      "host_service_ppm": -100,
+      "adc_sha256": "3e1c342e4f49be1864f50624c74113f5c1530187984e4dcd75abcc04c5c3c4cf",
+      "adc_checksum": 110012634624,
+      "reference_metrics": {
+        "adc_quantization": {
+          "conversions": 164,
+          "clipped_samples": 0,
+          "i_low": 0,
+          "i_high": 0,
+          "q_low": 0,
+          "q_high": 0
+        },
+        "dac_reference": {
+          "enabled": false,
+          "shared": true,
+          "minimum_span_v": 0.9786334810575673,
+          "updates": 0,
+          "charge_c": 0.0,
+          "load_capacitance_f": null
+        },
+        "minimum_span_v": 0.9786334810575673,
+        "total_load_charge_c": 6.685221681283128e-11,
+        "conversions": 164,
+        "resistance_ohm": 1000,
+        "capacitance_f": 1e-10,
+        "load_capacitance_f": 1e-12,
+        "frontend": {
+          "samples": 164,
+          "relative_rms_error": 0.0,
+          "gain_error": 0,
+          "phase_error_rad": 0,
+          "saturation": null,
+          "noise_rms_per_component": 0
+        },
+        "dac_supply": {
+          "coupling_per_v": 0,
+          "updates": 164,
+          "gain_min": 1.0,
+          "gain_max": 1.0
+        },
+        "supply": {
+          "minimum_delta_v": -0.024624721514943892,
+          "total_charge_c": 6.026000000000026e-10,
+          "transitions": 6026,
+          "return_transitions": 7274,
+          "return_charge_c": 0.0,
+          "coupling_per_v": 0,
+          "gain_min": 1.0,
+          "gain_max": 1.0
+        },
+        "capture": {
+          "enabled": true,
+          "done": true,
+          "count": 32,
+          "data_sha256": "e986a3b1e6c93dc48ad7cabe3461583dc72f0a2ba262727f54cd1ad8b5b86b4c"
+        },
+        "rf_lo_events": [],
+        "wired_clock_impulses": {
+          "ui_per_v": 0.0,
+          "count": 0,
+          "max_abs_ui": 0.0,
+          "total_signed_ui": 0.0
+        }
+      },
+      "controller": "AutonomousRFChip",
+      "interventions": [],
+      "mode": 0,
+      "ppm": 100,
+      "duration_s": 4.095590440955904e-06,
+      "source_frames": 16,
+      "transmitted_frames": 17,
+      "rf_samples_each_direction": 164,
+      "wired_words_each_direction": 512,
+      "observed_queue_peaks": {
+        "rf_tx": 21,
+        "wire_tx": 65,
+        "rf_return": 27,
+        "wire_return": 32,
+        "source_iq": 27,
+        "source_wire": 32
+      },
+      "rf_accounting": {
+        "accepted": 164,
+        "consumed": 164,
+        "discarded": 0,
+        "pending": 0,
+        "rejected": 0,
+        "underflows": 0
+      },
+      "wire_accounting": {
+        "completed_words": 512,
+        "partial_words_discarded": 0,
+        "serializing": 0,
+        "accepted": 512,
+        "consumed": 512,
+        "discarded": 0,
+        "pending": 0,
+        "underflows": 0
+      }
+    },
+    {
+      "service_pauses": [],
+      "visibility_edges": 0,
+      "source_phase_edges": 0,
+      "matched_reference": true,
+      "host_service_ppm": -100,
+      "adc_sha256": "ac809ac8c12ecb3366c4ea38d28629cfdadc7d75cb0c0ab11472500d780c7f68",
+      "adc_checksum": 71515719,
+      "reference_metrics": {
+        "adc_quantization": {
+          "conversions": 66,
+          "clipped_samples": 0,
+          "i_low": 0,
+          "i_high": 0,
+          "q_low": 0,
+          "q_high": 0
+        },
+        "dac_reference": {
+          "enabled": false,
+          "shared": true,
+          "minimum_span_v": 0.9874451912752832,
+          "updates": 0,
+          "charge_c": 0.0,
+          "load_capacitance_f": null
+        },
+        "minimum_span_v": 0.9874451912752832,
+        "total_load_charge_c": 2.6920390712313225e-11,
+        "conversions": 66,
+        "resistance_ohm": 1000,
+        "capacitance_f": 1e-10,
+        "load_capacitance_f": 1e-12,
+        "frontend": {
+          "samples": 66,
+          "relative_rms_error": 0.0,
+          "gain_error": 0,
+          "phase_error_rad": 0,
+          "saturation": null,
+          "noise_rms_per_component": 0
+        },
+        "dac_supply": {
+          "coupling_per_v": 0,
+          "updates": 66,
+          "gain_min": 1.0,
+          "gain_max": 1.0
+        },
+        "supply": {
+          "minimum_delta_v": -0.029319249221008113,
+          "total_charge_c": 6.19000000000002e-10,
+          "transitions": 6190,
+          "return_transitions": 7739,
+          "return_charge_c": 0.0,
+          "coupling_per_v": 0,
+          "gain_min": 1.0,
+          "gain_max": 1.0
+        },
+        "capture": {
+          "enabled": true,
+          "done": true,
+          "count": 32,
+          "data_sha256": "1fadb2f4c139ee388df142d1743678b32a356bb84d18c5988cf3bba3d96b8cd1"
+        },
+        "rf_lo_events": [],
+        "wired_clock_impulses": {
+          "ui_per_v": 0.0,
+          "count": 0,
+          "max_abs_ui": 0.0,
+          "total_signed_ui": 0.0
+        }
+      },
+      "controller": "AutonomousRFChip",
+      "interventions": [],
+      "mode": 1,
+      "ppm": 100,
+      "duration_s": 3.2764723527647233e-06,
+      "source_frames": 16,
+      "transmitted_frames": 17,
+      "rf_samples_each_direction": 66,
+      "wired_words_each_direction": 819,
+      "observed_queue_peaks": {
+        "rf_tx": 9,
+        "wire_tx": 103,
+        "rf_return": 7,
+        "wire_return": 51,
+        "source_iq": 8,
+        "source_wire": 52
+      },
+      "rf_accounting": {
+        "accepted": 66,
+        "consumed": 66,
+        "discarded": 0,
+        "pending": 0,
+        "rejected": 0,
+        "underflows": 0
+      },
+      "wire_accounting": {
+        "completed_words": 819,
+        "partial_words_discarded": 0,
+        "serializing": 0,
+        "accepted": 819,
+        "consumed": 819,
+        "discarded": 0,
+        "pending": 0,
+        "underflows": 0
+      }
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "One shared RF synthesizer and separate wired synthesizer; no extra independent RF TX/RX PLL assumed.",
+    "2.4GHz candidate carrier; carrier programming and hardware divider/band calibration remain open.",
+    "Linear RF phase interpolation is a controlled numerical approximation; convergence checked against an independent analytic-loop convolution.",
+    "RF supply-to-frequency coupling, stochastic phase noise, fractional-divider spurs and LO distribution mismatch are not included.",
+    "Independent-source tests expose waveform changes, not a full modulated RF quality envelope or Wi-Fi compliance."
+  ]
+}

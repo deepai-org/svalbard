@@ -1,0 +1,18 @@
+{
+  "cycles": 251151,
+  "reset_cases": 20888,
+  "metadata_error_patterns": 20875,
+  "legal_count_pairs": 1308,
+  "scope": "Standalone aligned v2 receiver functional RTL and structural elaboration; no physical timing or whole-chip savings claim",
+  "result": "pass",
+  "interface": "Payload transfer strobes and in_word sampled on same edge with downstream readiness; command event registered after header acceptance",
+  "source_sha256": {
+    "rtl/pt_stream_rx.sv": "db085e40d4f9c0de587fd245da0585b51f71d86bbdaa8e6968afdd88b580e49d",
+    "rtl/pt_schedule.vh": "826aecb656c8057dc1acf21ff9acc35702a26bc01ac93e3c5d887f036b6a860c",
+    "verification/stream_codec.py": "4515bf61e3c83f041eee97740e61c075dca1681da388dc651117cdd10d1a0088",
+    "verification/stream_vectors.py": "f32dff13fb30d4fdd30598451828d5714ce38f4a2e3efd92ad259b9719face30",
+    "sim/tb_stream_rx.sv": "23c5061bf8b8ccbfd04fde2ffb0ca268425f4568754d83dfca7f1bd1a9257d78",
+    "verification/run_stream_rx.sh": "00de040929233dfcc027c7d9aebbd58a803f05bf111f4c8b33d699fdcb71cb97"
+  },
+  "vector_sha256": "54ff584c5560e2f33b4b46f0189e5546fcbc7e817d4f9b329feddc0b34495b3e"
+}

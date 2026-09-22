@@ -1,0 +1,171 @@
+{
+  "scope": "Exact closed-rectangle intersections between opposite rails on each PDN layer, including expanded native via geometry; not complete DRC",
+  "rectangles_checked": 268404,
+  "opposite_rail_contacts": 0,
+  "negative_controls": [
+    "interior overlap rejected",
+    "edge contact rejected"
+  ],
+  "counts": [
+    {
+      "net": "VDD_CORE",
+      "layer": "Metal1",
+      "kind": "STRIPE",
+      "rectangles": 195
+    },
+    {
+      "net": "VDD_CORE",
+      "layer": "Metal1",
+      "kind": "VIA",
+      "rectangles": 3705
+    },
+    {
+      "net": "VDD_CORE",
+      "layer": "Metal2",
+      "kind": "VIA",
+      "rectangles": 7410
+    },
+    {
+      "net": "VDD_CORE",
+      "layer": "Metal3",
+      "kind": "VIA",
+      "rectangles": 7410
+    },
+    {
+      "net": "VDD_CORE",
+      "layer": "Metal4",
+      "kind": "STRIPE",
+      "rectangles": 19
+    },
+    {
+      "net": "VDD_CORE",
+      "layer": "Metal4",
+      "kind": "VIA",
+      "rectangles": 6593
+    },
+    {
+      "net": "VDD_CORE",
+      "layer": "Metal5",
+      "kind": "STRIPE",
+      "rectangles": 19
+    },
+    {
+      "net": "VDD_CORE",
+      "layer": "Metal5",
+      "kind": "VIA",
+      "rectangles": 2888
+    },
+    {
+      "net": "VDD_CORE",
+      "layer": "Via1",
+      "kind": "VIA",
+      "rectangles": 25935
+    },
+    {
+      "net": "VDD_CORE",
+      "layer": "Via2",
+      "kind": "VIA",
+      "rectangles": 25935
+    },
+    {
+      "net": "VDD_CORE",
+      "layer": "Via3",
+      "kind": "VIA",
+      "rectangles": 25935
+    },
+    {
+      "net": "VDD_CORE",
+      "layer": "Via4",
+      "kind": "VIA",
+      "rectangles": 28158
+    },
+    {
+      "net": "VSS_CORE",
+      "layer": "Metal1",
+      "kind": "STRIPE",
+      "rectangles": 195
+    },
+    {
+      "net": "VSS_CORE",
+      "layer": "Metal1",
+      "kind": "VIA",
+      "rectangles": 3705
+    },
+    {
+      "net": "VSS_CORE",
+      "layer": "Metal2",
+      "kind": "VIA",
+      "rectangles": 7410
+    },
+    {
+      "net": "VSS_CORE",
+      "layer": "Metal3",
+      "kind": "VIA",
+      "rectangles": 7410
+    },
+    {
+      "net": "VSS_CORE",
+      "layer": "Metal4",
+      "kind": "STRIPE",
+      "rectangles": 19
+    },
+    {
+      "net": "VSS_CORE",
+      "layer": "Metal4",
+      "kind": "VIA",
+      "rectangles": 6593
+    },
+    {
+      "net": "VSS_CORE",
+      "layer": "Metal5",
+      "kind": "STRIPE",
+      "rectangles": 19
+    },
+    {
+      "net": "VSS_CORE",
+      "layer": "Metal5",
+      "kind": "VIA",
+      "rectangles": 2888
+    },
+    {
+      "net": "VSS_CORE",
+      "layer": "Via1",
+      "kind": "VIA",
+      "rectangles": 25935
+    },
+    {
+      "net": "VSS_CORE",
+      "layer": "Via2",
+      "kind": "VIA",
+      "rectangles": 25935
+    },
+    {
+      "net": "VSS_CORE",
+      "layer": "Via3",
+      "kind": "VIA",
+      "rectangles": 25935
+    },
+    {
+      "net": "VSS_CORE",
+      "layer": "Via4",
+      "kind": "VIA",
+      "rectangles": 28158
+    }
+  ],
+  "input_database_sha256": "fa8af34f45359939a65fef747a542310d317bb9b0835ca5b23fcaae1f896609c",
+  "artifact_sha256": {
+    "rectangles.tsv": "c3fbbcad16a1a0ed44b78add4c28390cc611502b17a19f3ad21faa7b63369760",
+    "dump.log": "40f81861892f7edf1bcb4642a8a2d51e981e275819ab838eabcf84f6d48b3e6f"
+  },
+  "source_sha256": {
+    "pdn_geometry_dump.tcl": "95af480a05a60cade00af80b22b52c96a0585af12367634c6658ab9c90926a9e",
+    "check_pdn_geometry.py": "478e588077012817a80a63efb5e878171baf96f75f226607cb3683c4b09f7ece",
+    "run_pdn_geometry.sh": "9b3edbb61db8ca780f60df4f096a88b341025ee336e8b5521696535f3f2836a7"
+  },
+  "limitations": [
+    "Checks generated special-wire PDN shapes only, not all cell geometry, signal wires or pads.",
+    "No minimum spacing, enclosure, cut-array or density rules checked; complete DRC/LVS still required.",
+    "No via resistance/current, IR/EM, dynamic supply noise or package-feed qualification.",
+    "Well/substrate contacts and full-chip domain isolation remain unverified."
+  ]
+}

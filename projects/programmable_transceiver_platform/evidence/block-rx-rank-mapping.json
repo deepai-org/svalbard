@@ -1,0 +1,51 @@
+{
+  "pass": 81,
+  "status": "setup fails both modes",
+  "cell_area_um2": 52004.288,
+  "flip_flops": 147,
+  "paths": {
+    "0": {
+      "max": {
+        "slack_ns": -1.2164,
+        "startpoint": "_4674_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "wire_words[26] (output port clocked by clk)"
+      },
+      "min": {
+        "slack_ns": 0.3987,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_4801_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    },
+    "1": {
+      "max": {
+        "slack_ns": -1.2164,
+        "startpoint": "_4674_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "wire_words[26] (output port clocked by clk)"
+      },
+      "min": {
+        "slack_ns": 0.3987,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_4801_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    }
+  },
+  "period_ns": 25.6,
+  "input_max_delay_ns": 4,
+  "output_max_delay_ns": 4,
+  "scope": "Nominal TT25C3.3V unplaced ideal clocks/no wire RC. No mapped equivalence, queues or physical signoff.",
+  "sha256": {
+    "projects/programmable_transceiver_platform/rtl/pt_block_rx_rank.sv": "d53063e8c3c46f6be5bad1e288713b7a8fafcbcddd061a90cdb665ab8e2bd328",
+    "projects/programmable_transceiver_platform/rtl/pt_block_header.sv": "c209a40f9bfb5e8391da2d84e8f4f26578ba60c0c39efa3d9ba3a328958e15fa",
+    "projects/programmable_transceiver_platform/rtl/pt_block_route_rank.sv": "f1e8f980abc11ea32d8d05978bfc8c97be4e6a48d61b53868b603d01fec50015",
+    "projects/programmable_transceiver_platform/rtl/pt_lane_compact.sv": "177039ea39062c139c08127af565743075e204954711e7ba04be00d280201e69",
+    "projects/programmable_transceiver_platform/rtl/pt_schedule.vh": "826aecb656c8057dc1acf21ff9acc35702a26bc01ac93e3c5d887f036b6a860c",
+    "projects/programmable_transceiver_platform/verification/block_rx_rank_timing.tcl": "65051f7130c6697a692b158b8a23c60b79a9183b6a56744e4a4b948fe218912f",
+    "projects/programmable_transceiver_platform/verification/run_block_rx_rank_mapping.sh": "5d893f0a27f8afe424f900269143507bef32f8b4c214130499dde4d6e9f538a2",
+    "projects/programmable_transceiver_platform/verification/report_block_rx_rank_mapping.py": "e8ef8b888e2f37ca2db39d3a299920d1923d9cfb6046b9ff985bc344856c4ade",
+    "scratch/transceiver-block-rx-rank-mapping/mapped.v": "dec1abe40d3b4d85b36ef497e0f966e1f5050dc9a096705ff085145188c36c73",
+    "scratch/transceiver-block-rx-rank-mapping/mapped.json": "80fe4f61ae2d4d6fc5cf7c7d4cff813ebaf62d49f4e96683c09909314613f3ec",
+    "scratch/transceiver-block-rx-rank-mapping/stat.json": "e7c90069e8451a15bb4e8b471e99f61b99acd021ac5abed327f303e26519075d",
+    "scratch/transceiver-block-rx-rank-mapping/timing.log": "4905fd650ed45717e19878cf54be5500cba780047a7edd533e9bccff86d29bbf",
+    "scratch/transceiver-block-rx-rank-mapping/library.sha256": "63f746b08d8105af8a803731675c322662d70056ecde4239087246914f7f6f20"
+  }
+}

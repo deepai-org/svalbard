@@ -1,0 +1,13 @@
+* Exploratory differential low/high-pass quadrature; not a qualified LO driver.
+* CM is an explicit external bias port; ideal in initial AC diagnostic.
+.include /screen/reference/reservoir_mim.spice
+.subckt pt_rc_quadrature P N IP IN QP QN CM VSS params: RL=2u
+XRIp P IP VSS ppolyf_u r_width=2u r_length={RL}
+XRIn N IN VSS ppolyf_u r_width=2u r_length={RL}
+XCIp IP CM pt_ref_reservoir_4
+XCIn IN CM pt_ref_reservoir_4
+XCQp P QP pt_ref_reservoir_4
+XCQn N QN pt_ref_reservoir_4
+XRQp QP CM VSS ppolyf_u r_width=2u r_length={RL}
+XRQn QN CM VSS ppolyf_u r_width=2u r_length={RL}
+.ends pt_rc_quadrature

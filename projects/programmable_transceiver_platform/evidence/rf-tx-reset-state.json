@@ -1,0 +1,20 @@
+{
+  "controls": {
+    "accepted": 4,
+    "consumed": 2,
+    "discarded": 2,
+    "pending": 0,
+    "rejected": 1,
+    "underflows": 1
+  },
+  "complete_architecture": false,
+  "source_hashes": {
+    "system_model/connected/rf_tx_state.py": "09d886a181fd595d7d08cafc9d22da10432462364f82c74c6f07d6428bb9cf1a",
+    "system_model/connected/session.py": "6752e434755cd77ef43fa943570fa0843c6fbf10bdd10f3119374e63fff39374"
+  },
+  "limitations": [
+    "Consumer block only; not yet connected to framed transport/reset propagation.",
+    "No physical filter-reset switch: retained analog state follows hypothetical one-pole response.",
+    "Upstream drain/rearm barrier is assumed; late old-epoch words after rearm remain unresolved."
+  ]
+}

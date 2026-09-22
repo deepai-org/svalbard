@@ -1,0 +1,112 @@
+{
+  "status": "matched_static_current_DAC_transfer_audited",
+  "cases": [
+    {
+      "name": "cm1.2",
+      "output_clamp_v": 1.2,
+      "returncode": 0,
+      "artifacts_sha256": {
+        ".spice": "617bb8ae312e5d3be91a3e3ffc2d904a3eeb66ff9d20c14ac52b90233b44ce73",
+        ".dat": "fc0c815f85b70506646a07ba6bd7b88f90484061dda1a5e411e2dec111449153",
+        ".log": "8eba6e7e23ace3b99afce70d965acef945477b9e6f079fc8bd17b73c3de0a050"
+      },
+      "differential_endpoints_ma": [
+        -5.157105896980075,
+        5.157105881886252
+      ],
+      "endpoint_lsb_ua": 40.44788932888755,
+      "strictly_monotonic": true,
+      "max_endpoint_normalized_dnl_lsb": 1.978236809696554e-06,
+      "max_endpoint_normalized_inl_lsb": 1.6081851638697844e-06,
+      "total_output_current_range_ma": [
+        5.157106417948004,
+        5.157106514080074
+      ],
+      "bias_range_v": [
+        0.8234829673536631,
+        0.8234830052759022
+      ]
+    },
+    {
+      "name": "cm1.65",
+      "output_clamp_v": 1.65,
+      "returncode": 0,
+      "artifacts_sha256": {
+        ".spice": "49214708ee940e76097c49c00213f4835215d7b1581a9d3b5925bb9a6cfe3aab",
+        ".dat": "f6f7a6b3f184201be3ea03a0cb49db7c19f51cc468e55cbebe32dd9dec7bd3c8",
+        ".log": "8eba6e7e23ace3b99afce70d965acef945477b9e6f079fc8bd17b73c3de0a050"
+      },
+      "differential_endpoints_ma": [
+        -5.221172876460419,
+        5.22117217755431
+      ],
+      "endpoint_lsb_ua": 40.95037276084208,
+      "strictly_monotonic": true,
+      "max_endpoint_normalized_dnl_lsb": 3.29588942533654e-05,
+      "max_endpoint_normalized_inl_lsb": 3.283473593523775e-05,
+      "total_output_current_range_ma": [
+        5.221173024154274,
+        5.221173988646817
+      ],
+      "bias_range_v": [
+        0.8234829673536631,
+        0.8234830052759022
+      ]
+    },
+    {
+      "name": "cm2.1",
+      "output_clamp_v": 2.1,
+      "returncode": 0,
+      "artifacts_sha256": {
+        ".spice": "c0539234e00185935c887489ab96fa79e7a11e5e81b0d8b7a30050f2a33aadfd",
+        ".dat": "17ec4ea61e9755c9a54d71e1424ec9ac66577cdc172bd1b709ccb9cd4952e754",
+        ".log": "8eba6e7e23ace3b99afce70d965acef945477b9e6f079fc8bd17b73c3de0a050"
+      },
+      "differential_endpoints_ma": [
+        -5.280518871836103,
+        5.28051863998978
+      ],
+      "endpoint_lsb_ua": 41.41583337970934,
+      "strictly_monotonic": true,
+      "max_endpoint_normalized_dnl_lsb": 1.700385763792056e-05,
+      "max_endpoint_normalized_inl_lsb": 1.1380805266671627e-05,
+      "total_output_current_range_ma": [
+        5.280519380018551,
+        5.280519947936104
+      ],
+      "bias_range_v": [
+        0.8234829673536631,
+        0.8234830052759022
+      ]
+    }
+  ],
+  "source_sha256_before": {
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+    "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a"
+  },
+  "source_sha256_after": {
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+    "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a"
+  },
+  "limitations": [
+    "Behavioral sources supply testbench bit controls only; transistor DAC is actual PDK circuitry.",
+    "Equal clamped outputs, no dynamic voltage swing, finite code driver, reconstruction filter or mixer.",
+    "Ideal20uA reference, matched FET typical only; no mismatch/noise/glitch/SFDR/settling qualification.",
+    "Tiny normalized static errors in matched weighted instances do not establish physical eight-bit precision or dynamic ENOB."
+  ],
+  "qualified_radio_DAC": false
+}

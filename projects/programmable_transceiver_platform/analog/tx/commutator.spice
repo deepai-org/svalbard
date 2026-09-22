@@ -1,0 +1,7 @@
+* Differential passive TX commutator candidate; externally supplied LO/LOB.
+* Reuses actual receive switch banks bidirectionally; no gain or output driver.
+* Include wifi rf_switch_mixer/mixer.spice before this cell.
+.subckt pt_tx_commutator BP BN RP RN LO LOB VSS
+XP RP LO LOB BP BN VSS wifi_rf_switch_mixer
+XN RN LOB LO BP BN VSS wifi_rf_switch_mixer
+.ends pt_tx_commutator

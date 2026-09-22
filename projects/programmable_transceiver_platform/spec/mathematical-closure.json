@@ -1,0 +1,359 @@
+{
+  "version": 2,
+  "scope": "Full intended programmable PHY companion; mathematical closure precedes transistor schematic closure and layout.",
+  "basis": [
+    "spec/block-diagram.md",
+    "spec/clock-rate-ownership.md",
+    "spec/contract.json"
+  ],
+  "requirements": [
+    {
+      "id": "four_paths",
+      "status": "partial",
+      "evidence": "connected-combined-platform.json",
+      "remaining": "SharedPhaseLoadedTxChip now passes both-mode finite loaded-pad/shared-ADC TX/RX quality with verified source snapshots. Driver/readout/PLL-feedback extensions cannot inherit those results. Require both-mode quality, continuous service, retune/recovery and SPI-only use on the final selected composition, followed by a fresh aggregate.",
+      "historical_notes_before_calibration": "Declared candidate now combines live wired CDR/idle/supply kicks, wideband modulated RF/multipole filtering/blockers/phase events, both converter pipelines, shared reference loads and host pauses. Four signed both-mode cases pass transport and provisional RF quality. Missing intended functions elsewhere in this inventory and broader uncertainty/independent-source operation still prevent whole-chip closure. Pass848 combines the public supply-coupled detector before four-path traffic, independent wideband RF, autonomous sampled clocks, shared ADC/DAC reference loads and a16-word host pause. Both32-frame cases pass with3.785%/4.945% held-out error; this finite candidate screen does not close whole-chip uncertainty or all supported controls.",
+      "remaining_before_managed_tx_update": "CalibratedFractionalChip now composes both pulse clocks, fractional RF tuning, diagnostics, transport and I/Q offset calibration. Two calibrated wideband cases pass with shared references, blockers, detector loading and four-path traffic. Still apply continuous traffic, recovery and all supported configuration tests to this single candidate; two finite cases do not close the chip. Both-mode finite continuous duplex, stop/underrun and noisy reference-loss/opposite-mode retune now pass on this candidate; these are not long-duration or arbitrary-service proofs.",
+      "supporting_evidence": [
+        "connected-managed-tx-lockwait-mode0.json",
+        "connected-managed-tx-lockwait-mode1.json",
+        "connected-tx-observability.json",
+        "shared-calibration-mode1-signed-readout.json",
+        "shared-calibration-mode1-signed-launch.json",
+        "connected-loaded-pad-quality-mode0.json",
+        "connected-shared-pad-quality-mode1.json",
+        "connected-shared-pad-quality-mode0.json"
+      ],
+      "remaining_before_shared_readout_update": "Experimental ManagedTxHostChip now passes both-mode finite four-path quality with coarse acquisition, RX offset calibration, finite nonlinear TX power-detector calibration, correction and host activation. Requalify continuous service, recovery/retune and alternative SPI-only use on this same composition; older candidate tests do not automatically transfer."
+    },
+    {
+      "id": "sustained_rate_ownership",
+      "status": "partial",
+      "evidence": "connected-matched-rate-lifecycle.json",
+      "remaining": "Finite and count-free streams, atomic starts, host-pause tests and explicit overflow/underrun exist. Still prove declared rate/phase/service envelopes and bounded queues across clock acquisition, calibration transitions and persistent mismatch on the fractional candidate. Define graceful stopping and host handshake; abort remains lossy.",
+      "historical_notes_before_calibration": "Common-reference rates and selected visibility/phase tests pass;16/64-word H2D pauses pass and256-word pauses fault. Still establish variable CDC, arbitrary service-phase and finite queue bounds across lock transients."
+    },
+    {
+      "id": "clock_services",
+      "status": "partial",
+      "evidence": "connected-compliant-edge-pll.json",
+      "remaining": "The 300 kHz fractional pulse-loop candidate passes 201/201 nominal MHz-grid acquisition points and the tested continuous/reference-recovery cases. Experimental CoarseRetuningChip adds settling-bounded bank search, finite 12-bit snapshots, passive recentering and managed warm retuning with cancellation/restart; two-mode post-retune RF/wired transport passes. Coarse startup combined RF quality is 6.76%/9.85%, leaving very little margin in the latter. Two warm-retune receive-quality cases now pass at 6.09%/7.15% with I/Q recalibration and simultaneous four-path traffic; these do not qualify TX RF spectrum or the full operating envelope. Remaining: unify and requalify the candidate across declared tuning/startup/noise/supply/reference envelopes; bound bank and shunt uncertainty, pump mismatch/reset delay and real CDC behavior. All oscillator, bank, shunt and noise parameters remain mathematical assumptions requiring transistor evidence. Independent TX observation fails at 10.37%/12.59%; recorded phase substitution reproduces the failure, making LO phase/noise budget closure the immediate priority. Isolation implicates combined noise/supply forcing and an underdamped passive filter: averaged equal-capacitor phase margin is 12.95 degrees with 4.53 peak sensitivity. A 0.25 fast-capacitor fraction is under TX/grid requalification; the default remains 0.5. No assumed noise was reduced in that trial. The quarter-fraction full-chip trial fails RF lock during traffic; its grid sweep and a 0.35-fraction full TX trial remain running. Averaged peaking improvement is not sufficient qualification. Completed trials: 0.25/300k qualifies 187/201 carriers; 0.35/300k qualifies 201/201 but fails mode-1 TX quality at 11.38%; 0.25/250k retains traffic lock but fails mode-1 TX at 11.32%. Saved trace decomposition identifies a large training-to-validation gain shift; investigate startup/load coupling without oracle correction. Defaults remain unchanged. Matched mode-1 host preconditioning at 0.35/300k gives 11.60% after quiet wait versus 9.34% after valid empty frames. Startup-load handling or supply isolation must become an explicit, broadly checked implementation; one warm-link fixture does not close cold startup. HostActivationChip now enforces counted empty-frame activation and passes rejection/timeout/reference-loss tests. Both-mode TX quality reproduces 8.09%/9.34%; three additional mode-1 start phases pass. Combined RX/TX validation now passes both modes on HostActivationChip with explicit training; physical monitor and broader lifecycle qualification remain open. Physical timing observation, idle/activity envelopes and final SPI-path integration remain open.",
+      "historical_notes_before_calibration": "Standalone compliance-limited pump model qualifies40 of44 startup cases; four miss30us. All six prior ideal-current compliance boundaries recover under the assumed symmetric rolloff law. Full-chip integration, mismatch/reset delay/noise, carrier controls and independent full RF quality remain open; this is not a measured GF180 current law. Managed RF carrier tuning is now connected in the sampled-clock profile: six both-mode cases preserve oscillator phase/filter state and reacquire. Fractional ratios still use ideal average feedback; physical divider edges and tuned independent RF quality remain open. Pass861 adds isolated pulse-loop phase forecasting and connects the compliance-dependent loop to the actual wired serializer/channel at both rates. Exact word transport and non-mutating forecasts pass. Full-chip reset/reference, noise/supply and RF/fractional adapters remain open. Pass862 pulse loops now preserve phase/filter charge through reference loss, gate pump current and reacquire on reference return; four both-rate lifecycle cases and serializer regression pass. Detection delay, leakage/noise, returned reference phase and full-chip adapter remain open. Pass863 pulse loops support exact exponential rail-frequency forcing, continuous phase/filter state and live serializer retiming; four signed/both-rate cases pass with analytical and subdivision controls. Pump/reference PSRR, noise and common-chip substitution remain open. Pass864 pulse loops integrate the immutable finite-spectrum frequency-noise source exactly into phase, with independent quadrature/subdivision/forecast checks at both rates. Pump/reference noise, fractional feedback and the full-chip adapter remain open. Pass865 substitutes an integer pulse-clock service for wired timing in the common controller. Both-mode transport and opposite-mode recovery pass; RF remains sampled, and fractional/phase-step operations reject explicitly. Band-switch charge/work and RF adapter remain open. Pass866 PulseChip connects both pulse synthesizers, using unwrapped RF phase. Independent tone and simultaneous ADC/wired transport pass; assumed-noise tone error is9.82% against10% maximum budget, so margin remains weak. RF tuning rejects explicitly; wideband and recovery coverage remain open. Pass867 both-pulse combined wideband cases pass with4.87\u20135.91% held-out RMS error. Pass868 managed integer-channel tuning preserves phase and capacitor state and passes six both-mode tone/converter cases. Fractional feedback remains unavailable. Pass869 actual first-order fractional divider reaches mean2.412/2.437GHz but fails current lock qualification; dense timing ripple is5.39/32.15ps RMS. Arithmetic and forecast tests pass only. Fractional quality remains an explicit unresolved risk. Pass870 second-order integer feedback at500kHz bandwidth qualifies the two tested fractional channels with1.59/3.35ps RMS deterministic timing and2.41%/5.13% phase-only error. At1MHz it remains inadequate. Full-chain integration, device noise and broader ratios remain open. Pass871 full-chip fractional RF requires a longer unchanged-limit qualification window;500kHz still fails2.437GHz acquisition.350kHz qualifies both channels/modes and passes loaded-reference tone/converter/wired transport at1.10\u20132.91% held-out error. Device noise, wideband fractional operation and the full channel grid remain open. Pass872 the350kHz shaped candidate passes both channels/modes with assumed oscillator noise at6.40\u20137.64% held-out tone error. Wideband comparison must include deterministic divider distortion against an ideal tuned reference; broader noise/grid coverage remains open. Pass874/875 fractional wideband against an ideal tuned reference passes four carrier/mode cases at7.38\u20138.03% with20/30MHz carrier-relative blockers. Fixed-laboratory in-band interference failures remain archived. Broader channel/noise/uncertainty coverage and physical validation remain open.",
+      "historical_clock_progress_before_retune_quality": "Both compliance-limited pulse loops and second-order integer feedback are integrated. 350 kHz candidate RF loop passes tested 2412/2437 MHz quality cases; first-order and wider-band failures remain preserved. Still test tuning-grid coverage, initial conditions, reference-loss/reacquisition, retune, mismatch/reset delay and declared noise/supply failure envelopes on the unified candidate. New full-grid evidence: 350 kHz gives 195/201 sustained qualifications; six ratio-specific holes remain. A targeted 300/325 kHz filter comparison repairs all six without relaxing lock thresholds; full-grid and RF quality requalification are pending. Separate outside-span startup cases motivate explicit coarse tuning. The full 300 kHz grid now passes 201/201 nominal points and calibrated wideband error is 6.50%/6.75%; candidate defaults have been updated, preserving 350 kHz failure evidence. Coarse-bank range search remains staged and lifecycle revalidation is running. CoarseStartupChip now integrates settling-bounded edge-count search, management ownership and cancellation, and passes two previously unreachable startup cases. It remains experimental: live recenter/retune, counter/CDC semantics and full-chain quality are unfinished. Finite 12-bit /16 counter snapshots, two-control-cycle delivery, modular wrap, bounded freshness and pending-result cancellation now have executable full-chip tests. Physical CDC qualification, live coarse recentering and full coarse-profile RF quality remain open. Coarse combined quality now passes two loaded/noisy points at 6.76%/9.85%, with narrow margin in the latter. Standalone passive recentering passes independent KCL/energy/guard checks and two coarse/fine retunes. CoarseRetuningChip now passes managed warm retuning, interruption/restart and post-retune transport in both modes. Recovered RF waveform quality and broader uncertainty coverage remain unfinished; it is not the main candidate yet.",
+      "supporting_evidence": [
+        "connected-fractional-grid-300k.json",
+        "connected-calibrated-lifecycle.json",
+        "connected-coarse-counter.json",
+        "connected-coarse-wideband.json",
+        "connected-passive-recenter.json",
+        "connected-coarse-retune.json",
+        "connected-retuned-wideband.json"
+      ]
+    },
+    {
+      "id": "rf_chain",
+      "status": "partial",
+      "evidence": "connected-wideband-clock-quality.json",
+      "remaining": "Unified mode0 full traffic failed (58376) at 326.052us with host activation missing/expired; source hashes verified, first-quiesce replay 9180 identifies RF frequency-lock loss while host remains ready; investigate supply/PLL frequency margin without loosening lock limits. No unified payload quality pass. Earlier shared-ADC/passive-driver both-mode results remain separate. Guarded finite-reference-current mode1 full traffic completed but TX14.85% failed the10% gate; RX6.97% passed (88046, verified sources). Exact diagnostic decomposition assigns75.18% of TX squared error to angular mismatch. Controlled rail20 mode0 test38143 is running. Require final-composition both-mode quality, lifecycle and bounded loading.",
+      "historical_notes_before_calibration": "Autonomous shared RF LO now drives both mixers. Independent tone reception exposes clock disturbances which cancel in loopback; four modulated external-input cases retain both converter delays and wired traffic, with uncoupled TX-isolation controls. Extend combined-profile signal-quality and uncertainty measurements to these autonomous clocks. RF gain, images/leakage and overload recovery remain open. Managed carrier tuning now passes six independent-tone analytical-response cases and two detuning controls with64-sample converter transport. This covers a noiseless single-pole tone response only; combined wideband quality remains open. Independent50-carrier reception now passes a32-frame four-path run in both modes with sampled autonomous RF/wired clocks, finite converter delays, spectral oscillator noise, host/return supply pulling and frontend impairments. Held-out incremental errors are3.95%/4.86%; blockers, wider uncertainty and actual pulse-loop integration remain open. Four both-mode/signed blocker and cubic-response cases now pass with3.94\u20134.99% held-out error; full uncertainty coverage remains open. Pass848 combines the public supply-coupled detector before four-path traffic, independent wideband RF, autonomous sampled clocks, shared ADC/DAC reference loads and a16-word host pause. Both32-frame cases pass with3.785%/4.945% held-out error; this finite candidate screen does not close whole-chip uncertainty or all supported controls. Pass874/875 fractional wideband against an ideal tuned reference passes four carrier/mode cases at7.38\u20138.03% with20/30MHz carrier-relative blockers. Fixed-laboratory in-band interference failures remain archived. Broader channel/noise/uncertainty coverage and physical validation remain open.",
+      "tx_calibration_update": "Local finite-code correction, finite detector and managed sequencing have targeted evidence. Shared-LO and unknown-receiver counterexamples prove loopback cannot qualify TX independently. Full live corrected output-stage quality remains unclosed.",
+      "supporting_evidence": [
+        "connected-tx-observability.json",
+        "connected-tx-calibration-inflight.json",
+        "connected-tx-calibration-verification.json",
+        "connected-managed-tx-lockwait-mode0.json",
+        "connected-managed-tx-lockwait-mode1.json",
+        "connected-tx-output-isolation-audit.json",
+        "connected-tx-output-isolation.json",
+        "connected-isolated-tx-recovery.json",
+        "connected-isolated-tx-wideband-mode0.json",
+        "connected-isolated-tx-wideband-mode1.json",
+        "connected-isolated-tx-onset-mode1.json",
+        "connected-rf-isolation-load.json",
+        "connected-rf-dummy-load.json",
+        "connected-rf-switched-load.json",
+        "connected-rf-loaded-detector.json",
+        "connected-rf-loaded-calibration.json",
+        "connected-loaded-tx-chip.json",
+        "connected-rf-carrier-frame.json",
+        "connected-rf-phase-forcing.json",
+        "connected-rf-phase-events.json",
+        "connected-phase-loaded-tx-chip.json",
+        "connected-phase-loaded-calibration.json",
+        "connected-loaded-pad-observer.json",
+        "connected-loaded-pad-capture.json",
+        "connected-loaded-pad-quality-mode0.json",
+        "connected-retunable-loaded-tx.json",
+        "connected-shared-tx-detector.json",
+        "connected-shared-tx-cancel.json",
+        "connected-shared-tx-restart.json",
+        "connected-buffered-calibration-settling.json",
+        "connected-buffered-shared-detector.json"
+      ],
+      "remaining_before_managed_tx_update": "Independent wideband and calibrated tone tests demonstrate signal transport and provisional held-out waveform quality. Still establish minimum useful signal level, DC/error allocations, gain/phase calibration requirements, blocker/noise/nonlinearity operating envelopes, more seeds and signed coupling, and RX/TX uncertainty margins. A 10% model screen is not protocol compliance. The current combined wideband metric compares received ADC words against an independent ideal receive envelope; concurrent TX checks prove transport/accounting, not RF output spectral quality. Add an independently observed TX envelope/spectrum check on the same composed candidate, including DAC/reference errors and autonomous LO phase. Independent nominal-carrier TX observation now fails the provisional waveform screen at 10.37%/12.59%. Finite-burst out-of-channel energy is -25.11/-13.26 dB and nearly identical in the ideal baseline. Preserve these failures; Recorded-state substitution now gives phase-only error 10.36%/12.60% and baseband-only error 0.73%/0.49% after gain correction. Next isolate oscillator-noise, divider and supply contributions without relaxing quality thresholds. TX reconstruction, mixer/driver impairments and a justified spectrum requirement remain open.",
+      "isolation_remaining": "Passive topology audit contradicts treating60dB isolation as independent of capacitance/loading. Upstream calibration sees a changed load; pad-side observation loses SNR. Choose and integrate load-preserving observation/isolation dynamics, then requalify waveform quality and uncertainty.",
+      "dummy_load_remaining": "Experimental managed2412MHz network now handles loaded calibration, exact DAC boundaries and stop charge retention. Retuning, LO phase/noise propagation, independent full-chain observer, shared resources and physical power/area remain open.",
+      "loaded_pad_remaining": "Mode0 actual pad TX/RX quality passes7.44%/5.99% with matched network reference and independent detector ADC. Still qualify mode1, phase-aware shared ADC/mux, retuned/recovered quality, active-driver/DC feedback and physical uncertainties.",
+      "remaining_before_shared_readout_update": "Both managed modes pass independent TX/RX quality at the 100 us readiness-poll profile: TX 8.322%/9.559%, RX 6.193%/6.965%. Mode1 margin depends strongly on phase trajectory. Reconstruction and output IQ/leakage/cubic models are integrated in the independent observer. Remaining: detector uncertainty/loading, residual quality qualification, physical output isolation, minimum signal/blocker/linearity envelopes and broader initial-state/noise seeds. Independent monitor ADC is an unbudgeted resource assumption; output-stage loading is one-way. Power/loopback checks cannot certify independent TX phase fidelity."
+    },
+    {
+      "id": "converters_reference",
+      "status": "partial",
+      "evidence": "connected-adc-recovery.json",
+      "remaining": "Unified reference/driver rail state and actual shared-ADC calibration are connected. Finite-current local load sweeps expose 50uA failure and candidate 150uA recovery; finite-current law now lives inside a separate unified solver candidate. Baseline unified monitor transport passed both modes with exact 64-word host delivery and reference-loss invalidation (65541; source hashes verified). Guarded finite-current full traffic remains unqualified. Remaining: full conversion/host timing, mux kickback, source/sink and bandwidth envelopes, aperture and diagnostic frontend qualification.",
+      "historical_notes_before_calibration": "Finite converter pipelines, shared/separate reference loads and signed ADC clipping diagnostics are integrated. Saturated codes retain validity; nonfinite inputs are rejected. Hardware diagnostic mapping, overload recovery, DAC analog limits and full reference/source-sink/noise operating envelopes remain open. A configurable sampled ADC overload-memory law is now integrated after reference loading; four signed both-mode cases recover and deliver256 samples each. Recovery time/gain are assumed; between-sample overload and physical common-mode behavior remain unknown. Pass848 combines the public supply-coupled detector before four-path traffic, independent wideband RF, autonomous sampled clocks, shared ADC/DAC reference loads and a16-word host pause. Both32-frame cases pass with3.785%/4.945% held-out error; this finite candidate screen does not close whole-chip uncertainty or all supported controls.",
+      "remaining_before_shared_readout_update": "Finite pipelines, actual reference loading, clipping telemetry, recovery model and quiet maintenance ADC conversion exist. Still bound reference/source-sink/noise behavior, DAC limits, maintenance-mode transfer/settling and independent observer uncertainty. The test 1 mV calibration tolerance and supplied 300 uV observer bound are not established system requirements.",
+      "supporting_evidence": [
+        "connected-signed-calibration.json",
+        "shared-calibration-mode1-signed-readout.json",
+        "connected-detector-readout-settling.json",
+        "connected-buffered-shared-detector.json"
+      ]
+    },
+    {
+      "id": "wired_modes",
+      "status": "partial",
+      "evidence": "connected-receiver-detection.json",
+      "remaining": "Autonomous wired timing, shaping, equalization and supply-coupled receiver detection exist with managed recovery and local release observation. Still validate complete supported load/termination envelopes, detector false-negative boundaries, both-mode lifecycle and clock ownership on CalibratedFractionalChip. Arbitrary loads and full standards compliance are not established.",
+      "historical_notes_before_calibration": "Autonomous wired timing, TX shaping and live RX equalization are connected. ReceiverDetectChip now adds two-leg RC receiver detection, timed commands, TX exclusion, release, reset/rearm and discoverable interlock state. Known small-coupling-capacitor false negatives require the declared load envelope. Probe supply coupling, broader uncertainty, equalizer calibration and automatic slip reporting remain open. SupplyDetectChip now feeds an assumed positive-current/bias/sink-overhead load into the actual shared RC rail and oscillator pulling; both-mode finite RF capture and timestep refinement pass. Rail feedback into probe stimulus/sensors remains open. Signed probe-drive gain and sensor-offset dependence on the actual rail now pass both-mode nominal-load and refinement checks. Release now uses a4us minimum dwell plus a local5mV monitor criterion; baseline also uses only the local sensor. Sixteen load histories and stuck-monitor timeout pass. Arbitrary precharged remote networks and full sensor/timing uncertainty remain unqualified."
+    },
+    {
+      "id": "programmable_resources",
+      "status": "partial",
+      "remaining": "Local gm/C tile, internal monitors and diagnostic allocation exist. Shared calibration now controls independent I/Q post-filter offset actuators, owns the ADC during maintenance and exposes trim/status/resource discovery. Still define and verify remaining trim targets, independent physical observation topology, target-specific validity/invalidation, atomic multi-resource configuration and all documented analog routes.",
+      "evidence": "connected-resource-inventory.json",
+      "historical_notes_before_calibration": "Management now discovers six existing converter/memory/wired engines and returns actual configured owner, scheduled/in-flight busy and armed/frozen flags. Both-mode tests exercise ownership conflicts and apply-time snapshots. Full analog tile/diagnostic resource graph, trim-to-analog calibration, atomic multi-resource configuration and asynchronous reset remain open. Model-management IDs are not a frozen SPI ABI. Shutdown tests verify conversion cancellation, disabled wired RX status and configuration freeze until drain acknowledgement; queued TX words now count as busy. Pass852 adds a standalone two-input weighted gm/C tile with leakage, saturation and hysteresis; analytical/state tests pass. Diagnostic mux, ADC ownership and timed configuration integration remain open. Pass853 DiagnosticChip connects tile output to the I-ADC with exclusive pair allocation, finite conversion/host transport, reference loading and discoverable ownership. Four cases pass; timed management, internal monitor sources and common top integration remain open. Pass854 adds timed tile weight/enable, diagnostic select, discharge and status commands with execution-time permission and epoch fences. Physical monitor sources, triggers and common top integration remain open. Pass856 common entry adds timed internal monitor selection with fixed-cadence rail/reference observations feeding the tile and ADC. Both-mode transport and subdivision tests pass; pad sensing, shutdown/rearm and physical buffer behavior remain unqualified. Pass857 monitor status is epoch-qualified and invalidated on shutdown. Both-mode probe-pad monitoring, stopped updates, retained analog state and opposite-mode rearm pass. Physical buffer behavior, freshness limits and trigger routing remain open."
+    },
+    {
+      "id": "management_lifecycle",
+      "status": "partial",
+      "evidence": "connected-local-timing.json",
+      "remaining": "Signed shared-ADC calibration commits at2437MHz. ProgrammableDwellChip adds a proposed serialized dwell operation and deadline polling with serialized abort cleanup. Handler/local90.27us sequence tests pass; real startup/timeout/ADC-release/fresh-generation commit now passes (19211, source hashes verified). Require completion/cancellation/epoch/ownership checks and continuous, retuned, SPI-only and graceful-stop semantics on one unified candidate; proposed management operations still need RTL/CDC reconciliation.",
+      "historical_notes_before_calibration": "Timed transactions configure resources and start finite32-sample local TX/RX atomically with a signed programmable relative converter offset. Both-mode simultaneous/leading/lagging starts and atomic past-start rejection pass. Continuous streaming/run-stop, external trigger routing, LO/trim/calibration and hardware SPI/CDC mapping remain open. configure_rf_carrier now accepts integer-Hz targets in the declared2.3\u20132.5GHz command envelope, only while reset/disarmed; this envelope is not a physical tuning guarantee. Pass858 adds timed count-free RX in the common entry, bounded streaming codec state, duplicate-start rejection, explicit abort stop and overflow fault/drain tests in both modes. Continuous TX, lossless stop and independent host agreement remain open. Pass859 adds timed count-free host TX through existing framed input, DAC queue and pipeline; both-mode exact sequence, stop and underrun tests pass. Atomic dual-start, triggers, lossless stop and rate uncertainty remain open. Pass860 adds atomic timed continuous TX/RX start with signed relative timing and both-mode rejection tests for busy or past-start conflicts. Trigger routing and lossless stop remain open.",
+      "remaining_before_shared_readout_update": "Timed commands and epoch fencing cover finite/continuous starts, diagnostics and calibration start/status/abort. Calibration has rollback, in-flight cancellation and stale-result tests. Still resolve trigger semantics and graceful stop, test recovery/retuning/continuous operation on the unified candidate, and reconcile the complete command contract with intended SPI/CDC hardware. No extra pins are assumed. Unified reference-loss recovery preserves applied I/Q trim codes while invalidating calibration accuracy, drains the old epoch and resumes both RF/wired output after retuning.",
+      "supporting_evidence": [
+        "connected-programmable-dwell.json",
+        "shared-calibration-mode1-signed-launch.json",
+        "connected-managed-dwell-recovery.json"
+      ]
+    },
+    {
+      "id": "coexistence",
+      "status": "partial",
+      "evidence": "connected-oscillator-supply.json",
+      "remaining": "ManagedUnifiedReferenceChip shares one driver/reference rail with RF PLL feedback; calibration passed, full mode0 payload pending. ManagedLimitedReferenceChip adds finite reference current limits with short impulse/rollback and nonbinding equivalence checks. Remaining: finite-limit full traffic and recovery, supply-dependent RF output impedance/current limits, host/wired disturbance envelopes and physical power/package qualification.",
+      "historical_notes_before_calibration": "Both host buses now drive continuous shared-rail RF/wired oscillator frequency pulling in the connected controller. Small signed sensitivities preserve transport; excessive values fault; independent RF analog samples expose coupling. Internal switching currents, separate domains/package networks and combined-profile wideband quality/uncertainty with these clocks remain open. Receiver-detect drive/release loading now produces shared-rail droop and measurable independent RF changes under an explicit driver-current law. Two-way probe supply sensitivity and a full uncertainty envelope remain open.",
+      "remaining_before_shared_readout_update": "Shared converter reference loads, host switching, oscillator supply pulling and two-way detector coupling run with calibrated fractional RF. Still declare combined operating/failure envelopes, internal switching-current assumptions and separate supply-domain/package abstractions. Actual substrate/package coupling, power and area remain unqualified physical risks.",
+      "supporting_evidence": [
+        "connected-managed-feedback-calibration.json",
+        "connected-reference-rail-feedback.json",
+        "connected-driver-pll-feedback.json"
+      ]
+    },
+    {
+      "id": "coverage_and_reproducibility",
+      "status": "partial",
+      "evidence": "connected-architecture-pass842-baseline.json",
+      "remaining": "Current runner registers 177 scenarios. Last verified full aggregate remains pass876 (107 scenarios); no fresh aggregate covers all additions, and the default independent TX gate still retains a failure. Experimental passing profiles must not replace that evidence. Freeze a selected unified candidate and run its lifecycle/quality/resource regression after known integration gaps close.",
+      "historical_notes_before_calibration": "The archived pass842 aggregate passed80 scenarios with649 source hashes and80 report/log hash pairs verified.107 scenarios are now registered, including the public detector entry and combined independent-wideband test. Later isolated passes do not constitute a fresh aggregate. Whole-chip closure and physical qualification remain unproven. Runner now honors explicit failure/quality flags and hashes all candidate top profiles; no fresh aggregate has been run.",
+      "remaining_before_managed_tx_update": "Archived pass876 aggregate passed 107 scenarios with 702 unchanged source hashes and all report/log pairs verified. Six promoted calibration screens now pass with an unchanged code snapshot and verified report/log hashes, including the combined fractional wideband test. 131 scenarios are registered, including a currently failing independent TX quality gate; no fresh aggregate yet includes all new files. Full architecture closure and physical qualification remain unproven. Historical obligations remain available for reconciliation. The unified-candidate lifecycle screen now separately passes six continuous/recovery cases."
+    }
+  ],
+  "deferred_to_transistor_stage": [
+    "PDK-calibrated gains, bandwidths, jitter, noise and power",
+    "Device sizing, transistor startup and transistor corner/mismatch coverage",
+    "Layout/extraction, actual package/substrate network and physical compliance"
+  ],
+  "not_deferred": [
+    "Missing functional blocks and control paths from the intended architecture",
+    "Unbounded persistent rate mismatch disguised by short runs",
+    "Silent loss, stale data, impossible event ordering or invalid-state continuation",
+    "Explicit parameter envelopes and tests on both sides of uncertainty"
+  ],
+  "complete": false,
+  "implementation_profile": "spec/fractional-top-profile.json",
+  "implementation_entry": "system_model/connected/calibrated_fractional_chip.py:CalibratedFractionalChip",
+  "implementation_profile_role": "RF/traffic baseline; calibration preparation and longer source record are explicit overrides in calibration_wideband_screen.py. A universal supported operating envelope is not yet closed.",
+  "audit": "spec/closure-audit-pass876.md",
+  "candidate_under_integration": {
+    "entry": "system_model/connected/shared_phase_loaded_tx.py:SharedPhaseLoadedTxChip",
+    "quality_run_session": 66917,
+    "readout_extension": "system_model/connected/programmable_calibration_dwell.py:ProgrammableDwellChip",
+    "readout_lifecycle_run_session": 19211,
+    "status": "Experimental; no unified candidate promoted and no aggregate closure claimed.",
+    "readout_lifecycle_status": "Passed quiet buffered calibration timeout/ADC-release/fresh-generation commit; no payload quality claim.",
+    "quality_status": "Both modes finite loaded-pad/shared-ADC quality passed: mode0 TX7.5353% RX6.0579%; mode1 TX8.7394% RX6.3861%. Extensions need independent qualification.",
+    "driver_feedback_entry": "system_model/connected/managed_driver_feedback.py:ManagedDriverFeedbackChip",
+    "driver_feedback_status": "Autonomous coarse acquisition and9-sample shared-ADC calibration/commit passed; reference voltage coupling and payload quality not yet included.",
+    "unified_entry": "system_model/connected/managed_unified_reference.py:ManagedUnifiedReferenceChip",
+    "unified_status": "Autonomous acquisition and9-sample shared-ADC calibration/commit passed with driver/reference/PLL coupling. Full mode0 quality pending session58376."
+  },
+  "fast_reference_update": {
+    "status": "connected_functional_reference_passes_not_full_closure",
+    "entry": "system_model/architecture_fast/README.md",
+    "evidence": [
+      "fast-whole-chip.json",
+      "fast-whole-chip-clock-noise.json",
+      "fast-whole-chip-services.json",
+      "fast-service-traffic.json",
+      "fast-service-pauses.json",
+      "fast-carrier-retune.json",
+      "fast-tx-services.json",
+      "fast-tx-traffic.json",
+      "fast-shared-tx-traffic.json",
+      "fast-shared-tx-recovery.json",
+      "fast-diagnostics.json",
+      "fast-continuous-rx.json",
+      "fast-continuous-duplex.json",
+      "fast-continuous-four-path.json",
+      "fast-continuous-quality.json",
+      "fast-receiver-detect-supply.json",
+      "fast-common-chip.json",
+      "fast-common-migration.json",
+      "fast-common-resource-migration.json",
+      "fast-common-acceptance.json",
+      "fast-local-mode.json",
+      "fast-tuning-envelope.json",
+      "fast-tuning-margin.json",
+      "fast-coarse-clock.json",
+      "fast-coarse-chip.json",
+      "fast-coarse-cancel.json",
+      "fast-coarse-quality.json",
+      "fast-warm-clock.json",
+      "fast-warm-chip.json",
+      "fast-warm-quality.json",
+      "fast-output-loopback.json",
+      "fast-loopback-chip.json",
+      "fast-loopback-quality.json",
+      "fast-wideband-loopback-quality.json"
+    ],
+    "established": [
+      "Both-mode finite four-path traffic with independent RF RX and independently observed TX.",
+      "Shared ADC/reference I/Q trim sequencing before traffic, without inventing an accuracy-valid claim.",
+      "Sampled RF/wired clocks, assumed oscillator noise and supply/reference coupling on the service composition.",
+      "Reference-loss path gating and opposite-mode reacquisition after traffic.",
+      "Both modes tolerate a selected 16-word host-input pause; a 256-word pause faults with DAC underflow. No general service bound is claimed.",
+      "Both-direction 2.412/2.437 GHz warm averaged-feedback retunes preserve phase/filter state and pass subsequent four-path quality and recovery.",
+      "Fast TX service adapter passes timed probe/detector/commit ownership, both correction widths, and reference-loss cancellation; detector ADC remains independent.",
+      "Both-mode four-path traffic after RX/TX calibration passes with output distortion included in independent TX observation; independent detector ADC remains an assumption.",
+      "Shared-ADC TX detector with finite readout/ADC latency passes both-mode corrected four-path quality; exact shared reference-conversion accounting verified. Physical observation accuracy remains open.",
+      "Shared detector conversion cancellation preserves analog state, rejects stale results, releases ownership and restarts in both modes; retune requires renewed TX calibration.",
+      "Rail/reference monitor-to-tile-to-ADC-to-host transport and subdivision invariance pass both modes on SharedOutputChip.",
+      "Count-free RX normal stop and host-return overflow pass both modes, with intact opposite-mode restarted payloads on the same instance. Abort remains lossy.",
+      "Calibrated count-free RF duplex passes both-mode timed stop and underflow, preserving correction-input order, RX transport and conversion accounting. Continuous wired coexistence remains open.",
+      "Count-free RF/wired TX and RF RX with finite wired RX traffic pass both-mode stop/starvation, exact wired payload prefixes and RF/converter accounting.",
+      "Continuous four-path timed-stop scenario passes unchanged independent RX/TX quality screen in both modes with assumed oscillator noise, reference loading and supply coupling.",
+      "Nominal wired receiver detection, probe release and supply/RF coupling pass both modes with zero-load controls and timestep refinement.",
+      "Reusable TransceiverChip extracted with explicit output parameters and no source-triggered calibration; four exact calibration/capture equivalence cases pass.",
+      "Continuous four-path transport and noisy RF quality migrated to reusable TransceiverChip; fresh complete case records exactly match prior composition.",
+      "Fresh common TransceiverChip aggregate passes six executables/18 case rows with identical source snapshots and verified result digests.",
+      "Common-chip management-only profile passes both-mode calibrated playback/capture/readout through timed commands with zero high-speed stream transitions; SPI pin/CDC verification remains open.",
+      "18 selected common-chip warm retunes across 2.3\u20132.5 GHz, ascending quiet and descending noisy, preserve state and end locked within a 20 us observation; invalid requests are atomic.",
+      "Standalone sampled-clock finite coarse-bank startup passes eight endpoint/variation cases through existing counter-only acquisition; maximum fine control 0.636 V. Full-chip adapter integration remains open.",
+      "Scheduled common-chip coarse startup gates mode/calibration correctly and enables both-mode calibrated capture at formerly unreachable 2.5 GHz/-0.5% free-frequency case.",
+      "Coarse reference-return hold-voltage bug fixed; five acquisition-phase cancellation/restart cases and both integrated startup regressions pass.",
+      "Coarse-started continuous four-path quality passes both modes at 2.5 GHz/-0.5% free-frequency with assumed oscillator noise and shared loading; unchanged 10% gates.",
+      "Standalone warm clock adds finite held-control/integrator centering, residual error bound and state-preserving cancellation; three sequential carrier locks pass.",
+      "WarmTransceiverChip integrates centering status and calibration invalidation; both-mode same-chip 2.437->2.5->2.412 GHz lifecycle/capture/stop/drain passes.",
+      "Warm 2.437->2.5 GHz after active stop/drain, detector rearm and fresh calibration passes both-mode four-path quality with assumed noise/loading.",
+      "Nonlinear output-to-loopback RX adapter matches independent quadrature and subdivision in three transients; common-chip installation/traffic qualification pending.",
+      "Common chip now includes nonlinear TX output in internal loopback; routing/isolation test and both-mode four-path stop/starvation transport regressions pass.",
+      "Nonlinear internal loopback RX and independent TX quality pass both-mode continuous four-path traffic with assumed noise/loading; mode-1 RX 7.653% against unchanged 10% gate.",
+      "Fixed-amplitude 50-subcarrier nonlinear loopback and independent TX quality pass both-mode continuous four-path traffic; no rescaling or gate relaxation."
+    ],
+    "remaining": [
+      "Broader supported configuration, carrier, noise/loading and queue-service envelopes beyond the named acceptance scenarios.",
+      "Pin-level SPI/CDC and management/RTL reconciliation; local transaction-level operation is modeled.",
+      "Physical output/package loading and parameter validation against transistor schematic evidence.",
+      "Integrated warm-retune waveform quality and general service bounds remain separate from the selected common acceptance; abort is explicitly lossy.",
+      "Complete connected transistor schematic and matching verification before layout."
+    ],
+    "physical_qualification": false,
+    "current_acceptance": {
+      "command": "make transceiver-math-fast",
+      "evidence": "evidence/fast-common-acceptance.json",
+      "scope": "Twelve-executable fast functional baseline; report status is authoritative.",
+      "includes": [
+        "simultaneous wired and RF TX/RX",
+        "external RF and nonlinear wideband loopback quality",
+        "shared calibration cancellation and ownership",
+        "diagnostics and receiver detection",
+        "overflow and restart",
+        "local transaction-level capture/playback",
+        "warm coarse retuning",
+        "periodic LO image/sideband conversion with independent integration oracle"
+      ],
+      "physical_qualification": false,
+      "exhaustive_architecture_closure": false,
+      "status": "passed",
+      "executables": 12,
+      "case_rows": 38,
+      "elapsed_s": 240.7566398596391,
+      "report_sha256": "3cf3f7b1b58e827ba4eab8964f0eba716bd244c4476269569b2bacbe22793af3"
+    },
+    "receiver_filter_update": {
+      "implementation": "system_model/architecture_fast/chip.py",
+      "order": 5,
+      "cutoff_hz": 9157407.055691985,
+      "replaces": "Historical common-chip default was one 10 MHz pole despite fifth-order intended profile.",
+      "independent_approximation_evidence": "evidence/lo-multipole-truncation.json",
+      "scope": "Fixed 50-tone switched-mixer comparison, missing every eighth I cycle; 2.263e-7 relative RMS truncation error.",
+      "physical_qualification": false,
+      "remaining": "Transistor stopband feedthrough, noise/nonlinearity, aperture and changing-symbol coverage."
+    },
+    "blocker_update": {
+      "evidence": "evidence/fast-blocker-quality.json",
+      "result_sha256": "28596680b92ab5a13cee75767c3f0b68c30ca9db89b1d491bdb27c14162282ff",
+      "status": "passed",
+      "rx_relative_rms": [
+        0.03940262666474692,
+        0.05265598965757895
+      ],
+      "tx_relative_rms": [
+        0.013505678480799987,
+        0.022012728617490984
+      ],
+      "scope": "Both-mode continuous four-path quality with two 0.1-amplitude +20/+30 MHz blockers and RF cubic coefficient +0.05; selected nominal carrier and assumed noise/loading.",
+      "physical_qualification": false
+    },
+    "profile_load_update": {
+      "evidence": "evidence/fast-profile-load-quality.json",
+      "result_sha256": "d9fc78da0d15e5adba26bf04a84a891c7116f37a96956b3da5683296776c166b",
+      "status": "passed",
+      "rx_relative_rms": [
+        0.039397469088381806,
+        0.05469912327277603
+      ],
+      "tx_relative_rms": [
+        0.013580831395280352,
+        0.022132174667363648
+      ],
+      "scope": "Both-mode blocked/noisy continuous four-path quality with profile DAC load 2 pF and ADC/DAC latency 2/1.5 sample periods. No common default change or whole-profile closure.",
+      "physical_qualification": false
+    },
+    "signed_coupling_update": {
+      "evidence": "evidence/fast-signed-coupling-quality.json",
+      "result_sha256": "4c9504c913e778a28ab2925292861052b0d051e9cd80771c9e356cfb93f0cb19",
+      "status": "passed",
+      "cases": 4,
+      "max_rx_relative_rms": 0.06098405758683659,
+      "max_tx_relative_rms": 0.024181650405963855,
+      "scope": "Both modes and coupling signs with profile converter gain/wired-phase sensitivities, reference load/timing, blockers, and assumed oscillator noise; active coupling confirmed in recorded metrics.",
+      "physical_qualification": false
+    }
+  },
+  "operating_policy_update": {
+    "specification": "exclusive-engine-policy.md",
+    "simultaneous_rf_wired_required": false,
+    "enforcement_complete": false,
+    "next_required_tests": [
+      "RF-only",
+      "wired-only",
+      "overlap rejection",
+      "RF-to-wired transition",
+      "wired-to-RF transition",
+      "shared-resource ownership and calibration validity"
+    ],
+    "historical_four_path_tests": "Optional stress evidence, not a product closure requirement."
+  }
+}

@@ -1,0 +1,37 @@
+* Candidate: existing NMOS bridge plus equal-width parallel PMOS banks.
+* PMOS bodies at VDD; opposite LO gates. No gate boosting or ideal switches.
+.subckt pt_tx_commutator_tg BP BN RP RN LO LOB VDD VSS
+XBASE BP BN RP RN LO LOB VSS pt_tx_commutator
+XPP0 RP LOB BP VDD pfet_03v3 w=4u l=0.28u
+XPP1 BP LOB RP VDD pfet_03v3 w=4u l=0.28u
+XPP2 RP LOB BP VDD pfet_03v3 w=4u l=0.28u
+XPP3 RP LOB BP VDD pfet_03v3 w=4u l=0.28u
+XPP4 BP LOB RP VDD pfet_03v3 w=4u l=0.28u
+XPP5 BP LOB RP VDD pfet_03v3 w=4u l=0.28u
+XPP6 BP LOB RP VDD pfet_03v3 w=4u l=0.28u
+XPP7 RP LOB BP VDD pfet_03v3 w=4u l=0.28u
+XPN0 RP LO BN VDD pfet_03v3 w=4u l=0.28u
+XPN1 BN LO RP VDD pfet_03v3 w=4u l=0.28u
+XPN2 RP LO BN VDD pfet_03v3 w=4u l=0.28u
+XPN3 RP LO BN VDD pfet_03v3 w=4u l=0.28u
+XPN4 BN LO RP VDD pfet_03v3 w=4u l=0.28u
+XPN5 BN LO RP VDD pfet_03v3 w=4u l=0.28u
+XPN6 BN LO RP VDD pfet_03v3 w=4u l=0.28u
+XPN7 RP LO BN VDD pfet_03v3 w=4u l=0.28u
+XNP0 RN LO BP VDD pfet_03v3 w=4u l=0.28u
+XNP1 BP LO RN VDD pfet_03v3 w=4u l=0.28u
+XNP2 RN LO BP VDD pfet_03v3 w=4u l=0.28u
+XNP3 RN LO BP VDD pfet_03v3 w=4u l=0.28u
+XNP4 BP LO RN VDD pfet_03v3 w=4u l=0.28u
+XNP5 BP LO RN VDD pfet_03v3 w=4u l=0.28u
+XNP6 BP LO RN VDD pfet_03v3 w=4u l=0.28u
+XNP7 RN LO BP VDD pfet_03v3 w=4u l=0.28u
+XNN0 RN LOB BN VDD pfet_03v3 w=4u l=0.28u
+XNN1 BN LOB RN VDD pfet_03v3 w=4u l=0.28u
+XNN2 RN LOB BN VDD pfet_03v3 w=4u l=0.28u
+XNN3 RN LOB BN VDD pfet_03v3 w=4u l=0.28u
+XNN4 BN LOB RN VDD pfet_03v3 w=4u l=0.28u
+XNN5 BN LOB RN VDD pfet_03v3 w=4u l=0.28u
+XNN6 BN LOB RN VDD pfet_03v3 w=4u l=0.28u
+XNN7 RN LOB BN VDD pfet_03v3 w=4u l=0.28u
+.ends pt_tx_commutator_tg

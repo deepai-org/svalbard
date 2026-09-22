@@ -1,0 +1,40 @@
+{
+  "preparation_sha256": "0f624dff02dd5df7f957fdd467669ab2c79e3b80f8cee3a040f6d65f52f848fc",
+  "constant_fit_sha256": "b1f3e9ad6eefcfebd3ceebff6de508ad8ba635aede44f03e2c7fbd3e6f83805a",
+  "two_terminal_fit_sha256": "bbdda1f8458bf109561795eba1d723b61467239089dcc563926c3c871967c60b",
+  "bias_observation_sha256": "11107aeab747c34ecb03df8f0bd48d063c5481a07619f00746ec7d7ba6bb83e7",
+  "constant_capacitance_f": {
+    "xhigh": 9.419340068922667e-13,
+    "xlow": 9.369709289349244e-13
+  },
+  "two_terminal_models": [
+    {
+      "rail": "xhigh",
+      "identifiable": true,
+      "cds_f": -1.853981863277692e-12,
+      "cdg_f": 2.9660109389508174e-12,
+      "passive_coefficient_signs": false,
+      "normalized_design_condition": 449.14988684943876,
+      "coefficient_error_gain_f_per_c": [
+        11802.61744433035,
+        12546.846277276818
+      ]
+    },
+    {
+      "rail": "xlow",
+      "identifiable": true,
+      "cds_f": -4.537465654145225e-13,
+      "cdg_f": 1.4524952101662488e-12,
+      "passive_coefficient_signs": false,
+      "normalized_design_condition": 356.54509621346995,
+      "coefficient_error_gain_f_per_c": [
+        8756.872754681348,
+        9147.740662265001
+      ]
+    }
+  ],
+  "scoring": "All24 preclock and24 switching windows per rail; no coefficient refit or window exclusion.",
+  "limitations": [
+    "No charge-error acceptance budget established; report prediction errors without declaring physical qualification."
+  ]
+}

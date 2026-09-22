@@ -1,0 +1,59 @@
+{
+  "cases": [
+    {
+      "mode": 0,
+      "fault": {
+        "time_s": 6e-08,
+        "reason": "nonzero final padding",
+        "samples_decoded": 1,
+        "samples_consumed": 1
+      },
+      "wired_words_preserved": 3,
+      "retained_filter_at_fault": 0.3576952283319853,
+      "accounting": {
+        "accepted": 1,
+        "consumed": 1,
+        "discarded": 0,
+        "pending": 0,
+        "rejected": 1,
+        "underflows": 0
+      }
+    },
+    {
+      "mode": 1,
+      "fault": {
+        "time_s": 1.088e-07,
+        "reason": "nonzero final padding",
+        "samples_decoded": 1,
+        "samples_consumed": 1
+      },
+      "wired_words_preserved": 3,
+      "retained_filter_at_fault": 0.48361190279212857,
+      "accounting": {
+        "accepted": 1,
+        "consumed": 1,
+        "discarded": 0,
+        "pending": 0,
+        "rejected": 1,
+        "underflows": 0
+      }
+    }
+  ],
+  "status": "passed",
+  "complete_architecture": false,
+  "source_hashes": {
+    "system_model/connected/burst_fault_screen.py": "347994d7895877825e919bb4c6fb18100f5c7a8a58790b828dbd817bdd9d2198",
+    "system_model/connected/burst_codec.py": "924f843f70f68cdede2def9fcc4bca91971e24fe194cb928c87dce2437dddd90",
+    "system_model/connected/rf_tx_state.py": "ec5212778951470252783848fc20d2797b549e30e012d82ee0ceaf17fc0a7929",
+    "system_model/connected/session.py": "6752e434755cd77ef43fa943570fa0843c6fbf10bdd10f3119374e63fff39374",
+    "system_model/connected/chip_model.py": "37a55e0006e0c164efd19c2ef33c96259410d6975b5ab42e2f4a8bf70c0f7308",
+    "verification/stream_codec.py": "4515bf61e3c83f041eee97740e61c075dca1681da388dc651117cdd10d1a0088",
+    "verification/transport_model.py": "fb93356b2851ee253d3f8e49bb25b2018e22175500ec3d14b8ebaa78814da09d"
+  },
+  "limitations": [
+    "Fault-to-DAC mute is instantaneous in this behavioral adapter; physical CDC latency is not modeled.",
+    "First-fault snapshot is abstract management state, not serialized host notification.",
+    "One sample is intentionally consumed before late corruption; streaming delivery is not quarantined.",
+    "Recovery and fresh descriptors still require an upstream drain/epoch contract."
+  ]
+}

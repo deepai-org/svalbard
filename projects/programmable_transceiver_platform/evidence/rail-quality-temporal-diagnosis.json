@@ -1,0 +1,73 @@
+{
+  "connected-rail20-pad-quality-mode0": {
+    "trace_sha256": "c79e0743e3108c39f6a23866d8afe299d23badc7f9447dc954f8047047606508",
+    "training_samples": 544,
+    "windows": [
+      {
+        "heldout_third": 1,
+        "samples": 544,
+        "start_s": 0.00032387999999999997,
+        "end_s": 0.00032605199999999996,
+        "fixed_gain_relative_rms": 0.11561017791906804,
+        "weighted_phase_offset_deg": 4.786329401152906,
+        "envelope_energy_ratio": 1.0040987426602046
+      },
+      {
+        "heldout_third": 2,
+        "samples": 544,
+        "start_s": 0.00032605599999999997,
+        "end_s": 0.00032822799999999996,
+        "fixed_gain_relative_rms": 0.09810106637014357,
+        "weighted_phase_offset_deg": 3.3619767342060265,
+        "envelope_energy_ratio": 1.069551072784895
+      },
+      {
+        "heldout_third": 3,
+        "samples": 544,
+        "start_s": 0.00032823199999999997,
+        "end_s": 0.00033040399999999996,
+        "fixed_gain_relative_rms": 0.10003461471414328,
+        "weighted_phase_offset_deg": 3.7261921018148665,
+        "envelope_energy_ratio": 1.0442066750537946
+      }
+    ]
+  },
+  "connected-guarded-limited-pad-quality-mode1": {
+    "trace_sha256": "83e740240e3a9a3a2b85fd99465c133a74d18ef57760b8098a610a6d28a9bbe1",
+    "training_samples": 544,
+    "windows": [
+      {
+        "heldout_third": 1,
+        "samples": 544,
+        "start_s": 0.00032344399999999993,
+        "end_s": 0.00032518159999999995,
+        "fixed_gain_relative_rms": 0.14470709506248003,
+        "weighted_phase_offset_deg": 6.779034192459082,
+        "envelope_energy_ratio": 1.1112084275720007
+      },
+      {
+        "heldout_third": 2,
+        "samples": 544,
+        "start_s": 0.00032518479999999996,
+        "end_s": 0.00032692239999999997,
+        "fixed_gain_relative_rms": 0.1701705147108246,
+        "weighted_phase_offset_deg": 8.120167094965012,
+        "envelope_energy_ratio": 1.0362562283243266
+      },
+      {
+        "heldout_third": 3,
+        "samples": 544,
+        "start_s": 0.0003269256,
+        "end_s": 0.00032866319999999994,
+        "fixed_gain_relative_rms": 0.12944991988092056,
+        "weighted_phase_offset_deg": 6.070976843915855,
+        "envelope_energy_ratio": 1.0324444910972024
+      }
+    ]
+  },
+  "limitations": [
+    "Diagnostic time partition only; original gain retained, all held-out samples remain in original quality gate.",
+    "Weighted phase offset and envelope ratio do not modify samples or identify a unique physical cause.",
+    "Modes have different reference configurations; compare temporal behavior, not a controlled cross-mode effect."
+  ]
+}

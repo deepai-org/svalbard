@@ -1,0 +1,210 @@
+{
+  "status": "completed_controlled_comparison",
+  "completed": true,
+  "inputs_sha256": {
+    "evidence/adc-shared-iq-same.json": "ee138a0e5bca80ab59fcfd89da3152e55506ab2b81a3afaecd7d4dcc42baa01f",
+    "evidence/adc-shared-iq-receiver-cm.json": "5f53e6f10517b3a2128559f6e478873363c771a3b04f73f06b6f90b349f86972"
+  },
+  "limitations": [
+    "Code agreement is not transfer accuracy or ENOB.",
+    "First predecision plate differences include sampling/CDAC history; distinguish from later reset plate states.",
+    "Same-history ideal sources and clocks do not bound actual filter loading or I/Q skew."
+  ],
+  "frames": [
+    {
+      "hold_ns": 70,
+      "channels": {
+        "I": {
+          "baseline_codes": [
+            177
+          ],
+          "candidate_codes": [
+            173
+          ],
+          "codes_equal": false,
+          "candidate_logic_rails": true,
+          "baseline_predecision_differential_range_v": [
+            -0.395421387852126,
+            -0.3954179263641371
+          ],
+          "candidate_predecision_differential_range_v": [
+            -0.3675633796260386,
+            -0.36755952841773276
+          ],
+          "baseline_predecision_cm_range_v": [
+            1.6394439713363065,
+            1.639477904152872
+          ],
+          "candidate_predecision_cm_range_v": [
+            1.0608727338007427,
+            1.0608863132724526
+          ]
+        },
+        "Q": {
+          "baseline_codes": [
+            177
+          ],
+          "candidate_codes": [
+            173
+          ],
+          "codes_equal": false,
+          "candidate_logic_rails": true,
+          "baseline_predecision_differential_range_v": [
+            -0.3954213878521349,
+            -0.39541792636418505
+          ],
+          "candidate_predecision_differential_range_v": [
+            -0.36756337962599206,
+            -0.36755952841774264
+          ],
+          "baseline_predecision_cm_range_v": [
+            1.6394439713362665,
+            1.6394779041528134
+          ],
+          "candidate_predecision_cm_range_v": [
+            1.060872733800736,
+            1.0608863132724298
+          ]
+        }
+      },
+      "largest_reference_span_mean_change_v": 0.015917973639363536,
+      "candidate_max_reference_span_motion_v": 0.0076729350228919024,
+      "accounted_supply_power_change_w": {
+        "i(vlog)": -9.090570009606669e-05,
+        "i(vdrv)": -8.00105082326974e-08,
+        "i(vbuf)": -0.000729744715821292,
+        "i(vrefsup)": 4.9065462417133276e-05
+      }
+    },
+    {
+      "hold_ns": 120,
+      "channels": {
+        "I": {
+          "baseline_codes": [
+            78
+          ],
+          "candidate_codes": [
+            82
+          ],
+          "codes_equal": false,
+          "candidate_logic_rails": true,
+          "baseline_predecision_differential_range_v": [
+            0.395514671999047,
+            0.395519013593326
+          ],
+          "candidate_predecision_differential_range_v": [
+            0.36979454698759595,
+            0.3697999173167099
+          ],
+          "baseline_predecision_cm_range_v": [
+            1.6400324016098171,
+            1.6400869920046155
+          ],
+          "candidate_predecision_cm_range_v": [
+            1.061157792058792,
+            1.061261899168419
+          ]
+        },
+        "Q": {
+          "baseline_codes": [
+            78
+          ],
+          "candidate_codes": [
+            82
+          ],
+          "codes_equal": false,
+          "candidate_logic_rails": true,
+          "baseline_predecision_differential_range_v": [
+            0.395514671999025,
+            0.39551901359334707
+          ],
+          "candidate_predecision_differential_range_v": [
+            0.3697945469876037,
+            0.36979991731675044
+          ],
+          "baseline_predecision_cm_range_v": [
+            1.6400324016098304,
+            1.6400869920046235
+          ],
+          "candidate_predecision_cm_range_v": [
+            1.0611577920587818,
+            1.0612618991683982
+          ]
+        }
+      },
+      "largest_reference_span_mean_change_v": 0.00855290972523326,
+      "candidate_max_reference_span_motion_v": 0.009717271893096457,
+      "accounted_supply_power_change_w": {
+        "i(vlog)": 9.281431837399826e-05,
+        "i(vdrv)": -3.638103231503459e-07,
+        "i(vbuf)": -0.0007262839212587961,
+        "i(vrefsup)": 2.0575543763376447e-05
+      }
+    },
+    {
+      "hold_ns": 170,
+      "channels": {
+        "I": {
+          "baseline_codes": [
+            177
+          ],
+          "candidate_codes": [
+            173
+          ],
+          "codes_equal": false,
+          "candidate_logic_rails": true,
+          "baseline_predecision_differential_range_v": [
+            -0.39572498246005505,
+            -0.39572090560319806
+          ],
+          "candidate_predecision_differential_range_v": [
+            -0.3717435844267065,
+            -0.3717388010345011
+          ],
+          "baseline_predecision_cm_range_v": [
+            1.6413207780203105,
+            1.641576361543901
+          ],
+          "candidate_predecision_cm_range_v": [
+            1.0612541044064256,
+            1.0615986827838884
+          ]
+        },
+        "Q": {
+          "baseline_codes": [
+            177
+          ],
+          "candidate_codes": [
+            173
+          ],
+          "codes_equal": false,
+          "candidate_logic_rails": true,
+          "baseline_predecision_differential_range_v": [
+            -0.39572498246003995,
+            -0.39572090560319606
+          ],
+          "candidate_predecision_differential_range_v": [
+            -0.3717435844267747,
+            -0.3717388010346323
+          ],
+          "baseline_predecision_cm_range_v": [
+            1.641320778020336,
+            1.6415763615439252
+          ],
+          "candidate_predecision_cm_range_v": [
+            1.0612541044063608,
+            1.061598682783786
+          ]
+        }
+      },
+      "largest_reference_span_mean_change_v": 0.015878558175213886,
+      "candidate_max_reference_span_motion_v": 0.007437292349351754,
+      "accounted_supply_power_change_w": {
+        "i(vlog)": -8.644229962369125e-05,
+        "i(vdrv)": 2.4992337841790724e-07,
+        "i(vbuf)": -0.0007260219668180322,
+        "i(vrefsup)": 3.757908976476099e-05
+      }
+    }
+  ]
+}

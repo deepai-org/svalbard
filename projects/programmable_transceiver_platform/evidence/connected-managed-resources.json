@@ -1,0 +1,33 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "rf_samples": 32,
+      "read_capture": 65,
+      "new_epoch": 1
+    },
+    {
+      "mode": 1,
+      "rf_samples": 32,
+      "read_capture": 255,
+      "new_epoch": 1
+    }
+  ],
+  "queued_while_disarmed_applied_while_armed": {
+    "token": 0,
+    "operation": "select_playback",
+    "applied_at": 6.45e-06,
+    "epoch": 0,
+    "generation": 0,
+    "accepted": false,
+    "reason": "DAC source frozen while armed"
+  },
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Packed command payloads are candidate model encodings, not implemented register/RTL ABI.",
+    "RF and wire sample scheduling still uses explicit testbench engine requests; autonomous run-length/continuous-mode controls remain open.",
+    "LO/trim/calibration and full resource topology controls remain outside the timed command set."
+  ]
+}

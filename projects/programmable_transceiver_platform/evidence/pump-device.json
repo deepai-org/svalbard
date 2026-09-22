@@ -1,0 +1,127 @@
+{
+  "completed": true,
+  "status": "terminal",
+  "limitations": [
+    "Signed simulator MOS quantities retained without assuming a reverse-operation headroom convention.",
+    "Model id is not a complete displacement-inclusive terminal-current attribution.",
+    "One nominal clamped-output case; no autonomous-loop qualification."
+  ],
+  "provenance": {
+    "returncode": 0,
+    "timed_out": false,
+    "source_sha256_before": {
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+    },
+    "source_sha256_after": {
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+    },
+    "artifacts_sha256": {
+      ".spice": "205c06e9d04012dcc76b8c111c4f54b48648a4f001b1d05e816a6c78ff373fc5",
+      ".log": "61e2701043db1b7212f99c97926ce6f156c58606b84d471cd18becf7f06e0de1",
+      ".dat": "17906896c981f427afb9c5930f0426fcc26c901330f73cd21c44c5794a06b1cb"
+    }
+  },
+  "original_vectors_identical": true,
+  "probe_ranges": {
+    "@m.xcp.xps.m0[id]": {
+      "minimum": 1.54439137702608e-16,
+      "maximum": 3.439180371969267e-05
+    },
+    "@m.xcp.xps.m0[vds]": {
+      "minimum": -0.0008438499482146256,
+      "maximum": 1.971055438477822
+    },
+    "@m.xcp.xps.m0[vdsat]": {
+      "minimum": 0.1881203149432026,
+      "maximum": 0.2672253620093372
+    },
+    "@m.xcp.xps.m0[vgs]": {
+      "minimum": 0.9898404147843718,
+      "maximum": 1.099445866419131
+    },
+    "@m.xcp.xps.m0[vth]": {
+      "minimum": 0.7835357071037593,
+      "maximum": 0.7839419938898928
+    },
+    "@m.xcp.xpu.m0[id]": {
+      "minimum": 5.166459040012496e-33,
+      "maximum": 0.0003627342843507767
+    },
+    "@m.xcp.xpu.m0[vds]": {
+      "minimum": 0.2489445615221786,
+      "maximum": 2.220843849948215
+    },
+    "@m.xcp.xpu.m0[vdsat]": {
+      "minimum": 0.04662461654298146,
+      "maximum": 0.7039410601494341
+    },
+    "@m.xcp.xpu.m0[vgs]": {
+      "minimum": -1.100068991267275,
+      "maximum": 1.778104368297463
+    },
+    "@m.xcp.xpu.m0[vth]": {
+      "minimum": 0.7183230966500876,
+      "maximum": 1.157880633729187
+    },
+    "@m.xcp.xnd.m0[id]": {
+      "minimum": 2.11476660546163e-13,
+      "maximum": 8.369146038878562e-05
+    },
+    "@m.xcp.xnd.m0[vds]": {
+      "minimum": -0.01273740669178824,
+      "maximum": 1.085334195425986
+    },
+    "@m.xcp.xnd.m0[vdsat]": {
+      "minimum": 0.04879958767992958,
+      "maximum": 0.8208044444324237
+    },
+    "@m.xcp.xnd.m0[vgs]": {
+      "minimum": -0.04140774319501177,
+      "maximum": 2.249549720434077
+    },
+    "@m.xcp.xnd.m0[vth]": {
+      "minimum": 0.6338034064150232,
+      "maximum": 0.8348166761659734
+    },
+    "@m.xcp.xns.m0[id]": {
+      "minimum": 5.350281723484421e-17,
+      "maximum": 2.748390557598589e-05
+    },
+    "@m.xcp.xns.m0[vds]": {
+      "minimum": -0.00533419542598601,
+      "maximum": 1.092737406691788
+    },
+    "@m.xcp.xns.m0[vdsat]": {
+      "minimum": 0.151452847410619,
+      "maximum": 0.1873496590463003
+    },
+    "@m.xcp.xns.m0[vgs]": {
+      "minimum": 0.8060678297652294,
+      "maximum": 0.8552630765725697
+    },
+    "@m.xcp.xns.m0[vth]": {
+      "minimum": 0.6863878765412794,
+      "maximum": 0.6884384089783661
+    }
+  }
+}

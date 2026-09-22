@@ -1,0 +1,109 @@
+{
+  "status": "completed",
+  "numerical_checks": "passed",
+  "approximation_screen_pass": false,
+  "source_sha256": {
+    "verification/lo_modulated_truncation.py": "213f2facafa1676726a9f6de3cd5548956d11b320b6025b08237e06d91fb3c50",
+    "system_model/architecture_fast/lo_drive.py": "daf0061acb6daaeb4526ffe26a20c2b1a56889a153396acef58ee7a1c4902a8b"
+  },
+  "cases": [
+    {
+      "coarse": {
+        "missing_i_period": 8,
+        "subdivision": 1,
+        "truncations": [
+          {
+            "sidebands_each_side": 0,
+            "relative_rms_error": 0.007266200841138545
+          },
+          {
+            "sidebands_each_side": 3,
+            "relative_rms_error": 0.0040880904459050646
+          },
+          {
+            "sidebands_each_side": 7,
+            "relative_rms_error": 0.003917079448637732
+          }
+        ],
+        "approximation_budget": 0.003,
+        "approximation_screen_pass": false
+      },
+      "fine": {
+        "missing_i_period": 8,
+        "subdivision": 2,
+        "truncations": [
+          {
+            "sidebands_each_side": 0,
+            "relative_rms_error": 0.006739656772767023
+          },
+          {
+            "sidebands_each_side": 3,
+            "relative_rms_error": 0.0031772188513972733
+          },
+          {
+            "sidebands_each_side": 7,
+            "relative_rms_error": 0.0029963153929947065
+          }
+        ],
+        "approximation_budget": 0.003,
+        "approximation_screen_pass": true
+      },
+      "subdivision_max_error": 1.7277487954028602e-12
+    },
+    {
+      "coarse": {
+        "missing_i_period": 16,
+        "subdivision": 1,
+        "truncations": [
+          {
+            "sidebands_each_side": 0,
+            "relative_rms_error": 0.007336435948580644
+          },
+          {
+            "sidebands_each_side": 3,
+            "relative_rms_error": 0.004261491488760027
+          },
+          {
+            "sidebands_each_side": 15,
+            "relative_rms_error": 0.0038156284622309603
+          }
+        ],
+        "approximation_budget": 0.003,
+        "approximation_screen_pass": false
+      },
+      "fine": {
+        "missing_i_period": 16,
+        "subdivision": 2,
+        "truncations": [
+          {
+            "sidebands_each_side": 0,
+            "relative_rms_error": 0.006877726927844255
+          },
+          {
+            "sidebands_each_side": 3,
+            "relative_rms_error": 0.003442628698307599
+          },
+          {
+            "sidebands_each_side": 15,
+            "relative_rms_error": 0.0029237147435781105
+          }
+        ],
+        "approximation_budget": 0.003,
+        "approximation_screen_pass": true
+      },
+      "subdivision_max_error": 1.7606812836603874e-12
+    }
+  ],
+  "carrier_hz": 2400000000.0,
+  "cutoff_hz": 10000000.0,
+  "tone_count": 50,
+  "tone_spacing_hz": 312500,
+  "seed": 804,
+  "duration_s": 3.2e-06,
+  "physical_qualification": false,
+  "limitations": [
+    "Fixed multitone symbol, not changing OFDM symbols or Wi-Fi compliance.",
+    "First-order filter, normalized switching drive; no gate-voltage mapping.",
+    "Errors measure envelope truncation, not total RF quality or noise."
+  ]
+}

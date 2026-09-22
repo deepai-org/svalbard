@@ -1,0 +1,152 @@
+{
+  "status": "completed_loaded_closed_loop_ac_diagnostic",
+  "cases": [
+    {
+      "case": "negative",
+      "source_voltages_v": [
+        0.87,
+        1.27
+      ],
+      "metrics": {
+        "driver": {
+          "low_frequency_gain": 0.9997306514192738,
+          "peak_gain": 1.4157513093852565,
+          "peak_frequency_hz": 114815362.1496864,
+          "peaking_db": 3.0220792864675317
+        },
+        "plate": {
+          "low_frequency_gain": 0.9997306502127931,
+          "peak_gain": 1.2403952494891728,
+          "peak_frequency_hz": 104712854.8050883,
+          "peaking_db": 1.8735417434934667
+        }
+      }
+    },
+    {
+      "case": "center",
+      "source_voltages_v": [
+        1.07,
+        1.07
+      ],
+      "metrics": {
+        "driver": {
+          "low_frequency_gain": 0.9988463893540168,
+          "peak_gain": 1.398739539157796,
+          "peak_frequency_hz": 128824955.1693113,
+          "peaking_db": 2.924762950128904
+        },
+        "plate": {
+          "low_frequency_gain": 0.9988463885310537,
+          "peak_gain": 1.1855794485223954,
+          "peak_frequency_hz": 112201845.4301945,
+          "peaking_db": 1.4886391741136356
+        }
+      }
+    },
+    {
+      "case": "positive",
+      "source_voltages_v": [
+        1.27,
+        0.87
+      ],
+      "metrics": {
+        "driver": {
+          "low_frequency_gain": 0.9997306514192633,
+          "peak_gain": 1.4157598074772957,
+          "peak_frequency_hz": 114815362.1496864,
+          "peaking_db": 3.022131423638582
+        },
+        "plate": {
+          "low_frequency_gain": 0.9997306502127824,
+          "peak_gain": 1.240402960049724,
+          "peak_frequency_hz": 104712854.8050883,
+          "peaking_db": 1.87359573666216
+        }
+      }
+    }
+  ],
+  "provenance": {
+    "cases": [
+      {
+        "name": "negative",
+        "source_voltages_v": [
+          0.87,
+          1.27
+        ],
+        "returncode": 0,
+        "exact_reversal": true,
+        "artifacts_sha256": {
+          ".spice": "4c22b0f084e0e0666784af0b361c112faf2f0e77ab6d0f05b9c0582b6f05e34c",
+          ".log": "9e13b20d9d816ff20684b866d5a90ea6e158f1ab0c07f3eec00535e4f5fc44b0",
+          ".dat": "0182637202209c00d4deced2891e9ac9b972f4acb34063d3b9e4f3cdeea75283"
+        }
+      },
+      {
+        "name": "center",
+        "source_voltages_v": [
+          1.07,
+          1.07
+        ],
+        "returncode": 0,
+        "exact_reversal": true,
+        "artifacts_sha256": {
+          ".spice": "43e23ffbaac2ce989aad7c3c45fbcf85a6ec690d6b94d8c18b2bf775dd66bfa9",
+          ".log": "9e13b20d9d816ff20684b866d5a90ea6e158f1ab0c07f3eec00535e4f5fc44b0",
+          ".dat": "05d38c4c4d8e725d91e5438c3d616e760e9ceae0d32dfd628ae310494f1ea14c"
+        }
+      },
+      {
+        "name": "positive",
+        "source_voltages_v": [
+          1.27,
+          0.87
+        ],
+        "returncode": 0,
+        "exact_reversal": true,
+        "artifacts_sha256": {
+          ".spice": "ec58548157fe50a59acedf06e46af59da0b9594cec2328ef6d06fac4548ecd45",
+          ".log": "9e13b20d9d816ff20684b866d5a90ea6e158f1ab0c07f3eec00535e4f5fc44b0",
+          ".dat": "e788026b1b17013b1434800ad4f52c52e5d54d4cebafaabb0a318df7dc0824bd"
+        }
+      }
+    ],
+    "baseline_deck_sha256": "fb7d7364737a9a6da684ba7fbbe5db638480af9309a6811e4e4d5355fbb4f965",
+    "source_sha256_before": {
+      "/screen/adc/loaded_driver_screen.py": "e807725888142ececf41712cc88ff7ae473b885695c808011021e7b4748ac4a8",
+      "/screen/adc/sample_driver_headroom.spice": "34840413c8d9ed96e56383230e0016611c78a6e94e7990ccfbc35d2d59abba83",
+      "/screen/adc/cdac8_scaled.spice": "4006f42115b3a5a30b9ad74626ef0c084655bf0cdc2f1d1cc8bd32f65e351fd2",
+      "/screen/adc/cdac8_mim.spice": "532e86fc11da6f695d092dd06c0508cbb363f49c4c2b070c78683c7d5bf85e14",
+      "/wifi/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/adc/loaded_driver_ac.py": "5930462215f71a418d2af80cd8f5f117e232b4791a534456cbce1e6fd8fa7add"
+    },
+    "source_sha256_after": {
+      "/screen/adc/loaded_driver_screen.py": "e807725888142ececf41712cc88ff7ae473b885695c808011021e7b4748ac4a8",
+      "/screen/adc/sample_driver_headroom.spice": "34840413c8d9ed96e56383230e0016611c78a6e94e7990ccfbc35d2d59abba83",
+      "/screen/adc/cdac8_scaled.spice": "4006f42115b3a5a30b9ad74626ef0c084655bf0cdc2f1d1cc8bd32f65e351fd2",
+      "/screen/adc/cdac8_mim.spice": "532e86fc11da6f695d092dd06c0508cbb363f49c4c2b070c78683c7d5bf85e14",
+      "/wifi/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/adc/loaded_driver_ac.py": "5930462215f71a418d2af80cd8f5f117e232b4791a534456cbce1e6fd8fa7add"
+    }
+  },
+  "limitations": [
+    "AC about each static operating point; does not simulate the large input excursion.",
+    "Closed-loop peaking is not a return-ratio measurement, pole audit or phase-margin proof.",
+    "Ideal references, static code and always-on sampler remain; not ADC conversion qualification."
+  ]
+}

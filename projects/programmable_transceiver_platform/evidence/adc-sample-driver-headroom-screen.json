@@ -1,0 +1,104 @@
+{
+  "status": "transistor_sampling_driver_first_nominal_screen",
+  "cases": [
+    {
+      "name": "vin-0.4_change0",
+      "input_difference_v": -0.4,
+      "changing": false,
+      "baseline_deck_sha256": "4ae7071eb94b86a04ac1b5e569a406a002f7415d5baf78a0ab62841bd730c68a",
+      "artifacts_sha256": {
+        ".spice": "cbc6917a157ddada30016c9e7abc2d32b4bd917073ef521e0a9764d3ea8a8158",
+        ".dat": "12a762f8adca81a83d155e5e886d78a521dc81e1f7dd5bea20c16f8574ce40c7",
+        ".log": "5376eed3f04bc2b55722f4cee34e0a957c56aed68d0f73ed15831dd6f8985d2f"
+      }
+    },
+    {
+      "name": "vin-0.4_change1",
+      "input_difference_v": -0.4,
+      "changing": true,
+      "baseline_deck_sha256": "ce735705ff67b4d7af624c765dc5cfb1e6a2cf71007246239f77526995928a1b",
+      "artifacts_sha256": {
+        ".spice": "859b18e3293b794c8f7cc8abb2b6b0728b127e798abeb135ee3c491db33538a2",
+        ".dat": "91e2da0215dbf6e98e6977a9bbfa8a5a38bfd7b2d69b4333b8615eea5735d927",
+        ".log": "ba963559564bb322d66cf84f8caed1ab8d826921bf4c5e964ee808bd9d6f7fa8"
+      }
+    },
+    {
+      "name": "vin0.4_change0",
+      "input_difference_v": 0.4,
+      "changing": false,
+      "baseline_deck_sha256": "fe99fd75af62c6f9e4ac1543b40196b259af67e97846e17415e69440db40237e",
+      "artifacts_sha256": {
+        ".spice": "d39233f318514e8eadb624e199d57ebf1e724dfe9adcb0d1037d87c69bc3db48",
+        ".dat": "d5cd7ae7e03063779cbfe09f23d124ea6c7ff5e8c3494d95e7be317019e416b0",
+        ".log": "d5e69ee233bd2dcd7c5f00f10a01691ad72124c98c0560cc4989bd902f4e8c42"
+      }
+    },
+    {
+      "name": "vin0.4_change1",
+      "input_difference_v": 0.4,
+      "changing": true,
+      "baseline_deck_sha256": "6422c75694adee13962e242cd2ce9bc0043d1d7ee1ae6da0600bee55e0771034",
+      "artifacts_sha256": {
+        ".spice": "980660309dab7e0b485cff251bf25dd75d14e4a36f6f4b2b581261f361ba70f1",
+        ".dat": "12929cbf409c81541abbfade9935e33f0d56f90b3bafac1f5b156aeabb114be5",
+        ".log": "09112c42dba0f185917edaba4a18accfc4af9cf86c5cff99d2d5944f89418704"
+      }
+    }
+  ],
+  "source_sha256": {
+    "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+    "/screen/adc/sar8_control.spice": "e345fa96d9d1342d55a1bc65b0fc42e2c1d31ebcda127597fc372f625cd038fb",
+    "/screen/adc/comparator.spice": "a41ecccf87f625bbddca6139730c5e8500529c5acb2f05a5052f9049e8ee74a0",
+    "/screen/adc/cdac8_scaled.spice": "4006f42115b3a5a30b9ad74626ef0c084655bf0cdc2f1d1cc8bd32f65e351fd2",
+    "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+    "/wifi/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+    "/screen/adc/sample_driver_headroom.spice": "34840413c8d9ed96e56383230e0016611c78a6e94e7990ccfbc35d2d59abba83"
+  },
+  "limitations": [
+    "TT 3.3V 27C matched devices; 1pF compensation and ideal matched capacitors.",
+    "Diode-connected bias devices driven by ideal 20uA sources; complete reference generation absent.",
+    "Ideal separate buffer supply; no supply/ground coupling, noise, mismatch or extracted loading.",
+    "Constant and 0.8V step inputs from 1kohm sources; no conversion or repeated-frame qualification.",
+    "No loop stability margin, startup or broad load/common-mode qualification."
+  ],
+  "output_device_only_change_checked": true,
+  "paired_metrics": [
+    {
+      "input_difference_v": -0.4,
+      "paired_held_acquisition_error_v": 0.0007667486912452948,
+      "paired_tracking_error_v": -0.002162368313859897,
+      "constant_driver_differential_error_v": 0.0024584817716605256,
+      "constant_held_difference_v": -0.40262810957545553,
+      "buffer_output_range_v": [
+        1.080747182250402,
+        2.097770813208022
+      ],
+      "quiescent_buffer_current_ma": 3.2934120570515466,
+      "peak_buffer_current_ma": 3.38431687975474,
+      "late_buffer_ripple_pp_v": [
+        1.3123019209082543e-06,
+        2.815972362846253e-06
+      ]
+    },
+    {
+      "input_difference_v": 0.4,
+      "paired_held_acquisition_error_v": -0.0007685468169175896,
+      "paired_tracking_error_v": 0.002160919912079606,
+      "constant_driver_differential_error_v": -0.0024583087914300528,
+      "constant_held_difference_v": 0.4026282956078762,
+      "buffer_output_range_v": [
+        1.348113501624377,
+        1.921205070188403
+      ],
+      "quiescent_buffer_current_ma": 3.2935233878211787,
+      "peak_buffer_current_ma": 3.384003859322318,
+      "late_buffer_ripple_pp_v": [
+        2.832502966843009e-06,
+        1.338689245899971e-06
+      ]
+    }
+  ],
+  "buffer_only_substitution_checked": true,
+  "driver_qualified": false
+}

@@ -1,0 +1,198 @@
+{
+  "completed": true,
+  "status": "terminal",
+  "cases": [
+    {
+      "supply_v": 3.29,
+      "completed": true,
+      "actual_stop_ns": 41.0,
+      "frequency_hz": 2500103164.621131,
+      "crossings": 50,
+      "gate_range_v": [
+        1.492128350550385,
+        1.511132734013356
+      ],
+      "subwindows": [
+        {
+          "window_ns": [
+            20,
+            30
+          ],
+          "crossings": 25,
+          "frequency_hz": 2500107985.9767876
+        },
+        {
+          "window_ns": [
+            30,
+            40
+          ],
+          "crossings": 25,
+          "frequency_hz": 2500108067.0685616
+        }
+      ]
+    },
+    {
+      "supply_v": 3.3,
+      "completed": true,
+      "actual_stop_ns": 41.0,
+      "frequency_hz": 2500750921.268876,
+      "crossings": 50,
+      "gate_range_v": [
+        1.492070783822318,
+        1.511126963414953
+      ],
+      "subwindows": [
+        {
+          "window_ns": [
+            20,
+            30
+          ],
+          "crossings": 25,
+          "frequency_hz": 2500755651.6212096
+        },
+        {
+          "window_ns": [
+            30,
+            40
+          ],
+          "crossings": 25,
+          "frequency_hz": 2500755884.2117643
+        }
+      ],
+      "nominal_vectors_bit_identical": true
+    },
+    {
+      "supply_v": 3.31,
+      "completed": true,
+      "actual_stop_ns": 41.0,
+      "frequency_hz": 2501396267.0056415,
+      "crossings": 50,
+      "gate_range_v": [
+        1.49202891785987,
+        1.511116098889386
+      ],
+      "subwindows": [
+        {
+          "window_ns": [
+            20,
+            30
+          ],
+          "crossings": 25,
+          "frequency_hz": 2501401010.82578
+        },
+        {
+          "window_ns": [
+            30,
+            40
+          ],
+          "crossings": 25,
+          "frequency_hz": 2501401219.3963437
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Deterministic seeded, prebiased open-loop supply sensitivity only; not random jitter or PLL rejection.",
+    "Only PLLVDD changes; fixed ideal biases and other supplies. No process or mismatch coverage."
+  ],
+  "provenance": {
+    "cases": [
+      {
+        "name": "v3.29",
+        "supply_v": 3.29,
+        "returncode": 0,
+        "timed_out": false,
+        "deck_sha256_before": "05583510de4734b5bb924c308fddb2bb0138d26f6a162abe7bbf7aa8d9c87773",
+        "artifacts_sha256": {
+          ".spice": "05583510de4734b5bb924c308fddb2bb0138d26f6a162abe7bbf7aa8d9c87773",
+          ".log": "3818609b5e0f17edf45b2c4057ffcf2e3d60554997b609abb1a2426396dd5769",
+          ".dat": "60bf723a631ca305174e8be041871d7243ff0ace502f77960826221ffa66d73f"
+        }
+      },
+      {
+        "name": "v3.3",
+        "supply_v": 3.3,
+        "returncode": 0,
+        "timed_out": false,
+        "deck_sha256_before": "2a711daccf64afa033344edabcc84236f51e81471c57af5c24dbd0201ca08b0e",
+        "artifacts_sha256": {
+          ".spice": "2a711daccf64afa033344edabcc84236f51e81471c57af5c24dbd0201ca08b0e",
+          ".log": "21bd9394c9966f224c2b6cdaf85729de733c9d5f899bddb179e7b0d37f45ffa5",
+          ".dat": "8d930f1ec568f91a0a4c0dba283b64131d84ceba88a699179a11b21ac9cbd118"
+        }
+      },
+      {
+        "name": "v3.31",
+        "supply_v": 3.31,
+        "returncode": 0,
+        "timed_out": false,
+        "deck_sha256_before": "b874b87a2deead499d25f4b5394c7a4bf604e4f23a62dc3f94356e43abd1efe8",
+        "artifacts_sha256": {
+          ".spice": "b874b87a2deead499d25f4b5394c7a4bf604e4f23a62dc3f94356e43abd1efe8",
+          ".log": "ad88e2c732079a971fbc427ba82a5f2fc599545e049ae6c6aea07eb234f1ef06",
+          ".dat": "7f01738d4b0608d20abd27be890b4f6c265a49a4eef8c8cf2db3bfacfd442b84"
+        }
+      }
+    ],
+    "source_sha256_before": {
+      "/baseline/v1.08.spice": "c95856ecd24ccbbb7b2aac9d586a17c69109d78f2b126b0b04800b5cc0aa642d",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+      "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/screen/rf_rx_candidate_split.spice": "44431da3c11bea2282e6dd5cd388e81e26551454b9bd88973bf205f678fff498",
+      "/vco/divider.spice": "1e007f6d40d8678192a090ed1906fd27f6834dfec6983a35f15ffb8f1a3e364b",
+      "/wifi/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+    },
+    "source_sha256_after": {
+      "/baseline/v1.08.spice": "c95856ecd24ccbbb7b2aac9d586a17c69109d78f2b126b0b04800b5cc0aa642d",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+      "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/screen/rf_rx_candidate_split.spice": "44431da3c11bea2282e6dd5cd388e81e26551454b9bd88973bf205f678fff498",
+      "/vco/divider.spice": "1e007f6d40d8678192a090ed1906fd27f6834dfec6983a35f15ffb8f1a3e364b",
+      "/wifi/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+    }
+  },
+  "local_slopes_hz_per_v": [
+    64775664.77451462,
+    64534573.67653698
+  ],
+  "subwindow_slopes_hz_per_v": [
+    {
+      "window_ns": [
+        20,
+        30
+      ],
+      "slopes": [
+        64766564.44220681,
+        64535920.45702785
+      ]
+    },
+    {
+      "window_ns": [
+        30,
+        40
+      ],
+      "slopes": [
+        64781714.320279546,
+        64533518.45793575
+      ]
+    }
+  ]
+}

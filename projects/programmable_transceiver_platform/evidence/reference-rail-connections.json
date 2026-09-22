@@ -1,0 +1,81 @@
+{
+  "status": "topology_audited",
+  "buffers": [
+    {
+      "source": "buffer_scaled.spice",
+      "sha256": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+      "connections": [
+        {
+          "instance": "XIP",
+          "terminal": "gate",
+          "device": "nfet_03v3"
+        },
+        {
+          "instance": "XOUT",
+          "terminal": "drain",
+          "device": "nfet_03v3"
+        },
+        {
+          "instance": "XLOAD",
+          "terminal": "drain",
+          "device": "pfet_03v3"
+        },
+        {
+          "instance": "CC",
+          "terminal": "negative",
+          "device": "C"
+        }
+      ],
+      "accounted": [
+        "XOUT/XLOAD channel conduction with selected-DC probe sign convention",
+        "CC branch via current in series RC; internal Z has only RC and CC"
+      ],
+      "not_explicitly_accounted": [
+        "XIP feedback gate terminal current/charge",
+        "XOUT and XLOAD drain displacement and junction terms beyond reported channel current"
+      ]
+    },
+    {
+      "source": "buffer_complement.spice",
+      "sha256": "b21147fcdd7c13e4c7359fb966319a70badbb6a12c0de0064926b73be10602b4",
+      "connections": [
+        {
+          "instance": "XIP",
+          "terminal": "gate",
+          "device": "pfet_03v3"
+        },
+        {
+          "instance": "XOUT",
+          "terminal": "drain",
+          "device": "pfet_03v3"
+        },
+        {
+          "instance": "XLOAD",
+          "terminal": "drain",
+          "device": "nfet_03v3"
+        },
+        {
+          "instance": "CC",
+          "terminal": "negative",
+          "device": "C"
+        }
+      ],
+      "accounted": [
+        "XOUT/XLOAD channel conduction with selected-DC probe sign convention",
+        "CC branch via current in series RC; internal Z has only RC and CC"
+      ],
+      "not_explicitly_accounted": [
+        "XIP feedback gate terminal current/charge",
+        "XOUT and XLOAD drain displacement and junction terms beyond reported channel current"
+      ]
+    }
+  ],
+  "result_sha256": "fceca993739cdaa68ec44e787365f85eb5707cee3f43f2765e9ef5673f0bce68",
+  "analyzer_sha256": "53a91ef74f4380d2d604207d2c0c8556a7a2c7fe325bbaed0ca680d6c3ab6fd3",
+  "conclusion": "The omitted dynamic load includes the input feedback gate, not only output device drains.",
+  "limitations": [
+    "Incidence identifies possible current paths, not their magnitudes or unique cause of the residual.",
+    "External reservoir and CDAC branches are accounted separately in reference-refined-balance.json.",
+    "PDK MOS wrappers can contain additional internal parasitics; full terminal current is needed for closure."
+  ]
+}

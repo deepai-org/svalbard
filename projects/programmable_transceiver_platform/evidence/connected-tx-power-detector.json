@@ -1,0 +1,123 @@
+{
+  "status": "passed",
+  "quadrature_error": 1.3877787807814457e-17,
+  "cases": [
+    {
+      "dwell_s": 1e-07,
+      "total_time_s": 1.7999999999999993e-06,
+      "codes": [
+        1,
+        54,
+        155,
+        202,
+        193,
+        246,
+        398,
+        419,
+        455
+      ],
+      "error": 0.23408787608533188,
+      "quality": {
+        "calibration_samples": 256,
+        "validation_samples": 768,
+        "gain_real": 1.1010389246556616,
+        "gain_imag": -0.014451045741278808,
+        "gain_magnitude": 1.101133754967993,
+        "raw_relative_rms": 0.27384417664736693,
+        "corrected_relative_rms": 0.23408787608533188,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": false
+      }
+    },
+    {
+      "dwell_s": 5e-07,
+      "total_time_s": 5.399999999999999e-06,
+      "codes": [
+        1,
+        251,
+        222,
+        231,
+        212,
+        445,
+        519,
+        494,
+        393
+      ],
+      "error": 0.026785717158490124,
+      "quality": {
+        "calibration_samples": 256,
+        "validation_samples": 768,
+        "gain_real": 0.9989737842444036,
+        "gain_imag": -0.005599224985885312,
+        "gain_magnitude": 0.9989894758845195,
+        "raw_relative_rms": 0.027187221726943,
+        "corrected_relative_rms": 0.026785717158490124,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      }
+    },
+    {
+      "dwell_s": 2e-06,
+      "total_time_s": 1.8900000000000002e-05,
+      "codes": [
+        1,
+        277,
+        214,
+        231,
+        207,
+        467,
+        523,
+        484,
+        379
+      ],
+      "error": 0.0006342015683855177,
+      "quality": {
+        "calibration_samples": 256,
+        "validation_samples": 768,
+        "gain_real": 0.9996867802660139,
+        "gain_imag": 3.063615468261543e-05,
+        "gain_magnitude": 0.9996867807354479,
+        "raw_relative_rms": 0.0007011240345719312,
+        "corrected_relative_rms": 0.0006342015683855177,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      }
+    },
+    {
+      "dwell_s": 5e-06,
+      "total_time_s": 4.5900000000000004e-05,
+      "codes": [
+        1,
+        277,
+        214,
+        231,
+        207,
+        467,
+        523,
+        484,
+        379
+      ],
+      "error": 0.0006342015683855177,
+      "quality": {
+        "calibration_samples": 256,
+        "validation_samples": 768,
+        "gain_real": 0.9996867802660139,
+        "gain_imag": 3.063615468261543e-05,
+        "gain_magnitude": 0.9996867807354479,
+        "raw_relative_rms": 0.0007011240345719312,
+        "corrected_relative_rms": 0.0006342015683855177,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      }
+    }
+  ],
+  "limitations": [
+    "Local continuous filter / linear IQ modulator / square-law detector; no cubic RF output compression.",
+    "No host ownership, monitor loading, detector mismatch or full-chip clock disturbance.",
+    "Settling sweep characterizes finite assumed poles, not guaranteed physical settling."
+  ]
+}

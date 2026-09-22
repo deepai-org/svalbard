@@ -1,0 +1,94 @@
+{
+  "status": "aborted_gear2_partial_evidence_not_settling_pass",
+  "requested_stop_ns": 3201,
+  "actual_last_time_ns": 2762.5,
+  "failure": "ngspice timestep too small at vsense#branch; no physical-failure conclusion",
+  "windows": [
+    {
+      "window_ns": [
+        1100,
+        1200
+      ],
+      "vco_frequency_hz": 2488903086.3447685,
+      "control_range_v": [
+        1.028980771643596,
+        1.107843997639855
+      ],
+      "gate_range_v": [
+        1.491339358605991,
+        1.512117245511316
+      ],
+      "pump_charge_fc": -456.5369547133381
+    },
+    {
+      "window_ns": [
+        2000,
+        2100
+      ],
+      "vco_frequency_hz": 2481793609.609815,
+      "control_range_v": [
+        1.059688284519059,
+        1.077316467953535
+      ],
+      "gate_range_v": [
+        1.491902013936217,
+        1.511201459414411
+      ],
+      "pump_charge_fc": -31.96622263755725
+    },
+    {
+      "window_ns": [
+        2500,
+        2600
+      ],
+      "vco_frequency_hz": 2498429958.216719,
+      "control_range_v": [
+        1.073130148344411,
+        1.091573840258661
+      ],
+      "gate_range_v": [
+        1.490997780564667,
+        1.512395778544677
+      ],
+      "pump_charge_fc": 35.76076570651758
+    }
+  ],
+  "prefix_max_absolute_errors_by_column": [
+    1.3588331320895939,
+    1.28329953628168,
+    1.1656980222568571,
+    1.1926108044654706,
+    1.1960417287223157,
+    1.1941882176716847,
+    1.1899484081852643,
+    1.6461981665721988,
+    2.9747933475949564,
+    0.024506834610821926,
+    0.0024917592217543715,
+    0.8272502381829088,
+    0.7456040058126252,
+    0.005118934028061961,
+    0.00048298750688702263,
+    0.00013333612900546932,
+    0.0
+  ],
+  "artifacts_sha256": {
+    ".spice": "515488ab67b94a2f07c77ef8758a85a82221f56c94a728cc1af05c8ec9a94377",
+    ".dat": "09f5e406848107c8d6bb8f205f661239b046220fa166b09a1b908f3e56de159c",
+    ".log": "25e0b6f3c1c0abff610b7efbe0e78f5e2207c8e4a35d23ace6a3e14948c5c438"
+  },
+  "pll_lock_established": false,
+  "limitations": [
+    "Run aborted before requested horizon; investigate numerical cause and rerun before qualification.",
+    "Only windows ending at or before 2600ns summarized; no inference from tiny-step failure neighborhood.",
+    "Nominal seeded/prebiased circuit with ideal external biases; no noise/startup/process or package evidence."
+  ],
+  "reference_edge_observation": {
+    "pulse_delay_ns": 100,
+    "period_ns": 51.2,
+    "rise_ns": 0.1,
+    "cycle_index": 52,
+    "rise_end_ns": 2762.5,
+    "interpretation": "Coincidence with failure time; causality not established."
+  }
+}

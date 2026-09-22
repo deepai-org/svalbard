@@ -1,0 +1,65 @@
+{
+  "target_loading_cases": [
+    {
+      "target_source_resistance_ohm": 0,
+      "ideal_output_v": 2.15,
+      "target_error_v": 0.0
+    },
+    {
+      "target_source_resistance_ohm": 10,
+      "ideal_output_v": 2.1494626343414147,
+      "target_error_v": 0.0005373656585853536
+    },
+    {
+      "target_source_resistance_ohm": 100,
+      "ideal_output_v": 2.144638403990025,
+      "target_error_v": 0.005361596009975062
+    },
+    {
+      "target_source_resistance_ohm": 1000,
+      "ideal_output_v": 2.097560975609756,
+      "target_error_v": 0.0524390243902439
+    },
+    {
+      "target_source_resistance_ohm": 10000,
+      "ideal_output_v": 1.72,
+      "target_error_v": 0.43
+    }
+  ],
+  "target_source_resistance_for_1mv_error_ohm": 18.613308515588646,
+  "status": "ideal_ratio_sensitivity_only",
+  "cases": [
+    {
+      "independent_resistor_fractional_bound": 0.001,
+      "output_min_v": 2.1478510733888427,
+      "output_max_v": 2.152151076613845,
+      "worst_target_error_v": 0.00215107661384506
+    },
+    {
+      "independent_resistor_fractional_bound": 0.005,
+      "output_min_v": 2.139276674272747,
+      "output_max_v": 2.1607770774069843,
+      "worst_target_error_v": 0.010777077406984414
+    },
+    {
+      "independent_resistor_fractional_bound": 0.01,
+      "output_min_v": 2.128605900791084,
+      "output_max_v": 2.171609126086738,
+      "worst_target_error_v": 0.02160912608673815
+    },
+    {
+      "independent_resistor_fractional_bound": 0.05,
+      "output_min_v": 2.044993894993895,
+      "output_max_v": 2.260397946084724,
+      "worst_target_error_v": 0.1103979460847242
+    }
+  ],
+  "nominal_divider_current_a": 5.375e-05,
+  "nominal_feedback_factor": 0.75,
+  "limitations": [
+    "Independent symmetric hypothetical bounds, not established fab mismatch limits.",
+    "Infinite amplifier gain; ratio sweep uses ideal target, loading sweep uses specified DC Thevenin resistance. No noise, parasitics or input currents.",
+    "Common-centroid layout can improve correlation but has not been designed or quantified.",
+    "Calibration is not implemented and cannot be assumed to remove dynamic errors."
+  ]
+}

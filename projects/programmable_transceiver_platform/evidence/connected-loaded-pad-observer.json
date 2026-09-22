@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "carrier_hz": 2412000000,
+      "frame_error": 1.3904866443919908e-17,
+      "double_lo_error": 0.1400411349854061
+    },
+    {
+      "carrier_hz": 2437000000,
+      "frame_error": 4.2934406030425976e-17,
+      "double_lo_error": 0.14004113498540613
+    }
+  ],
+  "limitations": [
+    "Observer assumes source already includes LO phase; caller must enforce this contract.",
+    "No waveform quality claim; full-chip observer wrapper integration remains pending."
+  ]
+}

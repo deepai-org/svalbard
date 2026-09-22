@@ -1,0 +1,55 @@
+{
+  "status": "independent_fixture_prediction_comparison",
+  "source_sha256": {
+    "adc-kickback-fine-clamped.json": "865c7a5d060dc14a3fb4cd1f463f8d2114bf2d4884121449a66d3d0c54f04c0f",
+    "adc-cdac-kickback.json": "8728f04dd7c8e3bfac4eaa57c69ecbc2606d79c7039ca982b92aadf4f2cf4d92",
+    "adc-top-load-matrix.json": "e65333f4d1d22f1a0c59d7c6f6e9ad5f24e574060814fe980d7d5b2b1129ccaa",
+    "adc-top-load.json": "c140b4b3b1c598421e046f0b7da4bc9bd9f237146f0214e1bb8b4d08586c56f2",
+    "fast-cdac-impedance.json": "95bc7b3067fe3f7550ee8fcf7c99ed3246b5b078cd3db55590da0b7f772396d5"
+  },
+  "script_sha256": "e582485fa7ca8f94a4e7e8c3f80e8aa696189d766883493b8ab14fdc8886e5d5",
+  "results": [
+    {
+      "input_differential_v": -0.001,
+      "metrics": {
+        "differential": {
+          "predicted_peak_v": 0.00021581143366432038,
+          "observed_peak_v": 0.00022170999999993057,
+          "max_error_v": 3.4467796867673674e-05,
+          "time_weighted_rms_error_v": 4.496969267492061e-06
+        },
+        "common_mode": {
+          "predicted_peak_v": 0.0030501103186201645,
+          "observed_peak_v": 0.0026733700000001193,
+          "max_error_v": 0.0014961910350566182,
+          "time_weighted_rms_error_v": 9.606084535740993e-05
+        }
+      },
+      "step_refinement_max_port_difference_v": 1.1343213435904831e-07
+    },
+    {
+      "input_differential_v": 0.001,
+      "metrics": {
+        "differential": {
+          "predicted_peak_v": 0.00021581298339757487,
+          "observed_peak_v": 0.00022169999999999135,
+          "max_error_v": 3.397433330170913e-05,
+          "time_weighted_rms_error_v": 4.418614723143246e-06
+        },
+        "common_mode": {
+          "predicted_peak_v": 0.003050109220727705,
+          "observed_peak_v": 0.0026733799999999475,
+          "max_error_v": 0.0014961852229599159,
+          "time_weighted_rms_error_v": 9.60600072679492e-05
+        }
+      },
+      "step_refinement_max_port_difference_v": 1.135034645217449e-07
+    }
+  ],
+  "limitations": [
+    "No fitted voltage gain or time shift; current sign and timing use SPICE source conventions.",
+    "Reset input matrix plus one series RC per CDAC side; nonlinear switching and reference dynamics omitted.",
+    "Clamped and floating input trajectories differ, including sampler-induced initial bias.",
+    "Two nominal inputs with fixed-code127 transistor CDAC and ideal rails; not full SAR or new process conditions."
+  ]
+}

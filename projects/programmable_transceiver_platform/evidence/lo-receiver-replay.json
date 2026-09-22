@@ -1,0 +1,98 @@
+{
+  "completed": true,
+  "status": "terminal",
+  "preparation_sha256": "525f3f2980789bc72d250e3190692b213aaa5a7a0c92ec3786f6066c95a09dac",
+  "diagnostic_use_approved": false,
+  "returncode": 0,
+  "timed_out": false,
+  "errors": [],
+  "artifacts_sha256": {
+    ".spice": "b898404f6de382921deb734a2c3dc6cd030d21214a42a4e8552b5807528c7072",
+    ".log": "dc377464da5ed83db26d85c76962806c0a42c0b6d993b22a0f1426df0a9cf812",
+    ".dat": "7caa6d42da14702d964b180b5ad4e386ce67d48e8b704c1d7621d56ac4718dad"
+  },
+  "actual_stop_ns": 1024.0,
+  "nodes": {
+    "v(p)": {
+      "max_abs_difference_v": 1.979749697511579e-12,
+      "time_weighted_rms_difference_v": 1.7724441851148833e-13
+    },
+    "v(n)": {
+      "max_abs_difference_v": 1.9468870959826745e-12,
+      "time_weighted_rms_difference_v": 1.777545537941087e-13
+    },
+    "v(bip)": {
+      "max_abs_difference_v": 3.210317866031431e-05,
+      "time_weighted_rms_difference_v": 1.8369283173681565e-05
+    },
+    "v(bin)": {
+      "max_abs_difference_v": 3.350721102912679e-05,
+      "time_weighted_rms_difference_v": 1.8445598892192227e-05
+    },
+    "v(bqp)": {
+      "max_abs_difference_v": 2.7324061993905246e-05,
+      "time_weighted_rms_difference_v": 1.5387423790361348e-05
+    },
+    "v(bqn)": {
+      "max_abs_difference_v": 2.8272532347717316e-05,
+      "time_weighted_rms_difference_v": 1.5453795157662363e-05
+    },
+    "v(lg)": {
+      "max_abs_difference_v": 0.0014310234117660414,
+      "time_weighted_rms_difference_v": 0.0013604171692096518
+    },
+    "v(ls)": {
+      "max_abs_difference_v": 0.000535027996087678,
+      "time_weighted_rms_difference_v": 0.0005259393563447886
+    },
+    "v(fip)": {
+      "max_abs_difference_v": 4.1251286083232586e-05,
+      "time_weighted_rms_difference_v": 2.4052946778682776e-05
+    },
+    "v(fin)": {
+      "max_abs_difference_v": 9.100162691333402e-05,
+      "time_weighted_rms_difference_v": 6.767094496924521e-05
+    },
+    "v(fqp)": {
+      "max_abs_difference_v": 4.0093152058773285e-05,
+      "time_weighted_rms_difference_v": 3.688648011877366e-05
+    },
+    "v(fqn)": {
+      "max_abs_difference_v": 4.1067457535959306e-05,
+      "time_weighted_rms_difference_v": 3.8277588988965476e-05
+    },
+    "v(oip)": {
+      "max_abs_difference_v": 0.0020375941433865563,
+      "time_weighted_rms_difference_v": 0.0008592065071717238,
+      "replay_rises": 1170,
+      "parent_rises": 1170,
+      "ordinal_max_displacement_ps": 0.36653402934288515
+    },
+    "v(oin)": {
+      "max_abs_difference_v": 0.0022006027499406056,
+      "time_weighted_rms_difference_v": 0.0008554161524402852,
+      "replay_rises": 1160,
+      "parent_rises": 1160,
+      "ordinal_max_displacement_ps": 0.6254318147932544
+    },
+    "v(oqp)": {
+      "max_abs_difference_v": 0.0018712373567103535,
+      "time_weighted_rms_difference_v": 0.0007212336503898943,
+      "replay_rises": 1280,
+      "parent_rises": 1280,
+      "ordinal_max_displacement_ps": 0.04358755355957024
+    },
+    "v(oqn)": {
+      "max_abs_difference_v": 0.0018838430810990126,
+      "time_weighted_rms_difference_v": 0.0007224899984585604,
+      "replay_rises": 1280,
+      "parent_rises": 1280,
+      "ordinal_max_displacement_ps": 0.04385122930445723
+    }
+  },
+  "limitations": [
+    "Completion and self-check do not approve replay accuracy; inspect deviations and missing events before use.",
+    "No time shifts or nearest-edge rematching; unequal counts prevent ordinal displacement claims.",
+    "Removed feedback/loading and incomplete internal initialization remain explicit fixture differences."
+  ]
+}

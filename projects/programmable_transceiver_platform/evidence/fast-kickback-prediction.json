@@ -1,0 +1,52 @@
+{
+  "status": "independent_fixture_prediction_comparison",
+  "source_sha256": {
+    "adc-kickback-fine-clamped.json": "865c7a5d060dc14a3fb4cd1f463f8d2114bf2d4884121449a66d3d0c54f04c0f",
+    "adc-floating-kickback.json": "60da9d9b075b1f34d0c4c13b4b3d1aab1e041b9eafb156120aafbc7c6a88cfb9",
+    "adc-top-load-matrix.json": "e65333f4d1d22f1a0c59d7c6f6e9ad5f24e574060814fe980d7d5b2b1129ccaa",
+    "adc-top-load.json": "c140b4b3b1c598421e046f0b7da4bc9bd9f237146f0214e1bb8b4d08586c56f2"
+  },
+  "script_sha256": "7b3cd53e9f15085c96e675a546f0f8c29b1611bf18ad3bbf7c149bde4b36540b",
+  "results": [
+    {
+      "input_differential_v": -0.001,
+      "metrics": {
+        "differential": {
+          "predicted_peak_v": 0.0001565863122006436,
+          "observed_peak_v": 0.00015644999999997466,
+          "max_error_v": 5.222636882558883e-07,
+          "time_weighted_rms_error_v": 1.0376443917481325e-07
+        },
+        "common_mode": {
+          "predicted_peak_v": 0.002319661312455465,
+          "observed_peak_v": 0.0023197799999998825,
+          "max_error_v": 1.1596025150471118e-06,
+          "time_weighted_rms_error_v": 2.743569021502574e-07
+        }
+      }
+    },
+    {
+      "input_differential_v": 0.001,
+      "metrics": {
+        "differential": {
+          "predicted_peak_v": 0.00015658631220533993,
+          "observed_peak_v": 0.00015644999999997466,
+          "max_error_v": 5.222636938330243e-07,
+          "time_weighted_rms_error_v": 1.0376443825233791e-07
+        },
+        "common_mode": {
+          "predicted_peak_v": 0.0023196613124608374,
+          "observed_peak_v": 0.0023197799999998825,
+          "max_error_v": 1.1596025150163204e-06,
+          "time_weighted_rms_error_v": 2.7435690092807866e-07
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "No fitted voltage gain or time shift; current sign and timing use SPICE source conventions.",
+    "Reset-state matrix approximated constant during evaluation; conductive/leakage terms omitted.",
+    "Clamped and floating input trajectories differ, including sampler-induced initial bias.",
+    "Two nominal inputs with grounded MIM arrays, not switched CDAC or new process conditions."
+  ]
+}

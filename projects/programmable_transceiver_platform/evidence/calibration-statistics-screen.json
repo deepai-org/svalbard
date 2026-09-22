@@ -1,0 +1,59 @@
+{
+  "status": "passed",
+  "zero_case": {
+    "accuracy": "statistically_qualified",
+    "valid": false,
+    "statistical_pass": true,
+    "confidence": 0.999,
+    "samples": 64,
+    "planned_samples": 64,
+    "interpretation": "Per fixed window; conditional on declared observation assumptions",
+    "mean_observation_v": 0.0,
+    "observation_half_width_v": 0.0006554564664364869,
+    "residual_confidence_interval_v": [
+      -0.000689954175196302,
+      0.000689954175196302
+    ],
+    "reason": "confidence interval meets tolerance; deterministic validity remains unverified"
+  },
+  "cases": [
+    {
+      "residual_v": 0.0,
+      "gain": 1.0,
+      "bias_v": 0.0,
+      "windows": 10000,
+      "covered": 10000,
+      "statistically_qualified": 9824
+    },
+    {
+      "residual_v": 0.0009,
+      "gain": 0.95,
+      "bias_v": 0.000244140625,
+      "windows": 10000,
+      "covered": 10000,
+      "statistically_qualified": 0
+    },
+    {
+      "residual_v": -0.0009,
+      "gain": 1.05,
+      "bias_v": -0.000244140625,
+      "windows": 10000,
+      "covered": 9994,
+      "statistically_qualified": 0
+    },
+    {
+      "residual_v": 0.003,
+      "gain": 1.0,
+      "bias_v": 0.0,
+      "windows": 10000,
+      "covered": 10000,
+      "statistically_qualified": 0
+    }
+  ],
+  "model_sha256": "b541e245dedb0737a90d4718103af9af625d93a55ffff08c5a2aabf10f35b5a7",
+  "limitations": [
+    "Synthetic independent Gaussian observation model only; physical assumptions not established.",
+    "Not yet connected to repeated shared-ADC scheduling or host status.",
+    "Per-window confidence does not cover repeated retries or a lifetime of calibrations."
+  ]
+}

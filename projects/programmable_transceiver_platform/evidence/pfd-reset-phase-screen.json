@@ -1,0 +1,80 @@
+{
+  "status": "controlled_reset_phase_waveforms_audited",
+  "cases": [
+    {
+      "name": "reset90",
+      "reset_release_ns": 90,
+      "artifacts_sha256": {
+        ".spice": "35369af6068dd07cc01f8505cd5f486a8fbbb2c50570b3193974bf1c3de931c2",
+        ".dat": "8573aaf6eb8fb79e1cd029688c9c1b2e3c89c4c268e1a1eefb63764cfd5d233d",
+        ".log": "4ff835dc58315937e0b873fcd11006dabf5af5aacdd839d459fdfebc3b364a51"
+      },
+      "measurement_window_ns": [
+        203,
+        305.4
+      ],
+      "reference_rising_edges_ns": [
+        100.05000000000007,
+        151.25000000000006,
+        202.45000000000005,
+        253.65,
+        304.85
+      ],
+      "feedback_rising_edges_ns": [
+        90.05000000000001,
+        141.25000000000006,
+        192.45000000000005,
+        243.6500000000001,
+        294.85
+      ],
+      "up_high_time_ns": 83.9300000000016,
+      "dn_high_time_ns": 1.5520000000018128,
+      "pump_charge_fc": 1721.5249523163602,
+      "control_change_v": 0.033351132970575126,
+      "final_control_v": 1.311500747484884
+    },
+    {
+      "name": "reset80",
+      "reset_release_ns": 80,
+      "artifacts_sha256": {
+        ".spice": "ea7861d2619bbddc868d3341f0b8a6a68a7c6709b6ecbc2ee6f548b09a86596c",
+        ".dat": "4cddad80a0fd8998cee5fbe2509acf1a75ee94beeb7fc9fd025cf33ce4fd39ea",
+        ".log": "64997ba408ee092d0e5576db56b54095f0813bcf4dcd1632547cd8f13c682ef9"
+      },
+      "measurement_window_ns": [
+        203,
+        305.4
+      ],
+      "reference_rising_edges_ns": [
+        100.05000000000007,
+        151.25000000000006,
+        202.45000000000005,
+        253.65,
+        304.85
+      ],
+      "feedback_rising_edges_ns": [
+        90.05000000000001,
+        141.25000000000006,
+        192.45000000000005,
+        243.6500000000001,
+        294.85
+      ],
+      "up_high_time_ns": 1.5220000000017788,
+      "dn_high_time_ns": 21.554000000001757,
+      "pump_charge_fc": -356.928460021544,
+      "control_change_v": -0.006872986613404852,
+      "final_control_v": 1.031252253934544
+    }
+  ],
+  "baseline_deck_sha256": "fe9c65006c1e7e2ea9f6134f82e908a2acafb09459f4b45091bb97d974a16a7d",
+  "source_sha256": {
+    "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+    "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+    "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca"
+  },
+  "limitations": [
+    "Ideal feedback/reference clocks, seeded filter and ideal bias sources; not autonomous lock or startup qualification.",
+    "Two deterministic reset timings do not characterize metastability or recovery/removal margins.",
+    "Measured branch and pump direction concern this fixture, not arbitrary loop acquisition behavior."
+  ]
+}

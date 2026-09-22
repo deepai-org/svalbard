@@ -1,0 +1,30 @@
+{
+  "status": "finite_zero_rf_replay_trace_only",
+  "source_sha256": "7caa6d42da14702d964b180b5ad4e386ce67d48e8b704c1d7621d56ac4718dad",
+  "evidence_sha256": "ef00595a9316e57073f94eb7c8e38770e803060ef63b0d5aa846cdb465462e72",
+  "script_sha256": "3a1417852f0c76e0602f1eb7c26847a0557f1df1ec7d51fca1a4ba9810b34599",
+  "trace_sha256": "78c5b17ae348843c0930b1f4b2c62a202b5897e34654e7cf9ed882fa98ec60ab",
+  "start_s": 5.13e-07,
+  "stop_s": 1.0229500000000382e-06,
+  "samples": 10200,
+  "resolution_comparison": [
+    {
+      "step_ps": 100.0,
+      "ac_rms_v": 0.023672883062239875,
+      "fundamental_fit_residual_rms_v": 0.007624193753889901,
+      "max_residual_v": 0.019618218613077658
+    },
+    {
+      "step_ps": 50.0,
+      "ac_rms_v": 0.023672712780681397,
+      "fundamental_fit_residual_rms_v": 0.007624191263353159,
+      "max_residual_v": 0.019618924282143367
+    }
+  ],
+  "limitations": [
+    "Specific seeded zero-RF replay; not autonomous full-loop qualification.",
+    "No periodic extension or steady-state assumption justified.",
+    "Uniform interpolation is not an anti-alias filter.",
+    "RF-driven superposition and physical ADC sampling remain unverified."
+  ]
+}

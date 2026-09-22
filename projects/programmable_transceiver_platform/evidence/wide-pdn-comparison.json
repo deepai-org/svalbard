@@ -1,0 +1,84 @@
+{
+  "scope": "Wider local-grid candidate compared under identical requested ideal feeds and explicit uniform DC loads; not physical signoff",
+  "strap_widths_um": {
+    "Metal4": 4,
+    "Metal5": 8
+  },
+  "pitch_um": 80,
+  "stripe_rectangle_area_um2_by_layer": {
+    "previous": {
+      "Metal5": 227951.36000000002,
+      "Metal4": 115638.55999999994,
+      "Metal1": 350925.1200000007
+    },
+    "wide": {
+      "Metal5": 455902.72000000003,
+      "Metal4": 231277.11999999988,
+      "Metal1": 350925.1200000007
+    }
+  },
+  "previous_combined_voltage": [
+    {
+      "assumed_current_ma": 24,
+      "minimum_cell_supply_v": 3.1300547928772113,
+      "maximum_cell_supply_v": 3.255563569995788,
+      "worst_instance": "_21561_"
+    },
+    {
+      "assumed_current_ma": 48,
+      "minimum_cell_supply_v": 2.9601095857544224,
+      "maximum_cell_supply_v": 3.2111271399915755,
+      "worst_instance": "_21561_"
+    }
+  ],
+  "candidate_combined_voltage": [
+    {
+      "assumed_current_ma": 24,
+      "minimum_cell_supply_v": 3.2111727191496557,
+      "maximum_cell_supply_v": 3.2790738929859953,
+      "worst_instance": "_21544_"
+    },
+    {
+      "assumed_current_ma": 48,
+      "minimum_cell_supply_v": 3.1223454382993125,
+      "maximum_cell_supply_v": 3.2581477859719907,
+      "worst_instance": "_21544_"
+    }
+  ],
+  "actual_source_nodes": {
+    "VDD_CORE": [
+      "V0",
+      "Node_Metal5_47160_123520",
+      "0",
+      "DC",
+      "3.300000"
+    ],
+    "VSS_CORE": [
+      "V0",
+      "Node_Metal5_47160_43520",
+      "0",
+      "DC",
+      "0.000000"
+    ]
+  },
+  "geometry_report_sha256": "13220fd410633d72240ce69a728ba4a24471106f91a25c858d5a9d219f8bdb05",
+  "resistance_report_sha256": "17c30894d8ce6b54f4315513615f7019e2a420a85f20982dc77d8360f667dfa4",
+  "artifact_sha256": {
+    "digital-pdn.odb": "fa8af34f45359939a65fef747a542310d317bb9b0835ca5b23fcaae1f896609c",
+    "digital-pdn.def": "47aa062be21a48b742c48731a77b2a4dd73fc4f7c70b916264b7371084390592",
+    "pdn.log": "05e344a9e4cc956a69c0fa6dca658387db5da0c31d2a9c82217ef8f1f78c0b75"
+  },
+  "source_sha256": {
+    "wide_pdn_screen.tcl": "1740f2516eb9e725adbeba70e88f1ff0a2282775d3211a65b6fac7a10c2ed136",
+    "run_wide_pdn.sh": "da31e947b4e05d1c5bc59c49530997076a12f117eae98352cf77226be2235ec4",
+    "report_wide_pdn.py": "a787505d743672f1f9764bc9010041869c83ed16d75f52493e6b49e2f01d9a16"
+  },
+  "decision": "Retain separate candidate for congestion/current-density evaluation; not an approved replacement grid.",
+  "limitations": [
+    "Requested feed regions match, but source node snapping may change with geometry; comparison includes that effect.",
+    "Strap rectangle area is not routed congestion or available track capacity.",
+    "Uniform-load assumption, ideal feeds and nominal resistor models are not worst-case bounds.",
+    "No IR/EM limits, dynamic/package model, process corners, full DRC/LVS or well/tap qualification.",
+    "Full chip still lacks timing closure and completed analog/DDR macros."
+  ]
+}

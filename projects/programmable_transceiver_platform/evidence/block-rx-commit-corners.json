@@ -1,0 +1,135 @@
+{
+  "pass": 86,
+  "status": "available slow mixed-PVT setup screens fail",
+  "corners": {
+    "tt_025C_3v30": {
+      "0:max": {
+        "slack_ns": 9.7177,
+        "startpoint": "_5404_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "_5545_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "0:min": {
+        "slack_ns": 0.4211,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_5725_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:max": {
+        "slack_ns": 9.7177,
+        "startpoint": "_5404_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "_5545_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:min": {
+        "slack_ns": 0.4211,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_5725_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    },
+    "ff_n40C_3v60": {
+      "0:max": {
+        "slack_ns": 15.4011,
+        "startpoint": "iq_ready (input port clocked by clk)",
+        "endpoint": "argument[0] (output port clocked by clk)"
+      },
+      "0:min": {
+        "slack_ns": 0.2535,
+        "startpoint": "words[0] (input port clocked by clk)",
+        "endpoint": "_5439_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:max": {
+        "slack_ns": 15.4011,
+        "startpoint": "iq_ready (input port clocked by clk)",
+        "endpoint": "argument[0] (output port clocked by clk)"
+      },
+      "1:min": {
+        "slack_ns": 0.2535,
+        "startpoint": "words[0] (input port clocked by clk)",
+        "endpoint": "_5439_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    },
+    "ff_125C_3v60": {
+      "0:max": {
+        "slack_ns": 12.6477,
+        "startpoint": "_5404_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "_5545_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "0:min": {
+        "slack_ns": 0.3342,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_5725_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:max": {
+        "slack_ns": 12.6477,
+        "startpoint": "_5404_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "_5545_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:min": {
+        "slack_ns": 0.3342,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_5725_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    },
+    "ss_n40C_3v00": {
+      "0:max": {
+        "slack_ns": 3.3003,
+        "startpoint": "_5404_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "_5545_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "0:min": {
+        "slack_ns": 0.5494,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_5725_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:max": {
+        "slack_ns": 3.3003,
+        "startpoint": "_5404_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "_5545_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:min": {
+        "slack_ns": 0.5494,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_5725_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    },
+    "ss_125C_3v00": {
+      "0:max": {
+        "slack_ns": -6.882,
+        "startpoint": "_5404_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "_5545_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "0:min": {
+        "slack_ns": 0.7047,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_5725_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:max": {
+        "slack_ns": -6.882,
+        "startpoint": "_5404_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "_5545_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:min": {
+        "slack_ns": 0.7047,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_5725_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    }
+  },
+  "library_sha256": {
+    "tt_025C_3v30": "f9dee07cf158324934b0c59144d970a2e8313f43533ede6283ec3c136f82fe53",
+    "ff_n40C_3v60": "a222740b574d0699c8a416400bd9746ecb8556bc87a515ab7fb80f911e2cd74b",
+    "ff_125C_3v60": "f7d93ac4452c3388e27e8f88149c4f6a4ed1aaed344e93cec095914d374ed945",
+    "ss_n40C_3v00": "08847da4bb78d75ba004e79bb1540dd43fa8d4ed694b84ed5c182d0809520a93",
+    "ss_125C_3v00": "5d2f37ba6f43e33aeba26dc1da55c96394a862eeec4148043f1d48bdf65ccea6"
+  },
+  "scope": "Fixed nominal mapped netlist, ideal clocks/no wire RC. Mixed PVT stress screens do not define or bound the user-approved narrow operating window.",
+  "sha256": {
+    "projects/programmable_transceiver_platform/verification/block_rx_commit_corners.py": "67d318de1c4379e66a71953768b0f444cd7cc2b266c9b99adaef21679327a3e0",
+    "projects/programmable_transceiver_platform/verification/run_block_rx_commit_corners.sh": "0060f37b6e3d2f62605bf0f68458b82e580927caf181fec0f2c565126ab13a80",
+    "projects/programmable_transceiver_platform/verification/report_block_rx_commit_corners.py": "5456a931130f06800084a86875ab656a184c89e1456f3076a9afc489f52e8aae",
+    "projects/programmable_transceiver_platform/verification/block_rx_commit_timing.tcl": "7d8333bee7639227c21a1196a32027dc94c7fada7c3ebab7f796818253d1d7d0",
+    "scratch/transceiver-block-rx-commit-corners/ff_n40C_3v60.log": "c5e7837922899f5b002e5b1f0fd26eacd58bea4289f2c8a236ecc787a1858c57",
+    "scratch/transceiver-block-rx-commit-corners/ff_125C_3v60.log": "7a68c1113c732cb3af38ffeba7e8d0c5f1ad598f166c39247fdee2d7a33c0746",
+    "scratch/transceiver-block-rx-commit-corners/ss_125C_3v00.log": "404fa92851368c57d2d8393507020c99bb6bd585d303a5c4374cab0f9c507815",
+    "scratch/transceiver-block-rx-commit-corners/tt_025C_3v30.log": "4c003de93a1f0258a333962a571721cb67c0ab56668d7bc94295cd43b36a8103",
+    "scratch/transceiver-block-rx-commit-corners/ss_n40C_3v00.log": "e352b77a677fa09ba4ea9c48356d810f24d3534f8ede108830c0a16bbdeeae76"
+  }
+}

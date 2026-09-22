@@ -1,0 +1,87 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "bits": 12,
+      "sample_rate_hz": 40000000.0,
+      "quality": {
+        "calibration_samples": 992,
+        "validation_samples": 2976,
+        "gain_real": 1.0000789293162868,
+        "gain_imag": 2.6832549408361213e-05,
+        "gain_magnitude": 1.0000789296762513,
+        "raw_relative_rms": 0.0008208870369783729,
+        "corrected_relative_rms": 0.0008163769686066505,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "uncorrected": {
+        "calibration_samples": 992,
+        "validation_samples": 2976,
+        "gain_real": 0.9988047918971567,
+        "gain_imag": 0.042044137620910034,
+        "gain_magnitude": 0.9996893126491893,
+        "raw_relative_rms": 0.08695984446212576,
+        "corrected_relative_rms": 0.07593205876554157,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "preamble_samples": 128,
+      "accounting": {
+        "accepted": 4097,
+        "consumed": 4096,
+        "discarded": 1,
+        "pending": 0,
+        "rejected": 0,
+        "underflows": 0
+      },
+      "headroom_rejections": 1
+    },
+    {
+      "bits": 8,
+      "sample_rate_hz": 20000000.0,
+      "quality": {
+        "calibration_samples": 992,
+        "validation_samples": 2976,
+        "gain_real": 0.9991258635580431,
+        "gain_imag": 0.0010097233561566887,
+        "gain_magnitude": 0.9991263737745397,
+        "raw_relative_rms": 0.013157765500413933,
+        "corrected_relative_rms": 0.013105957744737254,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "uncorrected": {
+        "calibration_samples": 992,
+        "validation_samples": 2976,
+        "gain_real": 0.9983169535610078,
+        "gain_imag": 0.0423006575157022,
+        "gain_magnitude": 0.9992127328019755,
+        "raw_relative_rms": 0.08739310470206062,
+        "corrected_relative_rms": 0.07648541792934069,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "preamble_samples": 128,
+      "accounting": {
+        "accepted": 4097,
+        "consumed": 4096,
+        "discarded": 1,
+        "pending": 0,
+        "rejected": 0,
+        "underflows": 0
+      },
+      "headroom_rejections": 1
+    }
+  ],
+  "limitations": [
+    "Local queue/filter/output composition; no autonomous clock, host supply or full-chip traffic in this screen.",
+    "Static correction coefficients; no managed live calibration or finite detector yet.",
+    "Matched identical I/Q reconstruction filters; filter mismatch and converter nonlinearity unqualified.",
+    "Reset sets held DAC zero; RF mixer/driver must be disabled separately to suppress residual LO feedthrough."
+  ]
+}

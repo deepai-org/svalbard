@@ -1,0 +1,51 @@
+{
+  "status": "diagnostic_only",
+  "exact_pad_replay": true,
+  "original_relative_rms": 0.1167460772178467,
+  "instantaneous_derotation_relative_rms": 0.06762657100348791,
+  "windows": [
+    {
+      "samples": 544,
+      "lo_phase_rad": 1.4861871764466419,
+      "pad_phase_rad": 1.4953571020849414,
+      "rail_min_v": 3.229222086589331,
+      "rail_max_v": 3.2579989695445057,
+      "reference_min_v": 0.9899402595588361
+    },
+    {
+      "samples": 544,
+      "lo_phase_rad": 1.569250470388695,
+      "pad_phase_rad": 1.5751637139632773,
+      "rail_min_v": 3.2413441965105716,
+      "rail_max_v": 3.257948657487188,
+      "reference_min_v": 0.9901354419585385
+    },
+    {
+      "samples": 544,
+      "lo_phase_rad": 1.5925393367172407,
+      "pad_phase_rad": 1.5981599501019106,
+      "rail_min_v": 3.228859235807315,
+      "rail_max_v": 3.2578932124355973,
+      "reference_min_v": 0.9898387490534379
+    },
+    {
+      "samples": 544,
+      "lo_phase_rad": 1.567578904886827,
+      "pad_phase_rad": 1.5790168031991756,
+      "rail_min_v": 3.2339963732474173,
+      "rail_max_v": 3.257970342474939,
+      "reference_min_v": 0.9890207580875443
+    }
+  ],
+  "input_sha256": {
+    "projects/programmable_transceiver_platform/evidence/connected-limited-rail20-pad-quality-mode1-traces.npz": "0e7dae9c581946df6dfbbb5951039d05c7bfc28781fb5b9b577508179716ec69",
+    "projects/programmable_transceiver_platform/evidence/connected-limited-rail20-pad-quality-mode1-phase-diagnostic-traces.npz": "0e7dae9c581946df6dfbbb5951039d05c7bfc28781fb5b9b577508179716ec69",
+    "projects/programmable_transceiver_platform/evidence/connected-limited-rail20-pad-quality-mode1-phase-diagnostic-phase.npz": "70e847c660a77611fa56525ab7663b9e72165e04d2dbbff2197232a6f26a61de"
+  },
+  "limitations": [
+    "Derotation uses internal LO state unavailable to an external receiver; it is not a passing PHY result.",
+    "Both scores fit gain on the first quarter only; no held-out fitting or dropped samples.",
+    "Network memory prevents instantaneous derotation from uniquely isolating causal PLL error.",
+    "Window phase means use signal-energy weights; phase is circular, not an unwrapped timing measurement."
+  ]
+}

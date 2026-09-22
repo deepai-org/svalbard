@@ -1,0 +1,36 @@
+"""Independent ADC observer with explicit bounded offset and quantization."""
+import json
+from verification import assess
+from sensitivity_check import run
+
+lsb=.5/4095
+rows=[]
+for tau in (20e-9,100e-9,300e-9,1e-6):
+ for mismatch in (0.,.00025,.002):
+  for offset in (-.2,-.03,0.,.07,.2):
+   plant_result=run(offset,tau,mismatch,12e-6)
+   truth=plant_result['residual_v']
+   for observer_bits in (8,12,14):
+    step=.5/(2**observer_bits-1)
+    offset_bound=20e-6
+    for observer_offset in (-offset_bound,0.,offset_bound):
+     reading=round((truth+observer_offset)/step)*step
+     result=assess(done=True,range_limited=plant_result['range_limited'],
+       observation_v=reading,error_bound_v=step/2+offset_bound,
+       tolerance_v=lsb,quiet=True,epoch=3,observation_epoch=3)
+     assert not result['valid'] or abs(truth)<=lsb
+     assert result['accuracy']!='failed' or abs(truth)>lsb
+     rows.append(dict(plant=plant_result,observer_bits=observer_bits,
+       observer_offset_v=observer_offset,reading_v=reading,result=result))
+base=dict(done=True,range_limited=False,observation_v=0.,error_bound_v=20e-6,
+          tolerance_v=lsb,quiet=True,epoch=3,observation_epoch=3)
+controls=[]
+for patch in ({'done':False},{'quiet':False},{'observation_epoch':2},
+              {'error_bound_v':None},{'observation_v':None},{'range_limited':True}):
+ result=assess(**(base|patch));assert not result['valid'];controls.append(dict(input=patch,result=result))
+summary={str(bits):{state:sum(r['observer_bits']==bits and r['result']['accuracy']==state for r in rows)
+         for state in ('verified','failed','unverified')} for bits in (8,12,14)}
+report=dict(status='passed',cases=rows,negative_controls=controls,summary=summary,
+ assumptions='Independent zero-input observation; known 20uV offset bound; ideal quantizer; no saturation. Bounds are design assumptions, not PDK qualification.')
+open('/tmp/svalbard-calibration-pass877/verification-report.json','w').write(json.dumps(report,indent=2)+'\n')
+print(json.dumps(summary,indent=2))

@@ -1,0 +1,66 @@
+{
+  "status": "two_resolution_comparison",
+  "sources_sha256": {
+    "adc-kickback-excursion.json": "8c2bf1501abf82d7733e36568c5609f3e4cb80c5e6055923ffb937908667af96",
+    "adc-kickback-fine-excursion.json": "c3b9f59d4dcf89170e898ac9334c169cda63c79d6e77ab8c2675ec43159eba95"
+  },
+  "results": [
+    {
+      "differential_v": -0.4,
+      "net_differential_charge_c": {
+        "coarse": 3.741846806469597e-15,
+        "fine": 3.742733492890494e-15,
+        "absolute_change_c": 8.866864208967614e-19
+      },
+      "maximum_absolute_cumulative_charge_c": {
+        "coarse": 6.562937926952553e-15,
+        "fine": 6.565759414873188e-15,
+        "absolute_change_c": 2.821487920635271e-18
+      }
+    },
+    {
+      "differential_v": -0.001,
+      "net_differential_charge_c": {
+        "coarse": 9.220545408813317e-18,
+        "fine": 9.157892098089515e-18,
+        "absolute_change_c": 6.265331072380132e-20
+      },
+      "maximum_absolute_cumulative_charge_c": {
+        "coarse": 1.7863441648182987e-15,
+        "fine": 1.7863225835277384e-15,
+        "absolute_change_c": 2.1581290560328307e-20
+      }
+    },
+    {
+      "differential_v": 0.001,
+      "net_differential_charge_c": {
+        "coarse": -9.220545338429534e-18,
+        "fine": -9.157892076649353e-18,
+        "absolute_change_c": 6.265326178018062e-20
+      },
+      "maximum_absolute_cumulative_charge_c": {
+        "coarse": 1.7863441649027254e-15,
+        "fine": 1.7863225835813537e-15,
+        "absolute_change_c": 2.1581321371657543e-20
+      }
+    },
+    {
+      "differential_v": 0.4,
+      "net_differential_charge_c": {
+        "coarse": -3.7418468064725584e-15,
+        "fine": -3.74273349293988e-15,
+        "absolute_change_c": 8.866864673212256e-19
+      },
+      "maximum_absolute_cumulative_charge_c": {
+        "coarse": 6.562937926952916e-15,
+        "fine": 6.565759414873839e-15,
+        "absolute_change_c": 2.8214879209224162e-18
+      }
+    }
+  ],
+  "limitations": [
+    "Only two timestep settings; not an asymptotic convergence proof.",
+    "Tiny signed net charges require absolute comparisons, not misleading relative percentages.",
+    "Clamped-input diagnostic remains distinct from floating ADC behavior."
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "chunks": 1,
+      "declared_error_bound_v": null,
+      "trace": [
+        {
+          "time": 3.675e-05,
+          "target": 0,
+          "word": 0,
+          "observed_v": 0.0,
+          "result": {
+            "done": true,
+            "range_limited": false,
+            "accuracy": "unverified",
+            "valid": false,
+            "reason": "missing independent observation or error bound"
+          }
+        }
+      ],
+      "reference_charge_c": 2.50018315018315e-13,
+      "accounting": {
+        "sampled": 1,
+        "completed": 1,
+        "cancelled": 0,
+        "pending": 0
+      }
+    },
+    {
+      "chunks": 1,
+      "declared_error_bound_v": 0.0003,
+      "trace": [
+        {
+          "time": 3.675e-05,
+          "target": 0,
+          "word": 0,
+          "observed_v": 0.0,
+          "result": {
+            "done": true,
+            "range_limited": false,
+            "accuracy": "verified",
+            "valid": true,
+            "residual_interval_v": [
+              -0.0003,
+              0.0003
+            ],
+            "reason": "entire bounded residual interval meets tolerance"
+          }
+        }
+      ],
+      "reference_charge_c": 2.50018315018315e-13,
+      "accounting": {
+        "sampled": 1,
+        "completed": 1,
+        "cancelled": 0,
+        "pending": 0
+      }
+    },
+    {
+      "chunks": 61,
+      "declared_error_bound_v": null,
+      "trace": [
+        {
+          "time": 3.675e-05,
+          "target": 0,
+          "word": 0,
+          "observed_v": 0.0,
+          "result": {
+            "done": true,
+            "range_limited": false,
+            "accuracy": "unverified",
+            "valid": false,
+            "reason": "missing independent observation or error bound"
+          }
+        }
+      ],
+      "reference_charge_c": 2.50018315018315e-13,
+      "accounting": {
+        "sampled": 1,
+        "completed": 1,
+        "cancelled": 0,
+        "pending": 0
+      }
+    },
+    {
+      "chunks": 61,
+      "declared_error_bound_v": 0.0003,
+      "trace": [
+        {
+          "time": 3.675e-05,
+          "target": 0,
+          "word": 0,
+          "observed_v": 0.0,
+          "result": {
+            "done": true,
+            "range_limited": false,
+            "accuracy": "verified",
+            "valid": true,
+            "residual_interval_v": [
+              -0.0003,
+              0.0003
+            ],
+            "reason": "entire bounded residual interval meets tolerance"
+          }
+        }
+      ],
+      "reference_charge_c": 2.50018315018315e-13,
+      "accounting": {
+        "sampled": 1,
+        "completed": 1,
+        "cancelled": 0,
+        "pending": 0
+      }
+    }
+  ],
+  "reference_loss_accounting": {
+    "sampled": 1,
+    "completed": 0,
+    "cancelled": 1,
+    "pending": 0
+  },
+  "limitations": [
+    "Separate maintenance conversion scheduler shares actual converter transfer/reference but not normal host-return pipeline.",
+    "12-bit maintenance mode and independent zero-input route are architecture candidates.",
+    "Total observer uncertainty must be supplied explicitly; 300uV is a test assumption, not an established physical bound.",
+    "Calibration target is a static offset fixture; full RF target insertion remains."
+  ]
+}

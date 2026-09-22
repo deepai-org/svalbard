@@ -1,0 +1,221 @@
+{
+  "status": "complete_registered_diagnostic",
+  "cases": [
+    {
+      "name": "c32_skew-0.2",
+      "returncode": 0,
+      "completed": true,
+      "captures": [
+        {
+          "window_ns": [
+            20,
+            25
+          ],
+          "code": 127,
+          "max_register_rail_error_v": 1.9638527579690646e-05,
+          "output_error_mv": 0.1642205219960502
+        },
+        {
+          "window_ns": [
+            45,
+            50
+          ],
+          "code": 128,
+          "max_register_rail_error_v": 1.963842162266971e-05,
+          "output_error_mv": 0.08688670987400116
+        },
+        {
+          "window_ns": [
+            70,
+            75
+          ],
+          "code": 127,
+          "max_register_rail_error_v": 1.9638472788852113e-05,
+          "output_error_mv": 0.046314032530192506
+        }
+      ],
+      "events": [
+        {
+          "command_ns": 30,
+          "buffered_clock_edge_ns": 31.197802651369006,
+          "peak_error_mv": 16.824322438911963,
+          "absolute_error_area_mv_ns": 8.043189752085404,
+          "pre_capture_output_deviation_mv": 0.1281137313189351,
+          "pre_capture_registers_hold": true
+        },
+        {
+          "command_ns": 55,
+          "buffered_clock_edge_ns": 56.198063156925976,
+          "peak_error_mv": 36.47553471464193,
+          "absolute_error_area_mv_ns": 18.36545956244036,
+          "pre_capture_output_deviation_mv": 0.06800364253511937,
+          "pre_capture_registers_hold": true
+        }
+      ],
+      "clock_rising_edges_ns": [
+        6.198165662461125,
+        31.197802651369006,
+        56.198063156925976
+      ],
+      "total_logic_peak_current_ma": 69.54570311956252,
+      "external_clock_peak_source_current_ma": 1.266376610324057
+    },
+    {
+      "name": "c32_skew0",
+      "returncode": 0,
+      "completed": true,
+      "captures": [
+        {
+          "window_ns": [
+            20,
+            25
+          ],
+          "code": 127,
+          "max_register_rail_error_v": 1.9638527579690646e-05,
+          "output_error_mv": 0.1642205219960502
+        },
+        {
+          "window_ns": [
+            45,
+            50
+          ],
+          "code": 128,
+          "max_register_rail_error_v": 1.9638421625778335e-05,
+          "output_error_mv": 0.08688671002898829
+        },
+        {
+          "window_ns": [
+            70,
+            75
+          ],
+          "code": 127,
+          "max_register_rail_error_v": 1.9638472848804156e-05,
+          "output_error_mv": 0.04631404259503036
+        }
+      ],
+      "events": [
+        {
+          "command_ns": 30,
+          "buffered_clock_edge_ns": 31.19785172062486,
+          "peak_error_mv": 16.82623340976397,
+          "absolute_error_area_mv_ns": 8.04704630614093,
+          "pre_capture_output_deviation_mv": 0.1281137313189351,
+          "pre_capture_registers_hold": true
+        },
+        {
+          "command_ns": 55,
+          "buffered_clock_edge_ns": 56.19804758330863,
+          "peak_error_mv": 36.4909031125209,
+          "absolute_error_area_mv_ns": 18.36469119867312,
+          "pre_capture_output_deviation_mv": 0.06800364265102665,
+          "pre_capture_registers_hold": true
+        }
+      ],
+      "clock_rising_edges_ns": [
+        6.198165662461125,
+        31.19785172062486,
+        56.19804758330863
+      ],
+      "total_logic_peak_current_ma": 69.54570311956252,
+      "external_clock_peak_source_current_ma": 1.266376610324057
+    }
+  ],
+  "manifest": {
+    "source_sha256_before": {
+      "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+      "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+      "/screen/dac/segmented8.spice": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+      "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/screen/dac/segmented8_registered.spice": "18cfb19ed8b12ee0a84f72f7210f3d7cd35549bcaee386ed1c1781f3dd108e82",
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/dac/segmented8_isolated.spice": "ff6b69c2c90fa8f2e14c011ec0815aa663478a33652d3d743f5ba274b3fce1c4"
+    },
+    "planned_cases": [
+      "c32_skew-0.2",
+      "c32_skew0"
+    ],
+    "extra_vectors": [
+      "v(XD.ISL0)",
+      "v(XD.ISL1)",
+      "v(XD.ISL2)",
+      "v(XD.ISL3)",
+      "v(XD.ISH1)",
+      "v(XD.ISH2)",
+      "v(XD.ISH3)",
+      "v(XD.ISH4)",
+      "v(XD.ISH5)",
+      "v(XD.ISH6)",
+      "v(XD.ISH7)",
+      "v(XD.ISH8)",
+      "v(XD.ISH9)",
+      "v(XD.ISH10)",
+      "v(XD.ISH11)",
+      "v(XD.ISH12)",
+      "v(XD.ISH13)",
+      "v(XD.ISH14)",
+      "v(XD.ISH15)"
+    ],
+    "baseline_manifest": {
+      "source_sha256_before": {
+        "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+        "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+        "/screen/dac/segmented8.spice": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+        "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+        "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+        "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+        "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+        "/screen/dac/segmented8_registered.spice": "18cfb19ed8b12ee0a84f72f7210f3d7cd35549bcaee386ed1c1781f3dd108e82",
+        "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983"
+      },
+      "planned_cases": [
+        "c32_skew-0.2",
+        "c32_skew0"
+      ],
+      "extra_vectors": [
+        "v(XD.CK)",
+        "i(VCLK)",
+        "v(XD.RL0)",
+        "v(XD.RL1)",
+        "v(XD.RL2)",
+        "v(XD.RL3)",
+        "v(XD.RH1)",
+        "v(XD.RH2)",
+        "v(XD.RH3)",
+        "v(XD.RH4)",
+        "v(XD.RH5)",
+        "v(XD.RH6)",
+        "v(XD.RH7)",
+        "v(XD.RH8)",
+        "v(XD.RH9)",
+        "v(XD.RH10)",
+        "v(XD.RH11)",
+        "v(XD.RH12)",
+        "v(XD.RH13)",
+        "v(XD.RH14)",
+        "v(XD.RH15)"
+      ],
+      "clock_fixture": "PULSE first6ns,period25ns,width5ns,100ps edges; reset release2ns",
+      "scope": "Fixed capture opportunity ~1ns after nominal command onset; not setup/hold qualification"
+    }
+  },
+  "limitations": [
+    "Clock-based ideal transition includes real clock-to-output delay; no individual cell realignment.",
+    "Fixed nominal capture interval, two cases; not setup/hold, clock jitter, noise/mismatch or full load qualification.",
+    "Supply is ideal; added clock and logic currents do not yet have a shared physical supply network."
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "target_hz": 2412000000,
+      "bandwidth_hz": 350000.0,
+      "qualified": true,
+      "quality": {
+        "calibration_samples": 64,
+        "validation_samples": 192,
+        "gain_real": -0.8302630771703599,
+        "gain_imag": -0.5823287200847768,
+        "gain_magnitude": 1.014122041742496,
+        "raw_relative_rms": 1.9150419854874463,
+        "corrected_relative_rms": 0.07236871148251155,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "locked": true,
+      "rail_events": 4000,
+      "reference_minimum_v": 0.9763710109716662,
+      "divider_counts": 2512,
+      "rf_noise_rms_hz": 20000,
+      "wire_noise_rms_hz": 10000,
+      "noise_seed": 830
+    },
+    {
+      "mode": 0,
+      "target_hz": 2437000000,
+      "bandwidth_hz": 350000.0,
+      "qualified": true,
+      "quality": {
+        "calibration_samples": 64,
+        "validation_samples": 192,
+        "gain_real": -0.32586239529482297,
+        "gain_imag": -0.9593638212131833,
+        "gain_magnitude": 1.0131955596626152,
+        "raw_relative_rms": 1.6271898628751813,
+        "corrected_relative_rms": 0.07637467504264629,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "locked": true,
+      "rail_events": 4000,
+      "reference_minimum_v": 0.9763669897497252,
+      "divider_counts": 2510,
+      "rf_noise_rms_hz": 20000,
+      "wire_noise_rms_hz": 10000,
+      "noise_seed": 830
+    },
+    {
+      "mode": 1,
+      "target_hz": 2412000000,
+      "bandwidth_hz": 350000.0,
+      "qualified": true,
+      "quality": {
+        "calibration_samples": 64,
+        "validation_samples": 192,
+        "gain_real": -0.8197864132838426,
+        "gain_imag": -0.5840696701593885,
+        "gain_magnitude": 1.0065719760677245,
+        "raw_relative_rms": 1.909630676870256,
+        "corrected_relative_rms": 0.06400573644186003,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "locked": true,
+      "rail_events": 5000,
+      "reference_minimum_v": 0.9865778754100765,
+      "divider_counts": 2512,
+      "rf_noise_rms_hz": 20000,
+      "wire_noise_rms_hz": 10000,
+      "noise_seed": 830
+    },
+    {
+      "mode": 1,
+      "target_hz": 2437000000,
+      "bandwidth_hz": 350000.0,
+      "qualified": true,
+      "quality": {
+        "calibration_samples": 64,
+        "validation_samples": 192,
+        "gain_real": -0.3209195396698722,
+        "gain_imag": -0.9509776546044202,
+        "gain_magnitude": 1.0036672010675882,
+        "raw_relative_rms": 1.623571692540653,
+        "corrected_relative_rms": 0.07378690780751385,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "locked": true,
+      "rail_events": 5000,
+      "reference_minimum_v": 0.9865759230101624,
+      "divider_counts": 2510,
+      "rf_noise_rms_hz": 20000,
+      "wire_noise_rms_hz": 10000,
+      "noise_seed": 830
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "One finite spectral realization; source amplitudes are assumptions, not measured PDK noise.",
+    "Independent tone with loaded reference and wired/host activity; no wideband blocker or full channel-grid coverage.",
+    "Acquisition and run-time failures are retained rather than hidden by successful later lock observations."
+  ]
+}

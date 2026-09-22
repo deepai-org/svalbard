@@ -1,0 +1,44 @@
+{
+  "status": "passed",
+  "phase_substeps": 118606,
+  "phase_events": 3557,
+  "shared_adc_samples": 9,
+  "reference_charge_c": 2.4932603889934973e-12,
+  "probe_powers": [
+    0.0,
+    0.00360107421875,
+    0.00335693359375,
+    0.0032958984375,
+    0.0032958984375,
+    0.00665283203125,
+    0.007080078125,
+    0.00689697265625,
+    0.00640869140625
+  ],
+  "correction": {
+    "gain_policy": "relative",
+    "matrix": [
+      [
+        0.986328125,
+        0.033447265625
+      ],
+      [
+        0.0,
+        1.013916015625
+      ]
+    ],
+    "offset": [
+      -0.00244140625,
+      -0.000244140625
+    ],
+    "fractional_bits": 12,
+    "fit_rms": 8.971324703859458e-06,
+    "condition": 1.090726375417538
+  },
+  "limitations": [
+    "Shared ADC and autonomous LO composition; host traffic and retuned quality not yet exercised.",
+    "ADC transfer/reference path reused; analog mux buffer loading/settling and readout curvature remain unmodeled.",
+    "Detector front end remains resource10; no independent monitor quantizer is used.",
+    "Full-chain quality, reference-loss conversion cancellation and shared-resource recovery remain to verify."
+  ]
+}

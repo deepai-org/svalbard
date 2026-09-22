@@ -1,0 +1,30 @@
+{
+  "status": "interface_gap_not_failure_proof",
+  "receiver_window_ns": [
+    320,
+    400
+  ],
+  "receiver_common_mode_v": {
+    "i": 1.069655907628128,
+    "q": 1.0710510689989021
+  },
+  "adc_test_source_common_mode_v": 1.65,
+  "common_mode_difference_v": {
+    "i": 0.5803440923718719,
+    "q": 0.5789489310010978
+  },
+  "inputs_sha256": {
+    "scratch/transceiver-adc-shared-iq-same/frames.spice": "47912f5cdd9383406205c341d0adc33ff830fd5708637a150014ece54eb4aa29",
+    "projects/programmable_transceiver_platform/evidence/bb-connected-bypass.json": "c12b680e619c540e1820b7479fd3cd9c36c8da41b3a834e4e7ea335848912c15"
+  },
+  "obligations": [
+    "Test actual sample-driver bias/headroom at receiver common mode before selecting direct connection or level shifting.",
+    "Connect finite filter source to actual driver/switch/CDAC; measure acquisition settling and kickback in both directions and simultaneous I/Q.",
+    "Allocate signal swing, sample rate and anti-alias requirements; existing ideal test vectors do not establish end-to-end bandwidth.",
+    "Retain shared-reference regulation failure as independent accuracy obligation."
+  ],
+  "limitations": [
+    "Common-mode difference is evidence of untested interface, not proof ADC cannot operate at1.07V.",
+    "Receiver zero-tone means do not bound modulation or process excursions."
+  ]
+}

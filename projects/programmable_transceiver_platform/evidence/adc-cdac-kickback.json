@@ -1,0 +1,74 @@
+{
+  "status": "fixed_code_cdac_clock_diagnostic",
+  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "source_sha256": {
+    "projects/programmable_transceiver_platform/analog/adc/top_load.spice": "8fa005a6d11fd5d6d954797a91ca2ec52a2aa0f5aa6c49911631f3824c8d28ea",
+    "projects/programmable_transceiver_platform/analog/adc/comparator.spice": "a41ecccf87f625bbddca6139730c5e8500529c5acb2f05a5052f9049e8ee74a0",
+    "ip/blocks/analog/wifi_80211b/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+    "projects/programmable_transceiver_platform/analog/adc/cdac8_scaled.spice": "4006f42115b3a5a30b9ad74626ef0c084655bf0cdc2f1d1cc8bd32f65e351fd2",
+    "projects/programmable_transceiver_platform/analog/adc/cdac8_mim.spice": "532e86fc11da6f695d092dd06c0508cbb363f49c4c2b070c78683c7d5bf85e14"
+  },
+  "cases": [
+    {
+      "name": "d-0.001_clk0",
+      "differential_v": -0.001,
+      "clocked": false,
+      "artifacts_sha256": {
+        ".spice": "4332f606b9dca5c4dd84e8f5e0aeb7ed3be5b623f45147b2191da87570779486",
+        ".log": "08010d3fcfbbb7f632f5e3b42e46e5fe1c994e1ef23fee7ce64b69e3240027ae",
+        ".dat": "73c79a473dbedba0ef747f89ac2aff6950cd73a28b0c5d31dd6673ea8c30f2e6"
+      }
+    },
+    {
+      "name": "d-0.001_clk1",
+      "differential_v": -0.001,
+      "clocked": true,
+      "artifacts_sha256": {
+        ".spice": "aa4d43774d56a91b4ebf46efbcb51bdc8f0848e7456d9fd994167412ff00c9cb",
+        ".log": "bc80096fab3102b4a5a037ac83ce5a618912c36d454ca423402bdbcb6aa54dd3",
+        ".dat": "40357c5bb0abe51f5fcc6258e48465a35ed7a5abdba214e7e993bfc94ad7c465"
+      }
+    },
+    {
+      "name": "d0.001_clk0",
+      "differential_v": 0.001,
+      "clocked": false,
+      "artifacts_sha256": {
+        ".spice": "249c7602aae82a17eb7bf36941f34137d26d2159affff15a2a0c0a4cd22359e8",
+        ".log": "bff7b3c50e93b09faa89d4fae576cd421a1d5837e23d4ff742df9003f68b41d6",
+        ".dat": "8158d0417fe321e2a35a923ad55a27d47821850ee9f0e642f5552c0ef3afb563"
+      }
+    },
+    {
+      "name": "d0.001_clk1",
+      "differential_v": 0.001,
+      "clocked": true,
+      "artifacts_sha256": {
+        ".spice": "e35fd724eb2d8151c5d6b6f01c044ec0dff9aaeccc08331f5f5d588ca8ea10a1",
+        ".log": "9d865668c5dde54b563c164c756f41f2a31ee6b2982789a8ce1883d35e635ce2",
+        ".dat": "78f3d22373a66345a1137bf4e60f20440f2eaac89b76d9b217aaf0847bfca674"
+      }
+    }
+  ],
+  "results": [
+    {
+      "input_differential_v": -0.001,
+      "held_before_clock_v": -0.0010059099999999432,
+      "peak_clock_induced_differential_v": 0.00022170999999993057,
+      "peak_clock_induced_common_mode_v": 0.0026733700000001193,
+      "output_difference_v": -3.2999999936023916
+    },
+    {
+      "input_differential_v": 0.001,
+      "held_before_clock_v": 0.0010059199999998825,
+      "peak_clock_induced_differential_v": 0.00022169999999999135,
+      "peak_clock_induced_common_mode_v": 0.0026733799999998364,
+      "output_difference_v": 3.2999999936023903
+    }
+  ],
+  "limitations": [
+    "Actual CDAC switches at fixed code127 and ideal rails; no SAR transitions or physical reference regulation.",
+    "Paired reset subtraction separates clock effect; sampler acquisition/injection still affects held value.",
+    "Nominal two inputs, one clock slew, no mismatch or noise; not ADC qualification."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "status_snapshot": 7,
+      "armed_writes_rejected": true,
+      "stale_write_rejected": true,
+      "rf_owner_restored": true
+    },
+    {
+      "mode": 1,
+      "status_snapshot": 7,
+      "armed_writes_rejected": true,
+      "stale_write_rejected": true,
+      "rf_owner_restored": true
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Named model commands are not a frozen hardware register ABI.",
+    "Diagnostic inputs remain external held fixtures; physical monitor mux and triggers remain open."
+  ]
+}

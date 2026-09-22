@@ -1,0 +1,13 @@
+* Preliminary two-stage unity feedback amplifier, external bias voltages.
+* Negative feedback: OUT drives first-stage positive gain input; second stage inverts.
+.subckt pt_sample_driver_longmirror IN OUT BN BP VDD VSS params: CC=1p
+XIP A OUT T VSS nfet_03v3 w=8u l=.5u m=4
+XIN X IN T VSS nfet_03v3 w=8u l=.5u m=4
+XT T BN VSS VSS nfet_03v3 w=8u l=.5u m=16
+XMP A A VDD VDD pfet_03v3 w=8u l=2u m=16
+XMN X A VDD VDD pfet_03v3 w=8u l=2u m=16
+XOUT OUT X VSS VSS nfet_03v3 w=8u l=.5u m=32
+XLOAD OUT BP VDD VDD pfet_03v3 w=8u l=.5u m=64
+RC X Z 100
+CC Z OUT {CC}
+.ends

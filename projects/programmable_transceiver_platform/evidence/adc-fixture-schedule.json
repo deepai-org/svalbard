@@ -1,0 +1,23 @@
+{
+  "status": "fixture_schedule_audit_not_rate_qualification",
+  "source_sha256": "22133a1dc55036b48a0f347c3257a15fa782d89caf063c220886a76dd285ff51",
+  "hold_edge_start_ns": [
+    70.0,
+    120.0,
+    170.0
+  ],
+  "track_edge_start_ns": [
+    110.0,
+    160.0
+  ],
+  "steady_sample_interval_ns": 50,
+  "nominal_fixture_sample_rate_per_channel_hz": 20000000.0,
+  "steady_tracking_interval_ns": 10,
+  "hold_conversion_interval_ns": 40,
+  "first_track_interval_ns": 70,
+  "interpretation": "Advancing first input transition increases time for that step inside the long first track interval; it does not demonstrate20ns steady acquisition at20MS/s.",
+  "limitations": [
+    "Ideal clocks and only three frames, not continuous converter qualification.",
+    "No reduced sampling rate adopted; alternative architecture/timing must preserve required signal bandwidth."
+  ]
+}

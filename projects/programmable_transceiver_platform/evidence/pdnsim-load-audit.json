@@ -1,0 +1,55 @@
+{
+  "scope": "Pinned-tool load-model bug diagnosis, not chip current characterization",
+  "tool_commit": "dcf36133a369abc8f3c5e5738cd4d82e4903c0e0",
+  "source_url": "https://github.com/The-OpenROAD-Project/OpenROAD/blob/dcf36133a369abc8f3c5e5738cd4d82e4903c0e0/src/psm/src/ir_solver.cpp#L831",
+  "source_file_sha256": "b69bd5ea8e408e5a45a157b3a4e24b57b38fa72d3609e18fc802bfd6531ea893",
+  "results": [
+    {
+      "net": "VDD_CORE",
+      "source_count": 26438,
+      "zero_user_load_current_a": 0.034105032894301,
+      "total_exported_current_a": {
+        "0": 0.034105032894301,
+        "24": 0.0581065407,
+        "48": 0.082110272
+      },
+      "maximum_node_addition_error_a": {
+        "24": 7.784249943265302e-09,
+        "48": 5.568499886529006e-09
+      }
+    },
+    {
+      "net": "VSS_CORE",
+      "source_count": 26438,
+      "zero_user_load_current_a": 0.034105032894301,
+      "total_exported_current_a": {
+        "0": 0.034105032894301,
+        "24": 0.0581065407,
+        "48": 0.082110272
+      },
+      "maximum_node_addition_error_a": {
+        "24": 7.784249943265302e-09,
+        "48": 5.568499886529006e-09
+      }
+    }
+  ],
+  "artifact_sha256": {
+    "scratch/transceiver-pdn-ir0/VDD_CORE.spice": "49e7af73d44b305796a57854c3301adebb0a0df40c9793bbf0b42d8241251175",
+    "scratch/transceiver-pdn-ir0/ir.log": "a21ac9f814e099c74538da48cc4be74e25952e60fce2b67e203589897a2fb588",
+    "scratch/transceiver-pdn-ir24/VDD_CORE.spice": "70d269b7ce3ac2d30eb111aa847f8a8dd7951d66dedf079c6652cda06dbe9e11",
+    "scratch/transceiver-pdn-ir24/ir.log": "4d903ce25a671c1c269c8fd07e37f571a23724d975e07e5a631b74bef77f3d47",
+    "scratch/transceiver-pdn-ir48/VDD_CORE.spice": "931595d3b0699926552f9f72f18a03327ed1ecb150c2707325f0f234d6ac7247",
+    "scratch/transceiver-pdn-ir48/ir.log": "102150932e55a384e3d9f3341be5cd2b240fb6a1f437a8c6f83c5decff6e523c",
+    "scratch/transceiver-pdn-ir0/VSS_CORE.spice": "627baa3807dc046f07249139d36825196b80496ebada705c2ab92d613663d1a3",
+    "scratch/transceiver-pdn-ir24/VSS_CORE.spice": "c9f989671988cd99b8dd31c40737bb52d0cd26da629991678d24e12edc518db7",
+    "scratch/transceiver-pdn-ir48/VSS_CORE.spice": "082813ad8d76eaf6184b2008f92c1af2d8589a3dcd04443bb914e5df6c62873c"
+  },
+  "checker_sha256": "94a608926368d1f3308dca5488107179cc4f49694014251dfed56ef1251a796c",
+  "finding": "buildNodeCurrentMap first adds automatic STA currents, then adds user currents with +=; the separate instance_powers map is overwritten for the printed total. User power therefore does not replace current in this revision.",
+  "action": "Do not use direct PDNSim voltages as specified-load results. Continue independently solving exported resistor topology with explicit audited currents. No local tool binary patch applied.",
+  "limitations": [
+    "Automatic-current residue is an unqualified tool estimate, not measured or bounded silicon current.",
+    "Diagnosis is specific to this pinned revision; other revisions require separate verification.",
+    "Independent resistor model still lacks package, process, dynamic and full physical signoff qualification."
+  ]
+}

@@ -1,0 +1,96 @@
+"""Initial-acquisition coarse bank, observed through a prescaled edge counter."""
+import math
+from fractional_rf_chip import ShapedRFClock
+
+class IdealBankClock(ShapedRFClock):
+    def __init__(self,**kwargs):
+        self.base_free=kwargs['free_hz'];self.bank_code=8
+        self.bank_hz=tuple((i-8)*25e6 for i in range(16))
+        self.bank_settled_at=0.;self.bank_writes=[]
+        super().__init__(**kwargs)
+    def write_bank(self,time,code,guard_s):
+        if self.present:raise ValueError('Coarse bank requires charge-pump hold')
+        if type(code) is not int or not 0<=code<16 or not math.isfinite(guard_s) or guard_s<0:
+            raise ValueError('Invalid coarse setting')
+        self.advance(time);phase=self.phase;charge=self.integral
+        self.bank_code=code;self.gains.free_hz=self.base_free+self.bank_hz[code]
+        self.bank_settled_at=time+guard_s;self.good=0;self.locked=False;self.first_lock=None
+        assert self.phase==phase and self.integral==charge
+        self.bank_writes.append(dict(time=time,code=code,phase=phase,charge=charge))
+    def counter(self,time,prescale):
+        self.advance(time)
+        if time<self.bank_settled_at:raise ValueError('Coarse bank settling guard incomplete')
+        return math.floor(self.output_phase_cycles/prescale)
+
+"""Coarse bank with integrated first-order settling and bounded edge measurement."""
+import copy,math
+
+class CoarseVCOClock(IdealBankClock):
+    def __init__(self,bank_tau_s=200e-9,**kwargs):
+        if not math.isfinite(bank_tau_s) or bank_tau_s<=0:raise ValueError('Invalid bank settling constant')
+        self.bank_tau=bank_tau_s;self.bank_transient=0.;self.bank_epoch=0.
+        self.coarse_initial_ready=True
+        super().__init__(**kwargs)
+        if self.base_free+min(self.bank_hz)-self.gains.kvco*self.filter.limit<=0:
+            raise ValueError('Coarse bank violates positive frequency envelope')
+    def __copy__(self):
+        p=super().__copy__();p.bank_writes=list(self.bank_writes);return p
+    def transient(self,time):return self.bank_transient*math.exp(-(time-self.bank_epoch)/self.bank_tau)
+    @property
+    def frequency_hz(self):return super().frequency_hz+self.transient(self.time)
+    def predict(self,time):
+        filt,phase=super().predict(time)
+        phase+=self.transient(self.time)*self.bank_tau*(-math.expm1(-(time-self.time)/self.bank_tau))
+        return filt,phase
+    def advance(self,time):
+        if self.present and time>self.time:self.coarse_initial_ready=False
+        return super().advance(time)
+    def write_bank(self,time,code,guard_s):
+        # Validate before advancing or changing the target frequency.
+        if self.present or type(code) is not int or not 0<=code<16 or not math.isfinite(guard_s) or guard_s<0:
+            raise ValueError('Invalid held-bank write')
+        self.advance(time);actual=self.gains.free_hz+self.transient(time)
+        super().write_bank(time,code,guard_s)
+        self.bank_transient=actual-self.gains.free_hz;self.bank_epoch=time
+    def edge_time(self,target):
+        if not math.isfinite(target) or target<self.output_phase_cycles:raise ValueError('Invalid future edge')
+        if target==self.output_phase_cycles:return self.time
+        minimum=self.base_free+min(self.bank_hz)-self.gains.kvco*self.filter.limit+min(0,self.rail_frequency(self.time))-self.frequency_noise.bound_hz
+        if minimum<=0:raise ValueError('No positive coarse frequency bound')
+        lo=self.time;hi=self.time+(target-self.output_phase_cycles)/minimum
+        for _ in range(64):
+            mid=(lo+hi)/2;p=copy.copy(self);p.advance(mid)
+            error=p.output_phase_cycles-target
+            if abs(error)<1e-8:return mid
+            if error<0:lo=mid
+            else:hi=mid
+        raise ValueError('Coarse edge forecast did not converge')
+
+def select_bank(clock,target,guard_s=2e-6,window_s=2e-6,prescale=16,
+                allowed_fine_correction_hz=150e6,bank_tau_bound_s=200e-9,
+                bank_span_bound_hz=375e6,noise_bound_hz=0.):
+    values=(target,guard_s,window_s,allowed_fine_correction_hz,bank_tau_bound_s,bank_span_bound_hz,noise_bound_hz)
+    if not all(math.isfinite(x) for x in values) or min(target,window_s,allowed_fine_correction_hz,bank_tau_bound_s,bank_span_bound_hz)<=0 or guard_s<0 or noise_bound_hz<0 or type(prescale) is not int or prescale<=0:
+        raise ValueError('Invalid coarse measurement contract')
+    if not clock.coarse_initial_ready:raise ValueError('Coarse acquisition requires initial centered-filter state')
+    residual=bank_span_bound_hz*math.exp(-guard_s/bank_tau_bound_s)
+    settling_average=residual*bank_tau_bound_s/window_s*(-math.expm1(-window_s/bank_tau_bound_s))
+    bound=prescale/window_s+settling_average+noise_bound_hz
+    old=clock.bank_code;clock.set_reference(False,clock.time)
+    low=0;high=15;observations=[]
+    while low<=high:
+        code=(low+high)//2;clock.write_bank(clock.time,code,guard_s)
+        start=clock.time+guard_s;a=clock.counter(start,prescale)
+        b=clock.counter(start+window_s,prescale)
+        estimate=(b-a)*prescale/window_s
+        observations.append(dict(code=code,count=b-a,frequency_hz=estimate,error_bound_hz=bound))
+        if estimate<target:low=code+1
+        else:high=code-1
+    chosen=min(observations,key=lambda r:abs(r['frequency_hz']-target))
+    qualified=abs(chosen['frequency_hz']-target)+bound+residual<=allowed_fine_correction_hz
+    clock.write_bank(clock.time,chosen['code'] if qualified else old,guard_s)
+    clock.advance(clock.time+guard_s)
+    return dict(qualified=qualified,code=clock.bank_code,observations=observations,
+                coarse_complete_s=clock.time,allowed_fine_correction_hz=allowed_fine_correction_hz,
+                count_error_bound_hz=prescale/window_s,settling_average_bound_hz=settling_average,
+                final_settling_bound_hz=residual,noise_bound_hz=noise_bound_hz)

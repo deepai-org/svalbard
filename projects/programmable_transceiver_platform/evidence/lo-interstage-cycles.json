@@ -1,0 +1,137 @@
+{
+  "completed": true,
+  "source_evidence_sha256": "c34d9aebb6219456247ecda269f4261edd8a913ed08db14f4372ece400d8b895",
+  "waveform_sha256": "77c3490389d1c659aa22cb57a87894bbb7bfe9b27aec4b235e8e7f5d526d06f3",
+  "threshold_v": 1.65,
+  "window_ns": [
+    512,
+    1024
+  ],
+  "legs": [
+    {
+      "node": "v(oip)",
+      "complete_cycles": 1279,
+      "metrics": {
+        "period_ps": {
+          "min": 381.4350639898699,
+          "max": 424.0564274440023
+        },
+        "high_ps": {
+          "min": 175.76913030902782,
+          "max": 243.5239923857355
+        },
+        "low_ps": {
+          "min": 148.6645441156836,
+          "max": 223.67652635382245
+        },
+        "duty": {
+          "min": 0.44003281894650015,
+          "max": 0.6209360287736363
+        },
+        "peak_v": {
+          "min": 2.646161656532543,
+          "max": 2.984537684055909
+        },
+        "trough_v": {
+          "min": 0.2288192105202221,
+          "max": 0.746510161027208
+        }
+      }
+    },
+    {
+      "node": "v(oin)",
+      "complete_cycles": 1279,
+      "metrics": {
+        "period_ps": {
+          "min": 377.8398050307044,
+          "max": 419.12761553699926
+        },
+        "high_ps": {
+          "min": 173.745761589518,
+          "max": 252.26105080457464
+        },
+        "low_ps": {
+          "min": 149.7771557240921,
+          "max": 226.28426436243984
+        },
+        "duty": {
+          "min": 0.43598496675453846,
+          "max": 0.6073598491096578
+        },
+        "peak_v": {
+          "min": 2.633273247388575,
+          "max": 3.021298379031373
+        },
+        "trough_v": {
+          "min": 0.2215997202801007,
+          "max": 0.7089005807469847
+        }
+      }
+    },
+    {
+      "node": "v(oqp)",
+      "complete_cycles": 1279,
+      "metrics": {
+        "period_ps": {
+          "min": 395.10471487659504,
+          "max": 403.3137315786285
+        },
+        "high_ps": {
+          "min": 201.03702079303577,
+          "max": 209.37640774338294
+        },
+        "low_ps": {
+          "min": 188.4018372393143,
+          "max": 199.93908318615834
+        },
+        "duty": {
+          "min": 0.5013690810948355,
+          "max": 0.5231597656443553
+        },
+        "peak_v": {
+          "min": 2.872380358263938,
+          "max": 2.92913554845193
+        },
+        "trough_v": {
+          "min": 0.221615485187323,
+          "max": 0.2666481027746043
+        }
+      }
+    },
+    {
+      "node": "v(oqn)",
+      "complete_cycles": 1279,
+      "metrics": {
+        "period_ps": {
+          "min": 396.6896778812985,
+          "max": 405.36299569305174
+        },
+        "high_ps": {
+          "min": 199.88951416226976,
+          "max": 209.28614259082727
+        },
+        "low_ps": {
+          "min": 188.15021164962099,
+          "max": 198.87329926399616
+        },
+        "duty": {
+          "min": 0.5012742097107075,
+          "max": 0.5265903341701085
+        },
+        "peak_v": {
+          "min": 2.870136292597278,
+          "max": 2.928254708777403
+        },
+        "trough_v": {
+          "min": 0.2228406771757685,
+          "max": 0.265263092254154
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Only complete threshold-defined cycles inside the window; partial boundary cycles excluded.",
+    "Voltage extrema and widths are diagnostics, not established mixer-drive acceptance limits.",
+    "Replay omits oscillator back-loading, phase-noise and startup variation."
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "completed": true,
+  "audit_sha256": "e92d60ec8580c911df16a43dbf99d55362604b65b4ccde73f97631f4b0272cc1",
+  "cases": [
+    {
+      "name": "early",
+      "cycles": 11,
+      "mean_up_high_width_ps": 810.7108561284953,
+      "mean_dn_high_width_ps": 823.274310637583,
+      "mean_upb_low_width_ps": 824.5719634544399,
+      "mean_gate_command_width_difference_ps": 1.2976528168570833,
+      "charge_per_cycle_c": {
+        "both_commands": 2.919752998567389e-14,
+        "pmos_command_only": 5.940606185239137e-16,
+        "nmos_command_only": -7.761717311909061e-16,
+        "neither_command": -6.620641794793213e-15
+      },
+      "net_charge_per_cycle_c": 2.239477707821369e-14,
+      "pmos_vsg_range_v": [
+        -1.1000689912672748,
+        1.7781043682974627
+      ],
+      "nmos_vgs_range_v": [
+        -0.04140774319501177,
+        2.249549720434077
+      ]
+    },
+    {
+      "name": "late",
+      "cycles": 11,
+      "mean_up_high_width_ps": 811.5865186900908,
+      "mean_dn_high_width_ps": 822.0993430323524,
+      "mean_upb_low_width_ps": 825.436756141894,
+      "mean_gate_command_width_difference_ps": 3.3374131095415205,
+      "charge_per_cycle_c": {
+        "both_commands": 2.932777481831769e-14,
+        "pmos_command_only": 5.939733945238156e-16,
+        "nmos_command_only": -8.118849274489946e-16,
+        "neither_command": -6.6663668478481634e-15
+      },
+      "net_charge_per_cycle_c": 2.2443496437544344e-14,
+      "pmos_vsg_range_v": [
+        -1.100194074337927,
+        1.7780351443681854
+      ],
+      "nmos_vgs_range_v": [
+        -0.041436704120746445,
+        2.249427179098951
+      ]
+    }
+  ],
+  "limitations": [
+    "1.65V command bins label logic states, not physical channel conduction.",
+    "Total pump current includes switching/displacement effects; bins do not identify which device caused charge.",
+    "Ideal output clamp and ideal reference/bias sources; no autonomous PLL qualification.",
+    "Partial results lack terminal matrix-level after-run provenance until both cases finish."
+  ]
+}

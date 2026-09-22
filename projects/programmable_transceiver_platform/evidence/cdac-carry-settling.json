@@ -1,0 +1,84 @@
+{
+  "status": "finite_post_ramp_settling_diagnostic",
+  "source_sha256": "1858e8119d01c83b66e3624b23d53ad3003f5a8806292ca1f2fcdca5fae2a1e7",
+  "results": [
+    {
+      "initial_code": 127,
+      "settled_differential_step_v": 0.007772430000000163,
+      "envelopes": [
+        {
+          "delay_after_gate_ramp_ps": 0,
+          "max_differential_residual_v": 0.0022758700000000687,
+          "max_common_mode_motion_v": 0.034143470000000065
+        },
+        {
+          "delay_after_gate_ramp_ps": 50,
+          "max_differential_residual_v": 0.00023912499999989567,
+          "max_common_mode_motion_v": 0.014645180000000035
+        },
+        {
+          "delay_after_gate_ramp_ps": 100,
+          "max_differential_residual_v": 6.314499999993117e-05,
+          "max_common_mode_motion_v": 0.014390857500000012
+        },
+        {
+          "delay_after_gate_ramp_ps": 200,
+          "max_differential_residual_v": 1.6049999999045994e-06,
+          "max_common_mode_motion_v": 0.0065911874999999695
+        },
+        {
+          "delay_after_gate_ramp_ps": 500,
+          "max_differential_residual_v": 3.499999998712866e-07,
+          "max_common_mode_motion_v": 0.00011247500000011145
+        },
+        {
+          "delay_after_gate_ramp_ps": 1000,
+          "max_differential_residual_v": 1.0000000161269895e-08,
+          "max_common_mode_motion_v": 9.500000008877407e-08
+        }
+      ]
+    },
+    {
+      "initial_code": 128,
+      "settled_differential_step_v": -0.007772429999999941,
+      "envelopes": [
+        {
+          "delay_after_gate_ramp_ps": 0,
+          "max_differential_residual_v": 0.0022759100000000476,
+          "max_common_mode_motion_v": 0.034143460000000125
+        },
+        {
+          "delay_after_gate_ramp_ps": 50,
+          "max_differential_residual_v": 0.00023912000000003708,
+          "max_common_mode_motion_v": 0.014645175000000066
+        },
+        {
+          "delay_after_gate_ramp_ps": 100,
+          "max_differential_residual_v": 6.313499999999195e-05,
+          "max_common_mode_motion_v": 0.014390852500000042
+        },
+        {
+          "delay_after_gate_ramp_ps": 200,
+          "max_differential_residual_v": 1.5949999999653741e-06,
+          "max_common_mode_motion_v": 0.0065911825
+        },
+        {
+          "delay_after_gate_ramp_ps": 500,
+          "max_differential_residual_v": 3.499999998712866e-07,
+          "max_common_mode_motion_v": 0.00011246750000015705
+        },
+        {
+          "delay_after_gate_ramp_ps": 1000,
+          "max_differential_residual_v": 1.0000000161269895e-08,
+          "max_common_mode_motion_v": 8.500000014954878e-08
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Residual is relative to4.9ns endpoint, not an independently verified infinite-time value.",
+    "Envelopes extend only until4.9ns before reverse transition.",
+    "Delay starts after ideal100ps gate ramp; physical driver timing and comparator decision aperture are not represented.",
+    "Ideal reference rails and reset comparator; no full SAR accuracy qualification."
+  ]
+}

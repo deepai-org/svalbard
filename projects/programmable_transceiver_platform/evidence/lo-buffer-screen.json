@@ -1,0 +1,111 @@
+{
+  "status": "simulation_completed_not_clock_qualified",
+  "frequency_hz": 2400000000.0,
+  "supply_v": 3.3,
+  "temperature_c": 27,
+  "process": "typical",
+  "cases": [
+    {
+      "scale": 0.5,
+      "lo": {
+        "rise_10_90_ps_max": 73.17226821774595,
+        "rise_full_swing_edges": 48,
+        "fall_10_90_ps_max": 55.84831762454566,
+        "fall_full_swing_edges": 48,
+        "min_v": -0.07444028639371743,
+        "max_v": 3.391035778107981,
+        "rising_edges": 48,
+        "falling_edges": 48,
+        "mean_high_fraction": 0.5381900723844715
+      },
+      "lob": {
+        "rise_10_90_ps_max": 73.17226846741552,
+        "rise_full_swing_edges": 48,
+        "fall_10_90_ps_max": 55.84831739675335,
+        "fall_full_swing_edges": 48,
+        "min_v": -0.07444028637877825,
+        "max_v": 3.39103577838335,
+        "rising_edges": 48,
+        "falling_edges": 48,
+        "mean_high_fraction": 0.538190072384507
+      },
+      "mean_rising_delay_ps": 106.37434197206656,
+      "driver_pair_current_a": 0.001584984463285314,
+      "lna_mixer_current_a": 0.00593637132664334,
+      "deck_sha256": "fe2830d2a30fee8823aa0a79944e36cb08e21fbb548cfbcd05d9c1bd526e76fc"
+    },
+    {
+      "scale": 1,
+      "lo": {
+        "rise_10_90_ps_max": 57.66532269393215,
+        "rise_full_swing_edges": 48,
+        "fall_10_90_ps_max": 47.40006334774337,
+        "fall_full_swing_edges": 48,
+        "min_v": -0.07766490275462168,
+        "max_v": 3.407265695159738,
+        "rising_edges": 48,
+        "falling_edges": 48,
+        "mean_high_fraction": 0.5249976668906011
+      },
+      "lob": {
+        "rise_10_90_ps_max": 57.665322924569956,
+        "rise_full_swing_edges": 48,
+        "fall_10_90_ps_max": 47.40006315951677,
+        "fall_full_swing_edges": 48,
+        "min_v": -0.0776649027429405,
+        "max_v": 3.407265695322666,
+        "rising_edges": 48,
+        "falling_edges": 48,
+        "mean_high_fraction": 0.5249976668906372
+      },
+      "mean_rising_delay_ps": 100.44588719216522,
+      "driver_pair_current_a": 0.002792429594889681,
+      "lna_mixer_current_a": 0.005951445306724762,
+      "deck_sha256": "4407c9d6ca5205be5a7ab3831a8ff3a6254b2ed97e019c4b286d70f3c1eba645"
+    },
+    {
+      "scale": 2,
+      "lo": {
+        "rise_10_90_ps_max": 49.68829820529139,
+        "rise_full_swing_edges": 48,
+        "fall_10_90_ps_max": 43.48178429418326,
+        "fall_full_swing_edges": 48,
+        "min_v": -0.07885621106258486,
+        "max_v": 3.414042106593624,
+        "rising_edges": 48,
+        "falling_edges": 48,
+        "mean_high_fraction": 0.5172852655175283
+      },
+      "lob": {
+        "rise_10_90_ps_max": 49.68829836782907,
+        "rise_full_swing_edges": 48,
+        "fall_10_90_ps_max": 43.481784169914256,
+        "fall_full_swing_edges": 48,
+        "min_v": -0.07885621105425607,
+        "max_v": 3.414042106683741,
+        "rising_edges": 48,
+        "falling_edges": 48,
+        "mean_high_fraction": 0.517285265517562
+      },
+      "mean_rising_delay_ps": 97.13301523218203,
+      "driver_pair_current_a": 0.005252398308346955,
+      "lna_mixer_current_a": 0.005958261267336385,
+      "deck_sha256": "1d965550ee7df57ac74f21fed71bbaf1e6ec1be6a54bab71be1755928b1a6bba"
+    }
+  ],
+  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "source_sha256": {
+    "/screen/lo_buffer_screen.py": "216c0842babe6068ffb9ff7e8279f368a3221a69e5aed0d432000355d15be886",
+    "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+    "/src/rf_rx_external_lo_parent/rf_rx_external_lo_parent.spice": "4bb85237459cce0805ab5c691375d7e61a89191c69ffbc34ac5504c784640a8b",
+    "/src/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+    "/src/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+  },
+  "limitations": [
+    "Ideal clocks at first-stage inputs; no oscillator or phase generator.",
+    "Actual mixer gate load at zero RF input with existing biased LNA and external IF passives.",
+    "No route/package parasitics, mismatch, PVT closure or phase-noise qualification.",
+    "Input driver power excluded; two buffer chains measured, four needed for I/Q.",
+    "No receiver conversion or output duty acceptance threshold in this short screen."
+  ]
+}

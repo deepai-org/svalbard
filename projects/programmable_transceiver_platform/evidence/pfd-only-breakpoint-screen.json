@@ -1,0 +1,97 @@
+{
+  "status": "terminal_PFD_only_diagnostic",
+  "manifest": {
+    "source_sha256_before": {
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/screen/pll/reference_input_buffer.spice": "e9922aa2757ca9ece9eea717cc27b090920c522fd7f1ea7f25d0ce98f5c78e76",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+    },
+    "baseline_deck_sha256": "82b0e75e33baeee0888a019b758fb0ae4198a4ccd177233314d0dea3e1cec012",
+    "deck_sha256_before": "7f1d2492a25c967e08cfea9d9f0f990a4e9e833c069d7bfc604e134867c695be",
+    "removed_lines": [
+      "IP BPCP 0 20u\n",
+      "IN VDIV BNCP 20u\n",
+      "XCP UP DN PUMP BPCP BNCP VDIV 0 pt_charge_pump\n",
+      "VSENSE PUMP CTRL 0\n",
+      "XFILT CTRL 0 pt_loop_filter\n",
+      ".ic v(CTRL)=1.08 v(XFILT.Z)=1.08\n"
+    ],
+    "scope": "Actual buffer/PFD and50fF outputs; pump/filter and their gate loading removed; exact clock/reset sources retained"
+  },
+  "declared_reduction_verified": true,
+  "run_record": {
+    "returncode": 1,
+    "timed_out": false,
+    "source_sha256_before": {
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/screen/pll/reference_input_buffer.spice": "e9922aa2757ca9ece9eea717cc27b090920c522fd7f1ea7f25d0ce98f5c78e76",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+    },
+    "source_sha256_after": {
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/screen/pll/reference_input_buffer.spice": "e9922aa2757ca9ece9eea717cc27b090920c522fd7f1ea7f25d0ce98f5c78e76",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+    },
+    "artifacts_sha256": {
+      ".spice": "7f1d2492a25c967e08cfea9d9f0f990a4e9e833c069d7bfc604e134867c695be",
+      ".log": "1ceedc9d118f896c8ce5ad01de166641c5d46e661e884c658f5c98872a201c54",
+      ".dat": "d3bd8d4076cebb7f90a24959428f0706a9e4636b6fd941c061d128479fa7c4f3"
+    }
+  },
+  "completed": false,
+  "failure_time_ns": 637.7,
+  "actual_stop_ns": 637.6999999999998,
+  "equal_printed_time_intervals": 0,
+  "observed_window_ns": [
+    203,
+    305.4
+  ],
+  "outputs": {
+    "up": {
+      "range_v": [
+        -0.05275789495643132,
+        3.338194179784185
+      ],
+      "above_midrail_duration_ns": 1.5220000000016993
+    },
+    "down": {
+      "range_v": [
+        -0.05187163247047265,
+        3.341707058606977
+      ],
+      "above_midrail_duration_ns": 1.7740000000019323
+    }
+  },
+  "limitations": [
+    "Removing pump also removes its gate loading and filter/control interaction; completion would not isolate those contributions individually.",
+    "Forced clocks, one nominal scenario; no autonomous frequency acquisition, jitter or metastability qualification.",
+    "Output midrail durations are observations, not a PFD functional pass criterion."
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "status": "complete_buffered_reference_diagnostic",
+  "cases": [
+    {
+      "name": "pulse",
+      "returncode": 0,
+      "completed_requested_horizon": true,
+      "actual_stop_ns": 800.0000000000001,
+      "failure_time_ns": null,
+      "rising_delay_ps_range": [
+        127.74649180222305,
+        127.75506041314021
+      ],
+      "matched_rising_edges": 14,
+      "control_range_v": [
+        1.076291177997952,
+        1.10397515218641
+      ],
+      "measurement_window_ns": [
+        203,
+        305.4
+      ],
+      "pump_charge_fc": 38.16496527276731,
+      "up_range_v": [
+        -0.05037586809041545,
+        3.335126471338177
+      ],
+      "dn_range_v": [
+        -0.04660143875062143,
+        3.332254941508872
+      ],
+      "last_saved_state": {
+        "refraw_v": 0.0,
+        "reference_v": 5.63466010973333e-07,
+        "feedback_v": 0.0,
+        "up_v": 1.904079921755635e-06,
+        "dn_v": 1.488775540178048e-06,
+        "control_v": 1.086957133644259,
+        "pump_current_a": 1.048131754774366e-09
+      }
+    },
+    {
+      "name": "pwl",
+      "returncode": 1,
+      "completed_requested_horizon": false,
+      "actual_stop_ns": 637.6999999999998,
+      "failure_time_ns": 637.7,
+      "rising_delay_ps_range": [
+        127.74649180231569,
+        127.75506041314021
+      ],
+      "matched_rising_edges": 11,
+      "control_range_v": [
+        1.076291177997953,
+        1.102878546460322
+      ],
+      "measurement_window_ns": [
+        203,
+        305.4
+      ],
+      "pump_charge_fc": 38.1649652727621,
+      "up_range_v": [
+        -0.05037586809041517,
+        3.335126471338167
+      ],
+      "dn_range_v": [
+        -0.0466014387506207,
+        3.332254941508881
+      ],
+      "last_saved_state": {
+        "refraw_v": 3.494105005330539e-12,
+        "reference_v": 3.381443051095233,
+        "feedback_v": 5.757616605706062e-12,
+        "up_v": 3.713674051481261e-05,
+        "dn_v": -0.0009678605549307903,
+        "control_v": 1.086807898587173,
+        "pump_current_a": 4.596822595370733e-08
+      }
+    }
+  ],
+  "provenance": {
+    "status": "buffered_reference_diagnostic_unverified",
+    "cases": [
+      {
+        "name": "pulse",
+        "returncode": 0,
+        "baseline_deck_sha256": "98fe4b1a6ed2ca26c01e407cf246ca2556bfb7814cff94f1397813f5c0556282",
+        "artifacts_sha256": {
+          ".spice": "b66e323088e5445de396e9868cf42671c6a4469d66e87ff0acea5f1b579e1e63",
+          ".dat": "f9eb86d1c1dddcf39e62a0de9d18c10d0c47be9db95d09f25321b6e832f7d66d",
+          ".log": "512ccfce5083b9492205ac319f579d085412128242275c2e31346b9b9beb8848"
+        }
+      },
+      {
+        "name": "pwl",
+        "returncode": 1,
+        "baseline_deck_sha256": "b574b3484c066556f1e4e0b0ef7738546b82a4b9076944461190c2a4247c12a8",
+        "artifacts_sha256": {
+          ".spice": "82b0e75e33baeee0888a019b758fb0ae4198a4ccd177233314d0dea3e1cec012",
+          ".dat": "869fb1042026b394e66d0d3ad4ac4d78c357ed7d896a53da96b19b4d75fbbd1a",
+          ".log": "e610c875139cbdc8e54fc06c850f4b658a4f3383be429a9da47bfff3e1f9ddbf"
+        }
+      }
+    ],
+    "source_sha256_before": {
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/screen/pll/reference_input_buffer.spice": "e9922aa2757ca9ece9eea717cc27b090920c522fd7f1ea7f25d0ce98f5c78e76",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+    },
+    "source_sha256_after": {
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/screen/pll/reference_input_buffer.spice": "e9922aa2757ca9ece9eea717cc27b090920c522fd7f1ea7f25d0ce98f5c78e76",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+    }
+  },
+  "declared_circuit_change_verified": true,
+  "limitations": [
+    "Actual two-inverter buffer; no pad, ESD, independent supply impedance or corner qualification.",
+    "Forced feedback excludes autonomous VCO/divider and RF loading.",
+    "Propagation delay changes physical phase; completion is not lock or jitter qualification.",
+    "Failed cases retain partial observations; no simulator defect or physical instability attribution."
+  ]
+}

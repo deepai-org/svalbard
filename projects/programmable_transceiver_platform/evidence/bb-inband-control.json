@@ -1,0 +1,88 @@
+{
+  "completed": true,
+  "analysis_sha256": "9e9f806ea98f5610624b795de515403e394bd049000120dce4d7f8d986559092",
+  "comparisons": [
+    {
+      "window_ns": [
+        400,
+        800
+      ],
+      "harmonic_order": 4,
+      "i": {
+        "tone_peak_v": 0.0071822014371183615,
+        "zero_fitted_peak_v": 5.134114869922905e-08,
+        "zero_over_tone": 7.148386069192194e-06
+      },
+      "q": {
+        "tone_peak_v": 0.008066314151546277,
+        "zero_fitted_peak_v": 4.7987971532368605e-08,
+        "zero_over_tone": 5.949182071363972e-06
+      }
+    },
+    {
+      "window_ns": [
+        400,
+        800
+      ],
+      "harmonic_order": 8,
+      "i": {
+        "tone_peak_v": 0.007182201436430343,
+        "zero_fitted_peak_v": 5.13412147764553e-08,
+        "zero_over_tone": 7.148395270012451e-06
+      },
+      "q": {
+        "tone_peak_v": 0.0080663141525441,
+        "zero_fitted_peak_v": 4.798692621044421e-08,
+        "zero_over_tone": 5.9490524796023756e-06
+      }
+    },
+    {
+      "window_ns": [
+        800,
+        1200
+      ],
+      "harmonic_order": 4,
+      "i": {
+        "tone_peak_v": 0.007182309550478126,
+        "zero_fitted_peak_v": 6.302176484523521e-08,
+        "zero_over_tone": 8.774582103752386e-06
+      },
+      "q": {
+        "tone_peak_v": 0.008066296266780395,
+        "zero_fitted_peak_v": 4.065958079960663e-08,
+        "zero_over_tone": 5.040675355188214e-06
+      }
+    },
+    {
+      "window_ns": [
+        800,
+        1200
+      ],
+      "harmonic_order": 8,
+      "i": {
+        "tone_peak_v": 0.007182309550070261,
+        "zero_fitted_peak_v": 6.302162228351472e-08,
+        "zero_over_tone": 8.774562255242565e-06
+      },
+      "q": {
+        "tone_peak_v": 0.008066296267658538,
+        "zero_fitted_peak_v": 4.0659613740912524e-08,
+        "zero_over_tone": 5.040679438459936e-06
+      }
+    }
+  ],
+  "tone_late_window_change": {
+    "i": {
+      "relative_amplitude_change": 1.5052994666531205e-05
+    },
+    "q": {
+      "relative_amplitude_change": -2.217231467094294e-06
+    }
+  },
+  "conclusion": "Selected late fitted IF component is strongly stimulus-dependent with small window/order sensitivity in this fixture.",
+  "limitations": [
+    "No stochastic device noise in these deterministic histories; tiny no-tone fit is not a receiver noise floor.",
+    "Per-case measured LO frequencies differ; scalar amplitudes are compared without subtracting time histories or phasors.",
+    "Two late windows and one amplitude do not establish broadband response, compression, sensitivity, startup or ADC performance."
+  ]
+}

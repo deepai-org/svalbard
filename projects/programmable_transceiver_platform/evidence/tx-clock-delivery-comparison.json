@@ -1,0 +1,68 @@
+{
+  "status": "clock_delivery_comparison",
+  "cases": [
+    {
+      "case": "ideal_upstream",
+      "window_ns": [
+        6,
+        10
+      ],
+      "complete_cycles": 9,
+      "lo_range_v": [
+        -0.07358210179482091,
+        3.377523589759889
+      ],
+      "lob_range_v": [
+        -0.07358210111906822,
+        3.377523582064115
+      ],
+      "buffer_input_range_v": [
+        0.0,
+        3.3
+      ],
+      "rf_fundamental_peak_range_v": [
+        0.08282983556154344,
+        0.08286876712378029
+      ],
+      "artifacts_sha256": {
+        ".spice": "f75b9b36fe050602873d0a6829d4d8597ce341bf66a88d7e37a5c8da4b467bb1",
+        ".log": "4d7ab44a388af9e7ce8dcdb410e48c217c8bb505bf4a5d3366318c267c0f1709",
+        ".dat": "a6871f839125e73fc6dd17295e204b32bd395053ace84906a39ed2d34d6e3164"
+      }
+    },
+    {
+      "case": "actual_ring",
+      "window_ns": [
+        590,
+        600
+      ],
+      "complete_cycles": 24,
+      "lo_range_v": [
+        0.1354932373378213,
+        3.060163708744784
+      ],
+      "lob_range_v": [
+        0.1354934095527004,
+        3.060163594438357
+      ],
+      "buffer_input_range_v": [
+        1.019228160925923,
+        2.062381582430385
+      ],
+      "rf_fundamental_peak_range_v": [
+        0.04529895465540612,
+        0.045299220591550456
+      ],
+      "artifacts_sha256": {
+        ".spice": "4cabd698a344b2c6c634b1ff7dc204654dfe2adec23503be99a47d1e286f28e4",
+        ".log": "4d73a12a7a6f6351a2a4026ecff42d4ac0b9ee7c64d026a5f13989f650d72e2d",
+        ".dat": "6012fefe524a33327afb259375c3bda8146867514ee9daf131171ff513fe1a61"
+      }
+    }
+  ],
+  "limitations": [
+    "Same downstream NMOS topology, but source circuit, initialization and observation duration differ. No isolated waveform-mechanism attribution.",
+    "Per-cycle amplitude uses delivered LO crossing reference and linear phase; not a phase-noise or EVM measurement.",
+    "No timestep/PVT/mismatch or extracted validation."
+  ]
+}

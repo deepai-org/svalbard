@@ -1,0 +1,78 @@
+"""Staged chip-connected detection adapter; source-current coupling pending."""
+import json,hashlib,sys
+from pathlib import Path
+from sampled_clock_lifecycle import SampledClockChip
+from rearm_screen import RecoverableProbe
+from probe_sequence import load,reject
+from chip_model import P
+
+class DetectChip(SampledClockChip):
+    def __init__(self,remote_terms=(75.,75.),**kwargs):
+        self.probe=RecoverableProbe([load(r) for r in remote_terms])
+        self.probe_chip_epoch=None
+        super().__init__(**kwargs)
+    def detect_start(self,time,epoch):
+        if epoch!=self.epoch or self.state!='active':raise ValueError('Detection needs active current epoch')
+        self.advance(time)
+        busy=bool(self.wire_queue or self.wire_remaining or (self.serializer and self.serializer.active))
+        self.probe.start(time,self.probe.epoch,busy);self.probe_chip_epoch=epoch
+    def detect_result(self,epoch):
+        if epoch!=self.epoch or epoch!=self.probe_chip_epoch or self.state!='active':raise ValueError('Stale detection epoch')
+        return self.probe.read(self.probe.epoch)
+    def accept_wire(self,value):
+        if self.probe.state not in ('idle','ready'):raise ValueError('Receiver detection owns wired TX')
+        return super().accept_wire(value)
+    def schedule_wire(self,*args,**kwargs):
+        if self.probe.state not in ('idle','ready'):raise ValueError('Receiver detection owns wired TX')
+        return super().schedule_wire(*args,**kwargs)
+    def advance(self,time):
+        while self.probe.next_event<=time:
+            when=self.probe.next_event
+            super().advance(when)
+            self.probe.advance(when)
+        super().advance(time);self.probe.advance(time)
+    def quiesce(self,time,reason):
+        self.probe.abort(time);self.probe_chip_epoch=None
+        return super().quiesce(time,reason)
+
+
+def run(mode,terms,expected):
+    c=DetectChip(remote_terms=terms,watchdog_s=100e-6)
+    c.configure_rx('external_tone',1,5e6,5e6,.2+.1j,0)
+    c.configure(mode,0);c.advance(8e-6)
+    c.incoming_wire([0x155]*128,c.time)
+    c.capture(64,c.time+100e-9)
+    c.detect_start(c.time,c.epoch)
+    reject(lambda:c.accept_wire(17));reject(lambda:c.schedule_wire(1,c.time+1e-6))
+    reject(lambda:c.detect_result(c.epoch))
+    c.advance(c.time+10e-6)
+    assert c.detect_result(c.epoch)['decision']==expected
+    c.host_decoder.finish();assert c.host_samples==c.adc_words and len(c.host_samples)==64
+    assert c.live_rx.done and c.state=='active'
+    # Actual TX queuing excludes detection; drain a word through the serializer.
+    c.accept_wire(17);reject(lambda:c.detect_start(c.time,c.epoch))
+    c.schedule_wire(1,c.time+100e-9);c.advance(c.time+1e-6)
+    assert c.wire_consumed==1 and not c.serializer.active
+    c.detect_start(c.time,c.epoch);c.advance(c.time+73e-9)
+    before=[leg.x.copy() for leg in c.probe.legs]
+    c.set_reference(False,c.time)
+    assert c.probe.state=='aborted' and c.probe.drive is None
+    assert all((v==leg.x).all() for v,leg in zip(before,c.probe.legs))
+    reject(lambda:c.detect_result(c.epoch))
+    return dict(mode=mode,remote_terms=terms,decision=expected,rf_samples=64,
+        independent_wired_rx_complete=True,tx_word_after_release=True,reference_loss_aborts=True)
+
+
+def main():
+    rows=[run(m,t,e) for m in (0,1) for t,e in (((75.,75.),'present'),((1e8,1e8),'absent'),((75.,1e8),'indeterminate'))]
+    report=dict(status='passed',staged_adapter=True,physical_qualification=False,cases=rows,
+        source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        imported_source_hashes={str(Path(m.__file__).resolve()):hashlib.sha256(Path(m.__file__).read_bytes()).hexdigest() for m in list(sys.modules.values()) if getattr(m,'__file__',None) and str(m.__file__).endswith('.py') and ('/system_model/' in str(m.__file__) or '/svalbard-receiver-detect-stage/' in str(m.__file__))},
+        limitations=['Staged external adapter against unchanged sampled-clock chip; not registered in running aggregate.',
+        'Direct controller API only; timed management, resource discovery and post-reset rearm integration remain pending.',
+        'Probe load is not yet coupled to the chip supply. Concurrent RF/receive transport therefore establishes control isolation only.',
+        'Nominal external loads, not device/package or protocol compliance.'])
+    (P/'evidence/receiver-detect-chip-adapter.json').write_text(json.dumps(report,indent=2)+'\n')
+    print('Passed six staged chip-connected probe cases with RF capture, wired RX, TX exclusion and reference-loss abort')
+
+if __name__=='__main__':main()

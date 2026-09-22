@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "tie_time_s": 1.5999964900509176e-06,
+      "natural_aperture_s": 1.5999934469254763e-06,
+      "events": [
+        "dac_transfer",
+        "adc_sample"
+      ]
+    },
+    {
+      "mode": 1,
+      "tie_time_s": 1.6249964900509176e-06,
+      "natural_aperture_s": 1.6249938522486955e-06,
+      "events": [
+        "dac_transfer",
+        "adc_sample"
+      ]
+    }
+  ],
+  "limitations": [
+    "Explicit exact-aperture tie injected into PlaybackChip scheduler; not unified analog acquisition/payload validation.",
+    "Confirms software convention only; physical aperture skew and reference kickback remain unqualified."
+  ]
+}

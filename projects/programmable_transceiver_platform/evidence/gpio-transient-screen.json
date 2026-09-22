@@ -1,0 +1,136 @@
+{
+  "scope": "transistor-level candidate pair, not extracted/package/SSO or FPGA qualification",
+  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "simulator": "******\n** ngspice-46 : Circuit level simulation program\n** Compiled with KLU Direct Linear Solver\n** The U. C. Berkeley CAD Group\n** Copyright 1985-1994, Regents of the University of California.\n** Copyright 2001-2025, The ngspice team.\n** Please get your ngspice manual from https://ngspice.sourceforge.io/docs.html\n** Please file your bug-reports at http://ngspice.sourceforge.net/bugrep.html\n** Creation Date: Mon Jul 27 16:39:24 UTC 2026\n******\n",
+  "script_sha256": "13365df0625d8efcea4c02ab8009868e2916331e173d677a5aea3c8dd9184121",
+  "input_sha256": {
+    "/foss/pdks/gf180mcuD/libs.ref/gf180mcu_fd_io/spice/gf180mcu_fd_io.spice": "710732fd6a69e165caa2c29e4cdf81b11af41da32705fcd860b7ecfb09630dd1",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24"
+  },
+  "ngspice_init": "set ngbehavior=hs",
+  "execution": "reanalysis of existing waveforms with exact deck/init match",
+  "case_count": 4,
+  "results": [
+    {
+      "case": "typical_25_5_alternating",
+      "mos_corner": "typical",
+      "passive_corners": [
+        "res_typical",
+        "diode_typical",
+        "moscap_typical"
+      ],
+      "vdd_v": 3.3,
+      "temperature_c": 25,
+      "external_lumped_capacitance_pf_per_output": 5,
+      "pattern": "alternating",
+      "sampled_bits": 20,
+      "aperture_ns": 0.4,
+      "thresholds_fraction": [
+        0.3,
+        0.7
+      ],
+      "minimum_aperture_voltage_margin_v": 0.9884686351042755,
+      "threshold_failures": 0,
+      "clock_edge_delay_min_ns": 2.505779387381957,
+      "clock_edge_delay_max_ns": 2.545089260313718,
+      "two_pad_dvdd_average_a": 0.013271992430006874,
+      "two_pad_core_vdd_average_a": 2.8756567599924642e-05,
+      "deck_sha256": "f9012a2713a370fe0c01b0ffd25412dee28f58047f719baa661a309f057038d4",
+      "waveform_sha256": "def7a66aac482bbd6cd762ba2b8a032843cbbac175fe78805561086dda583dfc",
+      "log_sha256": "25d13e642fd96a0bc43de6edc68ffd2ddc5aaacc00b24e41f5e471051fe9a899"
+    },
+    {
+      "case": "typical_25_5_prbs7",
+      "mos_corner": "typical",
+      "passive_corners": [
+        "res_typical",
+        "diode_typical",
+        "moscap_typical"
+      ],
+      "vdd_v": 3.3,
+      "temperature_c": 25,
+      "external_lumped_capacitance_pf_per_output": 5,
+      "pattern": "prbs7",
+      "sampled_bits": 20,
+      "aperture_ns": 0.4,
+      "thresholds_fraction": [
+        0.3,
+        0.7
+      ],
+      "minimum_aperture_voltage_margin_v": 0.9884346421275345,
+      "threshold_failures": 0,
+      "clock_edge_delay_min_ns": 2.505736946924831,
+      "clock_edge_delay_max_ns": 2.545097416242044,
+      "two_pad_dvdd_average_a": 0.009299172433266344,
+      "two_pad_core_vdd_average_a": 2.0141463303145783e-05,
+      "deck_sha256": "42a63fb98810154c277338601fba1d98959b1ab7f147bb874efa977c71d78520",
+      "waveform_sha256": "6dfd504a5b1a0347d5900248b08588324efeb739dc875ba758094e6bd6c40505",
+      "log_sha256": "6317a89bf3f9ac4cfd167fed2573afd22199bab6adca33bf5ee14b4986d1023f"
+    },
+    {
+      "case": "ss_125_5_alternating",
+      "mos_corner": "ss",
+      "passive_corners": [
+        "res_ss",
+        "diode_typical",
+        "moscap_typical"
+      ],
+      "vdd_v": 2.97,
+      "temperature_c": 125,
+      "external_lumped_capacitance_pf_per_output": 5,
+      "pattern": "alternating",
+      "sampled_bits": 20,
+      "aperture_ns": 0.4,
+      "thresholds_fraction": [
+        0.3,
+        0.7
+      ],
+      "minimum_aperture_voltage_margin_v": 0.858436387246134,
+      "threshold_failures": 0,
+      "clock_edge_delay_min_ns": 4.525216362844118,
+      "clock_edge_delay_max_ns": 4.724558270976817,
+      "two_pad_dvdd_average_a": 0.011750916397436955,
+      "two_pad_core_vdd_average_a": 2.6204244608697025e-05,
+      "deck_sha256": "d14136de47c97041777ac12f23f79f86e7ccff73f99b197698de7c02bfeb16f2",
+      "waveform_sha256": "75f11560d174fb3be83dc0a9651502d9d19dbe7e4f85a95f0b1923397feea778",
+      "log_sha256": "ac0032ebdfcace88f59a1a8dbb810802991de0de4b29131b91a325a295845cea"
+    },
+    {
+      "case": "ss_125_5_prbs7",
+      "mos_corner": "ss",
+      "passive_corners": [
+        "res_ss",
+        "diode_typical",
+        "moscap_typical"
+      ],
+      "vdd_v": 2.97,
+      "temperature_c": 125,
+      "external_lumped_capacitance_pf_per_output": 5,
+      "pattern": "prbs7",
+      "sampled_bits": 20,
+      "aperture_ns": 0.4,
+      "thresholds_fraction": [
+        0.3,
+        0.7
+      ],
+      "minimum_aperture_voltage_margin_v": 0.83641753186643,
+      "threshold_failures": 0,
+      "clock_edge_delay_min_ns": 4.525214171588044,
+      "clock_edge_delay_max_ns": 4.7245616501548655,
+      "two_pad_dvdd_average_a": 0.008419017556037422,
+      "two_pad_core_vdd_average_a": 1.8343222955610185e-05,
+      "deck_sha256": "b1a041aa400f30c752157391a39068377f4b9f24d68568ca0388ae586b64e90e",
+      "waveform_sha256": "8df6285910a4296687fabd3107bd932cfc007aa11e9ad15ecf6aa2f4d999c20a",
+      "log_sha256": "6a976dcd66f3633939cc44fe50013ea5133f1a14d8accba754ae55392ec3fa62"
+    }
+  ],
+  "limitations": [
+    "Ideal supplies and no package/interconnect.",
+    "Assumed 0.3/0.7 receiver levels and +/-0.2 ns aperture, not a selected FPGA specification.",
+    "Ideal 0.5 ns core drive and 1.6 ns forwarded-clock phase offset.",
+    "No H2D receiver, full-bank SSO, jitter, mismatch, ESD signoff or model qualification.",
+    "Diode/MOS-cap corners remain typical; this is not full PVT/passive closure."
+  ]
+}

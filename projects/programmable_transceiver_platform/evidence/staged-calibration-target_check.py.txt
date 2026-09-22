@@ -1,0 +1,23 @@
+import json
+from pathlib import Path
+from automatic_observation import AutomaticCalibrationChip
+from managed_resources import command
+from chip_model import decode_iq
+rows=[]
+for calibrated in (False,True):
+ c=AutomaticCalibrationChip(observation_error_bound_v=.0003,load_capacitance=0.,adc_latency_s=30e-9,watchdog_s=1e-3)
+ if calibrated:
+  assert command(c,'cal_start',48)['accepted'];c.advance(c.time+40e-6)
+  assert c.cal.valid
+ c.configure_rx('external_tone',1,5e6,5e6,.2+0j,0)
+ c.configure(0,c.time);c.advance(c.time+8e-6)
+ start=c.time+100e-9;c.capture(8,start,gain=1)
+ c.advance(start+3e-6);c.host_decoder.finish()
+ assert c.host_samples==c.adc_words and len(c.host_samples)==8
+ values=[decode_iq(w,c.bits).real for w in c.host_samples]
+ errors=[abs(v-.2) for v in values]
+ if calibrated:assert max(errors)<.0005
+ else:assert min(errors)>.06
+ rows.append(dict(calibrated=calibrated,values=values,max_error_v=max(errors),trim_code=c.trim.code))
+Path('/tmp/svalbard-calibration-pass877/target-report.json').write_text(json.dumps(dict(status='passed',cases=rows,limitations=['One additive post-filter I-channel offset target','Static independent DC input, ideal reference loading','Not RF gain/IQ/LO calibration or a physical trim actuator']),indent=2)+'\n')
+print(rows)

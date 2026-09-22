@@ -1,0 +1,337 @@
+{
+  "scope": "Unplaced TT 25C 3.3V same-domain timing diagnostics; not signoff or fmax bounds",
+  "area_screen": {
+    "scope": "Nominal TT 25C 3.3V standard-cell mapping area; no STA, placement or power qualification",
+    "tool": "Yosys 0.62 (git sha1 7326bb7d6641500ecb285c291a54a662cb1e76cf, clang++ 21.1.2 -fPIC -O3)",
+    "library_sha256": "f9dee07cf158324934b0c59144d970a2e8313f43533ede6283ec3c136f82fe53",
+    "source_sha256": {
+      "rtl/pt_core.sv": "81fe0dbe5e84e1d0fd469b125bff3338b1cc719c35cdd4e306241adc891b3a5e",
+      "rtl/pt_crc.vh": "7f5e068f0cfca4dc1c4ddef8f37652680922c37473988d2d96c184d1fdb403c7",
+      "rtl/pt_digital.sv": "2184eb86c6076ca6ed176e568990f4ac5c7d1699c7dad4ba72d522771c0a3607",
+      "rtl/pt_fifo.sv": "360fba1c12a18628e3b59cd7e0f78b6c28f9a230b2127ff4c8e73ba356800058",
+      "rtl/pt_frame.sv": "57c05d237e6bfa4313d8e4e88a616c34ce9bcf7274bddad73ad5bf80e9c05400",
+      "rtl/pt_helpers.sv": "16fc0af7b7d2c97ed5267026c22c7dc2b80d438f4ae24277f3e09125dbcc902e",
+      "rtl/pt_memory.sv": "3f0cef4f7dacaad4312fca58a2a6e4743445e4c63c4baa92e1f6affda3d74fc3",
+      "rtl/pt_pack.sv": "1ee2545d705c2de01fbdb9192828c2c08a2b25332c6112e1fc7af91cbb1fc306",
+      "rtl/pt_schedule.vh": "826aecb656c8057dc1acf21ff9acc35702a26bc01ac93e3c5d887f036b6a860c",
+      "rtl/pt_spi.sv": "48648490810a8e2b37740508d78c86307cbc5caa56cafc2ec39ece99f3868102",
+      "rtl/pt_stream_link.sv": "26c55522cf98035c4ba6991d11c0a8671fe402449f900cae28cd0a61d2d2645b",
+      "rtl/pt_stream_rx.sv": "456af8ee78ec5bdcd070dc177b8af1f1df8ff3370734f92a5d857ad55c1ccec0",
+      "rtl/pt_stream_tx.sv": "24ff715f316f242daa88625128ab5afabc31b61fe6b4e955cd9c9d3c73b9fe02",
+      "verification/synthesis_container.sh": "a2032fd00b67083eee209bbf407ee7a35f5e3a82d919f1ee7afbbb0dad9a72e0"
+    },
+    "mapped_netlist_sha256": "b831a14377616e7d2d5f1bbd6156604ef1c7850b86e99d10c1ac0569611a1f63",
+    "physical_cell_count": 26250,
+    "flip_flop_count": 8256,
+    "cell_area_um2": 959008.2432,
+    "sequential_cell_area_um2": 550305.9072,
+    "combined_digital_memory_allocation_um2": 2300000,
+    "minimum_utilization_to_fit_before_physical_overhead": 0.41696010573913045,
+    "illustrative_utilization_sensitivity_not_proven_bounds": [
+      {
+        "utilization": 0.35,
+        "required_region_um2": 2740023.552,
+        "headroom_um2": -440023.55200000014
+      },
+      {
+        "utilization": 0.5,
+        "required_region_um2": 1918016.4864,
+        "headroom_um2": 381983.51359999995
+      },
+      {
+        "utilization": 0.65,
+        "required_region_um2": 1475397.2972307692,
+        "headroom_um2": 824602.7027692308
+      }
+    ],
+    "limitations": [
+      "ABC global delay target supplied; this is not a multi-clock STA constraint, timing closure, or allowance for clock-to-Q/setup/skew.",
+      "No clock tree, hold fixes, routing congestion, tap/filler/decap cells, level shifters or physical macro interfaces included.",
+      "Memory arrays mapped to flip-flops and muxes; no SRAM assumed.",
+      "Mapped netlist has not undergone formal equivalence or gate-level simulation.",
+      "Operating voltage is a mapping choice, not a frozen or qualified operating envelope.",
+      "No power or CORE supply-current estimate; clocking thousands of flip-flops remains an open concern."
+    ],
+    "status": "area estimate obtained; physical fit and timing unproven",
+    "buffering_transformation": {
+      "scope": "Identity-buffer netlist experiment, no placement/wire parasitics or clock tree",
+      "source_sha256": "4d82e0c3578f1b4c726b360afd44b204416519a24225d51512f3bc5321c30362",
+      "buffer_type": "gf180mcu_fd_sc_mcu7t5v0__buf_4",
+      "inserted_buffers": 150,
+      "fanout_limit": 16,
+      "added_cell_area_um2": 4609.92,
+      "connection_collapse_check": "pass for every original cell port",
+      "maximum_nonclock_input_pin_fanout": 16,
+      "limitations": [
+        "Pin-count cap does not guarantee capacitance or slew limits.",
+        "Grouping follows netlist order, not physical distance.",
+        "Clocks remain ideal; reset recovery/removal and skew are not closed.",
+        "No switching-power or wire-area estimate."
+      ]
+    },
+    "buffering_script_sha256": "b530a9d97aceb7fd9b5bac7e0c0f6586dca47e2efcc017f607d868e9bb3486e5",
+    "mapping_options": {
+      "abc_delay_target_ps": 3200,
+      "abc_sizing": true,
+      "sizing_boundary_model": "buf_1 driver and 5 fF load; illustrative, not physical IO constraints"
+    }
+  },
+  "timing_script_sha256": "465df829730d7bc60164074ec0932cf089b7421594453ce776266a4059ae12bd",
+  "profiles": [
+    {
+      "mode": 0,
+      "critical_register_outputs": {
+        "host_tx_clk": {
+          "start_Q": "\\core.wire_in.wg2 [5]",
+          "end_Q": "\\core.stream_v2.frame_tx.payload.leftw [4]"
+        },
+        "host_rx_clk": {
+          "start_Q": "\\core.stream_v2.frame_rx.payload.header [18]",
+          "end_Q": "\\core.stream_v2.frame_rx.payload.leftw [3]"
+        },
+        "wire_rx_clk": {
+          "start_Q": "\\core.wire_in.wg [4]",
+          "end_Q": "\\core.wire_in.mem[16] [0]"
+        },
+        "wire_tx_clk": {
+          "start_Q": "\\core.wire_out.rb [0]",
+          "end_Q": "\\core.wire_out.rg [6]"
+        },
+        "rf_rx_clk": {
+          "start_Q": "\\core.rf_in.wg [0]",
+          "end_Q": "\\core.rf_in.mem[4] [0]"
+        },
+        "rf_tx_clk": {
+          "start_Q": "\\core.rf_out.rb [0]",
+          "end_Q": "\\core.rf_out.rg [4]"
+        },
+        "host_sclk": {
+          "start_Q": "\\memory.index [1]",
+          "end_Q": "\\control.spi.miso_bit"
+        },
+        "ref_clk": {
+          "start_Q": "\\calibration.bitpos [2]",
+          "end_Q": "\\calibration.settle [2]"
+        }
+      },
+      "worst_reported_slack_ns_by_domain_and_group": {
+        "host_tx_clk": {
+          "asynchronous": -1.6775,
+          "host_tx_clk": -6.9026
+        },
+        "host_rx_clk": {
+          "asynchronous": -1.7957,
+          "host_rx_clk": -7.0606
+        },
+        "wire_rx_clk": {
+          "asynchronous": 6.2659,
+          "wire_rx_clk": -1.2376
+        },
+        "wire_tx_clk": {
+          "asynchronous": 5.0191,
+          "wire_tx_clk": 0.4295
+        },
+        "rf_rx_clk": {
+          "asynchronous": 23.2744,
+          "rf_rx_clk": 16.4422
+        },
+        "rf_tx_clk": {
+          "asynchronous": 23.2324,
+          "rf_tx_clk": 15.973
+        },
+        "host_sclk": {
+          "host_sclk": 41.2572
+        },
+        "ref_clk": {
+          "ref_clk": 18.1132
+        }
+      },
+      "reported_electrical_violation_rows": 0,
+      "warnings": [
+        "Warning: There are 52 input ports missing set_input_delay.",
+        "Warning: There are 128 output ports missing set_output_delay.",
+        "Warning: There are 128 unconstrained endpoints."
+      ],
+      "log_sha256": "3b7d8d1afa681be16c17aff32d1d3ff332ec3159335fab6ef03e6898eb893812"
+    },
+    {
+      "mode": 1,
+      "critical_register_outputs": {
+        "host_tx_clk": {
+          "start_Q": "\\core.wire_in.wg2 [5]",
+          "end_Q": "\\core.stream_v2.frame_tx.payload.leftw [4]"
+        },
+        "host_rx_clk": {
+          "start_Q": "\\core.stream_v2.frame_rx.payload.header [18]",
+          "end_Q": "\\core.stream_v2.frame_rx.payload.leftw [3]"
+        },
+        "wire_rx_clk": {
+          "start_Q": "\\core.wire_in.wg [4]",
+          "end_Q": "\\core.wire_in.mem[16] [0]"
+        },
+        "wire_tx_clk": {
+          "start_Q": "\\core.wire_out.rb [0]",
+          "end_Q": "\\core.wire_out.rg [6]"
+        },
+        "rf_rx_clk": {
+          "start_Q": "\\core.rf_in.wg [0]",
+          "end_Q": "\\core.rf_in.mem[4] [0]"
+        },
+        "rf_tx_clk": {
+          "start_Q": "\\core.rf_out.rb [0]",
+          "end_Q": "\\core.rf_out.rg [4]"
+        },
+        "host_sclk": {
+          "start_Q": "\\memory.index [1]",
+          "end_Q": "\\control.spi.miso_bit"
+        },
+        "ref_clk": {
+          "start_Q": "\\calibration.bitpos [2]",
+          "end_Q": "\\calibration.settle [2]"
+        }
+      },
+      "worst_reported_slack_ns_by_domain_and_group": {
+        "host_tx_clk": {
+          "asynchronous": -2.4775,
+          "host_tx_clk": -7.7026
+        },
+        "host_rx_clk": {
+          "asynchronous": -2.5957,
+          "host_rx_clk": -7.8606
+        },
+        "wire_rx_clk": {
+          "asynchronous": 2.2659,
+          "wire_rx_clk": -5.2376
+        },
+        "wire_tx_clk": {
+          "asynchronous": 1.0191,
+          "wire_tx_clk": -3.5705
+        },
+        "rf_rx_clk": {
+          "asynchronous": 48.2744,
+          "rf_rx_clk": 41.4422
+        },
+        "rf_tx_clk": {
+          "asynchronous": 48.2324,
+          "rf_tx_clk": 40.973
+        },
+        "host_sclk": {
+          "host_sclk": 41.2572
+        },
+        "ref_clk": {
+          "ref_clk": 18.1132
+        }
+      },
+      "reported_electrical_violation_rows": 0,
+      "warnings": [
+        "Warning: There are 52 input ports missing set_input_delay.",
+        "Warning: There are 128 output ports missing set_output_delay.",
+        "Warning: There are 128 unconstrained endpoints."
+      ],
+      "log_sha256": "0aaf80c9a0677e66425da9d3e97ad96810fa3cb278f731422a4e60ed9125c5f6"
+    }
+  ],
+  "largest_unbuffered_net_fanouts": [
+    {
+      "input_pin_loads": 3484,
+      "scalar_net_aliases": [
+        "core.e1.clk",
+        "core.host_rx_clk",
+        "core.iq_receive.clk",
+        "core.rf_out.wr_clk",
+        "core.stream_v2.frame_rx.clk",
+        "core.stream_v2.frame_rx.payload.clk",
+        "core.unpacker.clk",
+        "core.wire_out.wr_clk",
+        "host_rx_clk"
+      ]
+    },
+    {
+      "input_pin_loads": 1796,
+      "scalar_net_aliases": [
+        "core.e0.clk",
+        "core.host_tx_clk",
+        "core.iq_in.clk",
+        "core.packer.clk",
+        "core.rf_in.rd_clk",
+        "core.stream_v2.frame_tx.clk",
+        "core.stream_v2.frame_tx.payload.clk",
+        "core.wire_in.rd_clk",
+        "host_tx_clk"
+      ]
+    },
+    {
+      "input_pin_loads": 1184,
+      "scalar_net_aliases": [
+        "core.e4.clk",
+        "core.rf_in.wr_clk",
+        "core.rf_rx_clk",
+        "memory.rf_rx_clk",
+        "memory.s0.clk",
+        "rf_rx_clk"
+      ]
+    },
+    {
+      "input_pin_loads": 963,
+      "scalar_net_aliases": [
+        "control.sclk",
+        "control.spi.sclk",
+        "host_sclk",
+        "memory.spi_clk"
+      ]
+    },
+    {
+      "input_pin_loads": 672,
+      "scalar_net_aliases": [
+        "core.e2.clk",
+        "core.wire_in.wr_clk",
+        "core.wire_rx_clk",
+        "wire_rx_clk"
+      ]
+    },
+    {
+      "input_pin_loads": 73,
+      "scalar_net_aliases": [
+        "core.e3.clk",
+        "core.f0.clk",
+        "core.f2.clk",
+        "core.wire_out.rd_clk",
+        "core.wire_tx_clk",
+        "e.clk",
+        "prbs.clk",
+        "wire_tx_clk"
+      ]
+    },
+    {
+      "input_pin_loads": 48,
+      "scalar_net_aliases": [
+        "core.e5.clk",
+        "core.f1.clk",
+        "core.f3.clk",
+        "core.rf_out.rd_clk",
+        "core.rf_tx_clk",
+        "memory.ready.clk",
+        "memory.rf_tx_clk",
+        "memory.s1.clk",
+        "rf_tx_clk"
+      ]
+    },
+    {
+      "input_pin_loads": 36,
+      "scalar_net_aliases": [
+        "calibration.clk",
+        "cs.clk",
+        "ref_clk"
+      ]
+    }
+  ],
+  "limitations": [
+    "Ideal clocks, no extracted interconnect, no timing-driven physical buffering or sizing.",
+    "Electrical violations and library extrapolation invalidate interpreting extreme slacks as physical delay predictions.",
+    "Unconstrained external interfaces remain explicit; no blanket false-path exceptions were added.",
+    "Same-domain reports exclude CDC qualification, reset distribution closure and protocol timing.",
+    "SPI 10MHz and reference 40MHz are provisional service clocks.",
+    "No jitter/skew allowance or operating-envelope/process sweep."
+  ],
+  "result": "FAIL: reported timing or electrical violations remain"
+}

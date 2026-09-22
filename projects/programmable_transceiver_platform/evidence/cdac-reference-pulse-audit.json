@@ -1,0 +1,120 @@
+{
+  "status": "scoped_reference_pulse_topology_audit",
+  "cases": [
+    {
+      "window_ns": [
+        60,
+        109.9
+      ],
+      "peak_time_ns": 78.72250000000012,
+      "high_adc_demand_a": 0.05778088468694358,
+      "saved_physical_nodes_v": {
+        "v(b7)": 3.299415069562726,
+        "v(b7b)": -0.001781076142945171,
+        "v(xd.xp7.bot)": 2.031425960165107,
+        "v(xd.xn7.bot)": 1.259119204421924,
+        "v(vh)": 2.120012116258964,
+        "v(vl)": 1.169827098169164
+      },
+      "upstream_track_mask_commands_v": {
+        "sd0": -0.0001600536128715744,
+        "sd1": -0.0001669707459390236,
+        "sd2": -0.0001654415973836023,
+        "sd3": -0.0001490614027884374,
+        "sd4": -0.0001185504608988497,
+        "sd5": 3.200383256120288,
+        "sd6": 0.7474648779682049,
+        "sd7": 3.299883681738387
+      }
+    },
+    {
+      "window_ns": [
+        110,
+        159.9
+      ],
+      "peak_time_ns": 158.4325,
+      "high_adc_demand_a": 0.09407284986072705,
+      "saved_physical_nodes_v": {
+        "v(b7)": 2.924547206067411,
+        "v(b7b)": 0.5726497307596079,
+        "v(xd.xp7.bot)": 1.347667553906287,
+        "v(xd.xn7.bot)": 1.835937486983477,
+        "v(vh)": 2.153258368135039,
+        "v(vl)": 1.167938918945892
+      },
+      "upstream_track_mask_commands_v": {
+        "sd0": 9.908025018326525e-05,
+        "sd1": 0.0001732691055934756,
+        "sd2": 0.0003225243649187742,
+        "sd3": 0.001909009604332652,
+        "sd4": 3.253150219212774e-05,
+        "sd5": -9.208306059961608e-05,
+        "sd6": 1.392590881328077,
+        "sd7": 2.667094475781348
+      }
+    },
+    {
+      "window_ns": [
+        160,
+        209.9
+      ],
+      "peak_time_ns": 178.7225000000001,
+      "high_adc_demand_a": 0.05776687459197145,
+      "saved_physical_nodes_v": {
+        "v(b7)": 3.299369829109855,
+        "v(b7b)": -0.00185930490770441,
+        "v(xd.xp7.bot)": 2.047206263198885,
+        "v(xd.xn7.bot)": 1.260392625031551,
+        "v(vh)": 2.137151505821253,
+        "v(vl)": 1.170014792927218
+      },
+      "upstream_track_mask_commands_v": {
+        "sd0": -0.0001602033039366278,
+        "sd1": -0.00016726192850758,
+        "sd2": -0.0001663340953142667,
+        "sd3": -0.0001505738841300654,
+        "sd4": -0.0001203035629142186,
+        "sd5": 3.200386542296585,
+        "sd6": 0.7474399324629489,
+        "sd7": 3.299879705939832
+      }
+    },
+    {
+      "window_ns": [
+        122.5,
+        125.35
+      ],
+      "peak_time_ns": 123.77750000000022,
+      "high_adc_demand_a": 0.07266291389030667,
+      "saved_physical_nodes_v": {
+        "v(b7)": -0.0007968069748224311,
+        "v(b7b)": 3.299567759412951,
+        "v(xd.xp7.bot)": 1.254753648706537,
+        "v(xd.xn7.bot)": 2.022328624561553,
+        "v(vh)": 2.129477776918436,
+        "v(vl)": 1.185141995386086
+      },
+      "upstream_track_mask_commands_v": {
+        "sd0": 0.0001193913264107264,
+        "sd1": 0.0001649680879731524,
+        "sd2": 0.0002179741232540553,
+        "sd3": 0.000242935768022523,
+        "sd4": 0.0002255140954133548,
+        "sd5": 0.0001966789698532071,
+        "sd6": 2.309538587337832,
+        "sd7": 0.0234651351015692
+      }
+    }
+  ],
+  "scope_evidence_sha256": "34d8d3ac2f1cf47598b4a820b2bef5130c1ff6765609ac9e9c14ce1e301c2585",
+  "source_sha256": {
+    "analog/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+    "analog/adc/cdac8_scaled.spice": "4006f42115b3a5a30b9ad74626ef0c084655bf0cdc2f1d1cc8bd32f65e351fd2",
+    "analog/adc/cdac8_mim.spice": "532e86fc11da6f695d092dd06c0508cbb363f49c4c2b070c78683c7d5bf85e14"
+  },
+  "limitations": [
+    "B7/BB7 are the only saved physical bit-control pair; SD0..7 are upstream mask commands, not switch gates.",
+    "Rail-level MSB gates at a peak do not exonerate other bits or prior overlap.",
+    "No branch-current or transistor-conduction attribution from these voltage observations alone."
+  ]
+}

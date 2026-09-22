@@ -1,0 +1,59 @@
+{
+  "status": "observed_five_global_corners_not_signoff",
+  "rows": [
+    {
+      "corner": "typical",
+      "source": "rx-buffered-screen.json",
+      "gain_i_v_per_v": 0.7887746976116563,
+      "gain_q_v_per_v": 0.7887732966506914,
+      "measured_total_current_a": 0.01748774057192956,
+      "q_relative_to_i_deg": 90.00034206316352
+    },
+    {
+      "corner": "ff",
+      "source": "rx-process-screen.json",
+      "gain_i_v_per_v": 0.9058999812196683,
+      "gain_q_v_per_v": 0.9059118865025433,
+      "measured_total_current_a": 0.019031651930937987,
+      "q_relative_to_i_deg": 90.00019063324332
+    },
+    {
+      "corner": "ss",
+      "source": "rx-process-screen.json",
+      "gain_i_v_per_v": 0.5899858522482763,
+      "gain_q_v_per_v": 0.5899867787154037,
+      "measured_total_current_a": 0.01584572253267369,
+      "q_relative_to_i_deg": 90.00087238799168
+    },
+    {
+      "corner": "fs",
+      "source": "rx-mixed-process-screen.json",
+      "gain_i_v_per_v": 0.841241224417897,
+      "gain_q_v_per_v": 0.8412414257637713,
+      "measured_total_current_a": 0.018308728169564883,
+      "q_relative_to_i_deg": 90.0000309970399
+    },
+    {
+      "corner": "sf",
+      "source": "rx-mixed-process-screen.json",
+      "gain_i_v_per_v": 0.6760771373593806,
+      "gain_q_v_per_v": 0.6760744980891642,
+      "measured_total_current_a": 0.016602012101161683,
+      "q_relative_to_i_deg": 90.00090667797637
+    }
+  ],
+  "observed_gain_range": [
+    0.5899858522482763,
+    0.9058999812196683
+  ],
+  "observed_current_range_a": [
+    0.01584572253267369,
+    0.019031651930937987
+  ],
+  "input_sha256": {
+    "rx-buffered-screen.json": "17b63f9bffea4a6c240394c59d63a5805be1cc486116d653b92d6756f7897727",
+    "rx-process-screen.json": "a51da3e91be15c25e232253b3148ac15759adfbb344f1502ba85bf9c564e6b1d",
+    "rx-mixed-process-screen.json": "83a7ab83dd6f7e6158070d0748f65df0cdd0c0ebddc0de657392a722fc84c474"
+  },
+  "limitations": "Single-frequency small-signal schematic screens; no mismatch, passive variation, RF noise, PEX, converter load or yield bound."
+}

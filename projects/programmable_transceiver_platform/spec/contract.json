@@ -1,0 +1,520 @@
+{
+  "version": 4,
+  "status": "design_targets_not_qualified",
+  "limits": {
+    "total_terminals": 50,
+    "core_area_um2": 12920000
+  },
+  "pins": [
+    {
+      "name": "WIRE_TX_P",
+      "direction": "out",
+      "kind": "analog"
+    },
+    {
+      "name": "WIRE_TX_N",
+      "direction": "out",
+      "kind": "analog"
+    },
+    {
+      "name": "WIRE_RX_P",
+      "direction": "in",
+      "kind": "analog"
+    },
+    {
+      "name": "WIRE_RX_N",
+      "direction": "in",
+      "kind": "analog"
+    },
+    {
+      "name": "RF_RX_P",
+      "direction": "in",
+      "kind": "analog"
+    },
+    {
+      "name": "RF_RX_N",
+      "direction": "in",
+      "kind": "analog"
+    },
+    {
+      "name": "RF_TX_P",
+      "direction": "out",
+      "kind": "analog"
+    },
+    {
+      "name": "RF_TX_N",
+      "direction": "out",
+      "kind": "analog"
+    },
+    {
+      "name": "REF_IN",
+      "direction": "in",
+      "kind": "reference"
+    },
+    {
+      "name": "HOST_CS_N",
+      "direction": "in",
+      "kind": "digital"
+    },
+    {
+      "name": "HOST_SCLK",
+      "direction": "in",
+      "kind": "digital"
+    },
+    {
+      "name": "HOST_MOSI",
+      "direction": "in",
+      "kind": "digital"
+    },
+    {
+      "name": "HOST_MISO",
+      "direction": "out",
+      "kind": "digital"
+    },
+    {
+      "name": "RESET_N",
+      "direction": "in",
+      "kind": "digital"
+    },
+    {
+      "name": "D2H_D[0]",
+      "direction": "out",
+      "kind": "digital"
+    },
+    {
+      "name": "D2H_D[1]",
+      "direction": "out",
+      "kind": "digital"
+    },
+    {
+      "name": "D2H_D[2]",
+      "direction": "out",
+      "kind": "digital"
+    },
+    {
+      "name": "D2H_D[3]",
+      "direction": "out",
+      "kind": "digital"
+    },
+    {
+      "name": "D2H_D[4]",
+      "direction": "out",
+      "kind": "digital"
+    },
+    {
+      "name": "D2H_D[5]",
+      "direction": "out",
+      "kind": "digital"
+    },
+    {
+      "name": "D2H_D[6]",
+      "direction": "out",
+      "kind": "digital"
+    },
+    {
+      "name": "D2H_D[7]",
+      "direction": "out",
+      "kind": "digital"
+    },
+    {
+      "name": "D2H_D[8]",
+      "direction": "out",
+      "kind": "digital"
+    },
+    {
+      "name": "D2H_D[9]",
+      "direction": "out",
+      "kind": "digital"
+    },
+    {
+      "name": "D2H_CLK",
+      "direction": "out",
+      "kind": "digital"
+    },
+    {
+      "name": "H2D_D[0]",
+      "direction": "in",
+      "kind": "digital"
+    },
+    {
+      "name": "H2D_D[1]",
+      "direction": "in",
+      "kind": "digital"
+    },
+    {
+      "name": "H2D_D[2]",
+      "direction": "in",
+      "kind": "digital"
+    },
+    {
+      "name": "H2D_D[3]",
+      "direction": "in",
+      "kind": "digital"
+    },
+    {
+      "name": "H2D_D[4]",
+      "direction": "in",
+      "kind": "digital"
+    },
+    {
+      "name": "H2D_D[5]",
+      "direction": "in",
+      "kind": "digital"
+    },
+    {
+      "name": "H2D_D[6]",
+      "direction": "in",
+      "kind": "digital"
+    },
+    {
+      "name": "H2D_D[7]",
+      "direction": "in",
+      "kind": "digital"
+    },
+    {
+      "name": "H2D_D[8]",
+      "direction": "in",
+      "kind": "digital"
+    },
+    {
+      "name": "H2D_D[9]",
+      "direction": "in",
+      "kind": "digital"
+    },
+    {
+      "name": "H2D_CLK",
+      "direction": "in",
+      "kind": "digital"
+    },
+    {
+      "name": "VDD_CORE_0",
+      "direction": "power",
+      "kind": "supply"
+    },
+    {
+      "name": "VDD_HOST_1",
+      "direction": "power",
+      "kind": "supply"
+    },
+    {
+      "name": "VSS_CORE_0",
+      "direction": "power",
+      "kind": "ground"
+    },
+    {
+      "name": "VSS_HOST_1",
+      "direction": "power",
+      "kind": "ground"
+    },
+    {
+      "name": "VDD_HOST_0",
+      "direction": "power",
+      "kind": "supply"
+    },
+    {
+      "name": "VSS_HOST_0",
+      "direction": "power",
+      "kind": "ground"
+    },
+    {
+      "name": "VDD_WIRE_0",
+      "direction": "power",
+      "kind": "supply"
+    },
+    {
+      "name": "VDD_WIRE_1",
+      "direction": "power",
+      "kind": "supply"
+    },
+    {
+      "name": "VSS_WIRE_0",
+      "direction": "power",
+      "kind": "ground"
+    },
+    {
+      "name": "VSS_WIRE_1",
+      "direction": "power",
+      "kind": "ground"
+    },
+    {
+      "name": "VDD_RF_0",
+      "direction": "power",
+      "kind": "supply"
+    },
+    {
+      "name": "VSS_RF_0",
+      "direction": "power",
+      "kind": "ground"
+    },
+    {
+      "name": "VDD_PLL_0",
+      "direction": "power",
+      "kind": "supply"
+    },
+    {
+      "name": "VSS_PLL_0",
+      "direction": "power",
+      "kind": "ground"
+    }
+  ],
+  "area_um2": {
+    "wired": 2000000,
+    "rf": 2300000,
+    "converters": 1300000,
+    "timing": 1300000,
+    "digital": 1500000,
+    "memory": 800000,
+    "reserve": 3720000
+  },
+  "transport": {
+    "word_bits": 10,
+    "frame_words": 64,
+    "control_words": 5,
+    "host_slow_ppm": 100,
+    "source_fast_ppm": 100,
+    "profiles": {
+      "sdr25": {
+        "clock_hz": 25000000,
+        "edges": 1
+      },
+      "sdr50": {
+        "clock_hz": 50000000,
+        "edges": 1
+      },
+      "ddr125": {
+        "clock_hz": 125000000,
+        "edges": 2
+      },
+      "ddr156": {
+        "clock_hz": 156250000,
+        "edges": 2
+      }
+    },
+    "scheduling": {
+      "control_slots": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "policy": "smooth_weighted_round_robin_alphabetical_ties",
+      "descriptor": "counts6_sequence6_opcode4_argument8_hamming37_tag3_guard10",
+      "staging_frames": 2,
+      "startup_words": 256,
+      "ingress_bits_per_source": 1024,
+      "egress_bits_per_source": 2048,
+      "simulation_frames": 512,
+      "receive_commit": "stream_after_validated_header",
+      "status": "v2_integrated_finite_tests_only",
+      "fifo_budget_status": "legacy_planning_allocations_not_actual_rtl_depths"
+    },
+    "legacy_v1_scheduling": {
+      "control_slots": [
+        0,
+        1,
+        2,
+        62,
+        63
+      ],
+      "policy": "smooth_weighted_round_robin_alphabetical_ties",
+      "descriptor": "counts6_sequence6_opcode4_argument8_crc16_marker4",
+      "staging_frames": 2,
+      "startup_words": 256,
+      "ingress_bits_per_source": 1024,
+      "egress_bits_per_source": 2048,
+      "simulation_frames": 512,
+      "receive_commit": "after_complete_frame_crc"
+    }
+  },
+  "modes": [
+    {
+      "id": "ethernet_rf40_12",
+      "profile": "ddr125",
+      "sources": [
+        {
+          "id": "wire",
+          "directions": [
+            "d2h",
+            "h2d"
+          ],
+          "rate_bps": 1250000000,
+          "sample_bits": 10
+        },
+        {
+          "id": "iq",
+          "directions": [
+            "d2h",
+            "h2d"
+          ],
+          "rate_bps": 960000000,
+          "sample_bits": 24
+        }
+      ]
+    },
+    {
+      "id": "pcie_rf20_8",
+      "profile": "ddr156",
+      "sources": [
+        {
+          "id": "wire",
+          "directions": [
+            "d2h",
+            "h2d"
+          ],
+          "rate_bps": 2500000000,
+          "sample_bits": 10
+        },
+        {
+          "id": "iq",
+          "directions": [
+            "d2h",
+            "h2d"
+          ],
+          "rate_bps": 320000000,
+          "sample_bits": 16
+        }
+      ]
+    }
+  ],
+  "assumptions": [
+    "Continuous bit packing across word boundaries; per-source static slots, no payload packet headers.",
+    "Five header words per 64-word frame protect metadata; payload has no CRC/quarantine. V2 RTL is default, legacy v1 is a compile-time comparison. Acquisition is word-aligned only.",
+    "100 ppm independent host/source bounds are provisional budgeting margins, not a PCIe SSC model.",
+    "FIFO depth, service gaps, CDC, clock tracking, pad timing and analog performance require separate evidence.",
+    "Pass 2 models lossless source-matched playout and explicit per-frame valid-word counts; it does not prove CDC, error recovery, arbitrary drift or FIFO sufficiency for all phases.",
+    "The finite phase/frequency queue model is retained explicitly for legacy v1; v2 has integrated nominal-clock tests but no equivalent drift/phase bound yet."
+  ],
+  "power": {
+    "status": "candidate_allocation_not_current_or_physical_qualification",
+    "supply_cell_dc_limit_ma": 60,
+    "screen_output_current_multiplier": 1.25,
+    "screen_other_current_allowance_ma_per_segment": 2,
+    "current_evidence": "evidence/gpio-transient-screen.json",
+    "domains": [
+      {
+        "id": "CORE",
+        "supply_pins": [
+          "VDD_CORE_0"
+        ],
+        "return_pins": [
+          "VSS_CORE_0"
+        ],
+        "per_connection_budget_ma": 48,
+        "budget_status": "design_ceiling_not_measured"
+      },
+      {
+        "id": "HOST",
+        "supply_pins": [
+          "VDD_HOST_0",
+          "VDD_HOST_1"
+        ],
+        "return_pins": [
+          "VSS_HOST_0",
+          "VSS_HOST_1"
+        ],
+        "per_connection_budget_ma": 55,
+        "budget_status": "design_ceiling_not_measured"
+      },
+      {
+        "id": "WIRE",
+        "supply_pins": [
+          "VDD_WIRE_0",
+          "VDD_WIRE_1"
+        ],
+        "return_pins": [
+          "VSS_WIRE_0",
+          "VSS_WIRE_1"
+        ],
+        "per_connection_budget_ma": 48,
+        "budget_status": "design_ceiling_not_measured"
+      },
+      {
+        "id": "RF",
+        "supply_pins": [
+          "VDD_RF_0"
+        ],
+        "return_pins": [
+          "VSS_RF_0"
+        ],
+        "per_connection_budget_ma": 48,
+        "budget_status": "design_ceiling_not_measured"
+      },
+      {
+        "id": "PLL",
+        "supply_pins": [
+          "VDD_PLL_0"
+        ],
+        "return_pins": [
+          "VSS_PLL_0"
+        ],
+        "per_connection_budget_ma": 48,
+        "budget_status": "design_ceiling_not_measured"
+      }
+    ],
+    "host_segments": [
+      {
+        "id": "HOST_A",
+        "supply": "VDD_HOST_0",
+        "return": "VSS_HOST_0",
+        "fast_outputs": [
+          "D2H_D[0]",
+          "D2H_D[1]",
+          "D2H_D[2]",
+          "D2H_D[3]",
+          "D2H_D[4]"
+        ],
+        "inputs": [
+          "H2D_D[0]",
+          "H2D_D[1]",
+          "H2D_D[2]",
+          "H2D_D[3]",
+          "H2D_D[4]"
+        ],
+        "management": [
+          "HOST_CS_N",
+          "HOST_SCLK",
+          "HOST_MOSI",
+          "HOST_MISO",
+          "RESET_N"
+        ]
+      },
+      {
+        "id": "HOST_B",
+        "supply": "VDD_HOST_1",
+        "return": "VSS_HOST_1",
+        "fast_outputs": [
+          "D2H_D[5]",
+          "D2H_D[6]",
+          "D2H_D[7]",
+          "D2H_D[8]",
+          "D2H_D[9]",
+          "D2H_CLK"
+        ],
+        "inputs": [
+          "H2D_D[5]",
+          "H2D_D[6]",
+          "H2D_D[7]",
+          "H2D_D[8]",
+          "H2D_D[9]",
+          "H2D_CLK"
+        ],
+        "management": []
+      }
+    ]
+  },
+  "operating_policy": {
+    "active_payload_engine": [
+      "none",
+      "rf",
+      "wired"
+    ],
+    "rf_wired_simultaneous_required": false,
+    "rf_wired_simultaneous_permitted": false,
+    "within_engine_tx_rx_capability_retained": true,
+    "additional_physical_sharing_encouraged": true,
+    "implementation_enforcement": "pending",
+    "specification": "exclusive-engine-policy.md",
+    "historical_combined_rate_profiles": "Retained as optional stress/budget history; exclusive-mode rebudgeting pending."
+  }
+}

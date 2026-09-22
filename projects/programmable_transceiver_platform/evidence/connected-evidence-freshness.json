@@ -1,0 +1,65 @@
+{
+  "status": "source_identity_audit_only",
+  "reports": [
+    {
+      "report": "connected-platform",
+      "status": "current",
+      "report_sha256": "7d06b2d168dd5c675b70d7fea3d2c12bae7ad8a629f264fd99247eb7e8a6e211",
+      "mismatches": []
+    },
+    {
+      "report": "connected-platform-clock-sweep",
+      "status": "stale",
+      "report_sha256": "11aeeb73865154b031a7318b57a86a2c6e32a8fe8445c85896939d35b584b3e3",
+      "mismatches": [
+        {
+          "source": "system_model/connected/platform.py",
+          "reason": "missing"
+        },
+        {
+          "source": "system_model/connected/rf_blocks.py",
+          "reason": "changed"
+        },
+        {
+          "source": "system_model/connected/recovered_clock.py",
+          "reason": "changed"
+        }
+      ]
+    },
+    {
+      "report": "connected-platform-host-clock-sweep",
+      "status": "stale",
+      "report_sha256": "e37ad0058a6fe416a2cd77fedf9627b00ba37bf8506f210d89fb34145eeb940c",
+      "mismatches": [
+        {
+          "source": "system_model/connected/platform.py",
+          "reason": "missing"
+        },
+        {
+          "source": "system_model/connected/rf_blocks.py",
+          "reason": "changed"
+        },
+        {
+          "source": "system_model/connected/recovered_clock.py",
+          "reason": "changed"
+        }
+      ]
+    },
+    {
+      "report": "connected-clock-holdover",
+      "status": "current",
+      "report_sha256": "35ab75d4f57b73a0dbb1884740d8d0e007c62a7c0bbb2272688f24089a8143a2",
+      "mismatches": []
+    },
+    {
+      "report": "connected-transition-density",
+      "status": "current",
+      "report_sha256": "841c4aedd9703cf8c25f86ceecf09bdf6d484383a9529124d6c1192fbeb6dd89",
+      "mismatches": []
+    }
+  ],
+  "limitations": [
+    "Current hashes do not prove complete dependencies, test validity, or architecture completion.",
+    "Stale reports retain historical value but do not verify current source."
+  ]
+}

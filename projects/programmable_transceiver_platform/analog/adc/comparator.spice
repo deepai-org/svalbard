@@ -1,0 +1,16 @@
+* Clocked regenerative comparator. CLK low resets; high evaluates.
+* INP > INN should produce QP high and QN low. Dynamic outputs: latch externally.
+* All sizes preliminary; no offset/noise/ADC precision qualification.
+.subckt pt_adc_comparator INP INN CLK QP QN VDD VSS
+XIP N1 INP TAIL VSS nfet_03v3 w=12u l=.28u
+XIN N2 INN TAIL VSS nfet_03v3 w=12u l=.28u
+XT TAIL CLK VSS VSS nfet_03v3 w=24u l=.28u
+XNP QN QP N1 VSS nfet_03v3 w=4u l=.28u
+XNN QP QN N2 VSS nfet_03v3 w=4u l=.28u
+XPP QN QP VDD VDD pfet_03v3 w=8u l=.28u
+XPN QP QN VDD VDD pfet_03v3 w=8u l=.28u
+XR1 N1 CLK VDD VDD pfet_03v3 w=4u l=.28u
+XR2 N2 CLK VDD VDD pfet_03v3 w=4u l=.28u
+XRP QP CLK VDD VDD pfet_03v3 w=4u l=.28u
+XRN QN CLK VDD VDD pfet_03v3 w=4u l=.28u
+.ends

@@ -1,0 +1,36 @@
+{
+  "status": "characterized",
+  "trace_sha256": "36480a3c79e99868d5533a7a9f951ff3f3ebb3fd6a23197311ff7c7f99ae6439",
+  "first_observed_transition_time": 0.00032233359999999994,
+  "min_transfer": 0.001,
+  "max_transfer": 1.0,
+  "windows": [
+    {
+      "window_s": 1e-07,
+      "samples": 32,
+      "raw_relative_rms": 0.8279293014929545,
+      "late_gain_referenced_relative_rms": 0.08349228658163581,
+      "isolation_only_increment_relative_rms": 0.03543736265556196
+    },
+    {
+      "window_s": 2e-07,
+      "samples": 63,
+      "raw_relative_rms": 0.8186749875454074,
+      "late_gain_referenced_relative_rms": 0.09299044703308991,
+      "isolation_only_increment_relative_rms": 0.013581011259832033
+    },
+    {
+      "window_s": 1e-06,
+      "samples": 313,
+      "raw_relative_rms": 0.817193831188234,
+      "late_gain_referenced_relative_rms": 0.09136566939994926,
+      "isolation_only_increment_relative_rms": 0.007200035988993377
+    }
+  ],
+  "limitations": [
+    "Descriptive onset windows; no new pass threshold or protocol compliance claim.",
+    "Gain is fitted on later samples for diagnosis, not available causal startup calibration.",
+    "Dividing by known gate transfer is a frozen-state counterfactual, not an independent analog simulation.",
+    "Observation grid may miss instantaneous peaks and the exact switching boundary."
+  ]
+}

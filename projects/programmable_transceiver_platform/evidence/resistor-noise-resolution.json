@@ -1,0 +1,63 @@
+{
+  "status": "linear_ensemble_resolution_checked",
+  "rows": [
+    {
+      "case": "nominal",
+      "bins": 32,
+      "phase_rms_rad": 0.007644934270918082,
+      "relative_variance_error": 0.005416616458146173
+    },
+    {
+      "case": "nominal",
+      "bins": 64,
+      "phase_rms_rad": 0.007629512655887392,
+      "relative_variance_error": 0.0013643882227951654
+    },
+    {
+      "case": "nominal",
+      "bins": 128,
+      "phase_rms_rad": 0.0076256129154918945,
+      "relative_variance_error": 0.0003409773400304683
+    },
+    {
+      "case": "nominal",
+      "bins": 256,
+      "phase_rms_rad": 0.007624638039603069,
+      "relative_variance_error": 8.52219079661154e-05
+    },
+    {
+      "case": "stressed",
+      "bins": 32,
+      "phase_rms_rad": 0.008489544341553705,
+      "relative_variance_error": 0.0029194499226044
+    },
+    {
+      "case": "stressed",
+      "bins": 64,
+      "phase_rms_rad": 0.008482910796209196,
+      "relative_variance_error": 0.0013527433574114234
+    },
+    {
+      "case": "stressed",
+      "bins": 128,
+      "phase_rms_rad": 0.008478614486411738,
+      "relative_variance_error": 0.00033869705533984273
+    },
+    {
+      "case": "stressed",
+      "bins": 256,
+      "phase_rms_rad": 0.008477537807709214,
+      "relative_variance_error": 8.465201376073317e-05
+    }
+  ],
+  "limitations": [
+    "Ensemble power only: a finite-window seeded realization can differ.",
+    "Does not test nonlinear fractional PLL, sampled aliasing, or coupled TX quality."
+  ],
+  "source_sha256": {
+    "evidence/stressed-three-cap-quality-mode1-launch.json": "57baa1a01e0c8999a98899d229dc713c7c3b9e54cd4402fde1e0ced7df7871c0",
+    "verification/resistor_noise_resolution.py": "e8b8384cb47c9ead333c3b8778845faab3db4032b37debde2aed243d9422c335",
+    "verification/three_cap_thermal_noise.py": "974f36f1b8126ccc35a1d5a18cbf0c97da68744b1edc32e30e19f32c98af54a0",
+    "system_model/connected/three_cap_resistor_noise.py": "187c062bb6323b5a7907693a19af0aa2762ae4d3d1490ecc0eba62bf9d8f16d4"
+  }
+}

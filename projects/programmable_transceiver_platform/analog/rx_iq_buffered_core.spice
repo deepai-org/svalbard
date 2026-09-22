@@ -1,0 +1,10 @@
+* Split-LNA receiver with four real LO buffers; phase generation remains external.
+.include /screen/rx_iq_split_core.spice
+.include /screen/lo_buffer.spice
+.subckt pt_rx_iq_buffered G DI SI DQ SQ CI CIB CQ CQB IP IN QP QN VDDL VSS
+XBI CI LI VDDL VSS pt_lo_buffer S=1
+XBIB CIB LIB VDDL VSS pt_lo_buffer S=1
+XBQ CQ LQ VDDL VSS pt_lo_buffer S=1
+XBQB CQB LQB VDDL VSS pt_lo_buffer S=1
+XCORE G DI SI DQ SQ LI LIB LQ LQB IP IN QP QN VSS pt_rx_iq_split
+.ends pt_rx_iq_buffered

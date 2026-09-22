@@ -1,0 +1,21 @@
+{
+  "status": "conditional_budget_estimate",
+  "baseline_tx_error": 0.099773848117563,
+  "screen_limit": 0.1,
+  "independent_additive_rms_headroom": 0.0067215498074084295,
+  "resistor_phase_rms_rad": 0.008477180375156601,
+  "conditional_quadrature_tx_error": 0.10013332789485961,
+  "thermal_to_headroom_ratio": 1.2611943105462273,
+  "equilibrium_relative_error": -2.5614968325315957e-06,
+  "inputs_sha256": {
+    "evidence/stressed-three-cap-quality-mode1-launch.json": "57baa1a01e0c8999a98899d229dc713c7c3b9e54cd4402fde1e0ced7df7871c0",
+    "evidence/connected-limited-rail20-pad-quality-mode1-three-cap-stressed-repeated-cal-phase-diagnostic.json": "293c0979e22eda02eda454f19cc9defc342297ae816c5d3b878b24197d8f10b9",
+    "verification/stressed_noise_margin.py": "fe4e48792c7cd61ca96eff42593aa23dc7f645ad8daf15677595b96e79ab414b",
+    "verification/three_cap_thermal_noise.py": "974f36f1b8126ccc35a1d5a18cbf0c97da68744b1edc32e30e19f32c98af54a0"
+  },
+  "limitations": [
+    "Quadrature comparison assumes independent small phase error mapped with unit sensitivity to normalized TX error.",
+    "Gain fitting, finite observation window and analog filtering alter that mapping; this is not a pass/fail prediction.",
+    "Averaged resistor noise only, 100 Hz to 10 MHz at 300 K; sampled aliasing, pump, reference and other device noise omitted."
+  ]
+}

@@ -1,0 +1,4974 @@
+{
+  "status": "diagnostic_not_lane_qualification",
+  "pulse_physical_qualified": true,
+  "environment": [
+    "typical",
+    "res_typical",
+    3.3,
+    27
+  ],
+  "stimulus_bits": [
+    1,
+    0,
+    1,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1
+  ],
+  "bit_period_s": 4e-10,
+  "first_bit_end_s": 1.4e-09,
+  "ideal_boundaries": [
+    "upstream 1.25 GHz complementary rail clocks",
+    "200 mV differential ideal RX pin drive through 1 ohm per leg",
+    "DC biases and supplies"
+  ],
+  "limitations": [
+    "No channel or TX",
+    "Unrouted inter-macro wires",
+    "No CDR",
+    "Output polarity/latency and aperture require assessment; no BER claim"
+  ],
+  "source_sha256": {
+    "runner": "41a52a1620b4e39d153c9660c836eea1f146496aa0828d4e2697b856bfa86042",
+    "template": "2e3ffffbafa29a2300af146153c357c6c3d32cd96063142d927b5e3eae7d7b00",
+    "pulse": "f152f7434a508ba8b77189b5e2de701a8ec6c2f38843b20b62d381594d0c3e9d",
+    "bridge": "d2868772b9a302ad7c291f7ca024c73ec8391e5ae6da4d56dc1b218498634614",
+    "lane": "f8fdcb7cdcc486c6ac868f476dd7a85bcaaa3ee02ec77caaf835c6107519b1df"
+  },
+  "cases": [
+    {
+      "id": "static_positive",
+      "deck_sha256": "cf3f4d41941e8b855edbfeb1f4f4569518c00e87e72e3f532bd21ec347d8f8d8",
+      "waveform_sha256": "cbc5b9a78e0c13d61ed63cfd717eab3d7f11c37c11f68934bc0bcf6bdd8c001b",
+      "branches": {
+        "even": {
+          "sample_times_s": [
+            6.365334394404374e-09,
+            7.1705668628322086e-09,
+            7.974542832352463e-09,
+            8.77755919665088e-09,
+            9.579856730773153e-09,
+            1.0381612381614455e-08,
+            1.1182955345352242e-08,
+            1.1983987381092718e-08,
+            1.2784785173236797e-08,
+            1.3585398355101857e-08,
+            1.4385878266000164e-08,
+            1.5186253707494902e-08,
+            1.5986544430061255e-08
+          ],
+          "differential_output_v": [
+            3.161027085455035,
+            3.156296135148755,
+            3.1528424814475016,
+            3.150327375050756,
+            3.148482841350004,
+            3.1471208240648956,
+            3.146110262428948,
+            3.1453690714186733,
+            3.144806759834839,
+            3.1443984118521398,
+            3.1440871842219456,
+            3.143851705676806,
+            3.1436778615855427
+          ],
+          "minimum_absolute_output_v": 3.1436778615855427,
+          "note": "Samples 100 ps after each actual capture falling edge; latency not calibrated."
+        },
+        "odd": {
+          "sample_times_s": [
+            6.799263191344584e-09,
+            7.603621609073754e-09,
+            8.406958158287959e-09,
+            9.20952448612269e-09,
+            1.0011492900097148e-08,
+            1.0813008372992983e-08,
+            1.1614176717683776e-08,
+            1.2415088507132255e-08,
+            1.3215793747717208e-08,
+            1.4016352268254761e-08,
+            1.4816791553060913e-08,
+            1.5617131584578858e-08
+          ],
+          "differential_output_v": [
+            3.125249574464018,
+            3.124237267597422,
+            3.123594525658801,
+            3.1232030166838833,
+            3.1229434936457836,
+            3.122763921848866,
+            3.1226672672026954,
+            3.122577423169377,
+            3.1225418090034354,
+            3.1225056704519067,
+            3.122471578658248,
+            3.1224542525248458
+          ],
+          "minimum_absolute_output_v": 3.1224542525248458,
+          "note": "Samples 100 ps after each actual capture falling edge; latency not calibrated."
+        }
+      },
+      "current_a": 0.07597264150764024
+    },
+    {
+      "id": "static_negative",
+      "deck_sha256": "3b838e58e66c8e6d431c7704ec0d2fb95b5f0c08540b736683a98d8436aed36c",
+      "waveform_sha256": "7a05e146cd389a5c2dcd334bf4ec5db93b562ee638f1c26f4b533fe9b92fae70",
+      "branches": {
+        "even": {
+          "sample_times_s": [
+            6.3652938279544625e-09,
+            7.170527307092847e-09,
+            7.974506098508421e-09,
+            8.777522879306472e-09,
+            9.57981994943483e-09,
+            1.0381574568149235e-08,
+            1.1182918215642331e-08,
+            1.1983951050896267e-08,
+            1.2784748580921373e-08,
+            1.3585363197066454e-08,
+            1.4385842828476072e-08,
+            1.5186217330254173e-08,
+            1.598650978632006e-08
+          ],
+          "differential_output_v": [
+            -3.159010433107821,
+            -3.154328760084611,
+            -3.150927623863571,
+            -3.148462582624572,
+            -3.146664143658372,
+            -3.1453392579620445,
+            -3.144356404343418,
+            -3.1436401300096564,
+            -3.1430960946251227,
+            -3.1427005355139164,
+            -3.14240234842637,
+            -3.142177373648768,
+            -3.1420083658603106
+          ],
+          "minimum_absolute_output_v": 3.1420083658603106,
+          "note": "Samples 100 ps after each actual capture falling edge; latency not calibrated."
+        },
+        "odd": {
+          "sample_times_s": [
+            6.799238654118887e-09,
+            7.603598412238337e-09,
+            8.406935654912008e-09,
+            9.209500413514e-09,
+            1.0011467120198048e-08,
+            1.0812983059093687e-08,
+            1.1614149583250347e-08,
+            1.2415060644881725e-08,
+            1.3215767528406308e-08,
+            1.4016325990887862e-08,
+            1.4816766352336215e-08,
+            1.5617101684245843e-08
+          ],
+          "differential_output_v": [
+            -3.120260092259233,
+            -3.1196559940192206,
+            -3.119320675021948,
+            -3.1191569381046933,
+            -3.1190689663873434,
+            -3.1190201789496874,
+            -3.1190209892385634,
+            -3.119006845942128,
+            -3.1190283947402633,
+            -3.1190372598750318,
+            -3.1190388876053774,
+            -3.1190468012931283
+          ],
+          "minimum_absolute_output_v": 3.119006845942128,
+          "note": "Samples 100 ps after each actual capture falling edge; latency not calibrated."
+        }
+      },
+      "current_a": 0.07598525974416492
+    },
+    {
+      "id": "changing",
+      "deck_sha256": "72a3f7a589ae65dbca1ec06d9d9c730d0c7a195bcf5da40a9893307fb6816378",
+      "waveform_sha256": "a44c75635eacf72beb9dd7af777d5206ba5825adae2c453fea4ca6008f0e48d5",
+      "branches": {
+        "even": {
+          "sample_times_s": [
+            6.366131515568122e-09,
+            7.16968076105944e-09,
+            7.973684287143417e-09,
+            8.778738143633357e-09,
+            9.579397318440204e-09,
+            1.0380704607850244e-08,
+            1.118445556646184e-08,
+            1.1983154310284729e-08,
+            1.2783787940285066e-08,
+            1.3585599793555363e-08,
+            1.4384981764483262e-08,
+            1.5187733281377302e-08,
+            1.5985715283262313e-08
+          ],
+          "differential_output_v": [
+            3.0924168669213983,
+            -2.6811912201454122,
+            -3.1397038922355094,
+            -3.081299523376963,
+            2.8709177133780597,
+            3.143479026837817,
+            3.090713618006684,
+            3.1254171222042806,
+            -2.889900890212843,
+            2.871288875106431,
+            3.140603419973791,
+            3.0889559357800915,
+            3.1229959335953263
+          ],
+          "minimum_absolute_output_v": 2.6811912201454122,
+          "note": "Samples 100 ps after each actual capture falling edge; latency not calibrated."
+        },
+        "odd": {
+          "sample_times_s": [
+            6.79978155663468e-09,
+            7.60203322500738e-09,
+            8.40683374949219e-09,
+            9.210199274022123e-09,
+            1.0010020592694346e-08,
+            1.0812962842930548e-08,
+            1.1613319421340155e-08,
+            1.2415850276671608e-08,
+            1.321642624290706e-08,
+            1.4014838940396151e-08,
+            1.4816750205901637e-08,
+            1.561626270091031e-08
+          ],
+          "differential_output_v": [
+            -2.7175966941383782,
+            2.8874375063990874,
+            3.073667043057798,
+            -2.6916845525606425,
+            2.8635445181580015,
+            3.0826987393715406,
+            -2.8774119569054992,
+            -3.028549303445433,
+            -2.973281332674802,
+            2.8719719406011297,
+            3.080098171501852,
+            -2.8814520957054857
+          ],
+          "minimum_absolute_output_v": 2.6916845525606425,
+          "note": "Samples 100 ps after each actual capture falling edge; latency not calibrated."
+        }
+      },
+      "current_a": 0.08395620146287844
+    }
+  ],
+  "analysis": {
+    "static_signed_minimum_v": {
+      "static_positive": {
+        "even": 3.1436778615855427,
+        "odd": 3.1224542525248458
+      },
+      "static_negative": {
+        "even": 3.1420083658603106,
+        "odd": 3.119006845942128
+      }
+    },
+    "static_both_polarities_above_500mv": true,
+    "changing_samples": 25,
+    "best_common_latency_diagnostic": {
+      "delay_ps": 1025,
+      "wrong_polarity": 2,
+      "below_500mv": 2,
+      "minimum_signed_v": -3.143479026837817,
+      "branches": {
+        "even": {
+          "expected_bit_indices": [
+            10,
+            12,
+            14,
+            16,
+            18,
+            20,
+            22,
+            24,
+            26,
+            28,
+            30,
+            32,
+            34
+          ],
+          "wrong_polarity": 2,
+          "below_500mv": 2,
+          "minimum_signed_v": -3.143479026837817
+        },
+        "odd": {
+          "expected_bit_indices": [
+            11,
+            13,
+            15,
+            17,
+            19,
+            21,
+            23,
+            25,
+            27,
+            29,
+            31,
+            33
+          ],
+          "wrong_polarity": 0,
+          "below_500mv": 0,
+          "minimum_signed_v": 2.6916845525606425
+        }
+      }
+    },
+    "latency_scan": [
+      {
+        "delay_ps": 0,
+        "wrong_polarity": 10,
+        "below_500mv": 10,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35,
+              37
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.028549303445433
+          }
+        }
+      },
+      {
+        "delay_ps": 25,
+        "wrong_polarity": 10,
+        "below_500mv": 10,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35,
+              37
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.028549303445433
+          }
+        }
+      },
+      {
+        "delay_ps": 50,
+        "wrong_polarity": 10,
+        "below_500mv": 10,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35,
+              37
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.028549303445433
+          }
+        }
+      },
+      {
+        "delay_ps": 75,
+        "wrong_polarity": 10,
+        "below_500mv": 10,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35,
+              37
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.028549303445433
+          }
+        }
+      },
+      {
+        "delay_ps": 100,
+        "wrong_polarity": 10,
+        "below_500mv": 10,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35,
+              37
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.028549303445433
+          }
+        }
+      },
+      {
+        "delay_ps": 125,
+        "wrong_polarity": 10,
+        "below_500mv": 10,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35,
+              37
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.028549303445433
+          }
+        }
+      },
+      {
+        "delay_ps": 150,
+        "wrong_polarity": 10,
+        "below_500mv": 10,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35,
+              37
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.028549303445433
+          }
+        }
+      },
+      {
+        "delay_ps": 175,
+        "wrong_polarity": 10,
+        "below_500mv": 10,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35,
+              37
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.028549303445433
+          }
+        }
+      },
+      {
+        "delay_ps": 200,
+        "wrong_polarity": 10,
+        "below_500mv": 10,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              13,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 3,
+            "below_500mv": 3,
+            "minimum_signed_v": -3.028549303445433
+          }
+        }
+      },
+      {
+        "delay_ps": 225,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 250,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 275,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 300,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 325,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 350,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 375,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 400,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 425,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 450,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 475,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 500,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 525,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 550,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 575,
+        "wrong_polarity": 15,
+        "below_500mv": 15,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36
+            ],
+            "wrong_polarity": 9,
+            "below_500mv": 9,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 600,
+        "wrong_polarity": 12,
+        "below_500mv": 12,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              12,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 5,
+            "below_500mv": 5,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 625,
+        "wrong_polarity": 15,
+        "below_500mv": 15,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 650,
+        "wrong_polarity": 15,
+        "below_500mv": 15,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 675,
+        "wrong_polarity": 15,
+        "below_500mv": 15,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 700,
+        "wrong_polarity": 15,
+        "below_500mv": 15,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 725,
+        "wrong_polarity": 15,
+        "below_500mv": 15,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 750,
+        "wrong_polarity": 15,
+        "below_500mv": 15,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 775,
+        "wrong_polarity": 15,
+        "below_500mv": 15,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 800,
+        "wrong_polarity": 15,
+        "below_500mv": 15,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 825,
+        "wrong_polarity": 15,
+        "below_500mv": 15,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 850,
+        "wrong_polarity": 15,
+        "below_500mv": 15,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 875,
+        "wrong_polarity": 15,
+        "below_500mv": 15,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 900,
+        "wrong_polarity": 15,
+        "below_500mv": 15,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 925,
+        "wrong_polarity": 15,
+        "below_500mv": 15,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 950,
+        "wrong_polarity": 15,
+        "below_500mv": 15,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 975,
+        "wrong_polarity": 12,
+        "below_500mv": 12,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35
+            ],
+            "wrong_polarity": 4,
+            "below_500mv": 4,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 1000,
+        "wrong_polarity": 10,
+        "below_500mv": 10,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              11,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 1025,
+        "wrong_polarity": 2,
+        "below_500mv": 2,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 0,
+            "below_500mv": 0,
+            "minimum_signed_v": 2.6916845525606425
+          }
+        }
+      },
+      {
+        "delay_ps": 1050,
+        "wrong_polarity": 2,
+        "below_500mv": 2,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 0,
+            "below_500mv": 0,
+            "minimum_signed_v": 2.6916845525606425
+          }
+        }
+      },
+      {
+        "delay_ps": 1075,
+        "wrong_polarity": 2,
+        "below_500mv": 2,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 0,
+            "below_500mv": 0,
+            "minimum_signed_v": 2.6916845525606425
+          }
+        }
+      },
+      {
+        "delay_ps": 1100,
+        "wrong_polarity": 2,
+        "below_500mv": 2,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 0,
+            "below_500mv": 0,
+            "minimum_signed_v": 2.6916845525606425
+          }
+        }
+      },
+      {
+        "delay_ps": 1125,
+        "wrong_polarity": 2,
+        "below_500mv": 2,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 0,
+            "below_500mv": 0,
+            "minimum_signed_v": 2.6916845525606425
+          }
+        }
+      },
+      {
+        "delay_ps": 1150,
+        "wrong_polarity": 2,
+        "below_500mv": 2,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 0,
+            "below_500mv": 0,
+            "minimum_signed_v": 2.6916845525606425
+          }
+        }
+      },
+      {
+        "delay_ps": 1175,
+        "wrong_polarity": 2,
+        "below_500mv": 2,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 0,
+            "below_500mv": 0,
+            "minimum_signed_v": 2.6916845525606425
+          }
+        }
+      },
+      {
+        "delay_ps": 1200,
+        "wrong_polarity": 2,
+        "below_500mv": 2,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 0,
+            "below_500mv": 0,
+            "minimum_signed_v": 2.6916845525606425
+          }
+        }
+      },
+      {
+        "delay_ps": 1225,
+        "wrong_polarity": 2,
+        "below_500mv": 2,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 0,
+            "below_500mv": 0,
+            "minimum_signed_v": 2.6916845525606425
+          }
+        }
+      },
+      {
+        "delay_ps": 1250,
+        "wrong_polarity": 2,
+        "below_500mv": 2,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 0,
+            "below_500mv": 0,
+            "minimum_signed_v": 2.6916845525606425
+          }
+        }
+      },
+      {
+        "delay_ps": 1275,
+        "wrong_polarity": 2,
+        "below_500mv": 2,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 0,
+            "below_500mv": 0,
+            "minimum_signed_v": 2.6916845525606425
+          }
+        }
+      },
+      {
+        "delay_ps": 1300,
+        "wrong_polarity": 2,
+        "below_500mv": 2,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 0,
+            "below_500mv": 0,
+            "minimum_signed_v": 2.6916845525606425
+          }
+        }
+      },
+      {
+        "delay_ps": 1325,
+        "wrong_polarity": 2,
+        "below_500mv": 2,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 0,
+            "below_500mv": 0,
+            "minimum_signed_v": 2.6916845525606425
+          }
+        }
+      },
+      {
+        "delay_ps": 1350,
+        "wrong_polarity": 2,
+        "below_500mv": 2,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 2,
+            "below_500mv": 2,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 0,
+            "below_500mv": 0,
+            "minimum_signed_v": 2.6916845525606425
+          }
+        }
+      },
+      {
+        "delay_ps": 1375,
+        "wrong_polarity": 3,
+        "below_500mv": 3,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32,
+              34
+            ],
+            "wrong_polarity": 3,
+            "below_500mv": 3,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 0,
+            "below_500mv": 0,
+            "minimum_signed_v": 2.6916845525606425
+          }
+        }
+      },
+      {
+        "delay_ps": 1400,
+        "wrong_polarity": 7,
+        "below_500mv": 7,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              10,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 1,
+            "below_500mv": 1,
+            "minimum_signed_v": -2.7175966941383782
+          }
+        }
+      },
+      {
+        "delay_ps": 1425,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 1450,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 1475,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 1500,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 1525,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 1550,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 1575,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 1600,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 1625,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 1650,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 1675,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 1700,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 1725,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 1750,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.1397038922355094,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.1397038922355094
+          },
+          "odd": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 1775,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.1254171222042806,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.1254171222042806
+          },
+          "odd": {
+            "expected_bit_indices": [
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 1800,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.090713618006684,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.090713618006684
+          },
+          "odd": {
+            "expected_bit_indices": [
+              9,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 8,
+            "below_500mv": 8,
+            "minimum_signed_v": -3.0826987393715406
+          }
+        }
+      },
+      {
+        "delay_ps": 1825,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.090713618006684,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.090713618006684
+          },
+          "odd": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -2.8874375063990874
+          }
+        }
+      },
+      {
+        "delay_ps": 1850,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.090713618006684,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.090713618006684
+          },
+          "odd": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -2.8874375063990874
+          }
+        }
+      },
+      {
+        "delay_ps": 1875,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.090713618006684,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.090713618006684
+          },
+          "odd": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -2.8874375063990874
+          }
+        }
+      },
+      {
+        "delay_ps": 1900,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.090713618006684,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.090713618006684
+          },
+          "odd": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -2.8874375063990874
+          }
+        }
+      },
+      {
+        "delay_ps": 1925,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.090713618006684,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.090713618006684
+          },
+          "odd": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -2.8874375063990874
+          }
+        }
+      },
+      {
+        "delay_ps": 1950,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.090713618006684,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.090713618006684
+          },
+          "odd": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -2.8874375063990874
+          }
+        }
+      },
+      {
+        "delay_ps": 1975,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.090713618006684,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.090713618006684
+          },
+          "odd": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -2.8874375063990874
+          }
+        }
+      },
+      {
+        "delay_ps": 2000,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.090713618006684,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.090713618006684
+          },
+          "odd": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -2.8874375063990874
+          }
+        }
+      },
+      {
+        "delay_ps": 2025,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.090713618006684,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.090713618006684
+          },
+          "odd": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -2.8874375063990874
+          }
+        }
+      },
+      {
+        "delay_ps": 2050,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.090713618006684,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.090713618006684
+          },
+          "odd": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -2.8874375063990874
+          }
+        }
+      },
+      {
+        "delay_ps": 2075,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.090713618006684,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.090713618006684
+          },
+          "odd": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -2.8874375063990874
+          }
+        }
+      },
+      {
+        "delay_ps": 2100,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.090713618006684,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.090713618006684
+          },
+          "odd": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -2.8874375063990874
+          }
+        }
+      },
+      {
+        "delay_ps": 2125,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.090713618006684,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.090713618006684
+          },
+          "odd": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -2.8874375063990874
+          }
+        }
+      },
+      {
+        "delay_ps": 2150,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.090713618006684,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.090713618006684
+          },
+          "odd": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -2.8874375063990874
+          }
+        }
+      },
+      {
+        "delay_ps": 2175,
+        "wrong_polarity": 14,
+        "below_500mv": 14,
+        "minimum_signed_v": -3.0924168669213983,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              7,
+              9,
+              11,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              32
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -3.0924168669213983
+          },
+          "odd": {
+            "expected_bit_indices": [
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -2.8874375063990874
+          }
+        }
+      },
+      {
+        "delay_ps": 2200,
+        "wrong_polarity": 13,
+        "below_500mv": 13,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              7,
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              8,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 7,
+            "below_500mv": 7,
+            "minimum_signed_v": -2.8874375063990874
+          }
+        }
+      },
+      {
+        "delay_ps": 2225,
+        "wrong_polarity": 12,
+        "below_500mv": 12,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              7,
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 2250,
+        "wrong_polarity": 12,
+        "below_500mv": 12,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              7,
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 2275,
+        "wrong_polarity": 12,
+        "below_500mv": 12,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              7,
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 2300,
+        "wrong_polarity": 12,
+        "below_500mv": 12,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              7,
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 2325,
+        "wrong_polarity": 12,
+        "below_500mv": 12,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              7,
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 2350,
+        "wrong_polarity": 12,
+        "below_500mv": 12,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              7,
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 2375,
+        "wrong_polarity": 12,
+        "below_500mv": 12,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              7,
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      },
+      {
+        "delay_ps": 2400,
+        "wrong_polarity": 12,
+        "below_500mv": 12,
+        "minimum_signed_v": -3.143479026837817,
+        "branches": {
+          "even": {
+            "expected_bit_indices": [
+              7,
+              9,
+              11,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.143479026837817
+          },
+          "odd": {
+            "expected_bit_indices": [
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30
+            ],
+            "wrong_polarity": 6,
+            "below_500mv": 6,
+            "minimum_signed_v": -3.073667043057798
+          }
+        }
+      }
+    ],
+    "interpretation": "Exploratory shared delay 0..2400 ps in 25 ps increments, fixed noninverting polarity, samples 100 ps after actual capture fall. No per-bit or per-branch latency fitting. Best fit does not establish timing aperture, acquisition, BER, or correct operation for other patterns."
+  },
+  "analysis_source_sha256": "b10bff9760bc57e462969e1c1860d91a0a72a432e7b6bd506755170b8221926c",
+  "reproduction": "make transceiver-wired-pulse-data; python3 projects/programmable_transceiver_platform/verification/analyze_wired_pulse_data.py",
+  "container_image_id": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "physical_records": {
+    "pulse": {
+      "checks": {
+        "drc_clean": true,
+        "lvs_unique": true,
+        "pex_present": true
+      },
+      "claim": "fresh_extracted_pulse_leaf_for_composed_capture_boundary",
+      "layout_generator_sha256": "920bf97ba3a62212904c511d7019df95372fb7e12892d4541e0fa85e58955e1b",
+      "pex_sha256": "f152f7434a508ba8b77189b5e2de701a8ec6c2f38843b20b62d381594d0c3e9d",
+      "result": "pass",
+      "schema_version": 1,
+      "schematic_source_sha256": "ca0fab425621e943f5f38844c03b3569f47971209560d7211d9506077c1c2174"
+    },
+    "bridge": {
+      "checks": {
+        "drc_zero": true,
+        "fingerized_device_identity": true,
+        "full_rc": true,
+        "lvs_unique": true,
+        "rendered": true
+      },
+      "claim": "physical_local_complementary_capture_clock_bridge",
+      "drc_error_count": 0,
+      "gds_sha256": "d5cb6377cc36af773be6d0df13d28c6f3597fdc76de662aa269237ec3d05aa15",
+      "layout_image_sha256": "665e4e53e3eff1ce94d5ef9b0276bbeca4a6e5642d4b8330b0917d288ba68727",
+      "layout_source_sha256": "f3f91e6932f54f04587c2bd85affb3c35a70f7ccdfd68e3b6dbf2b02a22525ee",
+      "pex_capacitor_count": 560,
+      "pex_mos_count": 96,
+      "pex_resistor_count": 898,
+      "pex_sha256": "d2868772b9a302ad7c291f7ca024c73ec8391e5ae6da4d56dc1b218498634614",
+      "result": "pass",
+      "schema_version": 1,
+      "schematic_source_sha256": "860b53a537db95b73259203907be0120ca48559eaacfa290665026cd753ae4fc"
+    },
+    "lane": {
+      "checker_source_sha256": "edbfb1bb3b62f57aac278edd88eddf99dd210a23694bbb2255741d3878c15a05",
+      "claim": "routed_termination_rx_dual_regenerative_sampler_capture",
+      "drc_error_count": 0,
+      "gds_sha256": "7385b65fc5dbc1921d4994ed405946cced85cec866c586d36a795cef3c44bd6a",
+      "layout_image_bytes": 158877,
+      "layout_image_sha256": "c946b040d74b8c2eb817623c1e8f5deeaced74d1b9ae8c76fe71cf834eafb75c",
+      "layout_source_sha256": "0f789ececa9d40f570f3f4217b5681536c1734101c65aeeb544698b9761323ab",
+      "lvs_unique": true,
+      "pex_capacitor_count": 4348,
+      "pex_resistor_count": 7108,
+      "pex_sha256": "f8fdcb7cdcc486c6ac868f476dd7a85bcaaa3ee02ec77caaf835c6107519b1df",
+      "result": "pass",
+      "schema_version": 1,
+      "schematic_source_sha256": "bc364f4c21fe7cb7320553956650338df7c2e4ba84b29b3e13b2a558faf921f5"
+    }
+  }
+}

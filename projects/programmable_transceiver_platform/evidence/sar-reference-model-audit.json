@@ -1,0 +1,104 @@
+{
+  "source_sha256": "6cf656e0cd3be88ad0cadb60bbb0ef5ab5233501df656e1a35cb5d18138a7568",
+  "script_sha256": "18fcb84744b3ea656b2cec957cee9b31cf26f8f8067971bf698c600aaba39285",
+  "frames": [
+    {
+      "case": "sar-driver-physical-400",
+      "hold_ns": 70,
+      "nominal_sign_disagreement_bits": [
+        0
+      ],
+      "rail_only_sign_disagreement_bits": [],
+      "residual_exceeds_rail_margin_bits": [],
+      "maximum_unexplained_residue_v": 0.0026769643177669278,
+      "minimum_actual_decision_margin_v": 0.0015923863114160053
+    },
+    {
+      "case": "sar-driver-physical-400",
+      "hold_ns": 120,
+      "nominal_sign_disagreement_bits": [],
+      "rail_only_sign_disagreement_bits": [
+        0
+      ],
+      "residual_exceeds_rail_margin_bits": [
+        0
+      ],
+      "maximum_unexplained_residue_v": 0.002692312920693496,
+      "minimum_actual_decision_margin_v": 0.0009194983506761734
+    },
+    {
+      "case": "sar-driver-physical-400",
+      "hold_ns": 170,
+      "nominal_sign_disagreement_bits": [],
+      "rail_only_sign_disagreement_bits": [
+        0
+      ],
+      "residual_exceeds_rail_margin_bits": [
+        0
+      ],
+      "maximum_unexplained_residue_v": 0.0027074370947123283,
+      "minimum_actual_decision_margin_v": 0.0001043532011428816
+    },
+    {
+      "case": "sar-driver-physical-100",
+      "hold_ns": 70,
+      "nominal_sign_disagreement_bits": [],
+      "rail_only_sign_disagreement_bits": [],
+      "residual_exceeds_rail_margin_bits": [],
+      "maximum_unexplained_residue_v": 0.002699949133634416,
+      "minimum_actual_decision_margin_v": 0.003145712222325958
+    },
+    {
+      "case": "sar-driver-physical-100",
+      "hold_ns": 120,
+      "nominal_sign_disagreement_bits": [],
+      "rail_only_sign_disagreement_bits": [],
+      "residual_exceeds_rail_margin_bits": [],
+      "maximum_unexplained_residue_v": 0.002732772461257693,
+      "minimum_actual_decision_margin_v": 0.001780534936425049
+    },
+    {
+      "case": "sar-driver-physical-100",
+      "hold_ns": 170,
+      "nominal_sign_disagreement_bits": [],
+      "rail_only_sign_disagreement_bits": [],
+      "residual_exceeds_rail_margin_bits": [],
+      "maximum_unexplained_residue_v": 0.002715422844863258,
+      "minimum_actual_decision_margin_v": 0.0031199798972201265
+    },
+    {
+      "case": "sar-physical-control-100",
+      "hold_ns": 70,
+      "nominal_sign_disagreement_bits": [],
+      "rail_only_sign_disagreement_bits": [],
+      "residual_exceeds_rail_margin_bits": [],
+      "maximum_unexplained_residue_v": 0.0027000763411643147,
+      "minimum_actual_decision_margin_v": 0.0033772706532499974
+    },
+    {
+      "case": "sar-physical-control-100",
+      "hold_ns": 120,
+      "nominal_sign_disagreement_bits": [],
+      "rail_only_sign_disagreement_bits": [],
+      "residual_exceeds_rail_margin_bits": [],
+      "maximum_unexplained_residue_v": 0.0027335349601788073,
+      "minimum_actual_decision_margin_v": 0.0018107217850569235
+    },
+    {
+      "case": "sar-physical-control-100",
+      "hold_ns": 170,
+      "nominal_sign_disagreement_bits": [],
+      "rail_only_sign_disagreement_bits": [],
+      "residual_exceeds_rail_margin_bits": [],
+      "maximum_unexplained_residue_v": 0.0027160433683501295,
+      "minimum_actual_decision_margin_v": 0.0034597512087541915
+    }
+  ],
+  "status": "observed_history_model_adequacy_audit",
+  "limitations": [
+    "Uses observed trial codes and rail traces; not a predictive conversion model.",
+    "Unexplained residual combines omitted mechanisms, not an independent random offset.",
+    "Nine conversions cannot establish bounds or generalization to modulated input.",
+    "Do not replay these rails onto changed code histories as if loading were unchanged."
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "route": "loopback",
+      "gain": 0.5,
+      "adc_sha256": "ee74f8190b4373cb3b1465b3b2872141c7ac65f338c8b4eb657f9687902804e0"
+    },
+    {
+      "mode": 0,
+      "route": "loopback",
+      "gain": 2,
+      "adc_sha256": "901f52bf71a97dbea4d35bcb201ca4d9e162bcb7fe8a20d50d42480a1ec32b7a"
+    },
+    {
+      "mode": 0,
+      "route": "external_tone",
+      "gain": 0.5,
+      "adc_sha256": "aa71566bae5cbe966e515576594b7fa9c9f9db2ad8333686ac2fa51ba66dbb9c"
+    },
+    {
+      "mode": 0,
+      "route": "external_tone",
+      "gain": 2,
+      "adc_sha256": "b989ec4614881684cdc8b92430e6533a4a57c502fdc6e40f5c40fcd7d57c80d0"
+    },
+    {
+      "mode": 0,
+      "route": "mute",
+      "gain": 0.5,
+      "adc_sha256": "3aee9865bc33686fe8e8cd49d32d8fed217890af281e51087100f3a22ff11a6e"
+    },
+    {
+      "mode": 0,
+      "route": "mute",
+      "gain": 2,
+      "adc_sha256": "3aee9865bc33686fe8e8cd49d32d8fed217890af281e51087100f3a22ff11a6e"
+    },
+    {
+      "mode": 1,
+      "route": "loopback",
+      "gain": 0.5,
+      "adc_sha256": "992611368ca82f8821af1bd3e320df902d576d5da8bb1c2189aae28f9856ccc1"
+    },
+    {
+      "mode": 1,
+      "route": "loopback",
+      "gain": 2,
+      "adc_sha256": "2f390bf8402ee7a21f98e81eace8881ab343b09c5dddcde6ab8e26c3d900f7df"
+    },
+    {
+      "mode": 1,
+      "route": "external_tone",
+      "gain": 0.5,
+      "adc_sha256": "07948180dc5b9b570ff9db3705d42be195b6ed4edd8c24dacbd86cd2e4e7c82a"
+    },
+    {
+      "mode": 1,
+      "route": "external_tone",
+      "gain": 2,
+      "adc_sha256": "fa4f95ccca17782642fc385a46f35b13fe343ed082f2ec9291ab0b23e7cb0a5c"
+    },
+    {
+      "mode": 1,
+      "route": "mute",
+      "gain": 0.5,
+      "adc_sha256": "3aee9865bc33686fe8e8cd49d32d8fed217890af281e51087100f3a22ff11a6e"
+    },
+    {
+      "mode": 1,
+      "route": "mute",
+      "gain": 2,
+      "adc_sha256": "3aee9865bc33686fe8e8cd49d32d8fed217890af281e51087100f3a22ff11a6e"
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "External tone is an ideal downconverted envelope fixture, not a physical RF source or complete mixer/LO model.",
+    "Loopback denotes the existing external channel fixture, not an added silicon RF connection.",
+    "Gain is a linear local baseband setting; no gain-bandwidth/noise tradeoff is implied.",
+    "Three exclusive receive selections do not yet implement the full intended programmable resource graph."
+  ]
+}

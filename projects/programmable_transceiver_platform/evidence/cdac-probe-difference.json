@@ -1,0 +1,84 @@
+{
+  "reproduction_evidence_sha256": "7f5b14ce4478d3383da52d4e37d334227111e6ac52deb5161ae19381669a9c67",
+  "analog_reproduction_verified": false,
+  "nodes": [
+    {
+      "node": "v(hp)",
+      "max_error_v": 8.865324508944283e-06,
+      "peak_time_ns": 158.4425,
+      "samples_at_or_above_limit": 0,
+      "first_exceedance_ns": null,
+      "last_exceedance_ns": null,
+      "max_predecision_error_v": 3.326111828183542e-07
+    },
+    {
+      "node": "v(hn)",
+      "max_error_v": 1.0749625272921115e-05,
+      "peak_time_ns": 158.4225,
+      "samples_at_or_above_limit": 3,
+      "first_exceedance_ns": 158.4175,
+      "last_exceedance_ns": 158.4275,
+      "max_predecision_error_v": 3.977597231585861e-07
+    },
+    {
+      "node": "v(q_hp)",
+      "max_error_v": 8.865324763185356e-06,
+      "peak_time_ns": 158.4425,
+      "samples_at_or_above_limit": 0,
+      "first_exceedance_ns": null,
+      "last_exceedance_ns": null,
+      "max_predecision_error_v": 3.326117370416881e-07
+    },
+    {
+      "node": "v(q_hn)",
+      "max_error_v": 1.0749626367378973e-05,
+      "peak_time_ns": 158.4225,
+      "samples_at_or_above_limit": 3,
+      "first_exceedance_ns": 158.4175,
+      "last_exceedance_ns": 158.4275,
+      "max_predecision_error_v": 3.9775943205810904e-07
+    },
+    {
+      "node": "v(vh)",
+      "max_error_v": 1.087751456019248e-06,
+      "peak_time_ns": 158.4375,
+      "samples_at_or_above_limit": 0,
+      "first_exceedance_ns": null,
+      "last_exceedance_ns": null,
+      "max_predecision_error_v": 6.719703682378508e-08
+    },
+    {
+      "node": "v(vl)",
+      "max_error_v": 1.0073837619639647e-06,
+      "peak_time_ns": 208.4825000000001,
+      "samples_at_or_above_limit": 0,
+      "first_exceedance_ns": null,
+      "last_exceedance_ns": null,
+      "max_predecision_error_v": 3.24470659229803e-08
+    },
+    {
+      "node": "v(ip)",
+      "max_error_v": 3.311311020937069e-07,
+      "peak_time_ns": 113.457500000001,
+      "samples_at_or_above_limit": 0,
+      "first_exceedance_ns": null,
+      "last_exceedance_ns": null,
+      "max_predecision_error_v": 1.8122287004374016e-08
+    },
+    {
+      "node": "v(in)",
+      "max_error_v": 3.101557930484944e-07,
+      "peak_time_ns": 110.1725000000001,
+      "samples_at_or_above_limit": 0,
+      "first_exceedance_ns": null,
+      "last_exceedance_ns": null,
+      "max_predecision_error_v": 2.2711514335860272e-08
+    }
+  ],
+  "interpretation": "Localization only; original 10uV gate remains failed. No branch attribution authorized.",
+  "next_test": "Matched baseline and sensor runs with tighter solver tolerances; compare convergence of both before attributing currents.",
+  "limitations": [
+    "Post-inspection window audit is diagnostic, not a replacement acceptance criterion.",
+    "Matching captured codes and rail KCL does not establish unchanged analog trajectories."
+  ]
+}

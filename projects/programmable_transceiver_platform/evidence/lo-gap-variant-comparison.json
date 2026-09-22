@@ -1,0 +1,592 @@
+{
+  "status": "diagnostic_comparison_only",
+  "sources_sha256": {
+    "lo-gap-state-contiguous.json": "487bb9ed8d8a6160e0a0c409200153574f7803cc31d4f761a9f0edc8f2895d3d",
+    "lo-second-stage-gap-state.json": "e21fa6c98ad0df1df4b6622c7a6c8c6a0e57d7c39ed84ff1bf02656a8797afb7",
+    "lo-second-stage-half-gap-state.json": "846f659800a59ff03e274e390f66128a5b34653b402a9006f5bf25cca976bc07"
+  },
+  "variants": {
+    "baseline": {
+      "ip": {
+        "inside_long_gap": {
+          "cycles": 108,
+          "nodes": {
+            "v(bip)": {
+              "mean_cycle_peak_to_peak_v": 0.18991405461478283,
+              "cycle_mean_min_v": 1.5280031892955799,
+              "cycle_mean_max_v": 1.5332320553710677,
+              "cycle_mean_range_v": 0.005228866075487781
+            },
+            "v(xbip.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.22360728235820582,
+              "cycle_mean_min_v": 1.5131521304410303,
+              "cycle_mean_max_v": 1.565641373854167,
+              "cycle_mean_range_v": 0.052489243413136766
+            },
+            "v(preip)": {
+              "mean_cycle_peak_to_peak_v": 0.8125159324821072,
+              "cycle_mean_min_v": 1.0182233789403745,
+              "cycle_mean_max_v": 1.8239551243486414,
+              "cycle_mean_range_v": 0.8057317454082669
+            },
+            "v(oip)": {
+              "mean_cycle_peak_to_peak_v": 1.106803224358109,
+              "cycle_mean_min_v": 0.44312771896616865,
+              "cycle_mean_max_v": 3.0855437327584516,
+              "cycle_mean_range_v": 2.6424160137922827
+            }
+          }
+        },
+        "outside_long_gap": {
+          "cycles": 1132,
+          "nodes": {
+            "v(bip)": {
+              "mean_cycle_peak_to_peak_v": 0.19029004062746036,
+              "cycle_mean_min_v": 1.5231716603455536,
+              "cycle_mean_max_v": 1.5330481431355678,
+              "cycle_mean_range_v": 0.009876482790014185
+            },
+            "v(xbip.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.21379575403194395,
+              "cycle_mean_min_v": 1.5202362658396846,
+              "cycle_mean_max_v": 1.5656459645170482,
+              "cycle_mean_range_v": 0.04540969867736355
+            },
+            "v(preip)": {
+              "mean_cycle_peak_to_peak_v": 0.7914650741290588,
+              "cycle_mean_min_v": 1.0181739429276975,
+              "cycle_mean_max_v": 1.6729100089469862,
+              "cycle_mean_range_v": 0.6547360660192887
+            },
+            "v(oip)": {
+              "mean_cycle_peak_to_peak_v": 2.412541907322232,
+              "cycle_mean_min_v": 0.8899246657054077,
+              "cycle_mean_max_v": 3.082736405217175,
+              "cycle_mean_range_v": 2.192811739511767
+            }
+          }
+        }
+      },
+      "in": {
+        "inside_long_gap": {
+          "cycles": 117,
+          "nodes": {
+            "v(bin)": {
+              "mean_cycle_peak_to_peak_v": 0.19077794341678334,
+              "cycle_mean_min_v": 1.5222406056055533,
+              "cycle_mean_max_v": 1.5334869064387615,
+              "cycle_mean_range_v": 0.011246300833208212
+            },
+            "v(xbin.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.2223000747932622,
+              "cycle_mean_min_v": 1.5110019727114488,
+              "cycle_mean_max_v": 1.5698114907342928,
+              "cycle_mean_range_v": 0.058809518022844065
+            },
+            "v(prein)": {
+              "mean_cycle_peak_to_peak_v": 0.7977939039582655,
+              "cycle_mean_min_v": 0.9683582633966075,
+              "cycle_mean_max_v": 1.8552963572804764,
+              "cycle_mean_range_v": 0.8869380938838689
+            },
+            "v(oin)": {
+              "mean_cycle_peak_to_peak_v": 0.9851142133299557,
+              "cycle_mean_min_v": 0.37618460850233054,
+              "cycle_mean_max_v": 3.1312834606771602,
+              "cycle_mean_range_v": 2.7550988521748296
+            }
+          }
+        },
+        "outside_long_gap": {
+          "cycles": 1123,
+          "nodes": {
+            "v(bin)": {
+              "mean_cycle_peak_to_peak_v": 0.19038285002821986,
+              "cycle_mean_min_v": 1.5222399736134171,
+              "cycle_mean_max_v": 1.5333828812444126,
+              "cycle_mean_range_v": 0.011142907630995458
+            },
+            "v(xbin.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.21430471761853576,
+              "cycle_mean_min_v": 1.5195158083856481,
+              "cycle_mean_max_v": 1.5698158377774496,
+              "cycle_mean_range_v": 0.05030002939180145
+            },
+            "v(prein)": {
+              "mean_cycle_peak_to_peak_v": 0.7939765932550422,
+              "cycle_mean_min_v": 0.9683157662080355,
+              "cycle_mean_max_v": 1.6946363438876457,
+              "cycle_mean_range_v": 0.7263205776796102
+            },
+            "v(oin)": {
+              "mean_cycle_peak_to_peak_v": 2.4162538058783047,
+              "cycle_mean_min_v": 0.7955557730362964,
+              "cycle_mean_max_v": 3.121325458267614,
+              "cycle_mean_range_v": 2.3257696852313177
+            }
+          }
+        }
+      },
+      "qp": {
+        "inside_long_gap": {
+          "cycles": 0,
+          "nodes": {}
+        },
+        "outside_long_gap": {
+          "cycles": 1279,
+          "nodes": {
+            "v(bqp)": {
+              "mean_cycle_peak_to_peak_v": 0.21468235767019728,
+              "cycle_mean_min_v": 1.5291379752479224,
+              "cycle_mean_max_v": 1.5313336114923557,
+              "cycle_mean_range_v": 0.0021956362444333077
+            },
+            "v(xbqp.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.2556112724050823,
+              "cycle_mean_min_v": 1.5285277592306479,
+              "cycle_mean_max_v": 1.5346167424786927,
+              "cycle_mean_range_v": 0.006088983248044855
+            },
+            "v(preqp)": {
+              "mean_cycle_peak_to_peak_v": 0.9271259634563296,
+              "cycle_mean_min_v": 1.4699753373443685,
+              "cycle_mean_max_v": 1.5562750575927031,
+              "cycle_mean_range_v": 0.08629972024833465
+            },
+            "v(oqp)": {
+              "mean_cycle_peak_to_peak_v": 2.6104428935909363,
+              "cycle_mean_min_v": 1.523264919175002,
+              "cycle_mean_max_v": 1.8406686224030804,
+              "cycle_mean_range_v": 0.3174037032280783
+            }
+          }
+        }
+      },
+      "qn": {
+        "inside_long_gap": {
+          "cycles": 0,
+          "nodes": {}
+        },
+        "outside_long_gap": {
+          "cycles": 1279,
+          "nodes": {
+            "v(bqn)": {
+              "mean_cycle_peak_to_peak_v": 0.21604593124051497,
+              "cycle_mean_min_v": 1.5294688442701476,
+              "cycle_mean_max_v": 1.5313214988680193,
+              "cycle_mean_range_v": 0.0018526545978716502
+            },
+            "v(xbqn.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.2558281915365781,
+              "cycle_mean_min_v": 1.5283337496338356,
+              "cycle_mean_max_v": 1.5344260891606964,
+              "cycle_mean_range_v": 0.006092339526860835
+            },
+            "v(preqn)": {
+              "mean_cycle_peak_to_peak_v": 0.9285319101817608,
+              "cycle_mean_min_v": 1.4649010511035045,
+              "cycle_mean_max_v": 1.559148273317946,
+              "cycle_mean_range_v": 0.09424722221444148
+            },
+            "v(oqn)": {
+              "mean_cycle_peak_to_peak_v": 2.611874573077311,
+              "cycle_mean_min_v": 1.5153902774535923,
+              "cycle_mean_max_v": 1.8509918296231571,
+              "cycle_mean_range_v": 0.3356015521695648
+            }
+          }
+        }
+      }
+    },
+    "doubled": {
+      "ip": {
+        "inside_long_gap": {
+          "cycles": 188,
+          "nodes": {
+            "v(bip)": {
+              "mean_cycle_peak_to_peak_v": 0.19036372906176258,
+              "cycle_mean_min_v": 1.52725501362713,
+              "cycle_mean_max_v": 1.532997101901778,
+              "cycle_mean_range_v": 0.005742088274648172
+            },
+            "v(xbip.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.10144615239182397,
+              "cycle_mean_min_v": 1.518538445802663,
+              "cycle_mean_max_v": 1.5514548764217793,
+              "cycle_mean_range_v": 0.03291643061911631
+            },
+            "v(preip)": {
+              "mean_cycle_peak_to_peak_v": 0.5600224049019589,
+              "cycle_mean_min_v": 1.1604728331869563,
+              "cycle_mean_max_v": 1.7421729078866388,
+              "cycle_mean_range_v": 0.5817000746996825
+            },
+            "v(oip)": {
+              "mean_cycle_peak_to_peak_v": 0.9917637869549234,
+              "cycle_mean_min_v": 0.46161119542297924,
+              "cycle_mean_max_v": 3.0051449923456923,
+              "cycle_mean_range_v": 2.543533796922713
+            }
+          }
+        },
+        "outside_long_gap": {
+          "cycles": 1052,
+          "nodes": {
+            "v(bip)": {
+              "mean_cycle_peak_to_peak_v": 0.1906113269263292,
+              "cycle_mean_min_v": 1.5227092447934971,
+              "cycle_mean_max_v": 1.5327713690771836,
+              "cycle_mean_range_v": 0.010062124283686469
+            },
+            "v(xbip.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.09635264480896977,
+              "cycle_mean_min_v": 1.5264702572095312,
+              "cycle_mean_max_v": 1.551457345651488,
+              "cycle_mean_range_v": 0.02498708844195674
+            },
+            "v(preip)": {
+              "mean_cycle_peak_to_peak_v": 0.5513724689391466,
+              "cycle_mean_min_v": 1.1847759413011234,
+              "cycle_mean_max_v": 1.588100238935482,
+              "cycle_mean_range_v": 0.4033242976343585
+            },
+            "v(oip)": {
+              "mean_cycle_peak_to_peak_v": 1.8709091260876731,
+              "cycle_mean_min_v": 1.0684210882544358,
+              "cycle_mean_max_v": 2.9606824862358643,
+              "cycle_mean_range_v": 1.8922613979814285
+            }
+          }
+        }
+      },
+      "in": {
+        "inside_long_gap": {
+          "cycles": 197,
+          "nodes": {
+            "v(bin)": {
+              "mean_cycle_peak_to_peak_v": 0.1909275425478305,
+              "cycle_mean_min_v": 1.521726043431087,
+              "cycle_mean_max_v": 1.5332880866668546,
+              "cycle_mean_range_v": 0.011562043235767483
+            },
+            "v(xbin.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.10131706568778998,
+              "cycle_mean_min_v": 1.5170760313827611,
+              "cycle_mean_max_v": 1.5538866517709646,
+              "cycle_mean_range_v": 0.036810620388203485
+            },
+            "v(prein)": {
+              "mean_cycle_peak_to_peak_v": 0.5562101081327442,
+              "cycle_mean_min_v": 1.1165227253817611,
+              "cycle_mean_max_v": 1.7683902582382938,
+              "cycle_mean_range_v": 0.6518675328565326
+            },
+            "v(oin)": {
+              "mean_cycle_peak_to_peak_v": 0.9017120095598357,
+              "cycle_mean_min_v": 0.40267223255867357,
+              "cycle_mean_max_v": 3.0496072384478556,
+              "cycle_mean_range_v": 2.646935005889182
+            }
+          }
+        },
+        "outside_long_gap": {
+          "cycles": 1043,
+          "nodes": {
+            "v(bin)": {
+              "mean_cycle_peak_to_peak_v": 0.19070317528265024,
+              "cycle_mean_min_v": 1.5217253680982001,
+              "cycle_mean_max_v": 1.533101195409574,
+              "cycle_mean_range_v": 0.011375827311373765
+            },
+            "v(xbin.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.09657435891844002,
+              "cycle_mean_min_v": 1.5266372148326692,
+              "cycle_mean_max_v": 1.5538889032314305,
+              "cycle_mean_range_v": 0.027251688398761242
+            },
+            "v(prein)": {
+              "mean_cycle_peak_to_peak_v": 0.5529636138498215,
+              "cycle_mean_min_v": 1.1485262588225207,
+              "cycle_mean_max_v": 1.6014204016696154,
+              "cycle_mean_range_v": 0.4528941428470947
+            },
+            "v(oin)": {
+              "mean_cycle_peak_to_peak_v": 1.865741333498633,
+              "cycle_mean_min_v": 0.9792291341086165,
+              "cycle_mean_max_v": 3.0017685224143253,
+              "cycle_mean_range_v": 2.022539388305709
+            }
+          }
+        }
+      },
+      "qp": {
+        "inside_long_gap": {
+          "cycles": 0,
+          "nodes": {}
+        },
+        "outside_long_gap": {
+          "cycles": 1279,
+          "nodes": {
+            "v(bqp)": {
+              "mean_cycle_peak_to_peak_v": 0.21516063618971182,
+              "cycle_mean_min_v": 1.5291164072389747,
+              "cycle_mean_max_v": 1.5313178684697362,
+              "cycle_mean_range_v": 0.002201461230761481
+            },
+            "v(xbqp.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.11462250455347722,
+              "cycle_mean_min_v": 1.5297102109808602,
+              "cycle_mean_max_v": 1.5325815125156033,
+              "cycle_mean_range_v": 0.0028713015347430204
+            },
+            "v(preqp)": {
+              "mean_cycle_peak_to_peak_v": 0.6489953915862015,
+              "cycle_mean_min_v": 1.489537424619234,
+              "cycle_mean_max_v": 1.539006497260752,
+              "cycle_mean_range_v": 0.0494690726415179
+            },
+            "v(oqp)": {
+              "mean_cycle_peak_to_peak_v": 2.1457639576198786,
+              "cycle_mean_min_v": 1.5190955444381666,
+              "cycle_mean_max_v": 1.86144261874096,
+              "cycle_mean_range_v": 0.34234707430279343
+            }
+          }
+        }
+      },
+      "qn": {
+        "inside_long_gap": {
+          "cycles": 0,
+          "nodes": {}
+        },
+        "outside_long_gap": {
+          "cycles": 1279,
+          "nodes": {
+            "v(bqn)": {
+              "mean_cycle_peak_to_peak_v": 0.21655311037076652,
+              "cycle_mean_min_v": 1.5294461943362332,
+              "cycle_mean_max_v": 1.5313134418521341,
+              "cycle_mean_range_v": 0.0018672475159009494
+            },
+            "v(xbqn.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.11471542859397288,
+              "cycle_mean_min_v": 1.5296144860849088,
+              "cycle_mean_max_v": 1.5326482674414867,
+              "cycle_mean_range_v": 0.003033781356577947
+            },
+            "v(preqn)": {
+              "mean_cycle_peak_to_peak_v": 0.6499024160507814,
+              "cycle_mean_min_v": 1.485899363915009,
+              "cycle_mean_max_v": 1.5402414295010094,
+              "cycle_mean_range_v": 0.0543420655860003
+            },
+            "v(oqn)": {
+              "mean_cycle_peak_to_peak_v": 2.147402401909571,
+              "cycle_mean_min_v": 1.5105099116168499,
+              "cycle_mean_max_v": 1.8686391454069387,
+              "cycle_mean_range_v": 0.35812923379008876
+            }
+          }
+        }
+      }
+    },
+    "halved": {
+      "ip": {
+        "inside_long_gap": {
+          "cycles": 88,
+          "nodes": {
+            "v(bip)": {
+              "mean_cycle_peak_to_peak_v": 0.18940336555053316,
+              "cycle_mean_min_v": 1.5288651754619358,
+              "cycle_mean_max_v": 1.533098569314932,
+              "cycle_mean_range_v": 0.004233393852996148
+            },
+            "v(xbip.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.44169593126751994,
+              "cycle_mean_min_v": 1.5091302498122798,
+              "cycle_mean_max_v": 1.5765782227585963,
+              "cycle_mean_range_v": 0.06744797294631644
+            },
+            "v(preip)": {
+              "mean_cycle_peak_to_peak_v": 0.9485246377052974,
+              "cycle_mean_min_v": 0.951393925789847,
+              "cycle_mean_max_v": 1.8546686842190367,
+              "cycle_mean_range_v": 0.9032747584291897
+            },
+            "v(oip)": {
+              "mean_cycle_peak_to_peak_v": 1.3986048151244068,
+              "cycle_mean_min_v": 0.47039901470298334,
+              "cycle_mean_max_v": 3.1119239733166104,
+              "cycle_mean_range_v": 2.641524958613627
+            }
+          }
+        },
+        "outside_long_gap": {
+          "cycles": 1152,
+          "nodes": {
+            "v(bip)": {
+              "mean_cycle_peak_to_peak_v": 0.18981000152192262,
+              "cycle_mean_min_v": 1.5238506594493109,
+              "cycle_mean_max_v": 1.5304010764186695,
+              "cycle_mean_range_v": 0.006550416969358652
+            },
+            "v(xbip.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.42929741384555564,
+              "cycle_mean_min_v": 1.5252627801705705,
+              "cycle_mean_max_v": 1.5864149555734612,
+              "cycle_mean_range_v": 0.06115217540289075
+            },
+            "v(preip)": {
+              "mean_cycle_peak_to_peak_v": 0.9271503595038706,
+              "cycle_mean_min_v": 0.9513426499916695,
+              "cycle_mean_max_v": 1.6935662735987609,
+              "cycle_mean_range_v": 0.7422236236070914
+            },
+            "v(oip)": {
+              "mean_cycle_peak_to_peak_v": 2.5985792768260505,
+              "cycle_mean_min_v": 0.9362024432702198,
+              "cycle_mean_max_v": 3.1119596637822897,
+              "cycle_mean_range_v": 2.17575722051207
+            }
+          }
+        }
+      },
+      "in": {
+        "inside_long_gap": {
+          "cycles": 97,
+          "nodes": {
+            "v(bin)": {
+              "mean_cycle_peak_to_peak_v": 0.19037509010524367,
+              "cycle_mean_min_v": 1.5229823353458272,
+              "cycle_mean_max_v": 1.5330884243833247,
+              "cycle_mean_range_v": 0.010106089037497545
+            },
+            "v(xbin.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.43779137749121655,
+              "cycle_mean_min_v": 1.506096511020474,
+              "cycle_mean_max_v": 1.5918900914663188,
+              "cycle_mean_range_v": 0.08579358044584473
+            },
+            "v(prein)": {
+              "mean_cycle_peak_to_peak_v": 0.9177726093183127,
+              "cycle_mean_min_v": 0.8932253882823831,
+              "cycle_mean_max_v": 1.8864941562006656,
+              "cycle_mean_range_v": 0.9932687679182826
+            },
+            "v(oin)": {
+              "mean_cycle_peak_to_peak_v": 1.2057479259375685,
+              "cycle_mean_min_v": 0.4092249719744674,
+              "cycle_mean_max_v": 3.1553148021905666,
+              "cycle_mean_range_v": 2.746089830216099
+            }
+          }
+        },
+        "outside_long_gap": {
+          "cycles": 1143,
+          "nodes": {
+            "v(bin)": {
+              "mean_cycle_peak_to_peak_v": 0.18990762332976163,
+              "cycle_mean_min_v": 1.5229817673596195,
+              "cycle_mean_max_v": 1.5304277410726062,
+              "cycle_mean_range_v": 0.007445973712986609
+            },
+            "v(xbin.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.4302011990929737,
+              "cycle_mean_min_v": 1.5242982583232305,
+              "cycle_mean_max_v": 1.5918948252969731,
+              "cycle_mean_range_v": 0.06759656697374261
+            },
+            "v(prein)": {
+              "mean_cycle_peak_to_peak_v": 0.930971183092236,
+              "cycle_mean_min_v": 0.8931804745721931,
+              "cycle_mean_max_v": 1.7150416678934282,
+              "cycle_mean_range_v": 0.8218611933212351
+            },
+            "v(oin)": {
+              "mean_cycle_peak_to_peak_v": 2.6019290257372503,
+              "cycle_mean_min_v": 0.8376636868953842,
+              "cycle_mean_max_v": 3.1553390423602283,
+              "cycle_mean_range_v": 2.317675355464844
+            }
+          }
+        }
+      },
+      "qp": {
+        "inside_long_gap": {
+          "cycles": 0,
+          "nodes": {}
+        },
+        "outside_long_gap": {
+          "cycles": 1279,
+          "nodes": {
+            "v(bqp)": {
+              "mean_cycle_peak_to_peak_v": 0.2139161536311458,
+              "cycle_mean_min_v": 1.5291518891598754,
+              "cycle_mean_max_v": 1.5313479157988732,
+              "cycle_mean_range_v": 0.002196026638997761
+            },
+            "v(xbqp.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.5117745038811619,
+              "cycle_mean_min_v": 1.525630622002193,
+              "cycle_mean_max_v": 1.5379153864755075,
+              "cycle_mean_range_v": 0.012284764473314613
+            },
+            "v(preqp)": {
+              "mean_cycle_peak_to_peak_v": 1.080335735153975,
+              "cycle_mean_min_v": 1.4701140829355697,
+              "cycle_mean_max_v": 1.5825042127821192,
+              "cycle_mean_range_v": 0.1123901298465495
+            },
+            "v(oqp)": {
+              "mean_cycle_peak_to_peak_v": 2.766581241505327,
+              "cycle_mean_min_v": 1.4828725747354479,
+              "cycle_mean_max_v": 1.8079839751112523,
+              "cycle_mean_range_v": 0.32511140037580444
+            }
+          }
+        }
+      },
+      "qn": {
+        "inside_long_gap": {
+          "cycles": 0,
+          "nodes": {}
+        },
+        "outside_long_gap": {
+          "cycles": 1279,
+          "nodes": {
+            "v(bqn)": {
+              "mean_cycle_peak_to_peak_v": 0.21523638143897728,
+              "cycle_mean_min_v": 1.5294836030544114,
+              "cycle_mean_max_v": 1.5312440399743736,
+              "cycle_mean_range_v": 0.0017604369199621939
+            },
+            "v(xbqn.mid)": {
+              "mean_cycle_peak_to_peak_v": 0.5122100073051894,
+              "cycle_mean_min_v": 1.5254007753795966,
+              "cycle_mean_max_v": 1.5375106880724116,
+              "cycle_mean_range_v": 0.012109912692815028
+            },
+            "v(preqn)": {
+              "mean_cycle_peak_to_peak_v": 1.0820713953005527,
+              "cycle_mean_min_v": 1.4641619135096884,
+              "cycle_mean_max_v": 1.585455869307138,
+              "cycle_mean_range_v": 0.12129395579744973
+            },
+            "v(oqn)": {
+              "mean_cycle_peak_to_peak_v": 2.767946532894598,
+              "cycle_mean_min_v": 1.4742098581301073,
+              "cycle_mean_max_v": 1.8218027003726152,
+              "cycle_mean_range_v": 0.34759284224250786
+            }
+          }
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Gap membership differs between variants; these are not matched cycle cohorts.",
+    "Cycle mean movement is observed, not proof of feedback instability.",
+    "No supply-current evidence, startup, process spread or autonomous-loop validation."
+  ],
+  "next_experiment": "Test self-bias feedback resistance in both directions around 100kohm with original transistor sizes; preserve baseline and loaded replay scope. Check attenuation as well as bias drift, output edges and baseband disturbance."
+}

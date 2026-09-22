@@ -1,0 +1,43 @@
+* Four binary low bits plus fifteen weight-16 thermometer cells.
+* Includes supplied by parent deck; actual combinational decoder/drivers, no retiming.
+.subckt pt_dac_segmented8 OP ON BN VDD VSS D0 D1 D2 D3 D4 D5 D6 D7
+XDEC D4 D5 D6 D7 T1 T2 T3 T4 T5 T6 T7 T8 T9 T10 T11 T12 T13 T14 T15 VDD VSS pt_dac_thermometer4
+XDL0 D0 L0 L0B VDD VSS pt_adc_code_small_driver WEIGHT=1
+XCL0 OP ON L0 L0B BN VSS pt_dac_current_bit WGT=1
+XDL1 D1 L1 L1B VDD VSS pt_adc_code_small_driver WEIGHT=2
+XCL1 OP ON L1 L1B BN VSS pt_dac_current_bit WGT=2
+XDL2 D2 L2 L2B VDD VSS pt_adc_code_small_driver WEIGHT=4
+XCL2 OP ON L2 L2B BN VSS pt_dac_current_bit WGT=4
+XDL3 D3 L3 L3B VDD VSS pt_adc_code_small_driver WEIGHT=8
+XCL3 OP ON L3 L3B BN VSS pt_dac_current_bit WGT=8
+XDH1 T1 H1 H1B VDD VSS pt_adc_code_small_driver WEIGHT=16
+XCH1 OP ON H1 H1B BN VSS pt_dac_current_bit WGT=16
+XDH2 T2 H2 H2B VDD VSS pt_adc_code_small_driver WEIGHT=16
+XCH2 OP ON H2 H2B BN VSS pt_dac_current_bit WGT=16
+XDH3 T3 H3 H3B VDD VSS pt_adc_code_small_driver WEIGHT=16
+XCH3 OP ON H3 H3B BN VSS pt_dac_current_bit WGT=16
+XDH4 T4 H4 H4B VDD VSS pt_adc_code_small_driver WEIGHT=16
+XCH4 OP ON H4 H4B BN VSS pt_dac_current_bit WGT=16
+XDH5 T5 H5 H5B VDD VSS pt_adc_code_small_driver WEIGHT=16
+XCH5 OP ON H5 H5B BN VSS pt_dac_current_bit WGT=16
+XDH6 T6 H6 H6B VDD VSS pt_adc_code_small_driver WEIGHT=16
+XCH6 OP ON H6 H6B BN VSS pt_dac_current_bit WGT=16
+XDH7 T7 H7 H7B VDD VSS pt_adc_code_small_driver WEIGHT=16
+XCH7 OP ON H7 H7B BN VSS pt_dac_current_bit WGT=16
+XDH8 T8 H8 H8B VDD VSS pt_adc_code_small_driver WEIGHT=16
+XCH8 OP ON H8 H8B BN VSS pt_dac_current_bit WGT=16
+XDH9 T9 H9 H9B VDD VSS pt_adc_code_small_driver WEIGHT=16
+XCH9 OP ON H9 H9B BN VSS pt_dac_current_bit WGT=16
+XDH10 T10 H10 H10B VDD VSS pt_adc_code_small_driver WEIGHT=16
+XCH10 OP ON H10 H10B BN VSS pt_dac_current_bit WGT=16
+XDH11 T11 H11 H11B VDD VSS pt_adc_code_small_driver WEIGHT=16
+XCH11 OP ON H11 H11B BN VSS pt_dac_current_bit WGT=16
+XDH12 T12 H12 H12B VDD VSS pt_adc_code_small_driver WEIGHT=16
+XCH12 OP ON H12 H12B BN VSS pt_dac_current_bit WGT=16
+XDH13 T13 H13 H13B VDD VSS pt_adc_code_small_driver WEIGHT=16
+XCH13 OP ON H13 H13B BN VSS pt_dac_current_bit WGT=16
+XDH14 T14 H14 H14B VDD VSS pt_adc_code_small_driver WEIGHT=16
+XCH14 OP ON H14 H14B BN VSS pt_dac_current_bit WGT=16
+XDH15 T15 H15 H15B VDD VSS pt_adc_code_small_driver WEIGHT=16
+XCH15 OP ON H15 H15B BN VSS pt_dac_current_bit WGT=16
+.ends

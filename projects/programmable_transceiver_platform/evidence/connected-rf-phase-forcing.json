@@ -1,0 +1,35 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "step_s": 4e-09,
+      "steps": 30,
+      "max_midpoint_phase_error": 0.0008633138119193973,
+      "monitor_power": 0.002919154607076953,
+      "voltage_difference_from_finest": 4.82648661720022e-07,
+      "detector_difference_from_finest": 2.276964142407245e-11
+    },
+    {
+      "step_s": 1e-09,
+      "steps": 102,
+      "max_midpoint_phase_error": 7.041564168730474e-05,
+      "monitor_power": 0.0029191546104951156,
+      "voltage_difference_from_finest": 3.822404816538665e-07,
+      "detector_difference_from_finest": 1.8319736136071518e-11
+    },
+    {
+      "step_s": 2.5e-10,
+      "steps": 402,
+      "max_midpoint_phase_error": 3.488483594082936e-05,
+      "monitor_power": 0.0029191546054126985,
+      "voltage_difference_from_finest": 0.0,
+      "detector_difference_from_finest": 0.0
+    }
+  ],
+  "limitations": [
+    "One100ns noisy oscillator trajectory; finite step convergence is not a global error guarantee.",
+    "Midpoint residual is diagnostic and can miss high-frequency phase structure.",
+    "Clock is forecast without mutation; future external disturbances must split forcing intervals.",
+    "Not yet connected to managed loaded-chip timing or full-chain quality."
+  ]
+}

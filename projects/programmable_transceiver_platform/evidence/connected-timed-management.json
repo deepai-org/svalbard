@@ -1,0 +1,155 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "control_phase_s": 0.0,
+      "rf_samples": 32,
+      "ack": {
+        "token": 0,
+        "operation": "ack_wire_idle",
+        "applied_at": 9.45e-06,
+        "epoch": 0,
+        "generation": 1,
+        "accepted": true
+      },
+      "stale": {
+        "token": 1,
+        "operation": "ack_wire_idle",
+        "applied_at": 2.23e-05,
+        "epoch": 0,
+        "generation": 2,
+        "accepted": false,
+        "reason": "stale epoch or receive generation"
+      },
+      "status": {
+        "token": 2,
+        "operation": "status",
+        "applied_at": 3.515e-05,
+        "epoch": 0,
+        "generation": 2,
+        "accepted": true,
+        "idle": false,
+        "idle_latched": false,
+        "adc_clipped": 0,
+        "capture_done": true
+      }
+    },
+    {
+      "mode": 0,
+      "control_phase_s": 7e-09,
+      "rf_samples": 32,
+      "ack": {
+        "token": 0,
+        "operation": "ack_wire_idle",
+        "applied_at": 9.432e-06,
+        "epoch": 0,
+        "generation": 1,
+        "accepted": true
+      },
+      "stale": {
+        "token": 1,
+        "operation": "ack_wire_idle",
+        "applied_at": 2.2307e-05,
+        "epoch": 0,
+        "generation": 2,
+        "accepted": false,
+        "reason": "stale epoch or receive generation"
+      },
+      "status": {
+        "token": 2,
+        "operation": "status",
+        "applied_at": 3.5157e-05,
+        "epoch": 0,
+        "generation": 2,
+        "accepted": true,
+        "idle": false,
+        "idle_latched": false,
+        "adc_clipped": 0,
+        "capture_done": true
+      }
+    },
+    {
+      "mode": 1,
+      "control_phase_s": 0.0,
+      "rf_samples": 32,
+      "ack": {
+        "token": 0,
+        "operation": "ack_wire_idle",
+        "applied_at": 8.75e-06,
+        "epoch": 0,
+        "generation": 1,
+        "accepted": true
+      },
+      "stale": {
+        "token": 1,
+        "operation": "ack_wire_idle",
+        "applied_at": 2.16e-05,
+        "epoch": 0,
+        "generation": 2,
+        "accepted": false,
+        "reason": "stale epoch or receive generation"
+      },
+      "status": {
+        "token": 2,
+        "operation": "status",
+        "applied_at": 3.445e-05,
+        "epoch": 0,
+        "generation": 2,
+        "accepted": true,
+        "idle": false,
+        "idle_latched": false,
+        "adc_clipped": 0,
+        "capture_done": true
+      }
+    },
+    {
+      "mode": 1,
+      "control_phase_s": 7e-09,
+      "rf_samples": 32,
+      "ack": {
+        "token": 0,
+        "operation": "ack_wire_idle",
+        "applied_at": 8.732e-06,
+        "epoch": 0,
+        "generation": 1,
+        "accepted": true
+      },
+      "stale": {
+        "token": 1,
+        "operation": "ack_wire_idle",
+        "applied_at": 2.1606999999999998e-05,
+        "epoch": 0,
+        "generation": 2,
+        "accepted": false,
+        "reason": "stale epoch or receive generation"
+      },
+      "status": {
+        "token": 2,
+        "operation": "status",
+        "applied_at": 3.4457e-05,
+        "epoch": 0,
+        "generation": 2,
+        "accepted": true,
+        "idle": false,
+        "idle_latched": false,
+        "adc_clipped": 0,
+        "capture_done": true
+      }
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "contract": [
+    "Serialized128-bit request, next control edge plus two control cycles, then separate128-bit response.",
+    "Candidate fields:16-bit header/status,16-bit token,32-bit epoch,32-bit RX generation,32-bit payload; timestamps are trace metadata, not wire fields.",
+    "Status payload carries flags and a saturating16-bit clipped-sample count; token exhaustion rejects new commands rather than wrapping.",
+    "Queue capacity counts requests until response visibility; commands act at arrival and replies retain that snapshot.",
+    "Every command is fenced by explicit expected global epoch and wired RX generation; stale writes are rejected."
+  ],
+  "limitations": [
+    "Named transaction abstraction, not the existing single-word SPI/register ABI; four-word assembly and generation fields still need hardware implementation.",
+    "No stochastic metastability model; stated CDC delay is a bounded assumption.",
+    "Timed adapter covers status, RX idle acknowledgement, ADC diagnostics, RX settings, playback/capture, mode and stop/abort/drain; LO/trim/calibration and autonomous run controls remain open."
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "completed": true,
+  "cases": [
+    {
+      "direction": "up",
+      "threshold_inputs_v": {
+        "mid": 1.5239611974169263,
+        "pre": 1.5306593694153527,
+        "out": 1.530426704088321
+      },
+      "output_at_observed_bip_extrema_v": [
+        3.299999996307715,
+        1.5041745569742007e-09
+      ]
+    },
+    {
+      "direction": "down",
+      "threshold_inputs_v": {
+        "mid": 1.5239611974169167,
+        "pre": 1.530659369415346,
+        "out": 1.5304267040602184
+      },
+      "output_at_observed_bip_extrema_v": [
+        3.299999996307715,
+        1.5041743762163039e-09
+      ]
+    }
+  ],
+  "max_direction_voltage_difference_v": 6.131100033890391e-06,
+  "provenance": {
+    "cases": [
+      {
+        "name": "up",
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "b1602178328a40543f11101418a6b2b3352e674aa4c48d0cacf332988ddf6fe0",
+          ".log": "1fda881fd105f4c8808f94b9c88ce04671cfc36f59b902d7b4631480f1028177",
+          ".dat": "4dc0b77dff5dc7df0b994edbb3f27ed015229bf803512e5c358f22c951b3b199"
+        }
+      },
+      {
+        "name": "down",
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "7db9ad2e21ea12ea84c77ae6503e68eb0b11dc88890c0452dc0c977577e3c4c3",
+          ".log": "1fda881fd105f4c8808f94b9c88ce04671cfc36f59b902d7b4631480f1028177",
+          ".dat": "225b06788bf6b10b9e44f598408ea2b19bb1d7ee9d468cb1ccb36e2a09bc1282"
+        }
+      }
+    ],
+    "sources_before": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/screen/quadrature/lo_transfer_dc.py": "a21fcf7305cc1d638e7edf7a6a0b60704fe24a1df7810fd1fff8182eddc1fc40",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/screen/quadrature/lo_final_stage.spice": "3f234838df5453d1c5f69d1f7f3c753da87e17052d979147a6d6e05fa418ca9f",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275"
+    },
+    "sources_after": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/screen/quadrature/lo_transfer_dc.py": "a21fcf7305cc1d638e7edf7a6a0b60704fe24a1df7810fd1fff8182eddc1fc40",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/screen/quadrature/lo_final_stage.spice": "3f234838df5453d1c5f69d1f7f3c753da87e17052d979147a6d6e05fa418ca9f",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275"
+    }
+  },
+  "limitations": [
+    "Driven ideal DC input and50fF output capacitance only; AC coupling, self-bias and mixer loading absent.",
+    "Static threshold crossing does not establish switching speed or duty margin with a~400ps carrier.",
+    "Measured input extrema bracket static region only; their durations and dynamic internal-node states remain essential."
+  ]
+}

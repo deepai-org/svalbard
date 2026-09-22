@@ -1,0 +1,56 @@
+{
+  "status": "nominal_transistor_pfd_phase_direction_screen_not_pll",
+  "cases": [
+    {
+      "feedback_delay_ns": -5,
+      "equivalent_high_time_s": [
+        5.4421242904704574e-09,
+        4.04447130638017e-08
+      ],
+      "up_minus_down_s": -3.500258877333124e-08,
+      "reset_output_max_v": 1.085634051366397e-08,
+      "artifacts_sha256": {
+        ".spice": "3d0204a848eaa13b514369b4334fc8e819c600bde64d87e085abf4c0fae5924a",
+        ".dat": "225fa24672c9dab860c9ddc1c93985e672ee1161bee6d772622a0730b5c99114",
+        ".log": "1f4c9eb722b57f5c996762e392a18a2e4db29592d025fc6380e7d5620f7729d3"
+      },
+      "equivalent_net_pulse_per_cycle_s": -5.000369824761606e-09
+    },
+    {
+      "feedback_delay_ns": 0,
+      "equivalent_high_time_s": [
+        5.7226594435608655e-09,
+        5.714757919574357e-09
+      ],
+      "up_minus_down_s": 7.901523986508136e-12,
+      "reset_output_max_v": 1.085634051366397e-08,
+      "artifacts_sha256": {
+        ".spice": "d01a0183bde5edf00b6790695b362d1576bcff9f8377e471b169d3fd2f5beba7",
+        ".dat": "67635af4d65a8d3be4816b54be6fafd30fb50ddfa3e33826530e898d54213dec",
+        ".log": "20da67bb3988bc6f22c3713e2fc69ad05c87366a87748e8cc93397f185c177fa"
+      },
+      "equivalent_net_pulse_per_cycle_s": 1.1287891409297337e-12
+    },
+    {
+      "feedback_delay_ns": 5,
+      "equivalent_high_time_s": [
+        4.0429102741693214e-08,
+        5.3997794016869666e-09
+      ],
+      "up_minus_down_s": 3.502932334000625e-08,
+      "reset_output_max_v": 1.085634051366397e-08,
+      "artifacts_sha256": {
+        ".spice": "b57f2ea979ecfb6f06a0a850935caf63ccc26a4b2feb78ba76ddb2585f60c2fe",
+        ".dat": "51e521d9f6ce869f422d6cc713b38dc4730f7eb239100b4e0436782dea5bd7d0",
+        ".log": "a287d8761744bfcafadbb5ee61f964b039376c65a7e6bfd6d1459bcd4c084c55"
+      },
+      "equivalent_net_pulse_per_cycle_s": 5.004189048572321e-09
+    }
+  ],
+  "source_sha256": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+  "limitations": [
+    "25MHz, TT 3.3V 27C, 50fF output loads; no charge pump.",
+    "No frequency acquisition, dead-zone sweep, mismatch, supply perturbation or extracted timing."
+  ],
+  "phase_and_reset_checks_pass": true
+}

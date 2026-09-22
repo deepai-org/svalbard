@@ -1,0 +1,70 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "boost": 0.5,
+      "retained_channel": -0.9962720891969626,
+      "retained_equalizer": -0.557197184783473,
+      "words": [
+        313,
+        615,
+        341
+      ]
+    },
+    {
+      "mode": 0,
+      "boost": 2.0,
+      "retained_channel": -0.9962720891969626,
+      "retained_equalizer": -0.557197184783473,
+      "words": [
+        313,
+        615,
+        341
+      ]
+    },
+    {
+      "mode": 1,
+      "boost": 0.5,
+      "retained_channel": -0.9962720891969751,
+      "retained_equalizer": -0.5571971847838381,
+      "words": [
+        313,
+        615,
+        341
+      ]
+    },
+    {
+      "mode": 1,
+      "boost": 2.0,
+      "retained_channel": -0.9962720891969751,
+      "retained_equalizer": -0.5571971847838381,
+      "words": [
+        313,
+        615,
+        341
+      ]
+    }
+  ],
+  "management_cases": [
+    {
+      "initial_mode": 0,
+      "new_mode": 1,
+      "boost": 0.5,
+      "retained_pole": 7853981633.974483
+    },
+    {
+      "initial_mode": 1,
+      "new_mode": 0,
+      "boost": 0.5,
+      "retained_pole": 15707963267.948965
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Timed payload selects four fixed boosts; automatic adaptation and calibration are not implemented.",
+    "State retention applies to the same equalizer topology; arbitrary capacitor reconnection is not modeled.",
+    "Analog bandwidth is retained across mode changes; physical bias/termination switching remains outside the model."
+  ]
+}

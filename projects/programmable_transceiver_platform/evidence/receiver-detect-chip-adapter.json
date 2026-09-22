@@ -1,0 +1,149 @@
+{
+  "status": "passed",
+  "staged_adapter": true,
+  "physical_qualification": false,
+  "cases": [
+    {
+      "mode": 0,
+      "remote_terms": [
+        75.0,
+        75.0
+      ],
+      "decision": "present",
+      "rf_samples": 64,
+      "independent_wired_rx_complete": true,
+      "tx_word_after_release": true,
+      "reference_loss_aborts": true
+    },
+    {
+      "mode": 0,
+      "remote_terms": [
+        100000000.0,
+        100000000.0
+      ],
+      "decision": "absent",
+      "rf_samples": 64,
+      "independent_wired_rx_complete": true,
+      "tx_word_after_release": true,
+      "reference_loss_aborts": true
+    },
+    {
+      "mode": 0,
+      "remote_terms": [
+        75.0,
+        100000000.0
+      ],
+      "decision": "indeterminate",
+      "rf_samples": 64,
+      "independent_wired_rx_complete": true,
+      "tx_word_after_release": true,
+      "reference_loss_aborts": true
+    },
+    {
+      "mode": 1,
+      "remote_terms": [
+        75.0,
+        75.0
+      ],
+      "decision": "present",
+      "rf_samples": 64,
+      "independent_wired_rx_complete": true,
+      "tx_word_after_release": true,
+      "reference_loss_aborts": true
+    },
+    {
+      "mode": 1,
+      "remote_terms": [
+        100000000.0,
+        100000000.0
+      ],
+      "decision": "absent",
+      "rf_samples": 64,
+      "independent_wired_rx_complete": true,
+      "tx_word_after_release": true,
+      "reference_loss_aborts": true
+    },
+    {
+      "mode": 1,
+      "remote_terms": [
+        75.0,
+        100000000.0
+      ],
+      "decision": "indeterminate",
+      "rf_samples": 64,
+      "independent_wired_rx_complete": true,
+      "tx_word_after_release": true,
+      "reference_loss_aborts": true
+    }
+  ],
+  "source_sha256": "d6c1a9e0960cb57522524b6601a380152eaea4044b142c47dc65b4164cf70e53",
+  "imported_source_hashes": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/receiver_detection_screen.py": "2c5a07d8a1a0434feb7969273c66881e9133fe0d9e2d596c0ee6a3ac0a5ccb11",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/rf_blocks.py": "f4d40fd90f0d416d6ac57d648940e34a41b24d44e14192f6a572bfae2010d688",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/wired_blocks.py": "204d494690aef062c3f492c3fb0be4c4f5edffb0babbb650c8a5a45a78932495",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/framing.py": "31b48aa47ff0e290c66ed422874d6e21fb44e833b11d5f982548b18a2ff4985b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/wired_screen.py": "145cf7cdea4b862f6f54f6cfa0b6a475ab10588d367173dfb3c48f26a8c20a79",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/clock_tracking_screen.py": "7a93ec5775824e3472f951aac6d2d6af0e3026cb6d5ab6dc6a2297afbd3e5ac0",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/recovered_clock.py": "98b9feadbf511e008b7fb47d0333041af60d83ff842f79b29fc72de1b495aef9",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/pacing.py": "3ffda5bf764df8e9f0f36493efceedaad42e4d0f70a93f99b523719eeca2a6ca",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/burst_codec.py": "924f843f70f68cdede2def9fcc4bca91971e24fe194cb928c87dce2437dddd90",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/loopback_return.py": "e14913a01e40e6e2e8c41e6f5594a42c39e76467a06e88d0ee930e82e4dd0a20",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/pilot.py": "b25ed7e5381b904f01795e2fcc2c781e116a72fcf079133fa96baca18becd057",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/session.py": "6752e434755cd77ef43fa943570fa0843c6fbf10bdd10f3119374e63fff39374",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/chip_model.py": "37a55e0006e0c164efd19c2ef33c96259410d6975b5ab42e2f4a8bf70c0f7308",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/receiver_detect_load_screen.py": "d4e3693d9049402a567ef817f0a7e7c605b6265114f6912db2f778e9dd2d448a",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/receiver_detect_timing_screen.py": "e542fe8674fc626775978c988af9ab76498ed6cac5ae9cf1d208c9ee860fbda1",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/receiver_detect_release_screen.py": "753bf2b36c2f72a4dbea1997beb2503295e93f075bd0c2a6584bffb1dee496af",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/receiver_detect_energy_screen.py": "26dded865109ed2d7e22b00811925269a2df57e07910f791a979a9913f80db4b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/receiver_detect_probe_sequence.py": "c8c466a90b24b7f90654abb59dffe00da8d9a6e5209172c4dd00d17d16d2ada2",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/receiver_detect_rearm_screen.py": "6079440ee8e93e73eccd3ee5695636c72d26518b874500148d8e4bdd048077a2",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/oscillator_noise.py": "14be8efe565f556752cc51c5ca3231909026751af9305223b48d20aa81d4dd9f",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/autonomous_pll.py": "27de0a06fc5df35310686d7a4fb763768518132872c798bc1fe52440a3b4c0c2",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/wired_serializer.py": "dc9c156c915b1e38c0b7d1b6a4af5214ed9343b65fa99eaf4ca9b6ff2f10a4bc",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/pll_serializer.py": "53d561a107fa90aac0d18879ae387981e53b59cb164abca83cd805b43a6d87be",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/sample_clock.py": "f1438b1bd7ebb5e876bd2d96e551c7c4f02fbcc3cfe40c9abb6b100cf02004db",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/adc_recovery.py": "5cefccd91a1695f8f4e1809a8528dba8234539757fd4079265f6b9020d68aae9",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/rf_tx_state.py": "ec5212778951470252783848fc20d2797b549e30e012d82ee0ceaf17fc0a7929",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/whole_chip_lifecycle.py": "956af7781efd67a19632312bb84e2c0b3b499235fab88cbd2bc1c665f0e4532b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/timed_lifecycle.py": "5f89738f52cd9a9706a844224baccdd340f41523e9c096d382eb97dbb9295b6e",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/rf_cascade_state.py": "06b878972009d6953b2c6273703d4231806d4c21cafcaf7fe9279156152aa6c4",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/rf_return_lifecycle.py": "b858291e113396aeb3bd28473be121ea75a82888ae08ecf10ea2fecc7755302d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/wired_return_lifecycle.py": "3ebc85dcaabeac6684ac0c824d57ca414cad521db24fa7af752c5caf96880118",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/clock_lock_lifecycle.py": "10f628e0bbe940cb23c20dd08b04ed63e059a5a0b53ff3786bca65f3107e15a2",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/loop_driven_edges.py": "4958c14269bf381853850d2b5512fc2b356a1967810c82473c8c871fe8352ecf",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/sustained_lifecycle.py": "3207a4cc98ec25d6e959b67050942d24deb0a5e96a88b7771c286835b54fe498",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/causal_reference_lifecycle.py": "650fc390a288906e8128e3415ba3c13ad8e6912cd75fbeccf0c1ed22a7e1821b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/receiver_impairments.py": "53c3adbdb3b76235411ff3ff82ddc87fd05ea4b7806ac9f07b4eff278d745d8f",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/shared_supply_lifecycle.py": "4270f885a35dc86508a3ab09131c74a77a3376f6ba2d80d745e64aa9adb5d985",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/capture_memory_lifecycle.py": "9b6176688dc0de7433c0eaf11553c2158593a40e710da4647783b2e1ff437eab",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/playback_memory_lifecycle.py": "4e794ec2abdaccd5690eb16906f9c7bf4f31abc47d28a4e47f5c0cd6c30eb85a",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/programmable_filters_lifecycle.py": "f70d4cf1a0b2071fda7f735992654450a20095a76fd3024d0474797472c838a2",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/local_routing_lifecycle.py": "c85458693a7c48a105fdfed9a8b1cc019c5e7c2619102feae9bf564bcfa3c8f1",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/rf_phase_lifecycle.py": "b83443fe601ef4ae3e078932fdb12c0f39e8f7f3be3f1fca3170a3784412bbdb",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/live_wired_lifecycle.py": "2a0fd1321c2693c30e25ef3c4f6c8f2f2a32a093541b7ba8ff79ba3e3eee4184",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/wired_idle_lifecycle.py": "3356cc4f8bd2f27bf793bbb8fbf1b84d16abfd8b565d49d60f7a4e3f48f39c9d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/wired_supply_lifecycle.py": "9a7547cdf51b4efab0031531c2eb4aad79c00168eea9fee63708900d74a809d9",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/rf_quality_screen.py": "2b08b555e27b4c3d736ec13825760b6e32f41afe94bc7c2e6c44867fe37458ce",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/rf_selectivity_screen.py": "6d05eda7f85e2dd5a331dfc2b7ffd507330cbca152857ecd5f77f8323a90b931",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/rf_modulated_quality.py": "76ba63a7204ab9af40f0d6f7dbf5b370e7c6324a9c92791b9089a71a40db1f22",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/combined_platform.py": "e280bfdbaca6b492b7157b2404fe6b7ca055c5b91df9e929c6d734f081ca76cb",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/external_rf_lifecycle.py": "8ee1f53bf3849a103eb4b4f761fbd8cf3761f9d9da3685ca3f8293dce5881087",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/wired_equalizer.py": "f72866a32e36fd0028f6c351f64b6d7b3242b24f826ec18a1be194ce83eab6d5",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/resource_inventory.py": "a2ce65e3240517fb99d314671d0b3ce6eb3787a9cdf967023a5665414fdeb039",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/timed_management.py": "ebc062804d58db28438d608dbb56a84ad0ff9902c80794fa0faf75e87484c753",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/autonomous_wire_lifecycle.py": "efe02708da4c2f822a69e48e62c967d6142b7c7384243c4569bea6c9fd9812a1",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/autonomous_rf_lifecycle.py": "147aef3726c15734c2e8bea0f93b082b4fed53d20800c44be6043a17fe876af0",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/oscillator_supply_lifecycle.py": "273c805295904031055179a8b78e07ae9a3333a2089b57ab55b5facbb2685b7c",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/noisy_oscillator_lifecycle.py": "1c40d833732293d0a84f502281db8b2ec9993d288c59c1204573846e3998540e",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/integer_clock_lifecycle.py": "c828f85220b083931a64e8d292bdf26debf6776fb0692d91f459777b3954e249",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/sampled_pll.py": "3167b8d3a4d1606559fd18d553ee158f1497390d6764530693a57f68033fe488",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/sampled_clock_lifecycle.py": "c9d873f062eea262e94d53b354b9b482ce633dd09e7e6a59505396df24f050f4",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected/receiver_detect_chip_adapter.py": "d6c1a9e0960cb57522524b6601a380152eaea4044b142c47dc65b4164cf70e53"
+  },
+  "limitations": [
+    "Staged external adapter against unchanged sampled-clock chip; not registered in running aggregate.",
+    "Direct controller API only; timed management, resource discovery and post-reset rearm integration remain pending.",
+    "Probe load is not yet coupled to the chip supply. Concurrent RF/receive transport therefore establishes control isolation only.",
+    "Nominal external loads, not device/package or protocol compliance."
+  ]
+}

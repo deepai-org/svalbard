@@ -1,0 +1,62 @@
+{
+  "status": "terminal_comparison",
+  "completed": true,
+  "input_audit_sha256": {
+    "vco-supply-ripple.json": "ea27794a950e1b95a50c640ee44520d5924202e2294d28615de59d1bd6b45757",
+    "vco-supply-ripple-fine.json": "d589f270883b767b0400244816853ac099143397d3016dae32857eb245e962f5"
+  },
+  "limitations": [
+    "Two timesteps provide sensitivity evidence, not proof of convergence to the physical solution.",
+    "One deterministic disturbance; no intrinsic jitter/noise, process or full PLL qualification."
+  ],
+  "windows": [
+    {
+      "window_ns": [
+        40,
+        200
+      ],
+      "coarse_peak_ps": 0.8361132691361328,
+      "fine_peak_ps": 0.8363408711265978,
+      "peak_change_ps": 0.0002276019904650095,
+      "peak_change_percent": 0.0272214302615037,
+      "phase_change_degrees": -0.006424144188456065,
+      "sin_cos_vector_change_ps": 0.000246157620213496,
+      "offset_change_ps": 0.0002887548589768363,
+      "drift_change_ps_per_ns": 7.875025385057732e-06,
+      "coarse_residual_rms_ps": 0.0023029346911183036,
+      "fine_residual_rms_ps": 0.0023302541395306985
+    },
+    {
+      "window_ns": [
+        40,
+        120
+      ],
+      "coarse_peak_ps": 0.8361270536969831,
+      "fine_peak_ps": 0.8363438835228164,
+      "peak_change_ps": 0.0002168298258332646,
+      "peak_change_percent": 0.025932640843828736,
+      "phase_change_degrees": -0.007223311282755225,
+      "sin_cos_vector_change_ps": 0.00024110067578126833,
+      "offset_change_ps": -4.6102653129431737e-05,
+      "drift_change_ps_per_ns": 6.066348070210613e-06,
+      "coarse_residual_rms_ps": 0.002295599493491973,
+      "fine_residual_rms_ps": 0.0023207903215045986
+    },
+    {
+      "window_ns": [
+        120,
+        200
+      ],
+      "coarse_peak_ps": 0.8361013126503904,
+      "fine_peak_ps": 0.8363396377500346,
+      "peak_change_ps": 0.00023832509964416548,
+      "peak_change_percent": 0.028504332673362498,
+      "phase_change_degrees": -0.004220340797942406,
+      "sin_cos_vector_change_ps": 0.00024615605018150503,
+      "offset_change_ps": 0.000623612428752307,
+      "drift_change_ps_per_ns": 6.470831585553142e-06,
+      "coarse_residual_rms_ps": 0.002282751354194018,
+      "fine_residual_rms_ps": 0.002320950827818237
+    }
+  ]
+}

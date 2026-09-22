@@ -1,0 +1,598 @@
+{
+  "status": "reference_driver_device_headroom_audited",
+  "cases": [
+    {
+      "name": "v1.15_i-0.015",
+      "target_v": 1.15,
+      "load_a": -0.015,
+      "scale": 16,
+      "values": {
+        "v(OUT)": 1.140918488842374,
+        "v(XBUF.X)": 1.221227942174367,
+        "v(XBUF.A)": 2.17578603079068,
+        "v(XBUF.T)": 0.2220934342457227,
+        "i(VDD)": -0.0261256875180082,
+        "@m.xbuf.xip.m0[vds]": 1.953692596544958,
+        "@m.xbuf.xip.m0[vdsat]": 0.1719140262249005,
+        "@m.xbuf.xip.m0[vgs]": 0.9188250545966513,
+        "@m.xbuf.xip.m0[vth]": 0.7846216163289428,
+        "@m.xbuf.xip.m0[gm]": 0.02297095192414384,
+        "@m.xbuf.xip.m0[gds]": 0.000127453155165559,
+        "@m.xbuf.xip.m0[id]": 0.002334002426620103,
+        "@m.xbuf.xin.m0[vds]": 0.9991345079286446,
+        "@m.xbuf.xin.m0[vdsat]": 0.1775285477391565,
+        "@m.xbuf.xin.m0[vgs]": 0.9279065657542774,
+        "@m.xbuf.xin.m0[vth]": 0.7858597940044593,
+        "@m.xbuf.xin.m0[gm]": 0.02328361543927345,
+        "@m.xbuf.xin.m0[gds]": 0.0001593874838693006,
+        "@m.xbuf.xin.m0[id]": 0.002410883996110349,
+        "@m.xbuf.xt.m0[vds]": 0.2220934342457227,
+        "@m.xbuf.xt.m0[vdsat]": 0.1353462886423759,
+        "@m.xbuf.xt.m0[vgs]": 0.7966725506343387,
+        "@m.xbuf.xt.m0[vth]": 0.7133146031606251,
+        "@m.xbuf.xt.m0[gm]": 0.05837201128799244,
+        "@m.xbuf.xt.m0[gds]": 0.001691209692063465,
+        "@m.xbuf.xt.m0[id]": 0.00474488633359442,
+        "@m.xbuf.xmp.m0[vds]": 1.12421396920932,
+        "@m.xbuf.xmp.m0[vdsat]": 0.3122059294751185,
+        "@m.xbuf.xmp.m0[vgs]": 1.12421396920932,
+        "@m.xbuf.xmp.m0[vth]": 0.7876313864579462,
+        "@m.xbuf.xmp.m0[gm]": 0.01227245212080142,
+        "@m.xbuf.xmp.m0[gds]": 0.0001027526579301633,
+        "@m.xbuf.xmp.m0[id]": 0.002334130378464741,
+        "@m.xbuf.xmn.m0[vds]": 2.078772057825633,
+        "@m.xbuf.xmn.m0[vdsat]": 0.312887826847557,
+        "@m.xbuf.xmn.m0[vgs]": 1.12421396920932,
+        "@m.xbuf.xmn.m0[vth]": 0.786764249704144,
+        "@m.xbuf.xmn.m0[gm]": 0.01264713144649457,
+        "@m.xbuf.xmn.m0[gds]": 6.579349607774896e-05,
+        "@m.xbuf.xmn.m0[id]": 0.002410883602992372,
+        "@m.xbuf.xout.m0[vds]": 1.140918488842374,
+        "@m.xbuf.xout.m0[vdsat]": 0.4312905418511159,
+        "@m.xbuf.xout.m0[vgs]": 1.221227942174367,
+        "@m.xbuf.xout.m0[vth]": 0.7122258473334269,
+        "@m.xbuf.xout.m0[gm]": 0.1150951308436907,
+        "@m.xbuf.xout.m0[gds]": 0.001435458100844924,
+        "@m.xbuf.xout.m0[id]": 0.03634067284465101,
+        "@m.xbuf.xload.m0[vds]": 2.159081511157626,
+        "@m.xbuf.xload.m0[vdsat]": 0.2365951659965355,
+        "@m.xbuf.xload.m0[vgs]": 1.027111480359222,
+        "@m.xbuf.xload.m0[vth]": 0.7866912952349583,
+        "@m.xbuf.xload.m0[gm]": 0.1529524041920055,
+        "@m.xbuf.xload.m0[gds]": 0.0006217490406880873,
+        "@m.xbuf.xload.m0[id]": 0.02134065591192194
+      },
+      "baseline_deck_sha256": "3247fc25c688b9b8a8afc5014f12908db46d418b77b46e261f4ee018066c1f2d",
+      "artifacts_sha256": {
+        ".spice": "bb37ed93267d06544e92eb314cffec504558a55d1c789596f2c25f70d9d59ca0",
+        ".dat": "6dc27bd5a21767780f6fd9c95a2b3ba9d9d593c435ff7013407cd46d0425aab8",
+        ".log": "7d9f7f32a06bb01b4c430aab87009bcb02b350e465505ff7e03156adfb1f91f5"
+      },
+      "devices": {
+        "xip": {
+          "model_vds_minus_vdsat_v": 1.7817785703200575,
+          "gm_over_gds": 180.23054740626117
+        },
+        "xin": {
+          "model_vds_minus_vdsat_v": 0.8216059601894881,
+          "gm_over_gds": 146.08183073124022
+        },
+        "xt": {
+          "model_vds_minus_vdsat_v": 0.08674714560334679,
+          "gm_over_gds": 34.514946054248334
+        },
+        "xmp": {
+          "model_vds_minus_vdsat_v": 0.8120080397342015,
+          "gm_over_gds": 119.43683373273416
+        },
+        "xmn": {
+          "model_vds_minus_vdsat_v": 1.765884230978076,
+          "gm_over_gds": 192.22464529851558
+        },
+        "xout": {
+          "model_vds_minus_vdsat_v": 0.7096279469912581,
+          "gm_over_gds": 80.18006988566552
+        },
+        "xload": {
+          "model_vds_minus_vdsat_v": 1.9224863451610905,
+          "gm_over_gds": 246.00344219708592
+        }
+      }
+    },
+    {
+      "name": "v1.15_i0",
+      "target_v": 1.15,
+      "load_a": 0,
+      "scale": 16,
+      "values": {
+        "v(OUT)": 1.139521626159795,
+        "v(XBUF.X)": 1.079277703992066,
+        "v(XBUF.A)": 2.176210856301671,
+        "v(XBUF.T)": 0.2212118646071776,
+        "i(VDD)": -0.02612505858426296,
+        "@m.xbuf.xip.m0[vds]": 1.954998991694493,
+        "@m.xbuf.xip.m0[vdsat]": 0.1717359455921405,
+        "@m.xbuf.xip.m0[vgs]": 0.9183097615526176,
+        "@m.xbuf.xip.m0[vth]": 0.7843458235780955,
+        "@m.xbuf.xip.m0[gm]": 0.02294066486171551,
+        "@m.xbuf.xip.m0[gds]": 0.000127251077528675,
+        "@m.xbuf.xip.m0[id]": 0.002328746772043012,
+        "@m.xbuf.xin.m0[vds]": 0.8580658393848885,
+        "@m.xbuf.xin.m0[vdsat]": 0.1782202759122454,
+        "@m.xbuf.xin.m0[vgs]": 0.9287881353928226,
+        "@m.xbuf.xin.m0[vth]": 0.7857681904601256,
+        "@m.xbuf.xin.m0[gm]": 0.02326742772401369,
+        "@m.xbuf.xin.m0[gds]": 0.0001710813818539156,
+        "@m.xbuf.xin.m0[id]": 0.002414641041745488,
+        "@m.xbuf.xt.m0[vds]": 0.2212118646071776,
+        "@m.xbuf.xt.m0[vdsat]": 0.1353455969431218,
+        "@m.xbuf.xt.m0[vgs]": 0.7966725506343387,
+        "@m.xbuf.xt.m0[vth]": 0.7133156477708872,
+        "@m.xbuf.xt.m0[gm]": 0.05834415591864292,
+        "@m.xbuf.xt.m0[gds]": 0.001708676913621473,
+        "@m.xbuf.xt.m0[id]": 0.004743387724990894,
+        "@m.xbuf.xmp.m0[vds]": 1.12378914369833,
+        "@m.xbuf.xmp.m0[vdsat]": 0.311871616467744,
+        "@m.xbuf.xmp.m0[vgs]": 1.12378914369833,
+        "@m.xbuf.xmp.m0[vth]": 0.787631772376644,
+        "@m.xbuf.xmp.m0[gm]": 0.01225980313937712,
+        "@m.xbuf.xmp.m0[gds]": 0.0001025560047451915,
+        "@m.xbuf.xmp.m0[id]": 0.002328875802499017,
+        "@m.xbuf.xmn.m0[vds]": 2.220722296007934,
+        "@m.xbuf.xmn.m0[vdsat]": 0.3126552343190107,
+        "@m.xbuf.xmn.m0[vgs]": 1.12378914369833,
+        "@m.xbuf.xmn.m0[vth]": 0.7866352997007794,
+        "@m.xbuf.xmn.m0[gm]": 0.01267586466681581,
+        "@m.xbuf.xmn.m0[gds]": 6.297186861181776e-05,
+        "@m.xbuf.xmn.m0[id]": 0.002414639497427485,
+        "@m.xbuf.xout.m0[vds]": 1.139521626159795,
+        "@m.xbuf.xout.m0[vdsat]": 0.3364758142599188,
+        "@m.xbuf.xout.m0[vgs]": 1.079277703992066,
+        "@m.xbuf.xout.m0[vth]": 0.7122275025368607,
+        "@m.xbuf.xout.m0[gm]": 0.09514682775860936,
+        "@m.xbuf.xout.m0[gds]": 0.0009063793136132526,
+        "@m.xbuf.xout.m0[id]": 0.02134154145027906,
+        "@m.xbuf.xload.m0[vds]": 2.160478373840205,
+        "@m.xbuf.xload.m0[vdsat]": 0.2365961607390364,
+        "@m.xbuf.xload.m0[vgs]": 1.027111480359222,
+        "@m.xbuf.xload.m0[vth]": 0.7866900263012113,
+        "@m.xbuf.xload.m0[gm]": 0.1529575513398454,
+        "@m.xbuf.xload.m0[gds]": 0.000621536481481659,
+        "@m.xbuf.xload.m0[id]": 0.02134152431854509
+      },
+      "baseline_deck_sha256": "3247fc25c688b9b8a8afc5014f12908db46d418b77b46e261f4ee018066c1f2d",
+      "artifacts_sha256": {
+        ".spice": "b7c7209cc61893e2b2edcdc782d970558a9853a8378dd9ae9c7c0557e0a6434e",
+        ".dat": "e2cb6c9bf8bfed51695875a84f0905a812883f3d08fe6039f9b383d73ee8b126",
+        ".log": "7d9f7f32a06bb01b4c430aab87009bcb02b350e465505ff7e03156adfb1f91f5"
+      },
+      "devices": {
+        "xip": {
+          "model_vds_minus_vdsat_v": 1.7832630461023524,
+          "gm_over_gds": 180.27874739642982
+        },
+        "xin": {
+          "model_vds_minus_vdsat_v": 0.679845563472643,
+          "gm_over_gds": 136.00210304521315
+        },
+        "xt": {
+          "model_vds_minus_vdsat_v": 0.0858662676640558,
+          "gm_over_gds": 34.145809224392686
+        },
+        "xmp": {
+          "model_vds_minus_vdsat_v": 0.8119175272305861,
+          "gm_over_gds": 119.54251893721455
+        },
+        "xmn": {
+          "model_vds_minus_vdsat_v": 1.9080670616889233,
+          "gm_over_gds": 201.2940849024919
+        },
+        "xout": {
+          "model_vds_minus_vdsat_v": 0.8030458118998761,
+          "gm_over_gds": 104.97462412211233
+        },
+        "xload": {
+          "model_vds_minus_vdsat_v": 1.9238822131011686,
+          "gm_over_gds": 246.09585422116373
+        }
+      }
+    },
+    {
+      "name": "v1.15_i0.015",
+      "target_v": 1.15,
+      "load_a": 0.015,
+      "scale": 16,
+      "values": {
+        "v(OUT)": 1.137452431858913,
+        "v(XBUF.X)": 0.8824652130496187,
+        "v(XBUF.A)": 2.176783922488033,
+        "v(XBUF.T)": 0.2198830819461696,
+        "i(VDD)": -0.02612405796250069,
+        "@m.xbuf.xip.m0[vds]": 1.956900840541864,
+        "@m.xbuf.xip.m0[vdsat]": 0.1714936482841083,
+        "@m.xbuf.xip.m0[vgs]": 0.9175693499127434,
+        "@m.xbuf.xip.m0[vth]": 0.7839299810298865,
+        "@m.xbuf.xip.m0[gm]": 0.02289979129422672,
+        "@m.xbuf.xip.m0[gds]": 0.0001269769986186788,
+        "@m.xbuf.xip.m0[id]": 0.002321665689160833,
+        "@m.xbuf.xin.m0[vds]": 0.6625821311034491,
+        "@m.xbuf.xin.m0[vdsat]": 0.1792803660502469,
+        "@m.xbuf.xin.m0[vgs]": 0.9301169180538306,
+        "@m.xbuf.xin.m0[vth]": 0.7856074241696855,
+        "@m.xbuf.xin.m0[gm]": 0.02321870131859454,
+        "@m.xbuf.xin.m0[gds]": 0.0001993560912923463,
+        "@m.xbuf.xin.m0[id]": 0.002419433779488165,
+        "@m.xbuf.xt.m0[vds]": 0.2198830819461696,
+        "@m.xbuf.xt.m0[vdsat]": 0.1353445543534771,
+        "@m.xbuf.xt.m0[vgs]": 0.7966725506343388,
+        "@m.xbuf.xt.m0[vth]": 0.7133172223033382,
+        "@m.xbuf.xt.m0[gm]": 0.05830141848666393,
+        "@m.xbuf.xt.m0[gds]": 0.001735698574494445,
+        "@m.xbuf.xt.m0[id]": 0.00474109938036129,
+        "@m.xbuf.xmp.m0[vds]": 1.123216077511967,
+        "@m.xbuf.xmp.m0[vdsat]": 0.3114206360039732,
+        "@m.xbuf.xmp.m0[vgs]": 1.123216077511967,
+        "@m.xbuf.xmp.m0[vth]": 0.787632292959685,
+        "@m.xbuf.xmp.m0[gm]": 0.0122427316278622,
+        "@m.xbuf.xmp.m0[gds]": 0.0001022909489143964,
+        "@m.xbuf.xmp.m0[id]": 0.002321796317289805,
+        "@m.xbuf.xmn.m0[vds]": 2.417534786950382,
+        "@m.xbuf.xmn.m0[vdsat]": 0.3123452816950666,
+        "@m.xbuf.xmn.m0[vgs]": 1.123216077511967,
+        "@m.xbuf.xmn.m0[vth]": 0.7864565118967276,
+        "@m.xbuf.xmn.m0[gm]": 0.01271252115943227,
+        "@m.xbuf.xmn.m0[gds]": 5.970067933894061e-05,
+        "@m.xbuf.xmn.m0[id]": 0.00241942547610598,
+        "@m.xbuf.xout.m0[vds]": 1.137452431858913,
+        "@m.xbuf.xout.m0[vdsat]": 0.1958048270605159,
+        "@m.xbuf.xout.m0[vgs]": 0.8824652130496187,
+        "@m.xbuf.xout.m0[vth]": 0.7122299544153129,
+        "@m.xbuf.xout.m0[gm]": 0.05432523301671059,
+        "@m.xbuf.xout.m0[gds]": 0.0003683731027832062,
+        "@m.xbuf.xout.m0[id]": 0.006342827584187057,
+        "@m.xbuf.xload.m0[vds]": 2.162547568141087,
+        "@m.xbuf.xload.m0[vdsat]": 0.236597634266871,
+        "@m.xbuf.xload.m0[vgs]": 1.027111480359222,
+        "@m.xbuf.xload.m0[vth]": 0.7866881466100218,
+        "@m.xbuf.xload.m0[gm]": 0.1529651714379051,
+        "@m.xbuf.xload.m0[gds]": 0.0006212221930782682,
+        "@m.xbuf.xload.m0[id]": 0.02134281015757469
+      },
+      "baseline_deck_sha256": "3247fc25c688b9b8a8afc5014f12908db46d418b77b46e261f4ee018066c1f2d",
+      "artifacts_sha256": {
+        ".spice": "efdc34f4b37017ba99c3fd0a49a1ffe5259deb9b20eee301e008cdde21f1f657",
+        ".dat": "c38d1969ffca5d6e4ed7f9b3aecb017eb13b7f5e3a6db464d4a96a4462f37661",
+        ".log": "7d9f7f32a06bb01b4c430aab87009bcb02b350e465505ff7e03156adfb1f91f5"
+      },
+      "devices": {
+        "xip": {
+          "model_vds_minus_vdsat_v": 1.7854071922577557,
+          "gm_over_gds": 180.34598032196732
+        },
+        "xin": {
+          "model_vds_minus_vdsat_v": 0.4833017650532022,
+          "gm_over_gds": 116.46848194141914
+        },
+        "xt": {
+          "model_vds_minus_vdsat_v": 0.08453852759269251,
+          "gm_over_gds": 33.5895986454015
+        },
+        "xmp": {
+          "model_vds_minus_vdsat_v": 0.8117954415079939,
+          "gm_over_gds": 119.68538524466813
+        },
+        "xmn": {
+          "model_vds_minus_vdsat_v": 2.1051895052553156,
+          "gm_over_gds": 212.93762985943695
+        },
+        "xout": {
+          "model_vds_minus_vdsat_v": 0.941647604798397,
+          "gm_over_gds": 147.47339750449126
+        },
+        "xload": {
+          "model_vds_minus_vdsat_v": 1.925949933874216,
+          "gm_over_gds": 246.2326252060234
+        }
+      }
+    },
+    {
+      "name": "v2.15_i-0.015",
+      "target_v": 2.15,
+      "load_a": -0.015,
+      "scale": 16,
+      "values": {
+        "v(OUT)": 2.132989304153496,
+        "v(XBUF.X)": 1.205633965457245,
+        "v(XBUF.A)": 2.157914397925921,
+        "v(XBUF.T)": 0.9923873453114124,
+        "i(VDD)": -0.02585493845945507,
+        "@m.xbuf.xip.m0[vds]": 1.165527052614509,
+        "@m.xbuf.xip.m0[vdsat]": 0.1899204383952953,
+        "@m.xbuf.xip.m0[vgs]": 1.140601958842083,
+        "@m.xbuf.xip.m0[vth]": 0.9899013649249743,
+        "@m.xbuf.xip.m0[gm]": 0.0242903638182953,
+        "@m.xbuf.xip.m0[gds]": 0.000155473431899299,
+        "@m.xbuf.xip.m0[id]": 0.002560095448578066,
+        "@m.xbuf.xin.m0[vds]": 0.2132466201458328,
+        "@m.xbuf.xin.m0[vdsat]": 0.2016487080261809,
+        "@m.xbuf.xin.m0[vgs]": 1.157612654688588,
+        "@m.xbuf.xin.m0[vth]": 0.9915072743280399,
+        "@m.xbuf.xin.m0[gm]": 0.02228470391149737,
+        "@m.xbuf.xin.m0[gds]": 0.002513722466549595,
+        "@m.xbuf.xin.m0[id]": 0.002642810266105777,
+        "@m.xbuf.xt.m0[vds]": 0.9923873453114124,
+        "@m.xbuf.xt.m0[vdsat]": 0.1359512756927166,
+        "@m.xbuf.xt.m0[vgs]": 0.7966725555552087,
+        "@m.xbuf.xt.m0[vth]": 0.7124018483547647,
+        "@m.xbuf.xt.m0[gm]": 0.06374444246583391,
+        "@m.xbuf.xt.m0[gds]": 0.0004104034201220655,
+        "@m.xbuf.xt.m0[id]": 0.005202905346851146,
+        "@m.xbuf.xmp.m0[vds]": 1.142085602074079,
+        "@m.xbuf.xmp.m0[vdsat]": 0.3262631529039012,
+        "@m.xbuf.xmp.m0[vgs]": 1.142085602074079,
+        "@m.xbuf.xmp.m0[vth]": 0.7876151515636088,
+        "@m.xbuf.xmp.m0[gm]": 0.01279969392193049,
+        "@m.xbuf.xmp.m0[gds]": 0.0001111485502292995,
+        "@m.xbuf.xmp.m0[id]": 0.002560095599995081,
+        "@m.xbuf.xmn.m0[vds]": 2.094366034542755,
+        "@m.xbuf.xmn.m0[vdsat]": 0.3269426980145085,
+        "@m.xbuf.xmn.m0[vgs]": 1.142085602074079,
+        "@m.xbuf.xmn.m0[vth]": 0.7867500838712727,
+        "@m.xbuf.xmn.m0[gm]": 0.01318659443453849,
+        "@m.xbuf.xmn.m0[gds]": 7.093656870515633e-05,
+        "@m.xbuf.xmn.m0[id]": 0.002642809465157578,
+        "@m.xbuf.xout.m0[vds]": 2.132989304153496,
+        "@m.xbuf.xout.m0[vdsat]": 0.4219405796993879,
+        "@m.xbuf.xout.m0[vgs]": 1.205633965457245,
+        "@m.xbuf.xout.m0[vth]": 0.7110502994140927,
+        "@m.xbuf.xout.m0[gm]": 0.1157997043544316,
+        "@m.xbuf.xout.m0[gds]": 0.0008912226226282951,
+        "@m.xbuf.xout.m0[id]": 0.03561086930229566,
+        "@m.xbuf.xload.m0[vds]": 1.167010695846505,
+        "@m.xbuf.xload.m0[vdsat]": 0.235888738346341,
+        "@m.xbuf.xload.m0[vgs]": 1.027111480359218,
+        "@m.xbuf.xload.m0[vth]": 0.7875925091857799,
+        "@m.xbuf.xload.m0[gm]": 0.1483792507018434,
+        "@m.xbuf.xload.m0[gds]": 0.0009039077311304694,
+        "@m.xbuf.xload.m0[id]": 0.02061203159901341
+      },
+      "baseline_deck_sha256": "f53137772a99157dc0320527fc2506246148008c845f6a66d2b406c011a2a246",
+      "artifacts_sha256": {
+        ".spice": "8eb83ff44987126895ae851226194384326334b556a4ac51d9a401c553db52ca",
+        ".dat": "51d9d0231e230f2fda67eb6677c7377124c88167517021c9bba1a3a57066be7e",
+        ".log": "48173ebbca3de29d137af031ed3495b652337662fabc053b6bb84ed8f7ce292f"
+      },
+      "devices": {
+        "xip": {
+          "model_vds_minus_vdsat_v": 0.9756066142192137,
+          "gm_over_gds": 156.2348210981044
+        },
+        "xin": {
+          "model_vds_minus_vdsat_v": 0.011597912119651888,
+          "gm_over_gds": 8.86522048795863
+        },
+        "xt": {
+          "model_vds_minus_vdsat_v": 0.8564360696186958,
+          "gm_over_gds": 155.3214211686504
+        },
+        "xmp": {
+          "model_vds_minus_vdsat_v": 0.8158224491701779,
+          "gm_over_gds": 115.15844242254816
+        },
+        "xmn": {
+          "model_vds_minus_vdsat_v": 1.7674233365282463,
+          "gm_over_gds": 185.8927584917138
+        },
+        "xout": {
+          "model_vds_minus_vdsat_v": 1.7110487244541082,
+          "gm_over_gds": 129.93353334425908
+        },
+        "xload": {
+          "model_vds_minus_vdsat_v": 0.9311219575001639,
+          "gm_over_gds": 164.1530939405434
+        }
+      }
+    },
+    {
+      "name": "v2.15_i0",
+      "target_v": 2.15,
+      "load_a": 0,
+      "scale": 16,
+      "values": {
+        "v(OUT)": 2.085956222959207,
+        "v(XBUF.X)": 1.064709794865621,
+        "v(XBUF.A)": 2.158881575733333,
+        "v(XBUF.T)": 0.9548982608005646,
+        "i(VDD)": -0.0258814222144047,
+        "@m.xbuf.xip.m0[vds]": 1.203983314932768,
+        "@m.xbuf.xip.m0[vdsat]": 0.1890159376763154,
+        "@m.xbuf.xip.m0[vgs]": 1.131057962158642,
+        "@m.xbuf.xip.m0[vth]": 0.9811781608184952,
+        "@m.xbuf.xip.m0[gm]": 0.02421950537434065,
+        "@m.xbuf.xip.m0[gds]": 0.0001531747723533927,
+        "@m.xbuf.xip.m0[id]": 0.002547622338406576,
+        "@m.xbuf.xin.m0[vds]": 0.1098115340650563,
+        "@m.xbuf.xin.m0[vdsat]": 0.2367691190513777,
+        "@m.xbuf.xin.m0[vgs]": 1.195101739199435,
+        "@m.xbuf.xin.m0[vth]": 0.9830026209353769,
+        "@m.xbuf.xin.m0[gm]": 0.01425240624967119,
+        "@m.xbuf.xin.m0[gds]": 0.01669492964706554,
+        "@m.xbuf.xin.m0[id]": 0.002639815477323955,
+        "@m.xbuf.xt.m0[vds]": 0.9548982608005646,
+        "@m.xbuf.xt.m0[vdsat]": 0.1359218014210507,
+        "@m.xbuf.xt.m0[vgs]": 0.7966725506343362,
+        "@m.xbuf.xt.m0[vth]": 0.7124462708038624,
+        "@m.xbuf.xt.m0[gm]": 0.06360691073202406,
+        "@m.xbuf.xt.m0[gds]": 0.0004148050262371871,
+        "@m.xbuf.xt.m0[id]": 0.00518743745346165,
+        "@m.xbuf.xmp.m0[vds]": 1.141118424266668,
+        "@m.xbuf.xmp.m0[vdsat]": 0.3255027651440866,
+        "@m.xbuf.xmp.m0[vgs]": 1.141118424266668,
+        "@m.xbuf.xmp.m0[vth]": 0.7876160301643292,
+        "@m.xbuf.xmp.m0[gm]": 0.01277139938031311,
+        "@m.xbuf.xmp.m0[gds]": 0.0001106881128953804,
+        "@m.xbuf.xmp.m0[id]": 0.002547622419127477,
+        "@m.xbuf.xmn.m0[vds]": 2.23529020513438,
+        "@m.xbuf.xmn.m0[vdsat]": 0.3262836085543886,
+        "@m.xbuf.xmn.m0[vgs]": 1.141118424266668,
+        "@m.xbuf.xmn.m0[vth]": 0.7866220659651061,
+        "@m.xbuf.xmn.m0[gm]": 0.01320047604935705,
+        "@m.xbuf.xmn.m0[gds]": 6.771618898585838e-05,
+        "@m.xbuf.xmn.m0[id]": 0.002639813781858855,
+        "@m.xbuf.xout.m0[vds]": 2.085956222959207,
+        "@m.xbuf.xout.m0[vdsat]": 0.3271611330121441,
+        "@m.xbuf.xout.m0[vgs]": 1.064709794865621,
+        "@m.xbuf.xout.m0[vth]": 0.7111060309605554,
+        "@m.xbuf.xout.m0[gm]": 0.09489272919085633,
+        "@m.xbuf.xout.m0[gds]": 0.0006371441992070678,
+        "@m.xbuf.xout.m0[id]": 0.02065302036107296,
+        "@m.xbuf.xload.m0[vds]": 1.214043777040794,
+        "@m.xbuf.xload.m0[vdsat]": 0.2359222270076053,
+        "@m.xbuf.xload.m0[vgs]": 1.027111480359225,
+        "@m.xbuf.xload.m0[vth]": 0.7875497835372999,
+        "@m.xbuf.xload.m0[gm]": 0.14865780341461,
+        "@m.xbuf.xload.m0[gds]": 0.000880229514686911,
+        "@m.xbuf.xload.m0[id]": 0.02065398291834828
+      },
+      "baseline_deck_sha256": "f53137772a99157dc0320527fc2506246148008c845f6a66d2b406c011a2a246",
+      "artifacts_sha256": {
+        ".spice": "7e11fe61c4ef1402f956a74161bda1bd0a5f84b9834036db857a85058990b104",
+        ".dat": "de99dcde46dfc41b746d3240a75b2402ce94efefd8501b13b57a58a4010cf423",
+        ".log": "48173ebbca3de29d137af031ed3495b652337662fabc053b6bb84ed8f7ce292f"
+      },
+      "devices": {
+        "xip": {
+          "model_vds_minus_vdsat_v": 1.0149673772564525,
+          "gm_over_gds": 158.1168034541832
+        },
+        "xin": {
+          "model_vds_minus_vdsat_v": -0.12695758498632143,
+          "gm_over_gds": 0.8536966942041788
+        },
+        "xt": {
+          "model_vds_minus_vdsat_v": 0.8189764593795139,
+          "gm_over_gds": 153.34170684723907
+        },
+        "xmp": {
+          "model_vds_minus_vdsat_v": 0.8156156591225815,
+          "gm_over_gds": 115.38185127778186
+        },
+        "xmn": {
+          "model_vds_minus_vdsat_v": 1.9090065965799916,
+          "gm_over_gds": 194.93825992058996
+        },
+        "xout": {
+          "model_vds_minus_vdsat_v": 1.7587950899470628,
+          "gm_over_gds": 148.93446304455296
+        },
+        "xload": {
+          "model_vds_minus_vdsat_v": 0.9781215500331886,
+          "gm_over_gds": 168.88527473142742
+        }
+      }
+    },
+    {
+      "name": "v2.15_i0.015",
+      "target_v": 2.15,
+      "load_a": 0.015,
+      "scale": 16,
+      "values": {
+        "v(OUT)": 1.911923851476735,
+        "v(XBUF.X)": 0.8675225923307287,
+        "v(XBUF.A)": 2.16163472281039,
+        "v(XBUF.T)": 0.8165828655632953,
+        "i(VDD)": -0.02596918843096613,
+        "@m.xbuf.xip.m0[vds]": 1.345051857247095,
+        "@m.xbuf.xip.m0[vdsat]": 0.1860061646228983,
+        "@m.xbuf.xip.m0[vgs]": 1.09534098591344,
+        "@m.xbuf.xip.m0[vth]": 0.9480744968456103,
+        "@m.xbuf.xip.m0[gm]": 0.02401342695264297,
+        "@m.xbuf.xip.m0[gds]": 0.0001463713849532467,
+        "@m.xbuf.xip.m0[id]": 0.002512269252819954,
+        "@m.xbuf.xin.m0[vds]": 0.05093972676743341,
+        "@m.xbuf.xin.m0[vdsat]": 0.363730001983058,
+        "@m.xbuf.xin.m0[vgs]": 1.333417134436705,
+        "@m.xbuf.xin.m0[vth]": 0.9501418773693882,
+        "@m.xbuf.xin.m0[gm]": 0.00666539952395222,
+        "@m.xbuf.xin.m0[gds]": 0.0471988586780923,
+        "@m.xbuf.xin.m0[id]": 0.002616447865747923,
+        "@m.xbuf.xt.m0[vds]": 0.8165828655632953,
+        "@m.xbuf.xt.m0[vdsat]": 0.1358130958180573,
+        "@m.xbuf.xt.m0[vgs]": 0.7966725555552087,
+        "@m.xbuf.xt.m0[vth]": 0.7126101667400936,
+        "@m.xbuf.xt.m0[gm]": 0.06307449602323476,
+        "@m.xbuf.xt.m0[gds]": 0.0004357042262407256,
+        "@m.xbuf.xt.m0[id]": 0.005128712951106159,
+        "@m.xbuf.xmp.m0[vds]": 1.13836527718961,
+        "@m.xbuf.xmp.m0[vdsat]": 0.3233380232301425,
+        "@m.xbuf.xmp.m0[vgs]": 1.13836527718961,
+        "@m.xbuf.xmp.m0[vth]": 0.7876185311698182,
+        "@m.xbuf.xmp.m0[gm]": 0.01269070973934379,
+        "@m.xbuf.xmp.m0[gds]": 0.0001093812007827822,
+        "@m.xbuf.xmp.m0[id]": 0.002512268951676381,
+        "@m.xbuf.xmn.m0[vds]": 2.432477407669272,
+        "@m.xbuf.xmn.m0[vdsat]": 0.3242617083065525,
+        "@m.xbuf.xmn.m0[vgs]": 1.13836527718961,
+        "@m.xbuf.xmn.m0[vth]": 0.7864429377666898,
+        "@m.xbuf.xmn.m0[gm]": 0.01317397086471084,
+        "@m.xbuf.xmn.m0[gds]": 6.35520260134177e-05,
+        "@m.xbuf.xmn.m0[id]": 0.002616435014936835,
+        "@m.xbuf.xout.m0[vds]": 1.911923851476735,
+        "@m.xbuf.xout.m0[vdsat]": 0.1857297506970625,
+        "@m.xbuf.xout.m0[vgs]": 0.8675225923307287,
+        "@m.xbuf.xout.m0[vth]": 0.7113122494976151,
+        "@m.xbuf.xout.m0[gm]": 0.05198268746847816,
+        "@m.xbuf.xout.m0[gds]": 0.0002952970139402415,
+        "@m.xbuf.xout.m0[id]": 0.005800270615863829,
+        "@m.xbuf.xload.m0[vds]": 1.388076148523266,
+        "@m.xbuf.xload.m0[vdsat]": 0.2360461442151311,
+        "@m.xbuf.xload.m0[vgs]": 1.027111480359218,
+        "@m.xbuf.xload.m0[vth]": 0.7873916895800399,
+        "@m.xbuf.xload.m0[gm]": 0.1496145873587431,
+        "@m.xbuf.xload.m0[gds]": 0.0008064347792059266,
+        "@m.xbuf.xload.m0[id]": 0.02080047370052176
+      },
+      "baseline_deck_sha256": "f53137772a99157dc0320527fc2506246148008c845f6a66d2b406c011a2a246",
+      "artifacts_sha256": {
+        ".spice": "8b7144690f8e6a5091c9ab4f074ce801c68fb4edea6d3da1b1c0cef44e5ebac4",
+        ".dat": "4e2640543d3b3e7b1a5d6ff94a9a574d6de497fd73a9293322c635549ac334da",
+        ".log": "48173ebbca3de29d137af031ed3495b652337662fabc053b6bb84ed8f7ce292f"
+      },
+      "devices": {
+        "xip": {
+          "model_vds_minus_vdsat_v": 1.1590456926241968,
+          "gm_over_gds": 164.05820687092105
+        },
+        "xin": {
+          "model_vds_minus_vdsat_v": -0.3127902752156246,
+          "gm_over_gds": 0.14121950637433558
+        },
+        "xt": {
+          "model_vds_minus_vdsat_v": 0.680769769745238,
+          "gm_over_gds": 144.76448063734463
+        },
+        "xmp": {
+          "model_vds_minus_vdsat_v": 0.8150272539594675,
+          "gm_over_gds": 116.02276852441949
+        },
+        "xmn": {
+          "model_vds_minus_vdsat_v": 2.1082156993627197,
+          "gm_over_gds": 207.29427039712985
+        },
+        "xout": {
+          "model_vds_minus_vdsat_v": 1.7261941007796724,
+          "gm_over_gds": 176.0352628523286
+        },
+        "xload": {
+          "model_vds_minus_vdsat_v": 1.1520300043081348,
+          "gm_over_gds": 185.52596095379758
+        }
+      }
+    }
+  ],
+  "source_sha256": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+  "limitations": [
+    "PDK nominal operating-region indicators, not worst-case process bounds.",
+    "DC diagnostic only; no feedback-loop phase margin, transient regulation or noise proof."
+  ]
+}

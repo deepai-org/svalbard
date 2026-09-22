@@ -1,0 +1,6 @@
+* Passive candidate values, not a designed/qualified closed-loop bandwidth.
+.subckt pt_loop_filter IN VSS params: RZ=10k CZ=50p CP=2p
+CP IN VSS {CP}
+RZ IN Z {RZ}
+CZ Z VSS {CZ}
+.ends pt_loop_filter

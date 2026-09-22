@@ -1,0 +1,35 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "words": 4096,
+      "transitions": 24195
+    },
+    {
+      "mode": 1,
+      "words": 4096,
+      "transitions": 24195
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "controls": [
+    "both-mode 64-frame counting",
+    "low switching rejection",
+    "payload rejection",
+    "stale epoch",
+    "clock gap",
+    "duplicate arm",
+    "untrained RF/wired start rejection",
+    "partial training rejection",
+    "exact timeout deadline",
+    "reference loss",
+    "drain does not restore qualification"
+  ],
+  "limitations": [
+    "Per-edge timestamps are a mathematical timing contract, not a implemented on-chip time-to-digital monitor.",
+    "Activity thresholds and idle-validity window are provisional; full noise/load and pause/recovery envelopes remain open.",
+    "Experimental streaming-only candidate; SPI-only capture uses separate existing architecture and is not promoted here."
+  ]
+}

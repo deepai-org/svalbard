@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "rate_hz": 1250000000.0,
+      "loss_s": 1.5e-07,
+      "recovery_start_s": 5.150000000000001e-06,
+      "phase_subdivision_error": 9.094947017729282e-13,
+      "held_pump_charge_c": 4.0978204094550357e-13,
+      "final_frequency_hz": 1250000000.0027478,
+      "locked": true
+    },
+    {
+      "rate_hz": 1250000000.0,
+      "loss_s": 2.0035e-05,
+      "recovery_start_s": 2.5035e-05,
+      "phase_subdivision_error": 5.820766091346741e-11,
+      "held_pump_charge_c": 1.0132118364583542e-12,
+      "final_frequency_hz": 1249999999.9950826,
+      "locked": true
+    },
+    {
+      "rate_hz": 2500000000.0,
+      "loss_s": 1.5e-07,
+      "recovery_start_s": 5.150000000000001e-06,
+      "phase_subdivision_error": 1.8189894035458565e-12,
+      "held_pump_charge_c": 4.0978204094550357e-13,
+      "final_frequency_hz": 2499999999.9970345,
+      "locked": true
+    },
+    {
+      "rate_hz": 2500000000.0,
+      "loss_s": 2.0035e-05,
+      "recovery_start_s": 2.5035e-05,
+      "phase_subdivision_error": 2.0372681319713593e-10,
+      "held_pump_charge_c": 1.0132118364263661e-12,
+      "final_frequency_hz": 2500000000.0040584,
+      "locked": true
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Reference loss instantly gates the pump; physical loss-detection delay is not modeled.",
+    "Ideal capacitor retention excludes leakage and noise; passive filter redistribution is preserved.",
+    "Reference returns on the original grid; arbitrary returned reference phase remains untested."
+  ]
+}

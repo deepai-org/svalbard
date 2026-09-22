@@ -1,0 +1,45 @@
+{
+  "status": "actual_sar_timing_scope_audit",
+  "source_sha256": "6647c5a973b0247e516c388867e5483ba21a633e129db6718cdb906b98560fe4",
+  "cases": [
+    {
+      "case": "typical_first-1",
+      "hold_ns": 120,
+      "sd7_fall_ns": 123.12448620279805,
+      "sd6_rise_ns": 123.45205871588286,
+      "command_skew_ps": 327.572513084792,
+      "b7_fall_ns": 123.35483427613583,
+      "decision_clock_midpoint_ns": 125.55000000000001,
+      "last_command_to_clock_ps": 2097.941284117159,
+      "span_at_clock_v": 0.9623358126646456
+    },
+    {
+      "case": "typical_first1",
+      "hold_ns": 70,
+      "sd7_fall_ns": 73.12477041490811,
+      "sd6_rise_ns": 73.45235372750764,
+      "command_skew_ps": 327.58331259951837,
+      "b7_fall_ns": 73.35513368881057,
+      "decision_clock_midpoint_ns": 75.55,
+      "last_command_to_clock_ps": 2097.6462724923617,
+      "span_at_clock_v": 0.9540778082596835
+    },
+    {
+      "case": "typical_first1",
+      "hold_ns": 170,
+      "sd7_fall_ns": 173.12448620753727,
+      "sd6_rise_ns": 173.4520986536819,
+      "command_skew_ps": 327.6124461446115,
+      "b7_fall_ns": 173.35483371612716,
+      "decision_clock_midpoint_ns": 175.54999999999995,
+      "last_command_to_clock_ps": 2097.9013463180577,
+      "span_at_clock_v": 0.9614771048031465
+    }
+  ],
+  "limitations": [
+    "50% voltage crossings are timing markers, not conduction boundaries.",
+    "B6 was not saved; SD6 command and actual B7 output must not be conflated.",
+    "Clock midpoint is not a complete comparator aperture model.",
+    "Three selected nominal128->64 transitions do not bound all code histories."
+  ]
+}

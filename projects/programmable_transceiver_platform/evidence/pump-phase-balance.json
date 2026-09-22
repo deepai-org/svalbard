@@ -1,0 +1,71 @@
+{
+  "status": "diagnostic_secants_not_lock",
+  "cases": [
+    {
+      "control_v": 0.98,
+      "phase_points_ps": [
+        299.99999999999835,
+        -300.00000000002916
+      ],
+      "charge_points_fc": [
+        -12.190061120456996,
+        -0.18195278806539952
+      ],
+      "equivalent_current_a": 2.001351388731841e-05,
+      "linear_zero_reference_minus_feedback_ps": -309.0914963304509,
+      "zero_inside_sampled_interval": false,
+      "measured_opposite_charge_signs": false,
+      "limitations": "Two-point secant only; zero estimate is not a simulated operating point, nonlinear transfer, acquisition or equilibrium proof."
+    },
+    {
+      "control_v": 1.08,
+      "phase_points_ps": [
+        299.99999999999835,
+        -300.00000000002916
+      ],
+      "charge_points_fc": [
+        -10.532493886693697,
+        1.6178020413071807
+      ],
+      "equivalent_current_a": 2.0250493213333867e-05,
+      "linear_zero_reference_minus_feedback_ps": -220.110486976122,
+      "zero_inside_sampled_interval": true,
+      "measured_opposite_charge_signs": true,
+      "limitations": "Two-point secant only; zero estimate is not a simulated operating point, nonlinear transfer, acquisition or equilibrium proof."
+    },
+    {
+      "control_v": 1.16,
+      "phase_points_ps": [
+        299.99999999999835,
+        -300.00000000002916
+      ],
+      "charge_points_fc": [
+        -9.370055048680115,
+        2.857199077810856
+      ],
+      "equivalent_current_a": 2.0378756877484014e-05,
+      "linear_zero_reference_minus_feedback_ps": -159.79522229998682,
+      "zero_inside_sampled_interval": true,
+      "measured_opposite_charge_signs": true,
+      "limitations": "Two-point secant only; zero estimate is not a simulated operating point, nonlinear transfer, acquisition or equilibrium proof."
+    }
+  ],
+  "inputs_sha256": {
+    "evidence/pump-follower-phase.json": "23ebb8454d178e18d449420e17fbf694df269c1cd20810892c5471b8ceb3af08",
+    "evidence/pump-control-range.json": "d6f307212242aa22ab93758424503d652cab7ceb79e99501f776750128474456",
+    "evidence/pump-range-followup.json": "6e3a7a535510d2dddec94beae052f4528b5c35ba92148d6325fd1550ea4dd05f"
+  },
+  "low_control_late_phase_comparison": {
+    "control_v": 0.98,
+    "phase_lag_ps": [
+      300,
+      600
+    ],
+    "measured_charge_fc": [
+      -0.18195278806539952,
+      5.71228535980806
+    ],
+    "opposite_measured_signs": true,
+    "interpretation": "Opposite measured charge signs support shifted balance; continuity, an actual zero, equilibrium stability and autonomous acquisition remain unverified."
+  }
+}

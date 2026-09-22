@@ -1,0 +1,309 @@
+* Explicit 5um x 5um PDK MIM units; conditional M4-M5 1.5fF/um2 option.
+* No layout/extracted coupling or mismatch qualification.
+.subckt pt_cdac_mim_bit0 TOP VH VL B BB VDD VSS
+XH VH BOT B BB VDD VSS pt_cdac_scaled_switch S=1
+XL VL BOT BB B VDD VSS pt_cdac_scaled_switch S=1
+XC0 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+.ends
+.subckt pt_cdac_mim_bit1 TOP VH VL B BB VDD VSS
+XH VH BOT B BB VDD VSS pt_cdac_scaled_switch S=2
+XL VL BOT BB B VDD VSS pt_cdac_scaled_switch S=2
+XC0 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC1 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+.ends
+.subckt pt_cdac_mim_bit2 TOP VH VL B BB VDD VSS
+XH VH BOT B BB VDD VSS pt_cdac_scaled_switch S=4
+XL VL BOT BB B VDD VSS pt_cdac_scaled_switch S=4
+XC0 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC1 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC2 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC3 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+.ends
+.subckt pt_cdac_mim_bit3 TOP VH VL B BB VDD VSS
+XH VH BOT B BB VDD VSS pt_cdac_scaled_switch S=8
+XL VL BOT BB B VDD VSS pt_cdac_scaled_switch S=8
+XC0 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC1 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC2 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC3 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC4 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC5 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC6 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC7 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+.ends
+.subckt pt_cdac_mim_bit4 TOP VH VL B BB VDD VSS
+XH VH BOT B BB VDD VSS pt_cdac_scaled_switch S=16
+XL VL BOT BB B VDD VSS pt_cdac_scaled_switch S=16
+XC0 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC1 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC2 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC3 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC4 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC5 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC6 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC7 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC8 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC9 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC10 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC11 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC12 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC13 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC14 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC15 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+.ends
+.subckt pt_cdac_mim_bit5 TOP VH VL B BB VDD VSS
+XH VH BOT B BB VDD VSS pt_cdac_scaled_switch S=32
+XL VL BOT BB B VDD VSS pt_cdac_scaled_switch S=32
+XC0 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC1 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC2 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC3 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC4 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC5 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC6 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC7 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC8 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC9 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC10 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC11 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC12 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC13 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC14 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC15 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC16 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC17 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC18 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC19 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC20 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC21 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC22 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC23 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC24 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC25 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC26 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC27 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC28 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC29 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC30 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC31 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+.ends
+.subckt pt_cdac_mim_bit6 TOP VH VL B BB VDD VSS
+XH VH BOT B BB VDD VSS pt_cdac_scaled_switch S=64
+XL VL BOT BB B VDD VSS pt_cdac_scaled_switch S=64
+XC0 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC1 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC2 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC3 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC4 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC5 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC6 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC7 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC8 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC9 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC10 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC11 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC12 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC13 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC14 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC15 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC16 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC17 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC18 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC19 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC20 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC21 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC22 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC23 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC24 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC25 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC26 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC27 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC28 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC29 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC30 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC31 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC32 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC33 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC34 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC35 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC36 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC37 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC38 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC39 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC40 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC41 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC42 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC43 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC44 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC45 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC46 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC47 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC48 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC49 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC50 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC51 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC52 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC53 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC54 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC55 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC56 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC57 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC58 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC59 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC60 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC61 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC62 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC63 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+.ends
+.subckt pt_cdac_mim_bit7 TOP VH VL B BB VDD VSS
+XH VH BOT B BB VDD VSS pt_cdac_scaled_switch S=128
+XL VL BOT BB B VDD VSS pt_cdac_scaled_switch S=128
+XC0 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC1 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC2 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC3 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC4 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC5 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC6 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC7 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC8 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC9 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC10 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC11 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC12 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC13 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC14 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC15 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC16 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC17 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC18 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC19 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC20 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC21 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC22 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC23 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC24 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC25 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC26 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC27 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC28 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC29 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC30 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC31 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC32 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC33 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC34 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC35 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC36 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC37 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC38 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC39 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC40 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC41 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC42 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC43 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC44 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC45 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC46 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC47 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC48 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC49 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC50 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC51 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC52 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC53 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC54 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC55 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC56 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC57 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC58 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC59 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC60 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC61 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC62 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC63 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC64 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC65 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC66 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC67 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC68 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC69 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC70 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC71 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC72 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC73 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC74 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC75 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC76 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC77 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC78 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC79 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC80 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC81 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC82 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC83 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC84 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC85 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC86 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC87 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC88 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC89 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC90 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC91 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC92 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC93 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC94 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC95 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC96 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC97 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC98 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC99 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC100 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC101 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC102 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC103 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC104 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC105 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC106 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC107 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC108 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC109 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC110 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC111 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC112 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC113 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC114 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC115 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC116 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC117 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC118 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC119 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC120 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC121 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC122 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC123 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC124 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC125 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC126 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XC127 TOP BOT cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+.ends
+.subckt pt_cdac8_mim HP HN VH VL B0 B0B B1 B1B B2 B2B B3 B3B B4 B4B B5 B5B B6 B6B B7 B7B VDD VSS
+XP0 HP VH VL B0 B0B VDD VSS pt_cdac_mim_bit0
+XN0 HN VH VL B0B B0 VDD VSS pt_cdac_mim_bit0
+XP1 HP VH VL B1 B1B VDD VSS pt_cdac_mim_bit1
+XN1 HN VH VL B1B B1 VDD VSS pt_cdac_mim_bit1
+XP2 HP VH VL B2 B2B VDD VSS pt_cdac_mim_bit2
+XN2 HN VH VL B2B B2 VDD VSS pt_cdac_mim_bit2
+XP3 HP VH VL B3 B3B VDD VSS pt_cdac_mim_bit3
+XN3 HN VH VL B3B B3 VDD VSS pt_cdac_mim_bit3
+XP4 HP VH VL B4 B4B VDD VSS pt_cdac_mim_bit4
+XN4 HN VH VL B4B B4 VDD VSS pt_cdac_mim_bit4
+XP5 HP VH VL B5 B5B VDD VSS pt_cdac_mim_bit5
+XN5 HN VH VL B5B B5 VDD VSS pt_cdac_mim_bit5
+XP6 HP VH VL B6 B6B VDD VSS pt_cdac_mim_bit6
+XN6 HN VH VL B6B B6 VDD VSS pt_cdac_mim_bit6
+XP7 HP VH VL B7 B7B VDD VSS pt_cdac_mim_bit7
+XN7 HN VH VL B7B B7 VDD VSS pt_cdac_mim_bit7
+XDP HP VL cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+XDN HN VL cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+.ends

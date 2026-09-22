@@ -1,0 +1,32 @@
+{
+  "status": "nominal_DC_truth_table_verified",
+  "input_codes": 16,
+  "threshold_checks": 240,
+  "max_rail_error_v": 3.6612722283280164e-05,
+  "max_static_supply_current_a": 3.6335533943027e-10,
+  "manifest": {
+    "source_sha256_before": {
+      "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+    },
+    "deck_sha256_before": "bc0300b9ab5c2b181fd9c049271130c7babd391c1ca8717c6f740e2c069fbdd7"
+  },
+  "artifacts": {
+    ".spice": "bc0300b9ab5c2b181fd9c049271130c7babd391c1ca8717c6f740e2c069fbdd7",
+    ".log": "40d2a99a4fe493d37b8f9fd9085308ebcc706982ad5f16a7980cda3a7f82e7c3",
+    ".dat": "922e46b133f8ba017658bd8f6558587ff24f11aac1481e1a1b63826415f3296e"
+  },
+  "limitations": [
+    "20fF ideal output loads do not qualify dynamic fanout.",
+    "No transition hazards, input skew, timing, mismatch or corners tested.",
+    "No retiming; decoder has unequal logic depths and shared terms.",
+    "Not yet integrated with current cells; no DAC glitch improvement established."
+  ]
+}

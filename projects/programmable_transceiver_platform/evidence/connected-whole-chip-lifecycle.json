@@ -1,0 +1,210 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "start_mode": 0,
+      "interruption": "reference",
+      "events": [
+        [
+          "configure",
+          0,
+          0,
+          0.0
+        ],
+        [
+          "active",
+          0,
+          2e-06
+        ],
+        [
+          "quiesce",
+          "reference loss",
+          0,
+          2.132e-06
+        ],
+        [
+          "configure",
+          1,
+          1,
+          2.256e-06
+        ],
+        [
+          "active",
+          1,
+          4.2559999999999996e-06
+        ],
+        [
+          "quiesce",
+          "host watchdog",
+          1,
+          6.8703999999999995e-06
+        ]
+      ],
+      "stale_words_rejected": 32,
+      "accounting": {
+        "accepted": 5,
+        "consumed": 5,
+        "discarded": 0,
+        "pending": 0,
+        "rejected": 0,
+        "underflows": 0
+      }
+    },
+    {
+      "start_mode": 0,
+      "interruption": "mode",
+      "events": [
+        [
+          "configure",
+          0,
+          0,
+          0.0
+        ],
+        [
+          "active",
+          0,
+          2e-06
+        ],
+        [
+          "quiesce",
+          "mode change",
+          0,
+          2.132e-06
+        ],
+        [
+          "configure",
+          1,
+          1,
+          2.256e-06
+        ],
+        [
+          "active",
+          1,
+          4.2559999999999996e-06
+        ],
+        [
+          "quiesce",
+          "host watchdog",
+          1,
+          6.8703999999999995e-06
+        ]
+      ],
+      "stale_words_rejected": 32,
+      "accounting": {
+        "accepted": 5,
+        "consumed": 5,
+        "discarded": 0,
+        "pending": 0,
+        "rejected": 0,
+        "underflows": 0
+      }
+    },
+    {
+      "start_mode": 1,
+      "interruption": "reference",
+      "events": [
+        [
+          "configure",
+          1,
+          0,
+          0.0
+        ],
+        [
+          "active",
+          0,
+          2e-06
+        ],
+        [
+          "quiesce",
+          "reference loss",
+          0,
+          2.1056e-06
+        ],
+        [
+          "configure",
+          0,
+          1,
+          2.2048e-06
+        ],
+        [
+          "active",
+          1,
+          4.2048e-06
+        ],
+        [
+          "quiesce",
+          "host watchdog",
+          1,
+          6.972799999999999e-06
+        ]
+      ],
+      "stale_words_rejected": 32,
+      "accounting": {
+        "accepted": 4,
+        "consumed": 4,
+        "discarded": 0,
+        "pending": 0,
+        "rejected": 0,
+        "underflows": 0
+      }
+    },
+    {
+      "start_mode": 1,
+      "interruption": "mode",
+      "events": [
+        [
+          "configure",
+          1,
+          0,
+          0.0
+        ],
+        [
+          "active",
+          0,
+          2e-06
+        ],
+        [
+          "quiesce",
+          "mode change",
+          0,
+          2.1056e-06
+        ],
+        [
+          "configure",
+          0,
+          1,
+          2.2048e-06
+        ],
+        [
+          "active",
+          1,
+          4.2048e-06
+        ],
+        [
+          "quiesce",
+          "host watchdog",
+          1,
+          6.972799999999999e-06
+        ]
+      ],
+      "stale_words_rejected": 32,
+      "accounting": {
+        "accepted": 4,
+        "consumed": 4,
+        "discarded": 0,
+        "pending": 0,
+        "rejected": 0,
+        "underflows": 0
+      }
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "assumptions": [
+    "Fixed acquisition delay and immediate reference-loss detection are assumed lock behavior.",
+    "Drain acknowledgement is a coherent abstract management event; epoch tags exist only in the simulator.",
+    "Arrival-paced consumption isolates lifecycle; independent sample clocks are exercised in the other suite scenarios.",
+    "Mode changes quiesce both engines; RF analog filter state persists across resets.",
+    "No serialized management, CDC metastability, or calibrated silicon parameters are claimed."
+  ]
+}

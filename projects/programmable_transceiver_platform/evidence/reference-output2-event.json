@@ -1,0 +1,143 @@
+{
+  "completed": true,
+  "parent_sha256": "59e215f089ff52273cab4823ff492018b700e847f15973f6b89116e2dad39216",
+  "windows": [
+    {
+      "case": "baseline",
+      "window_ns": [
+        122.5,
+        125.35
+      ],
+      "rails": [
+        {
+          "rail": "h",
+          "start_v": 2.17338187900543,
+          "end_v": 2.0918300761326063,
+          "change_v": -0.08155180287282349,
+          "motion_v": 0.10552621573036713,
+          "delivery_charge_c": 3.906248943339928e-12,
+          "reservoir_charge_c": -7.404857987776905e-12,
+          "load_charge_c": 1.1311106931116832e-11,
+          "load_min_a": -0.011163766096473607,
+          "load_max_a": 0.07257439945888182
+        },
+        {
+          "rail": "l",
+          "start_v": 1.138387153240727,
+          "end_v": 1.1593179620521565,
+          "change_v": 0.020930808811429502,
+          "motion_v": 0.11504988763536805,
+          "delivery_charge_c": -1.0148986194793287e-11,
+          "reservoir_charge_c": 1.9002488111444027e-12,
+          "load_charge_c": -1.204923500593769e-11,
+          "load_min_a": -0.06559549119801301,
+          "load_max_a": 0.01800742240605317
+        }
+      ]
+    },
+    {
+      "case": "baseline",
+      "window_ns": [
+        125.2,
+        125.35
+      ],
+      "rails": [
+        {
+          "rail": "h",
+          "start_v": 2.0886514801485743,
+          "end_v": 2.0918300761326063,
+          "change_v": 0.003178595984032029,
+          "motion_v": 0.003178595984032029,
+          "delivery_charge_c": 4.124824181127559e-13,
+          "reservoir_charge_c": 2.8860131535996314e-13,
+          "load_charge_c": 1.2388110275279279e-13,
+          "load_min_a": 0.0002074678625887858,
+          "load_max_a": 0.00144303008925222
+        },
+        {
+          "rail": "l",
+          "start_v": 1.166194864108649,
+          "end_v": 1.1593179620521565,
+          "change_v": -0.006876902056492495,
+          "motion_v": 0.006876902056492495,
+          "delivery_charge_c": -7.843907099818439e-13,
+          "reservoir_charge_c": -6.243893052922698e-13,
+          "load_charge_c": -1.6000140468957406e-13,
+          "load_min_a": -0.0013949076601895687,
+          "load_max_a": -0.0007363364715795495
+        }
+      ]
+    },
+    {
+      "case": "candidate",
+      "window_ns": [
+        122.5,
+        125.35
+      ],
+      "rails": [
+        {
+          "rail": "h",
+          "start_v": 2.148204801071151,
+          "end_v": 2.1007717371022734,
+          "change_v": -0.04743306396887759,
+          "motion_v": 0.10081149265054279,
+          "delivery_charge_c": 7.30201559752688e-12,
+          "reservoir_charge_c": -4.306919436982342e-12,
+          "load_charge_c": 1.1608935034509224e-11,
+          "load_min_a": -0.011131987500325409,
+          "load_max_a": 0.07097191420868089
+        },
+        {
+          "rail": "l",
+          "start_v": 1.138408652494314,
+          "end_v": 1.1598359978159676,
+          "change_v": 0.02142734532165358,
+          "motion_v": 0.11238602041327295,
+          "delivery_charge_c": -1.003469587689259e-11,
+          "reservoir_charge_c": 1.94538620335917e-12,
+          "load_charge_c": -1.1980082080251758e-11,
+          "load_min_a": -0.06389663134836904,
+          "load_max_a": 0.01804004653494381
+        }
+      ]
+    },
+    {
+      "case": "candidate",
+      "window_ns": [
+        125.2,
+        125.35
+      ],
+      "rails": [
+        {
+          "rail": "h",
+          "start_v": 2.0936338511476773,
+          "end_v": 2.1007717371022734,
+          "change_v": 0.007137885954596079,
+          "motion_v": 0.007137885954596079,
+          "delivery_charge_c": 8.457194215293395e-13,
+          "reservoir_charge_c": 6.480862479175836e-13,
+          "load_charge_c": 1.9763317361175571e-13,
+          "load_min_a": 0.0008595857648316767,
+          "load_max_a": 0.0017723388129595981
+        },
+        {
+          "rail": "l",
+          "start_v": 1.1663645826128146,
+          "end_v": 1.1598359978159676,
+          "change_v": -0.006528584796847037,
+          "motion_v": 0.006528584796847037,
+          "delivery_charge_c": -7.802726373216258e-13,
+          "reservoir_charge_c": -5.927637850854161e-13,
+          "load_charge_c": -1.8750885223620972e-13,
+          "load_min_a": -0.0015165437644137471,
+          "load_max_a": -0.0009805003315674138
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Signed current conventions inherited from verified delivery/reservoir probes; negative reservoir charge means net discharge under that convention.",
+    "Observation of this event does not uniquely establish a compensation or transistor failure mechanism.",
+    "No approximation of nonlinear MIM capacitance by a constant C; rail movement and integrated current reported separately."
+  ]
+}

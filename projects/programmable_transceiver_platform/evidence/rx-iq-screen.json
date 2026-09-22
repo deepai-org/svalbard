@@ -1,0 +1,184 @@
+{
+  "status": "simulation_completed_not_receiver_qualified",
+  "process": "typical",
+  "supply_v": 3.3,
+  "temperature_c": 27,
+  "lo_hz": 2400000000.0,
+  "if_hz": 10000000.0,
+  "cases": [
+    {
+      "name": "zero",
+      "rf_hz": 2410000000.0,
+      "input_peak_v": 0,
+      "max_step_s": 2e-12,
+      "phasors_v": [
+        [
+          [
+            -6.611375974921709e-11,
+            -6.110240505826902e-12
+          ],
+          [
+            -1.4234686569253094e-09,
+            -7.814304610247825e-14
+          ]
+        ],
+        [
+          [
+            -6.581004776756325e-11,
+            -6.027779347520168e-12
+          ],
+          [
+            -1.4164192236632487e-09,
+            -6.168674203253889e-14
+          ]
+        ]
+      ],
+      "drain_range_v": [
+        1.051540557551974,
+        1.203836130262595
+      ],
+      "average_vdd_current_a": 0.007254182006905626,
+      "deck_sha256": "576657ddfa8ec4fa696f4ad126caffae8a40b2d1ee4c2d219d28f01158fcadeb"
+    },
+    {
+      "name": "upper",
+      "rf_hz": 2410000000.0,
+      "input_peak_v": 0.001,
+      "max_step_s": 2e-12,
+      "phasors_v": [
+        [
+          [
+            -0.00031631140199309463,
+            -6.299105330574221e-06
+          ],
+          [
+            6.297739852152617e-06,
+            -0.00031631130115511105
+          ]
+        ],
+        [
+          [
+            -0.0003163109992154317,
+            -6.299323089416961e-06
+          ],
+          [
+            6.297964433721376e-06,
+            -0.00031631089883767284
+          ]
+        ]
+      ],
+      "drain_range_v": [
+        1.05120672635719,
+        1.204141988679998
+      ],
+      "average_vdd_current_a": 0.007254182038335616,
+      "deck_sha256": "a2d12226dd5def5b073edc230700dbc162a3da5faca2888c33a9a7c42bc94134",
+      "gain_i_v_per_v": 0.31637365248583554,
+      "gain_q_v_per_v": 0.3163736191334583,
+      "q_relative_to_i_deg": 90.00001167529047,
+      "amplitude_imbalance_db": -9.156738575581954e-07,
+      "window_change_relative": 1.4563670676974285e-06,
+      "sideband_ratio_db": 138.8077142677427,
+      "dominant_combination": "I-jQ"
+    },
+    {
+      "name": "lower",
+      "rf_hz": 2390000000.0,
+      "input_peak_v": 0.001,
+      "max_step_s": 2e-12,
+      "phasors_v": [
+        [
+          [
+            -0.0003143047393759374,
+            1.586031272350792e-05
+          ],
+          [
+            1.5858829591510836e-05,
+            0.0003143047016031853
+          ]
+        ],
+        [
+          [
+            -0.00031430432747747613,
+            1.5860491190043436e-05
+          ],
+          [
+            1.5859015346313845e-05,
+            0.0003143042898819392
+          ]
+        ]
+      ],
+      "drain_range_v": [
+        1.051205743906561,
+        1.204140205981574
+      ],
+      "average_vdd_current_a": 0.007254182037980126,
+      "deck_sha256": "cc93d9f5f360ab55e773ddc9e7abf7bda11228a2b162691d759c2ac410406bbc",
+      "gain_i_v_per_v": 0.31470418534602274,
+      "gain_q_v_per_v": 0.3147042102876226,
+      "q_relative_to_i_deg": -89.99998783929718,
+      "amplitude_imbalance_db": 6.883924173211278e-07,
+      "window_change_relative": 1.435267993798347e-06,
+      "sideband_ratio_db": 138.91698390962276,
+      "dominant_combination": "I+jQ"
+    },
+    {
+      "name": "upper_fine",
+      "rf_hz": 2410000000.0,
+      "input_peak_v": 0.001,
+      "max_step_s": 1e-12,
+      "phasors_v": [
+        [
+          [
+            -0.00031656290973835284,
+            -6.820351559696588e-06
+          ],
+          [
+            6.820231279109691e-06,
+            -0.0003165621094675759
+          ]
+        ],
+        [
+          [
+            -0.0003165625438317528,
+            -6.820576091562511e-06
+          ],
+          [
+            6.820462070983279e-06,
+            -0.0003165617440403121
+          ]
+        ]
+      ],
+      "drain_range_v": [
+        1.051161977677159,
+        1.206370754973466
+      ],
+      "average_vdd_current_a": 0.0072540461255667125,
+      "deck_sha256": "c39f14256266d499a6dbb9d2477d50ad986a000e00c779bbb617c588ebdffa84",
+      "gain_i_v_per_v": 0.31663594658098665,
+      "gain_q_v_per_v": 0.3166352408954567,
+      "q_relative_to_i_deg": 90.00023956862152,
+      "amplitude_imbalance_db": -1.935823626405824e-05,
+      "window_change_relative": 1.3649963224940225e-06,
+      "sideband_ratio_db": 112.508427542153,
+      "dominant_combination": "I-jQ"
+    }
+  ],
+  "timestep_phasor_relative_change": 0.0018304727536555682,
+  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "limitations": [
+    "external ideal LO and bias",
+    "external ideal 1k/1pF output loads",
+    "no transistor mismatch or PEX",
+    "no physical LO driver power",
+    "single-ended RF experimental core, not final differential interface",
+    "no noise/model qualification or ADC/filter proof",
+    "fine timestep uses coarse zero-input baseline"
+  ],
+  "source_sha256": {
+    "/screen/rx_iq_screen.py": "469576819df5945ba21072829ad72a3a3c3c49ea78500b77ef09a49bdf186000",
+    "/screen/rx_iq_core.spice": "a29f6f9aa546ae08d029e4f00cd9ab99592fb902e023657e28c46574704a77ed",
+    "/src/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+    "/src/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "status": "combined_passive_clock_diagnostic",
+  "cases": [
+    {
+      "equal_printed_time_intervals": 0,
+      "minimum_positive_printed_step_s": 2e-14,
+      "name": "pulse",
+      "returncode": 0,
+      "completed": true,
+      "actual_stop_ns": 800.0000000000001,
+      "failure_ns": null,
+      "max_input_difference_v": 0.0,
+      "max_output_difference_v": 0.0
+    },
+    {
+      "equal_printed_time_intervals": 8,
+      "minimum_positive_printed_step_s": 1.0587911840678754e-22,
+      "name": "pwl",
+      "returncode": 0,
+      "completed": true,
+      "actual_stop_ns": 800.0000000000001,
+      "failure_ns": null,
+      "max_input_difference_v": 2.730260462158185e-12,
+      "max_output_difference_v": 1.6369128275073308e-12
+    }
+  ],
+  "provenance": {
+    "cases": [
+      {
+        "name": "pulse",
+        "returncode": 0,
+        "deck_sha256_before": "6cbe460e966c4ec33e76a4126f4890278fae515969cb0e80007b1bf513e6947c",
+        "artifacts_sha256": {
+          ".spice": "6cbe460e966c4ec33e76a4126f4890278fae515969cb0e80007b1bf513e6947c",
+          ".log": "464187565b8178d288b29081e1a7ac9db1134e52fbccc48a2b798d5500713e10",
+          ".dat": "d1fd47f21450b300aed9a92928bbe322a89abae2021820bc7ea8dd2346fcfbdf"
+        }
+      },
+      {
+        "name": "pwl",
+        "returncode": 0,
+        "deck_sha256_before": "3c878c4fcbbe692ecfb5d9a5e4e499b8c7fd7a4945a7f8fa5ff7010cf060851b",
+        "artifacts_sha256": {
+          ".spice": "3c878c4fcbbe692ecfb5d9a5e4e499b8c7fd7a4945a7f8fa5ff7010cf060851b",
+          ".log": "40eddd089e2e813c82218dca7de6312a0ab2ea92ec2bf12828e6708a15065fb9",
+          ".dat": "e64c378c3d8348b0a3c64875e6fc63a863c2a68e3467313dffade1c096a555c3"
+        }
+      }
+    ],
+    "source_sha256_before": {
+      "/baseline/pulse_skew0.spice": "98fe4b1a6ed2ca26c01e407cf246ca2556bfb7814cff94f1397813f5c0556282",
+      "/baseline/pwl_skew0.spice": "b574b3484c066556f1e4e0b0ef7738546b82a4b9076944461190c2a4247c12a8"
+    },
+    "source_sha256_after": {
+      "/baseline/pulse_skew0.spice": "98fe4b1a6ed2ca26c01e407cf246ca2556bfb7814cff94f1397813f5c0556282",
+      "/baseline/pwl_skew0.spice": "b574b3484c066556f1e4e0b0ef7738546b82a4b9076944461190c2a4247c12a8"
+    }
+  },
+  "limitations": [
+    "No active device, feedback, bias or RF loading; any result applies only to this numerical fixture.",
+    "A reproduced passive failure would not prove every full-loop abort has the same cause.",
+    "No physical timing or jitter qualification."
+  ]
+}

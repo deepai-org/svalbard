@@ -1,0 +1,42 @@
+import json
+from pathlib import Path
+from chip_model import P
+from calibration_lifecycle import ManagedCalibrationChip
+from managed_resources import command
+
+def reject(action):
+ try:action()
+ except ValueError:return
+ raise AssertionError('Ownership bypass accepted')
+c=ManagedCalibrationChip(watchdog_s=1e-3,control_hz=20e6)
+assert command(c,'cal_start',480)['accepted']
+assert c.cal.spacing==480*c.control_period
+checks=[('route',lambda:c.configure_rx('mute',1,5e6,5e6)),
+ ('filters',lambda:c.configure_filters(5e6,5e6)),
+ ('RF input',lambda:c.configure_rf_input()),('LO',lambda:c.configure_lo()),
+ ('carrier',lambda:c.configure_rf_carrier(2412000000)),
+ ('diagnostic',lambda:c.select_diagnostic(True)),
+ ('capture',lambda:c.capture(1,c.time+1e-6)),
+ ('TX schedule',lambda:c.schedule(1,c.time+1e-6)),
+ ('mode',lambda:c.configure(0,c.time))]
+before=(c.trim.code,c.cal.generation,c.cal.next_event,c.rx_gain,c.tx.rx_route,c.diagnostic_selected)
+for name,action in checks:
+ reject(action)
+ assert before==(c.trim.code,c.cal.generation,c.cal.next_event,c.rx_gain,c.tx.rx_route,c.diagnostic_selected)
+assert command(c,'resource_count')['value']==9
+for resource in (0,8):
+ word=command(c,'resource_status',resource)['value'];assert word&255==9 and word&256
+c.set_reference(False,c.time)
+assert c.cal.state=='cancelled' and c.trim.code==2048
+assert not command(c,'cal_start',480)['accepted']
+assert command(c,'resource_status',8)['value']==0
+c.set_reference(True,c.time)
+assert command(c,'cal_start',480)['accepted']
+assert command(c,'cal_abort')['accepted']
+c.configure(0,c.time)
+# Acquiring is disarmed, but is not a quiet reset configuration window.
+reject(lambda:c.execute_management('cal_start',480,c.time))
+report=dict(status='passed',direct_mutations_rejected=[x[0] for x in checks],
+ controls=['configured control-clock spacing','live resource discovery','reset-state reference-loss rollback','missing-reference rejection','restored-reference restart','acquisition overlap rejection'])
+(P/'evidence/connected-calibration-ownership.json').write_text(json.dumps(report,indent=2)+'\n')
+print(report)

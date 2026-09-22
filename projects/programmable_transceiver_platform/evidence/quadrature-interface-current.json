@@ -1,0 +1,105 @@
+{
+  "status": "terminal",
+  "completed": true,
+  "cases": [
+    {
+      "name": "zero",
+      "completed": true,
+      "actual_stop_ns": 201.0,
+      "original_vectors_bit_identical": false,
+      "sensor_voltage_max_abs_v": 0.0,
+      "current_mean_a": 0.0035832169630512327,
+      "current_range_a": [
+        0.003246149554110755,
+        0.003771931899332256
+      ],
+      "interpolated_baseline_max_difference_v": {
+        "v(rf)": 1.4080870913701915e-08,
+        "v(oip)": 8.668917095278061e-08,
+        "v(oqp)": 1.0100493885722983e-07,
+        "v(mip)": 6.622015824575556e-09,
+        "v(min)": 6.620627046594052e-09,
+        "v(mqp)": 6.393052975894875e-09,
+        "v(mqn)": 6.3929685989450036e-09
+      }
+    },
+    {
+      "name": "tone",
+      "completed": true,
+      "actual_stop_ns": 201.0,
+      "original_vectors_bit_identical": false,
+      "sensor_voltage_max_abs_v": 0.0,
+      "current_mean_a": 0.0035832191469536653,
+      "current_range_a": [
+        0.003242839872628188,
+        0.003775819444056152
+      ],
+      "interpolated_baseline_max_difference_v": {
+        "v(rf)": 9.664695932443124e-09,
+        "v(oip)": 5.9468238999826895e-08,
+        "v(oqp)": 6.927561391201209e-08,
+        "v(mip)": 4.5519983338238035e-09,
+        "v(min)": 4.55238546859249e-09,
+        "v(mqp)": 4.393591046536471e-09,
+        "v(mqn)": 4.394106967176015e-09
+      }
+    }
+  ],
+  "limitations": [
+    "Zero-volt observation sensor; positive current into combined mixer input.",
+    "Waveform reproduction must be assessed before interpreting loading.",
+    "Periodic-port RF voltage/current ratio is conditional on LO and terminations, not a broadband scalar resistor or power gain."
+  ],
+  "provenance": {
+    "cases": [
+      {
+        "name": "zero",
+        "returncode": 0,
+        "timed_out": false,
+        "deck_sha256_before": "f7ef511e9fbcb89711b4460c51268c5ebb8d2b4f908cb8fdace1e87496c5839f",
+        "artifacts_sha256": {
+          ".spice": "f7ef511e9fbcb89711b4460c51268c5ebb8d2b4f908cb8fdace1e87496c5839f",
+          ".log": "901371dd9e04fa402d41fd2fc0b0470cccdb8c92e9b243b7d3863508b42f5c4e",
+          ".dat": "6069e2a94eabbe7d8ea593180b7af9214f105097d5aa02b7e1cb00b932301cc6"
+        }
+      },
+      {
+        "name": "tone",
+        "returncode": 0,
+        "timed_out": false,
+        "deck_sha256_before": "abeb2e0e2200b625ca53ea83bcd65d9b1a0d2ca53189117849dfdb64da7c19cb",
+        "artifacts_sha256": {
+          ".spice": "abeb2e0e2200b625ca53ea83bcd65d9b1a0d2ca53189117849dfdb64da7c19cb",
+          ".log": "24dc53e3ed47a68116127d1baf627750601899d7244d328e1dd043cfb1011235",
+          ".dat": "a5c42754f49f40a04604e5bec643947d375ec4dddb97e3865a08ebfcb2e5efc7"
+        }
+      }
+    ],
+    "source_sha256_before": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/quadrature/rc_split.spice": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+      "/screen/quadrature/lo_final_stage.spice": "3f234838df5453d1c5f69d1f7f3c753da87e17052d979147a6d6e05fa418ca9f"
+    },
+    "source_sha256_after": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/quadrature/rc_split.spice": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+      "/screen/quadrature/lo_final_stage.spice": "3f234838df5453d1c5f69d1f7f3c753da87e17052d979147a6d6e05fa418ca9f"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "status": "passed",
+  "elapsed_s": 406.11933736968786,
+  "final_time_s": 0.000127125,
+  "feedback_steps": 128300,
+  "driver_rail_v": 3.0899951140854367,
+  "shared_adc_samples": 9,
+  "reference_charge_c": 2.4148535024892485e-12,
+  "correction": {
+    "gain_policy": "relative",
+    "matrix": [
+      [
+        0.985107421875,
+        0.03173828125
+      ],
+      [
+        0.0,
+        1.014892578125
+      ]
+    ],
+    "offset": [
+      -0.002197265625,
+      -0.00048828125
+    ],
+    "fractional_bits": 12,
+    "fit_rms": 7.169045176820877e-05,
+    "condition": 1.0908867428725177
+  },
+  "powers": [
+    0.0,
+    0.00299072265625,
+    0.0028076171875,
+    0.00274658203125,
+    0.00274658203125,
+    0.0052490234375,
+    0.00555419921875,
+    0.00543212890625,
+    0.00506591796875
+  ],
+  "limitations": [
+    "Managed autonomous acquisition and quiet shared-ADC calibration, no payload quality.",
+    "Driver rail pulls RF PLL; reference load is real but reference voltage and buffer current share the coupled driver rail.",
+    "Assumed driver/readout/sensitivity parameters and finite coupling-step error remain unqualified."
+  ]
+}

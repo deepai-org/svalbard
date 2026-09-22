@@ -1,0 +1,148 @@
+{
+  "status": "partial_history_loading_diagnostic",
+  "completed_conversion": false,
+  "cases": [
+    {
+      "case": "loaded",
+      "artifacts_sha256": {
+        ".spice": "f7385bc1309e682e27a0fc5fec69e0698275fc50637a2ee52d1f807ddcf3b090",
+        ".log": "82f633fa05f514931490dfec4e56815d78457764eef82a0a8008cf39efa0ae40",
+        ".dat": "f6bb05d783ae8aecf0855a940ec9124197a174aa6c9982389cc3d773ce097bee"
+      },
+      "fits": [
+        {
+          "window_ns": [
+            240,
+            400
+          ],
+          "lo_hz": 2495422293.1883016,
+          "if_hz": 20000336.811698437,
+          "if_cycles": 3.2000138892017573,
+          "channels": {
+            "i": {
+              "if_peak_v": 0.0036005839446143465,
+              "if_phase_rad": -3.0542972677691367,
+              "mean_common_mode_v": 1.0696563430909463,
+              "residual_rms_v": 4.2397498180661827e-07
+            },
+            "q": {
+              "if_peak_v": 0.004033721273561424,
+              "if_phase_rad": 1.598267321914493,
+              "mean_common_mode_v": 1.0710515981883153,
+              "residual_rms_v": 1.0484326480548635e-07
+            }
+          }
+        },
+        {
+          "window_ns": [
+            300,
+            460
+          ],
+          "lo_hz": 2495422363.6445584,
+          "if_hz": 20000266.35544157,
+          "if_cycles": 3.1999916208169767,
+          "channels": {
+            "i": {
+              "if_peak_v": 0.0036009229786740666,
+              "if_phase_rad": -3.054208646683913,
+              "mean_common_mode_v": 1.0696560211340533,
+              "residual_rms_v": 8.489111599675267e-07
+            },
+            "q": {
+              "if_peak_v": 0.004033378825239874,
+              "if_phase_rad": 1.5985713697076902,
+              "mean_common_mode_v": 1.0710512056987889,
+              "residual_rms_v": 8.158466268424747e-07
+            }
+          }
+        }
+      ]
+    },
+    {
+      "case": "isolated",
+      "artifacts_sha256": {
+        ".spice": "a9fb1d4c0e81030d8dc0dd58304a70c40dd255a72ca15da489070c41fc7d547f",
+        ".log": "6074a74af02c05bd7a9566c4ad2556f56aa1e6bfa67aa8382bf93913ec221779",
+        ".dat": "76db49c6069e570120aabcec6bcbeb2b5866af5383ae8513cbff9fb368eb572a"
+      },
+      "fits": [
+        {
+          "window_ns": [
+            240,
+            400
+          ],
+          "lo_hz": 2495422293.1876693,
+          "if_hz": 20000336.812330723,
+          "if_cycles": 3.2000138893029217,
+          "channels": {
+            "i": {
+              "if_peak_v": 0.0036041927559788537,
+              "if_phase_rad": -3.0533339395641503,
+              "mean_common_mode_v": 1.069656346795002,
+              "residual_rms_v": 4.20614883456862e-07
+            },
+            "q": {
+              "if_peak_v": 0.004037773914259453,
+              "if_phase_rad": 1.5992298365930082,
+              "mean_common_mode_v": 1.071051601243339,
+              "residual_rms_v": 1.0298934960344935e-07
+            }
+          }
+        },
+        {
+          "window_ns": [
+            300,
+            460
+          ],
+          "lo_hz": 2495422363.644027,
+          "if_hz": 20000266.355972767,
+          "if_cycles": 3.199991620901967,
+          "channels": {
+            "i": {
+              "if_peak_v": 0.003604533203870813,
+              "if_phase_rad": -3.0532459498074433,
+              "mean_common_mode_v": 1.0696560211147805,
+              "residual_rms_v": 8.493618272289524e-07
+            },
+            "q": {
+              "if_peak_v": 0.004037431260795134,
+              "if_phase_rad": 1.5995335234993344,
+              "mean_common_mode_v": 1.0710512056527464,
+              "residual_rms_v": 8.163712922501989e-07
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "comparison": [
+    {
+      "window_ns": [
+        240,
+        400
+      ],
+      "lo_change_hz": 0.0006322860717773438,
+      "loaded_over_isolated_amplitude": {
+        "i": 0.998998718545638,
+        "q": 0.9989963180742447
+      }
+    },
+    {
+      "window_ns": [
+        300,
+        460
+      ],
+      "lo_change_hz": 0.0005311965942382812,
+      "loaded_over_isolated_amplitude": {
+        "i": 0.9989984208793334,
+        "q": 0.998996283702806
+      }
+    }
+  ],
+  "limitations": [
+    "Both full runs failed478.5ns; windows precede first hold470ns and do not verify repeated acquisition.",
+    "Only about3.2IF cycles/window; residual includes leakage/transients and is not noise or ENOB.",
+    "Ideal isolation changes back-loading; result does not qualify actual isolation hardware.",
+    "Inherited IF aliases near DC at ADC rate; no sampled-signal quality claim."
+  ]
+}

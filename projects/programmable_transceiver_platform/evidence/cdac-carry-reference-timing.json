@@ -1,0 +1,416 @@
+{
+  "status": "reference_event_timing_diagnostic",
+  "source_sha256": "10a47eda2186534f3a5e860014dbcb3f30bd92b044fb24adff8e4a86a4a6bb97",
+  "results": [
+    {
+      "name": "code127_delay100",
+      "initial_rails_v": {
+        "high": 2.16314761,
+        "low": 1.13952163,
+        "span": 1.0236259800000003,
+        "common": 1.65133462
+      },
+      "precarry_rails_v": {
+        "high": 2.163362365,
+        "low": 1.1397123949999999,
+        "span": 1.0236499700000001,
+        "common": 1.65153738
+      },
+      "windows": [
+        {
+          "label": "before_carry",
+          "interval_ns": [
+            1.8,
+            2
+          ],
+          "rails": {
+            "high": {
+              "min_v": 2.16335797,
+              "max_v": 2.1633666799999998,
+              "minimum_time_ns": 2.0,
+              "maximum_time_ns": 1.8000000000000003,
+              "max_departure_from_precarry_v": 4.394999999934868e-06
+            },
+            "low": {
+              "min_v": 1.13970327,
+              "max_v": 1.13972114,
+              "minimum_time_ns": 2.0,
+              "maximum_time_ns": 1.8000000000000003,
+              "max_departure_from_precarry_v": 9.124999999832184e-06
+            },
+            "span": {
+              "min_v": 1.02364554,
+              "max_v": 1.0236546999999998,
+              "minimum_time_ns": 1.8000000000000003,
+              "maximum_time_ns": 2.0,
+              "max_departure_from_precarry_v": 4.729999999675272e-06
+            },
+            "common": {
+              "min_v": 1.65153062,
+              "max_v": 1.65154391,
+              "minimum_time_ns": 2.0,
+              "maximum_time_ns": 1.8000000000000003,
+              "max_departure_from_precarry_v": 6.759999999994548e-06
+            }
+          }
+        },
+        {
+          "label": "gate_ramp",
+          "interval_ns": [
+            2,
+            2.1
+          ],
+          "rails": {
+            "high": {
+              "min_v": 2.13966547,
+              "max_v": 2.17134673,
+              "minimum_time_ns": 2.1,
+              "maximum_time_ns": 2.0525,
+              "max_departure_from_precarry_v": 0.023696894999999607
+            },
+            "low": {
+              "min_v": 1.13712565,
+              "max_v": 1.16332243,
+              "minimum_time_ns": 2.0615,
+              "maximum_time_ns": 2.1,
+              "max_departure_from_precarry_v": 0.02361003500000014
+            },
+            "span": {
+              "min_v": 0.9763430400000002,
+              "max_v": 1.03411521,
+              "minimum_time_ns": 2.1,
+              "maximum_time_ns": 2.0575,
+              "max_departure_from_precarry_v": 0.04730692999999997
+            },
+            "common": {
+              "min_v": 1.65149395,
+              "max_v": 1.6543196,
+              "minimum_time_ns": 2.1,
+              "maximum_time_ns": 2.0495,
+              "max_departure_from_precarry_v": 0.0027822200000000574
+            }
+          }
+        },
+        {
+          "label": "before_clock",
+          "interval_ns": [
+            2.1,
+            2.2
+          ],
+          "rails": {
+            "high": {
+              "min_v": 2.05592807,
+              "max_v": 2.13966547,
+              "minimum_time_ns": 2.1999999999999997,
+              "maximum_time_ns": 2.1,
+              "max_departure_from_precarry_v": 0.10743429499999957
+            },
+            "low": {
+              "min_v": 1.16332243,
+              "max_v": 1.2476490500000001,
+              "minimum_time_ns": 2.1,
+              "maximum_time_ns": 2.2,
+              "max_departure_from_precarry_v": 0.10793665500000027
+            },
+            "span": {
+              "min_v": 0.80827902,
+              "max_v": 0.9763430400000002,
+              "minimum_time_ns": 2.2,
+              "maximum_time_ns": 2.1,
+              "max_departure_from_precarry_v": 0.21537095000000017
+            },
+            "common": {
+              "min_v": 1.6513478149999998,
+              "max_v": 1.65188068,
+              "minimum_time_ns": 2.1105,
+              "maximum_time_ns": 2.1725,
+              "max_departure_from_precarry_v": 0.00034330000000015737
+            }
+          }
+        },
+        {
+          "label": "clock_ramp",
+          "interval_ns": [
+            2.2,
+            2.3
+          ],
+          "rails": {
+            "high": {
+              "min_v": 2.03931463,
+              "max_v": 2.05592807,
+              "minimum_time_ns": 2.3,
+              "maximum_time_ns": 2.2,
+              "max_departure_from_precarry_v": 0.12404773499999999
+            },
+            "low": {
+              "min_v": 1.2476490500000001,
+              "max_v": 1.26228318,
+              "minimum_time_ns": 2.2,
+              "maximum_time_ns": 2.3,
+              "max_departure_from_precarry_v": 0.12257078500000018
+            },
+            "span": {
+              "min_v": 0.7770314499999997,
+              "max_v": 0.80827902,
+              "minimum_time_ns": 2.3,
+              "maximum_time_ns": 2.2,
+              "max_departure_from_precarry_v": 0.2466185200000004
+            },
+            "common": {
+              "min_v": 1.6507989049999998,
+              "max_v": 1.65178856,
+              "minimum_time_ns": 2.3,
+              "maximum_time_ns": 2.2,
+              "max_departure_from_precarry_v": 0.0007384750000001272
+            }
+          }
+        },
+        {
+          "label": "evaluation",
+          "interval_ns": [
+            2.3,
+            4.4
+          ],
+          "rails": {
+            "high": {
+              "min_v": 2.03742594,
+              "max_v": 2.076965075,
+              "minimum_time_ns": 2.3885,
+              "maximum_time_ns": 4.4,
+              "max_departure_from_precarry_v": 0.1259364249999999
+            },
+            "low": {
+              "min_v": 1.158413015,
+              "max_v": 1.26293706,
+              "minimum_time_ns": 4.4,
+              "maximum_time_ns": 2.3425000000000002,
+              "max_departure_from_precarry_v": 0.12322466500000018
+            },
+            "span": {
+              "min_v": 0.7747012699999998,
+              "max_v": 0.9185520599999999,
+              "minimum_time_ns": 2.3615000000000004,
+              "maximum_time_ns": 4.4,
+              "max_departure_from_precarry_v": 0.24894870000000036
+            },
+            "common": {
+              "min_v": 1.6176890449999999,
+              "max_v": 1.6507989049999998,
+              "minimum_time_ns": 4.4,
+              "maximum_time_ns": 2.3,
+              "max_departure_from_precarry_v": 0.03384833500000006
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "code128_delay100",
+      "initial_rails_v": {
+        "high": 2.16314761,
+        "low": 1.13952163,
+        "span": 1.0236259800000003,
+        "common": 1.65133462
+      },
+      "precarry_rails_v": {
+        "high": 2.163362365,
+        "low": 1.1397123949999999,
+        "span": 1.0236499700000001,
+        "common": 1.65153738
+      },
+      "windows": [
+        {
+          "label": "before_carry",
+          "interval_ns": [
+            1.8,
+            2
+          ],
+          "rails": {
+            "high": {
+              "min_v": 2.16335797,
+              "max_v": 2.1633666799999998,
+              "minimum_time_ns": 2.0,
+              "maximum_time_ns": 1.8000000000000003,
+              "max_departure_from_precarry_v": 4.394999999934868e-06
+            },
+            "low": {
+              "min_v": 1.13970327,
+              "max_v": 1.13972114,
+              "minimum_time_ns": 2.0,
+              "maximum_time_ns": 1.8000000000000003,
+              "max_departure_from_precarry_v": 9.124999999832184e-06
+            },
+            "span": {
+              "min_v": 1.02364554,
+              "max_v": 1.0236546999999998,
+              "minimum_time_ns": 1.8000000000000003,
+              "maximum_time_ns": 2.0,
+              "max_departure_from_precarry_v": 4.729999999675272e-06
+            },
+            "common": {
+              "min_v": 1.65153062,
+              "max_v": 1.65154391,
+              "minimum_time_ns": 2.0,
+              "maximum_time_ns": 1.8000000000000003,
+              "max_departure_from_precarry_v": 6.759999999994548e-06
+            }
+          }
+        },
+        {
+          "label": "gate_ramp",
+          "interval_ns": [
+            2,
+            2.1
+          ],
+          "rails": {
+            "high": {
+              "min_v": 2.13966547,
+              "max_v": 2.17134673,
+              "minimum_time_ns": 2.1,
+              "maximum_time_ns": 2.0525,
+              "max_departure_from_precarry_v": 0.023696894999999607
+            },
+            "low": {
+              "min_v": 1.13712565,
+              "max_v": 1.16332243,
+              "minimum_time_ns": 2.0615,
+              "maximum_time_ns": 2.1,
+              "max_departure_from_precarry_v": 0.02361003500000014
+            },
+            "span": {
+              "min_v": 0.9763430400000002,
+              "max_v": 1.03411521,
+              "minimum_time_ns": 2.1,
+              "maximum_time_ns": 2.0575,
+              "max_departure_from_precarry_v": 0.04730692999999997
+            },
+            "common": {
+              "min_v": 1.65149395,
+              "max_v": 1.6543196,
+              "minimum_time_ns": 2.1,
+              "maximum_time_ns": 2.0495,
+              "max_departure_from_precarry_v": 0.0027822200000000574
+            }
+          }
+        },
+        {
+          "label": "before_clock",
+          "interval_ns": [
+            2.1,
+            2.2
+          ],
+          "rails": {
+            "high": {
+              "min_v": 2.05592807,
+              "max_v": 2.13966547,
+              "minimum_time_ns": 2.1999999999999997,
+              "maximum_time_ns": 2.1,
+              "max_departure_from_precarry_v": 0.10743429499999957
+            },
+            "low": {
+              "min_v": 1.16332243,
+              "max_v": 1.2476490500000001,
+              "minimum_time_ns": 2.1,
+              "maximum_time_ns": 2.2,
+              "max_departure_from_precarry_v": 0.10793665500000027
+            },
+            "span": {
+              "min_v": 0.80827902,
+              "max_v": 0.9763430400000002,
+              "minimum_time_ns": 2.2,
+              "maximum_time_ns": 2.1,
+              "max_departure_from_precarry_v": 0.21537095000000017
+            },
+            "common": {
+              "min_v": 1.6513478149999998,
+              "max_v": 1.65188068,
+              "minimum_time_ns": 2.1105,
+              "maximum_time_ns": 2.1725,
+              "max_departure_from_precarry_v": 0.00034330000000015737
+            }
+          }
+        },
+        {
+          "label": "clock_ramp",
+          "interval_ns": [
+            2.2,
+            2.3
+          ],
+          "rails": {
+            "high": {
+              "min_v": 2.03931463,
+              "max_v": 2.05592807,
+              "minimum_time_ns": 2.3,
+              "maximum_time_ns": 2.2,
+              "max_departure_from_precarry_v": 0.12404773499999999
+            },
+            "low": {
+              "min_v": 1.2476490500000001,
+              "max_v": 1.26228318,
+              "minimum_time_ns": 2.2,
+              "maximum_time_ns": 2.3,
+              "max_departure_from_precarry_v": 0.12257078500000018
+            },
+            "span": {
+              "min_v": 0.7770314499999997,
+              "max_v": 0.80827902,
+              "minimum_time_ns": 2.3,
+              "maximum_time_ns": 2.2,
+              "max_departure_from_precarry_v": 0.2466185200000004
+            },
+            "common": {
+              "min_v": 1.6507989049999998,
+              "max_v": 1.65178856,
+              "minimum_time_ns": 2.3,
+              "maximum_time_ns": 2.2,
+              "max_departure_from_precarry_v": 0.0007384750000001272
+            }
+          }
+        },
+        {
+          "label": "evaluation",
+          "interval_ns": [
+            2.3,
+            4.4
+          ],
+          "rails": {
+            "high": {
+              "min_v": 2.03742594,
+              "max_v": 2.076965075,
+              "minimum_time_ns": 2.3885,
+              "maximum_time_ns": 4.4,
+              "max_departure_from_precarry_v": 0.1259364249999999
+            },
+            "low": {
+              "min_v": 1.158413015,
+              "max_v": 1.26293706,
+              "minimum_time_ns": 4.4,
+              "maximum_time_ns": 2.3425000000000002,
+              "max_departure_from_precarry_v": 0.12322466500000018
+            },
+            "span": {
+              "min_v": 0.7747012699999998,
+              "max_v": 0.9185520599999999,
+              "minimum_time_ns": 2.3615000000000004,
+              "maximum_time_ns": 4.4,
+              "max_departure_from_precarry_v": 0.24894870000000036
+            },
+            "common": {
+              "min_v": 1.6176890449999999,
+              "max_v": 1.6507989049999998,
+              "minimum_time_ns": 4.4,
+              "maximum_time_ns": 2.3,
+              "max_departure_from_precarry_v": 0.03384833500000006
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Timing correlation alone does not identify current paths or prove gate overlap causality.",
+    "Only reference supply current was saved, not individual rail load currents.",
+    "Initial operating point and precarry baseline are distinct from target accuracy.",
+    "Ideal controls and one nominal carry; not bounded full-SAR/reference behavior."
+  ]
+}

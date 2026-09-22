@@ -1,0 +1,40 @@
+{
+  "status": "connected_segmented_DC_measured",
+  "monotonic": true,
+  "endpoints_v": [
+    -0.5218168075761269,
+    0.521816807576122
+  ],
+  "lsb_v": 0.004092680843734309,
+  "max_abs_inl_lsb": 0.0052760163603124965,
+  "max_abs_dnl_lsb": 0.0003994580909880696,
+  "max_difference_from_binary_v": 1.1656667939785592e-06,
+  "loaded_decoder_checks": 3840,
+  "manifest": {
+    "source_sha256_before": {
+      "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+      "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+      "/screen/dac/segmented8.spice": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+      "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+    },
+    "deck_sha256_before": "b7efad796388ba50205ea151c4c137fb479ac79f28baa37774cf5d19eb30a00c"
+  },
+  "artifacts": {
+    ".spice": "b7efad796388ba50205ea151c4c137fb479ac79f28baa37774cf5d19eb30a00c",
+    ".log": "bc1e408ba26800a11a61ef2a97b89e7ef44e444a505552c5b4c75be773f9b36b",
+    ".dat": "971ff34a5ccd4cbbd4ac26f608dcf9cbfe8e59cb29580dd9fc273c6bf471c5b1"
+  },
+  "limitations": [
+    "Nominal matched devices; ideal bias current, resistive termination and command sources.",
+    "Full code DC only; no glitch, noise, mismatch, SFDR or RF integration qualification.",
+    "Combinational decoder has unequal path delays and no retiming."
+  ]
+}

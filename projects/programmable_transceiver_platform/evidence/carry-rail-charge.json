@@ -1,0 +1,49 @@
+{
+  "status": "signed_rail_demand_diagnostic",
+  "source_sha256": "546f52f84f2ebecff510f3c11c83dbbe7bb64ef89826b2ef527babf8fd24e6b7",
+  "results": [
+    {
+      "name": "code127_delay100",
+      "window_ns": [
+        2,
+        4.4
+      ],
+      "rails": {
+        "high": {
+          "net_charge_into_cdac_c": 1.3159529209870093e-11,
+          "peak_current_into_cdac_a": 0.157617222,
+          "peak_current_returned_to_rail_a": 0.0211844511
+        },
+        "low": {
+          "net_charge_into_cdac_c": -1.3528469259259958e-11,
+          "peak_current_into_cdac_a": 0.0069713536,
+          "peak_current_returned_to_rail_a": 0.141308318
+        }
+      }
+    },
+    {
+      "name": "code128_delay100",
+      "window_ns": [
+        2,
+        4.4
+      ],
+      "rails": {
+        "high": {
+          "net_charge_into_cdac_c": 1.3159529210214284e-11,
+          "peak_current_into_cdac_a": 0.157617222,
+          "peak_current_returned_to_rail_a": 0.021184451
+        },
+        "low": {
+          "net_charge_into_cdac_c": -1.3528469259175571e-11,
+          "peak_current_into_cdac_a": 0.0069713536,
+          "peak_current_returned_to_rail_a": 0.141308318
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Integrated total rail current, no branch/path attribution or baseline DC subtraction.",
+    "Finite window ends before complete recovery; not full-cycle energy or charge balance.",
+    "Ideal gate controls, one CDAC and prebiased reference fixture."
+  ]
+}

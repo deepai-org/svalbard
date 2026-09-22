@@ -1,0 +1,176 @@
+{
+  "disposition": "Diagnostic candidate only; DC headroom is not dynamic regulation.",
+  "completed": true,
+  "exact_declared_changes_verified": true,
+  "cases": [
+    {
+      "rail": "VH",
+      "values": [
+        {
+          "case": "baseline",
+          "error_v": 0.013147609705061125,
+          "mirror_current_difference_a": 2.185525481742572e-05,
+          "tail_margin_v": -0.15311027831907548,
+          "device_margin_sweep_min_v": {
+            "xip": 2.1679631958333276,
+            "xin": 1.2700405543014017,
+            "xt": -0.16019034876525318,
+            "xmp": 0.6586207847308067,
+            "xmn": 1.5498235863817476,
+            "xout": 0.4272870537540493,
+            "xload": 2.0064557016056335
+          },
+          "supply_power_w": 0.04245098314360869
+        },
+        {
+          "case": "candidate",
+          "error_v": -0.005227838402761975,
+          "mirror_current_difference_a": 1.1357740437101856e-05,
+          "tail_margin_v": 0.8652529654469516,
+          "device_margin_sweep_min_v": {
+            "xip": 0.947861371624704,
+            "xin": 0.4766318829952498,
+            "xt": 0.8492694501870636,
+            "xmp": 0.8161074141936961,
+            "xmn": 1.2818386917542937,
+            "xout": 0.4463288068181841,
+            "xload": 1.9879723920102126
+          },
+          "supply_power_w": 0.04455784979948508
+        }
+      ]
+    },
+    {
+      "rail": "VL",
+      "values": [
+        {
+          "case": "baseline",
+          "error_v": -0.010478373839788002,
+          "mirror_current_difference_a": 2.1440923732202232e-05,
+          "tail_margin_v": 0.08586626768018302,
+          "device_margin_sweep_min_v": {
+            "xip": 1.7670214445678833,
+            "xin": 0.6641850348774634,
+            "xt": 0.07123711286792639,
+            "xmp": 0.8116840773147947,
+            "xmn": 1.9076589965624973,
+            "xout": 0.7828672117608307,
+            "xload": 1.9039248653328458
+          },
+          "supply_power_w": 0.04245098314296731
+        },
+        {
+          "case": "candidate",
+          "error_v": -0.010478373838769928,
+          "mirror_current_difference_a": 2.1440923732166236e-05,
+          "tail_margin_v": 0.08586626768037581,
+          "device_margin_sweep_min_v": {
+            "xip": 1.7670214445685088,
+            "xin": 0.6641850348774423,
+            "xt": 0.0712371128681156,
+            "xmp": 0.811684077314695,
+            "xmn": 1.907658996563045,
+            "xout": 0.7828672117606787,
+            "xload": 1.9039248653327876
+          },
+          "supply_power_w": 0.0445578497995087
+        }
+      ]
+    }
+  ],
+  "provenance": [
+    {
+      "cases": [
+        {
+          "name": "VH",
+          "target_v": 2.15,
+          "returncode": 0,
+          "artifacts_sha256": {
+            ".spice": "0919c2036d9e69d48d4f18618fbffa79358d16178c89a48e8b02f11834031ba9",
+            ".dat": "93b5358be6a397f68aa5ebf143bd162cc872a29c9afc23d3bcbfafcb27446759",
+            ".log": "3090a079abd6071175d27f5619d4d4773d459f99c39c73b357abd15026166c2e"
+          }
+        },
+        {
+          "name": "VL",
+          "target_v": 1.15,
+          "returncode": 0,
+          "artifacts_sha256": {
+            ".spice": "781c770e31e18e2ca4e236357af4238e1f3e257d32a5c71369ccea02e8abb3e9",
+            ".dat": "f0a2be364e32b7c761f3d3d9673a697b93d991755d19778bdc0b7978905bca57",
+            ".log": "3090a079abd6071175d27f5619d4d4773d459f99c39c73b357abd15026166c2e"
+          }
+        }
+      ],
+      "sources_before": {
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/screen/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+        "/screen/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+        "/screen/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+        "/screen/reference/pair_device_dc.py": "099891f93fe0dcc34743c24459951c6b8f41dedb568d0d3f025fa946e6a86cb0"
+      },
+      "sources_after": {
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/screen/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+        "/screen/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+        "/screen/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+        "/screen/reference/pair_device_dc.py": "099891f93fe0dcc34743c24459951c6b8f41dedb568d0d3f025fa946e6a86cb0"
+      }
+    },
+    {
+      "cases": [
+        {
+          "name": "VH",
+          "target_v": 2.15,
+          "returncode": 0,
+          "artifacts_sha256": {
+            ".spice": "c66aeb05fda7be9e8aa7da7f325dd37672bdbf3755fffac49fa64b611c6c4cd3",
+            ".dat": "67fa655609014950baece7aa7e42d9ad2ed4825642288cb953003a723662394f",
+            ".log": "3090a079abd6071175d27f5619d4d4773d459f99c39c73b357abd15026166c2e"
+          }
+        },
+        {
+          "name": "VL",
+          "target_v": 1.15,
+          "returncode": 0,
+          "artifacts_sha256": {
+            ".spice": "fede56c2f5b7daf408f46f1b14bc6381c231a35143945e9a6bdff88fbaa7b370",
+            ".dat": "f7ab8d1b2f0e2863544f67b7c3ab04d559ede1a5614f6655e391648d56f21092",
+            ".log": "3090a079abd6071175d27f5619d4d4773d459f99c39c73b357abd15026166c2e"
+          }
+        }
+      ],
+      "sources_before": {
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/screen/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+        "/screen/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+        "/screen/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+        "/screen/reference/pair_hybrid_dc.py": "cb3586a83b9fff29079330bf1209d6d2257792255d3313fbf9de9e630037529a"
+      },
+      "sources_after": {
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/screen/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+        "/screen/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+        "/screen/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+        "/screen/reference/pair_hybrid_dc.py": "cb3586a83b9fff29079330bf1209d6d2257792255d3313fbf9de9e630037529a"
+      }
+    }
+  ],
+  "limitations": [
+    "DC only; changed input topology changes internal swing and loop response; compensation and connected dynamics must be rechecked.",
+    "High input stage changes polarity and bias; device operating points must be checked before dynamic promotion.",
+    "Ideal target/bias and zero external load remain."
+  ]
+}

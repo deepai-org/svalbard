@@ -1,0 +1,107 @@
+{
+  "scope": "Five specified spatial load cases at fixed 48mA total on the wider nominal DC grid; not exhaustive or calibrated activity bounds",
+  "region_rule": "Quadrants by VDD instance-pin coordinate relative to x=760um, y=775um. Matching cell currents used on both rails.",
+  "cases": [
+    {
+      "distribution": "uniform",
+      "active_cells": 26438,
+      "current_per_active_cell_a": 1.815568499886527e-06,
+      "minimum_cell_supply_v": 3.1223454382993125,
+      "maximum_cell_supply_v": 3.2581477859719907,
+      "worst_instance": "_21544_",
+      "checks": {
+        "VDD_CORE": {
+          "source_current_a": 0.04800000002015476,
+          "max_kcl_residual_a": 2.122625246549865e-13
+        },
+        "VSS_CORE": {
+          "source_current_a": 0.04800000002433265,
+          "max_kcl_residual_a": 1.7731473468598092e-13
+        }
+      }
+    },
+    {
+      "distribution": "south_west",
+      "active_cells": 7305,
+      "current_per_active_cell_a": 6.5708418891170435e-06,
+      "minimum_cell_supply_v": 3.1627033227333703,
+      "maximum_cell_supply_v": 3.2580437070591346,
+      "worst_instance": "_22546_",
+      "checks": {
+        "VDD_CORE": {
+          "source_current_a": 0.048000000017864884,
+          "max_kcl_residual_a": 1.864424252530643e-13
+        },
+        "VSS_CORE": {
+          "source_current_a": 0.04800000002111605,
+          "max_kcl_residual_a": 1.6142642778049776e-13
+        }
+      }
+    },
+    {
+      "distribution": "north_west",
+      "active_cells": 7686,
+      "current_per_active_cell_a": 6.24512099921936e-06,
+      "minimum_cell_supply_v": 3.0758331969194046,
+      "maximum_cell_supply_v": 3.2582242170903575,
+      "worst_instance": "_43630_",
+      "checks": {
+        "VDD_CORE": {
+          "source_current_a": 0.04800000002184911,
+          "max_kcl_residual_a": 2.708873054728801e-13
+        },
+        "VSS_CORE": {
+          "source_current_a": 0.04800000002650999,
+          "max_kcl_residual_a": 2.128297538206425e-13
+        }
+      }
+    },
+    {
+      "distribution": "south_east",
+      "active_cells": 6245,
+      "current_per_active_cell_a": 7.686148919135308e-06,
+      "minimum_cell_supply_v": 3.1469064441725574,
+      "maximum_cell_supply_v": 3.2581186821357364,
+      "worst_instance": "_29286_",
+      "checks": {
+        "VDD_CORE": {
+          "source_current_a": 0.048000000019480175,
+          "max_kcl_residual_a": 2.26929586233382e-13
+        },
+        "VSS_CORE": {
+          "source_current_a": 0.048000000023706905,
+          "max_kcl_residual_a": 1.8421529018462952e-13
+        }
+      }
+    },
+    {
+      "distribution": "north_east",
+      "active_cells": 5202,
+      "current_per_active_cell_a": 9.22722029988466e-06,
+      "minimum_cell_supply_v": 3.0864085851505427,
+      "maximum_cell_supply_v": 3.2582159521273266,
+      "worst_instance": "_27324_",
+      "checks": {
+        "VDD_CORE": {
+          "source_current_a": 0.048000000021676974,
+          "max_kcl_residual_a": 2.5146551507759796e-13
+        },
+        "VSS_CORE": {
+          "source_current_a": 0.048000000026383854,
+          "max_kcl_residual_a": 1.9828583219805296e-13
+        }
+      }
+    }
+  ],
+  "reference_sha256": "17c30894d8ce6b54f4315513615f7019e2a420a85f20982dc77d8360f667dfa4",
+  "source_sha256": {
+    "pdn_regional_loads.py": "a72a047e407f6766a9aec8e2fafb7f6c77cf60b9b5c5a7d2ad87b01fe88bb3d7",
+    "pdn_linear.py": "f331c05e9c964fc168a6b21f561bd8c04d1ab14249f15114af4a07507db71a16"
+  },
+  "limitations": [
+    "All current uniformly concentrated within each active region; other cells have zero assumed load. Not measured switching/leakage.",
+    "Finite quadrant cases do not bound arbitrary within-region hot spots or realistic per-cell current.",
+    "One ideal feed per rail, nominal resistor models, no package impedance, dynamics, process corners or EM qualification.",
+    "No accepted local-supply tolerance or timing-library envelope established."
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "status": "complete_offset_diagnostic",
+  "cases": [
+    {
+      "name": "offset-10",
+      "offset_ps": -10,
+      "returncode": 0,
+      "timed_out": false,
+      "completed": true,
+      "failure_time_ns": null,
+      "actual_stop_ns": 800.0000000000001,
+      "control_range_v": [
+        1.076316868607888,
+        1.10380840370395
+      ]
+    },
+    {
+      "name": "offset10",
+      "offset_ps": 10,
+      "returncode": 0,
+      "timed_out": false,
+      "completed": true,
+      "failure_time_ns": null,
+      "actual_stop_ns": 800.0000000000001,
+      "control_range_v": [
+        1.076262229009239,
+        1.104142645134526
+      ]
+    }
+  ],
+  "manifest": {
+    "source_sha256_before": {
+      "/baseline/pwl.spice": "82b0e75e33baeee0888a019b758fb0ae4198a4ccd177233314d0dea3e1cec012",
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/screen/pll/reference_input_buffer.spice": "e9922aa2757ca9ece9eea717cc27b090920c522fd7f1ea7f25d0ce98f5c78e76",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+    },
+    "offsets_ps": [
+      -10,
+      10
+    ],
+    "scope": "800ns forced feedback; diagnostic source-event offsets, not autonomous acquisition"
+  },
+  "limitations": [
+    "Signed offsets alter physical phase as well as source breakpoint coincidence.",
+    "Forced clocks: no autonomous lock, noise, startup or silicon qualification.",
+    "Completion does not establish a solver defect or a sufficient remedy for the full loop."
+  ]
+}

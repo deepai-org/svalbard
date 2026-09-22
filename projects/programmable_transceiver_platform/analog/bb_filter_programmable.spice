@@ -1,0 +1,29 @@
+* Two feedback settings using actual GF180 transmission gates.
+* SEL high / SELB low bypasses second20k section (~20k total).
+* SEL low / SELB high retains both sections (~40k total).
+* Complementary controls supplied externally; register/level-shifter not implemented.
+.include /screen/bb_pmos_gain.spice
+.subckt pt_bb_feedback_switch A B SEL SELB VDD VSS
+XN A SEL B VSS nfet_03v3 w=1u l=.28u
+XP A SELB B VDD pfet_03v3 w=2u l=.28u
+.ends pt_bb_feedback_switch
+.subckt pt_bb_filter_programmable IP IN OP ON BIAS VDD VSS SEL SELB params: C=20p
+RIP IP GP 1k
+RIN IN GN 1k
+RFPA ON FBP 20k
+RFPB FBP GP 20k
+RFNA OP FBN 20k
+RFNB FBN GN 20k
+XSP FBP GP SEL SELB VDD VSS pt_bb_feedback_switch
+XSN FBN GN SEL SELB VDD VSS pt_bb_feedback_switch
+XA GP GN MP MN T1 BIAS VDD pt_bb_pmos_gain
+XB MP MN OP ON T2 BIAS VDD pt_bb_pmos_gain
+RMP MP VSS 1k
+RMN MN VSS 1k
+ROP OP VSS 1k
+RON ON VSS 1k
+CMP MP VSS {C}
+CMN MN VSS {C}
+COP OP VSS {C}
+CON ON VSS {C}
+.ends pt_bb_filter_programmable

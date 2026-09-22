@@ -1,0 +1,1103 @@
+{
+  "status": "ideal_connected_payload_transport_increment",
+  "complete_architecture": false,
+  "source_hashes": {
+    "system_model/connected/chip_model.py": "37a55e0006e0c164efd19c2ef33c96259410d6975b5ab42e2f4a8bf70c0f7308",
+    "system_model/connected/rf_blocks.py": "f4d40fd90f0d416d6ac57d648940e34a41b24d44e14192f6a572bfae2010d688",
+    "system_model/connected/wired_blocks.py": "b81af22c71ca8ed5b79dc616922a1b8d930268e9726fb4b90edb6b6195999c3d",
+    "system_model/connected/recovered_clock.py": "98b9feadbf511e008b7fb47d0333041af60d83ff842f79b29fc72de1b495aef9",
+    "system_model/connected/framing.py": "31b48aa47ff0e290c66ed422874d6e21fb44e833b11d5f982548b18a2ff4985b",
+    "system_model/connected/pacing.py": "3ffda5bf764df8e9f0f36493efceedaad42e4d0f70a93f99b523719eeca2a6ca",
+    "system_model/connected/loopback_return.py": "6ac6f3c1c92aa8524ab9cb72e0a3897a9b85c12bebd1a1b9af65ed64424ab3de",
+    "system_model/connected/pilot.py": "b25ed7e5381b904f01795e2fcc2c781e116a72fcf079133fa96baca18becd057",
+    "system_model/connected/session.py": "6752e434755cd77ef43fa943570fa0843c6fbf10bdd10f3119374e63fff39374",
+    "system_model/clock_tracking_screen.py": "7a93ec5775824e3472f951aac6d2d6af0e3026cb6d5ab6dc6a2297afbd3e5ac0",
+    "system_model/wired_screen.py": "145cf7cdea4b862f6f54f6cfa0b6a475ab10588d367173dfb3c48f26a8c20a79",
+    "spec/contract.json": "f7ba04b8cfb7681c280147778edbe333b3bf245c4b2dec3e47a69cdf0b1b5026",
+    "verification/stream_codec.py": "4515bf61e3c83f041eee97740e61c075dca1681da388dc651117cdd10d1a0088",
+    "verification/transport_model.py": "fb93356b2851ee253d3f8e49bb25b2018e22175500ec3d14b8ebaa78814da09d"
+  },
+  "results": [
+    {
+      "mode": "ethernet_rf40_12",
+      "symbol_samples": 2,
+      "iq_gain_error": 0.0,
+      "iq_phase_error_deg": 0,
+      "rf_test_waveform": "pilot_then_qpsk",
+      "lifecycle": {
+        "armed": true,
+        "host_readiness": "ideal external input",
+        "rf_readiness": "ideal external input",
+        "wire_readiness": "completed marker acquisition; no independent lock detector"
+      },
+      "h2d_visibility_cycles": 2,
+      "h2d_frequency_error_ppm": 0,
+      "h2d_phase_ticks": 0.0,
+      "initial_wired_phase_ui": 0.3,
+      "initial_wired_period_ppm": 100,
+      "duration_s": 0.00016,
+      "host_payload_pacing_ratios": {
+        "wire": [
+          1,
+          2
+        ],
+        "iq": [
+          4,
+          25
+        ]
+      },
+      "directions": [
+        {
+          "direction": "d2h",
+          "streams": {
+            "wire": {
+              "generated_samples": 20000,
+              "received_samples": 20000,
+              "remaining_bits": 0,
+              "payload_errors": 0,
+              "peak_ingress_bits": 320,
+              "maximum_delivery_latency_s": 5.32e-07,
+              "wired_receiver": {
+                "training_bits": 1024,
+                "marker_bits": 64,
+                "marker_acquired_relative_payload_s": -3.1191394282203563e-10,
+                "recovered_words": 20000,
+                "initial_phase_ui": 0.3,
+                "initial_period_ppm": 100,
+                "clock": "received zero-crossing PI tracker",
+                "framing": "observed64-bit test marker",
+                "final_period_ppm": -3.416554173352182
+              }
+            },
+            "iq": {
+              "generated_samples": 6400,
+              "received_samples": 6400,
+              "remaining_bits": 0,
+              "payload_errors": 0,
+              "peak_ingress_bits": 272,
+              "maximum_delivery_latency_s": 5.63e-07
+            }
+          },
+          "rf_reconstruction": null,
+          "rf_external_loopbacks": [],
+          "rx_bandwidth_hz": 10000000.0,
+          "rf_quantization_rms_error": 0.00021929230460169763,
+          "rf_sample_rate_hz": 40000000,
+          "rf_bits_per_component": 12
+        },
+        {
+          "direction": "h2d",
+          "streams": {
+            "wire": {
+              "generated_samples": 20000,
+              "received_samples": 20000,
+              "remaining_bits": 0,
+              "payload_errors": 0,
+              "peak_ingress_bits": 320,
+              "maximum_delivery_latency_s": 5.32e-07,
+              "transmit_sink": {
+                "startup_delay_s": 7.68e-07,
+                "underflows": 0,
+                "overflows": 0,
+                "capacity_samples": 204,
+                "capacity_bits": 2040,
+                "consumed_samples": 20000,
+                "peak_fifo_samples": 33,
+                "peak_fifo_bits": 330,
+                "remaining_samples": 0
+              },
+              "zero_prefill_control_underflows": 67,
+              "two_frame_prefill_underflows": 3,
+              "external_wired_receiver": {
+                "bits": 200000,
+                "observed_bit_errors": 0,
+                "minimum_signed_margin": 0.9135721634724555,
+                "clock": "prescribed mid-bit phase; no CDR"
+              }
+            },
+            "iq": {
+              "generated_samples": 6400,
+              "received_samples": 6400,
+              "remaining_bits": 0,
+              "payload_errors": 0,
+              "peak_ingress_bits": 272,
+              "maximum_delivery_latency_s": 5.71e-07,
+              "transmit_sink": {
+                "startup_delay_s": 7.68e-07,
+                "underflows": 0,
+                "overflows": 0,
+                "capacity_samples": 85,
+                "capacity_bits": 2040,
+                "consumed_samples": 6400,
+                "peak_fifo_samples": 10,
+                "peak_fifo_bits": 240,
+                "remaining_samples": 0
+              },
+              "zero_prefill_control_underflows": 23,
+              "two_frame_prefill_underflows": 3
+            }
+          },
+          "rf_reconstruction": {
+            "bandwidth_hz": 10000000.0,
+            "mute_command_observation_ticks": [
+              6468.0,
+              12868.0
+            ],
+            "muted_samples": 1024,
+            "first_muted_sample": 1005,
+            "first_unmuted_sample_after_mute": 2029,
+            "mute_semantics": "Zero DAC samples at next sample boundary; queues and clocks continue.",
+            "rms_quantization_effect": 0.0001250605820490654,
+            "output_peak": 0.5987696351558351,
+            "observation": "End of each DAC hold; zero initial filter state."
+          },
+          "rf_external_loopbacks": [
+            {
+              "external_amplitude_transmission": 0.25,
+              "host_return": {
+                "adc_samples_returned": 6400,
+                "wired_words_returned": 20000,
+                "payload_errors": 0,
+                "peak_ingress_bits": {
+                  "wire": 320,
+                  "iq": 272
+                },
+                "maximum_adc_to_host_delay_ticks": 140.75,
+                "minimum_adc_to_host_delay_ticks": 125.5,
+                "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+              },
+              "lo_offset_hz": -100000.0,
+              "external_host_pilot": {
+                "estimated_offset_hz": -99995.00900281857,
+                "gain_real": 0.14428959947899903,
+                "gain_imag": -0.03540107132480837,
+                "training_samples": 192,
+                "held_out_samples": 1024,
+                "known_symbol_calibration": {
+                  "first_sample": 4865,
+                  "last_sample": 5375,
+                  "training_symbols": 256,
+                  "gain_real": 0.7994484141867239,
+                  "gain_imag": 0.09234428891887388,
+                  "held_out_normalized_rms_error": 0.20363012074675213,
+                  "symbol_errors": 0,
+                  "scope": "External host; reserved known symbols and supplied timing; scalar correction frozen before scoring."
+                },
+                "known_symbol_image_calibration": {
+                  "training_symbols": 256,
+                  "basis_condition": 1.0000078335570188,
+                  "direct_real": 0.7994484110296536,
+                  "direct_imag": 0.0923443405152375,
+                  "image_real": 0.005593850153317459,
+                  "image_imag": -0.003500666310516833,
+                  "determinant": 0.6476016932988766,
+                  "held_out_normalized_rms_error": 0.20384665619282596,
+                  "symbol_errors": 0,
+                  "scope": "External host; rotating-image fit on reserved symbols; frequency and coefficients frozen before scoring."
+                },
+                "held_out_qpsk_symbols": 512,
+                "held_out_qpsk_normalized_rms_error": 0.2747694159344026,
+                "held_out_qpsk_normalized_peak_error": 0.35680656493852675,
+                "diagnostic_known_symbol_projection": {
+                  "scalar_real": 0.7994949929896831,
+                  "scalar_imag": 0.0918773001009386,
+                  "scalar_bias_rms": 0.22055315937443556,
+                  "nonscalar_residual_rms": 0.1638735360663447,
+                  "scope": "Uses held-out truth; attribution only, not deployable calibration or corrected performance."
+                },
+                "symbol_errors": 0,
+                "symbol_sampling": "Last of 2 samples; symbol timing supplied by test setup."
+              },
+              "rms_error_vs_zero_offset": 0.14684443067100503,
+              "adc_samples": 6400,
+              "peak_analog_component": 0.1485799222266768,
+              "rms_error_vs_filtered_ideal": 0.00018529025141352426,
+              "maximum_error": 0.0003559349538111885,
+              "quantization_bound": 0.0004315837287515549,
+              "observation": "ADC at end of each DAC hold; staged D2H return alongside wired RX."
+            },
+            {
+              "external_amplitude_transmission": 0.25,
+              "host_return": {
+                "adc_samples_returned": 6400,
+                "wired_words_returned": 20000,
+                "payload_errors": 0,
+                "peak_ingress_bits": {
+                  "wire": 320,
+                  "iq": 272
+                },
+                "maximum_adc_to_host_delay_ticks": 140.75,
+                "minimum_adc_to_host_delay_ticks": 125.5,
+                "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+              },
+              "lo_offset_hz": 0,
+              "external_host_pilot": {
+                "estimated_offset_hz": -0.44864357836014873,
+                "gain_real": 0.1438873540809857,
+                "gain_imag": 0.036445718418091556,
+                "training_samples": 192,
+                "held_out_samples": 1024,
+                "known_symbol_calibration": {
+                  "first_sample": 4865,
+                  "last_sample": 5375,
+                  "training_symbols": 256,
+                  "gain_real": 0.8001144238065893,
+                  "gain_imag": 0.09816146868732917,
+                  "held_out_normalized_rms_error": 0.20345755138550287,
+                  "symbol_errors": 0,
+                  "scope": "External host; reserved known symbols and supplied timing; scalar correction frozen before scoring."
+                },
+                "known_symbol_image_calibration": {
+                  "training_symbols": 256,
+                  "basis_condition": 1.0000000000000004,
+                  "direct_real": 0.8001144238065896,
+                  "direct_imag": 0.09816146868732921,
+                  "image_real": -0.05855769703164097,
+                  "image_imag": -0.007343229952757135,
+                  "determinant": 0.6463358382104158,
+                  "held_out_normalized_rms_error": 0.18872734939374733,
+                  "symbol_errors": 0,
+                  "scope": "External host; rotating-image fit on reserved symbols; frequency and coefficients frozen before scoring."
+                },
+                "held_out_qpsk_symbols": 512,
+                "held_out_qpsk_normalized_rms_error": 0.27658592746971344,
+                "held_out_qpsk_normalized_peak_error": 0.3578309039122951,
+                "diagnostic_known_symbol_projection": {
+                  "scalar_real": 0.8001091097028601,
+                  "scalar_imag": 0.09820477318948515,
+                  "scalar_bias_rms": 0.22271179919569023,
+                  "nonscalar_residual_rms": 0.16400984657422296,
+                  "scope": "Uses held-out truth; attribution only, not deployable calibration or corrected performance."
+                },
+                "symbol_errors": 0,
+                "symbol_sampling": "Last of 2 samples; symbol timing supplied by test setup."
+              },
+              "rms_error_vs_zero_offset": 0.0001702518443175975,
+              "adc_samples": 6400,
+              "peak_analog_component": 0.14813407773414522,
+              "rms_error_vs_filtered_ideal": 0.0001702518443175975,
+              "maximum_error": 0.00032597377494752604,
+              "quantization_bound": 0.0004315837287515549,
+              "observation": "ADC at end of each DAC hold; staged D2H return alongside wired RX."
+            },
+            {
+              "external_amplitude_transmission": 0.25,
+              "host_return": {
+                "adc_samples_returned": 6400,
+                "wired_words_returned": 20000,
+                "payload_errors": 0,
+                "peak_ingress_bits": {
+                  "wire": 320,
+                  "iq": 272
+                },
+                "maximum_adc_to_host_delay_ticks": 140.75,
+                "minimum_adc_to_host_delay_ticks": 125.5,
+                "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+              },
+              "lo_offset_hz": 100000.0,
+              "external_host_pilot": {
+                "estimated_offset_hz": 100005.1149445532,
+                "gain_real": 0.10988375163517705,
+                "gain_imag": 0.09954971679588565,
+                "training_samples": 192,
+                "held_out_samples": 1024,
+                "known_symbol_calibration": {
+                  "first_sample": 4865,
+                  "last_sample": 5375,
+                  "training_symbols": 256,
+                  "gain_real": 0.8004413317486073,
+                  "gain_imag": 0.0972357828800058,
+                  "held_out_normalized_rms_error": 0.20380209918180595,
+                  "symbol_errors": 0,
+                  "scope": "External host; reserved known symbols and supplied timing; scalar correction frozen before scoring."
+                },
+                "known_symbol_image_calibration": {
+                  "training_symbols": 256,
+                  "basis_condition": 1.0000078347631147,
+                  "direct_real": 0.8004413272542454,
+                  "direct_imag": 0.0972358442701812,
+                  "image_real": 0.005960075227035488,
+                  "image_imag": 0.005118973760291933,
+                  "determinant": 0.6500994013984025,
+                  "held_out_normalized_rms_error": 0.20411886576091565,
+                  "symbol_errors": 0,
+                  "scope": "External host; rotating-image fit on reserved symbols; frequency and coefficients frozen before scoring."
+                },
+                "held_out_qpsk_symbols": 512,
+                "held_out_qpsk_normalized_rms_error": 0.2759149369487528,
+                "held_out_qpsk_normalized_peak_error": 0.35768948574304393,
+                "diagnostic_known_symbol_projection": {
+                  "scalar_real": 0.8005397449874474,
+                  "scalar_imag": 0.09664565476405299,
+                  "scalar_bias_rms": 0.22164109707914062,
+                  "nonscalar_residual_rms": 0.16432977976310056,
+                  "scope": "Uses held-out truth; attribution only, not deployable calibration or corrected performance."
+                },
+                "symbol_errors": 0,
+                "symbol_sampling": "Last of 2 samples; symbol timing supplied by test setup."
+              },
+              "rms_error_vs_zero_offset": 0.14682514036070246,
+              "adc_samples": 6400,
+              "peak_analog_component": 0.14828739404718397,
+              "rms_error_vs_filtered_ideal": 0.00018500028185982774,
+              "maximum_error": 0.0003597068576631612,
+              "quantization_bound": 0.0004315837287515549,
+              "observation": "ADC at end of each DAC hold; staged D2H return alongside wired RX."
+            },
+            {
+              "external_amplitude_transmission": 1,
+              "host_return": {
+                "adc_samples_returned": 6400,
+                "wired_words_returned": 20000,
+                "payload_errors": 0,
+                "peak_ingress_bits": {
+                  "wire": 320,
+                  "iq": 272
+                },
+                "maximum_adc_to_host_delay_ticks": 140.75,
+                "minimum_adc_to_host_delay_ticks": 125.5,
+                "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+              },
+              "lo_offset_hz": -100000.0,
+              "external_host_pilot": {
+                "estimated_offset_hz": -99999.5123230625,
+                "gain_real": 0.5772029999440296,
+                "gain_imag": -0.14161289593360382,
+                "training_samples": 192,
+                "held_out_samples": 1024,
+                "known_symbol_calibration": {
+                  "first_sample": 4865,
+                  "last_sample": 5375,
+                  "training_symbols": 256,
+                  "gain_real": 0.7990498310189359,
+                  "gain_imag": 0.09530268093725354,
+                  "held_out_normalized_rms_error": 0.20361603860376679,
+                  "symbol_errors": 0,
+                  "scope": "External host; reserved known symbols and supplied timing; scalar correction frozen before scoring."
+                },
+                "known_symbol_image_calibration": {
+                  "training_symbols": 256,
+                  "basis_condition": 1.0000078340951384,
+                  "direct_real": 0.7990498274499206,
+                  "direct_imag": 0.09530273230617799,
+                  "image_real": 0.005575337576360644,
+                  "image_imag": -0.0034812387417875786,
+                  "determinant": 0.6475200341205032,
+                  "held_out_normalized_rms_error": 0.20383428944586066,
+                  "symbol_errors": 0,
+                  "scope": "External host; rotating-image fit on reserved symbols; frequency and coefficients frozen before scoring."
+                },
+                "held_out_qpsk_symbols": 512,
+                "held_out_qpsk_normalized_rms_error": 0.276218926354763,
+                "held_out_qpsk_normalized_peak_error": 0.3566690560111449,
+                "diagnostic_known_symbol_projection": {
+                  "scalar_real": 0.7990571864607029,
+                  "scalar_imag": 0.095243070129374,
+                  "scalar_bias_rms": 0.22237188833294008,
+                  "nonscalar_residual_rms": 0.1638524902338086,
+                  "scope": "Uses held-out truth; attribution only, not deployable calibration or corrected performance."
+                },
+                "symbol_errors": 0,
+                "symbol_sampling": "Last of 2 samples; symbol timing supplied by test setup."
+              },
+              "rms_error_vs_zero_offset": 0.5874041646069984,
+              "adc_samples": 6400,
+              "peak_analog_component": 0.5943196889067072,
+              "rms_error_vs_filtered_ideal": 0.0002087091102628341,
+              "maximum_error": 0.00045177336776326866,
+              "quantization_bound": 0.0006905339660024879,
+              "observation": "ADC at end of each DAC hold; staged D2H return alongside wired RX."
+            },
+            {
+              "external_amplitude_transmission": 1,
+              "host_return": {
+                "adc_samples_returned": 6400,
+                "wired_words_returned": 20000,
+                "payload_errors": 0,
+                "peak_ingress_bits": {
+                  "wire": 320,
+                  "iq": 272
+                },
+                "maximum_adc_to_host_delay_ticks": 140.75,
+                "minimum_adc_to_host_delay_ticks": 125.5,
+                "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+              },
+              "lo_offset_hz": 0,
+              "external_host_pilot": {
+                "estimated_offset_hz": -0.1614672923053143,
+                "gain_real": 0.5756844043852083,
+                "gain_imag": 0.14560895077315741,
+                "training_samples": 192,
+                "held_out_samples": 1024,
+                "known_symbol_calibration": {
+                  "first_sample": 4865,
+                  "last_sample": 5375,
+                  "training_symbols": 256,
+                  "gain_real": 0.799359269003912,
+                  "gain_imag": 0.09827963756251233,
+                  "held_out_normalized_rms_error": 0.2037292715773973,
+                  "symbol_errors": 0,
+                  "scope": "External host; reserved known symbols and supplied timing; scalar correction frozen before scoring."
+                },
+                "known_symbol_image_calibration": {
+                  "training_symbols": 256,
+                  "basis_condition": 1.0000000000000004,
+                  "direct_real": 0.7993592690039122,
+                  "direct_imag": 0.09827963756251235,
+                  "image_real": -0.0587468365752712,
+                  "image_imag": -0.007136999161850042,
+                  "determinant": 0.6451320005372497,
+                  "held_out_normalized_rms_error": 0.1889111786443355,
+                  "symbol_errors": 0,
+                  "scope": "External host; rotating-image fit on reserved symbols; frequency and coefficients frozen before scoring."
+                },
+                "held_out_qpsk_symbols": 512,
+                "held_out_qpsk_normalized_rms_error": 0.2772027742206672,
+                "held_out_qpsk_normalized_peak_error": 0.3567464280961568,
+                "diagnostic_known_symbol_projection": {
+                  "scalar_real": 0.7993573544507512,
+                  "scalar_imag": 0.09829520822521359,
+                  "scalar_bias_rms": 0.2234265408876922,
+                  "nonscalar_residual_rms": 0.1640791237866492,
+                  "scope": "Uses held-out truth; attribution only, not deployable calibration or corrected performance."
+                },
+                "symbol_errors": 0,
+                "symbol_sampling": "Last of 2 samples; symbol timing supplied by test setup."
+              },
+              "rms_error_vs_zero_offset": 0.00021388782478988722,
+              "adc_samples": 6400,
+              "peak_analog_component": 0.5925363109365809,
+              "rms_error_vs_filtered_ideal": 0.00021388782478988722,
+              "maximum_error": 0.0004857198792734352,
+              "quantization_bound": 0.0006905339660024879,
+              "observation": "ADC at end of each DAC hold; staged D2H return alongside wired RX."
+            },
+            {
+              "external_amplitude_transmission": 1,
+              "host_return": {
+                "adc_samples_returned": 6400,
+                "wired_words_returned": 20000,
+                "payload_errors": 0,
+                "peak_ingress_bits": {
+                  "wire": 320,
+                  "iq": 272
+                },
+                "maximum_adc_to_host_delay_ticks": 140.75,
+                "minimum_adc_to_host_delay_ticks": 125.5,
+                "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+              },
+              "lo_offset_hz": 100000.0,
+              "external_host_pilot": {
+                "estimated_offset_hz": 99999.69650407988,
+                "gain_real": 0.439570451646652,
+                "gain_imag": 0.3982782035917983,
+                "training_samples": 192,
+                "held_out_samples": 1024,
+                "known_symbol_calibration": {
+                  "first_sample": 4865,
+                  "last_sample": 5375,
+                  "training_symbols": 256,
+                  "gain_real": 0.7999508562245348,
+                  "gain_imag": 0.10070364700061105,
+                  "held_out_normalized_rms_error": 0.20358147894967352,
+                  "symbol_errors": 0,
+                  "scope": "External host; reserved known symbols and supplied timing; scalar correction frozen before scoring."
+                },
+                "known_symbol_image_calibration": {
+                  "training_symbols": 256,
+                  "basis_condition": 1.0000078341171241,
+                  "direct_real": 0.7999508510195518,
+                  "direct_imag": 0.10070370835242311,
+                  "image_real": 0.005947713403442112,
+                  "image_imag": 0.00513778710804577,
+                  "determinant": 0.6500008287717379,
+                  "held_out_normalized_rms_error": 0.2038957791938312,
+                  "symbol_errors": 0,
+                  "scope": "External host; rotating-image fit on reserved symbols; frequency and coefficients frozen before scoring."
+                },
+                "held_out_qpsk_symbols": 512,
+                "held_out_qpsk_normalized_rms_error": 0.2776779162304958,
+                "held_out_qpsk_normalized_peak_error": 0.35796637803229714,
+                "diagnostic_known_symbol_projection": {
+                  "scalar_real": 0.7999628793333924,
+                  "scalar_imag": 0.10073758180453109,
+                  "scalar_bias_rms": 0.22397077941644872,
+                  "nonscalar_residual_rms": 0.16414053469420245,
+                  "scope": "Uses held-out truth; attribution only, not deployable calibration or corrected performance."
+                },
+                "symbol_errors": 0,
+                "symbol_sampling": "Last of 2 samples; symbol timing supplied by test setup."
+              },
+              "rms_error_vs_zero_offset": 0.5873073599657047,
+              "adc_samples": 6400,
+              "peak_analog_component": 0.5931495761887359,
+              "rms_error_vs_filtered_ideal": 0.00020304760582189396,
+              "maximum_error": 0.00046174366514067423,
+              "quantization_bound": 0.0006905339660024879,
+              "observation": "ADC at end of each DAC hold; staged D2H return alongside wired RX."
+            }
+          ],
+          "rx_bandwidth_hz": null,
+          "rf_quantization_rms_error": 0.0001570572978866258,
+          "rf_sample_rate_hz": 40000000,
+          "rf_bits_per_component": 12
+        }
+      ]
+    },
+    {
+      "mode": "pcie_rf20_8",
+      "symbol_samples": 2,
+      "iq_gain_error": 0.0,
+      "iq_phase_error_deg": 0,
+      "rf_test_waveform": "pilot_then_qpsk",
+      "lifecycle": {
+        "armed": true,
+        "host_readiness": "ideal external input",
+        "rf_readiness": "ideal external input",
+        "wire_readiness": "completed marker acquisition; no independent lock detector"
+      },
+      "h2d_visibility_cycles": 2,
+      "h2d_frequency_error_ppm": 0,
+      "h2d_phase_ticks": 0.0,
+      "initial_wired_phase_ui": 0.3,
+      "initial_wired_period_ppm": 100,
+      "duration_s": 0.000128,
+      "host_payload_pacing_ratios": {
+        "wire": [
+          4,
+          5
+        ],
+        "iq": [
+          8,
+          125
+        ]
+      },
+      "directions": [
+        {
+          "direction": "d2h",
+          "streams": {
+            "wire": {
+              "generated_samples": 32000,
+              "received_samples": 32000,
+              "remaining_bits": 0,
+              "payload_errors": 0,
+              "peak_ingress_bits": 520,
+              "maximum_delivery_latency_s": 4.288e-07,
+              "wired_receiver": {
+                "training_bits": 1024,
+                "marker_bits": 64,
+                "marker_acquired_relative_payload_s": -1.5595697141101781e-10,
+                "recovered_words": 32000,
+                "initial_phase_ui": 0.3,
+                "initial_period_ppm": 100,
+                "clock": "received zero-crossing PI tracker",
+                "framing": "observed64-bit test marker",
+                "final_period_ppm": -3.4029995312767625
+              }
+            },
+            "iq": {
+              "generated_samples": 2560,
+              "received_samples": 2560,
+              "remaining_bits": 0,
+              "payload_errors": 0,
+              "peak_ingress_bits": 88,
+              "maximum_delivery_latency_s": 4.928e-07
+            }
+          },
+          "rf_reconstruction": null,
+          "rf_external_loopbacks": [],
+          "rx_bandwidth_hz": 10000000.0,
+          "rf_quantization_rms_error": 0.0028131460856510864,
+          "rf_sample_rate_hz": 20000000,
+          "rf_bits_per_component": 8
+        },
+        {
+          "direction": "h2d",
+          "streams": {
+            "wire": {
+              "generated_samples": 32000,
+              "received_samples": 32000,
+              "remaining_bits": 0,
+              "payload_errors": 0,
+              "peak_ingress_bits": 520,
+              "maximum_delivery_latency_s": 4.312e-07,
+              "transmit_sink": {
+                "startup_delay_s": 6.144e-07,
+                "underflows": 0,
+                "overflows": 0,
+                "capacity_samples": 204,
+                "capacity_bits": 2040,
+                "consumed_samples": 32000,
+                "peak_fifo_samples": 52,
+                "peak_fifo_bits": 520,
+                "remaining_samples": 0
+              },
+              "zero_prefill_control_underflows": 108,
+              "two_frame_prefill_underflows": 6,
+              "external_wired_receiver": {
+                "bits": 320000,
+                "observed_bit_errors": 0,
+                "minimum_signed_margin": 0.9135721634724555,
+                "clock": "prescribed mid-bit phase; no CDR"
+              }
+            },
+            "iq": {
+              "generated_samples": 2560,
+              "received_samples": 2560,
+              "remaining_bits": 0,
+              "payload_errors": 0,
+              "peak_ingress_bits": 88,
+              "maximum_delivery_latency_s": 4.992e-07,
+              "transmit_sink": {
+                "startup_delay_s": 6.144e-07,
+                "underflows": 0,
+                "overflows": 0,
+                "capacity_samples": 128,
+                "capacity_bits": 2048,
+                "consumed_samples": 2560,
+                "peak_fifo_samples": 5,
+                "peak_fifo_bits": 80,
+                "remaining_samples": 0
+              },
+              "zero_prefill_control_underflows": 10,
+              "two_frame_prefill_underflows": 2
+            }
+          },
+          "rf_reconstruction": {
+            "bandwidth_hz": 10000000.0,
+            "mute_command_observation_ticks": [
+              6468.0,
+              12868.0
+            ],
+            "muted_samples": 410,
+            "first_muted_sample": 402,
+            "first_unmuted_sample_after_mute": 812,
+            "mute_semantics": "Zero DAC samples at next sample boundary; queues and clocks continue.",
+            "rms_quantization_effect": 0.002336735255300789,
+            "output_peak": 0.6037389832632868,
+            "observation": "End of each DAC hold; zero initial filter state."
+          },
+          "rf_external_loopbacks": [
+            {
+              "external_amplitude_transmission": 0.25,
+              "host_return": {
+                "adc_samples_returned": 2560,
+                "wired_words_returned": 32000,
+                "payload_errors": 0,
+                "peak_ingress_bits": {
+                  "wire": 520,
+                  "iq": 88
+                },
+                "maximum_adc_to_host_delay_ticks": 154.125,
+                "minimum_adc_to_host_delay_ticks": 123.125,
+                "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+              },
+              "lo_offset_hz": -100000.0,
+              "external_host_pilot": {
+                "estimated_offset_hz": -100006.07839451834,
+                "gain_real": 0.1491065575604411,
+                "gain_imag": -0.014579514748957351,
+                "training_samples": 192,
+                "held_out_samples": 1024,
+                "known_symbol_calibration": {
+                  "first_sample": 1025,
+                  "last_sample": 1535,
+                  "training_symbols": 256,
+                  "gain_real": 0.9822372338265724,
+                  "gain_imag": 0.05835053942913951,
+                  "held_out_normalized_rms_error": 0.027361358772243195,
+                  "symbol_errors": 0,
+                  "scope": "External host; reserved known symbols and supplied timing; scalar correction frozen before scoring."
+                },
+                "known_symbol_image_calibration": {
+                  "training_symbols": 256,
+                  "basis_condition": 1.0000257613963335,
+                  "direct_real": 0.9822372686406156,
+                  "direct_imag": 0.05835054474063242,
+                  "image_real": 0.001347892746460999,
+                  "image_imag": -0.00022811230861553887,
+                  "determinant": 0.9681929691280241,
+                  "held_out_normalized_rms_error": 0.027328911838794528,
+                  "symbol_errors": 0,
+                  "scope": "External host; rotating-image fit on reserved symbols; frequency and coefficients frozen before scoring."
+                },
+                "held_out_qpsk_symbols": 512,
+                "held_out_qpsk_normalized_rms_error": 0.06831060364643603,
+                "held_out_qpsk_normalized_peak_error": 0.10320527694953056,
+                "diagnostic_known_symbol_projection": {
+                  "scalar_real": 0.9824981919665707,
+                  "scalar_imag": 0.06032545496450774,
+                  "scalar_bias_rms": 0.06281300662373886,
+                  "nonscalar_residual_rms": 0.026848924921244362,
+                  "scope": "Uses held-out truth; attribution only, not deployable calibration or corrected performance."
+                },
+                "symbol_errors": 0,
+                "symbol_sampling": "Last of 2 samples; symbol timing supplied by test setup."
+              },
+              "rms_error_vs_zero_offset": 0.18092596732313415,
+              "adc_samples": 2560,
+              "peak_analog_component": 0.1499149660554831,
+              "rms_error_vs_filtered_ideal": 0.0030116085539251825,
+              "maximum_error": 0.0059570904172263,
+              "quantization_bound": 0.006905339660024878,
+              "observation": "ADC at end of each DAC hold; staged D2H return alongside wired RX."
+            },
+            {
+              "external_amplitude_transmission": 0.25,
+              "host_return": {
+                "adc_samples_returned": 2560,
+                "wired_words_returned": 32000,
+                "payload_errors": 0,
+                "peak_ingress_bits": {
+                  "wire": 520,
+                  "iq": 88
+                },
+                "maximum_adc_to_host_delay_ticks": 154.125,
+                "minimum_adc_to_host_delay_ticks": 123.125,
+                "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+              },
+              "lo_offset_hz": 0,
+              "external_host_pilot": {
+                "estimated_offset_hz": 4.580546479652796,
+                "gain_real": 0.14139759906593902,
+                "gain_imag": 0.04495760242024647,
+                "training_samples": 192,
+                "held_out_samples": 1024,
+                "known_symbol_calibration": {
+                  "first_sample": 1025,
+                  "last_sample": 1535,
+                  "training_symbols": 256,
+                  "gain_real": 0.9811172090967815,
+                  "gain_imag": 0.05010562895580953,
+                  "held_out_normalized_rms_error": 0.02486929834763404,
+                  "symbol_errors": 0,
+                  "scope": "External host; reserved known symbols and supplied timing; scalar correction frozen before scoring."
+                },
+                "known_symbol_image_calibration": {
+                  "training_symbols": 256,
+                  "basis_condition": 1.0000000000000002,
+                  "direct_real": 0.9811172090967818,
+                  "direct_imag": 0.050105628955809556,
+                  "image_real": -0.008759821711855329,
+                  "image_imag": -0.004553712372947709,
+                  "determinant": 0.9650040812661166,
+                  "held_out_normalized_rms_error": 0.022788510582331473,
+                  "symbol_errors": 0,
+                  "scope": "External host; rotating-image fit on reserved symbols; frequency and coefficients frozen before scoring."
+                },
+                "held_out_qpsk_symbols": 512,
+                "held_out_qpsk_normalized_rms_error": 0.05790771322945012,
+                "held_out_qpsk_normalized_peak_error": 0.08925988554026641,
+                "diagnostic_known_symbol_projection": {
+                  "scalar_real": 0.981171918489728,
+                  "scalar_imag": 0.04902129569327533,
+                  "scalar_bias_rms": 0.052512704032500385,
+                  "nonscalar_residual_rms": 0.0244073588628359,
+                  "scope": "Uses held-out truth; attribution only, not deployable calibration or corrected performance."
+                },
+                "symbol_errors": 0,
+                "symbol_sampling": "Last of 2 samples; symbol timing supplied by test setup."
+              },
+              "rms_error_vs_zero_offset": 0.003092891636670761,
+              "adc_samples": 2560,
+              "peak_analog_component": 0.1490745130505442,
+              "rms_error_vs_filtered_ideal": 0.003092891636670761,
+              "maximum_error": 0.004859290077570866,
+              "quantization_bound": 0.006905339660024878,
+              "observation": "ADC at end of each DAC hold; staged D2H return alongside wired RX."
+            },
+            {
+              "external_amplitude_transmission": 0.25,
+              "host_return": {
+                "adc_samples_returned": 2560,
+                "wired_words_returned": 32000,
+                "payload_errors": 0,
+                "peak_ingress_bits": {
+                  "wire": 520,
+                  "iq": 88
+                },
+                "maximum_adc_to_host_delay_ticks": 154.125,
+                "minimum_adc_to_host_delay_ticks": 123.125,
+                "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+              },
+              "lo_offset_hz": 100000.0,
+              "external_host_pilot": {
+                "estimated_offset_hz": 100024.83925046372,
+                "gain_real": 0.11269880127390891,
+                "gain_imag": 0.09779793213526408,
+                "training_samples": 192,
+                "held_out_samples": 1024,
+                "known_symbol_calibration": {
+                  "first_sample": 1025,
+                  "last_sample": 1535,
+                  "training_symbols": 256,
+                  "gain_real": 0.9873782582789468,
+                  "gain_imag": 0.04957745217685837,
+                  "held_out_normalized_rms_error": 0.02714620780984032,
+                  "symbol_errors": 0,
+                  "scope": "External host; reserved known symbols and supplied timing; scalar correction frozen before scoring."
+                },
+                "known_symbol_image_calibration": {
+                  "training_symbols": 256,
+                  "basis_condition": 1.0000259728923773,
+                  "direct_real": 0.9873782384318972,
+                  "direct_imag": 0.0495775032674482,
+                  "image_real": 0.0013670088405154965,
+                  "image_imag": -0.0016076996267086817,
+                  "determinant": 0.9773692611478505,
+                  "held_out_normalized_rms_error": 0.027119377833439436,
+                  "symbol_errors": 0,
+                  "scope": "External host; rotating-image fit on reserved symbols; frequency and coefficients frozen before scoring."
+                },
+                "held_out_qpsk_symbols": 512,
+                "held_out_qpsk_normalized_rms_error": 0.05273957017453117,
+                "held_out_qpsk_normalized_peak_error": 0.0906223810881134,
+                "diagnostic_known_symbol_projection": {
+                  "scalar_real": 0.9877026938265576,
+                  "scalar_imag": 0.044052532106337965,
+                  "scalar_bias_rms": 0.04573673932522214,
+                  "nonscalar_residual_rms": 0.026260482442083462,
+                  "scope": "Uses held-out truth; attribution only, not deployable calibration or corrected performance."
+                },
+                "symbol_errors": 0,
+                "symbol_sampling": "Last of 2 samples; symbol timing supplied by test setup."
+              },
+              "rms_error_vs_zero_offset": 0.1809514190788775,
+              "adc_samples": 2560,
+              "peak_analog_component": 0.14967953305870008,
+              "rms_error_vs_filtered_ideal": 0.0030102386080847914,
+              "maximum_error": 0.0058189495695946565,
+              "quantization_bound": 0.006905339660024878,
+              "observation": "ADC at end of each DAC hold; staged D2H return alongside wired RX."
+            },
+            {
+              "external_amplitude_transmission": 1,
+              "host_return": {
+                "adc_samples_returned": 2560,
+                "wired_words_returned": 32000,
+                "payload_errors": 0,
+                "peak_ingress_bits": {
+                  "wire": 520,
+                  "iq": 88
+                },
+                "maximum_adc_to_host_delay_ticks": 154.125,
+                "minimum_adc_to_host_delay_ticks": 123.125,
+                "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+              },
+              "lo_offset_hz": -100000.0,
+              "external_host_pilot": {
+                "estimated_offset_hz": -99991.6505242488,
+                "gain_real": 0.5944937539360875,
+                "gain_imag": -0.05888367508515266,
+                "training_samples": 192,
+                "held_out_samples": 1024,
+                "known_symbol_calibration": {
+                  "first_sample": 1025,
+                  "last_sample": 1535,
+                  "training_symbols": 256,
+                  "gain_real": 0.9841157306148034,
+                  "gain_imag": 0.05520666500850478,
+                  "held_out_normalized_rms_error": 0.01547291930602002,
+                  "symbol_errors": 0,
+                  "scope": "External host; reserved known symbols and supplied timing; scalar correction frozen before scoring."
+                },
+                "known_symbol_image_calibration": {
+                  "training_symbols": 256,
+                  "basis_condition": 1.000025598754694,
+                  "direct_real": 0.9841157144327628,
+                  "direct_imag": 0.05520665903932126,
+                  "image_real": -0.000673075841869027,
+                  "image_imag": -3.094801592646668e-05,
+                  "determinant": 0.9715310606069224,
+                  "held_out_normalized_rms_error": 0.01545254524879235,
+                  "symbol_errors": 0,
+                  "scope": "External host; rotating-image fit on reserved symbols; frequency and coefficients frozen before scoring."
+                },
+                "held_out_qpsk_symbols": 512,
+                "held_out_qpsk_normalized_rms_error": 0.05740370460831893,
+                "held_out_qpsk_normalized_peak_error": 0.07671163909149055,
+                "diagnostic_known_symbol_projection": {
+                  "scalar_real": 0.9841617602653423,
+                  "scalar_imag": 0.05306893542274164,
+                  "scalar_bias_rms": 0.05538196226927692,
+                  "nonscalar_residual_rms": 0.015100448932516115,
+                  "scope": "Uses held-out truth; attribution only, not deployable calibration or corrected performance."
+                },
+                "symbol_errors": 0,
+                "symbol_sampling": "Last of 2 samples; symbol timing supplied by test setup."
+              },
+              "rms_error_vs_zero_offset": 0.7233667279429974,
+              "adc_samples": 2560,
+              "peak_analog_component": 0.5996598642219324,
+              "rms_error_vs_filtered_ideal": 0.0036826354591450072,
+              "maximum_error": 0.009514423496275144,
+              "quantization_bound": 0.011048543456039806,
+              "observation": "ADC at end of each DAC hold; staged D2H return alongside wired RX."
+            },
+            {
+              "external_amplitude_transmission": 1,
+              "host_return": {
+                "adc_samples_returned": 2560,
+                "wired_words_returned": 32000,
+                "payload_errors": 0,
+                "peak_ingress_bits": {
+                  "wire": 520,
+                  "iq": 88
+                },
+                "maximum_adc_to_host_delay_ticks": 154.125,
+                "minimum_adc_to_host_delay_ticks": 123.125,
+                "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+              },
+              "lo_offset_hz": 0,
+              "external_host_pilot": {
+                "estimated_offset_hz": -1.0137735795517215,
+                "gain_real": 0.5682225471135889,
+                "gain_imag": 0.18091208353974175,
+                "training_samples": 192,
+                "held_out_samples": 1024,
+                "known_symbol_calibration": {
+                  "first_sample": 1025,
+                  "last_sample": 1535,
+                  "training_symbols": 256,
+                  "gain_real": 0.9865372998574492,
+                  "gain_imag": 0.05695071204323281,
+                  "held_out_normalized_rms_error": 0.014354518723208063,
+                  "symbol_errors": 0,
+                  "scope": "External host; reserved known symbols and supplied timing; scalar correction frozen before scoring."
+                },
+                "known_symbol_image_calibration": {
+                  "training_symbols": 256,
+                  "basis_condition": 1.0,
+                  "direct_real": 0.9865372998574494,
+                  "direct_imag": 0.056950712043232835,
+                  "image_real": -0.004365040021432853,
+                  "image_imag": -0.0022545150871703177,
+                  "determinant": 0.9764750911995912,
+                  "held_out_normalized_rms_error": 0.013456041608961454,
+                  "symbol_errors": 0,
+                  "scope": "External host; rotating-image fit on reserved symbols; frequency and coefficients frozen before scoring."
+                },
+                "held_out_qpsk_symbols": 512,
+                "held_out_qpsk_normalized_rms_error": 0.06044583023371421,
+                "held_out_qpsk_normalized_peak_error": 0.06884831566328069,
+                "diagnostic_known_symbol_projection": {
+                  "scalar_real": 0.9865233370640406,
+                  "scalar_imag": 0.057192014730730614,
+                  "scalar_bias_rms": 0.05875837806517101,
+                  "nonscalar_residual_rms": 0.014182785332699177,
+                  "scope": "Uses held-out truth; attribution only, not deployable calibration or corrected performance."
+                },
+                "symbol_errors": 0,
+                "symbol_sampling": "Last of 2 samples; symbol timing supplied by test setup."
+              },
+              "rms_error_vs_zero_offset": 0.003312233904896872,
+              "adc_samples": 2560,
+              "peak_analog_component": 0.5962980522021768,
+              "rms_error_vs_filtered_ideal": 0.003312233904896872,
+              "maximum_error": 0.006475591289209362,
+              "quantization_bound": 0.011048543456039806,
+              "observation": "ADC at end of each DAC hold; staged D2H return alongside wired RX."
+            },
+            {
+              "external_amplitude_transmission": 1,
+              "host_return": {
+                "adc_samples_returned": 2560,
+                "wired_words_returned": 32000,
+                "payload_errors": 0,
+                "peak_ingress_bits": {
+                  "wire": 520,
+                  "iq": 88
+                },
+                "maximum_adc_to_host_delay_ticks": 154.125,
+                "minimum_adc_to_host_delay_ticks": 123.125,
+                "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+              },
+              "lo_offset_hz": 100000.0,
+              "external_host_pilot": {
+                "estimated_offset_hz": 99999.40926503984,
+                "gain_real": 0.4503593941524449,
+                "gain_imag": 0.39195990911668477,
+                "training_samples": 192,
+                "held_out_samples": 1024,
+                "known_symbol_calibration": {
+                  "first_sample": 1025,
+                  "last_sample": 1535,
+                  "training_symbols": 256,
+                  "gain_real": 0.9841195187004784,
+                  "gain_imag": 0.05919337771846944,
+                  "held_out_normalized_rms_error": 0.015755587170468138,
+                  "symbol_errors": 0,
+                  "scope": "External host; reserved known symbols and supplied timing; scalar correction frozen before scoring."
+                },
+                "known_symbol_image_calibration": {
+                  "training_symbols": 256,
+                  "basis_condition": 1.0000256862160861,
+                  "direct_real": 0.984119530838057,
+                  "direct_imag": 0.05919337040211304,
+                  "image_real": -0.0005373720062565641,
+                  "image_imag": 0.000125131305217149,
+                  "determinant": 0.9719948016499627,
+                  "held_out_normalized_rms_error": 0.01575353555461264,
+                  "symbol_errors": 0,
+                  "scope": "External host; rotating-image fit on reserved symbols; frequency and coefficients frozen before scoring."
+                },
+                "held_out_qpsk_symbols": 512,
+                "held_out_qpsk_normalized_rms_error": 0.06342315646984989,
+                "held_out_qpsk_normalized_peak_error": 0.08307931554666607,
+                "diagnostic_known_symbol_projection": {
+                  "scalar_real": 0.9840643057001881,
+                  "scalar_imag": 0.0593911268560101,
+                  "scalar_bias_rms": 0.0614918880995188,
+                  "nonscalar_residual_rms": 0.015532046695632918,
+                  "scope": "Uses held-out truth; attribution only, not deployable calibration or corrected performance."
+                },
+                "symbol_errors": 0,
+                "symbol_sampling": "Last of 2 samples; symbol timing supplied by test setup."
+              },
+              "rms_error_vs_zero_offset": 0.7231039083175996,
+              "adc_samples": 2560,
+              "peak_analog_component": 0.5987181322348003,
+              "rms_error_vs_filtered_ideal": 0.0037292200781459135,
+              "maximum_error": 0.00853686532797124,
+              "quantization_bound": 0.011048543456039806,
+              "observation": "ADC at end of each DAC hold; staged D2H return alongside wired RX."
+            }
+          ],
+          "rx_bandwidth_hz": null,
+          "rf_quantization_rms_error": 0.0026371635612326676,
+          "rf_sample_rate_hz": 20000000,
+          "rf_bits_per_component": 8
+        }
+      ]
+    }
+  ],
+  "finite_fifo_drift_controls": [
+    {
+      "consumer_frequency_error_ppm": -1000,
+      "pre_end_underflows": 0,
+      "overflows": 6,
+      "peak_samples": 8
+    },
+    {
+      "consumer_frequency_error_ppm": 0,
+      "pre_end_underflows": 0,
+      "overflows": 0,
+      "peak_samples": 5
+    },
+    {
+      "consumer_frequency_error_ppm": 1000,
+      "pre_end_underflows": 6,
+      "overflows": 0,
+      "peak_samples": 5
+    }
+  ],
+  "limitations": [
+    "RF RX and TX filters are hypothetical 10MHz one-pole envelopes; mixers and wired sampling remain ideal.",
+    "RX wired clock tracks observed transitions; H2D phase/frequency differ from D2H. Reference-to-H2D visibility has a fixed configurable delay, not a metastability model.",
+    "TX consumes exact-rate sample/word events after a chosen three-frame prefill; DAC holds drive an exact one-pole response; wired bits traverse a hypothetical one-pole channel with prescribed sampling phase.",
+    "RF mute/unmute crosses validated host commands with ideal next-sample application; shared reset/mode changes, calibration, CDC latency, noise and supply coupling remain absent.",
+    "Finite queue test includes one frame of snapshot staging; remaining RTL packer/CDC/pipeline delays are not qualified.",
+    "TX payload pacing assumes exact chip TX/reference ratios. H2D service offsets are exercised; return-path CDC, variable synchronization delays, stalls and clock-ratio errors remain open.",
+    "Contract converter widths are targets, not achieved transistor resolution."
+  ]
+}

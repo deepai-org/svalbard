@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "inband_control": {
+    "sample_rate_hz": 200000000.0000019,
+    "samples": 4000,
+    "bin_spacing_hz": 50000.00000000048,
+    "analysis_window": "Hann; finite burst including launch transient",
+    "channel_half_width_hz": 10000000.0,
+    "outside_to_inside_db": -138.3799454077121,
+    "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+  },
+  "outside_control": {
+    "sample_rate_hz": 200000000.0000019,
+    "samples": 4000,
+    "bin_spacing_hz": 50000.00000000048,
+    "analysis_window": "Hann; finite burst including launch transient",
+    "channel_half_width_hz": 10000000.0,
+    "outside_to_inside_db": 153.4198126992252,
+    "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+  },
+  "controls": [
+    "independent nominal carrier phase",
+    "receiver phase does not cancel TX phase",
+    "nonmutating oscillator forecast",
+    "analytical reconstruction magnitude",
+    "TX phase rotation",
+    "known-tone spectrum",
+    "nonuniform-grid rejection"
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "status": "completed_ideal_LO_diagnostic",
+  "cases": [
+    {
+      "name": "nmos_c128",
+      "completed": true,
+      "actual_stop_ns": 10.0,
+      "window_ns": [
+        6,
+        10
+      ],
+      "rf_fundamental_peak_v": 0.0003680573222123427,
+      "rf_peak_to_peak_v": 0.0006730261028229378,
+      "lo_peak_absolute_current_a": 0.01556373046807625,
+      "lo_sum_absolute_charge_per_cycle_c": 6.075517282364928e-13,
+      "lo_signed_delivered_energy_per_cycle_j": 2.0006300237803952e-14
+    },
+    {
+      "name": "nmos_c255",
+      "completed": true,
+      "actual_stop_ns": 10.0,
+      "window_ns": [
+        6,
+        10
+      ],
+      "rf_fundamental_peak_v": 0.08941485201157837,
+      "rf_peak_to_peak_v": 0.16417299955777276,
+      "lo_peak_absolute_current_a": 0.01568707476886387,
+      "lo_sum_absolute_charge_per_cycle_c": 6.08546128686845e-13,
+      "lo_signed_delivered_energy_per_cycle_j": 1.9936761992577602e-14
+    },
+    {
+      "name": "tg_c128",
+      "completed": true,
+      "actual_stop_ns": 10.0,
+      "window_ns": [
+        6,
+        10
+      ],
+      "rf_fundamental_peak_v": 0.00043161792763996145,
+      "rf_peak_to_peak_v": 0.0007812657827650504,
+      "lo_peak_absolute_current_a": 0.02386397542750102,
+      "lo_sum_absolute_charge_per_cycle_c": 1.3749803414707507e-12,
+      "lo_signed_delivered_energy_per_cycle_j": 3.1390255042189087e-14
+    },
+    {
+      "name": "tg_c255",
+      "completed": true,
+      "actual_stop_ns": 10.0,
+      "window_ns": [
+        6,
+        10
+      ],
+      "rf_fundamental_peak_v": 0.10743732717096395,
+      "rf_peak_to_peak_v": 0.1963047615434259,
+      "lo_peak_absolute_current_a": 0.0243940356722972,
+      "lo_sum_absolute_charge_per_cycle_c": 1.3781459047472257e-12,
+      "lo_signed_delivered_energy_per_cycle_j": 2.8550914669984125e-14
+    }
+  ],
+  "limitations": [
+    "Ideal2.5GHz LO, fixed DAC code, nominal model and ideal biases. Not autonomous timing or modulated RF qualification.",
+    "Signed ideal-source energy is not driver dissipation; returned charge must not be treated as free physical drive.",
+    "One1pF output-load scenario, no mismatch/noise/reconstruction/IQ or package qualification."
+  ],
+  "provenance": {
+    "cases": [
+      {
+        "name": "nmos_c128",
+        "variant": "nmos",
+        "code": 128,
+        "returncode": 0,
+        "timed_out": false,
+        "elapsed_seconds": 5.22925646789372,
+        "deck_sha256_before": "a5217533c9fc15d0e90d6b0e5124a2933a07d861a0b9dddfd7bbc251dfb8494a",
+        "artifacts_sha256": {
+          ".spice": "a5217533c9fc15d0e90d6b0e5124a2933a07d861a0b9dddfd7bbc251dfb8494a",
+          ".log": "123e240da66e11d353a2308e4034dc2ce7c73fbe53c3384486bccf6d9e5c6c9b",
+          ".dat": "308b71b818b712c725cf1f148552b5e82a4d346eff30088be2b2601435d511d0"
+        }
+      },
+      {
+        "name": "nmos_c255",
+        "variant": "nmos",
+        "code": 255,
+        "returncode": 0,
+        "timed_out": false,
+        "elapsed_seconds": 5.220046877861023,
+        "deck_sha256_before": "8fd02bb1cb8c3bc62fc318df7a1666925d19e4efa7f258732c1796938238c7d0",
+        "artifacts_sha256": {
+          ".spice": "8fd02bb1cb8c3bc62fc318df7a1666925d19e4efa7f258732c1796938238c7d0",
+          ".log": "005e2f4641c0636b8c76961d7c9869af34bdab2223e583949b4e82f36772126a",
+          ".dat": "3ce3cf3b7efee116a9a20483e02e663eb18cbe9eeeb97a165c266eafd237b15e"
+        }
+      },
+      {
+        "name": "tg_c128",
+        "variant": "tg",
+        "code": 128,
+        "returncode": 0,
+        "timed_out": false,
+        "elapsed_seconds": 5.579323885962367,
+        "deck_sha256_before": "9d9d1f8db617ec6919acb686c4020b3c22c86acf2d38ac75ab7c165f8e805a27",
+        "artifacts_sha256": {
+          ".spice": "9d9d1f8db617ec6919acb686c4020b3c22c86acf2d38ac75ab7c165f8e805a27",
+          ".log": "d25c8ce0039d672e665fee2f2c3b0fc89a9c47da585e4a4e9c1eedd0cb421ba3",
+          ".dat": "9284c3922fccb2b90bf1d1528a0024f2728c6f22dad6275127c8a31d6f5e2282"
+        }
+      },
+      {
+        "name": "tg_c255",
+        "variant": "tg",
+        "code": 255,
+        "returncode": 0,
+        "timed_out": false,
+        "elapsed_seconds": 5.620489447377622,
+        "deck_sha256_before": "769f0f509a07437d41f9d3d3b1ef1791ae67603dac59e5e2f71b6d25afbf5151",
+        "artifacts_sha256": {
+          ".spice": "769f0f509a07437d41f9d3d3b1ef1791ae67603dac59e5e2f71b6d25afbf5151",
+          ".log": "a91d1d215232f0da1822e8475c1dc1adf7e33d35482f704367fcfbe5bed2c8b3",
+          ".dat": "7eee412f75da971b620625e3f2ae586814954adaae9d7d56e4abf645a9b86364"
+        }
+      }
+    ],
+    "source_sha256_before": {
+      "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+      "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+      "/screen/dac/segmented8.spice": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+      "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/screen/tx/commutator.spice": "89cb009a303ded0120ce8536abe86174045bb73ed27b1ec3272f0cdfdef8ad6b",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+      "/screen/tx/commutator_tg.spice": "3d28ec375da796cf1333da9d085caab5cd74bcda44a835f0e7cf72f06433a304"
+    },
+    "source_sha256_after": {
+      "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+      "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+      "/screen/dac/segmented8.spice": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+      "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/screen/tx/commutator.spice": "89cb009a303ded0120ce8536abe86174045bb73ed27b1ec3272f0cdfdef8ad6b",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+      "/screen/tx/commutator_tg.spice": "3d28ec375da796cf1333da9d085caab5cd74bcda44a835f0e7cf72f06433a304"
+    }
+  }
+}

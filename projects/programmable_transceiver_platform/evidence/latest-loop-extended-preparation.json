@@ -1,0 +1,29 @@
+{
+  "deck_sha256": "76d4482cc6dcd5521377a2493e3f625099f36ce7594ebefa8606f4bf437c74dd",
+  "baseline_deck_sha256": "ff9a59cac625a488dfdff227d71dae909859d596665c34c49a7bdf3187f4ca21",
+  "receiver_exact_reversal": true,
+  "horizon_only_reversal": true,
+  "requested_horizon_ns": 8001,
+  "scope": "Only stop time3201ns->8001ns; all circuits, timestep, method and seeded initial conditions unchanged.",
+  "comparison_windows_ns": [
+    [
+      3000,
+      3100
+    ],
+    [
+      5000,
+      5100
+    ],
+    [
+      7000,
+      7100
+    ],
+    [
+      7900,
+      8000
+    ]
+  ],
+  "limitations": [
+    "Longer seeded zero-RF history does not qualify startup, intrinsic noise or conversion."
+  ]
+}

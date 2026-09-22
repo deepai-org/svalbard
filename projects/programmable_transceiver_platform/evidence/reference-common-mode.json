@@ -1,0 +1,142 @@
+{
+  "completed": true,
+  "scope": "nominal unloaded DC common-mode diagnostic",
+  "cases": [
+    {
+      "direction": "forward",
+      "tail_margin_zero_brackets_v": [
+        [
+          1.83,
+          1.84
+        ]
+      ],
+      "points": [
+        {
+          "target_v": 1.5,
+          "output_error_mv": 16.423046532203056,
+          "tail_margin_v": 0.2377061017124179,
+          "power_mw": 43.571278543493776
+        },
+        {
+          "target_v": 1.8,
+          "output_error_mv": 15.286316006972944,
+          "tail_margin_v": 0.0258569069826296,
+          "power_mw": 43.775219114071334
+        },
+        {
+          "target_v": 2.0,
+          "output_error_mv": 14.26956539018498,
+          "tail_margin_v": -0.0902175473788388,
+          "power_mw": 43.30071531734262
+        },
+        {
+          "target_v": 2.15,
+          "output_error_mv": 13.147610078938943,
+          "tail_margin_v": -0.15311029135380233,
+          "power_mw": 42.45098324995493
+        },
+        {
+          "target_v": 2.4,
+          "output_error_mv": 10.983689701315136,
+          "tail_margin_v": -0.21985394150576482,
+          "power_mw": 41.06567383956925
+        }
+      ]
+    },
+    {
+      "direction": "reverse",
+      "tail_margin_zero_brackets_v": [
+        [
+          1.830000000000008,
+          1.840000000000008
+        ]
+      ],
+      "points": [
+        {
+          "target_v": 1.5,
+          "output_error_mv": 16.423046503925008,
+          "tail_margin_v": 0.23770610217570037,
+          "power_mw": 43.571278543591326
+        },
+        {
+          "target_v": 1.8,
+          "output_error_mv": 15.286316032830038,
+          "tail_margin_v": 0.025856904815252213,
+          "power_mw": 43.77521913513477
+        },
+        {
+          "target_v": 2.0,
+          "output_error_mv": 14.26956539941493,
+          "tail_margin_v": -0.09021754543247959,
+          "power_mw": 43.30071529502779
+        },
+        {
+          "target_v": 2.15,
+          "output_error_mv": 13.147610142293154,
+          "tail_margin_v": -0.15311029102802895,
+          "power_mw": 42.450983247941465
+        },
+        {
+          "target_v": 2.4,
+          "output_error_mv": 10.98368985620013,
+          "tail_margin_v": -0.2198539115522663,
+          "power_mw": 41.06567409426537
+        }
+      ]
+    }
+  ],
+  "reverse_sweep_max_output_difference_v": 2.2616031589706154e-06,
+  "provenance": {
+    "cases": [
+      {
+        "name": "forward",
+        "start_v": 1.5,
+        "stop_v": 2.4,
+        "step_v": 0.01,
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "99977b47f4aa7c027a314294b388626365041189a50143f7a2090233f43385bb",
+          ".dat": "1be66daf140b040329c0969fdec4f04c696f59aa6ed936fbc4589898e45415dc",
+          ".log": "1294bc70d47d490528b763d403f5efe93def34d3a96f6cd3ad8526062852a439"
+        }
+      },
+      {
+        "name": "reverse",
+        "start_v": 2.4,
+        "stop_v": 1.5,
+        "step_v": -0.01,
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "f44e869dc6beb7ad25661f8e2e28b5d331006a210fe64d2b315e5786c52a5ce5",
+          ".dat": "da2b0d93ea72afc7209eb64ded8d4d130207c5c3c61ed8d250e9075df0db5b10",
+          ".log": "1294bc70d47d490528b763d403f5efe93def34d3a96f6cd3ad8526062852a439"
+        }
+      }
+    ],
+    "sources_before": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+      "/screen/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+      "/screen/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+      "/screen/reference/pair_common_mode_dc.py": "dc05226435a8bea39d3715df054c1bb5df0bbe04a24d5ebc11a20372b67a0cc7"
+    },
+    "sources_after": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+      "/screen/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+      "/screen/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+      "/screen/reference/pair_common_mode_dc.py": "dc05226435a8bea39d3715df054c1bb5df0bbe04a24d5ebc11a20372b67a0cc7"
+    }
+  },
+  "limitations": [
+    "Changing reference target changes ADC span and interface requirements; no target change adopted.",
+    "Positive tail margin alone does not qualify other devices, regulation, dynamic stability, noise or PVT.",
+    "Ideal target/bias sources and zero external load; this is not an uncertainty bound."
+  ]
+}

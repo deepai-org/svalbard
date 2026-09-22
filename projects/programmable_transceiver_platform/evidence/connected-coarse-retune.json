@@ -1,0 +1,105 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "initial_hz": 2437000000,
+      "target_hz": 2500000000,
+      "initial_control_v": 0.26982184830777,
+      "centering": [
+        {
+          "start_s": 0.0001457,
+          "deadline_s": 0.0001505,
+          "epoch": 1
+        },
+        {
+          "start_s": 0.0002558,
+          "deadline_s": 0.0002606,
+          "epoch": 2
+        },
+        {
+          "start_s": 0.00026534999999999997,
+          "deadline_s": 0.00027015,
+          "epoch": 2
+        }
+      ],
+      "bank": 15,
+      "metrics": {
+        "resistance_ohm": 31983.926487666962,
+        "fast_capacitance_f": 4.69079553899712e-11,
+        "slow_capacitance_f": 4.69079553899712e-11,
+        "extra_pole_hz": 212164.07355021217,
+        "minimum_v": -0.09759979360913036,
+        "maximum_v": 0.8943336326721564,
+        "compliance_limit_v": 1.0,
+        "energy_residual_j": 3.2311742677852644e-27,
+        "voltage_within_envelope": true,
+        "headroom_v": 0.1,
+        "rolloff_time_s": 0.0,
+        "minimum_current_fraction": 1.0,
+        "center_charge_c": -2.5309851044415653e-11,
+        "center_shunt_loss_j": 3.4140737399056944e-12,
+        "center_resistance_fast_ohm": 4263.6691012706015,
+        "center_resistance_slow_ohm": 4263.6691012706015
+      }
+    },
+    {
+      "mode": 1,
+      "initial_hz": 2500000000,
+      "target_hz": 2300000000,
+      "initial_control_v": 0.5847907676889459,
+      "centering": [
+        {
+          "start_s": 0.0001457,
+          "deadline_s": 0.0001505,
+          "epoch": 1
+        },
+        {
+          "start_s": 0.0002558,
+          "deadline_s": 0.0002606,
+          "epoch": 2
+        },
+        {
+          "start_s": 0.00026534999999999997,
+          "deadline_s": 0.00027015,
+          "epoch": 2
+        }
+      ],
+      "bank": 12,
+      "metrics": {
+        "resistance_ohm": 31983.926487666962,
+        "fast_capacitance_f": 4.69079553899712e-11,
+        "slow_capacitance_f": 4.69079553899712e-11,
+        "extra_pole_hz": 212164.07355021217,
+        "minimum_v": -0.20533912437073484,
+        "maximum_v": 0.9512010591151777,
+        "compliance_limit_v": 1.0,
+        "energy_residual_j": -1.0404381142268551e-24,
+        "voltage_within_envelope": true,
+        "headroom_v": 0.1,
+        "rolloff_time_s": 1.6812300043071996e-07,
+        "minimum_current_fraction": 0.48798940884822284,
+        "center_charge_c": -5.4872326880872504e-11,
+        "center_shunt_loss_j": 1.6047237115822014e-11,
+        "center_resistance_fast_ohm": 4263.6691012706015,
+        "center_resistance_slow_ohm": 4263.6691012706015
+      }
+    }
+  ],
+  "controls": [
+    "active rejection",
+    "invalid target before discharge",
+    "switch continuity",
+    "shared ownership",
+    "guard status",
+    "abort and reference-loss cancellation",
+    "restart after interrupted guard",
+    "RF and wired transport"
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Two warm retunes; RF waveform quality after retuning remains untested.",
+    "Matched shunt RC and bank/noise bounds remain model assumptions."
+  ]
+}

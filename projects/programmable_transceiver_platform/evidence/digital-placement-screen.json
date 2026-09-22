@@ -1,0 +1,37 @@
+{
+  "scope": "Digital-region placement of sized netlist; not routed/full-chip/timing signoff",
+  "instances": 26269,
+  "unplaced": 0,
+  "cell_area_um2": 956516.6912,
+  "row_area_um2": 2286832.0384,
+  "row_utilization": 0.4182715106043531,
+  "checks": [
+    "OpenROAD check_placement",
+    "independent row/boundary/site/orientation/overlap checks",
+    "three deliberately invalid geometry controls rejected",
+    "cell count/area matches characterized sizing netlist"
+  ],
+  "pdk_sha256": [
+    "842b186318d53844561af4ec530b4e30d8ba519bcc58d512a363ef255acc7abd  /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/techlef/gf180mcu_fd_sc_mcu7t5v0__nom.tlef",
+    "47dadf84c21b20f558d043c36271632f07b1c2c2a595b118e2e1050ebb74349b  /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/lef/gf180mcu_fd_sc_mcu7t5v0.lef",
+    "f9dee07cf158324934b0c59144d970a2e8313f43533ede6283ec3c136f82fe53  /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/lib/gf180mcu_fd_sc_mcu7t5v0__tt_025C_3v30.lib"
+  ],
+  "artifact_sha256": {
+    "input.v": "8dd8b47832c8142f7172980c9b82bf897607831c2a22d5e445405f30014c4768",
+    "digital.def": "43e866796fc1fe69428cdb42d407746e6eaee9fba0a9a73c0b242b1c75e96aae",
+    "digital.odb": "b5103d3804cec1c9051ec047f4d3bdce77da8a065e90c85faf5ad249c8ebc9ae",
+    "cells.tsv": "bb3be7542ad33229fc567944e1b00bc6855a55e229cc5b4d49e359dbf5acba55",
+    "placement.log": "46af6ed440fca003f6bb9f78b04986b800f7f0650916bbee588f8d978a354947"
+  },
+  "source_sha256": {
+    "placement_screen.tcl": "afcd234aef7babad1104803f0c40bbf467487a2893dc1abb250d4a78b2e303bc",
+    "run_placement_screen.sh": "dfb337eea76bf13a707ea56cae6c68067dc0a4609b24e24f1cfef042d2ce5bcb",
+    "check_placement_screen.py": "fc0452403be2272363486885658176724ee977d4f903b0077d50771e94e445fc"
+  },
+  "limitations": [
+    "Abstract digital-region boundaries/pins; no analog macros or full-chip padframe.",
+    "No PDN/taps/decaps/fillers, clock tree, reset repair, routing or extracted parasitics.",
+    "No physical timing repair or post-placement timing claim; previous setup/recovery failures remain.",
+    "No routability/congestion or final area/power/DRC/LVS qualification."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "held_probe_v": 0.02852436986879442,
+      "updates_before_loss": 66,
+      "updates_after_recovery": 261,
+      "epoch": 1,
+      "valid_after_recovery": true
+    },
+    {
+      "mode": 1,
+      "held_probe_v": 0.02852436986879442,
+      "updates_before_loss": 66,
+      "updates_after_recovery": 259,
+      "epoch": 1,
+      "valid_after_recovery": true
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Validity qualifies sampling epoch, not analog accuracy or freshness duration.",
+    "Held buffer and tile capacitor survive digital shutdown; physical leakage is simplified.",
+    "Nominal probe loads only; fixed monitor clock remains an assumed service."
+  ]
+}

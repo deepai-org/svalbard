@@ -1,0 +1,45 @@
+{
+  "completed": true,
+  "cases": [
+    {
+      "root": "scratch/transceiver-vco-charge-kick-fine",
+      "artifacts_sha256": {
+        ".spice": "f7ad7fb3a604739359f5216455dda8908f86760bea58c9ee67f838b1269e6c33",
+        ".log": "9e41ed3afd648d898b5bc17cb72123c82c0e9b71b2c24eada4656d9cf019c5ba",
+        ".dat": "9d4644ed6685cddb0a9f94ee9afe5fca38990a0f10449810d47b47bf9b79f658"
+      },
+      "rows": 82055,
+      "same_time_grid": true,
+      "all_saved_vectors_identical": true,
+      "max_abs_vector_difference": 0.0
+    },
+    {
+      "root": "scratch/transceiver-vco-internal-kick-v2",
+      "artifacts_sha256": {
+        ".spice": "086cdd570c6f5a382eb908b89ff658d75f5b30c9b1870fa5a1d866caa7cb8392",
+        ".log": "0986bf240c8739687cb01c174e7d2b2cc5c0c0e67ef21e80a0ba05292d5ca774",
+        ".dat": "9d4644ed6685cddb0a9f94ee9afe5fca38990a0f10449810d47b47bf9b79f658"
+      },
+      "rows": 82055,
+      "same_time_grid": true,
+      "all_saved_vectors_identical": true,
+      "max_abs_vector_difference": 0.0
+    },
+    {
+      "root": "scratch/transceiver-vco-channel-kick",
+      "artifacts_sha256": {
+        ".spice": "2bb66106fd24a258a09a77da246e02a868849a4eae52a8d0393f27087e574b34",
+        ".log": "737f31c074ac3796aed577e8a40d409a4d6db2627580b6a99ac25f08e21640cf",
+        ".dat": "9d4644ed6685cddb0a9f94ee9afe5fca38990a0f10449810d47b47bf9b79f658"
+      },
+      "rows": 82055,
+      "same_time_grid": true,
+      "all_saved_vectors_identical": true,
+      "max_abs_vector_difference": 0.0
+    }
+  ],
+  "limitations": [
+    "Only zero-current controls at matched0.5ps timestep and41ns horizon; positive/negative cases remain separate.",
+    "Bit-identical zero controls do not establish noise accuracy, pulse linearity or convergence of perturbed histories."
+  ]
+}

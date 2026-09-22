@@ -1,0 +1,135 @@
+{
+  "matrix_terminal": true,
+  "cases": [
+    {
+      "case": "default-baseline",
+      "status": "terminal",
+      "completed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "errors": [],
+      "final_time_s": 1e-09,
+      "rows": 208,
+      "elapsed_s": 3.2698476845398545,
+      "result_sha256": "d21e1c5eed6122e0cbc0afe79adc36be5626d89c63bb23297565fb9cc8c592b3"
+    },
+    {
+      "case": "reltol-baseline",
+      "status": "terminal",
+      "completed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "errors": [],
+      "final_time_s": 1e-09,
+      "rows": 208,
+      "elapsed_s": 3.2562641026452184,
+      "result_sha256": "004ffea4d7156aff5dc4b28d87fcff2da4d0ca042f48b3fc319a4898aa7c425e"
+    },
+    {
+      "case": "abstol-baseline",
+      "status": "terminal",
+      "completed": false,
+      "returncode": 1,
+      "timed_out": false,
+      "errors": [
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"vrefl_res#branch\"",
+        "tran simulation(s) aborted"
+      ],
+      "final_time_s": 0.0,
+      "rows": 1,
+      "elapsed_s": 4.3987066727131605,
+      "result_sha256": "e12c0c79666f9f1679a1db8fdd794696e74dd894342de470e1855af9a29a33ff"
+    },
+    {
+      "case": "vntol-baseline",
+      "status": "terminal",
+      "completed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "errors": [],
+      "final_time_s": 1e-09,
+      "rows": 208,
+      "elapsed_s": 3.2463568951934576,
+      "result_sha256": "709184ef2398f6d2a8c87d6027b90cac326a8ab069a794fc9367521b8656bd62"
+    },
+    {
+      "case": "combined-baseline",
+      "status": "terminal",
+      "completed": false,
+      "returncode": 1,
+      "timed_out": false,
+      "errors": [
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"vrefl_res#branch\"",
+        "tran simulation(s) aborted"
+      ],
+      "final_time_s": 0.0,
+      "rows": 1,
+      "elapsed_s": 4.498745431192219,
+      "result_sha256": "f2505f494177b2012bd7e0a2c6dcde3c1953682b1379aa8238d1e645758f4cb7"
+    },
+    {
+      "case": "default-probed",
+      "status": "terminal",
+      "completed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "errors": [],
+      "final_time_s": 1e-09,
+      "rows": 208,
+      "elapsed_s": 3.295431001111865,
+      "result_sha256": "cf35df57cd8aab487d030a98c700c2e8a749836145eac86bdfdbcc3204e87df5"
+    },
+    {
+      "case": "reltol-probed",
+      "status": "terminal",
+      "completed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "errors": [],
+      "final_time_s": 1e-09,
+      "rows": 208,
+      "elapsed_s": 3.3475660579279065,
+      "result_sha256": "046412f1521bfe4b2ea95c1498480ba6805b75062867016a6e9053d93708622c"
+    },
+    {
+      "case": "abstol-probed",
+      "status": "terminal",
+      "completed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "errors": [],
+      "final_time_s": 1e-09,
+      "rows": 208,
+      "elapsed_s": 3.5476498045027256,
+      "result_sha256": "6480af38434a0410414084c7d41648e0ec4b8c4f9c2dc006f47fb0143c1699be"
+    },
+    {
+      "case": "vntol-probed",
+      "status": "terminal",
+      "completed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "errors": [],
+      "final_time_s": 1e-09,
+      "rows": 208,
+      "elapsed_s": 3.397869858890772,
+      "result_sha256": "d182280fd0a58230988caf3e3576e8543ab37e22426ada81f041bc8b22c19da0"
+    },
+    {
+      "case": "combined-probed",
+      "status": "terminal",
+      "completed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "errors": [],
+      "final_time_s": 1e-09,
+      "rows": 208,
+      "elapsed_s": 3.493734546005726,
+      "result_sha256": "41b7b160b8300936488f54331c7c54e107b4b138abab17ebe4b59a0b9f8dc0a8"
+    }
+  ],
+  "limitations": [
+    "Startup discriminator only; no full-history accuracy or physical qualification.",
+    "Sensitivity to a solver option is not proof of a device-level failure mechanism."
+  ]
+}

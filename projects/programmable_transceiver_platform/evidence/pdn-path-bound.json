@@ -1,0 +1,76 @@
+{
+  "scope": "Conservative path-resistance bound for arbitrary nonnegative DC cell loads with a specified total; not a bound on actual chip current or process uncertainty",
+  "rail_path_bounds": {
+    "VDD_CORE": {
+      "maximum_path_resistance_ohm": 86.80864395000017,
+      "source": [
+        "V0",
+        "Node_Metal5_47160_123520",
+        "0",
+        "DC",
+        "3.300000"
+      ]
+    },
+    "VSS_CORE": {
+      "maximum_path_resistance_ohm": 90.04277711000019,
+      "source": [
+        "V0",
+        "Node_Metal5_40160_43520",
+        "0",
+        "DC",
+        "0.000000"
+      ]
+    }
+  },
+  "maximum_combined_path_resistance_ohm": 174.23998632000036,
+  "worst_bound_instance": "_27326_",
+  "cases": [
+    {
+      "assumed_total_current_ma": 24,
+      "maximum_combined_drop_bound_v": 4.181759671680009,
+      "minimum_local_supply_bound_v": -0.8817596716800091,
+      "positive_supply_guarantee": false
+    },
+    {
+      "assumed_total_current_ma": 48,
+      "maximum_combined_drop_bound_v": 8.363519343360018,
+      "minimum_local_supply_bound_v": -5.063519343360018,
+      "positive_supply_guarantee": false
+    }
+  ],
+  "conditional_current_limits_ma": [
+    {
+      "allowed_supply_loss_v": 0.05,
+      "sufficient_total_current_limit_ma": 0.28696053676320044
+    },
+    {
+      "allowed_supply_loss_v": 0.1,
+      "sufficient_total_current_limit_ma": 0.5739210735264009
+    },
+    {
+      "allowed_supply_loss_v": 0.2,
+      "sufficient_total_current_limit_ma": 1.1478421470528017
+    }
+  ],
+  "proof_outline": [
+    "With one ideal source and nonnegative loads, voltage-directed edge flows form an acyclic flow toward sinks; no edge flow can exceed total load current.",
+    "Telescoping voltage along any source-to-observation path is bounded by total current times the sum of positive edge resistances.",
+    "Shortest resistance paths tighten that valid path bound; VDD and VSS path bounds add at each corresponding cell.",
+    "The maximum over cells bounds all observed supplies for every spatial distribution with the assumed total current."
+  ],
+  "checks": [
+    "Analytic series/parallel-path graph",
+    "Negative resistance rejected",
+    "Disconnected graph rejected",
+    "Retained uniform-load results lie inside the bound"
+  ],
+  "input_screen_sha256": "4a164ddc95991433afcde4e68f6ca178ade6e57757e4f233c879e31ccb1aa943",
+  "source_sha256": "3b6f646328c1e2b4063105fff2ab2afe2b3a1f9b76d30568a507e4d52cb6deb9",
+  "limitations": [
+    "A bound larger than the supply is vacuous, not a prediction of negative operating voltage or proof a particular load fails.",
+    "Assumes positive linear resistors, one ideal feed per rail and only nonnegative cell loads; package dynamics and other voltage sources are excluded.",
+    "48mA planning allocation is not a measured or proven upper bound on CORE current.",
+    "Nominal extracted model is not a foundry-verified resistance bound; unknown process/feed impedances remain.",
+    "Suggested loss values are sensitivity examples, not frozen allowable operating voltages."
+  ]
+}

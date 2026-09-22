@@ -1,0 +1,133 @@
+{
+  "completed": true,
+  "provenance": {
+    "cases": [
+      {
+        "name": "resistor",
+        "fnoicor": null,
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "a9400af42e92bc09080b2ebc324e06a01d03957b1440358fc9e57292df20707d",
+          ".log": "eb0331fd29be301a02e61b71bc775ab73fea5cc131f42b7076e7734386b35181",
+          ".dat": "0772c82c805a91edbdf31678664c5e43a72e6e65a8bacfe2856f327fec741f05",
+          "-integrated.dat": "683071bc275571848d5a17c15e133e18788698fc3573bba6018184bd7f93cf51"
+        }
+      },
+      {
+        "name": "filter_f0",
+        "fnoicor": 0,
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "e48bc1f0afcbb5cf46d7f8969e44833a4ac8c3a5b8d49411375a5041db770c02",
+          ".log": "eb0331fd29be301a02e61b71bc775ab73fea5cc131f42b7076e7734386b35181",
+          ".dat": "26fa3cdaeb0bad2a298f8dca6bf499ce2947093e32825ce6ce598565f5f51442",
+          "-integrated.dat": "726bda8ae3381d4971638782994b953475acb09690260d5dbccc18ef913e7901"
+        }
+      },
+      {
+        "name": "filter_f1",
+        "fnoicor": 1,
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "2d302f2a2e1321f08739e70ec02546075d7a8c72893d2f5b25cec8def692d039",
+          ".log": "eb0331fd29be301a02e61b71bc775ab73fea5cc131f42b7076e7734386b35181",
+          ".dat": "3d5bb356a356aeb60266a5e03340c7fe932130324290ebc31f20ce25528a88ed",
+          "-integrated.dat": "0c7ca38a1c187a350b2d8697c7eaa70f3fba9eef41cc32012aea3b29678b963a"
+        }
+      }
+    ],
+    "source_sha256_before": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+      "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06"
+    },
+    "source_sha256_after": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+      "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06"
+    },
+    "model_excerpts_sha256": "a3dee7883083ff56d32f54636f0608e294be9f2e9a9140ff7292b78448925c4c"
+  },
+  "resistor_expected_asd_v_per_sqrt_hz": 4.0713722372192895e-09,
+  "cases": [
+    {
+      "name": "resistor",
+      "fnoicor": null,
+      "output_rms_v_1k_100meg": 4.071351172578794e-05,
+      "input_referred_rms_v_1k_100meg": 4.071351172578794e-05,
+      "output_rms_v_1k_20meg_trapezoid": 1.820727180431678e-05,
+      "input_referred_rms_v_1k_20meg_trapezoid": 1.820727180431678e-05,
+      "spot_asd_v_per_sqrt_hz": {
+        "1000.0": {
+          "output": 4.071371529487329e-09,
+          "input_referred": 4.071371529487329e-09
+        },
+        "1000000.0": {
+          "output": 4.071371529487329e-09,
+          "input_referred": 4.071371529487329e-09
+        },
+        "20000000.0": {
+          "output": 4.071371529487329e-09,
+          "input_referred": 4.071371529487329e-09
+        }
+      }
+    },
+    {
+      "name": "filter_f0",
+      "fnoicor": 0,
+      "output_rms_v_1k_100meg": 0.0002911475231349553,
+      "input_referred_rms_v_1k_100meg": 0.0001006695504883493,
+      "output_rms_v_1k_20meg_trapezoid": 0.00026925716524742546,
+      "input_referred_rms_v_1k_20meg_trapezoid": 4.122172061080729e-05,
+      "spot_asd_v_per_sqrt_hz": {
+        "1000.0": {
+          "output": 8.509598891095791e-07,
+          "input_referred": 1.282500372223517e-07
+        },
+        "1000000.0": {
+          "output": 6.194055702088694e-08,
+          "input_referred": 9.32324396853984e-09
+        },
+        "20000000.0": {
+          "output": 4.1054207640217195e-08,
+          "input_referred": 9.018794899793132e-09
+        }
+      }
+    },
+    {
+      "name": "filter_f1",
+      "fnoicor": 1,
+      "output_rms_v_1k_100meg": 0.0003615399748789875,
+      "input_referred_rms_v_1k_100meg": 0.0001067058820037811,
+      "output_rms_v_1k_20meg_trapezoid": 0.00034361541360390267,
+      "input_referred_rms_v_1k_20meg_trapezoid": 5.226535343701949e-05,
+      "spot_asd_v_per_sqrt_hz": {
+        "1000.0": {
+          "output": 2.918855942555572e-06,
+          "input_referred": 4.399072013501567e-07
+        },
+        "1000000.0": {
+          "output": 8.514682753981543e-08,
+          "input_referred": 1.2816233571054163e-08
+        },
+        "20000000.0": {
+          "output": 4.1864768862492295e-08,
+          "input_referred": 9.1968320680505e-09
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Stationary DC-linearized filter with ideal differential source,1kohm noisy source resistance per leg,CM0.9V,external bias2.25V,TT27C3.3V.",
+    "Includes source-resistor and filter noise; not isolated intrinsic filter noise.",
+    "PDK fnoicor0/1 scenarios are not guaranteed bounds on fab behavior.",
+    "No periodically switched mixer noise folding, LNA noise, oscillator phase noise, bias-supply noise, ADC noise or receiver sensitivity qualification.",
+    "1kHz-20MHz is a diagnostic integration band, not proof of usable Wi-Fi bandwidth or EVM."
+  ]
+}

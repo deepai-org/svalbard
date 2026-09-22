@@ -1,0 +1,57 @@
+{
+  "completed": true,
+  "comparisons": {
+    "refined_pair": {
+      "analog_errors_v": {
+        "hp": 4.194399819024142e-06,
+        "hn": 3.3052227859098338e-06,
+        "vh": 3.127030088201366e-07,
+        "vl": 2.8474528090960405e-07
+      },
+      "all_decisions_match": true,
+      "within_10uv_and_decisions": true
+    },
+    "coarse_pair": {
+      "analog_errors_v": {
+        "hp": 1.3993598497963333e-05,
+        "hn": 1.413187537990801e-05,
+        "vh": 1.3530141917961203e-06,
+        "vl": 1.2449078778953293e-06
+      },
+      "all_decisions_match": true,
+      "within_10uv_and_decisions": false
+    },
+    "baseline_refinement": {
+      "analog_errors_v": {
+        "hp": 0.002490703951579354,
+        "hn": 0.002074167161705276,
+        "vh": 7.530654014553662e-05,
+        "vl": 8.992416792463764e-05
+      },
+      "all_decisions_match": true,
+      "within_10uv_and_decisions": false
+    },
+    "instrumented_refinement": {
+      "analog_errors_v": {
+        "hp": 0.002490789799615367,
+        "hn": 0.0020742443114876163,
+        "vh": 7.527168213528057e-05,
+        "vl": 8.993668204659855e-05
+      },
+      "all_decisions_match": true,
+      "within_10uv_and_decisions": false
+    }
+  },
+  "waveform_hashes": {
+    "coarse_baseline": "d130c60d932ef6d25ec582d3f2a354e6d7a7f38929bd2192dca1d7d7e48260a6",
+    "coarse_instrumented": "4524b4c0a4871fa1d988ab94bfd9e9f7ab268993e174a587956077e9fae7a99d",
+    "fine_baseline": "4bfa260a281bb1613058a175cef24805d97084a1e6b3a488d8c206359073d031",
+    "fine_instrumented": "bfabb8fe7e0e76a7abe1ab613b310cfd9162f974e39fc4d5345cc4737f7e0ac7"
+  },
+  "checker_sha256": "d3f455660fc4224a57d6002302a2e1c57ba4b58f9bc2a0d407b349625e63dd7b",
+  "limitations": [
+    "One refinement does not establish asymptotic convergence.",
+    "Refined-pair agreement alone does not authorize use of coarse failed current probes.",
+    "No current balance or physical circuit qualification is implied."
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "status": "terminal",
+  "completed": true,
+  "reproduction_pass": true,
+  "voltage_limit_v": 1e-05,
+  "edge_limit_s": 1e-11,
+  "preparation_sha256": "c71844392eefd661f5245cbd28a0dd16c283ceeb7a38080fe5e0fb7c943fbeb0",
+  "returncode": 0,
+  "timed_out": false,
+  "errors": [],
+  "result_sha256": "98e39e27360fdff121288c260b18aab5ae12593f3ab3bfb3ebd058b03806ba67",
+  "waveform_sha256": "279b5dafb15fcb844569b0e80cd7be5aeeaa01b848322c1d2cc087e470a6cbc0",
+  "reference_sha256": "597a245ab08e1ac319d0460e406295592b48516041c5aa9975c530285e4c537c",
+  "voltage_errors_v": {
+    "v(hp)": 0.0,
+    "v(hn)": 0.0,
+    "v(vh)": 0.0,
+    "v(vl)": 0.0
+  },
+  "b7_edges": [
+    {
+      "rising": false,
+      "counts": [
+        1,
+        1
+      ],
+      "maximum_error_s": 0.0
+    },
+    {
+      "rising": true,
+      "counts": [
+        0,
+        0
+      ],
+      "maximum_error_s": null
+    }
+  ],
+  "decisions": [
+    {
+      "time_ns": 72.4,
+      "candidate_v": 3.2999979595054256,
+      "reference_v": 3.2999979595054256,
+      "match": true
+    },
+    {
+      "time_ns": 77.4,
+      "candidate_v": -3.299999476444597,
+      "reference_v": -3.299999476444597,
+      "match": true
+    }
+  ],
+  "limitations": [
+    "Reproduction only over70\u201379ns and two decisions, not full SAR correctness or internal-state identity.",
+    "Pending report is not evidence that a process is live; inspect runtime handle separately."
+  ]
+}

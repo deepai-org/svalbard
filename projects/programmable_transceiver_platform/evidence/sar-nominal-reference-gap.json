@@ -1,0 +1,70 @@
+{
+  "beta": 0.9948834140557815,
+  "results": [
+    {
+      "case": "sar-driver-physical-400",
+      "hold_ns": 70,
+      "held_anchor_v": 0.40181756079530295,
+      "nominal_reference_predicted_code": 76,
+      "physical_code": 77,
+      "code_error": -1,
+      "first_sign_divergence_bit": 0
+    },
+    {
+      "case": "sar-driver-physical-400",
+      "hold_ns": 120,
+      "held_anchor_v": -0.4036921436207028,
+      "nominal_reference_predicted_code": 179,
+      "physical_code": 179,
+      "code_error": 0,
+      "first_sign_divergence_bit": null
+    },
+    {
+      "case": "sar-driver-physical-400",
+      "hold_ns": 170,
+      "held_anchor_v": 0.40328675327549,
+      "nominal_reference_predicted_code": 76,
+      "physical_code": 76,
+      "code_error": 0,
+      "first_sign_divergence_bit": null
+    },
+    {
+      "case": "sar-driver-physical-100",
+      "hold_ns": 70,
+      "held_anchor_v": 0.09997926582529892,
+      "nominal_reference_predicted_code": 115,
+      "physical_code": 115,
+      "code_error": 0,
+      "first_sign_divergence_bit": null
+    },
+    {
+      "case": "sar-driver-physical-100",
+      "hold_ns": 120,
+      "held_anchor_v": -0.10033224414365005,
+      "nominal_reference_predicted_code": 140,
+      "physical_code": 140,
+      "code_error": 0,
+      "first_sign_divergence_bit": null
+    },
+    {
+      "case": "sar-driver-physical-100",
+      "hold_ns": 170,
+      "held_anchor_v": 0.09999846737389584,
+      "nominal_reference_predicted_code": 115,
+      "physical_code": 115,
+      "code_error": 0,
+      "first_sign_divergence_bit": null
+    }
+  ],
+  "source_hashes": {
+    "system_model/sar_nominal_reference_gap.py": "71d49b795fb7623f39dbc56e7b57e6d2e78a7c6885e710b3b28996a72efc4b74",
+    "evidence/sar-top-load-fit.json": "5561aba4888d5ef5af5a28226d131327b74cd46c5cabf9c4bf899077ad9c025c",
+    "evidence/sar-driver-physical.json": "023b181c17eb3b5cddc56c73919f4c680759e9e0d5e757defeac3de94997026f",
+    "system_model/connected/sar_charge.py": "5821f592f83c43cd674742ca3c7d7dba30c6cc8af00b959e51d405ccfd693264"
+  },
+  "limitations": [
+    "Only held anchor comes from the physical conversion; subsequent nominal-rail search is causal.",
+    "After first divergence, physical and modeled switching histories differ.",
+    "Nominal reference error is not a claim that all discrepancies have one cause."
+  ]
+}

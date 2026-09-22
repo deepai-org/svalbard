@@ -1,0 +1,65 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "adc_completed_at_idle": 19,
+      "adc_completed_final": 32,
+      "rf_words": 32,
+      "wired_tx": [
+        341,
+        682
+      ],
+      "old_rx_words": 2,
+      "retrained_rx_words": [
+        291,
+        615
+      ],
+      "idle_events": [
+        {
+          "time": 2.364600000000008e-06,
+          "generation": 1,
+          "partial_bits": 4,
+          "completed_words": 2
+        }
+      ],
+      "global_epoch": 0
+    },
+    {
+      "mode": 1,
+      "adc_completed_at_idle": 1,
+      "adc_completed_final": 32,
+      "rf_words": 32,
+      "wired_tx": [
+        341,
+        682
+      ],
+      "old_rx_words": 2,
+      "retrained_rx_words": [
+        291,
+        615
+      ],
+      "idle_events": [
+        {
+          "time": 1.919800000000003e-06,
+          "generation": 1,
+          "partial_bits": 4,
+          "completed_words": 2
+        }
+      ],
+      "global_epoch": 0
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "contract": [
+    "Default idle response disables only wired RX tracking/framing; complete words retain their order in D2H.",
+    "RF conversion, wired TX and shared host service continue; global epoch does not change.",
+    "Signal return does not enable decoding. Explicit host idle acknowledgement and new peer training start a new RX generation."
+  ],
+  "limitations": [
+    "Idle/generation notifications use coherent management APIs; hardware status bits and bounded CDC visibility remain unmapped.",
+    "Bits sampled during detector latency may form words before idle is declared; protocol-level validation/discard remains external.",
+    "No automatic idle-exit training or impedance receiver-detection implementation is claimed."
+  ]
+}

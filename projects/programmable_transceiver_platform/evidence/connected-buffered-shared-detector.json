@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "detector_power_at_sample": 0.015738773611494665,
+  "sampled_readout": 0.0015921007204714368,
+  "checks": [
+    "finite readout sampled",
+    "busy/early rejection",
+    "sample held through latency",
+    "abort retains analog states",
+    "shared detector identity",
+    "two-pole method retained"
+  ],
+  "limitations": [
+    "Readout and adapter boundary screen; no full-chip startup/traffic claim.",
+    "One-way buffer excludes mux reverse loading, ADC kickback and physical parameter qualification."
+  ]
+}

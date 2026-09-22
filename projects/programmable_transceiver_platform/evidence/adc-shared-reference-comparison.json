@@ -1,0 +1,99 @@
+{
+  "status": "shared_reference_loading_comparison",
+  "cases": [
+    {
+      "case": "shared_IQ",
+      "best_constant_additive_span_correction_v": -0.0013184882893586547,
+      "minimum_worst_mean_span_error_after_constant_correction_v": 0.048164120790206766,
+      "captured_I_or_single_codes": [
+        [
+          177
+        ],
+        [
+          78
+        ],
+        [
+          177
+        ]
+      ],
+      "reference_supply_frame_power_w": [
+        0.04456530243550832,
+        0.044362286382870944,
+        0.04436011618260832
+      ],
+      "decision_span_range_v": [
+        0.9531543674991519,
+        1.0494826090795655
+      ],
+      "worst_decision_span_motion_v": 0.006451490359746792,
+      "worst_high_error_v": 0.041499750789107726,
+      "worst_low_error_v": 0.016982344340877864,
+      "waveform_sha256": "e4a335c2f7e218c37a98820fdfa9f21a605fb1ca49370c52c5d08de51134ee19"
+    },
+    {
+      "case": "typical_first-1",
+      "best_constant_additive_span_correction_v": -0.008154561897651291,
+      "minimum_worst_mean_span_error_after_constant_correction_v": 0.03542859846240687,
+      "captured_I_or_single_codes": [
+        [
+          177
+        ],
+        [
+          78
+        ],
+        [
+          177
+        ]
+      ],
+      "reference_supply_frame_power_w": [
+        0.04333193521102647,
+        0.043641180899277716,
+        0.04317165778421353
+      ],
+      "decision_span_range_v": [
+        0.9727259634352443,
+        1.043583160360058
+      ],
+      "worst_decision_span_motion_v": 0.005739408668683943,
+      "worst_high_error_v": 0.030245591499908908,
+      "worst_low_error_v": 0.01573577275207194,
+      "waveform_sha256": "1255071cede494b7597de33719be1137d448e58d5a0421188e26852463369468"
+    },
+    {
+      "case": "typical_first1",
+      "best_constant_additive_span_correction_v": -0.005999954981804834,
+      "minimum_worst_mean_span_error_after_constant_correction_v": 0.037602083797957264,
+      "captured_I_or_single_codes": [
+        [
+          78
+        ],
+        [
+          177
+        ],
+        [
+          78
+        ]
+      ],
+      "reference_supply_frame_power_w": [
+        0.04370433783667747,
+        0.04317218776938169,
+        0.043639845720585116
+      ],
+      "decision_span_range_v": [
+        0.9683978711838475,
+        1.043602038779762
+      ],
+      "worst_decision_span_motion_v": 0.00578944007378368,
+      "worst_high_error_v": 0.03143492118449176,
+      "worst_low_error_v": 0.015735453913393815,
+      "waveform_sha256": "5f10f7f089bd41b294df114a4eed2c26ab6686d4b96c7cf9bc83022478606573"
+    }
+  ],
+  "limitations": [
+    "Both baseline histories are separate single-channel runs, not simultaneous channels.",
+    "Decision-window sample means, not ENOB/noise or aperture-weighted accuracy.",
+    "Only opposite-history simultaneous clocks; same-direction and skewed cases remain untested.",
+    "Power covers the reference supply only; not an accurate total-chip budget or qualified sharing savings.",
+    "Constant-correction result is a minimax mathematical offset of recorded span means; not a physical trim, per-code calibration, or bound on a redesigned reference."
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "status": "hierarchical_prebiased_schematic_boundary_check_not_receiver_qualification",
+  "checks": {
+    "gate_bias_in_diagnostic_range": true,
+    "source_mean_in_diagnostic_range": true,
+    "clock_activity": true
+  },
+  "all_checks_pass": true,
+  "gate_range_v": [
+    1.491460578679472,
+    1.511637501824186
+  ],
+  "source_mean_v": 0.2959425607572872,
+  "drain_mean_v": 1.5553441002323787,
+  "lo_range_v": [
+    0.1299788415756684,
+    3.091286425891008
+  ],
+  "frequency_hz": 2500413796.26333,
+  "rf_current_a": 0.014253619909880036,
+  "pll_current_a": 0.008408912115945523,
+  "artifacts_sha256": {
+    "transient.dat": "f0134ea48926ad87ba75aba5ed438b1ee77b6085180e94d1ca89b4f20952b336",
+    "op.log": "b9bbf95abd121024cc938e0f9a30d0b2cc48ea418ea6a3842ec117bfc95c2064"
+  },
+  "source_sha256": {
+    "rf_rx_candidate.spice": "755dc05869d1add201e20953635bb3e2f31cd55f5b46d58f69992efcddc452eb",
+    "rf_candidate_bias_tb.spice": "6ea67b1cedc7449f3845d75698afe1c456fd47bd2c1d3c42dfa2da4f4e7aaa6b"
+  },
+  "limitations": [
+    "Explicit gate precharge and oscillator seed: not cold-start or acquisition.",
+    "Ideal external bias and sampling clocks; no PLL, quadrature or ADC.",
+    "Bias thresholds are diagnostic guardrails, not qualified design specifications.",
+    "Short nominal schematic run does not establish gain, noise, mismatch, extraction or package performance."
+  ]
+}

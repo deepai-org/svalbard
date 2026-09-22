@@ -1,0 +1,108 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "management_stop": false,
+      "duplex": false,
+      "rx_samples": 0,
+      "updates": 655,
+      "queue_peak": 32,
+      "accounting": {
+        "consumed": 655,
+        "updated": 655,
+        "cancelled": 0,
+        "pending": 0,
+        "latency_s": 2e-08,
+        "capacity": 4
+      }
+    },
+    {
+      "mode": 0,
+      "management_stop": true,
+      "duplex": false,
+      "rx_samples": 0,
+      "updates": 482,
+      "queue_peak": 32,
+      "accounting": {
+        "consumed": 483,
+        "updated": 482,
+        "cancelled": 1,
+        "pending": 0,
+        "latency_s": 2e-08,
+        "capacity": 4
+      }
+    },
+    {
+      "mode": 1,
+      "management_stop": false,
+      "duplex": false,
+      "rx_samples": 0,
+      "updates": 261,
+      "queue_peak": 16,
+      "accounting": {
+        "consumed": 261,
+        "updated": 261,
+        "cancelled": 0,
+        "pending": 0,
+        "latency_s": 2e-08,
+        "capacity": 4
+      }
+    },
+    {
+      "mode": 1,
+      "management_stop": true,
+      "duplex": false,
+      "rx_samples": 0,
+      "updates": 241,
+      "queue_peak": 16,
+      "accounting": {
+        "consumed": 242,
+        "updated": 241,
+        "cancelled": 1,
+        "pending": 0,
+        "latency_s": 2e-08,
+        "capacity": 4
+      }
+    },
+    {
+      "mode": 0,
+      "management_stop": true,
+      "duplex": true,
+      "rx_samples": 471,
+      "updates": 482,
+      "queue_peak": 32,
+      "accounting": {
+        "consumed": 483,
+        "updated": 482,
+        "cancelled": 1,
+        "pending": 0,
+        "latency_s": 2e-08,
+        "capacity": 4
+      }
+    },
+    {
+      "mode": 1,
+      "management_stop": true,
+      "duplex": true,
+      "rx_samples": 236,
+      "updates": 241,
+      "queue_peak": 16,
+      "accounting": {
+        "consumed": 242,
+        "updated": 241,
+        "cancelled": 1,
+        "pending": 0,
+        "latency_s": 2e-08,
+        "capacity": 4
+      }
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Finite matched-rate observation, not a proof for arbitrary host service or ppm mismatch.",
+    "Stop aborts pending samples; no lossless stop protocol.",
+    "Duplex cases use direct RX start alongside timed TX; atomic dual-start and triggers remain open."
+  ]
+}

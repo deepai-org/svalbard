@@ -1,0 +1,8 @@
+* Candidate two-stage, non-inverting CMOS LO buffer. S is a sizing multiplier.
+* Same elementary inverter sizing as existing IF research; no feedback loop.
+.subckt pt_lo_buffer IN OUT VDD VSS params: S=1
+XP1 MID IN VDD VDD pfet_03v3 w=8u l=0.28u m={S}
+XN1 MID IN VSS VSS nfet_03v3 w=4u l=0.28u m={S}
+XP2 OUT MID VDD VDD pfet_03v3 w=8u l=0.28u m={4*S}
+XN2 OUT MID VSS VSS nfet_03v3 w=4u l=0.28u m={4*S}
+.ends pt_lo_buffer

@@ -1,0 +1,79 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "name": "ready",
+      "delay_s": 0,
+      "time_s": 0.0001,
+      "calls": [
+        "tx_cal_status",
+        "tx_cal_start",
+        "tx_cal_commit"
+      ]
+    },
+    {
+      "name": "ready",
+      "delay_s": 2.5e-05,
+      "time_s": 0.0001,
+      "calls": [
+        "tx_cal_status",
+        "tx_cal_status",
+        "tx_cal_start",
+        "tx_cal_commit"
+      ]
+    },
+    {
+      "name": "ready",
+      "delay_s": 5e-05,
+      "time_s": 0.0001,
+      "calls": [
+        "tx_cal_status",
+        "tx_cal_status",
+        "tx_cal_status",
+        "tx_cal_status",
+        "tx_cal_start",
+        "tx_cal_commit"
+      ]
+    },
+    {
+      "name": "slow transport budget exceeded",
+      "time_s": 0.000105,
+      "calls": [
+        "tx_cal_status",
+        "tx_cal_status",
+        "tx_cal_status",
+        "tx_cal_start",
+        "tx_cal_commit"
+      ]
+    },
+    {
+      "name": "no readiness",
+      "time_s": 5.14e-05,
+      "calls": [
+        "tx_cal_status",
+        "tx_cal_status",
+        "tx_cal_status",
+        "tx_cal_status"
+      ]
+    },
+    {
+      "name": "reject tx_cal_start",
+      "calls": [
+        "tx_cal_status",
+        "tx_cal_start"
+      ]
+    },
+    {
+      "name": "reject tx_cal_commit",
+      "calls": [
+        "tx_cal_status",
+        "tx_cal_start",
+        "tx_cal_commit"
+      ]
+    }
+  ],
+  "limitations": [
+    "Synthetic serialized transport exercises host policy only; full chip lock/noise behavior checked separately.",
+    "Late readiness can complete calibration before overall budget rejection; no traffic is activated, but this is not rollback."
+  ]
+}

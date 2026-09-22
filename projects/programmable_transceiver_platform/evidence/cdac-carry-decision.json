@@ -1,0 +1,132 @@
+{
+  "status": "nominal_carry_decision_diagnostic",
+  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "source_sha256": {
+    "projects/programmable_transceiver_platform/analog/adc/comparator.spice": "a41ecccf87f625bbddca6139730c5e8500529c5acb2f05a5052f9049e8ee74a0",
+    "projects/programmable_transceiver_platform/analog/adc/cdac8_mim.spice": "532e86fc11da6f695d092dd06c0508cbb363f49c4c2b070c78683c7d5bf85e14",
+    "projects/programmable_transceiver_platform/analog/adc/cdac8_scaled.spice": "4006f42115b3a5a30b9ad74626ef0c084655bf0cdc2f1d1cc8bd32f65e351fd2",
+    "ip/blocks/analog/wifi_80211b/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02"
+  },
+  "prior_sha256": "1858e8119d01c83b66e3624b23d53ad3003f5a8806292ca1f2fcdca5fae2a1e7",
+  "cases": [
+    {
+      "name": "code127_delay100",
+      "initial_code": 127,
+      "delay_ps": 100,
+      "edge_ns": 2.2,
+      "input_diff_v": -0.00677243,
+      "target_sign": 1,
+      "parent_sha256": "ac22f085826f6dffa41d4c0e854cfc727798da452a2cd778fa7c5455af5bdea3",
+      "preclock_residue_v": 0.0010230600000000747,
+      "preclock_common_mode_v": 1.63776198,
+      "output_difference_v": 3.2999999935998736,
+      "correct_target_polarity": true,
+      "first_resolved_after_edge_ps": 727.4999999999998,
+      "artifacts_sha256": {
+        ".spice": "75f62f4d62918b4e3165e8d19789a39ae2cfb47efcd0edb75f425eb3ec6b758f",
+        ".log": "c0f54c01e682e55fe430a9fc7032b927878a3200879ef377e7a325b50fb3e1bf",
+        ".dat": "ce1e2e9ec7d3d506981fe3036ceb07eb855621c9cfbd0f909e3a5aa993860e89"
+      }
+    },
+    {
+      "name": "code127_delay200",
+      "initial_code": 127,
+      "delay_ps": 200,
+      "edge_ns": 2.3000000000000003,
+      "input_diff_v": -0.00677243,
+      "target_sign": 1,
+      "parent_sha256": "ac22f085826f6dffa41d4c0e854cfc727798da452a2cd778fa7c5455af5bdea3",
+      "preclock_residue_v": 0.0009615400000000385,
+      "preclock_common_mode_v": 1.64556202,
+      "output_difference_v": 3.2999999935885382,
+      "correct_target_polarity": true,
+      "first_resolved_after_edge_ps": 727.4999999999998,
+      "artifacts_sha256": {
+        ".spice": "6535e5ef563e03429beab977b5f2f52b30d01551241f52edc7c90a87bec55601",
+        ".log": "36cc316e593d98aea84ff0c364b4454bbe857f25283beb09c3f655be279de35d",
+        ".dat": "0e9ea4fb32258459b3e53e7cef0ebf628b5bc9a3e7d1f38f9f0a5872ac40446d"
+      }
+    },
+    {
+      "name": "code127_delay500",
+      "initial_code": 127,
+      "delay_ps": 500,
+      "edge_ns": 2.6,
+      "input_diff_v": -0.00677243,
+      "target_sign": 1,
+      "parent_sha256": "ac22f085826f6dffa41d4c0e854cfc727798da452a2cd778fa7c5455af5bdea3",
+      "preclock_residue_v": 0.0009602899999998638,
+      "preclock_common_mode_v": 1.6520406749999998,
+      "output_difference_v": 3.299999991231611,
+      "correct_target_polarity": true,
+      "first_resolved_after_edge_ps": 727.4999999999998,
+      "artifacts_sha256": {
+        ".spice": "4533db2236ce946ad5e6f250d7c22564a1db495b898e8c2124c7777f7b40223c",
+        ".log": "332fdc50e0b4b82f76dd57bf0b4e58542e4eb9ebd634278d201ae8083f19c45c",
+        ".dat": "0a213d62dcf9ae2c9ef18856991fa5e8c0c9b1d7bbc860d38ee3dcc086f57a12"
+      }
+    },
+    {
+      "name": "code128_delay100",
+      "initial_code": 128,
+      "delay_ps": 100,
+      "edge_ns": 2.2,
+      "input_diff_v": 0.00677243,
+      "target_sign": -1,
+      "parent_sha256": "7df56ccaa0d318cf8eabb5382c1aa33087d331bc76cf07546958d68e56f8caca",
+      "preclock_residue_v": -0.0010230600000000747,
+      "preclock_common_mode_v": 1.63776198,
+      "output_difference_v": -3.2999999935998745,
+      "correct_target_polarity": true,
+      "first_resolved_after_edge_ps": 727.4999999999998,
+      "artifacts_sha256": {
+        ".spice": "1a3a9bbc618490b34896602d0c87757acd14232231d81cb107ad037ace295e9f",
+        ".log": "98d6dbbe057de99b3dd8a53fc7663fac19b0a38931bd3c1d3541dc6921743f9a",
+        ".dat": "b1a937af14c053e754ed83ddab919dd05492b3ea5a9c2d4b1941e45cb75308f0"
+      }
+    },
+    {
+      "name": "code128_delay200",
+      "initial_code": 128,
+      "delay_ps": 200,
+      "edge_ns": 2.3000000000000003,
+      "input_diff_v": 0.00677243,
+      "target_sign": -1,
+      "parent_sha256": "7df56ccaa0d318cf8eabb5382c1aa33087d331bc76cf07546958d68e56f8caca",
+      "preclock_residue_v": -0.0009615400000000385,
+      "preclock_common_mode_v": 1.64556202,
+      "output_difference_v": -3.2999999935885422,
+      "correct_target_polarity": true,
+      "first_resolved_after_edge_ps": 727.4999999999998,
+      "artifacts_sha256": {
+        ".spice": "a5b11ee2cffd3ac1c954ae0a88fa865d253da95fd00bc0c12968d640b401e2e9",
+        ".log": "17ecd002bba84e8906339ac5b1fd09ceac7d9209d287d67e62d2878d2265f484",
+        ".dat": "e2ad1fcdbfc7874d9e50bda5e6130bb5ce01f1d123fe8b6d33b95a346eabf01a"
+      }
+    },
+    {
+      "name": "code128_delay500",
+      "initial_code": 128,
+      "delay_ps": 500,
+      "edge_ns": 2.6,
+      "input_diff_v": 0.00677243,
+      "target_sign": -1,
+      "parent_sha256": "7df56ccaa0d318cf8eabb5382c1aa33087d331bc76cf07546958d68e56f8caca",
+      "preclock_residue_v": -0.0009602899999998638,
+      "preclock_common_mode_v": 1.6520406749999998,
+      "output_difference_v": -3.299999991231612,
+      "correct_target_polarity": true,
+      "first_resolved_after_edge_ps": 727.4999999999998,
+      "artifacts_sha256": {
+        ".spice": "f61a300eb75e388ff318060901d86979ec3ac3feb13205cf7d79b7e038c452be",
+        ".log": "f40ab2fa721c36d654c4678428bab0beb8704f4e62261e076afbb5da6be68f5a",
+        ".dat": "868bc31d90335bfd6577d3ca7864c7982f9af0b613eab93a90bdd4e260f9230b"
+      }
+    }
+  ],
+  "limitations": [
+    "Near\u00b11mV target only, nominal devices, ideal rails and100ps ideal control edges.",
+    "Resolution time uses output crossing, not latched decision validity or metastability probability.",
+    "Reference regulation, actual code/clock drivers, noise and mismatch absent."
+  ]
+}

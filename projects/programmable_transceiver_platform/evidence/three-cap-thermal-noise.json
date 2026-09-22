@@ -1,0 +1,54 @@
+{
+  "status": "resistor_only_linear_estimate",
+  "temperature_k": 300.0,
+  "filter_values": {
+    "r": 10184.271638275502,
+    "cf": 2.1190014980784758e-11,
+    "cs": 2.457626702372388e-10,
+    "r3": 10063.455048665259,
+    "c3": 1.2479232271147656e-12
+  },
+  "equilibrium_check": {
+    "measured_v2": 3.3036023553203454e-09,
+    "expected_v2": 3.3036285008489127e-09,
+    "relative_error": -7.914185435997645e-06
+  },
+  "bands": [
+    {
+      "low_hz": 100,
+      "high_hz": 10000000.0,
+      "phase_rms_rad": 0.007624314381852579,
+      "equivalent_time_rms_s": 4.979266809841881e-13,
+      "resistor_phase_variance_rad2": [
+        2.0816444562541695e-05,
+        3.731372523078239e-05
+      ]
+    },
+    {
+      "low_hz": 1000.0,
+      "high_hz": 100000000.0,
+      "phase_rms_rad": 0.007636274804778263,
+      "equivalent_time_rms_s": 4.987077890802457e-13,
+      "resistor_phase_variance_rad2": [
+        2.081697402412436e-05,
+        3.7495718869966944e-05
+      ]
+    },
+    {
+      "low_hz": 10000.0,
+      "high_hz": 10000000.0,
+      "phase_rms_rad": 0.007624037417733446,
+      "equivalent_time_rms_s": 4.979085930856986e-13,
+      "resistor_phase_variance_rad2": [
+        2.0814496000998358e-05,
+        3.731145054600132e-05
+      ]
+    }
+  ],
+  "limitations": [
+    "Averaged PLL feedback only; no sampled aliasing or fractional mixing.",
+    "Omits pump, VCO, reference, buffer and bias noise; not total jitter or phase noise.",
+    "Centering switches assumed open; leakage and device noise omitted.",
+    "No PDK resistor excess-noise or parasitic qualification; no acceptance gate established."
+  ]
+}

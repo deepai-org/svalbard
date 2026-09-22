@@ -1,0 +1,30 @@
+* Hierarchical schematic candidate: actual PDK FET cores, ideal lumped passives.
+* Explicit external bias, control and sample clocks; no PLL/quadrature/ADC yet.
+* Include ring_vco, lo_buffer, lna_cs_core, mixer, bb_filter_section and
+* rf_if_transmission_gate definitions before this file.
+* RF_IN is an external voltage port; matching/source impedance belongs in bench.
+.subckt pt_rf_rx_candidate_split RF_IN HP HN RFBIAS BBBIAS CTRL SC SCB VDDRF VDDPLL VSS REGEN
+XVCO CTRL REGEN VDDPLL VSS CP CN pt_split_ring LOAD_L=5.25u CAP_W=4u CAP_L=3u
+CLOADP CP VSS 25f
+CLOADN CN VSS 25f
+CCP CP BP 200f
+CCN CN BN 200f
+RFBP BP XBP.MID 100k
+RFBN BN XBN.MID 100k
+XBP BP LO VDDRF VSS pt_lo_buffer S=1
+XBN BN LOB VDDRF VSS pt_lo_buffer S=1
+RB GATE RFBIAS 1meg
+CC RF_IN GATE 20p
+RD VDDRF DRAIN 300
+RS SOURCE VSS 82
+XLNA GATE DRAIN SOURCE VSS wifi_lna_cs_core
+XMIX DRAIN LO LOB IP INN VSS wifi_rf_switch_mixer
+RIP IP VSS 1k
+RIN INN VSS 1k
+CIP IP VSS 1p
+CIN INN VSS 1p
+XF IP INN FP FN BBBIAS VDDRF VSS pt_bb_filter RFB=20k C=20p
+XS FP FN HP HN SC SCB VDDRF VSS wifi_if_transmission_gate
+CHP HP VSS 5p
+CHN HN VSS 5p
+.ends pt_rf_rx_candidate_split

@@ -1,0 +1,108 @@
+{
+  "status": "screens_completed",
+  "silicon_qualified": false,
+  "seconds": 9.191989153623581,
+  "coverage": {
+    "rf_rx_tx": "Complex-envelope gain, filtering, clipping, I/Q imbalance and quantization; mostly hypothetical parameters.",
+    "wired": "Channel sampling and idealized transition-driven timing recovery; no transistor CDR qualification.",
+    "transport": "Contract rates, static slots and finite event queues; no electrical GPIO timing qualification.",
+    "coexistence": "Hypothetical shared-supply sensitivity; no extracted die/package network.",
+    "measured_conversion": "Finite recorded LO disturbance sampled by an ideal quantizer; not a calibrated complete RF chain."
+  },
+  "workflow": "spec/fast-feasibility-workflow.md",
+  "limitations": [
+    "Execution success checks model controls, not physical requirements.",
+    "These are partially connected screens, not a complete chip simulation.",
+    "Measured LO screen requires existing transistor replay evidence."
+  ],
+  "results": [
+    {
+      "script": "check_filter_analytic.py",
+      "returncode": 0,
+      "seconds": 0.12702689040452242,
+      "source_sha256": "4983b52a3f180b47b094f6e42319bd1942e054551eb2b4bae9a526b1c02b4820",
+      "stdout": "Four analytic step controls and four complex-input refinement cases passed\n",
+      "stderr": ""
+    },
+    {
+      "script": "check_envelope_convergence.py",
+      "returncode": 0,
+      "seconds": 2.20535372197628,
+      "source_sha256": "ac4189ea6e75d107e12ffddfb411ef55d7fa3a4c3a1ba7a29ba7f7b6c0f750a2",
+      "stdout": "20000000.0 0.05 [0.06116, 0.089, 0.06829, 0.08362, 0.08362] 0.0\n20000000.0 0.4 [0.01653, 0.02878, 0.03275, 0.03217, 0.03217] 0.0\n20000000.0 0.8 [0.14786, 0.14982, 0.15217, 0.15005, 0.15091] 0.0008554674759743974\n40000000.0 0.05 [0.06568, 0.10377, 0.10851, 0.11318, 0.1136] 0.000421274600480831\n40000000.0 0.4 [0.06574, 0.10403, 0.10953, 0.11247, 0.11403] 0.0015596688832126698\n40000000.0 0.8 [0.1474, 0.15806, 0.16051, 0.16197, 0.16259] 0.0006203673393901932\n",
+      "stderr": ""
+    },
+    {
+      "script": "fast_screen.py",
+      "returncode": 0,
+      "seconds": 2.9238671232014894,
+      "source_sha256": "32b8f36a7b649a6e25cf2b2ce47a7444375365e1e233f2fda76facfa1c75faea",
+      "stdout": "170 scenarios in 2.844s; exploratory RF envelope paths\n",
+      "stderr": ""
+    },
+    {
+      "script": "host_screen.py",
+      "returncode": 0,
+      "seconds": 0.024388027377426624,
+      "source_sha256": "af1212d82d69b5b3c12e4167e5a9bb8edc2412e84298fe8317671e934514f9b2",
+      "stdout": "ethernet_rf40_12 ddr125 d2h True 94.24 Mb/s margin\nethernet_rf40_12 ddr125 h2d True 94.24 Mb/s margin\npcie_rf20_8 ddr156 d2h True 60.29 Mb/s margin\npcie_rf20_8 ddr156 h2d True 60.29 Mb/s margin\nfast_rf_40MSps_8bit_per_IQ sdr25 each independently False -409.62 Mb/s margin\nfast_rf_40MSps_8bit_per_IQ sdr50 each independently False -179.17 Mb/s margin\nfast_rf_40MSps_8bit_per_IQ ddr125 each independently True 1664.39 Mb/s margin\nfast_rf_40MSps_8bit_per_IQ ddr156 each independently True 2240.51 Mb/s margin\nfast_rf_40MSps_8bit_per_IQ sdr25 each independently False -1659.74 Mb/s margin\nfast_rf_40MSps_8bit_per_IQ sdr50 each independently False -1429.3 Mb/s margin\nfast_rf_40MSps_8bit_per_IQ ddr125 each independently True 414.27 Mb/s margin\nfast_rf_40MSps_8bit_per_IQ ddr156 each independently True 990.38 Mb/s margin\nfast_rf_40MSps_8bit_per_IQ sdr25 each independently False -2909.87 Mb/s margin\nfast_rf_40MSps_8bit_per_IQ sdr50 each independently False -2679.42 Mb/s margin\nfast_rf_40MSps_8bit_per_IQ ddr125 each independently False -835.86 Mb/s margin\nfast_rf_40MSps_8bit_per_IQ ddr156 each independently False -259.74 Mb/s margin\n",
+      "stderr": ""
+    },
+    {
+      "script": "mode_screen.py",
+      "returncode": 0,
+      "seconds": 0.399714233353734,
+      "source_sha256": "46645355d7dbfa86662f921eda6576614bd8f4584bf5d4462e25de6165fe432a",
+      "stdout": "ethernet_rf40_12 40000000.0 12 0.05 0.1085\nethernet_rf40_12 40000000.0 12 0.4 0.1095\nethernet_rf40_12 40000000.0 12 0.8 0.1605\npcie_rf20_8 20000000.0 8 0.05 0.0683\npcie_rf20_8 20000000.0 8 0.4 0.0328\npcie_rf20_8 20000000.0 8 0.8 0.1522\n",
+      "stderr": ""
+    },
+    {
+      "script": "queue_screen.py",
+      "returncode": 0,
+      "seconds": 0.5696919709444046,
+      "source_sha256": "bd52374b9b7e8aab337f9600567b08ca345b850a0943df3cf1aa010219bfde9c",
+      "stdout": "16 cases; maximum ingress 520 bits\n",
+      "stderr": ""
+    },
+    {
+      "script": "host_supply_screen.py",
+      "returncode": 0,
+      "seconds": 0.19672815036028624,
+      "source_sha256": "b440c20239023c2f0341b5b80b710656a11cfe5230cf6d4d51f283881e40cb59",
+      "stdout": "12 coupled cases; charge conservation and zero-load controls pass\n",
+      "stderr": ""
+    },
+    {
+      "script": "wired_screen.py",
+      "returncode": 0,
+      "seconds": 0.39052146952599287,
+      "source_sha256": "145cf7cdea4b862f6f54f6cfa0b6a475ab10588d367173dfb3c48f26a8c20a79",
+      "stdout": "108 cases 0.276 seconds 84 with errors\n",
+      "stderr": ""
+    },
+    {
+      "script": "clock_tracking_screen.py",
+      "returncode": 0,
+      "seconds": 2.0373578714206815,
+      "source_sha256": "7a93ec5775824e3472f951aac6d2d6af0e3026cb6d5ab6dc6a2297afbd3e5ac0",
+      "stdout": "72 cases completed; ideal-tracking and crossing controls passed\n",
+      "stderr": ""
+    },
+    {
+      "script": "measured_lo_screen.py",
+      "returncode": 0,
+      "seconds": 0.13141469564288855,
+      "source_sha256": "ed18f16c702db09cbae09eacb8d08d1eebdb0aee2982c64a59815a582e3c3625",
+      "stdout": "baseline 0.008 2.8161 2.8162\nbaseline 0.25 0.0896 0.0898\ndoubled 0.008 3.0143 3.0173\ndoubled 0.25 0.0965 0.0966\nhalved 0.008 2.6726 2.6758\nhalved 0.25 0.0855 0.0856\n",
+      "stderr": ""
+    },
+    {
+      "script": "trace_conversion_screen.py",
+      "returncode": 0,
+      "seconds": 0.18490807991474867,
+      "source_sha256": "16db9121124ae69aa2d7cb8a71f5f02c183e8ddd71b0ad84f9a57c59e9647c40",
+      "stdout": "20000000.0 0.008 {'full_trace': [0.40679806166602267, 3.03995695261088], 'dc_and_fundamental': [0.35284371453936836, 1.6312874859075814], 'quantization_only': [0.18636611206782264, 0.23018621222154687]}\n20000000.0 0.25 {'full_trace': [0.010748017877153683, 0.09723947880974053], 'dc_and_fundamental': [0.010814550266269856, 0.053142672946066394], 'quantization_only': [0.0037034837673227683, 0.008867451196901535]}\n40000000.0 0.008 {'full_trace': [2.221672726017352, 3.54304284764447], 'dc_and_fundamental': [1.5882490780503404, 3.6552372650336995], 'quantization_only': [0.20408335008871145, 0.22587020818888018]}\n40000000.0 0.25 {'full_trace': [0.06947944677728488, 0.11318571844118232], 'dc_and_fundamental': [0.04969514630846388, 0.11778108899998471], 'quantization_only': [0.0051327240907434145, 0.00813009662048957]}\n",
+      "stderr": ""
+    }
+  ]
+}

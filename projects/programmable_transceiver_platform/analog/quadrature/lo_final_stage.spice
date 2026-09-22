@@ -1,0 +1,5 @@
+* Experimental final inverting LO stage; matched inversion on I/Q and complements.
+.subckt pt_lo_final_stage IN OUT VDD VSS
+XP OUT IN VDD VDD pfet_03v3 w=8u l=.28u m=4
+XN OUT IN VSS VSS nfet_03v3 w=4u l=.28u m=4
+.ends pt_lo_final_stage

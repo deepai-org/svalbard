@@ -1,0 +1,147 @@
+{
+  "scope": "Nominal lumped Liberty clock-input capacitance charging estimate; not total power or a PVT bound",
+  "voltage_v": 3.3,
+  "core_budget_ma": 48,
+  "library_sha256": "f9dee07cf158324934b0c59144d970a2e8313f43533ede6283ec3c136f82fe53",
+  "netlist_sha256": "6e1161db68bba9f7e2d1dac3802c7a5870bc63a90b657245c552fc591774a8b7",
+  "formula": "I=C*V*f; one 0-to-1 charge per clock cycle",
+  "profiles": [
+    {
+      "mode": 0,
+      "domains": [
+        {
+          "clock": "ref_clk",
+          "pin_count": 36,
+          "capacitance_pf": 0.12045600000000005,
+          "frequency_hz": 40000000.0,
+          "charging_current_ma": 0.015900192000000007
+        },
+        {
+          "clock": "host_sclk",
+          "pin_count": 963,
+          "capacitance_pf": 3.0959419999999693,
+          "frequency_hz": 10000000.0,
+          "charging_current_ma": 0.10216608599999899
+        },
+        {
+          "clock": "host_tx_clk",
+          "pin_count": 1788,
+          "capacitance_pf": 5.930727999999936,
+          "frequency_hz": 250000000.0,
+          "charging_current_ma": 4.892850599999947
+        },
+        {
+          "clock": "host_rx_clk",
+          "pin_count": 4865,
+          "capacitance_pf": 15.545711999999723,
+          "frequency_hz": 250000000.0,
+          "charging_current_ma": 12.825212399999772
+        },
+        {
+          "clock": "wire_rx_clk",
+          "pin_count": 672,
+          "capacitance_pf": 2.1441919999999834,
+          "frequency_hz": 125000000.0,
+          "charging_current_ma": 0.8844791999999932
+        },
+        {
+          "clock": "wire_tx_clk",
+          "pin_count": 73,
+          "capacitance_pf": 0.24472299999999983,
+          "frequency_hz": 125000000.0,
+          "charging_current_ma": 0.10094823749999993
+        },
+        {
+          "clock": "rf_rx_clk",
+          "pin_count": 1184,
+          "capacitance_pf": 3.7738879999999515,
+          "frequency_hz": 40000000.0,
+          "charging_current_ma": 0.49815321599999357
+        },
+        {
+          "clock": "rf_tx_clk",
+          "pin_count": 48,
+          "capacitance_pf": 0.16060799999999992,
+          "frequency_hz": 40000000.0,
+          "charging_current_ma": 0.021200255999999987
+        }
+      ],
+      "clock_pin_charging_current_ma": 19.340910187499706,
+      "clock_pin_charging_power_mw": 63.82500361874902,
+      "remaining_from_48ma_before_other_loads": 28.659089812500294,
+      "clock_pin_load_alone_exceeds_budget": false
+    },
+    {
+      "mode": 1,
+      "domains": [
+        {
+          "clock": "ref_clk",
+          "pin_count": 36,
+          "capacitance_pf": 0.12045600000000005,
+          "frequency_hz": 40000000.0,
+          "charging_current_ma": 0.015900192000000007
+        },
+        {
+          "clock": "host_sclk",
+          "pin_count": 963,
+          "capacitance_pf": 3.0959419999999693,
+          "frequency_hz": 10000000.0,
+          "charging_current_ma": 0.10216608599999899
+        },
+        {
+          "clock": "host_tx_clk",
+          "pin_count": 1788,
+          "capacitance_pf": 5.930727999999936,
+          "frequency_hz": 312500000.0,
+          "charging_current_ma": 6.116063249999933
+        },
+        {
+          "clock": "host_rx_clk",
+          "pin_count": 4865,
+          "capacitance_pf": 15.545711999999723,
+          "frequency_hz": 312500000.0,
+          "charging_current_ma": 16.031515499999713
+        },
+        {
+          "clock": "wire_rx_clk",
+          "pin_count": 672,
+          "capacitance_pf": 2.1441919999999834,
+          "frequency_hz": 250000000.0,
+          "charging_current_ma": 1.7689583999999865
+        },
+        {
+          "clock": "wire_tx_clk",
+          "pin_count": 73,
+          "capacitance_pf": 0.24472299999999983,
+          "frequency_hz": 250000000.0,
+          "charging_current_ma": 0.20189647499999985
+        },
+        {
+          "clock": "rf_rx_clk",
+          "pin_count": 1184,
+          "capacitance_pf": 3.7738879999999515,
+          "frequency_hz": 20000000.0,
+          "charging_current_ma": 0.24907660799999679
+        },
+        {
+          "clock": "rf_tx_clk",
+          "pin_count": 48,
+          "capacitance_pf": 0.16060799999999992,
+          "frequency_hz": 20000000.0,
+          "charging_current_ma": 0.010600127999999993
+        }
+      ],
+      "clock_pin_charging_current_ma": 24.49617663899963,
+      "clock_pin_charging_power_mw": 80.83738290869877,
+      "remaining_from_48ma_before_other_loads": 23.50382336100037,
+      "clock_pin_load_alone_exceeds_budget": false
+    }
+  ],
+  "limitations": [
+    "No internal flip-flop power, data/control switching, clock tree, wire capacitance, leakage or GPIO pre-driver load.",
+    "Nominal scalar Liberty input capacitance; nonlinear voltage behavior and rise/fall capacitance differences are not bounded.",
+    "All implemented clock domains active; SPI/reference frequencies are provisional.",
+    "Clock sources are assigned to CORE for budget accounting; final rail ownership must be explicit.",
+    "Even a result below 48mA would not close the core budget."
+  ]
+}

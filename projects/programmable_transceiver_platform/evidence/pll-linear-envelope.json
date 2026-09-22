@@ -1,0 +1,49 @@
+{
+  "status": "conditional_linearized_loop_scenario_not_lock_evidence",
+  "cases": [
+    {
+      "kv_hz_per_v": 439838565.34359413,
+      "poles_rad_per_s": [
+        [
+          -51356967.2933749,
+          0.0
+        ],
+        [
+          -321516.3533125428,
+          1111218.0116007857
+        ],
+        [
+          -321516.3533125428,
+          -1111218.0116007857
+        ]
+      ],
+      "all_poles_left_half_plane": true,
+      "four_time_constant_envelope_s": 1.2441046804582411e-05
+    },
+    {
+      "kv_hz_per_v": 366970168.01543206,
+      "poles_rad_per_s": [
+        [
+          -51464575.44040168,
+          0.0
+        ],
+        [
+          -267712.27979916125,
+          1021017.5666258816
+        ],
+        [
+          -267712.27979916125,
+          -1021017.5666258816
+        ]
+      ],
+      "all_poles_left_half_plane": true,
+      "four_time_constant_envelope_s": 1.4941413979966907e-05
+    }
+  ],
+  "assumptions": [
+    "Ideal averaged matched 20uA pump and ideal divide128.",
+    "Measured local VCO slopes treated constant; loop excursions can invalidate this.",
+    "Ideal R=10kohm, Cz=50pF, Cp=2pF; ignores VCO input admittance, delay, switching, offset, saturation and noise.",
+    "Negative real poles in this simplified model do not prove transistor-loop stability."
+  ]
+}

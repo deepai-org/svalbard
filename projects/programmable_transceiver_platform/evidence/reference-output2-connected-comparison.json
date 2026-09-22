@@ -1,0 +1,123 @@
+{
+  "status": "paired_reference_compensation_observations",
+  "cases": [
+    {
+      "name": "typical_first-1",
+      "baseline": {
+        "max_in_window_span_motion_mv": 5.739408668683943,
+        "span_range_v": [
+          0.9727259634352443,
+          1.043583160360058
+        ],
+        "worst_high_error_mv": 30.245591499908908,
+        "worst_low_error_mv": 15.735772752071941,
+        "codes": [
+          177,
+          78,
+          177
+        ],
+        "held_errors_v": [
+          0.004487694551469357,
+          -0.004449280775690845,
+          0.004340113656070732
+        ],
+        "reference_average_current_ma": [
+          13.080444562781416,
+          13.200964606363796,
+          13.194334353200807
+        ],
+        "reference_peak_current_ma": 14.9036794897171
+      },
+      "candidate": {
+        "max_in_window_span_motion_mv": 7.159821436173663,
+        "span_range_v": [
+          1.0018200694324118,
+          1.035067247119729
+        ],
+        "worst_high_error_mv": 21.329015286771114,
+        "worst_low_error_mv": 20.749927658278988,
+        "codes": [
+          177,
+          78,
+          177
+        ],
+        "held_errors_v": [
+          0.00452863232064421,
+          -0.00461658472484644,
+          0.0047458703131810775
+        ],
+        "reference_average_current_ma": [
+          24.062699672134396,
+          24.18718520793995,
+          24.163094137964546
+        ],
+        "reference_peak_current_ma": 26.90801516353537
+      }
+    },
+    {
+      "name": "typical_first1",
+      "baseline": {
+        "max_in_window_span_motion_mv": 5.78944007378368,
+        "span_range_v": [
+          0.9683978711838475,
+          1.043602038779762
+        ],
+        "worst_high_error_mv": 31.43492118449176,
+        "worst_low_error_mv": 15.735453913393815,
+        "codes": [
+          78,
+          177,
+          78
+        ],
+        "held_errors_v": [
+          -0.004500201182687846,
+          0.004341901984158847,
+          -0.0044434123608773635
+        ],
+        "reference_average_current_ma": [
+          13.16980224645031,
+          13.195091137366507,
+          13.199029906539836
+        ],
+        "reference_peak_current_ma": 14.90453927332403
+      },
+      "candidate": {
+        "max_in_window_span_motion_mv": 7.186680096430864,
+        "span_range_v": [
+          1.0003557915777095,
+          1.0350782551452986
+        ],
+        "worst_high_error_mv": 21.36042880876321,
+        "worst_low_error_mv": 20.746816018994974,
+        "codes": [
+          78,
+          177,
+          78
+        ],
+        "held_errors_v": [
+          -0.004545398215741847,
+          0.004745920106780321,
+          -0.004612814256820308
+        ],
+        "reference_average_current_ma": [
+          24.158177265967506,
+          24.164902145550112,
+          24.183117200529345
+        ],
+        "reference_peak_current_ma": 26.911563920910602
+      }
+    }
+  ],
+  "pending": [],
+  "evidence_sha256": {
+    "adc-reference-compensated-decision-windows.json": "1e77f3637be01610d54cb5a84fb816794b6063ec8a469b4b43be1fcdefa484e5",
+    "adc-reference-output2-decision-windows.json": "be157def9b58174d359494a80efa38a9907ffa14516dc9f42b6f4e6b2826d3ab",
+    "adc-sar8-reference-compensated-screen.json": "5b05017fc9e674bb7635ccc1cd3e7b6d41b30d78d36c91aa75a7b4347f920e58",
+    "adc-sar8-reference-output2-screen.json": "4de4f805440dbf7ca996f423923dcde6743f939778547b161e30171f75574cb6"
+  },
+  "limitations": [
+    "Identical nominal decision windows, not a complete comparator aperture or jitter analysis.",
+    "Reduced error is not reference qualification; selected codes and logic correctness do not establish ADC precision.",
+    "AC candidate compensation remains ideal components, with ideal targets/bias and separate supply."
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "pass": 68,
+  "status": "boundary hold fails under provisional zero-minimum input arrival",
+  "corners": {
+    "tt_025C_3v30": {
+      "wr_clk:max:wr_clk": {
+        "slack_ns": 13.213,
+        "startpoint": "wr_words[2] (input port clocked by wr_clk)",
+        "endpoint": "_3422_ (rising edge-triggered flip-flop clocked by wr_clk)"
+      },
+      "wr_clk:max:asynchronous": {
+        "slack_ns": 21.7377,
+        "startpoint": "_4099_ (rising edge-triggered flip-flop clocked by wr_clk)",
+        "endpoint": "_4124_ (recovery check against rising-edge clock wr_clk)"
+      },
+      "wr_clk:min:wr_clk": {
+        "slack_ns": -1.7075,
+        "startpoint": "wr_valid (input port clocked by wr_clk)",
+        "endpoint": "_4110_ (rising edge-triggered flip-flop clocked by wr_clk)"
+      },
+      "wr_clk:min:asynchronous": {
+        "slack_ns": 1.8119,
+        "startpoint": "_4099_ (rising edge-triggered flip-flop clocked by wr_clk)",
+        "endpoint": "_4103_ (removal check against rising-edge clock wr_clk)"
+      },
+      "rd_clk:max:rd_clk": {
+        "slack_ns": 14.1524,
+        "startpoint": "_4089_ (rising edge-triggered flip-flop clocked by rd_clk)",
+        "endpoint": "rd_data[28] (output port clocked by rd_clk)"
+      },
+      "rd_clk:max:asynchronous": {
+        "slack_ns": 20.6728,
+        "startpoint": "_4109_ (rising edge-triggered flip-flop clocked by rd_clk)",
+        "endpoint": "_4111_ (recovery check against rising-edge clock rd_clk)"
+      },
+      "rd_clk:min:rd_clk": {
+        "slack_ns": -0.6816,
+        "startpoint": "rd_ready (input port clocked by rd_clk)",
+        "endpoint": "_4089_ (rising edge-triggered flip-flop clocked by rd_clk)"
+      },
+      "rd_clk:min:asynchronous": {
+        "slack_ns": 2.3422,
+        "startpoint": "_4109_ (rising edge-triggered flip-flop clocked by rd_clk)",
+        "endpoint": "_4090_ (removal check against rising-edge clock rd_clk)"
+      }
+    },
+    "ff_n40C_3v60": {
+      "wr_clk:max:wr_clk": {
+        "slack_ns": 16.683,
+        "startpoint": "wr_words[2] (input port clocked by wr_clk)",
+        "endpoint": "_3422_ (rising edge-triggered flip-flop clocked by wr_clk)"
+      },
+      "wr_clk:max:asynchronous": {
+        "slack_ns": 23.2395,
+        "startpoint": "_4099_ (rising edge-triggered flip-flop clocked by wr_clk)",
+        "endpoint": "_4124_ (recovery check against rising-edge clock wr_clk)"
+      },
+      "wr_clk:min:wr_clk": {
+        "slack_ns": -1.1916,
+        "startpoint": "wr_valid (input port clocked by wr_clk)",
+        "endpoint": "_4110_ (rising edge-triggered flip-flop clocked by wr_clk)"
+      },
+      "wr_clk:min:asynchronous": {
+        "slack_ns": 0.9434,
+        "startpoint": "_4099_ (rising edge-triggered flip-flop clocked by wr_clk)",
+        "endpoint": "_4103_ (removal check against rising-edge clock wr_clk)"
+      },
+      "rd_clk:max:rd_clk": {
+        "slack_ns": 17.2063,
+        "startpoint": "_4089_ (rising edge-triggered flip-flop clocked by rd_clk)",
+        "endpoint": "rd_data[28] (output port clocked by rd_clk)"
+      },
+      "rd_clk:max:asynchronous": {
+        "slack_ns": 22.5848,
+        "startpoint": "_4109_ (rising edge-triggered flip-flop clocked by rd_clk)",
+        "endpoint": "_4111_ (recovery check against rising-edge clock rd_clk)"
+      },
+      "rd_clk:min:rd_clk": {
+        "slack_ns": -0.6462,
+        "startpoint": "rd_ready (input port clocked by rd_clk)",
+        "endpoint": "_4089_ (rising edge-triggered flip-flop clocked by rd_clk)"
+      },
+      "rd_clk:min:asynchronous": {
+        "slack_ns": 1.289,
+        "startpoint": "_4109_ (rising edge-triggered flip-flop clocked by rd_clk)",
+        "endpoint": "_4090_ (removal check against rising-edge clock rd_clk)"
+      }
+    },
+    "ss_125C_3v00": {
+      "wr_clk:max:wr_clk": {
+        "slack_ns": 3.9193,
+        "startpoint": "_4099_ (rising edge-triggered flip-flop clocked by wr_clk)",
+        "endpoint": "_3422_ (rising edge-triggered flip-flop clocked by wr_clk)"
+      },
+      "wr_clk:max:asynchronous": {
+        "slack_ns": 18.1218,
+        "startpoint": "_4099_ (rising edge-triggered flip-flop clocked by wr_clk)",
+        "endpoint": "_4124_ (recovery check against rising-edge clock wr_clk)"
+      },
+      "wr_clk:min:wr_clk": {
+        "slack_ns": -2.9218,
+        "startpoint": "wr_valid (input port clocked by wr_clk)",
+        "endpoint": "_4110_ (rising edge-triggered flip-flop clocked by wr_clk)"
+      },
+      "wr_clk:min:asynchronous": {
+        "slack_ns": 3.9297,
+        "startpoint": "_4099_ (rising edge-triggered flip-flop clocked by wr_clk)",
+        "endpoint": "_4103_ (removal check against rising-edge clock wr_clk)"
+      },
+      "rd_clk:max:rd_clk": {
+        "slack_ns": 6.404,
+        "startpoint": "_4109_ (rising edge-triggered flip-flop clocked by rd_clk)",
+        "endpoint": "_3926_ (rising edge-triggered flip-flop clocked by rd_clk)"
+      },
+      "rd_clk:max:asynchronous": {
+        "slack_ns": 16.0427,
+        "startpoint": "_4109_ (rising edge-triggered flip-flop clocked by rd_clk)",
+        "endpoint": "_3917_ (recovery check against rising-edge clock rd_clk)"
+      },
+      "rd_clk:min:rd_clk": {
+        "slack_ns": -0.7263,
+        "startpoint": "rd_ready (input port clocked by rd_clk)",
+        "endpoint": "_4089_ (rising edge-triggered flip-flop clocked by rd_clk)"
+      },
+      "rd_clk:min:asynchronous": {
+        "slack_ns": 4.8855,
+        "startpoint": "_4109_ (rising edge-triggered flip-flop clocked by rd_clk)",
+        "endpoint": "_4090_ (removal check against rising-edge clock rd_clk)"
+      }
+    }
+  },
+  "scope": "Same-domain setup/hold/recovery/removal with provisional IO budgets and 0.5ns hold uncertainty. CTS/placement RC only; cross-domain paths not qualified.",
+  "sha256": {
+    "projects/programmable_transceiver_platform/verification/block_elastic_boundary.tcl": "3112be6c7cd179118a2e414549271b52183b7f65e55e30dc6b9228967569bd02",
+    "projects/programmable_transceiver_platform/verification/block_elastic_boundary.py": "85083e6cea69eff353eb2ea1f0b4a4f5746ace9a309babf6fc894c4fd62505ee",
+    "projects/programmable_transceiver_platform/verification/run_block_elastic_boundary.sh": "da3fc7c13304903435c90ceab0a9f5125c68bdee6340e33310c4cc55e91fd8d5",
+    "projects/programmable_transceiver_platform/verification/report_block_elastic_boundary.py": "832fc0e168399db27e9977a6f6408d42194978f5e89a6b87647375e3417200a5",
+    "scratch/transceiver-block-elastic-boundary/ff_n40C_3v60.log": "22ffd1c4ada28994ac9e22ffde1429eb2d1328625515f539146ef6837c7a4407",
+    "scratch/transceiver-block-elastic-boundary/ss_125C_3v00.log": "239285881aa4c492575cd73966c3d287ab6729285358c8c91f3682cc05a2b4e3",
+    "scratch/transceiver-block-elastic-boundary/tt_025C_3v30.log": "bb718794d062213be528f3a77f5f69a3d2a1f1dfc84724b095cbbbca59ce629a"
+  }
+}

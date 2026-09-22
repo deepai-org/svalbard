@@ -1,0 +1,42 @@
+{
+  "mode": "schedule_wide_edge_comparison",
+  "cases": [
+    {
+      "case": "separated",
+      "status": "terminal",
+      "completed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "errors": [],
+      "artifacts_sha256": {
+        ".spice": "5b12870b836d8af6dab71726a2aeb5f3f98d9f83fef54c96566bc636ebcd642e",
+        ".log": "8a6215290987a9248682a0766975135e1350d1ea6eb41709d6963e275846c0f2",
+        ".dat": "e246b83a73537f843dbfa5066ff52f1de57030ddd0368515fe7a5c15a04ff100"
+      },
+      "actual_stop_ns": 610.0000000000001,
+      "rows": 305712,
+      "repeated_times": 0,
+      "pre_event_comparison_window_ns": [
+        350,
+        473.3
+      ],
+      "pre_event_max_errors_v": {
+        "v(fip)": 0.0,
+        "v(fin)": 0.0,
+        "v(fqp)": 0.0,
+        "v(fqn)": 0.0,
+        "v(xadc.vh)": 0.0,
+        "v(xadc.vl)": 0.0,
+        "v(xadc.hp)": 0.0,
+        "v(xadc.hn)": 0.0
+      }
+    }
+  ],
+  "matrix_terminal": true,
+  "completed": true,
+  "limitations": [
+    "Successful simulation would establish event sensitivity, not a physical fix.",
+    "Pre-event interpolation is diagnostic without a new acceptance threshold.",
+    "No ADC quality/noise claim from this inherited aliasing stimulus."
+  ]
+}

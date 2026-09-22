@@ -1,0 +1,4998 @@
+{
+  "status": "passed",
+  "profile": {
+    "name": "combined-programmable-phy-candidate",
+    "scope": "Declared mathematical assumptions, not qualified GF180 specifications",
+    "rf_filter": {
+      "order": 5,
+      "cutoff_hz": 9157407.055691985
+    },
+    "converter_latency_periods": {
+      "adc": 2,
+      "dac": 1.5
+    },
+    "shared_reference": {
+      "resistance_ohm": 1000,
+      "capacitance_f": 1e-10,
+      "adc_load_f": 1e-12,
+      "dac_load_f": 2e-12
+    },
+    "host_switching_charge_c": {
+      "h2d": 1e-13,
+      "d2h": 5e-14
+    },
+    "signed_coupling": {
+      "rx_gain_per_v": 1,
+      "dac_gain_per_v": 1,
+      "wired_phase_ui_per_v": 0.02,
+      "rf_cubic": 0.05,
+      "iq_gain_error": 0.03,
+      "iq_phase_error_rad": 0.03
+    },
+    "frontend": {
+      "saturation": 0.8,
+      "noise_rms": 0.001,
+      "seed": 800
+    },
+    "blockers": [
+      [
+        0.1,
+        20000000
+      ],
+      [
+        0.1,
+        30000000
+      ]
+    ],
+    "rf_phase_fixture": {
+      "scale": 0.5,
+      "seed": 800
+    },
+    "traffic": {
+      "source_ppm": 100,
+      "host_ppm": -100,
+      "pause_frame": 48,
+      "pause_word_periods": 16,
+      "waveform_seed": 804
+    },
+    "quality_budget_relative_rms": 0.1,
+    "open_functions": [
+      "independent external RF source",
+      "autonomous RF and wired TX oscillator qualification",
+      "wired TX swing/EQ and receiver detect",
+      "timed hardware management mapping",
+      "complete converter clipping/validity diagnostics"
+    ]
+  },
+  "profile_sha256": "4ba30ffd0919274c84cd4aab0a1af9dbc458310ec16de38197564a4ccf900b6b",
+  "cases": [
+    {
+      "mode": 0,
+      "sign": -1,
+      "quality": {
+        "calibration_samples": 327,
+        "validation_samples": 984,
+        "gain_real": 1.0196351642044679,
+        "gain_imag": 0.019358502211836427,
+        "gain_magnitude": 1.019818915146291,
+        "raw_relative_rms": 0.0698159957731168,
+        "corrected_relative_rms": 0.05785473810802365,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "traffic": {
+        "service_pauses": [
+          {
+            "frame": 48,
+            "word_periods": 16,
+            "dac_consumed": 3,
+            "wired_consumed": 8,
+            "adc_captured": 3
+          }
+        ],
+        "visibility_edges": 0,
+        "source_phase_edges": 0,
+        "matched_reference": true,
+        "host_service_ppm": -100,
+        "adc_sha256": "373d7d557127639e4b0f2bd8f26e5609a09c6b1b5d9e22c493e567e2631dfb6a",
+        "adc_checksum": 7478037016697,
+        "reference_metrics": {
+          "adc_quantization": {
+            "conversions": 1311,
+            "clipped_samples": 0,
+            "i_low": 0,
+            "i_high": 0,
+            "q_low": 0,
+            "q_high": 0
+          },
+          "dac_reference": {
+            "enabled": true,
+            "shared": true,
+            "minimum_span_v": 0.9555535799766189,
+            "updates": 1311,
+            "charge_c": 7.266487175416143e-10,
+            "load_capacitance_f": 2e-12
+          },
+          "minimum_span_v": 0.9555535799766189,
+          "total_load_charge_c": 1.1601980652488022e-09,
+          "conversions": 1311,
+          "resistance_ohm": 1000,
+          "capacitance_f": 1e-10,
+          "load_capacitance_f": 1e-12,
+          "frontend": {
+            "samples": 1311,
+            "relative_rms_error": 0.04206227999696177,
+            "gain_error": -0.03,
+            "phase_error_rad": -0.03,
+            "saturation": 0.8,
+            "noise_rms_per_component": 0.001
+          },
+          "dac_supply": {
+            "coupling_per_v": -1,
+            "updates": 1311,
+            "gain_min": 1.0,
+            "gain_max": 1.031817167174487
+          },
+          "supply": {
+            "minimum_delta_v": -0.03395268164257817,
+            "total_charge_c": 7.356600000000021e-09,
+            "transitions": 48654,
+            "return_transitions": 49824,
+            "return_charge_c": 2.4911999999999105e-09,
+            "coupling_per_v": -1,
+            "gain_min": 1.0,
+            "gain_max": 1.0315180009696912
+          },
+          "capture": {
+            "enabled": true,
+            "done": true,
+            "count": 32,
+            "data_sha256": "07b325a613cfac0358d6c3a802fa7004fd3533469c4fa330d1550e8792bbcb14"
+          },
+          "rf_lo_events": [
+            {
+              "time": 5e-06,
+              "tx_phase_step": 0.025704395208221306,
+              "rx_phase_step": 0.06747966437581089,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.1e-06,
+              "tx_phase_step": -0.09358938711547282,
+              "rx_phase_step": -0.07452024312508913,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.2e-06,
+              "tx_phase_step": 0.06950240743613319,
+              "rx_phase_step": -0.02088731833396488,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.3e-06,
+              "tx_phase_step": -0.07177449884761204,
+              "rx_phase_step": -0.015161240202312597,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.400000000000001e-06,
+              "tx_phase_step": 0.02710950054552684,
+              "rx_phase_step": 0.10922485900260277,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.500000000000001e-06,
+              "tx_phase_step": 0.048805673251228254,
+              "rx_phase_step": -0.01659863424099703,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.600000000000001e-06,
+              "tx_phase_step": -0.02906336267792054,
+              "rx_phase_step": -0.09843197599594074,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.7000000000000005e-06,
+              "tx_phase_step": -0.006509047500956398,
+              "rx_phase_step": 0.12009995318921916,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.8e-06,
+              "tx_phase_step": -0.03846171850069133,
+              "rx_phase_step": -0.12104799996073679,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.9e-06,
+              "tx_phase_step": 0.07784102266526591,
+              "rx_phase_step": 0.08536640640764326,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6e-06,
+              "tx_phase_step": -0.06983286683467085,
+              "rx_phase_step": -0.11012855194936216,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.100000000000001e-06,
+              "tx_phase_step": 0.06225564867052734,
+              "rx_phase_step": 0.10721001460884205,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.2e-06,
+              "tx_phase_step": -0.042818927797820254,
+              "rx_phase_step": -0.01622831866274177,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.300000000000001e-06,
+              "tx_phase_step": -0.02381749662856731,
+              "rx_phase_step": -0.009390946301788258,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.4000000000000006e-06,
+              "tx_phase_step": 0.0677654344545922,
+              "rx_phase_step": 0.0071308545312875615,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.5000000000000004e-06,
+              "tx_phase_step": -0.013474326931259162,
+              "rx_phase_step": 0.027094771804818327,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.6e-06,
+              "tx_phase_step": 0.03440492718366599,
+              "rx_phase_step": -0.07383292439266274,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.7e-06,
+              "tx_phase_step": -0.09904666284866995,
+              "rx_phase_step": 0.04454072457192518,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.8e-06,
+              "tx_phase_step": 0.07225442168917423,
+              "rx_phase_step": 0.004890684547394275,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.9e-06,
+              "tx_phase_step": 0.05649829652704186,
+              "rx_phase_step": -0.026596633503879516,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.000000000000001e-06,
+              "tx_phase_step": -0.06642414419129813,
+              "rx_phase_step": -0.04400463356356474,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.1e-06,
+              "tx_phase_step": 0.015091363451353423,
+              "rx_phase_step": 0.055573940589298404,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.2000000000000005e-06,
+              "tx_phase_step": -0.018100715097450475,
+              "rx_phase_step": 0.02378323187829455,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.3e-06,
+              "tx_phase_step": 0.006091720610982461,
+              "rx_phase_step": -0.015079913724814015,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.4e-06,
+              "tx_phase_step": 0.08027506111017209,
+              "rx_phase_step": -0.026790893247594864,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.5e-06,
+              "tx_phase_step": -0.06849612810347405,
+              "rx_phase_step": 0.012959387849920075,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.6e-06,
+              "tx_phase_step": 0.03480802423941726,
+              "rx_phase_step": 0.023111692418343113,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.7e-06,
+              "tx_phase_step": 0.025356512048704455,
+              "rx_phase_step": -0.04068050511791355,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.8e-06,
+              "tx_phase_step": -0.061416778109094225,
+              "rx_phase_step": 0.07770429663973691,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.9e-06,
+              "tx_phase_step": -0.07028398587756823,
+              "rx_phase_step": 0.013748851529345546,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.000000000000001e-06,
+              "tx_phase_step": 0.06155401410469277,
+              "rx_phase_step": -0.06270390256965915,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.1e-06,
+              "tx_phase_step": 0.07602382385933075,
+              "rx_phase_step": -0.025709309753388858,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.2e-06,
+              "tx_phase_step": -0.02542072986656284,
+              "rx_phase_step": -0.03249196669423655,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.3e-06,
+              "tx_phase_step": -0.043242639627826235,
+              "rx_phase_step": 0.019490901685119036,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.400000000000001e-06,
+              "tx_phase_step": -0.0014071766175949574,
+              "rx_phase_step": -0.007128890378470705,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.5e-06,
+              "tx_phase_step": -0.055598356171928404,
+              "rx_phase_step": 0.0835263017954192,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.6e-06,
+              "tx_phase_step": 0.02455308361433913,
+              "rx_phase_step": -0.06490607071946158,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.7e-06,
+              "tx_phase_step": -0.007344880997495723,
+              "rx_phase_step": 0.0053268875558373785,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.8e-06,
+              "tx_phase_step": -0.03196843840083428,
+              "rx_phase_step": -0.014313550684336256,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.9e-06,
+              "tx_phase_step": 0.11306053659253125,
+              "rx_phase_step": -0.03666710781368156,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9e-06,
+              "tx_phase_step": -0.03622986309956866,
+              "rx_phase_step": 0.03765243069337176,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.100000000000001e-06,
+              "tx_phase_step": -0.010659393186122412,
+              "rx_phase_step": 0.015246676502656417,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.2e-06,
+              "tx_phase_step": 0.07554604421850279,
+              "rx_phase_step": -0.062459921107861235,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.299999999999999e-06,
+              "tx_phase_step": -0.12519690032486272,
+              "rx_phase_step": 0.12068901904017991,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.400000000000001e-06,
+              "tx_phase_step": 0.11982306864465089,
+              "rx_phase_step": -0.04893805285957559,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.5e-06,
+              "tx_phase_step": -0.09770912321758407,
+              "rx_phase_step": -0.013784781367366064,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.6e-06,
+              "tx_phase_step": 0.08624990960944698,
+              "rx_phase_step": 0.08753347137158128,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.7e-06,
+              "tx_phase_step": -0.043689351298766346,
+              "rx_phase_step": -0.061839749249895964,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.800000000000001e-06,
+              "tx_phase_step": -0.016840780937882938,
+              "rx_phase_step": 0.0202094798253733,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.9e-06,
+              "tx_phase_step": 7.271088295210393e-05,
+              "rx_phase_step": 0.010666426162398879,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.999999999999999e-06,
+              "tx_phase_step": -0.005301427917068821,
+              "rx_phase_step": -0.08063013019805423,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.01e-05,
+              "tx_phase_step": 0.059474004188522195,
+              "rx_phase_step": 0.07404443419620821,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.02e-05,
+              "tx_phase_step": -0.0580305858743289,
+              "rx_phase_step": 0.027452339645820084,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.03e-05,
+              "tx_phase_step": 0.05673920229257201,
+              "rx_phase_step": -0.10586854571253107,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.04e-05,
+              "tx_phase_step": -0.11442464709320813,
+              "rx_phase_step": -0.002157829647937412,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.0500000000000001e-05,
+              "tx_phase_step": 0.08029030627604983,
+              "rx_phase_step": 0.02677182131609046,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.06e-05,
+              "tx_phase_step": 0.05786047031488732,
+              "rx_phase_step": 0.030937646106326017,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.07e-05,
+              "tx_phase_step": -0.019684897995252526,
+              "rx_phase_step": 0.0548871883479143,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.08e-05,
+              "tx_phase_step": -0.10182094408235592,
+              "rx_phase_step": -0.07819369317168176,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.09e-05,
+              "tx_phase_step": 0.0291687411686379,
+              "rx_phase_step": 0.038913677768754915,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.1e-05,
+              "tx_phase_step": 0.08680208947473754,
+              "rx_phase_step": -0.005390009994472825,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.11e-05,
+              "tx_phase_step": -0.13181778289657745,
+              "rx_phase_step": 0.03951955748454178,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.1200000000000001e-05,
+              "tx_phase_step": 0.07737672021017632,
+              "rx_phase_step": -0.014883046101080474,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.13e-05,
+              "tx_phase_step": 0.012654400137325036,
+              "rx_phase_step": -0.11815847169801191,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.14e-05,
+              "tx_phase_step": -0.0075109530542987885,
+              "rx_phase_step": 0.02948245245695432,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.15e-05,
+              "tx_phase_step": 0.017392217450358752,
+              "rx_phase_step": 0.017012848495782003,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.16e-05,
+              "tx_phase_step": -0.009641058705620029,
+              "rx_phase_step": 0.06290585219562948,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.17e-05,
+              "tx_phase_step": -0.08923576200379371,
+              "rx_phase_step": 0.03776812370978985,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.1799999999999999e-05,
+              "tx_phase_step": 0.0015368037688921615,
+              "rx_phase_step": -0.13285770919910828,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.1900000000000001e-05,
+              "tx_phase_step": 0.09427434498498304,
+              "rx_phase_step": 0.009023624026410118,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.2e-05,
+              "tx_phase_step": -0.032421175085723355,
+              "rx_phase_step": 0.027728294645880926,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.21e-05,
+              "tx_phase_step": -0.010208438026206183,
+              "rx_phase_step": 0.05577614813979826,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.22e-05,
+              "tx_phase_step": 0.04115505483301694,
+              "rx_phase_step": -0.09520072942002702,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.23e-05,
+              "tx_phase_step": -0.055678956169225906,
+              "rx_phase_step": 0.09394555319544791,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.24e-05,
+              "tx_phase_step": 0.06345390590940692,
+              "rx_phase_step": -0.07535230497045371,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.2499999999999999e-05,
+              "tx_phase_step": -0.04128918234998977,
+              "rx_phase_step": -0.022959236961688848,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.2600000000000001e-05,
+              "tx_phase_step": -0.05994097718023607,
+              "rx_phase_step": 0.004955148963698877,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.27e-05,
+              "tx_phase_step": 0.059710827929031915,
+              "rx_phase_step": 0.101809434648221,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.28e-05,
+              "tx_phase_step": 0.05856892041845353,
+              "rx_phase_step": -0.007760547797279277,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.2899999999999998e-05,
+              "tx_phase_step": -0.06379609317541382,
+              "rx_phase_step": -0.08430415698930996,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3000000000000001e-05,
+              "tx_phase_step": 0.03281481653740591,
+              "rx_phase_step": 0.10145628786065475,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.31e-05,
+              "tx_phase_step": -0.09010772604985126,
+              "rx_phase_step": 0.02215218753122572,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3199999999999999e-05,
+              "tx_phase_step": 0.04412178557824372,
+              "rx_phase_step": -0.04361594725686278,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3300000000000001e-05,
+              "tx_phase_step": -0.022587085195585478,
+              "rx_phase_step": -0.004437471370588614,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.34e-05,
+              "tx_phase_step": 0.1082623010144475,
+              "rx_phase_step": 0.016484890729863436,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.35e-05,
+              "tx_phase_step": -0.07764857379594979,
+              "rx_phase_step": 0.03153301588320839,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3599999999999999e-05,
+              "tx_phase_step": 0.03867624946980583,
+              "rx_phase_step": -0.12520023165844896,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3700000000000001e-05,
+              "tx_phase_step": -0.032451193891206695,
+              "rx_phase_step": 0.0901390443442805,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.38e-05,
+              "tx_phase_step": -0.06131901141040348,
+              "rx_phase_step": -0.02198518735699323,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3899999999999999e-05,
+              "tx_phase_step": 0.09891334272312954,
+              "rx_phase_step": 0.025038838646361042,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4000000000000001e-05,
+              "tx_phase_step": -0.055798219391973915,
+              "rx_phase_step": -0.06627181012899402,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.41e-05,
+              "tx_phase_step": 0.06397641571698273,
+              "rx_phase_step": -0.04286997910532558,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.42e-05,
+              "tx_phase_step": 0.009521011020248493,
+              "rx_phase_step": 0.12501917336206608,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4299999999999999e-05,
+              "tx_phase_step": -0.06083029019766834,
+              "rx_phase_step": -0.11842415209654328,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4400000000000001e-05,
+              "tx_phase_step": -0.02065272701281437,
+              "rx_phase_step": 0.11544701065105936,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.45e-05,
+              "tx_phase_step": 0.05345103571209233,
+              "rx_phase_step": 0.009055991843103156,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4599999999999999e-05,
+              "tx_phase_step": -0.0171079651833779,
+              "rx_phase_step": -0.01893133772160356,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4700000000000002e-05,
+              "tx_phase_step": 0.0539364621251784,
+              "rx_phase_step": -0.07434311207998004,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.48e-05,
+              "tx_phase_step": 0.0008049712648560969,
+              "rx_phase_step": 0.021965459621605177,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.49e-05,
+              "tx_phase_step": -0.0021497642093973313,
+              "rx_phase_step": 0.051263294156947206,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4999999999999999e-05,
+              "tx_phase_step": -0.07407222987961026,
+              "rx_phase_step": -0.06492950541257464,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.5100000000000001e-05,
+              "tx_phase_step": 0.05147298294958483,
+              "rx_phase_step": 0.057807023848708027,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.52e-05,
+              "tx_phase_step": -0.02730664775714907,
+              "rx_phase_step": 0.00041401671749580204,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.53e-05,
+              "tx_phase_step": -0.025935805647882955,
+              "rx_phase_step": -0.1096129337092113,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.5399999999999998e-05,
+              "tx_phase_step": 0.09726542063958338,
+              "rx_phase_step": 0.09883399605608567,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.55e-05,
+              "tx_phase_step": -0.09439434311523157,
+              "rx_phase_step": 0.007684428591501105,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.56e-05,
+              "tx_phase_step": 0.025264205355772708,
+              "rx_phase_step": -0.08496700340845989,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.57e-05,
+              "tx_phase_step": -0.022638066140804373,
+              "rx_phase_step": -0.01072891136446176,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.58e-05,
+              "tx_phase_step": 0.03412778369697444,
+              "rx_phase_step": 0.0753207681621573,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.59e-05,
+              "tx_phase_step": 0.017311690896952864,
+              "rx_phase_step": -0.04235197703881482,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.6e-05,
+              "tx_phase_step": 0.037909000421156816,
+              "rx_phase_step": -0.021419089017220318,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.61e-05,
+              "tx_phase_step": -0.05581549048104799,
+              "rx_phase_step": 0.008579913648330224,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.62e-05,
+              "tx_phase_step": 0.04658596156776497,
+              "rx_phase_step": -0.018531127343248757,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.63e-05,
+              "tx_phase_step": -0.06878085625497014,
+              "rx_phase_step": 0.04513762445424177,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.64e-05,
+              "tx_phase_step": 0.07293874250157435,
+              "rx_phase_step": -0.04713058720059426,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.65e-05,
+              "tx_phase_step": -0.06710764821422852,
+              "rx_phase_step": 0.12274197588575464,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.66e-05,
+              "tx_phase_step": 0.01996670414294449,
+              "rx_phase_step": -0.029744297274555867,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.67e-05,
+              "tx_phase_step": -0.013001399364603983,
+              "rx_phase_step": 0.035748035808103165,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.68e-05,
+              "tx_phase_step": -0.06413545177178837,
+              "rx_phase_step": -0.09031532807098991,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.69e-05,
+              "tx_phase_step": 0.02183263314759419,
+              "rx_phase_step": 0.021958502979337005,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.7e-05,
+              "tx_phase_step": 0.10928824042004473,
+              "rx_phase_step": 0.0002091426183136319,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.71e-05,
+              "tx_phase_step": -0.041662566473160106,
+              "rx_phase_step": 0.06089081318266548,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.72e-05,
+              "tx_phase_step": -0.038364231685649716,
+              "rx_phase_step": -0.10696325182380466,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.73e-05,
+              "tx_phase_step": -0.042216578218562534,
+              "rx_phase_step": 0.04934784674038964,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.74e-05,
+              "tx_phase_step": 0.10169933074109146,
+              "rx_phase_step": -0.03604283935039767,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.75e-05,
+              "tx_phase_step": -0.1230668119469042,
+              "rx_phase_step": 0.00512344485499984,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.76e-05,
+              "tx_phase_step": 0.13266786068630865,
+              "rx_phase_step": 0.012343876266297231,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.77e-05,
+              "tx_phase_step": -0.03461117534275031,
+              "rx_phase_step": -0.04132793155044232,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.78e-05,
+              "tx_phase_step": -0.08994659278738967,
+              "rx_phase_step": -0.0032018776902609375,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.79e-05,
+              "tx_phase_step": 0.08212928482780782,
+              "rx_phase_step": 0.03321218954000357,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.8e-05,
+              "tx_phase_step": -0.03917701684567569,
+              "rx_phase_step": 0.041210340214769166,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.81e-05,
+              "tx_phase_step": 0.05630405685289386,
+              "rx_phase_step": -0.04900805690824981,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.82e-05,
+              "tx_phase_step": -0.07948300203967582,
+              "rx_phase_step": 0.014309404377183518,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.83e-05,
+              "tx_phase_step": -0.015615167616830544,
+              "rx_phase_step": 0.07892350822196786,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.84e-05,
+              "tx_phase_step": 0.022053369398539663,
+              "rx_phase_step": -0.033152901952741565,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.85e-05,
+              "tx_phase_step": 0.10648389400735742,
+              "rx_phase_step": 0.04989697858200037,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.8599999999999998e-05,
+              "tx_phase_step": -0.07334920451267571,
+              "rx_phase_step": -0.11533866160929568,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.87e-05,
+              "tx_phase_step": 0.030415864169325957,
+              "rx_phase_step": 0.09793603442579757,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.88e-05,
+              "tx_phase_step": 0.0033423793504813726,
+              "rx_phase_step": -0.06284243236866521,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.89e-05,
+              "tx_phase_step": -0.06748520221330956,
+              "rx_phase_step": -0.0645701221622114,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.9e-05,
+              "tx_phase_step": 0.039005767707828286,
+              "rx_phase_step": -0.002576351774394095,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.91e-05,
+              "tx_phase_step": 0.026887699228759276,
+              "rx_phase_step": 0.005618034657364282,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.92e-05,
+              "tx_phase_step": -0.06821576153373876,
+              "rx_phase_step": 0.09959532904186191,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.9299999999999998e-05,
+              "tx_phase_step": 0.01053426826256907,
+              "rx_phase_step": -0.08116572400929602,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.94e-05,
+              "tx_phase_step": -0.030098991409477763,
+              "rx_phase_step": 0.006550694699126322,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.95e-05,
+              "tx_phase_step": 0.04106650314994942,
+              "rx_phase_step": 0.10546038046472618,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.96e-05,
+              "tx_phase_step": -0.04806235847574327,
+              "rx_phase_step": -0.1302156297396495,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.97e-05,
+              "tx_phase_step": 0.026675967066398652,
+              "rx_phase_step": -0.002712009619391831,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.98e-05,
+              "tx_phase_step": 0.010065092265542433,
+              "rx_phase_step": 0.0843224625942346,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.99e-05,
+              "tx_phase_step": -0.03739042264580605,
+              "rx_phase_step": 0.03343804821773297,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.9999999999999998e-05,
+              "tx_phase_step": 0.10212071063449674,
+              "rx_phase_step": -0.046411496970574034,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            }
+          ],
+          "wired_clock_impulses": {
+            "ui_per_v": -0.02,
+            "count": 16666,
+            "max_abs_ui": 0.00021999999999999998,
+            "total_signed_ui": 1.4583099999999878
+          }
+        },
+        "controller": "PlatformChip",
+        "interventions": [
+          {
+            "frame": 40,
+            "dac_shift_s": 2.501340143516782e-11,
+            "adc_shift_s": 2.507137417934028e-11
+          },
+          {
+            "frame": 80,
+            "dac_shift_s": -2.5038733578370588e-11,
+            "adc_shift_s": -2.504862315559197e-11
+          }
+        ],
+        "mode": 0,
+        "ppm": 100,
+        "duration_s": 3.276472352764723e-05,
+        "source_frames": 128,
+        "transmitted_frames": 129,
+        "rf_samples_each_direction": 1311,
+        "wired_words_each_direction": 4096,
+        "observed_queue_peaks": {
+          "rf_tx": 21,
+          "wire_tx": 65,
+          "rf_return": 27,
+          "wire_return": 32,
+          "source_iq": 32,
+          "source_wire": 40
+        },
+        "rf_accounting": {
+          "accepted": 1311,
+          "consumed": 1311,
+          "discarded": 0,
+          "pending": 0,
+          "rejected": 0,
+          "underflows": 0
+        },
+        "wire_accounting": {
+          "completed_words": 4096,
+          "partial_words_discarded": 0,
+          "serializing": 0,
+          "accepted": 4096,
+          "consumed": 4096,
+          "discarded": 0,
+          "pending": 0,
+          "underflows": 0
+        },
+        "adc_pipeline": {
+          "sampled": 1311,
+          "completed": 1311,
+          "cancelled": 0,
+          "pending": 0,
+          "latency_s": 5e-08,
+          "capacity": 4
+        },
+        "dac_pipeline": {
+          "consumed": 1311,
+          "updated": 1311,
+          "cancelled": 0,
+          "pending": 0,
+          "latency_s": 3.75e-08,
+          "capacity": 4
+        }
+      },
+      "waveform": {
+        "seed": 804,
+        "fft_size": 128,
+        "cyclic_prefix_samples": 32,
+        "active_subcarriers": 50,
+        "spacing_hz": 312500,
+        "edge_hz": 7812500,
+        "useful_symbol_s": 3.2e-06,
+        "prefix_s": 8e-07,
+        "generated_blocks": 9,
+        "sample_count": 1311,
+        "peak_envelope": 0.7102451167864783,
+        "rms_envelope": 0.24707652762622484,
+        "waveform_sha256": "8c87252794563f2a398f50cf7a4a99a0f06af4b0b721f1d52d88a396a5b29274"
+      },
+      "reference_adc_sha256": "6d75c9e42b18802a0d3f3ba1e0c0a4b272bbb6694bbe8ba5d06a55963d686637"
+    },
+    {
+      "mode": 0,
+      "sign": 1,
+      "quality": {
+        "calibration_samples": 327,
+        "validation_samples": 984,
+        "gain_real": 0.9423260189705431,
+        "gain_imag": -0.009760734494448803,
+        "gain_magnitude": 0.9423765690883573,
+        "raw_relative_rms": 0.07855279896265112,
+        "corrected_relative_rms": 0.05800949188541175,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "traffic": {
+        "service_pauses": [
+          {
+            "frame": 48,
+            "word_periods": 16,
+            "dac_consumed": 3,
+            "wired_consumed": 8,
+            "adc_captured": 3
+          }
+        ],
+        "visibility_edges": 0,
+        "source_phase_edges": 0,
+        "matched_reference": true,
+        "host_service_ppm": -100,
+        "adc_sha256": "dc305bb59a92bdb91b58f94585dd59e1444fc997e9f7db47db1c0c053faeb94c",
+        "adc_checksum": 7481315640293,
+        "reference_metrics": {
+          "adc_quantization": {
+            "conversions": 1311,
+            "clipped_samples": 0,
+            "i_low": 0,
+            "i_high": 0,
+            "q_low": 0,
+            "q_high": 0
+          },
+          "dac_reference": {
+            "enabled": true,
+            "shared": true,
+            "minimum_span_v": 0.9559429044981135,
+            "updates": 1311,
+            "charge_c": 7.268615347328251e-10,
+            "load_capacitance_f": 2e-12
+          },
+          "minimum_span_v": 0.9559429044981135,
+          "total_load_charge_c": 1.151827193770173e-09,
+          "conversions": 1311,
+          "resistance_ohm": 1000,
+          "capacitance_f": 1e-10,
+          "load_capacitance_f": 1e-12,
+          "frontend": {
+            "samples": 1311,
+            "relative_rms_error": 0.044855168093953054,
+            "gain_error": 0.03,
+            "phase_error_rad": 0.03,
+            "saturation": 0.8,
+            "noise_rms_per_component": 0.001
+          },
+          "dac_supply": {
+            "coupling_per_v": 1,
+            "updates": 1311,
+            "gain_min": 0.9684305399799613,
+            "gain_max": 1.0
+          },
+          "supply": {
+            "minimum_delta_v": -0.03465201412383265,
+            "total_charge_c": 7.352800000000005e-09,
+            "transitions": 48654,
+            "return_transitions": 49748,
+            "return_charge_c": 2.4873999999999044e-09,
+            "coupling_per_v": 1,
+            "gain_min": 0.9682185537269814,
+            "gain_max": 1.0
+          },
+          "capture": {
+            "enabled": true,
+            "done": true,
+            "count": 32,
+            "data_sha256": "15a81d66fe7d67f6a4ec1093c8ad89af7af33ddf33a392a011a46aae3948ec26"
+          },
+          "rf_lo_events": [
+            {
+              "time": 5e-06,
+              "tx_phase_step": 0.025704395208221306,
+              "rx_phase_step": 0.06747966437581089,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.1e-06,
+              "tx_phase_step": -0.09358938711547282,
+              "rx_phase_step": -0.07452024312508913,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.2e-06,
+              "tx_phase_step": 0.06950240743613319,
+              "rx_phase_step": -0.02088731833396488,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.3e-06,
+              "tx_phase_step": -0.07177449884761204,
+              "rx_phase_step": -0.015161240202312597,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.400000000000001e-06,
+              "tx_phase_step": 0.02710950054552684,
+              "rx_phase_step": 0.10922485900260277,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.500000000000001e-06,
+              "tx_phase_step": 0.048805673251228254,
+              "rx_phase_step": -0.01659863424099703,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.600000000000001e-06,
+              "tx_phase_step": -0.02906336267792054,
+              "rx_phase_step": -0.09843197599594074,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.7000000000000005e-06,
+              "tx_phase_step": -0.006509047500956398,
+              "rx_phase_step": 0.12009995318921916,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.8e-06,
+              "tx_phase_step": -0.03846171850069133,
+              "rx_phase_step": -0.12104799996073679,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.9e-06,
+              "tx_phase_step": 0.07784102266526591,
+              "rx_phase_step": 0.08536640640764326,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6e-06,
+              "tx_phase_step": -0.06983286683467085,
+              "rx_phase_step": -0.11012855194936216,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.100000000000001e-06,
+              "tx_phase_step": 0.06225564867052734,
+              "rx_phase_step": 0.10721001460884205,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.2e-06,
+              "tx_phase_step": -0.042818927797820254,
+              "rx_phase_step": -0.01622831866274177,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.300000000000001e-06,
+              "tx_phase_step": -0.02381749662856731,
+              "rx_phase_step": -0.009390946301788258,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.4000000000000006e-06,
+              "tx_phase_step": 0.0677654344545922,
+              "rx_phase_step": 0.0071308545312875615,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.5000000000000004e-06,
+              "tx_phase_step": -0.013474326931259162,
+              "rx_phase_step": 0.027094771804818327,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.6e-06,
+              "tx_phase_step": 0.03440492718366599,
+              "rx_phase_step": -0.07383292439266274,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.7e-06,
+              "tx_phase_step": -0.09904666284866995,
+              "rx_phase_step": 0.04454072457192518,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.8e-06,
+              "tx_phase_step": 0.07225442168917423,
+              "rx_phase_step": 0.004890684547394275,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.9e-06,
+              "tx_phase_step": 0.05649829652704186,
+              "rx_phase_step": -0.026596633503879516,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.000000000000001e-06,
+              "tx_phase_step": -0.06642414419129813,
+              "rx_phase_step": -0.04400463356356474,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.1e-06,
+              "tx_phase_step": 0.015091363451353423,
+              "rx_phase_step": 0.055573940589298404,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.2000000000000005e-06,
+              "tx_phase_step": -0.018100715097450475,
+              "rx_phase_step": 0.02378323187829455,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.3e-06,
+              "tx_phase_step": 0.006091720610982461,
+              "rx_phase_step": -0.015079913724814015,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.4e-06,
+              "tx_phase_step": 0.08027506111017209,
+              "rx_phase_step": -0.026790893247594864,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.5e-06,
+              "tx_phase_step": -0.06849612810347405,
+              "rx_phase_step": 0.012959387849920075,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.6e-06,
+              "tx_phase_step": 0.03480802423941726,
+              "rx_phase_step": 0.023111692418343113,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.7e-06,
+              "tx_phase_step": 0.025356512048704455,
+              "rx_phase_step": -0.04068050511791355,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.8e-06,
+              "tx_phase_step": -0.061416778109094225,
+              "rx_phase_step": 0.07770429663973691,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.9e-06,
+              "tx_phase_step": -0.07028398587756823,
+              "rx_phase_step": 0.013748851529345546,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.000000000000001e-06,
+              "tx_phase_step": 0.06155401410469277,
+              "rx_phase_step": -0.06270390256965915,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.1e-06,
+              "tx_phase_step": 0.07602382385933075,
+              "rx_phase_step": -0.025709309753388858,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.2e-06,
+              "tx_phase_step": -0.02542072986656284,
+              "rx_phase_step": -0.03249196669423655,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.3e-06,
+              "tx_phase_step": -0.043242639627826235,
+              "rx_phase_step": 0.019490901685119036,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.400000000000001e-06,
+              "tx_phase_step": -0.0014071766175949574,
+              "rx_phase_step": -0.007128890378470705,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.5e-06,
+              "tx_phase_step": -0.055598356171928404,
+              "rx_phase_step": 0.0835263017954192,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.6e-06,
+              "tx_phase_step": 0.02455308361433913,
+              "rx_phase_step": -0.06490607071946158,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.7e-06,
+              "tx_phase_step": -0.007344880997495723,
+              "rx_phase_step": 0.0053268875558373785,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.8e-06,
+              "tx_phase_step": -0.03196843840083428,
+              "rx_phase_step": -0.014313550684336256,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.9e-06,
+              "tx_phase_step": 0.11306053659253125,
+              "rx_phase_step": -0.03666710781368156,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9e-06,
+              "tx_phase_step": -0.03622986309956866,
+              "rx_phase_step": 0.03765243069337176,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.100000000000001e-06,
+              "tx_phase_step": -0.010659393186122412,
+              "rx_phase_step": 0.015246676502656417,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.2e-06,
+              "tx_phase_step": 0.07554604421850279,
+              "rx_phase_step": -0.062459921107861235,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.299999999999999e-06,
+              "tx_phase_step": -0.12519690032486272,
+              "rx_phase_step": 0.12068901904017991,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.400000000000001e-06,
+              "tx_phase_step": 0.11982306864465089,
+              "rx_phase_step": -0.04893805285957559,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.5e-06,
+              "tx_phase_step": -0.09770912321758407,
+              "rx_phase_step": -0.013784781367366064,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.6e-06,
+              "tx_phase_step": 0.08624990960944698,
+              "rx_phase_step": 0.08753347137158128,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.7e-06,
+              "tx_phase_step": -0.043689351298766346,
+              "rx_phase_step": -0.061839749249895964,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.800000000000001e-06,
+              "tx_phase_step": -0.016840780937882938,
+              "rx_phase_step": 0.0202094798253733,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.9e-06,
+              "tx_phase_step": 7.271088295210393e-05,
+              "rx_phase_step": 0.010666426162398879,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.999999999999999e-06,
+              "tx_phase_step": -0.005301427917068821,
+              "rx_phase_step": -0.08063013019805423,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.01e-05,
+              "tx_phase_step": 0.059474004188522195,
+              "rx_phase_step": 0.07404443419620821,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.02e-05,
+              "tx_phase_step": -0.0580305858743289,
+              "rx_phase_step": 0.027452339645820084,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.03e-05,
+              "tx_phase_step": 0.05673920229257201,
+              "rx_phase_step": -0.10586854571253107,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.04e-05,
+              "tx_phase_step": -0.11442464709320813,
+              "rx_phase_step": -0.002157829647937412,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.0500000000000001e-05,
+              "tx_phase_step": 0.08029030627604983,
+              "rx_phase_step": 0.02677182131609046,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.06e-05,
+              "tx_phase_step": 0.05786047031488732,
+              "rx_phase_step": 0.030937646106326017,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.07e-05,
+              "tx_phase_step": -0.019684897995252526,
+              "rx_phase_step": 0.0548871883479143,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.08e-05,
+              "tx_phase_step": -0.10182094408235592,
+              "rx_phase_step": -0.07819369317168176,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.09e-05,
+              "tx_phase_step": 0.0291687411686379,
+              "rx_phase_step": 0.038913677768754915,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.1e-05,
+              "tx_phase_step": 0.08680208947473754,
+              "rx_phase_step": -0.005390009994472825,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.11e-05,
+              "tx_phase_step": -0.13181778289657745,
+              "rx_phase_step": 0.03951955748454178,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.1200000000000001e-05,
+              "tx_phase_step": 0.07737672021017632,
+              "rx_phase_step": -0.014883046101080474,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.13e-05,
+              "tx_phase_step": 0.012654400137325036,
+              "rx_phase_step": -0.11815847169801191,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.14e-05,
+              "tx_phase_step": -0.0075109530542987885,
+              "rx_phase_step": 0.02948245245695432,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.15e-05,
+              "tx_phase_step": 0.017392217450358752,
+              "rx_phase_step": 0.017012848495782003,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.16e-05,
+              "tx_phase_step": -0.009641058705620029,
+              "rx_phase_step": 0.06290585219562948,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.17e-05,
+              "tx_phase_step": -0.08923576200379371,
+              "rx_phase_step": 0.03776812370978985,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.1799999999999999e-05,
+              "tx_phase_step": 0.0015368037688921615,
+              "rx_phase_step": -0.13285770919910828,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.1900000000000001e-05,
+              "tx_phase_step": 0.09427434498498304,
+              "rx_phase_step": 0.009023624026410118,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.2e-05,
+              "tx_phase_step": -0.032421175085723355,
+              "rx_phase_step": 0.027728294645880926,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.21e-05,
+              "tx_phase_step": -0.010208438026206183,
+              "rx_phase_step": 0.05577614813979826,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.22e-05,
+              "tx_phase_step": 0.04115505483301694,
+              "rx_phase_step": -0.09520072942002702,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.23e-05,
+              "tx_phase_step": -0.055678956169225906,
+              "rx_phase_step": 0.09394555319544791,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.24e-05,
+              "tx_phase_step": 0.06345390590940692,
+              "rx_phase_step": -0.07535230497045371,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.2499999999999999e-05,
+              "tx_phase_step": -0.04128918234998977,
+              "rx_phase_step": -0.022959236961688848,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.2600000000000001e-05,
+              "tx_phase_step": -0.05994097718023607,
+              "rx_phase_step": 0.004955148963698877,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.27e-05,
+              "tx_phase_step": 0.059710827929031915,
+              "rx_phase_step": 0.101809434648221,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.28e-05,
+              "tx_phase_step": 0.05856892041845353,
+              "rx_phase_step": -0.007760547797279277,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.2899999999999998e-05,
+              "tx_phase_step": -0.06379609317541382,
+              "rx_phase_step": -0.08430415698930996,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3000000000000001e-05,
+              "tx_phase_step": 0.03281481653740591,
+              "rx_phase_step": 0.10145628786065475,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.31e-05,
+              "tx_phase_step": -0.09010772604985126,
+              "rx_phase_step": 0.02215218753122572,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3199999999999999e-05,
+              "tx_phase_step": 0.04412178557824372,
+              "rx_phase_step": -0.04361594725686278,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3300000000000001e-05,
+              "tx_phase_step": -0.022587085195585478,
+              "rx_phase_step": -0.004437471370588614,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.34e-05,
+              "tx_phase_step": 0.1082623010144475,
+              "rx_phase_step": 0.016484890729863436,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.35e-05,
+              "tx_phase_step": -0.07764857379594979,
+              "rx_phase_step": 0.03153301588320839,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3599999999999999e-05,
+              "tx_phase_step": 0.03867624946980583,
+              "rx_phase_step": -0.12520023165844896,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3700000000000001e-05,
+              "tx_phase_step": -0.032451193891206695,
+              "rx_phase_step": 0.0901390443442805,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.38e-05,
+              "tx_phase_step": -0.06131901141040348,
+              "rx_phase_step": -0.02198518735699323,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3899999999999999e-05,
+              "tx_phase_step": 0.09891334272312954,
+              "rx_phase_step": 0.025038838646361042,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4000000000000001e-05,
+              "tx_phase_step": -0.055798219391973915,
+              "rx_phase_step": -0.06627181012899402,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.41e-05,
+              "tx_phase_step": 0.06397641571698273,
+              "rx_phase_step": -0.04286997910532558,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.42e-05,
+              "tx_phase_step": 0.009521011020248493,
+              "rx_phase_step": 0.12501917336206608,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4299999999999999e-05,
+              "tx_phase_step": -0.06083029019766834,
+              "rx_phase_step": -0.11842415209654328,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4400000000000001e-05,
+              "tx_phase_step": -0.02065272701281437,
+              "rx_phase_step": 0.11544701065105936,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.45e-05,
+              "tx_phase_step": 0.05345103571209233,
+              "rx_phase_step": 0.009055991843103156,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4599999999999999e-05,
+              "tx_phase_step": -0.0171079651833779,
+              "rx_phase_step": -0.01893133772160356,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4700000000000002e-05,
+              "tx_phase_step": 0.0539364621251784,
+              "rx_phase_step": -0.07434311207998004,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.48e-05,
+              "tx_phase_step": 0.0008049712648560969,
+              "rx_phase_step": 0.021965459621605177,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.49e-05,
+              "tx_phase_step": -0.0021497642093973313,
+              "rx_phase_step": 0.051263294156947206,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4999999999999999e-05,
+              "tx_phase_step": -0.07407222987961026,
+              "rx_phase_step": -0.06492950541257464,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.5100000000000001e-05,
+              "tx_phase_step": 0.05147298294958483,
+              "rx_phase_step": 0.057807023848708027,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.52e-05,
+              "tx_phase_step": -0.02730664775714907,
+              "rx_phase_step": 0.00041401671749580204,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.53e-05,
+              "tx_phase_step": -0.025935805647882955,
+              "rx_phase_step": -0.1096129337092113,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.5399999999999998e-05,
+              "tx_phase_step": 0.09726542063958338,
+              "rx_phase_step": 0.09883399605608567,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.55e-05,
+              "tx_phase_step": -0.09439434311523157,
+              "rx_phase_step": 0.007684428591501105,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.56e-05,
+              "tx_phase_step": 0.025264205355772708,
+              "rx_phase_step": -0.08496700340845989,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.57e-05,
+              "tx_phase_step": -0.022638066140804373,
+              "rx_phase_step": -0.01072891136446176,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.58e-05,
+              "tx_phase_step": 0.03412778369697444,
+              "rx_phase_step": 0.0753207681621573,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.59e-05,
+              "tx_phase_step": 0.017311690896952864,
+              "rx_phase_step": -0.04235197703881482,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.6e-05,
+              "tx_phase_step": 0.037909000421156816,
+              "rx_phase_step": -0.021419089017220318,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.61e-05,
+              "tx_phase_step": -0.05581549048104799,
+              "rx_phase_step": 0.008579913648330224,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.62e-05,
+              "tx_phase_step": 0.04658596156776497,
+              "rx_phase_step": -0.018531127343248757,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.63e-05,
+              "tx_phase_step": -0.06878085625497014,
+              "rx_phase_step": 0.04513762445424177,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.64e-05,
+              "tx_phase_step": 0.07293874250157435,
+              "rx_phase_step": -0.04713058720059426,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.65e-05,
+              "tx_phase_step": -0.06710764821422852,
+              "rx_phase_step": 0.12274197588575464,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.66e-05,
+              "tx_phase_step": 0.01996670414294449,
+              "rx_phase_step": -0.029744297274555867,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.67e-05,
+              "tx_phase_step": -0.013001399364603983,
+              "rx_phase_step": 0.035748035808103165,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.68e-05,
+              "tx_phase_step": -0.06413545177178837,
+              "rx_phase_step": -0.09031532807098991,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.69e-05,
+              "tx_phase_step": 0.02183263314759419,
+              "rx_phase_step": 0.021958502979337005,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.7e-05,
+              "tx_phase_step": 0.10928824042004473,
+              "rx_phase_step": 0.0002091426183136319,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.71e-05,
+              "tx_phase_step": -0.041662566473160106,
+              "rx_phase_step": 0.06089081318266548,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.72e-05,
+              "tx_phase_step": -0.038364231685649716,
+              "rx_phase_step": -0.10696325182380466,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.73e-05,
+              "tx_phase_step": -0.042216578218562534,
+              "rx_phase_step": 0.04934784674038964,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.74e-05,
+              "tx_phase_step": 0.10169933074109146,
+              "rx_phase_step": -0.03604283935039767,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.75e-05,
+              "tx_phase_step": -0.1230668119469042,
+              "rx_phase_step": 0.00512344485499984,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.76e-05,
+              "tx_phase_step": 0.13266786068630865,
+              "rx_phase_step": 0.012343876266297231,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.77e-05,
+              "tx_phase_step": -0.03461117534275031,
+              "rx_phase_step": -0.04132793155044232,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.78e-05,
+              "tx_phase_step": -0.08994659278738967,
+              "rx_phase_step": -0.0032018776902609375,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.79e-05,
+              "tx_phase_step": 0.08212928482780782,
+              "rx_phase_step": 0.03321218954000357,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.8e-05,
+              "tx_phase_step": -0.03917701684567569,
+              "rx_phase_step": 0.041210340214769166,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.81e-05,
+              "tx_phase_step": 0.05630405685289386,
+              "rx_phase_step": -0.04900805690824981,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.82e-05,
+              "tx_phase_step": -0.07948300203967582,
+              "rx_phase_step": 0.014309404377183518,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.83e-05,
+              "tx_phase_step": -0.015615167616830544,
+              "rx_phase_step": 0.07892350822196786,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.84e-05,
+              "tx_phase_step": 0.022053369398539663,
+              "rx_phase_step": -0.033152901952741565,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.85e-05,
+              "tx_phase_step": 0.10648389400735742,
+              "rx_phase_step": 0.04989697858200037,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.8599999999999998e-05,
+              "tx_phase_step": -0.07334920451267571,
+              "rx_phase_step": -0.11533866160929568,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.87e-05,
+              "tx_phase_step": 0.030415864169325957,
+              "rx_phase_step": 0.09793603442579757,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.88e-05,
+              "tx_phase_step": 0.0033423793504813726,
+              "rx_phase_step": -0.06284243236866521,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.89e-05,
+              "tx_phase_step": -0.06748520221330956,
+              "rx_phase_step": -0.0645701221622114,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.9e-05,
+              "tx_phase_step": 0.039005767707828286,
+              "rx_phase_step": -0.002576351774394095,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.91e-05,
+              "tx_phase_step": 0.026887699228759276,
+              "rx_phase_step": 0.005618034657364282,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.92e-05,
+              "tx_phase_step": -0.06821576153373876,
+              "rx_phase_step": 0.09959532904186191,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.9299999999999998e-05,
+              "tx_phase_step": 0.01053426826256907,
+              "rx_phase_step": -0.08116572400929602,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.94e-05,
+              "tx_phase_step": -0.030098991409477763,
+              "rx_phase_step": 0.006550694699126322,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.95e-05,
+              "tx_phase_step": 0.04106650314994942,
+              "rx_phase_step": 0.10546038046472618,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.96e-05,
+              "tx_phase_step": -0.04806235847574327,
+              "rx_phase_step": -0.1302156297396495,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.97e-05,
+              "tx_phase_step": 0.026675967066398652,
+              "rx_phase_step": -0.002712009619391831,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.98e-05,
+              "tx_phase_step": 0.010065092265542433,
+              "rx_phase_step": 0.0843224625942346,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.99e-05,
+              "tx_phase_step": -0.03739042264580605,
+              "rx_phase_step": 0.03343804821773297,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.9999999999999998e-05,
+              "tx_phase_step": 0.10212071063449674,
+              "rx_phase_step": -0.046411496970574034,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            }
+          ],
+          "wired_clock_impulses": {
+            "ui_per_v": 0.02,
+            "count": 16666,
+            "max_abs_ui": 0.00021999999999999998,
+            "total_signed_ui": -1.4576499999999892
+          }
+        },
+        "controller": "PlatformChip",
+        "interventions": [
+          {
+            "frame": 40,
+            "dac_shift_s": -2.501283894091634e-11,
+            "adc_shift_s": -2.5071342974646504e-11
+          },
+          {
+            "frame": 80,
+            "dac_shift_s": 2.503834261506719e-11,
+            "adc_shift_s": 2.5048968948322356e-11
+          }
+        ],
+        "mode": 0,
+        "ppm": 100,
+        "duration_s": 3.276472352764723e-05,
+        "source_frames": 128,
+        "transmitted_frames": 129,
+        "rf_samples_each_direction": 1311,
+        "wired_words_each_direction": 4096,
+        "observed_queue_peaks": {
+          "rf_tx": 21,
+          "wire_tx": 65,
+          "rf_return": 27,
+          "wire_return": 32,
+          "source_iq": 32,
+          "source_wire": 40
+        },
+        "rf_accounting": {
+          "accepted": 1311,
+          "consumed": 1311,
+          "discarded": 0,
+          "pending": 0,
+          "rejected": 0,
+          "underflows": 0
+        },
+        "wire_accounting": {
+          "completed_words": 4096,
+          "partial_words_discarded": 0,
+          "serializing": 0,
+          "accepted": 4096,
+          "consumed": 4096,
+          "discarded": 0,
+          "pending": 0,
+          "underflows": 0
+        },
+        "adc_pipeline": {
+          "sampled": 1311,
+          "completed": 1311,
+          "cancelled": 0,
+          "pending": 0,
+          "latency_s": 5e-08,
+          "capacity": 4
+        },
+        "dac_pipeline": {
+          "consumed": 1311,
+          "updated": 1311,
+          "cancelled": 0,
+          "pending": 0,
+          "latency_s": 3.75e-08,
+          "capacity": 4
+        }
+      },
+      "waveform": {
+        "seed": 804,
+        "fft_size": 128,
+        "cyclic_prefix_samples": 32,
+        "active_subcarriers": 50,
+        "spacing_hz": 312500,
+        "edge_hz": 7812500,
+        "useful_symbol_s": 3.2e-06,
+        "prefix_s": 8e-07,
+        "generated_blocks": 9,
+        "sample_count": 1311,
+        "peak_envelope": 0.7102451167864783,
+        "rms_envelope": 0.24707652762622484,
+        "waveform_sha256": "8c87252794563f2a398f50cf7a4a99a0f06af4b0b721f1d52d88a396a5b29274"
+      },
+      "reference_adc_sha256": "1d9f9dbc8b0266ad2317740ae5e1d045cce4003b5c62f0194feee534b31fe3fc"
+    },
+    {
+      "mode": 1,
+      "sign": -1,
+      "quality": {
+        "calibration_samples": 131,
+        "validation_samples": 394,
+        "gain_real": 1.0335530126582244,
+        "gain_imag": 0.01069026083773199,
+        "gain_magnitude": 1.0336082970118181,
+        "raw_relative_rms": 0.08117239732599497,
+        "corrected_relative_rms": 0.06746898353644985,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "traffic": {
+        "service_pauses": [
+          {
+            "frame": 48,
+            "word_periods": 16,
+            "dac_consumed": 1,
+            "wired_consumed": 13,
+            "adc_captured": 1
+          }
+        ],
+        "visibility_edges": 0,
+        "source_phase_edges": 0,
+        "matched_reference": true,
+        "host_service_ppm": -100,
+        "adc_sha256": "7b86cb83dd7a40f5c89260c2c0e0b80a5e1d646fd1655ac0873a5aa50ac4bdc7",
+        "adc_checksum": 4506281930,
+        "reference_metrics": {
+          "adc_quantization": {
+            "conversions": 525,
+            "clipped_samples": 0,
+            "i_low": 0,
+            "i_high": 0,
+            "q_low": 0,
+            "q_high": 0
+          },
+          "dac_reference": {
+            "enabled": true,
+            "shared": true,
+            "minimum_span_v": 0.9732374414781758,
+            "updates": 525,
+            "charge_c": 3.250229347449734e-10,
+            "load_capacitance_f": 2e-12
+          },
+          "minimum_span_v": 0.9732374414781758,
+          "total_load_charge_c": 5.003263120006726e-10,
+          "conversions": 525,
+          "resistance_ohm": 1000,
+          "capacitance_f": 1e-10,
+          "load_capacitance_f": 1e-12,
+          "frontend": {
+            "samples": 525,
+            "relative_rms_error": 0.04017433163815781,
+            "gain_error": -0.03,
+            "phase_error_rad": -0.03,
+            "saturation": 0.8,
+            "noise_rms_per_component": 0.001
+          },
+          "dac_supply": {
+            "coupling_per_v": -1,
+            "updates": 525,
+            "gain_min": 1.0,
+            "gain_max": 1.0353756969956192
+          },
+          "supply": {
+            "minimum_delta_v": -0.03889680300119933,
+            "total_charge_c": 7.440150000000185e-09,
+            "transitions": 49144,
+            "return_transitions": 50515,
+            "return_charge_c": 2.5257499999998853e-09,
+            "coupling_per_v": -1,
+            "gain_min": 1.0,
+            "gain_max": 1.037052194883499
+          },
+          "capture": {
+            "enabled": true,
+            "done": true,
+            "count": 32,
+            "data_sha256": "d9680bd96919d2bc4f01dc2e427e9045b92981661f625aa0eb58c766c062241b"
+          },
+          "rf_lo_events": [
+            {
+              "time": 5e-06,
+              "tx_phase_step": 0.025704395208221306,
+              "rx_phase_step": 0.06747966437581089,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.1e-06,
+              "tx_phase_step": -0.09358938711547282,
+              "rx_phase_step": -0.07452024312508913,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.2e-06,
+              "tx_phase_step": 0.06950240743613319,
+              "rx_phase_step": -0.02088731833396488,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.3e-06,
+              "tx_phase_step": -0.07177449884761204,
+              "rx_phase_step": -0.015161240202312597,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.400000000000001e-06,
+              "tx_phase_step": 0.02710950054552684,
+              "rx_phase_step": 0.10922485900260277,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.500000000000001e-06,
+              "tx_phase_step": 0.048805673251228254,
+              "rx_phase_step": -0.01659863424099703,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.600000000000001e-06,
+              "tx_phase_step": -0.02906336267792054,
+              "rx_phase_step": -0.09843197599594074,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.7000000000000005e-06,
+              "tx_phase_step": -0.006509047500956398,
+              "rx_phase_step": 0.12009995318921916,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.8e-06,
+              "tx_phase_step": -0.03846171850069133,
+              "rx_phase_step": -0.12104799996073679,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.9e-06,
+              "tx_phase_step": 0.07784102266526591,
+              "rx_phase_step": 0.08536640640764326,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6e-06,
+              "tx_phase_step": -0.06983286683467085,
+              "rx_phase_step": -0.11012855194936216,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.100000000000001e-06,
+              "tx_phase_step": 0.06225564867052734,
+              "rx_phase_step": 0.10721001460884205,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.2e-06,
+              "tx_phase_step": -0.042818927797820254,
+              "rx_phase_step": -0.01622831866274177,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.300000000000001e-06,
+              "tx_phase_step": -0.02381749662856731,
+              "rx_phase_step": -0.009390946301788258,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.4000000000000006e-06,
+              "tx_phase_step": 0.0677654344545922,
+              "rx_phase_step": 0.0071308545312875615,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.5000000000000004e-06,
+              "tx_phase_step": -0.013474326931259162,
+              "rx_phase_step": 0.027094771804818327,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.6e-06,
+              "tx_phase_step": 0.03440492718366599,
+              "rx_phase_step": -0.07383292439266274,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.7e-06,
+              "tx_phase_step": -0.09904666284866995,
+              "rx_phase_step": 0.04454072457192518,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.8e-06,
+              "tx_phase_step": 0.07225442168917423,
+              "rx_phase_step": 0.004890684547394275,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.9e-06,
+              "tx_phase_step": 0.05649829652704186,
+              "rx_phase_step": -0.026596633503879516,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.000000000000001e-06,
+              "tx_phase_step": -0.06642414419129813,
+              "rx_phase_step": -0.04400463356356474,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.1e-06,
+              "tx_phase_step": 0.015091363451353423,
+              "rx_phase_step": 0.055573940589298404,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.2000000000000005e-06,
+              "tx_phase_step": -0.018100715097450475,
+              "rx_phase_step": 0.02378323187829455,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.3e-06,
+              "tx_phase_step": 0.006091720610982461,
+              "rx_phase_step": -0.015079913724814015,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.4e-06,
+              "tx_phase_step": 0.08027506111017209,
+              "rx_phase_step": -0.026790893247594864,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.5e-06,
+              "tx_phase_step": -0.06849612810347405,
+              "rx_phase_step": 0.012959387849920075,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.6e-06,
+              "tx_phase_step": 0.03480802423941726,
+              "rx_phase_step": 0.023111692418343113,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.7e-06,
+              "tx_phase_step": 0.025356512048704455,
+              "rx_phase_step": -0.04068050511791355,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.8e-06,
+              "tx_phase_step": -0.061416778109094225,
+              "rx_phase_step": 0.07770429663973691,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.9e-06,
+              "tx_phase_step": -0.07028398587756823,
+              "rx_phase_step": 0.013748851529345546,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.000000000000001e-06,
+              "tx_phase_step": 0.06155401410469277,
+              "rx_phase_step": -0.06270390256965915,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.1e-06,
+              "tx_phase_step": 0.07602382385933075,
+              "rx_phase_step": -0.025709309753388858,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.2e-06,
+              "tx_phase_step": -0.02542072986656284,
+              "rx_phase_step": -0.03249196669423655,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.3e-06,
+              "tx_phase_step": -0.043242639627826235,
+              "rx_phase_step": 0.019490901685119036,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.400000000000001e-06,
+              "tx_phase_step": -0.0014071766175949574,
+              "rx_phase_step": -0.007128890378470705,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.5e-06,
+              "tx_phase_step": -0.055598356171928404,
+              "rx_phase_step": 0.0835263017954192,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.6e-06,
+              "tx_phase_step": 0.02455308361433913,
+              "rx_phase_step": -0.06490607071946158,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.7e-06,
+              "tx_phase_step": -0.007344880997495723,
+              "rx_phase_step": 0.0053268875558373785,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.8e-06,
+              "tx_phase_step": -0.03196843840083428,
+              "rx_phase_step": -0.014313550684336256,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.9e-06,
+              "tx_phase_step": 0.11306053659253125,
+              "rx_phase_step": -0.03666710781368156,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9e-06,
+              "tx_phase_step": -0.03622986309956866,
+              "rx_phase_step": 0.03765243069337176,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.100000000000001e-06,
+              "tx_phase_step": -0.010659393186122412,
+              "rx_phase_step": 0.015246676502656417,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.2e-06,
+              "tx_phase_step": 0.07554604421850279,
+              "rx_phase_step": -0.062459921107861235,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.299999999999999e-06,
+              "tx_phase_step": -0.12519690032486272,
+              "rx_phase_step": 0.12068901904017991,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.400000000000001e-06,
+              "tx_phase_step": 0.11982306864465089,
+              "rx_phase_step": -0.04893805285957559,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.5e-06,
+              "tx_phase_step": -0.09770912321758407,
+              "rx_phase_step": -0.013784781367366064,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.6e-06,
+              "tx_phase_step": 0.08624990960944698,
+              "rx_phase_step": 0.08753347137158128,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.7e-06,
+              "tx_phase_step": -0.043689351298766346,
+              "rx_phase_step": -0.061839749249895964,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.800000000000001e-06,
+              "tx_phase_step": -0.016840780937882938,
+              "rx_phase_step": 0.0202094798253733,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.9e-06,
+              "tx_phase_step": 7.271088295210393e-05,
+              "rx_phase_step": 0.010666426162398879,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.999999999999999e-06,
+              "tx_phase_step": -0.005301427917068821,
+              "rx_phase_step": -0.08063013019805423,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.01e-05,
+              "tx_phase_step": 0.059474004188522195,
+              "rx_phase_step": 0.07404443419620821,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.02e-05,
+              "tx_phase_step": -0.0580305858743289,
+              "rx_phase_step": 0.027452339645820084,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.03e-05,
+              "tx_phase_step": 0.05673920229257201,
+              "rx_phase_step": -0.10586854571253107,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.04e-05,
+              "tx_phase_step": -0.11442464709320813,
+              "rx_phase_step": -0.002157829647937412,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.0500000000000001e-05,
+              "tx_phase_step": 0.08029030627604983,
+              "rx_phase_step": 0.02677182131609046,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.06e-05,
+              "tx_phase_step": 0.05786047031488732,
+              "rx_phase_step": 0.030937646106326017,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.07e-05,
+              "tx_phase_step": -0.019684897995252526,
+              "rx_phase_step": 0.0548871883479143,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.08e-05,
+              "tx_phase_step": -0.10182094408235592,
+              "rx_phase_step": -0.07819369317168176,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.09e-05,
+              "tx_phase_step": 0.0291687411686379,
+              "rx_phase_step": 0.038913677768754915,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.1e-05,
+              "tx_phase_step": 0.08680208947473754,
+              "rx_phase_step": -0.005390009994472825,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.11e-05,
+              "tx_phase_step": -0.13181778289657745,
+              "rx_phase_step": 0.03951955748454178,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.1200000000000001e-05,
+              "tx_phase_step": 0.07737672021017632,
+              "rx_phase_step": -0.014883046101080474,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.13e-05,
+              "tx_phase_step": 0.012654400137325036,
+              "rx_phase_step": -0.11815847169801191,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.14e-05,
+              "tx_phase_step": -0.0075109530542987885,
+              "rx_phase_step": 0.02948245245695432,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.15e-05,
+              "tx_phase_step": 0.017392217450358752,
+              "rx_phase_step": 0.017012848495782003,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.16e-05,
+              "tx_phase_step": -0.009641058705620029,
+              "rx_phase_step": 0.06290585219562948,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.17e-05,
+              "tx_phase_step": -0.08923576200379371,
+              "rx_phase_step": 0.03776812370978985,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.1799999999999999e-05,
+              "tx_phase_step": 0.0015368037688921615,
+              "rx_phase_step": -0.13285770919910828,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.1900000000000001e-05,
+              "tx_phase_step": 0.09427434498498304,
+              "rx_phase_step": 0.009023624026410118,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.2e-05,
+              "tx_phase_step": -0.032421175085723355,
+              "rx_phase_step": 0.027728294645880926,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.21e-05,
+              "tx_phase_step": -0.010208438026206183,
+              "rx_phase_step": 0.05577614813979826,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.22e-05,
+              "tx_phase_step": 0.04115505483301694,
+              "rx_phase_step": -0.09520072942002702,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.23e-05,
+              "tx_phase_step": -0.055678956169225906,
+              "rx_phase_step": 0.09394555319544791,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.24e-05,
+              "tx_phase_step": 0.06345390590940692,
+              "rx_phase_step": -0.07535230497045371,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.2499999999999999e-05,
+              "tx_phase_step": -0.04128918234998977,
+              "rx_phase_step": -0.022959236961688848,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.2600000000000001e-05,
+              "tx_phase_step": -0.05994097718023607,
+              "rx_phase_step": 0.004955148963698877,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.27e-05,
+              "tx_phase_step": 0.059710827929031915,
+              "rx_phase_step": 0.101809434648221,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.28e-05,
+              "tx_phase_step": 0.05856892041845353,
+              "rx_phase_step": -0.007760547797279277,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.2899999999999998e-05,
+              "tx_phase_step": -0.06379609317541382,
+              "rx_phase_step": -0.08430415698930996,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3000000000000001e-05,
+              "tx_phase_step": 0.03281481653740591,
+              "rx_phase_step": 0.10145628786065475,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.31e-05,
+              "tx_phase_step": -0.09010772604985126,
+              "rx_phase_step": 0.02215218753122572,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3199999999999999e-05,
+              "tx_phase_step": 0.04412178557824372,
+              "rx_phase_step": -0.04361594725686278,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3300000000000001e-05,
+              "tx_phase_step": -0.022587085195585478,
+              "rx_phase_step": -0.004437471370588614,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.34e-05,
+              "tx_phase_step": 0.1082623010144475,
+              "rx_phase_step": 0.016484890729863436,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.35e-05,
+              "tx_phase_step": -0.07764857379594979,
+              "rx_phase_step": 0.03153301588320839,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3599999999999999e-05,
+              "tx_phase_step": 0.03867624946980583,
+              "rx_phase_step": -0.12520023165844896,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3700000000000001e-05,
+              "tx_phase_step": -0.032451193891206695,
+              "rx_phase_step": 0.0901390443442805,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.38e-05,
+              "tx_phase_step": -0.06131901141040348,
+              "rx_phase_step": -0.02198518735699323,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3899999999999999e-05,
+              "tx_phase_step": 0.09891334272312954,
+              "rx_phase_step": 0.025038838646361042,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4000000000000001e-05,
+              "tx_phase_step": -0.055798219391973915,
+              "rx_phase_step": -0.06627181012899402,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.41e-05,
+              "tx_phase_step": 0.06397641571698273,
+              "rx_phase_step": -0.04286997910532558,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.42e-05,
+              "tx_phase_step": 0.009521011020248493,
+              "rx_phase_step": 0.12501917336206608,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4299999999999999e-05,
+              "tx_phase_step": -0.06083029019766834,
+              "rx_phase_step": -0.11842415209654328,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4400000000000001e-05,
+              "tx_phase_step": -0.02065272701281437,
+              "rx_phase_step": 0.11544701065105936,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.45e-05,
+              "tx_phase_step": 0.05345103571209233,
+              "rx_phase_step": 0.009055991843103156,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4599999999999999e-05,
+              "tx_phase_step": -0.0171079651833779,
+              "rx_phase_step": -0.01893133772160356,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4700000000000002e-05,
+              "tx_phase_step": 0.0539364621251784,
+              "rx_phase_step": -0.07434311207998004,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.48e-05,
+              "tx_phase_step": 0.0008049712648560969,
+              "rx_phase_step": 0.021965459621605177,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.49e-05,
+              "tx_phase_step": -0.0021497642093973313,
+              "rx_phase_step": 0.051263294156947206,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4999999999999999e-05,
+              "tx_phase_step": -0.07407222987961026,
+              "rx_phase_step": -0.06492950541257464,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.5100000000000001e-05,
+              "tx_phase_step": 0.05147298294958483,
+              "rx_phase_step": 0.057807023848708027,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.52e-05,
+              "tx_phase_step": -0.02730664775714907,
+              "rx_phase_step": 0.00041401671749580204,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.53e-05,
+              "tx_phase_step": -0.025935805647882955,
+              "rx_phase_step": -0.1096129337092113,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.5399999999999998e-05,
+              "tx_phase_step": 0.09726542063958338,
+              "rx_phase_step": 0.09883399605608567,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.55e-05,
+              "tx_phase_step": -0.09439434311523157,
+              "rx_phase_step": 0.007684428591501105,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.56e-05,
+              "tx_phase_step": 0.025264205355772708,
+              "rx_phase_step": -0.08496700340845989,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.57e-05,
+              "tx_phase_step": -0.022638066140804373,
+              "rx_phase_step": -0.01072891136446176,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.58e-05,
+              "tx_phase_step": 0.03412778369697444,
+              "rx_phase_step": 0.0753207681621573,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.59e-05,
+              "tx_phase_step": 0.017311690896952864,
+              "rx_phase_step": -0.04235197703881482,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.6e-05,
+              "tx_phase_step": 0.037909000421156816,
+              "rx_phase_step": -0.021419089017220318,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.61e-05,
+              "tx_phase_step": -0.05581549048104799,
+              "rx_phase_step": 0.008579913648330224,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.62e-05,
+              "tx_phase_step": 0.04658596156776497,
+              "rx_phase_step": -0.018531127343248757,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.63e-05,
+              "tx_phase_step": -0.06878085625497014,
+              "rx_phase_step": 0.04513762445424177,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.64e-05,
+              "tx_phase_step": 0.07293874250157435,
+              "rx_phase_step": -0.04713058720059426,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.65e-05,
+              "tx_phase_step": -0.06710764821422852,
+              "rx_phase_step": 0.12274197588575464,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.66e-05,
+              "tx_phase_step": 0.01996670414294449,
+              "rx_phase_step": -0.029744297274555867,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.67e-05,
+              "tx_phase_step": -0.013001399364603983,
+              "rx_phase_step": 0.035748035808103165,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.68e-05,
+              "tx_phase_step": -0.06413545177178837,
+              "rx_phase_step": -0.09031532807098991,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.69e-05,
+              "tx_phase_step": 0.02183263314759419,
+              "rx_phase_step": 0.021958502979337005,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.7e-05,
+              "tx_phase_step": 0.10928824042004473,
+              "rx_phase_step": 0.0002091426183136319,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.71e-05,
+              "tx_phase_step": -0.041662566473160106,
+              "rx_phase_step": 0.06089081318266548,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.72e-05,
+              "tx_phase_step": -0.038364231685649716,
+              "rx_phase_step": -0.10696325182380466,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.73e-05,
+              "tx_phase_step": -0.042216578218562534,
+              "rx_phase_step": 0.04934784674038964,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.74e-05,
+              "tx_phase_step": 0.10169933074109146,
+              "rx_phase_step": -0.03604283935039767,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.75e-05,
+              "tx_phase_step": -0.1230668119469042,
+              "rx_phase_step": 0.00512344485499984,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.76e-05,
+              "tx_phase_step": 0.13266786068630865,
+              "rx_phase_step": 0.012343876266297231,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.77e-05,
+              "tx_phase_step": -0.03461117534275031,
+              "rx_phase_step": -0.04132793155044232,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.78e-05,
+              "tx_phase_step": -0.08994659278738967,
+              "rx_phase_step": -0.0032018776902609375,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.79e-05,
+              "tx_phase_step": 0.08212928482780782,
+              "rx_phase_step": 0.03321218954000357,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.8e-05,
+              "tx_phase_step": -0.03917701684567569,
+              "rx_phase_step": 0.041210340214769166,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.81e-05,
+              "tx_phase_step": 0.05630405685289386,
+              "rx_phase_step": -0.04900805690824981,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.82e-05,
+              "tx_phase_step": -0.07948300203967582,
+              "rx_phase_step": 0.014309404377183518,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.83e-05,
+              "tx_phase_step": -0.015615167616830544,
+              "rx_phase_step": 0.07892350822196786,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.84e-05,
+              "tx_phase_step": 0.022053369398539663,
+              "rx_phase_step": -0.033152901952741565,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.85e-05,
+              "tx_phase_step": 0.10648389400735742,
+              "rx_phase_step": 0.04989697858200037,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.8599999999999998e-05,
+              "tx_phase_step": -0.07334920451267571,
+              "rx_phase_step": -0.11533866160929568,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.87e-05,
+              "tx_phase_step": 0.030415864169325957,
+              "rx_phase_step": 0.09793603442579757,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.88e-05,
+              "tx_phase_step": 0.0033423793504813726,
+              "rx_phase_step": -0.06284243236866521,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.89e-05,
+              "tx_phase_step": -0.06748520221330956,
+              "rx_phase_step": -0.0645701221622114,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.9e-05,
+              "tx_phase_step": 0.039005767707828286,
+              "rx_phase_step": -0.002576351774394095,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.91e-05,
+              "tx_phase_step": 0.026887699228759276,
+              "rx_phase_step": 0.005618034657364282,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.92e-05,
+              "tx_phase_step": -0.06821576153373876,
+              "rx_phase_step": 0.09959532904186191,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.9299999999999998e-05,
+              "tx_phase_step": 0.01053426826256907,
+              "rx_phase_step": -0.08116572400929602,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.94e-05,
+              "tx_phase_step": -0.030098991409477763,
+              "rx_phase_step": 0.006550694699126322,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.95e-05,
+              "tx_phase_step": 0.04106650314994942,
+              "rx_phase_step": 0.10546038046472618,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.96e-05,
+              "tx_phase_step": -0.04806235847574327,
+              "rx_phase_step": -0.1302156297396495,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.97e-05,
+              "tx_phase_step": 0.026675967066398652,
+              "rx_phase_step": -0.002712009619391831,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.98e-05,
+              "tx_phase_step": 0.010065092265542433,
+              "rx_phase_step": 0.0843224625942346,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.99e-05,
+              "tx_phase_step": -0.03739042264580605,
+              "rx_phase_step": 0.03343804821773297,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.9999999999999998e-05,
+              "tx_phase_step": 0.10212071063449674,
+              "rx_phase_step": -0.046411496970574034,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            }
+          ],
+          "wired_clock_impulses": {
+            "ui_per_v": -0.02,
+            "count": 16584,
+            "max_abs_ui": 0.00021999999999999998,
+            "total_signed_ui": 1.4708099999999922
+          }
+        },
+        "controller": "PlatformChip",
+        "interventions": [
+          {
+            "frame": 40,
+            "dac_shift_s": 2.503145420771507e-11,
+            "adc_shift_s": 2.490355717596395e-11
+          },
+          {
+            "frame": 80,
+            "dac_shift_s": -2.497652090574856e-11,
+            "adc_shift_s": -2.480791806247322e-11
+          }
+        ],
+        "mode": 1,
+        "ppm": 100,
+        "duration_s": 2.6211778822117787e-05,
+        "source_frames": 128,
+        "transmitted_frames": 129,
+        "rf_samples_each_direction": 525,
+        "wired_words_each_direction": 6553,
+        "observed_queue_peaks": {
+          "rf_tx": 9,
+          "wire_tx": 103,
+          "rf_return": 8,
+          "wire_return": 52,
+          "source_iq": 8,
+          "source_wire": 64
+        },
+        "rf_accounting": {
+          "accepted": 525,
+          "consumed": 525,
+          "discarded": 0,
+          "pending": 0,
+          "rejected": 0,
+          "underflows": 0
+        },
+        "wire_accounting": {
+          "completed_words": 6553,
+          "partial_words_discarded": 0,
+          "serializing": 0,
+          "accepted": 6553,
+          "consumed": 6553,
+          "discarded": 0,
+          "pending": 0,
+          "underflows": 0
+        },
+        "adc_pipeline": {
+          "sampled": 525,
+          "completed": 525,
+          "cancelled": 0,
+          "pending": 0,
+          "latency_s": 1e-07,
+          "capacity": 4
+        },
+        "dac_pipeline": {
+          "consumed": 525,
+          "updated": 525,
+          "cancelled": 0,
+          "pending": 0,
+          "latency_s": 7.5e-08,
+          "capacity": 4
+        }
+      },
+      "waveform": {
+        "seed": 804,
+        "fft_size": 64,
+        "cyclic_prefix_samples": 16,
+        "active_subcarriers": 50,
+        "spacing_hz": 312500,
+        "edge_hz": 7812500,
+        "useful_symbol_s": 3.2e-06,
+        "prefix_s": 8e-07,
+        "generated_blocks": 7,
+        "sample_count": 525,
+        "peak_envelope": 0.7102451167864783,
+        "rms_envelope": 0.24585575435544854,
+        "waveform_sha256": "dcd3d8ba408b3966831b125dae5e1f28122509ee89100b5c5bf904b591c12903"
+      },
+      "reference_adc_sha256": "0bb8bb6ef52c1751e4dc4df585231640c30416009bd5545a5b4a84e51b14536d"
+    },
+    {
+      "mode": 1,
+      "sign": 1,
+      "quality": {
+        "calibration_samples": 131,
+        "validation_samples": 394,
+        "gain_real": 0.9327334508431199,
+        "gain_imag": -0.02438620217884913,
+        "gain_magnitude": 0.9330521835237419,
+        "raw_relative_rms": 0.09271281567182608,
+        "corrected_relative_rms": 0.07463571325281058,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "traffic": {
+        "service_pauses": [
+          {
+            "frame": 48,
+            "word_periods": 16,
+            "dac_consumed": 1,
+            "wired_consumed": 13,
+            "adc_captured": 1
+          }
+        ],
+        "visibility_edges": 0,
+        "source_phase_edges": 0,
+        "matched_reference": true,
+        "host_service_ppm": -100,
+        "adc_sha256": "07affe80beda36211286d7ba2f77835ddfba093b0d5c4a85d469c4c1f759ae64",
+        "adc_checksum": 4497772016,
+        "reference_metrics": {
+          "adc_quantization": {
+            "conversions": 525,
+            "clipped_samples": 0,
+            "i_low": 0,
+            "i_high": 0,
+            "q_low": 0,
+            "q_high": 0
+          },
+          "dac_reference": {
+            "enabled": true,
+            "shared": true,
+            "minimum_span_v": 0.9735796957110496,
+            "updates": 525,
+            "charge_c": 3.2508364173930974e-10,
+            "load_capacitance_f": 2e-12
+          },
+          "minimum_span_v": 0.9735796957110496,
+          "total_load_charge_c": 4.959357483936079e-10,
+          "conversions": 525,
+          "resistance_ohm": 1000,
+          "capacitance_f": 1e-10,
+          "load_capacitance_f": 1e-12,
+          "frontend": {
+            "samples": 525,
+            "relative_rms_error": 0.04506342054577401,
+            "gain_error": 0.03,
+            "phase_error_rad": 0.03,
+            "saturation": 0.8,
+            "noise_rms_per_component": 0.001
+          },
+          "dac_supply": {
+            "coupling_per_v": 1,
+            "updates": 525,
+            "gain_min": 0.9646280301152038,
+            "gain_max": 1.0
+          },
+          "supply": {
+            "minimum_delta_v": -0.03889680300420377,
+            "total_charge_c": 7.438550000000193e-09,
+            "transitions": 49144,
+            "return_transitions": 50483,
+            "return_charge_c": 2.5241499999998815e-09,
+            "coupling_per_v": 1,
+            "gain_min": 0.9628058217631421,
+            "gain_max": 1.0
+          },
+          "capture": {
+            "enabled": true,
+            "done": true,
+            "count": 32,
+            "data_sha256": "4310cce01d9d321de495156970dea1bb5a90be7d549333bb7a2aeb7776e3a666"
+          },
+          "rf_lo_events": [
+            {
+              "time": 5e-06,
+              "tx_phase_step": 0.025704395208221306,
+              "rx_phase_step": 0.06747966437581089,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.1e-06,
+              "tx_phase_step": -0.09358938711547282,
+              "rx_phase_step": -0.07452024312508913,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.2e-06,
+              "tx_phase_step": 0.06950240743613319,
+              "rx_phase_step": -0.02088731833396488,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.3e-06,
+              "tx_phase_step": -0.07177449884761204,
+              "rx_phase_step": -0.015161240202312597,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.400000000000001e-06,
+              "tx_phase_step": 0.02710950054552684,
+              "rx_phase_step": 0.10922485900260277,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.500000000000001e-06,
+              "tx_phase_step": 0.048805673251228254,
+              "rx_phase_step": -0.01659863424099703,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.600000000000001e-06,
+              "tx_phase_step": -0.02906336267792054,
+              "rx_phase_step": -0.09843197599594074,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.7000000000000005e-06,
+              "tx_phase_step": -0.006509047500956398,
+              "rx_phase_step": 0.12009995318921916,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.8e-06,
+              "tx_phase_step": -0.03846171850069133,
+              "rx_phase_step": -0.12104799996073679,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 5.9e-06,
+              "tx_phase_step": 0.07784102266526591,
+              "rx_phase_step": 0.08536640640764326,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6e-06,
+              "tx_phase_step": -0.06983286683467085,
+              "rx_phase_step": -0.11012855194936216,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.100000000000001e-06,
+              "tx_phase_step": 0.06225564867052734,
+              "rx_phase_step": 0.10721001460884205,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.2e-06,
+              "tx_phase_step": -0.042818927797820254,
+              "rx_phase_step": -0.01622831866274177,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.300000000000001e-06,
+              "tx_phase_step": -0.02381749662856731,
+              "rx_phase_step": -0.009390946301788258,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.4000000000000006e-06,
+              "tx_phase_step": 0.0677654344545922,
+              "rx_phase_step": 0.0071308545312875615,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.5000000000000004e-06,
+              "tx_phase_step": -0.013474326931259162,
+              "rx_phase_step": 0.027094771804818327,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.6e-06,
+              "tx_phase_step": 0.03440492718366599,
+              "rx_phase_step": -0.07383292439266274,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.7e-06,
+              "tx_phase_step": -0.09904666284866995,
+              "rx_phase_step": 0.04454072457192518,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.8e-06,
+              "tx_phase_step": 0.07225442168917423,
+              "rx_phase_step": 0.004890684547394275,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 6.9e-06,
+              "tx_phase_step": 0.05649829652704186,
+              "rx_phase_step": -0.026596633503879516,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.000000000000001e-06,
+              "tx_phase_step": -0.06642414419129813,
+              "rx_phase_step": -0.04400463356356474,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.1e-06,
+              "tx_phase_step": 0.015091363451353423,
+              "rx_phase_step": 0.055573940589298404,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.2000000000000005e-06,
+              "tx_phase_step": -0.018100715097450475,
+              "rx_phase_step": 0.02378323187829455,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.3e-06,
+              "tx_phase_step": 0.006091720610982461,
+              "rx_phase_step": -0.015079913724814015,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.4e-06,
+              "tx_phase_step": 0.08027506111017209,
+              "rx_phase_step": -0.026790893247594864,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.5e-06,
+              "tx_phase_step": -0.06849612810347405,
+              "rx_phase_step": 0.012959387849920075,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.6e-06,
+              "tx_phase_step": 0.03480802423941726,
+              "rx_phase_step": 0.023111692418343113,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.7e-06,
+              "tx_phase_step": 0.025356512048704455,
+              "rx_phase_step": -0.04068050511791355,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.8e-06,
+              "tx_phase_step": -0.061416778109094225,
+              "rx_phase_step": 0.07770429663973691,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 7.9e-06,
+              "tx_phase_step": -0.07028398587756823,
+              "rx_phase_step": 0.013748851529345546,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.000000000000001e-06,
+              "tx_phase_step": 0.06155401410469277,
+              "rx_phase_step": -0.06270390256965915,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.1e-06,
+              "tx_phase_step": 0.07602382385933075,
+              "rx_phase_step": -0.025709309753388858,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.2e-06,
+              "tx_phase_step": -0.02542072986656284,
+              "rx_phase_step": -0.03249196669423655,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.3e-06,
+              "tx_phase_step": -0.043242639627826235,
+              "rx_phase_step": 0.019490901685119036,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.400000000000001e-06,
+              "tx_phase_step": -0.0014071766175949574,
+              "rx_phase_step": -0.007128890378470705,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.5e-06,
+              "tx_phase_step": -0.055598356171928404,
+              "rx_phase_step": 0.0835263017954192,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.6e-06,
+              "tx_phase_step": 0.02455308361433913,
+              "rx_phase_step": -0.06490607071946158,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.7e-06,
+              "tx_phase_step": -0.007344880997495723,
+              "rx_phase_step": 0.0053268875558373785,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.8e-06,
+              "tx_phase_step": -0.03196843840083428,
+              "rx_phase_step": -0.014313550684336256,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 8.9e-06,
+              "tx_phase_step": 0.11306053659253125,
+              "rx_phase_step": -0.03666710781368156,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9e-06,
+              "tx_phase_step": -0.03622986309956866,
+              "rx_phase_step": 0.03765243069337176,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.100000000000001e-06,
+              "tx_phase_step": -0.010659393186122412,
+              "rx_phase_step": 0.015246676502656417,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.2e-06,
+              "tx_phase_step": 0.07554604421850279,
+              "rx_phase_step": -0.062459921107861235,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.299999999999999e-06,
+              "tx_phase_step": -0.12519690032486272,
+              "rx_phase_step": 0.12068901904017991,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.400000000000001e-06,
+              "tx_phase_step": 0.11982306864465089,
+              "rx_phase_step": -0.04893805285957559,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.5e-06,
+              "tx_phase_step": -0.09770912321758407,
+              "rx_phase_step": -0.013784781367366064,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.6e-06,
+              "tx_phase_step": 0.08624990960944698,
+              "rx_phase_step": 0.08753347137158128,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.7e-06,
+              "tx_phase_step": -0.043689351298766346,
+              "rx_phase_step": -0.061839749249895964,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.800000000000001e-06,
+              "tx_phase_step": -0.016840780937882938,
+              "rx_phase_step": 0.0202094798253733,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.9e-06,
+              "tx_phase_step": 7.271088295210393e-05,
+              "rx_phase_step": 0.010666426162398879,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 9.999999999999999e-06,
+              "tx_phase_step": -0.005301427917068821,
+              "rx_phase_step": -0.08063013019805423,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.01e-05,
+              "tx_phase_step": 0.059474004188522195,
+              "rx_phase_step": 0.07404443419620821,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.02e-05,
+              "tx_phase_step": -0.0580305858743289,
+              "rx_phase_step": 0.027452339645820084,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.03e-05,
+              "tx_phase_step": 0.05673920229257201,
+              "rx_phase_step": -0.10586854571253107,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.04e-05,
+              "tx_phase_step": -0.11442464709320813,
+              "rx_phase_step": -0.002157829647937412,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.0500000000000001e-05,
+              "tx_phase_step": 0.08029030627604983,
+              "rx_phase_step": 0.02677182131609046,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.06e-05,
+              "tx_phase_step": 0.05786047031488732,
+              "rx_phase_step": 0.030937646106326017,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.07e-05,
+              "tx_phase_step": -0.019684897995252526,
+              "rx_phase_step": 0.0548871883479143,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.08e-05,
+              "tx_phase_step": -0.10182094408235592,
+              "rx_phase_step": -0.07819369317168176,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.09e-05,
+              "tx_phase_step": 0.0291687411686379,
+              "rx_phase_step": 0.038913677768754915,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.1e-05,
+              "tx_phase_step": 0.08680208947473754,
+              "rx_phase_step": -0.005390009994472825,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.11e-05,
+              "tx_phase_step": -0.13181778289657745,
+              "rx_phase_step": 0.03951955748454178,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.1200000000000001e-05,
+              "tx_phase_step": 0.07737672021017632,
+              "rx_phase_step": -0.014883046101080474,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.13e-05,
+              "tx_phase_step": 0.012654400137325036,
+              "rx_phase_step": -0.11815847169801191,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.14e-05,
+              "tx_phase_step": -0.0075109530542987885,
+              "rx_phase_step": 0.02948245245695432,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.15e-05,
+              "tx_phase_step": 0.017392217450358752,
+              "rx_phase_step": 0.017012848495782003,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.16e-05,
+              "tx_phase_step": -0.009641058705620029,
+              "rx_phase_step": 0.06290585219562948,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.17e-05,
+              "tx_phase_step": -0.08923576200379371,
+              "rx_phase_step": 0.03776812370978985,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.1799999999999999e-05,
+              "tx_phase_step": 0.0015368037688921615,
+              "rx_phase_step": -0.13285770919910828,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.1900000000000001e-05,
+              "tx_phase_step": 0.09427434498498304,
+              "rx_phase_step": 0.009023624026410118,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.2e-05,
+              "tx_phase_step": -0.032421175085723355,
+              "rx_phase_step": 0.027728294645880926,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.21e-05,
+              "tx_phase_step": -0.010208438026206183,
+              "rx_phase_step": 0.05577614813979826,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.22e-05,
+              "tx_phase_step": 0.04115505483301694,
+              "rx_phase_step": -0.09520072942002702,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.23e-05,
+              "tx_phase_step": -0.055678956169225906,
+              "rx_phase_step": 0.09394555319544791,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.24e-05,
+              "tx_phase_step": 0.06345390590940692,
+              "rx_phase_step": -0.07535230497045371,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.2499999999999999e-05,
+              "tx_phase_step": -0.04128918234998977,
+              "rx_phase_step": -0.022959236961688848,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.2600000000000001e-05,
+              "tx_phase_step": -0.05994097718023607,
+              "rx_phase_step": 0.004955148963698877,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.27e-05,
+              "tx_phase_step": 0.059710827929031915,
+              "rx_phase_step": 0.101809434648221,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.28e-05,
+              "tx_phase_step": 0.05856892041845353,
+              "rx_phase_step": -0.007760547797279277,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.2899999999999998e-05,
+              "tx_phase_step": -0.06379609317541382,
+              "rx_phase_step": -0.08430415698930996,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3000000000000001e-05,
+              "tx_phase_step": 0.03281481653740591,
+              "rx_phase_step": 0.10145628786065475,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.31e-05,
+              "tx_phase_step": -0.09010772604985126,
+              "rx_phase_step": 0.02215218753122572,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3199999999999999e-05,
+              "tx_phase_step": 0.04412178557824372,
+              "rx_phase_step": -0.04361594725686278,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3300000000000001e-05,
+              "tx_phase_step": -0.022587085195585478,
+              "rx_phase_step": -0.004437471370588614,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.34e-05,
+              "tx_phase_step": 0.1082623010144475,
+              "rx_phase_step": 0.016484890729863436,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.35e-05,
+              "tx_phase_step": -0.07764857379594979,
+              "rx_phase_step": 0.03153301588320839,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3599999999999999e-05,
+              "tx_phase_step": 0.03867624946980583,
+              "rx_phase_step": -0.12520023165844896,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3700000000000001e-05,
+              "tx_phase_step": -0.032451193891206695,
+              "rx_phase_step": 0.0901390443442805,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.38e-05,
+              "tx_phase_step": -0.06131901141040348,
+              "rx_phase_step": -0.02198518735699323,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.3899999999999999e-05,
+              "tx_phase_step": 0.09891334272312954,
+              "rx_phase_step": 0.025038838646361042,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4000000000000001e-05,
+              "tx_phase_step": -0.055798219391973915,
+              "rx_phase_step": -0.06627181012899402,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.41e-05,
+              "tx_phase_step": 0.06397641571698273,
+              "rx_phase_step": -0.04286997910532558,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.42e-05,
+              "tx_phase_step": 0.009521011020248493,
+              "rx_phase_step": 0.12501917336206608,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4299999999999999e-05,
+              "tx_phase_step": -0.06083029019766834,
+              "rx_phase_step": -0.11842415209654328,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4400000000000001e-05,
+              "tx_phase_step": -0.02065272701281437,
+              "rx_phase_step": 0.11544701065105936,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.45e-05,
+              "tx_phase_step": 0.05345103571209233,
+              "rx_phase_step": 0.009055991843103156,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4599999999999999e-05,
+              "tx_phase_step": -0.0171079651833779,
+              "rx_phase_step": -0.01893133772160356,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4700000000000002e-05,
+              "tx_phase_step": 0.0539364621251784,
+              "rx_phase_step": -0.07434311207998004,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.48e-05,
+              "tx_phase_step": 0.0008049712648560969,
+              "rx_phase_step": 0.021965459621605177,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.49e-05,
+              "tx_phase_step": -0.0021497642093973313,
+              "rx_phase_step": 0.051263294156947206,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.4999999999999999e-05,
+              "tx_phase_step": -0.07407222987961026,
+              "rx_phase_step": -0.06492950541257464,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.5100000000000001e-05,
+              "tx_phase_step": 0.05147298294958483,
+              "rx_phase_step": 0.057807023848708027,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.52e-05,
+              "tx_phase_step": -0.02730664775714907,
+              "rx_phase_step": 0.00041401671749580204,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.53e-05,
+              "tx_phase_step": -0.025935805647882955,
+              "rx_phase_step": -0.1096129337092113,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.5399999999999998e-05,
+              "tx_phase_step": 0.09726542063958338,
+              "rx_phase_step": 0.09883399605608567,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.55e-05,
+              "tx_phase_step": -0.09439434311523157,
+              "rx_phase_step": 0.007684428591501105,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.56e-05,
+              "tx_phase_step": 0.025264205355772708,
+              "rx_phase_step": -0.08496700340845989,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.57e-05,
+              "tx_phase_step": -0.022638066140804373,
+              "rx_phase_step": -0.01072891136446176,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.58e-05,
+              "tx_phase_step": 0.03412778369697444,
+              "rx_phase_step": 0.0753207681621573,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.59e-05,
+              "tx_phase_step": 0.017311690896952864,
+              "rx_phase_step": -0.04235197703881482,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.6e-05,
+              "tx_phase_step": 0.037909000421156816,
+              "rx_phase_step": -0.021419089017220318,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.61e-05,
+              "tx_phase_step": -0.05581549048104799,
+              "rx_phase_step": 0.008579913648330224,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.62e-05,
+              "tx_phase_step": 0.04658596156776497,
+              "rx_phase_step": -0.018531127343248757,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.63e-05,
+              "tx_phase_step": -0.06878085625497014,
+              "rx_phase_step": 0.04513762445424177,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.64e-05,
+              "tx_phase_step": 0.07293874250157435,
+              "rx_phase_step": -0.04713058720059426,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.65e-05,
+              "tx_phase_step": -0.06710764821422852,
+              "rx_phase_step": 0.12274197588575464,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.66e-05,
+              "tx_phase_step": 0.01996670414294449,
+              "rx_phase_step": -0.029744297274555867,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.67e-05,
+              "tx_phase_step": -0.013001399364603983,
+              "rx_phase_step": 0.035748035808103165,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.68e-05,
+              "tx_phase_step": -0.06413545177178837,
+              "rx_phase_step": -0.09031532807098991,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.69e-05,
+              "tx_phase_step": 0.02183263314759419,
+              "rx_phase_step": 0.021958502979337005,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.7e-05,
+              "tx_phase_step": 0.10928824042004473,
+              "rx_phase_step": 0.0002091426183136319,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.71e-05,
+              "tx_phase_step": -0.041662566473160106,
+              "rx_phase_step": 0.06089081318266548,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.72e-05,
+              "tx_phase_step": -0.038364231685649716,
+              "rx_phase_step": -0.10696325182380466,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.73e-05,
+              "tx_phase_step": -0.042216578218562534,
+              "rx_phase_step": 0.04934784674038964,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.74e-05,
+              "tx_phase_step": 0.10169933074109146,
+              "rx_phase_step": -0.03604283935039767,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.75e-05,
+              "tx_phase_step": -0.1230668119469042,
+              "rx_phase_step": 0.00512344485499984,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.76e-05,
+              "tx_phase_step": 0.13266786068630865,
+              "rx_phase_step": 0.012343876266297231,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.77e-05,
+              "tx_phase_step": -0.03461117534275031,
+              "rx_phase_step": -0.04132793155044232,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.78e-05,
+              "tx_phase_step": -0.08994659278738967,
+              "rx_phase_step": -0.0032018776902609375,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.79e-05,
+              "tx_phase_step": 0.08212928482780782,
+              "rx_phase_step": 0.03321218954000357,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.8e-05,
+              "tx_phase_step": -0.03917701684567569,
+              "rx_phase_step": 0.041210340214769166,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.81e-05,
+              "tx_phase_step": 0.05630405685289386,
+              "rx_phase_step": -0.04900805690824981,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.82e-05,
+              "tx_phase_step": -0.07948300203967582,
+              "rx_phase_step": 0.014309404377183518,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.83e-05,
+              "tx_phase_step": -0.015615167616830544,
+              "rx_phase_step": 0.07892350822196786,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.84e-05,
+              "tx_phase_step": 0.022053369398539663,
+              "rx_phase_step": -0.033152901952741565,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.85e-05,
+              "tx_phase_step": 0.10648389400735742,
+              "rx_phase_step": 0.04989697858200037,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.8599999999999998e-05,
+              "tx_phase_step": -0.07334920451267571,
+              "rx_phase_step": -0.11533866160929568,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.87e-05,
+              "tx_phase_step": 0.030415864169325957,
+              "rx_phase_step": 0.09793603442579757,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.88e-05,
+              "tx_phase_step": 0.0033423793504813726,
+              "rx_phase_step": -0.06284243236866521,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.89e-05,
+              "tx_phase_step": -0.06748520221330956,
+              "rx_phase_step": -0.0645701221622114,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.9e-05,
+              "tx_phase_step": 0.039005767707828286,
+              "rx_phase_step": -0.002576351774394095,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.91e-05,
+              "tx_phase_step": 0.026887699228759276,
+              "rx_phase_step": 0.005618034657364282,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.92e-05,
+              "tx_phase_step": -0.06821576153373876,
+              "rx_phase_step": 0.09959532904186191,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.9299999999999998e-05,
+              "tx_phase_step": 0.01053426826256907,
+              "rx_phase_step": -0.08116572400929602,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.94e-05,
+              "tx_phase_step": -0.030098991409477763,
+              "rx_phase_step": 0.006550694699126322,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.95e-05,
+              "tx_phase_step": 0.04106650314994942,
+              "rx_phase_step": 0.10546038046472618,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.96e-05,
+              "tx_phase_step": -0.04806235847574327,
+              "rx_phase_step": -0.1302156297396495,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.97e-05,
+              "tx_phase_step": 0.026675967066398652,
+              "rx_phase_step": -0.002712009619391831,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.98e-05,
+              "tx_phase_step": 0.010065092265542433,
+              "rx_phase_step": 0.0843224625942346,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.99e-05,
+              "tx_phase_step": -0.03739042264580605,
+              "rx_phase_step": 0.03343804821773297,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            },
+            {
+              "time": 1.9999999999999998e-05,
+              "tx_phase_step": 0.10212071063449674,
+              "rx_phase_step": -0.046411496970574034,
+              "tx_frequency_step": 0.0,
+              "rx_frequency_step": 0.0
+            }
+          ],
+          "wired_clock_impulses": {
+            "ui_per_v": 0.02,
+            "count": 16584,
+            "max_abs_ui": 0.00021999999999999998,
+            "total_signed_ui": -1.4705499999999931
+          }
+        },
+        "controller": "PlatformChip",
+        "interventions": [
+          {
+            "frame": 40,
+            "dac_shift_s": -2.5031882304942877e-11,
+            "adc_shift_s": -2.490439425796814e-11
+          },
+          {
+            "frame": 80,
+            "dac_shift_s": 2.497587458572849e-11,
+            "adc_shift_s": 2.480689366082681e-11
+          }
+        ],
+        "mode": 1,
+        "ppm": 100,
+        "duration_s": 2.6211778822117787e-05,
+        "source_frames": 128,
+        "transmitted_frames": 129,
+        "rf_samples_each_direction": 525,
+        "wired_words_each_direction": 6553,
+        "observed_queue_peaks": {
+          "rf_tx": 9,
+          "wire_tx": 103,
+          "rf_return": 8,
+          "wire_return": 52,
+          "source_iq": 8,
+          "source_wire": 64
+        },
+        "rf_accounting": {
+          "accepted": 525,
+          "consumed": 525,
+          "discarded": 0,
+          "pending": 0,
+          "rejected": 0,
+          "underflows": 0
+        },
+        "wire_accounting": {
+          "completed_words": 6553,
+          "partial_words_discarded": 0,
+          "serializing": 0,
+          "accepted": 6553,
+          "consumed": 6553,
+          "discarded": 0,
+          "pending": 0,
+          "underflows": 0
+        },
+        "adc_pipeline": {
+          "sampled": 525,
+          "completed": 525,
+          "cancelled": 0,
+          "pending": 0,
+          "latency_s": 1e-07,
+          "capacity": 4
+        },
+        "dac_pipeline": {
+          "consumed": 525,
+          "updated": 525,
+          "cancelled": 0,
+          "pending": 0,
+          "latency_s": 7.5e-08,
+          "capacity": 4
+        }
+      },
+      "waveform": {
+        "seed": 804,
+        "fft_size": 64,
+        "cyclic_prefix_samples": 16,
+        "active_subcarriers": 50,
+        "spacing_hz": 312500,
+        "edge_hz": 7812500,
+        "useful_symbol_s": 3.2e-06,
+        "prefix_s": 8e-07,
+        "generated_blocks": 7,
+        "sample_count": 525,
+        "peak_envelope": 0.7102451167864783,
+        "rms_envelope": 0.24585575435544854,
+        "waveform_sha256": "dcd3d8ba408b3966831b125dae5e1f28122509ee89100b5c5bf904b591c12903"
+      },
+      "reference_adc_sha256": "0bb8bb6ef52c1751e4dc4df585231640c30416009bd5545a5b4a84e51b14536d"
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "One declared candidate assembles implemented blocks; open_functions remain explicit architectural gaps.",
+    "Signed points and one waveform seed do not prove an uncertainty envelope or physical feasibility.",
+    "Quality includes ADC quantization relative to the matched ideal analog/filter path, not total modem EVM.",
+    "Passing scenario execution does not override an individual RF quality-screen failure."
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "status": "failed_full_loop_partial_waveform",
+  "declared_change_verified": true,
+  "manifest": {
+    "status": "running",
+    "source_sha256_before": {
+      "/baseline/closed.spice": "1885addb4814ab79c02d4f8ed4a59edce5bbe3549a5e23261243ed4f676e3210",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+      "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/reference_input_buffer.spice": "e9922aa2757ca9ece9eea717cc27b090920c522fd7f1ea7f25d0ce98f5c78e76",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/screen/reference/buffer_scaled.spice": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/screen/rf_rx_candidate_split.spice": "44431da3c11bea2282e6dd5cd388e81e26551454b9bd88973bf205f678fff498",
+      "/vco/divider.spice": "1e007f6d40d8678192a090ed1906fd27f6834dfec6983a35f15ffb8f1a3e364b",
+      "/wifi/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+    },
+    "deck_sha256_before": "1885addb4814ab79c02d4f8ed4a59edce5bbe3549a5e23261243ed4f676e3210",
+    "declared_change": "Only PULSE-to-explicit-PWL reference representation; same intended edges, actual divider feedback and transistor circuit retained.",
+    "requested_horizon_ns": 3201,
+    "limitations": [
+      "Precharged filter, seeded VCO, prebiased LNA: not cold startup.",
+      "Ideal reference, bias and supply sources; no intrinsic jitter/noise qualification."
+    ]
+  },
+  "completed_requested_horizon": false,
+  "windows": [
+    {
+      "window_ns": [
+        100,
+        200
+      ],
+      "vco_rising_edges": 266,
+      "vco_frequency_hz": 2669417325.7773976,
+      "control_range_v": [
+        1.079069749308919,
+        1.257906900378822
+      ],
+      "pump_charge_fc": 1218.1557065302777,
+      "lna_gate_range_v": [
+        1.490165091736887,
+        1.512993015328792
+      ],
+      "dummy_range_v": [
+        1.054033830318487,
+        1.269655539620315
+      ],
+      "driver_supply_power_w": 0.0004682136341521755
+    },
+    {
+      "window_ns": [
+        500,
+        600
+      ],
+      "vco_rising_edges": 264,
+      "vco_frequency_hz": 2637576933.601355,
+      "control_range_v": [
+        1.148318569872368,
+        1.197825200953383
+      ],
+      "pump_charge_fc": 159.2121032383507,
+      "lna_gate_range_v": [
+        1.488757063082198,
+        1.514392590621397
+      ],
+      "dummy_range_v": [
+        1.117076797344846,
+        1.236279800239921
+      ],
+      "driver_supply_power_w": 0.0004683479154244616
+    }
+  ],
+  "run_record": {
+    "returncode": 1,
+    "timed_out": false,
+    "source_sha256_before": {
+      "/baseline/closed.spice": "1885addb4814ab79c02d4f8ed4a59edce5bbe3549a5e23261243ed4f676e3210",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+      "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/reference_input_buffer.spice": "e9922aa2757ca9ece9eea717cc27b090920c522fd7f1ea7f25d0ce98f5c78e76",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/screen/reference/buffer_scaled.spice": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/screen/rf_rx_candidate_split.spice": "44431da3c11bea2282e6dd5cd388e81e26551454b9bd88973bf205f678fff498",
+      "/vco/divider.spice": "1e007f6d40d8678192a090ed1906fd27f6834dfec6983a35f15ffb8f1a3e364b",
+      "/wifi/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+    },
+    "source_sha256_after": {
+      "/baseline/closed.spice": "1885addb4814ab79c02d4f8ed4a59edce5bbe3549a5e23261243ed4f676e3210",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+      "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/reference_input_buffer.spice": "e9922aa2757ca9ece9eea717cc27b090920c522fd7f1ea7f25d0ce98f5c78e76",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/screen/reference/buffer_scaled.spice": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/screen/rf_rx_candidate_split.spice": "44431da3c11bea2282e6dd5cd388e81e26551454b9bd88973bf205f678fff498",
+      "/vco/divider.spice": "1e007f6d40d8678192a090ed1906fd27f6834dfec6983a35f15ffb8f1a3e364b",
+      "/wifi/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+    },
+    "deck_unchanged": true,
+    "artifacts_sha256": {
+      ".spice": "1885addb4814ab79c02d4f8ed4a59edce5bbe3549a5e23261243ed4f676e3210",
+      ".log": "976c7324a3ad1a1f3dec00581518ee28ac0f2907148990c56c7a9f1d24255629",
+      ".dat": "1bf49528cf8cc934c52b5cda3820221d336b0ba5487de617c0e6019da241857f"
+    }
+  },
+  "failure_time_ns": 637.7,
+  "actual_stop_ns": 637.6999999999998,
+  "control_excursions": [
+    {
+      "start_ns": 0.0,
+      "stop_ns": 637.6999999999998,
+      "minimum_v": 1.079069749308919,
+      "minimum_time_ns": 100.6650000000005,
+      "maximum_v": 1.260064079398934,
+      "maximum_time_ns": 228.2910000000002
+    },
+    {
+      "start_ns": 100.0,
+      "stop_ns": 637.6999999999998,
+      "minimum_v": 1.079069749308919,
+      "minimum_time_ns": 100.6650000000005,
+      "maximum_v": 1.260064079398934,
+      "maximum_time_ns": 228.2910000000002
+    }
+  ],
+  "pump_kcl_max_error_a": 2.7755575615628914e-17,
+  "phase_observation": {
+    "reference_edge_count": 11,
+    "feedback_edge_count": 11,
+    "ordered_feedback_minus_reference_ns": [
+      31.88820488571575,
+      28.44787948119074,
+      24.91293481260469,
+      21.423590510833648,
+      18.009107572215466,
+      14.689867227560459,
+      11.483422792051583,
+      8.405782396839442,
+      5.479700138803756,
+      2.7344061106946795,
+      0.19687728071403982
+    ],
+    "reference_edge_times_ns": [
+      100.17774760310844,
+      151.3777548088124,
+      202.57775483111618,
+      253.7777547431129,
+      304.97775613922596,
+      356.17775614254083,
+      407.3777561165414,
+      458.57775619813697,
+      509.7777561868252,
+      560.9777561756551,
+      612.1777560530495
+    ]
+  },
+  "limitations": [
+    "Seeded/prebiased operation, ideal reference/bias/supplies, nominal models; no cold-start or variation qualification.",
+    "Ordered edge pairing has startup-dependent alignment; it is a diagnostic phase history, not a lock detector.",
+    "Deterministic frequency/phase trajectories do not establish random jitter, intrinsic phase noise, stability or silicon behavior."
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "status": "connected_pfd_pump_passive_filter_open_loop",
+  "cases": [
+    {
+      "charge_per_cycle_c": -7.81966856553614e-14,
+      "feedback_delay_ns": -5,
+      "equivalent_high_time_s": [
+        1.3451329871386395e-08,
+        9.856708216850609e-08
+      ],
+      "up_minus_down_s": -8.51157522971197e-08,
+      "reset_output_max_v": 1.085634060313448e-08,
+      "artifacts_sha256": {
+        ".spice": "3286e43aae0e6b26a3a6eeb47704987a02efbaaaa360278e47d55be8666c9d56",
+        ".dat": "b4ab21ac5184fdcd8d1f798edb23c9002af5172dc514a4c3da2d5e93d67ffd9f",
+        ".log": "8102ff61d365437c7724cae964f339a7740b2261495939d06436e2ba42b71573"
+      },
+      "integrated_charge_c": -1.3296408726094517e-12,
+      "capacitor_charge_change_c": -1.3296940054417576e-12,
+      "charge_balance_error_c": 5.313283230581165e-17,
+      "charge_balance_pass": true,
+      "control_start_v": 1.035379114437762,
+      "control_end_v": 1.0100250293272568,
+      "control_change_v": -0.025354085110505187,
+      "last_cycle_raw_peak_to_peak_v": 0.03963933144516707,
+      "last_cycle_linear_detrended_peak_to_peak_v": 0.0389371902454374
+    },
+    {
+      "charge_per_cycle_c": 2.2218409945441983e-14,
+      "feedback_delay_ns": 0,
+      "equivalent_high_time_s": [
+        1.424728624834604e-08,
+        1.4327302060697835e-08
+      ],
+      "up_minus_down_s": -8.001581235179488e-11,
+      "reset_output_max_v": 1.085634060313448e-08,
+      "artifacts_sha256": {
+        ".spice": "bf46f83d4931961e323791f9314f9e8f18afbd743d549698d5150bb93664e5d4",
+        ".dat": "aeb0c5ea4489a697c971c2c3a9c9397727ce065debf4941d745ed45b84bd2bf7",
+        ".log": "a1ba8be8a807e774e8ac2b8a1ee4a994b5b7e9bf1edbd31cfc470cb6b9850829"
+      },
+      "integrated_charge_c": 3.7771298343399e-13,
+      "capacitor_charge_change_c": 3.776472519303429e-13,
+      "charge_balance_error_c": 6.57315036471076e-17,
+      "charge_balance_pass": true,
+      "control_start_v": 1.082384754510507,
+      "control_end_v": 1.08966663421363,
+      "control_change_v": 0.007281879703123106,
+      "last_cycle_raw_peak_to_peak_v": 0.02403175086472209,
+      "last_cycle_linear_detrended_peak_to_peak_v": 0.02415576964620314
+    },
+    {
+      "charge_per_cycle_c": 1.2916204203642917e-13,
+      "feedback_delay_ns": 5,
+      "equivalent_high_time_s": [
+        9.85792178399984e-08,
+        1.3595093373358043e-08
+      ],
+      "up_minus_down_s": 8.498412446664035e-08,
+      "reset_output_max_v": 1.085634060313448e-08,
+      "artifacts_sha256": {
+        ".spice": "ccbd06b9968cd584a45fab00aed0400abb2d9307e6c34802bca271ffef965d86",
+        ".dat": "2b836df8e3cba675a38b1a0d7156e837e20036755c8a4f2146dd4da1df4ea0cf",
+        ".log": "570423b3b0b682173a8f32349e4c6ec557229fa8d7cd20737de325e234d91b61"
+      },
+      "integrated_charge_c": 2.195754806180236e-12,
+      "capacitor_charge_change_c": 2.1957485497937963e-12,
+      "charge_balance_error_c": 6.256386439743024e-18,
+      "charge_balance_pass": true,
+      "control_start_v": 1.09475877767263,
+      "control_end_v": 1.137098240951303,
+      "control_change_v": 0.042339463278673106,
+      "last_cycle_raw_peak_to_peak_v": 0.06073640605137487,
+      "last_cycle_linear_detrended_peak_to_peak_v": 0.06669114425666756
+    }
+  ],
+  "source_sha256": {
+    "pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+    "charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+    "loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca"
+  },
+  "limitations": [
+    "25MHz, TT 3.3V 27C, 50fF output loads plus actual charge-pump gates; Filter precharged to 1.08V, then released; not cold startup.",
+    "No frequency acquisition, dead-zone sweep, mismatch, supply perturbation or extracted timing.",
+    "No VCO loading or feedback; filter values not a stability design.",
+    "Detrended peak-to-peak is a deterministic waveform diagnostic, not phase noise or random jitter."
+  ]
+}

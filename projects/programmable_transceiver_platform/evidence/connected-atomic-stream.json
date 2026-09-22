@@ -1,0 +1,47 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "conflict": "rx_busy",
+      "reason": "Capture requires idle active stream and future start",
+      "atomic_rejection": true
+    },
+    {
+      "mode": 0,
+      "conflict": "tx_busy",
+      "reason": "Continuous host TX requires unowned empty DAC input",
+      "atomic_rejection": true
+    },
+    {
+      "mode": 0,
+      "conflict": "past_rx",
+      "reason": "Capture requires idle active stream and future start",
+      "atomic_rejection": true
+    },
+    {
+      "mode": 1,
+      "conflict": "rx_busy",
+      "reason": "Capture requires idle active stream and future start",
+      "atomic_rejection": true
+    },
+    {
+      "mode": 1,
+      "conflict": "tx_busy",
+      "reason": "Continuous host TX requires unowned empty DAC input",
+      "atomic_rejection": true
+    },
+    {
+      "mode": 1,
+      "conflict": "past_rx",
+      "reason": "Capture requires idle active stream and future start",
+      "atomic_rejection": true
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Scheduling currently assigns fresh objects; future scheduler changes must preserve staging isolation.",
+    "No external or comparator trigger semantics are implied."
+  ]
+}

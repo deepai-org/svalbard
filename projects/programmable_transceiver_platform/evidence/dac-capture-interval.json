@@ -1,0 +1,67 @@
+{
+  "status": "observed_nominal_capture_interval",
+  "cases": [
+    {
+      "name": "c32_skew-0.2",
+      "source_group": "registered",
+      "events": [
+        {
+          "command_ns": 30,
+          "buffered_clock_ns": 31.197802160461553,
+          "all_register_inputs_10percent_rail_band_before_capture_ns": 0.6403021604616441,
+          "last_bad_sample_ns": 30.552499999999924
+        },
+        {
+          "command_ns": 55,
+          "buffered_clock_ns": 56.19806252696089,
+          "all_register_inputs_10percent_rail_band_before_capture_ns": 0.6255625269609695,
+          "last_bad_sample_ns": 55.56749999999993
+        }
+      ],
+      "waveform_sha256": "16246fd01c5dc38a9bc28d661a85fd932746c2e62ca186f53af8205a10b1315f"
+    },
+    {
+      "name": "c32_skew0",
+      "source_group": "registered",
+      "events": [
+        {
+          "command_ns": 30,
+          "buffered_clock_ns": 31.197851233942945,
+          "all_register_inputs_10percent_rail_band_before_capture_ns": 0.6403512339430364,
+          "last_bad_sample_ns": 30.552499999999924
+        },
+        {
+          "command_ns": 55,
+          "buffered_clock_ns": 56.198046969188006,
+          "all_register_inputs_10percent_rail_band_before_capture_ns": 0.6305469691880745,
+          "last_bad_sample_ns": 55.562499999999936
+        }
+      ],
+      "waveform_sha256": "7c20e5f2fddfdc8407e3591752ec45737adbdd3e700bd65ea67c02f140c4a88b"
+    },
+    {
+      "name": "c32_skew0.2",
+      "source_group": "coverage",
+      "events": [
+        {
+          "command_ns": 30,
+          "buffered_clock_ns": 31.19802765153114,
+          "all_register_inputs_10percent_rail_band_before_capture_ns": 0.645527651531193,
+          "last_bad_sample_ns": 30.54749999999995
+        },
+        {
+          "command_ns": 55,
+          "buffered_clock_ns": 56.19795289190545,
+          "all_register_inputs_10percent_rail_band_before_capture_ns": 0.71045289190549,
+          "last_bad_sample_ns": 55.48249999999996
+        }
+      ],
+      "waveform_sha256": "e09b061df5567386e1e967c01ed3cabdfe8623ee9d0eae306ec5561f801ef461"
+    }
+  ],
+  "limitations": [
+    "10percent rail band is a diagnostic convention, not a characterized setup requirement.",
+    "Only completed existing fixtures; actual DFF setup/hold aperture, clock variation and mismatch remain unmeasured.",
+    "Measured interval depends on register-loaded decoder behavior and this code transition; not a worst-case logic delay bound."
+  ]
+}

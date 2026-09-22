@@ -1,0 +1,110 @@
+{
+  "status": "characterized",
+  "sequence_committed": true,
+  "reads": [
+    {
+      "time_s": 2e-06,
+      "power": 8.300976547166244e-07,
+      "measured": 0.0,
+      "rail_v": 3.099995098274209
+    },
+    {
+      "time_s": 4.03e-06,
+      "power": 0.002974006498853563,
+      "measured": 0.00299072265625,
+      "rail_v": 3.082336738368312
+    },
+    {
+      "time_s": 6.06e-06,
+      "power": 0.002796808637913125,
+      "measured": 0.0028076171875,
+      "rail_v": 3.0833950091393305
+    },
+    {
+      "time_s": 8.089999999999999e-06,
+      "power": 0.002730991539279588,
+      "measured": 0.00274658203125,
+      "rail_v": 3.0837887335113945
+    },
+    {
+      "time_s": 1.0119999999999998e-05,
+      "power": 0.002737046258609972,
+      "measured": 0.00274658203125,
+      "rail_v": 3.083751667394099
+    },
+    {
+      "time_s": 1.2149999999999997e-05,
+      "power": 0.005204549650324673,
+      "measured": 0.00518798828125,
+      "rail_v": 3.068954576449277
+    },
+    {
+      "time_s": 1.4179999999999996e-05,
+      "power": 0.0055348365797859705,
+      "measured": 0.00555419921875,
+      "rail_v": 3.066964741606531
+    },
+    {
+      "time_s": 1.6209999999999996e-05,
+      "power": 0.00537296193245417,
+      "measured": 0.00537109375,
+      "rail_v": 3.067939476535015
+    },
+    {
+      "time_s": 1.8239999999999998e-05,
+      "power": 0.005050964268709048,
+      "measured": 0.00506591796875,
+      "rail_v": 3.0698816002103757
+    }
+  ],
+  "correction": {
+    "gain_policy": "relative",
+    "matrix": [
+      [
+        0.985107421875,
+        0.031982421875
+      ],
+      [
+        0.0,
+        1.01513671875
+      ]
+    ],
+    "offset": [
+      -0.002197265625,
+      0.000244140625
+    ],
+    "fractional_bits": 12,
+    "fit_rms": 7.843040300984948e-05,
+    "condition": 1.0916337046591535
+  },
+  "uncorrected_static_quality": {
+    "calibration_samples": 32,
+    "validation_samples": 96,
+    "gain_real": 0.42670331732276723,
+    "gain_imag": -0.0328595300245717,
+    "gain_magnitude": 0.42796666894477886,
+    "raw_relative_rms": 0.5731783552175858,
+    "corrected_relative_rms": 0.03781680621343571,
+    "gain_in_screen_range": false,
+    "screen_budget": 0.1,
+    "screen_pass": false
+  },
+  "corrected_static_quality": {
+    "calibration_samples": 32,
+    "validation_samples": 96,
+    "gain_real": 0.4271948239356778,
+    "gain_imag": -0.031014015011511263,
+    "gain_magnitude": 0.4283191412073117,
+    "raw_relative_rms": 0.5743656805960478,
+    "corrected_relative_rms": 0.003344894249932415,
+    "gain_in_screen_range": false,
+    "screen_budget": 0.1,
+    "screen_pass": false
+  },
+  "limitations": [
+    "Timed local reconstruction/driver/network/rail/detector sequence; local12bit quantizer only.",
+    "Held-out static output points include self-consistent rail loading but exclude playback transients.",
+    "Autonomous LO, shared reference and managed whole-chip ownership remain unconnected in this local test.",
+    "Ready/commit does not certify waveform quality; driver and detector laws are assumptions."
+  ]
+}

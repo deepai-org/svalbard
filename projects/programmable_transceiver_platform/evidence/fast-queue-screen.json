@@ -1,0 +1,178 @@
+{
+  "status": "finite_ingress_screen_not_complete_transport",
+  "cases": [
+    {
+      "mode": "ethernet_rf40_12",
+      "source": "wire",
+      "phase": 0.0,
+      "peak_ingress_bits": 330,
+      "produced_bits": 163870,
+      "sent_bits": 163240,
+      "pending_bits": 630,
+      "planning_1024bit_ingress_exceeded": false
+    },
+    {
+      "mode": "ethernet_rf40_12",
+      "source": "wire",
+      "phase": 0.25,
+      "peak_ingress_bits": 330,
+      "produced_bits": 163870,
+      "sent_bits": 163240,
+      "pending_bits": 630,
+      "planning_1024bit_ingress_exceeded": false
+    },
+    {
+      "mode": "ethernet_rf40_12",
+      "source": "wire",
+      "phase": 0.5,
+      "peak_ingress_bits": 330,
+      "produced_bits": 163870,
+      "sent_bits": 163230,
+      "pending_bits": 640,
+      "planning_1024bit_ingress_exceeded": false
+    },
+    {
+      "mode": "ethernet_rf40_12",
+      "source": "wire",
+      "phase": 0.75,
+      "peak_ingress_bits": 330,
+      "produced_bits": 163870,
+      "sent_bits": 163230,
+      "pending_bits": 640,
+      "planning_1024bit_ingress_exceeded": false
+    },
+    {
+      "mode": "ethernet_rf40_12",
+      "source": "iq",
+      "phase": 0.0,
+      "peak_ingress_bits": 272,
+      "produced_bits": 125856,
+      "sent_bits": 125370,
+      "pending_bits": 486,
+      "planning_1024bit_ingress_exceeded": false
+    },
+    {
+      "mode": "ethernet_rf40_12",
+      "source": "iq",
+      "phase": 0.25,
+      "peak_ingress_bits": 272,
+      "produced_bits": 125856,
+      "sent_bits": 125360,
+      "pending_bits": 496,
+      "planning_1024bit_ingress_exceeded": false
+    },
+    {
+      "mode": "ethernet_rf40_12",
+      "source": "iq",
+      "phase": 0.5,
+      "peak_ingress_bits": 272,
+      "produced_bits": 125856,
+      "sent_bits": 125350,
+      "pending_bits": 506,
+      "planning_1024bit_ingress_exceeded": false
+    },
+    {
+      "mode": "ethernet_rf40_12",
+      "source": "iq",
+      "phase": 0.75,
+      "peak_ingress_bits": 272,
+      "produced_bits": 125856,
+      "sent_bits": 125350,
+      "pending_bits": 506,
+      "planning_1024bit_ingress_exceeded": false
+    },
+    {
+      "mode": "pcie_rf20_8",
+      "source": "wire",
+      "phase": 0.0,
+      "peak_ingress_bits": 520,
+      "produced_bits": 262190,
+      "sent_bits": 261180,
+      "pending_bits": 1010,
+      "planning_1024bit_ingress_exceeded": false
+    },
+    {
+      "mode": "pcie_rf20_8",
+      "source": "wire",
+      "phase": 0.25,
+      "peak_ingress_bits": 520,
+      "produced_bits": 262190,
+      "sent_bits": 261170,
+      "pending_bits": 1020,
+      "planning_1024bit_ingress_exceeded": false
+    },
+    {
+      "mode": "pcie_rf20_8",
+      "source": "wire",
+      "phase": 0.5,
+      "peak_ingress_bits": 520,
+      "produced_bits": 262190,
+      "sent_bits": 261170,
+      "pending_bits": 1020,
+      "planning_1024bit_ingress_exceeded": false
+    },
+    {
+      "mode": "pcie_rf20_8",
+      "source": "wire",
+      "phase": 0.75,
+      "peak_ingress_bits": 520,
+      "produced_bits": 262190,
+      "sent_bits": 261170,
+      "pending_bits": 1020,
+      "planning_1024bit_ingress_exceeded": false
+    },
+    {
+      "mode": "pcie_rf20_8",
+      "source": "iq",
+      "phase": 0.0,
+      "peak_ingress_bits": 88,
+      "produced_bits": 33568,
+      "sent_bits": 33440,
+      "pending_bits": 128,
+      "planning_1024bit_ingress_exceeded": false
+    },
+    {
+      "mode": "pcie_rf20_8",
+      "source": "iq",
+      "phase": 0.25,
+      "peak_ingress_bits": 88,
+      "produced_bits": 33568,
+      "sent_bits": 33430,
+      "pending_bits": 138,
+      "planning_1024bit_ingress_exceeded": false
+    },
+    {
+      "mode": "pcie_rf20_8",
+      "source": "iq",
+      "phase": 0.5,
+      "peak_ingress_bits": 88,
+      "produced_bits": 33568,
+      "sent_bits": 33420,
+      "pending_bits": 148,
+      "planning_1024bit_ingress_exceeded": false
+    },
+    {
+      "mode": "pcie_rf20_8",
+      "source": "iq",
+      "phase": 0.75,
+      "peak_ingress_bits": 88,
+      "produced_bits": 33552,
+      "sent_bits": 33420,
+      "pending_bits": 132,
+      "planning_1024bit_ingress_exceeded": false
+    }
+  ],
+  "source_hashes": {
+    "spec/contract.json": "f7ba04b8cfb7681c280147778edbe333b3bf245c4b2dec3e47a69cdf0b1b5026",
+    "system_model/queue_screen.py": "bd52374b9b7e8aab337f9600567b08ca345b850a0943df3cf1aa010219bfde9c",
+    "verification/stream_codec.py": "4515bf61e3c83f041eee97740e61c075dca1681da388dc651117cdd10d1a0088",
+    "verification/transport_model.py": "fb93356b2851ee253d3f8e49bb25b2018e22175500ec3d14b8ebaa78814da09d"
+  },
+  "limitations": [
+    "Uses actual v2 slot plans, ideal valid-word handling and two staging banks.",
+    "512 frames and four phases are finite cases, not exhaustive bounds.",
+    "No receiver egress, payload ordering, CDC, host stalls or electrical timing.",
+    "1024-bit threshold is a planning allocation, not verified RTL depth.",
+    "Same per-direction rates; opposite directions do not share a queue."
+  ]
+}

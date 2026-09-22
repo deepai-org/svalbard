@@ -1,0 +1,834 @@
+{
+  "status": "passed",
+  "scope": "Analytical controls pass; sensitivity results include failures. Frozen output-only replay, not a coupled full-chip qualification.",
+  "analytical_max_error": 2.482534153247273e-16,
+  "cases": [
+    {
+      "mode": 0,
+      "trace": "connected-reconstructed-duplex-quality-mode0-traces.npz",
+      "sha256": "a7d6a9f98cd63da0c2afaa983e3231e32c68639a5b7ccb779a004c6c9ea3f1f8",
+      "cases": [
+        {
+          "name": "identity",
+          "parameters": {},
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": -0.7351963931986111,
+            "gain_imag": 0.6046533267232435,
+            "gain_magnitude": 0.9519030318733795,
+            "raw_relative_rms": 1.8541005624987088,
+            "corrected_relative_rms": 0.08286284612390318,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 249999999.99945182,
+            "samples": 2176,
+            "bin_spacing_hz": 114889.70588210101,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -43.148393482938204,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "gain_0.1_dB",
+          "parameters": {
+            "gain_imbalance_db": 0.1
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": -0.7346115344075712,
+            "gain_imag": 0.6061756957805584,
+            "gain_magnitude": 0.9524195927424479,
+            "raw_relative_rms": 1.8534667684971113,
+            "corrected_relative_rms": 0.08400021257842352,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 249999999.99945182,
+            "samples": 2176,
+            "bin_spacing_hz": 114889.70588210101,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -43.146452525266895,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "gain_0.25_dB",
+          "parameters": {
+            "gain_imbalance_db": 0.25
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": -0.7337798831148343,
+            "gain_imag": 0.6084969280941396,
+            "gain_magnitude": 0.953258321948476,
+            "raw_relative_rms": 1.852601447693448,
+            "corrected_relative_rms": 0.0864449615591973,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 249999999.99945182,
+            "samples": 2176,
+            "bin_spacing_hz": 114889.70588210101,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -43.14355468869974,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "gain_0.5_dB",
+          "parameters": {
+            "gain_imbalance_db": 0.5
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": -0.732515345426382,
+            "gain_imag": 0.6124665546366667,
+            "gain_magnitude": 0.9548266920408335,
+            "raw_relative_rms": 1.851386873096966,
+            "corrected_relative_rms": 0.09228736050550024,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 249999999.99945182,
+            "samples": 2176,
+            "bin_spacing_hz": 114889.70588210101,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -43.13876553761784,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "gain_1.0_dB",
+          "parameters": {
+            "gain_imbalance_db": 1.0
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": -0.7304411710676616,
+            "gain_imag": 0.6207871980888839,
+            "gain_magnitude": 0.9586036979386967,
+            "raw_relative_rms": 1.849811327362626,
+            "corrected_relative_rms": 0.10908030487601389,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": false
+          },
+          "spectrum": {
+            "sample_rate_hz": 249999999.99945182,
+            "samples": 2176,
+            "bin_spacing_hz": 114889.70588210101,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -43.12936777623321,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "phase_1.0_deg",
+          "parameters": {
+            "phase_error_deg": 1.0
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": -0.7381162806738383,
+            "gain_imag": 0.5973067687845751,
+            "gain_magnitude": 0.949521468862948,
+            "raw_relative_rms": 1.8566472109322152,
+            "corrected_relative_rms": 0.08443331091405615,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 249999999.99945182,
+            "samples": 2176,
+            "bin_spacing_hz": 114889.70588210101,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -43.13672651844888,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "phase_2.0_deg",
+          "parameters": {
+            "phase_error_deg": 2.0
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": -0.740907508321,
+            "gain_imag": 0.5899103706992953,
+            "gain_magnitude": 0.9470682031115883,
+            "raw_relative_rms": 1.8591177504895662,
+            "corrected_relative_rms": 0.08694399401921876,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 249999999.99945182,
+            "samples": 2176,
+            "bin_spacing_hz": 114889.70588210101,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -43.125059430405905,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "phase_5.0_deg",
+          "parameters": {
+            "phase_error_deg": 5.0
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": -0.748500927441356,
+            "gain_imag": 0.5674447374956657,
+            "gain_magnitude": 0.9392801331296724,
+            "raw_relative_rms": 1.8660683112936851,
+            "corrected_relative_rms": 0.09941194517590862,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 249999999.99945182,
+            "samples": 2176,
+            "bin_spacing_hz": 114889.70588210101,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -43.09009197967047,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "LO_-50_dBc",
+          "parameters": {
+            "lo_feedthrough": 0.0006524519962549136
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": -0.7351737237860718,
+            "gain_imag": 0.6048879038765607,
+            "gain_magnitude": 0.9520345479034145,
+            "raw_relative_rms": 1.8541231918413361,
+            "corrected_relative_rms": 0.08306147447769184,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 249999999.99945182,
+            "samples": 2176,
+            "bin_spacing_hz": 114889.70588210101,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -43.15006392446875,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "LO_-40_dBc",
+          "parameters": {
+            "lo_feedthrough": 0.0020632343720891765
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": -0.7351247062217698,
+            "gain_imag": 0.6053951248147604,
+            "gain_magnitude": 0.9523190593740749,
+            "raw_relative_rms": 1.8541870169652976,
+            "corrected_relative_rms": 0.08385419465793663,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 249999999.99945182,
+            "samples": 2176,
+            "bin_spacing_hz": 114889.70588210101,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -43.153899962659274,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "LO_-30_dBc",
+          "parameters": {
+            "lo_feedthrough": 0.006524519962549135
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": -0.7349696990732209,
+            "gain_imag": 0.6069990982564065,
+            "gain_magnitude": 0.9532199976080398,
+            "raw_relative_rms": 1.8545228716149154,
+            "corrected_relative_rms": 0.08943110499773917,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 249999999.99945182,
+            "samples": 2176,
+            "bin_spacing_hz": 114889.70588210101,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -43.168037898301634,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "peak_compression_0.01",
+          "parameters": {
+            "cubic": 0.029686744532101947
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": -0.7324341663150159,
+            "gain_imag": 0.6022781044044375,
+            "gain_magnitude": 0.9482608939688354,
+            "raw_relative_rms": 1.851395471058719,
+            "corrected_relative_rms": 0.0827851781926415,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 249999999.99945182,
+            "samples": 2176,
+            "bin_spacing_hz": 114889.70588210101,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -43.0505448003369,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "peak_compression_0.03",
+          "parameters": {
+            "cubic": 0.08906023359630584
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": -0.7269097125478261,
+            "gain_imag": 0.5975276597668258,
+            "gain_magnitude": 0.9409766385956575,
+            "raw_relative_rms": 1.8459927515273469,
+            "corrected_relative_rms": 0.08281074283656592,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 249999999.99945182,
+            "samples": 2176,
+            "bin_spacing_hz": 114889.70588210101,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -42.2252353805128,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "peak_compression_0.1",
+          "parameters": {
+            "cubic": 0.2968674453210195
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": -0.7075741243626609,
+            "gain_imag": 0.5809011035351869,
+            "gain_magnitude": 0.9154819679032373,
+            "raw_relative_rms": 1.8271627553137557,
+            "corrected_relative_rms": 0.08492687347704361,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 249999999.99945182,
+            "samples": 2176,
+            "bin_spacing_hz": 114889.70588210101,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -37.26744593176151,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "combined_trial",
+          "parameters": {
+            "gain_imbalance_db": 0.25,
+            "phase_error_deg": 2.0,
+            "lo_feedthrough": 0.0020632343720891765,
+            "cubic": 0.08906023359630584
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": -0.7310624095592687,
+            "gain_imag": 0.5876213035183849,
+            "gain_magnitude": 0.9379504480617565,
+            "raw_relative_rms": 1.8495136681071265,
+            "corrected_relative_rms": 0.09111201482669436,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 249999999.99945182,
+            "samples": 2176,
+            "bin_spacing_hz": 114889.70588210101,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -42.1685562770735,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        }
+      ]
+    },
+    {
+      "mode": 1,
+      "trace": "connected-reconstructed-duplex-quality-mode1-traces.npz",
+      "sha256": "4a1c0feb97142064eeed9e8e96ef40e62f16d1c1b012891541abe609795c1a56",
+      "cases": [
+        {
+          "name": "identity",
+          "parameters": {},
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": 0.6233594193387614,
+            "gain_imag": 0.7279809192361041,
+            "gain_magnitude": 0.9584013691821401,
+            "raw_relative_rms": 0.8983390197567951,
+            "corrected_relative_rms": 0.09630886766277164,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 312499999.9993148,
+            "samples": 2176,
+            "bin_spacing_hz": 143612.13235262627,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -38.956034021711616,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "gain_0.1_dB",
+          "parameters": {
+            "gain_imbalance_db": 0.1
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": 0.6253284719116179,
+            "gain_imag": 0.7269222612454902,
+            "gain_magnitude": 0.958880426162499,
+            "raw_relative_rms": 0.8977948879174558,
+            "corrected_relative_rms": 0.09826962038668646,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 312499999.9993148,
+            "samples": 2176,
+            "bin_spacing_hz": 143612.13235262627,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -38.95435066263626,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "gain_0.25_dB",
+          "parameters": {
+            "gain_imbalance_db": 0.25
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": 0.6283209241260573,
+            "gain_imag": 0.7253794284964591,
+            "gain_magnitude": 0.9596679107798032,
+            "raw_relative_rms": 0.8970659065447351,
+            "corrected_relative_rms": 0.10183207916675062,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": false
+          },
+          "spectrum": {
+            "sample_rate_hz": 312499999.9993148,
+            "samples": 2176,
+            "bin_spacing_hz": 143612.13235262627,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -38.95183081995208,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "gain_0.5_dB",
+          "parameters": {
+            "gain_imbalance_db": 0.5
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": 0.6334125598123722,
+            "gain_imag": 0.7229281703426382,
+            "gain_magnitude": 0.9611641953397019,
+            "raw_relative_rms": 0.8960832695839684,
+            "corrected_relative_rms": 0.10922551356621495,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": false
+          },
+          "spectrum": {
+            "sample_rate_hz": 312499999.9993148,
+            "samples": 2176,
+            "bin_spacing_hz": 143612.13235262627,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -38.947648602083724,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "gain_1.0_dB",
+          "parameters": {
+            "gain_imbalance_db": 1.0
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": 0.6439904691454125,
+            "gain_imag": 0.7184743520916445,
+            "gain_magnitude": 0.9648466815839897,
+            "raw_relative_rms": 0.8949877185873856,
+            "corrected_relative_rms": 0.128168633625187,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": false
+          },
+          "spectrum": {
+            "sample_rate_hz": 312499999.9993148,
+            "samples": 2176,
+            "bin_spacing_hz": 143612.13235262627,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -38.93937412470206,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "phase_1.0_deg",
+          "parameters": {
+            "phase_error_deg": 1.0
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": 0.6153622601527365,
+            "gain_imag": 0.7303816705308928,
+            "gain_magnitude": 0.9550539753688174,
+            "raw_relative_rms": 0.9070567315274805,
+            "corrected_relative_rms": 0.09852903678957436,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 312499999.9993148,
+            "samples": 2176,
+            "bin_spacing_hz": 143612.13235262627,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -38.94405635405001,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "phase_2.0_deg",
+          "parameters": {
+            "phase_error_deg": 2.0
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": 0.6073244200854391,
+            "gain_imag": 0.7326424865071739,
+            "gain_magnitude": 0.9516343647995954,
+            "raw_relative_rms": 0.915792322925269,
+            "corrected_relative_rms": 0.1016054363232006,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": false
+          },
+          "spectrum": {
+            "sample_rate_hz": 312499999.9993148,
+            "samples": 2176,
+            "bin_spacing_hz": 143612.13235262627,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -38.932025064588835,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "phase_5.0_deg",
+          "parameters": {
+            "phase_error_deg": 5.0
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": 0.5829913561159613,
+            "gain_imag": 0.7385786502343563,
+            "gain_magnitude": 0.9409449207514387,
+            "raw_relative_rms": 0.9420755081926182,
+            "corrected_relative_rms": 0.1153722863570246,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": false
+          },
+          "spectrum": {
+            "sample_rate_hz": 312499999.9993148,
+            "samples": 2176,
+            "bin_spacing_hz": 143612.13235262627,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -38.895642245742536,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "LO_-50_dBc",
+          "parameters": {
+            "lo_feedthrough": 0.0006339962584235027
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": 0.6237501672521463,
+            "gain_imag": 0.7279226886534521,
+            "gain_magnitude": 0.9586113455428905,
+            "raw_relative_rms": 0.8985200137595931,
+            "corrected_relative_rms": 0.09683966114015756,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 312499999.9993148,
+            "samples": 2176,
+            "bin_spacing_hz": 143612.13235262627,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -38.956336238556226,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "LO_-40_dBc",
+          "parameters": {
+            "lo_feedthrough": 0.0020048722046429814
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": 0.624595072736015,
+            "gain_imag": 0.7277967779654436,
+            "gain_magnitude": 0.9590657719379777,
+            "raw_relative_rms": 0.898943200358742,
+            "corrected_relative_rms": 0.09830437040581853,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 312499999.9993148,
+            "samples": 2176,
+            "bin_spacing_hz": 143612.13235262627,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -38.957237268702364,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "LO_-30_dBc",
+          "parameters": {
+            "lo_feedthrough": 0.006339962584235026
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": 0.627266898472607,
+            "gain_imag": 0.7273986134095805,
+            "gain_magnitude": 0.9605063793175056,
+            "raw_relative_rms": 0.9005672139550199,
+            "corrected_relative_rms": 0.10555763265644003,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": false
+          },
+          "spectrum": {
+            "sample_rate_hz": 312499999.9993148,
+            "samples": 2176,
+            "bin_spacing_hz": 143612.13235262627,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -38.962307075412596,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "peak_compression_0.01",
+          "parameters": {
+            "cubic": 0.03372929706720236
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": 0.6207355760834871,
+            "gain_imag": 0.7250027985893293,
+            "gain_magnitude": 0.9544326657119705,
+            "raw_relative_rms": 0.8970207926361073,
+            "corrected_relative_rms": 0.09628165643145581,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 312499999.9993148,
+            "samples": 2176,
+            "bin_spacing_hz": 143612.13235262627,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -38.75297285370893,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "peak_compression_0.03",
+          "parameters": {
+            "cubic": 0.10118789120160708
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": 0.6154878895729383,
+            "gain_imag": 0.7190465572957793,
+            "gain_magnitude": 0.9464952687519689,
+            "raw_relative_rms": 0.8944254994939569,
+            "corrected_relative_rms": 0.09640236997289009,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 312499999.9993148,
+            "samples": 2176,
+            "bin_spacing_hz": 143612.13235262627,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -38.16560458392213,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "peak_compression_0.1",
+          "parameters": {
+            "cubic": 0.33729297067202363
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": 0.5971209867860185,
+            "gain_imag": 0.6981997127683538,
+            "gain_magnitude": 0.9187144887124183,
+            "raw_relative_rms": 0.8857803961433961,
+            "corrected_relative_rms": 0.09879391114323702,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": true
+          },
+          "spectrum": {
+            "sample_rate_hz": 312499999.9993148,
+            "samples": 2176,
+            "bin_spacing_hz": 143612.13235262627,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -35.23090111306573,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        },
+        {
+          "name": "combined_trial",
+          "parameters": {
+            "gain_imbalance_db": 0.25,
+            "phase_error_deg": 2.0,
+            "lo_feedthrough": 0.0020048722046429814,
+            "cubic": 0.10118789120160708
+          },
+          "quality": {
+            "calibration_samples": 544,
+            "validation_samples": 1632,
+            "gain_real": 0.605955880687553,
+            "gain_imag": 0.7209206447375228,
+            "gain_magnitude": 0.9417585175344014,
+            "raw_relative_rms": 0.9109222336234905,
+            "corrected_relative_rms": 0.10891388653775771,
+            "gain_in_screen_range": true,
+            "screen_budget": 0.1,
+            "screen_pass": false
+          },
+          "spectrum": {
+            "sample_rate_hz": 312499999.9993148,
+            "samples": 2176,
+            "bin_spacing_hz": 143612.13235262627,
+            "analysis_window": "Hann; finite burst including launch transient",
+            "channel_half_width_hz": 10000000.0,
+            "outside_to_inside_db": -38.10935654859674,
+            "scope": "All observed frequencies outside +/-10MHz up to observation Nyquist; not a protocol emission mask"
+          }
+        }
+      ]
+    }
+  ],
+  "physical_qualification": false
+}

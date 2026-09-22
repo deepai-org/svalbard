@@ -1,0 +1,29 @@
+{
+  "status": "comparison_unavailable",
+  "completed": false,
+  "cases": {
+    "baseline": {
+      "status": "terminal",
+      "returncode": 1,
+      "timed_out": false,
+      "errors": [
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"vrefl_res#branch\"",
+        "tran simulation(s) aborted"
+      ],
+      "result_sha256": "9c7da8620e0a9899589ab221c9790606ac1e7766cf2455a0115b0e4f891bf9ca"
+    },
+    "probed": {
+      "status": "terminal",
+      "returncode": 0,
+      "timed_out": false,
+      "errors": [],
+      "result_sha256": "1e1a7eb6e96b6f2908adb1ac69415f1f017d6d0f352dc898107ec0f8a1fdca4c"
+    }
+  },
+  "reason": "At least one case failed; pending cases may continue, but no matched convergence claim is possible.",
+  "limitations": [
+    "No circuit promotion or automatic branch attribution from this diagnostic.",
+    "Two tolerance settings do not prove numerical convergence, intrinsic noise, or ADC precision.",
+    "A failed original replay gate remains failed regardless of this result."
+  ]
+}

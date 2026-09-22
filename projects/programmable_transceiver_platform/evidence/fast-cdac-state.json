@@ -1,0 +1,70 @@
+{
+  "status": "charge_state_controls_only",
+  "source_sha256": "c140b4b3b1c598421e046f0b7da4bc9bd9f237146f0214e1bb8b4d08586c56f2",
+  "script_sha256": "5784c3747c091837a7dc97d0accf37e354d96f08d88c00fc3be50b7137bedc10",
+  "cases": [
+    {
+      "initial_code": 127,
+      "selected_code": 128,
+      "top_v": 1.6538862146581108,
+      "expected_settled_v": 1.6538862146581108,
+      "top_charge_error_c": 2.4233807008389483e-27
+    },
+    {
+      "initial_code": 127,
+      "selected_code": 127,
+      "top_v": 1.6500000000000001,
+      "expected_settled_v": 1.65,
+      "top_charge_error_c": 3.2311742677852644e-27
+    },
+    {
+      "initial_code": 128,
+      "selected_code": 127,
+      "top_v": 1.6461137853418892,
+      "expected_settled_v": 1.646113785341889,
+      "top_charge_error_c": 8.077935669463161e-28
+    },
+    {
+      "initial_code": 128,
+      "selected_code": 128,
+      "top_v": 1.6500000000000001,
+      "expected_settled_v": 1.65,
+      "top_charge_error_c": 3.2311742677852644e-27
+    },
+    {
+      "initial_code": 0,
+      "selected_code": 255,
+      "top_v": 2.6409847378182576,
+      "expected_settled_v": 2.640984737818258,
+      "top_charge_error_c": 8.885729236409477e-27
+    },
+    {
+      "initial_code": 0,
+      "selected_code": 0,
+      "top_v": 1.649999999999999,
+      "expected_settled_v": 1.65,
+      "top_charge_error_c": 9.693522803355793e-27
+    },
+    {
+      "initial_code": 85,
+      "selected_code": 170,
+      "top_v": 1.9803282459394194,
+      "expected_settled_v": 1.9803282459394194,
+      "top_charge_error_c": 2.4233807008389483e-27
+    },
+    {
+      "initial_code": 85,
+      "selected_code": 85,
+      "top_v": 1.6500000000000001,
+      "expected_settled_v": 1.65,
+      "top_charge_error_c": 3.2311742677852644e-27
+    }
+  ],
+  "limitations": [
+    "Ideal linear array capacitors plus constant top load; no transistor switching calibration.",
+    "1300ohm unit resistance is a scenario assumption, not a characterized selected-rail law.",
+    "Ideal abrupt switch selection excludes overlap, dead time, charge injection and clock feedthrough.",
+    "Fixed ideal rails and fixed dummy bottom; moving references need explicit additional state/input terms.",
+    "A single-side scaffold; not complete differential SAR or validated broadband clock model."
+  ]
+}

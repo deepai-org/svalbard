@@ -1,0 +1,7 @@
+* Nominal 3.3V CMOS reference-input buffer; no pad/ESD or level conversion.
+.subckt pt_reference_input_buffer IN OUT VDD VSS
+XP0 N IN VDD VDD pfet_03v3 w=2u l=.28u
+XN0 N IN VSS VSS nfet_03v3 w=1u l=.28u
+XP1 OUT N VDD VDD pfet_03v3 w=8u l=.28u
+XN1 OUT N VSS VSS nfet_03v3 w=4u l=.28u
+.ends

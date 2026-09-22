@@ -1,0 +1,57 @@
+{
+  "scope": "two-pad-current extrapolation only; not bank simulation or power qualification",
+  "all_host_estimates_within_candidate_budget": true,
+  "rows": [
+    {
+      "case": "typical_25_5_alternating",
+      "segment": "HOST_A",
+      "fast_outputs": 5,
+      "scaled_average_ma": 33.17998107501718,
+      "with_provisional_allowances_ma": 43.47497634377147,
+      "planning_budget_ma": 55,
+      "within_planning_budget": true
+    },
+    {
+      "case": "typical_25_5_alternating",
+      "segment": "HOST_B",
+      "fast_outputs": 6,
+      "scaled_average_ma": 39.81597729002062,
+      "with_provisional_allowances_ma": 51.76997161252577,
+      "planning_budget_ma": 55,
+      "within_planning_budget": true
+    },
+    {
+      "case": "ss_125_5_alternating",
+      "segment": "HOST_A",
+      "fast_outputs": 5,
+      "scaled_average_ma": 29.377290993592386,
+      "with_provisional_allowances_ma": 38.72161374199048,
+      "planning_budget_ma": 55,
+      "within_planning_budget": true
+    },
+    {
+      "case": "ss_125_5_alternating",
+      "segment": "HOST_B",
+      "fast_outputs": 6,
+      "scaled_average_ma": 35.252749192310866,
+      "with_provisional_allowances_ma": 46.06593649038858,
+      "planning_budget_ma": 55,
+      "within_planning_budget": true
+    }
+  ],
+  "unqualified_domains": [
+    "CORE",
+    "HOST",
+    "WIRE",
+    "RF",
+    "PLL"
+  ],
+  "limitations": [
+    "25% multiplier and 2 mA allowance are design assumptions, not measured bounds.",
+    "No FF/hot/high-VDD bank current, peak/SSO, clamp, ground distribution or package data.",
+    "Digital core now has one supply/return pair and a 48 mA ceiling; no core power estimate proves it fits.",
+    "Two segments require actual rail separation and dedicated returns; pad counts alone do not establish it."
+  ],
+  "contract_sha256": "99ffc14cf44c82a953a1c7409f043bf83c42b39b0b0ee9fec049d834082e34f8",
+  "evidence_sha256": "79cfee7b19b538c485b398b1f2abefda16fda955f1ea5ad24a3509bae955922a"
+}

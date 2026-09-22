@@ -1,0 +1,94 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "source_carrier_hz": 2320000000,
+      "lo_target_hz": 2320000000.0,
+      "baseband_hz": 250000.0,
+      "expected_amplitude": 0.2689222973184122,
+      "measured_amplitude": 0.26892229731841216,
+      "maximum_relative_analog_error": 1.4127875239571489e-12,
+      "returned_samples": 64
+    },
+    {
+      "mode": 0,
+      "source_carrier_hz": 2412000000,
+      "lo_target_hz": 2412000000.0,
+      "baseband_hz": 250000.0,
+      "expected_amplitude": 0.2689222973184122,
+      "measured_amplitude": 0.26892229731841216,
+      "maximum_relative_analog_error": 4.416929436493242e-13,
+      "returned_samples": 64
+    },
+    {
+      "mode": 0,
+      "source_carrier_hz": 2480000000,
+      "lo_target_hz": 2480000000.0,
+      "baseband_hz": 250000.0,
+      "expected_amplitude": 0.2689222973184122,
+      "measured_amplitude": 0.2689222973184135,
+      "maximum_relative_analog_error": 1.5348468389603224e-12,
+      "returned_samples": 64
+    },
+    {
+      "mode": 1,
+      "source_carrier_hz": 2320000000,
+      "lo_target_hz": 2320000000.0,
+      "baseband_hz": 250000.0,
+      "expected_amplitude": 0.2689222973184122,
+      "measured_amplitude": 0.26892229731841216,
+      "maximum_relative_analog_error": 1.4127875239571489e-12,
+      "returned_samples": 64
+    },
+    {
+      "mode": 1,
+      "source_carrier_hz": 2412000000,
+      "lo_target_hz": 2412000000.0,
+      "baseband_hz": 250000.0,
+      "expected_amplitude": 0.2689222973184122,
+      "measured_amplitude": 0.26892229731841216,
+      "maximum_relative_analog_error": 4.416929436493242e-13,
+      "returned_samples": 64
+    },
+    {
+      "mode": 1,
+      "source_carrier_hz": 2480000000,
+      "lo_target_hz": 2480000000.0,
+      "baseband_hz": 250000.0,
+      "expected_amplitude": 0.2689222973184122,
+      "measured_amplitude": 0.2689222973184135,
+      "maximum_relative_analog_error": 1.5348468389603224e-12,
+      "returned_samples": 64
+    }
+  ],
+  "detuned_controls": [
+    {
+      "mode": 0,
+      "source_carrier_hz": 2412000000,
+      "lo_target_hz": 2432000000.0,
+      "baseband_hz": -19750000.0,
+      "expected_amplitude": 0.06608186004550898,
+      "measured_amplitude": 0.06608186004550926,
+      "maximum_relative_analog_error": 2.3504573434540854e-12,
+      "returned_samples": 64
+    },
+    {
+      "mode": 1,
+      "source_carrier_hz": 2412000000,
+      "lo_target_hz": 2432000000.0,
+      "baseband_hz": -19750000.0,
+      "expected_amplitude": 0.06608186004550898,
+      "measured_amplitude": 0.06608186004550926,
+      "maximum_relative_analog_error": 2.3504573434540854e-12,
+      "returned_samples": 64
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Single independent tone and a single-pole baseband filter, without analog noise or blockers.",
+    "Absolute LO phase is initialized from oscillator state before observation; no received-sample fit.",
+    "Fractional divider remains an ideal average. This is not wideband EVM, image rejection or physical RF qualification."
+  ]
+}

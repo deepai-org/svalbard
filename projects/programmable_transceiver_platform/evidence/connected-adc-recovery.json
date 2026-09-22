@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "sign": -1,
+      "tau_s": 2e-07,
+      "clipped": 77,
+      "final_error": 0.0034938562148434087,
+      "final_residual": 6.778224890380958e-11,
+      "samples": 256
+    },
+    {
+      "mode": 0,
+      "sign": 1,
+      "tau_s": 2e-07,
+      "clipped": 78,
+      "final_error": 0.0034938562148434087,
+      "final_residual": 6.778224890380958e-11,
+      "samples": 256
+    },
+    {
+      "mode": 1,
+      "sign": -1,
+      "tau_s": 2e-07,
+      "clipped": 39,
+      "final_error": 0.0034938562148434087,
+      "final_residual": 9.727010020020665e-25,
+      "samples": 256
+    },
+    {
+      "mode": 1,
+      "sign": 1,
+      "tau_s": 2e-07,
+      "clipped": 39,
+      "final_error": 0.0034938562148434087,
+      "final_residual": 9.727010020020665e-25,
+      "samples": 256
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "200ns decay and0.1 per-sample excess coupling are assumed uncertainty parameters.",
+    "This models sampled comparator/input memory only; overload between samples, physical common-mode and device recovery remain unknown.",
+    "Default zero-memory behavior remains available; residual state persists across digital resets and decays on the next conversion."
+  ]
+}

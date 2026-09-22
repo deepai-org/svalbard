@@ -1,0 +1,3766 @@
+{
+  "scope": "Worst reported path per domain/group, nominal ideal-clock repaired experimental placement",
+  "cases": [
+    {
+      "estimated_signal_rc": false,
+      "paths": [
+        {
+          "domain": "host_tx_clk",
+          "group": "asynchronous",
+          "start_Q": "\\core.stream_v2.frame_tx.training [3]",
+          "end_Q": "\\core.stream_v2.frame_tx.payload.active",
+          "arrival_ns": 7.383486,
+          "slack_ns": -3.875699,
+          "cell_arc_ns": 7.383487,
+          "net_arc_ns": 0.0,
+          "cell_arc_count_including_launch": 8,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.217118,
+              "instance": "_38781_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_18082_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.599607,
+              "instance": "_18082_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_18083_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.424818,
+              "instance": "_18083_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_18084_",
+              "pin": "A4",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__or4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.301662,
+              "instance": "_18084_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__or4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_18085_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.740952,
+              "instance": "_18085_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_18086_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.659108,
+              "instance": "_18086_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "pt_distribution_140",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.780929,
+              "instance": "pt_distribution_140",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "pt_distribution_56",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.659293,
+              "instance": "pt_distribution_56",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_38782_",
+              "pin": "RN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "host_tx_clk",
+          "group": "host_tx_clk",
+          "start_Q": "\\core.wire_in.rb [0]",
+          "end_Q": "\\core.stream_v2.frame_tx.payload.banks[5] [7]",
+          "arrival_ns": 10.705665,
+          "slack_ns": -8.00685,
+          "cell_arc_ns": 10.705664,
+          "net_arc_ns": 0.0,
+          "cell_arc_count_including_launch": 17,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.237945,
+              "instance": "_40142_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_22223_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_2"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.585068,
+              "instance": "_22223_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_2"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_22229_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__inv_2"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.221786,
+              "instance": "_22229_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__inv_2"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28327_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.934013,
+              "instance": "_28327_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28381_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.476392,
+              "instance": "_28381_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28440_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.488961,
+              "instance": "_28440_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28903_",
+              "pin": "C2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi222_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.40765,
+              "instance": "_28903_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi222_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28906_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.483754,
+              "instance": "_28906_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28907_",
+              "pin": "C",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi221_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.332717,
+              "instance": "_28907_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi221_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28908_",
+              "pin": "A4",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.561003,
+              "instance": "_28908_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28922_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.250899,
+              "instance": "_28922_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28923_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.345386,
+              "instance": "_28923_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28924_",
+              "pin": "B",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi21_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.270904,
+              "instance": "_28924_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi21_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28945_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai22_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.176029,
+              "instance": "_28945_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai22_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28946_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.737179,
+              "instance": "_28946_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28947_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.710769,
+              "instance": "_28947_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28948_",
+              "pin": "I1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.485209,
+              "instance": "_28948_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_38870_",
+              "pin": "D",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "host_rx_clk",
+          "group": "asynchronous",
+          "start_Q": "\\core.er",
+          "end_Q": "\\core.stream_v2.frame_rx.payload.iq_slots [0]",
+          "arrival_ns": 6.040251,
+          "slack_ns": -2.534863,
+          "cell_arc_ns": 6.04025,
+          "net_arc_ns": 0.0,
+          "cell_arc_count_including_launch": 6,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.419534,
+              "instance": "_43922_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_17817_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__and2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.120228,
+              "instance": "_17817_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__and2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "pt_distribution_15",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.665716,
+              "instance": "pt_distribution_15",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_17818_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.373745,
+              "instance": "_17818_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_17819_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.789841,
+              "instance": "_17819_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "pt_distribution_35",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.671186,
+              "instance": "pt_distribution_35",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_35698_",
+              "pin": "RN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "host_rx_clk",
+          "group": "host_rx_clk",
+          "start_Q": "\\core.stream_v2.frame_rx.payload.header [14]",
+          "end_Q": "\\core.stream_v2.frame_rx.payload.wire_slots [43]",
+          "arrival_ns": 10.894261,
+          "slack_ns": -8.206174,
+          "cell_arc_ns": 10.894261,
+          "net_arc_ns": 0.0,
+          "cell_arc_count_including_launch": 15,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.237945,
+              "instance": "_38697_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_17893_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_2"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.425839,
+              "instance": "_17893_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_2"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_17894_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor2_2"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.728589,
+              "instance": "_17894_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor2_2"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_17916_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.540827,
+              "instance": "_17916_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_17921_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.608449,
+              "instance": "_17921_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_17926_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor3_2"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.596853,
+              "instance": "_17926_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor3_2"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_17937_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.186844,
+              "instance": "_17937_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_17993_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.637359,
+              "instance": "_17993_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_18015_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_2"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.415486,
+              "instance": "_18015_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_2"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_18017_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi21_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.56469,
+              "instance": "_18017_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi21_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_22376_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.380028,
+              "instance": "_22376_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_22385_",
+              "pin": "B",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi21_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.632594,
+              "instance": "_22385_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi21_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28148_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.427534,
+              "instance": "_28148_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28183_",
+              "pin": "B",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai21_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.246716,
+              "instance": "_28183_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai21_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_28184_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.264508,
+              "instance": "_28184_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_38762_",
+              "pin": "D",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "wire_rx_clk",
+          "group": "asynchronous",
+          "start_Q": "\\core.wire_in.wr_reset [1]",
+          "end_Q": "\\core.wire_in.wg [6]",
+          "arrival_ns": 2.051499,
+          "slack_ns": 2.265863,
+          "cell_arc_ns": 2.0514989999999997,
+          "net_arc_ns": 0.0,
+          "cell_arc_count_including_launch": 2,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.440057,
+              "instance": "_43911_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "pt_distribution_34",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.611442,
+              "instance": "pt_distribution_34",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_40168_",
+              "pin": "RN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "wire_rx_clk",
+          "group": "wire_rx_clk",
+          "start_Q": "\\core.wire_in.wg [6]",
+          "end_Q": "\\core.wire_in.mem[16] [0]",
+          "arrival_ns": 8.554751,
+          "slack_ns": -4.986975,
+          "cell_arc_ns": 8.554752,
+          "net_arc_ns": 0.0,
+          "cell_arc_count_including_launch": 10,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.537218,
+              "instance": "_40168_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_31080_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xnor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.553271,
+              "instance": "_31080_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xnor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_31082_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.307571,
+              "instance": "_31082_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_31083_",
+              "pin": "A4",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.519367,
+              "instance": "_31083_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_31088_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.476016,
+              "instance": "_31088_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_31098_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__inv_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.808503,
+              "instance": "_31098_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__inv_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_31376_",
+              "pin": "A4",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.808095,
+              "instance": "_31376_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_31377_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.997626,
+              "instance": "_31377_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_31378_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.844494,
+              "instance": "_31378_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_31379_",
+              "pin": "S",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.702591,
+              "instance": "_31379_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_40329_",
+              "pin": "D",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffq_1"
+            }
+          ]
+        },
+        {
+          "domain": "wire_tx_clk",
+          "group": "asynchronous",
+          "start_Q": "tx_enabled",
+          "end_Q": "\\prbs.state [0]",
+          "arrival_ns": 2.880545,
+          "slack_ns": 1.055509,
+          "cell_arc_ns": 2.880545,
+          "net_arc_ns": 0.0,
+          "cell_arc_count_including_launch": 4,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.345191,
+              "instance": "_43918_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_18054_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.239947,
+              "instance": "_18054_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_18055_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.671174,
+              "instance": "_18055_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "pt_distribution_148",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.624233,
+              "instance": "pt_distribution_148",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_43701_",
+              "pin": "SETN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffsnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "wire_tx_clk",
+          "group": "wire_tx_clk",
+          "start_Q": "\\core.wire_out.rb [0]",
+          "end_Q": "\\core.wire_out.rg [6]",
+          "arrival_ns": 7.537144,
+          "slack_ns": -4.073712,
+          "cell_arc_ns": 7.537142,
+          "net_arc_ns": 0.0,
+          "cell_arc_count_including_launch": 13,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.217118,
+              "instance": "_40810_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_19301_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.607516,
+              "instance": "_19301_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_19321_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.401109,
+              "instance": "_19321_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_19341_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.090895,
+              "instance": "_19341_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_19415_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.284305,
+              "instance": "_19415_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_19418_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.811054,
+              "instance": "_19418_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_19526_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.461506,
+              "instance": "_19526_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_19527_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.946872,
+              "instance": "_19527_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_32008_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.553899,
+              "instance": "_32008_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_32009_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.237825,
+              "instance": "_32009_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_32010_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.334039,
+              "instance": "_32010_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_32011_",
+              "pin": "B",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi21_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.269412,
+              "instance": "_32011_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi21_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_32012_",
+              "pin": "B",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai21_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.321592,
+              "instance": "_32012_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai21_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_40823_",
+              "pin": "D",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "rf_rx_clk",
+          "group": "asynchronous",
+          "start_Q": "\\core.rf_in.wr_reset [1]",
+          "end_Q": "status[3]",
+          "arrival_ns": 2.039643,
+          "slack_ns": 48.278252,
+          "cell_arc_ns": 2.039643,
+          "net_arc_ns": 0.0,
+          "cell_arc_count_including_launch": 2,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.440057,
+              "instance": "_43880_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "pt_distribution_26",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.599586,
+              "instance": "pt_distribution_26",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_36670_",
+              "pin": "RN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "rf_rx_clk",
+          "group": "rf_rx_clk",
+          "start_Q": "\\core.rf_in.wg [4]",
+          "end_Q": "\\core.rf_in.mem[8] [0]",
+          "arrival_ns": 7.591618,
+          "slack_ns": 41.978935,
+          "cell_arc_ns": 7.591619,
+          "net_arc_ns": 0.0,
+          "cell_arc_count_including_launch": 11,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.139168,
+              "instance": "_36679_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_25278_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.722653,
+              "instance": "_25278_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_25279_",
+              "pin": "C",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai221_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.411845,
+              "instance": "_25279_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai221_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_25280_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.210085,
+              "instance": "_25280_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_25281_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.377366,
+              "instance": "_25281_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_25285_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__and3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.844495,
+              "instance": "_25285_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__and3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_25320_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__and2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.504034,
+              "instance": "_25320_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__and2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_25586_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.436068,
+              "instance": "_25586_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_25587_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.050439,
+              "instance": "_25587_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_25588_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.162626,
+              "instance": "_25588_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_25589_",
+              "pin": "S",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.73284,
+              "instance": "_25589_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_36872_",
+              "pin": "D",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffq_1"
+            }
+          ]
+        },
+        {
+          "domain": "rf_tx_clk",
+          "group": "asynchronous",
+          "start_Q": "\\core.rf_out.rd_reset [1]",
+          "end_Q": "\\core.rf_out_un",
+          "arrival_ns": 2.075523,
+          "slack_ns": 48.232437,
+          "cell_arc_ns": 2.075523,
+          "net_arc_ns": 0.0,
+          "cell_arc_count_including_launch": 2,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.440057,
+              "instance": "_43815_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "pt_distribution_54",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.635466,
+              "instance": "pt_distribution_54",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_37064_",
+              "pin": "RN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "rf_tx_clk",
+          "group": "rf_tx_clk",
+          "start_Q": "\\core.rf_out.rb [0]",
+          "end_Q": "\\core.rf_out.rg [5]",
+          "arrival_ns": 7.499855,
+          "slack_ns": 41.941841,
+          "cell_arc_ns": 7.499855,
+          "net_arc_ns": 0.0,
+          "cell_arc_count_including_launch": 10,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.217118,
+              "instance": "_37065_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_20283_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.636156,
+              "instance": "_20283_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_20297_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.483266,
+              "instance": "_20297_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_20298_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.019388,
+              "instance": "_20298_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_20388_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.64546,
+              "instance": "_20388_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_20434_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.065995,
+              "instance": "_20434_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_20994_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.979441,
+              "instance": "_20994_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_25834_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.743495,
+              "instance": "_25834_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_25836_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.245953,
+              "instance": "_25836_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_25837_",
+              "pin": "C",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai211_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.463583,
+              "instance": "_25837_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai211_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_37076_",
+              "pin": "D",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "host_sclk",
+          "group": "host_sclk",
+          "start_Q": "\\memory.index [2]",
+          "end_Q": "\\control.spi.read_value [13]",
+          "arrival_ns": 7.782017,
+          "slack_ns": 41.743248,
+          "cell_arc_ns": 7.782019,
+          "net_arc_ns": 0.0,
+          "cell_arc_count_including_launch": 11,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.271608,
+              "instance": "_35853_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_22041_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.732553,
+              "instance": "_22041_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_22082_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.359117,
+              "instance": "_22082_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_22139_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__and3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.564749,
+              "instance": "_22139_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__and3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_22140_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.616149,
+              "instance": "_22140_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_22954_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.793356,
+              "instance": "_22954_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_23431_",
+              "pin": "C2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi222_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.046581,
+              "instance": "_23431_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi222_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_23435_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.29535,
+              "instance": "_23435_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_23443_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__or3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.96987,
+              "instance": "_23443_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__or3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_23444_",
+              "pin": "B1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi222_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.840421,
+              "instance": "_23444_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi222_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_23445_",
+              "pin": "B2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi22_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.292265,
+              "instance": "_23445_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi22_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_35882_",
+              "pin": "D",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "ref_clk",
+          "group": "ref_clk",
+          "start_Q": "\\calibration.bitpos [0]",
+          "end_Q": "\\calibration.settle [2]",
+          "arrival_ns": 6.584546,
+          "slack_ns": 17.87775,
+          "cell_arc_ns": 6.584544,
+          "net_arc_ns": 0.0,
+          "cell_arc_count_including_launch": 10,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.203463,
+              "instance": "_35779_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_18027_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.743935,
+              "instance": "_18027_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_18028_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.359458,
+              "instance": "_18028_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_18029_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.499651,
+              "instance": "_18029_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_18030_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.692636,
+              "instance": "_18030_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_18031_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__and2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.709736,
+              "instance": "_18031_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__and2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_22727_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.021595,
+              "instance": "_22727_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_22734_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.32487,
+              "instance": "_22734_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_22735_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.750541,
+              "instance": "_22735_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_22736_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.278659,
+              "instance": "_22736_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0,
+              "instance": "_35785_",
+              "pin": "D",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        }
+      ],
+      "log_sha256": "6a3d81e2d864feb182595db43eb46845c70842296210f1b5bf605952c154e607"
+    },
+    {
+      "estimated_signal_rc": true,
+      "paths": [
+        {
+          "domain": "host_tx_clk",
+          "group": "asynchronous",
+          "start_Q": "\\core.stream_v2.frame_tx.training [3]",
+          "end_Q": "\\core.stream_v2.frame_tx.payload.banks[1] [9]",
+          "arrival_ns": 9.606812,
+          "slack_ns": -6.197378,
+          "cell_arc_ns": 9.557777,
+          "net_arc_ns": 0.049035999999999996,
+          "cell_arc_count_including_launch": 8,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.228359,
+              "instance": "_38781_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 1.1e-05,
+              "instance": "_18082_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.682086,
+              "instance": "_18082_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000363,
+              "instance": "_18083_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.533262,
+              "instance": "_18083_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 3.4e-05,
+              "instance": "_18084_",
+              "pin": "A4",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__or4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.319121,
+              "instance": "_18084_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__or4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 2e-06,
+              "instance": "_18085_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.959172,
+              "instance": "_18085_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000266,
+              "instance": "_18086_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 2.935428,
+              "instance": "_18086_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.003763,
+              "instance": "pt_distribution_140",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.961301,
+              "instance": "pt_distribution_140",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.028248,
+              "instance": "pt_distribution_59",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.939048,
+              "instance": "pt_distribution_59",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.016349,
+              "instance": "_38832_",
+              "pin": "RN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "host_tx_clk",
+          "group": "host_tx_clk",
+          "start_Q": "\\core.wire_in.rb [0]",
+          "end_Q": "\\core.stream_v2.frame_tx.payload.banks[8] [8]",
+          "arrival_ns": 18.935434,
+          "slack_ns": -16.245001,
+          "cell_arc_ns": 18.908947,
+          "net_arc_ns": 0.026487,
+          "cell_arc_count_including_launch": 17,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.240245,
+              "instance": "_40142_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 3e-06,
+              "instance": "_22223_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_2"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.638796,
+              "instance": "_22223_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_2"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000391,
+              "instance": "_22229_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__inv_2"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.265307,
+              "instance": "_22229_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__inv_2"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000184,
+              "instance": "_28327_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.453501,
+              "instance": "_28327_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.00199,
+              "instance": "_28328_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.45979,
+              "instance": "_28328_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 4.8e-05,
+              "instance": "_28377_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 2.534367,
+              "instance": "_28377_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000473,
+              "instance": "_28965_",
+              "pin": "C1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi222_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.800874,
+              "instance": "_28965_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi222_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000442,
+              "instance": "_28966_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.545965,
+              "instance": "_28966_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 1.4e-05,
+              "instance": "_28967_",
+              "pin": "C",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi221_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.457348,
+              "instance": "_28967_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi221_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000386,
+              "instance": "_28968_",
+              "pin": "A4",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.379684,
+              "instance": "_28968_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.002351,
+              "instance": "_28983_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.829042,
+              "instance": "_28983_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.001563,
+              "instance": "_28984_",
+              "pin": "A4",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.747224,
+              "instance": "_28984_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000177,
+              "instance": "_28985_",
+              "pin": "B",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi21_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.587498,
+              "instance": "_28985_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi21_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.001105,
+              "instance": "_29005_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai22_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 3.918342,
+              "instance": "_29005_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai22_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.015669,
+              "instance": "_29006_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.197842,
+              "instance": "_29006_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000902,
+              "instance": "_29007_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.316431,
+              "instance": "_29007_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000773,
+              "instance": "_29104_",
+              "pin": "I1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.536691,
+              "instance": "_29104_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 1.6e-05,
+              "instance": "_38901_",
+              "pin": "D",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "host_rx_clk",
+          "group": "asynchronous",
+          "start_Q": "\\core.er",
+          "end_Q": "\\core.stream_v2.frame_rx.payload.expected_seq [0]",
+          "arrival_ns": 8.14467,
+          "slack_ns": -4.683283,
+          "cell_arc_ns": 8.119763,
+          "net_arc_ns": 0.024905999999999998,
+          "cell_arc_count_including_launch": 6,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.578529,
+              "instance": "_43922_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 5.5e-05,
+              "instance": "_17817_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__and2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.700296,
+              "instance": "_17817_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__and2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.005977,
+              "instance": "pt_distribution_15",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.898523,
+              "instance": "pt_distribution_15",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.009822,
+              "instance": "_17818_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.670088,
+              "instance": "_17818_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.001843,
+              "instance": "_17819_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 2.493215,
+              "instance": "_17819_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.002968,
+              "instance": "pt_distribution_43",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.779112,
+              "instance": "pt_distribution_43",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.004241,
+              "instance": "_38713_",
+              "pin": "RN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "host_rx_clk",
+          "group": "host_rx_clk",
+          "start_Q": "\\core.iq_receive.rp [2]",
+          "end_Q": "\\core.unpacker.bits [25]",
+          "arrival_ns": 14.931344,
+          "slack_ns": -12.235855,
+          "cell_arc_ns": 14.921086,
+          "net_arc_ns": 0.010259,
+          "cell_arc_count_including_launch": 15,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.212132,
+              "instance": "_36609_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 6e-06,
+              "instance": "_24567_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.927833,
+              "instance": "_24567_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000406,
+              "instance": "_30542_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.931911,
+              "instance": "_30542_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000487,
+              "instance": "_30566_",
+              "pin": "A4",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 5.096866,
+              "instance": "_30566_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.004548,
+              "instance": "_30847_",
+              "pin": "B1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi22_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.527205,
+              "instance": "_30847_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi22_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000214,
+              "instance": "_30849_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.835843,
+              "instance": "_30849_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 6e-05,
+              "instance": "_30854_",
+              "pin": "B",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi211_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.39994,
+              "instance": "_30854_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi211_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 5.6e-05,
+              "instance": "_30855_",
+              "pin": "A4",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.810551,
+              "instance": "_30855_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.0003,
+              "instance": "_30856_",
+              "pin": "B2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai22_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.833052,
+              "instance": "_30856_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai22_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.003239,
+              "instance": "_30858_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi21_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.946268,
+              "instance": "_30858_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi21_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000151,
+              "instance": "_30859_",
+              "pin": "I1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.607898,
+              "instance": "_30859_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 7.5e-05,
+              "instance": "_30861_",
+              "pin": "I0",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.766089,
+              "instance": "_30861_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000694,
+              "instance": "_30971_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi21_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.223722,
+              "instance": "_30971_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi21_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 1.3e-05,
+              "instance": "_30973_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai21_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.340203,
+              "instance": "_30973_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai21_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 5e-06,
+              "instance": "_30974_",
+              "pin": "I1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.461573,
+              "instance": "_30974_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 5e-06,
+              "instance": "_40118_",
+              "pin": "D",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "wire_rx_clk",
+          "group": "asynchronous",
+          "start_Q": "\\core.wire_in.wr_reset [1]",
+          "end_Q": "\\core.wire_in.wb [1]",
+          "arrival_ns": 2.159181,
+          "slack_ns": 2.127654,
+          "cell_arc_ns": 2.1552,
+          "net_arc_ns": 0.003981,
+          "cell_arc_count_including_launch": 2,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.450356,
+              "instance": "_43911_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 1.5e-05,
+              "instance": "pt_distribution_33",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.704844,
+              "instance": "pt_distribution_33",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.003966,
+              "instance": "_40157_",
+              "pin": "RN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "wire_rx_clk",
+          "group": "wire_rx_clk",
+          "start_Q": "\\core.wire_in.wg [6]",
+          "end_Q": "\\core.wire_in.mem[54] [7]",
+          "arrival_ns": 11.620298,
+          "slack_ns": -8.062596,
+          "cell_arc_ns": 11.609254,
+          "net_arc_ns": 0.011045,
+          "cell_arc_count_including_launch": 10,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.625677,
+              "instance": "_40168_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000188,
+              "instance": "_31080_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xnor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.584374,
+              "instance": "_31080_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xnor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 2.8e-05,
+              "instance": "_31082_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.380561,
+              "instance": "_31082_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 7e-05,
+              "instance": "_31083_",
+              "pin": "A4",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.765707,
+              "instance": "_31083_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000638,
+              "instance": "_31088_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.769064,
+              "instance": "_31088_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.001586,
+              "instance": "_31098_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__inv_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.130844,
+              "instance": "_31098_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__inv_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000276,
+              "instance": "_31779_",
+              "pin": "A4",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.284945,
+              "instance": "_31779_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.002877,
+              "instance": "_31780_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.215398,
+              "instance": "_31780_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000175,
+              "instance": "_31857_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 3.235615,
+              "instance": "_31857_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.005195,
+              "instance": "_31865_",
+              "pin": "S",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.617069,
+              "instance": "_31865_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 1.2e-05,
+              "instance": "_40716_",
+              "pin": "D",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffq_1"
+            }
+          ]
+        },
+        {
+          "domain": "wire_tx_clk",
+          "group": "asynchronous",
+          "start_Q": "tx_enabled",
+          "end_Q": "\\prbs.state [12]",
+          "arrival_ns": 3.409725,
+          "slack_ns": 0.506809,
+          "cell_arc_ns": 3.407435,
+          "net_arc_ns": 0.002291,
+          "cell_arc_count_including_launch": 4,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.665012,
+              "instance": "_43918_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000203,
+              "instance": "_18054_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.32774,
+              "instance": "_18054_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 4.8e-05,
+              "instance": "_18055_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.716536,
+              "instance": "_18055_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 4.6e-05,
+              "instance": "pt_distribution_148",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.698147,
+              "instance": "pt_distribution_148",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.001994,
+              "instance": "_43713_",
+              "pin": "SETN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffsnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "wire_tx_clk",
+          "group": "wire_tx_clk",
+          "start_Q": "\\core.wire_out.rb [0]",
+          "end_Q": "\\core.wire_out.rg [6]",
+          "arrival_ns": 10.002385,
+          "slack_ns": -6.546319,
+          "cell_arc_ns": 9.996179,
+          "net_arc_ns": 0.006205,
+          "cell_arc_count_including_launch": 13,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.228419,
+              "instance": "_40810_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 1.1e-05,
+              "instance": "_19301_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.684952,
+              "instance": "_19301_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000122,
+              "instance": "_19321_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.438118,
+              "instance": "_19321_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 6.4e-05,
+              "instance": "_19341_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.693898,
+              "instance": "_19341_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.001816,
+              "instance": "_19415_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.45117,
+              "instance": "_19415_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000387,
+              "instance": "_19418_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.303658,
+              "instance": "_19418_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.00028,
+              "instance": "_19526_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.814657,
+              "instance": "_19526_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000426,
+              "instance": "_19527_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.575415,
+              "instance": "_19527_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.003044,
+              "instance": "_32008_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.536089,
+              "instance": "_32008_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 1.2e-05,
+              "instance": "_32009_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.260349,
+              "instance": "_32009_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 4e-06,
+              "instance": "_32010_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.370956,
+              "instance": "_32010_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 1.9e-05,
+              "instance": "_32011_",
+              "pin": "B",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi21_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.290222,
+              "instance": "_32011_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi21_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 7e-06,
+              "instance": "_32012_",
+              "pin": "B",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai21_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.348276,
+              "instance": "_32012_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai21_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 1.3e-05,
+              "instance": "_40823_",
+              "pin": "D",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "rf_rx_clk",
+          "group": "asynchronous",
+          "start_Q": "\\core.rf_in.wr_reset [1]",
+          "end_Q": "status[3]",
+          "arrival_ns": 2.187528,
+          "slack_ns": 48.091732,
+          "cell_arc_ns": 2.183192,
+          "net_arc_ns": 0.004336,
+          "cell_arc_count_including_launch": 2,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.457092,
+              "instance": "_43880_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 4.4e-05,
+              "instance": "pt_distribution_26",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.7261,
+              "instance": "pt_distribution_26",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.004292,
+              "instance": "_36670_",
+              "pin": "RN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "rf_rx_clk",
+          "group": "rf_rx_clk",
+          "start_Q": "\\core.rf_in.wg [4]",
+          "end_Q": "\\core.rf_in.mem[10] [18]",
+          "arrival_ns": 10.012678,
+          "slack_ns": 39.551624,
+          "cell_arc_ns": 10.001055,
+          "net_arc_ns": 0.011623999999999999,
+          "cell_arc_count_including_launch": 11,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.180947,
+              "instance": "_36679_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000155,
+              "instance": "_25278_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.751697,
+              "instance": "_25278_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__xor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 2.7e-05,
+              "instance": "_25279_",
+              "pin": "C",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai221_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.453708,
+              "instance": "_25279_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai221_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 2.9e-05,
+              "instance": "_25280_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.237862,
+              "instance": "_25280_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 2.4e-05,
+              "instance": "_25281_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.902975,
+              "instance": "_25281_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.002835,
+              "instance": "_25285_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__and3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.235323,
+              "instance": "_25285_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__and3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.003613,
+              "instance": "_25320_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__and2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.560688,
+              "instance": "_25320_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__and2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 4e-05,
+              "instance": "_25586_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.587474,
+              "instance": "_25586_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000672,
+              "instance": "_25641_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.693605,
+              "instance": "_25641_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.001046,
+              "instance": "_25653_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.663089,
+              "instance": "_25653_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.003175,
+              "instance": "_25662_",
+              "pin": "S",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.733687,
+              "instance": "_25662_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 8e-06,
+              "instance": "_36938_",
+              "pin": "D",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffq_1"
+            }
+          ]
+        },
+        {
+          "domain": "rf_tx_clk",
+          "group": "asynchronous",
+          "start_Q": "\\core.rf_out.rd_reset [1]",
+          "end_Q": "\\core.rf_out.rb [2]",
+          "arrival_ns": 2.177799,
+          "slack_ns": 48.100517,
+          "cell_arc_ns": 2.173604,
+          "net_arc_ns": 0.004195,
+          "cell_arc_count_including_launch": 2,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.447168,
+              "instance": "_43815_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 6e-06,
+              "instance": "pt_distribution_54",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.726436,
+              "instance": "pt_distribution_54",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_4"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.004189,
+              "instance": "_37067_",
+              "pin": "RN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "rf_tx_clk",
+          "group": "rf_tx_clk",
+          "start_Q": "\\core.rf_out.rb [0]",
+          "end_Q": "\\core.rf_out.rg [4]",
+          "arrival_ns": 11.1633,
+          "slack_ns": 38.329136,
+          "cell_arc_ns": 11.154425999999999,
+          "net_arc_ns": 0.008874,
+          "cell_arc_count_including_launch": 10,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.229158,
+              "instance": "_37065_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 1.2e-05,
+              "instance": "_20283_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.721428,
+              "instance": "_20283_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 6.5e-05,
+              "instance": "_20297_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.571983,
+              "instance": "_20297_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 9.7e-05,
+              "instance": "_20298_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.456786,
+              "instance": "_20298_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000245,
+              "instance": "_20388_",
+              "pin": "A3",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.082695,
+              "instance": "_20388_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.001851,
+              "instance": "_20394_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 2.014668,
+              "instance": "_20394_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.001975,
+              "instance": "_20621_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 2.364015,
+              "instance": "_20621_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.004551,
+              "instance": "_25822_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai21_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.611814,
+              "instance": "_25822_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__oai21_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 3.7e-05,
+              "instance": "_25832_",
+              "pin": "I1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.873942,
+              "instance": "_25832_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__mux2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 3.5e-05,
+              "instance": "_25833_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.227937,
+              "instance": "_25833_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 6e-06,
+              "instance": "_37075_",
+              "pin": "D",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "host_sclk",
+          "group": "host_sclk",
+          "start_Q": "\\memory.index [3]",
+          "end_Q": "\\control.spi.read_value [7]",
+          "arrival_ns": 12.898894,
+          "slack_ns": 36.714943,
+          "cell_arc_ns": 12.887662,
+          "net_arc_ns": 0.011231,
+          "cell_arc_count_including_launch": 12,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.289345,
+              "instance": "_35854_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 6e-06,
+              "instance": "_22040_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.957634,
+              "instance": "_22040_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.001065,
+              "instance": "_22069_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.464413,
+              "instance": "_22069_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 7.4e-05,
+              "instance": "_22113_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 3.736021,
+              "instance": "_22113_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.004743,
+              "instance": "_22114_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.696662,
+              "instance": "_22114_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.00061,
+              "instance": "_22962_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.894191,
+              "instance": "_22962_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000424,
+              "instance": "_23277_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi22_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.15427,
+              "instance": "_23277_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi22_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 2.8e-05,
+              "instance": "_23279_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.443928,
+              "instance": "_23279_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 1.1e-05,
+              "instance": "_23285_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.268904,
+              "instance": "_23285_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 1.8e-05,
+              "instance": "_23286_",
+              "pin": "A4",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.234081,
+              "instance": "_23286_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nand4_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.004154,
+              "instance": "_23306_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi221_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.305974,
+              "instance": "_23306_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi221_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 8.3e-05,
+              "instance": "_23307_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.442239,
+              "instance": "_23307_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 1.5e-05,
+              "instance": "_35876_",
+              "pin": "D",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1"
+            }
+          ]
+        },
+        {
+          "domain": "ref_clk",
+          "group": "ref_clk",
+          "start_Q": "status[14]",
+          "end_Q": "\\calibration.accepted [7]",
+          "arrival_ns": 7.17389,
+          "slack_ns": 17.303005,
+          "cell_arc_ns": 7.170652,
+          "net_arc_ns": 0.0032389999999999997,
+          "cell_arc_count_including_launch": 8,
+          "arcs": [
+            {
+              "kind": "cell",
+              "delay_ns": 1.512173,
+              "instance": "_43933_",
+              "pin": "Q",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 3.6e-05,
+              "instance": "_18020_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.819911,
+              "instance": "_18020_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkbuf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000385,
+              "instance": "_18025_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.543642,
+              "instance": "_18025_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.00034,
+              "instance": "_18030_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor3_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.965315,
+              "instance": "_18030_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__nor3_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.000383,
+              "instance": "_22730_",
+              "pin": "A1",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__or2_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.63145,
+              "instance": "_22730_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__or2_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 7.1e-05,
+              "instance": "_22737_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 1.189257,
+              "instance": "_22737_",
+              "pin": "Z",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__buf_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 0.001982,
+              "instance": "_22754_",
+              "pin": "A2",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi22_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.210929,
+              "instance": "_22754_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__aoi22_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 2.9e-05,
+              "instance": "_22755_",
+              "pin": "I",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "cell",
+              "delay_ns": 0.297975,
+              "instance": "_22755_",
+              "pin": "ZN",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__clkinv_1"
+            },
+            {
+              "kind": "net",
+              "delay_ns": 1.3e-05,
+              "instance": "_35794_",
+              "pin": "D",
+              "cell": "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1"
+            }
+          ]
+        }
+      ],
+      "log_sha256": "f6d69a57bee22c942fe6285423f5901ca92c9f25c29572ac7c2755044f505617"
+    }
+  ],
+  "input_database_sha256": "a233088a7368c14c479fb969fc08191afc59391418bff129c150adbc847a8dfd",
+  "interpretation": "Cell delay includes load capacitance and incoming slew effects. Small explicit net delay does NOT mean interconnect has negligible impact. Different RC cases may select different paths.",
+  "limitations": [
+    "No extracted routing, qualified RC bounds, CTS or external interface closure.",
+    "Repaired netlist remains experimental pending equivalence and independent geometry checks."
+  ],
+  "source_sha256": {
+    "path_delay_screen.tcl": "620063cfcc0c8f0ab49afd80f0e6567af4549c33b96b6441a79a840527624b3b",
+    "report_path_delay.py": "478a26430529abdb69371fbd9b1f48e56037333b4ab07e3b28fba0516d52b348",
+    "run_path_delay.sh": "0e247fc575716b62ca813f4a777fe6eeea93eed709168993cd61562dcf031648"
+  }
+}

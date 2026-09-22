@@ -1,0 +1,89 @@
+{
+  "status": "transition_tracker_adapter_verified_not_yet_connected",
+  "cases": [
+    {
+      "rate_bps": 1250000000.0,
+      "phase_ui": -0.3,
+      "period_ppm": -100,
+      "payload_bits": 7168,
+      "payload_errors": 0,
+      "omitted_indices": 0,
+      "final_period_ppm": -3.7385759367181137
+    },
+    {
+      "rate_bps": 1250000000.0,
+      "phase_ui": -0.3,
+      "period_ppm": 100,
+      "payload_bits": 7168,
+      "payload_errors": 0,
+      "omitted_indices": 0,
+      "final_period_ppm": -3.738575936829136
+    },
+    {
+      "rate_bps": 1250000000.0,
+      "phase_ui": 0.3,
+      "period_ppm": -100,
+      "payload_bits": 7168,
+      "payload_errors": 0,
+      "omitted_indices": 0,
+      "final_period_ppm": -3.738575937162203
+    },
+    {
+      "rate_bps": 1250000000.0,
+      "phase_ui": 0.3,
+      "period_ppm": 100,
+      "payload_bits": 7168,
+      "payload_errors": 0,
+      "omitted_indices": 0,
+      "final_period_ppm": -3.7385759367181137
+    },
+    {
+      "rate_bps": 2500000000.0,
+      "phase_ui": -0.3,
+      "period_ppm": -100,
+      "payload_bits": 7168,
+      "payload_errors": 0,
+      "omitted_indices": 0,
+      "final_period_ppm": -3.7385759367181137
+    },
+    {
+      "rate_bps": 2500000000.0,
+      "phase_ui": -0.3,
+      "period_ppm": 100,
+      "payload_bits": 7168,
+      "payload_errors": 0,
+      "omitted_indices": 0,
+      "final_period_ppm": -3.738575936829136
+    },
+    {
+      "rate_bps": 2500000000.0,
+      "phase_ui": 0.3,
+      "period_ppm": -100,
+      "payload_bits": 7168,
+      "payload_errors": 0,
+      "omitted_indices": 0,
+      "final_period_ppm": -3.738575937162203
+    },
+    {
+      "rate_bps": 2500000000.0,
+      "phase_ui": 0.3,
+      "period_ppm": 100,
+      "payload_bits": 7168,
+      "payload_errors": 0,
+      "omitted_indices": 0,
+      "final_period_ppm": -3.7385759367181137
+    }
+  ],
+  "sources_sha256": {
+    "system_model/connected/recovered_clock.py": "8c61921920bc67b5826355a4953caee7eb05f087454904fa20c28ce33088cb89",
+    "system_model/clock_tracking_screen.py": "7a93ec5775824e3472f951aac6d2d6af0e3026cb6d5ab6dc6a2297afbd3e5ac0",
+    "system_model/wired_screen.py": "145cf7cdea4b862f6f54f6cfa0b6a475ab10588d367173dfb3c48f26a8c20a79"
+  },
+  "limitations": [
+    "First1024 bits excluded as acquisition interval; no lock detector or framed preamble yet.",
+    "Clock indices have initial alignment by convention; word framing remains unresolved.",
+    "No transmitted bits enter feedback, but ideal zero-crossing timestamps and near-nominal oscillator are assumed.",
+    "Not yet feeding host queues; recovered-time causality must be preserved when connected.",
+    "No jitter/noise, physical tuning constraints or BER qualification."
+  ]
+}

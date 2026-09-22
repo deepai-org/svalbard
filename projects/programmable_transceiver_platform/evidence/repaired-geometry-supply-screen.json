@@ -1,0 +1,88 @@
+{
+  "scope": "Independent repaired geometry and logical power/well net assignment only; no metal power delivery",
+  "geometry": {
+    "scope": "Digital-region placement of sized netlist; not routed/full-chip/timing signoff",
+    "characterization_sha256": "4cfea62669de913705171b527db27166240f4eb1d4bb22820224f71482fd8af8",
+    "instances": 26438,
+    "unplaced": 0,
+    "cell_area_um2": 967233.6576,
+    "row_area_um2": 2286832.0384,
+    "row_utilization": 0.42295789168527337,
+    "checks": [
+      "OpenROAD check_placement",
+      "independent row/boundary/site/orientation/overlap checks",
+      "three deliberately invalid geometry controls rejected",
+      "cell count/area matches characterized sizing netlist"
+    ],
+    "pdk_sha256": [
+      "842b186318d53844561af4ec530b4e30d8ba519bcc58d512a363ef255acc7abd  /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/techlef/gf180mcu_fd_sc_mcu7t5v0__nom.tlef",
+      "47dadf84c21b20f558d043c36271632f07b1c2c2a595b118e2e1050ebb74349b  /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/lef/gf180mcu_fd_sc_mcu7t5v0.lef",
+      "f9dee07cf158324934b0c59144d970a2e8313f43533ede6283ec3c136f82fe53  /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/lib/gf180mcu_fd_sc_mcu7t5v0__tt_025C_3v30.lib"
+    ],
+    "artifact_sha256": {
+      "input.v": "9a38cd0a8ebb7395250ea5ff8021cc60bf71be99751462b97f118afab6365b39",
+      "digital.def": "0df2d75f1cdb641246c6a31b94488e38e1da6ee97bcdead87f19f20c09529037",
+      "digital.odb": "ec39a46229be7e0f9eb5cd659bb897288f4b45b51909be37dfeda5dfb458bf78",
+      "cells.tsv": "d5041b2d8cb5850863c38ed0d9f6d801f70b60f63029e6daf0c8f00d0e60e209",
+      "placement.log": "c578139f95817d2b3b47ddf72cee609cd74079e0f8a8ab6ab9ab83fa3f0aebad"
+    },
+    "source_sha256": {
+      "placement_screen.tcl": "afcd234aef7babad1104803f0c40bbf467487a2893dc1abb250d4a78b2e303bc",
+      "run_placement_screen.sh": "dfb337eea76bf13a707ea56cae6c68067dc0a4609b24e24f1cfef042d2ce5bcb",
+      "check_placement_screen.py": "ed5b1b831bd55dbffe1bcccf2bcd83f1f78d0c6705f74b5f4013febcf0aeaa78"
+    },
+    "limitations": [
+      "Abstract digital-region boundaries/pins; no analog macros or full-chip padframe.",
+      "No PDN/taps/decaps/fillers, clock tree, reset repair, routing or extracted parasitics.",
+      "No physical timing repair or post-placement timing claim; previous setup/recovery failures remain.",
+      "No routability/congestion or final area/power/DRC/LVS qualification."
+    ]
+  },
+  "supply_pins_checked": 105752,
+  "initially_unconnected": 105752,
+  "remaining_unconnected": 0,
+  "tie_supply_pins_checked": 24,
+  "rail_mapping": {
+    "VDD": [
+      "POWER",
+      "VDD_CORE"
+    ],
+    "VNW": [
+      "POWER",
+      "VDD_CORE"
+    ],
+    "VSS": [
+      "GROUND",
+      "VSS_CORE"
+    ],
+    "VPW": [
+      "GROUND",
+      "VSS_CORE"
+    ]
+  },
+  "checks": [
+    "all instances have exactly four expected supply/well pins",
+    "wrong-rail negative control rejected",
+    "all non-supply instance-pin connections unchanged",
+    "DEF component placement unchanged"
+  ],
+  "artifact_sha256": {
+    "supply-before.tsv": "033278e34b16073d26c6b516d63a7477e3db62f117bfd4f9f3c3777be3a670d4",
+    "supply-after.tsv": "13c1618d49108bf618aa254c01b60159b1b973cfda79f02ae40ff5d6a194fa3e",
+    "signals-before.tsv": "676c0a4cb79d54ee569b6e7fec795d2e3d8b65ab2ebf97ffdc99d24d6c3ea2c2",
+    "signals-after.tsv": "676c0a4cb79d54ee569b6e7fec795d2e3d8b65ab2ebf97ffdc99d24d6c3ea2c2",
+    "supply-connected.odb": "4799cfe4c12bd975e0e20a9a93aa1d13c21db6c51ed0b19236a066f2f6e5533b",
+    "supply-connected.def": "9c835a56266805affbd188b2f4f998a8fce78e55c7f88b37a0ab7cfb7c255275"
+  },
+  "source_sha256": {
+    "repaired_geometry_screen.tcl": "39a3a5d9833aeb57bfeb5c076ae7a7710cbfe0fecb739668e0ea516240761a6d",
+    "run_repaired_geometry.sh": "cdab25b04a8e82e8fa778bd25eaad89e9892e3fc2f230f0c6fbb8c4419d5ec7a",
+    "report_repaired_geometry.py": "b7527e6ae9597b5a4b2df7030eca05d7c4d3cd638a4dca85cf0340241744631f"
+  },
+  "limitations": [
+    "Global connection assigns database nets only; no straps, rails, vias, taps, pad connections or IR/EM closure.",
+    "Well/substrate continuity and isolation require layout/LVS qualification.",
+    "Original mapped equivalence covers signal logic; these logical supply assignments do not prove powered behavior.",
+    "All prior setup/recovery failures and analog/DDR/full-chip signoff gaps remain."
+  ]
+}

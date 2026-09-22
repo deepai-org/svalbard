@@ -1,0 +1,108 @@
+{
+  "completed": true,
+  "audit_sha256": "656d7da9f5c71cab07261f682762df6152ebff9d8b923f7026aa6851593e1229",
+  "cases": [
+    {
+      "device": "xps",
+      "model_voltage_vs_physical_terminal_errors": {
+        "1": {
+          "vds_max_error_v": 3.9421108769556428,
+          "vgs_max_error_v": 2.198891732838262
+        },
+        "-1": {
+          "vds_max_error_v": 1.3322676295501878e-15,
+          "vgs_max_error_v": 1.3322676295501878e-15
+        }
+      },
+      "verified_voltage_sign": -1,
+      "id_range_a": [
+        1.54439137702608e-16,
+        3.439180371969267e-05
+      ],
+      "model_forward_inversion_time_fraction": 0.9671160919193319,
+      "model_below_vdsat_time_fraction": 0.9305464764295133,
+      "minimum_vds_minus_vdsat_when_forward_inversion_v": -0.20858359984867617
+    },
+    {
+      "device": "xpu",
+      "model_voltage_vs_physical_terminal_errors": {
+        "1": {
+          "vds_max_error_v": 4.44168769989643,
+          "vgs_max_error_v": 3.5562087365949258
+        },
+        "-1": {
+          "vds_max_error_v": 8.881784197001252e-16,
+          "vgs_max_error_v": 1.3322676295501878e-15
+        }
+      },
+      "verified_voltage_sign": -1,
+      "id_range_a": [
+        5.166459040012496e-33,
+        0.0003627342843507767
+      ],
+      "model_forward_inversion_time_fraction": 0.016515310221208994,
+      "model_below_vdsat_time_fraction": 0.0012610212237866903,
+      "minimum_vds_minus_vdsat_when_forward_inversion_v": -0.03208092552967118
+    },
+    {
+      "device": "xnd",
+      "model_voltage_vs_physical_terminal_errors": {
+        "1": {
+          "vds_max_error_v": 6.713379852030243e-16,
+          "vgs_max_error_v": 1.3322676295501878e-15
+        },
+        "-1": {
+          "vds_max_error_v": 2.170668390851972,
+          "vgs_max_error_v": 4.499099440868154
+        }
+      },
+      "verified_voltage_sign": 1,
+      "id_range_a": [
+        2.11476660546163e-13,
+        8.369146038878562e-05
+      ],
+      "model_forward_inversion_time_fraction": 0.01643395401322261,
+      "model_below_vdsat_time_fraction": 0.012528856029882829,
+      "minimum_vds_minus_vdsat_when_forward_inversion_v": -0.8170039260117962
+    },
+    {
+      "device": "xns",
+      "model_voltage_vs_physical_terminal_errors": {
+        "1": {
+          "vds_max_error_v": 1.1102230246251565e-16,
+          "vgs_max_error_v": 0.0
+        },
+        "-1": {
+          "vds_max_error_v": 2.185474813383576,
+          "vgs_max_error_v": 1.7105261531451394
+        }
+      },
+      "verified_voltage_sign": 1,
+      "id_range_a": [
+        5.350281723484421e-17,
+        2.748390557598589e-05
+      ],
+      "model_forward_inversion_time_fraction": 0.8829410862423448,
+      "model_below_vdsat_time_fraction": 0.856866421582752,
+      "minimum_vds_minus_vdsat_when_forward_inversion_v": -0.16394013027149915
+    }
+  ],
+  "charge_diagnostic": {
+    "reference_cycles": 11,
+    "reported_id_integral_per_cycle_c": {
+      "xps": 5.486526548749282e-14,
+      "xpu": 5.484082851055152e-14,
+      "xnd": 3.68075700830522e-14,
+      "xns": 3.255443784674274e-14
+    },
+    "pmos_minus_nmos_switch_id_integral_c": 1.803325842749932e-14,
+    "measured_pump_charge_per_cycle_c": 2.2394777078213686e-14,
+    "difference_c": 4.3615186507143666e-15
+  },
+  "limitations": [
+    "Named-terminal voltage convention verified against waveform; model inversion/saturation flags are diagnostics, not silicon compliance guarantees.",
+    "id includes the model reported channel-current convention and is not summed as displacement-inclusive output current.",
+    "Threshold crossing duty uses sampled-state trapezoidal weighting; no precise timing limit claimed.",
+    "Only nominal clamped-output history; no acquisition, mismatch or intrinsic noise qualification."
+  ]
+}

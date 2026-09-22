@@ -1,0 +1,489 @@
+{
+  "status": "early_mask_output_logic_rail_deadline_failed",
+  "cases": [
+    {
+      "name": "first-1",
+      "hold_times_ns": [
+        70,
+        120,
+        170
+      ],
+      "input_differences_v": [
+        -0.4,
+        0.4,
+        -0.4
+      ],
+      "baseline_deck_sha256": "ef8caba37935e3cea1f03ca679e3724258ca58bdf4305ae8e1e907646dfc9c99",
+      "artifacts_sha256": {
+        ".spice": "cc9de324de9a5ad274f73ab4b2c7e2120e177bfa8336d410a7c699ec2f7a7b15",
+        ".dat": "60c49dc68d5060448fb71f85a413c1a940749cb6eadfa5e88a53f345f0f1e1fd",
+        ".log": "f8c6c789e3ee57d29bbac9cd4891863a34f69c668ce438a5009f443d541c1811"
+      },
+      "frames": [
+        {
+          "hold_ns": 70,
+          "input_difference_v": -0.4,
+          "pretrack_midcode_rails_valid": null,
+          "final_code": 180,
+          "reported_residue_window_ns": [
+            107,
+            107.3
+          ],
+          "ideal_capacitor_quantizer_code": 179,
+          "steps": [
+            {
+              "bit": 7,
+              "pre_evaluation_residue_v": -0.40186335084809616,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 192
+            },
+            {
+              "bit": 6,
+              "pre_evaluation_residue_v": 0.0924251397354638,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 160
+            },
+            {
+              "bit": 5,
+              "pre_evaluation_residue_v": -0.15467049759517332,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 176
+            },
+            {
+              "bit": 4,
+              "pre_evaluation_residue_v": -0.031075548617313476,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 184
+            },
+            {
+              "bit": 3,
+              "pre_evaluation_residue_v": 0.03069289632035385,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 180
+            },
+            {
+              "bit": 2,
+              "pre_evaluation_residue_v": -0.0001913413293676299,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 182
+            },
+            {
+              "bit": 1,
+              "pre_evaluation_residue_v": 0.015251316331097517,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 181
+            },
+            {
+              "bit": 0,
+              "pre_evaluation_residue_v": 0.007530214962081431,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 180
+            }
+          ],
+          "last_trial_residue_v": 0.0075200661709431925
+        },
+        {
+          "hold_ns": 120,
+          "input_difference_v": 0.4,
+          "pretrack_midcode_rails_valid": true,
+          "final_code": 75,
+          "reported_residue_window_ns": [
+            157,
+            157.3
+          ],
+          "ideal_capacitor_quantizer_code": 76,
+          "steps": [
+            {
+              "bit": 7,
+              "pre_evaluation_residue_v": 0.4018363452247853,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 64
+            },
+            {
+              "bit": 6,
+              "pre_evaluation_residue_v": -0.09213747519612595,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 96
+            },
+            {
+              "bit": 5,
+              "pre_evaluation_residue_v": 0.15465150334888852,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 80
+            },
+            {
+              "bit": 4,
+              "pre_evaluation_residue_v": 0.03110132362825168,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 72
+            },
+            {
+              "bit": 3,
+              "pre_evaluation_residue_v": -0.03067106357943709,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 76
+            },
+            {
+              "bit": 2,
+              "pre_evaluation_residue_v": 0.0002110607504565302,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 74
+            },
+            {
+              "bit": 1,
+              "pre_evaluation_residue_v": -0.015230835678951567,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 75
+            },
+            {
+              "bit": 0,
+              "pre_evaluation_residue_v": -0.0075100773689894314,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 75
+            }
+          ],
+          "last_trial_residue_v": -0.00749986183324424
+        },
+        {
+          "hold_ns": 170,
+          "input_difference_v": -0.4,
+          "pretrack_midcode_rails_valid": false,
+          "final_code": 180,
+          "reported_residue_window_ns": [
+            207,
+            207.3
+          ],
+          "ideal_capacitor_quantizer_code": 179,
+          "steps": [
+            {
+              "bit": 7,
+              "pre_evaluation_residue_v": -0.4018397493752364,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 192
+            },
+            {
+              "bit": 6,
+              "pre_evaluation_residue_v": 0.09240422251252782,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 160
+            },
+            {
+              "bit": 5,
+              "pre_evaluation_residue_v": -0.15469146108450657,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 176
+            },
+            {
+              "bit": 4,
+              "pre_evaluation_residue_v": -0.031096504400988094,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 184
+            },
+            {
+              "bit": 3,
+              "pre_evaluation_residue_v": 0.0306719395473213,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 180
+            },
+            {
+              "bit": 2,
+              "pre_evaluation_residue_v": -0.00021229722230297436,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 182
+            },
+            {
+              "bit": 1,
+              "pre_evaluation_residue_v": 0.015230365576541456,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 181
+            },
+            {
+              "bit": 0,
+              "pre_evaluation_residue_v": 0.007509264550008621,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 180
+            }
+          ],
+          "last_trial_residue_v": 0.007499143051157775
+        }
+      ]
+    },
+    {
+      "name": "first1",
+      "hold_times_ns": [
+        70,
+        120,
+        170
+      ],
+      "input_differences_v": [
+        0.4,
+        -0.4,
+        0.4
+      ],
+      "baseline_deck_sha256": "a869791ebfa9b7fe9e70d78ee0232e3155a3520f4208682efacd4bf48815d977",
+      "artifacts_sha256": {
+        ".spice": "77945ed96d90154142da6d9f07b99684eb12677dadfda9a0dd7ab4f689b5917a",
+        ".dat": "27ea00c41509d449c787bb712ba103dac8f42cb51600355570f87902b983c2c1",
+        ".log": "44ea83d60553109379a21114c21ceb8e99a6d49ff4a9aff255d2392c7c43a6d9"
+      },
+      "frames": [
+        {
+          "hold_ns": 70,
+          "input_difference_v": 0.4,
+          "pretrack_midcode_rails_valid": null,
+          "final_code": 75,
+          "reported_residue_window_ns": [
+            107,
+            107.3
+          ],
+          "ideal_capacitor_quantizer_code": 76,
+          "steps": [
+            {
+              "bit": 7,
+              "pre_evaluation_residue_v": 0.4018636778351998,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 64
+            },
+            {
+              "bit": 6,
+              "pre_evaluation_residue_v": -0.09215762129154846,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 96
+            },
+            {
+              "bit": 5,
+              "pre_evaluation_residue_v": 0.15463089091523366,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 80
+            },
+            {
+              "bit": 4,
+              "pre_evaluation_residue_v": 0.031080713936201317,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 72
+            },
+            {
+              "bit": 3,
+              "pre_evaluation_residue_v": -0.030691674459700648,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 76
+            },
+            {
+              "bit": 2,
+              "pre_evaluation_residue_v": 0.00019045068642400408,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 74
+            },
+            {
+              "bit": 1,
+              "pre_evaluation_residue_v": -0.015251446599031755,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 75
+            },
+            {
+              "bit": 0,
+              "pre_evaluation_residue_v": -0.007530687980758851,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 75
+            }
+          ],
+          "last_trial_residue_v": -0.007520445149339787
+        },
+        {
+          "hold_ns": 120,
+          "input_difference_v": -0.4,
+          "pretrack_midcode_rails_valid": false,
+          "final_code": 180,
+          "reported_residue_window_ns": [
+            157,
+            157.3
+          ],
+          "ideal_capacitor_quantizer_code": 179,
+          "steps": [
+            {
+              "bit": 7,
+              "pre_evaluation_residue_v": -0.4018377372324202,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 192
+            },
+            {
+              "bit": 6,
+              "pre_evaluation_residue_v": 0.09240621978073064,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 160
+            },
+            {
+              "bit": 5,
+              "pre_evaluation_residue_v": -0.15468946285785928,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 176
+            },
+            {
+              "bit": 4,
+              "pre_evaluation_residue_v": -0.03109450702636129,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 184
+            },
+            {
+              "bit": 3,
+              "pre_evaluation_residue_v": 0.03067393665896129,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 180
+            },
+            {
+              "bit": 2,
+              "pre_evaluation_residue_v": -0.0002103001140765744,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 182
+            },
+            {
+              "bit": 1,
+              "pre_evaluation_residue_v": 0.015232360661708988,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 181
+            },
+            {
+              "bit": 0,
+              "pre_evaluation_residue_v": 0.007511259624628012,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 180
+            }
+          ],
+          "last_trial_residue_v": 0.007501136824273754
+        },
+        {
+          "hold_ns": 170,
+          "input_difference_v": 0.4,
+          "pretrack_midcode_rails_valid": true,
+          "final_code": 75,
+          "reported_residue_window_ns": [
+            207,
+            207.3
+          ],
+          "ideal_capacitor_quantizer_code": 76,
+          "steps": [
+            {
+              "bit": 7,
+              "pre_evaluation_residue_v": 0.40183827798641947,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 64
+            },
+            {
+              "bit": 6,
+              "pre_evaluation_residue_v": -0.09213553403175749,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 96
+            },
+            {
+              "bit": 5,
+              "pre_evaluation_residue_v": 0.15465343335970932,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 80
+            },
+            {
+              "bit": 4,
+              "pre_evaluation_residue_v": 0.031103253219915562,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 72
+            },
+            {
+              "bit": 3,
+              "pre_evaluation_residue_v": -0.030669134571778216,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 76
+            },
+            {
+              "bit": 2,
+              "pre_evaluation_residue_v": 0.0002129895540622077,
+              "keep": false,
+              "agrees_with_residue": true,
+              "code_after_update": 74
+            },
+            {
+              "bit": 1,
+              "pre_evaluation_residue_v": -0.015228907098198493,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 75
+            },
+            {
+              "bit": 0,
+              "pre_evaluation_residue_v": -0.007508150682418413,
+              "keep": true,
+              "agrees_with_residue": true,
+              "code_after_update": 75
+            }
+          ],
+          "last_trial_residue_v": -0.007497938176313183
+        }
+      ]
+    }
+  ],
+  "source_sha256": {
+    "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+    "/screen/adc/sar8_control.spice": "e345fa96d9d1342d55a1bc65b0fc42e2c1d31ebcda127597fc372f625cd038fb",
+    "/screen/adc/comparator.spice": "a41ecccf87f625bbddca6139730c5e8500529c5acb2f05a5052f9049e8ee74a0",
+    "/screen/adc/cdac8_scaled.spice": "4006f42115b3a5a30b9ad74626ef0c084655bf0cdc2f1d1cc8bd32f65e351fd2",
+    "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+    "/wifi/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+    "/screen/adc/sample_driver_headroom.spice": "34840413c8d9ed96e56383230e0016611c78a6e94e7990ccfbc35d2d59abba83",
+    "/screen/adc/sar_track_mask.spice": "f422e316bf656484c282fd3a880eb7e2aef41a7a67aa65af8055d13578b16741"
+  },
+  "limitations": [
+    "External reset/start/clock/sample waveforms; no actual phase generator or output register.",
+    "Three frames in each polarity sequence, ideal capacitors/bias references and separate supplies.",
+    "No continuous transfer, ENOB, noise/mismatch/process or physical loading qualification.",
+    "Code must be observed before next reset; host capture timing unimplemented."
+  ],
+  "frame_logic_and_decision_capture_checked": true,
+  "all_comparator_decisions_agree_with_residue": true,
+  "qualified_20msps_adc": false,
+  "reported_residue_is_last_trial_before_update": true,
+  "pretrack_deadline_pass": false,
+  "pretrack_observation_scope": "SD0..SD7 mask outputs upstream of code buffers; final switch-gate and capacitor-plate settling are not directly measured by this check."
+}

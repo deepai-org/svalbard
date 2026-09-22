@@ -1,0 +1,30 @@
+{
+  "scope": "Coordinated startup on word-aligned synchronous input; not DDR/CDC/physical qualification",
+  "profiles_passed": [
+    0,
+    1
+  ],
+  "checks": [
+    "startup with prefix noise",
+    "streaming prefix-valued payload",
+    "sticky metadata fault",
+    "no automatic reacquisition",
+    "1024-cycle acquisition timeout",
+    "explicit reset/restart",
+    "TX and RX structural elaboration"
+  ],
+  "untested": [
+    "arbitrary DDR bit alignment",
+    "all start phases and exact deadline edge",
+    "stopped input clock",
+    "late join or independent enable ordering"
+  ],
+  "source_sha256": {
+    "rtl/pt_stream_link.sv": "26c55522cf98035c4ba6991d11c0a8671fe402449f900cae28cd0a61d2d2645b",
+    "rtl/pt_stream_tx.sv": "ea4b0e7479abfbd76bc5be10a6cbc848748ec77200e10b3b7dcc48ba68c7fbf6",
+    "rtl/pt_stream_rx.sv": "db085e40d4f9c0de587fd245da0585b51f71d86bbdaa8e6968afdd88b580e49d",
+    "rtl/pt_schedule.vh": "826aecb656c8057dc1acf21ff9acc35702a26bc01ac93e3c5d887f036b6a860c",
+    "sim/tb_stream_link.sv": "10264a106fe6504856d694dc4d2e6e7dd2ce7234dc674470a829b1c844335028",
+    "verification/run_stream_link.sh": "00b3e5d19692cd0e42d6ae35f5b561699319a071d25c177a7b202c4f8314d71c"
+  }
+}

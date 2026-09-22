@@ -1,0 +1,118 @@
+{
+  "completed": true,
+  "status": "terminal",
+  "cases": [
+    {
+      "name": "small",
+      "completed": true,
+      "returncode": 0,
+      "errors": [],
+      "artifacts_sha256": {
+        ".spice": "e92f344139850ec600d93a7bac7ac776e6346e9da605e69bfa705a1fc4b7e848",
+        ".log": "75854509ce0f2dbaa48d9a922c618197d2a322fb2caa0028e16d710d8039f765",
+        ".dat": "67daf6753d424a012c8547225960f9a12ecab1eac90e51ac5b4e3c59981583bf"
+      },
+      "signals": {
+        "input": {
+          "range_v": [
+            1.44298777884014,
+            1.617857238309883
+          ],
+          "rises": 125,
+          "period_range_ps": [
+            399.9999999260338,
+            400.00000178351087
+          ]
+        },
+        "mid": {
+          "range_v": [
+            1.431591295334113,
+            1.629625487170883
+          ],
+          "rises": 0,
+          "period_range_ps": null
+        },
+        "pre": {
+          "range_v": [
+            1.159235166512846,
+            1.900537433135444
+          ],
+          "rises": 125,
+          "period_range_ps": [
+            399.99999783983793,
+            400.0000102519676
+          ]
+        },
+        "output": {
+          "range_v": [
+            0.4091489844905879,
+            2.713155702790382
+          ],
+          "rises": 125,
+          "period_range_ps": [
+            399.9999818752389,
+            400.00000348333396
+          ]
+        }
+      }
+    },
+    {
+      "name": "large",
+      "completed": true,
+      "returncode": 0,
+      "errors": [],
+      "artifacts_sha256": {
+        ".spice": "092bc7abb86c3627dc4bb0aa14c5de867b07c34f56985f515a15ac2ffc519e10",
+        ".log": "74329edecd9b4a04315c3f89289cd1918f89e3de4236f7475cb4294a34f1f1cf",
+        ".dat": "159fb4f386da5bda734fe8b4cea4e444e0a3116104e53fca386ba5901c52e289"
+      },
+      "signals": {
+        "input": {
+          "range_v": [
+            1.431049491982417,
+            1.629860476799768
+          ],
+          "rises": 125,
+          "period_range_ps": [
+            399.9999999168091,
+            400.00000178243886
+          ]
+        },
+        "mid": {
+          "range_v": [
+            1.41724419797383,
+            1.643896285886548
+          ],
+          "rises": 0,
+          "period_range_ps": null
+        },
+        "pre": {
+          "range_v": [
+            1.108227579158404,
+            1.948566490531402
+          ],
+          "rises": 125,
+          "period_range_ps": [
+            399.9999975777739,
+            400.0000090669222
+          ]
+        },
+        "output": {
+          "range_v": [
+            0.335751756560351,
+            2.805119063692567
+          ],
+          "rises": 125,
+          "period_range_ps": [
+            399.99998578516943,
+            400.0000034131559
+          ]
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Complementary AC-coupled self-biased drivers with actual mixer and1k/1p IF loads; ideal RF1.5V through300ohm, no LNA/filter/actual ring modulation.",
+    "Passing this screen cannot qualify the autonomous receiver or identify a unique cause of its missing pulses."
+  ]
+}

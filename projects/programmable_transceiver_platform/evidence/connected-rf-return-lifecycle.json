@@ -1,0 +1,85 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "ppm": -100,
+      "interrupted": false,
+      "captured": 3,
+      "returned": 3,
+      "return_word_ticks": 442,
+      "discarded_transport_words": 0
+    },
+    {
+      "mode": 0,
+      "ppm": -100,
+      "interrupted": true,
+      "captured": 1,
+      "returned": 0,
+      "return_word_ticks": 194,
+      "discarded_transport_words": 64
+    },
+    {
+      "mode": 0,
+      "ppm": 100,
+      "interrupted": false,
+      "captured": 3,
+      "returned": 3,
+      "return_word_ticks": 441,
+      "discarded_transport_words": 0
+    },
+    {
+      "mode": 0,
+      "ppm": 100,
+      "interrupted": true,
+      "captured": 1,
+      "returned": 0,
+      "return_word_ticks": 194,
+      "discarded_transport_words": 64
+    },
+    {
+      "mode": 1,
+      "ppm": -100,
+      "interrupted": false,
+      "captured": 3,
+      "returned": 3,
+      "return_word_ticks": 504,
+      "discarded_transport_words": 0
+    },
+    {
+      "mode": 1,
+      "ppm": -100,
+      "interrupted": true,
+      "captured": 1,
+      "returned": 0,
+      "return_word_ticks": 195,
+      "discarded_transport_words": 62
+    },
+    {
+      "mode": 1,
+      "ppm": 100,
+      "interrupted": false,
+      "captured": 3,
+      "returned": 3,
+      "return_word_ticks": 504,
+      "discarded_transport_words": 0
+    },
+    {
+      "mode": 1,
+      "ppm": 100,
+      "interrupted": true,
+      "captured": 1,
+      "returned": 0,
+      "return_word_ticks": 195,
+      "discarded_transport_words": 62
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "RF uses equal10MHz one-pole TX/RX filters with ideal coherent gain and quantization; mixer impairments and noise remain open.",
+    "Return uses real frames at independent word deadlines, with coherent host abort on reference loss assumed.",
+    "Small bursts only; continuous throughput, wired RX and management/CDC timing remain open.",
+    "An ADC edge coincident with host service is available to that frame; TX edges precede ADC sampling."
+  ]
+}

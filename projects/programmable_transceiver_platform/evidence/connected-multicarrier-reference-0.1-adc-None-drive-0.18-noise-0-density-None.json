@@ -1,0 +1,314 @@
+{
+  "cases": [
+    {
+      "reference_memory_strength": 0.1,
+      "reference_memory_tau_s": 5e-08,
+      "minimum_reference_span": 1.0,
+      "maximum_reference_span": 1.0098170654246443,
+      "adc_quantizer_bits": 8,
+      "transport_component_bits": 8,
+      "drive_complex_rms_target": 0.18,
+      "dac_clipped_pairs": 0,
+      "noise_complex_rms_target": 0.0,
+      "noise_complex_two_sided_density": 0.0,
+      "noise_bin_rms_before_equalizer": 0.0,
+      "noise_complex_rms_measured": 0.0,
+      "adc_clipped_pairs": 0,
+      "mode": "pcie_rf20_8",
+      "host_transmit": {
+        "transport": {
+          "adc_samples_returned": 3200,
+          "wired_words_returned": 40000,
+          "payload_errors": 0,
+          "peak_ingress_bits": {
+            "wire": 520,
+            "iq": 88
+          },
+          "maximum_adc_to_host_delay_ticks": 154.0,
+          "minimum_adc_to_host_delay_ticks": 124.5,
+          "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+        },
+        "prefill_ticks": 192,
+        "peak_dac_fifo_samples": 5,
+        "underflows": 0,
+        "overflows": 0,
+        "zero_prefill_underflows": 10,
+        "scope": "Shared-clock host framing and DAC pacing; wired TX words decoded but serializer not exercised here."
+      },
+      "host_return": {
+        "adc_samples_returned": 3200,
+        "wired_words_returned": 40000,
+        "payload_errors": 0,
+        "peak_ingress_bits": {
+          "wire": 520,
+          "iq": 88
+        },
+        "maximum_adc_to_host_delay_ticks": 154.125,
+        "minimum_adc_to_host_delay_ticks": 123.125,
+        "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+      },
+      "wire_recovery": {
+        "training_bits": 1024,
+        "marker_bits": 64,
+        "marker_acquired_relative_payload_s": -1.5595697141101781e-10,
+        "recovered_words": 40000,
+        "initial_phase_ui": 0.3,
+        "initial_period_ppm": 100,
+        "clock": "received zero-crossing PI tracker",
+        "framing": "observed64-bit test marker",
+        "final_period_ppm": -3.094589905217049
+      },
+      "sample_rate_hz": 20000000.0,
+      "bits": 8,
+      "attenuation": 0.25,
+      "active_subcarrier_edge_hz": 8125000,
+      "subcarrier_spacing_hz": 312500,
+      "training_blocks": 8,
+      "held_out_blocks": 30,
+      "held_out_symbols": 1560,
+      "dac_peak_component": 0.4550871868548502,
+      "minimum_normalized_response": 0.6711922953525606,
+      "maximum_normalized_response": 1.012446818085773,
+      "calibrated_rms_error": 0.08487388208766873,
+      "symbol_errors": 0
+    },
+    {
+      "reference_memory_strength": 0.1,
+      "reference_memory_tau_s": 5e-08,
+      "minimum_reference_span": 1.0,
+      "maximum_reference_span": 1.0392682616985773,
+      "adc_quantizer_bits": 8,
+      "transport_component_bits": 8,
+      "drive_complex_rms_target": 0.18,
+      "dac_clipped_pairs": 0,
+      "noise_complex_rms_target": 0.0,
+      "noise_complex_two_sided_density": 0.0,
+      "noise_bin_rms_before_equalizer": 0.0,
+      "noise_complex_rms_measured": 0.0,
+      "adc_clipped_pairs": 0,
+      "mode": "pcie_rf20_8",
+      "host_transmit": {
+        "transport": {
+          "adc_samples_returned": 3200,
+          "wired_words_returned": 40000,
+          "payload_errors": 0,
+          "peak_ingress_bits": {
+            "wire": 520,
+            "iq": 88
+          },
+          "maximum_adc_to_host_delay_ticks": 154.0,
+          "minimum_adc_to_host_delay_ticks": 124.5,
+          "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+        },
+        "prefill_ticks": 192,
+        "peak_dac_fifo_samples": 5,
+        "underflows": 0,
+        "overflows": 0,
+        "zero_prefill_underflows": 10,
+        "scope": "Shared-clock host framing and DAC pacing; wired TX words decoded but serializer not exercised here."
+      },
+      "host_return": {
+        "adc_samples_returned": 3200,
+        "wired_words_returned": 40000,
+        "payload_errors": 0,
+        "peak_ingress_bits": {
+          "wire": 520,
+          "iq": 88
+        },
+        "maximum_adc_to_host_delay_ticks": 154.125,
+        "minimum_adc_to_host_delay_ticks": 123.125,
+        "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+      },
+      "wire_recovery": {
+        "training_bits": 1024,
+        "marker_bits": 64,
+        "marker_acquired_relative_payload_s": -1.5595697141101781e-10,
+        "recovered_words": 40000,
+        "initial_phase_ui": 0.3,
+        "initial_period_ppm": 100,
+        "clock": "received zero-crossing PI tracker",
+        "framing": "observed64-bit test marker",
+        "final_period_ppm": -3.094589905217049
+      },
+      "sample_rate_hz": 20000000.0,
+      "bits": 8,
+      "attenuation": 1,
+      "active_subcarrier_edge_hz": 8125000,
+      "subcarrier_spacing_hz": 312500,
+      "training_blocks": 8,
+      "held_out_blocks": 30,
+      "held_out_symbols": 1560,
+      "dac_peak_component": 0.4550871868548502,
+      "minimum_normalized_response": 0.6777440869241594,
+      "maximum_normalized_response": 0.9841932806889304,
+      "calibrated_rms_error": 0.02705845798643714,
+      "symbol_errors": 0
+    },
+    {
+      "reference_memory_strength": 0.1,
+      "reference_memory_tau_s": 5e-08,
+      "minimum_reference_span": 1.0,
+      "maximum_reference_span": 1.0054019919803225,
+      "adc_quantizer_bits": 12,
+      "transport_component_bits": 12,
+      "drive_complex_rms_target": 0.18,
+      "dac_clipped_pairs": 0,
+      "noise_complex_rms_target": 0.0,
+      "noise_complex_two_sided_density": 0.0,
+      "noise_bin_rms_before_equalizer": 0.0,
+      "noise_complex_rms_measured": 0.0,
+      "adc_clipped_pairs": 0,
+      "mode": "ethernet_rf40_12",
+      "host_transmit": {
+        "transport": {
+          "adc_samples_returned": 6400,
+          "wired_words_returned": 20000,
+          "payload_errors": 0,
+          "peak_ingress_bits": {
+            "wire": 320,
+            "iq": 272
+          },
+          "maximum_adc_to_host_delay_ticks": 140.75,
+          "minimum_adc_to_host_delay_ticks": 126.75,
+          "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+        },
+        "prefill_ticks": 192,
+        "peak_dac_fifo_samples": 11,
+        "underflows": 0,
+        "overflows": 0,
+        "zero_prefill_underflows": 23,
+        "scope": "Shared-clock host framing and DAC pacing; wired TX words decoded but serializer not exercised here."
+      },
+      "host_return": {
+        "adc_samples_returned": 6400,
+        "wired_words_returned": 20000,
+        "payload_errors": 0,
+        "peak_ingress_bits": {
+          "wire": 320,
+          "iq": 272
+        },
+        "maximum_adc_to_host_delay_ticks": 140.75,
+        "minimum_adc_to_host_delay_ticks": 125.5,
+        "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+      },
+      "wire_recovery": {
+        "training_bits": 1024,
+        "marker_bits": 64,
+        "marker_acquired_relative_payload_s": -3.1191394282203563e-10,
+        "recovered_words": 20000,
+        "initial_phase_ui": 0.3,
+        "initial_period_ppm": 100,
+        "clock": "received zero-crossing PI tracker",
+        "framing": "observed64-bit test marker",
+        "final_period_ppm": -3.416554173352182
+      },
+      "sample_rate_hz": 40000000.0,
+      "bits": 12,
+      "attenuation": 0.25,
+      "active_subcarrier_edge_hz": 8125000,
+      "subcarrier_spacing_hz": 312500,
+      "training_blocks": 8,
+      "held_out_blocks": 30,
+      "held_out_symbols": 1560,
+      "dac_peak_component": 0.48312602435604557,
+      "minimum_normalized_response": 0.5792942856288633,
+      "maximum_normalized_response": 0.9973894251574285,
+      "calibrated_rms_error": 0.00389981849542608,
+      "symbol_errors": 0
+    },
+    {
+      "reference_memory_strength": 0.1,
+      "reference_memory_tau_s": 5e-08,
+      "minimum_reference_span": 1.0,
+      "maximum_reference_span": 1.0216079679212906,
+      "adc_quantizer_bits": 12,
+      "transport_component_bits": 12,
+      "drive_complex_rms_target": 0.18,
+      "dac_clipped_pairs": 0,
+      "noise_complex_rms_target": 0.0,
+      "noise_complex_two_sided_density": 0.0,
+      "noise_bin_rms_before_equalizer": 0.0,
+      "noise_complex_rms_measured": 0.0,
+      "adc_clipped_pairs": 0,
+      "mode": "ethernet_rf40_12",
+      "host_transmit": {
+        "transport": {
+          "adc_samples_returned": 6400,
+          "wired_words_returned": 20000,
+          "payload_errors": 0,
+          "peak_ingress_bits": {
+            "wire": 320,
+            "iq": 272
+          },
+          "maximum_adc_to_host_delay_ticks": 140.75,
+          "minimum_adc_to_host_delay_ticks": 126.75,
+          "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+        },
+        "prefill_ticks": 192,
+        "peak_dac_fifo_samples": 11,
+        "underflows": 0,
+        "overflows": 0,
+        "zero_prefill_underflows": 23,
+        "scope": "Shared-clock host framing and DAC pacing; wired TX words decoded but serializer not exercised here."
+      },
+      "host_return": {
+        "adc_samples_returned": 6400,
+        "wired_words_returned": 20000,
+        "payload_errors": 0,
+        "peak_ingress_bits": {
+          "wire": 320,
+          "iq": 272
+        },
+        "maximum_adc_to_host_delay_ticks": 140.75,
+        "minimum_adc_to_host_delay_ticks": 125.5,
+        "execution": "Feed-forward replay at absolute event times; no RF/host feedback coupling."
+      },
+      "wire_recovery": {
+        "training_bits": 1024,
+        "marker_bits": 64,
+        "marker_acquired_relative_payload_s": -3.1191394282203563e-10,
+        "recovered_words": 20000,
+        "initial_phase_ui": 0.3,
+        "initial_period_ppm": 100,
+        "clock": "received zero-crossing PI tracker",
+        "framing": "observed64-bit test marker",
+        "final_period_ppm": -3.416554173352182
+      },
+      "sample_rate_hz": 40000000.0,
+      "bits": 12,
+      "attenuation": 1,
+      "active_subcarrier_edge_hz": 8125000,
+      "subcarrier_spacing_hz": 312500,
+      "training_blocks": 8,
+      "held_out_blocks": 30,
+      "held_out_symbols": 1560,
+      "dac_peak_component": 0.48312602435604557,
+      "minimum_normalized_response": 0.5748172109455265,
+      "maximum_normalized_response": 0.9905824003539804,
+      "calibrated_rms_error": 0.0028472505771695474,
+      "symbol_errors": 0
+    }
+  ],
+  "status": "supporting_rf_bandwidth_screen",
+  "complete_architecture": false,
+  "limitations": [
+    "Both RF host directions framed; shared clocks only, no wired TX serializer or reset/mute in this screen.",
+    "Ideal timing and LO; no I/Q mismatch, blockers or nonlinear compression. Injected IID complex noise is a sensitivity assumption, not a physical noise prediction.",
+    "Active carriers span -8.125 to +8.125MHz; finite rectangular blocks have out-of-band sidelobes.",
+    "No spectral mask, Wi-Fi packet format, coding, acquisition or compliance claim.",
+    "Per-bin equalizer is external-host functionality; poles and converter widths remain hypothetical."
+  ],
+  "source_hashes": {
+    "system_model/connected/multicarrier_screen.py": "14bfdee17a67561806939dd07670f900eca197422404609693766cce140893c4",
+    "system_model/connected/rf_blocks.py": "f4d40fd90f0d416d6ac57d648940e34a41b24d44e14192f6a572bfae2010d688",
+    "system_model/connected/reference_memory.py": "751a406b294fcebf89445c06fce11ac2f764c5baabcfe67fc1fd7957a57192fd",
+    "system_model/connected/chip_model.py": "37a55e0006e0c164efd19c2ef33c96259410d6975b5ab42e2f4a8bf70c0f7308",
+    "system_model/connected/loopback_return.py": "83a2a13f06b05393444264256b866a2c489d69d1b8421129e822f5a3044d4c86",
+    "system_model/connected/recovered_clock.py": "98b9feadbf511e008b7fb47d0333041af60d83ff842f79b29fc72de1b495aef9",
+    "verification/stream_codec.py": "4515bf61e3c83f041eee97740e61c075dca1681da388dc651117cdd10d1a0088",
+    "system_model/clock_tracking_screen.py": "7a93ec5775824e3472f951aac6d2d6af0e3026cb6d5ab6dc6a2297afbd3e5ac0",
+    "system_model/wired_screen.py": "145cf7cdea4b862f6f54f6cfa0b6a475ab10588d367173dfb3c48f26a8c20a79",
+    "system_model/connected/framing.py": "31b48aa47ff0e290c66ed422874d6e21fb44e833b11d5f982548b18a2ff4985b",
+    "spec/contract.json": "f7ba04b8cfb7681c280147778edbe333b3bf245c4b2dec3e47a69cdf0b1b5026"
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "status": "completed_common_mode_diagnostic",
+  "baseline_bit_identical": true,
+  "cases": [
+    {
+      "name": "lower",
+      "rf_endpoint_magnitude_v": 0.10240155315857402,
+      "bb_endpoint_magnitude_v": 0.31434798808031617,
+      "endpoint_voltage_ratio": 0.32575857661417684,
+      "differential_equivalent_series_ohm_range": [
+        96.99630736388643,
+        103.48790051742496
+      ],
+      "on_gate_minus_higher_terminal_v_range": [
+        1.5480727611292768,
+        1.7633651977872788
+      ],
+      "monotonic": true,
+      "max_endpoint_fit_error_v": 0.0007434431409604203
+    },
+    {
+      "name": "baseline",
+      "rf_endpoint_magnitude_v": 0.08455946357941202,
+      "bb_endpoint_magnitude_v": 0.35397079008785703,
+      "endpoint_voltage_ratio": 0.2388882527804738,
+      "differential_equivalent_series_ohm_range": [
+        145.44271486480284,
+        159.30288290880284
+      ],
+      "on_gate_minus_higher_terminal_v_range": [
+        1.224954099864676,
+        1.4570824434494458
+      ],
+      "monotonic": true,
+      "max_endpoint_fit_error_v": 0.0011846484146622316
+    },
+    {
+      "name": "upper",
+      "rf_endpoint_magnitude_v": 0.046687620683337094,
+      "bb_endpoint_magnitude_v": 0.4333103298775338,
+      "endpoint_voltage_ratio": 0.1077463828211351,
+      "differential_equivalent_series_ohm_range": [
+        380.1394743248836,
+        414.052701267965
+      ],
+      "on_gate_minus_higher_terminal_v_range": [
+        0.87533469257728,
+        1.1440203091545458
+      ],
+      "monotonic": true,
+      "max_endpoint_fit_error_v": 0.001045400497543078
+    }
+  ],
+  "provenance": {
+    "source_sha256_before": {
+      "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+      "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+      "/screen/dac/segmented8.spice": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+      "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/screen/tx/commutator.spice": "89cb009a303ded0120ce8536abe86174045bb73ed27b1ec3272f0cdfdef8ad6b",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+    },
+    "source_sha256_after": {
+      "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+      "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+      "/screen/dac/segmented8.spice": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+      "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/screen/tx/commutator.spice": "89cb009a303ded0120ce8536abe86174045bb73ed27b1ec3272f0cdfdef8ad6b",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+    },
+    "cases": [
+      {
+        "name": "lower",
+        "term_v": 1.85,
+        "cm_v": 1.59,
+        "returncode": 0,
+        "elapsed_seconds": 1.1151401298120618,
+        "deck_sha256_before": "5d2af24ed89f6484d4b10964ce07fd8b76b8d3f0e4b4030b1f9b0a34216767bb",
+        "artifacts_sha256": {
+          ".spice": "5d2af24ed89f6484d4b10964ce07fd8b76b8d3f0e4b4030b1f9b0a34216767bb",
+          ".log": "cac4c58bd7c029e20a82464a7410cc23aba4a6aceab320c1c31f4abf1b2b9641",
+          ".dat": "4bfddfed082ee38ae7bd2d981bb9cd2426cb29bd26984f7f7023b5cd9fe917c3"
+        }
+      },
+      {
+        "name": "baseline",
+        "term_v": 2.15,
+        "cm_v": 1.89,
+        "returncode": 0,
+        "elapsed_seconds": 1.2152199298143387,
+        "deck_sha256_before": "4c77215792bd33e6f6dfa46bd0234f06b561243c200774bdc252010fd7a33871",
+        "artifacts_sha256": {
+          ".spice": "4c77215792bd33e6f6dfa46bd0234f06b561243c200774bdc252010fd7a33871",
+          ".log": "7a7c264de4d7e000111b488b60ee8c5c19aba15868e784b2836f31afe72b7c20",
+          ".dat": "932cdb3bebfe66330c5b5d55f6b95d10c372cc8914906815a84e6a0dc25cf321"
+        }
+      },
+      {
+        "name": "upper",
+        "term_v": 2.45,
+        "cm_v": 2.19,
+        "returncode": 0,
+        "elapsed_seconds": 1.265261773020029,
+        "deck_sha256_before": "837a1f18b3ba5cdea324d22d400478942c30ee3179abf9dedbfab6a33c7de65d",
+        "artifacts_sha256": {
+          ".spice": "837a1f18b3ba5cdea324d22d400478942c30ee3179abf9dedbfab6a33c7de65d",
+          ".log": "aead7e94e67ec5071e5d19eaaf113d0f8182c22105c665129cb6c819d19f5902",
+          ".dat": "d533ce9537f8cf1679d9ad19917b41a518ffa7b3960c1990dd1590865dd40c08"
+        }
+      }
+    ]
+  },
+  "limitations": [
+    "Equivalent series resistance includes whole static bridge behavior; no individual FET OP, body-effect attribution or noise inferred.",
+    "Gate minus terminal voltage is not overdrive: threshold and body bias not probed.",
+    "Moving both ideal biases changes DAC compliance as well as switch operating point; no isolated mechanism claimed.",
+    "No RF dynamic, mismatch, reconstruction or autonomous LO qualification."
+  ]
+}

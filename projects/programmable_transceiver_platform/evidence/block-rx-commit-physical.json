@@ -1,0 +1,121 @@
+{
+  "pass": 87,
+  "status": "slow-corner setup and provisional interface hold fail",
+  "pre_cts_placement": {
+    "instances": 3119,
+    "cell_area_um2": 69234.41279999992,
+    "unplaced": 0,
+    "requested_region_um2": 160000
+  },
+  "clock_roots": 1,
+  "clock_sinks": 330,
+  "clock_tree_buffers": 31,
+  "hold_uncertainty_ns": 0.5,
+  "corners": {
+    "tt_025C_3v30": {
+      "0:max": {
+        "slack_ns": 6.3217,
+        "startpoint": "_5404_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "_5552_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "0:min": {
+        "slack_ns": -1.6869,
+        "startpoint": "words[42] (input port clocked by clk)",
+        "endpoint": "_5481_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:max": {
+        "slack_ns": 6.3217,
+        "startpoint": "_5404_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "_5552_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:min": {
+        "slack_ns": -1.6869,
+        "startpoint": "words[42] (input port clocked by clk)",
+        "endpoint": "_5481_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    },
+    "ff_n40C_3v60": {
+      "0:max": {
+        "slack_ns": 14.7345,
+        "startpoint": "_5404_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "_5552_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "0:min": {
+        "slack_ns": -1.2199,
+        "startpoint": "words[42] (input port clocked by clk)",
+        "endpoint": "_5481_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:max": {
+        "slack_ns": 14.7345,
+        "startpoint": "_5404_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "_5552_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:min": {
+        "slack_ns": -1.2199,
+        "startpoint": "words[42] (input port clocked by clk)",
+        "endpoint": "_5481_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    },
+    "ss_n40C_3v00": {
+      "0:max": {
+        "slack_ns": -1.6075,
+        "startpoint": "_5404_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "_5552_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "0:min": {
+        "slack_ns": -2.1423,
+        "startpoint": "words[9] (input port clocked by clk)",
+        "endpoint": "_5448_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:max": {
+        "slack_ns": -1.6075,
+        "startpoint": "_5404_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "_5552_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:min": {
+        "slack_ns": -2.1423,
+        "startpoint": "words[9] (input port clocked by clk)",
+        "endpoint": "_5448_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    },
+    "ss_125C_3v00": {
+      "0:max": {
+        "slack_ns": -13.5283,
+        "startpoint": "_5404_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "_5552_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "0:min": {
+        "slack_ns": -2.7837,
+        "startpoint": "words[9] (input port clocked by clk)",
+        "endpoint": "_5448_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:max": {
+        "slack_ns": -13.5283,
+        "startpoint": "_5404_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "_5552_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:min": {
+        "slack_ns": -2.7837,
+        "startpoint": "words[9] (input port clocked by clk)",
+        "endpoint": "_5448_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    }
+  },
+  "scope": "Propagated CTS with placement-estimated RC. No routed timing, verified source launch contract, CTS equivalence, full geometry/DRC or physical signoff.",
+  "sha256": {
+    "projects/programmable_transceiver_platform/verification/block_rx_commit_physical.tcl": "90aa8b0be8b73c4851599dcd46a71797a3963f64d34a62ef33cd47a3dca850ba",
+    "projects/programmable_transceiver_platform/verification/block_rx_commit_physical.py": "159e60db2e50c928fbf868cb6285a8296e00d5e2ccfc9bf66133ff161429cd01",
+    "projects/programmable_transceiver_platform/verification/run_block_rx_commit_physical.sh": "6f7c751a606b405f4468a43de5d9e23ae1bb8c7c3b1cfa68297a05957bf8b2a8",
+    "projects/programmable_transceiver_platform/verification/report_block_rx_commit_physical.py": "591979c19495085dd3035e7ebec1eb19740ff14aa1bf08df43d0d4fbef168306",
+    "projects/programmable_transceiver_platform/verification/block_rx_commit_timing.tcl": "7d8333bee7639227c21a1196a32027dc94c7fada7c3ebab7f796818253d1d7d0",
+    "scratch/transceiver-block-rx-commit-physical/digital.odb": "106a33ef272fdf99b4884663ea694ed3057b4941b794d335a8d767e2ba072439",
+    "scratch/transceiver-block-rx-commit-physical/digital.def": "14ca30a009add5b36320212c944d8b05f6e2a57d904db6f8d5f735453f0fc18d",
+    "scratch/transceiver-block-rx-commit-physical/placed.odb": "1b5c63329e5da66d45f17e7fb52f853485546ff02fa2ecb77bc589f4c8762953",
+    "scratch/transceiver-block-rx-commit-physical/physical.log": "9a62bc573b9378dea5c37a9b0e1f0d24be56eaa5eae654ff34bd25e566a38a48",
+    "scratch/transceiver-block-rx-commit-physical/placement-counts.json": "772a42b8370087e08e93415395b5089e2f4dc1b9665e968d9f6895e1ca917742",
+    "scratch/transceiver-block-rx-commit-physical/ff_n40C_3v60.log": "4f5cd455eb14e1d4e7c6654c59ae4000d14666c03be0a9b4fd6d1ca74dc1568d",
+    "scratch/transceiver-block-rx-commit-physical/ss_125C_3v00.log": "829139c5c96c49db719d57f4a39df2625a8784c10807515e3d2269e6eda730fc",
+    "scratch/transceiver-block-rx-commit-physical/tt_025C_3v30.log": "f0856131b4757641a4120af1b054e093a68de2d32855bbdbf6a0696ecbc200e5",
+    "scratch/transceiver-block-rx-commit-physical/ss_n40C_3v00.log": "943747dee43e54c6f6edbb35e2f3b8bc9531cf15b96bad6f677536522fc79d9c"
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "status": "transistor_divide128_and_pfd_input_open_loop",
+  "nodes": [
+    {
+      "node": "VCO",
+      "edges": 551,
+      "frequency_hz": 2500755825.338543,
+      "min_v": -0.8389185905850776,
+      "max_v": 0.8358657897190638
+    },
+    {
+      "node": "div2",
+      "edges": 275,
+      "frequency_hz": 1250377903.06929,
+      "min_v": -1.18111320528998,
+      "max_v": 1.18771717209245
+    },
+    {
+      "node": "div4",
+      "edges": 138,
+      "frequency_hz": 625188912.1766863,
+      "min_v": -1.412626747645725,
+      "max_v": 1.413068342258231
+    },
+    {
+      "node": "div8",
+      "edges": 69,
+      "frequency_hz": 312594479.30831033,
+      "min_v": -1.543399083375596,
+      "max_v": 1.543294949186349
+    },
+    {
+      "node": "div16",
+      "edges": 34,
+      "frequency_hz": 156297222.9217761,
+      "min_v": -1.562902025225417,
+      "max_v": 1.563067827489931
+    },
+    {
+      "node": "div32",
+      "edges": 18,
+      "frequency_hz": 78148611.76193586,
+      "min_v": -1.56805075893598,
+      "max_v": 1.568141033011639
+    },
+    {
+      "node": "div64",
+      "edges": 8,
+      "frequency_hz": 39074299.742403075,
+      "min_v": -1.569048782051307,
+      "max_v": 1.569141557518162
+    },
+    {
+      "node": "div128",
+      "edges": 4,
+      "frequency_hz": 19537137.208073065,
+      "min_v": -1.546704692396091,
+      "max_v": 1.539261666230983
+    },
+    {
+      "node": "FB",
+      "edges": 4,
+      "frequency_hz": 19535268.23349419,
+      "min_v": -0.02671198408801407,
+      "max_v": 3.336030285994284
+    }
+  ],
+  "divider_interface_pfd_current_a": 0.015628647456160057,
+  "gate_range_v": [
+    1.491929541123398,
+    1.51109248460943
+  ],
+  "artifacts_sha256": {
+    ".spice": "2bec80182d11595fab949289e6c413b136263c3e1c11935da9788093303c9577",
+    ".dat": "9a94a56cf40815344ae45ab1d6c5223f05abdc59801da7556c7ca7207a04fec5",
+    ".log": "09362ed3f56e805c2eff828d184bfbc03ac638e0a8e1658304aeae6bfacb5b94"
+  },
+  "limitations": [
+    "Nominal seeded/prebiased run; external control and bias, no charge pump feedback.",
+    "Fixed divide128 test architecture; reference19.53125MHz is a fixture, not frozen product reference.",
+    "Only a few late final-stage cycles; no acquisition, jitter, mismatch or process proof.",
+    "AC-coupled CMOS interface needs startup/duty/supply sensitivity qualification."
+  ],
+  "boundary_checks": {
+    "div2": true,
+    "div4": true,
+    "div8": true,
+    "div16": true,
+    "div32": true,
+    "div64": true,
+    "div128": true,
+    "FB": true,
+    "gate_bias": true,
+    "feedback_swing": true
+  },
+  "all_checks_pass": true,
+  "source_sha256": {
+    "ip/blocks/analog/wireline_serdes/pll/divider.spice": "1e007f6d40d8678192a090ed1906fd27f6834dfec6983a35f15ffb8f1a3e364b",
+    "projects/programmable_transceiver_platform/analog/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+    "projects/programmable_transceiver_platform/analog/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+    "projects/programmable_transceiver_platform/analog/rf_rx_candidate.spice": "755dc05869d1add201e20953635bb3e2f31cd55f5b46d58f69992efcddc452eb"
+  }
+}

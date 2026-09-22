@@ -1,0 +1,11 @@
+* Simple switched mirror candidate; external reference currents required.
+* Requires pt_inv from pfd.spice. No regulated matching or internal reference.
+.subckt pt_charge_pump UP DN OUT BP BN VDD VSS
+XINV UP UPB VDD VSS pt_inv
+XPR BP BP VDD VDD pfet_03v3 w=20u l=1u
+XNR BN BN VSS VSS nfet_03v3 w=10u l=1u
+XPS PS BP VDD VDD pfet_03v3 w=20u l=1u
+XPU OUT UPB PS VDD pfet_03v3 w=10u l=.28u
+XND OUT DN NS VSS nfet_03v3 w=10u l=.28u
+XNS NS BN VSS VSS nfet_03v3 w=10u l=1u
+.ends pt_charge_pump

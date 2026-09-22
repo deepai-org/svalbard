@@ -1,0 +1,7 @@
+* PMOS-input differential candidate; resistive loads to ground are external.
+* Crossed drains give positive differential voltage gain. No CMFB is included.
+.subckt pt_bb_pmos_gain IP IN OP ON TAIL BIAS VDD
+XIP ON IP TAIL VDD pfet_03v3 w=4u l=0.28u m=32
+XIN OP IN TAIL VDD pfet_03v3 w=4u l=0.28u m=32
+XTAIL TAIL BIAS VDD VDD pfet_03v3 w=4u l=0.28u m=64
+.ends pt_bb_pmos_gain

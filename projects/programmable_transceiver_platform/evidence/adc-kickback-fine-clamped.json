@@ -1,0 +1,154 @@
+{
+  "status": "clamped_input_clock_charge_only",
+  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "source_sha256": {
+    "projects/programmable_transceiver_platform/analog/adc/top_load.spice": "8fa005a6d11fd5d6d954797a91ca2ec52a2aa0f5aa6c49911631f3824c8d28ea",
+    "projects/programmable_transceiver_platform/analog/adc/comparator.spice": "a41ecccf87f625bbddca6139730c5e8500529c5acb2f05a5052f9049e8ee74a0",
+    "ip/blocks/analog/wifi_80211b/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02"
+  },
+  "cases": [
+    {
+      "name": "d-0.4_clk0",
+      "differential_v": -0.4,
+      "clocked": false,
+      "artifacts_sha256": {
+        ".spice": "577edf2526262fe932e081e06f8b4656323da15018313ac69eef013b9ba44a8b",
+        ".log": "58dc95eb58416878be6a2cf1219e260e7926a277e0fea0e64f231863f35fd662",
+        ".dat": "f9ce7a82dfa5ac11ce87c963d98b4bf3c6f50ef7dad29923081ddf5054618e60"
+      }
+    },
+    {
+      "name": "d-0.4_clk1",
+      "differential_v": -0.4,
+      "clocked": true,
+      "artifacts_sha256": {
+        ".spice": "cae3a2356bef1eedabdc67923d4666b1a0cf8c739aa70a988aec517e3b9a1eeb",
+        ".log": "1bb1f467009d6d66e2987a25992fa0101e4d07e17ca9ef293f4c3eb52df9a0e3",
+        ".dat": "e367e0ce36563ceff5223aaa31cac47ada49e2f74d052049d43344124b05078d"
+      }
+    },
+    {
+      "name": "d-0.001_clk0",
+      "differential_v": -0.001,
+      "clocked": false,
+      "artifacts_sha256": {
+        ".spice": "c39a79b4169a8889f2939e819d1f5fae609d416e170efb4c24362d13d9f0b2bc",
+        ".log": "292dc7e7c97b101cb332a1b662eedd3656580bacccfde50b3b6c366a67360470",
+        ".dat": "eaa76119d6f130d3f42c98455528b11e35d78af026699ce00b2d9c02a9edc983"
+      }
+    },
+    {
+      "name": "d-0.001_clk1",
+      "differential_v": -0.001,
+      "clocked": true,
+      "artifacts_sha256": {
+        ".spice": "b22f3b058bde4bbedf4639567026017abcf01b081e950826615e21ca6cae8468",
+        ".log": "1e54c728bc3e9f6a3a5a04b77d66d45f67e1bdfc44469a1a5438b7aa7e79c7fc",
+        ".dat": "1b17b82176162741463ffeb10345fd21bffff41a6e62d30f853ea55e39ac8d27"
+      }
+    },
+    {
+      "name": "d0.001_clk0",
+      "differential_v": 0.001,
+      "clocked": false,
+      "artifacts_sha256": {
+        ".spice": "e2c9f6b24b1b64e69d51c9f99c8a80742354b7bccce6aea04376679e52a02957",
+        ".log": "31af0bd84486c03a783f45843b1a1e02c0e271040064ce780d5cfa378b45d254",
+        ".dat": "52c5bcf64ad800189732f7bce8d41d2e676fadd361fa7b7cde86eafe3bbe1682"
+      }
+    },
+    {
+      "name": "d0.001_clk1",
+      "differential_v": 0.001,
+      "clocked": true,
+      "artifacts_sha256": {
+        ".spice": "6f440b17d13b49a56ca4a9f2e38306a5cebe400a2f0ea93af33a681ebb4ad0d4",
+        ".log": "358ff37a827d8d78b6d1a7998405107b19e01695a8933a2a2d022857b0c58457",
+        ".dat": "6770f9eff5142a4aedd638082ec6bd785232823422160519e2d433d0ef21da26"
+      }
+    },
+    {
+      "name": "d0.4_clk0",
+      "differential_v": 0.4,
+      "clocked": false,
+      "artifacts_sha256": {
+        ".spice": "a873bc8c92b1ac14890c00ba6bced23b6f9c0e3cb9d6fda415772f9fa768f562",
+        ".log": "05c8951409c0031ed770e59ccfec96d4616c7e62cc46c8bd17f26df3a83b1d4e",
+        ".dat": "e444a1a56abe247496e10aea0797969f8d600c05599adb5ad54f75179e97b239"
+      }
+    },
+    {
+      "name": "d0.4_clk1",
+      "differential_v": 0.4,
+      "clocked": true,
+      "artifacts_sha256": {
+        ".spice": "7459d195ec2cd5705d33d30bb088ef98f69df291aacb9f10012234a089dc7ba3",
+        ".log": "682f36a41b2b6741c4c875ff85a77e953f22a1722d319c03532c0ba1175d5e75",
+        ".dat": "4318aa1d6cc9afd87313731c3fc5eca196c8b1e5f09557983843b994937d6424"
+      }
+    }
+  ],
+  "results": [
+    {
+      "differential_v": -0.4,
+      "window_ns": [
+        2,
+        4.9
+      ],
+      "source_charge_c": [
+        -2.5186217578573286e-14,
+        -2.892895107146385e-14
+      ],
+      "differential_source_charge_c": 3.742733492890566e-15,
+      "peak_differential_current_a": 0.00026995997539945484,
+      "output_difference_v": -3.2999999938632456
+    },
+    {
+      "differential_v": -0.001,
+      "window_ns": [
+        2,
+        4.9
+      ],
+      "source_charge_c": [
+        -2.645568815044126e-14,
+        -2.646484604253931e-14
+      ],
+      "differential_source_charge_c": 9.157892098048074e-18,
+      "peak_differential_current_a": 1.7362528934028108e-05,
+      "output_difference_v": -3.299999993607725
+    },
+    {
+      "differential_v": 0.001,
+      "window_ns": [
+        2,
+        4.9
+      ],
+      "source_charge_c": [
+        -2.646484604258988e-14,
+        -2.6455688150513255e-14
+      ],
+      "differential_source_charge_c": -9.157892076625767e-18,
+      "peak_differential_current_a": 1.7362528923720598e-05,
+      "output_difference_v": 3.299999993607733
+    },
+    {
+      "differential_v": 0.4,
+      "window_ns": [
+        2,
+        4.9
+      ],
+      "source_charge_c": [
+        -2.892895107150522e-14,
+        -2.5186217578565328e-14
+      ],
+      "differential_source_charge_c": -3.742733492939892e-15,
+      "peak_differential_current_a": 0.00026995997539937727,
+      "output_difference_v": 3.2999999938632456
+    }
+  ],
+  "limitations": [
+    "Ideal sources clamp input voltage; charge is not an observed floating-CDAC voltage error.",
+    "Reset-only subtraction retains clock-driven charge but does not identify individual device contributions.",
+    "Nominal bias and one clock slew; no noise, mismatch, extracted coupling or timestep convergence qualification."
+  ]
+}

@@ -1,0 +1,50 @@
+import json,math,copy
+from pathlib import Path
+from coarse_settling import BankClock,select_bank
+from oscillator_noise import FrequencyNoise
+# Closed-form phase and substep invariance during a bank transition.
+def plant(tau=200e-9,free=2.304e9):return BankClock(reference_hz=40e6,divider=60,free_hz=free,bandwidth_hz=300e3,bank_tau_s=tau)
+p=plant();p.set_reference(False,0);phase=p.phase;charge=p.integral;frequency=p.frequency_hz
+p.write_bank(0,12,2e-6)
+assert p.phase==phase and p.integral==charge and p.frequency_hz==frequency
+q=copy.copy(p);t=730e-9;p.advance(t)
+for i in range(1,74):q.advance(t*i/73)
+expected=phase+frequency*t+100e6*(t-200e-9*(-math.expm1(-t/200e-9)))
+assert abs(p.phase-expected)<1e-8 and abs(p.phase-q.phase)<1e-8
+before=(q.time,q.phase,q.bank_transient,q.bank_code)
+crossing=q.edge_time(q.output_phase_cycles+13);r=copy.copy(q);r.advance(crossing)
+assert abs(r.output_phase_cycles-q.output_phase_cycles-13)<1e-8
+assert before==(q.time,q.phase,q.bank_transient,q.bank_code)
+rows=[]
+for tau in (50e-9,200e-9,800e-9):
+ for target in (2300000000,2437000000,2500000000):
+  p=plant(tau,2.208e9);noise=FrequencyNoise.seeded(20000,seed=830);p.set_noise(0,noise)
+  guard=max(2e-6,8*tau)
+  result=select_bank(p,target,guard_s=guard,bank_tau_bound_s=tau,noise_bound_hz=noise.bound_hz)
+  assert result['qualified']
+  # Truth is an external verification oracle, not a controller input.
+  true_error=abs(p.frequency_hz-target)
+  assert true_error<=result['allowed_fine_correction_hz']
+  for row in result['observations']:
+   steady=p.base_free+p.bank_hz[row['code']]
+   assert abs(row['frequency_hz']-steady)<=row['error_bound_hz']+1e-5
+    # Continue from the actual settled bank state, without resetting phase or charge.
+  phase=p.phase;charge=p.integral;p.retarget(p.time,target)
+  assert p.phase==phase and p.integral==charge
+  p.set_reference(True,p.time);start=p.time;first=None;losses=0;tail=True
+  for i in range(1,2401):
+   p.advance(start+i/40e6);was=p.locked;locked=p.observe_lock()
+   if locked and first is None:first=p.time-start
+   if was and not locked:losses+=1
+   if i>=1600:tail=tail and locked
+  qualified=first is not None and first<=40e-6 and losses==0 and tail
+  try:select_bank(p,target)
+  except ValueError:pass
+  else:raise AssertionError('Noninitial coarse acquisition accepted')
+  rows.append(dict(tau_s=tau,target_hz=target,guard_s=guard,true_error_hz=true_error,search=result,
+                   first_fine_lock_s=first,lock_losses=losses,sustained=qualified))
+Path('/tmp/svalbard-coarse-vco/settling-report.json').write_text(json.dumps(dict(status='passed' if all(r['sustained'] for r in rows) else 'failed',cases=rows,
+ controls=['analytical transition phase','73-way subdivision','frequency/phase/charge continuity','nonmutating edge forecast'],
+ limitations=['Declared settling/noise bounds are assumptions, not measured silicon limits.','Initial centered fine filter only; full-chip coarse acquisition not integrated.']),indent=2)+'\n')
+assert all(r['sustained'] for r in rows)
+print('Passed explicit settling, count-error bounds and nine noisy coarse-to-fine acquisitions')

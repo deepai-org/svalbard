@@ -1,0 +1,96 @@
+{
+  "completed": true,
+  "status": "matched_timestep_response_comparison",
+  "report_sha256": {
+    "vco-charge-kick.json": "7fbbb28091657501e2ad8e2309513ed8644eb7d937da7a3aad2296274c4f28a8",
+    "vco-charge-kick-fine.json": "0eb039b0a43599805fe93974a13aa4b9e7d0ad40e9547b7096092c0c663461b6"
+  },
+  "comparisons": [
+    {
+      "case": "positive",
+      "windows": [
+        {
+          "window_ns": [
+            10,
+            19
+          ],
+          "coarse_peak_ps": 0.0,
+          "fine_peak_ps": 0.0,
+          "max_response_difference_ps": 0.0
+        },
+        {
+          "window_ns": [
+            20,
+            21
+          ],
+          "coarse_peak_ps": 0.8363465398350939,
+          "fine_peak_ps": 0.8457163234100785,
+          "max_response_difference_ps": 0.009369783574984643
+        },
+        {
+          "window_ns": [
+            21,
+            25
+          ],
+          "coarse_peak_ps": 0.011579013101450852,
+          "fine_peak_ps": 0.011426394264954487,
+          "max_response_difference_ps": 0.00016891349716154986
+        },
+        {
+          "window_ns": [
+            30,
+            40
+          ],
+          "coarse_peak_ps": 0.010066256012200353,
+          "fine_peak_ps": 0.009950280049304056,
+          "max_response_difference_ps": 0.00014118316048077116
+        }
+      ]
+    },
+    {
+      "case": "negative",
+      "windows": [
+        {
+          "window_ns": [
+            10,
+            19
+          ],
+          "coarse_peak_ps": 0.0,
+          "fine_peak_ps": 0.0,
+          "max_response_difference_ps": 0.0
+        },
+        {
+          "window_ns": [
+            20,
+            21
+          ],
+          "coarse_peak_ps": 0.8447715705249395,
+          "fine_peak_ps": 0.853207560123748,
+          "max_response_difference_ps": 0.008435989598808457
+        },
+        {
+          "window_ns": [
+            21,
+            25
+          ],
+          "coarse_peak_ps": 0.01162142418339494,
+          "fine_peak_ps": 0.01142260183044311,
+          "max_response_difference_ps": 0.0002463838021880856
+        },
+        {
+          "window_ns": [
+            30,
+            40
+          ],
+          "coarse_peak_ps": 0.010191303307532493,
+          "fine_peak_ps": 0.009992730640702923,
+          "max_response_difference_ps": 0.0002308955565933569
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Two numerical resolutions do not prove convergence or silicon accuracy.",
+    "Output-buffer perturbation at one phase is not intrinsic oscillator noise."
+  ]
+}

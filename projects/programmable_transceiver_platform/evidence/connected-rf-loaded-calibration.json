@@ -1,0 +1,130 @@
+{
+  "status": "characterized",
+  "cases": [
+    {
+      "detector_bits": 10,
+      "calibration": {
+        "gain_policy": "relative",
+        "matrix": [
+          [
+            0.989013671875,
+            0.0322265625
+          ],
+          [
+            0.0,
+            1.01123046875
+          ]
+        ],
+        "offset": [
+          -0.0029296875,
+          0.000244140625
+        ],
+        "fractional_bits": 12,
+        "fit_rms": 1.436815092356122e-05,
+        "condition": 1.0813741079854013
+      },
+      "probe_powers": [
+        0.0,
+        0.003616813294232649,
+        0.00332355816226784,
+        0.00332355816226784,
+        0.00332355816226784,
+        0.00664711632453568,
+        0.007135874877810362,
+        0.006842619745845552,
+        0.006451612903225807
+      ],
+      "sampled_calibration_pad_peak": 8.523205706021433e-05,
+      "corrected_quality": {
+        "calibration_samples": 32,
+        "validation_samples": 96,
+        "gain_real": 0.9964752706511629,
+        "gain_imag": 0.0007810895032448558,
+        "gain_magnitude": 0.9964755767805453,
+        "raw_relative_rms": 0.005661948948606005,
+        "corrected_relative_rms": 0.004991132012132647,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "uncorrected_quality": {
+        "calibration_samples": 32,
+        "validation_samples": 96,
+        "gain_real": 0.9922500086397034,
+        "gain_imag": 0.017844704061919826,
+        "gain_magnitude": 0.9924104559649445,
+        "raw_relative_rms": 0.031044414817447092,
+        "corrected_relative_rms": 0.028016841998840237,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      }
+    },
+    {
+      "detector_bits": 12,
+      "calibration": {
+        "gain_policy": "relative",
+        "matrix": [
+          [
+            0.9853515625,
+            0.034912109375
+          ],
+          [
+            0.0,
+            1.014892578125
+          ]
+        ],
+        "offset": [
+          -0.00244140625,
+          0.0
+        ],
+        "fractional_bits": 12,
+        "fit_rms": 5.254352660707204e-06,
+        "condition": 1.09576744705228
+      },
+      "probe_powers": [
+        0.0,
+        0.00358974358974359,
+        0.00336996336996337,
+        0.0032722832722832723,
+        0.0032967032967032967,
+        0.006617826617826618,
+        0.007106227106227107,
+        0.0068620268620268625,
+        0.006398046398046399
+      ],
+      "sampled_calibration_pad_peak": 8.523205706021433e-05,
+      "corrected_quality": {
+        "calibration_samples": 32,
+        "validation_samples": 96,
+        "gain_real": 0.9972550879380327,
+        "gain_imag": -9.632969442084405e-05,
+        "gain_magnitude": 0.9972550925905084,
+        "raw_relative_rms": 0.0029620592824386774,
+        "corrected_relative_rms": 0.0010924243859185168,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "uncorrected_quality": {
+        "calibration_samples": 32,
+        "validation_samples": 96,
+        "gain_real": 0.9922500086397034,
+        "gain_imag": 0.017844704061919826,
+        "gain_magnitude": 0.9924104559649445,
+        "raw_relative_rms": 0.031044414817447092,
+        "corrected_relative_rms": 0.028016841998840237,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      }
+    }
+  ],
+  "limitations": [
+    "Local timed calibration/controller and electrical network; not managed full-chip lifecycle or shared ADC ownership.",
+    "Fixed ideal carrier and prescribed Thevenin source, with actual reconstruction and nonlinear modulator terms.",
+    "Switch transition retains charge but waveform scoring follows32 settling samples; startup remains separate.",
+    "Monitor and pad use one network state; no normalization by hidden monitor gain.",
+    "Finite multitone record and assumed electrical parameters; not a physical or protocol certificate."
+  ]
+}

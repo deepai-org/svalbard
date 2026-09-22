@@ -1,0 +1,238 @@
+{
+  "status": "scaled_switch_cdac_step_screen_not_adc",
+  "cases": [
+    {
+      "name": "code64_a0",
+      "code": 64,
+      "active": false,
+      "artifacts_sha256": {
+        ".spice": "0b9ee116ea40427d434bf0e0b9637ea3756f53c40cfbb646c0c806e70a5c9cf2",
+        ".dat": "086b3afa191ec87a46ee9aaf98d29fa8fd597c018e390ac0384695c90d2ec057",
+        ".log": "e9b60cf0d227df0a67f57b52bd0115bad44941a1f1b723df0fc1e479f28171a1"
+      }
+    },
+    {
+      "name": "code64_a1",
+      "code": 64,
+      "active": true,
+      "artifacts_sha256": {
+        ".spice": "f63900a68a73978533338ffd54c6a18927649e76b2a5f3301cbee9c1692cdb30",
+        ".dat": "4a5a648a52acee9ffbdc7eb9ddcc17fe02c89c1bfa747bd77aaaf6d744baf213",
+        ".log": "c883ee4f2da338af7d57d3cb9c03ea115e88add98ccb79f125c66bed8b782ff8"
+      }
+    },
+    {
+      "name": "code127_a0",
+      "code": 127,
+      "active": false,
+      "artifacts_sha256": {
+        ".spice": "cfc8708e7491b72df8b7776ed0532e5539414535fa9c7f2f9a830fd6e7130a92",
+        ".dat": "ba9365b8a969d974fc1e0d74af6b330c1e36ebb1afae873a15aa89991176b1ba",
+        ".log": "6189eb7c0dd87fa935c55a93cfd8a7f803fc2ab10af676a12cdd59e3186a78e3"
+      }
+    },
+    {
+      "name": "code127_a1",
+      "code": 127,
+      "active": true,
+      "artifacts_sha256": {
+        ".spice": "1e2315d2dff6818250221dfba9cd73c371792dd4103afc88c305fa1aded84a8c",
+        ".dat": "d9398196ec3136be7e01d67cd536ce0f51fdd21240b47348a950b40ba84fcea8",
+        ".log": "7b5837ee66f61c36235b37ec4d5686d17c02fbad129ac1466109f72114c52fab"
+      }
+    },
+    {
+      "name": "code129_a0",
+      "code": 129,
+      "active": false,
+      "artifacts_sha256": {
+        ".spice": "39152594253c09e7d759284ce4f47371c8df92c1678b17ab6c4cd10036ce9656",
+        ".dat": "a74e438a04bf312ec3c04ef0fbf26998deb980329ef180675bb365c4191bbe07",
+        ".log": "5b312e7531e7cb47833bbf845b397fb9ae02efe4673ba5e9218d8baeee5c5af1"
+      }
+    },
+    {
+      "name": "code129_a1",
+      "code": 129,
+      "active": true,
+      "artifacts_sha256": {
+        ".spice": "c27637e0651a59c30497e560b5fd39a4243a8887510766b229b22b4c8e9d16ee",
+        ".dat": "d931686b66548387af7e112cf26cf4ba098196dc766a5a18188e31a9c4b62748",
+        ".log": "087237152f19f58e6dedf479bb0d4af735c3653ba7e0eeb7a80392c7aa0b0b22"
+      }
+    },
+    {
+      "name": "code192_a0",
+      "code": 192,
+      "active": false,
+      "artifacts_sha256": {
+        ".spice": "4333a27f50ac10f879962731076346b1ebbb341f332778f4ddc5a335a679c8cd",
+        ".dat": "851946c0c3b59de6bc4c79e105548c9590edd73b917010f4022a109232d4cdd3",
+        ".log": "da244565dce587fa741070a9267b2fe125dcf9538592a4f0e66139b3934fb599"
+      }
+    },
+    {
+      "name": "code192_a1",
+      "code": 192,
+      "active": true,
+      "artifacts_sha256": {
+        ".spice": "bcb5729b77291b29cef0ba922de90ad98b21759f786356a22b32c5209115de71",
+        ".dat": "fe358c9919c91f4addfb98e5d3698f00243b745f760001b27a2d7b61b2af0097",
+        ".log": "defb8fb1516201502c46b4ab1b440d93b700f4736781b58d50f5623c63f60eef"
+      }
+    }
+  ],
+  "source_sha256": {
+    "/screen/adc/comparator.spice": "a41ecccf87f625bbddca6139730c5e8500529c5acb2f05a5052f9049e8ee74a0",
+    "/screen/adc/cdac8_scaled.spice": "4006f42115b3a5a30b9ad74626ef0c084655bf0cdc2f1d1cc8bd32f65e351fd2",
+    "/wifi/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02"
+  },
+  "limitations": [
+    "Nominal matched TT 3.3V 27C; ideal capacitors 20fF unit, 5.12pF per side.",
+    "Ideal reference sources behind 10ohm and 10pF local capacitance; not implemented reference drivers.",
+    "Ideal external code/complement and clock waveforms; no SAR controller or output latch.",
+    "Two scripted decisions with code return, not a complete conversion or transfer curve.",
+    "No mismatch, capacitor nonlinearity, noise, physical parasitics, previous-sample acquisition or ENOB qualification."
+  ],
+  "switch_scaling_only_substitution_checked": true,
+  "paired_metrics": [
+    {
+      "code": 64,
+      "initial_held_difference_v": 0.0010120262666197743,
+      "ideal_differential_step_v": -0.5,
+      "measured_idle_step_v": -0.4943369599140708,
+      "step_gain_ratio": 0.9886739198281416,
+      "idle_code_return_error_uv": -0.006318923921220729,
+      "active_code_return_error_uv": 0.16221778341993578,
+      "peak_comparator_differential_disturbance_mv": 2.50028677215286,
+      "reference_high_range_v": [
+        1.940843222896242,
+        2.188801486798702
+      ],
+      "reference_low_range_v": [
+        1.136563991682961,
+        1.355852073186097
+      ],
+      "decisions": [
+        {
+          "clock_edge_ns": 16,
+          "expected_ideal_input_sign": -1.0,
+          "correct_rails": true,
+          "min_expected_high_v": 3.299999996301013,
+          "max_expected_low_v": 7.209345249857709e-09
+        },
+        {
+          "clock_edge_ns": 26,
+          "expected_ideal_input_sign": 1.0,
+          "correct_rails": true,
+          "min_expected_high_v": 3.299999995938565,
+          "max_expected_low_v": 1.100040878329784e-08
+        }
+      ]
+    },
+    {
+      "code": 127,
+      "initial_held_difference_v": 0.0010120262666197743,
+      "ideal_differential_step_v": -0.0078125,
+      "measured_idle_step_v": -0.00772421616800528,
+      "step_gain_ratio": 0.9886996695046758,
+      "idle_code_return_error_uv": -0.0034320110997923536,
+      "active_code_return_error_uv": -0.09328400823126713,
+      "peak_comparator_differential_disturbance_mv": 0.8910832527249113,
+      "reference_high_range_v": [
+        1.869667814143632,
+        2.200710849138726
+      ],
+      "reference_low_range_v": [
+        1.132915333777931,
+        1.425474798240559
+      ],
+      "decisions": [
+        {
+          "clock_edge_ns": 16,
+          "expected_ideal_input_sign": -1.0,
+          "correct_rails": true,
+          "min_expected_high_v": 3.299999996200427,
+          "max_expected_low_v": 8.789028522302996e-09
+        },
+        {
+          "clock_edge_ns": 26,
+          "expected_ideal_input_sign": 1.0,
+          "correct_rails": true,
+          "min_expected_high_v": 3.299999995947553,
+          "max_expected_low_v": 1.092513793559137e-08
+        }
+      ]
+    },
+    {
+      "code": 129,
+      "initial_held_difference_v": 0.0010120262666197743,
+      "ideal_differential_step_v": 0.0078125,
+      "measured_idle_step_v": 0.007724213373969361,
+      "step_gain_ratio": 0.9886993118680782,
+      "idle_code_return_error_uv": -0.0025334514497116906,
+      "active_code_return_error_uv": -0.5501480204710835,
+      "peak_comparator_differential_disturbance_mv": 0.8941900280750037,
+      "reference_high_range_v": [
+        2.148940915108225,
+        2.150895870545121
+      ],
+      "reference_low_range_v": [
+        1.14906240892961,
+        1.15105441287256
+      ],
+      "decisions": [
+        {
+          "clock_edge_ns": 16,
+          "expected_ideal_input_sign": 1.0,
+          "correct_rails": true,
+          "min_expected_high_v": 3.299999996215851,
+          "max_expected_low_v": 8.614033879870566e-09
+        },
+        {
+          "clock_edge_ns": 26,
+          "expected_ideal_input_sign": 1.0,
+          "correct_rails": true,
+          "min_expected_high_v": 3.29999999594745,
+          "max_expected_low_v": 1.092583642350477e-08
+        }
+      ]
+    },
+    {
+      "code": 192,
+      "initial_held_difference_v": 0.0010120262666197743,
+      "ideal_differential_step_v": 0.5,
+      "measured_idle_step_v": 0.4943368506146012,
+      "step_gain_ratio": 0.9886737012292024,
+      "idle_code_return_error_uv": -0.01830678418406062,
+      "active_code_return_error_uv": -0.3215531797983676,
+      "peak_comparator_differential_disturbance_mv": 2.512724126487065,
+      "reference_high_range_v": [
+        2.081052954105544,
+        2.162875481853102
+      ],
+      "reference_low_range_v": [
+        1.145540248323947,
+        1.218404683233236
+      ],
+      "decisions": [
+        {
+          "clock_edge_ns": 16,
+          "expected_ideal_input_sign": 1.0,
+          "correct_rails": true,
+          "min_expected_high_v": 3.299999996300972,
+          "max_expected_low_v": 7.209019204489332e-09
+        },
+        {
+          "clock_edge_ns": 26,
+          "expected_ideal_input_sign": 1.0,
+          "correct_rails": true,
+          "min_expected_high_v": 3.299999995938474,
+          "max_expected_low_v": 1.100098814542697e-08
+        }
+      ]
+    }
+  ],
+  "clock_only_difference_checked": true,
+  "adc_complete": false
+}

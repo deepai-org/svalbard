@@ -1,0 +1,44 @@
+{
+  "scope": "digital functional baseline and structural elaboration, not analog or physical signoff",
+  "checks": [
+    "two core loopback profiles with CRC fault/reset",
+    "SPI configuration and rejected live writes",
+    "PRBS and calibration",
+    "finite capture/playback and uninitialized playback guard",
+    "independent Python frame decoding",
+    "digital and 50-terminal chip structural synthesis with explicit analog/host black boxes"
+  ],
+  "frame_results": [
+    {
+      "mode": 0,
+      "decoded_frames": 234,
+      "wire_words": 7414,
+      "iq_samples": 2371
+    },
+    {
+      "mode": 1,
+      "decoded_frames": 293,
+      "wire_words": 14878,
+      "iq_samples": 1190
+    }
+  ],
+  "source_sha256": {
+    "integration/macro-contract.md": "4b3df568f4d9c91d20de56aedd18a444a61ee467395f13c52c66c177c333a072",
+    "integration/pt_chip.sv": "a704916886eb997e787e284aa805bf1cac6ff0884e7f626d3831f976a7c0abb0",
+    "rtl/pt_core.sv": "5305222ed9e3e112d84fc12d819dccbb3bb1feec0f18bd32719397141d0bc76e",
+    "rtl/pt_digital.sv": "462ebe56a88dee26200f73c2ff22b1368fd33e6d530dd43c09d8b0f46dca8efc",
+    "rtl/pt_fifo.sv": "360fba1c12a18628e3b59cd7e0f78b6c28f9a230b2127ff4c8e73ba356800058",
+    "rtl/pt_frame.sv": "8f7e5afb3432dacad080601bd71316fe97b9e0d13d664117327a3ab856a8bf31",
+    "rtl/pt_helpers.sv": "16fc0af7b7d2c97ed5267026c22c7dc2b80d438f4ae24277f3e09125dbcc902e",
+    "rtl/pt_memory.sv": "3f0cef4f7dacaad4312fca58a2a6e4743445e4c63c4baa92e1f6affda3d74fc3",
+    "rtl/pt_pack.sv": "1ee2545d705c2de01fbdb9192828c2c08a2b25332c6112e1fc7af91cbb1fc306",
+    "rtl/pt_schedule.vh": "826aecb656c8057dc1acf21ff9acc35702a26bc01ac93e3c5d887f036b6a860c",
+    "rtl/pt_spi.sv": "48648490810a8e2b37740508d78c86307cbc5caa56cafc2ec39ece99f3868102",
+    "sim/pt_afe_model.sv": "f6412f2faf92c4e86ef9a63ddeef2abb085f842a3fe7c68ac2f41adee3d3ee94",
+    "sim/tb_control.sv": "578f94936a8d5a95b0c75215ca67e2b6f438e838f7acb0bdc912819472a1f41f",
+    "sim/tb_core.sv": "9aa49ed2adce6320e095cf5c2e88c51c8f5621d5f46e07d0fc9360f4ad52dcdd",
+    "sim/tb_helpers.sv": "8a6d28020f21d5ebf1beb083da685ef5c50268ae37c0fc4215fe7243c6ae5b1e",
+    "sim/tb_memory.sv": "939e2bc2c2da393515bda2d9a9fcda19c985af8e3765fd6d1cc427e6f8d05705"
+  },
+  "declared_array_bits": 8576
+}

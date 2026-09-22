@@ -1,0 +1,52 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "noisy": false,
+      "maximum_relative_analog_error": 1.3798201621411193e-07,
+      "rf_pulse_reference_edges": 1128,
+      "rf_phase_continuity_error_rad": 2.8074266297846962e-11,
+      "converter_samples": 64,
+      "wired_words": 16,
+      "rail_events": 1250
+    },
+    {
+      "mode": 0,
+      "noisy": true,
+      "maximum_relative_analog_error": 0.09821768713800846,
+      "rf_pulse_reference_edges": 1128,
+      "rf_phase_continuity_error_rad": 3.941936273926805e-11,
+      "converter_samples": 64,
+      "wired_words": 16,
+      "rail_events": 1250
+    },
+    {
+      "mode": 1,
+      "noisy": false,
+      "maximum_relative_analog_error": 1.3798201621411193e-07,
+      "rf_pulse_reference_edges": 1128,
+      "rf_phase_continuity_error_rad": 2.8074266297846962e-11,
+      "converter_samples": 64,
+      "wired_words": 16,
+      "rail_events": 1562
+    },
+    {
+      "mode": 1,
+      "noisy": true,
+      "maximum_relative_analog_error": 0.09821768713800846,
+      "rf_pulse_reference_edges": 1128,
+      "rf_phase_continuity_error_rad": 3.941936273926805e-11,
+      "converter_samples": 64,
+      "wired_words": 16,
+      "rail_events": 1562
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Single independent tone at nominal2.4GHz; no wideband blocker/noise envelope qualification.",
+    "Unknown initial LO phase read once; no fitting to received samples.10% provisional maximum-error budget.",
+    "RF carrier retargeting explicitly unavailable; fractional feedback remains open."
+  ]
+}

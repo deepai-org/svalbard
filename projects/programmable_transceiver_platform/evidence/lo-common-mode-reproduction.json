@@ -1,0 +1,102 @@
+{
+  "completed": true,
+  "reproduction_pass": true,
+  "limits": {
+    "window_ns": [
+      800,
+      1000
+    ],
+    "output_rms_error_v": 0.02,
+    "output_peak_error_v": 0.1,
+    "maximum_matched_edge_error_ps": 5,
+    "maximum_edge_count_difference": 1,
+    "edge_polarities": [
+      "rising",
+      "falling"
+    ]
+  },
+  "metrics": {
+    "v(p)": {
+      "rms_error_v": 1.6272577228861508e-13,
+      "maximum_error_v": 7.269740365245525e-13
+    },
+    "v(n)": {
+      "rms_error_v": 1.6314818571117091e-13,
+      "maximum_error_v": 7.358558207215538e-13
+    },
+    "v(oip)": {
+      "rms_error_v": 0.0018690232266084688,
+      "maximum_error_v": 0.006941455680245401,
+      "rising_edges": {
+        "parent_edges": 509,
+        "replay_edges": 509,
+        "maximum_nearest_edge_error_ps": 0.4056080983863092,
+        "passes": true
+      },
+      "falling_edges": {
+        "parent_edges": 509,
+        "replay_edges": 509,
+        "maximum_nearest_edge_error_ps": 0.6543877785025569,
+        "passes": true
+      }
+    },
+    "v(oin)": {
+      "rms_error_v": 0.0018779856325044824,
+      "maximum_error_v": 0.0069548398114360754,
+      "rising_edges": {
+        "parent_edges": 509,
+        "replay_edges": 509,
+        "maximum_nearest_edge_error_ps": 0.4214196754358368,
+        "passes": true
+      },
+      "falling_edges": {
+        "parent_edges": 509,
+        "replay_edges": 509,
+        "maximum_nearest_edge_error_ps": 0.6857552130371987,
+        "passes": true
+      }
+    },
+    "v(oqp)": {
+      "rms_error_v": 0.002146652167253402,
+      "maximum_error_v": 0.006020542450020372,
+      "rising_edges": {
+        "parent_edges": 509,
+        "replay_edges": 509,
+        "maximum_nearest_edge_error_ps": 0.10791821110214068,
+        "passes": true
+      },
+      "falling_edges": {
+        "parent_edges": 509,
+        "replay_edges": 509,
+        "maximum_nearest_edge_error_ps": 0.18111190101456784,
+        "passes": true
+      }
+    },
+    "v(oqn)": {
+      "rms_error_v": 0.002142621702584746,
+      "maximum_error_v": 0.0060527837862525136,
+      "rising_edges": {
+        "parent_edges": 509,
+        "replay_edges": 509,
+        "maximum_nearest_edge_error_ps": 0.10861378989974471,
+        "passes": true
+      },
+      "falling_edges": {
+        "parent_edges": 509,
+        "replay_edges": 509,
+        "maximum_nearest_edge_error_ps": 0.17987781043283504,
+        "passes": true
+      }
+    }
+  },
+  "waveform_hashes": {
+    "recorded": "7a9ccca1c2de0234f58028bdbe5bcbe2020b6ff7fb6c5354b2f288197e79dcbb",
+    "fixed": "fb953922179d3e7cfbe3a88913cb2f69109a8e152377d7318af8a0224ff03070"
+  },
+  "parent_waveform_sha256": "dc1ecc7a0f8ba5b653f66d04e39e4822a1d74813d4f395c8781544ce5849b7f8",
+  "checker_sha256": "3f1ae38d20cd861e0b4d35fcc0e52701002318baf6de2df39d7d6e6d07120109",
+  "limitations": [
+    "Diagnostic reproduction tolerances, not mixer operating specifications.",
+    "Fixed-CM mechanism interpretation requires reproduction_pass; physical autonomous validation remains separate."
+  ]
+}

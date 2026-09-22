@@ -1,0 +1,8 @@
+* Differential transconductance primitive with transistor tail bias.
+* Resistive loads, common-mode stabilization and bias generation are not included.
+* OP follows IP (crossed drains); ON follows IN. Fingers/layout remain unimplemented.
+.subckt pt_bb_diff_gain IP IN OP ON TAIL BIAS VSS
+XIP ON IP TAIL VSS nfet_03v3 w=4u l=0.28u m=16
+XIN OP IN TAIL VSS nfet_03v3 w=4u l=0.28u m=16
+XTAIL TAIL BIAS VSS VSS nfet_03v3 w=4u l=0.28u m=32
+.ends pt_bb_diff_gain

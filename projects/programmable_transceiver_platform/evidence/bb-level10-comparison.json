@@ -1,0 +1,225 @@
+{
+  "completed": true,
+  "provenance": {
+    "bb-connected-bypass": {
+      "audit_sha256": "c12b680e619c540e1820b7479fd3cd9c36c8da41b3a834e4e7ea335848912c15",
+      "analysis_sha256": "8df55b2656f1e2ed65141002320cf09821fe6f508e8734d3372515209bfefa47"
+    },
+    "bb-connected-level10": {
+      "audit_sha256": "ffea33d135d944e3c5000caf7bedc186259ce65bf34ecfae5221ae7e87537329",
+      "analysis_sha256": "80eaae52b0b75be1f804531df97eb450e4f535b18d2c6aba671f1673d09fdd09"
+    }
+  },
+  "cases": [
+    {
+      "name": "zero",
+      "baseline": {
+        "lna_gate_tone_peak_v": 1.1251346597172115e-09,
+        "drain_over_gate_tone_gain": null,
+        "i_if_over_drain_tone": null,
+        "q_if_over_drain_tone": null,
+        "filter_i_peak_v": 2.263872759378596e-07,
+        "filter_q_peak_v": 6.726360023665288e-08,
+        "filter_i_residual_rms_v": 3.346717815796432e-07,
+        "filter_q_residual_rms_v": 8.227759681908329e-08,
+        "filter_i_gain_from_source": null,
+        "filter_q_gain_from_source": null,
+        "filter_q_over_i": null,
+        "filter_q_phase_deg": null,
+        "window_ns": [
+          240,
+          400
+        ],
+        "lo_frequency_hz": 2495422293.708738,
+        "if_frequency_hz": 20000336.29126215,
+        "if_cycles": 3.2000138059329912,
+        "lo_harmonic_fit_order": 8,
+        "i_peak_v": 4.790080515491316e-08,
+        "q_peak_v": 3.2424330347790893e-08,
+        "rf_node_tone_peak_v": 1.730915949796586e-07,
+        "rf_node_time_mean_v": 1.1767066482724213,
+        "i_gain_from_source": null,
+        "q_gain_from_source": null,
+        "q_over_i": null,
+        "q_relative_phase_deg": null,
+        "i_residual_rms_v": 0.00018224012922724153,
+        "q_residual_rms_v": 0.0002191302170766278
+      },
+      "candidate": {
+        "lna_gate_tone_peak_v": 1.1251346597172115e-09,
+        "drain_over_gate_tone_gain": null,
+        "i_if_over_drain_tone": null,
+        "q_if_over_drain_tone": null,
+        "filter_i_peak_v": 2.263872759378596e-07,
+        "filter_q_peak_v": 6.726360023665288e-08,
+        "filter_i_residual_rms_v": 3.346717815796432e-07,
+        "filter_q_residual_rms_v": 8.227759681908329e-08,
+        "filter_i_gain_from_source": null,
+        "filter_q_gain_from_source": null,
+        "filter_q_over_i": null,
+        "filter_q_phase_deg": null,
+        "window_ns": [
+          240,
+          400
+        ],
+        "lo_frequency_hz": 2495422293.708738,
+        "if_frequency_hz": 20000336.29126215,
+        "if_cycles": 3.2000138059329912,
+        "lo_harmonic_fit_order": 8,
+        "i_peak_v": 4.790080515491316e-08,
+        "q_peak_v": 3.2424330347790893e-08,
+        "rf_node_tone_peak_v": 1.730915949796586e-07,
+        "rf_node_time_mean_v": 1.1767066482724213,
+        "i_gain_from_source": null,
+        "q_gain_from_source": null,
+        "q_over_i": null,
+        "q_relative_phase_deg": null,
+        "i_residual_rms_v": 0.00018224012922724153,
+        "q_residual_rms_v": 0.0002191302170766278
+      },
+      "physical_baseline": {
+        "source_power_w": {
+          "vlna": 0.02335622686900337,
+          "vbuf": 0.057974468746625776,
+          "vpll": 0.027743832546603384,
+          "vbb": 0.028816368246467237
+        },
+        "accounted_supply_power_w": 0.13789089640869978,
+        "rf_mean_v": 1.1767066482724213,
+        "source_mean_v": 0.28807762418191224,
+        "selected_finger_minimum_vds_margin_v": 0.45033959943679086,
+        "filter_i_common_mode_v": 1.0696562926985487,
+        "filter_q_common_mode_v": 1.0710515336265194
+      },
+      "physical_candidate": {
+        "source_power_w": {
+          "vlna": 0.02335622686900337,
+          "vbuf": 0.057974468746625776,
+          "vpll": 0.027743832546603384,
+          "vbb": 0.028816368246467237
+        },
+        "accounted_supply_power_w": 0.13789089640869978,
+        "rf_mean_v": 1.1767066482724213,
+        "source_mean_v": 0.28807762418191224,
+        "selected_finger_minimum_vds_margin_v": 0.45033959943679086,
+        "filter_i_common_mode_v": 1.0696562926985487,
+        "filter_q_common_mode_v": 1.0710515336265194
+      },
+      "accounted_supply_power_change_w": 0.0
+    },
+    {
+      "name": "tone",
+      "baseline": {
+        "lna_gate_tone_peak_v": 0.000991286626583119,
+        "drain_over_gate_tone_gain": 0.9773972511068021,
+        "i_if_over_drain_tone": 0.8595299195715903,
+        "q_if_over_drain_tone": 0.9624421711170705,
+        "filter_i_peak_v": 0.0036044519085430835,
+        "filter_q_peak_v": 0.004037762110913633,
+        "filter_i_residual_rms_v": 4.3248034109711406e-07,
+        "filter_q_residual_rms_v": 1.269272403669257e-07,
+        "filter_i_gain_from_source": 3.6044519085430835,
+        "filter_q_gain_from_source": 4.037762110913633,
+        "filter_q_over_i": 1.1202152819249829,
+        "filter_q_phase_deg": -93.42870620400016,
+        "window_ns": [
+          240,
+          400
+        ],
+        "lo_frequency_hz": 2495422293.502531,
+        "if_frequency_hz": 20000336.49746895,
+        "if_cycles": 3.2000138389256665,
+        "lo_harmonic_fit_order": 8,
+        "i_peak_v": 0.0008327820566251291,
+        "q_peak_v": 0.000932491763689991,
+        "rf_node_tone_peak_v": 0.0009688808238812756,
+        "rf_node_time_mean_v": 1.1767072246010097,
+        "i_gain_from_source": 0.832782056625129,
+        "q_gain_from_source": 0.932491763689991,
+        "q_over_i": 1.1197308542752928,
+        "q_relative_phase_deg": -93.3844205172181,
+        "i_residual_rms_v": 0.00018288363807527456,
+        "q_residual_rms_v": 0.00021971133141824445
+      },
+      "candidate": {
+        "lna_gate_tone_peak_v": 0.009912876813160058,
+        "drain_over_gate_tone_gain": 0.9774431781365797,
+        "i_if_over_drain_tone": 0.859346443740367,
+        "q_if_over_drain_tone": 0.9622902507877787,
+        "filter_i_peak_v": 0.036030222079328926,
+        "filter_q_peak_v": 0.04036233252550859,
+        "filter_i_residual_rms_v": 5.819306249894961e-07,
+        "filter_q_residual_rms_v": 7.470676928005615e-07,
+        "filter_i_gain_from_source": 3.6030222079328924,
+        "filter_q_gain_from_source": 4.036233252550859,
+        "filter_q_over_i": 1.120235463346341,
+        "filter_q_phase_deg": -93.42345970536071,
+        "window_ns": [
+          240,
+          400
+        ],
+        "lo_frequency_hz": 2495422304.3731318,
+        "if_frequency_hz": 20000325.626868248,
+        "if_cycles": 3.2000120996512957,
+        "lo_harmonic_fit_order": 8,
+        "i_peak_v": 0.008326442996834932,
+        "q_peak_v": 0.009323893731054085,
+        "rf_node_tone_peak_v": 0.009689273816731576,
+        "rf_node_time_mean_v": 1.1767149123559344,
+        "i_gain_from_source": 0.8326442996834932,
+        "q_gain_from_source": 0.9323893731054085,
+        "q_over_i": 1.1197931379099466,
+        "q_relative_phase_deg": -93.38058167110093,
+        "i_residual_rms_v": 0.0002381572856385025,
+        "q_residual_rms_v": 0.0002711989522403921
+      },
+      "physical_baseline": {
+        "source_power_w": {
+          "vlna": 0.023356220529388894,
+          "vbuf": 0.057974468934437695,
+          "vpll": 0.027743832544578906,
+          "vbb": 0.02881636887288055
+        },
+        "accounted_supply_power_w": 0.13789089088128603,
+        "rf_mean_v": 1.1767072246010097,
+        "source_mean_v": 0.2880776465504303,
+        "selected_finger_minimum_vds_margin_v": 0.44899441709210947,
+        "filter_i_common_mode_v": 1.0696563342853307,
+        "filter_q_common_mode_v": 1.0710515873832203
+      },
+      "physical_candidate": {
+        "source_power_w": {
+          "vlna": 0.023356135964084725,
+          "vbuf": 0.057974478476049564,
+          "vpll": 0.027743832538773144,
+          "vbb": 0.028816479854832967
+        },
+        "accounted_supply_power_w": 0.1378909268337404,
+        "rf_mean_v": 1.1767149123559344,
+        "source_mean_v": 0.2880817885375702,
+        "selected_finger_minimum_vds_margin_v": 0.43686334899637674,
+        "filter_i_common_mode_v": 1.0696604672106789,
+        "filter_q_common_mode_v": 1.0710569121867626
+      },
+      "accounted_supply_power_change_w": 3.5952454374710285e-08,
+      "normalized_filter_gain_ratio": {
+        "i": 0.9996033514535726,
+        "q": 0.9996213599709993
+      },
+      "normalized_gain_change_db": {
+        "i": -0.003445928955911046,
+        "q": -0.003289448302161535
+      },
+      "late_window_amplitude_fraction_change": {
+        "i": 7.529621333990377e-06,
+        "q": -5.211265318272318e-06
+      },
+      "relative_phase_change_deg": 0.005246498639451147
+    }
+  ],
+  "limitations": [
+    "Two nominal single-tone amplitudes; no1dB compression point, two-tone intercept, intrinsic noise or EVM claim.",
+    "Seeded/prebiased history, ideal biases/supplies and no ADC; MIM bank has no extracted routing.",
+    "No requirement-derived gain/settling/linearity acceptance limit assigned by this comparison."
+  ]
+}

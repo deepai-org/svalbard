@@ -1,0 +1,100 @@
+{
+  "status": "ordering_identity_and_negative_controls_passed",
+  "cases": [
+    {
+      "gain_error": -0.1,
+      "phase_error_deg": -5,
+      "offset_hz": -100000.0,
+      "fixed_post_derotation_fit_rms": 0.10661694670603099,
+      "known_inverse_before_derotation_rms": 3.152109188466151e-16
+    },
+    {
+      "gain_error": -0.1,
+      "phase_error_deg": -5,
+      "offset_hz": 0,
+      "fixed_post_derotation_fit_rms": 3.7835916365220954e-15,
+      "known_inverse_before_derotation_rms": 3.3383700531128675e-16
+    },
+    {
+      "gain_error": -0.1,
+      "phase_error_deg": -5,
+      "offset_hz": 100000.0,
+      "fixed_post_derotation_fit_rms": 0.10660648665929576,
+      "known_inverse_before_derotation_rms": 3.186418353820863e-16
+    },
+    {
+      "gain_error": -0.1,
+      "phase_error_deg": 5,
+      "offset_hz": -100000.0,
+      "fixed_post_derotation_fit_rms": 0.10681475691565911,
+      "known_inverse_before_derotation_rms": 3.173738112879707e-16
+    },
+    {
+      "gain_error": -0.1,
+      "phase_error_deg": 5,
+      "offset_hz": 0,
+      "fixed_post_derotation_fit_rms": 4.0320168460165855e-15,
+      "known_inverse_before_derotation_rms": 3.322950247569192e-16
+    },
+    {
+      "gain_error": -0.1,
+      "phase_error_deg": 5,
+      "offset_hz": 100000.0,
+      "fixed_post_derotation_fit_rms": 0.10680980978525895,
+      "known_inverse_before_derotation_rms": 3.2033725173538966e-16
+    },
+    {
+      "gain_error": 0.1,
+      "phase_error_deg": -5,
+      "offset_hz": -100000.0,
+      "fixed_post_derotation_fit_rms": 0.1100114713664021,
+      "known_inverse_before_derotation_rms": 1.9530860186130995e-16
+    },
+    {
+      "gain_error": 0.1,
+      "phase_error_deg": -5,
+      "offset_hz": 0,
+      "fixed_post_derotation_fit_rms": 4.293996262679988e-15,
+      "known_inverse_before_derotation_rms": 7.891244190146483e-17
+    },
+    {
+      "gain_error": 0.1,
+      "phase_error_deg": -5,
+      "offset_hz": 100000.0,
+      "fixed_post_derotation_fit_rms": 0.1100224983055357,
+      "known_inverse_before_derotation_rms": 1.9419607545862652e-16
+    },
+    {
+      "gain_error": 0.1,
+      "phase_error_deg": 5,
+      "offset_hz": -100000.0,
+      "fixed_post_derotation_fit_rms": 0.11018305734460582,
+      "known_inverse_before_derotation_rms": 1.9508249068509952e-16
+    },
+    {
+      "gain_error": 0.1,
+      "phase_error_deg": 5,
+      "offset_hz": 0,
+      "fixed_post_derotation_fit_rms": 4.305656820549853e-15,
+      "known_inverse_before_derotation_rms": 7.809467432050822e-17
+    },
+    {
+      "gain_error": 0.1,
+      "phase_error_deg": 5,
+      "offset_hz": 100000.0,
+      "fixed_post_derotation_fit_rms": 0.11018907504328151,
+      "known_inverse_before_derotation_rms": 1.9476343393031182e-16
+    }
+  ],
+  "training_samples": 512,
+  "held_out_samples": 3072,
+  "limitations": [
+    "Synthetic memoryless mismatch; no filters, ADC, noise or transport.",
+    "Exact inverse uses known impairment parameters: not achieved calibration.",
+    "Actual estimator must identify imbalance before derotation or include rotating image basis."
+  ],
+  "source_hashes": {
+    "system_model/connected/iq_rotation_screen.py": "b8c832aa0c27b680b75195032fabcb89de600dc17895769d63b0a291cf476db5",
+    "system_model/connected/rf_blocks.py": "f4d40fd90f0d416d6ac57d648940e34a41b24d44e14192f6a572bfae2010d688"
+  }
+}

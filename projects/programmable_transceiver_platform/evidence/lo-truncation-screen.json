@@ -1,0 +1,119 @@
+{
+  "status": "passed",
+  "source_sha256": {
+    "verification/lo_truncation_screen.py": "6522b3168ad7c324ff5c0a901376c090c9b14bfbbf3c1e840fd85fbdc18cfc9c",
+    "system_model/architecture_fast/lo_drive.py": "daf0061acb6daaeb4526ffe26a20c2b1a56889a153396acef58ee7a1c4902a8b"
+  },
+  "cases": [
+    {
+      "carrier_hz": 80000000.0,
+      "missing_i_period": 8,
+      "cutoff_hz": 10000000.0,
+      "periodic_closure_error": 5.721958498152797e-17,
+      "truncations": [
+        {
+          "sidebands_each_side": 0,
+          "relative_rms_error": 0.16443136236164826
+        },
+        {
+          "sidebands_each_side": 1,
+          "relative_rms_error": 0.11342943803302791
+        },
+        {
+          "sidebands_each_side": 3,
+          "relative_rms_error": 0.07935211887714572
+        },
+        {
+          "sidebands_each_side": 7,
+          "relative_rms_error": 0.07292685281643707
+        }
+      ]
+    },
+    {
+      "carrier_hz": 80000000.0,
+      "missing_i_period": 16,
+      "cutoff_hz": 10000000.0,
+      "periodic_closure_error": 5.551115123125783e-17,
+      "truncations": [
+        {
+          "sidebands_each_side": 0,
+          "relative_rms_error": 0.13451999368603057
+        },
+        {
+          "sidebands_each_side": 1,
+          "relative_rms_error": 0.1128332922837887
+        },
+        {
+          "sidebands_each_side": 3,
+          "relative_rms_error": 0.08757277511668805
+        },
+        {
+          "sidebands_each_side": 7,
+          "relative_rms_error": 0.07259809523108955
+        },
+        {
+          "sidebands_each_side": 15,
+          "relative_rms_error": 0.07015364839631633
+        }
+      ]
+    },
+    {
+      "carrier_hz": 2400000000.0,
+      "missing_i_period": 8,
+      "cutoff_hz": 10000000.0,
+      "periodic_closure_error": 3.6506759942727966e-16,
+      "truncations": [
+        {
+          "sidebands_each_side": 0,
+          "relative_rms_error": 0.006976785922487393
+        },
+        {
+          "sidebands_each_side": 1,
+          "relative_rms_error": 0.0040448973744685235
+        },
+        {
+          "sidebands_each_side": 3,
+          "relative_rms_error": 0.0026968465645320224
+        },
+        {
+          "sidebands_each_side": 7,
+          "relative_rms_error": 0.0024688757870097635
+        }
+      ]
+    },
+    {
+      "carrier_hz": 2400000000.0,
+      "missing_i_period": 16,
+      "cutoff_hz": 10000000.0,
+      "periodic_closure_error": 7.244417918960237e-16,
+      "truncations": [
+        {
+          "sidebands_each_side": 0,
+          "relative_rms_error": 0.007049869900105275
+        },
+        {
+          "sidebands_each_side": 1,
+          "relative_rms_error": 0.004415731044205537
+        },
+        {
+          "sidebands_each_side": 3,
+          "relative_rms_error": 0.003035879659355469
+        },
+        {
+          "sidebands_each_side": 7,
+          "relative_rms_error": 0.0024503547572349077
+        },
+        {
+          "sidebands_each_side": 15,
+          "relative_rms_error": 0.002364214533428709
+        }
+      ]
+    }
+  ],
+  "physical_qualification": false,
+  "limitations": [
+    "Constant complex RF envelope, periodic missing I cycle, first-order 10 MHz filter.",
+    "Retained sidebands omit carrier harmonics; residual error is measured, not assumed zero.",
+    "Switching effectiveness is ideal normalized drive, not a transistor gate-voltage model."
+  ]
+}

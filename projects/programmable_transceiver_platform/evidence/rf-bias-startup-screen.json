@@ -1,0 +1,48 @@
+{
+  "status": "cold_bias_with_pll_rail_off_not_complete_startup",
+  "cases": [
+    {
+      "resistance_scale": 0.5,
+      "gate_final_v": 1.499999996529627,
+      "source_final_v": 0.30088369652178,
+      "gate_1percent_settling_s": 4.671240727599072e-05,
+      "artifacts_sha256": {
+        ".spice": "3a2e3548635ebbdb867e451d855d2e899e0c8cb9960238d0398ac980ce9f0994",
+        "_core.spice": "7751246ee57e5a11e7688a3b08db7703a1e6f6faf132fd26e1de5cda4968915d",
+        ".dat": "646b37265af9bc2407c8c1d237a84d7626e37b38c8510952d092cdb78bcb9527",
+        ".log": "00559b774c015eec30aa9ba22c24a6529c20ebb690676d342b26e6c8771b2465"
+      }
+    },
+    {
+      "resistance_scale": 1,
+      "gate_final_v": 1.499927917967861,
+      "source_final_v": 0.3008554599587878,
+      "gate_1percent_settling_s": 9.289240727611301e-05,
+      "artifacts_sha256": {
+        ".spice": "71a90994d084fce401e41405e5c1e82c5dde868e5227db15b2a6f375268010f5",
+        "_core.spice": "d5d37fe55eee98ac3c64fab4f83fe908e53cee098c11b79161ae60a046316d44",
+        ".dat": "e15ce3359fd1a8034b36a3bd8e8e657238eeb76bcf7082f09cee097bab4b90fd",
+        ".log": "36e344672394f226a378df11fbcc005b604d6e5935595d8b68f5b6e77d78c5ca"
+      }
+    },
+    {
+      "resistance_scale": 2,
+      "gate_final_v": 1.489610844031802,
+      "source_final_v": 0.2968157458852036,
+      "gate_1percent_settling_s": 0.0001852724072761212,
+      "artifacts_sha256": {
+        ".spice": "801f2f3dd38f3ad6442d1aeba3b2953b4c93e7f989e3f682410b651f1f43e79f",
+        "_core.spice": "e3797c128baf59069c100174262c4e0881f28fbb8e0a3f4d10f006d96bc99c77",
+        ".dat": "a0f768c21bf101d4ffc63e48f588524a6f608313ee7bfaccb7f9ee1728569cbc",
+        ".log": "efa7ef1c8f0d27775583ec0b7cae37f09564f3bae16336d2ca451dad3cbcd96f"
+      }
+    }
+  ],
+  "limitations": [
+    "Ideal 1us external supply and bias ramps; bias generators not implemented.",
+    "Oscillator rail held at zero and control at zero; no oscillator release/startup test.",
+    "0.5x/2x resistance are sensitivity scenarios, not process bounds.",
+    "Gate settling threshold 15mV is diagnostic, not receiver accuracy qualification."
+  ],
+  "checker_pass": true
+}

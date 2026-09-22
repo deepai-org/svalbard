@@ -1,0 +1,24 @@
+{
+  "pass": 85,
+  "status": "two-stage functional and structural tests pass",
+  "cycles": 21254,
+  "latency_block_cycles": 2,
+  "negative_controls": [
+    "capacity",
+    "command",
+    "wrong-stage valid",
+    "next-beat mask"
+  ],
+  "scope": "Finite two-stage fail-stop RX evidence; no physical timing or queue integration.",
+  "sha256": {
+    "rtl/pt_block_rx_commit.sv": "91bb8f8e836681810d8440f6a760c70687d23f3114071e8aa229db3f1cdaa022",
+    "rtl/pt_block_header.sv": "c209a40f9bfb5e8391da2d84e8f4f26578ba60c0c39efa3d9ba3a328958e15fa",
+    "rtl/pt_block_route_prefix.sv": "5a1cac1284536e2ee2c425c7d4fb55836b33f1eb01df4a4ad1fe39639b9a6e88",
+    "rtl/pt_lane_compact.sv": "177039ea39062c139c08127af565743075e204954711e7ba04be00d280201e69",
+    "rtl/pt_schedule.vh": "826aecb656c8057dc1acf21ff9acc35702a26bc01ac93e3c5d887f036b6a860c",
+    "verification/check_block_rx_commit.py": "3604d1c2419b7f3b956fa2c32224872732b3e87a3831205eacca40e086b699d6",
+    "verification/run_block_rx_commit.sh": "d17ca6f9c1b9a37946ba349cd0badd5203e92c63c02af8e12a1abaabf40a15ef",
+    "verification/stream_codec.py": "4515bf61e3c83f041eee97740e61c075dca1681da388dc651117cdd10d1a0088",
+    "verification/transport_model.py": "fb93356b2851ee253d3f8e49bb25b2018e22175500ec3d14b8ebaa78814da09d"
+  }
+}

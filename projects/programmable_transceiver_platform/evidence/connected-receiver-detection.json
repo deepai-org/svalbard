@@ -1,0 +1,58 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "module": "load_screen",
+      "evidence": "receiver-detect-load-screen.json",
+      "sha256": "3b45bb72fb90d57d01c0686c0813adbec837e0a668bbba17ae5764e5ed5f3276"
+    },
+    {
+      "module": "timing_screen",
+      "evidence": "receiver-detect-timing-screen.json",
+      "sha256": "f39b3f633a3c4ff88f5428a6136d88f57d6d7914feb69d56af607ad29c45eb71"
+    },
+    {
+      "module": "release_screen",
+      "evidence": "receiver-detect-release-screen.json",
+      "sha256": "c31f0ed5e1d71b9150d0a6ae8042e9b552d158992a3352c391f27f87cc91b84b"
+    },
+    {
+      "module": "energy_screen",
+      "evidence": "receiver-detect-energy-screen.json",
+      "sha256": "eb2c125dd87f410bd7c7cf6dc9f1172f92e021285dfb2b06726aa822cd8f4e38"
+    },
+    {
+      "module": "probe_sequence",
+      "evidence": "receiver-detect-sequence-screen.json",
+      "sha256": "abb3eb4f863324b1e12467a11045327b3218e05cdf8df36b0c8afe10ba44e9d8"
+    },
+    {
+      "module": "rearm_screen",
+      "evidence": "receiver-detect-rearm-screen.json",
+      "sha256": "09ff8e423cc384a2916a2c9babde77c0b86c48a0925d87d91f531f05a2c730fe"
+    },
+    {
+      "module": "chip_adapter",
+      "evidence": "receiver-detect-chip-adapter.json",
+      "sha256": "d98ed5bb4ac9a6c48ab7aa443ffe27a244393b741866d66cd9fcd94c67a692f2"
+    },
+    {
+      "module": "managed_adapter",
+      "evidence": "receiver-detect-managed-adapter.json",
+      "sha256": "937c3d11831b59dcfe43da784b2565f9ed6ec79ac21394febb1ae96af657059f"
+    },
+    {
+      "module": "resource_adapter",
+      "evidence": "receiver-detect-resource-adapter.json",
+      "sha256": "e8f3db7b294539d09745a9701dd25883e24dd9b3c9bd0f98bca19ca9a01add93"
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "ReceiverDetect resource adapter is a connected model variant, not yet the default combined profile.",
+    "Supply loading is quantified separately but not coupled to chip rails; no electrical-coexistence qualification.",
+    "Known small-coupling-capacitor false negatives remain outside the declared load envelope.",
+    "Provisional detector resource and management ABI; full uncertainty and physical device/package validation remain open."
+  ]
+}

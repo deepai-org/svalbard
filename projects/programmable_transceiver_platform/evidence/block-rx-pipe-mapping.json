@@ -1,0 +1,51 @@
+{
+  "pass": 77,
+  "status": "setup fails both modes",
+  "cell_area_um2": 38088.9152,
+  "flip_flops": 131,
+  "paths": {
+    "0": {
+      "max": {
+        "slack_ns": -4.9203,
+        "startpoint": "_3046_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "wire_words[30] (output port clocked by clk)"
+      },
+      "min": {
+        "slack_ns": 0.3481,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_3175_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    },
+    "1": {
+      "max": {
+        "slack_ns": -4.9197,
+        "startpoint": "_3046_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "wire_words[30] (output port clocked by clk)"
+      },
+      "min": {
+        "slack_ns": 0.3481,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_3175_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    }
+  },
+  "period_ns": 25.6,
+  "input_max_delay_ns": 4,
+  "output_max_delay_ns": 4,
+  "scope": "Nominal TT25C3.3V unplaced ideal clocks/no wire RC. No mapped equivalence, queues or physical signoff.",
+  "sha256": {
+    "projects/programmable_transceiver_platform/rtl/pt_block_rx_pipe.sv": "b16c2dd2001d324ef74526c5b0406eccf30d7585599400a504a6771d87764789",
+    "projects/programmable_transceiver_platform/rtl/pt_block_header.sv": "c209a40f9bfb5e8391da2d84e8f4f26578ba60c0c39efa3d9ba3a328958e15fa",
+    "projects/programmable_transceiver_platform/rtl/pt_block_route.sv": "424a27b9c2a3f73d44309661412ab6434e28cbe470f1d0f11940f2bb61c66141",
+    "projects/programmable_transceiver_platform/rtl/pt_lane_compact.sv": "177039ea39062c139c08127af565743075e204954711e7ba04be00d280201e69",
+    "projects/programmable_transceiver_platform/rtl/pt_schedule.vh": "826aecb656c8057dc1acf21ff9acc35702a26bc01ac93e3c5d887f036b6a860c",
+    "projects/programmable_transceiver_platform/verification/block_rx_pipe_timing.tcl": "c101e18aae67f166cf293151a45b4fbe74cde658c4c931caeb616541ab8f7582",
+    "projects/programmable_transceiver_platform/verification/run_block_rx_pipe_mapping.sh": "aceadbb5c6d06934f20d657ea7daec9f4c6222ebefdeefeb9954000c0c84d033",
+    "projects/programmable_transceiver_platform/verification/report_block_rx_pipe_mapping.py": "6c7b7508d1680d2d0e25c2d4c19314406f98825f9f47b5a2e40b9a952bf75e7f",
+    "scratch/transceiver-block-rx-pipe-mapping/mapped.v": "a8a5594c7bf716d7041ccae01692df8495ed050daaabd5464b256428e22114a5",
+    "scratch/transceiver-block-rx-pipe-mapping/mapped.json": "f174afd98fe451ef6aabbf8ece204afaf3cb8fb3629cd47bc5960a57fb62fa66",
+    "scratch/transceiver-block-rx-pipe-mapping/stat.json": "30c96fa1e3186321444f80b71db11da4ed218baf445021cd8d66efbc6307fc37",
+    "scratch/transceiver-block-rx-pipe-mapping/timing.log": "db1768d7b577208144541520341b1a8bd3c2713d37b90f869fe27f1dcec3dd62",
+    "scratch/transceiver-block-rx-pipe-mapping/library.sha256": "63f746b08d8105af8a803731675c322662d70056ecde4239087246914f7f6f20"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "completed": true,
+  "evidence_sha256": {
+    "lna-noise.json": "53862cfa64d1b6b0aa9e6b22d2661d247b41dde5b85534c829378dc5ab07bd7f",
+    "lna-bypass.json": "bd6ae0be6d49dfab13c0d12294f9dff84f32fc62b66928475d049dd0409bf301"
+  },
+  "declared_change": "Ideal20pF bypass across82ohm source resistor",
+  "dc_reproduces_exactly": true,
+  "cases": [
+    {
+      "name": "unloaded_f0",
+      "gain_ratio": 1.9126817041338788,
+      "noise_factor_change_db": -3.376196751122123,
+      "input_noise_asd_ratio": 0.6779382882209425
+    },
+    {
+      "name": "unloaded_f1",
+      "gain_ratio": 1.9126817041338788,
+      "noise_factor_change_db": -3.1103324731391115,
+      "input_noise_asd_ratio": 0.6990099799759797
+    },
+    {
+      "name": "snapshot_f0",
+      "gain_ratio": 1.9486879994614799,
+      "noise_factor_change_db": -4.114736872981155,
+      "input_noise_asd_ratio": 0.6226774760019491
+    },
+    {
+      "name": "snapshot_f1",
+      "gain_ratio": 1.9486879994614799,
+      "noise_factor_change_db": -3.9148764457386704,
+      "input_noise_asd_ratio": 0.6371712589155512
+    },
+    {
+      "name": "heavy_f0",
+      "gain_ratio": 1.9555094718094412,
+      "noise_factor_change_db": -4.433186794731776,
+      "input_noise_asd_ratio": 0.6002617364910998
+    },
+    {
+      "name": "heavy_f1",
+      "gain_ratio": 1.9555094718094412,
+      "noise_factor_change_db": -4.259613355123555,
+      "input_noise_asd_ratio": 0.612377650580357
+    }
+  ],
+  "disposition": "Candidate for physical capacitor substitution and actual mixer integration; retained connected baseline unchanged.",
+  "limitations": [
+    "No capacitor ESR/ESL or layout parasitics; no RF stability, compression or startup qualification.",
+    "Stationary source-referred noise factors under artificial loads are not complete receiver noise figures."
+  ]
+}

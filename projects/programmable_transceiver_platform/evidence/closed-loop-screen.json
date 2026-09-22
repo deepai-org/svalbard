@@ -1,0 +1,56 @@
+{
+  "status": "short_closed_transistor_loop_not_lock_qualification",
+  "windows": [
+    {
+      "window_ns": [
+        100,
+        200
+      ],
+      "vco_frequency_hz": 2511954371.741605,
+      "control_range_v": [
+        1.080713170231814,
+        1.270810575781367
+      ],
+      "control_mean_v": 1.2076127613639611,
+      "gate_range_v": [
+        1.489283100477156,
+        1.513742387986683
+      ]
+    },
+    {
+      "window_ns": [
+        220,
+        320
+      ],
+      "vco_frequency_hz": 2498032259.22949,
+      "control_range_v": [
+        1.194488536983731,
+        1.299538079696698
+      ],
+      "control_mean_v": 1.2545908618128638,
+      "gate_range_v": [
+        1.488784728637195,
+        1.512723963017286
+      ]
+    }
+  ],
+  "artifacts_sha256": {
+    ".spice": "605fb96056e28251ca1251864afceb67d03aa15245fdd6934d51a2ca417711d4",
+    ".dat": "9bb46a0fa786e0121421c2e7cc0e9bb897f64c9f5120f8257915f3a1be91b4e9",
+    ".log": "d36b850a24e47ba2c8130b6da16831a2e5d218013a78503007a42093a1fa094f"
+  },
+  "limitations": [
+    "321ns with precharged filter, seeded VCO and prebiased LNA; no cold startup.",
+    "Only a few reference cycles, no lock/acquisition/stability or phase-noise claim.",
+    "Actual divide128/PFD/pump/filter/VCO, but ideal external bias sources/reference/sampling clocks.",
+    "Filter values are preliminary; no PVT/mismatch or physical parasitics."
+  ],
+  "actual_feedback_connectivity_checked": true,
+  "local_tuning_interval_exceeded": true,
+  "bias_guard_pass": true,
+  "pump_filter_control_range_v": [
+    1.080713170231814,
+    1.299538079696698
+  ],
+  "pll_lock_established": false
+}

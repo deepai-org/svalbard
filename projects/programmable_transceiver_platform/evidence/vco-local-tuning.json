@@ -1,0 +1,55 @@
+{
+  "status": "loaded_prebiased_local_vco_tuning_not_pll",
+  "cases": [
+    {
+      "control_v": 1.06,
+      "frequency_hz": 2491616963.9072556,
+      "gate_range_v": [
+        1.491483175415296,
+        1.511537695258474
+      ],
+      "artifacts_sha256": {
+        ".spice": "4c2a0572b933b43e10d6e1abd2cec415f16ca82d9209f1c81617e0a12f22bdca",
+        ".dat": "7d85e5116f1c2909235bd4af98d095ebe646f2de037549a8aaa2c7adf1fad063",
+        ".log": "522592ee3f81541cadef1d9da53db5d5e3b89c55656b0ef19a78da860ed422ba"
+      }
+    },
+    {
+      "control_v": 1.08,
+      "frequency_hz": 2500413735.2141275,
+      "gate_range_v": [
+        1.491389492306614,
+        1.511708419117832
+      ],
+      "artifacts_sha256": {
+        ".spice": "36037e6cc5cf3c119ae35d776d71e1aa53fdff0ce2e1457fba17764eca29a064",
+        ".dat": "c6b1d6f1ffaa2afebf5512ac47b10ef1d9b8697e3e8a0605cb041ef2705d72d5",
+        ".log": "54d784c45f8bba8532df1f9f90ce0d808acbc4315a4a37f61d72f24d3dd0638b"
+      }
+    },
+    {
+      "control_v": 1.1,
+      "frequency_hz": 2507753138.574436,
+      "gate_range_v": [
+        1.491436279408092,
+        1.511392111581024
+      ],
+      "artifacts_sha256": {
+        ".spice": "7dfa93c7f69bff279e1e0d61bd62e3abe9048af4a94d235c0bb4751253809d21",
+        ".dat": "ba4f0670d9a2664464260a297b851cfdad74f31bfbdc3ad2c0faf01c0e0bef4d",
+        ".log": "aedacdddf61071082937a2b614e8d798715734717f532066834b78f70c59b27a"
+      }
+    }
+  ],
+  "slopes_hz_per_v": [
+    439838565.34359413,
+    366970168.01543206
+  ],
+  "limitations": [
+    "Nominal seeded/prebiased RF hierarchy; no acquisition, phase noise or process/mismatch.",
+    "Three local tuning points do not establish global monotonicity or a loop-stability model.",
+    "Actual mixer/buffer load but ideal biases/sample clocks; no divider load."
+  ],
+  "local_tuning_sign_consistent": true,
+  "feedback_interpretation": "Positive local tuning: sourcing pump current speeds VCO; REF-leading UP has negative-feedback polarity."
+}

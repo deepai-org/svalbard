@@ -1,0 +1,61 @@
+{
+  "scope": "necessary frequency and bandwidth screen; not electrical qualification",
+  "source": {
+    "url": "https://www.latticesemi.com/view_document?document_id=50461",
+    "revision": "FPGA-DS-02012-3.4, September 2025",
+    "tables": [
+      "3.21",
+      "3.44"
+    ],
+    "pdf_sha256": "26570f8bb2b800123120829cacd75d818d7a985d573797610521b5bda2e293c3"
+  },
+  "contract_sha256": "99ffc14cf44c82a953a1c7409f043bf83c42b39b0b0ee9fec049d834082e34f8",
+  "profiles": {
+    "sdr25": {
+      "d2h_within_documented_input_clock_limit": true,
+      "h2d_within_documented_output_clock_limit": true,
+      "qualified": false
+    },
+    "sdr50": {
+      "d2h_within_documented_input_clock_limit": true,
+      "h2d_within_documented_output_clock_limit": true,
+      "qualified": false
+    },
+    "ddr125": {
+      "d2h_within_documented_input_clock_limit": true,
+      "h2d_within_documented_output_clock_limit": true,
+      "qualified": false
+    },
+    "ddr156": {
+      "d2h_within_documented_input_clock_limit": true,
+      "h2d_within_documented_output_clock_limit": false,
+      "qualified": false
+    }
+  },
+  "hypothetical_ddr150": [
+    {
+      "mode": "ethernet_rf40_12",
+      "reserved_slots": {
+        "wire": 27,
+        "iq": 21
+      },
+      "slots_per_direction": {
+        "d2h": 48,
+        "h2d": 48
+      },
+      "fits": true
+    },
+    {
+      "mode": "pcie_rf20_8",
+      "reserved_slots": {
+        "wire": 54,
+        "iq": 7
+      },
+      "slots_per_direction": {
+        "d2h": 61,
+        "h2d": 61
+      },
+      "fits": false
+    }
+  ]
+}

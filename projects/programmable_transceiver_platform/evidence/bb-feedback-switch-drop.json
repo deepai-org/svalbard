@@ -1,0 +1,172 @@
+{
+  "completed": true,
+  "original_OP_and_AC_bitidentical": true,
+  "cases": [
+    {
+      "nominal_feedback_ohm": 20000,
+      "legs": [
+        {
+          "leg": "fbp",
+          "out_v": 1.086908054437844,
+          "mid_v": 1.161720772791779,
+          "input_gate_v": 1.169518732039648,
+          "first_resistor_current_a": -3.7406359176967553e-06,
+          "parallel_resistor_current_a": -3.8989796239344843e-07,
+          "switch_current_by_kcl_a": -3.350737955303307e-06,
+          "switch_drop_v": -0.0077979592478689685,
+          "dc_secant_switch_ohm": 2327.236373565686,
+          "effective_feedback_dc_ohm": 22084.661383637263
+        },
+        {
+          "leg": "fbn",
+          "out_v": 1.086908054437843,
+          "mid_v": 1.161720772791779,
+          "input_gate_v": 1.169518732039649,
+          "first_resistor_current_a": -3.7406359176967998e-06,
+          "parallel_resistor_current_a": -3.8989796239349284e-07,
+          "switch_current_by_kcl_a": -3.350737955303307e-06,
+          "switch_drop_v": -0.007797959247869857,
+          "dc_secant_switch_ohm": 2327.2363735659505,
+          "effective_feedback_dc_ohm": 22084.661383637478
+        }
+      ]
+    },
+    {
+      "nominal_feedback_ohm": 40000,
+      "legs": [
+        {
+          "leg": "fbp",
+          "out_v": 1.085412964708823,
+          "mid_v": 1.129025850484093,
+          "input_gate_v": 1.172638715416473,
+          "first_resistor_current_a": -2.1806442887635003e-06,
+          "parallel_resistor_current_a": -2.1806432466189963e-06,
+          "switch_current_by_kcl_a": -1.04214450400076e-12,
+          "switch_drop_v": -0.043612864932379924,
+          "dc_secant_switch_ohm": null,
+          "effective_feedback_dc_ohm": 39999.99044186611
+        },
+        {
+          "leg": "fbn",
+          "out_v": 1.085412964708824,
+          "mid_v": 1.129025850484094,
+          "input_gate_v": 1.172638715416473,
+          "first_resistor_current_a": -2.1806442887635003e-06,
+          "parallel_resistor_current_a": -2.180643246618952e-06,
+          "switch_current_by_kcl_a": -1.0421445484699898e-12,
+          "switch_drop_v": -0.043612864932379036,
+          "dc_secant_switch_ohm": null,
+          "effective_feedback_dc_ohm": 39999.9904418657
+        }
+      ]
+    }
+  ],
+  "provenance": [
+    {
+      "cases": [
+        {
+          "name": "cm1.177_fb20000",
+          "common_mode_v": 1.177,
+          "source_ohm_per_leg": 1000,
+          "feedback_ohm": 20000,
+          "returncode": 0,
+          "deck_sha256_before": "bea8b7d608cdc21ef456db802ec11b600e8aca43f46b3654fb6f497c8780dc9b",
+          "artifacts_sha256": {
+            ".spice": "bea8b7d608cdc21ef456db802ec11b600e8aca43f46b3654fb6f497c8780dc9b",
+            ".log": "a8dd772b7e723603d026322889ddf059ce89c303f953178676e2b02097ae45d2",
+            ".dat": "d38ee54166caaec883aeb92b6fba00b51dc60accf8ab1f5bcbb2e377f8181595",
+            "-op.dat": "117164ded1663addddad2541fe05be1675d6ac1bbbf87016efa2be26876793e4"
+          }
+        },
+        {
+          "name": "cm1.177_fb40000",
+          "common_mode_v": 1.177,
+          "source_ohm_per_leg": 1000,
+          "feedback_ohm": 40000,
+          "returncode": 0,
+          "deck_sha256_before": "e24cf023bb33824e3aa1d45f8e13f7ff16527fdb4abf6b4b081ed498d3e1538a",
+          "artifacts_sha256": {
+            ".spice": "e24cf023bb33824e3aa1d45f8e13f7ff16527fdb4abf6b4b081ed498d3e1538a",
+            ".log": "a8dd772b7e723603d026322889ddf059ce89c303f953178676e2b02097ae45d2",
+            ".dat": "4bd241b803fe3504929bb0a672b6d0e12a8e08cbc858c9595df2e70d276a76ce",
+            "-op.dat": "1860c84390861e7edbde5cc0d4b8cb6e03207f29a6750dd9aad072d06a289246"
+          }
+        }
+      ],
+      "source_sha256_before": {
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/screen/bb_filter_programmable.spice": "a7850ff8e2ac2bb86b82672f5ba697596b702956650015c43350a7687bb837e5",
+        "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+        "/screen/baseband/programmed_feedback_screen.py": "6c8029ccfc869f15010ea4d66c70337f572b9b962e7a8d7e06b0add64db9c1e6"
+      },
+      "source_sha256_after": {
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/screen/bb_filter_programmable.spice": "a7850ff8e2ac2bb86b82672f5ba697596b702956650015c43350a7687bb837e5",
+        "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+        "/screen/baseband/programmed_feedback_screen.py": "6c8029ccfc869f15010ea4d66c70337f572b9b962e7a8d7e06b0add64db9c1e6"
+      }
+    },
+    {
+      "cases": [
+        {
+          "name": "cm1.177_fb20000",
+          "common_mode_v": 1.177,
+          "source_ohm_per_leg": 1000,
+          "feedback_ohm": 20000,
+          "returncode": 0,
+          "deck_sha256_before": "b70a5b222192b91124861f0d941567ffc4c3bc0fbddd70c168cdd923bd652e1c",
+          "artifacts_sha256": {
+            ".spice": "b70a5b222192b91124861f0d941567ffc4c3bc0fbddd70c168cdd923bd652e1c",
+            ".log": "a8dd772b7e723603d026322889ddf059ce89c303f953178676e2b02097ae45d2",
+            ".dat": "d38ee54166caaec883aeb92b6fba00b51dc60accf8ab1f5bcbb2e377f8181595",
+            "-op.dat": "a44bdcc0735c4c5470108763745b215f29c0a1511053a24620d181630907f12e"
+          }
+        },
+        {
+          "name": "cm1.177_fb40000",
+          "common_mode_v": 1.177,
+          "source_ohm_per_leg": 1000,
+          "feedback_ohm": 40000,
+          "returncode": 0,
+          "deck_sha256_before": "6c6f9b3e1bab002451f8442b88ac80784f591e767a13adcdb4c2735fbb26a771",
+          "artifacts_sha256": {
+            ".spice": "6c6f9b3e1bab002451f8442b88ac80784f591e767a13adcdb4c2735fbb26a771",
+            ".log": "a8dd772b7e723603d026322889ddf059ce89c303f953178676e2b02097ae45d2",
+            ".dat": "4bd241b803fe3504929bb0a672b6d0e12a8e08cbc858c9595df2e70d276a76ce",
+            "-op.dat": "1eccf18689ea2b1c636a0cc9612bbf81aad6a64330427c97f41e78b65c19b44f"
+          }
+        }
+      ],
+      "source_sha256_before": {
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/screen/bb_filter_programmable.spice": "a7850ff8e2ac2bb86b82672f5ba697596b702956650015c43350a7687bb837e5",
+        "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+        "/screen/baseband/programmed_feedback_probe.py": "d0cc2a03a75749e120bd13cf4a348f80d6fcfa1364d8647ab0e5137ddd4c0b00"
+      },
+      "source_sha256_after": {
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/screen/bb_filter_programmable.spice": "a7850ff8e2ac2bb86b82672f5ba697596b702956650015c43350a7687bb837e5",
+        "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+        "/screen/baseband/programmed_feedback_probe.py": "d0cc2a03a75749e120bd13cf4a348f80d6fcfa1364d8647ab0e5137ddd4c0b00"
+      }
+    }
+  ],
+  "limitations": [
+    "DC KCL uses two ideal20kohm resistors; terminal gate leakage is included in surrounding circuit.",
+    "On-state V/I is a secant at this bias, not incremental RF impedance or voltage-independent on-resistance.",
+    "Off-state residual is a subtraction of similar currents; not a validated leakage floor.",
+    "No mode-transition, distortion, mismatch or temperature qualification."
+  ]
+}

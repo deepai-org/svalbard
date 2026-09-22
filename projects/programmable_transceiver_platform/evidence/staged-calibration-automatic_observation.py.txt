@@ -1,0 +1,79 @@
+"""Quiet maintenance conversion shares ADC transfer/reference; separate 1-slot result sink."""
+import math
+from managed_calibration import ManagedCalibrationChip
+from chip_model import decode_iq
+
+class AutomaticCalibrationChip(ManagedCalibrationChip):
+    def __init__(self,observation_error_bound_v=None,**kwargs):
+        if observation_error_bound_v is not None and (not math.isfinite(observation_error_bound_v) or observation_error_bound_v<0):
+            raise ValueError('Invalid declared total observation error bound')
+        self.observation_error_bound=observation_error_bound_v
+        self.maintenance_next=math.inf;self.maintenance_pending=None
+        self.maintenance_sampled=0;self.maintenance_completed=0;self.maintenance_cancelled=0
+        self.maintenance_trace=[]
+        super().__init__(**kwargs)
+    def receiver_value(self):
+        value=super().receiver_value()
+        if not self.diagnostic_selected:
+            # Candidate target: additive I-channel DC at the post-filter ADC
+            # input. The quiet observation sees this same trim actuator.
+            value+=complex(*(p.apply(self.tx.time,0.) for p in self.trim_targets))
+        return value
+    def _drop_observation(self):
+        if self.maintenance_pending is not None:self.maintenance_cancelled+=1
+        self.maintenance_pending=None;self.maintenance_next=math.inf
+    def quiesce(self,time,reason):
+        self._drop_observation()
+        return super().quiesce(time,reason)
+    def set_reference(self,present,time):
+        result=super().set_reference(present,time)
+        if not present:self._drop_observation()
+        return result
+    def _service(self):
+        if not self.cal.busy:
+            self._drop_observation();return
+        if self.cal.state!='observe':return
+        if self.maintenance_pending is not None:
+            deadline,epoch,generation,word=self.maintenance_pending
+            if deadline>self.time:return
+            self.maintenance_pending=None;self.maintenance_next=math.inf
+            if epoch!=self.epoch or generation!=self.cal.generation:
+                self.maintenance_cancelled+=1;return
+            decoded=decode_iq(word,12)
+            value=decoded.real if self.trim_target==0 else decoded.imag
+            self.cal.observe(self.time,generation=generation,epoch=epoch,quiet=self.quiet(),
+                             value=value,error_bound=self.observation_error_bound)
+            self.maintenance_completed+=1
+            self.maintenance_trace.append(dict(time=self.time,target=self.trim_target,word=word,observed_v=value,result=self.cal.result))
+        elif self.maintenance_next==math.inf:
+            # Conversion starts at a future reference-derived control edge.
+            tick=math.floor((self.time-self.control_phase)/self.control_period)+1
+            self.maintenance_next=self.control_phase+tick*self.control_period
+        elif self.maintenance_next<=self.time:
+            # Maintenance forces precision ADC mode without arming RF or host.
+            # Restore the normal mode field immediately after this atomic sample.
+            had_bits=hasattr(self,'bits');old_bits=getattr(self,'bits',None)
+            self.bits=12
+            try:
+                residual=self.trim.apply(self.tx.time,0.)
+                value=complex(residual,0.) if self.trim_target==0 else complex(0.,residual)
+                word=self.convert_adc(value)
+            finally:
+                if had_bits:self.bits=old_bits
+                else:del self.bits
+            self.maintenance_sampled+=1
+            self.maintenance_pending=(self.time+self.adc_latency,self.epoch,self.cal.generation,word)
+            self.maintenance_next=self.time+self.adc_latency
+            if self.adc_latency==0:self._service()
+    def advance(self,time):
+        if not math.isfinite(time) or time<self.time:raise ValueError('Invalid maintenance time')
+        while self.time<time:
+            event=self.cal.next_event if self.cal.next_event is not None else math.inf
+            command=self.command_events[0][0] if self.command_events else math.inf
+            end=min(time,event,command,self.maintenance_next)
+            super().advance(end);self._service()
+        super().advance(time);self._service()
+    def maintenance_accounting(self):
+        assert self.maintenance_sampled==self.maintenance_completed+self.maintenance_cancelled+int(self.maintenance_pending is not None)
+        return dict(sampled=self.maintenance_sampled,completed=self.maintenance_completed,
+                    cancelled=self.maintenance_cancelled,pending=int(self.maintenance_pending is not None))

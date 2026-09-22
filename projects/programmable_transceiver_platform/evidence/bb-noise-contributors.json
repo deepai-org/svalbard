@@ -1,0 +1,188 @@
+{
+  "completed": true,
+  "band_hz": [
+    1000.0,
+    20000000.0
+  ],
+  "unchanged_total_noise_verified": true,
+  "provenance": {
+    "cases": [
+      {
+        "name": "resistor",
+        "fnoicor": null,
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "e16d05eadaa21251c9261bfb9be391eb162ad5f36e977a775448beb331e11e7a",
+          ".log": "eb0331fd29be301a02e61b71bc775ab73fea5cc131f42b7076e7734386b35181",
+          ".dat": "0772c82c805a91edbdf31678664c5e43a72e6e65a8bacfe2856f327fec741f05",
+          "-integrated.dat": "0956f19242421e14d5fbef98ae2fcefb737b8a5dd17ddb85349fae3360b7bb4d",
+          "-contributors.dat": "e67266082cdeb8018b6baa0ffba73bf6312684de2c62f417741c8e0e2f84cd2d"
+        }
+      },
+      {
+        "name": "filter_f0",
+        "fnoicor": 0,
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "991206536d89e43d2a0f5bc18299790b63195583da6d3dd9288536f7e835e25b",
+          ".log": "eb0331fd29be301a02e61b71bc775ab73fea5cc131f42b7076e7734386b35181",
+          ".dat": "26fa3cdaeb0bad2a298f8dca6bf499ce2947093e32825ce6ce598565f5f51442",
+          "-integrated.dat": "8dad10afa13f48cfca2882d4bd5a325db3406f69a062a34aa2e3f378b167521d",
+          "-contributors.dat": "c1ddd89ded467d04ca9657d483be1c88cc69ab723cbbcf93d5547cf34cb1aeea"
+        }
+      },
+      {
+        "name": "filter_f1",
+        "fnoicor": 1,
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "cff210ca97d266256a6e997663e20a5eae2883a428eedc4cd69ecb31f85edad1",
+          ".log": "eb0331fd29be301a02e61b71bc775ab73fea5cc131f42b7076e7734386b35181",
+          ".dat": "3d5bb356a356aeb60266a5e03340c7fe932130324290ebc31f20ce25528a88ed",
+          "-integrated.dat": "8c8d5437e8ab56a02c58689b83442174df1c0b251ebcfec99f2aa2e7fbc41272",
+          "-contributors.dat": "5561fe9bc740d0ef852833337ec0856f0873241f2f6e0710d9a129981e94fe3d"
+        }
+      }
+    ],
+    "source_sha256_before": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+      "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06"
+    },
+    "source_sha256_after": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+      "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06"
+    },
+    "model_excerpts_sha256": "a3dee7883083ff56d32f54636f0608e294be9f2e9a9140ff7292b78448925c4c"
+  },
+  "cases": [
+    {
+      "name": "resistor",
+      "sum_closure_max_relative_error": 0.0,
+      "total_output_rms_v": 1.820727180431678e-05,
+      "groups": {
+        "calibration_resistor": {
+          "output_rms_v": 1.820727180431678e-05,
+          "noise_power_fraction": 1.0
+        }
+      },
+      "mos_flicker_noise_power_fraction": 0.0,
+      "device_noise_power_fraction": {
+        "onoise_rtest": 1.0
+      }
+    },
+    {
+      "name": "filter_f0",
+      "sum_closure_max_relative_error": 8.881784197001252e-16,
+      "total_output_rms_v": 0.00026925716524742546,
+      "groups": {
+        "filter_input_resistors": {
+          "output_rms_v": 0.00016808062248697267,
+          "noise_power_fraction": 0.38967339671801476
+        },
+        "external_source_resistors": {
+          "output_rms_v": 0.00016808062248697267,
+          "noise_power_fraction": 0.38967339671801476
+        },
+        "first_stage_mos": {
+          "output_rms_v": 9.109979379316308e-05,
+          "noise_power_fraction": 0.11447225799102967
+        },
+        "filter_feedback_resistors": {
+          "output_rms_v": 7.669260366563318e-05,
+          "noise_power_fraction": 0.08112830934202502
+        },
+        "filter_load_resistors": {
+          "output_rms_v": 3.426482038578062e-05,
+          "noise_power_fraction": 0.016194307475494628
+        },
+        "second_stage_mos": {
+          "output_rms_v": 2.534213731362074e-05,
+          "noise_power_fraction": 0.008858331755421153
+        }
+      },
+      "mos_flicker_noise_power_fraction": 0.058104537580180755,
+      "device_noise_power_fraction": {
+        "onoise.m.xdut.xa.xin.m0": 0.05723612899551481,
+        "onoise.m.xdut.xa.xip.m0": 0.05723612899551488,
+        "onoise.m.xdut.xa.xtail.m0": 1.5987605506638744e-32,
+        "onoise.m.xdut.xb.xin.m0": 0.0044291658777105775,
+        "onoise.m.xdut.xb.xip.m0": 0.004429165877710575,
+        "onoise.m.xdut.xb.xtail.m0": 2.266907007386596e-34,
+        "onoise_r.xdut.rfn": 0.04056415467101251,
+        "onoise_r.xdut.rfp": 0.04056415467101251,
+        "onoise_r.xdut.rin": 0.19483669835900735,
+        "onoise_r.xdut.rip": 0.19483669835900738,
+        "onoise_r.xdut.rmn": 0.007340111068007221,
+        "onoise_r.xdut.rmp": 0.007340111068007224,
+        "onoise_r.xdut.ron": 0.0007570426697400932,
+        "onoise_r.xdut.rop": 0.0007570426697400932,
+        "onoise_rn": 0.19483669835900735,
+        "onoise_rp": 0.19483669835900738
+      }
+    },
+    {
+      "name": "filter_f1",
+      "sum_closure_max_relative_error": 1.1102230246251565e-15,
+      "total_output_rms_v": 0.00034361541360390267,
+      "groups": {
+        "first_stage_mos": {
+          "output_rms_v": 0.00022725609363390958,
+          "noise_power_fraction": 0.4374070723643352
+        },
+        "filter_input_resistors": {
+          "output_rms_v": 0.00016808062248697267,
+          "noise_power_fraction": 0.23927097650130497
+        },
+        "external_source_resistors": {
+          "output_rms_v": 0.00016808062248697267,
+          "noise_power_fraction": 0.23927097650130497
+        },
+        "filter_feedback_resistors": {
+          "output_rms_v": 7.669260366563318e-05,
+          "noise_power_fraction": 0.04981517845882975
+        },
+        "second_stage_mos": {
+          "output_rms_v": 5.3555538351665274e-05,
+          "noise_power_fraction": 0.024292013005911977
+        },
+        "filter_load_resistors": {
+          "output_rms_v": 3.426482038578062e-05,
+          "noise_power_fraction": 0.009943783168313087
+        }
+      },
+      "mos_flicker_noise_power_fraction": 0.4216483625685513,
+      "device_noise_power_fraction": {
+        "onoise.m.xdut.xa.xin.m0": 0.21870353618216729,
+        "onoise.m.xdut.xa.xip.m0": 0.21870353618216792,
+        "onoise.m.xdut.xa.xtail.m0": 6.058159750562088e-32,
+        "onoise.m.xdut.xb.xin.m0": 0.012146006502956004,
+        "onoise.m.xdut.xb.xip.m0": 0.012146006502955973,
+        "onoise.m.xdut.xb.xtail.m0": 7.878239598303938e-34,
+        "onoise_r.xdut.rfn": 0.024907589229414873,
+        "onoise_r.xdut.rfp": 0.024907589229414873,
+        "onoise_r.xdut.rin": 0.11963548825065247,
+        "onoise_r.xdut.rip": 0.11963548825065248,
+        "onoise_r.xdut.rmn": 0.004507045021965009,
+        "onoise_r.xdut.rmp": 0.004507045021965011,
+        "onoise_r.xdut.ron": 0.00046484656219153425,
+        "onoise_r.xdut.rop": 0.00046484656219153425,
+        "onoise_rn": 0.11963548825065247,
+        "onoise_rp": 0.11963548825065248
+      }
+    }
+  ],
+  "limitations": [
+    "Stationary symmetric nominal filter; noisy1kohm source legs; no switched mixer or receiver qualification.",
+    "Near-zero differential tail contribution depends on symmetry; not immunity to mismatch or common-mode noise.",
+    "RMS contributions add in quadrature; fractions are noise power, not voltage amplitude.",
+    "Flicker fraction overlaps MOS group fractions and must not be added to them."
+  ]
+}

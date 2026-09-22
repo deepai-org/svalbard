@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "reference": false,
+      "detector": false,
+      "max_state_difference": 0.0,
+      "baseline_s": 0.3254734491929412,
+      "dense_s": 0.2835230082273483,
+      "observed_speedup": 1.147961328528068
+    },
+    {
+      "reference": false,
+      "detector": true,
+      "max_state_difference": 0.0,
+      "baseline_s": 0.3675125343725085,
+      "dense_s": 0.2888932628557086,
+      "observed_speedup": 1.272139511803248
+    },
+    {
+      "reference": true,
+      "detector": false,
+      "max_state_difference": 0.0,
+      "baseline_s": 0.416571912355721,
+      "dense_s": 0.33827404864132404,
+      "observed_speedup": 1.2314628155156446
+    },
+    {
+      "reference": true,
+      "detector": true,
+      "max_state_difference": 0.0,
+      "baseline_s": 0.46411885786801577,
+      "dense_s": 0.34288525860756636,
+      "observed_speedup": 1.3535690036742052
+    }
+  ],
+  "limitations": [
+    "Local switched ODE equivalence and rollback; full managed PLL/host quality not yet checked.",
+    "Single wall-time observation per case under concurrent load; speedup is indicative."
+  ]
+}

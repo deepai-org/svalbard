@@ -1,0 +1,205 @@
+{
+  "status": "completed_DC_diagnostic",
+  "rows": [
+    {
+      "load_ua": -100,
+      "target_v": 1.07,
+      "output_v": 1.059785446069562,
+      "error_v": -0.01021455393043813,
+      "supply_power_w": 0.005490003297816137,
+      "device_model_headroom_v": {
+        "xt": 0.0283842709433349,
+        "xip": 1.8503006146962353,
+        "xin": 0.7587441021113098,
+        "xout": 0.7110675770433837,
+        "xload": 2.0035616106314853
+      }
+    },
+    {
+      "load_ua": -100,
+      "target_v": 1.65,
+      "output_v": 1.638464803363067,
+      "error_v": -0.01153519663693281,
+      "supply_power_w": 0.0055023540676271505,
+      "device_model_headroom_v": {
+        "xt": 0.465812990328452,
+        "xip": 1.3817768999723095,
+        "xin": 0.2977025930331434,
+        "xout": 1.2954419387833043,
+        "xload": 1.4252943333757475
+      }
+    },
+    {
+      "load_ua": 0,
+      "target_v": 1.07,
+      "output_v": 1.059623957346098,
+      "error_v": -0.010376042653902129,
+      "supply_power_w": 0.005489935567019745,
+      "device_model_headroom_v": {
+        "xt": 0.028287153085143596,
+        "xip": 1.8504805648342506,
+        "xin": 0.7421747522211365,
+        "xout": 0.7223147184355213,
+        "xload": 2.003722984353242
+      }
+    },
+    {
+      "load_ua": 0,
+      "target_v": 1.65,
+      "output_v": 1.638225068064034,
+      "error_v": -0.011774931935965904,
+      "supply_power_w": 0.005502372469624516,
+      "device_model_headroom_v": {
+        "xt": 0.4656443463995269,
+        "xip": 1.3820122476613634,
+        "xin": 0.2811669508634393,
+        "xout": 1.3066374754104193,
+        "xload": 1.4255338979655592
+      }
+    },
+    {
+      "load_ua": 100,
+      "target_v": 1.07,
+      "output_v": 1.059456929516151,
+      "error_v": -0.01054307048384917,
+      "supply_power_w": 0.005489865191277281,
+      "device_model_headroom_v": {
+        "xt": 0.02818656265173039,
+        "xip": 1.8506663450355514,
+        "xin": 0.725118378529274,
+        "xout": 0.7339841989268453,
+        "xload": 2.0038898932368916
+      }
+    },
+    {
+      "load_ua": 100,
+      "target_v": 1.65,
+      "output_v": 1.637969579351654,
+      "error_v": -0.012030420648345919,
+      "supply_power_w": 0.0055023920005625735,
+      "device_model_headroom_v": {
+        "xt": 0.46546389664454474,
+        "xip": 1.3822613990075125,
+        "xin": 0.26412980070903813,
+        "xout": 1.3182561166266562,
+        "xload": 1.4257892047511174
+      }
+    }
+  ],
+  "sweep_diagnostics": [
+    {
+      "load_ua": -100,
+      "tail_model_saturation_crossing_brackets_v": [
+        [
+          1.02,
+          1.03
+        ]
+      ],
+      "local_secant_gain_095_to_115_v": [
+        0.9986791660226082,
+        0.9997220794673569
+      ],
+      "tracking_error_095_to_115_v": [
+        -0.010312248415856873,
+        -0.010125434010015644
+      ]
+    },
+    {
+      "load_ua": 0,
+      "tail_model_saturation_crossing_brackets_v": [
+        [
+          1.02,
+          1.03
+        ]
+      ],
+      "local_secant_gain_095_to_115_v": [
+        0.9986201442057965,
+        0.9996344884161559
+      ],
+      "tracking_error_095_to_115_v": [
+        -0.010478373684635889,
+        -0.010278168378003327
+      ]
+    },
+    {
+      "load_ua": 100,
+      "tail_model_saturation_crossing_brackets_v": [
+        [
+          1.02,
+          1.03
+        ]
+      ],
+      "local_secant_gain_095_to_115_v": [
+        0.998556027516905,
+        0.9995419788742845
+      ],
+      "tracking_error_095_to_115_v": [
+        -0.010650419130871835,
+        -0.010435877377588776
+      ]
+    }
+  ],
+  "provenance": {
+    "cases": [
+      {
+        "name": "load-100",
+        "load_ua": -100,
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "ff087fb593b9a8df714e4f44f9dc92ab3948777cdde595d517ca2a4e7cec0bba",
+          ".log": "3bf2154aed9d825c8f3884c293215fde522dc76da1bc680083ceb6484072fa71",
+          ".dat": "5c2e9947223871b220282a678f47468cbbf8ec0b77366c017044d42553728072"
+        }
+      },
+      {
+        "name": "load0",
+        "load_ua": 0,
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "ac99154821c2ed3d9056bd389333f137028ea6656a7d89ed7e6a1bb81d8fc1ca",
+          ".log": "3bf2154aed9d825c8f3884c293215fde522dc76da1bc680083ceb6484072fa71",
+          ".dat": "cdc7eb2384c9e4043dcf263230808dca38213fd14dad87a567b2fc24e8df7daa"
+        }
+      },
+      {
+        "name": "load100",
+        "load_ua": 100,
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "771256dbd36896ec33b113ed38e86140d0e4f2c7294ea122306397f5a81f0e15",
+          ".log": "3bf2154aed9d825c8f3884c293215fde522dc76da1bc680083ceb6484072fa71",
+          ".dat": "8c8bc97c8efadebb2dd941df0e13788dd03faa5826de59cc7d8562977bc1ce9c"
+        }
+      }
+    ],
+    "source_sha256_before": {
+      "/screen/adc/sample_driver_headroom.spice": "34840413c8d9ed96e56383230e0016611c78a6e94e7990ccfbc35d2d59abba83",
+      "/screen/adc/receiver_cm_screen.py": "5ef4606d9692acf0a97c465ea402d456952de7dfbabd6b23fea43dd2453f85c7",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f"
+    },
+    "source_sha256_after": {
+      "/screen/adc/sample_driver_headroom.spice": "34840413c8d9ed96e56383230e0016611c78a6e94e7990ccfbc35d2d59abba83",
+      "/screen/adc/receiver_cm_screen.py": "5ef4606d9692acf0a97c465ea402d456952de7dfbabd6b23fea43dd2453f85c7",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f"
+    }
+  },
+  "limitations": [
+    "Ideal input/bias/supply; constant loads are diagnostics, not CDAC current bounds.",
+    "No filter loading dynamics, switched settling, stability, noise or ADC accuracy qualification.",
+    "VDS-VDSAT uses model convention; sign alone is not qualification."
+  ]
+}

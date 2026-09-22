@@ -1,0 +1,71 @@
+* Equal Q/QB input loads and equal two-inverter paths; timing not presumed equal.
+.subckt pt_dac_dual_driver Q QB B BB VDD VSS params: WEIGHT=1
+XP0 Q NP VDD VSS pt_adc_drive_small_inv S=1
+XP1 NP B VDD VSS pt_adc_drive_small_inv S={4*WEIGHT}
+XN0 QB NN VDD VSS pt_adc_drive_small_inv S=1
+XN1 NN BB VDD VSS pt_adc_drive_small_inv S={4*WEIGHT}
+.ends
+* Four binary low bits plus fifteen weight-16 thermometer cells.
+* Requires pfd.spice and code_driver_small.spice. Actual local clock buffer and 19 registers.
+.subckt pt_dac_segmented8_dual OP ON BN VDD VSS CLK RN D0 D1 D2 D3 D4 D5 D6 D7
+XCK0 CLK CKB VDD VSS pt_adc_drive_small_inv S=16
+XCK1 CKB CK VDD VSS pt_adc_drive_small_inv S=64
+XDEC D4 D5 D6 D7 T1 T2 T3 T4 T5 T6 T7 T8 T9 T10 T11 T12 T13 T14 T15 VDD VSS pt_dac_thermometer4
+XRL0 D0 CK RN RL0 RLB0 VDD VSS pt_dff_reset
+XDL0 RL0 RLB0 L0 L0B VDD VSS pt_dac_dual_driver WEIGHT=1
+XCL0 OP ON L0 L0B BN VSS pt_dac_current_bit WGT=1
+XRL1 D1 CK RN RL1 RLB1 VDD VSS pt_dff_reset
+XDL1 RL1 RLB1 L1 L1B VDD VSS pt_dac_dual_driver WEIGHT=2
+XCL1 OP ON L1 L1B BN VSS pt_dac_current_bit WGT=2
+XRL2 D2 CK RN RL2 RLB2 VDD VSS pt_dff_reset
+XDL2 RL2 RLB2 L2 L2B VDD VSS pt_dac_dual_driver WEIGHT=4
+XCL2 OP ON L2 L2B BN VSS pt_dac_current_bit WGT=4
+XRL3 D3 CK RN RL3 RLB3 VDD VSS pt_dff_reset
+XDL3 RL3 RLB3 L3 L3B VDD VSS pt_dac_dual_driver WEIGHT=8
+XCL3 OP ON L3 L3B BN VSS pt_dac_current_bit WGT=8
+XRH1 T1 CK RN RH1 RHB1 VDD VSS pt_dff_reset
+XDH1 RH1 RHB1 H1 H1B VDD VSS pt_dac_dual_driver WEIGHT=16
+XCH1 OP ON H1 H1B BN VSS pt_dac_current_bit WGT=16
+XRH2 T2 CK RN RH2 RHB2 VDD VSS pt_dff_reset
+XDH2 RH2 RHB2 H2 H2B VDD VSS pt_dac_dual_driver WEIGHT=16
+XCH2 OP ON H2 H2B BN VSS pt_dac_current_bit WGT=16
+XRH3 T3 CK RN RH3 RHB3 VDD VSS pt_dff_reset
+XDH3 RH3 RHB3 H3 H3B VDD VSS pt_dac_dual_driver WEIGHT=16
+XCH3 OP ON H3 H3B BN VSS pt_dac_current_bit WGT=16
+XRH4 T4 CK RN RH4 RHB4 VDD VSS pt_dff_reset
+XDH4 RH4 RHB4 H4 H4B VDD VSS pt_dac_dual_driver WEIGHT=16
+XCH4 OP ON H4 H4B BN VSS pt_dac_current_bit WGT=16
+XRH5 T5 CK RN RH5 RHB5 VDD VSS pt_dff_reset
+XDH5 RH5 RHB5 H5 H5B VDD VSS pt_dac_dual_driver WEIGHT=16
+XCH5 OP ON H5 H5B BN VSS pt_dac_current_bit WGT=16
+XRH6 T6 CK RN RH6 RHB6 VDD VSS pt_dff_reset
+XDH6 RH6 RHB6 H6 H6B VDD VSS pt_dac_dual_driver WEIGHT=16
+XCH6 OP ON H6 H6B BN VSS pt_dac_current_bit WGT=16
+XRH7 T7 CK RN RH7 RHB7 VDD VSS pt_dff_reset
+XDH7 RH7 RHB7 H7 H7B VDD VSS pt_dac_dual_driver WEIGHT=16
+XCH7 OP ON H7 H7B BN VSS pt_dac_current_bit WGT=16
+XRH8 T8 CK RN RH8 RHB8 VDD VSS pt_dff_reset
+XDH8 RH8 RHB8 H8 H8B VDD VSS pt_dac_dual_driver WEIGHT=16
+XCH8 OP ON H8 H8B BN VSS pt_dac_current_bit WGT=16
+XRH9 T9 CK RN RH9 RHB9 VDD VSS pt_dff_reset
+XDH9 RH9 RHB9 H9 H9B VDD VSS pt_dac_dual_driver WEIGHT=16
+XCH9 OP ON H9 H9B BN VSS pt_dac_current_bit WGT=16
+XRH10 T10 CK RN RH10 RHB10 VDD VSS pt_dff_reset
+XDH10 RH10 RHB10 H10 H10B VDD VSS pt_dac_dual_driver WEIGHT=16
+XCH10 OP ON H10 H10B BN VSS pt_dac_current_bit WGT=16
+XRH11 T11 CK RN RH11 RHB11 VDD VSS pt_dff_reset
+XDH11 RH11 RHB11 H11 H11B VDD VSS pt_dac_dual_driver WEIGHT=16
+XCH11 OP ON H11 H11B BN VSS pt_dac_current_bit WGT=16
+XRH12 T12 CK RN RH12 RHB12 VDD VSS pt_dff_reset
+XDH12 RH12 RHB12 H12 H12B VDD VSS pt_dac_dual_driver WEIGHT=16
+XCH12 OP ON H12 H12B BN VSS pt_dac_current_bit WGT=16
+XRH13 T13 CK RN RH13 RHB13 VDD VSS pt_dff_reset
+XDH13 RH13 RHB13 H13 H13B VDD VSS pt_dac_dual_driver WEIGHT=16
+XCH13 OP ON H13 H13B BN VSS pt_dac_current_bit WGT=16
+XRH14 T14 CK RN RH14 RHB14 VDD VSS pt_dff_reset
+XDH14 RH14 RHB14 H14 H14B VDD VSS pt_dac_dual_driver WEIGHT=16
+XCH14 OP ON H14 H14B BN VSS pt_dac_current_bit WGT=16
+XRH15 T15 CK RN RH15 RHB15 VDD VSS pt_dff_reset
+XDH15 RH15 RHB15 H15 H15B VDD VSS pt_dac_dual_driver WEIGHT=16
+XCH15 OP ON H15 H15B BN VSS pt_dac_current_bit WGT=16
+.ends

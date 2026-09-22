@@ -1,0 +1,23 @@
+{
+  "status": "structural_boundary_audit_not_behavior",
+  "input_sha256": {
+    "scratch/transceiver-closed-loop-follower-prepared/closed.spice": "4627977b145d56ee6bb4bb6db50ea8b115cd0f85bedbd709cc64bca68c9734d3",
+    "scratch/transceiver-bb-connected-bypass/zero.spice": "a9c1aeb0ec91f831230e4340e70125e4424b1329b53e89967f6db95074e78b52",
+    "projects/programmable_transceiver_platform/analog/rf_rx_candidate_split.spice": "44431da3c11bea2282e6dd5cd388e81e26551454b9bd88973bf205f678fff498"
+  },
+  "changes": [
+    "Old oscillator drives two AC-coupled LO buffers and divide128; new P/N drive quadrature network without divider.",
+    "New path has four LO buffer/final-stage branches, two mixers/filters and448-unit LNA source bypass.",
+    "Old path includes sample switches and5pF held nodes; new filter outputs lack ADC/sample loading."
+  ],
+  "next_integration": [
+    "Use new receiver as baseline; retain every existing LO/RF/baseband load.",
+    "Attach divider first-stage input to P/N; preserve divider/reset/feedback conversion and actual PFD input timing.",
+    "Replace only VCTRL with actual loop/filter/follower connection; retain independent regeneration bias explicitly.",
+    "Keep output ADC/interface loading marked missing; rerun tuning/phase/conversion under new loading."
+  ],
+  "limitations": [
+    "No latest-load oscillator tuning or autonomous behavior inferred from old-loop evidence.",
+    "Both fixtures retain ideal bias/supplies and seeded initial state; RF pad and ADC interface remain incomplete."
+  ]
+}

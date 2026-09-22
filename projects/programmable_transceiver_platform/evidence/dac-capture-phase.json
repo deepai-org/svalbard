@@ -1,0 +1,183 @@
+{
+  "status": "complete_capture_phase_diagnostic",
+  "cases": [
+    {
+      "name": "capture-0.8",
+      "offset_ns": -0.8,
+      "completed": true,
+      "captures": [
+        {
+          "window_ns": [
+            20,
+            25
+          ],
+          "intended_code": 127,
+          "observed_weighted_code_range": [
+            127,
+            127
+          ],
+          "all_register_bits_correct": true,
+          "max_register_rail_error_v": 1.7913757697662902e-05,
+          "mean_output_v": -0.002197339397226244
+        },
+        {
+          "window_ns": [
+            45,
+            50
+          ],
+          "intended_code": 128,
+          "observed_weighted_code_range": [
+            208,
+            208
+          ],
+          "all_register_bits_correct": false,
+          "max_register_rail_error_v": 3.299988727816469,
+          "mean_output_v": 0.3324566581925477
+        },
+        {
+          "window_ns": [
+            70,
+            75
+          ],
+          "intended_code": 127,
+          "observed_weighted_code_range": [
+            95,
+            95
+          ],
+          "all_register_bits_correct": false,
+          "max_register_rail_error_v": 3.2999991354800113,
+          "mean_output_v": -0.13696520592232433
+        }
+      ]
+    },
+    {
+      "name": "capture-0.5",
+      "offset_ns": -0.5,
+      "completed": true,
+      "captures": [
+        {
+          "window_ns": [
+            20,
+            25
+          ],
+          "intended_code": 127,
+          "observed_weighted_code_range": [
+            127,
+            127
+          ],
+          "all_register_bits_correct": true,
+          "max_register_rail_error_v": 1.857025135887369e-05,
+          "mean_output_v": -0.0021985033156800846
+        },
+        {
+          "window_ns": [
+            45,
+            50
+          ],
+          "intended_code": 128,
+          "observed_weighted_code_range": [
+            128,
+            128
+          ],
+          "all_register_bits_correct": true,
+          "max_register_rail_error_v": 1.857015647788174e-05,
+          "mean_output_v": 0.0021270263725315193
+        },
+        {
+          "window_ns": [
+            70,
+            75
+          ],
+          "intended_code": 127,
+          "observed_weighted_code_range": [
+            127,
+            127
+          ],
+          "all_register_bits_correct": true,
+          "max_register_rail_error_v": 1.8505609411967328e-05,
+          "mean_output_v": -0.002089468174191779
+        }
+      ]
+    },
+    {
+      "name": "capture0.5",
+      "offset_ns": 0.5,
+      "completed": true,
+      "captures": [
+        {
+          "window_ns": [
+            20,
+            25
+          ],
+          "intended_code": 127,
+          "observed_weighted_code_range": [
+            127,
+            127
+          ],
+          "all_register_bits_correct": true,
+          "max_register_rail_error_v": 2.1142351557923433e-05,
+          "mean_output_v": -0.002202450189962434
+        },
+        {
+          "window_ns": [
+            45,
+            50
+          ],
+          "intended_code": 128,
+          "observed_weighted_code_range": [
+            128,
+            128
+          ],
+          "all_register_bits_correct": true,
+          "max_register_rail_error_v": 2.114222931881571e-05,
+          "mean_output_v": 0.002129087629874963
+        },
+        {
+          "window_ns": [
+            70,
+            75
+          ],
+          "intended_code": 127,
+          "observed_weighted_code_range": [
+            127,
+            127
+          ],
+          "all_register_bits_correct": true,
+          "max_register_rail_error_v": 2.1058987477839963e-05,
+          "mean_output_v": -0.0020905591503752757
+        }
+      ]
+    }
+  ],
+  "manifest": {
+    "source_sha256_before": {
+      "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+      "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+      "/screen/dac/segmented8.spice": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+      "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/screen/dac/segmented8_registered.spice": "18cfb19ed8b12ee0a84f72f7210f3d7cd35549bcaee386ed1c1781f3dd108e82",
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983"
+    },
+    "baseline_deck_sha256": "9c7c09bb20c2527b419202f42225ce6c9643b3b0cd45f7e079a8c4d66fc70379",
+    "capture_offsets_ns": [
+      -0.8,
+      -0.5,
+      0.5
+    ],
+    "scope": "Nominal code127/128,zero command skew,32-unit output load; only external clock phase changes"
+  },
+  "limitations": [
+    "Fixed nominal code/load/input-skew; signed clock offsets are scenarios, not setup/hold bounds.",
+    "Late capture correctness does not establish absence of metastability or bounded resolution time.",
+    "Output glitches and repeated arbitrary data remain separate quality requirements."
+  ]
+}

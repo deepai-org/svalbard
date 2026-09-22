@@ -1,0 +1,142 @@
+{
+  "status": "terminal",
+  "completed": true,
+  "cases": [
+    {
+      "name": "early",
+      "completed": true,
+      "actual_stop_ns": 800.0000000000001,
+      "reference_minus_feedback_ps": [
+        299.9999999999961,
+        299.99999999991667,
+        300.0000000000755,
+        300.00000000002257,
+        299.99999999991667,
+        300.00000000002257,
+        300.00000000002257,
+        300.00000000002257,
+        300.00000000002257,
+        299.99999999991667,
+        300.00000000002257,
+        300.00000000002257
+      ],
+      "cycle_charge_c": [
+        -9.806194340643242e-15,
+        -9.80619434064829e-15,
+        -9.806194340646681e-15,
+        -9.806194340651437e-15,
+        -9.806194340652412e-15,
+        -9.806194340605153e-15,
+        -9.806194340533198e-15,
+        -9.806194340536235e-15,
+        -9.80619434053921e-15,
+        -9.80619434053146e-15,
+        -9.806194340535622e-15
+      ],
+      "mean_charge_per_cycle_c": -9.806194340592996e-15,
+      "mean_pump_current_a": -1.9152723321470693e-07,
+      "correction_sign_consistent_with_positive_vco_gain": true,
+      "dummy_voltage_range_v": [
+        1.08,
+        1.08
+      ]
+    },
+    {
+      "name": "late",
+      "completed": true,
+      "actual_stop_ns": 800.0000000000001,
+      "reference_minus_feedback_ps": [
+        -300.0000000001019,
+        -299.9999999999696,
+        -299.9999999999696,
+        -300.0000000000755,
+        -299.9999999999696,
+        -300.00000000002257,
+        -300.00000000002257,
+        -300.00000000002257,
+        -300.00000000002257,
+        -300.0000000001284,
+        -300.00000000002257,
+        -300.00000000002257
+      ],
+      "cycle_charge_c": [
+        2.5774527031219565e-15,
+        2.577452703129453e-15,
+        2.5774527031276564e-15,
+        2.577452703124977e-15,
+        2.577452703128282e-15,
+        2.577452703126144e-15,
+        2.577452703215135e-15,
+        2.577452703212995e-15,
+        2.5774527032104485e-15,
+        2.57745270321454e-15,
+        2.5774527032133582e-15
+      ],
+      "mean_charge_per_cycle_c": 2.5774527031659043e-15,
+      "mean_pump_current_a": 5.034087310870906e-08,
+      "correction_sign_consistent_with_positive_vco_gain": true,
+      "dummy_voltage_range_v": [
+        1.08,
+        1.08
+      ]
+    }
+  ],
+  "limitations": [
+    "Ideal clocks and clamped output; follower variant has actual dummy driver but ideal bias currents; original variant has ideal dummy clamp.",
+    "Signed phase scenarios are not process/jitter bounds.",
+    "Measured charge sign is not lock/acquisition proof."
+  ],
+  "provenance": {
+    "baseline_deck_sha256": "cd868dec81568d9dedf28ac78b20d4e7fc588f1de9298abd1910c89340cb8fc2",
+    "source_sha256_before": {
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+    },
+    "source_sha256_after": {
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+    },
+    "cases": [
+      {
+        "name": "early",
+        "delay": "99.7n",
+        "returncode": 0,
+        "timed_out": false,
+        "artifacts_sha256": {
+          ".spice": "65a952b247f742db8c90aa4d75797af5c2d511ba93cc36fcf087d2078be3d6af",
+          ".log": "15340a41b91a5223e9fbb09aa130608f6a7c8eea4a5815366699a1f71224b6fa",
+          ".dat": "37c4000bf7cb59f87b265e80c555e7b83fbbf875403113ceedcada24cc080384"
+        }
+      },
+      {
+        "name": "late",
+        "delay": "100.3n",
+        "returncode": 0,
+        "timed_out": false,
+        "artifacts_sha256": {
+          ".spice": "b6c583958caa6b6487076ab538cb0b32ffd43432744207115b14607dd9dc6526",
+          ".log": "00a244f5dd9231821af4605268bc48131256c1c73cb58ebd00d3070c17341d53",
+          ".dat": "0c3c11dfcbddce0c7908ad5502fed2197f1c71e103e51f2b8bfb4e38cbb3fbbd"
+        }
+      }
+    ]
+  }
+}

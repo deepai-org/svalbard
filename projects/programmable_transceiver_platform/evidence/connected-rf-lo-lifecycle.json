@@ -1,0 +1,82 @@
+{
+  "status": "passed",
+  "controls": {
+    "quadrature_max_error": 5.254039128999684e-10,
+    "mismatch_amplitude_ratios": [
+      1.0,
+      0.894427190999916,
+      0.07974522228289001
+    ]
+  },
+  "cases": [
+    {
+      "mode": 0,
+      "offset_hz": 0,
+      "phase_rad": 0,
+      "adc_sha256": "dfc0f9def2bcfbe2d492a0a04e7533e3fb99b200293c39f59781472e592548eb"
+    },
+    {
+      "mode": 0,
+      "offset_hz": 0,
+      "phase_rad": 0.5,
+      "adc_sha256": "0b2cff087f21821ecfa4addf9e37f2c44b2afdf4343446927d66a39953e524d8"
+    },
+    {
+      "mode": 0,
+      "offset_hz": -1000000.0,
+      "phase_rad": 0,
+      "adc_sha256": "0af23ce6f25db47d38dbb64b3ab0fd4a01bcb936c12c599a06b893d80641d4d0"
+    },
+    {
+      "mode": 0,
+      "offset_hz": 1000000.0,
+      "phase_rad": 0,
+      "adc_sha256": "943afb76eae908b88239631f5cd7b716df6f15f7d56dbd47242fe53c099ee222"
+    },
+    {
+      "mode": 0,
+      "offset_hz": 25000000.0,
+      "phase_rad": 0,
+      "adc_sha256": "d96f2307de728c89d2271a62a761848a5cc4d69f04256c567295b0ff2bd60f75"
+    },
+    {
+      "mode": 1,
+      "offset_hz": 0,
+      "phase_rad": 0,
+      "adc_sha256": "ce32efda921e22dab1803f3d7e0e3be478b0405b3b11bdd2403229a7d6c547c1"
+    },
+    {
+      "mode": 1,
+      "offset_hz": 0,
+      "phase_rad": 0.5,
+      "adc_sha256": "d9867e95c46a175b7244dd35e38fcd46679fb7dd96ba8b96c140537e31432068"
+    },
+    {
+      "mode": 1,
+      "offset_hz": -1000000.0,
+      "phase_rad": 0,
+      "adc_sha256": "2bd8c6a1925b4644792df6c43270bd2f2b43f452ddb01745a909effcef164640"
+    },
+    {
+      "mode": 1,
+      "offset_hz": 1000000.0,
+      "phase_rad": 0,
+      "adc_sha256": "88d8e012a47ee252301abb9534ecaaea1bd2647fedea7980ac1e3d0dab0fc1a9"
+    },
+    {
+      "mode": 1,
+      "offset_hz": 25000000.0,
+      "phase_rad": 0,
+      "adc_sha256": "190cfa399e8806c1cb2a17293dce4fd0b8e3fad92c99ed8ee8404c83df81a0ee"
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Ideal complex mixers omit images, LO leakage, RF compression and blockers.",
+    "Offsets are relative to a common nominal carrier; absolute RF device bandwidth is not qualified.",
+    "Oscillators are constant-frequency and independent of sample PLL; phase noise and supply response remain open.",
+    "No carrier recovery or modem is on chip; attenuation control is not a Wi-Fi compliance threshold.",
+    "Integrated scenarios are finite playback/capture, not sustained simultaneous wired traffic."
+  ]
+}

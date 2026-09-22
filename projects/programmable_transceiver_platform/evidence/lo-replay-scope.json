@@ -1,0 +1,29 @@
+{
+  "completed": true,
+  "scope_use_approved": true,
+  "upstream_sha256": "ef00595a9316e57073f94eb7c8e38770e803060ef63b0d5aa846cdb465462e72",
+  "criteria_origin": "Post-observation diagnostic scope; not predeclared design acceptance limits.",
+  "observations": {
+    "max_edge_displacement_ps": 0.6254318147932544,
+    "max_output_difference_v": 0.0022006027499406056,
+    "max_buffer_input_difference_v": 3.350721102912679e-05,
+    "all_output_rising_counts_equal": true
+  },
+  "guardrails": {
+    "max_edge_displacement_ps": 1.0,
+    "max_output_difference_v": 0.003,
+    "max_buffer_input_difference_v": 5e-05
+  },
+  "rationale": "Sub-picosecond edge disagreement and millivolt output disagreement are small relative to observed multi-cycle gaps exceeding800ps. Identical counts and ordinal matching support reproducing that severe output symptom, not all internal dynamics.",
+  "allowed": [
+    "Locate candidate mechanisms for the reproduced multi-cycle LO output failure.",
+    "Compare candidate circuits against this exact replay baseline as a screening experiment."
+  ],
+  "excluded": [
+    "Direct validation of MID/PRE: parent did not record these nodes.",
+    "All-node identity: LNA gate difference reaches1.431mV.",
+    "Noise, phase noise, startup, autonomous feedback/loading or receiver sensitivity qualification.",
+    "Acceptance of a repair without restoring the autonomous connected simulation."
+  ],
+  "original_unqualified_reproduction_flag": false
+}

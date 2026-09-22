@@ -1,0 +1,43 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "step_s": 2e-09,
+      "steps": 26,
+      "rail_v": 3.0439585787190304,
+      "phase_cycles": 108.50783070941289,
+      "phase_error_cycles": 0.00022407209660002536,
+      "pad_error_v": 0.00016664340019157347
+    },
+    {
+      "step_s": 1e-09,
+      "steps": 50,
+      "rail_v": 3.04395857812215,
+      "phase_cycles": 108.50770109984235,
+      "phase_error_cycles": 9.44625260643761e-05,
+      "pad_error_v": 7.025136779550866e-05
+    },
+    {
+      "step_s": 5e-10,
+      "steps": 101,
+      "rail_v": 3.0439585772941657,
+      "phase_cycles": 108.5076378631529,
+      "phase_error_cycles": 3.122583660797318e-05,
+      "pad_error_v": 2.3222382599130812e-05
+    },
+    {
+      "step_s": 2.5e-10,
+      "steps": 201,
+      "rail_v": 3.0439585773243762,
+      "phase_cycles": 108.50760663731629,
+      "phase_error_cycles": 0.0,
+      "pad_error_v": 0.0
+    }
+  ],
+  "phase_change_vs_uncoupled_cycles": -0.010133714580490505,
+  "limitations": [
+    "50ns local feedback convergence; no acquired-lock, waveform-quality or whole-chip claim.",
+    "Driver pull held per coupling interval; convergence must be rechecked for full operating envelopes.",
+    "Assumed coupling and local rail; shared reference/other domains remain unconnected."
+  ]
+}

@@ -1,0 +1,56 @@
+* Transistor SAR trial sequencer; external update/evaluation clocks and START.
+* KEEP=1 retains trial bit. For this CDAC polarity use comparator QN.
+* Load token into bit7 with START=1 on an UPDATE edge while sampling.
+* Subsequent eight UPDATE edges capture decisions and advance one-hot token.
+* Requires pt_dff_reset and pt_nand2 from pll/pfd.spice.
+.subckt pt_sar8_control KEEP UPDATE START RN D0 D1 D2 D3 D4 D5 D6 D7 DONE VDD VSS
+XT7 START UPDATE RN T7 TB7 VDD VSS pt_dff_reset
+XSEL7 T7 KEEP S7 VDD VSS pt_nand2
+XHOLD7 TB7 Q7 H7 VDD VSS pt_nand2
+XMUX7 S7 H7 NEXT7 VDD VSS pt_nand2
+XQ7 NEXT7 UPDATE RN Q7 QB7 VDD VSS pt_dff_reset
+XTRIAL7 QB7 TB7 D7 VDD VSS pt_nand2
+XT6 T7 UPDATE RN T6 TB6 VDD VSS pt_dff_reset
+XSEL6 T6 KEEP S6 VDD VSS pt_nand2
+XHOLD6 TB6 Q6 H6 VDD VSS pt_nand2
+XMUX6 S6 H6 NEXT6 VDD VSS pt_nand2
+XQ6 NEXT6 UPDATE RN Q6 QB6 VDD VSS pt_dff_reset
+XTRIAL6 QB6 TB6 D6 VDD VSS pt_nand2
+XT5 T6 UPDATE RN T5 TB5 VDD VSS pt_dff_reset
+XSEL5 T5 KEEP S5 VDD VSS pt_nand2
+XHOLD5 TB5 Q5 H5 VDD VSS pt_nand2
+XMUX5 S5 H5 NEXT5 VDD VSS pt_nand2
+XQ5 NEXT5 UPDATE RN Q5 QB5 VDD VSS pt_dff_reset
+XTRIAL5 QB5 TB5 D5 VDD VSS pt_nand2
+XT4 T5 UPDATE RN T4 TB4 VDD VSS pt_dff_reset
+XSEL4 T4 KEEP S4 VDD VSS pt_nand2
+XHOLD4 TB4 Q4 H4 VDD VSS pt_nand2
+XMUX4 S4 H4 NEXT4 VDD VSS pt_nand2
+XQ4 NEXT4 UPDATE RN Q4 QB4 VDD VSS pt_dff_reset
+XTRIAL4 QB4 TB4 D4 VDD VSS pt_nand2
+XT3 T4 UPDATE RN T3 TB3 VDD VSS pt_dff_reset
+XSEL3 T3 KEEP S3 VDD VSS pt_nand2
+XHOLD3 TB3 Q3 H3 VDD VSS pt_nand2
+XMUX3 S3 H3 NEXT3 VDD VSS pt_nand2
+XQ3 NEXT3 UPDATE RN Q3 QB3 VDD VSS pt_dff_reset
+XTRIAL3 QB3 TB3 D3 VDD VSS pt_nand2
+XT2 T3 UPDATE RN T2 TB2 VDD VSS pt_dff_reset
+XSEL2 T2 KEEP S2 VDD VSS pt_nand2
+XHOLD2 TB2 Q2 H2 VDD VSS pt_nand2
+XMUX2 S2 H2 NEXT2 VDD VSS pt_nand2
+XQ2 NEXT2 UPDATE RN Q2 QB2 VDD VSS pt_dff_reset
+XTRIAL2 QB2 TB2 D2 VDD VSS pt_nand2
+XT1 T2 UPDATE RN T1 TB1 VDD VSS pt_dff_reset
+XSEL1 T1 KEEP S1 VDD VSS pt_nand2
+XHOLD1 TB1 Q1 H1 VDD VSS pt_nand2
+XMUX1 S1 H1 NEXT1 VDD VSS pt_nand2
+XQ1 NEXT1 UPDATE RN Q1 QB1 VDD VSS pt_dff_reset
+XTRIAL1 QB1 TB1 D1 VDD VSS pt_nand2
+XT0 T1 UPDATE RN T0 TB0 VDD VSS pt_dff_reset
+XSEL0 T0 KEEP S0 VDD VSS pt_nand2
+XHOLD0 TB0 Q0 H0 VDD VSS pt_nand2
+XMUX0 S0 H0 NEXT0 VDD VSS pt_nand2
+XQ0 NEXT0 UPDATE RN Q0 QB0 VDD VSS pt_dff_reset
+XTRIAL0 QB0 TB0 D0 VDD VSS pt_nand2
+XDONE T0 UPDATE RN DONE DONEB VDD VSS pt_dff_reset
+.ends

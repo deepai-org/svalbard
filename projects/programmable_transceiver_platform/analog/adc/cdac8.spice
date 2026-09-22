@@ -1,0 +1,32 @@
+* Eight-bit differential charge DAC candidate; ideal linear capacitors pending PDK sizing.
+* Code controls are external full-swing true/complement signals; not a SAR controller.
+* Each side totals 256*CU including a one-unit dummy at VLO.
+.subckt pt_cdac_switch A Y G GB VDD VSS
+XN A G Y VSS nfet_03v3 w=2u l=.28u
+XP A GB Y VDD pfet_03v3 w=4u l=.28u
+.ends
+.subckt pt_cdac_bit TOP VH VL B BB VDD VSS params: CVAL=20f
+XH VH BOT B BB VDD VSS pt_cdac_switch
+XL VL BOT BB B VDD VSS pt_cdac_switch
+C TOP BOT {CVAL}
+.ends
+.subckt pt_cdac8 HP HN VH VL B0 B0B B1 B1B B2 B2B B3 B3B B4 B4B B5 B5B B6 B6B B7 B7B VDD VSS params: CU=20f
+XP0 HP VH VL B0 B0B VDD VSS pt_cdac_bit CVAL={CU*1}
+XN0 HN VH VL B0B B0 VDD VSS pt_cdac_bit CVAL={CU*1}
+XP1 HP VH VL B1 B1B VDD VSS pt_cdac_bit CVAL={CU*2}
+XN1 HN VH VL B1B B1 VDD VSS pt_cdac_bit CVAL={CU*2}
+XP2 HP VH VL B2 B2B VDD VSS pt_cdac_bit CVAL={CU*4}
+XN2 HN VH VL B2B B2 VDD VSS pt_cdac_bit CVAL={CU*4}
+XP3 HP VH VL B3 B3B VDD VSS pt_cdac_bit CVAL={CU*8}
+XN3 HN VH VL B3B B3 VDD VSS pt_cdac_bit CVAL={CU*8}
+XP4 HP VH VL B4 B4B VDD VSS pt_cdac_bit CVAL={CU*16}
+XN4 HN VH VL B4B B4 VDD VSS pt_cdac_bit CVAL={CU*16}
+XP5 HP VH VL B5 B5B VDD VSS pt_cdac_bit CVAL={CU*32}
+XN5 HN VH VL B5B B5 VDD VSS pt_cdac_bit CVAL={CU*32}
+XP6 HP VH VL B6 B6B VDD VSS pt_cdac_bit CVAL={CU*64}
+XN6 HN VH VL B6B B6 VDD VSS pt_cdac_bit CVAL={CU*64}
+XP7 HP VH VL B7 B7B VDD VSS pt_cdac_bit CVAL={CU*128}
+XN7 HN VH VL B7B B7 VDD VSS pt_cdac_bit CVAL={CU*128}
+CDP HP VL {CU}
+CDN HN VL {CU}
+.ends

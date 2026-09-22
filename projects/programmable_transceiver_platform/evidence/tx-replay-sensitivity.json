@@ -1,0 +1,152 @@
+{
+  "status": "completed_clock_input_sensitivity",
+  "cases": [
+    {
+      "name": "cm_minus",
+      "complete_cycles": 0,
+      "rf_fundamental_peak_range_v": null,
+      "lo_range_v": [
+        -0.02064609015582063,
+        0.160572599697282
+      ],
+      "buffer_power_w": 0.0048801909992378
+    },
+    {
+      "name": "cm_plus",
+      "complete_cycles": 0,
+      "rf_fundamental_peak_range_v": null,
+      "lo_range_v": [
+        3.080841132458865,
+        3.328358211291094
+      ],
+      "buffer_power_w": 0.005163841272529666
+    },
+    {
+      "name": "swing_low",
+      "complete_cycles": 9,
+      "rf_fundamental_peak_range_v": [
+        0.03383400069675554,
+        0.03386387930347222
+      ],
+      "lo_range_v": [
+        0.2567991263053997,
+        2.988012780571428
+      ],
+      "buffer_power_w": 0.014969030445633372
+    },
+    {
+      "name": "swing_high",
+      "complete_cycles": 9,
+      "rf_fundamental_peak_range_v": [
+        0.05392400203858999,
+        0.05399235855724278
+      ],
+      "lo_range_v": [
+        0.06437533401368102,
+        3.133139542850508
+      ],
+      "buffer_power_w": 0.012716054153403572
+    }
+  ],
+  "provenance": {
+    "cases": [
+      {
+        "name": "cm_minus",
+        "offset_v": -0.15,
+        "differential_scale": 1,
+        "returncode": 0,
+        "timed_out": false,
+        "elapsed_seconds": 24.6349762333557,
+        "deck_sha256_before": "8bf486c6b666b62f9a5d5e7c45d26b637598c9de0693b8a108ead63e4faac084",
+        "artifacts_sha256": {
+          ".spice": "8bf486c6b666b62f9a5d5e7c45d26b637598c9de0693b8a108ead63e4faac084",
+          ".log": "fa621143092b5930bcd64ccc2ec2dfb32d47049b1daff7ed1dd9abb4dc8b60ec",
+          ".dat": "6806e44eb39a21d976418aa8fded9da9bd99faa75402420949bba4fb05c6205d"
+        }
+      },
+      {
+        "name": "cm_plus",
+        "offset_v": 0.15,
+        "differential_scale": 1,
+        "returncode": 0,
+        "timed_out": false,
+        "elapsed_seconds": 24.615350367501378,
+        "deck_sha256_before": "c6e346c235e99f425e32d4436ebda7b0ad097981c95e7e9f6ec83f55d0357571",
+        "artifacts_sha256": {
+          ".spice": "c6e346c235e99f425e32d4436ebda7b0ad097981c95e7e9f6ec83f55d0357571",
+          ".log": "b019875d3f440255d308997003ff99dfcc33b4ea65317a12e60fd00b1e03db05",
+          ".dat": "56e61f68666d26142cc4a5423a5ee8b7bd4ae1814532692d387568a04b1a7815"
+        }
+      },
+      {
+        "name": "swing_low",
+        "offset_v": 0,
+        "differential_scale": 0.75,
+        "returncode": 0,
+        "timed_out": false,
+        "elapsed_seconds": 24.688167003914714,
+        "deck_sha256_before": "a35fee56c14c34427e652a7433205a41c5476de5b373924e4a75a9448e79af76",
+        "artifacts_sha256": {
+          ".spice": "a35fee56c14c34427e652a7433205a41c5476de5b373924e4a75a9448e79af76",
+          ".log": "995f52ee77f8b8928e479c9f2117f563abd619bd85fd782c7765e6485550e238",
+          ".dat": "2bf45a317138bb42f6595c829896d118accdcffb85b57c786cf617236d159a6e"
+        }
+      },
+      {
+        "name": "swing_high",
+        "offset_v": 0,
+        "differential_scale": 1.25,
+        "returncode": 0,
+        "timed_out": false,
+        "elapsed_seconds": 24.894946795888245,
+        "deck_sha256_before": "648b857663ae8da03633562ba9849940b16a1ad68f1a4df8a7f4db28dd009a91",
+        "artifacts_sha256": {
+          ".spice": "648b857663ae8da03633562ba9849940b16a1ad68f1a4df8a7f4db28dd009a91",
+          ".log": "d1f2e15b105b9614d3286c6bd144c86c6102138e61f5a299449e7991b7901bfa",
+          ".dat": "a81092d4f126208732e2d967fa7a82daceb3316433732a57013c07642b8cff48"
+        }
+      }
+    ],
+    "source_sha256_before": {
+      "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+      "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+      "/screen/dac/segmented8.spice": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+      "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/screen/tx/commutator.spice": "89cb009a303ded0120ce8536abe86174045bb73ed27b1ec3272f0cdfdef8ad6b",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+      "/screen/tx/commutator_tg.spice": "3d28ec375da796cf1333da9d085caab5cd74bcda44a835f0e7cf72f06433a304",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275"
+    },
+    "source_sha256_after": {
+      "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+      "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+      "/screen/dac/segmented8.spice": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+      "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/screen/tx/commutator.spice": "89cb009a303ded0120ce8536abe86174045bb73ed27b1ec3272f0cdfdef8ad6b",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+      "/screen/tx/commutator_tg.spice": "3d28ec375da796cf1333da9d085caab5cd74bcda44a835f0e7cf72f06433a304",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275"
+    }
+  },
+  "limitations": [
+    "Stimulus transformations are diagnostic, not realizable circuit changes or uncertainty bounds.",
+    "Differential scaling preserves waveform shape but changes slew too; no amplitude-only attribution.",
+    "No loading feedback, autonomous noise/modulation or physical restorer fix demonstrated."
+  ]
+}

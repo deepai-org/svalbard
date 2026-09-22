@@ -1,0 +1,120 @@
+{
+  "completed": true,
+  "cases": [
+    {
+      "load_ff": 25.0,
+      "q_load_ff": 25.0,
+      "at_2p5ghz": {
+        "i_gain": 0.5601348321905667,
+        "q_gain": 0.6560659673652585,
+        "q_over_i": 1.171264362902635,
+        "q_lead_degrees": 90.00000000000003
+      },
+      "phase_range_deg": [
+        89.99999999999994,
+        90.0000000000001
+      ],
+      "gain_ratio_range": [
+        0.9370114903221078,
+        1.4055172354831622
+      ]
+    },
+    {
+      "load_ff": 25.0,
+      "q_load_ff": 100.0,
+      "at_2p5ghz": {
+        "i_gain": 0.5655517858559899,
+        "q_gain": 0.5298247520326603,
+        "q_over_i": 0.9368280063526722,
+        "q_lead_degrees": 81.83269938307528
+      },
+      "phase_range_deg": [
+        81.23069113423762,
+        82.5245868319972
+      ],
+      "gain_ratio_range": [
+        0.7732020079835183,
+        1.100077658975525
+      ]
+    },
+    {
+      "load_ff": 100.0,
+      "q_load_ff": 25.0,
+      "at_2p5ghz": {
+        "i_gain": 0.4449066599947432,
+        "q_gain": 0.651506721506751,
+        "q_over_i": 1.4643672034813975,
+        "q_lead_degrees": 98.16730061692479
+      },
+      "phase_range_deg": [
+        97.4754131680028,
+        98.76930886576245
+      ],
+      "gain_ratio_range": [
+        1.1355254175883793,
+        1.7957629473904115
+      ]
+    }
+  ],
+  "provenance": {
+    "cases": [
+      {
+        "name": "i25_q25",
+        "load_f": 2.5e-14,
+        "q_load_f": 2.5e-14,
+        "returncode": 0,
+        "deck_sha256_before": "797a8c7d2b1acd1dbd3c6d9a2a1d06f1e7a7b7dc6199f571c7e5e7fac5044588",
+        "artifacts_sha256": {
+          ".spice": "797a8c7d2b1acd1dbd3c6d9a2a1d06f1e7a7b7dc6199f571c7e5e7fac5044588",
+          ".log": "b5fed74aebd9ec7b863da927e502b5f21e4ab304cad0e27c58a9bd2e58b42caa",
+          ".dat": "62df6a8cf7b959a7627fdae3e83f0ef1cda16b7a45a27868b576b0b32dccaed2"
+        }
+      },
+      {
+        "name": "i25_q100",
+        "load_f": 2.5e-14,
+        "q_load_f": 1e-13,
+        "returncode": 0,
+        "deck_sha256_before": "f881ffd0d4add78898e220c5a7ebe3e4235532a0aa2faa335f085cfac7b257d0",
+        "artifacts_sha256": {
+          ".spice": "f881ffd0d4add78898e220c5a7ebe3e4235532a0aa2faa335f085cfac7b257d0",
+          ".log": "b5fed74aebd9ec7b863da927e502b5f21e4ab304cad0e27c58a9bd2e58b42caa",
+          ".dat": "b0b87ddfcddf1c2ee7e07e6ebb60f3895bf3f465ce16519d4159f9926bc937ee"
+        }
+      },
+      {
+        "name": "i100_q25",
+        "load_f": 1e-13,
+        "q_load_f": 2.5e-14,
+        "returncode": 0,
+        "deck_sha256_before": "890ff19e93ba8bc8dbad45d0235b3090d803dfed4f5ec532df66176bf45535ac",
+        "artifacts_sha256": {
+          ".spice": "890ff19e93ba8bc8dbad45d0235b3090d803dfed4f5ec532df66176bf45535ac",
+          ".log": "b5fed74aebd9ec7b863da927e502b5f21e4ab304cad0e27c58a9bd2e58b42caa",
+          ".dat": "199e9000d27bfa805f168f6064855bf28083e44c6bb121f67cf6d0742ea8b628"
+        }
+      }
+    ],
+    "source_sha256_before": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/quadrature/rc_split.spice": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5"
+    },
+    "source_sha256_after": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/quadrature/rc_split.spice": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5"
+    }
+  },
+  "limitations": [
+    "AC only with ideal1.5V common mode and25ohm source per leg; no oscillator or actual buffer/mixer load.",
+    "Single resistor geometry and nominal corner; lumped load scenarios are not process bounds.",
+    "Quadrature phase alone does not establish usable amplitude, edge timing, noise or image rejection."
+  ]
+}

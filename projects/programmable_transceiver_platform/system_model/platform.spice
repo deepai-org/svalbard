@@ -1,0 +1,35 @@
+* Executable envelope-level integration scaffold. ALL blocks assumed behavioral.
+* RF I/Q and host words are normalized analog envelopes, NOT package pins.
+* No noise, quantization, protocol, PLL acquisition, CDR or physical feasibility.
+.subckt pt_env_stage IN OUT VDD VSS params: G=1 RIN=100k ROUT=1k CLOAD=10p IQ=1m
+RIN IN VSS {RIN}
+BGAIN DRIVE VSS V=G*v(IN,VSS)
+RO DRIVE OUT {ROUT}
+CO OUT VSS {CLOAD}
+ILOAD VDD VSS DC {IQ}
+.ends pt_env_stage
+
+.subckt pt_platform_env RXI RXQ TXI TXQ HOST_RXI HOST_RXQ HOST_TXI HOST_TXQ WIRE_RX WIRE_TX HOST_WRX HOST_WTX ENABLE REF BIAS_OK VCORE VRF VWIRE VPLL VSS
+* Bias service has finite settling. Initial DC solution models prebiased use.
+RBIAS VRF BIAS_OK 100k
+CBIAS BIAS_OK VSS 10p
+* Reference service only reports presence: no synthesis or recovery claim.
+RREF REF VSS 1meg
+IPLL VPLL VSS 5m
+* Local programmable gain/routes: enable only in this first scaffold.
+BRXI RXIE VSS V=v(RXI,VSS)*v(ENABLE,VSS)
+BRXQ RXQE VSS V=v(RXQ,VSS)*v(ENABLE,VSS)
+XRXI RXIE BBI VRF VSS pt_env_stage G=10
+XRXQ RXQE BBQ VRF VSS pt_env_stage G=10
+* ADC placeholders are continuous finite-bandwidth unity stages; no bits/ENOB.
+XADCI BBI HOST_RXI VCORE VSS pt_env_stage G=1
+XADCQ BBQ HOST_RXQ VCORE VSS pt_env_stage G=1
+* Host TX represents a normalized sample stream; DACs are not implemented.
+XDACI HOST_TXI DI VCORE VSS pt_env_stage G=1
+XDACQ HOST_TXQ DQ VCORE VSS pt_env_stage G=1
+XTXI DI TXI VRF VSS pt_env_stage G=1
+XTXQ DQ TXQ VRF VSS pt_env_stage G=1
+* Wired normalized baseband path: no bit slicing/serialization or timing recovery.
+XWRX WIRE_RX HOST_WRX VWIRE VSS pt_env_stage G=1
+XWTX HOST_WTX WIRE_TX VWIRE VSS pt_env_stage G=1
+.ends pt_platform_env

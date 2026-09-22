@@ -1,0 +1,63 @@
+{
+  "completed": true,
+  "parent_evidence_sha256": "39ed1711726c814417ebd98a8a55a88ab728ece44675a6637d2e7755e11d3d4a",
+  "cases": [
+    {
+      "case": "baseline",
+      "rail": "h",
+      "window_ns": [
+        60,
+        209.9
+      ],
+      "max_withdrawal_a": 0.09428099911870112,
+      "max_return_a": 0.02319407534733085,
+      "withdrawn_charge_c": 1.0090486212944388e-10,
+      "returned_charge_c": 9.154458099531335e-12,
+      "net_charge_c": 9.175040402991255e-11
+    },
+    {
+      "case": "baseline",
+      "rail": "l",
+      "window_ns": [
+        60,
+        209.9
+      ],
+      "max_withdrawal_a": 0.01800742240605317,
+      "max_return_a": 0.06623498868662875,
+      "withdrawn_charge_c": 6.48166402068035e-12,
+      "returned_charge_c": 9.804962457411007e-11,
+      "net_charge_c": -9.156796055342972e-11
+    },
+    {
+      "case": "hybrid",
+      "rail": "h",
+      "window_ns": [
+        60,
+        209.9
+      ],
+      "max_withdrawal_a": 0.09231909440319733,
+      "max_return_a": 0.023382013193822885,
+      "withdrawn_charge_c": 9.955681699877304e-11,
+      "returned_charge_c": 9.706904458749687e-12,
+      "net_charge_c": 8.984991254002337e-11
+    },
+    {
+      "case": "hybrid",
+      "rail": "l",
+      "window_ns": [
+        60,
+        209.9
+      ],
+      "max_withdrawal_a": 0.018049563908879858,
+      "max_return_a": 0.06519724849555297,
+      "withdrawn_charge_c": 6.590870045541349e-12,
+      "returned_charge_c": 9.625068507746733e-11,
+      "net_charge_c": -8.965981503192597e-11
+    }
+  ],
+  "limitations": [
+    "Demand equals delivery current minus reservoir current using retained probe conventions; includes capacitive switching.",
+    "A brief return-current peak is not equivalent to sustained DC injection; reservoir and time-dependent driver response must be retained.",
+    "No physical current-limit, reverse-load requirement or acceptance threshold inferred from these waveforms."
+  ]
+}

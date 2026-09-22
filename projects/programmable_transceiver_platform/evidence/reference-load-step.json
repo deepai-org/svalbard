@@ -1,0 +1,65 @@
+{
+  "status": "complete_load_step_diagnostic",
+  "cases": [
+    {
+      "name": "high_-2ma",
+      "baseline_v": 2.163147609706833,
+      "baseline_error_mv": 13.147609706833041,
+      "max_deviation_from_preload_mv": 56.175671508138066,
+      "late_max_deviation_mv": 1.111255087948848e-06,
+      "last_outside_1mv_after_release_ns": 41.470000000001896,
+      "peak_supply_ma": 6.581494946900517
+    },
+    {
+      "name": "high_2ma",
+      "baseline_v": 2.163147609706833,
+      "baseline_error_mv": 13.147609706833041,
+      "max_deviation_from_preload_mv": 50.38269512385796,
+      "late_max_deviation_mv": 1.0475127432130193e-06,
+      "last_outside_1mv_after_release_ns": 41.91000000000181,
+      "peak_supply_ma": 8.731849717685229
+    },
+    {
+      "name": "low_-2ma",
+      "baseline_v": 1.1395216261598797,
+      "baseline_error_mv": -10.478373840120181,
+      "max_deviation_from_preload_mv": 20.552279100295223,
+      "late_max_deviation_mv": 3.478572629944665e-05,
+      "last_outside_1mv_after_release_ns": 13.870000000001944,
+      "peak_supply_ma": 6.632556182604504
+    },
+    {
+      "name": "low_2ma",
+      "baseline_v": 1.1395216261598797,
+      "baseline_error_mv": -10.478373840120181,
+      "max_deviation_from_preload_mv": 22.72077809105277,
+      "late_max_deviation_mv": 3.936033077245327e-05,
+      "last_outside_1mv_after_release_ns": 14.770000000002078,
+      "peak_supply_ma": 6.629898575618172
+    }
+  ],
+  "manifest": {
+    "source_sha256_before": {
+      "/screen/reference/buffer_scaled.spice": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+      "/screen/reference/buffer_complement.spice": "b21147fcdd7c13e4c7359fb966319a70badbb6a12c0de0064926b73be10602b4",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/screen/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+      "/screen/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264"
+    },
+    "rails": [
+      "high",
+      "low"
+    ],
+    "loads_ma": [
+      -2,
+      2
+    ],
+    "scope": "10ns signed2mA pulse after unloaded OP; tuned reference and same2048-unit reservoir; not startup or ADC load bound"
+  },
+  "limitations": [
+    "Signed2mA10ns pulses are selected scenarios, not maximum ADC demand or qualified source/sink capacity.",
+    "Unloaded OP initialization, no cold startup or input-history/mismatch variation.",
+    "1mV recovery band is diagnostic; absolute target offset reported separately.",
+    "20ps step, no numerical convergence or full-loop stability qualification."
+  ]
+}

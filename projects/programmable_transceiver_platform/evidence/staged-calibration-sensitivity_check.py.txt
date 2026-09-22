@@ -1,0 +1,43 @@
+"""Characterize calibration blind spots; failed accuracy is retained as evidence."""
+import json
+from trim_calibration import OffsetTrimPlant, Calibration
+
+class SwitchingPlant(OffsetTrimPlant):
+    def __init__(self,*args,switch_offset_v=0.,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.switch_offset=switch_offset_v
+    def above(self,time,polarity=1):
+        self.advance(time)
+        # Input-referred polarity-dependent switch mismatch. This changes sign
+        # with the input, unlike comparator offset, so reversal cannot cancel it.
+        return polarity*(self.offset+self.correction+self.switch_offset)+self.comparator_offset>0
+
+def run(offset,tau,switch_offset,spacing):
+    plant=SwitchingPlant(offset,tau_s=tau,comparator_offset_v=.002,switch_offset_v=switch_offset)
+    forward=Calibration(plant.write,lambda t:plant.above(t,1),spacing/9).run(0.)
+    reverse=Calibration(plant.write,lambda t:not plant.above(t,-1),spacing/9).run(forward['done_at'])
+    limited=forward['range_limited'] or reverse['range_limited']
+    code=2048 if limited else (forward['code']+reverse['code']+1)//2
+    plant.write(reverse['done_at'],code)
+    # Verify an ordinary held-out signal after settling, outside the observation
+    # switch path. Controller never sees this ideal error oracle.
+    residual=plant.apply(plant.time+30*tau,.123)-.123
+    return dict(offset_v=offset,tau_s=tau,switch_offset_v=switch_offset,
+                comparison_spacing_s=spacing,code=code,range_limited=limited,
+                residual_v=residual,within_one_lsb=abs(residual)<=plant.span/4095,
+                duration_s=reverse['done_at'])
+rows=[run(o,t,s,d) for o in (-.2,-.03,0.,.07,.2)
+      for t in (20e-9,100e-9,300e-9,1e-6)
+      for s in (0.,.00025,.002) for d in (225e-9,12e-6)]
+baseline=[r for r in rows if r['tau_s']==20e-9 and r['switch_offset_v']==0 and r['comparison_spacing_s']==225e-9]
+slow=[r for r in rows if r['switch_offset_v']==0 and r['comparison_spacing_s']==12e-6]
+blind=[r for r in rows if r['switch_offset_v']==.002 and r['comparison_spacing_s']==12e-6]
+assert all(r['within_one_lsb'] for r in baseline+slow)
+assert all(not r['within_one_lsb'] and not r['range_limited'] for r in blind)
+report=dict(status='characterized',assumptions='Monotonic 12-bit actuator; static switch mismatch; no noise; independent residual oracle is verification only.',
+            cases=rows,summary=dict(cases=len(rows),accuracy_failures=sum(not r['within_one_lsb'] for r in rows),
+            unflagged_accuracy_failures=sum(not r['within_one_lsb'] and not r['range_limited'] for r in rows),
+            slow_settle_no_switch_max_residual_v=max(abs(r['residual_v']) for r in slow),
+            switch_2mV_slow_max_residual_v=max(abs(r['residual_v']) for r in blind)))
+open('/tmp/svalbard-calibration-pass877/sensitivity-report.json','w').write(json.dumps(report,indent=2)+'\n')
+print(json.dumps(report['summary'],indent=2))

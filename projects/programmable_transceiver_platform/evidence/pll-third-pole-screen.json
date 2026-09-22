@@ -1,0 +1,119 @@
+{
+  "status": "diagnostic_only",
+  "cases": [
+    {
+      "c3_f": 1e-12,
+      "r3_ohm": 318309.8861837907,
+      "nominal_unloaded_pole_hz": 500000.0,
+      "crossover_count": 1,
+      "minimum_sampled_phase_margin_deg": -14.225753837625035,
+      "predicted_noise_rms_rad": 0.05947422058555206,
+      "transimpedance_ratio_at_4mhz": 0.12372794197525246
+    },
+    {
+      "c3_f": 1e-12,
+      "r3_ohm": 159154.94309189534,
+      "nominal_unloaded_pole_hz": 1000000.0,
+      "crossover_count": 1,
+      "minimum_sampled_phase_margin_deg": -0.4727202748450452,
+      "predicted_noise_rms_rad": 0.047088134847148966,
+      "transimpedance_ratio_at_4mhz": 0.24082316056769387
+    },
+    {
+      "c3_f": 1e-12,
+      "r3_ohm": 79577.47154594767,
+      "nominal_unloaded_pole_hz": 2000000.0,
+      "crossover_count": 1,
+      "minimum_sampled_phase_margin_deg": 11.497811420213537,
+      "predicted_noise_rms_rad": 0.04814950089894385,
+      "transimpedance_ratio_at_4mhz": 0.43842303366568586
+    },
+    {
+      "c3_f": 1e-12,
+      "r3_ohm": 39788.735772973836,
+      "nominal_unloaded_pole_hz": 4000000.0,
+      "crossover_count": 1,
+      "minimum_sampled_phase_margin_deg": 19.282544928319084,
+      "predicted_noise_rms_rad": 0.04040507034351212,
+      "transimpedance_ratio_at_4mhz": 0.6769066767309306
+    },
+    {
+      "c3_f": 3e-12,
+      "r3_ohm": 106103.29539459689,
+      "nominal_unloaded_pole_hz": 500000.0,
+      "crossover_count": 1,
+      "minimum_sampled_phase_margin_deg": -12.360978015425502,
+      "predicted_noise_rms_rad": 0.06979387741376206,
+      "transimpedance_ratio_at_4mhz": 0.12308588836118323
+    },
+    {
+      "c3_f": 3e-12,
+      "r3_ohm": 53051.647697298446,
+      "nominal_unloaded_pole_hz": 1000000.0,
+      "crossover_count": 1,
+      "minimum_sampled_phase_margin_deg": 1.0123959161340679,
+      "predicted_noise_rms_rad": 0.05526560233129735,
+      "transimpedance_ratio_at_4mhz": 0.23725469984731712
+    },
+    {
+      "c3_f": 3e-12,
+      "r3_ohm": 26525.823848649223,
+      "nominal_unloaded_pole_hz": 2000000.0,
+      "crossover_count": 1,
+      "minimum_sampled_phase_margin_deg": 11.756956440884068,
+      "predicted_noise_rms_rad": 0.04531712952093886,
+      "transimpedance_ratio_at_4mhz": 0.4208986610877509
+    },
+    {
+      "c3_f": 3e-12,
+      "r3_ohm": 13262.911924324611,
+      "nominal_unloaded_pole_hz": 4000000.0,
+      "crossover_count": 1,
+      "minimum_sampled_phase_margin_deg": 18.53060811955001,
+      "predicted_noise_rms_rad": 0.040512665087873316,
+      "transimpedance_ratio_at_4mhz": 0.6220297089683716
+    },
+    {
+      "c3_f": 1e-11,
+      "r3_ohm": 31830.988618379073,
+      "nominal_unloaded_pole_hz": 500000.0,
+      "crossover_count": 1,
+      "minimum_sampled_phase_margin_deg": -7.678951908590591,
+      "predicted_noise_rms_rad": 0.07113513387663775,
+      "transimpedance_ratio_at_4mhz": 0.12057134205043346
+    },
+    {
+      "c3_f": 1e-11,
+      "r3_ohm": 15915.494309189537,
+      "nominal_unloaded_pole_hz": 1000000.0,
+      "crossover_count": 1,
+      "minimum_sampled_phase_margin_deg": 3.6906824739951674,
+      "predicted_noise_rms_rad": 0.20936650981373914,
+      "transimpedance_ratio_at_4mhz": 0.2236925429829612
+    },
+    {
+      "c3_f": 1e-11,
+      "r3_ohm": 7957.747154594768,
+      "nominal_unloaded_pole_hz": 2000000.0,
+      "crossover_count": 1,
+      "minimum_sampled_phase_margin_deg": 11.573331687259127,
+      "predicted_noise_rms_rad": 0.06580036277529872,
+      "transimpedance_ratio_at_4mhz": 0.36314418736107634
+    },
+    {
+      "c3_f": 1e-11,
+      "r3_ohm": 3978.873577297384,
+      "nominal_unloaded_pole_hz": 4000000.0,
+      "crossover_count": 1,
+      "minimum_sampled_phase_margin_deg": 16.11908546264172,
+      "predicted_noise_rms_rad": 0.05118012245359955,
+      "transimpedance_ratio_at_4mhz": 0.477700321166528
+    }
+  ],
+  "limitations": [
+    "Loaded linear nodal solve; excludes fractional edge dynamics, pump compliance, resistor noise and acquisition.",
+    "Sampled crossover estimates only; neither rigorous stability proof nor usable full-chip result.",
+    "4MHz attenuation is illustrative; actual divider spectrum has multiple lines.",
+    "Added capacitor changes low-frequency integral gain; original PI mapping is not preserved."
+  ]
+}

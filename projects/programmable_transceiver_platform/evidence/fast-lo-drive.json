@@ -1,0 +1,52 @@
+{
+  "status": "passed",
+  "source_sha256": {
+    "system_model/architecture_fast/lo_drive_check.py": "fdb8822fab113b17f1029832b7dcc040da8ad77dfac96ed2bf719c2c10f3d3c4",
+    "system_model/architecture_fast/lo_drive.py": "626f1c7707acb0308a183b4577b38a0667c8bf4edd55899aab72012dd320a26a"
+  },
+  "cases": [
+    {
+      "missing_i_period_cycles": null,
+      "i_missing_fraction": 0,
+      "desired_gain": 0.9999999999999998,
+      "image_gain": 1.301660949257801e-15,
+      "image_relative_rms": 1.3016609492578014e-15,
+      "upper_sideband_coefficient": 0,
+      "image_only_below_10_percent": true
+    },
+    {
+      "missing_i_period_cycles": 16,
+      "i_missing_fraction": 0.0625,
+      "desired_gain": 0.9687499999999999,
+      "image_gain": 0.03124999999999894,
+      "image_relative_rms": 0.03225806451612794,
+      "upper_sideband_coefficient": 0.04092079131495498,
+      "image_only_below_10_percent": true
+    },
+    {
+      "missing_i_period_cycles": 8,
+      "i_missing_fraction": 0.125,
+      "desired_gain": 0.9374999999999991,
+      "image_gain": 0.06249999999999971,
+      "image_relative_rms": 0.06666666666666642,
+      "upper_sideband_coefficient": 0.08291102463915233,
+      "image_only_below_10_percent": true
+    },
+    {
+      "missing_i_period_cycles": 4,
+      "i_missing_fraction": 0.25,
+      "desired_gain": 0.8750000000000002,
+      "image_gain": 0.12499999999999854,
+      "image_relative_rms": 0.14285714285714116,
+      "upper_sideband_coefficient": 0.16264781134433587,
+      "image_only_below_10_percent": false
+    }
+  ],
+  "physical_qualification": false,
+  "limitations": [
+    "Normalized switching effectiveness, not transistor gate voltage or threshold crossings.",
+    "Image-only RMS assumes equal-power uncorrelated complex signal and its conjugate after one complex-gain correction.",
+    "Additional dropout sidebands, DC, loading, noise and receiver filtering are not included in this RMS bound.",
+    "Sensitivity model is not yet connected to full-chip mixing or actual transistor waveforms."
+  ]
+}

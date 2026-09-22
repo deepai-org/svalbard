@@ -1,0 +1,168 @@
+{
+  "scope": "Electrical repair of current placed candidate, with mapped-state next-state/output equivalence; not RTL-to-gates or signoff",
+  "before": {
+    "estimated_signal_parasitics": true,
+    "worst_slacks_ns": {
+      "host_tx_clk": {
+        "asynchronous": -5.3528,
+        "host_tx_clk": -10.6511
+      },
+      "host_rx_clk": {
+        "asynchronous": -4.5825,
+        "host_rx_clk": -11.1665
+      },
+      "wire_rx_clk": {
+        "asynchronous": 2.1496,
+        "wire_rx_clk": -7.2036
+      },
+      "wire_tx_clk": {
+        "asynchronous": 0.7307,
+        "wire_tx_clk": -5.7924
+      },
+      "rf_rx_clk": {
+        "asynchronous": 48.1953,
+        "rf_rx_clk": 40.343
+      },
+      "rf_tx_clk": {
+        "asynchronous": 48.1113,
+        "rf_tx_clk": 38.8671
+      },
+      "host_sclk": {
+        "host_sclk": 35.132
+      },
+      "ref_clk": {
+        "ref_clk": 17.7121
+      }
+    },
+    "electrical_violation_rows": 25,
+    "log_sha256": "82116affa26aa6a876b1b5e615333ea019d947923b34d27b2bb7282e44326685"
+  },
+  "after": {
+    "cells": 26438,
+    "cell_area_um2": 967233.6575997142,
+    "unplaced": 0,
+    "worst_slacks_ns": {
+      "host_tx_clk": {
+        "asynchronous": -5.3528,
+        "host_tx_clk": -10.6511
+      },
+      "host_rx_clk": {
+        "asynchronous": -4.5825,
+        "host_rx_clk": -11.1665
+      },
+      "wire_rx_clk": {
+        "asynchronous": 2.1496,
+        "wire_rx_clk": -7.2036
+      },
+      "wire_tx_clk": {
+        "asynchronous": 0.7307,
+        "wire_tx_clk": -5.7924
+      },
+      "rf_rx_clk": {
+        "asynchronous": 48.1953,
+        "rf_rx_clk": 40.343
+      },
+      "rf_tx_clk": {
+        "asynchronous": 48.1113,
+        "rf_tx_clk": 38.8671
+      },
+      "host_sclk": {
+        "host_sclk": 35.132
+      },
+      "ref_clk": {
+        "ref_clk": 17.7121
+      }
+    },
+    "electrical_violation_rows": 0
+  },
+  "missing_tie_failure": {
+    "affected_registers": [
+      "_44063_",
+      "_44097_",
+      "_44098_",
+      "_44128_",
+      "_44159_",
+      "_44161_"
+    ],
+    "symptom": "Constant-one D inputs became undriven one_ net after export without native ties",
+    "failed_netlist_sha256": "82567350fc2d7a8a2ff34fc1e9dee25d44382603ef070a58b3c2facaeb13a904",
+    "failed_proof_sha256": "549956870bf3087fca7cf825826a56f78f0d43a0a6c4935d8f882af6e66f50c3"
+  },
+  "resized_instances": [
+    {
+      "instance": "_19361_",
+      "before": "gf180mcu_fd_sc_mcu7t5v0__nor4_1",
+      "after": "gf180mcu_fd_sc_mcu7t5v0__nor4_2"
+    },
+    {
+      "instance": "_29960_",
+      "before": "gf180mcu_fd_sc_mcu7t5v0__nor4_1",
+      "after": "gf180mcu_fd_sc_mcu7t5v0__nor4_2"
+    }
+  ],
+  "inserted_instances": [
+    "_44063__1",
+    "_44097__2",
+    "_44098__3",
+    "_44128__4",
+    "_44159__5",
+    "_44161__6",
+    "load_slew7",
+    "load_slew8",
+    "wire9"
+  ],
+  "removed_instances": [],
+  "input_database_sha256": "a7c71ab3a9409dee65f0afbdf97ce36c2a51d52ebc93df8611927a904ab6feb3",
+  "equivalence": {
+    "scope": "Mapped-state correspondence and combinational next-state/output equivalence; not RTL-to-gates or physical verification",
+    "gold_sha256": "13e5f5b91662c8f886a52fe2257fbe0b2dad244998e5a75ff573d7efaffd868a",
+    "gate_sha256": "7223ca1e066c1f4bfb7e8847af6279c0189bb64b8672b9e3aaa61320186f1b3e",
+    "matched_registers": 8299,
+    "register_input_bits_observed": 18881,
+    "top_output_bits": 128,
+    "method": "Corresponding Q values are shared arbitrary inputs; compare every D/CLK/reset/set input and top output. Cell types and port directions must match.",
+    "proof_status": "pass",
+    "negative_control": "Deliberate inversion of status[0] rejected by the same SAT comparison",
+    "library_sha256": "f9dee07cf158324934b0c59144d970a2e8313f43533ede6283ec3c136f82fe53",
+    "artifact_sha256": {
+      "gold-cut.json": "6b84c9b595afe6e3e0bf2b66f3f2169160a936db270f4c485ac5bad971fa045d",
+      "gate-cut.json": "1057a03d24d2fd7c6593b84a0fa66f7066494fe406b1d395c653c5d7737e2304",
+      "gate-negative.json": "52d14336ed00472adfe860c26eb768a3665cb79cac8f01db97b88df528220fb5",
+      "proof.log": "1b6fbbda994c216e9f553e9ce3ebb33fe2bbc3a63e9e606b95b97821680ce592",
+      "negative-proof.log": "64f5feacb7a4ac3f8e23b2fc75aa36fb6a50345ddb098f39f1a374d0ee8bf5a5"
+    },
+    "harness_sha256": {
+      "mapping_equivalence.py": "97bd624f9b787927603cd19d67e2f19e94d967c7863cdfc897c7ac11bbe10eaf",
+      "run_mapping_equivalence.sh": "895d0ddcb7b99c384125ee86f71289ba1490a0e9dab0a4e92b5f15f9149a8491",
+      "report_mapping_equivalence.py": "9ce9440b0d049960fd56c9e1a61d0882205964f87591c00b5993acda4b2fb683"
+    },
+    "limitations": [
+      "Two-state Boolean equivalence under matched arbitrary register state; no X/metastability/glitch/timing proof.",
+      "Compares selected mapped artifacts, not original behavioral RTL against gates.",
+      "All mapped register cell types/parameters and input pins are compared; equivalent initial state correspondence is required.",
+      "No placement, wire parasitics, clock/reset physical distribution or analog qualification."
+    ],
+    "harness_correction": "Negative control initially exposed inconsistent port/net-name wiring; generator now checks these agree and mutates both. Corrected positive and negative checks both rerun."
+  },
+  "artifact_sha256": {
+    "repair.log": "8c0e712a0f2659cf4a0fa2c7b974324b502ad42978520b2e5c2cf32899f59193",
+    "repaired.odb": "ec39a46229be7e0f9eb5cd659bb897288f4b45b51909be37dfeda5dfb458bf78",
+    "repaired.def": "0df2d75f1cdb641246c6a31b94488e38e1da6ee97bcdead87f19f20c09529037",
+    "repaired.v": "9a38cd0a8ebb7395250ea5ff8021cc60bf71be99751462b97f118afab6365b39",
+    "gold.json": "13e5f5b91662c8f886a52fe2257fbe0b2dad244998e5a75ff573d7efaffd868a",
+    "gate.json": "7223ca1e066c1f4bfb7e8847af6279c0189bb64b8672b9e3aaa61320186f1b3e",
+    "gold-read.log": "4fa986bb774c3e0d636cd0bc47509085ab2ae9f8a27c5806a87f462d20e1bc9a",
+    "gate-read.log": "f4ee01a375ae8bbb91e838a37627617c4415c3f1ca81eda7ef435599007b70a8"
+  },
+  "source_sha256": {
+    "current_repair_screen.tcl": "a297e060d61ba37ce8ee2e3802d36815f22ab83a27b09e3f6773a7deba75acbf",
+    "run_current_repair.sh": "266bea3577e04b849e0e8018ffd4240079d9c1a7e64287c8479d081be0afa9c4",
+    "report_current_repair.py": "4b6a238bb8cb5823d3ef5293526177022d2acccec17888aa4e07052751aca56d"
+  },
+  "limitations": [
+    "OpenROAD legalizes/checks placement; independent post-repair geometry checks not yet rerun.",
+    "Equivalence compares mapped artifacts under matching arbitrary register state, not original behavioral RTL.",
+    "Ideal clocks, uniform Metal3 placement estimate, no extracted/coupled routing, PDN or analog macros.",
+    "No external IO, full-chip power, protocol timing or signoff qualification."
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "status": "passed",
+  "controls": {
+    "analytic_max_phase_error_cycles": 1.0219689677848365e-15,
+    "refined_states": [
+      [
+        0.7133333333333318,
+        0.16440426523777965,
+        0.45333333333332615,
+        0.43916889834642875,
+        -0.013871707041650486,
+        0.7496038097675041,
+        -0.015345269553025908,
+        0.4823455413115624,
+        -0.00010613448165462283,
+        0.4804301590832596
+      ],
+      [
+        0.7133333333333429,
+        0.16440426523788657,
+        0.4533333333333681,
+        0.43916889834656453,
+        -0.01387170704158891,
+        0.7496038097675565,
+        -0.015345269553094133,
+        0.4823455413116566,
+        -0.00010613448165428643,
+        0.48043015908326164
+      ],
+      [
+        0.7133333333333427,
+        0.16440426523789362,
+        0.4533333333333692,
+        0.43916889834657624,
+        -0.013871707041557489,
+        0.7496038097675723,
+        -0.015345269553100107,
+        0.48234554131166446,
+        -0.00010613448165409615,
+        0.4804301590832607
+      ]
+    ]
+  },
+  "acquisition": [
+    {
+      "divider": 31.25,
+      "initial_phase_cycles": -3,
+      "initial_offset_fraction": -0.04,
+      "locked": true,
+      "final_phase_cycles": 9.787976340778659e-16,
+      "saturated_s": 2.6229968261718566e-07
+    },
+    {
+      "divider": 31.25,
+      "initial_phase_cycles": 3,
+      "initial_offset_fraction": 0.04,
+      "locked": true,
+      "final_phase_cycles": -9.787976340778659e-16,
+      "saturated_s": 2.6229968261718566e-07
+    },
+    {
+      "divider": 31.25,
+      "outside_tuning_range": true,
+      "locked": false,
+      "final_phase_cycles": -32.35237854661391
+    },
+    {
+      "divider": 60.0,
+      "initial_phase_cycles": -3,
+      "initial_offset_fraction": -0.04,
+      "locked": true,
+      "final_phase_cycles": 2.1129415325111846e-15,
+      "saturated_s": 5.816796874999998e-07
+    },
+    {
+      "divider": 60.0,
+      "initial_phase_cycles": 3,
+      "initial_offset_fraction": 0.04,
+      "locked": true,
+      "final_phase_cycles": -2.1129415325111846e-15,
+      "saturated_s": 5.816796874999998e-07
+    },
+    {
+      "divider": 60.0,
+      "outside_tuning_range": true,
+      "locked": false,
+      "final_phase_cycles": -16.84638465049119
+    },
+    {
+      "divider": 62.5,
+      "initial_phase_cycles": -3,
+      "initial_offset_fraction": -0.04,
+      "locked": true,
+      "final_phase_cycles": 2.0788374209195244e-15,
+      "saturated_s": 5.981718749999992e-07
+    },
+    {
+      "divider": 62.5,
+      "initial_phase_cycles": 3,
+      "initial_offset_fraction": 0.04,
+      "locked": true,
+      "final_phase_cycles": -2.0788374209195244e-15,
+      "saturated_s": 5.981718749999992e-07
+    },
+    {
+      "divider": 62.5,
+      "outside_tuning_range": true,
+      "locked": false,
+      "final_phase_cycles": -16.172529264497506
+    }
+  ],
+  "holdover": {
+    "holdover_phase_drift_cycles": -0.03333333266402595,
+    "reacquired": true,
+    "final_frequency_hz": 2400000000.0,
+    "final_phase_cycles": -1.3769085346537401e-15
+  },
+  "edges": [
+    {
+      "divider": 31.25,
+      "half_cycle_crossings": 64,
+      "maximum_phase_residual_cycles": 1.8189894035458565e-12
+    },
+    {
+      "divider": 60.0,
+      "half_cycle_crossings": 64,
+      "maximum_phase_residual_cycles": 3.637978807091713e-12
+    },
+    {
+      "divider": 62.5,
+      "half_cycle_crossings": 64,
+      "maximum_phase_residual_cycles": 3.637978807091713e-12
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Averaged ideal PFD clips unwrapped phase error to half a reference cycle; no gate-level divider or charge-pump pulses.",
+    "Fractional divider ratios represent average frequency only; fractional spurs and edge patterns are absent.",
+    "Declared VCO gain/range and loop bandwidth are assumptions, not public-PDK validation.",
+    "Deterministic oscillator dynamics only; stochastic phase noise and supply-network coupling remain open.",
+    "Standalone clock block has not yet replaced connected serializer or RF mixer timing."
+  ]
+}

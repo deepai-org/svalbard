@@ -1,0 +1,345 @@
+{
+  "status": "controlled_lo_comparison_not_receiver_qualification",
+  "cases": [
+    {
+      "case": "autonomous",
+      "gains_v_per_v": {
+        "mixer": 0.003208425608298128,
+        "filter": 0.026615147596794543,
+        "held": 0.026412597234974553
+      },
+      "raw_result": {
+        "status": "single_branch_autonomous_lo_filtered_sampled_tone_not_complete_receiver",
+        "cases": [
+          {
+            "amplitude_v": 0,
+            "sample_times_s": [
+              1.24e-07,
+              1.49e-07,
+              1.74e-07,
+              1.99e-07,
+              2.24e-07,
+              2.4899999999999997e-07,
+              2.74e-07,
+              2.99e-07
+            ],
+            "held_samples_v": [
+              -8.36146098248669e-06,
+              6.232617585255618e-06,
+              -5.774356382159951e-06,
+              5.908762347628382e-06,
+              -5.89744127521552e-06,
+              5.703818437341468e-06,
+              -5.851979436366506e-06,
+              5.7097379179138485e-06
+            ],
+            "hold_range_v": [
+              1.068024807388882,
+              1.094170371136335
+            ],
+            "vco_current_a": 0.008408912247150013,
+            "rf_filter_current_a": 0.010920793588769255,
+            "artifacts_sha256": {
+              ".spice": "2dcec29060c2a1de3838a21349af5760bbdbf308a3a8b4d0bc0c9dd8776a86d6",
+              ".dat": "435303854505a2ff784c2a65861998c18387d032c0c68fe06ae617f483f37d1d",
+              ".log": "8a526a18b5adb2e183c17dbb2e8c7980b40eafb1b7b0d71547281fec63fe03b4"
+            }
+          },
+          {
+            "amplitude_v": 0.001,
+            "sample_times_s": [
+              1.24e-07,
+              1.49e-07,
+              1.74e-07,
+              1.99e-07,
+              2.24e-07,
+              2.4899999999999997e-07,
+              2.74e-07,
+              2.99e-07
+            ],
+            "held_samples_v": [
+              -2.1217963335873335e-05,
+              2.9508689105561814e-05,
+              6.852072898522188e-06,
+              -1.7290134457170758e-05,
+              -1.842435732646308e-05,
+              2.8785392487074013e-05,
+              6.6541288186172665e-06,
+              -1.7524575283589524e-05
+            ],
+            "hold_range_v": [
+              1.068013222365647,
+              1.094175946053078
+            ],
+            "vco_current_a": 0.00840891224767477,
+            "rf_filter_current_a": 0.010920793617635993,
+            "artifacts_sha256": {
+              ".spice": "02f71791d135ab116ffb4e5f24f2564c10a68d36b841fa7d0836233b3bc6e0e3",
+              ".dat": "2aa1b599ade9ca531da8b5dac1cc9e27621f4def0995bcff9c80b49e34bf0359",
+              ".log": "b7aae17c35857625ce6cb75007879d98ab372a2432b982bd0fd4a78ee38b0c2a"
+            }
+          }
+        ],
+        "rf_hz": 2510416392.628496,
+        "nominal_if_hz": 10000000.0,
+        "baseline_subtracted_samples_v": [
+          -1.2856502353386645e-05,
+          2.3276071520306196e-05,
+          1.2626429280682139e-05,
+          -2.319889680479914e-05,
+          -1.252691605124756e-05,
+          2.3081574049732545e-05,
+          1.2506108254983772e-05,
+          -2.3234313201503373e-05
+        ],
+        "held_tone_gain": 0.026412597234974553,
+        "fit_residual_rms_v": 1.0303877604205797e-07,
+        "runner_sha256": "5ac3bd7d96d4e6a1fa2c6369045aec9e1810dcb8743d9fb32b874021bcbb6a40",
+        "limitations": [
+          "One branch, no quadrature or ADC; ideal 40MS/s sampling clock and biases.",
+          "Seeded oscillator, no PLL, intrinsic phase noise, mismatch, PEX, package or pad model.",
+          "Eight held samples and paired zero subtraction are a diagnostic, not EVM/SNR/ENOB.",
+          "RF frequency selected using preceding clock measurement; not demonstrated channel tuning or acquisition.",
+          "Added filter loading may pull oscillator and alter frequency; fixed 10MHz fit is diagnostic."
+        ],
+        "four_sample_held_gains": [
+          0.026501426779921528,
+          0.02632400861279284
+        ]
+      }
+    },
+    {
+      "case": "ideal_full",
+      "gains_v_per_v": {
+        "mixer": 0.0048484835387176545,
+        "filter": 0.04027481676314704,
+        "held": 0.039927097337069666
+      },
+      "raw_result": {
+        "status": "ideal_lo_control_not_autonomous_receiver",
+        "lo_low_v": 0,
+        "lo_high_v": 3.3,
+        "lo_edge_s": 2e-11,
+        "cases": [
+          {
+            "amplitude_v": 0,
+            "sample_times_s": [
+              1.24e-07,
+              1.49e-07,
+              1.74e-07,
+              1.99e-07,
+              2.24e-07,
+              2.4899999999999997e-07,
+              2.74e-07,
+              2.99e-07
+            ],
+            "held_samples_v": [
+              0.00015937297731413743,
+              0.00012888733046067366,
+              3.7407963304785133e-06,
+              -1.5127285598335543e-05,
+              5.642360829860297e-06,
+              -5.467628816162229e-06,
+              6.118156348154255e-06,
+              -6.009878754255678e-06
+            ],
+            "hold_range_v": [
+              1.082665446416476,
+              1.111507372232625
+            ],
+            "vco_current_a": 0.008408916044821657,
+            "rf_filter_current_a": 0.01127279761847301,
+            "artifacts_sha256": {
+              ".spice": "1b6c9a8253d485eb33e4e65eb7fa2f498343dc2c3068ce9e1db1c5512956c6b6",
+              ".dat": "3c3e456232b2b77ecdffe9948de78eb791ff0f9bea16d751e57e0b90d7024f48",
+              ".log": "f199552ba5ad598457cd191e91e6e6c66e78f4084d2f1c927952842abdb1a4d6"
+            }
+          },
+          {
+            "amplitude_v": 0.001,
+            "sample_times_s": [
+              1.24e-07,
+              1.49e-07,
+              1.74e-07,
+              1.99e-07,
+              2.24e-07,
+              2.4899999999999997e-07,
+              2.74e-07,
+              2.99e-07
+            ],
+            "held_samples_v": [
+              0.00018295188041277162,
+              9.673676127725643e-05,
+              -2.010332884827283e-05,
+              1.635190392333515e-05,
+              2.9114609592183453e-05,
+              -3.816119347789657e-05,
+              -1.7763350507487227e-05,
+              2.621301860390274e-05
+            ],
+            "hold_range_v": [
+              1.082681617810257,
+              1.111517678781669
+            ],
+            "vco_current_a": 0.008408916043877161,
+            "rf_filter_current_a": 0.011272797628161179,
+            "artifacts_sha256": {
+              ".spice": "f90de5a1036d2f5636a37a74e24f865da5e4853c009f98ab4095a25e0f5b35ef",
+              ".dat": "bca5f21f1fa8ad634d4bcb1f8714a982a9dd5753126ee85895af3ea2b1d4b40b",
+              ".log": "74970254313b99908b721be808d01f5da2575ed1ad5204f08fa2767b43cc14cb"
+            }
+          }
+        ],
+        "rf_hz": 2510416392.628496,
+        "nominal_if_hz": 10000000.0,
+        "baseline_subtracted_samples_v": [
+          2.357890309863419e-05,
+          -3.215056918341723e-05,
+          -2.384412517875134e-05,
+          3.147918952167069e-05,
+          2.3472248762323154e-05,
+          -3.269356466173434e-05,
+          -2.388150685564148e-05,
+          3.222289735815842e-05
+        ],
+        "held_tone_gain": 0.039927097337069666,
+        "fit_residual_rms_v": 2.3918777259795913e-07,
+        "runner_sha256": "9209c8d62b655fe045231c5712ccbd8242c9981f05dab7599b979acac49d9cb1",
+        "limitations": [
+          "Ideal complementary LO at the prior measured frequency; oscillator and buffers remain but lose mixer gate loading. Rail currents not directly comparable.",
+          "One branch, no quadrature or ADC; ideal 40MS/s sampling clock and biases.",
+          "Seeded oscillator, no PLL, intrinsic phase noise, mismatch, PEX, package or pad model.",
+          "Eight held samples and paired zero subtraction are a diagnostic, not EVM/SNR/ENOB.",
+          "RF frequency selected using preceding clock measurement; not demonstrated channel tuning or acquisition.",
+          "Added filter loading may pull oscillator and alter frequency; fixed 10MHz fit is diagnostic."
+        ],
+        "four_sample_held_gains": [
+          0.03967899256491216,
+          0.04017625297456849
+        ]
+      }
+    },
+    {
+      "case": "ideal_limited",
+      "gains_v_per_v": {
+        "mixer": 0.002640816603831144,
+        "filter": 0.02195065889894119,
+        "held": 0.02176711881690646
+      },
+      "raw_result": {
+        "status": "ideal_lo_control_not_autonomous_receiver",
+        "lo_low_v": 0.125,
+        "lo_high_v": 3.099,
+        "lo_edge_s": 2e-11,
+        "cases": [
+          {
+            "amplitude_v": 0,
+            "sample_times_s": [
+              1.24e-07,
+              1.49e-07,
+              1.74e-07,
+              1.99e-07,
+              2.24e-07,
+              2.4899999999999997e-07,
+              2.74e-07,
+              2.99e-07
+            ],
+            "held_samples_v": [
+              0.000135735792695602,
+              0.00011876168013472794,
+              4.67107593738445e-06,
+              -1.3849747945336112e-05,
+              5.145762810642418e-06,
+              -5.094742323574764e-06,
+              5.650398434266279e-06,
+              -5.5689286102137636e-06
+            ],
+            "hold_range_v": [
+              1.075688802969471,
+              1.104077083614505
+            ],
+            "vco_current_a": 0.008408916236803779,
+            "rf_filter_current_a": 0.011062187816053405,
+            "artifacts_sha256": {
+              ".spice": "0eb7c22a66754f5b6bc6a9fe17b67874065d3322bb4594453e57cd9c20a6265a",
+              ".dat": "04d7ea5413458fff1b95073eaa265e27c7558d27c9db702357cadb48d158fa5c",
+              ".log": "00d1452377a99a37c46d1f18a76cc2a386bceae791467f5f06c5411b35ca407c"
+            }
+          },
+          {
+            "amplitude_v": 0.001,
+            "sample_times_s": [
+              1.24e-07,
+              1.49e-07,
+              1.74e-07,
+              1.99e-07,
+              2.24e-07,
+              2.4899999999999997e-07,
+              2.74e-07,
+              2.99e-07
+            ],
+            "held_samples_v": [
+              0.00014777550063421778,
+              0.00010072716575162258,
+              -7.479083234501993e-06,
+              4.249549201862379e-06,
+              1.7379408809502473e-05,
+              -2.315052154034585e-05,
+              -6.479184813918744e-06,
+              1.2515377863795918e-05
+            ],
+            "hold_range_v": [
+              1.075697865877264,
+              1.104080560431548
+            ],
+            "vco_current_a": 0.008408916251588464,
+            "rf_filter_current_a": 0.011062187736403694,
+            "artifacts_sha256": {
+              ".spice": "95028fac3df7ecbfeac5dd1516860b823683000f4a8dd2520f1e231fe9752eb5",
+              ".dat": "75408c9e2c6a78f666a7fc84ce8b7d4e27decdbf7e88239fb7718319c426e46c",
+              ".log": "a73648fdadf9f3c658c5fbb7263bc99e12a1125a92024c0b4454208fafc844cf"
+            }
+          }
+        ],
+        "rf_hz": 2510416392.628496,
+        "nominal_if_hz": 10000000.0,
+        "baseline_subtracted_samples_v": [
+          1.2039707938615781e-05,
+          -1.803451438310536e-05,
+          -1.2150159171886443e-05,
+          1.8099297147198493e-05,
+          1.2233645998860055e-05,
+          -1.8055779216771086e-05,
+          -1.2129583248185024e-05,
+          1.8084306474009682e-05
+        ],
+        "held_tone_gain": 0.02176711881690646,
+        "fit_residual_rms_v": 5.074273421036407e-08,
+        "runner_sha256": "9209c8d62b655fe045231c5712ccbd8242c9981f05dab7599b979acac49d9cb1",
+        "limitations": [
+          "Ideal complementary LO at the prior measured frequency; oscillator and buffers remain but lose mixer gate loading. Rail currents not directly comparable.",
+          "One branch, no quadrature or ADC; ideal 40MS/s sampling clock and biases.",
+          "Seeded oscillator, no PLL, intrinsic phase noise, mismatch, PEX, package or pad model.",
+          "Eight held samples and paired zero subtraction are a diagnostic, not EVM/SNR/ENOB.",
+          "RF frequency selected using preceding clock measurement; not demonstrated channel tuning or acquisition.",
+          "Added filter loading may pull oscillator and alter frequency; fixed 10MHz fit is diagnostic."
+        ],
+        "four_sample_held_gains": [
+          0.02174167660583744,
+          0.021792617632360324
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "Ideal sources disconnect real mixer gate load from oscillator buffers; no equal-power or equal-loading clock comparison.",
+    "Fixed receive topology, input tone and sample timing; ideal LO phase differs from autonomous clock, compare tone magnitudes.",
+    "Limited swing matches extrema only, not actual slew, duty cycle, impedance or overlap.",
+    "No intrinsic noise, ADC, quadrature, process, mismatch, PEX, EVM or blocker qualification."
+  ],
+  "held_gain_ratios_to_autonomous": {
+    "ideal_full": 1.5116687307145897,
+    "ideal_limited": 0.8241188332695761
+  },
+  "interpretation_correction_pass124": "UIC transient leaves LNA gate near 20mV rather than intended 1.5V within 301ns (1Mohm bias/20pF coupling). Raw results retained. Receiver useful-gain and loading conclusions cannot be extrapolated to a correctly biased receiver. Clock results describe this underbiased load only; recheck with corrected bias."
+}

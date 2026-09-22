@@ -1,0 +1,197 @@
+{
+  "status": "terminal",
+  "completed": true,
+  "fit_contract_verified": true,
+  "cases": [
+    {
+      "name": "quiet",
+      "completed": true,
+      "actual_stop_ns": 201.0,
+      "gate_range_v": [
+        1.491886780323451,
+        1.511047416605011
+      ],
+      "frequency_windows": [
+        {
+          "window_ns": [
+            40,
+            120
+          ],
+          "frequency_hz": 2500909386.845639,
+          "crossings": 200
+        },
+        {
+          "window_ns": [
+            120,
+            200
+          ],
+          "frequency_hz": 2500909402.717879,
+          "crossings": 200
+        }
+      ]
+    },
+    {
+      "name": "ripple",
+      "completed": true,
+      "actual_stop_ns": 201.0,
+      "gate_range_v": [
+        1.491329214497342,
+        1.511397532166003
+      ],
+      "frequency_windows": [
+        {
+          "window_ns": [
+            40,
+            120
+          ],
+          "frequency_hz": 2500908744.445651,
+          "crossings": 200
+        },
+        {
+          "window_ns": [
+            120,
+            200
+          ],
+          "frequency_hz": 2500908792.78294,
+          "crossings": 200
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Deterministic50MHz supply modulation; not intrinsic random jitter or closed-loop rejection.",
+    "Seeded/prebiased ring and fixed ideal biases; one amplitude/frequency at nominal process only.",
+    "Fit removes and separately reports mean offset and linear drift; residual is not a noise measurement."
+  ],
+  "synthetic_interpolation_check": {
+    "expected_peak_ps": 0.8,
+    "sample_step_ps": 2,
+    "result": {
+      "offset_ps": 6.521770687467261e-06,
+      "drift_ps_per_ns": -7.366583055565857e-08,
+      "sin_ps": 0.8000025112958955,
+      "cos_ps": 1.5595353551796562e-05,
+      "ripple_peak_ps": 0.8000025114479045,
+      "residual_rms_ps": 8.011640458699745e-05,
+      "crossings": 401
+    },
+    "limitation": "Sinusoidal synthetic carrier validates analysis only; actual circuit timestep convergence remains required."
+  },
+  "provenance": {
+    "cases": [
+      {
+        "name": "quiet",
+        "supply_v": 3.3,
+        "returncode": 0,
+        "timed_out": false,
+        "deck_sha256_before": "0e2135c98b91cdd3c2544f667dccef7a20d33ed3d4bd09eaad4f9dd86c93d15b",
+        "artifacts_sha256": {
+          ".spice": "0e2135c98b91cdd3c2544f667dccef7a20d33ed3d4bd09eaad4f9dd86c93d15b",
+          ".log": "501ad7aa086261db0f2b1d131b13838da7674a346febf12892aed17d605e30ce",
+          ".dat": "28f3cccd549ec8bb381bcb11cc67b0bd4846a8a28b362c8e81faf942ba317d01"
+        }
+      },
+      {
+        "name": "ripple",
+        "supply_v": 3.3,
+        "returncode": 0,
+        "timed_out": false,
+        "deck_sha256_before": "14975e8ac92582c9b47cb4bdf82e37d2aa25e7a1994f1c87e72d62cb642705f6",
+        "artifacts_sha256": {
+          ".spice": "14975e8ac92582c9b47cb4bdf82e37d2aa25e7a1994f1c87e72d62cb642705f6",
+          ".log": "58e81adfc6a690e0a367cc0d76e3ecad7d798cc58eb367db78d9bbeb280b5a51",
+          ".dat": "9258bfa67f35539ccedea6778fcc52671dddf15aee5f947de9471397fcf59922"
+        }
+      }
+    ],
+    "source_sha256_before": {
+      "/baseline/v1.08.spice": "c95856ecd24ccbbb7b2aac9d586a17c69109d78f2b126b0b04800b5cc0aa642d",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+      "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/screen/rf_rx_candidate_split.spice": "44431da3c11bea2282e6dd5cd388e81e26551454b9bd88973bf205f678fff498",
+      "/vco/divider.spice": "1e007f6d40d8678192a090ed1906fd27f6834dfec6983a35f15ffb8f1a3e364b",
+      "/wifi/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+    },
+    "source_sha256_after": {
+      "/baseline/v1.08.spice": "c95856ecd24ccbbb7b2aac9d586a17c69109d78f2b126b0b04800b5cc0aa642d",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+      "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/screen/rf_rx_candidate_split.spice": "44431da3c11bea2282e6dd5cd388e81e26551454b9bd88973bf205f678fff498",
+      "/vco/divider.spice": "1e007f6d40d8678192a090ed1906fd27f6834dfec6983a35f15ffb8f1a3e364b",
+      "/wifi/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+    }
+  },
+  "source_hashes_rechecked_after_matrix": true,
+  "pre_ripple_edge_difference_max_ps": 0.0,
+  "windows": [
+    {
+      "offset_ps": -0.7994070741737375,
+      "drift_ps_per_ns": 0.00026617595691719507,
+      "sin_ps": -0.027059837646877957,
+      "cos_ps": 0.8359029955104367,
+      "ripple_peak_ps": 0.8363408711265978,
+      "residual_rms_ps": 0.0023302541395306985,
+      "crossings": 400,
+      "window_ns": [
+        40,
+        200
+      ],
+      "raw_delay_range_ps": [
+        -1.654090926059829,
+        0.05470323498019178
+      ]
+    },
+    {
+      "offset_ps": -0.8099473142911687,
+      "drift_ps_per_ns": 0.00027426627561615995,
+      "sin_ps": -0.02700391909695691,
+      "cos_ps": 0.8359078178001634,
+      "ripple_peak_ps": 0.8363438835228164,
+      "residual_rms_ps": 0.0023207903215045986,
+      "crossings": 200,
+      "window_ns": [
+        40,
+        120
+      ],
+      "raw_delay_range_ps": [
+        -1.654090926059829,
+        0.034194525104259556
+      ]
+    },
+    {
+      "offset_ps": -0.7888668340410825,
+      "drift_ps_per_ns": 0.0002741411263860034,
+      "sin_ps": -0.027013604591893586,
+      "cos_ps": 0.8359032568657763,
+      "ripple_peak_ps": 0.8363396377500346,
+      "residual_rms_ps": 0.002320950827818237,
+      "crossings": 200,
+      "window_ns": [
+        120,
+        200
+      ],
+      "raw_delay_range_ps": [
+        -1.6332821893649516,
+        0.05470323498019178
+      ]
+    }
+  ]
+}

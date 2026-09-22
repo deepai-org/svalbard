@@ -1,0 +1,75 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "event_aligned": false,
+      "step_s": 4e-09,
+      "steps": 30,
+      "max_midpoint_phase_error": 0.0008633138119193973,
+      "monitor_power": 0.002919154607076953,
+      "voltage_difference_from_finest": 9.964174404917234e-07,
+      "detector_difference_from_finest": 4.725610267680702e-11
+    },
+    {
+      "event_aligned": false,
+      "step_s": 1e-09,
+      "steps": 102,
+      "max_midpoint_phase_error": 7.041564168730474e-05,
+      "monitor_power": 0.0029191546104951156,
+      "voltage_difference_from_finest": 8.962311103214223e-07,
+      "detector_difference_from_finest": 4.280619738880609e-11
+    },
+    {
+      "event_aligned": false,
+      "step_s": 2.5e-10,
+      "steps": 402,
+      "max_midpoint_phase_error": 3.488483594082936e-05,
+      "monitor_power": 0.0029191546054126985,
+      "voltage_difference_from_finest": 5.158066416680127e-07,
+      "detector_difference_from_finest": 2.448646125273457e-11
+    },
+    {
+      "event_aligned": true,
+      "step_s": 4e-09,
+      "steps": 38,
+      "max_midpoint_phase_error": 3.5118537141443085e-05,
+      "monitor_power": 0.0029191545977837376,
+      "voltage_difference_from_finest": 2.0255651659627057e-08,
+      "detector_difference_from_finest": 8.091375876609352e-13
+    },
+    {
+      "event_aligned": true,
+      "step_s": 1e-09,
+      "steps": 109,
+      "max_midpoint_phase_error": 3.5118537141443085e-05,
+      "monitor_power": 0.002919154597735081,
+      "voltage_difference_from_finest": 4.933445936959419e-09,
+      "detector_difference_from_finest": 1.7767986517855383e-13
+    },
+    {
+      "event_aligned": true,
+      "step_s": 2.5e-10,
+      "steps": 409,
+      "max_midpoint_phase_error": 8.912096916446899e-06,
+      "monitor_power": 0.00291915459776736,
+      "voltage_difference_from_finest": 0.0,
+      "detector_difference_from_finest": 0.0
+    }
+  ],
+  "phase_event_times": [
+    1.24867110663058e-10,
+    2.4999198545049212e-08,
+    2.499999999999383e-08,
+    4.9873669568269564e-08,
+    4.999999999999444e-08,
+    7.4749164015064e-08,
+    7.499999999999505e-08,
+    9.999999999999565e-08
+  ],
+  "limitations": [
+    "One100ns noisy oscillator trajectory; finite step convergence is not a global error guarantee.",
+    "Midpoint residual is diagnostic and can miss high-frequency phase structure.",
+    "Clock is forecast without mutation; future external disturbances must split forcing intervals.",
+    "Not yet connected to managed loaded-chip timing or full-chain quality."
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "status": "both_minimal_passive_reference_tests_complete",
+  "cases": [
+    {
+      "kind": "pulse",
+      "returncode": 0,
+      "reference_source_deck_sha256": "515488ab67b94a2f07c77ef8758a85a82221f56c94a728cc1af05c8ec9a94377",
+      "artifacts_sha256": {
+        ".spice": "6934ba3d7b3072d664148890d62887d07d5cbda4287057513ead7ea74e449886",
+        ".log": "ac725e0347467e0e124707ba45a2cf6e4473d6fa8003ff34ac87f78bea003a11"
+      },
+      "final_output_v": 9.67591e-15
+    },
+    {
+      "kind": "pwl",
+      "returncode": 0,
+      "reference_source_deck_sha256": "3b4ee7e01032c74a0b66894ba71ce53bf99bbdba5bfc49fcf3c72352668c9baf",
+      "artifacts_sha256": {
+        ".spice": "7ea674d4fc92a09988fb298b36391a5670875940def2d2c8ab22a8ecfd97d26c",
+        ".log": "4993b1c7140c9bff29311064368695c4efd2f2c4b543bffcd7ea52762b58d249"
+      },
+      "final_output_v": 9.67591e-15
+    }
+  ],
+  "interpretation": "The reference fixture alone completes with a passive load. This does not isolate the active PLL failure or establish a simulator bug."
+}

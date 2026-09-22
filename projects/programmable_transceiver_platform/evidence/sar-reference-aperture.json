@@ -1,0 +1,70 @@
+{
+  "source_evidence_sha256": "be3c69f403b22d13750bb6ec688ed90db125805b7de3aa653b84224c0e5f16ba",
+  "results": [
+    {
+      "variant": "baseline",
+      "waveform_sha256": "279b5dafb15fcb844569b0e80cd7be5aeeaa01b848322c1d2cc087e470a6cbc0",
+      "events": [
+        {
+          "clock_start_ns": 70.5,
+          "first_full_swing_ns": 70.85459534395362,
+          "regeneration_ps": 354.59534395361555,
+          "span_start_v": 1.029669420792825,
+          "span_at_resolution_v": 1.0297161194729345,
+          "span_motion_v": 6.402418092688045e-05,
+          "residue_start_v": 0.39550519282794716,
+          "residue_at_resolution_v": 0.3951803833795306,
+          "residue_motion_v": 0.001320425460913155,
+          "residue_sign_changes": 0
+        },
+        {
+          "clock_start_ns": 75.5,
+          "first_full_swing_ns": 75.95812720291762,
+          "regeneration_ps": 458.12720291762224,
+          "span_start_v": 0.9522300288768324,
+          "span_at_resolution_v": 0.9693378382533412,
+          "span_motion_v": 0.017107809376508798,
+          "residue_start_v": -0.07823780933996892,
+          "residue_at_resolution_v": -0.08660888174001545,
+          "residue_motion_v": 0.00837107240004653,
+          "residue_sign_changes": 0
+        }
+      ]
+    },
+    {
+      "variant": "double",
+      "waveform_sha256": "5576d244f594bf61d628d0474e8b64b337932c4b3ccc75dcab29388c26717a5a",
+      "events": [
+        {
+          "clock_start_ns": 70.5,
+          "first_full_swing_ns": 70.85456654258549,
+          "regeneration_ps": 354.56654258548934,
+          "span_start_v": 1.024816428372954,
+          "span_at_resolution_v": 1.0251332749490245,
+          "span_motion_v": 0.0003168465760705619,
+          "residue_start_v": 0.39565485602081485,
+          "residue_at_resolution_v": 0.39533090636542634,
+          "residue_motion_v": 0.0013212313553010446,
+          "residue_sign_changes": 0
+        },
+        {
+          "clock_start_ns": 75.5,
+          "first_full_swing_ns": 75.94942851345978,
+          "regeneration_ps": 449.4285134597759,
+          "span_start_v": 0.9762858907373879,
+          "span_at_resolution_v": 0.9822172491216556,
+          "span_motion_v": 0.0059313583842677264,
+          "residue_start_v": -0.09009310311372479,
+          "residue_at_resolution_v": -0.0929416265742839,
+          "residue_motion_v": 0.002859749646841825,
+          "residue_sign_changes": 0
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "First crossing of 90% output differential is a timing diagnostic, not an effective sampling instant.",
+    "Residue motion includes reference response, comparator kickback and other coupled effects; no causal decomposition.",
+    "No noise/mismatch or complete-code accuracy qualification."
+  ]
+}

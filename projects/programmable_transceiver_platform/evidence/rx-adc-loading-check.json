@@ -1,0 +1,44 @@
+{
+  "cases": [
+    {
+      "case": "loaded",
+      "status": "terminal",
+      "completed": false,
+      "returncode": 1,
+      "timed_out": false,
+      "errors": [
+        "tran simulation(s) aborted",
+        "Error: incomplete or empty netlist"
+      ],
+      "artifacts_sha256": {
+        ".spice": "f7385bc1309e682e27a0fc5fec69e0698275fc50637a2ee52d1f807ddcf3b090",
+        ".log": "82f633fa05f514931490dfec4e56815d78457764eef82a0a8008cf39efa0ae40",
+        ".dat": "f6bb05d783ae8aecf0855a940ec9124197a174aa6c9982389cc3d773ce097bee"
+      }
+    },
+    {
+      "case": "isolated",
+      "status": "terminal",
+      "completed": false,
+      "returncode": 1,
+      "timed_out": false,
+      "errors": [
+        "tran simulation(s) aborted",
+        "Error: incomplete or empty netlist"
+      ],
+      "artifacts_sha256": {
+        ".spice": "a9fb1d4c0e81030d8dc0dd58304a70c40dd255a72ca15da489070c41fc7d547f",
+        ".log": "6074a74af02c05bd7a9566c4ad2556f56aa1e6bfa67aa8382bf93913ec221779",
+        ".dat": "76db49c6069e570120aabcec6bcbeb2b5866af5383ae8513cbff9fb368eb572a"
+      }
+    }
+  ],
+  "matrix_terminal": true,
+  "completed": false,
+  "limitations": [
+    "Ideal isolation is a loading control, not implemented hardware.",
+    "Bias window stability alone does not establish device headroom, gain, or full startup.",
+    "Seeded RF UIC and ideal clock/bias sources remain.",
+    "No code/ENOB claim; physical bias must be assessed first."
+  ]
+}

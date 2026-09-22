@@ -1,0 +1,48 @@
+"""Initial-acquisition coarse bank, observed through a prescaled edge counter."""
+import sys,math
+sys.path.insert(0,'/home/ubuntu/svalbard/projects/programmable_transceiver_platform/system_model/connected')
+from fractional_rf_chip import ShapedRFClock
+
+class BankClock(ShapedRFClock):
+    def __init__(self,**kwargs):
+        self.base_free=kwargs['free_hz'];self.bank_code=8
+        self.bank_hz=tuple((i-8)*25e6 for i in range(16))
+        self.bank_settled_at=0.;self.bank_writes=[]
+        super().__init__(**kwargs)
+    def write_bank(self,time,code,guard_s):
+        if self.present:raise ValueError('Coarse bank requires charge-pump hold')
+        if type(code) is not int or not 0<=code<16 or not math.isfinite(guard_s) or guard_s<0:
+            raise ValueError('Invalid coarse setting')
+        self.advance(time);phase=self.phase;charge=self.integral
+        self.bank_code=code;self.gains.free_hz=self.base_free+self.bank_hz[code]
+        self.bank_settled_at=time+guard_s;self.good=0;self.locked=False;self.first_lock=None
+        assert self.phase==phase and self.integral==charge
+        self.bank_writes.append(dict(time=time,code=code,phase=phase,charge=charge))
+    def counter(self,time,prescale):
+        self.advance(time)
+        if time<self.bank_settled_at:raise ValueError('Coarse bank settling guard incomplete')
+        return math.floor(self.output_phase_cycles/prescale)
+
+def select_bank(clock,target,guard_s=2e-6,window_s=2e-6,prescale=16,allowed_fine_correction_hz=150e6):
+    # This controller reads only integer counts. It cannot access base_free,
+    # frequency_hz, bank_hz or the true residual frequency.
+    if not all(math.isfinite(x) for x in (target,guard_s,window_s,allowed_fine_correction_hz)) or target<=0 or guard_s<0 or window_s<=0 or allowed_fine_correction_hz<=0 or type(prescale) is not int or prescale<=0:
+        raise ValueError('Invalid counter/search contract')
+    if abs(clock.filter.v)>1e-12 or abs(clock.filter.w)>1e-12:
+        raise ValueError('Initial acquisition requires a centered fine-control filter')
+    old_code=clock.bank_code;clock.set_reference(False,clock.time)
+    low=0;high=15;observations=[]
+    while low<=high:
+        code=(low+high)//2;clock.write_bank(clock.time,code,guard_s)
+        start=clock.time+guard_s;a=clock.counter(start,prescale)
+        end=start+window_s;b=clock.counter(end,prescale)
+        estimate=(b-a)*prescale/window_s;bound=prescale/window_s
+        observations.append(dict(code=code,count=b-a,frequency_hz=estimate,error_bound_hz=bound))
+        if estimate<target:low=code+1
+        else:high=code-1
+    chosen=min(observations,key=lambda r:abs(r['frequency_hz']-target))
+    qualified=abs(chosen['frequency_hz']-target)+chosen['error_bound_hz']<=allowed_fine_correction_hz
+    clock.write_bank(clock.time,chosen['code'] if qualified else old_code,guard_s)
+    clock.advance(clock.time+guard_s)
+    return dict(qualified=qualified,code=clock.bank_code,observations=observations,
+                coarse_complete_s=clock.time,allowed_fine_correction_hz=allowed_fine_correction_hz)

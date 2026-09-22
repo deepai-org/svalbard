@@ -1,0 +1,129 @@
+{
+  "scope": "lumped signal-path sensitivity, ideal supply/return, not package or host qualification",
+  "results": [
+    {
+      "case": "typical_25_10_prbs7_drive8_r1_ld1_lc1",
+      "mos_corner": "typical",
+      "passive_corners": [
+        "res_typical",
+        "diode_typical",
+        "moscap_typical"
+      ],
+      "signal_path_r_ohm_ld_nh_lc_nh": [
+        1,
+        1,
+        1
+      ],
+      "drive_strength_ma": 8,
+      "vdd_v": 3.3,
+      "temperature_c": 25,
+      "external_lumped_capacitance_pf_per_output": 10,
+      "pattern": "prbs7",
+      "sampled_bits": 20,
+      "aperture_ns": 0.4,
+      "thresholds_fraction": [
+        0.3,
+        0.7
+      ],
+      "minimum_aperture_voltage_margin_v": 0.5278428464725637,
+      "threshold_failures": 0,
+      "clock_edge_delay_min_ns": 3.1626603584523236,
+      "clock_edge_delay_max_ns": 3.3604528606920616,
+      "two_pad_dvdd_average_a": 0.009793409044484452,
+      "two_pad_core_vdd_average_a": 2.0135252930347652e-05,
+      "deck_sha256": "0233de78b831e636da38bb8ecb0b6e18cf167c8f6f14a63d8e7c5b4114d7872d",
+      "waveform_sha256": "5d38051809f8c5dc13f78cf83fad391314f90909d9af1e0369f149fc8936b6fc",
+      "log_sha256": "dee269597f759590d1fa7f2759900523066f82d307ad2eff1938ca79f879bedc",
+      "host_threshold_screen": {
+        "sampled_bits": 20,
+        "minimum_margin_v": 0.6654024435810165,
+        "failures": 0,
+        "vil_max_v": 0.8,
+        "vih_min_v": 2.0,
+        "clock_interval_min_ns": 3.0022074977602604,
+        "clock_interval_max_ns": 3.331323457024219,
+        "clock_measurement_reference_v": 1.65,
+        "assumed_aperture_ns": 0.4,
+        "qualified": false
+      },
+      "receiver_voltage_extrema_v": {
+        "data": {
+          "min": -0.0409310632,
+          "max": 3.34180402
+        },
+        "clock": {
+          "min": 0.0518837511,
+          "max": 3.07344614
+        }
+      }
+    },
+    {
+      "case": "typical_25_10_prbs7_drive8_r1_ld2_lc1",
+      "mos_corner": "typical",
+      "passive_corners": [
+        "res_typical",
+        "diode_typical",
+        "moscap_typical"
+      ],
+      "signal_path_r_ohm_ld_nh_lc_nh": [
+        1,
+        2,
+        1
+      ],
+      "drive_strength_ma": 8,
+      "vdd_v": 3.3,
+      "temperature_c": 25,
+      "external_lumped_capacitance_pf_per_output": 10,
+      "pattern": "prbs7",
+      "sampled_bits": 20,
+      "aperture_ns": 0.4,
+      "thresholds_fraction": [
+        0.3,
+        0.7
+      ],
+      "minimum_aperture_voltage_margin_v": 0.5318587929973582,
+      "threshold_failures": 0,
+      "clock_edge_delay_min_ns": 3.1626603584523236,
+      "clock_edge_delay_max_ns": 3.3604528683107193,
+      "two_pad_dvdd_average_a": 0.009796797712743359,
+      "two_pad_core_vdd_average_a": 2.013524644556044e-05,
+      "deck_sha256": "c849dc2980b34d063e3254c0bac655a0b3051adb5e350e65d8de55cb82a036ea",
+      "waveform_sha256": "3b2ad9f7ff177a26f36422d9558f28a5edb3cde30da0ad04227f7bcc0d321520",
+      "log_sha256": "e3cd2a2aaf17e838706ad099cbb977ce6ec356b1f134c3319f11dd1bd19e27d2",
+      "host_threshold_screen": {
+        "sampled_bits": 20,
+        "minimum_margin_v": 0.6743385761222381,
+        "failures": 0,
+        "vil_max_v": 0.8,
+        "vih_min_v": 2.0,
+        "clock_interval_min_ns": 3.0022074901416027,
+        "clock_interval_max_ns": 3.331323457024219,
+        "clock_measurement_reference_v": 1.65,
+        "assumed_aperture_ns": 0.4,
+        "qualified": false
+      },
+      "receiver_voltage_extrema_v": {
+        "data": {
+          "min": -0.042437353,
+          "max": 3.34301896
+        },
+        "clock": {
+          "min": 0.0518836695,
+          "max": 3.07344614
+        }
+      }
+    }
+  ],
+  "input_hashes": {
+    "/foss/pdks/gf180mcuD/libs.ref/gf180mcu_fd_io/spice/gf180mcu_fd_io.spice": "710732fd6a69e165caa2c29e4cdf81b11af41da32705fcd860b7ecfb09630dd1",
+    "/src/verification/screen_signal_path.py": "50dad0a8b9ceb94d6484ed99aa451818810ac4e801c6df945e65b5a5dd87bf94",
+    "/src/verification/run_gpio_transient.py": "7dc404ececc1af597d0e99bbdc3bca13f4d85808c12b5e0931a3d1fb9659a69a",
+    "/src/verification/screen_weak_drive.py": "6935663727c3f1ebe679786f1c4f995698402ce3715ea698cd1f5f8599b13afc"
+  },
+  "assumptions": [
+    "1 ohm per signal, 1 nH clock, 1 or 2 nH data are selected sensitivity points.",
+    "10 pF receiver load; no receiver clamp or transmission line model.",
+    "Ideal power and ground; no rail inductance, coupling, SSO or process variation.",
+    "Assumed +/-0.2 ns aperture; diagnostic clock intervals must remain 1.6 to 4.8 ns."
+  ]
+}

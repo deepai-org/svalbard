@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "bias_a": 0.002,
+      "result": "accepted",
+      "rail_v": 3.0900000004329473
+    },
+    {
+      "bias_a": 0.006,
+      "result": "accepted",
+      "rail_v": 2.690000001257974
+    },
+    {
+      "bias_a": 0.01,
+      "result": "rejected_without_state_change"
+    },
+    {
+      "bias_a": 0.02,
+      "result": "rejected_without_state_change"
+    }
+  ],
+  "pll_transaction_rollback": true,
+  "limitations": [
+    "Assumed100ohm rail and2.5V floor; not GF180 operating-current limits.",
+    "Numerical domain rejection, not implemented brownout detection or managed fault/drain behavior."
+  ]
+}

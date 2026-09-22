@@ -1,0 +1,200 @@
+{
+  "completed": true,
+  "cases": [
+    {
+      "feedback_ohm": 20000,
+      "points": [
+        {
+          "hz": 1000000.0,
+          "ideal_gain": 6.681771995754111,
+          "switched_gain": 7.163728468161675,
+          "relative_gain_change": 0.07213003866546486
+        },
+        {
+          "hz": 5000000.0,
+          "ideal_gain": 6.873399627473534,
+          "switched_gain": 7.352083510845477,
+          "relative_gain_change": 0.06964295826167377
+        },
+        {
+          "hz": 10000000.0,
+          "ideal_gain": 7.14537533368543,
+          "switched_gain": 7.527455135832795,
+          "relative_gain_change": 0.0534723208095349
+        },
+        {
+          "hz": 20000000.0,
+          "ideal_gain": 4.580307231844294,
+          "switched_gain": 4.5621298094745395,
+          "relative_gain_change": -0.003968603294420392
+        }
+      ]
+    },
+    {
+      "feedback_ohm": 40000,
+      "points": [
+        {
+          "hz": 1000000.0,
+          "ideal_gain": 10.357834995225891,
+          "switched_gain": 10.357901705939588,
+          "relative_gain_change": 6.440604018775886e-06
+        },
+        {
+          "hz": 5000000.0,
+          "ideal_gain": 10.331108828642854,
+          "switched_gain": 10.332753505975472,
+          "relative_gain_change": 0.00015919659350194237
+        },
+        {
+          "hz": 10000000.0,
+          "ideal_gain": 9.291112075533144,
+          "switched_gain": 9.295803062478278,
+          "relative_gain_change": 0.0005048897168602462
+        },
+        {
+          "hz": 20000000.0,
+          "ideal_gain": 4.395463288355177,
+          "switched_gain": 4.397229341217887,
+          "relative_gain_change": 0.00040178992448614004
+        }
+      ]
+    }
+  ],
+  "provenance": [
+    {
+      "cases": [
+        {
+          "name": "cm0.9_fb20000",
+          "common_mode_v": 0.9,
+          "source_ohm_per_leg": 1000,
+          "feedback_ohm": 20000,
+          "returncode": 0,
+          "deck_sha256_before": "91fee3d9fd42cfc901a5c6fb00911faec7eaf01fa28b5487b294af46111d6f73",
+          "artifacts_sha256": {
+            ".spice": "91fee3d9fd42cfc901a5c6fb00911faec7eaf01fa28b5487b294af46111d6f73",
+            ".log": "a8dd772b7e723603d026322889ddf059ce89c303f953178676e2b02097ae45d2",
+            ".dat": "3d18f0430702e26fff4793d03846a0acc9e6bd51f25c59b386a128f002202287",
+            "-op.dat": "3f5f0afcd659602fd1d81a0b7dbe595cd180fcd1ae794256c06b33106592fa5e"
+          }
+        },
+        {
+          "name": "cm0.9_fb40000",
+          "common_mode_v": 0.9,
+          "source_ohm_per_leg": 1000,
+          "feedback_ohm": 40000,
+          "returncode": 0,
+          "deck_sha256_before": "d5de57b94028ed8232ed869d0f6c03a80d63fe26a215e356e8535bc83f2bc590",
+          "artifacts_sha256": {
+            ".spice": "d5de57b94028ed8232ed869d0f6c03a80d63fe26a215e356e8535bc83f2bc590",
+            ".log": "a8dd772b7e723603d026322889ddf059ce89c303f953178676e2b02097ae45d2",
+            ".dat": "83d6c879f37a5f693b07cfaa04db51f1a481e53fb4cdfecbdc6e3604fce39ef5",
+            "-op.dat": "b6bb282d4f36ea34f04ecdbbf65a1f810d72c9ac78c016b381a0955f24e812da"
+          }
+        },
+        {
+          "name": "cm1.177_fb20000",
+          "common_mode_v": 1.177,
+          "source_ohm_per_leg": 1000,
+          "feedback_ohm": 20000,
+          "returncode": 0,
+          "deck_sha256_before": "53d6695781d73cf83443f9c3c8e531b4db526b388d07008f192586c0a3a1d37e",
+          "artifacts_sha256": {
+            ".spice": "53d6695781d73cf83443f9c3c8e531b4db526b388d07008f192586c0a3a1d37e",
+            ".log": "a8dd772b7e723603d026322889ddf059ce89c303f953178676e2b02097ae45d2",
+            ".dat": "bd5c215b255ec13eff50a2afbfa99e77f872719ae7fcb790cc3aaf028efd69dd",
+            "-op.dat": "085438037ab4dccb04bcec377bbf3d3209a4090aa95fd40cac9591d38571b772"
+          }
+        },
+        {
+          "name": "cm1.177_fb40000",
+          "common_mode_v": 1.177,
+          "source_ohm_per_leg": 1000,
+          "feedback_ohm": 40000,
+          "returncode": 0,
+          "deck_sha256_before": "2d57676186bdbe7dfac6971e90acbf9b038b3f0c8b5fd0e058e771e375b0c6fb",
+          "artifacts_sha256": {
+            ".spice": "2d57676186bdbe7dfac6971e90acbf9b038b3f0c8b5fd0e058e771e375b0c6fb",
+            ".log": "a8dd772b7e723603d026322889ddf059ce89c303f953178676e2b02097ae45d2",
+            ".dat": "92b505cd9e3c9ec4760fa5373e4154a7ba1a7e2784958ddea4b645baf3c5cd13",
+            "-op.dat": "32b3f4c865f311f9cea57025b21cac6a64f4be199c739e72b604d366e48ccc39"
+          }
+        }
+      ],
+      "source_sha256_before": {
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+        "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+        "/screen/baseband/feedback_gain_screen.py": "3df4de6d15baad5e7ec69da051ce834b79ca0a13fdf06e7d7cfc9befd48e27eb"
+      },
+      "source_sha256_after": {
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+        "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+        "/screen/baseband/feedback_gain_screen.py": "3df4de6d15baad5e7ec69da051ce834b79ca0a13fdf06e7d7cfc9befd48e27eb"
+      }
+    },
+    {
+      "cases": [
+        {
+          "name": "cm1.177_fb20000",
+          "common_mode_v": 1.177,
+          "source_ohm_per_leg": 1000,
+          "feedback_ohm": 20000,
+          "returncode": 0,
+          "deck_sha256_before": "bea8b7d608cdc21ef456db802ec11b600e8aca43f46b3654fb6f497c8780dc9b",
+          "artifacts_sha256": {
+            ".spice": "bea8b7d608cdc21ef456db802ec11b600e8aca43f46b3654fb6f497c8780dc9b",
+            ".log": "a8dd772b7e723603d026322889ddf059ce89c303f953178676e2b02097ae45d2",
+            ".dat": "d38ee54166caaec883aeb92b6fba00b51dc60accf8ab1f5bcbb2e377f8181595",
+            "-op.dat": "117164ded1663addddad2541fe05be1675d6ac1bbbf87016efa2be26876793e4"
+          }
+        },
+        {
+          "name": "cm1.177_fb40000",
+          "common_mode_v": 1.177,
+          "source_ohm_per_leg": 1000,
+          "feedback_ohm": 40000,
+          "returncode": 0,
+          "deck_sha256_before": "e24cf023bb33824e3aa1d45f8e13f7ff16527fdb4abf6b4b081ed498d3e1538a",
+          "artifacts_sha256": {
+            ".spice": "e24cf023bb33824e3aa1d45f8e13f7ff16527fdb4abf6b4b081ed498d3e1538a",
+            ".log": "a8dd772b7e723603d026322889ddf059ce89c303f953178676e2b02097ae45d2",
+            ".dat": "4bd241b803fe3504929bb0a672b6d0e12a8e08cbc858c9595df2e70d276a76ce",
+            "-op.dat": "1860c84390861e7edbde5cc0d4b8cb6e03207f29a6750dd9aad072d06a289246"
+          }
+        }
+      ],
+      "source_sha256_before": {
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/screen/bb_filter_programmable.spice": "a7850ff8e2ac2bb86b82672f5ba697596b702956650015c43350a7687bb837e5",
+        "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+        "/screen/baseband/programmed_feedback_screen.py": "6c8029ccfc869f15010ea4d66c70337f572b9b962e7a8d7e06b0add64db9c1e6"
+      },
+      "source_sha256_after": {
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+        "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+        "/screen/bb_filter_programmable.spice": "a7850ff8e2ac2bb86b82672f5ba697596b702956650015c43350a7687bb837e5",
+        "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+        "/screen/baseband/programmed_feedback_screen.py": "6c8029ccfc869f15010ea4d66c70337f572b9b962e7a8d7e06b0add64db9c1e6"
+      }
+    }
+  ],
+  "cell_sha256": "a7850ff8e2ac2bb86b82672f5ba697596b702956650015c43350a7687bb837e5",
+  "limitations": [
+    "Only nominal static complementary selects; mode transitions, control skew, charge injection, noise and mismatch unqualified.",
+    "Lumped resistors/capacitors and ideal select/bias voltages; physical resistor bank and control logic still missing.",
+    "Only two modest gain settings; does not close the roughly31\u201335x additional gain requirement.",
+    "No adoption into connected receiver or stability qualification."
+  ]
+}

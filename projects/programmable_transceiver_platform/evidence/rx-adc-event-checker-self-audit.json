@@ -1,0 +1,80 @@
+{
+  "mode": "failed_baseline_self_check",
+  "cases": [
+    {
+      "case": "early",
+      "status": "terminal",
+      "completed": false,
+      "returncode": 1,
+      "timed_out": false,
+      "errors": [
+        "doAnalyses: TRAN:  Timestep too small; time = 4.785e-07, timestep = 2.5e-24: trouble with node \"v.xadc.vrefl_res#branch\"",
+        "tran simulation(s) aborted",
+        "Error: incomplete or empty netlist"
+      ],
+      "artifacts_sha256": {
+        ".spice": "f7385bc1309e682e27a0fc5fec69e0698275fc50637a2ee52d1f807ddcf3b090",
+        ".log": "82f633fa05f514931490dfec4e56815d78457764eef82a0a8008cf39efa0ae40",
+        ".dat": "f6bb05d783ae8aecf0855a940ec9124197a174aa6c9982389cc3d773ce097bee"
+      },
+      "actual_stop_ns": 478.49999999999994,
+      "rows": 239332,
+      "repeated_times": 0,
+      "pre_event_comparison_window_ns": [
+        350,
+        478.30000000000007
+      ],
+      "pre_event_max_errors_v": {
+        "v(fip)": 0.0,
+        "v(fin)": 0.0,
+        "v(fqp)": 0.0,
+        "v(fqn)": 0.0,
+        "v(xadc.vh)": 0.0,
+        "v(xadc.vl)": 0.0,
+        "v(xadc.hp)": 0.0,
+        "v(xadc.hn)": 0.0
+      }
+    },
+    {
+      "case": "late",
+      "status": "terminal",
+      "completed": false,
+      "returncode": 1,
+      "timed_out": false,
+      "errors": [
+        "doAnalyses: TRAN:  Timestep too small; time = 4.785e-07, timestep = 2.5e-24: trouble with node \"v.xadc.vrefl_res#branch\"",
+        "tran simulation(s) aborted",
+        "Error: incomplete or empty netlist"
+      ],
+      "artifacts_sha256": {
+        ".spice": "f7385bc1309e682e27a0fc5fec69e0698275fc50637a2ee52d1f807ddcf3b090",
+        ".log": "82f633fa05f514931490dfec4e56815d78457764eef82a0a8008cf39efa0ae40",
+        ".dat": "f6bb05d783ae8aecf0855a940ec9124197a174aa6c9982389cc3d773ce097bee"
+      },
+      "actual_stop_ns": 478.49999999999994,
+      "rows": 239332,
+      "repeated_times": 0,
+      "pre_event_comparison_window_ns": [
+        350,
+        478.30000000000007
+      ],
+      "pre_event_max_errors_v": {
+        "v(fip)": 0.0,
+        "v(fin)": 0.0,
+        "v(fqp)": 0.0,
+        "v(fqn)": 0.0,
+        "v(xadc.vh)": 0.0,
+        "v(xadc.vl)": 0.0,
+        "v(xadc.hp)": 0.0,
+        "v(xadc.hn)": 0.0
+      }
+    }
+  ],
+  "matrix_terminal": true,
+  "completed": false,
+  "limitations": [
+    "Successful simulation would establish event sensitivity, not a physical fix.",
+    "Pre-event interpolation is diagnostic without a new acceptance threshold.",
+    "No ADC quality/noise claim from this inherited aliasing stimulus."
+  ]
+}

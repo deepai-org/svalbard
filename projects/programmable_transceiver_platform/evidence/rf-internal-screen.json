@@ -1,0 +1,69 @@
+{
+  "status": "internal_observation_no_circuit_change",
+  "original_waveforms_bitwise_identical": true,
+  "node_statistics_200_to_301ns": {
+    "gate": {
+      "min_v": 0.0002415416299964657,
+      "max_v": 0.03983869992690586,
+      "mean_v": 0.019737751123544468
+    },
+    "drain": {
+      "min_v": 2.183883994259471,
+      "max_v": 2.895003591386688,
+      "mean_v": 2.3581233210181445
+    },
+    "source": {
+      "min_v": -0.004344736359887371,
+      "max_v": 0.001812628437312977,
+      "mean_v": 2.823764353310588e-07
+    },
+    "ip": {
+      "min_v": 1.382986641916308,
+      "max_v": 1.70630978114886,
+      "mean_v": 1.5490296472807534
+    },
+    "inn": {
+      "min_v": 1.382988114181461,
+      "max_v": 1.706309580616715,
+      "mean_v": 1.5487539523043452
+    },
+    "lo": {
+      "min_v": 0.0,
+      "max_v": 3.3,
+      "mean_v": 1.6522305305670633
+    },
+    "lob": {
+      "min_v": 0.0,
+      "max_v": 3.3,
+      "mean_v": 1.6477694694329368
+    },
+    "filter_gp": {
+      "min_v": 1.473556054087743,
+      "max_v": 1.573902731781961,
+      "mean_v": 1.5280249282150715
+    },
+    "filter_gn": {
+      "min_v": 1.473561933706008,
+      "max_v": 1.57390088987266,
+      "mean_v": 1.5280544222042503
+    }
+  },
+  "artifacts_sha256": {
+    ".spice": "8c8d75e6e5a7682ceb358325c0522296ad4be81b5e65f7d42c3782afe16fe8db",
+    ".dat": "f882cbba50dfab3b42e4ae80b2a58ce37a7114e24299cd52b9dd67f20352ea7e",
+    ".log": "96b5f14d6d8c8bb96e3fa4bf5637fa7eb1dc8e904ad1fbb02c465fbc1d3cdec3"
+  },
+  "reference_wave_sha256": "bca5f21f1fa8ad634d4bcb1f8714a982a9dd5753126ee85895af3ea2b1d4b40b",
+  "limitations": [
+    "One nominal ideal-LO signal run; no autonomous clock or noise.",
+    "Statistics include RF/LO ripple, not only wanted signal.",
+    "No ADC, process, mismatch, extraction or package validation.",
+    "Internal RF phasors from one signal run with nuisance-tone fit, not paired subtraction; nearby spurs can bias them."
+  ],
+  "independent_late_uniform_fft_if_gain": 0.004883628497426067,
+  "single_run_rf_tone_fit_peak_v": {
+    "gate": 0.0009886764864653166,
+    "drain": 1.2569276358089578e-05,
+    "source": 1.6356839986863788e-05
+  }
+}

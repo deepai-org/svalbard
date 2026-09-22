@@ -1,0 +1,65 @@
+{
+  "status": "complete_clock_representation_diagnostic",
+  "cases": [
+    {
+      "name": "mixed",
+      "returncode": 1,
+      "artifacts_sha256": {
+        ".spice": "43b890e68b535dc783027e930585e5c08b09575c9ac12a6f5e4594b3d14ee45f",
+        ".log": "f713dbe8ef8f121283d481d732acca9b4e14817baa91da0caa7120143ae91344",
+        ".dat": "2eeec224d2540a13cab7286104de29e12ec0b36cad5ce422ad351d5eb7c1ce3c"
+      },
+      "completed_requested_horizon": false,
+      "actual_stop_ns": 637.6999999999998,
+      "failure_time_ns": 637.7,
+      "max_reference_feedback_difference_v": 2.510880392492254e-12,
+      "control_range_v": [
+        1.075470442002646,
+        1.104957411401008
+      ],
+      "last_saved_state": {
+        "reference_v": 3.494105005330539e-12,
+        "feedback_v": 5.757616605706062e-12,
+        "up_v": -0.0009753240643109231,
+        "dn_v": -0.000963815503116532,
+        "control_v": 1.087823682596795,
+        "pump_current_a": 4.725052282644728e-08
+      }
+    },
+    {
+      "name": "matched",
+      "returncode": 0,
+      "artifacts_sha256": {
+        ".spice": "d7195c805d9cb769acffbd7360e40495c26284f023b41417c61eac6b0e222ae8",
+        ".log": "1b49c5a40b40508d62708b690906e43d3d9614eb4aabe9c18da59b1d37445625",
+        ".dat": "e248bb9da6c75203761763c9aca0aa739a8fe6b080d6f1a8329c81dfcb69248d"
+      },
+      "completed_requested_horizon": true,
+      "actual_stop_ns": 800.0000000000001,
+      "failure_time_ns": null,
+      "max_reference_feedback_difference_v": 0.0,
+      "control_range_v": [
+        1.075470442002646,
+        1.106220656178091
+      ]
+    }
+  ],
+  "source_sha256_before": {
+    "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+    "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+    "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+    "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+  },
+  "limitations": [
+    "Reduced actual PFD/pump/filter only; excludes oscillator/divider and RF load.",
+    "Identical ideal clocks are a diagnostic scenario, not realistic independent clocks or jitter.",
+    "No simulator-bug attribution, metastability, autonomous lock/noise or silicon qualification."
+  ]
+}

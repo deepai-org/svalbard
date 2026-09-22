@@ -1,0 +1,148 @@
+{
+  "source_sha256": "876615c9650860763eaaf849fb7acf150c366990a0776a2a8f73809344aaf238",
+  "results": [
+    {
+      "variant": "baseline",
+      "waveform_sha256": "597a245ab08e1ac319d0460e406295592b48516041c5aa9975c530285e4c537c",
+      "frames": [
+        {
+          "hold_ns": 70,
+          "control_nodes": {
+            "high": {
+              "min_v": 1.570495167230253,
+              "max_v": 1.711032344284216,
+              "min_time_ns": 79.02250000000046,
+              "max_time_ns": 96.64750000000119,
+              "fraction_time_within_100mv_of_supply": 0.0,
+              "at_bit1_v": 1.701592731769776
+            },
+            "low": {
+              "min_v": 1.044365794340469,
+              "max_v": 1.190823781213945,
+              "min_time_ns": 82.64750000000005,
+              "max_time_ns": 75.69750000000012,
+              "fraction_time_within_100mv_of_supply": 0.0,
+              "at_bit1_v": 1.09016562810309
+            }
+          }
+        },
+        {
+          "hold_ns": 120,
+          "control_nodes": {
+            "high": {
+              "min_v": 1.596194485957108,
+              "max_v": 1.740645979877855,
+              "min_time_ns": 133.66250000000002,
+              "max_time_ns": 123.7275000000002,
+              "fraction_time_within_100mv_of_supply": 0.0,
+              "at_bit1_v": 1.70415069071356
+            },
+            "low": {
+              "min_v": 1.05124917098167,
+              "max_v": 1.14401722271932,
+              "min_time_ns": 137.317500000002,
+              "max_time_ns": 130.8375000000003,
+              "fraction_time_within_100mv_of_supply": 0.0,
+              "at_bit1_v": 1.072762337632032
+            }
+          }
+        },
+        {
+          "hold_ns": 170,
+          "control_nodes": {
+            "high": {
+              "min_v": 1.582635382476774,
+              "max_v": 1.711307397871267,
+              "min_time_ns": 179.457500000001,
+              "max_time_ns": 197.42250000000212,
+              "fraction_time_within_100mv_of_supply": 0.0,
+              "at_bit1_v": 1.70434671928225
+            },
+            "low": {
+              "min_v": 1.046047529054703,
+              "max_v": 1.193450473424174,
+              "min_time_ns": 182.35250000000198,
+              "max_time_ns": 175.5325,
+              "fraction_time_within_100mv_of_supply": 0.0,
+              "at_bit1_v": 1.089529709367571
+            }
+          }
+        }
+      ]
+    },
+    {
+      "variant": "double",
+      "waveform_sha256": "1f8017d98eaf20e27fe0ab5694ebfa745960e61e6eb68774affcf7416d5a6447",
+      "frames": [
+        {
+          "hold_ns": 70,
+          "control_nodes": {
+            "high": {
+              "min_v": 1.590752440565277,
+              "max_v": 1.730975829986587,
+              "min_time_ns": 83.71750000000016,
+              "max_time_ns": 103.1225000000006,
+              "fraction_time_within_100mv_of_supply": 0.0,
+              "at_bit1_v": 1.72597053741692
+            },
+            "low": {
+              "min_v": 1.054643007463787,
+              "max_v": 1.162809069554142,
+              "min_time_ns": 83.33250000000083,
+              "max_time_ns": 76.59750000000113,
+              "fraction_time_within_100mv_of_supply": 0.0,
+              "at_bit1_v": 1.062235043091434
+            }
+          }
+        },
+        {
+          "hold_ns": 120,
+          "control_nodes": {
+            "high": {
+              "min_v": 1.605719613900163,
+              "max_v": 1.693339149114422,
+              "min_time_ns": 120.0005,
+              "max_time_ns": 128.4375,
+              "fraction_time_within_100mv_of_supply": 0.0,
+              "at_bit1_v": 1.688443878428842
+            },
+            "low": {
+              "min_v": 1.010359288187045,
+              "max_v": 1.170123810199682,
+              "min_time_ns": 120.0005,
+              "max_time_ns": 129.7525000000013,
+              "fraction_time_within_100mv_of_supply": 0.0,
+              "at_bit1_v": 1.080920295688783
+            }
+          }
+        },
+        {
+          "hold_ns": 170,
+          "control_nodes": {
+            "high": {
+              "min_v": 1.606554983257618,
+              "max_v": 1.722971502477345,
+              "min_time_ns": 183.7375000000001,
+              "max_time_ns": 203.1325000000006,
+              "fraction_time_within_100mv_of_supply": 0.0,
+              "at_bit1_v": 1.717785775411971
+            },
+            "low": {
+              "min_v": 1.045660787295394,
+              "max_v": 1.182793276996947,
+              "min_time_ns": 183.3425000000008,
+              "max_time_ns": 176.8575000000014,
+              "fraction_time_within_100mv_of_supply": 0.0,
+              "at_bit1_v": 1.056590323248919
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "100mV proximity is an explicit diagnostic marker, not device compliance or saturation criterion.",
+    "Saved X nodes omit tail/mirror internal nodes, bias voltages, device currents and VDSAT; internal headroom remains unproven.",
+    "No rail contact does not rule out current limiting, insufficient loop gain or large-signal slew."
+  ]
+}

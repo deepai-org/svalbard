@@ -1,0 +1,44 @@
+{
+  "training_to_validation_gain_shift_relative_rms": 0.10816948619346824,
+  "within_validation_residual_relative_rms": 0.03325249776951882,
+  "decomposition_scope": "Orthogonal diagnostic using a held-out oracle gain; not a permitted calibration or qualification substitution.",
+  "trace": "projects/programmable_transceiver_platform/evidence/connected-tx-filter-quarter-250k-mode1-traces.npz",
+  "trace_sha256": "389be8af4571939b1415a8b2585881e6e8fc1e48ebe72b72f3afeceeb6ad2a28",
+  "observations": 2176,
+  "phase_span_rad": 0.2200903456120309,
+  "phase_rms_about_mean_rad": 0.046421682482781314,
+  "training_fitted_frequency_offset_hz": 14385.076584639633,
+  "heldout_phase_rms_after_training_linear_fit_rad": 0.24808826286280036,
+  "dominant_phase_bins_hz": [
+    143612.13235262627,
+    287224.26470525254,
+    574448.5294105051,
+    430836.3970578788,
+    718060.6617631314
+  ],
+  "uncorrected_gate": {
+    "calibration_samples": 544,
+    "validation_samples": 1632,
+    "gain_real": 0.6385261944660517,
+    "gain_imag": 0.7135450798408403,
+    "gain_magnitude": 0.9575292590748177,
+    "raw_relative_rms": 0.8946514929793972,
+    "corrected_relative_rms": 0.11316521705573095,
+    "gain_in_screen_range": true,
+    "screen_budget": 0.1,
+    "screen_pass": false
+  },
+  "frequency_fit_diagnostic": {
+    "calibration_samples": 544,
+    "validation_samples": 1632,
+    "gain_real": 0.701065872187185,
+    "gain_imag": 0.6527070162092802,
+    "gain_magnitude": 0.9578725417060455,
+    "raw_relative_rms": 0.5407042558039789,
+    "corrected_relative_rms": 0.2503537029861036,
+    "gain_in_screen_range": true,
+    "screen_budget": 0.1,
+    "screen_pass": false
+  },
+  "scope": "Offline diagnostics only. Fitted frequency correction does not change the qualification gate; FFT bins are finite-record features, not identified device noise sources."
+}

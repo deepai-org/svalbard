@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "rate_hz": 1250000000.0,
+      "sign": -1,
+      "analytic_phase_error_cycles": 7.0456192963197495e-12,
+      "deadline_change_s": 3.193863427311712e-14,
+      "words": 6
+    },
+    {
+      "rate_hz": 1250000000.0,
+      "sign": 1,
+      "analytic_phase_error_cycles": 2.303383178636764e-13,
+      "deadline_change_s": -3.193353852290644e-14,
+      "words": 6
+    },
+    {
+      "rate_hz": 2500000000.0,
+      "sign": -1,
+      "analytic_phase_error_cycles": 3.868317124955389e-12,
+      "deadline_change_s": 7.992325063484879e-15,
+      "words": 6
+    },
+    {
+      "rate_hz": 2500000000.0,
+      "sign": 1,
+      "analytic_phase_error_cycles": 1.0683598103411462e-11,
+      "deadline_change_s": -7.991684706576754e-15,
+      "words": 6
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Assumed linear frequency sensitivity and one exponentially recovering rail.",
+    "Pump current, filter leakage and reference timing are not supply-sensitive in this model.",
+    "Full-chip pulse-loop substitution and stochastic noise remain open."
+  ]
+}

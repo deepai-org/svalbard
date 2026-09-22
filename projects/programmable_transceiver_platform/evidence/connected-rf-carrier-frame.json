@@ -1,0 +1,31 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "new_carrier_hz": 2437000000.0,
+      "phase_delta_rad": 0.7,
+      "voltage_equivalence_error": 1.5515838457795457e-17,
+      "detector_equivalence_error": 0.0,
+      "untransformed_source_error": 0.09700055567911643
+    },
+    {
+      "new_carrier_hz": 2387000000.0,
+      "phase_delta_rad": -1.2,
+      "voltage_equivalence_error": 1.5515838457795457e-17,
+      "detector_equivalence_error": 0.0,
+      "untransformed_source_error": 0.13721594317475488
+    },
+    {
+      "new_carrier_hz": 2412000000.0,
+      "phase_delta_rad": 2.1,
+      "voltage_equivalence_error": 1.3877787807814457e-17,
+      "detector_equivalence_error": 0.0,
+      "untransformed_source_error": 0.17332060193959867
+    }
+  ],
+  "limitations": [
+    "Coordinate transform only; physical oscillator retuning and phase-noise interpolation remain separate.",
+    "Caller owns frame phase and must transform every source term consistently.",
+    "Managed LoadedTxChip remains fixed2412MHz until oscillator trajectory integration is verified."
+  ]
+}

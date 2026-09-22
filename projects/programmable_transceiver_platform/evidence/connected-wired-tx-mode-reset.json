@@ -1,0 +1,118 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "initial_mode": 0,
+      "new_mode": 1,
+      "cut_ui": 0.75,
+      "retained_state": 0.9910167089788737,
+      "retained_bandwidth_hz": 1250000000.0,
+      "accounting": {
+        "completed_words": 2,
+        "partial_words_discarded": 1,
+        "serializing": 0,
+        "accepted": 3,
+        "consumed": 3,
+        "discarded": 0,
+        "pending": 0,
+        "underflows": 0
+      }
+    },
+    {
+      "initial_mode": 0,
+      "new_mode": 1,
+      "cut_ui": 3.75,
+      "retained_state": -0.9820669069236166,
+      "retained_bandwidth_hz": 1250000000.0,
+      "accounting": {
+        "completed_words": 2,
+        "partial_words_discarded": 1,
+        "serializing": 0,
+        "accepted": 3,
+        "consumed": 3,
+        "discarded": 0,
+        "pending": 0,
+        "underflows": 0
+      }
+    },
+    {
+      "initial_mode": 0,
+      "new_mode": 1,
+      "cut_ui": 8.75,
+      "retained_state": 0.9820669069819611,
+      "retained_bandwidth_hz": 1250000000.0,
+      "accounting": {
+        "completed_words": 2,
+        "partial_words_discarded": 1,
+        "serializing": 0,
+        "accepted": 3,
+        "consumed": 3,
+        "discarded": 0,
+        "pending": 0,
+        "underflows": 0
+      }
+    },
+    {
+      "initial_mode": 1,
+      "new_mode": 0,
+      "cut_ui": 0.75,
+      "retained_state": 0.9910167089788439,
+      "retained_bandwidth_hz": 2500000000.0,
+      "accounting": {
+        "completed_words": 2,
+        "partial_words_discarded": 1,
+        "serializing": 0,
+        "accepted": 3,
+        "consumed": 3,
+        "discarded": 0,
+        "pending": 0,
+        "underflows": 0
+      }
+    },
+    {
+      "initial_mode": 1,
+      "new_mode": 0,
+      "cut_ui": 3.75,
+      "retained_state": -0.9820669069236166,
+      "retained_bandwidth_hz": 2500000000.0,
+      "accounting": {
+        "completed_words": 2,
+        "partial_words_discarded": 1,
+        "serializing": 0,
+        "accepted": 3,
+        "consumed": 3,
+        "discarded": 0,
+        "pending": 0,
+        "underflows": 0
+      }
+    },
+    {
+      "initial_mode": 1,
+      "new_mode": 0,
+      "cut_ui": 8.75,
+      "retained_state": 0.9820669069820209,
+      "retained_bandwidth_hz": 2500000000.0,
+      "accounting": {
+        "completed_words": 2,
+        "partial_words_discarded": 1,
+        "serializing": 0,
+        "accepted": 3,
+        "consumed": 3,
+        "discarded": 0,
+        "pending": 0,
+        "underflows": 0
+      }
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "contract": [
+    "Digital mode reset clears serializer history but retains external channel voltage and absolute bandwidth.",
+    "Muted drive decays continuously during reacquisition; subsequent bits use the new line rate against the same channel."
+  ],
+  "limitations": [
+    "Single-pole external fixture only; termination switches, common mode and package reflections are unmodeled.",
+    "Successful selected words at both rates do not qualify eye margin or channel loss tolerance.",
+    "Autonomous TX clock acquisition, jitter and supply response remain open."
+  ]
+}

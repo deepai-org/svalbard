@@ -1,0 +1,154 @@
+{
+  "status": "early_phase_catchup_and_conditional_linear_analysis_not_lock",
+  "cycles": [
+    {
+      "reference_edge_ns": 100.05000000000007,
+      "feedback_edge_ns": 131.8897956926774,
+      "feedback_lag_ns": 31.83979569267735,
+      "pump_charge_fc": 672.2261264951181
+    },
+    {
+      "reference_edge_ns": 151.25000000000006,
+      "feedback_edge_ns": 179.53786720273155,
+      "feedback_lag_ns": 28.287867202731476,
+      "pump_charge_fc": 600.4233962351549
+    },
+    {
+      "reference_edge_ns": 202.45000000000005,
+      "feedback_edge_ns": 227.097584537154,
+      "feedback_lag_ns": 24.64758453715396,
+      "pump_charge_fc": 526.6916158388668
+    },
+    {
+      "reference_edge_ns": 253.65,
+      "feedback_edge_ns": 274.7023842147143,
+      "feedback_lag_ns": 21.052384214714287,
+      "pump_charge_fc": 453.724204650252
+    }
+  ],
+  "conditional_linear_cases": [
+    {
+      "kv_hz_per_v": 500778222.88866794,
+      "poles_rad_per_s": [
+        [
+          -51266637.46393738,
+          0.0
+        ],
+        [
+          -366681.26803131227,
+          1179750.9249396299
+        ],
+        [
+          -366681.26803131227,
+          -1179750.9249396299
+        ]
+      ],
+      "all_poles_left_half_plane": true,
+      "four_time_constant_envelope_s": 1.0908656505623367e-05
+    },
+    {
+      "kv_hz_per_v": 992912647.9328445,
+      "poles_rad_per_s": [
+        [
+          -50525482.27220466,
+          0.0
+        ],
+        [
+          -737258.8638976752,
+          1589663.6976361945
+        ],
+        [
+          -737258.8638976752,
+          -1589663.6976361945
+        ]
+      ],
+      "all_poles_left_half_plane": true,
+      "four_time_constant_envelope_s": 5.425502758763933e-06
+    },
+    {
+      "kv_hz_per_v": 1697522820.4234452,
+      "poles_rad_per_s": [
+        [
+          -49425359.418501735,
+          0.0
+        ],
+        [
+          -1287320.290749115,
+          1925938.9140356767
+        ],
+        [
+          -1287320.290749115,
+          -1925938.9140356767
+        ]
+      ],
+      "all_poles_left_half_plane": true,
+      "four_time_constant_envelope_s": 3.107229823645775e-06
+    },
+    {
+      "kv_hz_per_v": 2072979960.4159336,
+      "poles_rad_per_s": [
+        [
+          -48818485.62634546,
+          0.0
+        ],
+        [
+          -1590757.1868272768,
+          2025916.3999992632
+        ],
+        [
+          -1590757.1868272768,
+          -2025916.3999992632
+        ]
+      ],
+      "all_poles_left_half_plane": true,
+      "four_time_constant_envelope_s": 2.514525807661378e-06
+    },
+    {
+      "kv_hz_per_v": 2308921484.969769,
+      "poles_rad_per_s": [
+        [
+          -48429109.061440125,
+          0.0
+        ],
+        [
+          -1785445.4692799281,
+          2064366.435366364
+        ],
+        [
+          -1785445.4692799281,
+          -2064366.435366364
+        ]
+      ],
+      "all_poles_left_half_plane": true,
+      "four_time_constant_envelope_s": 2.240337254104548e-06
+    },
+    {
+      "kv_hz_per_v": 2636913932.517419,
+      "poles_rad_per_s": [
+        [
+          -47876857.204534106,
+          0.0
+        ],
+        [
+          -2061571.3977329521,
+          2087032.7016001425
+        ],
+        [
+          -2061571.3977329521,
+          -2087032.7016001425
+        ]
+      ],
+      "all_poles_left_half_plane": true,
+      "four_time_constant_envelope_s": 1.940267508755059e-06
+    }
+  ],
+  "waveform_sha256": "792006446e1ff4a86d55ec74e3086d831e8f9f799374a3cc3a2b8946cd45f065",
+  "interpretation": "Feedback remains later than reference after reset; positive pump charge is consistent with that phase lag even though instantaneous oscillator frequency is above target. Lag and cycle charge decrease over the four complete observed cycles. This is early catchup, not acquisition proof.",
+  "limitations": [
+    "Initial divider phase, PFD reset and precharge strongly affect this short record.",
+    "Edge pairing is valid for this record only; longer tests must account for cycle slips.",
+    "Secant slopes treated as constant differential gains in an ideal averaged 20uA pump/divide128 model.",
+    "Linear poles omit switching delay, pump asymmetry, real VCO admittance, saturation, noise and process variation.",
+    "No physical or statistical bound follows from the sampled gain range."
+  ]
+}

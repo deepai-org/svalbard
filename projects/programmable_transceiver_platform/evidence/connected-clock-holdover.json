@@ -1,0 +1,150 @@
+{
+  "status": "transition_starvation_sensitivity",
+  "cases": [
+    {
+      "constant_bits": 640,
+      "phase_ui": -0.3,
+      "initial_period_ppm": -100,
+      "acquired": true,
+      "expected_words": 320,
+      "received_words": 320,
+      "differing_words": 0,
+      "first_differing_word": null,
+      "exact_payload": true,
+      "clock": {
+        "training_bits": 1024,
+        "marker_bits": 64,
+        "marker_acquired_relative_payload_s": -1.5594987230824347e-10,
+        "recovered_words": 320,
+        "initial_phase_ui": -0.3,
+        "initial_period_ppm": -100,
+        "clock": "received zero-crossing PI tracker",
+        "framing": "observed64-bit test marker",
+        "final_period_ppm": -3.2441850541520267
+      }
+    },
+    {
+      "constant_bits": 640,
+      "phase_ui": 0.3,
+      "initial_period_ppm": 100,
+      "acquired": true,
+      "expected_words": 320,
+      "received_words": 320,
+      "differing_words": 0,
+      "first_differing_word": null,
+      "exact_payload": true,
+      "clock": {
+        "training_bits": 1024,
+        "marker_bits": 64,
+        "marker_acquired_relative_payload_s": -1.5595697141101781e-10,
+        "recovered_words": 320,
+        "initial_phase_ui": 0.3,
+        "initial_period_ppm": 100,
+        "clock": "received zero-crossing PI tracker",
+        "framing": "observed64-bit test marker",
+        "final_period_ppm": -3.2441850510434023
+      }
+    },
+    {
+      "constant_bits": 40960,
+      "phase_ui": -0.3,
+      "initial_period_ppm": -100,
+      "acquired": true,
+      "expected_words": 4352,
+      "received_words": 4352,
+      "differing_words": 0,
+      "first_differing_word": null,
+      "exact_payload": true,
+      "clock": {
+        "training_bits": 1024,
+        "marker_bits": 64,
+        "marker_acquired_relative_payload_s": -1.5594987230824347e-10,
+        "recovered_words": 4352,
+        "initial_phase_ui": -0.3,
+        "initial_period_ppm": -100,
+        "clock": "received zero-crossing PI tracker",
+        "framing": "observed64-bit test marker",
+        "final_period_ppm": -3.2441835714491774
+      }
+    },
+    {
+      "constant_bits": 40960,
+      "phase_ui": 0.3,
+      "initial_period_ppm": 100,
+      "acquired": true,
+      "expected_words": 4352,
+      "received_words": 4352,
+      "differing_words": 0,
+      "first_differing_word": null,
+      "exact_payload": true,
+      "clock": {
+        "training_bits": 1024,
+        "marker_bits": 64,
+        "marker_acquired_relative_payload_s": -1.5595697141101781e-10,
+        "recovered_words": 4352,
+        "initial_phase_ui": 0.3,
+        "initial_period_ppm": 100,
+        "clock": "received zero-crossing PI tracker",
+        "framing": "observed64-bit test marker",
+        "final_period_ppm": -3.244183128248146
+      }
+    },
+    {
+      "constant_bits": 327680,
+      "phase_ui": -0.3,
+      "initial_period_ppm": -100,
+      "acquired": true,
+      "expected_words": 33024,
+      "received_words": 33024,
+      "differing_words": 256,
+      "first_differing_word": 32768,
+      "exact_payload": false,
+      "clock": {
+        "training_bits": 1024,
+        "marker_bits": 64,
+        "marker_acquired_relative_payload_s": -1.5594987230824347e-10,
+        "recovered_words": 33024,
+        "initial_phase_ui": -0.3,
+        "initial_period_ppm": -100,
+        "clock": "received zero-crossing PI tracker",
+        "framing": "observed64-bit test marker",
+        "final_period_ppm": -3.244186549733463
+      }
+    },
+    {
+      "constant_bits": 327680,
+      "phase_ui": 0.3,
+      "initial_period_ppm": 100,
+      "acquired": true,
+      "expected_words": 33024,
+      "received_words": 33024,
+      "differing_words": 256,
+      "first_differing_word": 32768,
+      "exact_payload": false,
+      "clock": {
+        "training_bits": 1024,
+        "marker_bits": 64,
+        "marker_acquired_relative_payload_s": -1.5595697141101781e-10,
+        "recovered_words": 33024,
+        "initial_phase_ui": 0.3,
+        "initial_period_ppm": 100,
+        "clock": "received zero-crossing PI tracker",
+        "framing": "observed64-bit test marker",
+        "final_period_ppm": -3.244184323403232
+      }
+    }
+  ],
+  "source_hashes": {
+    "system_model/connected/holdover_screen.py": "03cc085668f6afa4753e69103d3a1f0f4fa73ca2121b505b6a45da5185fcebf7",
+    "system_model/connected/recovered_clock.py": "41a0ddea23a5a712b945ef7d80f150b8867290f5938a541383d082cbdbd82012",
+    "system_model/connected/framing.py": "31b48aa47ff0e290c66ed422874d6e21fb44e833b11d5f982548b18a2ff4985b",
+    "system_model/clock_tracking_screen.py": "7a93ec5775824e3472f951aac6d2d6af0e3026cb6d5ab6dc6a2297afbd3e5ac0",
+    "system_model/wired_screen.py": "145cf7cdea4b862f6f54f6cfa0b6a475ab10588d367173dfb3c48f26a8c20a79"
+  },
+  "limitations": [
+    "No noise or oscillator drift after training; not a physical holdover guarantee.",
+    "Initial +/-100ppm is corrected during training, not a persistent frequency-error bound.",
+    "Arbitrary raw streams may lack timing information; application encoding/run-length limits must be explicit.",
+    "No transition timeout is adopted as a lock detector."
+  ]
+}

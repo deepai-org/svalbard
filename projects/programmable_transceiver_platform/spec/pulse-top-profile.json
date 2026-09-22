@@ -1,0 +1,72 @@
+{
+  "name": "pulse-loop-programmable-phy-candidate",
+  "scope": "Mathematical candidate assumptions; not qualified GF180 specifications",
+  "entry": "pulse_wideband_quality.CombinedChip",
+  "historical_profile": "mathematical-top-profile.json",
+  "settle_s": 2e-05,
+  "detection_end_s": 2.6e-05,
+  "shared_reference": {
+    "resistance": 1000,
+    "capacitance": 1e-10,
+    "load_capacitance": 1e-12,
+    "dac_reference_load_capacitance": 2e-12
+  },
+  "coupling": {
+    "coupling_per_v": 1,
+    "dac_coupling_per_v": 1,
+    "probe_gain_per_v": 1,
+    "probe_sensor_v_per_v": 0.02
+  },
+  "blockers": [
+    [
+      0.1,
+      20000000.0
+    ],
+    [
+      0.1,
+      30000000.0
+    ]
+  ],
+  "cubic": 0.05,
+  "traffic": {
+    "pause_frame": 16,
+    "pause_words": 16
+  },
+  "quality_budget_relative_rms": 0.1,
+  "open_functions": [
+    "continuous streaming and command transitions",
+    "pulse-level and fractional divider clocks",
+    "complete programmable analog tile and diagnostics",
+    "full uncertainty envelopes",
+    "transistor implementation and extracted layout",
+    "pulse RF carrier retargeting and fractional feedback"
+  ],
+  "experiment": {
+    "source_seed": 839,
+    "source_count": 2000,
+    "source_rate_hz": 40000000.0,
+    "source_offset_hz": 250000.0,
+    "tx_seed": 840,
+    "frames": 32,
+    "filter_pass_hz": 8000000.0,
+    "filter_stop_hz": 20000000.0,
+    "filter_pass_db": 1,
+    "filter_stop_db": 30,
+    "rf_noise_rms_hz": 20000,
+    "wire_noise_rms_hz": 10000,
+    "rf_hz_per_v": 1000000.0,
+    "wire_hz_per_v": 1000000.0,
+    "adc_latency_s": 3e-08,
+    "dac_latency_s": 2e-08,
+    "charge_per_transition": 1e-13,
+    "return_charge_per_transition": 5e-14,
+    "gain_error": 0.03,
+    "phase_error": 0.03,
+    "saturation": 0.8,
+    "noise_rms": 0.001,
+    "frontend_seed": 839,
+    "envelope_limit": 1.5
+  },
+  "model_entry": "pulse_chip.PulseChip",
+  "entry_role": "combined test harness with explicit acquisition/detection startup"
+}

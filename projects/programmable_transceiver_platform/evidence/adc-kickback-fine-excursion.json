@@ -1,0 +1,32 @@
+{
+  "status": "clamped_charge_controls_pass",
+  "source_sha256": "865c7a5d060dc14a3fb4cd1f463f8d2114bf2d4884121449a66d3d0c54f04c0f",
+  "results": [
+    {
+      "differential_v": -0.4,
+      "net_differential_charge_c": 3.742733492890494e-15,
+      "maximum_absolute_cumulative_charge_c": 6.565759414873188e-15
+    },
+    {
+      "differential_v": -0.001,
+      "net_differential_charge_c": 9.157892098089515e-18,
+      "maximum_absolute_cumulative_charge_c": 1.7863225835277384e-15
+    },
+    {
+      "differential_v": 0.001,
+      "net_differential_charge_c": -9.157892076649353e-18,
+      "maximum_absolute_cumulative_charge_c": 1.7863225835813537e-15
+    },
+    {
+      "differential_v": 0.4,
+      "net_differential_charge_c": -3.74273349293988e-15,
+      "maximum_absolute_cumulative_charge_c": 6.565759414873839e-15
+    }
+  ],
+  "limitations": [
+    "Ideal sources clamp input voltage; charge is not an observed floating-CDAC voltage error.",
+    "Reset-only subtraction retains clock-driven charge but does not identify individual device contributions.",
+    "Nominal bias and one clock slew; no noise, mismatch, extracted coupling or timestep convergence qualification.",
+    "Maximum cumulative charge depends on integration start; do not treat final net charge as maximum disturbance."
+  ]
+}

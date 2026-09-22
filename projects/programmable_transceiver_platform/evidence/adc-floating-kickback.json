@@ -1,0 +1,72 @@
+{
+  "status": "floating_capacitor_load_diagnostic",
+  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "source_sha256": {
+    "projects/programmable_transceiver_platform/analog/adc/top_load.spice": "8fa005a6d11fd5d6d954797a91ca2ec52a2aa0f5aa6c49911631f3824c8d28ea",
+    "projects/programmable_transceiver_platform/analog/adc/comparator.spice": "a41ecccf87f625bbddca6139730c5e8500529c5acb2f05a5052f9049e8ee74a0",
+    "ip/blocks/analog/wifi_80211b/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02"
+  },
+  "cases": [
+    {
+      "name": "d-0.001_clk0",
+      "differential_v": -0.001,
+      "clocked": false,
+      "artifacts_sha256": {
+        ".spice": "e4fec871352bbbc7d9dedc80831bcee2efe95fdf31ada35229462356551722c9",
+        ".log": "479d5fcdc0fe22811ae0969bc5040c6eb7f3e4c4f85ce649527106c78bbe5c4c",
+        ".dat": "880f1233f1cd39b18a421a545f7501e2f01ae8e5c4c109d83ef569fb551e2bad"
+      }
+    },
+    {
+      "name": "d-0.001_clk1",
+      "differential_v": -0.001,
+      "clocked": true,
+      "artifacts_sha256": {
+        ".spice": "855d3338385c6155bd54c434405035ff3226062cc0e55a6a02b2ec3d537d7dfb",
+        ".log": "c45d60bc7c5d223988c64837db039325d79a6dc3a2e04f9ce562cfd2358ec85f",
+        ".dat": "7adf5cae0dfea99c7ff0a3102c20d9b861b367c319c9834887a7595cfbd4299d"
+      }
+    },
+    {
+      "name": "d0.001_clk0",
+      "differential_v": 0.001,
+      "clocked": false,
+      "artifacts_sha256": {
+        ".spice": "6e55a5af57709cb2306bca50e5b12f8eeb0688b20f430fa5af4e306f5ea2c4c3",
+        ".log": "f133211bd37f65ae059262128a69828cb2ee0ddea80333b31bcb9fefd58f6d30",
+        ".dat": "6feee5120d13e18ad973b19db7c8f4296c82e79c319a805fc924330273c9a880"
+      }
+    },
+    {
+      "name": "d0.001_clk1",
+      "differential_v": 0.001,
+      "clocked": true,
+      "artifacts_sha256": {
+        ".spice": "74570f102abb57f7300376653e785e208162f449900a5e44d9b043deb29397bc",
+        ".log": "f9edb6b2b253e6bbc4fdfb2a384d026ef19c1625a9b592efd683d9e6d36e1b8a",
+        ".dat": "6e4f0bc1573cf9f3bd924ce92d7fa2fc6b0225af4455870f4738a0e07a5df1d8"
+      }
+    }
+  ],
+  "results": [
+    {
+      "input_differential_v": -0.001,
+      "held_before_clock_v": -0.0010058900000000648,
+      "peak_clock_induced_differential_v": 0.00015644999999997466,
+      "peak_clock_induced_common_mode_v": 0.0023197799999998825,
+      "output_difference_v": -3.299999993602434
+    },
+    {
+      "input_differential_v": 0.001,
+      "held_before_clock_v": 0.0010058900000000648,
+      "peak_clock_induced_differential_v": 0.00015644999999997466,
+      "peak_clock_induced_common_mode_v": 0.0023197799999998825,
+      "output_difference_v": 3.299999993602431
+    }
+  ],
+  "limitations": [
+    "256 grounded MIM units per side approximate array capacitance; switched CDAC and actual references absent.",
+    "Paired reset subtraction separates clock effect; sampler acquisition/injection still affects held value.",
+    "Nominal two inputs, one clock slew, no mismatch or noise; not ADC qualification."
+  ]
+}

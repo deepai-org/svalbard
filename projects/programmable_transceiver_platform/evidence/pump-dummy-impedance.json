@@ -1,0 +1,151 @@
+{
+  "status": "terminal",
+  "completed": true,
+  "cases": [
+    {
+      "name": "resistive",
+      "completed": true,
+      "actual_stop_ns": 800.0000000000001,
+      "reference_minus_feedback_ps": [
+        1.000000000001134,
+        0.9999999999746642,
+        0.9999999999746642,
+        1.0000000000276037,
+        0.9999999999746642,
+        0.9999999999746642,
+        1.0000000000276037,
+        1.0000000000276037,
+        1.0000000000276037,
+        0.9999999999217246,
+        1.0000000000276037,
+        1.0000000000276037
+      ],
+      "cycle_charge_c": [
+        -7.498191169700146e-15,
+        -7.498191169690344e-15,
+        -7.49819116970032e-15,
+        -7.498191169698136e-15,
+        -7.498191169690049e-15,
+        -7.498191169701049e-15,
+        -7.49819116950157e-15,
+        -7.498191169500137e-15,
+        -7.498191169502018e-15,
+        -7.498191169499219e-15,
+        -7.498191169497491e-15
+      ],
+      "mean_charge_per_cycle_c": -7.498191169607316e-15,
+      "mean_pump_current_a": -1.4644904628139287e-07,
+      "correction_sign_consistent_with_positive_vco_gain": true,
+      "dummy_voltage_range_v": [
+        0.9839693853050583,
+        1.171933298958658
+      ],
+      "dummy_drive_current_range_a": [
+        -9.60306146949417e-05,
+        9.193329895865795e-05
+      ],
+      "dummy_resistor_kcl_max_error_a": 5.353248226647178e-19
+    },
+    {
+      "name": "reservoir",
+      "completed": true,
+      "actual_stop_ns": 800.0000000000001,
+      "reference_minus_feedback_ps": [
+        1.000000000001134,
+        0.9999999999746642,
+        0.9999999999746642,
+        1.0000000000276037,
+        0.9999999999746642,
+        0.9999999999746642,
+        1.0000000000276037,
+        1.0000000000276037,
+        1.0000000000276037,
+        0.9999999999217246,
+        1.0000000000276037,
+        1.0000000000276037
+      ],
+      "cycle_charge_c": [
+        -3.945896476720257e-15,
+        -3.945896476713815e-15,
+        -3.945896476722461e-15,
+        -3.945896476716903e-15,
+        -3.945896476713951e-15,
+        -3.945896476724133e-15,
+        -3.945896476614337e-15,
+        -3.945896476611859e-15,
+        -3.945896476612079e-15,
+        -3.945896476613442e-15,
+        -3.945896476611902e-15
+      ],
+      "mean_charge_per_cycle_c": -3.9458964766704685e-15,
+      "mean_pump_current_a": -7.706829055997007e-08,
+      "correction_sign_consistent_with_positive_vco_gain": true,
+      "dummy_voltage_range_v": [
+        1.068768006722107,
+        1.086374029579015
+      ],
+      "dummy_drive_current_range_a": [
+        -1.123199327789318e-05,
+        6.374029579014975e-06
+      ],
+      "dummy_resistor_kcl_max_error_a": 5.285485590866834e-19
+    }
+  ],
+  "limitations": [
+    "Ideal clocks and output clamp; dummy source has1kohm impedance with optional precharged MIM bank, not a physical voltage generator.",
+    "Signed phase scenarios are not process/jitter bounds.",
+    "Measured charge sign is not lock/acquisition proof."
+  ],
+  "provenance": {
+    "source_sha256_before": {
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5"
+    },
+    "source_sha256_after": {
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5"
+    },
+    "cases": [
+      {
+        "name": "resistive",
+        "returncode": 0,
+        "timed_out": false,
+        "artifacts_sha256": {
+          ".spice": "5b749ea105f03700dd130280e65fdee344b100f4636e7fd585acc1f5b6a89213",
+          ".log": "28e12e992f62e7eff99d9505d16ef8250a03331164ec829ea7f81079afe4bcf5",
+          ".dat": "9c70367962dc501407512914bde2a14b232753affc79eab59ade3a16f8c5f2bf"
+        }
+      },
+      {
+        "name": "reservoir",
+        "returncode": 0,
+        "timed_out": false,
+        "artifacts_sha256": {
+          ".spice": "70f4e1c7269342b91238cebe6c46ad0de9c043f82104defe2846f357e35bcf70",
+          ".log": "c6613c4309f202fcaa6b1796607cf6dfbabef620a02b9ed798ff703bf5d4fcb0",
+          ".dat": "89c4290fe2cbb232620d3cd910828b3e5e43110d548a6505c63781a759ffc454"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+* Output/load transistor multiplicity doubled; input and compensation unchanged.
+* Uniformly scaled buffer candidate; ideal external target and bias still required.
+* Preliminary two-stage unity feedback amplifier, external bias voltages.
+* Negative feedback: OUT drives first-stage positive gain input; second stage inverts.
+.subckt pt_reference_buffer_scaled_output2 IN OUT BN BP VDD VSS params: CC=1p S=1 RZ=100
+XIP A OUT T VSS nfet_03v3 w=8u l=.5u m={4*S}
+XIN X IN T VSS nfet_03v3 w=8u l=.5u m={4*S}
+XT T BN VSS VSS nfet_03v3 w=8u l=.5u m={16*S}
+XMP A A VDD VDD pfet_03v3 w=8u l=.5u m={4*S}
+XMN X A VDD VDD pfet_03v3 w=8u l=.5u m={4*S}
+XOUT OUT X VSS VSS nfet_03v3 w=8u l=.5u m={16*S}
+XLOAD OUT BP VDD VDD pfet_03v3 w=8u l=.5u m={128*S}
+RC X Z {RZ/S}
+CC Z OUT {CC*S}
+.ends

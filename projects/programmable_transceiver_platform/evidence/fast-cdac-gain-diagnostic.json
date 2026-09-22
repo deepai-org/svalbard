@@ -1,0 +1,51 @@
+{
+  "status": "empirical_gain_hypothesis_not_physical_identification",
+  "sources_sha256": {
+    "fast-cdac-charge-0.2ns.json": "80eb594b48fbea1c26e4eadb99514dd35faba7b84ad95ad7c32c82d980e2dc0b",
+    "fast-cdac-charge.json": "4283226caa63ead72a070d8f2174b62d6b66885d782fc3488779c0b5ef9b0cc4",
+    "fast-cdac-charge-0.35ns.json": "0cfcab9345c462192874d4df1f3091486f5e06ee6c794b092fa1cfc964791659"
+  },
+  "script_sha256": "495761e49e576c8dad3bf4e0b61ed46c75846e24d491bff842ec91ad6ebf6890",
+  "results": [
+    {
+      "offset_ns": 0.2,
+      "gain": 0.995188411582778,
+      "equivalent_extra_capacitance_fraction": 0.004834851733823475,
+      "training_samples": 14,
+      "held_out_samples": 28,
+      "held_out_rms_v": 0.00019756835174758057,
+      "held_out_max_abs_v": 0.0004913823572470777,
+      "held_out_sign_disagreements": 0,
+      "held_out_uncorrected_rms_v": 0.0019799459249027125
+    },
+    {
+      "offset_ns": 0.275,
+      "gain": 0.9951853016874265,
+      "equivalent_extra_capacitance_fraction": 0.004837991783449569,
+      "training_samples": 14,
+      "held_out_samples": 28,
+      "held_out_rms_v": 0.00019749012757399876,
+      "held_out_max_abs_v": 0.0004719413513962767,
+      "held_out_sign_disagreements": 0,
+      "held_out_uncorrected_rms_v": 0.001987170311029217
+    },
+    {
+      "offset_ns": 0.35,
+      "gain": 0.9951843600251139,
+      "equivalent_extra_capacitance_fraction": 0.004838942580211558,
+      "training_samples": 14,
+      "held_out_samples": 28,
+      "held_out_rms_v": 0.00019927350781977343,
+      "held_out_max_abs_v": 0.00046519463463162714,
+      "held_out_sign_disagreements": 0,
+      "held_out_uncorrected_rms_v": 0.0019936364759426447
+    }
+  ],
+  "limitations": [
+    "Early70ns frames fit one gain; later120/170ns frames score it, excluding per-frame anchors.",
+    "All records were inspected previously; this is held-out fitting, not a blind validation dataset.",
+    "Repeated nominal inputs and one fixture do not establish transfer across codes, process or load.",
+    "Equivalent capacitance fraction assumes attenuation solely from extra top capacitance; cause is unidentified.",
+    "Recorded code/rail/MSB trajectories and a measured anchor remain necessary; not autonomous SAR prediction."
+  ]
+}

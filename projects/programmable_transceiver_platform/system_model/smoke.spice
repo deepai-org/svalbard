@@ -1,0 +1,23 @@
+* Whole-chip envelope connectivity smoke; no physical qualification.
+.include /model/platform.spice
+VCORE VCORE 0 3.3
+VRF VRF 0 3.3
+VWIRE VWIRE 0 3.3
+VPLL VPLL 0 3.3
+VEN EN 0 1
+VREF REF 0 PULSE(0 1 0 1n 1n 18n 40n)
+VRI RXI 0 SIN(0 0.001 1meg)
+VRQ RXQ 0 SIN(0 0.001 2meg)
+VTI HTI 0 SIN(0 0.01 3meg)
+VTQ HTQ 0 SIN(0 0.01 4meg)
+VWR WRX 0 SIN(0 0.1 5meg)
+VWT HWT 0 SIN(0 0.1 6meg)
+XCHIP RXI RXQ TXI TXQ HRI HRQ HTI HTQ WRX WTX HWR HWT EN REF BIAS VCORE VRF VWIRE VPLL 0 pt_platform_env
+.control
+set wr_singlescale
+set wr_vecnames
+set numdgt=15
+tran 1n 10u 0 1n
+wrdata /work/envelope.dat v(HRI) v(HRQ) v(TXI) v(TXQ) v(HWR) v(WTX) v(BIAS) i(VCORE) i(VRF) i(VWIRE) i(VPLL)
+.endc
+.end

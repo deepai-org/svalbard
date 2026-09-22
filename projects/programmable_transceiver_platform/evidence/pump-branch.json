@@ -1,0 +1,101 @@
+{
+  "completed": true,
+  "status": "terminal",
+  "limitations": [
+    "Ideal zero-volt sensors are a measurement fixture, not proposed silicon.",
+    "Numerical replay differences must be inspected before attributing charge changes.",
+    "One clamped nominal history; no autonomous PLL or transistor mechanism qualification."
+  ],
+  "provenance": {
+    "returncode": 0,
+    "timed_out": false,
+    "source_sha256_before": {
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+    },
+    "source_sha256_after": {
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/charge_pump.spice": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561"
+    },
+    "artifacts_sha256": {
+      ".spice": "e92e3c1d728267cd43e936b681d9274de4d7ea8b2f684731d6b2c848b5058203",
+      ".log": "04d7e9d2e86874e682be309a68ae2bb50d5ba22008e9ce4a9b72164e7a4d5a3a",
+      ".dat": "3ecbe3a1b5df1e676ce260ef3cc80daefcf11b48ce10c8fca57ce62e1ba1a9a6"
+    }
+  },
+  "orientation_diagnostic": {
+    "xpu": {
+      "vds_oriented_id_charge_c": 5.484083906004145e-14,
+      "terminal_sensor_charge_c": 5.484102282968215e-14,
+      "difference_c": 1.837696406991472e-19
+    },
+    "xnd": {
+      "vds_oriented_id_charge_c": 3.244609482847104e-14,
+      "terminal_sensor_charge_c": 3.244624432483911e-14,
+      "difference_c": 1.4949636807325341e-19
+    }
+  },
+  "original_vectors_identical": false,
+  "late_interpolated_max_errors": {
+    "v(ref)": 0.0,
+    "v(fb)": 0.0,
+    "v(up)": 7.574838424062591e-06,
+    "v(dn)": 6.68663739999964e-06,
+    "v(ctrl)": 0.0,
+    "i(vsense)": 4.892562879660301e-09,
+    "v(xcp.upb)": 2.346571710098999e-05,
+    "v(xcp.ps)": 1.0751597719682593e-05,
+    "v(xcp.ns)": 2.9193708099839455e-06,
+    "v(bpcp)": 4.787024150409991e-07,
+    "v(bncp)": 8.443424170945235e-08,
+    "i(vclamp)": 4.892562879660301e-09,
+    "@m.xcp.xps.m0[id]": 2.455583434819177e-10,
+    "@m.xcp.xps.m0[vds]": 1.0751597720126682e-05,
+    "@m.xcp.xps.m0[vdsat]": 3.4698984749392814e-07,
+    "@m.xcp.xps.m0[vgs]": 4.787024150409991e-07,
+    "@m.xcp.xps.m0[vth]": 1.0127991445507689e-08,
+    "@m.xcp.xpu.m0[id]": 3.227679504908248e-09,
+    "@m.xcp.xpu.m0[vds]": 1.0751597719904638e-05,
+    "@m.xcp.xpu.m0[vdsat]": 4.269047407301496e-06,
+    "@m.xcp.xpu.m0[vgs]": 1.9662826460375982e-05,
+    "@m.xcp.xpu.m0[vth]": 2.453137483482415e-06,
+    "@m.xcp.xnd.m0[id]": 1.631726865221507e-09,
+    "@m.xcp.xnd.m0[vds]": 2.9193708099839455e-06,
+    "@m.xcp.xnd.m0[vdsat]": 3.6137175614125994e-06,
+    "@m.xcp.xnd.m0[vgs]": 6.425320552061464e-06,
+    "@m.xcp.xnd.m0[vth]": 4.739588285174179e-07,
+    "@m.xcp.xns.m0[id]": 8.528990388294647e-11,
+    "@m.xcp.xns.m0[vds]": 2.9193708099839455e-06,
+    "@m.xcp.xns.m0[vdsat]": 1.4142618331991486e-07,
+    "@m.xcp.xns.m0[vgs]": 8.443424170945235e-08,
+    "@m.xcp.xns.m0[vth]": 6.775218830412655e-08
+  },
+  "maximum_sensor_drop_v": 0.0,
+  "kcl_max_error_a": 1.6263032587282567e-19,
+  "reference_cycles": 11,
+  "charge_per_cycle_c": {
+    "i(v.xcp.vp)": 5.484102282968215e-14,
+    "i(v.xcp.vn)": 3.244624432483911e-14,
+    "i(vsense)": 2.2394778504843036e-14,
+    "@m.xcp.xpu.m0[id]": 5.484083906004145e-14,
+    "@m.xcp.xnd.m0[id]": 3.680757872601526e-14
+  }
+}

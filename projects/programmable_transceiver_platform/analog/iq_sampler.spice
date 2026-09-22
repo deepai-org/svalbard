@@ -1,0 +1,10 @@
+* Diagnostic 40 MS/s sampler: no ADC, gain, anti-alias filter or real clock driver.
+.include /src/rf_if_transmission_gate/rf_if_transmission_gate.spice
+.subckt pt_iq_sampler IP IN QP QN HIP HIN HQP HQN CLK CLKB VDD VSS
+XI IP IN HIP HIN CLK CLKB VDD VSS wifi_if_transmission_gate
+XQ QP QN HQP HQN CLK CLKB VDD VSS wifi_if_transmission_gate
+CIP HIP VSS 5p
+CIN HIN VSS 5p
+CQP HQP VSS 5p
+CQN HQN VSS 5p
+.ends pt_iq_sampler

@@ -1,0 +1,588 @@
+{
+  "completed": true,
+  "source_sha256": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+  "pulse_manifest_sha256": "60b2885add53de0b076c6903f2829acd9cebd13ff6970c86771312d4524bdf67",
+  "devices": [
+    {
+      "instance": "XRX.XVCO.X0.XRP",
+      "inside_loop": true,
+      "role": "load_resistor",
+      "terminals": {
+        "a": "PLLVDD",
+        "b": "XRX.XVCO.N0P",
+        "substrate": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "PLLVDD",
+        "XRX.XVCO.N0P"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X0.XRN",
+      "inside_loop": true,
+      "role": "load_resistor",
+      "terminals": {
+        "a": "PLLVDD",
+        "b": "XRX.XVCO.N0N",
+        "substrate": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "PLLVDD",
+        "XRX.XVCO.N0N"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X0.XMP",
+      "inside_loop": true,
+      "role": "input_pair",
+      "terminals": {
+        "drain": "XRX.XVCO.N0P",
+        "gate": "XRX.XVCO.N2P",
+        "source": "XRX.XVCO.X0.TAIL",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.N0P",
+        "XRX.XVCO.X0.TAIL"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X0.XMN",
+      "inside_loop": true,
+      "role": "input_pair",
+      "terminals": {
+        "drain": "XRX.XVCO.N0N",
+        "gate": "XRX.XVCO.N2N",
+        "source": "XRX.XVCO.X0.TAIL",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.N0N",
+        "XRX.XVCO.X0.TAIL"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X0.XMT",
+      "inside_loop": true,
+      "role": "tail",
+      "terminals": {
+        "drain": "XRX.XVCO.X0.TAIL",
+        "gate": "CTRL",
+        "source": "0",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.X0.TAIL",
+        "0"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X0.XLP",
+      "inside_loop": true,
+      "role": "regenerative_pair",
+      "terminals": {
+        "drain": "XRX.XVCO.N0P",
+        "gate": "XRX.XVCO.N0N",
+        "source": "XRX.XVCO.X0.LTAIL",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.N0P",
+        "XRX.XVCO.X0.LTAIL"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X0.XLN",
+      "inside_loop": true,
+      "role": "regenerative_pair",
+      "terminals": {
+        "drain": "XRX.XVCO.N0N",
+        "gate": "XRX.XVCO.N0P",
+        "source": "XRX.XVCO.X0.LTAIL",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.N0N",
+        "XRX.XVCO.X0.LTAIL"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X0.XMLT",
+      "inside_loop": true,
+      "role": "tail",
+      "terminals": {
+        "drain": "XRX.XVCO.X0.LTAIL",
+        "gate": "REGEN",
+        "source": "0",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.X0.LTAIL",
+        "0"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X0.XCP",
+      "inside_loop": true,
+      "role": "capacitor",
+      "terminals": {
+        "drain": "0",
+        "gate": "XRX.XVCO.N0P",
+        "source": "0",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": null
+    },
+    {
+      "instance": "XRX.XVCO.X0.XCN",
+      "inside_loop": true,
+      "role": "capacitor",
+      "terminals": {
+        "drain": "0",
+        "gate": "XRX.XVCO.N0N",
+        "source": "0",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": null
+    },
+    {
+      "instance": "XRX.XVCO.X1.XRP",
+      "inside_loop": true,
+      "role": "load_resistor",
+      "terminals": {
+        "a": "PLLVDD",
+        "b": "XRX.XVCO.N1P",
+        "substrate": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "PLLVDD",
+        "XRX.XVCO.N1P"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X1.XRN",
+      "inside_loop": true,
+      "role": "load_resistor",
+      "terminals": {
+        "a": "PLLVDD",
+        "b": "XRX.XVCO.N1N",
+        "substrate": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "PLLVDD",
+        "XRX.XVCO.N1N"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X1.XMP",
+      "inside_loop": true,
+      "role": "input_pair",
+      "terminals": {
+        "drain": "XRX.XVCO.N1P",
+        "gate": "XRX.XVCO.N0P",
+        "source": "XRX.XVCO.X1.TAIL",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.N1P",
+        "XRX.XVCO.X1.TAIL"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X1.XMN",
+      "inside_loop": true,
+      "role": "input_pair",
+      "terminals": {
+        "drain": "XRX.XVCO.N1N",
+        "gate": "XRX.XVCO.N0N",
+        "source": "XRX.XVCO.X1.TAIL",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.N1N",
+        "XRX.XVCO.X1.TAIL"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X1.XMT",
+      "inside_loop": true,
+      "role": "tail",
+      "terminals": {
+        "drain": "XRX.XVCO.X1.TAIL",
+        "gate": "CTRL",
+        "source": "0",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.X1.TAIL",
+        "0"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X1.XLP",
+      "inside_loop": true,
+      "role": "regenerative_pair",
+      "terminals": {
+        "drain": "XRX.XVCO.N1P",
+        "gate": "XRX.XVCO.N1N",
+        "source": "XRX.XVCO.X1.LTAIL",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.N1P",
+        "XRX.XVCO.X1.LTAIL"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X1.XLN",
+      "inside_loop": true,
+      "role": "regenerative_pair",
+      "terminals": {
+        "drain": "XRX.XVCO.N1N",
+        "gate": "XRX.XVCO.N1P",
+        "source": "XRX.XVCO.X1.LTAIL",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.N1N",
+        "XRX.XVCO.X1.LTAIL"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X1.XMLT",
+      "inside_loop": true,
+      "role": "tail",
+      "terminals": {
+        "drain": "XRX.XVCO.X1.LTAIL",
+        "gate": "REGEN",
+        "source": "0",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.X1.LTAIL",
+        "0"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X1.XCP",
+      "inside_loop": true,
+      "role": "capacitor",
+      "terminals": {
+        "drain": "0",
+        "gate": "XRX.XVCO.N1P",
+        "source": "0",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": null
+    },
+    {
+      "instance": "XRX.XVCO.X1.XCN",
+      "inside_loop": true,
+      "role": "capacitor",
+      "terminals": {
+        "drain": "0",
+        "gate": "XRX.XVCO.N1N",
+        "source": "0",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": null
+    },
+    {
+      "instance": "XRX.XVCO.X2.XRP",
+      "inside_loop": true,
+      "role": "load_resistor",
+      "terminals": {
+        "a": "PLLVDD",
+        "b": "XRX.XVCO.N2P",
+        "substrate": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "PLLVDD",
+        "XRX.XVCO.N2P"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X2.XRN",
+      "inside_loop": true,
+      "role": "load_resistor",
+      "terminals": {
+        "a": "PLLVDD",
+        "b": "XRX.XVCO.N2N",
+        "substrate": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "PLLVDD",
+        "XRX.XVCO.N2N"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X2.XMP",
+      "inside_loop": true,
+      "role": "input_pair",
+      "terminals": {
+        "drain": "XRX.XVCO.N2P",
+        "gate": "XRX.XVCO.N1P",
+        "source": "XRX.XVCO.X2.TAIL",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.N2P",
+        "XRX.XVCO.X2.TAIL"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X2.XMN",
+      "inside_loop": true,
+      "role": "input_pair",
+      "terminals": {
+        "drain": "XRX.XVCO.N2N",
+        "gate": "XRX.XVCO.N1N",
+        "source": "XRX.XVCO.X2.TAIL",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.N2N",
+        "XRX.XVCO.X2.TAIL"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X2.XMT",
+      "inside_loop": true,
+      "role": "tail",
+      "terminals": {
+        "drain": "XRX.XVCO.X2.TAIL",
+        "gate": "CTRL",
+        "source": "0",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.X2.TAIL",
+        "0"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X2.XLP",
+      "inside_loop": true,
+      "role": "regenerative_pair",
+      "terminals": {
+        "drain": "XRX.XVCO.N2P",
+        "gate": "XRX.XVCO.N2N",
+        "source": "XRX.XVCO.X2.LTAIL",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.N2P",
+        "XRX.XVCO.X2.LTAIL"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X2.XLN",
+      "inside_loop": true,
+      "role": "regenerative_pair",
+      "terminals": {
+        "drain": "XRX.XVCO.N2N",
+        "gate": "XRX.XVCO.N2P",
+        "source": "XRX.XVCO.X2.LTAIL",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.N2N",
+        "XRX.XVCO.X2.LTAIL"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X2.XMLT",
+      "inside_loop": true,
+      "role": "tail",
+      "terminals": {
+        "drain": "XRX.XVCO.X2.LTAIL",
+        "gate": "REGEN",
+        "source": "0",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.X2.LTAIL",
+        "0"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.X2.XCP",
+      "inside_loop": true,
+      "role": "capacitor",
+      "terminals": {
+        "drain": "0",
+        "gate": "XRX.XVCO.N2P",
+        "source": "0",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": null
+    },
+    {
+      "instance": "XRX.XVCO.X2.XCN",
+      "inside_loop": true,
+      "role": "capacitor",
+      "terminals": {
+        "drain": "0",
+        "gate": "XRX.XVCO.N2N",
+        "source": "0",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": null
+    },
+    {
+      "instance": "XRX.XVCO.XBUF.XRP",
+      "inside_loop": false,
+      "role": "load_resistor",
+      "terminals": {
+        "a": "PLLVDD",
+        "b": "XRX.XVCO.CLK_P",
+        "substrate": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "PLLVDD",
+        "XRX.XVCO.CLK_P"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.XBUF.XRN",
+      "inside_loop": false,
+      "role": "load_resistor",
+      "terminals": {
+        "a": "PLLVDD",
+        "b": "XRX.XVCO.CLK_N",
+        "substrate": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "PLLVDD",
+        "XRX.XVCO.CLK_N"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.XBUF.XMP",
+      "inside_loop": false,
+      "role": "input_pair",
+      "terminals": {
+        "drain": "XRX.XVCO.CLK_P",
+        "gate": "XRX.XVCO.N2P",
+        "source": "XRX.XVCO.XBUF.TAIL",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.CLK_P",
+        "XRX.XVCO.XBUF.TAIL"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.XBUF.XMN",
+      "inside_loop": false,
+      "role": "input_pair",
+      "terminals": {
+        "drain": "XRX.XVCO.CLK_N",
+        "gate": "XRX.XVCO.N2N",
+        "source": "XRX.XVCO.XBUF.TAIL",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.CLK_N",
+        "XRX.XVCO.XBUF.TAIL"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.XBUF.XMT",
+      "inside_loop": false,
+      "role": "tail",
+      "terminals": {
+        "drain": "XRX.XVCO.XBUF.TAIL",
+        "gate": "CTRL",
+        "source": "0",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.XBUF.TAIL",
+        "0"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.XBUF.XLP",
+      "inside_loop": false,
+      "role": "regenerative_pair",
+      "terminals": {
+        "drain": "XRX.XVCO.CLK_P",
+        "gate": "XRX.XVCO.CLK_N",
+        "source": "XRX.XVCO.XBUF.LTAIL",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.CLK_P",
+        "XRX.XVCO.XBUF.LTAIL"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.XBUF.XLN",
+      "inside_loop": false,
+      "role": "regenerative_pair",
+      "terminals": {
+        "drain": "XRX.XVCO.CLK_N",
+        "gate": "XRX.XVCO.CLK_P",
+        "source": "XRX.XVCO.XBUF.LTAIL",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.CLK_N",
+        "XRX.XVCO.XBUF.LTAIL"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.XBUF.XMLT",
+      "inside_loop": false,
+      "role": "tail",
+      "terminals": {
+        "drain": "XRX.XVCO.XBUF.LTAIL",
+        "gate": "REGEN",
+        "source": "0",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": [
+        "XRX.XVCO.XBUF.LTAIL",
+        "0"
+      ]
+    },
+    {
+      "instance": "XRX.XVCO.XBUF.XCP",
+      "inside_loop": false,
+      "role": "capacitor",
+      "terminals": {
+        "drain": "0",
+        "gate": "XRX.XVCO.CLK_P",
+        "source": "0",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": null
+    },
+    {
+      "instance": "XRX.XVCO.XBUF.XCN",
+      "inside_loop": false,
+      "role": "capacitor",
+      "terminals": {
+        "drain": "0",
+        "gate": "XRX.XVCO.CLK_N",
+        "source": "0",
+        "bulk": "0"
+      },
+      "candidate_current_injection_nodes": null
+    }
+  ],
+  "counts": {
+    "loop_devices": 30,
+    "buffer_devices": 10,
+    "mos_capacitors": 8,
+    "load_resistors": 8
+  },
+  "limitations": [
+    "Topology inventory only: not a complete independent-noise-source expansion of PDK subcircuits.",
+    "Channel-terminal injection alone omits gate, body, resistor and correlated model sources; MOS capacitors require separate model inspection.",
+    "One pulse phase and magnitude cannot provide cycle weighting, linearity or integrated phase noise.",
+    "Supply, control, bias, output loading and PLL feedback noise remain outside this local inventory.",
+    "PDK noise options and selected corners do not bound undisclosed silicon variation."
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "status": "fixed_region_energy_fixtures_verified",
+  "rows": [
+    {
+      "case": "held",
+      "duration_s": 1e-09,
+      "max_work_loss_error_j": 1.8242408433235898e-30,
+      "quadrature_change_j": 7.395570986446986e-31,
+      "energy_residual_j": 7.568134309464082e-30
+    },
+    {
+      "case": "held",
+      "duration_s": 1e-08,
+      "max_work_loss_error_j": 9.604381521065819e-29,
+      "quadrature_change_j": 2.879342304056693e-29,
+      "energy_residual_j": -3.273772756667199e-29
+    },
+    {
+      "case": "up",
+      "duration_s": 1e-09,
+      "max_work_loss_error_j": 2.3665827156630354e-30,
+      "quadrature_change_j": 3.8456969129524326e-30,
+      "energy_residual_j": 1.3016204936146695e-29
+    },
+    {
+      "case": "up",
+      "duration_s": 1e-08,
+      "max_work_loss_error_j": 4.614836295542919e-28,
+      "quadrature_change_j": 2.2324763617754634e-28,
+      "energy_residual_j": -4.299291933454514e-28
+    },
+    {
+      "case": "down",
+      "duration_s": 1e-09,
+      "max_work_loss_error_j": 2.3665827156630354e-30,
+      "quadrature_change_j": 1.1216615996111262e-29,
+      "energy_residual_j": 7.14905195356542e-30
+    },
+    {
+      "case": "down",
+      "duration_s": 1e-08,
+      "max_work_loss_error_j": 5.724171943509967e-28,
+      "quadrature_change_j": 5.41454403821072e-28,
+      "energy_residual_j": -8.5374471467544e-28
+    },
+    {
+      "case": "centering",
+      "duration_s": 1e-09,
+      "max_work_loss_error_j": 1.873544649899903e-30,
+      "quadrature_change_j": 7.888609052210118e-31,
+      "energy_residual_j": 1.035379938102578e-30
+    },
+    {
+      "case": "centering",
+      "duration_s": 1e-08,
+      "max_work_loss_error_j": 3.3132158019282496e-29,
+      "quadrature_change_j": 4.02319061662716e-29,
+      "energy_residual_j": -3.668203209277705e-29
+    },
+    {
+      "case": "positive_compliance",
+      "duration_s": 1e-09,
+      "max_work_loss_error_j": 5.048709793414476e-29,
+      "quadrature_change_j": 1.3883951931889808e-28,
+      "energy_residual_j": -9.967904842521793e-27
+    },
+    {
+      "case": "positive_compliance",
+      "duration_s": 1e-08,
+      "max_work_loss_error_j": 3.0292258760486853e-28,
+      "quadrature_change_j": 6.1089388500315154e-27,
+      "energy_residual_j": 5.572562738287804e-27
+    },
+    {
+      "case": "negative_compliance",
+      "duration_s": 1e-09,
+      "max_work_loss_error_j": 1.7670484276950664e-28,
+      "quadrature_change_j": 1.072850831100576e-28,
+      "energy_residual_j": -1.2297265158297905e-26
+    },
+    {
+      "case": "negative_compliance",
+      "duration_s": 1e-08,
+      "max_work_loss_error_j": 1.5146129380243427e-28,
+      "quadrature_change_j": 6.26040014383395e-27,
+      "energy_residual_j": 3.5246724327630706e-26
+    }
+  ],
+  "limitations": [
+    "No compliance-boundary detection or crossing support.",
+    "Quadrature orders verified only on these short-step fixtures.",
+    "No full-chip integration or runtime-speedup claim."
+  ],
+  "source_sha256": {
+    "verification/thermal_filter_energy_screen.py": "f6370aa3c43c9f34d5c90f39e4e5c34f5108b133ee77db014f23da1cc8b4cc61",
+    "verification/thermal_filter_exact_step_screen.py": "5ab379d94fcff360b2768c7031436749792270669e05a8bc19b9447e37442565",
+    "system_model/connected/three_cap_acquisition_screen.py": "3f9564fd73d5827f7e585ba2d315c01863dc517ee2546c6efab90b51a043e26a",
+    "system_model/connected/three_cap_exact_centering.py": "64d5c9bc445725cefd22115c5b5c6ccf74aa776a7aadcf6be157fa5f66ebed03",
+    "system_model/connected/three_cap_centering_screen.py": "969fed82fe3ae8feabec7d985e8b7b22625feac248ccb403979ac3f4766e96a3",
+    "system_model/connected/three_cap_pll.py": "41e9db2ef26b1905f0d107c08f786a1f5b014883e275d9c8aedfad1cb2a53c23",
+    "system_model/connected/three_cap_retuning_clock.py": "3bc54afca9412324498e9624f21049e1e7a1fd88b727e8de3de60f6ea680bac7",
+    "system_model/connected/three_cap_centering.py": "877346a77069846e12bbce59a0155d68858e3470563b757f0f51457165b57a79",
+    "system_model/connected/three_cap_pad_quality.py": "744c76edaf070bab954c8db95c6f943a4fa64ef56056aa90088aa53dbcb74508",
+    "system_model/connected/three_cap_retuning_screen.py": "cdbb9bcd1c231f7ef2b50e3886a47264156bd21bb69fe1126f49b89d31e23c80",
+    "system_model/connected/three_cap_managed_chip.py": "fc861ebf068f4f6a0514bcc9444109e24888513f8710f1da2e81d8db966d91d8",
+    "system_model/connected/three_cap_filter_screen.py": "46318c5aa15606d2040641e7918619f156a35377a43ac5aefc09af1b5e5324ee",
+    "system_model/connected/three_cap_pll_screen.py": "53e4c64067bba4cc4b2dd798716fb596ca9b634ba531a6f4341e84c2db50cf4e",
+    "system_model/connected/three_cap_resistor_noise.py": "187c062bb6323b5a7907693a19af0aa2762ae4d3d1490ecc0eba62bf9d8f16d4",
+    "system_model/connected/three_cap_exact_centering_screen.py": "674b18d1f22b0bc2eb48c729ae59b57a54dc61b9f13d7a8a21c964c4853a51fb",
+    "system_model/connected/three_cap_filter.py": "715f0edcd40bfe90b00f8497f81226b01d4c95e2254c4cbcf6e4c0149b9790e9"
+  }
+}

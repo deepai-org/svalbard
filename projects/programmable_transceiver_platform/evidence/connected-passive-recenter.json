@@ -1,0 +1,210 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "initial_hz": 2437000000,
+      "target_hz": 2500000000,
+      "initial_control_v": 0.6645683387162701,
+      "initial_slow_v": 0.6649953043668977,
+      "centered_residual_v": 2.5096421597214597e-11,
+      "declared_center_bound_v": 6.14421235332821e-06,
+      "bank": 15,
+      "first_lock_s": 2.4675000000000003e-05,
+      "center_metrics": {
+        "resistance_ohm": 31983.926487666962,
+        "fast_capacitance_f": 4.69079553899712e-11,
+        "slow_capacitance_f": 4.69079553899712e-11,
+        "extra_pole_hz": 212164.07355021217,
+        "minimum_v": -0.45566007256405283,
+        "maximum_v": 0.930031467744301,
+        "compliance_limit_v": 1.0,
+        "energy_residual_j": 2.3910689581610956e-25,
+        "voltage_within_envelope": true,
+        "headroom_v": 0.1,
+        "rolloff_time_s": 8.742616765742132e-08,
+        "minimum_current_fraction": 0.6996853225569899,
+        "center_charge_c": -6.236711205551826e-11,
+        "center_shunt_loss_j": 2.073026286688907e-11,
+        "center_resistance_fast_ohm": 4263.6691012706015,
+        "center_resistance_slow_ohm": 4263.6691012706015
+      }
+    },
+    {
+      "initial_hz": 2500000000,
+      "target_hz": 2300000000,
+      "initial_control_v": 0.9798888925300171,
+      "initial_slow_v": 0.9800013664526422,
+      "centered_residual_v": 3.6994250630454584e-11,
+      "declared_center_bound_v": 6.14421235332821e-06,
+      "bank": 8,
+      "first_lock_s": 2.2724999999999997e-05,
+      "center_metrics": {
+        "resistance_ohm": 31983.926487666962,
+        "fast_capacitance_f": 4.69079553899712e-11,
+        "slow_capacitance_f": 4.69079553899712e-11,
+        "extra_pole_hz": 212164.07355021217,
+        "minimum_v": -0.30756470900412325,
+        "maximum_v": 0.9995907948551707,
+        "compliance_limit_v": 1.0,
+        "energy_residual_j": -1.4217166778255163e-24,
+        "voltage_within_envelope": true,
+        "headroom_v": 0.1,
+        "rolloff_time_s": 3.970453548984999e-06,
+        "minimum_current_fraction": 0.004092051448293388,
+        "center_charge_c": -9.193444483412705e-11,
+        "center_shunt_loss_j": 4.5045355842670625e-11,
+        "center_resistance_fast_ohm": 4263.6691012706015,
+        "center_resistance_slow_ohm": 4263.6691012706015
+      }
+    }
+  ],
+  "numerical_kcl_cases": [
+    {
+      "cf": 4e-11,
+      "cs": 6e-11,
+      "tau": 1e-07,
+      "initial": [
+        0.9,
+        -0.7
+      ],
+      "errors": [
+        2.0007431066126357e-23,
+        1.9697238336418972e-23,
+        6.220398206398768e-22,
+        3.2311742677852644e-27,
+        5.816113682013476e-24
+      ]
+    },
+    {
+      "cf": 4e-11,
+      "cs": 6e-11,
+      "tau": 4e-07,
+      "initial": [
+        0.9,
+        -0.7
+      ],
+      "errors": [
+        1.0842021724855044e-19,
+        4.87890977618477e-19,
+        6.749793798432706e-22,
+        2.5849394142282115e-26,
+        1.1309109937248425e-24
+      ]
+    },
+    {
+      "cf": 4e-11,
+      "cs": 6e-11,
+      "tau": 1e-07,
+      "initial": [
+        -0.8,
+        0.6
+      ],
+      "errors": [
+        1.455320890210483e-23,
+        1.4372263143108856e-23,
+        5.293955920339377e-23,
+        2.1810426307550534e-26,
+        5.050325380548368e-24
+      ]
+    },
+    {
+      "cf": 4e-11,
+      "cs": 6e-11,
+      "tau": 4e-07,
+      "initial": [
+        -0.8,
+        0.6
+      ],
+      "errors": [
+        3.2526065174565133e-18,
+        4.0115480381963664e-18,
+        1.376428539288238e-21,
+        1.3732490638087374e-26,
+        6.72084247699335e-25
+      ]
+    },
+    {
+      "cf": 9e-11,
+      "cs": 1e-11,
+      "tau": 1e-07,
+      "initial": [
+        0.9,
+        -0.7
+      ],
+      "errors": [
+        2.4319110009059014e-22,
+        2.4319110009059014e-22,
+        6.617444900424221e-23,
+        2.5849394142282115e-26,
+        2.5132073454833786e-23
+      ]
+    },
+    {
+      "cf": 9e-11,
+      "cs": 1e-11,
+      "tau": 4e-07,
+      "initial": [
+        0.9,
+        -0.7
+      ],
+      "errors": [
+        0.0,
+        0.0,
+        1.1117307432712692e-21,
+        1.2924697071141057e-25,
+        8.905116282016189e-24
+      ]
+    },
+    {
+      "cf": 9e-11,
+      "cs": 1e-11,
+      "tau": 1e-07,
+      "initial": [
+        -0.8,
+        0.6
+      ],
+      "errors": [
+        2.2726787329894435e-22,
+        2.2726787329894435e-22,
+        4.896909226313924e-22,
+        1.4734154661100805e-24,
+        1.9225486893322323e-23
+      ]
+    },
+    {
+      "cf": 9e-11,
+      "cs": 1e-11,
+      "tau": 4e-07,
+      "initial": [
+        -0.8,
+        0.6
+      ],
+      "errors": [
+        1.734723475976807e-18,
+        1.734723475976807e-18,
+        3.441071348220595e-21,
+        3.877409121342317e-26,
+        6.95994937280946e-24
+      ]
+    }
+  ],
+  "negative_controls": [
+    "finish without start",
+    "understated RC bound",
+    "early release",
+    "duplicate start",
+    "pump during centering",
+    "aborted guard cannot qualify"
+  ],
+  "controls": [
+    "97-way subdivision",
+    "energy dissipation",
+    "charge conservation",
+    "continuous phase/voltage at switch closure"
+  ],
+  "limitations": [
+    "Two shunt RC constants assumed matched; 400ns upper bound is not a silicon result.",
+    "Energy is relative to abstract fine-control center; shared-rail common-mode work is not qualified.",
+    "Standalone retuning sequence, not full-chip management integration."
+  ]
+}

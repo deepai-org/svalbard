@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "energy_residual_w": 2.710505431213761e-20,
+  "cases": [
+    {
+      "limit_a": 5e-05,
+      "minimum_reference_v": 0.41538444173308336,
+      "maximum_sample_gain": 2.362871358168705,
+      "last_sample_gain": 2.362871358168705,
+      "numerical_difference": 2.817430377888286e-08
+    },
+    {
+      "limit_a": 0.00015,
+      "minimum_reference_v": 0.9583442896809233,
+      "maximum_sample_gain": 1.0241622040934646,
+      "last_sample_gain": 1.02416220408414,
+      "numerical_difference": 1.1215175454992732e-08
+    },
+    {
+      "limit_a": 0.0006,
+      "minimum_reference_v": 0.9593429598496891,
+      "maximum_sample_gain": 1.0230960574868684,
+      "last_sample_gain": 1.0230960574868684,
+      "numerical_difference": 5.619340548435048e-10
+    }
+  ],
+  "limitations": [
+    "Local reference/rail model; full RF network, PLL and host integration remains.",
+    "Hard current limiting and constant bias are assumptions, not transistor feasibility.",
+    "Pass checks energy and numerical convergence; gain error is not a system quality pass."
+  ]
+}

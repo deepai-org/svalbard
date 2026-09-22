@@ -1,0 +1,44 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "rate_hz": 1250000000.0,
+      "seed": 1,
+      "phase_error_cycles": 1.8862186118573376e-12,
+      "locked": true,
+      "noise_bound_hz": 80000.0,
+      "forecast_error_cycles": 7.275957614183426e-12
+    },
+    {
+      "rate_hz": 1250000000.0,
+      "seed": 2,
+      "phase_error_cycles": 1.540410160538741e-12,
+      "locked": true,
+      "noise_bound_hz": 80000.0,
+      "forecast_error_cycles": 0.0
+    },
+    {
+      "rate_hz": 2500000000.0,
+      "seed": 1,
+      "phase_error_cycles": 5.389739002326088e-12,
+      "locked": true,
+      "noise_bound_hz": 80000.0,
+      "forecast_error_cycles": 1.4551915228366852e-11
+    },
+    {
+      "rate_hz": 2500000000.0,
+      "seed": 2,
+      "phase_error_cycles": 8.816367774722167e-12,
+      "locked": true,
+      "noise_bound_hz": 80000.0,
+      "forecast_error_cycles": 0.0
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Finite periodic spectral realization, not calibrated GF180 phase noise or infinite-band noise.",
+    "Lock is observed but not required under the injected noise; application tolerance is not qualified.",
+    "Noise currently perturbs VCO frequency only; pump/reference noise remain absent."
+  ]
+}

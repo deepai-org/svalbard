@@ -1,0 +1,27 @@
+* Hierarchical transistor schematic elaboration and bias check.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.include /vco/ring_vco.spice
+.include /screen/lo_buffer.spice
+.include /wifi/rf_lna/lna_cs_core.spice
+.include /wifi/rf_switch_mixer/mixer.spice
+.include /screen/bb_filter_section.spice
+.include /wifi/rf_if_transmission_gate/rf_if_transmission_gate.spice
+.include /screen/rf_rx_candidate.spice
+.temp 27
+VDD RFVDD 0 3.3
+VPLL PLLVDD 0 3.3
+VB RFBIAS 0 1.5
+VBB BBBIAS 0 2.25
+VC CTRL 0 1.08
+VSC SC 0 0
+VSCB SCB 0 3.3
+VIN IN 0 0
+XRX IN HP HN RFBIAS BBBIAS CTRL SC SCB RFVDD PLLVDD 0 pt_rf_rx_candidate
+.control
+set numdgt=15
+op
+print v(XRX.GATE) v(XRX.SOURCE) v(XRX.DRAIN) i(VDD) i(VPLL)
+.endc
+.end

@@ -1,0 +1,358 @@
+{
+  "completed": true,
+  "provenance": {
+    "cases": [
+      {
+        "name": "VH",
+        "target_v": 2.15,
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "0919c2036d9e69d48d4f18618fbffa79358d16178c89a48e8b02f11834031ba9",
+          ".dat": "93b5358be6a397f68aa5ebf143bd162cc872a29c9afc23d3bcbfafcb27446759",
+          ".log": "3090a079abd6071175d27f5619d4d4773d459f99c39c73b357abd15026166c2e"
+        }
+      },
+      {
+        "name": "VL",
+        "target_v": 1.15,
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "781c770e31e18e2ca4e236357af4238e1f3e257d32a5c71369ccea02e8abb3e9",
+          ".dat": "f0a2be364e32b7c761f3d3d9673a697b93d991755d19778bdc0b7978905bca57",
+          ".log": "3090a079abd6071175d27f5619d4d4773d459f99c39c73b357abd15026166c2e"
+        }
+      }
+    ],
+    "sources_before": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+      "/screen/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+      "/screen/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+      "/screen/reference/pair_device_dc.py": "099891f93fe0dcc34743c24459951c6b8f41dedb568d0d3f025fa946e6a86cb0"
+    },
+    "sources_after": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+      "/screen/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+      "/screen/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+      "/screen/reference/pair_device_dc.py": "099891f93fe0dcc34743c24459951c6b8f41dedb568d0d3f025fa946e6a86cb0"
+    }
+  },
+  "cases": [
+    {
+      "case": "VH",
+      "original_vectors_identical": true,
+      "stages": [
+        {
+          "stage": "xhigh",
+          "internal_nodes_v": {
+            "a": 0.7959825799731667,
+            "x": 1.688347945304293,
+            "t": 3.217994022266047
+          },
+          "devices": [
+            {
+              "device": "xip",
+              "vds": 2.42201144229288,
+              "vdsat": 0.2335509397128966,
+              "id": 0.0003172701305005068,
+              "gm": 0.002335362258104567,
+              "gds": 8.871848291041408e-06,
+              "reported_margin_v": 2.1884605025799835
+            },
+            {
+              "device": "xin",
+              "vds": 1.529646076961754,
+              "vdsat": 0.2432939172608287,
+              "id": 0.0003391302609378548,
+              "gm": 0.002391101601258445,
+              "gds": 1.236090212885394e-05,
+              "reported_margin_v": 1.2863521597009253
+            },
+            {
+              "device": "xt",
+              "vds": 0.08200597773395302,
+              "vdsat": 0.2351162560530285,
+              "id": 0.0006564003830395238,
+              "gm": 0.003157070479836703,
+              "gds": 0.006257451181374544,
+              "reported_margin_v": -0.15311027831907548
+            },
+            {
+              "device": "xmp",
+              "vds": 0.7959825799731667,
+              "vdsat": 0.1353453347551851,
+              "id": 0.0003172721831473121,
+              "gm": 0.003915124957306926,
+              "gds": 2.730203070691867e-05,
+              "reported_margin_v": 0.6606372452179816
+            },
+            {
+              "device": "xmn",
+              "vds": 1.688347945304293,
+              "vdsat": 0.1360462888252388,
+              "id": 0.0003391274379647378,
+              "gm": 0.004103735666923582,
+              "gds": 2.30141590885574e-05,
+              "reported_margin_v": 1.5523016564790544
+            },
+            {
+              "device": "xout",
+              "vds": 1.136852390294939,
+              "vdsat": 0.6888764975672518,
+              "id": 0.005646267120017306,
+              "gm": 0.01178815059967098,
+              "gds": 0.0003071475500535487,
+              "reported_margin_v": 0.44797589272768723
+            },
+            {
+              "device": "xload",
+              "vds": 2.163147609705061,
+              "vdsat": 0.1368730290629563,
+              "id": 0.005644806008876953,
+              "gm": 0.06741213087278328,
+              "gds": 0.0003611066050012733,
+              "reported_margin_v": 2.026274580642105
+            }
+          ]
+        },
+        {
+          "stage": "xlow",
+          "internal_nodes_v": {
+            "a": 2.176210856301666,
+            "x": 1.079277703992076,
+            "t": 0.2212118646073835
+          },
+          "devices": [
+            {
+              "device": "xip",
+              "vds": 1.954998991694283,
+              "vdsat": 0.1717359455919432,
+              "id": 0.0005821866930091486,
+              "gm": 0.005735166215419613,
+              "gds": 3.181276938211271e-05,
+              "reported_margin_v": 1.7832630461023398
+            },
+            {
+              "device": "xin",
+              "vds": 0.8580658393846927,
+              "vdsat": 0.1782202759120533,
+              "id": 0.0006036602604347875,
+              "gm": 0.005816856930994626,
+              "gds": 4.277034546339855e-05,
+              "reported_margin_v": 0.6798455634726395
+            },
+            {
+              "device": "xt",
+              "vds": 0.2212118646073835,
+              "vdsat": 0.1353455969431208,
+              "id": 0.001185846931247797,
+              "gm": 0.01458603897966225,
+              "gds": 0.0004271692284043331,
+              "reported_margin_v": 0.08586626766426272
+            },
+            {
+              "device": "xmp",
+              "vds": 1.123789143698334,
+              "vdsat": 0.311871616467747,
+              "id": 0.0005822189506247676,
+              "gm": 0.003064950784844314,
+              "gds": 2.56390011862984e-05,
+              "reported_margin_v": 0.811917527230587
+            },
+            {
+              "device": "xmn",
+              "vds": 2.220722296007924,
+              "vdsat": 0.3126552343190167,
+              "id": 0.0006036598743568856,
+              "gm": 0.003168966166703989,
+              "gds": 1.57429671529548e-05,
+              "reported_margin_v": 1.908067061688907
+            },
+            {
+              "device": "xout",
+              "vds": 1.139521626159787,
+              "vdsat": 0.3364758142599258,
+              "id": 0.005335385362570009,
+              "gm": 0.02378670693965276,
+              "gds": 0.0002265948284033227,
+              "reported_margin_v": 0.8030458118998611
+            },
+            {
+              "device": "xload",
+              "vds": 2.160478373840213,
+              "vdsat": 0.2365961607390423,
+              "id": 0.005335381079636408,
+              "gm": 0.03823938783496186,
+              "gds": 0.0001553841203704176,
+              "reported_margin_v": 1.9238822131011706
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "VL",
+      "original_vectors_identical": true,
+      "stages": [
+        {
+          "stage": "xhigh",
+          "internal_nodes_v": {
+            "a": 0.795982579945996,
+            "x": 1.688347945304099,
+            "t": 3.217994022296637
+          },
+          "devices": [
+            {
+              "device": "xip",
+              "vds": 2.422011442350641,
+              "vdsat": 0.2335509397447365,
+              "id": 0.0003172701305979707,
+              "gm": 0.002335362258466686,
+              "gds": 8.871848293084411e-06,
+              "reported_margin_v": 2.1884605026059045
+            },
+            {
+              "device": "xin",
+              "vds": 1.529646076992538,
+              "vdsat": 0.2432939172943148,
+              "id": 0.000339130261042421,
+              "gm": 0.002391101601624088,
+              "gds": 1.236090213200299e-05,
+              "reported_margin_v": 1.2863521596982233
+            },
+            {
+              "device": "xt",
+              "vds": 0.08200597770336326,
+              "vdsat": 0.2351162560530076,
+              "id": 0.0006564003828481103,
+              "gm": 0.003157070478700394,
+              "gds": 0.006257451182658679,
+              "reported_margin_v": -0.15311027834964433
+            },
+            {
+              "device": "xmp",
+              "vds": 0.795982579945996,
+              "vdsat": 0.1353453347373944,
+              "id": 0.0003172721830401941,
+              "gm": 0.003915124956441255,
+              "gds": 2.730203070034973e-05,
+              "reported_margin_v": 0.6606372452086016
+            },
+            {
+              "device": "xmn",
+              "vds": 1.688347945304099,
+              "vdsat": 0.1360462888074289,
+              "id": 0.0003391274378532323,
+              "gm": 0.004103735666044662,
+              "gds": 2.301415908343049e-05,
+              "reported_margin_v": 1.55230165649667
+            },
+            {
+              "device": "xout",
+              "vds": 1.136852390292897,
+              "vdsat": 0.6888764975673989,
+              "id": 0.00564626712001897,
+              "gm": 0.01178815059967089,
+              "gds": 0.0003071475500545419,
+              "reported_margin_v": 0.4479758927254982
+            },
+            {
+              "device": "xload",
+              "vds": 2.163147609707103,
+              "vdsat": 0.1368730290629583,
+              "id": 0.005644806008877687,
+              "gm": 0.06741213087278908,
+              "gds": 0.0003611066050012505,
+              "reported_margin_v": 2.0262745806441447
+            }
+          ]
+        },
+        {
+          "stage": "xlow",
+          "internal_nodes_v": {
+            "a": 2.176210856300583,
+            "x": 1.079277703992054,
+            "t": 0.2212118646233166
+          },
+          "devices": [
+            {
+              "device": "xip",
+              "vds": 1.954998991677267,
+              "vdsat": 0.1717359455774305,
+              "id": 0.0005821866928907204,
+              "gm": 0.005735166214735675,
+              "gds": 3.181276937798167e-05,
+              "reported_margin_v": 1.7832630460998364
+            },
+            {
+              "device": "xin",
+              "vds": 0.8580658393687376,
+              "vdsat": 0.1782202758971157,
+              "id": 0.0006036602603120623,
+              "gm": 0.005816856930313189,
+              "gds": 4.277034545720023e-05,
+              "reported_margin_v": 0.6798455634716218
+            },
+            {
+              "device": "xt",
+              "vds": 0.2212118646233167,
+              "vdsat": 0.1353455969431337,
+              "id": 0.001185846931254605,
+              "gm": 0.01458603897978902,
+              "gds": 0.0004271692283245897,
+              "reported_margin_v": 0.08586626768018302
+            },
+            {
+              "device": "xmp",
+              "vds": 1.123789143699417,
+              "vdsat": 0.3118716164685977,
+              "id": 0.0005822189506281157,
+              "gm": 0.003064950784852378,
+              "gds": 2.563900118642377e-05,
+              "reported_margin_v": 0.8119175272308192
+            },
+            {
+              "device": "xmn",
+              "vds": 2.220722296007946,
+              "vdsat": 0.3126552343198672,
+              "id": 0.000603659874360318,
+              "gm": 0.003168966166712194,
+              "gds": 1.574296715303181e-05,
+              "reported_margin_v": 1.9080670616880788
+            },
+            {
+              "device": "xout",
+              "vds": 1.139521626160212,
+              "vdsat": 0.3364758142599109,
+              "id": 0.005335385362569578,
+              "gm": 0.02378670693965219,
+              "gds": 0.0002265948284032424,
+              "reported_margin_v": 0.803045811900301
+            },
+            {
+              "device": "xload",
+              "vds": 2.160478373839788,
+              "vdsat": 0.2365961607390394,
+              "id": 0.005335381079636335,
+              "gm": 0.03823938783496143,
+              "gds": 0.0001553841203704337,
+              "reported_margin_v": 1.9238822131007485
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Model-reported currents and margins require orientation/physical-terminal checks before causal interpretation.",
+    "Zero-load DC nominal targets; no dynamic regulation, noise or process qualification.",
+    "Device correlations alone do not establish cause of offset."
+  ]
+}

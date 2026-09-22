@@ -1,0 +1,116 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "scheduled_adc_snapshot": 1793,
+      "completed_samples": 32,
+      "playback_host_conflict_rejected": true,
+      "ownership_retained_while_armed": true
+    },
+    {
+      "mode": 1,
+      "scheduled_adc_snapshot": 1793,
+      "completed_samples": 32,
+      "playback_host_conflict_rejected": true,
+      "ownership_retained_while_armed": true
+    }
+  ],
+  "cancellation": [
+    {
+      "mode": 0,
+      "before": [
+        1793,
+        1795,
+        1796,
+        1795,
+        1797,
+        1542
+      ],
+      "cancelled_adc": 1,
+      "cancelled_dac": 1,
+      "disabled_receiver_not_busy": true
+    },
+    {
+      "mode": 1,
+      "before": [
+        1793,
+        1795,
+        1796,
+        1795,
+        1797,
+        1542
+      ],
+      "cancelled_adc": 1,
+      "cancelled_dac": 1,
+      "disabled_receiver_not_busy": true
+    }
+  ],
+  "resources": [
+    {
+      "id": 0,
+      "name": "iq_adc",
+      "dependencies": [
+        "rf_rx_filter",
+        "rf_lo",
+        "sample_clock",
+        "adc_reference"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "iq_dac",
+      "dependencies": [
+        "rf_tx_filter",
+        "rf_lo",
+        "sample_clock",
+        "dac_reference"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "capture_bank",
+      "dependencies": [
+        "iq_adc"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "playback_bank",
+      "dependencies": [
+        "iq_dac"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "wired_rx",
+      "dependencies": [
+        "wired_cdr"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "wired_tx",
+      "dependencies": [
+        "wired_tx_clock"
+      ]
+    }
+  ],
+  "owners": [
+    "none",
+    "rf_receive",
+    "host_stream",
+    "playback",
+    "capture",
+    "wired_receive",
+    "wired_transmit"
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Discovery covers six existing data/converter/memory engines, not all analog tiles or diagnostic allocations.",
+    "Dependencies describe intended services; their names do not certify physical implementation or dynamic allocation.",
+    "Flags distinguish configured owner, pending work and armed configuration freeze; not transistor power state.",
+    "Model-management IDs and packed flags are provisional, not a frozen SPI hardware ABI."
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "target_hz": 2320000000,
+      "max_relative_error": 2.4554693016136525e-09,
+      "returned_samples": 32
+    },
+    {
+      "mode": 0,
+      "target_hz": 2400000000,
+      "max_relative_error": 1.1633855573657601e-09,
+      "returned_samples": 32
+    },
+    {
+      "mode": 0,
+      "target_hz": 2480000000,
+      "max_relative_error": 1.9837636675509227e-09,
+      "returned_samples": 32
+    },
+    {
+      "mode": 1,
+      "target_hz": 2320000000,
+      "max_relative_error": 2.4554693016136525e-09,
+      "returned_samples": 32
+    },
+    {
+      "mode": 1,
+      "target_hz": 2400000000,
+      "max_relative_error": 1.1633855573657601e-09,
+      "returned_samples": 32
+    },
+    {
+      "mode": 1,
+      "target_hz": 2480000000,
+      "max_relative_error": 1.9837636675509227e-09,
+      "returned_samples": 32
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Integer40MHz channels only; Wi-Fi channel spacing still requires fractional feedback.",
+    "Ideal divider/PFD reset introduces no analog charge injection; real reprogramming transients remain unknown.",
+    "Noiseless single-tone cases; not a wideband or physical RF qualification."
+  ]
+}

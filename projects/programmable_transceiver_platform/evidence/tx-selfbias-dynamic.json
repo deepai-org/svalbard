@@ -1,0 +1,175 @@
+{
+  "status": "completed_dynamic_selfbias_diagnostic",
+  "case_status": [
+    {
+      "name": "zero",
+      "completed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "failure_time_s": null,
+      "waveform_available": true,
+      "actual_stop_ns": 10.0
+    },
+    {
+      "name": "minus",
+      "completed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "failure_time_s": null,
+      "waveform_available": true,
+      "actual_stop_ns": 10.0
+    },
+    {
+      "name": "plus",
+      "completed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "failure_time_s": null,
+      "waveform_available": true,
+      "actual_stop_ns": 10.0
+    }
+  ],
+  "cases": [
+    {
+      "name": "zero",
+      "window_ns": [
+        6,
+        10
+      ],
+      "first_stage_ranges_v": null,
+      "complete_cycles": 9,
+      "rf_fundamental_peak_range_v": [
+        0.046249633093006656,
+        0.04795292875234495
+      ],
+      "input_common_mode_mean_v": 1.5344289213458813,
+      "lo_range_v": [
+        0.06364768327275927,
+        3.073519299707694
+      ],
+      "buffer_power_w": 0.013806875080662936
+    },
+    {
+      "name": "minus",
+      "window_ns": [
+        6,
+        10
+      ],
+      "first_stage_ranges_v": null,
+      "complete_cycles": 9,
+      "rf_fundamental_peak_range_v": [
+        0.00012772173753286753,
+        0.007528514374911272
+      ],
+      "input_common_mode_mean_v": 1.5111605970265605,
+      "lo_range_v": [
+        -0.001536715812130154,
+        2.497651704292717
+      ],
+      "buffer_power_w": 0.012200541413016654
+    },
+    {
+      "name": "plus",
+      "window_ns": [
+        6,
+        10
+      ],
+      "first_stage_ranges_v": null,
+      "complete_cycles": 9,
+      "rf_fundamental_peak_range_v": [
+        0.0763642654173948,
+        0.08201312503282326
+      ],
+      "input_common_mode_mean_v": 1.5588575131458613,
+      "lo_range_v": [
+        0.2911851694697667,
+        3.263344327287721
+      ],
+      "buffer_power_w": 0.012216683375851384
+    }
+  ],
+  "provenance": {
+    "cases": [
+      {
+        "name": "zero",
+        "injection_a": 0,
+        "returncode": 0,
+        "timed_out": false,
+        "deck_sha256_before": "3ce79fdd107aa2337a17683483c3751a8977cd524e743b143805f3355da70b35",
+        "elapsed_seconds": 24.92304337117821,
+        "artifacts_sha256": {
+          ".spice": "3ce79fdd107aa2337a17683483c3751a8977cd524e743b143805f3355da70b35",
+          ".log": "e44d68b736aa0d00bd92e9f06b07b7f02955eb4e36ea02456ca92b083feb3c6d",
+          ".dat": "5a51c902320f9eec2a9fcb5709d35b50ed6e0f1ac522b1378a91570e40d92f80"
+        }
+      },
+      {
+        "name": "minus",
+        "injection_a": -3e-06,
+        "returncode": 0,
+        "timed_out": false,
+        "deck_sha256_before": "2257c8aa806f2d8b6361922801791f97e3aa461fd4f5db508c0e5c6bf1d1b3c9",
+        "elapsed_seconds": 24.701535906642675,
+        "artifacts_sha256": {
+          ".spice": "2257c8aa806f2d8b6361922801791f97e3aa461fd4f5db508c0e5c6bf1d1b3c9",
+          ".log": "eefb242a4384f831b00d204b0e9717a0befb822c4e8e1c0457d277b331408176",
+          ".dat": "14b5990372f8ce7c9ab40ed2c0c34459d018c16c1f582a47c3f61ce2dfb1e145"
+        }
+      },
+      {
+        "name": "plus",
+        "injection_a": 3e-06,
+        "returncode": 0,
+        "timed_out": false,
+        "deck_sha256_before": "d6adc34acece779dd6399ba55a2eb201280cfa8df8535482e0b3715d09c305a6",
+        "elapsed_seconds": 24.64576007798314,
+        "artifacts_sha256": {
+          ".spice": "d6adc34acece779dd6399ba55a2eb201280cfa8df8535482e0b3715d09c305a6",
+          ".log": "030337d2471588bfbe66d100ab37b046d2baaec1b73c85aaa70faa7e75027694",
+          ".dat": "dc3cdbcf3c7308ce503936a7de24baf97bf9640e955ba435c028313f81486689"
+        }
+      }
+    ],
+    "source_sha256_before": {
+      "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+      "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+      "/screen/dac/segmented8.spice": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+      "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/screen/tx/commutator.spice": "89cb009a303ded0120ce8536abe86174045bb73ed27b1ec3272f0cdfdef8ad6b",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+      "/screen/tx/commutator_tg.spice": "3d28ec375da796cf1333da9d085caab5cd74bcda44a835f0e7cf72f06433a304",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275"
+    },
+    "source_sha256_after": {
+      "/screen/dac/current_steering8.spice": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+      "/screen/dac/thermometer4.spice": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+      "/screen/dac/segmented8.spice": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+      "/screen/adc/code_driver_small.spice": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/screen/tx/commutator.spice": "89cb009a303ded0120ce8536abe86174045bb73ed27b1ec3272f0cdfdef8ad6b",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+      "/screen/tx/commutator_tg.spice": "3d28ec375da796cf1333da9d085caab5cd74bcda44a835f0e7cf72f06433a304",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275"
+    }
+  },
+  "limitations": [
+    "Recorded oscillator-output voltage replay removes bidirectional oscillator loading; no autonomous stability claim.",
+    "Equal injected currents are scenarios, not process/mismatch bounds; ideal supplies and passives.",
+    "Finite OP-initialized replay; observed windows alone do not establish all-time stability or asymmetric disturbance tolerance."
+  ]
+}

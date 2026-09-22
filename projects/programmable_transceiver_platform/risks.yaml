@@ -1,0 +1,60 @@
+{
+  "component": "project.programmable_transceiver_platform",
+  "risks": [
+    {
+      "id": "provider",
+      "status": "open",
+      "description": "Custom pad ring, assembly, process revision and submission acceptance are not frozen."
+    },
+    {
+      "id": "host_gpio",
+      "status": "open",
+      "description": "Native TT/SS pad-pair screen is positive only under ideal supplies and 5 pF loads. Pass-6 candidate splits eleven fast outputs across two host supply/return pairs; worst limited estimate with provisional allowances is 51.77 mA against a 55 mA target. Actual segmentation, FF/high-voltage current, full-bank SSO, package, H2D and FPGA-bank limits remain unclosed. ECP5 datasheet screening rejects its documented LVCMOS output limit for the top profile; 150 MHz DDR cannot carry the declared PCIe/RF combination. A full-rate ordinary-GPIO host is still unqualified. Pass-8 nominal 8 pF simulation, motivated by Artix-7 die capacitance, gives HOST_B 63.54 mA after existing allowances versus 55 mA; power allocation is not closed even at the narrow nominal operating point. Pass-9 native 12 mA drive improves the nominal 8 pF HOST_B estimate to 55.75 mA with unchanged allowances, still above 55 mA; no driver selection or power closure is claimed. Pass-10 8 mA candidate yields 53.80 mA HOST_B at nominal 10 pF with existing allowances, leaving 1.20 mA; package/bank/process and host timing remain open. Pass-11 selected signal-path R/L cases retain >=0.665 V sampled margin and pass a new extra-clock interval screen, but supplies/returns remain ideal and the package remains unqualified."
+    },
+    {
+      "id": "transport",
+      "status": "open",
+      "description": "V2 protected-header streaming is default integrated RTL; no payload CRC/quarantine. Both full-rate nominal-loopback profiles and independent decoding pass; v1 remains a compile-time comparison. V2 drift/phase FIFO bounds, arbitrary acquisition/DDR bit slips, clock loss/SSC, hardware command timing and protocol peers remain unqualified. Payload BER and undetected four-bit metadata errors need explicit budgets."
+    },
+    {
+      "id": "analog",
+      "status": "open",
+      "description": "Existing RF and wired experiments do not establish complete chip performance or RF model validity."
+    },
+    {
+      "id": "area",
+      "status": "open",
+      "description": "Pass 17 maps digital plus flop-based memories to 1.054 mm\u00b2 cell area (27,662 cells, 9,423 flops). At an illustrative 50% utilization this consumes 2.109 mm\u00b2 of the combined 2.3 mm\u00b2 digital/memory region; at 35% it exceeds that allocation. Utilization bounds, placement, clock/support cells, physical interfaces, timing and power remain unverified. Analog budgets remain unimplemented footprints. Pass 33 sized digital candidate legally places all 26,269 cells in an abstract 1500x1530um region (41.83% realized row utilization). Independent geometry checks and negative controls pass. No routing, CTS, PDN/taps, analog/padframe or post-placement timing closure; this is not proof of full-chip fit."
+    },
+    {
+      "id": "protocols",
+      "status": "open",
+      "description": "External FPGA modem/PCS/soft-PCIe adapters and peer interoperability remain unverified."
+    },
+    {
+      "id": "sharing",
+      "status": "open",
+      "description": "Pooled resources, converter monitoring and references require contention/coupling closure."
+    },
+    {
+      "id": "signoff",
+      "status": "open",
+      "description": "No complete schematic, layout, top-level DRC/LVS/PEX, reliability review or immutable submission exists."
+    },
+    {
+      "id": "core_power_reallocation",
+      "status": "open",
+      "description": "One CORE supply/return pair was reassigned to HOST within the unchanged 50-terminal budget. CORE now has a 48 mA design ceiling, including pre-drivers; no actual RTL/memory/activity/PDN evidence establishes compliance. Revisit allocation if it fails."
+    },
+    {
+      "id": "shared_rail_numerics",
+      "status": "open",
+      "description": "Pass-12 native shared output supply/return R/L runs fail to complete before stimulus under both default and Gear integration. Six incomplete cases retained; numerical/model/topology cause unresolved. No rail-margin or bank-power evidence exists from this experiment. Pass-13 four quiet-input 1 ns topology-isolation probes complete with near-DC rails; this does not explain the later slowdown or close dynamic rail behavior. Pass-14 snapshots show either supply-only or return-only impedance can trigger slowdown with tiny captured terminal variations; ideal rails reach 12 ns. Solver/internal-node diagnosis remains open. Pass-15 KLU also fails shared rails (initial DVSS timestep abort), while both solvers complete ideal controls. Parser now rejects post-abort operating-point files masquerading as transient checkpoints."
+    },
+    {
+      "id": "digital_timing",
+      "status": "open",
+      "description": "Pass 18 raw TT 25C 3.3V mapped STA fails same-domain host/wired timing and reports 5,586 electrical violation rows per clock profile. Host-TX reset/enable net drives 1,414 input pins without buffering; extrapolated slacks are not physical delay predictions. Repair electrical fanout and physical clock/reset distribution before inferring achievable speed. External IO constraints, CDC, STA corners, jitter, placement and power remain open. Pass 19 bounded-fanout unplaced buffering adds 1,426 cells/0.044 mm\u00b2 and reduces electrical violation rows to 18, but host/wired setup still fails. Host TX word selection plus CRC and host RX slot decode/count paths require redesign or timing-driven optimization; full targets remain unchanged. Buffer-collapse connectivity is verified, not physical timing equivalence. Pass 20 receive slot predecode improves buffered host-RX setup slack to -8.9803 ns and shifts the critical path to frame-bank readout. Both full-rate functional tests still pass, but timing remains failed; buffered cell area increases to 1.114371 mm\u00b2. Pass 21 splits frame-bank readout into registered 16:1 subreads and 8:1 selection. Full-rate host-RX slack improves to -8.4266 ns and the limiting path moves to RX CRC. Buffered area is 1.121828 mm\u00b2. One host-word cycle of receive latency is added; protocol latency closure remains open. Pass 22 parallel CRC equations pass exhaustive combinational SAT equivalence and finite full-frame tests. Buffered full-rate TX/RX setup slacks improve to -10.3125/-7.9343 ns, with 1.125960 mm\u00b2 cell area and 18 electrical violation rows. Timing still fails; RX critical path now enters the I/Q unpacker. Pass 28 integrated v2 reduces buffered area to 0.964299 mm\u00b2 / 8,119 flops and nominal high-profile clock-pin charging current to 19.51mA. Electrical violation rows become zero in the limited screen, but host TX/RX setup remains -9.2393/-11.1264ns: RX regresses due to slot decode to FIFO write. No physical closure. Pass 29 v2 schedule masks improve host-RX setup slack to -10.0815ns, but recovery worsens to -2.4561ns. Header validation/schedule loading becomes the critical setup path. Buffered area is 0.974386 mm\u00b2, nominal high-profile clock-pin current 19.92mA; all timing remains unqualified. Pass 30 early schedule preloading passed functional checks but regressed aggregate setup slack in the existing area-oriented mapping; the candidate was rejected and pass-29 RTL restored by SHA256. Mapping/buffering sensitivity, reset/enable distribution and timing-driven optimization now require attention before more RTL tweaks. Pass 31 target-only ABC -D3200 yields unchanged results. Enabling ABC buffering/upsize/dnsize with illustrative buf_1/5fF boundaries reduces buffered area to 0.956517 mm\u00b2 and host TX/RX setup failures to -8.0069/-8.2062ns. This diagnostic has no full gate-level equivalence or physical qualification; reset recovery remains failed. Pass 32 SAT proves mapped next-state/output equivalence between target-only and sized/buffered artifacts for matched state, including register clocks/resets; intentional status inversion is rejected. This is not RTL-to-gates, metastability, glitch or physical timing qualification. Pass 34 placed signal-RC estimate worsens high-profile host TX/RX setup to -16.2450/-12.2338ns and adds four electrical violation rows. Uniform nominal Metal3 estimated RC is not routed extraction or a bound; ideal clocks still omit CTS/skew. Legal placement has not solved interconnect timing."
+    }
+  ]
+}

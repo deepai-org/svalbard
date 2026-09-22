@@ -1,0 +1,41 @@
+* Matched-frequency comparison: only the Q mixer instance changes.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.include @CORE@
+.temp 27
+VDD VDD 0 3.3
+VBIAS BIAS 0 1.5
+RB GATE BIAS 1meg
+VRF RF_SRC 0 SIN(0 @AMPLITUDE@ 2410000000.0)
+RSIG RF_SRC RF_PAD 50
+CCIN RF_PAD GATE 20p
+RD VDD MIX_RF 300
+RSOURCE SOURCE 0 82
+VI IDRV 0 PULSE(0 3.3 0 10p 10p 1.983333333333333e-10 4.166666666666667e-10)
+RI IDRV LOI 10
+VIB IBDRV 0 PULSE(0 3.3 2.083333333333333e-10 10p 10p 1.983333333333333e-10 4.166666666666667e-10)
+RIB IBDRV LOIB 10
+VQ QDRV 0 PULSE(0 3.3 1.041666666666667e-10 10p 10p 1.983333333333333e-10 4.166666666666667e-10)
+RQ QDRV LOQ 10
+VQB QBDRV 0 PULSE(0 3.3 3.125e-10 10p 10p 1.983333333333333e-10 4.166666666666667e-10)
+RQB QBDRV LOQB 10
+RIP IP 0 1k
+CIP IP 0 1p
+RIN IN 0 1k
+CIN IN 0 1p
+RQP QP 0 1k
+CQP QP 0 1p
+RQN QN 0 1k
+CQN QN 0 1p
+
+XDUT GATE MIX_RF SOURCE LOI LOIB LOQ LOQB IP IN QP QN 0 pt_rx_iq_core
+.control
+set wr_singlescale
+set wr_vecnames
+set numdgt=15
+tran 2e-12 301n 0 2e-12
+let idiff = v(IP)-v(IN)
+let qdiff = v(QP)-v(QN)
+wrdata @DATA@ idiff qdiff v(MIX_RF) i(VDD)
+.endc
+.end

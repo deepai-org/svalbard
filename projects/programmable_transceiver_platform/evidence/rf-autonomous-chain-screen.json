@@ -1,0 +1,124 @@
+{
+  "status": "single_branch_autonomous_lo_filtered_sampled_tone_not_complete_receiver",
+  "cases": [
+    {
+      "amplitude_v": 0,
+      "sample_times_s": [
+        1.24e-07,
+        1.49e-07,
+        1.74e-07,
+        1.99e-07,
+        2.24e-07,
+        2.4899999999999997e-07,
+        2.74e-07,
+        2.99e-07
+      ],
+      "held_samples_v": [
+        -8.36146098248669e-06,
+        6.232617585255618e-06,
+        -5.774356382159951e-06,
+        5.908762347628382e-06,
+        -5.89744127521552e-06,
+        5.703818437341468e-06,
+        -5.851979436366506e-06,
+        5.7097379179138485e-06
+      ],
+      "hold_range_v": [
+        1.068024807388882,
+        1.094170371136335
+      ],
+      "vco_current_a": 0.008408912247150013,
+      "rf_filter_current_a": 0.010920793588769255,
+      "artifacts_sha256": {
+        ".spice": "2dcec29060c2a1de3838a21349af5760bbdbf308a3a8b4d0bc0c9dd8776a86d6",
+        ".dat": "435303854505a2ff784c2a65861998c18387d032c0c68fe06ae617f483f37d1d",
+        ".log": "8a526a18b5adb2e183c17dbb2e8c7980b40eafb1b7b0d71547281fec63fe03b4"
+      },
+      "measured_late_vco_frequency_hz": 2500416558.395048,
+      "measured_if_hz": 9999834.233448029
+    },
+    {
+      "amplitude_v": 0.001,
+      "sample_times_s": [
+        1.24e-07,
+        1.49e-07,
+        1.74e-07,
+        1.99e-07,
+        2.24e-07,
+        2.4899999999999997e-07,
+        2.74e-07,
+        2.99e-07
+      ],
+      "held_samples_v": [
+        -2.1217963335873335e-05,
+        2.9508689105561814e-05,
+        6.852072898522188e-06,
+        -1.7290134457170758e-05,
+        -1.842435732646308e-05,
+        2.8785392487074013e-05,
+        6.6541288186172665e-06,
+        -1.7524575283589524e-05
+      ],
+      "hold_range_v": [
+        1.068013222365647,
+        1.094175946053078
+      ],
+      "vco_current_a": 0.00840891224767477,
+      "rf_filter_current_a": 0.010920793617635993,
+      "artifacts_sha256": {
+        ".spice": "02f71791d135ab116ffb4e5f24f2564c10a68d36b841fa7d0836233b3bc6e0e3",
+        ".dat": "2aa1b599ade9ca531da8b5dac1cc9e27621f4def0995bcff9c80b49e34bf0359",
+        ".log": "b7aae17c35857625ce6cb75007879d98ab372a2432b982bd0fd4a78ee38b0c2a"
+      },
+      "measured_late_vco_frequency_hz": 2500416558.299603,
+      "measured_if_hz": 9999834.328893185
+    }
+  ],
+  "rf_hz": 2510416392.628496,
+  "nominal_if_hz": 10000000.0,
+  "baseline_subtracted_samples_v": [
+    -1.2856502353386645e-05,
+    2.3276071520306196e-05,
+    1.2626429280682139e-05,
+    -2.319889680479914e-05,
+    -1.252691605124756e-05,
+    2.3081574049732545e-05,
+    1.2506108254983772e-05,
+    -2.3234313201503373e-05
+  ],
+  "held_tone_gain": 0.026412597234974553,
+  "fit_residual_rms_v": 1.0303877604205797e-07,
+  "runner_sha256": "5ac3bd7d96d4e6a1fa2c6369045aec9e1810dcb8743d9fb32b874021bcbb6a40",
+  "limitations": [
+    "One branch, no quadrature or ADC; ideal 40MS/s sampling clock and biases.",
+    "Seeded oscillator, no PLL, intrinsic phase noise, mismatch, PEX, package or pad model.",
+    "Eight held samples and paired zero subtraction are a diagnostic, not EVM/SNR/ENOB.",
+    "RF frequency selected using preceding clock measurement; not demonstrated channel tuning or acquisition.",
+    "Added filter loading may pull oscillator and alter frequency; fixed 10MHz fit is diagnostic."
+  ],
+  "four_sample_block_diagnostics": [
+    {
+      "mean_v": -3.82245892993631e-08,
+      "tone_gain": 0.026501426779921528,
+      "sin_v": -1.1257229741634627e-05,
+      "cos_v": -2.3991673553872783e-05
+    },
+    {
+      "mean_v": -4.3386737008653225e-08,
+      "tone_gain": 0.02632400861279284,
+      "sin_v": -1.1037714364023635e-05,
+      "cos_v": -2.389816501459093e-05
+    }
+  ],
+  "baseline_subtracted_stage_tone_gain": {
+    "mixer_output": 0.003208425608298128,
+    "filter_output": 0.026615147596794543
+  },
+  "dependency_sha256": {
+    "projects/programmable_transceiver_platform/analog/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+    "projects/programmable_transceiver_platform/analog/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+    "projects/programmable_transceiver_platform/analog/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+    "ip/blocks/analog/wifi_80211b/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02"
+  },
+  "interpretation_correction_pass124": "UIC transient leaves LNA gate near 20mV rather than intended 1.5V within 301ns (1Mohm bias/20pF coupling). Raw results retained. Receiver useful-gain and loading conclusions cannot be extrapolated to a correctly biased receiver. Clock results describe this underbiased load only; recheck with corrected bias."
+}

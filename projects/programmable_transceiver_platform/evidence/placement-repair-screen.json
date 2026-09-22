@@ -1,0 +1,98 @@
+{
+  "scope": "Experimental placement-aware electrical repair; not adopted or equivalence-qualified",
+  "input_database_sha256": "b5103d3804cec1c9051ec047f4d3bdce77da8a065e90c85faf5ad249c8ebc9ae",
+  "before": {
+    "estimated_signal_parasitics": true,
+    "worst_slacks_ns": {
+      "host_tx_clk": {
+        "asynchronous": -6.1974,
+        "host_tx_clk": -16.245
+      },
+      "host_rx_clk": {
+        "asynchronous": -4.6833,
+        "host_rx_clk": -12.2338
+      },
+      "wire_rx_clk": {
+        "asynchronous": 2.1277,
+        "wire_rx_clk": -8.0626
+      },
+      "wire_tx_clk": {
+        "asynchronous": 0.5068,
+        "wire_tx_clk": -6.5463
+      },
+      "rf_rx_clk": {
+        "asynchronous": 48.0917,
+        "rf_rx_clk": 39.5516
+      },
+      "rf_tx_clk": {
+        "asynchronous": 48.1005,
+        "rf_tx_clk": 38.3291
+      },
+      "host_sclk": {
+        "host_sclk": 36.7149
+      },
+      "ref_clk": {
+        "ref_clk": 17.303
+      }
+    },
+    "electrical_violation_rows": 4,
+    "log_sha256": "61acc5e51cbd21fd6cd7c1a3d0257ff795acf390d4be9463ce0592981312c781"
+  },
+  "after": {
+    "cells": 26275,
+    "cell_area_um2": 956635.2319997153,
+    "unplaced": 0,
+    "worst_slacks_ns": {
+      "host_tx_clk": {
+        "asynchronous": -6.1974,
+        "host_tx_clk": -16.245
+      },
+      "host_rx_clk": {
+        "asynchronous": -4.6833,
+        "host_rx_clk": -12.2359
+      },
+      "wire_rx_clk": {
+        "asynchronous": 2.1277,
+        "wire_rx_clk": -8.0626
+      },
+      "wire_tx_clk": {
+        "asynchronous": 0.5068,
+        "wire_tx_clk": -6.5463
+      },
+      "rf_rx_clk": {
+        "asynchronous": 48.0917,
+        "rf_rx_clk": 39.5516
+      },
+      "rf_tx_clk": {
+        "asynchronous": 48.1005,
+        "rf_tx_clk": 38.3291
+      },
+      "host_sclk": {
+        "host_sclk": 36.7149
+      },
+      "ref_clk": {
+        "ref_clk": 17.303
+      }
+    },
+    "electrical_violation_rows": 0
+  },
+  "artifact_sha256": {
+    "repair.log": "032590e15c0b701e256d8321ee6a043fd52b72bcf881aae53f3a0861668f54a2",
+    "repaired.odb": "a233088a7368c14c479fb969fc08191afc59391418bff129c150adbc847a8dfd",
+    "repaired.def": "01e3ffb09c4c72d74eeeba97f6935806926f303c82df9bb5a9586bfd1878c54d",
+    "repaired.v": "a9f61de99c9c9d9c775fedc78e605714c71a79064cc5aa9d8869291e3ca432c8"
+  },
+  "source_sha256": {
+    "repair_placement_screen.tcl": "e41ba101e49eef8be4089aeb7ec24bec8d400cb7650ccb903b501c78b8552882",
+    "run_placement_repair.sh": "39fe7447b0f5819f8b52aec17a25d925d9706e88434cc5dd3976739d54e83c69",
+    "report_placement_repair.py": "f7d8e7e8e3bce006733c153b39c22db4a82ac6bb48cdaaa5569db169a1aa9b72"
+  },
+  "limitations": [
+    "Ideal clocks; no CTS, propagated skew/jitter or reset distribution repair.",
+    "No routed geometry, coupling, vias or qualified RC corners; selected Metal3 estimate is not a proven lower/upper bound.",
+    "No external IO timing closure; inherited interface warnings remain.",
+    "Electrical violations can cause library extrapolation; negative slacks are diagnostic, not precise achievable-frequency limits.",
+    "OpenROAD detailed placement/check_placement only; independent geometry and transformed-netlist equivalence not yet rerun.",
+    "Electrical repair is not setup/hold optimization. No CTS, routed extraction or full-chip integration."
+  ]
+}

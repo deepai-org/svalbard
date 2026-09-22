@@ -1,0 +1,105 @@
+{
+  "status": "measured_reference_loadstep_supply_tradeoff",
+  "cases": [
+    {
+      "variant": "baseline",
+      "name": "high_-2ma",
+      "idle_current_ma": 6.342669639695785,
+      "idle_power_mw": 20.93080981099609,
+      "event_window_ns": [
+        20,
+        100
+      ],
+      "excess_supply_energy_pj": -66.02409776260053,
+      "waveform_sha256": "9525a555cd4351f33e6a5d2b1de4df659f6081f45bb297c4eac87150efd90786"
+    },
+    {
+      "variant": "baseline",
+      "name": "high_2ma",
+      "idle_current_ma": 6.342669639695785,
+      "idle_power_mw": 20.93080981099609,
+      "event_window_ns": [
+        20,
+        100
+      ],
+      "excess_supply_energy_pj": 66.14282399811198,
+      "waveform_sha256": "49ac7cb456018508336221fc458ca99c6e2189fad987d62fee75362c8bf51df6"
+    },
+    {
+      "variant": "baseline",
+      "name": "low_-2ma",
+      "idle_current_ma": 6.561264646066989,
+      "idle_power_mw": 21.65217333202106,
+      "event_window_ns": [
+        20,
+        100
+      ],
+      "excess_supply_energy_pj": 0.02823007808020377,
+      "waveform_sha256": "9e15e268c44979a35ad63cd196b63aeadfe750eebe4089944858ed2ce2d258bf"
+    },
+    {
+      "variant": "baseline",
+      "name": "low_2ma",
+      "idle_current_ma": 6.561264646066989,
+      "idle_power_mw": 21.65217333202106,
+      "event_window_ns": [
+        20,
+        100
+      ],
+      "excess_supply_energy_pj": -0.0322811655621676,
+      "waveform_sha256": "9ae9fcd861d1ffed4a949106de18c630772d76e36e0e5f4d96e5d6196bcc6bcf"
+    },
+    {
+      "variant": "output2",
+      "name": "high_-2ma",
+      "idle_current_ma": 11.988936796430993,
+      "idle_power_mw": 39.56349142822228,
+      "event_window_ns": [
+        20,
+        100
+      ],
+      "excess_supply_energy_pj": -66.29921420263055,
+      "waveform_sha256": "04365e89b362948a176b66026f27b53440df3d9110e4a285e2865f9257fe1388"
+    },
+    {
+      "variant": "output2",
+      "name": "high_2ma",
+      "idle_current_ma": 11.988936796430993,
+      "idle_power_mw": 39.56349142822228,
+      "event_window_ns": [
+        20,
+        100
+      ],
+      "excess_supply_energy_pj": 66.39414809042387,
+      "waveform_sha256": "4c081dc57733311d55d7be60e53211b081096e423c5af03c23c8746766efdc76"
+    },
+    {
+      "variant": "output2",
+      "name": "low_-2ma",
+      "idle_current_ma": 11.896650045511128,
+      "idle_power_mw": 39.25894515018672,
+      "event_window_ns": [
+        20,
+        100
+      ],
+      "excess_supply_energy_pj": 0.04053729476634569,
+      "waveform_sha256": "78a9dd420cc960239882031cbe5c9e633e73ff753a233fc77489c1a2158840bf"
+    },
+    {
+      "variant": "output2",
+      "name": "low_2ma",
+      "idle_current_ma": 11.896650045511128,
+      "idle_power_mw": 39.25894515018672,
+      "event_window_ns": [
+        20,
+        100
+      ],
+      "excess_supply_energy_pj": -0.03959505221782881,
+      "waveform_sha256": "1cb2e1587d8ed4ca38884da4e560842325cb3242e7126c554ecfe8e93fd2e769"
+    }
+  ],
+  "limitations": [
+    "Excess energy is signed ideal-supply energy above unloaded baseline, not total dissipated heat.",
+    "Pulse response not repeated ADC duty cycle or full-chip supply/coexistence verification."
+  ]
+}

@@ -1,0 +1,37 @@
+# Managed coarse RF retuning candidate
+
+`CoarseRetuningChip` extends the startup-only candidate with a timed passive
+fine-filter recentering state. It does not replace the main calibrated candidate
+until recovered signal quality and its broader lifecycle envelope are checked.
+
+The host must stop/quiesce traffic, acknowledge host abort and drain, and rearm
+receiver detection when it was aborted. `rf_coarse_start` accepts a new carrier
+only in the existing quiet reset state with a present reference. Active retuning
+is rejected; this is a service interruption, not a phase-coherent frequency hop.
+
+For an already used fine loop, the controller holds the charge pump and closes
+two modeled shunts to the fine-control center. It waits 12 times the declared
+400 ns upper RC bound. No capacitor voltage, phase, or accumulated charge is
+reset. Under the assumed matched-RC passive network, the maximum absolute node
+voltage contracts by at least exp(-12). The frequency-error allowance therefore
+includes Kvco times the original compliance limit times exp(-12); the controller
+does not measure hidden capacitor voltages to decide readiness.
+
+After the guard, the existing finite-counter search chooses a bank and waits for
+bank settling. Only a qualified result releases the fine PLL. Mode configuration
+then runs normal fine-clock acquisition. `rf_coarse_status` adds state 9 for
+centering and retains the existing busy/qualified/bank fields. The same resource
+owner excludes calibration throughout centering and counted search.
+
+Abort, epoch change, and reference loss cancel pending centering/search events,
+open the centering shunts, restore the previous bank with its settling guard, and
+leave the fine pump held. An interrupted centering guard does not confer readiness;
+a retry repeats the full timed guard. Analog state continues through cancellation.
+Bank rollback is not restoration of the former filter voltage or former lock.
+
+The matched shunt RC constants, bounded resistance, abstract voltage center,
+monotonic coarse bank and finite counter observation contract are mathematical
+assumptions. Actual switch charge injection, common-mode rail work, mismatch,
+phase noise and package coupling require subsequent circuit evidence. This
+candidate introduces neither additional package pins nor a hidden external loop
+filter. Full-chip waveform quality after retuning remains a separate requirement.

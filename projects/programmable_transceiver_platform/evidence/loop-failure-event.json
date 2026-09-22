@@ -1,0 +1,62 @@
+{
+  "status": "verified_terminal_failure_event_comparison",
+  "cases": [
+    {
+      "case": "buffered",
+      "evidence_sha256": "a228554fdca450778b2307d5b8426041413590ff0ef787dbbb5d387b10b9cee7",
+      "deck_sha256": "e1b0d94d20242cad28544f50cb4f22774a1b52fb123b879aad92d76049d61528",
+      "source": "VREF REFRAW 0 PULSE(0 3.3 100n 100p 100p 25.5n 51.2n)",
+      "failure_time_ns": 2762.5,
+      "nearest_event": {
+        "kind": "rise_end",
+        "cycle": 52,
+        "time_ns": 2762.5000000000005,
+        "failure_minus_event_ps": 0.0
+      },
+      "late_phase": {
+        "paired_edges": 21,
+        "window_ns": [
+          1687.377756100451,
+          2711.3777556273485
+        ],
+        "reference_frequency_hz": 19531250.009023715,
+        "feedback_frequency_hz": 19421619.115598205,
+        "phase_drift_ns": 5.780261375103124,
+        "phase_slope_s_per_s": 0.005433662158376711,
+        "detrended_phase_peak_to_peak_ps": 2073.750353825329,
+        "limitations": "Last21 ordinal edge pairs; deterministic residual is not intrinsic jitter. No lock threshold allocated or asserted. Partial-run tail may be a failure neighborhood."
+      }
+    },
+    {
+      "case": "follower",
+      "evidence_sha256": "9236888ecff121c5942a6d1b9c83c8cdfd24f55bc45c44550675d11eaa39f510",
+      "deck_sha256": "4627977b145d56ee6bb4bb6db50ea8b115cd0f85bedbd709cc64bca68c9734d3",
+      "source": "VREF REFRAW 0 PULSE(0 3.3 100n 100p 100p 25.5n 51.2n)",
+      "failure_time_ns": 2762.5,
+      "nearest_event": {
+        "kind": "rise_end",
+        "cycle": 52,
+        "time_ns": 2762.5000000000005,
+        "failure_minus_event_ps": 0.0
+      },
+      "late_phase": {
+        "paired_edges": 21,
+        "window_ns": [
+          1687.377756219544,
+          2711.3777561991105
+        ],
+        "reference_frequency_hz": 19531250.000389736,
+        "feedback_frequency_hz": 19426696.02842325,
+        "phase_drift_ns": 5.511141325055945,
+        "phase_slope_s_per_s": 0.005176040152608226,
+        "detrended_phase_peak_to_peak_ps": 1983.1665293278156,
+        "limitations": "Last21 ordinal edge pairs; deterministic residual is not intrinsic jitter. No lock threshold allocated or asserted. Partial-run tail may be a failure neighborhood."
+      }
+    }
+  ],
+  "limitations": [
+    "Coincidence with an ideal-source breakpoint is not proof of the solver failure mechanism.",
+    "Changed pump topology did not eliminate this failure; this does not establish physical impossibility.",
+    "Partial trajectories and deterministic phase residuals do not qualify lock or phase noise."
+  ]
+}

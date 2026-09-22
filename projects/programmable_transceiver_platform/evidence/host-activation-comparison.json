@@ -1,0 +1,43 @@
+{
+  "status": "passed",
+  "startup_timing_cases": [
+    {
+      "mode": 0,
+      "delay_s": 0.0,
+      "error": 0.08094437628156487,
+      "source": "connected-tx-warm-m0-d0.json"
+    },
+    {
+      "mode": 1,
+      "delay_s": 1e-06,
+      "error": 0.04080444682048253,
+      "source": "connected-tx-warm-m1-d1.json"
+    },
+    {
+      "mode": 1,
+      "delay_s": 2e-06,
+      "error": 0.04339640586344827,
+      "source": "connected-tx-warm-m1-d2.json"
+    },
+    {
+      "mode": 1,
+      "delay_s": 3e-06,
+      "error": 0.04881490145050706,
+      "source": "connected-tx-warm-m1-d3.json"
+    }
+  ],
+  "managed_controller_comparison": [
+    {
+      "mode": 0,
+      "managed_and_fixture_tx_identical": true
+    },
+    {
+      "mode": 1,
+      "managed_and_fixture_tx_identical": true
+    }
+  ],
+  "limitations": [
+    "Four additional finite cases; no arbitrary seed/phase proof.",
+    "Managed candidate has provisional ideal-timestamp timing checks and streaming-only start gates."
+  ]
+}

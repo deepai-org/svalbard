@@ -1,0 +1,86 @@
+{
+  "completed": true,
+  "status": "terminal",
+  "adopted": false,
+  "preparation_sha256": "6accc768ab77a81879925ce1956660c54b0e0f1aba91d94d1dc2079c75fc1a7d",
+  "added_mim_plate_area_mm2": 0.1024,
+  "limitations": [
+    "Only first two decisions of one frame are simulated.",
+    "Ideal external reference targets and bias remain.",
+    "Doubling reservoir MIM area may be unacceptable; do not infer chip-fit.",
+    "Plate area excludes spacing, routing and guard structures.",
+    "Matching baseline decisions does not establish ADC accuracy; pre-clock residues and rail errors must also be evaluated."
+  ],
+  "returncode": 0,
+  "timed_out": false,
+  "errors": [],
+  "result_sha256": "8183784dde9ab8e4f830e3c4aee79b55300c49cb8d0f075a6eac54db86af0789",
+  "baseline": {
+    "reference_supply_mean_power_w": 0.04464676584335976,
+    "clock_onsets": [
+      {
+        "time_ns": 70.5,
+        "span_v": 1.029669420792825,
+        "residue_v": 0.39550519282794716
+      },
+      {
+        "time_ns": 75.5,
+        "span_v": 0.9522300288768324,
+        "residue_v": -0.07823780933996892
+      }
+    ],
+    "max_high_error_v": 0.04476774769301173,
+    "max_low_error_v": 0.046024197770748065,
+    "max_span_error_v": 0.09072106426403215,
+    "decisions": [
+      {
+        "time_ns": 72.4,
+        "span_v": 1.0280915169502682,
+        "residue_v": 0.3951750902155615,
+        "comparator_v": 3.2999979595054256
+      },
+      {
+        "time_ns": 77.4,
+        "span_v": 1.0193095998386146,
+        "residue_v": -0.11130133324012932,
+        "comparator_v": -3.299999476444597
+      }
+    ]
+  },
+  "candidate": {
+    "reference_supply_mean_power_w": 0.04389491712738267,
+    "clock_onsets": [
+      {
+        "time_ns": 70.5,
+        "span_v": 1.024816428372954,
+        "residue_v": 0.39565485602081485
+      },
+      {
+        "time_ns": 75.5,
+        "span_v": 0.9762858907373879,
+        "residue_v": -0.09009310311372479
+      }
+    ],
+    "max_high_error_v": 0.01825663358612406,
+    "max_low_error_v": 0.019746461082730926,
+    "max_span_error_v": 0.037407874258513996,
+    "decisions": [
+      {
+        "time_ns": 72.4,
+        "span_v": 1.026162234694091,
+        "residue_v": 0.3953359377519251,
+        "comparator_v": 3.300001457825126
+      },
+      {
+        "time_ns": 77.4,
+        "span_v": 1.0031492877534265,
+        "residue_v": -0.10326254177282544,
+        "comparator_v": -3.300006463467169
+      }
+    ]
+  },
+  "decision_output_matches_baseline": [
+    true,
+    true
+  ]
+}

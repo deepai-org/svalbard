@@ -1,0 +1,42 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "reservoir_f": 5e-11,
+      "conversion_load_f": 5e-13,
+      "numerical_difference": 1.2849605823817e-09,
+      "min_reference_v": 0.9514869078379822,
+      "min_rail_v": 3.069935698317358,
+      "max_adc_reference_gain": 1.0412649841406998
+    },
+    {
+      "reservoir_f": 5e-11,
+      "conversion_load_f": 2e-12,
+      "numerical_difference": 1.1860099569105387e-09,
+      "min_reference_v": 0.8510762617047789,
+      "min_rail_v": 3.065349717543224,
+      "max_adc_reference_gain": 1.1315084714864778
+    },
+    {
+      "reservoir_f": 2e-10,
+      "conversion_load_f": 5e-13,
+      "numerical_difference": 2.5163346961676325e-09,
+      "min_reference_v": 0.9582992744178117,
+      "min_rail_v": 3.0698591519837266,
+      "max_adc_reference_gain": 1.0411022178912923
+    },
+    {
+      "reservoir_f": 2e-10,
+      "conversion_load_f": 2e-12,
+      "numerical_difference": 1.871873767100851e-09,
+      "min_reference_v": 0.8758401933641203,
+      "min_rail_v": 3.0650277697887,
+      "max_adc_reference_gain": 1.1311995127724257
+    }
+  ],
+  "limitations": [
+    "Pass means numerical refinement agrees; it does not mean signal quality meets requirements.",
+    "Exploratory component values, 32 paired updates at 40 MS/s; not a qualified operating envelope.",
+    "Direct conversion events and held RF source; autonomous PLL, host scheduler and aperture are excluded."
+  ]
+}

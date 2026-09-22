@@ -1,0 +1,68 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "overflow": false,
+      "sampled": 1421,
+      "delivered": 1407,
+      "accounting": {
+        "sampled": 1421,
+        "completed": 1419,
+        "cancelled": 2,
+        "pending": 0,
+        "latency_s": 3e-08,
+        "capacity": 4
+      }
+    },
+    {
+      "mode": 0,
+      "overflow": true,
+      "sampled": 302,
+      "delivered": 236,
+      "accounting": {
+        "sampled": 302,
+        "completed": 301,
+        "cancelled": 1,
+        "pending": 0,
+        "latency_s": 3e-08,
+        "capacity": 4
+      }
+    },
+    {
+      "mode": 1,
+      "overflow": false,
+      "sampled": 711,
+      "delivered": 705,
+      "accounting": {
+        "sampled": 711,
+        "completed": 710,
+        "cancelled": 1,
+        "pending": 0,
+        "latency_s": 3e-08,
+        "capacity": 4
+      }
+    },
+    {
+      "mode": 1,
+      "overflow": true,
+      "sampled": 204,
+      "delivered": 120,
+      "accounting": {
+        "sampled": 204,
+        "completed": 204,
+        "cancelled": 0,
+        "pending": 0,
+        "latency_s": 3e-08,
+        "capacity": 4
+      }
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Finite observation of an unbounded-duration receiver; not an indefinite stability proof.",
+    "Stop uses epoch abort and discards partial transport data; graceful drain is not implemented.",
+    "Continuous TX and independent host descriptor/control implementation remain open."
+  ]
+}

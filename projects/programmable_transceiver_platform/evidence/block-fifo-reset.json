@@ -1,0 +1,24 @@
+{
+  "pass": 57,
+  "checks": {
+    "make transceiver-block-fifo": "pass",
+    "make transceiver-baseline": "pass"
+  },
+  "accepted": 7489,
+  "received": 7487,
+  "reset_discarded": 2,
+  "invalid_rejected": 7419,
+  "negative_controls": [
+    "metadata",
+    "invalid",
+    "reset_bypass"
+  ],
+  "scope": "finite functional and structural evidence, not physical CDC/reset signoff",
+  "sha256": {
+    "rtl/pt_fifo.sv": "993815ea2911f6158e78d3a731d4fde866fe115e602b7188431260be0932497b",
+    "rtl/pt_block_fifo.sv": "f13f801248743598db862040d47eac0144d6772ab153b2d0ed83cd42109615ae",
+    "sim/tb_block_fifo.sv": "772125190059a7500379ed93ccc826e48803d7d11588a9323f5cf15324e3a54a",
+    "verification/block_fifo_negative.py": "2d86bb0f04468adb9d0ac83e69a134b67afdcce9ad3044682d11e56dc05750b0",
+    "verification/run_block_fifo.sh": "8dc7464cf89e7479c0bf363fa9d068cf65f7540ec358d8eeb121d9198670a268"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "status": "characterized",
+  "cases": [
+    {
+      "skew_s": -1e-09,
+      "tie_order": "dac_first",
+      "adc_normalized_i": 0.40613160931578757,
+      "adc_normalized_q": 0.20306580465789378,
+      "initial_rail_v": 3.0616226249483214,
+      "final_rail_v": 3.06112281948808,
+      "reference_charge_c": 1.01055824853629e-12
+    },
+    {
+      "skew_s": 0.0,
+      "tie_order": "dac_first",
+      "adc_normalized_i": 0.4061447811218877,
+      "adc_normalized_q": 0.20307239056094384,
+      "initial_rail_v": 3.0616226249483214,
+      "final_rail_v": 3.06112261386778,
+      "reference_charge_c": 1.0105358893656086e-12
+    },
+    {
+      "skew_s": 1e-09,
+      "tie_order": "dac_first",
+      "adc_normalized_i": 0.4048248105832416,
+      "adc_normalized_q": 0.2024124052916208,
+      "initial_rail_v": 3.0616226249483214,
+      "final_rail_v": 3.061122637420723,
+      "reference_charge_c": 1.0105582507775503e-12
+    },
+    {
+      "skew_s": 0.0,
+      "tie_order": "adc_first",
+      "adc_normalized_i": 0.4048248105832416,
+      "adc_normalized_q": 0.2024124052916208,
+      "initial_rail_v": 3.0616226249483214,
+      "final_rail_v": 3.06112261386778,
+      "reference_charge_c": 1.0105358893656086e-12
+    }
+  ],
+  "coincident_order_delta_i": 0.0013199705386460758,
+  "delta_in_12bit_lsb": 2.7032996631471633,
+  "limitations": [
+    "Local converter reference impulse ordering; no transistor aperture or kickback model.",
+    "Both tie orders are sensitivity cases, not a claim that event order is interchangeable.",
+    "Scheduled managed-path convention and physical skew envelope must be reconciled."
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "sign": -1,
+      "dac_shift_s": 2.5070739345086973e-11,
+      "completed": true
+    },
+    {
+      "mode": 0,
+      "sign": 1,
+      "dac_shift_s": -2.5070801794285075e-11,
+      "completed": true
+    },
+    {
+      "mode": 1,
+      "sign": -1,
+      "dac_shift_s": 2.476488751820328e-11,
+      "completed": true
+    },
+    {
+      "mode": 1,
+      "sign": 1,
+      "dac_shift_s": -2.476597938687097e-11,
+      "completed": true
+    },
+    {
+      "mode": 0,
+      "near_edge": true,
+      "explicit_fault": true
+    },
+    {
+      "mode": 1,
+      "near_edge": true,
+      "explicit_fault": true
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Discrete externally injected interventions in a linear near-lock model, not stochastic PLL noise.",
+    "Edges crossed by a phase jump fault explicitly; nonlinear cycle-slip recovery is not modeled.",
+    "Only ADC/DAC deadlines follow loop phase; serializer and host clocks remain prescribed."
+  ]
+}

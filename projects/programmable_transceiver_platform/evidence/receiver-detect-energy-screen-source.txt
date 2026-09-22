@@ -1,0 +1,61 @@
+"""Source/sink charge and stored/dissipated energy for persistent probe states."""
+import json,hashlib,itertools
+from pathlib import Path
+import numpy as np
+from scipy.linalg import expm
+from scipy.integrate import quad_vec
+from release_screen import Leg
+
+class MeteredLeg(Leg):
+    def __init__(self,p):
+        super().__init__(p);self.source_work=0.;self.loss=0.;self.positive_charge=0.;self.sink_charge=0.;self.sampled_peak=0.
+    def advance(self,time,drive):
+        dt=time-self.time
+        if dt<0:raise ValueError('Backward time')
+        x0=self.x.copy();rs=self.p['rs'];rt=self.p['rt']
+        g=1/self.leakage+(1/rs if drive is not None else 0.)
+        A=-np.linalg.solve(self.C,np.diag([g,1/rt]))
+        eq=np.array([drive/rs/g if drive is not None else 0.,0.])
+        def quantities(t):
+            v,w=eq+expm(A*t)@(x0-eq)
+            current=(drive-v)/rs if drive is not None else 0.
+            return np.array([(drive or 0.)*current,current*current*rs+v*v/self.leakage+w*w/rt,max(current,0.),max(-current,0.)])
+        if dt:
+            integral,_=quad_vec(quantities,0,dt,epsabs=1e-20,epsrel=1e-9)
+            self.source_work+=integral[0];self.loss+=integral[1]
+            self.positive_charge+=integral[2];self.sink_charge+=integral[3]
+            for t in np.linspace(0,dt,65):
+                z=quantities(t);self.sampled_peak=max(self.sampled_peak,float(z[2]+z[3]))
+        super().advance(time,drive)
+
+
+def main():
+    rows=[]
+    for rt,cc,rs in itertools.product((40.,100.,1e5,1e8),(10e-9,100e-9),(100.,1000.)):
+        p=dict(cp=5e-12,cr=5e-12,cc=cc,rs=rs,rt=rt)
+        a=MeteredLeg(p);decision=a.probe()
+        steps=0
+        while max(abs(a.x))>.005 and steps<1000:
+            a.advance(a.time+1e-6,0.);steps+=1
+        assert max(abs(a.x))<=.005
+        a.advance(a.time+1e-6,None)
+        stored=float(a.x@a.C@a.x/2)
+        residual=a.source_work-a.loss-stored
+        assert abs(residual)<1e-17,(p,residual)
+        rows.append(dict(parameters=p,decision=decision['result'],release_steps=steps,
+            source_work_j=float(a.source_work),dissipation_j=float(a.loss),stored_j=stored,
+            energy_residual_j=float(residual),positive_charge_c=float(a.positive_charge),
+            sink_charge_c=float(a.sink_charge),sampled_peak_current_a=a.sampled_peak))
+    report=dict(status='passed',connected=False,physical_qualification=False,cases=rows,
+        source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        dependency_hashes={n:hashlib.sha256(Path(__file__).with_name(n).read_bytes()).hexdigest() for n in ('release_screen.py','load_screen.py')},
+        limitations=['One leg per case; equal two-leg simultaneous probes double this stimulus current, not necessarily total chip supply current.',
+        'Ideal0.2V source work excludes driver bias, regulator efficiency, comparator power and actual supply voltage.',
+        'Peak currents are65-point-per-interval samples including endpoints, not a continuous extrema proof.',
+        'Integrated source and sink charge must not be netted away when sizing a real release driver.'])
+    Path('/home/ubuntu/svalbard/projects/programmable_transceiver_platform/evidence/receiver-detect-energy-screen.json').write_text(json.dumps(report,indent=2)+'\n')
+    print('16 cases; max sampled current',max(r['sampled_peak_current_a'] for r in rows),
+          'max source charge',max(r['positive_charge_c'] for r in rows),'max sink charge',max(r['sink_charge_c'] for r in rows),
+          'max energy residual',max(abs(r['energy_residual_j']) for r in rows))
+
+if __name__=='__main__':main()

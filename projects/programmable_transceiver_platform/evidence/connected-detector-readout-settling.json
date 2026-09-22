@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "readout_tau_s": 5e-09,
+      "ode_error": 4.366992878424014e-14,
+      "detector": 0.030550026093952375,
+      "readout": 0.030501814777807477
+    },
+    {
+      "readout_tau_s": 2e-08,
+      "ode_error": 4.9443088512290956e-14,
+      "detector": 0.030550026093952375,
+      "readout": 0.030338628882445397
+    },
+    {
+      "readout_tau_s": 5e-07,
+      "ode_error": 4.016578736276699e-14,
+      "detector": 0.030550026093952375,
+      "readout": 0.016675010138251872
+    }
+  ],
+  "limitations": [
+    "One-way buffered cascade; finite mux reverse loading and ADC kickback not represented.",
+    "Readout state not yet selected by shared ADC sampling callback.",
+    "Explicitly rejects coincident poles; values are exploratory, not PDK-derived."
+  ]
+}

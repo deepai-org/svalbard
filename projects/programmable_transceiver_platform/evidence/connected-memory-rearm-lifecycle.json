@@ -1,0 +1,60 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "initial_mode": 0,
+      "epochs": [
+        {
+          "epoch": 0,
+          "mode": 0,
+          "adc_start": 0,
+          "count": 32
+        },
+        {
+          "epoch": 1,
+          "mode": 1,
+          "adc_start": 32,
+          "count": 32
+        },
+        {
+          "epoch": 2,
+          "mode": 0,
+          "adc_start": 64,
+          "count": 32
+        }
+      ],
+      "partial_reload_rejected": true
+    },
+    {
+      "initial_mode": 1,
+      "epochs": [
+        {
+          "epoch": 0,
+          "mode": 1,
+          "adc_start": 0,
+          "count": 32
+        },
+        {
+          "epoch": 1,
+          "mode": 0,
+          "adc_start": 32,
+          "count": 32
+        },
+        {
+          "epoch": 2,
+          "mode": 1,
+          "adc_start": 64,
+          "count": 32
+        }
+      ],
+      "partial_reload_rejected": true
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Memory reset is explicit stopped-controller invalidation, not a full asynchronous chip reset waveform.",
+    "Management acknowledgement and reads remain coherent transactions, not SPI/CDC equivalence.",
+    "RAM bit clearing is not assumed; invalid entries and zero-until-done reads hide stale contents."
+  ]
+}

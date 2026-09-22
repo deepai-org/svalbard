@@ -1,0 +1,171 @@
+{
+  "status": "terminal",
+  "completed": true,
+  "cases": {
+    "baseline": {
+      "status": "terminal",
+      "returncode": 0,
+      "timed_out": false,
+      "errors": [],
+      "result_sha256": "84bcacb3eece69c879a77922da66f1c4eacdf62aceffe91fbafab44ae21322e0"
+    },
+    "probed": {
+      "status": "terminal",
+      "returncode": 0,
+      "timed_out": false,
+      "errors": [],
+      "result_sha256": "30c92ce77699b052cf9afc3b7b3ab1d058349f7bf4c8e3a10767f9aac2ab0b50"
+    }
+  },
+  "manifest_sha256": {
+    "baseline": "290a38b15450963251dbad3baf16c71f27d94dbf152a84f6a9c6eaac766537d1",
+    "probed": "1e3004db3dc3d44884ed06218d5f1b1d667b5d7e654673ff34b586c468aece3d"
+  },
+  "matched_pair": {
+    "same_time_grid": false,
+    "errors_v": {
+      "v(hp)": 4.068490871311781e-06,
+      "v(hn)": 3.2258488414926845e-06,
+      "v(q_hp)": 4.068490355280119e-06,
+      "v(q_hn)": 3.2258496511783363e-06,
+      "v(vh)": 2.835194381489714e-07,
+      "v(vl)": 3.497894263126966e-07,
+      "v(ip)": 6.323107890615631e-07,
+      "v(in)": 1.4162418823238099e-06
+    },
+    "below_original_10uv_limit": true,
+    "interpolation": "Right trajectory linearly interpolated onto left timestamps; no time alignment."
+  },
+  "baseline_tolerance_change": {
+    "same_time_grid": false,
+    "errors_v": {
+      "v(hp)": 0.001902407878000556,
+      "v(hn)": 0.0012429675412777286,
+      "v(q_hp)": 0.0019024078781841869,
+      "v(q_hn)": 0.0012429675398670792,
+      "v(vh)": 0.00014358632139410688,
+      "v(vl)": 8.305015171949925e-05,
+      "v(ip)": 0.000669812225064792,
+      "v(in)": 0.0007393952104448598
+    },
+    "below_original_10uv_limit": false,
+    "interpolation": "Right trajectory linearly interpolated onto left timestamps; no time alignment."
+  },
+  "probed_tolerance_change": {
+    "same_time_grid": false,
+    "errors_v": {
+      "v(hp)": 0.0019068317592665363,
+      "v(hn)": 0.001246004064852979,
+      "v(q_hp)": 0.0019068317591601769,
+      "v(q_hn)": 0.0012460040654356241,
+      "v(vh)": 0.00014435074736374176,
+      "v(vl)": 8.304352414989502e-05,
+      "v(ip)": 0.0006698065125538832,
+      "v(in)": 0.0007395113831782929
+    },
+    "below_original_10uv_limit": false,
+    "interpolation": "Right trajectory linearly interpolated onto left timestamps; no time alignment."
+  },
+  "captured_codes": {
+    "baseline": [
+      [
+        177
+      ],
+      [
+        177
+      ],
+      [
+        78
+      ],
+      [
+        78
+      ],
+      [
+        178
+      ],
+      [
+        178
+      ]
+    ],
+    "probed": [
+      [
+        177
+      ],
+      [
+        177
+      ],
+      [
+        78
+      ],
+      [
+        78
+      ],
+      [
+        178
+      ],
+      [
+        178
+      ]
+    ],
+    "baseline_original": [
+      [
+        177
+      ],
+      [
+        177
+      ],
+      [
+        78
+      ],
+      [
+        78
+      ],
+      [
+        178
+      ],
+      [
+        178
+      ]
+    ],
+    "probed_original": [
+      [
+        177
+      ],
+      [
+        177
+      ],
+      [
+        78
+      ],
+      [
+        78
+      ],
+      [
+        178
+      ],
+      [
+        178
+      ]
+    ]
+  },
+  "codes_match_all_runs": true,
+  "rail_current_sums": {
+    "h": {
+      "max_residual_a": 1.2198063739643494e-12,
+      "signed_residual_charge_c": -9.853337391962147e-23,
+      "closed_test": true
+    },
+    "l": {
+      "max_residual_a": 0.0007342255473137896,
+      "signed_residual_charge_c": 5.676078810765762e-15,
+      "closed_test": false
+    }
+  },
+  "high_rail_kcl_verified": true,
+  "low_rail_caveat": "Four dummy-capacitor reference terminals are unsensed; low-rail residual is not a closed KCL test.",
+  "limitations": [
+    "No circuit promotion or automatic branch attribution from this diagnostic.",
+    "Two tolerance settings do not prove numerical convergence, intrinsic noise, or ADC precision.",
+    "A failed original replay gate remains failed regardless of this result."
+  ]
+}

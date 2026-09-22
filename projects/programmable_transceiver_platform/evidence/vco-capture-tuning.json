@@ -1,0 +1,70 @@
+{
+  "status": "actual_divider_loaded_wide_vco_tuning_not_pll",
+  "cases": [
+    {
+      "control_v": 1.08,
+      "frequency_hz": 2500750847.280986,
+      "gate_range_v": [
+        1.492070778639973,
+        1.511126994592571
+      ],
+      "artifacts_sha256": {
+        ".spice": "7f880be4bf9322f094433e0dda7405bb1596d2b500bf82593b0f2b04c780b210",
+        ".dat": "d21345e9e238663f967a84b3739a2f5ef69bfb8cf43ea0475fa3fa750ad26e30",
+        ".log": "3de9f4b9cf639f61f5773381f02bf894354f37731c3395c4b1cdc30faa0deb5e"
+      }
+    },
+    {
+      "control_v": 1.16,
+      "frequency_hz": 2521134809.709257,
+      "gate_range_v": [
+        1.49134472392913,
+        1.511565796937687
+      ],
+      "artifacts_sha256": {
+        ".spice": "35e7214826484f2834ab46ba29bea408b04afeb1c388eb0962fdbbc72fb5f648",
+        ".dat": "429f7d1d17d22fab262d3bc49ad63d11ee668bdd7d6db1671c5e59fc48ff6845",
+        ".log": "416403efaadd8c5c27fd3d8e2cefd2f281e7e68dd02cb8ec3cc6feafe41b5c5d"
+      }
+    },
+    {
+      "control_v": 1.24,
+      "frequency_hz": 2504544676.1543326,
+      "gate_range_v": [
+        1.491156216254981,
+        1.511770439605792
+      ],
+      "artifacts_sha256": {
+        ".spice": "bebea2cf91c1d101cc492914081c402a23884f5af3ad19dc9bbbda4f10997ea9",
+        ".dat": "d67c3bc2df97a1a9d4d64d64a2d15345f0e5a68b592413bf8302abf17d22f6b7",
+        ".log": "8627dab660105d1c74a51d8ff8b63939cf9c158fae3f36258af4f5df3319f02d"
+      }
+    },
+    {
+      "control_v": 1.3,
+      "frequency_hz": 2479089112.370462,
+      "gate_range_v": [
+        1.491048928796955,
+        1.511939672264885
+      ],
+      "artifacts_sha256": {
+        ".spice": "805acd37a8989627a624f0022a8a7fb10d4a1a7c4aafe85b208fc5ba8b4079dc",
+        ".dat": "56759426455d90960ae31d5bf2c7bfaf08fd372c4e7c0527920710bd444f4e98",
+        ".log": "3524c7453a1d1766f15e370f07bb6665ce00580bb4d6bef805d1805f4db96f88"
+      }
+    }
+  ],
+  "slopes_hz_per_v": [
+    254799530.35339165,
+    -207376669.43655592,
+    -424259396.39784455
+  ],
+  "limitations": [
+    "Nominal seeded/prebiased RF hierarchy; no acquisition, phase noise or process/mismatch.",
+    "Four tuning points do not establish global monotonicity or a loop-stability model.",
+    "Actual mixer/buffer load but ideal biases/sample clocks; actual seven-stage divider/interface/PFD load.",
+    "41ns snapshots; final slow divider/PFD acquisition not exercised. No precise turning point or globally monotonic interval established."
+  ],
+  "secant_sign_change_observed": true,
+  "interpretation": "A fixed UP-increases-frequency relationship cannot be assumed across the sampled range; turning point resolution and robust branch selection remain open."
+}

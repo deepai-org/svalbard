@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "owner_snapshot": 1290,
+  "recovered_bank": 15,
+  "stale_reply": {
+    "token": 0,
+    "operation": "rf_coarse_start",
+    "applied_at": 6.45e-06,
+    "epoch": 1,
+    "generation": 0,
+    "accepted": false,
+    "reason": "stale epoch or receive generation"
+  },
+  "controls": [
+    "shared sequencer ownership",
+    "command abort rollback",
+    "no post-abort count events",
+    "reference loss rollback",
+    "missing-reference start rejection",
+    "restore stays held until search completes",
+    "restart and fine acquisition",
+    "active search rejection",
+    "stale epoch start rejection"
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false
+}

@@ -1,0 +1,119 @@
+{
+  "status": "passed",
+  "actual_monitor_to_pad_power_ratio": 0.5604789528018422,
+  "cases": [
+    {
+      "normalization": "ignored",
+      "power_ratio_estimate": 1.0,
+      "quality": {
+        "calibration_samples": 256,
+        "validation_samples": 768,
+        "gain_real": 1.3356541801422392,
+        "gain_imag": -0.014019672373116842,
+        "gain_magnitude": 1.3357277567471924,
+        "raw_relative_rms": 0.3359253715834663,
+        "corrected_relative_rms": 0.000626422912157782,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "high_sample_accepted": false,
+      "coefficient_matrix": [
+        [
+          1.329345703125,
+          0.04638671875
+        ],
+        [
+          0.0,
+          1.368896484375
+        ]
+      ]
+    },
+    {
+      "normalization": "exact",
+      "power_ratio_estimate": 0.5604789528018422,
+      "quality": {
+        "calibration_samples": 256,
+        "validation_samples": 768,
+        "gain_real": 1.0000352541721045,
+        "gain_imag": -0.010446046585901708,
+        "gain_magnitude": 1.000089810705189,
+        "raw_relative_rms": 0.010498379487866702,
+        "corrected_relative_rms": 0.0008497460956176227,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "high_sample_accepted": true,
+      "coefficient_matrix": [
+        [
+          0.995361328125,
+          0.03466796875
+        ],
+        [
+          0.0,
+          1.02490234375
+        ]
+      ]
+    },
+    {
+      "normalization": "estimate_low",
+      "power_ratio_estimate": 0.5044310575216581,
+      "quality": {
+        "calibration_samples": 256,
+        "validation_samples": 768,
+        "gain_real": 0.9484766062970056,
+        "gain_imag": -0.009959602330814787,
+        "gain_magnitude": 0.9485288959073798,
+        "raw_relative_rms": 0.052455215082605804,
+        "corrected_relative_rms": 0.0008959914169061435,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "high_sample_accepted": true,
+      "coefficient_matrix": [
+        [
+          0.944091796875,
+          0.032958984375
+        ],
+        [
+          0.0,
+          0.97216796875
+        ]
+      ]
+    },
+    {
+      "normalization": "estimate_high",
+      "power_ratio_estimate": 0.6165268480820265,
+      "quality": {
+        "calibration_samples": 256,
+        "validation_samples": 768,
+        "gain_real": 1.0486934683105582,
+        "gain_imag": -0.011035341494108102,
+        "gain_magnitude": 1.04875152883756,
+        "raw_relative_rms": 0.04993749417802881,
+        "corrected_relative_rms": 0.0007920305040539211,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "high_sample_accepted": true,
+      "coefficient_matrix": [
+        [
+          1.0439453125,
+          0.036376953125
+        ],
+        [
+          0.0,
+          1.07470703125
+        ]
+      ]
+    }
+  ],
+  "limitations": [
+    "Narrowband carrier transfer with local finite detector; no full-chip supply or package model.",
+    "Exact normalization is an oracle control; actual ratio must be independently characterized or bounded.",
+    "10% ratio errors are assumed, not measured. Absolute output-amplitude tolerance is not yet specified."
+  ]
+}

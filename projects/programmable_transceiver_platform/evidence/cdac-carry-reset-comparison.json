@@ -1,0 +1,28 @@
+{
+  "status": "matched_reset_isolation_complete",
+  "sources_sha256": {
+    "cdac-carry-real-reference.json": "10a47eda2186534f3a5e860014dbcb3f30bd92b044fb24adff8e4a86a4a6bb97",
+    "cdac-carry-real-reference-reset.json": "7c2b46a59b11df65a5597de49f7651b6dc6bb9fb9e8e23c31e70ff8e8d775195"
+  },
+  "cases": [
+    {
+      "name": "code127_delay100",
+      "clocked_minimum_span_v": 0.7747012699999998,
+      "reset_minimum_span_v": 0.77469079,
+      "maximum_clocked_minus_reset_span_v": 0.0001168849999999555,
+      "preclock_maximum_difference_v": 1.4849999998567398e-06
+    },
+    {
+      "name": "code128_delay100",
+      "clocked_minimum_span_v": 0.7747012699999998,
+      "reset_minimum_span_v": 0.77469079,
+      "maximum_clocked_minus_reset_span_v": 0.0001168849999999555,
+      "preclock_maximum_difference_v": 1.4849999998567398e-06
+    }
+  ],
+  "limitations": [
+    "Clock removal isolates its contribution in this fixture; does not distinguish CDAC redistribution from switch overlap/injection.",
+    "Ideal sources and prebiased nominal single-CDAC case remain.",
+    "Correct-target-polarity field in reset-run raw report is inapplicable because comparator is intentionally never evaluated."
+  ]
+}

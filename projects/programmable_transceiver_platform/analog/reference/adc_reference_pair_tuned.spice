@@ -1,0 +1,7 @@
+* Connected test of prior AC compensation candidate; no qualification claim.
+.include /screen/reference/buffer_scaled_tune.spice
+.include /screen/reference/buffer_complement_tune.spice
+.subckt pt_adc_reference_pair_tuned HIGH_TARGET LOW_TARGET VH VL BN BP VDD VSS
+XHIGH HIGH_TARGET VH BN BP VDD VSS pt_reference_buffer_complement_tune S=4 CC=2p RZ=2000
+XLOW LOW_TARGET VL BN BP VDD VSS pt_reference_buffer_scaled_tune S=4 CC=2p RZ=2000
+.ends

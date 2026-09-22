@@ -1,0 +1,73 @@
+{
+  "status": "complete_load_step_diagnostic",
+  "cases": [
+    {
+      "name": "high_-2ma",
+      "baseline_v": 2.1631476097068423,
+      "baseline_error_mv": 13.147609706842367,
+      "max_deviation_from_preload_mv": 32.25890827207056,
+      "late_max_deviation_mv": 0.0011267985295937422,
+      "last_outside_1mv_after_release_ns": 27.770000000003918,
+      "peak_supply_ma": 12.02180208659996
+    },
+    {
+      "name": "high_2ma",
+      "baseline_v": 2.1631476097068423,
+      "baseline_error_mv": 13.147609706842367,
+      "max_deviation_from_preload_mv": 30.80595849320744,
+      "late_max_deviation_mv": 0.0012323368681066427,
+      "last_outside_1mv_after_release_ns": 27.450000000003868,
+      "peak_supply_ma": 14.11897827223714
+    },
+    {
+      "name": "low_-2ma",
+      "baseline_v": 1.1395216261598784,
+      "baseline_error_mv": -10.478373840121513,
+      "max_deviation_from_preload_mv": 15.005639916206626,
+      "late_max_deviation_mv": 2.336962956484001e-05,
+      "last_outside_1mv_after_release_ns": 11.630000000001637,
+      "peak_supply_ma": 11.944153855488048
+    },
+    {
+      "name": "low_2ma",
+      "baseline_v": 1.1395216261598784,
+      "baseline_error_mv": -10.478373840121513,
+      "max_deviation_from_preload_mv": 15.54602126294835,
+      "late_max_deviation_mv": 2.320990444282245e-05,
+      "last_outside_1mv_after_release_ns": 12.070000000001698,
+      "peak_supply_ma": 11.94112072406344
+    }
+  ],
+  "manifest": {
+    "source_sha256_before": {
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/foss/pdks/gf180mcuD/libs.tech/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+      "/screen/reference/buffer_complement.spice": "b21147fcdd7c13e4c7359fb966319a70badbb6a12c0de0064926b73be10602b4",
+      "/screen/reference/buffer_complement_output2.spice": "990e4bdc4c080d64c67053ccf629447b7bfae66e921cb8191da964b08c5b17f2",
+      "/screen/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+      "/screen/reference/buffer_scaled.spice": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+      "/screen/reference/buffer_scaled_output2.spice": "fa991a36d9ac893aaf786ee57f3a5f19f009ffb00818c67b77c44a849c809c86",
+      "/screen/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5"
+    },
+    "planned_cases": [
+      "high_-2ma",
+      "high_2ma",
+      "low_-2ma",
+      "low_2ma"
+    ],
+    "scope": "Output/load multiplicity2x; same input stage, compensation, reservoir and signed2mA pulse"
+  },
+  "limitations": [
+    "Signed2mA10ns pulses are selected scenarios, not maximum ADC demand or qualified source/sink capacity.",
+    "Unloaded OP initialization, no cold startup or input-history/mismatch variation.",
+    "1mV recovery band is diagnostic; absolute target offset reported separately.",
+    "20ps step, no numerical convergence or full-loop stability qualification."
+  ]
+}

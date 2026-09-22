@@ -1,0 +1,135 @@
+{
+  "pass": 84,
+  "status": "available slow mixed-PVT setup screens fail",
+  "corners": {
+    "tt_025C_3v30": {
+      "0:max": {
+        "slack_ns": 1.4126,
+        "startpoint": "_4588_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "iq_words[10] (output port clocked by clk)"
+      },
+      "0:min": {
+        "slack_ns": 0.3481,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_4719_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:max": {
+        "slack_ns": 1.4126,
+        "startpoint": "_4588_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "iq_words[10] (output port clocked by clk)"
+      },
+      "1:min": {
+        "slack_ns": 0.3481,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_4719_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    },
+    "ff_n40C_3v60": {
+      "0:max": {
+        "slack_ns": 10.1635,
+        "startpoint": "_4588_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "iq_words[50] (output port clocked by clk)"
+      },
+      "0:min": {
+        "slack_ns": 0.2347,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_4719_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:max": {
+        "slack_ns": 10.1635,
+        "startpoint": "_4588_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "iq_words[50] (output port clocked by clk)"
+      },
+      "1:min": {
+        "slack_ns": 0.2347,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_4719_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    },
+    "ff_125C_3v60": {
+      "0:max": {
+        "slack_ns": 4.951,
+        "startpoint": "_4588_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "iq_words[50] (output port clocked by clk)"
+      },
+      "0:min": {
+        "slack_ns": 0.2754,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_4719_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:max": {
+        "slack_ns": 4.951,
+        "startpoint": "_4588_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "iq_words[50] (output port clocked by clk)"
+      },
+      "1:min": {
+        "slack_ns": 0.2754,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_4719_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    },
+    "ss_n40C_3v00": {
+      "0:max": {
+        "slack_ns": -6.4298,
+        "startpoint": "_4588_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "iq_words[10] (output port clocked by clk)"
+      },
+      "0:min": {
+        "slack_ns": 0.4528,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_4719_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:max": {
+        "slack_ns": -6.4298,
+        "startpoint": "_4588_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "iq_words[10] (output port clocked by clk)"
+      },
+      "1:min": {
+        "slack_ns": 0.4528,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_4719_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    },
+    "ss_125C_3v00": {
+      "0:max": {
+        "slack_ns": -19.3801,
+        "startpoint": "_4588_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "iq_words[20] (output port clocked by clk)"
+      },
+      "0:min": {
+        "slack_ns": 0.5781,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_4719_ (rising edge-triggered flip-flop clocked by clk)"
+      },
+      "1:max": {
+        "slack_ns": -19.3801,
+        "startpoint": "_4588_ (rising edge-triggered flip-flop clocked by clk)",
+        "endpoint": "iq_words[20] (output port clocked by clk)"
+      },
+      "1:min": {
+        "slack_ns": 0.5781,
+        "startpoint": "in_valid (input port clocked by clk)",
+        "endpoint": "_4719_ (rising edge-triggered flip-flop clocked by clk)"
+      }
+    }
+  },
+  "library_sha256": {
+    "tt_025C_3v30": "f9dee07cf158324934b0c59144d970a2e8313f43533ede6283ec3c136f82fe53",
+    "ff_n40C_3v60": "a222740b574d0699c8a416400bd9746ecb8556bc87a515ab7fb80f911e2cd74b",
+    "ff_125C_3v60": "f7d93ac4452c3388e27e8f88149c4f6a4ed1aaed344e93cec095914d374ed945",
+    "ss_n40C_3v00": "08847da4bb78d75ba004e79bb1540dd43fa8d4ed694b84ed5c182d0809520a93",
+    "ss_125C_3v00": "5d2f37ba6f43e33aeba26dc1da55c96394a862eeec4148043f1d48bdf65ccea6"
+  },
+  "scope": "Fixed nominal mapped netlist, ideal clocks/no wire RC. Mixed PVT stress screens do not define or bound the user-approved narrow operating window.",
+  "sha256": {
+    "projects/programmable_transceiver_platform/verification/block_rx_prefix_corners.py": "44740f3b749c00994d6c82ebe63a08531b0b47b114c689f295c99dc1cc8dbbb4",
+    "projects/programmable_transceiver_platform/verification/run_block_rx_prefix_corners.sh": "cdd7f3183414460eb6a8ddb3ebc323e377ee3efc65dbee976aec377ae2e21c5d",
+    "projects/programmable_transceiver_platform/verification/report_block_rx_prefix_corners.py": "29c5ab1b1eb47e5f48a07e1c92f9546a4d7a50f1cf1ef6fc1597f0bf6a8d50a0",
+    "projects/programmable_transceiver_platform/verification/block_rx_prefix_timing.tcl": "829787aa98cab449a2a533015734d6ba70897a5d1509f6f1e82248230ab9e02e",
+    "scratch/transceiver-block-rx-prefix-corners/ff_n40C_3v60.log": "34174318daa4d86523c4064dee3150cc564657b04e0a884ec1e1eee33531afb8",
+    "scratch/transceiver-block-rx-prefix-corners/ff_125C_3v60.log": "05256551bcbd9a46a905134ee47c73d9260f150d16bf8549f4606756e3840e3c",
+    "scratch/transceiver-block-rx-prefix-corners/ss_125C_3v00.log": "4e5d20d29068686a38e221cf03380f5fa950b4c179b5b16cedba7a15aed52f96",
+    "scratch/transceiver-block-rx-prefix-corners/tt_025C_3v30.log": "b367b3372e517e2e115bea5742149fd34faeb3d8cd12e12dd99d8234640515df",
+    "scratch/transceiver-block-rx-prefix-corners/ss_n40C_3v00.log": "5284fb8b762c50ca3b025f756ff62469365cbe4646c126a13a14dd4ead61f6d4"
+  }
+}

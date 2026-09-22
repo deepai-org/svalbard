@@ -1,0 +1,142 @@
+{
+  "completed": true,
+  "rows": [
+    {
+      "fs": 20000000.0,
+      "b1": 12000000.0,
+      "b2": 20000000.0,
+      "errors": [
+        {
+          "oversample": 1,
+          "max_absolute_error": 0.11425896551377927,
+          "rms_error": 0.05566713797938691
+        },
+        {
+          "oversample": 8,
+          "max_absolute_error": 0.03894693850772541,
+          "rms_error": 0.01897500638164625
+        },
+        {
+          "oversample": 16,
+          "max_absolute_error": 0.021482086581991744,
+          "rms_error": 0.01046610454127264
+        },
+        {
+          "oversample": 32,
+          "max_absolute_error": 0.011299708090117721,
+          "rms_error": 0.005505234591884237
+        },
+        {
+          "oversample": 64,
+          "max_absolute_error": 0.005797309163429276,
+          "rms_error": 0.002824457648978816
+        }
+      ]
+    },
+    {
+      "fs": 20000000.0,
+      "b1": 12000000.0,
+      "b2": 12000000.0,
+      "errors": [
+        {
+          "oversample": 1,
+          "max_absolute_error": 0.24183425435388306,
+          "rms_error": 0.11856120758489351
+        },
+        {
+          "oversample": 8,
+          "max_absolute_error": 0.06612977544528806,
+          "rms_error": 0.03242065957553748
+        },
+        {
+          "oversample": 16,
+          "max_absolute_error": 0.03560555434118236,
+          "rms_error": 0.017455912235008635
+        },
+        {
+          "oversample": 32,
+          "max_absolute_error": 0.01849466150140158,
+          "rms_error": 0.00906715803076956
+        },
+        {
+          "oversample": 64,
+          "max_absolute_error": 0.009427986261087951,
+          "rms_error": 0.004622146846793228
+        }
+      ]
+    },
+    {
+      "fs": 40000000.0,
+      "b1": 12000000.0,
+      "b2": 20000000.0,
+      "errors": [
+        {
+          "oversample": 1,
+          "max_absolute_error": 0.46148285519875415,
+          "rms_error": 0.21924942816800683
+        },
+        {
+          "oversample": 8,
+          "max_absolute_error": 0.10552100179579979,
+          "rms_error": 0.05013278184187416
+        },
+        {
+          "oversample": 16,
+          "max_absolute_error": 0.05550468820234811,
+          "rms_error": 0.026370147908890782
+        },
+        {
+          "oversample": 32,
+          "max_absolute_error": 0.028476650455261165,
+          "rms_error": 0.01352919021394038
+        },
+        {
+          "oversample": 64,
+          "max_absolute_error": 0.014424426804221548,
+          "rms_error": 0.006853011531955138
+        }
+      ]
+    },
+    {
+      "fs": 40000000.0,
+      "b1": 12000000.0,
+      "b2": 12000000.0,
+      "errors": [
+        {
+          "oversample": 1,
+          "max_absolute_error": 0.573615188480149,
+          "rms_error": 0.26380052156820455
+        },
+        {
+          "oversample": 8,
+          "max_absolute_error": 0.113753492083278,
+          "rms_error": 0.05231421891265323
+        },
+        {
+          "oversample": 16,
+          "max_absolute_error": 0.05908719495062637,
+          "rms_error": 0.02717367524259133
+        },
+        {
+          "oversample": 32,
+          "max_absolute_error": 0.030120760099259836,
+          "rms_error": 0.013852269576872262
+        },
+        {
+          "oversample": 64,
+          "max_absolute_error": 0.015207867145266169,
+          "rms_error": 0.006993962791485133
+        }
+      ]
+    }
+  ],
+  "sources_sha256": {
+    "check_filter_analytic.py": "4983b52a3f180b47b094f6e42319bd1942e054551eb2b4bae9a526b1c02b4820",
+    "fast_screen.py": "32b8f36a7b649a6e25cf2b2ce47a7444375365e1e233f2fda76facfa1c75faea"
+  },
+  "limitations": [
+    "Linear two-pole cascade only; no quantization or intermediate compression.",
+    "Exact recurrence is a reference check, not calibrated analog transfer behavior.",
+    "No tolerance establishes default16x sufficiency for all future uses."
+  ]
+}

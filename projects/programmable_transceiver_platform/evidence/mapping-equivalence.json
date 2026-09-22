@@ -1,0 +1,31 @@
+{
+  "scope": "Mapped-state correspondence and combinational next-state/output equivalence; not RTL-to-gates or physical verification",
+  "gold_sha256": "ccedec7880808d45f5450376022cdbdee0637ce83a9972f4f6c2aafd6bc474e4",
+  "gate_sha256": "c2013f678d679db01fe939118753ec7428d2381b54fbc6ea0f4ce4b2a6517116",
+  "matched_registers": 8236,
+  "register_input_bits_observed": 18692,
+  "top_output_bits": 128,
+  "method": "Corresponding Q values are shared arbitrary inputs; compare every D/CLK/reset/set input and top output. Cell types and port directions must match.",
+  "proof_status": "pass",
+  "negative_control": "Deliberate inversion of status[0] rejected by the same SAT comparison",
+  "library_sha256": "f9dee07cf158324934b0c59144d970a2e8313f43533ede6283ec3c136f82fe53",
+  "artifact_sha256": {
+    "gold-cut.json": "17c4d638eadb0ad0fdf196c52197732925b36d338b1c34fd8722aef5b5bc8e90",
+    "gate-cut.json": "9769275269eed567e951d552423181046062dea52505e004ba15e375645fa17c",
+    "gate-negative.json": "988774bc514d3c4d0f3683c54e67dc8616d85c0e231d0f6d4959128a538412b1",
+    "proof.log": "61fc167774b1ea3bfa9c4d8f3230e2b865924c355693f4c105c85ae0148de4f2",
+    "negative-proof.log": "771590a5581e7812c26726d095fc43adea58301cf095c92d02f323cdb2c47f49"
+  },
+  "harness_sha256": {
+    "mapping_equivalence.py": "97bd624f9b787927603cd19d67e2f19e94d967c7863cdfc897c7ac11bbe10eaf",
+    "run_mapping_equivalence.sh": "895d0ddcb7b99c384125ee86f71289ba1490a0e9dab0a4e92b5f15f9149a8491",
+    "report_mapping_equivalence.py": "9ce9440b0d049960fd56c9e1a61d0882205964f87591c00b5993acda4b2fb683"
+  },
+  "limitations": [
+    "Two-state Boolean equivalence under matched arbitrary register state; no X/metastability/glitch/timing proof.",
+    "Compares selected mapped artifacts, not original behavioral RTL against gates.",
+    "All mapped register cell types/parameters and input pins are compared; equivalent initial state correspondence is required.",
+    "No placement, wire parasitics, clock/reset physical distribution or analog qualification."
+  ],
+  "harness_correction": "Negative control initially exposed inconsistent port/net-name wiring; generator now checks these agree and mutates both. Corrected positive and negative checks both rerun."
+}

@@ -1,0 +1,17 @@
+* First radio DAC candidate: binary-weighted differential current steering.
+* External BN bias and full-swing true/complement controls; no output driver/filter.
+.subckt pt_dac_current_bit OP ON B BB BN VSS params: WGT=1
+XTAIL T BN VSS VSS nfet_03v3 w=10u l=1u m={WGT}
+XP OP B T VSS nfet_03v3 w=4u l=.28u m={WGT}
+XN ON BB T VSS nfet_03v3 w=4u l=.28u m={WGT}
+.ends
+.subckt pt_current_dac8 OP ON BN VSS B0 B0B B1 B1B B2 B2B B3 B3B B4 B4B B5 B5B B6 B6B B7 B7B
+X0 OP ON B0 B0B BN VSS pt_dac_current_bit WGT=1
+X1 OP ON B1 B1B BN VSS pt_dac_current_bit WGT=2
+X2 OP ON B2 B2B BN VSS pt_dac_current_bit WGT=4
+X3 OP ON B3 B3B BN VSS pt_dac_current_bit WGT=8
+X4 OP ON B4 B4B BN VSS pt_dac_current_bit WGT=16
+X5 OP ON B5 B5B BN VSS pt_dac_current_bit WGT=32
+X6 OP ON B6 B6B BN VSS pt_dac_current_bit WGT=64
+X7 OP ON B7 B7B BN VSS pt_dac_current_bit WGT=128
+.ends

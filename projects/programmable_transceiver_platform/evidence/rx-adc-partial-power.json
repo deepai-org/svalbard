@@ -1,0 +1,125 @@
+{
+  "status": "partial_failed_run_selected_supply_energy",
+  "completed": false,
+  "artifacts_sha256": {
+    ".spice": "f7385bc1309e682e27a0fc5fec69e0698275fc50637a2ee52d1f807ddcf3b090",
+    ".log": "82f633fa05f514931490dfec4e56815d78457764eef82a0a8008cf39efa0ae40",
+    ".dat": "f6bb05d783ae8aecf0855a940ec9124197a174aa6c9982389cc3d773ce097bee"
+  },
+  "windows": [
+    {
+      "window_ns": [
+        350.00000000000006,
+        400.00000000000006
+      ],
+      "rails": {
+        "baseband_filters": {
+          "mean_mw": 28.816380963823715,
+          "energy_pj": 1440.8190481911856,
+          "native_window_peak_mw": 28.87397186261246,
+          "minimum_mw": 28.751425328725237
+        },
+        "four_sample_drivers": {
+          "mean_mw": 21.696417892313875,
+          "energy_pj": 1084.8208946156938,
+          "native_window_peak_mw": 21.70164571341134,
+          "minimum_mw": 21.691190573816762
+        },
+        "reference_pair": {
+          "mean_mw": 42.41999910120799,
+          "energy_pj": 2120.9999550603993,
+          "native_window_peak_mw": 42.43690493965511,
+          "minimum_mw": 42.39362076540406
+        }
+      },
+      "selected_rails_mean_mw": 92.93279795734556
+    },
+    {
+      "window_ns": [
+        420.0,
+        450.00000000000006
+      ],
+      "rails": {
+        "baseband_filters": {
+          "mean_mw": 28.816354397986316,
+          "energy_pj": 864.4906319395903,
+          "native_window_peak_mw": 28.84766054007468,
+          "minimum_mw": 28.77772866867638
+        },
+        "four_sample_drivers": {
+          "mean_mw": 21.69641821960165,
+          "energy_pj": 650.8925465880502,
+          "native_window_peak_mw": 21.696422378602854,
+          "minimum_mw": 21.696412507545052
+        },
+        "reference_pair": {
+          "mean_mw": 42.44539890097006,
+          "energy_pj": 1273.3619670291032,
+          "native_window_peak_mw": 42.4474735507144,
+          "minimum_mw": 42.442703905896224
+        }
+      },
+      "selected_rails_mean_mw": 92.95817151855803
+    },
+    {
+      "window_ns": [
+        450.00000000000006,
+        469.00000000000006
+      ],
+      "rails": {
+        "baseband_filters": {
+          "mean_mw": 28.816318430381806,
+          "energy_pj": 547.5100501772542,
+          "native_window_peak_mw": 28.847660075965603,
+          "minimum_mw": 28.777725382725595
+        },
+        "four_sample_drivers": {
+          "mean_mw": 21.696417757435437,
+          "energy_pj": 412.2319373912732,
+          "native_window_peak_mw": 21.69642263581113,
+          "minimum_mw": 21.696411915572057
+        },
+        "reference_pair": {
+          "mean_mw": 42.44821769965917,
+          "energy_pj": 806.5161362935241,
+          "native_window_peak_mw": 42.44882161627862,
+          "minimum_mw": 42.4474735507144
+        }
+      },
+      "selected_rails_mean_mw": 92.9609538874764
+    },
+    {
+      "window_ns": [
+        470.2,
+        478.30000000000007
+      ],
+      "rails": {
+        "baseband_filters": {
+          "mean_mw": 28.816430710457002,
+          "energy_pj": 233.41308875470247,
+          "native_window_peak_mw": 28.847571058696612,
+          "minimum_mw": 28.77821692157484
+        },
+        "four_sample_drivers": {
+          "mean_mw": 21.701529584476315,
+          "energy_pj": 175.78238963425872,
+          "native_window_peak_mw": 22.32615343917448,
+          "minimum_mw": 21.10011885998608
+        },
+        "reference_pair": {
+          "mean_mw": 45.31560017471265,
+          "energy_pj": 367.0563614151737,
+          "native_window_peak_mw": 48.98906253989704,
+          "minimum_mw": 41.7819137813345
+        }
+      },
+      "selected_rails_mean_mw": 95.83356046964596
+    }
+  ],
+  "limitations": [
+    "Not whole-chip power or a guaranteed lower bound: other ideal sources can supply or absorb energy.",
+    "Excludes LNA, oscillator, LO buffers, ADC logic/comparators/CDAC drivers, ideal controls and bias implementation.",
+    "Early conversion window is incomplete; no repeated-conversion average or thermal/package qualification.",
+    "Positive power is energy delivered by each measured supply, not independently measured heat."
+  ]
+}

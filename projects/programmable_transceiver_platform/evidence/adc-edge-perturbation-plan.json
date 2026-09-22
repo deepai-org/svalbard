@@ -1,0 +1,139 @@
+{
+  "status": "verified_source_schedule_for_proposed_sampler_only_test",
+  "deck_sha256": "1b58a5083f6bcd96668f86bb34d5c7b8a7abee3b584b933be4296d77a4cb95b4",
+  "cases": [
+    {
+      "offset_ns": -0.1,
+      "frame": 0,
+      "sampler_ramp_ns": [
+        69.9,
+        70.0
+      ],
+      "mask_ramp_ns": [
+        70.0,
+        70.1
+      ],
+      "first_comparator_rise_ns": 70.5,
+      "ideal_end_to_comparator_gap_ns": 0.5000000000000057
+    },
+    {
+      "offset_ns": -0.1,
+      "frame": 1,
+      "sampler_ramp_ns": [
+        119.9,
+        120.0
+      ],
+      "mask_ramp_ns": [
+        120.0,
+        120.1
+      ],
+      "first_comparator_rise_ns": 120.5,
+      "ideal_end_to_comparator_gap_ns": 0.5000000000000057
+    },
+    {
+      "offset_ns": -0.1,
+      "frame": 2,
+      "sampler_ramp_ns": [
+        169.9,
+        170.0
+      ],
+      "mask_ramp_ns": [
+        170.0,
+        170.1
+      ],
+      "first_comparator_rise_ns": 170.5,
+      "ideal_end_to_comparator_gap_ns": 0.5000000000000057
+    },
+    {
+      "offset_ns": 0.0,
+      "frame": 0,
+      "sampler_ramp_ns": [
+        70.0,
+        70.1
+      ],
+      "mask_ramp_ns": [
+        70.0,
+        70.1
+      ],
+      "first_comparator_rise_ns": 70.5,
+      "ideal_end_to_comparator_gap_ns": 0.4000000000000057
+    },
+    {
+      "offset_ns": 0.0,
+      "frame": 1,
+      "sampler_ramp_ns": [
+        120.0,
+        120.1
+      ],
+      "mask_ramp_ns": [
+        120.0,
+        120.1
+      ],
+      "first_comparator_rise_ns": 120.5,
+      "ideal_end_to_comparator_gap_ns": 0.4000000000000057
+    },
+    {
+      "offset_ns": 0.0,
+      "frame": 2,
+      "sampler_ramp_ns": [
+        170.0,
+        170.1
+      ],
+      "mask_ramp_ns": [
+        170.0,
+        170.1
+      ],
+      "first_comparator_rise_ns": 170.5,
+      "ideal_end_to_comparator_gap_ns": 0.4000000000000057
+    },
+    {
+      "offset_ns": 0.1,
+      "frame": 0,
+      "sampler_ramp_ns": [
+        70.1,
+        70.19999999999999
+      ],
+      "mask_ramp_ns": [
+        70.0,
+        70.1
+      ],
+      "first_comparator_rise_ns": 70.5,
+      "ideal_end_to_comparator_gap_ns": 0.3000000000000057
+    },
+    {
+      "offset_ns": 0.1,
+      "frame": 1,
+      "sampler_ramp_ns": [
+        120.1,
+        120.19999999999999
+      ],
+      "mask_ramp_ns": [
+        120.0,
+        120.1
+      ],
+      "first_comparator_rise_ns": 120.5,
+      "ideal_end_to_comparator_gap_ns": 0.3000000000000057
+    },
+    {
+      "offset_ns": 0.1,
+      "frame": 2,
+      "sampler_ramp_ns": [
+        170.1,
+        170.2
+      ],
+      "mask_ramp_ns": [
+        170.0,
+        170.1
+      ],
+      "first_comparator_rise_ns": 170.5,
+      "ideal_end_to_comparator_gap_ns": 0.3000000000000057
+    }
+  ],
+  "limitations": [
+    "Proposed experiment only; no perturbed simulation run.",
+    "Shift both complementary sampler controls together; leave mask/conversion/reset/input schedules unchanged.",
+    "Positive shift overlaps mask release intentionally and tests that interaction; not a pure observation-time shift.",
+    "Ideal source gaps exclude physical control/comparator delays and are not setup-time qualification.",
+    "Both offsets are diagnostic scenarios, not guaranteed jitter bounds."
+  ]
+}

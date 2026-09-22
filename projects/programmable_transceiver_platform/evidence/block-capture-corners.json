@@ -1,0 +1,85 @@
+{
+  "pass": 62,
+  "corners": {
+    "tt_025C_3v30": {
+      "capture_slack_ns": {
+        "wr_clk": 21.9306,
+        "rd_clk": 17.3183
+      },
+      "minimum_read_domain_hold_ns": 1.1485,
+      "hold_uncertainty_sensitivity_ns": {
+        "0.5": 0.6485,
+        "5.0": -3.8515
+      }
+    },
+    "ff_n40C_3v60": {
+      "capture_slack_ns": {
+        "wr_clk": 23.5532,
+        "rd_clk": 19.1034
+      },
+      "minimum_read_domain_hold_ns": 0.6776,
+      "hold_uncertainty_sensitivity_ns": {
+        "0.5": 0.1776,
+        "5.0": -4.3224
+      }
+    },
+    "ff_125C_3v60": {
+      "capture_slack_ns": {
+        "wr_clk": 22.5959,
+        "rd_clk": 18.1258
+      },
+      "minimum_read_domain_hold_ns": 0.9359,
+      "hold_uncertainty_sensitivity_ns": {
+        "0.5": 0.4359,
+        "5.0": -4.0641
+      }
+    },
+    "ss_n40C_3v00": {
+      "capture_slack_ns": {
+        "wr_clk": 20.4475,
+        "rd_clk": 15.4055
+      },
+      "minimum_read_domain_hold_ns": 1.5139,
+      "hold_uncertainty_sensitivity_ns": {
+        "0.5": 1.0139,
+        "5.0": -3.4861
+      }
+    },
+    "ss_125C_3v00": {
+      "capture_slack_ns": {
+        "wr_clk": 18.0748,
+        "rd_clk": 11.1982
+      },
+      "minimum_read_domain_hold_ns": 2.1639,
+      "hold_uncertainty_sensitivity_ns": {
+        "0.5": 1.6639,
+        "5.0": -2.8361
+      }
+    }
+  },
+  "library_sha256": {
+    "tt_025C_3v30": "f9dee07cf158324934b0c59144d970a2e8313f43533ede6283ec3c136f82fe53",
+    "ff_n40C_3v60": "a222740b574d0699c8a416400bd9746ecb8556bc87a515ab7fb80f911e2cd74b",
+    "ff_125C_3v60": "f7d93ac4452c3388e27e8f88149c4f6a4ed1aaed344e93cec095914d374ed945",
+    "ss_n40C_3v00": "08847da4bb78d75ba004e79bb1540dd43fa8d4ed694b84ed5c182d0809520a93",
+    "ss_125C_3v00": "5d2f37ba6f43e33aeba26dc1da55c96394a862eeec4148043f1d48bdf65ccea6"
+  },
+  "scope": "Fixed nominal mapped fixture. Available mixed PVT stress screens, not process-only or proof of bounding the intended narrow envelope. Ideal clocks, no wire RC or local variation; capture paths only.",
+  "sha256": {
+    "projects/programmable_transceiver_platform/verification/block_capture_corners.py": "69b3175773fcb74c8c07570ea7d629f133c5227be9cf1111e286fdfb3200b85f",
+    "projects/programmable_transceiver_platform/verification/run_block_capture_corners.sh": "4f30eaf18f3281dd26a77a0a2a024779877d9e9c61760312f3d864454e8526dc",
+    "projects/programmable_transceiver_platform/verification/report_block_capture_corners.py": "5f4b1b5ee72d074fdb50f5a130345b9626a04f1d4e2cecc9db4af04c36cf4819",
+    "projects/programmable_transceiver_platform/verification/block_capture_timing.tcl": "ba473a052ba4caa8d3d062328643203bf3b6a0ea42d99b61e3e604a5e582b729",
+    "projects/programmable_transceiver_platform/verification/block_capture_hold.tcl": "0cfd8964f25b0c3b672fbdc8a81f2f0afaf77bd36a3ee2165a893d496657d2c9",
+    "scratch/transceiver-block-capture-corners/ff_125C_3v60-setup.log": "f3b99eecfd50c2bd2158843008cb9bf38a66757bed20de9b53bda81482c847ee",
+    "scratch/transceiver-block-capture-corners/ff_125C_3v60-hold.log": "b6686d7f0888882cdd3b230429c5ab204459e3125dea84f2f49ceb183ebce935",
+    "scratch/transceiver-block-capture-corners/ss_n40C_3v00-hold.log": "e7a73caed97e9bca15b0fc78a0492c9c492b280611c32529972b745e654c68f8",
+    "scratch/transceiver-block-capture-corners/ff_n40C_3v60-setup.log": "13d3e60f2fdfc27a48155ca461d0a37ba5cbc3555976d033f21773b42844f645",
+    "scratch/transceiver-block-capture-corners/tt_025C_3v30-setup.log": "4f5a3c8eb52ea77d6189a28f0e60de0671176249396611555f62b243ba376de8",
+    "scratch/transceiver-block-capture-corners/ss_n40C_3v00-setup.log": "b55d6a57557cf5a61b4f0c59db60ad687e1e8f3cfaf2c565b4175789fcc50d9b",
+    "scratch/transceiver-block-capture-corners/ff_n40C_3v60-hold.log": "5fa16feff862389af7eb313ba9e6d4fb5b92e4120b2d8e6afabf7874bef04cfe",
+    "scratch/transceiver-block-capture-corners/tt_025C_3v30-hold.log": "6b3c72e7049afd072f7042f08f640464cdebbdd73f57894481e6b61e7c34b457",
+    "scratch/transceiver-block-capture-corners/ss_125C_3v00-hold.log": "cfc9f42d7f81a8670f38649269b57b2a62ed0b6add4f54d8d382b590e1e7f85e",
+    "scratch/transceiver-block-capture-corners/ss_125C_3v00-setup.log": "0cc95cc5b05f7ecf18a421aa2571d02211fd2b3c59e389710b61f8b9589b1cfb"
+  }
+}

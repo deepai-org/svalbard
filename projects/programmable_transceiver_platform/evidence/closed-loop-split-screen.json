@@ -1,0 +1,66 @@
+{
+  "status": "short_split_bias_closed_loop_not_lock_qualification",
+  "windows": [
+    {
+      "window_ns": [
+        100,
+        200
+      ],
+      "vco_frequency_hz": 2677035960.441855,
+      "control_range_v": [
+        1.080404646441971,
+        1.260133769015924
+      ],
+      "control_mean_v": 1.198343934556706,
+      "gate_range_v": [
+        1.490181891700362,
+        1.51338671626369
+      ],
+      "pump_charge_fc": 1272.5806970354984,
+      "pump_minus_filter_charge_fc": 33.0253607267813
+    },
+    {
+      "window_ns": [
+        220,
+        320
+      ],
+      "vco_frequency_hz": 2688458198.012302,
+      "control_range_v": [
+        1.157936366853181,
+        1.262988807289462
+      ],
+      "control_mean_v": 1.2094628680092803,
+      "gate_range_v": [
+        1.490150609661074,
+        1.513492634218545
+      ],
+      "pump_charge_fc": 931.5955403731465,
+      "pump_minus_filter_charge_fc": 1.15489981427579
+    }
+  ],
+  "artifacts_sha256": {
+    ".spice": "01fd1f64885fa91301a0b53c7c4eda5bd82784527e40ba2e4400627d3d6bb029",
+    ".dat": "792006446e1ff4a86d55ec74e3086d831e8f9f799374a3cc3a2b8946cd45f065",
+    ".log": "628c3645454d630ba8bca8598636280f6364da7258e32f731cfb242f3a06689f"
+  },
+  "limitations": [
+    "321ns with precharged filter, seeded VCO and prebiased LNA; no cold startup.",
+    "Only a few reference cycles, no lock/acquisition/stability or phase-noise claim.",
+    "Actual divide128/PFD/pump/filter/VCO, but ideal external bias sources/reference/sampling clocks.",
+    "Filter values are preliminary; no PVT/mismatch or physical parasitics.",
+    "Seven fixed-control samples bracket a range; they do not establish continuous monotonicity or a safe capture envelope."
+  ],
+  "controlled_vco_substitution_checked": true,
+  "actual_feedback_connectivity_checked": true,
+  "bias_guard_pass": true,
+  "pump_filter_control_range_v": [
+    1.080404646441971,
+    1.262988807289462
+  ],
+  "sampled_tuning_envelope_v": [
+    0.98,
+    1.3
+  ],
+  "sampled_tuning_envelope_exceeded": false,
+  "pll_lock_established": false
+}

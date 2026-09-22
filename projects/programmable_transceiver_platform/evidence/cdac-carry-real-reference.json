@@ -1,0 +1,70 @@
+{
+  "status": "prebiased_real_reference_carry_diagnostic",
+  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "source_sha256": {
+    "projects/programmable_transceiver_platform/analog/adc/comparator.spice": "a41ecccf87f625bbddca6139730c5e8500529c5acb2f05a5052f9049e8ee74a0",
+    "projects/programmable_transceiver_platform/analog/adc/cdac8_mim.spice": "532e86fc11da6f695d092dd06c0508cbb363f49c4c2b070c78683c7d5bf85e14",
+    "projects/programmable_transceiver_platform/analog/adc/cdac8_scaled.spice": "4006f42115b3a5a30b9ad74626ef0c084655bf0cdc2f1d1cc8bd32f65e351fd2",
+    "ip/blocks/analog/wifi_80211b/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+    "projects/programmable_transceiver_platform/analog/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+    "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_complement_output2.spice": "990e4bdc4c080d64c67053ccf629447b7bfae66e921cb8191da964b08c5b17f2",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_scaled_output2.spice": "fa991a36d9ac893aaf786ee57f3a5f19f009ffb00818c67b77c44a849c809c86",
+    "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair.spice": "041cc2507332035bcef9925f485ca4208ac4a37771a391d8a9853fcec6fb8048",
+    "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair_output2.spice": "46ce833ed2bd78bad164bd3a85accaca24f66449610589a4363fff394d61bd8f",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_scaled.spice": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+    "projects/programmable_transceiver_platform/analog/reference/buffer_complement.spice": "b21147fcdd7c13e4c7359fb966319a70badbb6a12c0de0064926b73be10602b4"
+  },
+  "prior_sha256": "bcec8d91db56749b0ba7f2a5a7c66e7f528161356add4ee57f3d5e922ffbd679",
+  "reference_donor_sha256": "fd11098ac5bde92facb422912f8cdc88211c454f1ade05537ca4c458f211912f",
+  "cases": [
+    {
+      "name": "code127_delay100",
+      "initial_code": 127,
+      "parent_sha256": "75f62f4d62918b4e3165e8d19789a39ae2cfb47efcd0edb75f425eb3ec6b758f",
+      "target_sign": 1,
+      "preclock_residue_v": 0.0004117699999999225,
+      "output_difference_v": 3.30007657068505,
+      "correct_target_polarity": true,
+      "initial_reference_span_v": 1.0236259800000003,
+      "reference_span_range_v": [
+        0.7747012699999998,
+        1.03411521
+      ],
+      "reference_supply_peak_a": 0.0157650957,
+      "artifacts_sha256": {
+        ".spice": "c8cb5a99eff25d4cffb7eca160b60d575b427e82310afd309b8078fd9d42a5e1",
+        ".log": "7c2fdca318147c74356672c44c990c5b5e106263c93a850ca6329b57cc80729b",
+        ".dat": "575a6612a115f54e0b9353904ca06321c6b4aaa25f6e0001500f008fd301cf14"
+      }
+    },
+    {
+      "name": "code128_delay100",
+      "initial_code": 128,
+      "parent_sha256": "1a3a9bbc618490b34896602d0c87757acd14232231d81cb107ad037ace295e9f",
+      "target_sign": -1,
+      "preclock_residue_v": -0.0004117699999999225,
+      "output_difference_v": -3.30007657068515,
+      "correct_target_polarity": true,
+      "initial_reference_span_v": 1.0236259800000003,
+      "reference_span_range_v": [
+        0.7747012699999998,
+        1.03411521
+      ],
+      "reference_supply_peak_a": 0.0157650957,
+      "artifacts_sha256": {
+        ".spice": "30779d676d6ec75e57f155effbe25c3cc2050667d69b03438c4050cb7701e6f9",
+        ".log": "131cbbe90cf65e63e5c954c36cf083b730a6d41df4c37af8a0e885f69328326f",
+        ".dat": "7e46f1ac50a370edd68ef7fffd95ebf1f74731e372cbdb84e9861c0af3e22650"
+      }
+    }
+  ],
+  "limitations": [
+    "DC operating-point initialization, not cold startup.",
+    "Targets,20uA biases, supply and gate clocks remain ideal.",
+    "Single carry with one CDAC; not simultaneous I/Q or autonomous SAR.",
+    "Different reference DC span changes residue; ideal-rail target is not an accuracy specification."
+  ]
+}

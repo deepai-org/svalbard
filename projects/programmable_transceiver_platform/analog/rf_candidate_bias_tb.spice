@@ -1,0 +1,35 @@
+* Hierarchical transistor schematic elaboration and bias check.
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.include /vco/ring_vco.spice
+.include /screen/lo_buffer.spice
+.include /wifi/rf_lna/lna_cs_core.spice
+.include /wifi/rf_switch_mixer/mixer.spice
+.include /screen/bb_filter_section.spice
+.include /wifi/rf_if_transmission_gate/rf_if_transmission_gate.spice
+.include /screen/rf_rx_candidate.spice
+.temp 27
+VDD RFVDD 0 3.3
+VPLL PLLVDD 0 3.3
+VB RFBIAS 0 1.5
+VBB BBBIAS 0 2.25
+VC CTRL 0 1.08
+VSC SC 0 PULSE(0 3.3 0 200p 200p 12.3n 25n)
+VSCB SCB 0 PULSE(3.3 0 0 200p 200p 12.3n 25n)
+VIN RF_SRC 0 SIN(0 0.001 2.510416392628496g)
+RSIG RF_SRC IN 50
+XRX IN HP HN RFBIAS BBBIAS CTRL SC SCB RFVDD PLLVDD 0 pt_rf_rx_candidate
+.ic v(XRX.GATE)=1.5
+.ic v(XRX.XVCO.N0P)=1.718 v(XRX.XVCO.N0N)=1.714
+.ic v(XRX.XVCO.N1P)=1.714 v(XRX.XVCO.N1N)=1.718
+.ic v(XRX.XVCO.N2P)=1.718 v(XRX.XVCO.N2N)=1.714
+.control
+set wr_singlescale
+set wr_vecnames
+set numdgt=15
+tran 2p 81n 0 2p uic
+let cml=v(XRX.CP)-v(XRX.CN)
+wrdata /work/transient.dat v(XRX.GATE) v(XRX.SOURCE) v(XRX.DRAIN) v(XRX.LO) v(XRX.LOB) cml v(HP) v(HN) i(VDD) i(VPLL)
+.endc
+.end

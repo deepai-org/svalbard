@@ -1,0 +1,125 @@
+{
+  "status": "fixed_region_state_propagation_verified",
+  "cases": [
+    {
+      "case": "held",
+      "duration_s": 1e-09,
+      "max_voltage_error_v": 3.8163916471489756e-17,
+      "phase_integral_error_vs": 4.620579202932928e-25,
+      "pump_charge_error_c": 0.0,
+      "exact_seconds": 0.0004741791635751724,
+      "reference_seconds": 0.0033163484185934067
+    },
+    {
+      "case": "held",
+      "duration_s": 1e-08,
+      "max_voltage_error_v": 5.759281940243e-16,
+      "phase_integral_error_vs": 6.875938841847043e-24,
+      "pump_charge_error_c": 0.0,
+      "exact_seconds": 0.0001930519938468933,
+      "reference_seconds": 0.011436578817665577
+    },
+    {
+      "case": "up",
+      "duration_s": 1e-09,
+      "max_voltage_error_v": 3.8163916471489756e-17,
+      "phase_integral_error_vs": 3.7481621506309067e-25,
+      "pump_charge_error_c": 1.262177448353619e-29,
+      "exact_seconds": 0.00019611511379480362,
+      "reference_seconds": 0.0033094314858317375
+    },
+    {
+      "case": "up",
+      "duration_s": 1e-08,
+      "max_voltage_error_v": 2.643718577388654e-15,
+      "phase_integral_error_vs": 3.117436933559223e-23,
+      "pump_charge_error_c": 8.077935669463161e-28,
+      "exact_seconds": 0.00018296204507350922,
+      "reference_seconds": 0.013945827260613441
+    },
+    {
+      "case": "down",
+      "duration_s": 1e-09,
+      "max_voltage_error_v": 1.0408340855860843e-17,
+      "phase_integral_error_vs": 1.809457589959748e-25,
+      "pump_charge_error_c": 1.262177448353619e-29,
+      "exact_seconds": 0.00018178392201662064,
+      "reference_seconds": 0.0036159316077828407
+    },
+    {
+      "case": "down",
+      "duration_s": 1e-08,
+      "max_voltage_error_v": 6.453171330633722e-16,
+      "phase_integral_error_vs": 7.909914607538327e-24,
+      "pump_charge_error_c": 2.0194839173657902e-28,
+      "exact_seconds": 0.00018362794071435928,
+      "reference_seconds": 0.018397714011371136
+    },
+    {
+      "case": "centering",
+      "duration_s": 1e-09,
+      "max_voltage_error_v": 4.5102810375396984e-17,
+      "phase_integral_error_vs": 5.072943600422865e-25,
+      "pump_charge_error_c": 0.0,
+      "exact_seconds": 0.00019192323088645935,
+      "reference_seconds": 0.0029283342882990837
+    },
+    {
+      "case": "centering",
+      "duration_s": 1e-08,
+      "max_voltage_error_v": 3.011479954295737e-15,
+      "phase_integral_error_vs": 3.383685693224729e-23,
+      "pump_charge_error_c": 0.0,
+      "exact_seconds": 0.00018410198390483856,
+      "reference_seconds": 0.012240992859005928
+    },
+    {
+      "case": "positive_compliance",
+      "duration_s": 1e-09,
+      "max_voltage_error_v": 2.220446049250313e-16,
+      "phase_integral_error_vs": 1.0339757656912846e-24,
+      "pump_charge_error_c": 3.7865323450608567e-28,
+      "exact_seconds": 0.00017793010920286179,
+      "reference_seconds": 0.003037485294044018
+    },
+    {
+      "case": "positive_compliance",
+      "duration_s": 1e-08,
+      "max_voltage_error_v": 3.6637359812630166e-15,
+      "phase_integral_error_vs": 4.1359030627651384e-23,
+      "pump_charge_error_c": 5.9069904582949364e-27,
+      "exact_seconds": 0.00018407870084047318,
+      "reference_seconds": 0.014143558219075203
+    },
+    {
+      "case": "negative_compliance",
+      "duration_s": 1e-09,
+      "max_voltage_error_v": 2.220446049250313e-16,
+      "phase_integral_error_vs": 1.0339757656912846e-24,
+      "pump_charge_error_c": 5.616689645173604e-28,
+      "exact_seconds": 0.00017704162746667862,
+      "reference_seconds": 0.0030294805765151978
+    },
+    {
+      "case": "negative_compliance",
+      "duration_s": 1e-08,
+      "max_voltage_error_v": 3.9968028886505635e-15,
+      "phase_integral_error_vs": 4.4667753077863494e-23,
+      "pump_charge_error_c": 6.563322731438818e-27,
+      "exact_seconds": 0.0001783166080713272,
+      "reference_seconds": 0.014195098541676998
+    }
+  ],
+  "limitations": [
+    "Not integrated into chip; live solver unchanged.",
+    "Missing source-work and dissipation integration.",
+    "Sampled fixture boundary checks are not certified event detection.",
+    "No compliance-region crossing or full-chip speedup claim."
+  ],
+  "source_sha256": {
+    "verification/thermal_filter_exact_step_screen.py": "5ab379d94fcff360b2768c7031436749792270669e05a8bc19b9447e37442565",
+    "system_model/connected/three_cap_resistor_noise.py": "187c062bb6323b5a7907693a19af0aa2762ae4d3d1490ecc0eba62bf9d8f16d4",
+    "system_model/connected/three_cap_filter.py": "715f0edcd40bfe90b00f8497f81226b01d4c95e2254c4cbcf6e4c0149b9790e9",
+    "system_model/connected/three_cap_centering.py": "877346a77069846e12bbce59a0155d68858e3470563b757f0f51457165b57a79"
+  }
+}

@@ -1,0 +1,435 @@
+{
+  "status": "completed_seeded_diagnostic",
+  "completed": true,
+  "limitations": [
+    "Seeded zero-RF test, ideal biases/supplies and absent ADC/interface loads.",
+    "No cold startup, noise, modulation or lock qualification."
+  ],
+  "provenance": {
+    "returncode": 0,
+    "timed_out": false,
+    "source_sha256_before": {
+      "/baseline/latest.spice": "ff9a59cac625a488dfdff227d71dae909859d596665c34c49a7bdf3187f4ca21",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+      "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/reference_input_buffer.spice": "e9922aa2757ca9ece9eea717cc27b090920c522fd7f1ea7f25d0ce98f5c78e76",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/screen/quadrature/lo_final_stage.spice": "3f234838df5453d1c5f69d1f7f3c753da87e17052d979147a6d6e05fa418ca9f",
+      "/screen/quadrature/rc_split.spice": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+      "/screen/reference/buffer_scaled.spice": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/vco/divider.spice": "1e007f6d40d8678192a090ed1906fd27f6834dfec6983a35f15ffb8f1a3e364b",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+    },
+    "source_sha256_after": {
+      "/baseline/latest.spice": "ff9a59cac625a488dfdff227d71dae909859d596665c34c49a7bdf3187f4ca21",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/bb_filter_section.spice": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+      "/screen/bb_pmos_gain.spice": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/pll/loop_filter.spice": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+      "/screen/pll/pfd.spice": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+      "/screen/pll/reference_input_buffer.spice": "e9922aa2757ca9ece9eea717cc27b090920c522fd7f1ea7f25d0ce98f5c78e76",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/screen/quadrature/lo_final_stage.spice": "3f234838df5453d1c5f69d1f7f3c753da87e17052d979147a6d6e05fa418ca9f",
+      "/screen/quadrature/rc_split.spice": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+      "/screen/reference/buffer_scaled.spice": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/vco/divider.spice": "1e007f6d40d8678192a090ed1906fd27f6834dfec6983a35f15ffb8f1a3e364b",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+    },
+    "deck_unchanged": true,
+    "artifacts_sha256": {
+      ".spice": "ff9a59cac625a488dfdff227d71dae909859d596665c34c49a7bdf3187f4ca21",
+      ".log": "5774a6c987d98bb8a7536b6064b64c727f8b2a3f1b117afca30e67ca3a3bf2d2",
+      ".dat": "08e2d80ed7557297b1006a41af2fbaccc02b97cd59144a84376b691ed43f3390"
+    }
+  },
+  "actual_stop_ns": 3201.0,
+  "phase": {
+    "reference_edges": 61,
+    "feedback_edges": 61,
+    "reference_times_ns": [
+      100.17774760435277,
+      151.377754912222,
+      202.5777548391687,
+      253.77775480603216,
+      304.9777561526412,
+      356.17775617225294,
+      407.3777561959784,
+      458.57775615328416,
+      509.77775613845927,
+      560.9777561800507,
+      612.1777562000595,
+      663.3777561865453,
+      714.577756145918,
+      765.777756158901,
+      816.9777561253206,
+      868.1777561974679,
+      919.3777559286239,
+      970.5777562328649,
+      1021.7777561100826,
+      1072.9777562055062,
+      1124.1777562201482,
+      1175.3777561599757,
+      1226.5777563017878,
+      1277.7777561844437,
+      1328.9777561357419,
+      1380.1777561751767,
+      1431.3777561995155,
+      1482.5777561854554,
+      1533.7777561328758,
+      1584.977756181244,
+      1636.1777561031283,
+      1687.3777561821921,
+      1738.5777561702241,
+      1789.7777561281885,
+      1840.9777561680144,
+      1892.177756191338,
+      1943.3777561531404,
+      1994.5777562872295,
+      2045.7777561818161,
+      2096.9777564881783,
+      2148.1777551179985,
+      2199.377756059181,
+      2250.57775612849,
+      2301.777756137743,
+      2352.9777561114493,
+      2404.177756127405,
+      2455.3777561516727,
+      2506.5777561881882,
+      2557.7777561859716,
+      2608.977756172222,
+      2660.177756121609,
+      2711.3777561629704,
+      2762.5777561750233,
+      2813.777756205115,
+      2864.977756182392,
+      2916.1777561343497,
+      2967.3777561683464,
+      3018.577756189711,
+      3069.777756218818,
+      3120.977756141065,
+      3172.177756095897
+    ],
+    "ordinal_feedback_minus_reference_ns": [
+      32.11401100939266,
+      28.756665644767885,
+      25.298638981902275,
+      21.87902089128245,
+      18.526321154736973,
+      15.259958193196885,
+      12.097197050371149,
+      9.053248757581525,
+      6.148307591102404,
+      3.4097999136425736,
+      0.8641496788288648,
+      -1.45249702801917,
+      -3.513405844267358,
+      -5.307100956791901,
+      -6.827584338812848,
+      -8.075756141189713,
+      -9.05805572414439,
+      -9.785577944480256,
+      -10.27321135897071,
+      -10.539357293431573,
+      -10.604995689751386,
+      -10.49301788801867,
+      -10.227428455761423,
+      -9.832579454713347,
+      -9.33258998392132,
+      -8.750689723472632,
+      -8.10851665746057,
+      -7.425919370762442,
+      -6.720580674520907,
+      -6.00817983723632,
+      -5.301838403484857,
+      -4.612731349158886,
+      -3.9497406005911353,
+      -3.3198596367468247,
+      -2.728417114044569,
+      -2.1791496184770085,
+      -1.6745312229347964,
+      -1.215834066550673,
+      -0.8034120676641116,
+      -0.4367519682971909,
+      -0.114790688530508,
+      0.16404775969256014,
+      0.4014109674334494,
+      0.6008165813170582,
+      0.7651157090608498,
+      0.8970034557910715,
+      0.9992445205105138,
+      1.0745739133711525,
+      1.1257868653326946,
+      1.1555821835165765,
+      1.1666110552462332,
+      1.1614436985422336,
+      1.1424935530288298,
+      1.1120624062630513,
+      1.072277381983904,
+      1.0250980017366913,
+      0.9722806797463757,
+      0.915446653459431,
+      0.8560462178660584,
+      0.7953686083697541,
+      0.7344876896365486
+    ]
+  },
+  "node_ranges_v": {
+    "v(ctrl)": [
+      1.031696490175457,
+      1.261488819619029
+    ],
+    "v(dummy)": [
+      0.9902443212120143,
+      1.276187689395551
+    ],
+    "v(lg)": [
+      1.479763221166052,
+      1.563542534302191
+    ],
+    "v(ls)": [
+      3.35703384798935e-05,
+      0.2996455352943742
+    ],
+    "v(fip)": [
+      0.005499729585249315,
+      1.10732141462924
+    ],
+    "v(fin)": [
+      0.005499729585249315,
+      1.095008238357608
+    ],
+    "v(fqp)": [
+      0.005499729585227902,
+      1.077257918176945
+    ],
+    "v(fqn)": [
+      0.005499729585227919,
+      1.080119211838218
+    ]
+  },
+  "windows": [
+    {
+      "window_ns": [
+        100,
+        200
+      ],
+      "vco_frequency_hz": 2664134977.1660795,
+      "control_range_v": [
+        1.079081573406107,
+        1.258949039067061
+      ],
+      "dummy_range_v": [
+        1.054035061308318,
+        1.271204210290232
+      ],
+      "pump_charge_fc": 1229.0185127363943,
+      "filter_output": {
+        "i": {
+          "common_mode_range_v": [
+            1.044891961592994,
+            1.075327104691961
+          ],
+          "differential_range_v": [
+            -0.012471340825243926,
+            0.01084766196936493
+          ]
+        },
+        "q": {
+          "common_mode_range_v": [
+            1.0691853065922756,
+            1.074646646086626
+          ],
+          "differential_range_v": [
+            -0.005294381702499962,
+            0.006306193220956935
+          ]
+        }
+      }
+    },
+    {
+      "window_ns": [
+        500,
+        600
+      ],
+      "vco_frequency_hz": 2637734288.884967,
+      "control_range_v": [
+        1.151264401301191,
+        1.204287019343129
+      ],
+      "dummy_range_v": [
+        1.125286146714887,
+        1.244200121225708
+      ],
+      "pump_charge_fc": 186.94922981193014,
+      "filter_output": {
+        "i": {
+          "common_mode_range_v": [
+            1.0247059925852096,
+            1.040346924202428
+          ],
+          "differential_range_v": [
+            -0.02083504204406683,
+            0.00724970857884899
+          ]
+        },
+        "q": {
+          "common_mode_range_v": [
+            1.074954132106063,
+            1.0783954499675705
+          ],
+          "differential_range_v": [
+            -0.003919994883053057,
+            -0.00017648899875410962
+          ]
+        }
+      }
+    },
+    {
+      "window_ns": [
+        1100,
+        1200
+      ],
+      "vco_frequency_hz": 2491966720.523196,
+      "control_range_v": [
+        1.036975041728708,
+        1.112710069512097
+      ],
+      "dummy_range_v": [
+        1.016281814363121,
+        1.118800549946235
+      ],
+      "pump_charge_fc": -431.16560327018306,
+      "filter_output": {
+        "i": {
+          "common_mode_range_v": [
+            1.0536699251748085,
+            1.073654143142171
+          ],
+          "differential_range_v": [
+            -0.007014886179377067,
+            0.033367971784060035
+          ]
+        },
+        "q": {
+          "common_mode_range_v": [
+            1.06843269362081,
+            1.0720838933857435
+          ],
+          "differential_range_v": [
+            -0.011559815866366119,
+            0.0029152676551940093
+          ]
+        }
+      }
+    },
+    {
+      "window_ns": [
+        2000,
+        2100
+      ],
+      "vco_frequency_hz": 2481788134.070076,
+      "control_range_v": [
+        1.066550771286261,
+        1.079932473724393
+      ],
+      "dummy_range_v": [
+        1.036953806891144,
+        1.080062335202925
+      ],
+      "pump_charge_fc": -34.17399654784991,
+      "filter_output": {
+        "i": {
+          "common_mode_range_v": [
+            1.0648712380950855,
+            1.072948355305946
+          ],
+          "differential_range_v": [
+            -0.0041915355431998425,
+            0.037708046246389015
+          ]
+        },
+        "q": {
+          "common_mode_range_v": [
+            1.0689477332390365,
+            1.0703920144721515
+          ],
+          "differential_range_v": [
+            -0.0038453565414520163,
+            0.001980306842837898
+          ]
+        }
+      }
+    },
+    {
+      "window_ns": [
+        3000,
+        3100
+      ],
+      "vco_frequency_hz": 2502854762.434196,
+      "control_range_v": [
+        1.079911765747052,
+        1.095814384524189
+      ],
+      "dummy_range_v": [
+        1.050470443782947,
+        1.090540763350431
+      ],
+      "pump_charge_fc": 25.971301496280148,
+      "filter_output": {
+        "i": {
+          "common_mode_range_v": [
+            1.0582446985250005,
+            1.0659455737436014
+          ],
+          "differential_range_v": [
+            -0.012816752004104037,
+            0.019201210796085943
+          ]
+        },
+        "q": {
+          "common_mode_range_v": [
+            1.0714179528365944,
+            1.0729552121203296
+          ],
+          "differential_range_v": [
+            0.003978746572205871,
+            0.00640019772438305
+          ]
+        }
+      }
+    }
+  ],
+  "late_phase_diagnostic": {
+    "window_ns": [
+      2148.1777551179985,
+      3172.177756095897
+    ],
+    "phase_drift_ns": 0.8492783781670566,
+    "phase_slope_s_per_s": 0.0005666979075074267,
+    "detrended_peak_to_peak_ps": 1009.2384756702357,
+    "limitations": "Ordinal pairing with startup-dependent alignment; deterministic residual is not intrinsic jitter. No lock threshold asserted."
+  },
+  "post100ns_supply_power_w": {
+    "i(vpll)": 0.02894135264278295,
+    "i(vbuf)": 0.05245531197202429,
+    "i(vlna)": 0.02253568003263043,
+    "i(vbb)": 0.028896510607658,
+    "i(vdiv)": 0.051692186686708434,
+    "i(vdrv)": 0.0004673643346386418
+  }
+}

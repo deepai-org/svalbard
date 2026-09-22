@@ -1,0 +1,1124 @@
+{
+  "status": "audit_completed",
+  "schematic_complete": false,
+  "layout_gate_open": false,
+  "inventory_sha256": "8bec369ff52deb7c3e582d135e02f00b2cea0b7ce0a76ebe953f2d9afebe2604",
+  "blocks": [
+    {
+      "id": "rf_receive",
+      "inventory_status": "partial_connected",
+      "sources": [
+        {
+          "path": "projects/programmable_transceiver_platform/analog/rf_rx_candidate.spice",
+          "exists": true,
+          "sha256": "755dc05869d1add201e20953635bb3e2f31cd55f5b46d58f69992efcddc452eb"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/rf_rx_candidate_split.spice",
+          "exists": true,
+          "sha256": "44431da3c11bea2282e6dd5cd388e81e26551454b9bd88973bf205f678fff498"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/baseband/connected_screen.py",
+          "exists": true,
+          "sha256": "7ece4f775a11ef282bea892f16024981ca0f20526211506f2ade132de8e597ed"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/quadrature/mixer_screen.py",
+          "exists": true,
+          "sha256": "2ca4d36183aaae0109664519a3e2942c6c06c0e6714902e8aada2865cf9b2f40"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/quadrature/lo_final_stage.spice",
+          "exists": true,
+          "sha256": "3f234838df5453d1c5f69d1f7f3c753da87e17052d979147a6d6e05fa418ca9f"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/bb_filter_section.spice",
+          "exists": true,
+          "sha256": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/bb_pmos_gain.spice",
+          "exists": true,
+          "sha256": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/lna/noise_screen.py",
+          "exists": true,
+          "sha256": "3685570af5b581b99313bda7e87cbea8a2b1800aaa674b636f74b5cb11185ee3"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/reservoir_mim.spice",
+          "exists": true,
+          "sha256": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/integration/rx_adc_loading.py",
+          "exists": true,
+          "sha256": "fd4c3a92fcd5d38965154ddd202ec5c168ce13f6e5916776dfbbb69b2e0750d2"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/baseband/inband_screen.py",
+          "exists": true,
+          "sha256": "3fc349b4dc816ea053b934d9dab23bc76f0503c69972d46821dfa6abe3dc06cd"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/quadrature-mixers.json",
+          "exists": true,
+          "sha256": "d155d901d94fdd5fc2153e8deb7f32a777ee30865b09edefbd2e68d5abf0087b"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/quadrature-conversion.json",
+          "exists": true,
+          "sha256": "847ecb887594ce820dff39fbe3eb250a97c22d601d3c38cb2a4915d2d9bbad5f"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/quadrature-lna.json",
+          "exists": true,
+          "sha256": "2025ca412cd0dc7a7016eeea5ab3cf0fbac5f93005424dbb5a1b73f85ab14100"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/quadrature-lna-conversion.json",
+          "exists": true,
+          "sha256": "af53a9e89c3a89486c95f22d119ef111fed83aad69cfc40ca42ebc28b7d6e404"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bb-connected-settling.json",
+          "exists": true,
+          "sha256": "07bee27ac22022da1a3f13cb9654ddb2bb428ab73838badff3fb1e89f7ffcf01"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bb-connected-settling-conversion.json",
+          "exists": true,
+          "sha256": "cf16f9b51f15186cf30d4f72b91d3bb99f4eb9f6c2067b60d9b55d974b7c6920"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bb-settling-comparison.json",
+          "exists": true,
+          "sha256": "0bcb5073f17f4befca767145ec39851609b05151d1ec5279cebc246e0045c9f7"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bb-noise.json",
+          "exists": true,
+          "sha256": "ba7728b94b5a47f50fd4dc861f0db8dc24d7e67e8ecac4ce977a72f0db6e21c3"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bb-noise-contributors.json",
+          "exists": true,
+          "sha256": "a5ea911b6a0b6f9925c0ab883f0d5a9423ec78b4a777d010d14622869f9939e3"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bb-input-resistance.json",
+          "exists": true,
+          "sha256": "171b918c5102d0cf103012a914af9b98c8b9637dd0d5e6b5dbce22ffed459931"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/lna-noise.json",
+          "exists": true,
+          "sha256": "53862cfa64d1b6b0aa9e6b22d2661d247b41dde5b85534c829378dc5ab07bd7f"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/lna-bypass-comparison.json",
+          "exists": true,
+          "sha256": "cd9492ea39154cd25ced9aee24af38a9f4768a8574465147317029021dee83ec"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/lna-mim-comparison.json",
+          "exists": true,
+          "sha256": "6d18c4d0d344f34050e6841d29aa69a69b3443d42f5673b07cd10e1db1c2d334"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bb-connected-bypass.json",
+          "exists": true,
+          "sha256": "c12b680e619c540e1820b7479fd3cd9c36c8da41b3a834e4e7ea335848912c15"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bb-connected-bypass-conversion.json",
+          "exists": true,
+          "sha256": "8df55b2656f1e2ed65141002320cf09821fe6f508e8734d3372515209bfefa47"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bb-bypass-comparison.json",
+          "exists": true,
+          "sha256": "672af0418070cc92c9cf6d1ea46769855e6cc3219ca80e390705be8cc9ceafd3"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/latest-rf-loop-preparation.json",
+          "exists": true,
+          "sha256": "611ed5ebe60a89f975e6f079850fada5fb2e3f1e6f08dfc4b2c117c7358d8a96"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/latest-loop-elaboration.json",
+          "exists": true,
+          "sha256": "06703dfcdb59c723dbea406f054ccb2c01f59cb97f2fd76e2a8de00bb3037f59"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/latest-rf-loop.json",
+          "exists": true,
+          "sha256": "d72b89962900d8604ec357fa4fb6bc99848a8f89e24befec42d2a8a90aa59da8"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-partial-loading.json",
+          "exists": true,
+          "sha256": "d78c0ad4034f709f012c5e86af46595d8fb1223bc588de5cce987be7d26582fb"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bb-inband.json",
+          "exists": true,
+          "sha256": "9e9f806ea98f5610624b795de515403e394bd049000120dce4d7f8d986559092"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bb-inband-control.json",
+          "exists": true,
+          "sha256": "b1738d9b54edd82ac68ed8ae301264a2b0069568cbe6b00b1d98035344b666ae"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/inband-gain-budget.json",
+          "exists": true,
+          "sha256": "9d0d3191da5f6bc30db07907bf30cc6e28da6ba39006c1f25e6596976e7d7dee"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bb-noise-receiver-cm.json",
+          "exists": true,
+          "sha256": "c0a2fcf1232bdc4463807ffe0eb63bc47f466f2f5077887db2bf958f829fda20"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bb-large-input-step.json",
+          "exists": true,
+          "sha256": "08a40ee14268394bf923ecb6ac5ab245425f3ae6f5b19e2f0d37e2c8410bdfce"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-separated-events.json",
+          "exists": true,
+          "sha256": "66f28c9b675187ea184b78dde6332f369f6dd1729cd83461284cf43b9c20af87"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-separated-frames.json",
+          "exists": true,
+          "sha256": "3eec2af60af0ff0b081d5532ffafbe24e1a36e958a25adea63183954af049904"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/latest-loop-baseband.json",
+          "exists": true,
+          "sha256": "75b05d5b04d0b5e548d12a49df65ba006f3a5d6f730e1315d714787625c23789"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/latest-loop-path-nodes.json",
+          "exists": true,
+          "sha256": "ededed06f0d74c333a21d7b77f4ad421678bf8125f902849abf5eb710275d383"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/latest-lo-upstream.json",
+          "exists": true,
+          "sha256": "b0332ae9510766425fb7ffdf164162b5143a2f0485d54625e62905b6df8307f9"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-inband.json",
+          "exists": true,
+          "sha256": "ca85bf9cf4cd46f214a78791571be5f8755ade33535f2775ae759741000d904b"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-inband-frames.json",
+          "exists": true,
+          "sha256": "2af0f189c9139112a217adef4fc679ba616a658bff52f0ac620ab3ed398d422d"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/lo-receiver-replay.json",
+          "exists": true,
+          "sha256": "ef00595a9316e57073f94eb7c8e38770e803060ef63b0d5aa846cdb465462e72"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/lo-replay-stages.json",
+          "exists": true,
+          "sha256": "c41193e708739937f1856611ef65a4d81dc78bff298767514fbcba104ca0ca96"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/lo-gap-state.json",
+          "exists": true,
+          "sha256": "487bb9ed8d8a6160e0a0c409200153574f7803cc31d4f761a9f0edc8f2895d3d"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/lo-replay-scope.json",
+          "exists": true,
+          "sha256": "7a5b2ae7186802deb043df46d9b7fe99efa59e9cfc73b6a3b5e35050a5e7bc07"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/lo-interstage.json",
+          "exists": true,
+          "sha256": "c34d9aebb6219456247ecda269f4261edd8a913ed08db14f4372ece400d8b895"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/lo-interstage-cycles.json",
+          "exists": true,
+          "sha256": "c178c79da911f1eb96427ba1dacc115f5a4075867b04e6a61fde3826349740d9"
+        }
+      ],
+      "inventory_gap": "Actual LNA with448MIM bypass, ring/RC quadrature, LO drivers, mixers and two filters are connected. Fixed-control matched5MHz IF tone/zero histories complete;1mV RF gives7.182/8.066mV output peaks, roughly one nominal ADC step. Actual autonomous zero-RF8.001us run completes but reveals persistent31.6mV peak reference-frequency I spur and missing I-LO threshold crossings while the ring continues. Q is more regular. This is an unresolved loaded LO-path failure, not useful autonomous receiver qualification. Receiver/dualADC610ns changing-input fixture also completes with ideal10ps-separated control schedule, but reference span0.914493..1.068451V remains inaccurate. Autonomous-loop and ADC results are separate fixtures. Gain range, RF differential input, noise/linearity, real bias/startup, variation and shared physical integration remain open. Loaded P/N replay completes and matches all four output rising counts with at most0.626ps ordinal displacement. Separate post-observation scope audit permits multi-cycle-failure diagnosis only; MID/PRE have no saved autonomous comparison and no repair is accepted; static LO threshold and self-bias AC tests do not replace dynamic qualification.",
+      "completion_proven": false,
+      "reason": "Artifact presence and inventory labels do not establish circuit performance."
+    },
+    {
+      "id": "rf_synthesizer",
+      "inventory_status": "partial_connected_seeded_loop_signal_quality_failure",
+      "sources": [
+        {
+          "path": "ip/blocks/analog/wireline_serdes/pll/ring_vco.spice",
+          "exists": true,
+          "sha256": "c6c8e33a61f6a52c69ba9d9fc1438637298f17ebb35251be1ace3ebda6416142"
+        },
+        {
+          "path": "ip/blocks/analog/wireline_serdes/pll/divider.spice",
+          "exists": true,
+          "sha256": "1e007f6d40d8678192a090ed1906fd27f6834dfec6983a35f15ffb8f1a3e364b"
+        },
+        {
+          "path": "ip/blocks/analog/wireline_serdes/pll/pll_clock_path.spice",
+          "exists": true,
+          "sha256": "addabe7242ffb0d878d1021c7646fbda180beb4c07d5cce5413d24d53940d1a2"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/pfd.spice",
+          "exists": true,
+          "sha256": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/charge_pump.spice",
+          "exists": true,
+          "sha256": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/loop_filter.spice",
+          "exists": true,
+          "sha256": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/ring_vco_split.spice",
+          "exists": true,
+          "sha256": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/reference_input_buffer.spice",
+          "exists": true,
+          "sha256": "e9922aa2757ca9ece9eea717cc27b090920c522fd7f1ea7f25d0ce98f5c78e76"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/quadrature/rc_split.spice",
+          "exists": true,
+          "sha256": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/pump_steering_screen.py",
+          "exists": true,
+          "sha256": "e193c9880fa1f4cf9925369c0461fb7d319593c85f7df54f74c52d2da343417c"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/pump_steering_phase_screen.py",
+          "exists": true,
+          "sha256": "0dc12347d0f62431faa8b0310494aaf3180f18e58a666ca04a7f912e81bb8942"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/pump_dummy_impedance_screen.py",
+          "exists": true,
+          "sha256": "7727bbd15acdcb17f615bd9cb154d3a6d54dec604a079517bb9d5d88ec5a5b6a"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/dummy_driver_dc_screen.py",
+          "exists": true,
+          "sha256": "e19b67648e68c030844e1c2eb4e21f4700d9b90ad029280e98b9640bc6979289"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/pump_follower_screen.py",
+          "exists": true,
+          "sha256": "477be55ea871991ab5164fbe94b84d89529c3dbfc708114d8c58bf818f6700fa"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/buffer_scaled.spice",
+          "exists": true,
+          "sha256": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/vco-supply-screen.json",
+          "exists": true,
+          "sha256": "701cd1e89c1de15e8e3626354a6dabdefb8d773f1bfd56f55fa3ab9a6f15c0d5"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/buffer-finite-source-screen.json",
+          "exists": true,
+          "sha256": "ace6dae22d18a1885d4f08ead1ae89a9dbfaeda047c102b43810153e52e98522"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/quadrature-rc.json",
+          "exists": true,
+          "sha256": "01ad8935d9a67991dd9f1ec28ad62c5a13bd1e6d5829821a3de5ed90c9a906c2"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bb-connected-settling-conversion.json",
+          "exists": true,
+          "sha256": "cf16f9b51f15186cf30d4f72b91d3bb99f4eb9f6c2067b60d9b55d974b7c6920"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/pfd-event-offset.json",
+          "exists": true,
+          "sha256": "0cbede960d1de3fc5762c7567120ef641068e5690044f84c1491a403b160fe52"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/pump-clamped.json",
+          "exists": true,
+          "sha256": "e92d60ec8580c911df16a43dbf99d55362604b65b4ccde73f97631f4b0272cc1"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/pump-branch.json",
+          "exists": true,
+          "sha256": "7dd5cba3e70edf065756da1c2ae499e52667f4798f34a6eac275ff15a1883729"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/pump-steering.json",
+          "exists": true,
+          "sha256": "2a0a1ac4f07b7351afafcdf98ee3a3e833e3866b96ca74b9938c8ffff64486f1"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/pump-steering-phase.json",
+          "exists": true,
+          "sha256": "d0f2a12ad366b37f20fbe9b9522b6153be0681acfdc462591e55516e9aa63a3c"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/pump-dummy-impedance.json",
+          "exists": true,
+          "sha256": "a018a59824545010f3af6e505daa29f6fc5a642122e45894d316d64c76e90db2"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/dummy-driver-dc.json",
+          "exists": true,
+          "sha256": "3d605c925503de8156bfcb470bb868f8e6fc2be90422a0dbd6d15cb88970de34"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/pump-follower.json",
+          "exists": true,
+          "sha256": "9fe0175a506a5e5dedc1ff0d932653d72267267ab259d0ef71a9f1fb46a0b9f0"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/pump-follower-phase.json",
+          "exists": true,
+          "sha256": "23ebb8454d178e18d449420e17fbf694df269c1cd20810892c5471b8ceb3af08"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/pll-local-model-follower.json",
+          "exists": true,
+          "sha256": "5c907fdfbfa145e0829a639b9d14fe0c4ee90c8ede34445fe8c4d572a9925097"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/pump-control-range.json",
+          "exists": true,
+          "sha256": "d6f307212242aa22ab93758424503d652cab7ceb79e99501f776750128474456"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/pump-phase-balance.json",
+          "exists": true,
+          "sha256": "40aea2b9c28dc3b279b180740d0dde2fcfb43f0329d71001dca57c39107283ad"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/pump-range-followup.json",
+          "exists": true,
+          "sha256": "d0ff6269e488cce2eb60cff807948d910df04ab5d8b7453fa979902672176df7"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/closed-loop-follower-screen.json",
+          "exists": true,
+          "sha256": "9236888ecff121c5942a6d1b9c83c8cdfd24f55bc45c44550675d11eaa39f510"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/latest-rf-loop-preparation.json",
+          "exists": true,
+          "sha256": "611ed5ebe60a89f975e6f079850fada5fb2e3f1e6f08dfc4b2c117c7358d8a96"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/latest-loop-elaboration.json",
+          "exists": true,
+          "sha256": "06703dfcdb59c723dbea406f054ccb2c01f59cb97f2fd76e2a8de00bb3037f59"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/latest-rf-loop.json",
+          "exists": true,
+          "sha256": "d72b89962900d8604ec357fa4fb6bc99848a8f89e24befec42d2a8a90aa59da8"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/loop-failure-event.json",
+          "exists": true,
+          "sha256": "a0efca65b2f3d8c1cf912620b5bab2b2626426827b84e101c237fd92febfc82b"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/follower-pwl-preparation.json",
+          "exists": true,
+          "sha256": "2c6fdedbd04cc5aa845859fb4d67f8e7c0de4138651759b58445ceccb73398b1"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/latest-rf-loop-memory-failure.json",
+          "exists": true,
+          "sha256": "2ea675c600417bdefe1c78193c2b866e715edfc101e71462f3baf4742f69d2cf"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/latest-loop-save-control.json",
+          "exists": true,
+          "sha256": "b38eff8ce5000d070bcd29df6854aef80c27d22365fc154568908d0814014ea6"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/vco-internal-kick.json",
+          "exists": true,
+          "sha256": "afebe67c6f138d8ec8f67b370d1bb78befa4e21111aa2ac4b3d53fe414bd68ee"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/latest-rf-loop-selective.json",
+          "exists": true,
+          "sha256": "d8b2f34f24c55659b0dc421835ea195fec048d6a10bd50929d2cf37991a13640"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/latest-loop-selective-phase-tail.json",
+          "exists": true,
+          "sha256": "8ed9c4bde02555b1cf1e3eecbcd75226fe97e4b2cb7bb1c224de8879aa0e3972"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/vco-channel-kick.json",
+          "exists": true,
+          "sha256": "629c8cf9e088bd7605c406e4be9c61f53dca3c7ecd5c1478bb2ce85cda269980"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/ring-noise-ports.json",
+          "exists": true,
+          "sha256": "d3e481074d4ede06ae63414b5b70e5b540432e62ac2e3e3e56a69dfde4ff0a36"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/ring-noise-models.json",
+          "exists": true,
+          "sha256": "e28c0a7b5bb3fd7e37866836d4fe23fe73dc407b4afdb6eca268498ba24e4895"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/latest-lo-upstream.json",
+          "exists": true,
+          "sha256": "b0332ae9510766425fb7ffdf164162b5143a2f0485d54625e62905b6df8307f9"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/lo-interstage.json",
+          "exists": true,
+          "sha256": "c34d9aebb6219456247ecda269f4261edd8a913ed08db14f4372ece400d8b895"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/lo-interstage-cycles.json",
+          "exists": true,
+          "sha256": "c178c79da911f1eb96427ba1dacc115f5a4075867b04e6a61fde3826349740d9"
+        }
+      ],
+      "inventory_gap": "Actual ring/divider/PFD/pump/follower/filter plus receiver completes8.001us seeded zero-RF operation. Last21 paired edges drift0.108ps over1024ns; deterministic detrended range0.576ps is not intrinsic jitter. Frequency settling does not qualify RF operation: downstream I-LO loses threshold crossings and baseband has large reference spur. Real bias, cold startup/acquisition, source noise/phase noise, variation and uncertain physical loads remain unqualified. Internal differential and one channel-terminal signed-charge responses are deterministic one-phase diagnostics; source inventory/model excerpts do not predict noise. Quadrature imbalance and broadband/mismatch tolerance remain open.",
+      "completion_proven": false,
+      "reason": "Artifact presence and inventory labels do not establish circuit performance."
+    },
+    {
+      "id": "radio_adc",
+      "inventory_status": "partial_connected_PDK_capacitor_substitution_under_test",
+      "sources": [
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/comparator.spice",
+          "exists": true,
+          "sha256": "a41ecccf87f625bbddca6139730c5e8500529c5acb2f05a5052f9049e8ee74a0"
+        },
+        {
+          "path": "ip/blocks/analog/wifi_80211b/rf_if_transmission_gate/rf_if_transmission_gate.spice",
+          "exists": true,
+          "sha256": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/cdac8.spice",
+          "exists": true,
+          "sha256": "d285f207ce5570fe8ae22234ad4cc7864a891e154450270d78658312162084da"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/cdac8_scaled.spice",
+          "exists": true,
+          "sha256": "4006f42115b3a5a30b9ad74626ef0c084655bf0cdc2f1d1cc8bd32f65e351fd2"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/code_driver.spice",
+          "exists": true,
+          "sha256": "705d0a9166967460fce6151cfa49ffa951469e1a8d2b061805321142fdfebdc4"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/code_driver_small.spice",
+          "exists": true,
+          "sha256": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/sar8_control.spice",
+          "exists": true,
+          "sha256": "e345fa96d9d1342d55a1bc65b0fc42e2c1d31ebcda127597fc372f625cd038fb"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/sample_driver.spice",
+          "exists": true,
+          "sha256": "9b18cad081cac114abdc8b8f60dfee57eb7993fc1e2b77d71afa0b1f85b6ff38"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/sample_driver_longmirror.spice",
+          "exists": true,
+          "sha256": "6d0442a5ab45f6db74c0f3cbc5f40e7cd7a9b47c05a7f33d53b64b5a13128453"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/sample_driver_headroom.spice",
+          "exists": true,
+          "sha256": "34840413c8d9ed96e56383230e0016611c78a6e94e7990ccfbc35d2d59abba83"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/sar_track_mask.spice",
+          "exists": true,
+          "sha256": "f422e316bf656484c282fd3a880eb7e2aef41a7a67aa65af8055d13578b16741"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/sar_track_mask_strong.spice",
+          "exists": true,
+          "sha256": "6e8cc546f93cc22d25b6b293f2539d4e640917f2a84fe53cb6411ee2d33ea1d9"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/cdac8_mim.spice",
+          "exists": true,
+          "sha256": "532e86fc11da6f695d092dd06c0508cbb363f49c4c2b070c78683c7d5bf85e14"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-boundary.json",
+          "exists": true,
+          "sha256": "de570077c7d37fcc5b59546ce6e353918f173ae2b9c0c3f30c080a5ec32b204d"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/adc-receiver-cm.json",
+          "exists": true,
+          "sha256": "56f194a90f92c1a4fd47247e547e712c94593a407f6d4fa156a2a6d24a8b8734"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/adc-shared-iq-receiver-cm.json",
+          "exists": true,
+          "sha256": "5f53e6f10517b3a2128559f6e478873363c771a3b04f73f06b6f90b349f86972"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/adc-receiver-cm-comparison.json",
+          "exists": true,
+          "sha256": "aff0ff7db631cbe0ec253f65d17b4e6fc89e668183d15b7523e4c3e9718c13ad"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/adc-tracking-history.json",
+          "exists": true,
+          "sha256": "5414d6f1613baa8e616f310537fc84676d5a231c29e1eddfe83036eaf24ad5e3"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/adc-cm-sampling-compensation.json",
+          "exists": true,
+          "sha256": "d6ea59b5dbf6e341515594db17277d65a303444bf1e4fc1ab20a4baf6de92d4b"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/adc-driver-devices.json",
+          "exists": true,
+          "sha256": "a36bc0a3417304420a7ff21ed423e2ce4884d2209fefa3c163f40ed56a59264e"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/adc-fixture-schedule.json",
+          "exists": true,
+          "sha256": "62b0cf7added205ac9eb18032a1f63a7ec68411f453e568c1b9a95ac673c4710"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/adc-sampler-edge-comparison.json",
+          "exists": true,
+          "sha256": "00448ba5225a9f25dfa3326f9ec15a55c16b7f15ef6d27d13570123cedb3d570"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/adc-cm-sampling-damping2k.json",
+          "exists": true,
+          "sha256": "80b5dd592395e4eca424a1a5a5dc8ee99486754fd54eb737bd225dc3c6f9d9a9"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/adc-reference-current-preparation.json",
+          "exists": true,
+          "sha256": "a5a1d8a9210d62fe780723a09cfb18c8805c6e7e4221f0c2b3494eaee6e622ff"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/adc-reference-reproduction-scope.json",
+          "exists": true,
+          "sha256": "34d8d3ac2f1cf47598b4a820b2bef5130c1ff6765609ac9e9c14ce1e301c2585"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/cdac-branch-replay.json",
+          "exists": true,
+          "sha256": "7f5b14ce4478d3383da52d4e37d334227111e6ac52deb5161ae19381669a9c67"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/cdac-probe-difference.json",
+          "exists": true,
+          "sha256": "a94e48422fba2d7ad1ec4a53b6c23b5faead590236a03547487388d3ed6b9e5f"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/cdac-probe-startup.json",
+          "exists": true,
+          "sha256": "e5174b9c306be212cf20841dc0c3720a99d06be5ce4a05168152de4d04125ecf"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/cdac-probe-reltol.json",
+          "exists": true,
+          "sha256": "702bbc3172cdfec89d84991d92043ee4c22d69e44bf83cc9edb9c3431ca24a98"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bit6-complement.json",
+          "exists": true,
+          "sha256": "71680fbf5273d969d4d243718b7bbb4b2257a4781b18a7d32609eab35f3fa7de"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-measurement-budget.json",
+          "exists": true,
+          "sha256": "adddb20d604e3d865dd6f86c98518214b04f5a2cdad23132db88cd8c59f506a4"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-repeated-failure.json",
+          "exists": true,
+          "sha256": "62266e57b7c38c45f6ca7c5b25ab55289961ec75d287893b40308331008f0f2e"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-first-frame.json",
+          "exists": true,
+          "sha256": "5f00ec4b55c0a525d5942023c338af0dd59b1383f08688a1586ca7fc28e32a4f"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-second-acquisition.json",
+          "exists": true,
+          "sha256": "62e657ef575989c25adddc14975f1b135b18c7483bbcb455250792d84b7fa996"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-partial-power.json",
+          "exists": true,
+          "sha256": "6ec756e4c0cce231526a1ae6dce35a78b6ff25d4139ff896bbd0a119a2fe9edb"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-event-offsets.json",
+          "exists": true,
+          "sha256": "e7d3f47e13f2029ab467e8f368a639b6d66bdf7a4d4171905ddc417c91625445"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-separated-event-preparation.json",
+          "exists": true,
+          "sha256": "f1042c17765c06b2ecdb32e7d3789575a5a96003f2934d80bc052514df3948d3"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-separated-events.json",
+          "exists": true,
+          "sha256": "66f28c9b675187ea184b78dde6332f369f6dd1729cd83461284cf43b9c20af87"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-separated-frames.json",
+          "exists": true,
+          "sha256": "3eec2af60af0ff0b081d5532ffafbe24e1a36e958a25adea63183954af049904"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-inband-frames.json",
+          "exists": true,
+          "sha256": "2af0f189c9139112a217adef4fc679ba616a658bff52f0ac620ab3ed398d422d"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-hybrid-candidates.json",
+          "exists": true,
+          "sha256": "8900b09a78027d258a0a9602fbd1ee847448ebd302ea9f5a42311b1fc19b85c4"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-output2-event.json",
+          "exists": true,
+          "sha256": "bee8e871ca7469802d39eea803df56a13dcaefe074f17450230ff3c784fdfa45"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/rx-adc-inband.json",
+          "exists": true,
+          "sha256": "ca85bf9cf4cd46f214a78791571be5f8755ade33535f2775ae759741000d904b"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/sar-driver-physical.json",
+          "exists": true,
+          "sha256": "023b181c17eb3b5cddc56c73919f4c680759e9e0d5e757defeac3de94997026f"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/sar-physical-divergence.json",
+          "exists": true,
+          "sha256": "6cf656e0cd3be88ad0cadb60bbb0ef5ab5233501df656e1a35cb5d18138a7568"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/sar-driver-physical-margin.json",
+          "exists": true,
+          "sha256": "39fcd8b521144b952bd1dd05f19eaf3f24afb16f51eb250d18934c0add4a3a7b"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/sar-driver-reservoir.json",
+          "exists": true,
+          "sha256": "54fd619c88f6134e8b4f930fb3ed1fb2df60266ab0f43ad9646e075472ca29b9"
+        }
+      ],
+      "inventory_gap": "Actual shared-reference dualADC and receiver interface complete selected three-frame tests, including changing approximately5MHz IF input, with ideal external phases and seeded receiver. Dynamic reference span0.914493..1.068451V in connected in-band case remains inaccurate. Stronger hybrid reference candidate improves some target/held errors but worsens decision-window motion and power; unadopted. Real phases/bias, independent skew, full-scale acquisition, transfer/ENOB, noise/mismatch, autonomous-loop simultaneous operation and host capture remain unqualified. Completed histories demonstrate connectivity and selected behavior, not useful ADC accuracy.",
+      "completion_proven": false,
+      "reason": "Artifact presence and inventory labels do not establish circuit performance."
+    },
+    {
+      "id": "radio_dac_tx",
+      "inventory_status": "partial_fixed_code_RF_chain_registered_updates_separate",
+      "sources": [
+        {
+          "path": "projects/programmable_transceiver_platform/analog/dac/current_steering8.spice",
+          "exists": true,
+          "sha256": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/code_driver_small.spice",
+          "exists": true,
+          "sha256": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/dac/thermometer4.spice",
+          "exists": true,
+          "sha256": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/dac/segmented8.spice",
+          "exists": true,
+          "sha256": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/dac/segmented8_registered.spice",
+          "exists": true,
+          "sha256": "18cfb19ed8b12ee0a84f72f7210f3d7cd35549bcaee386ed1c1781f3dd108e82"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/tx/commutator.spice",
+          "exists": true,
+          "sha256": "89cb009a303ded0120ce8536abe86174045bb73ed27b1ec3272f0cdfdef8ad6b"
+        },
+        {
+          "path": "ip/blocks/analog/wifi_80211b/rf_switch_mixer/mixer.spice",
+          "exists": true,
+          "sha256": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/tx/commutator_tg.spice",
+          "exists": true,
+          "sha256": "3d28ec375da796cf1333da9d085caab5cd74bcda44a835f0e7cf72f06433a304"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/lo_buffer.spice",
+          "exists": true,
+          "sha256": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/tx-ring-settling.json",
+          "exists": true,
+          "sha256": "3aa91f5813877a0b429722817a8ac0158a1ecf23a61812128c1f357bd42d3195"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/dac-registered-coverage-summary.json",
+          "exists": true,
+          "sha256": "300e3113f8f1f71c5b4001853afe9a58cbe0e14dfde4243ee20d7053ad8f9a71"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/tx-selfbias-dynamic.json",
+          "exists": true,
+          "sha256": "48351f688baf03b611c3400d4b8a65ea506c7835ed38cf1e75549a2c29f03d4e"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/tx-selfbias-recovery.json",
+          "exists": true,
+          "sha256": "d44b1b87d59de8cd717935687d812abbeb37ce71d9cb8c7e150d464533a5c859"
+        }
+      ],
+      "inventory_gap": "600ns seeded ring/buffer/combinational DAC/NMOS bridge test yields45.3mV peak carrier at2.5004GHz after bias settling;~52.8mW accounted source power excludes real bias generation and other chip functions. Registered DAC updates are separate tests, not connected RF playback; residual glitches remain. Actual I/Q duplication, quadrature, reconstruction, bias/output drivers, intrinsic noise, modulated quality and host integration are missing or unqualified. Completed self-bias replay recovers toward baseline after removal of signed3uA disturbances, but sustained disturbance strongly changes carrier amplitude; forced-input failures do not establish closed-bias process failure.",
+      "completion_proven": false,
+      "reason": "Artifact presence and inventory labels do not establish circuit performance."
+    },
+    {
+      "id": "bias_reference_startup",
+      "inventory_status": "connected_driver_dynamic_regulation_failure",
+      "sources": [
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/buffer_scaled.spice",
+          "exists": true,
+          "sha256": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/buffer_complement.spice",
+          "exists": true,
+          "sha256": "b21147fcdd7c13e4c7359fb966319a70badbb6a12c0de0064926b73be10602b4"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair.spice",
+          "exists": true,
+          "sha256": "041cc2507332035bcef9925f485ca4208ac4a37771a391d8a9853fcec6fb8048"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/reservoir_mim.spice",
+          "exists": true,
+          "sha256": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair_tuned.spice",
+          "exists": true,
+          "sha256": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/buffer_scaled_tune.spice",
+          "exists": true,
+          "sha256": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/buffer_complement_tune.spice",
+          "exists": true,
+          "sha256": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair_output2.spice",
+          "exists": true,
+          "sha256": "46ce833ed2bd78bad164bd3a85accaca24f66449610589a4363fff394d61bd8f"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/buffer_scaled_output2.spice",
+          "exists": true,
+          "sha256": "fa991a36d9ac893aaf786ee57f3a5f19f009ffb00818c67b77c44a849c809c86"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/buffer_complement_output2.spice",
+          "exists": true,
+          "sha256": "990e4bdc4c080d64c67053ccf629447b7bfae66e921cb8191da964b08c5b17f2"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/adc-shared-iq-same.json",
+          "exists": true,
+          "sha256": "ee138a0e5bca80ab59fcfd89da3152e55506ab2b81a3afaecd7d4dcc42baa01f"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/adc-shared-iq-frames.json",
+          "exists": true,
+          "sha256": "a305cca354bec87eb24ceb75b30a83035105b3aa897a6af6e83517181433dffb"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/iq-reference-headroom.json",
+          "exists": true,
+          "sha256": "88850a55b0b55aa48f12ee7c9305a1d58b775308dac01b714c4d26a7a644998c"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-input-headroom.json",
+          "exists": true,
+          "sha256": "513558baf857e11c9577ef4554569d28dc56bfb7050000ff6a12ee284e114da1"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-tail-headroom.json",
+          "exists": true,
+          "sha256": "abb1a3189cb94b897edddaec517a54b332795319290f172d43c57bbffca863ff"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/adc-reference-current-attribution.json",
+          "exists": true,
+          "sha256": "1c8524e9bc15d6be935ae6c794790cfea4816e64eda8727e1f81d57868f9045d"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-high-rz.json",
+          "exists": true,
+          "sha256": "4d6e8dc4b204d8b9f9c7c61056300c0cfb6b7c9c36d6bde7157660f93e38a30a"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-long-mirror-frames.json",
+          "exists": true,
+          "sha256": "99d1bd3a4d73a744d19eac8abf2124f5b5e1e44268795a99e8036947a187ff43"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-pair-impedance.json",
+          "exists": true,
+          "sha256": "a1b73fc7e85cf64b87d8c4e14cddfbcad937d023d952e8cb1226c3295fdeea42"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-pair-step.json",
+          "exists": true,
+          "sha256": "cb50bda7b4653aedec9ad9e90c8b9870b5354c13841deda7f6ce70fdb80b3924"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-wide-input.json",
+          "exists": true,
+          "sha256": "8a67983ba8555c53b27d06234ed7eb807c98a2e27bfde544e5eac10a98dd6420"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-half-tail.json",
+          "exists": true,
+          "sha256": "49eb868f9f7a4f770a427cf63cf7abaa7776da9de800b9a700369abd278b5ae0"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-common-mode.json",
+          "exists": true,
+          "sha256": "1e1af23fbc979ed99008514d37f5140663e78172b032b623b2d670bce1c93a3a"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/cdac-branch-peaks-reltol.json",
+          "exists": true,
+          "sha256": "9a7ff339310296036badb75d0d8803779e5b637899b00c97817a4e0361367ddc"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-hybrid-frames.json",
+          "exists": true,
+          "sha256": "39ed1711726c814417ebd98a8a55a88ab728ece44675a6637d2e7755e11d3d4a"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-hybrid-output2-dc.json",
+          "exists": true,
+          "sha256": "7cbc806f0189666f441470b3aa81e5ae15819bd3e7622051eee588df281bb67c"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-output2-impedance.json",
+          "exists": true,
+          "sha256": "40760d114b7a4a2244391a1250ab1376d29291f767f850ff32f7303708132160"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-hybrid-output2-step.json",
+          "exists": true,
+          "sha256": "19862c90034c647feef8b8a747e9a820da9878c496c92899603f546ecd841336"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-return-charge.json",
+          "exists": true,
+          "sha256": "6a0e789573a3494e90f6c159d684839d7b11e09539c3c1a9ef415d4e2b1b03b6"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-hybrid-output2-frames.json",
+          "exists": true,
+          "sha256": "59e215f089ff52273cab4823ff492018b700e847f15973f6b89116e2dad39216"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-hybrid-candidates.json",
+          "exists": true,
+          "sha256": "8900b09a78027d258a0a9602fbd1ee847448ebd302ea9f5a42311b1fc19b85c4"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/reference-output2-event.json",
+          "exists": true,
+          "sha256": "bee8e871ca7469802d39eea803df56a13dcaefe074f17450230ff3c784fdfa45"
+        }
+      ],
+      "inventory_gap": "Aligned and opposite-history simultaneous I/Q with one compensated reference pair complete selected frames, but aligned decision spans0.92837--1.05964V and motion9.69mV/150ps remain inaccurate despite stable codes. Observation-only probes reveal high-reference tail below its reported saturation boundary in all24 decision windows. Input-width and independent diode-biased tail DC experiments improve headroom without qualifying regulation; no candidate adopted. Ideal targets/bias/compensation, startup/noise/mismatch, skew and shared supplies remain missing or unqualified. Later scoped terminal-current replay shows pulsed CDAC demand and reservoir withdrawal; worst high-reference decision error remains about61mV. Doubling high-reference compensation resistance from physical500ohm to1kohm gives only modest error improvement and worsens window motion, so it was rejected. Matched reltol-only probe reproduction now supports scoped per-bit attribution; do not prescribe amplifier sizing from peak current alone. Zero-load paired DC reproduces+13.148/-10.478mV offsets. Longer mirror W/L8u/.5u to16u/1u reduces offsets to+8.198/-8.140mV but leaves high-tail compliance deficit; switched-load candidate completed and was rejected: worst reference errors worsened. Wider high input pair and halved high tail multiplicity also remain unadopted; both leave negative tail margin at2.15V. Retained common-mode sweep brackets tail zero margin at1.83\u20131.84V, but error remains15mV at1.8V with positive margin. Compliance alone does not explain static accuracy. High-reference impedance peak39.7ohm and slower bipolar step recovery remain dynamic concerns. Pass473: hybrid high-input stage improves isolated DC/AC/signed steps but actual ADC worst high target error worsens61.35->70.65mV and reference power rises2.05mW; not adopted. Separate static offset from dynamic deviations before selecting another architecture. Completed hybrid outputPMOS-doubled ADC trial reduces worst high-reference target error61.349->56.366mV, but worsens decision-window motion3.179->7.138mV and raises reference power44.423->46.493mW. Event analysis shows stronger recovery during the decision window with similar load charge; candidate remains unadopted. Isolated DC/AC/step improvement does not qualify switched-load regulation. Actual reference demand is bidirectional; sustained reverse-load compliance still fails. Real bias/startup and absolute conversion accuracy remain open.",
+      "completion_proven": false,
+      "reason": "Artifact presence and inventory labels do not establish circuit performance."
+    },
+    {
+      "id": "wire_tx",
+      "inventory_status": "partial_components",
+      "sources": [
+        {
+          "path": "ip/blocks/analog/wireline_serdes/serializer/serializer_tx_2p5.spice",
+          "exists": true,
+          "sha256": "a9804061111282974aff2aa80f3f6355b7298af46a1d6657aab726961e9cec84"
+        },
+        {
+          "path": "ip/blocks/analog/wireline_serdes/serdes_tx/serdes_tx_programmable.spice",
+          "exists": true,
+          "sha256": "852af112c5d050149b0e7cdee2d3de20ed65f1d888a6544758be31b937c4b29c"
+        }
+      ],
+      "evidence": [],
+      "inventory_gap": "Requires integration with autonomous timing, controls and host path.",
+      "completion_proven": false,
+      "reason": "Artifact presence and inventory labels do not establish circuit performance."
+    },
+    {
+      "id": "wire_rx_cdr",
+      "inventory_status": "partial_components",
+      "sources": [
+        {
+          "path": "ip/blocks/analog/wireline_serdes/cdr/cdr_sampler.spice",
+          "exists": true,
+          "sha256": "5095eb93b1cd1e722b984ff2d88de75a1372226b3fc2b25613698f21ddf41ea4"
+        },
+        {
+          "path": "ip/blocks/analog/wireline_serdes/cdr/integrated_detector/cdr_alexander_frontend.spice",
+          "exists": true,
+          "sha256": "4633e4d2aa3211cf71148cedc3c3a96ea6fb42e07518d012e8cb7431ad38c23d"
+        }
+      ],
+      "evidence": [],
+      "inventory_gap": "Sampler/detector are not a qualified closed recovery loop; existing receiver errors remain.",
+      "completion_proven": false,
+      "reason": "Artifact presence and inventory labels do not establish circuit performance."
+    },
+    {
+      "id": "programmability",
+      "inventory_status": "partial_components",
+      "sources": [
+        {
+          "path": "ip/blocks/analog/wireline_serdes/phase_control_dac/phase_control_dac.spice",
+          "exists": true,
+          "sha256": "041f51547899a3c18d292e240586364c2d308fd6d4b243a4d23f3af110308ac7"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/bb_filter_programmable.spice",
+          "exists": true,
+          "sha256": "a7850ff8e2ac2bb86b82672f5ba697596b702956650015c43350a7687bb837e5"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bb-programmed-feedback.json",
+          "exists": true,
+          "sha256": "3bc83982e8e5c3b14fbe8bd04f53e254bfdd85e9c2cdc5f7ab7320a533d637c0"
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/evidence/bb-feedback-switch-drop.json",
+          "exists": true,
+          "sha256": "32e52b0dfc32e2cbcfc84bef12748ca812c2ab5e6732c6c07289b8e07bf0acec"
+        }
+      ],
+      "inventory_gap": "Actual two-setting transistor-switched filter feedback now exists and has nominal OP/AC evidence. Enabled transmission gate has2.327kohm DC secant resistance and nominal20k path is22.085kohm; nominal40k off setting is near ideal in this fixture. Actual mode transitions, complementary-control generation, registers/level shifting, physical resistor/capacitor banks, useful full gain range and connected RF/ADC behavior are not implemented or qualified.",
+      "completion_proven": false,
+      "reason": "Artifact presence and inventory labels do not establish circuit performance."
+    },
+    {
+      "id": "host_digital_boundary",
+      "inventory_status": "incomplete",
+      "sources": [],
+      "evidence": [],
+      "inventory_gap": "RTL exists separately; physical clock/load/CDC interface not qualified. No whole digital transistor implementation claimed.",
+      "completion_proven": false,
+      "reason": "Artifact presence and inventory labels do not establish circuit performance."
+    },
+    {
+      "id": "whole_chip_analog",
+      "inventory_status": "missing",
+      "sources": [],
+      "evidence": [],
+      "inventory_gap": "RF, wired, timing, converters, bias, pads and controls not connected into a complete schematic.",
+      "completion_proven": false,
+      "reason": "Artifact presence and inventory labels do not establish circuit performance."
+    }
+  ],
+  "priority": [
+    {
+      "block": "rf_synthesizer/rf_receive",
+      "gap": "Loaded LO threshold continuity and reference spur; ideal fast mixers do not expose this failure.",
+      "next_evidence": "Autonomous loaded mixer-clock crossings and RX spur/noise against explicit acceptance limits."
+    },
+    {
+      "block": "bias_reference_startup/radio_adc",
+      "gap": "Reference regulation and converter signal accuracy under actual load are not established.",
+      "next_evidence": "Connected converter/reference startup, settling and signal-quality measurements."
+    },
+    {
+      "block": "whole_chip_analog",
+      "gap": "No integrated whole-chip transistor schematic listed.",
+      "next_evidence": "One explicit hierarchy connecting RF, wired clocks/paths, converters, bias, pads and controls."
+    }
+  ],
+  "limitations": [
+    "Inventory may contain historical runs; no running/terminal inference is made from text.",
+    "Hashes capture current files but do not establish every historical result matches current source.",
+    "No fabrication assurance or schematic/layout completion inferred from mathematical tests."
+  ]
+}

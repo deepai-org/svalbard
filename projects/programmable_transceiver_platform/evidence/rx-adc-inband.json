@@ -1,0 +1,26 @@
+{
+  "completed": true,
+  "cases": [
+    {
+      "case": "inband",
+      "status": "terminal",
+      "completed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "errors": [],
+      "artifacts_sha256": {
+        ".spice": "6bb444a0612264041436862b2c13a14832d30eaa13ad2e7b633deb476a301c82",
+        ".log": "7cc2f9368345cca714123cf38bf191dd4cc4a4cea6607b451738c42d29e6d4a4",
+        ".dat": "9c9f9d68d44e28842d2db388ad4d3f9b9b40a0588db73364acb2f8b5aa3b9c62"
+      },
+      "actual_stop_ns": 610.0000000000001,
+      "rows": 305712
+    }
+  ],
+  "preparation_sha256": "1a7a36090fc79840521ce6028cd0446cf37b8388c7eb55ef1591a976bebbaec0",
+  "limitations": [
+    "Three sub-LSB-scale frames do not establish ENOB or full-scale acquisition.",
+    "Seeded oscillator and ideal10ps-separated control schedule remain.",
+    "No gain or reference circuit change; no physical qualification threshold."
+  ]
+}

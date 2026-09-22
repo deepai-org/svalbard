@@ -1,0 +1,33 @@
+import json
+from pathlib import Path
+from coarse_vco import BankClock,select_bank
+rows=[]
+for target in (2300000000,2437000000,2500000000):
+ for offset in (-.08,-.04,.02):
+  p=BankClock(reference_hz=40e6,divider=60,free_hz=2.4e9*(1+offset),bandwidth_hz=300e3)
+  result=select_bank(p,target);assert result['qualified']
+  # Independent verification oracle, excluded from the controller.
+  true_error=abs(p.frequency_hz-target)
+  assert true_error<=result['allowed_fine_correction_hz']
+  phase=p.phase;charges=p.integral;p.retarget(p.time,target)
+  assert p.phase==phase and p.integral==charges
+  p.set_reference(True,p.time);start=p.time;first=None;losses=0;tail=True
+  for i in range(1,2401):
+   p.advance(start+i/40e6);was=p.locked;locked=p.observe_lock()
+   if locked and first is None:first=p.time-start
+   if was and not locked:losses+=1
+   if i>=1600:tail=tail and locked
+  qualified=first is not None and first<=40e-6 and losses==0 and tail
+  rows.append(dict(target_hz=target,free_offset=offset,coarse=result,true_error_hz=true_error,
+      first_fine_lock_s=first,lock_losses=losses,sustained=qualified))
+  print(target,offset,result['code'],true_error,qualified,flush=True)
+p=BankClock(reference_hz=40e6,divider=60,free_hz=1.9e9,bandwidth_hz=300e3)
+rejected=select_bank(p,2500000000)
+assert not rejected['qualified'] and p.bank_code==8 and not p.present
+report=dict(status='passed' if all(r['sustained'] for r in rows) else 'failed',cases=rows,range_negative_control=rejected,
+ limitations=['Ideal monotonic 16-code bank with 25MHz steps; not a qualified GF180 tuning bank.',
+ 'Frequency steps preserve oscillator phase and filter charge; physical switch transient is not modeled, only a 2us guard.',
+ 'Fresh centered fine filter only; live coarse retuning and nonzero filter-state handling remain open.',
+ 'Count uncertainty assumes stationary oscillator during a 2us measurement; noise and drift require an expanded bound.'])
+Path('/tmp/svalbard-coarse-vco/report.json').write_text(json.dumps(report,indent=2)+'\n')
+assert report['status']=='passed'

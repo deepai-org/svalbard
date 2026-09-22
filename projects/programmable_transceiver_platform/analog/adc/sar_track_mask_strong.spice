@@ -1,0 +1,21 @@
+* Hold CDAC at code128 while TRACKB=0; pass trial code when TRACKB=1.
+* Existing pt_inv, pt_and2 and pt_nand2 are PDK transistor gates from pfd.spice.
+.subckt pt_sar_track_mask_strong D0 D1 D2 D3 D4 D5 D6 D7 TRACKB S0 S1 S2 S3 S4 S5 S6 S7 VDD VSS
+X0 D0 TRACKB S0 VDD VSS pt_and2
+X1 D1 TRACKB S1 VDD VSS pt_and2
+X2 D2 TRACKB S2 VDD VSS pt_and2
+X3 D3 TRACKB S3 VDD VSS pt_and2
+X4 D4 TRACKB S4 VDD VSS pt_and2
+X5 D5 TRACKB S5 VDD VSS pt_and2
+X6 D6 TRACKB S6 VDD VSS pt_and2
+X7B D7 D7B VDD VSS pt_inv
+X7 D7B TRACKB S7 VDD VSS pt_mask_nand2_strong
+.ends
+
+* Four-times device width for the heavily loaded MSB midcode gate.
+.subckt pt_mask_nand2_strong A B Y VDD VSS
+XP0 Y A VDD VDD pfet_03v3 w=8u l=.28u
+XP1 Y B VDD VDD pfet_03v3 w=8u l=.28u
+XN0 Y A N VSS nfet_03v3 w=8u l=.28u
+XN1 N B VSS VSS nfet_03v3 w=8u l=.28u
+.ends

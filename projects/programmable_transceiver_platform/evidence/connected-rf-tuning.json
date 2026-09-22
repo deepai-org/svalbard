@@ -1,0 +1,64 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "target_hz": 2320000000,
+      "phase_continuity_error_cycles": 0.0,
+      "settled_hz": 2320000000.0,
+      "adc_samples": 32,
+      "armed_write_rejected": true
+    },
+    {
+      "mode": 0,
+      "target_hz": 2412000000,
+      "phase_continuity_error_cycles": 0.0,
+      "settled_hz": 2412000000.0,
+      "adc_samples": 32,
+      "armed_write_rejected": true
+    },
+    {
+      "mode": 0,
+      "target_hz": 2480000000,
+      "phase_continuity_error_cycles": 0.0,
+      "settled_hz": 2480000000.0,
+      "adc_samples": 32,
+      "armed_write_rejected": true
+    },
+    {
+      "mode": 1,
+      "target_hz": 2320000000,
+      "phase_continuity_error_cycles": 0.0,
+      "settled_hz": 2320000000.0,
+      "adc_samples": 32,
+      "armed_write_rejected": true
+    },
+    {
+      "mode": 1,
+      "target_hz": 2412000000,
+      "phase_continuity_error_cycles": 0.0,
+      "settled_hz": 2412000000.0,
+      "adc_samples": 32,
+      "armed_write_rejected": true
+    },
+    {
+      "mode": 1,
+      "target_hz": 2480000000,
+      "phase_continuity_error_cycles": 0.0,
+      "settled_hz": 2480000000.0,
+      "adc_samples": 32,
+      "armed_write_rejected": true
+    }
+  ],
+  "controls": {
+    "invalid_targets_atomic": true
+  },
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Fractional feedback ratios are ideal averages; fractional-N edge modulation, spurs and noise remain unmodeled.",
+    "2.3\u20132.5GHz is a command envelope, not a measured VCO tuning range or full acquisition guarantee.",
+    "Retuning requires reset/disarmed state and preserves the fixed2.4GHz RF envelope coordinate.",
+    "Capture verifies lifecycle and transport only; independent tuned RF signal quality remains to be screened."
+  ]
+}

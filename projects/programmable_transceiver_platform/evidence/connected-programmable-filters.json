@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "tx_bandwidth_hz": 10000000.0,
+      "rx_bandwidth_hz": 10000000.0,
+      "adc_sha256": "5fcbd9f6a6fce9a7864d337a0f04354f16fcf4bd9d351b91300eb3ff5bd07ea3"
+    },
+    {
+      "mode": 0,
+      "tx_bandwidth_hz": 2000000.0,
+      "rx_bandwidth_hz": 20000000.0,
+      "adc_sha256": "2da6b1102cb2ea2220ca39c4253a45bfbad716de20123c6ca0f1de55e4fedf32"
+    },
+    {
+      "mode": 0,
+      "tx_bandwidth_hz": 5000000.0,
+      "rx_bandwidth_hz": 2000000.0,
+      "adc_sha256": "3a0c7a74652b91ec271e847f226a7d3fea4b9b760ea4a4c6c9eca6a1e67546a0"
+    },
+    {
+      "mode": 1,
+      "tx_bandwidth_hz": 10000000.0,
+      "rx_bandwidth_hz": 10000000.0,
+      "adc_sha256": "eb9bd1ba6cfb39382cf32118e57740429dea8c24bec6e5a9094db90a220bdcd4"
+    },
+    {
+      "mode": 1,
+      "tx_bandwidth_hz": 2000000.0,
+      "rx_bandwidth_hz": 20000000.0,
+      "adc_sha256": "46dfd37bf4de1aa316412940d63f111add1f5e9df2afadbef20e0673854168c1"
+    },
+    {
+      "mode": 1,
+      "tx_bandwidth_hz": 5000000.0,
+      "rx_bandwidth_hz": 2000000.0,
+      "adc_sha256": "aaf494fd4f629de715fc8f3c19a91f09dd23915233095f057f0629b5f9769cb1"
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Four bandwidth settings are candidate functional selections, not verified transistor tuning ranges.",
+    "First-order continuous filters only; tuning parasitics/noise and switch charge injection are omitted.",
+    "Control is coherent and disarmed; SPI/CDC and generic routing remain separate work."
+  ]
+}

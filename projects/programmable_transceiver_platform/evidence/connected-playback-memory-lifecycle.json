@@ -1,0 +1,37 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "interrupted": false,
+      "played": 32,
+      "captured": 32
+    },
+    {
+      "mode": 0,
+      "interrupted": true,
+      "played": 8,
+      "captured": 8
+    },
+    {
+      "mode": 1,
+      "interrupted": false,
+      "played": 32,
+      "captured": 32
+    },
+    {
+      "mode": 1,
+      "interrupted": true,
+      "played": 8,
+      "captured": 8
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Management access is coherent/disarmed; SPI and loaded-flag CDC timing are not modeled.",
+    "Engine quiesce preserves bank initialization; full asynchronous reset behavior remains separate.",
+    "Playback completion holds the final DAC level; application mute/rearm policy must be explicit.",
+    "MCU-only capture operation and generic analog routing remain open."
+  ]
+}

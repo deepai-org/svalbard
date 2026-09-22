@@ -1,0 +1,47 @@
+{
+  "status": "nominal_transistor_pfd_frequency_and_reset_reentry_screen_not_pll",
+  "cases": [
+    {
+      "feedback_period_ns": 36,
+      "equivalent_high_time_s": [
+        9.330043921092613e-09,
+        2.573074046853762e-07
+      ],
+      "up_minus_down_s": -2.479773607642836e-07,
+      "reset_output_max_v": 0.001248961229208352,
+      "artifacts_sha256": {
+        ".spice": "8b4baeb75928a8defbc3a5f8ca1f6947288eec19ef237f076c6001650eb6c50b",
+        ".dat": "05c4bb6999ded03978db1c40ffb806fb25c7e9dc5ca8852655af371d2b8cd479",
+        ".log": "365ece7252e9f480b21dc79c3fe3bca0000407c46617e677cea1e1ac7b91b667"
+      },
+      "reset_reentry_pass": true,
+      "ideal_event_net_area_s": -2.48e-07,
+      "event_reference_pass": true,
+      "frequency_direction_pass": true
+    },
+    {
+      "feedback_period_ns": 44,
+      "equivalent_high_time_s": [
+        9.333752010800656e-08,
+        6.933348365514352e-08
+      ],
+      "up_minus_down_s": 2.4004036452863048e-08,
+      "reset_output_max_v": 0.001251971495605415,
+      "artifacts_sha256": {
+        ".spice": "1663d6c87292af72d85217418d6c45e1024f9764d1c9950501310deee64ce511",
+        ".dat": "c9b75e0bf693a16b22d24d71d4b0bf24c47cf6daf966bf43ab42d9f2a0d68382",
+        ".log": "aa0965a3daa305b20fc410edbed68346a09a840e6eeecf9b566b4b80180bc26f"
+      },
+      "reset_reentry_pass": true,
+      "ideal_event_net_area_s": 2.4000000000000003e-08,
+      "event_reference_pass": true,
+      "frequency_direction_pass": true
+    }
+  ],
+  "source_sha256": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+  "limitations": [
+    "25MHz, TT 3.3V 27C, 50fF output loads; no charge pump.",
+    "No closed-loop acquisition, dead-zone sweep, mismatch, supply perturbation or extracted timing."
+  ],
+  "all_checks_pass": true
+}

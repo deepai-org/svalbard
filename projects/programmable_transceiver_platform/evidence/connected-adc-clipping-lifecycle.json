@@ -1,0 +1,69 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "sign": -1,
+      "diagnostics": {
+        "conversions": 32,
+        "clipped_samples": 32,
+        "i_low": 32,
+        "i_high": 0,
+        "q_low": 0,
+        "q_high": 32
+      },
+      "valid_saturated_samples": 32
+    },
+    {
+      "mode": 0,
+      "sign": 1,
+      "diagnostics": {
+        "conversions": 32,
+        "clipped_samples": 32,
+        "i_low": 0,
+        "i_high": 32,
+        "q_low": 32,
+        "q_high": 0
+      },
+      "valid_saturated_samples": 32
+    },
+    {
+      "mode": 1,
+      "sign": -1,
+      "diagnostics": {
+        "conversions": 32,
+        "clipped_samples": 32,
+        "i_low": 32,
+        "i_high": 0,
+        "q_low": 0,
+        "q_high": 32
+      },
+      "valid_saturated_samples": 32
+    },
+    {
+      "mode": 1,
+      "sign": 1,
+      "diagnostics": {
+        "conversions": 32,
+        "clipped_samples": 32,
+        "i_low": 0,
+        "i_high": 32,
+        "q_low": 32,
+        "q_high": 0
+      },
+      "valid_saturated_samples": 32
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "contract": [
+    "Round to nearest, ties to even; saturation is reported only if the rounded integer exceeds a code rail.",
+    "Clipping preserves sample validity and conversion latency; per-component signed counts and clipped-sample count accumulate.",
+    "Nonfinite input is rejected; diagnostics persist across receive epochs until explicitly cleared while disarmed."
+  ],
+  "limitations": [
+    "Counters are named model diagnostics, not allocated hardware/SPI registers or per-sample host flags.",
+    "Clipping threshold is a mathematical quantizer contract; comparator overload recovery and input common-mode limits remain unmodeled.",
+    "DAC clipping/glitch and complete converter validity/operating envelopes remain open."
+  ]
+}

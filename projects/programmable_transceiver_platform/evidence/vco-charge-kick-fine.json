@@ -1,0 +1,177 @@
+{
+  "completed": true,
+  "cases": [
+    {
+      "name": "quiet",
+      "status": "terminal",
+      "completed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "errors": [],
+      "artifacts_sha256": {
+        ".spice": "f7ad7fb3a604739359f5216455dda8908f86760bea58c9ee67f838b1269e6c33",
+        ".log": "9e41ed3afd648d898b5bc17cb72123c82c0e9b71b2c24eada4656d9cf019c5ba",
+        ".dat": "9d4644ed6685cddb0a9f94ee9afe5fca38990a0f10449810d47b47bf9b79f658"
+      },
+      "actual_stop_ns": 41.0,
+      "rising_edges": 103,
+      "pulse_charge_c": 0.0,
+      "same_edge_count": true,
+      "windows": [
+        {
+          "window_ns": [
+            10,
+            19
+          ],
+          "edge_count": 23,
+          "mean_displacement_ps": 0.0,
+          "max_abs_displacement_ps": 0.0
+        },
+        {
+          "window_ns": [
+            20,
+            21
+          ],
+          "edge_count": 3,
+          "mean_displacement_ps": 0.0,
+          "max_abs_displacement_ps": 0.0
+        },
+        {
+          "window_ns": [
+            21,
+            25
+          ],
+          "edge_count": 10,
+          "mean_displacement_ps": 0.0,
+          "max_abs_displacement_ps": 0.0
+        },
+        {
+          "window_ns": [
+            30,
+            40
+          ],
+          "edge_count": 25,
+          "mean_displacement_ps": 0.0,
+          "max_abs_displacement_ps": 0.0
+        }
+      ]
+    },
+    {
+      "name": "positive",
+      "status": "terminal",
+      "completed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "errors": [],
+      "artifacts_sha256": {
+        ".spice": "3525f208ad606e6216cf598ba854a873668ea32e5c88c7c3bc332a75a464965e",
+        ".log": "9e35132445dd9a34b1f704119f59684f2273ad7ffcda384671d5751bb816b685",
+        ".dat": "2562cb1437ee4d4b9d8fd0ac415ee768db3a3972b56a1916094ea849d9ec1463"
+      },
+      "actual_stop_ns": 41.0,
+      "rising_edges": 103,
+      "pulse_charge_c": 1.1000000000000001e-15,
+      "same_edge_count": true,
+      "windows": [
+        {
+          "window_ns": [
+            10,
+            19
+          ],
+          "edge_count": 23,
+          "mean_displacement_ps": 0.0,
+          "max_abs_displacement_ps": 0.0
+        },
+        {
+          "window_ns": [
+            20,
+            21
+          ],
+          "edge_count": 3,
+          "mean_displacement_ps": 0.30739876392178406,
+          "max_abs_displacement_ps": 0.8457163234100785
+        },
+        {
+          "window_ns": [
+            21,
+            25
+          ],
+          "edge_count": 10,
+          "mean_displacement_ps": -0.004374457399946829,
+          "max_abs_displacement_ps": 0.011426394264954487
+        },
+        {
+          "window_ns": [
+            30,
+            40
+          ],
+          "edge_count": 25,
+          "mean_displacement_ps": -0.009814518530725258,
+          "max_abs_displacement_ps": 0.009950280049304056
+        }
+      ]
+    },
+    {
+      "name": "negative",
+      "status": "terminal",
+      "completed": true,
+      "returncode": 0,
+      "timed_out": false,
+      "errors": [],
+      "artifacts_sha256": {
+        ".spice": "4c7c107392c8cc54d578a56a361b140f7936cfbd7b7418a7ecb3897e5c03bb78",
+        ".log": "bba538233675bbf8e48e182f81631b2ba56a526a4c2134d966cdc990f5809190",
+        ".dat": "6448b41b2685f1b58e58af90cef7af2cdb158c9ee01069796cc07031fe265540"
+      },
+      "actual_stop_ns": 41.0,
+      "rising_edges": 103,
+      "pulse_charge_c": -1.1000000000000001e-15,
+      "same_edge_count": true,
+      "windows": [
+        {
+          "window_ns": [
+            10,
+            19
+          ],
+          "edge_count": 23,
+          "mean_displacement_ps": 0.0,
+          "max_abs_displacement_ps": 0.0
+        },
+        {
+          "window_ns": [
+            20,
+            21
+          ],
+          "edge_count": 3,
+          "mean_displacement_ps": -0.31015996257972217,
+          "max_abs_displacement_ps": 0.853207560123748
+        },
+        {
+          "window_ns": [
+            21,
+            25
+          ],
+          "edge_count": 10,
+          "mean_displacement_ps": 0.004379870861958987,
+          "max_abs_displacement_ps": 0.01142260183044311
+        },
+        {
+          "window_ns": [
+            30,
+            40
+          ],
+          "edge_count": 25,
+          "mean_displacement_ps": 0.009857649579954253,
+          "max_abs_displacement_ps": 0.009992730640702923
+        }
+      ]
+    }
+  ],
+  "source_hashes_final_verified": true,
+  "limitations": [
+    "One injection phase/amplitude at isolating output; not internal-source phase sensitivity or intrinsic noise.",
+    "Maximum step is0.5ps in fine mode,2ps otherwise; compare matched response before quantitative interpretation.",
+    "Ordinal edges are never rematched; unequal count prevents displacement comparison.",
+    "Fixed ideal control/bias, seeded open-loop oscillator with historical RF/divider load; not autonomous PLL qualification."
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "zero": {
+        "mode": 0,
+        "scale": 0.0,
+        "step_s": 5e-10,
+        "charge_c": 0.0,
+        "peak_a": 0.0,
+        "minimum_rail_delta_v": 0.0,
+        "rf_pull_hz": 0.0,
+        "samples": 64
+      },
+      "coarse": {
+        "mode": 0,
+        "scale": 1.0,
+        "step_s": 5e-10,
+        "charge_c": 5.684567216249097e-10,
+        "peak_a": 0.0009510638297872342,
+        "minimum_rail_delta_v": -0.085266264048157,
+        "rf_pull_hz": 85266.264048157,
+        "samples": 64
+      },
+      "fine": {
+        "mode": 0,
+        "scale": 1.0,
+        "step_s": 2.5e-10,
+        "charge_c": 5.684368234825276e-10,
+        "peak_a": 0.0009510638297872342,
+        "minimum_rail_delta_v": -0.08421321837610043,
+        "rf_pull_hz": 84213.21837610044,
+        "samples": 64
+      },
+      "rf_change": 0.0043422063684630365,
+      "refinement_change": 5.2370841668331685e-06
+    },
+    {
+      "mode": 1,
+      "zero": {
+        "mode": 1,
+        "scale": 0.0,
+        "step_s": 5e-10,
+        "charge_c": 0.0,
+        "peak_a": 0.0,
+        "minimum_rail_delta_v": 0.0,
+        "rf_pull_hz": 0.0,
+        "samples": 64
+      },
+      "coarse": {
+        "mode": 1,
+        "scale": 1.0,
+        "step_s": 5e-10,
+        "charge_c": 5.684567216249097e-10,
+        "peak_a": 0.0009510638297872342,
+        "minimum_rail_delta_v": -0.085266264048157,
+        "rf_pull_hz": 85266.264048157,
+        "samples": 64
+      },
+      "fine": {
+        "mode": 1,
+        "scale": 1.0,
+        "step_s": 2.5e-10,
+        "charge_c": 5.684368234825276e-10,
+        "peak_a": 0.0009510638297872342,
+        "minimum_rail_delta_v": -0.08421321837610043,
+        "rf_pull_hz": 84213.21837610044,
+        "samples": 64
+      },
+      "rf_change": 0.004342215700748587,
+      "refinement_change": 4.973195077702241e-06
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Assumed linear driver mapping:100uA enabled bias and10% sink overhead; no physical efficiency or bias estimate.",
+    "Subnanosecond charge impulses approximate continuous driver load; two-step refinement is local evidence, not a complete convergence proof.",
+    "Probe circuit source voltage remains ideal0.2V; shared rail affects other chip circuits but not yet the probe stimulus/comparator itself.",
+    "Nominal present load only, one coupling sign, finite RF capture; full electrical coexistence envelope remains open."
+  ]
+}

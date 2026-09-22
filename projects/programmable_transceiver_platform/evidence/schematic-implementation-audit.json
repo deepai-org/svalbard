@@ -1,0 +1,785 @@
+{
+  "status": "incomplete_schematic_blocks_layout_gate_closed",
+  "layout_gate": "No new layout/recreation until the integrated transistor-level analog schematic meets agreed requirements; retain existing layouts as reference.",
+  "blocks": [
+    {
+      "id": "rf_receive",
+      "status": "partial_connected",
+      "source_paths": [
+        "projects/programmable_transceiver_platform/analog/rf_rx_candidate.spice",
+        "projects/programmable_transceiver_platform/analog/rf_rx_candidate_split.spice",
+        "projects/programmable_transceiver_platform/analog/baseband/connected_screen.py",
+        "projects/programmable_transceiver_platform/analog/quadrature/mixer_screen.py",
+        "projects/programmable_transceiver_platform/analog/quadrature/lo_final_stage.spice",
+        "projects/programmable_transceiver_platform/analog/bb_filter_section.spice",
+        "projects/programmable_transceiver_platform/analog/bb_pmos_gain.spice",
+        "projects/programmable_transceiver_platform/analog/lna/noise_screen.py",
+        "projects/programmable_transceiver_platform/analog/reference/reservoir_mim.spice",
+        "projects/programmable_transceiver_platform/analog/integration/rx_adc_loading.py",
+        "projects/programmable_transceiver_platform/analog/baseband/inband_screen.py"
+      ],
+      "gap": "Actual LNA with448MIM bypass, ring/RC quadrature, LO drivers, mixers and two filters are connected. Fixed-control matched5MHz IF tone/zero histories complete;1mV RF gives7.182/8.066mV output peaks, roughly one nominal ADC step. Actual autonomous zero-RF8.001us run completes but reveals persistent31.6mV peak reference-frequency I spur and missing I-LO threshold crossings while the ring continues. Q is more regular. This is an unresolved loaded LO-path failure, not useful autonomous receiver qualification. Receiver/dualADC610ns changing-input fixture also completes with ideal10ps-separated control schedule, but reference span0.914493..1.068451V remains inaccurate. Autonomous-loop and ADC results are separate fixtures. Gain range, RF differential input, noise/linearity, real bias/startup, variation and shared physical integration remain open. Loaded P/N replay completes and matches all four output rising counts with at most0.626ps ordinal displacement. Separate post-observation scope audit permits multi-cycle-failure diagnosis only; MID/PRE have no saved autonomous comparison and no repair is accepted; static LO threshold and self-bias AC tests do not replace dynamic qualification.",
+      "evidence_paths": [
+        "projects/programmable_transceiver_platform/evidence/quadrature-mixers.json",
+        "projects/programmable_transceiver_platform/evidence/quadrature-conversion.json",
+        "projects/programmable_transceiver_platform/evidence/quadrature-lna.json",
+        "projects/programmable_transceiver_platform/evidence/quadrature-lna-conversion.json",
+        "projects/programmable_transceiver_platform/evidence/bb-connected-settling.json",
+        "projects/programmable_transceiver_platform/evidence/bb-connected-settling-conversion.json",
+        "projects/programmable_transceiver_platform/evidence/bb-settling-comparison.json",
+        "projects/programmable_transceiver_platform/evidence/bb-noise.json",
+        "projects/programmable_transceiver_platform/evidence/bb-noise-contributors.json",
+        "projects/programmable_transceiver_platform/evidence/bb-input-resistance.json",
+        "projects/programmable_transceiver_platform/evidence/lna-noise.json",
+        "projects/programmable_transceiver_platform/evidence/lna-bypass-comparison.json",
+        "projects/programmable_transceiver_platform/evidence/lna-mim-comparison.json",
+        "projects/programmable_transceiver_platform/evidence/bb-connected-bypass.json",
+        "projects/programmable_transceiver_platform/evidence/bb-connected-bypass-conversion.json",
+        "projects/programmable_transceiver_platform/evidence/bb-bypass-comparison.json",
+        "projects/programmable_transceiver_platform/evidence/latest-rf-loop-preparation.json",
+        "projects/programmable_transceiver_platform/evidence/latest-loop-elaboration.json",
+        "projects/programmable_transceiver_platform/evidence/latest-rf-loop.json",
+        "projects/programmable_transceiver_platform/evidence/rx-adc-partial-loading.json",
+        "projects/programmable_transceiver_platform/evidence/bb-inband.json",
+        "projects/programmable_transceiver_platform/evidence/bb-inband-control.json",
+        "projects/programmable_transceiver_platform/evidence/inband-gain-budget.json",
+        "projects/programmable_transceiver_platform/evidence/bb-noise-receiver-cm.json",
+        "projects/programmable_transceiver_platform/evidence/bb-large-input-step.json",
+        "projects/programmable_transceiver_platform/evidence/rx-adc-separated-events.json",
+        "projects/programmable_transceiver_platform/evidence/rx-adc-separated-frames.json",
+        "projects/programmable_transceiver_platform/evidence/latest-loop-baseband.json",
+        "projects/programmable_transceiver_platform/evidence/latest-loop-path-nodes.json",
+        "projects/programmable_transceiver_platform/evidence/latest-lo-upstream.json",
+        "projects/programmable_transceiver_platform/evidence/rx-adc-inband.json",
+        "projects/programmable_transceiver_platform/evidence/rx-adc-inband-frames.json",
+        "projects/programmable_transceiver_platform/evidence/lo-receiver-replay.json",
+        "projects/programmable_transceiver_platform/evidence/lo-replay-stages.json",
+        "projects/programmable_transceiver_platform/evidence/lo-gap-state.json",
+        "projects/programmable_transceiver_platform/evidence/lo-replay-scope.json"
+      ],
+      "stationary_noise_status": "Separate filter screen:269/344uVrms output over1kHz-20MHz including1kohm source legs. LNA bypass candidate uses448 explicit MIM units; selected series R/L cases retain stationary gain/noise improvement. These separate fixtures do not establish complete switched receiver noise; connected bypass gain improvement is verified separately; no complete receiver noise claim.",
+      "port_contract_gap": "Contract declares RF_RX_P/RF_RX_N. Current connected LNA/mixer/filter fixture uses a single-ended50ohm source; differential RF pad/front-end realization, matching, ESD loading and common-mode rejection remain unimplemented or unverified. Do not infer full RF port compliance from this fixture.",
+      "sources": [
+        {
+          "path": "projects/programmable_transceiver_platform/analog/rf_rx_candidate.spice",
+          "sha256": "755dc05869d1add201e20953635bb3e2f31cd55f5b46d58f69992efcddc452eb",
+          "subcircuits": [
+            "pt_rf_rx_candidate"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/rf_rx_candidate_split.spice",
+          "sha256": "44431da3c11bea2282e6dd5cd388e81e26551454b9bd88973bf205f678fff498",
+          "subcircuits": [
+            "pt_rf_rx_candidate_split"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/baseband/connected_screen.py",
+          "sha256": "7ece4f775a11ef282bea892f16024981ca0f20526211506f2ade132de8e597ed",
+          "subcircuits": []
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/quadrature/mixer_screen.py",
+          "sha256": "2ca4d36183aaae0109664519a3e2942c6c06c0e6714902e8aada2865cf9b2f40",
+          "subcircuits": []
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/quadrature/lo_final_stage.spice",
+          "sha256": "3f234838df5453d1c5f69d1f7f3c753da87e17052d979147a6d6e05fa418ca9f",
+          "subcircuits": [
+            "pt_lo_final_stage"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/bb_filter_section.spice",
+          "sha256": "d8811869bb9c276974363698c71e206c45f06dcb86ba6d3e5db01acb2ff81841",
+          "subcircuits": [
+            "pt_bb_filter"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/bb_pmos_gain.spice",
+          "sha256": "70d930a98ef580dfe4eb418f5f26c20445ac0561e5723558d461f56427d01f06",
+          "subcircuits": [
+            "pt_bb_pmos_gain"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/lna/noise_screen.py",
+          "sha256": "3685570af5b581b99313bda7e87cbea8a2b1800aaa674b636f74b5cb11185ee3",
+          "subcircuits": []
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/reservoir_mim.spice",
+          "sha256": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+          "subcircuits": [
+            "pt_ref_reservoir_1",
+            "pt_ref_reservoir_2",
+            "pt_ref_reservoir_4",
+            "pt_ref_reservoir_8",
+            "pt_ref_reservoir_16",
+            "pt_ref_reservoir_32",
+            "pt_ref_reservoir_64",
+            "pt_ref_reservoir_128",
+            "pt_ref_reservoir_256",
+            "pt_ref_reservoir_512",
+            "pt_ref_reservoir_1024",
+            "pt_ref_reservoir_2048"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/integration/rx_adc_loading.py",
+          "sha256": "fd4c3a92fcd5d38965154ddd202ec5c168ce13f6e5916776dfbbb69b2e0750d2",
+          "subcircuits": []
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/baseband/inband_screen.py",
+          "sha256": "3fc349b4dc816ea053b934d9dab23bc76f0503c69972d46821dfa6abe3dc06cd",
+          "subcircuits": []
+        }
+      ]
+    },
+    {
+      "id": "rf_synthesizer",
+      "status": "partial_connected_seeded_loop_signal_quality_failure",
+      "source_paths": [
+        "ip/blocks/analog/wireline_serdes/pll/ring_vco.spice",
+        "ip/blocks/analog/wireline_serdes/pll/divider.spice",
+        "ip/blocks/analog/wireline_serdes/pll/pll_clock_path.spice",
+        "projects/programmable_transceiver_platform/analog/pll/pfd.spice",
+        "projects/programmable_transceiver_platform/analog/pll/charge_pump.spice",
+        "projects/programmable_transceiver_platform/analog/pll/loop_filter.spice",
+        "projects/programmable_transceiver_platform/analog/pll/ring_vco_split.spice",
+        "projects/programmable_transceiver_platform/analog/pll/reference_input_buffer.spice",
+        "projects/programmable_transceiver_platform/analog/quadrature/rc_split.spice",
+        "projects/programmable_transceiver_platform/analog/pll/pump_steering_screen.py",
+        "projects/programmable_transceiver_platform/analog/pll/pump_steering_phase_screen.py",
+        "projects/programmable_transceiver_platform/analog/pll/pump_dummy_impedance_screen.py",
+        "projects/programmable_transceiver_platform/analog/pll/dummy_driver_dc_screen.py",
+        "projects/programmable_transceiver_platform/analog/pll/pump_follower_screen.py",
+        "projects/programmable_transceiver_platform/analog/reference/buffer_scaled.spice"
+      ],
+      "gap": "Actual ring/divider/PFD/pump/follower/filter plus receiver completes8.001us seeded zero-RF operation. Last21 paired edges drift0.108ps over1024ns; deterministic detrended range0.576ps is not intrinsic jitter. Frequency settling does not qualify RF operation: downstream I-LO loses threshold crossings and baseband has large reference spur. Real bias, cold startup/acquisition, source noise/phase noise, variation and uncertain physical loads remain unqualified. Internal differential and one channel-terminal signed-charge responses are deterministic one-phase diagnostics; source inventory/model excerpts do not predict noise. Quadrature imbalance and broadband/mismatch tolerance remain open.",
+      "evidence_paths": [
+        "projects/programmable_transceiver_platform/evidence/vco-supply-screen.json",
+        "projects/programmable_transceiver_platform/evidence/buffer-finite-source-screen.json",
+        "projects/programmable_transceiver_platform/evidence/quadrature-rc.json",
+        "projects/programmable_transceiver_platform/evidence/bb-connected-settling-conversion.json",
+        "projects/programmable_transceiver_platform/evidence/pfd-event-offset.json",
+        "projects/programmable_transceiver_platform/evidence/pump-clamped.json",
+        "projects/programmable_transceiver_platform/evidence/pump-branch.json",
+        "projects/programmable_transceiver_platform/evidence/pump-steering.json",
+        "projects/programmable_transceiver_platform/evidence/pump-steering-phase.json",
+        "projects/programmable_transceiver_platform/evidence/pump-dummy-impedance.json",
+        "projects/programmable_transceiver_platform/evidence/dummy-driver-dc.json",
+        "projects/programmable_transceiver_platform/evidence/pump-follower.json",
+        "projects/programmable_transceiver_platform/evidence/pump-follower-phase.json",
+        "projects/programmable_transceiver_platform/evidence/pll-local-model-follower.json",
+        "projects/programmable_transceiver_platform/evidence/pump-control-range.json",
+        "projects/programmable_transceiver_platform/evidence/pump-phase-balance.json",
+        "projects/programmable_transceiver_platform/evidence/pump-range-followup.json",
+        "projects/programmable_transceiver_platform/evidence/closed-loop-follower-screen.json",
+        "projects/programmable_transceiver_platform/evidence/latest-rf-loop-preparation.json",
+        "projects/programmable_transceiver_platform/evidence/latest-loop-elaboration.json",
+        "projects/programmable_transceiver_platform/evidence/latest-rf-loop.json",
+        "projects/programmable_transceiver_platform/evidence/loop-failure-event.json",
+        "projects/programmable_transceiver_platform/evidence/follower-pwl-preparation.json",
+        "projects/programmable_transceiver_platform/evidence/latest-rf-loop-memory-failure.json",
+        "projects/programmable_transceiver_platform/evidence/latest-loop-save-control.json",
+        "projects/programmable_transceiver_platform/evidence/vco-internal-kick.json",
+        "projects/programmable_transceiver_platform/evidence/latest-rf-loop-selective.json",
+        "projects/programmable_transceiver_platform/evidence/latest-loop-selective-phase-tail.json",
+        "projects/programmable_transceiver_platform/evidence/vco-channel-kick.json",
+        "projects/programmable_transceiver_platform/evidence/ring-noise-ports.json",
+        "projects/programmable_transceiver_platform/evidence/ring-noise-models.json",
+        "projects/programmable_transceiver_platform/evidence/latest-lo-upstream.json"
+      ],
+      "pump_diagnostic_status": "Original clamped pump+22.395fC/cycle; unadopted steering/follower/MIM candidate nominal-4.509fC/cycle. Completed forced-clock tests:0.98V early300ps/late300ps/late600ps charges-12.190/-0.182/+5.712fC;1.08V +/-300ps-10.532/+1.618fC;1.16V-9.370/+2.857fC;1.30V-7.987/+4.302fC. Low-control offset shifts correction threshold but sourcing remains possible. Follower supply0.461..0.469mW; ideal bias currents and precharge remain. These are finite-history clamped diagnostics, not autonomous acquisition or noise qualification.",
+      "integration_gap": "Completed selective-save8.001us history supersedes pending status. Original save-all extension was killed; selective10ns control matched bit-for-bit. Final4.3GB hashing caused post-simulation memory pressure; existing container limit raised4->8GiB without simulation restart, then artifact validation completed. Actual-feedback zero-RF test still uses seeded/precharged states, ideal bias/supplies and lacks ADC/host loading. Reference-periodic I-LO/mixer disturbance is unresolved; no lock/noise or whole-chip coexistence qualification.",
+      "sources": [
+        {
+          "path": "ip/blocks/analog/wireline_serdes/pll/ring_vco.spice",
+          "sha256": "c6c8e33a61f6a52c69ba9d9fc1438637298f17ebb35251be1ace3ebda6416142",
+          "subcircuits": [
+            "cml_vco_delay",
+            "ring_vco"
+          ]
+        },
+        {
+          "path": "ip/blocks/analog/wireline_serdes/pll/divider.spice",
+          "sha256": "1e007f6d40d8678192a090ed1906fd27f6834dfec6983a35f15ffb8f1a3e364b",
+          "subcircuits": [
+            "cml_divider_latch",
+            "cml_divider_by_2"
+          ]
+        },
+        {
+          "path": "ip/blocks/analog/wireline_serdes/pll/pll_clock_path.spice",
+          "sha256": "addabe7242ffb0d878d1021c7646fbda180beb4c07d5cce5413d24d53940d1a2",
+          "subcircuits": [
+            "pll_clock_path"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/pfd.spice",
+          "sha256": "6de4b8a47d7a4f76d12a85ec08a3a4502de867de30ba2b1166cb00275a7fa983",
+          "subcircuits": [
+            "pt_inv",
+            "pt_nand2",
+            "pt_nand3",
+            "pt_and2",
+            "pt_dff_reset",
+            "pt_pfd"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/charge_pump.spice",
+          "sha256": "eb68a0462ec4d7149149fd16542c342ba1ed4021aadeaa42e9534ffa6acdbdff",
+          "subcircuits": [
+            "pt_charge_pump"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/loop_filter.spice",
+          "sha256": "80a620e5d9e4874bc565f214f307953682ec739256efe3b357373a48811143ca",
+          "subcircuits": [
+            "pt_loop_filter"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/ring_vco_split.spice",
+          "sha256": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+          "subcircuits": [
+            "pt_split_delay",
+            "pt_split_ring"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/reference_input_buffer.spice",
+          "sha256": "e9922aa2757ca9ece9eea717cc27b090920c522fd7f1ea7f25d0ce98f5c78e76",
+          "subcircuits": [
+            "pt_reference_input_buffer"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/quadrature/rc_split.spice",
+          "sha256": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+          "subcircuits": [
+            "pt_rc_quadrature"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/pump_steering_screen.py",
+          "sha256": "e193c9880fa1f4cf9925369c0461fb7d319593c85f7df54f74c52d2da343417c",
+          "subcircuits": []
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/pump_steering_phase_screen.py",
+          "sha256": "0dc12347d0f62431faa8b0310494aaf3180f18e58a666ca04a7f912e81bb8942",
+          "subcircuits": []
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/pump_dummy_impedance_screen.py",
+          "sha256": "7727bbd15acdcb17f615bd9cb154d3a6d54dec604a079517bb9d5d88ec5a5b6a",
+          "subcircuits": []
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/dummy_driver_dc_screen.py",
+          "sha256": "e19b67648e68c030844e1c2eb4e21f4700d9b90ad029280e98b9640bc6979289",
+          "subcircuits": []
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/pll/pump_follower_screen.py",
+          "sha256": "477be55ea871991ab5164fbe94b84d89529c3dbfc708114d8c58bf818f6700fa",
+          "subcircuits": []
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/buffer_scaled.spice",
+          "sha256": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+          "subcircuits": [
+            "pt_reference_buffer_scaled"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "radio_adc",
+      "status": "partial_connected_PDK_capacitor_substitution_under_test",
+      "source_paths": [
+        "projects/programmable_transceiver_platform/analog/adc/comparator.spice",
+        "ip/blocks/analog/wifi_80211b/rf_if_transmission_gate/rf_if_transmission_gate.spice",
+        "projects/programmable_transceiver_platform/analog/adc/cdac8.spice",
+        "projects/programmable_transceiver_platform/analog/adc/cdac8_scaled.spice",
+        "projects/programmable_transceiver_platform/analog/adc/code_driver.spice",
+        "projects/programmable_transceiver_platform/analog/adc/code_driver_small.spice",
+        "projects/programmable_transceiver_platform/analog/adc/sar8_control.spice",
+        "projects/programmable_transceiver_platform/analog/adc/sample_driver.spice",
+        "projects/programmable_transceiver_platform/analog/adc/sample_driver_longmirror.spice",
+        "projects/programmable_transceiver_platform/analog/adc/sample_driver_headroom.spice",
+        "projects/programmable_transceiver_platform/analog/adc/sar_track_mask.spice",
+        "projects/programmable_transceiver_platform/analog/adc/sar_track_mask_strong.spice",
+        "projects/programmable_transceiver_platform/analog/adc/cdac8_mim.spice"
+      ],
+      "gap": "Actual shared-reference dualADC and receiver interface complete selected three-frame tests, including changing approximately5MHz IF input, with ideal external phases and seeded receiver. Dynamic reference span0.914493..1.068451V in connected in-band case remains inaccurate. Stronger hybrid reference candidate improves some target/held errors but worsens decision-window motion and power; unadopted. Real phases/bias, independent skew, full-scale acquisition, transfer/ENOB, noise/mismatch, autonomous-loop simultaneous operation and host capture remain unqualified. Completed histories demonstrate connectivity and selected behavior, not useful ADC accuracy.",
+      "receiver_interface_status": "The original coincident-control loaded and isolated histories fail at478.5ns; single-edge changes only move failure to528.5ns. The later schedule-wide24 UPDATE-fall+10ps separation completes610ns, as does the approximately5MHz IF input fixture. Three in-band frames capture codes127/128 with asserted DONE, but reference span0.914493..1.068451V remains inaccurate. These ideal phase schedules establish selected connected behavior, not robust physical control timing or conversion accuracy.",
+      "evidence_paths": [
+        "projects/programmable_transceiver_platform/evidence/rx-adc-boundary.json",
+        "projects/programmable_transceiver_platform/evidence/adc-receiver-cm.json",
+        "projects/programmable_transceiver_platform/evidence/adc-shared-iq-receiver-cm.json",
+        "projects/programmable_transceiver_platform/evidence/adc-receiver-cm-comparison.json",
+        "projects/programmable_transceiver_platform/evidence/adc-tracking-history.json",
+        "projects/programmable_transceiver_platform/evidence/adc-cm-sampling-compensation.json",
+        "projects/programmable_transceiver_platform/evidence/adc-driver-devices.json",
+        "projects/programmable_transceiver_platform/evidence/adc-fixture-schedule.json",
+        "projects/programmable_transceiver_platform/evidence/adc-sampler-edge-comparison.json",
+        "projects/programmable_transceiver_platform/evidence/adc-cm-sampling-damping2k.json",
+        "projects/programmable_transceiver_platform/evidence/adc-reference-current-preparation.json",
+        "projects/programmable_transceiver_platform/evidence/adc-reference-reproduction-scope.json",
+        "projects/programmable_transceiver_platform/evidence/cdac-branch-replay.json",
+        "projects/programmable_transceiver_platform/evidence/cdac-probe-difference.json",
+        "projects/programmable_transceiver_platform/evidence/cdac-probe-startup.json",
+        "projects/programmable_transceiver_platform/evidence/cdac-probe-reltol.json",
+        "projects/programmable_transceiver_platform/evidence/bit6-complement.json",
+        "projects/programmable_transceiver_platform/evidence/rx-adc-measurement-budget.json",
+        "projects/programmable_transceiver_platform/evidence/rx-adc-repeated-failure.json",
+        "projects/programmable_transceiver_platform/evidence/rx-adc-first-frame.json",
+        "projects/programmable_transceiver_platform/evidence/rx-adc-second-acquisition.json",
+        "projects/programmable_transceiver_platform/evidence/rx-adc-partial-power.json",
+        "projects/programmable_transceiver_platform/evidence/rx-adc-event-offsets.json",
+        "projects/programmable_transceiver_platform/evidence/rx-adc-separated-event-preparation.json",
+        "projects/programmable_transceiver_platform/evidence/rx-adc-separated-events.json",
+        "projects/programmable_transceiver_platform/evidence/rx-adc-separated-frames.json",
+        "projects/programmable_transceiver_platform/evidence/rx-adc-inband-frames.json",
+        "projects/programmable_transceiver_platform/evidence/reference-hybrid-candidates.json",
+        "projects/programmable_transceiver_platform/evidence/reference-output2-event.json",
+        "projects/programmable_transceiver_platform/evidence/rx-adc-inband.json"
+      ],
+      "next_integration_gate": "Implement and verify real phase generation and independent skew tolerance; preserve completed610ns separated-event and in-band fixtures as diagnostic comparisons. Gain, reference regulation and autonomous-loop simultaneous operation remain required.",
+      "measurement_gap": "Earlier approximately20MHz IF fixture aliases near DC at20MS/s. Completed approximately5MHz IF fixture removes that stimulus limitation but only spans three small-signal frames and codes127/128. Full-scale acquisition, useful gain, adequate records, transfer accuracy and ENOB remain unverified.",
+      "rejected_candidate": "Doubling bit6 complement inverter strength reduces selected high peak but improves worst high-reference error only0.055mV, worsens low motion and costs10.87% VDRV energy; retain original driver.",
+      "sources": [
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/comparator.spice",
+          "sha256": "a41ecccf87f625bbddca6139730c5e8500529c5acb2f05a5052f9049e8ee74a0",
+          "subcircuits": [
+            "pt_adc_comparator"
+          ]
+        },
+        {
+          "path": "ip/blocks/analog/wifi_80211b/rf_if_transmission_gate/rf_if_transmission_gate.spice",
+          "sha256": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+          "subcircuits": [
+            "wifi_if_transmission_gate"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/cdac8.spice",
+          "sha256": "d285f207ce5570fe8ae22234ad4cc7864a891e154450270d78658312162084da",
+          "subcircuits": [
+            "pt_cdac_switch",
+            "pt_cdac_bit",
+            "pt_cdac8"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/cdac8_scaled.spice",
+          "sha256": "4006f42115b3a5a30b9ad74626ef0c084655bf0cdc2f1d1cc8bd32f65e351fd2",
+          "subcircuits": [
+            "pt_cdac_scaled_switch",
+            "pt_cdac_scaled_bit",
+            "pt_cdac8_scaled"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/code_driver.spice",
+          "sha256": "705d0a9166967460fce6151cfa49ffa951469e1a8d2b061805321142fdfebdc4",
+          "subcircuits": [
+            "pt_adc_drive_inv",
+            "pt_adc_code_driver"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/code_driver_small.spice",
+          "sha256": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+          "subcircuits": [
+            "pt_adc_drive_small_inv",
+            "pt_adc_code_small_driver"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/sar8_control.spice",
+          "sha256": "e345fa96d9d1342d55a1bc65b0fc42e2c1d31ebcda127597fc372f625cd038fb",
+          "subcircuits": [
+            "pt_sar8_control"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/sample_driver.spice",
+          "sha256": "9b18cad081cac114abdc8b8f60dfee57eb7993fc1e2b77d71afa0b1f85b6ff38",
+          "subcircuits": [
+            "pt_sample_driver"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/sample_driver_longmirror.spice",
+          "sha256": "6d0442a5ab45f6db74c0f3cbc5f40e7cd7a9b47c05a7f33d53b64b5a13128453",
+          "subcircuits": [
+            "pt_sample_driver_longmirror"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/sample_driver_headroom.spice",
+          "sha256": "34840413c8d9ed96e56383230e0016611c78a6e94e7990ccfbc35d2d59abba83",
+          "subcircuits": [
+            "pt_sample_driver_headroom"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/sar_track_mask.spice",
+          "sha256": "f422e316bf656484c282fd3a880eb7e2aef41a7a67aa65af8055d13578b16741",
+          "subcircuits": [
+            "pt_sar_track_mask"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/sar_track_mask_strong.spice",
+          "sha256": "6e8cc546f93cc22d25b6b293f2539d4e640917f2a84fe53cb6411ee2d33ea1d9",
+          "subcircuits": [
+            "pt_sar_track_mask_strong",
+            "pt_mask_nand2_strong"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/cdac8_mim.spice",
+          "sha256": "532e86fc11da6f695d092dd06c0508cbb363f49c4c2b070c78683c7d5bf85e14",
+          "subcircuits": [
+            "pt_cdac_mim_bit0",
+            "pt_cdac_mim_bit1",
+            "pt_cdac_mim_bit2",
+            "pt_cdac_mim_bit3",
+            "pt_cdac_mim_bit4",
+            "pt_cdac_mim_bit5",
+            "pt_cdac_mim_bit6",
+            "pt_cdac_mim_bit7",
+            "pt_cdac8_mim"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "radio_dac_tx",
+      "status": "partial_fixed_code_RF_chain_registered_updates_separate",
+      "source_paths": [
+        "projects/programmable_transceiver_platform/analog/dac/current_steering8.spice",
+        "projects/programmable_transceiver_platform/analog/adc/code_driver_small.spice",
+        "projects/programmable_transceiver_platform/analog/dac/thermometer4.spice",
+        "projects/programmable_transceiver_platform/analog/dac/segmented8.spice",
+        "projects/programmable_transceiver_platform/analog/dac/segmented8_registered.spice",
+        "projects/programmable_transceiver_platform/analog/tx/commutator.spice",
+        "ip/blocks/analog/wifi_80211b/rf_switch_mixer/mixer.spice",
+        "projects/programmable_transceiver_platform/analog/tx/commutator_tg.spice",
+        "projects/programmable_transceiver_platform/analog/lo_buffer.spice"
+      ],
+      "gap": "600ns seeded ring/buffer/combinational DAC/NMOS bridge test yields45.3mV peak carrier at2.5004GHz after bias settling;~52.8mW accounted source power excludes real bias generation and other chip functions. Registered DAC updates are separate tests, not connected RF playback; residual glitches remain. Actual I/Q duplication, quadrature, reconstruction, bias/output drivers, intrinsic noise, modulated quality and host integration are missing or unqualified. Completed self-bias replay recovers toward baseline after removal of signed3uA disturbances, but sustained disturbance strongly changes carrier amplitude; forced-input failures do not establish closed-bias process failure.",
+      "evidence_paths": [
+        "projects/programmable_transceiver_platform/evidence/tx-ring-settling.json",
+        "projects/programmable_transceiver_platform/evidence/dac-registered-coverage-summary.json",
+        "projects/programmable_transceiver_platform/evidence/tx-selfbias-dynamic.json",
+        "projects/programmable_transceiver_platform/evidence/tx-selfbias-recovery.json"
+      ],
+      "sources": [
+        {
+          "path": "projects/programmable_transceiver_platform/analog/dac/current_steering8.spice",
+          "sha256": "149a6753de91979adc993070a6ea4c14d0873de196a965d04017d8cb08e8ae8a",
+          "subcircuits": [
+            "pt_dac_current_bit",
+            "pt_current_dac8"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/adc/code_driver_small.spice",
+          "sha256": "24a240c031ca0af8fbbf44a33f24c7f28474e244b2e1a2d30d02508e0525bc81",
+          "subcircuits": [
+            "pt_adc_drive_small_inv",
+            "pt_adc_code_small_driver"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/dac/thermometer4.spice",
+          "sha256": "f724bc2780d0f952669d089eb87beebd53c1ef1c00f9b4d9f722b7973b1b6b26",
+          "subcircuits": [
+            "pt_dac_dec_inv",
+            "pt_dac_dec_and",
+            "pt_dac_dec_or",
+            "pt_dac_thermometer4"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/dac/segmented8.spice",
+          "sha256": "77a26194f15c3460b5574c5057bf1495edcb686d5b40bf37acff13e191797afb",
+          "subcircuits": [
+            "pt_dac_segmented8"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/dac/segmented8_registered.spice",
+          "sha256": "18cfb19ed8b12ee0a84f72f7210f3d7cd35549bcaee386ed1c1781f3dd108e82",
+          "subcircuits": [
+            "pt_dac_segmented8_registered"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/tx/commutator.spice",
+          "sha256": "89cb009a303ded0120ce8536abe86174045bb73ed27b1ec3272f0cdfdef8ad6b",
+          "subcircuits": [
+            "pt_tx_commutator"
+          ]
+        },
+        {
+          "path": "ip/blocks/analog/wifi_80211b/rf_switch_mixer/mixer.spice",
+          "sha256": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+          "subcircuits": [
+            "wifi_rf_switch_mixer"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/tx/commutator_tg.spice",
+          "sha256": "3d28ec375da796cf1333da9d085caab5cd74bcda44a835f0e7cf72f06433a304",
+          "subcircuits": [
+            "pt_tx_commutator_tg"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/lo_buffer.spice",
+          "sha256": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+          "subcircuits": [
+            "pt_lo_buffer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bias_reference_startup",
+      "status": "connected_driver_dynamic_regulation_failure",
+      "source_paths": [
+        "projects/programmable_transceiver_platform/analog/reference/buffer_scaled.spice",
+        "projects/programmable_transceiver_platform/analog/reference/buffer_complement.spice",
+        "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair.spice",
+        "projects/programmable_transceiver_platform/analog/reference/reservoir_mim.spice",
+        "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair_tuned.spice",
+        "projects/programmable_transceiver_platform/analog/reference/buffer_scaled_tune.spice",
+        "projects/programmable_transceiver_platform/analog/reference/buffer_complement_tune.spice",
+        "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair_output2.spice",
+        "projects/programmable_transceiver_platform/analog/reference/buffer_scaled_output2.spice",
+        "projects/programmable_transceiver_platform/analog/reference/buffer_complement_output2.spice"
+      ],
+      "gap": "Aligned and opposite-history simultaneous I/Q with one compensated reference pair complete selected frames, but aligned decision spans0.92837--1.05964V and motion9.69mV/150ps remain inaccurate despite stable codes. Observation-only probes reveal high-reference tail below its reported saturation boundary in all24 decision windows. Input-width and independent diode-biased tail DC experiments improve headroom without qualifying regulation; no candidate adopted. Ideal targets/bias/compensation, startup/noise/mismatch, skew and shared supplies remain missing or unqualified. Later scoped terminal-current replay shows pulsed CDAC demand and reservoir withdrawal; worst high-reference decision error remains about61mV. Doubling high-reference compensation resistance from physical500ohm to1kohm gives only modest error improvement and worsens window motion, so it was rejected. Matched reltol-only probe reproduction now supports scoped per-bit attribution; do not prescribe amplifier sizing from peak current alone. Zero-load paired DC reproduces+13.148/-10.478mV offsets. Longer mirror W/L8u/.5u to16u/1u reduces offsets to+8.198/-8.140mV but leaves high-tail compliance deficit; switched-load candidate completed and was rejected: worst reference errors worsened. Wider high input pair and halved high tail multiplicity also remain unadopted; both leave negative tail margin at2.15V. Retained common-mode sweep brackets tail zero margin at1.83\u20131.84V, but error remains15mV at1.8V with positive margin. Compliance alone does not explain static accuracy. High-reference impedance peak39.7ohm and slower bipolar step recovery remain dynamic concerns. Pass473: hybrid high-input stage improves isolated DC/AC/signed steps but actual ADC worst high target error worsens61.35->70.65mV and reference power rises2.05mW; not adopted. Separate static offset from dynamic deviations before selecting another architecture. Completed hybrid outputPMOS-doubled ADC trial reduces worst high-reference target error61.349->56.366mV, but worsens decision-window motion3.179->7.138mV and raises reference power44.423->46.493mW. Event analysis shows stronger recovery during the decision window with similar load charge; candidate remains unadopted. Isolated DC/AC/step improvement does not qualify switched-load regulation. Actual reference demand is bidirectional; sustained reverse-load compliance still fails. Real bias/startup and absolute conversion accuracy remain open.",
+      "evidence_paths": [
+        "projects/programmable_transceiver_platform/evidence/adc-shared-iq-same.json",
+        "projects/programmable_transceiver_platform/evidence/adc-shared-iq-frames.json",
+        "projects/programmable_transceiver_platform/evidence/iq-reference-headroom.json",
+        "projects/programmable_transceiver_platform/evidence/reference-input-headroom.json",
+        "projects/programmable_transceiver_platform/evidence/reference-tail-headroom.json",
+        "projects/programmable_transceiver_platform/evidence/adc-reference-current-attribution.json",
+        "projects/programmable_transceiver_platform/evidence/reference-high-rz.json",
+        "projects/programmable_transceiver_platform/evidence/reference-long-mirror-frames.json",
+        "projects/programmable_transceiver_platform/evidence/reference-pair-impedance.json",
+        "projects/programmable_transceiver_platform/evidence/reference-pair-step.json",
+        "projects/programmable_transceiver_platform/evidence/reference-wide-input.json",
+        "projects/programmable_transceiver_platform/evidence/reference-half-tail.json",
+        "projects/programmable_transceiver_platform/evidence/reference-common-mode.json",
+        "projects/programmable_transceiver_platform/evidence/cdac-branch-peaks-reltol.json",
+        "projects/programmable_transceiver_platform/evidence/reference-hybrid-frames.json",
+        "projects/programmable_transceiver_platform/evidence/reference-hybrid-output2-dc.json",
+        "projects/programmable_transceiver_platform/evidence/reference-output2-impedance.json",
+        "projects/programmable_transceiver_platform/evidence/reference-hybrid-output2-step.json",
+        "projects/programmable_transceiver_platform/evidence/reference-return-charge.json",
+        "projects/programmable_transceiver_platform/evidence/reference-hybrid-output2-frames.json",
+        "projects/programmable_transceiver_platform/evidence/reference-hybrid-candidates.json",
+        "projects/programmable_transceiver_platform/evidence/reference-output2-event.json"
+      ],
+      "sources": [
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/buffer_scaled.spice",
+          "sha256": "4cc407986c842805ab332cee3355568a688c5fa49d4b3bdcaae888bca574318a",
+          "subcircuits": [
+            "pt_reference_buffer_scaled"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/buffer_complement.spice",
+          "sha256": "b21147fcdd7c13e4c7359fb966319a70badbb6a12c0de0064926b73be10602b4",
+          "subcircuits": [
+            "pt_reference_buffer_complement"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair.spice",
+          "sha256": "041cc2507332035bcef9925f485ca4208ac4a37771a391d8a9853fcec6fb8048",
+          "subcircuits": [
+            "pt_adc_reference_pair"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/reservoir_mim.spice",
+          "sha256": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+          "subcircuits": [
+            "pt_ref_reservoir_1",
+            "pt_ref_reservoir_2",
+            "pt_ref_reservoir_4",
+            "pt_ref_reservoir_8",
+            "pt_ref_reservoir_16",
+            "pt_ref_reservoir_32",
+            "pt_ref_reservoir_64",
+            "pt_ref_reservoir_128",
+            "pt_ref_reservoir_256",
+            "pt_ref_reservoir_512",
+            "pt_ref_reservoir_1024",
+            "pt_ref_reservoir_2048"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair_tuned.spice",
+          "sha256": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+          "subcircuits": [
+            "pt_adc_reference_pair_tuned"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/buffer_scaled_tune.spice",
+          "sha256": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+          "subcircuits": [
+            "pt_reference_buffer_scaled_tune"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/buffer_complement_tune.spice",
+          "sha256": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+          "subcircuits": [
+            "pt_reference_buffer_complement_tune"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/adc_reference_pair_output2.spice",
+          "sha256": "46ce833ed2bd78bad164bd3a85accaca24f66449610589a4363fff394d61bd8f",
+          "subcircuits": [
+            "pt_adc_reference_pair_output2"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/buffer_scaled_output2.spice",
+          "sha256": "fa991a36d9ac893aaf786ee57f3a5f19f009ffb00818c67b77c44a849c809c86",
+          "subcircuits": [
+            "pt_reference_buffer_scaled_output2"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/reference/buffer_complement_output2.spice",
+          "sha256": "990e4bdc4c080d64c67053ccf629447b7bfae66e921cb8191da964b08c5b17f2",
+          "subcircuits": [
+            "pt_reference_buffer_complement_output2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wire_tx",
+      "status": "partial_components",
+      "source_paths": [
+        "ip/blocks/analog/wireline_serdes/serializer/serializer_tx_2p5.spice",
+        "ip/blocks/analog/wireline_serdes/serdes_tx/serdes_tx_programmable.spice"
+      ],
+      "gap": "Requires integration with autonomous timing, controls and host path.",
+      "sources": [
+        {
+          "path": "ip/blocks/analog/wireline_serdes/serializer/serializer_tx_2p5.spice",
+          "sha256": "a9804061111282974aff2aa80f3f6355b7298af46a1d6657aab726961e9cec84",
+          "subcircuits": [
+            "serializer_tx_2p5"
+          ]
+        },
+        {
+          "path": "ip/blocks/analog/wireline_serdes/serdes_tx/serdes_tx_programmable.spice",
+          "sha256": "852af112c5d050149b0e7cdee2d3de20ed65f1d888a6544758be31b937c4b29c",
+          "subcircuits": [
+            "serdes_tx_programmable"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wire_rx_cdr",
+      "status": "partial_components",
+      "source_paths": [
+        "ip/blocks/analog/wireline_serdes/cdr/cdr_sampler.spice",
+        "ip/blocks/analog/wireline_serdes/cdr/integrated_detector/cdr_alexander_frontend.spice"
+      ],
+      "gap": "Sampler/detector are not a qualified closed recovery loop; existing receiver errors remain.",
+      "sources": [
+        {
+          "path": "ip/blocks/analog/wireline_serdes/cdr/cdr_sampler.spice",
+          "sha256": "5095eb93b1cd1e722b984ff2d88de75a1372226b3fc2b25613698f21ddf41ea4",
+          "subcircuits": [
+            "cml_sampler_latch",
+            "cdr_sampler"
+          ]
+        },
+        {
+          "path": "ip/blocks/analog/wireline_serdes/cdr/integrated_detector/cdr_alexander_frontend.spice",
+          "sha256": "4633e4d2aa3211cf71148cedc3c3a96ea6fb42e07518d012e8cb7431ad38c23d",
+          "subcircuits": [
+            "cdr_alexander_frontend"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "programmability",
+      "status": "partial_components",
+      "source_paths": [
+        "ip/blocks/analog/wireline_serdes/phase_control_dac/phase_control_dac.spice",
+        "projects/programmable_transceiver_platform/analog/bb_filter_programmable.spice"
+      ],
+      "gap": "Actual two-setting transistor-switched filter feedback now exists and has nominal OP/AC evidence. Enabled transmission gate has2.327kohm DC secant resistance and nominal20k path is22.085kohm; nominal40k off setting is near ideal in this fixture. Actual mode transitions, complementary-control generation, registers/level shifting, physical resistor/capacitor banks, useful full gain range and connected RF/ADC behavior are not implemented or qualified.",
+      "evidence_paths": [
+        "projects/programmable_transceiver_platform/evidence/bb-programmed-feedback.json",
+        "projects/programmable_transceiver_platform/evidence/bb-feedback-switch-drop.json"
+      ],
+      "sources": [
+        {
+          "path": "ip/blocks/analog/wireline_serdes/phase_control_dac/phase_control_dac.spice",
+          "sha256": "041f51547899a3c18d292e240586364c2d308fd6d4b243a4d23f3af110308ac7",
+          "subcircuits": [
+            "phase_control_dac"
+          ]
+        },
+        {
+          "path": "projects/programmable_transceiver_platform/analog/bb_filter_programmable.spice",
+          "sha256": "a7850ff8e2ac2bb86b82672f5ba697596b702956650015c43350a7687bb837e5",
+          "subcircuits": [
+            "pt_bb_feedback_switch",
+            "pt_bb_filter_programmable"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "host_digital_boundary",
+      "status": "incomplete",
+      "source_paths": [],
+      "gap": "RTL exists separately; physical clock/load/CDC interface not qualified. No whole digital transistor implementation claimed.",
+      "sources": []
+    },
+    {
+      "id": "whole_chip_analog",
+      "status": "missing",
+      "source_paths": [],
+      "gap": "RF, wired, timing, converters, bias, pads and controls not connected into a complete schematic.",
+      "sources": []
+    }
+  ],
+  "last_evidence_review_pass": 501,
+  "source_presence_checked": true,
+  "whole_chip_schematic_ready": false
+}

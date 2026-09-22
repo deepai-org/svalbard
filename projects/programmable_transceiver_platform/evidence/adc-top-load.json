@@ -1,0 +1,37 @@
+{
+  "status": "static_loading_supports_gain_hypothesis",
+  "simulator_image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "files_sha256": {
+    "scratch/transceiver-adc-top-load/load.spice": "8fa005a6d11fd5d6d954797a91ca2ec52a2aa0f5aa6c49911631f3824c8d28ea",
+    "scratch/transceiver-adc-top-load/load.log": "1268c1b4fffa2aa9c936192530eb4ff5a54c1d26f4b7da6410d23b1213231c2d",
+    "scratch/transceiver-adc-top-load/load.dat": "653749f3d45786461c1f4bec4b6ac9818cc24412c08931edcb4d5902d5ff67ee",
+    "projects/programmable_transceiver_platform/analog/adc/comparator.spice": "a41ecccf87f625bbddca6139730c5e8500529c5acb2f05a5052f9049e8ee74a0",
+    "ip/blocks/analog/wifi_80211b/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02",
+    "projects/programmable_transceiver_platform/evidence/fast-cdac-charge.json": "4283226caa63ead72a070d8f2174b62d6b66885d782fc3488779c0b5ef9b0cc4",
+    "projects/programmable_transceiver_platform/verification/check_adc_top_load.py": "f3796a4edffdb5052ff1ad5580058733a75146a8f3b4df2b88ac5f182285ed01"
+  },
+  "capacitance_per_side_ff": [
+    58.511713410697936,
+    58.51171327354135,
+    58.51171321584469,
+    58.511712455768276,
+    58.5117100231214,
+    58.511697991576185,
+    58.51164179097355,
+    58.51138202619923,
+    58.510178376412846,
+    58.50464788615431
+  ],
+  "unit_capacitance_ff": 44.33358772368263,
+  "predicted_gain": 0.994870952476369,
+  "nonanchor_samples": 42,
+  "residue_rms_v": 0.00024017464452834802,
+  "residue_max_abs_v": 0.0007156500469395755,
+  "sign_disagreements": 0,
+  "limitations": [
+    "Nominal symmetric1.65V bias, comparator reset, sampling gate off; no switching or extracted layout.",
+    "Array denominator assumes256 equal capacitors; additional CDAC parasitics omitted.",
+    "Gain from independent AC test, but residue validation reuses previously inspected records and measured frame anchors.",
+    "PDK supplied by pinned image; no independent fab capacitance validation."
+  ]
+}

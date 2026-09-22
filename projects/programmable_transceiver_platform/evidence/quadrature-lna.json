@@ -1,0 +1,185 @@
+{
+  "completed": true,
+  "status": "terminal",
+  "cases": [
+    {
+      "name": "zero",
+      "completed": true,
+      "actual_stop_ns": 201.0,
+      "ring_frequency_hz": 2495422519.759651,
+      "late_ranges_v": {
+        "OIP": [
+          1.073553488844754,
+          1.975676821214941
+        ],
+        "OIN": [
+          1.073553342738713,
+          1.975677109539744
+        ],
+        "OQP": [
+          0.9953880065965202,
+          2.055060515722764
+        ],
+        "OQN": [
+          0.9953879348648151,
+          2.055060486627867
+        ],
+        "RF": [
+          1.409518330092106,
+          1.485552263181234
+        ],
+        "MIP": [
+          0.5784916373681581,
+          0.7067525427937366
+        ],
+        "MIN": [
+          0.5784917059174864,
+          0.7067529870021633
+        ],
+        "MQP": [
+          0.6019645623393282,
+          0.7423472923662453
+        ],
+        "MQN": [
+          0.6019645862295993,
+          0.7423472932491648
+        ]
+      },
+      "buffer_supply_power_w": 0.03350751620230007,
+      "ring_supply_power_w": 0.027743832348880542,
+      "lo_q_lead_phase_deg_range": [
+        89.97895610885843,
+        89.97974897787161
+      ],
+      "lna_gate_range_v": [
+        1.501492394165593,
+        1.503630306336609
+      ],
+      "lna_source_range_v": [
+        0.2930251771963803,
+        0.294780881462779
+      ],
+      "representative_forward_finger_min_vds_minus_vdsat_v": 0.7193793333525356,
+      "representative_forward_finger_negative_vds_samples": 0,
+      "lna_supply_power_w": 0.020465127198937973
+    },
+    {
+      "name": "tone",
+      "completed": true,
+      "actual_stop_ns": 201.0,
+      "ring_frequency_hz": 2495422520.2845445,
+      "late_ranges_v": {
+        "OIP": [
+          1.073504602053885,
+          1.975724871516343
+        ],
+        "OIN": [
+          1.073506082200418,
+          1.975725717806712
+        ],
+        "OQP": [
+          0.9953388431591839,
+          2.055108846852038
+        ],
+        "OQN": [
+          0.9953384648703087,
+          2.05510938470512
+        ],
+        "RF": [
+          1.408458707318112,
+          1.486624794871774
+        ],
+        "MIP": [
+          0.5784592050759034,
+          0.7068038228146147
+        ],
+        "MIN": [
+          0.5784586312615478,
+          0.7068039489389032
+        ],
+        "MQP": [
+          0.6019257870253636,
+          0.7424039852381399
+        ],
+        "MQN": [
+          0.6019257714452135,
+          0.7424047078887259
+        ]
+      },
+      "buffer_supply_power_w": 0.033507516284296525,
+      "ring_supply_power_w": 0.02774383234599675,
+      "lo_q_lead_phase_deg_range": [
+        89.97811953898517,
+        89.98057026643033
+      ],
+      "lna_gate_range_v": [
+        1.500505613247724,
+        1.504617260363035
+      ],
+      "lna_source_range_v": [
+        0.2926355628044905,
+        0.295171326594852
+      ],
+      "representative_forward_finger_min_vds_minus_vdsat_v": 0.7177184059591271,
+      "representative_forward_finger_negative_vds_samples": 0,
+      "lna_supply_power_w": 0.020465118684609585
+    }
+  ],
+  "limitations": [
+    "Actual LNA with prebiased gate and seeded ring, I/Q mixers; ideal supplies/bias/passives; no ADC/PLL or cold startup. Only one forward-oriented LNA finger is device-probed.",
+    "Completion and voltage ranges do not establish conversion quality; conversion/no-tone comparison still required.",
+    "Power excludes control/regeneration and common-mode source delivery."
+  ],
+  "provenance": {
+    "cases": [
+      {
+        "name": "zero",
+        "amplitude_v": 0,
+        "returncode": 0,
+        "timed_out": false,
+        "deck_sha256_before": "0d34187b296039bd8e288c8e5f67152187a361c869801494de211b4862e393c7",
+        "artifacts_sha256": {
+          ".spice": "0d34187b296039bd8e288c8e5f67152187a361c869801494de211b4862e393c7",
+          ".log": "4d4494293011de63d72621da22175679d5e87f9f9cf81d8b71998167faf411e6",
+          ".dat": "15325cbc89771d0548ac03c3b81d00c06e9980823fce9d1006b4788e2dfa9bb6"
+        }
+      },
+      {
+        "name": "tone",
+        "amplitude_v": 0.001,
+        "returncode": 0,
+        "timed_out": false,
+        "deck_sha256_before": "ac9efe3123f50c92bb2a390cba05dfe0c5ff05cfb0a09d129e6ec0bb6c4f6f4d",
+        "artifacts_sha256": {
+          ".spice": "ac9efe3123f50c92bb2a390cba05dfe0c5ff05cfb0a09d129e6ec0bb6c4f6f4d",
+          ".log": "49ddd555179495543450cb6e24e20338cc9d01f337726570e6da64a4db7e9718",
+          ".dat": "1b274b0c2e612759686f1a12c7e5994f3167be57d2ff5366e958a8f0b784b823"
+        }
+      }
+    ],
+    "source_sha256_before": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/quadrature/rc_split.spice": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859"
+    },
+    "source_sha256_after": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/lo_buffer.spice": "f7c65a815990c35c4d7470ff62ba23314f503115506366967ef58b8d842c6275",
+      "/screen/quadrature/rc_split.spice": "c849fa87e652f2ccff3d3cdf230d3c0939a2992873af08533584d33a9e6ab07b",
+      "/screen/reference/reservoir_mim.spice": "2542282b3a3aa0e06e4b54b97cf06165061364ea9fa3597e0dff868f4aab0dd5",
+      "/screen/pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+      "/wifi/rf_switch_mixer/mixer.spice": "adf665e249ae513c4e0fb79882de1f91957006764ccf8b81868e8beee845ecb7",
+      "/wifi/rf_lna/lna_cs_core.spice": "d85447ac55c9749760b66694fc9763a92df36c0e920aacd6b9dc30c98a654859"
+    }
+  }
+}

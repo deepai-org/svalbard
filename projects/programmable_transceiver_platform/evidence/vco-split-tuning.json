@@ -1,0 +1,76 @@
+{
+  "status": "independent_regen_bias_tuning_screen_not_pll",
+  "regen_bias_v": 1.08,
+  "cases": [
+    {
+      "control_v": 1.08,
+      "frequency_hz": 2500750921.268876,
+      "gate_range_v": [
+        1.492070783822318,
+        1.511126963414953
+      ],
+      "artifacts_sha256": {
+        ".spice": "c95856ecd24ccbbb7b2aac9d586a17c69109d78f2b126b0b04800b5cc0aa642d",
+        ".dat": "8d930f1ec568f91a0a4c0dba283b64131d84ceba88a699179a11b21ac9cbd118",
+        ".log": "cadfac462849bf859a6c4c4eaae5587931a19f35f0ac17361c871aec3e5861ec"
+      }
+    },
+    {
+      "control_v": 1.16,
+      "frequency_hz": 2636552746.9027514,
+      "gate_range_v": [
+        1.491639314813609,
+        1.511532169367722
+      ],
+      "artifacts_sha256": {
+        ".spice": "9d7503fc7024c7c1957a2ed07a7b86476745558e06487ce9d193c9b831075e6e",
+        ".dat": "44f1c05c0f99c13611f4f50f62a0cd9d8c816fe693d54c3e444a69a5ac521ed0",
+        ".log": "0b4873a79169a274147e459f4ac4c9d486512acc251d346e25a4cbd357baea97"
+      }
+    },
+    {
+      "control_v": 1.24,
+      "frequency_hz": 2715985758.737379,
+      "gate_range_v": [
+        1.491526656802388,
+        1.511809704992733
+      ],
+      "artifacts_sha256": {
+        ".spice": "61196d3260be8b1a6deac3c4a0238de8e571b959cbe47c7a97c5ac55f83ce708",
+        ".dat": "f9817a10b5c94a13889055c0f8dec9bc352cf921ec5365d9f165c6b21a93096a",
+        ".log": "b14e23367384ff5e0669486ebd180f9a38d37a73b094db09726214c545346ff1"
+      }
+    },
+    {
+      "control_v": 1.3,
+      "frequency_hz": 2746032452.110699,
+      "gate_range_v": [
+        1.491531413168653,
+        1.511900917386894
+      ],
+      "artifacts_sha256": {
+        ".spice": "6faa4a928f8eac0c01b68ef1873ca62f67236e7a035b9822d587a70307eff972",
+        ".dat": "ab71b0ac279e8bef8cdc4b214465dcc880ba839069a6527a73a7f512ca2b3d6d",
+        ".log": "3409665f76b396ce61066fc467b75d4e15252dc448338f629776573abc6dcca5"
+      }
+    }
+  ],
+  "slopes_hz_per_v": [
+    1697522820.4234452,
+    992912647.9328445,
+    500778222.88866794
+  ],
+  "limitations": [
+    "Nominal seeded/prebiased RF hierarchy; no acquisition, phase noise or process/mismatch.",
+    "Four tuning points do not establish global monotonicity or a loop-stability model.",
+    "Actual mixer/buffer load but ideal biases/sample clocks; actual seven-stage divider/interface/PFD load.",
+    "Separate ideal regenerative-bias source is a fixture; generation/noise and robust monotonicity not implemented or qualified."
+  ],
+  "original_dimensions_preserved": true,
+  "positive_secants_all_tested_intervals": true,
+  "same_bias_baseline_frequency_difference_hz": 73.98789024353027,
+  "source_sha256": {
+    "pll/ring_vco_split.spice": "2b3c0b8460de31d74a649f67f07265c7895441e78100d9d418fc11cbe5edd8c4",
+    "rf_rx_candidate_split.spice": "44431da3c11bea2282e6dd5cd388e81e26551454b9bd88973bf205f678fff498"
+  }
+}

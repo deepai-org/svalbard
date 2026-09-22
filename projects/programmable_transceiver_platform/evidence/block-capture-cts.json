@@ -1,0 +1,55 @@
+{
+  "pass": 64,
+  "status": "hold sensitivity failure retained",
+  "clock_roots": 2,
+  "clock_sinks": 791,
+  "clock_tree_buffers": 54,
+  "corners": {
+    "tt_025C_3v30": {
+      "capture_setup_min_ns": 15.6726,
+      "hold_paths_ns": {
+        "pointer": 4.0692,
+        "feedback": 1.3493,
+        "ready": 0.6229,
+        "read_domain": 0.6229
+      },
+      "hold_with_0p5ns_uncertainty": 0.1229
+    },
+    "ff_n40C_3v60": {
+      "capture_setup_min_ns": 18.9231,
+      "hold_paths_ns": {
+        "pointer": 2.3687,
+        "feedback": 0.7562,
+        "ready": 0.4112,
+        "read_domain": 0.4112
+      },
+      "hold_with_0p5ns_uncertainty": -0.0888
+    },
+    "ss_125C_3v00": {
+      "capture_setup_min_ns": 5.8279,
+      "hold_paths_ns": {
+        "pointer": 8.0557,
+        "feedback": 2.74,
+        "ready": 1.0972,
+        "read_domain": 1.0972
+      },
+      "hold_with_0p5ns_uncertainty": 0.5972
+    }
+  },
+  "scope": "Propagated CTS cells with placement-estimated RC. Zero-minimum ready arrival, illustrative 0.5ns uncertainty. No routed timing, functional CTS equivalence, reset/CDC or full-chip signoff.",
+  "sha256": {
+    "projects/programmable_transceiver_platform/verification/block_capture_cts.tcl": "6942ba897ab9f273941920c106d78f37dfe24d4b3cd614e7e6b37cd73a1363d9",
+    "projects/programmable_transceiver_platform/verification/block_capture_cts_timing.py": "d138380ff254567c1ba827f831ec5018aba97ec09bc806ab8d82d953820be70e",
+    "projects/programmable_transceiver_platform/verification/run_block_capture_cts.sh": "c6486c22b0f8ce349fbd6f0a1f06c07b1fbec4dbda5918065c9f91ad9e6cbca6",
+    "projects/programmable_transceiver_platform/verification/report_block_capture_cts.py": "1cc0fc5eb5d53efae6cad4e6481cea67152a85da55fff984a51eb83e05cc1a54",
+    "scratch/transceiver-block-capture-cts/digital.odb": "9946e54dc8931e6d84a57590b4148423e74fe47e778ad17a4abd400651cdd7f6",
+    "scratch/transceiver-block-capture-cts/digital.def": "8e1f6a8046fa8aa195557c8d6b5b60a004e491a5bd1c66170d8d9a6110e27be4",
+    "scratch/transceiver-block-capture-cts/cts.log": "87fc93b49c9e4b76a9a12b86a99c41f66898774404e71124e9953544d7896cd4",
+    "scratch/transceiver-block-capture-cts/ff_n40C_3v60-setup.log": "580dc93a6070d26322e1219395869ed18e038c94a6ab0f567b767dcda6b14991",
+    "scratch/transceiver-block-capture-cts/tt_025C_3v30-setup.log": "655b8ad896e51ef5c741173c78d70f84d4efe57f0483b183af0d18bce6f146dd",
+    "scratch/transceiver-block-capture-cts/ff_n40C_3v60-hold.log": "c271a0cd1076125b39abc3def397d1358861cd43325bdc46f1683108811eb396",
+    "scratch/transceiver-block-capture-cts/tt_025C_3v30-hold.log": "df2a1704ed36bcffff980674600e09f022674147790f4ac0f29ae3aba63496e6",
+    "scratch/transceiver-block-capture-cts/ss_125C_3v00-hold.log": "1b7cbd4efb0896f1befbb2bdd2437d5b3c6c0f1dd432c4fc547208d17d5c23dc",
+    "scratch/transceiver-block-capture-cts/ss_125C_3v00-setup.log": "942b6b543eef2056465e9f849a2da622b357cc86a5f86bad8a82ac56e2fcefc5"
+  }
+}

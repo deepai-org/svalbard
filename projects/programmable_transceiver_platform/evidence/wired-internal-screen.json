@@ -1,0 +1,247 @@
+{
+  "status": "internal_observation_not_lane_qualification",
+  "baseline_source_sha256": {
+    "runner": "44c9c2f2871b6c346f4f28b5bc25d1f46361af0db3a2968f5d3bdbac2f960320",
+    "baseline_result": "3df4753d911a8f8e4fba56e5bccc9e14a42803246dd1ba012b27e5d0f26f069d",
+    "baseline_deck": "72a3f7a589ae65dbca1ec06d9d9c730d0c7a195bcf5da40a9893307fb6816378",
+    "shifted_deck": "075ffbe115e0cfaace8ca83444026fb0c6ec3cf0c04abd5452f90efef67a74d3",
+    "pulse": "f152f7434a508ba8b77189b5e2de701a8ec6c2f38843b20b62d381594d0c3e9d",
+    "bridge": "d2868772b9a302ad7c291f7ca024c73ec8391e5ae6da4d56dc1b218498634614",
+    "lane": "f8fdcb7cdcc486c6ac868f476dd7a85bcaaa3ee02ec77caaf835c6107519b1df"
+  },
+  "source_sha256": {
+    "runner": "6f9bb9217afd4a87bc0643f5196ec1034e10f466c1e528101e2dfa65f39c1523",
+    "baseline_case": "c858eb50404be21491a5ad1549675224037e6bd5b144283eba6dad438b17c672",
+    "deck": "52d53749914a22af127634d7635e28e45a9326cd4520612ae304a84a121b2c61",
+    "waveform": "dc63c7901aed224b367143fe19b6f9d675cce47356cfab99cb9d069336d23537"
+  },
+  "appended_columns": {
+    "16": "E_SENSE_BOOST",
+    "17": "XREGENCAP.XFRONT.XFE_E.XP.t0",
+    "18": "XREGENCAP.XFRONT.XFE_E.XN.t0",
+    "19": "XREGENCAP.XFRONT.XFE_E.NIP.t0",
+    "20": "XREGENCAP.XFRONT.XFE_E.NIN.t0",
+    "21": "XREGENCAP.XFRONT.XFE_E.NTAIL.t0",
+    "22": "XREGENCAP.E_SENSE_CLK.t4",
+    "23": "XREGENCAP.E_SENSE_BOOST.t14"
+  },
+  "selected_tail_devices": {
+    "sense": [
+      "X102",
+      "XFRONT.XFE_E.NTAIL.t0",
+      "E_SENSE_CLK.t4",
+      "VSS.t100",
+      "VSS.t99",
+      "nfet_03v3",
+      "ad=2.6p",
+      "pd=10.52u",
+      "as=4.4p",
+      "ps=20.88u",
+      "w=10u",
+      "l=0.28u"
+    ],
+    "boost": [
+      "X30",
+      "XFRONT.XFE_E.NTAIL.t30",
+      "E_SENSE_BOOST.t14",
+      "VSS.t452",
+      "VSS.t451",
+      "nfet_03v3",
+      "ad=2.6p",
+      "pd=10.52u",
+      "as=2.6p",
+      "ps=10.52u",
+      "w=10u",
+      "l=0.28u"
+    ]
+  },
+  "original_waveform_columns_bitwise_identical": true,
+  "baseline_wrong_bits": 6,
+  "note": "XP/XN/NIP/NIN/NTAIL t0 are named extracted observation points, not a claim of identical voltage over every parasitic segment.",
+  "environment": [
+    "typical",
+    "res_typical",
+    3.3,
+    27
+  ],
+  "observations": [
+    {
+      "bit": 20,
+      "minimum_sense": {
+        "time_s": 9.203e-09,
+        "pin_diff_v": 0.05673744000000003,
+        "raw_rx_diff_v": -0.23997652999999985,
+        "converter_diff_v": 2.936215161,
+        "sense_gate_v": 0.26267318,
+        "boost_gate_v": 3.09317953,
+        "xp_v": 2.66506799,
+        "xn_v": 1.8810162,
+        "nip_v": 0.900448857,
+        "nin_v": 1.34083296,
+        "ntail_v": 0.522303139,
+        "capture_clock_v": 2.13609879,
+        "output_diff_v": -2.92224343
+      },
+      "best_lower_dynamic_node_during_sense_below_0p8": {
+        "time_s": 9.271e-09,
+        "pin_diff_v": 0.19678226,
+        "raw_rx_diff_v": -0.15409804000000005,
+        "converter_diff_v": 2.940299075,
+        "sense_gate_v": 0.782254601,
+        "boost_gate_v": 3.14956927,
+        "xp_v": 2.71986808,
+        "xn_v": 2.55994463,
+        "nip_v": 1.29730568,
+        "nin_v": 1.44846481,
+        "ntail_v": 0.650232523,
+        "capture_clock_v": 2.8640387,
+        "output_diff_v": -2.88338436
+      },
+      "sense_below_0p8_ps": 150.94244193241636,
+      "boost_gate_min_during_sense_below_0p8": 2.91602495,
+      "boost_gate_max_during_sense_below_0p8": 3.14956927,
+      "rising_crossings": [
+        {
+          "observation_level_v": 0.5,
+          "time_s": 9.249351072092175e-09,
+          "pin_diff_v": 0.1965784434862412,
+          "raw_rx_diff_v": -0.19925409677025963,
+          "converter_diff_v": 2.9355525105480695,
+          "sense_gate_v": 0.4999999999999908,
+          "boost_gate_v": 3.142925006010302,
+          "xp_v": 2.6897675293418954,
+          "xn_v": 2.4184615071941553,
+          "nip_v": 1.213697849238856,
+          "nin_v": 1.448275930074814,
+          "ntail_v": 0.6256459748022711,
+          "capture_clock_v": 2.717283988061366,
+          "output_diff_v": -2.8815233383581904
+        },
+        {
+          "observation_level_v": 0.8,
+          "time_s": 9.272239676034423e-09,
+          "pin_diff_v": 0.19679821463056313,
+          "raw_rx_diff_v": -0.15135216378213467,
+          "converter_diff_v": 2.9407572239315556,
+          "sense_gate_v": 0.7999999999999998,
+          "boost_gate_v": 3.1496409232747897,
+          "xp_v": 2.7210502846534665,
+          "xn_v": 2.5656482926570554,
+          "nip_v": 1.3004171924658383,
+          "nin_v": 1.44760840460514,
+          "ntail_v": 0.650952290682508,
+          "capture_clock_v": 2.8710481444160134,
+          "output_diff_v": -2.883948270032918
+        },
+        {
+          "observation_level_v": 1.65,
+          "time_s": 9.330363458122921e-09,
+          "pin_diff_v": 0.19691887571655942,
+          "raw_rx_diff_v": -0.0226509707257585,
+          "converter_diff_v": 2.966875744007588,
+          "sense_gate_v": 1.6500000000000095,
+          "boost_gate_v": 3.1227433605927635,
+          "xp_v": 2.651922653002516,
+          "xn_v": 2.5769910169521775,
+          "nip_v": 1.251597447288967,
+          "nin_v": 1.294205103670483,
+          "ntail_v": 0.5409259245543562,
+          "capture_clock_v": 3.108614347234442,
+          "output_diff_v": -2.978238837284562
+        }
+      ]
+    },
+    {
+      "bit": 30,
+      "minimum_sense": {
+        "time_s": 1.3203e-08,
+        "pin_diff_v": 0.056738090000000074,
+        "raw_rx_diff_v": -0.24431691000000022,
+        "converter_diff_v": 2.9652586960000002,
+        "sense_gate_v": 0.26117882,
+        "boost_gate_v": 3.10571268,
+        "xp_v": 2.67416236,
+        "xn_v": 1.86651348,
+        "nip_v": 0.890097796,
+        "nin_v": 1.33631745,
+        "ntail_v": 0.514896704,
+        "capture_clock_v": 2.05568385,
+        "output_diff_v": -3.0036849
+      },
+      "best_lower_dynamic_node_during_sense_below_0p8": {
+        "time_s": 1.3271e-08,
+        "pin_diff_v": 0.1967827900000001,
+        "raw_rx_diff_v": -0.16011202000000013,
+        "converter_diff_v": 2.955058081,
+        "sense_gate_v": 0.77293109,
+        "boost_gate_v": 3.15837784,
+        "xp_v": 2.72258018,
+        "xn_v": 2.55711793,
+        "nip_v": 1.29459907,
+        "nin_v": 1.45070916,
+        "ntail_v": 0.648452631,
+        "capture_clock_v": 2.83816761,
+        "output_diff_v": -2.91857637
+      },
+      "sense_below_0p8_ps": 150.11714304018815,
+      "boost_gate_min_during_sense_below_0p8": 2.93157636,
+      "boost_gate_max_during_sense_below_0p8": 3.15837784,
+      "rising_crossings": [
+        {
+          "observation_level_v": 0.5,
+          "time_s": 1.3250005814882648e-08,
+          "pin_diff_v": 0.19658156023579165,
+          "raw_rx_diff_v": -0.20318190574802353,
+          "converter_diff_v": 2.954776770193085,
+          "sense_gate_v": 0.5000000000000027,
+          "boost_gate_v": 3.153577826871638,
+          "xp_v": 2.694448478946545,
+          "xn_v": 2.417760974696329,
+          "nip_v": 1.2121071739905835,
+          "nin_v": 1.4508290988239867,
+          "ntail_v": 0.6240671330975349,
+          "capture_clock_v": 2.688327036638106,
+          "output_diff_v": -2.9288569487512226
+        },
+        {
+          "observation_level_v": 0.8,
+          "time_s": 1.3272902794095366e-08,
+          "pin_diff_v": 0.1968072599320667,
+          "raw_rx_diff_v": -0.15597628751975323,
+          "converter_diff_v": 2.955446658193391,
+          "sense_gate_v": 0.8000000000000068,
+          "boost_gate_v": 3.158373958300045,
+          "xp_v": 2.7243510533807336,
+          "xn_v": 2.56611979198797,
+          "nip_v": 1.2995520525442061,
+          "nin_v": 1.449410940672555,
+          "ntail_v": 0.6496410771846861,
+          "capture_clock_v": 2.849389947071527,
+          "output_diff_v": -2.9184482168176773
+        },
+        {
+          "observation_level_v": 1.65,
+          "time_s": 1.3331272403964537e-08,
+          "pin_diff_v": 0.19691854380507867,
+          "raw_rx_diff_v": -0.02929537524317416,
+          "converter_diff_v": 2.9767460124971077,
+          "sense_gate_v": 1.6499999999999961,
+          "boost_gate_v": 3.127551499158621,
+          "xp_v": 2.6531795952751636,
+          "xn_v": 2.5779226309671976,
+          "nip_v": 1.2509092768776864,
+          "nin_v": 1.294559889500645,
+          "ntail_v": 0.5386373282074328,
+          "capture_clock_v": 3.099922462116484,
+          "output_diff_v": -2.990931008259561
+        }
+      ]
+    }
+  ],
+  "analysis_sha256": "8dd79c5db3518dcd9570287f640cec49b438d6bd4d8c470c2da70455df926561",
+  "limitations": [
+    "Named local PEX node observations; not all segments of the parasitic network.",
+    "Voltage observation levels are not characterized decision thresholds.",
+    "No circuit modification, new passing data point, or process/noise qualification."
+  ]
+}

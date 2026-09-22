@@ -1,0 +1,24 @@
+{
+  "prior_conversion_evidence_sha256": "8df55b2656f1e2ed65141002320cf09821fe6f508e8734d3372515209bfefa47",
+  "schedule_evidence_sha256": "fa25b53e588173ee94218dc1be1f516c9e32d40264a654ddb1d4a4231b340de4",
+  "sample_rate_per_channel_hz": 20000000.0,
+  "prior_unloaded_if_hz": 20000336.49746895,
+  "prior_if_alias_hz": 336.49746894836426,
+  "nominal_differential_step_v": 0.0078125,
+  "prior_peak_steps": {
+    "i": 0.4613698442935147,
+    "q": 0.516833550196945
+  },
+  "status": "loading_fixture_not_signal_quality_qualification",
+  "next_measurement_requirements": [
+    "Retain current loaded/isolated comparison for startup and back-loading evidence.",
+    "Use a tone comfortably within +/-10MHz for this20MS/s profile; determine IF from actual LO, not nominal control.",
+    "Establish programmable analog gain and input headroom so a useful tone exercises multiple codes without compression.",
+    "Use sufficient samples and matched no-tone histories before dynamic distortion/noise interpretation; three frames cannot qualify ENOB."
+  ],
+  "limitations": [
+    "Prior unloaded open-loop receiver fit; current loaded amplitude and LO may differ.",
+    "Nominal step is an ideal symmetric8bit range calculation, not measured DNL or ENOB.",
+    "Do not raise RF amplitude and silently assume linearity to compensate for missing gain."
+  ]
+}

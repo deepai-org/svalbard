@@ -1,0 +1,11 @@
+* Preliminary true/complement code driver. Asymmetric paths deliberately explicit.
+* D remains an externally driven logic command, not a completed SAR controller.
+.subckt pt_adc_drive_small_inv A Y VDD VSS params: S=1
+XP Y A VDD VDD pfet_03v3 w=1u l=.28u m={S}
+XN Y A VSS VSS nfet_03v3 w=.5u l=.28u m={S}
+.ends
+.subckt pt_adc_code_small_driver D B BB VDD VSS params: WEIGHT=1
+X0 D N0 VDD VSS pt_adc_drive_small_inv S={WEIGHT}
+X1 N0 B VDD VSS pt_adc_drive_small_inv S={4*WEIGHT}
+X2 B BB VDD VSS pt_adc_drive_small_inv S={4*WEIGHT}
+.ends

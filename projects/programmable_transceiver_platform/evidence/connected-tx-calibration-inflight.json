@@ -1,0 +1,73 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "completion_guard": false,
+      "pending_before_abort": false,
+      "tx": {
+        "accepted": 2,
+        "consumed": 0,
+        "discarded": 2,
+        "pending": 0,
+        "rejected": 0,
+        "underflows": 0
+      },
+      "dac": {
+        "consumed": 0,
+        "updated": 0,
+        "cancelled": 0,
+        "pending": 0,
+        "latency_s": 1e-07,
+        "capacity": 4
+      },
+      "filter_state_norm_at_abort": 1.6401955648379022e-111
+    },
+    {
+      "completion_guard": false,
+      "pending_before_abort": true,
+      "tx": {
+        "accepted": 2,
+        "consumed": 1,
+        "discarded": 1,
+        "pending": 0,
+        "rejected": 0,
+        "underflows": 0
+      },
+      "dac": {
+        "consumed": 1,
+        "updated": 0,
+        "cancelled": 1,
+        "pending": 0,
+        "latency_s": 1e-07,
+        "capacity": 4
+      },
+      "filter_state_norm_at_abort": 2.6252561085133677e-115
+    },
+    {
+      "completion_guard": true,
+      "pending_before_abort": true,
+      "tx": {
+        "accepted": 2,
+        "consumed": 1,
+        "discarded": 1,
+        "pending": 0,
+        "rejected": 0,
+        "underflows": 0
+      },
+      "dac": {
+        "consumed": 1,
+        "updated": 0,
+        "cancelled": 1,
+        "pending": 0,
+        "latency_s": 1e-07,
+        "capacity": 4
+      },
+      "filter_state_norm_at_abort": 1.6958423627805825e-115
+    }
+  ],
+  "limitations": [
+    "Active calibration abort uses existing whole-chip fault/drain recovery, interrupting other active streams.",
+    "Command delivery latency tested separately; this test isolates application at queue and pipeline boundaries.",
+    "DAC cancellation does not prove physical RF output isolation or LO-feedthrough suppression."
+  ]
+}

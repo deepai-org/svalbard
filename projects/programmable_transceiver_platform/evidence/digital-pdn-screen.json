@@ -1,0 +1,69 @@
+{
+  "scope": "Provisional local digital PDN generation and OpenROAD connectivity/placement checks, not power integrity or full-chip DRC/LVS",
+  "input_database_sha256": "4799cfe4c12bd975e0e20a9a93aa1d13c21db6c51ed0b19236a066f2f6e5533b",
+  "grid": {
+    "Metal1": {
+      "width_um": 0.6,
+      "followpins": true
+    },
+    "Metal4": {
+      "width_um": 2.0,
+      "pitch_um": 80,
+      "offset_um": 10
+    },
+    "Metal5": {
+      "width_um": 4.0,
+      "pitch_um": 80,
+      "offset_um": 10
+    },
+    "connections": [
+      [
+        "Metal1",
+        "Metal4"
+      ],
+      [
+        "Metal4",
+        "Metal5"
+      ]
+    ],
+    "generated_access_pin_layer": "Metal5"
+  },
+  "special_wire_shape_counts": {
+    "VDD_CORE": {
+      "Metal5": 19,
+      "Metal4": 19,
+      "Metal1": 195,
+      "VIA": 11476
+    },
+    "VSS_CORE": {
+      "Metal5": 19,
+      "Metal4": 19,
+      "Metal1": 195,
+      "VIA": 11476
+    }
+  },
+  "checks": [
+    "Both rail shape networks connected by check_power_grid",
+    "Post-PDN check_placement passes",
+    "DEF components and signal NETS sections unchanged"
+  ],
+  "rejected_low_layer_trial": "Metal2/Metal3 strap version connected electrically but failed placement blocked-layer checks on 7572 instances; retained source in evidence/experiments/pdn-low-layer.tcl",
+  "artifact_sha256": {
+    "digital-pdn.odb": "7e1568f37bd6ed03ab1e036b737e9e8a637da9f30724f6e5867834565859d5dd",
+    "digital-pdn.def": "5617685933b384b498c48a5041c22a1bab896ab5d6e57c7965020e43aae8810e",
+    "pdn.log": "05e344a9e4cc956a69c0fa6dca658387db5da0c31d2a9c82217ef8f1f78c0b75",
+    "grid-shapes.tsv": "22627350153176b9dd3303d9248fedd249ff6c29e286dd8c696b754890297658"
+  },
+  "source_sha256": {
+    "pdn_screen.tcl": "7b2002a2a93b20ba33c783e8a4b9f9fa02143df88ba5b97dba9b7b4a21efaa95",
+    "run_pdn_screen.sh": "aca89518567513b9b8f9866e5ff6a3232c42501caef7dd12dad9f989b9418171",
+    "report_pdn_screen.py": "40a5b7ab2811f634d15e28f40246b9e0e4d8fdaaa4e53a39dd6fd2542362f20f"
+  },
+  "limitations": [
+    "Provisional widths/pitch; no current/activity-based sizing, IR drop or electromigration check.",
+    "Generated local power access pins are not package-pad connections; single CORE supply/return delivery remains unfinished.",
+    "No independent DRC/LVS, via enclosure/array signoff or well/substrate/tap continuity qualification.",
+    "Upper-layer routing resources now consumed; signal/clock congestion and timing must be re-evaluated.",
+    "No extracted timing or supply-noise qualification; prior setup/recovery failures and incomplete analog/DDR blocks remain."
+  ]
+}

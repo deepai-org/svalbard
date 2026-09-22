@@ -1,0 +1,74 @@
+{
+  "status": "actual_cdac_carry_diagnostic",
+  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "baseline_sha256": "249c7602aae82a17eb7bf36941f34137d26d2159affff15a2a0c0a4cd22359e8",
+  "source_sha256": {
+    "projects/programmable_transceiver_platform/analog/adc/comparator.spice": "a41ecccf87f625bbddca6139730c5e8500529c5acb2f05a5052f9049e8ee74a0",
+    "projects/programmable_transceiver_platform/analog/adc/cdac8_mim.spice": "532e86fc11da6f695d092dd06c0508cbb363f49c4c2b070c78683c7d5bf85e14",
+    "projects/programmable_transceiver_platform/analog/adc/cdac8_scaled.spice": "4006f42115b3a5a30b9ad74626ef0c084655bf0cdc2f1d1cc8bd32f65e351fd2",
+    "ip/blocks/analog/wifi_80211b/rf_if_transmission_gate/rf_if_transmission_gate.spice": "3b06fbdd6ffeeac7418730f511ed5acf6b88598d26cc1fa0b5188c189fce1a02"
+  },
+  "cases": [
+    {
+      "name": "code127_switch0",
+      "initial_code": 127,
+      "switching": false,
+      "artifacts_sha256": {
+        ".spice": "db8209af2e53e0ed8d5131793f39eea4dd1aacd95f056f961213bd8512ee2bff",
+        ".log": "a8baf51a18210533cc163751e8a154aae5bb8129656666aa28b257ea17c39498",
+        ".dat": "8158d0417fe321e2a35a923ad55a27d47821850ee9f0e642f5552c0ef3afb563"
+      }
+    },
+    {
+      "name": "code127_switch1",
+      "initial_code": 127,
+      "switching": true,
+      "artifacts_sha256": {
+        ".spice": "ac22f085826f6dffa41d4c0e854cfc727798da452a2cd778fa7c5455af5bdea3",
+        ".log": "81b43a55895c949c54f8113259ba0b6b979d409bb118ba5b0c6facf7d444c9f4",
+        ".dat": "7c3345b792be8cd34a061691f244dd210fd00e12f7d62a1519cd5672ca5b00de"
+      }
+    },
+    {
+      "name": "code128_switch0",
+      "initial_code": 128,
+      "switching": false,
+      "artifacts_sha256": {
+        ".spice": "e4fe075c041ae1dc0c65e4bfba221b69cda655809147eb23d97024d353f4c781",
+        ".log": "0549acf429ffdbcd35a602b4ea724bc393b5f97129f605bc36d14a870ccff236",
+        ".dat": "14090e34905baf1a3701e7b724a8cbe081338ebfc1ce22f7dcd890f78e4cc4ef"
+      }
+    },
+    {
+      "name": "code128_switch1",
+      "initial_code": 128,
+      "switching": true,
+      "artifacts_sha256": {
+        ".spice": "7df56ccaa0d318cf8eabb5382c1aa33087d331bc76cf07546958d68e56f8caca",
+        ".log": "8134ee8a7894cd1a275e18cac3f369a03405e00dc2aa2083bf62a88ef648e5f0",
+        ".dat": "e27b279bf2c76a34e61936996b69fe7bd2f6a76a84dc331e8ae7dd3dff2f2189"
+      }
+    }
+  ],
+  "results": [
+    {
+      "initial_code": 127,
+      "peak_differential_change_v": 0.008025270000000306,
+      "settled_differential_change_v": 0.007772430000000163,
+      "returned_differential_error_v": 0.0,
+      "peak_common_mode_change_v": 0.066763495
+    },
+    {
+      "initial_code": 128,
+      "peak_differential_change_v": 0.008025269999999862,
+      "settled_differential_change_v": -0.007772429999999941,
+      "returned_differential_error_v": 0.0,
+      "peak_common_mode_change_v": 0.06676349499999978
+    }
+  ],
+  "limitations": [
+    "Ideal simultaneous100ps complementary gate commands, not physical code drivers.",
+    "Ideal rails, comparator held reset, no autonomous SAR or reference feedback.",
+    "Changing topology can inject charge; matching initial/final code does not guarantee exact return."
+  ]
+}

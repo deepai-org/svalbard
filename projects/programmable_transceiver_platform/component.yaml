@@ -1,0 +1,30 @@
+{
+  "id": "project.programmable_transceiver_platform",
+  "kind": "project",
+  "owner": "unassigned",
+  "independent_reviewer": "unassigned",
+  "lifecycle": "experimental",
+  "process_compatibility": [
+    "process.gf180"
+  ],
+  "license": "unresolved",
+  "dependencies": [
+    "block.analog.wireline_serdes",
+    "block.analog.wifi_80211b"
+  ],
+  "public_interfaces": [
+    "svalbard_host_v1",
+    "svalbard_phy_gpio_v1",
+    "svalbard_phy_gpio_v2"
+  ],
+  "verification_targets": [
+    "transceiver-contract",
+    "transceiver-baseline",
+    "transceiver-stream-codec",
+    "transceiver-stream-rx",
+    "transceiver-stream-tx",
+    "transceiver-stream-link"
+  ],
+  "next_gate": "gate.portfolio.g0",
+  "note": "Research project; not added to the committed silicon_v1 shuttle."
+}

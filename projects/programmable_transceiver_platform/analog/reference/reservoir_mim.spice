@@ -1,0 +1,48 @@
+* Hierarchical explicit MIM replication; no reliance on unused par parameter.
+.subckt pt_ref_reservoir_1 P N
+XC P N cap_mim_1f5_m4m5_noshield c_length=5u c_width=5u
+.ends
+.subckt pt_ref_reservoir_2 P N
+XA P N pt_ref_reservoir_1
+XB P N pt_ref_reservoir_1
+.ends
+.subckt pt_ref_reservoir_4 P N
+XA P N pt_ref_reservoir_2
+XB P N pt_ref_reservoir_2
+.ends
+.subckt pt_ref_reservoir_8 P N
+XA P N pt_ref_reservoir_4
+XB P N pt_ref_reservoir_4
+.ends
+.subckt pt_ref_reservoir_16 P N
+XA P N pt_ref_reservoir_8
+XB P N pt_ref_reservoir_8
+.ends
+.subckt pt_ref_reservoir_32 P N
+XA P N pt_ref_reservoir_16
+XB P N pt_ref_reservoir_16
+.ends
+.subckt pt_ref_reservoir_64 P N
+XA P N pt_ref_reservoir_32
+XB P N pt_ref_reservoir_32
+.ends
+.subckt pt_ref_reservoir_128 P N
+XA P N pt_ref_reservoir_64
+XB P N pt_ref_reservoir_64
+.ends
+.subckt pt_ref_reservoir_256 P N
+XA P N pt_ref_reservoir_128
+XB P N pt_ref_reservoir_128
+.ends
+.subckt pt_ref_reservoir_512 P N
+XA P N pt_ref_reservoir_256
+XB P N pt_ref_reservoir_256
+.ends
+.subckt pt_ref_reservoir_1024 P N
+XA P N pt_ref_reservoir_512
+XB P N pt_ref_reservoir_512
+.ends
+.subckt pt_ref_reservoir_2048 P N
+XA P N pt_ref_reservoir_1024
+XB P N pt_ref_reservoir_1024
+.ends

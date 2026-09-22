@@ -1,0 +1,78 @@
+{
+  "status": "diagnostic_completed",
+  "cases": [
+    {
+      "case": "wideband",
+      "mode": 1,
+      "quality": {
+        "calibration_samples": 544,
+        "validation_samples": 1632,
+        "gain_real": 0.6411933303165303,
+        "gain_imag": 0.7107517351950546,
+        "gain_magnitude": 0.9572339922532965,
+        "raw_relative_rms": 0.901934526426982,
+        "corrected_relative_rms": 0.12587225681295178,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": false
+      },
+      "bank": 15
+    },
+    {
+      "case": "no-noise",
+      "mode": 1,
+      "quality": {
+        "calibration_samples": 544,
+        "validation_samples": 1632,
+        "gain_real": 0.5936567725070327,
+        "gain_imag": 0.7517665510974925,
+        "gain_magnitude": 0.9579046460334586,
+        "raw_relative_rms": 0.8862229588276302,
+        "corrected_relative_rms": 0.04086713559334596,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "bank": 15
+    },
+    {
+      "case": "no-pulling",
+      "mode": 1,
+      "quality": {
+        "calibration_samples": 544,
+        "validation_samples": 1632,
+        "gain_real": 0.6111691730388162,
+        "gain_imag": 0.7369747425075898,
+        "gain_magnitude": 0.9574233803114893,
+        "raw_relative_rms": 0.90282358016237,
+        "corrected_relative_rms": 0.08710273395803145,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "bank": 15
+    },
+    {
+      "case": "quiet-clock",
+      "mode": 1,
+      "quality": {
+        "calibration_samples": 544,
+        "validation_samples": 1632,
+        "gain_real": 0.5617677003755737,
+        "gain_imag": 0.7757132746144213,
+        "gain_magnitude": 0.9577651244424642,
+        "raw_relative_rms": 0.8871210489515395,
+        "corrected_relative_rms": 0.016884395201129214,
+        "gain_in_screen_range": true,
+        "screen_budget": 0.1,
+        "screen_pass": true
+      },
+      "bank": 15
+    }
+  ],
+  "limitations": [
+    "Mode 1 at 2437MHz only; combined profile still fails.",
+    "All runs select bank 15. Removing one forcing term is diagnostic, not permission to remove it from qualification.",
+    "Errors are not independent additive budgets; startup and feedback evolve during each experiment."
+  ]
+}

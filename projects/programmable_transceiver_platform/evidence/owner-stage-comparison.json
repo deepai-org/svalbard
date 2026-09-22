@@ -1,0 +1,999 @@
+{
+  "scope": "Nominal zero-wire/ideal-clock mapping experiments; not physical qualification",
+  "reference_sha256": "172e52b588927e20e9d5d3a2cfd7a453a86840dca30bebfa38482f13698e1a61",
+  "cases": [
+    {
+      "name": "owner-stage",
+      "timing_screen": {
+        "scope": "Unplaced TT 25C 3.3V same-domain timing diagnostics; not signoff or fmax bounds",
+        "area_screen": {
+          "scope": "Nominal TT 25C 3.3V standard-cell mapping area; no STA, placement or power qualification",
+          "tool": "Yosys 0.62 (git sha1 7326bb7d6641500ecb285c291a54a662cb1e76cf, clang++ 21.1.2 -fPIC -O3)",
+          "library_sha256": "f9dee07cf158324934b0c59144d970a2e8313f43533ede6283ec3c136f82fe53",
+          "source_sha256": {
+            "rtl/pt_core.sv": "81fe0dbe5e84e1d0fd469b125bff3338b1cc719c35cdd4e306241adc891b3a5e",
+            "rtl/pt_crc.vh": "7f5e068f0cfca4dc1c4ddef8f37652680922c37473988d2d96c184d1fdb403c7",
+            "rtl/pt_digital.sv": "2184eb86c6076ca6ed176e568990f4ac5c7d1699c7dad4ba72d522771c0a3607",
+            "rtl/pt_fifo.sv": "360fba1c12a18628e3b59cd7e0f78b6c28f9a230b2127ff4c8e73ba356800058",
+            "rtl/pt_frame.sv": "57c05d237e6bfa4313d8e4e88a616c34ce9bcf7274bddad73ad5bf80e9c05400",
+            "rtl/pt_helpers.sv": "16fc0af7b7d2c97ed5267026c22c7dc2b80d438f4ae24277f3e09125dbcc902e",
+            "rtl/pt_memory.sv": "3f0cef4f7dacaad4312fca58a2a6e4743445e4c63c4baa92e1f6affda3d74fc3",
+            "rtl/pt_pack.sv": "1ee2545d705c2de01fbdb9192828c2c08a2b25332c6112e1fc7af91cbb1fc306",
+            "rtl/pt_schedule.vh": "826aecb656c8057dc1acf21ff9acc35702a26bc01ac93e3c5d887f036b6a860c",
+            "rtl/pt_spi.sv": "48648490810a8e2b37740508d78c86307cbc5caa56cafc2ec39ece99f3868102",
+            "rtl/pt_stream_link.sv": "26c55522cf98035c4ba6991d11c0a8671fe402449f900cae28cd0a61d2d2645b",
+            "rtl/pt_stream_rx.sv": "456af8ee78ec5bdcd070dc177b8af1f1df8ff3370734f92a5d857ad55c1ccec0",
+            "rtl/pt_stream_tx.sv": "24ff715f316f242daa88625128ab5afabc31b61fe6b4e955cd9c9d3c73b9fe02",
+            "verification/synthesis_container.sh": "a2032fd00b67083eee209bbf407ee7a35f5e3a82d919f1ee7afbbb0dad9a72e0"
+          },
+          "mapped_netlist_sha256": "b831a14377616e7d2d5f1bbd6156604ef1c7850b86e99d10c1ac0569611a1f63",
+          "physical_cell_count": 26250,
+          "flip_flop_count": 8256,
+          "cell_area_um2": 959008.2432,
+          "sequential_cell_area_um2": 550305.9072,
+          "combined_digital_memory_allocation_um2": 2300000,
+          "minimum_utilization_to_fit_before_physical_overhead": 0.41696010573913045,
+          "illustrative_utilization_sensitivity_not_proven_bounds": [
+            {
+              "utilization": 0.35,
+              "required_region_um2": 2740023.552,
+              "headroom_um2": -440023.55200000014
+            },
+            {
+              "utilization": 0.5,
+              "required_region_um2": 1918016.4864,
+              "headroom_um2": 381983.51359999995
+            },
+            {
+              "utilization": 0.65,
+              "required_region_um2": 1475397.2972307692,
+              "headroom_um2": 824602.7027692308
+            }
+          ],
+          "limitations": [
+            "ABC global delay target supplied; this is not a multi-clock STA constraint, timing closure, or allowance for clock-to-Q/setup/skew.",
+            "No clock tree, hold fixes, routing congestion, tap/filler/decap cells, level shifters or physical macro interfaces included.",
+            "Memory arrays mapped to flip-flops and muxes; no SRAM assumed.",
+            "Mapped netlist has not undergone formal equivalence or gate-level simulation.",
+            "Operating voltage is a mapping choice, not a frozen or qualified operating envelope.",
+            "No power or CORE supply-current estimate; clocking thousands of flip-flops remains an open concern."
+          ],
+          "status": "area estimate obtained; physical fit and timing unproven",
+          "buffering_transformation": {
+            "scope": "Identity-buffer netlist experiment, no placement/wire parasitics or clock tree",
+            "source_sha256": "4d82e0c3578f1b4c726b360afd44b204416519a24225d51512f3bc5321c30362",
+            "buffer_type": "gf180mcu_fd_sc_mcu7t5v0__buf_4",
+            "inserted_buffers": 150,
+            "fanout_limit": 16,
+            "added_cell_area_um2": 4609.92,
+            "connection_collapse_check": "pass for every original cell port",
+            "maximum_nonclock_input_pin_fanout": 16,
+            "limitations": [
+              "Pin-count cap does not guarantee capacitance or slew limits.",
+              "Grouping follows netlist order, not physical distance.",
+              "Clocks remain ideal; reset recovery/removal and skew are not closed.",
+              "No switching-power or wire-area estimate."
+            ]
+          },
+          "buffering_script_sha256": "b530a9d97aceb7fd9b5bac7e0c0f6586dca47e2efcc017f607d868e9bb3486e5",
+          "mapping_options": {
+            "abc_delay_target_ps": 3200,
+            "abc_sizing": true,
+            "sizing_boundary_model": "buf_1 driver and 5 fF load; illustrative, not physical IO constraints"
+          }
+        },
+        "timing_script_sha256": "465df829730d7bc60164074ec0932cf089b7421594453ce776266a4059ae12bd",
+        "profiles": [
+          {
+            "mode": 0,
+            "critical_register_outputs": {
+              "host_tx_clk": {
+                "start_Q": "\\core.wire_in.wg2 [5]",
+                "end_Q": "\\core.stream_v2.frame_tx.payload.leftw [4]"
+              },
+              "host_rx_clk": {
+                "start_Q": "\\core.stream_v2.frame_rx.payload.header [18]",
+                "end_Q": "\\core.stream_v2.frame_rx.payload.leftw [3]"
+              },
+              "wire_rx_clk": {
+                "start_Q": "\\core.wire_in.wg [4]",
+                "end_Q": "\\core.wire_in.mem[16] [0]"
+              },
+              "wire_tx_clk": {
+                "start_Q": "\\core.wire_out.rb [0]",
+                "end_Q": "\\core.wire_out.rg [6]"
+              },
+              "rf_rx_clk": {
+                "start_Q": "\\core.rf_in.wg [0]",
+                "end_Q": "\\core.rf_in.mem[4] [0]"
+              },
+              "rf_tx_clk": {
+                "start_Q": "\\core.rf_out.rb [0]",
+                "end_Q": "\\core.rf_out.rg [4]"
+              },
+              "host_sclk": {
+                "start_Q": "\\memory.index [1]",
+                "end_Q": "\\control.spi.miso_bit"
+              },
+              "ref_clk": {
+                "start_Q": "\\calibration.bitpos [2]",
+                "end_Q": "\\calibration.settle [2]"
+              }
+            },
+            "worst_reported_slack_ns_by_domain_and_group": {
+              "host_tx_clk": {
+                "asynchronous": -1.6775,
+                "host_tx_clk": -6.9026
+              },
+              "host_rx_clk": {
+                "asynchronous": -1.7957,
+                "host_rx_clk": -7.0606
+              },
+              "wire_rx_clk": {
+                "asynchronous": 6.2659,
+                "wire_rx_clk": -1.2376
+              },
+              "wire_tx_clk": {
+                "asynchronous": 5.0191,
+                "wire_tx_clk": 0.4295
+              },
+              "rf_rx_clk": {
+                "asynchronous": 23.2744,
+                "rf_rx_clk": 16.4422
+              },
+              "rf_tx_clk": {
+                "asynchronous": 23.2324,
+                "rf_tx_clk": 15.973
+              },
+              "host_sclk": {
+                "host_sclk": 41.2572
+              },
+              "ref_clk": {
+                "ref_clk": 18.1132
+              }
+            },
+            "reported_electrical_violation_rows": 0,
+            "warnings": [
+              "Warning: There are 52 input ports missing set_input_delay.",
+              "Warning: There are 128 output ports missing set_output_delay.",
+              "Warning: There are 128 unconstrained endpoints."
+            ],
+            "log_sha256": "3b7d8d1afa681be16c17aff32d1d3ff332ec3159335fab6ef03e6898eb893812"
+          },
+          {
+            "mode": 1,
+            "critical_register_outputs": {
+              "host_tx_clk": {
+                "start_Q": "\\core.wire_in.wg2 [5]",
+                "end_Q": "\\core.stream_v2.frame_tx.payload.leftw [4]"
+              },
+              "host_rx_clk": {
+                "start_Q": "\\core.stream_v2.frame_rx.payload.header [18]",
+                "end_Q": "\\core.stream_v2.frame_rx.payload.leftw [3]"
+              },
+              "wire_rx_clk": {
+                "start_Q": "\\core.wire_in.wg [4]",
+                "end_Q": "\\core.wire_in.mem[16] [0]"
+              },
+              "wire_tx_clk": {
+                "start_Q": "\\core.wire_out.rb [0]",
+                "end_Q": "\\core.wire_out.rg [6]"
+              },
+              "rf_rx_clk": {
+                "start_Q": "\\core.rf_in.wg [0]",
+                "end_Q": "\\core.rf_in.mem[4] [0]"
+              },
+              "rf_tx_clk": {
+                "start_Q": "\\core.rf_out.rb [0]",
+                "end_Q": "\\core.rf_out.rg [4]"
+              },
+              "host_sclk": {
+                "start_Q": "\\memory.index [1]",
+                "end_Q": "\\control.spi.miso_bit"
+              },
+              "ref_clk": {
+                "start_Q": "\\calibration.bitpos [2]",
+                "end_Q": "\\calibration.settle [2]"
+              }
+            },
+            "worst_reported_slack_ns_by_domain_and_group": {
+              "host_tx_clk": {
+                "asynchronous": -2.4775,
+                "host_tx_clk": -7.7026
+              },
+              "host_rx_clk": {
+                "asynchronous": -2.5957,
+                "host_rx_clk": -7.8606
+              },
+              "wire_rx_clk": {
+                "asynchronous": 2.2659,
+                "wire_rx_clk": -5.2376
+              },
+              "wire_tx_clk": {
+                "asynchronous": 1.0191,
+                "wire_tx_clk": -3.5705
+              },
+              "rf_rx_clk": {
+                "asynchronous": 48.2744,
+                "rf_rx_clk": 41.4422
+              },
+              "rf_tx_clk": {
+                "asynchronous": 48.2324,
+                "rf_tx_clk": 40.973
+              },
+              "host_sclk": {
+                "host_sclk": 41.2572
+              },
+              "ref_clk": {
+                "ref_clk": 18.1132
+              }
+            },
+            "reported_electrical_violation_rows": 0,
+            "warnings": [
+              "Warning: There are 52 input ports missing set_input_delay.",
+              "Warning: There are 128 output ports missing set_output_delay.",
+              "Warning: There are 128 unconstrained endpoints."
+            ],
+            "log_sha256": "0aaf80c9a0677e66425da9d3e97ad96810fa3cb278f731422a4e60ed9125c5f6"
+          }
+        ],
+        "largest_unbuffered_net_fanouts": [
+          {
+            "input_pin_loads": 3484,
+            "scalar_net_aliases": [
+              "core.e1.clk",
+              "core.host_rx_clk",
+              "core.iq_receive.clk",
+              "core.rf_out.wr_clk",
+              "core.stream_v2.frame_rx.clk",
+              "core.stream_v2.frame_rx.payload.clk",
+              "core.unpacker.clk",
+              "core.wire_out.wr_clk",
+              "host_rx_clk"
+            ]
+          },
+          {
+            "input_pin_loads": 1796,
+            "scalar_net_aliases": [
+              "core.e0.clk",
+              "core.host_tx_clk",
+              "core.iq_in.clk",
+              "core.packer.clk",
+              "core.rf_in.rd_clk",
+              "core.stream_v2.frame_tx.clk",
+              "core.stream_v2.frame_tx.payload.clk",
+              "core.wire_in.rd_clk",
+              "host_tx_clk"
+            ]
+          },
+          {
+            "input_pin_loads": 1184,
+            "scalar_net_aliases": [
+              "core.e4.clk",
+              "core.rf_in.wr_clk",
+              "core.rf_rx_clk",
+              "memory.rf_rx_clk",
+              "memory.s0.clk",
+              "rf_rx_clk"
+            ]
+          },
+          {
+            "input_pin_loads": 963,
+            "scalar_net_aliases": [
+              "control.sclk",
+              "control.spi.sclk",
+              "host_sclk",
+              "memory.spi_clk"
+            ]
+          },
+          {
+            "input_pin_loads": 672,
+            "scalar_net_aliases": [
+              "core.e2.clk",
+              "core.wire_in.wr_clk",
+              "core.wire_rx_clk",
+              "wire_rx_clk"
+            ]
+          },
+          {
+            "input_pin_loads": 73,
+            "scalar_net_aliases": [
+              "core.e3.clk",
+              "core.f0.clk",
+              "core.f2.clk",
+              "core.wire_out.rd_clk",
+              "core.wire_tx_clk",
+              "e.clk",
+              "prbs.clk",
+              "wire_tx_clk"
+            ]
+          },
+          {
+            "input_pin_loads": 48,
+            "scalar_net_aliases": [
+              "core.e5.clk",
+              "core.f1.clk",
+              "core.f3.clk",
+              "core.rf_out.rd_clk",
+              "core.rf_tx_clk",
+              "memory.ready.clk",
+              "memory.rf_tx_clk",
+              "memory.s1.clk",
+              "rf_tx_clk"
+            ]
+          },
+          {
+            "input_pin_loads": 36,
+            "scalar_net_aliases": [
+              "calibration.clk",
+              "cs.clk",
+              "ref_clk"
+            ]
+          }
+        ],
+        "limitations": [
+          "Ideal clocks, no extracted interconnect, no timing-driven physical buffering or sizing.",
+          "Electrical violations and library extrapolation invalidate interpreting extreme slacks as physical delay predictions.",
+          "Unconstrained external interfaces remain explicit; no blanket false-path exceptions were added.",
+          "Same-domain reports exclude CDC qualification, reset distribution closure and protocol timing.",
+          "SPI 10MHz and reference 40MHz are provisional service clocks.",
+          "No jitter/skew allowance or operating-envelope/process sweep."
+        ],
+        "result": "FAIL: reported timing or electrical violations remain"
+      },
+      "test_log_sha256": "d0f625f7887c0b79dc7e53bbd0257821d7149203073f6020624f1b150146a252",
+      "candidate_sha256": "24ff715f316f242daa88625128ab5afabc31b61fe6b4e955cd9c9d3c73b9fe02"
+    },
+    {
+      "name": "owner-count-stage",
+      "timing_screen": {
+        "scope": "Unplaced TT 25C 3.3V same-domain timing diagnostics; not signoff or fmax bounds",
+        "area_screen": {
+          "scope": "Nominal TT 25C 3.3V standard-cell mapping area; no STA, placement or power qualification",
+          "tool": "Yosys 0.62 (git sha1 7326bb7d6641500ecb285c291a54a662cb1e76cf, clang++ 21.1.2 -fPIC -O3)",
+          "library_sha256": "f9dee07cf158324934b0c59144d970a2e8313f43533ede6283ec3c136f82fe53",
+          "source_sha256": {
+            "rtl/pt_core.sv": "81fe0dbe5e84e1d0fd469b125bff3338b1cc719c35cdd4e306241adc891b3a5e",
+            "rtl/pt_crc.vh": "7f5e068f0cfca4dc1c4ddef8f37652680922c37473988d2d96c184d1fdb403c7",
+            "rtl/pt_digital.sv": "2184eb86c6076ca6ed176e568990f4ac5c7d1699c7dad4ba72d522771c0a3607",
+            "rtl/pt_fifo.sv": "360fba1c12a18628e3b59cd7e0f78b6c28f9a230b2127ff4c8e73ba356800058",
+            "rtl/pt_frame.sv": "57c05d237e6bfa4313d8e4e88a616c34ce9bcf7274bddad73ad5bf80e9c05400",
+            "rtl/pt_helpers.sv": "16fc0af7b7d2c97ed5267026c22c7dc2b80d438f4ae24277f3e09125dbcc902e",
+            "rtl/pt_memory.sv": "3f0cef4f7dacaad4312fca58a2a6e4743445e4c63c4baa92e1f6affda3d74fc3",
+            "rtl/pt_pack.sv": "1ee2545d705c2de01fbdb9192828c2c08a2b25332c6112e1fc7af91cbb1fc306",
+            "rtl/pt_schedule.vh": "826aecb656c8057dc1acf21ff9acc35702a26bc01ac93e3c5d887f036b6a860c",
+            "rtl/pt_spi.sv": "48648490810a8e2b37740508d78c86307cbc5caa56cafc2ec39ece99f3868102",
+            "rtl/pt_stream_link.sv": "26c55522cf98035c4ba6991d11c0a8671fe402449f900cae28cd0a61d2d2645b",
+            "rtl/pt_stream_rx.sv": "456af8ee78ec5bdcd070dc177b8af1f1df8ff3370734f92a5d857ad55c1ccec0",
+            "rtl/pt_stream_tx.sv": "c42af8fd07f87562415f581c7b322b8856e31b344a2741a4c287804405501cd9",
+            "verification/synthesis_container.sh": "a2032fd00b67083eee209bbf407ee7a35f5e3a82d919f1ee7afbbb0dad9a72e0"
+          },
+          "mapped_netlist_sha256": "fb5aac9eef677ae8aed227d395d4cede7092f60482e3795ebef5b271ddabdbd5",
+          "physical_cell_count": 26525,
+          "flip_flop_count": 8270,
+          "cell_area_um2": 963539.136,
+          "sequential_cell_area_um2": 551350.8224,
+          "combined_digital_memory_allocation_um2": 2300000,
+          "minimum_utilization_to_fit_before_physical_overhead": 0.4189300591304348,
+          "illustrative_utilization_sensitivity_not_proven_bounds": [
+            {
+              "utilization": 0.35,
+              "required_region_um2": 2752968.9600000004,
+              "headroom_um2": -452968.9600000004
+            },
+            {
+              "utilization": 0.5,
+              "required_region_um2": 1927078.272,
+              "headroom_um2": 372921.7279999999
+            },
+            {
+              "utilization": 0.65,
+              "required_region_um2": 1482367.9015384617,
+              "headroom_um2": 817632.0984615383
+            }
+          ],
+          "limitations": [
+            "ABC global delay target supplied; this is not a multi-clock STA constraint, timing closure, or allowance for clock-to-Q/setup/skew.",
+            "No clock tree, hold fixes, routing congestion, tap/filler/decap cells, level shifters or physical macro interfaces included.",
+            "Memory arrays mapped to flip-flops and muxes; no SRAM assumed.",
+            "Mapped netlist has not undergone formal equivalence or gate-level simulation.",
+            "Operating voltage is a mapping choice, not a frozen or qualified operating envelope.",
+            "No power or CORE supply-current estimate; clocking thousands of flip-flops remains an open concern."
+          ],
+          "status": "area estimate obtained; physical fit and timing unproven",
+          "buffering_transformation": {
+            "scope": "Identity-buffer netlist experiment, no placement/wire parasitics or clock tree",
+            "source_sha256": "42660a91d2a00f2edfa6bc680f6e5d6ef1a39e36f74ce57f18d08aeb7487288a",
+            "buffer_type": "gf180mcu_fd_sc_mcu7t5v0__buf_4",
+            "inserted_buffers": 152,
+            "fanout_limit": 16,
+            "added_cell_area_um2": 4671.3856000000005,
+            "connection_collapse_check": "pass for every original cell port",
+            "maximum_nonclock_input_pin_fanout": 16,
+            "limitations": [
+              "Pin-count cap does not guarantee capacitance or slew limits.",
+              "Grouping follows netlist order, not physical distance.",
+              "Clocks remain ideal; reset recovery/removal and skew are not closed.",
+              "No switching-power or wire-area estimate."
+            ]
+          },
+          "buffering_script_sha256": "b530a9d97aceb7fd9b5bac7e0c0f6586dca47e2efcc017f607d868e9bb3486e5",
+          "mapping_options": {
+            "abc_delay_target_ps": 3200,
+            "abc_sizing": true,
+            "sizing_boundary_model": "buf_1 driver and 5 fF load; illustrative, not physical IO constraints"
+          }
+        },
+        "timing_script_sha256": "465df829730d7bc60164074ec0932cf089b7421594453ce776266a4059ae12bd",
+        "profiles": [
+          {
+            "mode": 0,
+            "critical_register_outputs": {
+              "host_tx_clk": {
+                "start_Q": "\\core.rf_in.rb [0]",
+                "end_Q": "\\core.packer.bits [18]"
+              },
+              "host_rx_clk": {
+                "start_Q": "\\core.stream_v2.frame_rx.payload.header [14]",
+                "end_Q": "\\core.stream_v2.frame_rx.payload.iq_slots [4]"
+              },
+              "wire_rx_clk": {
+                "start_Q": "\\core.wire_in.wg [6]",
+                "end_Q": "\\core.wire_in.mem[1] [0]"
+              },
+              "wire_tx_clk": {
+                "start_Q": "\\core.wire_out.wg2 [7]",
+                "end_Q": "\\core.wire_running"
+              },
+              "rf_rx_clk": {
+                "start_Q": "\\core.rf_in.wg [0]",
+                "end_Q": "\\core.rf_in.mem[4] [0]"
+              },
+              "rf_tx_clk": {
+                "start_Q": "\\core.rf_out.rb [0]",
+                "end_Q": "\\core.rf_out.rg [5]"
+              },
+              "host_sclk": {
+                "start_Q": "\\memory.index [2]",
+                "end_Q": "\\control.spi.read_value [1]"
+              },
+              "ref_clk": {
+                "start_Q": "\\calibration.bitpos [3]",
+                "end_Q": "\\calibration.settle [2]"
+              }
+            },
+            "worst_reported_slack_ns_by_domain_and_group": {
+              "host_tx_clk": {
+                "asynchronous": -3.0887,
+                "host_tx_clk": -6.2654
+              },
+              "host_rx_clk": {
+                "asynchronous": -1.744,
+                "host_rx_clk": -6.7014
+              },
+              "wire_rx_clk": {
+                "asynchronous": 6.2659,
+                "wire_rx_clk": -1.2368
+              },
+              "wire_tx_clk": {
+                "asynchronous": 5.0556,
+                "wire_tx_clk": 0.262
+              },
+              "rf_rx_clk": {
+                "asynchronous": 23.2744,
+                "rf_rx_clk": 16.2967
+              },
+              "rf_tx_clk": {
+                "asynchronous": 23.2324,
+                "rf_tx_clk": 17.433
+              },
+              "host_sclk": {
+                "host_sclk": 41.3958
+              },
+              "ref_clk": {
+                "ref_clk": 17.9937
+              }
+            },
+            "reported_electrical_violation_rows": 0,
+            "warnings": [
+              "Warning: There are 52 input ports missing set_input_delay.",
+              "Warning: There are 128 output ports missing set_output_delay.",
+              "Warning: There are 128 unconstrained endpoints."
+            ],
+            "log_sha256": "26d6dbaaae5f95c89c100f8d1d5a2ec628c118d8f5ad5d65016d801bf700d367"
+          },
+          {
+            "mode": 1,
+            "critical_register_outputs": {
+              "host_tx_clk": {
+                "start_Q": "\\core.rf_in.rb [0]",
+                "end_Q": "\\core.packer.bits [18]"
+              },
+              "host_rx_clk": {
+                "start_Q": "\\core.stream_v2.frame_rx.payload.header [14]",
+                "end_Q": "\\core.stream_v2.frame_rx.payload.iq_slots [4]"
+              },
+              "wire_rx_clk": {
+                "start_Q": "\\core.wire_in.wg [6]",
+                "end_Q": "\\core.wire_in.mem[1] [0]"
+              },
+              "wire_tx_clk": {
+                "start_Q": "\\core.wire_out.wg2 [7]",
+                "end_Q": "\\core.wire_running"
+              },
+              "rf_rx_clk": {
+                "start_Q": "\\core.rf_in.wg [0]",
+                "end_Q": "\\core.rf_in.mem[4] [0]"
+              },
+              "rf_tx_clk": {
+                "start_Q": "\\core.rf_out.rb [0]",
+                "end_Q": "\\core.rf_out.rg [5]"
+              },
+              "host_sclk": {
+                "start_Q": "\\memory.index [2]",
+                "end_Q": "\\control.spi.read_value [1]"
+              },
+              "ref_clk": {
+                "start_Q": "\\calibration.bitpos [3]",
+                "end_Q": "\\calibration.settle [2]"
+              }
+            },
+            "worst_reported_slack_ns_by_domain_and_group": {
+              "host_tx_clk": {
+                "asynchronous": -3.8887,
+                "host_tx_clk": -7.0654
+              },
+              "host_rx_clk": {
+                "asynchronous": -2.544,
+                "host_rx_clk": -7.5014
+              },
+              "wire_rx_clk": {
+                "asynchronous": 2.2659,
+                "wire_rx_clk": -5.2368
+              },
+              "wire_tx_clk": {
+                "asynchronous": 1.0556,
+                "wire_tx_clk": -3.738
+              },
+              "rf_rx_clk": {
+                "asynchronous": 48.2744,
+                "rf_rx_clk": 41.2967
+              },
+              "rf_tx_clk": {
+                "asynchronous": 48.2324,
+                "rf_tx_clk": 42.433
+              },
+              "host_sclk": {
+                "host_sclk": 41.3958
+              },
+              "ref_clk": {
+                "ref_clk": 17.9937
+              }
+            },
+            "reported_electrical_violation_rows": 0,
+            "warnings": [
+              "Warning: There are 52 input ports missing set_input_delay.",
+              "Warning: There are 128 output ports missing set_output_delay.",
+              "Warning: There are 128 unconstrained endpoints."
+            ],
+            "log_sha256": "399d08ff1966926a698581b6456f22d9c66c66506983d387f1d1c480f53ffa30"
+          }
+        ],
+        "largest_unbuffered_net_fanouts": [
+          {
+            "input_pin_loads": 3484,
+            "scalar_net_aliases": [
+              "core.e1.clk",
+              "core.host_rx_clk",
+              "core.iq_receive.clk",
+              "core.rf_out.wr_clk",
+              "core.stream_v2.frame_rx.clk",
+              "core.stream_v2.frame_rx.payload.clk",
+              "core.unpacker.clk",
+              "core.wire_out.wr_clk",
+              "host_rx_clk"
+            ]
+          },
+          {
+            "input_pin_loads": 1810,
+            "scalar_net_aliases": [
+              "core.e0.clk",
+              "core.host_tx_clk",
+              "core.iq_in.clk",
+              "core.packer.clk",
+              "core.rf_in.rd_clk",
+              "core.stream_v2.frame_tx.clk",
+              "core.stream_v2.frame_tx.payload.clk",
+              "core.wire_in.rd_clk",
+              "host_tx_clk"
+            ]
+          },
+          {
+            "input_pin_loads": 1184,
+            "scalar_net_aliases": [
+              "core.e4.clk",
+              "core.rf_in.wr_clk",
+              "core.rf_rx_clk",
+              "memory.rf_rx_clk",
+              "memory.s0.clk",
+              "rf_rx_clk"
+            ]
+          },
+          {
+            "input_pin_loads": 963,
+            "scalar_net_aliases": [
+              "control.sclk",
+              "control.spi.sclk",
+              "host_sclk",
+              "memory.spi_clk"
+            ]
+          },
+          {
+            "input_pin_loads": 672,
+            "scalar_net_aliases": [
+              "core.e2.clk",
+              "core.wire_in.wr_clk",
+              "core.wire_rx_clk",
+              "wire_rx_clk"
+            ]
+          },
+          {
+            "input_pin_loads": 73,
+            "scalar_net_aliases": [
+              "core.e3.clk",
+              "core.f0.clk",
+              "core.f2.clk",
+              "core.wire_out.rd_clk",
+              "core.wire_tx_clk",
+              "e.clk",
+              "prbs.clk",
+              "wire_tx_clk"
+            ]
+          },
+          {
+            "input_pin_loads": 48,
+            "scalar_net_aliases": [
+              "core.e5.clk",
+              "core.f1.clk",
+              "core.f3.clk",
+              "core.rf_out.rd_clk",
+              "core.rf_tx_clk",
+              "memory.ready.clk",
+              "memory.rf_tx_clk",
+              "memory.s1.clk",
+              "rf_tx_clk"
+            ]
+          },
+          {
+            "input_pin_loads": 36,
+            "scalar_net_aliases": [
+              "calibration.clk",
+              "cs.clk",
+              "ref_clk"
+            ]
+          }
+        ],
+        "limitations": [
+          "Ideal clocks, no extracted interconnect, no timing-driven physical buffering or sizing.",
+          "Electrical violations and library extrapolation invalidate interpreting extreme slacks as physical delay predictions.",
+          "Unconstrained external interfaces remain explicit; no blanket false-path exceptions were added.",
+          "Same-domain reports exclude CDC qualification, reset distribution closure and protocol timing.",
+          "SPI 10MHz and reference 40MHz are provisional service clocks.",
+          "No jitter/skew allowance or operating-envelope/process sweep."
+        ],
+        "result": "FAIL: reported timing or electrical violations remain"
+      },
+      "test_log_sha256": "d0f625f7887c0b79dc7e53bbd0257821d7149203073f6020624f1b150146a252",
+      "candidate_sha256": "c42af8fd07f87562415f581c7b322b8856e31b344a2741a4c287804405501cd9"
+    }
+  ],
+  "functional_scope": "Independent codec vectors with changing live counts and integrated tests, plus finite original-TX comparison under mode frozen between resets. No formal equivalence.",
+  "source_sha256": {
+    "verification/report_owner_stage.py": "f7fdb5bc3569f0c86348540059659417e06d67a7aed45055a75eb43ea785dbd7",
+    "verification/stream_tx_vectors.py": "7648206ecce96e2820a861466b77c93b7a44356a71917a7e0227950ce40b040f",
+    "sim/tb_tx_stage_compare.sv": "ded6d6bb7995940a89378290f3b5f2738225ff8bc4d51018c75b1d7169bb8282",
+    "verification/run_delay_mapping.sh": "161ca885d24658cbac6ff04f4e40db12b81bd604ba60950490b15d330189339d"
+  },
+  "decision": "Retain combined owner/count stages as next RTL candidate; no physical qualification. Standalone owner stage is comparison only.",
+  "clock_pin_screens": {
+    "tx-stage": {
+      "scope": "Nominal lumped Liberty clock-input capacitance charging estimate; not total power or a PVT bound",
+      "voltage_v": 3.3,
+      "core_budget_ma": 48,
+      "library_sha256": "f9dee07cf158324934b0c59144d970a2e8313f43533ede6283ec3c136f82fe53",
+      "netlist_sha256": "a58a421a42520ecd3a95047f8731c6fec8222e6136ca4b68b6c77d41dcfbf22b",
+      "formula": "I=C*V*f; one 0-to-1 charge per clock cycle",
+      "profiles": [
+        {
+          "mode": 0,
+          "domains": [
+            {
+              "clock": "ref_clk",
+              "pin_count": 36,
+              "capacitance_pf": 0.12045600000000005,
+              "frequency_hz": 40000000.0,
+              "charging_current_ma": 0.015900192000000007
+            },
+            {
+              "clock": "host_sclk",
+              "pin_count": 963,
+              "capacitance_pf": 3.0959419999999693,
+              "frequency_hz": 10000000.0,
+              "charging_current_ma": 0.10216608599999899
+            },
+            {
+              "clock": "host_tx_clk",
+              "pin_count": 1794,
+              "capacitance_pf": 5.950563999999851,
+              "frequency_hz": 250000000.0,
+              "charging_current_ma": 4.909215299999877
+            },
+            {
+              "clock": "host_rx_clk",
+              "pin_count": 3484,
+              "capacitance_pf": 11.146295999999763,
+              "frequency_hz": 250000000.0,
+              "charging_current_ma": 9.195694199999805
+            },
+            {
+              "clock": "wire_rx_clk",
+              "pin_count": 672,
+              "capacitance_pf": 2.144191999999986,
+              "frequency_hz": 125000000.0,
+              "charging_current_ma": 0.8844791999999944
+            },
+            {
+              "clock": "wire_tx_clk",
+              "pin_count": 73,
+              "capacitance_pf": 0.2447229999999998,
+              "frequency_hz": 125000000.0,
+              "charging_current_ma": 0.10094823749999991
+            },
+            {
+              "clock": "rf_rx_clk",
+              "pin_count": 1184,
+              "capacitance_pf": 3.7738879999999537,
+              "frequency_hz": 40000000.0,
+              "charging_current_ma": 0.4981532159999939
+            },
+            {
+              "clock": "rf_tx_clk",
+              "pin_count": 48,
+              "capacitance_pf": 0.16060799999999992,
+              "frequency_hz": 40000000.0,
+              "charging_current_ma": 0.021200255999999987
+            }
+          ],
+          "clock_pin_charging_current_ma": 15.727756687499669,
+          "clock_pin_charging_power_mw": 51.901597068748906,
+          "remaining_from_48ma_before_other_loads": 32.27224331250033,
+          "clock_pin_load_alone_exceeds_budget": false
+        },
+        {
+          "mode": 1,
+          "domains": [
+            {
+              "clock": "ref_clk",
+              "pin_count": 36,
+              "capacitance_pf": 0.12045600000000005,
+              "frequency_hz": 40000000.0,
+              "charging_current_ma": 0.015900192000000007
+            },
+            {
+              "clock": "host_sclk",
+              "pin_count": 963,
+              "capacitance_pf": 3.0959419999999693,
+              "frequency_hz": 10000000.0,
+              "charging_current_ma": 0.10216608599999899
+            },
+            {
+              "clock": "host_tx_clk",
+              "pin_count": 1794,
+              "capacitance_pf": 5.950563999999851,
+              "frequency_hz": 312500000.0,
+              "charging_current_ma": 6.136519124999846
+            },
+            {
+              "clock": "host_rx_clk",
+              "pin_count": 3484,
+              "capacitance_pf": 11.146295999999763,
+              "frequency_hz": 312500000.0,
+              "charging_current_ma": 11.494617749999756
+            },
+            {
+              "clock": "wire_rx_clk",
+              "pin_count": 672,
+              "capacitance_pf": 2.144191999999986,
+              "frequency_hz": 250000000.0,
+              "charging_current_ma": 1.7689583999999887
+            },
+            {
+              "clock": "wire_tx_clk",
+              "pin_count": 73,
+              "capacitance_pf": 0.2447229999999998,
+              "frequency_hz": 250000000.0,
+              "charging_current_ma": 0.20189647499999983
+            },
+            {
+              "clock": "rf_rx_clk",
+              "pin_count": 1184,
+              "capacitance_pf": 3.7738879999999537,
+              "frequency_hz": 20000000.0,
+              "charging_current_ma": 0.24907660799999695
+            },
+            {
+              "clock": "rf_tx_clk",
+              "pin_count": 48,
+              "capacitance_pf": 0.16060799999999992,
+              "frequency_hz": 20000000.0,
+              "charging_current_ma": 0.010600127999999993
+            }
+          ],
+          "clock_pin_charging_current_ma": 19.979734763999588,
+          "clock_pin_charging_power_mw": 65.93312472119864,
+          "remaining_from_48ma_before_other_loads": 28.020265236000412,
+          "clock_pin_load_alone_exceeds_budget": false
+        }
+      ],
+      "limitations": [
+        "No internal flip-flop power, data/control switching, clock tree, wire capacitance, leakage or GPIO pre-driver load.",
+        "Nominal scalar Liberty input capacitance; nonlinear voltage behavior and rise/fall capacitance differences are not bounded.",
+        "All implemented clock domains active; SPI/reference frequencies are provisional.",
+        "Clock sources are assigned to CORE for budget accounting; final rail ownership must be explicit.",
+        "Even a result below 48mA would not close the core budget."
+      ]
+    },
+    "owner-count-stage": {
+      "scope": "Nominal lumped Liberty clock-input capacitance charging estimate; not total power or a PVT bound",
+      "voltage_v": 3.3,
+      "core_budget_ma": 48,
+      "library_sha256": "f9dee07cf158324934b0c59144d970a2e8313f43533ede6283ec3c136f82fe53",
+      "netlist_sha256": "8283f58215aa3c6c38eb393bfc31d00c542e5d30c469c69e43fbfb3b8e2e2138",
+      "formula": "I=C*V*f; one 0-to-1 charge per clock cycle",
+      "profiles": [
+        {
+          "mode": 0,
+          "domains": [
+            {
+              "clock": "ref_clk",
+              "pin_count": 36,
+              "capacitance_pf": 0.12045600000000005,
+              "frequency_hz": 40000000.0,
+              "charging_current_ma": 0.015900192000000007
+            },
+            {
+              "clock": "host_sclk",
+              "pin_count": 963,
+              "capacitance_pf": 3.0959419999999693,
+              "frequency_hz": 10000000.0,
+              "charging_current_ma": 0.10216608599999899
+            },
+            {
+              "clock": "host_tx_clk",
+              "pin_count": 1810,
+              "capacitance_pf": 6.004099999999845,
+              "frequency_hz": 250000000.0,
+              "charging_current_ma": 4.953382499999871
+            },
+            {
+              "clock": "host_rx_clk",
+              "pin_count": 3484,
+              "capacitance_pf": 11.146295999999763,
+              "frequency_hz": 250000000.0,
+              "charging_current_ma": 9.195694199999805
+            },
+            {
+              "clock": "wire_rx_clk",
+              "pin_count": 672,
+              "capacitance_pf": 2.144191999999986,
+              "frequency_hz": 125000000.0,
+              "charging_current_ma": 0.8844791999999944
+            },
+            {
+              "clock": "wire_tx_clk",
+              "pin_count": 73,
+              "capacitance_pf": 0.2447229999999998,
+              "frequency_hz": 125000000.0,
+              "charging_current_ma": 0.10094823749999991
+            },
+            {
+              "clock": "rf_rx_clk",
+              "pin_count": 1184,
+              "capacitance_pf": 3.7738879999999537,
+              "frequency_hz": 40000000.0,
+              "charging_current_ma": 0.4981532159999939
+            },
+            {
+              "clock": "rf_tx_clk",
+              "pin_count": 48,
+              "capacitance_pf": 0.16060799999999992,
+              "frequency_hz": 40000000.0,
+              "charging_current_ma": 0.021200255999999987
+            }
+          ],
+          "clock_pin_charging_current_ma": 15.771923887499662,
+          "clock_pin_charging_power_mw": 52.04734882874888,
+          "remaining_from_48ma_before_other_loads": 32.22807611250034,
+          "clock_pin_load_alone_exceeds_budget": false
+        },
+        {
+          "mode": 1,
+          "domains": [
+            {
+              "clock": "ref_clk",
+              "pin_count": 36,
+              "capacitance_pf": 0.12045600000000005,
+              "frequency_hz": 40000000.0,
+              "charging_current_ma": 0.015900192000000007
+            },
+            {
+              "clock": "host_sclk",
+              "pin_count": 963,
+              "capacitance_pf": 3.0959419999999693,
+              "frequency_hz": 10000000.0,
+              "charging_current_ma": 0.10216608599999899
+            },
+            {
+              "clock": "host_tx_clk",
+              "pin_count": 1810,
+              "capacitance_pf": 6.004099999999845,
+              "frequency_hz": 312500000.0,
+              "charging_current_ma": 6.19172812499984
+            },
+            {
+              "clock": "host_rx_clk",
+              "pin_count": 3484,
+              "capacitance_pf": 11.146295999999763,
+              "frequency_hz": 312500000.0,
+              "charging_current_ma": 11.494617749999756
+            },
+            {
+              "clock": "wire_rx_clk",
+              "pin_count": 672,
+              "capacitance_pf": 2.144191999999986,
+              "frequency_hz": 250000000.0,
+              "charging_current_ma": 1.7689583999999887
+            },
+            {
+              "clock": "wire_tx_clk",
+              "pin_count": 73,
+              "capacitance_pf": 0.2447229999999998,
+              "frequency_hz": 250000000.0,
+              "charging_current_ma": 0.20189647499999983
+            },
+            {
+              "clock": "rf_rx_clk",
+              "pin_count": 1184,
+              "capacitance_pf": 3.7738879999999537,
+              "frequency_hz": 20000000.0,
+              "charging_current_ma": 0.24907660799999695
+            },
+            {
+              "clock": "rf_tx_clk",
+              "pin_count": 48,
+              "capacitance_pf": 0.16060799999999992,
+              "frequency_hz": 20000000.0,
+              "charging_current_ma": 0.010600127999999993
+            }
+          ],
+          "clock_pin_charging_current_ma": 20.034943763999582,
+          "clock_pin_charging_power_mw": 66.11531442119862,
+          "remaining_from_48ma_before_other_loads": 27.965056236000418,
+          "clock_pin_load_alone_exceeds_budget": false
+        }
+      ],
+      "limitations": [
+        "No internal flip-flop power, data/control switching, clock tree, wire capacitance, leakage or GPIO pre-driver load.",
+        "Nominal scalar Liberty input capacitance; nonlinear voltage behavior and rise/fall capacitance differences are not bounded.",
+        "All implemented clock domains active; SPI/reference frequencies are provisional.",
+        "Clock sources are assigned to CORE for budget accounting; final rail ownership must be explicit.",
+        "Even a result below 48mA would not close the core budget."
+      ]
+    }
+  },
+  "limitations": [
+    "Whole-design mapping changes affect unchanged paths.",
+    "No candidate placement, extracted timing, power or CDC closure.",
+    "Results are not frequency limits or uncertainty bounds."
+  ]
+}

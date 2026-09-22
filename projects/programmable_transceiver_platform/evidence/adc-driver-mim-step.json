@@ -1,0 +1,939 @@
+{
+  "status": "completed_isolated_large_signal_audit",
+  "cases": [
+    {
+      "name": "typical_cc0.5",
+      "compensation_pf": 0.5,
+      "corner": "typical",
+      "transitions": [
+        {
+          "edge_ns": 20,
+          "target_v": 0.4,
+          "late_value_v": 0.397540686346191,
+          "late_static_error_v": -0.0024593136538090254,
+          "late_window_peak_to_peak_v": 5.585164160049061e-07,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.00967769679887398,
+              "max_dynamic_error_from_late_value_v": 0.007218383145064955,
+              "peak_to_peak_v": 0.002978765815920159
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.006678780894979863,
+              "max_dynamic_error_from_late_value_v": 0.004219467241170838,
+              "peak_to_peak_v": 0.005254694949442973
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.0026672756240141426,
+              "max_dynamic_error_from_late_value_v": 0.0002079619702051172,
+              "peak_to_peak_v": 0.00023752491735007375
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.002463183142982106,
+              "max_dynamic_error_from_late_value_v": 3.869489173080609e-06,
+              "peak_to_peak_v": 2.772556578989338e-06
+            }
+          ]
+        },
+        {
+          "edge_ns": 60,
+          "target_v": -0.4,
+          "late_value_v": -0.3975405780138186,
+          "late_static_error_v": 0.0024594219861814315,
+          "late_window_peak_to_peak_v": 5.901721960022144e-07,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.009674700678455994,
+              "max_dynamic_error_from_late_value_v": 0.007215278692274563,
+              "peak_to_peak_v": 0.0029743830096369273
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.006680180735107011,
+              "max_dynamic_error_from_late_value_v": 0.004220758748925579,
+              "peak_to_peak_v": 0.0052543512126341785
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.0026676981603489525,
+              "max_dynamic_error_from_late_value_v": 0.00020827617416752098,
+              "peak_to_peak_v": 0.0002375512871097829
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.0024634443928320815,
+              "max_dynamic_error_from_late_value_v": 4.022406650650012e-06,
+              "peak_to_peak_v": 2.809762612132616e-06
+            }
+          ]
+        }
+      ],
+      "supply_peak_current_a": 0.003405254758691521,
+      "artifacts_sha256": {
+        ".spice": "e6b7f08598b3527d573bbbf95f3d79fc117f20ee303841137b43652b4bd4d207",
+        ".dat": "671b4f40f98c607a12305072cc7632a79842edb930012870f07f013f224f272c",
+        ".log": "cdeec5fb68e4462b608aa2ebfbc90597f36f49118432fcb18e8cc0c17208bc52"
+      }
+    },
+    {
+      "name": "typical_cc1",
+      "compensation_pf": 1,
+      "corner": "typical",
+      "transitions": [
+        {
+          "edge_ns": 20,
+          "target_v": 0.4,
+          "late_value_v": 0.3975433759035316,
+          "late_static_error_v": -0.002456624096468407,
+          "late_window_peak_to_peak_v": 2.6449031851338844e-06,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.01821312672222397,
+              "max_dynamic_error_from_late_value_v": 0.02066975081869238,
+              "peak_to_peak_v": 0.024497509491907987
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.018330379845813982,
+              "max_dynamic_error_from_late_value_v": 0.015873755749345575,
+              "peak_to_peak_v": 0.011957311702590845
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.0026535270349051787,
+              "max_dynamic_error_from_late_value_v": 0.0028628036210793795,
+              "peak_to_peak_v": 0.003059706559516151
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.0024686970008970244,
+              "max_dynamic_error_from_late_value_v": 9.288360461034983e-05,
+              "peak_to_peak_v": 0.00010495650903896703
+            }
+          ]
+        },
+        {
+          "edge_ns": 60,
+          "target_v": -0.4,
+          "late_value_v": -0.3975432892428574,
+          "late_static_error_v": 0.0024567107571425995,
+          "late_window_peak_to_peak_v": 2.6278905929100205e-06,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.01822499745031292,
+              "max_dynamic_error_from_late_value_v": 0.020681708207455518,
+              "peak_to_peak_v": 0.024500084167782044
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.018328803873484012,
+              "max_dynamic_error_from_late_value_v": 0.015872093116341413,
+              "peak_to_peak_v": 0.011965008164163127
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.0026535156995780573,
+              "max_dynamic_error_from_late_value_v": 0.002862239509550557,
+              "peak_to_peak_v": 0.003059044451986015
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.0024688327356111595,
+              "max_dynamic_error_from_late_value_v": 9.277887160763498e-05,
+              "peak_to_peak_v": 0.00010490085007619498
+            }
+          ]
+        }
+      ],
+      "supply_peak_current_a": 0.003388940967884457,
+      "artifacts_sha256": {
+        ".spice": "a2aaf5bae6dab57b4e448a588724773c4567b3f817fb791720ceb61b973ad692",
+        ".dat": "44292fd4f16f08355498f00b9e070f6e1f83fcff865fc4c7e0f50877257e7047",
+        ".log": "3112a1f839ba3169eff5825aae29c86ac2e996e790d45c3712273148a757d1e9"
+      }
+    },
+    {
+      "name": "typical_cc2",
+      "compensation_pf": 2,
+      "corner": "typical",
+      "transitions": [
+        {
+          "edge_ns": 20,
+          "target_v": 0.4,
+          "late_value_v": 0.39759722688186083,
+          "late_static_error_v": -0.00240277311813919,
+          "late_window_peak_to_peak_v": 5.2546476999815184e-05,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.0949070407295719,
+              "max_dynamic_error_from_late_value_v": 0.09730981384771109,
+              "peak_to_peak_v": 0.012638117096642087
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.08216612753039498,
+              "max_dynamic_error_from_late_value_v": 0.08456890064853417,
+              "peak_to_peak_v": 0.05148335473624699
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.018268782611160828,
+              "max_dynamic_error_from_late_value_v": 0.015866009493021638,
+              "peak_to_peak_v": 0.013972445939274936
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.002876614892227125,
+              "max_dynamic_error_from_late_value_v": 0.0015897462289613529,
+              "peak_to_peak_v": 0.002063588003049288
+            }
+          ]
+        },
+        {
+          "edge_ns": 60,
+          "target_v": -0.4,
+          "late_value_v": -0.39759717573296194,
+          "late_static_error_v": 0.002402824267038084,
+          "late_window_peak_to_peak_v": 5.257042107409404e-05,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.09490699353530097,
+              "max_dynamic_error_from_late_value_v": 0.09730981780233905,
+              "peak_to_peak_v": 0.012634991036631016
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.08216921751997897,
+              "max_dynamic_error_from_late_value_v": 0.08457204178701705,
+              "peak_to_peak_v": 0.05148230831403211
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.018269619427140893,
+              "max_dynamic_error_from_late_value_v": 0.01586679516010281,
+              "peak_to_peak_v": 0.013972435670949857
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.002876733240901097,
+              "max_dynamic_error_from_late_value_v": 0.00158989938223697,
+              "peak_to_peak_v": 0.002063808356099983
+            }
+          ]
+        }
+      ],
+      "supply_peak_current_a": 0.003393415649562702,
+      "artifacts_sha256": {
+        ".spice": "efbba32588dadd2fdc25b16c6ebd6e7c9fdae362e7c637d1200dc5cfebb332aa",
+        ".dat": "3a956d122ac15c65b49447aca991918db667f4afb9d964a6bd065fa76546539b",
+        ".log": "6d348f23346ed221066d833acd07162ad29d6af0d6ab973a41254b94f3ea7d2e"
+      }
+    },
+    {
+      "name": "ss_cc0.5",
+      "compensation_pf": 0.5,
+      "corner": "ss",
+      "transitions": [
+        {
+          "edge_ns": 20,
+          "target_v": 0.4,
+          "late_value_v": 0.3975402657490831,
+          "late_static_error_v": -0.002459734250916945,
+          "late_window_peak_to_peak_v": 7.17622967938425e-07,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.006857565036986979,
+              "max_dynamic_error_from_late_value_v": 0.004397830786070034,
+              "peak_to_peak_v": 0.0019251216772229185
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.006815990820234208,
+              "max_dynamic_error_from_late_value_v": 0.004356256569317263,
+              "peak_to_peak_v": 0.003696685378905995
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.002560071860805091,
+              "max_dynamic_error_from_late_value_v": 0.0003209616963039119,
+              "peak_to_peak_v": 0.0004212993061920578
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.0024653654856000573,
+              "max_dynamic_error_from_late_value_v": 5.631234683112218e-06,
+              "peak_to_peak_v": 4.293579267011793e-06
+            }
+          ]
+        },
+        {
+          "edge_ns": 60,
+          "target_v": -0.4,
+          "late_value_v": -0.39754013392653564,
+          "late_static_error_v": 0.0024598660734643785,
+          "late_window_peak_to_peak_v": 7.561856112392462e-07,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.0068538715013281015,
+              "max_dynamic_error_from_late_value_v": 0.004394005427863723,
+              "peak_to_peak_v": 0.0019295423828820102
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.006813035250323174,
+              "max_dynamic_error_from_late_value_v": 0.0043531691768587955,
+              "peak_to_peak_v": 0.003691625019125233
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.0025605504085660646,
+              "max_dynamic_error_from_late_value_v": 0.00032046847648237176,
+              "peak_to_peak_v": 0.00042115281158405793
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.0024656808986919243,
+              "max_dynamic_error_from_late_value_v": 5.814825227545839e-06,
+              "peak_to_peak_v": 4.389735654974913e-06
+            }
+          ]
+        }
+      ],
+      "supply_peak_current_a": 0.003417297315574549,
+      "artifacts_sha256": {
+        ".spice": "83deef2098566bd7a011577458998b315031c7a3ee71f41a440d2c2d53e0565e",
+        ".dat": "0d168fd42fc789d29035308cbbf97b74464c5b1d3f0bf208740b70be638b89cf",
+        ".log": "559fd32f5f9bf4f3d8190b8ed5f84678e3a45f609fd076c1465f8f94070531eb"
+      }
+    },
+    {
+      "name": "ss_cc1",
+      "compensation_pf": 1,
+      "corner": "ss",
+      "transitions": [
+        {
+          "edge_ns": 20,
+          "target_v": 0.4,
+          "late_value_v": 0.39753896691242774,
+          "late_static_error_v": -0.002461033087572284,
+          "late_window_peak_to_peak_v": 1.143605590891994e-05,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.03680269946032799,
+              "max_dynamic_error_from_late_value_v": 0.039263732547900276,
+              "peak_to_peak_v": 0.02617009258687708
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.01485752438724186,
+              "max_dynamic_error_from_late_value_v": 0.012979315472570252,
+              "peak_to_peak_v": 0.02537580677223983
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.006016120652246104,
+              "max_dynamic_error_from_late_value_v": 0.00355508756467382,
+              "peak_to_peak_v": 0.005780857743202139
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.0026571362179600433,
+              "max_dynamic_error_from_late_value_v": 0.00019610313038775917,
+              "peak_to_peak_v": 0.00026343172671694504
+            }
+          ]
+        },
+        {
+          "edge_ns": 60,
+          "target_v": -0.4,
+          "late_value_v": -0.39753885449497145,
+          "late_static_error_v": 0.0024611455050285724,
+          "late_window_peak_to_peak_v": 1.1471161659892815e-05,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.03681245869273997,
+              "max_dynamic_error_from_late_value_v": 0.03927360419776854,
+              "peak_to_peak_v": 0.026166446242674946
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.01485288740937507,
+              "max_dynamic_error_from_late_value_v": 0.012992830235193542,
+              "peak_to_peak_v": 0.02538457213954004
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.0060193979260260155,
+              "max_dynamic_error_from_late_value_v": 0.003558252420997443,
+              "peak_to_peak_v": 0.005783304829035885
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.002657494216037004,
+              "max_dynamic_error_from_late_value_v": 0.00019634871100843165,
+              "peak_to_peak_v": 0.0002635783942790404
+            }
+          ]
+        }
+      ],
+      "supply_peak_current_a": 0.00338927139462039,
+      "artifacts_sha256": {
+        ".spice": "d50db5ff638752e67ae20b47c71453738a26d4e38cc73194cf7480977ab4fc66",
+        ".dat": "99212e0588f75ade89bc147abdb04e971af40d8017999fed08e177da7baa3e43",
+        ".log": "2fa67e0cfe9baab10c0d432714234b46d763f2b175c19270eff54a72477375db"
+      }
+    },
+    {
+      "name": "ss_cc2",
+      "compensation_pf": 2,
+      "corner": "ss",
+      "transitions": [
+        {
+          "edge_ns": 20,
+          "target_v": 0.4,
+          "late_value_v": 0.39751186325621907,
+          "late_static_error_v": -0.0024881367437809554,
+          "late_window_peak_to_peak_v": 0.0002581772772329849,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.09349289173794595,
+              "max_dynamic_error_from_late_value_v": 0.0959810284817269,
+              "peak_to_peak_v": 0.003141028957650116
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.09115602541515899,
+              "max_dynamic_error_from_late_value_v": 0.09364416215893995,
+              "peak_to_peak_v": 0.039970218323390094
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.01815142748395615,
+              "max_dynamic_error_from_late_value_v": 0.015663290740175195,
+              "peak_to_peak_v": 0.010156394206159103
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.0025803686786561864,
+              "max_dynamic_error_from_late_value_v": 0.002545979438825896,
+              "peak_to_peak_v": 0.002638211373701127
+            }
+          ]
+        },
+        {
+          "edge_ns": 60,
+          "target_v": -0.4,
+          "late_value_v": -0.3975117486606491,
+          "late_static_error_v": 0.002488251339350933,
+          "late_window_peak_to_peak_v": 0.0002582786270868276,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.09349165150521299,
+              "max_dynamic_error_from_late_value_v": 0.09597990284456392,
+              "peak_to_peak_v": 0.0031482011848220637
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.09116024240090403,
+              "max_dynamic_error_from_late_value_v": 0.09364849374025497,
+              "peak_to_peak_v": 0.039960249564117145
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.01815237613761289,
+              "max_dynamic_error_from_late_value_v": 0.015664124798261958,
+              "peak_to_peak_v": 0.010162948845853892
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.002580315889148088,
+              "max_dynamic_error_from_late_value_v": 0.0025462014298608393,
+              "peak_to_peak_v": 0.0026382659796579944
+            }
+          ]
+        }
+      ],
+      "supply_peak_current_a": 0.0033935861896802,
+      "artifacts_sha256": {
+        ".spice": "5793c4e265e0491d9f38d90ab44fa7c913857299504af0ab16d6d09c81096378",
+        ".dat": "3b8d82876750a65d6963d36ac078f47224acebb3aec88a7546a6e21477393d7f",
+        ".log": "9597dbe9abad7f5ff0db05fa1638a31834775436fd3099fb8333e34a25c26003"
+      }
+    },
+    {
+      "name": "ff_cc0.5",
+      "compensation_pf": 0.5,
+      "corner": "ff",
+      "transitions": [
+        {
+          "edge_ns": 20,
+          "target_v": 0.4,
+          "late_value_v": 0.3975410957622808,
+          "late_static_error_v": -0.002458904237719217,
+          "late_window_peak_to_peak_v": 4.784434730620291e-07,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.009062857002522073,
+              "max_dynamic_error_from_late_value_v": 0.006603952764802856,
+              "peak_to_peak_v": 0.006209364810820128
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.00283060092480214,
+              "max_dynamic_error_from_late_value_v": 0.002164402260849241,
+              "peak_to_peak_v": 0.002536098947932164
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.0028243844108949423,
+              "max_dynamic_error_from_late_value_v": 0.0003654801731757251,
+              "peak_to_peak_v": 0.00044182006395399043
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.002461133643009039,
+              "max_dynamic_error_from_late_value_v": 2.229405289821962e-06,
+              "peak_to_peak_v": 2.3830146991254963e-06
+            }
+          ]
+        },
+        {
+          "edge_ns": 60,
+          "target_v": -0.4,
+          "late_value_v": -0.39754100991012165,
+          "late_static_error_v": 0.0024589900898783768,
+          "late_window_peak_to_peak_v": 5.035463128688633e-07,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.009064932401945058,
+              "max_dynamic_error_from_late_value_v": 0.006605942312066682,
+              "peak_to_peak_v": 0.0062086119857389654
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.002833425278499946,
+              "max_dynamic_error_from_late_value_v": 0.00216330572332335,
+              "peak_to_peak_v": 0.002537740911944919
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.0028248416130701726,
+              "max_dynamic_error_from_late_value_v": 0.0003658515231917958,
+              "peak_to_peak_v": 0.0004419168159832676
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.002461308539024931,
+              "max_dynamic_error_from_late_value_v": 2.3184491465544355e-06,
+              "peak_to_peak_v": 2.3529381718567777e-06
+            }
+          ]
+        }
+      ],
+      "supply_peak_current_a": 0.003390008970781062,
+      "artifacts_sha256": {
+        ".spice": "8ec5c40b7de757fa33639b410792fda550203d6d8dbf6798457d8c9954de73fa",
+        ".dat": "ad12bebb56f8a2b21af5c1f76c926ba0670eac8f419ac06a8bcf80d731e2bca7",
+        ".log": "e1c487d022db7cdc924032e113ebf03f83fef83e804ec1eec404b60fe65405d3"
+      }
+    },
+    {
+      "name": "ff_cc1",
+      "compensation_pf": 1,
+      "corner": "ff",
+      "transitions": [
+        {
+          "edge_ns": 20,
+          "target_v": 0.4,
+          "late_value_v": 0.3975412026670553,
+          "late_static_error_v": -0.00245879733294474,
+          "late_window_peak_to_peak_v": 2.9288252489934052e-06,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.01980563988276207,
+              "max_dynamic_error_from_late_value_v": 0.017346842549817332,
+              "peak_to_peak_v": 0.015368665511890978
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.02139100886706402,
+              "max_dynamic_error_from_late_value_v": 0.01893221153411928,
+              "peak_to_peak_v": 0.00843168201657396
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.0031614400462830483,
+              "max_dynamic_error_from_late_value_v": 0.003613929534209692,
+              "peak_to_peak_v": 0.004316572247548001
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.0024859844969070677,
+              "max_dynamic_error_from_late_value_v": 0.00010870397497586559,
+              "peak_to_peak_v": 0.00013589113893819338
+            }
+          ]
+        },
+        {
+          "edge_ns": 60,
+          "target_v": -0.4,
+          "late_value_v": -0.39754113814926667,
+          "late_static_error_v": 0.0024588618507333515,
+          "late_window_peak_to_peak_v": 2.916984443990245e-06,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.019802481775930025,
+              "max_dynamic_error_from_late_value_v": 0.017343619925196674,
+              "peak_to_peak_v": 0.015373615155437115
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.021390144524073063,
+              "max_dynamic_error_from_late_value_v": 0.01893128267333971,
+              "peak_to_peak_v": 0.008428016706923058
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.0031616688900238943,
+              "max_dynamic_error_from_late_value_v": 0.003613544366638466,
+              "peak_to_peak_v": 0.004316351405929009
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.0024861046720640045,
+              "max_dynamic_error_from_late_value_v": 0.00010863542847533436,
+              "peak_to_peak_v": 0.0001358782498059874
+            }
+          ]
+        }
+      ],
+      "supply_peak_current_a": 0.00338850710083325,
+      "artifacts_sha256": {
+        ".spice": "2cfc61718824c2fc57c954d360762a21af51348e900e1d3d279e7d1cab50e612",
+        ".dat": "be775a244a97ffefee16b9f9e4ed62c9d8beaed614a5105a2312a68805e1ef90",
+        ".log": "c6437adeef3933d90c3874cbf138ccbef0a469ccd37eaaf9a6cc67771b021483"
+      }
+    },
+    {
+      "name": "ff_cc2",
+      "compensation_pf": 2,
+      "corner": "ff",
+      "transitions": [
+        {
+          "edge_ns": 20,
+          "target_v": 0.4,
+          "late_value_v": 0.39756819209421174,
+          "late_static_error_v": -0.0024318079057882858,
+          "late_window_peak_to_peak_v": 6.069798934205117e-05,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.087031398193819,
+              "max_dynamic_error_from_late_value_v": 0.08946320609960728,
+              "peak_to_peak_v": 0.02423309278770791
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.06265575949950086,
+              "max_dynamic_error_from_late_value_v": 0.06508756740528915,
+              "peak_to_peak_v": 0.05370875451452295
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.01767672547516519,
+              "max_dynamic_error_from_late_value_v": 0.015244917569376903,
+              "peak_to_peak_v": 0.01684381169353011
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.002846197083279045,
+              "max_dynamic_error_from_late_value_v": 0.0004143891774907593,
+              "peak_to_peak_v": 0.000702029641854951
+            }
+          ]
+        },
+        {
+          "edge_ns": 60,
+          "target_v": -0.4,
+          "late_value_v": -0.3975681579005848,
+          "late_static_error_v": 0.0024318420994152157,
+          "late_window_peak_to_peak_v": 6.069060729907427e-05,
+          "windows": [
+            {
+              "after_edge_ns": [
+                9,
+                10
+              ],
+              "max_absolute_error_v": 0.08703266929672504,
+              "max_dynamic_error_from_late_value_v": 0.08946451139614026,
+              "peak_to_peak_v": 0.024231683220265143
+            },
+            {
+              "after_edge_ns": [
+                10,
+                12
+              ],
+              "max_absolute_error_v": 0.06265844365300899,
+              "max_dynamic_error_from_late_value_v": 0.0650902857524242,
+              "peak_to_peak_v": 0.05370942379062105
+            },
+            {
+              "after_edge_ns": [
+                15,
+                20
+              ],
+              "max_absolute_error_v": 0.017677397181375176,
+              "max_dynamic_error_from_late_value_v": 0.01524555508195996,
+              "peak_to_peak_v": 0.016844252850249264
+            },
+            {
+              "after_edge_ns": [
+                25,
+                30
+              ],
+              "max_absolute_error_v": 0.002846290639681004,
+              "max_dynamic_error_from_late_value_v": 0.00041444854026578826,
+              "peak_to_peak_v": 0.0007021147323860166
+            }
+          ]
+        }
+      ],
+      "supply_peak_current_a": 0.003393186539623513,
+      "artifacts_sha256": {
+        ".spice": "2aaecd1eea18316e0cd36c6b1ae025b7eb2caa4e1782063e61032860de2b9289",
+        ".dat": "9bc8b908af3e75db89d33c2fd6191a05ad0d14ef57361a3a972c2d2d252e8247",
+        ".log": "52f0c1e8cb06c8cdb10a1bc8222d570df0e1bac91cf65cb12db0a39aaad6a646"
+      }
+    }
+  ],
+  "pending": [],
+  "qualified_adc": false,
+  "limitations": [
+    "All load bottoms grounded, sampler always on; finite references/CDAC switching and turnoff absent.",
+    "Late value is a finite-window estimate, not independently proven DC asymptote.",
+    "FET typical only; compensation ideal. No noise/mismatch/phase-margin qualification."
+  ]
+}

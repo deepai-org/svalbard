@@ -1,0 +1,120 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "switch_offset_v": 0.0,
+      "bits": 12,
+      "transported_values_v": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "result": {
+        "done": true,
+        "range_limited": false,
+        "accuracy": "unverified",
+        "valid": false,
+        "residual_interval_v": [
+          -0.000264140625,
+          0.000264140625
+        ],
+        "reason": "uncertainty overlaps accuracy boundary"
+      },
+      "calibration_duration_s": 0.000288
+    },
+    {
+      "mode": 0,
+      "switch_offset_v": 0.002,
+      "bits": 12,
+      "transported_values_v": [
+        -0.001953125,
+        -0.001953125,
+        -0.001953125,
+        -0.001953125,
+        -0.001953125,
+        -0.001953125,
+        -0.001953125,
+        -0.001953125
+      ],
+      "result": {
+        "done": true,
+        "range_limited": false,
+        "accuracy": "failed",
+        "valid": false,
+        "residual_interval_v": [
+          -0.002217265625,
+          -0.001688984375
+        ],
+        "reason": "entire residual interval violates tolerance"
+      },
+      "calibration_duration_s": 0.000288
+    },
+    {
+      "mode": 1,
+      "switch_offset_v": 0.0,
+      "bits": 8,
+      "transported_values_v": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "result": {
+        "done": true,
+        "range_limited": false,
+        "accuracy": "unverified",
+        "valid": false,
+        "residual_interval_v": [
+          -0.00392625,
+          0.00392625
+        ],
+        "reason": "uncertainty overlaps accuracy boundary"
+      },
+      "calibration_duration_s": 0.000288
+    },
+    {
+      "mode": 1,
+      "switch_offset_v": 0.002,
+      "bits": 8,
+      "transported_values_v": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "result": {
+        "done": true,
+        "range_limited": false,
+        "accuracy": "unverified",
+        "valid": false,
+        "residual_interval_v": [
+          -0.00392625,
+          0.00392625
+        ],
+        "reason": "uncertainty overlaps accuracy boundary"
+      },
+      "calibration_duration_s": 0.000288
+    }
+  ],
+  "complete_architecture": false,
+  "limitations": [
+    "Direct controller; no serialized start/status/abort yet.",
+    "Independent zero-input diagnostic path is an assumed topology, not transistor-qualified.",
+    "ADC reference loading disabled; loaded observation needs a larger justified error bound.",
+    "Epoch values are fixtures; full lifecycle ownership and invalidation remain to connect."
+  ]
+}

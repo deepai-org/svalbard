@@ -1,0 +1,70 @@
+{
+  "completed": true,
+  "cases": [
+    {
+      "rail": "VH",
+      "nominal_output_v": 2.163147609705061,
+      "nominal_error_v": 0.013147609705061125,
+      "local_target_slope": 0.9916170281051069,
+      "max_fit_residual_v": 1.4211727989987821e-06,
+      "supply_power_w": 0.04245098314360869
+    },
+    {
+      "rail": "VL",
+      "nominal_output_v": 1.139521626160212,
+      "nominal_error_v": -0.010478373839788002,
+      "local_target_slope": 0.9986062640901398,
+      "max_fit_residual_v": 3.6119398161282845e-07,
+      "supply_power_w": 0.04245098314296731
+    }
+  ],
+  "provenance": {
+    "cases": [
+      {
+        "name": "VH",
+        "target_v": 2.15,
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "220ce8c36a5615cf2e1260ddae25b71ac5d91713eab399704ba4bbfcc5ea4648",
+          ".dat": "d18c01334c33bbd607d5ba59ec9b1de5456fffb9dd46866d44138ae7356860f0",
+          ".log": "3090a079abd6071175d27f5619d4d4773d459f99c39c73b357abd15026166c2e"
+        }
+      },
+      {
+        "name": "VL",
+        "target_v": 1.15,
+        "returncode": 0,
+        "artifacts_sha256": {
+          ".spice": "c6c364406c31d8d758974877e6a4ec7211ebcc7fe95b7c5612a77e39611431bc",
+          ".dat": "7b3698bd9794c8e7119abcc529f0f55fa73db71fea7860d0d08500638515900a",
+          ".log": "3090a079abd6071175d27f5619d4d4773d459f99c39c73b357abd15026166c2e"
+        }
+      }
+    ],
+    "sources_before": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+      "/screen/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+      "/screen/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+      "/screen/reference/pair_target_dc.py": "bb16e824542c349469e9c995c57c20fb4c7a7bb7f11c0a2bad2f5af2f1464a4a"
+    },
+    "sources_after": {
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+      "/foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+      "/screen/reference/adc_reference_pair_tuned.spice": "7b2f849443913722d8d1a2e5de2eab66005f8162469a15cff2f52f6f2666333b",
+      "/screen/reference/buffer_scaled_tune.spice": "511e1b4658d8bd4da2a686d84a7895a52fe438f29679cb9f6b34c30a4e4a976c",
+      "/screen/reference/buffer_complement_tune.spice": "9c06a05c48b0ab896037d4ec452dcd979edb8a7315eba828b53b817b1f21b264",
+      "/screen/reference/pair_target_dc.py": "bb16e824542c349469e9c995c57c20fb4c7a7bb7f11c0a2bad2f5af2f1464a4a"
+    }
+  },
+  "limitations": [
+    "Zero external DC load and ideal bias/target supplies; dynamic reference error not addressed.",
+    "Near-unity target response does not measure open-loop gain or isolate transistor mismatch.",
+    "No target precompensation adopted; process variation and switched load remain unqualified."
+  ]
+}

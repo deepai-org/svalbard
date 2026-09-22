@@ -1,0 +1,62 @@
+{
+  "status": "nominal_loaded_first_divider_stage_not_feedback_chain",
+  "cases": [
+    {
+      "restored": false,
+      "vco_hz": 2500718635.9388576,
+      "divider_hz": 1250359454.8720214,
+      "divider_edges": 25,
+      "divider_period_span_s": 2.615920104186458e-15,
+      "ratio": 1.9999997810188228,
+      "divider_diff_range_v": [
+        -1.255758106114524,
+        1.25639427512377
+      ],
+      "divider_branch_current_a": 0.002158306143855701,
+      "gate_range_v": [
+        1.492058760737835,
+        1.51112369329368
+      ],
+      "artifacts_sha256": {
+        ".spice": "d8a2abf64a227eb5447d8b7867bced8939b190df4587682cf2fa470fd7fa1edd",
+        ".dat": "90e3607eaeb461ec4b2306f8c65266f6ab5e98a05a3f5684fbc5b3b15f045db7",
+        ".log": "955c634104a0252056179ec7123baf3ed8614b5043fd5898ce99812a69c53a3d"
+      },
+      "nominal_division_check": true
+    },
+    {
+      "restored": true,
+      "vco_hz": 2500280175.383202,
+      "divider_hz": 1250140035.6681225,
+      "divider_edges": 25,
+      "divider_period_span_s": 2.0483429634990935e-15,
+      "ratio": 2.0000000832282416,
+      "divider_diff_range_v": [
+        -1.390321663901437,
+        1.389918979365793
+      ],
+      "divider_branch_current_a": 0.0054041716885816,
+      "gate_range_v": [
+        1.491971971797397,
+        1.511157179089211
+      ],
+      "artifacts_sha256": {
+        ".spice": "e182a31342464db8b47714718f923452e6a0e1e145e8d4a3c074b01a82c2ae81",
+        ".dat": "bb16a520d6487703cfc99e39d22284011a331f6e2bcefda351ec76694354c04b",
+        ".log": "e95549f9a3928c21651fbc01cd1b2d43369166e3f204f3961a48038be5812191"
+      },
+      "nominal_division_check": true
+    }
+  ],
+  "limitations": [
+    "Seeded VCO/prebiased LNA; external divider/reset/restorer bias sources.",
+    "One divider stage with 25fF per output, not full feedback divisor or PFD loading.",
+    "Nominal TT 3.3V 27C; no phase noise, process/mismatch or startup guarantee.",
+    "Femtosecond deterministic period spread is numerical waveform variation, not intrinsic jitter evidence."
+  ],
+  "source_sha256": {
+    "projects/programmable_transceiver_platform/analog/rf_rx_candidate.spice": "755dc05869d1add201e20953635bb3e2f31cd55f5b46d58f69992efcddc452eb",
+    "ip/blocks/analog/wireline_serdes/pll/divider.spice": "1e007f6d40d8678192a090ed1906fd27f6834dfec6983a35f15ffb8f1a3e364b",
+    "ip/blocks/analog/wireline_serdes/pll/clock_restorer_cascade.spice": "0b8b54a627a1916cda4432bacc098143fc864c60b296d57ae438aed3f7a99711"
+  }
+}

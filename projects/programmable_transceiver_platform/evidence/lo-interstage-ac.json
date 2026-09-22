@@ -1,0 +1,55 @@
+{
+  "status": "local_small_signal_topology_hypothesis",
+  "cases": [
+    {
+      "name": "baseline",
+      "gain_magnitude_in_mid_pre_out": {
+        "19531250.0": [
+          0.13284853431686283,
+          2.1025983728398976,
+          39.707312337434665,
+          753.847102114722
+        ],
+        "2500000000.0": [
+          0.9206780306589005,
+          1.0319710402100606,
+          3.5934874414693474,
+          17.60395157448417
+        ]
+      },
+      "artifacts_sha256": {
+        ".spice": "ce1720df96b3463fe1f61c4987a29268d5ce5e2458c781dd47484feebb448379",
+        ".log": "39c095b2a0558dcea9463bb7128f23f5bc5e95239403a2a39422f837bffcd326",
+        ".dat": "d6157ad16afcc5146557922fa73eeff9ab7fae4aa2a082b3d3a2be4dd56f5574"
+      }
+    },
+    {
+      "name": "isolated",
+      "gain_magnitude_in_mid_pre_out": {
+        "19531250.0": [
+          0.1293554102670556,
+          2.094926699771041,
+          0.42747674809416814,
+          8.115675046019842
+        ],
+        "2500000000.0": [
+          0.9186854999464924,
+          1.4776159231634907,
+          3.681370622741953,
+          18.03385128266097
+        ]
+      },
+      "artifacts_sha256": {
+        ".spice": "85371aa276ebeb0398017137cd96fe93e9033aa1f6611f6890939d8b760bca70",
+        ".log": "39c095b2a0558dcea9463bb7128f23f5bc5e95239403a2a39422f837bffcd326",
+        ".dat": "b4a69b4f28f9f95b91545f0bf4d1381faf730ef61c6f27751e1361c07e9797ff"
+      }
+    }
+  ],
+  "limitations": [
+    "50fF final load only; real mixer/filter loading and ring backloading absent.",
+    "Linearized around1.530318V equilibrium; large AC gains do not imply unclipped physical amplitudes.",
+    "Four PDK unit coupling capacitors and10kohm local feedback are exploratory choices.",
+    "No transient startup, phase noise, duty-cycle or autonomous-loop qualification."
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "completed": true,
+  "status": "terminal_comparison",
+  "limitations": [
+    "One nominal seeded/prebiased RF tone; no broadband gain/noise/linearity or process qualification.",
+    "Added common inversion changes absolute conversion polarity; amplitude/relative-IQ comparisons do not imply preserved absolute phase.",
+    "Accounted supply power excludes ideal control/regeneration/common-mode/bias sources and other chip functions."
+  ],
+  "windows": [
+    {
+      "window_ns": [
+        40,
+        200
+      ],
+      "harmonic_fit_order": 4,
+      "i_gain_ratio": 5.063930706614529,
+      "q_gain_ratio": 4.969147497720165,
+      "i_gain_improvement_db": 14.08975508575928,
+      "q_gain_improvement_db": 13.925637759403521,
+      "baseline_q_over_i": 1.139134745554722,
+      "candidate_q_over_i": 1.1178131965837401,
+      "baseline_q_phase_deg": -90.44389453026531,
+      "candidate_q_phase_deg": -93.39801617133543
+    },
+    {
+      "window_ns": [
+        40,
+        200
+      ],
+      "harmonic_fit_order": 8,
+      "i_gain_ratio": 5.0689348735678434,
+      "q_gain_ratio": 4.976836152838457,
+      "i_gain_improvement_db": 14.09833422757788,
+      "q_gain_improvement_db": 13.93906686314468,
+      "baseline_q_over_i": 1.1390437828349063,
+      "candidate_q_over_i": 1.118348217026617,
+      "baseline_q_phase_deg": -90.45883994386341,
+      "candidate_q_phase_deg": -93.41080168217388
+    },
+    {
+      "window_ns": [
+        80,
+        200
+      ],
+      "harmonic_fit_order": 4,
+      "i_gain_ratio": 5.056534630603219,
+      "q_gain_ratio": 4.971863188428841,
+      "i_gain_improvement_db": 14.077059718642253,
+      "q_gain_improvement_db": 13.930383391637138,
+      "baseline_q_over_i": 1.1387559086903012,
+      "candidate_q_over_i": 1.1196874928448235,
+      "baseline_q_phase_deg": -90.4127369006917,
+      "candidate_q_phase_deg": -93.2783255974537
+    },
+    {
+      "window_ns": [
+        80,
+        200
+      ],
+      "harmonic_fit_order": 8,
+      "i_gain_ratio": 5.068331248817022,
+      "q_gain_ratio": 4.977274762744147,
+      "i_gain_improvement_db": 14.097299822855476,
+      "q_gain_improvement_db": 13.939832319199926,
+      "baseline_q_over_i": 1.1390204374917972,
+      "candidate_q_over_i": 1.1185570554609956,
+      "baseline_q_phase_deg": -90.46015871441809,
+      "candidate_q_phase_deg": -93.40718954676528
+    },
+    {
+      "window_ns": [
+        120,
+        200
+      ],
+      "harmonic_fit_order": 4,
+      "i_gain_ratio": 5.067785699969653,
+      "q_gain_ratio": 4.968708941014527,
+      "i_gain_improvement_db": 14.096364834218518,
+      "q_gain_improvement_db": 13.924871144355064,
+      "baseline_q_over_i": 1.1387519182277235,
+      "candidate_q_over_i": 1.116488970267511,
+      "baseline_q_phase_deg": -90.37942588652352,
+      "candidate_q_phase_deg": -93.18302561668337
+    },
+    {
+      "window_ns": [
+        120,
+        200
+      ],
+      "harmonic_fit_order": 8,
+      "i_gain_ratio": 5.071269845305275,
+      "q_gain_ratio": 4.976743388462156,
+      "i_gain_improvement_db": 14.102334404643349,
+      "q_gain_improvement_db": 13.938904963371524,
+      "baseline_q_over_i": 1.139645835655788,
+      "candidate_q_over_i": 1.1184032896689509,
+      "baseline_q_phase_deg": -90.41406823052648,
+      "candidate_q_phase_deg": -93.39795698863706
+    }
+  ],
+  "power": [
+    {
+      "case": "zero",
+      "baseline": {
+        "buffer_supply_power_w": 0.03350751620230007,
+        "ring_supply_power_w": 0.027743832348880542,
+        "lna_supply_power_w": 0.020465127198937973
+      },
+      "candidate": {
+        "buffer_supply_power_w": 0.05797803493424871,
+        "ring_supply_power_w": 0.02774383188342938,
+        "lna_supply_power_w": 0.023413328652410664
+      },
+      "accounted_power_increase_w": 0.02741871971997017
+    },
+    {
+      "case": "tone",
+      "baseline": {
+        "buffer_supply_power_w": 0.033507516284296525,
+        "ring_supply_power_w": 0.02774383234599675,
+        "lna_supply_power_w": 0.020465118684609585
+      },
+      "candidate": {
+        "buffer_supply_power_w": 0.05797803470431061,
+        "ring_supply_power_w": 0.02774383188283184,
+        "lna_supply_power_w": 0.02341331773577582
+      },
+      "accounted_power_increase_w": 0.027418717008015406
+    }
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "scope": "Global-routing congestion comparison with PDN obstructions; no detailed routing, CTS or timing qualification",
+  "cases": [
+    {
+      "case": "original",
+      "input_database_sha256": "7e1568f37bd6ed03ab1e036b737e9e8a637da9f30724f6e5867834565859d5dd",
+      "layers": {
+        "Metal1": {
+          "resource": 0,
+          "demand": 0,
+          "usage_percent": 0.0,
+          "max_horizontal_overflow": 0,
+          "max_vertical_overflow": 0,
+          "total_overflow": 0
+        },
+        "Metal2": {
+          "resource": 468452,
+          "demand": 144511,
+          "usage_percent": 30.85,
+          "max_horizontal_overflow": 0,
+          "max_vertical_overflow": 0,
+          "total_overflow": 0
+        },
+        "Metal3": {
+          "resource": 487389,
+          "demand": 135391,
+          "usage_percent": 27.78,
+          "max_horizontal_overflow": 0,
+          "max_vertical_overflow": 0,
+          "total_overflow": 0
+        },
+        "Metal4": {
+          "resource": 468088,
+          "demand": 2213,
+          "usage_percent": 0.47,
+          "max_horizontal_overflow": 0,
+          "max_vertical_overflow": 0,
+          "total_overflow": 0
+        },
+        "Metal5": {
+          "resource": 272459,
+          "demand": 1755,
+          "usage_percent": 0.64,
+          "max_horizontal_overflow": 0,
+          "max_vertical_overflow": 0,
+          "total_overflow": 0
+        },
+        "Total": {
+          "resource": 1696388,
+          "demand": 283870,
+          "usage_percent": 16.73,
+          "max_horizontal_overflow": 0,
+          "max_vertical_overflow": 0,
+          "total_overflow": 0
+        }
+      },
+      "routed_nets": 26498,
+      "routed_net_names_sha256": "facbd0651f9342ccd5a524614033173b67162b30fe1f982689367c0c00320ab1",
+      "wirelength_um": 3151881,
+      "raw_clock_nets_present": [
+        "host_rx_clk",
+        "host_sclk",
+        "host_tx_clk",
+        "ref_clk",
+        "rf_rx_clk",
+        "rf_tx_clk",
+        "wire_rx_clk",
+        "wire_tx_clk"
+      ],
+      "log_sha256": "82ad2cae3d0dd8d55acae733f47a4201c6f3890181463f51bc564a652bc5f67a",
+      "guides_sha256": "19ab2596f0867b5499c7f029e13ca050e2170fcd02a432b23ae2cd2a84eeb47e"
+    },
+    {
+      "case": "wide",
+      "input_database_sha256": "fa8af34f45359939a65fef747a542310d317bb9b0835ca5b23fcaae1f896609c",
+      "layers": {
+        "Metal1": {
+          "resource": 0,
+          "demand": 0,
+          "usage_percent": 0.0,
+          "max_horizontal_overflow": 0,
+          "max_vertical_overflow": 0,
+          "total_overflow": 0
+        },
+        "Metal2": {
+          "resource": 447704,
+          "demand": 144373,
+          "usage_percent": 32.25,
+          "max_horizontal_overflow": 0,
+          "max_vertical_overflow": 0,
+          "total_overflow": 0
+        },
+        "Metal3": {
+          "resource": 487389,
+          "demand": 135656,
+          "usage_percent": 27.83,
+          "max_horizontal_overflow": 0,
+          "max_vertical_overflow": 0,
+          "total_overflow": 0
+        },
+        "Metal4": {
+          "resource": 441334,
+          "demand": 2290,
+          "usage_percent": 0.52,
+          "max_horizontal_overflow": 0,
+          "max_vertical_overflow": 0,
+          "total_overflow": 0
+        },
+        "Metal5": {
+          "resource": 241487,
+          "demand": 1642,
+          "usage_percent": 0.68,
+          "max_horizontal_overflow": 0,
+          "max_vertical_overflow": 0,
+          "total_overflow": 0
+        },
+        "Total": {
+          "resource": 1617914,
+          "demand": 283961,
+          "usage_percent": 17.55,
+          "max_horizontal_overflow": 0,
+          "max_vertical_overflow": 0,
+          "total_overflow": 0
+        }
+      },
+      "routed_nets": 26498,
+      "routed_net_names_sha256": "facbd0651f9342ccd5a524614033173b67162b30fe1f982689367c0c00320ab1",
+      "wirelength_um": 3156627,
+      "raw_clock_nets_present": [
+        "host_rx_clk",
+        "host_sclk",
+        "host_tx_clk",
+        "ref_clk",
+        "rf_rx_clk",
+        "rf_tx_clk",
+        "wire_rx_clk",
+        "wire_tx_clk"
+      ],
+      "log_sha256": "d53b5d8a97ad27652cdcb76eb65724cbb518b21af96bec3e215c998556e916dd",
+      "guides_sha256": "5458f0a5a78d342864337c66b490bc1003504eb3cacc69184466e311c7a936c5"
+    }
+  ],
+  "resource_change_percent": -4.625946422634442,
+  "wirelength_change_percent": 0.15057675083545163,
+  "source_sha256": {
+    "pdn_routing_screen.tcl": "b6de8ce820c71ff5731a4810760c29072ba919b6a3858c9e0d83c3758c9abc30",
+    "run_pdn_routing.sh": "0e335467bbb669150881f561e12169735990e2920143a2363d42c7aad3fc72b8",
+    "report_pdn_routing.py": "079c780b5b73d6d2b2a9ed303acbe1a5ec0894cfb009a8f78521b49f5deba0fb"
+  },
+  "limitations": [
+    "No STA clock definitions: eight unbuffered clock nets are routed as ordinary nets and explicitly checked present in guides. No clock tree, skew or latency qualification.",
+    "No timing-driven criticality, layer derating margin, detailed-route DRC, pin-access or antenna signoff.",
+    "Global capacity is a coarse model and zero overflow does not prove detailed routability.",
+    "Abstract digital-region pins, no analog macros, full-chip padframe or package feeds.",
+    "Power-grid current/EM and all previous setup/recovery failures remain open."
+  ]
+}

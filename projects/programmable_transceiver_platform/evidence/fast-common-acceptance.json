@@ -27,7 +27,7 @@
     "system_model/connected/calibration_adc_lifecycle.py": "6c2dc2ca03df6ae3a21871c67c59e55894bf43e92ee167eac57d14946ae499a9",
     "system_model/connected/integer_clock_screen.py": "fc989e6ca5822176c49169f572969694fc035bcd60318addc5d3545580957db7",
     "system_model/connected/coarse_startup_lifecycle.py": "65154a948d7a9e740a2feb30c284210a7ccd2a5a3d6b82270a07e61c6afa7d96",
-    "system_model/connected/detector_readout_settling.py": "710765ae1c2e107a5994ed755a458aa4e3240c2f96185b9622afeeb33573d054",
+    "system_model/connected/detector_readout_settling.py": "e3934b301b5d360ac450928d2ccfd0a2216153e72fc7eea4c2084eef26e73345",
     "system_model/connected/wideband_blocker_quality.py": "68ed5ee2d7ae52067e0549a062eea58de935938470e5a7b14a4d62f8d664f97b",
     "system_model/connected/coarse_recovery_screen.py": "5465658a1130518be3571018838dfc8d9774a388681e7534a8523e7fc2162be4",
     "system_model/connected/fractional_pulse_screen.py": "af8447768a3d24689a302877b81f401fde05f8a2644a7e62aa9cd046e2a79de9",
@@ -45,7 +45,7 @@
     "system_model/connected/continuous_receiver_screen.py": "c18df9949039cdd48bad35f870b57c015eb368dc2138b52b6d0c2e235752c5b8",
     "system_model/connected/receiver_detect_load_screen.py": "d4e3693d9049402a567ef817f0a7e7c605b6265114f6912db2f778e9dd2d448a",
     "system_model/connected/source_visibility_lifecycle.py": "aa3d7d3e326fa754c4786d26456d7276e30aa42448e17fc4b82c8161962ea1d1",
-    "system_model/connected/buffered_shared_detector.py": "74a0aa9472b36321e554cbe882926f8593558a1f5ce253b2447348a66d6aa68a",
+    "system_model/connected/buffered_shared_detector.py": "ebbafbbd5195e381c7e9ea2fd84d0b8ac79ad1c57c23e827b57f54a3036ad276",
     "system_model/connected/programmable_calibration_dwell.py": "f745051e40d7dc6fd84a763586cf845ca2e6f6897df9ac12ffcd3e22ac1f5854",
     "system_model/connected/autonomous_wire_screen.py": "74752b044481ee3965ee5dce4f310579bcb61de146b568f6e158e194e6942014",
     "system_model/connected/dac_supply_lifecycle.py": "e29b9e85e846a92baa4e81eed9f53331f1cf93569e5cd68b46036cb2ae1345bf",
@@ -338,7 +338,7 @@
     "system_model/connected/pump_reference_screen.py": "8023bcd4377189e37813c11e31f98b9cf41971c428c3bf7a8fd71d7266ee04c3",
     "system_model/connected/analog_tile_screen.py": "cd2fcaca88f497f4a2eeb0a8066002b213d0925149d079a4e6c235dd95ffbdde",
     "system_model/connected/local_routing_lifecycle.py": "c85458693a7c48a105fdfed9a8b1cc019c5e7c2619102feae9bf564bcfa3c8f1",
-    "system_model/connected/shared_tx_detector.py": "772ab6e74d2fe95c2a11da574cb8e3593eb40a18344d6e9eda6d99024faa2999",
+    "system_model/connected/shared_tx_detector.py": "b3f457c0f3873c8b4e5833e6ab5e9f533471fcab7c0e354dcf11c1666e9c2b84",
     "system_model/connected/statistical_calibration_lifecycle.py": "0c11969925dba638247e2d52c7c41c53703474a6aba603b5132d9f39130aed8d",
     "system_model/connected/oscillator_supply_screen.py": "7df579e1966583dddd9c8467b51c044a3b5ccae67bd000f35fc6fb25a03917fc",
     "system_model/connected/fractional_pulse_pll.py": "5eff5b4baa16d5d04dadf616f255ef457042d5907a97800478fcfb7f5f2ef6ab",
@@ -415,7 +415,7 @@
     "system_model/architecture_fast/diagnostics.py": "5ff07f853721990835b9fea86711b708e5f3a7822afeead361c08a1be9ed55d9",
     "system_model/architecture_fast/output_loopback.py": "f1a4ca8f2f921018865f37aee78b3a68a9c4cf99bae3238c10953661ee9323e5",
     "system_model/architecture_fast/clock_noise.py": "e02f159217eb17fdb6fbedcefd81fc2f486224d9e38f6eb6253ed88909a77fd1",
-    "system_model/architecture_fast/chip.py": "2e57fdff7c04afd66cce7c8167bce093373d8c5c6e2e6aa9d50bde3725bdde83",
+    "system_model/architecture_fast/chip.py": "af23b20f43e712617a655aebf7acc7cb0f1366642b67468d636c8aa17a7db589",
     "system_model/architecture_fast/coarse_clock.py": "c8c05e04b5e8a1c5082877fd3e7eacc9cf25e138d12c779ea96817ba3ba957ba",
     "system_model/architecture_fast/local_mode_check.py": "ce0dc55ea773d3f8a5bdf39eb281c142b8d7999fb62858722f29014a4d9baeea",
     "system_model/architecture_fast/tuning_margin.py": "ca37eff85fb000a28d98f5c185784df12a751c622fc608aa46ab0aafc0d1a92e",
@@ -449,73 +449,73 @@
       "script": "shared_tx_recovery.py",
       "evidence": "fast-shared-tx-recovery.json",
       "case_count": 2,
-      "result_sha256": "9e3d23dad44900ce4d1b29a68a0b5ddfaf32f21e82e47e565cd472c5c46a3e41"
+      "result_sha256": "effe2e50737f01626d777e3867568a220f271429f06b1271e83b86ec10a8cd5d"
     },
     {
       "script": "diagnostics.py",
       "evidence": "fast-diagnostics.json",
       "case_count": 4,
-      "result_sha256": "ebe986e43fca28fb85a0fea69549c5ed33512a7ce289b3d0220852a578c1acbd"
+      "result_sha256": "2419fe3f8b62626573f2b8c18efc4edc00c74c5f200c5d53994c014831c3f62d"
     },
     {
       "script": "receiver_detect.py",
       "evidence": "fast-receiver-detect-supply.json",
       "case_count": 2,
-      "result_sha256": "cd885ed601e12cc6db76ac3dcc6d0c5c85ad961a43fde45ebb836a944a45582b"
+      "result_sha256": "d31373e161241076d5284d83fcecb3a15f95e32fd6bcfa8b371936ee10ab5e38"
     },
     {
       "script": "continuous_rx.py",
       "evidence": "fast-continuous-rx.json",
       "case_count": 4,
-      "result_sha256": "7b2a3e1223ffe28dd2c5aadf81f1ea2b76762643b3ae6fe1f2d0c84a26f76e97"
+      "result_sha256": "cb0c34c42d9e835d3dc1604ec3bdec4bc28051cea5f90a7e89a0ba6233201c17"
     },
     {
       "script": "lo_mixer_check.py",
       "evidence": "fast-lo-mixer.json",
       "case_count": 4,
-      "result_sha256": "4261e953b0ecde75d4aeeb29e837105425eb68a8ef31bfce33503555b1397c75"
+      "result_sha256": "8a7b8862d161163931fa520206240bc29e866ae63c29301f82332b7d1ae1b979"
     },
     {
       "script": "lo_sideband_check.py",
       "evidence": "fast-lo-sidebands.json",
       "case_count": 5,
-      "result_sha256": "65f922bfbc7afbd1079ebafb0b777322a2d3ec905fbd5117e67b3772e0a0d690"
+      "result_sha256": "a159be6f482b1150aa81dffa2e3868030477ca3d615d59713a3f21b124fd6a48"
     },
     {
       "script": "output_loopback_check.py",
       "evidence": "fast-output-loopback.json",
       "case_count": 3,
-      "result_sha256": "d897c2f626bd6c2c83830446585aa3b8f43266205ae080e6fbb286eb5a735e9e"
+      "result_sha256": "9e67a8c67b5a7ab06bf05fd27320e965f45017c1cf6b69422822f568457fe460"
     },
     {
       "script": "continuous_quality.py",
       "evidence": "fast-continuous-quality.json",
       "case_count": 2,
-      "result_sha256": "e757591c97e495b56438cf3888527d5b5e9703384c9d96e97e9beeade69f0d96"
+      "result_sha256": "868860348fa4550b82472efb96c26162f4dfc222350ebc91d4025f26c170a124"
     },
     {
       "script": "continuous_four_path.py",
       "evidence": "fast-continuous-four-path.json",
       "case_count": 4,
-      "result_sha256": "45c58caebf269eb526d1adba1babaab280fa0c8cf82854edd676e3e54fb21325"
+      "result_sha256": "ce3538631982feb502b01e2e938f473efc5960d7e339708d2fe495b97a5493f6"
     },
     {
       "script": "warm_chip_check.py",
       "evidence": "fast-warm-chip.json",
       "case_count": 4,
-      "result_sha256": "840299ba1d5ed73bd823bfaae839f47259519affb64b95aadb0ce6b5d6af75a7"
+      "result_sha256": "2ba976721a0799dfd9ad11389979758422b4d943f5d10359e846a8eb0a2b4303"
     },
     {
       "script": "local_mode_check.py",
       "evidence": "fast-local-mode.json",
       "case_count": 2,
-      "result_sha256": "d2c6d3e804c86ec73acda10a5d624f43e7ff0db6599ee1054d534f254cf743bc"
+      "result_sha256": "810e9160fb223ab69684196aaa4e7e2836d8003c86da4c2dd258e95a1f054cda"
     },
     {
       "script": "wideband_loopback_quality.py",
       "evidence": "fast-wideband-loopback-quality.json",
       "case_count": 2,
-      "result_sha256": "f71a922e3b10853b40378f1d636fd357952a0ef4cccb0f1320e4dfd1e42ddeda"
+      "result_sha256": "c5dae5cda1711850dd0a813e36d166e96ceb6ff1946f7b360dd4008748497afc"
     }
   ],
   "complete_architecture": false,
@@ -527,5 +527,5 @@
     "Complete noise, loaded output/package and physical parameter qualification; nonlinear loopback tested.",
     "Full connected transistor schematic before layout."
   ],
-  "elapsed_s": 240.7566398596391
+  "elapsed_s": 241.11367790121585
 }

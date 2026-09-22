@@ -85,3 +85,5 @@ readout ODE checks pass at 5 ns, 20 ns and 500 ns settling constants (maximum
 error 4.95e-14). The full common aggregate was not rerun for this extraction;
 its previous source hashes are historical and must not be presented as fresh
 qualification for this source snapshot.
+
+Follow-up requalification after the helper extraction: all 12 common acceptance programs / 38 cases pass; all eight consolidated RF stress case records remain exactly equal. Loaded-loopback numerics and exclusive-engine/serialized-management checks also pass. The selected evidence audit verifies current source and result hashes. This supersedes the earlier note that the common aggregate had not yet been rerun.

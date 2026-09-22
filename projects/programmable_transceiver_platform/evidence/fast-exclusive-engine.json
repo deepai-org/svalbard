@@ -442,26 +442,29 @@
     "system_model/architecture_fast/traffic.py": "d0bd449d2f8bb0ed522e7800be6f9b6106191cbc8fb8a04838c58b19daf30338",
     "system_model/architecture_fast/run.py": "e2883fdd43d4c0c7a1c2425896e7aa584fb7b90e0ee6038ea2f7c940469acde7",
     "verification/fast_loaded_output.py": "68a8f879570ec936492153f00d464cca2451ecb5bbba09adb51b7e43081bd350",
-    "verification/fast_exclusive_engine.py": "be7c4c826b5ec4e7b4f23b37e752267b2a2137cd7a43adedef5c9560ade794a5",
-    "verification/fast_exclusive_engine_check.py": "8874f3feb247419981534e6af0addeb5fbdee41652927ea3f9219bfc84071a07"
+    "verification/fast_exclusive_engine.py": "67abbdd190b064b3d472227349fbf87cb29e56cdb820eb22e2fe8191cd8e58da",
+    "verification/fast_exclusive_engine_check.py": "597f7f742fe21ea01108d0e7b9669622a6bf708f5b1aaaeeee466524e70d6f7c"
   },
   "cases": [
     {
       "engine": "rf",
       "mode": 0,
       "opposite_engine_rejected": true,
+      "ingress_rejection_atomic": true,
       "stopped": true
     },
     {
       "engine": "wire",
       "mode": 1,
       "opposite_engine_rejected": true,
+      "ingress_rejection_atomic": true,
       "stopped": true
     },
     {
       "engine": "rf",
       "mode": 1,
       "opposite_engine_rejected": true,
+      "ingress_rejection_atomic": true,
       "stopped": true
     }
   ],

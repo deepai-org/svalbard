@@ -22,11 +22,18 @@ def main():
         assert c.session.enabled(engine) and not c.session.enabled(other)
         reject(lambda:c.select_engine(other))
         if engine=='rf':
+            accepted=c.wire_accepted;queued=list(c.wire_queue)
+            reject(lambda:c.accept_wire(17))
+            assert c.wire_accepted==accepted and list(c.wire_queue)==queued
             reject(lambda:c.schedule_wire(32,c.time+1e-6))
             reject(lambda:c.incoming_wire([1],c.time+1e-6))
             before=len(c.adc_words);c.capture(32,c.time+100e-9);c.advance(c.time+3e-6)
             assert len(c.adc_words)-before==32
         else:
+            before=c.decoder
+            reject(lambda:c.descriptor(32))
+            reject(lambda:c.execute_management('start_local',3|(32<<2)|(1<<18),c.time))
+            assert c.decoder is before and c.remaining==0
             reject(lambda:c.capture(32,c.time+1e-6));reject(lambda:c.schedule(32,c.time+1e-6))
             reject(lambda:c.execute_management('tx_cal_start',0,c.time))
             c.incoming_wire([i%1024 for i in range(64)],c.time+100e-9,.3,0)
@@ -35,7 +42,7 @@ def main():
         assert command(c,'stop')['accepted']
         assert command(c,'ack_abort')['accepted'] and command(c,'ack_drain')['accepted']
         assert c.state=='reset' and not c.session.armed
-        rows.append(dict(engine=engine,mode=mode,opposite_engine_rejected=True,stopped=True))
+        rows.append(dict(engine=engine,mode=mode,opposite_engine_rejected=True,ingress_rejection_atomic=True,stopped=True))
     c.select_engine('none');reject(lambda:c.configure(0,c.time))
     files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[P/'verification'/n for n in ('fast_loaded_output.py','fast_exclusive_engine.py','fast_exclusive_engine_check.py')]
     out=dict(status='passed',source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files},cases=rows,

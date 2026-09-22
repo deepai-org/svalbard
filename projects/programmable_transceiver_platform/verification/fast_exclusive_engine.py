@@ -29,6 +29,10 @@ class ExclusiveEngineChip(LoadedOutputChip):
     def configure(self,*args,**kwargs):
         if self.active_engine=='none':raise ValueError('Select payload engine before configuration')
         return super().configure(*args,**kwargs)
+    def descriptor(self,*args,**kwargs):
+        self.require_engine('rf');return super().descriptor(*args,**kwargs)
+    def accept_wire(self,*args,**kwargs):
+        self.require_engine('wire');return super().accept_wire(*args,**kwargs)
     def capture(self,*args,**kwargs):
         self.require_engine('rf');return super().capture(*args,**kwargs)
     def schedule(self,*args,**kwargs):
@@ -45,6 +49,6 @@ class ExclusiveEngineChip(LoadedOutputChip):
         if operation=='engine_status':
             if payload:raise ValueError('Reserved engine status bits')
             return dict(value=('none','rf','wire').index(self.active_engine))
-        if operation in ('tx_cal_start','rx_stream_start','tx_stream_start','stream_start'):
+        if operation in ('tx_cal_start','rx_stream_start','tx_stream_start','stream_start','start_local'):
             self.require_engine('rf')
         return super().execute_management(operation,payload,time)

@@ -1,12 +1,13 @@
 """Experimental payload ownership interlock on the loaded common-chip model.
 
-Inactive analog clock/bias shutdown and serialized management encoding remain
+Inactive analog clock/bias shutdown and pin-level management/RTL encoding remain
 unimplemented. This adapter gates admission and actual session enables.
 """
 from types import MethodType
 from fast_loaded_output import LoadedOutputChip
 
 class ExclusiveEngineChip(LoadedOutputChip):
+    TILE_COMMANDS=LoadedOutputChip.TILE_COMMANDS+('engine_select','engine_status')
     def __init__(self,**kwargs):
         self.active_engine='none'
         super().__init__(**kwargs)
@@ -37,6 +38,13 @@ class ExclusiveEngineChip(LoadedOutputChip):
     def incoming_wire(self,*args,**kwargs):
         self.require_engine('wire');return super().incoming_wire(*args,**kwargs)
     def execute_management(self,operation,payload,time):
+        if operation=='engine_select':
+            if payload not in (0,1,2):raise ValueError('Reserved engine selection')
+            self.select_engine(('none','rf','wire')[payload])
+            return dict(value=payload)
+        if operation=='engine_status':
+            if payload:raise ValueError('Reserved engine status bits')
+            return dict(value=('none','rf','wire').index(self.active_engine))
         if operation in ('tx_cal_start','rx_stream_start','tx_stream_start','stream_start'):
             self.require_engine('rf')
         return super().execute_management(operation,payload,time)

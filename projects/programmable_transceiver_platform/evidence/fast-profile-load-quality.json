@@ -441,7 +441,7 @@
     "system_model/architecture_fast/warm_clock.py": "5cb83f35f8f69e3a3f1d97a4bcbcbe60793322bdcab9e4e062661a66438f4c52",
     "system_model/architecture_fast/traffic.py": "d0bd449d2f8bb0ed522e7800be6f9b6106191cbc8fb8a04838c58b19daf30338",
     "system_model/architecture_fast/run.py": "e2883fdd43d4c0c7a1c2425896e7aa584fb7b90e0ee6038ea2f7c940469acde7",
-    "verification/fast_profile_load_quality.py": "29fc0225efdbeec993f666bfea5744d3575f4118acc878c67325717e504c2d9c",
+    "verification/fast_rf_quality.py": "4194a087b2e06888594064eafbf5740a4792ad5ae9565c211ad6b8edcc1073da",
     "spec/mathematical-top-profile.json": "4ba30ffd0919274c84cd4aab0a1af9dbc458310ec16de38197564a4ccf900b6b",
     "verification/stream_codec.py": "4515bf61e3c83f041eee97740e61c075dca1681da388dc651117cdd10d1a0088"
   },
@@ -559,12 +559,12 @@
   ],
   "physical_qualification": false,
   "limitations": [
-    "Finite continuous-service record with timed lossy stop, not indefinite service bounds.",
-    "RX is wideband multicarrier; TX uses deterministic amplitude-varying transport stimulus.",
-    "Assumed device/noise parameters; no spectral mask or physical qualification.",
-    "Two 0.1-amplitude blockers at 20/30 MHz in fixed 2.4 GHz envelope frame; cubic coefficient 0.05.",
-    "Selected nominal carrier only; arbitrary blocker/carrier placement remains unqualified.",
-    "Profile DAC reference load 2 pF and ADC/DAC latency 2/1.5 sample periods; other assumptions retain the fast blocker fixture."
+    "Historical simultaneous-traffic stress fixture, not an exclusive-mode requirement.",
+    "Selected nominal carrier and assumed noise/loading; no physical qualification.",
+    "blockers: fast timing/load; load: profile timing/load; signed: profile timing/load and both coupling signs."
   ],
-  "elapsed_s": 111.7114930562675
+  "variant": "load",
+  "previous_cases_equal": true,
+  "previous_cases_sha256": "7ddbc8102c024cf6d075b618aca8bf29c5a88f5f0421c847101097fde2fc5732",
+  "elapsed_s": 111.87827447336167
 }

@@ -51,3 +51,17 @@ This pass does not claim that every retained file is necessary.
 
 New progress belongs in focused implementation/specification files and concise
 result summaries. Do not add another numbered experiment narrative to README.
+
+## RF quality runner consolidation
+
+The blocker, profile-load and signed-coupling scenarios now share
+`verification/fast_rf_quality.py --variant blockers|load|signed`. Their original
+231 lines of duplicated fixture/runner code become one 101-line implementation.
+The migration compares complete serialized case records, including waveform
+quality, transport accounting and signed supply/reference diagnostics. JSON
+normalization preserves tuples-as-arrays; it does not round numbers or loosen
+quality gates. The original scripts remain in Git history after removal.
+The fast-model README is now a focused composition/command/limitations guide
+instead of a 608-line chronological journal.
+
+All three consolidated variants passed (8 case rows total), with exact serialized case equality against the originals in Git. Source hashes were verified before removing the three superseded runners.

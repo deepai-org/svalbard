@@ -443,31 +443,19 @@
     "system_model/architecture_fast/run.py": "e2883fdd43d4c0c7a1c2425896e7aa584fb7b90e0ee6038ea2f7c940469acde7",
     "verification/fast_loaded_output.py": "68a8f879570ec936492153f00d464cca2451ecb5bbba09adb51b7e43081bd350",
     "verification/fast_exclusive_engine.py": "be7c4c826b5ec4e7b4f23b37e752267b2a2137cd7a43adedef5c9560ade794a5",
-    "verification/fast_exclusive_engine_check.py": "8874f3feb247419981534e6af0addeb5fbdee41652927ea3f9219bfc84071a07"
+    "verification/fast_exclusive_management_check.py": "29d1707d9412eaa44baa06603aca44f33175cc161e70785ef57de54f85525e14"
   },
-  "cases": [
-    {
-      "engine": "rf",
-      "mode": 0,
-      "opposite_engine_rejected": true,
-      "stopped": true
-    },
-    {
-      "engine": "wire",
-      "mode": 1,
-      "opposite_engine_rejected": true,
-      "stopped": true
-    },
-    {
-      "engine": "rf",
-      "mode": 1,
-      "opposite_engine_rejected": true,
-      "stopped": true
-    }
+  "checks": [
+    "deferred selection at apply edge",
+    "reserved payload rejection",
+    "stale epoch rejection",
+    "live switch rejection",
+    "stopped switch acceptance",
+    "inactive calibration rejection",
+    "status readback"
   ],
   "limitations": [
-    "Payload admission/session enables only; inactive clock and bias shutdown remain open.",
-    "Python selection API; serialized management/RTL interlock not implemented.",
-    "RF capture and wired receive checked; full selected-engine duplex and calibration validity across mode changes need further coverage."
+    "Serialized transaction timing model, not SPI-pin or RTL opcode qualification.",
+    "Analog clock/bias shutdown and shared synthesizer implementation remain open."
   ]
 }

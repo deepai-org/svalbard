@@ -41,6 +41,9 @@ independent RX, added phase noise, current adequacy or sustained operation.
    10 pF / 0.25 ns edge with the current RC fixture (HOST_B reaches 2.119 V).
    The full-chip 50 fC event is 330–660 times smaller than the charge demanded
    by 5–10 pF outputs; replace it with finite pad current before power closure.
+   A charge-conserving host-bank supply candidate now passes KCL, energy and
+   independent ODE controls, but remains outside the chip. Fit its driver
+   dynamics and connect real D2H events; characterize H2D loads separately.
    Die area, 50 terminals and host bandwidth remain joint
    constraints, not independently solved allocations.
 3. **Sustained service and recovery, then implementation.** Exercise both wired

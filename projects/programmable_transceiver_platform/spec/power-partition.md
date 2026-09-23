@@ -255,6 +255,38 @@ That fixed offset alone does not reproduce the timeout. Dynamic feed feedback
 and its numerical treatment remain unresolved; this does not identify a
 physical instability.
 
+## Explicit host capacitor/return model candidate
+
+`verification/host_bank_supply.py` now models the eleven output capacitors to
+board ground, separate pull-up/down paths, seven local supply capacitors, feed
+resistors and the common return. It retains local supply spans and output
+voltages as continuous states and solves the return potential algebraically.
+The governing charge relation is
+`sum(feed currents) - return current = sum(Coutput * dVoutput/dt)`.
+Consequently, output charging and discharging cannot both be represented by
+the same positive two-terminal supply impulse. The earlier lumped charge-demand
+screens do not establish the true ground-return waveform.
+
+For each held digital pattern and background load, the candidate propagates the
+affine circuit exactly and independently integrates source energy, resistor
+loss, background-load energy and stored capacitor energy. Controls in
+`evidence/host-bank-supply-controls.json` compare with a separate nodal ODE for
+both edges, check interval subdivision and KCL, and recover the existing
+seven-domain model when output capacitors are absent. Maximum ODE discrepancy
+is below 4e-14 V and energy residual below 1e-21 J in these controls. The
+exploratory simultaneous-edge fixture produces an initial ground movement of
+−13.4 mV on rising and +30.0 mV on falling; these are model examples, not chip
+predictions.
+
+This is **not integrated into the full-chip candidate**. Its 150/100 ohm
+pull-up/down resistances are provisional, and its ideal switches omit delay,
+overlap current and internal switching charge. Fit and bound those terms against
+native pad evidence, then connect actual D2H bit events and rail/clock histories.
+H2D receiver switching requires its own load model; external input capacitance
+is charged by the FPGA, not by the transceiver's output drivers. Package
+inductance, distributed grounds and substrate coupling remain outside this
+candidate. Preserve the current noisy-RF run before replacing its supply owner.
+
 Next replace the full-chip host disturbance fixture with finite, load-dependent
 pad supply/return currents, retaining per-segment ownership and energy accounting.
 Test those currents together with autonomous timing and RF conversion; do not

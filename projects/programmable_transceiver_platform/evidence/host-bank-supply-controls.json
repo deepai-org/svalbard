@@ -1,0 +1,26 @@
+{
+  "status": "controls_passed",
+  "integrated_into_chip": false,
+  "full_chip_closure": false,
+  "physical_qualification": false,
+  "domain_reduction_error_v": 4.440892098500626e-15,
+  "independent_ode_error_v": 3.774758283725532e-14,
+  "falling_ode_error_v": 6.661338147750939e-15,
+  "interval_refinement_error_v": 4.440892098500626e-15,
+  "ground_kcl_error_a": -6.938893903907228e-18,
+  "external_capacitor_return_kcl_error_a": 1.0408340855860843e-17,
+  "energy_residual_j": 9.041084095204592e-22,
+  "rising_edge_initial_ground_v": -0.013383693516843978,
+  "falling_edge_initial_ground_v": 0.03003620881131758,
+  "assumptions": [
+    "150 ohm pull-up / 100 ohm pull-down are exploratory, not extracted pad parameters.",
+    "Seven 2 ohm feeds, 100 pF local decoupling each, 0.1 ohm common return; eleven 10 pF external outputs.",
+    "Ideal exclusive resistive switches omit gate delay, overlap current and internal switching charge.",
+    "No package inductance, separate ground paths, substrate coupling or voltage-floor envelope qualification.",
+    "Board sources may absorb regenerative current; regulator behavior is not qualified."
+  ],
+  "source_sha256": {
+    "verification/host_bank_supply.py": "2882004de3aa525f47d571ded269913e3b51591675e21218535beda2fde1aa61",
+    "system_model/connected/shared_supply_lifecycle.py": "9ef67d25af25e74125d10316ffcaff2b0b066e34a1f95c0530b4ebb3d0c80e81"
+  }
+}

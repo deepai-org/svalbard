@@ -482,8 +482,15 @@
     "full_chip_closure": false,
     "native_bank_evidence": [
       "evidence/native-host-bank-rc-screen.json",
-      "evidence/native-host-bank-isolation-screen.json"
+      "evidence/native-host-bank-isolation-screen.json",
+      "evidence/native-host-bank-offset-screen.json"
     ],
-    "native_bank_status": "Eleven-output ideal and return-resistance-only cases complete. RC and feed-resistance-only cases time out before stimulus; no supply-feed electrical qualification."
+    "native_bank_status": "Eleven-output ideal and return-resistance-only cases complete. RC and feed-resistance-only cases time out before stimulus; no supply-feed electrical qualification. Fixed 4 mV driver/core rail offset also completes; dynamic feed feedback remains unresolved.",
+    "explicit_return_candidate": {
+      "entry": "verification/host_bank_supply.py",
+      "evidence": "evidence/host-bank-supply-controls.json",
+      "integrated_into_chip": false,
+      "scope": "Explicit external output capacitors and separate supply/return currents. Exact held-pattern propagation; provisional resistive drivers, not native-pad qualification."
+    }
   }
 }

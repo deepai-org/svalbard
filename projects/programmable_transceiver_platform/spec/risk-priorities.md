@@ -51,6 +51,20 @@ Avoid further isolated nominal sweeps unless they answer a failure found in one
 of these three checks. Preserve completed diagnostic evidence; reuse its acquisition/calibration flow
 for the independent-input test rather than launching duplicate nominal runs.
 
+The next integrated RF test uses the existing checker with
+`--domain-rf-screen --rf-mode 1 --independent-rx --rf-noise-rms-hz 20000`.
+After quiet RX trim and shared-ADC TX calibration, an independent two-tone
+antenna stimulus replaces receive loopback. Its 2.5/7.5 MHz baseband tones are
+referenced to an ideal 2.437 GHz carrier. The assumed eight-line VCO frequency
+noise spans 250 kHz–2 MHz; its actual 80 kHz peak bound is supplied to coarse
+acquisition. This is a declared test hypothesis, not a GF180 phase-noise claim.
+RX is compared with a separate settled five-pole transfer-function reference;
+TX retains the independent-carrier metric. Reference controls match a serial
+filter ODE within 4.4e-12 V and reject an incorrect carrier. Short startup checks
+verify input/noise plumbing only. Antenna route selection is testbench setup;
+its management-command integration, calibration under external interference,
+sustained service, broad noise coverage and power budgets remain open.
+
 ## Historical experiments (not the current task queue)
 
 The next RF experiment is implemented in the existing engine checker as

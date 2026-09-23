@@ -164,12 +164,36 @@ def domain_chip_screen():
     return dict(cases=rows,scope='12 ns startup and one host output event; illustrative constant background loads',
         host_impulses_integrated=True,payload_qualified=False,physical_qualification=False)
 
-def coupled_acquisition_screen(payload=False,domains=False,mode=0):
+def install_independent_rx(c):
+    """Testbench antenna stimulus; preserve the selected physical filter bank.
+
+    The old configure_rx command also retunes single-pole filters and is not
+    applicable to this fixed multipole candidate. This selects the existing
+    external receive path directly, not a newly qualified management command.
+    """
+    if c.session.armed:raise ValueError('External fixture requires disarmed setup')
+    c.tx.advance(c.time)
+    tones=[[.18,0.,2.5e6],[.04,0.,7.5e6]]
+    offset=c.rf_target_hz-c.rf_carrier
+    c.tx.rx_route='external_tone'
+    c.tx.external_amplitude=complex(*tones[0][:2])
+    c.tx.external_frequency=offset+tones[0][2]
+    c.configure_rf_input([(complex(*row[:2]),offset+row[2]) for row in tones[1:]])
+    return dict(tones=tones,enabled_time_s=c.time,target_hz=c.rf_target_hz,
+        envelope_frame_hz=c.rf_carrier,testbench_route_selection=True)
+
+
+def coupled_acquisition_screen(payload=False,domains=False,mode=0,independent_rx=False,noise_rms_hz=0.):
     import time
+    if not math.isfinite(noise_rms_hz) or noise_rms_hz<0:raise ValueError('Invalid RF noise')
+    if (independent_rx or noise_rms_hz) and not (payload and domains):
+        raise ValueError('Independent/noisy RF screen requires domain payload')
     start=time.monotonic()
     files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
     hashes={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
     output=P/(('evidence/fast-domain-rf-mode1-payload.json' if mode==1 else 'evidence/fast-domain-rf-payload.json') if domains else 'evidence/fast-coupled-rf-calibrated-payload.json' if payload else 'evidence/fast-coupled-acquisition.json')
+    if independent_rx or noise_rms_hz:
+        output=P/f'evidence/fast-domain-rf-{"external" if independent_rx else "loopback"}-mode{mode}-noise{noise_rms_hz:g}-payload.json'
     progress=dict(status='running',stage='acquisition',source_sha256=hashes,
         full_chip_closure=False,physical_qualification=False)
     def save():output.write_text(json.dumps(progress,indent=2)+'\n')
@@ -184,7 +208,13 @@ def coupled_acquisition_screen(payload=False,domains=False,mode=0):
         options=dict(domain_supply=DomainSupply(names,[3.3]*7,[2.]*7,[100e-12]*7,.1),
             domain_minimum_v=[2.5]*7,domain_load=lambda t,v:background,return_charge_per_transition=50e-15)
         progress['domain_fixture']=domain_fixture;save()
-    c=IntegratedTransceiverChip(coupled_analog=True,rf_hz_per_v=1e6,watchdog_s=1e-3,tx_relative_gain=payload,**options)
+    from oscillator_noise import FrequencyNoise
+    noise=FrequencyNoise.seeded(noise_rms_hz,seed=839)
+    c=IntegratedTransceiverChip(coupled_analog=True,rf_hz_per_v=1e6,watchdog_s=1e-3,tx_relative_gain=payload,
+        rf_noise_rms_hz=noise_rms_hz,noise_seed=839,coarse_noise_bound_hz=noise.bound_hz,**options)
+    progress['oscillator_noise']=dict(rms_hz=noise_rms_hz,tones=noise.tones,bound_hz=noise.bound_hz,
+        scope='Assumed finite spectral frequency-noise realization, not a measured device spectrum')
+    save()
     c.select_engine('rf')
     c.execute_management('rf_coarse_start',2437000000,c.time)
     rows=[]
@@ -228,6 +258,7 @@ def coupled_acquisition_screen(payload=False,domains=False,mode=0):
         for i,value in enumerate(values):c.write_playback(i,encode_iq(value,12 if mode==0 else 8))
         c.select_playback(True);c.configure_capture(True)
         progress.update(stage='payload',calibration=calibration);save()
+    external=install_independent_rx(c) if independent_rx else None
     c.configure(mode,c.time);c.advance(c.time+3e-6)
     assert c.state=='active' and c.session.enabled('rf') and not c.session.enabled('wire')
     assert c.time==c.rf_pll.time==c.analog_owner.time==c.tx.time
@@ -250,7 +281,9 @@ def coupled_acquisition_screen(payload=False,domains=False,mode=0):
             pad_iq=[[z.real,z.imag] for z in c.tx_probe],observations=observations,
             played=[[t,z.real,z.imag] for t,z in c.played],sample_rate_hz=40e6 if mode==0 else 20e6,mode=mode,bits_per_component=c.bits,
             rx_gain=c.rx_gain,capture_gain=c.gain,signal_quality_qualified=False)
+        if external:payload_result['independent_rx']=external
     report=dict(status='passed',elapsed_s=time.monotonic()-start,acquisition=rows,calibration=calibration,rx_calibration=rx_calibration,payload=payload_result,
+        oscillator_noise=progress['oscillator_noise'],
         active_time_s=c.time,feedback_intervals=c.feedback_intervals,
         full_chip_closure=False,physical_qualification=False,
         limitations=['One RF carrier acquisition with assumed 1 MHz/V rail sensitivity.',
@@ -328,12 +361,17 @@ def main():
     parser.add_argument('--domain-wire-screen',action='store_true')
     parser.add_argument('--domain-rf-screen',action='store_true')
     parser.add_argument('--rf-mode',type=int,choices=(0,1),default=0)
+    parser.add_argument('--independent-rx',action='store_true')
+    parser.add_argument('--rf-noise-rms-hz',type=float,default=0.)
     parser.add_argument('--coupled-analog-screen',action='store_true')
     parser.add_argument('--coupled-acquisition-screen',action='store_true')
     parser.add_argument('--coupled-wire-screen',action='store_true')
     parser.add_argument('--coupled-rf-payload-screen',action='store_true')
     args=parser.parse_args()
-    if args.domain_rf_screen:return coupled_acquisition_screen(payload=True,domains=True,mode=args.rf_mode)
+    if (args.independent_rx or args.rf_noise_rms_hz) and not args.domain_rf_screen:
+        parser.error('Independent input/noise options require --domain-rf-screen')
+    if args.domain_rf_screen:return coupled_acquisition_screen(payload=True,domains=True,mode=args.rf_mode,
+        independent_rx=args.independent_rx,noise_rms_hz=args.rf_noise_rms_hz)
     if args.domain_wire_screen:return coupled_wire_screen(domains=True)
     if args.domain_chip_screen:
         print(domain_chip_screen());return

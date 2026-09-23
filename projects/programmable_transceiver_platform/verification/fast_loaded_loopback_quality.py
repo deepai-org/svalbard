@@ -99,6 +99,8 @@ def independent_rx_reference(data):
     """
     import cmath,math
     source=data['independent_rx']
+    if source.get('target_hz')!=2437e6 or source.get('envelope_frame_hz')!=2400e6:
+        raise ValueError('External reference supports only the declared carrier profile')
     times=[row['time_s'] for row in data['observations']]
     if not times or min(times)-source['enabled_time_s']<2e-6:
         raise ValueError('Independent RX reference requires settled input')
@@ -120,7 +122,7 @@ def independent_rx_reference_controls():
     times=[3e-6+i/20e6 for i in range(32)]
     tones=[[.18,0.,2.5e6],[.04,0.,7.5e6]]
     data=dict(rx_gain=2.,capture_gain=.5,observations=[dict(time_s=t) for t in times],
-        independent_rx=dict(enabled_time_s=0.,tones=tones))
+        independent_rx=dict(enabled_time_s=0.,tones=tones,target_hz=2437e6,envelope_frame_hz=2400e6))
     expected=independent_rx_reference(data)
     poles=np.array([-2*math.pi*9157407.055691985*cmath.exp(
         1j*math.pi*(2*k+6)/10) for k in range(5)])

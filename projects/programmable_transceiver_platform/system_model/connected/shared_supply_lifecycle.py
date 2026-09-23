@@ -41,7 +41,7 @@ class DomainSupply:
         self.resistance=np.diag(self.feed_r)+common_return_r*np.ones((n,n))
         self.conductance=np.linalg.inv(self.resistance)
         self.matrix=-self.conductance/self.c[:,None]
-        self.voltage=self.nominal.copy();self.time=0.
+        self.voltage=self.nominal.copy();self.time=0.;self.trajectories=None
         self.source_energy_j=0.;self.feed_loss_j=0.;self.load_energy_j=0.;self.impulse_energy_j=0.
 
     def currents(self,values):
@@ -77,11 +77,11 @@ class DomainSupply:
             .5*np.sum(self.c*(delta*delta-after_delta*after_delta)))
         if not np.all(np.isfinite(after)) or not all(math.isfinite(v) for v in (source,load,loss)):
             raise ValueError('Nonfinite domain supply solution')
-        self.voltage=after;self.time=time
+        self.voltage=after;self.time=time;self.trajectories=None
         self.source_energy_j+=source;self.load_energy_j+=load;self.feed_loss_j+=loss
         return after.copy()
 
-    def advance_load(self,time,load,minimum_v,rtol=1e-9,atol=1e-12):
+    def advance_load(self,time,load,minimum_v,rtol=1e-9,atol=1e-12,trace_step_s=None):
         """Voltage-dependent loads; commit only after a guarded interval succeeds.
 
         load(time, voltages) returns one nonnegative current per physical feed.
@@ -94,6 +94,8 @@ class DomainSupply:
             raise ValueError('Valid load callback and monotonic time required')
         if not all(math.isfinite(x) and x>0 for x in (rtol,atol)):
             raise ValueError('Positive finite solver tolerances required')
+        if trace_step_s is not None and (not math.isfinite(trace_step_s) or trace_step_s<=0):
+            raise ValueError('Positive finite trajectory step required')
         floor=np.asarray(minimum_v,float)
         if floor.shape!=self.voltage.shape or not np.all(np.isfinite(floor)) or np.any(floor<=0):
             raise ValueError('Positive finite per-domain voltage floors required')
@@ -108,11 +110,18 @@ class DomainSupply:
         def guard(t,y):return float(np.min(y[:n]-floor))
         guard.terminal=True;guard.direction=-1
         result=solve_ivp(rhs,(self.time,time),np.r_[self.voltage,0.,0.,0.],
-            method='Radau',rtol=rtol,atol=atol,events=guard)
+            method='Radau',rtol=rtol,atol=atol,events=guard,dense_output=trace_step_s is not None)
         after=result.y[:n,-1];energy=result.y[n:,-1]*scale
         if not result.success or result.status==1 or np.any(after<=floor) or not np.all(np.isfinite(result.y[:,-1])):
             raise ValueError('Domain load left voltage envelope or integration failed')
-        self.voltage=after.copy();self.time=time
+        trajectories=None
+        if trace_step_s is not None:
+            from autonomous_pll import SupplyTrajectory
+            times=np.linspace(self.time,time,max(1,math.ceil((time-self.time)/trace_step_s))+1)
+            voltages=result.sol(times)[:n]
+            trajectories={name:SupplyTrajectory(tuple(times),tuple(voltages[i]-self.nominal[i]))
+                for i,name in enumerate(self.names)}
+        self.voltage=after.copy();self.time=time;self.trajectories=trajectories
         self.source_energy_j+=float(energy[0]);self.feed_loss_j+=float(energy[1]);self.load_energy_j+=float(energy[2])
         return self.voltage.copy()
 
@@ -124,6 +133,10 @@ class DomainSupply:
         if np.any(after<=0):raise ValueError('Charge exceeds positive rail envelope')
         self.impulse_energy_j+=float(.5*np.sum(self.c*(self.voltage**2-after**2)))
         self.voltage=after
+        # A charge event terminates the preceding continuous forecast.
+        from autonomous_pll import SupplyTrajectory
+        self.trajectories={name:SupplyTrajectory((time,),(float(after[i]-self.nominal[i]),))
+            for i,name in enumerate(self.names)}
 
 
 def domain_controls():
@@ -183,7 +196,21 @@ def domain_controls():
     else:raise AssertionError('Overloaded domain accepted')
     assert np.array_equal(before,nonlinear.voltage) and nonlinear.time==before_time
     assert energies==(nonlinear.source_energy_j,nonlinear.feed_loss_j,nonlinear.load_energy_j)
-    return dict(dynamic_constant_current_error_v=dynamic_error,constant_power_energy_residual_j=nonlinear_residual,
+    from autonomous_pll import AutonomousPLL
+    clocks=[]
+    for step in (20e-12,10e-12):
+        rails=DomainSupply(names,[3.3]*7,[2.]*7,[100e-12]*7,.1)
+        rails.advance_load(2e-9,lambda t,v:host,[2.5]*7,trace_step_s=step)
+        clock=AutonomousPLL();clock.set_supply_trajectory(rails.trajectories['PLL'],1e6)
+        clock.advance(2e-9);clocks.append(clock.output_phase_cycles)
+        assert rails.trajectories['PLL'].deltas[-1]<0
+        try:rails.trajectories['PLL'].voltage(2.1e-9)
+        except ValueError:pass
+        else:raise AssertionError('Domain trajectory extrapolated')
+        rails.draw(2e-9,np.zeros(7))
+        assert rails.trajectories['PLL'].times==(2e-9,)
+    phase_refinement=abs(clocks[0]-clocks[1]);assert phase_refinement<1e-8
+    return dict(clock_phase_refinement_cycles=phase_refinement,domain_trajectories_bounded=True,dynamic_constant_current_error_v=dynamic_error,constant_power_energy_residual_j=nonlinear_residual,
         overload_preserves_state=True,subdivision_error_v=subdivision,invalid_event_preserves_state=True,domains=len(names),maximum_ode_error_v=error,energy_residual_j=residual,
         shared_return_couples_host_to_pll=True,full_chip_connected=False,physical_qualification=False)
 

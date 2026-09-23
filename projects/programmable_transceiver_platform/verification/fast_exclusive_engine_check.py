@@ -78,7 +78,7 @@ def main():
     assert not command(c,'configure_rx_gain',3)['accepted'] and c.rx_gain==2.
     reject(lambda:c.configure_rx_gain(float('nan')))
     rows=[]
-    for engine,mode in (('rf',0),('wire',1),('rf',1)):
+    for engine,mode in (('rf',0),('wire',0),('rf',1),('wire',1)):
         c.select_engine(engine);assert not c.tx_cal.valid
         c.reset_memory()
         if engine=='rf':
@@ -106,6 +106,7 @@ def main():
             accepted=c.wire_accepted;queued=list(c.wire_queue)
             reject(lambda:c.accept_wire(17))
             assert c.wire_accepted==accepted and list(c.wire_queue)==queued
+            reject(lambda:c.execute_management('wire_return_start',8,c.time))
             reject(lambda:c.schedule_wire(32,c.time+1e-6))
             reject(lambda:c.incoming_wire([1],c.time+1e-6))
             before=len(c.adc_words);consumed=c.tx.consumed
@@ -123,18 +124,29 @@ def main():
             assert c.decoder is before and c.remaining==0
             reject(lambda:c.capture(32,c.time+1e-6));reject(lambda:c.schedule(32,c.time+1e-6))
             reject(lambda:c.execute_management('tx_cal_start',0,c.time))
-            c.incoming_wire([i%1024 for i in range(64)],c.time+100e-9,.3,0)
+            assert command(c,'detect_rearm')['accepted']
+            assert command(c,'wire_return_start',8)['accepted']
+            assert not command(c,'wire_return_start',8)['accepted']
+            tx_words=[(i*37+11)%1024 for i in range(32)]
+            rx_words=[(i*43+17)%1024 for i in range(64)]
+            tx_before=len(c.wired_output);rx_before=len(c.host_wire)
+            adc_before=len(c.adc_words)
+            for word in tx_words:c.accept_wire(word)
+            start=c.time+100e-9;c.schedule_wire(len(tx_words),start)
+            c.incoming_wire(rx_words,start,.3,0)
             c.advance(c.time+3e-6)
-            assert c.live_rx.done
+            assert c.live_rx.done and c.wired_output[tx_before:]==tx_words
+            assert c.host_wire[rx_before:]==rx_words and len(c.adc_words)==adc_before
+            c.wire_accounting()
         assert command(c,'stop')['accepted']
         assert command(c,'ack_abort')['accepted'] and command(c,'ack_drain')['accepted']
         assert c.state=='reset' and not c.session.armed
-        rows.append(dict(engine=engine,mode=mode,opposite_engine_rejected=True,ingress_rejection_atomic=True,rf_duplex_samples=32 if engine=='rf' else 0,stopped=True))
+        rows.append(dict(engine=engine,mode=mode,opposite_engine_rejected=True,ingress_rejection_atomic=True,rf_duplex_samples=32 if engine=='rf' else 0,wire_tx_words=32 if engine=='wire' else 0,wire_host_rx_words=64 if engine=='wire' else 0,stopped=True))
     c.select_engine('none');reject(lambda:c.configure(0,c.time))
     files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[P/'verification'/n for n in ('fast_loaded_output.py','fast_exclusive_engine.py','fast_exclusive_engine_check.py')]
     out=dict(status='passed',power_gated=args.power_gated,standalone_power_state=power_case,clock_ownership=clock_cases,source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files},cases=rows,
-        limitations=['Payload admission/session enables only; inactive clock and bias shutdown remain open.',
+        limitations=['Power-gated variant checks oscillator shutdown; physical bias-current and settling behavior remain open.',
         'Python selection API with serialized local-start command; pin-level management/RTL interlock not implemented.',
-        'Finite 32-sample RF TX/RX and wired receive checked; sustained duplex, RF quality and calibration validity across mode changes need further coverage.'])
+        'Finite RF TX/RX and wired TX/host RX checked; sustained duplex, RF quality and calibration validity across mode changes need further coverage.'])
     (P/('evidence/fast-powered-exclusive-engine.json' if args.power_gated else 'evidence/fast-exclusive-engine.json')).write_text(json.dumps(out,indent=2)+'\n');print(rows)
 if __name__=='__main__':main()

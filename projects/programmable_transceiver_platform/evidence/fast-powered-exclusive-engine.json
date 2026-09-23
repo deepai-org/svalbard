@@ -464,8 +464,8 @@
     "system_model/architecture_fast/traffic.py": "d0bd449d2f8bb0ed522e7800be6f9b6106191cbc8fb8a04838c58b19daf30338",
     "system_model/architecture_fast/run.py": "e2883fdd43d4c0c7a1c2425896e7aa584fb7b90e0ee6038ea2f7c940469acde7",
     "verification/fast_loaded_output.py": "68a8f879570ec936492153f00d464cca2451ecb5bbba09adb51b7e43081bd350",
-    "verification/fast_exclusive_engine.py": "3805265496689604818ee7e2d65fce92a1354f1dcaa3856651350d1dcf418c99",
-    "verification/fast_exclusive_engine_check.py": "fa5c5ba56b319981101725c58be727b1efb79c1c864a15b48dd01c65c2e6520a"
+    "verification/fast_exclusive_engine.py": "b35ed978543f7cf0dce139282335363705f5a4ee61231071cc0fdc4175469733",
+    "verification/fast_exclusive_engine_check.py": "ca4bdcbf524d384a09c6a84040e1a5a084e0c5e5c64ad5991fab65bb724e3b7e"
   },
   "cases": [
     {
@@ -474,14 +474,18 @@
       "opposite_engine_rejected": true,
       "ingress_rejection_atomic": true,
       "rf_duplex_samples": 32,
+      "wire_tx_words": 0,
+      "wire_host_rx_words": 0,
       "stopped": true
     },
     {
       "engine": "wire",
-      "mode": 1,
+      "mode": 0,
       "opposite_engine_rejected": true,
       "ingress_rejection_atomic": true,
       "rf_duplex_samples": 0,
+      "wire_tx_words": 32,
+      "wire_host_rx_words": 64,
       "stopped": true
     },
     {
@@ -490,12 +494,24 @@
       "opposite_engine_rejected": true,
       "ingress_rejection_atomic": true,
       "rf_duplex_samples": 32,
+      "wire_tx_words": 0,
+      "wire_host_rx_words": 0,
+      "stopped": true
+    },
+    {
+      "engine": "wire",
+      "mode": 1,
+      "opposite_engine_rejected": true,
+      "ingress_rejection_atomic": true,
+      "rf_duplex_samples": 0,
+      "wire_tx_words": 32,
+      "wire_host_rx_words": 64,
       "stopped": true
     }
   ],
   "limitations": [
-    "Payload admission/session enables only; inactive clock and bias shutdown remain open.",
+    "Power-gated variant checks oscillator shutdown; physical bias-current and settling behavior remain open.",
     "Python selection API with serialized local-start command; pin-level management/RTL interlock not implemented.",
-    "Finite 32-sample RF TX/RX and wired receive checked; sustained duplex, RF quality and calibration validity across mode changes need further coverage."
+    "Finite RF TX/RX and wired TX/host RX checked; sustained duplex, RF quality and calibration validity across mode changes need further coverage."
   ]
 }

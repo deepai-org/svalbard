@@ -7,9 +7,10 @@ import math
 from types import MethodType
 from fast_loaded_output import LoadedOutputChip
 from autonomous_pll import AutonomousPLL
+from rf_return_lifecycle import Receiver
 
 class ExclusiveEngineChip(LoadedOutputChip):
-    TILE_COMMANDS=LoadedOutputChip.TILE_COMMANDS+('engine_select','engine_status')
+    TILE_COMMANDS=LoadedOutputChip.TILE_COMMANDS+('engine_select','engine_status','wire_return_start')
     def __init__(self,**kwargs):
         self.active_engine='none'
         super().__init__(**kwargs)
@@ -45,7 +46,21 @@ class ExclusiveEngineChip(LoadedOutputChip):
         self.require_engine('wire');return super().schedule_wire(*args,**kwargs)
     def incoming_wire(self,*args,**kwargs):
         self.require_engine('wire');return super().incoming_wire(*args,**kwargs)
+    def start_wire_return(self,start):
+        self.require_engine('wire')
+        if (self.state!='active' or not math.isfinite(start) or start<=self.time or
+                not math.isinf(self.next_return) or self.return_queue or self.return_frame):
+            raise ValueError('Wired return requires active idle transport and future start')
+        self.host_receiver=Receiver(self.session.mode)
+        self.return_sequence=0
+        self.return_period=1/(250e6 if self.session.mode==0 else 312.5e6)
+        self.next_return=start
+
     def execute_management(self,operation,payload,time):
+        if operation=='wire_return_start':
+            if not 1<=payload<=65535:raise ValueError('Return start delay must fit16 bits')
+            self.start_wire_return(time+payload*self.control_period)
+            return dict(value=payload)
         if operation=='engine_select':
             if payload not in (0,1,2):raise ValueError('Reserved engine selection')
             self.select_engine(('none','rf','wire')[payload])

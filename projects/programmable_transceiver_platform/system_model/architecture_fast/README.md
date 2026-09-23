@@ -36,6 +36,13 @@ and remains unavailable with the selected multipole topology. This gain command
 is a mathematical management interface; its pin-level RTL encoding is not yet
 implemented. It models an ideal gain setting, not a qualified physical PGA.
 
+The exclusive adapters expose `wire_return_start` with a 1–65535 control-cycle
+delay. It starts the wired host-return framing independently of RF capture and
+requires the wired engine active with idle return transport. Repeated starts
+reject; stop cancels the return schedule. Receiver detection must be rearmed
+after a prior stop before reusing wired TX. This is a serialized mathematical
+command; pin-level RTL encoding remains open.
+
 ## Run from the repository root
 
 ```sh

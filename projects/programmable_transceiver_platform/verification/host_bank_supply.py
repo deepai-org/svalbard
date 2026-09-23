@@ -8,6 +8,7 @@ native pads. Ideal mutually exclusive pull-up/down controls omit gate energy.
 """
 import hashlib
 import copy
+import argparse
 import json
 from pathlib import Path
 import sys
@@ -130,6 +131,175 @@ class HostBankSupply:
         return self.source_energy-self.resistor_energy-self.load_energy-(self.cap_energy()-self.initial_energy)
 
 
+class LimitedHostBankSupply(HostBankSupply):
+    """Current-limited output paths plus finite internal switching-current pulses.
+
+    Edge charge is a pending consumption ledger, not capacitor energy. The
+    delivered current draws from the owning local rail and returns to local
+    ground. Explicit external output capacitors are charged separately.
+    """
+    def __init__(self, *args, pullup_limit_a, pulldown_limit_a,
+                 rising_charge_c, falling_charge_c, switching_tau_s,
+                 minimum_supply_v, **kwargs):
+        super().__init__(*args, **kwargs)
+        def vector(values, count, positive):
+            a = np.asarray(values, float)
+            if a.shape != (count,) or not np.all(np.isfinite(a)) or np.any(a < 0) or (positive and np.any(a == 0)):
+                raise ValueError('Invalid explicit driver/load bound')
+            return a.copy()
+        self.up_limit = vector(pullup_limit_a, self.m, True)
+        self.down_limit = vector(pulldown_limit_a, self.m, True)
+        self.rise_charge = vector(rising_charge_c, self.m, False)
+        self.fall_charge = vector(falling_charge_c, self.m, False)
+        self.floor = vector(minimum_supply_v, self.n, True)
+        if np.any(self.state[:self.n] <= self.floor):raise ValueError('Initial supply below envelope')
+        if not np.isfinite(switching_tau_s) or switching_tau_s <= 0:
+            raise ValueError('Positive finite switching-current duration required')
+        self.switching_tau = float(switching_tau_s)
+        self.drive = self.levels([0]*self.m)
+        self.pending_charge = np.zeros(self.n)
+        self.injected_charge = np.zeros(self.n)
+        self.consumed_charge = np.zeros(self.n)
+        self.driver_energy = self.internal_energy = 0.
+
+    def currents(self, state, levels):
+        from scipy.optimize import brentq
+        u = state[:self.n];out = state[self.n:]
+        denominator = 1/self.return_r+np.sum(1/self.feed_r)
+        center = np.sum((self.nominal-u)/self.feed_r)/denominator
+        radius = np.sum(np.where(levels, self.up_limit, self.down_limit))/denominator
+        def branches(g):
+            up = np.where(levels, np.clip((u[self.output_domain]+g-out)/self.pullup_r,
+                -self.up_limit, self.up_limit), 0.)
+            down = np.where(levels, 0., np.clip((out-g)/self.pulldown_r,
+                -self.down_limit, self.down_limit))
+            return up, down
+        def residual(g):
+            up, down = branches(g)
+            return denominator*(g-center)+np.sum(up)-np.sum(down)
+        ground = brentq(residual, center-radius-1e-12, center+radius+1e-12,
+            xtol=1e-14, rtol=1e-14)
+        up, down = branches(ground)
+        return ground, (self.nominal-u-ground)/self.feed_r, up, down
+
+    def internal_current(self, time):
+        if not np.isfinite(time) or time < self.time:raise ValueError('Unknown switching-current history')
+        return self.pending_charge*np.exp(-(time-self.time)/self.switching_tau)/self.switching_tau
+
+    def advance(self, end, load_current_a, drive, rtol=1e-9, atol=1e-12):
+        from scipy.integrate import solve_ivp
+        if not np.isfinite(end) or end < self.time:raise ValueError('Nonmonotonic time')
+        if not all(np.isfinite(v) and v > 0 for v in (rtol, atol)):
+            raise ValueError('Positive numerical tolerances required')
+        load = np.asarray(load_current_a, float)
+        if load.shape != (self.n,) or not np.all(np.isfinite(load)) or np.any(load < 0):
+            raise ValueError('Finite nonnegative background currents required')
+        levels = self.levels(drive)
+        edge_charge = np.where(levels != self.drive,
+            np.where(levels, self.rise_charge, self.fall_charge), 0.)
+        injected = np.bincount(self.output_domain, weights=edge_charge, minlength=self.n)
+        pending = self.pending_charge+injected
+        if not np.all(np.isfinite(pending/self.switching_tau)):
+            raise ValueError('Unbounded switching-current pulse')
+        if np.any(self.state[:self.n] <= self.floor):raise ValueError('Supply outside envelope')
+        dt = end-self.time;size = len(self.state);start = self.time
+        scale = max(self.initial_energy, 1e-12)
+        energies = np.zeros(5);after = self.state.copy()
+        if dt:
+            def rhs(t, y):
+                x = y[:size];u = x[:self.n];out = x[self.n:]
+                internal = pending*np.exp(-(t-start)/self.switching_tau)/self.switching_tau
+                ground, feed, up, down = self.currents(x, levels)
+                du = (feed-load-internal-np.bincount(self.output_domain, weights=up,
+                    minlength=self.n))/self.decap
+                dv = (up-down)/self.load_cap
+                feed_loss = self.feed_r@(feed**2)+ground**2/self.return_r
+                driver_loss = up@(u[self.output_domain]+ground-out)+down@(out-ground)
+                return np.r_[du, dv, np.array([self.nominal@feed, feed_loss,
+                    u@load, driver_loss, u@internal])/scale]
+            def floor_event(t, y):return float(np.min(y[:self.n]-self.floor))
+            floor_event.terminal = True;floor_event.direction = -1
+            result = solve_ivp(rhs, (start, end), np.r_[after, np.zeros(5)],
+                method='Radau', rtol=rtol, atol=atol, events=floor_event)
+            if not result.success or result.status == 1 or not np.all(np.isfinite(result.y[:, -1])):
+                raise ValueError('Host supply left envelope or solve failed')
+            after = result.y[:size, -1];energies = result.y[size:, -1]*scale
+            if np.any(after[:self.n] <= self.floor):raise ValueError('Host supply below floor')
+        # Commit only after the entire interval is accepted; rejected forecasts
+        # do not consume charge, latch bits or partially update rail states.
+        fraction = -np.expm1(-dt/self.switching_tau)
+        self.injected_charge += injected
+        self.consumed_charge += pending*fraction
+        self.pending_charge = pending*np.exp(-dt/self.switching_tau)
+        self.state = after;self.time = end;self.drive = levels
+        self.source_energy += float(energies[0]);self.resistor_energy += float(energies[1])
+        self.load_energy += float(energies[2]);self.driver_energy += float(energies[3])
+        self.internal_energy += float(energies[4])
+        return after.copy()
+
+    def energy_residual(self):
+        return super().energy_residual()-self.driver_energy-self.internal_energy
+
+
+def limited_controls():
+    p = Path(__file__).resolve().parents[1]
+    arguments = ([3.3]*7, [2.]*7, [100e-12]*7, .1,
+        [1]*5+[2]*6, [10e-12]*11, [100.]*11, [80.]*11)
+    background = np.array([.020, .002, .002, 0., 0., .012, .008])
+    low = [0]*11;high = [1]*11
+    def factory(limit, charge):
+        return LimitedHostBankSupply(*arguments, pullup_limit_a=[limit]*11,
+            pulldown_limit_a=[limit*1.2]*11, rising_charge_c=[charge]*11,
+            falling_charge_c=[charge]*11, switching_tau_s=.5e-9, minimum_supply_v=[2.5]*7)
+    linear = HostBankSupply(*arguments);unlimited = factory(10., 0.)
+    for end, drive in ((3.2e-9, high), (6.4e-9, low)):
+        linear.advance(end, background, drive);unlimited.advance(end, background, drive)
+    linear_error = float(np.max(np.abs(linear.state-unlimited.state)))
+    assert linear_error < 1e-8, linear_error
+    c = factory(.010, 7e-12);c.advance(20e-9, background, low)
+    refined = copy.deepcopy(c)
+    for end, drive in ((23.2e-9, high), (26.4e-9, low)):
+        start = refined.time
+        for t in np.linspace(start, end, 9)[1:]:refined.advance(float(t), background, drive)
+        c.advance(end, background, drive)
+    refinement = float(np.max(np.abs(c.state-refined.state)))
+    assert refinement < 1e-7, refinement
+    assert np.allclose(c.injected_charge, [0., 70e-12, 84e-12, 0., 0., 0., 0.], rtol=0., atol=1e-25)
+    charge_error = float(np.max(np.abs(c.injected_charge-c.consumed_charge-c.pending_charge)))
+    assert charge_error < 1e-24, charge_error
+    residual = c.energy_residual()
+    assert abs(residual) < 1e-17, residual
+    assert c.internal_energy > 0 and c.driver_energy > 0
+    # A repeated identical word must not charge every pad again.
+    injected_before = c.injected_charge.copy()
+    c.advance(c.time, background, low)
+    assert np.array_equal(c.injected_charge, injected_before)
+    snapshot = copy.deepcopy(c.__dict__)
+    overload = background.copy();overload[1] = 2.
+    try:c.advance(c.time+10e-9, overload, high)
+    except ValueError:pass
+    else:raise AssertionError('Overload did not reject')
+    for key in ('state', 'pending_charge', 'consumed_charge', 'injected_charge', 'drive'):
+        assert np.array_equal(getattr(c, key), snapshot[key]), key
+    for key in ('time', 'source_energy', 'resistor_energy', 'driver_energy', 'internal_energy', 'load_energy'):
+        assert getattr(c, key) == snapshot[key], key
+    report = dict(status='controls_passed', integrated_into_chip=False,
+        full_chip_closure=False, physical_qualification=False,
+        unlimited_comparison_error_v=linear_error, interval_refinement_error_v=refinement,
+        charge_residual_c=charge_error, energy_residual_j=residual,
+        internal_switching_energy_j=c.internal_energy, driver_dissipation_j=c.driver_energy,
+        injected_charge_by_domain_c=c.injected_charge.tolist(),
+        repeated_word_does_not_inject_charge=True, overload_rollback_verified=True,
+        assumptions=['7 pC per changed output and 0.5 ns exponential duration are hypotheses, not extracted bounds.',
+            'Finite internal consumption is separate from external capacitor charging and held background loads.',
+            '10/12 mA output limits and 100/80 ohm resistance are control parameters, not an installed native fit.',
+            'Events occur at ideal drive changes; propagation delay, current overlap, input-receiver loads and package effects remain open.'],
+        source_sha256={str(Path(__file__).relative_to(p)):hashlib.sha256(Path(__file__).read_bytes()).hexdigest()})
+    (p/'evidence/host-bank-limited-supply-controls.json').write_text(json.dumps(report, indent=2)+'\n')
+    print(json.dumps(report, indent=2))
+    return report
+
+
 def controls():
     """Independent nodal KCL/energy, ODE and existing domain-model comparisons."""
     from scipy.integrate import solve_ivp
@@ -208,4 +378,7 @@ def controls():
 
 
 if __name__ == '__main__':
-    controls()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--limited-controls', action='store_true')
+    args = parser.parse_args()
+    limited_controls() if args.limited_controls else controls()

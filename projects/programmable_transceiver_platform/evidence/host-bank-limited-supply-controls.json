@@ -1,0 +1,32 @@
+{
+  "status": "controls_passed",
+  "integrated_into_chip": false,
+  "full_chip_closure": false,
+  "physical_qualification": false,
+  "unlimited_comparison_error_v": 2.980948821118545e-14,
+  "interval_refinement_error_v": 9.186609806199897e-11,
+  "charge_residual_c": 7.699282434957075e-27,
+  "energy_residual_j": 1.6957202557337067e-23,
+  "internal_switching_energy_j": 4.895221010439607e-10,
+  "driver_dissipation_j": 9.84047685220842e-10,
+  "injected_charge_by_domain_c": [
+    0.0,
+    7e-11,
+    8.400000000000001e-11,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "repeated_word_does_not_inject_charge": true,
+  "overload_rollback_verified": true,
+  "assumptions": [
+    "7 pC per changed output and 0.5 ns exponential duration are hypotheses, not extracted bounds.",
+    "Finite internal consumption is separate from external capacitor charging and held background loads.",
+    "10/12 mA output limits and 100/80 ohm resistance are control parameters, not an installed native fit.",
+    "Events occur at ideal drive changes; propagation delay, current overlap, input-receiver loads and package effects remain open."
+  ],
+  "source_sha256": {
+    "verification/host_bank_supply.py": "ccac068b93ba0faaadec170fc9e3f3931a7a4fa904f9976bff08ce40a91ddd2e"
+  }
+}

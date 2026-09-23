@@ -490,7 +490,13 @@
       "entry": "verification/host_bank_supply.py",
       "evidence": "evidence/host-bank-supply-controls.json",
       "integrated_into_chip": false,
-      "scope": "Explicit external output capacitors and separate supply/return currents. Exact held-pattern propagation; provisional resistive drivers, not native-pad qualification."
+      "scope": "Explicit external output capacitors and separate supply/return currents. Exact held-pattern propagation; provisional resistive drivers, not native-pad qualification.",
+      "internal_switching_update": {
+        "entry": "verification/host_bank_supply.py:LimitedHostBankSupply",
+        "evidence": "evidence/host-bank-limited-supply-controls.json",
+        "integrated_into_chip": false,
+        "scope": "Current-limited output branches and finite internal charge pulses; held-load nonlinear controls, charge/energy accounting and overload rollback pass. Parameter bounds, delayed actual host events and shared analog-owner integration remain open."
+      }
     },
     "driver_fit_update": {
       "evidence": "evidence/host-driver-current-limited-fit.json",

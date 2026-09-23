@@ -320,6 +320,29 @@ spend more passes polishing nominal voltage fits while those power terms remain
 absent. Current-limited fit parameters are still not installed as qualified
 full-chip behavior.
 
+`LimitedHostBankSupply` in `verification/host_bank_supply.py` now supplies the
+missing accounting mechanism: separate current-limited pull-up/down branches
+and finite internal consumption pulses, assigned to each output's physical
+supply. An edge adds pending internal charge; that charge is consumed through
+an explicit time constant and its instantaneous rail voltage determines energy.
+It is not stored capacitor energy and is not a second copy of output charging.
+Repeated unchanged data does not inject another pulse. Background loads remain
+separate and must exclude the internal switching term they replace.
+
+`evidence/host-bank-limited-supply-controls.json` records linear-limit comparison,
+interval refinement, per-domain charge conservation, complete energy balance,
+repeated-word behavior and atomic rejection of an overload. In its declared
+fixture, two edges inject 70/84 pC into HOST_A/B; charge residual is below
+8e-27 C and energy residual below 2e-23 J. The tested 7 pC per changed output,
+0.5 ns pulse duration and output-current limits are hypotheses, not validated
+native-pad bounds. The model remains outside the full-chip composition.
+
+The next integration must preserve these continuous output-capacitor states and
+charge tails inside the same analog owner as RF/reference/PLL supplies. Actual
+D2H bit and clock events should replace the legacy output charge impulse, while
+H2D receiver activity remains separately accounted. Do not replay independently
+advanced rail histories or retain the old output impulse on top of the new load.
+
 The noisy independent RF test has now completed with source-verified RX/TX
 waveform passes, so its snapshot is preserved. It still uses the 50 fC host
 disturbance and does not validate the explicit host capacitor/return candidate.

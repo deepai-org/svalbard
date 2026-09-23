@@ -200,8 +200,7 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         from types import MethodType
         from driver_sensitive_reference import DriverSensitiveReference
         from limited_coupled_driver import LimitedCoupledDriver
-        if self.wire_hz_per_v:
-            raise ValueError('Coupled wired PLL edge scheduling is not yet supported')
+        self.BOUNDED_WIRE_CLOCK=bool(self.wire_hz_per_v)
         if self.tx.rx_bank is None:raise ValueError('Coupled candidate requires multipole RX')
         old=self.adc_reference
         reference=DriverSensitiveReference(resistance=old.r,capacitance=old.c,load_capacitance=old.load)
@@ -229,11 +228,13 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         self.supply.draw=MethodType(supply_draw,self.supply)
 
     def requires_rf_boundary_flush(self):
-        return getattr(self,'analog_owner',None) is not None and bool(self.rf_hz_per_v)
+        return getattr(self,'analog_owner',None) is not None and bool(self.rf_hz_per_v or self.wire_hz_per_v)
 
     def rf_interval_end(self,end):
-        if getattr(self,'analog_owner',None) is None or not self.rf_hz_per_v:return end
+        if not self.requires_rf_boundary_flush():return end
         deadlines=[end]
+        if self.BOUNDED_WIRE_CLOCK and self.wire_remaining and self.wire_start_not_before is not None and self.wire_start_not_before>self.time:
+            deadlines.append(self.wire_start_not_before)
         # Parent layers already split calibration/coarse/probe events. Include
         # lower-layer events before predicting any continuous clock/load state.
         for name in ('next_sample','next_wire','next_adc','next_return','next_detect','next_reference'):
@@ -253,7 +254,7 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         return min(deadlines)
 
     def prepare_rf_interval(self,end):
-        if getattr(self,'analog_owner',None) is None or not self.rf_hz_per_v:return
+        if not self.requires_rf_boundary_flush():return
         import cmath
         from driver_pll_feedback import forecast_trajectory_feedback
         from tx_output_terms import output_terms
@@ -263,7 +264,9 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         state=self.tx
         terms=[(a*cmath.exp(1j*self.rf_tx_phase),r) for a,r in
             output_terms(state.transmit_terms(),**self.tx_output_parameters)] or [(0j,0j)]
+        if not self.rf_pll.powered:terms=[(0j,0j)]
         def receive(t,pad,phase):
+            if not self.rf_pll.powered:return 0j
             if state.rx_route=='loopback':signal=pad
             elif state.rx_route=='external_tone':signal=state.external_amplitude*cmath.exp(2j*math.pi*state.external_frequency*t)
             else:signal=0j
@@ -272,23 +275,55 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
                 raise ValueError('Coupled RF input outside declared cubic-model range')
             signal+=state.rf_cubic*signal*abs(signal)**2
             return signal*cmath.exp(-1j*(phase+self.rf_rx_phase))
-        candidate,clock,metrics=forecast_trajectory_feedback(owner,self.rf_pll,end,
-            terms,self.rf_hz_per_v,.5e-9,receive_transform=receive)
-        self.rf_pll.set_supply_trajectory(clock.supply_trajectory,self.rf_hz_per_v)
-        self._analog_forecast=(self.time,end,candidate)
-        self.feedback_intervals=getattr(self,'feedback_intervals',0)+1
-        self.feedback_max_iterations=max(getattr(self,'feedback_max_iterations',0),metrics['iterations'])
+        from autonomous_pll import SupplyTrajectory
+        for refinement in range(12):
+            candidate,clock,metrics=forecast_trajectory_feedback(owner,self.rf_pll,end,
+                terms,self.rf_hz_per_v,.5e-9,receive_transform=receive)
+            forecast=None
+            if self.BOUNDED_WIRE_CLOCK and self.wire_pll is not None:
+                forecast=self.forecast_wire_edges(candidate.rail_trajectory,self.wire_hz_per_v)
+                first=min(forecast['word_deadline'],forecast['bit_deadline'])
+                if first==self.time:
+                    # Service an already-due launch before any analog time passes.
+                    point=SupplyTrajectory((self.time,),(self.supply.delta,))
+                    self.commit_wire_forecast(point,self.wire_hz_per_v,forecast)
+                    return self.time
+                if first<end-8*math.ulp(end):
+                    end=first
+                    continue
+                for key in ('word_deadline','bit_deadline'):
+                    if abs(forecast[key]-end)<=8*math.ulp(end):forecast[key]=end
+            self.rf_pll.set_supply_trajectory(clock.supply_trajectory,self.rf_hz_per_v)
+            if forecast is not None:
+                self.commit_wire_forecast(candidate.rail_trajectory,self.wire_hz_per_v,forecast)
+            self._analog_forecast=(self.time,end,candidate)
+            self.feedback_intervals=getattr(self,'feedback_intervals',0)+1
+            self.feedback_max_iterations=max(getattr(self,'feedback_max_iterations',0),metrics['iterations'])
+            return end
+        raise ValueError('Wired edge and analog forecast boundary did not converge')
+
+    def make_serializer(self,time):
+        result=super().make_serializer(time)
+        if getattr(self,'analog_owner',None) is not None and self.BOUNDED_WIRE_CLOCK:
+            from autonomous_pll import SupplyTrajectory
+            self.wire_pll.set_supply_trajectory(SupplyTrajectory((time,),(self.supply.delta,)),self.wire_hz_per_v)
+        return result
 
     def supply_impulse(self,time,delta_v):
-        if getattr(self,'analog_owner',None) is None or not self.rf_hz_per_v:
+        if not self.requires_rf_boundary_flush():
             return super().supply_impulse(time,delta_v)
         from autonomous_pll import SupplyTrajectory
         from oscillator_supply_lifecycle import OscillatorSupplyChip
         super(OscillatorSupplyChip,self).supply_impulse(time,delta_v)
         # Finish the preceding phase trajectory, then install only the known
         # post-impulse point. The next forecast supplies its future history.
-        self.rf_pll.advance(time)
-        self.rf_pll.set_supply_trajectory(SupplyTrajectory((time,),(self.supply.delta,)),self.rf_hz_per_v)
+        for pll,sensitivity in ((self.rf_pll,self.rf_hz_per_v),(self.wire_pll,self.wire_hz_per_v)):
+            if pll is not None:
+                pll.advance(time)
+                pll.set_supply_trajectory(SupplyTrajectory((time,),(self.supply.delta,)),sensitivity)
+        if self.BOUNDED_WIRE_CLOCK:
+            if self.wire_remaining:self.next_wire=math.inf
+            if self.serializer is not None and self.serializer.active:self.serializer.retime()
         self.oscillator_supply_events+=1
 
     RF_PLL_CLASS=SwitchableWarmClock

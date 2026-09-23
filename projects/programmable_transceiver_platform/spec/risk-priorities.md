@@ -58,8 +58,8 @@ converter callbacks; it is not a legal RF payload sequence or acquisition test.
 See `evidence/fast-coupled-analog-integration.json` and its source hashes.
 
 The option remains experimental. RF PLL rail sensitivity now uses an iterative trajectory forecast split at chip
-events. Wired PLL sensitivity remains rejected pending bounded serializer-edge
-scheduling. Acquired sustained signal quality, bias power gating and rail energy
+events. Wired PLL sensitivity now uses bounded word/bit forecasts and interval
+recomputation; finite duplex tests pass in both modes. Acquired sustained signal quality, bias power gating and rail energy
 accounting on this composition remain major integration gaps. Full lifecycle runtime also needs assessment;
 do not promote a short boundary screen to whole-chip closure. Existing full-chip evidence is historical
 when its recorded source hashes differ; this local pass does not refresh it.
@@ -90,8 +90,8 @@ callback. A host impulse preserves phase and installs only its known rail point;
 future phase crossings are rejected until another forecast supplies the history.
 The short integrated screen passed external-source boundaries, interval splitting,
 aligned states and host impulse behavior. Autonomous acquisition and real payload
-are separate tests; a short boundary pass does not qualify them. Wired PLL supply
-feedback still needs bounded serializer-edge scheduling. Bias power gating, whole-rail energy accounting,
+are separate tests; a short boundary pass does not qualify them. Wired PLL supply feedback now uses the same bounded scheduling contract;
+its finite duplex evidence is described below. Bias power gating, whole-rail energy accounting,
 sustained acquired signal quality and actual area/power totals remain major gaps.
 See `evidence/connected-supply-trajectory.json`; older report source hashes do
 not certify this newer model.
@@ -116,11 +116,21 @@ wired fault/mode-change controls and four duplex burst cases also passed. See
 `evidence/connected-bounded-wire-scheduling.json` and
 `evidence/connected-pll-serializer.json` for the finite test scopes.
 
-Next connect these pending word/bit forecasts to the integrated analog owner's
-rail history and shorten/recompute intervals at actual crossings. The tests so
-far supplied prescribed histories; they do not demonstrate coupled wired driver
-current or integrated wired operation. Keep that limitation explicit rather than
-enabling the integrated candidate's currently rejected wired supply sensitivity.
+The pending word/bit forecasts are now connected to the integrated analog
+owner. A predicted crossing shortens the interval and causes a fresh coupled
+solve before state commit. Both wired modes passed actual six-word TX and
+64-word incoming RX/host return with 100 kHz/V sensitivity and 50 fC per return
+transition. State clocks aligned and the RF oscillator remained off. See
+`evidence/fast-coupled-wire.json`; the prescribed-history checks remain separate
+regression evidence. The inactive RF source/mixer is now silent while stored
+analog state decays. Bias current is still fixed, so this is signal gating, not
+power closure.
+
+The highest remaining integration gaps are wired output-current feedback,
+mode-dependent bias/clock/converter loads, rail energy accounting, and acquired
+calibrated RF payload quality on this composition. Qualify reference recovery,
+mode transitions and uncertainty after those missing loads are included. Area
+and per-domain current totals remain allocations rather than demonstrated fits.
 
 ## Historical experiment notes
 

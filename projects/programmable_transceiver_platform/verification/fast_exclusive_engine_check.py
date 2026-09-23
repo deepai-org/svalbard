@@ -65,8 +65,10 @@ def clock_ownership_controls(chip_factory=ExclusiveEngineChip):
 
 def coupled_analog_screen():
     c=IntegratedTransceiverChip(coupled_analog=True,return_charge_per_transition=50e-15)
-    reject(lambda:IntegratedTransceiverChip(coupled_analog=True,wire_hz_per_v=1e6))
     c.select_engine('wire');c.configure(0,0.)
+    c.quiesce(c.time,'boundary fixture preparation')
+    c.acknowledge_host_abort(c.epoch,c.time);c.acknowledge_drain(c.epoch,c.time)
+    c.select_engine('rf')
     c.advance(30e-9)
     owner=c.analog_owner;r=c.adc_reference
     assert c.dac_reference is r and c.output_network is owner.network
@@ -92,7 +94,7 @@ def coupled_analog_screen():
         host_return_charge_c=c.return_charge,shared_state_alignment=True,
         independent_reference_advance_rejected=True,
         limitations=['Finite boundary integration screen, not acquired payload or signal quality.',
-        'RF rail feedback has a separate short scheduler check; wired PLL sensitivity remains rejected.',
+        'RF rail feedback has a separate short scheduler check; integrated wired traffic is a separate test.',
         'Driver/reference bias is fixed, including inactive engines; power gating is not yet modeled.',
         'Whole-rail energy accounting, operating uncertainty and physical parameters remain unqualified.'])
     files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
@@ -154,13 +156,45 @@ def coupled_acquisition_screen():
     (P/'evidence/fast-coupled-acquisition.json').write_text(json.dumps(report,indent=2)+'\n')
     print({k:v for k,v in report.items() if k not in ('source_sha256','acquisition')},flush=True)
 
+def coupled_wire_screen():
+    import time
+    rows=[];started=time.monotonic()
+    for mode in (0,1):
+        c=IntegratedTransceiverChip(coupled_analog=True,wire_hz_per_v=1e5,
+            return_charge_per_transition=50e-15,watchdog_s=1e-3)
+        c.select_engine('wire');c.configure(mode,0.)
+        c.advance(8e-6)
+        assert c.state=='active' and c.wire_pll.locked
+        assert not c.rf_pll.powered and abs(c.output_network.voltage[1])<1e-12
+        c.start_wire_return(c.time+20e-9)
+        tx=[17,801,0,1023,511,7];rx=[(29*i+7)%1024 for i in range(64)]
+        for word in tx:c.accept_wire(word)
+        start=c.time+30e-9;c.schedule_wire(len(tx),start);c.incoming_wire(rx,start,.3,0)
+        c.advance(c.time+2e-6)
+        assert c.wired_output==tx and c.host_wire==rx and c.state=='active'
+        assert c.return_charge>0 and c.oscillator_supply_events>0
+        assert not c.adc_words and c.adc_reference.samples==0
+        assert c.time==c.analog_owner.time==c.wire_pll.time==c.rf_pll.time
+        c.wire_accounting()
+        rows.append(dict(mode=mode,tx_words=len(tx),host_rx_words=len(rx),return_charge_c=c.return_charge,
+            rail_v=c.analog_owner.rail_v,feedback_intervals=c.feedback_intervals,rf_oscillator_off=True))
+        print(dict(elapsed_s=time.monotonic()-started,**rows[-1]),flush=True)
+    files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
+    report=dict(status='passed',cases=rows,full_chip_closure=False,physical_qualification=False,
+        source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files},
+        limitations=['Wired driver switching current is not yet included in the shared rail load.',
+        'Short finite bursts, not full throughput or protocol compliance; RF bias gating and physical parameters remain open.'])
+    (P/'evidence/fast-coupled-wire.json').write_text(json.dumps(report,indent=2)+'\n')
+
 def main():
     if not __debug__:raise RuntimeError('Assertions must remain enabled')
     parser=argparse.ArgumentParser();parser.add_argument('--power-gated',action='store_true')
     parser.add_argument('--integrated',action='store_true')
     parser.add_argument('--coupled-analog-screen',action='store_true')
     parser.add_argument('--coupled-acquisition-screen',action='store_true')
+    parser.add_argument('--coupled-wire-screen',action='store_true')
     args=parser.parse_args()
+    if args.coupled_wire_screen:return coupled_wire_screen()
     if args.coupled_acquisition_screen:return coupled_acquisition_screen()
     if args.coupled_analog_screen:return coupled_analog_screen()
     if args.integrated:args.power_gated=True

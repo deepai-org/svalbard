@@ -1,30 +1,27 @@
 {
   "status": "passed",
-  "rf_scheduler": {
-    "external_updates": 3,
-    "intervals": 4,
-    "maximum_iterations": 3,
-    "aligned_analog_and_clock": true,
-    "host_impulse_preserves_phase": true,
-    "out_of_horizon_edge_rejected": true,
-    "full_payload_qualification": false
-  },
+  "cases": [
+    {
+      "mode": 0,
+      "tx_words": 6,
+      "host_rx_words": 64,
+      "return_charge_c": 5.975000000000022e-11,
+      "rail_v": 3.0889829953805346,
+      "feedback_intervals": 5892,
+      "rf_oscillator_off": true
+    },
+    {
+      "mode": 1,
+      "tx_words": 6,
+      "host_rx_words": 64,
+      "return_charge_c": 5.825000000000082e-11,
+      "rail_v": 3.088563452061869,
+      "feedback_intervals": 6273,
+      "rf_oscillator_off": true
+    }
+  ],
   "full_chip_closure": false,
   "physical_qualification": false,
-  "time_s": 6e-08,
-  "rail_v": 3.0886759898393468,
-  "reference_v": 0.9918706692121637,
-  "received_magnitude": 0.00024299620757481738,
-  "converter_charge_c": 8.985515037310821e-13,
-  "host_return_charge_c": 8.5e-13,
-  "shared_state_alignment": true,
-  "independent_reference_advance_rejected": true,
-  "limitations": [
-    "Finite boundary integration screen, not acquired payload or signal quality.",
-    "RF rail feedback has a separate short scheduler check; integrated wired traffic is a separate test.",
-    "Driver/reference bias is fixed, including inactive engines; power gating is not yet modeled.",
-    "Whole-rail energy accounting, operating uncertainty and physical parameters remain unqualified."
-  ],
   "source_sha256": {
     "system_model/connected/rf_driver_transient_screen.py": "abc0a51c95d7b902edbbac74ab735f0b62251e6dde22c76a605bab53b7c31a1a",
     "system_model/connected/tx_readiness_screen.py": "69540686bba7fb48f14ed7144e282e7322a6a634a0ad36db17615c6a26b79cac",
@@ -469,5 +466,9 @@
     "verification/fast_exclusive_engine_check.py": "7c86bbe39aa7663f3b5b310bf855e3f8ef4ab49d8a7f0e3dbe58bb6efff858a7",
     "verification/fast_loaded_output.py": "2931f232671f27cb2bcbb371342928d6fe24fc3172d6573f9a78a5c0c63a6f4b",
     "verification/fast_exclusive_engine.py": "78cafe231bb84b4be34d655e63288dadb9769d01a92f72ee046411fc231723fb"
-  }
+  },
+  "limitations": [
+    "Wired driver switching current is not yet included in the shared rail load.",
+    "Short finite bursts, not full throughput or protocol compliance; RF bias gating and physical parameters remain open."
+  ]
 }

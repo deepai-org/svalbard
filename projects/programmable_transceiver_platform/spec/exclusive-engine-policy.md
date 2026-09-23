@@ -66,7 +66,7 @@ Both rate profiles now pass finite count-free RF TX/RX with `PoweredExclusiveChi
 
 The powered lifecycle test now covers RF and wired duplex in both rate profiles on the same instance. Wired-only host return starts through `wire_return_start`, independently of RF ADC capture; 32 transmitted and 64 host-received words match exactly per profile with no added ADC samples. Detection is rearmed after stop, and duplicate or RF-mode return starts reject. These are finite nominal bursts; sustained wired service and receiver/error envelopes remain open. Evidence: `evidence/fast-powered-exclusive-engine.json`.
 
-## Remaining wired rail-feedback scheduling contract
+## Wired rail-feedback scheduling contract
 
 The coupled RF candidate can forecast only until the next load-changing event.
 Wired word launch and serializer half-bit sampling currently call `edge_time`
@@ -94,3 +94,11 @@ Required evidence is actual wired TX/host RX traffic under coupled supply load,
 with conservation of accepted/completed/aborted words, no duplicated boundary
 bits, no lost pending edges, subdivision convergence and correct retiming after
 host impulses. The current RF-only feedback pass provides none of this evidence.
+
+The integrated candidate now implements this event contract and passes finite
+TX plus incoming-RX/host-return tests in both wired modes. These tests include
+host return switching charge and rail-sensitive clock timing, but omit wired
+output-stage current. RF source and mixer signals stop with the RF oscillator;
+retained filter/network state decays. Fixed bias in the present current law is
+still an explicit limitation, so neither exclusion nor signal gating proves a
+power-budget saving yet. Evidence: `evidence/fast-coupled-wire.json`.

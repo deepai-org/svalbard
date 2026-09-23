@@ -48,6 +48,7 @@ class LoadedOutputChip(TransceiverChip):
         def drive(t):return sum(a*cmath.exp(r*(t-start)) for a,r in terms)
         state=self.tx
         def receive(t,pad):
+            if not getattr(self.rf_pll,'powered',True):return 0j
             if state.rx_route=='loopback':signal=pad
             elif state.rx_route=='external_tone':
                 signal=state.external_amplitude*cmath.exp(2j*math.pi*state.external_frequency*t)
@@ -81,6 +82,7 @@ class LoadedOutputChip(TransceiverChip):
         self.supply.minimum=min(self.supply.minimum,self.supply.delta)
 
     def loaded_receive_terms(self,state,original_receive):
+        if not getattr(self.rf_pll,'powered',True):return []
         if state.rx_route!='loopback':return original_receive()
         if self._output_modes is not None and self._output_modes[0]==state.time:
             modes=self._output_modes[1]
@@ -103,6 +105,7 @@ class LoadedOutputChip(TransceiverChip):
         # Network hook owns detector integration at actual DAC/LO boundaries.
         pass
     def output_source_terms(self):
+        if not getattr(self.rf_pll,'powered',True):return [(0j,0j)]
         # Fast LO segments are already expressed relative to fixed rf_carrier.
         rate=2j*math.pi*self.tx.tx_lo_hz
         rotation=cmath.exp(rate*self.tx.time+1j*self.tx.tx_lo_phase)

@@ -97,7 +97,13 @@ class AutonomousRFChip(AutonomousWireChip):
                     self.command_events[0][0] if self.command_events else math.inf)
             end=self.rf_interval_end(end)
             if end>self.time:
-                self.prepare_rf_interval(end)
+                prepared=self.prepare_rf_interval(end)
+                if prepared is not None:
+                    if not self.time<=prepared<=end:raise ValueError('Invalid coupled forecast boundary')
+                    end=prepared
+                    if end==self.time:
+                        super().advance(end)
+                        continue
                 predicted=copy.copy(self.rf_pll);predicted.advance(end)
                 frequency=(self.envelope_phase(predicted)-self.envelope_phase(self.rf_pll))/(end-self.time)
                 self.install_segment(frequency)

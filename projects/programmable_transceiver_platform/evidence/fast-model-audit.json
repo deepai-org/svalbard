@@ -4,36 +4,102 @@
     {
       "evidence": "fast-common-acceptance.json",
       "status": "passed",
-      "source_mismatches": [],
+      "source_mismatches": [
+        "system_model/architecture_fast/continuous_duplex.py"
+      ],
       "result_mismatches": [],
-      "current": true,
-      "sha256": "be232656f025abe034d9f7d149f0c728823dea2e600904495b45beb91ba77e6d"
+      "current": false,
+      "sha256": "028e259b459009602c80fd99b2fdf81b1baf4973a887ce92782c8e74484b2282"
     },
     {
       "evidence": "fast-blocker-quality.json",
       "status": "passed",
-      "source_mismatches": [],
+      "source_mismatches": [
+        "system_model/connected/autonomous_wire_lifecycle.py",
+        "system_model/connected/autonomous_rf_lifecycle.py",
+        "system_model/connected/whole_chip_lifecycle.py",
+        "system_model/architecture_fast/continuous_duplex.py",
+        "system_model/architecture_fast/chip.py"
+      ],
       "result_mismatches": [],
-      "current": true,
+      "current": false,
       "sha256": "6522b2e220cf62ece5b956bf85bd933605e1b3d424535e8f0dfbc7eb9ab8a851"
     },
     {
       "evidence": "fast-profile-load-quality.json",
       "status": "passed",
-      "source_mismatches": [],
+      "source_mismatches": [
+        "system_model/connected/autonomous_wire_lifecycle.py",
+        "system_model/connected/autonomous_rf_lifecycle.py",
+        "system_model/connected/whole_chip_lifecycle.py",
+        "system_model/architecture_fast/continuous_duplex.py",
+        "system_model/architecture_fast/chip.py"
+      ],
       "result_mismatches": [],
-      "current": true,
+      "current": false,
       "sha256": "a791860be8a2c8ae663b177f29c6805119274c42b3d2a98b1af774d132c98b5c"
     },
     {
       "evidence": "fast-signed-coupling-quality.json",
       "status": "passed",
-      "source_mismatches": [],
+      "source_mismatches": [
+        "system_model/connected/autonomous_wire_lifecycle.py",
+        "system_model/connected/autonomous_rf_lifecycle.py",
+        "system_model/connected/whole_chip_lifecycle.py",
+        "system_model/architecture_fast/continuous_duplex.py",
+        "system_model/architecture_fast/chip.py"
+      ],
       "result_mismatches": [],
-      "current": true,
+      "current": false,
       "sha256": "78bc7d734158ef3799f64ee452fcb347785f946506a9d9ad3135f9f7053e083f"
     }
   ],
+  "composition_inventory": [
+    {
+      "name": "common",
+      "implementation": "TransceiverChip",
+      "finite_output_network": false,
+      "coarse_tuning": false,
+      "engine_ownership": false,
+      "oscillator_shutdown": false,
+      "reference_model": "Reference",
+      "reference_current_limit_exposed": false
+    },
+    {
+      "name": "warm",
+      "implementation": "WarmTransceiverChip",
+      "finite_output_network": false,
+      "coarse_tuning": true,
+      "engine_ownership": false,
+      "oscillator_shutdown": false,
+      "reference_model": "Reference",
+      "reference_current_limit_exposed": false
+    },
+    {
+      "name": "powered_loaded",
+      "implementation": "PoweredExclusiveChip",
+      "finite_output_network": true,
+      "coarse_tuning": false,
+      "engine_ownership": true,
+      "oscillator_shutdown": true,
+      "reference_model": "Reference",
+      "reference_current_limit_exposed": false
+    }
+  ],
+  "budget_inventory": {
+    "area_allocation_um2": {
+      "wired": 2000000,
+      "rf": 2300000,
+      "converters": 1300000,
+      "timing": 1300000,
+      "digital": 1500000,
+      "memory": 800000,
+      "reserve": 3720000
+    },
+    "power_status": "candidate_allocation_not_current_or_physical_qualification",
+    "implementation_area_sum_available": false,
+    "whole_chip_current_sum_available": false
+  },
   "observed_common_configuration": {
     "receiver_filter_order": 5,
     "receiver_cutoff_hz": 9157407.055691985,
@@ -44,17 +110,23 @@
   "mathematical_closure": false,
   "transistor_schematic_complete": false,
   "layout_gate_open": false,
-  "next_priority": "Integrate phase-aware finite TX output network into common chip, detector, loopback and independent pad observation; requalify transport and quality.",
+  "next_priority": "Unify powered loaded RF/wired lifecycle with coarse/warm tuning, then replace unlimited reference/output drive assumptions with finite-current shared supply behavior and reconcile whole-chip budgets.",
   "remaining": [
-    "Finite output loading/current and supply interaction are not represented by memoryless output observation.",
-    "Warm coarse clocks are a tested subclass, not the default common composition.",
-    "Pin-level management/RTL agreement, general service and configuration envelopes remain open.",
-    "Reference current/bandwidth limits and all physical block parameters need circuit evidence."
+    "No inspected composition combines coarse/warm tuning, loaded output, exclusive ownership and oscillator shutdown.",
+    "Reference.advance replenishes charge by ideal RC relaxation to a fixed source; no explicit driver current limit in these compositions.",
+    "Power-domain ceilings and area allocations are targets, not sums from implemented blocks and active modes.",
+    "Pin-level management/RTL agreement and declared host/service envelopes remain open.",
+    "Architecture flags establish implementation presence only, not verified operation or physical performance."
   ],
   "implementation_sources": {
-    "verification/fast_model_audit.py": "f239be5158fa570fe60f9566a7a6d0ba9d6ae9f7135027b13e76c85bb72d3b3d",
-    "system_model/architecture_fast/chip.py": "af23b20f43e712617a655aebf7acc7cb0f1366642b67468d636c8aa17a7db589",
+    "verification/fast_model_audit.py": "83709907a730b09e3b27dfb35f350ed56addc61992dd78c65dd5c4d8c1ac9b40",
+    "system_model/architecture_fast/chip.py": "bc72486f7e9ac81ba6fb6956ef547ae8911811ce6b67e57ebd4e2f7cc8a9c3cf",
     "system_model/architecture_fast/output_loopback.py": "f1a4ca8f2f921018865f37aee78b3a68a9c4cf99bae3238c10953661ee9323e5",
-    "system_model/connected/loaded_tx_chip.py": "7a92c8e3d4cff825d32f36159dd4feb2f9c18e679c3bdf54547f2984dbf7637d"
+    "system_model/architecture_fast/warm_chip.py": "054b0af7ec76ffdc7209dd21a3265621c9ccf0e3665b0444c2e43d97ad2ce537",
+    "system_model/architecture_fast/coarse_chip.py": "af4698b928b4711bb6e33819e9ff8142b478b6f0ea8bdf07e131a9680671c9e4",
+    "verification/fast_exclusive_engine.py": "b35ed978543f7cf0dce139282335363705f5a4ee61231071cc0fdc4175469733",
+    "verification/fast_loaded_output.py": "68a8f879570ec936492153f00d464cca2451ecb5bbba09adb51b7e43081bd350",
+    "system_model/connected/causal_reference_lifecycle.py": "650fc390a288906e8128e3415ba3c13ad8e6912cd75fbeccf0c1ed22a7e1821b",
+    "spec/contract.json": "96e2544bfab69e5774896f23b53d93c285d2b5aa3332e1b21813b4cf31b4abc2"
   }
 }

@@ -1,3 +1,44 @@
+# Current whole-chip priorities — 2026-09-23
+
+This section supersedes the priority ordering in the historical pass notes below.
+User steering: focus on the largest remaining gaps, not additional narrow sweeps.
+The executable inventory is `evidence/fast-model-audit.json`; its presence flags
+are not performance qualification. Historical session numbers below do not imply
+that a process is still running.
+
+1. **One supported full-chip composition.** The common chip, warm/coarse tuning
+   chip and powered loaded chip are separate. None inspected combines loaded
+   RF output/calibration, engine ownership/shutdown and coarse/warm acquisition.
+   Integrate these into one explicit composition with shared resource ownership.
+   The exit evidence is one same-instance lifecycle: startup, RF operation,
+   stopped carrier change and recalibration, wired duplex, RF return, reference
+   loss and recovery. Use the existing fixtures; passing different subclasses
+   cannot substitute for this evidence.
+2. **Finite-current references, bias and output drive.** The selected fast
+   reference uses RC restoration to a fixed source without a driver current
+   limit. Output loading is passive and RX gain is ideal. Connect finite-current
+   reference and driver behavior to the actual converter/clock loads and rail
+   state. Require signal quality, startup, recovery and supply-current accounting
+   on that same composition; do not hide failure by normalizing gain or omitting
+   load. Reuse the existing detailed reference/driver work where applicable.
+3. **Whole-chip feasibility budgets.** Contract area numbers and per-domain
+   current ceilings are allocations, not demonstrated implementation totals.
+   Reconcile active RF, active wired and transition demands with the 50-terminal
+   power allocation, die area, bandwidth and noise/jitter requirements. Mark
+   unsupported parameters explicitly and test adverse uncertainty combinations.
+   Shared synthesis is a resource-saving candidate to evaluate, not an assumed
+   completed feature or a reason to discard independent wired RX recovery.
+4. **Implementation handoff.** Reconcile management/RTL and declared service
+   contracts on the selected model. Then build the connected transistor schematic
+   using the adopted six-family primitive library, with particular attention to
+   autonomous loaded clock quality and converter/reference accuracy. Layout stays
+   behind the verified integrated-schematic gate.
+
+The already-running wideband test may finish. Do not launch further per-setting
+quality sweeps unless their result determines one of these architectural choices.
+
+## Historical experiment notes
+
 ## Mode 1 signed calibration now commits; full traffic rerunning
 
 The corrected noisy 2437 MHz preparation completed nine real shared-ADC probes

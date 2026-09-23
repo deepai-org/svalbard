@@ -25,7 +25,7 @@ class PreparedChip(TransceiverChip):
             self.applied_inputs.append(value)
         self.tx.apply_sample=observed
 
-def run(mode,stop,duplex=False,chip_factory=PreparedChip,preparation_s=8e-6):
+def run(mode,stop,duplex=False,chip_factory=PreparedChip,preparation_s=8e-6,waveform=None):
     c=chip_factory(watchdog_s=100e-6,dac_latency_s=20e-9)
     c.configure(mode,c.time);c.advance(c.time+preparation_s)
     token,apply,reply=c.submit('stream_start' if duplex else 'tx_stream_start',c.time,c.epoch,c.rx_generation,(32<<2)|3 if duplex else 32)
@@ -36,13 +36,17 @@ def run(mode,stop,duplex=False,chip_factory=PreparedChip,preparation_s=8e-6):
         assert abs(c.next_adc-c.next_sample-c.local_rx_offset_s)<1e-15
     encoder=StreamEncoder(2*c.bits);pacer=RationalPacer(4,25) if mode==0 else RationalPacer(8,125)
     rate=250e6 if mode==0 else 312.5e6
+    stimulus=None if waveform is None else list(waveform(1024,40e6 if mode==0 else 20e6))
+    if stimulus is not None:
+        assert len(stimulus)==1024 and all(math.isfinite(z.real) and math.isfinite(z.imag) and
+            -1<=z.real<1 and -1<=z.imag<1 for z in stimulus)
     words=deque();source=[];stop_token=None;peak=0
     for frame in range(64):
         if frame==16 and stop:
             stop_token,_,stop_reply=c.submit('stop',c.time,c.epoch,c.rx_generation)
         for edge in range(64):
             if pacer.tick():
-                i=len(source);sample=encode_iq(complex((i%7-3)/16,(i%5-2)/16),c.bits)
+                i=len(source);sample=encode_iq(complex((i%7-3)/16,(i%5-2)/16) if stimulus is None else stimulus[i],c.bits)
                 source.append(decode_iq(sample,c.bits));words.extend(encoder.push(sample))
         payload=[words.popleft() for _ in range(min(len(words),25 if mode==0 else 7))]
         for i,word in enumerate(encode(mode,[],payload,frame%64)):

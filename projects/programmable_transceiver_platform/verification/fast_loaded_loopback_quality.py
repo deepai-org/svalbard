@@ -10,9 +10,10 @@ from shared_tx_traffic import scenario
 from rf_quality_screen import quality
 from chip_model import decode_iq
 from managed_resources import command
+from rf_modulated_quality import Multicarrier
 
 
-def simulate(mode,impaired,power_gated=False):
+def simulate(mode,impaired,power_gated=False,wideband=False):
     chips=[]
     class Observed(PreparedPoweredChip if power_gated else PreparedChip):
         def __init__(self,**kwargs):
@@ -33,7 +34,9 @@ def simulate(mode,impaired,power_gated=False):
         def quantize_adc(self,value):
             self.adc_analog.append(value)
             return super().quantize_adc(value)
-    traffic=(run_rf if power_gated else run)(mode,True,True,chip_factory=Observed)
+    waveform=Multicarrier(seed=804) if wideband else None
+    traffic=(run_rf if power_gated else run)(mode,True,True,chip_factory=Observed,waveform=waveform)
+    if wideband:traffic['waveform']=waveform.metadata
     if power_gated:
         assert chips[0].off_clock_checks>128
         assert not chips[0].wired_output and not chips[0].host_wire
@@ -45,25 +48,28 @@ def simulate(mode,impaired,power_gated=False):
 def main():
     if not __debug__:raise RuntimeError('Assertions must remain enabled')
     parser=argparse.ArgumentParser();parser.add_argument('--power-gated',action='store_true')
+    parser.add_argument('--wideband',action='store_true')
     args=parser.parse_args()
     p=scenario.architecture.P;start=time.monotonic()
     files=list(scenario.architecture.D.glob('*.py'))+list(FAST.glob('*.py'))+[Path(__file__),p/'verification/fast_loaded_output.py',p/'verification/fast_loaded_traffic.py',p/'verification/fast_exclusive_engine.py']+[p/'verification/stream_codec.py']
     hashes={str(f.relative_to(p)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
-    report=dict(status='running',power_gated=args.power_gated,source_sha256=hashes,cases=[],physical_qualification=False,
+    report=dict(status='running',power_gated=args.power_gated,wideband=args.wideband,source_sha256=hashes,cases=[],physical_qualification=False,
         limitations=['Finite continuous-service record with timed lossy stop, not indefinite service bounds.',
-                     'RX follows the nonlinear TX loopback; deterministic amplitude-varying stimulus, not wideband modulation.',
+                     'RX follows nonlinear TX loopback; --wideband selects 50 changing QPSK carriers through +/-7.8125 MHz, otherwise a repeating pattern. Neither is protocol compliance.',
                      'Assumed device/noise parameters; no spectral mask or physical qualification.',
                      'Both baseline and impaired candidate use finite pad/monitor network, relative-gain calibration and the same 2x RX gain.',
                      'Independent TX observation is actual loaded pad voltage; no source reconstruction or normalization.',
                      'Pre-quantizer diagnostics include frontend/reference/recovery; they isolate quantization, not individual analog impairments.'])
-    output=p/('evidence/fast-powered-loopback-quality.json' if args.power_gated else 'evidence/fast-loaded-loopback-quality.json')
+    prefix='fast-powered' if args.power_gated else 'fast-loaded'
+    output=p/('evidence/'+prefix+('-wideband' if args.wideband else '')+'-loopback-quality.json')
     def save():output.write_text(json.dumps(report,indent=2)+'\n')
     save()
     try:
         for mode in (0,1):
-            rx0,tx0,t0,_,analog0=simulate(mode,False,args.power_gated)
-            rx,tx,t,traffic,analog=simulate(mode,True,args.power_gated)
+            rx0,tx0,t0,baseline_traffic,analog0=simulate(mode,False,args.power_gated,args.wideband)
+            rx,tx,t,traffic,analog=simulate(mode,True,args.power_gated,args.wideband)
             assert t==t0 and len(rx)==len(rx0)
+            if args.wideband:assert traffic['waveform']==baseline_traffic['waveform']
             rq=quality(rx0,rx);tq=quality(tx0,tx)
             diagnostics=dict(analog_rx_quality=quality(analog0,analog),
                 baseline_quantization=quality(analog0,rx0),impaired_quantization=quality(analog,rx),

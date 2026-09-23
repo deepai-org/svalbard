@@ -63,11 +63,50 @@ def clock_ownership_controls(chip_factory=ExclusiveEngineChip):
             inactive_unlock_ignored=True,selected_lock_loss_stops=True))
     return rows
 
+def coupled_analog_screen():
+    c=IntegratedTransceiverChip(coupled_analog=True,return_charge_per_transition=50e-15)
+    reject(lambda:IntegratedTransceiverChip(coupled_analog=True,rf_hz_per_v=1e6))
+    c.select_engine('wire');c.configure(0,0.)
+    c.advance(30e-9)
+    owner=c.analog_owner;r=c.adc_reference
+    assert c.dac_reference is r and c.output_network is owner.network
+    assert c.tx.rx_bank is owner.rx_bank
+    reject(lambda:r.advance(c.time+1e-9))
+    # Exercise actual converter transfer and return-bus charge callbacks at one
+    # boundary; no acquisition/calibration or sustained-traffic claim here.
+    c.tx.apply_sample(.3+.1j,c.time)
+    c.output_network.configure(True,False)
+    assert r.dac_updates==1 and r.dac_charge>0
+    before=owner.rail_v
+    c.emitted_return_word(0xffff,c.time)
+    assert abs(owner.rail_v-(before-17*50e-15/c.supply.c))<1e-14
+    c.advance(60e-9)
+    c.convert_adc(c.tx.received)
+    assert r.samples==1 and r.charge>r.dac_charge
+    assert abs(c.tx.received)>0 and abs(c.output_network.voltage[1])>0
+    assert c.time==c.tx.time==owner.time==r.time==c.supply.time==c.tx_detector.time
+    assert abs(c.supply.delta-(owner.rail_v-owner.law.nominal_v))<1e-14
+    result=dict(status='passed',full_chip_closure=False,physical_qualification=False,
+        time_s=c.time,rail_v=owner.rail_v,reference_v=r.voltage,
+        received_magnitude=abs(c.tx.received),converter_charge_c=r.charge,
+        host_return_charge_c=c.return_charge,shared_state_alignment=True,
+        independent_reference_advance_rejected=True,
+        limitations=['Finite boundary integration screen, not acquired payload or signal quality.',
+        'Continuous PLL rail feedback is not implemented; nonzero sensitivity is rejected.',
+        'Driver/reference bias is fixed, including inactive engines; power gating is not yet modeled.',
+        'Whole-rail energy accounting, operating uncertainty and physical parameters remain unqualified.'])
+    files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
+    result['source_sha256']={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
+    (P/'evidence/fast-coupled-analog-integration.json').write_text(json.dumps(result,indent=2)+'\n')
+    print({k:v for k,v in result.items() if k!='source_sha256'})
+
 def main():
     if not __debug__:raise RuntimeError('Assertions must remain enabled')
     parser=argparse.ArgumentParser();parser.add_argument('--power-gated',action='store_true')
     parser.add_argument('--integrated',action='store_true')
+    parser.add_argument('--coupled-analog-screen',action='store_true')
     args=parser.parse_args()
+    if args.coupled_analog_screen:return coupled_analog_screen()
     if args.integrated:args.power_gated=True
     chip_factory=IntegratedTransceiverChip if args.integrated else PoweredExclusiveChip if args.power_gated else ExclusiveEngineChip
     power_case=power_state_controls()

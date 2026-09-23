@@ -22,6 +22,9 @@ class LoadedOutputChip(TransceiverChip):
         self.tx.receive_terms=MethodType(lambda state:self.loaded_receive_terms(state,original_receive),self.tx)
         original=self.tx.advance
         def advance(time):
+            if getattr(self,'analog_owner',None) is not None:
+                self.advance_coupled_analog(time)
+                return
             n=self.output_network
             if time>self.tx.time:
                 if n.time!=self.tx.time:raise ValueError('Output network history mismatch')
@@ -34,6 +37,35 @@ class LoadedOutputChip(TransceiverChip):
                 n.time=time
             original(time)
         self.tx.advance=advance
+    def advance_coupled_analog(self,time):
+        from rf_tx_state import RfTxState
+        owner=self.analog_owner
+        if time<self.tx.time:raise ValueError('Nonmonotonic analog time')
+        if time==self.tx.time:return
+        if owner.time!=self.tx.time:raise ValueError('Coupled analog history mismatch')
+        start=self.tx.time
+        terms=self.output_source_terms()
+        def drive(t):return sum(a*cmath.exp(r*(t-start)) for a,r in terms)
+        state=self.tx
+        def receive(t,pad):
+            if state.rx_route=='loopback':signal=pad
+            elif state.rx_route=='external_tone':
+                signal=state.external_amplitude*cmath.exp(2j*math.pi*state.external_frequency*t)
+            else:signal=0j
+            signal+=sum(a*cmath.exp(2j*math.pi*f*t) for a,f in state.rf_blockers)
+            if (state.rf_cubic or state.rf_blockers) and abs(signal)>state.rf_envelope_limit:
+                raise ValueError('Coupled RF input outside declared cubic-model range')
+            signal+=state.rf_cubic*signal*abs(signal)**2
+            return signal*cmath.exp(-1j*(2*math.pi*state.rx_lo_hz*t+state.rx_lo_phase))
+        owner.receive=receive
+        owner.advance(time,drive)
+        # The owner has advanced RX; advance only the independent TX reconstruction.
+        RfTxState.advance(state,time)
+        state.rx_bank=owner.rx_bank;state.received=owner.received
+        self.supply.delta=owner.rail_v-owner.law.nominal_v
+        self.supply.time=time
+        self.supply.minimum=min(self.supply.minimum,self.supply.delta)
+
     def loaded_receive_terms(self,state,original_receive):
         if state.rx_route!='loopback':return original_receive()
         if self._output_modes is not None and self._output_modes[0]==state.time:

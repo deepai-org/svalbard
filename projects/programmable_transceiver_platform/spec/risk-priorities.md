@@ -39,8 +39,31 @@ that a process is still running.
    autonomous loaded clock quality and converter/reference accuracy. Layout stays
    behind the verified integrated-schematic gate.
 
-The already-running wideband test may finish. Do not launch further per-setting
-quality sweeps unless their result determines one of these architectural choices.
+Do not launch further per-setting quality sweeps unless their result determines
+one of these architectural choices.
+
+The shared continuous solver (`limited_coupled_driver.py`) now optionally owns
+receive-filter states and accepts a mixer/input callback evaluated against the
+instantaneous loaded pad voltage. Network, rail, detector, reference and RX filter
+commit together only after a successful solve. The existing baseline-equivalence
+screen checks independent modal convolution (maximum state error 1.10e-15),
+nonlinear trajectory subdivision (1.83e-14), and failed-solve rollback. These are
+local mathematical checks, not full-chip or physical qualification. `IntegratedTransceiverChip(coupled_analog=True)` now routes TX advancement,
+loaded pad/detector, RX filter, shared converter reference and host-return charge
+through this owner. The existing engine checker has `--coupled-analog-screen`:
+a 60 ns boundary screen passed actual converter transfer callbacks and return-bus
+charge, aligned state clocks, and rejection of independent reference advancement.
+This screen initializes mode through wired configuration and directly invokes
+converter callbacks; it is not a legal RF payload sequence or acquisition test.
+See `evidence/fast-coupled-analog-integration.json` and its source hashes.
+
+The option remains experimental. Nonzero PLL supply sensitivity is explicitly
+rejected: the old exponentially recovering impulse approximation cannot represent
+the coupled rail trajectory. Continuous PLL feedback is the next major integration
+gap, followed by bias power gating, rail energy accounting, and acquired sustained
+signal quality on this composition. Full lifecycle runtime also needs assessment;
+do not promote a short boundary screen to whole-chip closure. Existing full-chip evidence is historical
+when its recorded source hashes differ; this local pass does not refresh it.
 
 ## Historical experiment notes
 

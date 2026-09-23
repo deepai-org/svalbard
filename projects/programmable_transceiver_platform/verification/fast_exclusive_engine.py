@@ -179,7 +179,7 @@ class SwitchableWarmClock(SwitchablePLL,WarmClock):
             self.initialize_reference(time,tick)
 
 class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
-    def __init__(self,*,reference_source_limit_a=150e-6,reference_sink_limit_a=150e-6,**kwargs):
+    def __init__(self,*,reference_source_limit_a=150e-6,reference_sink_limit_a=150e-6,coupled_analog=False,**kwargs):
         from causal_reference_lifecycle import CurrentLimitedReference
         kwargs.setdefault('dac_reference_load_capacitance',2e-12)
         super().__init__(**kwargs)
@@ -192,6 +192,41 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
             load_capacitance=old.load,source_limit_a=reference_source_limit_a,
             sink_limit_a=reference_sink_limit_a)
         self.dac_reference=self.adc_reference
+        self.analog_owner=None
+        if coupled_analog:
+            self.install_analog_owner(reference_source_limit_a,reference_sink_limit_a)
+
+    def install_analog_owner(self,source_limit,sink_limit):
+        from types import MethodType
+        from driver_sensitive_reference import DriverSensitiveReference
+        from limited_coupled_driver import LimitedCoupledDriver
+        if self.rf_hz_per_v or self.wire_hz_per_v:
+            raise ValueError('Coupled rail trajectory needs continuous PLL feedback; impulse approximation unsupported')
+        if self.tx.rx_bank is None:raise ValueError('Coupled candidate requires multipole RX')
+        old=self.adc_reference
+        reference=DriverSensitiveReference(resistance=old.r,capacitance=old.c,load_capacitance=old.load)
+        def reference_advance(ref,time):
+            if time!=ref.time:raise ValueError('Reference must advance through coupled analog owner')
+        reference.advance=MethodType(reference_advance,reference)
+        self.adc_reference=self.dac_reference=reference
+        self.analog_owner=LimitedCoupledDriver(network=self.output_network,detector=self.tx_detector,
+            reference=reference,rx_bank=self.tx.rx_bank,source_limit_a=source_limit,
+            sink_limit_a=sink_limit,rail_r=self.supply.r,rail_c=self.supply.c)
+        self.output_network=self.analog_owner.network
+        self.tx.rx_bank=self.analog_owner.rx_bank
+        def supply_advance(supply,time):
+            self.tx.advance(time)
+            if supply.time!=time:raise ValueError('Supply clock mismatch')
+        def supply_draw(supply,time,charge):
+            if not math.isfinite(charge) or charge<0:raise ValueError('Invalid switching charge')
+            supply.advance(time)
+            rail=self.analog_owner.rail_v-charge/supply.c
+            if rail<self.analog_owner.minimum_rail_v:raise ValueError('Switching charge exceeds rail envelope')
+            self.analog_owner.rail_v=rail
+            supply.delta=rail-self.analog_owner.law.nominal_v
+            supply.minimum=min(supply.minimum,supply.delta);supply.charge+=charge
+        self.supply.advance=MethodType(supply_advance,self.supply)
+        self.supply.draw=MethodType(supply_draw,self.supply)
 
     RF_PLL_CLASS=SwitchableWarmClock
     TILE_COMMANDS=tuple(dict.fromkeys(PoweredExclusiveChip.TILE_COMMANDS+WarmTransceiverChip.TILE_COMMANDS))

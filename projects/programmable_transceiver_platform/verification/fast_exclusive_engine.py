@@ -26,6 +26,8 @@ class ExclusiveEngineChip(LoadedOutputChip):
             self.active_engine=engine
     def require_engine(self,engine):
         if self.active_engine!=engine:raise ValueError('Inactive payload engine')
+    def clock_required(self,engine):
+        return engine==self.active_engine
     def configure(self,*args,**kwargs):
         if self.active_engine=='none':raise ValueError('Select payload engine before configuration')
         return super().configure(*args,**kwargs)

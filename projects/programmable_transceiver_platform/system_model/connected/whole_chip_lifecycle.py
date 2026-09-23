@@ -47,6 +47,10 @@ class WholeChip:
             self.last_host = time
             self.events.append(['active', self.epoch, time])
 
+    def clock_required(self,engine):
+        """Concurrent baseline needs both clocks; exclusive compositions override."""
+        return True
+
     def clocks_ready(self):
         return True
 

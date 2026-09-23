@@ -55,7 +55,8 @@ class AutonomousWireChip(ManagedChip):
         return PLLSerializer(self.channel,time,self.wire_pll)
 
     def clocks_ready(self):
-        return super().clocks_ready() and self.wire_pll is not None and self.wire_pll.locked
+        return super().clocks_ready() and (not self.clock_required('wire') or
+                self.wire_pll is not None and self.wire_pll.locked)
 
     def schedule_wire(self,count,start,ppm=0):
         if ppm!=self.wire_reference_ppm:raise ValueError('Payload rate must match configured wired reference')
@@ -85,7 +86,7 @@ class AutonomousWireChip(ManagedChip):
                 was_locked=self.wire_pll.locked
                 qualified=self.wire_pll.observe_lock()
                 self.wire_lock_history.append((tick,self.wire_pll.error,self.wire_pll.frequency_hz,qualified))
-                if was_locked and not qualified and self.state=='active':
+                if was_locked and not qualified and self.state=='active' and self.clock_required('wire'):
                     self.quiesce(tick,'wired TX clock lock loss')
                 self.wire_ref_index+=1
                 self.next_wire_reference=self.wire_ref_origin+self.wire_ref_index/self.wire_pll.reference_hz

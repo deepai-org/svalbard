@@ -1,6 +1,7 @@
 """Admission, enable exclusion and stopped RF/wired mode transitions."""
 import hashlib,json,copy
 from pathlib import Path
+from types import MethodType
 from fast_exclusive_engine import ExclusiveEngineChip
 from fast_loaded_output import P
 from managed_resources import command
@@ -11,8 +12,38 @@ def reject(fn):
     except ValueError:return
     raise AssertionError('Forbidden operation accepted')
 
+def clock_ownership_controls():
+    def unlocked(pll):
+        pll.locked=False
+        return False
+    rows=[]
+    for engine in ('rf','wire'):
+        c=ExclusiveEngineChip(watchdog_s=1e-3)
+        c.select_engine(engine);c.configure(0,0.)
+        selected=c.rf_pll if engine=='rf' else c.wire_pll
+        inactive=c.wire_pll if engine=='rf' else c.rf_pll
+        original=selected.observe_lock
+        selected.observe_lock=MethodType(unlocked,selected)
+        inactive.observe_lock=MethodType(unlocked,inactive)
+        c.advance(8e-6)
+        assert c.state=='acquiring' and not c.session.armed
+        selected.observe_lock=original
+        c.advance(c.time+8e-6)
+        assert selected.locked and not inactive.locked and c.state=='active'
+        assert c.session.enabled(engine)
+        # Inject a lock-loss edge on the unused clock while payload is enabled.
+        inactive.locked=True;c.advance(c.time+1e-6)
+        assert not inactive.locked and c.state=='active'
+        selected.observe_lock=MethodType(unlocked,selected)
+        c.advance(c.time+1e-6)
+        assert c.state=='draining' and not c.session.enabled(engine),(engine,c.state,c.session.armed,c.session.enabled(engine),c.events[-3:])
+        rows.append(dict(engine=engine,selected_lock_required=True,
+            inactive_unlock_ignored=True,selected_lock_loss_stops=True))
+    return rows
+
 def main():
     if not __debug__:raise RuntimeError('Assertions must remain enabled')
+    clock_cases=clock_ownership_controls()
     c=ExclusiveEngineChip(watchdog_s=1e-3,tx_relative_gain=True);reject(lambda:c.configure(0,0.))
     bank=copy.deepcopy(c.tx.rx_bank)
     c.configure_rx_gain(2.);assert c.tx.rx_bank==bank
@@ -70,7 +101,7 @@ def main():
         rows.append(dict(engine=engine,mode=mode,opposite_engine_rejected=True,ingress_rejection_atomic=True,rf_duplex_samples=32 if engine=='rf' else 0,stopped=True))
     c.select_engine('none');reject(lambda:c.configure(0,c.time))
     files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[P/'verification'/n for n in ('fast_loaded_output.py','fast_exclusive_engine.py','fast_exclusive_engine_check.py')]
-    out=dict(status='passed',source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files},cases=rows,
+    out=dict(status='passed',clock_ownership=clock_cases,source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files},cases=rows,
         limitations=['Payload admission/session enables only; inactive clock and bias shutdown remain open.',
         'Python selection API with serialized local-start command; pin-level management/RTL interlock not implemented.',
         'Finite 32-sample RF TX/RX and wired receive checked; sustained duplex, RF quality and calibration validity across mode changes need further coverage.'])

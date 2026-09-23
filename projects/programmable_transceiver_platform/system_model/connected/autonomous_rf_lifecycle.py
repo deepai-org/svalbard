@@ -67,7 +67,7 @@ class AutonomousRFChip(AutonomousWireChip):
         return super().make_serializer(time)
 
     def clocks_ready(self):
-        return super().clocks_ready() and self.rf_pll.locked
+        return super().clocks_ready() and (not self.clock_required('rf') or self.rf_pll.locked)
 
     def schedule_lo(self,events):
         if list(events):raise ValueError('RF oscillator owns LO timing; use oscillator disturbances')
@@ -98,7 +98,7 @@ class AutonomousRFChip(AutonomousWireChip):
                 self.rf_lock_history.append((end,self.rf_pll.error,self.rf_pll.frequency_hz,qualified))
                 self.rf_reference_index+=1
                 self.next_rf_reference=self.rf_reference_index/self.rf_pll.reference_hz
-                if was_locked and not qualified and self.state=='active':
+                if was_locked and not qualified and self.state=='active' and self.clock_required('rf'):
                     self.quiesce(end,'RF oscillator lock loss')
                 super().advance(end)
         super().advance(time)

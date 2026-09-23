@@ -42,7 +42,17 @@ implemented. It models an ideal gain setting, not a qualified physical PGA.
 make transceiver-math-fast
 python3 projects/programmable_transceiver_platform/verification/fast_exclusive_engine_check.py
 python3 projects/programmable_transceiver_platform/verification/fast_exclusive_management_check.py
+OPENBLAS_NUM_THREADS=1 python3 projects/programmable_transceiver_platform/verification/fast_loaded_traffic.py --exclusive
 ```
+
+The loaded-traffic runner's `--exclusive` option selects RF before calibration
+and uses the existing count-free RF duplex fixture in both rate profiles. It
+checks ordered DAC input, ADC return data, bounded queues, conversion accounting,
+loaded-output isolation at stop, and zero wired payload. Results are written to
+`evidence/fast-exclusive-rf-traffic.json`; its status is authoritative. This is a
+finite transport test with lossy stop, not RF quality or inactive clock/bias
+shutdown qualification. Without the option, the historical four-path stress
+fixture remains available.
 
 Use `OPENBLAS_NUM_THREADS=1` for repeatable, economical simulation runs.
 The common acceptance suite runs 12 executables / 38 case rows, checks shared

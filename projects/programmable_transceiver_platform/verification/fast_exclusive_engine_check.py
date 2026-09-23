@@ -129,10 +129,17 @@ def coupled_rf_scheduler_screen():
         aligned_analog_and_clock=True,host_impulse_preserves_phase=True,
         out_of_horizon_edge_rejected=True,full_payload_qualification=False)
 
-def coupled_acquisition_screen():
+def coupled_acquisition_screen(payload=False):
     import time
     start=time.monotonic()
-    c=IntegratedTransceiverChip(coupled_analog=True,rf_hz_per_v=1e6,watchdog_s=1e-3)
+    files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
+    hashes={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
+    output=P/('evidence/fast-coupled-rf-payload.json' if payload else 'evidence/fast-coupled-acquisition.json')
+    progress=dict(status='running',stage='acquisition',source_sha256=hashes,
+        full_chip_closure=False,physical_qualification=False)
+    def save():output.write_text(json.dumps(progress,indent=2)+'\n')
+    save()
+    c=IntegratedTransceiverChip(coupled_analog=True,rf_hz_per_v=1e6,watchdog_s=1e-3,tx_relative_gain=payload)
     c.select_engine('rf')
     c.execute_management('rf_coarse_start',2437000000,c.time)
     rows=[]
@@ -143,17 +150,57 @@ def coupled_acquisition_screen():
         if tick%5==0:print(dict(elapsed_s=time.monotonic()-start,**rows[-1]),flush=True)
         if c.coarse.qualified and c.rf_pll.locked:break
     assert c.coarse.qualified and c.rf_pll.locked, rows[-1]
+    calibration=None
+    if payload:
+        c.configure_rx_gain(2.)
+        progress.update(stage='calibration',acquisition=rows);save()
+        reply=c.execute_management('tx_cal_start',0,c.time)
+        while c.tx_cal.next_event is not None:
+            c.advance(c.tx_cal.next_event)
+            print(dict(stage='calibration',time_s=c.time,state=c.tx_cal.state,
+                probes=len(c.tx_cal.powers),elapsed_s=time.monotonic()-start),flush=True)
+            progress['calibration_state']=dict(state=c.tx_cal.state,powers=c.tx_cal.powers,
+                reason=getattr(c.tx_cal,'reason',None));save()
+        if c.tx_cal.state!='ready':
+            progress.update(status='failed',stage='calibration');save()
+            raise AssertionError(progress['calibration_state'])
+        c.execute_management('tx_cal_commit',reply['value'],c.time)
+        calibration=dict(powers=list(c.tx_cal.powers),valid=c.tx_cal.valid,shared_adc_samples=c.tx_adc_samples)
+        import cmath
+        values=[.18*cmath.exp(2j*math.pi*i/16)+.04*cmath.exp(2j*math.pi*i/4) for i in range(32)]
+        for i,value in enumerate(values):c.write_playback(i,encode_iq(value,12))
+        c.select_playback(True);c.configure_capture(True)
+        progress.update(stage='payload',calibration=calibration);save()
     c.configure(0,c.time);c.advance(c.time+3e-6)
     assert c.state=='active' and c.session.enabled('rf') and not c.session.enabled('wire')
     assert c.time==c.rf_pll.time==c.analog_owner.time==c.tx.time
-    report=dict(status='passed',elapsed_s=time.monotonic()-start,acquisition=rows,
+    payload_result=None
+    if payload:
+        c.tx_probe.clear();c.probe_times.clear()
+        observations=[];original=c.convert_adc
+        def observe(value):
+            observations.append(dict(time_s=c.tx.time,receiver_real=value.real,receiver_imag=value.imag,
+                rx_lo_phase_rad=2*math.pi*c.tx.rx_lo_hz*c.tx.time+c.tx.rx_lo_phase))
+            return original(value)
+        c.convert_adc=observe
+        c.execute_management('start_local',3|(32<<2)|(8<<18),c.time)
+        c.advance(c.time+5e-6)
+        assert len(c.adc_words)==32 and c.tx.consumed==32 and c.capture_bank.done
+        assert [c.capture_bank.read(i) for i in range(32)]==c.adc_words
+        assert any(c.adc_words) and c.tx_cal.valid and c.state=='active'
+        c.dac_accounting();c.adc_accounting()
+        payload_result=dict(sample_words=c.adc_words,desired_iq=[[z.real,z.imag] for z in values],
+            pad_iq=[[z.real,z.imag] for z in c.tx_probe],observations=observations,
+            played=[[t,z.real,z.imag] for t,z in c.played],sample_rate_hz=40e6,
+            rx_gain=c.rx_gain,signal_quality_qualified=False)
+    report=dict(status='passed',elapsed_s=time.monotonic()-start,acquisition=rows,calibration=calibration,payload=payload_result,
         active_time_s=c.time,feedback_intervals=c.feedback_intervals,
         full_chip_closure=False,physical_qualification=False,
         limitations=['One RF carrier acquisition with assumed 1 MHz/V rail sensitivity.',
-            'No calibrated payload, full mode lifecycle, wired supply feedback or physical qualification.'])
+            'Optional payload is a 32-sample diagnostic; held-out signal quality, full lifecycle and physical qualification remain open.'])
     files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
-    report['source_sha256']={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
-    (P/'evidence/fast-coupled-acquisition.json').write_text(json.dumps(report,indent=2)+'\n')
+    report['source_sha256']=hashes
+    output.write_text(json.dumps(report,indent=2)+'\n')
     print({k:v for k,v in report.items() if k not in ('source_sha256','acquisition')},flush=True)
 
 def coupled_wire_screen():
@@ -199,7 +246,9 @@ def main():
     parser.add_argument('--coupled-analog-screen',action='store_true')
     parser.add_argument('--coupled-acquisition-screen',action='store_true')
     parser.add_argument('--coupled-wire-screen',action='store_true')
+    parser.add_argument('--coupled-rf-payload-screen',action='store_true')
     args=parser.parse_args()
+    if args.coupled_rf_payload_screen:return coupled_acquisition_screen(payload=True)
     if args.coupled_wire_screen:return coupled_wire_screen()
     if args.coupled_acquisition_screen:return coupled_acquisition_screen()
     if args.coupled_analog_screen:return coupled_analog_screen()

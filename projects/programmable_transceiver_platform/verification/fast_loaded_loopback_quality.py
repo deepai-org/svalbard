@@ -45,11 +45,76 @@ def simulate(mode,impaired,power_gated=False,wideband=False):
     return [decode_iq(w,bits) for w in c.host_samples],c.tx_probe,c.probe_times,traffic,c.adc_analog[:len(c.host_samples)]
 
 
+def coupled_record_quality(path):
+    """Compare a saved coupled payload with an independent linear modal path."""
+    import math,cmath
+    import numpy as np
+    from chip_model import encode_iq
+    from rf_switched_load import SwitchedLoad
+    from rf_loaded_detector import voltage_terms
+    from rf_cascade_state import RfCascadeState,convolution
+    from tx_reconstruction import Reconstruction
+    from session import Session
+    record=json.loads(path.read_text())
+    if record.get('status')!='passed' or not record.get('payload'):
+        raise ValueError('Completed coupled RF payload record required')
+    p=path.parent.parent
+    mismatches=[f for f,h in record['source_sha256'].items() if hashlib.sha256((p/f).read_bytes()).hexdigest()!=h]
+    if mismatches:raise ValueError('Payload sources differ from reference profile: '+str(mismatches))
+    data=record['payload'];observations=data['observations'];played=data['played']
+    if len(played)!=32 or len(observations)!=32 or len(data['sample_words'])!=32:
+        raise ValueError('Reference supports the declared 32-sample mode-0 diagnostic')
+    desired=[decode_iq(encode_iq(complex(*z),12),12) for z in data['desired_iq']]
+    reconstruction=Reconstruction();dc=float(reconstruction.response([0])[0].real)
+    network=SwitchedLoad(frequency_hz=2437e6)
+    cascade=RfCascadeState(Session());cascade.set_butterworth(5,9157407.055691985)
+    bank=cascade.rx_bank
+    epoch=min(observations[0]['time_s'],played[0][0])
+    network.time=reconstruction.time=epoch
+    held=0j;rx=[];tx=[];times=[]
+    events=sorted([(t,0,i) for i,(t,_,_) in enumerate(played)]+
+                  [(row['time_s'],1,i) for i,row in enumerate(observations)])
+    for time,kind,index in events:
+        dt=time-network.time
+        modes=voltage_terms(network,reconstruction.terms(held))
+        bank['states']=[old*cmath.exp(-pole*dt)+sum(v[1]*convolution(rate,pole,dt) for v,rate in modes)
+            for old,pole in zip(bank['states'],bank['poles'])]
+        network.voltage=sum((v*np.exp(rate*dt) for v,rate in modes),np.zeros(4,complex))
+        network.time=time;reconstruction.advance(time,held)
+        if kind==0:
+            held=desired[index]/dc;network.configure(True,False)
+        else:
+            tx.append(complex(network.voltage[1]))
+            value=data['rx_gain']*sum(w*x for w,x in zip(bank['weights'],bank['states']))
+            rx.append(complex(value));times.append(time)
+    measured_rx=[decode_iq(word,12) for word in data['sample_words']]
+    measured_tx=[complex(*z)*cmath.exp(-1j*row['rx_lo_phase_rad'])
+        for z,row in zip(data['pad_iq'],observations)]
+    if len(measured_tx)!=len(tx):raise ValueError('Unaligned pad observations')
+    rx_quality=quality(rx,measured_rx);tx_quality=quality(tx,measured_tx)
+    # An error confined to validation samples must not be absorbed by the fit.
+    corrupted=[v if i<8 else -v for i,v in enumerate(rx)]
+    assert not quality(rx,corrupted)['screen_pass']
+    report=dict(status='passed' if rx_quality['screen_pass'] and tx_quality['screen_pass'] else 'failed',
+        payload_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+        reference_code_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        rx=rx_quality,tx=tx_quality,physical_qualification=False,full_chip_closure=False,
+        limitations=['32 samples, with eight fitting and 24 validation samples; no sustained or modem qualification.',
+            'Linear modal reconstruction, finite output load and receive filter at nominal 2.437 GHz; zero initial state after the diagnostic settling interval is assumed.',
+            'Uses recorded event times but desired digital samples, not fitted nonlinear DAC values; branch phase is removed using the saved shared-LO phase.',
+            'Fixed profile reference must be revisited if topology, gain, carrier or sample format changes.'])
+    (p/'evidence/fast-coupled-rf-quality.json').write_text(json.dumps(report,indent=2)+'\n')
+    print(report)
+    if report['status']!='passed':raise AssertionError('Coupled RF waveform exceeded the provisional quality screen')
+    return report
+
 def main():
     if not __debug__:raise RuntimeError('Assertions must remain enabled')
     parser=argparse.ArgumentParser();parser.add_argument('--power-gated',action='store_true')
     parser.add_argument('--wideband',action='store_true')
+    parser.add_argument('--coupled-record',type=Path)
     args=parser.parse_args()
+    if args.coupled_record is not None:return coupled_record_quality(args.coupled_record.resolve())
     p=scenario.architecture.P;start=time.monotonic()
     files=list(scenario.architecture.D.glob('*.py'))+list(FAST.glob('*.py'))+[Path(__file__),p/'verification/fast_loaded_output.py',p/'verification/fast_loaded_traffic.py',p/'verification/fast_exclusive_engine.py']+[p/'verification/stream_codec.py']
     hashes={str(f.relative_to(p)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}

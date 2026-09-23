@@ -26,6 +26,17 @@ remain closed. The selected integration candidate is
    families, concentrating on autonomous loaded clocks and conversion accuracy.
    Layout follows verified schematic closure, not behavioral-model success.
 
+The next RF experiment is implemented in the existing engine checker as
+`--coupled-rf-payload-screen`: autonomous acquisition, shared-ADC TX calibration,
+explicit calibration commit, then a 32-sample two-tone playback/capture diagnostic.
+It snapshots sources at launch and saves calibration observations and waveform
+data in `fast-coupled-rf-payload.json`. A running status is not a pass; confirm the
+process handle and terminal result. The existing loopback-quality runner accepts
+`--coupled-record` to compare a completed record against an independent linear
+modal reference using recorded event times and desired digital samples. That
+comparison uses eight fitting and 24 validation samples; it cannot establish
+sustained or modem performance. Neither new RF result is qualified yet.
+
 ## What the coupled candidate currently demonstrates
 
 One continuous owner advances loaded RF network, detector, RX filter, finite

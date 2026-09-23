@@ -24,7 +24,8 @@ class DomainSupply:
 
     Mandatory parameters are hypotheses until extracted/characterized. This
     primitive supplies equations for the analog owner; it does not include
-    inductance, regulator dynamics, domain currents or continuous voltage guards.
+    inductance, regulator dynamics or a complete chip current inventory.
+    The nonlinear advance has voltage guards; exact held-current advance does not.
     """
     def __init__(self,names,nominal_v,feed_r,capacitance_f,common_return_r):
         import numpy as np
@@ -80,6 +81,41 @@ class DomainSupply:
         self.source_energy_j+=source;self.load_energy_j+=load;self.feed_loss_j+=loss
         return after.copy()
 
+    def advance_load(self,time,load,minimum_v,rtol=1e-9,atol=1e-12):
+        """Voltage-dependent loads; commit only after a guarded interval succeeds.
+
+        load(time, voltages) returns one nonnegative current per physical feed.
+        The callback must be pure: solver retries cannot mutate circuit state.
+        The caller still owns splitting switching events and coupled analog state.
+        """
+        import numpy as np
+        from scipy.integrate import solve_ivp
+        if not math.isfinite(time) or time<self.time or not callable(load):
+            raise ValueError('Valid load callback and monotonic time required')
+        if not all(math.isfinite(x) and x>0 for x in (rtol,atol)):
+            raise ValueError('Positive finite solver tolerances required')
+        floor=np.asarray(minimum_v,float)
+        if floor.shape!=self.voltage.shape or not np.all(np.isfinite(floor)) or np.any(floor<=0):
+            raise ValueError('Positive finite per-domain voltage floors required')
+        if np.any(self.voltage<=floor):raise ValueError('Initial rail outside envelope')
+        if time==self.time:return self.voltage.copy()
+        n=len(self.names);scale=float(np.sum(self.c))
+        def rhs(t,y):
+            v=y[:n];current=self.currents(load(t,v.copy()))
+            feed=self.conductance@(self.nominal-v)
+            return np.r_[(feed-current)/self.c,
+                self.nominal@feed/scale,feed@self.resistance@feed/scale,v@current/scale]
+        def guard(t,y):return float(np.min(y[:n]-floor))
+        guard.terminal=True;guard.direction=-1
+        result=solve_ivp(rhs,(self.time,time),np.r_[self.voltage,0.,0.,0.],
+            method='Radau',rtol=rtol,atol=atol,events=guard)
+        after=result.y[:n,-1];energy=result.y[n:,-1]*scale
+        if not result.success or result.status==1 or np.any(after<=floor) or not np.all(np.isfinite(result.y[:,-1])):
+            raise ValueError('Domain load left voltage envelope or integration failed')
+        self.voltage=after.copy();self.time=time
+        self.source_energy_j+=float(energy[0]);self.feed_loss_j+=float(energy[1]);self.load_energy_j+=float(energy[2])
+        return self.voltage.copy()
+
     def draw(self,time,charges):
         """Apply an impulse only at an already serviced owner boundary."""
         import numpy as np
@@ -127,7 +163,28 @@ def domain_controls():
         except ValueError:pass
         else:raise AssertionError('Invalid rail event accepted')
         assert np.array_equal(r.voltage,before) and r.time==time and r.source_energy_j==energy
-    return dict(subdivision_error_v=subdivision,invalid_event_preserves_state=True,domains=len(names),maximum_ode_error_v=error,energy_residual_j=residual,
+    numeric=DomainSupply(names,[3.3]*7,[2.]*7,[100e-12]*7,.1)
+    numeric.advance_load(2e-9,lambda t,v:current,[2.5]*7)
+    dynamic_error=float(np.max(abs(numeric.voltage-whole.voltage)))
+    assert dynamic_error<1e-10
+    assert abs(numeric.source_energy_j-whole.source_energy_j)<1e-19
+    power=.02;feed_r=2.
+    nonlinear=DomainSupply(('RF',),[3.3],[feed_r],[100e-12],0.)
+    nonlinear.advance_load(10e-9,lambda t,v:power/v,[2.5])
+    expected=(3.3+math.sqrt(3.3**2-4*feed_r*power))/2
+    assert abs(nonlinear.voltage[0]-expected)<1e-10
+    stored=.5*nonlinear.c[0]*(nonlinear.voltage[0]**2-3.3**2)
+    nonlinear_residual=nonlinear.source_energy_j-nonlinear.feed_loss_j-nonlinear.load_energy_j-stored
+    assert abs(nonlinear_residual)<1e-19
+    before=nonlinear.voltage.copy();before_time=nonlinear.time
+    energies=(nonlinear.source_energy_j,nonlinear.feed_loss_j,nonlinear.load_energy_j)
+    try:nonlinear.advance_load(20e-9,lambda t,v:[1.],[2.5])
+    except ValueError:pass
+    else:raise AssertionError('Overloaded domain accepted')
+    assert np.array_equal(before,nonlinear.voltage) and nonlinear.time==before_time
+    assert energies==(nonlinear.source_energy_j,nonlinear.feed_loss_j,nonlinear.load_energy_j)
+    return dict(dynamic_constant_current_error_v=dynamic_error,constant_power_energy_residual_j=nonlinear_residual,
+        overload_preserves_state=True,subdivision_error_v=subdivision,invalid_event_preserves_state=True,domains=len(names),maximum_ode_error_v=error,energy_residual_j=residual,
         shared_return_couples_host_to_pll=True,full_chip_connected=False,physical_qualification=False)
 
 class CoupledChip(ImpairedChip):

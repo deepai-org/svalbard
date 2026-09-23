@@ -84,14 +84,17 @@ explicitly **unverified** without a declared observation-error bound, even if th
 subsequent finite waveform screen passes. Do not infer calibration qualification
 from sequencer completion.
 
-The next integration task is to bring the tested domain-supply branch into this
-composition, route real host events to their physical feeds, and supply a
-complete current inventory before repeating quality and lifecycle checks. The
-branch already connects driver/reference ODE states and PLL-domain histories to
-the full-chip scheduler, with local energy/rollback/refinement checks. Its
+The domain-supply candidate is now merged into main (`b278eb2`). Its primitive,
+loaded driver/PLL feedback, and RF/wired startup checks pass after the merge;
+receiver trim and capture-gain recording are retained. Next route actual host
+events to their physical feeds and supply a complete current inventory before
+repeating quality and lifecycle checks. The candidate connects driver/reference
+ODE states and PLL-domain histories to the full-chip scheduler, with local
+energy/rollback/refinement checks. Its
 10 ns startup checks use illustrative loads and disable scalar host impulses;
-they do not qualify domain-loaded traffic or chip power. Keep the new RF pass
-scoped to its recorded single-rail source snapshot after merging.
+they do not qualify domain-loaded traffic or chip power. The RF pass remains
+scoped to its recorded single-rail source snapshot (`ca7a220`); it does not
+qualify this new domain-supply composition.
 
 ## What the coupled candidate currently demonstrates
 

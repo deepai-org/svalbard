@@ -403,12 +403,12 @@
     "source": "risk-priorities.md",
     "audit": "evidence/fast-model-audit.json",
     "single_composition_complete": false,
-    "next_implementation": "Unify reference and RF driver with one causal analog rail owner; reuse LimitedCoupledDriver equations rather than adding delayed recharge impulses. Then qualify integrated quality and recovery.",
-    "following": "Finite-current shared reference/driver/bias integration and per-mode whole-chip budgets.",
+    "next_implementation": "Qualify acquired RF operation on the coupled analog/PLL candidate, then connect wired PLL supply feedback to bounded serializer-edge prediction. Preserve event boundaries and shared state ownership.",
+    "following": "Bias power gating, rail energy accounting, sustained converter/receiver quality and per-mode whole-chip area/current budgets; then full transistor schematic and layout.",
     "historical_requirement_notes": "Retained for traceability; old running-job and candidate references are not current state.",
     "integrated_candidate": "verification/fast_exclusive_engine.py:IntegratedTransceiverChip",
     "composition_evidence": "evidence/fast-integrated-engine.json",
-    "composition_status": "Same-instance RF/wired retune lifecycle passes with explicit coarse invalidation and finite shared reference; quality and reference-loss recovery on this composition remain open.",
+    "composition_status": "Historical independent-reference lifecycle passes remain recorded. The optional coupled_analog candidate now includes iterative RF rail/PLL feedback and passes short event-boundary checks; acquired payload, complete mode transitions and reference recovery on this composition remain unqualified.",
     "finite_reference_evidence": {
       "path": "evidence/fast-integrated-engine.json",
       "sha256": "574dbccf529556bdbd125a49f21857d76613126f24bf94eef3d02ac0c8db1ec2",
@@ -421,6 +421,8 @@
       "conversion_charge_c": 7.095587462957791e-11,
       "charge_residual_c": -1.9387045606711586e-26
     },
-    "finite_reference_scope": "150 uA limit did not bind in this lifecycle; this is integration/accounting evidence, not worst-case current adequacy."
+    "finite_reference_scope": "150 uA limit did not bind in this lifecycle; this is integration/accounting evidence, not worst-case current adequacy.",
+    "coupled_analog_evidence": "evidence/fast-coupled-analog-integration.json",
+    "local_feedback_evidence": "evidence/connected-supply-trajectory.json"
   }
 }

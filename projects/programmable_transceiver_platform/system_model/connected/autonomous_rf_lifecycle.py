@@ -80,12 +80,24 @@ class AutonomousRFChip(AutonomousWireChip):
         self.rf_tx_phase=tx_phase;self.rf_rx_phase=rx_phase
         self.install_segment(self.rf_pll.frequency_hz-self.rf_carrier,check=False)
 
+    def requires_rf_boundary_flush(self):
+        return False
+
+    def rf_interval_end(self,end):
+        return end
+
+    def prepare_rf_interval(self,end):
+        pass
+
     def advance(self,time):
         if not math.isfinite(time) or time<self.time:raise ValueError('Invalid RF chip time')
         while self.time<time:
+            if self.requires_rf_boundary_flush():super().advance(self.time)
             end=min(time,self.time+self.rf_step,self.next_rf_reference,self.next_wire_reference,self.next_return,
                     self.command_events[0][0] if self.command_events else math.inf)
+            end=self.rf_interval_end(end)
             if end>self.time:
+                self.prepare_rf_interval(end)
                 predicted=copy.copy(self.rf_pll);predicted.advance(end)
                 frequency=(self.envelope_phase(predicted)-self.envelope_phase(self.rf_pll))/(end-self.time)
                 self.install_segment(frequency)

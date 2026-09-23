@@ -65,7 +65,7 @@ def clock_ownership_controls(chip_factory=ExclusiveEngineChip):
 
 def coupled_analog_screen():
     c=IntegratedTransceiverChip(coupled_analog=True,return_charge_per_transition=50e-15)
-    reject(lambda:IntegratedTransceiverChip(coupled_analog=True,rf_hz_per_v=1e6))
+    reject(lambda:IntegratedTransceiverChip(coupled_analog=True,wire_hz_per_v=1e6))
     c.select_engine('wire');c.configure(0,0.)
     c.advance(30e-9)
     owner=c.analog_owner;r=c.adc_reference
@@ -86,13 +86,13 @@ def coupled_analog_screen():
     assert abs(c.tx.received)>0 and abs(c.output_network.voltage[1])>0
     assert c.time==c.tx.time==owner.time==r.time==c.supply.time==c.tx_detector.time
     assert abs(c.supply.delta-(owner.rail_v-owner.law.nominal_v))<1e-14
-    result=dict(status='passed',full_chip_closure=False,physical_qualification=False,
+    result=dict(status='passed',rf_scheduler=coupled_rf_scheduler_screen(),full_chip_closure=False,physical_qualification=False,
         time_s=c.time,rail_v=owner.rail_v,reference_v=r.voltage,
         received_magnitude=abs(c.tx.received),converter_charge_c=r.charge,
         host_return_charge_c=c.return_charge,shared_state_alignment=True,
         independent_reference_advance_rejected=True,
         limitations=['Finite boundary integration screen, not acquired payload or signal quality.',
-        'Continuous PLL rail feedback is not implemented; nonzero sensitivity is rejected.',
+        'RF rail feedback has a separate short scheduler check; wired PLL sensitivity remains rejected.',
         'Driver/reference bias is fixed, including inactive engines; power gating is not yet modeled.',
         'Whole-rail energy accounting, operating uncertainty and physical parameters remain unqualified.'])
     files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
@@ -100,12 +100,68 @@ def coupled_analog_screen():
     (P/'evidence/fast-coupled-analog-integration.json').write_text(json.dumps(result,indent=2)+'\n')
     print({k:v for k,v in result.items() if k!='source_sha256'})
 
+def coupled_rf_scheduler_screen():
+    def build():
+        c=IntegratedTransceiverChip(coupled_analog=True,rf_hz_per_v=1e8,
+            return_charge_per_transition=50e-15)
+        c.select_engine('rf')
+        c.external_source([.2+.1j,-.1+.2j,.3-.1j],0.,7e-9)
+        return c
+    a=build();b=build()
+    a.advance(20e-9)
+    for t in (7e-9,14e-9,20e-9):b.advance(t)
+    assert a.external_updates==b.external_updates==3
+    assert a.tx.received!=0
+    assert a.time==a.analog_owner.time==a.rf_pll.time==a.adc_reference.time
+    assert abs(a.rf_pll.output_phase_cycles-b.rf_pll.output_phase_cycles)<1e-8
+    assert abs(a.tx.received-b.tx.received)<1e-8
+    phase=a.rf_pll.output_phase_cycles
+    a.emitted_return_word(0xffff,a.time)
+    assert a.rf_pll.output_phase_cycles==phase
+    assert abs(a.rf_pll.rail_frequency(a.time)-a.rf_hz_per_v*a.supply.delta)<1e-6
+    reject(lambda:a.rf_pll.edge_time(phase+1))
+    a.advance(23e-9)
+    assert a.rf_pll.output_phase_cycles>phase and a._analog_forecast is None
+    return dict(external_updates=a.external_updates,intervals=a.feedback_intervals,
+        maximum_iterations=a.feedback_max_iterations,
+        aligned_analog_and_clock=True,host_impulse_preserves_phase=True,
+        out_of_horizon_edge_rejected=True,full_payload_qualification=False)
+
+def coupled_acquisition_screen():
+    import time
+    start=time.monotonic()
+    c=IntegratedTransceiverChip(coupled_analog=True,rf_hz_per_v=1e6,watchdog_s=1e-3)
+    c.select_engine('rf')
+    c.execute_management('rf_coarse_start',2437000000,c.time)
+    rows=[]
+    for tick in range(1,41):
+        c.advance(tick*1e-6)
+        rows.append(dict(time_s=c.time,coarse_state=c.coarse.state,locked=c.rf_pll.locked,
+            rail_v=c.analog_owner.rail_v,reference_v=c.adc_reference.voltage))
+        if tick%5==0:print(dict(elapsed_s=time.monotonic()-start,**rows[-1]),flush=True)
+        if c.coarse.qualified and c.rf_pll.locked:break
+    assert c.coarse.qualified and c.rf_pll.locked, rows[-1]
+    c.configure(0,c.time);c.advance(c.time+3e-6)
+    assert c.state=='active' and c.session.enabled('rf') and not c.session.enabled('wire')
+    assert c.time==c.rf_pll.time==c.analog_owner.time==c.tx.time
+    report=dict(status='passed',elapsed_s=time.monotonic()-start,acquisition=rows,
+        active_time_s=c.time,feedback_intervals=c.feedback_intervals,
+        full_chip_closure=False,physical_qualification=False,
+        limitations=['One RF carrier acquisition with assumed 1 MHz/V rail sensitivity.',
+            'No calibrated payload, full mode lifecycle, wired supply feedback or physical qualification.'])
+    files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
+    report['source_sha256']={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
+    (P/'evidence/fast-coupled-acquisition.json').write_text(json.dumps(report,indent=2)+'\n')
+    print({k:v for k,v in report.items() if k not in ('source_sha256','acquisition')},flush=True)
+
 def main():
     if not __debug__:raise RuntimeError('Assertions must remain enabled')
     parser=argparse.ArgumentParser();parser.add_argument('--power-gated',action='store_true')
     parser.add_argument('--integrated',action='store_true')
     parser.add_argument('--coupled-analog-screen',action='store_true')
+    parser.add_argument('--coupled-acquisition-screen',action='store_true')
     args=parser.parse_args()
+    if args.coupled_acquisition_screen:return coupled_acquisition_screen()
     if args.coupled_analog_screen:return coupled_analog_screen()
     if args.integrated:args.power_gated=True
     chip_factory=IntegratedTransceiverChip if args.integrated else PoweredExclusiveChip if args.power_gated else ExclusiveEngineChip

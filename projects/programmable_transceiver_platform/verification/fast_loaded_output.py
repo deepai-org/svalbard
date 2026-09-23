@@ -58,7 +58,21 @@ class LoadedOutputChip(TransceiverChip):
             signal+=state.rf_cubic*signal*abs(signal)**2
             return signal*cmath.exp(-1j*(2*math.pi*state.rx_lo_hz*t+state.rx_lo_phase))
         owner.receive=receive
-        owner.advance(time,drive)
+        forecast=getattr(self,'_analog_forecast',None)
+        if forecast is None:
+            owner.advance(time,drive)
+        else:
+            start,end,candidate=forecast
+            if owner.time!=start or time!=end:
+                raise ValueError('Unscheduled boundary inside coupled analog forecast')
+            owner.network.__dict__.update(candidate.network.__dict__)
+            owner.reference.__dict__.update(candidate.reference.__dict__)
+            owner.detector.__dict__.update(candidate.detector.__dict__)
+            owner.rx_bank.update(candidate.rx_bank)
+            owner.received=candidate.received
+            owner.rail_v=candidate.rail_v;owner.time=candidate.time
+            owner.rail_trajectory=candidate.rail_trajectory
+            self._analog_forecast=None
         # The owner has advanced RX; advance only the independent TX reconstruction.
         RfTxState.advance(state,time)
         state.rx_bank=owner.rx_bank;state.received=owner.received

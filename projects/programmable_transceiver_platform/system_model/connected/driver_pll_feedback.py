@@ -53,7 +53,7 @@ def advance_feedback(driver,pll,end,source_terms,hz_per_v,step_s):
 
 
 def forecast_trajectory_feedback(driver,pll,end,source_terms,hz_per_v,step_s,
-                                 phase_tolerance=1e-9,rail_tolerance=1e-8,max_iterations=12):
+                                 phase_tolerance=1e-9,rail_tolerance=1e-8,max_iterations=12,receive_transform=None):
     """Iterate rail -> PLL phase -> loaded RF until the interval agrees.
 
     Returns candidate states without mutating either caller. Source terms are
@@ -90,7 +90,7 @@ def forecast_trajectory_feedback(driver,pll,end,source_terms,hz_per_v,step_s,
         def angle(t):return 2*math.pi*float(np.interp(t,times,phase))
         def command(t):
             return sum(a*np.exp(r*(t-start)) for a,r in source_terms)*np.exp(1j*angle(t))
-        local.receive=lambda t,pad:pad*np.exp(-1j*angle(t))
+        local.receive=lambda t,pad:(receive_transform(t,pad,angle(t)) if receive_transform is not None else pad*np.exp(-1j*angle(t)))
         local.advance(end,command,rail_trace_step_s=step_s,rtol=1e-10,atol=1e-13)
         new_rail=np.asarray(local.rail_trajectory.deltas)
         rail_error=float(np.max(abs(new_rail-rail)))

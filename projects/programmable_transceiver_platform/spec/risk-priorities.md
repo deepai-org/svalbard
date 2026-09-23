@@ -57,11 +57,10 @@ This screen initializes mode through wired configuration and directly invokes
 converter callbacks; it is not a legal RF payload sequence or acquisition test.
 See `evidence/fast-coupled-analog-integration.json` and its source hashes.
 
-The option remains experimental. Nonzero PLL supply sensitivity is explicitly
-rejected: the old exponentially recovering impulse approximation cannot represent
-the coupled rail trajectory. Continuous PLL feedback is the next major integration
-gap, followed by bias power gating, rail energy accounting, and acquired sustained
-signal quality on this composition. Full lifecycle runtime also needs assessment;
+The option remains experimental. RF PLL rail sensitivity now uses an iterative trajectory forecast split at chip
+events. Wired PLL sensitivity remains rejected pending bounded serializer-edge
+scheduling. Acquired sustained signal quality, bias power gating and rail energy
+accounting on this composition remain major integration gaps. Full lifecycle runtime also needs assessment;
 do not promote a short boundary screen to whole-chip closure. Existing full-chip evidence is historical
 when its recorded source hashes differ; this local pass does not refresh it.
 
@@ -82,12 +81,17 @@ iteration rollback. The 20 ns feedback fixture converged in four iterations at
 1/0.5/0.25 ns resolution; the 0.5 ns phase difference from 0.25 ns was 3.94e-5
 cycles. These numbers qualify only the declared fixture, not physical jitter.
 
-Full-chip scheduling remains open: forecast only to the next converter, host,
-switch or management event; constrain predicted clock edges to that horizon;
-then commit analog and clock state together. The current local solver models
-shared-LO TX/RX loopback, not every external-input/blocker configuration. The
-full-chip candidate still rejects nonzero PLL rail sensitivity until these
-connections are implemented. Bias power gating, whole-rail energy accounting,
+The RF scheduler now limits its forecast to lower-layer converter, host,
+external-source, wire, reference and management boundaries; outer layers retain
+coarse/calibration/probe boundaries. Due events at the current time are flushed
+before forecasting, so an external waveform beginning at time zero is included.
+The forecast includes external inputs and blockers through the shared receive
+callback. A host impulse preserves phase and installs only its known rail point;
+future phase crossings are rejected until another forecast supplies the history.
+The short integrated screen passed external-source boundaries, interval splitting,
+aligned states and host impulse behavior. Autonomous acquisition and real payload
+are separate tests; a short boundary pass does not qualify them. Wired PLL supply
+feedback still needs bounded serializer-edge scheduling. Bias power gating, whole-rail energy accounting,
 sustained acquired signal quality and actual area/power totals remain major gaps.
 See `evidence/connected-supply-trajectory.json`; older report source hashes do
 not certify this newer model.

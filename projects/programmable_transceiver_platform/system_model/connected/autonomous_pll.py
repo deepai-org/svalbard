@@ -24,7 +24,7 @@ class SupplyTrajectory:
     def __post_init__(self):
         object.__setattr__(self,'times',tuple(self.times))
         object.__setattr__(self,'deltas',tuple(self.deltas))
-        if len(self.times)<2 or len(self.times)!=len(self.deltas):
+        if len(self.times)<1 or len(self.times)!=len(self.deltas):
             raise ValueError('Supply history needs aligned voltage/time samples')
         if not all(math.isfinite(v) for v in self.times+self.deltas):
             raise ValueError('Nonfinite supply history')
@@ -34,6 +34,7 @@ class SupplyTrajectory:
     def voltage(self,time):
         if not math.isfinite(time) or not self.times[0]<=time<=self.times[-1]:
             raise ValueError('Supply forecast outside known analog history')
+        if len(self.times)==1:return self.deltas[0]
         i=min(len(self.times)-2,max(0,bisect_right(self.times,time)-1))
         fraction=(time-self.times[i])/(self.times[i+1]-self.times[i])
         return self.deltas[i]+fraction*(self.deltas[i+1]-self.deltas[i])
@@ -81,6 +82,11 @@ class AutonomousPLL:
 
     def rail_frequency(self,time):
         if self.supply_trajectory is not None:
+            # RK half-step sums can round a few ulps beyond an exact endpoint.
+            # Public advance/edge horizons remain strict in validate_supply_horizon.
+            lo,hi=self.supply_trajectory.times[0],self.supply_trajectory.times[-1]
+            if time>hi and time-hi<=2*max(math.ulp(time),math.ulp(hi)):time=hi
+            if time<lo and lo-time<=2*max(math.ulp(time),math.ulp(lo)):time=lo
             return self.trajectory_hz_per_v*self.supply_trajectory.voltage(time)
         return self.rail_amplitude_hz*math.exp(-(time-self.rail_epoch)/self.rail_tau)
 

@@ -200,8 +200,8 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         from types import MethodType
         from driver_sensitive_reference import DriverSensitiveReference
         from limited_coupled_driver import LimitedCoupledDriver
-        if self.rf_hz_per_v or self.wire_hz_per_v:
-            raise ValueError('Coupled rail trajectory needs continuous PLL feedback; impulse approximation unsupported')
+        if self.wire_hz_per_v:
+            raise ValueError('Coupled wired PLL edge scheduling is not yet supported')
         if self.tx.rx_bank is None:raise ValueError('Coupled candidate requires multipole RX')
         old=self.adc_reference
         reference=DriverSensitiveReference(resistance=old.r,capacitance=old.c,load_capacitance=old.load)
@@ -227,6 +227,69 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
             supply.minimum=min(supply.minimum,supply.delta);supply.charge+=charge
         self.supply.advance=MethodType(supply_advance,self.supply)
         self.supply.draw=MethodType(supply_draw,self.supply)
+
+    def requires_rf_boundary_flush(self):
+        return getattr(self,'analog_owner',None) is not None and bool(self.rf_hz_per_v)
+
+    def rf_interval_end(self,end):
+        if getattr(self,'analog_owner',None) is None or not self.rf_hz_per_v:return end
+        deadlines=[end]
+        # Parent layers already split calibration/coarse/probe events. Include
+        # lower-layer events before predicting any continuous clock/load state.
+        for name in ('next_sample','next_wire','next_adc','next_return','next_detect','next_reference'):
+            value=getattr(self,name,math.inf)
+            if value>self.time:deadlines.append(value)
+        for name in ('dac_pending','adc_pending','external_events','rx_events','lo_events','command_events'):
+            queue=getattr(self,name,())
+            if queue and queue[0][0]>self.time:deadlines.append(queue[0][0])
+        if self.serializer is not None and self.serializer.deadline>self.time:
+            deadlines.append(self.serializer.deadline)
+        if self.live_rx is not None and self.live_rx.next_time()>self.time:
+            deadlines.append(self.live_rx.next_time())
+        if self.streaming_watchdog_enabled and self.state=='active':
+            deadline=self.last_host+self.watchdog_s
+            if deadline>self.time:deadlines.append(deadline)
+            elif end>deadline:self.quiesce(self.time,'host watchdog')
+        return min(deadlines)
+
+    def prepare_rf_interval(self,end):
+        if getattr(self,'analog_owner',None) is None or not self.rf_hz_per_v:return
+        import cmath
+        from driver_pll_feedback import forecast_trajectory_feedback
+        from tx_output_terms import output_terms
+        owner=self.analog_owner
+        if self.tx.time!=self.time or owner.time!=self.time or self.rf_pll.time!=self.time:
+            raise ValueError('Coupled RF scheduler clocks are not aligned')
+        state=self.tx
+        terms=[(a*cmath.exp(1j*self.rf_tx_phase),r) for a,r in
+            output_terms(state.transmit_terms(),**self.tx_output_parameters)] or [(0j,0j)]
+        def receive(t,pad,phase):
+            if state.rx_route=='loopback':signal=pad
+            elif state.rx_route=='external_tone':signal=state.external_amplitude*cmath.exp(2j*math.pi*state.external_frequency*t)
+            else:signal=0j
+            signal+=sum(a*cmath.exp(2j*math.pi*f*t) for a,f in state.rf_blockers)
+            if (state.rf_cubic or state.rf_blockers) and abs(signal)>state.rf_envelope_limit:
+                raise ValueError('Coupled RF input outside declared cubic-model range')
+            signal+=state.rf_cubic*signal*abs(signal)**2
+            return signal*cmath.exp(-1j*(phase+self.rf_rx_phase))
+        candidate,clock,metrics=forecast_trajectory_feedback(owner,self.rf_pll,end,
+            terms,self.rf_hz_per_v,.5e-9,receive_transform=receive)
+        self.rf_pll.set_supply_trajectory(clock.supply_trajectory,self.rf_hz_per_v)
+        self._analog_forecast=(self.time,end,candidate)
+        self.feedback_intervals=getattr(self,'feedback_intervals',0)+1
+        self.feedback_max_iterations=max(getattr(self,'feedback_max_iterations',0),metrics['iterations'])
+
+    def supply_impulse(self,time,delta_v):
+        if getattr(self,'analog_owner',None) is None or not self.rf_hz_per_v:
+            return super().supply_impulse(time,delta_v)
+        from autonomous_pll import SupplyTrajectory
+        from oscillator_supply_lifecycle import OscillatorSupplyChip
+        super(OscillatorSupplyChip,self).supply_impulse(time,delta_v)
+        # Finish the preceding phase trajectory, then install only the known
+        # post-impulse point. The next forecast supplies its future history.
+        self.rf_pll.advance(time)
+        self.rf_pll.set_supply_trajectory(SupplyTrajectory((time,),(self.supply.delta,)),self.rf_hz_per_v)
+        self.oscillator_supply_events+=1
 
     RF_PLL_CLASS=SwitchableWarmClock
     TILE_COMMANDS=tuple(dict.fromkeys(PoweredExclusiveChip.TILE_COMMANDS+WarmTransceiverChip.TILE_COMMANDS))

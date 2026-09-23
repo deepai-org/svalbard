@@ -349,7 +349,7 @@ def coupled_controls(chip_events=False):
             source_sha256={str(f.relative_to(p)):hashlib.sha256(f.read_bytes()).hexdigest()
                 for f in list((p/'system_model/connected').glob('*.py'))+
                          list((p/'system_model/architecture_fast').glob('*.py'))+
-                         [Path(__file__),p/'verification/fast_exclusive_engine.py',p/'verification/fast_loaded_output.py']})
+                         [Path(__file__).resolve(),p/'verification/fast_exclusive_engine.py',p/'verification/fast_loaded_output.py']})
         (p/'evidence/host-bank-chip-events.json').write_text(json.dumps(report,indent=2)+'\n')
         print(json.dumps(report,indent=2));return report
     c = LimitedCoupledDriver(domain_supply=d, domain_minimum_v=[2.5]*7,
@@ -376,7 +376,7 @@ def coupled_controls(chip_events=False):
             'Does not verify full-chip event hooks, PLL feedback or payload operation.',
             'Driver and internal charge parameters remain exploratory.'],
         source_sha256={str(f.relative_to(p)):hashlib.sha256(f.read_bytes()).hexdigest()
-            for f in (Path(__file__), p/'system_model/connected/limited_coupled_driver.py',
+            for f in (Path(__file__).resolve(), p/'system_model/connected/limited_coupled_driver.py',
                       p/'system_model/connected/shared_supply_lifecycle.py')})
     (p/'evidence/host-bank-coupled-supply-controls.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report, indent=2))
@@ -454,7 +454,7 @@ def controls():
             'No package inductance, separate ground paths, substrate coupling or voltage-floor envelope qualification.',
             'Board sources may absorb regenerative current; regulator behavior is not qualified.'],
         source_sha256={str(f.relative_to(p)):hashlib.sha256(f.read_bytes()).hexdigest()
-            for f in (Path(__file__), p/'system_model/connected/shared_supply_lifecycle.py')})
+            for f in (Path(__file__).resolve(), p/'system_model/connected/shared_supply_lifecycle.py')})
     (p/'evidence/host-bank-supply-controls.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report, indent=2))
     return report

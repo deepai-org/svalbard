@@ -125,7 +125,11 @@ class LimitedCoupledDriver:
                     host_states=y[domain_index:]
                     currents+=host.internal_current(t)
                     ground,feed,up,down=host.currents(host_states,host.drive)
-                    derivative=host.derivative(host_states,currents,host.drive)
+                    # Reuse the already solved return-node currents. Calling
+                    # host.derivative here would solve the identical KCL twice.
+                    derivative=np.concatenate(((feed-currents-np.bincount(
+                        host.output_domain,weights=up,minlength=domain_count))/host.decap,
+                        (up-down)/host.load_cap))
                     outputs=host_states[domain_count:]
                     driver_loss=float(up@(rails[host.output_domain]+ground-outputs)+down@(outputs-ground))
                     feed_loss=float(domains.feed_r@(feed**2)+ground**2/host.return_r)

@@ -87,6 +87,7 @@ def domain_controls():
     supply=DomainSupply(names,[3.3]*7,[2.]*7,[100e-12]*7,.1)
     d=LimitedCoupledDriver(domain_supply=supply,domain_minimum_v=[2.5]*7,
         domain_load=lambda t,v:[.02,.02,.02,0,0,.01,.008],reference=DriverSensitiveReference())
+    d.network.configure(True,False)
     d.advance(5e-9,0j,rail_trace_step_s=.1e-9)
     r=d.domains
     stored=.5*np.sum(r.c*(r.voltage**2-r.nominal**2))
@@ -98,7 +99,15 @@ def domain_controls():
     from autonomous_pll import AutonomousPLL
     from driver_pll_feedback import forecast_trajectory_feedback
     clock=AutonomousPLL();clock.advance(d.time)
-    trial,future,metrics=forecast_trajectory_feedback(d,clock,7e-9,[(0j,0j)],1e6,.1e-9)
+    trial,future,metrics=forecast_trajectory_feedback(d,clock,7e-9,[(.2+.03j,0j)],1e6,.1e-9)
+    refined,refined_clock,_=forecast_trajectory_feedback(d,clock,7e-9,[(.2+.03j,0j)],1e6,.05e-9)
+    refinement=float(np.max(abs(trial.network.voltage-refined.network.voltage)))
+    assert abs(trial.network.voltage[1])>1e-4
+    assert refinement<1e-6
+    assert abs(future.output_phase_cycles-refined_clock.output_phase_cycles)<1e-8
+    trial_stored=.5*np.sum(trial.domains.c*(trial.domains.voltage**2-trial.domains.nominal**2))
+    driven_residual=trial.source_energy_j-trial.rail_resistor_energy_j-trial.load_energy_j-trial_stored
+    assert abs(driven_residual)<1e-18
     assert d.time==clock.time==r.time==5e-9
     assert np.array_equal(before,np.r_[r.voltage,d.network.voltage.real,d.network.voltage.imag,d.reference.voltage,r.time,r.source_energy_j])
     assert trial.time==trial.domains.time==future.time==7e-9
@@ -108,7 +117,7 @@ def domain_controls():
     else:raise AssertionError('Domain overload accepted')
     after=np.r_[r.voltage,d.network.voltage.real,d.network.voltage.imag,d.reference.voltage,r.time,r.source_energy_j]
     assert np.array_equal(before,after)
-    return dict(feedback_iterations=metrics["iterations"],forecast_preserves_live_domains=True,energy_residual_j=float(residual),separate_rf_and_reference_supplies=True,
+    return dict(driven_network_refinement_v=refinement,driven_energy_residual_j=float(driven_residual),feedback_iterations=metrics["iterations"],forecast_preserves_live_domains=True,energy_residual_j=float(residual),separate_rf_and_reference_supplies=True,
         overload_preserves_analog_and_domains=True,full_chip_connected=False)
 
 def main():
@@ -126,7 +135,7 @@ def main():
         assert a.reference.dac_updates==b.reference.dac_updates==k+1
         assert abs(a.reference.charge-b.reference.charge)<1e-20
         errors.append(error)
-    report=dict(status='passed',energy_controls=energy_controls(),receive_controls=receive_controls(),max_state_difference=max(errors),switch_cases=4,
+    report=dict(status='passed',domain_controls=domain_controls(),energy_controls=energy_controls(),receive_controls=receive_controls(),max_state_difference=max(errors),switch_cases=4,
         limitations=['Nonbinding current-limit regression on finite local PLL/network intervals, not payload quality.',
         'No physical parameter qualification; finite-limit managed calibration remains separate.'])
     (P/'evidence/connected-limited-baseline-equivalence.json').write_text(json.dumps(report,indent=2)+'\n');print(report)

@@ -519,5 +519,18 @@
     "tx_fixed_carrier_corrected_relative_rms": 0.02136635704755263,
     "scope": "Mode 1, 2.437 GHz, independent external RX tones and independent-carrier TX, 32 samples, assumed 20 kHz RMS / 80 kHz peak finite spectral VCO frequency noise. Original illustrative backgrounds and 50 fC host disturbance remain.",
     "full_chip_closure": false
+  },
+  "latest_loaded_wired_diagnostic": {
+    "evidence": "evidence/fast-host-bank-wire.json",
+    "status": "passed",
+    "source_hashes_verified": true,
+    "modes": [
+      0,
+      1
+    ],
+    "tx_words_per_mode": 6,
+    "rx_words_per_mode": 64,
+    "host_load": "Explicit 10 pF output capacitors, limited driver current and finite internal switching pulses; legacy output impulse disabled",
+    "scope": "Finite traffic and charge/energy integration. No physical GPIO timing, sustained service, protocol compliance or complete current-budget qualification."
   }
 }

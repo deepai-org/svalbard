@@ -43,7 +43,7 @@ def sample_value(index, bits):
 
 def simulate(slots, source, rate_bps, sample_bits, host_words_hz, *,
              phase=Fraction(0), frames=512, startup_words=256,
-             ingress_bits=1024, egress_bits=2048):
+             ingress_bits=1024, egress_bits=2048, streaming=False):
     """Same-rate producer/consumer, arbitrary source phase, integer bit packing.
 
     One producer burst is sample_bits (a raw line symbol or an I/Q pair).
@@ -51,6 +51,8 @@ def simulate(slots, source, rate_bps, sample_bits, host_words_hz, *,
     A snapshot is emitted in the *following* frame, requiring two staging banks.
     Receiver consumes the source cadence delayed startup_words host ticks.
     Missing/extra symbols, clock drift, errors and host stalls are not masked.
+    streaming=True releases words immediately after ideal header acceptance;
+    it does not model header decoding, CDC or management commands.
     """
     period = Fraction(sample_bits * host_words_hz, rate_bps)
     if not 0 <= phase < 1 or sample_bits <= 0 or rate_bps <= 0:
@@ -94,7 +96,7 @@ def simulate(slots, source, rate_bps, sample_bits, host_words_hz, *,
         if slots[slot] == source and active:
             # Emit valid words in the first count assigned source slots.
             # Remaining assigned slots are ignored using the frame descriptor.
-            received_frame.extend(active.popleft())
+            (egress if streaming else received_frame).extend(active.popleft())
             transferred += 10
         if slot == len(slots)-1:
             # Ideal CRC acceptance at frame end; fault behavior is tested by codec.

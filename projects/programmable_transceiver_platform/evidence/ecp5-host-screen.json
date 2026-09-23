@@ -9,7 +9,7 @@
     ],
     "pdf_sha256": "26570f8bb2b800123120829cacd75d818d7a985d573797610521b5bda2e293c3"
   },
-  "contract_sha256": "99ffc14cf44c82a953a1c7409f043bf83c42b39b0b0ee9fec049d834082e34f8",
+  "contract_sha256": "96e2544bfab69e5774896f23b53d93c285d2b5aa3332e1b21813b4cf31b4abc2",
   "profiles": {
     "sdr25": {
       "d2h_within_documented_input_clock_limit": true,
@@ -56,6 +56,96 @@
         "h2d": 61
       },
       "fits": false
+    }
+  ],
+  "exclusive_hypothetical_ddr150": [
+    {
+      "mode": "ethernet_rf40_12",
+      "active_source": "wire",
+      "reserved_slots": 27,
+      "available_slots": 59,
+      "fits": true,
+      "minimum_ddr_clock_hz": 67810170.84759323,
+      "requires_exclusive_slot_reallocation": true,
+      "implemented": false,
+      "electrical_qualification": false,
+      "queue_screen": {
+        "status": "passed",
+        "frames_per_case": 512,
+        "source_phases": 4,
+        "scope": "Ideal streaming words after accepted header; no CDC, electrical timing or mode changes",
+        "peak_bits": {
+          "ingress_high_water_bits": 270,
+          "egress_high_water_bits": 550,
+          "staging_high_water_bits": 540
+        }
+      }
+    },
+    {
+      "mode": "ethernet_rf40_12",
+      "active_source": "iq",
+      "reserved_slots": 21,
+      "available_slots": 59,
+      "fits": true,
+      "minimum_ddr_clock_hz": 52078211.210951604,
+      "requires_exclusive_slot_reallocation": true,
+      "implemented": false,
+      "electrical_qualification": false,
+      "queue_screen": {
+        "status": "passed",
+        "frames_per_case": 512,
+        "source_phases": 4,
+        "scope": "Ideal streaming words after accepted header; no CDC, electrical timing or mode changes",
+        "peak_bits": {
+          "ingress_high_water_bits": 230,
+          "egress_high_water_bits": 432,
+          "staging_high_water_bits": 420
+        }
+      }
+    },
+    {
+      "mode": "pcie_rf20_8",
+      "active_source": "wire",
+      "reserved_slots": 54,
+      "available_slots": 59,
+      "fits": true,
+      "minimum_ddr_clock_hz": 135620341.69518647,
+      "requires_exclusive_slot_reallocation": true,
+      "implemented": false,
+      "electrical_qualification": false,
+      "queue_screen": {
+        "status": "passed",
+        "frames_per_case": 512,
+        "source_phases": 4,
+        "scope": "Ideal streaming words after accepted header; no CDC, electrical timing or mode changes",
+        "peak_bits": {
+          "ingress_high_water_bits": 540,
+          "egress_high_water_bits": 1090,
+          "staging_high_water_bits": 1070
+        }
+      }
+    },
+    {
+      "mode": "pcie_rf20_8",
+      "active_source": "iq",
+      "reserved_slots": 7,
+      "available_slots": 59,
+      "fits": true,
+      "minimum_ddr_clock_hz": 17359403.73698387,
+      "requires_exclusive_slot_reallocation": true,
+      "implemented": false,
+      "electrical_qualification": false,
+      "queue_screen": {
+        "status": "passed",
+        "frames_per_case": 512,
+        "source_phases": 4,
+        "scope": "Ideal streaming words after accepted header; no CDC, electrical timing or mode changes",
+        "peak_bits": {
+          "ingress_high_water_bits": 88,
+          "egress_high_water_bits": 146,
+          "staging_high_water_bits": 140
+        }
+      }
     }
   ]
 }

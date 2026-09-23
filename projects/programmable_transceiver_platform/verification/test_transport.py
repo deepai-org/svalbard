@@ -5,6 +5,20 @@ from check_contract import CONTRACT, check
 from transport_model import schedule, max_gap, simulate
 
 class TransportTests(unittest.TestCase):
+    def test_exclusive_streaming_150_service_boundary(self):
+        host=Fraction(300000000*999900,1000000)
+        rate=Fraction(2500000000*1000100,1000000)
+        for quota in (53,54):
+            slots=schedule({'wire':quota},control_slots=(0,1,2,3,4))
+            if quota==53:
+                with self.assertRaisesRegex(ValueError,'ingress overflow'):
+                    simulate(slots,'wire',rate,10,host,streaming=True)
+            else:
+                result=simulate(slots,'wire',rate,10,host,streaming=True)
+                self.assertGreater(result['consumed_samples'],1000)
+                self.assertLessEqual(result['ingress_high_water_bits'],1024)
+                self.assertLessEqual(result['egress_high_water_bits'],2048)
+
     @classmethod
     def setUpClass(cls):
         cls.c = json.loads(CONTRACT.read_text())

@@ -44,6 +44,14 @@ energy balance without legacy output impulses. This is integration evidence,
 not sustained traffic or RF quality. Next use this composition in the loaded
 payload runner; do not count historical 50 fC payload passes as its qualification.
 
+The in-progress `--host-bank-wire-screen` run has completed profile 0: six TX
+words and 64 RX words match, RF oscillator remains off, and the supply-energy
+residual is -6.44e-21 J with 8.365 nC of modeled internal host switching charge.
+This is a partial console result; profile 1 and the final source-hashed report
+are still pending. It does not establish host voltage timing, sustained service
+or protocol compliance. The independent-input/noisy RF run with the same host
+load hypothesis is separately in acquisition on branch `rf-host-integration`.
+
 1. **Autonomous timing and RF quality against an independent reference.**
    The existing TX conversion metric removes the measured shared-LO phase, and
    RX loopback can cancel that same phase error. Neither establishes useful

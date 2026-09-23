@@ -64,6 +64,17 @@ post-hoc offset subtraction. Only after that close sustained RF service and
 reference-loss/recovery. Defer additional narrow component sweeps and domain-rail
 integration until this basic receive-path contract is resolved.
 
+The revised runner now executes quiet I/Q trim through the existing sequencer
+and shared maintenance ADC before TX calibration. It records the capture gain
+and writes `fast-coupled-rf-calibrated-payload.json`, preserving the failed baseline.
+The quality runner includes the declared capture gain and writes a corresponding
+`fast-coupled-rf-calibrated-quality.json`. No DC subtraction is applied.
+A fast control run completed both trim searches; the independent reference's
+ODE controls still pass. The full coupled rerun is pending. Trim accuracy remains
+explicitly **unverified** without a declared observation-error bound, even if the
+subsequent finite waveform screen passes. Do not infer calibration qualification
+from sequencer completion.
+
 ## What the coupled candidate currently demonstrates
 
 One continuous owner advances loaded RF network, detector, RX filter, finite

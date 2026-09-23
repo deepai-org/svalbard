@@ -134,7 +134,7 @@ def coupled_acquisition_screen(payload=False):
     start=time.monotonic()
     files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
     hashes={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
-    output=P/('evidence/fast-coupled-rf-payload.json' if payload else 'evidence/fast-coupled-acquisition.json')
+    output=P/('evidence/fast-coupled-rf-calibrated-payload.json' if payload else 'evidence/fast-coupled-acquisition.json')
     progress=dict(status='running',stage='acquisition',source_sha256=hashes,
         full_chip_closure=False,physical_qualification=False)
     def save():output.write_text(json.dumps(progress,indent=2)+'\n')
@@ -151,7 +151,19 @@ def coupled_acquisition_screen(payload=False):
         if c.coarse.qualified and c.rf_pll.locked:break
     assert c.coarse.qualified and c.rf_pll.locked, rows[-1]
     calibration=None
+    rx_calibration=[]
     if payload:
+        progress.update(stage='receiver_calibration',acquisition=rows);save()
+        for target in (0,1):
+            c.execute_management('cal_start',9|(target<<16),c.time)
+            deadline=c.time+10e-6
+            while c.cal.busy and c.time<deadline:
+                c.advance(min(c.time+225e-9,deadline))
+            assert c.cal.state=='done',c.cal.result
+            rx_calibration.append(dict(target=target,code=c.trim.code,
+                result=c.cal.result,observations=list(c.maintenance_trace)))
+            progress['rx_calibration']=rx_calibration;save()
+            print(dict(stage='receiver_calibration',target=target,result=c.cal.result),flush=True)
         c.configure_rx_gain(2.)
         progress.update(stage='calibration',acquisition=rows);save()
         reply=c.execute_management('tx_cal_start',0,c.time)
@@ -192,8 +204,8 @@ def coupled_acquisition_screen(payload=False):
         payload_result=dict(sample_words=c.adc_words,desired_iq=[[z.real,z.imag] for z in values],
             pad_iq=[[z.real,z.imag] for z in c.tx_probe],observations=observations,
             played=[[t,z.real,z.imag] for t,z in c.played],sample_rate_hz=40e6,
-            rx_gain=c.rx_gain,signal_quality_qualified=False)
-    report=dict(status='passed',elapsed_s=time.monotonic()-start,acquisition=rows,calibration=calibration,payload=payload_result,
+            rx_gain=c.rx_gain,capture_gain=c.gain,signal_quality_qualified=False)
+    report=dict(status='passed',elapsed_s=time.monotonic()-start,acquisition=rows,calibration=calibration,rx_calibration=rx_calibration,payload=payload_result,
         active_time_s=c.time,feedback_intervals=c.feedback_intervals,
         full_chip_closure=False,physical_qualification=False,
         limitations=['One RF carrier acquisition with assumed 1 MHz/V rail sensitivity.',

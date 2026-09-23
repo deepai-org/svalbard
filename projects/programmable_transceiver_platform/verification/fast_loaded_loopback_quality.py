@@ -76,7 +76,7 @@ def coupled_linear_reference(data):
             held=desired[index]/dc;network.configure(True,False)
         else:
             tx.append(complex(network.voltage[1]))
-            value=data['rx_gain']*sum(w*x for w,x in zip(bank['weights'],bank['states']))
+            value=data.get('capture_gain',1.)*data['rx_gain']*sum(w*x for w,x in zip(bank['weights'],bank['states']))
             rx.append(complex(value))
     return rx,tx
 
@@ -116,7 +116,7 @@ def coupled_record_quality(path):
             'Linear modal reconstruction, finite output load and receive filter at nominal 2.437 GHz; zero initial state after the diagnostic settling interval is assumed.',
             'Uses recorded event times but desired digital samples, not fitted nonlinear DAC values; branch phase is removed using the saved shared-LO phase.',
             'Fixed profile reference must be revisited if topology, gain, carrier or sample format changes.'])
-    (p/'evidence/fast-coupled-rf-quality.json').write_text(json.dumps(report,indent=2)+'\n')
+    path.with_name(path.stem.replace('payload','quality')+'.json').write_text(json.dumps(report,indent=2)+'\n')
     print(report)
     if report['status']!='passed':raise AssertionError('Coupled RF waveform exceeded the provisional quality screen')
     return report

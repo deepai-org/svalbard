@@ -68,6 +68,13 @@ report is `evidence/fast-powered-rf-traffic.json`. Oscillator shutdown and a tim
 readiness guard do not yet model bias-current/supply transients or a physically
 shared synthesizer.
 
+`fast_loaded_loopback_quality.py --power-gated` runs a matched baseline/impaired
+RF-only quality comparison on that powered composition. It keeps the 2x RX gain,
+finite pad/monitor network, shared calibration and existing 10% incremental
+error screen, and verifies that the wired oscillator remains stopped. Results
+go to `evidence/fast-powered-loopback-quality.json`; this finite deterministic
+stimulus does not establish wideband modem performance or physical PGA quality.
+
 Use `OPENBLAS_NUM_THREADS=1` for repeatable, economical simulation runs.
 The common acceptance suite runs 12 executables / 38 case rows, checks shared
 source snapshots and result digests, and writes

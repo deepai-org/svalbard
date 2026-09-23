@@ -113,6 +113,14 @@ The coupled RF acquisition run took 564 seconds for 25 us simulated time.
 Measure and improve runtime where needed for sustained RF quality, preserving
 feedback and checking convergence against the existing detailed solver.
 
+A bounded solver comparison (`coupled-solver-comparison.json`) found BDF about
+1.42x faster than Radau over the first 100 ns of coarse acquisition, with maximum
+network-component difference below 9e-14 and unchanged feedback interval count.
+LSODA offered no speedup. This single startup case is insufficient to switch
+solvers: current limiting, calibrated payload and faults remain untested. The
+modest gain does not remove the need for a validated reduced envelope model for
+long service tests. Keep the running calibrated RF experiment unchanged.
+
 ## Historical experiment notes
 
 ## Mode 1 signed calibration now commits; full traffic rerunning

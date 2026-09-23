@@ -1,0 +1,113 @@
+{
+  "scope": "100 ns initial autonomous RF coarse acquisition; no payload or calibration",
+  "methods": [
+    {
+      "method": "Radau",
+      "elapsed_s": 5.950181230902672,
+      "rail": 3.0900046511119448,
+      "reference": 0.9987583457480415,
+      "phase": 218.38109989933855,
+      "received": [
+        1.7322945183679737e-07,
+        9.605430134460213e-07
+      ],
+      "network": [
+        [
+          -0.0008600505637468574,
+          0.0008564020595568099
+        ],
+        [
+          -7.014163554989809e-07,
+          -5.283479354618626e-07
+        ],
+        [
+          -0.00018815555601003079,
+          0.0009023463360609958
+        ],
+        [
+          -0.0007808889413420735,
+          0.0007795228304002415
+        ]
+      ],
+      "intervals": 4
+    },
+    {
+      "method": "BDF",
+      "elapsed_s": 4.197330890223384,
+      "rail": 3.0900046511119443,
+      "reference": 0.9987583457480416,
+      "phase": 218.38109989933855,
+      "received": [
+        1.7322945181939568e-07,
+        9.605430135574832e-07
+      ],
+      "network": [
+        [
+          -0.0008600505637450291,
+          0.0008564020595516626
+        ],
+        [
+          -7.014163555027539e-07,
+          -5.283479354330176e-07
+        ],
+        [
+          -0.0001881555560433365,
+          0.0009023463359755874
+        ],
+        [
+          -0.0007808889413402965,
+          0.0007795228303954342
+        ]
+      ],
+      "intervals": 4
+    },
+    {
+      "method": "LSODA",
+      "elapsed_s": 6.049694609828293,
+      "rail": 3.090004651111945,
+      "reference": 0.9987583457480405,
+      "phase": 218.38109989933858,
+      "received": [
+        1.7322945182686932e-07,
+        9.605430134782117e-07
+      ],
+      "network": [
+        [
+          -0.0008600505637425481,
+          0.0008564020595513286
+        ],
+        [
+          -7.014163554787517e-07,
+          -5.283479354708276e-07
+        ],
+        [
+          -0.0001881555560198988,
+          0.0009023463360356371
+        ],
+        [
+          -0.0007808889413379569,
+          0.0007795228303950582
+        ]
+      ],
+      "intervals": 4
+    }
+  ],
+  "bdf_speedup": 1.417610711788796,
+  "maximum_network_component_difference": 8.54084598184146e-14,
+  "tolerances": {
+    "rtol": 1e-10,
+    "atol": 1e-13
+  },
+  "methodology": "Identical fresh IntegratedTransceiverChip(coupled_analog=True, rf_hz_per_v=1e6, watchdog_s=1e-3); select RF, rf_coarse_start 2437000000, advance 100 ns. Replace only limited_coupled_driver.solve_ivp method in process memory. OPENBLAS_NUM_THREADS=1.",
+  "physical_qualification": false,
+  "full_chip_closure": false,
+  "limitations": [
+    "Single startup interval, one timing sample per method; concurrent coupled RF run can affect wall times.",
+    "No solver change adopted; payload, current limiting, faults and subdivision need comparison first."
+  ],
+  "source_sha256": {
+    "verification/fast_exclusive_engine.py": "f98974c69bff84857469413f0318fe40c09f711c718d4d4ac3187a254b313312",
+    "system_model/connected/limited_coupled_driver.py": "a48e7dde37eaf70433040e940965144d24cf6552d4bc5997343940099554f75b",
+    "system_model/connected/driver_pll_feedback.py": "4ae9b915b748d56219d7ca236d03bf67737e2fad83648a866fa8fa46b79061fc"
+  }
+}

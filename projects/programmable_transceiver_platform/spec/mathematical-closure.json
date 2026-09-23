@@ -53,8 +53,8 @@
     {
       "id": "rf_chain",
       "status": "partial",
-      "evidence": "connected-wideband-clock-quality.json",
-      "remaining": "Unified mode0 full traffic failed (58376) at 326.052us with host activation missing/expired; source hashes verified, first-quiesce replay 9180 identifies RF frequency-lock loss while host remains ready; investigate supply/PLL frequency margin without loosening lock limits. No unified payload quality pass. Earlier shared-ADC/passive-driver both-mode results remain separate. Guarded finite-reference-current mode1 full traffic completed but TX14.85% failed the10% gate; RX6.97% passed (88046, verified sources). Exact diagnostic decomposition assigns75.18% of TX squared error to angular mismatch. Controlled rail20 mode0 test38143 is running. Require final-composition both-mode quality, lifecycle and bounded loading.",
+      "evidence": "fast-domain-rf-quality.json",
+      "remaining": "On the selected domain-loaded coupled composition, require TX quality without measured-LO phase removal and independent external RX, then sustained traffic, declared noise/uncertainty and reference recovery. The mode-0 nominal 32-sample conversion pass is scoped in latest_domain_rf_diagnostic; older failed candidates remain historical evidence.",
       "historical_notes_before_calibration": "Autonomous shared RF LO now drives both mixers. Independent tone reception exposes clock disturbances which cancel in loopback; four modulated external-input cases retain both converter delays and wired traffic, with uncoupled TX-isolation controls. Extend combined-profile signal-quality and uncertainty measurements to these autonomous clocks. RF gain, images/leakage and overload recovery remain open. Managed carrier tuning now passes six independent-tone analytical-response cases and two detuning controls with64-sample converter transport. This covers a noiseless single-pole tone response only; combined wideband quality remains open. Independent50-carrier reception now passes a32-frame four-path run in both modes with sampled autonomous RF/wired clocks, finite converter delays, spectral oscillator noise, host/return supply pulling and frontend impairments. Held-out incremental errors are3.95%/4.86%; blockers, wider uncertainty and actual pulse-loop integration remain open. Four both-mode/signed blocker and cubic-response cases now pass with3.94\u20134.99% held-out error; full uncertainty coverage remains open. Pass848 combines the public supply-coupled detector before four-path traffic, independent wideband RF, autonomous sampled clocks, shared ADC/DAC reference loads and a16-word host pause. Both32-frame cases pass with3.785%/4.945% held-out error; this finite candidate screen does not close whole-chip uncertainty or all supported controls. Pass874/875 fractional wideband against an ideal tuned reference passes four carrier/mode cases at7.38\u20138.03% with20/30MHz carrier-relative blockers. Fixed-laboratory in-band interference failures remain archived. Broader channel/noise/uncertainty coverage and physical validation remain open.",
       "tx_calibration_update": "Local finite-code correction, finite detector and managed sequencing have targeted evidence. Shared-LO and unknown-receiver counterexamples prove loopback cannot qualify TX independently. Full live corrected output-stage quality remains unclosed.",
       "supporting_evidence": [
@@ -403,12 +403,12 @@
     "source": "risk-priorities.md",
     "audit": "evidence/fast-model-audit.json",
     "single_composition_complete": false,
-    "next_implementation": "Qualify acquired calibrated RF payload quality on the coupled composition; complete oscillator/converter/receiver/digital current inventory and mode-transition budgets.",
+    "next_implementation": "Independent-carrier TX and external-input RX quality with declared timing/noise uncertainty; complete non-overlapping per-domain current inventory and feasibility envelopes.",
     "following": "Reference recovery, sustained traffic, mode transitions and adverse uncertainty with complete loads; whole-chip area/current budgets; then full transistor schematic and layout.",
     "historical_requirement_notes": "Retained for traceability; old running-job and candidate references are not current state.",
     "integrated_candidate": "verification/fast_exclusive_engine.py:IntegratedTransceiverChip",
     "composition_evidence": "evidence/fast-integrated-engine.json",
-    "composition_status": "Historical independent-reference lifecycle passes remain recorded. The optional coupled_analog candidate now includes iterative RF rail/PLL feedback and passes short event-boundary checks; acquired payload, complete mode transitions and reference recovery on this composition remain unqualified.",
+    "composition_status": "Domain-loaded mode-0 RF passes a finite calibrated 32-sample conversion diagnostic; both wired profiles pass finite traffic. These recorded snapshots do not establish independent-carrier RF quality, realistic current adequacy, sustained service or recovery on the current composition.",
     "finite_reference_evidence": {
       "path": "evidence/fast-integrated-engine.json",
       "sha256": "574dbccf529556bdbd125a49f21857d76613126f24bf94eef3d02ac0c8db1ec2",
@@ -461,7 +461,7 @@
     "status": "finite_screen_passed",
     "rx_corrected_relative_rms": 0.016203821877134154,
     "tx_corrected_relative_rms": 0.019393793711858353,
-    "scope": "Mode 0, 2.437 GHz, 32 samples; explicit domain supplies and host switching, illustrative background currents; no added oscillator noise.",
+    "scope": "Mode 0, 2.437 GHz, 32 samples; explicit domain supplies and host switching, illustrative background currents; no added oscillator noise. TX metric removes measured shared-LO phase; independent-carrier timing quality was not qualified by this historical report.",
     "full_chip_closure": false
   }
 }

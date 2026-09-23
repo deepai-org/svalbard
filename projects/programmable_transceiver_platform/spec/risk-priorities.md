@@ -15,32 +15,37 @@ not absolute gain qualification. Both wired profiles also pass finite traffic
 with domain supplies. These results establish nominal functional integration,
 not complete current budgets, noise bounds, sustained operation or silicon.
 
-1. **Expand coupled RF quality beyond the first calibrated diagnostic.** The
-   completed 32-sample mode-0 two-tone test passes held-out RX/TX quality at
-   1.49% / 1.83% corrected RMS against the provisional 10% screen. It includes
-   autonomous acquisition, actual I/Q trim, shared-ADC TX calibration and finite
-   loaded converters/reference. Require both profiles, sustained service,
-   independent RF inputs, noise/uncertainty and reference-loss/recovery on this
-   same composition. Reuse existing quality and service runners.
-2. **Complete current inventory and feasibility budgets.** Wired termination
-   power and RF/wired driver bias now affect the rail. Oscillator, converter,
-   receiver, digital and startup currents remain incomplete. Bound these loads
-   explicitly before claiming whole-chip current adequacy. Reconcile active RF,
-   active wired and transitions against per-domain supply allocations, 50 total
-   terminals, die area, bandwidth, noise and jitter. Area/current allocations
-   are not demonstrated implementation totals. Retained prebiased schematic
-   evidence reports 14.254 mA on an RF supply, whereas the present 100 ohm rail
-   fixture permits only 8 mA before its voltage floor. Explicit domain DC feeds
-   and transient coupling must accompany the larger current inventory. See the
-   retained-evidence audit in `power-partition.md`; its partial measurements are
-   not a whole-chip sum or current qualification. Shared physical components save
-   area only where actually implemented; mutual exclusion alone does not.
-3. **Integrated lifecycle and implementation handoff.** Qualify sustained wired
-   traffic, mode changes, faults and adverse uncertainty combinations with the
-   complete loads. Reconcile management/RTL contracts on this composition. Then
-   build the full connected transistor schematic from the adopted six primitive
-   families, concentrating on autonomous loaded clocks and conversion accuracy.
-   Layout follows verified schematic closure, not behavioral-model success.
+1. **Autonomous timing and RF quality against an independent reference.**
+   The existing TX conversion metric removes the measured shared-LO phase, and
+   RX loopback can cancel that same phase error. Neither establishes useful
+   external-radio performance. The saved-payload evaluator now also requires TX
+   quality against an ideal 2.437 GHz carrier, retaining DUT oscillator error.
+   Its negative control rejects a phase disturbance hidden by shared-LO
+   correction. Finish the already-running mode-1 diagnostic, then prioritize
+   external RX, declared oscillator/reference noise, and sustained traffic on
+   this composition. Measure a failure envelope, not just another nominal pass.
+2. **Complete current inventory and feasibility budgets.** The seven-domain
+   model integrates driver/reference loads and host charge, but background
+   currents remain illustrative. Clock, converter, receiver, digital, leakage
+   and startup loads need non-overlapping ownership and evidence-backed ranges.
+   Compare each physical connection with its own planning ceiling in RF, wired
+   and transitions; an unknown load cannot count as zero. Do not sum overlapping
+   historical circuit reports or tune feed resistance to obtain a pass. See
+   `power-partition.md`. Die area, 50 terminals and host bandwidth remain joint
+   constraints, not independently solved allocations.
+3. **Sustained service and recovery, then implementation.** Exercise both wired
+   profiles and RF with complete loads, host stalls, reference loss/reacquisition
+   and RF/wired handover. Require explicit safe failure outside the accepted
+   envelope. Only after mathematical closure build the full connected transistor
+   schematic from the six adopted primitive families, starting with loaded
+   autonomous clocks and the RF/converter chain. Layout follows schematic
+   verification; the narrow allowed operating range does not remove these gates.
+
+Avoid further isolated nominal sweeps unless they answer a failure found in one
+of these three checks. The mode-1 RF run already in progress is retained; it is
+not a reason to defer independent work or launch duplicate simulations.
+
+## Historical experiments (not the current task queue)
 
 The next RF experiment is implemented in the existing engine checker as
 `--coupled-rf-payload-screen`: autonomous acquisition, shared-ADC TX calibration,

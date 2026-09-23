@@ -82,6 +82,14 @@ def coupled_linear_reference(data):
             rx.append(complex(value))
     return rx,tx
 
+def fixed_carrier_envelope(values,times,offset_hz):
+    """Translate a laboratory envelope using only the requested carrier."""
+    import cmath,math
+    if not times or len(values)!=len(times):raise ValueError('Unaligned carrier record')
+    return [z*cmath.exp(-2j*math.pi*offset_hz*(t-times[0]))
+        for z,t in zip(values,times)]
+
+
 def coupled_record_quality(path):
     """Compare a saved coupled payload with an independent linear modal path."""
     import math,cmath
@@ -107,16 +115,31 @@ def coupled_record_quality(path):
         for z,row in zip(data['pad_iq'],observations)]
     if len(measured_tx)!=len(tx):raise ValueError('Unaligned pad observations')
     rx_quality=quality(rx,measured_rx);tx_quality=quality(tx,measured_tx)
+    # Pad voltages are already envelopes in the fixed rf_carrier frame (see
+    # LoadedOutputChip.output_source_terms). Do not remove the DUT oscillator's
+    # phase when judging transmission against an independent receiver.
+    # This diagnostic tunes 2.437 GHz while the inherited envelope frame remains
+    # 2.4 GHz. Translate by the ideal 37 MHz difference, never by measured phase.
+    # Choosing a local epoch only changes the constant phase absorbed by gain.
+    ideal_offset_hz=2437e6-2400e6
+    tx_fixed_carrier=quality(tx,fixed_carrier_envelope(
+        [complex(*z) for z in data['pad_iq']],
+        [row['time_s'] for row in observations],ideal_offset_hz))
     # An error confined to validation samples must not be absorbed by the fit.
     corrupted=[v if i<8 else -v for i,v in enumerate(rx)]
     assert not quality(rx,corrupted)['screen_pass']
-    report=dict(status='passed' if rx_quality['screen_pass'] and tx_quality['screen_pass'] else 'failed',
+    report=dict(status='passed' if all(q['screen_pass'] for q in
+        (rx_quality,tx_quality,tx_fixed_carrier)) else 'failed',
         payload_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
         reference_code_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-        reference_controls=coupled_reference_controls(data.get('bits_per_component',12),data['sample_rate_hz'],data.get('capture_gain',1.)),rx=rx_quality,tx=tx_quality,physical_qualification=False,full_chip_closure=False,
+        reference_controls=coupled_reference_controls(data.get('bits_per_component',12),data['sample_rate_hz'],data.get('capture_gain',1.)),rx=rx_quality,tx=tx_quality,
+        tx_fixed_carrier=tx_fixed_carrier,ideal_carrier_hz=2437e6,
+        envelope_frame_hz=2400e6,physical_qualification=False,full_chip_closure=False,
         limitations=['32 samples, with eight fitting and 24 validation samples; no sustained or modem qualification.',
             'Linear modal reconstruction, finite output load and receive filter at nominal 2.437 GHz; zero initial state after the diagnostic settling interval is assumed.',
-            'Uses recorded event times but desired digital samples, not fitted nonlinear DAC values; branch phase is removed using the saved shared-LO phase.',
+            'Uses recorded event times but desired digital samples, not fitted nonlinear DAC values; sample-clock error relative to an ideal schedule remains unqualified.',
+            'tx removes saved shared-LO phase to isolate conversion distortion; tx_fixed_carrier retains oscillator error and is also required to pass. Only one constant complex gain is fitted; no frequency or time-varying phase correction.',
+            'RX is internal loopback and can cancel shared oscillator error; independent external reception and declared phase-noise bounds remain open.',
             'Fixed profile reference must be revisited if topology, gain, carrier or sample format changes.'])
     path.with_name(path.stem.replace('payload','quality')+'.json').write_text(json.dumps(report,indent=2)+'\n')
     print(report)
@@ -159,8 +182,21 @@ def coupled_reference_controls(bits=12,sample_rate_hz=40e6,capture_gain=1.):
     assert quality(expected_rx,rx)['screen_pass'] and quality(expected_tx,tx)['screen_pass']
     damaged=[z if i<8 else -z for i,z in enumerate(rx)]
     assert not quality(expected_rx,damaged)['screen_pass']
+    # A shared-LO comparison can entirely conceal this phase disturbance.
+    # The independent carrier comparison must reject it instead.
+    phase=[0. if i<8 else .3 for i in range(len(tx))]
+    disturbed=[z*cmath.exp(1j*p) for z,p in zip(tx,phase)]
+    assert not quality(expected_tx,disturbed)['screen_pass']
+    assert quality(expected_tx,[z*cmath.exp(-1j*p)
+        for z,p in zip(disturbed,phase)])['screen_pass']
+    times=[row['time_s'] for row in data['observations']]
+    laboratory=[z*cmath.exp(2j*math.pi*37e6*(t-times[0])) for z,t in zip(tx,times)]
+    assert quality(expected_tx,fixed_carrier_envelope(laboratory,times,37e6))['screen_pass']
+    disturbed_lab=[z*cmath.exp(1j*p) for z,p in zip(laboratory,phase)]
+    assert not quality(expected_tx,fixed_carrier_envelope(disturbed_lab,times,37e6))['screen_pass']
     return dict(samples=32,maximum_rx_ode_error=rx_error,maximum_tx_ode_error=tx_error,
-        validation_only_error_rejected=True,physical_qualification=False)
+        validation_only_error_rejected=True,shared_lo_hidden_phase_error_rejected=True,
+        physical_qualification=False)
 
 def main():
     if not __debug__:raise RuntimeError('Assertions must remain enabled')

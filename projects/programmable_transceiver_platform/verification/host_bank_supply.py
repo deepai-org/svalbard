@@ -383,6 +383,65 @@ def coupled_controls(chip_events=False):
     return report
 
 
+def sampling_screen():
+    """Conditional pad-level sampling windows; ideal equal launch delays only."""
+    p=Path(__file__).resolve().parents[1]
+    rows=[]
+    for rate in (250e6,300e6,312.5e6):
+        h=LimitedHostBankSupply([3.3]*7,[2.]*7,[100e-12]*7,.1,
+            [1]*5+[2]*6,[10e-12]*11,[100.]*11,[80.]*11,
+            pullup_limit_a=[.01]*11,pulldown_limit_a=[.012]*11,
+            rising_charge_c=[7e-12]*11,falling_charge_c=[7e-12]*11,
+            switching_tau_s=.5e-9,minimum_supply_v=[2.5]*7)
+        background=np.array([.020,.002,.002,0.,.005,0.,.008])
+        h.advance(20e-9,background,[0]*11)
+        period=1/rate;phases=np.linspace(0.,period,65)
+        windows=[];middle_errors=0;minimum=3.3
+        for word in range(24):
+            high=word%2==0;drive=[int(high)]*11;start=h.time
+            h.advance(start,background,drive)
+            wave=[h.state[7:].copy()]
+            for dt in phases[1:]:
+                h.advance(start+float(dt),background,drive)
+                wave.append(h.state[7:].copy());minimum=min(minimum,float(min(h.state[:7])))
+            if word<8:continue
+            wave=np.asarray(wave)
+            good=np.all(wave[:,:10]>=.7*3.3 if high else wave[:,:10]<=.3*3.3,axis=1)
+            middle_errors+=int(not good[32])
+            changes=np.where((wave[:-1,10]-1.65)*(wave[1:,10]-1.65)<=0)[0]
+            if len(changes)!=1 or not good[-1]:
+                windows.append(None);continue
+            j=int(changes[0]);v0,v1=wave[j:j+2,10]
+            crossing=phases[j]+(1.65-v0)*(phases[j+1]-phases[j])/(v1-v0)
+            # Take only the terminal contiguous valid interval; grid resolution
+            # and a separate 0.2 ns per-side allowance remain explicit.
+            last_bad=np.flatnonzero(~good)
+            first=int(last_bad[-1]+1) if len(last_bad) else 0
+            windows.append((float(phases[first]-crossing+.2e-9),float(period-crossing-.2e-9)))
+        valid=all(w is not None for w in windows)
+        lower=max(w[0] for w in windows) if valid else None
+        upper=min(w[1] for w in windows) if valid else None
+        rows.append(dict(word_rate_hz=rate,measured_words=16,
+            common_clock_relative_window_s=[lower,upper],
+            has_sampled_window=bool(valid and lower<upper),
+            midpoint_launch_sample_errors=middle_errors,
+            minimum_sampled_supply_v=minimum,phase_grid_s=period/64,
+            energy_residual_j=h.energy_residual()))
+        assert abs(h.energy_residual())<1e-16
+        print(rows[-1],flush=True)
+    report=dict(status='screen_completed',cases=rows,physical_qualification=False,
+        full_chip_closure=False,assumptions=[
+            '10 pF per output, 100/80 ohm paths, 10/12 mA limits, 7 pC internal edge charge and 0.5 ns decay.',
+            'Receiver thresholds 0.3/0.7 of 3.3 V and clock threshold 1.65 V are test hypotheses, not an FPGA specification.',
+            '0.2 ns allowance at each window edge represents an assumed combined timing margin.',
+            'Equal ideal launch delays; delay mismatch, PCB/package impedance, receiver hysteresis and clock jitter omitted.',
+            'Synchronous alternating data; 8 warmup and 16 measured words, sampled at 65 points per word.',
+            'Grid window is conditional and finite; neither all patterns nor continuous-time eye qualification.'],
+        source_sha256={str(Path(__file__).resolve().relative_to(p)):hashlib.sha256(Path(__file__).read_bytes()).hexdigest()})
+    (p/'evidence/host-bank-sampling-screen.json').write_text(json.dumps(report,indent=2)+'\n')
+    return report
+
+
 def controls():
     """Independent nodal KCL/energy, ODE and existing domain-model comparisons."""
     from scipy.integrate import solve_ivp
@@ -465,5 +524,6 @@ if __name__ == '__main__':
     parser.add_argument('--limited-controls', action='store_true')
     parser.add_argument('--coupled-controls', action='store_true')
     parser.add_argument('--chip-events', action='store_true')
+    parser.add_argument('--sampling-screen', action='store_true')
     args = parser.parse_args()
-    coupled_controls(chip_events=True) if args.chip_events else coupled_controls() if args.coupled_controls else limited_controls() if args.limited_controls else controls()
+    sampling_screen() if args.sampling_screen else coupled_controls(chip_events=True) if args.chip_events else coupled_controls() if args.coupled_controls else limited_controls() if args.limited_controls else controls()

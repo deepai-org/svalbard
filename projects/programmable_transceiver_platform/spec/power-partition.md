@@ -43,6 +43,26 @@ non-overlapping accounting. The loaded traffic runner checks logical transport
 and supply coupling, not external receiver sampling of these voltage waveforms.
 Its pass must not close host electrical timing or the whole-chip power budget.
 
+The subsequent `host_bank_supply.py --sampling-screen` observes output voltages
+and the forwarded-clock threshold crossing rather than accepting ideal words.
+With the same exploratory driver, 10 pF loads, a 3.3 V receiver and assumed
+0.3/0.7 data thresholds, the synchronous alternating-pattern fixture gives:
+
+| DDR clock | Sample delay after modeled clock crossing, including 0.2 ns per-side allowance |
+| --- | --- |
+| 125 MHz | 0.928–2.215 ns |
+| 150 MHz candidate | 0.913–1.606 ns |
+| 156.25 MHz | 0.889–1.489 ns |
+
+All three have a nonempty sampled window, but sampling halfway after the ideal
+launch fails on eight of sixteen measured words in each case. Host clock phase
+selection must therefore be explicit. These finite, grid-sampled intervals are
+conditional on equal ideal launch delays and the chosen receiver thresholds;
+they omit actual FPGA setup/hold, delay mismatch, package/board effects and clock
+jitter. They are not a qualified eye or a guarantee for arbitrary data patterns.
+The faster profile's approximately 0.600 ns residual window makes those omitted
+effects material. Evidence: `host-bank-sampling-screen.json`.
+
 `HOST_A` owns D2H data 0–4 and H2D data 0–4, plus SPI/reset pad circuitry. `HOST_B` owns D2H data 5–9, D2H clock, H2D data 5–9 and H2D clock. A and B each have one dedicated supply pad and one dedicated return pad. They use the same nominal board I/O voltage, but output-driver rail segments must have explicitly routed local feeds and returns. Their electrical connection on the board does not justify assuming equal on-die current division.
 
 The [native netlist audit](../evidence/supply-cell-audit.json) records these formal pins:

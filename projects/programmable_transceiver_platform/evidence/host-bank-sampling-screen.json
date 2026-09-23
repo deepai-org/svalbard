@@ -1,0 +1,57 @@
+{
+  "status": "screen_completed",
+  "cases": [
+    {
+      "word_rate_hz": 250000000.0,
+      "measured_words": 16,
+      "common_clock_relative_window_s": [
+        9.275088685406204e-10,
+        2.2150088673651166e-09
+      ],
+      "has_sampled_window": true,
+      "midpoint_launch_sample_errors": 8,
+      "minimum_sampled_supply_v": 3.0969130408474825,
+      "phase_grid_s": 6.25e-11,
+      "energy_residual_j": -5.459392042849983e-23
+    },
+    {
+      "word_rate_hz": 300000000.0,
+      "measured_words": 16,
+      "common_clock_relative_window_s": [
+        9.126453346247438e-10,
+        1.606395057585443e-09
+      ],
+      "has_sampled_window": true,
+      "midpoint_launch_sample_errors": 8,
+      "minimum_sampled_supply_v": 3.0967327424709885,
+      "phase_grid_s": 5.2083333333333334e-11,
+      "energy_residual_j": 2.2333876538931747e-23
+    },
+    {
+      "word_rate_hz": 312500000.0,
+      "measured_words": 16,
+      "common_clock_relative_window_s": [
+        8.887697644150688e-10,
+        1.4887689881071552e-09
+      ],
+      "has_sampled_window": true,
+      "midpoint_launch_sample_errors": 8,
+      "minimum_sampled_supply_v": 3.096475685266206,
+      "phase_grid_s": 5e-11,
+      "energy_residual_j": -4.4667753077863494e-23
+    }
+  ],
+  "physical_qualification": false,
+  "full_chip_closure": false,
+  "assumptions": [
+    "10 pF per output, 100/80 ohm paths, 10/12 mA limits, 7 pC internal edge charge and 0.5 ns decay.",
+    "Receiver thresholds 0.3/0.7 of 3.3 V and clock threshold 1.65 V are test hypotheses, not an FPGA specification.",
+    "0.2 ns allowance at each window edge represents an assumed combined timing margin.",
+    "Equal ideal launch delays; delay mismatch, PCB/package impedance, receiver hysteresis and clock jitter omitted.",
+    "Synchronous alternating data; 8 warmup and 16 measured words, sampled at 65 points per word.",
+    "Grid window is conditional and finite; neither all patterns nor continuous-time eye qualification."
+  ],
+  "source_sha256": {
+    "verification/host_bank_supply.py": "597883459e2989eaa42d1003f2e11fd91cfd7ca7ea988e5486f9538b17c0cce1"
+  }
+}

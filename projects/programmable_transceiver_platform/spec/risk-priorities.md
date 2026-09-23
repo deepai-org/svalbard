@@ -6,6 +6,51 @@ The mathematical model is not closed; transistor schematic and layout gates
 remain closed. The selected integration candidate is
 `IntegratedTransceiverChip(coupled_analog=True)`.
 
+## Current stopping point and handoff
+
+Completed work is committed on main through `1faa40b`: finite host-output loading
+is integrated with the shared analog owner; both wired profiles pass their finite
+traffic checks (`6d86b15`); the duplicate current solve is removed (`89415dd`);
+and conditional host sampling windows are recorded. The 150 MHz exclusive host
+candidate has finite queue tests and constant-rate bounds (`682469a`, `652b817`),
+but is not installed in the chip's clock/transport lifecycle. No whole-chip
+mathematical, transistor or layout completion is claimed.
+
+The RF diagnostic is still running in `/tmp/svalbard-rf-host` on source commit
+`2f1b67b`. At this handoff its process PID is 581267, tool session is 1607, and
+its log is `/tmp/svalbard-host-bank-rf.log`. These are session-local handles,
+not durable proof that the job remains live: recheck before taking action.
+The last inspected record was still acquiring after coarse tuning; it was not
+a signal-quality pass. Keep this checkout unchanged until evaluation finishes.
+
+The progress/output file in that checkout is
+`projects/programmable_transceiver_platform/evidence/fast-host-bank-rf-external-mode1-noise20000-payload.json`.
+It is a progress report, **not a resumable simulation checkpoint**. If the process
+is live, continue observing it; do not launch a duplicate. Once it terminates,
+inspect its exit/log and the record's status. For a passed payload record, run
+from that same checkout:
+
+```sh
+OPENBLAS_NUM_THREADS=1 python3 projects/programmable_transceiver_platform/verification/fast_loaded_loopback_quality.py --coupled-record projects/programmable_transceiver_platform/evidence/fast-host-bank-rf-external-mode1-noise20000-payload.json
+```
+
+The evaluator verifies source hashes and writes the corresponding `quality.json`.
+Preserve either the pass or the failure, then copy the completed evidence to main
+and update this handoff. Main now contains a verified solver optimization, so do
+not evaluate this older source snapshot against main or silently relabel it as
+qualification of changed code. The runner change itself is already on main as
+`05ab2fe`. No additional nominal run is needed merely to reproduce this result.
+
+After this diagnostic, the highest-priority remaining work is complete declared
+load/noise envelopes and sustained service/recovery on the chosen composition.
+Host electrical timing still needs receiver, skew/jitter and package/board
+assumptions; the sampled alternating-pattern window is not electrical closure.
+Parameter realizability belongs to subsequent transistor verification, while
+missing functionality and unallocated loads must be resolved in the mathematical
+model first. See the stage boundaries in `analog-design-workflow.md`.
+
+## Prior RF evidence and priority rationale
+
 The domain-loaded RF diagnostic now passes: autonomous lock at 23 us, both RX
 trim searches, accepted shared-ADC TX calibration, and 32 captured samples.
 `fast-domain-rf-quality.json` reports 1.62% RX and 1.94% TX corrected RMS against

@@ -90,6 +90,55 @@ def fixed_carrier_envelope(values,times,offset_hz):
         for z,t in zip(values,times)]
 
 
+def independent_rx_reference(data):
+    """Ideal external tones through the declared five-pole receive filter.
+
+    This uses transmitter frequencies, never the chip's measured LO phase or
+    TX samples. The long settling precondition makes initial filter memory
+    negligible for this fixed diagnostic profile.
+    """
+    import cmath,math
+    source=data['independent_rx']
+    times=[row['time_s'] for row in data['observations']]
+    if not times or min(times)-source['enabled_time_s']<2e-6:
+        raise ValueError('Independent RX reference requires settled input')
+    tones=source['tones']
+    if not tones or any(len(row)!=3 for row in tones):raise ValueError('Missing external tones')
+    cutoff=9157407.055691985;order=5
+    poles=[-2*math.pi*cutoff*cmath.exp(1j*math.pi*(2*k+order+1)/(2*order))
+        for k in range(order)]
+    gain=data['rx_gain']*data['capture_gain']
+    return [gain*sum(complex(real,imag)*math.prod(p/(p+2j*math.pi*hz) for p in poles)
+        *cmath.exp(2j*math.pi*hz*t) for real,imag,hz in tones) for t in times]
+
+
+def independent_rx_reference_controls():
+    """Check frequency response against a separately integrated serial filter."""
+    import cmath,math
+    import numpy as np
+    from scipy.integrate import solve_ivp
+    times=[3e-6+i/20e6 for i in range(32)]
+    tones=[[.18,0.,2.5e6],[.04,0.,7.5e6]]
+    data=dict(rx_gain=2.,capture_gain=.5,observations=[dict(time_s=t) for t in times],
+        independent_rx=dict(enabled_time_s=0.,tones=tones))
+    expected=independent_rx_reference(data)
+    poles=np.array([-2*math.pi*9157407.055691985*cmath.exp(
+        1j*math.pi*(2*k+6)/10) for k in range(5)])
+    def rhs(t,y):
+        signal=sum(complex(re,im)*cmath.exp(2j*math.pi*f*t) for re,im,f in tones)
+        return poles*(np.r_[signal,y[:-1]]-y)
+    solution=solve_ivp(rhs,(0.,times[-1]),np.zeros(5,complex),t_eval=times,
+        method='DOP853',rtol=1e-10,atol=1e-12,max_step=5e-9)
+    if not solution.success:raise AssertionError(solution.message)
+    error=max(abs(a-b) for a,b in zip(expected,solution.y[-1]))
+    assert error<1e-8,error
+    # A receiver tracking its own loopback cannot stand in for this input.
+    wrong=[z*cmath.exp(2j*math.pi*1e6*(t-times[0])) for z,t in zip(expected,times)]
+    assert not quality(expected,wrong)['screen_pass']
+    return dict(maximum_serial_filter_ode_error=float(error),
+        wrong_carrier_rejected=True,physical_qualification=False)
+
+
 def coupled_record_quality(path):
     """Compare a saved coupled payload with an independent linear modal path."""
     import math,cmath
@@ -110,6 +159,7 @@ def coupled_record_quality(path):
     if len(played)!=32 or len(observations)!=32 or len(data['sample_words'])!=32:
         raise ValueError('Reference supports the declared 32-sample diagnostic')
     rx,tx=coupled_linear_reference(data)
+    if data.get('independent_rx'):rx=independent_rx_reference(data)
     measured_rx=[decode_iq(word,data.get('bits_per_component',12)) for word in data['sample_words']]
     measured_tx=[complex(*z)*cmath.exp(-1j*row['rx_lo_phase_rad'])
         for z,row in zip(data['pad_iq'],observations)]
@@ -133,14 +183,15 @@ def coupled_record_quality(path):
         payload_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
         reference_code_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         reference_controls=coupled_reference_controls(data.get('bits_per_component',12),data['sample_rate_hz'],data.get('capture_gain',1.)),rx=rx_quality,tx=tx_quality,
-        tx_fixed_carrier=tx_fixed_carrier,ideal_carrier_hz=2437e6,
+        tx_fixed_carrier=tx_fixed_carrier,rx_source='independent_tones' if data.get('independent_rx') else 'internal_loopback',ideal_carrier_hz=2437e6,
         envelope_frame_hz=2400e6,physical_qualification=False,full_chip_closure=False,
         limitations=['32 samples, with eight fitting and 24 validation samples; no sustained or modem qualification.',
             'Linear modal reconstruction, finite output load and receive filter at nominal 2.437 GHz; zero initial state after the diagnostic settling interval is assumed.',
             'Uses recorded event times but desired digital samples, not fitted nonlinear DAC values; sample-clock error relative to an ideal schedule remains unqualified.',
             'tx removes saved shared-LO phase to isolate conversion distortion; tx_fixed_carrier retains oscillator error and is also required to pass. Only one constant complex gain is fitted; no frequency or time-varying phase correction.',
-            'RX is internal loopback and can cancel shared oscillator error; independent external reception and declared phase-noise bounds remain open.',
+            ('RX uses independently generated tones; this finite record does not establish wideband modem, blocker or noise performance.' if data.get('independent_rx') else 'RX is internal loopback and can cancel shared oscillator error; independent external reception and declared phase-noise bounds remain open.'),
             'Fixed profile reference must be revisited if topology, gain, carrier or sample format changes.'])
+    if data.get('independent_rx'):report['independent_rx_reference_controls']=independent_rx_reference_controls()
     path.with_name(path.stem.replace('payload','quality')+'.json').write_text(json.dumps(report,indent=2)+'\n')
     print(report)
     if report['status']!='passed':raise AssertionError('Coupled RF waveform exceeded the provisional quality screen')

@@ -1,0 +1,62 @@
+{
+  "status": "passed",
+  "payload_sha256": "66a05aa5c761d0d4d54f149b60a82be783c105c8bfbb8ce1b782bcca1d9b2fed",
+  "reference_code_sha256": "6f6d0be9bbc0bf0ac59b27bc5560f747a118ac709b3ed93c427e75a87845a4b7",
+  "reference_controls": {
+    "samples": 32,
+    "maximum_rx_ode_error": 4.4976131101268855e-15,
+    "maximum_tx_ode_error": 1.0886971073588978e-13,
+    "validation_only_error_rejected": true,
+    "shared_lo_hidden_phase_error_rejected": true,
+    "physical_qualification": false
+  },
+  "rx": {
+    "calibration_samples": 8,
+    "validation_samples": 24,
+    "gain_real": 0.8647464704471334,
+    "gain_imag": 0.013548685396128973,
+    "gain_magnitude": 0.8648526030640933,
+    "raw_relative_rms": 0.1369250187037,
+    "corrected_relative_rms": 0.046399814542356095,
+    "gain_in_screen_range": true,
+    "screen_budget": 0.1,
+    "screen_pass": true
+  },
+  "tx": {
+    "calibration_samples": 8,
+    "validation_samples": 24,
+    "gain_real": 0.8444953640653343,
+    "gain_imag": 0.00046064947773499066,
+    "gain_magnitude": 0.8444954897012671,
+    "raw_relative_rms": 0.15458542804573538,
+    "corrected_relative_rms": 0.013834259115244205,
+    "gain_in_screen_range": true,
+    "screen_budget": 0.1,
+    "screen_pass": true
+  },
+  "tx_fixed_carrier": {
+    "calibration_samples": 8,
+    "validation_samples": 24,
+    "gain_real": -0.5425533187954503,
+    "gain_imag": -0.6471541744822612,
+    "gain_magnitude": 0.8444954880197848,
+    "raw_relative_rms": 1.6737800195054755,
+    "corrected_relative_rms": 0.013834820153968554,
+    "gain_in_screen_range": true,
+    "screen_budget": 0.1,
+    "screen_pass": true
+  },
+  "rx_source": "internal_loopback",
+  "ideal_carrier_hz": 2437000000.0,
+  "envelope_frame_hz": 2400000000.0,
+  "physical_qualification": false,
+  "full_chip_closure": false,
+  "limitations": [
+    "32 samples, with eight fitting and 24 validation samples; no sustained or modem qualification.",
+    "Linear modal reconstruction, finite output load and receive filter at nominal 2.437 GHz; zero initial state after the diagnostic settling interval is assumed.",
+    "Uses recorded event times but desired digital samples, not fitted nonlinear DAC values; sample-clock error relative to an ideal schedule remains unqualified.",
+    "tx removes saved shared-LO phase to isolate conversion distortion; tx_fixed_carrier retains oscillator error and is also required to pass. Only one constant complex gain is fitted; no frequency or time-varying phase correction.",
+    "RX is internal loopback and can cancel shared oscillator error; independent external reception and declared phase-noise bounds remain open.",
+    "Fixed profile reference must be revisited if topology, gain, carrier or sample format changes."
+  ]
+}

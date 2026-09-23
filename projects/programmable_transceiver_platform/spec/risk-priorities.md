@@ -15,13 +15,19 @@ not absolute gain qualification. Both wired profiles also pass finite traffic
 with domain supplies. These results establish nominal functional integration,
 not complete current budgets, noise bounds, sustained operation or silicon.
 
+Mode 1 now also passes the finite domain RF screen: 4.64% RX loopback error
+and 1.38% TX error against an independent ideal carrier, with eight fitting and
+24 held-out samples (`fast-domain-rf-mode1-quality.json`). Source hashes were
+verified at evaluation. This closes the nominal second-profile diagnostic, not
+independent RX, added phase noise, current adequacy or sustained operation.
+
 1. **Autonomous timing and RF quality against an independent reference.**
    The existing TX conversion metric removes the measured shared-LO phase, and
    RX loopback can cancel that same phase error. Neither establishes useful
    external-radio performance. The saved-payload evaluator now also requires TX
    quality against an ideal 2.437 GHz carrier, retaining DUT oscillator error.
    Its negative control rejects a phase disturbance hidden by shared-LO
-   correction. Finish the already-running mode-1 diagnostic, then prioritize
+   correction. The mode-1 diagnostic now passes this stronger TX check. Prioritize
    external RX, declared oscillator/reference noise, and sustained traffic on
    this composition. Measure a failure envelope, not just another nominal pass.
 2. **Complete current inventory and feasibility budgets.** The seven-domain
@@ -42,8 +48,8 @@ not complete current budgets, noise bounds, sustained operation or silicon.
    verification; the narrow allowed operating range does not remove these gates.
 
 Avoid further isolated nominal sweeps unless they answer a failure found in one
-of these three checks. The mode-1 RF run already in progress is retained; it is
-not a reason to defer independent work or launch duplicate simulations.
+of these three checks. Preserve completed diagnostic evidence; reuse its acquisition/calibration flow
+for the independent-input test rather than launching duplicate nominal runs.
 
 ## Historical experiments (not the current task queue)
 

@@ -183,17 +183,19 @@ def install_independent_rx(c):
         envelope_frame_hz=c.rf_carrier,testbench_route_selection=True)
 
 
-def coupled_acquisition_screen(payload=False,domains=False,mode=0,independent_rx=False,noise_rms_hz=0.):
+def coupled_acquisition_screen(payload=False,domains=False,mode=0,independent_rx=False,noise_rms_hz=0.,physical_host=False):
     import time
     if not math.isfinite(noise_rms_hz) or noise_rms_hz<0:raise ValueError('Invalid RF noise')
     if (independent_rx or noise_rms_hz) and not (payload and domains):
         raise ValueError('Independent/noisy RF screen requires domain payload')
+    if physical_host and not (payload and domains):raise ValueError('Host bank requires domain payload')
     start=time.monotonic()
-    files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
+    files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py',P/'verification/host_bank_supply.py']
     hashes={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
     output=P/(('evidence/fast-domain-rf-mode1-payload.json' if mode==1 else 'evidence/fast-domain-rf-payload.json') if domains else 'evidence/fast-coupled-rf-calibrated-payload.json' if payload else 'evidence/fast-coupled-acquisition.json')
     if independent_rx or noise_rms_hz:
         output=P/f'evidence/fast-domain-rf-{"external" if independent_rx else "loopback"}-mode{mode}-noise{noise_rms_hz:g}-payload.json'
+    if physical_host:output=output.with_name(output.name.replace('fast-domain-rf','fast-host-bank-rf'))
     progress=dict(status='running',stage='acquisition',source_sha256=hashes,
         full_chip_closure=False,physical_qualification=False)
     def save():output.write_text(json.dumps(progress,indent=2)+'\n')
@@ -202,12 +204,23 @@ def coupled_acquisition_screen(payload=False,domains=False,mode=0,independent_rx
     if domains:
         from shared_supply_lifecycle import DomainSupply
         names=('CORE','HOST_A','HOST_B','WIRE_A','WIRE_B','RF','PLL')
-        background=[.02,.02,.02,0,0,.012,.008]
+        background=[.02,.002,.002,0,0,.012,.008] if physical_host else [.02,.02,.02,0,0,.012,.008]
         domain_fixture=dict(names=list(names),feed_r_ohm=2.,capacitance_f=100e-12,
             common_return_r_ohm=.1,background_current_a=background,complete_current_inventory=False)
         options=dict(domain_supply=DomainSupply(names,[3.3]*7,[2.]*7,[100e-12]*7,.1),
-            domain_minimum_v=[2.5]*7,domain_load=lambda t,v:background,return_charge_per_transition=50e-15)
+            domain_minimum_v=[2.5]*7,domain_load=lambda t,v:background,return_charge_per_transition=0. if physical_host else 50e-15)
         progress['domain_fixture']=domain_fixture;save()
+    if physical_host:
+        from host_bank_supply import LimitedHostBankSupply
+        options['host_bank']=LimitedHostBankSupply([3.3]*7,[2.]*7,[100e-12]*7,.1,
+            [1]*5+[2]*6,[10e-12]*11,[100.]*11,[80.]*11,
+            pullup_limit_a=[.01]*11,pulldown_limit_a=[.012]*11,
+            rising_charge_c=[7e-12]*11,falling_charge_c=[7e-12]*11,
+            switching_tau_s=.5e-9,minimum_supply_v=[2.5]*7)
+        progress['physical_host_fixture']=dict(capacitance_f=10e-12,pullup_r_ohm=100.,
+            pulldown_r_ohm=80.,pullup_limit_a=.01,pulldown_limit_a=.012,
+            internal_charge_per_edge_c=7e-12,switching_tau_s=.5e-9,
+            electrical_timing_qualified=False)
     from oscillator_noise import FrequencyNoise
     noise=FrequencyNoise.seeded(noise_rms_hz,seed=839)
     c=IntegratedTransceiverChip(coupled_analog=True,rf_hz_per_v=1e6,watchdog_s=1e-3,tx_relative_gain=payload,
@@ -222,7 +235,8 @@ def coupled_acquisition_screen(payload=False,domains=False,mode=0,independent_rx
         c.advance(tick*1e-6)
         rows.append(dict(time_s=c.time,coarse_state=c.coarse.state,locked=c.rf_pll.locked,
             rail_v=c.analog_owner.rail_v,reference_v=c.adc_reference.voltage))
-        if tick%5==0:print(dict(elapsed_s=time.monotonic()-start,**rows[-1]),flush=True)
+        progress.update(acquisition=rows,elapsed_s=time.monotonic()-start);save()
+        print(dict(elapsed_s=time.monotonic()-start,**rows[-1]),flush=True)
         if c.coarse.qualified and c.rf_pll.locked:break
     assert c.coarse.qualified and c.rf_pll.locked, rows[-1]
     calibration=None
@@ -288,16 +302,26 @@ def coupled_acquisition_screen(payload=False,domains=False,mode=0,independent_rx
         full_chip_closure=False,physical_qualification=False,
         limitations=['One RF carrier acquisition with assumed 1 MHz/V rail sensitivity.',
             'Optional payload is a 32-sample diagnostic; held-out signal quality, full lifecycle and physical qualification remain open.'])
-    files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
+    files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py',P/'verification/host_bank_supply.py']
     report['source_sha256']=hashes
     if domains:
         import numpy as np
         d=c.analog_owner.domains
-        residual=d.source_energy_j-d.feed_loss_j-d.load_energy_j-d.impulse_energy_j-.5*float(np.sum(d.c*(d.voltage**2-d.nominal**2)))
+        stored=.5*float(np.sum(d.c*(d.voltage**2-d.nominal**2)))
+        if physical_host:
+            h=c.analog_owner.host_bank
+            stored=h.cap_energy()-h.initial_energy
+            assert h.time==c.time and h.injected_charge.sum()>0
+            assert max(abs(h.injected_charge-h.consumed_charge-h.pending_charge))<1e-21
+            report['physical_host_fixture']=progress['physical_host_fixture']
+            report['physical_host_result']=dict(internal_charge_c=float(h.injected_charge.sum()),return_word_edges=c.return_ticks)
+            report['limitations'].append('Host voltage timing is not sampled by an external receiver; pad parameters and background currents remain hypotheses.')
+        residual=d.source_energy_j-d.feed_loss_j-d.load_energy_j-d.impulse_energy_j-stored
         assert abs(residual)<1e-15
         report['domain_fixture']=domain_fixture
         report['domain_result']=dict(voltage_v=d.voltage.tolist(),energy_residual_j=residual,host_return_charge_c=c.return_charge)
         report['limitations'].append('Illustrative domain impedance and background current inventory; not a power-budget or package qualification.')
+    assert all(hashlib.sha256((P/n).read_bytes()).hexdigest()==h for n,h in hashes.items()), 'Sources changed during run'
     output.write_text(json.dumps(report,indent=2)+'\n')
     print({k:v for k,v in report.items() if k not in ('source_sha256','acquisition')},flush=True)
 
@@ -382,6 +406,7 @@ def main():
     parser.add_argument('--domain-wire-screen',action='store_true')
     parser.add_argument('--host-bank-wire-screen',action='store_true')
     parser.add_argument('--domain-rf-screen',action='store_true')
+    parser.add_argument('--host-bank-rf',action='store_true')
     parser.add_argument('--rf-mode',type=int,choices=(0,1),default=0)
     parser.add_argument('--independent-rx',action='store_true')
     parser.add_argument('--rf-noise-rms-hz',type=float,default=0.)
@@ -390,10 +415,11 @@ def main():
     parser.add_argument('--coupled-wire-screen',action='store_true')
     parser.add_argument('--coupled-rf-payload-screen',action='store_true')
     args=parser.parse_args()
+    if args.host_bank_rf and not args.domain_rf_screen:parser.error('--host-bank-rf requires --domain-rf-screen')
     if (args.independent_rx or args.rf_noise_rms_hz) and not args.domain_rf_screen:
         parser.error('Independent input/noise options require --domain-rf-screen')
     if args.domain_rf_screen:return coupled_acquisition_screen(payload=True,domains=True,mode=args.rf_mode,
-        independent_rx=args.independent_rx,noise_rms_hz=args.rf_noise_rms_hz)
+        independent_rx=args.independent_rx,noise_rms_hz=args.rf_noise_rms_hz,physical_host=args.host_bank_rf)
     if args.host_bank_wire_screen:return coupled_wire_screen(domains=True,physical_host=True)
     if args.domain_wire_screen:return coupled_wire_screen(domains=True)
     if args.domain_chip_screen:

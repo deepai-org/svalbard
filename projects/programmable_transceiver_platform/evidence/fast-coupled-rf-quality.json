@@ -1,0 +1,44 @@
+{
+  "status": "failed",
+  "payload_sha256": "2c5c4066d17636dd335f7371cc067efaf285f2feb3bb081f92500d3beb98c186",
+  "reference_code_sha256": "713441c0947d6841d420689b31f9c8833d710508d013d1ed5af4c3f165318e4b",
+  "reference_controls": {
+    "samples": 32,
+    "maximum_rx_ode_error": 6.874927777889454e-15,
+    "maximum_tx_ode_error": 4.223319340615739e-14,
+    "validation_only_error_rejected": true,
+    "physical_qualification": false
+  },
+  "rx": {
+    "calibration_samples": 8,
+    "validation_samples": 24,
+    "gain_real": 0.8147027668618029,
+    "gain_imag": -0.19908837657456108,
+    "gain_magnitude": 0.8386756107216731,
+    "raw_relative_rms": 0.7801162424485723,
+    "corrected_relative_rms": 0.7745596963291181,
+    "gain_in_screen_range": true,
+    "screen_budget": 0.1,
+    "screen_pass": false
+  },
+  "tx": {
+    "calibration_samples": 8,
+    "validation_samples": 24,
+    "gain_real": 0.7989133529024051,
+    "gain_imag": 0.00310648229690772,
+    "gain_magnitude": 0.7989193924783801,
+    "raw_relative_rms": 0.21544806462074567,
+    "corrected_relative_rms": 0.01831179531418286,
+    "gain_in_screen_range": true,
+    "screen_budget": 0.1,
+    "screen_pass": true
+  },
+  "physical_qualification": false,
+  "full_chip_closure": false,
+  "limitations": [
+    "32 samples, with eight fitting and 24 validation samples; no sustained or modem qualification.",
+    "Linear modal reconstruction, finite output load and receive filter at nominal 2.437 GHz; zero initial state after the diagnostic settling interval is assumed.",
+    "Uses recorded event times but desired digital samples, not fitted nonlinear DAC values; branch phase is removed using the saved shared-LO phase.",
+    "Fixed profile reference must be revisited if topology, gain, carrier or sample format changes."
+  ]
+}

@@ -43,8 +43,26 @@ comparison uses eight fitting and 24 validation samples; it cannot establish
 sustained or modem performance. The linear reference has now been checked against a separate numerical ODE
 solve over the 32-sample fixture: maximum RX error 6.88e-15 and TX error 4.23e-14.
 A validation-only sign error is rejected without being absorbed by the fitting
-segment. These controls run again when analyzing a saved payload. Actual coupled
-RF calibration/payload and its quality result remain unqualified.
+segment. These controls run again when analyzing a saved payload. The completed coupled run now passes acquisition, TX calibration and 32-sample
+capture. The independent waveform screen fails RX: 77.46% corrected relative RMS,
+while TX passes at 1.83% against the provisional 10% budget. Preserve this failure
+in `fast-coupled-rf-quality.json`; capture success is not signal-quality success.
+
+Diagnosis localizes the large discrepancy before the ADC (77.44%); ADC output
+versus its analog input is 0.93% after gain fitting. The runner omits RX offset
+calibration: `ManagedCalibrationChip` defaults to a 70 mV I-channel offset, and
+`ReturnChip.capture` defaults to gain 0.5, which the ideal RX reference omitted.
+Subtracting the known 70 mV for diagnosis and including that fixed gain yields
+2.39% pre-ADC corrected RMS. This is not an implemented calibration or a passing
+end-to-end result. Do not fit away DC offset in the qualification metric.
+
+**Immediate next experiment:** exercise the existing quiet I/Q trim sequence on
+the same coupled chip, record its observations and actual capture gain, then run
+TX calibration and payload. Make the ideal reference include the declared fixed
+capture gain, retain the failed baseline, and check held-out ADC samples without
+post-hoc offset subtraction. Only after that close sustained RF service and
+reference-loss/recovery. Defer additional narrow component sweeps and domain-rail
+integration until this basic receive-path contract is resolved.
 
 ## What the coupled candidate currently demonstrates
 

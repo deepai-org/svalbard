@@ -26,7 +26,8 @@ class CoarseTransceiverChip(TransceiverChip):
     def quiet(self):
         return (self.coarse is None or not self.coarse.busy and self.time>=self.rf_pll.bank_settled_at) and super().quiet()
     def configure(self,mode,time):
-        if not self.coarse.qualified:raise ValueError('Coarse frequency search must qualify before mode acquisition')
+        if self.clock_required('rf') and not self.coarse.qualified:
+            raise ValueError('Coarse frequency search must qualify before RF mode acquisition')
         return super().configure(mode,time)
     def configure_rf_carrier(self,frequency_hz):
         self._require_target_free()

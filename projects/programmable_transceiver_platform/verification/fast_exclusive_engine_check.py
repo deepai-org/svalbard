@@ -2,7 +2,7 @@
 import argparse,hashlib,json,copy,math
 from pathlib import Path
 from types import MethodType
-from fast_exclusive_engine import ExclusiveEngineChip,SwitchablePLL,PoweredExclusiveChip
+from fast_exclusive_engine import ExclusiveEngineChip,SwitchablePLL,PoweredExclusiveChip,IntegratedTransceiverChip
 from fast_loaded_output import P
 from managed_resources import command
 from chip_model import encode_iq
@@ -66,9 +66,12 @@ def clock_ownership_controls(chip_factory=ExclusiveEngineChip):
 def main():
     if not __debug__:raise RuntimeError('Assertions must remain enabled')
     parser=argparse.ArgumentParser();parser.add_argument('--power-gated',action='store_true')
-    args=parser.parse_args();chip_factory=PoweredExclusiveChip if args.power_gated else ExclusiveEngineChip
+    parser.add_argument('--integrated',action='store_true')
+    args=parser.parse_args()
+    if args.integrated:args.power_gated=True
+    chip_factory=IntegratedTransceiverChip if args.integrated else PoweredExclusiveChip if args.power_gated else ExclusiveEngineChip
     power_case=power_state_controls()
-    clock_cases=clock_ownership_controls(chip_factory)
+    clock_cases=[] if args.integrated else clock_ownership_controls(chip_factory)
     c=chip_factory(watchdog_s=1e-3,tx_relative_gain=True);reject(lambda:c.configure(0,0.))
     bank=copy.deepcopy(c.tx.rx_bank)
     c.configure_rx_gain(2.);assert c.tx.rx_bank==bank
@@ -82,6 +85,11 @@ def main():
         c.select_engine(engine);assert not c.tx_cal.valid
         c.reset_memory()
         if engine=='rf':
+            if args.integrated:
+                target=2437000000 if mode==0 else 2500000000
+                assert command(c,'rf_coarse_start',target)['accepted']
+                c.advance(c.time+35e-6)
+                assert c.coarse.qualified and c.rf_pll.locked and c.rf_target_hz==target
             c.advance(c.time+8e-6)
             reply=command(c,'tx_cal_start');assert reply['accepted']
             reject(lambda:c.configure_rx_gain(1.))
@@ -118,6 +126,7 @@ def main():
             assert any(c.adc_words[before:])
             assert c.output_network.output_on and not c.output_network.dummy_on
         else:
+            if args.integrated:assert not command(c,'rf_coarse_start',2437000000)['accepted']
             before=c.decoder
             reject(lambda:c.descriptor(32))
             reject(lambda:c.execute_management('start_local',3|(32<<2)|(1<<18),c.time))
@@ -144,9 +153,9 @@ def main():
         rows.append(dict(engine=engine,mode=mode,opposite_engine_rejected=True,ingress_rejection_atomic=True,rf_duplex_samples=32 if engine=='rf' else 0,wire_tx_words=32 if engine=='wire' else 0,wire_host_rx_words=64 if engine=='wire' else 0,stopped=True))
     c.select_engine('none');reject(lambda:c.configure(0,c.time))
     files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[P/'verification'/n for n in ('fast_loaded_output.py','fast_exclusive_engine.py','fast_exclusive_engine_check.py')]
-    out=dict(status='passed',power_gated=args.power_gated,standalone_power_state=power_case,clock_ownership=clock_cases,source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files},cases=rows,
+    out=dict(status='passed',integrated=args.integrated,power_gated=args.power_gated,standalone_power_state=power_case,clock_ownership=clock_cases,source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files},cases=rows,
         limitations=['Power-gated variant checks oscillator shutdown; physical bias-current and settling behavior remain open.',
         'Python selection API with serialized local-start command; pin-level management/RTL interlock not implemented.',
         'Finite RF TX/RX and wired TX/host RX checked; sustained duplex, RF quality and calibration validity across mode changes need further coverage.'])
-    (P/('evidence/fast-powered-exclusive-engine.json' if args.power_gated else 'evidence/fast-exclusive-engine.json')).write_text(json.dumps(out,indent=2)+'\n');print(rows)
+    (P/('evidence/fast-integrated-engine.json' if args.integrated else 'evidence/fast-powered-exclusive-engine.json' if args.power_gated else 'evidence/fast-exclusive-engine.json')).write_text(json.dumps(out,indent=2)+'\n');print(rows)
 if __name__=='__main__':main()

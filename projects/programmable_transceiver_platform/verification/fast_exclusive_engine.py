@@ -163,3 +163,31 @@ class PoweredExclusiveChip(ExclusiveEngineChip):
 
     def _tx_clock_ready(self):
         return self.active_engine=='rf' and self.time>=self.engine_ready_at and super()._tx_clock_ready()
+
+
+# One composition for powered operation, finite output loading and RF retuning.
+from warm_clock import WarmClock
+from warm_chip import WarmTransceiverChip
+
+class SwitchableWarmClock(SwitchablePLL,WarmClock):
+    def set_power(self,powered,time):
+        was_powered=self.powered
+        super().set_power(powered,time)
+        if powered and not was_powered:
+            tick=(math.floor(time*self.reference_hz)+1)/self.reference_hz
+            if tick<=time:tick+=1/self.reference_hz
+            self.initialize_reference(time,tick)
+
+class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
+    RF_PLL_CLASS=SwitchableWarmClock
+    TILE_COMMANDS=tuple(dict.fromkeys(PoweredExclusiveChip.TILE_COMMANDS+WarmTransceiverChip.TILE_COMMANDS))
+
+    def select_engine(self,engine):
+        self._require_target_free()
+        previous=self.active_engine
+        super().select_engine(engine)
+        if previous!=engine:self.coarse.cancel(self.time)
+
+    def execute_management(self,operation,payload,time):
+        if operation=='rf_coarse_start':self.require_engine('rf')
+        return super().execute_management(operation,payload,time)

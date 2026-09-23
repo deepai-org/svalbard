@@ -65,3 +65,32 @@ Run `verification/fast_exclusive_engine_check.py --power-gated` to check the pow
 Both rate profiles now pass finite count-free RF TX/RX with `PoweredExclusiveChip` and the loaded output network (`evidence/fast-powered-rf-traffic.json`). Repeated checks during the run verify the wired oscillator is off with zero frequency and fixed phase; transport, queue bounds, conversion accounting and stop isolation also pass. This extends the powered lifecycle evidence to sustained RF transport, not waveform quality, wired-only duplex or physical bias-current behavior.
 
 The powered lifecycle test now covers RF and wired duplex in both rate profiles on the same instance. Wired-only host return starts through `wire_return_start`, independently of RF ADC capture; 32 transmitted and 64 host-received words match exactly per profile with no added ADC samples. Detection is rearmed after stop, and duplicate or RF-mode return starts reject. These are finite nominal bursts; sustained wired service and receiver/error envelopes remain open. Evidence: `evidence/fast-powered-exclusive-engine.json`.
+
+## Remaining wired rail-feedback scheduling contract
+
+The coupled RF candidate can forecast only until the next load-changing event.
+Wired word launch and serializer half-bit sampling currently call `edge_time`
+for a future phase target immediately. A target beyond the known supply history
+must remain pending; it must not be extrapolated, mistaken for an oscillator
+fault, or replaced by a fixed nominal bit period.
+
+Implement bounded phase prediction as a distinct outcome: a valid target either
+has a crossing within the supplied horizon or remains pending beyond it. Invalid
+phase direction, nonpositive frequency and failed integration remain errors.
+Keep the pending target phase and serializer stage intact. At each new analog
+forecast, resolve both pending word and bit targets and choose the earliest
+crossing together with external/converter/control events. If a crossing shortens
+the interval, recompute the coupled forecast to that boundary before committing.
+A switching impulse at the boundary changes the next forecast while preserving
+oscillator phase and the already-serviced event ordering.
+
+The scheduler must revisit pending targets even when their temporary deadline is
+infinite; otherwise a short forecast silently stalls the serializer. A target
+exactly at the horizon is serviced once. Reset cancels pending phase targets with
+the existing partial-word accounting. Engine changes retain the existing stopped
+selection and coarse-qualification rules.
+
+Required evidence is actual wired TX/host RX traffic under coupled supply load,
+with conservation of accepted/completed/aborted words, no duplicated boundary
+bits, no lost pending edges, subdivision convergence and correct retiming after
+host impulses. The current RF-only feedback pass provides none of this evidence.

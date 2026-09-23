@@ -171,3 +171,25 @@ Per-transition charge is still an assumption, not a measured pad-energy law;
 CORE pre-driver switching and SPI/reset events still need their own inventory.
 A short RF/wired startup check verifies segment voltage steps, energy balance
 and unchanged oscillator phase at the event. Sustained traffic remains open.
+
+## Current integrated fixture is not a feasibility load envelope
+
+The new domain RF/wired tests use 20 mA CORE background. Against the retained
+clock-pin estimate above, RF mode 0 leaves only 1.645 mA of that fixture for all
+non-clock-pin core activity; RF mode 1 clock-pin charging alone exceeds it by
+2.525 mA. These comparisons are historical estimates, not current RTL power,
+but the 20 mA fixture cannot be presented as an established whole-core bound.
+
+At an assumed 3.3 V, the partial reference-pair power windows correspond to
+12.85–13.73 mA, versus the coupled reference's 0.1 mA fixed bias placeholder.
+The model additionally charges finite reference output power; that does not
+establish coverage of the measured candidate's internal bias. The partial
+report is from an incomplete, failed transient and must not be summed with
+other candidate reports or substituted as a validated total current.
+
+After functional domain integration, prioritize a complete, non-overlapping
+mode-dependent current inventory and a declared load envelope up to the
+connection budgets. Do not tune the domain feed resistance merely to make an
+optimistic current fixture pass. The running RF diagnostic intentionally retains
+its recorded assumptions so it can expose integration defects; its eventual
+result cannot close power feasibility.

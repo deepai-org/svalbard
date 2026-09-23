@@ -55,7 +55,9 @@ def coupled_linear_reference(data):
     from tx_reconstruction import Reconstruction
     from session import Session
     played=data['played'];observations=data['observations']
-    desired=[decode_iq(encode_iq(complex(*z),12),12) for z in data['desired_iq']]
+    bits=data.get('bits_per_component',12)
+    if bits not in (8,12):raise ValueError('Unsupported sample precision')
+    desired=[decode_iq(encode_iq(complex(*z),bits),bits) for z in data['desired_iq']]
     reconstruction=Reconstruction();dc=float(reconstruction.response([0])[0].real)
     network=SwitchedLoad(frequency_hz=2437e6)
     cascade=RfCascadeState(Session());cascade.set_butterworth(5,9157407.055691985)
@@ -98,9 +100,9 @@ def coupled_record_quality(path):
     if mismatches:raise ValueError('Payload sources differ from reference profile: '+str(mismatches))
     data=record['payload'];observations=data['observations'];played=data['played']
     if len(played)!=32 or len(observations)!=32 or len(data['sample_words'])!=32:
-        raise ValueError('Reference supports the declared 32-sample mode-0 diagnostic')
+        raise ValueError('Reference supports the declared 32-sample diagnostic')
     rx,tx=coupled_linear_reference(data)
-    measured_rx=[decode_iq(word,12) for word in data['sample_words']]
+    measured_rx=[decode_iq(word,data.get('bits_per_component',12)) for word in data['sample_words']]
     measured_tx=[complex(*z)*cmath.exp(-1j*row['rx_lo_phase_rad'])
         for z,row in zip(data['pad_iq'],observations)]
     if len(measured_tx)!=len(tx):raise ValueError('Unaligned pad observations')
@@ -111,7 +113,7 @@ def coupled_record_quality(path):
     report=dict(status='passed' if rx_quality['screen_pass'] and tx_quality['screen_pass'] else 'failed',
         payload_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
         reference_code_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-        reference_controls=coupled_reference_controls(),rx=rx_quality,tx=tx_quality,physical_qualification=False,full_chip_closure=False,
+        reference_controls=coupled_reference_controls(data.get('bits_per_component',12),data['sample_rate_hz'],data.get('capture_gain',1.)),rx=rx_quality,tx=tx_quality,physical_qualification=False,full_chip_closure=False,
         limitations=['32 samples, with eight fitting and 24 validation samples; no sustained or modem qualification.',
             'Linear modal reconstruction, finite output load and receive filter at nominal 2.437 GHz; zero initial state after the diagnostic settling interval is assumed.',
             'Uses recorded event times but desired digital samples, not fitted nonlinear DAC values; branch phase is removed using the saved shared-LO phase.',
@@ -121,7 +123,7 @@ def coupled_record_quality(path):
     if report['status']!='passed':raise AssertionError('Coupled RF waveform exceeded the provisional quality screen')
     return report
 
-def coupled_reference_controls():
+def coupled_reference_controls(bits=12,sample_rate_hz=40e6,capture_gain=1.):
     import cmath,math
     from chip_model import encode_iq
     from limited_coupled_driver import LimitedCoupledDriver
@@ -133,9 +135,9 @@ def coupled_reference_controls():
     class LinearLaw(DriverSupplyLaw):
         def source(self,command,rail):return command
     values=[.18*cmath.exp(2j*math.pi*i/16)+.04*cmath.exp(2j*math.pi*i/4) for i in range(32)]
-    data=dict(desired_iq=[[z.real,z.imag] for z in values],rx_gain=2.,
-        played=[[20e-9+i*25e-9,0.,0.] for i in range(32)],
-        observations=[dict(time_s=10e-9+i*25e-9) for i in range(32)])
+    data=dict(desired_iq=[[z.real,z.imag] for z in values],rx_gain=2.,bits_per_component=bits,capture_gain=capture_gain,
+        played=[[20e-9+i/sample_rate_hz,0.,0.] for i in range(32)],
+        observations=[dict(time_s=10e-9+i/sample_rate_hz) for i in range(32)])
     expected_rx,expected_tx=coupled_linear_reference(data)
     cascade=RfCascadeState(Session());cascade.set_butterworth(5,9157407.055691985)
     d=LimitedCoupledDriver(network=SwitchedLoad(frequency_hz=2437e6),law=LinearLaw(),rx_bank=cascade.rx_bank)
@@ -147,10 +149,10 @@ def coupled_reference_controls():
         d.advance(time,lambda t:r.value(t,held),rtol=1e-10,atol=1e-13)
         r.advance(time,held)
         if kind==0:
-            held=decode_iq(encode_iq(values[index],12),12)/dc
+            held=decode_iq(encode_iq(values[index],bits),bits)/dc
             d.network.configure(True,False)
         else:
-            rx.append(2*d.received);tx.append(complex(d.network.voltage[1]))
+            rx.append(2*capture_gain*d.received);tx.append(complex(d.network.voltage[1]))
     rx_error=max(abs(a-b) for a,b in zip(rx,expected_rx))
     tx_error=max(abs(a-b) for a,b in zip(tx,expected_tx))
     assert max(rx_error,tx_error)<1e-8

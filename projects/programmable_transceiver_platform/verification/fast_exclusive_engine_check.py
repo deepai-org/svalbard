@@ -164,12 +164,12 @@ def domain_chip_screen():
     return dict(cases=rows,scope='12 ns startup and one host output event; illustrative constant background loads',
         host_impulses_integrated=True,payload_qualified=False,physical_qualification=False)
 
-def coupled_acquisition_screen(payload=False,domains=False):
+def coupled_acquisition_screen(payload=False,domains=False,mode=0):
     import time
     start=time.monotonic()
     files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
     hashes={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
-    output=P/('evidence/fast-domain-rf-payload.json' if domains else 'evidence/fast-coupled-rf-calibrated-payload.json' if payload else 'evidence/fast-coupled-acquisition.json')
+    output=P/(('evidence/fast-domain-rf-mode1-payload.json' if mode==1 else 'evidence/fast-domain-rf-payload.json') if domains else 'evidence/fast-coupled-rf-calibrated-payload.json' if payload else 'evidence/fast-coupled-acquisition.json')
     progress=dict(status='running',stage='acquisition',source_sha256=hashes,
         full_chip_closure=False,physical_qualification=False)
     def save():output.write_text(json.dumps(progress,indent=2)+'\n')
@@ -225,10 +225,10 @@ def coupled_acquisition_screen(payload=False,domains=False):
         calibration=dict(powers=list(c.tx_cal.powers),valid=c.tx_cal.valid,shared_adc_samples=c.tx_adc_samples)
         import cmath
         values=[.18*cmath.exp(2j*math.pi*i/16)+.04*cmath.exp(2j*math.pi*i/4) for i in range(32)]
-        for i,value in enumerate(values):c.write_playback(i,encode_iq(value,12))
+        for i,value in enumerate(values):c.write_playback(i,encode_iq(value,12 if mode==0 else 8))
         c.select_playback(True);c.configure_capture(True)
         progress.update(stage='payload',calibration=calibration);save()
-    c.configure(0,c.time);c.advance(c.time+3e-6)
+    c.configure(mode,c.time);c.advance(c.time+3e-6)
     assert c.state=='active' and c.session.enabled('rf') and not c.session.enabled('wire')
     assert c.time==c.rf_pll.time==c.analog_owner.time==c.tx.time
     payload_result=None
@@ -248,7 +248,7 @@ def coupled_acquisition_screen(payload=False,domains=False):
         c.dac_accounting();c.adc_accounting()
         payload_result=dict(sample_words=c.adc_words,desired_iq=[[z.real,z.imag] for z in values],
             pad_iq=[[z.real,z.imag] for z in c.tx_probe],observations=observations,
-            played=[[t,z.real,z.imag] for t,z in c.played],sample_rate_hz=40e6,
+            played=[[t,z.real,z.imag] for t,z in c.played],sample_rate_hz=40e6 if mode==0 else 20e6,mode=mode,bits_per_component=c.bits,
             rx_gain=c.rx_gain,capture_gain=c.gain,signal_quality_qualified=False)
     report=dict(status='passed',elapsed_s=time.monotonic()-start,acquisition=rows,calibration=calibration,rx_calibration=rx_calibration,payload=payload_result,
         active_time_s=c.time,feedback_intervals=c.feedback_intervals,
@@ -327,12 +327,13 @@ def main():
     parser.add_argument('--domain-chip-screen',action='store_true')
     parser.add_argument('--domain-wire-screen',action='store_true')
     parser.add_argument('--domain-rf-screen',action='store_true')
+    parser.add_argument('--rf-mode',type=int,choices=(0,1),default=0)
     parser.add_argument('--coupled-analog-screen',action='store_true')
     parser.add_argument('--coupled-acquisition-screen',action='store_true')
     parser.add_argument('--coupled-wire-screen',action='store_true')
     parser.add_argument('--coupled-rf-payload-screen',action='store_true')
     args=parser.parse_args()
-    if args.domain_rf_screen:return coupled_acquisition_screen(payload=True,domains=True)
+    if args.domain_rf_screen:return coupled_acquisition_screen(payload=True,domains=True,mode=args.rf_mode)
     if args.domain_wire_screen:return coupled_wire_screen(domains=True)
     if args.domain_chip_screen:
         print(domain_chip_screen());return

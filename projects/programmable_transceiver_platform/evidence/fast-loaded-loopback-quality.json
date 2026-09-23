@@ -1,5 +1,5 @@
 {
-  "status": "failed",
+  "status": "passed",
   "source_sha256": {
     "system_model/connected/rf_driver_transient_screen.py": "abc0a51c95d7b902edbbac74ab735f0b62251e6dde22c76a605bab53b7c31a1a",
     "system_model/connected/tx_readiness_screen.py": "69540686bba7fb48f14ed7144e282e7322a6a634a0ad36db17615c6a26b79cac",
@@ -414,7 +414,7 @@
     "system_model/architecture_fast/diagnostics.py": "5ff07f853721990835b9fea86711b708e5f3a7822afeead361c08a1be9ed55d9",
     "system_model/architecture_fast/output_loopback.py": "f1a4ca8f2f921018865f37aee78b3a68a9c4cf99bae3238c10953661ee9323e5",
     "system_model/architecture_fast/clock_noise.py": "e02f159217eb17fdb6fbedcefd81fc2f486224d9e38f6eb6253ed88909a77fd1",
-    "system_model/architecture_fast/chip.py": "af23b20f43e712617a655aebf7acc7cb0f1366642b67468d636c8aa17a7db589",
+    "system_model/architecture_fast/chip.py": "bc72486f7e9ac81ba6fb6956ef547ae8911811ce6b67e57ebd4e2f7cc8a9c3cf",
     "system_model/architecture_fast/coarse_clock.py": "c8c05e04b5e8a1c5082877fd3e7eacc9cf25e138d12c779ea96817ba3ba957ba",
     "system_model/architecture_fast/local_mode_check.py": "ce0dc55ea773d3f8a5bdf39eb281c142b8d7999fb62858722f29014a4d9baeea",
     "system_model/architecture_fast/tuning_margin.py": "ca37eff85fb000a28d98f5c185784df12a751c622fc608aa46ab0aafc0d1a92e",
@@ -441,7 +441,7 @@
     "system_model/architecture_fast/warm_clock.py": "5cb83f35f8f69e3a3f1d97a4bcbcbe60793322bdcab9e4e062661a66438f4c52",
     "system_model/architecture_fast/traffic.py": "d0bd449d2f8bb0ed522e7800be6f9b6106191cbc8fb8a04838c58b19daf30338",
     "system_model/architecture_fast/run.py": "e2883fdd43d4c0c7a1c2425896e7aa584fb7b90e0ee6038ea2f7c940469acde7",
-    "verification/fast_loaded_loopback_quality.py": "564027040c37338d8c34880229ecfb7cb6aece9709f6e17914f3c6cbfea2edaf",
+    "verification/fast_loaded_loopback_quality.py": "057be5d1df77948e20a0e13709711253947a1a8069196210b19d3e3e7399a7c6",
     "verification/fast_loaded_output.py": "68a8f879570ec936492153f00d464cca2451ecb5bbba09adb51b7e43081bd350",
     "verification/fast_loaded_traffic.py": "243bb158fab1bbaa42db2a2346652f09b062a054caf987f2b69023b8876d601c",
     "verification/stream_codec.py": "4515bf61e3c83f041eee97740e61c075dca1681da388dc651117cdd10d1a0088"
@@ -452,11 +452,11 @@
       "rx_quality": {
         "calibration_samples": 117,
         "validation_samples": 353,
-        "gain_real": 1.000584089677002,
-        "gain_imag": -0.0031372960495252085,
-        "gain_magnitude": 1.0005890081053543,
-        "raw_relative_rms": 0.06694204455850858,
-        "corrected_relative_rms": 0.06668188391253688,
+        "gain_real": 1.0009776584030003,
+        "gain_imag": -0.0020946068472881807,
+        "gain_magnitude": 1.00097984994694,
+        "raw_relative_rms": 0.04071437183833121,
+        "corrected_relative_rms": 0.04047158977583202,
         "gain_in_screen_range": true,
         "screen_budget": 0.1,
         "screen_pass": true
@@ -464,11 +464,11 @@
       "tx_quality": {
         "calibration_samples": 120,
         "validation_samples": 362,
-        "gain_real": 0.9813617771313538,
-        "gain_imag": 0.0011922204948694901,
-        "gain_magnitude": 0.9813625013236023,
-        "raw_relative_rms": 0.03240088275359688,
-        "corrected_relative_rms": 0.02695839764109439,
+        "gain_real": 0.9805293482663117,
+        "gain_imag": 0.0005799725920951893,
+        "gain_magnitude": 0.9805295197900803,
+        "raw_relative_rms": 0.032855888698308744,
+        "corrected_relative_rms": 0.02689261682854048,
         "gain_in_screen_range": true,
         "screen_budget": 0.1,
         "screen_pass": true
@@ -505,11 +505,11 @@
         "analog_rx_quality": {
           "calibration_samples": 117,
           "validation_samples": 353,
-          "gain_real": 1.0013773464212434,
-          "gain_imag": -0.0009394011534509135,
-          "gain_magnitude": 1.0013777870515093,
-          "raw_relative_rms": 0.06532619196637213,
-          "corrected_relative_rms": 0.06510943866133814,
+          "gain_real": 1.000745940756408,
+          "gain_imag": -0.0031781095770462963,
+          "gain_magnitude": 1.0007509871695914,
+          "raw_relative_rms": 0.04076557635753752,
+          "corrected_relative_rms": 0.04043009586563616,
           "gain_in_screen_range": true,
           "screen_budget": 0.1,
           "screen_pass": true
@@ -517,11 +517,11 @@
         "baseline_quantization": {
           "calibration_samples": 117,
           "validation_samples": 353,
-          "gain_real": 1.000745781853529,
-          "gain_imag": 0.0013846771506624653,
-          "gain_magnitude": 1.000746739804054,
-          "raw_relative_rms": 0.0077157174137295,
-          "corrected_relative_rms": 0.007445085181143885,
+          "gain_real": 0.9998357544955284,
+          "gain_imag": -0.0009083598881874153,
+          "gain_magnitude": 0.9998361671220586,
+          "raw_relative_rms": 0.003403253812189548,
+          "corrected_relative_rms": 0.00318688620660969,
           "gain_in_screen_range": true,
           "screen_budget": 0.1,
           "screen_pass": true
@@ -529,17 +529,17 @@
         "impaired_quantization": {
           "calibration_samples": 117,
           "validation_samples": 353,
-          "gain_real": 1.0000149774953455,
-          "gain_imag": -0.0008958764041817705,
-          "gain_magnitude": 1.0000153787865205,
-          "raw_relative_rms": 0.007916882434243704,
-          "corrected_relative_rms": 0.008014551388442918,
+          "gain_real": 1.0000513444587453,
+          "gain_imag": 0.00018155507721426427,
+          "gain_magnitude": 1.000051360939022,
+          "raw_relative_rms": 0.0041635839429538845,
+          "corrected_relative_rms": 0.004184355480132313,
           "gain_in_screen_range": true,
           "screen_budget": 0.1,
           "screen_pass": true
         },
-        "baseline_adc_rms": 0.02471131905583495,
-        "impaired_adc_rms": 0.02484096071988944
+        "baseline_adc_rms": 0.04942220844767678,
+        "impaired_adc_rms": 0.049513450020430914
       }
     },
     {
@@ -547,23 +547,23 @@
       "rx_quality": {
         "calibration_samples": 59,
         "validation_samples": 177,
-        "gain_real": 0.9662921348314607,
-        "gain_imag": -0.016853932584269662,
-        "gain_magnitude": 0.9664391056247139,
-        "raw_relative_rms": 0.14713274514103727,
-        "corrected_relative_rms": 0.15135698099821807,
+        "gain_real": 0.9979919678714859,
+        "gain_imag": 0.0005737234652897303,
+        "gain_magnitude": 0.9979921327819251,
+        "raw_relative_rms": 0.06451541484869751,
+        "corrected_relative_rms": 0.06435647835740355,
         "gain_in_screen_range": true,
         "screen_budget": 0.1,
-        "screen_pass": false
+        "screen_pass": true
       },
       "tx_quality": {
         "calibration_samples": 60,
         "validation_samples": 181,
-        "gain_real": 0.9885202706728979,
-        "gain_imag": 0.0024348353161462036,
-        "gain_magnitude": 0.9885232693033766,
-        "raw_relative_rms": 0.03936349082503064,
-        "corrected_relative_rms": 0.0379719519459855,
+        "gain_real": 0.9878809289494952,
+        "gain_imag": 0.0018795518626258667,
+        "gain_magnitude": 0.9878827169747034,
+        "raw_relative_rms": 0.03867541655827661,
+        "corrected_relative_rms": 0.03704199801058264,
         "gain_in_screen_range": true,
         "screen_budget": 0.1,
         "screen_pass": true
@@ -600,11 +600,11 @@
         "analog_rx_quality": {
           "calibration_samples": 59,
           "validation_samples": 177,
-          "gain_real": 1.001929150938308,
-          "gain_imag": -0.012611322747391488,
-          "gain_magnitude": 1.0020085174096065,
-          "raw_relative_rms": 0.05764441570663064,
-          "corrected_relative_rms": 0.0575206471726181,
+          "gain_real": 0.9986570069533575,
+          "gain_imag": -0.009350159673226697,
+          "gain_magnitude": 0.9987007775219529,
+          "raw_relative_rms": 0.040896093664898756,
+          "corrected_relative_rms": 0.04043794799094217,
           "gain_in_screen_range": true,
           "screen_budget": 0.1,
           "screen_pass": true
@@ -612,29 +612,29 @@
         "baseline_quantization": {
           "calibration_samples": 59,
           "validation_samples": 177,
-          "gain_real": 1.0076284308994317,
-          "gain_imag": 0.009362693674860116,
-          "gain_magnitude": 1.0076719281540496,
-          "raw_relative_rms": 0.11417468538352826,
-          "corrected_relative_rms": 0.11358807585396123,
+          "gain_real": 1.0025248118090369,
+          "gain_imag": -0.007622937673885182,
+          "gain_magnitude": 1.002553792806912,
+          "raw_relative_rms": 0.04818744936233347,
+          "corrected_relative_rms": 0.04774261791383476,
           "gain_in_screen_range": true,
           "screen_budget": 0.1,
-          "screen_pass": false
+          "screen_pass": true
         },
         "impaired_quantization": {
           "calibration_samples": 59,
           "validation_samples": 177,
-          "gain_real": 0.982482068332199,
-          "gain_imag": 0.0025651546035066948,
-          "gain_magnitude": 0.9824854169973494,
-          "raw_relative_rms": 0.10600310899950004,
-          "corrected_relative_rms": 0.10789668264921387,
+          "gain_real": 1.0039025139681375,
+          "gain_imag": 0.0029584473520736032,
+          "gain_magnitude": 1.003906873152227,
+          "raw_relative_rms": 0.04695681679806175,
+          "corrected_relative_rms": 0.0471005884253991,
           "gain_in_screen_range": true,
           "screen_budget": 0.1,
-          "screen_pass": false
+          "screen_pass": true
         },
-        "baseline_adc_rms": 0.030745279472445156,
-        "impaired_adc_rms": 0.030820577109174144
+        "baseline_adc_rms": 0.06148992999123908,
+        "impaired_adc_rms": 0.06138724631204075
       }
     }
   ],
@@ -643,10 +643,9 @@
     "Finite continuous-service record with timed lossy stop, not indefinite service bounds.",
     "RX follows the nonlinear TX loopback; deterministic amplitude-varying stimulus, not wideband modulation.",
     "Assumed device/noise parameters; no spectral mask or physical qualification.",
-    "Both baseline and impaired candidate use finite pad/monitor network and relative-gain calibration.",
+    "Both baseline and impaired candidate use finite pad/monitor network, relative-gain calibration and the same 2x RX gain.",
     "Independent TX observation is actual loaded pad voltage; no source reconstruction or normalization.",
     "Pre-quantizer diagnostics include frontend/reference/recovery; they isolate quantization, not individual analog impairments."
   ],
-  "error": "AssertionError()",
-  "elapsed_s": 756.5974482735619
+  "elapsed_s": 761.7773316502571
 }

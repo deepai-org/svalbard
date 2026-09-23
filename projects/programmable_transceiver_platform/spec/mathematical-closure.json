@@ -342,20 +342,20 @@
       "physical_qualification": false
     },
     "loaded_loopback_update": {
-      "status": "failed_screen_under_investigation",
+      "status": "passed_selected_2x_gain_screen",
       "evidence": "evidence/fast-loaded-loopback-quality.json",
       "preserved_failure_commit": "da17e48",
       "rx_relative_rms": [
-        0.06668188391253688,
-        0.15135698099821807
+        0.04047158977583202,
+        0.06435647835740355
       ],
       "tx_relative_rms": [
-        0.02695839764109439,
-        0.0379719519459855
+        0.02689261682854048,
+        0.03704199801058264
       ],
       "screen_budget": 0.1,
-      "scope": "Finite loaded-pad loopback with optional simultaneous wired stress. Mode-1 RX fails the unchanged incremental error screen; both TX cases pass. Relative-gain calibration does not establish absolute gain or physical accuracy.",
-      "next_action": "Finish matched 2x-gain loaded-quality comparison; common aggregate has requalified all 38 cases with current hashes. Original mode-1 quality failure remains open pending the loaded result.",
+      "scope": "Both-mode finite loaded-pad loopback with optional simultaneous wired stress, identical 2x RX gain in baseline and impaired fixtures, relative-gain TX calibration and unchanged 10% screen. Gain is an ideal mathematical setting, not a physically qualified PGA.",
+      "next_action": "Integrate and verify sustained exclusive-engine operation and inactive clock/bias shutdown. Extend loaded-quality coverage to wideband signals, gain headroom/settling/noise and supported tuning/loading envelopes before whole-chip closure.",
       "physical_qualification": false,
       "gain_control_gap": "Resolved in common mathematical chip by configure_rx_gain API and serialized command selecting existing 0.5/1/2 gain independently of filter tuning. Direct filter-state preservation, serialized selection/reserved encoding rejection, active-session rejection and TX-calibration rejection pass in fast-exclusive-engine.json. Pin-level RTL mapping and physical gain behavior remain open.",
       "diagnosis": {
@@ -364,7 +364,9 @@
         "mode1_baseline_quantization_relative_rms": 0.11358807585396123,
         "mode1_impaired_quantization_relative_rms": 0.10789668264921387,
         "mode1_baseline_adc_rms": 0.030745279472445156
-      }
+      },
+      "result_sha256": "46eff8a6914c4d20fb3ef39d5bdbfe7dfd5adf4aac9b2e0f60c929dbaa3f79f4",
+      "rx_gain": 2
     }
   },
   "operating_policy_update": {

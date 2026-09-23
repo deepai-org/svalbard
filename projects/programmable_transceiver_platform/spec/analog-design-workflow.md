@@ -77,6 +77,28 @@ does not authorize starting layout before the schematic gate is satisfied.
 
 ## 1. Choose the next uncertainty, not the next convenient parameter
 
+### Keep the three completion gates distinct
+
+Mathematical closure means the full intended chip operates in one connected
+model across explicitly declared functional, loading, timing, noise and service
+envelopes. It requires end-to-end acceptance tests, ownership/accounting,
+failure/recovery behavior, and a complete allocation of modeled resources and
+loads. A nominal short capture or an isolated block pass cannot close it.
+
+It does **not** require proving every assumed circuit parameter in GF180 before
+the transistor schematic phase begins. For each uncharacterized parameter,
+declare the required value/range, units, owning block, effect on acceptance and
+the later circuit test that must establish it. Mathematical results are
+conditional on those assumptions. Unknown loads must have explicit assumptions
+or sensitivity ranges; they cannot disappear from the model or count as zero.
+
+The transistor schematic phase must then realize those contracts using the six
+primitive families and check where the public PDK supports or contradicts them.
+If circuit evidence misses a contract, revise the architecture/model and rerun
+the affected chip tests. Layout and extraction subsequently test the physical
+implementation. Keep physical uncertainty visible at every stage without making
+silicon qualification a circular prerequisite for beginning circuit design.
+
 ### Everyday loop
 
 Use one short experiment record, not a new planning document for every run:

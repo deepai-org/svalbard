@@ -74,6 +74,9 @@ class LoadedOutputChip(TransceiverChip):
             owner.received=candidate.received
             owner.rail_v=candidate.rail_v;owner.time=candidate.time
             owner.rail_trajectory=candidate.rail_trajectory
+            if owner.domains is not None:
+                owner.domains.__dict__.update(candidate.domains.__dict__)
+                owner.domain_trajectories=candidate.domain_trajectories
             for name in ('source_energy_j','rail_resistor_energy_j','load_energy_j','extra_load_energy_j'):
                 setattr(owner,name,getattr(candidate,name))
             self._analog_forecast=None

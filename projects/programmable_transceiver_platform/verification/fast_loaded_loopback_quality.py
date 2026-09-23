@@ -3,12 +3,9 @@ import hashlib,json,time,sys
 from pathlib import Path
 FAST=Path(__file__).resolve().parents[1]/'system_model/architecture_fast'
 sys.path.insert(0,str(FAST))
-from pathlib import Path
 from continuous_four_path import run
 from fast_loaded_traffic import PreparedLoadedChip as PreparedChip
 from shared_tx_traffic import scenario
-from external_rf_lifecycle import ExternalChip
-from rf_modulated_quality import Multicarrier
 from rf_quality_screen import quality
 from chip_model import decode_iq
 
@@ -24,13 +21,18 @@ def simulate(mode,impaired):
                     return_charge_per_transition=50e-15,rf_hz_per_v=1e6,wire_hz_per_v=1e5,
                     rf_noise_rms_hz=20000,wire_noise_rms_hz=20000,noise_seed=839,
                     frontend=dict(gain_error=.03,phase_error=.03,saturation=.8,noise_rms=.001,seed=800))
+            self.adc_analog=[]
             super().__init__(**options,**kwargs)
+            self.adc_analog.clear()
             self.tx_probe.clear();self.probe_times.clear()
             assert self.tx.rx_route=="loopback"
             chips.append(self)
+        def quantize_adc(self,value):
+            self.adc_analog.append(value)
+            return super().quantize_adc(value)
     traffic=run(mode,True,True,chip_factory=Observed)
     c=chips[0];bits=12 if mode==0 else 8
-    return [decode_iq(w,bits) for w in c.host_samples],c.tx_probe,c.probe_times,traffic
+    return [decode_iq(w,bits) for w in c.host_samples],c.tx_probe,c.probe_times,traffic,c.adc_analog[:len(c.host_samples)]
 
 
 def main():
@@ -43,23 +45,30 @@ def main():
                      'RX follows the nonlinear TX loopback; deterministic amplitude-varying stimulus, not wideband modulation.',
                      'Assumed device/noise parameters; no spectral mask or physical qualification.',
                      'Both baseline and impaired candidate use finite pad/monitor network and relative-gain calibration.',
-                     'Independent TX observation is actual loaded pad voltage; no source reconstruction or normalization.'])
+                     'Independent TX observation is actual loaded pad voltage; no source reconstruction or normalization.',
+                     'Pre-quantizer diagnostics include frontend/reference/recovery; they isolate quantization, not individual analog impairments.'])
     output=p/'evidence/fast-loaded-loopback-quality.json'
     def save():output.write_text(json.dumps(report,indent=2)+'\n')
     save()
     try:
         for mode in (0,1):
-            rx0,tx0,t0,_=simulate(mode,False)
-            rx,tx,t,traffic=simulate(mode,True)
+            rx0,tx0,t0,_,analog0=simulate(mode,False)
+            rx,tx,t,traffic,analog=simulate(mode,True)
             assert t==t0 and len(rx)==len(rx0)
             rq=quality(rx0,rx);tq=quality(tx0,tx)
-            report['cases'].append(dict(mode=mode,rx_quality=rq,tx_quality=tq,traffic=traffic));save()
+            diagnostics=dict(analog_rx_quality=quality(analog0,analog),
+                baseline_quantization=quality(analog0,rx0),impaired_quantization=quality(analog,rx),
+                baseline_adc_rms=(sum(abs(z)**2 for z in analog0)/len(analog0))**.5,
+                impaired_adc_rms=(sum(abs(z)**2 for z in analog)/len(analog))**.5)
+            report['cases'].append(dict(mode=mode,rx_quality=rq,tx_quality=tq,traffic=traffic,diagnostics=diagnostics));save()
             print(mode,rq['corrected_relative_rms'],tq['corrected_relative_rms'],flush=True)
             assert rq['screen_pass'] and tq['screen_pass']
         assert all(hashlib.sha256((p/n).read_bytes()).hexdigest()==h for n,h in hashes.items())
         report.update(status='passed',elapsed_s=time.monotonic()-start)
     except BaseException as exc:
         report.update(status='failed',error=repr(exc));raise
-    finally:save()
+    finally:
+        report['elapsed_s']=time.monotonic()-start
+        save()
 
 if __name__=='__main__':main()

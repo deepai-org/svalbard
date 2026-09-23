@@ -340,6 +340,23 @@
       "max_tx_relative_rms": 0.024181650405963855,
       "scope": "Both modes and coupling signs with profile converter gain/wired-phase sensitivities, reference load/timing, blockers, and assumed oscillator noise; active coupling confirmed in recorded metrics.",
       "physical_qualification": false
+    },
+    "loaded_loopback_update": {
+      "status": "failed_screen_under_investigation",
+      "evidence": "evidence/fast-loaded-loopback-quality.json",
+      "preserved_failure_commit": "da17e48",
+      "rx_relative_rms": [
+        0.06668188391253688,
+        0.15135698099821807
+      ],
+      "tx_relative_rms": [
+        0.02695839764109439,
+        0.0379719519459855
+      ],
+      "screen_budget": 0.1,
+      "scope": "Finite loaded-pad loopback with optional simultaneous wired stress. Mode-1 RX fails the unchanged incremental error screen; both TX cases pass. Relative-gain calibration does not establish absolute gain or physical accuracy.",
+      "next_action": "Record actual pre-quantizer samples to separate analog impairment from ADC quantization before selecting a gain/noise design change.",
+      "physical_qualification": false
     }
   },
   "operating_policy_update": {

@@ -3,10 +3,22 @@
 This section supersedes the ordering and running-job references in the historical
 notes below. Focus on missing chip capabilities, not additional narrow sweeps.
 The mathematical model is not closed; transistor schematic and layout gates
-remain closed. The selected integration candidate is
-`IntegratedTransceiverChip(coupled_analog=True)`.
+remain closed. The selected composition is now
+`verification/full_chip_model.py:make_chip`, model ID
+`exclusive-coupled-domains-host-v1`, built on
+`IntegratedTransceiverChip(coupled_analog=True)` with mandatory domain supplies
+and the explicit host bank. Canonical diagnostics must use this constructor;
+earlier passing compositions remain supporting evidence only.
 
-## Current stopping point and handoff
+Current priority: qualify this one composition through ownership/management,
+both wired and RF profiles, sustained service, calibration, reference recovery,
+stopped handovers, SPI-only operation and declared uncertainty envelopes.
+`full_chip_check.py` records its control checks and explicit remaining gates;
+the long diagnostic runner accepts `--canonical`. The separate RF experiment
+below remains useful evidence about the predecessor; do not silently promote
+it to a canonical-model pass.
+
+## Previous stopping point and RF handoff
 
 Completed work is committed on main through `1faa40b`: finite host-output loading
 is integrated with the shared analog owner; both wired profiles pass their finite

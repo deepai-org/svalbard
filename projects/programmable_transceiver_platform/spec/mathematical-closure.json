@@ -532,5 +532,15 @@
     "rx_words_per_mode": 64,
     "host_load": "Explicit 10 pF output capacitors, limited driver current and finite internal switching pulses; legacy output impulse disabled",
     "scope": "Finite traffic and charge/energy integration. No physical GPIO timing, sustained service, protocol compliance or complete current-budget qualification."
+  },
+  "selected_composition": {
+    "model_id": "exclusive-coupled-domains-host-v1",
+    "constructor": "verification/full_chip_model.py:make_chip",
+    "parameters": "verification/full_chip_model.py:parameters",
+    "control_regression": "verification/full_chip_check.py",
+    "wired_regression": "verification/fast_exclusive_engine_check.py --canonical --host-bank-wire-screen",
+    "rf_regression": "verification/fast_exclusive_engine_check.py --canonical --domain-rf-screen --host-bank-rf --rf-mode MODE --independent-rx --rf-noise-rms-hz 20000",
+    "complete": false,
+    "policy": "Every system acceptance scenario must instantiate this constructor. Historical results and other chip classes cannot satisfy its gates without requalification. Physical parameter assumptions remain explicit."
   }
 }

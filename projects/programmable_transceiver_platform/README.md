@@ -18,6 +18,16 @@ wired and approximately 2.4 GHz capabilities. See the
 
 ## Current state
 
+The selected composition now has one constructor:
+[`full_chip_model.make_chip`](verification/full_chip_model.py), model ID
+`exclusive-coupled-domains-host-v1`. It always includes the coupled analog owner,
+seven supply domains, explicit host-output loads and mode-dependent background
+loads. Its parameters are declared hypotheses; full verification is pending.
+[`full_chip_check.py`](verification/full_chip_check.py) checks this composition's
+ownership and serialized management. Wired/RF diagnostic runners accept
+`--canonical` to use the same constructor. Historical passes on other classes
+are supporting evidence, not closure of this composition.
+
 A functional mathematical prototype exists. Mathematical closure, the complete
 transistor schematic, and layout are **not complete**. The common baseline has
 38 acceptance cases. Later experimental adapters add a finite TX pad/monitor
@@ -42,6 +52,7 @@ From the repository root:
 ```sh
 make transceiver-contract
 make transceiver-math-fast
+OPENBLAS_NUM_THREADS=1 python3 projects/programmable_transceiver_platform/verification/full_chip_check.py
 OPENBLAS_NUM_THREADS=1 python3 projects/programmable_transceiver_platform/verification/fast_exclusive_engine_check.py
 OPENBLAS_NUM_THREADS=1 python3 projects/programmable_transceiver_platform/verification/fast_exclusive_management_check.py
 ```

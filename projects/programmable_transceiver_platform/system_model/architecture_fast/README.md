@@ -54,6 +54,13 @@ finite transport test with lossy stop, not RF quality or inactive clock/bias
 shutdown qualification. Without the option, the historical four-path stress
 fixture remains available.
 
+Use `fast_loaded_traffic.py --power-gated` for the experimental powered
+exclusive composition (`--exclusive` is implied). It additionally checks zero
+wired-oscillator frequency and fixed phase throughout RF streaming. Its separate
+report is `evidence/fast-powered-rf-traffic.json`. Oscillator shutdown and a timed
+readiness guard do not yet model bias-current/supply transients or a physically
+shared synthesizer.
+
 Use `OPENBLAS_NUM_THREADS=1` for repeatable, economical simulation runs.
 The common acceptance suite runs 12 executables / 38 case rows, checks shared
 source snapshots and result digests, and writes

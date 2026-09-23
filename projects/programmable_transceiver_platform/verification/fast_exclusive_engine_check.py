@@ -250,12 +250,18 @@ def coupled_acquisition_screen(payload=False):
     output.write_text(json.dumps(report,indent=2)+'\n')
     print({k:v for k,v in report.items() if k not in ('source_sha256','acquisition')},flush=True)
 
-def coupled_wire_screen():
+def coupled_wire_screen(domains=False):
     import time
     rows=[];started=time.monotonic()
     for mode in (0,1):
+        options={}
+        if domains:
+            from shared_supply_lifecycle import DomainSupply
+            names=('CORE','HOST_A','HOST_B','WIRE_A','WIRE_B','RF','PLL')
+            options=dict(domain_supply=DomainSupply(names,[3.3]*7,[2.]*7,[100e-12]*7,.1),
+                domain_minimum_v=[2.5]*7,domain_load=lambda t,v:[.02,.02,.02,0,.005,0,.008])
         c=IntegratedTransceiverChip(coupled_analog=True,wire_hz_per_v=1e5,
-            return_charge_per_transition=50e-15,watchdog_s=1e-3)
+            return_charge_per_transition=50e-15,watchdog_s=1e-3,**options)
         c.select_engine('wire');c.configure(mode,0.)
         c.advance(8e-6)
         assert c.state=='active' and c.wire_pll.locked
@@ -271,7 +277,12 @@ def coupled_wire_screen():
         assert c.time==c.analog_owner.time==c.wire_pll.time==c.rf_pll.time
         c.wire_accounting()
         owner=c.analog_owner
-        stored=.5*owner.c*(owner.rail_v**2-owner.law.nominal_v**2)
+        if domains:
+            import numpy as np
+            d=owner.domains
+            assert d.time==c.time and d.impulse_energy_j>0
+            stored=.5*float(np.sum(d.c*(d.voltage**2-d.nominal**2)))
+        else:stored=.5*owner.c*(owner.rail_v**2-owner.law.nominal_v**2)
         residual=owner.source_energy_j-owner.rail_resistor_energy_j-owner.load_energy_j-owner.impulse_energy_j-stored
         assert abs(residual)<1e-16 and owner.extra_load_energy_j>0
         rows.append(dict(mode=mode,tx_words=len(tx),host_rx_words=len(rx),return_charge_c=c.return_charge,
@@ -284,18 +295,25 @@ def coupled_wire_screen():
         source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files},
         limitations=['Assumed regulated wired swing/termination efficiency and bias; gate switching charge, output compliance and clock/converter bias remain open.',
         'Short finite bursts, not full throughput or protocol compliance; RF bias gating and physical parameters remain open.'])
-    (P/'evidence/fast-coupled-wire.json').write_text(json.dumps(report,indent=2)+'\n')
+    if domains:
+        report['domain_fixture']=dict(names=list(names),feed_r_ohm=2.,capacitance_f=100e-12,
+            common_return_r_ohm=.1,minimum_v=2.5,background_current_a=[.02,.02,.02,0,.005,0,.008],
+            complete_current_inventory=False)
+        report['limitations'].append('Illustrative domain parameters and background currents; no full-chip power qualification.')
+    (P/('evidence/fast-domain-wire.json' if domains else 'evidence/fast-coupled-wire.json')).write_text(json.dumps(report,indent=2)+'\n')
 
 def main():
     if not __debug__:raise RuntimeError('Assertions must remain enabled')
     parser=argparse.ArgumentParser();parser.add_argument('--power-gated',action='store_true')
     parser.add_argument('--integrated',action='store_true')
     parser.add_argument('--domain-chip-screen',action='store_true')
+    parser.add_argument('--domain-wire-screen',action='store_true')
     parser.add_argument('--coupled-analog-screen',action='store_true')
     parser.add_argument('--coupled-acquisition-screen',action='store_true')
     parser.add_argument('--coupled-wire-screen',action='store_true')
     parser.add_argument('--coupled-rf-payload-screen',action='store_true')
     args=parser.parse_args()
+    if args.domain_wire_screen:return coupled_wire_screen(domains=True)
     if args.domain_chip_screen:
         print(domain_chip_screen());return
     if args.coupled_rf_payload_screen:return coupled_acquisition_screen(payload=True)

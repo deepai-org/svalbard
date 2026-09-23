@@ -6,6 +6,15 @@ The mathematical model is not closed; transistor schematic and layout gates
 remain closed. The selected integration candidate is
 `IntegratedTransceiverChip(coupled_analog=True)`.
 
+The domain-loaded RF diagnostic now passes: autonomous lock at 23 us, both RX
+trim searches, accepted shared-ADC TX calibration, and 32 captured samples.
+`fast-domain-rf-quality.json` reports 1.62% RX and 1.94% TX corrected RMS against
+the provisional 10% screen; recorded source hashes match. Raw errors are 13.41%
+and 16.31%, so this is relative waveform quality after one complex gain fit,
+not absolute gain qualification. Both wired profiles also pass finite traffic
+with domain supplies. These results establish nominal functional integration,
+not complete current budgets, noise bounds, sustained operation or silicon.
+
 1. **Expand coupled RF quality beyond the first calibrated diagnostic.** The
    completed 32-sample mode-0 two-tone test passes held-out RX/TX quality at
    1.49% / 1.83% corrected RMS against the provisional 10% screen. It includes

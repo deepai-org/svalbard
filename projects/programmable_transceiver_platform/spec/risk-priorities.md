@@ -6,14 +6,15 @@ The executable inventory is `evidence/fast-model-audit.json`; its presence flags
 are not performance qualification. Historical session numbers below do not imply
 that a process is still running.
 
-1. **One supported full-chip composition.** The common chip, warm/coarse tuning
-   chip and powered loaded chip are separate. None inspected combines loaded
-   RF output/calibration, engine ownership/shutdown and coarse/warm acquisition.
-   Integrate these into one explicit composition with shared resource ownership.
-   The exit evidence is one same-instance lifecycle: startup, RF operation,
-   stopped carrier change and recalibration, wired duplex, RF return, reference
-   loss and recovery. Use the existing fixtures; passing different subclasses
-   cannot substitute for this evidence.
+1. **One supported full-chip composition.** `IntegratedTransceiverChip` now
+   combines powered engine ownership, loaded RF output/shared calibration and
+   coarse/warm acquisition. An initial same-instance 2.437 GHz RF -> wired ->
+   2.5 GHz RF -> wired lifecycle passes in `fast-integrated-engine.json` at
+   commit `89d485f`. A follow-up explicitly invalidates coarse qualification on
+   engine changes and is being rechecked; consult report hashes before reuse.
+   Reference-loss/recovery and whole-composition signal quality remain open.
+   Use this composition for further integration instead of transferring results
+   between separate subclasses. The prior candidates remain regression references.
 2. **Finite-current references, bias and output drive.** The selected fast
    reference uses RC restoration to a fixed source without a driver current
    limit. Output loading is passive and RX gain is ideal. Connect finite-current

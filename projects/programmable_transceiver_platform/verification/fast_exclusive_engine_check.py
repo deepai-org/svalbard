@@ -83,6 +83,7 @@ def main():
     rows=[]
     for engine,mode in (('rf',0),('wire',0),('rf',1),('wire',1)):
         c.select_engine(engine);assert not c.tx_cal.valid
+        if args.integrated:assert not c.coarse.qualified
         c.reset_memory()
         if engine=='rf':
             if args.integrated:

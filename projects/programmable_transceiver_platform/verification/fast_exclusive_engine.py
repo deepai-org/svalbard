@@ -186,7 +186,9 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         self._require_target_free()
         previous=self.active_engine
         super().select_engine(engine)
-        if previous!=engine:self.coarse.cancel(self.time)
+        if previous!=engine:
+            self.coarse.cancel(self.time)
+            self.coarse.qualified=False
 
     def execute_management(self,operation,payload,time):
         if operation=='rf_coarse_start':self.require_engine('rf')

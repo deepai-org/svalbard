@@ -14,6 +14,7 @@ Existing simultaneous-traffic runners are retained as optional stress tests.
 | `warm_chip.py:WarmTransceiverChip` | Adds coarse startup, finite recentering and warm retuning | Separate subclass; not automatically covered by common quality results |
 | `../../verification/fast_loaded_output.py:LoadedOutputChip` | Finite output network shared by pad observation, calibration detector and RX loopback | Assumed passive RC network; no nonlinear driver current/supply limits |
 | `../../verification/fast_exclusive_engine.py:ExclusiveEngineChip` | Loaded model with mutually exclusive payload admission/session enables | Inactive bias/clock shutdown and RTL implementation remain open |
+| `../../verification/fast_exclusive_engine.py:IntegratedTransceiverChip` | Combines powered exclusivity, loaded output and coarse/warm RF acquisition | Initial same-instance lifecycle only; reference recovery, finite-current drive and integrated quality remain open |
 
 The common model connects host framing and finite queues, wired serialization
 and receive timing, ADC/DAC quantization and delay, RF mixing and filtering,

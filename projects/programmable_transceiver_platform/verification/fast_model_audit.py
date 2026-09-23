@@ -5,7 +5,7 @@ P=Path(__file__).resolve().parents[1]
 F=P/'system_model/architecture_fast';sys.path.insert(0,str(F))
 from chip import TransceiverChip
 from warm_chip import WarmTransceiverChip
-from fast_exclusive_engine import PoweredExclusiveChip
+from fast_exclusive_engine import PoweredExclusiveChip,IntegratedTransceiverChip
 
 def main():
     c=TransceiverChip()
@@ -26,7 +26,7 @@ def main():
             sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
     loaded=hasattr(c,'output_network')
     compositions=[]
-    for name,model in (('common',c),('warm',WarmTransceiverChip()),('powered_loaded',PoweredExclusiveChip())):
+    for name,model in (('common',c),('warm',WarmTransceiverChip()),('powered_loaded',PoweredExclusiveChip()),('integrated',IntegratedTransceiverChip())):
         compositions.append(dict(name=name,implementation=type(model).__name__,
             finite_output_network=hasattr(model,'output_network'),
             coarse_tuning=hasattr(model,'coarse'),
@@ -43,8 +43,8 @@ def main():
         finite_loaded_tx_network_instantiated=loaded,
         adc_latency_s=c.adc_latency),
         mathematical_closure=False,transistor_schematic_complete=False,layout_gate_open=False,
-        next_priority='Unify powered loaded RF/wired lifecycle with coarse/warm tuning, then replace unlimited reference/output drive assumptions with finite-current shared supply behavior and reconcile whole-chip budgets.',
-        remaining=['No inspected composition combines coarse/warm tuning, loaded output, exclusive ownership and oscillator shutdown.',
+        next_priority='Complete reference-loss/recovery on the integrated composition, then replace unlimited reference/output drive assumptions with finite-current shared supply behavior and reconcile whole-chip budgets.',
+        remaining=['IntegratedTransceiverChip combines coarse/warm tuning, loaded output, ownership and shutdown; initial same-instance RF/wired retune lifecycle passes, but full recovery and quality coverage remain open.',
             'Reference.advance replenishes charge by ideal RC relaxation to a fixed source; no explicit driver current limit in these compositions.',
             'Power-domain ceilings and area allocations are targets, not sums from implemented blocks and active modes.',
             'Pin-level management/RTL agreement and declared host/service envelopes remain open.',

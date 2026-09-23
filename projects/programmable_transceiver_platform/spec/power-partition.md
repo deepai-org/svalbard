@@ -123,3 +123,42 @@ switching, leakage and GPIO pre-drivers are excluded. Mutual exclusion helps
 but leaves the dominant host-clock load. Current netlist selection, domain
 ownership and gate controls must be reconciled before using these estimates in
 the executable full-chip current model.
+
+## Supply ownership for exclusive operation
+
+Use the following physical ownership when connecting the domain model. Engine
+selection controls loads inside a domain; it does not disconnect the entire
+supply pad. In particular, the RF pad name does not imply that shared converters
+are unavailable in wired maintenance mode.
+
+| Circuit group | Physical supply owner | Activity rule |
+|---|---|---|
+| Transport, memory, control, clock-tree cells, GPIO pre-drivers | CORE | Management/retention plus actual host and selected-engine activity |
+| Host output devices and pad receivers | HOST_A / HOST_B, per pad map above | Actual traffic and input activity; clocks and idle patterns count |
+| Wired TX driver and termination control | WIRE_A | Wired selected; held output level continues drawing power |
+| Wired RX front end, equalizer, slicer and local recovery circuitry | WIRE_B | Wired RX/detection activity; account any required quiet detection bias separately |
+| RF LNA, mixers, RX filters, TX reconstruction and output driver | RF | RF acquisition/calibration/payload as required; isolate inactive front end |
+| Shared sample converters and diagnostic analog mux | RF | RF payload or explicit maintenance ownership, including wired maintenance |
+| Reference input, master bias, converter reference and analog clock engines | PLL/reference | Shared services remain available; only inactive clock-engine branches may stop |
+
+This is the selected modeling partition, not validated rail routing. Local
+buffers belong to their consuming domain unless their explicit circuit supply
+says otherwise. Distinguish CORE digital clock-tree current from PLL/reference
+analog oscillator/divider current to avoid double counting. A future physically
+shared synthesizer must replace the two branch inventories, not add a third.
+
+For each row, the executable load inventory must include idle bias, enabled
+bias, switching charge or power, startup charge, and off-state leakage (zero
+only as an explicit hypothesis). Unknown quantities remain unknown, not zero.
+Count shared converter and reference instances once, even when both ADC and DAC
+operate in RF mode. Their conversion events and load-dependent reference output
+power remain separate contributions. Host supply current and the existing
+host-coupling impulse are not two independent copies of pad switching power;
+replace the impulse fixture with the physical-domain event when integrating.
+
+WIRE_A/B have separate connection limits; their aggregate 96 mA allocation is
+not permission for either connection to carry 96 mA. Likewise, shared converters
+continue to consume the RF connection's allocation during wired maintenance.
+Full-chip budget closure needs these loads and mode transitions on the same
+supply owner. The current seven-domain RC primitive is still isolated and does
+not establish this integration or any package parameters.

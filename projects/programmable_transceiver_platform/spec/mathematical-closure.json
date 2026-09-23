@@ -381,6 +381,22 @@
       "wired-to-RF transition",
       "shared-resource ownership and calibration validity"
     ],
-    "historical_four_path_tests": "Optional stress evidence, not a product closure requirement."
+    "historical_four_path_tests": "Optional stress evidence, not a product closure requirement.",
+    "powered_rf_quality": {
+      "status": "passed_selected_screen",
+      "evidence": "evidence/fast-powered-loopback-quality.json",
+      "result_sha256": "0db166fbc2ef0f69aaa0e62a06d2b4b751cfda83a3f246ec013d048788e9eca8",
+      "rx_relative_rms": [
+        0.04047158977583202,
+        0.06435647835740355
+      ],
+      "tx_relative_rms": [
+        0.02656065944690467,
+        0.03675402947741485
+      ],
+      "scope": "RF-only finite deterministic loopback, loaded pad and shared calibration, 2x RX gain, assumed noise/loading, wired oscillator stopped throughout.",
+      "physical_qualification": false,
+      "remaining": "Wideband stimulus, physical PGA and bias-current behavior, supported tuning/loading uncertainty envelopes, and sustained wired-only service remain open."
+    }
   }
 }

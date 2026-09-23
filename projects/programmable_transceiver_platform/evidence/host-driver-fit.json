@@ -1,0 +1,47 @@
+{
+  "status": "characterization_completed",
+  "physical_qualification": false,
+  "integrated_into_chip": false,
+  "full_chip_closure": false,
+  "parameters": {
+    "pullup_r_ohm": 127.45205679605516,
+    "pulldown_r_ohm": 89.3583261619666,
+    "rising_delay_ns": 2.3659515937646707,
+    "falling_delay_ns": 2.5165606870319737
+  },
+  "training": {
+    "samples": 677,
+    "rms_v": 0.11807449511736674,
+    "maximum_absolute_v": 0.3555222770573949
+  },
+  "held_out": [
+    {
+      "case": "10pf_bank_later_cycles",
+      "fitting_data": false,
+      "samples": 725,
+      "rms_v": 0.13161282573269548,
+      "maximum_absolute_v": 0.3360559833242176
+    },
+    {
+      "case": "8pf_pair_data",
+      "fitting_data": false,
+      "samples": 3439,
+      "rms_v": 0.13781215348567452,
+      "maximum_absolute_v": 0.37218936597494245
+    }
+  ],
+  "limitations": [
+    "Only ideal-supply output voltage is fitted; no supply-current or ground-current fit.",
+    "Voltage dependence, finite gate slew, overlap/internal current and nonideal-feed behavior are not qualified.",
+    "Do not install these parameters merely because optimization converged; retain waveform error as model uncertainty."
+  ],
+  "source_sha256": {
+    "verification/fit_host_driver.py": "892d1099a6bc14cbf62a2cd612574ed06dab9cbac5e330b1f288b6d10f96b2c5",
+    "evidence/native-host-bank-rc-screen.json": "8d319d3311aeae4470047ea49150b4a56231441ec2ad0468e05a34edfdf7c67c",
+    "evidence/weak-drive-screen.json": "b9900dba8564e6db5bb18e8146e7f0262efcbe69f5087cebb5c540aa88326b29"
+  },
+  "archive_sha256": {
+    "scratch/transceiver-host-bank-waveforms.tar.gz": "c2bcf8a960996e8ea525bb5d0ea058f3390582a0386f0261a52bcf4940080d77",
+    "scratch/transceiver-weak-drive-waveforms.tar.gz": "25286e3d54ccaac072239455fe7b7c269ea32eda62c86a61c035fc7ada253400"
+  }
+}

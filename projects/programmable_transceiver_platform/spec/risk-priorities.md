@@ -21,6 +21,14 @@ and 1.38% TX error against an independent ideal carrier, with eight fitting and
 verified at evaluation. This closes the nominal second-profile diagnostic, not
 independent RX, added phase noise, current adequacy or sustained operation.
 
+The independent-input/noisy mode-1 screen now passes: 2.13% RX and 2.14% TX
+held-out error (`fast-domain-rf-external-mode1-noise20000-quality.json`). TX is
+compared with an independent ideal carrier; RX uses external 2.5/7.5 MHz tones.
+The assumed eight-line VCO noise is 20 kHz RMS, 80 kHz peak. This is still only
+32 samples with eight fitting points, original illustrative backgrounds and the
+50 fC host disturbance. Prioritize physical host charge/return coupling and
+sustained service over another nominal short RF capture.
+
 1. **Autonomous timing and RF quality against an independent reference.**
    The existing TX conversion metric removes the measured shared-LO phase, and
    RX loopback can cancel that same phase error. Neither establishes useful
@@ -58,7 +66,7 @@ Avoid further isolated nominal sweeps unless they answer a failure found in one
 of these three checks. Preserve completed diagnostic evidence; reuse its acquisition/calibration flow
 for the independent-input test rather than launching duplicate nominal runs.
 
-The next integrated RF test uses the existing checker with
+The completed independent-input RF test uses the existing checker with
 `--domain-rf-screen --rf-mode 1 --independent-rx --rf-noise-rms-hz 20000`.
 After quiet RX trim and shared-ADC TX calibration, an independent two-tone
 antenna stimulus replaces receive loopback. Its 2.5/7.5 MHz baseband tones are

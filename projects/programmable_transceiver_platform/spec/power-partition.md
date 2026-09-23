@@ -287,6 +287,20 @@ is charged by the FPGA, not by the transceiver's output drivers. Package
 inductance, distributed grounds and substrate coupling remain outside this
 candidate. Preserve the current noisy-RF run before replacing its supply owner.
 
+The first native-waveform fit is retained in `evidence/host-driver-fit.json`
+and reproducible with `verification/fit_host_driver.py`. A delayed linear RC
+driver fitted to early 10 pF bank cycles gives approximately 127/89 ohm
+pull-up/down resistance and 2.37/2.52 ns rise/fall transport delay. Held-out
+later cycles have 0.132 V RMS / 0.336 V peak voltage error; the unused 8 pF
+pair data has 0.138 V RMS / 0.372 V peak error. Supply current is not fitted.
+These parameters are therefore not installed as a validated driver law.
+Bound nonlinear current, gate slew/delay and internal switching energy before
+using this reduced circuit to qualify whole-chip timing or rail margin.
+
+The noisy independent RF test has now completed with source-verified RX/TX
+waveform passes, so its snapshot is preserved. It still uses the 50 fC host
+disturbance and does not validate the explicit host capacitor/return candidate.
+
 Next replace the full-chip host disturbance fixture with finite, load-dependent
 pad supply/return currents, retaining per-segment ownership and energy accounting.
 Test those currents together with autonomous timing and RF conversion; do not

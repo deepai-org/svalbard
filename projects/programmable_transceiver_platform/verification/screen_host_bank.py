@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Native five/six-output bank: ideal versus candidate RC supply feedback."""
 import hashlib
+import argparse
 import json
 import os
 from pathlib import Path
@@ -13,17 +14,18 @@ import numpy as np
 from run_gpio_transient import output_instance, TECH, PAD
 
 
-def deck(path, rc):
+def deck(path, mode):
     lines = ['* Native host bank supply sensitivity; electrical SSO fixture',
         f'.include {TECH}/design.ngspice']
     lines += [f'.lib {TECH}/sm141064.ngspice {section}' for section in
         ('typical', 'res_typical', 'diode_typical', 'moscap_typical')]
     lines += [f'.include {PAD}', '.temp 25', 'VD BOARD 0 3.3', 'VC VDD 0 3.3',
         'VA A 0 PULSE(0 3.3 4n .5n .5n 2.7n 6.4n)']
-    if rc:
-        lines += ['RA BOARD HOST_A 2', 'RB BOARD HOST_B 2', 'RG GRET 0 .1']
+    if mode in ('rc', 'feed'):
+        lines += ['RA BOARD HOST_A 2', 'RB BOARD HOST_B 2']
     else:
-        lines += ['VA_FEED BOARD HOST_A 0', 'VB_FEED BOARD HOST_B 0', 'VG GRET 0 0']
+        lines += ['VA_FEED BOARD HOST_A 0', 'VB_FEED BOARD HOST_B 0']
+    lines += ['RG GRET 0 .1' if mode in ('rc', 'return') else 'VG GRET 0 0']
     lines += ['CA HOST_A GRET 100p', 'CB HOST_B GRET 100p',
         'IA_IDLE HOST_A GRET .002', 'IB_IDLE HOST_B GRET .002',
         'IOTHER BOARD GRET .040']
@@ -45,11 +47,11 @@ def deck(path, rc):
     return '\n'.join(lines)+'\n', pads
 
 
-def run_case(work, rc):
-    name = 'rc_bank' if rc else 'ideal_bank'
+def run_case(work, mode):
+    name = mode+'_bank'
     path = work/name;path.mkdir()
     (path/'.spiceinit').write_text('set ngbehavior=hs\n')
-    source, pads = deck(path, rc)
+    source, pads = deck(path, mode)
     (path/'tb.spice').write_text(source)
     start = time.monotonic()
     row = dict(case=name, status='incomplete', elapsed_s=None,
@@ -83,27 +85,33 @@ def run_case(work, rc):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--isolate', action='store_true')
+    args = parser.parse_args()
     work = Path('/work')
+    modes = ('feed', 'return') if args.isolate else ('ideal', 'rc')
+    stem = 'host-bank-isolation' if args.isolate else 'host-bank'
     report = dict(status='running', cases=[], full_chip_closure=False, physical_qualification=False,
         source_tree_sha256=os.environ['ANALOG_SOURCE_SHA256'],
         source_sha256={str(p):hashlib.sha256(p.read_bytes()).hexdigest()
             for p in (Path(__file__), Path('/src/run_gpio_transient.py'), PAD)},
         assumptions=['Eleven native 8 mA output pads, 5/6 segmented output supplies; typical process, 3.3 V, 25 C.',
             'All outputs switch together into 10 pF each; this SSO stress is not a host protocol/timing test.',
-            'Candidate PDN: 2 ohm per supply feed, 0.1 ohm shared return, 100 pF local capacitance per segment.',
+            'Candidate PDN: 2 ohm per supply feed, 0.1 ohm shared return, 100 pF local capacitance per segment; isolation cases enable only feed or return resistance.',
             '2 mA assumed additional load per host segment and 40 mA other-chip load through the common return.',
             'Core pre-driver supply remains ideal. No package inductance, clamp ring, input bank, substrate network or mismatch.',
             '32 ns transient with a 12–32 ns measurement window; no sustained-current or jitter qualification.'])
-    output = work/'host-bank.json'
+    output = work/(stem+'.json')
     def save():output.write_text(json.dumps(report, indent=2)+'\n')
     save()
-    for rc in (False, True):
-        row = run_case(work, rc);report['cases'].append(row);save()
+    for mode in modes:
+        row = run_case(work, mode);report['cases'].append(row);save()
         print(json.dumps(row), flush=True)
     report['status'] = 'screen_completed' if all(r['status']=='completed' for r in report['cases']) else 'incomplete'
     save()
-    with tarfile.open(work/'host-bank-waveforms.tar.gz', 'w:gz') as bundle:
-        for name in ('ideal_bank', 'rc_bank'):bundle.add(work/name, arcname=name)
+    with tarfile.open(work/(stem+'-waveforms.tar.gz'), 'w:gz') as bundle:
+        for mode in modes:
+            name = mode+'_bank';bundle.add(work/name, arcname=name)
 
 
 if __name__ == '__main__':

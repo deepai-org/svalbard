@@ -479,6 +479,11 @@
     "minimum_host_b_v_at_10pf_0p25ns": 2.1192397557116562,
     "scope": "One simultaneous rising edge on a hypothesized RC network; demand waveform, not physical pad implementation. Full-chip host charge remains a disturbance fixture.",
     "next": "Finite pad supply/return currents with real load dependence, then integrated clocks/RF quality under that loading.",
-    "full_chip_closure": false
+    "full_chip_closure": false,
+    "native_bank_evidence": [
+      "evidence/native-host-bank-rc-screen.json",
+      "evidence/native-host-bank-isolation-screen.json"
+    ],
+    "native_bank_status": "Eleven-output ideal and return-resistance-only cases complete. RC and feed-resistance-only cases time out before stimulus; no supply-feed electrical qualification."
   }
 }

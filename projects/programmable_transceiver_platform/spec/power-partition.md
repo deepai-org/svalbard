@@ -235,6 +235,17 @@ collapse or a bank-current pass. Reproduce with `verification/run_host_bank.sh`;
 wrapper completion only means artifacts were retained. Isolate feed versus
 return impedance before fitting a current model from nonideal-rail waveforms.
 
+That isolation is now recorded in `evidence/native-host-bank-isolation-screen.json`
+(`run_host_bank.sh --isolate`). With only the 0.1 ohm return impedance, the complete
+bank runs to 32 ns and both local supply spans remain above 3.273 V in the
+measurement window; the return reaches 26.75 mV above board ground. With only
+the two 2 ohm feed impedances, simulation again times out before stimulus.
+The common return alone therefore does not reproduce the numerical failure.
+Next distinguish fixed DVDD/core-supply offsets from dynamic supply-feed
+feedback using short startup observations. Do not turn timeout evidence into
+electrical impossibility or use the successful return-only case to qualify the
+full supply network. Both isolation cases retain 100 pF per segment.
+
 Next replace the full-chip host disturbance fixture with finite, load-dependent
 pad supply/return currents, retaining per-segment ownership and energy accounting.
 Test those currents together with autonomous timing and RF conversion; do not

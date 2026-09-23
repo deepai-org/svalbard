@@ -1,0 +1,106 @@
+{
+  "status": "incomplete",
+  "cases": [
+    {
+      "case": "feed_bank",
+      "status": "incomplete",
+      "elapsed_s": 90.01057135406882,
+      "deck_sha256": "47157e759d6b520b44c3d70f2218bd770487ef2bc3b23050678401948e7ab361",
+      "error": "90 second simulation timeout; not an electrical failure result",
+      "log_sha256": "d32a858fee7b3d48364ad3c18d4fbbff68b67359b18cc491912c86ecefa9dbec",
+      "last_reported_simulation_time_s": 1.12473e-09,
+      "stimulus_start_s": 4e-09,
+      "retained_artifacts_verified": true
+    },
+    {
+      "case": "return_bank",
+      "status": "completed",
+      "elapsed_s": 24.466084047220647,
+      "deck_sha256": "8d2cc08287990e3725827152ff71039976d6c4797c8ceb1f719980c25447a8a8",
+      "returncode": 0,
+      "log_sha256": "c72d1f9243179782892476c68f60ea167fef8c3c78a9e380b9635fb8fe27ab2b",
+      "waveform_sha256": "67388a1509b527ef7db8d8e22ac2e0ac61f71c7aa0f57d08fc8743bc74682d59",
+      "measured_start_s": 1.201e-08,
+      "measured_end_s": 3.2e-08,
+      "rail_span_min_v": [
+        3.2732501004,
+        3.2732501004
+      ],
+      "rail_span_max_v": [
+        3.2942755796,
+        3.2942755796
+      ],
+      "common_return_extrema_v": [
+        0.0057244204,
+        0.0267498996
+      ],
+      "output_extrema_v": {
+        "PA0": [
+          0.0733435797,
+          3.06995022
+        ],
+        "PA1": [
+          0.0733435797,
+          3.06995022
+        ],
+        "PA2": [
+          0.0733435797,
+          3.06995022
+        ],
+        "PA3": [
+          0.0733435797,
+          3.06995022
+        ],
+        "PA4": [
+          0.0733435797,
+          3.06995022
+        ],
+        "PB0": [
+          0.0733435797,
+          3.06995022
+        ],
+        "PB1": [
+          0.0733435797,
+          3.06995022
+        ],
+        "PB2": [
+          0.0733435797,
+          3.06995022
+        ],
+        "PB3": [
+          0.0733435797,
+          3.06995022
+        ],
+        "PB4": [
+          0.0733435797,
+          3.06995022
+        ],
+        "PB5": [
+          0.0733435797,
+          3.06995022
+        ]
+      },
+      "board_current_peak_a": 0.21751597,
+      "below_2p5v_model_floor": false,
+      "retained_artifacts_verified": true
+    }
+  ],
+  "full_chip_closure": false,
+  "physical_qualification": false,
+  "source_tree_sha256": "77920156a787e926c8d41a3c85a6f5112c01c419615828fb093f97fa35212b61",
+  "source_sha256": {
+    "/src/screen_host_bank.py": "c05a0779575fe9db02d31a8934be4faa7b594c0b5f2f89d0231e3e377c6e8708",
+    "/src/run_gpio_transient.py": "4533040325ce2583a40e826734950ce023af563f39fdeced57a25a186ceef36a",
+    "/foss/pdks/gf180mcuD/libs.ref/gf180mcu_fd_io/spice/gf180mcu_fd_io.spice": "710732fd6a69e165caa2c29e4cdf81b11af41da32705fcd860b7ecfb09630dd1"
+  },
+  "assumptions": [
+    "Eleven native 8 mA output pads, 5/6 segmented output supplies; typical process, 3.3 V, 25 C.",
+    "All outputs switch together into 10 pF each; this SSO stress is not a host protocol/timing test.",
+    "Candidate PDN: 2 ohm per supply feed, 0.1 ohm shared return, 100 pF local capacitance per segment; isolation cases enable only feed or return resistance.",
+    "2 mA assumed additional load per host segment and 40 mA other-chip load through the common return.",
+    "Core pre-driver supply remains ideal. No package inductance, clamp ring, input bank, substrate network or mismatch.",
+    "32 ns transient with a 12\u201332 ns measurement window; no sustained-current or jitter qualification."
+  ],
+  "archive_path": "scratch/transceiver-host-bank-isolation-waveforms.tar.gz",
+  "archive_sha256": "42d243e2b28035596a17b4f9e94d29c0c7e975757059993303662fcd8fb7b34c"
+}

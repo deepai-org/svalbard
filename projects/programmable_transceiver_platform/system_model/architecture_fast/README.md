@@ -27,6 +27,15 @@ RF output parameters and detector readout settling are constructor parameters.
 Preparation/calibration belongs to the caller; creating a chip does not silently
 calibrate it. A 12-bit transport word is not a claim of 12-bit converter ENOB.
 
+`configure_rx_gain(gain)` selects 0.5, 1 or 2 without changing the filter
+topology or its stored state. The serialized `configure_rx_gain` command maps
+payloads 0/1/2 to those gains; other encodings reject. Changes require a disarmed
+receiver with no active calibration or pending ADC/maintenance conversion.
+The older combined `configure_rx` command includes single-pole bandwidth tuning
+and remains unavailable with the selected multipole topology. This gain command
+is a mathematical management interface; its pin-level RTL encoding is not yet
+implemented. It models an ideal gain setting, not a qualified physical PGA.
+
 ## Run from the repository root
 
 ```sh

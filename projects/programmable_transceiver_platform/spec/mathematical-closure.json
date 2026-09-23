@@ -355,9 +355,9 @@
       ],
       "screen_budget": 0.1,
       "scope": "Finite loaded-pad loopback with optional simultaneous wired stress. Mode-1 RX fails the unchanged incremental error screen; both TX cases pass. Relative-gain calibration does not establish absolute gain or physical accuracy.",
-      "next_action": "Finish gain ownership/filter-preservation checks and loaded quality run, then requalify common aggregate. Original mode-1 failure remains open until measured.",
+      "next_action": "Finish matched 2x-gain loaded-quality comparison and fresh common aggregate; original mode-1 quality failure remains open pending the result.",
       "physical_qualification": false,
-      "gain_control_gap": "Gain-only configure_rx_gain API and serialized command added to common chip; selects existing 0.5/1/2 gain without invoking single-pole tuning. Verification and matched 2x-gain loaded-quality run in progress; pin-level RTL mapping remains open.",
+      "gain_control_gap": "Resolved in common mathematical chip by configure_rx_gain API and serialized command selecting existing 0.5/1/2 gain independently of filter tuning. Direct filter-state preservation, serialized selection/reserved encoding rejection, active-session rejection and TX-calibration rejection pass in fast-exclusive-engine.json. Pin-level RTL mapping and physical gain behavior remain open.",
       "diagnosis": {
         "evidence_commit": "eb82ac1",
         "mode1_prequantizer_relative_rms": 0.0575206471726181,

@@ -179,6 +179,20 @@ class SwitchableWarmClock(SwitchablePLL,WarmClock):
             self.initialize_reference(time,tick)
 
 class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
+    def __init__(self,*,reference_source_limit_a=150e-6,reference_sink_limit_a=150e-6,**kwargs):
+        from causal_reference_lifecycle import CurrentLimitedReference
+        kwargs.setdefault('dac_reference_load_capacitance',2e-12)
+        super().__init__(**kwargs)
+        old=self.adc_reference
+        if old.time!=0 or old.samples or old.dac_updates:
+            raise ValueError('Reference replacement requires unenergized initial state')
+        if self.dac_reference is not old:
+            raise ValueError('Integrated candidate requires one shared converter reference')
+        self.adc_reference=CurrentLimitedReference(resistance=old.r,capacitance=old.c,
+            load_capacitance=old.load,source_limit_a=reference_source_limit_a,
+            sink_limit_a=reference_sink_limit_a)
+        self.dac_reference=self.adc_reference
+
     RF_PLL_CLASS=SwitchableWarmClock
     TILE_COMMANDS=tuple(dict.fromkeys(PoweredExclusiveChip.TILE_COMMANDS+WarmTransceiverChip.TILE_COMMANDS))
 

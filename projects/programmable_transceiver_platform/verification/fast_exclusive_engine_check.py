@@ -153,8 +153,17 @@ def main():
         assert c.state=='reset' and not c.session.armed
         rows.append(dict(engine=engine,mode=mode,opposite_engine_rejected=True,ingress_rejection_atomic=True,rf_duplex_samples=32 if engine=='rf' else 0,wire_tx_words=32 if engine=='wire' else 0,wire_host_rx_words=64 if engine=='wire' else 0,stopped=True))
     c.select_engine('none');reject(lambda:c.configure(0,c.time))
+    reference_metrics=None
+    if args.integrated:
+        r=c.adc_reference
+        assert c.dac_reference is r and r.dac_updates>0 and r.samples>0
+        residual=r.recharge_c-r.absorbed_c-r.charge-r.c*(r.voltage-1.)
+        assert abs(residual)<1e-21
+        reference_metrics=dict(source_limit_a=r.source_current_limit,sink_limit_a=r.sink_current_limit,
+            minimum_v=r.minimum,peak_current_a=r.peak_current_a,limited_s=r.limited_s,
+            recharge_c=r.recharge_c,conversion_charge_c=r.charge,charge_residual_c=residual)
     files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[P/'verification'/n for n in ('fast_loaded_output.py','fast_exclusive_engine.py','fast_exclusive_engine_check.py')]
-    out=dict(status='passed',integrated=args.integrated,power_gated=args.power_gated,standalone_power_state=power_case,clock_ownership=clock_cases,source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files},cases=rows,
+    out=dict(status='passed',finite_reference=reference_metrics,integrated=args.integrated,power_gated=args.power_gated,standalone_power_state=power_case,clock_ownership=clock_cases,source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files},cases=rows,
         limitations=['Power-gated variant checks oscillator shutdown; physical bias-current and settling behavior remain open.',
         'Python selection API with serialized local-start command; pin-level management/RTL interlock not implemented.',
         'Finite RF TX/RX and wired TX/host RX checked; sustained duplex, RF quality and calibration validity across mode changes need further coverage.'])

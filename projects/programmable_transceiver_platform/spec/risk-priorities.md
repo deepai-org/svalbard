@@ -10,14 +10,17 @@ that a process is still running.
    combines powered engine ownership, loaded RF output/shared calibration and
    coarse/warm acquisition. An initial same-instance 2.437 GHz RF -> wired ->
    2.5 GHz RF -> wired lifecycle passes in `fast-integrated-engine.json` at
-   commit `89d485f`. A follow-up explicitly invalidates coarse qualification on
-   engine changes and is being rechecked; consult report hashes before reuse.
+   commit `89d485f`. Coarse qualification is explicitly invalidated on engine changes; that
+   follow-up also passed at commit `1f3afe4`. Consult report hashes before reuse.
    Reference-loss/recovery and whole-composition signal quality remain open.
    Use this composition for further integration instead of transferring results
    between separate subclasses. The prior candidates remain regression references.
 2. **Finite-current references, bias and output drive.** The selected fast
-   reference uses RC restoration to a fixed source without a driver current
-   limit. Output loading is passive and RX gain is ideal. Connect finite-current
+   reference previously used unlimited RC restoration. The integrated candidate
+   now connects an exact bidirectionally current-limited reference to actual
+   ADC/DAC loads, with source-charge accounting and a full lifecycle rerun in
+   progress. Its fixed target still omits rail feedback. Output loading is
+   passive and RX gain is ideal. Connect finite-current
    reference and driver behavior to the actual converter/clock loads and rail
    state. Require signal quality, startup, recovery and supply-current accounting
    on that same composition; do not hide failure by normalizing gain or omitting

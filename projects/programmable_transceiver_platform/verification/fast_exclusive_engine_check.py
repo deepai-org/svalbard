@@ -164,17 +164,27 @@ def domain_chip_screen():
     return dict(cases=rows,scope='12 ns startup and one host output event; illustrative constant background loads',
         host_impulses_integrated=True,payload_qualified=False,physical_qualification=False)
 
-def coupled_acquisition_screen(payload=False):
+def coupled_acquisition_screen(payload=False,domains=False):
     import time
     start=time.monotonic()
     files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
     hashes={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
-    output=P/('evidence/fast-coupled-rf-calibrated-payload.json' if payload else 'evidence/fast-coupled-acquisition.json')
+    output=P/('evidence/fast-domain-rf-payload.json' if domains else 'evidence/fast-coupled-rf-calibrated-payload.json' if payload else 'evidence/fast-coupled-acquisition.json')
     progress=dict(status='running',stage='acquisition',source_sha256=hashes,
         full_chip_closure=False,physical_qualification=False)
     def save():output.write_text(json.dumps(progress,indent=2)+'\n')
     save()
-    c=IntegratedTransceiverChip(coupled_analog=True,rf_hz_per_v=1e6,watchdog_s=1e-3,tx_relative_gain=payload)
+    options={};domain_fixture=None
+    if domains:
+        from shared_supply_lifecycle import DomainSupply
+        names=('CORE','HOST_A','HOST_B','WIRE_A','WIRE_B','RF','PLL')
+        background=[.02,.02,.02,0,0,.012,.008]
+        domain_fixture=dict(names=list(names),feed_r_ohm=2.,capacitance_f=100e-12,
+            common_return_r_ohm=.1,background_current_a=background,complete_current_inventory=False)
+        options=dict(domain_supply=DomainSupply(names,[3.3]*7,[2.]*7,[100e-12]*7,.1),
+            domain_minimum_v=[2.5]*7,domain_load=lambda t,v:background,return_charge_per_transition=50e-15)
+        progress['domain_fixture']=domain_fixture;save()
+    c=IntegratedTransceiverChip(coupled_analog=True,rf_hz_per_v=1e6,watchdog_s=1e-3,tx_relative_gain=payload,**options)
     c.select_engine('rf')
     c.execute_management('rf_coarse_start',2437000000,c.time)
     rows=[]
@@ -247,6 +257,14 @@ def coupled_acquisition_screen(payload=False):
             'Optional payload is a 32-sample diagnostic; held-out signal quality, full lifecycle and physical qualification remain open.'])
     files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
     report['source_sha256']=hashes
+    if domains:
+        import numpy as np
+        d=c.analog_owner.domains
+        residual=d.source_energy_j-d.feed_loss_j-d.load_energy_j-d.impulse_energy_j-.5*float(np.sum(d.c*(d.voltage**2-d.nominal**2)))
+        assert abs(residual)<1e-15
+        report['domain_fixture']=domain_fixture
+        report['domain_result']=dict(voltage_v=d.voltage.tolist(),energy_residual_j=residual,host_return_charge_c=c.return_charge)
+        report['limitations'].append('Illustrative domain impedance and background current inventory; not a power-budget or package qualification.')
     output.write_text(json.dumps(report,indent=2)+'\n')
     print({k:v for k,v in report.items() if k not in ('source_sha256','acquisition')},flush=True)
 
@@ -308,11 +326,13 @@ def main():
     parser.add_argument('--integrated',action='store_true')
     parser.add_argument('--domain-chip-screen',action='store_true')
     parser.add_argument('--domain-wire-screen',action='store_true')
+    parser.add_argument('--domain-rf-screen',action='store_true')
     parser.add_argument('--coupled-analog-screen',action='store_true')
     parser.add_argument('--coupled-acquisition-screen',action='store_true')
     parser.add_argument('--coupled-wire-screen',action='store_true')
     parser.add_argument('--coupled-rf-payload-screen',action='store_true')
     args=parser.parse_args()
+    if args.domain_rf_screen:return coupled_acquisition_screen(payload=True,domains=True)
     if args.domain_wire_screen:return coupled_wire_screen(domains=True)
     if args.domain_chip_screen:
         print(domain_chip_screen());return

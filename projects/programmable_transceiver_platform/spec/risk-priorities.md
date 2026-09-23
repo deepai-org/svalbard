@@ -97,6 +97,15 @@ they do not qualify domain-loaded traffic or chip power. The RF pass remains
 scoped to its recorded single-rail source snapshot (`ca7a220`); it does not
 qualify this new domain-supply composition.
 
+The first domain-loaded wired traffic run now passes both profiles
+(`evidence/fast-domain-wire.json`, source hashes verified): six TX words and 64
+incoming RX words returned to the host per profile, RF oscillator off, segmented
+host charge enabled, and total rail energy residual below 7e-20 J. This closes
+the first traffic-integration check, not sustained service. Background currents
+and feed impedances remain illustrative; complete operating currents, longer
+traffic, domain-loaded RF quality and transitions remain open. Prioritize those
+whole-chip gaps over more isolated primitive sweeps.
+
 ## What the coupled candidate currently demonstrates
 
 One continuous owner advances loaded RF network, detector, RX filter, finite

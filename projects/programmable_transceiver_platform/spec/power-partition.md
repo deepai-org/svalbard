@@ -297,6 +297,29 @@ These parameters are therefore not installed as a validated driver law.
 Bound nonlinear current, gate slew/delay and internal switching energy before
 using this reduced circuit to qualify whole-chip timing or rail margin.
 
+Adding bounded output current improves the voltage model without closing its
+power accounting. `fit_host_driver.py --current-limited` fits an approximately
+13.27/16.13 mA pull-up/down limit and retains separate transport delays. In
+`evidence/host-driver-current-limited-fit.json`, held-out 10 pF voltage error
+falls to 0.040 V RMS / 0.158 V peak; unused 8 pF data gives 0.086 V RMS /
+0.180 V peak. A separate capacitor-current ODE agrees with the piecewise
+analytic model within 1.5e-9 V. The older resistor-only result is preserved.
+
+Over two held-out periods, measured driver-supply charge is 88.38 pC per pad,
+whereas predicted external-capacitor charging accounts for 61.44 pC. Positive
+charge computed directly from the native output waveform is 60.18 pC, so the
+gap is not primarily the fitted output-voltage error. The model leaves about
+2.11 mA per pad unaccounted for in this window. This residual includes internal
+pad switching, bias, coupling and model error; it is not a uniquely identified
+current law. It is already included in the native measured-current budgets and
+must not be added to them again. Core pre-driver current is a separate rail.
+
+Next carry bounded nonlinear drive and internal switching-energy terms into the
+explicit capacitor/return model and the actual full-chip host events. Do not
+spend more passes polishing nominal voltage fits while those power terms remain
+absent. Current-limited fit parameters are still not installed as qualified
+full-chip behavior.
+
 The noisy independent RF test has now completed with source-verified RX/TX
 waveform passes, so its snapshot is preserved. It still uses the 50 fC host
 disturbance and does not validate the explicit host capacitor/return candidate.

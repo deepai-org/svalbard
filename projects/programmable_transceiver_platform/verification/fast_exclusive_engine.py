@@ -179,7 +179,7 @@ class SwitchableWarmClock(SwitchablePLL,WarmClock):
             self.initialize_reference(time,tick)
 
 class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
-    def __init__(self,*,reference_source_limit_a=150e-6,reference_sink_limit_a=150e-6,coupled_analog=False,wired_power_parameters=None,**kwargs):
+    def __init__(self,*,reference_source_limit_a=150e-6,reference_sink_limit_a=150e-6,coupled_analog=False,wired_power_parameters=None,domain_supply=None,domain_minimum_v=None,domain_load=None,**kwargs):
         from causal_reference_lifecycle import CurrentLimitedReference
         kwargs.setdefault('dac_reference_load_capacitance',2e-12)
         super().__init__(**kwargs)
@@ -193,6 +193,10 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
             sink_limit_a=reference_sink_limit_a)
         self.dac_reference=self.adc_reference
         self.analog_owner=None
+        self.domain_configuration=dict(domain_supply=domain_supply,domain_minimum_v=domain_minimum_v,domain_load=domain_load)
+        if domain_supply is not None:
+            if not coupled_analog:raise ValueError('Domain supplies require the coupled analog owner')
+            if self.q or self.return_q:raise ValueError('Domain host impulse routing is not integrated; explicitly disable scalar impulse fixtures')
         self.wired_power_parameters=dict(peak_differential_v=.4,termination_ohm=100.,efficiency=.35,bias_a=.002)
         if wired_power_parameters is not None:
             if set(wired_power_parameters)!=set(self.wired_power_parameters):raise ValueError('Complete wired power parameters required')
@@ -216,7 +220,7 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         self.adc_reference=self.dac_reference=reference
         self.analog_owner=LimitedCoupledDriver(network=self.output_network,detector=self.tx_detector,
             reference=reference,rx_bank=self.tx.rx_bank,source_limit_a=source_limit,
-            sink_limit_a=sink_limit,rail_r=self.supply.r,rail_c=self.supply.c)
+            sink_limit_a=sink_limit,rail_r=self.supply.r,rail_c=self.supply.c,**self.domain_configuration)
         self.output_network=self.analog_owner.network
         self.tx.rx_bank=self.analog_owner.rx_bank
         def supply_advance(supply,time):
@@ -225,6 +229,9 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         def supply_draw(supply,time,charge):
             if not math.isfinite(charge) or charge<0:raise ValueError('Invalid switching charge')
             supply.advance(time)
+            if self.analog_owner.domains is not None:
+                if charge:raise ValueError('Scalar charge cannot be assigned to physical domains')
+                return
             rail=self.analog_owner.rail_v-charge/supply.c
             if rail<self.analog_owner.minimum_rail_v:raise ValueError('Switching charge exceeds rail envelope')
             self.analog_owner.impulse_energy_j+=.5*supply.c*(self.analog_owner.rail_v**2-rail**2)
@@ -233,6 +240,13 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
             supply.minimum=min(supply.minimum,supply.delta);supply.charge+=charge
         self.supply.advance=MethodType(supply_advance,self.supply)
         self.supply.draw=MethodType(supply_draw,self.supply)
+
+    def clock_supply_delta(self):
+        owner=self.analog_owner
+        if owner is not None and owner.domains is not None:
+            d=owner.domains;i=owner.reference_domain
+            return float(d.voltage[i]-d.nominal[i])
+        return self.supply.delta
 
     def configure_analog_loads(self):
         owner=self.analog_owner
@@ -299,13 +313,14 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         for refinement in range(12):
             candidate,clock,metrics=forecast_trajectory_feedback(owner,self.rf_pll,end,
                 terms,self.rf_hz_per_v,.5e-9,receive_transform=receive)
+            clock_rail=candidate.domain_trajectories["PLL"] if candidate.domains is not None else candidate.rail_trajectory
             forecast=None
             if self.BOUNDED_WIRE_CLOCK and self.wire_pll is not None:
-                forecast=self.forecast_wire_edges(candidate.rail_trajectory,self.wire_hz_per_v)
+                forecast=self.forecast_wire_edges(clock_rail,self.wire_hz_per_v)
                 first=min(forecast['word_deadline'],forecast['bit_deadline'])
                 if first==self.time:
                     # Service an already-due launch before any analog time passes.
-                    point=SupplyTrajectory((self.time,),(self.supply.delta,))
+                    point=SupplyTrajectory((self.time,),(self.clock_supply_delta(),))
                     self.commit_wire_forecast(point,self.wire_hz_per_v,forecast)
                     return self.time
                 if first<end-8*math.ulp(end):
@@ -315,7 +330,7 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
                     if abs(forecast[key]-end)<=8*math.ulp(end):forecast[key]=end
             self.rf_pll.set_supply_trajectory(clock.supply_trajectory,self.rf_hz_per_v)
             if forecast is not None:
-                self.commit_wire_forecast(candidate.rail_trajectory,self.wire_hz_per_v,forecast)
+                self.commit_wire_forecast(clock_rail,self.wire_hz_per_v,forecast)
             self._analog_forecast=(self.time,end,candidate)
             self.feedback_intervals=getattr(self,'feedback_intervals',0)+1
             self.feedback_max_iterations=max(getattr(self,'feedback_max_iterations',0),metrics['iterations'])
@@ -326,7 +341,7 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         result=super().make_serializer(time)
         if getattr(self,'analog_owner',None) is not None and self.BOUNDED_WIRE_CLOCK:
             from autonomous_pll import SupplyTrajectory
-            self.wire_pll.set_supply_trajectory(SupplyTrajectory((time,),(self.supply.delta,)),self.wire_hz_per_v)
+            self.wire_pll.set_supply_trajectory(SupplyTrajectory((time,),(self.clock_supply_delta(),)),self.wire_hz_per_v)
         return result
 
     def supply_impulse(self,time,delta_v):
@@ -340,7 +355,7 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         for pll,sensitivity in ((self.rf_pll,self.rf_hz_per_v),(self.wire_pll,self.wire_hz_per_v)):
             if pll is not None:
                 pll.advance(time)
-                pll.set_supply_trajectory(SupplyTrajectory((time,),(self.supply.delta,)),sensitivity)
+                pll.set_supply_trajectory(SupplyTrajectory((time,),(self.clock_supply_delta(),)),sensitivity)
         if self.BOUNDED_WIRE_CLOCK:
             if self.wire_remaining:self.next_wire=math.inf
             if self.serializer is not None and self.serializer.active:self.serializer.retime()

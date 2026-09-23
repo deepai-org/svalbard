@@ -129,6 +129,32 @@ def coupled_rf_scheduler_screen():
         aligned_analog_and_clock=True,host_impulse_preserves_phase=True,
         out_of_horizon_edge_rejected=True,full_payload_qualification=False)
 
+def domain_chip_screen():
+    import numpy as np
+    from shared_supply_lifecycle import DomainSupply
+    names=('CORE','HOST_A','HOST_B','WIRE_A','WIRE_B','RF','PLL')
+    rows=[]
+    for engine in ('rf','wire'):
+        c=IntegratedTransceiverChip(coupled_analog=True,rf_hz_per_v=1e6,wire_hz_per_v=1e5,
+            charge_per_transition=0,return_charge_per_transition=0,
+            domain_supply=DomainSupply(names,[3.3]*7,[2.]*7,[100e-12]*7,.1),
+            domain_minimum_v=[2.5]*7,domain_load=lambda t,v:[.02,.02,.02,0,0,.01,.008])
+        c.select_engine(engine);c.advance(10e-9)
+        o=c.analog_owner;d=o.domains
+        assert c.time==o.time==d.time==c.rf_pll.time
+        assert c.rf_pll.supply_trajectory.deltas[-1]==o.domain_trajectories['PLL'].deltas[-1]
+        assert o.reference.driver_voltage==d.voltage[6]
+        assert c.clock_supply_delta()==d.voltage[6]-d.nominal[6]
+        assert abs(o.rail_v-d.voltage[5])<1e-12
+        energy=d.source_energy_j-d.feed_loss_j-d.load_energy_j-.5*np.sum(d.c*(d.voltage**2-d.nominal**2))
+        assert abs(energy)<1e-18
+        before=(c.time,d.voltage.copy())
+        reject(lambda:c.supply.draw(c.time,1e-15))
+        assert c.time==before[0] and np.array_equal(d.voltage,before[1])
+        rows.append(dict(engine=engine,voltage_v=d.voltage.tolist(),energy_residual_j=float(energy),intervals=c.feedback_intervals))
+    return dict(cases=rows,scope='10 ns startup only; illustrative constant background loads',
+        host_impulses_integrated=False,payload_qualified=False,physical_qualification=False)
+
 def coupled_acquisition_screen(payload=False):
     import time
     start=time.monotonic()
@@ -255,11 +281,14 @@ def main():
     if not __debug__:raise RuntimeError('Assertions must remain enabled')
     parser=argparse.ArgumentParser();parser.add_argument('--power-gated',action='store_true')
     parser.add_argument('--integrated',action='store_true')
+    parser.add_argument('--domain-chip-screen',action='store_true')
     parser.add_argument('--coupled-analog-screen',action='store_true')
     parser.add_argument('--coupled-acquisition-screen',action='store_true')
     parser.add_argument('--coupled-wire-screen',action='store_true')
     parser.add_argument('--coupled-rf-payload-screen',action='store_true')
     args=parser.parse_args()
+    if args.domain_chip_screen:
+        print(domain_chip_screen());return
     if args.coupled_rf_payload_screen:return coupled_acquisition_screen(payload=True)
     if args.coupled_wire_screen:return coupled_wire_screen()
     if args.coupled_acquisition_screen:return coupled_acquisition_screen()

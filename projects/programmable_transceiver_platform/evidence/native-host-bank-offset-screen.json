@@ -1,0 +1,96 @@
+{
+  "status": "screen_completed",
+  "cases": [
+    {
+      "case": "offset_bank",
+      "status": "completed",
+      "elapsed_s": 12.236584634520113,
+      "deck_sha256": "69228bab8b249f7eab6315c0f84489f503e71f922f7e9b33c4c458ea9af4ed0d",
+      "returncode": 0,
+      "log_sha256": "b35b95452178021617cbe576ca508221d04b666d93befb027002c9ab948bf3f4",
+      "waveform_sha256": "ac10559185b38a4ea7243735ca0bc8c606e43bfa04ebaa40ce04c128e630bed1",
+      "measured_start_s": 1.201e-08,
+      "measured_end_s": 3.2e-08,
+      "rail_span_min_v": [
+        3.296,
+        3.296
+      ],
+      "rail_span_max_v": [
+        3.296,
+        3.296
+      ],
+      "common_return_extrema_v": [
+        0.0,
+        0.0
+      ],
+      "output_extrema_v": {
+        "PA0": [
+          0.0574233366,
+          3.06405514
+        ],
+        "PA1": [
+          0.0574233366,
+          3.06405514
+        ],
+        "PA2": [
+          0.0574233366,
+          3.06405514
+        ],
+        "PA3": [
+          0.0574233366,
+          3.06405514
+        ],
+        "PA4": [
+          0.0574233366,
+          3.06405514
+        ],
+        "PB0": [
+          0.0574233366,
+          3.06405514
+        ],
+        "PB1": [
+          0.0574233366,
+          3.06405514
+        ],
+        "PB2": [
+          0.0574233366,
+          3.06405514
+        ],
+        "PB3": [
+          0.0574233366,
+          3.06405514
+        ],
+        "PB4": [
+          0.0574233366,
+          3.06405514
+        ],
+        "PB5": [
+          0.0574233366,
+          3.06405514
+        ]
+      },
+      "board_current_peak_a": 0.217897941,
+      "below_2p5v_model_floor": false,
+      "retained_artifacts_verified": true
+    }
+  ],
+  "full_chip_closure": false,
+  "physical_qualification": false,
+  "source_tree_sha256": "09f2e558755a26474f5beeb7fa9dd4aba189c371e61182a147b4caee939dabc2",
+  "source_sha256": {
+    "/src/screen_host_bank.py": "637290d2f6388993cc538d3b2c4799c6e36a347b663eb602145821fac6a1e57c",
+    "/src/run_gpio_transient.py": "4533040325ce2583a40e826734950ce023af563f39fdeced57a25a186ceef36a",
+    "/foss/pdks/gf180mcuD/libs.ref/gf180mcu_fd_io/spice/gf180mcu_fd_io.spice": "710732fd6a69e165caa2c29e4cdf81b11af41da32705fcd860b7ecfb09630dd1"
+  },
+  "assumptions": [
+    "Eleven native 8 mA output pads, 5/6 segmented output supplies; typical process, 3.3 V, 25 C.",
+    "All outputs switch together into 10 pF each; this SSO stress is not a host protocol/timing test.",
+    "Candidate PDN: 2 ohm per supply feed, 0.1 ohm shared return, 100 pF local capacitance per segment; isolation cases enable only feed or return resistance.",
+    "Offset control uses fixed 3.296 V driver rails and 3.3 V core rails with ideal ground, matching the assumed idle feed drop without dynamic feedback.",
+    "2 mA assumed additional load per host segment and 40 mA other-chip load through the common return.",
+    "Core pre-driver supply remains ideal. No package inductance, clamp ring, input bank, substrate network or mismatch.",
+    "32 ns transient with a 12\u201332 ns measurement window; no sustained-current or jitter qualification."
+  ],
+  "archive_path": "scratch/transceiver-host-bank-offset-waveforms.tar.gz",
+  "archive_sha256": "b0451f96a2e92592953ba27dac507f6d5dd7be8b98ca2a359bc772276abf0d71"
+}

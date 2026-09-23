@@ -23,6 +23,9 @@ def deck(path, mode):
         'VA A 0 PULSE(0 3.3 4n .5n .5n 2.7n 6.4n)']
     if mode in ('rc', 'feed'):
         lines += ['RA BOARD HOST_A 2', 'RB BOARD HOST_B 2']
+    elif mode == 'offset':
+        # Reproduce the 2 mA * 2 ohm idle drop without dynamic feed feedback.
+        lines += ['VA_FEED BOARD HOST_A .004', 'VB_FEED BOARD HOST_B .004']
     else:
         lines += ['VA_FEED BOARD HOST_A 0', 'VB_FEED BOARD HOST_B 0']
     lines += ['RG GRET 0 .1' if mode in ('rc', 'return') else 'VG GRET 0 0']
@@ -86,11 +89,13 @@ def run_case(work, mode):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--isolate', action='store_true')
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('--isolate', action='store_true')
+    group.add_argument('--offset', action='store_true')
     args = parser.parse_args()
     work = Path('/work')
-    modes = ('feed', 'return') if args.isolate else ('ideal', 'rc')
-    stem = 'host-bank-isolation' if args.isolate else 'host-bank'
+    modes = ('offset',) if args.offset else ('feed', 'return') if args.isolate else ('ideal', 'rc')
+    stem = 'host-bank-offset' if args.offset else 'host-bank-isolation' if args.isolate else 'host-bank'
     report = dict(status='running', cases=[], full_chip_closure=False, physical_qualification=False,
         source_tree_sha256=os.environ['ANALOG_SOURCE_SHA256'],
         source_sha256={str(p):hashlib.sha256(p.read_bytes()).hexdigest()
@@ -98,6 +103,7 @@ def main():
         assumptions=['Eleven native 8 mA output pads, 5/6 segmented output supplies; typical process, 3.3 V, 25 C.',
             'All outputs switch together into 10 pF each; this SSO stress is not a host protocol/timing test.',
             'Candidate PDN: 2 ohm per supply feed, 0.1 ohm shared return, 100 pF local capacitance per segment; isolation cases enable only feed or return resistance.',
+            'Offset control uses fixed 3.296 V driver rails and 3.3 V core rails with ideal ground, matching the assumed idle feed drop without dynamic feedback.',
             '2 mA assumed additional load per host segment and 40 mA other-chip load through the common return.',
             'Core pre-driver supply remains ideal. No package inductance, clamp ring, input bank, substrate network or mismatch.',
             '32 ns transient with a 12–32 ns measurement window; no sustained-current or jitter qualification.'])

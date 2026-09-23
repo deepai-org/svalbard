@@ -246,6 +246,15 @@ feedback using short startup observations. Do not turn timeout evidence into
 electrical impossibility or use the successful return-only case to qualify the
 full supply network. Both isolation cases retain 100 pF per segment.
 
+The fixed-offset control (`run_host_bank.sh --offset`,
+`evidence/native-host-bank-offset-screen.json`) holds both driver rails at
+3.296 V with the core at 3.3 V and ideal ground. This reproduces the assumed
+2 mA × 2 ohm idle drop without dynamic feed feedback. The full bank completes
+32 ns in 12.24 seconds and all outputs span approximately 0.057–3.064 V.
+That fixed offset alone does not reproduce the timeout. Dynamic feed feedback
+and its numerical treatment remain unresolved; this does not identify a
+physical instability.
+
 Next replace the full-chip host disturbance fixture with finite, load-dependent
 pad supply/return currents, retaining per-segment ownership and energy accounting.
 Test those currents together with autonomous timing and RF conversion; do not

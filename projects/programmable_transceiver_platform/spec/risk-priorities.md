@@ -35,7 +35,11 @@ process handle and terminal result. The existing loopback-quality runner accepts
 `--coupled-record` to compare a completed record against an independent linear
 modal reference using recorded event times and desired digital samples. That
 comparison uses eight fitting and 24 validation samples; it cannot establish
-sustained or modem performance. Neither new RF result is qualified yet.
+sustained or modem performance. The linear reference has now been checked against a separate numerical ODE
+solve over the 32-sample fixture: maximum RX error 6.88e-15 and TX error 4.23e-14.
+A validation-only sign error is rejected without being absorbed by the fitting
+segment. These controls run again when analyzing a saved payload. Actual coupled
+RF calibration/payload and its quality result remain unqualified.
 
 ## What the coupled candidate currently demonstrates
 

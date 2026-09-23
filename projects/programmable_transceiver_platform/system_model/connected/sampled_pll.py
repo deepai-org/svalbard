@@ -37,6 +37,7 @@ class SampledPLL(AutonomousPLL):
 
     def advance(self,time):
         if not math.isfinite(time) or time<self.time:raise ValueError('Invalid sampled PLL time')
+        self.validate_supply_horizon(time)
         while self.next_detector<=time:
             tick=self.next_detector
             super().advance(tick)

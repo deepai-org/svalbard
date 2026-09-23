@@ -6,7 +6,37 @@ pattern. Parameters are declared mathematical assumptions, not GF180 estimates.
 """
 import math
 import copy
+from dataclasses import dataclass
+from bisect import bisect_right
 from oscillator_noise import FrequencyNoise
+
+
+@dataclass(frozen=True)
+class SupplyTrajectory:
+    """Immutable piecewise-linear voltage history with a strict forecast horizon.
+
+    Values are deltas from nominal. Interpolation accuracy belongs to the analog
+    producer and must be checked by refinement; extrapolation is forbidden.
+    """
+    times: tuple
+    deltas: tuple
+
+    def __post_init__(self):
+        object.__setattr__(self,'times',tuple(self.times))
+        object.__setattr__(self,'deltas',tuple(self.deltas))
+        if len(self.times)<2 or len(self.times)!=len(self.deltas):
+            raise ValueError('Supply history needs aligned voltage/time samples')
+        if not all(math.isfinite(v) for v in self.times+self.deltas):
+            raise ValueError('Nonfinite supply history')
+        if any(b<=a for a,b in zip(self.times,self.times[1:])):
+            raise ValueError('Supply history must increase strictly')
+
+    def voltage(self,time):
+        if not math.isfinite(time) or not self.times[0]<=time<=self.times[-1]:
+            raise ValueError('Supply forecast outside known analog history')
+        i=min(len(self.times)-2,max(0,bisect_right(self.times,time)-1))
+        fraction=(time-self.times[i])/(self.times[i+1]-self.times[i])
+        return self.deltas[i]+fraction*(self.deltas[i+1]-self.deltas[i])
 
 
 class AutonomousPLL:
@@ -32,6 +62,7 @@ class AutonomousPLL:
         self.error=phase_cycles; self.integral=0.; self.time=0.; self.phase_offset=0.
         self.max_step=max_step_s; self.present=True; self.hold_voltage=0.
         self.supply_shift_hz=0.; self.rail_amplitude_hz=0.; self.rail_epoch=0.; self.rail_tau=1.
+        self.supply_trajectory=None;self.trajectory_hz_per_v=0.
         self.good=0; self.locked=False
         self.saturation_time=0.;self.frequency_noise=FrequencyNoise(())
 
@@ -49,7 +80,32 @@ class AutonomousPLL:
         return self.clip(self.kp*max(-.5,min(.5,e))+i)
 
     def rail_frequency(self,time):
+        if self.supply_trajectory is not None:
+            return self.trajectory_hz_per_v*self.supply_trajectory.voltage(time)
         return self.rail_amplitude_hz*math.exp(-(time-self.rail_epoch)/self.rail_tau)
+
+    def validate_supply_horizon(self,time):
+        if self.supply_trajectory is not None:
+            self.supply_trajectory.voltage(time)
+
+    def minimum_rail_frequency(self):
+        if self.supply_trajectory is not None:
+            return min(self.trajectory_hz_per_v*v for v in self.supply_trajectory.deltas)+self.minimum_extra_rail_frequency()
+        return min(0.,self.rail_frequency(self.time))
+
+    def minimum_extra_rail_frequency(self):
+        return 0.
+
+    def set_supply_trajectory(self,trajectory,hz_per_v):
+        if not isinstance(trajectory,SupplyTrajectory) or not math.isfinite(hz_per_v):
+            raise ValueError('Immutable supply trajectory and finite sensitivity required')
+        if trajectory.times[0]!=self.time:raise ValueError('Supply trajectory must start at PLL time')
+        shifts=tuple(hz_per_v*v for v in trajectory.deltas)
+        if not all(math.isfinite(v) for v in shifts):raise ValueError('Nonfinite supply frequency shift')
+        minimum=min(shifts)+self.minimum_extra_rail_frequency()
+        if self.free_hz-self.kvco*self.rail+self.supply_shift_hz+minimum-self.frequency_noise.bound_hz<=0:
+            raise ValueError('Supply trajectory can reverse oscillator phase')
+        self.supply_trajectory=trajectory;self.trajectory_hz_per_v=hz_per_v
 
     @property
     def frequency_hz(self):
@@ -77,8 +133,13 @@ class AutonomousPLL:
     def advance(self,time):
         if not math.isfinite(time) or time<self.time:
             raise ValueError('PLL time must be finite and monotonic')
+        self.validate_supply_horizon(time)
         while self.time<time:
             h=min(self.max_step,time-self.time,self.frequency_noise.integration_step_s)
+            if self.supply_trajectory is not None:
+                knots=self.supply_trajectory.times
+                next_knot=knots[bisect_right(knots,self.time)]
+                h=min(h,next_knot-self.time)
             e,i=self.error,self.integral
             # Resolve switching at tuning/anti-windup boundaries instead of
             # allowing reference cadence to determine the acquisition result.
@@ -108,8 +169,13 @@ class AutonomousPLL:
         if not math.isfinite(target_phase) or target_phase<phase:
             raise ValueError('Clock edge must be a finite future phase crossing')
         if target_phase==phase:return self.time
-        minimum=self.free_hz-self.kvco*self.rail+self.supply_shift_hz+min(0.,self.rail_frequency(self.time))-self.frequency_noise.bound_hz
+        minimum=self.free_hz-self.kvco*self.rail+self.supply_shift_hz+self.minimum_rail_frequency()-self.frequency_noise.bound_hz
         lo=self.time;hi=lo+(target_phase-phase)/minimum
+        if self.supply_trajectory is not None:
+            hi=min(hi,self.supply_trajectory.times[-1])
+            trial=copy.copy(self);trial.advance(hi)
+            if trial.output_phase_cycles<target_phase-1e-10:
+                raise ValueError('Clock edge exceeds supply forecast horizon')
         mid=min(hi,lo+(target_phase-phase)/self.frequency_hz)
         for _ in range(48):
             trial=copy.copy(self);trial.advance(mid)
@@ -150,6 +216,7 @@ class AutonomousPLL:
         if not math.isfinite(amplitude) or self.free_hz-self.kvco*self.rail+self.supply_shift_hz+min(0.,amplitude)-self.frequency_noise.bound_hz<=0:
             raise ValueError('Supply response exceeds positive oscillator envelope')
         self.advance(time)
+        self.supply_trajectory=None
         self.rail_amplitude_hz=amplitude;self.rail_epoch=time;self.rail_tau=tau_s
 
     def set_noise(self,time,source):

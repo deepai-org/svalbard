@@ -65,6 +65,33 @@ signal quality on this composition. Full lifecycle runtime also needs assessment
 do not promote a short boundary screen to whole-chip closure. Existing full-chip evidence is historical
 when its recorded source hashes differ; this local pass does not refresh it.
 
+### Rail-to-PLL integration progress
+
+The autonomous and sampled PLLs now accept an immutable, piecewise-linear
+supply history with a strict end time. Phase integration splits at rail knots;
+edge predictions beyond that history are rejected without advancing live state.
+The finite-current analog solver can export such a rail history from its dense
+numerical solution. Interpolation is an approximation requiring step refinement.
+
+`driver_pll_feedback.forecast_trajectory_feedback` now solves the local circular
+dependency by iterating rail -> PLL phase -> loaded output/reference rail. It
+returns candidate states without advancing the caller. The existing oscillator
+supply screen (`--trajectory-only`) verifies phase integrals, edge timing,
+interpolation refinement, local feedback convergence, split intervals and failed
+iteration rollback. The 20 ns feedback fixture converged in four iterations at
+1/0.5/0.25 ns resolution; the 0.5 ns phase difference from 0.25 ns was 3.94e-5
+cycles. These numbers qualify only the declared fixture, not physical jitter.
+
+Full-chip scheduling remains open: forecast only to the next converter, host,
+switch or management event; constrain predicted clock edges to that horizon;
+then commit analog and clock state together. The current local solver models
+shared-LO TX/RX loopback, not every external-input/blocker configuration. The
+full-chip candidate still rejects nonzero PLL rail sensitivity until these
+connections are implemented. Bias power gating, whole-rail energy accounting,
+sustained acquired signal quality and actual area/power totals remain major gaps.
+See `evidence/connected-supply-trajectory.json`; older report source hashes do
+not certify this newer model.
+
 ## Historical experiment notes
 
 ## Mode 1 signed calibration now commits; full traffic rerunning

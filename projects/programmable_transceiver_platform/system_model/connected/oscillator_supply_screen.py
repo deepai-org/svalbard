@@ -32,6 +32,101 @@ def analytic():
     return rows
 
 
+def trajectory_controls():
+    import copy
+    import numpy as np
+    from autonomous_pll import SupplyTrajectory
+    from sampled_pll import SampledPLL
+    from limited_coupled_driver import LimitedCoupledDriver
+    from driver_sensitive_reference import DriverSensitiveReference
+    errors=[];edge_errors=[]
+    for cls in (AutonomousPLL,SampledPLL):
+        for sign in (-1,1):
+            times=(0.,7e-9,19e-9,50e-9)
+            volts=(0.,-.2,-.08,-.12)
+            trajectory=SupplyTrajectory(times,volts)
+            p=cls(free_hz=2.4e9,phase_cycles=0.)
+            p.set_reference(False,0.);p.set_supply_trajectory(trajectory,sign*1e8)
+            phase=p.output_phase_cycles
+            edge=p.edge_time(40.)
+            def integral(end):
+                result=0.
+                for a,b in zip(times,times[1:]):
+                    stop=min(b,end)
+                    if stop>a:result+=(trajectory.voltage(a)+trajectory.voltage(stop))*(stop-a)/2
+                return result
+            edge_errors.append(abs(p.free_hz*edge+sign*1e8*integral(edge)-40.))
+            assert edge_errors[-1]<1e-8 and p.output_phase_cycles==phase
+            before=copy.copy(p).__dict__
+            for operation in (lambda:p.advance(51e-9),lambda:p.edge_time(1000.)):
+                try:operation()
+                except ValueError:pass
+                else:raise AssertionError('Unknown future supply silently extrapolated')
+                assert p.__dict__==before
+            split=copy.copy(p)
+            p.advance(times[-1])
+            for t in np.linspace(0,times[-1],51)[1:]:split.advance(float(t))
+            errors.append(abs(p.output_phase_cycles-(p.free_hz*times[-1]+sign*1e8*integral(times[-1]))))
+            assert errors[-1]<1e-8 and abs(p.output_phase_cycles-split.output_phase_cycles)<1e-8
+    # Actual driver/reference rail trajectory, with interpolation refinement.
+    r=DriverSensitiveReference();r.voltage=.8
+    d=LimitedCoupledDriver(reference=r)
+    d.network.configure(True,False)
+    d.advance(100e-9,.3+.1j,rtol=1e-10,atol=1e-13,rail_trace_step_s=.25e-9)
+    trace=d.rail_trajectory
+    phases=[]
+    for stride in (8,4,2,1):
+        indices=list(range(0,len(trace.times)-1,stride))+[len(trace.times)-1]
+        history=SupplyTrajectory(tuple(trace.times[i] for i in indices),tuple(trace.deltas[i] for i in indices))
+        p=SampledPLL(free_hz=2.4e9,phase_cycles=0.);p.set_reference(False,0.)
+        p.set_supply_trajectory(history,1e8);p.advance(history.times[-1])
+        phases.append(p.output_phase_cycles)
+    differences=[abs(v-phases[-1]) for v in phases[:-1]]
+    assert differences[2]<differences[1]<differences[0] and differences[2]<1e-4, differences
+    return dict(max_phase_integral_error_cycles=max(errors),max_edge_error_cycles=max(edge_errors),
+        out_of_horizon_atomic_rejection=True,rail_interpolation_phase_errors_cycles=differences,
+        final_rail_v=d.rail_v,full_chip_feedback_closed=False)
+
+def feedback_controls():
+    import copy
+    import numpy as np
+    from sampled_pll import SampledPLL
+    from limited_coupled_driver import LimitedCoupledDriver
+    from driver_sensitive_reference import DriverSensitiveReference
+    from driver_pll_feedback import forecast_trajectory_feedback
+    r=DriverSensitiveReference();r.voltage=.8
+    from rf_cascade_state import RfCascadeState
+    from session import Session
+    from buffered_shared_detector import BufferedSharedDetector
+    rx=RfCascadeState(Session());rx.set_butterworth(5,9.1574070557e6)
+    detector=BufferedSharedDetector(lambda value,time:(value,False))
+    driver=LimitedCoupledDriver(reference=r,rx_bank=rx.rx_bank,detector=detector)
+    driver.network.configure(True,False)
+    clock=SampledPLL(free_hz=2.412e9,phase_cycles=0.)
+    clock.set_reference(False,0.)
+    result=[]
+    for step in (1e-9,.5e-9,.25e-9):
+        d,p,metrics=forecast_trajectory_feedback(driver,clock,20e-9,[(.3+.1j,0j)],1e8,step)
+        result.append((d,p,metrics))
+        assert driver.time==clock.time==0 and driver.reference.voltage==.8
+    differences=[abs(p.output_phase_cycles-result[-1][1].output_phase_cycles) for d,p,m in result[:-1]]
+    assert differences[1]<differences[0] and differences[1]<1e-4, differences
+    first,p,_=forecast_trajectory_feedback(driver,clock,10e-9,[(.3+.1j,0j)],1e8,.25e-9)
+    split,sp,_=forecast_trajectory_feedback(first,p,20e-9,[(.3+.1j,0j)],1e8,.25e-9)
+    assert abs(sp.output_phase_cycles-result[-1][1].output_phase_cycles)<1e-7
+    assert np.max(abs(split.network.voltage-result[-1][0].network.voltage))<1e-7
+    assert abs(split.received-result[-1][0].received)<1e-7
+    assert abs(split.received)>0 and split.detector.value>0
+    assert driver.rx_bank['states']==[0j]*5 and driver.detector.value==0
+    # Nonconvergence cannot partially advance the live analog/clock objects.
+    try:forecast_trajectory_feedback(driver,clock,20e-9,[(.3+.1j,0j)],1e8,1e-9,max_iterations=2)
+    except ValueError:pass
+    else:raise AssertionError('Deliberately incomplete iteration unexpectedly converged')
+    assert driver.time==clock.time==0 and driver.reference.voltage==.8
+    return dict(iterations=[m for d,p,m in result],step_phase_differences_cycles=differences,
+        split_phase_error_cycles=abs(sp.output_phase_cycles-result[-1][1].output_phase_cycles),
+        nonconvergence_preserves_live_state=True,receive_filter_and_detector_included=True,full_chip_event_scheduler_connected=False)
+
 def traffic(mode,sign):
     chips=[]
     def factory(**kw):
@@ -108,6 +203,18 @@ def lifecycle(mode):
 
 
 def main():
+    import argparse,hashlib
+    from pathlib import Path
+    parser=argparse.ArgumentParser();parser.add_argument('--trajectory-only',action='store_true')
+    args=parser.parse_args()
+    if args.trajectory_only:
+        report=dict(status='passed',trajectory=trajectory_controls(),feedback=feedback_controls(),legacy_analytic=analytic(),
+            limitations=['Prescribed piecewise-linear supply history, not closed bidirectional full-chip feedback.',
+            'Interpolation requires convergence; forecast horizon is enforced rather than extrapolated.'])
+        files=[Path(__file__)]+[P/'system_model/connected'/name for name in ('autonomous_pll.py','sampled_pll.py','limited_coupled_driver.py','driver_pll_feedback.py')]
+        report['source_sha256']={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
+        (P/'evidence/connected-supply-trajectory.json').write_text(json.dumps(report,indent=2)+'\n')
+        print(report['trajectory']);print(report['feedback']);return
     controls=analytic();lifecycle_cases=[lifecycle(m) for m in (0,1)]
     rows=[traffic(m,s) for m in (0,1) for s in (-1,1)]
     inputs=[independent(m,s) for m in (0,1) for s in (-1,1)]

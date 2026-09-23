@@ -1,0 +1,94 @@
+{
+  "status": "passed",
+  "trajectory": {
+    "max_phase_integral_error_cycles": 1.4210854715202004e-14,
+    "max_edge_error_cycles": 7.105427357601002e-15,
+    "out_of_horizon_atomic_rejection": true,
+    "rail_interpolation_phase_errors_cycles": [
+      0.0009458352091655797,
+      0.00022579234112640734,
+      4.5303759947046274e-05
+    ],
+    "final_rail_v": 3.0220760676710383,
+    "full_chip_feedback_closed": false
+  },
+  "feedback": {
+    "iterations": [
+      {
+        "iterations": 4,
+        "rail_residual_v": 1.021405182655144e-14,
+        "phase_residual_cycles": 1.7391244000464212e-10,
+        "step_s": 1e-09
+      },
+      {
+        "iterations": 4,
+        "rail_residual_v": 4.884981308350689e-15,
+        "phase_residual_cycles": 1.7409007568858215e-10,
+        "step_s": 5e-10
+      },
+      {
+        "iterations": 4,
+        "rail_residual_v": 9.325873406851315e-15,
+        "phase_residual_cycles": 1.7414691910744295e-10,
+        "step_s": 2.5e-10
+      }
+    ],
+    "step_phase_differences_cycles": [
+      0.0001960625526535864,
+      3.9356434456294664e-05
+    ],
+    "split_phase_error_cycles": 1.4210854715202004e-14,
+    "nonconvergence_preserves_live_state": true,
+    "receive_filter_and_detector_included": true,
+    "full_chip_event_scheduler_connected": false
+  },
+  "legacy_analytic": [
+    {
+      "divider": 31.25,
+      "sign": -1,
+      "phase_integral_error_cycles": 4.3016257222916465e-11,
+      "edge_residual_cycles": 1.730526832943724e-11
+    },
+    {
+      "divider": 31.25,
+      "sign": 1,
+      "phase_integral_error_cycles": 4.3009151795558864e-11,
+      "edge_residual_cycles": 1.731592647047364e-11
+    },
+    {
+      "divider": 60.0,
+      "sign": -1,
+      "phase_integral_error_cycles": 4.3016257222916465e-11,
+      "edge_residual_cycles": 3.89910326248355e-11
+    },
+    {
+      "divider": 60.0,
+      "sign": 1,
+      "phase_integral_error_cycles": 4.3016257222916465e-11,
+      "edge_residual_cycles": 3.907985046680551e-11
+    },
+    {
+      "divider": 62.5,
+      "sign": -1,
+      "phase_integral_error_cycles": 4.3016257222916465e-11,
+      "edge_residual_cycles": 3.424815986363683e-11
+    },
+    {
+      "divider": 62.5,
+      "sign": 1,
+      "phase_integral_error_cycles": 4.3016257222916465e-11,
+      "edge_residual_cycles": 3.432631956457044e-11
+    }
+  ],
+  "limitations": [
+    "Prescribed piecewise-linear supply history, not closed bidirectional full-chip feedback.",
+    "Interpolation requires convergence; forecast horizon is enforced rather than extrapolated."
+  ],
+  "source_sha256": {
+    "system_model/connected/oscillator_supply_screen.py": "4701cb1d93953163f19102e6b6e017ff6724f9161b796714306161f2469eb085",
+    "system_model/connected/autonomous_pll.py": "e2058a67bda40f825d9d787343a1dd6eb26b8f6535ace869fbfbda71caaa0e99",
+    "system_model/connected/sampled_pll.py": "809db79a6cd5315d1f46a7f6d42a06dd9f64a308c2b63726729b79734daf86b6",
+    "system_model/connected/limited_coupled_driver.py": "24ccc4f5a8c64ae78b7baafc40fe50535a8e552cbaa8b0ac1ece79d7d2e3602d",
+    "system_model/connected/driver_pll_feedback.py": "280c504c085d95b9de92e02250ee26639ca67529a4134591442656e54a5e3e0b"
+  }
+}

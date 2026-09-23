@@ -19,6 +19,7 @@ class LimitedCoupledDriver:
         if not all(math.isfinite(x) and x>0 for x in (rail_r,rail_c,minimum_rail_v)) or minimum_rail_v>=self.law.nominal_v:raise ValueError('Invalid rail parameters')
         self.r=rail_r;self.c=rail_c;self.minimum_rail_v=minimum_rail_v
         self.rail_v=self.law.nominal_v;self.time=self.network.time
+        self.rail_trajectory=None
         self.source_limit=source_limit_a;self.sink_limit=sink_limit_a
         self.reference=reference;self.reference_bias=reference_bias_a;self.reference_efficiency=reference_efficiency
         if reference is not None:
@@ -40,9 +41,11 @@ class LimitedCoupledDriver:
         self.detector=detector
         if detector is not None and (detector.time!=self.time or not hasattr(detector,'readout_pole')):
             raise ValueError('Aligned two-pole detector required')
-    def advance(self,time,command,rtol=1e-8,atol=1e-11,max_step=math.inf):
+    def advance(self,time,command,rtol=1e-8,atol=1e-11,max_step=math.inf,rail_trace_step_s=None):
         if not math.isfinite(time) or time<self.time:raise ValueError('Nonmonotonic time')
         if max_step<=0 or math.isnan(max_step):raise ValueError('Invalid integration step bound')
+        if rail_trace_step_s is not None and (not math.isfinite(rail_trace_step_s) or rail_trace_step_s<=0):
+            raise ValueError('Positive finite rail trace step required')
         drive=command if callable(command) else lambda t:command
         self.law.source(drive(self.time),self.rail_v)
         if time==self.time:return
@@ -86,8 +89,13 @@ class LimitedCoupledDriver:
         if count:
             states=np.asarray(self.rx_bank['states'],complex)
             y=np.r_[y,states.real,states.imag]
-        sol=solve_ivp(rhs,(self.time,time),y,method='Radau',rtol=rtol,atol=atol,events=undervoltage,max_step=max_step)
+        sol=solve_ivp(rhs,(self.time,time),y,method='Radau',rtol=rtol,atol=atol,events=undervoltage,max_step=max_step,dense_output=rail_trace_step_s is not None)
         if not sol.success or sol.status==1:raise ValueError('Coupled driver left declared rail envelope or integration failed')
+        trajectory=None
+        if rail_trace_step_s is not None:
+            from autonomous_pll import SupplyTrajectory
+            times=np.linspace(self.time,time,max(1,math.ceil((time-self.time)/rail_trace_step_s))+1)
+            trajectory=SupplyTrajectory(tuple(times),tuple(sol.sol(times)[8]-law.nominal_v))
         # Transactional update: failed exploratory solves cannot corrupt live state.
         out=sol.y[:,-1]
         if self.reference is not None and out[ref_index]<=.1:raise ValueError('Reference outside model')
@@ -104,3 +112,4 @@ class LimitedCoupledDriver:
             self.received=sum(w*x for w,x in zip(self.rx_bank['weights'],states))
         n.voltage=out[:4]+1j*out[4:8]
         self.rail_v=float(out[8]);self.time=time;n.time=time
+        self.rail_trajectory=trajectory

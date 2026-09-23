@@ -59,6 +59,27 @@ def screen(c, queues=False):
                     source_phases=4,scope='Ideal streaming words after accepted header; no CDC, electrical timing or mode changes',
                     peak_bits={key:max(case[key] for case in cases) for key in
                         ('ingress_high_water_bits','egress_high_water_bits','staging_high_water_bits')})
+                # Periodic snapshot service has rate R and latency one frame.
+                # A prepared batch finishes within two more frames. Continuous
+                # packing may wait one sample for the final partial word.
+                r=Fraction(source['rate_bps']*(1_000_000+t['source_fast_ppm']),
+                           300_000_000*(1_000_000-t['host_slow_ppm']))
+                R=Fraction(allocation[source['id']]*t['word_bits'],t['frame_words'])
+                sample=source['sample_bits'];burst=sample+t['word_bits']-1
+                if sample<t['word_bits'] or R<r:raise ValueError('Queue-bound assumptions violated')
+                delay=3*t['frame_words']+Fraction(burst,R)+Fraction(sample,r)
+                ingress=ceil(burst+r*t['frame_words'])
+                egress=ceil(r*(cfg['startup_words']-t['frame_words'])+2*sample+t['word_bits'])
+                staging=2*allocation[source['id']]*t['word_bits']
+                assert delay<cfg['startup_words']
+                assert ingress<=cfg['ingress_bits_per_source'] and egress<=cfg['egress_bits_per_source']
+                assert all(case['ingress_high_water_bits']<=ingress and
+                    case['egress_high_water_bits']<=egress and
+                    case['staging_high_water_bits']<=staging for case in cases)
+                row['constant_rate_bounds']=dict(max_delivery_host_words=float(delay),
+                    ingress_bits=ingress,egress_bits=egress,staging_bits=staging,
+                    startup_host_words=cfg['startup_words'],
+                    scope='Matched constant producer/consumer rates; no stalls, errors, CDC delays or mode transitions')
             exclusive.append(row)
     return {'scope': 'necessary frequency and bandwidth screen; not electrical qualification',
             'source': {'url': 'https://www.latticesemi.com/view_document?document_id=50461',

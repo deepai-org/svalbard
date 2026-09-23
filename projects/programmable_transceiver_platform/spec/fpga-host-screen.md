@@ -31,6 +31,26 @@ are not implemented RTL FIFO depths. A 53-slot negative control overflows ingres
 while the proposed 54-slot service passes. Header decoding, CDC, host pauses,
 mode changes, actual clock generation and latency acceptance remain open.
 
+For this ideal fixed-rate queue model, the checker also derives conservative
+duration-independent bounds. In host-word time, let `F=64`, sample width `s`,
+source bit rate `r`, allocated service `R=10*q/F`, and arrival burst allowance
+`b=s+9`. A frame-boundary snapshot server supplies rate R with at most one frame
+of latency. The following-frame staging/emission adds at most two frames;
+finishing a partial ten-bit word can wait one sample period because s is at
+least ten bits. Thus delivery delay is bounded by `3*F + b/R + s/r` when R>=r.
+Ingress is bounded by `b+r*F`, and the two staging banks by `20*q` bits.
+
+With producer and consumer at the same constant cadence and consumer start
+delayed S=256 host words, the delivery bound below S prevents starvation after
+startup. Delivery cannot precede one frame of staging, giving the conservative
+egress bound `r*(S-F)+2*s+10`, including packet/word rounding allowances.
+Across the four streams, delivery bounds are below 230 host words. The largest
+ingress/egress/staging bounds are 553/1,631/1,080 bits, within the planning
+allocations. The finite tests also check their observed peaks against these
+bounds. These arguments address indefinite operation only under the stated
+constant, matched-rate and uninterrupted-service assumptions. They do not bound
+independent sink drift, host stalls, extra CDC latency, acquisition or transitions.
+
 ## Primary evidence
 
 [Lattice ECP5 family datasheet](https://www.latticesemi.com/view_document?document_id=50461), FPGA-DS-02012-3.4 (September 2025), Table 3.21, printed pages 65–66: LVCMOS33 input/output clock ceilings are 200/150 MHz. DDR transfers twice per clock. These speeds are characterized, not tested on every device; fast slew is used. Table 3.44 uses a 0 pF fixture load for LVCMOS timing, so the stated frequency is not proof at our board load. Source PDF SHA-256 is retained in the report.

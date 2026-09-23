@@ -8,6 +8,7 @@ from fast_loaded_traffic import PreparedLoadedChip as PreparedChip
 from shared_tx_traffic import scenario
 from rf_quality_screen import quality
 from chip_model import decode_iq
+from managed_resources import command
 
 
 def simulate(mode,impaired):
@@ -23,6 +24,7 @@ def simulate(mode,impaired):
                     frontend=dict(gain_error=.03,phase_error=.03,saturation=.8,noise_rms=.001,seed=800))
             self.adc_analog=[]
             super().__init__(**options,**kwargs)
+            assert command(self,'configure_rx_gain',2)['accepted']
             self.adc_analog.clear()
             self.tx_probe.clear();self.probe_times.clear()
             assert self.tx.rx_route=="loopback"
@@ -44,7 +46,7 @@ def main():
         limitations=['Finite continuous-service record with timed lossy stop, not indefinite service bounds.',
                      'RX follows the nonlinear TX loopback; deterministic amplitude-varying stimulus, not wideband modulation.',
                      'Assumed device/noise parameters; no spectral mask or physical qualification.',
-                     'Both baseline and impaired candidate use finite pad/monitor network and relative-gain calibration.',
+                     'Both baseline and impaired candidate use finite pad/monitor network, relative-gain calibration and the same 2x RX gain.',
                      'Independent TX observation is actual loaded pad voltage; no source reconstruction or normalization.',
                      'Pre-quantizer diagnostics include frontend/reference/recovery; they isolate quantization, not individual analog impairments.'])
     output=p/'evidence/fast-loaded-loopback-quality.json'

@@ -355,9 +355,16 @@
       ],
       "screen_budget": 0.1,
       "scope": "Finite loaded-pad loopback with optional simultaneous wired stress. Mode-1 RX fails the unchanged incremental error screen; both TX cases pass. Relative-gain calibration does not establish absolute gain or physical accuracy.",
-      "next_action": "Record actual pre-quantizer samples to separate analog impairment from ADC quantization before selecting a gain/noise design change.",
+      "next_action": "Finish gain ownership/filter-preservation checks and loaded quality run, then requalify common aggregate. Original mode-1 failure remains open until measured.",
       "physical_qualification": false,
-      "gain_control_gap": "Reproduced on common TransceiverChip: configure_rx(loopback, 2, 10e6, 10e6) rejects because it unconditionally invokes single-pole bandwidth tuning while the selected RX topology is fifth order. Gain remains 1.0. Provide independently validated gain control that preserves filter state/topology; do not bypass with direct attribute mutation in the quality fixture."
+      "gain_control_gap": "Gain-only configure_rx_gain API and serialized command added to common chip; selects existing 0.5/1/2 gain without invoking single-pole tuning. Verification and matched 2x-gain loaded-quality run in progress; pin-level RTL mapping remains open.",
+      "diagnosis": {
+        "evidence_commit": "eb82ac1",
+        "mode1_prequantizer_relative_rms": 0.0575206471726181,
+        "mode1_baseline_quantization_relative_rms": 0.11358807585396123,
+        "mode1_impaired_quantization_relative_rms": 0.10789668264921387,
+        "mode1_baseline_adc_rms": 0.030745279472445156
+      }
     }
   },
   "operating_policy_update": {

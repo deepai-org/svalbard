@@ -7,6 +7,7 @@ from detector_readout_settling import BufferedSharedDetector, sample_shared_dete
 from output_loopback import connect
 
 class TransceiverChip(FastTxServiceChip):
+    TILE_COMMANDS=FastTxServiceChip.TILE_COMMANDS+('configure_rx_gain',)
     def __init__(self,*,output_parameters=None,readout_tau_s=20e-9,rx_filter=(5,9157407.055691985),**kwargs):
         kwargs.setdefault('adc_latency_s',30e-9)
         super().__init__(**kwargs)
@@ -26,7 +27,19 @@ class TransceiverChip(FastTxServiceChip):
         if rx_filter is not None:self.tx.set_butterworth(*rx_filter)
         connect(self)
     _sample_detector=sample_shared_detector
+    def configure_rx_gain(self,gain):
+        """Select existing baseband gain without retuning the filter topology."""
+        if isinstance(gain,bool) or gain not in (.5,1.,2.):
+            raise ValueError('Unsupported receiver gain')
+        if (self.session.armed or self.cal.busy or self.tx_cal.busy or
+                self.adc_left or self.adc_pending or self.maintenance_pending is not None):
+            raise ValueError('Receiver gain requires disarmed unowned ADC')
+        self.rx_gain=float(gain)
     def execute_management(self,operation,payload,time):
+        if operation=='configure_rx_gain':
+            if payload not in (0,1,2):raise ValueError('Reserved receiver gain encoding')
+            self.configure_rx_gain((.5,1.,2.)[payload])
+            return dict(value=payload)
         if operation=='tx_cal_start' and (self.adc_pending or self.maintenance_pending is not None):
             raise ValueError('Existing ADC conversion pending')
         if operation=='resource_status' and payload==0 and self.tx_cal.busy:

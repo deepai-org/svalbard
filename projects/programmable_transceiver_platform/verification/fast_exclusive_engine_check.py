@@ -1,5 +1,5 @@
 """Admission, enable exclusion and stopped RF/wired mode transitions."""
-import hashlib,json
+import hashlib,json,copy
 from pathlib import Path
 from fast_exclusive_engine import ExclusiveEngineChip
 from fast_loaded_output import P
@@ -14,6 +14,13 @@ def reject(fn):
 def main():
     if not __debug__:raise RuntimeError('Assertions must remain enabled')
     c=ExclusiveEngineChip(watchdog_s=1e-3,tx_relative_gain=True);reject(lambda:c.configure(0,0.))
+    bank=copy.deepcopy(c.tx.rx_bank)
+    c.configure_rx_gain(2.);assert c.tx.rx_bank==bank
+    for code,gain in enumerate((.5,1.,2.)):
+        assert command(c,'configure_rx_gain',code)['accepted'] and c.rx_gain==gain
+    assert all(c.tx.rx_bank[k]==bank[k] for k in ('poles','weights','cutoff_hz'))
+    assert not command(c,'configure_rx_gain',3)['accepted'] and c.rx_gain==2.
+    reject(lambda:c.configure_rx_gain(float('nan')))
     rows=[]
     for engine,mode in (('rf',0),('wire',1),('rf',1)):
         c.select_engine(engine);assert not c.tx_cal.valid
@@ -21,6 +28,7 @@ def main():
         if engine=='rf':
             c.advance(c.time+8e-6)
             reply=command(c,'tx_cal_start');assert reply['accepted']
+            reject(lambda:c.configure_rx_gain(1.))
             c.advance(c.time+25e-6)
             assert command(c,'tx_cal_commit',reply['value'])['accepted']
             bits=12 if mode==0 else 8
@@ -28,6 +36,7 @@ def main():
             c.select_playback(True);c.configure_capture(True)
         c.configure(mode,c.time);c.advance(c.time+8e-6)
         assert c.state=='active'
+        reject(lambda:c.configure_rx_gain(1.));assert c.rx_gain==2.
         other='wire' if engine=='rf' else 'rf'
         assert c.session.enabled(engine) and not c.session.enabled(other)
         reject(lambda:c.select_engine(other))

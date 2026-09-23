@@ -78,3 +78,48 @@ energy decrease. The checked balance is source energy = feed loss + load energy
 lumped rail's accounting, not transistor efficiency or a package power network.
 The one lumped rail remains a coupling fixture; it does not replace the separate
 physical supply-domain allocations above.
+
+## Retained evidence audit: load scale and rail-model limits
+
+The source hashes for `analog/rf_rx_candidate.spice` and
+`analog/rf_candidate_bias_tb.spice` still match
+`evidence/rf-candidate-bias-screen.json`. That **prebiased, seeded, nominal**
+fixture reports 14.254 mA on its RF supply and 8.409 mA on its clock supply.
+It has ideal external bias/sampling clocks and no complete PLL, quadrature path
+or ADC; these values do not qualify the integrated candidate.
+
+`evidence/rx-adc-partial-power.json` reports approximately 92.93–95.83 mW on
+selected filter, sample-driver and reference supplies in a failed, incomplete
+transient run. The reference pair alone accounts for about 42.42–45.32 mW in
+those windows. Other ideal sources may deliver or absorb energy, so the report
+is neither total consumption nor a guaranteed lower bound. These supplies may
+overlap other historical fixtures; summing the reports would double-count or
+combine incompatible circuits.
+
+The current coupled model's 3.3 V source, 100 ohm feed and 2.5 V lower rail limit
+allow only `(3.3-2.5)/100 = 8 mA` in steady state. The retained RF fixture's
+14.254 mA alone exceeds that model envelope. At that current, 56.13 ohm is the
+largest feed resistance consistent with the same voltage floor, before any
+other load or transient margin. This arithmetic exposes a modeling gap; it is
+not evidence that the silicon requires a 100 ohm feed or that the chip cannot
+work. Replace the single coupling fixture with explicit domain DC feeds and
+bounded transient coupling before inserting a complete current inventory.
+
+The historical `clock-power-screen.json` also reports much larger core clock
+loads than the few-milliamp analog fixture. Assuming perfect gating of just the
+inactive engine's listed clock-input capacitances gives:
+
+| Mode | Selected engine | Clock-pin charging estimate | Remaining from 48 mA core allocation |
+|---|---|---:|---:|
+| 0 | RF | 18.355 mA | 29.645 mA |
+| 0 | Wired | 18.822 mA | 29.178 mA |
+| 1 | RF | 22.525 mA | 25.475 mA |
+| 1 | Wired | 24.237 mA | 23.763 mA |
+
+These are recomputations of that saved nominal Liberty/netlist screen, not new
+power measurements or proof of clock-gating implementation. Host clocks remain
+active in this arithmetic. Internal cell power, clock trees, data/control
+switching, leakage and GPIO pre-drivers are excluded. Mutual exclusion helps
+but leaves the dominant host-clock load. Current netlist selection, domain
+ownership and gate controls must be reconciled before using these estimates in
+the executable full-chip current model.

@@ -17,7 +17,12 @@ remain closed. The selected integration candidate is
    explicitly before claiming whole-chip current adequacy. Reconcile active RF,
    active wired and transitions against per-domain supply allocations, 50 total
    terminals, die area, bandwidth, noise and jitter. Area/current allocations
-   are not demonstrated implementation totals. Shared physical components save
+   are not demonstrated implementation totals. Retained prebiased schematic
+   evidence reports 14.254 mA on an RF supply, whereas the present 100 ohm rail
+   fixture permits only 8 mA before its voltage floor. Explicit domain DC feeds
+   and transient coupling must accompany the larger current inventory. See the
+   retained-evidence audit in `power-partition.md`; its partial measurements are
+   not a whole-chip sum or current qualification. Shared physical components save
    area only where actually implemented; mutual exclusion alone does not.
 3. **Integrated lifecycle and implementation handoff.** Qualify sustained wired
    traffic, mode changes, faults and adverse uncertainty combinations with the

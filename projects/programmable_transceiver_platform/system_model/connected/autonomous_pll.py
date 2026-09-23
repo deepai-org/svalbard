@@ -194,6 +194,28 @@ class AutonomousPLL:
             mid=candidate if lo<candidate<hi else (lo+hi)/2
         raise ArithmeticError('Oscillator phase crossing did not converge')
 
+    def edge_time_before(self,target_phase,horizon):
+        """Return a crossing inside known history, or None for a pending target."""
+        phase=self.output_phase_cycles
+        if not all(math.isfinite(v) for v in (target_phase,horizon)) or horizon<self.time or target_phase<phase:
+            raise ValueError('Finite forward phase target and horizon required')
+        self.validate_supply_horizon(horizon)
+        if self.frequency_hz<=0:raise ValueError('Stopped oscillator has no future edges')
+        if target_phase==phase:return self.time
+        future=copy.copy(self);future.advance(horizon)
+        if future.output_phase_cycles<target_phase:return None
+        if future.output_phase_cycles==target_phase:return horizon
+        lo=self.time;hi=horizon
+        for _ in range(64):
+            mid=(lo+hi)/2
+            trial=copy.copy(self);trial.advance(mid)
+            residual=trial.output_phase_cycles-target_phase
+            if abs(residual)<1e-10:return mid
+            if residual<0:lo=mid
+            else:hi=mid
+            if hi-lo<=max(2*math.ulp(mid),1e-21):return (lo+hi)/2
+        raise ArithmeticError('Bounded phase crossing did not converge')
+
     def observe_lock(self):
         valid=(self.present and abs(self.error)<self.lock_phase_cycles and
                abs(self.frequency_hz/self.divider-self.reference_hz)<self.lock_frequency_hz)

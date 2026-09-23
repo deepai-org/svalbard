@@ -25,7 +25,7 @@ whole-chip closure or transfer automatically to a different composition.
 | [Fast model documentation](system_model/architecture_fast/README.md) | Executable baseline, assumptions and experiment results |
 | [Closure inventory](spec/mathematical-closure.json) | Requirements and outstanding integration work; includes historical notes |
 | [Schematic inventory](spec/schematic-implementation.json) | Transistor-level implementation gaps |
-| [Analog workflow](spec/analog-design-workflow.md) | Schematic, simulation, then layout/extraction |
+| [Analog workflow](spec/analog-design-workflow.md) | Six-family primitive library, transistor composition, then layout/extraction |
 | [Feasibility gates](spec/feasibility-gates.md) | Clocks, RF/converters, die/package risks |
 | [RTL / macro boundary](integration/macro-contract.md) | Digital implementation and analog black-box obligations |
 

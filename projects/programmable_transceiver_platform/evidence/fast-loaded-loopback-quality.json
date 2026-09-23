@@ -441,7 +441,7 @@
     "system_model/architecture_fast/warm_clock.py": "5cb83f35f8f69e3a3f1d97a4bcbcbe60793322bdcab9e4e062661a66438f4c52",
     "system_model/architecture_fast/traffic.py": "d0bd449d2f8bb0ed522e7800be6f9b6106191cbc8fb8a04838c58b19daf30338",
     "system_model/architecture_fast/run.py": "e2883fdd43d4c0c7a1c2425896e7aa584fb7b90e0ee6038ea2f7c940469acde7",
-    "verification/fast_loaded_loopback_quality.py": "ca0f86edfbd86b984a1605941309f20101261491ec17a430107a0b3d9d069316",
+    "verification/fast_loaded_loopback_quality.py": "564027040c37338d8c34880229ecfb7cb6aece9709f6e17914f3c6cbfea2edaf",
     "verification/fast_loaded_output.py": "68a8f879570ec936492153f00d464cca2451ecb5bbba09adb51b7e43081bd350",
     "verification/fast_loaded_traffic.py": "243bb158fab1bbaa42db2a2346652f09b062a054caf987f2b69023b8876d601c",
     "verification/stream_codec.py": "4515bf61e3c83f041eee97740e61c075dca1681da388dc651117cdd10d1a0088"
@@ -500,6 +500,46 @@
         },
         "wire_tx_words": 1506,
         "wire_rx_words": 1463
+      },
+      "diagnostics": {
+        "analog_rx_quality": {
+          "calibration_samples": 117,
+          "validation_samples": 353,
+          "gain_real": 1.0013773464212434,
+          "gain_imag": -0.0009394011534509135,
+          "gain_magnitude": 1.0013777870515093,
+          "raw_relative_rms": 0.06532619196637213,
+          "corrected_relative_rms": 0.06510943866133814,
+          "gain_in_screen_range": true,
+          "screen_budget": 0.1,
+          "screen_pass": true
+        },
+        "baseline_quantization": {
+          "calibration_samples": 117,
+          "validation_samples": 353,
+          "gain_real": 1.000745781853529,
+          "gain_imag": 0.0013846771506624653,
+          "gain_magnitude": 1.000746739804054,
+          "raw_relative_rms": 0.0077157174137295,
+          "corrected_relative_rms": 0.007445085181143885,
+          "gain_in_screen_range": true,
+          "screen_budget": 0.1,
+          "screen_pass": true
+        },
+        "impaired_quantization": {
+          "calibration_samples": 117,
+          "validation_samples": 353,
+          "gain_real": 1.0000149774953455,
+          "gain_imag": -0.0008958764041817705,
+          "gain_magnitude": 1.0000153787865205,
+          "raw_relative_rms": 0.007916882434243704,
+          "corrected_relative_rms": 0.008014551388442918,
+          "gain_in_screen_range": true,
+          "screen_budget": 0.1,
+          "screen_pass": true
+        },
+        "baseline_adc_rms": 0.02471131905583495,
+        "impaired_adc_rms": 0.02484096071988944
       }
     },
     {
@@ -555,6 +595,46 @@
         },
         "wire_tx_words": 3012,
         "wire_rx_words": 3052
+      },
+      "diagnostics": {
+        "analog_rx_quality": {
+          "calibration_samples": 59,
+          "validation_samples": 177,
+          "gain_real": 1.001929150938308,
+          "gain_imag": -0.012611322747391488,
+          "gain_magnitude": 1.0020085174096065,
+          "raw_relative_rms": 0.05764441570663064,
+          "corrected_relative_rms": 0.0575206471726181,
+          "gain_in_screen_range": true,
+          "screen_budget": 0.1,
+          "screen_pass": true
+        },
+        "baseline_quantization": {
+          "calibration_samples": 59,
+          "validation_samples": 177,
+          "gain_real": 1.0076284308994317,
+          "gain_imag": 0.009362693674860116,
+          "gain_magnitude": 1.0076719281540496,
+          "raw_relative_rms": 0.11417468538352826,
+          "corrected_relative_rms": 0.11358807585396123,
+          "gain_in_screen_range": true,
+          "screen_budget": 0.1,
+          "screen_pass": false
+        },
+        "impaired_quantization": {
+          "calibration_samples": 59,
+          "validation_samples": 177,
+          "gain_real": 0.982482068332199,
+          "gain_imag": 0.0025651546035066948,
+          "gain_magnitude": 0.9824854169973494,
+          "raw_relative_rms": 0.10600310899950004,
+          "corrected_relative_rms": 0.10789668264921387,
+          "gain_in_screen_range": true,
+          "screen_budget": 0.1,
+          "screen_pass": false
+        },
+        "baseline_adc_rms": 0.030745279472445156,
+        "impaired_adc_rms": 0.030820577109174144
       }
     }
   ],
@@ -564,7 +644,9 @@
     "RX follows the nonlinear TX loopback; deterministic amplitude-varying stimulus, not wideband modulation.",
     "Assumed device/noise parameters; no spectral mask or physical qualification.",
     "Both baseline and impaired candidate use finite pad/monitor network and relative-gain calibration.",
-    "Independent TX observation is actual loaded pad voltage; no source reconstruction or normalization."
+    "Independent TX observation is actual loaded pad voltage; no source reconstruction or normalization.",
+    "Pre-quantizer diagnostics include frontend/reference/recovery; they isolate quantization, not individual analog impairments."
   ],
-  "error": "AssertionError()"
+  "error": "AssertionError()",
+  "elapsed_s": 756.5974482735619
 }

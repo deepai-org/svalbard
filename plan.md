@@ -55,6 +55,17 @@ schematic of the whole analog chip before new layout work. Then lay out, extract
 and rerun the same requirements-based tests. Existing layouts are reference
 material. See [schematic workflow](projects/programmable_transceiver_platform/spec/executable-chip-model.md).
 
+**Analog implementation foundation:** build transistor schematics and subsequent
+layout on six customizable, simulation-characterized primitive families: NMOS,
+PMOS, resistor, capacitor, diode/junction, and interconnect. Use pinned public
+GF180 models, legal geometry parameters, reusable characterization fixtures and
+cached results with explicit validity bounds. Compose larger circuits from
+inspectable transistor structures; derive layout from the same instance
+parameters and rerun circuit tests after extraction. Characterize needed
+configurations incrementally, distinguish model predictions from silicon
+evidence, and retain block/full-chip verification. See the
+[primitive-library architecture](projects/programmable_transceiver_platform/spec/analog-design-workflow.md#primitive-library-architecture-for-schematic-and-layout-work).
+
 Build **a single-chip, programmable wired-and-wireless transceiver platform**, identified as `programmable_transceiver_platform`, as a GF180MCU **analog/PHY companion for external FPGA regular GPIOs**, with slower SPI-only MCU operation. It combines generic analog conversion, RF translation, high-speed wired signaling, timing, and bounded data movement. External FPGA logic supplies modem/MAC, protocol controllers, PCIe endpoint behavior, and applications. This direction builds on v1 communications and characterization; it is not an additional committed v1 project or shuttle submission. Performance and fit remain hypotheses until supported by extracted simulation and measured silicon.
 
 - **Architecture:** implement one full-duplex wired lane and one RF RX/TX chain from local programmable transconductors, RC networks, sampling/mixing switches, slicers, current drivers, converters, synthesizers, and clock-phase resources. Add reusable gearboxes, optional line coding/alignment, FIFOs, calibration, timed control, and capture/playback. Keep high-frequency analog paths local and expose raw/bypass modes; implement example protocols through configurations plus external FPGA logic rather than separate fixed-function on-chip controllers.

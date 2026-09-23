@@ -9,6 +9,72 @@ schematic, then layout, extract and repeat the tests. Transmission-line geometry
 and shielding are deferred. Preserve the full programmable RF/wired companion
 scope. An easier isolated circuit is an experiment, not a replacement product.
 
+## Primitive-library architecture for schematic and layout work
+
+Adopted user decision, 2026-09-23: build the programmable transceiver's analog
+implementation on a small, customizable, simulation-characterized library of
+six primitive families: **NMOS, PMOS, resistor, capacitor, diode/junction, and
+interconnect**. These are families, not six universal device models. Each
+process-supported device flavor or passive construction retains its own model
+and legal geometry range. Add a supported bipolar device or inductor only if
+an actual circuit requires it; do not force an unsuitable transistor substitute.
+
+Use the pinned public GF180 PDK as the device-model and geometry foundation.
+Reuse its models rather than inventing replacement device physics. Separate
+PDK predictions, our simulation evidence, and uncharacterized physical behavior;
+repeated simulation cannot supply missing foundry or package data.
+
+The implementation hierarchy is:
+
+```text
+Pinned PDK models and legal geometries
+  -> parameterized primitive families and characterization records
+  -> reusable, expandable transistor circuit generators
+  -> connected full-chip transistor schematic
+  -> layout generated from the same instance parameters
+  -> extraction and rerun of the same circuit acceptance tests
+```
+
+For each primitive, retain:
+
+- Named terminals, units, model identity, supported parameters and validity
+  bounds. Parameters include transistor width/length/fingers/multiplicity,
+  passive dimensions and construction, and interconnect layer/geometry.
+  A requested resistance or capacitance must resolve to a realizable geometry.
+- Reproducible characterization fixtures and compact results over the needed
+  geometry, bias, frequency, loading, temperature and supply ranges. Prioritize
+  the chip's agreed narrow operating window and explicitly bounded uncertainty.
+- Relevant current/voltage behavior, small-signal response, noise, leakage and
+  parasitics where the public models support them. Record unavailable effects
+  and bounds explicitly; do not claim measured accuracy from model agreement.
+- Both a SPICE implementation and, where useful, a faster mathematical view
+  with checked approximation error and applicability limits. Cache results by
+  device parameters, PDK revision, simulator/settings and fixture revision.
+- A future layout view using the same instance parameters, with connectivity,
+  matching and placement constraints. Interconnect estimates before layout
+  become geometry-specific extracted resistance/capacitance/coupling, and
+  inductance where required, after routing.
+
+Current mirrors, differential pairs, switches, latches, filters, converters and
+clock circuits are compositions of these primitives, not opaque substitutes for
+them. Keep their transistor connections inspectable. Distinguish generation-time
+sizing from runtime programmability: programmable gain, bias, tuning or routing
+requires explicit switches, arrays and control circuitry in the schematic.
+
+Build and characterize the primitive configurations needed by the highest-risk
+circuits first; an exhaustive library over every legal geometry is not a
+prerequisite. Consolidate existing circuits and fixtures into this hierarchy
+incrementally, preserving useful evidence rather than restarting working blocks.
+Device characterization does not replace assembled-block and full-chip tests
+for startup, feedback stability, phase noise, signal quality, shared loading,
+matching and mode transitions. Public statistical models are used only within
+their documented scope; missing correlations remain uncertainties.
+
+The sequence remains mathematical model closure, then verified connected
+transistor schematic, then layout/extraction. This architecture is a plan, not
+a claim that the primitive library or transistor schematic is complete, and it
+does not authorize starting layout before the schematic gate is satisfied.
+
 ## 1. Choose the next uncertainty, not the next convenient parameter
 
 ### Everyday loop

@@ -288,8 +288,8 @@
       "status": "passed",
       "executables": 12,
       "case_rows": 38,
-      "elapsed_s": 241.11367790121585,
-      "report_sha256": "be232656f025abe034d9f7d149f0c728823dea2e600904495b45beb91ba77e6d"
+      "elapsed_s": 241.27164594084024,
+      "report_sha256": "24617d97043a6226896ca557f7773c3307cbbeac5b8efb9b06a69b7de8ab88c3"
     },
     "receiver_filter_update": {
       "implementation": "system_model/architecture_fast/chip.py",
@@ -355,7 +355,7 @@
       ],
       "screen_budget": 0.1,
       "scope": "Finite loaded-pad loopback with optional simultaneous wired stress. Mode-1 RX fails the unchanged incremental error screen; both TX cases pass. Relative-gain calibration does not establish absolute gain or physical accuracy.",
-      "next_action": "Finish matched 2x-gain loaded-quality comparison and fresh common aggregate; original mode-1 quality failure remains open pending the result.",
+      "next_action": "Finish matched 2x-gain loaded-quality comparison; common aggregate has requalified all 38 cases with current hashes. Original mode-1 quality failure remains open pending the loaded result.",
       "physical_qualification": false,
       "gain_control_gap": "Resolved in common mathematical chip by configure_rx_gain API and serialized command selecting existing 0.5/1/2 gain independently of filter tuning. Direct filter-state preservation, serialized selection/reserved encoding rejection, active-session rejection and TX-calibration rejection pass in fast-exclusive-engine.json. Pin-level RTL mapping and physical gain behavior remain open.",
       "diagnosis": {

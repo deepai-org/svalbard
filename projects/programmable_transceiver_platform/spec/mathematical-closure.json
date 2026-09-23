@@ -356,7 +356,8 @@
       "screen_budget": 0.1,
       "scope": "Finite loaded-pad loopback with optional simultaneous wired stress. Mode-1 RX fails the unchanged incremental error screen; both TX cases pass. Relative-gain calibration does not establish absolute gain or physical accuracy.",
       "next_action": "Record actual pre-quantizer samples to separate analog impairment from ADC quantization before selecting a gain/noise design change.",
-      "physical_qualification": false
+      "physical_qualification": false,
+      "gain_control_gap": "Reproduced on common TransceiverChip: configure_rx(loopback, 2, 10e6, 10e6) rejects because it unconditionally invokes single-pole bandwidth tuning while the selected RX topology is fifth order. Gain remains 1.0. Provide independently validated gain control that preserves filter state/topology; do not bypass with direct attribute mutation in the quality fixture."
     }
   },
   "operating_policy_update": {

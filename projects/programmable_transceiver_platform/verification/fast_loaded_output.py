@@ -40,6 +40,7 @@ class LoadedOutputChip(TransceiverChip):
     def advance_coupled_analog(self,time):
         from rf_tx_state import RfTxState
         owner=self.analog_owner
+        self.configure_analog_loads()
         if time<self.tx.time:raise ValueError('Nonmonotonic analog time')
         if time==self.tx.time:return
         if owner.time!=self.tx.time:raise ValueError('Coupled analog history mismatch')
@@ -73,6 +74,8 @@ class LoadedOutputChip(TransceiverChip):
             owner.received=candidate.received
             owner.rail_v=candidate.rail_v;owner.time=candidate.time
             owner.rail_trajectory=candidate.rail_trajectory
+            for name in ('source_energy_j','rail_resistor_energy_j','load_energy_j','extra_load_energy_j'):
+                setattr(owner,name,getattr(candidate,name))
             self._analog_forecast=None
         # The owner has advanced RX; advance only the independent TX reconstruction.
         RfTxState.advance(state,time)

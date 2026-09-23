@@ -179,7 +179,7 @@ class SwitchableWarmClock(SwitchablePLL,WarmClock):
             self.initialize_reference(time,tick)
 
 class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
-    def __init__(self,*,reference_source_limit_a=150e-6,reference_sink_limit_a=150e-6,coupled_analog=False,**kwargs):
+    def __init__(self,*,reference_source_limit_a=150e-6,reference_sink_limit_a=150e-6,coupled_analog=False,wired_power_parameters=None,**kwargs):
         from causal_reference_lifecycle import CurrentLimitedReference
         kwargs.setdefault('dac_reference_load_capacitance',2e-12)
         super().__init__(**kwargs)
@@ -193,6 +193,12 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
             sink_limit_a=reference_sink_limit_a)
         self.dac_reference=self.adc_reference
         self.analog_owner=None
+        self.wired_power_parameters=dict(peak_differential_v=.4,termination_ohm=100.,efficiency=.35,bias_a=.002)
+        if wired_power_parameters is not None:
+            if set(wired_power_parameters)!=set(self.wired_power_parameters):raise ValueError('Complete wired power parameters required')
+            self.wired_power_parameters=dict(wired_power_parameters)
+        if not all(math.isfinite(v) and v>0 for v in self.wired_power_parameters.values()) or self.wired_power_parameters['efficiency']>1:
+            raise ValueError('Invalid wired power parameters')
         if coupled_analog:
             self.install_analog_owner(reference_source_limit_a,reference_sink_limit_a)
 
@@ -221,11 +227,24 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
             supply.advance(time)
             rail=self.analog_owner.rail_v-charge/supply.c
             if rail<self.analog_owner.minimum_rail_v:raise ValueError('Switching charge exceeds rail envelope')
+            self.analog_owner.impulse_energy_j+=.5*supply.c*(self.analog_owner.rail_v**2-rail**2)
             self.analog_owner.rail_v=rail
             supply.delta=rail-self.analog_owner.law.nominal_v
             supply.minimum=min(supply.minimum,supply.delta);supply.charge+=charge
         self.supply.advance=MethodType(supply_advance,self.supply)
         self.supply.draw=MethodType(supply_draw,self.supply)
+
+    def configure_analog_loads(self):
+        owner=self.analog_owner
+        owner.driver_enabled=self.rf_pll.powered
+        parameters=self.wired_power_parameters
+        enabled=self.active_engine=='wire'
+        drive=self.serializer.drive if self.serializer is not None else 0.
+        voltage=parameters['peak_differential_v']*drive
+        output_w=voltage*voltage/parameters['termination_ohm']
+        # Regulated differential swing is assumed within the declared rail
+        # envelope; output compliance and gate switching charge remain open.
+        owner.extra_current=lambda time,rail:(parameters['bias_a']+output_w/(parameters['efficiency']*rail)) if enabled else 0.
 
     def requires_rf_boundary_flush(self):
         return getattr(self,'analog_owner',None) is not None and bool(self.rf_hz_per_v or self.wire_hz_per_v)
@@ -259,6 +278,7 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         from driver_pll_feedback import forecast_trajectory_feedback
         from tx_output_terms import output_terms
         owner=self.analog_owner
+        self.configure_analog_loads()
         if self.tx.time!=self.time or owner.time!=self.time or self.rf_pll.time!=self.time:
             raise ValueError('Coupled RF scheduler clocks are not aligned')
         state=self.tx

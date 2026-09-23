@@ -95,8 +95,8 @@ def coupled_analog_screen():
         independent_reference_advance_rejected=True,
         limitations=['Finite boundary integration screen, not acquired payload or signal quality.',
         'RF rail feedback has a separate short scheduler check; integrated wired traffic is a separate test.',
-        'Driver/reference bias is fixed, including inactive engines; power gating is not yet modeled.',
-        'Whole-rail energy accounting, operating uncertainty and physical parameters remain unqualified.'])
+        'Driver bias follows engine selection; shared reference bias is fixed and clock/converter/receiver operating currents remain incomplete.',
+        'Lumped rail energy accounting is checked separately; full domain budgets, operating uncertainty and physical parameters remain unqualified.'])
     files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
     result['source_sha256']={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
     (P/'evidence/fast-coupled-analog-integration.json').write_text(json.dumps(result,indent=2)+'\n')
@@ -176,13 +176,19 @@ def coupled_wire_screen():
         assert not c.adc_words and c.adc_reference.samples==0
         assert c.time==c.analog_owner.time==c.wire_pll.time==c.rf_pll.time
         c.wire_accounting()
+        owner=c.analog_owner
+        stored=.5*owner.c*(owner.rail_v**2-owner.law.nominal_v**2)
+        residual=owner.source_energy_j-owner.rail_resistor_energy_j-owner.load_energy_j-owner.impulse_energy_j-stored
+        assert abs(residual)<1e-16 and owner.extra_load_energy_j>0
         rows.append(dict(mode=mode,tx_words=len(tx),host_rx_words=len(rx),return_charge_c=c.return_charge,
-            rail_v=c.analog_owner.rail_v,feedback_intervals=c.feedback_intervals,rf_oscillator_off=True))
+            rail_v=owner.rail_v,feedback_intervals=c.feedback_intervals,rf_oscillator_off=True,
+            wired_power_parameters=c.wired_power_parameters,additional_load_energy_j=owner.extra_load_energy_j,
+            rail_energy_residual_j=residual,source_energy_j=owner.source_energy_j))
         print(dict(elapsed_s=time.monotonic()-started,**rows[-1]),flush=True)
     files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
     report=dict(status='passed',cases=rows,full_chip_closure=False,physical_qualification=False,
         source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files},
-        limitations=['Wired driver switching current is not yet included in the shared rail load.',
+        limitations=['Assumed regulated wired swing/termination efficiency and bias; gate switching charge, output compliance and clock/converter bias remain open.',
         'Short finite bursts, not full throughput or protocol compliance; RF bias gating and physical parameters remain open.'])
     (P/'evidence/fast-coupled-wire.json').write_text(json.dumps(report,indent=2)+'\n')
 

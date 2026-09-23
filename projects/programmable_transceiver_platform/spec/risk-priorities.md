@@ -1,136 +1,68 @@
 # Current whole-chip priorities — 2026-09-23
 
-This section supersedes the priority ordering in the historical pass notes below.
-User steering: focus on the largest remaining gaps, not additional narrow sweeps.
-The executable inventory is `evidence/fast-model-audit.json`; its presence flags
-are not performance qualification. Historical session numbers below do not imply
-that a process is still running.
+This section supersedes the ordering and running-job references in the historical
+notes below. Focus on missing chip capabilities, not additional narrow sweeps.
+The mathematical model is not closed; transistor schematic and layout gates
+remain closed. The selected integration candidate is
+`IntegratedTransceiverChip(coupled_analog=True)`.
 
-1. **One supported full-chip composition.** `IntegratedTransceiverChip` now
-   combines powered engine ownership, loaded RF output/shared calibration and
-   coarse/warm acquisition. An initial same-instance 2.437 GHz RF -> wired ->
-   2.5 GHz RF -> wired lifecycle passes in `fast-integrated-engine.json` at
-   commit `89d485f`. Coarse qualification is explicitly invalidated on engine changes; that
-   follow-up also passed at commit `1f3afe4`. Consult report hashes before reuse.
-   Reference-loss/recovery and whole-composition signal quality remain open.
-   Use this composition for further integration instead of transferring results
-   between separate subclasses. The prior candidates remain regression references.
-2. **Finite-current references, bias and output drive.** The selected fast
-   reference previously used unlimited RC restoration. The integrated candidate
-   now connects an exact bidirectionally current-limited reference to actual
-   ADC/DAC loads with a passing full lifecycle and source-charge accounting.
-   Minimum reference is 0.963389 V and peak recharge current 36.611 uA; the
-   assumed 150 uA limit did not bind, so this does not bound current margin. Its fixed target still omits rail feedback. Output loading is
-   passive and RX gain is ideal. Connect finite-current
-   reference and driver behavior to the actual converter/clock loads and rail
-   state. Require signal quality, startup, recovery and supply-current accounting
-   on that same composition; do not hide failure by normalizing gain or omitting
-   load. Reuse the existing detailed reference/driver work where applicable.
-3. **Whole-chip feasibility budgets.** Contract area numbers and per-domain
-   current ceilings are allocations, not demonstrated implementation totals.
-   Reconcile active RF, active wired and transition demands with the 50-terminal
-   power allocation, die area, bandwidth and noise/jitter requirements. Mark
-   unsupported parameters explicitly and test adverse uncertainty combinations.
-   Shared synthesis is a resource-saving candidate to evaluate, not an assumed
-   completed feature or a reason to discard independent wired RX recovery.
-4. **Implementation handoff.** Reconcile management/RTL and declared service
-   contracts on the selected model. Then build the connected transistor schematic
-   using the adopted six-family primitive library, with particular attention to
-   autonomous loaded clock quality and converter/reference accuracy. Layout stays
-   behind the verified integrated-schematic gate.
+1. **Calibrated RF payload on the coupled composition.** Acquire, calibrate,
+   transmit and receive actual samples through the loaded output, receive
+   filters, converter reference and rail-sensitive clocks. Require held-out
+   signal quality and reference-loss/recovery on the same chip instance.
+   Acquisition alone is insufficient. Reuse existing quality and service runners.
+2. **Complete current inventory and feasibility budgets.** Wired termination
+   power and RF/wired driver bias now affect the rail. Oscillator, converter,
+   receiver, digital and startup currents remain incomplete. Bound these loads
+   explicitly before claiming whole-chip current adequacy. Reconcile active RF,
+   active wired and transitions against per-domain supply allocations, 50 total
+   terminals, die area, bandwidth, noise and jitter. Area/current allocations
+   are not demonstrated implementation totals. Shared physical components save
+   area only where actually implemented; mutual exclusion alone does not.
+3. **Integrated lifecycle and implementation handoff.** Qualify sustained wired
+   traffic, mode changes, faults and adverse uncertainty combinations with the
+   complete loads. Reconcile management/RTL contracts on this composition. Then
+   build the full connected transistor schematic from the adopted six primitive
+   families, concentrating on autonomous loaded clocks and conversion accuracy.
+   Layout follows verified schematic closure, not behavioral-model success.
 
-Do not launch further per-setting quality sweeps unless their result determines
-one of these architectural choices.
+## What the coupled candidate currently demonstrates
 
-The shared continuous solver (`limited_coupled_driver.py`) now optionally owns
-receive-filter states and accepts a mixer/input callback evaluated against the
-instantaneous loaded pad voltage. Network, rail, detector, reference and RX filter
-commit together only after a successful solve. The existing baseline-equivalence
-screen checks independent modal convolution (maximum state error 1.10e-15),
-nonlinear trajectory subdivision (1.83e-14), and failed-solve rollback. These are
-local mathematical checks, not full-chip or physical qualification. `IntegratedTransceiverChip(coupled_analog=True)` now routes TX advancement,
-loaded pad/detector, RX filter, shared converter reference and host-return charge
-through this owner. The existing engine checker has `--coupled-analog-screen`:
-a 60 ns boundary screen passed actual converter transfer callbacks and return-bus
-charge, aligned state clocks, and rejection of independent reference advancement.
-This screen initializes mode through wired configuration and directly invokes
-converter callbacks; it is not a legal RF payload sequence or acquisition test.
-See `evidence/fast-coupled-analog-integration.json` and its source hashes.
+One continuous owner advances loaded RF network, detector, RX filter, finite
+shared converter reference and lumped rail. RF phase and rail are iterated to
+agreement over bounded intervals. Wired word/bit phase targets can remain
+pending beyond the known rail history. Actual crossings shorten the forecast
+and trigger recomputation before commit. Host impulses preserve clock phase;
+external, converter, management and reference boundaries retain causal ordering.
 
-The option remains experimental. RF PLL rail sensitivity now uses an iterative trajectory forecast split at chip
-events. Wired PLL sensitivity now uses bounded word/bit forecasts and interval
-recomputation; finite duplex tests pass in both modes. Acquired sustained signal quality, bias power gating and rail energy
-accounting on this composition remain major integration gaps. Full lifecycle runtime also needs assessment;
-do not promote a short boundary screen to whole-chip closure. Existing full-chip evidence is historical
-when its recorded source hashes differ; this local pass does not refresh it.
+- Local controls check modal/filter equivalence, numerical subdivision, analytic
+  rail response, overload rollback, phase integrals and bounded edge prediction.
+- `fast-coupled-acquisition.json` records a 2.437 GHz coarse search/lock at 22 us
+  and active RF at 25 us with assumed 1 MHz/V sensitivity. Its source hashes were
+  verified before subsequent wired/load changes; it is historical acquisition
+  evidence, not a current calibrated-payload or physical-jitter qualification.
+- `fast-coupled-wire.json` checks both modes with six TX words and 64 incoming
+  RX words returned to the host, 100 kHz/V wired sensitivity and 50 fC per return
+  transition. The latest load model includes assumed 0.4 V peak differential
+  swing, 100 ohm termination, 35% efficiency and 2 mA selected wired bias.
+  The modeled final rail is about 2.93 V; this is not a whole-chip power result.
+- RF source and mixer signals stop with the RF oscillator; stored analog states
+  decay. RF driver bias is removed when disabled. Shared reference bias remains
+  active. Other mode-dependent operating currents are still missing.
+- The solver accounts for source energy, rail-feed resistor loss, modeled load
+  energy, host impulse energy and rail capacitor energy. Independent RC and
+  overload controls check this balance. It does not qualify physical efficiency
+  or replace separate package supply domains.
 
-### Rail-to-PLL integration progress
+See `power-partition.md` for assumptions and missing loads. Reports certify only
+sources matching their recorded hashes and their explicit finite test scopes.
+The full-chip audit and earlier independent-reference lifecycle reports are
+historical until rerun on the current composition. Do not combine passes from
+separate models into a whole-chip closure claim.
 
-The autonomous and sampled PLLs now accept an immutable, piecewise-linear
-supply history with a strict end time. Phase integration splits at rail knots;
-edge predictions beyond that history are rejected without advancing live state.
-The finite-current analog solver can export such a rail history from its dense
-numerical solution. Interpolation is an approximation requiring step refinement.
-
-`driver_pll_feedback.forecast_trajectory_feedback` now solves the local circular
-dependency by iterating rail -> PLL phase -> loaded output/reference rail. It
-returns candidate states without advancing the caller. The existing oscillator
-supply screen (`--trajectory-only`) verifies phase integrals, edge timing,
-interpolation refinement, local feedback convergence, split intervals and failed
-iteration rollback. The 20 ns feedback fixture converged in four iterations at
-1/0.5/0.25 ns resolution; the 0.5 ns phase difference from 0.25 ns was 3.94e-5
-cycles. These numbers qualify only the declared fixture, not physical jitter.
-
-The RF scheduler now limits its forecast to lower-layer converter, host,
-external-source, wire, reference and management boundaries; outer layers retain
-coarse/calibration/probe boundaries. Due events at the current time are flushed
-before forecasting, so an external waveform beginning at time zero is included.
-The forecast includes external inputs and blockers through the shared receive
-callback. A host impulse preserves phase and installs only its known rail point;
-future phase crossings are rejected until another forecast supplies the history.
-The short integrated screen passed external-source boundaries, interval splitting,
-aligned states and host impulse behavior. Autonomous acquisition and real payload
-are separate tests; a short boundary pass does not qualify them. Wired PLL supply feedback now uses the same bounded scheduling contract;
-its finite duplex evidence is described below. Bias power gating, whole-rail energy accounting,
-sustained acquired signal quality and actual area/power totals remain major gaps.
-See `evidence/connected-supply-trajectory.json`; older report source hashes do
-not certify this newer model.
-
-### Acquisition evidence and wired scheduling handoff
-
-The coupled RF candidate completed the 2.437 GHz coarse search and locked at
-22 us, then entered active RF mode at 25 us with 1 MHz/V assumed supply
-sensitivity. The run used 1,086 coupled forecast intervals and took 564 seconds.
-`evidence/fast-coupled-acquisition.json` records the tested source hashes; they
-were verified before bringing in the later wired-scheduling changes. This is
-acquisition evidence for that revision, not calibrated payload, recovery, or
-physical jitter qualification. Runtime is a practical concern for sustained
-quality testing and needs measurement-guided optimization without removing the
-couplings being tested.
-
-Bounded serializer and word-launch support is now implemented behind
-`BOUNDED_WIRE_CLOCK`. The existing wired chip scheduler delivered six words per
-mode with 0.1 UI rail-history windows and 100 kHz/V sensitivity. At 2 MHz/V,
-negative controls entered lock-loss drain and preserved word accounting. Default
-wired fault/mode-change controls and four duplex burst cases also passed. See
-`evidence/connected-bounded-wire-scheduling.json` and
-`evidence/connected-pll-serializer.json` for the finite test scopes.
-
-The pending word/bit forecasts are now connected to the integrated analog
-owner. A predicted crossing shortens the interval and causes a fresh coupled
-solve before state commit. Both wired modes passed actual six-word TX and
-64-word incoming RX/host return with 100 kHz/V sensitivity and 50 fC per return
-transition. State clocks aligned and the RF oscillator remained off. See
-`evidence/fast-coupled-wire.json`; the prescribed-history checks remain separate
-regression evidence. The inactive RF source/mixer is now silent while stored
-analog state decays. Bias current is still fixed, so this is signal gating, not
-power closure.
-
-The highest remaining integration gaps are wired output-current feedback,
-mode-dependent bias/clock/converter loads, rail energy accounting, and acquired
-calibrated RF payload quality on this composition. Qualify reference recovery,
-mode transitions and uncertainty after those missing loads are included. Area
-and per-domain current totals remain allocations rather than demonstrated fits.
+The coupled RF acquisition run took 564 seconds for 25 us simulated time.
+Measure and improve runtime where needed for sustained RF quality, preserving
+feedback and checking convergence against the existing detailed solver.
 
 ## Historical experiment notes
 

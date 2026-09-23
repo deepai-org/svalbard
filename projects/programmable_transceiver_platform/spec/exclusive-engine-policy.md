@@ -97,8 +97,8 @@ host impulses. The current RF-only feedback pass provides none of this evidence.
 
 The integrated candidate now implements this event contract and passes finite
 TX plus incoming-RX/host-return tests in both wired modes. These tests include
-host return switching charge and rail-sensitive clock timing, but omit wired
-output-stage current. RF source and mixer signals stop with the RF oscillator;
-retained filter/network state decays. Fixed bias in the present current law is
-still an explicit limitation, so neither exclusion nor signal gating proves a
-power-budget saving yet. Evidence: `evidence/fast-coupled-wire.json`.
+host return switching charge, rail-sensitive clock timing, and an assumed
+regulated wired termination load with explicit efficiency and bias. RF source and mixer signals stop with the RF oscillator;
+retained filter/network state decays. RF and wired driver bias now follow engine selection. Shared reference bias
+remains active; oscillator, converter, receiver and digital currents are still
+incomplete, so this does not establish a whole-chip power-budget saving. Evidence: `evidence/fast-coupled-wire.json`.

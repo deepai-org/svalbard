@@ -20,6 +20,10 @@ class LimitedCoupledDriver:
         self.r=rail_r;self.c=rail_c;self.minimum_rail_v=minimum_rail_v
         self.rail_v=self.law.nominal_v;self.time=self.network.time
         self.rail_trajectory=None
+        self.driver_enabled=True
+        self.extra_current=lambda time,rail:0.
+        self.source_energy_j=self.rail_resistor_energy_j=self.load_energy_j=0.
+        self.extra_load_energy_j=0.;self.impulse_energy_j=0.
         self.source_limit=source_limit_a;self.sink_limit=sink_limit_a
         self.reference=reference;self.reference_bias=reference_bias_a;self.reference_efficiency=reference_efficiency
         if reference is not None:
@@ -54,12 +58,16 @@ class LimitedCoupledDriver:
         ref_index=11 if self.detector is not None else 9
         rx_index=ref_index+(self.reference is not None)
         count=len(self.rx_bank['poles']) if self.rx_bank is not None else 0
+        energy_index=rx_index+2*count
         def rhs(t,y):
             v=y[:4]+1j*y[4:8];rail=y[8]
-            source=law.source(drive(t),rail)
+            source=law.source(drive(t),rail) if self.driver_enabled else 0j
             dv=n.A@v+B*source
             power=float(np.real(source*np.conj((source-v[0])/50)))
-            current=law.consumption(rail,power)['dc_current_a']
+            current=law.consumption(rail,power)['dc_current_a'] if self.driver_enabled else 0.
+            extra=self.extra_current(t,rail)
+            if not math.isfinite(extra) or extra<0:raise ValueError('Invalid additional rail load')
+            current+=extra
             dr=((law.nominal_v-rail)/self.r-current)/self.c
             result=np.r_[dv.real,dv.imag,dr]
             if self.detector is not None:
@@ -69,6 +77,7 @@ class LimitedCoupledDriver:
                 r=self.reference;target=1+r.driver_sensitivity*(rail-r.driver_nominal)
                 power=limited_power(y[ref_index],target,r.r,rail,self.source_limit,self.sink_limit,self.reference_bias,self.reference_efficiency)
                 result[8]-=power['dc_current_a']/self.c
+                current+=power['dc_current_a']
                 result=np.r_[result,power['current_a']/r.c]
             if count:
                 states=y[rx_index:rx_index+count]+1j*y[rx_index+count:rx_index+2*count]
@@ -76,7 +85,10 @@ class LimitedCoupledDriver:
                 if not np.isfinite(signal):raise ValueError('Nonfinite RX input')
                 change=np.asarray(self.rx_bank['poles'])*(signal-states)
                 result=np.r_[result,change.real,change.imag]
-            return result
+            feed=(law.nominal_v-rail)/self.r
+            # Scale energy states by C for comparable numerical tolerances.
+            return np.r_[result,law.nominal_v*feed/self.c,feed*feed*self.r/self.c,
+                         rail*current/self.c,rail*extra/self.c]
         def undervoltage(t,y):return y[8]-self.minimum_rail_v
         undervoltage.terminal=True;undervoltage.direction=-1
         y=np.r_[n.voltage.real,n.voltage.imag,self.rail_v]
@@ -89,6 +101,7 @@ class LimitedCoupledDriver:
         if count:
             states=np.asarray(self.rx_bank['states'],complex)
             y=np.r_[y,states.real,states.imag]
+        y=np.r_[y,0.,0.,0.,0.]
         sol=solve_ivp(rhs,(self.time,time),y,method='Radau',rtol=rtol,atol=atol,events=undervoltage,max_step=max_step,dense_output=rail_trace_step_s is not None)
         if not sol.success or sol.status==1:raise ValueError('Coupled driver left declared rail envelope or integration failed')
         trajectory=None
@@ -111,5 +124,9 @@ class LimitedCoupledDriver:
             self.rx_bank['states']=list(states)
             self.received=sum(w*x for w,x in zip(self.rx_bank['weights'],states))
         n.voltage=out[:4]+1j*out[4:8]
+        self.source_energy_j+=float(out[energy_index])*self.c
+        self.rail_resistor_energy_j+=float(out[energy_index+1])*self.c
+        self.load_energy_j+=float(out[energy_index+2])*self.c
+        self.extra_load_energy_j+=float(out[energy_index+3])*self.c
         self.rail_v=float(out[8]);self.time=time;n.time=time
         self.rail_trajectory=trajectory

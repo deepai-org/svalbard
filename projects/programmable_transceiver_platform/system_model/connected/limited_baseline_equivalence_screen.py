@@ -64,6 +64,22 @@ def receive_controls():
     assert a.rx_bank==before.rx_bank and a.received==before.received
     return dict(modal_filter_error=max(errors),subdivision_error=difference,failed_solve_preserves_state=True)
 
+def energy_controls():
+    import math
+    d=LimitedCoupledDriver();d.driver_enabled=False;d.extra_current=lambda t,v:.001
+    d.advance(30e-9,0j)
+    expected=3.3-.1*(1-math.exp(-3))
+    error=abs(d.rail_v-expected)
+    residual=d.source_energy_j-d.rail_resistor_energy_j-d.load_energy_j-.5*d.c*(d.rail_v**2-3.3**2)
+    assert error<1e-9 and abs(residual)<1e-18
+    before=(d.time,d.rail_v,d.source_energy_j,d.load_energy_j,d.rail_resistor_energy_j,d.extra_load_energy_j)
+    d.extra_current=lambda t,v:.1
+    try:d.advance(100e-9,0j)
+    except ValueError:pass
+    else:raise AssertionError('Overload accepted')
+    assert before==(d.time,d.rail_v,d.source_energy_j,d.load_energy_j,d.rail_resistor_energy_j,d.extra_load_energy_j)
+    return dict(analytic_voltage_error_v=error,energy_residual_j=residual,overload_rolls_back=True)
+
 def main():
     a,pa=build(CoupledDriver);b,pb=build(LimitedCoupledDriver)
     errors=[]
@@ -79,7 +95,7 @@ def main():
         assert a.reference.dac_updates==b.reference.dac_updates==k+1
         assert abs(a.reference.charge-b.reference.charge)<1e-20
         errors.append(error)
-    report=dict(status='passed',receive_controls=receive_controls(),max_state_difference=max(errors),switch_cases=4,
+    report=dict(status='passed',energy_controls=energy_controls(),receive_controls=receive_controls(),max_state_difference=max(errors),switch_cases=4,
         limitations=['Nonbinding current-limit regression on finite local PLL/network intervals, not payload quality.',
         'No physical parameter qualification; finite-limit managed calibration remains separate.'])
     (P/'evidence/connected-limited-baseline-equivalence.json').write_text(json.dumps(report,indent=2)+'\n');print(report)

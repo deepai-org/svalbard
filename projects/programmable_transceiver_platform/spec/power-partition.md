@@ -52,3 +52,29 @@ The [8 pF host screen](artix-host-load-screen.md) exceeds HOST_B's planning ceil
 Pass 9 [native driver comparison](host-driver-selection.md): 12 mA mode reduces the same 8 pF HOST_B estimate to 55.75 mA with unchanged allowances, still above 55 mA. No driver or current ceiling is changed by this experiment.
 
 Pass 10 [8 mA candidate](weak-drive-screen.md): the nominal 10 pF HOST_B estimate is 53.80 mA with unchanged allowances. This passes the limited planning comparison but leaves only 1.20 mA headroom; no package/bank/operating-envelope closure is implied.
+
+## Coupled mathematical load accounting
+
+The integrated candidate now expresses wired output load in physical units:
+`Vdiff = 0.4 V * serializer.drive`, `Ptermination = Vdiff^2 / 100 ohm`, and
+`Irail = 2 mA + Ptermination / (0.35 * Vrail)` while the wired engine is selected.
+The voltage, termination, efficiency and bias are explicit configurable
+assumptions, not transistor results. The normalized channel still assumes
+regulated output swing throughout the accepted rail range. Compliance limits,
+output impedance changes and gate-switching charge remain to be modeled.
+The last driven level continues to draw termination power until the serializer
+is reset/aborted; completing a finite word list does not erase its output state.
+
+RF driver bias is counted only while its oscillator is enabled; wired driver
+bias is counted only for the selected wired engine. Shared reference bias
+remains active. Oscillator, converter, receiver and digital operating currents
+are not yet a complete mode-dependent inventory. Do not interpret the resulting
+few-milliampere rail current as a whole-chip current estimate.
+
+The continuous solver integrates ideal-source energy, feed-resistor loss and
+load energy. Host charge impulses record the rail capacitor's corresponding
+energy decrease. The checked balance is source energy = feed loss + load energy
++ impulse energy + change in rail capacitor energy. This verifies the modeled
+lumped rail's accounting, not transistor efficiency or a package power network.
+The one lumped rail remains a coupling fixture; it does not replace the separate
+physical supply-domain allocations above.

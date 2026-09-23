@@ -6,18 +6,36 @@
       "tx_words": 6,
       "host_rx_words": 64,
       "return_charge_c": 5.975000000000022e-11,
-      "rail_v": 3.0889829953805346,
-      "feedback_intervals": 5892,
-      "rf_oscillator_off": true
+      "rail_v": 2.933115657276179,
+      "feedback_intervals": 5902,
+      "rf_oscillator_off": true,
+      "wired_power_parameters": {
+        "peak_differential_v": 0.4,
+        "termination_ohm": 100.0,
+        "efficiency": 0.35,
+        "bias_a": 0.002
+      },
+      "additional_load_energy_j": 7.018505323922321e-08,
+      "rail_energy_residual_j": -7.845937357036179e-22,
+      "source_energy_j": 7.951073579986237e-08
     },
     {
       "mode": 1,
       "tx_words": 6,
       "host_rx_words": 64,
       "return_charge_c": 5.825000000000082e-11,
-      "rail_v": 3.088563452061869,
-      "feedback_intervals": 6273,
-      "rf_oscillator_off": true
+      "rail_v": 2.9326776301860176,
+      "feedback_intervals": 6290,
+      "rf_oscillator_off": true,
+      "wired_power_parameters": {
+        "peak_differential_v": 0.4,
+        "termination_ohm": 100.0,
+        "efficiency": 0.35,
+        "bias_a": 0.002
+      },
+      "additional_load_energy_j": 7.018708351125294e-08,
+      "rail_energy_residual_j": 1.1633519833734066e-22,
+      "source_energy_j": 7.950740775611222e-08
     }
   ],
   "full_chip_closure": false,
@@ -82,7 +100,7 @@
     "system_model/connected/retuned_wideband_screen.py": "3480ab529965f9f3c603134184de52900935c440f8b4a9b15333bd59d5b54232",
     "system_model/connected/rf_driver_transient.py": "3e0f54d5a994a53823460c3e7fcbdcfe69b777158c62c89591a3ba9439276536",
     "system_model/connected/vector_loaded_tx.py": "0ba7ad3e693c4c9721d4b93a889985f61682e8dcfba0daf0eacc9efe22e7f591",
-    "system_model/connected/limited_coupled_driver.py": "24ccc4f5a8c64ae78b7baafc40fe50535a8e552cbaa8b0ac1ece79d7d2e3602d",
+    "system_model/connected/limited_coupled_driver.py": "a48e7dde37eaf70433040e940965144d24cf6552d4bc5997343940099554f75b",
     "system_model/connected/managed_local_run.py": "17d8b8fd3f0663a7f609e8a50cf0e3312ce03e3c5ababa672299b1f5ee945851",
     "system_model/connected/reconstructed_driver_supply_screen.py": "e67624286b5a434eac90cf97a118024e94b650be42d78cb73d64f74993f500ad",
     "system_model/connected/rf_driver_power_screen.py": "7aee004c8f10b84530fa8bd791bd432a9a29ff98991be7048ab8a1ecacd9dbe6",
@@ -90,7 +108,7 @@
     "system_model/connected/receiver_detect_resource_adapter.py": "15bb923b22196ac38c6e06232ceee16063b7f8c36375bbd55e4299704a8bc2ff",
     "system_model/connected/holdover_screen.py": "03cc085668f6afa4753e69103d3a1f0f4fa73ca2121b505b6a45da5185fcebf7",
     "system_model/connected/tx_error_decomposition.py": "9559c058097f23fafd2942dd1a9a27470098bd95afef49c32be20c053b1536f7",
-    "system_model/connected/limited_baseline_equivalence_screen.py": "b631c2cdbdf10f043d83d659c2352ec64b61e978b621bb5ef78e679efb56b9fd",
+    "system_model/connected/limited_baseline_equivalence_screen.py": "3dd8d8aa409c5f446cc267c75d957db60efccb4f647d263ae8c57cbb513ff1f5",
     "system_model/connected/loaded_pad_capture.py": "4b95c691f8e35e1b47faa9f3e20d9fdc15c419893b9cb65f50c202f15bfb0477",
     "system_model/connected/driver_reference_screen.py": "6ddff857ac4318ef53bd1b4ea97ba5b31b05a7bd9f8e4f811646d4aef5486ea3",
     "system_model/connected/shared_supply_lifecycle.py": "4270f885a35dc86508a3ab09131c74a77a3376f6ba2d80d745e64aa9adb5d985",
@@ -463,12 +481,12 @@
     "system_model/architecture_fast/warm_clock.py": "5cb83f35f8f69e3a3f1d97a4bcbcbe60793322bdcab9e4e062661a66438f4c52",
     "system_model/architecture_fast/traffic.py": "d0bd449d2f8bb0ed522e7800be6f9b6106191cbc8fb8a04838c58b19daf30338",
     "system_model/architecture_fast/run.py": "e2883fdd43d4c0c7a1c2425896e7aa584fb7b90e0ee6038ea2f7c940469acde7",
-    "verification/fast_exclusive_engine_check.py": "7c86bbe39aa7663f3b5b310bf855e3f8ef4ab49d8a7f0e3dbe58bb6efff858a7",
-    "verification/fast_loaded_output.py": "2931f232671f27cb2bcbb371342928d6fe24fc3172d6573f9a78a5c0c63a6f4b",
-    "verification/fast_exclusive_engine.py": "78cafe231bb84b4be34d655e63288dadb9769d01a92f72ee046411fc231723fb"
+    "verification/fast_exclusive_engine_check.py": "68f2a4817b033da1d79d8d96543dd82123ffa09c1865144890268775f406db1b",
+    "verification/fast_loaded_output.py": "132af96073d051a45b9e9e9afbfbd6deb5c596f77377a8f992bd9cb23ee918f9",
+    "verification/fast_exclusive_engine.py": "f98974c69bff84857469413f0318fe40c09f711c718d4d4ac3187a254b313312"
   },
   "limitations": [
-    "Wired driver switching current is not yet included in the shared rail load.",
+    "Assumed regulated wired swing/termination efficiency and bias; gate switching charge, output compliance and clock/converter bias remain open.",
     "Short finite bursts, not full throughput or protocol compliance; RF bias gating and physical parameters remain open."
   ]
 }

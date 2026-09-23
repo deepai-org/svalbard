@@ -403,8 +403,8 @@
     "source": "risk-priorities.md",
     "audit": "evidence/fast-model-audit.json",
     "single_composition_complete": false,
-    "next_implementation": "Add wired output current and mode-dependent bias/clock/converter loads to the shared rail owner with energy accounting; qualify calibrated RF payload quality on the same composition.",
-    "following": "Bias power gating, rail energy accounting, sustained converter/receiver quality and per-mode whole-chip area/current budgets; then full transistor schematic and layout.",
+    "next_implementation": "Qualify acquired calibrated RF payload quality on the coupled composition; complete oscillator/converter/receiver/digital current inventory and mode-transition budgets.",
+    "following": "Reference recovery, sustained traffic, mode transitions and adverse uncertainty with complete loads; whole-chip area/current budgets; then full transistor schematic and layout.",
     "historical_requirement_notes": "Retained for traceability; old running-job and candidate references are not current state.",
     "integrated_candidate": "verification/fast_exclusive_engine.py:IntegratedTransceiverChip",
     "composition_evidence": "evidence/fast-integrated-engine.json",
@@ -442,7 +442,7 @@
       "tx_words_per_mode": 6,
       "host_rx_words_per_mode": 64,
       "wire_supply_sensitivity_hz_per_v": 100000.0,
-      "scope": "Finite duplex with actual rail forecasts and host switching; wired driver current, full power budget and physical qualification remain open."
+      "scope": "Finite duplex with rail-sensitive clocks, host switching, assumed wired termination power and selected driver bias. Clock/converter/receiver/digital loads and physical qualification remain open."
     }
   }
 }

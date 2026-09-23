@@ -1,8 +1,8 @@
 """Admission, enable exclusion and stopped RF/wired mode transitions."""
-import hashlib,json,copy,math
+import argparse,hashlib,json,copy,math
 from pathlib import Path
 from types import MethodType
-from fast_exclusive_engine import ExclusiveEngineChip,SwitchablePLL
+from fast_exclusive_engine import ExclusiveEngineChip,SwitchablePLL,PoweredExclusiveChip
 from fast_loaded_output import P
 from managed_resources import command
 from chip_model import encode_iq
@@ -34,13 +34,13 @@ def power_state_controls():
     return dict(stopped_phase_preserved=True,leakage_subdivision_invariant=True,
         off_edges_rejected=True,restart_requalified=True,off_tau_s=1e-3)
 
-def clock_ownership_controls():
+def clock_ownership_controls(chip_factory=ExclusiveEngineChip):
     def unlocked(pll):
         pll.locked=False
         return False
     rows=[]
     for engine in ('rf','wire'):
-        c=ExclusiveEngineChip(watchdog_s=1e-3)
+        c=chip_factory(watchdog_s=1e-3)
         c.select_engine(engine);c.configure(0,0.)
         selected=c.rf_pll if engine=='rf' else c.wire_pll
         inactive=c.wire_pll if engine=='rf' else c.rf_pll
@@ -65,9 +65,11 @@ def clock_ownership_controls():
 
 def main():
     if not __debug__:raise RuntimeError('Assertions must remain enabled')
+    parser=argparse.ArgumentParser();parser.add_argument('--power-gated',action='store_true')
+    args=parser.parse_args();chip_factory=PoweredExclusiveChip if args.power_gated else ExclusiveEngineChip
     power_case=power_state_controls()
-    clock_cases=clock_ownership_controls()
-    c=ExclusiveEngineChip(watchdog_s=1e-3,tx_relative_gain=True);reject(lambda:c.configure(0,0.))
+    clock_cases=clock_ownership_controls(chip_factory)
+    c=chip_factory(watchdog_s=1e-3,tx_relative_gain=True);reject(lambda:c.configure(0,0.))
     bank=copy.deepcopy(c.tx.rx_bank)
     c.configure_rx_gain(2.);assert c.tx.rx_bank==bank
     for code,gain in enumerate((.5,1.,2.)):
@@ -90,6 +92,12 @@ def main():
             c.select_playback(True);c.configure_capture(True)
         c.configure(mode,c.time);c.advance(c.time+8e-6)
         assert c.state=='active'
+        if args.power_gated:
+            inactive=c.wire_pll if engine=='rf' else c.rf_pll
+            phase=inactive.output_phase_cycles
+            c.advance(c.time+100e-9)
+            assert not inactive.powered and inactive.frequency_hz==0
+            assert abs(inactive.output_phase_cycles-phase)<1e-8
         reject(lambda:c.configure_rx_gain(1.));assert c.rx_gain==2.
         other='wire' if engine=='rf' else 'rf'
         assert c.session.enabled(engine) and not c.session.enabled(other)
@@ -124,9 +132,9 @@ def main():
         rows.append(dict(engine=engine,mode=mode,opposite_engine_rejected=True,ingress_rejection_atomic=True,rf_duplex_samples=32 if engine=='rf' else 0,stopped=True))
     c.select_engine('none');reject(lambda:c.configure(0,c.time))
     files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[P/'verification'/n for n in ('fast_loaded_output.py','fast_exclusive_engine.py','fast_exclusive_engine_check.py')]
-    out=dict(status='passed',standalone_power_state=power_case,clock_ownership=clock_cases,source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files},cases=rows,
+    out=dict(status='passed',power_gated=args.power_gated,standalone_power_state=power_case,clock_ownership=clock_cases,source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files},cases=rows,
         limitations=['Payload admission/session enables only; inactive clock and bias shutdown remain open.',
         'Python selection API with serialized local-start command; pin-level management/RTL interlock not implemented.',
         'Finite 32-sample RF TX/RX and wired receive checked; sustained duplex, RF quality and calibration validity across mode changes need further coverage.'])
-    (P/'evidence/fast-exclusive-engine.json').write_text(json.dumps(out,indent=2)+'\n');print(rows)
+    (P/('evidence/fast-powered-exclusive-engine.json' if args.power_gated else 'evidence/fast-exclusive-engine.json')).write_text(json.dumps(out,indent=2)+'\n');print(rows)
 if __name__=='__main__':main()

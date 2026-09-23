@@ -105,3 +105,46 @@ class SwitchablePLL(AutonomousPLL):
     def edge_time(self,target_phase):
         if not self.powered:raise ValueError('Stopped oscillator has no future edges')
         return super().edge_time(target_phase)
+
+
+class PoweredExclusiveChip(ExclusiveEngineChip):
+    """Experimental oscillator shutdown plus a timed bias-readiness guard.
+
+    Bias current, supply transients and physical settling are not modeled by
+    this guard. Both synthesizer instances remain; this is not a shared PLL.
+    """
+    RF_PLL_CLASS=SwitchablePLL
+    WIRE_PLL_CLASS=SwitchablePLL
+
+    def __init__(self,*,bias_settle_s=2e-6,**kwargs):
+        if not math.isfinite(bias_settle_s) or bias_settle_s<=0:
+            raise ValueError('Positive finite bias settling guard required')
+        self.bias_settle_s=bias_settle_s;self.engine_ready_at=math.inf
+        super().__init__(**kwargs)
+        self.rf_pll.set_power(False,self.time)
+        self.install_segment(-self.rf_carrier,check=False)
+
+    def select_engine(self,engine):
+        if self.cal.busy:raise ValueError('Calibration owns analog target')
+        previous=self.active_engine
+        super().select_engine(engine)
+        if engine==previous:return
+        # Parent has stopped/isolation preconditions and invalidates calibration.
+        # Stop both before enabling the selected oscillator.
+        for pll in (self.rf_pll,self.wire_pll):
+            if pll is not None:pll.set_power(False,self.time)
+        selected=self.rf_pll if engine=='rf' else self.wire_pll if engine=='wire' else None
+        if selected is not None:selected.set_power(True,self.time)
+        self.engine_ready_at=self.time+self.bias_settle_s if engine!='none' else math.inf
+        self.install_segment(self.rf_pll.frequency_hz-self.rf_carrier,check=False)
+
+    def make_serializer(self,time):
+        result=super().make_serializer(time)
+        self.wire_pll.set_power(self.active_engine=='wire',time)
+        return result
+
+    def clocks_ready(self):
+        return self.time>=self.engine_ready_at and super().clocks_ready()
+
+    def _tx_clock_ready(self):
+        return self.active_engine=='rf' and self.time>=self.engine_ready_at and super()._tx_clock_ready()

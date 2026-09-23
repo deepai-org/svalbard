@@ -96,6 +96,32 @@ sustained acquired signal quality and actual area/power totals remain major gaps
 See `evidence/connected-supply-trajectory.json`; older report source hashes do
 not certify this newer model.
 
+### Acquisition evidence and wired scheduling handoff
+
+The coupled RF candidate completed the 2.437 GHz coarse search and locked at
+22 us, then entered active RF mode at 25 us with 1 MHz/V assumed supply
+sensitivity. The run used 1,086 coupled forecast intervals and took 564 seconds.
+`evidence/fast-coupled-acquisition.json` records the tested source hashes; they
+were verified before bringing in the later wired-scheduling changes. This is
+acquisition evidence for that revision, not calibrated payload, recovery, or
+physical jitter qualification. Runtime is a practical concern for sustained
+quality testing and needs measurement-guided optimization without removing the
+couplings being tested.
+
+Bounded serializer and word-launch support is now implemented behind
+`BOUNDED_WIRE_CLOCK`. The existing wired chip scheduler delivered six words per
+mode with 0.1 UI rail-history windows and 100 kHz/V sensitivity. At 2 MHz/V,
+negative controls entered lock-loss drain and preserved word accounting. Default
+wired fault/mode-change controls and four duplex burst cases also passed. See
+`evidence/connected-bounded-wire-scheduling.json` and
+`evidence/connected-pll-serializer.json` for the finite test scopes.
+
+Next connect these pending word/bit forecasts to the integrated analog owner's
+rail history and shorten/recompute intervals at actual crossings. The tests so
+far supplied prescribed histories; they do not demonstrate coupled wired driver
+current or integrated wired operation. Keep that limitation explicit rather than
+enabling the integrated candidate's currently rejected wired supply sensitivity.
+
 ## Historical experiment notes
 
 ## Mode 1 signed calibration now commits; full traffic rerunning

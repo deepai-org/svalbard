@@ -403,7 +403,7 @@
     "source": "risk-priorities.md",
     "audit": "evidence/fast-model-audit.json",
     "single_composition_complete": false,
-    "next_implementation": "Qualify acquired RF operation on the coupled analog/PLL candidate, then connect wired PLL supply feedback to bounded serializer-edge prediction. Preserve event boundaries and shared state ownership.",
+    "next_implementation": "Connect staged bounded wired word/bit forecasts to the integrated analog rail owner, including interval shortening and recomputation. Then qualify integrated wired traffic and calibrated RF payload.",
     "following": "Bias power gating, rail energy accounting, sustained converter/receiver quality and per-mode whole-chip area/current budgets; then full transistor schematic and layout.",
     "historical_requirement_notes": "Retained for traceability; old running-job and candidate references are not current state.",
     "integrated_candidate": "verification/fast_exclusive_engine.py:IntegratedTransceiverChip",
@@ -423,6 +423,15 @@
     },
     "finite_reference_scope": "150 uA limit did not bind in this lifecycle; this is integration/accounting evidence, not worst-case current adequacy.",
     "coupled_analog_evidence": "evidence/fast-coupled-analog-integration.json",
-    "local_feedback_evidence": "evidence/connected-supply-trajectory.json"
+    "local_feedback_evidence": "evidence/connected-supply-trajectory.json",
+    "rf_acquisition_evidence": {
+      "path": "evidence/fast-coupled-acquisition.json",
+      "tested_code_revision": "d28e6de",
+      "coarse_done_and_locked_s": 2.2e-05,
+      "active_s": 2.5e-05,
+      "rf_supply_sensitivity_hz_per_v": 1000000.0,
+      "scope": "One carrier acquisition; no payload quality or physical qualification. Recorded sources verified before subsequent wired scheduling changes."
+    },
+    "bounded_wire_evidence": "evidence/connected-bounded-wire-scheduling.json"
   }
 }

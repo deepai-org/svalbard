@@ -37,7 +37,11 @@ independent RX, added phase noise, current adequacy or sustained operation.
    Compare each physical connection with its own planning ceiling in RF, wired
    and transitions; an unknown load cannot count as zero. Do not sum overlapping
    historical circuit reports or tune feed resistance to obtain a pass. See
-   `power-partition.md`. Die area, 50 terminals and host bandwidth remain joint
+   `power-partition.md`. A finite host-charge screen now rejects the assumed
+   10 pF / 0.25 ns edge with the current RC fixture (HOST_B reaches 2.119 V).
+   The full-chip 50 fC event is 330–660 times smaller than the charge demanded
+   by 5–10 pF outputs; replace it with finite pad current before power closure.
+   Die area, 50 terminals and host bandwidth remain joint
    constraints, not independently solved allocations.
 3. **Sustained service and recovery, then implementation.** Exercise both wired
    profiles and RF with complete loads, host stalls, reference loss/reacquisition

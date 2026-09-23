@@ -1,0 +1,537 @@
+{
+  "status": "screen_completed",
+  "full_chip_closure": false,
+  "physical_qualification": false,
+  "names": [
+    "CORE",
+    "HOST_A",
+    "HOST_B",
+    "WIRE_A",
+    "WIRE_B",
+    "RF",
+    "PLL"
+  ],
+  "assumptions": {
+    "supply_v": 3.3,
+    "feed_r_ohm": 2.0,
+    "local_capacitance_f": 1e-10,
+    "common_return_r_ohm": 0.1,
+    "background_current_a": [
+      0.02,
+      0.002,
+      0.002,
+      0.0,
+      0.0,
+      0.012,
+      0.008
+    ],
+    "simultaneous_rising_outputs": {
+      "HOST_A": 5,
+      "HOST_B": 6
+    },
+    "pulse_shape": "constant current over the declared edge duration"
+  },
+  "controls": {
+    "scalar_voltage_error_v": 4.440892098500626e-16,
+    "minimum_sampling_refinement_v": 5.447612665854251e-05,
+    "below_floor_case_detected": true
+  },
+  "cases": [
+    {
+      "load_pf": 5.0,
+      "edge_ns": 0.25,
+      "charge_per_rising_output_c": 1.6499999999999998e-11,
+      "ratio_to_50fc_fixture": 329.99999999999994,
+      "group_charge_c": [
+        0.0,
+        8.25e-11,
+        9.9e-11,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "added_pulse_current_a": [
+        0.0,
+        0.32999999999999996,
+        0.39599999999999996,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "initial_voltage_v": [
+        3.2556,
+        3.2916,
+        3.2916,
+        3.2956,
+        3.2956,
+        3.2716,
+        3.2796
+      ],
+      "minimum_voltage_v": [
+        3.228420785211841,
+        2.799601244670283,
+        2.7054198778558267,
+        3.2684207852118417,
+        3.2684207852118417,
+        3.244420785211841,
+        3.2524207852118416
+      ],
+      "minimum_time_s": [
+        3.6718750000000003e-10,
+        2.5e-10,
+        2.5e-10,
+        3.6718750000000003e-10,
+        3.6718750000000003e-10,
+        3.6718750000000003e-10,
+        3.6718750000000003e-10
+      ],
+      "energy_residual_j": 1.6543612251060553e-24,
+      "above_2p5v_model_floor": true,
+      "above_95_percent_nominal": false
+    },
+    {
+      "load_pf": 5.0,
+      "edge_ns": 0.5,
+      "charge_per_rising_output_c": 1.6499999999999998e-11,
+      "ratio_to_50fc_fixture": 329.99999999999994,
+      "group_charge_c": [
+        0.0,
+        8.25e-11,
+        9.9e-11,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "added_pulse_current_a": [
+        0.0,
+        0.16499999999999998,
+        0.19799999999999998,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "initial_voltage_v": [
+        3.2556,
+        3.2916,
+        3.2916,
+        3.2956,
+        3.2956,
+        3.2716,
+        3.2796
+      ],
+      "minimum_voltage_v": [
+        3.231634176077608,
+        2.965849380450019,
+        2.9052669903591957,
+        3.271634176077608,
+        3.271634176077608,
+        3.247634176077608,
+        3.255634176077608
+      ],
+      "minimum_time_s": [
+        5.78125e-10,
+        5e-10,
+        5e-10,
+        5.78125e-10,
+        5.78125e-10,
+        5.78125e-10,
+        5.78125e-10
+      ],
+      "energy_residual_j": -1.6543612251060553e-24,
+      "above_2p5v_model_floor": true,
+      "above_95_percent_nominal": false
+    },
+    {
+      "load_pf": 5.0,
+      "edge_ns": 1.0,
+      "charge_per_rising_output_c": 1.6499999999999998e-11,
+      "ratio_to_50fc_fixture": 329.99999999999994,
+      "group_charge_c": [
+        0.0,
+        8.25e-11,
+        9.9e-11,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "added_pulse_current_a": [
+        0.0,
+        0.08249999999999999,
+        0.09899999999999999,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "initial_voltage_v": [
+        3.2556,
+        3.2916,
+        3.2916,
+        3.2956,
+        3.2956,
+        3.2716,
+        3.2796
+      ],
+      "minimum_voltage_v": [
+        3.2388250141687998,
+        3.1109367754236494,
+        3.0781591276746196,
+        3.2788250141688,
+        3.2788250141688,
+        3.2548250141687998,
+        3.2628250141687998
+      ],
+      "minimum_time_s": [
+        1e-09,
+        1e-09,
+        1e-09,
+        1e-09,
+        1e-09,
+        1e-09,
+        1e-09
+      ],
+      "energy_residual_j": -8.271806125530277e-25,
+      "above_2p5v_model_floor": true,
+      "above_95_percent_nominal": false
+    },
+    {
+      "load_pf": 5.0,
+      "edge_ns": 2.0,
+      "charge_per_rising_output_c": 1.6499999999999998e-11,
+      "ratio_to_50fc_fixture": 329.99999999999994,
+      "group_charge_c": [
+        0.0,
+        8.25e-11,
+        9.9e-11,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "added_pulse_current_a": [
+        0.0,
+        0.041249999999999995,
+        0.049499999999999995,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "initial_voltage_v": [
+        3.2556,
+        3.2916,
+        3.2916,
+        3.2956,
+        3.2956,
+        3.2716,
+        3.2796
+      ],
+      "minimum_voltage_v": [
+        3.2465450609708038,
+        3.2000488064650088,
+        3.183549555563851,
+        3.286545060970804,
+        3.286545060970804,
+        3.2625450609708038,
+        3.2705450609708038
+      ],
+      "minimum_time_s": [
+        2e-09,
+        2e-09,
+        2e-09,
+        2e-09,
+        2e-09,
+        2e-09,
+        2e-09
+      ],
+      "energy_residual_j": -4.1359030627651384e-24,
+      "above_2p5v_model_floor": true,
+      "above_95_percent_nominal": true
+    },
+    {
+      "load_pf": 10.0,
+      "edge_ns": 0.25,
+      "charge_per_rising_output_c": 3.2999999999999996e-11,
+      "ratio_to_50fc_fixture": 659.9999999999999,
+      "group_charge_c": [
+        0.0,
+        1.65e-10,
+        1.98e-10,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "added_pulse_current_a": [
+        0.0,
+        0.6599999999999999,
+        0.7919999999999999,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "initial_voltage_v": [
+        3.2556,
+        3.2916,
+        3.2916,
+        3.2956,
+        3.2956,
+        3.2716,
+        3.2796
+      ],
+      "minimum_voltage_v": [
+        3.201241570423683,
+        2.307602489340566,
+        2.1192397557116562,
+        3.2412415704236825,
+        3.241241570423683,
+        3.2172415704236825,
+        3.225241570423683
+      ],
+      "minimum_time_s": [
+        3.6718750000000003e-10,
+        2.5e-10,
+        2.5e-10,
+        3.6718750000000003e-10,
+        3.6718750000000003e-10,
+        3.6718750000000003e-10,
+        3.6718750000000003e-10
+      ],
+      "energy_residual_j": 3.308722450212111e-24,
+      "above_2p5v_model_floor": false,
+      "above_95_percent_nominal": false
+    },
+    {
+      "load_pf": 10.0,
+      "edge_ns": 0.5,
+      "charge_per_rising_output_c": 3.2999999999999996e-11,
+      "ratio_to_50fc_fixture": 659.9999999999999,
+      "group_charge_c": [
+        0.0,
+        1.65e-10,
+        1.98e-10,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "added_pulse_current_a": [
+        0.0,
+        0.32999999999999996,
+        0.39599999999999996,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "initial_voltage_v": [
+        3.2556,
+        3.2916,
+        3.2916,
+        3.2956,
+        3.2956,
+        3.2716,
+        3.2796
+      ],
+      "minimum_voltage_v": [
+        3.2076683521552156,
+        2.6400987609000395,
+        2.518933980718394,
+        3.2476683521552157,
+        3.2476683521552157,
+        3.2236683521552156,
+        3.2316683521552156
+      ],
+      "minimum_time_s": [
+        5.78125e-10,
+        5e-10,
+        5e-10,
+        5.78125e-10,
+        5.78125e-10,
+        5.78125e-10,
+        5.78125e-10
+      ],
+      "energy_residual_j": 2.481541837659083e-24,
+      "above_2p5v_model_floor": true,
+      "above_95_percent_nominal": false
+    },
+    {
+      "load_pf": 10.0,
+      "edge_ns": 1.0,
+      "charge_per_rising_output_c": 3.2999999999999996e-11,
+      "ratio_to_50fc_fixture": 659.9999999999999,
+      "group_charge_c": [
+        0.0,
+        1.65e-10,
+        1.98e-10,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "added_pulse_current_a": [
+        0.0,
+        0.16499999999999998,
+        0.19799999999999998,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "initial_voltage_v": [
+        3.2556,
+        3.2916,
+        3.2916,
+        3.2956,
+        3.2956,
+        3.2716,
+        3.2796
+      ],
+      "minimum_voltage_v": [
+        3.2220500283375997,
+        2.9302735508472986,
+        2.8647182553492376,
+        3.2620500283375997,
+        3.2620500283375997,
+        3.2380500283375997,
+        3.2460500283375997
+      ],
+      "minimum_time_s": [
+        1e-09,
+        1e-09,
+        1e-09,
+        1e-09,
+        1e-09,
+        1e-09,
+        1e-09
+      ],
+      "energy_residual_j": -4.963083675318166e-24,
+      "above_2p5v_model_floor": true,
+      "above_95_percent_nominal": false
+    },
+    {
+      "load_pf": 10.0,
+      "edge_ns": 2.0,
+      "charge_per_rising_output_c": 3.2999999999999996e-11,
+      "ratio_to_50fc_fixture": 659.9999999999999,
+      "group_charge_c": [
+        0.0,
+        1.65e-10,
+        1.98e-10,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "added_pulse_current_a": [
+        0.0,
+        0.08249999999999999,
+        0.09899999999999999,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "initial_voltage_v": [
+        3.2556,
+        3.2916,
+        3.2916,
+        3.2956,
+        3.2956,
+        3.2716,
+        3.2796
+      ],
+      "minimum_voltage_v": [
+        3.2374901219416095,
+        3.1084976129300204,
+        3.0754991111277024,
+        3.2774901219416095,
+        3.2774901219416095,
+        3.2534901219416095,
+        3.2614901219416095
+      ],
+      "minimum_time_s": [
+        2e-09,
+        2e-09,
+        2e-09,
+        2e-09,
+        2e-09,
+        2e-09,
+        2e-09
+      ],
+      "energy_residual_j": 0.0,
+      "above_2p5v_model_floor": true,
+      "above_95_percent_nominal": false
+    }
+  ],
+  "native_pad_trace_audit": {
+    "archive_sha256": "25286e3d54ccaac072239455fe7b7c269ea32eda62c86a61c035fc7ada253400",
+    "evidence_sha256": "b9900dba8564e6db5bb18e8146e7f0262efcbe69f5087cebb5c540aa88326b29",
+    "cases": [
+      {
+        "case": "typical_25_8_alternating_drive8",
+        "load_pf": 8,
+        "artifact_hashes_verified": true,
+        "two_pad_average_a": 0.012600868155873595,
+        "two_pad_peak_a": 0.0227762302,
+        "output_rises": 20,
+        "total_supply_charge_c": 8.064555619759101e-10,
+        "average_supply_charge_per_output_rise_c": 4.03227780987955e-11,
+        "ratio_to_50fc_fixture": 806.4555619759101,
+        "replicated_pair_rail_minimum_v": [
+          3.24406216066694,
+          3.1714427765185715,
+          3.149642017744465,
+          3.2840621606669402,
+          3.2840621606669402,
+          3.26006216066694,
+          3.26806216066694
+        ],
+        "replay_energy_residual_j": -2.6056189295420372e-23,
+        "negative_current_clipped": false,
+        "scope": "Supply charge includes internal current and bias; not an isolated transition law. Frozen ideal-supply pair replay excludes voltage feedback and true bank interaction."
+      },
+      {
+        "case": "typical_25_10_alternating_drive8",
+        "load_pf": 10,
+        "artifact_hashes_verified": true,
+        "two_pad_average_a": 0.01381349298290508,
+        "two_pad_peak_a": 0.0256859569,
+        "output_rises": 20,
+        "total_supply_charge_c": 8.840635509059251e-10,
+        "average_supply_charge_per_output_rise_c": 4.420317754529626e-11,
+        "ratio_to_50fc_fixture": 884.0635509059251,
+        "replicated_pair_rail_minimum_v": [
+          3.2425601249436986,
+          3.1557911630780633,
+          3.131151146913861,
+          3.2825601249436986,
+          3.2825601249436986,
+          3.2585601249436986,
+          3.2665601249436986
+        ],
+        "replay_energy_residual_j": 6.741521992307176e-23,
+        "negative_current_clipped": false,
+        "scope": "Supply charge includes internal current and bias; not an isolated transition law. Frozen ideal-supply pair replay excludes voltage feedback and true bank interaction."
+      }
+    ]
+  },
+  "limitations": [
+    "One isolated simultaneous rising edge, not sustained bank traffic or average-current qualification.",
+    "Q=Cload*3.3V is the charge demanded by the target swing; an actual driver may slow or lose swing as rails sag.",
+    "The former 20 mA host backgrounds are replaced by assumed 2 mA idle loads; no 50 fC event is added again.",
+    "Other backgrounds remain illustrative. Internal pad current, input switching, falling-edge return current, package inductance and substrate coupling are absent.",
+    "The 95% voltage threshold is a sensitivity indicator, not a selected chip operating specification.",
+    "Voltage-floor failures reject these load/edge/PDN combinations, not GF180 or the architecture as a whole."
+  ],
+  "source_sha256": {
+    "verification/host_charge_domain_screen.py": "18263062178fca9c68476ff4be9465f75b10741eb069e40abc429bf5e0d4ac5a",
+    "system_model/connected/shared_supply_lifecycle.py": "9ef67d25af25e74125d10316ffcaff2b0b066e34a1f95c0530b4ebb3d0c80e81"
+  }
+}

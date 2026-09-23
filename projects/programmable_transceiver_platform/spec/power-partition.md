@@ -174,6 +174,61 @@ and unchanged oscillator phase at the event. Sustained traffic remains open.
 
 ## Current integrated fixture is not a feasibility load envelope
 
+The finite-charge screen in `evidence/host-charge-domain-screen.json` exposes a
+second important limitation. The integrated host event assumes 50 fC per bit
+transition. Charging an external 5–10 pF output through 3.3 V demands 16.5–33 pC
+per rising output, 330–660 times that event charge. The small event remains a
+coupling fixture; moving it onto the HOST rail did not turn it into a complete
+physical pad-energy model. Constant background current cannot qualify its
+missing edge-time voltage behavior.
+
+`verification/host_charge_domain_screen.py` applies that charge as a finite
+rectangular current pulse to the existing seven-domain RC primitive. It replaces
+the 20 mA host backgrounds with assumed 2 mA idle loads and adds no 50 fC impulse,
+avoiding duplicate charging in this experiment. Five HOST_A and six HOST_B
+outputs rise together. Other backgrounds, 2 ohm feeds, 100 pF local capacitance
+and 0.1 ohm common return remain explicit hypotheses.
+
+| Output load | Assumed rise duration | Minimum HOST_B | Above 2.5 V model floor |
+|---|---:|---:|---|
+| 5 pF | 0.25 ns | 2.705 V | Yes |
+| 10 pF | 0.25 ns | 2.119 V | No |
+| 10 pF | 0.5 ns | 2.519 V | Yes, little margin |
+| 10 pF | 1 ns | 2.865 V | Yes |
+| 10 pF | 2 ns | 3.075 V | Yes |
+
+The uncoupled scalar analytic check agrees within 4.5e-16 V; doubling the
+minimum-search sampling changes minima by less than 55 uV. Exact interval energy
+accounting also passes. These are prescribed **charge demands**, not proven
+driver waveforms: a real output may instead slow or lose swing. Longer edges
+must still meet host timing. This isolated rising-edge screen omits sustained
+traffic, input activity, falling-edge ground current, inductance and substrate
+coupling, so even its passing cases do not qualify the supply network. No
+connection's DC planning ceiling is used as an instantaneous pulse-current limit.
+
+The same script verifies retained 8 mA native-pad deck, waveform and log hashes
+from `scratch/transceiver-weak-drive-waveforms.tar.gz` and reproduces their
+settled current measurements. The 8/10 pF alternating cases consume respectively
+40.32/44.20 pC of total supply charge per counted output rise. This includes
+internal current, bias and the intervening falling activity; it is not an
+isolated rising-edge law. It nevertheless confirms that the full-chip 50 fC
+disturbance has the wrong scale for physical pad loading.
+
+Replaying those ideal-supply pair-current waveforms, scaled by 2.5/3 for the two
+segments, gives HOST_B minima of 3.150/3.131 V with the same assumed RC network.
+These finite native waveforms are much less severe than the prescribed 0.25 ns
+charge-demand case. Their replay is encouraging but does not close the gap:
+the trace cannot respond to rail droop, fractional pair replication is not
+five/six-pin simultaneous switching, and return/substrate/inductive paths remain
+incomplete. Use native bank simulation with nonideal rails to supply a bounded
+reduced current model rather than copying these traces as a qualified load law.
+
+Next replace the full-chip host disturbance fixture with finite, load-dependent
+pad supply/return currents, retaining per-segment ownership and energy accounting.
+Test those currents together with autonomous timing and RF conversion; do not
+select feed/decoupling values solely to repair this screen. Current noisy-RF
+tests still use the original 50 fC fixture and must retain that limitation.
+
 The new domain RF/wired tests use 20 mA CORE background. Against the retained
 clock-pin estimate above, RF mode 0 leaves only 1.645 mA of that fixture for all
 non-clock-pin core activity; RF mode 1 clock-pin charging alone exceeds it by

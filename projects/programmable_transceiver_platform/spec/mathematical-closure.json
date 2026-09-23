@@ -472,5 +472,13 @@
     "tx_fixed_carrier_corrected_relative_rms": 0.013834820153968554,
     "scope": "Mode 1, 2.437 GHz, 32 samples, domain supplies and host switching. TX includes oscillator error relative to an independent ideal carrier; RX remains internal loopback. Illustrative loads, no added oscillator noise, no sustained service.",
     "full_chip_closure": false
+  },
+  "host_charge_feasibility_update": {
+    "evidence": "evidence/host-charge-domain-screen.json",
+    "status": "inadequate_fixture_combination_found",
+    "minimum_host_b_v_at_10pf_0p25ns": 2.1192397557116562,
+    "scope": "One simultaneous rising edge on a hypothesized RC network; demand waveform, not physical pad implementation. Full-chip host charge remains a disturbance fixture.",
+    "next": "Finite pad supply/return currents with real load dependence, then integrated clocks/RF quality under that loading.",
+    "full_chip_closure": false
   }
 }

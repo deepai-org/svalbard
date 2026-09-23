@@ -203,8 +203,10 @@ class AutonomousPLL:
         if self.frequency_hz<=0:raise ValueError('Stopped oscillator has no future edges')
         if target_phase==phase:return self.time
         future=copy.copy(self);future.advance(horizon)
-        if future.output_phase_cycles<target_phase:return None
-        if future.output_phase_cycles==target_phase:return horizon
+        endpoint=future.output_phase_cycles
+        roundoff=8*max(math.ulp(endpoint),math.ulp(target_phase))
+        if endpoint<target_phase-roundoff:return None
+        if abs(endpoint-target_phase)<=roundoff:return horizon
         lo=self.time;hi=horizon
         for _ in range(64):
             mid=(lo+hi)/2

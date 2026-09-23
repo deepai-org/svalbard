@@ -18,8 +18,9 @@ that a process is still running.
 2. **Finite-current references, bias and output drive.** The selected fast
    reference previously used unlimited RC restoration. The integrated candidate
    now connects an exact bidirectionally current-limited reference to actual
-   ADC/DAC loads, with source-charge accounting and a full lifecycle rerun in
-   progress. Its fixed target still omits rail feedback. Output loading is
+   ADC/DAC loads with a passing full lifecycle and source-charge accounting.
+   Minimum reference is 0.963389 V and peak recharge current 36.611 uA; the
+   assumed 150 uA limit did not bind, so this does not bound current margin. Its fixed target still omits rail feedback. Output loading is
    passive and RX gain is ideal. Connect finite-current
    reference and driver behavior to the actual converter/clock loads and rail
    state. Require signal quality, startup, recovery and supply-current accounting
@@ -656,3 +657,17 @@ The connected suite now passes10 scenarios, including persistent lifecycle
 mode changes/reference loss and drain epochs. The lifecycle screen still uses
 arrival-paced consumption and coherent management events. It is not yet a
 single independently paced full-chip simulation or physical clock model.
+
+
+### Shared analog owner integration decision
+
+Reuse the coupled RF network, detector, reference and rail equations in
+`system_model/connected/limited_coupled_driver.py` and the reference ownership
+rule in `managed_unified_reference.py`. The current fast reference and host
+supply advance independently. Do not append converter recharge as a delayed
+supply impulse: it can double-count energy or let PLL/ADC state observe the
+wrong rail history. The next integration must give continuous state one owner,
+apply DAC/ADC/host charge and switch events at their actual boundaries, and
+return consistent pad, detector, reference and rail observations. Preserve
+independent numerical checks and failed-solve rollback. The older detailed
+solver is implementation material, not transferable whole-chip qualification.

@@ -1,5 +1,15 @@
 {
   "status": "passed",
+  "finite_reference": {
+    "source_limit_a": 0.00015,
+    "sink_limit_a": 0.00015,
+    "minimum_v": 0.963389149300477,
+    "peak_current_a": 3.661085069952297e-05,
+    "limited_s": 0.0,
+    "recharge_c": 6.891908107172744e-11,
+    "conversion_charge_c": 7.095587462957791e-11,
+    "charge_residual_c": -1.9387045606711586e-26
+  },
   "integrated": true,
   "power_gated": true,
   "standalone_power_state": {
@@ -276,7 +286,7 @@
     "system_model/connected/signed_calibration_screen.py": "fbbc92e81f6d5e8fadbf6529dd653afb9c4e33cd56a24882c8e7b6f6e71d609e",
     "system_model/connected/limited_unified_screen.py": "4df5bd37fd83db4d9c2a88497897f0547887d4c4e673e25c7e47b8513d118253",
     "system_model/connected/three_cap_resistor_noise.py": "187c062bb6323b5a7907693a19af0aa2762ae4d3d1490ecc0eba62bf9d8f16d4",
-    "system_model/connected/causal_reference_lifecycle.py": "650fc390a288906e8128e3415ba3c13ad8e6912cd75fbeccf0c1ed22a7e1821b",
+    "system_model/connected/causal_reference_lifecycle.py": "781c0631264cfd8d4d718907f4279adb63e76c0aaae52ce053dbe9bc5b9d189b",
     "system_model/connected/wideband_clock_quality.py": "e94c47e61eea82e5c68231e12e55f045d080e82419262a90924a5edeef972023",
     "system_model/connected/capture_memory_lifecycle.py": "9b6176688dc0de7433c0eaf11553c2158593a40e710da4647783b2e1ff437eab",
     "system_model/connected/shaped_fractional_pll.py": "322255973147a5b06178db1ed47fac1016f1aa3550a02343774046a837007630",
@@ -393,7 +403,7 @@
     "system_model/connected/batched_rf_response_screen.py": "4d324f9cff3c347362bdfae32402c89c81d9714f677b5551f4749f994e5f53b2",
     "system_model/connected/tx_host_precondition.py": "5cc538a662158558e60a835673588bba3171928a7a4a04adb0cd46dab0b062a6",
     "system_model/connected/vector_power_detector_screen.py": "e1489da5f36d4693fd56b50e9fb017ce6f0040921e357d156ae9b002b44420f5",
-    "system_model/connected/current_limited_reference_screen.py": "d6e3f7ac81396b5b187bd6c035b8ca67343d88109e6cd8d53da9d8cb924f045c",
+    "system_model/connected/current_limited_reference_screen.py": "0d11fc8c9bc4eefb22a234a7b5dcc0826ade7af955a47594c0d2f96c728b1428",
     "system_model/connected/receiver_detect_feedback_screen.py": "638a5601c215652be10d3ab14f3d96cba00776df9c962ae8e0df24480be0b934",
     "system_model/connected/tx_retune_validity_audit.py": "b3cd541943f972f4dd5e2268d76d2b4bafd3bdee9e4c664b52eb2c18093d20b0",
     "system_model/connected/wired_return_lifecycle.py": "3ebc85dcaabeac6684ac0c824d57ca414cad521db24fa7af752c5caf96880118",
@@ -452,8 +462,8 @@
     "system_model/architecture_fast/traffic.py": "d0bd449d2f8bb0ed522e7800be6f9b6106191cbc8fb8a04838c58b19daf30338",
     "system_model/architecture_fast/run.py": "e2883fdd43d4c0c7a1c2425896e7aa584fb7b90e0ee6038ea2f7c940469acde7",
     "verification/fast_loaded_output.py": "68a8f879570ec936492153f00d464cca2451ecb5bbba09adb51b7e43081bd350",
-    "verification/fast_exclusive_engine.py": "5407d647ceace927cabb219e723cd94ef70db6b4061035d4e594c1d8add45096",
-    "verification/fast_exclusive_engine_check.py": "0872f675757cc0c98fb7b94c3c2bd854f6490de5017f3e5b64cd0711fda6724d"
+    "verification/fast_exclusive_engine.py": "5be4c69390527c7a32d9c61078c6fa8895f3da5e5b9c24f2b4163c5ee08d7066",
+    "verification/fast_exclusive_engine_check.py": "b50fd3192b086dda2ee9109182b50e9954fbd9d312829e94665ce49731235a38"
   },
   "cases": [
     {

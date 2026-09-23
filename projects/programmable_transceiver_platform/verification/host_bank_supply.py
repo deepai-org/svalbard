@@ -189,6 +189,8 @@ class LimitedHostBankSupply(HostBankSupply):
     def advance(self, end, load_current_a, drive, rtol=1e-9, atol=1e-12):
         from scipy.integrate import solve_ivp
         if not np.isfinite(end) or end < self.time:raise ValueError('Nonmonotonic time')
+        if getattr(self,'externally_owned',False) and end!=self.time:
+            raise ValueError('Host bank must advance through the shared analog owner')
         if not all(np.isfinite(v) and v > 0 for v in (rtol, atol)):
             raise ValueError('Positive numerical tolerances required')
         load = np.asarray(load_current_a, float)
@@ -238,6 +240,7 @@ class LimitedHostBankSupply(HostBankSupply):
         return after.copy()
 
     def energy_residual(self):
+        if getattr(self,'externally_owned',False):raise ValueError('Energy belongs to the shared analog owner')
         return super().energy_residual()-self.driver_energy-self.internal_energy
 
 
@@ -296,6 +299,86 @@ def limited_controls():
             'Events occur at ideal drive changes; propagation delay, current overlap, input-receiver loads and package effects remain open.'],
         source_sha256={str(Path(__file__).relative_to(p)):hashlib.sha256(Path(__file__).read_bytes()).hexdigest()})
     (p/'evidence/host-bank-limited-supply-controls.json').write_text(json.dumps(report, indent=2)+'\n')
+    print(json.dumps(report, indent=2))
+    return report
+
+
+def coupled_controls(chip_events=False):
+    """Check shared analog ownership against the standalone supply equations."""
+    p = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(p/'system_model/connected'))
+    from shared_supply_lifecycle import DomainSupply
+    from limited_coupled_driver import LimitedCoupledDriver
+    h = LimitedHostBankSupply([3.3]*7, [2.]*7, [100e-12]*7, .1,
+        [1]*5+[2]*6, [10e-12]*11, [100.]*11, [80.]*11,
+        pullup_limit_a=[.01]*11, pulldown_limit_a=[.012]*11,
+        rising_charge_c=[7e-12]*11, falling_charge_c=[7e-12]*11,
+        switching_tau_s=.5e-9, minimum_supply_v=[2.5]*7)
+    background = np.array([.020, .002, .002, 0., 0., .012, .008])
+    d = DomainSupply(('CORE', 'HOST_A', 'HOST_B', 'WIRE_A', 'WIRE_B', 'RF', 'PLL'),
+        [3.3]*7, [2.]*7, [100e-12]*7, .1)
+    if chip_events:
+        from fast_exclusive_engine import IntegratedTransceiverChip
+        rows = []
+        for engine in ('rf', 'wire'):
+            c = IntegratedTransceiverChip(coupled_analog=True,
+                rf_hz_per_v=1e6, wire_hz_per_v=1e5,
+                return_charge_per_transition=0., domain_supply=d,
+                domain_minimum_v=[2.5]*7, domain_load=lambda t, v:background.copy(),
+                host_bank=h)
+            c.select_engine(engine);c.advance(10e-9)
+            for word in (1023, 0, 31):
+                c.emitted_return_word(word, c.time);c.advance(c.time+3.2e-9)
+            owner=c.analog_owner;bank=owner.host_bank;domains=owner.domains
+            residual=(domains.source_energy_j-domains.feed_loss_j-domains.load_energy_j
+                -domains.impulse_energy_j-(bank.cap_energy()-bank.initial_energy))
+            assert abs(residual)<1e-17, residual
+            assert bank.time==c.time==owner.time
+            assert all(pll.time==c.time for pll in (c.rf_pll,c.wire_pll) if pll is not None)
+            assert np.max(abs(bank.state[:7]-domains.voltage))<1e-12
+            assert np.max(abs(bank.injected_charge-np.array([0,105e-12,91e-12,0,0,0,0])))<1e-24
+            assert np.max(abs(bank.injected_charge-bank.consumed_charge-bank.pending_charge))<1e-24
+            assert domains.impulse_energy_j==0 and c.return_charge==0
+            assert c.clock_supply_delta()==domains.voltage[6]-domains.nominal[6]
+            rows.append(dict(engine=engine,energy_residual_j=float(residual),
+                voltage_v=domains.voltage.tolist(),feedback_intervals=c.feedback_intervals))
+        report=dict(status='passed',cases=rows,full_chip_closure=False,
+            physical_qualification=False,scope='19.6 ns startup and three output words in each engine',
+            limitations=['No payload throughput or signal-quality qualification.',
+                'Exploratory driver, switching charge and background currents.'],
+            source_sha256={str(f.relative_to(p)):hashlib.sha256(f.read_bytes()).hexdigest()
+                for f in list((p/'system_model/connected').glob('*.py'))+
+                         list((p/'system_model/architecture_fast').glob('*.py'))+
+                         [Path(__file__),p/'verification/fast_exclusive_engine.py',p/'verification/fast_loaded_output.py']})
+        (p/'evidence/host-bank-chip-events.json').write_text(json.dumps(report,indent=2)+'\n')
+        print(json.dumps(report,indent=2));return report
+    c = LimitedCoupledDriver(domain_supply=d, domain_minimum_v=[2.5]*7,
+        domain_load=lambda t, v: background.copy(), host_bank=h)
+    c.driver_enabled = False
+    maximum_error = 0.
+    for end, drive in ((20e-9, [0]*11), (23.2e-9, [1]*11), (26.4e-9, [0]*11)):
+        c.host_bank.advance(c.time, np.zeros(7), drive)
+        c.advance(end, 0j, rtol=1e-9, atol=1e-12)
+        h.advance(end, background, drive)
+        maximum_error = max(maximum_error, float(np.max(np.abs(c.host_bank.state-h.state))))
+    d = c.domains
+    residual = (c.host_bank.cap_energy()-c.host_bank.initial_energy
+        -d.source_energy_j+d.feed_loss_j+d.load_energy_j)
+    charge_error = float(np.max(np.abs(c.host_bank.injected_charge
+        -c.host_bank.consumed_charge-c.host_bank.pending_charge)))
+    assert maximum_error < 1e-7, maximum_error
+    assert abs(residual) < 1e-17, residual
+    assert charge_error < 1e-24, charge_error
+    report = dict(status='controls_passed', full_chip_closure=False,
+        physical_qualification=False, shared_owner_state_error_v=maximum_error,
+        energy_residual_j=residual, charge_residual_c=charge_error,
+        limitations=['RF driver disabled for supply-equation comparison.',
+            'Does not verify full-chip event hooks, PLL feedback or payload operation.',
+            'Driver and internal charge parameters remain exploratory.'],
+        source_sha256={str(f.relative_to(p)):hashlib.sha256(f.read_bytes()).hexdigest()
+            for f in (Path(__file__), p/'system_model/connected/limited_coupled_driver.py',
+                      p/'system_model/connected/shared_supply_lifecycle.py')})
+    (p/'evidence/host-bank-coupled-supply-controls.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report, indent=2))
     return report
 
@@ -380,5 +463,7 @@ def controls():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--limited-controls', action='store_true')
+    parser.add_argument('--coupled-controls', action='store_true')
+    parser.add_argument('--chip-events', action='store_true')
     args = parser.parse_args()
-    limited_controls() if args.limited_controls else controls()
+    coupled_controls(chip_events=True) if args.chip_events else coupled_controls() if args.coupled_controls else limited_controls() if args.limited_controls else controls()

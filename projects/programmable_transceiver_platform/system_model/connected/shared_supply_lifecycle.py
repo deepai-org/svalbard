@@ -237,7 +237,7 @@ class CoupledChip(ImpairedChip):
     def supply_impulse(self,time,delta_v):
         pass
 
-    def host_supply_event(self,changed_bits,charge_per_transition,time):
+    def host_supply_event(self,changed_bits,charge_per_transition,time,output=False):
         charge=(changed_bits.bit_count()+1)*charge_per_transition
         self.supply.draw(time,charge)
         self.supply_impulse(time,-charge/self.supply.c)
@@ -251,7 +251,7 @@ class CoupledChip(ImpairedChip):
     def emitted_return_word(self,word,time):
         changes=(word^self.previous_return_word).bit_count()+1
         charge=changes*self.return_q
-        self.host_supply_event(word^self.previous_return_word,self.return_q,time)
+        self.host_supply_event(word^self.previous_return_word,self.return_q,time,output=True)
         self.previous_return_word=word;self.return_transitions+=changes;self.return_charge+=charge
 
     def convert_adc(self,value):

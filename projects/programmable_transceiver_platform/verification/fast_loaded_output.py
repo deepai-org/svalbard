@@ -71,6 +71,7 @@ class LoadedOutputChip(TransceiverChip):
             owner.reference.__dict__.update(candidate.reference.__dict__)
             owner.detector.__dict__.update(candidate.detector.__dict__)
             owner.rx_bank.update(candidate.rx_bank)
+            if owner.host_bank is not None:owner.host_bank.__dict__.update(candidate.host_bank.__dict__)
             owner.received=candidate.received
             owner.rail_v=candidate.rail_v;owner.time=candidate.time
             owner.rail_trajectory=candidate.rail_trajectory

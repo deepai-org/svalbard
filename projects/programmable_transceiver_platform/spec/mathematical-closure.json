@@ -494,8 +494,12 @@
       "internal_switching_update": {
         "entry": "verification/host_bank_supply.py:LimitedHostBankSupply",
         "evidence": "evidence/host-bank-limited-supply-controls.json",
-        "integrated_into_chip": false,
-        "scope": "Current-limited output branches and finite internal charge pulses; held-load nonlinear controls, charge/energy accounting and overload rollback pass. Parameter bounds, delayed actual host events and shared analog-owner integration remain open."
+        "integrated_into_chip": true,
+        "scope": "Experimental optional shared analog-owner integration passes standalone equation comparison and 19.6 ns startup/three output-word checks in RF and wired selections. Charge/energy and PLL supply observation checked; loaded payload, electrical timing, propagation delays and parameter bounds remain unqualified.",
+        "integration_evidence": [
+          "evidence/host-bank-coupled-supply-controls.json",
+          "evidence/host-bank-chip-events.json"
+        ]
       }
     },
     "driver_fit_update": {

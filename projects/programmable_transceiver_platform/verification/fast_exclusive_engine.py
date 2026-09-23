@@ -179,7 +179,7 @@ class SwitchableWarmClock(SwitchablePLL,WarmClock):
             self.initialize_reference(time,tick)
 
 class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
-    def __init__(self,*,reference_source_limit_a=150e-6,reference_sink_limit_a=150e-6,coupled_analog=False,wired_power_parameters=None,domain_supply=None,domain_minimum_v=None,domain_load=None,**kwargs):
+    def __init__(self,*,reference_source_limit_a=150e-6,reference_sink_limit_a=150e-6,coupled_analog=False,wired_power_parameters=None,domain_supply=None,domain_minimum_v=None,domain_load=None,host_bank=None,**kwargs):
         from causal_reference_lifecycle import CurrentLimitedReference
         kwargs.setdefault('dac_reference_load_capacitance',2e-12)
         super().__init__(**kwargs)
@@ -193,7 +193,12 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
             sink_limit_a=reference_sink_limit_a)
         self.dac_reference=self.adc_reference
         self.analog_owner=None
-        self.domain_configuration=dict(domain_supply=domain_supply,domain_minimum_v=domain_minimum_v,domain_load=domain_load)
+        self.domain_configuration=dict(domain_supply=domain_supply,domain_minimum_v=domain_minimum_v,domain_load=domain_load,host_bank=host_bank)
+        if host_bank is not None:
+            if not coupled_analog or domain_supply is None or self.return_q!=0:
+                raise ValueError('Physical host requires coupled domains and no legacy return impulse')
+            expected=[domain_supply.names.index('HOST_A')]*5+[domain_supply.names.index('HOST_B')]*6
+            if list(host_bank.output_domain)!=expected:raise ValueError('Host output ownership must match 5/5 data plus clock split')
         if domain_supply is not None:
             if not coupled_analog:raise ValueError('Domain supplies require the coupled analog owner')
         self.wired_power_parameters=dict(peak_differential_v=.4,termination_ohm=100.,efficiency=.35,bias_a=.002)
@@ -240,15 +245,23 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         self.supply.advance=MethodType(supply_advance,self.supply)
         self.supply.draw=MethodType(supply_draw,self.supply)
 
-    def host_supply_event(self,changed_bits,charge_per_transition,time):
+    def host_supply_event(self,changed_bits,charge_per_transition,time,output=False):
         owner=getattr(self,'analog_owner',None)
         if owner is None or owner.domains is None:
-            return super().host_supply_event(changed_bits,charge_per_transition,time)
+            return super().host_supply_event(changed_bits,charge_per_transition,time,output=output)
         import numpy as np
         if type(changed_bits) is not int or not 0<=changed_bits<1024:
             raise ValueError('Domain host event must describe ten physical data pins')
         self.supply.advance(time)
         d=owner.domains
+        if output and owner.host_bank is not None:
+            if charge_per_transition:raise ValueError('Legacy output impulse would double count physical host')
+            h=owner.host_bank
+            word=self.previous_return_word^changed_bits
+            drive=[bool(word&(1<<i)) for i in range(10)]+[not bool(h.drive[10])]
+            h.advance(time,np.zeros(h.n),drive)
+            self.supply_impulse(time,0.)
+            return
         charges=np.zeros(len(d.names))
         charges[d.names.index('HOST_A')]=(changed_bits&31).bit_count()*charge_per_transition
         charges[d.names.index('HOST_B')]=((changed_bits>>5).bit_count()+1)*charge_per_transition
@@ -257,6 +270,7 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         before=d.impulse_energy_j
         d.draw(time,charges)
         owner.impulse_energy_j+=d.impulse_energy_j-before
+        if owner.host_bank is not None:owner.host_bank.state[:owner.host_bank.n]=d.voltage
         owner.domain_trajectories=d.trajectories
         owner.rail_trajectory=d.trajectories['RF']
         self.supply.charge+=float(np.sum(charges))

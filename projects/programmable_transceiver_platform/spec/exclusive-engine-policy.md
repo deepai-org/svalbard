@@ -40,6 +40,31 @@ not merely two copies of the same design. Do not force a shared GHz analog path
 if routing and switch loading cost more than the saved circuitry. Likewise,
 retain independent wired RX timing where needed for a full-duplex wired link.
 
+## RF-band stretch goals
+
+User decision, 2026-09-23: include both of the following as stretch goals:
+
+- **Lower-frequency RF operation on the chip.** Evaluate reuse of the I/Q
+  converters, baseband filters, gain stages and mixers with suitable LO division
+  or tuning and RF input/output configuration. Select supported bands only after
+  checking the complete RX and TX paths, including quadrature generation,
+  matching, noise, linearity, images, filtering and calibration. No particular
+  sub-GHz band or continuous broadband tuning range is presently guaranteed.
+- **Other-band operation through external frequency conversion.** Evaluate a
+  board-level up/downconverter that translates an external RF band into a range
+  the chip can transmit and receive. Account for external LO phase noise, images,
+  spurs, conversion gain/loss, filtering and TX/RX routing in end-to-end signal
+  quality. The converter and its LO are explicit board resources, not additional
+  on-chip capability or an implied single-chip radio for that external band.
+
+Both extensions should reuse the selected RF engine and existing terminals where
+possible, retain RF/wired payload exclusion, and respect the one-slot / 50-terminal
+chip boundary. Any proposed additional chip resources require an explicit budget
+assessment. Neither extension replaces the required approximately 2.4 GHz radio
+or wired profiles, nor delays closure of their highest-risk gaps. Current
+mathematical and circuit evidence does not qualify either stretch goal; adding
+them to this plan does not expand the verified tuning range.
+
 ## Implementation and evidence status
 
 The existing model/RTL still permits concurrent operation. It must be updated

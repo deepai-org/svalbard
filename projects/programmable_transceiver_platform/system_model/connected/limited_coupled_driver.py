@@ -13,7 +13,7 @@ from current_limited_reference import power as limited_power
 
 
 class LimitedCoupledDriver:
-    def __init__(self,network=None,law=None,rail_r=100.,rail_c=100e-12,minimum_rail_v=2.5,detector=None,reference=None,reference_bias_a=.0001,reference_efficiency=.5,source_limit_a=150e-6,sink_limit_a=150e-6,rx_bank=None,receive=None,domain_supply=None,domain_minimum_v=None,domain_load=None):
+    def __init__(self,network=None,law=None,rail_r=100.,rail_c=100e-12,minimum_rail_v=2.5,detector=None,reference=None,reference_bias_a=.0001,reference_efficiency=.5,source_limit_a=150e-6,sink_limit_a=150e-6,rx_bank=None,receive=None,domain_supply=None,domain_minimum_v=None,domain_load=None,host_bank=None):
         self.network=copy.deepcopy(network) if network is not None else SwitchedLoad()
         self.law=law or DriverSupplyLaw()
         if not all(math.isfinite(x) and x>0 for x in (rail_r,rail_c,minimum_rail_v)) or minimum_rail_v>=self.law.nominal_v:raise ValueError('Invalid rail parameters')
@@ -54,6 +54,14 @@ class LimitedCoupledDriver:
             self.rf_domain=d.names.index('RF');self.reference_domain=d.names.index('PLL');self.wire_domain=d.names.index('WIRE_A')
             if d.nominal[self.rf_domain]!=self.law.nominal_v:raise ValueError('RF nominal voltage mismatch')
             self.rail_v=float(d.voltage[self.rf_domain])
+        self.host_bank=copy.deepcopy(host_bank)
+        if self.host_bank is not None:
+            h=self.host_bank;d=self.domains
+            if d is None or h.time!=self.time or h.n!=len(d.names):raise ValueError('Host bank requires aligned physical domains')
+            for a,b in ((h.nominal,d.nominal),(h.feed_r,d.feed_r),(h.decap,d.c),(h.floor,self.domain_floor),(h.state[:h.n],d.voltage)):
+                if not np.array_equal(a,b):raise ValueError('Host bank and domain circuit mismatch')
+            if h.return_r!=d.common_return_r:raise ValueError('Host return mismatch')
+            h.externally_owned=True
         self.detector=detector
         if detector is not None and (detector.time!=self.time or not hasattr(detector,'readout_pole')):
             raise ValueError('Aligned two-pole detector required')
@@ -72,10 +80,11 @@ class LimitedCoupledDriver:
         count=len(self.rx_bank['poles']) if self.rx_bank is not None else 0
         energy_index=rx_index+2*count
         domain_index=energy_index+4
-        domains=self.domains
+        domains=self.domains;host=self.host_bank
+        domain_count=len(domains.names) if domains is not None else 0
         def rhs(t,y):
             v=y[:4]+1j*y[4:8];rail=y[8]
-            rails=y[domain_index:] if domains is not None else None
+            rails=y[domain_index:domain_index+domain_count] if domains is not None else None
             reference_rail=rails[self.reference_domain] if domains is not None else rail
             extra_rail=rails[self.wire_domain] if domains is not None else rail
             source=law.source(drive(t),rail) if self.driver_enabled else 0j
@@ -111,18 +120,29 @@ class LimitedCoupledDriver:
                 currents[self.rf_domain]+=driver_current
                 currents[self.reference_domain]+=reference_current
                 currents[self.wire_domain]+=extra
-                feed=domains.conductance@(domains.nominal-rails)
-                derivative=(feed-currents)/domains.c
+                host_states=None;driver_loss=0.
+                if host is not None:
+                    host_states=y[domain_index:]
+                    currents+=host.internal_current(t)
+                    ground,feed,up,down=host.currents(host_states,host.drive)
+                    derivative=host.derivative(host_states,currents,host.drive)
+                    outputs=host_states[domain_count:]
+                    driver_loss=float(up@(rails[host.output_domain]+ground-outputs)+down@(outputs-ground))
+                    feed_loss=float(domains.feed_r@(feed**2)+ground**2/host.return_r)
+                else:
+                    feed=domains.conductance@(domains.nominal-rails)
+                    derivative=(feed-currents)/domains.c
+                    feed_loss=float(feed@domains.resistance@feed)
                 result[8]=derivative[self.rf_domain]
                 return np.r_[result,domains.nominal@feed/self.c,
-                    feed@domains.resistance@feed/self.c,rails@currents/self.c,
+                    feed_loss/self.c,(rails@currents+driver_loss)/self.c,
                     extra_rail*extra/self.c,derivative]
             feed=(law.nominal_v-rail)/self.r
             # Scale energy states by C for comparable numerical tolerances.
             return np.r_[result,law.nominal_v*feed/self.c,feed*feed*self.r/self.c,
                          rail*current/self.c,rail*extra/self.c]
         def undervoltage(t,y):
-            return float(np.min(y[domain_index:]-self.domain_floor)) if domains is not None else y[8]-self.minimum_rail_v
+            return float(np.min(y[domain_index:domain_index+domain_count]-self.domain_floor)) if domains is not None else y[8]-self.minimum_rail_v
         undervoltage.terminal=True;undervoltage.direction=-1
         y=np.r_[n.voltage.real,n.voltage.imag,self.rail_v]
         if self.detector is not None:
@@ -136,6 +156,7 @@ class LimitedCoupledDriver:
             y=np.r_[y,states.real,states.imag]
         y=np.r_[y,0.,0.,0.,0.]
         if domains is not None:y=np.r_[y,domains.voltage]
+        if host is not None:y=np.r_[y,host.state[domain_count:]]
         sol=solve_ivp(rhs,(self.time,time),y,method='Radau',rtol=rtol,atol=atol,events=undervoltage,max_step=max_step,dense_output=rail_trace_step_s is not None)
         if not sol.success or sol.status==1:raise ValueError('Coupled driver left declared rail envelope or integration failed')
         trajectory=None;domain_trajectories=None
@@ -170,7 +191,12 @@ class LimitedCoupledDriver:
         self.rail_trajectory=trajectory
         self.domain_trajectories=domain_trajectories
         if domains is not None:
-            domains.voltage=out[domain_index:].copy();domains.time=time
+            domains.voltage=out[domain_index:domain_index+domain_count].copy();domains.time=time
+            if host is not None:
+                pending=host.pending_charge.copy()
+                host.pending_charge=pending*np.exp(-(time-host.time)/host.switching_tau)
+                host.consumed_charge+=pending-host.pending_charge
+                host.state=out[domain_index:].copy();host.time=time
             domains.source_energy_j+=float(out[energy_index])*self.c
             domains.feed_loss_j+=float(out[energy_index+1])*self.c
             domains.load_energy_j+=float(out[energy_index+2])*self.c

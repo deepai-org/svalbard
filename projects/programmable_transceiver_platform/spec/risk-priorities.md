@@ -29,6 +29,21 @@ The assumed eight-line VCO noise is 20 kHz RMS, 80 kHz peak. This is still only
 50 fC host disturbance. Prioritize physical host charge/return coupling and
 sustained service over another nominal short RF capture.
 
+The finite host-output candidate is now connected experimentally to the shared
+analog supply equations. `host-bank-coupled-supply-controls.json` checks rising
+and falling output loads against standalone integration: maximum state difference
+4.47 nV, energy residual below 3e-23 J. This verifies accounting with the RF driver
+disabled, not the full-chip payload/event/PLL composition. Finish that integration
+check, then exercise loaded RF/wired service; further standalone pad fitting is
+not the next priority. Driver parameters and complete current bounds remain open.
+
+The subsequent `host-bank-chip-events.json` check passes 19.6 ns startup and
+three actual return-word events in each selected engine. It verifies finite
+output charge ownership, shared state/time, PLL supply observation and global
+energy balance without legacy output impulses. This is integration evidence,
+not sustained traffic or RF quality. Next use this composition in the loaded
+payload runner; do not count historical 50 fC payload passes as its qualification.
+
 1. **Autonomous timing and RF quality against an independent reference.**
    The existing TX conversion metric removes the measured shared-LO phase, and
    RX loopback can cancel that same phase error. Neither establishes useful

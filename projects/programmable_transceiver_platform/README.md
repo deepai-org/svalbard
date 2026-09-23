@@ -10,6 +10,12 @@ sharing is encouraged. See the [operating policy](spec/exclusive-engine-policy.m
 Narrow temperature and supply ranges are acceptable; actual limits and physical
 feasibility remain unqualified.
 
+Stretch goals are **lower-frequency RF operation** and **other-band operation
+through external frequency conversion**. Reuse the existing RF/baseband resources
+where feasible; these are unverified extensions, not replacements for the required
+wired and approximately 2.4 GHz capabilities. See the
+[stretch-goal scope](spec/exclusive-engine-policy.md#rf-band-stretch-goals).
+
 ## Current state
 
 A functional mathematical prototype exists. Mathematical closure, the complete

@@ -87,6 +87,7 @@ def forecast_trajectory_feedback(driver,pll,end,source_terms,hz_per_v,step_s,
         phase=np.asarray(phases)
         local=copy.copy(driver)
         if domains is not None:local.domains=copy.deepcopy(domains)
+        local.host_bank=copy.deepcopy(getattr(driver,'host_bank',None))
         local.network=copy.deepcopy(driver.network)
         local.detector=copy.copy(driver.detector) if driver.detector is not None else None
         local.reference=copy.copy(driver.reference) if driver.reference is not None else None

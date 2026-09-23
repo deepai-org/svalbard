@@ -301,8 +301,11 @@ def coupled_acquisition_screen(payload=False,domains=False,mode=0,independent_rx
     output.write_text(json.dumps(report,indent=2)+'\n')
     print({k:v for k,v in report.items() if k not in ('source_sha256','acquisition')},flush=True)
 
-def coupled_wire_screen(domains=False):
+def coupled_wire_screen(domains=False, physical_host=False):
     import time
+    if physical_host and not domains:raise ValueError('Physical host requires domains')
+    files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py',P/'verification/host_bank_supply.py']
+    hashes={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
     rows=[];started=time.monotonic()
     for mode in (0,1):
         options={}
@@ -311,8 +314,16 @@ def coupled_wire_screen(domains=False):
             names=('CORE','HOST_A','HOST_B','WIRE_A','WIRE_B','RF','PLL')
             options=dict(domain_supply=DomainSupply(names,[3.3]*7,[2.]*7,[100e-12]*7,.1),
                 domain_minimum_v=[2.5]*7,domain_load=lambda t,v:[.02,.02,.02,0,.005,0,.008])
+        if physical_host:
+            from host_bank_supply import LimitedHostBankSupply
+            options['domain_load']=lambda t,v:[.02,.002,.002,0,.005,0,.008]
+            options['host_bank']=LimitedHostBankSupply([3.3]*7,[2.]*7,[100e-12]*7,.1,
+                [1]*5+[2]*6,[10e-12]*11,[100.]*11,[80.]*11,
+                pullup_limit_a=[.01]*11,pulldown_limit_a=[.012]*11,
+                rising_charge_c=[7e-12]*11,falling_charge_c=[7e-12]*11,
+                switching_tau_s=.5e-9,minimum_supply_v=[2.5]*7)
         c=IntegratedTransceiverChip(coupled_analog=True,wire_hz_per_v=1e5,
-            return_charge_per_transition=50e-15,watchdog_s=1e-3,**options)
+            return_charge_per_transition=0. if physical_host else 50e-15,watchdog_s=1e-3,**options)
         c.select_engine('wire');c.configure(mode,0.)
         c.advance(8e-6)
         assert c.state=='active' and c.wire_pll.locked
@@ -323,7 +334,8 @@ def coupled_wire_screen(domains=False):
         start=c.time+30e-9;c.schedule_wire(len(tx),start);c.incoming_wire(rx,start,.3,0)
         c.advance(c.time+2e-6)
         assert c.wired_output==tx and c.host_wire==rx and c.state=='active'
-        assert c.return_charge>0 and c.oscillator_supply_events>0
+        assert c.oscillator_supply_events>0
+        assert c.analog_owner.host_bank.injected_charge.sum()>0 if physical_host else c.return_charge>0
         assert not c.adc_words and c.adc_reference.samples==0
         assert c.time==c.analog_owner.time==c.wire_pll.time==c.rf_pll.time
         c.wire_accounting()
@@ -331,27 +343,36 @@ def coupled_wire_screen(domains=False):
         if domains:
             import numpy as np
             d=owner.domains
-            assert d.time==c.time and d.impulse_energy_j>0
+            assert d.time==c.time
+            assert d.impulse_energy_j==0 if physical_host else d.impulse_energy_j>0
             stored=.5*float(np.sum(d.c*(d.voltage**2-d.nominal**2)))
         else:stored=.5*owner.c*(owner.rail_v**2-owner.law.nominal_v**2)
+        if physical_host:stored=owner.host_bank.cap_energy()-owner.host_bank.initial_energy
         residual=owner.source_energy_j-owner.rail_resistor_energy_j-owner.load_energy_j-owner.impulse_energy_j-stored
         assert abs(residual)<1e-16 and owner.extra_load_energy_j>0
         rows.append(dict(mode=mode,tx_words=len(tx),host_rx_words=len(rx),return_charge_c=c.return_charge,
             rail_v=owner.rail_v,feedback_intervals=c.feedback_intervals,rf_oscillator_off=True,
             wired_power_parameters=c.wired_power_parameters,additional_load_energy_j=owner.extra_load_energy_j,
             rail_energy_residual_j=residual,source_energy_j=owner.source_energy_j))
+        if physical_host:
+            h=owner.host_bank
+            assert max(abs(h.injected_charge-h.consumed_charge-h.pending_charge))<1e-22
+            rows[-1].update(internal_host_charge_c=float(h.injected_charge.sum()),host_output_v=h.state[7:].tolist())
         print(dict(elapsed_s=time.monotonic()-started,**rows[-1]),flush=True)
-    files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py']
+    assert all(hashlib.sha256((P/name).read_bytes()).hexdigest()==value for name,value in hashes.items()), 'Sources changed during run'
     report=dict(status='passed',cases=rows,full_chip_closure=False,physical_qualification=False,
-        source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files},
+        source_sha256=hashes,
         limitations=['Assumed regulated wired swing/termination efficiency and bias; gate switching charge, output compliance and clock/converter bias remain open.',
         'Short finite bursts, not full throughput or protocol compliance; RF bias gating and physical parameters remain open.'])
     if domains:
         report['domain_fixture']=dict(names=list(names),feed_r_ohm=2.,capacitance_f=100e-12,
-            common_return_r_ohm=.1,minimum_v=2.5,background_current_a=[.02,.02,.02,0,.005,0,.008],
+            common_return_r_ohm=.1,minimum_v=2.5,background_current_a=[.02,.002,.002,0,.005,0,.008] if physical_host else [.02,.02,.02,0,.005,0,.008],
             complete_current_inventory=False)
         report['limitations'].append('Illustrative domain parameters and background currents; no full-chip power qualification.')
-    (P/('evidence/fast-domain-wire.json' if domains else 'evidence/fast-coupled-wire.json')).write_text(json.dumps(report,indent=2)+'\n')
+    if physical_host:
+        report['physical_host_fixture']=dict(output_capacitance_f=10e-12,pullup_r_ohm=100.,pulldown_r_ohm=80.,pullup_limit_a=.01,pulldown_limit_a=.012,internal_charge_per_edge_c=7e-12,switching_tau_s=.5e-9)
+        report['limitations'].append('Exploratory output law; host electrical timing, propagation delay and complete current inventory unqualified.')
+    (P/('evidence/fast-host-bank-wire.json' if physical_host else 'evidence/fast-domain-wire.json' if domains else 'evidence/fast-coupled-wire.json')).write_text(json.dumps(report,indent=2)+'\n')
 
 def main():
     if not __debug__:raise RuntimeError('Assertions must remain enabled')
@@ -359,6 +380,7 @@ def main():
     parser.add_argument('--integrated',action='store_true')
     parser.add_argument('--domain-chip-screen',action='store_true')
     parser.add_argument('--domain-wire-screen',action='store_true')
+    parser.add_argument('--host-bank-wire-screen',action='store_true')
     parser.add_argument('--domain-rf-screen',action='store_true')
     parser.add_argument('--rf-mode',type=int,choices=(0,1),default=0)
     parser.add_argument('--independent-rx',action='store_true')
@@ -372,6 +394,7 @@ def main():
         parser.error('Independent input/noise options require --domain-rf-screen')
     if args.domain_rf_screen:return coupled_acquisition_screen(payload=True,domains=True,mode=args.rf_mode,
         independent_rx=args.independent_rx,noise_rms_hz=args.rf_noise_rms_hz)
+    if args.host_bank_wire_screen:return coupled_wire_screen(domains=True,physical_host=True)
     if args.domain_wire_screen:return coupled_wire_screen(domains=True)
     if args.domain_chip_screen:
         print(domain_chip_screen());return

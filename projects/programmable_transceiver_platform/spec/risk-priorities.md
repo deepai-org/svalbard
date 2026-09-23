@@ -86,12 +86,13 @@ from sequencer completion.
 
 The domain-supply candidate is now merged into main (`b278eb2`). Its primitive,
 loaded driver/PLL feedback, and RF/wired startup checks pass after the merge;
-receiver trim and capture-gain recording are retained. Next route actual host
-events to their physical feeds and supply a complete current inventory before
+receiver trim and capture-gain recording are retained. Host word events now route data pins 0–4 to HOST_A and pins 5–9 plus the
+clock to HOST_B. Next validate sustained host traffic and supply a complete
+current inventory before
 repeating quality and lifecycle checks. The candidate connects driver/reference
 ODE states and PLL-domain histories to the full-chip scheduler, with local
 energy/rollback/refinement checks. Its
-10 ns startup checks use illustrative loads and disable scalar host impulses;
+12 ns startup checks use illustrative loads and one segmented host output event;
 they do not qualify domain-loaded traffic or chip power. The RF pass remains
 scoped to its recorded single-rail source snapshot (`ca7a220`); it does not
 qualify this new domain-supply composition.

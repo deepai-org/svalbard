@@ -196,7 +196,6 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         self.domain_configuration=dict(domain_supply=domain_supply,domain_minimum_v=domain_minimum_v,domain_load=domain_load)
         if domain_supply is not None:
             if not coupled_analog:raise ValueError('Domain supplies require the coupled analog owner')
-            if self.q or self.return_q:raise ValueError('Domain host impulse routing is not integrated; explicitly disable scalar impulse fixtures')
         self.wired_power_parameters=dict(peak_differential_v=.4,termination_ohm=100.,efficiency=.35,bias_a=.002)
         if wired_power_parameters is not None:
             if set(wired_power_parameters)!=set(self.wired_power_parameters):raise ValueError('Complete wired power parameters required')
@@ -240,6 +239,29 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
             supply.minimum=min(supply.minimum,supply.delta);supply.charge+=charge
         self.supply.advance=MethodType(supply_advance,self.supply)
         self.supply.draw=MethodType(supply_draw,self.supply)
+
+    def host_supply_event(self,changed_bits,charge_per_transition,time):
+        owner=getattr(self,'analog_owner',None)
+        if owner is None or owner.domains is None:
+            return super().host_supply_event(changed_bits,charge_per_transition,time)
+        import numpy as np
+        if type(changed_bits) is not int or not 0<=changed_bits<1024:
+            raise ValueError('Domain host event must describe ten physical data pins')
+        self.supply.advance(time)
+        d=owner.domains
+        charges=np.zeros(len(d.names))
+        charges[d.names.index('HOST_A')]=(changed_bits&31).bit_count()*charge_per_transition
+        charges[d.names.index('HOST_B')]=((changed_bits>>5).bit_count()+1)*charge_per_transition
+        after=d.voltage-charges/d.c
+        if np.any(after<=owner.domain_floor):raise ValueError('Host switching exceeds domain voltage envelope')
+        before=d.impulse_energy_j
+        d.draw(time,charges)
+        owner.impulse_energy_j+=d.impulse_energy_j-before
+        owner.domain_trajectories=d.trajectories
+        owner.rail_trajectory=d.trajectories['RF']
+        self.supply.charge+=float(np.sum(charges))
+        # Only host capacitors jump; PLL/RF perturbations propagate continuously.
+        self.supply_impulse(time,0.)
 
     def clock_supply_delta(self):
         owner=self.analog_owner

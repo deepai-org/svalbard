@@ -136,7 +136,7 @@ def domain_chip_screen():
     rows=[]
     for engine in ('rf','wire'):
         c=IntegratedTransceiverChip(coupled_analog=True,rf_hz_per_v=1e6,wire_hz_per_v=1e5,
-            charge_per_transition=0,return_charge_per_transition=0,
+            charge_per_transition=50e-15,return_charge_per_transition=50e-15,
             domain_supply=DomainSupply(names,[3.3]*7,[2.]*7,[100e-12]*7,.1),
             domain_minimum_v=[2.5]*7,domain_load=lambda t,v:[.02,.02,.02,0,0,.01,.008])
         c.select_engine(engine);c.advance(10e-9)
@@ -151,9 +151,18 @@ def domain_chip_screen():
         before=(c.time,d.voltage.copy())
         reject(lambda:c.supply.draw(c.time,1e-15))
         assert c.time==before[0] and np.array_equal(d.voltage,before[1])
+        before_v=d.voltage.copy();phase=c.rf_pll.output_phase_cycles
+        c.emitted_return_word(31,c.time)
+        expected=np.zeros(7);expected[1]=5*c.return_q/d.c[1];expected[2]=c.return_q/d.c[2]
+        assert np.max(abs(before_v-d.voltage-expected))<1e-14
+        assert c.rf_pll.output_phase_cycles==phase
+        assert abs(c.return_charge-6*c.return_q)<1e-27 and abs(c.supply.charge-6*c.return_q)<1e-27
+        c.advance(12e-9)
+        energy=d.source_energy_j-d.feed_loss_j-d.load_energy_j-d.impulse_energy_j-.5*np.sum(d.c*(d.voltage**2-d.nominal**2))
+        assert abs(energy)<1e-18 and d.impulse_energy_j>0
         rows.append(dict(engine=engine,voltage_v=d.voltage.tolist(),energy_residual_j=float(energy),intervals=c.feedback_intervals))
-    return dict(cases=rows,scope='10 ns startup only; illustrative constant background loads',
-        host_impulses_integrated=False,payload_qualified=False,physical_qualification=False)
+    return dict(cases=rows,scope='12 ns startup and one host output event; illustrative constant background loads',
+        host_impulses_integrated=True,payload_qualified=False,physical_qualification=False)
 
 def coupled_acquisition_screen(payload=False):
     import time

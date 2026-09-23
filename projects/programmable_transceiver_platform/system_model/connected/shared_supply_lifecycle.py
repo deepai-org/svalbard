@@ -237,18 +237,21 @@ class CoupledChip(ImpairedChip):
     def supply_impulse(self,time,delta_v):
         pass
 
+    def host_supply_event(self,changed_bits,charge_per_transition,time):
+        charge=(changed_bits.bit_count()+1)*charge_per_transition
+        self.supply.draw(time,charge)
+        self.supply_impulse(time,-charge/self.supply.c)
+
     def feed(self,word,epoch,time):
         # Existing edge ordering completes ADC events at this time first.
         super().feed(word,epoch,time)
         changes=(word^self.previous_host_word).bit_count()+1 # Include host clock edge.
-        self.supply.draw(time,changes*self.q)
-        self.supply_impulse(time,-changes*self.q/self.supply.c)
+        self.host_supply_event(word^self.previous_host_word,self.q,time)
         self.previous_host_word=word;self.transitions+=changes
     def emitted_return_word(self,word,time):
         changes=(word^self.previous_return_word).bit_count()+1
         charge=changes*self.return_q
-        self.supply.draw(time,charge)
-        self.supply_impulse(time,-charge/self.supply.c)
+        self.host_supply_event(word^self.previous_return_word,self.return_q,time)
         self.previous_return_word=word;self.return_transitions+=changes;self.return_charge+=charge
 
     def convert_adc(self,value):

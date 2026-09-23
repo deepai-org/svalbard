@@ -162,3 +162,12 @@ continue to consume the RF connection's allocation during wired maintenance.
 Full-chip budget closure needs these loads and mode transitions on the same
 supply owner. The current seven-domain RC primitive is still isolated and does
 not establish this integration or any package parameters.
+
+The domain candidate now routes H2D/D2H word-event charge by the physical 5/5
+host data split, with the clock charged to HOST_B. The same event replaces the
+scalar impulse; it is not added a second time. RF/PLL capacitor voltages remain
+continuous at a host impulse, then respond through the common return network.
+Per-transition charge is still an assumption, not a measured pad-energy law;
+CORE pre-driver switching and SPI/reset events still need their own inventory.
+A short RF/wired startup check verifies segment voltage steps, energy balance
+and unchanged oscillator phase at the event. Sustained traffic remains open.

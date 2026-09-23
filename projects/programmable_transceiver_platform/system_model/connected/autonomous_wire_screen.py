@@ -73,7 +73,51 @@ def management(mode):
     return dict(mode=mode,timed_configuration=True,reference_loss_holds_running_oscillator=True)
 
 
+def bounded_word_controls(mode,sensitivity=1e5,expect_loss=False):
+    from autonomous_pll import SupplyTrajectory
+    class BoundedChip(AutonomousWireChip):
+        BOUNDED_WIRE_CLOCK=True
+    c=BoundedChip(watchdog_s=50e-6);c.configure(mode,0.);c.advance(5e-6)
+    assert c.state=='active' and c.wire_pll.locked
+    words=[17,801,3,999,0,1023]
+    for word in words:c.accept_wire(word)
+    start=c.time+1e-9;c.schedule_wire(len(words),start)
+    assert math.isinf(c.next_wire) and c.wire_phase_target is None
+    steps=0;pending=0
+    # The external controller here supplies bounded histories; the integrated
+    # analog owner must eventually provide them and split at resolved edges.
+    while c.wire_remaining or c.serializer.active:
+        end=c.time+.1/c.channel.rate
+        trace=SupplyTrajectory((c.time,end),(-.2,-.2))
+        old=(c.time,c.wire_pll.time,c.wire_phase_target,c.next_wire,c.serializer.deadline)
+        forecast=c.forecast_wire_edges(trace,sensitivity)
+        assert old==(c.time,c.wire_pll.time,c.wire_phase_target,c.next_wire,c.serializer.deadline)
+        c.commit_wire_forecast(trace,sensitivity,forecast)
+        pending+=int(math.isinf(c.next_wire))
+        c.advance(end);steps+=1
+        assert steps<2000
+    if expect_loss:
+        assert c.state=='draining' and c.events[-1][1]=='wired TX clock lock loss'
+        c.wire_accounting()
+        assert c.wire_phase_target is None and c.wire_start_not_before is None and not c.serializer.pending_phase
+        return dict(mode=mode,sensitivity_hz_per_v=sensitivity,expected_fault='wired TX clock lock loss',completed_words=len(c.wired_output))
+    assert c.wired_output==words and c.serializer.channel.errors==0, (c.wired_output,c.serializer.channel.errors,c.state,c.events[-3:])
+    assert c.serializer.accounting()==dict(started=6,completed=6,aborted=0,pending=0)
+    c.wire_accounting()
+    assert c.wire_times[0]>=start and pending>100
+    return dict(mode=mode,sensitivity_hz_per_v=sensitivity,words=len(words),forecast_intervals=steps,pending_word_intervals=pending,
+        private_forecast_preserves_state=True,complete_delivery=True,analog_owner_connected=False)
+
 def main():
+    import argparse
+    parser=argparse.ArgumentParser();parser.add_argument('--bounded-only',action='store_true')
+    args=parser.parse_args()
+    if args.bounded_only:
+        report=dict(status='passed',cases=[bounded_word_controls(m) for m in (0,1)],negative_cases=[bounded_word_controls(m,2e6,True) for m in (0,1)],
+            complete_architecture=False,physical_qualification=False,
+            limitations=['Prescribed rail histories; integrated analog owner and wired drive-current feedback remain open.'])
+        (P/'evidence/connected-bounded-wire-scheduling.json').write_text(json.dumps(report,indent=2)+'\n')
+        print(report);return
     rows=[burst(m,s) for m in (0,1) for s in (-1,1)]
     failures=[controls(m) for m in (0,1)]
     commands=[management(m) for m in (0,1)]

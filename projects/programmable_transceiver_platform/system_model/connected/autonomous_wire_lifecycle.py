@@ -8,6 +8,7 @@ from timed_management import ManagedChip
 
 class AutonomousWireChip(ManagedChip):
     WIRE_PLL_CLASS=AutonomousPLL
+    BOUNDED_WIRE_CLOCK=False
     def __init__(self,wire_free_offset=-.04,wire_bandwidth_hz=1e6,wire_reference_ppm=0.,wire_reference_divider=1,**kwargs):
         if not math.isfinite(wire_free_offset) or not math.isfinite(wire_bandwidth_hz) or wire_bandwidth_hz<=0:
             raise ValueError('Invalid wired oscillator assumptions')
@@ -20,7 +21,7 @@ class AutonomousWireChip(ManagedChip):
         self.wire_reference_ppm=wire_reference_ppm
         self.wire_pll=None;self.next_wire_reference=math.inf
         self.wire_free_offset=wire_free_offset;self.wire_bandwidth=wire_bandwidth_hz
-        self.wire_lock_history=[];self.wire_phase_target=None
+        self.wire_lock_history=[];self.wire_phase_target=None;self.wire_start_not_before=None
         super().__init__(**kwargs)
 
     def make_serializer(self,time):
@@ -52,7 +53,7 @@ class AutonomousWireChip(ManagedChip):
         self.wire_pll.initialize_reference(time,self.next_wire_reference)
         self.wire_pll.set_reference(self.reference,time)
         self.wire_phase_target=None
-        return PLLSerializer(self.channel,time,self.wire_pll)
+        return PLLSerializer(self.channel,time,self.wire_pll,bounded=self.BOUNDED_WIRE_CLOCK)
 
     def clocks_ready(self):
         return super().clocks_ready() and (not self.clock_required('wire') or
@@ -62,6 +63,11 @@ class AutonomousWireChip(ManagedChip):
         if ppm!=self.wire_reference_ppm:raise ValueError('Payload rate must match configured wired reference')
         if self.wire_pll is None or not self.wire_pll.locked:
             raise ValueError('Wired PLL is not qualified')
+        if self.BOUNDED_WIRE_CLOCK:
+            super().schedule_wire(count,start,ppm)
+            self.wire_start_not_before=start if count else None
+            self.wire_phase_target=None;self.next_wire=math.inf
+            return
         # Predict the first integer oscillator phase at or after the requested
         # start without advancing any shared analog state into the future.
         candidate=copy.copy(self.wire_pll);candidate.advance(start)
@@ -73,7 +79,42 @@ class AutonomousWireChip(ManagedChip):
 
     def next_wire_deadline(self,deadline):
         self.wire_phase_target+=10
+        if self.BOUNDED_WIRE_CLOCK:
+            history=self.wire_pll.supply_trajectory
+            if history is None:raise ValueError('Wired phase target requires supply history')
+            deadline=self.wire_pll.edge_time_before(self.wire_phase_target,history.times[-1])
+            return math.inf if deadline is None else deadline
         return self.wire_pll.edge_time(self.wire_phase_target)
+
+    def forecast_wire_edges(self,trajectory,hz_per_v):
+        """Stage word/bit crossings on a private clock; caller owns interval commit."""
+        if not self.BOUNDED_WIRE_CLOCK:raise ValueError('Bounded wired clock not enabled')
+        if self.wire_pll is None:raise ValueError('No configured wired oscillator')
+        clock=copy.copy(self.wire_pll);clock.set_supply_trajectory(trajectory,hz_per_v)
+        horizon=trajectory.times[-1];target=self.wire_phase_target;word=bit=math.inf
+        if self.wire_remaining:
+            if target is None and self.wire_start_not_before<=horizon:
+                clock.advance(self.wire_start_not_before)
+                target=math.ceil(clock.output_phase_cycles)
+            if target is not None:
+                deadline=clock.edge_time_before(target,horizon)
+                word=math.inf if deadline is None else deadline
+        if self.serializer is not None and self.serializer.active:
+            # Word-start prediction must not advance the clock used for an
+            # already active serializer's earlier phase crossing.
+            clock=copy.copy(self.wire_pll);clock.set_supply_trajectory(trajectory,hz_per_v)
+            deadline=clock.edge_time_before(self.serializer.target_phase,horizon)
+            bit=math.inf if deadline is None else deadline
+        return dict(word_deadline=word,bit_deadline=bit,word_phase_target=target)
+
+    def commit_wire_forecast(self,trajectory,hz_per_v,forecast):
+        if not self.BOUNDED_WIRE_CLOCK:raise ValueError('Bounded wired clock not enabled')
+        self.wire_pll.set_supply_trajectory(trajectory,hz_per_v)
+        self.wire_phase_target=forecast['word_phase_target']
+        self.next_wire=forecast['word_deadline']
+        if self.serializer is not None and self.serializer.active:
+            self.serializer.deadline=forecast['bit_deadline']
+            self.serializer.pending_phase=math.isinf(forecast['bit_deadline'])
 
     def advance(self,time):
         # A timed mode command can create/restart the reference schedule. Merge
@@ -94,6 +135,12 @@ class AutonomousWireChip(ManagedChip):
                 super().advance(tick)
         super().advance(time)
         if self.wire_pll is not None:self.wire_pll.advance(time)
+
+    def quiesce(self,time,reason):
+        result=super().quiesce(time,reason)
+        if self.BOUNDED_WIRE_CLOCK:
+            self.wire_phase_target=None;self.wire_start_not_before=None
+        return result
 
     def set_reference(self,present,time):
         super().set_reference(present,time)

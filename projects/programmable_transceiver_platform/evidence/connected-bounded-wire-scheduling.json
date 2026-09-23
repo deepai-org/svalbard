@@ -1,0 +1,44 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "mode": 0,
+      "sensitivity_hz_per_v": 100000.0,
+      "words": 6,
+      "forecast_intervals": 616,
+      "pending_word_intervals": 610,
+      "private_forecast_preserves_state": true,
+      "complete_delivery": true,
+      "analog_owner_connected": false
+    },
+    {
+      "mode": 1,
+      "sensitivity_hz_per_v": 100000.0,
+      "words": 6,
+      "forecast_intervals": 626,
+      "pending_word_intervals": 620,
+      "private_forecast_preserves_state": true,
+      "complete_delivery": true,
+      "analog_owner_connected": false
+    }
+  ],
+  "negative_cases": [
+    {
+      "mode": 0,
+      "sensitivity_hz_per_v": 2000000.0,
+      "expected_fault": "wired TX clock lock loss",
+      "completed_words": 2
+    },
+    {
+      "mode": 1,
+      "sensitivity_hz_per_v": 2000000.0,
+      "expected_fault": "wired TX clock lock loss",
+      "completed_words": 5
+    }
+  ],
+  "complete_architecture": false,
+  "physical_qualification": false,
+  "limitations": [
+    "Prescribed rail histories; integrated analog owner and wired drive-current feedback remain open."
+  ]
+}

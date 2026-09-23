@@ -223,6 +223,18 @@ five/six-pin simultaneous switching, and return/substrate/inductive paths remain
 incomplete. Use native bank simulation with nonideal rails to supply a bounded
 reduced current model rather than copying these traces as a qualified load law.
 
+The first native eleven-output bank comparison is retained in
+`evidence/native-host-bank-rc-screen.json`. All five/six output instances share
+the same switching stimulus for an electrical simultaneous-switching stress.
+The ideal-supply case completes 32 ns in 12 seconds, with every output reaching
+about 0.057–3.069 V. The 2 ohm feed / 0.1 ohm common-return / 100 pF-per-segment
+case times out after 90 seconds at reported simulation time 0.861 ns, before
+the 4 ns stimulus begins. Deck, log and completed-waveform hashes are verified.
+This is an unresolved numerical/initial-state problem, not measured supply
+collapse or a bank-current pass. Reproduce with `verification/run_host_bank.sh`;
+wrapper completion only means artifacts were retained. Isolate feed versus
+return impedance before fitting a current model from nonideal-rail waveforms.
+
 Next replace the full-chip host disturbance fixture with finite, load-dependent
 pad supply/return currents, retaining per-segment ownership and energy accounting.
 Test those currents together with autonomous timing and RF conversion; do not

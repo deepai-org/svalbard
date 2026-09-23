@@ -444,5 +444,15 @@
       "wire_supply_sensitivity_hz_per_v": 100000.0,
       "scope": "Finite duplex with rail-sensitive clocks, host switching, assumed wired termination power and selected driver bias. Clock/converter/receiver/digital loads and physical qualification remain open."
     }
+  },
+  "latest_coupled_rf_diagnostic": {
+    "payload": "evidence/fast-coupled-rf-calibrated-payload.json",
+    "quality": "evidence/fast-coupled-rf-calibrated-quality.json",
+    "status": "finite_screen_passed",
+    "rx_corrected_relative_rms": 0.014896982044751792,
+    "tx_corrected_relative_rms": 0.018282431234948156,
+    "scope": "Mode 0, 2.437 GHz, 32 samples; eight gain-fit and 24 held-out samples. Actual RX trim and TX calibration, no post-hoc DC subtraction. Single lumped rail; no added phase noise or host charge in this fixture.",
+    "remaining": "Both profiles, sustained/noisy/independent-input operation and recovery; complete domain currents and host impulse routing; observation-error bound for RX trim accuracy.",
+    "full_chip_closure": false
   }
 }

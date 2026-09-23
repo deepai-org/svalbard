@@ -6,11 +6,13 @@ The mathematical model is not closed; transistor schematic and layout gates
 remain closed. The selected integration candidate is
 `IntegratedTransceiverChip(coupled_analog=True)`.
 
-1. **Calibrated RF payload on the coupled composition.** Acquire, calibrate,
-   transmit and receive actual samples through the loaded output, receive
-   filters, converter reference and rail-sensitive clocks. Require held-out
-   signal quality and reference-loss/recovery on the same chip instance.
-   Acquisition alone is insufficient. Reuse existing quality and service runners.
+1. **Expand coupled RF quality beyond the first calibrated diagnostic.** The
+   completed 32-sample mode-0 two-tone test passes held-out RX/TX quality at
+   1.49% / 1.83% corrected RMS against the provisional 10% screen. It includes
+   autonomous acquisition, actual I/Q trim, shared-ADC TX calibration and finite
+   loaded converters/reference. Require both profiles, sustained service,
+   independent RF inputs, noise/uncertainty and reference-loss/recovery on this
+   same composition. Reuse existing quality and service runners.
 2. **Complete current inventory and feasibility budgets.** Wired termination
    power and RF/wired driver bias now affect the rail. Oscillator, converter,
    receiver, digital and startup currents remain incomplete. Bound these loads
@@ -56,7 +58,7 @@ Subtracting the known 70 mV for diagnosis and including that fixed gain yields
 2.39% pre-ADC corrected RMS. This is not an implemented calibration or a passing
 end-to-end result. Do not fit away DC offset in the qualification metric.
 
-**Immediate next experiment:** exercise the existing quiet I/Q trim sequence on
+**Resolved diagnostic step (retained failure history):** exercise the existing quiet I/Q trim sequence on
 the same coupled chip, record its observations and actual capture gain, then run
 TX calibration and payload. Make the ideal reference include the declared fixed
 capture gain, retain the failed baseline, and check held-out ADC samples without
@@ -70,10 +72,26 @@ and writes `fast-coupled-rf-calibrated-payload.json`, preserving the failed base
 The quality runner includes the declared capture gain and writes a corresponding
 `fast-coupled-rf-calibrated-quality.json`. No DC subtraction is applied.
 A fast control run completed both trim searches; the independent reference's
-ODE controls still pass. The full coupled rerun is pending. Trim accuracy remains
+ODE controls still pass. The coupled rerun has now completed and its source hashes match the independent
+quality check. `fast-coupled-rf-calibrated-quality.json` passes RX at
+0.0148969820 and TX at 0.0182824312 corrected relative RMS. Eight samples fit
+one complex gain; the remaining 24 validate it. No post-hoc DC subtraction was
+used. Raw relative errors remain 18.61% RX and 21.48% TX, so this is a
+relative-waveform screen, not absolute gain accuracy. The prior failed baseline
+is preserved. Both trim sequences completed, but their accuracy flags remain
+unverified for the reason below. Trim accuracy remains
 explicitly **unverified** without a declared observation-error bound, even if the
 subsequent finite waveform screen passes. Do not infer calibration qualification
 from sequencer completion.
+
+The next integration task is to bring the tested domain-supply branch into this
+composition, route real host events to their physical feeds, and supply a
+complete current inventory before repeating quality and lifecycle checks. The
+branch already connects driver/reference ODE states and PLL-domain histories to
+the full-chip scheduler, with local energy/rollback/refinement checks. Its
+10 ns startup checks use illustrative loads and disable scalar host impulses;
+they do not qualify domain-loaded traffic or chip power. Keep the new RF pass
+scoped to its recorded single-rail source snapshot after merging.
 
 ## What the coupled candidate currently demonstrates
 

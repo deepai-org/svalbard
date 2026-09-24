@@ -24,6 +24,34 @@ calibration-valid flag into a new mode without a defined validity check.
 Break-before-make ownership applies to analog switches and clocks. Instantaneous
 switching and zero reacquisition latency are not required.
 
+## Protocol-independent configuration
+
+User decision, 2026-09-24: the chip has no protocol profiles or protocol-ID
+register. It accepts supported combinations of resource ownership, line and
+sample clocks, pad topology, TX/RX enables, termination/pulls, filter/gain,
+converter format, host framing and calibration settings. Validate electrical
+conflicts and implemented ranges, not protocol names. RF and wired payload
+ownership remains mutually exclusive.
+
+The named entries in `spec/contract.json` and the protocol plan are external
+FPGA configuration recipes and verification targets. They do not prescribe
+on-chip presets or protocol controllers. Direction changes and timed line-state
+sequences can be local operations; changes requiring clock/bias/route ownership
+transfer must stop, isolate and requalify the affected resources.
+
+`configure_resources` is the mathematical chip API for the currently modeled
+rate/path/direction/framing combinations. `ProtocolService` and the factory's
+optional `protocol=` argument remain testbench conveniences that translate names
+into ordinary settings. The chip never reads their selected name or role.
+The register ABI and RTL still need to encode these independent controls.
+
+The low-level ownership selector also rejects transfer while either end drives
+the shared bidirectional pad. Configuration changes advance a mathematical
+resource-generation token; external saved-setting contexts must match it before
+requesting a hop. This is a model validity token, not a protocol selector or a
+new pin/register requirement. Rejected transfers preserve ownership and token. Successful ownership changes
+isolate the bidirectional branch while retaining its capacitor voltage history.
+
 ## Sharing direction
 
 | Resource | Design direction | Remaining condition |
@@ -67,8 +95,10 @@ them to this plan does not expand the verified tuning range.
 
 ## Implementation and evidence status
 
-The existing model/RTL still permits concurrent operation. It must be updated
-to enforce this policy; documenting it does not implement the interlock.
+The active behavioral model enforces exclusive payload ownership and checks
+stopped RF/wired handovers, overlap rejection and epoch invalidation. Earlier
+compositions may permit concurrent operation. Complete RTL/physical interlocks,
+inactive-domain shutdown and settling qualification remain open.
 Historical simultaneous four-path tests remain useful optional stress evidence,
 but they are no longer a required product capability or a closure gate.
 Qualification must cover RF-only, wired-only, prohibited overlap and transitions
@@ -127,3 +157,56 @@ regulated wired termination load with explicit efficiency and bias. RF source an
 retained filter/network state decays. RF and wired driver bias now follow engine selection. Shared reference bias
 remains active; oscillator, converter, receiver and digital currents are still
 incomplete, so this does not establish a whole-chip power-budget saving. Evidence: `evidence/fast-coupled-wire.json`.
+
+## Multi-chip wired assemblies
+
+HDMI/DVI is a supported design target through three single-lane instances plus
+external clock-pair circuitry. Each die independently retains mutually exclusive
+RF/wired payload ownership; bonding several wired chips does not relax this rule.
+Protocol encoding, group alignment and sidebands remain outside the die. Expose
+only generic line rate, DC sink/termination and forwarded-word clock settings.
+
+[HDMI/DVI board and pin plan](../../../docs/roadmap/programmable-transceiver-pin-plan.md#hdmidvi-through-multiple-instances).
+
+The external forwarded-lane supervisor can now bind to three distinct canonical
+chip instances. Launch requires matching serial rates, DC pads, forwarded word
+references, 64-word framing and uniform simplex direction. It snapshots chip
+resource generations, interface generations and reset epochs. Every transfer
+rechecks these: a wired-to-RF change or even an interface change followed by
+restoration cancels the group and requires a fresh launch. This is board/model
+supervision at transfer boundaries, not instantaneous silicon fault propagation.
+Analog startup/lock and physical group-monitor latency remain separate gates.
+
+The focused canonical forwarded TX/RX lifecycle checks now continue beyond
+reference-loss draining: resource changes reject before acknowledgement; drain
+acknowledgement rejects until the host discards its partial return frame. Correct
+acknowledgements increment the epoch and permit RF ownership on the same chip.
+The wired oscillator shuts down, RF bias/clock ownership activates without
+claiming readiness, stale wired traffic rejects, and existing pad state is not
+erased by the resource selection itself. These are ownership/epoch checks, not
+RF payload reacquisition or conserved-energy handover. Residual DC-pad return current is retained through subsequent ownership changes
+as described below; physical changes to external termination remain unmodeled.
+
+A quiesced DC pad now detaches as an immutable state/time snapshot. Zero-drive
+current and voltage decay are evaluated from that origin, so RF ownership or
+logical channel reconstruction cannot erase its tail current. The analog owner
+continues injecting that residual into the ground solve and checking compliance.
+Reconstructing the DC path transfers its evolved differential/current/common-mode
+states into the new channel and clears the detached owner, avoiding double
+ownership. The canonical TX lifecycle checks positive decaying residual current
+under RF ownership and exact restoration on DC reconstruction. Reference remains
+absent, so reconstruction must stay acquiring rather than implicitly relock.
+This assumes unchanged external termination; cable removal and other electrical
+family remapping still require explicit circuit topology models.
+
+### Behavioral handover enforcement
+
+The fast composition tests RF -> forwarded wire -> RF -> forwarded wire on one
+instance. Each stop invalidates the epoch and accounts for discarded RX/TX bits;
+each restart waits the full declared acquisition guard. Traffic before startup,
+stale epochs, active reconfiguration and stream clocks inconsistent with numeric
+configuration reject without advancing lifecycle state. RF settings are removed
+on wired ownership and wired clock settings are removed on RF ownership. Numeric
+RF uses configured sampling with 12-bit I/Q; numeric wired uses rate/10 with
+10-bit words. This verifies logical exclusivity and service accounting, not
+physical power-down, switch leakage or analog settling during handover.

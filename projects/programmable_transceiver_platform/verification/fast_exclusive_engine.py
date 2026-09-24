@@ -8,6 +8,7 @@ from types import MethodType
 from fast_loaded_output import LoadedOutputChip
 from autonomous_pll import AutonomousPLL
 from rf_return_lifecycle import Receiver
+from resource_configuration import ResourceConfigurationCommands
 
 class ExclusiveEngineChip(LoadedOutputChip):
     TILE_COMMANDS=LoadedOutputChip.TILE_COMMANDS+('engine_select','engine_status','wire_return_start')
@@ -29,29 +30,44 @@ class ExclusiveEngineChip(LoadedOutputChip):
             self.active_engine=engine
     def require_engine(self,engine):
         if self.active_engine!=engine:raise ValueError('Inactive payload engine')
+    def require_wire_direction(self,direction):
+        if direction=='rx' and getattr(self,'record_return',False):
+            raise ValueError('Raw record return owns receive transport')
+        if getattr(self,'wired_pad_path','serial')!='serial':
+            raise ValueError('Selected pad path lacks a serial traffic adapter')
+        if not getattr(self,'wired_'+direction+'_enabled',True):
+            raise ValueError('Wired direction disabled by configuration')
+
     def clock_required(self,engine):
         return engine==self.active_engine
     def configure(self,*args,**kwargs):
         if self.active_engine=='none':raise ValueError('Select payload engine before configuration')
+        mode=args[0] if args else kwargs.get('mode')
+        if self.host_frame_words==8 and mode!=0:
+            raise ValueError('Short framing currently supports DDR125 only')
         return super().configure(*args,**kwargs)
     def descriptor(self,*args,**kwargs):
         self.require_engine('rf');return super().descriptor(*args,**kwargs)
     def accept_wire(self,*args,**kwargs):
+        self.require_wire_direction('tx')
         self.require_engine('wire');return super().accept_wire(*args,**kwargs)
     def capture(self,*args,**kwargs):
         self.require_engine('rf');return super().capture(*args,**kwargs)
     def schedule(self,*args,**kwargs):
         self.require_engine('rf');return super().schedule(*args,**kwargs)
     def schedule_wire(self,*args,**kwargs):
+        self.require_wire_direction('tx')
         self.require_engine('wire');return super().schedule_wire(*args,**kwargs)
     def incoming_wire(self,*args,**kwargs):
+        self.require_wire_direction('rx')
         self.require_engine('wire');return super().incoming_wire(*args,**kwargs)
     def start_wire_return(self,start):
         self.require_engine('wire')
+        if not getattr(self,'wired_rx_enabled',True):raise ValueError('Wired RX disabled')
         if (self.state!='active' or not math.isfinite(start) or start<=self.time or
                 not math.isinf(self.next_return) or self.return_queue or self.return_frame):
             raise ValueError('Wired return requires active idle transport and future start')
-        self.host_receiver=Receiver(self.session.mode)
+        self.host_receiver=self.make_return_receiver()
         self.return_sequence=0
         self.return_period=1/(250e6 if self.session.mode==0 else 312.5e6)
         self.next_return=start
@@ -178,8 +194,10 @@ class SwitchableWarmClock(SwitchablePLL,WarmClock):
             if tick<=time:tick+=1/self.reference_hz
             self.initialize_reference(time,tick)
 
-class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
-    def __init__(self,*,reference_source_limit_a=150e-6,reference_sink_limit_a=150e-6,coupled_analog=False,wired_power_parameters=None,domain_supply=None,domain_minimum_v=None,domain_load=None,host_bank=None,**kwargs):
+class IntegratedTransceiverChip(ResourceConfigurationCommands,PoweredExclusiveChip,WarmTransceiverChip):
+    def __init__(self,*,rf_solver_method="Radau",reference_source_limit_a=150e-6,reference_sink_limit_a=150e-6,coupled_analog=False,wired_power_parameters=None,domain_supply=None,domain_minimum_v=None,domain_load=None,host_bank=None,**kwargs):
+        if rf_solver_method not in ("Radau","BDF"):raise ValueError("Unsupported RF stiff solver")
+        self.rf_solver_method=rf_solver_method
         from causal_reference_lifecycle import CurrentLimitedReference
         kwargs.setdefault('dac_reference_load_capacitance',2e-12)
         super().__init__(**kwargs)
@@ -209,6 +227,56 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
             raise ValueError('Invalid wired power parameters')
         if coupled_analog:
             self.install_analog_owner(reference_source_limit_a,reference_sink_limit_a)
+
+    def enable_reference_converter_clock(self,*,maximum_slew_v_per_s=1e9):
+        """Candidate mathematical timing option; only managed local starts use it."""
+        if self.session.armed or self.remaining or self.adc_left:
+            raise ValueError('Converter clock selection requires stopped converters')
+        if self.analog_owner is None or self.analog_owner.domains is None:
+            raise ValueError('Reference converter clock requires coupled supply domains')
+        if not math.isfinite(maximum_slew_v_per_s) or not 0<=maximum_slew_v_per_s<5e9:
+            raise ValueError('Finite monotonic buffer slew envelope required')
+        self.reference_converter_slew=maximum_slew_v_per_s
+
+    def plan_local_converter_clocks(self,start,offset,flags):
+        if not hasattr(self,'reference_converter_slew'):return
+        from reference_sample_clock import plan_converter_pair
+        if type(flags) is not int or flags not in (1,2,3):
+            raise ValueError('Select TX, RX, or both converter directions')
+        # A disabled branch must not impose a timing constraint. RX-only starts
+        # use their own requested lower bound; paired starts retain relative timing.
+        anchor=start+offset if flags==2 else start
+        relative=offset if flags==3 else 0.
+        tx,rx=plan_converter_pair(anchor,relative,now=self.time,
+            divider=1 if self.session.mode==0 else 2)
+        if flags&1:self.sample_clock=tx;self.next_sample=math.inf
+        if flags&2:self.adc_clock=rx;self.next_adc=math.inf
+
+    def configure_wire_interface(self,*,electrical='ac_differential',clock_source='embedded',word_reference_hz=None):
+        """Generic stopped interface contract; detailed pad/PLL implementation open."""
+        if self.state!='reset' or self.session.armed or self.active_engine!='wire':
+            raise ValueError('Stopped wired owner required')
+        if electrical not in ('ac_differential','dc_current_sink') or clock_source not in ('embedded','forwarded_word'):
+            raise ValueError('Unsupported electrical or clock mode')
+        if clock_source=='forwarded_word':
+            if (word_reference_hz not in (74.25e6,148.5e6) or
+                    self.wire_rate_override!=10*word_reference_hz):
+                raise ValueError('Forwarded word reference must match ten-bit lane rate')
+        elif word_reference_hz is not None:raise ValueError('Unexpected word reference')
+        if getattr(self,'wire_interface',{}).get('electrical')=='dc_current_sink' and electrical!='dc_current_sink':
+            self.retain_dc_pad()
+        self.wire_interface=dict(electrical=electrical,clock_source=clock_source,
+            word_reference_hz=word_reference_hz,detailed_pad_pll_qualified=False)
+        self.wire_interface_generation=getattr(self,"wire_interface_generation",0)+1
+
+    def pending_reference_converters(self):
+        from reference_sample_clock import ReferenceSampleClock
+        result=[]
+        for name,deadline,remaining in (('sample_clock','next_sample',self.remaining),
+                                        ('adc_clock','next_adc',self.adc_left)):
+            clock=getattr(self,name,None)
+            if remaining and isinstance(clock,ReferenceSampleClock):result.append((clock,deadline))
+        return result
 
     def install_analog_owner(self,source_limit,sink_limit):
         from types import MethodType
@@ -284,11 +352,88 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
             return float(d.voltage[i]-d.nominal[i])
         return self.supply.delta
 
+    def external_waveform_signal(self,time):
+        import cmath
+        start,w,carrier,amplitude=self.external_waveform
+        return amplitude*w.value(time-start)*cmath.exp(2j*math.pi*(carrier-self.rf_carrier)*time)
+
+    def install_external_waveform(self,waveform,carrier_hz,start=None,amplitude=.1):
+        self.require_engine('rf')
+        if self.session.armed or self.adc_pending or self.maintenance_pending is not None:
+            raise ValueError('Waveform fixture installation requires unarmed receiver')
+        start=self.time if start is None else start
+        if (not all(math.isfinite(v) for v in (carrier_hz,start,amplitude)) or start<self.time
+                or not 2.3e9<=carrier_hz<=2.5e9 or not 0<amplitude<=1):
+            raise ValueError('External waveform envelope')
+        self.external_waveform=(start,waveform,carrier_hz,amplitude)
+        self.tx.rx_route='external_waveform'
+
+    def retain_dc_pad(self):
+        """Retain zero-drive DC pad decay independently of logical ownership."""
+        import copy
+        channel=getattr(self,'channel',None)
+        serializer=getattr(self,'serializer',None)
+        if channel is None or not hasattr(channel,'tail_state') or serializer is None:return
+        if serializer.active or serializer.drive!=0.:
+            raise ValueError('DC pad must be quiesced before detaching its owner')
+        # Old serializer may still advance after selection. Retain an immutable
+        # snapshot and a time origin, never two mutable owners of its history.
+        if getattr(self,'dc_pad_residue',None) is None:
+            self.dc_pad_residue=(copy.copy(channel),serializer.time)
+
+    def retired_dc_pad(self,time):
+        import copy
+        residue=getattr(self,'dc_pad_residue',None)
+        if residue is None:return None
+        state,origin=residue
+        if time<origin:raise ValueError('Retired pad queried before retained history')
+        trial=copy.copy(state);trial.advance_state(0.,time-origin)
+        return trial
+
+    def configure(self,*args,**kwargs):
+        result=super().configure(*args,**kwargs)
+        if hasattr(self.channel,'tail_state') and getattr(self,'dc_pad_residue',None) is not None:
+            retained=self.retired_dc_pad(self.time)
+            for name in ('state','current_state','tail_state','common_drop_state'):
+                setattr(self.channel,name,getattr(retained,name))
+            self.dc_pad_residue=None
+        return result
+
     def configure_analog_loads(self):
         owner=self.analog_owner
         owner.driver_enabled=self.rf_pll.powered
         parameters=self.wired_power_parameters
-        enabled=self.active_engine=='wire'
+        enabled=(self.active_engine=='wire' and getattr(self,'wired_pad_path','serial')=='serial'
+                 and getattr(self,'wired_tx_enabled',True))
+        if getattr(self,'wire_interface',{}).get('electrical')=='dc_current_sink':
+            # Output current is supplied by the remote receiver termination.
+            # Only declared local bias belongs on this transmitter supply rail.
+            # Forecast the held-command tail state across this analog interval.
+            # Reject loss of compliance; do not invent saturated-device behavior.
+            channel=getattr(self,'channel',None)
+            if channel is not None and hasattr(channel,'tail_state') and self.serializer is not None:
+                initial=channel.tail_state;target=abs(self.serializer.drive)
+                origin=self.serializer.time;tau=channel.switch_tau_s
+                tail=channel.tail_current_a
+                owner.external_return_current=lambda time:tail*(target+(initial-target)*math.exp(-max(0.,time-origin)/tau))
+                import copy
+                snapshot=copy.copy(channel);held_drive=self.serializer.drive
+                def guard(time,ground):
+                    trial=copy.copy(snapshot)
+                    trial.advance_state(held_drive,max(0.,time-origin))
+                    return trial.pin_state(ground)['current_compliance_valid']
+                owner.external_return_guard=guard
+            else:
+                owner.external_return_current=lambda time:0.
+                owner.external_return_guard=lambda time,ground:True
+            owner.extra_current=lambda time,rail:parameters['bias_a'] if enabled else 0.
+            return
+        if getattr(self,'dc_pad_residue',None) is not None:
+            owner.external_return_current=lambda time:self.retired_dc_pad(time).tail_state*self.retired_dc_pad(time).tail_current_a
+            owner.external_return_guard=lambda time,ground:self.retired_dc_pad(time).pin_state(ground)['current_compliance_valid']
+        else:
+            owner.external_return_current=lambda time:0.
+            owner.external_return_guard=lambda time,ground:True
         drive=self.serializer.drive if self.serializer is not None else 0.
         voltage=parameters['peak_differential_v']*drive
         output_w=voltage*voltage/parameters['termination_ohm']
@@ -296,12 +441,43 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         # envelope; output compliance and gate switching charge remain open.
         owner.extra_current=lambda time,rail:(parameters['bias_a']+output_w/(parameters['efficiency']*rail)) if enabled else 0.
 
+    def wired_power_accounting(self):
+        """Separate local rail consumption from remote termination power."""
+        channel=getattr(self,'channel',None)
+        if (getattr(self,'wire_interface',{}).get('electrical')!='dc_current_sink' or
+                channel is None or not hasattr(channel,'pin_state')):
+            raise ValueError('Configured DC current-sink channel required')
+        host=self.analog_owner.host_bank
+        external=channel.tail_current_a*channel.tail_state
+        ground=host.currents(host.state,host.drive,external_return_a=external)[0]
+        pins=channel.pin_state(ground)
+        enabled=(self.active_engine=='wire' and self.wired_tx_enabled)
+        rail=float(self.analog_owner.domains.voltage[self.analog_owner.wire_domain])
+        local=self.wired_power_parameters['bias_a'] if enabled else 0.
+        return dict(local_bias_current_a=local,local_bias_power_w=rail*local,
+            external_termination_power_w=pins['termination_source_power_w'],
+            external_return_current_a=pins['positive_sink_a']+pins['negative_sink_a'],
+            transmitter_sink_heat_w=pins['sink_power_w'],
+            termination_heat_w=pins['resistor_power_w'],
+            return_current_coupled=True,pad_ground_feedback=True,nonlinear_current_feedback=False,
+            ground_transfer_power_w=pins["ground_transfer_power_w"],thermal_model_coupled=False,
+            receiver_termination_supply_coupled=False)
+
     def requires_rf_boundary_flush(self):
         return getattr(self,'analog_owner',None) is not None and bool(self.rf_hz_per_v or self.wire_hz_per_v)
 
     def rf_interval_end(self,end):
         if not self.requires_rf_boundary_flush():return end
         deadlines=[end]
+        wave=getattr(self,'external_waveform',None)
+        if wave is not None:
+            start,w,carrier,amplitude=wave
+            if self.time<start:deadlines.append(start)
+            elif self.time<start+w.duration:
+                index=math.floor((self.time-start)*w.sample_hz)+1
+                boundary=start+index/w.sample_hz
+                if boundary<=self.time+2*math.ulp(self.time):boundary=start+(index+1)/w.sample_hz
+                deadlines.append(boundary)
         if self.BOUNDED_WIRE_CLOCK and self.wire_remaining and self.wire_start_not_before is not None and self.wire_start_not_before>self.time:
             deadlines.append(self.wire_start_not_before)
         # Parent layers already split calibration/coarse/probe events. Include
@@ -320,12 +496,15 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
             deadline=self.last_host+self.watchdog_s
             if deadline>self.time:deadlines.append(deadline)
             elif end>deadline:self.quiesce(self.time,'host watchdog')
+        for clock,_ in self.pending_reference_converters():
+            upper=clock.origin+clock.index*clock.period+clock.branch_delay+clock.bounds[1]
+            if upper>self.time:deadlines.append(upper)
         return min(deadlines)
 
     def prepare_rf_interval(self,end):
         if not self.requires_rf_boundary_flush():return
         import cmath
-        from driver_pll_feedback import forecast_trajectory_feedback
+        from driver_pll_feedback import forecast_trajectory_feedback,zero_rf_state
         from tx_output_terms import output_terms
         owner=self.analog_owner
         self.configure_analog_loads()
@@ -338,6 +517,7 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         def receive(t,pad,phase):
             if not self.rf_pll.powered:return 0j
             if state.rx_route=='loopback':signal=pad
+            elif state.rx_route=='external_waveform':signal=self.external_waveform_signal(t)
             elif state.rx_route=='external_tone':signal=state.external_amplitude*cmath.exp(2j*math.pi*state.external_frequency*t)
             else:signal=0j
             signal+=sum(a*cmath.exp(2j*math.pi*f*t) for a,f in state.rf_blockers)
@@ -345,10 +525,29 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
                 raise ValueError('Coupled RF input outside declared cubic-model range')
             signal+=state.rf_cubic*signal*abs(signal)**2
             return signal*cmath.exp(-1j*(phase+self.rf_rx_phase))
+        quiet_rf=(self.rf_pll.powered and all(a==0 for a,_ in terms) and
+            zero_rf_state(owner) and not state.rf_blockers and
+            (state.rx_route in ('off','loopback') or
+             (state.rx_route=='external_tone' and state.external_amplitude==0)))
         from autonomous_pll import SupplyTrajectory
+        converters=self.pending_reference_converters()
         for refinement in range(12):
+            converter_due=()
+            if converters:
+                from reference_sample_clock import forecast_converter_boundary
+                def endpoint_voltage(t):
+                    if t==self.time:local=owner
+                    else:
+                        local,_,_=forecast_trajectory_feedback(owner,self.rf_pll,t,
+                            terms,self.rf_hz_per_v,.5e-9,receive_transform=receive,
+                            inactive_rf=not self.rf_pll.powered,quiet_rf=quiet_rf,solver_method=self.rf_solver_method)
+                    d=local.domains
+                    return float(d.voltage[list(d.names).index('PLL')])
+                end,converter_due=forecast_converter_boundary(
+                    [branch for branch,_ in converters],endpoint_voltage,
+                    start=self.time,end=end,maximum_slew_v_per_s=self.reference_converter_slew)
             candidate,clock,metrics=forecast_trajectory_feedback(owner,self.rf_pll,end,
-                terms,self.rf_hz_per_v,.5e-9,receive_transform=receive)
+                terms,self.rf_hz_per_v,.5e-9,receive_transform=receive,inactive_rf=not self.rf_pll.powered,quiet_rf=quiet_rf,solver_method=self.rf_solver_method)
             clock_rail=candidate.domain_trajectories["PLL"] if candidate.domains is not None else candidate.rail_trajectory
             forecast=None
             if self.BOUNDED_WIRE_CLOCK and self.wire_pll is not None:
@@ -367,6 +566,9 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
             self.rf_pll.set_supply_trajectory(clock.supply_trajectory,self.rf_hz_per_v)
             if forecast is not None:
                 self.commit_wire_forecast(clock_rail,self.wire_hz_per_v,forecast)
+            for branch,deadline in converters:
+                proposal=next((p for b,p in converter_due if b is branch),None)
+                setattr(self,deadline,proposal.time if proposal is not None else math.inf)
             self._analog_forecast=(self.time,end,candidate)
             self.feedback_intervals=getattr(self,'feedback_intervals',0)+1
             self.feedback_max_iterations=max(getattr(self,'feedback_max_iterations',0),metrics['iterations'])
@@ -398,16 +600,54 @@ class IntegratedTransceiverChip(PoweredExclusiveChip,WarmTransceiverChip):
         self.oscillator_supply_events+=1
 
     RF_PLL_CLASS=SwitchableWarmClock
-    TILE_COMMANDS=tuple(dict.fromkeys(PoweredExclusiveChip.TILE_COMMANDS+WarmTransceiverChip.TILE_COMMANDS))
+    TILE_COMMANDS=tuple(dict.fromkeys(PoweredExclusiveChip.TILE_COMMANDS+WarmTransceiverChip.TILE_COMMANDS+ResourceConfigurationCommands.RESOURCE_COMMANDS))
 
     def select_engine(self,engine):
         self._require_target_free()
         previous=self.active_engine
+        pad=self.analog_owner.pad_branch
+        if previous!=engine and pad is not None and (pad.local!='Z' or pad.peer!='Z'):
+            raise ValueError('Release pad drivers before ownership transfer')
         super().select_engine(engine)
         if previous!=engine:
+            if pad is not None:pad.configure('isolated')
             self.coarse.cancel(self.time)
             self.coarse.qualified=False
+            self.resource_generation=getattr(self,'resource_generation',0)+1
 
     def execute_management(self,operation,payload,time):
         if operation=='rf_coarse_start':self.require_engine('rf')
         return super().execute_management(operation,payload,time)
+
+    def configure_resources(self,*,engine,line_rate_bps=None,frame_words=64,
+                            pad_path='serial',tx_enabled=True,rx_enabled=True):
+        """Protocol-independent stopped hardware configuration; no protocol ID.
+
+        Rate choices are modeled clock targets, not silicon qualification.
+        Bidirectional pad packet admission remains unimplemented.
+        """
+        if (engine not in ('none','wire','rf') or frame_words not in (8,64) or
+                pad_path not in ('serial','bidirectional') or
+                type(tx_enabled) is not bool or type(rx_enabled) is not bool):
+            raise ValueError('Unsupported resource configuration')
+        if line_rate_bps is not None and line_rate_bps not in (480e6,1.25e9,1.5e9,1.62e9,2.5e9,.7425e9,1.485e9):
+            raise ValueError('Unmodeled line clock target')
+        if engine!='wire' and (line_rate_bps is not None or frame_words!=64 or pad_path!='serial'):
+            raise ValueError('Wired resources require wired ownership')
+        if self.state!='reset' or self.session.armed:raise ValueError('Stopped configuration required')
+        pad=self.analog_owner.pad_branch
+        if pad is not None and (pad.local!='Z' or pad.peer!='Z'):
+            raise ValueError('Release pad drivers before reconfiguration')
+        retiring=getattr(self,'wire_interface',{}).get('electrical')=='dc_current_sink'
+        if retiring and self.serializer is not None and (self.serializer.active or self.serializer.drive!=0.):
+            raise ValueError('DC pad must be quiesced before detaching its owner')
+        self.select_engine(engine)
+        if retiring:self.retain_dc_pad()
+        if pad is not None:pad.configure('isolated')
+        self.tx_cal.cancel(self.time,'resource configuration changed');self.coarse.qualified=False
+        self.external_waveform=None;self.tx.rx_route='off'
+        self.wire_rate_override=line_rate_bps;self.host_frame_words=frame_words
+        self.wire_interface=dict(electrical="ac_differential",clock_source="embedded",word_reference_hz=None,detailed_pad_pll_qualified=False)
+        self.wired_pad_path=pad_path
+        self.wired_tx_enabled=tx_enabled;self.wired_rx_enabled=rx_enabled
+        self.resource_generation=getattr(self,'resource_generation',0)+1

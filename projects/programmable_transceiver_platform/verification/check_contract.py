@@ -15,6 +15,61 @@ def ceil(value):
     return -(-value.numerator // value.denominator)
 
 
+def check_protocol_profiles(c):
+    """Check physical ownership and capacity targets, never infer compliance."""
+    profiles = c['protocol_profiles']
+    require(len({p['id'] for p in profiles}) == len(profiles), 'duplicate protocol profile')
+    pins = {p['name']: p for p in c['pins']}
+    services = c['physical_services']
+    rates = services['serial_target_rates_bps']
+    require(len(set(rates)) == len(rates) and all(0 < r <= 2500000000 for r in rates),
+            'serial rate envelope')
+    require(c['operating_policy']['rf_wired_simultaneous_permitted'] is False,
+            'exclusive engine ownership')
+    for p in profiles:
+        require(p['model_status'] in ('requirements_only','phy_primitives') and not p['standards_compliant'],
+                'protocol qualification requires implemented model and evidence')
+        if p['model_status']=='phy_primitives':
+            require(bool(p.get('modeled_primitives')) and bool(p.get('model_sources')), 'executable profile scope')
+        require(p['engine'] in ('wire', 'rf'), 'profile engine')
+        require(set(p['pins']) <= set(pins), 'profile hidden terminal')
+        require(len(set(p['pins'])) == len(p['pins']), 'duplicate profile terminal')
+        require({'clock_quality', 'loaded_electrical_path', 'host_service', 'lifecycle',
+                 'independent_protocol_waveform'} <= set(p['required_gates']), 'profile closure gates')
+        if p['engine'] == 'wire':
+            require(p['line_rate_bps'] in rates and p['lanes'] == 1, 'wired rate or lane allocation')
+            require(p['duplex'] in ('full', 'half', 'simplex'), 'wired duplex')
+            require(p['host_service'] in ('framed', 'short_framed'), 'wired host service')
+            if p['id'] == 'usb2':
+                require(set(p['pins']) == {'WIRE_RX_P', 'WIRE_RX_N'} and
+                        all(pins[n]['direction'] == 'inout' for n in p['pins']), 'USB bidirectional pair')
+                require(p['duplex'] == 'half' and set(p['roles']) == {'host', 'device'}, 'USB roles')
+                require(p['host_service'] == 'short_framed' and
+                        'fpga_response_deadline' in p['required_gates'], 'USB response deadline')
+            else:
+                require(set(p['pins']) == {'WIRE_RX_P', 'WIRE_RX_N', 'WIRE_TX_P', 'WIRE_TX_N'},
+                        'serial pad allocation')
+            if p['id'] in ('dvi_single_link','hdmi_tmds'):
+                require(p['chip_instances']==p['link_data_lanes']==3 and p['duplex']=='simplex', 'multi-chip video topology')
+                require(p['line_rates_bps']==[742500000,1485000000] and
+                        set(p['roles'])=={'source','sink'}, 'video timing and roles')
+                require({'forwarded_word_clock','multi_chip_alignment','dc_current_sink_electrical'} <= set(p['required_gates']), 'video physical gates')
+            if p['id'] == 'displayport_rbr':
+                require(p['line_rate_bps'] == 1620000000 and p['duplex'] == 'simplex' and
+                        set(p['roles']) == {'source', 'sink'} and 'external_aux' in p['required_gates'],
+                        'DisplayPort scope')
+        else:
+            require(set(p['pins']) == {'RF_RX_P', 'RF_RX_N', 'RF_TX_P', 'RF_TX_N'}, 'RF pad allocation')
+            require(2300000000 <= p['carrier_min_hz'] <= p['carrier_max_hz'] <= 2500000000,
+                    'RF tuning envelope')
+            require(p['spatial_streams'] == 1 and 0 < p['channel_bandwidth_max_hz'] <= 20000000,
+                    'RF bandwidth or stream allocation')
+            require(p['channel_bandwidth_max_hz'] <= p['complex_sample_rate_max_hz'] <= 40000000
+                    and 0 < p['sample_bits_max'] <= 12, 'converter envelope')
+            require(p['host_service'] == 'framed_with_timed_events', 'RF timed host service')
+    return profiles
+
+
 def check(c):
     pins = c['pins']
     require(len(pins) == c['limits']['total_terminals'] == 50, 'terminal budget')
@@ -26,7 +81,11 @@ def check(c):
         require(required <= actual, f'{bus} bus allocation')
     require(all(isinstance(v, int) and v > 0 for v in c['area_um2'].values()), 'area allocations')
     require(sum(c['area_um2'].values()) <= c['limits']['core_area_um2'], 'area budget')
+    check_protocol_profiles(c)
     t = c['transport']
+    u=t['usb_short_frame']
+    require((u['frame_words'],u['word_bits'],u['control_words'],u['payload_words'])==(8,10,5,3), 'USB reused frame geometry')
+    require(u['host_profile']=='ddr125', 'USB reused host clock')
     require(t['word_bits'] == 10 and t['frame_words'] == 64 and t['control_words'] == 5, 'transport geometry')
     scheduling = t['scheduling']
     require(scheduling['control_slots'] == [0, 1, 2, 3, 4], 'control slot allocation')

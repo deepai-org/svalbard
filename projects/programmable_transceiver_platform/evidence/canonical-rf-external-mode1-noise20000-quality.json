@@ -1,0 +1,116 @@
+{
+  "status": "passed",
+  "payload_sha256": "32b75d33d8ceb05f03bbd5089b29545c7db147f40c7187f94d81e2ce57aa0fa8",
+  "rx_calibration": {
+    "both_targets_completed": true,
+    "both_targets_qualified": false,
+    "targets": [
+      {
+        "target": 0,
+        "result": {
+          "done": true,
+          "range_limited": false,
+          "accuracy": "unverified",
+          "valid": false,
+          "reason": "missing independent observation or error bound"
+        }
+      },
+      {
+        "target": 1,
+        "result": {
+          "done": true,
+          "range_limited": false,
+          "accuracy": "unverified",
+          "valid": false,
+          "reason": "missing independent observation or error bound"
+        }
+      }
+    ],
+    "scope": "Controller observation-bound claims only; not independent physical calibration qualification."
+  },
+  "reference_code_sha256": "963eb65d11fa165d4fef63c0827687ea04073dcf9e07e4e48695978fd921848c",
+  "reference_controls": {
+    "samples": 32,
+    "maximum_rx_ode_error": 4.4976131101268855e-15,
+    "maximum_tx_ode_error": 1.0886971073588978e-13,
+    "validation_only_error_rejected": true,
+    "shared_lo_hidden_phase_error_rejected": true,
+    "physical_qualification": false
+  },
+  "rx": {
+    "calibration_samples": 8,
+    "validation_samples": 24,
+    "gain_real": 1.0062648995611165,
+    "gain_imag": 0.13105082998803902,
+    "gain_magnitude": 1.0147627151848346,
+    "raw_relative_rms": 0.14776243433213782,
+    "corrected_relative_rms": 0.028405980053495563,
+    "gain_in_screen_range": true,
+    "screen_budget": 0.1,
+    "screen_pass": true
+  },
+  "tx": {
+    "calibration_samples": 8,
+    "validation_samples": 24,
+    "gain_real": 0.844226979508431,
+    "gain_imag": 0.00043400447303176067,
+    "gain_magnitude": 0.8442270910660302,
+    "raw_relative_rms": 0.15541598327730724,
+    "corrected_relative_rms": 0.013804957640726308,
+    "gain_in_screen_range": true,
+    "screen_budget": 0.1,
+    "screen_pass": true
+  },
+  "rx_nominal_grid": {
+    "calibration_samples": 8,
+    "validation_samples": 24,
+    "gain_real": 1.0062648991337568,
+    "gain_imag": 0.13105083239208204,
+    "gain_magnitude": 1.0147627150715222,
+    "raw_relative_rms": 0.14776243821161003,
+    "corrected_relative_rms": 0.02840598076295175,
+    "gain_in_screen_range": true,
+    "screen_budget": 0.1,
+    "screen_pass": true
+  },
+  "sample_timing": {
+    "maximum_absolute_time_error_s": 2.358681826242215e-16,
+    "rms_time_error_s": 2.1466549358451749e-16,
+    "final_time_error_s": 2.358681826242215e-16,
+    "nominal_sample_rate_hz": 20000000.0,
+    "scope": "First-sample epoch only; no rate, phase trajectory or sample-time fit. Finite diagnostic, not jitter qualification."
+  },
+  "tx_fixed_carrier": {
+    "calibration_samples": 8,
+    "validation_samples": 24,
+    "gain_real": -0.5412346077652997,
+    "gain_imag": -0.6478489134604285,
+    "gain_magnitude": 0.8441819207461835,
+    "raw_relative_rms": 1.6775439042780154,
+    "corrected_relative_rms": 0.021228502726096804,
+    "gain_in_screen_range": true,
+    "screen_budget": 0.1,
+    "screen_pass": true
+  },
+  "rx_source": "independent_tones",
+  "ideal_carrier_hz": 2437000000.0,
+  "envelope_frame_hz": 2400000000.0,
+  "physical_qualification": false,
+  "full_chip_closure": false,
+  "limitations": [
+    "32 samples, with eight fitting and 24 validation samples; no sustained or modem qualification.",
+    "Canonical converter deadlines currently use a separate linear-clock snapshot; autonomous RF PLL noise and coupled rail trajectories do not establish ADC/DAC aperture timing. A nominal-grid pass cannot close this missing coupling.",
+    "Linear modal reconstruction, finite output load and receive filter at nominal 2.437 GHz; zero initial state after the diagnostic settling interval is assumed.",
+    "Uses recorded event times but desired digital samples, not fitted nonlinear DAC values; independent RX additionally requires a fixed nominal-grid comparison. TX timing and sustained sampling-clock qualification remain open.",
+    "tx removes saved shared-LO phase to isolate conversion distortion; tx_fixed_carrier retains oscillator error and is also required to pass. Only one constant complex gain is fitted; no frequency or time-varying phase correction.",
+    "RX uses independently generated tones; this finite record does not establish wideband modem, blocker or noise performance.",
+    "Fixed profile reference must be revisited if topology, gain, carrier or sample format changes."
+  ],
+  "independent_rx_reference_controls": {
+    "nominal_grid_validation_timing_error_rejected": true,
+    "injected_validation_delay_s": 2e-08,
+    "maximum_serial_filter_ode_error": 4.361837273470238e-12,
+    "wrong_carrier_rejected": true,
+    "physical_qualification": false
+  }
+}

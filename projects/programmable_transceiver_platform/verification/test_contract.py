@@ -47,4 +47,39 @@ class ContractTests(unittest.TestCase):
         self.c['transport']['scheduling']['control_slots'] = [0, 0]
         with self.assertRaisesRegex(ValueError, 'control slot'): check(self.c)
 
+    def profile(self, name):
+        return next(p for p in self.c['protocol_profiles'] if p['id'] == name)
+
+    def test_usb_cannot_use_input_only_pad(self):
+        next(p for p in self.c['pins'] if p['name']=='WIRE_RX_P')['direction']='in'
+        with self.assertRaisesRegex(ValueError, 'USB bidirectional'): check(self.c)
+
+    def test_usb_cannot_use_bulk_latency_contract(self):
+        self.profile('usb2')['host_service']='framed'
+        with self.assertRaisesRegex(ValueError, 'USB response'): check(self.c)
+
+    def test_dp_cannot_silently_add_lanes(self):
+        self.profile('displayport_rbr')['lanes']=2
+        with self.assertRaisesRegex(ValueError, 'lane allocation'): check(self.c)
+
+    def test_hbr_is_outside_clock_budget(self):
+        self.c['physical_services']['serial_target_rates_bps'].append(2700000000)
+        with self.assertRaisesRegex(ValueError, 'rate envelope'): check(self.c)
+
+    def test_wifi_cannot_silently_double_bandwidth(self):
+        self.profile('wifi_he20')['channel_bandwidth_max_hz']=40000000
+        with self.assertRaisesRegex(ValueError, 'bandwidth'): check(self.c)
+
+    def test_rf_cannot_take_wired_pads(self):
+        self.profile('lora_24')['pins'][0]='WIRE_RX_P'
+        with self.assertRaisesRegex(ValueError, 'RF pad'): check(self.c)
+
+    def test_architecture_is_not_qualification(self):
+        self.profile('sata_gen1')['standards_compliant']=True
+        with self.assertRaisesRegex(ValueError, 'qualification'): check(self.c)
+
+    def test_profiles_cannot_enable_simultaneous_engines(self):
+        self.c['operating_policy']['rf_wired_simultaneous_permitted']=True
+        with self.assertRaisesRegex(ValueError, 'exclusive engine'): check(self.c)
+
 if __name__ == '__main__': unittest.main()

@@ -1,161 +1,105 @@
-# Fast mathematical transceiver model
+# Whole-chip behavioral model
 
-This is an executable functional prototype, not a completed transistor schematic
-or proof of GF180 performance. Mathematical closure and the layout gate remain
-open. The required product supports **RF or wired payload operation, not both
-simultaneously**; see [the current policy](../../spec/exclusive-engine-policy.md).
-Existing simultaneous-traffic runners are retained as optional stress tests.
+## Active workflow
 
-## Model compositions
-
-| Entry | Role | Important limits |
-| --- | --- | --- |
-| `chip.py:TransceiverChip` | Common calibrated RF/wired model | Historical concurrent operation; memoryless RF output approximation |
-| `warm_chip.py:WarmTransceiverChip` | Adds coarse startup, finite recentering and warm retuning | Separate subclass; not automatically covered by common quality results |
-| `../../verification/fast_loaded_output.py:LoadedOutputChip` | Finite output network shared by pad observation, calibration detector and RX loopback | Assumed passive RC network; no nonlinear driver current/supply limits |
-| `../../verification/fast_exclusive_engine.py:ExclusiveEngineChip` | Loaded model with mutually exclusive payload admission/session enables | Inactive bias/clock shutdown and RTL implementation remain open |
-| `../../verification/fast_exclusive_engine.py:IntegratedTransceiverChip` | Combines powered exclusivity, loaded output and coarse/warm RF acquisition | Initial same-instance lifecycle only; reference recovery, finite-current drive and integrated quality remain open |
-
-The common model connects host framing and finite queues, wired serialization
-and receive timing, ADC/DAC quantization and delay, RF mixing and filtering,
-shared reference charge, supply coupling, sampled autonomous clocks, calibration,
-diagnostics and managed lifecycle control. It does not instantiate external
-FPGA modem, MAC or endpoint protocol logic.
-
-The receiver defaults to a fifth-order Butterworth filter at 9.157407 MHz.
-`rx_filter=None` explicitly selects the historical single-pole comparison.
-RF output parameters and detector readout settling are constructor parameters.
-Preparation/calibration belongs to the caller; creating a chip does not silently
-calibrate it. A 12-bit transport word is not a claim of 12-bit converter ENOB.
-
-`configure_rx_gain(gain)` selects 0.5, 1 or 2 without changing the filter
-topology or its stored state. The serialized `configure_rx_gain` command maps
-payloads 0/1/2 to those gains; other encodings reject. Changes require a disarmed
-receiver with no active calibration or pending ADC/maintenance conversion.
-The older combined `configure_rx` command includes single-pole bandwidth tuning
-and remains unavailable with the selected multipole topology. This gain command
-is a mathematical management interface; its pin-level RTL encoding is not yet
-implemented. It models an ideal gain setting, not a qualified physical PGA.
-
-The exclusive adapters expose `wire_return_start` with a 1–65535 control-cycle
-delay. It starts the wired host-return framing independently of RF capture and
-requires the wired engine active with idle return transport. Repeated starts
-reject; stop cancels the return schedule. Receiver detection must be rearmed
-after a prior stop before reusing wired TX. This is a serialized mathematical
-command; pin-level RTL encoding remains open.
-
-## Run from the repository root
+From the repository root:
 
 ```sh
+make transceiver-behavioral
+```
+
+[`behavioral.py`](behavioral.py) is the active architecture screen. It combines
+sampled/envelope RF and event-driven wired/host behavior without integrating
+transistor or oscillator waveforms. The recorded regression takes about ten
+seconds; runtime varies. It writes
+[`behavioral-system.json`](../../evidence/behavioral-system.json), including
+source hashes, assumptions, scenario outcomes and missing coverage.
+
+`status: passed` means the regression assertions—including negative controls—
+passed. Read per-case `conditional_system_pass` and `coverage` for capability
+status. `full_chip_closure` and physical qualification remain false.
+
+## What is connected
+
+| Part | Present behavior | Remaining boundary |
+| --- | --- | --- |
+| Configuration/lifecycle | Generic resource and numeric settings, exclusive RF/wire admission, startup guard, stop/reference-loss epochs, handovers | Startup guard is assumed; complete calibration, retune and recovery remain open |
+| Host transport | Persistent directional finite queues, independent source/H2D/D2H events, actual payload packing, prefill, delayed occupancy feedback and chunk-equivalence checks | Feedback ABI/RTL and general service/stability envelope are unfinished |
+| RF samples | Selectable sample rates and converter precision, persistent DAC/filter/mixer/ADC state, gain, carrier offset and impairment controls | Live host path and richer quality observer are not yet unified for all target fixtures |
+| RF observation | Known-training timing/gain/carrier recovery, HE20 equalization/pilot tracking, GFSK prefix acquisition, held-out decisions | Synthetic fixtures do not establish standard packet acquisition or complete protocol support |
+| Wired receive | Incremental channel/slicer/CDR words delivered through host queues at six rates from 1.25 to 2.5 Gb/s; common fast-channel time constant in seconds | Separate-screen initialization in holdover cases; continuous startup fixtures at 1.25/2.5 Gb/s use a fixed training guard, not a qualified lock detector |
+| Video timing | Fractional/intermediate x10 references, sampled forwarded PLL checks and supporting lane-group model | Complete multi-chip payload, deskew, continuous FIFO and pad integration remain open |
+| USB pads | Host/device pad lifecycle probes, NRZI/stuffing payload and contention controls; short-frame turnaround screen | Complete attach/reset/chirp negotiation and burst recovery are not established |
+| Power | Configuration-dependent average current/droop plus RF ripple and assumed host-coupling screens | One dynamic supply/clock/RF composition, package and thermal envelopes remain open |
+
+The suite includes 60 baseline assumption scenarios and 23 numeric configuration
+cases. Numeric recipes use the planned fifth-order RX response; historical
+one-pole comparisons are not substitutes for those results. Precision settings
+are converter model choices, not measured ENOB. Numeric sideband controls are
+behavioral candidates, not a finalized register ABI.
+
+Eight continuous wired startup cases exercise ±0.35 UI initial phase and ±100 ppm
+frequency error at 1.25/2.5 Gb/s. Each delivers 6,150 error-free scored bits after
+a fixed 2,040-bit external training guard through the same channel/CDR/host state.
+A provisional timing monitor qualifies 64 observed edges below 0.1 UI error
+and revokes qualification after 64 transition-free bits. Silence and transition-loss
+controls pass. This is bounded timing evidence; wrapped phase cannot detect
+whole-bit slips, and protocol word lock and general acquisition remain open.
+
+The model tests payload identity in connected 8/12-bit GFSK paths and wired
+receive paths. Other quality screens use separate waveform projections. Passing
+sample transport is insufficient evidence of RF quality, and a short passing
+waveform is insufficient evidence of a sustained operating link.
+
+## How to read quality evidence
+
+The current numeric sweep contains conditional passes and failures. BLE 2M,
+LoRa and several gain settings fail; BR and proprietary GFSK also have failing
+combined cases despite passing their baseline quality screen. Consult the report
+for exact settings and offset conditions instead of treating a protocol name as
+a single pass/fail property.
+
+HE20 evidence uses BPSK with trained equalization and pilot tracking. It does not
+establish all Wi-Fi 6 modulation/coding modes. The provisional 10% quality screen
+is an architectural budget, not a universal standards limit. Blocker, compression,
+clock-gap and supply-coupling negative controls expose failure envelopes; their
+parameters are hypotheses rather than measured GF180/package characteristics.
+
+State persists across calls for the live RF/filter and transport paths. Separate
+waveform diagnostics still have different scope. Keep these distinctions explicit
+when adding tests; no single fixture currently proves the entire system.
+
+## Optional supporting checks
+
+```sh
+# Longer, multi-seed RF robustness; outside the default iteration loop
+python3 projects/programmable_transceiver_platform/system_model/architecture_fast/behavioral.py --burst-stress
+
+# Bounded supporting numerical/architecture checks
 make transceiver-math-fast
-python3 projects/programmable_transceiver_platform/verification/fast_exclusive_engine_check.py
-python3 projects/programmable_transceiver_platform/verification/fast_exclusive_management_check.py
-OPENBLAS_NUM_THREADS=1 python3 projects/programmable_transceiver_platform/verification/fast_loaded_traffic.py --exclusive
+
+# Expensive coupled checks: use only for a specific unresolved question
+python3 projects/programmable_transceiver_platform/verification/full_chip_check.py --detailed
 ```
 
-The loaded-traffic runner's `--exclusive` option selects RF before calibration
-and uses the existing count-free RF duplex fixture in both rate profiles. It
-checks ordered DAC input, ADC return data, bounded queues, conversion accounting,
-loaded-output isolation at stop, and zero wired payload. Results are written to
-`evidence/fast-exclusive-rf-traffic.json`; its status is authoritative. This is a
-finite transport test with lossy stop, not RF quality or inactive clock/bias
-shutdown qualification. Without the option, the historical four-path stress
-fixture remains available.
+The coupled constructor is
+[`full_chip_model.make_chip`](../../verification/full_chip_model.py), model ID
+`exclusive-coupled-domains-host-v1`. Its canonical diagnostics must use that
+constructor; results from older subclasses do not qualify it automatically.
+Supporting blocks include [`chip.py`](chip.py), [`warm_chip.py`](warm_chip.py),
+[`lane_group.py`](../connected/lane_group.py),
+[`protocol_signals.py`](../connected/protocol_signals.py) and
+[`protocol_pad.py`](../connected/protocol_pad.py).
+Do not run long coupled startup simulations as the default architecture loop.
 
-Use `fast_loaded_traffic.py --power-gated` for the experimental powered
-exclusive composition (`--exclusive` is implied). It additionally checks zero
-wired-oscillator frequency and fixed phase throughout RF streaming. Its separate
-report is `evidence/fast-powered-rf-traffic.json`. Oscillator shutdown and a timed
-readiness guard do not yet model bias-current/supply transients or a physically
-shared synthesizer.
+## Requirements and ownership
 
-`fast_loaded_loopback_quality.py --power-gated` runs a matched baseline/impaired
-RF-only quality comparison on that powered composition. It keeps the 2x RX gain,
-finite pad/monitor network, shared calibration and existing 10% incremental
-error screen, and verifies that the wired oscillator remains stopped. Results
-go to `evidence/fast-powered-loopback-quality.json`; this finite deterministic
-stimulus does not establish wideband modem performance or physical PGA quality.
+- [Contract](../../spec/contract.json): configurations and external recipes.
+- [Transport](../../spec/streaming-transport-v2.md): framing and service obligations.
+- [Clock ownership](../../spec/clock-rate-ownership.md): timing conventions.
+- [RF coordinates](../../spec/rf-frequency-coordinates.md): signal conventions.
+- [Risk priorities](../../spec/risk-priorities.md): what to address next.
+- [Closure inventory](../../spec/mathematical-closure.json): completion gates.
 
-Use `OPENBLAS_NUM_THREADS=1` for repeatable, economical simulation runs.
-The common acceptance suite runs 12 executables / 38 case rows, checks shared
-source snapshots and result digests, and writes
-[fast-common-acceptance.json](../../evidence/fast-common-acceptance.json).
-It covers continuous transport, external RF and nonlinear loopback quality,
-calibration cancellation, diagnostics, receiver detection, overflow/restart,
-transaction-level local operation, warm retuning and LO sideband integration.
-These selected scenarios do not establish exhaustive architectural closure.
-
-The historical transport profiles are 1.25 Gb/s wired with 40 MS/s 12-bit I/Q,
-and 2.5 Gb/s wired with 20 MS/s 8-bit I/Q. Exclusive-mode bandwidth reallocation
-is pending. Stop/abort explicitly accounts for discarded data; it is not a
-lossless-stop guarantee. A finite FIFO cannot absorb persistent rate mismatch.
-
-## Consolidated RF stress runner
-
-```sh
-OPENBLAS_NUM_THREADS=1 python3 projects/programmable_transceiver_platform/verification/fast_rf_quality.py --variant blockers
-OPENBLAS_NUM_THREADS=1 python3 projects/programmable_transceiver_platform/verification/fast_rf_quality.py --variant load
-OPENBLAS_NUM_THREADS=1 python3 projects/programmable_transceiver_platform/verification/fast_rf_quality.py --variant signed
-```
-
-| Variant | Additional conditions | Report |
-| --- | --- | --- |
-| `blockers` | +20/+30 MHz blockers at 0.1 amplitude, RF cubic distortion, noise/loading | `fast-blocker-quality.json` |
-| `load` | Profile DAC reference load 2 pF; ADC/DAC delays 2/1.5 sample periods | `fast-profile-load-quality.json` |
-| `signed` | Profile converter gain and wired-phase coupling in both signs; signed oscillator sensitivity | `fast-signed-coupling-quality.json` |
-
-Each variant compares matched baseline/impaired runs. RX uses independent
-multicarrier input; TX is observed separately. One complex gain is fitted on the
-first quarter and frozen for held-out samples. The unchanged corrected RMS gate
-is 10%. Passing selected assumed parameters is not Wi-Fi compliance, a spectral
-mask, physical coupling qualification or a complete uncertainty bound.
-
-## Loaded output and exclusive-mode work
-
-The loaded adapter retains capacitor voltage through output/dummy switching and
-propagates exponential source terms using the actual LO phase segment. Pad
-observation reads node 1; calibration detects pre-isolation monitor node 2.
-Loopback uses the same interval-start network modes as the detector and pad.
-Independent stiff-ODE and subdivision checks validate that numerical connection.
-
-Absolute-gain calibration rejects the attenuated monitor path. Explicit
-`tx_relative_gain=True` permits relative I/Q fitting; it neither normalizes away
-network attenuation nor proves absolute pad amplitude or calibration accuracy.
-
-Relevant executable checks live in `../../verification/`:
-
-- `fast_loaded_output_check.py`: independent pad transient and switch continuity.
-- `fast_loaded_loopback_check.py`: simultaneous network/filter ODE comparison.
-- `fast_loaded_calibration_check.py`: shared-ADC observation and gain semantics.
-- `fast_loaded_traffic.py`: both-mode loaded four-path transport (historical stress).
-- `fast_exclusive_engine_check.py`: selected-engine admission and stopped transitions.
-- `fast_exclusive_management_check.py`: serialized selection/status and epoch fences.
-
-Loaded waveform quality, full selected-engine duplex, per-mode calibration
-validity, analog shutdown and shared-synthesizer implementation remain open.
-The transaction model is not SPI-pin/CDC or RTL opcode verification.
-
-## LO approximation and numerical checks
-
-`lo_drive.py` projects normalized switching effectiveness into desired/image and
-sideband terms. It does not map transistor gate voltage to switching efficiency.
-`lo_mixer.py` applies these terms ahead of receiver filtering with absolute-time
-phase. Independent quadrature, switched-mixer and ODE checks are retained in
-`lo_*check.py` here and `lo_*truncation*.py` under `../../verification`.
-
-The single-pole modulated approximation exceeded the proposed 0.3% error budget
-at some observation phases. The intended fifth-order filter passes the tested
-fixture. Neither result establishes physical high-frequency rejection: switch
-feedthrough, filter parasitics, aperture and changing-symbol coverage remain open.
-
-## Evidence and history
-
-[Closure inventory](../../spec/mathematical-closure.json) tracks open requirements.
-[Model audit](../../evidence/fast-model-audit.json) checks selected source/result
-provenance; rerun `../../verification/fast_model_audit.py` when sources change.
-A stale report remains historical evidence, not current qualification.
-
-The previous 608-line chronological model README is preserved in Git commit
-`de268da`. [Repository consolidation notes](../../docs/consolidation.md) explain
-retention and recovery. Keep this page an entry point; put implementation
-contracts in code/specifications and measured outcomes in focused reports.
+Keep experimental measurements in evidence reports and current conclusions in
+these owners. Do not append chronological progress logs to this guide.

@@ -51,12 +51,14 @@ class HostBankSupply:
             raise ValueError('One binary drive per output required')
         return a.astype(bool)
 
-    def currents(self, state, levels):
+    def currents(self, state, levels, external_return_a=0.):
         """Return ground potential, feed currents, pull-up and pull-down currents."""
+        if not np.isfinite(external_return_a) or external_return_a<0:
+            raise ValueError("Finite nonnegative external return current required")
         u = state[:self.n];out = state[self.n:]
         up_g = levels/self.pullup_r;down_g = (~levels)/self.pulldown_r
         denominator = 1/self.return_r+np.sum(1/self.feed_r)+np.sum(up_g+down_g)
-        ground = (np.sum((self.nominal-u)/self.feed_r)
+        ground = (external_return_a+np.sum((self.nominal-u)/self.feed_r)
             -np.sum(up_g*(u[self.output_domain]-out))+np.sum(down_g*out))/denominator
         feed = (self.nominal-u-ground)/self.feed_r
         up = up_g*(u[self.output_domain]+ground-out)
@@ -162,11 +164,13 @@ class LimitedHostBankSupply(HostBankSupply):
         self.consumed_charge = np.zeros(self.n)
         self.driver_energy = self.internal_energy = 0.
 
-    def currents(self, state, levels):
+    def currents(self, state, levels, external_return_a=0.):
         from scipy.optimize import brentq
+        if not np.isfinite(external_return_a) or external_return_a<0:
+            raise ValueError("Finite nonnegative external return current required")
         u = state[:self.n];out = state[self.n:]
         denominator = 1/self.return_r+np.sum(1/self.feed_r)
-        center = np.sum((self.nominal-u)/self.feed_r)/denominator
+        center = (external_return_a+np.sum((self.nominal-u)/self.feed_r))/denominator
         radius = np.sum(np.where(levels, self.up_limit, self.down_limit))/denominator
         def branches(g):
             up = np.where(levels, np.clip((u[self.output_domain]+g-out)/self.pullup_r,

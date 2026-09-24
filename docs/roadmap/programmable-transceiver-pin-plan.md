@@ -4,11 +4,12 @@
 
 Implementation progress and the executable budget are tracked in the [project](../../projects/programmable_transceiver_platform/README.md). Run `make transceiver-contract` to check the current planning invariants; this does not verify physical feasibility or tapeout readiness.
 
+
 ## Product and boundary
 
 Build the full `programmable_transceiver_platform` as a **generic analog/PHY companion for FPGA regular GPIOs**, with SPI-only MCU operation at lower throughput. The chip owns analog conversion, RF translation, high-speed electrical signaling, precise timing, and bounded data movement. The external FPGA owns Wi-Fi modem/MAC, Ethernet PCS/MAC as needed, PCIe link/transaction/endpoint logic, and application processing. Example configurations exercise common primitives; they do not define three independent fixed-function chips.
 
-The first fabrication is the complete companion, not a feasibility coupon. Keep one RF RX/TX chain and one full-duplex wired lane. The former four-pair HDMI allocation and on-chip modem/MAC/PCIe endpoint are superseded. A complete HDMI source is outside this pinout. A generic FPGA means no dedicated multi-gigabit transceiver, PCIe hard block, or vendor-specific host protocol is required; it does **not** mean every FPGA can run the maximum GPIO rate or has enough logic for every protocol.
+The first fabrication is the complete companion, not a feasibility coupon. Keep one RF RX/TX chain and one full-duplex wired lane. The former four-pair HDMI allocation and on-chip modem/MAC/PCIe endpoint are superseded. A complete HDMI/DVI link uses three instances of this single-lane chip plus an external TMDS clock buffer/receiver; no four-pair allocation is added to one die. A generic FPGA means no dedicated multi-gigabit transceiver, PCIe hard block, or vendor-specific host protocol is required; it does **not** mean every FPGA can run the maximum GPIO rate or has enough logic for every protocol.
 
 ## Accepted operating envelope
 
@@ -18,7 +19,7 @@ Numerical limits remain to be selected from evidence: specify junction temperatu
 
 ## Physical envelope
 
-Use one wafer.space **1×1 slot** and **50 total external connections: 36 signals plus 14 provisional supply/ground connections**. Provider information checked 2026-09-19: [wafer.space](https://wafer.space/price.html) lists a 3.93 × 5.12 mm full die and 12.92 mm² default-ring core. The [slot template](https://mith.ro/gf180mcu-project-template/) specifies a 3.05 × 4.24 mm core and 74 default pads, including only two analog signals. This design needs a custom mixed-signal pad ring and custom bare-die assembly or an explicitly accepted equivalent; the standard chip-on-board offer requires the default ring.
+Use one wafer.space **1×1 slot** and **50 total external connections: 36 signals plus 14 provisional supply/ground connections**. Provider information checked 2026-09-23: [wafer.space](https://wafer.space/price.html) lists a 3.93 × 5.12 mm full die and 12.92 mm² default-ring core. The current provider page lists 56 default I/O pads; older template pad counts are not the project terminal budget. This design needs a custom mixed-signal pad ring and custom bare-die assembly or an explicitly accepted equivalent; the standard chip-on-board offer requires the default ring.
 
 Retain a conservative **12.92 mm² core ceiling** until placed pads, ESD, seal ring, and isolation establish the actual usable envelope. This is an area budget, not demonstrated fit. Count every electrically connected package terminal, including any exposed ground paddle; do not hide additional supplies, loop-filter terminals, or references outside the 50 budget.
 
@@ -29,7 +30,7 @@ Logical IDs are allocation labels, not package numbering. Final ordering follows
 | IDs | Signals | Count | Function |
 |---|---|---:|---|
 | S01–S02 | `WIRE_TX_P/N` | 2 | Programmable differential output driver and serializer |
-| S03–S04 | `WIRE_RX_P/N` | 2 | Differential termination/equalizer/slicer/CDR input |
+| S03–S04 | `WIRE_RX_P/N` | 2 | Serial termination/EQ/slicer/CDR input; USB mode: bidirectional D+/D− |
 | S05–S06 | `RF_RX_P/N` | 2 | Differential RF receiver input |
 | S07–S08 | `RF_TX_P/N` | 2 | Differential RF transmitter output |
 | S09 | `REF_IN` | 1 | External reference oscillator; separately qualified external-LO injection mode |
@@ -74,16 +75,16 @@ Programmability means an exposed resource graph, documented routing and clock co
 
 ## Sharing between RF and wired resources
 
-Use **two specialized electrical front ends feeding related programmable local tiles, backed by shared digital services**. Distinguish reusable circuit designs instantiated in both islands from a single physical resource arbitrated between them. Local duplication is appropriate when required for continuous simultaneous operation; sharing is justified by measured area/power benefit after routing, isolation, and arbitration costs.
+Use **two specialized electrical front ends feeding related programmable local tiles, backed by shared digital services**. Distinguish reusable circuit designs instantiated in both islands from a single physical resource arbitrated between them. Local duplication is appropriate for concurrent functions within the selected engine, such as wired TX and RX. Share resources across mutually exclusive RF/wired modes where area/power benefits survive routing, isolation and switching costs.
 
 | Resource | Sharing policy | Concurrency requirement |
 |---|---|---|
 | SPI, configuration, GPIO transport | One common implementation | Reserve transport capacity per active engine; recovery remains independent of high-speed clocks |
 | Capture/playback and configuration memory | Shared banked memory with separate queues and ownership | Guaranteed service for continuous RX/TX; account for aggregate reads, writes, and bank conflicts |
-| Pattern engines, PRBS, packing, optional coding/filtering helpers | Common programmable digital resources | Allocate sufficient instances or scheduled throughput for declared simultaneous modes |
+| Pattern engines, PRBS, packing, optional coding/filtering helpers | Common programmable digital resources | Allocate throughput for the selected RF or wired mode, including its required TX/RX directions |
 | Calibration sequencing | Shared controller with local trim storage and correction circuits | Calibrating one island must not disturb the other's active settings; disruptive calibration requires an explicit quiet window |
 | Voltage/current references | Shared master references with locally filtered/buffered distribution | Bound supply/substrate coupling, settling, and common-reference failure effects |
-| Clocking | Shared frequency reference and control; independent RF and wired clock engines | Preserve RF LO quality and wired CDR tracking simultaneously |
+| Clocking | Shared frequency reference and control; independent RF and wired clock engines | Preserve RF LO quality in RF mode and independent wired TX/CDR timing in wired mode; evaluate cross-mode sharing |
 | Samplers, comparators, transconductors, current-source cells | Reuse circuit designs in a family of locally instantiated tiles | Size variants for their noise, loading, linearity, and speed envelopes |
 | RF matching/input gain and wired termination/equalization | Specialized local interfaces | Do not join sensitive RF input nodes to wired termination networks |
 | RF output and wired line driver | Specialized output stages using reusable cell designs where suitable | Preserve independent load, swing, linearity, and termination requirements |
@@ -129,7 +130,7 @@ Transport capacity is shared by active engines in each direction. Static bandwid
 
 For PCIe, optional decoded words can carry eight data bits, a control-character flag, and an aggregate decode-error flag; detailed errors remain observable in raw mode/counters. Keep line coding and generic alignment bypassable. Raw 10-bit mode transports every line bit without assuming a specific encoding. Control/status overhead is already reserved in the table; additional metadata must fit the remaining headroom.
 
-At the top host profile, one raw 2.5 Gb/s lane leaves about 380.9 Mb/s per direction before further metadata. A concurrent 20 MS/s, 8-bit I/Q stream needs 320 Mb/s and is a plausible allocation; 40 MS/s, 12-bit I/Q at 960 Mb/s does not fit alongside it. Do not promise every engine's maximum rate simultaneously. A first coexistence target is 1000BASE-X-rate raw traffic plus 40 MS/s, 12-bit I/Q (2.21 Gb/s total before extra metadata), leaving more transport margin.
+RF and wired payloads do not share the host bandwidth concurrently. Budget each selected engine against its actual frame-slot allocation: raw wired traffic reaches 2.5 Gb/s per direction; RF examples require 320 Mb/s for 20 MS/s × 8-bit I/Q or 960 Mb/s for 40 MS/s × 12-bit I/Q. The raw host ceiling does not prove that every slot schedule supports either case. The streaming-transport specification and executable configuration checks own finite-queue service, metadata and feedback overhead.
 
 PCIe feasibility requires more than the bandwidth sum: verify reference/SSC handling, receiver detection, electrical idle, polarity, alignment, elastic buffering, ordered sets, reset/recovery, control latency, and the exact PHY/controller boundary. The physical host link is not pin-compatible PIPE. Provide a cycle-accurate FPGA adapter to a specified soft-controller interface and prove end-to-end enumeration and transfers. [Intel's PIPE specification](https://cdrdv2-public.intel.com/643108/643108_PIPE_Arch_Spec_Rev_7_1.pdf) and the [TI XIO1100](https://www.ti.com/product/XIO1100) establish the external-PHY partition as a precedent, not proof of this design. Some FPGA hard controllers cannot expose the required interface and are not supported merely because they advertise PCIe.
 
@@ -147,17 +148,106 @@ Place wired and RF islands on opposite sides, host parallel pins adjacent to dig
 
 | Core allocation, including local routing/keepouts | Budget (mm²) |
 |---|---:|
-| One full-duplex wired PHY | 2.0 |
-| RF RX/TX and programmable analog baseband | 2.3 |
+| One full-duplex wired PHY plus local USB branch | 2.35 |
+| RF RX/TX and programmable analog baseband | 2.40 |
 | I/Q converters and analog calibration | 1.3 |
-| Synthesizers, timing, references | 1.3 |
-| GPIO transport, generic digital helpers and control | 1.5 |
-| FIFO/capture/playback/configuration memory | 0.8 |
-| Top-level isolation, routing, decoupling and closure reserve | 3.72 |
+| Synthesizers, timing, references | 1.45 |
+| GPIO transport, generic digital helpers and control | 1.65 |
+| FIFO/capture/playback/configuration memory | 0.85 |
+| Top-level isolation, routing, decoupling and closure reserve | 2.92 |
 | **Core ceiling** | **12.92** |
 
-These are ceilings, not measured areas or promised buffer capacities. Determine memory depth from actual macro availability, host stalls, and protocol latency; do not assume a dense SRAM exists. Close the fast GPIO pad/return budget and representative analog layouts before expanding programmability. Area pressure is addressed by resource sharing and bounded buffering, preserving the full companion target.
+Protocol flexibility reallocates 0.80 mm² from the prior 3.72 mm² reserve; the total remains 12.92 mm². These are ceilings, not measured areas or promised buffer capacities. Determine memory depth from actual macro availability, host stalls, and protocol latency; do not assume a dense SRAM exists. Close the fast GPIO pad/return budget and representative analog layouts before expanding programmability. Area pressure is addressed by resource sharing and bounded buffering, preserving the full companion target.
 
 Before fabrication, publish the 50-terminal bond map, actual placed area, rail/current/thermal budget, extracted die/package/board timing and RF models, host training/transport specification, and mode/resource conflict table. Demonstrate raw serial and RF transport with external FPGA logic in hardware-in-the-loop, then prove the exact PCIe and Ethernet adapters against peers. Exercise transport corruption, clock loss, flow-control failure, receiver errors, and every reset state. Carry all pre-silicon uncertainty into O1–O4 claims; one-slot fit, maximum GPIO rate, RF performance, and standards interoperability remain separate gates.
 
 Host evidence: the [first FPGA screen](../../projects/programmable_transceiver_platform/spec/fpga-host-screen.md) rejects ECP5 as a documented full-rate LVCMOS host for the current top profile. Lower profiles remain candidates; full-rate host selection and electrical closure remain required.
+
+
+## Protocol profiles
+
+These are external FPGA recipes and verification targets, not on-chip protocol
+selectors. Generic numeric settings also cover intermediate operating values.
+The heading is retained for existing links.
+
+| Profile | Intended boundary | New obligations beyond current model |
+| --- | --- | --- |
+| HD-SDI | 1.485 and 1.485/1.001 Gb/s serial video | External 75-ohm coax driver/equalizer, FPGA framing/scrambling, pathological-pattern CDR and jitter qualification |
+| SATA Gen1 | One full-duplex 1.5 Gb/s lane, FPGA host or device | 1.5 Gb/s synthesis/CDR; common mode, swing, termination and AC coupling; COMRESET/COMINIT/COMWAKE burst/gap generation and detection without requiring CDR lock; SSC tracking; idle exit and acquisition |
+| USB 2.0 HS | One 480 Mb/s port, statically selectable host or device; FS attach/fallback and LS host signaling | Bidirectional D+/D− branch, HS current driver and calibrated termination, FS/LS driver and single-ended receivers, squelch/disconnect detection, chirp/reset/resume/SE0/J/K states, turnaround and contention protection |
+| DisplayPort | One RBR lane at 1.62 Gb/s, source OR sink | RBR synthesis/CDR, training patterns, programmable swing/pre-emphasis and SSC tolerance; external AUX electrical interface and FPGA HPD/AUX control |
+| Wi-Fi 6 / 802.11ax | 2.4 GHz, one spatial stream, 20 MHz; first demonstrate HE MCS0, then qualify higher modes individually | HE waveforms, independent TX/RX EVM/PER and spectral mask, phase noise/CFO, blockers, PA backoff, RX-to-TX response latency and timed trigger-based operation |
+| Bluetooth LE | 2.4 GHz LE 1M, 2M and coded S=2/S=8, ordinary packet operation | Channel-hop profiles, gain/offset settling, GFSK fidelity, RX/TX turnaround and time-tagged bursts; no automatic channel-sounding or newest optional-PHY claim |
+| Bluetooth Classic | 2.4 GHz BR plus 2/3 Mb/s EDR | 79-channel hopping, GFSK plus differential PSK payload fidelity, mixed BR/EDR burst gain/phase continuity, slot scheduling |
+| IEEE 802.15.4 | 2.4 GHz 250 kb/s O-QPSK/DSSS, channels 11–26 | Half-sine pulse fidelity, sensitivity/PER, RSSI/CCA observability, gain freeze and acknowledgment turnaround; FPGA implements Zigbee/Thread or other upper layers |
+| 2.4 GHz LoRa | Chirp spread spectrum using SX1280-class bandwidths, initially about 203/406/812/1625 kHz | Frequency/phase continuity, long-packet drift, decimation/filtering, blocker tolerance, independent packet decoding; no promise of commercial-chip sensitivity or ranging accuracy |
+
+These are design targets with separate acceptance gates. Wi-Fi HE MCS0 is an
+entry waveform, not proof of a complete standards-compliant Wi-Fi 6 device.
+DisplayPort does not grow to HBR (2.7 Gb/s), multiple lanes, or USB-C PD/Alt Mode.
+USB host/device role changes occur only while stopped; OTG/HNP/SRP, hubs and
+Type-C PD are outside this pass. Host controller/protocol support must include
+FS/LS devices where required, not just HS traffic after an ideal handshake.
+
+
+## HDMI/DVI through multiple instances
+
+Support single-link DVI and HDMI TMDS source or sink using **three identical
+single-lane chips**, one per data pair. Initial targets are 720p60 (74.25 MHz
+pixel clock, 742.5 Mb/s per lane) and 1080p60 (148.5 MHz, 1.485 Gb/s), 8 bits per
+color. These are reduced-model targets, not compliance claims. No HDMI FRL,
+4K/high-refresh, deep color or dual-link DVI is implied.
+
+Each die retains 50 terminals (36 signal, 14 supply) and its own wafer.space 1x1
+slot/area ceiling. Three board instances require three dies, not three lanes
+inside one slot. All participating dies own the wired engine; RF payload is off.
+Source: WIRE_TX pair drives one TMDS data pair. Sink: WIRE_RX pair receives one.
+The opposite pair is unused. The fourth cable pair is a pixel clock: use an
+external TMDS-compatible clock driver/receiver and fanout, not an ordinary GPIO
+wired directly to the connector. REF_IN is repurposed by a generic wired
+forwarded-word mode across 74.25/1.001–148.5 MHz with a x10 serial clock,
+including 74.25/1.001, 74.25, 85.5, 108, 148.5/1.001 and 148.5 MHz
+behavioral test points; RF retains its
+normal reference configuration. Input-buffer bandwidth and deterministic x10
+phase/divider reset are new unqualified circuit requirements.
+
+FPGA logic supplies opaque 10-bit TMDS words, including control/guard/data-island
+symbols; pixel encoding, disparity, HDMI packets/audio and optional HDCP remain
+outside the chip. DDC, HPD, HDMI 5 V and optional CEC use external protected FPGA
+interfaces. Three host links are required: 10 data pins plus clock per active
+direction per chip, plus management. An FPGA must meet this aggregate pin and
+bandwidth requirement. Shared management wires can use separate chip selects.
+
+Use existing 64-word framing. At 720p60 host mode 0 provides
+250 Mword/s * 33/64 = 128.90625 M lane-words/s. At 1080p60 host mode 1 provides
+312.5 Mword/s * 52/64 = 253.90625 M lane-words/s. Both exceed their pixel-word
+rate. These are average capacities; finite FIFO, CDC, burst phasing and startup
+must still close. Total encoded link bandwidth is 2.2275/4.455 Gb/s across three
+chips, not through one host link.
+
+Use one board word clock and a shared launch epoch; equal frequency alone does
+not align independently locked serializers. FPGA training/control boundaries,
+word slips, bounded deskew FIFOs and fractional phase/skew calibration are
+required. A lane losing reference invalidates the whole link; restart all lanes.
+Distinguish serial word skew from framed host-return burst skew. Reserve **128
+words per lane in the external FPGA** for the current receive-side integration
+model; this does not enlarge the chip's own FIFOs or pin count. Independent
+host-clock/startup fixtures overflow four-word external buffers and reach 21/32
+words at 720p/1080p rates. Those measured peaks are not worst-case bounds: qualify
+host pauses and downstream service before fixing the board integration budget.
+A sink uses the received clock pair and bounded per-lane alignment rather than
+assuming the embedded-clock CDR alone reconstructs the video word boundary.
+
+Extend the existing current-steering driver with a **DC current-sink mode** and
+the RX termination with independently switched 50-ohm legs to 3.3 V. AC serial
+termination must be isolated in this mode and vice versa. An illustrative 8 mA
+sink gives 400 mV differential magnitude and 3.1 V common mode; it is a circuit
+budget hypothesis, not validated GF180 electrical performance. Qualify pad/ESD
+capacitance, off-state leakage, hot-plug/power sequencing, common-mode tolerance,
+current-source compliance and output-disable behavior before claiming support.
+
+References: [TI TFP410](https://www.ti.com/lit/ds/symlink/tfp410.pdf) for three data
+serializers, separate TMDS clock and 165 MHz pixel-class architecture;
+[TI TMDS141](https://www.ti.com/product/TMDS141) for receiver termination; and
+[TI HDMI/DVI overview](https://www.ti.com/lit/an/snla231/snla231.pdf) for 1080p
+lane rates. Their silicon performance is not a GF180 characterization.

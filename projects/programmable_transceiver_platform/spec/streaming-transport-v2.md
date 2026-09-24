@@ -1,5 +1,10 @@
 # Candidate streaming transport v2
 
+The framed path below serves bulk payload. USB response-critical operation also
+uses a proposed short-frame configuration of this same transport; RF profiles require
+time-tagged bursts and channel readiness. These are host-interface obligations
+on the existing pins, not permission to assume zero-latency FPGA responses.
+
 This is the executable reference for replacing compulsory bulk CRC/quarantine. As of pass 28, this is the default integrated RTL transport. V1 remains available through compile-time parameter STREAM_V2=0. No chip area, timing or power saving is claimed before implementation and measurement. All 50 terminals and both full-rate wired/RF profiles are retained.
 
 ## Geometry and encoding
@@ -73,3 +78,273 @@ This separates asynchronous-FIFO readout from the variable insertion shift. It a
 The two 32-word I/Q transport FIFOs retain their count, storage and boundary policy, but register full/empty flags. On accepted push only, full becomes `count==31` and empty clears; on accepted pop only, empty becomes `count==1` and full clears. With both accepted or neither accepted, count and flags hold. Reset sets count/full to zero and empty to one. Thus flags describe the post-edge occupancy without an additional externally visible cycle.
 
 Acceptance still uses pre-edge flags: at full, simultaneous push/pop rejects the push, accepts the pop and latches overflow; at empty, it accepts the push, rejects the pop and latches underflow. There is no fall-through bypass or full-boundary replacement. This preserves existing behavior instead of silently changing the FIFO contract while optimizing timing. Asynchronous FIFO CDC logic is unchanged by this pass.
+
+
+## Protocol deadlines and local line events
+
+**Local programmable line behavior.** A bounded sequence of levels, bits,
+   bursts, gaps and output-enable states supports SATA OOB, USB chirp/reset/EOP,
+   serial idle and training. Programmable envelope detectors work before CDR
+   lock. No on-chip SATA link state machine or USB host controller is implied.
+
+**Deadline-aware host service.** Reconfigure the existing transport to eight
+words for USB: five unchanged protected metadata/guard words and three raw
+payload words, using existing 125 MHz DDR clocks, source slots, queues and two
+staging banks. Keep the normal 64-word mode for other profiles. This supersedes
+the proposed separate streaming/event path. USB packet decisions and CRC remain
+in FPGA; short frames reduce latency without another parallel interface or
+on-chip protocol controller. Profile changes still occur only while stopped.
+
+
+## Executable line and deadline models
+
+`protocol_pad.py` models USB D+/D− as finite capacitances (including mutual and
+disabled-branch capacitance), selectable terminations/pulls, FS/LS voltage drive,
+HS current drive with compliance, external peer drive and contention rejection.
+`ProtocolService.usb_hold` advances those pad states through the canonical ODE;
+local current loads WIRE_A, while external source energy is accounted separately.
+Reconfiguration requires both drivers released and preserves capacitor state.
+This lumped model still lacks package transmission lines, qualified slew, ESD,
+USB burst CDR and electrical compliance limits.
+
+The standalone checks cover both host/device roles, attach/reset levels, HS
+NRZI plus bit stuffing, release/squelch and contention. Coupled checks cover
+both directions, rail droop and capacitor/source/dissipation conservation.
+The same solver still owns the existing host output bank and supply return.
+No USB negotiation state machine or packet transaction layer has been claimed.
+
+`stream_codec.slots`, `encode` and `Receiver` now accept `frame_words=8`,
+reusing the existing header protection, quota, sequence and fault logic. Three
+raw wire slots replace the old RF/wired quota split. The existing scheduler and
+queue simulator also run this geometry. Tests cover 130 frames per USB role,
+sequence wrap, quota overflow, header corruption, four producer phases and a
+65×65 response-phase sweep. Default 64-word callers remain unchanged.
+
+`usb_framed_turnaround` bounds the actual two-bank staging structure: less than
+one frame until snapshot, one frame until emission, and at most one frame until
+the final word is delivered, in each direction. At 250 Mword/s, eight-word
+frames provide 937.5 Mb/s raw payload capacity. With 40 ns FPGA processing,
+34 ns combined electrical observation/turnaround, four CDC word times, four
+queue word times and 20 USB bit times of packing, the bound is 339.67 ns.
+This meets the ordinary USB-IF EL_22 8–192 HS bit-time window (16.67–400 ns)
+with 60.33 ns remaining, conditional on those unqualified implementation budgets.
+An explicit minimum-gap guard applies if a faster configuration could respond
+too early. The same conservative staging bound fails for 64-word frames.
+
+No built-in-hub or cable extension is borrowed for the local chip/FPGA budget.
+Longer FPGA decisions and queue stalls are tested as failures. This is not a
+peer-compliance result. The older 100 ns stress example is not a USB requirement
+and is superseded as a design decision by this short-frame comparison.
+
+The canonical lifecycle now selects frame geometry through common receiver,
+quota and encoder hooks. USB configuration selects eight words, DDR125 and a
+480 Mb/s synthesizer target; it enters acquisition without manufacturing lock.
+The return scheduler and host activation monitor use the same geometry. Host
+conditioning still requires 4096 word edges (512 short frames), preserving its
+duration and provisional activity bounds. Stopped profile changes restore the
+64-word geometry. Component tests cover timed return, sequence wrap, abort,
+epoch acknowledgement, malformed headers and activation. Baseline 64-word
+return/abort and activation checks still pass in both modes.
+
+USB packet admission remains blocked on the canonical chip. A timed pad adapter
+and HS burst recovery must connect line events to metadata with correct ordering
+after the declared payload count and carry partial final words without corrupting
+EOP or external FPGA CRC decisions. Canonical acquired active traffic, the actual
+two-bank response schedule and RTL integration remain unverified. The current
+timed return component is a functional scheduler, not evidence that the physical
+CDC/staging latency budget is met. No new sideband pin or packet engine is selected.
+
+### Generic raw-bit/event transport candidate
+
+`system_model/connected/bit_event_stream.py` owns the bounded raw-bit queue;
+`verification/bit_event_codec.py` owns short-frame encoding, streaming decoding
+and record-aware snapshots. The chip makes no protocol decisions. Ten-bit data
+records precede opaque eight-bit events; an event atomically flushes a partial
+word with its valid-bit count. Overflow faults until reset.
+
+The existing protected metadata is reused in an explicitly selected transport
+interpretation: `wc` counts 0–3 data words, unused `qc` gives the final word's
+valid-bit count (zero without data, otherwise 1–10), operation 3 carries the
+opaque event in `arg`, and operation 0 has no event. Partial final words require
+an event; interior words contain ten bits. No extra payload tags or sideband
+pins are added. Timestamps are not transmitted. The streaming decoder emits
+data immediately and the event after the final data; event-only frames emit at
+the guard. Consumers must accept two ordered records on the final data edge.
+Malformed frames latch a fault, and prior payload cannot be retracted.
+
+`test_bit_event_codec.py` consolidates queue, pad-observation, codec, corruption,
+sequence-wrap, snapshot-boundary and stop/reset unit checks. Snapshot tests cover
+lengths 0–90 and adjacent bursts; invalid partial boundaries consume no queue
+records. `bit_event_schedule_check.py` exercises the finite two-bank schedule:
+40 bursts at five phases for each length 9, 10, 11, 23, 240 and 4096 bits deliver
+correctly at 480 Mb/s input and 250 Mword/s host, with maximum event latency
+83.934 ns. All five one-bit-burst cases overflow: one event per 32 ns frame
+supports 31.25 million events/s, below their 53.33 million boundaries/s demand.
+The 2 Gb/s overload also faults. Peak raw capacity is 937.5 Mb/s; adding one
+payload tag per word would reduce it to an inadequate 468.75 Mb/s. These are
+generic fixtures, not USB packet-conformance or turnaround evidence.
+
+The isolated guarded canonical candidate passes normal acquisition and returns
+23 coupled pad-voltage observations as 10 + 10 + 3 bits, then an event at
+35.04 ns latency. It rejects stopped observations, disabled RX and stale resource
+generations, and flushes partial records on stop. Sampling is prescribed and host
+decoding ideal. It also passes 13 coupled primitive regression groups and eight
+legacy RF/wired return/abort component checks. Evidence owners are:
+
+- `evidence/bit-event-schedule.json`: finite scheduling, including overloads.
+- `evidence/record-return-serialized.json`: serialized, guarded coupled pad-to-return test.
+- `evidence/record-integration-coupled-controls.json`: primitive regressions.
+- `evidence/record-return-legacy-controls.json`: legacy component checks.
+
+The integration is now installed in the main composition: generic resource
+commands, serialized raw-record selection, ordered return dispatch and guarded
+RF-disabled forecasting. The temporary patch has been removed. The original
+control run passed with its source manifest verified; its report is retained as
+`evidence/canonical-controls-before-record-integration.json`.
+
+`verification/record_return_check.py` is the single integration entry point for
+queue controls, receive-format ownership, serialized selection, coupled transfer,
+configuration guards and overflow-to-drain behavior. Ordinary serial RX rejects
+while raw-record return owns receive transport; disabled RX cannot start return.
+Internal queue overflow stops the chip, flushes partial records and prevents
+subsequent delivery. The isolated source-checked run passed; fresh main-model
+integration, primitive and control regressions are running. Prescribed sampling
+and ideal host decoding still leave burst CDR, CDC, physical capture, peer
+operation and RTL open. Command fields belong in `integration/macro-contract.md`.
+
+Reference: [USB-IF electrical compliance, EL_22](https://www.usb.org/sites/default/files/USB%202%200%20Electrical%20Compliance%20Specification%28v1.07%29.pdf).
+
+
+SATA OOB uses six nominal 160-UI bursts with 480-UI reset/init gaps or 160-UI wake
+gaps at Gen1 rate. The envelope observer requires consecutive valid widths/gaps
+and cannot distinguish electrically identical COMRESET/COMINIT without role.
+Tolerance is a declared fixture, not a qualified standard acceptance window.
+[Seagate SATA reference](https://www.seagate.com/support/disc/manuals/sata/sata_im.pdf)
+and the [USB 2.0 specification](https://www.usb.org/document-library/usb-20-specification)
+remain the sources for eventual complete PHY timing tests.
+
+### Loaded host voltage observation
+
+`verification/host_capture_check.py --voltage-screen` samples actual canonical host-output voltage
+states after diagnostic launches, rather than decoding the ideal emitted word.
+At 250 and 312.5 Mword/s, only one of four stress words is valid halfway through
+a word under the explicit external-receiver hypothesis VIL=0.99 V, VIH=2.31 V.
+All four are valid at three quarters of the word period; the minimum observed
+logic margins there are approximately 442 mV and 67 mV respectively. These
+are four-word sample margins, not worst-case timing or noise margins. The source-hashed
+`host-voltage.json` records per-word minimum logic margins and forwarded-clock
+voltage. This points to required sampling-phase qualification, not a certified
+eye opening. No setup/hold, skew, package ringing, PVT or receiver clock-capture
+model is included, and these stopped diagnostic launches do not prove acquired
+traffic. Ideal host-word observers in other tests must retain that limitation.
+
+The same screen now varies output capacitance by +20% and current limits by
+−20%, separately and together, without changing pull resistance or switching
+charge. These are uncertainty hypotheses, not PDK corners. At 312.5 Mword/s,
+the combined 12 pF / 8 mA case cannot charge an initially low output to 2.31 V
+within a 3.2 ns word: even the optimistic bound I·T/C is only 2.133 V.
+Moving the sampling phase alone cannot fix that case. At 250 Mword/s, all four
+combined-condition words pass at 90% of the period, with a minimum observed
+90 mV margin; this late sample does not establish setup/hold margin.
+
+Before selecting a host electrical implementation, constrain board/receiver
+capacitance and qualify drive strength and forwarded-clock sampling together.
+For the faster mode, 12 pF needs at least 8.663 mA merely to reach the assumed
+high threshold at the end of the word, or 11.55 mA by three quarters of it.
+These are necessary current/charge bounds, not sufficient design currents:
+resistive settling, supply droop, skew and receiver timing still apply.
+The model defaults and throughput targets remain unchanged pending that work.
+
+`verification/host_capture_check.py` extends this check to the canonical
+forwarded-clock voltage. It samples eight alternating all-bit words at 100 ps
+spacing at 312.5 Mword/s, estimates each 1.65 V clock crossing, and intersects
+the data-valid intervals relative to those crossings. Each interval reserves
+0.2 ns per side for a hypothetical combined receiver timing/skew allowance.
+The receiver would need to implement the resulting clock-relative delay;
+crossing detection and phase adjustment are not supplied by this test.
+
+The comparison retains nominal drive, the failing 12 pF / 8 mA rising-drive
+condition, and a 12 pF / 12 mA rising-drive candidate. Falling limits scale by
+the same factors. Increasing only the mathematical current limit leaves device
+size, switching charge and pull resistance unqualified; a passing candidate
+must be realized and rerun with those effects before it becomes a design choice.
+The sampled intersection is not a continuous-time eye or full-pattern guarantee.
+
+The source-hashed `evidence/host-capture.json` completes this finite comparison:
+nominal has a common interval 0.950–1.350 ns after the clock crossing (400 ps);
+the uncertain case has no common interval; the stronger candidate has
+1.024–1.350 ns (approximately 326 ps). These intervals already include the
+assumed 0.2 ns allowance per side. They are conditional external capture-delay
+requirements, not a measured FPGA receiver capability or chip signoff.
+
+The `--sized-driver` follow-up keeps 12 pF loading and 12 mA rising current,
+but scales pull resistance by 1/1.5 and internal edge charge by 1.5, with a
+second case at 3× edge charge. This represents a provisional 1.5× driver with
+a 20% current derating, plus an extra switching-charge stress. The existing
+coupled supply model consumes those edge charges; minimum sampled rail voltage
+and consumed/pending switching charge are recorded with the capture windows in
+`evidence/host-capture-sized.json`. The proportional sizing rule is an explicit
+hypothesis to replace with transistor simulation, not an inferred PDK guarantee.
+
+Both sized-driver cases complete with a sampled 400 ps common interval.
+The minimum sampled rail is 3.030 V at 1.5× charge and 2.889 V at 3× charge;
+consumed switching charge is respectively 0.924 nC and 1.848 nC. These values
+use the coupled owner's charge accounting. The standalone host-bank internal
+energy counter is not updated by this composition and must not be used here.
+
+## Opaque multi-lane video transport
+
+HDMI/DVI uses three separate chip host links, each carrying one pre-encoded
+10-bit lane. Existing 64-word frames are retained: 720p60 uses 74.25 M words/s
+versus 128.90625 M available in mode 0; 1080p60 uses 148.5 M versus 253.90625 M
+in mode 1. Blank/control intervals still require symbols: no blanking bandwidth
+is assumed free. FPGA rate matching, initial prefill and bounded inter-chip
+word deskew must cover independent host framing. Shared reset alone is not a
+serializer alignment guarantee. Loss or underflow of any lane invalidates the
+whole link; rearm with a common epoch. Capacity checks do not qualify FIFO/CDC
+or external GPIO timing. FPGA supplies all TMDS/HDMI semantics.
+
+[HDMI/DVI board and pin plan](../../../docs/roadmap/programmable-transceiver-pin-plan.md#hdmidvi-through-multiple-instances).
+
+The bounded video check now executes a continuous finite TX FIFO using actual
+64-word encoder/decoder frames, rather than average-capacity arithmetic alone.
+The candidate is 128 words deep with 64 words prefilled before group launch.
+An external FPGA fractional quota accumulator emits the nominal lane word count
+per frame. The test spans 256 frames, three initial consumer phases and ±100 ppm
+consumer-rate error at both video rates. Empty launch, excessive positive drift
+and excessive negative drift must respectively expose starvation and overflow.
+This is a finite-window TX result: independent clocks drift indefinitely without
+feedback. Sustained operation requires a common frequency source or measured
+occupancy feedback. Asynchronous FIFO implementation and group
+prefill/epoch enforcement remain open; this candidate is not an RTL depth mandate.
+
+The same finite-lane model now checks RX independently: incoming words enter an
+initially empty FIFO, each frame advertises only the occupancy observed at its
+start, and actual payload slots remove those words while the host decoder checks
+order. Arrivals during a frame wait for later headers; no future word is counted
+in advance. Both video rates run 256 frames at three phases and ±100 ppm. The
+reported conservation identity is produced = host-consumed + pending FIFO words.
+One frame without payload service is tolerated; eight paused frames overflow the
+128-word candidate, and a four-word FIFO also fails. Pauses retain framing and
+represent withheld payload service, not stopped electrical host clocks. This
+covers finite RX scheduling under ideal word capture. Clock-domain pointer
+synchronization, physical host capture and simultaneous three-lane scheduling
+remain open. TX and RX checks are separate simplex use cases.
+
+An external TX rate-controller candidate now uses FIFO occupancy delayed by two
+frames to adjust the next frame's fractional word quota, bounded by the existing
+wire-slot quota. It never reads the actual consumer frequency or current FIFO
+state. The proportional gain is 1/[4(delay+1)] words per occupancy-error word;
+initial target occupancy is 64. At both video rates, 512-frame ±1% frequency-error
+controls fail without feedback and pass with feedback, with observed occupancy
+between 57 and 80 words. The deliberately large drift makes the finite test
+sensitive to the controller rather than merely to the preload size.
+
+The delayed observation is currently a model input, not serialized telemetry.
+Its encoding, bandwidth, sequence/epoch, stale-report timeout and management
+integration are open requirements before this can serve as the actual continuous
+stream solution. Do not assume the chip already implements the report or add a
+protocol-specific command. Common-frequency operation remains the preferred
+initial board arrangement; the generic feedback candidate covers independent
+clock operation only within its stated assumptions. Finite tests do not prove
+unbounded-time stability or tolerance of arbitrary feedback latency.

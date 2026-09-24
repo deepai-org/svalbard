@@ -51,6 +51,7 @@ class LoadedOutputChip(TransceiverChip):
         def receive(t,pad):
             if not getattr(self.rf_pll,'powered',True):return 0j
             if state.rx_route=='loopback':signal=pad
+            elif state.rx_route=='external_waveform':signal=self.external_waveform_signal(t)
             elif state.rx_route=='external_tone':
                 signal=state.external_amplitude*cmath.exp(2j*math.pi*state.external_frequency*t)
             else:signal=0j
@@ -72,6 +73,7 @@ class LoadedOutputChip(TransceiverChip):
             owner.detector.__dict__.update(candidate.detector.__dict__)
             owner.rx_bank.update(candidate.rx_bank)
             if owner.host_bank is not None:owner.host_bank.__dict__.update(candidate.host_bank.__dict__)
+            if owner.pad_branch is not None:owner.pad_branch.__dict__.update(candidate.pad_branch.__dict__)
             owner.received=candidate.received
             owner.rail_v=candidate.rail_v;owner.time=candidate.time
             owner.rail_trajectory=candidate.rail_trajectory

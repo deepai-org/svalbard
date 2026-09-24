@@ -15,24 +15,62 @@ class DuplexChip(ReturnChip):
     def incoming_wire(self,words,start,phase=.3,ppm=100):
         if self.state!='active' or self.rx_events or start<self.time:
             raise ValueError('Incoming link requires active idle receiver')
-        rate=1.25e9 if self.session.mode==0 else 2.5e9
+        rate=self.channel.rate
         recovered,times,metadata=framed_words(words,rate,phase,ppm)
         origin=start+(metadata['training_bits']+metadata['marker_bits'])/rate
         self.rx_events.extend((origin+float(t),int(w)) for t,w in zip(times,recovered))
         self.rx_metadata=metadata
 
+    def configure_record_return(self,enabled=True):
+        if type(enabled) is not bool or self.state!='reset' or self.session.armed:
+            raise ValueError('Stopped record-return control required')
+        if not enabled:
+            if hasattr(self,'record_source'):self.record_source.reset()
+            self.record_return=False
+            return
+        if self.state!='reset' or self.session.armed or self.host_frame_words!=8 or self.active_engine!='wire' or not self.wired_rx_enabled:
+            raise ValueError('Stopped short-frame wired configuration required')
+        from bit_event_stream import BitEventStream
+        self.record_return=True;self.record_source=BitEventStream(16);self.host_records=[]
+        self.record_generation=self.resource_generation
+
+    def require_record_configuration(self):
+        if (not getattr(self,'record_return',False) or self.record_generation!=self.resource_generation
+                or self.active_engine!='wire' or self.host_frame_words!=8 or not self.wired_rx_enabled):
+            raise ValueError('Raw record configuration is absent or stale')
+
+    def observe_record(self,kind,value,time):
+        self.require_record_configuration()
+        if self.state!='active' or time!=self.time:
+            raise ValueError('Raw observation requires active aligned chip time')
+        if kind not in ('bit','event'):raise ValueError('Raw observation kind')
+        try:
+            getattr(self.record_source,kind)(value,time)
+        except ValueError:
+            if self.record_source.fault:self.quiesce(time,'raw record overflow')
+            raise
+
     def encode_return_frame(self,words,sequence):
-        quota=33 if self.session.mode==0 else 52
+        if getattr(self,'record_return',False):
+            self.require_record_configuration()
+            if words:raise ValueError('Raw record return has no IQ slots')
+            from bit_event_codec import snapshot_records
+            return snapshot_records(self.record_source,sequence)
+        quota=self.host_quota('wire')
         wire=[self.wired_return.popleft() for _ in range(min(quota,len(self.wired_return)))]
         self.rx_staged+=len(wire)
-        return encode(self.session.mode,wire,words,sequence)
+        return self.encode_host_frame(wire,words,sequence)
 
     def accept_host_event(self,event):
+        if getattr(self,'record_return',False) and event and event[0] in ('data','event'):
+            self.host_records.append((self.time,event));return
         super().accept_host_event(event)
         if event and event[0]=='wire':self.host_wire.append(event[1])
 
     def quiesce(self,time,reason):
         super().quiesce(time,reason)
+        if hasattr(self,'record_source'):self.record_source.reset()
+        self.record_return=False
         self.rx_events.clear()
         self.rx_discarded+=len(self.wired_return);self.wired_return.clear()
 

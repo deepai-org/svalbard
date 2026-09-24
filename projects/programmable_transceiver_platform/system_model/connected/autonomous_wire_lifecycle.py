@@ -26,9 +26,16 @@ class AutonomousWireChip(ManagedChip):
 
     def make_serializer(self,time):
         rate=self.channel.rate;previous=self.wire_pll
-        factor=self.wire_reference_divider;pfd_reference=40e6/factor
-        if previous is None or previous.divider!=rate/pfd_reference:
-            new=self.WIRE_PLL_CLASS(reference_hz=pfd_reference*(1+self.wire_reference_ppm*1e-6),
+        interface=getattr(self,'wire_interface',{})
+        forwarded=interface.get('clock_source')=='forwarded_word'
+        factor=1 if forwarded else self.wire_reference_divider
+        pfd_reference=interface['word_reference_hz'] if forwarded else 40e6/factor
+        if forwarded and rate!=10*pfd_reference:
+            raise ValueError('Forwarded reference and serial rate disagree')
+        reference_hz=pfd_reference*(1+self.wire_reference_ppm*1e-6)
+        if (previous is None or previous.divider!=rate/pfd_reference or
+                previous.reference_hz!=reference_hz):
+            new=self.WIRE_PLL_CLASS(reference_hz=reference_hz,
                               divider=rate/pfd_reference,free_hz=rate*(1+self.wire_free_offset),
                               bandwidth_hz=self.wire_bandwidth,phase_cycles=.2/factor,
                               lock_phase_cycles=.01/factor,lock_frequency_hz=4000./factor)
@@ -41,10 +48,10 @@ class AutonomousWireChip(ManagedChip):
             self.wire_pll=new
         self.wire_pll.good=0;self.wire_pll.locked=False
         self.wire_ref_origin=time
-        if factor>1:
+        if factor>1 or forwarded:
             # Reset the reference prescaler; count four future input edges,
             # including when configuration occurs between40MHz edges.
-            input_hz=40e6*(1+self.wire_reference_ppm*1e-6)
+            input_hz=reference_hz if forwarded else 40e6*(1+self.wire_reference_ppm*1e-6)
             index=time*input_hz
             if abs(index-round(index))<1e-10:index=round(index)
             self.wire_ref_origin=math.floor(index)/input_hz
@@ -59,6 +66,12 @@ class AutonomousWireChip(ManagedChip):
         return super().clocks_ready() and (not self.clock_required('wire') or
                 self.wire_pll is not None and self.wire_pll.locked)
 
+    def wire_word_phase_target(self,phase):
+        # A forwarded word reference defines a ten-bit boundary. Legacy serial
+        # operation retains its arbitrary first bit followed by ten-bit strides.
+        quantum=10 if getattr(self,'wire_interface',{}).get('clock_source')=='forwarded_word' else 1
+        return quantum*math.ceil(phase/quantum)
+
     def schedule_wire(self,count,start,ppm=0):
         if ppm!=self.wire_reference_ppm:raise ValueError('Payload rate must match configured wired reference')
         if self.wire_pll is None or not self.wire_pll.locked:
@@ -71,7 +84,7 @@ class AutonomousWireChip(ManagedChip):
         # Predict the first integer oscillator phase at or after the requested
         # start without advancing any shared analog state into the future.
         candidate=copy.copy(self.wire_pll);candidate.advance(start)
-        target=math.ceil(candidate.output_phase_cycles)
+        target=self.wire_word_phase_target(candidate.output_phase_cycles)
         deadline=self.wire_pll.edge_time(target)
         super().schedule_wire(count,start,ppm)
         self.wire_phase_target=target
@@ -95,7 +108,7 @@ class AutonomousWireChip(ManagedChip):
         if self.wire_remaining:
             if target is None and self.wire_start_not_before<=horizon:
                 clock.advance(self.wire_start_not_before)
-                target=math.ceil(clock.output_phase_cycles)
+                target=self.wire_word_phase_target(clock.output_phase_cycles)
             if target is not None:
                 deadline=clock.edge_time_before(target,horizon)
                 word=math.inf if deadline is None else deadline

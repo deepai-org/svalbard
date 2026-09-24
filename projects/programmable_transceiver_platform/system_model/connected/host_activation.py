@@ -4,9 +4,10 @@ from chip_model import Receiver
 
 class HostActivation:
     def __init__(self):self.state='idle';self.reason=None;self.last=None;self.words=0
-    def start(self,mode,time,epoch,sequence=0):
+    def start(self,mode,time,epoch,sequence=0,frame_words=64):
         if self.state=='training':raise ValueError('Host activation already busy')
-        self.receiver=Receiver(mode);self.receiver.sequence=sequence
+        self.receiver=Receiver(mode,frame_words=frame_words);self.receiver.sequence=sequence
+        self.frame_words=frame_words
         self.epoch=epoch;self.period=1/(250e6 if mode==0 else 312.5e6)
         self.state='training';self.reason=None;self.last=None;self.start_time=time;self.words=0
         self.previous=0;self.frame_transitions=0;self.transitions=0
@@ -27,7 +28,7 @@ class HostActivation:
         self.previous=word;self.transitions+=changes;self.frame_transitions+=changes
         self.last=time;self.words+=1
         if self.receiver.pos==0:
-            if not 4*64<=self.frame_transitions<=8*64:raise ValueError('Training frame switching activity outside assumed band')
+            if not 4*self.frame_words<=self.frame_transitions<=8*self.frame_words:raise ValueError('Training frame switching activity outside assumed band')
             self.frame_transitions=0
         if self.words==4096:self.state='ready'
     def ready(self,time,epoch):

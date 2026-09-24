@@ -9,6 +9,17 @@ schematic, then layout, extract and repeat the tests. Transmission-line geometry
 and shielding are deferred. Preserve the full programmable RF/wired companion
 scope. An easier isolated circuit is an experiment, not a replacement product.
 
+## Active phase: whole-chip behavioral closure
+
+User direction: focus on the whole-chip behavioral model until it is satisfactory.
+Use `make transceiver-behavioral` and its source-hashed report as the primary
+architecture loop. Connect lifecycle, both transport directions, waveform quality,
+clock/error envelopes, power/area/pins and uncertainty sweeps in one behavioral
+composition. Do not resume solver optimization, transistor implementation or
+layout while those architecture gaps remain. Detailed existing models provide
+selective parameter evidence, not mandatory per-scenario integration. A successful
+assumption-based screen is not physical qualification or whole-chip completion.
+
 ## Primitive-library architecture for schematic and layout work
 
 Adopted user decision, 2026-09-23: build the programmable transceiver's analog
@@ -676,3 +687,103 @@ it is not autonomous startup/noise closure. Reference/converter loading and
 whole-chip transistor interconnection remain the next major handoff gaps.
 
 Current audit: `evidence/fast-schematic-handoff.json`. The layout gate stays closed.
+
+
+## Programmable protocol primitives
+
+Implement these from the already selected six primitive families and shared
+control services. A configurable block must still have bounded code ranges,
+finite resolution, loading and power; mathematical configurability is not a
+new ideal component exemption.
+
+### RF-disabled forecast performance candidate
+
+Live-process sampling places most observed time in the coupled Radau solve
+and rail/PLL forecasting; the nonblocking profiler lost samples, so this is
+hotspot evidence rather than a precise CPU allocation. Wired-only intervals
+currently perform at least two RF phase-feedback solves even though the RF
+oscillator, drive and receive input are disabled.
+
+`verification/inactive_rf_feedback_check.py` compares a single-solve candidate
+against that reference with identical ODE tolerances, 2/20 ns intervals, host
+edges and nonzero stored network energy. Checked node/filter/rail/reference/
+host/clock states agree within 1.5e-14 in these four cases, and the solve count
+falls from two to one. All passive decay and shared supply loads remain in the
+ODE. The expanded probe compares 154 numeric fields, including 22 energy/charge
+fields, plus domain rail trajectories. Active-RF use and invalid intervals
+reject, and injected solver failure preserves caller state. A guarded version
+is now installed in the primary composition after the original control
+regression passed. A matched serialized-configuration/finite RX-to-host
+scenario has passed in both isolated copies. Source manifests were rechecked,
+and all five reported functional outcomes agree, including actual acquisition
+and eight causal received words at 1.62 Gb/s. Reports are preserved as
+`evidence/resource-command-reference.json` and
+`evidence/resource-command-optimized.json`. These are functional comparisons,
+not full analog trajectory equivalence; the return observer decodes ideal words.
+Fresh main-model coupled primitive and serialized record-return checks pass;
+the longer post-integration control regression remains live.
+Do not generalize this result to
+active RF or replace a still-running reference simulation.
+
+## Bounded architecture iteration
+
+Use `make transceiver-math-fast` as the routine loop: analytical/envelope RF,
+event-level transport/clock controls and interval uncertainty checks, bounded
+at 30 seconds total. The result is reduced-model evidence, not closure of the
+detailed coupled chip. Use short coupled transient windows to validate the
+approximations at selected disturbances; do not repeat a full stiff startup
+for every controller or configuration change. Full cold-start, sustained
+traffic and coupled uncertainty remain explicit later verification gates.
+Long coupled runs require `--detailed` and a specific unanswered question.
+
+## TMDS reuse before new circuitry
+
+For HDMI/DVI, first extend the existing wired current-steering driver, termination
+switches, comparator/sampler and clock divider using the six primitive families.
+Characterize the selectable DC sink/common-mode behavior and high-frequency
+forwarded reference before adding any separate video analog macro. Keep encoding
+and three-chip bonding in the FPGA; instantiate the same die three times. The
+schematic/layout sequence and all per-die constraints remain unchanged.
+
+[HDMI/DVI board and pin plan](../../../docs/roadmap/programmable-transceiver-pin-plan.md#hdmidvi-through-multiple-instances).
+
+The bounded canonical forwarded-RX check is opt-in:
+`timeout 15s env OPENBLAS_NUM_THREADS=1 python3 projects/programmable_transceiver_platform/verification/protocol_model_check.py --forwarded-lifecycle`.
+It acquires at 2 us, receives eight 1.485 Gb/s words, returns them through the
+existing host path and verifies reference-loss draining by 2.14 us. It writes
+`evidence/protocol-forwarded-lifecycle.json`; it is separate from the default
+architecture suite to preserve its runtime budget. Earlier diagnostic windows
+were stopped at their 12/15-second limits and provide no completed traffic proof.
+
+Profiling identified repeated stiff solves while RF states were exactly zero.
+`forecast_inactive_rf` now chooses RK45 only when driver, RF network, RX filter
+and detector state are exactly dormant and receive forcing is explicitly zero.
+Any retained RF state selects Radau. A short explicit/implicit rail comparison
+must agree within 1 nV; no tolerance loosening or active-RF solver replacement is
+implied. This optimization preserves the dormant invariant subspace and does not
+permit discarding residual charge during wired/RF transitions.
+
+Use `--forwarded-lifecycle --forwarded-direction tx` on the same bounded command
+for the complementary canonical TX check. After real coupled startup, one whole
+64-word host frame supplies four opaque words, which pass through the finite TX
+FIFO, forwarded PLL serializer and current-switch pad. The test requires exact
+internal serializer output and no underflow/pending words, then removes reference
+and verifies draining, stopped serialization and tail-current decay below 1 uA
+after 1 ns. `evidence/protocol-forwarded-tx-lifecycle.json` records this finite
+case. RX remains the default direction. Neither test qualifies a continuous
+three-chip video link; TX's canonical observation is internal, supplemented by
+the separately scoped independent-clock pad test.
+
+### Closure scope clarification
+
+Mathematical closure requires the complete intended PHY companion's connected
+behavior and declared uncertainty envelope. Representative FPGA fixtures must
+exercise actual signaling, framing/timing demands and recovery, but complete
+MAC/endpoint stacks are external responsibilities, not missing on-chip engines.
+Conversely, a host queue or waveform test alone cannot close chip clocks, pads,
+converter paths or management lifecycle. Physical feasibility remains unknown
+until transistor evidence constrains noise, speed, linearity and loading; that
+is the next stage, not something a mathematical pass certifies. Complete the
+full transistor schematic before layout. The machine-readable stage boundaries
+in `mathematical-closure.json` classify these obligations without waiving the
+existing requirements or moving missing chip behavior outside the project.

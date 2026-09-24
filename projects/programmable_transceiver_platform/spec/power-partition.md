@@ -417,3 +417,295 @@ connection budgets. Do not tune the domain feed resistance merely to make an
 optimistic current fixture pass. The running RF diagnostic intentionally retains
 its recorded assumptions so it can expose integration defects; its eventual
 result cannot close power feasibility.
+
+
+## Additional protocol resource budgets
+
+One slot means 3.93 × 5.12 mm, not 1 mm². Retain the conservative 12.92 mm² core
+ceiling and the 36-signal + 14-power/ground terminal allocation. Provider page
+checked 2026-09-23 lists 56 default I/O pads; the old 74-pad template statement
+in earlier planning must not be treated as the current offering. Our custom
+mixed-signal ring/assembly still requires independent fit and return analysis.
+
+Reserve **0.80 mm² within the existing 3.72 mm² closure reserve** for expansion:
+0.35 wired/USB local circuits, 0.15 timing/rate controls, 0.10 RF bandwidth/gain
+controls, 0.15 digital event/streaming helpers and 0.05 configuration memory.
+The residual reserve is 2.92 mm². These are allocation caps, not transistor area
+estimates. No reduction in return pins, baseline buffers or converter performance
+is assumed. If the allocation fails, revisit sharing/circuit choice and report
+the conflict; do not quietly drop a requested capability or expand the die.
+
+Power is not justified by this area reservation. Add selected-mode current and
+switching loads for every new branch to the same seven-domain model. USB cannot
+borrow RF current headroom across unrelated supply pins. Inactive branches still
+contribute capacitance, leakage and substrate coupling. Budget DC and transient
+current against the existing per-domain limits; actual transistor current and
+thermal closure remain unknown. No additional regulator or supply is assumed.
+
+The largest new wired rate is 1.62 Gb/s, below the existing 2.5 Gb/s target.
+At 40 MS/s and 12 bits each for I and Q, RF payload is 960 Mb/s per direction;
+at 20 MS/s and 8 bits it is 320 Mb/s. Existing exclusive bandwidth arithmetic
+therefore provides room in principle. It does not prove USB turnaround, packet
+jitter, continuous host timing, or ADC ENOB. Bound queues and transport latency
+separately for every profile and clock tolerance. Converter precision/sample
+rate increases and FFT/FEC/modem hardware on this die are not part of this pass.
+
+
+## Coupled shared-pad state
+
+The optional USB branch is now owned by `LimitedCoupledDriver`. Its two node
+voltages and local-source/external-source/dissipation energy integrals advance
+transactionally with the original RF/filter/reference/host/supply states.
+Forecast copies include the branch; committing a forecast preserves its object
+identity. Existing host-bank regressions cover the no-branch case. The default
+2 pF node, 0.2 pF mutual and 0.3 pF disabled-branch capacitances are assumptions.
+
+In the finite HS fixture, the wired rail reaches about 3.260 V and independent
+pad energy residual is below 1e-18 J. This is not a power estimate for a complete
+USB PHY. Disabled-branch capacitance is represented in the pad circuit but has
+not yet been integrated into the independent serial receiver channel/CDR model;
+that remains a critical 2.5 Gb/s coexistence gate.
+
+## Historical quiet-rail numerical diagnostics
+
+These bounded experiments preserve numerical failures as well as successes.
+They do not qualify switching behavior or replace the current power allocation.
+
+### Pass 13: isolate quiet-input rail startup
+
+Four fresh, bounded one-nanosecond runs compare ideal rails, supply-only impedance, return-only impedance and both. Each active rail uses the same selected 0.25 ohm/2 nH series path from pass 12. The native 8 mA pads, unequal signal inductances and 10 pF loads remain. Data and clock inputs are held low, matching the prior stimulus before its 20 ns start. Core supply/return remains ideal.
+
+All four DC operating points and short transients complete with default integration and a 10 ps maximum step. Reported VDD is 3.3 V; quiet source current is approximately 0.71 nA. The both-rails case has VSS between −0.024 and +0.395 nV, and low output voltage around 3.35 nV. These tiny model residuals do not establish physical noise accuracy.
+
+| Case | Saved transient rows | Completed simulated time |
+|---|---:|---:|
+| Ideal | 108 | 1 ns |
+| Supply only | 329 | 1 ns |
+| Return only | 287 | 1 ns |
+| Both | 391 | 1 ns |
+
+This rules out an obvious large startup rail excursion **in the captured interval**. It does not explain the later slowdown, prove stability beyond 1 ns, or test switching. More adaptive points with R/L are observed, but their count alone is not a diagnosis. Prior full-interval timeouts remain unresolved, including those using Gear.
+
+Run `verification/run_rail_startup.sh` from this project. Each probe has a 30-second subprocess limit and records completion separately from waveform availability. The [retained report](../evidence/rail-startup-screen.json) includes deck/log/operating-point/waveform hashes. The raw archive is `scratch/transceiver-rail-startup-artifacts.tar.gz`.
+
+Next preserve intermediate waveforms as simulated time approaches the slowdown, inspect timestep and rail/internal-node behavior, and compare the supply-only/return-only cases over that same interval. Do not infer that more damping is the correct physical fix before distinguishing numerical behavior from circuit behavior. Follow the [two-sided uncertainty requirement](uncertainty-envelope.md): both apparent stability and apparent instability need scrutiny.
+
+Archive SHA-256: `1327697b4462f4ae991e1670b4fbd06aa5fcb6e3ed91b8b88bb87d0ed8633b6e`.
+
+### Pass 14: intermediate quiet-rail traces
+
+The startup harness now saves checkpoints at 1, 2, 4 and 8 ns before a requested 12 ns endpoint. The [ngspice stop/resume commands](https://ngspice.sourceforge.io/docs/ngspice-manual.pdf) preserve transient state; the circuit is not restarted at each checkpoint. Saved endpoint times are checked against the requested times, and 16-digit output preserves small rail changes. The ideal case exercises all checkpoints successfully.
+
+Physical conditions match pass 13: quiet low inputs, native 8 mA pads, 10 pF loads, unequal signal inductances, and zero or selected 0.25 ohm/2 nH paths on supply/return. Integration is default trapezoidal, maximum step 10 ps. Each case has a 60-second wall-time bound.
+
+| Case | Execution | Last saved checkpoint | Saved rows at that point | Median / minimum saved timestep |
+|---|---|---:|---:|---:|
+| Ideal rails | Completed | 12 ns | 1,220 | 10 ps / 100 fs |
+| Supply only | Timeout | 1 ns | 329 | 1.25 ps / 9.77 fs |
+| Return only | Timeout | 2 ns | 590 | 2.5 ps / 78.1 fs |
+| Both | Timeout | 2 ns | 753 | 1.25 ps / 9.77 fs |
+
+The last saved checkpoint is not the exact point at which the run timed out. Logs continued to report progress after those checkpoints. Intermediate traces are retained despite the timeout.
+
+Supply-only VDD varies by approximately 0.062 nV in the saved interval. Return-only VSS varies by approximately 0.000367 nV. With both paths, VDD and VSS variations remain below 0.5 nV. These are model residuals, not predictions of physical noise. They show no large rail excursion in the captured intervals; later behavior is not available.
+
+#### Interpretation and next test
+
+The slowdown is not unique to the interaction of two moving rails: either rail impedance can expose it. Tiny timestep selection while terminal voltages remain nearly constant is consistent with numerical sensitivity, but does not identify the cause or rule out hidden internal-node behavior. The checkpoint interruptions also affect timestep history, so elapsed progress is not directly comparable with uninterrupted runs.
+
+Next compare the installed simulator's linear solvers on the same circuit and timestep controls, retaining both successful and unsuccessful outcomes. Inspect internal-node behavior or tolerance sensitivity if solver choice does not resolve it. Do not change circuit damping or relax electrical requirements merely to obtain a completed run. Both false stability and false instability remain possible until the numerical result is cross-checked.
+
+Reproduce with `verification/run_rail_checkpoints.sh`. The [report](../evidence/rail-checkpoint-screen.json) records execution state and hashes. Raw decks, logs and snapshots are in `scratch/transceiver-rail-checkpoint-artifacts.tar.gz`. The wrapper reports completion of the diagnostic collection; only the ideal electrical simulation reached its requested endpoint. No switching, bank-current or FPGA timing claim is established.
+
+Archive SHA-256: `9da1c7c81542d60c5239a5922c1d4a247fc9c1ded50ffd883c96a10995138329`.
+
+### Pass 15: linear solver comparison and invalid snapshot rejection
+
+Four fresh runs compare SPARSE 1.3 and KLU with ideal and shared R/L rails. Physical decks, integration method, tolerances and checkpoint times are identical after normalizing output paths; the comparison checks that equality. KLU is selected through `.spiceinit` using the [documented option](https://ngspice.sourceforge.io/applic.html). Each log confirms the actual solver. No compatibility flags, device parameters or circuit damping are changed.
+
+| Circuit | SPARSE | KLU |
+|---|---|---|
+| Ideal rails | Completes 12 ns | Completes 12 ns |
+| Shared 0.25 ohm/2 nH per rail | Times out; last saved checkpoint 2 ns | Aborts at initial time point, identifying DVSS |
+
+Solver choice does not resolve the shared-rail problem. KLU's initial-step failure and SPARSE's tiny-step progression are numerical outcomes; neither proves physical instability. The ideal control succeeds under both solvers. The full chip and dynamic rail behavior remain unqualified.
+
+#### Analyzer defect found and corrected
+
+After KLU's transient abort, subsequent `wrdata` commands wrote single-row operating-point data into the checkpoint filenames. The old parser attempted a timestep minimum on an empty difference array and raised an exception. It did not produce a successful comparison report, and no such artifact is accepted as a transient result.
+
+The parser now rejects single-row, non-finite, non-increasing-time and wrong-endpoint traces before computing statistics. Explicit transient-abort messages mark simulator failure even if ngspice exits with code zero. Normal checkpoint `pause requested` messages are not failures. Four new tests cover valid traces and malformed snapshots. Saved ideal runs exercise normal pause handling; all five shared-rail KLU snapshots are rejected.
+
+The [retained report](../evidence/rail-solver-screen.json) is corrected analysis of the saved run, not a new simulation. Replay checks exact deck and initialization content; the original SPARSE timeout is retained explicitly. Raw files are archived in `scratch/transceiver-rail-solver-artifacts.tar.gz`, with its hash in the report. The initial diagnostic run directory is `scratch/transceiver-rail-solvers.u6A18iuO`.
+
+Reproduce the current experiment with `verification/run_rail_solvers.sh`. It now retains simulator and invalid-snapshot failures instead of crashing during extraction. Diagnostic collection success does not mean all simulations completed.
+
+Next isolate resistive versus inductive rail elements and inspect the native MOS-capacitor/ESD model contributions. Keep the physical model unchanged for solver comparisons; any later simplification must be explicitly a diagnostic and must not become evidence for the complete chip. Both artificially stable and artificially unstable numerical behavior remain concerns.
+
+## Candidate algebraic host-ground acceleration
+
+`verification/host_capture_check.py --ground-solver-check` compares an exact
+piecewise-linear ground solution against the current Brent root. It enumerates
+current-limit breakpoints and interpolates the root only within one affine
+segment; branch resistances and bidirectional current limits remain unchanged.
+Two thousand randomized rail/output/drive cases agree within 1.69e-15 numerical
+units and satisfy return-current balance. One local timing comparison measured
+1.67x faster branch evaluation, not whole-chip speedup.
+
+An eight-interval switched standalone-bank comparison at existing integration
+tolerances reaches 5.18e-9 V state difference, exceeding the provisional 1e-9 V
+comparison gate. Maximum reported final energy difference is 4.08e-19 J. Retain
+this failed strict comparison: tighter integration tolerance/refinement must
+separate solver-equation error from adaptive ODE trajectory differences before
+installation. The running canonical RF model still uses its original solver.
+Refinement at `(rtol,atol)=(1e-10,1e-13)` and `(1e-11,1e-14)` reduces the
+maximum difference to 9.93e-11 V and 7.81e-11 V respectively, passing the unchanged
+1e-9 V comparison gate. Final energy differences are below 8e-21 J. These results
+support adaptive integration error as the coarse discrepancy; the consolidated
+check retains all three tolerance levels. Full coupled-driver/RF trajectory
+comparison and floor-rejection equivalence remain required before promotion.
+
+The companion `--coupled-ground-solver-check` retains a short canonical comparison:
+four host launches over 16 ns with RF off/on. Maximum host/reference state
+differences are 2.25e-11/1.992e-10 V and the powered RF phase difference is
+3.56e-15 cycles, below unchanged 1e-9 V/cycle gates. Both original and candidate
+standalone banks reject a deliberate floor violation with time, capacitor states,
+charge ledgers, drive state and energy ledgers unchanged. This supports a longer
+candidate run after the current source-frozen RF test, not a full-chip speed or
+quality claim; no acquired payload was used in these 16 ns comparisons.
+
+## TMDS electrical and multi-die power budget
+
+For the illustrative 8 mA / 50 ohm / 3.3 V DC sink model, one active lane draws
+26.4 mW from its termination supply: 23.2 mW dissipates in the transmitter sink
+and 3.2 mW in the receiver termination. Three lanes total 79.2 mW before clock,
+PLL, host, bias and digital overhead. Source and sink may be on different boards;
+do not charge the entire termination supply power to both chips. An external
+clock-pair buffer adds separate power. This is a static hypothesis, not a complete
+die budget. Preserve per-die 14 power/ground terminals and check common-mode,
+current-source compliance, simultaneous switching and disabled termination loads.
+
+[HDMI/DVI board and pin plan](../../../docs/roadmap/programmable-transceiver-pin-plan.md#hdmidvi-through-multiple-instances).
+
+The video lane model now solves both 50-ohm terminated pad legs with exact RC
+updates under complementary ideal 8 mA current sinks. A 2 pF per-leg candidate
+passes the illustrative 100 mV signed sample-eye threshold with the declared
+60 ps forwarded timing budget at both initial rates; a 30 pF load fails the
+alternating-bit control. These are load-envelope assumptions, not validated
+circuit parameters. Finite transistor output resistance, compliance, current
+switching bandwidth, ESD and distributed cable/package effects remain absent.
+
+The pad now optionally includes a first-order current-switch response before the
+terminated RC load. Exact cascaded-exponential updates retain both leg voltages
+and currents across bits, including the equal-pole limit. The independent
+repeated-pole step response checks that limit. With 100 ps current settling,
+2 pF per leg, 50 ohms and the fixed 60 ps early-sampling budget, alternating-bit
+minimum signed samples are approximately 388 mV at 742.5 Mb/s and 211 mV at
+1.485 Gb/s. A 1 ns switch time constant fails at both rates. The disturbed-PLL
+pad check now uses the 100 ps candidate too; earlier ideal-switch amplitudes are
+baseline comparisons, not its current results. Switching bandwidth is therefore
+an explicit schematic target, not silently infinite. These time constants are
+unvalidated hypotheses; transistor output resistance, current compliance,
+parasitic feedthrough and voltage-dependent switching remain open.
+
+Canonical DC-current-sink configuration now selects `CurrentSwitchChannel` in
+place of the generic one-pole serial channel. The event-driven serializer advances
+its two stored differential states (current and load voltage) with exact updates.
+Unit drive means the assumed 8 mA / 50 ohm / 0.4 V differential output; default
+switch and load time constants are both 100 ps. A ten-bit event-driven waveform
+matches the independent two-leg pad calculation to numerical tolerance at both
+video rates. Same-family reconfiguration preserves stored current and voltage.
+This integrates differential settling only: legacy analog power bookkeeping is
+not yet a DC TMDS termination/source-energy model, and mode-crossing common-mode
+charge, compliance and supply coupling remain unqualified. Normalized state
+continuity across different electrical families is not physical charge proof.
+
+The canonical current-switch channel now retains tail-current and common-mode
+load state alongside differential state. `pin_state()` exposes both pad voltages,
+both sink currents, external termination-source power, resistor loss and sink
+power. The nominal DC control converges to 3.3/2.9 V, 3.1 V common mode and
+26.4 mW external source power, split into 3.2 mW termination loss and 23.2 mW
+sink dissipation. A 0.4 V minimum sink-voltage hypothesis flags out-of-compliance
+solutions; a lowered 0.5 V termination-supply control fails this check. This flag
+does not implement transistor saturation or a hardware fault response.
+Same-family local reconfiguration retains common and differential states.
+
+Reported powers distinguish the external receiver termination supply from local
+transmitter rails. Transient source-minus-loss power also changes pad capacitance
+energy; only the settled DC conservation control is currently checked. Canonical
+domain power bookkeeping is still the legacy approximation and must not be
+mistaken for connected TMDS board/ground/thermal accounting. Receiver common-mode
+input tolerance, hot-plug/ESD and nonlinear transistor compliance remain open.
+
+Canonical TX power ownership now distinguishes DC current-sink mode from the
+legacy voltage driver: it no longer debits remote termination power, divided by
+a voltage-driver efficiency, from the local WIRE rail. The declared 2 mA local
+bias remains; output sink dissipation is reported as externally supplied heat.
+`wired_power_accounting()` separately exposes local bias power, remote termination
+power, sink return current and termination/sink heat. Its coupling flags distinguish the installed return-node/compliance guard from
+missing thermal and local RX termination supply integration. Internal switching charge is not characterized by the bias
+placeholder. This correction removes a wrong supply attribution; it does not
+establish total power or eliminate the external current's ground disturbance.
+
+External TX sink return current is now an input to the existing linear and
+current-limited host-bank ground-node solvers. The coupled analog owner evaluates
+the held-command tail-current response during each interval, adds the return
+current to ground KCL, and includes ground-voltage times injected current in its
+source-energy ledger. This is power entering the modeled ground terminal, not
+the remote termination's full source power or the transmitter's sink heat.
+The canonical DC mode installs this callback; other electrical modes clear it.
+A known 8 mA input satisfies independent KCL and raises the solved ground voltage;
+a short paired analog-owner integration checks that domain rails respond.
+
+This current-to-ground/rail coupling now rejects loss of pad compliance (below);
+nonlinear current response and a joined termination-source/ground/sink transient
+energy audit remain open. Thermal and RX termination supply coupling remain
+open. Short owner windows do not establish acquired canonical video traffic.
+
+Transient energy controls now cover both sides separately. Paired 1 ns analog
+owner windows, with zero and 8 mA external return current, check nominal-feed plus
+ground-terminal input energy against resistor/load losses and host/domain stored
+energy (absolute residual below 1 aJ). The independent pad control integrates
+termination-source, resistor and sink powers by 24-point Gauss quadrature over
+turn-on, alternating symbols and turn-off. It compares each interval and the
+whole sequence against explicit two-capacitor energy changes, with residuals
+below 1e-22 J and a detectable stored-energy excursion. These verify bookkeeping
+inside each reduced circuit; they do not yet join the remote termination,
+voltage-dependent pad compliance and moving local ground into one closed system.
+
+The shared-ground solve now checks predicted pad sink headroom at every analog
+RHS evaluation. `pin_state(ground_v)` references compliance and sink heat to local
+ground, and splits terminal power into local sink heat plus power transferred to
+the return node. Loss of the assumed 0.4 V compliance aborts the analog step
+without committing rail state/time. Tests cover nominal/raised-ground headroom,
+terminal-power splitting and rejected-step preservation. This closes feedback
+as a validity guard only: outside compliance, nonlinear sink saturation and
+recovery are not modeled. Joined acquired traffic and transistor-derived voltage
+limits remain open; a mathematical guard is not a hardware protection circuit.
+
+### Dynamic RF supply sensitivity screen
+
+The fast RF waveform path can apply sinusoidal rail ripple to receive gain and
+integrate an effective LO supply-to-frequency sensitivity into mixer phase before
+RX filtering. For ripple A*sin(2*pi*f*t), phase is K*A/f*(1-cos(2*pi*f*t)).
+K is residual sensitivity at the disturbance frequency after any PLL/regulator
+rejection, not raw VCO Kvco. A 50 mV peak, 1 MHz ripple gives HE20 fixture EVM
+about 8.5/9.6/45.9% at K=0/1/10 MHz/V under current assumptions. Zero ripple
+reproduces baseline exactly. These are probes, not measured GF180 sensitivities
+or a validated PDN; actual coupling, rejection transfer functions and converter
+reference modulation remain open. Common-phase pilot correction does not remove
+fast within-symbol phase modulation.
+
+### Host activity to RF disturbance
+
+A fast coupling screen now uses the HOST switched-capacitance current law
+(10 data outputs plus clock activity) to set a sinusoidal activity-envelope
+current amplitude. An assumed shared-path fraction of 0.1 or 1 drives a series
+R/L feed with local shunt C, whose load impedance is
+`Z=(R+j*w*L)/(1+j*w*C*(R+j*w*L))`. The example R=2 ohm, L=5 nH, C=1 nF
+is an uncertainty probe, not an extracted package or allocated on-die capacitor.
+At 1 MHz the two coupling fractions give about 5/50 mV peak ripple and roughly
+9.6/45% HE20 EVM with assumed residual LO sensitivity 10 MHz/V.
+The sinusoidal envelope is not a measured host switching spectrum. Separate
+rails do not alone prove isolation; shared return, regulator transfer and
+board/package impedance must ultimately constrain the effective coupling.

@@ -42,7 +42,8 @@ This pass does not claim that every retained file is necessary.
 
 - `README.md`: current project entry point, not an append-only experiment journal.
 - `spec/exclusive-engine-policy.md`: current user operating decision.
-- `system_model/architecture_fast/acceptance.py`: selected functional baseline.
+- `system_model/architecture_fast/behavioral.py`: active whole-chip behavioral loop.
+- `system_model/architecture_fast/acceptance.py`: supporting bounded numerical suite.
 - `verification/fast_exclusive_engine_check.py` and
   `fast_exclusive_management_check.py`: experimental exclusive-mode checks.
 - `spec/schematic-implementation.json`: transistor implementation inventory.
@@ -87,3 +88,33 @@ its previous source hashes are historical and must not be presented as fresh
 qualification for this source snapshot.
 
 Follow-up requalification after the helper extraction: all 12 common acceptance programs / 38 cases pass; all eight consolidated RF stress case records remain exactly equal. Loaded-loopback numerics and exclusive-engine/serialized-management checks also pass. The selected evidence audit verifies current source and result hashes. This supersedes the earlier note that the common aggregate had not yet been rerun.
+
+## Documentation and diagnostic entry points
+
+The three rail startup/checkpoint/solver notes are consolidated under historical
+numerical diagnostics in `spec/power-partition.md`. The model-root README now
+routes readers to the selected composition, shared implementation layers and
+closure inventory; its original experiment journal remains linked in Git.
+
+Host voltage and forwarded-clock capture checks share
+`verification/host_capture_check.py`: default capture, `--voltage-screen`, and
+`--sized-driver`. Their separate evidence reports and qualification limits remain.
+Raw bit/event queue controls share `verification/test_bit_event_codec.py`;
+serialized integration and rejection checks share `verification/record_return_check.py`.
+These consolidations preserve distinct failure cases rather than replacing them
+with one aggregate success claim. Historical source hashes describe the recorded
+snapshot and are not rewritten after a refactor.
+
+## Current documentation ownership
+
+The project README presents capabilities and routes readers to authoritative
+requirements. The model-root README is navigation; the fast-model README owns
+commands, coverage and limitations. `spec/risk-priorities.md` owns current
+priorities, and `spec/mathematical-closure.json` owns completion gates.
+
+The fast-model and risk guides replace accumulated, contradictory progress
+narratives with current summaries. Earlier model results remain in evidence
+reports and implementation sources; this documentation edit supplies no new
+qualification and does not change acceptance thresholds. Historical connected
+notes are explicitly labeled. Detailed electrical, timing, pin and transport
+requirements remain in their existing specialist specifications.

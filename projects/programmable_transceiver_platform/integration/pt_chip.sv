@@ -1,8 +1,9 @@
+// WIRE_RX is bidirectional for planned USB D+/D-; USB control/data macros remain unimplemented.
 // 50-terminal integration skeleton. Black-box macros are obligations, not fabricated IP.
 module pt_chip(
  input wire RESET_N,REF_IN,SPI_SCLK,SPI_CS_N,SPI_MOSI,output wire SPI_MISO,
  input wire[9:0]H2D,input wire H2D_CLK,output wire[9:0]D2H,output wire D2H_CLK,
- input wire WIRE_RX_P,WIRE_RX_N,output wire WIRE_TX_P,WIRE_TX_N,
+ inout wire WIRE_RX_P,WIRE_RX_N,output wire WIRE_TX_P,WIRE_TX_N,
  input wire RF_RX_P,RF_RX_N,output wire RF_TX_P,RF_TX_N,
  inout wire VDD_CORE,VSS_CORE,VDD_HOST_A,VSS_HOST_A,VDD_HOST_B,VSS_HOST_B,
  VDD_WIRE_A,VSS_WIRE_A,VDD_WIRE_B,VSS_WIRE_B,VDD_RF,VSS_RF,VDD_PLL,VSS_PLL);
@@ -33,7 +34,7 @@ endmodule
 
 // Internal architecture and circuit implementation tracked in macro-contract.md.
 (* blackbox *) module pt_analog_physical(
- input wire WIRE_RX_P,WIRE_RX_N,output wire WIRE_TX_P,WIRE_TX_N,
+ inout wire WIRE_RX_P,WIRE_RX_N,output wire WIRE_TX_P,WIRE_TX_N,
  input wire RF_RX_P,RF_RX_N,output wire RF_TX_P,RF_TX_N,
  inout wire VDD_CORE,VSS_CORE,VDD_WIRE_A,VSS_WIRE_A,VDD_WIRE_B,VSS_WIRE_B,VDD_RF,VSS_RF,VDD_PLL,VSS_PLL,
  input wire rst_n,ref_clk,enable,mode8,input wire[15:0]rf_trim,wire_trim,clock_trim,

@@ -10,7 +10,7 @@ from chip_model import P, encode, Receiver, encode_iq, decode_iq
 from burst_codec import BurstEncoder, BurstDecoder
 from rf_tx_state import RfTxState
 from session import Session
-from wired_blocks import WiredChannel
+from wired_blocks import WiredChannel,CurrentSwitchChannel
 
 
 class WholeChip:
@@ -32,6 +32,24 @@ class WholeChip:
         self.inflight = 0
         self.decoder = None
         self.rejected_stale = 0
+        self.host_frame_words = 64
+
+    def make_host_receiver(self):
+        return Receiver(self.session.mode,frame_words=self.host_frame_words)
+
+    def make_return_receiver(self):
+        if getattr(self,'record_return',False):
+            self.require_record_configuration()
+            from bit_event_codec import StreamingRecordReceiver
+            return StreamingRecordReceiver()
+        return self.make_host_receiver()
+
+    def host_quota(self,source):
+        from stream_codec import slots
+        return slots(self.session.mode,self.host_frame_words).count(source)
+
+    def encode_host_frame(self,wire,iq,sequence):
+        return encode(self.session.mode,wire,iq,sequence,frame_words=self.host_frame_words)
 
     def advance(self, time):
         if time < self.time:
@@ -67,9 +85,11 @@ class WholeChip:
             raise ValueError('Drain acknowledgement required before configuration')
         self.session.configure(mode)
         self.session.host_ready = True
-        self.receiver = Receiver(mode)
+        self.receiver = self.make_host_receiver()
         self.bits = 12 if mode == 0 else 8
-        self.channel = WiredChannel(1.25e9 if mode == 0 else 2.5e9,swing=self.wire_swing,postcursor=self.wire_postcursor)
+        self.channel = WiredChannel(getattr(self,"wire_rate_override",None) or (1.25e9 if mode == 0 else 2.5e9),swing=self.wire_swing,postcursor=self.wire_postcursor)
+        if getattr(self,'wire_interface',{}).get('electrical')=='dc_current_sink':
+            self.channel=CurrentSwitchChannel(self.channel.rate)
         self.state = 'acquiring'
         self.lock_at = time+self.acquisition_s if self.reference else math.inf
         self.events.append(['configure', mode, self.epoch, time])

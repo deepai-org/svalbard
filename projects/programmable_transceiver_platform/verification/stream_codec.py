@@ -24,8 +24,10 @@ def unprotect(code):
     if syndrome or body.bit_count()&1:raise ValueError('metadata parity')
     return sum(((body>>(p-1))&1)<<i for i,p in enumerate(DATA))
 
-def slots(mode):
+def slots(mode,frame_words=64):
     if mode not in (0,1):raise ValueError('mode')
+    if frame_words==8:return schedule({'wire':3},frame_words=8,control_slots=(0,1,2,3,4))
+    if frame_words!=64:raise ValueError('Unsupported frame geometry')
     return schedule({'wire':52,'iq':7} if mode else {'wire':33,'iq':25},control_slots=(0,1,2,3,4))
 
 def metadata(wc,qc,seq,op=0,arg=0):
@@ -33,8 +35,8 @@ def metadata(wc,qc,seq,op=0,arg=0):
     c=protect(wc|(qc<<6)|(seq<<12)|(op<<18)|(arg<<22))
     return [(c>>(10*i))&1023 for i in range(4)]+[GUARD]
 
-def encode(mode,wire,iq,seq,op=0,arg=0):
-    plan=slots(mode)
+def encode(mode,wire,iq,seq,op=0,arg=0,*,frame_words=64):
+    plan=slots(mode,frame_words)
     if len(wire)>plan.count('wire') or len(iq)>plan.count('iq'):raise ValueError('quota')
     if any(not 0<=w<1024 for w in [*wire,*iq]):raise ValueError('word range')
     result=metadata(len(wire),len(iq),seq,op,arg)
@@ -44,8 +46,8 @@ def encode(mode,wire,iq,seq,op=0,arg=0):
 
 class Receiver:
     """One input word at a time. No payload quarantine; any error latches fault."""
-    def __init__(self,mode):
-        self.plan=slots(mode)
+    def __init__(self,mode,*,frame_words=64):
+        self.plan=slots(mode,frame_words)
         self.reset()
     def reset(self):
         self.pos=0;self.sequence=0;self.header=0;self.fault=False;self.left={}
@@ -70,7 +72,7 @@ class Receiver:
                 source=self.plan[self.pos]
                 if self.left.get(source,0):
                     self.left[source]-=1;event=(source,word)
-            self.pos=(self.pos+1)%64
+            self.pos=(self.pos+1)%len(self.plan)
             if self.pos==0:self.sequence=(self.sequence+1)%64
             return event
         except ValueError:

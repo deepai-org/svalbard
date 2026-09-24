@@ -20,7 +20,7 @@ def main():
            list((P/'system_model/architecture_fast').glob('*.py'))+
            [P/'verification'/name for name in ('full_chip_model.py','full_chip_check.py',
             'fast_exclusive_engine.py','fast_loaded_output.py','host_bank_supply.py',
-            'stream_codec.py','transport_model.py')])
+            'stream_codec.py','transport_model.py','check_contract.py')]+[P/'spec/contract.json'])
     hashes={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
     report=dict(status='running',canonical_model=parameters(),source_sha256=hashes,
         checks=[],full_chip_closure=False,physical_qualification=False,
@@ -29,7 +29,8 @@ def main():
             'Sustained duplex service, stalls, queue bounds and electrical host sampling.',
             'Reference loss/reacquisition, calibrated retuning and active-to-stopped handovers.',
             'SPI-only operation, supported resource routes and RTL/CDC agreement.',
-            'Complete declared current/noise budgets and a fresh common-source regression.'])
+            'Complete declared current/noise budgets and a fresh common-source regression.',
+            'Protocol-specific electrical, deadline, waveform and lifecycle gates for all intended profiles.'])
     output=P/'evidence/canonical-controls.json'
     def save():output.write_text(json.dumps(report,indent=2)+'\n')
     def checked(name):
@@ -37,6 +38,14 @@ def main():
     save()
     try:
         c=make_chip();o=c.analog_owner
+        assert c.protocol_requirements == report['canonical_model']['protocol_profiles']
+        for profile in c.protocol_requirements:
+            if profile['model_status']=='requirements_only':
+                try: make_chip(protocol=profile['id'])
+                except NotImplementedError: pass
+                else: raise AssertionError('Unimplemented protocol was accepted')
+        reject(lambda: make_chip(protocol='unknown'))
+        checked('Protocol inventory and rejection of requirements-only or unknown profiles')
         assert o is not None and o.domains is not None and o.host_bank is not None
         assert c.adc_reference is c.dac_reference is o.reference
         assert c.output_network is o.network and c.tx.rx_bank is o.rx_bank
@@ -86,4 +95,10 @@ def main():
     finally:save()
 
 
-if __name__=='__main__':main()
+if __name__=='__main__':
+    import argparse
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--detailed',action='store_true',help='Explicitly allow the slow coupled transient suite')
+    args=parser.parse_args()
+    if not args.detailed:parser.error('Use make transceiver-math-fast for bounded iteration; --detailed explicitly opts into the slow coupled suite')
+    main()

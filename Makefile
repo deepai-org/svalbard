@@ -900,6 +900,17 @@ transceiver-current-dac-dc:
 	bash projects/programmable_transceiver_platform/verification/run_current_dac_dc.sh
 	python3 projects/programmable_transceiver_platform/verification/check_current_dac_dc.py
 
+.PHONY: transceiver-behavioral
+transceiver-behavioral:
+	$(PYTHON) projects/programmable_transceiver_platform/system_model/architecture_fast/behavioral.py
+
 .PHONY: transceiver-math-fast
 transceiver-math-fast:
 	OPENBLAS_NUM_THREADS=1 python3 projects/programmable_transceiver_platform/system_model/architecture_fast/acceptance.py
+
+.PHONY: transceiver-protocol-model transceiver-protocol-coupled
+transceiver-protocol-model:
+	OPENBLAS_NUM_THREADS=1 $(PYTHON) projects/programmable_transceiver_platform/verification/protocol_model_check.py
+
+transceiver-protocol-coupled:
+	OPENBLAS_NUM_THREADS=1 $(PYTHON) projects/programmable_transceiver_platform/verification/protocol_model_check.py --coupled

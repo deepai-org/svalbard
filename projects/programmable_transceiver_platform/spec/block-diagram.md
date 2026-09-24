@@ -1,6 +1,11 @@
 # Whole-chip architecture and implementation map
 
-**Current operating decision:** RF and wired payload operation are mutually exclusive on the same chip. Both capabilities remain required; additional physical resource sharing is encouraged. See the [exclusive-engine policy](exclusive-engine-policy.md), which supersedes simultaneous-operation requirements below. Model/RTL enforcement and resource rebudgeting remain implementation work.
+**Configuration boundary:** protocol names are external FPGA examples, not
+on-chip profiles. Configuration selects physical resources and compatible
+clock, pad, direction, filter/converter and host-transport settings.
+
+**Current operating decision:** RF and wired payload operation are mutually exclusive on the same chip. Both capabilities remain required; additional physical resource sharing is encouraged. See the [exclusive-engine policy](exclusive-engine-policy.md), which supersedes simultaneous-operation requirements below. The active behavioral model enforces payload exclusivity; complete RTL/physical enforcement and resource rebudgeting remain open.
+
 
 [Open the circuit-block SVG](../docs/diagrams/transceiver-block-diagram.svg) · [PNG preview](../docs/diagrams/transceiver-block-diagram.png)
 
@@ -133,14 +138,14 @@ bias services. That arithmetic is a planning scenario, not measured whole-chip
 power or a topology selection.
 
 The historical macro-contract sections describe earlier implementation passes;
-use current evidence and the README pass log for measured results. Neither the
+use scoped evidence reports and the active model guide for measured results. Neither the
 macro black boxes nor this diagram prove any circuit is tapeout-ready.
 
 Boundary targets remain one 1.25/2.5 Gb/s raw full-duplex wired lane and one
 approximately 2.4 GHz, 20 MHz-channel RF chain. RF transport formats are 8–12 bits
-at 20–40 MS/s per I/Q component, not promises of that ENOB. Current simultaneous
-planning profiles pair 1.25 Gb/s with 40 MS/s × 12-bit I/Q, or 2.5 Gb/s with
-20 MS/s × 8-bit I/Q. Protocol CRC, Wi-Fi DSP/MAC and PCIe endpoint logic remain
+at selectable 5/10/20/40 MS/s per I/Q component, not promises of that ENOB.
+RF and wired payload operation are exclusive; each configuration must fit its
+selected host slot schedule. Protocol CRC, Wi-Fi DSP/MAC and PCIe endpoint logic remain
 external. Optional on-chip protocol helpers must be bypassable and are not all
 implemented. A generic FPGA must still meet the selected GPIO and logic budgets.
 
@@ -157,7 +162,7 @@ resource-ownership and diagnostic controls. The full diagram therefore cannot
 be claimed to be fully represented by the present top-level ports. Those
 interfaces must be expanded and verified as the physical blocks are integrated.
 
-## Autonomous-clock mathematical implementation (pass 828)
+## Supporting autonomous-clock experiment (historical pass 828)
 
 `system_model/connected/autonomous_rf_lifecycle.py` provides a connected full-chip
 variant with a single RF synthesizer feeding both mixers and a separate wired TX
@@ -169,3 +174,64 @@ predates this variant; integrating its full impairment/quality envelope remains
 required. Oscillator parameters are assumed and physical qualification is absent.
 
 The expanded local wiring sheets separate P/N conductors and show RX offset and common-mode feedback, TX reconstruction-section feedback, wired sampling/CDR and loopback selection, and named control, clock, bias, reference and status connections. Named ports join the overview without extra package pins. Repeated I/Q circuits remain separate instances. Reconstruction biquads are a mathematical candidate, not a frozen circuit implementation.
+
+
+## Shared wired-pad and RF connectivity
+
+Keep RF_RX and RF_TX specialized. Keep the serial TX and RX analog paths local.
+Do not create a universal GHz crossbar or route RF through USB protection.
+
+```
+WIRE_TX_P/N <--- segmented serial driver <--- serializer / burst gate
+WIRE_RX_P/N ---> serial termination / CTLE / slicer / CDR ---> deserializer
+      |                                                   |
+      +<--> local USB branch <--> existing gearbox / timed line-state engine
+            HS driver + HS RX + squelch
+            FS/LS driver + single-ended RX
+            selectable pull-up / pull-down / HS termination
+
+RF_RX --> LNA --> I/Q mixers --> selectable LPF/PGA --> I/Q ADC --> host
+RF_TX <-- RF driver <-- I/Q mixers <-- LPF <-- I/Q DAC <-- host
+                         ^
+             shared reference and selectable synthesis services
+
+all paths <--> common bounded queues, timestamp/event scheduler, SPI and GPIO host
+```
+
+**Pin aliases:** S03/S04 (WIRE_RX_P/N) become bidirectional USB_DP/USB_DM in USB
+mode. S01/S02 remain high impedance in that mode. USB is directly connected;
+serial AC-coupling components are mode-specific board assembly options. No
+external short between TX and RX pairs is assumed. Disable serial termination,
+receiver-detect stimulus and all incompatible drivers before enabling USB.
+The disabled USB branch's capacitance/leakage is included in every serial RX
+channel model. This is a physical design risk, not a free mux.
+
+For DisplayPort source use WIRE_TX; for sink use WIRE_RX. Leave the other path
+inactive. AUX transceiver, HPD level interface and connector power are external
+and connect directly to FPGA GPIOs. USB VBUS power switch/current limit, 5 V
+sensing/level translation and connector protection are also external to the
+chip and controlled by the FPGA. No VBUS pin or 5 V exposure is silently added
+to a 3.3 V analog pad. RF matching, filtering, antenna switch and any external
+PA remain board resources. A single board exposing all connectors needs a
+separately characterized external switch or assembly selection; a passive tee
+is not an acceptable universal connection.
+
+
+USB transport reuses the existing host frame engine with eight-word frames;
+the final circuit sheet's host block is the same resource as the normal frame
+engine, not an additional fast bus. Prefer reconfiguration of wired timing,
+current-source, slicer and sampling resources; the bidirectional local pad
+branch and FS/LS observations remain electrical obligations.
+
+## Multi-instance HDMI/DVI connectivity
+
+Three copies of the existing wired lane serve three TMDS data pairs. FPGA
+opaque-word links connect to H2D (source) or D2H (sink) on each die. A board
+clock driver/receiver handles the fourth cable pair and distributes the pixel
+reference to REF_IN. Common launch/word alignment and deskew live in the FPGA.
+Within each die add switchable DC current-sink/termination behavior and a
+forwarded-word x10 clock configuration; reuse the existing serializer/sampler.
+The multi-chip topology is shown on the final diagram sheet. No extra per-die
+terminals or simultaneous RF/wired payload are assumed.
+
+[HDMI/DVI board and pin plan](../../../docs/roadmap/programmable-transceiver-pin-plan.md#hdmidvi-through-multiple-instances).

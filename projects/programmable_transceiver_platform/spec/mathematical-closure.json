@@ -4,14 +4,16 @@
   "basis": [
     "spec/block-diagram.md",
     "spec/clock-rate-ownership.md",
-    "spec/contract.json"
+    "spec/contract.json",
+    "spec/feasibility-gates.md",
+    "spec/streaming-transport-v2.md"
   ],
   "requirements": [
     {
       "id": "four_paths",
       "status": "partial",
       "evidence": "connected-combined-platform.json",
-      "remaining": "SharedPhaseLoadedTxChip now passes both-mode finite loaded-pad/shared-ADC TX/RX quality with verified source snapshots. Driver/readout/PLL-feedback extensions cannot inherit those results. Require both-mode quality, continuous service, retune/recovery and SPI-only use on the final selected composition, followed by a fresh aggregate.",
+      "remaining": "SharedPhaseLoadedTxChip now passes both-mode finite loaded-pad/shared-ADC TX/RX quality with verified source snapshots. Driver/readout/PLL-feedback extensions cannot inherit those results. Require both-mode quality, continuous service, retune/recovery and SPI-only use on the final selected composition, followed by a fresh aggregate. Profile audit now covers all eleven targets. Five serial profiles pass canonical-factory causal RX reductions and live-lifecycle rate dispatch; synthetic test framing and rate-scaled channel bandwidth do not close physical or peer startup qualification. Prioritize DP/SATA startup, USB timed packets and under-tested RF packet observers as recorded in risk-priorities.md.",
       "historical_notes_before_calibration": "Declared candidate now combines live wired CDR/idle/supply kicks, wideband modulated RF/multipole filtering/blockers/phase events, both converter pipelines, shared reference loads and host pauses. Four signed both-mode cases pass transport and provisional RF quality. Missing intended functions elsewhere in this inventory and broader uncertainty/independent-source operation still prevent whole-chip closure. Pass848 combines the public supply-coupled detector before four-path traffic, independent wideband RF, autonomous sampled clocks, shared ADC/DAC reference loads and a16-word host pause. Both32-frame cases pass with3.785%/4.945% held-out error; this finite candidate screen does not close whole-chip uncertainty or all supported controls.",
       "remaining_before_managed_tx_update": "CalibratedFractionalChip now composes both pulse clocks, fractional RF tuning, diagnostics, transport and I/Q offset calibration. Two calibrated wideband cases pass with shared references, blockers, detector loading and four-path traffic. Still apply continuous traffic, recovery and all supported configuration tests to this single candidate; two finite cases do not close the chip. Both-mode finite continuous duplex, stop/underrun and noisy reference-loss/opposite-mode retune now pass on this candidate; these are not long-duration or arbitrary-service proofs.",
       "supporting_evidence": [
@@ -48,7 +50,73 @@
         "connected-passive-recenter.json",
         "connected-coarse-retune.json",
         "connected-retuned-wideband.json"
-      ]
+      ],
+      "converter_clock_gap": {
+        "status": "open",
+        "implementation": "PhasedChip.schedule/capture -> LoopEdges snapshot of LockedChip LinearClock; separate from autonomous rf_pll and coupled rail trajectory.",
+        "consequence": "Carrier acquisition and nominal-grid RX quality do not qualify converter timing under autonomous noise or supply disturbance.",
+        "next": "Reuse REF_IN 40 MHz buffer and divide-by-two for 40/20 MS/s; solve bounded supply-sensitive propagation delay against shared forecast rails, retain common divider phase, atomically commit earliest conversion and analog state, and verify reference loss and near-edge faults. No added sampling PLL; not implemented.",
+        "primitive_controls": {
+          "trajectory_horizon_and_affine_root": true,
+          "missed_edge_rejected": true,
+          "committed_nominal_edges": 128,
+          "maximum_nominal_error_s": 4.235164736271502e-22,
+          "analytic_ramp": true,
+          "bounded_jitter_edges": 32,
+          "stale_forecast_rejected": true,
+          "reference_loss_cancels": true,
+          "invalid_envelopes_rejected": true,
+          "full_chip_integration": false,
+          "source_sha256": "f0ccff9c4c88a2e396a39d434783ce47cafba1c2b7b6f6bc2168aeb0e81f0b6c",
+          "canonical_rail_probe": {
+            "interval_s": [
+              2.5e-08,
+              3e-08
+            ],
+            "predicted_edge_s": 2.6003881999999998e-08,
+            "scope": "Read-only edge forecast from make_chip analog_owner PLL domain trajectory after advance(30 ns); not scheduler integration."
+          },
+          "forecast_commit_controls": {
+            "cases": 4,
+            "edges": 16,
+            "maximum_residual_s": 3.515e-22,
+            "scope": "Canonical inactive-RF rails, quiet and diagnostic host toggles, both dividers. Host launches occur at prior sample times, so this does not stress near-edge rail transients. No ADC/DAC scheduler integration."
+          },
+          "near_edge_refinement": {
+            "launch_after_reference_s": 5e-10,
+            "threshold_s": 1e-15,
+            "failed_first_residual_magnitudes_s": {
+              "500ps": 7.857221415146993e-15,
+              "125ps": 2.5749707164525714e-15,
+              "31.25ps": 1.2511812835944129e-15
+            },
+            "passed_step_s": 7.8125e-12,
+            "passed_maximum_residual_s": 8.820329607646572e-17,
+            "cases": 4,
+            "edges": 16,
+            "scope": "Inactive RF, canonical host switches near buffered reference edge; numerical consistency only. Full converter scheduling remains unimplemented."
+          }
+        },
+        "integration_constraints": [
+          "Preserve or explicitly reject configured signed ADC/DAC relative offsets; default 10 ns cannot disappear through reference-edge rounding. Residual branch delay implementation remains unspecified.",
+          "Preserve atomic staged dual-direction start; a rejected second direction must not mutate either clock.",
+          "Replace eager step() deadlines with bounded outer-scheduler forecasts; recompute shortened analog intervals, invalidate stale predictions, and preserve pipeline ordering/cancellation."
+        ]
+      },
+      "bounded_iteration_update": {
+        "status": "partial",
+        "evidence": "evidence/architecture-iteration.json",
+        "covered": [
+          "Shared reference jitter and bounded rail-sensitive timing",
+          "Paired/single-direction planning and stale forecast rejection",
+          "32-sample converter/transport and mid-transfer reference loss at both rates"
+        ],
+        "not_covered": [
+          "Acquired coupled RF payload using the candidate clock",
+          "Physical jitter/phase-noise and branch-delay bounds",
+          "Unified startup/clock qualification in the reduced system"
+        ]
+      }
     },
     {
       "id": "rf_chain",
@@ -157,6 +225,40 @@
       "remaining": "Current runner registers 177 scenarios. Last verified full aggregate remains pass876 (107 scenarios); no fresh aggregate covers all additions, and the default independent TX gate still retains a failure. Experimental passing profiles must not replace that evidence. Freeze a selected unified candidate and run its lifecycle/quality/resource regression after known integration gaps close.",
       "historical_notes_before_calibration": "The archived pass842 aggregate passed80 scenarios with649 source hashes and80 report/log hash pairs verified.107 scenarios are now registered, including the public detector entry and combined independent-wideband test. Later isolated passes do not constitute a fresh aggregate. Whole-chip closure and physical qualification remain unproven. Runner now honors explicit failure/quality flags and hashes all candidate top profiles; no fresh aggregate has been run.",
       "remaining_before_managed_tx_update": "Archived pass876 aggregate passed 107 scenarios with 702 unchanged source hashes and all report/log pairs verified. Six promoted calibration screens now pass with an unchanged code snapshot and verified report/log hashes, including the combined fractional wideband test. 131 scenarios are registered, including a currently failing independent TX quality gate; no fresh aggregate yet includes all new files. Full architecture closure and physical qualification remain unproven. Historical obligations remain available for reconciliation. The unified-candidate lifecycle screen now separately passes six continuous/recovery cases."
+    },
+    {
+      "id": "wired_profile_electrical",
+      "status": "partial",
+      "remaining": "SATA OOB, DP RBR training/SSC and USB host/device line states with shared-pad capacitance and power-off loading. Implement and verify on the canonical composition; executable PHY primitives now exist, but complete packet and system qualification remain open.",
+      "evidence": "protocol-model-coupled.json",
+      "short_burst_observation": {
+        "evidence": "protocol-model-coupled.json",
+        "group": "short_burst_clock",
+        "scope": "Twelve 480 Mb/s ideal-crossing PI tracker cases with 8/32 generic prefix bits; four cycle-label errors. Existing 64-bit observed marker resolves all tested payload alignments and rejects corrupted markers. The added marker supplies extra acquisition time and is not USB sync.",
+        "remaining": "Actual USB synchronization/EOP, noisy burst admission, canonical raw-record routing and physical clock/receiver qualification; no USB packet admission claim.",
+        "pad_scope": "Eight loaded-pad/global-grid cases detect origin and generic release, use bounded four-entry sample holdback, preserve exact synthetic-marker payload, and discard release samples before delivery. Brief low excursions and capacity overflow are checked."
+      }
+    },
+    {
+      "id": "protocol_response_deadlines",
+      "status": "partial",
+      "remaining": "USB short-frame geometry now uses shared lifecycle receiver/encoder/quota, return scheduling and activation hooks; canonical acquisition and stopped profile guards plus component return/abort/training pass. Still require timed pad packet adapter, HS burst recovery, partial-word/line-event ordering, canonical acquired active traffic and actual two-bank/CDC deadline verification. RF packet response deadlines also remain open; no ideal instant ACK.",
+      "evidence": "protocol-model-coupled.json"
+    },
+    {
+      "id": "rf_profile_waveforms",
+      "status": "partial",
+      "remaining": "HE20, LE coded/uncoded, BR/EDR, O-QPSK/DSSS and long chirps; independent packet decoding, masks, blockers, warm hops and calibration validity. Implement and verify on the canonical composition; executable PHY primitives now exist, but complete packet and system qualification remain open. Shared frozen-rail TX/channel/RX cascade now measures decisions for every RF profile at 8/12 bits and three seeds. Unequalized HE20 and a seed-dependent 8-bit EDR3 case have symbol errors; synchronization, independently trained equalization and converter/headroom closure are required. Reduced quality results do not qualify canonical clocks or packets. A generic external-FPGA CP-block equalizer now uses a synthetic known prefix and held-out payload: 12-bit finite HE20 cases recover all symbols across three seeds/two guard intervals. Eight-bit quality, actual preambles, synchronization/CFO/sample-clock recovery, noisy training and canonical coupled packet operation remain open. Higher-amplitude finite EDR3 probes remove observed errors without changing defaults. Received-only repeated-training fine CFO recovery now passes held-out 12-bit tests at -20/0/+20 kHz with zero/0.1 mV RMS added noise. This does not close acquisition: the explicit +/-36.8 kHz ambiguity limit, coarse CFO, unknown packet timing, sample-clock recovery and canonical coupled operation remain open.",
+      "evidence": "protocol-model-coupled.json",
+      "chirp_observation": {
+        "evidence": "protocol-model-coupled.json",
+        "groups": [
+          "chirp_frequency",
+          "chirp_training",
+          "chirp_drift"
+        ],
+        "scope": "Source-verified 16-group regression: reduced-chain SF7/SF10 chirp correction, SF10 decision-directed drift tracking, explicit wrong-bin failures, and separate known-training admission rejection. All timing synthetic and algorithms external; packet detection, coarse acquisition, noise/interference, sample-rate tracking and canonical physical clocks remain open."
+      }
     }
   ],
   "deferred_to_transistor_stage": [
@@ -403,7 +505,7 @@
     "source": "risk-priorities.md",
     "audit": "evidence/fast-model-audit.json",
     "single_composition_complete": false,
-    "next_implementation": "Bound driver dynamics and internal current, integrate explicit output-capacitor/supply-return states with actual host events, then qualify sustained independent RF/wired traffic and reference recovery under complete loads.",
+    "next_implementation": "Unify reduced clock, converter/transport and RF signal-quality paths into one fast exclusive-mode lifecycle; add independent RF reception and realistic uncertainty without replaying detailed cold startup.",
     "following": "Reference recovery, sustained traffic, mode transitions and adverse uncertainty with complete loads; whole-chip area/current budgets; then full transistor schematic and layout.",
     "historical_requirement_notes": "Retained for traceability; old running-job and candidate references are not current state.",
     "integrated_candidate": "verification/fast_exclusive_engine.py:IntegratedTransceiverChip",
@@ -443,7 +545,25 @@
       "host_rx_words_per_mode": 64,
       "wire_supply_sensitivity_hz_per_v": 100000.0,
       "scope": "Finite duplex with rail-sensitive clocks, host switching, assumed wired termination power and selected driver bias. Clock/converter/receiver/digital loads and physical qualification remain open."
-    }
+    },
+    "development_workflow": {
+      "command": "make transceiver-math-fast",
+      "wall_budget_s": 30,
+      "case_budget_s": 15,
+      "evidence": "evidence/architecture-iteration.json",
+      "result_sha256": "90aee89031d0ba4ca1155322d3b39990a9ccf53dbd68ea0756b3c4e8f38a2c17",
+      "source_hashes_verified": true,
+      "elapsed_s": 11.531698531471193,
+      "scope": "Reduced architecture and block contracts; not detailed full-chip qualification",
+      "detailed_runs": "Explicit --detailed only; validate selected short windows before cold-start or sustained coupled runs.",
+      "complete": false
+    },
+    "current_gaps_ranked": [
+      "One fast connected exclusive-mode system lifecycle: bounded block/transport checks still do not compose complete startup, RF signal quality and wired handovers.",
+      "Independent RF signal quality under declared frontend noise, nonlinearities, clock errors and converter/reference uncertainty; current nominal canonical frontend defaults omit several terms.",
+      "Wired startup and burst recovery/turnaround on shared pins, particularly USB HS; external test recipes do not prove operating protocol peers.",
+      "Closed area, current, host electrical timing and package/load envelopes; retain unknowns rather than replacing them with passing assumed constants."
+    ]
   },
   "latest_coupled_rf_diagnostic": {
     "payload": "evidence/fast-coupled-rf-calibrated-payload.json",
@@ -541,6 +661,379 @@
     "wired_regression": "verification/fast_exclusive_engine_check.py --canonical --host-bank-wire-screen",
     "rf_regression": "verification/fast_exclusive_engine_check.py --canonical --domain-rf-screen --host-bank-rf --rf-mode MODE --independent-rx --rf-noise-rms-hz 20000",
     "complete": false,
-    "policy": "Every system acceptance scenario must instantiate this constructor. Historical results and other chip classes cannot satisfy its gates without requalification. Physical parameter assumptions remain explicit."
+    "policy": "Every system acceptance scenario must instantiate this constructor. Historical results and other chip classes cannot satisfy its gates without requalification. Physical parameter assumptions remain explicit.",
+    "active_rf_qualification": {
+      "status": "finite_payload_and_quality_passed",
+      "payload": "evidence/canonical-rf-external-mode1-noise20000-payload.json",
+      "command": "OPENBLAS_NUM_THREADS=1 python3 verification/fast_exclusive_engine_check.py --canonical --domain-rf-screen --host-bank-rf --rf-mode 1 --independent-rx --rf-noise-rms-hz 20000",
+      "next": "After a source-verified payload pass, use verification/fast_loaded_loopback_quality.py --coupled-record on this payload; require independent RX and fixed-carrier TX quality, not merely sample counts.",
+      "scope": "Normal coarse acquisition/calibration, explicit host bank and supply domains, independent RF tones, one assumed frequency-noise realization; 32-sample diagnostic, not packet or physical qualification.",
+      "scorer_controls": {
+        "status": "passed",
+        "mode": 1,
+        "bits": 8,
+        "sample_hz": 20000000.0,
+        "capture_gain": 0.5,
+        "rx_ode_max_error": 4.4976131101268855e-15,
+        "tx_ode_max_error": 1.0886971073588978e-13,
+        "independent_rx_ode_max_error": 4.361837273470238e-12,
+        "validation_only_error_rejected": true,
+        "shared_lo_hidden_phase_error_rejected": true,
+        "wrong_carrier_rejected": true,
+        "scope": "Scorer reference controls only, not DUT performance",
+        "source_sha256": {
+          "verification/fast_loaded_loopback_quality.py": "59bf93695ae81d40ea38ec869e4fa792e206e359f35c62ff6a356e7db92e051b",
+          "system_model/connected/rf_quality_screen.py": "2b08b555e27b4c3d736ec13825760b6e32f41afe94bc7c2e6c44867fe37458ce"
+        }
+      },
+      "nominal_grid_controls": {
+        "independent_rx": {
+          "nominal_grid_validation_timing_error_rejected": true,
+          "injected_validation_delay_s": 2e-08,
+          "maximum_serial_filter_ode_error": 4.361837273470238e-12,
+          "wrong_carrier_rejected": true,
+          "physical_qualification": false
+        },
+        "coupled": {
+          "samples": 32,
+          "maximum_rx_ode_error": 4.4976131101268855e-15,
+          "maximum_tx_ode_error": 1.0886971073588978e-13,
+          "validation_only_error_rejected": true,
+          "shared_lo_hidden_phase_error_rejected": true,
+          "physical_qualification": false
+        },
+        "reference_code_sha256": "2b52846082abb2d7b257c1568132523f0f42aea811c22d3ef4e9424cd307e748"
+      },
+      "nominal_grid_scope": "Independent RX must also pass fixed nominal cadence anchored at sample zero; no fitted rate or per-sample timing correction. A 20 ns validation-only timing shift is rejected. Actual canonical payload is still running; no RF closure claim.",
+      "observed_rx_calibration_limit": "Both RX targets completed but remain unqualified without a total observation-error bound. TX calibration committed and finite payload/quality passed; neither closes RX calibration accuracy or converter timing.",
+      "rx_calibration_audit": {
+        "observation_path": "AutomaticCalibrationChip maintenance path measures the selected trim through convert_adc, sharing reference, frontend, recovery and quantization.",
+        "missing": "Total observation uncertainty bound is None in make_chip; prior 300 uV values were explicit isolated-test assumptions.",
+        "reporting": "RF quality report now separates both_targets_completed from both_targets_qualified and preserves each target result; missing or duplicate targets cannot qualify.",
+        "next": "Bound reference/gain, quantization, frontend and recovery errors for a declared quiet input envelope; verify an independent residual before accepting calibration accuracy. Do not insert an assumed bound merely to make valid=True."
+      },
+      "completed_evidence": {
+        "payload": "canonical-rf-external-mode1-noise20000-payload.json",
+        "quality": "canonical-rf-external-mode1-noise20000-quality.json",
+        "source_hashes_verified": 452,
+        "elapsed_s": 6557.132860565558,
+        "rx_relative_rms": 0.028405980053495563,
+        "rx_nominal_grid_relative_rms": 0.02840598076295175,
+        "tx_fixed_carrier_relative_rms": 0.021228502726096804,
+        "samples": 32,
+        "fitting_samples": 8,
+        "validation_samples": 24,
+        "budget": 0.1,
+        "full_chip_closure": false
+      },
+      "reference_clock_candidate": {
+        "status": "cancelled_before_payload",
+        "evidence": "evidence/canonical-rf-external-mode1-noise20000-payload-reference-clock.json",
+        "reason": "User requested bounded architectural iteration instead of long detailed runs",
+        "qualified": false
+      }
+    },
+    "post_record_integration_controls": {
+      "status": "passed",
+      "evidence": "canonical-controls.json",
+      "source_hashes_verified": 454,
+      "scope": "Ownership, accounting, serialized commands, armed handover rejection and stop/acknowledge/release; not RF waveform or whole-chip closure."
+    }
+  },
+  "host_capture_update": {
+    "evidence": [
+      "evidence/host-voltage.json",
+      "evidence/host-capture.json",
+      "evidence/host-capture-sized.json"
+    ],
+    "status": "conditional_sampling_windows_only",
+    "nominal_sampled_window_ps": 400,
+    "uncertainty_failure": "12 pF and 8 mA cannot reach 2.31 V within a 3.2 ns word; maximum first rise is 2.133 V.",
+    "current_only_candidate_sampled_window_ps": 326.1176632386094,
+    "remaining": "Qualify transistor driver sizing, actual receiver capture delay and setup/hold/skew, launch mismatch, longer patterns and physical parameter envelopes. Both sized-driver hypotheses retain a sampled 400 ps window with explicit consumed switching charge; no defaults changed.",
+    "full_chip_closure": false,
+    "sized_driver_cases": [
+      {
+        "condition": "sized_candidate",
+        "cap_scale": 1.2,
+        "current_scale": 1.2,
+        "resistance_scale": 0.6666666666666666,
+        "charge_scale": 1.5,
+        "minimum_sampled_rail_v": 3.0296250424681426,
+        "consumed_switching_charge_c": 9.238077707350148e-10,
+        "pending_switching_charge_c": 1.9222926498494245e-13,
+        "common_clock_relative_window_s": [
+          9.500000000000019e-10,
+          1.3500000000000022e-09
+        ],
+        "has_sampled_window": true
+      },
+      {
+        "condition": "charge_stress",
+        "cap_scale": 1.2,
+        "current_scale": 1.2,
+        "resistance_scale": 0.6666666666666666,
+        "charge_scale": 3.0,
+        "minimum_sampled_rail_v": 2.8889049673815332,
+        "consumed_switching_charge_c": 1.8476155414700297e-09,
+        "pending_switching_charge_c": 3.844585299698849e-13,
+        "common_clock_relative_window_s": [
+          9.499999999999994e-10,
+          1.3499999999999997e-09
+        ],
+        "has_sampled_window": true
+      }
+    ]
+  },
+  "generic_configuration_update": {
+    "evidence": [
+      "evidence/resource-command-reference.json",
+      "evidence/resource-command-optimized.json"
+    ],
+    "status": "isolated_canonical_integration_passed",
+    "scope": "Five matching reported functional outcomes: serialized generic write, reserved/stale rejects, active-state reject, and eight causal RX-to-host words at 1.62 Gb/s after normal acquisition. Source manifests checked before preserving reports.",
+    "remaining": "Installed in main; fresh selected-composition control and transport qualification running. Physical capture and RTL remain open.",
+    "full_chip_closure": false
+  },
+  "raw_event_transport_update": {
+    "status": "main_serialized_guarded_pad_to_return_passed",
+    "entry_points": [
+      "system_model/connected/bit_event_stream.py",
+      "verification/bit_event_codec.py",
+      "verification/bit_event_schedule_check.py"
+    ],
+    "evidence": "evidence/bit-event-schedule.json",
+    "scope": "Bounded bit packing, atomic partial-word/event ordering, protected short-frame metadata, streaming decode and two-bank scheduling. Thirty finite burst/phase cases deliver; five excessive-event-rate cases overflow as recorded.",
+    "remaining": "Main coupled integration and primitive regressions pass with verified source manifests. The longer post-integration control regression remains running. Burst CDR, USB peer timing, CDC, physical capture and RTL remain open.",
+    "full_chip_closure": false,
+    "canonical_evidence": "evidence/record-return.json"
+  },
+  "multi_chip_video": {
+    "status": "partial",
+    "protocols": [
+      "dvi_single_link",
+      "hdmi_tmds"
+    ],
+    "model": "system_model/connected/lane_group.py",
+    "test": "verification/protocol_model_check.py:multi_chip_video_checks",
+    "chip_instances": 3,
+    "external_clock_interface": true,
+    "per_die_constraints_unchanged": true,
+    "complete": false,
+    "remaining": [
+      "Physical DC pad and forwarded-reference PLL implementation",
+      "Deterministic multi-chip phase/word alignment and finite FIFO/CDC",
+      "Independent TMDS pixel/control/HDMI packet observer",
+      "DDC/HPD/power sequencing and package qualification"
+    ],
+    "bounded_extensions": {
+      "pad": "Exact terminated RC with optional first-order current-switch dynamics; 100 ps switch +2 pF load candidate, 1 ns switching and 30 pF load failure controls, independent equal-pole step-response check. Disturbed PLL pad composition uses 100 ps switching. Transistor bandwidth/compliance/ESD unqualified.",
+      "timing": "60 ps prescribed worst-case error sum plus separate sampled-PLL acquisition/noise and causal pad-capture checks below. Integer-word phase must be established externally; physical divider reset/alignment remains open.",
+      "fifo": "Actual framed codec into 128-word TX FIFO, 64-word prefill; 256 frames at three phases and \u00b1100 ppm; starvation/overflow controls",
+      "limits": "Finite TX/RX and delayed-feedback windows only. Serialized occupancy telemetry, stale-report handling, automatic word alignment, physical CDC and sustained three-chip analog traffic remain open.",
+      "dynamic_acquisition": "Three existing SampledPLL instances, both x10 rates, differing phase and \u00b11% free frequency; 4 us acquisition +32 comparisons; step refinement and \u00b140% tuning failure controls. Noiseless ideal detector, not physical jitter or divider alignment qualification.",
+      "disturbed_pll_pad": "Existing sampled PLL phase excursions feed RC pad sample margin and group admission: independent 20 kHz RMS finite-band frequency-noise seeds, 128 reference periods, four samples/period; 20 MHz RMS control denies launch. Assumed spectrum, finite window; not BER/device jitter/continuous monitoring qualification.",
+      "receive_fifo": "Finite empty RX FIFO, frame-start quota snapshot, actual payload-slot draining and host decoding; both rates, three phases, \u00b1100 ppm, 256 frames, word conservation. One-frame service pause recovers; eight-frame pause and four-word depth overflow. Ideal CDC/capture, separate simplex check.",
+      "delayed_tx_feedback": "External quota controller using two-frame-old occupancy; 512 frames at \u00b11% mismatch, both rates, succeeds where no-feedback controls starve/overflow. Observed range 57\u201380/128 words. Telemetry is prescribed, not serialized; management integration and stale-report behavior remain open.",
+      "interface_management": "Generic two-bit interface command in existing dispatcher; recording-callback serialized apply/reply, stale epoch and permission checks; canonical direct dispatcher mode-switch checks. RTL mapping and acquired coupled queue-to-pad lifecycle remain open.",
+      "canonical_resource_binding": "Optional group binding to three canonical chip instances validates matching generic resources and simplex roles; resource/interface/reset epoch snapshots reject transfer after reconfiguration, including restore-to-same-settings. Transfer-boundary supervision only, no acquired analog or serialized live-status claim.",
+      "canonical_forwarded_clock": "Canonical serializer now consumes selected word reference and x10 ratio; reference-sensitive PLL reconstruction, shared nominal comparison grid, ten-bit launch boundary in direct/bounded schedulers. Construction checks pass; acquired coupled payload and physical phase alignment unverified.",
+      "canonical_dc_channel": "DC configuration selects finite current-switch/RC channel in canonical serializer; two stored differential states; event-driven ten-bit samples match independent two-leg pad model at both rates. Common mode, cross-family charge, TMDS supply accounting and acquired coupled operation remain open.",
+      "common_mode": "Canonical pad retains tail/common-mode states; exposes both pin voltages/currents and external termination source/resistor/sink powers. Nominal DC energy balance and low-supply compliance failure control. No nonlinear saturation or connected rail/ground/thermal accounting.",
+      "independent_payload": "Configured canonical PLL copied with frozen supply, acquired oscillator phase-crossing bit launches drive current-switch pad; independent nominal board-clock observer recovers 16 words at both rates with declared noise/25 ps skew. 0.7 UI skew corrupts words. Known epoch, finite window, not acquired full-chip coupled traffic.",
+      "power_ownership": "Canonical DC TX local rail load now uses declared bias instead of charging remote termination output power via legacy voltage-driver efficiency. Separate external power/return-current/sink heat report; explicit uncoupled ground/thermal/RX-supply flags. Switching charge remains uncharacterized.",
+      "return_current": "Canonical held-command tail-current forecast feeds shared ground-node KCL and analog rail ODE; injected ground-terminal power included in source ledger. Independent KCL and paired 1 ns owner integration checks. One-way coupling only; pad ground/compliance feedback and joined transient energy audit open.",
+      "transient_energy": "Separate rail/ground and pad transient audits: paired 1 ns owner energy residuals <1e-18 J; independent 24-point quadrature of pad source/resistor/sink powers and explicit capacitor energy per turn-on/switch/off interval <1e-22 J. Joined ground-dependent compliance circuit remains open.",
+      "ground_compliance": "Pad headroom and sink heat reference solved ground; analog owner rejects outside-compliance RHS evaluations transactionally. Terminal power splits into sink heat plus ground-transfer power. Nominal/raised-ground, energy split and rejected-state controls. No nonlinear saturation/recovery or acquired joined traffic qualification.",
+      "canonical_forwarded_receiver": "Factory selects finite current-switch pad with prescribed forwarded sampling and opaque ten-bit framing; no test marker or training prefix. 16-word recovery and early-sampling failure controls at both rates. External word alignment and acquired RX-to-host lifecycle remain open.",
+      "canonical_rx_lifecycle": "Focused optional full canonical coupled run: 1.485 Gb/s RX-only, acquisition at 2 us, eight words returned exactly by 2.14 us, reference loss enters draining. Direct configuration and prescribed external word alignment; no sustained three-chip or physical host/termination qualification. Evidence: evidence/protocol-forwarded-lifecycle.json.",
+      "canonical_tx_lifecycle": "Focused optional canonical 1.485 Gb/s TX run: acquired coupled startup, complete framed host input, four FIFO/serializer words with no underflow, reference-loss draining and tail-current decay <1 uA after 1 ns. Evidence: evidence/protocol-forwarded-tx-lifecycle.json. Internal serializer observer; independent peer/compliance and sustained three-chip operation unqualified.",
+      "post_video_handover": "Both canonical finite lifecycle fixtures now test rejected premature reconfiguration/drain ack, explicit host abort then drain, epoch increment and RF ownership on same instance, wired-clock shutdown/stale traffic rejection and pad-state retention at resource selection. RF reacquisition and residual-pad energy/current through reconstruction remain open.",
+      "retired_pad_state": "Quiesced DC pad detaches as immutable state/time snapshot; passive zero-drive decay continues ground current/compliance checks across RF ownership. Reconstructed DC channel inherits evolved states and clears detached owner. Canonical TX restoration checked; fixed external termination assumption, physical cross-family/cable topology changes open.",
+      "causal_pad_deskew": "Three independently seeded PLL/current-switch-pad captures feed timestamped finite external queues at both rates: 16 rows, known common first-word epoch, arrival delays 0/2/1 words, four-word capacity. Exact recovery; one-word capacity overflows and stops the group, stale epochs reject, injected corruption remains visible. Frozen supplies and common nominal receiver clock; no automatic alignment discovery or physical CDC proof.",
+      "continuous_deskew": "Actual codec/TX-FIFO consumer timestamps feed external deskew over 256 frames: 4866 rows at 742.5 Mb/s and 7786 at 1.485 Gb/s, maximum occupancy three of four words. Three copies of one nominal-frequency consumer trace with 0/2/1-word delays; not independent host clock histories or full-stream analog PLL/pad co-simulation.",
+      "host_return_deskew": "Three independent RX codec/FIFO histories with host frequency errors -100/0/+100 ppm, different host phases and 0/1/2-frame startup pauses. Four-word external deskew overflows; 128-word external queues pass 4847/7755 common-prefix rows at the two rates, measured peak occupancy 21/32 words. Finite-window trailing captures remain reported. Known first-word epoch, ideal CDC, ready external consumer; not an all-phase depth bound or full analog run."
+    }
+  },
+  "rf_projection_frontend_integration": {
+    "status": "partial",
+    "model_sources": [
+      "system_model/connected/protocol_signals.py",
+      "system_model/architecture_fast/protocol_service.py"
+    ],
+    "verification": "verification/protocol_model_check.py:rf_conversion_impairment_checks",
+    "scope": "Configured ADC frontend gain/phase/compression/noise included before quantization; independent TX/RX LO histories. Five RF fixture families; state/RNG isolation and common-phase cancellation controls. Frozen rails/timing, assumed parameters, no acquired RF closure.",
+    "trained_quality": {
+      "status": "open",
+      "evidence": "evidence/protocol-model.json:trained_receiver",
+      "payload_symbols_per_condition": 14040,
+      "nominal_12bit_errors": 0,
+      "frontend_12bit_errors": 13,
+      "frontend_and_lo_12bit_errors": 20,
+      "scope": "Three seeds/two guards, synthetic known training/held-out BPSK; illustrative frontend and prescribed phase histories. Not measured silicon or protocol compliance."
+    },
+    "gain_attribution": {
+      "status": "open",
+      "configured_gain_consumed": true,
+      "compression_only_12bit_errors": 12,
+      "iq_only_12bit_errors": 0,
+      "noise_only_12bit_errors": 0,
+      "half_gain_combined_12bit_errors": 1,
+      "half_gain_combined_12bit_evm_range": [
+        0.1265001020649457,
+        0.149034450610483
+      ],
+      "half_gain_combined_8bit_training_rejections": 3,
+      "scope": "Same three seeds/two guards, assumed impairments, external training-only equalizer; not compliance or device qualification."
+    },
+    "clocked_conversion": {
+      "status": "partial",
+      "model": "ProtocolService.project_clocked_link",
+      "converter_modes": {
+        "12bit_hz": 40000000,
+        "8bit_hz": 20000000
+      },
+      "refinement_substeps": [
+        2,
+        4,
+        8
+      ],
+      "nominal_12bit_evm_range": [
+        0.03606439680568333,
+        0.038435668309214056
+      ],
+      "scope": "Nominal synthetic held-out HE20; exact source indexing, explicit DAC/ADC counts/timestamps, causal left-held TX-to-RX integration, external decimation for scoring. Combined impairments and acquired system lifecycle open.",
+      "tx_pad_included": true,
+      "pad_validation": "Matches matrix-exponential advancement; preserves live state/switch settings; output isolation attenuation control. Driven-source reduction, not nonlinear supply-coupled RF qualification."
+    },
+    "combined_clocked_loaded_chain": {
+      "status": "open",
+      "evidence": "evidence/protocol-model.json:checks.clocked_rf_conversion.combined_frontend_lo",
+      "scope": "One synthetic HE20 BPSK fixture, 468 training/2340 held-out symbols, eight integration substeps; actual 40/20 MS/s converters, loaded output pad, configured frontend, opposing prescribed 0.04 rad 1 MHz LO phase histories. Frozen rails, no acquired clocks or host transport.",
+      "results": "Half gain rejects training at both precisions. 12-bit unity/double gain: zero BPSK errors, 11.813%/16.079% RMS EVM. 8-bit unity/double gain: 20/9 errors, 34.421%/26.867% EVM. No ADC clipping.",
+      "implication": "Pre-pad half-gain improvement does not transfer to loaded chain. No default gain change; retain gain search and multi-fixture validation. Zero BPSK errors does not establish higher-order Wi-Fi performance."
+    },
+    "loaded_chain_isolation": {
+      "status": "partial",
+      "evidence": "evidence/protocol-model.json:checks.clocked_rf_conversion.loaded_chain_isolation",
+      "scope": "12-bit 40 MS/s, unity gain, eight substeps, loaded pad; two independent 2340-symbol payloads with shared 468-symbol training. Frozen rails; one noise seed per payload.",
+      "evm_ranges": {
+        "nominal": [
+          0.03649665309967102,
+          0.03745195686388142
+        ],
+        "iq": [
+          0.04525689682794326,
+          0.04593165126466008
+        ],
+        "compression": [
+          0.05434551304437837,
+          0.05441728088146703
+        ],
+        "noise": [
+          0.05821544452919256,
+          0.06117157484308341
+        ],
+        "lo": [
+          0.09905089246716854,
+          0.10086347351732972
+        ],
+        "combined": [
+          0.11556339689893318,
+          0.11626728227685695
+        ]
+      },
+      "interpretation": "Prescribed opposing 0.04 rad/1 MHz phase histories dominate tested individual impairments. This is sensitivity to an assumed tone, not measured oscillator phase noise. Next replace tone with independently acquired PLL phase histories before selecting circuit changes."
+    },
+    "acquired_oscillator_projection": {
+      "status": "partial",
+      "evidence": "evidence/protocol-rf-pll-projection.json",
+      "command": "OPENBLAS_NUM_THREADS=1 timeout 15s python3 projects/programmable_transceiver_platform/verification/protocol_model_check.py --rf-pll-projection",
+      "scope": "Two cloned canonical SwitchableWarmClock oscillators, explicit reference, frozen rails, independently seeded 20 kHz RMS finite-band frequency noise, about 20 us isolated acquisition, 40/80 MHz phase-history grids. 468 training/468 held-out BPSK symbols, loaded pad and actual 12-bit converter cadence; nominal and combined frontend.",
+      "result": "Both acquire; 40/80 MHz nominal EVM 4.875%/4.868%, zero errors. Shared phase knots differ <5e-13 rad; interpolation differences <0.000278 rad; ADC output refinement RMS 51.28 uV. Combined frontend at 80 MHz: 6.905% EVM, zero errors, zero clipping. Chip and RNG remain unadvanced.",
+      "remaining": "Managed coarse startup and canonical readiness, sustained lock, shared rail feedback, physically justified noise and longer/higher-order modulation fixtures. Two phase grids are a sensitivity check, not continuous-time error-bound proof."
+    },
+    "quiet_powered_startup_solver": {
+      "status": "partial",
+      "evidence": "evidence/protocol-rf-pll-projection.json:checks.acquired_rf_projection.quiet_startup_solver",
+      "scope": "Zero TX coefficients, exactly zero network/RX/detector states, no blockers, off/loopback or zero-amplitude tone RX only. Powered bias retained; rail solve feeds live oscillator forecast without RF phase iteration.",
+      "validation": "Explicit versus original implicit/iterative 1 ns solve: rail difference about 2.83e-12 V, zero observed phase difference; retained 1e-30 RF state rejects quiet path. Fast regression passes.",
+      "remaining": "Canonical zero-code TX includes 2.5 mV modeled LO feedthrough, so quiet path is not selected during normal coarse startup. Prior 100 ns timing is not evidence of quiet-path acceleration. Full managed acquisition remains open."
+    },
+    "stiff_startup_solver_comparison": {
+      "status": "partial",
+      "evidence": "evidence/protocol-rf-startup-solvers.json",
+      "command": "OPENBLAS_NUM_THREADS=1 timeout 15s python3 projects/programmable_transceiver_platform/verification/protocol_model_check.py --rf-startup-solvers",
+      "scope": "10 ns canonical loaded RF interval including modeled zero-code LO feedthrough; identical equations/tolerances, Radau versus BDF.",
+      "result": "3.83 s versus 1.24 s; rail/pad/phase differences below 1e-13 in respective units. Quiet path rejects nonzero leakage.",
+      "remaining": "Default remains Radau. Optional make_chip(rf_solver_method=\"BDF\") now reaches 100 ns canonical coarse centering in about 2.8 s versus prior 10.6 s Radau probe; not a controlled benchmark or acquired lock. Longer startup, disturbance and complete traffic validation remain required.",
+      "retained_signal": "Additional 2 ns continuation from retained LO-leakage pad state, output/dummy switch change and 20+j10 mV 10 MHz rotating drive into RX loopback. Radau/BDF rail/pad/RX differences <4e-13 V, phase difference zero; both original caller states preserved. BDF about four times faster in this fixture."
+    },
+    "exact_passive_source_propagation": {
+      "status": "partial",
+      "evidence": "evidence/protocol-rf-startup-solvers.json:checks.rf_startup_solvers.exact_passive_network",
+      "implementation": "SwitchedLoad.forecast_terms: modal exact exponential-source propagation with stable coincident-pole limit; retains initial complex voltage and does not mutate live state.",
+      "validation": "Independent augmented-state matrix exponential for DC, 108 MHz rotating envelope and coincident network/source pole; nonzero initial state, error <1e-12 V.",
+      "remaining": "Not installed into coupled supply/PLL solver. Preserve current/energy integration, load dependence, switch boundaries and phase/rail refinement when composing it.",
+      "startup_probe": "BDF canonical run reached 800 ns in 13.85 s; 15 s process limit ended run before 1 us. First coarse event is 2.4 us, so full managed acquisition remains impractical in this path."
+    },
+    "coupled_passive_reduction": {
+      "status": "experimental",
+      "evidence": "evidence/protocol-rf-startup-solvers.json:checks.rf_startup_solvers.passive_reduction",
+      "implementation": "Optional LimitedCoupledDriver.advance passive_terms replaces only passive-network ODE states with exact exponential-source propagation. Existing rail, finite reference, detector, RX, host and energy equations remain. Caller supplies explicit source-error budget; deviation from rail-dependent driver law is monitored at RHS evaluations and rejects transaction before commit. Disabled-source guard remains.",
+      "result": "10 ns rotating leakage, 1/2/4 held-source segments: endpoint pad error 12.8 uV / 115 pV / 5.12 pV; source-energy difference 3.25e-17 / 1.63e-17 / 7.73e-18 J. Peak sampled source mismatch remains about 24.7 uV during initial rail transient. Rejected 1 nV budget preserves state.",
+      "remaining": "Not installed in canonical RF scheduler or PLL feedback. Endpoint refinement does not bound whole-interval error; source budgets need rail-aware refinement and intermediate-state/energy checks before adoption. Default path and fast regression unchanged."
+    },
+    "adaptive_passive_forecast": {
+      "status": "experimental",
+      "evidence": "evidence/protocol-rf-startup-solvers.json:checks.rf_startup_solvers.adaptive_passive",
+      "implementation": "LimitedCoupledDriver.forecast_passive forecasts on a private candidate, halves intervals on typed source-budget rejection, rebases exponential commands and rail-dependent swing at accepted boundaries, merges complete rail histories. Bounded attempts/minimum step reject without altering caller.",
+      "result": "10 ns 108 MHz leakage fixture: 31 attempts, 16 accepted segments, sampled mismatch <=2.706 uV for 3 uV budget, endpoint pad error about 116 pV and source-energy difference 2.09e-19 J against full BDF integration. Attempt-budget rollback passes.",
+      "remaining": "Experimental only; no canonical PLL scheduler integration. Solver-evaluation source bound is not a continuous-time whole-state bound; intermediate-state/energy checks, longer acquired traffic and speed qualification remain."
+    }
+  },
+  "active_workflow": {
+    "phase": "whole_chip_behavioral",
+    "entry": "system_model/architecture_fast/behavioral.py",
+    "command": "make transceiver-behavioral",
+    "evidence": "evidence/behavioral-system.json",
+    "status": "partial",
+    "deferred": [
+      "fine-grained solver optimization",
+      "transistor implementation",
+      "layout"
+    ],
+    "next": [
+      "Unify persistent RF/host and wired/CDR/host payload paths with acquisition and quality observers for all required signaling classes",
+      "USB host/device attach-reset-chirp-turnaround lifecycle",
+      "Long-burst LoRa and remaining multipole RF quality gaps",
+      "Embedded CDR and multi-chip video payload integration",
+      "Constrain supply isolation, frontend linearity and autonomous clock hypotheses"
+    ],
+    "behavioral_transport": "Persistent RX/TX bit queues with separate source/H2D/D2H event clocks and conservative simultaneous-event ordering. One 128-frame run equals 17/46/65-frame chunks under source +100 ppm and opposite +/-100 ppm host offsets. Independent drift controls expose slow-H2D underflow, fast-H2D overflow and slow-D2H overflow. Delayed occupancy feedback and numeric clock/format binding are now modeled. Alternating RF/wire epochs account for discarded queues. Connected GFSK 8/12-bit and wired recovered-word fixtures verify host payload identity; complete coverage across target paths remains open.",
+    "behavioral_feedback": "Quantized 8-bit occupancy captured at D2H frame start, delivered after complete header plus two frame periods; proposed existing argument-field use, no new payload slots. Finite pending-report queue, age timeout and persistent fractional TX quota. +/-1% H2D offset controlled runs survive 1024 frames where open-loop fails. -2% capacity-deficient run still starves; report loss faults; chunk equivalence passes. ABI/RTL mapping, corruption and general stability envelope remain open.",
+    "behavioral_power": "Average domain/host CV current plus isolated dynamic RF ripple and uncertain R/L/C shared-path host-coupling screens. Physical package/regulator transfer and dynamic whole-chip composition remain unqualified.",
+    "behavioral_waveform": "Selectable 5/10/20/40 MS/s, explicit first/fifth-order RX reduction, known-prefix timing/gain/CFO recovery, HE20 trained equalization and pilot tracking; numeric target recipes use fifth order. Signed offsets, blocker/compression, supply ripple and optional multi-seed longer bursts expose remaining failures. Live SampledRFStream and multipole filters preserve cross-call state; standard packet acquisition and integration of all quality observers with the live path remain open.",
+    "coverage_report": "evidence/behavioral-system.json:coverage; explicit missing obligations per target, independent of regression status",
+    "stage_boundaries": {
+      "mathematical_model_required": [
+        "One declared chip configuration drives clocks, converters, pads, finite host transport and management lifecycle",
+        "TX/RX sample or bit identity through each physical-path model and host framing, with independent observers",
+        "Exclusive RF/wired startup, retune, reference loss, stop and recovery preserve state/epoch invariants",
+        "Bounded quality and failure envelopes for declared noise, clock error, loads, nonlinearities and supply coupling",
+        "Representative external FPGA fixtures exercise every targeted electrical/signaling class; missing fixtures stay explicit",
+        "Area, terminal and power budgets remain consistent with the full intended chip"
+      ],
+      "external_fpga_obligations": [
+        "MAC/endpoints, CRC/FEC and packet policy remain external",
+        "Standard preambles, framing and turnaround fixtures must supply realistic PHY demands, but implementing complete protocol stacks on chip is not required"
+      ],
+      "physical_stage_obligations": [
+        "Validate assumed device noise, speed, tuning, linearity, regulator rejection and parasitics with transistor-level evidence",
+        "Complete full-chip transistor schematic before layout",
+        "Extract and rerun physical implementation against the same behavioral requirements"
+      ],
+      "not_a_waiver": "Existing requirements/not_deferred remain authoritative. Missing chip behavior cannot be relabeled external; physical uncertainty remains a feasibility risk, not proven by mathematical passes."
+    }
   }
 }

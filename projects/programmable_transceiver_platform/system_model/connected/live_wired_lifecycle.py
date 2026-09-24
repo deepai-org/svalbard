@@ -91,6 +91,62 @@ class LiveReceiver:
             return self.framer.feed(int(self.decision_value()>0))
         return None
 
+class ForwardedReceiver(LiveReceiver):
+    """Opaque ten-bit words at an externally established word boundary.
+
+    No training sequence, marker, transition-tracking CDR or protocol decoder.
+    Reference phase/rate are prescribed inputs; acquisition remains external.
+    """
+    def __init__(self,words,rate,start,phase=0.,ppm=0):
+        from wired_blocks import CurrentSwitchChannel
+        from types import SimpleNamespace
+        if not words or any(type(w) is not int or not 0<=w<1024 for w in words):
+            raise ValueError('Nonempty opaque ten-bit payload required')
+        super().__init__(words,rate,start,phase,ppm)
+        self.bits=[(w>>k)&1 for w in words for k in range(10)]
+        self.stop=start+len(self.bits)*self.ui
+        self.pad=CurrentSwitchChannel(rate)
+        self.framer=SimpleNamespace(state='PAYLOAD',count=0,value=0)
+        self.framer.reset=lambda:self.reset_word()
+        self.minimum_margin=math.inf
+    def reset_word(self):
+        self.framer.state='PAYLOAD';self.framer.count=0;self.framer.value=0
+    def inherit_analog(self,previous):
+        import copy
+        if not isinstance(previous,ForwardedReceiver):
+            raise ValueError('Forwarded receiver requires compatible retained pad state')
+        self.pad=copy.copy(previous.pad);self.pad.rate=1/self.ui
+        self.state=self.pad.state;self.held=previous.held
+    def schedule_crossings(self,end):
+        self.cross=math.inf;self.crossings=[]
+    def evolve(self,time):
+        if time<self.time:raise ValueError('Nonmonotonic forwarded receiver')
+        dt=time-self.time
+        # Exact integral of the squared equal-pole response for idle detection.
+        # The default equal-pole response is D+(A+B*t)*exp(-t/tau).
+        from scipy.special import gammainc
+        tau=self.pad.load_tau_s
+        if self.pad.switch_tau_s!=tau:raise ValueError('Energy observer requires equal poles')
+        a=self.pad.state-self.held;b=(self.pad.current_state-self.held)/tau
+        def integral(n,k):return math.factorial(n)*gammainc(n+1,k*dt)/k**(n+1)
+        self.energy+=max(0.,self.held**2*dt+2*self.held*(a*integral(0,1/tau)+b*integral(1,1/tau))+
+            a*a*integral(0,2/tau)+2*a*b*integral(1,2/tau)+b*b*integral(2,2/tau))
+        self.pad.advance_state(self.held,dt);self.state=self.pad.state;self.time=time
+    def step(self):
+        time=self.next_time();self.evolve(time)
+        if time==self.stop:self.done=True;return None
+        launch=self.start+self.launch_index*self.ui if self.launch_index<len(self.bits) else math.inf
+        if time==launch:
+            self.held=(2*self.bits[self.launch_index]-1)*self.swing;self.launch_index+=1
+        if self.enabled and time==self.sample_time():
+            self.samples+=1;self.index+=1;self.forced_sample=None;self.retime()
+            self.minimum_margin=min(self.minimum_margin,abs(self.state)*self.pad.volts_per_unit)
+            self.framer.value|=int(self.state>0)<<self.framer.count;self.framer.count+=1
+            if self.framer.count==10:
+                word=self.framer.value;self.reset_word();return word
+        return None
+
+
 class LiveWireChip(PhaseChip):
     def __init__(self,**kwargs):
         super().__init__(**kwargs);self.live_rx=None;self.live_history=[]
@@ -100,10 +156,12 @@ class LiveWireChip(PhaseChip):
             raise ValueError('Incoming link requires active idle receiver')
         previous=self.live_rx
         if previous is not None:previous.evolve(start)
-        self.live_rx=self.make_receiver(words,1.25e9 if self.session.mode==0 else 2.5e9,start,phase,ppm)
+        self.live_rx=self.make_receiver(words,self.channel.rate,start,phase,ppm)
         if previous is not None:
             self.live_rx.inherit_analog(previous)
-        self.rx_metadata=dict(clock='causal transition tracker',framing='observed64-bit test marker')
+        self.rx_metadata=(dict(clock='prescribed forwarded reference',framing='external ten-bit word boundary')
+            if isinstance(self.live_rx,ForwardedReceiver) else
+            dict(clock='causal transition tracker',framing='observed64-bit test marker'))
     def advance(self,time):
         while self.live_rx is not None and min(self.live_rx.next_time(),self.next_return)<=time:
             rx=self.live_rx;when=min(rx.next_time(),self.next_return);super().advance(when)

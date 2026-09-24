@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "status": "design_targets_not_qualified",
   "limits": {
     "total_terminals": 50,
@@ -18,13 +18,21 @@
     },
     {
       "name": "WIRE_RX_P",
-      "direction": "in",
-      "kind": "analog"
+      "direction": "inout",
+      "kind": "analog",
+      "mode_aliases": {
+        "serial": "input",
+        "usb2": "USB_DP"
+      }
     },
     {
       "name": "WIRE_RX_N",
-      "direction": "in",
-      "kind": "analog"
+      "direction": "inout",
+      "kind": "analog",
+      "mode_aliases": {
+        "serial": "input",
+        "usb2": "USB_DM"
+      }
     },
     {
       "name": "RF_RX_P",
@@ -258,13 +266,13 @@
     }
   ],
   "area_um2": {
-    "wired": 2000000,
-    "rf": 2300000,
+    "wired": 2350000,
+    "rf": 2400000,
     "converters": 1300000,
-    "timing": 1300000,
-    "digital": 1500000,
-    "memory": 800000,
-    "reserve": 3720000
+    "timing": 1450000,
+    "digital": 1650000,
+    "memory": 850000,
+    "reserve": 2920000
   },
   "transport": {
     "word_bits": 10,
@@ -325,6 +333,16 @@
       "egress_bits_per_source": 2048,
       "simulation_frames": 512,
       "receive_commit": "after_complete_frame_crc"
+    },
+    "usb_short_frame": {
+      "frame_words": 8,
+      "word_bits": 10,
+      "control_words": 5,
+      "payload_words": 3,
+      "host_profile": "ddr125",
+      "header": "unchanged counts/sequence/opcode/argument with parity/tag/guard",
+      "staging": "reuse two banks with shorter frame counter",
+      "implementation": "Canonical frame geometry, receiver, return scheduler and activation hooks; component lifecycle verified. USB timed pad packet adapter, canonical acquired active traffic and RTL remain pending."
     }
   },
   "modes": [
@@ -516,5 +534,928 @@
     "implementation_enforcement": "pending",
     "specification": "exclusive-engine-policy.md",
     "historical_combined_rate_profiles": "Retained as optional stress/budget history; exclusive-mode rebudgeting pending."
+  },
+  "physical_services": {
+    "status": "design_targets_not_qualified",
+    "serial_target_rates_bps": [
+      480000000,
+      1250000000,
+      1500000000,
+      1620000000,
+      2500000000,
+      742500000,
+      1485000000
+    ],
+    "external_sidebands": [
+      "USB VBUS switch/current limit and sense to FPGA",
+      "DisplayPort AUX transceiver and HPD to FPGA",
+      "HDMI/DVI pixel-clock distribution and TMDS clock buffer/receiver; DDC/HPD and HDMI 5 V protection/power to FPGA"
+    ],
+    "host_latency_profile": "USB reuses 8-word framing at existing DDR125; separate deadline bus not selected",
+    "rf_settling_exploratory_targets_us": {
+      "same_channel_direction": 2,
+      "warm_hop": 50
+    },
+    "timing_target_note": "Internal exploration budgets, not protocol compliance limits",
+    "digital_protocol_crc_owner": "external FPGA",
+    "selection_policy": "one resource configuration at a time; stopped role/resource changes; local packet direction changes",
+    "multi_chip_video": {
+      "data_chips": 3,
+      "lanes_per_chip": 1,
+      "clock_pair": "External TMDS-compatible pixel-clock buffer for source; clock receiver/fanout for sink",
+      "word_reference": "Generic forwarded-reference x10 serial clock mode on REF_IN; 74.25/148.5 MHz input capability unqualified",
+      "alignment": "Common word epoch, per-lane integer-word deskew in FPGA, bounded fractional skew; loss on any lane invalidates entire group",
+      "encoding_owner": "External FPGA: TMDS/control symbols, HDMI packets/audio/guard bands, optional HDCP; chip transfers opaque 10-bit words",
+      "electrical": "DC current-sink differential TX; RX 50 ohm per leg to 3.3 V, disabled for AC serial modes; source/sink and voltage tolerance unqualified",
+      "per_die_constraints_unchanged": true
+    }
+  },
+  "protocol_profiles": [
+    {
+      "id": "pcie_gen1",
+      "scope": "one 2.5 GT/s lane; external FPGA endpoint",
+      "engine": "wire",
+      "model_status": "phy_primitives",
+      "physical_status": "unqualified",
+      "standards_compliant": false,
+      "line_rate_bps": 2500000000,
+      "duplex": "full",
+      "lanes": 1,
+      "pins": [
+        "WIRE_TX_P",
+        "WIRE_TX_N",
+        "WIRE_RX_P",
+        "WIRE_RX_N"
+      ],
+      "roles": [
+        "endpoint"
+      ],
+      "host_service": "framed",
+      "required_gates": [
+        "clock_quality",
+        "loaded_electrical_path",
+        "host_service",
+        "lifecycle",
+        "independent_protocol_waveform"
+      ],
+      "modeled_primitives": [
+        "profile_rate_serializer",
+        "causal_transition_receiver",
+        "shared_host_transport"
+      ],
+      "model_scope": "Generic serial PHY primitives at profile rate; test-link framing, no protocol training or interoperability",
+      "model_sources": [
+        "system_model/architecture_fast/protocol_service.py",
+        "system_model/connected/live_wired_lifecycle.py",
+        "system_model/connected/wired_equalizer.py"
+      ]
+    },
+    {
+      "id": "ethernet_1000basex",
+      "scope": "one 1.25 GBd lane; external optical module",
+      "engine": "wire",
+      "model_status": "phy_primitives",
+      "physical_status": "unqualified",
+      "standards_compliant": false,
+      "line_rate_bps": 1250000000,
+      "duplex": "full",
+      "lanes": 1,
+      "pins": [
+        "WIRE_TX_P",
+        "WIRE_TX_N",
+        "WIRE_RX_P",
+        "WIRE_RX_N"
+      ],
+      "roles": [
+        "link"
+      ],
+      "host_service": "framed",
+      "required_gates": [
+        "clock_quality",
+        "loaded_electrical_path",
+        "host_service",
+        "lifecycle",
+        "independent_protocol_waveform"
+      ],
+      "modeled_primitives": [
+        "profile_rate_serializer",
+        "causal_transition_receiver",
+        "shared_host_transport"
+      ],
+      "model_scope": "Generic serial PHY primitives at profile rate; test-link framing, no protocol training or interoperability",
+      "model_sources": [
+        "system_model/architecture_fast/protocol_service.py",
+        "system_model/connected/live_wired_lifecycle.py",
+        "system_model/connected/wired_equalizer.py"
+      ]
+    },
+    {
+      "id": "sgmii",
+      "scope": "one 1.25 GBd MAC/PHY serial lane",
+      "engine": "wire",
+      "model_status": "phy_primitives",
+      "physical_status": "unqualified",
+      "standards_compliant": false,
+      "line_rate_bps": 1250000000,
+      "duplex": "full",
+      "lanes": 1,
+      "pins": [
+        "WIRE_TX_P",
+        "WIRE_TX_N",
+        "WIRE_RX_P",
+        "WIRE_RX_N"
+      ],
+      "roles": [
+        "link"
+      ],
+      "host_service": "framed",
+      "required_gates": [
+        "clock_quality",
+        "loaded_electrical_path",
+        "host_service",
+        "lifecycle",
+        "independent_protocol_waveform"
+      ],
+      "modeled_primitives": [
+        "profile_rate_serializer",
+        "causal_transition_receiver",
+        "shared_host_transport"
+      ],
+      "model_scope": "Generic serial PHY primitives at profile rate; test-link framing, no protocol training or interoperability",
+      "model_sources": [
+        "system_model/architecture_fast/protocol_service.py",
+        "system_model/connected/live_wired_lifecycle.py",
+        "system_model/connected/wired_equalizer.py"
+      ]
+    },
+    {
+      "id": "sata_gen1",
+      "scope": "1.5 Gb/s full-duplex host or device",
+      "engine": "wire",
+      "model_status": "phy_primitives",
+      "physical_status": "unqualified",
+      "standards_compliant": false,
+      "line_rate_bps": 1500000000,
+      "duplex": "full",
+      "lanes": 1,
+      "pins": [
+        "WIRE_TX_P",
+        "WIRE_TX_N",
+        "WIRE_RX_P",
+        "WIRE_RX_N"
+      ],
+      "roles": [
+        "host",
+        "device"
+      ],
+      "host_service": "framed",
+      "required_gates": [
+        "clock_quality",
+        "loaded_electrical_path",
+        "host_service",
+        "lifecycle",
+        "independent_protocol_waveform"
+      ],
+      "modeled_primitives": [
+        "profile_rate_serializer",
+        "oob_envelope_generation_detection",
+        "role_selection",
+        "causal_transition_receiver",
+        "causal_rc_envelope_oob_observer",
+        "external_fpga_oob_startup_reduction"
+      ],
+      "model_scope": "Partial executable PHY math; no packet interoperability or full-chip closure",
+      "model_sources": [
+        "system_model/architecture_fast/protocol_service.py",
+        "system_model/connected/protocol_signals.py",
+        "system_model/connected/protocol_pad.py",
+        "system_model/connected/live_wired_lifecycle.py"
+      ]
+    },
+    {
+      "id": "usb2",
+      "scope": "480 Mb/s host or device; FS/LS electrical support; stopped role selection",
+      "engine": "wire",
+      "model_status": "phy_primitives",
+      "physical_status": "unqualified",
+      "standards_compliant": false,
+      "line_rate_bps": 480000000,
+      "duplex": "half",
+      "lanes": 1,
+      "pins": [
+        "WIRE_RX_P",
+        "WIRE_RX_N"
+      ],
+      "roles": [
+        "host",
+        "device"
+      ],
+      "host_service": "short_framed",
+      "required_gates": [
+        "clock_quality",
+        "loaded_electrical_path",
+        "host_service",
+        "lifecycle",
+        "independent_protocol_waveform",
+        "bidirectional_pad",
+        "fpga_response_deadline",
+        "disabled_usb_serial_loading"
+      ],
+      "modeled_primitives": [
+        "coupled_two_node_hs_fs_ls_pad",
+        "host_device_role",
+        "nrzi_bit_stuffing_fixture",
+        "response_budget",
+        "existing_codec_8_word_profile"
+      ],
+      "model_scope": "Partial executable PHY math; no packet interoperability or full-chip closure",
+      "model_sources": [
+        "system_model/architecture_fast/protocol_service.py",
+        "system_model/connected/protocol_signals.py",
+        "system_model/connected/protocol_pad.py"
+      ]
+    },
+    {
+      "id": "displayport_rbr",
+      "scope": "one 1.62 Gb/s lane; source or sink; external AUX",
+      "engine": "wire",
+      "model_status": "phy_primitives",
+      "physical_status": "unqualified",
+      "standards_compliant": false,
+      "line_rate_bps": 1620000000,
+      "duplex": "simplex",
+      "lanes": 1,
+      "pins": [
+        "WIRE_TX_P",
+        "WIRE_TX_N",
+        "WIRE_RX_P",
+        "WIRE_RX_N"
+      ],
+      "roles": [
+        "source",
+        "sink"
+      ],
+      "host_service": "framed",
+      "required_gates": [
+        "clock_quality",
+        "loaded_electrical_path",
+        "host_service",
+        "lifecycle",
+        "independent_protocol_waveform",
+        "external_aux",
+        "training_ssc"
+      ],
+      "modeled_primitives": [
+        "profile_rate_serializer",
+        "source_sink_role",
+        "response_budget",
+        "causal_transition_receiver"
+      ],
+      "model_scope": "Partial executable PHY math; no packet interoperability or full-chip closure",
+      "model_sources": [
+        "system_model/architecture_fast/protocol_service.py",
+        "system_model/connected/protocol_signals.py",
+        "system_model/connected/protocol_pad.py",
+        "system_model/connected/live_wired_lifecycle.py"
+      ]
+    },
+    {
+      "id": "wifi_he20",
+      "scope": "2.4 GHz, one stream, 20 MHz; qualify each MCS",
+      "engine": "rf",
+      "model_status": "phy_primitives",
+      "physical_status": "unqualified",
+      "standards_compliant": false,
+      "pins": [
+        "RF_RX_P",
+        "RF_RX_N",
+        "RF_TX_P",
+        "RF_TX_N"
+      ],
+      "carrier_min_hz": 2412000000,
+      "carrier_max_hz": 2472000000,
+      "channel_bandwidth_max_hz": 20000000,
+      "complex_sample_rate_max_hz": 40000000,
+      "sample_bits_max": 12,
+      "spatial_streams": 1,
+      "host_service": "framed_with_timed_events",
+      "required_gates": [
+        "clock_quality",
+        "loaded_electrical_path",
+        "host_service",
+        "lifecycle",
+        "independent_protocol_waveform",
+        "rf_turnaround",
+        "channel_context_validity",
+        "spectrum_blockers"
+      ],
+      "bandwidth_note": "Model allocation envelope, not regulatory occupied bandwidth or an implemented filter.",
+      "modeled_primitives": [
+        "he20_bpsk_data_symbols",
+        "canonical_rx_waveform_input",
+        "canonical_filter_projection"
+      ],
+      "model_scope": "Partial executable PHY math; no packet interoperability or full-chip closure",
+      "model_sources": [
+        "system_model/architecture_fast/protocol_service.py",
+        "system_model/connected/protocol_signals.py",
+        "system_model/connected/protocol_pad.py"
+      ]
+    },
+    {
+      "id": "bluetooth_le",
+      "scope": "1M, 2M, coded S=2/S=8",
+      "engine": "rf",
+      "model_status": "phy_primitives",
+      "physical_status": "unqualified",
+      "standards_compliant": false,
+      "pins": [
+        "RF_RX_P",
+        "RF_RX_N",
+        "RF_TX_P",
+        "RF_TX_N"
+      ],
+      "carrier_min_hz": 2402000000,
+      "carrier_max_hz": 2480000000,
+      "channel_bandwidth_max_hz": 4000000,
+      "complex_sample_rate_max_hz": 40000000,
+      "sample_bits_max": 12,
+      "spatial_streams": 1,
+      "host_service": "framed_with_timed_events",
+      "required_gates": [
+        "clock_quality",
+        "loaded_electrical_path",
+        "host_service",
+        "lifecycle",
+        "independent_protocol_waveform",
+        "rf_turnaround",
+        "channel_context_validity",
+        "spectrum_blockers"
+      ],
+      "bandwidth_note": "Model allocation envelope, not regulatory occupied bandwidth or an implemented filter.",
+      "modeled_primitives": [
+        "gfsk_1m_2m",
+        "coded_phy_supplied_symbols",
+        "canonical_rx_waveform_input",
+        "channel_context_request"
+      ],
+      "model_scope": "Partial executable PHY math; no packet interoperability or full-chip closure",
+      "model_sources": [
+        "system_model/architecture_fast/protocol_service.py",
+        "system_model/connected/protocol_signals.py",
+        "system_model/connected/protocol_pad.py"
+      ]
+    },
+    {
+      "id": "bluetooth_br_edr",
+      "scope": "BR and 2/3 Mb/s EDR",
+      "engine": "rf",
+      "model_status": "phy_primitives",
+      "physical_status": "unqualified",
+      "standards_compliant": false,
+      "pins": [
+        "RF_RX_P",
+        "RF_RX_N",
+        "RF_TX_P",
+        "RF_TX_N"
+      ],
+      "carrier_min_hz": 2402000000,
+      "carrier_max_hz": 2480000000,
+      "channel_bandwidth_max_hz": 4000000,
+      "complex_sample_rate_max_hz": 40000000,
+      "sample_bits_max": 12,
+      "spatial_streams": 1,
+      "host_service": "framed_with_timed_events",
+      "required_gates": [
+        "clock_quality",
+        "loaded_electrical_path",
+        "host_service",
+        "lifecycle",
+        "independent_protocol_waveform",
+        "rf_turnaround",
+        "channel_context_validity",
+        "spectrum_blockers"
+      ],
+      "bandwidth_note": "Model allocation envelope, not regulatory occupied bandwidth or an implemented filter.",
+      "modeled_primitives": [
+        "br_gfsk",
+        "edr_differential_phase_symbols_rrc",
+        "canonical_rx_waveform_input",
+        "channel_context_request"
+      ],
+      "model_scope": "Partial executable PHY math; no packet interoperability or full-chip closure",
+      "model_sources": [
+        "system_model/architecture_fast/protocol_service.py",
+        "system_model/connected/protocol_signals.py",
+        "system_model/connected/protocol_pad.py"
+      ]
+    },
+    {
+      "id": "ieee802154_24",
+      "scope": "2.4 GHz O-QPSK/DSSS 250 kb/s",
+      "engine": "rf",
+      "model_status": "phy_primitives",
+      "physical_status": "unqualified",
+      "standards_compliant": false,
+      "pins": [
+        "RF_RX_P",
+        "RF_RX_N",
+        "RF_TX_P",
+        "RF_TX_N"
+      ],
+      "carrier_min_hz": 2405000000,
+      "carrier_max_hz": 2480000000,
+      "channel_bandwidth_max_hz": 4000000,
+      "complex_sample_rate_max_hz": 40000000,
+      "sample_bits_max": 12,
+      "spatial_streams": 1,
+      "host_service": "framed_with_timed_events",
+      "required_gates": [
+        "clock_quality",
+        "loaded_electrical_path",
+        "host_service",
+        "lifecycle",
+        "independent_protocol_waveform",
+        "rf_turnaround",
+        "channel_context_validity",
+        "spectrum_blockers"
+      ],
+      "bandwidth_note": "Model allocation envelope, not regulatory occupied bandwidth or an implemented filter.",
+      "modeled_primitives": [
+        "oqpsk_half_sine_supplied_chips",
+        "canonical_rx_waveform_input"
+      ],
+      "model_scope": "Partial executable PHY math; no packet interoperability or full-chip closure",
+      "model_sources": [
+        "system_model/architecture_fast/protocol_service.py",
+        "system_model/connected/protocol_signals.py",
+        "system_model/connected/protocol_pad.py"
+      ]
+    },
+    {
+      "id": "lora_24",
+      "scope": "2.4 GHz chirp spread spectrum; SX1280-class bandwidths",
+      "engine": "rf",
+      "model_status": "phy_primitives",
+      "physical_status": "unqualified",
+      "standards_compliant": false,
+      "pins": [
+        "RF_RX_P",
+        "RF_RX_N",
+        "RF_TX_P",
+        "RF_TX_N"
+      ],
+      "carrier_min_hz": 2400000000,
+      "carrier_max_hz": 2500000000,
+      "channel_bandwidth_max_hz": 1625000,
+      "complex_sample_rate_max_hz": 40000000,
+      "sample_bits_max": 12,
+      "spatial_streams": 1,
+      "host_service": "framed_with_timed_events",
+      "required_gates": [
+        "clock_quality",
+        "loaded_electrical_path",
+        "host_service",
+        "lifecycle",
+        "independent_protocol_waveform",
+        "rf_turnaround",
+        "channel_context_validity",
+        "spectrum_blockers"
+      ],
+      "bandwidth_note": "Model allocation envelope, not regulatory occupied bandwidth or an implemented filter.",
+      "modeled_primitives": [
+        "cyclic_chirp_symbols",
+        "dechirp_fft_observer",
+        "canonical_rx_waveform_input"
+      ],
+      "model_scope": "Partial executable PHY math; no packet interoperability or full-chip closure",
+      "model_sources": [
+        "system_model/architecture_fast/protocol_service.py",
+        "system_model/connected/protocol_signals.py",
+        "system_model/connected/protocol_pad.py"
+      ]
+    },
+    {
+      "id": "dvi_single_link",
+      "scope": "Single-link DVI, 8 bits/color; 720p60 and 1080p60 initial timing targets; three instances plus external clock interface",
+      "engine": "wire",
+      "model_status": "phy_primitives",
+      "physical_status": "unqualified",
+      "standards_compliant": false,
+      "line_rate_bps": 1485000000,
+      "duplex": "simplex",
+      "lanes": 1,
+      "pins": [
+        "WIRE_TX_P",
+        "WIRE_TX_N",
+        "WIRE_RX_P",
+        "WIRE_RX_N"
+      ],
+      "roles": [
+        "source",
+        "sink"
+      ],
+      "host_service": "framed",
+      "required_gates": [
+        "clock_quality",
+        "loaded_electrical_path",
+        "host_service",
+        "lifecycle",
+        "independent_protocol_waveform",
+        "dc_current_sink_electrical",
+        "forwarded_word_clock",
+        "multi_chip_alignment",
+        "external_ddc_hpd",
+        "host_rate_matching"
+      ],
+      "modeled_primitives": [
+        "opaque_10bit_lane_group",
+        "framed_host_capacity",
+        "bounded_lane_skew",
+        "dc_termination_load"
+      ],
+      "model_scope": "Reduced multi-chip PHY math; full TMDS encoding/packets, PLL/electrical transistor qualification and interoperability open",
+      "model_sources": [
+        "system_model/connected/lane_group.py",
+        "verification/protocol_model_check.py",
+        "system_model/architecture_fast/protocol_service.py"
+      ],
+      "line_rates_bps": [
+        742500000,
+        1485000000
+      ],
+      "link_data_lanes": 3,
+      "chip_instances": 3
+    },
+    {
+      "id": "hdmi_tmds",
+      "scope": "HDMI TMDS 8 bits/color; same initial video timing targets; packets/audio in FPGA; three instances plus external clock interface",
+      "engine": "wire",
+      "model_status": "phy_primitives",
+      "physical_status": "unqualified",
+      "standards_compliant": false,
+      "line_rate_bps": 1485000000,
+      "duplex": "simplex",
+      "lanes": 1,
+      "pins": [
+        "WIRE_TX_P",
+        "WIRE_TX_N",
+        "WIRE_RX_P",
+        "WIRE_RX_N"
+      ],
+      "roles": [
+        "source",
+        "sink"
+      ],
+      "host_service": "framed",
+      "required_gates": [
+        "clock_quality",
+        "loaded_electrical_path",
+        "host_service",
+        "lifecycle",
+        "independent_protocol_waveform",
+        "dc_current_sink_electrical",
+        "forwarded_word_clock",
+        "multi_chip_alignment",
+        "external_ddc_hpd",
+        "host_rate_matching"
+      ],
+      "modeled_primitives": [
+        "opaque_10bit_lane_group",
+        "framed_host_capacity",
+        "bounded_lane_skew",
+        "dc_termination_load"
+      ],
+      "model_scope": "Reduced multi-chip PHY math; full TMDS encoding/packets, PLL/electrical transistor qualification and interoperability open",
+      "model_sources": [
+        "system_model/connected/lane_group.py",
+        "verification/protocol_model_check.py",
+        "system_model/architecture_fast/protocol_service.py"
+      ],
+      "line_rates_bps": [
+        742500000,
+        1485000000
+      ],
+      "link_data_lanes": 3,
+      "chip_instances": 3
+    }
+  ],
+  "protocol_profiles_scope": "External FPGA recipes and verification targets only. The chip exposes independent supported configuration combinations, not protocol IDs, roles or named hardware profiles.",
+  "behavioral_configuration_cases": [
+    {
+      "id": "video_74175824.17582418",
+      "engine": "wire",
+      "electrical": "dc_current_sink",
+      "timing": {
+        "line_rate_bps": 741758241.7582418,
+        "clock_source": "forwarded_word",
+        "reference_hz": 74175824.17582418
+      }
+    },
+    {
+      "id": "video_74250000.0",
+      "engine": "wire",
+      "electrical": "dc_current_sink",
+      "timing": {
+        "line_rate_bps": 742500000.0,
+        "clock_source": "forwarded_word",
+        "reference_hz": 74250000.0
+      }
+    },
+    {
+      "id": "video_85500000.0",
+      "engine": "wire",
+      "electrical": "dc_current_sink",
+      "timing": {
+        "line_rate_bps": 855000000.0,
+        "clock_source": "forwarded_word",
+        "reference_hz": 85500000.0
+      }
+    },
+    {
+      "id": "video_108000000.0",
+      "engine": "wire",
+      "electrical": "dc_current_sink",
+      "timing": {
+        "line_rate_bps": 1080000000.0,
+        "clock_source": "forwarded_word",
+        "reference_hz": 108000000.0
+      }
+    },
+    {
+      "id": "video_148351648.35164836",
+      "engine": "wire",
+      "electrical": "dc_current_sink",
+      "timing": {
+        "line_rate_bps": 1483516483.5164835,
+        "clock_source": "forwarded_word",
+        "reference_hz": 148351648.35164836
+      }
+    },
+    {
+      "id": "video_148500000.0",
+      "engine": "wire",
+      "electrical": "dc_current_sink",
+      "timing": {
+        "line_rate_bps": 1485000000.0,
+        "clock_source": "forwarded_word",
+        "reference_hz": 148500000.0
+      }
+    },
+    {
+      "id": "hd_sdi_1485000000.0",
+      "engine": "wire",
+      "electrical": "ac_differential_external_coax_interface",
+      "timing": {
+        "line_rate_bps": 1485000000.0
+      },
+      "external_requirements": [
+        "75-ohm coax driver/equalizer",
+        "FPGA scrambler/framing",
+        "CDR pathological-pattern and jitter qualification"
+      ]
+    },
+    {
+      "id": "hd_sdi_1483516483.5164838",
+      "engine": "wire",
+      "electrical": "ac_differential_external_coax_interface",
+      "timing": {
+        "line_rate_bps": 1483516483.5164838
+      },
+      "external_requirements": [
+        "75-ohm coax driver/equalizer",
+        "FPGA scrambler/framing",
+        "CDR pathological-pattern and jitter qualification"
+      ]
+    },
+    {
+      "id": "wifi_he20__40000000.0",
+      "engine": "rf",
+      "fixture": "wifi_he20",
+      "variant": "",
+      "rf": {
+        "sample_hz": 40000000.0,
+        "tx_cutoff_hz": 20000000.0,
+        "rx_cutoff_hz": 9157407.0,
+        "rx_gain": 1.0,
+        "rx_filter_order": 5
+      }
+    },
+    {
+      "id": "bluetooth_le_1m_10000000.0",
+      "engine": "rf",
+      "fixture": "bluetooth_le",
+      "variant": "1m",
+      "rf": {
+        "sample_hz": 10000000.0,
+        "tx_cutoff_hz": 5000000.0,
+        "rx_cutoff_hz": 1250000.0,
+        "rx_gain": 1.0,
+        "rx_filter_order": 5
+      }
+    },
+    {
+      "id": "bluetooth_le_2m_20000000.0",
+      "engine": "rf",
+      "fixture": "bluetooth_le",
+      "variant": "2m",
+      "rf": {
+        "sample_hz": 20000000.0,
+        "tx_cutoff_hz": 10000000.0,
+        "rx_cutoff_hz": 2000000.0,
+        "rx_gain": 1.0,
+        "rx_filter_order": 5
+      }
+    },
+    {
+      "id": "bluetooth_br_edr_br_10000000.0",
+      "engine": "rf",
+      "fixture": "bluetooth_br_edr",
+      "variant": "br",
+      "rf": {
+        "sample_hz": 10000000.0,
+        "tx_cutoff_hz": 5000000.0,
+        "rx_cutoff_hz": 1000000.0,
+        "rx_gain": 1.0,
+        "rx_filter_order": 5
+      }
+    },
+    {
+      "id": "bluetooth_br_edr_edr2_10000000.0",
+      "engine": "rf",
+      "fixture": "bluetooth_br_edr",
+      "variant": "edr2",
+      "rf": {
+        "sample_hz": 10000000.0,
+        "tx_cutoff_hz": 5000000.0,
+        "rx_cutoff_hz": 1500000.0,
+        "rx_gain": 1.0,
+        "rx_filter_order": 5
+      }
+    },
+    {
+      "id": "bluetooth_br_edr_edr3_10000000.0",
+      "engine": "rf",
+      "fixture": "bluetooth_br_edr",
+      "variant": "edr3",
+      "rf": {
+        "sample_hz": 10000000.0,
+        "tx_cutoff_hz": 5000000.0,
+        "rx_cutoff_hz": 1500000.0,
+        "rx_gain": 1.0,
+        "rx_filter_order": 5
+      }
+    },
+    {
+      "id": "ieee802154_24__10000000.0",
+      "engine": "rf",
+      "fixture": "ieee802154_24",
+      "variant": "",
+      "rf": {
+        "sample_hz": 10000000.0,
+        "tx_cutoff_hz": 5000000.0,
+        "rx_cutoff_hz": 2000000.0,
+        "rx_gain": 1.0,
+        "rx_filter_order": 5
+      }
+    },
+    {
+      "id": "proprietary_gfsk__5000000.0",
+      "engine": "rf",
+      "fixture": "proprietary_gfsk",
+      "variant": "",
+      "rf": {
+        "sample_hz": 5000000.0,
+        "tx_cutoff_hz": 2500000.0,
+        "rx_cutoff_hz": 500000.0,
+        "rx_gain": 1.0,
+        "rx_filter_order": 5
+      },
+      "symbol_rate_hz": 250000.0
+    },
+    {
+      "id": "lora_24__5000000.0",
+      "engine": "rf",
+      "fixture": "lora_24",
+      "variant": "",
+      "rf": {
+        "sample_hz": 5000000.0,
+        "tx_cutoff_hz": 2500000.0,
+        "rx_cutoff_hz": 300000.0,
+        "rx_gain": 1.0,
+        "rx_filter_order": 5
+      },
+      "bandwidth_hz": 203125.0
+    },
+    {
+      "id": "lora_24__10000000.0",
+      "engine": "rf",
+      "fixture": "lora_24",
+      "variant": "",
+      "rf": {
+        "sample_hz": 10000000.0,
+        "tx_cutoff_hz": 5000000.0,
+        "rx_cutoff_hz": 800000.0,
+        "rx_gain": 1.0,
+        "rx_filter_order": 5
+      },
+      "bandwidth_hz": 812500.0
+    },
+    {
+      "id": "gain_0.5",
+      "engine": "rf",
+      "fixture": "bluetooth_le",
+      "variant": "1m",
+      "rf": {
+        "sample_hz": 10000000.0,
+        "tx_cutoff_hz": 5000000.0,
+        "rx_cutoff_hz": 1000000.0,
+        "rx_gain": 0.5,
+        "rx_filter_order": 5
+      }
+    },
+    {
+      "id": "gain_0.75",
+      "engine": "rf",
+      "fixture": "bluetooth_le",
+      "variant": "1m",
+      "rf": {
+        "sample_hz": 10000000.0,
+        "tx_cutoff_hz": 5000000.0,
+        "rx_cutoff_hz": 1000000.0,
+        "rx_gain": 0.75,
+        "rx_filter_order": 5
+      }
+    },
+    {
+      "id": "gain_1.5",
+      "engine": "rf",
+      "fixture": "bluetooth_le",
+      "variant": "1m",
+      "rf": {
+        "sample_hz": 10000000.0,
+        "tx_cutoff_hz": 5000000.0,
+        "rx_cutoff_hz": 1000000.0,
+        "rx_gain": 1.5,
+        "rx_filter_order": 5
+      }
+    },
+    {
+      "id": "gain_2.0",
+      "engine": "rf",
+      "fixture": "bluetooth_le",
+      "variant": "1m",
+      "rf": {
+        "sample_hz": 10000000.0,
+        "tx_cutoff_hz": 5000000.0,
+        "rx_cutoff_hz": 1000000.0,
+        "rx_gain": 2.0,
+        "rx_filter_order": 5
+      }
+    },
+    {
+      "id": "wifi_he20_8bit_20msps_mode1",
+      "engine": "rf",
+      "fixture": "wifi_he20",
+      "variant": "",
+      "rf": {
+        "sample_hz": 20000000.0,
+        "tx_cutoff_hz": 10000000.0,
+        "rx_cutoff_hz": 9157407.0,
+        "rx_gain": 1.0,
+        "rx_filter_order": 5,
+        "converter_bits": 8
+      },
+      "host_mode": 1
+    }
+  ],
+  "generic_configuration_target": {
+    "status": "behavioral_candidate_not_physical_or_ABI_qualification",
+    "wire_rate_range_bps": [
+      480000000.0,
+      2500000000.0
+    ],
+    "forwarded_word_reference_range_hz": [
+      74175824.17582418,
+      148500000.0
+    ],
+    "forwarded_ratio": 10,
+    "rf_sample_rates_hz": [
+      5000000.0,
+      10000000.0,
+      20000000.0,
+      40000000.0
+    ],
+    "rx_filter_cutoff_range_hz": [
+      100000.0,
+      9157407.0
+    ],
+    "rx_gain_range": [
+      0.5,
+      2.0
+    ],
+    "rf_scope": "Existing 2.4 GHz chain; LoRa means 2.4 GHz, not sub-GHz",
+    "cost_policy": "Reuse clock dividers, switched RC filter banks and PGA trims; no extra lane, pins, modem or on-chip resampler; physical area/power delta unestimated",
+    "rx_filter_order": 5
   }
 }

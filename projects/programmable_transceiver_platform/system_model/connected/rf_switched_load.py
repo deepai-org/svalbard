@@ -50,9 +50,54 @@ Detector power and capacitor energy are invariant under the coordinate change.
         if not math.isfinite(dt) or dt<0 or not np.isfinite(source):raise ValueError('Invalid interval/source')
         steady=self.steady(source)
         return steady+expm(self.A*dt)@(self.voltage-steady)
+    def forecast_terms(self,dt,terms):
+        """Exact fixed-topology linear response to sum(a*exp(rate*t)).
+
+        Coefficients are relative to this state's time. This only projects the
+        passive network; supply feedback and driver consumption are not removed.
+        """
+        if not math.isfinite(dt) or dt<0 or not terms:
+            raise ValueError('Finite nonnegative interval and nonempty source required')
+        if any(not np.isfinite(a) or not np.isfinite(r) for a,r in terms):
+            raise ValueError('Finite source coefficients required')
+        poles,basis=np.linalg.eig(self.A)
+        initial=np.linalg.solve(basis,self.voltage)
+        forcing=np.linalg.solve(basis,np.linalg.solve(self.C,np.array([1/50,0,0,0],complex)))
+        decay=np.exp(poles*dt);modal=initial*decay
+        for amplitude,rate in terms:
+            delta=rate-poles;z=delta*dt
+            factor=np.empty(4,complex)
+            small=abs(z)<1e-5
+            # Series handles coincident source and network poles, including dt=0.
+            factor[small]=dt*decay[small]*(1+z[small]/2+z[small]**2/6+z[small]**3/24)
+            factor[~small]=(np.exp(rate*dt)-decay[~small])/delta[~small]
+            modal+=amplitude*forcing*factor
+        result=basis@modal
+        if not np.all(np.isfinite(result)):raise ValueError('Nonfinite projected voltage')
+        return result
+
     def advance(self,time,source):
         self.voltage=self.forecast(time-self.time,source);self.time=time
         return self.voltage.copy()
+    def project_samples(self,samples,sample_hz,node=1):
+        """Exact frozen-topology ZOH endpoint response, without live mutation."""
+        from scipy.signal import lfilter
+        values=np.asarray(samples,complex)
+        if values.ndim!=1 or not len(values) or not np.all(np.isfinite(values)):
+            raise ValueError('Finite nonempty envelope samples required')
+        if not math.isfinite(sample_hz) or sample_hz<=0 or type(node) is not int or not 0<=node<4:
+            raise ValueError('Positive sample rate and physical network node required')
+        poles,basis=np.linalg.eig(self.A)
+        initial=np.linalg.solve(basis,self.voltage)
+        forcing=np.linalg.solve(basis,np.linalg.solve(self.C,np.array([1/50,0,0,0],complex)))
+        result=np.zeros_like(values)
+        for i,pole in enumerate(poles):
+            decay=np.exp(pole/sample_hz)
+            modal,_=lfilter([forcing[i]*np.expm1(pole/sample_hz)/pole],[1,-decay],values,
+                zi=[decay*initial[i]])
+            result+=basis[node,i]*modal
+        return result
+
     def energy(self,voltage=None):
         v=self.voltage if voltage is None else voltage
         return float(np.vdot(v,self.C@v).real/2)

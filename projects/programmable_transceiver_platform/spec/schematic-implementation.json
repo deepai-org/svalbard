@@ -290,7 +290,38 @@
       "status": "missing",
       "source_paths": [],
       "gap": "RF, wired, timing, converters, bias, pads and controls not connected into a complete schematic."
+    },
+    {
+      "id": "usb_shared_serial_pad",
+      "status": "not_implemented",
+      "source_paths": [],
+      "remaining": "Implement local HS/FS/LS driver, receivers, pulls, termination and isolation on WIRE_RX_P/N; include off-state capacitance in serial RX, current in wired rails and reset/power-off behavior."
+    },
+    {
+      "id": "protocol_timing_and_rf_contexts",
+      "status": "not_implemented",
+      "source_paths": [],
+      "remaining": "Rate-selectable serial synthesis/CDR, pre-lock envelope detection, bounded line-state timing, RF filter/gain settings and retained channel contexts with settling and current budgets."
     }
   ],
-  "last_evidence_review_pass": 501
+  "last_evidence_review_pass": 501,
+  "multi_chip_video_requirements": {
+    "status": "not_implemented",
+    "reuse": [
+      "wired current steering TX",
+      "RX sampler and switched termination",
+      "wire PLL/divider and REF_IN"
+    ],
+    "extensions": [
+      "DC current sink compliance and high common-mode RX",
+      "Per-leg 50 ohm termination to 3.3 V with isolation from AC mode",
+      "74.25/148.5 MHz forwarded reference and deterministic x10 word phase"
+    ],
+    "external": [
+      "three-chip deskew and TMDS encoding in FPGA",
+      "TMDS clock driver/receiver and DDC/HPD protection"
+    ],
+    "new_signal_pins": 0,
+    "new_on_chip_protocol_logic": false
+  }
 }

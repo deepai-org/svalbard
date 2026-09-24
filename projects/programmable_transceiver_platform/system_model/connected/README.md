@@ -1,11 +1,14 @@
-# Connected behavioral platform — incremental implementation
+# Supporting connected models and historical experiments
 
-Start with [the executable architecture and closure checklist](ARCHITECTURE.md).
+For current work, use the [active model guide](../architecture_fast/README.md).
+The compositions and pass-number notes below are supporting historical evidence,
+not the current project status. [ARCHITECTURE.md](ARCHITECTURE.md) describes this
+earlier connected implementation.
 `python3 projects/programmable_transceiver_platform/system_model/connected/run_architecture.py`
 runs the connected regression suite and writes a fresh hashed evidence manifest.
 The historical notes below are retained; a passing suite is not full architecture closure.
 
-## Current status (pass 674)
+## Historical status (pass 674)
 
 The executable connects host framing and finite queues, paced DAC/serializer
 consumption, wired channel and transition-based clock recovery, RF DAC holds,

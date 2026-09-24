@@ -114,6 +114,43 @@ def independent_rx_reference(data):
         *cmath.exp(2j*math.pi*hz*t) for real,imag,hz in tones) for t in times]
 
 
+def independent_rx_nominal_grid(data):
+    """Reference a receiver's fixed sample cadence, anchored only at sample zero."""
+    import math
+    times=[row['time_s'] for row in data['observations']]
+    rate=float(data['sample_rate_hz'])
+    if not math.isfinite(rate) or rate<=0 or len(times)<2:
+        raise ValueError('Finite positive cadence and multiple observations required')
+    if any(not math.isfinite(t) for t in times) or any(b<=a for a,b in zip(times,times[1:])):
+        raise ValueError('Observation times must be finite and increasing')
+    grid=[times[0]+i/rate for i in range(len(times))]
+    reference=dict(data,observations=[dict(time_s=t) for t in grid])
+    errors=[actual-ideal for actual,ideal in zip(times,grid)]
+    return independent_rx_reference(reference),dict(
+        maximum_absolute_time_error_s=max(abs(e) for e in errors),
+        rms_time_error_s=math.sqrt(sum(e*e for e in errors)/len(errors)),
+        final_time_error_s=errors[-1],nominal_sample_rate_hz=rate,
+        scope='First-sample epoch only; no rate, phase trajectory or sample-time fit. Finite diagnostic, not jitter qualification.')
+
+
+def nominal_tx_reference(data):
+    """Keep receiver observation times but prescribe the transmitter cadence."""
+    import math
+    played=data['played'];rate=float(data['sample_rate_hz'])
+    if len(played)<2 or not math.isfinite(rate) or rate<=0:
+        raise ValueError('Finite positive TX cadence and multiple samples required')
+    times=[row[0] for row in played]
+    if any(not math.isfinite(t) for t in times) or any(b<=a for a,b in zip(times,times[1:])):
+        raise ValueError('TX update times must be finite and increasing')
+    grid=[times[0]+i/rate for i in range(len(times))]
+    fixed=dict(data,played=[[t,*row[1:]] for t,row in zip(grid,played)])
+    errors=[a-b for a,b in zip(times,grid)]
+    return coupled_linear_reference(fixed)[1],dict(
+        maximum_absolute_time_error_s=max(abs(e) for e in errors),
+        rms_time_error_s=math.sqrt(sum(e*e for e in errors)/len(errors)),
+        scope='Nominal TX update cadence anchored at first update; no rate or time-varying timing fit.')
+
+
 def independent_rx_reference_controls():
     """Check frequency response against a separately integrated serial filter."""
     import cmath,math
@@ -121,7 +158,7 @@ def independent_rx_reference_controls():
     from scipy.integrate import solve_ivp
     times=[3e-6+i/20e6 for i in range(32)]
     tones=[[.18,0.,2.5e6],[.04,0.,7.5e6]]
-    data=dict(rx_gain=2.,capture_gain=.5,observations=[dict(time_s=t) for t in times],
+    data=dict(rx_gain=2.,capture_gain=.5,sample_rate_hz=20e6,observations=[dict(time_s=t) for t in times],
         independent_rx=dict(enabled_time_s=0.,tones=tones,target_hz=2437e6,envelope_frame_hz=2400e6))
     expected=independent_rx_reference(data)
     poles=np.array([-2*math.pi*9157407.055691985*cmath.exp(
@@ -137,8 +174,30 @@ def independent_rx_reference_controls():
     # A receiver tracking its own loopback cannot stand in for this input.
     wrong=[z*cmath.exp(2j*math.pi*1e6*(t-times[0])) for z,t in zip(expected,times)]
     assert not quality(expected,wrong)['screen_pass']
-    return dict(maximum_serial_filter_ode_error=float(error),
+    nominal,timing=independent_rx_nominal_grid(data)
+    assert quality(nominal,expected)['screen_pass']
+    disturbed=dict(data,observations=[dict(time_s=t+(20e-9 if i>=8 else 0.))
+        for i,t in enumerate(times)])
+    actual=independent_rx_reference(disturbed)
+    fixed,timing=independent_rx_nominal_grid(disturbed)
+    assert quality(independent_rx_reference(disturbed),actual)['screen_pass']
+    assert not quality(fixed,actual)['screen_pass']
+    return dict(nominal_grid_validation_timing_error_rejected=True,
+        injected_validation_delay_s=20e-9,maximum_serial_filter_ode_error=float(error),
         wrong_carrier_rejected=True,physical_qualification=False)
+
+
+def rx_calibration_status(record):
+    """Completion is not an accuracy claim; preserve the controller's result."""
+    rows=record.get('rx_calibration') or []
+    targets=[row.get('target') for row in rows]
+    complete=sorted(targets)==[0,1] if all(type(t) is int for t in targets) else False
+    results=[row.get('result',{}) for row in rows]
+    done=complete and all(r.get('done') is True for r in results)
+    valid=done and all(r.get('valid') is True and r.get('accuracy')=='verified' for r in results)
+    return dict(both_targets_completed=done,both_targets_qualified=valid,
+        targets=[dict(target=row.get('target'),result=row.get('result')) for row in rows],
+        scope='Controller observation-bound claims only; not independent physical calibration qualification.')
 
 
 def coupled_record_quality(path):
@@ -167,6 +226,10 @@ def coupled_record_quality(path):
         for z,row in zip(data['pad_iq'],observations)]
     if len(measured_tx)!=len(tx):raise ValueError('Unaligned pad observations')
     rx_quality=quality(rx,measured_rx);tx_quality=quality(tx,measured_tx)
+    nominal_rx_quality=None;sample_timing=None
+    if data.get('independent_rx'):
+        nominal_rx,sample_timing=independent_rx_nominal_grid(data)
+        nominal_rx_quality=quality(nominal_rx,measured_rx)
     # Pad voltages are already envelopes in the fixed rf_carrier frame (see
     # LoadedOutputChip.output_source_terms). Do not remove the DUT oscillator's
     # phase when judging transmission against an independent receiver.
@@ -177,19 +240,31 @@ def coupled_record_quality(path):
     tx_fixed_carrier=quality(tx,fixed_carrier_envelope(
         [complex(*z) for z in data['pad_iq']],
         [row['time_s'] for row in observations],ideal_offset_hz))
+    nominal_tx,tx_sample_timing=nominal_tx_reference(data)
+    tx_nominal_grid=quality(nominal_tx,fixed_carrier_envelope(
+        [complex(*z) for z in data['pad_iq']],
+        [row['time_s'] for row in observations],ideal_offset_hz))
+    reference_clock=record.get('reference_converter_clock',False)
+    if type(reference_clock) is not bool:raise ValueError('Invalid converter-clock declaration')
+    clock_limit=('Candidate REF_IN-derived converter edges use coupled endpoint rail forecasts; input jitter, branch-delay variation, slew bounds and sustained aperture quality remain unqualified.'
+        if reference_clock else 'Converter deadlines use a separate linear-clock snapshot; RF PLL noise and coupled rails do not establish ADC/DAC aperture timing.')
     # An error confined to validation samples must not be absorbed by the fit.
     corrupted=[v if i<8 else -v for i,v in enumerate(rx)]
     assert not quality(rx,corrupted)['screen_pass']
     report=dict(status='passed' if all(q['screen_pass'] for q in
-        (rx_quality,tx_quality,tx_fixed_carrier)) else 'failed',
+        ([rx_quality,tx_quality,tx_fixed_carrier,tx_nominal_grid]+([nominal_rx_quality] if nominal_rx_quality is not None else []))) else 'failed',
         payload_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+        rx_calibration=rx_calibration_status(record),
+        converter_clock='reference_candidate' if reference_clock else 'linear_snapshot',
+        tx_nominal_grid=tx_nominal_grid,tx_sample_timing=tx_sample_timing,
         reference_code_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         reference_controls=coupled_reference_controls(data.get('bits_per_component',12),data['sample_rate_hz'],data.get('capture_gain',1.)),rx=rx_quality,tx=tx_quality,
-        tx_fixed_carrier=tx_fixed_carrier,rx_source='independent_tones' if data.get('independent_rx') else 'internal_loopback',ideal_carrier_hz=2437e6,
+        rx_nominal_grid=nominal_rx_quality,sample_timing=sample_timing,tx_fixed_carrier=tx_fixed_carrier,rx_source='independent_tones' if data.get('independent_rx') else 'internal_loopback',ideal_carrier_hz=2437e6,
         envelope_frame_hz=2400e6,physical_qualification=False,full_chip_closure=False,
         limitations=['32 samples, with eight fitting and 24 validation samples; no sustained or modem qualification.',
+            clock_limit,
             'Linear modal reconstruction, finite output load and receive filter at nominal 2.437 GHz; zero initial state after the diagnostic settling interval is assumed.',
-            'Uses recorded event times but desired digital samples, not fitted nonlinear DAC values; sample-clock error relative to an ideal schedule remains unqualified.',
+            'Uses recorded event times but desired digital samples, not fitted nonlinear DAC values; independent RX additionally requires a fixed nominal-grid comparison. TX timing and sustained sampling-clock qualification remain open.',
             'tx removes saved shared-LO phase to isolate conversion distortion; tx_fixed_carrier retains oscillator error and is also required to pass. Only one constant complex gain is fitted; no frequency or time-varying phase correction.',
             ('RX uses independently generated tones; this finite record does not establish wideband modem, blocker or noise performance.' if data.get('independent_rx') else 'RX is internal loopback and can cancel shared oscillator error; independent external reception and declared phase-noise bounds remain open.'),
             'Fixed profile reference must be revisited if topology, gain, carrier or sample format changes.'])
@@ -211,7 +286,7 @@ def coupled_reference_controls(bits=12,sample_rate_hz=40e6,capture_gain=1.):
     class LinearLaw(DriverSupplyLaw):
         def source(self,command,rail):return command
     values=[.18*cmath.exp(2j*math.pi*i/16)+.04*cmath.exp(2j*math.pi*i/4) for i in range(32)]
-    data=dict(desired_iq=[[z.real,z.imag] for z in values],rx_gain=2.,bits_per_component=bits,capture_gain=capture_gain,
+    data=dict(desired_iq=[[z.real,z.imag] for z in values],sample_rate_hz=sample_rate_hz,rx_gain=2.,bits_per_component=bits,capture_gain=capture_gain,
         played=[[20e-9+i/sample_rate_hz,0.,0.] for i in range(32)],
         observations=[dict(time_s=10e-9+i/sample_rate_hz) for i in range(32)])
     expected_rx,expected_tx=coupled_linear_reference(data)
@@ -247,7 +322,13 @@ def coupled_reference_controls(bits=12,sample_rate_hz=40e6,capture_gain=1.):
     assert quality(expected_tx,fixed_carrier_envelope(laboratory,times,37e6))['screen_pass']
     disturbed_lab=[z*cmath.exp(1j*p) for z,p in zip(laboratory,phase)]
     assert not quality(expected_tx,fixed_carrier_envelope(disturbed_lab,times,37e6))['screen_pass']
-    return dict(samples=32,maximum_rx_ode_error=rx_error,maximum_tx_ode_error=tx_error,
+    delayed=dict(data,played=[[t+(.4/sample_rate_hz if i>=8 else 0.),a,b]
+        for i,(t,a,b) in enumerate(data['played'])])
+    actual_delayed=coupled_linear_reference(delayed)[1]
+    nominal_delayed,_=nominal_tx_reference(delayed)
+    assert quality(actual_delayed,actual_delayed)['screen_pass']
+    assert not quality(nominal_delayed,actual_delayed)['screen_pass']
+    return dict(tx_validation_timing_error_rejected=True,samples=32,maximum_rx_ode_error=rx_error,maximum_tx_ode_error=tx_error,
         validation_only_error_rejected=True,shared_lo_hidden_phase_error_rejected=True,
         physical_qualification=False)
 

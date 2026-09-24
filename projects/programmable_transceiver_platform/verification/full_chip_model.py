@@ -4,10 +4,14 @@ This is a conditional design model, not a physically qualified implementation.
 All canonical scenarios must construct this composition rather than substitute
 an older class or disable the coupled analog owner.
 """
+import hashlib
+import json
+from check_contract import CONTRACT, check_protocol_profiles
 from fast_exclusive_engine import IntegratedTransceiverChip
 from shared_supply_lifecycle import DomainSupply
 from oscillator_noise import FrequencyNoise
 from host_bank_supply import LimitedHostBankSupply
+from protocol_service import ProtocolService
 
 MODEL_ID = 'exclusive-coupled-domains-host-v1'
 DOMAINS = ('CORE', 'HOST_A', 'HOST_B', 'WIRE_A', 'WIRE_B', 'RF', 'PLL')
@@ -18,8 +22,13 @@ BACKGROUND_A = {
 }
 
 
+def protocol_requirements():
+    return check_protocol_profiles(json.loads(CONTRACT.read_text()))
+
+
 def parameters():
-    return dict(model_id=MODEL_ID, domains=list(DOMAINS), nominal_v=3.3,
+    return dict(protocol_profiles=protocol_requirements(),
+        contract_sha256=hashlib.sha256(CONTRACT.read_bytes()).hexdigest(),model_id=MODEL_ID, domains=list(DOMAINS), nominal_v=3.3,
         feed_r_ohm=2., decoupling_f=100e-12, common_return_r_ohm=.1,
         minimum_supply_v=2.5, background_current_a=BACKGROUND_A,
         host_output_capacitance_f=10e-12, host_pullup_r_ohm=100.,
@@ -38,8 +47,15 @@ def parameters():
             '150 MHz exclusive transport remains a separate candidate, not an installed model option.'])
 
 
-def make_chip(*, rf_noise_rms_hz=0.):
+def make_chip(*, rf_noise_rms_hz=0., protocol=None, rf_solver_method="Radau"):
     """One physical-resource composition; scenarios may vary declared noise."""
+    profiles = protocol_requirements()
+    if protocol is not None:
+        selected = next((p for p in profiles if p['id'] == protocol), None)
+        if selected is None:
+            raise ValueError('Unknown protocol profile')
+        if selected["model_status"] != "phy_primitives":
+            raise NotImplementedError(f"{protocol}: no executable profile primitives")
     noise=FrequencyNoise.seeded(rf_noise_rms_hz,seed=839)
     host=LimitedHostBankSupply([3.3]*7,[2.]*7,[100e-12]*7,.1,
         [1]*5+[2]*6,[10e-12]*11,[100.]*11,[80.]*11,
@@ -49,7 +65,7 @@ def make_chip(*, rf_noise_rms_hz=0.):
     holder={}
     def load(time,voltage):
         return BACKGROUND_A[holder['chip'].active_engine]
-    c=IntegratedTransceiverChip(coupled_analog=True,
+    c=IntegratedTransceiverChip(coupled_analog=True,rf_solver_method=rf_solver_method,
         domain_supply=DomainSupply(DOMAINS,[3.3]*7,[2.]*7,[100e-12]*7,.1),
         domain_minimum_v=[2.5]*7,domain_load=load,host_bank=host,
         charge_per_transition=50e-15,return_charge_per_transition=0.,
@@ -59,5 +75,8 @@ def make_chip(*, rf_noise_rms_hz=0.):
         rf_noise_rms_hz=rf_noise_rms_hz,noise_seed=839,
         coarse_noise_bound_hz=noise.bound_hz)
     holder['chip']=c
+    c.protocol_requirements=profiles
+    c.protocol_service=ProtocolService(c,profiles)
+    if protocol is not None:c.protocol_service.select(protocol)
     c.model_id=MODEL_ID
     return c

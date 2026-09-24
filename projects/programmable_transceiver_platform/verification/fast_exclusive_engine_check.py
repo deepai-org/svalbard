@@ -183,22 +183,24 @@ def install_independent_rx(c):
         envelope_frame_hz=c.rf_carrier,testbench_route_selection=True)
 
 
-def coupled_acquisition_screen(payload=False,domains=False,mode=0,independent_rx=False,noise_rms_hz=0.,physical_host=False,canonical=False):
+def coupled_acquisition_screen(payload=False,domains=False,mode=0,independent_rx=False,noise_rms_hz=0.,physical_host=False,canonical=False,reference_converter_clock=False):
     import time
     if not math.isfinite(noise_rms_hz) or noise_rms_hz<0:raise ValueError('Invalid RF noise')
     if (independent_rx or noise_rms_hz) and not (payload and domains):
         raise ValueError('Independent/noisy RF screen requires domain payload')
+    if reference_converter_clock and not canonical:raise ValueError('Reference converter candidate requires canonical RF screen')
     if canonical and not physical_host:raise ValueError('Canonical model requires explicit host bank')
     if physical_host and not (payload and domains):raise ValueError('Host bank requires domain payload')
     start=time.monotonic()
-    files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py',P/'verification/host_bank_supply.py',P/'verification/full_chip_model.py']
+    files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py',P/'verification/host_bank_supply.py',P/'verification/full_chip_model.py',P/'verification/check_contract.py',P/'spec/contract.json']
     hashes={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
     output=P/(('evidence/fast-domain-rf-mode1-payload.json' if mode==1 else 'evidence/fast-domain-rf-payload.json') if domains else 'evidence/fast-coupled-rf-calibrated-payload.json' if payload else 'evidence/fast-coupled-acquisition.json')
     if independent_rx or noise_rms_hz:
         output=P/f'evidence/fast-domain-rf-{"external" if independent_rx else "loopback"}-mode{mode}-noise{noise_rms_hz:g}-payload.json'
     if physical_host:output=output.with_name(output.name.replace('fast-domain-rf','fast-host-bank-rf'))
     if canonical:output=output.with_name(output.name.replace('fast-host-bank-rf','canonical-rf'))
-    progress=dict(status='running',stage='acquisition',source_sha256=hashes,
+    if reference_converter_clock:output=output.with_name(output.stem+'-reference-clock.json')
+    progress=dict(status='running',stage='acquisition',source_sha256=hashes,reference_converter_clock=reference_converter_clock,
         full_chip_closure=False,physical_qualification=False)
     def save():output.write_text(json.dumps(progress,indent=2)+'\n')
     save()
@@ -228,6 +230,7 @@ def coupled_acquisition_screen(payload=False,domains=False,mode=0,independent_rx
     if canonical:
         from full_chip_model import make_chip
         c=make_chip(rf_noise_rms_hz=noise_rms_hz)
+        if reference_converter_clock:c.enable_reference_converter_clock()
     else:
         c=IntegratedTransceiverChip(coupled_analog=True,rf_hz_per_v=1e6,watchdog_s=1e-3,tx_relative_gain=payload,
             rf_noise_rms_hz=noise_rms_hz,noise_seed=839,coarse_noise_bound_hz=noise.bound_hz,**options)
@@ -308,7 +311,7 @@ def coupled_acquisition_screen(payload=False,domains=False,mode=0,independent_rx
         full_chip_closure=False,physical_qualification=False,
         limitations=['One RF carrier acquisition with assumed 1 MHz/V rail sensitivity.',
             'Optional payload is a 32-sample diagnostic; held-out signal quality, full lifecycle and physical qualification remain open.'])
-    files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py',P/'verification/host_bank_supply.py',P/'verification/full_chip_model.py']
+    files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py',P/'verification/host_bank_supply.py',P/'verification/full_chip_model.py',P/'verification/check_contract.py',P/'spec/contract.json']
     report['source_sha256']=hashes
     if domains:
         import numpy as np
@@ -331,6 +334,7 @@ def coupled_acquisition_screen(payload=False,domains=False,mode=0,independent_rx
     if canonical:
         from full_chip_model import parameters
         report['canonical_model']=parameters()
+        report['reference_converter_clock']=reference_converter_clock
     output.write_text(json.dumps(report,indent=2)+'\n')
     print({k:v for k,v in report.items() if k not in ('source_sha256','acquisition')},flush=True)
 
@@ -338,7 +342,7 @@ def coupled_wire_screen(domains=False, physical_host=False, canonical=False):
     import time
     if canonical and not physical_host:raise ValueError('Canonical model requires explicit host bank')
     if physical_host and not domains:raise ValueError('Physical host requires domains')
-    files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py',P/'verification/host_bank_supply.py',P/'verification/full_chip_model.py']
+    files=list((P/'system_model/connected').glob('*.py'))+list((P/'system_model/architecture_fast').glob('*.py'))+[Path(__file__),P/'verification/fast_loaded_output.py',P/'verification/fast_exclusive_engine.py',P/'verification/host_bank_supply.py',P/'verification/full_chip_model.py',P/'verification/check_contract.py',P/'spec/contract.json']
     hashes={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
     rows=[];started=time.monotonic()
     for mode in (0,1):
@@ -420,6 +424,8 @@ def main():
     parser=argparse.ArgumentParser();parser.add_argument('--power-gated',action='store_true')
     parser.add_argument('--integrated',action='store_true')
     parser.add_argument('--canonical',action='store_true')
+    parser.add_argument('--detailed',action='store_true',help='Explicitly permit expensive coupled acquisition/transient runs')
+    parser.add_argument('--reference-converter-clock',action='store_true')
     parser.add_argument('--domain-chip-screen',action='store_true')
     parser.add_argument('--domain-wire-screen',action='store_true')
     parser.add_argument('--host-bank-wire-screen',action='store_true')
@@ -433,13 +439,16 @@ def main():
     parser.add_argument('--coupled-wire-screen',action='store_true')
     parser.add_argument('--coupled-rf-payload-screen',action='store_true')
     args=parser.parse_args()
+    if not args.detailed and any((args.canonical,args.domain_chip_screen,args.domain_wire_screen,args.host_bank_wire_screen,args.domain_rf_screen,args.coupled_analog_screen,args.coupled_acquisition_screen,args.coupled_wire_screen,args.coupled_rf_payload_screen)):
+        parser.error('Coupled transient screens require --detailed; use make transceiver-math-fast for bounded iteration')
     if args.canonical and not (args.host_bank_wire_screen or (args.domain_rf_screen and args.host_bank_rf)):
         parser.error('--canonical requires host-bank wired or RF screen')
+    if args.reference_converter_clock and not (args.canonical and args.domain_rf_screen):parser.error('Reference converter clock requires canonical RF screen')
     if args.host_bank_rf and not args.domain_rf_screen:parser.error('--host-bank-rf requires --domain-rf-screen')
     if (args.independent_rx or args.rf_noise_rms_hz) and not args.domain_rf_screen:
         parser.error('Independent input/noise options require --domain-rf-screen')
     if args.domain_rf_screen:return coupled_acquisition_screen(payload=True,domains=True,mode=args.rf_mode,
-        independent_rx=args.independent_rx,noise_rms_hz=args.rf_noise_rms_hz,physical_host=args.host_bank_rf,canonical=args.canonical)
+        independent_rx=args.independent_rx,noise_rms_hz=args.rf_noise_rms_hz,physical_host=args.host_bank_rf,canonical=args.canonical,reference_converter_clock=args.reference_converter_clock)
     if args.host_bank_wire_screen:return coupled_wire_screen(domains=True,physical_host=True,canonical=args.canonical)
     if args.domain_wire_screen:return coupled_wire_screen(domains=True)
     if args.domain_chip_screen:

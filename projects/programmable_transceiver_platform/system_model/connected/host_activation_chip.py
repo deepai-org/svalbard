@@ -27,7 +27,7 @@ class HostActivationChip(CoarseRetuningChip):
                 if self.state!='active' or self.decoder is not None or self.tx.queue or self.wire_queue or self.adc_left or self.adc_pending or self.wire_remaining:
                     raise ValueError('Host training needs idle active clocks')
                 if self.receiver.pos:raise ValueError('Host training needs a frame boundary')
-                self.host_activation.start(self.session.mode,time,self.epoch,self.receiver.sequence)
+                self.host_activation.start(self.session.mode,time,self.epoch,self.receiver.sequence,self.host_frame_words)
                 return {}
             if operation=='host_train_status':
                 a=self.host_activation

@@ -87,6 +87,8 @@ class ManagedChip(EqualizerControls,ExternalChip):
             candidate=copy.copy(self);start=time+delay*self.control_period
             if flags&1:candidate.schedule(count,start)
             if flags&2:candidate.capture(count,start+self.local_rx_offset_s)
+            planner=getattr(candidate,'plan_local_converter_clocks',None)
+            if planner is not None:planner(start,self.local_rx_offset_s,flags)
             self.__dict__.update(candidate.__dict__)
             return dict(value=count|(flags<<16))
         elif operation=='read_capture':

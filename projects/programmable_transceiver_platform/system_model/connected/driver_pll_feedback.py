@@ -54,7 +54,7 @@ def advance_feedback(driver,pll,end,source_terms,hz_per_v,step_s):
 
 
 def forecast_trajectory_feedback(driver,pll,end,source_terms,hz_per_v,step_s,
-                                 phase_tolerance=1e-9,rail_tolerance=1e-8,max_iterations=12,receive_transform=None):
+                                 phase_tolerance=1e-9,rail_tolerance=1e-8,max_iterations=12,receive_transform=None,inactive_rf=False,quiet_rf=False,solver_method="Radau"):
     """Iterate rail -> PLL phase -> loaded RF until the interval agrees.
 
     Returns candidate states without mutating either caller. Source terms are
@@ -71,6 +71,17 @@ def forecast_trajectory_feedback(driver,pll,end,source_terms,hz_per_v,step_s,
     if type(max_iterations) is not int or max_iterations<2:raise ValueError('At least two feedback iterations required')
     if not source_terms or any(not np.isfinite(a) or not np.isfinite(r) for a,r in source_terms):
         raise ValueError('Finite nonempty source terms required')
+    if quiet_rf:
+        if any(a!=0 for a,_ in source_terms) or not zero_rf_state(driver):
+            raise ValueError('Quiet powered RF requires zero source and signal state')
+        local,clock=forecast_inactive_rf(driver,pll,end,hz_per_v,step_s,quiet_powered=True)
+        return local,clock,dict(iterations=1,rail_residual_v=0.,phase_residual_cycles=0.,
+                               step_s=step_s,quiet_powered_rf=True)
+    if inactive_rf:
+        if any(a!=0 for a,_ in source_terms):raise ValueError('Inactive RF requires zero source')
+        local,clock=forecast_inactive_rf(driver,pll,end,hz_per_v,step_s)
+        return local,clock,dict(iterations=1,rail_residual_v=0.,phase_residual_cycles=0.,
+                               step_s=step_s,rf_inactive=True)
     start=driver.time;carrier=driver.network.omega/(2*math.pi)
     times=np.linspace(start,end,max(1,math.ceil((end-start)/step_s))+1)
     domains=getattr(driver,'domains',None)
@@ -88,6 +99,7 @@ def forecast_trajectory_feedback(driver,pll,end,source_terms,hz_per_v,step_s,
         local=copy.copy(driver)
         if domains is not None:local.domains=copy.deepcopy(domains)
         local.host_bank=copy.deepcopy(getattr(driver,'host_bank',None))
+        local.pad_branch=copy.deepcopy(getattr(driver,'pad_branch',None))
         local.network=copy.deepcopy(driver.network)
         local.detector=copy.copy(driver.detector) if driver.detector is not None else None
         local.reference=copy.copy(driver.reference) if driver.reference is not None else None
@@ -96,7 +108,7 @@ def forecast_trajectory_feedback(driver,pll,end,source_terms,hz_per_v,step_s,
         def command(t):
             return sum(a*np.exp(r*(t-start)) for a,r in source_terms)*np.exp(1j*angle(t))
         local.receive=lambda t,pad:(receive_transform(t,pad,angle(t)) if receive_transform is not None else pad*np.exp(-1j*angle(t)))
-        local.advance(end,command,rail_trace_step_s=step_s,rtol=1e-10,atol=1e-13)
+        local.advance(end,command,rail_trace_step_s=step_s,rtol=1e-10,atol=1e-13,solver_method=solver_method)
         trace=local.domain_trajectories['PLL'] if domains is not None else local.rail_trajectory
         new_rail=np.asarray(trace.deltas)
         rail_error=float(np.max(abs(new_rail-rail)))
@@ -106,3 +118,40 @@ def forecast_trajectory_feedback(driver,pll,end,source_terms,hz_per_v,step_s,
                 phase_residual_cycles=phase_error,step_s=step_s)
         previous_phase=phase;rail=new_rail
     raise ValueError('Coupled rail/PLL interval did not converge')
+
+
+def inactive_rf_solver(driver):
+    """Explicit solve only on an exactly dormant RF invariant subspace.
+
+    forecast_inactive_rf also replaces receive forcing with zero. Any retained
+    RF charge, filter/detector history or enabled driver keeps the stiff solver.
+    """
+    return 'RK45' if not driver.driver_enabled and zero_rf_state(driver) else 'Radau'
+
+
+def zero_rf_state(driver):
+    return (all(v==0 for v in driver.network.voltage) and
+        (driver.rx_bank is None or all(v==0 for v in driver.rx_bank['states'])) and
+        (driver.detector is None or (driver.detector.value==0 and driver.detector.readout_value==0)))
+
+
+def forecast_inactive_rf(driver,pll,end,hz_per_v,step_s,*,quiet_powered=False):
+    from autonomous_pll import SupplyTrajectory
+    if quiet_powered and not zero_rf_state(driver):
+        raise ValueError("Quiet powered forecast requires zero RF states")
+    if not quiet_powered and (pll.powered or driver.driver_enabled):
+        raise ValueError('RF clock and driver must both be disabled')
+    if (driver.time!=pll.time or not all(math.isfinite(x) for x in (end,hz_per_v,step_s))
+            or end<=driver.time or step_s<=0):
+        raise ValueError('Aligned positive forecast interval required')
+    local=copy.copy(driver)
+    for name in ('domains','host_bank','pad_branch','network','rx_bank'):
+        setattr(local,name,copy.deepcopy(getattr(driver,name)))
+    for name in ('detector','reference'):
+        setattr(local,name,copy.copy(getattr(driver,name)))
+    local.receive=lambda t,pad:0j
+    local.advance(end,lambda t:0j,rail_trace_step_s=step_s,rtol=1e-10,atol=1e-13,solver_method="RK45" if quiet_powered else inactive_rf_solver(local))
+    trace=local.domain_trajectories['PLL'] if local.domains is not None else local.rail_trajectory
+    clock=copy.copy(pll)
+    clock.set_supply_trajectory(trace,hz_per_v);clock.advance(end)
+    return local,clock

@@ -1,7 +1,7 @@
 """Causal one-zero/one-pole receiver equalization feeding both crossing and data detectors."""
 import json,math
 from chip_model import P
-from live_wired_lifecycle import LiveReceiver
+from live_wired_lifecycle import LiveReceiver,ForwardedReceiver
 from wired_idle_lifecycle import IdleWireChip
 from sustained_lifecycle import run
 
@@ -56,6 +56,8 @@ class EqualizerControls:
             self.live_rx.boost=boost
             if not self.live_rx.done:self.live_rx.schedule_crossings(min(self.live_rx.start+self.live_rx.launch_index*self.live_rx.ui,self.live_rx.stop))
     def make_receiver(self,words,rate,start,phase,ppm):
+        if getattr(self,'wire_interface',{}).get('clock_source')=='forwarded_word':
+            return ForwardedReceiver(words,rate,start,phase,ppm)
         return EqualizedReceiver(words,rate,start,phase,ppm,boost=self.rx_boost,channel_ratio=self.rx_channel_ratio)
 
 class EqualizedChip(EqualizerControls,IdleWireChip):

@@ -8,7 +8,11 @@ class Serializer:
         self.pole=-math.log(channel.decay)*channel.rate
     def advance(self,time):
         assert time>=self.time
-        self.channel.state=self.drive+(self.channel.state-self.drive)*math.exp(-self.pole*(time-self.time));self.time=time
+        if hasattr(self.channel,'advance_state'):
+            self.channel.advance_state(self.drive,time-self.time)
+        else:
+            self.channel.state=self.drive+(self.channel.state-self.drive)*math.exp(-self.pole*(time-self.time))
+        self.time=time
     def start(self,word,time,ui):
         if self.active:raise ValueError('Serializer already has a partial word')
         self.advance(time);self.word=word;self.origin=time;self.ui=ui;self.bit=0;self.result=0

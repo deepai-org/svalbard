@@ -1,5 +1,34 @@
 {
   "status": "observation_budget_only",
+  "bounded_controls": {
+    "status": "conditional_interval_controls_passed",
+    "forward_trials": 4000,
+    "invalid_envelopes_rejected": 7,
+    "zero_code_interval_v": [
+      -0.00035716677295918376,
+      0.00035716677295918376
+    ],
+    "assumed_bounds": {
+      "span": [
+        0.98,
+        1.02
+      ],
+      "gain": [
+        0.98,
+        1.02
+      ],
+      "additive": [
+        -5e-05,
+        5e-05
+      ],
+      "recovery": [
+        -5e-05,
+        5e-05
+      ]
+    },
+    "physical_qualification": false,
+    "chip_calibration_validity_changed": false
+  },
   "tolerance_v": 0.001,
   "quantization_half_lsb_v": 0.000244140625,
   "noise_only_coverage_of_300uv_bound": 0.23582284437790513,
@@ -183,5 +212,1185 @@
     "Optimistic unity gain/reference scaling; actual reference, gain, supply, settling and drift uncertainties still required.",
     "A near-zero observed mean is required; sample count alone cannot approve calibration.",
     "No controller status or chip acceptance gate changed; 99.9% is exploratory, not an approved failure probability."
-  ]
+  ],
+  "canonical_nominal_transfer": {
+    "status": "canonical_nominal_transfer_control_passed",
+    "cases": [
+      {
+        "time_s": 2.5e-08,
+        "axis": "I",
+        "input_v": 0.0,
+        "code": 0,
+        "reference_before_v": 0.9999574387728302,
+        "reference_after_v": 0.9974575451758981,
+        "residual_interval_v": [
+          -0.000244130234075398,
+          0.000244130234075398
+        ]
+      },
+      {
+        "time_s": 2.5e-08,
+        "axis": "Q",
+        "input_v": -0.0,
+        "code": 0,
+        "reference_before_v": 0.9999574387728302,
+        "reference_after_v": 0.9974575451758981,
+        "residual_interval_v": [
+          -0.000244130234075398,
+          0.000244130234075398
+        ]
+      },
+      {
+        "time_s": 5e-08,
+        "axis": "I",
+        "input_v": 0.0001,
+        "code": 0,
+        "reference_before_v": 0.997976382307694,
+        "reference_after_v": 0.9954799443873513,
+        "residual_interval_v": [
+          -0.00024364657771183936,
+          0.00024364657771183936
+        ]
+      },
+      {
+        "time_s": 5e-08,
+        "axis": "Q",
+        "input_v": -0.0001,
+        "code": 0,
+        "reference_before_v": 0.997976382307694,
+        "reference_after_v": 0.9954799443873513,
+        "residual_interval_v": [
+          -0.00024364657771183936,
+          0.00024364657771183936
+        ]
+      },
+      {
+        "time_s": 7.5e-08,
+        "axis": "I",
+        "input_v": -0.0001,
+        "code": 0,
+        "reference_before_v": 0.996436831630517,
+        "reference_after_v": 0.9939442448961933,
+        "residual_interval_v": [
+          -0.0002432707108472942,
+          0.0002432707108472942
+        ]
+      },
+      {
+        "time_s": 7.5e-08,
+        "axis": "Q",
+        "input_v": 0.0001,
+        "code": 0,
+        "reference_before_v": 0.996436831630517,
+        "reference_after_v": 0.9939442448961933,
+        "residual_interval_v": [
+          -0.0002432707108472942,
+          0.0002432707108472942
+        ]
+      },
+      {
+        "time_s": 1e-07,
+        "axis": "I",
+        "input_v": 0.0008,
+        "code": 2,
+        "reference_before_v": 0.9952373471370931,
+        "reference_after_v": 0.9927373109210847,
+        "residual_interval_v": [
+          0.0007289336038601756,
+          0.0012148893397669594
+        ]
+      },
+      {
+        "time_s": 1e-07,
+        "axis": "Q",
+        "input_v": -0.0008,
+        "code": -2,
+        "reference_before_v": 0.9952373471370931,
+        "reference_after_v": 0.9927373109210847,
+        "residual_interval_v": [
+          -0.0012148893397669594,
+          -0.0007289336038601756
+        ]
+      },
+      {
+        "time_s": 1.25e-07,
+        "axis": "I",
+        "input_v": -0.0008,
+        "code": -2,
+        "reference_before_v": 0.9943008596897618,
+        "reference_after_v": 0.991803175930221,
+        "residual_interval_v": [
+          -0.0012137461666134788,
+          -0.0007282476999680872
+        ]
+      },
+      {
+        "time_s": 1.25e-07,
+        "axis": "Q",
+        "input_v": 0.0008,
+        "code": 2,
+        "reference_before_v": 0.9943008596897618,
+        "reference_after_v": 0.991803175930221,
+        "residual_interval_v": [
+          0.0007282476999680872,
+          0.0012137461666134788
+        ]
+      },
+      {
+        "time_s": 1.5e-07,
+        "axis": "I",
+        "input_v": 0.0012,
+        "code": 2,
+        "reference_before_v": 0.9935727409916282,
+        "reference_after_v": 0.9910709248298113,
+        "residual_interval_v": [
+          0.0007277144099059776,
+          0.0012128573498432962
+        ]
+      },
+      {
+        "time_s": 1.5e-07,
+        "axis": "Q",
+        "input_v": -0.0012,
+        "code": -2,
+        "reference_before_v": 0.9935727409916282,
+        "reference_after_v": 0.9910709248298113,
+        "residual_interval_v": [
+          -0.0012128573498432962,
+          -0.0007277144099059776
+        ]
+      },
+      {
+        "time_s": 1.75e-07,
+        "axis": "I",
+        "input_v": -0.0012,
+        "code": -2,
+        "reference_before_v": 0.9930030727352209,
+        "reference_after_v": 0.9905026909980736,
+        "residual_interval_v": [
+          -0.0012121619540224865,
+          -0.0007272971724134919
+        ]
+      },
+      {
+        "time_s": 1.75e-07,
+        "axis": "Q",
+        "input_v": 0.0012,
+        "code": 2,
+        "reference_before_v": 0.9930030727352209,
+        "reference_after_v": 0.9905026909980736,
+        "residual_interval_v": [
+          0.0007272971724134919,
+          0.0012121619540224865
+        ]
+      },
+      {
+        "time_s": 2e-07,
+        "axis": "I",
+        "input_v": 0.01,
+        "code": 21,
+        "reference_before_v": 0.9925570536668797,
+        "reference_after_v": 0.9899267774746625,
+        "residual_interval_v": [
+          0.009935263476646012,
+          0.010419910475506795
+        ]
+      },
+      {
+        "time_s": 2e-07,
+        "axis": "Q",
+        "input_v": -0.01,
+        "code": -21,
+        "reference_before_v": 0.9925570536668797,
+        "reference_after_v": 0.9899267774746625,
+        "residual_interval_v": [
+          -0.010419910475506795,
+          -0.009935263476646012
+        ]
+      }
+    ],
+    "physical_qualification": false,
+    "chip_calibration_validity_changed": false,
+    "limitations": [
+      "Known injected ADC inputs, not an independent calibration observation route.",
+      "Canonical frontend gain/phase errors, noise, compression and overload memory are disabled.",
+      "Verifier reads true pre-sample reference; hardware has no equivalent qualified span observation."
+    ],
+    "verifier_sha256": "4eb86784bcdfb30361ba089e7235e6cc6f58b63804c541fd187b3e88912a814f"
+  },
+  "canonical_nonideal_transfer": {
+    "status": "canonical_transfer_control_passed",
+    "nonideal": true,
+    "cases": [
+      {
+        "time_s": 2.5e-08,
+        "axis": "I",
+        "gain_error": -0.02,
+        "phase_error_rad": -0.03,
+        "input_v": 0.0,
+        "code": 0,
+        "reference_before_v": 0.9999574387728302,
+        "reference_after_v": 0.9974575451758981,
+        "residual_interval_v": [
+          -0.0007150892074197799,
+          0.0007150892074197799
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 2.5e-08,
+        "axis": "Q",
+        "gain_error": -0.02,
+        "phase_error_rad": -0.03,
+        "input_v": -0.0,
+        "code": 0,
+        "reference_before_v": 0.9999574387728302,
+        "reference_after_v": 0.9974575451758981,
+        "residual_interval_v": [
+          -0.0007150892074197799,
+          0.0007150892074197799
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 5e-08,
+        "axis": "I",
+        "gain_error": -0.02,
+        "phase_error_rad": -0.03,
+        "input_v": 0.0001,
+        "code": 0,
+        "reference_before_v": 0.997976382307694,
+        "reference_after_v": 0.9954799218307564,
+        "residual_interval_v": [
+          -0.000714292098917928,
+          0.000714292098917928
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 5e-08,
+        "axis": "Q",
+        "gain_error": -0.02,
+        "phase_error_rad": -0.03,
+        "input_v": -0.0001,
+        "code": 0,
+        "reference_before_v": 0.997976382307694,
+        "reference_after_v": 0.9954799218307564,
+        "residual_interval_v": [
+          -0.000714292098917928,
+          0.000714292098917928
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 7.5e-08,
+        "axis": "I",
+        "gain_error": -0.02,
+        "phase_error_rad": -0.03,
+        "input_v": -0.0001,
+        "code": 0,
+        "reference_before_v": 0.9964368140633725,
+        "reference_after_v": 0.9939442048511958,
+        "residual_interval_v": [
+          -0.0007136726299838887,
+          0.0007136726299838887
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 7.5e-08,
+        "axis": "Q",
+        "gain_error": -0.02,
+        "phase_error_rad": -0.03,
+        "input_v": 0.0001,
+        "code": 0,
+        "reference_before_v": 0.9964368140633725,
+        "reference_after_v": 0.9939442048511958,
+        "residual_interval_v": [
+          -0.0007136726299838887,
+          0.0007136726299838887
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 1e-07,
+        "axis": "I",
+        "gain_error": -0.02,
+        "phase_error_rad": -0.03,
+        "input_v": 0.0008,
+        "code": 2,
+        "reference_before_v": 0.995237315949918,
+        "reference_after_v": 0.9927370998547662,
+        "residual_interval_v": [
+          0.0002677563330245716,
+          0.0017063797564442808
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1e-07,
+        "axis": "Q",
+        "gain_error": -0.02,
+        "phase_error_rad": -0.03,
+        "input_v": -0.0008,
+        "code": -2,
+        "reference_before_v": 0.995237315949918,
+        "reference_after_v": 0.9927370998547662,
+        "residual_interval_v": [
+          -0.0017063797564442808,
+          -0.0002677563330245716
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.25e-07,
+        "axis": "I",
+        "gain_error": -0.02,
+        "phase_error_rad": -0.03,
+        "input_v": -0.0008,
+        "code": -2,
+        "reference_before_v": 0.9943006953106507,
+        "reference_after_v": 0.9918028321759033,
+        "residual_interval_v": [
+          -0.0017050691372841936,
+          -0.0002672215209178208
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.25e-07,
+        "axis": "Q",
+        "gain_error": -0.02,
+        "phase_error_rad": -0.03,
+        "input_v": 0.0008,
+        "code": 2,
+        "reference_before_v": 0.9943006953106507,
+        "reference_after_v": 0.9918028321759033,
+        "residual_interval_v": [
+          0.0002672215209178208,
+          0.0017050691372841936
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.5e-07,
+        "axis": "I",
+        "gain_error": -0.02,
+        "phase_error_rad": -0.03,
+        "input_v": 0.0012,
+        "code": 3,
+        "reference_before_v": 0.9935724732746427,
+        "reference_after_v": 0.9910703883022607,
+        "residual_interval_v": [
+          0.0007419572028026307,
+          0.0021998151381707673
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.5e-07,
+        "axis": "Q",
+        "gain_error": -0.02,
+        "phase_error_rad": -0.03,
+        "input_v": -0.0012,
+        "code": -3,
+        "reference_before_v": 0.9935724732746427,
+        "reference_after_v": 0.9910703883022607,
+        "residual_interval_v": [
+          -0.0021998151381707673,
+          -0.0007419572028026307
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.75e-07,
+        "axis": "I",
+        "gain_error": -0.02,
+        "phase_error_rad": -0.03,
+        "input_v": -0.0012,
+        "code": -2,
+        "reference_before_v": 0.9930026548858103,
+        "reference_after_v": 0.9905020048706821,
+        "residual_interval_v": [
+          -0.001703252781141653,
+          -0.0002664803374491332
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.75e-07,
+        "axis": "Q",
+        "gain_error": -0.02,
+        "phase_error_rad": -0.03,
+        "input_v": 0.0012,
+        "code": 2,
+        "reference_before_v": 0.9930026548858103,
+        "reference_after_v": 0.9905020048706821,
+        "residual_interval_v": [
+          0.0002664803374491332,
+          0.001703252781141653
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 2e-07,
+        "axis": "I",
+        "gain_error": -0.02,
+        "phase_error_rad": -0.03,
+        "input_v": 0.01,
+        "code": 21,
+        "reference_before_v": 0.9925565193086175,
+        "reference_after_v": 0.9899240011231057,
+        "residual_interval_v": [
+          0.009284863512017941,
+          0.011112541587683
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 2e-07,
+        "axis": "Q",
+        "gain_error": -0.02,
+        "phase_error_rad": -0.03,
+        "input_v": -0.01,
+        "code": -21,
+        "reference_before_v": 0.9925565193086175,
+        "reference_after_v": 0.9899240011231057,
+        "residual_interval_v": [
+          -0.011112541587683,
+          -0.009284863512017941
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 2.5e-08,
+        "axis": "I",
+        "gain_error": -0.02,
+        "phase_error_rad": 0.03,
+        "input_v": 0.0,
+        "code": 0,
+        "reference_before_v": 0.9999574387728302,
+        "reference_after_v": 0.9974575451758981,
+        "residual_interval_v": [
+          -0.0007150892074197799,
+          0.0007150892074197799
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 2.5e-08,
+        "axis": "Q",
+        "gain_error": -0.02,
+        "phase_error_rad": 0.03,
+        "input_v": -0.0,
+        "code": 0,
+        "reference_before_v": 0.9999574387728302,
+        "reference_after_v": 0.9974575451758981,
+        "residual_interval_v": [
+          -0.0007150892074197799,
+          0.0007150892074197799
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 5e-08,
+        "axis": "I",
+        "gain_error": -0.02,
+        "phase_error_rad": 0.03,
+        "input_v": 0.0001,
+        "code": 0,
+        "reference_before_v": 0.997976382307694,
+        "reference_after_v": 0.9954799676310015,
+        "residual_interval_v": [
+          -0.000714292098917928,
+          0.000714292098917928
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 5e-08,
+        "axis": "Q",
+        "gain_error": -0.02,
+        "phase_error_rad": 0.03,
+        "input_v": -0.0001,
+        "code": 0,
+        "reference_before_v": 0.997976382307694,
+        "reference_after_v": 0.9954799676310015,
+        "residual_interval_v": [
+          -0.000714292098917928,
+          0.000714292098917928
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 7.5e-08,
+        "axis": "I",
+        "gain_error": -0.02,
+        "phase_error_rad": 0.03,
+        "input_v": -0.0001,
+        "code": 0,
+        "reference_before_v": 0.9964368497327477,
+        "reference_after_v": 0.9939442861609346,
+        "residual_interval_v": [
+          -0.0007136726443360097,
+          0.0007136726443360097
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 7.5e-08,
+        "axis": "Q",
+        "gain_error": -0.02,
+        "phase_error_rad": 0.03,
+        "input_v": 0.0001,
+        "code": 0,
+        "reference_before_v": 0.9964368497327477,
+        "reference_after_v": 0.9939442861609346,
+        "residual_interval_v": [
+          -0.0007136726443360097,
+          0.0007136726443360097
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 1e-07,
+        "axis": "I",
+        "gain_error": -0.02,
+        "phase_error_rad": 0.03,
+        "input_v": 0.0008,
+        "code": 2,
+        "reference_before_v": 0.9952373792742082,
+        "reference_after_v": 0.9927375284163248,
+        "residual_interval_v": [
+          0.00026775636918285764,
+          0.0017063798450543588
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1e-07,
+        "axis": "Q",
+        "gain_error": -0.02,
+        "phase_error_rad": 0.03,
+        "input_v": -0.0008,
+        "code": -2,
+        "reference_before_v": 0.9952373792742082,
+        "reference_after_v": 0.9927375284163248,
+        "residual_interval_v": [
+          -0.0017063798450543588,
+          -0.00026775636918285764
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.25e-07,
+        "axis": "I",
+        "gain_error": -0.02,
+        "phase_error_rad": 0.03,
+        "input_v": -0.0008,
+        "code": -1,
+        "reference_before_v": 0.9943010290757898,
+        "reference_after_v": 0.9918035301551382,
+        "residual_interval_v": [
+          -0.0012089414342039684,
+          0.0002168773041767939
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.25e-07,
+        "axis": "Q",
+        "gain_error": -0.02,
+        "phase_error_rad": 0.03,
+        "input_v": 0.0008,
+        "code": 2,
+        "reference_before_v": 0.9943010290757898,
+        "reference_after_v": 0.9918035301551382,
+        "residual_interval_v": [
+          0.00026722171149832873,
+          0.001705069604323855
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.5e-07,
+        "axis": "I",
+        "gain_error": -0.02,
+        "phase_error_rad": 0.03,
+        "input_v": 0.0012,
+        "code": 2,
+        "reference_before_v": 0.9935730168631525,
+        "reference_after_v": 0.9910714776997995,
+        "residual_interval_v": [
+          0.000266806015186655,
+          0.0017040508922491282
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.5e-07,
+        "axis": "Q",
+        "gain_error": -0.02,
+        "phase_error_rad": 0.03,
+        "input_v": -0.0012,
+        "code": -3,
+        "reference_before_v": 0.9935730168631525,
+        "reference_after_v": 0.9910714776997995,
+        "residual_interval_v": [
+          -0.002199816169780412,
+          -0.0007419577734123522
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.75e-07,
+        "axis": "I",
+        "gain_error": -0.02,
+        "phase_error_rad": 0.03,
+        "input_v": -0.0012,
+        "code": -2,
+        "reference_before_v": 0.9930035033121766,
+        "reference_after_v": 0.990503398024772,
+        "residual_interval_v": [
+          -0.0017032539683500113,
+          -0.0002664808219021479
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.75e-07,
+        "axis": "Q",
+        "gain_error": -0.02,
+        "phase_error_rad": 0.03,
+        "input_v": 0.0012,
+        "code": 2,
+        "reference_before_v": 0.9930035033121766,
+        "reference_after_v": 0.990503398024772,
+        "residual_interval_v": [
+          0.0002664808219021479,
+          0.0017032539683500113
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 2e-07,
+        "axis": "I",
+        "gain_error": -0.02,
+        "phase_error_rad": 0.03,
+        "input_v": 0.01,
+        "code": 20,
+        "reference_before_v": 0.992557604301584,
+        "reference_after_v": 0.989929638394447,
+        "residual_interval_v": [
+          0.008810208327018893,
+          0.010617294257466442
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 2e-07,
+        "axis": "Q",
+        "gain_error": -0.02,
+        "phase_error_rad": 0.03,
+        "input_v": -0.01,
+        "code": -21,
+        "reference_before_v": 0.992557604301584,
+        "reference_after_v": 0.989929638394447,
+        "residual_interval_v": [
+          -0.011112553381822583,
+          -0.009284874000033973
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 2.5e-08,
+        "axis": "I",
+        "gain_error": 0.02,
+        "phase_error_rad": -0.03,
+        "input_v": 0.0,
+        "code": 0,
+        "reference_before_v": 0.9999574387728302,
+        "reference_after_v": 0.9974575451758981,
+        "residual_interval_v": [
+          -0.0007150892074197799,
+          0.0007150892074197799
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 2.5e-08,
+        "axis": "Q",
+        "gain_error": 0.02,
+        "phase_error_rad": -0.03,
+        "input_v": -0.0,
+        "code": 0,
+        "reference_before_v": 0.9999574387728302,
+        "reference_after_v": 0.9974575451758981,
+        "residual_interval_v": [
+          -0.0007150892074197799,
+          0.0007150892074197799
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 5e-08,
+        "axis": "I",
+        "gain_error": 0.02,
+        "phase_error_rad": -0.03,
+        "input_v": 0.0001,
+        "code": 0,
+        "reference_before_v": 0.997976382307694,
+        "reference_after_v": 0.9954799227153287,
+        "residual_interval_v": [
+          -0.000714292098917928,
+          0.000714292098917928
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 5e-08,
+        "axis": "Q",
+        "gain_error": 0.02,
+        "phase_error_rad": -0.03,
+        "input_v": -0.0001,
+        "code": 0,
+        "reference_before_v": 0.997976382307694,
+        "reference_after_v": 0.9954799227153287,
+        "residual_interval_v": [
+          -0.000714292098917928,
+          0.000714292098917928
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 7.5e-08,
+        "axis": "I",
+        "gain_error": 0.02,
+        "phase_error_rad": -0.03,
+        "input_v": -0.0001,
+        "code": 0,
+        "reference_before_v": 0.9964368147522752,
+        "reference_after_v": 0.993944206421583,
+        "residual_interval_v": [
+          -0.0007136726302610793,
+          0.0007136726302610793
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 7.5e-08,
+        "axis": "Q",
+        "gain_error": 0.02,
+        "phase_error_rad": -0.03,
+        "input_v": 0.0001,
+        "code": 0,
+        "reference_before_v": 0.9964368147522752,
+        "reference_after_v": 0.993944206421583,
+        "residual_interval_v": [
+          -0.0007136726302610793,
+          0.0007136726302610793
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 1e-07,
+        "axis": "I",
+        "gain_error": 0.02,
+        "phase_error_rad": -0.03,
+        "input_v": 0.0008,
+        "code": 2,
+        "reference_before_v": 0.9952373171729407,
+        "reference_after_v": 0.9927371081318728,
+        "residual_interval_v": [
+          0.0002677563337229198,
+          0.0017063797581556642
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1e-07,
+        "axis": "Q",
+        "gain_error": 0.02,
+        "phase_error_rad": -0.03,
+        "input_v": -0.0008,
+        "code": -2,
+        "reference_before_v": 0.9952373171729407,
+        "reference_after_v": 0.9927371081318728,
+        "residual_interval_v": [
+          -0.0017063797581556642,
+          -0.0002677563337229198
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.25e-07,
+        "axis": "I",
+        "gain_error": 0.02,
+        "phase_error_rad": -0.03,
+        "input_v": -0.0008,
+        "code": -2,
+        "reference_before_v": 0.9943007017568883,
+        "reference_after_v": 0.9918028456564616,
+        "residual_interval_v": [
+          -0.0017050691463044547,
+          -0.00026722152459863433
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.25e-07,
+        "axis": "Q",
+        "gain_error": 0.02,
+        "phase_error_rad": -0.03,
+        "input_v": 0.0008,
+        "code": 1,
+        "reference_before_v": 0.9943007017568883,
+        "reference_after_v": 0.9918028456564616,
+        "residual_interval_v": [
+          -0.0002168773356338117,
+          0.0012089411393433741
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.5e-07,
+        "axis": "I",
+        "gain_error": 0.02,
+        "phase_error_rad": -0.03,
+        "input_v": 0.0012,
+        "code": 3,
+        "reference_before_v": 0.9935724837733444,
+        "reference_after_v": 0.9910704093425504,
+        "residual_interval_v": [
+          0.0007419572138232116,
+          0.0021998151580949594
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.5e-07,
+        "axis": "Q",
+        "gain_error": 0.02,
+        "phase_error_rad": -0.03,
+        "input_v": -0.0012,
+        "code": -3,
+        "reference_before_v": 0.9935724837733444,
+        "reference_after_v": 0.9910704093425504,
+        "residual_interval_v": [
+          -0.0021998151580949594,
+          -0.0007419572138232116
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.75e-07,
+        "axis": "I",
+        "gain_error": 0.02,
+        "phase_error_rad": -0.03,
+        "input_v": -0.0012,
+        "code": -2,
+        "reference_before_v": 0.9930026712720574,
+        "reference_after_v": 0.9905020317776301,
+        "residual_interval_v": [
+          -0.001703252804071032,
+          -0.00026648034680571043
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.75e-07,
+        "axis": "Q",
+        "gain_error": 0.02,
+        "phase_error_rad": -0.03,
+        "input_v": 0.0012,
+        "code": 2,
+        "reference_before_v": 0.9930026712720574,
+        "reference_after_v": 0.9905020317776301,
+        "residual_interval_v": [
+          0.00026648034680571043,
+          0.001703252804071032
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 2e-07,
+        "axis": "I",
+        "gain_error": 0.02,
+        "phase_error_rad": -0.03,
+        "input_v": 0.01,
+        "code": 22,
+        "reference_before_v": 0.9925565402638394,
+        "reference_after_v": 0.9899241099995878,
+        "residual_interval_v": [
+          0.00975952887823292,
+          0.01160780040943615
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 2e-07,
+        "axis": "Q",
+        "gain_error": 0.02,
+        "phase_error_rad": -0.03,
+        "input_v": -0.01,
+        "code": -20,
+        "reference_before_v": 0.9925565402638394,
+        "reference_after_v": 0.9899241099995878,
+        "residual_interval_v": [
+          -0.010617283221506651,
+          -0.008810198550927621
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 2.5e-08,
+        "axis": "I",
+        "gain_error": 0.02,
+        "phase_error_rad": 0.03,
+        "input_v": 0.0,
+        "code": 0,
+        "reference_before_v": 0.9999574387728302,
+        "reference_after_v": 0.9974575451758981,
+        "residual_interval_v": [
+          -0.0007150892074197799,
+          0.0007150892074197799
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 2.5e-08,
+        "axis": "Q",
+        "gain_error": 0.02,
+        "phase_error_rad": 0.03,
+        "input_v": -0.0,
+        "code": 0,
+        "reference_before_v": 0.9999574387728302,
+        "reference_after_v": 0.9974575451758981,
+        "residual_interval_v": [
+          -0.0007150892074197799,
+          0.0007150892074197799
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 5e-08,
+        "axis": "I",
+        "gain_error": 0.02,
+        "phase_error_rad": 0.03,
+        "input_v": 0.0001,
+        "code": 0,
+        "reference_before_v": 0.997976382307694,
+        "reference_after_v": 0.9954799667194858,
+        "residual_interval_v": [
+          -0.000714292098917928,
+          0.000714292098917928
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 5e-08,
+        "axis": "Q",
+        "gain_error": 0.02,
+        "phase_error_rad": 0.03,
+        "input_v": -0.0001,
+        "code": 0,
+        "reference_before_v": 0.997976382307694,
+        "reference_after_v": 0.9954799667194858,
+        "residual_interval_v": [
+          -0.000714292098917928,
+          0.000714292098917928
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 7.5e-08,
+        "axis": "I",
+        "gain_error": 0.02,
+        "phase_error_rad": 0.03,
+        "input_v": -0.0001,
+        "code": 0,
+        "reference_before_v": 0.9964368490228553,
+        "reference_after_v": 0.9939442845427084,
+        "residual_interval_v": [
+          -0.0007136726440503736,
+          0.0007136726440503736
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 7.5e-08,
+        "axis": "Q",
+        "gain_error": 0.02,
+        "phase_error_rad": 0.03,
+        "input_v": 0.0001,
+        "code": 0,
+        "reference_before_v": 0.9964368490228553,
+        "reference_after_v": 0.9939442845427084,
+        "residual_interval_v": [
+          -0.0007136726440503736,
+          0.0007136726440503736
+        ],
+        "bounded_within_1mv": true
+      },
+      {
+        "time_s": 1e-07,
+        "axis": "I",
+        "gain_error": 0.02,
+        "phase_error_rad": 0.03,
+        "input_v": 0.0008,
+        "code": 2,
+        "reference_before_v": 0.9952373780139302,
+        "reference_after_v": 0.9927375198871005,
+        "residual_interval_v": [
+          0.0002677563684632366,
+          0.001706379843290844
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1e-07,
+        "axis": "Q",
+        "gain_error": 0.02,
+        "phase_error_rad": 0.03,
+        "input_v": -0.0008,
+        "code": -2,
+        "reference_before_v": 0.9952373780139302,
+        "reference_after_v": 0.9927375198871005,
+        "residual_interval_v": [
+          -0.001706379843290844,
+          -0.0002677563684632366
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.25e-07,
+        "axis": "I",
+        "gain_error": 0.02,
+        "phase_error_rad": 0.03,
+        "input_v": -0.0008,
+        "code": -1,
+        "reference_before_v": 0.9943010224332028,
+        "reference_after_v": 0.9918035162639661,
+        "residual_interval_v": [
+          -0.0012089414282200881,
+          0.0002168773048151804
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.25e-07,
+        "axis": "Q",
+        "gain_error": 0.02,
+        "phase_error_rad": 0.03,
+        "input_v": 0.0008,
+        "code": 1,
+        "reference_before_v": 0.9943010224332028,
+        "reference_after_v": 0.9918035162639661,
+        "residual_interval_v": [
+          -0.0002168773048151804,
+          0.0012089414282200881
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.5e-07,
+        "axis": "I",
+        "gain_error": 0.02,
+        "phase_error_rad": 0.03,
+        "input_v": 0.0012,
+        "code": 3,
+        "reference_before_v": 0.9935730060446628,
+        "reference_after_v": 0.9910714560186221,
+        "residual_interval_v": [
+          0.0007419577620560871,
+          0.0021998161492493336
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.5e-07,
+        "axis": "Q",
+        "gain_error": 0.02,
+        "phase_error_rad": 0.03,
+        "input_v": -0.0012,
+        "code": -3,
+        "reference_before_v": 0.9935730060446628,
+        "reference_after_v": 0.9910714560186221,
+        "residual_interval_v": [
+          -0.0021998161492493336,
+          -0.0007419577620560871
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.75e-07,
+        "axis": "I",
+        "gain_error": 0.02,
+        "phase_error_rad": 0.03,
+        "input_v": -0.0012,
+        "code": -2,
+        "reference_before_v": 0.9930034864268048,
+        "reference_after_v": 0.9905033702982293,
+        "residual_interval_v": [
+          -0.0017032539447222044,
+          -0.0002664808122605696
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 1.75e-07,
+        "axis": "Q",
+        "gain_error": 0.02,
+        "phase_error_rad": 0.03,
+        "input_v": 0.0012,
+        "code": 2,
+        "reference_before_v": 0.9930034864268048,
+        "reference_after_v": 0.9905033702982293,
+        "residual_interval_v": [
+          0.0002664808122605696,
+          0.0017032539447222044
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 2e-07,
+        "axis": "I",
+        "gain_error": 0.02,
+        "phase_error_rad": 0.03,
+        "input_v": 0.01,
+        "code": 21,
+        "reference_before_v": 0.9925575827080649,
+        "reference_after_v": 0.9899295262014648,
+        "residual_interval_v": [
+          0.009284873791301584,
+          0.011112553147095736
+        ],
+        "bounded_within_1mv": false
+      },
+      {
+        "time_s": 2e-07,
+        "axis": "Q",
+        "gain_error": 0.02,
+        "phase_error_rad": 0.03,
+        "input_v": -0.01,
+        "code": -20,
+        "reference_before_v": 0.9925575827080649,
+        "reference_after_v": 0.9899295262014648,
+        "residual_interval_v": [
+          -0.010617294033503324,
+          -0.008810208128623475
+        ],
+        "bounded_within_1mv": false
+      }
+    ],
+    "physical_qualification": false,
+    "chip_calibration_validity_changed": false,
+    "limitations": [
+      "Known injected ADC inputs, not an independent calibration observation route.",
+      "Nonideal settings and error envelopes are hypotheses; no Gaussian noise or compression.",
+      "Verifier observes pre-sample reference; the nonideal interval adds assumed 1 mV uncertainty.",
+      "Recovery starts with assumed bounded memory; no new overloads occur in this input range."
+    ],
+    "verifier_sha256": "ead80d6ed0fb81830ecb93b8dd9f942a3d0f20169939795dcd7ccff37ca48b40"
+  }
 }

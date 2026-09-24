@@ -35,6 +35,10 @@ class TimedChip(WholeChip):
             # The external channel is not erased or widened by local mode reset.
             # super().configure advanced the old serializer to this time first.
             self.channel.state=previous.channel.state
+            if hasattr(self.channel,'current_state'):
+                self.channel.current_state=getattr(previous.channel,'current_state',previous.drive)
+                for name in ('tail_state','common_drop_state'):
+                    if hasattr(previous.channel,name):setattr(self.channel,name,getattr(previous.channel,name))
             self.channel.decay=math.exp(-previous.pole/self.channel.rate)
         self.serializer=self.make_serializer(time)
         if previous is not None:self.serializer.pole=previous.pole
@@ -65,7 +69,7 @@ class TimedChip(WholeChip):
     def schedule_wire(self,count,start,ppm=0):
         if self.state!='active' or self.wire_remaining or (self.serializer is not None and self.serializer.active) or start<=self.time or count<0:
             raise ValueError('Wired playback requires active idle engine and future start')
-        self.wire_period=10/((1.25e9 if self.session.mode==0 else 2.5e9)*(1+ppm*1e-6))
+        self.wire_period=10/(self.channel.rate*(1+ppm*1e-6))
         self.wire_remaining=count
         self.next_wire=start if count else math.inf
 
@@ -83,6 +87,8 @@ class TimedChip(WholeChip):
         self.dac_cancelled+=len(self.dac_pending);self.dac_pending.clear()
         self.remaining=0
         self.next_sample=math.inf
+        clock=getattr(self,'sample_clock',None)
+        if hasattr(clock,'stop'):clock.stop()
         self.wire_discarded+=len(self.wire_queue);self.wire_queue.clear()
         self.wire_remaining=0;self.next_wire=math.inf
 
@@ -97,6 +103,13 @@ class TimedChip(WholeChip):
         assert self.tx.consumed==self.dac_pipeline_updates+self.dac_cancelled+len(self.dac_pending)
         return dict(consumed=self.tx.consumed,updated=self.dac_pipeline_updates,cancelled=self.dac_cancelled,
                     pending=len(self.dac_pending),latency_s=self.dac_latency,capacity=self.dac_pipeline_capacity)
+
+    @staticmethod
+    def converter_consumed(clock,time,remaining):
+        # Forecast-driven clocks commit even their final edge. Historical
+        # prescribed clocks retain their existing eager stepping behavior.
+        consume=getattr(clock,'consumed',None)
+        return consume(time,remaining) if consume is not None else (clock.step() if remaining else math.inf)
 
     def provide_dac_sample(self):
         pass
@@ -131,7 +144,7 @@ class TimedChip(WholeChip):
                 self.dac_pending.append((deadline+self.dac_latency,self.epoch,value))
                 self.complete_dac(deadline)
                 self.remaining-=1
-                self.next_sample=self.sample_clock.step() if self.remaining else math.inf
+                self.next_sample=self.converter_consumed(self.sample_clock,deadline,self.remaining)
         super().advance(time)
         if self.serializer is not None:self.serializer.advance(time)
 

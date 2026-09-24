@@ -30,7 +30,7 @@ class ReturnChip(TimedChip):
             raise ValueError('Capture requires idle active stream and future start')
         self.adc_encoder=BurstEncoder(2*self.bits,count)
         self.host_decoder=BurstDecoder(2*self.bits,count)
-        self.host_receiver=Receiver(self.session.mode)
+        self.host_receiver=self.make_return_receiver()
         self.return_sequence=0
         self.adc_left=count;self.next_adc=start if count else math.inf
         self.adc_period=1/((40e6 if self.session.mode==0 else 20e6)*(1+ppm*1e-6))
@@ -43,6 +43,8 @@ class ReturnChip(TimedChip):
         super().quiesce(time,reason)
         self.adc_cancelled+=len(self.adc_pending);self.adc_pending.clear()
         self.next_adc=self.next_return=math.inf;self.adc_left=0
+        clock=getattr(self,'adc_clock',None)
+        if hasattr(clock,'stop'):clock.stop()
         self.return_discarded+=len(self.return_queue)+len(self.return_frame)
         self.return_queue.clear();self.return_frame.clear()
         self.host_abort_epoch=None
@@ -112,7 +114,7 @@ class ReturnChip(TimedChip):
                     pending=len(self.adc_pending),latency_s=self.adc_latency,capacity=self.adc_pipeline_capacity)
 
     def encode_return_frame(self,words,sequence):
-        return encode(self.session.mode,[],words,sequence)
+        return self.encode_host_frame([],words,sequence)
 
     def accept_host_event(self,event):
         if event and event[0]=='iq':self.host_samples.extend(self.host_decoder.feed(event[1]))
@@ -130,18 +132,20 @@ class ReturnChip(TimedChip):
                 sample=self.convert_adc(self.receiver_value())
                 self.adc_left-=1;self.adc_sampled+=1
                 self.adc_pending.append((deadline+self.adc_latency,self.epoch,sample,not self.adc_left))
-                self.next_adc=self.adc_clock.step() if self.adc_left else math.inf
+                self.next_adc=self.converter_consumed(self.adc_clock,deadline,self.adc_left)
                 if not self.complete_adc(deadline):break
             if self.next_return==deadline:
                 if not self.return_frame:
-                    quota=25 if self.session.mode==0 else 7
+                    quota=self.host_quota('iq')
                     words=[self.return_queue.popleft() for _ in range(min(quota,len(self.return_queue)))]
                     self.return_frame.extend(self.encode_return_frame(words,self.return_sequence))
                     self.return_sequence=(self.return_sequence+1)%64
                 emitted=self.return_frame.popleft()
                 self.emitted_return_word(emitted,deadline)
                 event=self.host_receiver.feed(emitted)
-                self.accept_host_event(event)
+                if isinstance(event,list):
+                    for record in event:self.accept_host_event(record)
+                else:self.accept_host_event(event)
                 self.return_ticks+=1;self.next_return=deadline+self.return_period
         super().advance(time)
 

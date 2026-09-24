@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "cases": 8,
+  "scope": "Legacy component RF and wired returns and aborts, both modes, +100 ppm and wired phase +0.3 UI; not canonical physical qualification.",
+  "reproduce": "PYTHONPATH=<candidate>/verification python3: import full_chip_model; rf_return_lifecycle.run(mode,100,interrupted); wired_return_lifecycle.run(mode,.3,100,interrupted) for both modes and interruption states",
+  "source_sha256": {
+    "system_model/connected/rf_return_lifecycle.py": "6ac038eb820e1488858cf2cf24c8731d610b31fc0bf36b858c9f893e2ec22dfd",
+    "system_model/connected/wired_return_lifecycle.py": "3a9a29119e2424e9d7df747d511d87eccdd06cd50e692c29e9b816bef656a3f5",
+    "system_model/connected/whole_chip_lifecycle.py": "b1b3f7c080c11678b41c2d342c04f19bbdcfa7b4b25efbe8e877a9344165d556",
+    "verification/bit_event_codec.py": "f2b663a67a910502212b73377d120fbc7ace395fcb97fb4057dc8a40d3b3d5a3"
+  },
+  "full_chip_closure": false
+}

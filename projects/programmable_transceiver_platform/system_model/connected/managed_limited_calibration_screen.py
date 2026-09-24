@@ -5,9 +5,9 @@ from managed_resources import command
 from managed_limited_reference import ManagedLimitedReferenceChip
 from programmable_calibration_dwell import calibrate_until_complete
 
-def main():
+def run_calibration(chip_class,report_name):
     start=time.monotonic()
-    c=ManagedLimitedReferenceChip(resistance=50.,reference_source_limit_a=150e-6,reference_sink_limit_a=150e-6,adc_latency_s=30e-9,tx_relative_gain=True,watchdog_s=1e-3)
+    c=chip_class(resistance=50.,reference_source_limit_a=150e-6,reference_sink_limit_a=150e-6,adc_latency_s=30e-9,tx_relative_gain=True,watchdog_s=1e-3)
     assert command(c,'rf_coarse_start',2412000000)['accepted']
     print('Coarse search command accepted',c.time,flush=True)
     c.advance(c.time+50e-6)
@@ -26,7 +26,10 @@ def main():
         limitations=['Managed autonomous acquisition and quiet shared-ADC calibration, no payload quality.',
             'Driver rail pulls RF PLL; reference load is real but reference voltage and buffer current share the coupled driver rail.',
             'Reference limited to 150uA source/sink at 50ohms; physical drive, bias and bandwidth remain unqualified.'])
-    (P/'evidence/connected-managed-limited-calibration.json').write_text(json.dumps(report,indent=2)+'\n')
+    (P/'evidence'/report_name).write_text(json.dumps(report,indent=2)+'\n')
     print(report,flush=True)
+
+def main():
+    return run_calibration(ManagedLimitedReferenceChip,'connected-managed-limited-calibration.json')
 
 if __name__=='__main__':main()

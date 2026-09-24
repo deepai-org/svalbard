@@ -4,7 +4,7 @@ import ast
 import math
 from pathlib import Path
 
-source = Path(__file__).resolve().parents[1] / 'analog/lna_mixer_screen.py'
+source = Path(__file__).resolve().parents[1] / 'analog/rf_measure.py'
 function = next(node for node in ast.parse(source.read_text()).body
                 if isinstance(node, ast.FunctionDef) and node.name == 'projection')
 namespace = {'math': math}

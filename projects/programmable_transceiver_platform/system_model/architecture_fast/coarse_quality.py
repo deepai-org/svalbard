@@ -5,7 +5,6 @@ from continuous_four_path import run
 from coarse_chip import CoarseTransceiverChip
 from managed_resources import command
 from shared_tx_traffic import scenario
-from external_rf_lifecycle import ExternalChip
 from rf_modulated_quality import Multicarrier
 from rf_quality_screen import quality
 from chip_model import decode_iq
@@ -30,9 +29,9 @@ class PreparedChip(CoarseTransceiverChip):
             self.applied_inputs.append(value)
         self.tx.apply_sample=observed
 
-def simulate(mode,impaired):
+def simulate(mode,impaired,*,prepared_class=PreparedChip,initial_options=None):
     chips=[]
-    class Observed(PreparedChip):
+    class Observed(prepared_class):
         def __init__(self,**kwargs):
             options=dict(load_capacitance=0,output_parameters=dict(
                 gain_imbalance_db=0.,phase_error_deg=0.,lo_feedthrough=0j,cubic=0.))
@@ -41,7 +40,7 @@ def simulate(mode,impaired):
                     return_charge_per_transition=50e-15,rf_hz_per_v=1e6,wire_hz_per_v=1e5,
                     rf_noise_rms_hz=20000,wire_noise_rms_hz=20000,noise_seed=839,
                     frontend=dict(gain_error=.03,phase_error=.03,saturation=.8,noise_rms=.001,seed=800))
-            super().__init__(**options,**kwargs)
+            super().__init__(**(initial_options or {}),**options,**kwargs)
             self.tx_probe.clear();self.probe_times.clear()
             self.external_source(Multicarrier(seed=828)(4096,40e6),self.time,25e-9,offset_hz=100250e3)
             chips.append(self)
@@ -52,7 +51,7 @@ def simulate(mode,impaired):
     return [decode_iq(w,bits) for w in c.host_samples],c.tx_probe,c.probe_times,traffic
 
 
-def main():
+def run_quality(simulator=simulate,*,warm=False):
     if not __debug__:raise RuntimeError('Assertions must remain enabled')
     p=scenario.architecture.P;start=time.monotonic()
     files=list(scenario.architecture.D.glob('*.py'))+list(Path(__file__).parent.glob('*.py'))+[p/'verification/stream_codec.py']
@@ -61,14 +60,14 @@ def main():
         limitations=['Finite continuous-service record with timed lossy stop, not indefinite service bounds.',
                      'RX is wideband multicarrier; TX uses deterministic amplitude-varying transport stimulus.',
                      'Assumed coarse bank/device/noise parameters; no spectral mask or physical qualification.',
-                     '2.5 GHz and -0.5% free-frequency case; warm coarse retuning remains open.'])
-    output=p/'evidence/fast-coarse-quality.json'
+                     '2.5 GHz and -0.5% free-frequency case; warm 2.437-to-2.5 GHz transition; other tuning histories remain open.' if warm else '2.5 GHz and -0.5% free-frequency case; warm coarse retuning remains open.'])
+    output=p/'evidence'/('fast-warm-quality.json' if warm else 'fast-coarse-quality.json')
     def save():output.write_text(json.dumps(report,indent=2)+'\n')
     save()
     try:
         for mode in (0,1):
-            rx0,tx0,t0,_=simulate(mode,False)
-            rx,tx,t,traffic=simulate(mode,True)
+            rx0,tx0,t0,_=simulator(mode,False)
+            rx,tx,t,traffic=simulator(mode,True)
             assert t==t0 and len(rx)==len(rx0)
             rq=quality(rx0,rx);tq=quality(tx0,tx)
             report['cases'].append(dict(mode=mode,rx_quality=rq,tx_quality=tq,traffic=traffic));save()
@@ -79,5 +78,8 @@ def main():
     except BaseException as exc:
         report.update(status='failed',error=repr(exc));raise
     finally:save()
+
+def main():
+    return run_quality()
 
 if __name__=='__main__':main()

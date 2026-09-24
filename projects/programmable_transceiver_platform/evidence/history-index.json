@@ -1,7 +1,7 @@
 {
   "recovery_commit": "53f84a75542b80ff2611fc5eb785e680197a6bd9",
-  "scope": "Historical reports with no explicit filename reference in tracked project text other than the superseded chronological README. Dynamic references cannot be ruled out by this scan.",
-  "recovery": "git show <recovery_commit>:projects/programmable_transceiver_platform/<path>",
+  "scope": "Historical reports and migration snapshots removed after reference review; record-specific recovery commits override the default. Removal does not change evidence status. Dynamic references cannot be ruled out by static review.",
+  "recovery": "git show <record recovery_commit, or top-level recovery_commit if absent>:projects/programmable_transceiver_platform/<path>",
   "reports": [
     {
       "path": "evidence/adc-cdac-driver-screen.json",
@@ -1430,6 +1430,155 @@
       "sha256": "91f32c48d601c74951f23ca386e47861fb768526abd7a22e5089e3951be84108",
       "bytes": 35587,
       "status": "terminal_passed"
+    },
+    {
+      "path": "evidence/common-chip-migration-before/continuous_duplex.py",
+      "sha256": "5728d3a071e3e662e523a4b7ca73bc374db00f7c33ae0483b12b9c2a7f583b79",
+      "bytes": 4998,
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "reason": "Historical before-migration snapshot; no active path reference found"
+    },
+    {
+      "path": "evidence/common-chip-migration-before/continuous_quality.py",
+      "sha256": "d2d61ac67e7315e66618667d9ce3ee62d86a79f36bc9a61a73311b98c8a93fcc",
+      "bytes": 3107,
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "reason": "Historical before-migration snapshot; no active path reference found"
+    },
+    {
+      "path": "evidence/common-chip-migration-before/fast-continuous-quality.json",
+      "sha256": "3b01da37d7b6364dade77435f516a4222834e3cf4e5a1cad503f2b5465e8606b",
+      "bytes": 54871,
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "reason": "Historical before-migration snapshot; no active path reference found",
+      "status": "passed"
+    },
+    {
+      "path": "evidence/common-chip-migration-before/fast-continuous-four-path.json",
+      "sha256": "887538464d352855d85a9edc12625a2af472b8b9606b1a922d1710d6b5a2c9c9",
+      "bytes": 54183,
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "reason": "Historical before-migration snapshot; no active path reference found",
+      "status": "passed"
+    },
+    {
+      "path": "evidence/common-chip-resource-migration-before/shared_tx_recovery.py",
+      "sha256": "3586c552a70a5058cad42fbd7b73295016051ace13075149d16281dfda859f3a",
+      "bytes": 4085,
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "reason": "Historical before-migration snapshot; no active path reference found"
+    },
+    {
+      "path": "evidence/common-chip-resource-migration-before/fast-diagnostics.json",
+      "sha256": "f51182f5dfea47f233a8479cad9f6c6d872fe4199c6bcf46264e4e755eb05d22",
+      "bytes": 54763,
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "reason": "Historical before-migration snapshot; no active path reference found",
+      "status": "passed"
+    },
+    {
+      "path": "evidence/common-chip-resource-migration-before/fast-continuous-rx.json",
+      "sha256": "996791f967460947bf1d8b36781dbe23391ee1dc6b7108fc6438b845534ac27b",
+      "bytes": 52719,
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "reason": "Historical before-migration snapshot; no active path reference found",
+      "status": "passed"
+    },
+    {
+      "path": "evidence/common-chip-resource-migration-before/diagnostics.py",
+      "sha256": "a2004305a9fc338c41ad2ecd23a475029f62d30ae07b41b46050549b6731297c",
+      "bytes": 1921,
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "reason": "Historical before-migration snapshot; no active path reference found"
+    },
+    {
+      "path": "evidence/common-chip-resource-migration-before/fast-receiver-detect-supply.json",
+      "sha256": "7ac386188c3be1624bc94a9d318cc90a5dfa6522225616ad95063cb49ea65ad3",
+      "bytes": 53910,
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "reason": "Historical before-migration snapshot; no active path reference found",
+      "status": "passed"
+    },
+    {
+      "path": "evidence/common-chip-resource-migration-before/receiver_detect.py",
+      "sha256": "0a5005771dda154d8898230463e057ed468290f35d7ac24576af182c0addaa35",
+      "bytes": 3118,
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "reason": "Historical before-migration snapshot; no active path reference found"
+    },
+    {
+      "path": "evidence/common-chip-resource-migration-before/fast-shared-tx-recovery.json",
+      "sha256": "3ce5b0e7f3b4e4ecb86ec42ae894d5fbd93ae5cf9c90c038ecce8535746583be",
+      "bytes": 51599,
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "reason": "Historical before-migration snapshot; no active path reference found",
+      "status": "passed"
+    },
+    {
+      "path": "evidence/common-chip-resource-migration-before/continuous_rx.py",
+      "sha256": "07c6da06ea0662e5408de9edafdc81bd5e84d7931427ab0274c1d037e32e38c7",
+      "bytes": 4172,
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "reason": "Historical before-migration snapshot; no active path reference found"
+    },
+    {
+      "path": "evidence/staged-calibration-timed-report.json",
+      "sha256": "1c4544480f771c3f34376b803d3aba3faae283657c1271c39b72a580fcbfaf68",
+      "bytes": 4594,
+      "status": "passed",
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "identical_at_removal_to": "evidence/connected-calibration-controller.json",
+      "reason": "Historical snapshot duplicates retained report; archived link remains pinned to original Git object"
+    },
+    {
+      "path": "evidence/staged-calibration-iq-target-report.json",
+      "sha256": "2fca21b042fa23f69de88257acf2cb21aa7835a5122eb1a9f61f199cf3b0918c",
+      "bytes": 4115,
+      "status": "passed",
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "identical_at_removal_to": "evidence/connected-calibration-iq.json",
+      "reason": "Historical snapshot duplicates retained report; archived link remains pinned to original Git object"
+    },
+    {
+      "path": "evidence/staged-calibration-ownership-report.json",
+      "sha256": "468b0426f97ba1ec2065a8a03fd51954b04295adceb98dfa9cd19d80c8b5b7e1",
+      "bytes": 435,
+      "status": "passed",
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "identical_at_removal_to": "evidence/connected-calibration-ownership.json",
+      "reason": "Historical snapshot duplicates retained report; archived link remains pinned to original Git object"
+    },
+    {
+      "path": "evidence/staged-calibration-recovery-report.json",
+      "sha256": "931ebc45168a8fc09d846f0ae9f716aae4150781caa4acc86037ac1387ad2331",
+      "bytes": 469,
+      "status": "passed",
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "identical_at_removal_to": "evidence/connected-calibration-recovery.json",
+      "reason": "Historical snapshot duplicates retained report; archived link remains pinned to original Git object"
+    },
+    {
+      "path": "evidence/connected-architecture-pass876-baseline.json",
+      "sha256": "32c1c064f4196ce51918eea9647512edd13f924ab9e3947d18e947053283e34e",
+      "bytes": 160187,
+      "status": "passed",
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "identical_at_removal_to": "evidence/connected-architecture-suite.json",
+      "reason": "Historical snapshot duplicates retained report; archived link remains pinned to original Git object"
+    },
+    {
+      "path": "spec/fast-feasibility-workflow.md",
+      "sha256": "170f1280fca98d7f5b2a64efbc0479013485db94899f8ef2b61576a63370a48a",
+      "bytes": 6018,
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "reason": "Workflow consolidated into spec/analog-design-workflow.md; original retained for historical report references"
+    },
+    {
+      "path": "spec/executable-chip-model.md",
+      "sha256": "2d1c69c09cbe1643f90d301294a3a2d10c313361cf44d80d12fbf86a867fe3f0",
+      "bytes": 4351,
+      "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
+      "reason": "Workflow consolidated into spec/analog-design-workflow.md; original retained for historical report references"
     }
   ]
 }

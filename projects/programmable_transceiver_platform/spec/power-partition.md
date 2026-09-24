@@ -468,79 +468,31 @@ that remains a critical 2.5 Gb/s coexistence gate.
 
 ## Historical quiet-rail numerical diagnostics
 
-These bounded experiments preserve numerical failures as well as successes.
-They do not qualify switching behavior or replace the current power allocation.
+The [complete numerical experiment record](https://github.com/deepai-org/svalbard/blob/32aa5622d72b53d566cd8ed5100b2a67e1818b99/projects/programmable_transceiver_platform/spec/power-partition.md#historical-quiet-rail-numerical-diagnostics)
+retains decks, checkpoint tables, raw-archive locations/hashes and intermediate
+interpretations. These experiments do not qualify switching or replace current
+power allocations. They used quiet low inputs, native 8 mA pads, 10 pF loads,
+unequal signal inductances and selected 0.25 ohm/2 nH supply/return paths.
 
-### Pass 13: isolate quiet-input rail startup
+| Check | Retained result | Reproduction / report |
+| --- | --- | --- |
+| One-nanosecond startup | Ideal, supply-only, return-only and both-rail runs completed; tiny terminal residuals do not establish physical noise | `verification/run_rail_startup.sh`; [report](../evidence/rail-startup-screen.json) |
+| Checkpoints to 12 ns | Ideal completed; supply-only timed out after its last saved 1 ns checkpoint, return-only/both after 2 ns checkpoints | `verification/run_rail_checkpoints.sh`; [report](../evidence/rail-checkpoint-screen.json) |
+| SPARSE/KLU comparison | Both solved ideal rails; shared rails timed out with SPARSE and aborted at initial DVSS with KLU | `verification/run_rail_solvers.sh`; [report](../evidence/rail-solver-screen.json) |
 
-Four fresh, bounded one-nanosecond runs compare ideal rails, supply-only impedance, return-only impedance and both. Each active rail uses the same selected 0.25 ohm/2 nH series path from pass 12. The native 8 mA pads, unequal signal inductances and 10 pF loads remain. Data and clock inputs are held low, matching the prior stimulus before its 20 ns start. Core supply/return remains ideal.
+A last saved checkpoint is not the exact timeout point. Small saved rail motion
+neither proves stability after that window nor excludes hidden-node problems.
+Checkpoint pauses affect timestep history. Solver comparisons must preserve
+physical decks, tolerances and initialization; changing damping merely to finish
+a run would not resolve the underlying uncertainty.
 
-All four DC operating points and short transients complete with default integration and a 10 ps maximum step. Reported VDD is 3.3 V; quiet source current is approximately 0.71 nA. The both-rails case has VSS between −0.024 and +0.395 nV, and low output voltage around 3.35 nV. These tiny model residuals do not establish physical noise accuracy.
-
-| Case | Saved transient rows | Completed simulated time |
-|---|---:|---:|
-| Ideal | 108 | 1 ns |
-| Supply only | 329 | 1 ns |
-| Return only | 287 | 1 ns |
-| Both | 391 | 1 ns |
-
-This rules out an obvious large startup rail excursion **in the captured interval**. It does not explain the later slowdown, prove stability beyond 1 ns, or test switching. More adaptive points with R/L are observed, but their count alone is not a diagnosis. Prior full-interval timeouts remain unresolved, including those using Gear.
-
-Run `verification/run_rail_startup.sh` from this project. Each probe has a 30-second subprocess limit and records completion separately from waveform availability. The [retained report](../evidence/rail-startup-screen.json) includes deck/log/operating-point/waveform hashes. The raw archive is `scratch/transceiver-rail-startup-artifacts.tar.gz`.
-
-Next preserve intermediate waveforms as simulated time approaches the slowdown, inspect timestep and rail/internal-node behavior, and compare the supply-only/return-only cases over that same interval. Do not infer that more damping is the correct physical fix before distinguishing numerical behavior from circuit behavior. Follow the [two-sided uncertainty requirement](uncertainty-envelope.md): both apparent stability and apparent instability need scrutiny.
-
-Archive SHA-256: `1327697b4462f4ae991e1670b4fbd06aa5fcb6e3ed91b8b88bb87d0ed8633b6e`.
-
-### Pass 14: intermediate quiet-rail traces
-
-The startup harness now saves checkpoints at 1, 2, 4 and 8 ns before a requested 12 ns endpoint. The [ngspice stop/resume commands](https://ngspice.sourceforge.io/docs/ngspice-manual.pdf) preserve transient state; the circuit is not restarted at each checkpoint. Saved endpoint times are checked against the requested times, and 16-digit output preserves small rail changes. The ideal case exercises all checkpoints successfully.
-
-Physical conditions match pass 13: quiet low inputs, native 8 mA pads, 10 pF loads, unequal signal inductances, and zero or selected 0.25 ohm/2 nH paths on supply/return. Integration is default trapezoidal, maximum step 10 ps. Each case has a 60-second wall-time bound.
-
-| Case | Execution | Last saved checkpoint | Saved rows at that point | Median / minimum saved timestep |
-|---|---|---:|---:|---:|
-| Ideal rails | Completed | 12 ns | 1,220 | 10 ps / 100 fs |
-| Supply only | Timeout | 1 ns | 329 | 1.25 ps / 9.77 fs |
-| Return only | Timeout | 2 ns | 590 | 2.5 ps / 78.1 fs |
-| Both | Timeout | 2 ns | 753 | 1.25 ps / 9.77 fs |
-
-The last saved checkpoint is not the exact point at which the run timed out. Logs continued to report progress after those checkpoints. Intermediate traces are retained despite the timeout.
-
-Supply-only VDD varies by approximately 0.062 nV in the saved interval. Return-only VSS varies by approximately 0.000367 nV. With both paths, VDD and VSS variations remain below 0.5 nV. These are model residuals, not predictions of physical noise. They show no large rail excursion in the captured intervals; later behavior is not available.
-
-#### Interpretation and next test
-
-The slowdown is not unique to the interaction of two moving rails: either rail impedance can expose it. Tiny timestep selection while terminal voltages remain nearly constant is consistent with numerical sensitivity, but does not identify the cause or rule out hidden internal-node behavior. The checkpoint interruptions also affect timestep history, so elapsed progress is not directly comparable with uninterrupted runs.
-
-Next compare the installed simulator's linear solvers on the same circuit and timestep controls, retaining both successful and unsuccessful outcomes. Inspect internal-node behavior or tolerance sensitivity if solver choice does not resolve it. Do not change circuit damping or relax electrical requirements merely to obtain a completed run. Both false stability and false instability remain possible until the numerical result is cross-checked.
-
-Reproduce with `verification/run_rail_checkpoints.sh`. The [report](../evidence/rail-checkpoint-screen.json) records execution state and hashes. Raw decks, logs and snapshots are in `scratch/transceiver-rail-checkpoint-artifacts.tar.gz`. The wrapper reports completion of the diagnostic collection; only the ideal electrical simulation reached its requested endpoint. No switching, bank-current or FPGA timing claim is established.
-
-Archive SHA-256: `9da1c7c81542d60c5239a5922c1d4a247fc9c1ded50ffd883c96a10995138329`.
-
-### Pass 15: linear solver comparison and invalid snapshot rejection
-
-Four fresh runs compare SPARSE 1.3 and KLU with ideal and shared R/L rails. Physical decks, integration method, tolerances and checkpoint times are identical after normalizing output paths; the comparison checks that equality. KLU is selected through `.spiceinit` using the [documented option](https://ngspice.sourceforge.io/applic.html). Each log confirms the actual solver. No compatibility flags, device parameters or circuit damping are changed.
-
-| Circuit | SPARSE | KLU |
-|---|---|---|
-| Ideal rails | Completes 12 ns | Completes 12 ns |
-| Shared 0.25 ohm/2 nH per rail | Times out; last saved checkpoint 2 ns | Aborts at initial time point, identifying DVSS |
-
-Solver choice does not resolve the shared-rail problem. KLU's initial-step failure and SPARSE's tiny-step progression are numerical outcomes; neither proves physical instability. The ideal control succeeds under both solvers. The full chip and dynamic rail behavior remain unqualified.
-
-#### Analyzer defect found and corrected
-
-After KLU's transient abort, subsequent `wrdata` commands wrote single-row operating-point data into the checkpoint filenames. The old parser attempted a timestep minimum on an empty difference array and raised an exception. It did not produce a successful comparison report, and no such artifact is accepted as a transient result.
-
-The parser now rejects single-row, non-finite, non-increasing-time and wrong-endpoint traces before computing statistics. Explicit transient-abort messages mark simulator failure even if ngspice exits with code zero. Normal checkpoint `pause requested` messages are not failures. Four new tests cover valid traces and malformed snapshots. Saved ideal runs exercise normal pause handling; all five shared-rail KLU snapshots are rejected.
-
-The [retained report](../evidence/rail-solver-screen.json) is corrected analysis of the saved run, not a new simulation. Replay checks exact deck and initialization content; the original SPARSE timeout is retained explicitly. Raw files are archived in `scratch/transceiver-rail-solver-artifacts.tar.gz`, with its hash in the report. The initial diagnostic run directory is `scratch/transceiver-rail-solvers.u6A18iuO`.
-
-Reproduce the current experiment with `verification/run_rail_solvers.sh`. It now retains simulator and invalid-snapshot failures instead of crashing during extraction. Diagnostic collection success does not mean all simulations completed.
-
-Next isolate resistive versus inductive rail elements and inspect the native MOS-capacitor/ESD model contributions. Keep the physical model unchanged for solver comparisons; any later simplification must be explicitly a diagnostic and must not become evidence for the complete chip. Both artificially stable and artificially unstable numerical behavior remain concerns.
+After transient abort, ngspice may write single-row operating-point data under
+waveform filenames and even exit zero. The corrected analyzer rejects single-row,
+non-finite, non-increasing-time and wrong-endpoint traces before statistics, and
+recognizes abort messages separately from normal checkpoint pauses. It rejects
+all five shared-rail KLU snapshots; the corrected report is analysis of retained
+runs, not a successful resimulation. Distinguish collection success from circuit
+success and preserve both false-stability and false-instability concerns.
 
 ## Candidate algebraic host-ground acceleration
 

@@ -2,12 +2,6 @@
 import copy,json
 import numpy as np
 from chip_model import P
-from phase_loaded_tx_chip import PhaseLoadedTxChip
-from host_activation_chip import HostActivationChip
-from programmable_chip import ProgrammableChip
-from reconstructed_chip import reconstructed
-from rf_loaded_detector import LoadedDetector
-from tx_output_terms import output_terms
 from loaded_pad_capture import captured
 from calibration_wideband_screen import prepared,PROFILE
 from managed_tx_quality import calibration_window
@@ -16,13 +10,9 @@ from wideband_clock_quality import simulate
 from rf_quality_screen import quality
 from tx_envelope_observer import spectrum
 
-from loaded_pad_quality import IdealLoadedChip
+from pad_quality_fixture import IdealCarrierChip
 from managed_limited_rail_budget import ManagedLimitedRailBudgetChip
 
-class IdealCarrierChip(IdealLoadedChip):
-    def __init__(self,network_carrier_hz=2412000000,**kwargs):
-        super().__init__(**kwargs)
-        self.loaded_tx.network.reframe(network_carrier_hz,0.)
 
 def before_traffic(ideal,failure_path=None):
     def prepare(c):

@@ -1,4 +1,5 @@
 """Compare autonomous integer-edge clocks with reference and batched filters."""
+import argparse
 import copy
 import hashlib
 import json
@@ -28,14 +29,23 @@ class BatchedFilter(ResistorNoiseFilter):
         super().__init__(**kwargs);self.routes=Counter()
 
 
-def main():
+def main(variant='reference'):
+    if variant not in ('reference','local','long'):
+        raise ValueError('Unknown thermal comparison variant')
+    import thermal_filter_batched
+    from thermal_filter_guard_screen import safe_region as reference_guard
+    from thermal_filter_local_guard import safe_region as local_guard
+    thermal_filter_batched.safe_region=reference_guard if variant=='reference' else local_guard
+    long_run=variant=='long'
+
     files=list((P/'system_model/connected').glob('*.py'))+[Path(__file__)]+[
-        P/'verification'/f for f in ('thermal_filter_batched.py','thermal_filter_guard_screen.py',
+        P/'verification'/f for f in ('thermal_filter_batched.py','thermal_filter_guard_screen.py','thermal_filter_local_guard.py',
+          'thermal_filter_local_clock_comparison.py','thermal_filter_long_clock_comparison.py',
           'thermal_filter_energy_screen.py','thermal_filter_exact_step_screen.py')]
     hashes={str(p.relative_to(P)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
-    output=P/'evidence/thermal-filter-clock-comparison.json'
+    output=P/'evidence'/('thermal-filter-clock-comparison.json' if variant=='reference' else f'thermal-filter-{variant}-clock-comparison.json')
     report=dict(status='running',source_sha256=hashes,cases=[],limitations=[
-        'Short autonomous acquisition comparison, not sustained-lock or full-chip qualification.',
+        '60 us isolated acquisition and tail comparison; not full-chip qualification.' if long_run else 'Short autonomous acquisition comparison, not sustained-lock or full-chip qualification.',
         'Nominal component values, one thermal seed and one fractional carrier.'])
     def save():output.write_text(json.dumps(report,indent=2)+'\n')
     save()
@@ -48,10 +58,10 @@ def main():
             pll.retarget(0,2437000000)
             pll.set_noise(0,FrequencyNoise.seeded(20000.,seed=839))
             trace=[];start=time.perf_counter()
-            for i in range(1,101):
+            for i in range(1,2401 if long_run else 101):
                 pll.advance(i/40e6);lock=pll.observe_lock()
                 trace.append([pll.output_phase_cycles,pll.frequency_hz,float(lock),*pll.filter.state])
-                if i%25==0:print(cls.__name__,i,flush=True)
+                if i%(100 if long_run else 25)==0:print(cls.__name__,i,flush=True)
             traces.append(np.array(trace))
             report['cases'].append(dict(solver=cls.__name__,elapsed_s=time.perf_counter()-start,
                 routes=dict(getattr(pll.filter,'routes',{}))))
@@ -60,7 +70,9 @@ def main():
         assert maximum[0]<1e-6 and maximum[1]<1.,maximum
         assert maximum[2]==0 and max(maximum[3:6])<1e-8,maximum
         assert maximum[6]<1e-16 and maximum[7]<1e-18 and max(maximum[8:])<1e-21,maximum
-        report.update(status='short_clock_comparison_passed',max_trace_errors=maximum.tolist(),
+        if long_run:
+            assert np.all(traces[0][-800:,2]==1) and np.all(traces[1][-800:,2]==1), 'Tail did not sustain lock'
+        report.update(status='acquisition_tail_clock_comparison_passed' if long_run else 'short_clock_comparison_passed',max_trace_errors=maximum.tolist(),
                       reference_to_batched_runtime_ratio=report['cases'][0]['elapsed_s']/report['cases'][1]['elapsed_s'])
     except BaseException as exc:
         report.update(status='failed',error=repr(exc));raise
@@ -70,4 +82,7 @@ def main():
         save()
     print(json.dumps({k:v for k,v in report.items() if k!='source_sha256'},indent=2))
 
-if __name__=='__main__':main()
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--variant',choices=('reference','local','long'),default='reference')
+    main(parser.parse_args().variant)

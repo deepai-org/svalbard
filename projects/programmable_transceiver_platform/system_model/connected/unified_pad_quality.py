@@ -2,44 +2,26 @@
 import copy,json
 import numpy as np
 from chip_model import P
-from phase_loaded_tx_chip import PhaseLoadedTxChip
-from host_activation_chip import HostActivationChip
-from programmable_chip import ProgrammableChip
-from reconstructed_chip import reconstructed
-from rf_loaded_detector import LoadedDetector
-from tx_output_terms import output_terms
 from loaded_pad_capture import captured
 from calibration_wideband_screen import prepared,PROFILE
-from managed_tx_quality import calibration_window
 from tx_host_precondition import conditioner
 from wideband_clock_quality import simulate
 from rf_quality_screen import quality
 from tx_envelope_observer import spectrum
 
-from loaded_pad_quality import IdealLoadedChip
+from pad_quality_fixture import IdealCarrierChip, before_traffic
 from managed_unified_reference import ManagedUnifiedReferenceChip
+from managed_guarded_reference import ManagedGuardedReferenceChip
 
-class IdealCarrierChip(IdealLoadedChip):
-    def __init__(self,network_carrier_hz=2412000000,**kwargs):
-        super().__init__(**kwargs)
-        self.loaded_tx.network.reframe(network_carrier_hz,0.)
 
-def before_traffic(ideal):
-    def prepare(c):
-        calibration_window(ideal)(c)
-        # ADC conversion logs include maintenance reads. Keep them separately;
-        # only subsequent receive conversions belong to the RX waveform record.
-        c.tx_maintenance_observations=list(zip(c.sample_times,c.analog_samples))
-        c.sample_times=[];c.analog_samples=[]
-    return prepare
 
-def main(mode=0):
+def main(mode=0,*,guarded=False):
     target=(2412000000,2437000000)[mode]
-    prefix=f"connected-unified-pad-quality-mode{mode}"
+    prefix=f"connected-guarded-limited-pad-quality-mode{mode}" if guarded else f"connected-unified-pad-quality-mode{mode}"
     experiment=copy.deepcopy(PROFILE['experiment']);experiment['source_count']=18000
     experiment['source_offset_hz']+=target-2400000000
     records=[];instances=[]
-    for actual,base in ((False,IdealCarrierChip),(True,ManagedUnifiedReferenceChip)):
+    for actual,base in ((False,IdealCarrierChip),(True,ManagedGuardedReferenceChip if guarded else ManagedUnifiedReferenceChip)):
         found=[]
         cls=captured(prepared(base,target,not actual,50e-6,
             postprepare=conditioner('switching',0.),before_mode=before_traffic(not actual)),target,found)
@@ -47,6 +29,8 @@ def main(mode=0):
             rf_fast_fraction=.30,rf_pulse_bandwidth_hz=300e3,
             **PROFILE['shared_reference'],**PROFILE['coupling']) if actual else
             dict(network_carrier_hz=target,load_capacitance=0,dac_reference_load_capacitance=0,probe_load_scale=0))
+        if guarded:
+            if actual:options.update(resistance=50.,reference_source_limit_a=150e-6,reference_sink_limit_a=150e-6)
         kwargs=dict(blockers=[(a,f+target-2400000000) for a,f in PROFILE['blockers']],cubic=PROFILE['cubic']) if actual else {}
         result=simulate(mode,actual,chip_class=cls,chip_options=options,experiment=experiment,**kwargs)
         records.append(result);instances.append(found[0]);print('actual' if actual else 'ideal','traffic completed',flush=True)
@@ -62,7 +46,7 @@ def main(mode=0):
         coupled_reference_v=instances[1].adc_reference.voltage,
         limitations=['Single selected mode; provisional10% held-out quality, not protocol compliance.',
         'Matched passive network/source units; ideal carrier/modulator reference versus actual oscillator and nonlinear stage.',
-        'Coupled driver/readout/reference/PLL feedback included; no package extraction, reverse mux loading or retune/recovery quality.',
+        'Coupled driver/readout/reference/PLL feedback with 150uA reference limits and entry-state guards; no package extraction or retune/recovery quality.' if guarded else 'Coupled driver/readout/reference/PLL feedback included; no package extraction, reverse mux loading or retune/recovery quality.',
         'Calibration uses actual shared12bit ADC transfer and finite readout; physical current limits, aperture and driver laws remain assumptions.'])
     (P/'evidence'/(prefix+'.json')).write_text(json.dumps(report,indent=2)+'\n')
     print(tx,rx,flush=True)

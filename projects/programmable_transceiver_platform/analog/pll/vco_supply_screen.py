@@ -9,23 +9,10 @@ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 r=json.loads((B.parent/'result.json').read_text());c=next(c for c in r['cases'] if c['control_v']==1.08)
 assert sha(B)==c['artifacts_sha256']['.spice']
 original=B.read_text();assert original.count('VPLL PLLVDD 0 3.3')==1
-paths={B}
-def dependencies(text,parent):
- for line in text.splitlines():
-  match=re.match(r'\s*\.(?:include|inc|lib)\s+(\S+)',line,re.I)
-  if not match:continue
-  name=match.group(1).strip('"\'')
-  candidate=Path(name)
-  if not candidate.is_absolute():candidate=parent/candidate
-  if not candidate.is_file():
-   # .lib section declarations have a bare section name, not a file.
-   assert line.lower().lstrip().startswith('.lib ') and len(line.split())==2, line
-   continue
-  candidate=candidate.resolve()
-  if candidate in paths:continue
-  paths.add(candidate);dependencies(candidate.read_text(),candidate.parent)
+paths={B,Path(__file__).with_name('spice_dependencies.py')}
+from spice_dependencies import dependencies
 
-dependencies(original,B.parent)
+dependencies(original,B.parent,paths)
 before={str(p):sha(p) for p in sorted(paths)}
 (O/'manifest.json').write_text(json.dumps(dict(source_sha256_before=before,supply_v=[3.29,3.3,3.31] if not RIPPLE else [3.3,3.3],ripple_mode=RIPPLE,max_step_ps=1 if FINE else 2,ripple_frequency_hz=50e6 if RIPPLE else None,ripple_peak_v=.01 if RIPPLE else None,baseline_deck_sha256=sha(B),scope='Seeded prebiased ring with actual RF/divider/PFD loading; fixed ideal control and regen, no closed PLL or intrinsic noise'),indent=2)+'\n')
 rows=[]

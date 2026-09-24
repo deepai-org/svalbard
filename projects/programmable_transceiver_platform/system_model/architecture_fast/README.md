@@ -43,7 +43,10 @@ frequency error at 1.25/2.5 Gb/s. Each delivers 6,150 error-free scored bits aft
 a fixed 2,040-bit external training guard through the same channel/CDR/host state.
 A provisional timing monitor qualifies 64 observed edges below 0.1 UI error
 and revokes qualification after 64 transition-free bits. Silence and transition-loss
-controls pass. This is bounded timing evidence; wrapped phase cannot detect
+controls pass. After a +100 ppm source step during a 1,000-bit gap,
+qualification and payload recover. A 10,000-bit gap also requalifies timing but
+corrupts payload alignment; this negative control prevents treating timing
+qualification as link readiness. This is bounded timing evidence; wrapped phase cannot detect
 whole-bit slips, and protocol word lock and general acquisition remain open.
 
 The model tests payload identity in connected 8/12-bit GFSK paths and wired

@@ -11,22 +11,9 @@ assert sha(B)==c['artifacts_sha256']['.spice']
 original=B.read_text();assert '.ic v(XRX.XVCO.N0P)=' in original and 'v(XRX.XVCO.N0N)=' in original
 assert original.count('VPLL PLLVDD 0 3.3')==1
 paths={B,Path(__file__)}
-def dependencies(text,parent):
- for line in text.splitlines():
-  match=re.match(r'\s*\.(?:include|inc|lib)\s+(\S+)',line,re.I)
-  if not match:continue
-  name=match.group(1).strip('"\'')
-  candidate=Path(name)
-  if not candidate.is_absolute():candidate=parent/candidate
-  if not candidate.is_file():
-   # .lib section declarations have a bare section name, not a file.
-   assert line.lower().lstrip().startswith('.lib ') and len(line.split())==2, line
-   continue
-  candidate=candidate.resolve()
-  if candidate in paths:continue
-  paths.add(candidate);dependencies(candidate.read_text(),candidate.parent)
+from spice_dependencies import dependencies
 
-dependencies(original,B.parent)
+dependencies(original,B.parent,paths)
 before={str(p):sha(p) for p in sorted(paths)}
 (O/'manifest.json').write_text(json.dumps(dict(source_sha256_before=before,max_step_ps=.5 if FINE else 2,baseline_deck_sha256=sha(B),pulse_nodes=['XRX.XVCO.N0P','XRX.XVCO.N0N'],pulse_times_ns=[20,20.001,20.011,20.012],amplitudes_a=[0,1e-4,-1e-4],scope='Deterministic differential internal-stage charge perturbation; no intrinsic noise or autonomous PLL claim'),indent=2)+'\n')
 rows=[]

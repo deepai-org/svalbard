@@ -10,7 +10,11 @@ from thermal_filter_guard_screen import ResistorNoiseFilter,BALANCED_FILTER
 P=Path(__file__).resolve().parents[1]
 
 
-def main():
+def main(*,local_guard=False):
+    import thermal_filter_batched
+    from thermal_filter_guard_screen import safe_region as reference_guard
+    from thermal_filter_local_guard import safe_region as local_region
+    thermal_filter_batched.safe_region=local_region if local_guard else reference_guard
     rng=np.random.default_rng(3347);routes=Counter();errors=[];fixtures=[]
     for i in range(120):
         values={k:v*rng.uniform(.9,1.1) for k,v in BALANCED_FILTER.items()}
@@ -45,6 +49,7 @@ def main():
     assert routes['analytic']>0 and routes['radau_boundary_fallback']>0
     maxima=np.max(errors,axis=0).tolist()
     files=[Path(__file__)]+[P/'verification'/f for f in ('thermal_filter_batched.py','thermal_filter_guard_screen.py',
+        'thermal_filter_local_guard.py','thermal_filter_local_guard_regression.py',
         'thermal_filter_energy_screen.py','thermal_filter_exact_step_screen.py')]
     files+=list((P/'system_model/connected').glob('three_cap*.py'))
     report=dict(status='seeded_batched_regression_passed',seed=3347,cases=fixtures,routes=dict(routes),
@@ -53,7 +58,7 @@ def main():
                      'Exploratory component variation is not a foundry-qualified corner set.',
                      'Quadrature check is empirical; guard uses floating-point analytical bounds.'],
         source_sha256={str(p.relative_to(P)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files})
-    (P/'evidence/thermal-filter-batched-regression.json').write_text(json.dumps(report,indent=2)+'\n')
+    (P/'evidence'/('thermal-filter-local-guard-regression.json' if local_guard else 'thermal-filter-batched-regression.json')).write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(dict(cases=len(fixtures),routes=dict(routes),max_state_errors=maxima),indent=2))
 
 if __name__=='__main__':main()

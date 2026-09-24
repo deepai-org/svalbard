@@ -882,14 +882,34 @@ def cdr_qualification_controls():
     silence=RecoveredWordSource([0]*1024,2.5e9,.35,100.)
     for i in range(100):silence.forecast(i);silence.consume(i)
     assert silence.first_qualified_bit is None and not silence.timing_qualified
-    bits=np.random.default_rng(43).integers(0,2,2040).tolist()+[0]*1000
-    burst=RecoveredWordSource(bits,2.5e9,.35,100.)
-    for i in range(204):burst.forecast(i);burst.consume(i)
-    assert burst.timing_qualified
-    for i in range(204,304):burst.forecast(i);burst.consume(i)
-    assert not burst.timing_qualified and burst.qualification_losses>=1
+    recovery=[]
+    rng=np.random.default_rng(43)
+    prefix=rng.integers(0,2,2040).tolist()
+    payload=rng.integers(0,2,4090).tolist()
+    for gap in (1000,10000):
+        bits=prefix+[0]*gap+payload
+        burst=RecoveredWordSource(bits,2.5e9,.35,100.)
+        for i in range(204):burst.forecast(i);burst.consume(i)
+        assert burst.timing_qualified
+        # Independent source frequency change at the beginning of silence.
+        burst.frequency+=100e-6
+        stop=204+gap//10
+        for i in range(204,stop):burst.forecast(i);burst.consume(i)
+        assert not burst.timing_qualified and burst.qualification_losses>=1
+        reacquired=None
+        for i in range(stop,stop+409):
+            burst.forecast(i);burst.consume(i)
+            if burst.timing_qualified and reacquired is None:reacquired=(i-stop+1)*10
+        assert reacquired is not None
+        observed=[(word>>j)&1 for word in burst.words[stop:] for j in range(10)]
+        guard=2040
+        errors=sum(a!=b for a,b in zip(observed[guard:],payload[guard:]))
+        assert (errors==0)==(gap==1000)
+        recovery.append(dict(gap_bits=gap,frequency_step_ppm=100.,
+            timing_requalified_after_bits=reacquired,scored_bits=len(payload)-guard,
+            payload_errors=errors,qualification_proves_alignment=False))
     return dict(silence_rejected=True,transition_loss_revokes_qualification=True,
-        window_edges=64,max_phase_error_ui=.1,max_gap_bits=64,
+        recovery=recovery,window_edges=64,max_phase_error_ui=.1,max_gap_bits=64,
         scope='Provisional local timing-quality monitor, not protocol word lock; wrapped phase cannot detect whole-bit slips')
 
 

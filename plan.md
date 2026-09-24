@@ -53,7 +53,7 @@ There is no project backlog inside the named v1 portfolio. The gates sequence an
 **Implementation order:** complete and verify a connected GF180 transistor/passive
 schematic of the whole analog chip before new layout work. Then lay out, extract,
 and rerun the same requirements-based tests. Existing layouts are reference
-material. See [schematic workflow](projects/programmable_transceiver_platform/spec/executable-chip-model.md).
+material. See [schematic workflow](projects/programmable_transceiver_platform/spec/analog-design-workflow.md#schematic-implementation-gate).
 
 **Analog implementation foundation:** build transistor schematics and subsequent
 layout on six customizable, simulation-characterized primitive families: NMOS,

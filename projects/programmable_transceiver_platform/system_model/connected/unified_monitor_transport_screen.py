@@ -3,20 +3,31 @@ import json
 from chip_model import P
 from managed_unified_reference import ManagedUnifiedReferenceChip
 from managed_resources import command
+from tx_host_precondition import conditioner
 
-def main():
+def main(variant="transport"):
+    if variant not in ("transport","ordered","trained"):
+        raise ValueError("Unknown monitor experiment")
     rows=[]
     for mode in (0,1):
         c=ManagedUnifiedReferenceChip(watchdog_s=1e-3,adc_latency_s=30e-9)
-        assert command(c,'monitor_select',2)['accepted']
-        assert command(c,'diagnostic_select',1)['accepted']
+        if variant=='transport':
+            assert command(c,'monitor_select',2)['accepted']
+            assert command(c,'diagnostic_select',1)['accepted']
         assert command(c,'rf_coarse_start',2412000000)['accepted']
         c.advance(c.time+50e-6)
         assert c.coarse.qualified
+        if variant!='transport':
+            print('Coarse acquired',mode,c.time,flush=True)
+            assert command(c,'monitor_select',2)['accepted']
+            assert command(c,'diagnostic_select',1)['accepted']
         c.configure(mode,c.time)
         c.advance(c.time+60e-6)
         print('Monitor configured',mode,c.state,c.time,flush=True)
         assert c.state=='active'
+        if variant=='trained':
+            conditioner('switching')(c,mode)
+            assert c.host_activation.ready(c.time,c.epoch)
         start=c.time; updates=c.monitor_updates
         c.capture(64,start+100e-9)
         c.advance(start+6e-6)

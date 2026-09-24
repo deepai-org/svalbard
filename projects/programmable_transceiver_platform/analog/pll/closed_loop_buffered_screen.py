@@ -20,22 +20,9 @@ else:
  deck=original.replace('VREF REF 0 ','VREF REFRAW 0 ').replace('.control',addition+'.control')
  assert deck.replace(addition,'').replace('VREF REFRAW 0 ','VREF REF 0 ')==original
 # Enumerate actual include dependencies, including relative PDK includes.
-paths={B}
-def dependencies(text,parent):
- for line in text.splitlines():
-  match=re.match(r'\s*\.(?:include|inc|lib)\s+(\S+)',line,re.I)
-  if not match:continue
-  name=match.group(1).strip('"\'')
-  candidate=Path(name)
-  if not candidate.is_absolute():candidate=parent/candidate
-  if not candidate.is_file():
-   # .lib section declarations have a bare section name, not a file.
-   assert line.lower().lstrip().startswith('.lib ') and len(line.split())==2, line
-   continue
-  candidate=candidate.resolve()
-  if candidate in paths:continue
-  paths.add(candidate);dependencies(candidate.read_text(),candidate.parent)
-dependencies(deck,B.parent)
+paths={B,Path(__file__).with_name('spice_dependencies.py')}
+from spice_dependencies import dependencies
+dependencies(deck,B.parent,paths)
 p=O/(NAME+'.spice');p.write_text(deck)
 before={str(x):sha(x) for x in sorted(paths)}
 manifest=dict(status='running',source_sha256_before=before,deck_sha256_before=sha(p),declared_change=('Latest bypassed I/Q receiver with actual autonomous feedback; prepared deck unchanged.' if args.latest else 'Prepared steering pump/follower/reservoir substitution; original autonomous feedback and solver history retained.' if args.prepared else 'Four-FET reference buffer only; original autonomous feedback and all simulation options retained.'),requested_horizon_ns=float(re.search(r"^tran \S+ ([0-9.]+)n",deck,re.M).group(1)),limitations=['Precharged filter, seeded VCO, prebiased LNA: not cold startup.', 'Ideal reference, bias and supply sources; no intrinsic jitter/noise qualification.'])

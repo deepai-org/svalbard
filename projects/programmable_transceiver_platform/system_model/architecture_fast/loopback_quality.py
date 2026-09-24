@@ -4,13 +4,11 @@ from pathlib import Path
 from continuous_four_path import run
 from continuous_duplex import PreparedChip
 from shared_tx_traffic import scenario
-from external_rf_lifecycle import ExternalChip
-from rf_modulated_quality import Multicarrier
 from rf_quality_screen import quality
 from chip_model import decode_iq
 
 
-def simulate(mode,impaired):
+def simulate(mode,impaired,*,waveform=None):
     chips=[]
     class Observed(PreparedChip):
         def __init__(self,**kwargs):
@@ -25,27 +23,29 @@ def simulate(mode,impaired):
             self.tx_probe.clear();self.probe_times.clear()
             assert self.tx.rx_route=="loopback"
             chips.append(self)
-    traffic=run(mode,True,True,chip_factory=Observed)
+    traffic=run(mode,True,True,chip_factory=Observed,waveform=waveform)
     c=chips[0];bits=12 if mode==0 else 8
     return [decode_iq(w,bits) for w in c.host_samples],c.tx_probe,c.probe_times,traffic
 
 
-def main():
+def main(*,wideband=False):
+    from rf_modulated_quality import Multicarrier
+    waveform=Multicarrier(seed=804) if wideband else None
     if not __debug__:raise RuntimeError('Assertions must remain enabled')
     p=scenario.architecture.P;start=time.monotonic()
     files=list(scenario.architecture.D.glob('*.py'))+list(Path(__file__).parent.glob('*.py'))+[p/'verification/stream_codec.py']
     hashes={str(f.relative_to(p)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
     report=dict(status='running',source_sha256=hashes,cases=[],physical_qualification=False,
         limitations=['Finite continuous-service record with timed lossy stop, not indefinite service bounds.',
-                     'RX follows the nonlinear TX loopback; deterministic amplitude-varying stimulus, not wideband modulation.',
+                     'RX follows nonlinear TX loopback driven by 50 QPSK subcarriers spanning +/-7.8125 MHz.' if wideband else 'RX follows the nonlinear TX loopback; deterministic amplitude-varying stimulus, not wideband modulation.',
                      'Assumed device/noise parameters; no spectral mask or physical qualification.'])
-    output=p/'evidence/fast-loopback-quality.json'
+    output=p/'evidence'/('fast-wideband-loopback-quality.json' if wideband else 'fast-loopback-quality.json')
     def save():output.write_text(json.dumps(report,indent=2)+'\n')
     save()
     try:
         for mode in (0,1):
-            rx0,tx0,t0,_=simulate(mode,False)
-            rx,tx,t,traffic=simulate(mode,True)
+            rx0,tx0,t0,_=simulate(mode,False,waveform=waveform)
+            rx,tx,t,traffic=simulate(mode,True,waveform=waveform)
             assert t==t0 and len(rx)==len(rx0)
             rq=quality(rx0,rx);tq=quality(tx0,tx)
             report['cases'].append(dict(mode=mode,rx_quality=rq,tx_quality=tq,traffic=traffic));save()

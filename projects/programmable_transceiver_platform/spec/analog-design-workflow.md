@@ -422,7 +422,7 @@ settling under the larger periodic CDAC load or prove a unique failure mechanism
 
 | Observation | Reusable consequence | Evidence |
 |---|---|---|
-| UIC and a short RF run left a slow gate-bias network uncharged. | Validate bias before scoring gain; label prebias separately from startup. | [Schematic gate, pass 124](executable-chip-model.md) |
+| UIC and a short RF run left a slow gate-bias network uncharged. | Validate bias before scoring gain; label prebias separately from startup. | [Schematic implementation gate](#schematic-implementation-gate) |
 | The selected MIM model ignores `par`, and the assumed 20 fF unit was not supported by its inspected minimum cell. | Audit primitives and explicit replication before optimizing a circuit around their assumed values. | [MIM audit](../evidence/adc-mim-model-audit.json) |
 | Correct SAR logic converted inaccurate held samples. | Audit analog acquisition and reference state independently of decision/capture checks. | [Connected capacitor cases](../evidence/adc-sar8-mim-frames-screen.json) |
 | Nominal sample accuracy partly came from turnoff cancellation while the input was still moving. | Compare time windows, both histories and adverse loads; avoid one-instant optimization. | [Acquisition diagnostic](../evidence/adc-sar8-acquisition-diagnostic.json) |
@@ -787,3 +787,52 @@ is the next stage, not something a mathematical pass certifies. Complete the
 full transistor schematic before layout. The machine-readable stage boundaries
 in `mathematical-closure.json` classify these obligations without waiving the
 existing requirements or moving missing chip behavior outside the project.
+
+## Reduced-model validation and promotion
+
+Use the active behavioral loop above for architecture decisions. The historical
+`system_model/run_fast_suite.py` remains a supporting eleven-script collection
+with report `evidence/fast-suite.json`; it is not the full-chip acceptance gate.
+Use envelope/event/charge models to screen uncertainty, then short transistor
+windows to characterize the parameters that change decisions, then connected
+transistor verification. Preserve autonomous startup/noise runs where those are
+the question; steady-state replay cannot substitute for acquisition evidence.
+
+Each imported measurement needs its source hash, circuit revision, stimulus,
+supply, temperature, bias, load, observation window and numerical resolution.
+Keep assumed ranges separate. Validate reductions against held-out transistor
+waveforms/operating points and check timestep or envelope-rate convergence.
+Do not combine incompatible measurements into a purported characterized chain.
+Derive required margins from bidirectional and combined adverse sweeps; report
+clipping, distortion, timing and queue growth separately. Current risk ordering
+belongs only in [risk-priorities.md](risk-priorities.md).
+
+## Schematic implementation gate
+
+After mathematical closure, assemble a hierarchical GF180 FET/passive schematic
+covering the full analog chip. Include actual digital circuits where analog
+timing/loading/control depends on them; larger digital functions may use RTL.
+Behavioral fixtures support verification but cannot stand in for missing PLL,
+ADC or CDR circuits to claim schematic completion. Existing layouts are reference
+material; new layout follows complete schematic verification and then extraction.
+Transmission-line geometry and shielding remain deferred to layout.
+
+Verify bias/common mode at every boundary, cold startup separately from seeded
+runs, physical clock swing/duty/phase, actual loading, power/current/area/throughput,
+and process/mismatch/uncertain-load sensitivity. Reject invalid operating bias
+before scoring signal quality: the historical pass124 1 Mohm/20 pF bias network
+has a 20 us timescale, so a 301 ns UIC run left the LNA off.
+
+`analog/rf_rx_candidate.spice` is an early oscillator/buffer/LNA/mixer/filter/switch
+candidate with external bias/control/sample clocks, lacking full PLL, quadrature
+and ADC implementation. Its operating-point and seeded-bias benches do not
+prove cold startup, gain or noise. Likewise `pll_clock_path.spice` alone is a
+VCO/restorer/divider path, and `phase_control_dac.spice` is not a radio converter.
+Use [schematic-implementation.json](schematic-implementation.json) for the current
+inventory; presence of a source file does not prove operation.
+
+Historical reference-loading example: ideal references gave SAR codes 76/179/76
+at ±0.4 V; actual references with the damped driver gave 77/179/76 versus an
+original 78/178/78 baseline. At ±0.1 V both physical drivers gave 115/140/115.
+These selected points in `evidence/sar-driver-physical.json` do not establish
+transfer linearity, ENOB or selection of a production driver.

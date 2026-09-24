@@ -3,6 +3,24 @@
   "cdr_qualification_controls": {
     "silence_rejected": true,
     "transition_loss_revokes_qualification": true,
+    "recovery": [
+      {
+        "gap_bits": 1000,
+        "frequency_step_ppm": 100.0,
+        "timing_requalified_after_bits": 130,
+        "scored_bits": 2050,
+        "payload_errors": 0,
+        "qualification_proves_alignment": false
+      },
+      {
+        "gap_bits": 10000,
+        "frequency_step_ppm": 100.0,
+        "timing_requalified_after_bits": 140,
+        "scored_bits": 2050,
+        "payload_errors": 1000,
+        "qualification_proves_alignment": false
+      }
+    ],
     "window_edges": 64,
     "max_phase_error_ui": 0.1,
     "max_gap_bits": 64,
@@ -13961,7 +13979,7 @@
       "simulated_s": 9.95e-06
     }
   ],
-  "elapsed_s": 10.67757826950401,
+  "elapsed_s": 10.712848507799208,
   "scenarios": [
     {
       "target": "pcie_gen1",
@@ -23302,7 +23320,7 @@
     }
   ],
   "source_sha256": {
-    "system_model/architecture_fast/behavioral.py": "57b2cbcd369800f1363da6aa059d8eb5cf6601fd433d37ccd362f5b6588629f3",
+    "system_model/architecture_fast/behavioral.py": "98af1874317a5c6e9c8edf4f0880570aa9f96a828ea08bad7a790974b69123b8",
     "spec/contract.json": "9a5945818902268adba15f21b7baa5998bc259f860f4b05d03829853cf27f7a8",
     "verification/stream_codec.py": "1d875e2f53cdd99935fcb170871c51cf9dcf33ffecdfb9d74756a5c067ce2b4a",
     "verification/transport_model.py": "accda58cfe3c130a8a4967bd9704cdc36bc5e0026f0a0a794ab8077a566d8a8f",

@@ -42,7 +42,7 @@ def main():
     report = dict(status='screens_completed' if passed else 'screen_execution_failed',
                   silicon_qualified=False, seconds=time.perf_counter() - started,
                   coverage=COVERAGE,
-                  workflow='spec/fast-feasibility-workflow.md',
+                  workflow='spec/analog-design-workflow.md',
                   limitations=['Execution success checks model controls, not physical requirements.',
                                'These are partially connected screens, not a complete chip simulation.',
                                'Measured LO screen requires existing transistor replay evidence.'],

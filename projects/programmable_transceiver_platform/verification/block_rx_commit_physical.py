@@ -1,7 +1,6 @@
 import pathlib,subprocess
 out=pathlib.Path('/out')
-body=pathlib.Path('/src/verification/block_rx_commit_timing.tcl').read_text().split('create_clock',1)[1]
-body='create_clock'+body
+body=pathlib.Path('/src/verification/block_rx_timing_constraints.tcl').read_text()
 body=body.replace('# Provisional internal', 'set_propagated_clock [all_clocks]\nset_clock_uncertainty -hold 0.5 [all_clocks]\n# Provisional internal')
 for corner in ('tt_025C_3v30','ff_n40C_3v60','ss_n40C_3v00','ss_125C_3v00'):
  header=f'''read_liberty /pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/lib/gf180mcu_fd_sc_mcu7t5v0__{corner}.lib

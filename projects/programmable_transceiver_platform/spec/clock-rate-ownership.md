@@ -24,11 +24,12 @@ does not by itself make the host's payload production match a DAC or serializer.
 The current v2 metadata carries counts, sequence and limited commands, not
 consumer credits or timestamps. Do not assume unallocated control bandwidth,
 extra pins, arbitrary raw-bit insertion/deletion, or an implicit sample-rate
-converter. The top coexistence mode has no spare scheduled payload slot.
+converter. The historical fully occupied transport stress profile had no spare payload slot;
+it does not authorize simultaneous RF/wired operation.
 
 For a constant payload rate error Δr, queue occupancy changes by Δr*t. A finite
 queue or larger startup prefill cannot solve nonzero persistent mismatch.
-Next choose and simulate an explicit sustainable mechanism: common-reference
+A sustainable mechanism requires common-reference
 payload pacing where its frequency relationships can be guaranteed, or accounted
 feedback/status that controls external production. Quantify clock tolerances,
 feedback latency and FIFO bounds before selecting the mechanism. Preserve both RF and wired capabilities in exclusive modes, with independently recovered wired RX timing where needed.
@@ -49,10 +50,10 @@ one oscillator or recovered wired-RX clock.
 
 This candidate needs no new pins, credits, padding data or raw-stream edits.
 The host may use a separate H2D service clock, but its sample generation must
-follow D2H pacing and its queues/CDC must meet service bounds. Current connected
-implementation uses a common ideal host tick; separate H2D-clock verification is
-still open. Host wrappers and actual chip clock synthesis must implement the
-ratios before this is a hardware claim. A mode with intentionally independent
+follow D2H pacing and its queues/CDC must meet service bounds. The original pacing
+experiment used a common ideal host tick; the separate-service-clock experiment
+below extends its queue-level coverage. Host wrappers and actual chip clock
+synthesis must implement the ratios before this is a hardware claim. A mode with intentionally independent
 sample frequency, spread-spectrum TX or lost reference needs a separately
 specified tracking mechanism/failure response; do not silently apply this model.
 
@@ -139,224 +140,99 @@ must acquire a burst within the HS SYNC detection budget; restarting full clock
 acquisition on every packet is not acceptable. This topology is proposed; the
 current USB pad tests still use prescribed bit times, not a working burst CDR.
 
-## Current converter-clock integration gap
+## Converter-clock ownership and optional reference-clock candidate
 
-The selected `make_chip` composition still resolves ADC/DAC scheduling through
-`PhasedChip.capture/schedule` in `connected/loop_driven_edges.py`. `LoopEdges`
-snapshots `self.clock`, the separate `LinearClock` initialized by
-`LockedChip.configure`; it does not integrate `self.rf_pll` or the coupled PLL
-supply trajectory. Explicit `disturb_clock` invalidates pending deadlines, but
-ordinary autonomous RF noise and rail pulling do not enter this sample-clock
-state. Thus carrier-clock acquisition and finite RF quality do not qualify
-converter aperture jitter or supply-dependent sample timing.
+The legacy `PhasedChip.capture/schedule` path in
+`connected/loop_driven_edges.py` uses `LoopEdges` snapshots of a separate
+`LinearClock`, not autonomous RF PLL noise or coupled-rail pulling. Explicit
+`disturb_clock` invalidates deadlines, but carrier acquisition and waveform
+quality do not thereby qualify converter aperture timing. Fixed nominal-grid
+observation can expose supplied timing errors; it cannot supply a missing clock.
 
-The independent-RX quality checker now also uses a fixed nominal sample grid,
-which can detect supplied timing errors. Passing that observer cannot create a
-missing physical timing mechanism.
+The optional `IntegratedTransceiverChip.enable_reference_converter_clock()` in
+[fast_exclusive_engine.py](../verification/fast_exclusive_engine.py) installs
+paired reference-derived clocks for managed local starts. Direct `schedule` and
+`capture` remain legacy paths. This candidate is not the default or acquired-RF
+quality-qualified merely because its bounded controls pass. Active commands and
+coverage belong to the [model guide](../system_model/architecture_fast/README.md);
+completion decisions belong to [closure gates](mathematical-closure.json).
 
-### Selected next implementation: reference buffer and divide-by-two
+### Reference edge and branch contract
 
-Reuse the existing 40 MHz reference: every rising reference edge supplies the
-40 MS/s mode; alternate edges supply 20 MS/s. No extra sampling PLL is needed
-for these two rates, and RF carrier tuning remains independent. A tunable
-2.437 GHz RF carrier cannot supply these rates through an integer divider.
+Reuse 40 MHz REF_IN: each rising edge supplies 40 MS/s, alternate edges 20 MS/s.
+RF carrier tuning stays independent; a 2.437 GHz carrier cannot supply these
+sample rates through an integer divider. No extra sampling PLL is assumed.
+For source edge r[k], solve t[k]=r[k]+d(V_PLL(t[k]))+j[k] against the analog
+owner's forecast rail. Nominal buffer delay, supply sensitivity, bounded input
+noise and any additional branch-delay mechanism need transistor qualification.
+Require positive bounded propagation, monotonic edges and a justified slew bound
+for a unique bracketed root. Never move an already committed conversion.
 
-Represent the reference distribution/buffer with a nominal propagation delay,
-supply-dependent delay and explicitly bounded input timing noise. For reference
-edge `r[k]`, solve `t[k] = r[k] + d(V_PLL(t[k])) + j[k]` against the same forecast
-rail trajectory used by the analog owner. Delay coefficients and noise remain
-hypotheses until transistor verification. Require positive bounded delay and
-monotonic edges; reject a root outside its declared bracket or one crossing an
-already committed edge. Do not retrospectively shift a conversion.
+One source-edge count and retained divide-by-two phase own both branches. Evaluate
+reference jitter once per physical edge, including when both branches use it.
+Represent a nonnegative nominal branch delay below one 25 ns reference period
+separately from buffer delay. Split signed RX/TX offsets into complete cycles and
+residual branch delay; a signed 16-bit command field is not proof of an arbitrary
+physical delay line. Preserve supported offsets, including negative and zero,
+or reject the entire start atomically. The planned TX start is a lower bound
+rounded to the common divider phase, not an exact absolute-time promise.
 
-The scheduler must split a forecast at the earliest pending converter edge,
-recompute if its rail trajectory changes, and commit edge/analog state together.
-One shared reference-edge count owns ADC and DAC timing; explicit branch delay
-can express their configured relative offset. Divide-by-two phase is retained
-while the reference stays present, rather than restarted independently at each
-capture. Start commands arm the next eligible edge after their delay guard.
-Reference loss cancels pending conversions through the existing stop path;
-reacquisition requires renewed readiness before arming. Host pacing must use
-this same reference frequency, including its specified offset.
+`TimedManagement.start_local` stages both directions before committing. TX-only
+ignores a stored RX offset; RX-only plans from its own requested start; paired
+operation preserves relative timing. A busy or invalid second direction must not
+partially install clocks. Cover both rates, direction masks, simultaneous edges,
+restart phase and inactive-clock preservation. The legacy default offset is 10 ns.
+Host production must follow the same reference frequency, including its offset.
 
-Before promotion, compare zero-sensitivity behavior with the existing cadence,
-verify analytic constant-rail and ramp-delay roots, and test both modes with
-supply steps, bounded jitter, reference loss and near-edge interventions.
-The existing `clock_disturbance_lifecycle.py` passes four active retiming and two
-causal-edge fault cases on its legacy linear model. Preserve those invariants,
-but do not treat them as validation of this unimplemented reference-buffer path.
+### Forecast, commit and cancellation contract
 
-The candidate `connected/reference_sample_clock.py` now implements this bounded
-edge primitive with separate forecast/commit operations. Its executable controls
-cover 128 nominal edges across both divisors, analytic affine-rail roots, 32
-bounded-jitter edges, stale forecast rejection and cancellation on reference
-loss. Failed forecasts invalidate earlier proposals. A declared rail-slew bound
-ensures a unique edge root; the caller must establish that bound for its actual
-continuous trajectory. `forecast_trajectory` now consumes the analog owner's piecewise-linear delta
-history, derives its slew bound and refuses extrapolation. An interval ending
-before the edge leaves it pending; an interval beginning after a missed edge
-faults. Analytic partial-horizon/ramp checks pass. A read-only probe of the
-canonical PLL rail over 25–30 ns predicts an edge at 26.003882 ns without
-changing chip state. Full-chip scheduler integration, common ADC/DAC branch
-handling, reference-loss propagation and parameter qualification remain open.
+[reference_sample_clock.py](../system_model/connected/reference_sample_clock.py)
+owns the edge primitive, paired planner and coordinator. Consumption commits each
+edge, including the last, and leaves the next deadline unpublished. A branch may
+not extrapolate an unrestricted future edge inside `step()`. The outer scheduler
+forecasts only to an external-event horizon, publishes the earliest due proposals
+(both if simultaneous), then commits timing and analog state together. Preserve
+DAC consumption before same-time new host payload and existing pipeline accounting.
 
-`reference_sample_clock.py --coupled-controls` now checks four cases (16 edges)
-with host toggles 0.5 ns after the reference edge, close to its buffered output.
-The unchanged 1 fs numerical consistency threshold fails at 500, 125 and 31.25 ps
-rail grids (first failing residuals 7.86, 2.57 and 1.25 fs). A 7.8125 ps grid
-passes all cases with maximum residual below 0.089 fs. The diagnostic defaults
-to this finer grid; `--rail-step-ns` reproduces the failing coarse cases.
-Earlier settled-rail tests remain historical evidence, not near-edge coverage.
-The candidate `refine_converter_edge` now checks both half-grid edge convergence
-and a fresh analog forecast ending at the proposed edge before returning a
-pending proposal. An analytic affine-rail control passes. A canonical inactive-RF
-probe with a host transition at 25.5 ns converged after four refinements to a
-15.625 ps grid: edge 26.0046756954 ns, committed endpoint residual -0.247 fs,
-and half-grid edge change 0.350 fs, below the unchanged 1 fs numerical tolerance.
-This is one switching probe, not converter activity or full scheduler integration.
+An interval ending before the edge leaves it pending; one starting after a missed
+edge faults. Failed or changed forecasts clear old proposals, including failure
+while validating a new horizon. Quiesce/reference loss cancels both branches and
+pending conversions; readiness must be reacquired before explicit rearming.
+Reference loss does not erase retained analog state; rearming policy must preserve
+the declared reference-phase convention.
 
-Production integration needs local interpolation refinement around predicted
-edges rather than assuming the existing 0.5 ns forecast grid is sufficient.
-These are numerical residuals, not physical jitter accuracy. ADC/DAC operations
-are still absent from this coordinator diagnostic.
+Piecewise-linear rail history must not be extrapolated. Near predicted edges,
+refine interpolation and check half-grid convergence plus a fresh forecast ending
+at the root. The endpoint coordinator instead obtains voltage directly from each
+trial endpoint; at the current time return the committed rail without a zero-length
+solve. Both approaches need a justified slew bound and active-RF cost/convergence
+checks. A 1 fs numerical consistency tolerance is not physical jitter accuracy.
 
-### Integration constraints from the existing command path
+Quality checks need both fixed-carrier and nominal-cadence TX references. Anchor
+only the first DAC update, then use declared cadence at receiver observation times.
+Following all recorded update times can hide sample-clock distortion. Labels for
+legacy snapshot timing and the reference-clock candidate are not qualification.
 
-`TimedManagement.start_local` stages a shallow candidate chip, then schedules
-TX and RX before committing either. `configure_local_timing` accepts a signed
-16-bit control-period RX offset; the current default is 10 ns. Independently
-rounding both starts to reference edges would silently erase or change this
-behavior. The reference-clock candidate is therefore not a drop-in replacement.
+### Scoped converter-timing evidence
 
-Implement common reference counting with explicit branch timing, preserving the
-requested relative offset when supported. Separate complete reference cycles
-from residual branch delay; any residual-delay mechanism and its usable range
-need a stated mathematical model and later circuit implementation. Reject
-unsupported combinations atomically rather than reporting acceptance and
-rounding their timing. The existing wide signed field is not evidence for an
-arbitrarily precise physical delay line. Both positive and negative offsets,
-simultaneous edges, restart/divide-by-two phase, and a busy second direction
-must be covered by the integrated regression.
+These are distinct controls, not interchangeable full-chip passes. Complete run
+history, commands and intermediate measurements are preserved in the Git link below.
 
-The candidate `ReferenceSampleClock` now represents an explicit nonnegative
-nominal branch delay below one 40 MHz reference period, separately from its
-supply-sensitive buffer delay. Local controls pass 32 paired ADC/DAC-like edges
-with a 10 ns relative delay across divide-by-one and divide-by-two, plus invalid
-delay rejection. This is an assumed delay element, not a physical implementation
-or integrated timing-command acceptance. The pure `plan_converter_pair` helper now decomposes signed offsets into whole
-reference cycles and nonnegative residual delay, returning fresh pending branches
-only after both timing plans validate. Fifty-six paired edges across seven signed
-or zero offsets and both dividers preserve the nominal relative timing; past RX
-source edges, nonfuture starts and invalid dividers reject. The requested TX start
-is explicitly a lower bound rounded to the common divider phase, not an exact
-absolute-time promise. This semantic difference must be addressed when wiring
-management commands. Live common-counter/reference-loss ownership, branch-delay
-variation and atomic installation in the actual scheduler remain open.
-
-The parent converter loops call `sample_clock.step()` / `adc_clock.step()`
-immediately after consumption. A supply-dependent replacement cannot predict
-an unrestricted future edge there: leave the next edge pending, make the outer
-analog scheduler forecast its bounded interval, and publish the deadline only
-when that interval brackets it. When a forecast root shortens the analog step,
-recompute the trajectory to that endpoint and verify consistency before
-committing; discard stale proposals after intervening load/control events.
-Retain the conservative same-time ordering of DAC consumption before new host
-payload and the existing ADC/DAC pipeline cancellation/accounting invariants.
-
-The converter lifecycle now dispatches consumption through `converter_consumed`:
-forecast-driven clocks commit every consumed edge, including the last, and leave
-the next deadline unpublished for the outer forecast coordinator. Quiescing stops
-both branch clocks and invalidates their proposals. Existing prescribed clocks
-retain their stepping behavior. Two actual `ReturnChip` controls cover final-edge
-commit and cancellation with samples remaining; six legacy TX/RX lifecycle cases
-pass. Canonical scheduling still selects the old clocks: this hook alone does not
-close supply-coupled converter timing or install reference-loss coordination.
-
-`forecast_converter_boundary` coordinates pending branches within a supplied
-external-event horizon, retaining only the earliest due proposals (both when
-simultaneous). Its voltage callback forecasts directly to each trial endpoint,
-avoiding coarse rail interpolation; at the current time the callback must return
-the already committed rail rather than request a zero-length analog solve.
-Local controls cover partial horizons, ordered branches and simultaneous edges.
-They also cover a changed rail forecast invalidating both old proposals, paired
-reference-loss cancellation without automatic rearming, and a rejected event
-horizon invalidating prior proposals. The coordinator now clears proposals before
-validating the new horizon, so a failed reforecast cannot leave a stale edge
-available for consumption.
-A canonical inactive-RF host-switching probe used 11 endpoint evaluations, none
-past its 40 ns horizon, and found a 26.0046759430 ns edge with 9.85e-22 s committed
-residual. The supplied 1e9 V/s slew bound is a diagnostic assumption; a production
-coordinator needs a justified bound and active-RF cost/convergence checks.
-The coordinator is not yet selected by the canonical scheduler.
-
-### Candidate coupled-scheduler installation
-
-`IntegratedTransceiverChip.enable_reference_converter_clock()` now opts managed
-local starts into paired reference-derived clocks. The existing staged management
-start installs both branches only after planning succeeds. The coupled scheduler
-bounds intervals by pending converter brackets, resolves endpoints against its
-actual rail/RF forecast, publishes only due deadlines, and lets converter
-consumption commit the edge. Quiesce cancels pending branches. Direct `schedule`
-and `capture` remain legacy paths; this candidate is not the default clock model.
-
-A real scheduler probe with inactive RF published the 26.0046759430 ns TX edge,
-left RX pending, kept chip time unchanged during forecasting, and cancelled both
-on stop. The acquired, noisy independent-RX test was launched via
-`fast_exclusive_engine_check.py --canonical --domain-rf-screen --host-bank-rf
---rf-mode 1 --independent-rx --rf-noise-rms-hz 20000 --reference-converter-clock`.
-The run was cancelled during acquisition at the user's request because its
-runtime is unsuitable for architecture iteration; its 453 launch hashes were
-verified and its report is marked cancelled. It produced no payload result.
-Use bounded controls and short coupled windows to develop this option. A later
-explicit detailed run must pass quality checks before promotion. The 1e9 V/s slew envelope, nominal branch
-delay and reference timing noise still require qualification.
-
-Candidate planning audit: ten cases (both converter rates, RX offsets -60/-10/0/
-10/60 ns) preserve the requested relative timing and leave the original chip's
-clock attributes untouched while staging the candidate. A past RX edge rejects.
-The disabled-direction rejection bug is fixed: TX-only ignores the stored RX
-offset; RX-only plans from its own requested start; paired operation preserves
-the relative offset. The bounded suite covers all three masks at both rates,
-unchanged inactive clocks, and rejection without partial clock installation.
-This verifies planning only; the cancelled acquired-RF run provides no payload
-qualification for the candidate scheduler.
-
-Quality acceptance now requires a nominal-cadence TX reference as well as the
-fixed-carrier TX reference: using recorded DAC update times in the reference
-alone can hide sample-clock distortion. The added check anchors only the first
-update, then uses the declared rate while retaining receiver observation times.
-A validation-only 0.4-sample-period TX delay is rejected by this check even though
-the event-following reference accepts it. The quality report separately labels
-legacy snapshot timing and the declared reference-clock candidate; neither label
-qualifies reference jitter, branch-delay uncertainty or physical aperture timing.
-
-### Reduced connected timing/transport check
-
-`reference_sample_clock.py --payload-controls` now drives the existing
-`ReturnChip` DAC/ADC lifecycle, finite queues and framed return with the paired
-reference-clock coordinator at both sample rates. Each case transfers 32 samples
-through real input frames, DAC consumption, ADC capture and output frames. The
-prescribed 50 mV, 1 MHz sinusoidal rail produces about 10.06 ps deviation from a
-first-edge-anchored nominal cadence, confirming the rail reaches sample timing.
-Two additional cases interrupt after nine conversions at each rate. They verify
-that reference loss cancels both clocks and queued conversions, emits no further
-samples or return words, accounts for discarded TX data, and completes explicit
-abort/drain acknowledgement. Partial return delivery is retained as lossy-stop
-behavior (one/three samples delivered), not relabeled lossless. All four cases
-complete in under a second and run in the bounded architecture suite.
-This reduced connected check intentionally omits autonomous RF acquisition and
-nonlinear shared-rail feedback; it does not promote the cancelled detailed run
-or establish modem quality, calibrated analog parameters or physical feasibility.
-
-The bounded coordinator also accepts deterministic reference-edge timing noise,
-evaluated once per physical source edge for both branches. A shared 100 ps
-injection preserves the nominal 10 ns branch separation; an out-of-bound 101 ps
-injection rejects and clears the pending proposal. The reduced payload cases
-now combine a 100 ps peak sinusoidal reference disturbance with the 50 mV rail
-waveform and retain successful complete/aborted transport at both rates. Maximum
-nominal-grid TX timing deviation is about 110.1 ps. This is a declared sensitivity
-fixture, not a measured jitter budget or RF quality pass. The detailed candidate
-still defaults to zero input jitter until its configuration path is extended.
+| Check | Result and limitation |
+| --- | --- |
+| Legacy disturbance lifecycle | Four active retiming and two causal-edge fault cases establish invariants for the old linear clock, not the reference-buffer path. |
+| Edge primitive | 128 nominal edges across both dividers, analytic affine-rail roots, 32 bounded-jitter edges, stale-proposal and reference-loss controls. Failed forecasts invalidate prior proposals. |
+| Read-only rail probe | Canonical 25–30 ns rail predicts 26.003882 ns without changing chip state; not scheduler/payload integration. |
+| Near-edge interpolation | Four cases/16 edges with host transitions 0.5 ns after source edge. At 500/125/31.25 ps rail grids, first residuals 7.86/2.57/1.25 fs fail the unchanged 1 fs check. 7.8125 ps passes, max <0.089 fs; `--coupled-controls --rail-step-ns` retains coarse-grid reproduction. |
+| Adaptive edge refinement | Inactive-RF probe converges after four refinements to 15.625 ps grid: edge 26.0046756954 ns, endpoint residual −0.247 fs, half-grid change 0.350 fs. One switching probe, not converter traffic. |
+| Paired timing planner | 32 paired edges retain 10 ns delay; 56 edges across seven signed/zero offsets and both dividers retain nominal timing. Invalid delays/dividers, nonfuture starts and past RX source edges reject. Assumed delay element remains unqualified. |
+| Consumption hook | Two actual `ReturnChip` controls cover final-edge commit and cancellation with samples remaining; six legacy TX/RX lifecycle cases pass. Hook alone does not select the new scheduler. |
+| Forecast coordinator | Partial horizons, ordered/simultaneous branches, changed rail, reference loss and invalid horizon clear/preserve proposals as specified. Inactive-RF host-switching probe uses 11 endpoint evaluations within 40 ns, edge 26.0046759430 ns and residual 9.85e−22 s. The 1e9 V/s bound is assumed. |
+| Optional scheduler installation | Real inactive-RF probe publishes TX, leaves RX pending, forecasts without advancing chip time and cancels both on stop. Managed-start planning covers offsets −60/−10/0/10/60 ns at both rates and all three direction masks without partial installation. Planning is not RF payload quality. |
+| Detailed RF attempt | The noisy independent-RX acquisition with `--canonical --domain-rf-screen --host-bank-rf --rf-mode 1 --independent-rx --rf-noise-rms-hz 20000 --reference-converter-clock` was cancelled at the user's request for excessive runtime. All 453 launch hashes matched; **no payload result** was produced. Use short controls for iteration; promotion still requires explicit detailed quality evidence. |
+| Independent cadence control | A validation-only 0.4-sample-period TX delay fails the nominal-cadence check even when an event-following reference accepts it. |
+| Reduced connected payload | `--payload-controls` transfers 32 samples through real frames, DAC/ADC lifecycle, finite queues and return frames at both rates. Two further cases interrupt after nine conversions, cancel clocks/data and acknowledge abort/drain; one/three returned samples remain explicitly lossy-stop behavior. Four cases finish in under a second. Autonomous RF acquisition and nonlinear shared-rail feedback are omitted. |
+| Rail and reference disturbance | A prescribed 50 mV, 1 MHz rail yields ≈10.06 ps nominal-grid deviation. Shared 100 ps reference injection preserves 10 ns branch separation; 101 ps rejects and clears the proposal. Combined sinusoidal jitter/rail payload controls reach ≈110.1 ps deviation and retain transport. These are sensitivity fixtures; the detailed candidate defaults to zero input jitter until its configuration path is extended. |
 
 ## Forwarded word-clock configurations for multi-chip video
 
@@ -480,3 +356,5 @@ wrong even after wrapped phase settles again. Receiver readiness therefore must
 combine timing lock with external framing/alignment validation; a phase-lock
 indicator alone cannot authorize payload delivery after a suspected slip. This
 is an ideal edge-event model, not a voltage comparator/eye or standards test.
+
+The [complete immutable clock-development history](https://github.com/deepai-org/svalbard/blob/8bd7e601beba1b28d6bb0f4e092b1a76a5e2868c/projects/programmable_transceiver_platform/spec/clock-rate-ownership.md) preserves the original implementation sequence and numerical details. Superseded next-step statements there are historical, not current completion claims.

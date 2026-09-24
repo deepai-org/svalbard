@@ -1,4 +1,5 @@
 """Shared corner-report parser; retains historical rejection checks."""
+from timing_log import reported_paths
 
 def main(variant='commit'):
     if variant not in ('commit', 'prefix'):
@@ -19,9 +20,7 @@ def main(variant='commit'):
         for mode in (0, 1):
             for kind in ('max', 'min'):
                 section = s.split(f'PATH_BEGIN {mode} {kind}\n')[1].split('PATH_END')[0]
-                found = []
-                for path in section.split('Startpoint:')[1:]:
-                    found.append({'slack_ns': float(re.search('([-\\d.]+)\\s+slack', path)[1]), 'startpoint': path.splitlines()[0].strip(), 'endpoint': re.search('Endpoint: (.*)', path)[1]})
+                found = reported_paths(section)
                 paths[f'{mode}:{kind}'] = min(found, key=lambda x: x['slack_ns'])
         assert not s.split('ELECTRICAL_BEGIN')[1].split('ELECTRICAL_END')[0].strip()
         cases[corner] = paths
@@ -30,6 +29,8 @@ def main(variant='commit'):
     files = [p / 'verification' / f for f in (f'block_rx_{variant}_corners.py', f'run_block_rx_{variant}_corners.sh', f'report_block_rx_{variant}_corners.py', f'block_rx_{variant}_timing.tcl')] + list(out.glob('*.log'))
     if variant != 'commit':
         files.append(pathlib.Path(__file__).resolve())
+    files.append(p / 'verification/block_rx_timing_constraints.tcl')
+    files.append(p / 'verification/timing_log.py')
     r = {'pass': (86 if variant == 'commit' else 84), 'status': 'available slow mixed-PVT setup screens fail', 'corners': cases, 'library_sha256': libraries, 'scope': 'Fixed nominal mapped netlist, ideal clocks/no wire RC. Mixed PVT stress screens do not define or bound the user-approved narrow operating window.', 'sha256': {str(f.relative_to(root)): hashlib.sha256(f.read_bytes()).hexdigest() for f in files}}
     (p / f'evidence/block-rx-{variant}-corners.json').write_text(json.dumps(r, indent=2) + '\n')
     print(json.dumps({c: {k: v['slack_ns'] for k, v in d.items()} for c, d in cases.items()}, indent=2))

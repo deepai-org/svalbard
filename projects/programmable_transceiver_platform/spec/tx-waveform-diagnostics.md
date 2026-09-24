@@ -1,11 +1,13 @@
 # Independent transmit observation and failure diagnostics
 
-The TX observer forecasts a copy of the oscillator to the observation time and
+The original reconstructed-source TX observer forecasts a copy of the oscillator to the observation time and
 rotates the actual reconstructed DAC envelope against an independent nominal
-carrier. It never uses the receiver LO as its reference. The current modeled
-output still excludes mixer/driver nonlinearity, I/Q mismatch and LO leakage.
+carrier. It never uses the receiver LO as its reference. That historical fixture
+excludes mixer/driver nonlinearity, I/Q mismatch and LO leakage. The later loaded
+network uses the [pad-observation contract](tx-output-isolation.md#loaded-pad-observation);
+its physical LO phase is already in the pad state and must not be applied again.
 
-The strict incremental-quality screen fits one complex gain on the first quarter
+The original strict incremental-quality screen fits one complex gain on the first quarter
 of samples and evaluates the remaining samples without refitting. The provisional
 10% limit is unchanged. A passed receive test or correct TX sample count cannot
 replace this measurement. Its ideal comparison shares quantization and the

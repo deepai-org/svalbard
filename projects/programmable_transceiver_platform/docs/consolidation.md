@@ -34,6 +34,11 @@ chronological experiment logs. Specialist timing, RF, electrical and transport
 requirements retain their owners. The v1 transport note remains explicitly
 historical because CRC/quarantine behavior differs from streaming v2.
 
+The separate signal-path and supply-path notes are merged into host-driver selection
+as complete historical experiments, preserving numerical results, archive hashes,
+reproduction commands and incomplete-simulation limits. Current power ownership
+and priorities remain linked separately.
+
 The Artix load baseline and weak-drive note are merged into
 `spec/host-driver-selection.md`, retaining reports, reproduction commands,
 threshold conventions, current tables and waveform archive hashes. Stale
@@ -59,6 +64,24 @@ observer limitations, analytic error bounds and scoped numerical evidence.
 Superseded next-step lists move to immutable history; negative results and
 independent-observation requirements remain explicit.
 
+The separate loaded-pad observation note is merged into the RF isolation owner,
+retaining its exact frame transform, source/load normalization, state and timestamp
+requirements. Navigation now links the owning section; the original is recoverable.
+
+The RF isolation journal now owns continuous-load, carrier-coordinate and pad-observer
+contracts in one place, with scoped evidence for each model stage. Superseded next
+steps and running-session notices remain only in its immutable historical version.
+
+The clock-ownership note consolidates repeated converter-clock planning and
+scheduler updates into one contract and scoped evidence table. Legacy timing,
+optional reference-clock integration and the cancelled RF acquisition remain
+distinct; common-reference pacing no longer incorrectly says the separate host
+service-clock experiment is still absent. Original history is recovery-indexed.
+
+The OpenSERDES and TT07 ADC inspections now live in the open-design survey;
+commit-pinned sources and technical caveats are retained, and stale live-experiment
+wording points to current priorities. Original review files are recovery-indexed.
+
 ## Shared implementations and validation
 
 | Consolidated family | Implementation | Validation and limits |
@@ -68,6 +91,19 @@ independent-observation requirements remain explicit.
 | Host voltage/capture/sized-driver checks | `verification/host_capture_check.py` | Distinct reports and electrical limits retained |
 | Bit/event and record controls | `verification/test_bit_event_codec.py`, `record_return_check.py` | Distinct rejection and integration cases retained |
 | Fast/detailed coarse event advancement | `system_model/connected/coarse_acquisition.py:advance_coarse` | Original event-loop ASTs identical; controlled no-controller/idle/busy cases preserve command/event ordering, target updates, repeated-time calls and invalid-time rejection; parent advancement stays model-specific; detailed TX calibration regression passes with byte-identical prior report; fast coarse startup also passes both modes with identical prior fields except provenance/time |
+| Reference impedance/load output-device variants | `analog/reference/pair_impedance_compare.py`, `pair_hybrid_load_probe.py` | Four complete specialized sweep/report ASTs match except added wrapper provenance. Distinct baseline inclusion, doubled high-output-device change/assertion, 120-second timeout, sweep controls, parent/artifact integrity and report fields retained; no SPICE rerun. |
+| Half-tail/wide-input reference checks | `verification/check_reference_half_tail.py` | Both complete specialized checker ASTs match; retained waveform reports and output paths are identical. Device-change cardinality/replacement checks and diagnostic limitations remain variant-specific. |
+| Two baseband noise runners | `analog/baseband/noise_receiver_cm.py` | Both full experiment ASTs specialize exactly apart from added shared-runner provenance. Resistor calibration, noise-corner/contributor settings and enlarged-input geometry assertions retained; no SPICE rerun. |
+| Two CDAC prediction comparisons | `system_model/cdac_prediction_fixture.py` | Exact waveform-loading/comparison AST extracted; two-sign controlled waveform metrics and all four full/coarse response inputs match. Modified waveform hash rejected. Series-RC and modal passive-fit electrical models/independent controls remain separate and unchanged; shared comparison hash added to reports; no electrical simulation rerun. |
+| Ideal/autonomous RF sampled-chain sweeps | `analog/rf_autonomous_chain_screen.py:sampled_chain` | Common preparation/sweep/fit AST retained; four controlled decks and all sweep/fit outputs match exactly. Ideal LO loading, CLI controls, report status and limitations stay separate; shared runner hash added to ideal report. No SPICE rerun. |
+| Guarded/batched thermal benchmarks | `verification/thermal_filter_guard_benchmark.py` | Original numerical-loop ASTs identical; actual old/new three-step-size runs for both integrators preserve numerical results and route counts. Machine timing and source provenance excluded from comparison; wrapper/shared hashes retained. |
+| Fast/detailed sustained traffic | `system_model/connected/sustained_lifecycle.py` | Shared validation, traffic and report ASTs identical; separate original startup ASTs retained via callback. Twelve actual old/new cases preserve complete reports and all advance/feed events across both modes, matched/unmatched rates, nonzero preparation, service-clock offsets, pauses and fractional visibility lag; four run 84 frames. Detailed clock-intervention behavior preserved structurally, not newly exercised. Existing source manifests cover both modules. |
+| Seven reference DC experiment fixtures | `analog/reference/pair_dc_fixture.py` | Exact original ASTs for seven bias decks/include scanners, six device-probe lists and five target-sweep loops. Nested/cyclic/duplicate include hashes and missing-file rejection match; four controlled decks/reports match and both deck-mutation controls reject. Distinct circuit modifications and common-mode/target-only sweeps remain explicit; shared helper included in source hashes; no SPICE rerun. |
+| Two reference-impedance checkers | `verification/check_reference_pair_impedance.py` | Full specialized experiment/report ASTs identical; both retained four-case waveform sets produce identical complete reports and output paths. Hybrid/long-mirror cases, hash/header checks and limitations remain distinct. |
+| Two loaded receiver/ADC replay runners | `analog/integration/rx_adc_event_offsets.py` | Full specialized execution ASTs identical except added in-band wrapper provenance. Distinct prepared waveform paths, fresh output directories, 10,800-second timeout/failure recording, horizon metadata and source/artifact integrity retained; no SPICE run launched. |
+| Seven STA report extractors | `verification/timing_log.py` | Shared ordered path records and minimum domain/group slacks; experiment-specific error, completeness, timing, electrical, provenance and equivalence gates stay in callers. Thirteen retained-input report cases match except source provenance; thirteen corrupted-log cases reject; the six RX variants also retain all 30 threshold/error controls. No STA rerun. |
+| Six RX mapping launchers | `verification/run_block_rx_mapping.sh` | Baseline/mask/rank/prefix/pipe/commit retain byte-identical mkdir and complete Docker arguments, including the inner synthesis script; invalid variant rejected. Shared launcher included in new report provenance. No mapping rerun. |
+| Six RX timing constraint copies | `verification/block_rx_timing_constraints.tcl` | Six nominal and ten corner Tcl command traces identical; physical generator's constraint body byte-identical. All consumers reviewed, including text-transforming corner/physical generators. Nine retained-input reports identical except source hashes; manifests include shared constraints. No physical timing rerun. |
 | Commit/prefix RX corner reports | `verification/report_block_rx_commit_corners.py` | All ten retained corner results and report paths identical except source hashes; mapped-netlist hash, nominal consistency and slow-corner rejection checks preserved; no timing rerun |
 | Direct/self-biased LO sine runners | `analog/quadrature/lo_sine_speed.py` | All four decks and non-provenance fixture reports identical; include-scanner AST unchanged (scanner bypassed only in the fixture); explicit bias and coupling-network options; no SPICE rerun |
 | Loaded-receiver/interstage LO replays | `analog/quadrature/lo_receiver_replay.py` | Both full specialized execution ASTs identical except added wrapper provenance; distinct stems, 7,200/14,400-second timeout contracts and failure artifacts retained; no long SPICE run launched |
@@ -89,8 +125,9 @@ independent-observation requirements remain explicit.
 | Five PLL include walkers | `analog/pll/spice_dependencies.py` | Equal nested/cyclic/duplicate include discovery and missing-file rejection against old implementation |
 | Two seeded thermal regressions | `verification/thermal_filter_batched_regression.py` | Both 120-case suites pass; rerunning original Git source with current dependencies gives exactly equal numerical reports; older saved reports differ by up to 4e-13 V in error metrics |
 | Three thermal clock comparisons | `verification/thermal_filter_clock_comparison.py --variant reference\|local\|long` | Exact state/time/route equality across 12 signed/zero command steps; full acquisition not rerun |
-| Three RX mapping reports | `verification/block_rx_mapping_report.py` | Retained mapping inputs yield identical non-hash report fields for mask/rank/prefix; nine corrupted-log cases rejected; distinct setup-sign expectations and source manifests retained; no physical mapping rerun |
+| Six RX mapping reports | `verification/block_rx_mapping_report.py` | Baseline/pipe/mask/rank/prefix/commit retained inputs yield identical non-hash report fields; 30 altered-log cases preserve error/electrical/unconstrained rejection and variant thresholds, including baseline <−8 ns and positive prefix/commit setup. Source manifests retain variant files and shared helpers; no physical mapping rerun |
 | Mask/rank/prefix/pipe RX testbenches | `verification/block_rx_checks.py` | Original three specialized ASTs match; all four pass 21,219-cycle Icarus simulation and Yosys checks; four mutations rejected per mask/rank/prefix and three for pipe |
+| Baseline/pipelined/commit RX stimulus sequence | `verification/block_rx_vectors.py:receiver_stimulus` | Three original loop ASTs identical; byte-identical generated vectors: 21,202 / 1,006,540 bytes baseline, 21,219 / 924,971 bytes pipelined, 21,254 / 925,926 bytes commit. Distinct cycle latency, pending-beat handling, flush and commit-stage negative cases retained; RTL and simulation commands unchanged. |
 | Four block RX vector generators | `verification/block_rx_vectors.py` | Exact equality of all 21,219 rows / 924,971 bytes; variant RTL, mutations and synthesis unchanged |
 | Pad carrier/calibration fixtures | `system_model/connected/pad_quality_fixture.py` | Four carrier-class and three calibration-helper ASTs identical; 24 unused copied imports removed; limited-rail failure diagnostics remain separate |
 | Unified/guarded pad quality | `system_model/connected/unified_pad_quality.py` | Both variant-specialized function bodies match original ASTs; guarded source/sink limits, chip types, report paths and limitations retained |
@@ -103,7 +140,8 @@ independent-observation requirements remain explicit.
 | Narrow/wideband loopback runner | `system_model/architecture_fast/loopback_quality.py` | Controlled-adapter equivalence for both converter modes and impairment choices; full coupled RF quality not rerun |
 | Focused RF/video SVGs | `docs/diagrams/generate_block_diagram.py` | Removed invisible copies of other sheets: 585,684 → 23,997 bytes combined; both native-resolution renders pixel-identical, full-chip SVG byte-identical |
 | Fourteen RTL container launchers | `verification/run_rtl_check.sh` | Byte-identical Docker argument arrays for every wrapper |
-| 182 analog container launchers | `verification/run_analog_check.sh` | Byte-identical arguments for 30 reusable-directory, 13 fresh-directory and 85 baseline-mounted variants (40 RF-reference, 26 basic, 19 Wi-Fi-mounted); mkdir behavior, baseline paths and mount order preserved; 29 named single-CPU prepared replays also preserve fresh directories and baseline argument. Added eight divider-chain, seven paired-input and ten Wi-Fi-source callers; all 182 caller command arrays rechecked after the extension; invalid paths rejected |
+| Seventeen RF/PLL fixed-mount launchers | `verification/run_rf_loop_check.sh` | Thirty-four exact mkdir/Docker argument comparisons against original Git sources cover default and space/quote/shell-character arguments. Fixed flags, forwarding vs ignoring, baseline directories, extra pulse/PWL mounts, fresh/reusable directories, mount order, image/resources and the internal-kick `-v2` output exception preserved; invalid experiment rejected; no simulation launched. |
+| 216 analog container launchers | `verification/run_analog_check.sh` | Byte-identical arguments for 30 reusable-directory, 13 fresh-directory and 85 baseline-mounted variants (40 RF-reference, 26 basic, 19 Wi-Fi-mounted); mkdir behavior, baseline paths and mount order preserved; 29 named single-CPU prepared replays also preserve fresh directories and baseline argument. Added eight divider-chain, seven paired-input and ten Wi-Fi-source callers; all 182 caller command arrays rechecked after the extension; invalid paths rejected. Four additional LO launchers use the existing basic/fresh mode with exact mkdir/Docker argument equality; no helper extension. Nine more callers cover two Wi-Fi mounts, four baseline/candidate pairs and three named two-CPU replays; all 195 mkdir/Docker argument arrays match after extension, with shell syntax valid. Twelve prepared-reference callers share three explicit mount configurations; all 207 argument arrays match after extension, including fresh-directory behavior and mount order. Nine further named/basic, RF-source and baseline-before-Wi-Fi callers preserve all 216 command arrays; all 244 shared-shell entrypoint references resolve |
 
 Compatibility entry points preserve existing commands where needed. Thermal
 variants retain their guard choice, 100/2,400-step horizons, separate reports and
@@ -147,7 +185,7 @@ The present pass additionally removed:
   calibration surviving direct retarget. The index preserves these historical
   bugs explicitly; their current audit outputs are separate, non-equivalent results.
 
-All 276 recovery records have unique paths and verified Git hashes/sizes. Use a
+All 283 recovery records have unique paths and verified Git hashes/sizes. Use a
 record's `recovery_commit` when present, otherwise the index-level default:
 
 ```sh
@@ -184,11 +222,19 @@ not proof that their experiment configurations or future results are equivalent.
 | Family | Evidence and disposition |
 | --- | --- |
 | `analog/rx_iq_core.spice`, `rx_iq_split_core.spice`, `rx_iq_buffered_core.spice` | Shared-LNA vs two separate drain/source branches vs four physical LO buffers. Different input/LO loading is the experiment; retain distinct compositions. Buffered composition already includes the split core and LO-buffer subcircuits. |
-| `analog/adc/code_driver*.spice` | Same asymmetric three-inverter topology, but transistor widths differ (4/2 µm vs 1/0.5 µm). Do not equate width changes with multiplicity scaling without PDK-model evidence. Possible parameterized-source consolidation remains to be assessed. |
+| `analog/adc/code_driver*.spice` | Same asymmetric three-inverter topology, but transistor widths differ (4/2 µm vs 1/0.5 µm). Retain these 11-line explicit circuits: `check_cdac_driver.py` asserts their exact sizing-only relation; the bit-6 experiment extracts the small-driver subcircuit by name. Parameterizing would add include/provenance and extraction dependencies for little reduction. Do not equate width changes with multiplicity scaling without PDK-model evidence. |
 | `analog/adc/cdac8*.spice` | Fixed switches vs binary-weighted switch multiplicity alter loading and settling; retain those experiment settings. Ideal vs MIM capacitors are distinct physical assumptions. |
 | `rtl/pt_block_rx_mask.sv`, `pt_block_rx_rank.sv`, `pt_block_rx_prefix.sv` | Control body now shared in `pt_block_rx_routed.vh`; wrappers select the original routing module. Preprocessed old/new RTL is identical except comments/whitespace. All three pass 21,219-cycle simulation, synthesis checks and four mutation controls. The pipe variant retains separate beat-based routing without captured slot masks. Mapping hash manifests include the shared body; mutations operate on preprocessed input. No new physical timing claim. |
 
-The final whole-module scan (at least 20 lines, literal values normalized)
+Timing-report family review retains `report_timing.py`'s MET/VIOLATED-specific
+slack grammar and register lookup, `report_global_route_timing.py`'s first valid
+critical-register capture plus SPEF validation, `report_path_delay.py`'s first-path
+selection and cell/net arc sum checks, and `report_block_fifo_mapping.py`'s
+multiple-slack-per-path collection and optional asynchronous group. These differ
+from the shared minimum-domain and single-slack path extractors. Their surrounding
+placement, routing and equivalence checks are separate evidence contracts.
+
+The latest whole-module scan (at least 15 lines, literal values normalized)
 found one retained pair: `adc/sar8_reference_compensated_screen.py` and
 `adc/sar8_reference_output2_screen.py`. Each is a 22-line circuit-replacement
 recipe. They use different parent provenance schemas, replacement circuit sets,
@@ -200,12 +246,20 @@ that their text contains no repetition.
 ## Current checks and remaining scope
 
 The current full working-tree inventory covers 2,956 maintained project files:
-1,104 evidence artifacts; 967 verification files; 501 model files; 277 analog
-files; 49 specifications; 30 RTL files; 14 simulation files; eight diagram/docs
+1,104 evidence artifacts; 970 verification files; 502 model files; 278 analog
+files; 44 specifications; 30 RTL files; 14 simulation files; eight diagram/docs
 files; two integration files; and four root metadata/README files. Ignored
 scratch products are excluded. The exact-content scan finds only the five
 independent-output groups classified above; all local Markdown links resolve.
 
+
+After the accumulated source extractions, `make transceiver-math-fast` passed all
+seven bounded architecture checks again: protocol/signal paths, generic
+configuration, records, converter clock, converter transport, calibration bounds
+and independent RF reference. The refreshed iteration/protocol reports retain
+their original scope; this does not qualify legacy SPICE or physical timing.
+A fresh Git-aware inventory confirms the counts above and the same five retained
+equal-content output groups.
 
 The behavioral regression passed in about 10.7 seconds (60 assumption scenarios,
 23 numeric configurations). All seven bounded architecture checks passed:
@@ -215,7 +269,7 @@ qualify separately refactored legacy circuit/RTL experiments.
 
 All fourteen refactored quality/calibration/monitor entry points import with
 callable `main`; archive integrity and RF projection checks pass.
-All 1,264 Python files parsed at the latest syntax sweep; changed launchers passed
+All 1,267 Python files parsed at the latest syntax sweep; changed launchers passed
 `bash -n` and diff checks. The latest complete working-tree scan found no exact duplicate Python function
 or method ASTs of nine or more physical lines after extraction.
 A comment/whitespace-normalized scan found no identical SPICE or RTL sources
@@ -223,6 +277,11 @@ in the analog, RTL and simulation directories. This does not establish that
 all circuit families are optimally factored. Neither result proves absence of near-duplicates, nested duplication or dynamic
 dependency problems. Removed-path references in the repository plan were fixed. The latest project-wide
 Markdown link scan found no missing local targets.
+
+The nested-statement scan initially found eleven repeated groups of at least
+thirteen lines. After consolidation, the latest full scan finds no exact repeated
+statement ASTs at that threshold. Smaller blocks and near-duplicates are not ruled
+out; distinct circuit variants and experiments still require their own contracts.
 
 The whole-module constant-normalized scan is complete with the explicit short-recipe
 exception above. Remaining work: broader near-duplicate and dependency review,

@@ -18,18 +18,36 @@ runner_arguments=""
 input_target=baseline
 case "${3:-basic}" in
  basic) ;;
+ named_basic) container_name=(--name "$output_name") ;;
+ baseline_wifi) [[ "${5:-}" =~ ^[a-z0-9-]+$ ]] || exit 2 ;;
+ rf_sources)
+  extra_mounts=(-v "$ROOT/ip/blocks/analog/wireline_serdes/pll:/vco:ro"
+   -v "$ROOT/ip/blocks/analog/wifi_80211b:/wifi:ro") ;;
  wifi_src) leading_mounts=(-v "$ROOT/ip/blocks/analog/wifi_80211b:/src:ro") ;;
- paired_inputs)
+ paired_inputs|paired_baseline)
   [[ "${5:-}" =~ ^[a-z0-9-]+$ && "${6:-}" =~ ^[a-z0-9-]+$ ]] || exit 2
-  input_target=base ;;
- prepared_replay)
+  if [[ "$3" == paired_inputs ]]; then input_target=base; fi ;;
+ prepared_replay|named_replay)
   [[ "${5:-}" =~ ^[a-z0-9-]+$ ]] || exit 2
   extra_mounts=(-v "$ROOT/ip/blocks/analog/wifi_80211b:/wifi:ro")
   container_name=(--name "$output_name")
-  cpu_count=1
-  runner_arguments=" baseline"
+  if [[ "$3" == prepared_replay ]]; then
+   cpu_count=1
+   runner_arguments=" baseline"
+  fi
   input_target=prepared ;;
- wifi) extra_mounts=(-v "$ROOT/ip/blocks/analog/wifi_80211b:/wifi:ro") ;;
+ wifi|wifi_origin)
+  if [[ "$3" == wifi_origin ]]; then [[ "${5:-}" =~ ^[a-z0-9-]+$ ]] || exit 2; fi
+  extra_mounts=(-v "$ROOT/ip/blocks/analog/wifi_80211b:/wifi:ro") ;;
+ reference_probe)
+  extra_mounts=(-v "$ROOT/ip/blocks/analog/wifi_80211b:/wifi:ro"
+   -v "$ROOT/scratch/transceiver-adc-reference-current:/baseline:ro"
+   -v "$ROOT/scratch/transceiver-cdac-branch-replay:/probed:ro"
+   -v "$ROOT/scratch/transceiver-adc-reference-current-prepared:/origin:ro") ;;
+ reference_frames)
+  extra_mounts=(-v "$ROOT/ip/blocks/analog/wifi_80211b:/wifi:ro"
+   -v "$ROOT/scratch/transceiver-adc-reference-current-prepared:/origin:ro"
+   -v "$ROOT/scratch/transceiver-cdac-probe-reltol/probed:/candidate_base:ro") ;;
  rf_references|rf_chain)
   if [[ "$3" == rf_chain ]]; then input_target=chain; fi
   extra_mounts=(-v "$ROOT/ip/blocks/analog/wireline_serdes/pll:/vco:ro"
@@ -42,8 +60,14 @@ if [[ -n "${5:-}" ]]; then
  [[ "$5" =~ ^[a-z0-9-]+$ ]] || exit 2
  extra_mounts+=(-v "$ROOT/scratch/$5:/$input_target:ro")
 fi
-if [[ "${3:-basic}" == paired_inputs ]]; then
+if [[ "${3:-basic}" == paired_inputs || "${3:-basic}" == paired_baseline ]]; then
  extra_mounts+=(-v "$ROOT/scratch/$6:/candidate:ro")
+fi
+if [[ "${3:-basic}" == wifi_origin ]]; then
+ extra_mounts+=(-v "$ROOT/scratch/transceiver-adc-reference-current-prepared:/origin:ro")
+fi
+if [[ "${3:-basic}" == baseline_wifi ]]; then
+ extra_mounts+=(-v "$ROOT/ip/blocks/analog/wifi_80211b:/wifi:ro")
 fi
 docker run --rm "${container_name[@]}" --platform linux/arm64 --network none --cpus "$cpu_count" --memory 4g --entrypoint /bin/bash \
  "${leading_mounts[@]}" \

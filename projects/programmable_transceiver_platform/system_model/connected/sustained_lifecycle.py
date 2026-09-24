@@ -14,7 +14,7 @@ class TrafficFault(AssertionError):
         super().__init__(event)
 
 
-def run(mode,ppm,frames=128,chip_factory=DuplexChip,disturbance_sign=0,matched_reference=False,host_ppm=0,visibility_edges=0,source_phase_edges=0,service_pauses=None,waveform=None):
+def run(mode,ppm,frames=128,chip_factory=DuplexChip,disturbance_sign=0,matched_reference=False,host_ppm=0,visibility_edges=0,source_phase_edges=0,service_pauses=None,waveform=None,*,_startup=None):
     if visibility_edges<0 or not math.isfinite(visibility_edges) or not math.isfinite(source_phase_edges):
         raise ValueError('Invalid visibility/phase')
     lag=Fraction(str(visibility_edges))+Fraction(str(source_phase_edges))
@@ -25,11 +25,15 @@ def run(mode,ppm,frames=128,chip_factory=DuplexChip,disturbance_sign=0,matched_r
     if any(not isinstance(k,int) or k<1 or not isinstance(v,int) or v<0 for k,v in service_pauses.items()):
         raise ValueError('Pauses require positive frame index and nonnegative integer word periods')
     paused_edges=0;pause_observations=[]
-    c=chip_factory(watchdog_s=20e-6);c.configure(mode,0)
-    if hasattr(c,'next_reference'):
-        while c.state=='acquiring' and c.time<10e-6:c.advance(c.next_reference)
-    else:c.advance(c.acquisition_s)
-    assert c.state=='active'
+    c=chip_factory(watchdog_s=20e-6)
+    if _startup is None:
+        c.configure(mode,0)
+        if hasattr(c,'next_reference'):
+            while c.state=='acquiring' and c.time<10e-6:c.advance(c.next_reference)
+        else:c.advance(c.acquisition_s)
+        assert c.state=='active'
+    else:
+        _startup(c,mode)
     interventions=[]
     host_rate=250e6 if mode==0 else 312.5e6
     fs=40e6 if mode==0 else 20e6;wr=125e6 if mode==0 else 250e6

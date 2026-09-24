@@ -10,7 +10,7 @@ from thermal_filter_guard_screen import guarded_step,ResistorNoiseFilter,BALANCE
 P=Path(__file__).resolve().parents[1]
 
 
-def main():
+def main(guarded_step=guarded_step, *, report_name="thermal-filter-guard-benchmark.json", extra_sources=()):
     rows=[]
     for dt in (.1e-9,1e-9,10e-9):
         original=ResistorNoiseFilter(noise_bins=128,**BALANCED_FILTER)
@@ -36,13 +36,14 @@ def main():
             integrated_voltage_error_vs=float(error[3]),max_energy_error_j=float(max(error[5:]))))
     files=[Path(__file__)]+[P/'verification'/x for x in ('thermal_filter_guard_screen.py',
             'thermal_filter_energy_screen.py','thermal_filter_exact_step_screen.py')]
+    files.extend(P/'verification'/x for x in extra_sources)
     files+=list((P/'system_model/connected').glob('three_cap*.py'))
     report=dict(status='repeated_step_comparison_complete',rows=rows,
         limitations=['Fixed synthetic pump commands, not autonomous clock or full-chip traffic.',
                      'Timing is machine/load dependent and includes no performance guarantee.',
                      'No live-model substitution performed.'],
         source_sha256={str(p.relative_to(P)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files})
-    (P/'evidence/thermal-filter-guard-benchmark.json').write_text(json.dumps(report,indent=2)+'\n')
+    (P/'evidence'/report_name).write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(rows,indent=2))
 
 if __name__=='__main__':main()

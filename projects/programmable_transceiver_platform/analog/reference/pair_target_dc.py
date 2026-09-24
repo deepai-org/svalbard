@@ -1,31 +1,9 @@
 """Small target perturbations of actual tuned reference pair, zero external DC load."""
-import hashlib,json,re,subprocess
+import json,subprocess
 from pathlib import Path
+from pair_dc_fixture import body, sha, source_hashes
 O=Path('/work')
-def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
-body='''.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
-.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
-.include /screen/reference/adc_reference_pair_tuned.spice
-.temp 27
-VDD VDD 0 3.3
-VH HIGH 0 2.15
-VL LOW 0 1.15
-IBN VDD BN 20u
-IBP BP 0 20u
-XBN BN BN 0 0 nfet_03v3 w=8u l=.5u
-XBP BP BP VDD VDD pfet_03v3 w=8u l=.5u
-XDUT HIGH LOW OH OL BN BP VDD 0 pt_adc_reference_pair_tuned
-'''
-paths={}
-def scan(text,parent):
- for line in text.splitlines():
-  m=re.match(r'\s*\.(?:include|lib)\s+(\S+)',line,re.I)
-  if not m:continue
-  q=Path(m[1].strip(chr(34)+chr(39)));q=q if q.is_absolute() else parent/q
-  if not q.is_file():assert line.lower().lstrip().startswith('.lib ') and len(line.split())==2;continue
-  q=q.resolve()
-  if str(q) not in paths:paths[str(q)]=sha(q);scan(q.read_text(),q.parent)
-scan(body,O);paths[str(Path(__file__))]=sha(Path(__file__));rows=[]
+paths=source_hashes(body,O);paths[str(Path(__file__))]=sha(Path(__file__));rows=[]
 for name,target in [('VH',2.15),('VL',1.15)]:
  d='* Paired reference target response\n'+body+f'''.control
 set wr_singlescale

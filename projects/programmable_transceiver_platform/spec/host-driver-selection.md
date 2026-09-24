@@ -81,3 +81,58 @@ Reproduce with `verification/run_weak_drive.sh` from this project. The [retained
 Next add explicit supply/return and signal-path impedance sensitivity, then a complete switching bank. Choose those model values as documented stress assumptions until actual package geometry is available. Preserve both buses, the full PCIe/RF payload target, 50 terminals and the current planning allowances. The older 5 pF `check_power.py` remains a scoped historical screen; it does not automatically select or qualify this candidate.
 
 Archive SHA-256: `25286e3d54ccaac072239455fe7b7c269ea32eda62c86a61c035fc7ada253400`.
+
+## Signal-path impedance screen
+
+Historical pad-pair characterization. The results and next actions below describe
+this experiment; current rail ownership and integration requirements are maintained
+in [power partition](power-partition.md) and [current priorities](risk-priorities.md).
+
+Two fresh nominal native-pad simulations retain the 8 mA candidate, 312.5 Mb/s/pin, 10 pF load, 3.3 V, 25 C and PRBS7 data. Each signal now has 1 ohm series resistance; clock inductance is 1 nH and data inductance is either 1 or 2 nH. These values are deliberately selected sensitivity points, not extracted package parameters. Receiver load remains a capacitor to ideal ground; the core and output supplies remain ideal.
+
+| Data / clock series inductance | Minimum host-threshold margin | Received clock edge intervals | Data extrema in measurement region |
+|---|---:|---:|---:|
+| 1 / 1 nH | 0.665 V | 3.002–3.331 ns | −0.041 to 3.342 V |
+| 2 / 1 nH | 0.674 V | 3.002–3.331 ns | −0.042 to 3.343 V |
+
+Each case checks 20 bits against the same host boundaries and assumed ±0.2 ns aperture used in pass 10. No threshold failures occur. Slightly increased margin with added inductance does not establish a monotonic benefit; this is a short matched-pattern experiment with an unqualified receiver model. Voltage extrema are observations, not overshoot/reliability acceptance.
+
+### Measurement correction
+
+The previous host analyzer checked for missing clock edges but did not explicitly reject extra ringing-induced edges before pairing input/output crossings. It now rejects received edge intervals outside 0.5–1.5 UI (1.6–4.8 ns). This deliberately broad diagnostic screen is not an FPGA minimum pulse-width specification and cannot rule out every clock impairment. The new negative test inserts a short extra clock pulse and verifies rejection. Missing-edge and interior data-glitch tests continue to pass.
+
+Six native-instance/extractor tests plus three host-analysis tests passed inside the pinned analog image. Reanalysis of all four saved pass-10 waveforms passes the additional interval check with exactly unchanged voltage margins; this is replay analysis, not four new simulations. The [recheck record](../evidence/weak-drive-clock-recheck.json) is tied to the raw archive hash in the pass-10 specification.
+
+### Evidence and boundaries
+
+Run `verification/run_signal_path.sh` from this project. The [retained report](../evidence/signal-path-screen.json) records source, deck, waveform and log hashes. Raw waveforms: `scratch/transceiver-signal-path-waveforms.tar.gz`. This characterization's successful execution does not assert signoff.
+
+No receiver-clamp model, transmission-line model, rail/ground impedance, coupling, full-bank simultaneous switching, process spread or FPGA implementation is included. The package is still unselected. The prior current comparison remains a two-pad extrapolation; this PRBS-only path experiment does not update worst-case bank current.
+
+Next introduce a shared supply/return network and then replace the pair with the actual switching bank. Keep explicit separation between chosen stress parameters and provider/assembly-qualified values. Preserve the full data interface and terminal count throughout this work.
+
+Raw archive SHA-256: `9358e6eff098b33bfb7d45e682d2660e2e630aefd9f44a3f72b9d31263b2188d`.
+
+## Shared supply and return screen
+
+Historical pad-pair characterization. The results and next actions below describe
+this experiment; current rail ownership and integration requirements are maintained
+in [power partition](power-partition.md) and [current priorities](risk-priorities.md).
+
+The native GPIO harness now supports a shared output-driver supply and return, each with series R/L. Both pads connect DVSS to the moving return node while their core VSS remains ideal ground. A pin-mapping regression checks that distinction. Signal paths retain the pass-11 unequal inductances and 10 pF receiver load. No extra ideal decoupling is inserted; native pad capacitances remain.
+
+Initial selected stress points were 0.1 ohm/1 nH and 0.25 ohm/2 nH **per rail**, with alternating and PRBS7 patterns, 8 mA drive, nominal process, 3.3 V board supply and 25 C. These R/L values are assumptions, not assembly data. The reference planes are explicit: source and receiver use ideal board ground; output drivers use the shared moving DVSS; internal pre-driver/core rails remain ideal. Supply-pad clamp ring, substrate, mutual coupling and other bank pads are not modeled.
+
+### Observed numerical failure
+
+All four default-integration cases failed to produce final waveforms within the bounded run. The terminal exception was a 90-second per-case subprocess timeout. Last reported simulation times were approximately 8.43–9.82 ns, before stimulus begins at 20 ns. This is incomplete simulation evidence, not a measured electrical failure or a supply-margin result.
+
+A fresh numerical experiment retained one physical PRBS circuit (0.25 ohm/2 nH per rail) and tried Gear-2 with explicit 20 ps and 10 ps maximum steps. Both runs also ended without waveforms; last reported times were 5.71 ns and 2.15 ns. No timestep agreement or electrical margin is established.
+
+The [ngspice manual](https://ngspice.sourceforge.io/docs/ngspice-42-manual.pdf), transient-analysis options, documents the integration choices and warns that added numerical damping can hide ringing. Gear was a diagnostic comparison, not a means of accepting a circuit by suppressing its behavior. The cause remains unknown; model behavior, topology, numerical stiffness and genuine instability must be distinguished with actual startup traces.
+
+### Retained evidence and next action
+
+The [failure ledger](../evidence/supply-path-incomplete.json) records terminal state, last progress time and exact deck/log hashes for all six cases. Scratch directories are retained there. `verification/run_supply_path.sh` reproduces the current Gear comparison, which is **not passing**. Seven native-instance/extractor and three host-analysis tests passed before the runs; those tests do not validate supply behavior.
+
+Next capture a short startup trace before the slowdown and isolate supply versus return impedance. Verify the DC operating point and local rail/reference topology, then compare numerical methods on a tractable circuit before returning to the complete data interval. Do not extend to the full bank or report improved power closure until this numerical issue is understood. Preserve the 50-terminal full companion and all throughput goals. The previous ideal-rail positive results remain scoped to ideal rails.

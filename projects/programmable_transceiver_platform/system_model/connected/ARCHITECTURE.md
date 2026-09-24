@@ -19,7 +19,7 @@ Chip controls select generic resources and numeric configurations.
 | Autonomous clocks, divider/PFD/filter and rate ownership | [clock ownership](../../spec/clock-rate-ownership.md), [coarse observation](../../spec/coarse-counter-contract.md), [retuning](../../spec/coarse-retune-contract.md) |
 | RF mixing, carrier coordinates, blockers and waveform scoring | [frequency coordinates](../../spec/rf-frequency-coordinates.md), [RF quadrature budget](../../spec/rf-quadrature-budget.md) |
 | TX calibration, resource admission and cancellation | [shared lifecycle](tx_calibration_services.py), [detailed adapter](tx_calibration_chip.py), [monitor ADC gap](../../spec/tx-detector-shared-adc-gap.md) |
-| Loaded TX output, isolation, observation and retained analog state | [output isolation](../../spec/tx-output-isolation.md), [pad observation](../../spec/loaded-pad-observation-contract.md), [unified state](../../spec/unified-analog-state.md) |
+| Loaded TX output, isolation, observation and retained analog state | [output isolation](../../spec/tx-output-isolation.md), [pad observation](../../spec/tx-output-isolation.md#loaded-pad-observation), [unified state](../../spec/unified-analog-state.md) |
 | Converter references, shared rails and uncertain coupling | [power partition](../../spec/power-partition.md), [uncertainty envelope](../../spec/uncertainty-envelope.md) |
 | Wired receiver detection and analog stimulus ownership | [receiver-detect model](../../spec/receiver-detect-model.md) |
 

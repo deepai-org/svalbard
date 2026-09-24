@@ -4,7 +4,8 @@ Current experimental entry: `ManagedUnifiedReferenceChip` in
 `system_model/connected/managed_unified_reference.py`. This is not the candidate
 whose two-mode payload quality has already passed. Its full acquisition and
 calibration run passed with verified source hashes in `managed-unified-calibration-launch.json`.
-Full mode-0 payload quality is still running; it is not yet qualified.
+At this historical checkpoint, full mode-0 payload quality was incomplete.
+This note does not establish current process status or qualify that run.
 
 The local implicit solve carries four complex RF-network voltages, one driver
 rail voltage, detector power, buffered readout and shared reference voltage:

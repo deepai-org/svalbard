@@ -1,8 +1,7 @@
 """Experimental startup-only coarse search integrated with shared management."""
-import math
 from calibrated_fractional_chip import CalibratedFractionalChip
 from coarse_vco_clock import CoarseVCOClock
-from coarse_acquisition import CoarseAcquisition
+from coarse_acquisition import CoarseAcquisition, advance_coarse
 
 class HeldCoarseClock(CoarseVCOClock):
     def __init__(self,**kwargs):
@@ -61,14 +60,4 @@ class CoarseStartupChip(CalibratedFractionalChip):
         elif not self.coarse.qualified:self.rf_pll.set_reference(False,time)
         return result
     def advance(self,time):
-        if not math.isfinite(time) or time<self.time:raise ValueError('Invalid coarse chip time')
-        while self.time<time:
-            event=self.coarse.next_event if self.coarse is not None and self.coarse.next_event is not None else math.inf
-            command=self.command_events[0][0] if self.command_events else math.inf
-            end=min(time,event,command)
-            super().advance(end)
-            if self.coarse is not None and self.coarse.busy and self.coarse.next_event==self.time:
-                self.coarse.step(self.time,self.epoch,self.reference)
-                if self.coarse.qualified:self.rf_target_hz=self.coarse.target
-                self.install_segment(self.rf_pll.frequency_hz-self.rf_carrier,check=False)
-        super().advance(time)
+        return advance_coarse(self,time,super().advance)

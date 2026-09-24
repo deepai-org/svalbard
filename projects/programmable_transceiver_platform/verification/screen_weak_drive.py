@@ -56,7 +56,7 @@ def main():
             'script_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
             'runner_sha256':hashlib.sha256(Path('/src/verification/run_gpio_transient.py').read_bytes()).hexdigest(),
             'contract_sha256':hashlib.sha256(contract_path.read_bytes()).hexdigest(),
-            'host_threshold_source':'AMD DS181 v1.27.1 Tables 8 and 19; see spec/artix-host-load-screen.md',
+            'host_threshold_source':'AMD DS181 v1.27.1 Tables 8 and 19; see spec/host-driver-selection.md#artix-load-baseline',
             'limitations':['10 pF is a selected lumped-load stress, not a characterized package/PCB.',
                            'Assumed aperture and clock reference are not receiver setup/hold closure.',
                            'Ideal supplies; no SSO, jitter, mismatch, process spread or H2D.',

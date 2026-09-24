@@ -72,3 +72,17 @@ class CoarseAcquisition:
             if self.qualified:
                 self.clock.retarget(time,self.target)
                 self.clock.set_reference(True,time)
+
+
+def advance_coarse(chip,time,advance_parent):
+    if not math.isfinite(time) or time<chip.time:raise ValueError('Invalid coarse chip time')
+    while chip.time<time:
+        event=chip.coarse.next_event if chip.coarse is not None and chip.coarse.next_event is not None else math.inf
+        command=chip.command_events[0][0] if chip.command_events else math.inf
+        end=min(time,event,command)
+        advance_parent(end)
+        if chip.coarse is not None and chip.coarse.busy and chip.coarse.next_event==chip.time:
+            chip.coarse.step(chip.time,chip.epoch,chip.reference)
+            if chip.coarse.qualified:chip.rf_target_hz=chip.coarse.target
+            chip.install_segment(chip.rf_pll.frequency_hz-chip.rf_carrier,check=False)
+    advance_parent(time)

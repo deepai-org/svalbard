@@ -36,6 +36,9 @@ The diagnostic path temporarily owns the I-channel ADC. These are circuit
 candidates; switch timing, conditioning, references and parasitics need schematic
 and extracted verification. No diagram establishes physical qualification.
 
+Focused SVGs are generated from the same sheet elements as the full drawing,
+with shared definitions but without embedding the other sheets.
+
 ## Regenerate
 
 From the repository root:

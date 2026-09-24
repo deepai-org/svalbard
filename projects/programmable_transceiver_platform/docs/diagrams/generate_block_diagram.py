@@ -1154,6 +1154,7 @@ label(100,23300,'Interlock requires CENTER_EN low before enabling the pump; cent
 label(100,23340,'This expands candidate block connectivity. It does not assert completed transistor wiring, noise closure, or a fabricated implementation.',17,anchor='start')
 
 # Latest connected mathematical candidate; detailed physical realization remains open.
+rf_start = len(A)
 panel(55,23530,2490,1680,'CURRENT RF CANDIDATE — ONE LOADED NETWORK FOR PAD, CALIBRATION AND LOOPBACK','#f1f8f5')
 label(90,23610,'RF active mode; wired payload disabled. Experimental connectivity, not completed transistor circuitry or a scaled layout.',19,anchor='start')
 block(110,23700,300,90,'I/Q DAC + reconstruction','paired updates / correction')
@@ -1226,6 +1227,7 @@ label(90,25060,'Output-off / dummy-on switching retains capacitor state. Quiet c
 label(90,25105,'Still open: loaded waveform quality, driver current / supply limits, transistor realization, package and parasitic qualification.',18,anchor='start')
 
 
+rf_end = len(A)
 panel(55,25340,2490,1060,'OPERATING POLICY — ONE CHIP, RF OR WIRED ACTIVE; SHARE PHYSICAL RESOURCES','#f8f3fc')
 block(120,25460,540,100,'SPI / host mode request','NONE / RF / WIRED')
 block(820,25460,850,100,'Exclusive-engine ownership / interlock','stop → isolate → release → configure → settle → qualify')
@@ -1284,6 +1286,7 @@ label(100,28065,'Serial: 0.480–2.50 Gb/s; video x10 fractional references; HD-
 label(100,28115,'One resource configuration; DP one RBR lane; RF one 20 MHz stream. 50 terminals, 12.92 mm² allocation ceiling.',20,anchor='start')
 label(100,28165,'Shared-pad capacitance and FPGA response latency are feasibility gates, not assumptions of successful support.',20,anchor='start')
 
+video_start = len(A)
 # Board-level assembly: unchanged single-lane die instantiated three times.
 label(55,28380,'HDMI / DVI — THREE IDENTICAL SINGLE-LANE DIES',30,True,'start')
 label(55,28425,'Board assembly, not extra lanes on the 1x1 die. Source shown; sink reverses data direction.',20,anchor='start')
@@ -1309,9 +1312,12 @@ label(55,29910,'Open gates: DC pad / ESD, x10 clock and word phase, cross-die sk
 put('</g></svg>')
 Path(__file__).with_name('transceiver-block-diagram.svg').write_text('\n'.join(A)+'\n')
 
-# Focused sheet uses the identical elements and wiring from the full drawing.
-focused='\n'.join(A).replace('height="30000" viewBox="0 0 2600 30000"','height="1750" viewBox="0 23500 2600 1750"',1)
-Path(__file__).with_name('transceiver-rf-loaded-detail.svg').write_text(focused+'\n')
+# Focused sheets reuse only their own elements, plus shared SVG definitions.
+def write_detail(filename, start, end, y):
+    header = A[0].replace('height="30000" viewBox="0 0 2600 30000"',
+                          f'height="1750" viewBox="0 {y} 2600 1750"', 1)
+    drawing = [header, *A[start:end], A[-1]]
+    Path(__file__).with_name(filename).write_text('\n'.join(drawing) + '\n')
 
-video='\n'.join(A).replace('height="30000" viewBox="0 0 2600 30000"','height="1750" viewBox="0 28250 2600 1750"',1)
-Path(__file__).with_name('transceiver-video-detail.svg').write_text(video+'\n')
+write_detail('transceiver-rf-loaded-detail.svg', rf_start, rf_end, 23500)
+write_detail('transceiver-video-detail.svg', video_start, len(A) - 1, 28250)

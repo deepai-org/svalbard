@@ -5,8 +5,8 @@ from chip_model import P
 from managed_resources import command
 from phase_loaded_tx_chip import PhaseLoadedTxChip
 
-def main():
-    c=PhaseLoadedTxChip(watchdog_s=1e-3,dac_latency_s=100e-9,tx_relative_gain=True)
+def run_calibration(chip_class):
+    c=chip_class(watchdog_s=1e-3,dac_latency_s=100e-9,tx_relative_gain=True)
     assert command(c,'rf_coarse_start',2412000000)['accepted']
     c.advance(c.time+50e-6)
     print('coarse acquisition complete',c.time,flush=True)
@@ -41,6 +41,10 @@ def main():
         'Source is prescribed Thevenin envelope; no chip DC current feedback or physical qualification.',
         'Managed commands and finite internal queue playback; no full host/wired quality screen.',
         'Detector remains physically connected; shared ADC resource allocation still unresolved.'])
+    return report
+
+def main():
+    report=run_calibration(PhaseLoadedTxChip)
     (P/'evidence/connected-phase-loaded-calibration.json').write_text(json.dumps(report,indent=2)+'\n');print(report)
 
 if __name__=='__main__':main()

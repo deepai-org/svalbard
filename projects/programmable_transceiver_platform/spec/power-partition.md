@@ -92,11 +92,11 @@ The next physical pass must include FF/high-voltage current, input-bank activity
 
 ## Pass 8 limitation
 
-The [8 pF host screen](artix-host-load-screen.md) exceeds HOST_B's planning ceiling after the existing allowances (63.54 mA versus 55 mA), even at nominal temperature and voltage. The two-segment allocation remains a candidate and is not closed for this load. Passing the earlier 5 pF executable screen does not supersede this negative evidence.
+The [8 pF host screen](host-driver-selection.md#artix-load-baseline) exceeds HOST_B's planning ceiling after the existing allowances (63.54 mA versus 55 mA), even at nominal temperature and voltage. The two-segment allocation remains a candidate and is not closed for this load. Passing the earlier 5 pF executable screen does not supersede this negative evidence.
 
 Pass 9 [native driver comparison](host-driver-selection.md): 12 mA mode reduces the same 8 pF HOST_B estimate to 55.75 mA with unchanged allowances, still above 55 mA. No driver or current ceiling is changed by this experiment.
 
-Pass 10 [8 mA candidate](weak-drive-screen.md): the nominal 10 pF HOST_B estimate is 53.80 mA with unchanged allowances. This passes the limited planning comparison but leaves only 1.20 mA headroom; no package/bank/operating-envelope closure is implied.
+Pass 10 [8 mA candidate](host-driver-selection.md#8-ma-candidate): the nominal 10 pF HOST_B estimate is 53.80 mA with unchanged allowances. This passes the limited planning comparison but leaves only 1.20 mA headroom; no package/bank/operating-envelope closure is implied.
 
 ## Coupled mathematical load accounting
 

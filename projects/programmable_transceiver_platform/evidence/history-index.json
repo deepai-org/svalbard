@@ -1579,6 +1579,68 @@
       "bytes": 4351,
       "recovery_commit": "32aa5622d72b53d566cd8ed5100b2a67e1818b99",
       "reason": "Workflow consolidated into spec/analog-design-workflow.md; original retained for historical report references"
+    },
+    {
+      "path": "spec/artix-host-load-screen.md",
+      "sha256": "549758b250a1db4c8ec925071e21694974b8533b89bd3a8c95c2a656ee2c7f72",
+      "bytes": 3278,
+      "recovery_commit": "3d06e6263892b2e6755c9f6a6e6d5bf7da4dc678",
+      "reason": "Merged with host load and driver comparisons in spec/host-driver-selection.md"
+    },
+    {
+      "path": "spec/weak-drive-screen.md",
+      "sha256": "333ed7efb5aa88142e3d7b2e04ee2c8373010cbcc8c3530b9a88ef1a14f96d37",
+      "bytes": 3029,
+      "recovery_commit": "3d06e6263892b2e6755c9f6a6e6d5bf7da4dc678",
+      "reason": "Merged with host load and driver comparisons in spec/host-driver-selection.md"
+    },
+    {
+      "path": "evidence/connected-tx-resource-audit-before.json",
+      "sha256": "b4f9c4fec0f09147056ca7b97481a71dc213fc4fc9533b71c636f5c20d554ab3",
+      "bytes": 756,
+      "status": "characterized",
+      "recovery_commit": "3d06e6263892b2e6755c9f6a6e6d5bf7da4dc678",
+      "reason": "Unreferenced before-fix snapshot; current audit remains separately maintained.",
+      "historical_finding": "Historical characterization: DAC ownership was not visible and the monitor ADC was absent from the inventory.",
+      "current_report": "evidence/connected-tx-resource-audit.json"
+    },
+    {
+      "path": "evidence/connected-tx-retune-validity-before.json",
+      "sha256": "68a1ad651534506a8899ddc542bba68fecbd218de9fdb0cf430e26757d612db1",
+      "bytes": 318,
+      "status": "characterized",
+      "recovery_commit": "3d06e6263892b2e6755c9f6a6e6d5bf7da4dc678",
+      "reason": "Unreferenced before-fix snapshot; current audit remains separately maintained.",
+      "historical_finding": "Historical characterization: calibration stayed valid after direct retarget and TX was admitted without recalibration.",
+      "current_report": "evidence/connected-tx-retune-validity-audit.json"
+    },
+    {
+      "path": "system_model/connected/ARCHITECTURE.md",
+      "sha256": "5c4c92315ba32e7e27fe5e415a766ebb571c99fe8e47ef1bd45ba86a014b4119",
+      "bytes": 131123,
+      "recovery_commit": "3d06e6263892b2e6755c9f6a6e6d5bf7da4dc678",
+      "reason": "Historical pass-by-pass journal replaced by model navigation; full original retained in Git, current design owners linked."
+    },
+    {
+      "path": "spec/analog-design-workflow.md",
+      "sha256": "dd67ae3c5d18536f4d479b1f85255a875cc5dab66dbbce98c27aef30486caf60",
+      "bytes": 53733,
+      "recovery_commit": "3d06e6263892b2e6755c9f6a6e6d5bf7da4dc678",
+      "reason": "Historical handoff/solver/video narrative condensed into reusable workflow rules; full original remains recoverable."
+    },
+    {
+      "path": "system_model/connected/README.md",
+      "sha256": "90cae7f8319378fe601c34071585e6eb6318af8661046c61e949599078821003",
+      "bytes": 39795,
+      "recovery_commit": "3d06e6263892b2e6755c9f6a6e6d5bf7da4dc678",
+      "reason": "Historical pass journal replaced by directory guide; full commands, examples and measurements remain in immutable Git."
+    },
+    {
+      "path": "spec/tx-output-stage-sensitivity.md",
+      "sha256": "17832c3aa100a49039d609344810c9051659a2f97690b653d34d15cea07531b3",
+      "bytes": 22831,
+      "recovery_commit": "3d06e6263892b2e6755c9f6a6e6d5bf7da4dc678",
+      "reason": "Chronological TX sensitivity/calibration note consolidated into contracts, observability limits, error bounds and scoped evidence table."
     }
   ]
 }

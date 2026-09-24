@@ -1,12 +1,3 @@
 #!/usr/bin/env bash
 set -euo pipefail
-ROOT=$(cd "$(dirname "$0")/../../.." && pwd)
-OUT="$ROOT/scratch/transceiver-adc-receiver-driver-probe"
-mkdir -p "$OUT"
-docker run --rm --platform linux/arm64 --network none --cpus 2 --memory 4g --entrypoint /bin/bash \
- -v "$ROOT/projects/programmable_transceiver_platform/analog:/screen:ro" \
- -v "$ROOT/ip/blocks/analog/wifi_80211b:/wifi:ro" \
- -v "$ROOT/scratch/transceiver-adc-shared-iq-receiver-cm:/baseline:ro" \
- -v "$OUT:/work" --workdir /work \
- sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305 \
- -lc 'python3 /screen/adc/receiver_driver_probe.py'
+exec bash "$(dirname "$0")/run_analog_check.sh" transceiver-adc-receiver-driver-probe adc/receiver_driver_probe.py wifi reuse transceiver-adc-shared-iq-receiver-cm

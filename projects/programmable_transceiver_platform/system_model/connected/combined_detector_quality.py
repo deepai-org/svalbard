@@ -18,7 +18,10 @@ class CombinedChip(ProgrammableChip):
         assert self.detect_result(self.epoch)['decision']=='present'
         assert self.probe.drive is None
 
-def main():
+def run_quality(chip_class, profile, profile_path, report_name, *, pulse=False):
+    PROFILE = profile
+    PROFILE_PATH = profile_path
+    CombinedChip = chip_class
     rows=[]
     for mode in (0,1):
         settings=PROFILE['traffic']
@@ -39,6 +42,8 @@ def main():
             assert detect['drive_released'] and detect['result']['decision']=='present'
             assert len(traffic['service_pauses'])==1
             assert traffic['service_pauses'][0]['word_periods']==settings['pause_words']
+            if pulse:
+                assert actual[-1]<(PROFILE['experiment']['source_count']-1)/PROFILE['experiment']['source_rate_hz']
             q=quality(reference,measured)
             assert q['screen_budget']==PROFILE['quality_budget_relative_rms']
             rows.append(dict(mode=mode,sign=sign,quality=q,traffic=traffic,reference_traffic=baseline))
@@ -47,11 +52,15 @@ def main():
     report=dict(status='passed' if passed else 'failed',quality_pass=passed,
         profile=PROFILE,profile_sha256=hashlib.sha256(PROFILE_PATH.read_bytes()).hexdigest(),
         cases=rows,complete_architecture=False,physical_qualification=False,
-        limitations=['Detection precedes traffic because detection and wired TX share pads.',
+        limitations=(['Pulse-loop carrier retargeting and fractional feedback remain unsupported.',
+        '20us settling and26us traffic preparation; source duration extends through every captured sample.'] if pulse else []) + ['Detection precedes traffic because detection and wired TX share pads.',
         'Finite 32-frame run, one 16-word host pause and two signed assumed coupling points.',
         'Incremental held-out waveform error is not protocol EVM or silicon qualification.',
         'Converter references use aggregate charge impulses; clock noise and supply sensitivities are assumed.'])
-    (P/'evidence/connected-combined-detector-quality.json').write_text(json.dumps(report,indent=2)+'\n')
+    (P/'evidence'/report_name).write_text(json.dumps(report,indent=2)+'\n')
     assert passed, 'Combined quality budget exceeded; inspect written evidence'
+
+def main():
+    run_quality(CombinedChip, PROFILE, PROFILE_PATH, 'connected-combined-detector-quality.json')
 
 if __name__=='__main__':main()

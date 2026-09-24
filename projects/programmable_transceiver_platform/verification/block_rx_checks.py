@@ -33,7 +33,10 @@ $display("PASS RX cycles=%0d",n);$finish;end endmodule
     assert r.returncode == 0, r.stdout + r.stderr
     assert f'cycles={n}' in r.stdout
     print(r.stdout)
-    s = pathlib.Path(rtl[-1]).read_text()
+    # Mutate elaboration input after expanding the shared control-body include.
+    expanded = out / 'expanded_rx.sv'
+    subprocess.run(['iverilog', '-g2012', '-E', '-I/src/rtl', '-o', str(expanded), rtl[-1]], check=True)
+    s = expanded.read_text()
     assert s.count('allowed&&capacity') == 1
     (out / 'bad.sv').write_text(s.replace('allowed&&capacity', 'allowed'))
     r = run(rtl[:-1] + [str(out / 'bad.sv')], 'bad')

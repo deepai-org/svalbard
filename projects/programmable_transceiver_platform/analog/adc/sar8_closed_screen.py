@@ -2,14 +2,23 @@
 import hashlib,json,subprocess
 from pathlib import Path
 import numpy as np
-O=Path('/work');rows=[]
-for vin in (-.4,-.123,.123,.4):
- name=f'vin{vin:g}'
- update=['0 0']
- for edge in [5]+list(range(80,256,25)):update += [f'{edge}n 0',f'{edge+.1}n 3.3',f'{edge+5}n 3.3',f'{edge+5.1}n 0']
- ports=' '.join(f'B{i} B{i}B' for i in range(8));bits=' '.join(f'D{i}' for i in range(8))
- drivers='\n'.join(f'XDRV{i} D{i} B{i} B{i}B VDRV 0 pt_adc_code_small_driver WEIGHT={2**i}' for i in range(8))
- d=f'''* Actual GF180 SAR decision feedback, external phase clocks
+
+def main(variant='closed'):
+ if variant not in ('closed','buffered','fast'):raise ValueError('Unknown SAR variant')
+ fast=variant=='fast';buffered=variant!='closed'
+ edges=(77,113,5) if fast else (80,256,25)
+ width,fall=(1,1.1) if fast else (5,5.1)
+ window=(114e-9,114.8e-9) if fast else (265e-9,270e-9)
+ status={'closed':'transistor_sar_feedback_first_functional_screen','buffered':'buffered_transistor_sar_feedback_functional_screen','fast':'buffered_sar_5ns_bit_timing_screen_not_sample_rate_qualification'}[variant]
+ timing_limit='5ns bit interval with long initialization/acquisition; repeated 20--40MS/s conversions not demonstrated.' if fast else '25ns bit interval and long acquisition intentionally separate logic function from target throughput; does not meet 20--40MS/s.'
+ O=Path('/work');rows=[]
+ for vin in (-.4,-.123,.123,.4):
+  name=f'vin{vin:g}'
+  update=['0 0']
+  for edge in [5]+list(range(*edges)):update += [f'{edge}n 0',f'{edge+.1}n 3.3',f'{edge+width}n 3.3',f'{edge+fall}n 0']
+  ports=' '.join(f'B{i} B{i}B' for i in range(8));bits=' '.join(f'D{i}' for i in range(8))
+  drivers='\n'.join(f'XDRV{i} D{i} B{i} B{i}B VDRV 0 pt_adc_code_small_driver WEIGHT={2**i}' for i in range(8))
+  d=f'''* Actual GF180 SAR decision feedback, external phase clocks
 .include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
 .lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
 .include /screen/pll/pfd.spice
@@ -54,11 +63,17 @@ wrdata /work/{name}.dat v(HP) v(HN) v(QP) v(QN) v(CLK) v(UPDATE) v(DONE) {' '.jo
 .endc
 .end
 '''
- (O/(name+'.spice')).write_text(d)
- with (O/(name+'.log')).open('w') as log:subprocess.run(['ngspice','-b',str(O/(name+'.spice'))],stdout=log,stderr=subprocess.STDOUT,check=True,timeout=600)
- a=np.loadtxt(O/(name+'.dat'),skiprows=1);assert a.shape[1]==26 and np.isfinite(a).all()
- final=a[(a[:,0]>265e-9)&(a[:,0]<270e-9)];code=sum((np.mean(final[:,8+i])>1.65)*2**i for i in range(8))
- rows.append(dict(name=name,input_difference_v=vin,final_code=int(code),done_min_v=float(final[:,7].min()),artifacts_sha256={s:hashlib.sha256((O/(name+s)).read_bytes()).hexdigest() for s in ('.spice','.dat','.log')}))
-sources=[Path('/screen/pll/pfd.spice')]+[Path('/screen/adc')/f for f in ('sar8_control.spice','comparator.spice','cdac8_scaled.spice','code_driver_small.spice')]+[Path('/wifi/rf_if_transmission_gate/rf_if_transmission_gate.spice')]
-r=dict(status='transistor_sar_feedback_first_functional_screen',cases=rows,source_sha256={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},limitations=['Nominal matched TT 3.3V 27C, ideal matched capacitors/references/supplies.', 'External START/reset/update/comparator/sample clocks; phase generation not implemented.', '25ns bit interval and long acquisition intentionally separate logic function from target throughput; does not meet 20--40MS/s.', 'Four constant input conversions only, no transfer/noise/mismatch or changing-sample qualification.', 'Output bit polarity is complementary to ascending input; no host output register/interface.'])
-(O/'result.json').write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(rows,indent=2))
+  if buffered:
+   d=d.replace('CP QP 0 50f', 'XOP0 QP QPB VLOG 0 pt_inv\nXOP1 QPB KEEPP VLOG 0 pt_inv\nXON0 QN QNB VLOG 0 pt_inv\nXON1 QNB KEEPN VLOG 0 pt_inv\nCP QP 0 50f').replace('XCTL QN ', 'XCTL KEEPN ').replace('i(VLOG) i(VDRV)\n', 'i(VLOG) i(VDRV) v(KEEPP) v(KEEPN)\n')
+  if fast:
+   d=d.replace('75n 100p 100p 10n 25n', '75n 100p 100p 2.8n 5n').replace('tran 10p 274n 0 10p', 'tran 5p 114.9n 0 5p')
+  (O/(name+'.spice')).write_text(d)
+  with (O/(name+'.log')).open('w') as log:subprocess.run(['ngspice','-b',str(O/(name+'.spice'))],stdout=log,stderr=subprocess.STDOUT,check=True,timeout=600)
+  a=np.loadtxt(O/(name+'.dat'),skiprows=1);assert a.shape[1]==(28 if buffered else 26) and np.isfinite(a).all()
+  final=a[(a[:,0]>window[0])&(a[:,0]<window[1])];code=sum((np.mean(final[:,8+i])>1.65)*2**i for i in range(8))
+  rows.append(dict(name=name,input_difference_v=vin,final_code=int(code),done_min_v=float(final[:,7].min()),artifacts_sha256={s:hashlib.sha256((O/(name+s)).read_bytes()).hexdigest() for s in ('.spice','.dat','.log')}))
+ sources=[Path('/screen/pll/pfd.spice')]+[Path('/screen/adc')/f for f in ('sar8_control.spice','comparator.spice','cdac8_scaled.spice','code_driver_small.spice')]+[Path('/wifi/rf_if_transmission_gate/rf_if_transmission_gate.spice')]
+ r=dict(status=status,cases=rows,source_sha256={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},limitations=['Nominal matched TT 3.3V 27C, ideal matched capacitors/references/supplies.', 'External START/reset/update/comparator/sample clocks; phase generation not implemented.', timing_limit, 'Four constant input conversions only, no transfer/noise/mismatch or changing-sample qualification.', 'Output bit polarity is complementary to ascending input; no host output register/interface.'])
+ (O/'result.json').write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(rows,indent=2))
+
+if __name__=='__main__':main()

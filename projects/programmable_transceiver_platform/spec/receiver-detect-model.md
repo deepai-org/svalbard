@@ -118,7 +118,7 @@ nonzero initial-state handling or connected lifecycle behavior.
 Evidence: `evidence/receiver-detect-load-screen.json`. Its exact standalone Python
 source is saved as `evidence/receiver-detect-load-screen-source.txt`, with its SHA256
 in the report. Run it with Python from this workspace. It is not part of the
-currently running80-scenario aggregate and does not modify that model snapshot.
+then-running 80-scenario aggregate and does not modify that model snapshot.
 
 ## Earlier observation with held-out load/error cases
 

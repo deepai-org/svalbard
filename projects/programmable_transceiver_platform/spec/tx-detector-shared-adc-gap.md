@@ -82,13 +82,14 @@ relaxing phase steps or dropping loading dynamics. Profile artifact:
 evidence/loaded-network-profile.txt. These are instrumented local timings, not
 an end-to-end speedup claim.
 
-Original mode0 loaded-pad run remains live in session17675; no restart or quality
-claim. Registration remains deferred to preserve its source snapshot.
+At that checkpoint, the mode0 loaded-pad run was tracked as session17675 and
+registration was deferred to preserve its source snapshot. This historical
+identifier does not establish a currently live process or a quality result.
 
 A combined experimental SharedPhaseLoadedTxChip now composes shared maintenance
 conversion, autonomous LO forcing, retargetable loaded network and host PHY.
 Vectorization changes only detector integration, preserving the shared ADC
 request/read callback. The managed calibration check asserts identity of the
-controller, network and conversion detector objects. It is currently running;
-no calibration or full-chain result is claimed for this composition yet. See
-shared-phase-calibration-launch.json (session84313).
+controller, network and conversion detector objects. The historical launch
+record is shared-phase-calibration-launch.json (session84313); the launch alone
+is not a completed calibration/full-chain result or evidence of a live process.

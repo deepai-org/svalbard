@@ -669,124 +669,65 @@ full-SAR baseline reproduced exactly in the checked window. Use that fixture for
 reference-circuit experiments rather than tuning a replay indefinitely. Keep
 reduced-model validation local to its measured operating conditions and history.
 
-## Fast-model handoff checkpoint
+## Model handoff and bounded supporting checks
 
-`verification/fast_schematic_handoff.py` now records current source/evidence
-availability and hashes for all ten entries in `schematic-implementation.json`.
-The audit finds the listed artifacts present, but no complete whole-chip analog
-schematic. Artifact presence is not performance verification; historical source
-identity must be checked at each circuit refinement.
+The [active model guide](../system_model/architecture_fast/README.md) owns routine
+commands and coverage; `make transceiver-behavioral` remains the primary loop.
+`make transceiver-math-fast` is a bounded supporting suite, not whole-chip closure.
+Use short coupled windows for specific approximation questions rather than
+repeating stiff startup for every control change. Cold startup, sustained
+traffic and coupled uncertainty still need their own evidence.
 
-The highest-risk abstraction mismatch is loaded LO delivery: existing autonomous
-transistor evidence reports missing I-LO threshold crossings and reference spur,
-whereas fast RF mixing assumes an ideal carrier. Before using its passing RF
-quality as a circuit target, specify mixer-drive amplitude, duty, missing-edge
-and supply/load tolerances and connect their consequences to the mathematical
-RX/TX model. Preserve the separate replay improvement as diagnostic evidence;
-it is not autonomous startup/noise closure. Reference/converter loading and
-whole-chip transistor interconnection remain the next major handoff gaps.
+`verification/fast_schematic_handoff.py` records source/evidence availability
+and hashes against [the schematic inventory](schematic-implementation.json).
+Its report is `evidence/fast-schematic-handoff.json`. Presence does not establish
+performance or a complete schematic. In particular, ideal-carrier RF results
+must be reconciled with loaded transistor LO evidence: amplitude, duty, missing
+edges, reference spurs and supply/load tolerances matter. Improved seeded replay
+does not establish autonomous startup/noise behavior. Current priorities belong
+in [risk-priorities.md](risk-priorities.md); layout remains gated on schematic
+completion and verification.
 
-Current audit: `evidence/fast-schematic-handoff.json`. The layout gate stays closed.
+Preserve these solver-reduction rules: disabled RF still retains passive decay,
+rail loading and stored energy. The `forecast_inactive_rf` shortcut may use RK45
+only with exactly dormant RF driver/network/filter/detector state and explicitly
+zero receive forcing; retained RF state requires the detailed path. Check an
+explicit/implicit rail comparison within 1 nV. A passing finite functional test
+is not full trajectory equivalence, and a faster solve is not permission to
+loosen tolerances or discard state.
 
+## Programmable primitives and video reuse
 
-## Programmable protocol primitives
+Build configurable blocks from the six primitive families above, with bounded
+codes, finite resolution, loading and power. For TMDS, characterize extensions
+to the existing current-steering driver, terminations, sampler and divider before
+adding a separate macro. DC sink/common-mode behavior and high-frequency
+forwarded references need circuit evidence. FPGA logic owns encoding and
+multi-chip lane coordination; each die retains its constraints. The
+[board and pin plan](../../../docs/roadmap/programmable-transceiver-pin-plan.md#hdmidvi-through-multiple-instances)
+owns the three-instance assembly.
 
-Implement these from the already selected six primitive families and shared
-control services. A configurable block must still have bounded code ranges,
-finite resolution, loading and power; mathematical configurability is not a
-new ideal component exemption.
+For a specific forwarded-clock lifecycle question, the supporting command is:
 
-### RF-disabled forecast performance candidate
+```sh
+timeout 15s env OPENBLAS_NUM_THREADS=1 python3 projects/programmable_transceiver_platform/verification/protocol_model_check.py --forwarded-lifecycle
+```
 
-Live-process sampling places most observed time in the coupled Radau solve
-and rail/PLL forecasting; the nonblocking profiler lost samples, so this is
-hotspot evidence rather than a precise CPU allocation. Wired-only intervals
-currently perform at least two RF phase-feedback solves even though the RF
-oscillator, drive and receive input are disabled.
+Add `--forwarded-direction tx` for TX. These finite RX/TX checks cover host transfer
+and reference-loss draining; they do not establish a continuous three-chip video
+link. TX's canonical serializer observation is internal; independent pad
+observation has a separate scope. Timeouts are not completed traffic evidence.
 
-`verification/inactive_rf_feedback_check.py` compares a single-solve candidate
-against that reference with identical ODE tolerances, 2/20 ns intervals, host
-edges and nonzero stored network energy. Checked node/filter/rail/reference/
-host/clock states agree within 1.5e-14 in these four cases, and the solve count
-falls from two to one. All passive decay and shared supply loads remain in the
-ODE. The expanded probe compares 154 numeric fields, including 22 energy/charge
-fields, plus domain rail trajectories. Active-RF use and invalid intervals
-reject, and injected solver failure preserves caller state. A guarded version
-is now installed in the primary composition after the original control
-regression passed. A matched serialized-configuration/finite RX-to-host
-scenario has passed in both isolated copies. Source manifests were rechecked,
-and all five reported functional outcomes agree, including actual acquisition
-and eight causal received words at 1.62 Gb/s. Reports are preserved as
-`evidence/resource-command-reference.json` and
-`evidence/resource-command-optimized.json`. These are functional comparisons,
-not full analog trajectory equivalence; the return observer decodes ideal words.
-Fresh main-model coupled primitive and serialized record-return checks pass;
-the longer post-integration control regression remains live.
-Do not generalize this result to
-active RF or replace a still-running reference simulation.
+Mathematical closure requires the connected PHY behavior and declared uncertainty
+envelope, including representative external signaling and recovery fixtures.
+MAC/endpoint stacks remain external; that does not waive chip clock, pad,
+converter or management obligations. Stage boundaries belong in
+[the closure inventory](mathematical-closure.json). Mathematical acceptance does
+not certify transistor performance, and full transistor verification precedes layout.
 
-## Bounded architecture iteration
-
-Use `make transceiver-math-fast` as the routine loop: analytical/envelope RF,
-event-level transport/clock controls and interval uncertainty checks, bounded
-at 30 seconds total. The result is reduced-model evidence, not closure of the
-detailed coupled chip. Use short coupled transient windows to validate the
-approximations at selected disturbances; do not repeat a full stiff startup
-for every controller or configuration change. Full cold-start, sustained
-traffic and coupled uncertainty remain explicit later verification gates.
-Long coupled runs require `--detailed` and a specific unanswered question.
-
-## TMDS reuse before new circuitry
-
-For HDMI/DVI, first extend the existing wired current-steering driver, termination
-switches, comparator/sampler and clock divider using the six primitive families.
-Characterize the selectable DC sink/common-mode behavior and high-frequency
-forwarded reference before adding any separate video analog macro. Keep encoding
-and three-chip bonding in the FPGA; instantiate the same die three times. The
-schematic/layout sequence and all per-die constraints remain unchanged.
-
-[HDMI/DVI board and pin plan](../../../docs/roadmap/programmable-transceiver-pin-plan.md#hdmidvi-through-multiple-instances).
-
-The bounded canonical forwarded-RX check is opt-in:
-`timeout 15s env OPENBLAS_NUM_THREADS=1 python3 projects/programmable_transceiver_platform/verification/protocol_model_check.py --forwarded-lifecycle`.
-It acquires at 2 us, receives eight 1.485 Gb/s words, returns them through the
-existing host path and verifies reference-loss draining by 2.14 us. It writes
-`evidence/protocol-forwarded-lifecycle.json`; it is separate from the default
-architecture suite to preserve its runtime budget. Earlier diagnostic windows
-were stopped at their 12/15-second limits and provide no completed traffic proof.
-
-Profiling identified repeated stiff solves while RF states were exactly zero.
-`forecast_inactive_rf` now chooses RK45 only when driver, RF network, RX filter
-and detector state are exactly dormant and receive forcing is explicitly zero.
-Any retained RF state selects Radau. A short explicit/implicit rail comparison
-must agree within 1 nV; no tolerance loosening or active-RF solver replacement is
-implied. This optimization preserves the dormant invariant subspace and does not
-permit discarding residual charge during wired/RF transitions.
-
-Use `--forwarded-lifecycle --forwarded-direction tx` on the same bounded command
-for the complementary canonical TX check. After real coupled startup, one whole
-64-word host frame supplies four opaque words, which pass through the finite TX
-FIFO, forwarded PLL serializer and current-switch pad. The test requires exact
-internal serializer output and no underflow/pending words, then removes reference
-and verifies draining, stopped serialization and tail-current decay below 1 uA
-after 1 ns. `evidence/protocol-forwarded-tx-lifecycle.json` records this finite
-case. RX remains the default direction. Neither test qualifies a continuous
-three-chip video link; TX's canonical observation is internal, supplemented by
-the separately scoped independent-clock pad test.
-
-### Closure scope clarification
-
-Mathematical closure requires the complete intended PHY companion's connected
-behavior and declared uncertainty envelope. Representative FPGA fixtures must
-exercise actual signaling, framing/timing demands and recovery, but complete
-MAC/endpoint stacks are external responsibilities, not missing on-chip engines.
-Conversely, a host queue or waveform test alone cannot close chip clocks, pads,
-converter paths or management lifecycle. Physical feasibility remains unknown
-until transistor evidence constrains noise, speed, linearity and loading; that
-is the next stage, not something a mathematical pass certifies. Complete the
-full transistor schematic before layout. The machine-readable stage boundaries
-in `mathematical-closure.json` classify these obligations without waiving the
-existing requirements or moving missing chip behavior outside the project.
+The superseded handoff/performance narrative and exact historical measurements
+remain in the [immutable workflow snapshot](https://github.com/deepai-org/svalbard/blob/3d06e6263892b2e6755c9f6a6e6d5bf7da4dc678/projects/programmable_transceiver_platform/spec/analog-design-workflow.md#fast-model-handoff-checkpoint).
+Its running-job statements describe that historical snapshot, not current work.
 
 ## Reduced-model validation and promotion
 

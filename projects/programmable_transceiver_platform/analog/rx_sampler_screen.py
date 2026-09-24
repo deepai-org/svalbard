@@ -1,15 +1,10 @@
 #!/usr/bin/env python3
 """Direct sampler diagnostic; no complete ADC/baseband or sensitivity claim."""
-import bisect,hashlib,json,math,subprocess
+import hashlib,json,math,subprocess
 from pathlib import Path
-from rf_measure import projection
+from rf_measure import projection, interpolate, sampler_case
 SRC=Path('/screen'); OUT=Path('/work')
 def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
-def interpolate(rows,t,col):
-    times=[r[0] for r in rows]
-    k=bisect.bisect_left(times,t)
-    a,b=rows[k-1],rows[k]
-    return a[col]+(b[col]-a[col])*(t-a[0])/(b[0]-a[0])
 template=(SRC/'rx_branch_load_tb.spice.in').read_text()
 cases=[]
 for amplitude in (0,.001):
@@ -38,9 +33,7 @@ XS IP IN QP QN HIP HIN HQP HQN SC SCB VDD 0 pt_iq_sampler''')
     ph=[[projection(rows,col,a,b,10e6) for col in (1,2)] for a,b in ((100e-9,200e-9),(200e-9,300e-9))]
     window=[r for r in rows if 200e-9<=r[0]<=300e-9]
     currents=[-sum((b[0]-a[0])*(a[col]+b[col])/2 for a,b in zip(window,window[1:]))/(window[-1][0]-window[0][0]) for col in (9,10)]
-    cases.append(dict(input_peak_v=amplitude,samples=samples,if_phasors=[[[z.real,z.imag] for z in row] for row in ph],
-                      hold_node_range_v=[min(r[c] for r in window for c in (5,6,7,8)),max(r[c] for r in window for c in (5,6,7,8))],
-                      lna_sampler_current_a=currents[0],lo_current_a=currents[1],deck_sha256=digest(path)))
+    cases.append(dict(**sampler_case(amplitude, samples, ph, window, currents), deck_sha256=digest(path)))
     print(name,currents,samples[-1],flush=True)
 zero,signal=cases
 signal_samples=[[a[0],a[1]-b[1],a[2]-b[2]] for a,b in zip(signal['samples'],zero['samples'])]

@@ -1,6 +1,8 @@
 """Run the prepared loaded receiver replay, preserving failure artifacts."""
 import hashlib,json,re,subprocess,time,sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from spice_sources import collect_sources, __file__ as source_scanner_file
 O=Path('/work');B=Path('/prepared')
 name=sys.argv[1];assert name in ['baseline','replay']
 def sha(p):
@@ -11,15 +13,8 @@ def sha(p):
 m=json.loads((B/'manifest.json').read_text())
 for n,h in m['artifacts_sha256'].items():assert sha(B/n)==h
 paths={Path(__file__)}
-def scan(s,parent):
- for l in s.splitlines():
-  z=re.match(r'\s*\.(?:include|lib)\s+(\S+)',l,re.I)
-  if not z:continue
-  p=Path(z[1].strip(chr(34)+chr(39)));p=p if p.is_absolute() else parent/p
-  if not p.is_file():assert l.lower().lstrip().startswith('.lib ') and len(l.split())==2;continue
-  p=p.resolve()
-  if p not in paths:paths.add(p);scan(p.read_text(),p.parent)
-s=(B/(name+'.spice')).read_text();scan(s,B);before={str(p):sha(p) for p in paths}
+paths.add(Path(source_scanner_file))
+s=(B/(name+'.spice')).read_text();collect_sources(s, B, paths, include_inc=False);before={str(p):sha(p) for p in paths}
 for n,h in before.items():
  if n in m.get('source_provenance',{}):assert m['source_provenance'][n]==h
 p=O/(name+'.spice');p.write_text(s);start=time.monotonic()

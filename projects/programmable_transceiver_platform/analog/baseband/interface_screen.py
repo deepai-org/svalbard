@@ -1,6 +1,9 @@
 """Filter common-mode and finite-source loading screen; no stability claim."""
 import hashlib,json,re,subprocess
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from spice_sources import collect_sources, __file__ as source_scanner_file
 O=Path('/work')
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 base='''.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
@@ -12,15 +15,8 @@ VB BIAS 0 2.25
 XDUT IP IN OP ON BIAS VDD 0 pt_bb_filter RFB=20k C=20p
 '''
 paths=set()
-def deps(text,parent):
- for line in text.splitlines():
-  m=re.match(r'\s*\.(?:include|inc|lib)\s+(\S+)',line,re.I)
-  if not m:continue
-  p=Path(m[1].strip('"\''));p=p if p.is_absolute() else parent/p
-  if not p.is_file():assert line.lower().lstrip().startswith('.lib ') and len(line.split())==2;continue
-  p=p.resolve()
-  if p not in paths:paths.add(p);deps(p.read_text(),p.parent)
-deps(base,O);before={str(p):sha(p) for p in sorted(paths)}
+paths.add(Path(source_scanner_file))
+collect_sources(base, O, paths);before={str(p):sha(p) for p in sorted(paths)}
 probes=[f'v({n})' for n in ('IP','IN','XDUT.GP','XDUT.GN','XDUT.MP','XDUT.MN','OP','ON','XDUT.T1','XDUT.T2')]+['i(VIP)','i(VIN)','i(VDD)']+[f'@m.xdut.{stage}.{dev}.m0[{p}]' for stage in ('xa','xb') for dev in ('xip','xin','xtail') for p in ('vds','vdsat')]
 (O/'manifest.json').write_text(json.dumps(dict(source_sha256_before=before,common_mode_v=[.6,.9,1.177],source_ohm_per_leg=[0,1000],op_probes=probes,scope='TT27C3.3V external bias2.25V; original RFB20k/C20p; source/load scenarios not fab bounds'),indent=2)+'\n')
 rows=[]

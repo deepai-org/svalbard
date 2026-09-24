@@ -14,9 +14,12 @@ def codec():
             assert e.pending<10 and d.pending<bits
         assert observed==samples[:len(observed)] and len(samples)-len(observed)<=1
 
-def run(mode,overflow=False):
+def run(mode,overflow=False,configure_source=None):
     c=ProgrammableChip(watchdog_s=100e-6,adc_latency_s=30e-9)
-    c.configure_rx('external_tone',1,5e6,5e6,.2+.1j,250e3)
+    if configure_source is None:
+        c.configure_rx('external_tone',1,5e6,5e6,.2+.1j,250e3)
+    else:
+        configure_source(c)
     c.configure(mode,0);c.advance(8e-6)
     token,apply,reply=c.submit('rx_stream_start',c.time,c.epoch,c.rx_generation,8)
     c.advance(apply-1e-12);assert c.adc_left==0

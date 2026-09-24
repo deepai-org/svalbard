@@ -103,6 +103,12 @@ Both adverse directions, correlated/interior cases, calibration coverage and
 unknown-bound rules remain explicit; earlier simulation statuses are labeled
 historical. The separate note is recovery-indexed and navigation updated.
 
+The independent TX waveform-diagnostics note now lives in
+`spec/tx-output-stage-sensitivity.md`, alongside calibration and observer
+requirements. Its complete body is retained, including held-out error decomposition,
+training-only diagnostic fits, trace commands and host-preconditioning limits;
+the original is recovery-indexed. No implementation policy or quality gate changed.
+
 ## Shared implementations and validation
 
 | Consolidated family | Implementation | Validation and limits |
@@ -118,7 +124,29 @@ historical. The separate note is recovery-indexed and navigation updated.
 | Four SAR frame/masking modes | `analog/adc/sar8_early_mask_frames_screen.py:main` | Eight decks and four reports/command sequences match original unmasked, track-mask, early-mask and strong-mask runners. Seventy-two original/refactored checks preserve missing-control-source and simulator failure rejection. Pulse timing, source replacement cardinality, masking nodes/cells, artifact hashes and limitations retained; no SPICE rerun. |
 | Three VCO charge-injection runners | `analog/pll/vco_charge_kick.py:main` | Eighteen coarse/fine success/timeout/nonzero-exit cases preserve decks, manifests, reports and simulator settings except added shared-source provenance. Fifty-two original/refactored rejection checks preserve parent hash, required nodes/devices, source and deck integrity; output, internal-stage and channel-terminal pulses remain distinct. No SPICE rerun. |
 | Output/internal/channel VCO crossing checkers | `verification/check_vco_channel_kick.py:main` | Four retained waveform reports match (coarse/fine output, fine internal and channel); eight warning/pending-record comparisons and 32 original/refactored corrupt hash/node/source/deck rejection checks match. Pulse normalization, ordinal edge matching, time windows and incomplete-run behavior retained. |
-| Seeded closed-loop duration/integrator screens | `analog/pll/closed_loop_extended_screen.py:main` | Three generated decks and reports match controlled waveform fixtures, including saved vectors, short/long observation windows, Gear2 options/caveat, simulator arguments and timeouts. Thirty original/refactored checks preserve column/finite/horizon/template/simulator rejection. No SPICE rerun or lock qualification. |
+| Clamped/floating/CDAC kickback execution | `verification/run_adc_kickback.py:run_cases` | Forty original/refactored controlled scenarios preserve all 24 decks, four reports, CLI options, fresh-directory behavior, full Docker arguments, circuit hashes, simulator completion/log, shape/finite/horizon and floating-node sign rejection. Current integration and voltage-error equations remain separate; no containers or SPICE launched. |
+| Four reference-pair DC comparisons | `verification/check_reference_long_mirror.py:main` and `load_reference_arrays`, `check_reference_half_tail.py:main` | Long-mirror, hybrid, half-tail and wide-input reports/stdout match actual retained waveforms. Seventy-eight original/refactored corruption checks preserve source/artifact/deck, log, shape/finite/header and sweep-grid rejection; distinct geometry/topology validation, tail/full-device metrics and limitations remain in their callers. Evidence not rewritten. |
+| Buffered-LO/source-resistance TX checks | `verification/check_tx_buffered_lo.py:main` | Both reports and stdout match using actual retained waveforms. Sixty original/refactored corruption checks preserve source/case/deck/artifact, return-code/timeout, header/finite/order/horizon and resistance/vector checks. Pending-result exit remains identical; input-range metric, distinct restoration recipes and limitations retained. Evidence not rewritten. |
+| Three buffer/source-isolation diagnostics | `analog/pll/buffer_only_breakpoint_screen.py:main` | Twenty-four original/refactored controlled scenarios preserve decks, manifests, reports, simulator commands, nonzero/timeout recording, baseline/missing-source/template/source/deck rejection. Separate PFD-removal, feedback-DC and finite-source recipes retained; no SPICE rerun. |
+| Isolated/dual-output registered DAC variants | `analog/dac/segmented8_isolated_screen.py:main` | Four decks and all manifests/reports/commands match in 14 controlled scenarios; baseline, missing-source, reversible-recipe and changed-source checks retained along with timeout/nonzero recording. Different probe vectors and cells remain explicit; no SPICE rerun. |
+| SAR regeneration/aperture measurements | `verification/analyze_sar_full_aperture.py:aperture_events` | Fifteen controlled scenarios preserve both reports, 52 fixture events, output text and distinct source/hash/terminal/finite/time/crossing gates. Full 24-window and two-window callers retain their own evidence requirements; no large trace reread or SPICE rerun. |
+| Sampler amplitude/driver-damping frame scoring | `verification/check_sar_sampler_amplitude.py:sampler_frames` | Twenty-seven controlled scenarios preserve finite/time/horizon/rail checks and all three frames' codes, acquisition errors and bit decisions. Invalid bits and polarity remain reported diagnostics rather than new rejection gates. Both complete caller ASTs match after expanding the helper; donor/circuit/provenance checks unchanged. |
+| Legacy continuous-traffic report handling | `system_model/architecture_fast/continuous_duplex.py:record_cases` | Eighteen controlled scenarios preserve case order, incremental/final writes, source verification, elapsed time, failures, interrupts and exception propagation for duplex/four-path drivers. Both surrounding main ASTs remain unchanged; no transport policy change or long legacy traffic run. |
+| Direct/filtered RX sampler measurements | `analog/rf_measure.py:interpolate` and `sampler_case` | Forty-eight interpolation/record comparisons preserve boundary behavior, 8/20-sample records, current/hold ranges, errors and hash-call order; both complete surrounding runner ASTs unchanged. Existing source manifests already hash this module. Independent RF projection still passes at relative error 2.92e-9; no SPICE rerun. |
+| Seven analog source-dependency scanners | `analog/spice_sources.py:collect_sources` | 182 parser comparisons preserve recursive/relative/quoted/cyclic/symlink handling, preseeded sets, internal library sections and missing-file failures. Baseband/LNA callers still recognize `.inc`; ADC/LO replays deliberately do not. All seven complete caller ASTs match after removing only helper imports/calls and added helper provenance. Circuit, measurement, timeout and source-change logic unchanged; source-indexed Python excerpts naturally reflect the edited source. No SPICE rerun. |
+| Connected/fast continuous RX lifecycle | `system_model/connected/continuous_receiver_screen.py:run` | Ninety-six controlled scenarios preserve both modes' source setup, timed admission, rejected duplicate start, queue/pipeline limits, overflow/stop/drain failures, accounting and command/event calls. Source configuration remains caller-specific; opposite-mode restart main AST is unchanged. No long coupled-RX rerun. |
+| Nominal/balanced/stressed PLL acquisition loops | `system_model/connected/three_cap_acquisition_screen.py:run_acquisition_cases` | Twenty-three full controlled-clock scenarios preserve ranking selection, fresh-clock gain scaling, both targets' edge/lock calls, periodic/final reports, early/tail/observation faults, lock losses, the full 800-sample tail gate and source invalidation. Distinct builders and stress limitations retained; no long PLL rerun. |
+| Fixed-point/grid load-terminal DC probes | `analog/reference/load_terminal_dc.py:main` | Seventeen controlled scenarios preserve both decks, all 56 operating points, terminal/channel signs, KCL checks, reports and commands apart from added shared-owner provenance. Nonzero/timeout, missing grid bounds, shape/nonfinite/KCL, source and entrypoint rejection retained; two shared-owner mutation checks reject. No SPICE rerun. |
+| Immediate/pipelined/commit receiver vectors | `verification/block_rx_vectors.py:receiver_vectors` | All 63,675 original vectors are byte-identical across latency 0/1/2 (21,202/21,219/21,254 cycles). Consumption-time readiness, pending-command failures, stage flushing and occupied-stage reset remain distinct. Immediate and commit RTL simulations, six corruption mutations and both Yosys synthesis/check runs pass; driver tails containing benches/mutations are unchanged. |
+| Ideal/self-biased/mixer-loaded LO timing checks | `verification/check_lo_selfbias_sine.py:main` | Three actual-waveform reports and 12 pending/nonzero/warning/short-horizon comparisons match. Thirty-four original/refactored rejection checks preserve provenance, artifact hashes, circuit-restoration rules where applicable, headers, finite data and timestamp order. Independent circuit limitations retained; evidence not rewritten. |
+| Prefix/commit receiver timing corners | `verification/block_rx_prefix_corners.py:main` | Ten generated Tcl scripts, both five-library hash manifests and STA command sequences match; missing-library and failed-STA behavior preserved for both variants. Distinct timing templates retained; controlled fixture, no STA rerun. |
+| Divider-loaded VCO capture/split tuning | `analog/pll/vco_capture_tuning.py:main` | Sixteen original/refactored controlled-waveform scenarios preserve eight generated decks, both tuning/slope reports, stdout and simulator settings. Timeout, simulator failure, nonfinite/truncated data, insufficient edges and both gate-range bounds still reject. Distinct regeneration-bias circuit and report retained; no SPICE rerun. |
+| Three reference-pair geometry experiments | `analog/reference/pair_long_mirror_dc.py:main`, existing `pair_dc_fixture` | Thirty controlled scenarios preserve six decks, change manifests, reports, commands and timeout/nonzero behavior apart from shared-owner provenance. Expected geometry, changed-device count, include cardinality, missing/changed sources, entrypoint and generated-deck checks retained; three extra shared-owner mutation checks reject. No SPICE rerun. |
+| Buffer/PFD feedback event-offset diagnostics | `analog/pll/buffer_event_offset_screen.py:main` | Eighteen original/refactored scenarios preserve early/late decks, reports, simulator commands, timeout/nonzero recording and six integrity rejection cases per variant. Distinct single-run versus named-case baseline schemas remain explicit; controlled simulator fixture, no SPICE rerun. |
+| Aborted settling/Gear2 PLL observations | `verification/analyze_pll_aborted_settling.py:main` | Nineteen controlled-array scenarios with retained decks/logs preserve reports and paths, finite/shape/horizon/order/edge checks, aborted-run requirements, Gear2-only physical-deck comparison and settling-only prefix agreement. Gear2 prefix divergence remains accepted. Neither report claims lock or completed settling; no large trace reread or SPICE rerun. |
+| Short shared/split-bias PLL loop screens | `analog/pll/closed_loop_screen.py:main`, `closed_loop_deck`, `measure_loop_windows` | Shared construction/measurement now also serves all three extended variants. Two short circuit variants retain exact decks, numerical reports, artifact hashes, status labels and 900-second simulator settings under controlled waveform fixtures. Fourteen original/refactored scenarios preserve successful output and rejection of simulator failure, timeout, missing control fixture, bad columns, nonfinite values and truncated horizon. No SPICE rerun or lock qualification. |
+| Registered-DAC capture and additional coverage | `analog/dac/segmented8_registered_screen.py:main` | Six code/skew cases share post-decode register fixture generation. Ten original/refactored scenarios preserve decks, manifests, incremental/final reports, commands, timeout/nonzero-exit recording, baseline integrity and source-change rejection. No SPICE rerun. |
+| Seeded closed-loop duration/integrator screens | `analog/pll/closed_loop_extended_screen.py:main`, shared short-loop construction/measurement | Three generated decks and reports match controlled waveform fixtures, including saved vectors, short/long observation windows, Gear2 options/caveat, simulator arguments and timeouts. Thirty original/refactored checks preserve column/finite/horizon/template/simulator rejection. No SPICE rerun or lock qualification. |
 | Clamped and passive-filter PFD/pump screens | `analog/pll/pfd_pump_screen.py:main` | Six generated decks and both controlled waveform reports match, including 7/17-cycle normalization, clamped versus precharged filter nodes and distinct source hashes. Twelve original/refactored checks preserve column/finite/simulator rejection; simulator arguments and timeouts match. No SPICE rerun. |
 | Three baseband noise artifact checkers | `verification/check_bb_noise.py:main` | All three retained waveform reports and output paths match; 42 original/refactored rejection checks cover artifact hashes, source changes, case order, simulator status, model excerpts, error logs and unintended deck changes. Common-mode and enlarged-input circuit comparisons remain variant-specific. |
 | RF LO, IF-capacitance and prebias comparisons | `verification/analyze_rf_lo_controls.py:main` | All three reports match on retained waveforms; 12 original/refactored checks reject changed waveform hashes and unintended circuit changes. Paired subtraction, continuous/held gains, four-sample windows, variant-only residual metric, normalization rules and qualification limits retained. |
@@ -133,7 +161,7 @@ historical. The separate note is recovery-indexed and navigation updated.
 | Reference impedance/load output-device variants | `analog/reference/pair_impedance_compare.py`, `pair_hybrid_load_probe.py` | Four complete specialized sweep/report ASTs match except added wrapper provenance. Distinct baseline inclusion, doubled high-output-device change/assertion, 120-second timeout, sweep controls, parent/artifact integrity and report fields retained; no SPICE rerun. |
 | Half-tail/wide-input reference checks | `verification/check_reference_half_tail.py` | Both complete specialized checker ASTs match; retained waveform reports and output paths are identical. Device-change cardinality/replacement checks and diagnostic limitations remain variant-specific. |
 | Two baseband noise runners | `analog/baseband/noise_receiver_cm.py` | Both full experiment ASTs specialize exactly apart from added shared-runner provenance. Resistor calibration, noise-corner/contributor settings and enlarged-input geometry assertions retained; no SPICE rerun. |
-| Two CDAC prediction comparisons | `system_model/cdac_prediction_fixture.py` | Exact waveform-loading/comparison AST extracted; two-sign controlled waveform metrics and all four full/coarse response inputs match. Modified waveform hash rejected. Series-RC and modal passive-fit electrical models/independent controls remain separate and unchanged; shared comparison hash added to reports; no electrical simulation rerun. |
+| CDAC/floating-load prediction comparisons | `system_model/cdac_prediction_fixture.py:compare_prediction` and `prediction_metrics` | Shared metrics match 12 nonuniform-grid cases and the actual retained floating-load report except added shared-source provenance. Both 290,001-point CDAC grids, full/coarse response calls and reports match with retained inputs and a controlled response; both corrupted-artifact checks reject. Constant-capacitance, series-RC and modal passive-fit equations remain separate. Removed unused charge integration only from the CDAC comparison; no electrical simulation rerun. |
 | Ideal/autonomous RF sampled-chain sweeps | `analog/rf_autonomous_chain_screen.py:sampled_chain` | Common preparation/sweep/fit AST retained; four controlled decks and all sweep/fit outputs match exactly. Ideal LO loading, CLI controls, report status and limitations stay separate; shared runner hash added to ideal report. No SPICE rerun. |
 | Guarded/batched thermal benchmarks | `verification/thermal_filter_guard_benchmark.py` | Original numerical-loop ASTs identical; actual old/new three-step-size runs for both integrators preserve numerical results and route counts. Machine timing and source provenance excluded from comparison; wrapper/shared hashes retained. |
 | Fast/detailed sustained traffic | `system_model/connected/sustained_lifecycle.py` | Shared validation, traffic and report ASTs identical; separate original startup ASTs retained via callback. Twelve actual old/new cases preserve complete reports and all advance/feed events across both modes, matched/unmatched rates, nonzero preparation, service-clock offsets, pauses and fractional visibility lag; four run 84 frames. Detailed clock-intervention behavior preserved structurally, not newly exercised. Existing source manifests cover both modules. |
@@ -224,7 +252,7 @@ The present pass additionally removed:
   calibration surviving direct retarget. The index preserves these historical
   bugs explicitly; their current audit outputs are separate, non-equivalent results.
 
-All 288 recovery records have unique paths and verified Git hashes/sizes. Use a
+All 289 recovery records have unique paths and verified Git hashes/sizes. Use a
 record's `recovery_commit` when present, otherwise the index-level default:
 
 ```sh
@@ -293,15 +321,16 @@ claims would blur the model boundary.
 ## Current checks and remaining scope
 
 The current full working-tree inventory covers 2,951 maintained project files:
-1,104 evidence artifacts; 970 verification files; 502 model files; 278 analog
-files; 39 specifications; 30 RTL files; 14 simulation files; eight diagram/docs
+1,104 evidence artifacts; 970 verification files; 502 model files; 279 analog
+files; 38 specifications; 30 RTL files; 14 simulation files; eight diagram/docs
 files; two integration files; and four root metadata/README files. Ignored
 scratch products are excluded. The exact-content scan finds only the five
 independent-output groups classified above; all local Markdown links resolve.
 
 
-After the accumulated source extractions, including the rail-budget hierarchy
-and pad-quality runner changes, `make transceiver-math-fast` passed all
+After the accumulated source extractions, including the rail-budget hierarchy,
+pad-quality runners, acquisition loop, continuous RX lifecycle, prediction metrics
+and shared report handling, `make transceiver-math-fast` passed all
 seven bounded architecture checks again: protocol/signal paths, generic
 configuration, records, converter clock, converter transport, calibration bounds
 and independent RF reference. The refreshed iteration/protocol reports retain
@@ -309,14 +338,8 @@ their original scope; this does not qualify legacy SPICE or physical timing.
 A fresh Git-aware inventory confirms the counts above and the same five retained
 equal-content output groups.
 
-The behavioral regression passed in about 10.7 seconds (60 assumption scenarios,
-23 numeric configurations). All seven bounded architecture checks passed:
-protocol/signal paths, configuration, records, converter timing, converter
-transport, calibration bounds and independent RF reference. These checks do not
-qualify separately refactored legacy circuit/RTL experiments.
-
-A project-wide static named-import audit of the 47 currently changed Python
-providers checks 52 imported names. Every name remains declared, and provider
+The preceding consolidation checkpoint audited 47 changed Python
+providers and 52 imported names. Every name remains declared, and provider
 resolution has no ambiguous cases in this set. A follow-up module-alias scan finds
 no attribute-access consumers of these changed providers. The identified dynamic
 forms are reviewed separately: 12 `runpy.run_path` calls resolve to maintained
@@ -330,7 +353,7 @@ when conventional import searches find no consumers.
 
 All fourteen refactored quality/calibration/monitor entry points import with
 callable `main`; archive integrity and RF projection checks pass.
-All 1,267 Python files parsed at the latest syntax sweep; changed launchers passed
+All 1,268 Python files parsed at the latest syntax sweep; changed launchers passed
 `bash -n` and diff checks. The latest complete working-tree scan found no exact duplicate Python function
 or method ASTs of nine or more physical lines after extraction.
 A comment/whitespace-normalized scan found no identical SPICE or RTL sources
@@ -383,5 +406,30 @@ The shorter-script review shares elastic/staged block FIFO scoreboard generation
 Original and refactored runners both pass Icarus simulation and reject their
 respective corruption/overwrite mutations. Generated testbenches and mutated RTL
 are byte-identical; simulator output agrees after normalizing temporary paths.
-The expanded near-duplicate scan includes scripts of at least 20 lines; its
-remaining candidates still require review.
+The expanded near-duplicate scan includes scripts of at least 20 lines. It now
+finds only the two reviewed exceptions: the distinct LO truncation oracles and
+ADC reference replacement recipes described above. This completes review of
+candidates at this threshold, not the broader family/dependency/evidence audit.
+The 58 changed or newly added Python providers have 81 direct imported names;
+all resolve without ambiguity. Ten are Python-provided `__file__` metadata imports
+from the shared prediction/scanner helpers, verified by loading those file-backed
+modules. Existing shell entrypoints retain their filenames.
+
+A structural scan independent of physical line count initially identified 20
+maximal cross-file exact statement groups containing at least 100 AST nodes.
+After the shared implementations above, only the reviewed LO oracle loop remains.
+Its four-line per-pole injection expression is intentionally local to the scalar
+and complex-modal references; extracting it would add a many-argument helper for
+a small equation while obscuring the separate response calculations. This is an
+explicit maintenance choice, not a claim that the loop texts differ. All candidates
+at this threshold are reviewed; broader family, dependency, documentation and
+historical-evidence review remains separate. Exact subtree equality alone does
+not establish that moving the surrounding experiment preserves its contract.
+
+The SPICE subcircuit scan (at least five non-comment lines, normalized whitespace,
+case and declaration/end names) finds no identical bodies. Cross-file Markdown
+paragraph comparison (at least 120 characters, normalized whitespace, excluding
+headings/tables/fences) finds only a repeated HDMI/DVI pin-plan navigation link
+in six owners; retain those useful links. Neither scan rules out semantically
+overlapping circuits or prose. All 207 local Markdown targets resolve after the
+TX-note merge; anchor validation is outside this path-existence check.

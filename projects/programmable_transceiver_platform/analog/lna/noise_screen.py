@@ -5,6 +5,8 @@ MIM=next((a.split("=",1)[1] for a in sys.argv if a.startswith("--mim=")),None)
 assert MIM in (None,"clean","lossy","inductive")
 assert not (BYPASS and MIM)
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from spice_sources import collect_sources, __file__ as source_scanner_file
 O=Path('/work')
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 base=""".include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
@@ -31,15 +33,8 @@ if MIM:
   capnode="BPC"
  for count in (256,128,64):base+=f"XCSB{count} {capnode} 0 pt_ref_reservoir_{count}\n"
 paths=set()
-def deps(text,parent):
- for line in text.splitlines():
-  m=re.match(r'\s*\.(?:include|inc|lib)\s+(\S+)',line,re.I)
-  if not m:continue
-  p=Path(m[1].strip('"\''));p=p if p.is_absolute() else parent/p
-  if not p.is_file():assert line.lower().lstrip().startswith('.lib ') and len(line.split())==2;continue
-  p=p.resolve()
-  if p not in paths:paths.add(p);deps(p.read_text(),p.parent)
-deps(base,O);before={str(p):sha(p) for p in sorted(paths)}
+paths.add(Path(source_scanner_file))
+collect_sources(base, O, paths);before={str(p):sha(p) for p in sorted(paths)}
 scenarios=[dict(name='unloaded',sink=0,resistance=None,capacitance=0),dict(name='snapshot',sink=.003583217,resistance=1/.0058117,capacitance=.0028352/(2*3.141592653589793*2.51542263e9)),dict(name='heavy',sink=.004,resistance=100,capacitance=250e-15)]
 rows=[]
 for scenario in scenarios:

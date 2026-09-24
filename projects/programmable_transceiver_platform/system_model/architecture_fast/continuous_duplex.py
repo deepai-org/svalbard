@@ -71,6 +71,21 @@ def run(mode,stop,duplex=False,chip_factory=PreparedChip,preparation_s=8e-6,wave
     assert c.decoder is None and c.state=='reset'
     return dict(mode=mode,management_stop=stop,duplex=duplex,rx_samples=len(c.host_samples),updates=c.dac_pipeline_updates,queue_peak=peak,accounting=accounting)
 
+def record_cases(case_runner, report, save, p, hashes, start):
+    try:
+        for mode in (0, 1):
+            for stop in (False, True):
+                report['cases'].append(case_runner(mode, stop, True))
+                save()
+                print(mode, stop, 'passed', flush=True)
+        assert all((hashlib.sha256((p / n).read_bytes()).hexdigest() == h for n, h in hashes.items()))
+        report.update(status='passed', elapsed_s=time.monotonic() - start)
+    except BaseException as exc:
+        report.update(status='failed', error=repr(exc))
+        raise
+    finally:
+        save()
+
 def main():
     if not __debug__:raise RuntimeError('Assertions must remain enabled')
     p=scenario.architecture.P;start=time.monotonic()
@@ -84,15 +99,6 @@ def main():
     output=p/'evidence/fast-continuous-duplex.json'
     def save():output.write_text(json.dumps(report,indent=2)+'\n')
     save()
-    try:
-        for mode in (0,1):
-            for stop in (False,True):
-                report['cases'].append(run(mode,stop,True));save()
-                print(mode,stop,'passed',flush=True)
-        assert all(hashlib.sha256((p/n).read_bytes()).hexdigest()==h for n,h in hashes.items())
-        report.update(status='passed',elapsed_s=time.monotonic()-start)
-    except BaseException as exc:
-        report.update(status='failed',error=repr(exc));raise
-    finally:save()
+    record_cases(run, report, save, p, hashes, start)
 
 if __name__=='__main__':main()

@@ -2,6 +2,7 @@
 import hashlib,json
 from pathlib import Path
 import numpy as np
+from cdac_prediction_fixture import prediction_metrics, __file__ as comparison_source
 P=Path(__file__).resolve().parents[1];R=P.parents[1]
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 paths={name:P/'evidence'/name for name in ['adc-kickback-fine-clamped.json','adc-floating-kickback.json','adc-top-load-matrix.json','adc-top-load.json']}
@@ -25,11 +26,9 @@ for diff in [-.001,.001]:
  charge=np.vstack([np.zeros(2),np.cumsum((current[1:]+current[:-1])*.5*np.diff(t)[:,None],axis=0)])
  predicted=np.linalg.solve(c,charge.T).T
  observed=np.column_stack([np.interp(t,f[:,0],f[:,k])-np.interp(t,g[:,0],g[:,k]) for k in [1,2]])
- metrics={}
- for mode,weight in [('differential',np.array([1.,-1.])),('common_mode',np.array([.5,.5]))]:
-  x=predicted@weight;y=observed@weight;error=x-y
-  metrics[mode]=dict(predicted_peak_v=float(max(abs(x))),observed_peak_v=float(max(abs(y))),max_error_v=float(max(abs(error))),time_weighted_rms_error_v=float(np.sqrt(np.trapezoid(error**2,t)/(t[-1]-t[0]))))
+ metrics = prediction_metrics(t, predicted, observed)
  rows.append(dict(input_differential_v=diff,metrics=metrics))
 report=dict(status='independent_fixture_prediction_comparison',source_sha256={n:sha(p) for n,p in paths.items()},script_sha256=sha(Path(__file__)),results=rows,limitations=['No fitted voltage gain or time shift; current sign and timing use SPICE source conventions.', 'Reset-state matrix approximated constant during evaluation; conductive/leakage terms omitted.', 'Clamped and floating input trajectories differ, including sampler-induced initial bias.', 'Two nominal inputs with grounded MIM arrays, not switched CDAC or new process conditions.'])
+report['comparison_sha256']=sha(Path(comparison_source))
 (P/'evidence/fast-kickback-prediction.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps(rows,indent=2))

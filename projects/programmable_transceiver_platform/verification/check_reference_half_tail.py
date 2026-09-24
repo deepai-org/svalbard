@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-import hashlib,json
+import json
 from pathlib import Path
 import numpy as np
-def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+from check_reference_long_mirror import load_reference_arrays
 
 def main(wide_input=False):
  R=Path(__file__).resolve().parents[3];P=R/'projects/programmable_transceiver_platform';W=R/('scratch/transceiver-reference-pair-wide-input-dc' if wide_input else 'scratch/transceiver-reference-pair-half-tail-dc');B=R/'scratch/transceiver-reference-pair-device-dc'
@@ -17,13 +17,7 @@ def main(wide_input=False):
   pair=pair.replace('.include /screen/reference/'+file,cell)
  records=[json.loads((root/'result.json').read_text()) for root in (B,W)];rows=[]
  for name,target in [('VH',2.15),('VL',1.15)]:
-  arrays=[]
-  for root,record in zip((B,W),records):
-   assert record['sources_before']==record['sources_after'];c=next(x for x in record['cases'] if x['name']==name);assert c['returncode']==0
-   for ext,h in c['artifacts_sha256'].items():assert sha(root/(name+ext))==h
-   log=(root/(name+'.log')).read_text().lower();assert not any(x in log for x in ['warning','error','aborted'])
-   with (root/(name+'.dat')).open() as f:h=f.readline().lower().split()
-   a=np.loadtxt(root/(name+'.dat'),skiprows=1);assert a.shape==(41,len(h)) and np.isfinite(a).all();arrays.append((h,a))
+  arrays = load_reference_arrays((B, W), records, name)
   expected=(B/(name+'.spice')).read_text().replace('.include /screen/reference/adc_reference_pair_tuned.spice',pair);assert expected==(W/(name+'.spice')).read_text()
   (h,b),(ch,c)=arrays;assert h==ch and np.array_equal(b[:,0],c[:,0]);node='v(oh)' if name=='VH' else 'v(ol)';stage='xhigh' if name=='VH' else 'xlow';values=[]
   for label,a in [('baseline',b),('candidate',c)]:

@@ -1,6 +1,8 @@
 """Stationary filter noise diagnostic with resistor calibration; not mixer noise."""
 import hashlib, json, re, subprocess, sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from spice_sources import collect_sources, __file__ as source_scanner_file
 
 def main(large_input=False, *, entrypoint=None):
     CONTRIBUTORS = '--contributors' in sys.argv
@@ -11,21 +13,8 @@ def main(large_input=False, *, entrypoint=None):
     base = '.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice\n.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical\n.include /screen/bb_filter_section.spice\n.temp 27\n'
     paths = {Path(__file__), Path(entrypoint or __file__)}
 
-    def deps(text, parent):
-        for line in text.splitlines():
-            m = re.match('\\s*\\.(?:include|inc|lib)\\s+(\\S+)', line, re.I)
-            if not m:
-                continue
-            p = Path(m[1].strip('"\''))
-            p = p if p.is_absolute() else parent / p
-            if not p.is_file():
-                assert line.lower().lstrip().startswith('.lib ') and len(line.split()) == 2
-                continue
-            p = p.resolve()
-            if p not in paths:
-                paths.add(p)
-                deps(p.read_text(), p.parent)
-    deps(base, O)
+    paths.add(Path(source_scanner_file))
+    collect_sources(base, O, paths)
     before = {str(p): sha(p) for p in sorted(paths)}
     excerpts = []
     for p in sorted(paths):

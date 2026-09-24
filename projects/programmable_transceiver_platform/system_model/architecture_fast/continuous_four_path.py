@@ -8,7 +8,7 @@ from continuous_iq_codec import StreamEncoder
 from pacing import RationalPacer
 from managed_resources import command
 
-from continuous_duplex import PreparedChip
+from continuous_duplex import PreparedChip, record_cases
 
 def run(mode,stop,duplex=False,chip_factory=PreparedChip,preparation_s=8e-6,waveform=None):
     c=chip_factory(watchdog_s=100e-6,dac_latency_s=20e-9)
@@ -80,15 +80,6 @@ def main():
     output=p/'evidence/fast-continuous-four-path.json'
     def save():output.write_text(json.dumps(report,indent=2)+'\n')
     save()
-    try:
-        for mode in (0,1):
-            for stop in (False,True):
-                report['cases'].append(run(mode,stop,True));save()
-                print(mode,stop,'passed',flush=True)
-        assert all(hashlib.sha256((p/n).read_bytes()).hexdigest()==h for n,h in hashes.items())
-        report.update(status='passed',elapsed_s=time.monotonic()-start)
-    except BaseException as exc:
-        report.update(status='failed',error=repr(exc));raise
-    finally:save()
+    record_cases(run, report, save, p, hashes, start)
 
 if __name__=='__main__':main()

@@ -1,32 +1,8 @@
 import pathlib,sys,subprocess
 sys.path.insert(0,'/src/verification')
-from stream_codec import Receiver,encode,slots
-from block_rx_vectors import receiver_stimulus
-out=pathlib.Path('/out');rows=[];ref=None;fault=False;mode=0
-
-def cycle(words,valid=1,wr=1,qr=1,reset=0,cr=1):
- global ref,fault
- if reset:ref=Receiver(mode);fault=False
- ev=[]
- if not reset and valid and not fault:
-  try:
-   for w in words:
-    event=ref.feed(w)
-    if event:ev.append(event)
-   if (any(s=='wire' for s,v in ev) and not wr) or (any(s=='iq' for s,v in ev) and not qr) or (any(s=='command' for s,v in ev) and not cr):raise ValueError('capacity')
-  except ValueError:fault=True;ev=[]
- ws=[v for s,v in ev if s=='wire'];qs=[v for s,v in ev if s=='iq'];cmd=[v for s,v in ev if s=='command']
- values=[reset,mode,valid,wr,qr,cr,sum(w<<(10*i) for i,w in enumerate(words)),sum(w<<(10*i) for i,w in enumerate(ws)),sum(w<<(10*i) for i,w in enumerate(qs)),len(ws),len(qs),bool(ws),bool(qs),bool(cmd),cmd[0][0] if cmd else 0,cmd[0][1] if cmd else 0,fault]
- rows.append(' '.join(f'{int(v):x}' for v in values)+'\n')
-
-def reset():cycle([0]*8,reset=1)
-def frame(data,blocked=-1,wr=1,qr=1):
- for b in range(8):
-  if b%3==0:cycle(data[b*8:b*8+8],valid=0,wr=0,qr=0)
-  cycle(data[b*8:b*8+8],wr=wr if b==blocked else 1,qr=qr if b==blocked else 1)
-for mode in (0,1):
-    receiver_stimulus(mode,cycle,reset,frame)
-
+from block_rx_vectors import receiver_vectors
+out=pathlib.Path('/out')
+rows=receiver_vectors(latency=0)
 (out/'vectors.txt').write_text(''.join(rows));n=len(rows)
 (out/'test.sv').write_text('''module tb;
 reg clk=0,rst_n,mode8,in_valid,wire_ready,iq_ready,command_ready;reg[79:0]words;

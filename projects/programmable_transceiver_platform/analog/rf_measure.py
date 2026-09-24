@@ -1,5 +1,5 @@
 """Complex tone integration for nonuniform transient samples."""
-import math
+import bisect, math
 
 def projection(points, index, start, stop, frequency):
     # Integrate nonuniform transient samples, inserting exact window endpoints.
@@ -21,3 +21,13 @@ def projection(points, index, start, stop, frequency):
                 for a, b in zip(clipped, clipped[1:]))
     return 2*value/(stop-start)
 
+
+
+def interpolate(rows, t, col):
+    times = [r[0] for r in rows]
+    k = bisect.bisect_left(times, t)
+    a, b = (rows[k - 1], rows[k])
+    return a[col] + (b[col] - a[col]) * (t - a[0]) / (b[0] - a[0])
+
+def sampler_case(amplitude, samples, ph, window, currents):
+    return dict(input_peak_v=amplitude, samples=samples, if_phasors=[[[z.real, z.imag] for z in row] for row in ph], hold_node_range_v=[min((r[c] for r in window for c in (5, 6, 7, 8))), max((r[c] for r in window for c in (5, 6, 7, 8)))], lna_sampler_current_a=currents[0], lo_current_a=currents[1])

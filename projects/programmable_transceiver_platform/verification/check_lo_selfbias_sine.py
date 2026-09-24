@@ -4,9 +4,10 @@ from pathlib import Path
 import numpy as np
 R=Path(__file__).resolve().parents[3];P=R/'projects/programmable_transceiver_platform'
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
-def main(*, mixer=False):
+def main(*, mixer=False, ideal=False):
  variant='mixer' if mixer else 'selfbias'
- W=R/f'scratch/transceiver-lo-{variant}-sine'
+ tag='sine-speed' if ideal else variant+'-sine'
+ W=R/f'scratch/transceiver-lo-{tag}'
  out=dict(completed=False,status='pending',cases=[])
  if (W/'result.json').exists():
   r=json.loads((W/'result.json').read_text());assert r['sources_before']==r['sources_after'];out['status']='terminal'
@@ -18,7 +19,7 @@ def main(*, mixer=False):
     amplitude=.095 if n=='small' else .108
     assert f'VINB SIGB 0 SIN(2.24 {-amplitude} 2.5g)' in deck
 
-   else:
+   elif not ideal:
     deck=(W/(n+'.spice')).read_text();amp=.095 if n=='small' else .108
     changed=f'VIN SIG 0 SIN(2.24 {amp} 2.5g)\nXC SIG IN pt_ref_reservoir_4\nRFB IN XB.MID 100k'
     assert deck.count(changed)==1
@@ -37,8 +38,8 @@ def main(*, mixer=False):
     signals[node]=dict(range_v=[float(y[mask].min()),float(y[mask].max())],rises=len(edges),period_range_ps=[float(np.diff(edges).min()*1e12),float(np.diff(edges).max()*1e12)] if len(edges)>1 else None)
    row.update(completed=True,signals=signals)
   out['completed']=len(out['cases'])==2 and all(c['completed'] for c in out['cases'])
- out['limitations']=[('Complementary AC-coupled self-biased drivers with actual mixer and1k/1p IF loads; ideal RF1.5V through300ohm, no LNA/filter/actual ring modulation.' if mixer else 'Actual AC coupling and100k self-bias with ideal sine and50fF output; no mixer loading or actual ring modulation.'), 'Passing this screen cannot qualify the autonomous receiver or identify a unique cause of its missing pulses.']
- (P/f'evidence/lo-{variant}-sine.json').write_text(json.dumps(out,indent=2)+'\n');print(out['status'],out['completed']);print(out['cases'])
+ out['limitations']=[('Ideal sinusoidal source with fixed bias and50fF output only; no AC coupling/self-bias/mixer loading or actual ring modulation.' if ideal else 'Complementary AC-coupled self-biased drivers with actual mixer and1k/1p IF loads; ideal RF1.5V through300ohm, no LNA/filter/actual ring modulation.' if mixer else 'Actual AC coupling and100k self-bias with ideal sine and50fF output; no mixer loading or actual ring modulation.'), 'Passing this screen cannot qualify the autonomous receiver or identify a unique cause of its missing pulses.']
+ (P/f'evidence/lo-{tag}.json').write_text(json.dumps(out,indent=2)+'\n');print(out['status'],out['completed']);print(out['cases'])
 
 if __name__ == '__main__':
  main()

@@ -2,6 +2,8 @@
 import hashlib,json,re,subprocess,sys
 CONTRIBUTORS="--contributors" in sys.argv
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from spice_sources import collect_sources, __file__ as source_scanner_file
 O=Path('/work')
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 base=""".include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
@@ -10,15 +12,8 @@ base=""".include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
 .temp 27
 """
 paths=set()
-def deps(text,parent):
- for line in text.splitlines():
-  m=re.match(r'\s*\.(?:include|inc|lib)\s+(\S+)',line,re.I)
-  if not m:continue
-  p=Path(m[1].strip('"\''));p=p if p.is_absolute() else parent/p
-  if not p.is_file():assert line.lower().lstrip().startswith('.lib ') and len(line.split())==2;continue
-  p=p.resolve()
-  if p not in paths:paths.add(p);deps(p.read_text(),p.parent)
-deps(base,O)
+paths.add(Path(source_scanner_file))
+collect_sources(base, O, paths)
 before={str(p):sha(p) for p in sorted(paths)}
 # Save exact noise-related source lines, with locations and hashes; presence is not validation.
 excerpts=[]

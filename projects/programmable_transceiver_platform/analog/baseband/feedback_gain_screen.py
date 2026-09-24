@@ -1,6 +1,9 @@
 """Two feedback-resistor values at two source common modes; no stability claim."""
 import hashlib,json,re,subprocess
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from spice_sources import collect_sources, __file__ as source_scanner_file
 O=Path('/work')
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main(*, programmable=False, probe=False, large_input=False, entrypoint=None):
@@ -17,15 +20,8 @@ XDUT IP IN OP ON BIAS VDD 0 pt_bb_filter RFB=20k C=20p
  common_modes=(1.177,) if programmable or large_input else (.9,1.177)
  feedback_values=(20000,) if large_input else (20000,40000)
  paths=set()
- def deps(text,parent):
-  for line in text.splitlines():
-   m=re.match(r'\s*\.(?:include|inc|lib)\s+(\S+)',line,re.I)
-   if not m:continue
-   p=Path(m[1].strip('"\''));p=p if p.is_absolute() else parent/p
-   if not p.is_file():assert line.lower().lstrip().startswith('.lib ') and len(line.split())==2;continue
-   p=p.resolve()
-   if p not in paths:paths.add(p);deps(p.read_text(),p.parent)
- deps(base,O);before={str(p):sha(p) for p in sorted(paths)};before[str(Path(__file__))]=sha(Path(__file__));before[str(Path(entrypoint or __file__))]=sha(Path(entrypoint or __file__))
+ paths.add(Path(source_scanner_file))
+ collect_sources(base, O, paths);before={str(p):sha(p) for p in sorted(paths)};before[str(Path(__file__))]=sha(Path(__file__));before[str(Path(entrypoint or __file__))]=sha(Path(entrypoint or __file__))
  probes=[f'v({n})' for n in ('IP','IN','XDUT.GP','XDUT.GN','XDUT.MP','XDUT.MN','OP','ON','XDUT.T1','XDUT.T2')]+['i(VIP)','i(VIN)','i(VDD)']+[f'@m.xdut.{stage}.{dev}.m0[{p}]' for stage in ('xa','xb') for dev in ('xip','xin','xtail') for p in ('vds','vdsat')]
  if probe:probes += ['v(XDUT.FBP)','v(XDUT.FBN)']
  (O/'manifest.json').write_text(json.dumps(dict(source_sha256_before=before,common_mode_v=list(common_modes),source_ohm_per_leg=[1000],feedback_ohm=list(feedback_values),op_probes=probes,scope='TT27C3.3V external bias2.25V; original RFB20k/C20p; source/load scenarios not fab bounds'),indent=2)+'\n')

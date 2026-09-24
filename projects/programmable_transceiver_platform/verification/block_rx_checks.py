@@ -24,7 +24,7 @@ clk=1;#1;if(fault!==ef)$fatal(1,"RX fault %0d",n);clk=0;#1;n=n+1;end
 $display("PASS RX cycles=%0d",n);$finish;end endmodule
 '''.replace('_mask', '_' + variant))
     rtl = ['/src/rtl/' + f for f in ('pt_lane_compact.sv', ('pt_block_route.sv' if variant=='pipe' else 'pt_block_route_mask.sv'.replace('_mask', '_' + variant)), 'pt_block_header.sv', 'pt_block_rx_mask.sv'.replace('_mask', '_' + variant))]
-    
+
     def run(files, name):
         exe = str(out / name)
         subprocess.run(['iverilog', '-g2012', '-I/src/rtl', '-s', 'tb', '-o', exe, *files, str(out / 'test.sv')], check=True)

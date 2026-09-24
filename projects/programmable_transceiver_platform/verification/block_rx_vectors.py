@@ -3,7 +3,7 @@ from stream_codec import Receiver, encode, slots
 
 def receiver_vectors():
     rows=[];ref=None;fault=False;mode=0;pending=None
-    
+
     def cycle(words,valid=1,wr=1,qr=1,reset=0,cr=1):
      nonlocal ref,fault,pending
      if reset:ref=Receiver(mode);fault=False;pending=None
@@ -19,7 +19,7 @@ def receiver_vectors():
      ws=[v for s,v in ev if s=='wire'];qs=[v for s,v in ev if s=='iq'];cmd=[v for s,v in ev if s=='command']
      values=[reset,mode,valid,wr,qr,cr,sum(w<<(10*i) for i,w in enumerate(words)),sum(w<<(10*i) for i,w in enumerate(ws)),sum(w<<(10*i) for i,w in enumerate(qs)),len(ws),len(qs),bool(ws),bool(qs),bool(cmd),cmd[0][0] if cmd else 0,cmd[0][1] if cmd else 0,fault]
      rows.append(' '.join(f'{int(v):x}' for v in values)+'\n')
-    
+
     def reset():cycle([0]*8,reset=1)
     def frame(data,blocked=-1,wr=1,qr=1):
      for b in range(8):
@@ -49,7 +49,7 @@ def receiver_vectors():
         for b in range(1,8):cycle(data[b*8:b*8+8],cr=0)
         # Readiness restored cannot silently resume a faulted receiver.
         frame(encode(mode,[],[],1))
-    
+
     # Explicit arrival-ready / commit-not-ready transition for a pending command.
     for mode in (0,1):
      reset();data=encode(mode,[3]*3,[4]*3,0,2,1)

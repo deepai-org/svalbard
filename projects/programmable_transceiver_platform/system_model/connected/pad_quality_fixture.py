@@ -15,4 +15,3 @@ def before_traffic(ideal):
         c.tx_maintenance_observations=list(zip(c.sample_times,c.analog_samples))
         c.sample_times=[];c.analog_samples=[]
     return prepare
-

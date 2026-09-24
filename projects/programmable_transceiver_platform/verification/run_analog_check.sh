@@ -14,10 +14,34 @@ extra_mounts=()
 leading_mounts=()
 container_name=()
 cpu_count=2
+memory_limit=4g
+extra_environment=()
 runner_arguments=""
 input_target=baseline
 case "${3:-basic}" in
  basic) ;;
+ damping)
+  [[ "${5:-}" =~ ^[a-z0-9-]+$ ]] || exit 2
+  extra_mounts=(-v "$ROOT/ip/blocks/analog/wifi_80211b:/wifi:ro")
+  runner_arguments=" --damping" ;;
+ autonomous_prepared)
+  [[ "${5:-}" =~ ^[a-z0-9-]+$ ]] || exit 2
+  container_name=(--name "$output_name" --cidfile "$OUT/container.id")
+  memory_limit=8g
+  extra_mounts=(-v "$ROOT/ip/blocks/analog/wifi_80211b:/wifi:ro"
+   -v "$ROOT/ip/blocks/analog/wireline_serdes/pll:/vco:ro")
+  input_target=prepared ;;
+ measured_lo)
+  extra_mounts=(-v "$ROOT/ip/blocks/analog/wifi_80211b:/wifi:ro"
+   -v "$ROOT/scratch/transceiver-tx-buffered-lo:/baseline:ro"
+   -v "$ROOT/scratch/transceiver-tx-ring-settling:/measured:ro") ;;
+ wired_case)
+  [[ "${5:-}" =~ ^[a-z0-9-]+$ ]] || exit 2
+  memory_limit=8g
+  extra_environment=(--env PDK=gf180mcuD --env PDKPATH=/foss/pdks/gf180mcuD)
+  leading_mounts=(-v "$ROOT/ip/blocks/analog/wireline_serdes:/src:ro")
+  extra_mounts=(-v "$ROOT/scratch/transceiver-wired-pulse-data-gf180:/baseline:ro")
+  input_target=case ;;
  named_basic) container_name=(--name "$output_name") ;;
  baseline_wifi) [[ "${5:-}" =~ ^[a-z0-9-]+$ ]] || exit 2 ;;
  rf_sources)
@@ -69,7 +93,7 @@ fi
 if [[ "${3:-basic}" == baseline_wifi ]]; then
  extra_mounts+=(-v "$ROOT/ip/blocks/analog/wifi_80211b:/wifi:ro")
 fi
-docker run --rm "${container_name[@]}" --platform linux/arm64 --network none --cpus "$cpu_count" --memory 4g --entrypoint /bin/bash \
+docker run --rm "${container_name[@]}" --platform linux/arm64 --network none --cpus "$cpu_count" --memory "$memory_limit" "${extra_environment[@]}" --entrypoint /bin/bash \
  "${leading_mounts[@]}" \
  -v "$ROOT/projects/programmable_transceiver_platform/analog:/screen:ro" \
  "${extra_mounts[@]}" \

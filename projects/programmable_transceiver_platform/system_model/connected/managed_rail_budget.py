@@ -4,13 +4,16 @@ from chip_model import P
 from managed_dense_reference import ManagedDenseReferenceChip
 
 class ManagedRailBudgetChip(ManagedDenseReferenceChip):
+    REFERENCE_CURRENT_LIMIT_A = 1.
+    FAULT_PREFIX = "rail-budget"
+
     def __init__(self,driver_rail_resistance_ohm=20.,**kwargs):
         if not math.isfinite(driver_rail_resistance_ohm) or driver_rail_resistance_ohm<=0:
             raise ValueError('Invalid experimental driver rail impedance')
-        # Nonbinding limits reproduce the older unlimited-reference baseline;
-        # this isolates rail impedance from the separate 150uA candidate.
-        kwargs.setdefault('reference_source_limit_a',1.)
-        kwargs.setdefault('reference_sink_limit_a',1.)
+        # The base uses nonbinding reference limits; the limited variant supplies
+        # 150 uA defaults. Explicit caller limits take precedence in both cases.
+        kwargs.setdefault('reference_source_limit_a',self.REFERENCE_CURRENT_LIMIT_A)
+        kwargs.setdefault('reference_sink_limit_a',self.REFERENCE_CURRENT_LIMIT_A)
         super().__init__(**kwargs)
         self.loaded_tx.driver.r=driver_rail_resistance_ohm
         self.first_fault_written=False
@@ -25,7 +28,7 @@ class ManagedRailBudgetChip(ManagedDenseReferenceChip):
                 lock_frequency_limit_hz=pll.lock_frequency,lock_phase_limit=pll.lock_phase,
                 reference_present=pll.present,lock_history=self.rf_lock_history[-16:],
                 preceding_events=self.events[-12:])
-            name=f'rail-budget-{d.r:g}ohm-first-fault.json'
+            name=f'{self.FAULT_PREFIX}-{d.r:g}ohm-first-fault.json'
             (P/'evidence'/name).write_text(json.dumps(report,indent=2)+'\n')
             print('FIRST FAULT',report,flush=True)
         return super().quiesce(time,reason)

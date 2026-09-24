@@ -4,30 +4,68 @@ import hashlib,json
 from pathlib import Path
 import numpy as np
 ROOT=Path(__file__).resolve().parents[3]
-rows=[]
-for label,folder in [('autonomous','transceiver-rf-autonomous-chain'),('ideal_full','transceiver-rf-ideal-lo'),('ideal_limited','transceiver-rf-ideal-lo-limited')]:
- w=ROOT/'scratch'/folder;r=json.loads((w/'result.json').read_text());waves=[]
- for case in r['cases']:
-  name=f"a{case['amplitude_v']:g}"
-  for s,h in case['artifacts_sha256'].items():assert hashlib.sha256((w/(name+s)).read_bytes()).hexdigest()==h
-  if label!='autonomous':
-   deck=(w/(name+'.spice')).read_text()
-   normalized='\n'.join(line for line in deck.split('\n') if not line.startswith(('VTESTLO ','VTESTLOB ')))
-   normalized=normalized.replace('XMIX DRAIN TESTLO TESTLOB','XMIX DRAIN LO LOB')
-   original=(ROOT/'scratch/transceiver-rf-autonomous-chain'/(name+'.spice')).read_text()
-   assert normalized==original, 'Receive chain or fixture changed beyond intended LO substitution'
-  a=np.loadtxt(w/(name+'.dat'),skiprows=1);assert np.isfinite(a).all() and a[-1,0]>300e-9;waves.append(a)
- a,b=waves;b=b[b[:,0]>=100e-9];t=b[:,0];weight=np.sqrt(np.gradient(t));x=np.column_stack([np.ones(len(t)),np.sin(2*np.pi*1e7*t),np.cos(2*np.pi*1e7*t)])
- gains={}
- for stage,col in [('mixer',2),('filter',3)]:
-  y=b[:,col]-np.interp(t,a[:,0],a[:,col]);c=np.linalg.lstsq(x*weight[:,None],y*weight,rcond=None)[0];gains[stage]=float(np.hypot(c[1],c[2])/.001)
- gains['held']=r['held_tone_gain']
- ts=np.array(r['cases'][0]['sample_times_s']);y=np.array(r['baseline_subtracted_samples_v']);blocks=[]
- for start in (0,4):
-  tb=ts[start:start+4];yb=y[start:start+4];xb=np.column_stack([np.ones(4),np.sin(2*np.pi*1e7*tb),np.cos(2*np.pi*1e7*tb)]);cb=np.linalg.lstsq(xb,yb,rcond=None)[0];blocks.append(float(np.hypot(cb[1],cb[2])/.001))
- r['four_sample_held_gains']=blocks
- rows.append(dict(case=label,gains_v_per_v=gains,raw_result=r))
-r=dict(status='controlled_lo_comparison_not_receiver_qualification',cases=rows,limitations=['Ideal sources disconnect real mixer gate load from oscillator buffers; no equal-power or equal-loading clock comparison.', 'Fixed receive topology, input tone and sample timing; ideal LO phase differs from autonomous clock, compare tone magnitudes.', 'Limited swing matches extrema only, not actual slew, duty cycle, impedance or overlap.', 'No intrinsic noise, ADC, quadrature, process, mismatch, PEX, EVM or blocker qualification.'])
-r['held_gain_ratios_to_autonomous']={row['case']:row['gains_v_per_v']['held']/rows[0]['gains_v_per_v']['held'] for row in rows[1:]}
-(ROOT/'projects/programmable_transceiver_platform/evidence/rf-lo-control-comparison.json').write_text(json.dumps(r,indent=2)+'\n')
-print(json.dumps([dict(case=row['case'],gains=row['gains_v_per_v']) for row in rows],indent=2))
+CONFIGURATIONS = {
+    'lo': (
+        [('autonomous', 'transceiver-rf-autonomous-chain'), ('ideal_full', 'transceiver-rf-ideal-lo'), ('ideal_limited', 'transceiver-rf-ideal-lo-limited')],
+        'controlled_lo_comparison_not_receiver_qualification',
+        'Limited swing matches extrema only, not actual slew, duty cycle, impedance or overlap.',
+        'held_gain_ratios_to_autonomous',
+        'projects/programmable_transceiver_platform/evidence/rf-lo-control-comparison.json',
+    ),
+    'cap': (
+        [('baseline_1pf', 'transceiver-rf-ideal-lo'), ('reduced_01pf', 'transceiver-rf-ideal-lo-cap01')],
+        'controlled_if_capacitance_comparison_not_receiver_qualification',
+        'Only IF capacitors change; 0.1pF is an ideal scenario, not a selected physical capacitance including parasitics.',
+        'held_gain_ratios_to_1pf',
+        'projects/programmable_transceiver_platform/evidence/rf-if-cap-comparison.json',
+    ),
+    'prebias': (
+        [('baseline_1pf', 'transceiver-rf-ideal-lo'), ('prebiased', 'transceiver-rf-ideal-lo-prebias')],
+        'prebiased_ideal_lo_comparison_not_startup_or_radio_qualification',
+        'Only gate initial condition changes. Prebias is not a implemented startup solution; internal bias still needs waveform checks.',
+        'held_gain_ratios_to_underbiased',
+        'projects/programmable_transceiver_platform/evidence/rf-prebias-comparison.json',
+    ),
+}
+
+def main(variant="lo"):
+ folders,status,variant_limitation,ratio_key,output=CONFIGURATIONS[variant]
+ rows=[]
+ for label,folder in folders:
+  w=ROOT/'scratch'/folder;r=json.loads((w/'result.json').read_text());waves=[]
+  for case in r['cases']:
+   name=f"a{case['amplitude_v']:g}"
+   for s,h in case['artifacts_sha256'].items():assert hashlib.sha256((w/(name+s)).read_bytes()).hexdigest()==h
+   if variant=='lo' and label!='autonomous':
+    deck=(w/(name+'.spice')).read_text()
+    normalized='\n'.join(line for line in deck.split('\n') if not line.startswith(('VTESTLO ','VTESTLOB ')))
+    normalized=normalized.replace('XMIX DRAIN TESTLO TESTLOB','XMIX DRAIN LO LOB')
+    original=(ROOT/'scratch/transceiver-rf-autonomous-chain'/(name+'.spice')).read_text()
+    assert normalized==original, 'Receive chain or fixture changed beyond intended LO substitution'
+   elif label=='reduced_01pf':
+    deck=(w/(name+'.spice')).read_text()
+    normalized=deck.replace('CIP IP 0 0.1p','CIP IP 0 1p').replace('CIN INN 0 0.1p','CIN INN 0 1p')
+    assert normalized==(ROOT/'scratch/transceiver-rf-ideal-lo'/(name+'.spice')).read_text(), 'Unintended fixture change'
+   elif label=='prebiased':
+    deck=(w/(name+'.spice')).read_text()
+    normalized=deck.replace('.ic v(GATE)=1.5\n','')
+    assert normalized==(ROOT/'scratch/transceiver-rf-ideal-lo'/(name+'.spice')).read_text(), 'Unintended fixture change'
+   a=np.loadtxt(w/(name+'.dat'),skiprows=1);assert np.isfinite(a).all() and a[-1,0]>300e-9;waves.append(a)
+  a,b=waves;b=b[b[:,0]>=100e-9];t=b[:,0];weight=np.sqrt(np.gradient(t));x=np.column_stack([np.ones(len(t)),np.sin(2*np.pi*1e7*t),np.cos(2*np.pi*1e7*t)])
+  gains={}
+  for stage,col in [('mixer',2),('filter',3)]:
+   y=b[:,col]-np.interp(t,a[:,0],a[:,col]);c=np.linalg.lstsq(x*weight[:,None],y*weight,rcond=None)[0];gains[stage]=float(np.hypot(c[1],c[2])/.001)
+  gains['held']=r['held_tone_gain']
+  ts=np.array(r['cases'][0]['sample_times_s']);y=np.array(r['baseline_subtracted_samples_v']);blocks=[]
+  for start in (0,4):
+   tb=ts[start:start+4];yb=y[start:start+4];xb=np.column_stack([np.ones(4),np.sin(2*np.pi*1e7*tb),np.cos(2*np.pi*1e7*tb)]);cb=np.linalg.lstsq(xb,yb,rcond=None)[0];blocks.append(float(np.hypot(cb[1],cb[2])/.001))
+  r['four_sample_held_gains']=blocks
+  if variant!='lo':r['late_zero_input_sample_rms_about_mean_v']=float(np.std(np.array(r['cases'][0]['held_samples_v'])[-4:]))
+  rows.append(dict(case=label,gains_v_per_v=gains,raw_result=r))
+ r=dict(status=status,cases=rows,limitations=['Ideal sources disconnect real mixer gate load from oscillator buffers; no equal-power or equal-loading clock comparison.', 'Fixed receive topology, input tone and sample timing; ideal LO phase differs from autonomous clock, compare tone magnitudes.', variant_limitation, 'No intrinsic noise, ADC, quadrature, process, mismatch, PEX, EVM or blocker qualification.'])
+ r[ratio_key]={row['case']:row['gains_v_per_v']['held']/rows[0]['gains_v_per_v']['held'] for row in rows[1:]}
+ (ROOT/output).write_text(json.dumps(r,indent=2)+'\n')
+ print(json.dumps([dict(case=row['case'],gains=row['gains_v_per_v']) for row in rows],indent=2))
+
+if __name__ == '__main__':
+ main()

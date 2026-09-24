@@ -5,13 +5,19 @@ import numpy as np
 R=Path(__file__).resolve().parents[3];P=R/'projects/programmable_transceiver_platform';B=R/'scratch/transceiver-vco-split-tuning/v1.08.spice'
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 
-def main(internal=False):
+def main(internal=False, *, output=False):
  ap=argparse.ArgumentParser();ap.add_argument('--fine',action='store_true');args=ap.parse_args()
  W=R/('scratch/transceiver-vco-internal-kick-v2' if internal else 'scratch/transceiver-vco-channel-kick')
  node='XRX.XVCO.N0N' if internal else 'XRX.XVCO.X0.TAIL'
  limitation='One injection phase/amplitude at one internal differential stage; not a full phase-sensitivity function or intrinsic noise.' if internal else 'One injection phase/amplitude at one input-FET drain/source pair; not a full phase-sensitivity function or intrinsic noise.'
  report_name='vco-internal-kick.json' if internal else 'vco-channel-kick.json'
- m=json.loads((W/'manifest.json').read_text());assert sha(B)==m['baseline_deck_sha256'] and m['pulse_nodes']==['XRX.XVCO.N0P',node]
+ if output:
+  W=R/('scratch/transceiver-vco-charge-kick-fine' if args.fine else 'scratch/transceiver-vco-charge-kick-v2')
+  node='XRX.CN'
+  limitation='One injection phase/amplitude at isolating output; not internal-source phase sensitivity or intrinsic noise.'
+  report_name='vco-charge-kick-fine.json' if args.fine else 'vco-charge-kick.json'
+ positive_node='XRX.CP' if output else 'XRX.XVCO.N0P'
+ m=json.loads((W/'manifest.json').read_text());assert sha(B)==m['baseline_deck_sha256'] and m['pulse_nodes']==[positive_node,node]
  terminal=(W/'result.json').exists();record=W/('result.json' if terminal else 'progress.json');r=json.loads(record.read_text()) if record.exists() else {'cases':[]}
  if terminal:assert r['source_sha256_before']==r['source_sha256_after']==m['source_sha256_before']
  rows=[];edges={}
@@ -21,7 +27,7 @@ def main(internal=False):
   c=next(c for c in r['cases'] if c['name']==name)
   for ext,h in c['artifacts_sha256'].items():assert sha(W/(name+ext))==h
   d=(W/(name+'.spice')).read_text();assert ('tran .5p 41n 0 .5p uic' if args.fine else 'tran 2p 41n 0 2p uic') in d
-  pulse=f'IKICK XRX.XVCO.N0P {node} PWL(0n 0 20n 0 20.001n {amplitude} 20.011n {amplitude} 20.012n 0)\n'
+  pulse=f'IKICK {positive_node} {node} PWL(0n 0 20n 0 20.001n {amplitude} 20.011n {amplitude} 20.012n 0)\n'
   assert d.count(pulse)==1 and d.replace(pulse,'').replace(f'/work/{name}.dat','/work/v1.08.dat').replace('tran .5p 41n 0 .5p uic','tran 2p 41n 0 2p uic')==B.read_text()
   assert 'let cml=v(XRX.CP)-v(XRX.CN)' in d
   log=(W/(name+'.log')).read_text().lower();errors=[x for x in log.splitlines() if any(k in x for k in ('warning','error','aborted'))]

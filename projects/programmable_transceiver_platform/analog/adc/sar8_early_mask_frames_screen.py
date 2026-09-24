@@ -8,9 +8,12 @@ def pulses(edges,width):
  for edge in sorted(edges):points.extend([(edge,0),(edge+.1,3.3),(edge+width,3.3),(edge+width+.1,0)])
  return pwl(points)
 
-def main(strong=False):
+def main(strong=False, *, mask='early'):
+ assert mask in ('none','track','early')
  circuit='sar_track_mask_strong' if strong else 'sar_track_mask'
  status='strong_msb_early_midcode_frames_not_qualified_adc' if strong else 'early_midcode_external_phase_frames_not_qualified_adc'
+ if mask=='none':status='three_external_phase_frames_50ns_spacing_not_qualified_adc'
+ elif mask=='track':status='track_masked_external_phase_frames_not_qualified_adc'
  rows=[]
  for sign in (-1,1):
   name=f'first{sign}';base=(B/f'vin{sign*.4:g}_change0.spice').read_text();d=base
@@ -30,17 +33,19 @@ def main(strong=False):
    assert len(re.findall('^'+re.escape(prefix),d,re.M))==1
    d=re.sub('^'+re.escape(prefix)+'.+$',prefix+value,d,flags=re.M)
   d=d.replace('tran 5p 114.9n 0 5p','tran 5p 209.9n 0 5p').replace(f'/work/vin{sign*.4:g}_change0.dat',f'/work/{name}.dat')
-  for i in range(8):d=d.replace(f'XDRV{i} D{i} ',f'XDRV{i} SD{i} ')
-  extra=f'.include /screen/adc/{circuit}.spice\nXTRACK '+ ' '.join(f'D{i}' for i in range(8))+' MASKB '+' '.join(f'SD{i}' for i in range(8))+f' VLOG 0 pt_{circuit}\n'
-  mask=[(0,0)]
-  for hold in holds:mask.extend([(hold,0),(hold+.1,3.3),(hold+37.8,3.3),(hold+37.9,0)])
-  extra+='VMASK MASKB 0 '+pwl(mask)+'\n'
-  d=d.replace('.control',extra+'.control').replace('v(IP) v(IN) i(VBUF)\n','v(IP) v(IN) i(VBUF) '+' '.join(f'v(SD{i})' for i in range(8))+'\n')
+  if mask!='none':
+   for i in range(8):d=d.replace(f'XDRV{i} D{i} ',f'XDRV{i} SD{i} ')
+   extra=f'.include /screen/adc/{circuit}.spice\nXTRACK '+ ' '.join(f'D{i}' for i in range(8))+(' MASKB ' if mask=='early' else ' SCB ')+' '.join(f'SD{i}' for i in range(8))+f' VLOG 0 pt_{circuit}\n'
+   if mask=='early':
+    mask_points=[(0,0)]
+    for hold in holds:mask_points.extend([(hold,0),(hold+.1,3.3),(hold+37.8,3.3),(hold+37.9,0)])
+    extra+='VMASK MASKB 0 '+pwl(mask_points)+'\n'
+   d=d.replace('.control',extra+'.control').replace('v(IP) v(IN) i(VBUF)\n','v(IP) v(IN) i(VBUF) '+' '.join(f'v(SD{i})' for i in range(8))+'\n')
   (O/(name+'.spice')).write_text(d)
   with (O/(name+'.log')).open('w') as log:subprocess.run(['ngspice','-b',str(O/(name+'.spice'))],stdout=log,stderr=subprocess.STDOUT,check=True,timeout=900)
   rows.append(dict(name=name,hold_times_ns=holds,input_differences_v=values,baseline_deck_sha256=hashlib.sha256(base.encode()).hexdigest(),artifacts_sha256={s:hashlib.sha256((O/(name+s)).read_bytes()).hexdigest() for s in ('.spice','.dat','.log')}))
  r=dict(status=status,cases=rows,source_sha256=json.loads((B/'result.json').read_text())['source_sha256'],limitations=['External reset/start/clock/sample waveforms; no actual phase generator or output register.', 'Three frames in each polarity sequence, ideal capacitors/bias references and separate supplies.', 'No continuous transfer, ENOB, noise/mismatch/process or physical loading qualification.', 'Code must be observed before next reset; host capture timing unimplemented.'])
- r['source_sha256'][f'/screen/adc/{circuit}.spice']=hashlib.sha256(Path(f'/screen/adc/{circuit}.spice').read_bytes()).hexdigest()
+ if mask!='none':r['source_sha256'][f'/screen/adc/{circuit}.spice']=hashlib.sha256(Path(f'/screen/adc/{circuit}.spice').read_bytes()).hexdigest()
  (O/'result.json').write_text(json.dumps(r,indent=2)+'\n');print('Completed two three-frame streams.')
 
 if __name__=='__main__':main()

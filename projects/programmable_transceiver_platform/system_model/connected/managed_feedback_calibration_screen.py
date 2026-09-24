@@ -5,9 +5,11 @@ from managed_resources import command
 from managed_driver_feedback import ManagedDriverFeedbackChip
 from programmable_calibration_dwell import calibrate_until_complete
 
-def main():
+def main(chip_class=ManagedDriverFeedbackChip, *,
+         report_name='connected-managed-feedback-calibration.json',
+         coupling_limitation='Driver rail pulls RF PLL; reference load is real but direct driver-rail/reference-voltage coupling absent.'):
     start=time.monotonic()
-    c=ManagedDriverFeedbackChip(adc_latency_s=30e-9,tx_relative_gain=True,watchdog_s=1e-3)
+    c=chip_class(adc_latency_s=30e-9,tx_relative_gain=True,watchdog_s=1e-3)
     assert command(c,'rf_coarse_start',2412000000)['accepted']
     print('Coarse search command accepted',c.time,flush=True)
     c.advance(c.time+50e-6)
@@ -24,9 +26,9 @@ def main():
         shared_adc_samples=c.tx_adc_samples-before,reference_charge_c=c.adc_reference.charge-charge,
         correction=c.tx_cal.candidate,powers=c.tx_cal.powers,
         limitations=['Managed autonomous acquisition and quiet shared-ADC calibration, no payload quality.',
-            'Driver rail pulls RF PLL; reference load is real but direct driver-rail/reference-voltage coupling absent.',
+            coupling_limitation,
             'Assumed driver/readout/sensitivity parameters and finite coupling-step error remain unqualified.'])
-    (P/'evidence/connected-managed-feedback-calibration.json').write_text(json.dumps(report,indent=2)+'\n')
+    (P/'evidence'/report_name).write_text(json.dumps(report,indent=2)+'\n')
     print(report,flush=True)
 
 if __name__=='__main__':main()

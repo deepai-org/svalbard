@@ -75,6 +75,16 @@ Digital pad output devices use `DVDD/DVSS`; pre-drivers use `VDD/VSS`. The candi
 
 This revision adds neither a hidden paddle nor an uncounted supply terminal. Bond-wire peak current, inductance and ground bounce are independent of the DC ceiling and remain open.
 
+## Pinned PDNSim load-model restriction
+
+The pinned OpenROAD commit `dcf36133a369abc8f3c5e5738cd4d82e4903c0e0` does not implement `set_pdnsim_inst_power` as a current override. In [buildNodeCurrentMap](https://github.com/The-OpenROAD-Project/OpenROAD/blob/dcf36133a369abc8f3c5e5738cd4d82e4903c0e0/src/psm/src/ir_solver.cpp#L831), automatic STA-derived current is added first; user-specified current is then added to the same node map. The separate per-instance power map is overwritten and supplies the printed total, producing a misleading apparent override.
+
+The zero/24/48 mA control matrix confirms this behavior at all 26,438 load sources on both rails, within export rounding. Approximately 34.105 mA of automatic modeled current remains at zero user load. **That residue is not a measurement or qualified estimate of actual CORE consumption.** These runs have no qualified switching activity, clock-tree power or complete physical design.
+
+Use PDNSim's exported resistor topology with the independent explicit-current solver for the present specified-load sensitivity screens. Do not interpret direct PDNSim voltages as belonging to the requested user-load total, or accept the printed total without auditing the exported current sources. `run_pdn_ir.sh` now runs the zero-load control and source-by-source audit before the independent solve. No binary patch is applied. If the tool revision changes, independently requalify this behavior; do not carry either the bug assumption or an override assumption into a new build without tests.
+
+The independent solve still has nominal resistor models, ideal local feed locations and assumed fixed current distributions. It does not close IR/EM, package effects, process variation, dynamic noise, transistor behavior at reduced supply, or full-chip power signoff. Pass-48 explicit-current results and pass-49 conditional path bounds remain the relevant retained calculations; the diagnosis explains why the earlier direct tool results were rejected.
+
 ## Limited current screen
 
 `check_power.py` uses the saved pass-5 alternating-pattern pair currents, divides by two for an identical output estimate, and scales by five or six outputs. It then applies a **provisional** 1.25 multiplier plus 2 mA per segment for unmodeled activity. These allowances are assumptions, not measurements or guaranteed guard bands.

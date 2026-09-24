@@ -1,12 +1,3 @@
 #!/usr/bin/env bash
 set -euo pipefail
-ROOT=$(cd "$(dirname "$0")/../../.." && pwd)
-OUT="$ROOT/scratch/transceiver-adc-loaded-driver-ac-damping"
-mkdir -p "$OUT"
-docker run --rm --platform linux/arm64 --network none --cpus 2 --memory 4g --entrypoint /bin/bash \
- -v "$ROOT/projects/programmable_transceiver_platform/analog:/screen:ro" \
- -v "$ROOT/ip/blocks/analog/wifi_80211b:/wifi:ro" \
- -v "$ROOT/scratch/transceiver-adc-loaded-driver:/baseline:ro" \
- -v "$OUT:/work" --workdir /work \
- sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305 \
- -lc 'python3 /screen/adc/loaded_driver_ac.py --damping'
+exec bash "$(dirname "$0")/run_analog_check.sh" transceiver-adc-loaded-driver-ac-damping adc/loaded_driver_ac.py damping reuse transceiver-adc-loaded-driver

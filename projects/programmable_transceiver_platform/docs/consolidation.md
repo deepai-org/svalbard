@@ -1,6 +1,6 @@
 # Transceiver consolidation audit
 
-Project-wide consolidation is **in progress**. The current pass began with 2,969
+Project-wide consolidation is **complete**, with the intentional exceptions below. The current pass began with 2,969
 tracked project files; ignored simulator logs/caches are not maintained source.
 Source, distinct failure cases, implementation requirements and immutable
 historical provenance must survive consolidation. Passing a refactor check does
@@ -19,6 +19,34 @@ not establish chip feasibility.
 | `spec/power-partition.md` | Supply allocation, coupled load budgets and pinned PDNSim load interpretation |
 | `spec/analog-design-workflow.md` | Behavioral → schematic → extraction workflow and reusable lessons |
 | `spec/exclusive-engine-policy.md` | Generic configuration, sharing and RF/wired exclusivity |
+| `spec/block-diagram.md` | Whole-chip block composition and diagram interpretation |
+| `spec/clock-rate-ownership.md` | Clock-domain ownership, sustained-rate mismatch and forwarded-clock services |
+| `spec/clock-startup-verification.md` | Transistor bias/reset/acquisition and physical lock-qualification obligations |
+| `spec/coarse-retune-contract.md` | Fine-tuning envelope evidence, finite-counter observation and managed coarse retuning |
+| `spec/host-activation-candidate.md` | Experimental counted host-activity qualification and promotion gates |
+| `spec/host-driver-selection.md` | Host output-driver loading, impedance and shared-return experiments |
+| `spec/parallel-datapath-candidate.md` | Wide internal datapath alternatives, block CDC stability and receiving pipelines |
+| `spec/streaming-transport-v2.md` | Default protected-header transport, raw-record services and CRC partition rationale |
+| `spec/transport-scheduling.md` | Historical v1 CRC/quarantine scheduling comparison; not the current transport contract |
+| `spec/receiver-detect-model.md` | Wired impedance observation, detection lifecycle and its scoped model evidence |
+| `spec/rf-frequency-coordinates.md` | RF frequency conventions, waveform/channel settings and observation coordinates |
+| `spec/rf-quadrature-budget.md` | I/Q gain/phase image sensitivity and passive splitter evidence; not a receiver specification |
+| `spec/sampled-loop-model.md` | Two-state sampled phase-detector/PI recurrence and stability checks |
+| `spec/three-cap-pll-progress.md` | Historical three-node PLL findings, charge-state invariants and calibration limits |
+| `spec/tx-output-isolation.md` | RF output network, retained charge, isolation and loaded-pad observation |
+| `spec/tx-output-stage-sensitivity.md` | TX fitting, independent observers, calibration uncertainty and diagnostics |
+| `spec/tx-detector-shared-adc-gap.md` | Detector routing, converter ownership, cancellation and shared-ADC integration |
+| `spec/unified-analog-state.md` | Coupled driver/reference/network state and finite-current integration candidates |
+| `spec/closure-audit-pass876.md` | Historical closure checkpoint with immutable full-journal recovery |
+| `spec/open-high-speed-design-survey.md` | External design precedents and their process/performance limitations |
+| `spec/feasibility-gates.md` | Physical feasibility criteria, adverse-bound policy and historical stress envelope |
+| `spec/contract.json` | Machine-readable interface, limits, generic services and external protocol examples |
+| `spec/mathematical-top-profile.json` | Original combined-model stimulus and loading assumptions, read by combined_platform |
+| `spec/autonomous-top-profile.json` | Self-contained autonomous-clock combined experiment input |
+| `spec/pulse-top-profile.json` | Self-contained pulse-loop combined experiment input |
+| `spec/fractional-top-profile.json` | Self-contained fractional-clock/carrier-relative blocker experiment input |
+| `spec/phase-loaded-candidate.json` | Descriptive phase-loaded candidate checkpoint and its unverified obligations |
+| `spec/experimental-managed-tx-profile.json` | Descriptive managed-TX candidate settings, scoped evidence and outstanding work |
 | `docs/diagrams/generate_block_diagram.py` | Editable diagram source |
 | `evidence/history-index.json` | Recovery of removed historical files |
 
@@ -252,7 +280,7 @@ The present pass additionally removed:
   calibration surviving direct retarget. The index preserves these historical
   bugs explicitly; their current audit outputs are separate, non-equivalent results.
 
-All 289 recovery records have unique paths and verified Git hashes/sizes. Use a
+All 293 recovery records have unique paths and verified Git hashes/sizes. Use a
 record's `recovery_commit` when present, otherwise the index-level default:
 
 ```sh
@@ -293,6 +321,25 @@ not proof that their experiment configurations or future results are equivalent.
 | `analog/adc/cdac8*.spice` | Fixed switches vs binary-weighted switch multiplicity alter loading and settling; retain those experiment settings. Ideal vs MIM capacitors are distinct physical assumptions. |
 | `rtl/pt_block_rx_mask.sv`, `pt_block_rx_rank.sv`, `pt_block_rx_prefix.sv` | Control body now shared in `pt_block_rx_routed.vh`; wrappers select the original routing module. Preprocessed old/new RTL is identical except comments/whitespace. All three pass 21,219-cycle simulation, synthesis checks and four mutation controls. The pipe variant retains separate beat-based routing without captured slot masks. Mapping hash manifests include the shared body; mutations operate on preprocessed input. No new physical timing claim. |
 
+The reference/sample-driver family intentionally retains explicit small circuits.
+`buffer_scaled`, `_tune` and `_output2` differ in damping-parameter exposure and
+output/load multiplicity; sample-driver baseline/headroom/long-mirror variants
+change output multiplicity or mirror length and multiplicity. Existing replay
+and validation code compares exact device lines (`XIP`, `XIN`, `XT`, `XMP`, `XMN`,
+`XOUT`) and damping text, while driver probes observe internal hierarchy.
+A wrapper-only unification would change those contracts and add dependencies
+without reducing circuit complexity. Shared simulation/measurement runners are
+already consolidated separately from these retained electrical alternatives.
+
+DAC compositions retain binary versus thermometer segmentation, unregistered
+versus 19-register timing, isolated register fanout and dual Q/QB drive as distinct
+experiments. They already instantiate shared current-bit, decoder, small-driver
+and reset-DFF primitives; repeated cell instances are physical multiplicity,
+not duplicated implementations. PLL pump, passive filter, PFD, reference buffer
+and regenerative ring are distinct blocks. Tiny two-transistor inverters with
+separate local cell names remain explicit rather than adding hierarchy to those
+independently probed circuits.
+
 Timing-report family review retains `report_timing.py`'s MET/VIOLATED-specific
 slack grammar and register lookup, `report_global_route_timing.py`'s first valid
 critical-register capture plus SPEF validation, `report_path_delay.py`'s first-path
@@ -318,11 +365,11 @@ capacitor states, compliance, charge preservation and coupled thermal/acquisitio
 limits. Neither contract can substitute for the other; merging their stability
 claims would blur the model boundary.
 
-## Current checks and remaining scope
+## Review coverage and validation
 
-The current full working-tree inventory covers 2,951 maintained project files:
-1,104 evidence artifacts; 970 verification files; 502 model files; 279 analog
-files; 38 specifications; 30 RTL files; 14 simulation files; eight diagram/docs
+The current full working-tree inventory covers 2,947 maintained project files:
+1,103 evidence artifacts; 970 verification files; 502 model files; 279 analog
+files; 35 specifications; 30 RTL files; 14 simulation files; eight diagram/docs
 files; two integration files; and four root metadata/README files. Ignored
 scratch products are excluded. The exact-content scan finds only the five
 independent-output groups classified above; all local Markdown links resolve.
@@ -382,8 +429,7 @@ while the fifth-order screen requires it to pass. Both already share the LO
 fixture/sideband primitives. Factoring the remaining short setup/reporting around
 one generalized solver would obscure the two reference equations and their
 acceptance contracts. This is a reviewed maintenance choice, not a claim that
-these files contain no repeated text. Broader family and dependency review
-remains necessary beyond this similarity threshold.
+these files contain no repeated text. The family and dependency reviews below supplement this similarity threshold.
 
 The specialized launcher pass consolidates the remaining four repeated analog
 mount patterns and the RX preflight pair. A fresh project-wide shell-body scan
@@ -393,12 +439,14 @@ checks those patterns only; it does not prove arbitrary shell equivalence. All
 262 sibling shell-entrypoint references resolve.
 
 The whole-module constant-normalized scan is complete with the explicit short-recipe
-exception above. Remaining work: broader near-duplicate and dependency review,
-specialized launchers, non-identical historical evidence, overlapping
-specialist notes, and audit analog/RTL/model families with representative
-behavioral comparisons. Earlier dependency analysis found 179 reachable Python
-files including 115 connected-model modules, so an old filename is not evidence
-that a model can be removed. Analog circuits and RTL variants may represent
+exception above. Launcher-body, specification-ownership and historical-snapshot
+reviews are recorded here; they are no longer undifferentiated pending tasks.
+Subsequent semantic reviews cover model lifecycles, analog circuit alternatives,
+RTL routing/buffering and every standalone simulation fixture. Project-wide named
+imports and the explicit dynamic-loader/configured-module contracts resolve.
+Earlier dependency analysis found 179 reachable Python files including 115
+connected-model modules, so an old filename is not evidence that a model can be
+removed. Analog circuits and RTL variants may represent
 intentional alternatives. Do not collapse different equations, failure controls
 or protocol semantics merely to reduce file count.
 
@@ -433,3 +481,143 @@ headings/tables/fences) finds only a repeated HDMI/DVI pin-plan navigation link
 in six owners; retain those useful links. Neither scan rules out semantically
 overlapping circuits or prose. All 207 local Markdown targets resolve after the
 TX-note merge; anchor validation is outside this path-existence check.
+
+### RTL routing and buffering review
+
+The routing family retains distinct physical logic experiments: beat-based
+schedule decoding, captured masks with serial count subtraction, rank-based
+clipping, and compaction-before-prefix trimming. Lane compactors use indexed
+writes versus explicit rank/one-hot selection. Block FIFO, elastic and staged
+wrappers compose existing storage while adding different receiving/ingress
+registers and reset-release ownership; they are not duplicate FIFOs.
+
+The identical `mask_for` function in the shared routed receiver and commit-stage
+receiver now lives once in `pt_schedule.vh`. All four affected receiver modules
+preprocess identically before/after, ignoring comments and whitespace. All RTL
+modules elaborate with Icarus; other schedule consumers receive an unused local
+function. Existing mapping manifests already hash `pt_schedule.vh`, so the shared
+implementation remains covered without a new manifest dependency. No physical
+mapping or timing claim is inferred from this source-only extraction.
+
+The identical `slot_mask` helper from legacy and streaming RX is likewise owned
+by `pt_schedule.vh`. Preprocessed non-helper module text and the original helper
+definition are unchanged; only definition placement and an unused TX-local copy
+differ. All RTL elaborates after extraction. The three-line prefix counter in
+rank routing/compaction remains local to those small structural experiments;
+introducing a new include and provenance dependency would add comparable plumbing.
+
+### Simulation fixture review
+
+All 14 files under `sim` (486 lines) retain separate test responsibilities:
+
+| Fixtures | Distinct contract |
+| --- | --- |
+| `tb_stream_tx`, `tb_stream_rx` | Different vector formats, input/output direction and pre-edge versus post-edge checks. |
+| `tb_stream_link`, `tb_core` | Startup/training/fault recovery versus multi-clock integration, ordering and v1/v2 comparison. |
+| `tb_release` | Legacy quarantined-frame final-word readiness failure; not a streaming-v2 duplicate. |
+| `tb_tx_stage_compare` | Cycle-exact comparison against retained TX reference across reset phases. |
+| `tb_sync_fifo_flags`, `tb_pack_stream` | Occupancy/flags versus bit packing/stall stability and bounded backlog; their `cycle` tasks update different scoreboards. |
+| `tb_block_fifo` | Asynchronous block order, valid counts, Gray transitions and delayed reset release. |
+| `tb_memory`, `tb_control`, `tb_helpers` | Finite capture/playback, SPI register transactions, and calibrator/PRBS helpers respectively. |
+| `crc_equivalence` | Independent serial CRC recurrence versus shared optimized implementation. |
+| `pt_afe_model` | Ideal serial/converter simulation boundaries, not circuit implementations. |
+
+The three-step xorshift expression repeated in random-stimulus benches stays
+local; extracting it adds include plumbing without consolidating their different
+clocking, state or acceptance logic. No fixture changes or reruns were needed.
+
+## Subsequent consolidation and retention decisions
+
+| Review | Result and boundary |
+| --- | --- |
+| FIFO stability note | Merged into `spec/parallel-datapath-candidate.md` after the receiving-register screen. Complete publication/reuse derivation, counts, assumptions and nominal hold limits retained; stale next-step wording corrected. Physical timing remains open. |
+| CRC review | Merged into streaming v2 as historical partition rationale and migration obligations; legacy-v1 navigation updated. |
+| Fractional tuning | Full grid/startup findings and failures merged into `spec/coarse-retune-contract.md` with historical model scope. |
+| Clock startup and host activation | Retained separately: transistor bias/reset/PFD/lock qualification differs from mathematical tuning; experimental counted host activity has distinct promotion gates from RTL startup and GPIO qualification. |
+| Metadata-normalized evidence | Compared 1,056 top-level JSON objects, recursively omitting hash/timestamp/elapsed fields; seven pairs matched. Archived `canonical-controls-before-record-integration.json` with original manifest and immutable link. Retained current canonical controls and independent calibration, resource-command, serialized-return, thermal-solver and LO/pad-quality outputs. Matching measurements do not make provenance interchangeable. |
+| ADC historical source | Retain `analog/adc/shared_iq_receiver_cm_before_early.py`: both the evolved runner's variants and `receiver_driver_probe.py` verify its original hash during replay. Hash still matches; substituting the evolved runner breaks provenance. |
+| Migration reports | Retain `fast-common-migration.json` for continuous transport/quality and `fast-common-resource-migration.json` for recovery/diagnostics/detection/continuous RX. Both are distinct comparison records referenced by the closure inventory. |
+
+The removed notes and report are recoverable through `evidence/history-index.json`.
+
+### Configuration and navigation ownership
+
+All 35 specifications have an owner in the table above. Autonomous, pulse and
+fractional wideband JSON inputs remain self-contained: each harness directly
+parses, publishes and hashes the original bytes. Acquisition/detection times,
+source lengths, model entries and open-function lists differ; fractional tuning
+adds carrier-relative blockers and bandwidth/watchdog settings. Shared values
+express matched conditions, not mutable inherited defaults. Candidate checkpoints
+are scoped experiments, not alternate global contracts or chip protocol memories.
+
+The project README owns capabilities; model-root README owns abstraction levels;
+connected README introduces supporting experiments; active model guide owns
+commands/coverage; diagram README owns regeneration/wiring conventions. The
+integration macro contract owns the executable black-box/digital boundary,
+distinct from architectural block composition. Keep these scoped entry points.
+
+### Model-family decisions
+
+| Family | Shared implementation / retained distinction |
+| --- | --- |
+| Coarse startup command dispatch | `connected/coarse_acquisition.py:execute_coarse_management`; resource counts remain 11 versus 10. Fallbacks, clock classes, configuration qualification and reference-loss/held-voltage behavior stay caller-owned. |
+| Warm retuning | Retain fast `warm_clock.py` and detailed `coarse_retune_lifecycle.py`/`recenter_filter.py`. Fast centering uses one exponential control voltage; detailed propagation tracks two capacitor states, charge and loss. Detailed acquisition can bypass centering for an unused loop, records centering history and delegates cancellation/rollback. Fast acquisition always centers and cancels that state differently; its chip additionally invalidates TX calibration and installs an RF segment. |
+| Wideband startup/detection | `combined_detector_quality.settle_and_detect` shares the prelude while preserving each caller's timing profile and underlying clock model. |
+| Short report wrappers | Retain explicit report names, limitations and messages. Continuous traffic already delegates to `record_cases`; pulse-wired, monitor-recovery and coarse-startup mains would gain comparable configuration plumbing from another abstraction. |
+
+### Additional scan coverage
+
+Method scans include functions of at least eight physical lines. Constant
+normalization initially found three model groups after coarse-dispatch extraction:
+the startup prelude was shared, while two report-wrapper groups were reviewed and
+retained. No such groups remain in analog/verification; no cross-file exact
+function bodies of this size remain under different function names project-wide.
+A further project-wide scan normalizes function names, arguments and locally
+assigned variable names while preserving literals, external names and attributes.
+It finds no cross-file groups at either eight physical lines or 100 AST nodes,
+so compactly written helpers are also covered. These thresholds do not prove
+arbitrary semantic equivalence or make short repeated expressions defects.
+
+## Verification after specification and coarse-model consolidation
+
+The pass following `3300ae7` merges three notes, archives one report and shares
+two model helpers. Earlier validation remains scoped to its recorded snapshots.
+
+| Check | Result |
+| --- | --- |
+| Historical recovery | All 293 records match Git hashes and sizes. |
+| Python syntax and changed imports | All 1,268 sources parse; 21 named imports from five changed providers resolve without missing/ambiguous exports. |
+| Project-wide named imports | Static export review covers all 1,268 Python providers and 2,203 named imports from project modules; none missing or ambiguous. This checks declared exports, not dynamic loading or runtime path selection. |
+| Real adapter imports | Both coarse adapters resolve the shared function; warm subclasses retain their bases. |
+| Documentation links | All 207 local paths and 17 local heading links resolve. |
+| Bounded regression | All seven checks pass; 1,042 aggregate and 459 protocol-report source fingerprints match current files. |
+| Coarse command equivalence | 4,800 old/new scenarios match, including errors and ordered side effects/fallbacks. |
+| Startup prelude equivalence | 64 old/new sequences match timing, ordering and all three assertion gates. |
+| Generated diagrams | All three SVGs regenerate byte-for-byte in a temporary directory from one generator; focused sheets are exports, not separate editable sources. |
+| RTL schedule integration | Seven Icarus simulations pass: `tb_core` in both modes with v1/v2, `tb_stream_link` in both modes, and legacy `tb_release`. Bench copies redirect only trace output into a temporary directory. Ordering, startup, injected corruption, sticky fault/disarm and final-word readiness assertions remain active. |
+| Diff hygiene | `git diff --check` passes. |
+
+No long coupled/transistor simulation was needed for these dispatch/documentation
+changes. Unchanged diagram content needed no new visual-layout review. These
+checks establish the reviewed consolidation changes, not physical chip
+feasibility.
+
+## Completion audit
+
+| Requirement | Authoritative evidence and disposition |
+| --- | --- |
+| Cover the whole maintained project | Inventory: 2,947 files across analog, RTL, simulation, models, verification, integration, specifications, diagrams and evidence; ignored scratch products excluded. All file classes are covered by the scans and family reviews above. |
+| Consolidate repeated implementation | Shared-runner/helper tables record the extracted owners and equivalence checks. Python whole-module, method, statement and local-variable-normalized reviews supplement circuit/RTL family review. Identified candidates are consolidated or have explicit retention reasons. |
+| Consolidate documentation | All 35 specifications have one ownership entry; overlapping notes are merged, guides delegate to their owners, and historical claims retain their scope. All 207 local paths and 17 heading links resolve. |
+| Preserve evidence and distinct experiments | All 293 archived records verify against Git hashes/sizes. Five remaining byte-identical output groups have independent producers and documented retention reasons; metadata-normalized pairs and historical-looking files were separately reviewed. |
+| Preserve dependencies and entry points | All 2,203 named project imports resolve across 1,268 Python files; 12 run-path calls, 22 consumed namespace keys and nine configured receiver modules resolve. Shared launcher audits retain entrypoint filenames and check 262 sibling shell references. |
+| Preserve behavior | Refactor-specific old/new comparisons and negative controls are recorded above. Latest seven-check bounded model regression passes with current source fingerprints; focused RTL simulations and preprocessing equivalence pass for the scheduling extraction. |
+| Maintain generated artifacts from one source | Three SVG exports regenerate byte-for-byte from one generator; preview/export files remain deliberate deliverables. |
+| Keep the result reviewable | Clean diff whitespace checks; unrelated workspace changes remain untouched. The final changes after `3300ae7` are local and uncommitted. |
+
+No identified consolidation candidate remains without a disposition. Completion
+means the maintained project has been consolidated with documented ownership,
+validated shared implementations and justified exceptions. It does not imply
+that every short repeated expression should become an abstraction, that different
+experiments should share writable reports, or that the transceiver is verified
+for fabrication. New design work can introduce new consolidation opportunities.

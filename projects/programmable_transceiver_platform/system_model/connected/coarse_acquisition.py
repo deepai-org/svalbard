@@ -86,3 +86,25 @@ def advance_coarse(chip,time,advance_parent):
             if chip.coarse.qualified:chip.rf_target_hz=chip.coarse.target
             chip.install_segment(chip.rf_pll.frequency_hz-chip.rf_carrier,check=False)
     advance_parent(time)
+
+
+def execute_coarse_management(self,operation,payload,time,resource_count,fallback):
+    """Shared coarse-search commands; caller owns resource count and fallback."""
+    if operation=='rf_coarse_start':
+        self._require_target_free()
+        if not self.quiet():raise ValueError('Coarse startup requires quiet reset state')
+        self.coarse.start(time,payload,self.epoch);return {}
+    if operation=='rf_coarse_abort':
+        if payload:raise ValueError('Reserved coarse abort payload')
+        self.coarse.cancel(time);return {}
+    if operation=='rf_coarse_status':
+        if payload:raise ValueError('Reserved coarse status payload')
+        states=('idle','settle','measure','commit','done','failed','cancelled','start_wait','end_wait')
+        return dict(value=states.index(self.coarse.state)|(int(self.coarse.busy)<<8)|(int(self.coarse.qualified)<<9)|(self.rf_pll.bank_code<<16))
+    if operation=='resource_count':
+        if payload:raise ValueError('Reserved resource-count payload')
+        return dict(value=resource_count)
+    if operation=='resource_status' and (payload==9 or payload==8 and self.coarse.busy):
+        owner=10 if self.coarse.busy else 0
+        return dict(value=owner|(int(self.coarse.busy)<<8)|(int(bool(owner))<<10))
+    return fallback(operation,payload,time)

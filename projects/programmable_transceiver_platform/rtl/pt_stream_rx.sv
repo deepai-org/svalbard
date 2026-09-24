@@ -20,8 +20,6 @@ module pt_stream_rx(input wire clk,rst_n,mode8,input wire[9:0]in_word,
  // Load the fixed schedule once per accepted header. The low bits directly
  // drive transfer qualification; no slot-counter decode sits on FIFO writes.
  reg[58:0]wire_slots,iq_slots;
- function automatic[58:0]slot_mask(input mode,input[1:0]kind);
- integer k;begin for(k=0;k<59;k=k+1)slot_mask[k]=(owner(mode,6'(k+3))==kind);end endfunction
  // Combinational transfer strobes, sampled with in_word on this clock edge.
  // The continuously arriving source cannot stall: refused payload latches fault.
  assign data=in_word;

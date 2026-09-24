@@ -8,15 +8,19 @@ from rf_quality_screen import quality
 PROFILE_PATH=P/'spec/autonomous-top-profile.json'
 PROFILE=json.loads(PROFILE_PATH.read_text())
 
+def settle_and_detect(self,time,profile):
+    """Common acquisition/detection prelude with caller-owned timing."""
+    self.advance(time+profile['settle_s'])
+    assert self.state=='active'
+    self.detect_start(self.time,self.epoch)
+    self.advance(time+profile['detection_end_s'])
+    assert self.detect_result(self.epoch)['decision']=='present'
+    assert self.probe.drive is None
+
 class CombinedChip(ProgrammableChip):
     def configure(self,mode,time):
         super().configure(mode,time)
-        self.advance(time+PROFILE['settle_s'])
-        assert self.state=='active'
-        self.detect_start(self.time,self.epoch)
-        self.advance(time+PROFILE['detection_end_s'])
-        assert self.detect_result(self.epoch)['decision']=='present'
-        assert self.probe.drive is None
+        settle_and_detect(self,time,PROFILE)
 
 def run_quality(chip_class, profile, profile_path, report_name, *, pulse=False):
     PROFILE = profile

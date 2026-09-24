@@ -1,6 +1,6 @@
 # GPIO transport scheduling and integrity, pass 3
 
-**Architecture review:** [CRC necessity review](crc-architecture-review.md) recommends streaming payload without mandatory whole-frame CRC/quarantine and separate metadata/control protection. This document describes legacy v1. Default RTL and the current contract now use [streaming v2](streaming-transport-v2.md); the v1 finite queue model remains a historical comparison.
+**Architecture review:** [CRC necessity review](streaming-transport-v2.md#crc-partition-rationale-and-migration-history) recommends streaming payload without mandatory whole-frame CRC/quarantine and separate metadata/control protection. This document describes legacy v1. Default RTL and the current contract now use [streaming v2](streaming-transport-v2.md); the v1 finite queue model remains a historical comparison.
 
 The 64-word frame replaces the insufficient two-control-word/32-word proposal. Parameters live in `contract.json`; `transport_model.py` models error-free queues and `frame_codec.py` defines the aligned frame codec. Neither is hardware qualification.
 

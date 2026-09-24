@@ -129,3 +129,17 @@ begin
  end
 end
 endfunction
+
+// Eight-word block schedule; shared by staged and commit receivers.
+ function automatic[7:0]mask_for(input mode,input[2:0]b,input[1:0]kind);
+ integer i,pos;begin
+  mask_for=0;
+  for(i=0;i<8;i=i+1)begin
+   pos=b*8+i;
+   if(pos>=5)mask_for[i]=(owner(mode,6'(pos-2))==kind);
+  end
+ end endfunction
+
+// Shared payload-slot placement for legacy and streaming receivers.
+ function automatic[58:0]slot_mask(input mode,input[1:0]kind);
+ integer k;begin for(k=0;k<59;k=k+1)slot_mask[k]=(owner(mode,6'(k+3))==kind);end endfunction

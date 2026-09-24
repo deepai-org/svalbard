@@ -6,14 +6,6 @@ module pt_block_rx_commit(input wire clk,rst_n,mode8,in_valid,input wire[79:0]wo
  output wire command_valid,output wire[3:0]opcode,output wire[7:0]argument,
  output reg fault);
  `include "pt_schedule.vh"
- function automatic[7:0]mask_for(input mode,input[2:0]b,input[1:0]kind);
- integer i,pos;begin
-  mask_for=0;
-  for(i=0;i<8;i=i+1)begin
-   pos=b*8+i;
-   if(pos>=5)mask_for[i]=(owner(mode,6'(pos-2))==kind);
-  end
- end endfunction
  reg[7:0]wire_slots,iq_slots;
  reg[2:0]beat,input_beat;reg[5:0]sequence_id,leftw,leftq;
  reg stage_valid,stage_good;reg[79:0]stage_words;

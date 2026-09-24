@@ -1,7 +1,7 @@
 """Experimental startup-only coarse search integrated with shared management."""
 from calibrated_fractional_chip import CalibratedFractionalChip
 from coarse_vco_clock import CoarseVCOClock
-from coarse_acquisition import CoarseAcquisition, advance_coarse
+from coarse_acquisition import CoarseAcquisition, advance_coarse, execute_coarse_management
 
 class HeldCoarseClock(CoarseVCOClock):
     def __init__(self,**kwargs):
@@ -33,24 +33,7 @@ class CoarseStartupChip(CalibratedFractionalChip):
             raise ValueError('Experimental coarse profile requires startup search for this carrier')
         return super().configure_rf_carrier(frequency_hz)
     def execute_management(self,operation,payload,time):
-        if operation=='rf_coarse_start':
-            self._require_target_free()
-            if not self.quiet():raise ValueError('Coarse startup requires quiet reset state')
-            self.coarse.start(time,payload,self.epoch);return {}
-        if operation=='rf_coarse_abort':
-            if payload:raise ValueError('Reserved coarse abort payload')
-            self.coarse.cancel(time);return {}
-        if operation=='rf_coarse_status':
-            if payload:raise ValueError('Reserved coarse status payload')
-            states=('idle','settle','measure','commit','done','failed','cancelled','start_wait','end_wait')
-            return dict(value=states.index(self.coarse.state)|(int(self.coarse.busy)<<8)|(int(self.coarse.qualified)<<9)|(self.rf_pll.bank_code<<16))
-        if operation=='resource_count':
-            if payload:raise ValueError('Reserved resource-count payload')
-            return dict(value=10)
-        if operation=='resource_status' and (payload==9 or payload==8 and self.coarse.busy):
-            owner=10 if self.coarse.busy else 0
-            return dict(value=owner|(int(self.coarse.busy)<<8)|(int(bool(owner))<<10))
-        return super().execute_management(operation,payload,time)
+        return execute_coarse_management(self,operation,payload,time,10,super().execute_management)
     def quiesce(self,time,reason):
         if self.coarse is not None:self.coarse.cancel(time)
         return super().quiesce(time,reason)

@@ -52,8 +52,6 @@ module pt_frame_rx(input wire clk,rst_n,mode8,input wire[9:0]in_word,
  // Shift a predecoded schedule instead of decoding the slot counter on the
  // same path as valid/count updates. Mode is frozen while armed.
  reg[58:0]wire_slots,iq_slots;
- function automatic[58:0]slot_mask(input mode,input[1:0]kind);
- integer k;begin for(k=0;k<59;k=k+1)slot_mask[k]=(owner(mode,6'(k+3))==kind);end endfunction
  wire[1:0]own=wire_slots[0]?2'd1:iq_slots[0]?2'd2:2'd0;
  // Registered 16:1 subreads followed by an 8:1 group select. One extra
  // release cycle; the last pending word must still be checked for readiness.

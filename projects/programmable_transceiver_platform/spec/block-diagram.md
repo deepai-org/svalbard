@@ -1,237 +1,136 @@
-# Whole-chip architecture and implementation map
+# Normative whole-chip architecture
 
-**Configuration boundary:** protocol names are external FPGA examples, not
-on-chip profiles. Configuration selects physical resources and compatible
-clock, pad, direction, filter/converter and host-transport settings.
+[Full-chip SVG](../docs/diagrams/transceiver-block-diagram.svg) · [PNG preview](../docs/diagrams/transceiver-block-diagram.png)
 
-**Current operating decision:** RF and wired payload operation are mutually exclusive on the same chip. Both capabilities remain required; additional physical resource sharing is encouraged. See the [exclusive-engine policy](exclusive-engine-policy.md), which supersedes simultaneous-operation requirements below. The active behavioral model enforces payload exclusivity; complete RTL/physical enforcement and resource rebudgeting remain open.
+![Normative architecture](../docs/diagrams/transceiver-block-diagram.svg)
 
+This document owns the selected functional architecture. “Normative” specifies
+what the design must implement, not demonstrated silicon performance or a frozen
+circuit topology. The drawing places RF west, wired east, timing north and host
+logic south, with terminals at the perimeter. Neighborhoods are intentional;
+block areas and routes are not a physical fit result.
 
-[Open the circuit-block SVG](../docs/diagrams/transceiver-block-diagram.svg) · [PNG preview](../docs/diagrams/transceiver-block-diagram.png)
+## Selected boundaries
 
-![Circuit-block architecture](../docs/diagrams/transceiver-block-diagram.svg)
+- One GF180MCU die in one wafer.space slot, 50 total terminals. The 12.92 mm²
+  core allocation includes 2.92 mm² reserve; neither is an implemented area.
+- Both RF and wired capabilities are fabricated, but their payload operation is
+  mutually exclusive. Retain specialized RF frontends and wired line-rate
+  samplers. Share transport, control, slow bias/reference services and reusable
+  circuit designs where loading permits. No universal GHz analog crossbar.
+- Configuration selects numeric clocks, pad modes, gain, filtering, conversion
+  and transport settings. Protocol recipes reside on the FPGA, not in chip
+  protocol profiles. Narrow temperature and supply operation is acceptable.
+- FPGA owns modem/PCS/controller logic, CRC/FEC, bulk storage, sample-rate
+  conversion and TX interpolation. Chip storage is bounded CDC, elasticity,
+  update staging and deadline-critical service; its complete cost remains open.
 
-The SVG expands the intended architecture into amplifier, mixer, filter, converter, clock-loop, reference, diagnostic and control blocks. External I/O groups are on the edges. It preserves approximate placement neighborhoods and adds detailed transport, control, calibration and clock-acquisition wiring sheets. Named nets connect sheets, with distinct data and feedback paths. It is a functional view, not a scaled floorplan or a claim that every circuit is implemented.
+## Timing: two credible operating paths
 
-This is the intended full first-chip design, not a diagram of completed circuitry.
-It consolidates the [architecture/pin plan](../../../docs/roadmap/programmable-transceiver-pin-plan.md)
-and [macro contract](../integration/macro-contract.md). The existing
-[chip skeleton](../integration/pt_chip.sv) groups the physical obligations into
-host and analog black boxes; that grouping is not sufficient implementation detail.
+Provide autonomous synthesis **and** an alternate externally supplied timing
+path as first-class design requirements. Neither is yet physically qualified.
+`REF_IN` is the single allocated timing input: select reference, wired timing or
+RF LO operation while stopped. A GHz LO requires its own qualified input
+conditioning branch; it must not pass through an assumed ordinary GPIO buffer.
+There is no simultaneous separate reference and LO input on this terminal.
 
-```mermaid
-flowchart LR
-  FPGA["External FPGA: modem, MAC, PCS as needed, PCIe endpoint and applications"]
-  MCU["External MCU: configuration, finite capture/playback, lower-rate use"]
-  RXRF["RF_RX differential pair"]
-  TXRF["RF_TX differential pair"]
-  RXW["WIRE_RX differential pair"]
-  TXW["WIRE_TX differential pair"]
-  REF["REF_IN"]
-  subgraph CHIP["GF180 companion: one wafer.space slot, 50 total terminals"]
-    HOST["Host pads, DDR capture/launch, phase alignment"]
-    STREAM["Framing, packing, gearboxes, per-stream CDC and elastic queues"]
-    CTRL["SPI, configuration, resource ownership, reset and calibration control"]
-    MEM["Banked capture/playback, PRBS and optional digital helpers"]
-    subgraph RF["Local programmable RF/baseband island"]
-      LNA["RF protection, input matching/bias, differential gain"]
-      MIXR["Quadrature RX mixing"]
-      BB["Local gain, filtering, weighting/summing and sampling"]
-      ADC["I and Q ADCs"]
-      DAC["I and Q DACs"]
-      BBT["Reconstruction filtering, gain and local routing"]
-      MIXT["Quadrature TX mixing, summing and RF output driver"]
-    end
-    subgraph WIRE["Dedicated wired island"]
-      FRONT["Protection, termination, common mode, equalization"]
-      SLICE["Slicers and multiphase sampling"]
-      DES["CDR-supported deserializer, alignment and local loopback"]
-      SER["Serializer, swing/pre-emphasis driver, electrical idle"]
-      DET["RX idle / TX receiver detection and local monitors"]
-    end
-    subgraph CLOCKS["Reference and timing services"]
-      DIST["Reference input/distribution and local bias references"]
-      RFPLL["RF synthesizer and quadrature LO drivers"]
-      WPLL["Wired TX clock synthesis and independent RX CDR/phase control"]
-      SYSCLK["Host/sample clocks, reset release and lock monitoring"]
-    end
-    MON["Buffered slow diagnostics, trim storage and isolation"]
-  end
-  FPGA <-->|"two 10-bit buses + two forwarded clocks"| HOST
-  FPGA <-->|"SPI"| CTRL
-  MCU <-->|"SPI, alternative controller"| CTRL
-  HOST <--> STREAM
-  CTRL <--> STREAM
-  STREAM <--> MEM
-  RXRF --> LNA --> MIXR --> BB --> ADC --> STREAM
-  STREAM --> DAC --> BBT --> MIXT --> TXRF
-  RXW --> FRONT --> SLICE --> DES --> STREAM
-  STREAM --> SER --> TXW
-  FRONT -.-> DET
-  SER -.-> DET
-  DET -.-> CTRL
-  REF --> DIST
-  DIST --> RFPLL
-  DIST --> WPLL
-  DIST --> SYSCLK
-  RFPLL -.-> MIXR
-  RFPLL -.-> MIXT
-  SLICE -.-> WPLL
-  WPLL -.-> SLICE
-  WPLL -.-> DES
-  WPLL -.-> SER
-  SYSCLK -.-> HOST
-  SYSCLK -.-> STREAM
-  SYSCLK -.-> ADC
-  SYSCLK -.-> DAC
-  CTRL -.-> CLOCKS
-  CTRL -.-> RF
-  CTRL -.-> WIRE
-  RF -.-> MON
-  WIRE -.-> MON
-  MON -.-> ADC
-  MON -.-> CTRL
-```
+The RF source feeds local I/Q phase generation, mixer buffers and selectable
+sample dividers. The current mathematical candidate uses LO ÷64/128/256/512 for
+conversion and LO ÷16 for the D2H forwarded DDR clock. These sample rates track
+LO tuning; they are not exact fixed 5/10/20/40 MS/s promises. FPGA resampling
+must include causal delay, arithmetic, memory and sustained service cost.
 
-Solid arrows denote principal data/reference paths; dotted arrows denote control,
-clock, or diagnostic connections. Arrows are functional boundaries, not finalized
-wire-level interfaces. Reset and power distribution apply throughout. RF RX/TX
-resources do not imply same-frequency full-duplex radio. Shared converters may
-serve wired diagnostics only with explicit ownership and settling; the wired
-line-rate path always retains dedicated slicers. There is no GHz global crossbar.
+Wired TX retains selectable synthesis/external timing and flexible ×10
+serialization. Wired RX always retains independent clock/data recovery and
+phase control. External timing does not remove additive jitter, quadrature
+error, clock distribution noise, or host rate matching. Clock switching requires
+stop, isolation, settling/lock qualification, retraining and a new stream epoch.
+See [clock ownership](clock-rate-ownership.md) for detailed obligations.
 
-The RF RX fanout between input gain and I/Q mixers is a topology decision, not
-a qualified shared-drain connection. Experiments must compare shared versus
-isolated branch loading at identical frequency, bias and output loads before
-freezing that implementation. A shared symbol in this functional diagram does
-not require one transistor output node to drive both branches directly.
+## RF conversion chain
 
-The analog tile family consists of locally connected switches, sample capacitors,
-transconductance/current weights, summing/integration nodes and comparators.
-Reusable circuit designs can be instantiated in both islands. One physical tile
-cannot service unrelated continuous RF and wired clocks merely because its cell
-design is shared. The programmable topology set, counts, switch networks and
-resource configuration encoding still need concrete implementation.
+RX: board preselection/matching → protected differential LNA → separate I/Q
+mixers → selectable PGA/LPF with offset/common-mode control → paired ADCs → host.
+The schematic must resolve PGA/filter ordering and stage headroom; an ADC that
+never clips does not prove the upstream chain stayed linear.
 
-| Block group | Current authoritative state | Important missing work |
-|---|---|---|
-| Transport, FIFO, SPI, capture/playback, PRBS/calibration control | Synthesizable RTL and finite functional tests; default word-rate implementation fails physical timing; wider alternatives remain separate candidates | Integrate viable timing architecture, CDC/reset/clock and bandwidth closure |
-| Host physical interface | Pad transistor experiments; top-level macro remains black box | DDR gearbox, phase alignment, real FPGA and board timing, simultaneous switching |
-| RF RX | Existing LNA/mixer physical research; project-specific shared/split I/Q schematic candidates and transistor LO-buffer composition | Differential RF chain, autonomous LO/bias/passives, mismatch-tolerant I/Q, noise, linearity, package and extracted integration |
-| RF TX | Seeded free-running ring, AC-coupled buffers, fixed-code combinational segmented DAC and NMOS switching bridge complete a 600 ns test; separate registered DAC update tests retain glitches | Integrate registered sample playback with the RF path; actual I/Q pairing, quadrature, reconstruction, bias/output drivers, modulation spectrum and noise |
-| ADC/DAC and programmable baseband | Actual 8-bit SAR controller/comparator/sampler/PDK CDAC and input/reference drivers; registered segmented DAC candidate; finite connected tests with measured errors | Full transfer/noise/ENOB, I/Q simultaneous conversion and reference loading, clocks/bias/startup, filters/gain and topology switches |
-| Wired lane | Existing slicer/CDR/driver/physical research candidates | Select and compose full lane; jitter/BER, acquisition, serializer, electrical idle and receiver detection |
-| Clock and bias services | Actual VCO/divider/PFD/pump/filter with RF load still aborts before requested full-loop horizon; actual reference drivers have dynamic regulation failures | Full independent RF/wired clocks, complete bias generation, acquisition/reset, intrinsic noise and concurrent loading |
-| Shared diagnostics/configuration | Some digital helpers and candidate trim ABI | Complete resource graph, atomic ownership, local buffers/isolation and analog observation paths |
-| Physical chip | 50-terminal connection skeleton and area/power allocations; partial digital physical screens | Custom pad ring, analog integration, package, full power/timing, DRC/LVS/PEX and signoff |
+TX: FPGA interpolation/resampling → host → registered paired DACs → selectable
+reconstruction filtering/gain → I/Q upmixers/summation → RF driver → board
+matching/filtering and optional external PA. Use proper interpolation in the
+system model; sample repetition is a comparison fixture, not the selected
+wideband TX implementation. Filter order and transistor realization remain open;
+older two-biquad drawings do not freeze them.
 
-**Reference sharing is connected but not accurate enough to qualify.** Two actual
-ADC channels now complete three simultaneous frames for both opposite and aligned input histories with one
-compensated reference pair and reservoir. Decision-window reference span ranges
-0.928–1.060 V in the aligned-input case for a1 V target, despite stable selected
-codes. Phase skew, mismatch and realistic supply coupling remain untested. Duplicating
-reference pairs instead still requires explicit area and power accounting.
-Apply the same scrutiny to paired TX DACs and their clocks.
-The stronger reference pair consumes about23.9mA unloaded in its isolated fixture;
-two copies would be about47.8mA (~158mW at3.3V) before conversion load and other
-bias services. That arithmetic is a planning scenario, not measured whole-chip
-power or a topology selection.
+Keep narrow and wide filter settings. Wider settings improve some clean-channel
+fixtures but admit more blockers; narrow settings must remain available.
+Longer synthetic training has helped diagnostic recovery, but does not establish
+recovery from a real protocol preamble. FPGA modem work must close that gap.
+Converter word width is not achieved ENOB. Driver output power, RF noise,
+linearity and modulation quality must close together at actual supply/headroom.
 
-The historical macro-contract sections describe earlier implementation passes;
-use scoped evidence reports and the active model guide for measured results. Neither the
-macro black boxes nor this diagram prove any circuit is tapeout-ready.
+## Wired paths and specialized pad branches
 
-Boundary targets remain one 1.25/2.5 Gb/s raw full-duplex wired lane and one
-approximately 2.4 GHz, 20 MHz-channel RF chain. RF transport formats are 8–12 bits
-at selectable 5/10/20/40 MS/s per I/Q component, not promises of that ENOB.
-RF and wired payload operation are exclusive; each configuration must fit its
-selected host slot schedule. Protocol CRC, Wi-Fi DSP/MAC and PCIe endpoint logic remain
-external. Optional on-chip protocol helpers must be bypassable and are not all
-implemented. A generic FPGA must still meet the selected GPIO and logic budgets.
+Serial RX: protected pads / selectable termination and common mode → equalizer
+→ slicers / phase sampler / independent CDR → deserializer and alignment.
+Serial TX: gearbox / serializer → programmable main/postcursor driver, idle and
+load detection. Preserve a DC-coupled TMDS electrical branch; a generic serial
+swing model alone does not qualify HDMI/DVI.
 
-Physical boundary: eight analog pins, twenty host data pins, two host clocks,
-four SPI pins, reset, reference, and fourteen supply/ground terminals = fifty.
-External matching/baluns/filtering, reference oscillator, board PA where required,
-and antenna are board resources, not hidden extra die terminals. The nominal
-core planning ceiling is 12.92 mm² within one approximately 3.93 × 5.12 mm slot;
-custom-ring fit remains unproven. Narrow temperature/supply operation is accepted.
+`WIRE_RX_P/N` also carries bidirectional USB D+/D− through local HS and FS/LS
+receivers/drivers, squelch, pulls and switchable termination. `WIRE_TX_P/N` is
+high impedance in USB operation. USB controller and VBUS circuitry remain
+external. No RF routing through the USB protection network.
 
-A significant architecture gap is that `pt_analog_physical` currently exposes
-sample/word streams and coarse trim/status, not all intended detection, timing,
-resource-ownership and diagnostic controls. The full diagram therefore cannot
-be claimed to be fully represented by the present top-level ports. Those
-interfaces must be expanded and verified as the physical blocks are integrated.
+HDMI/DVI uses multiple identical lane dies plus external forwarded-clock
+interface/fanout. Cross-die phase alignment and continuous FIFO operation remain
+requirements. DisplayPort is one RBR lane per die. HD-SDI requires external
+coax circuitry. The [README](../README.md) owns the application target list;
+these are conditional capabilities, not compliance claims.
 
-## Supporting autonomous-clock experiment (historical pass 828)
+## Supplies, references and board support
 
-`system_model/connected/autonomous_rf_lifecycle.py` provides a connected full-chip
-variant with a single RF synthesizer feeding both mixers and a separate wired TX
-synthesizer. It inherits live wired RX/CDR, managed configuration, independent RF
-input, converter pipelines and host transport. `autonomous_rf_screen.py` checks
-acquisition, reference loss, continuous phase propagation, independent RF response
-and simultaneous four-path traffic. The existing declared combined-profile report
-predates this variant; integrating its full impairment/quality envelope remains
-required. Oscillator parameters are assumed and physical qualification is absent.
+Keep seven supply/return pairs: CORE ×1, HOST ×2, WIRE ×2, RF ×1, PLL ×1.
+Provide startup/trimmed bias, buffered converter references, local reservoirs
+and isolation. Share reference sources only if dynamic loading permits; retain
+local buffers or replicas and account for their current. On-chip regulators
+and particular compensation networks are candidates, not frozen requirements.
 
-The expanded local wiring sheets separate P/N conductors and show RX offset and common-mode feedback, TX reconstruction-section feedback, wired sampling/CDR and loopback selection, and named control, clock, bias, reference and status connections. Named ports join the overview without extra package pins. Repeated I/Q circuits remain separate instances. Reconstruction biquads are a mathematical candidate, not a frozen circuit implementation.
+External regulation, clocks and many SMD passives are normal supported board
+resources. External loop filters or observations needing additional terminals
+are **not** implied by this allowance. The existing pin budget must accommodate
+any eventual off-chip analog connection explicitly.
 
+Do not freeze a particular decoupling network from the passing 1 MHz screens.
+Host edge harmonics, reference/LO feed impedance, regulator stability, capacitor
+ESL/derating and package/shared-return coupling remain unresolved. RF/wired
+exclusivity does not stop host switching or eliminate inactive leakage.
+See [power partition](power-partition.md) for budgets and conditional studies.
 
-## Shared wired-pad and RF connectivity
+## Observation and implementation order
 
-Keep RF_RX and RF_TX specialized. Keep the serial TX and RX analog paths local.
-Do not create a universal GHz crossbar or route RF through USB protection.
+Use SPI status/configuration, existing host sample/word capture and independent
+known external stimuli. FPGA/lab equipment stores captures. Shared-LO loopback
+alone can hide clock defects; no unbudgeted analog test pins or universal
+internal overload detector are assumed.
 
-```
-WIRE_TX_P/N <--- segmented serial driver <--- serializer / burst gate
-WIRE_RX_P/N ---> serial termination / CTLE / slicer / CDR ---> deserializer
-      |                                                   |
-      +<--> local USB branch <--> existing gearbox / timed line-state engine
-            HS driver + HS RX + squelch
-            FS/LS driver + single-ended RX
-            selectable pull-up / pull-down / HS termination
+Finish the connected mathematical model before new schematic/layout work.
+Then implement the complete transistor/passive schematic using the planned
+[six-family primitive library](analog-design-workflow.md), verify it, and carry
+the same requirements into extracted layout. The highest-risk gates remain
+clock quality, complete RF conversion and physical supply/pad/package coupling.
+Current evidence and uncertainty ranges live in [risk priorities](risk-priorities.md),
+not in this architecture drawing.
 
-RF_RX --> LNA --> I/Q mixers --> selectable LPF/PGA --> I/Q ADC --> host
-RF_TX <-- RF driver <-- I/Q mixers <-- LPF <-- I/Q DAC <-- host
-                         ^
-             shared reference and selectable synthesis services
+## Diagram ownership
 
-all paths <--> common bounded queues, timestamp/event scheduler, SPI and GPIO host
-```
+`docs/diagrams/generate_block_diagram.py` regenerates the overview and supporting
+sheets; `generate_normative_diagram.py` owns the normative SVG. The PNG is a
+render of that SVG. Differential conductors and words are bundled, and local
+bias/clock/control fanout is named rather than drawn as individual wires.
 
-**Pin aliases:** S03/S04 (WIRE_RX_P/N) become bidirectional USB_DP/USB_DM in USB
-mode. S01/S02 remain high impedance in that mode. USB is directly connected;
-serial AC-coupling components are mode-specific board assembly options. No
-external short between TX and RX pairs is assumed. Disable serial termination,
-receiver-detect stimulus and all incompatible drivers before enabling USB.
-The disabled USB branch's capacitance/leakage is included in every serial RX
-channel model. This is a physical design risk, not a free mux.
-
-For DisplayPort source use WIRE_TX; for sink use WIRE_RX. Leave the other path
-inactive. AUX transceiver, HPD level interface and connector power are external
-and connect directly to FPGA GPIOs. USB VBUS power switch/current limit, 5 V
-sensing/level translation and connector protection are also external to the
-chip and controlled by the FPGA. No VBUS pin or 5 V exposure is silently added
-to a 3.3 V analog pad. RF matching, filtering, antenna switch and any external
-PA remain board resources. A single board exposing all connectors needs a
-separately characterized external switch or assembly selection; a passive tee
-is not an acceptable universal connection.
-
-
-USB transport reuses the existing host frame engine with eight-word frames;
-the final circuit sheet's host block is the same resource as the normal frame
-engine, not an additional fast bus. Prefer reconfiguration of wired timing,
-current-source, slicer and sampling resources; the bidirectional local pad
-branch and FS/LS observations remain electrical obligations.
-
-## Multi-instance HDMI/DVI connectivity
-
-Three copies of the existing wired lane serve three TMDS data pairs. FPGA
-opaque-word links connect to H2D (source) or D2H (sink) on each die. A board
-clock driver/receiver handles the fourth cable pair and distributes the pixel
-reference to REF_IN. Common launch/word alignment and deskew live in the FPGA.
-Within each die add switchable DC current-sink/termination behavior and a
-forwarded-word x10 clock configuration; reuse the existing serializer/sampler.
-The multi-chip topology is shown on the final diagram sheet. No extra per-die
-terminals or simultaneous RF/wired payload are assumed.
-
-[HDMI/DVI board and pin plan](../../../docs/roadmap/programmable-transceiver-pin-plan.md#hdmidvi-through-multiple-instances).
+[Detailed circuit candidates](../docs/diagrams/transceiver-circuit-candidates.svg),
+[RF loaded-chain sheet](../docs/diagrams/transceiver-rf-loaded-detail.svg) and
+[video assembly sheet](../docs/diagrams/transceiver-video-detail.svg) preserve
+exploratory connectivity. Their specific filters, monitors, memories, regulators
+and numerical assumptions are not additional normative requirements. The
+selected architecture above takes precedence over those historical candidates.

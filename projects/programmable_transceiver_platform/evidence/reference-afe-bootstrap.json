@@ -1,0 +1,1309 @@
+{
+  "source_gds_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+  "raw_extraction_sha256": "8e6e496501969c8458d68faad49cb9e5c8a6929d1c68fe080a46d9019b1552b0",
+  "model_sha256": {
+    "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+    "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+  },
+  "bootstrap_capacitors": [
+    {
+      "type": "mim_2ff",
+      "terminals": {
+        "A": "$5",
+        "B": "$13"
+      },
+      "parameters": {
+        "C": 5.760000000000001e-13,
+        "A": 288.0,
+        "P": 72.0
+      }
+    },
+    {
+      "type": "mim_2ff",
+      "terminals": {
+        "A": "$9",
+        "B": "$14"
+      },
+      "parameters": {
+        "C": 5.760000000000001e-13,
+        "A": 288.0,
+        "P": 72.0
+      }
+    }
+  ],
+  "branches": [
+    {
+      "suffix": "p",
+      "gate": "$10",
+      "bootstrap_top": "$13",
+      "total_sampling_width_um": 48.0
+    },
+    {
+      "suffix": "n",
+      "gate": "$11",
+      "bootstrap_top": "$14",
+      "total_sampling_width_um": 48.0
+    }
+  ],
+  "extracted_bulk_audit": {
+    "terminal_counts": {
+      "nmos": {
+        "vss": 24
+      },
+      "nmos6": {
+        "vss": 10
+      },
+      "pmos6": {
+        "vdd": 10
+      }
+    },
+    "isolated_pwell_regions": 0,
+    "deep_nwell_regions": 0,
+    "uncovered_gate_area_um2": {
+      "nmos": 0.0,
+      "pmos": 0.0
+    }
+  },
+  "cases": [
+    {
+      "input_positive_v": 0.3,
+      "body_case": "extracted",
+      "max_step_ns": 0.1,
+      "track_output_v": 0.2999999998953508,
+      "track_error_v": -1.046491782119574e-10,
+      "track_gate_v": 3.2166638560251535,
+      "track_gate_overdrive_v": 2.9166638560251537,
+      "bootstrap_top_v": 3.216663850195875,
+      "hold_output_v": 0.24837661128357585,
+      "gate_peak_v": 3.326006015542573
+    },
+    {
+      "input_positive_v": 0.3,
+      "body_case": "counterfactual_tracking_wells",
+      "max_step_ns": 0.1,
+      "track_output_v": 0.29999999986791387,
+      "track_error_v": -1.320861198195189e-10,
+      "track_gate_v": 3.2522145704575993,
+      "track_gate_overdrive_v": 2.9522145704575995,
+      "bootstrap_top_v": 3.2522145745207043,
+      "hold_output_v": 0.2486723442500105,
+      "gate_peak_v": 3.379946473084058
+    },
+    {
+      "input_positive_v": 1.65,
+      "body_case": "extracted",
+      "max_step_ns": 0.1,
+      "track_output_v": 1.6499940148442573,
+      "track_error_v": -5.985155742571635e-06,
+      "track_gate_v": 3.988555117286684,
+      "track_gate_overdrive_v": 2.3385551172866843,
+      "bootstrap_top_v": 3.9890950134811507,
+      "hold_output_v": 1.5813115913994633,
+      "gate_peak_v": 4.079207692655031
+    },
+    {
+      "input_positive_v": 1.65,
+      "body_case": "counterfactual_tracking_wells",
+      "max_step_ns": 0.1,
+      "track_output_v": 1.6499999992258696,
+      "track_error_v": -7.741303154062962e-10,
+      "track_gate_v": 4.481545869276091,
+      "track_gate_overdrive_v": 2.831545869276091,
+      "bootstrap_top_v": 4.4815458733404325,
+      "hold_output_v": 1.5787636679709873,
+      "gate_peak_v": 4.647617486021187
+    },
+    {
+      "input_positive_v": 3.0,
+      "body_case": "extracted",
+      "max_step_ns": 0.1,
+      "track_output_v": 2.999828604013878,
+      "track_error_v": -0.000171395986122036,
+      "track_gate_v": 3.9982125740556373,
+      "track_gate_overdrive_v": 0.9982125740556373,
+      "bootstrap_top_v": 3.9991282001249018,
+      "hold_output_v": 2.953380241812127,
+      "gate_peak_v": 4.126785659708667
+    },
+    {
+      "input_positive_v": 3.0,
+      "body_case": "counterfactual_tracking_wells",
+      "max_step_ns": 0.1,
+      "track_output_v": 2.999999998477342,
+      "track_error_v": -1.5226579996863165e-09,
+      "track_gate_v": 5.688712881090973,
+      "track_gate_overdrive_v": 2.6887128810909733,
+      "bootstrap_top_v": 5.688712885357877,
+      "hold_output_v": 2.914312718619769,
+      "gate_peak_v": 5.855318670635135
+    },
+    {
+      "input_positive_v": 3.0,
+      "body_case": "extracted",
+      "max_step_ns": 0.05,
+      "track_output_v": 2.999828577308218,
+      "track_error_v": -0.0001714226917819417,
+      "track_gate_v": 3.9982225890506533,
+      "track_gate_overdrive_v": 0.9982225890506533,
+      "bootstrap_top_v": 3.9991385637046486,
+      "hold_output_v": 2.9533800064895797,
+      "gate_peak_v": 4.126763025394424
+    }
+  ],
+  "dynamic_sampling": [
+    {
+      "output_load_pf": 0.666,
+      "single_ended_peak_v": 1.5,
+      "input_hz": 4921875.0,
+      "body_case": "extracted",
+      "max_step_ns": 0.2,
+      "sample_hz": 20000000.0,
+      "samples": 256,
+      "hold_observation_ns": 40,
+      "spectra": {
+        "differential": {
+          "fundamental_peak_v": 3.012270459192355,
+          "sfdr_db": 42.602098921497245,
+          "deterministic_sndr_db": 38.326156629075015,
+          "largest_spur_bin": 67
+        },
+        "positive_only": {
+          "fundamental_peak_v": 1.5061367802400247,
+          "sfdr_db": 38.21685764580335,
+          "deterministic_sndr_db": 33.837262660086104,
+          "largest_spur_bin": 126
+        }
+      }
+    },
+    {
+      "output_load_pf": 0.666,
+      "single_ended_peak_v": 1.5,
+      "input_hz": 4921875.0,
+      "body_case": "counterfactual_tracking_wells",
+      "max_step_ns": 0.2,
+      "sample_hz": 20000000.0,
+      "samples": 256,
+      "hold_observation_ns": 40,
+      "spectra": {
+        "differential": {
+          "fundamental_peak_v": 2.9617323384603615,
+          "sfdr_db": 73.47275904505943,
+          "deterministic_sndr_db": 73.16911737573658,
+          "largest_spur_bin": 67
+        },
+        "positive_only": {
+          "fundamental_peak_v": 1.4808664008948667,
+          "sfdr_db": 57.92170623280832,
+          "deterministic_sndr_db": 57.78785202894228,
+          "largest_spur_bin": 126
+        }
+      }
+    },
+    {
+      "output_load_pf": 0.666,
+      "single_ended_peak_v": 1.5,
+      "input_hz": 4921875.0,
+      "body_case": "extracted",
+      "max_step_ns": 0.1,
+      "sample_hz": 20000000.0,
+      "samples": 256,
+      "hold_observation_ns": 40,
+      "spectra": {
+        "differential": {
+          "fundamental_peak_v": 3.0122593086786797,
+          "sfdr_db": 42.60674064475413,
+          "deterministic_sndr_db": 38.330403588519964,
+          "largest_spur_bin": 67
+        },
+        "positive_only": {
+          "fundamental_peak_v": 1.5061306877914966,
+          "sfdr_db": 38.219905114779586,
+          "deterministic_sndr_db": 33.841277417394046,
+          "largest_spur_bin": 126
+        }
+      }
+    },
+    {
+      "output_load_pf": 0.666,
+      "single_ended_peak_v": 0.5,
+      "input_hz": 4921875.0,
+      "body_case": "extracted",
+      "max_step_ns": 0.2,
+      "sample_hz": 20000000.0,
+      "samples": 256,
+      "hold_observation_ns": 40,
+      "spectra": {
+        "differential": {
+          "fundamental_peak_v": 0.9953262867675188,
+          "sfdr_db": 75.41974643047769,
+          "deterministic_sndr_db": 75.40746549856762,
+          "largest_spur_bin": 67
+        },
+        "positive_only": {
+          "fundamental_peak_v": 0.4976636278337274,
+          "sfdr_db": 53.30437906853714,
+          "deterministic_sndr_db": 53.277357948573126,
+          "largest_spur_bin": 126
+        }
+      }
+    },
+    {
+      "output_load_pf": 1.5,
+      "single_ended_peak_v": 1.5,
+      "input_hz": 4921875.0,
+      "body_case": "extracted",
+      "max_step_ns": 0.2,
+      "sample_hz": 20000000.0,
+      "samples": 256,
+      "hold_observation_ns": 40,
+      "spectra": {
+        "differential": {
+          "fundamental_peak_v": 3.0172727884787642,
+          "sfdr_db": 39.574927932006936,
+          "deterministic_sndr_db": 36.01834162898959,
+          "largest_spur_bin": 67
+        },
+        "positive_only": {
+          "fundamental_peak_v": 1.5086377007389424,
+          "sfdr_db": 38.5078952991838,
+          "deterministic_sndr_db": 32.328520526187454,
+          "largest_spur_bin": 126
+        }
+      }
+    },
+    {
+      "output_load_pf": 3.0,
+      "single_ended_peak_v": 1.5,
+      "input_hz": 4921875.0,
+      "body_case": "extracted",
+      "max_step_ns": 0.2,
+      "sample_hz": 20000000.0,
+      "samples": 256,
+      "hold_observation_ns": 40,
+      "spectra": {
+        "differential": {
+          "fundamental_peak_v": 3.007158749962449,
+          "sfdr_db": 36.973351915042,
+          "deterministic_sndr_db": 34.25483075469768,
+          "largest_spur_bin": 67
+        },
+        "positive_only": {
+          "fundamental_peak_v": 1.5035804596517504,
+          "sfdr_db": 36.75446556057373,
+          "deterministic_sndr_db": 30.681091238126964,
+          "largest_spur_bin": 126
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Nominal PDK,25C,3.3V supply,20MHz assigned clock with15ns high phase,constant differential inputs.",
+    "Assigned .666pF plate-only baseline and1.5/3pF sensitivity loads; no full capacitor matrix, reference switching, preamp, pads or package.",
+    "3.3V versus6V gate classes extracted using Dualgate55/0; ideal2fF/um2 MIM and conductive wells.",
+    "Counterfactual changes two PMOS bulk ties per branch to track bootstrap top; not the fabricated layout or an implementable fix without well/layout changes.",
+    "Dynamic screen observes held analog differential samples, not ADC codes; no comparator, DAC switching, noise or quantization. Not measured ENOB or oxide reliability qualification."
+  ],
+  "near_nyquist_harmonic_screen": {
+    "cases": [
+      {
+        "selection": "figure7-low",
+        "analysis_script_sha256": "bbf6df0cdb77e78a47ae8948a69eda3e6d7a80953c534edfb552740bc99e71b1",
+        "source_gds_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+        "raw_extraction_sha256": "8e6e496501969c8458d68faad49cb9e5c8a6929d1c68fe080a46d9019b1552b0",
+        "model_sha256": {
+          "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+          "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+        },
+        "bootstrap_capacitors": [
+          {
+            "type": "mim_2ff",
+            "terminals": {
+              "A": "$5",
+              "B": "$13"
+            },
+            "parameters": {
+              "C": 5.760000000000001e-13,
+              "A": 288.0,
+              "P": 72.0
+            }
+          },
+          {
+            "type": "mim_2ff",
+            "terminals": {
+              "A": "$9",
+              "B": "$14"
+            },
+            "parameters": {
+              "C": 5.760000000000001e-13,
+              "A": 288.0,
+              "P": 72.0
+            }
+          }
+        ],
+        "branches": [
+          {
+            "suffix": "p",
+            "gate": "$10",
+            "bootstrap_top": "$13",
+            "total_sampling_width_um": 48.0
+          },
+          {
+            "suffix": "n",
+            "gate": "$11",
+            "bootstrap_top": "$14",
+            "total_sampling_width_um": 48.0
+          }
+        ],
+        "extracted_bulk_audit": {
+          "terminal_counts": {
+            "nmos": {
+              "vss": 24
+            },
+            "nmos6": {
+              "vss": 10
+            },
+            "pmos6": {
+              "vdd": 10
+            }
+          },
+          "isolated_pwell_regions": 0,
+          "deep_nwell_regions": 0,
+          "uncovered_gate_area_um2": {
+            "nmos": 0.0,
+            "pmos": 0.0
+          }
+        },
+        "cases": [],
+        "dynamic_sampling": [
+          {
+            "output_load_pf": 0.666,
+            "single_ended_peak_v": 0.765,
+            "input_hz": 4960937.5,
+            "body_case": "extracted",
+            "max_step_ns": 0.2,
+            "sample_hz": 10000000.0,
+            "samples": 256,
+            "hold_observation_ns": 40,
+            "spectra": {
+              "differential": {
+                "harmonics_3_5_7_dbc": [
+                  -68.62494010528229,
+                  -92.14449576872136,
+                  -97.59527392215819
+                ],
+                "fundamental_peak_v": 1.524434315986571,
+                "sfdr_db": 68.62494010528229,
+                "deterministic_sndr_db": 68.59715348354155,
+                "largest_spur_bin": 125
+              },
+              "positive_only": {
+                "harmonics_3_5_7_dbc": [
+                  -68.63149385355891,
+                  -92.11672794540817,
+                  -97.63766609033433
+                ],
+                "fundamental_peak_v": 0.7622174897463198,
+                "sfdr_db": 48.88986195822976,
+                "deterministic_sndr_db": 48.84162626932901,
+                "largest_spur_bin": 2
+              }
+            }
+          }
+        ],
+        "limitations": [
+          "Nominal PDK,25C,3.3V supply,10000000.0Hz assigned clock with15ns high phase. Figure7 mode matches annotated tone/rate approximately, not recovered input amplitude, acquisition duty or load.",
+          "Assigned .666pF plate-only baseline and1.5/3pF sensitivity loads; no full capacitor matrix, reference switching, preamp, pads or package.",
+          "3.3V versus6V gate classes extracted using Dualgate55/0; ideal2fF/um2 MIM and conductive wells.",
+          "Counterfactual changes two PMOS bulk ties per branch to track bootstrap top; not the fabricated layout or an implementable fix without well/layout changes.",
+          "Dynamic screen observes held analog differential samples, not ADC codes; no comparator, DAC switching, noise or quantization. Not measured ENOB or oxide reliability qualification."
+        ]
+      },
+      {
+        "selection": "figure7-high",
+        "analysis_script_sha256": "bbf6df0cdb77e78a47ae8948a69eda3e6d7a80953c534edfb552740bc99e71b1",
+        "source_gds_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+        "raw_extraction_sha256": "8e6e496501969c8458d68faad49cb9e5c8a6929d1c68fe080a46d9019b1552b0",
+        "model_sha256": {
+          "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+          "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+        },
+        "bootstrap_capacitors": [
+          {
+            "type": "mim_2ff",
+            "terminals": {
+              "A": "$5",
+              "B": "$13"
+            },
+            "parameters": {
+              "C": 5.760000000000001e-13,
+              "A": 288.0,
+              "P": 72.0
+            }
+          },
+          {
+            "type": "mim_2ff",
+            "terminals": {
+              "A": "$9",
+              "B": "$14"
+            },
+            "parameters": {
+              "C": 5.760000000000001e-13,
+              "A": 288.0,
+              "P": 72.0
+            }
+          }
+        ],
+        "branches": [
+          {
+            "suffix": "p",
+            "gate": "$10",
+            "bootstrap_top": "$13",
+            "total_sampling_width_um": 48.0
+          },
+          {
+            "suffix": "n",
+            "gate": "$11",
+            "bootstrap_top": "$14",
+            "total_sampling_width_um": 48.0
+          }
+        ],
+        "extracted_bulk_audit": {
+          "terminal_counts": {
+            "nmos": {
+              "vss": 24
+            },
+            "nmos6": {
+              "vss": 10
+            },
+            "pmos6": {
+              "vdd": 10
+            }
+          },
+          "isolated_pwell_regions": 0,
+          "deep_nwell_regions": 0,
+          "uncovered_gate_area_um2": {
+            "nmos": 0.0,
+            "pmos": 0.0
+          }
+        },
+        "cases": [],
+        "dynamic_sampling": [
+          {
+            "output_load_pf": 0.666,
+            "single_ended_peak_v": 1.5,
+            "input_hz": 4960937.5,
+            "body_case": "extracted",
+            "max_step_ns": 0.2,
+            "sample_hz": 10000000.0,
+            "samples": 256,
+            "hold_observation_ns": 40,
+            "spectra": {
+              "differential": {
+                "harmonics_3_5_7_dbc": [
+                  -42.519544876665364,
+                  -42.83064310222081,
+                  -45.84544576615045
+                ],
+                "fundamental_peak_v": 3.0124175557163997,
+                "sfdr_db": 42.519544876665364,
+                "deterministic_sndr_db": 38.258656994902616,
+                "largest_spur_bin": 125
+              },
+              "positive_only": {
+                "harmonics_3_5_7_dbc": [
+                  -42.518928578934585,
+                  -42.83009621702617,
+                  -45.84439945072883
+                ],
+                "fundamental_peak_v": 1.5062102881620247,
+                "sfdr_db": 38.172639624020384,
+                "deterministic_sndr_db": 33.77948130021928,
+                "largest_spur_bin": 2
+              }
+            }
+          }
+        ],
+        "limitations": [
+          "Nominal PDK,25C,3.3V supply,10000000.0Hz assigned clock with15ns high phase. Figure7 mode matches annotated tone/rate approximately, not recovered input amplitude, acquisition duty or load.",
+          "Assigned .666pF plate-only baseline and1.5/3pF sensitivity loads; no full capacitor matrix, reference switching, preamp, pads or package.",
+          "3.3V versus6V gate classes extracted using Dualgate55/0; ideal2fF/um2 MIM and conductive wells.",
+          "Counterfactual changes two PMOS bulk ties per branch to track bootstrap top; not the fabricated layout or an implementable fix without well/layout changes.",
+          "Dynamic screen observes held analog differential samples, not ADC codes; no comparator, DAC switching, noise or quantization. Not measured ENOB or oxide reliability qualification."
+        ]
+      },
+      {
+        "selection": "figure7-loaded",
+        "analysis_script_sha256": "bbf6df0cdb77e78a47ae8948a69eda3e6d7a80953c534edfb552740bc99e71b1",
+        "source_gds_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+        "raw_extraction_sha256": "8e6e496501969c8458d68faad49cb9e5c8a6929d1c68fe080a46d9019b1552b0",
+        "model_sha256": {
+          "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+          "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+        },
+        "bootstrap_capacitors": [
+          {
+            "type": "mim_2ff",
+            "terminals": {
+              "A": "$5",
+              "B": "$13"
+            },
+            "parameters": {
+              "C": 5.760000000000001e-13,
+              "A": 288.0,
+              "P": 72.0
+            }
+          },
+          {
+            "type": "mim_2ff",
+            "terminals": {
+              "A": "$9",
+              "B": "$14"
+            },
+            "parameters": {
+              "C": 5.760000000000001e-13,
+              "A": 288.0,
+              "P": 72.0
+            }
+          }
+        ],
+        "branches": [
+          {
+            "suffix": "p",
+            "gate": "$10",
+            "bootstrap_top": "$13",
+            "total_sampling_width_um": 48.0
+          },
+          {
+            "suffix": "n",
+            "gate": "$11",
+            "bootstrap_top": "$14",
+            "total_sampling_width_um": 48.0
+          }
+        ],
+        "extracted_bulk_audit": {
+          "terminal_counts": {
+            "nmos": {
+              "vss": 24
+            },
+            "nmos6": {
+              "vss": 10
+            },
+            "pmos6": {
+              "vdd": 10
+            }
+          },
+          "isolated_pwell_regions": 0,
+          "deep_nwell_regions": 0,
+          "uncovered_gate_area_um2": {
+            "nmos": 0.0,
+            "pmos": 0.0
+          }
+        },
+        "cases": [],
+        "dynamic_sampling": [
+          {
+            "output_load_pf": 1.5,
+            "single_ended_peak_v": 1.5,
+            "input_hz": 4960937.5,
+            "body_case": "extracted",
+            "max_step_ns": 0.2,
+            "sample_hz": 10000000.0,
+            "samples": 256,
+            "hold_observation_ns": 40,
+            "spectra": {
+              "differential": {
+                "harmonics_3_5_7_dbc": [
+                  -39.550224495285335,
+                  -40.56071977543098,
+                  -44.820293372716236
+                ],
+                "fundamental_peak_v": 3.01714147982943,
+                "sfdr_db": 39.550224495285335,
+                "deterministic_sndr_db": 36.01636072556412,
+                "largest_spur_bin": 125
+              },
+              "positive_only": {
+                "harmonics_3_5_7_dbc": [
+                  -39.54980920040187,
+                  -40.56028505543213,
+                  -44.8197340062005
+                ],
+                "fundamental_peak_v": 1.5085720227143304,
+                "sfdr_db": 38.49168539884094,
+                "deterministic_sndr_db": 32.32644065280917,
+                "largest_spur_bin": 2
+              }
+            }
+          }
+        ],
+        "limitations": [
+          "Nominal PDK,25C,3.3V supply,10000000.0Hz assigned clock with15ns high phase. Figure7 mode matches annotated tone/rate approximately, not recovered input amplitude, acquisition duty or load.",
+          "Assigned .666pF plate-only baseline and1.5/3pF sensitivity loads; no full capacitor matrix, reference switching, preamp, pads or package.",
+          "3.3V versus6V gate classes extracted using Dualgate55/0; ideal2fF/um2 MIM and conductive wells.",
+          "Counterfactual changes two PMOS bulk ties per branch to track bootstrap top; not the fabricated layout or an implementable fix without well/layout changes.",
+          "Dynamic screen observes held analog differential samples, not ADC codes; no comparator, DAC switching, noise or quantization. Not measured ENOB or oxide reliability qualification."
+        ]
+      },
+      {
+        "selection": "figure7-refined",
+        "analysis_script_sha256": "aa6c15f6fd315184afcfc68e9e8039451f873c6f4067a753490f2d83d120ec15",
+        "source_gds_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+        "raw_extraction_sha256": "8e6e496501969c8458d68faad49cb9e5c8a6929d1c68fe080a46d9019b1552b0",
+        "model_sha256": {
+          "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+          "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+        },
+        "bootstrap_capacitors": [
+          {
+            "type": "mim_2ff",
+            "terminals": {
+              "A": "$5",
+              "B": "$13"
+            },
+            "parameters": {
+              "C": 5.760000000000001e-13,
+              "A": 288.0,
+              "P": 72.0
+            }
+          },
+          {
+            "type": "mim_2ff",
+            "terminals": {
+              "A": "$9",
+              "B": "$14"
+            },
+            "parameters": {
+              "C": 5.760000000000001e-13,
+              "A": 288.0,
+              "P": 72.0
+            }
+          }
+        ],
+        "branches": [
+          {
+            "suffix": "p",
+            "gate": "$10",
+            "bootstrap_top": "$13",
+            "total_sampling_width_um": 48.0
+          },
+          {
+            "suffix": "n",
+            "gate": "$11",
+            "bootstrap_top": "$14",
+            "total_sampling_width_um": 48.0
+          }
+        ],
+        "extracted_bulk_audit": {
+          "terminal_counts": {
+            "nmos": {
+              "vss": 24
+            },
+            "nmos6": {
+              "vss": 10
+            },
+            "pmos6": {
+              "vdd": 10
+            }
+          },
+          "isolated_pwell_regions": 0,
+          "deep_nwell_regions": 0,
+          "uncovered_gate_area_um2": {
+            "nmos": 0.0,
+            "pmos": 0.0
+          }
+        },
+        "cases": [],
+        "dynamic_sampling": [
+          {
+            "output_load_pf": 0.666,
+            "single_ended_peak_v": 1.5,
+            "input_hz": 4960937.5,
+            "body_case": "extracted",
+            "max_step_ns": 0.1,
+            "sample_hz": 10000000.0,
+            "samples": 256,
+            "hold_observation_ns": 40,
+            "spectra": {
+              "differential": {
+                "harmonics_3_5_7_dbc": [
+                  -42.52415549097397,
+                  -42.83479043889355,
+                  -45.849171612590865
+                ],
+                "fundamental_peak_v": 3.0124061807282967,
+                "sfdr_db": 42.52415549097397,
+                "deterministic_sndr_db": 38.262905734187,
+                "largest_spur_bin": 125
+              },
+              "positive_only": {
+                "harmonics_3_5_7_dbc": [
+                  -42.523891600600365,
+                  -42.8346141653543,
+                  -45.84838632183535
+                ],
+                "fundamental_peak_v": 1.5062040230488714,
+                "sfdr_db": 38.17568997403941,
+                "deterministic_sndr_db": 33.78350061893051,
+                "largest_spur_bin": 2
+              }
+            },
+            "held_samples_v": {
+              "positive": [
+                1.9378438274185568,
+                1.2626048557672997,
+                1.866266849371741,
+                1.334839522574162,
+                1.7941336534430148,
+                1.4077604606657999,
+                1.7216033796073231,
+                1.4811997090762583,
+                1.6488339200517252,
+                1.5550015302060287,
+                1.5759935553506341,
+                1.6289997492081403,
+                1.5032496766131171,
+                1.7030153760471307,
+                1.430771619683859,
+                1.776875105914332,
+                1.3587263756751753,
+                1.850405884525886,
+                1.2872768648161736,
+                1.9234391077212278,
+                1.2165864666606352,
+                1.995809650038234,
+                1.1467839545124687,
+                2.0673496068871695,
+                1.0779813318340676,
+                2.137883947719363,
+                1.0103558059777717,
+                2.207258492079921,
+                0.9440989430582806,
+                2.275331846590496,
+                0.8793796354821501,
+                2.341962277077208,
+                0.8163528313475776,
+                2.4069982741534135,
+                0.7551701530212778,
+                2.470297913464343,
+                0.6959781836649105,
+                2.5317538501055252,
+                0.6389201964185913,
+                2.5913293890020648,
+                0.584131769585768,
+                2.64912028903302,
+                0.5317445958902891,
+                2.705488923566377,
+                0.4818855005372317,
+                2.761408444488096,
+                0.4346720058554361,
+                2.8195472956681717,
+                0.39021907076338064,
+                2.8854406853646646,
+                0.34863206186671364,
+                2.9540163769237235,
+                0.31000582228592705,
+                3.0072528476043576,
+                0.27443863020379317,
+                3.042076705599598,
+                0.2420122165697231,
+                3.063581704498143,
+                0.21280052276459535,
+                3.076548517036251,
+                0.18687487060446084,
+                3.0840639353022454,
+                0.16429034468178702,
+                3.08789472526627,
+                0.1450996258415973,
+                3.0890387239646677,
+                0.1293451770897108,
+                3.088195955481543,
+                0.11706577535889977,
+                3.0860222563690733,
+                0.1082868450303336,
+                3.0829624464946326,
+                0.10302984367074357,
+                3.0791780216815514,
+                0.10130711452782831,
+                3.07456499976488,
+                0.10312321795646265,
+                3.0688443653836264,
+                0.1084770844711585,
+                3.06163936788862,
+                0.11735471422952151,
+                3.052493986335254,
+                0.12974399801184058,
+                3.040877648512588,
+                0.14561086050762798,
+                3.0262119985343303,
+                0.16492787401314868,
+                3.0079416414960893,
+                0.18765209636121616,
+                2.985640565248232,
+                0.21373328409525408,
+                2.959101248191134,
+                0.24310719785575602,
+                2.9283475949815387,
+                0.2757138389368953,
+                2.8935692874281234,
+                0.31147719516650335,
+                2.8550334145708276,
+                0.3503061979654344,
+                2.813019510541537,
+                0.39211112199757664,
+                2.767789354121766,
+                0.4367922049803636,
+                2.7195798544016454,
+                0.4842456244086163,
+                2.6686030493277855,
+                0.5343547375001448,
+                2.6150475924625187,
+                0.5870127119362247,
+                2.559086750536362,
+                0.6421619037793966,
+                2.500881765868015,
+                0.6997171518239311,
+                2.440587700211009,
+                0.7594995019796392,
+                2.3783599313724744,
+                0.8213441267198713,
+                2.3143551037155015,
+                0.8850995865451159,
+                2.248735382333328,
+                0.9505927219851101,
+                2.1816645601333033,
+                1.0176670077118262,
+                2.113306627621345,
+                1.0861691036679244,
+                2.0438227068770263,
+                1.1559346364955512,
+                1.9733763455442286,
+                1.2268028170793146,
+                1.9021325882084887,
+                1.298624390130065,
+                1.8302599033425542,
+                1.3712250087745268,
+                1.7579087296053275,
+                1.4444260143402792,
+                1.6852384031920453,
+                1.5180668667038952,
+                1.612412066732667,
+                1.5919864142197904,
+                1.5395984488409413,
+                1.666016174390658,
+                1.4669656557324033,
+                1.739975102694278,
+                1.3946850298190163,
+                1.8136924878659266,
+                1.3229159367738148,
+                1.8869953292632657,
+                1.2518289913531937,
+                1.959717349952236,
+                1.1815671738353077,
+                2.031693551767487,
+                1.1122473539673219,
+                2.102752491206921,
+                1.0440083680678327,
+                2.1727253509875912,
+                0.9770460730944842,
+                2.2414663302399576,
+                0.9115384249496145,
+                2.308836973740301,
+                0.8476453321244102,
+                2.3746889879943596,
+                0.7855213746859897,
+                2.438872953596007,
+                0.7253157552457639,
+                2.501260848707477,
+                0.6671735286435242,
+                2.5617749960471654,
+                0.6112337197912154,
+                2.6204340239025763,
+                0.5576303759116341,
+                2.677442607233547,
+                0.5064915289805668,
+                2.7334004040880733,
+                0.4579409587154656,
+                2.789904327044906,
+                0.41209365872215625,
+                2.851248591506148,
+                0.36906122880638287,
+                2.9206905891217527,
+                0.32894312063117037,
+                2.9831160357748145,
+                0.29183506902664413,
+                3.0266855346267914,
+                0.25783121650609564,
+                3.054155683170138,
+                0.22699934080740275,
+                3.0709019359910035,
+                0.19942507868714662,
+                3.0808526535644143,
+                0.17516166690466559,
+                3.0863655149646023,
+                0.15426780161626838,
+                3.088756460299068,
+                0.13678977754558141,
+                3.088823726727904,
+                0.12276938218892172,
+                3.0872399814873352,
+                0.11223736554078262,
+                3.0845865061047792,
+                0.1052172908949116,
+                3.0811618042172824,
+                0.10172622688950221,
+                3.0769897009562777,
+                0.10177283181251244,
+                3.071864750906731,
+                0.10535778440464934,
+                3.065454064830302,
+                0.11247744377963641,
+                3.057340742953973,
+                0.12311219176897627,
+                3.0470303366898963,
+                0.137242957866308,
+                3.033962416959689,
+                0.15484081656132503,
+                3.0175583282308356,
+                0.1758687721747826,
+                2.997313650491863,
+                0.2002756947495429,
+                2.9729040862431075,
+                0.22801421297421995,
+                2.9442421619201515,
+                0.2590111668496569,
+                2.9114457853886555,
+                0.29320509091192726,
+                2.8747534033469337,
+                0.3305143830292319,
+                2.8344442960729306,
+                0.3708416989019659,
+                2.7907909845816503,
+                0.4141001876801726,
+                2.744043052326186,
+                0.4601791587174406,
+                2.694425137574484,
+                0.5089781506068553,
+                2.6421365504303007,
+                0.5603713455738758,
+                2.587357446857901,
+                0.6142761202999669,
+                2.5302549177022406,
+                0.6706484597310333,
+                2.4709861811773446,
+                0.7293402072352896,
+                2.409705633835832,
+                0.7901731563957324,
+                2.3465701442118836,
+                0.8529938824365976,
+                2.2817367413418475,
+                0.9176395323310007,
+                2.2153710757837826,
+                0.9839417924831428,
+                2.1476360707167155,
+                1.051749543335818,
+                2.078695554383237,
+                1.1209040075188732,
+                2.008709709486603,
+                1.1912400128218137
+              ],
+              "negative": [
+                1.2268060654145492,
+                1.9021329740123694,
+                1.298628676378737,
+                1.8302584258438237,
+                1.3712258367408987,
+                1.7579076421148085,
+                1.4444247235827745,
+                1.6852343065206916,
+                1.5180655669223602,
+                1.6124095794865319,
+                1.5919883343266288,
+                1.5395968950345538,
+                1.6660157855959972,
+                1.4669635135100962,
+                1.739974527714727,
+                1.394686047471872,
+                1.8136924710454325,
+                1.3229194353155145,
+                1.8869961739716863,
+                1.2518297949790562,
+                1.9597183269992993,
+                1.1815683945753908,
+                2.03169428222031,
+                1.1122470539991214,
+                2.1027534518006896,
+                1.044008290951058,
+                2.172726142253514,
+                0.9770431303560743,
+                2.241467075907772,
+                0.9115360669214793,
+                2.308837604062615,
+                0.8476449349173829,
+                2.3746897845028343,
+                0.785522145864589,
+                2.4388739089211073,
+                0.7253174742487156,
+                2.501261886852508,
+                0.6671747971282725,
+                2.561775704281213,
+                0.6112344591293667,
+                2.6204351801349226,
+                0.5576302349517976,
+                2.6774438604734687,
+                0.5064918694351994,
+                2.7334023714586047,
+                0.4579420376546121,
+                2.789905767171744,
+                0.41209620489575655,
+                2.851248774763721,
+                0.3690639610000166,
+                2.920688896600518,
+                0.3289497872697349,
+                2.983112937492543,
+                0.29184439550636665,
+                3.02668155002098,
+                0.25783579921389166,
+                3.0541526150202642,
+                0.22701144946508509,
+                3.070899263202992,
+                0.19942872028617822,
+                3.0808505346520216,
+                0.17516507816133747,
+                3.086363948510879,
+                0.1542729271089067,
+                3.088755472263096,
+                0.13679548607316963,
+                3.0888232998605,
+                0.12277420050400165,
+                3.0872399166608893,
+                0.11224156652492515,
+                3.0845865853442223,
+                0.1052211953264304,
+                3.0811618789810775,
+                0.10172857660996971,
+                3.0769897387885816,
+                0.10177390129954224,
+                3.07186474645991,
+                0.10536030904918459,
+                3.065454026685569,
+                0.11247776562957032,
+                3.0573407301405586,
+                0.123114743492903,
+                3.047030323978342,
+                0.13724836653136072,
+                3.033962431751692,
+                0.15484765862026675,
+                3.0175583660745118,
+                0.17587156419731248,
+                2.9973137238972094,
+                0.20028205601382507,
+                2.9729041167888073,
+                0.22801583855449306,
+                2.9442421176445,
+                0.2590209634453626,
+                2.9114456684366017,
+                0.2932125236691901,
+                2.8747532765062283,
+                0.33051594691568226,
+                2.834444171645267,
+                0.37084336956986047,
+                2.790790858703072,
+                0.41409877005110063,
+                2.744043044210249,
+                0.4601787236611908,
+                2.6944250762703166,
+                0.5089739930441888,
+                2.6421366859992066,
+                0.5603707239111166,
+                2.5873577135937476,
+                0.6142751913059096,
+                2.530255441556862,
+                0.6706481521310274,
+                2.470987099845737,
+                0.7293426036286857,
+                2.4097069023591544,
+                0.7901739895155666,
+                2.3465697326247046,
+                0.8529936334421128,
+                2.281737232469584,
+                0.917635154209856,
+                2.215370942262962,
+                0.983937485817816,
+                2.147636312896132,
+                1.051747763577311,
+                2.0786940785235424,
+                1.1209031200342838,
+                2.008708473964693,
+                1.191241952439661,
+                1.93784192545301,
+                1.262607335145052,
+                1.866265993323377,
+                1.3348417385764275,
+                1.7941327536583682,
+                1.407760550318423,
+                1.7216018514772227,
+                1.481200157387697,
+                1.6488318250368534,
+                1.5550016118610281,
+                1.5759908308340107,
+                1.6289999145562168,
+                1.503246700359151,
+                1.7030142348498312,
+                1.4307713740885823,
+                1.7768747270299898,
+                1.3587284338463572,
+                1.8504069326343235,
+                1.287279831297423,
+                1.9234399179160313,
+                1.2165889066000175,
+                1.9958103257894402,
+                1.1467826103407546,
+                2.0673503811613094,
+                1.0779812743213435,
+                2.137884747123623,
+                1.0103547948362082,
+                2.2072593230546227,
+                0.9440976282951045,
+                2.2753326620898258,
+                0.8793788044947131,
+                2.341962810240694,
+                0.8163542816872725,
+                2.406999461146837,
+                0.7551715811181787,
+                2.470298935649657,
+                0.6959796175476438,
+                2.5317550771772264,
+                0.638920874042865,
+                2.5913304435693045,
+                0.5841322672301837,
+                2.6491214291256573,
+                0.5317451979932267,
+                2.7054906904965628,
+                0.48188583684690883,
+                2.7614100371408647,
+                0.43467454083344703,
+                2.8195483710205993,
+                0.39022232311856075,
+                2.8854403680917544,
+                0.3486372990126634,
+                2.954013457034779,
+                0.3100138749940433,
+                3.0072487987327934,
+                0.2744489781472289,
+                3.042073798204041,
+                0.24202342560698212,
+                3.063578879302003,
+                0.21280743726438453,
+                3.0765457977858355,
+                0.18687887088871055,
+                3.084061987912576,
+                0.16429423290559322,
+                3.0878935233200235,
+                0.145104196818954,
+                3.089038062245701,
+                0.1293481522076684,
+                3.088195731866746,
+                0.11707009682363709,
+                3.0860222855404738,
+                0.10829125141854258,
+                3.082962552935187,
+                0.10303134293194849,
+                3.079178085557063,
+                0.10130813232107534,
+                3.0745650052593607,
+                0.10312461236584293,
+                3.0688443388368363,
+                0.10847792386254075,
+                3.0616393056397566,
+                0.11735862701499541,
+                3.0524939988214768,
+                0.12974647490345545,
+                3.0408776449411943,
+                0.1456164629875462,
+                3.0262119721278244,
+                0.16493376701678414,
+                3.0079417351493793,
+                0.1876581217186556,
+                2.9856405380203093,
+                0.21373493204665492,
+                2.9591012195686233,
+                0.24311255018920142,
+                2.9283475056073627,
+                0.275722718645909,
+                2.8935692622486053,
+                0.3114818478975294,
+                2.855033423195947,
+                0.3503083467013862,
+                2.8130193922911295,
+                0.39211135804592057,
+                2.7677892650958187,
+                0.4367929668211547,
+                2.719579939049526,
+                0.4842451343327435,
+                2.668603196236916,
+                0.5343546349584174,
+                2.6150477050364267,
+                0.5870119635750861,
+                2.559087152269389,
+                0.642158795700103,
+                2.50088239393237,
+                0.6997179924194059,
+                2.440588672619234,
+                0.7595011739141302,
+                2.378359710151171,
+                0.8213449682848538,
+                2.314355201737219,
+                0.8850972226662881,
+                2.248735306678287,
+                0.950587167336139,
+                2.1816640984166384,
+                1.0176633333815133,
+                2.113304871658414,
+                1.0861673695690859,
+                2.043821679977198,
+                1.1559348861696792,
+                1.9733744182256887
+              ]
+            }
+          }
+        ],
+        "limitations": [
+          "Nominal PDK,25C,3.3V supply,10000000.0Hz assigned clock with15ns high phase. Figure7 mode matches annotated tone/rate approximately, not recovered input amplitude, acquisition duty or load.",
+          "Assigned .666pF plate-only baseline and1.5/3pF sensitivity loads; no full capacitor matrix, reference switching, preamp, pads or package.",
+          "3.3V versus6V gate classes extracted using Dualgate55/0; ideal2fF/um2 MIM and conductive wells.",
+          "Counterfactual changes two PMOS bulk ties per branch to track bootstrap top; not the fabricated layout or an implementable fix without well/layout changes.",
+          "Dynamic screen observes held analog differential samples, not ADC codes; no comparator, DAC switching, noise or quantization. Not measured ENOB or oxide reliability qualification."
+        ]
+      }
+    ],
+    "figure_source_sha256": "0f83638a6d2d3a609a64b865a5af34c8df10857e811a9afa037d2fede20ea1c1",
+    "exact_frequency_attempts": {
+      "samples": 1024,
+      "input_hz": 4990234.375,
+      "sample_hz": 10000000.0,
+      "selections": [
+        "figure7-low",
+        "figure7-high",
+        "figure7-loaded"
+      ],
+      "status": "Each ngspice subprocess terminated at60second timeout; no spectral results.",
+      "subsequent_change": "256sample coherent record and single ngspice worker; input4960937.5Hz, not exact figure frequency."
+    },
+    "maximum_timestep_refinement_harmonic_change_db": 0.0046106143086035445,
+    "refined_large_swing_held_common_mode_range_v": [
+      1.5823072155237512,
+      1.6505672563870102
+    ],
+    "refined_large_swing_held_differential_range_v": [
+      -2.9781320353103338,
+      2.9781304612853337
+    ],
+    "conclusions": [
+      "At0.765V per-leg peak, sampled differential harmonics are about-68.6/-92.1/-97.6dBc: much weaker than the figure.",
+      "At1.5V per-leg peak and0.666pF load, harmonics are about-42.5/-42.8/-45.8dBc;1.5pF load gives-39.6/-40.6/-44.8dBc. High-order distortion is plausible, but no case jointly matches the figure.",
+      "Near6Vpp input is a sampler stress condition, not a full ADC replay with2.5/0.8V sensor references; absolute measured FFT amplitude remains unknown.",
+      "Large-swing held common mode varies by about68mV, so subsequent preamp/comparator interaction may matter; it is not represented by a differential-only static transfer.",
+      "The refined held positive/negative samples are retained for conditional chain reuse. No ADC decisions, noise, reference switching, full matrix or actual package are simulated."
+    ]
+  }
+}

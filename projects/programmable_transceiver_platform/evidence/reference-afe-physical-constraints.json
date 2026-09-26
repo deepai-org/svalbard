@@ -1,0 +1,139 @@
+{
+  "source_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+  "connected_cell": "adc_preamp_comp_controller_probe_offcal",
+  "directly_connected_devices": [
+    {
+      "type": "nmos",
+      "terminals": {
+        "S": "$4",
+        "G": "x_dacn",
+        "D": "x_preoutp"
+      },
+      "parameters": {
+        "L": 0.27999999999999997,
+        "W": 24.0,
+        "AS": 6.599999999999998,
+        "AD": 6.599999999999999,
+        "PS": 32.6,
+        "PD": 32.6
+      }
+    },
+    {
+      "type": "nmos",
+      "terminals": {
+        "S": "$4",
+        "G": "x_dacp",
+        "D": "x_preoutn"
+      },
+      "parameters": {
+        "L": 0.27999999999999997,
+        "W": 24.0,
+        "AS": 6.599999999999998,
+        "AD": 6.599999999999999,
+        "PS": 32.6,
+        "PD": 32.6
+      }
+    },
+    {
+      "type": "nmos",
+      "terminals": {
+        "S": "$12",
+        "G": "x_preoutp",
+        "D": "$10"
+      },
+      "parameters": {
+        "L": 0.27999999999999997,
+        "W": 16.0,
+        "AS": 4.52,
+        "AD": 4.5200000000000005,
+        "PS": 22.52,
+        "PD": 22.52
+      }
+    },
+    {
+      "type": "nmos",
+      "terminals": {
+        "S": "$12",
+        "G": "x_preoutn",
+        "D": "$11"
+      },
+      "parameters": {
+        "L": 0.27999999999999997,
+        "W": 16.0,
+        "AS": 4.52,
+        "AD": 4.5200000000000005,
+        "PS": 22.52,
+        "PD": 22.52
+      }
+    },
+    {
+      "type": "resistor",
+      "terminals": {
+        "A": "x_preoutp",
+        "B": "vdd"
+      },
+      "parameters": {
+        "R": 999.9999999999999,
+        "L": 10.0,
+        "W": 10.0,
+        "A": 100.0,
+        "P": 220.0
+      }
+    },
+    {
+      "type": "resistor",
+      "terminals": {
+        "A": "vdd",
+        "B": "x_preoutn"
+      },
+      "parameters": {
+        "R": 999.9999999999999,
+        "L": 10.0,
+        "W": 10.0,
+        "A": 100.0,
+        "P": 220.0
+      }
+    }
+  ],
+  "input_gate_oxide_plate_ff": [
+    15.232000000000001,
+    19.712000000000003,
+    24.192000000000004
+  ],
+  "input_gate_oxide_note": "Cox*drawn W*L plate scale, not measured dynamic Cin; excludes overlap, bias partition, Miller and kickback.",
+  "capacitor_overlap_area_um2": 16896.1,
+  "capacitance_scenarios": [
+    {
+      "m4_m3_density_ff_per_um2": 0.0337,
+      "overlap_only_array_capacitance_pf": 0.56939857,
+      "differential_sampling_noise_uv": 120.64730550171176
+    },
+    {
+      "m4_m3_density_ff_per_um2": 0.0394,
+      "overlap_only_array_capacitance_pf": 0.6657063400000001,
+      "differential_sampling_noise_uv": 111.57951426547564
+    },
+    {
+      "m4_m3_density_ff_per_um2": 0.0472,
+      "overlap_only_array_capacitance_pf": 0.79749592,
+      "differential_sampling_noise_uv": 101.94397839950322
+    }
+  ],
+  "measurement_scenario": {
+    "sine_vpp": 6,
+    "signal_rms_v": 2.1213203435596424,
+    "noise_rms_mv": 18.906287462797316
+  },
+  "sources": [
+    "https://gf180mcu-pdk.readthedocs.io/en/latest/analog/spice/elec_specs/elec_specs_5_3.html",
+    "https://gf180mcu-pdk.readthedocs.io/en/latest/analog/spice/elec_specs/elec_specs_5_6.html",
+    "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=957346"
+  ],
+  "limitations": [
+    "Assuming two equal arrays and independent kT/C noise at 300.15K.",
+    "Overlap model omits fringe and field shielding; density range is not a full capacitance confidence interval.",
+    "6Vpp is a paper input-swing figure, not confirmed actual FFT tone amplitude.",
+    "Published ADC SNR includes the measurement chain; cannot assign it to comparator or transistor noise.",
+    "Connected geometry extraction has incomplete well/body/supply-island modeling; inspect preserved islands before circuit simulation."
+  ]
+}

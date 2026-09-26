@@ -1,0 +1,220 @@
+{
+  "source_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+  "child": "adc_comp_miyahara_offcal",
+  "parent": "adc_top_final_deliver",
+  "control": {
+    "preamp_bias_node": "pad_vpreamp_bias",
+    "calibration_gate_node": "$2479",
+    "logic": "NAND",
+    "inputs": [
+      "$2745",
+      "pad_offcal_en"
+    ],
+    "disabled_condition": "pad_offcal_en=0 forces calibration PMOS gates high in settled static CMOS logic",
+    "devices": [
+      {
+        "type": "pmos",
+        "terminals": {
+          "S": "vdd",
+          "G": "pad_offcal_en",
+          "D": "$2479",
+          "B": "vdd"
+        },
+        "parameters": {
+          "L": 0.27999999999999997,
+          "W": 2.0,
+          "AS": 0.61,
+          "AD": 0.61,
+          "PS": 4.94,
+          "PD": 4.94
+        }
+      },
+      {
+        "type": "pmos",
+        "terminals": {
+          "S": "vdd",
+          "G": "$2745",
+          "D": "$2479",
+          "B": "vdd"
+        },
+        "parameters": {
+          "L": 0.27999999999999997,
+          "W": 2.0,
+          "AS": 0.61,
+          "AD": 0.61,
+          "PS": 4.94,
+          "PD": 4.94
+        }
+      },
+      {
+        "type": "nmos",
+        "terminals": {
+          "S": "$2723",
+          "G": "$2745",
+          "D": "$2479",
+          "B": "vss"
+        },
+        "parameters": {
+          "L": 0.27999999999999997,
+          "W": 2.0,
+          "AS": 0.61,
+          "AD": 0.61,
+          "PS": 4.94,
+          "PD": 4.94
+        }
+      },
+      {
+        "type": "nmos",
+        "terminals": {
+          "S": "vss",
+          "G": "pad_offcal_en",
+          "D": "$2723",
+          "B": "vss"
+        },
+        "parameters": {
+          "L": 0.27999999999999997,
+          "W": 2.0,
+          "AS": 0.61,
+          "AD": 0.61,
+          "PS": 4.94,
+          "PD": 4.94
+        }
+      }
+    ],
+    "limitations": [
+      "Internal second-input timing is not recovered; no calibration sequence or settling time established.",
+      "Pad connection establishes external controllability, not the bias or enable used in the published measurement."
+    ]
+  },
+  "ports": {
+    "adc_comp_miyahara_offcal": {
+      "vdd": "vdd",
+      "vss": "vss",
+      "i_p_amplify": "$2430",
+      "i_inn": "$2036",
+      "i_inp": "$2034",
+      "i_pb_offcal": "$2430",
+      "o_outn": "$2672",
+      "o_outp": "$2670",
+      "xx_outp": "$2631",
+      "xx_outn": "$2605",
+      "x_outn": "$2555",
+      "x_outp": "$2554",
+      "x_sb": "$2428",
+      "x_rb": "$2429"
+    },
+    "adc_preamp_v2": {
+      "o_outp": "$2034",
+      "o_outn": "$2036",
+      "vdd": "vdd",
+      "vss": "vss",
+      "nbias": "pad_vpreamp_bias",
+      "i_inn": "$1876",
+      "i_inp": "$1850"
+    }
+  },
+  "mapping": {
+    "poly": {
+      "$6": "$2479",
+      "$8": "$2479"
+    },
+    "m1": {
+      "$6": "$2479",
+      "$8": "$2479",
+      "vdd__island2": "vdd",
+      "vdd": "vdd"
+    },
+    "m2": {}
+  },
+  "parent_calibration_devices": [
+    {
+      "type": "nmos",
+      "terminals": {
+        "S": "$2723",
+        "G": "$2745",
+        "D": "$2479",
+        "B": "vss"
+      },
+      "parameters": {
+        "L": 0.27999999999999997,
+        "W": 2.0,
+        "AS": 0.61,
+        "AD": 0.61,
+        "PS": 4.94,
+        "PD": 4.94
+      }
+    },
+    {
+      "type": "pmos",
+      "terminals": {
+        "S": "$2428",
+        "G": "$2479",
+        "D": "vdd",
+        "B": "vdd"
+      },
+      "parameters": {
+        "L": 0.27999999999999997,
+        "W": 2.0,
+        "AS": 0.88,
+        "AD": 0.88,
+        "PS": 4.88,
+        "PD": 4.88
+      }
+    },
+    {
+      "type": "pmos",
+      "terminals": {
+        "S": "vdd",
+        "G": "$2479",
+        "D": "$2429",
+        "B": "vdd"
+      },
+      "parameters": {
+        "L": 0.27999999999999997,
+        "W": 2.0,
+        "AS": 0.88,
+        "AD": 0.88,
+        "PS": 4.88,
+        "PD": 4.88
+      }
+    },
+    {
+      "type": "pmos",
+      "terminals": {
+        "S": "vdd",
+        "G": "pad_offcal_en",
+        "D": "$2479",
+        "B": "vdd"
+      },
+      "parameters": {
+        "L": 0.27999999999999997,
+        "W": 2.0,
+        "AS": 0.61,
+        "AD": 0.61,
+        "PS": 4.94,
+        "PD": 4.94
+      }
+    },
+    {
+      "type": "pmos",
+      "terminals": {
+        "S": "vdd",
+        "G": "$2745",
+        "D": "$2479",
+        "B": "vdd"
+      },
+      "parameters": {
+        "L": 0.27999999999999997,
+        "W": 2.0,
+        "AS": 0.61,
+        "AD": 0.61,
+        "PS": 4.94,
+        "PD": 4.94
+      }
+    }
+  ],
+  "limitations": [
+    "Generic connectivity, not foundry LVS; node identifiers are extraction-local.",
+    "Calibration gates share a parent net; its operating voltage/timing is not established by this trace."
+  ]
+}

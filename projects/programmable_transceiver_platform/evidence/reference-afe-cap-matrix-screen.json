@@ -1,0 +1,599 @@
+{
+  "reference_span_reduction": [
+    {
+      "common_node": "floating",
+      "transition": "low_to_high",
+      "spans_v": [
+        0.5,
+        1.0,
+        1.7,
+        2.3
+      ],
+      "extra_terminal_charge_pc": [
+        0.2504416935769623,
+        0.32221749345098655,
+        0.42401544040912015,
+        0.5128310211769826
+      ],
+      "affine_intercept_pc": 0.17696856055278873,
+      "affine_slope_pf": 0.14594329645962242,
+      "maximum_training_residual_pc": 0.0006943635614246046,
+      "held_out_span_v": 1.7,
+      "held_out_error_pc": 0.00105672412502672,
+      "fixed_nominal_cap_max_relative_charge_error": 0.5020380917068948
+    },
+    {
+      "common_node": "floating",
+      "transition": "high_to_low",
+      "spans_v": [
+        0.5,
+        1.0,
+        1.7,
+        2.3
+      ],
+      "extra_terminal_charge_pc": [
+        0.2504280900293983,
+        0.32222716542271146,
+        0.4240256103109806,
+        0.512848226199825
+      ],
+      "affine_intercept_pc": 0.17695418404537103,
+      "affine_slope_pf": 0.14595813934626883,
+      "maximum_training_residual_pc": 0.0006851579689284293,
+      "held_out_span_v": 1.7,
+      "held_out_error_pc": 0.0010574106230474278,
+      "fixed_nominal_cap_max_relative_charge_error": 0.5019990976942448
+    },
+    {
+      "common_node": "clamped",
+      "transition": "low_to_high",
+      "spans_v": [
+        0.5,
+        1.0,
+        1.7,
+        2.3
+      ],
+      "extra_terminal_charge_pc": [
+        0.2504384133851424,
+        0.3222340424002145,
+        0.4240510070878887,
+        0.5127548968625576
+      ],
+      "affine_intercept_pc": 0.17700670679266825,
+      "affine_slope_pf": 0.1458966400710289,
+      "maximum_training_residual_pc": 0.0006693044634826228,
+      "held_out_span_v": 1.7,
+      "held_out_error_pc": 0.000979987825528661,
+      "fixed_nominal_cap_max_relative_charge_error": 0.5019897996007128
+    },
+    {
+      "common_node": "clamped",
+      "transition": "high_to_low",
+      "spans_v": [
+        0.5,
+        1.0,
+        1.7,
+        2.3
+      ],
+      "extra_terminal_charge_pc": [
+        0.2504233657010347,
+        0.3222282964110965,
+        0.42402908826938995,
+        0.5127775888935333
+      ],
+      "affine_intercept_pc": 0.17698055085973582,
+      "affine_slope_pf": 0.14591778905959396,
+      "maximum_training_residual_pc": 0.0006700435082332978,
+      "held_out_span_v": 1.7,
+      "held_out_error_pc": 0.001011703991655566,
+      "fixed_nominal_cap_max_relative_charge_error": 0.5019856179268025
+    }
+  ],
+  "transistor_reference_comparison": [
+    {
+      "transition": "low_to_high",
+      "common_node": "floating",
+      "reservoir_pf": 10,
+      "ideal_sharing_excursion_mv": 61.44578313253012,
+      "transistor_peak_excursion_mv": 86.75567431216002,
+      "equivalent_extra_switched_capacitance_ff": 162.77145179277142,
+      "equivalent_impulse_residual_pc": 0.2625901209886603
+    },
+    {
+      "transition": "low_to_high",
+      "common_node": "floating",
+      "reservoir_pf": 100,
+      "ideal_sharing_excursion_mv": 6.35118306351183,
+      "transistor_peak_excursion_mv": 9.244069788858056,
+      "equivalent_extra_switched_capacitance_ff": 171.74182261798455,
+      "equivalent_impulse_residual_pc": 0.2903735050566274
+    },
+    {
+      "transition": "low_to_high",
+      "common_node": "floating",
+      "reservoir_pf": 1000,
+      "ideal_sharing_excursion_mv": 0.6372610271148319,
+      "transistor_peak_excursion_mv": 0.9562670599039258,
+      "equivalent_extra_switched_capacitance_ff": 187.82663086556428,
+      "equivalent_impulse_residual_pc": 0.31912566005138987
+    },
+    {
+      "transition": "low_to_high",
+      "common_node": "clamped",
+      "reservoir_pf": 10,
+      "ideal_sharing_excursion_mv": 118.60465116279069,
+      "transistor_peak_excursion_mv": 139.1085266379699,
+      "equivalent_extra_switched_capacitance_ff": 141.2120349939624,
+      "equivalent_impulse_residual_pc": 0.2204166613581766
+    },
+    {
+      "transition": "low_to_high",
+      "common_node": "clamped",
+      "reservoir_pf": 100,
+      "ideal_sharing_excursion_mv": 12.655086848635234,
+      "transistor_peak_excursion_mv": 15.22376956563587,
+      "equivalent_extra_switched_capacitance_ff": 153.60780800610664,
+      "equivalent_impulse_residual_pc": 0.25879478373781395
+    },
+    {
+      "transition": "low_to_high",
+      "common_node": "clamped",
+      "reservoir_pf": 1000,
+      "ideal_sharing_excursion_mv": 1.2740444666500124,
+      "transistor_peak_excursion_mv": 1.5562354864400163,
+      "equivalent_extra_switched_capacitance_ff": 166.27142385001338,
+      "equivalent_impulse_residual_pc": 0.2824026630548464
+    },
+    {
+      "transition": "high_to_low",
+      "common_node": "floating",
+      "reservoir_pf": 10,
+      "ideal_sharing_excursion_mv": 61.44578313253012,
+      "transistor_peak_excursion_mv": 84.90850326986454,
+      "equivalent_extra_switched_capacitance_ff": 150.71946197331664,
+      "equivalent_impulse_residual_pc": 0.24342572142484464
+    },
+    {
+      "transition": "high_to_low",
+      "common_node": "floating",
+      "reservoir_pf": 100,
+      "ideal_sharing_excursion_mv": 6.35118306351183,
+      "transistor_peak_excursion_mv": 8.95430341346426,
+      "equivalent_extra_switched_capacitance_ff": 154.51279977465958,
+      "equivalent_impulse_residual_pc": 0.2612882051264751
+    },
+    {
+      "transition": "high_to_low",
+      "common_node": "floating",
+      "reservoir_pf": 1000,
+      "ideal_sharing_excursion_mv": 0.6372610271148319,
+      "transistor_peak_excursion_mv": 0.9190121098341386,
+      "equivalent_extra_switched_capacitance_ff": 165.88776013868656,
+      "equivalent_impulse_residual_pc": 0.2818567393753264
+    },
+    {
+      "transition": "high_to_low",
+      "common_node": "clamped",
+      "reservoir_pf": 10,
+      "ideal_sharing_excursion_mv": 118.60465116279069,
+      "transistor_peak_excursion_mv": 139.0445400865019,
+      "equivalent_extra_switched_capacitance_ff": 140.76558337037503,
+      "equivalent_impulse_residual_pc": 0.21972880592989563
+    },
+    {
+      "transition": "high_to_low",
+      "common_node": "clamped",
+      "reservoir_pf": 100,
+      "ideal_sharing_excursion_mv": 12.655086848635234,
+      "transistor_peak_excursion_mv": 15.079025078752473,
+      "equivalent_extra_switched_capacitance_ff": 144.93960269900853,
+      "equivalent_impulse_residual_pc": 0.2442117766843117
+    },
+    {
+      "transition": "high_to_low",
+      "common_node": "clamped",
+      "reservoir_pf": 1000,
+      "ideal_sharing_excursion_mv": 1.2740444666500124,
+      "transistor_peak_excursion_mv": 1.535456988048356,
+      "equivalent_extra_switched_capacitance_ff": 154.0265187552705,
+      "equivalent_impulse_residual_pc": 0.2616085807893924
+    }
+  ],
+  "finite_reservoir_charge_sharing": {
+    "bit_capacitance_pf": 1,
+    "rail_capacitance_pf": 100,
+    "rail_rise_mv": 16.831683168316957,
+    "charge_conservation_error_c": 1.3126645462877636e-26,
+    "dissipated_energy_j": 1.4306930693069444e-12,
+    "floating_top_rail_rise_mv": 6.351183063511831,
+    "rail_rise_after_50ns_with_1kohm_mv": 3.8593898451765307,
+    "coupled_reference_ode_max_error_v": 2.495781359357352e-12
+  },
+  "reference_recovery_scenarios": [
+    {
+      "capacitance_pf": 10,
+      "resistance_ohm": 10,
+      "route_coupling_ff": 0,
+      "charge_pc": 0.282925193300821,
+      "mean_current_for_one_event_per_20msps_ua": 5.658503866016419,
+      "current_limited_duration_ns": 1.7861679553388088,
+      "samples": [
+        {
+          "time_ns": 1,
+          "droop_mv": 13.292519330082131
+        },
+        {
+          "time_ns": 3,
+          "droop_mv": 8.025750730666914e-06
+        },
+        {
+          "time_ns": 10,
+          "droop_mv": 0.0
+        },
+        {
+          "time_ns": 50,
+          "droop_mv": 0.0
+        }
+      ]
+    },
+    {
+      "capacitance_pf": 10,
+      "resistance_ohm": 10,
+      "route_coupling_ff": 2.8562778036788385,
+      "charge_pc": 0.28778086556707494,
+      "mean_current_for_one_event_per_20msps_ua": 5.755617311341499,
+      "current_limited_duration_ns": 1.8185391037805023,
+      "samples": [
+        {
+          "time_ns": 1,
+          "droop_mv": 13.778086556707535
+        },
+        {
+          "time_ns": 3,
+          "droop_mv": 1.1093581608889735e-05
+        },
+        {
+          "time_ns": 10,
+          "droop_mv": 0.0
+        },
+        {
+          "time_ns": 50,
+          "droop_mv": 0.0
+        }
+      ]
+    },
+    {
+      "capacitance_pf": 10,
+      "resistance_ohm": 1000,
+      "route_coupling_ff": 0,
+      "charge_pc": 0.282925193300821,
+      "mean_current_for_one_event_per_20msps_ua": 5.658503866016419,
+      "current_limited_duration_ns": 0.0,
+      "samples": [
+        {
+          "time_ns": 1,
+          "droop_mv": 25.600130140363998
+        },
+        {
+          "time_ns": 3,
+          "droop_mv": 20.959613828714584
+        },
+        {
+          "time_ns": 10,
+          "droop_mv": 10.408236200482811
+        },
+        {
+          "time_ns": 50,
+          "droop_mv": 0.19063349571668553
+        }
+      ]
+    },
+    {
+      "capacitance_pf": 10,
+      "resistance_ohm": 1000,
+      "route_coupling_ff": 2.8562778036788385,
+      "charge_pc": 0.28778086556707494,
+      "mean_current_for_one_event_per_20msps_ua": 5.755617311341499,
+      "current_limited_duration_ns": 0.0,
+      "samples": [
+        {
+          "time_ns": 1,
+          "droop_mv": 26.03948953598656
+        },
+        {
+          "time_ns": 3,
+          "droop_mv": 21.319330877564546
+        },
+        {
+          "time_ns": 10,
+          "droop_mv": 10.586866400464912
+        },
+        {
+          "time_ns": 50,
+          "droop_mv": 0.19390522195417148
+        }
+      ]
+    },
+    {
+      "capacitance_pf": 100,
+      "resistance_ohm": 10,
+      "route_coupling_ff": 0,
+      "charge_pc": 0.282925193300821,
+      "mean_current_for_one_event_per_20msps_ua": 5.658503866016419,
+      "current_limited_duration_ns": 0.8861679553388024,
+      "samples": [
+        {
+          "time_ns": 1,
+          "droop_mv": 1.338611741932838
+        },
+        {
+          "time_ns": 3,
+          "droop_mv": 0.18116139923829433
+        },
+        {
+          "time_ns": 10,
+          "droop_mv": 0.00016519781287360757
+        },
+        {
+          "time_ns": 50,
+          "droop_mv": 0.0
+        }
+      ]
+    },
+    {
+      "capacitance_pf": 100,
+      "resistance_ohm": 10,
+      "route_coupling_ff": 2.8562778036788385,
+      "charge_pc": 0.28778086556707494,
+      "mean_current_for_one_event_per_20msps_ua": 5.755617311341499,
+      "current_limited_duration_ns": 0.9185391037805183,
+      "samples": [
+        {
+          "time_ns": 1,
+          "droop_mv": 1.382653130688194
+        },
+        {
+          "time_ns": 3,
+          "droop_mv": 0.18712175305968248
+        },
+        {
+          "time_ns": 10,
+          "droop_mv": 0.00017063295199015727
+        },
+        {
+          "time_ns": 50,
+          "droop_mv": 0.0
+        }
+      ]
+    },
+    {
+      "capacitance_pf": 100,
+      "resistance_ohm": 1000,
+      "route_coupling_ff": 0,
+      "charge_pc": 0.282925193300821,
+      "mean_current_for_one_event_per_20msps_ua": 5.658503866016419,
+      "current_limited_duration_ns": 0.0,
+      "samples": [
+        {
+          "time_ns": 1,
+          "droop_mv": 2.801100405909307
+        },
+        {
+          "time_ns": 3,
+          "droop_mv": 2.7456349016713455
+        },
+        {
+          "time_ns": 10,
+          "droop_mv": 2.560013014036411
+        },
+        {
+          "time_ns": 50,
+          "droop_mv": 1.7160280414206808
+        }
+      ]
+    },
+    {
+      "capacitance_pf": 100,
+      "resistance_ohm": 1000,
+      "route_coupling_ff": 2.8562778036788385,
+      "charge_pc": 0.28778086556707494,
+      "mean_current_for_one_event_per_20msps_ua": 5.755617311341499,
+      "current_limited_duration_ns": 0.0,
+      "samples": [
+        {
+          "time_ns": 1,
+          "droop_mv": 2.8491739811087324
+        },
+        {
+          "time_ns": 3,
+          "droop_mv": 2.7927565563029555
+        },
+        {
+          "time_ns": 10,
+          "droop_mv": 2.6039489535987226
+        },
+        {
+          "time_ns": 50,
+          "droop_mv": 1.7454791824507154
+        }
+      ]
+    },
+    {
+      "capacitance_pf": 1000,
+      "resistance_ohm": 10,
+      "route_coupling_ff": 0,
+      "charge_pc": 0.282925193300821,
+      "mean_current_for_one_event_per_20msps_ua": 5.658503866016419,
+      "current_limited_duration_ns": 0.0,
+      "samples": [
+        {
+          "time_ns": 1,
+          "droop_mv": 0.2560013014036855
+        },
+        {
+          "time_ns": 3,
+          "droop_mv": 0.2095961382871936
+        },
+        {
+          "time_ns": 10,
+          "droop_mv": 0.10408236200487586
+        },
+        {
+          "time_ns": 50,
+          "droop_mv": 0.0019063349571135646
+        }
+      ]
+    },
+    {
+      "capacitance_pf": 1000,
+      "resistance_ohm": 10,
+      "route_coupling_ff": 2.8562778036788385,
+      "charge_pc": 0.28778086556707494,
+      "mean_current_for_one_event_per_20msps_ua": 5.755617311341499,
+      "current_limited_duration_ns": 0.0,
+      "samples": [
+        {
+          "time_ns": 1,
+          "droop_mv": 0.26039489535978344
+        },
+        {
+          "time_ns": 3,
+          "droop_mv": 0.21319330877556109
+        },
+        {
+          "time_ns": 10,
+          "droop_mv": 0.10586866400463801
+        },
+        {
+          "time_ns": 50,
+          "droop_mv": 0.0019390522195683602
+        }
+      ]
+    },
+    {
+      "capacitance_pf": 1000,
+      "resistance_ohm": 1000,
+      "route_coupling_ff": 0,
+      "charge_pc": 0.282925193300821,
+      "mean_current_for_one_event_per_20msps_ua": 5.658503866016419,
+      "current_limited_duration_ns": 0.0,
+      "samples": [
+        {
+          "time_ns": 1,
+          "droop_mv": 0.2826424095230262
+        },
+        {
+          "time_ns": 3,
+          "droop_mv": 0.28207768961208135
+        },
+        {
+          "time_ns": 10,
+          "droop_mv": 0.2801100405909196
+        },
+        {
+          "time_ns": 50,
+          "droop_mv": 0.2691267688003096
+        }
+      ]
+    },
+    {
+      "capacitance_pf": 1000,
+      "resistance_ohm": 1000,
+      "route_coupling_ff": 2.8562778036788385,
+      "charge_pc": 0.28778086556707494,
+      "mean_current_for_one_event_per_20msps_ua": 5.755617311341499,
+      "current_limited_duration_ns": 0.0,
+      "samples": [
+        {
+          "time_ns": 1,
+          "droop_mv": 0.28749322854393355
+        },
+        {
+          "time_ns": 3,
+          "droop_mv": 0.2869188166901848
+        },
+        {
+          "time_ns": 10,
+          "droop_mv": 0.28491739811087324
+        },
+        {
+          "time_ns": 50,
+          "droop_mv": 0.27374562713566863
+        }
+      ]
+    }
+  ],
+  "layout_informed_route_scenarios": [
+    {
+      "route_coupling_ff": 0,
+      "top_voltage_v": 2.4999446617858556,
+      "b0_charge_pc": 0.282925193300821,
+      "b2_charge_pc": -0.07070953124241688
+    },
+    {
+      "route_coupling_ff": 2.650777593099361,
+      "top_voltage_v": 2.4999446617858556,
+      "b0_charge_pc": 0.2874315152090899,
+      "b2_charge_pc": -0.07521585315068578,
+      "b0_charge_increase_percent": 1.5927609187767007
+    },
+    {
+      "route_coupling_ff": 2.6948671604757863,
+      "top_voltage_v": 2.4999446617858556,
+      "b0_charge_pc": 0.28750646747362973,
+      "b2_charge_pc": -0.0752908054152257,
+      "b0_charge_increase_percent": 1.6192528206343872
+    },
+    {
+      "route_coupling_ff": 2.8562778036788385,
+      "top_voltage_v": 2.4999446617858556,
+      "b0_charge_pc": 0.28778086556707494,
+      "b2_charge_pc": -0.07556520350867091,
+      "b0_charge_increase_percent": 1.7162389144650045
+    }
+  ],
+  "source_sha256": {
+    "reference-afe-cap-geometry.json": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+    "reference-afe-fringe-screen.json": "05005251d05e0f1453727999dacd22b6103b71600cf950b892f0de55205da4c8",
+    "reference-afe-reference-transient.json": "fb76b9ec31566c8ee97b1c18fd2f34b834cd27aabc01a66336e7bd6d685ca604",
+    "causal_reference_lifecycle.py": "781c0631264cfd8d4d718907f4279adb63e76c0aaae52ce053dbe9bc5b9d189b",
+    "capacitor_network.py": "070cc8646dcb1d8ff819b4430cc4f03203f98b97e8f2fada0b0ced5e920ecd6b"
+  },
+  "coupling_scenarios": [
+    {
+      "inter_bit_coupling_pf": 0,
+      "final_top_v": 2.5,
+      "high_source_charge_pc": 0.6375000000000001,
+      "low_source_charge_pc": -0.6375000000000001
+    },
+    {
+      "inter_bit_coupling_pf": 0.1,
+      "final_top_v": 2.5,
+      "high_source_charge_pc": 0.8075,
+      "low_source_charge_pc": -0.8075
+    },
+    {
+      "inter_bit_coupling_pf": 1.0,
+      "final_top_v": 2.5,
+      "high_source_charge_pc": 2.3375,
+      "low_source_charge_pc": -2.3374999999999995
+    }
+  ],
+  "ground_parasitic_case": {
+    "capacitance_pf": 0.5,
+    "final_top_v": 2.2874999999999996
+  },
+  "conclusions": [
+    "Coupling between ideal-driven bottom plates increases reference charge without changing final top-plate voltage.",
+    "Top-to-ground capacitance changes final redistribution. Matrix location matters, not total capacitance alone."
+  ],
+  "limitations": [
+    "Affine charge law is conditional on the recovered MSB driver and fixed midpoint/gate swing, fitted over0.5-2.3V. It is not a universal device capacitance or transient rail-partition model.",
+    "Equivalent extra switched capacitance is an inverse diagnostic of conditional PDK transients, not measured silicon capacitance. MOS charge, finite edges, conduction and reference recovery are confounded; peak times may differ.",
+    "13-bit route scenarios use area-only plate weights plus one conditional isolated-route estimate, not a complete extracted matrix or SAR sequence.",
+    "Assigned two-bit1.5pF array and0/0.1/1pF coupling; no extracted full capacitance matrix.",
+    "Ideal-switch redistribution includes finite-reservoir charge sharing. Matrix relaxation solves linear resistive reference recovery, without current clipping, switch injection or finite switch resistance.",
+    "Separate impulse-recovery scenarios reuse the fixed-target current-limited reference law with assigned R/C and150uA limit; feedback from droop to switching charge, supply coupling and repeated bit events omitted.",
+    "This component is not yet connected to the whole-chip ADC conversion path."
+  ]
+}

@@ -1,0 +1,865 @@
+{
+  "cases": [
+    {
+      "ideal_scalar_max_code_difference": 0,
+      "mode": "ideal",
+      "samples": 1024,
+      "warmup_samples": 128,
+      "sample_rate_msps": 10.0,
+      "tone_frequency_mhz": 4.990234375,
+      "input_differential_peak_v": 1.53,
+      "ideal_comparator": true,
+      "acquisition_ns": 10.0,
+      "decision_interval_ns": 2.75,
+      "noiseless_sndr_db": 69.99907211530004,
+      "sfdr_db": 85.21419935143457,
+      "harmonics_3_5_7_dbc": [
+        -99.60592803300499,
+        -99.19092297427918,
+        -103.28650317638328
+      ],
+      "maximum_final_comparator_residual_mv": 0.3199077735485112,
+      "maximum_decision_sampled_source_current_ua": 0.0,
+      "maximum_end_conversion_rail_error_mv": 0.0,
+      "reference_span_range_v": [
+        1.7,
+        1.7
+      ],
+      "source_sha256": {
+        "reference-afe-cap-geometry.json": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+        "reference-afe-controller-references.json": "a1f7566178da31fd39ab4f8739140991614419e04180e9634fec5b74bbdf761d",
+        "reference-afe-reference-transient.json": "fb76b9ec31566c8ee97b1c18fd2f34b834cd27aabc01a66336e7bd6d685ca604",
+        "reference-afe-reference-drivers.json": "0f2a04642008b5b3316a6ad827e8ecbf3b74859f5b44cf9c9ed121c0fd88255e",
+        "capacitor_network.py": "070cc8646dcb1d8ff819b4430cc4f03203f98b97e8f2fada0b0ced5e920ecd6b",
+        "reference_sequence.py": "038439e28fd9958fe363775ad77be94cfc421fa532cea3a6eb5d6b44ecd02c08",
+        "sar_transfer.py": "f2b5e064f88489738254625939c14a4a7335d5235b556248d4a1cd7c7f4a3beb"
+      },
+      "limitations": [
+        "Autonomous ideal-sign decisions with fixed timing and natural binary output; no preamp/comparator noise,offset,kickback or metastability. Not the recovered transistor timing model.",
+        "Ideal top-plate acquisition, area-only caps,100pF rails. Finite modes use linear1kohm sources and conditional charge impulses; no real bootstrap/full capacitance matrix.",
+        "Tone and sample rate approximateFigure7, but amplitude90percent of modeled range and references2.5/0.8V are scenarios, not recovered characterization settings.",
+        "Isolated-switch overhead is scaled by drawn width at nominal span; rail partition and gate/body countercharge are reduced assumptions.",
+        "No silicon fit or standards claim; inspect discrepancies, not just completed conversions."
+      ]
+    },
+    {
+      "ideal_scalar_max_code_difference": null,
+      "mode": "plate_only",
+      "samples": 1024,
+      "warmup_samples": 128,
+      "sample_rate_msps": 10.0,
+      "tone_frequency_mhz": 4.990234375,
+      "input_differential_peak_v": 1.53,
+      "ideal_comparator": true,
+      "acquisition_ns": 10.0,
+      "decision_interval_ns": 2.75,
+      "noiseless_sndr_db": 52.99352817569422,
+      "sfdr_db": 53.16109709722649,
+      "harmonics_3_5_7_dbc": [
+        -53.16109709722649,
+        -95.92051175300509,
+        -88.48926412425534
+      ],
+      "maximum_final_comparator_residual_mv": 2.3855798577477882,
+      "maximum_decision_sampled_source_current_ua": 16.546585786642698,
+      "maximum_end_conversion_rail_error_mv": 12.836120211427104,
+      "reference_span_range_v": [
+        1.6743285686572773,
+        1.6883716553726407
+      ],
+      "source_sha256": {
+        "reference-afe-cap-geometry.json": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+        "reference-afe-controller-references.json": "a1f7566178da31fd39ab4f8739140991614419e04180e9634fec5b74bbdf761d",
+        "reference-afe-reference-transient.json": "fb76b9ec31566c8ee97b1c18fd2f34b834cd27aabc01a66336e7bd6d685ca604",
+        "reference-afe-reference-drivers.json": "0f2a04642008b5b3316a6ad827e8ecbf3b74859f5b44cf9c9ed121c0fd88255e",
+        "capacitor_network.py": "070cc8646dcb1d8ff819b4430cc4f03203f98b97e8f2fada0b0ced5e920ecd6b",
+        "reference_sequence.py": "038439e28fd9958fe363775ad77be94cfc421fa532cea3a6eb5d6b44ecd02c08",
+        "sar_transfer.py": "f2b5e064f88489738254625939c14a4a7335d5235b556248d4a1cd7c7f4a3beb"
+      },
+      "limitations": [
+        "Autonomous ideal-sign decisions with fixed timing and natural binary output; no preamp/comparator noise,offset,kickback or metastability. Not the recovered transistor timing model.",
+        "Ideal top-plate acquisition, area-only caps,100pF rails. Finite modes use linear1kohm sources and conditional charge impulses; no real bootstrap/full capacitance matrix.",
+        "Tone and sample rate approximateFigure7, but amplitude90percent of modeled range and references2.5/0.8V are scenarios, not recovered characterization settings.",
+        "Isolated-switch overhead is scaled by drawn width at nominal span; rail partition and gate/body countercharge are reduced assumptions.",
+        "No silicon fit or standards claim; inspect discrepancies, not just completed conversions."
+      ]
+    },
+    {
+      "ideal_scalar_max_code_difference": null,
+      "mode": "large_partition",
+      "samples": 1024,
+      "warmup_samples": 128,
+      "sample_rate_msps": 10.0,
+      "tone_frequency_mhz": 4.990234375,
+      "input_differential_peak_v": 1.53,
+      "ideal_comparator": true,
+      "acquisition_ns": 10.0,
+      "decision_interval_ns": 2.75,
+      "noiseless_sndr_db": 52.63113855558595,
+      "sfdr_db": 52.961305602216946,
+      "harmonics_3_5_7_dbc": [
+        -52.961305602216946,
+        -100.84779170931967,
+        -84.04735779871262
+      ],
+      "maximum_final_comparator_residual_mv": 4.042211514339811,
+      "maximum_decision_sampled_source_current_ua": 35.12617953805508,
+      "maximum_end_conversion_rail_error_mv": 29.087823486932397,
+      "reference_span_range_v": [
+        1.6481437700961412,
+        1.662433403908548
+      ],
+      "source_sha256": {
+        "reference-afe-cap-geometry.json": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+        "reference-afe-controller-references.json": "a1f7566178da31fd39ab4f8739140991614419e04180e9634fec5b74bbdf761d",
+        "reference-afe-reference-transient.json": "fb76b9ec31566c8ee97b1c18fd2f34b834cd27aabc01a66336e7bd6d685ca604",
+        "reference-afe-reference-drivers.json": "0f2a04642008b5b3316a6ad827e8ecbf3b74859f5b44cf9c9ed121c0fd88255e",
+        "capacitor_network.py": "070cc8646dcb1d8ff819b4430cc4f03203f98b97e8f2fada0b0ced5e920ecd6b",
+        "reference_sequence.py": "038439e28fd9958fe363775ad77be94cfc421fa532cea3a6eb5d6b44ecd02c08",
+        "sar_transfer.py": "f2b5e064f88489738254625939c14a4a7335d5235b556248d4a1cd7c7f4a3beb"
+      },
+      "limitations": [
+        "Autonomous ideal-sign decisions with fixed timing and natural binary output; no preamp/comparator noise,offset,kickback or metastability. Not the recovered transistor timing model.",
+        "Ideal top-plate acquisition, area-only caps,100pF rails. Finite modes use linear1kohm sources and conditional charge impulses; no real bootstrap/full capacitance matrix.",
+        "Tone and sample rate approximateFigure7, but amplitude90percent of modeled range and references2.5/0.8V are scenarios, not recovered characterization settings.",
+        "Isolated-switch overhead is scaled by drawn width at nominal span; rail partition and gate/body countercharge are reduced assumptions.",
+        "No silicon fit or standards claim; inspect discrepancies, not just completed conversions."
+      ]
+    },
+    {
+      "ideal_scalar_max_code_difference": null,
+      "mode": "small_partition",
+      "samples": 1024,
+      "warmup_samples": 128,
+      "sample_rate_msps": 10.0,
+      "tone_frequency_mhz": 4.990234375,
+      "input_differential_peak_v": 1.53,
+      "ideal_comparator": true,
+      "acquisition_ns": 10.0,
+      "decision_interval_ns": 2.75,
+      "noiseless_sndr_db": 52.56127638257466,
+      "sfdr_db": 52.84286002650948,
+      "harmonics_3_5_7_dbc": [
+        -52.84286002650948,
+        -85.12644498910527,
+        -96.32833574328185
+      ],
+      "maximum_final_comparator_residual_mv": 3.921473606171122,
+      "maximum_decision_sampled_source_current_ua": 32.00222360638572,
+      "maximum_end_conversion_rail_error_mv": 25.68054636234285,
+      "reference_span_range_v": [
+        1.6549584812985645,
+        1.669191792205835
+      ],
+      "source_sha256": {
+        "reference-afe-cap-geometry.json": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+        "reference-afe-controller-references.json": "a1f7566178da31fd39ab4f8739140991614419e04180e9634fec5b74bbdf761d",
+        "reference-afe-reference-transient.json": "fb76b9ec31566c8ee97b1c18fd2f34b834cd27aabc01a66336e7bd6d685ca604",
+        "reference-afe-reference-drivers.json": "0f2a04642008b5b3316a6ad827e8ecbf3b74859f5b44cf9c9ed121c0fd88255e",
+        "capacitor_network.py": "070cc8646dcb1d8ff819b4430cc4f03203f98b97e8f2fada0b0ced5e920ecd6b",
+        "reference_sequence.py": "038439e28fd9958fe363775ad77be94cfc421fa532cea3a6eb5d6b44ecd02c08",
+        "sar_transfer.py": "f2b5e064f88489738254625939c14a4a7335d5235b556248d4a1cd7c7f4a3beb"
+      },
+      "limitations": [
+        "Autonomous ideal-sign decisions with fixed timing and natural binary output; no preamp/comparator noise,offset,kickback or metastability. Not the recovered transistor timing model.",
+        "Ideal top-plate acquisition, area-only caps,100pF rails. Finite modes use linear1kohm sources and conditional charge impulses; no real bootstrap/full capacitance matrix.",
+        "Tone and sample rate approximateFigure7, but amplitude90percent of modeled range and references2.5/0.8V are scenarios, not recovered characterization settings.",
+        "Isolated-switch overhead is scaled by drawn width at nominal span; rail partition and gate/body countercharge are reduced assumptions.",
+        "No silicon fit or standards claim; inspect discrepancies, not just completed conversions."
+      ]
+    }
+  ],
+  "warmup_refinement": {
+    "short_samples": 128,
+    "long_samples": 256,
+    "differences": {
+      "noiseless_sndr_db": 0.0,
+      "sfdr_db": 0.0,
+      "maximum_harmonic_difference_db": 0.0
+    }
+  },
+  "conclusions": [
+    "The model now makes ideal-sign decisions autonomously and emits natural-binary14bit codes; it does not replay measured decision words.",
+    "At10MS/s and90percent modeled input range,1kohm/100pF finite references reduce noiseless SNDR to about53dB. Added switch overhead shifts rails substantially but changes this spectral result modestly.",
+    "Predicted3rd/5th/7th harmonics do not jointly explain the approximateFigure7 peaks under these conditions. This constrains this scenario, not all reference-error mechanisms.",
+    "Bootstrap acquisition, comparator dynamics,full capacitance matrix and true bench conditions remain missing; this is not a complete silicon-calibrated ADC model."
+  ],
+  "reference_resistance_sensitivity": {
+    "cases": [
+      {
+        "reference_resistance_ohm": 2000.0,
+        "ideal_scalar_max_code_difference": null,
+        "mode": "large_partition",
+        "samples": 1024,
+        "warmup_samples": 256,
+        "sample_rate_msps": 10.0,
+        "tone_frequency_mhz": 4.990234375,
+        "input_differential_peak_v": 1.53,
+        "ideal_comparator": true,
+        "acquisition_ns": 10.0,
+        "decision_interval_ns": 2.75,
+        "noiseless_sndr_db": 46.72828305614988,
+        "sfdr_db": 46.794081899332134,
+        "harmonics_3_5_7_dbc": [
+          -46.79408189933213,
+          -85.32894399828339,
+          -93.74729017765691
+        ],
+        "maximum_final_comparator_residual_mv": 3.69236445961707,
+        "maximum_decision_sampled_source_current_ua": 29.158899574909693,
+        "maximum_end_conversion_rail_error_mv": 52.817577217327496,
+        "reference_span_range_v": [
+          1.6003645167907548,
+          1.6289018079592614
+        ],
+        "source_sha256": {
+          "reference-afe-cap-geometry.json": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+          "reference-afe-controller-references.json": "a1f7566178da31fd39ab4f8739140991614419e04180e9634fec5b74bbdf761d",
+          "reference-afe-reference-transient.json": "fb76b9ec31566c8ee97b1c18fd2f34b834cd27aabc01a66336e7bd6d685ca604",
+          "reference-afe-reference-drivers.json": "0f2a04642008b5b3316a6ad827e8ecbf3b74859f5b44cf9c9ed121c0fd88255e",
+          "capacitor_network.py": "070cc8646dcb1d8ff819b4430cc4f03203f98b97e8f2fada0b0ced5e920ecd6b",
+          "reference_sequence.py": "038439e28fd9958fe363775ad77be94cfc421fa532cea3a6eb5d6b44ecd02c08",
+          "sar_transfer.py": "d259c050660b07c8c46f65017236ff0ac0908a9f24ec06a4d080e72cd48dc0e4"
+        },
+        "limitations": [
+          "Autonomous ideal-sign decisions with fixed timing and natural binary output; no preamp/comparator noise,offset,kickback or metastability. Not the recovered transistor timing model.",
+          "Ideal top-plate acquisition, area-only caps,100pF rails. Finite modes use the stated linear source resistance and conditional charge impulses; no real bootstrap/full capacitance matrix.",
+          "Tone and sample rate approximateFigure7, but amplitude90percent of modeled range and references2.5/0.8V are scenarios, not recovered characterization settings.",
+          "Isolated-switch overhead is scaled by drawn width at nominal span; rail partition and gate/body countercharge are reduced assumptions.",
+          "No silicon fit or standards claim; inspect discrepancies, not just completed conversions."
+        ],
+        "harmonic_errors_vs_figure_db": [
+          -11.035154171266534,
+          -40.15977213125317,
+          -48.578118310626685
+        ],
+        "maximum_absolute_harmonic_error_db": 48.578118310626685
+      },
+      {
+        "reference_resistance_ohm": 5000.0,
+        "ideal_scalar_max_code_difference": null,
+        "mode": "large_partition",
+        "samples": 1024,
+        "warmup_samples": 256,
+        "sample_rate_msps": 10.0,
+        "tone_frequency_mhz": 4.990234375,
+        "input_differential_peak_v": 1.53,
+        "ideal_comparator": true,
+        "acquisition_ns": 10.0,
+        "decision_interval_ns": 2.75,
+        "noiseless_sndr_db": 38.47952412676821,
+        "sfdr_db": 38.48834135226571,
+        "harmonics_3_5_7_dbc": [
+          -38.488341352265714,
+          -70.98108531472762,
+          -86.46490365858082
+        ],
+        "maximum_final_comparator_residual_mv": 3.0187009818448685,
+        "maximum_decision_sampled_source_current_ua": 24.93916733914805,
+        "maximum_end_conversion_rail_error_mv": 119.57844374419213,
+        "reference_span_range_v": [
+          1.4666105254036275,
+          1.5381643380181518
+        ],
+        "source_sha256": {
+          "reference-afe-cap-geometry.json": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+          "reference-afe-controller-references.json": "a1f7566178da31fd39ab4f8739140991614419e04180e9634fec5b74bbdf761d",
+          "reference-afe-reference-transient.json": "fb76b9ec31566c8ee97b1c18fd2f34b834cd27aabc01a66336e7bd6d685ca604",
+          "reference-afe-reference-drivers.json": "0f2a04642008b5b3316a6ad827e8ecbf3b74859f5b44cf9c9ed121c0fd88255e",
+          "capacitor_network.py": "070cc8646dcb1d8ff819b4430cc4f03203f98b97e8f2fada0b0ced5e920ecd6b",
+          "reference_sequence.py": "038439e28fd9958fe363775ad77be94cfc421fa532cea3a6eb5d6b44ecd02c08",
+          "sar_transfer.py": "d259c050660b07c8c46f65017236ff0ac0908a9f24ec06a4d080e72cd48dc0e4"
+        },
+        "limitations": [
+          "Autonomous ideal-sign decisions with fixed timing and natural binary output; no preamp/comparator noise,offset,kickback or metastability. Not the recovered transistor timing model.",
+          "Ideal top-plate acquisition, area-only caps,100pF rails. Finite modes use the stated linear source resistance and conditional charge impulses; no real bootstrap/full capacitance matrix.",
+          "Tone and sample rate approximateFigure7, but amplitude90percent of modeled range and references2.5/0.8V are scenarios, not recovered characterization settings.",
+          "Isolated-switch overhead is scaled by drawn width at nominal span; rail partition and gate/body countercharge are reduced assumptions.",
+          "No silicon fit or standards claim; inspect discrepancies, not just completed conversions."
+        ],
+        "harmonic_errors_vs_figure_db": [
+          -2.72941362420012,
+          -25.8119134476974,
+          -41.2957317915506
+        ],
+        "maximum_absolute_harmonic_error_db": 41.2957317915506
+      },
+      {
+        "reference_resistance_ohm": 6000.0,
+        "ideal_scalar_max_code_difference": null,
+        "mode": "large_partition",
+        "samples": 1024,
+        "warmup_samples": 256,
+        "sample_rate_msps": 10.0,
+        "tone_frequency_mhz": 4.990234375,
+        "input_differential_peak_v": 1.53,
+        "ideal_comparator": true,
+        "acquisition_ns": 10.0,
+        "decision_interval_ns": 2.75,
+        "noiseless_sndr_db": 35.389922355300094,
+        "sfdr_db": 35.590570604081236,
+        "harmonics_3_5_7_dbc": [
+          -35.59057060408123,
+          -56.255895932324485,
+          -55.3578181862164
+        ],
+        "maximum_final_comparator_residual_mv": 20.25794298108563,
+        "maximum_decision_sampled_source_current_ua": 24.279466447966787,
+        "maximum_end_conversion_rail_error_mv": 140.61327632260512,
+        "reference_span_range_v": [
+          1.4245141699500552,
+          1.5098037947782745
+        ],
+        "source_sha256": {
+          "reference-afe-cap-geometry.json": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+          "reference-afe-controller-references.json": "a1f7566178da31fd39ab4f8739140991614419e04180e9634fec5b74bbdf761d",
+          "reference-afe-reference-transient.json": "fb76b9ec31566c8ee97b1c18fd2f34b834cd27aabc01a66336e7bd6d685ca604",
+          "reference-afe-reference-drivers.json": "0f2a04642008b5b3316a6ad827e8ecbf3b74859f5b44cf9c9ed121c0fd88255e",
+          "capacitor_network.py": "070cc8646dcb1d8ff819b4430cc4f03203f98b97e8f2fada0b0ced5e920ecd6b",
+          "reference_sequence.py": "038439e28fd9958fe363775ad77be94cfc421fa532cea3a6eb5d6b44ecd02c08",
+          "sar_transfer.py": "d259c050660b07c8c46f65017236ff0ac0908a9f24ec06a4d080e72cd48dc0e4"
+        },
+        "limitations": [
+          "Autonomous ideal-sign decisions with fixed timing and natural binary output; no preamp/comparator noise,offset,kickback or metastability. Not the recovered transistor timing model.",
+          "Ideal top-plate acquisition, area-only caps,100pF rails. Finite modes use the stated linear source resistance and conditional charge impulses; no real bootstrap/full capacitance matrix.",
+          "Tone and sample rate approximateFigure7, but amplitude90percent of modeled range and references2.5/0.8V are scenarios, not recovered characterization settings.",
+          "Isolated-switch overhead is scaled by drawn width at nominal span; rail partition and gate/body countercharge are reduced assumptions.",
+          "No silicon fit or standards claim; inspect discrepancies, not just completed conversions."
+        ],
+        "harmonic_errors_vs_figure_db": [
+          0.16835712398436442,
+          -11.086724065294263,
+          -10.188646319186176
+        ],
+        "maximum_absolute_harmonic_error_db": 11.086724065294263
+      },
+      {
+        "reference_resistance_ohm": 7000.0,
+        "ideal_scalar_max_code_difference": null,
+        "mode": "large_partition",
+        "samples": 1024,
+        "warmup_samples": 256,
+        "sample_rate_msps": 10.0,
+        "tone_frequency_mhz": 4.990234375,
+        "input_differential_peak_v": 1.53,
+        "ideal_comparator": true,
+        "acquisition_ns": 10.0,
+        "decision_interval_ns": 2.75,
+        "noiseless_sndr_db": 31.854473577712874,
+        "sfdr_db": 32.385393850756344,
+        "harmonics_3_5_7_dbc": [
+          -32.385393850756344,
+          -45.583153022822586,
+          -46.35394686708547
+        ],
+        "maximum_final_comparator_residual_mv": 47.9962614395878,
+        "maximum_decision_sampled_source_current_ua": 23.729380855559423,
+        "maximum_end_conversion_rail_error_mv": 161.08532258616358,
+        "reference_span_range_v": [
+          1.3835511603732908,
+          1.4820996429333442
+        ],
+        "source_sha256": {
+          "reference-afe-cap-geometry.json": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+          "reference-afe-controller-references.json": "a1f7566178da31fd39ab4f8739140991614419e04180e9634fec5b74bbdf761d",
+          "reference-afe-reference-transient.json": "fb76b9ec31566c8ee97b1c18fd2f34b834cd27aabc01a66336e7bd6d685ca604",
+          "reference-afe-reference-drivers.json": "0f2a04642008b5b3316a6ad827e8ecbf3b74859f5b44cf9c9ed121c0fd88255e",
+          "capacitor_network.py": "070cc8646dcb1d8ff819b4430cc4f03203f98b97e8f2fada0b0ced5e920ecd6b",
+          "reference_sequence.py": "038439e28fd9958fe363775ad77be94cfc421fa532cea3a6eb5d6b44ecd02c08",
+          "sar_transfer.py": "d259c050660b07c8c46f65017236ff0ac0908a9f24ec06a4d080e72cd48dc0e4"
+        },
+        "limitations": [
+          "Autonomous ideal-sign decisions with fixed timing and natural binary output; no preamp/comparator noise,offset,kickback or metastability. Not the recovered transistor timing model.",
+          "Ideal top-plate acquisition, area-only caps,100pF rails. Finite modes use the stated linear source resistance and conditional charge impulses; no real bootstrap/full capacitance matrix.",
+          "Tone and sample rate approximateFigure7, but amplitude90percent of modeled range and references2.5/0.8V are scenarios, not recovered characterization settings.",
+          "Isolated-switch overhead is scaled by drawn width at nominal span; rail partition and gate/body countercharge are reduced assumptions.",
+          "No silicon fit or standards claim; inspect discrepancies, not just completed conversions."
+        ],
+        "harmonic_errors_vs_figure_db": [
+          3.3735338773092494,
+          -0.4139811557923636,
+          -1.1847750000552466
+        ],
+        "maximum_absolute_harmonic_error_db": 3.3735338773092494
+      },
+      {
+        "reference_resistance_ohm": 8000.0,
+        "ideal_scalar_max_code_difference": null,
+        "mode": "large_partition",
+        "samples": 1024,
+        "warmup_samples": 256,
+        "sample_rate_msps": 10.0,
+        "tone_frequency_mhz": 4.990234375,
+        "input_differential_peak_v": 1.53,
+        "ideal_comparator": true,
+        "acquisition_ns": 10.0,
+        "decision_interval_ns": 2.75,
+        "noiseless_sndr_db": 29.075848599701544,
+        "sfdr_db": 29.719330165569353,
+        "harmonics_3_5_7_dbc": [
+          -29.719330165569353,
+          -40.664981945164,
+          -42.66883119572849
+        ],
+        "maximum_final_comparator_residual_mv": 74.89357674532293,
+        "maximum_decision_sampled_source_current_ua": 23.250075362144184,
+        "maximum_end_conversion_rail_error_mv": 181.01641265755865,
+        "reference_span_range_v": [
+          1.3436752487241748,
+          1.4552495280936555
+        ],
+        "source_sha256": {
+          "reference-afe-cap-geometry.json": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+          "reference-afe-controller-references.json": "a1f7566178da31fd39ab4f8739140991614419e04180e9634fec5b74bbdf761d",
+          "reference-afe-reference-transient.json": "fb76b9ec31566c8ee97b1c18fd2f34b834cd27aabc01a66336e7bd6d685ca604",
+          "reference-afe-reference-drivers.json": "0f2a04642008b5b3316a6ad827e8ecbf3b74859f5b44cf9c9ed121c0fd88255e",
+          "capacitor_network.py": "070cc8646dcb1d8ff819b4430cc4f03203f98b97e8f2fada0b0ced5e920ecd6b",
+          "reference_sequence.py": "038439e28fd9958fe363775ad77be94cfc421fa532cea3a6eb5d6b44ecd02c08",
+          "sar_transfer.py": "d259c050660b07c8c46f65017236ff0ac0908a9f24ec06a4d080e72cd48dc0e4"
+        },
+        "limitations": [
+          "Autonomous ideal-sign decisions with fixed timing and natural binary output; no preamp/comparator noise,offset,kickback or metastability. Not the recovered transistor timing model.",
+          "Ideal top-plate acquisition, area-only caps,100pF rails. Finite modes use the stated linear source resistance and conditional charge impulses; no real bootstrap/full capacitance matrix.",
+          "Tone and sample rate approximateFigure7, but amplitude90percent of modeled range and references2.5/0.8V are scenarios, not recovered characterization settings.",
+          "Isolated-switch overhead is scaled by drawn width at nominal span; rail partition and gate/body countercharge are reduced assumptions.",
+          "No silicon fit or standards claim; inspect discrepancies, not just completed conversions."
+        ],
+        "harmonic_errors_vs_figure_db": [
+          6.03959756249624,
+          4.504189921866221,
+          2.5003406713017355
+        ],
+        "maximum_absolute_harmonic_error_db": 6.03959756249624
+      },
+      {
+        "reference_resistance_ohm": 10000.0,
+        "ideal_scalar_max_code_difference": null,
+        "mode": "large_partition",
+        "samples": 1024,
+        "warmup_samples": 256,
+        "sample_rate_msps": 10.0,
+        "tone_frequency_mhz": 4.990234375,
+        "input_differential_peak_v": 1.53,
+        "ideal_comparator": true,
+        "acquisition_ns": 10.0,
+        "decision_interval_ns": 2.75,
+        "noiseless_sndr_db": 25.15840585660473,
+        "sfdr_db": 25.731127699725654,
+        "harmonics_3_5_7_dbc": [
+          -25.731127699725654,
+          -35.84318298616558,
+          -40.34437445471519
+        ],
+        "maximum_final_comparator_residual_mv": 126.3136676458706,
+        "maximum_decision_sampled_source_current_ua": 22.425774968783553,
+        "maximum_end_conversion_rail_error_mv": 219.33262230835115,
+        "reference_span_range_v": [
+          1.2670253247971135,
+          1.4039490663807337
+        ],
+        "source_sha256": {
+          "reference-afe-cap-geometry.json": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+          "reference-afe-controller-references.json": "a1f7566178da31fd39ab4f8739140991614419e04180e9634fec5b74bbdf761d",
+          "reference-afe-reference-transient.json": "fb76b9ec31566c8ee97b1c18fd2f34b834cd27aabc01a66336e7bd6d685ca604",
+          "reference-afe-reference-drivers.json": "0f2a04642008b5b3316a6ad827e8ecbf3b74859f5b44cf9c9ed121c0fd88255e",
+          "capacitor_network.py": "070cc8646dcb1d8ff819b4430cc4f03203f98b97e8f2fada0b0ced5e920ecd6b",
+          "reference_sequence.py": "038439e28fd9958fe363775ad77be94cfc421fa532cea3a6eb5d6b44ecd02c08",
+          "sar_transfer.py": "d259c050660b07c8c46f65017236ff0ac0908a9f24ec06a4d080e72cd48dc0e4"
+        },
+        "limitations": [
+          "Autonomous ideal-sign decisions with fixed timing and natural binary output; no preamp/comparator noise,offset,kickback or metastability. Not the recovered transistor timing model.",
+          "Ideal top-plate acquisition, area-only caps,100pF rails. Finite modes use the stated linear source resistance and conditional charge impulses; no real bootstrap/full capacitance matrix.",
+          "Tone and sample rate approximateFigure7, but amplitude90percent of modeled range and references2.5/0.8V are scenarios, not recovered characterization settings.",
+          "Isolated-switch overhead is scaled by drawn width at nominal span; rail partition and gate/body countercharge are reduced assumptions.",
+          "No silicon fit or standards claim; inspect discrepancies, not just completed conversions."
+        ],
+        "harmonic_errors_vs_figure_db": [
+          10.02780002833994,
+          9.325988880864642,
+          4.824797412315036
+        ],
+        "maximum_absolute_harmonic_error_db": 10.02780002833994
+      }
+    ],
+    "figure_target_harmonics_dbc": [
+      -35.75892772806559,
+      -45.16917186703022,
+      -45.16917186703022
+    ],
+    "figure_sha256": "0f83638a6d2d3a609a64b865a5af34c8df10857e811a9afa037d2fede20ea1c1",
+    "conclusions": [
+      "At6kohm the third harmonic matches within0.17dB while fifth/seventh are about11.1/10.2dB too weak.",
+      "At7kohm fifth/seventh are within about0.4/1.2dB but third is3.37dB too strong; reference span varies about1.384-1.482V and end-decision residual reaches48mV.",
+      "The source-impedance family can create a similar set of higher harmonics near overload, but none of these sampled settings jointly matches all three within the approximate1dB reading precision.",
+      "This is not an inferred silicon reference resistance. Fixed100pF reservoirs,90percent nominal input range,ideal sampling/comparator and nominal-span charge calibration remain assumptions.",
+      "The finite sweep does not exclude untested resistances,other R/C pairs,source dynamics,amplitudes or combinations of physical mechanisms."
+    ],
+    "warmup_check": {
+      "reference_resistance_ohm": 7000,
+      "short_samples": 256,
+      "long_samples": 512,
+      "maximum_harmonic_difference_db": 0.0
+    }
+  },
+  "span_dependent_charge_sensitivity": {
+    "cases": [
+      {
+        "switch_charge_law": "span",
+        "charge_evaluation_span_range_v": [
+          1.4300695306840354,
+          1.7000000000000055
+        ],
+        "maximum_charge_midpoint_deviation_v": 0.01578336854153428,
+        "span_extrapolation_evaluations": 0,
+        "reference_resistance_ohm": 6000.0,
+        "ideal_scalar_max_code_difference": null,
+        "mode": "large_partition",
+        "samples": 1024,
+        "warmup_samples": 256,
+        "sample_rate_msps": 10.0,
+        "tone_frequency_mhz": 4.990234375,
+        "input_differential_peak_v": 1.53,
+        "ideal_comparator": true,
+        "acquisition_ns": 10.0,
+        "decision_interval_ns": 2.75,
+        "noiseless_sndr_db": 36.49205780381545,
+        "sfdr_db": 36.586104126353476,
+        "harmonics_3_5_7_dbc": [
+          -36.586104126353476,
+          -63.80225747352034,
+          -60.58760330223548
+        ],
+        "maximum_final_comparator_residual_mv": 12.421484969083796,
+        "maximum_decision_sampled_source_current_ua": 23.282994058211546,
+        "maximum_end_conversion_rail_error_mv": 133.80974333262708,
+        "reference_span_range_v": [
+          1.436442475250721,
+          1.517633586045648
+        ],
+        "source_sha256": {
+          "reference-afe-cap-geometry.json": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+          "reference-afe-controller-references.json": "a1f7566178da31fd39ab4f8739140991614419e04180e9634fec5b74bbdf761d",
+          "reference-afe-reference-transient.json": "fb76b9ec31566c8ee97b1c18fd2f34b834cd27aabc01a66336e7bd6d685ca604",
+          "reference-afe-reference-drivers.json": "0f2a04642008b5b3316a6ad827e8ecbf3b74859f5b44cf9c9ed121c0fd88255e",
+          "reference-afe-cap-matrix-screen.json": "dabcfb1391a712f313ca923157de0a717e5ed6a0d1a1a2a04c0c4f68ae7aff97",
+          "capacitor_network.py": "070cc8646dcb1d8ff819b4430cc4f03203f98b97e8f2fada0b0ced5e920ecd6b",
+          "reference_sequence.py": "038439e28fd9958fe363775ad77be94cfc421fa532cea3a6eb5d6b44ecd02c08",
+          "sar_transfer.py": "d6f5848ea2522f97abc5a0f63648a42c0144d7c18b57475a04ece0aaf7c1a4d9"
+        },
+        "limitations": [
+          "Autonomous ideal-sign decisions with fixed timing and natural binary output; no preamp/comparator noise,offset,kickback or metastability. Not the recovered transistor timing model.",
+          "Ideal top-plate acquisition, area-only caps,100pF rails. Finite modes use the stated linear source resistance and conditional charge impulses; no real bootstrap/full capacitance matrix.",
+          "Tone and sample rate approximateFigure7, but amplitude90percent of modeled range and references2.5/0.8V are scenarios, not recovered characterization settings.",
+          "Switch charge uses nominal or span-adjusted endpoint law as reported. The span fit was characterized at fixed1.65V midpoint; midpoint and rail-partition variation remain unmodeled. Drawn-width scaling is conditional.",
+          "No silicon fit or standards claim; inspect discrepancies, not just completed conversions."
+        ],
+        "harmonic_change_from_nominal_charge_db": [
+          -0.9955335222722468,
+          -7.546361541195857,
+          -5.22978511601908
+        ],
+        "harmonic_errors_vs_figure_db": [
+          -0.8271763982878824,
+          -18.63308560649012,
+          -15.418431435205257
+        ]
+      },
+      {
+        "switch_charge_law": "span",
+        "charge_evaluation_span_range_v": [
+          1.3930948437898505,
+          1.7000000000000055
+        ],
+        "maximum_charge_midpoint_deviation_v": 0.015968428434646853,
+        "span_extrapolation_evaluations": 0,
+        "reference_resistance_ohm": 7000.0,
+        "ideal_scalar_max_code_difference": null,
+        "mode": "large_partition",
+        "samples": 1024,
+        "warmup_samples": 256,
+        "sample_rate_msps": 10.0,
+        "tone_frequency_mhz": 4.990234375,
+        "input_differential_peak_v": 1.53,
+        "ideal_comparator": true,
+        "acquisition_ns": 10.0,
+        "decision_interval_ns": 2.75,
+        "noiseless_sndr_db": 33.13939192336087,
+        "sfdr_db": 33.57809525870056,
+        "harmonics_3_5_7_dbc": [
+          -33.57809525870056,
+          -48.52469660726379,
+          -48.64445553916194
+        ],
+        "maximum_final_comparator_residual_mv": 37.66127475455083,
+        "maximum_decision_sampled_source_current_ua": 22.601297767059517,
+        "maximum_end_conversion_rail_error_mv": 152.26292052344758,
+        "reference_span_range_v": [
+          1.3992785158111636,
+          1.4924183220168317
+        ],
+        "source_sha256": {
+          "reference-afe-cap-geometry.json": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+          "reference-afe-controller-references.json": "a1f7566178da31fd39ab4f8739140991614419e04180e9634fec5b74bbdf761d",
+          "reference-afe-reference-transient.json": "fb76b9ec31566c8ee97b1c18fd2f34b834cd27aabc01a66336e7bd6d685ca604",
+          "reference-afe-reference-drivers.json": "0f2a04642008b5b3316a6ad827e8ecbf3b74859f5b44cf9c9ed121c0fd88255e",
+          "reference-afe-cap-matrix-screen.json": "dabcfb1391a712f313ca923157de0a717e5ed6a0d1a1a2a04c0c4f68ae7aff97",
+          "capacitor_network.py": "070cc8646dcb1d8ff819b4430cc4f03203f98b97e8f2fada0b0ced5e920ecd6b",
+          "reference_sequence.py": "038439e28fd9958fe363775ad77be94cfc421fa532cea3a6eb5d6b44ecd02c08",
+          "sar_transfer.py": "d6f5848ea2522f97abc5a0f63648a42c0144d7c18b57475a04ece0aaf7c1a4d9"
+        },
+        "limitations": [
+          "Autonomous ideal-sign decisions with fixed timing and natural binary output; no preamp/comparator noise,offset,kickback or metastability. Not the recovered transistor timing model.",
+          "Ideal top-plate acquisition, area-only caps,100pF rails. Finite modes use the stated linear source resistance and conditional charge impulses; no real bootstrap/full capacitance matrix.",
+          "Tone and sample rate approximateFigure7, but amplitude90percent of modeled range and references2.5/0.8V are scenarios, not recovered characterization settings.",
+          "Switch charge uses nominal or span-adjusted endpoint law as reported. The span fit was characterized at fixed1.65V midpoint; midpoint and rail-partition variation remain unmodeled. Drawn-width scaling is conditional.",
+          "No silicon fit or standards claim; inspect discrepancies, not just completed conversions."
+        ],
+        "harmonic_change_from_nominal_charge_db": [
+          -1.192701407944213,
+          -2.941543584441206,
+          -2.29050867207647
+        ],
+        "harmonic_errors_vs_figure_db": [
+          2.1808324693650363,
+          -3.3555247402335695,
+          -3.4752836721317166
+        ]
+      }
+    ],
+    "nominal_regression_max_harmonic_difference_db": 0.0,
+    "warmup_256_to_512_max_harmonic_difference_db": 0.0,
+    "conclusions": [
+      "The independently derived span-dependent charge law changes higher harmonics materially near overload; nominal fixed-charge near-agreement is not robust.",
+      "At7kohm corrected harmonics are about-33.58/-48.52/-48.64dBc, versus figure-35.76/-45.17/-45.17dBc. No joint match or unique reference impedance is established.",
+      "All evaluated spans remain within0.5-2.3V characterized span interval. Reference midpoint deviates up to about16mV from the fixed1.65V characterization point; that dependence and rail-partition variation remain unmodeled.",
+      "Only total overhead charge is scaled; timing,body/gate transfer and full reference source dynamics remain reduced assumptions."
+    ]
+  },
+  "sampler_connected_screen": {
+    "sampler_input_json_text": "{\n  \"selection\": \"figure7-low\",\n  \"analysis_script_sha256\": \"aa6c15f6fd315184afcfc68e9e8039451f873c6f4067a753490f2d83d120ec15\",\n  \"source_gds_sha256\": \"3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10\",\n  \"raw_extraction_sha256\": \"8e6e496501969c8458d68faad49cb9e5c8a6929d1c68fe080a46d9019b1552b0\",\n  \"model_sha256\": {\n    \"design.ngspice\": \"8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508\",\n    \"sm141064.ngspice\": \"73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda\"\n  },\n  \"bootstrap_capacitors\": [\n    {\n      \"type\": \"mim_2ff\",\n      \"terminals\": {\n        \"A\": \"$5\",\n        \"B\": \"$13\"\n      },\n      \"parameters\": {\n        \"C\": 5.760000000000001e-13,\n        \"A\": 288.0,\n        \"P\": 72.0\n      }\n    },\n    {\n      \"type\": \"mim_2ff\",\n      \"terminals\": {\n        \"A\": \"$9\",\n        \"B\": \"$14\"\n      },\n      \"parameters\": {\n        \"C\": 5.760000000000001e-13,\n        \"A\": 288.0,\n        \"P\": 72.0\n      }\n    }\n  ],\n  \"branches\": [\n    {\n      \"suffix\": \"p\",\n      \"gate\": \"$10\",\n      \"bootstrap_top\": \"$13\",\n      \"total_sampling_width_um\": 48.0\n    },\n    {\n      \"suffix\": \"n\",\n      \"gate\": \"$11\",\n      \"bootstrap_top\": \"$14\",\n      \"total_sampling_width_um\": 48.0\n    }\n  ],\n  \"extracted_bulk_audit\": {\n    \"terminal_counts\": {\n      \"nmos\": {\n        \"vss\": 24\n      },\n      \"nmos6\": {\n        \"vss\": 10\n      },\n      \"pmos6\": {\n        \"vdd\": 10\n      }\n    },\n    \"isolated_pwell_regions\": 0,\n    \"deep_nwell_regions\": 0,\n    \"uncovered_gate_area_um2\": {\n      \"nmos\": 0.0,\n      \"pmos\": 0.0\n    }\n  },\n  \"cases\": [],\n  \"dynamic_sampling\": [\n    {\n      \"output_load_pf\": 0.666,\n      \"single_ended_peak_v\": 0.765,\n      \"input_hz\": 4960937.5,\n      \"body_case\": \"extracted\",\n      \"max_step_ns\": 0.2,\n      \"sample_hz\": 10000000.0,\n      \"samples\": 256,\n      \"hold_observation_ns\": 40,\n      \"spectra\": {\n        \"differential\": {\n          \"harmonics_3_5_7_dbc\": [\n            -68.62494010528229,\n            -92.14449576872136,\n            -97.59527392215819\n          ],\n          \"fundamental_peak_v\": 1.524434315986571,\n          \"sfdr_db\": 68.62494010528229,\n          \"deterministic_sndr_db\": 68.59715348354155,\n          \"largest_spur_bin\": 125\n        },\n        \"positive_only\": {\n          \"harmonics_3_5_7_dbc\": [\n            -68.63149385355891,\n            -92.11672794540817,\n            -97.63766609033433\n          ],\n          \"fundamental_peak_v\": 0.7622174897463198,\n          \"sfdr_db\": 48.88986195822976,\n          \"deterministic_sndr_db\": 48.84162626932901,\n          \"largest_spur_bin\": 2\n        }\n      },\n      \"held_samples_v\": {\n        \"positive\": [\n          1.7632418592650994,\n          1.418329147086794,\n          1.7267679587182412,\n          1.4550570445487085,\n          1.6899737370975192,\n          1.4921143316885277,\n          1.6529447169330418,\n          1.5294083795317532,\n          1.6157667059340255,\n          1.566853676366248,\n          1.5785281483281148,\n          1.6043588056368414,\n          1.5413189551178377,\n          1.6418311552186557,\n          1.504225551424606,\n          1.6791812588472586,\n          1.467337055482836,\n          1.7163172078292463,\n          1.4307406903083417,\n          1.7531485886933496,\n          1.3945228754193153,\n          1.7895869974033394,\n          1.3587686816527929,\n          1.825543452474367,\n          1.3235635093775266,\n          1.8609303186572652,\n          1.288987524883024,\n          1.89566249618374,\n          1.2551226872261023,\n          1.9296541749064555,\n          1.2220470399682226,\n          1.9628232323084431,\n          1.1898398877384098,\n          1.9950889924766242,\n          1.1585748502107334,\n          2.0263715130092264,\n          1.1283273010626682,\n          2.056593985286769,\n          1.0991706352969466,\n          2.085679522276954,\n          1.071171274390182,\n          2.1135551425224945,\n          1.044398517501717,\n          2.1401520621068415,\n          1.0189131294420275,\n          2.165403380034048,\n          0.9947790866852897,\n          2.189246789459977,\n          0.97205313516696,\n          2.2116210240495007,\n          0.9507870189697956,\n          2.2324695083282333,\n          0.9310354841854169,\n          2.251741289992072,\n          0.9128433375094107,\n          2.2693878073226665,\n          0.8962549158119899,\n          2.285364337229615,\n          0.8813094214005045,\n          2.299632256367856,\n          0.8680440753830462,\n          2.312155072262782,\n          0.8564897484302073,\n          2.32290243725756,\n          0.8466742037972792,\n          2.3318469625258444,\n          0.8386199296666221,\n          2.33896721197284,\n          0.8323490465510425,\n          2.344244576584502,\n          0.8278753140427627,\n          2.3476670550866463,\n          0.8252095092469439,\n          2.349226310050466,\n          0.824359163822533,\n          2.3489182320448987,\n          0.8253244095366271,\n          2.346744116876804,\n          0.8281058705420876,\n          2.3427121334642855,\n          0.8326941694291158,\n          2.336830815430054,\n          0.839080845648224,\n          2.3291185120439395,\n          0.8472507369985095,\n          2.3195952434216505,\n          0.8571835027285463,\n          2.308286294035201,\n          0.8688550454442602,\n          2.2952215694653284,\n          0.8822389873278632,\n          2.2804352404519483,\n          0.8973050187246084,\n          2.263965778065277,\n          0.9140205341131318,\n          2.2458568169742903,\n          0.9323502901559841,\n          2.226153963477003,\n          0.9522602450472248,\n          2.2049072669105154,\n          0.9737096562281932,\n          2.1821717367791043,\n          0.9966439241856664,\n          2.1580063657558335,\n          1.0210056515469759,\n          2.1324698075810358,\n          1.0467316849581758,\n          2.105628408894398,\n          1.0737585080501029,\n          2.07754771419075,\n          1.1020221843708446,\n          2.048299012228935,\n          1.131454339838904,\n          2.0179537156273337,\n          1.1619877817792144,\n          1.986586592058853,\n          1.193549062835645,\n          1.9542731829557451,\n          1.2260612531095607,\n          1.921092336673401,\n          1.2594495869892215,\n          1.8871268155875787,\n          1.2936311730460512,\n          1.8524559613663367,\n          1.3285239692815143,\n          1.8171631315937957,\n          1.3640465979289862,\n          1.7813324370579662,\n          1.400116297482373,\n          1.7450508549329071,\n          1.4366460299780424,\n          1.7084050521880219,\n          1.473550125774447,\n          1.671483488793833,\n          1.510737118078287,\n          1.6343684107715024,\n          1.548119364929945,\n          1.597149416885224,\n          1.5856036464957157,\n          1.5599143175034953,\n          1.6231046327011178,\n          1.5227520031052213,\n          1.6605265813809644,\n          1.4857499210190983,\n          1.6977814470788501,\n          1.4489970123738773,\n          1.7347766695252216,\n          1.4125790399827056,\n          1.7714230260291972,\n          1.376582729001202,\n          1.8076316167265774,\n          1.3410930238629175,\n          1.8433133576966758,\n          1.3061907755161355,\n          1.878383008371053,\n          1.271961098317036,\n          1.9127560007486655,\n          1.2384806035129121,\n          1.9463466750778005,\n          1.2058299879230077,\n          1.9790739553088925,\n          1.1740843826028602,\n          2.0108581011823476,\n          1.143319318205785,\n          2.0416198849184592,\n          1.1136087013407154,\n          2.0712829294209287,\n          1.0850225239366023,\n          2.0997727978886456,\n          1.0576281902390154,\n          2.127017589063619,\n          1.0314910158100608,\n          2.1529503591648913,\n          1.0066736587607288,\n          2.177504930754692,\n          0.9832364054186818,\n          2.200621207948849,\n          0.961233798111635,\n          2.222238800091551,\n          0.9407188759805603,\n          2.242305925017876,\n          0.9217416233457099,\n          2.2607706193619004,\n          0.904346458728683,\n          2.277587504754545,\n          0.8885751426266357,\n          2.2927141858229874,\n          0.8744654024044509,\n          2.3061137645701417,\n          0.8620506346186185,\n          2.3177526270935083,\n          0.8513624580827225,\n          2.3276014863818575,\n          0.8424261160720553,\n          2.3356361500233063,\n          0.8352612151838645,\n          2.3418369444555838,\n          0.8298861624979237,\n          2.3461884693603365,\n          0.8263161212317512,\n          2.3486801388063463,\n          0.8245569376974191,\n          2.3493056734051265,\n          0.8246151222967051,\n          2.3480638464101298,\n          0.8264880739039887,\n          2.3449602483124568,\n          0.8301749734147535,\n          2.340001465988931,\n          0.8356637656411863,\n          2.333202447494473,\n          0.8429444615381297,\n          2.324581736595609,\n          0.8519982492176394,\n          2.3141622766097587,\n          0.8628036163593814,\n          2.301971302732461,\n          0.8753349665541442,\n          2.2880412437080007,\n          0.8895637691133992,\n          2.2724082958532748,\n          0.9054583998389496,\n          2.255113644050567,\n          0.9229849211267316,\n          2.236201251337461,\n          0.9421098470488813,\n          2.2157201659865886,\n          0.9627965633033465,\n          2.193723155113137,\n          0.9849946638799563,\n          2.170264214280609,\n          1.0086506571511096,\n          2.1454054724349096,\n          1.033701652764751,\n          2.1192087096599135,\n          1.0600856841574935,\n          2.091738876915074,\n          1.0877399305388118,\n          2.063064980123628,\n          1.1165972731904974,\n          2.03325850614306,\n          1.1465883666392713,\n          2.002393163356907,\n          1.1776442550312265,\n          1.970543454333438,\n          1.2096907753773396,\n          1.9377851707963352,\n          1.2426509554814427,\n          1.9042028369674453,\n          1.2764458677786563,\n          1.8698750559465958,\n          1.3109943936891464,\n          1.8348823708501858,\n          1.346212848350872,\n          1.799310116731414,\n          1.3820184247825422\n        ],\n        \"negative\": [\n          1.4001174598633943,\n          1.7450519121707018,\n          1.4366467227199997,\n          1.7084060842035762,\n          1.4735499933802556,\n          1.6714832232374897,\n          1.5107373553062162,\n          1.634366299601364,\n          1.5481184934768533,\n          1.5971476114883019,\n          1.5856042692335142,\n          1.5599133484115717,\n          1.6231043117578312,\n          1.5227497350667114,\n          1.6605268063457514,\n          1.4857479283281758,\n          1.6977808871834505,\n          1.4489952972792228,\n          1.7347768999442312,\n          1.412578490181343,\n          1.7714222518197242,\n          1.3765829459036392,\n          1.8076310284925143,\n          1.3410918699332763,\n          1.8433122123349959,\n          1.3061915901882581,\n          1.8783815223465168,\n          1.2719614884842125,\n          1.9127541433022404,\n          1.2384829062365945,\n          1.94634623606962,\n          1.205831440585176,\n          1.9790736670135443,\n          1.1740858919150379,\n          2.010857675692384,\n          1.143321464835407,\n          2.0416197961260925,\n          1.1136110562511015,\n          2.0712835632750153,\n          1.0850247346791593,\n          2.099773337921681,\n          1.057629131316147,\n          2.127018220559118,\n          1.0314924542862445,\n          2.152949686885482,\n          1.0066776198496634,\n          2.1775037750881987,\n          0.9832393546087582,\n          2.2006206940096766,\n          0.9612362611102522,\n          2.2222387054826607,\n          0.9407209819523551,\n          2.2423060334129645,\n          0.9217425708278233,\n          2.260770831247617,\n          0.9043466592987013,\n          2.2775876985258554,\n          0.8885747763239383,\n          2.2927148232407766,\n          0.8744633208178911,\n          2.3061141624880954,\n          0.8620501275329158,\n          2.3177527732644827,\n          0.8513625900311587,\n          2.327601818837025,\n          0.8424252981892759,\n          2.3356368428007297,\n          0.835261805367424,\n          2.3418375442369554,\n          0.8298876006615198,\n          2.346188858088041,\n          0.826316247936311,\n          2.348680139383941,\n          0.8245574484431613,\n          2.349305592037567,\n          0.8246155665186009,\n          2.3480642763843993,\n          0.8264895487301649,\n          2.344960113561149,\n          0.8301756738260864,\n          2.340001590012758,\n          0.8356650740541596,\n          2.3332031247026666,\n          0.84294549811096,\n          2.3245819963815464,\n          0.8519988144989078,\n          2.3141624185685647,\n          0.8628049246080415,\n          2.301971402159761,\n          0.875337160647942,\n          2.2880417528653414,\n          0.8895663251883228,\n          2.2724087461761666,\n          0.905460170268054,\n          2.2551138153974084,\n          0.9229865263712832,\n          2.2362019887900697,\n          0.9421129349735362,\n          2.2157206651020194,\n          0.9627979255988337,\n          2.1937222189964447,\n          0.9849956454274055,\n          2.170264107047313,\n          1.0086512241505674,\n          2.145405105250495,\n          1.0337027336581832,\n          2.1192067119521867,\n          1.0600849044050482,\n          2.0917368328197625,\n          1.0877385257505106,\n          2.063063507826504,\n          1.1165954922550207,\n          2.0332565259338042,\n          1.1465878065615642,\n          2.00239101762553,\n          1.1776441527590185,\n          1.9705410519822157,\n          1.2096902627455222,\n          1.9377854067770472,\n          1.242650746441986,\n          1.904203347853648,\n          1.2764456505007473,\n          1.8698738079958581,\n          1.3109942096506926,\n          1.8348820893015898,\n          1.3462142374928097,\n          1.799310120646784,\n          1.3820204320019036,\n          1.763243564616838,\n          1.4183301244800988,\n          1.726769057724581,\n          1.4550569787095167,\n          1.68997400277958,\n          1.492113834661209,\n          1.6529432698013582,\n          1.5294085351909141,\n          1.615765443781553,\n          1.56685393048645,\n          1.578526310266899,\n          1.6043586331574564,\n          1.5413168734949103,\n          1.6418309027701938,\n          1.5042230606388234,\n          1.6791806936322187,\n          1.467334510882176,\n          1.7163162905446097,\n          1.4307395583926885,\n          1.7531488263946216,\n          1.3945223142960612,\n          1.7895868664193315,\n          1.3587683637010457,\n          1.8255429956183336,\n          1.3235635424691523,\n          1.8609288248890983,\n          1.2889878017501555,\n          1.8956605622238119,\n          1.2551230025630025,\n          1.9296528455022954,\n          1.2220491775261575,\n          1.962822439866062,\n          1.189840962749744,\n          1.9950886712110785,\n          1.1585764923901436,\n          2.026371825855014,\n          1.1283301014223694,\n          2.0565936552846766,\n          1.099173140771849,\n          2.085679879007111,\n          1.0711744750441583,\n          2.1135556970516567,\n          1.0444001794870879,\n          2.140151584708982,\n          1.0189168214529314,\n          2.165402744672612,\n          0.9947820208713859,\n          2.189246156615847,\n          0.9720550098789252,\n          2.2116209195599708,\n          0.9507897376596851,\n          2.2324697522718924,\n          0.931037006002317,\n          2.25174168911919,\n          0.9128442400349567,\n          2.2693880507356567,\n          0.896255988722232,\n          2.285365072973124,\n          0.8813105981876775,\n          2.2996325445527126,\n          0.8680440669898148,\n          2.3121555450680225,\n          0.8564887649822044,\n          2.322902863527044,\n          0.8466736974485694,\n          2.3318475828032974,\n          0.8386201699466301,\n          2.3389675869031707,\n          0.8323501049380476,\n          2.3442452269174936,\n          0.8278761370196954,\n          2.3476674400565636,\n          0.8252088987004212,\n          2.349226262054905,\n          0.8243597064217205,\n          2.3489181493745765,\n          0.8253256954328039,\n          2.346744621173044,\n          0.8281064557690622,\n          2.342711939660378,\n          0.8326958568346039,\n          2.3368314829294814,\n          0.8390827657328677,\n          2.32911921534384,\n          0.8472518537945835,\n          2.3195955118060843,\n          0.8571838495392466,\n          2.3082864270868657,\n          0.8688571080166925,\n          2.295221974496218,\n          0.882241593317477,\n          2.2804354850364335,\n          0.8973072303282945,\n          2.263966354834963,\n          0.9140219607110206,\n          2.245857061644562,\n          0.9323529985575517,\n          2.2261541065808217,\n          0.9522632940029438,\n          2.204906757100885,\n          0.9737115715397716,\n          2.182172273755999,\n          0.9966451077575172,\n          2.1580062166724594,\n          1.0210064033123425,\n          2.1324688213723535,\n          1.0467322973510924,\n          2.105626894086121,\n          1.0737576177899921,\n          2.0775462596731162,\n          1.1020213232429723,\n          2.0482975717016907,\n          1.131454247374467,\n          2.017951643279718,\n          1.1619875571026386,\n          1.9865838758497016,\n          1.1935482212996535,\n          1.954270729988883,\n          1.2260607814601927,\n          1.9210914067211102,\n          1.259449190910143,\n          1.8871274415433843,\n          1.293631494439261,\n          1.8524577485741438,\n          1.3285261478457902,\n          1.8171657377141257,\n          1.3640494286911096,\n          1.7813333336533441\n        ]\n      }\n    }\n  ],\n  \"limitations\": [\n    \"Nominal PDK,25C,3.3V supply,10000000.0Hz assigned clock with15ns high phase. Figure7 mode matches annotated tone/rate approximately, not recovered input amplitude, acquisition duty or load.\",\n    \"Assigned .666pF plate-only baseline and1.5/3pF sensitivity loads; no full capacitor matrix, reference switching, preamp, pads or package.\",\n    \"3.3V versus6V gate classes extracted using Dualgate55/0; ideal2fF/um2 MIM and conductive wells.\",\n    \"Counterfactual changes two PMOS bulk ties per branch to track bootstrap top; not the fabricated layout or an implementable fix without well/layout changes.\",\n    \"Dynamic screen observes held analog differential samples, not ADC codes; no comparator, DAC switching, noise or quantization. Not measured ENOB or oxide reliability qualification.\"\n  ]\n}\n",
+    "cases": [
+      {
+        "decision_input_common_mode_ranges_v": [
+          [
+            1.5816758792179435,
+            1.5871380113171525
+          ],
+          [
+            1.156703548325016,
+            1.1621656804242246
+          ],
+          [
+            0.944229959745403,
+            0.9496920918446119
+          ],
+          [
+            0.838005742322447,
+            0.8434678744216566
+          ],
+          [
+            0.7849062104778197,
+            0.79036834257703
+          ],
+          [
+            0.7583690214223566,
+            0.7638311535215679
+          ],
+          [
+            0.7451130037614758,
+            0.750575135860688
+          ],
+          [
+            0.7384975717978861,
+            0.7439597038970991
+          ],
+          [
+            0.7352024326829418,
+            0.7406645647821558
+          ],
+          [
+            0.7335674399923207,
+            0.7390295720915354
+          ],
+          [
+            0.732762520513861,
+            0.7382246526130762
+          ],
+          [
+            0.7321387079180544,
+            0.7376008400172707
+          ],
+          [
+            0.7318288139188471,
+            0.7372909460180641
+          ],
+          [
+            0.7316758792179393,
+            0.737138011317157
+          ]
+        ],
+        "sampler_source_sha256": "fce2547cdeeca7df10c8bc75aad1869112b175aa4059d0fe400273b7a8e1bf2f",
+        "sampler_connection": "One-way periodic held-waveform replay; no CDAC feedback into sampler",
+        "switch_charge_law": "nominal",
+        "charge_evaluation_span_range_v": null,
+        "maximum_charge_midpoint_deviation_v": null,
+        "span_extrapolation_evaluations": 0,
+        "reference_resistance_ohm": null,
+        "ideal_scalar_max_code_difference": 0,
+        "mode": "ideal",
+        "samples": 256,
+        "warmup_samples": 128,
+        "sample_rate_msps": 10.0,
+        "tone_frequency_mhz": 4.9609375,
+        "input_differential_peak_v": 1.53,
+        "ideal_comparator": true,
+        "acquisition_ns": 10.0,
+        "decision_interval_ns": 2.75,
+        "noiseless_sndr_db": 66.22046253052582,
+        "sfdr_db": 69.06092106117933,
+        "harmonics_3_5_7_dbc": [
+          -69.06092106117933,
+          -103.8586707215977,
+          -89.39974589125882
+        ],
+        "maximum_final_comparator_residual_mv": 0.3131856598510563,
+        "maximum_decision_sampled_source_current_ua": 0.0,
+        "maximum_end_conversion_rail_error_mv": 0.0,
+        "reference_span_range_v": [
+          1.7,
+          1.7
+        ],
+        "source_sha256": {
+          "reference-afe-cap-geometry.json": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+          "reference-afe-controller-references.json": "a1f7566178da31fd39ab4f8739140991614419e04180e9634fec5b74bbdf761d",
+          "reference-afe-reference-transient.json": "fb76b9ec31566c8ee97b1c18fd2f34b834cd27aabc01a66336e7bd6d685ca604",
+          "reference-afe-reference-drivers.json": "0f2a04642008b5b3316a6ad827e8ecbf3b74859f5b44cf9c9ed121c0fd88255e",
+          "reference-afe-cap-matrix-screen.json": "dabcfb1391a712f313ca923157de0a717e5ed6a0d1a1a2a04c0c4f68ae7aff97",
+          "capacitor_network.py": "070cc8646dcb1d8ff819b4430cc4f03203f98b97e8f2fada0b0ced5e920ecd6b",
+          "reference_sequence.py": "038439e28fd9958fe363775ad77be94cfc421fa532cea3a6eb5d6b44ecd02c08",
+          "sar_transfer.py": "51414620841a607a7b432a7e89eb79e9e193dc213f183bdfca5420dd5e6eaacc"
+        },
+        "limitations": [
+          "Autonomous ideal-sign decisions with fixed timing and natural binary output; no preamp/comparator noise,offset,kickback or metastability. Not the recovered transistor timing model.",
+          "Ideal top-plate acquisition, area-only caps,100pF rails. Finite modes use the stated linear source resistance and conditional charge impulses; no real bootstrap/full capacitance matrix.",
+          "Tone and sample rate approximateFigure7, but amplitude90percent of modeled range and references2.5/0.8V are scenarios, not recovered characterization settings.",
+          "Switch charge uses nominal or span-adjusted endpoint law as reported. The span fit was characterized at fixed1.65V midpoint; midpoint and rail-partition variation remain unmodeled. Drawn-width scaling is conditional.",
+          "Optional sampler replay preserves both held legs but ideal-clamps them during acquisition. It omits bidirectional loading, reset interaction and common-mode sensitivity of a real comparator. Its periodic record is an assigned steady-state input.",
+          "No silicon fit or standards claim; inspect discrepancies, not just completed conversions."
+        ]
+      },
+      {
+        "decision_input_common_mode_ranges_v": [
+          [
+            1.582589664559029,
+            1.5878730360621878
+          ],
+          [
+            1.1700064269826012,
+            1.1729871130940297
+          ],
+          [
+            0.9653657722068623,
+            0.9686600357977184
+          ],
+          [
+            0.863110275155941,
+            0.8667403858681042
+          ],
+          [
+            0.8125580688500467,
+            0.8165394608572907
+          ],
+          [
+            0.7878059532078647,
+            0.7919662866167203
+          ],
+          [
+            0.7754433099510725,
+            0.7796967256206341
+          ],
+          [
+            0.7695220570911749,
+            0.773821219912293
+          ],
+          [
+            0.7668164753234792,
+            0.7711370414898184
+          ],
+          [
+            0.7657131925403355,
+            0.7700430399700019
+          ],
+          [
+            0.7654049927987714,
+            0.7697383575670833
+          ],
+          [
+            0.7652600451520578,
+            0.7695956239422155
+          ],
+          [
+            0.765408571550467,
+            0.7697443708959273
+          ],
+          [
+            0.7656980207712427,
+            0.7700331170258998
+          ]
+        ],
+        "sampler_source_sha256": "fce2547cdeeca7df10c8bc75aad1869112b175aa4059d0fe400273b7a8e1bf2f",
+        "sampler_connection": "One-way periodic held-waveform replay; no CDAC feedback into sampler",
+        "switch_charge_law": "span",
+        "charge_evaluation_span_range_v": [
+          1.6395998245298116,
+          1.6992087445861286
+        ],
+        "maximum_charge_midpoint_deviation_v": 0.01087546017990837,
+        "span_extrapolation_evaluations": 0,
+        "reference_resistance_ohm": 1000.0,
+        "ideal_scalar_max_code_difference": null,
+        "mode": "large_partition",
+        "samples": 256,
+        "warmup_samples": 256,
+        "sample_rate_msps": 10.0,
+        "tone_frequency_mhz": 4.9609375,
+        "input_differential_peak_v": 1.53,
+        "ideal_comparator": true,
+        "acquisition_ns": 10.0,
+        "decision_interval_ns": 2.75,
+        "noiseless_sndr_db": 54.19193282717217,
+        "sfdr_db": 54.64931503861827,
+        "harmonics_3_5_7_dbc": [
+          -54.64931503861827,
+          -78.21623877426744,
+          -85.9608941600348
+        ],
+        "maximum_final_comparator_residual_mv": 4.047742422395917,
+        "maximum_decision_sampled_source_current_ua": 34.9501630993414,
+        "maximum_end_conversion_rail_error_mv": 28.73574890751762,
+        "reference_span_range_v": [
+          1.6485315810881387,
+          1.6625497737590855
+        ],
+        "source_sha256": {
+          "reference-afe-cap-geometry.json": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+          "reference-afe-controller-references.json": "a1f7566178da31fd39ab4f8739140991614419e04180e9634fec5b74bbdf761d",
+          "reference-afe-reference-transient.json": "fb76b9ec31566c8ee97b1c18fd2f34b834cd27aabc01a66336e7bd6d685ca604",
+          "reference-afe-reference-drivers.json": "0f2a04642008b5b3316a6ad827e8ecbf3b74859f5b44cf9c9ed121c0fd88255e",
+          "reference-afe-cap-matrix-screen.json": "dabcfb1391a712f313ca923157de0a717e5ed6a0d1a1a2a04c0c4f68ae7aff97",
+          "capacitor_network.py": "070cc8646dcb1d8ff819b4430cc4f03203f98b97e8f2fada0b0ced5e920ecd6b",
+          "reference_sequence.py": "038439e28fd9958fe363775ad77be94cfc421fa532cea3a6eb5d6b44ecd02c08",
+          "sar_transfer.py": "51414620841a607a7b432a7e89eb79e9e193dc213f183bdfca5420dd5e6eaacc"
+        },
+        "limitations": [
+          "Autonomous ideal-sign decisions with fixed timing and natural binary output; no preamp/comparator noise,offset,kickback or metastability. Not the recovered transistor timing model.",
+          "Ideal top-plate acquisition, area-only caps,100pF rails. Finite modes use the stated linear source resistance and conditional charge impulses; no real bootstrap/full capacitance matrix.",
+          "Tone and sample rate approximateFigure7, but amplitude90percent of modeled range and references2.5/0.8V are scenarios, not recovered characterization settings.",
+          "Switch charge uses nominal or span-adjusted endpoint law as reported. The span fit was characterized at fixed1.65V midpoint; midpoint and rail-partition variation remain unmodeled. Drawn-width scaling is conditional.",
+          "Optional sampler replay preserves both held legs but ideal-clamps them during acquisition. It omits bidirectional loading, reset interaction and common-mode sensitivity of a real comparator. Its periodic record is an assigned steady-state input.",
+          "No silicon fit or standards claim; inspect discrepancies, not just completed conversions."
+        ]
+      }
+    ],
+    "interpretation": "One-way low-swing sampler plus autonomous SAR, preserving both held legs. No joint match to measured harmonic spectrum; no calibration or bidirectional transistor chain claim."
+  }
+}

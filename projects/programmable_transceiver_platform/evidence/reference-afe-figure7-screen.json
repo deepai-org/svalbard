@@ -1,0 +1,287 @@
+{
+  "conditional_shape_comparison": {
+    "assumption": "Inset peaks assigned to3rd/5th/7th harmonics. Conditional shape test, not proof of those identities or a silicon transfer fit.",
+    "target_harmonics_dbc": [
+      -35.75892772806559,
+      -45.16917186703022,
+      -45.16917186703022
+    ],
+    "third_harmonic_matched_models": [
+      {
+        "model": "symmetric_hard_clip",
+        "parameter": 0.9395546727331182,
+        "harmonics_dbc": [
+          -35.758927728066396,
+          -37.56330759233159,
+          -40.51772725241956
+        ],
+        "errors_vs_figure_db": [
+          -8.029132914089132e-13,
+          7.605864274698632,
+          4.651444614610661
+        ]
+      },
+      {
+        "model": "tanh_compression",
+        "parameter": 0.45338289775643015,
+        "harmonics_dbc": [
+          -35.75892772807892,
+          -69.86152302030075,
+          -103.85256541245441
+        ],
+        "errors_vs_figure_db": [
+          -1.332978172285948e-11,
+          -24.69235115327053,
+          -58.68339354542419
+        ]
+      },
+      {
+        "model": "arctangent_compression",
+        "parameter": 0.4649265635084995,
+        "harmonics_dbc": [
+          -35.7589277280656,
+          -66.41240535406484,
+          -95.55146870130885
+        ],
+        "errors_vs_figure_db": [
+          -7.105427357601002e-15,
+          -21.243233487034622,
+          -50.38229683427863
+        ]
+      }
+    ],
+    "nonunique_monotone_transfers": [
+      {
+        "harmonic_signs": [
+          -1,
+          -1,
+          -1
+        ],
+        "minimum_transfer_slope": 0.44523911597234944,
+        "maximum_harmonic_fit_error_db": 2.1316282072803006e-14
+      },
+      {
+        "harmonic_signs": [
+          -1,
+          -1,
+          1
+        ],
+        "minimum_transfer_slope": 0.8355680119209006,
+        "maximum_harmonic_fit_error_db": 2.1316282072803006e-14
+      },
+      {
+        "harmonic_signs": [
+          -1,
+          1,
+          -1
+        ],
+        "minimum_transfer_slope": 0.7209865063090838,
+        "maximum_harmonic_fit_error_db": 2.1316282072803006e-14
+      },
+      {
+        "harmonic_signs": [
+          -1,
+          1,
+          1
+        ],
+        "minimum_transfer_slope": 0.8570234009863993,
+        "maximum_harmonic_fit_error_db": 2.1316282072803006e-14
+      },
+      {
+        "harmonic_signs": [
+          1,
+          -1,
+          -1
+        ],
+        "minimum_transfer_slope": 0.738548608630917,
+        "maximum_harmonic_fit_error_db": 2.1316282072803006e-14
+      },
+      {
+        "harmonic_signs": [
+          1,
+          -1,
+          1
+        ],
+        "minimum_transfer_slope": 0.8849357108760891,
+        "maximum_harmonic_fit_error_db": 2.1316282072803006e-14
+      },
+      {
+        "harmonic_signs": [
+          1,
+          1,
+          -1
+        ],
+        "minimum_transfer_slope": 0.9259939702999991,
+        "maximum_harmonic_fit_error_db": 2.1316282072803006e-14
+      },
+      {
+        "harmonic_signs": [
+          1,
+          1,
+          1
+        ],
+        "minimum_transfer_slope": 0.9400851889434361,
+        "maximum_harmonic_fit_error_db": 2.842170943040401e-14
+      }
+    ],
+    "construction": "y=x+sum(sign[n]*amplitude[n]*T_n(x)), n=3,5,7, x in[-1,1]. Fundamental normalized to1; harmonic phases unobserved.",
+    "conclusion": "These simple clipping/compression families fail to jointly reproduce the peaks. Eight distinct monotone polynomial transfers reproduce their magnitudes exactly, so magnitudes alone do not identify transfer curvature or physical cause."
+  },
+  "paper_url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=957346",
+  "paper_sha256": "a83f10a67fd39972c2eccaa9e431f39807e777eff434c8713da1f2bc0881adac",
+  "embedded_raster_sha256": "63e67f9cec9e41749813cbf40c37544ea6d5ea6d5d6772f8207f2b0446dcd9f1",
+  "analysis_script_sha256": "114186a6138fa68a0547eb6282fad0eb32243524ee5b967f0b6c4464f51eafe1",
+  "native_raster_size": [
+    898,
+    822
+  ],
+  "inset_crop_xy": [
+    452,
+    20,
+    800,
+    349
+  ],
+  "ordinate_calibration": {
+    "pixel_y": [
+      32,
+      112,
+      192,
+      271,
+      351
+    ],
+    "dbfs": [
+      0,
+      -25,
+      -50,
+      -75,
+      -100
+    ]
+  },
+  "detected_peaks": [
+    {
+      "x_pixel": 457,
+      "y_pixel": 256,
+      "plot_dbfs": -70.20065741831075,
+      "relative_to_fundamental_db": -70.26315623760257
+    },
+    {
+      "x_pixel": 492,
+      "y_pixel": 237,
+      "plot_dbfs": -64.24083613029983,
+      "relative_to_fundamental_db": -64.30333494959166
+    },
+    {
+      "x_pixel": 505,
+      "y_pixel": 299,
+      "plot_dbfs": -83.6886740174934,
+      "relative_to_fundamental_db": -83.75117283678523
+    },
+    {
+      "x_pixel": 526,
+      "y_pixel": 253,
+      "plot_dbfs": -69.2596330044143,
+      "relative_to_fundamental_db": -69.32213182370612
+    },
+    {
+      "x_pixel": 561,
+      "y_pixel": 176,
+      "plot_dbfs": -45.1066730477384,
+      "relative_to_fundamental_db": -45.16917186703022
+    },
+    {
+      "x_pixel": 595,
+      "y_pixel": 251,
+      "plot_dbfs": -68.63228339514998,
+      "relative_to_fundamental_db": -68.6947822144418
+    },
+    {
+      "x_pixel": 630,
+      "y_pixel": 176,
+      "plot_dbfs": -45.1066730477384,
+      "relative_to_fundamental_db": -45.16917186703022
+    },
+    {
+      "x_pixel": 663,
+      "y_pixel": 265,
+      "plot_dbfs": -73.02373066000014,
+      "relative_to_fundamental_db": -73.08622947929197
+    },
+    {
+      "x_pixel": 678,
+      "y_pixel": 291,
+      "plot_dbfs": -81.17927558043615,
+      "relative_to_fundamental_db": -81.24177439972797
+    },
+    {
+      "x_pixel": 698,
+      "y_pixel": 146,
+      "plot_dbfs": -35.69642890877377,
+      "relative_to_fundamental_db": -35.75892772806559
+    },
+    {
+      "x_pixel": 732,
+      "y_pixel": 248,
+      "plot_dbfs": -67.69125898125353,
+      "relative_to_fundamental_db": -67.75375780054534
+    },
+    {
+      "x_pixel": 767,
+      "y_pixel": 32,
+      "plot_dbfs": 0.062498819291825214,
+      "relative_to_fundamental_db": 0.0
+    }
+  ],
+  "fundamental": {
+    "x_pixel": 767,
+    "y_pixel": 32,
+    "plot_dbfs": 0.062498819291825214,
+    "relative_to_fundamental_db": 0.0
+  },
+  "strongest_three_nonfundamental_inset_peaks": [
+    {
+      "x_pixel": 698,
+      "y_pixel": 146,
+      "plot_dbfs": -35.69642890877377,
+      "relative_to_fundamental_db": -35.75892772806559
+    },
+    {
+      "x_pixel": 630,
+      "y_pixel": 176,
+      "plot_dbfs": -45.1066730477384,
+      "relative_to_fundamental_db": -45.16917186703022
+    },
+    {
+      "x_pixel": 561,
+      "y_pixel": 176,
+      "plot_dbfs": -45.1066730477384,
+      "relative_to_fundamental_db": -45.16917186703022
+    }
+  ],
+  "strong_peak_pixel_spacings": [
+    69,
+    68,
+    69
+  ],
+  "practical_reading_precision_db": "About1dB; approximate raster reading, not statistical confidence interval.",
+  "conditional_harmonic_interpretation": {
+    "assumed_sample_rate_msps": 10,
+    "annotated_input_mhz": 4.99023,
+    "odd_orders": [
+      3,
+      5,
+      7
+    ],
+    "aliased_frequencies_mhz": [
+      4.970690000000001,
+      4.951150000000002,
+      4.931610000000006
+    ],
+    "interpretation": "Approximately equally spaced peaks are compatible with folded odd harmonics nearNyquist; modulation/other mechanisms can also produce a comb. No unique circuit cause inferred."
+  },
+  "limitations": [
+    "Inset-only largest spur separation is not full-band SFDR; obscured/outside spurs are not bounded.",
+    "dBFS labeling alone does not establish absolute input voltage or FFT normalization. Peak pixel locations do not recover raw samples, bin power or integrated noise.",
+    "The table20MS/s conditions are not established for this near5MHz Nyquist figure; do not combine their metrics as a single trace.",
+    "Several visible distortion peaks constrain spectral shape beyond one harmonic, but do not identify capacitor mismatch, reference error or sampling nonlinearity uniquely."
+  ]
+}

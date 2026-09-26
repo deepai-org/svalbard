@@ -1,4 +1,5 @@
 """Report a deliberately limited nominal, unplaced register timing screen."""
+import argparse
 import hashlib
 import json
 import pathlib
@@ -35,5 +36,53 @@ report = dict(pass_number=58, standard_cells=sum(n for k,n in cells.items() if k
               unconstrained_output_endpoints=87,
               scope='TT 25C 3.3V; ideal clocks; no wire RC; register paths only. Data output, IO budgets, CDC, hold, reset distribution and physical implementation not qualified.',
               sha256={str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in files})
+parser=argparse.ArgumentParser()
+parser.add_argument('--lib',type=pathlib.Path,help='Optional original mapping Liberty for clock-pin-only load accounting')
+args=parser.parse_args()
+if args.lib:
+    library=args.lib.read_text()
+    digest=hashlib.sha256(args.lib.read_bytes()).hexdigest()
+    assert digest==(out/'library.sha256').read_text().split()[0]
+    assert re.search(r'capacitive_load_unit\(1,\s*pf\)',library)
+    mapped=json.loads((out/'mapped.json').read_text())['modules']['pt_block_fifo']
+    cap={};counts={'wr_clk':{},'rd_clk':{}}
+    for cell in mapped['cells'].values():
+        if 'CLK' not in cell.get('connections',{}):continue
+        kind=cell['type']
+        if kind not in cap:
+            start=library.index('cell('+kind+')');end=library.find('\n  cell(',start+1)
+            body=library[start:end if end!=-1 else len(library)]
+            pin=body[body.index('pin(CLK)'):]
+            cap[kind]=float(re.search(r'capacitance\s*:\s*([0-9.]+)',pin)[1])*1e-12
+        domains=[name for name in counts if cell['connections']['CLK']==mapped['ports'][name]['bits']]
+        assert len(domains)==1,'Clock connection must be traced before accounting'
+        domain=counts[domains[0]];domain[kind]=domain.get(kind,0)+1
+    assert sum(sum(c.values()) for c in counts.values())==ff
+    capacitance={name:sum(cap[k]*n for k,n in c.items()) for name,c in counts.items()}
+    rows=[]
+    for word_hz in (250e6,312.5e6):
+        clocks={'wr_clk':word_hz/8,'rd_clk':40e6}
+        charge={name:c*3.3 for name,c in capacitance.items()}
+        current=sum(charge[name]*clocks[name] for name in clocks)
+        rows.append(dict(host_word_hz=word_hz,clock_hz=clocks,charge_per_rising_edge_c=charge,
+                         supply_current_a=current,supply_power_w=current*3.3))
+    report['clock_pin_load']=dict(library_sha256=digest,voltage_v=3.3,
+        capacitance_per_cell_f=cap,cells_per_clock=counts,clock_pin_capacitance_f=capacitance,
+        operating_points=rows,
+        scope='Nominal mapped clock-pin capacitance only: Q=C*V per rising edge and P=C*V^2*f. Excludes cell internal power, data switching, clock buffers/interconnect, leakage and rail transfer. Not a complete current or physical lower-bound guarantee.')
+    report['sha256'][str((out/'mapped.json').relative_to(root))]=hashlib.sha256((out/'mapped.json').read_bytes()).hexdigest()
+elif (project/'evidence/block-fifo-mapping.json').exists():
+    # Preserve the optional extracted load only when its original inputs still
+    # match; a fresh incompatible mapping must supply its own Liberty.
+    previous=json.loads((project/'evidence/block-fifo-mapping.json').read_text())
+    if 'clock_pin_load' in previous:
+        mapped_key=str((out/'mapped.json').relative_to(root))
+        mapped_hash=hashlib.sha256((out/'mapped.json').read_bytes()).hexdigest()
+        if (previous['sha256'].get(mapped_key)!=mapped_hash or
+            previous['clock_pin_load']['library_sha256']!=(out/'library.sha256').read_text().split()[0]):
+            raise ValueError('Changed mapping/library: provide --lib to regenerate clock-pin loads')
+        report['clock_pin_load']=previous['clock_pin_load']
+        report['sha256'][mapped_key]=mapped_hash
+report['sha256'][str(pathlib.Path(__file__).resolve().relative_to(root))]=hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest()
 (project / 'evidence/block-fifo-mapping.json').write_text(json.dumps(report, indent=2)+'\n')
 print(json.dumps({k:v for k,v in report.items() if k!='sha256'}, indent=2))

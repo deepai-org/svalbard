@@ -17,6 +17,63 @@ The user explicitly accepts operation over relatively narrow temperature and sup
 
 Numerical limits remain to be selected from evidence: specify junction temperature (not just room temperature), each rail's voltage at the die, ripple/droop and control tolerances, warm-up/calibration conditions, and any required board regulation or thermal control. Account for self-heating in each active mode and transients when switching modes. Process variation and mismatch remain separate uncertainties; this preference does not assume a typical-process die or authorize unsafe bias. Characterize out-of-envelope behavior separately without treating every exploratory corner as a required peak-performance pass. Freeze the required operating window and process/yield claims explicitly before signoff.
 
+## External passive component allowance
+
+User decision: **generous use of external SMD passives is acceptable**, including
+many components per board. Minimizing external passive count is not a design
+goal. “Single-chip transceiver” means one programmable active analog/PHY chip
+with its external FPGA/MCU and board support; it does not require integrating
+all filtering, matching, energy storage or frequency-selective components.
+
+Prefer external implementation where it improves feasibility or saves die area:
+RF matching and baluns, antenna/preselection and reconstruction filters, wired
+AC coupling and suitable termination networks, supply decoupling and RC/LC
+filtering, and bias/reference filtering. External resonators/tanks and PLL loop
+filters are also allowed candidates when the selected topology and accessible
+terminals support them. Their use is permission to evaluate an architecture,
+not a claim that the present pinout already exposes internal oscillator or
+loop-filter nodes.
+
+Keep all chip connections within the existing 50-terminal budget. Explicitly
+reallocate pins before adopting a topology needing additional analog nodes;
+include pad/ESD capacitance, package inductance, board parasitics, tolerances and
+loss in its model. Count board area/BOM separately from die resources. Model
+power consumption, settling, noise and stability of the resulting complete
+network rather than assuming ideal external components. Board population may
+vary by application; passive allowance does not imply every protocol uses one
+unchanged matching/filter network.
+
+Use this freedom in the analog risk work: compare local and external supply
+filtering, RF selectivity and output matching, and externally supported timing
+networks before forcing those burdens onto the die. The core clock, conversion
+and signaling performance still needs evidence in the resulting configuration.
+
+## External oscillator and clock allowance
+
+User decision: **external oscillators and clock sources are explicitly allowed**
+to simplify the chip, just as external passive networks are. A board reference
+oscillator, low-jitter clock module, external synthesizer or RF LO source may
+supply timing where the architecture supports it. Autonomous on-chip frequency
+generation is no longer a mandatory condition for every supported configuration.
+Retain it where useful; evaluate external-clock configurations as legitimate
+operating choices, not merely laboratory debug fallbacks.
+
+The existing `REF_IN` is an allocated reference input, with external-LO injection
+already a separately qualified candidate. Its name alone does not prove RF
+bandwidth, permitted swing/common mode, termination, noise, duty cycle or I/Q
+compatibility. Specify those requirements and any buffering, division or
+quadrature generation before claiming an external source solves LO quality.
+Additional clock/LO inputs require explicit allocation within 50 terminals;
+reference, converter and RF-clock needs may not all fit one input simultaneously.
+
+Update the system model for the selected source's phase-noise/jitter spectrum,
+frequency range, spurs, amplitude, loading and clock-loss behavior. Include
+on-chip distribution and any required PLL/CDR noise. An external transmit or
+sample clock does not recover an independently timed incoming serial stream.
+Board source power/BOM belongs to the board budget; input receiver and clock
+conditioning power/area belongs to the chip. Reassess autonomous clock risk
+against configurations that actually require autonomous synthesis.
+
 ## Physical envelope
 
 Use one wafer.space **1×1 slot** and **50 total external connections: 36 signals plus 14 provisional supply/ground connections**. Provider information checked 2026-09-23: [wafer.space](https://wafer.space/price.html) lists a 3.93 × 5.12 mm full die and 12.92 mm² default-ring core. The current provider page lists 56 default I/O pads; older template pad counts are not the project terminal budget. This design needs a custom mixed-signal pad ring and custom bare-die assembly or an explicitly accepted equivalent; the standard chip-on-board offer requires the default ring.
@@ -44,7 +101,14 @@ Logical IDs are allocation labels, not package numbering. Final ordering follows
 
 There is no dedicated interrupt, crystal pair, general GPIO bank, external-memory interface, or wide analog monitor bus. Poll status over SPI or receive events in the fast link. The host FPGA directly drives board PA enable, RF switch, and other connector sidebands; deterministic scheduled TX and timestamped status support that coordination. An MCU can drive those board controls too. External PA, baluns/matching, RF filtering, reference oscillator, and antenna remain board components.
 
-`REF_IN` normally accepts a qualified single-ended clock. PCIe's differential common reference needs a suitable external clock receiver/buffer; its jitter contribution belongs in the budget. Do not route an arbitrary fabric-generated FPGA clock into the RF PLL and assume adequate phase noise. External LO injection is an alternate local RF input mode that requires separate pad/loading qualification, not permission to put GHz signals through an ordinary digital buffer. Normal operation uses on-chip synthesizers. No claim of simultaneous reference and external LO use on this one pin.
+`REF_IN` normally accepts a qualified single-ended clock. PCIe's differential common reference needs a suitable external clock receiver/buffer; its jitter contribution belongs in the budget. Do not route an arbitrary fabric-generated FPGA clock into the RF PLL and assume adequate phase noise. External LO injection is an alternate local RF input mode that requires separate pad/loading qualification, not permission to put GHz signals through an ordinary digital buffer. Autonomous synthesis and externally supplied timing are both intended operating paths; neither is physically qualified. No claim of simultaneous reference and external LO use on this one pin.
+The [direct-LO rate candidate](../../projects/programmable_transceiver_platform/spec/clock-feasibility-envelope.md#direct-lo-mitigation-in-the-fast-waveform-model)
+uses uniform LO division for ADC/DAC and proposes LO/16 for D2H_CLK, retaining
+H2D_CLK from the FPGA. It adds no terminal. Variable-rate conversion may require
+explicit FPGA resampling; the model now accounts for its latency and estimated
+processing/storage cost. Clock routes, physical qualification, finite pacing
+and area remain open; this is an alternative under evaluation, not a selected
+replacement for autonomous synthesis.
 
 ## Power/ground: provisional 14
 

@@ -156,6 +156,26 @@ The single-pole sampled-filter experiment rejected a 30 MHz alias by only about
 -70.82 dBm in that simple scenario, before other losses/interference. This is
 not a sensitivity specification or a measured radio result.
 
+The normalized RF model's 4% frontend-noise allocation corresponds to about
+27.96 dB signal/noise ratio at its reference plane, not the 20 dB example above.
+An explicit illustrative mapping now lives in the same analytic report: at
+300.15 K, 20 MHz equivalent noise bandwidth and 10 dB cascaded NF, the required
+input is −62.86 dBm to allocate only 4% EVM to frontend noise. Mapping normalized
+complex RMS 0.2 to 0.1 V RMS complex differential I/Q envelope (1 Vpp range per
+branch) requires 52.86 dB conversion **voltage** gain from a 50-ohm RF input.
+The convention is `v_RF(t)=Re{z exp(jωt)}`, so `P_RF=E|z|²/(2R)`.
+This is not power gain into a stated baseband load, a sensitivity specification,
+or evidence that the present LNA/mixer/filter provide that gain/NF together.
+The live chain still lacks a calibrated antenna-to-converter normalization.
+
+At normalized signal RMS 0.2, the illustrative 9-ENOB/12-bit excess converter
+noise contributes 0.791% EVM at RX gain 1 and 0.396% at gain 2, while frontend
+noise stays at 4%. Their quadrature total changes only from 4.077% to 4.020%.
+The historical post-gain frontend-noise model instead predicted 2.039% at gain 2.
+These isolated reference-plane calculations exclude ideal quantization, filter
+attenuation, clock errors, blockers and receiver estimation. They explain why
+raising gain cannot substitute for a full frontend noise/gain/dynamic-range budget.
+
 For 1 Vpp differential full scale, ideal quantization and a two-leg kT/C model,
 keeping sampling thermal RMS below half quantization RMS requires about
 0.026/0.417/6.674 pF **per leg** at 8/10/12 bits respectively. These are ideal

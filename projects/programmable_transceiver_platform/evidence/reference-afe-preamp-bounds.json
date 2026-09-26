@@ -1,0 +1,91 @@
+{
+  "provenance": "Extracted 10 parallel 10-square high-poly resistors per output; nominal 1 kohm/square.",
+  "load_sweep_note": "800..1200 ohm/square foundry wide-monitor sheet range; narrow 1um resistor end/width effects omitted. Not guaranteed load bounds.",
+  "capacitance_sweep_note": "50..500 fF assigned scenarios; not extracted or measured.",
+  "scenarios": [
+    {
+      "load_ohm": 800,
+      "output_capacitance_ff": 50,
+      "pole_hz": 3978873577.297383,
+      "settling_7bit_half_lsb_ns": 0.2218070977791825
+    },
+    {
+      "load_ohm": 800,
+      "output_capacitance_ff": 100,
+      "pole_hz": 1989436788.6486914,
+      "settling_7bit_half_lsb_ns": 0.443614195558365
+    },
+    {
+      "load_ohm": 800,
+      "output_capacitance_ff": 200,
+      "pole_hz": 994718394.3243457,
+      "settling_7bit_half_lsb_ns": 0.88722839111673
+    },
+    {
+      "load_ohm": 800,
+      "output_capacitance_ff": 500,
+      "pole_hz": 397887357.7297383,
+      "settling_7bit_half_lsb_ns": 2.218070977791825
+    },
+    {
+      "load_ohm": 1000,
+      "output_capacitance_ff": 50,
+      "pole_hz": 3183098861.8379064,
+      "settling_7bit_half_lsb_ns": 0.2772588722239781
+    },
+    {
+      "load_ohm": 1000,
+      "output_capacitance_ff": 100,
+      "pole_hz": 1591549430.9189532,
+      "settling_7bit_half_lsb_ns": 0.5545177444479562
+    },
+    {
+      "load_ohm": 1000,
+      "output_capacitance_ff": 200,
+      "pole_hz": 795774715.4594766,
+      "settling_7bit_half_lsb_ns": 1.1090354888959124
+    },
+    {
+      "load_ohm": 1000,
+      "output_capacitance_ff": 500,
+      "pole_hz": 318309886.1837907,
+      "settling_7bit_half_lsb_ns": 2.772588722239781
+    },
+    {
+      "load_ohm": 1200,
+      "output_capacitance_ff": 50,
+      "pole_hz": 2652582384.8649225,
+      "settling_7bit_half_lsb_ns": 0.3327106466687737
+    },
+    {
+      "load_ohm": 1200,
+      "output_capacitance_ff": 100,
+      "pole_hz": 1326291192.4324613,
+      "settling_7bit_half_lsb_ns": 0.6654212933375474
+    },
+    {
+      "load_ohm": 1200,
+      "output_capacitance_ff": 200,
+      "pole_hz": 663145596.2162306,
+      "settling_7bit_half_lsb_ns": 1.3308425866750948
+    },
+    {
+      "load_ohm": 1200,
+      "output_capacitance_ff": 500,
+      "pole_hz": 265258238.48649225,
+      "settling_7bit_half_lsb_ns": 3.3271064666877375
+    }
+  ],
+  "differential_pair_relations": {
+    "differential_gain": "gm * (Rload || ro)",
+    "output_common_mode": "VDD - Itail * Rload / 2",
+    "resistive_pole": "1 / (2*pi*(Rload || ro)*Cout)",
+    "load_resistor_input_noise_psd": "8*k*T / (gm^2 * Rload), symmetric differential convention; transistor noise additional"
+  },
+  "limitations": [
+    "Linear single-pole settling only; excludes slew, comparator regeneration, kickback and sample timing.",
+    "No bias current inferred from overall chip power or measured ADC SNR.",
+    "Overall ADC 20MS/s or >30MS/s does not identify per-decision timing.",
+    "No direct transfer of these loads or gain to the proposed transceiver."
+  ]
+}

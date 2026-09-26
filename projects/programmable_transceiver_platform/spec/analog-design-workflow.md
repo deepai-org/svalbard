@@ -4,8 +4,9 @@ Use this workflow for subsequent analog passes. Its purpose is to spend less tim
 on uninformative simulations and retain lessons that apply to other blocks.
 It is a living procedure, not a claim that the current design is qualified.
 
-The user-required sequence remains: complete and verify the connected transistor
-schematic, then layout, extract and repeat the tests. Transmission-line geometry
+The user-required sequence is: finish the whole-chip mathematical model before
+any new schematic work; then complete and verify the connected transistor
+schematic; then layout, extract and repeat the tests. Transmission-line geometry
 and shielding are deferred. Preserve the full programmable RF/wired companion
 scope. An easier isolated circuit is an experiment, not a replacement product.
 
@@ -19,6 +20,12 @@ composition. Do not resume solver optimization, transistor implementation or
 layout while those architecture gaps remain. Detailed existing models provide
 selective parameter evidence, not mandatory per-scenario integration. A successful
 assumption-based screen is not physical qualification or whole-chip completion.
+
+The reference-AFE reconstruction is now a retained evidence source, not an active
+simulation campaign. Use the [adopted assumptions](risk-priorities.md#adopted-assumptions-and-uncertainty-ranges)
+and prioritize connected clock, RF-chain and coexistence failure boundaries.
+Reopen reference-chip experiments only for new measurements or a concrete design
+decision; more precise agreement between PDK simulations is not silicon validation.
 
 ## Primitive-library architecture for schematic and layout work
 

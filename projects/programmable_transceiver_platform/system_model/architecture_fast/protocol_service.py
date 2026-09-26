@@ -65,6 +65,7 @@ class ProtocolService:
         if self.selected is None or self.selected['engine']!='rf':raise ValueError('RF profile required')
         b=self.chip.analog_owner.rx_bank
         kwargs.setdefault('frontend',self.chip.frontend)
+        kwargs.setdefault('adc_impairments',self.chip.adc_impairments)
         kwargs.setdefault('gain',self.chip.rx_gain)
         return receiver_projection(waveform,b['poles'],b['weights'],**kwargs)
 

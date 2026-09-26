@@ -1,0 +1,1027 @@
+{
+  "layouts": [
+    {
+      "source_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+      "cell": "opamp1_v2_to_fix",
+      "devices": [
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vss",
+            "G": "vss",
+            "D": "vss"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 1020.0,
+            "AS": 294.89999999999986,
+            "AD": 294.8999999999999,
+            "PS": 1197.5199999999998,
+            "PD": 1197.5199999999995
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vss",
+            "G": "vbias_tail",
+            "D": "vout"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 900.0,
+            "AS": 255.59999999999994,
+            "AD": 255.59999999999997,
+            "PS": 1028.5199999999998,
+            "PD": 1028.52
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vss",
+            "G": "vbias_tail",
+            "D": "vtail"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 3600.0,
+            "AS": 957.6000000000009,
+            "AD": 957.6000000000008,
+            "PS": 3751.919999999999,
+            "PD": 3751.919999999999
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vout1",
+            "G": "vin2",
+            "D": "vtail"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 1800.0,
+            "AS": 484.20000000000044,
+            "AD": 484.2000000000004,
+            "PS": 1922.2799999999993,
+            "PD": 1922.2799999999995
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vbias_tail",
+            "G": "vbias_tail",
+            "D": "vss"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 20.0,
+            "AS": 5.379999999999997,
+            "AD": 5.379999999999998,
+            "PS": 31.759999999999994,
+            "PD": 31.759999999999994
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vx",
+            "G": "vin1",
+            "D": "vtail"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 1800.0,
+            "AS": 484.20000000000044,
+            "AD": 484.2000000000004,
+            "PS": 1922.2799999999993,
+            "PD": 1922.2799999999995
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vout_t",
+            "G": "vdd",
+            "D": "vout"
+          },
+          "parameters": {
+            "L": 0.27999999999999997,
+            "W": 12.0,
+            "AS": 3.299999999999999,
+            "AD": 3.2999999999999994,
+            "PS": 19.599999999999998,
+            "PD": 19.599999999999998
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "vdd",
+            "G": "vdd",
+            "D": "vdd"
+          },
+          "parameters": {
+            "L": 2.0,
+            "W": 189.0,
+            "AS": 83.16,
+            "AD": 83.16,
+            "PS": 379.76,
+            "PD": 379.76
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "vdd",
+            "G": "vx",
+            "D": "vx"
+          },
+          "parameters": {
+            "L": 2.0,
+            "W": 2500.0,
+            "AS": 668.0,
+            "AD": 668.0,
+            "PS": 2613.3599999999997,
+            "PD": 2613.36
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "vdd",
+            "G": "vx",
+            "D": "vout1"
+          },
+          "parameters": {
+            "L": 2.0,
+            "W": 2500.0,
+            "AS": 668.0,
+            "AD": 668.0,
+            "PS": 2613.3599999999997,
+            "PD": 2613.36
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "vdd",
+            "G": "vout1",
+            "D": "vout"
+          },
+          "parameters": {
+            "L": 0.7,
+            "W": 400.0,
+            "AS": 122.0,
+            "AD": 122.0,
+            "PS": 502.43999999999994,
+            "PD": 502.44
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "vdd",
+            "G": "vdd",
+            "D": "vdd"
+          },
+          "parameters": {
+            "L": 0.7,
+            "W": 100.0,
+            "AS": 44.0,
+            "AD": 44.0,
+            "PS": 200.88,
+            "PD": 200.88
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "vdd",
+            "G": "vp",
+            "D": "vbias_tail"
+          },
+          "parameters": {
+            "L": 2.0,
+            "W": 10.0,
+            "AS": 4.3999999999999995,
+            "AD": 4.3999999999999995,
+            "PS": 20.88,
+            "PD": 20.88
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "vout_t",
+            "G": "vss",
+            "D": "vout"
+          },
+          "parameters": {
+            "L": 0.27999999999999997,
+            "W": 24.0,
+            "AS": 6.599999999999998,
+            "AD": 6.599999999999999,
+            "PS": 32.6,
+            "PD": 32.6
+          }
+        },
+        {
+          "type": "resistor",
+          "terminals": {
+            "A": "vout1",
+            "B": "$12"
+          },
+          "parameters": {
+            "R": 575.0,
+            "L": 2.3000000000000003,
+            "W": 4.0,
+            "A": 9.2,
+            "P": 12.6
+          }
+        },
+        {
+          "type": "mim_2ff",
+          "terminals": {
+            "A": "vout",
+            "B": "$12"
+          },
+          "parameters": {
+            "C": 3.2e-12,
+            "A": 1600.0,
+            "P": 160.0
+          }
+        }
+      ],
+      "disconnected_label_aliases": [],
+      "limitations": [
+        "Generic extraction; body, special device classes and parasitics omitted.",
+        "Repeated supply names on disconnected metal islands are explicitly distinguished; no implicit global connection.",
+        "Resistor sheet resistance assigned 1000 ohm/square; valid for ADC high-poly only, other resistor flavors need classification.",
+        "MIM Option B assumed M4 bottom/FuseTop top, assigned 2 fF/um2. No fringe or plate parasitics."
+      ]
+    },
+    {
+      "source_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+      "cell": "opamp2_to_fix",
+      "devices": [
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vss",
+            "G": "vss",
+            "D": "vss"
+          },
+          "parameters": {
+            "L": 0.3,
+            "W": 500.0,
+            "AS": 138.9999999999999,
+            "AD": 138.99999999999991,
+            "PS": 577.7999999999996,
+            "PD": 577.7999999999996
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "$7",
+            "G": "vin2",
+            "D": "$4"
+          },
+          "parameters": {
+            "L": 0.3,
+            "W": 400.0,
+            "AS": 111.19999999999993,
+            "AD": 111.19999999999995,
+            "PS": 462.2399999999997,
+            "PD": 462.2399999999998
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "$8",
+            "G": "vin1",
+            "D": "$4"
+          },
+          "parameters": {
+            "L": 0.3,
+            "W": 400.0,
+            "AS": 111.19999999999993,
+            "AD": 111.19999999999995,
+            "PS": 462.2399999999997,
+            "PD": 462.2399999999998
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "$9",
+            "G": "$21",
+            "D": "$2"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 10.0,
+            "AS": 4.3999999999999995,
+            "AD": 4.3999999999999995,
+            "PS": 20.88,
+            "PD": 20.88
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vss",
+            "G": "$14",
+            "D": "$10"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 20.0,
+            "AS": 7.0,
+            "AD": 7.0,
+            "PS": 31.4,
+            "PD": 31.4
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vss",
+            "G": "$14",
+            "D": "$11"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 20.0,
+            "AS": 7.0,
+            "AD": 7.0,
+            "PS": 31.4,
+            "PD": 31.4
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vss",
+            "G": "$12",
+            "D": "$4"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 100.0,
+            "AS": 29.59999999999999,
+            "AD": 29.599999999999994,
+            "PS": 134.79999999999998,
+            "PD": 134.79999999999998
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vss",
+            "G": "$12",
+            "D": "$12"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 20.0,
+            "AS": 5.92,
+            "AD": 5.92,
+            "PS": 26.96,
+            "PD": 26.96
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vss",
+            "G": "$12",
+            "D": "$13"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 2.0,
+            "AS": 0.88,
+            "AD": 0.88,
+            "PS": 4.88,
+            "PD": 4.88
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vss",
+            "G": "vss",
+            "D": "vss"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 9.0,
+            "AS": 3.96,
+            "AD": 3.96,
+            "PS": 19.76,
+            "PD": 19.76
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vss",
+            "G": "$12",
+            "D": "$19"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 2.0,
+            "AS": 0.88,
+            "AD": 0.88,
+            "PS": 4.88,
+            "PD": 4.88
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vss",
+            "G": "$22",
+            "D": "$22"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 2.0,
+            "AS": 0.88,
+            "AD": 0.88,
+            "PS": 4.88,
+            "PD": 4.88
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vout",
+            "G": "$2",
+            "D": "vss"
+          },
+          "parameters": {
+            "L": 0.3,
+            "W": 100.0,
+            "AS": 27.800000000000004,
+            "AD": 27.8,
+            "PS": 115.55999999999997,
+            "PD": 115.55999999999997
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "$16",
+            "G": "$21",
+            "D": "$14"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 10.0,
+            "AS": 4.3999999999999995,
+            "AD": 4.3999999999999995,
+            "PS": 20.88,
+            "PD": 20.88
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "$14",
+            "G": "vbiasn",
+            "D": "$10"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 20.0,
+            "AS": 7.0,
+            "AD": 7.0,
+            "PS": 31.4,
+            "PD": 31.4
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "$2",
+            "G": "vbiasn",
+            "D": "$11"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 20.0,
+            "AS": 7.0,
+            "AD": 7.0,
+            "PS": 31.4,
+            "PD": 31.4
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "$18",
+            "G": "$18",
+            "D": "$12"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 20.0,
+            "AS": 5.919999999999998,
+            "AD": 5.919999999999999,
+            "PS": 29.919999999999998,
+            "PD": 29.919999999999998
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "$31",
+            "G": "$18",
+            "D": "$13"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 0.22,
+            "AS": 0.15159999999999998,
+            "AD": 0.15159999999999998,
+            "PS": 1.6400000000000001,
+            "PD": 1.6400000000000001
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "$21",
+            "G": "$21",
+            "D": "$22"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 10.0,
+            "AS": 2.96,
+            "AD": 2.96,
+            "PS": 14.959999999999999,
+            "PD": 14.96
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "$19",
+            "G": "$18",
+            "D": "$20"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 10.0,
+            "AS": 2.96,
+            "AD": 2.96,
+            "PS": 14.959999999999999,
+            "PD": 14.96
+          }
+        },
+        {
+          "type": "nmos",
+          "terminals": {
+            "S": "vout_t",
+            "G": "vdd",
+            "D": "vout"
+          },
+          "parameters": {
+            "L": 0.27999999999999997,
+            "W": 12.0,
+            "AS": 3.299999999999999,
+            "AD": 3.2999999999999994,
+            "PS": 19.599999999999998,
+            "PD": 19.599999999999998
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "vdd",
+            "G": "vdd",
+            "D": "vdd"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 45.0,
+            "AS": 19.8,
+            "AD": 19.8,
+            "PS": 105.83999999999997,
+            "PD": 105.83999999999997
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "vdd",
+            "G": "vdd",
+            "D": "vdd"
+          },
+          "parameters": {
+            "L": 3.0,
+            "W": 44.0,
+            "AS": 19.360000000000003,
+            "AD": 19.360000000000003,
+            "PS": 103.83999999999999,
+            "PD": 103.83999999999999
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "$28",
+            "G": "vin2",
+            "D": "$11"
+          },
+          "parameters": {
+            "L": 0.3,
+            "W": 400.0,
+            "AS": 111.19999999999993,
+            "AD": 111.19999999999995,
+            "PS": 462.2399999999997,
+            "PD": 462.2399999999998
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "$28",
+            "G": "vin1",
+            "D": "$10"
+          },
+          "parameters": {
+            "L": 0.3,
+            "W": 400.0,
+            "AS": 111.19999999999993,
+            "AD": 111.19999999999995,
+            "PS": 462.2399999999997,
+            "PD": 462.2399999999998
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "$7",
+            "G": "$16",
+            "D": "vdd"
+          },
+          "parameters": {
+            "L": 3.0,
+            "W": 100.0,
+            "AS": 27.800000000000004,
+            "AD": 26.000000000000004,
+            "PS": 115.55999999999997,
+            "PD": 105.19999999999997
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "vdd",
+            "G": "$16",
+            "D": "$8"
+          },
+          "parameters": {
+            "L": 3.0,
+            "W": 100.0,
+            "AS": 27.800000000000004,
+            "AD": 26.000000000000004,
+            "PS": 115.55999999999997,
+            "PD": 105.19999999999997
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "$8",
+            "G": "vbiasp",
+            "D": "$16"
+          },
+          "parameters": {
+            "L": 3.0,
+            "W": 40.0,
+            "AS": 12.2,
+            "AD": 14.0,
+            "PS": 52.44,
+            "PD": 62.8
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "$7",
+            "G": "vbiasp",
+            "D": "$9"
+          },
+          "parameters": {
+            "L": 3.0,
+            "W": 40.0,
+            "AS": 12.2,
+            "AD": 14.0,
+            "PS": 52.44,
+            "PD": 62.8
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "$9",
+            "G": "$20",
+            "D": "$2"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 10.0,
+            "AS": 4.3999999999999995,
+            "AD": 4.3999999999999995,
+            "PS": 20.88,
+            "PD": 20.88
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "$26",
+            "G": "$20",
+            "D": "$20"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 10.0,
+            "AS": 4.3999999999999995,
+            "AD": 4.3999999999999995,
+            "PS": 23.52,
+            "PD": 23.52
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "$26",
+            "G": "$26",
+            "D": "vdd"
+          },
+          "parameters": {
+            "L": 3.0,
+            "W": 2.0,
+            "AS": 0.88,
+            "AD": 0.88,
+            "PS": 4.88,
+            "PD": 4.88
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "$27",
+            "G": "$31",
+            "D": "$21"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 10.0,
+            "AS": 4.3999999999999995,
+            "AD": 4.3999999999999995,
+            "PS": 23.52,
+            "PD": 23.52
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "vdd",
+            "G": "$30",
+            "D": "$27"
+          },
+          "parameters": {
+            "L": 3.0,
+            "W": 2.0,
+            "AS": 0.88,
+            "AD": 0.88,
+            "PS": 4.88,
+            "PD": 4.88
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "vdd",
+            "G": "$30",
+            "D": "$28"
+          },
+          "parameters": {
+            "L": 3.0,
+            "W": 100.0,
+            "AS": 44.00000000000003,
+            "AD": 44.00000000000003,
+            "PS": 235.19999999999987,
+            "PD": 235.19999999999987
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "vout",
+            "G": "$9",
+            "D": "vdd"
+          },
+          "parameters": {
+            "L": 0.3,
+            "W": 150.0,
+            "AS": 40.80000000000001,
+            "AD": 40.800000000000004,
+            "PS": 168.16,
+            "PD": 168.15999999999997
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "vdd",
+            "G": "vdd",
+            "D": "vdd"
+          },
+          "parameters": {
+            "L": 0.3,
+            "W": 450.0,
+            "AS": 122.3999999999999,
+            "AD": 122.39999999999992,
+            "PS": 504.4799999999997,
+            "PD": 504.4799999999997
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "$16",
+            "G": "$20",
+            "D": "$14"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 10.0,
+            "AS": 4.3999999999999995,
+            "AD": 4.3999999999999995,
+            "PS": 20.88,
+            "PD": 20.88
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "$18",
+            "G": "vprog",
+            "D": "vdd"
+          },
+          "parameters": {
+            "L": 3.0,
+            "W": 2.0,
+            "AS": 0.88,
+            "AD": 0.88,
+            "PS": 4.88,
+            "PD": 4.88
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "$30",
+            "G": "$31",
+            "D": "$31"
+          },
+          "parameters": {
+            "L": 1.0,
+            "W": 10.0,
+            "AS": 4.3999999999999995,
+            "AD": 4.3999999999999995,
+            "PS": 23.52,
+            "PD": 23.52
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "vdd",
+            "G": "$30",
+            "D": "$30"
+          },
+          "parameters": {
+            "L": 3.0,
+            "W": 2.0,
+            "AS": 0.88,
+            "AD": 0.88,
+            "PS": 4.88,
+            "PD": 4.88
+          }
+        },
+        {
+          "type": "pmos",
+          "terminals": {
+            "S": "vout_t",
+            "G": "vss",
+            "D": "vout"
+          },
+          "parameters": {
+            "L": 0.27999999999999997,
+            "W": 24.0,
+            "AS": 6.599999999999998,
+            "AD": 6.599999999999999,
+            "PS": 32.6,
+            "PD": 32.6
+          }
+        },
+        {
+          "type": "mim_2ff",
+          "terminals": {
+            "A": "vout",
+            "B": "$2"
+          },
+          "parameters": {
+            "C": 5.0000000000000005e-12,
+            "A": 2500.0,
+            "P": 400.0
+          }
+        },
+        {
+          "type": "mim_2ff",
+          "terminals": {
+            "A": "vout",
+            "B": "$9"
+          },
+          "parameters": {
+            "C": 5.0000000000000005e-12,
+            "A": 2500.0,
+            "P": 400.0
+          }
+        }
+      ],
+      "disconnected_label_aliases": [],
+      "limitations": [
+        "Generic extraction; body, special device classes and parasitics omitted.",
+        "Repeated supply names on disconnected metal islands are explicitly distinguished; no implicit global connection.",
+        "Resistor sheet resistance assigned 1000 ohm/square; valid for ADC high-poly only, other resistor flavors need classification.",
+        "MIM Option B assumed M4 bottom/FuseTop top, assigned 2 fF/um2. No fringe or plate parasitics."
+      ]
+    }
+  ],
+  "identification": "opamp2 is structurally consistent with published complementary-input hybrid amplifier; opamp1 is the separate two-stage design. Paper-to-pad/test-channel identity still needs confirmation.",
+  "physical_capacitors": {
+    "plate_count": 8,
+    "each_plate_um": [
+      25,
+      25
+    ],
+    "each_branch_parallel_plates": 4,
+    "nominal_branch_pf": 5,
+    "branch_density_sweep_pf": [
+      4.5,
+      5.5
+    ]
+  },
+  "conditional_inversion": {
+    "single_dominant_pole_hz": 313.98580393869776,
+    "simulated_single_dominant_pole_hz": 157.0825836022748,
+    "gm_scenarios": [
+      {
+        "assumed_equivalent_compensation_pf": 4.5,
+        "effective_gm_ms": 0.35342917352885167
+      },
+      {
+        "assumed_equivalent_compensation_pf": 5,
+        "effective_gm_ms": 0.3926990816987241
+      },
+      {
+        "assumed_equivalent_compensation_pf": 5.5,
+        "effective_gm_ms": 0.4319689898685965
+      },
+      {
+        "assumed_equivalent_compensation_pf": 9,
+        "effective_gm_ms": 0.7068583470577033
+      },
+      {
+        "assumed_equivalent_compensation_pf": 10,
+        "effective_gm_ms": 0.7853981633974482
+      },
+      {
+        "assumed_equivalent_compensation_pf": 11,
+        "effective_gm_ms": 0.863937979737193
+      }
+    ]
+  },
+  "limitations": [
+    "Compensation branches connect output to different output-transistor gate nodes; cannot simply sum them without a small-signal model.",
+    "gm=2*pi*GBW*C is a single-dominant-pole equivalent, not measured input-transistor gm.",
+    "Generic three-terminal MOS reconstruction omits body effect and special device classification; resistor values outside ADC high-poly need checking.",
+    "MIM density 2fF/um2 assumed from process/design context; 1.8..2.2 density sweep excludes fringe and systematic area offsets.",
+    "Measured amplifier power is shared-rail upper estimate; it does not identify branch currents."
+  ]
+}

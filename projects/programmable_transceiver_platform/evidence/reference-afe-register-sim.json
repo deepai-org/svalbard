@@ -1,0 +1,180 @@
+{
+  "cases": [
+    {
+      "cell": "lib_dff",
+      "raw_sha256": "9f0e00f126cd805e704de83544a609932d3b554df8bd4c8899ac9b02aaf3d19b",
+      "maximum_timestep_ns": 0.01,
+      "observation_ns": [
+        2.8,
+        3.8,
+        4.8,
+        5.8,
+        6.8,
+        8.8,
+        10.8,
+        11.8,
+        13.8,
+        14.8
+      ],
+      "q_volts": [
+        3.2993868905315735,
+        3.2999977543625354,
+        3.29995590030303,
+        3.2999980461519236,
+        0.00043868968455833897,
+        2.5369650998689187e-05,
+        3.2993871451443817,
+        3.2999977478905884,
+        3.299998173158689,
+        3.2999984907282456
+      ],
+      "expected_logic": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "cell": "lib_dff",
+      "raw_sha256": "9f0e00f126cd805e704de83544a609932d3b554df8bd4c8899ac9b02aaf3d19b",
+      "maximum_timestep_ns": 0.005,
+      "observation_ns": [
+        2.8,
+        3.8,
+        4.8,
+        5.8,
+        6.8,
+        8.8,
+        10.8,
+        11.8,
+        13.8,
+        14.8
+      ],
+      "q_volts": [
+        3.2993825681115596,
+        3.2999977539609424,
+        3.299955800490942,
+        3.299998045351539,
+        0.00043925682086789396,
+        2.539946216817991e-05,
+        3.299383883518302,
+        3.2999977474249858,
+        3.2999981717713767,
+        3.299998481424298
+      ],
+      "expected_logic": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "cell": "lib_dff_wreset",
+      "raw_sha256": "626d75e7de2de75729b73a3699247eb4dc0a75afe13b12c1262c491b69efa1da",
+      "maximum_timestep_ns": 0.01,
+      "observation_ns": [
+        2.8,
+        3.8,
+        4.8,
+        5.8,
+        6.8,
+        8.8,
+        10.8,
+        11.8,
+        13.8,
+        14.8
+      ],
+      "q_volts": [
+        3.2957095804673293,
+        0.024197955042615855,
+        8.185868870545741e-07,
+        6.646176387437177e-08,
+        1.0046191989862194e-07,
+        5.287189556731156e-08,
+        3.295724181782165,
+        1.619250467714739e-05,
+        7.467683953880691e-08,
+        3.2957364502083473
+      ],
+      "expected_logic": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "cell": "lib_dff_wreset",
+      "raw_sha256": "626d75e7de2de75729b73a3699247eb4dc0a75afe13b12c1262c491b69efa1da",
+      "maximum_timestep_ns": 0.005,
+      "observation_ns": [
+        2.8,
+        3.8,
+        4.8,
+        5.8,
+        6.8,
+        8.8,
+        10.8,
+        11.8,
+        13.8,
+        14.8
+      ],
+      "q_volts": [
+        3.29568946949384,
+        0.02426656436779083,
+        8.214913572768616e-07,
+        6.631350767997263e-08,
+        1.011946421703295e-07,
+        5.2737641624949644e-08,
+        3.2957060482148584,
+        1.6530335283898765e-05,
+        7.445552098772865e-08,
+        3.295708789286499
+      ],
+      "expected_logic": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1
+      ]
+    }
+  ],
+  "model_sha256": {
+    "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+    "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+  },
+  "conclusions": [
+    "Both cells capture on rising clock edges in these nominal tests.",
+    "lib_dff_wreset clears with rstb low without waiting for a clock edge; releasing reset does not itself capture data in the tested low-clock interval."
+  ],
+  "limitations": [
+    "3.3V25C nominal models,100ps input edges,10fF output load; extracted MOS geometry without routing parasitics.",
+    "Widely separated transitions do not characterize setup/hold, reset recovery/removal, metastability, startup or PVT margins."
+  ]
+}

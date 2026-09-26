@@ -93,6 +93,12 @@ class EdgePumpPLL:
     def rail_frequency(self,time):
         return self.rail_amplitude_hz*math.exp(-(time-self.rail_epoch)/self.rail_tau)
 
+    def rail_phase_integral(self,start,end):
+        """Integrated supply-induced cycles; override with the same rail trajectory."""
+        if not all(math.isfinite(x) for x in (start,end)) or end<start:
+            raise ValueError('Invalid rail integration interval')
+        return self.rail_frequency(start)*self.rail_tau*(-math.expm1(-(end-start)/self.rail_tau))
+
     def set_supply(self,time,delta_v,tau_s,hz_per_v):
         if not all(math.isfinite(v) for v in (time,delta_v,tau_s,hz_per_v)) or time<self.time or tau_s<=0:
             raise ValueError('Invalid pulse-loop rail forcing')
@@ -117,7 +123,7 @@ class EdgePumpPLL:
         trial=copy.copy(self.filter);previous=trial.voltage_integral
         trial.voltage_integral=0.;trial.advance(time,self.current)
         integral=trial.voltage_integral;trial.voltage_integral+=previous
-        rail_phase=self.rail_frequency(self.time)*self.rail_tau*(-math.expm1(-(time-self.time)/self.rail_tau))
+        rail_phase=self.rail_phase_integral(self.time,time)
         phase=self.phase+self.gains.free_hz*(time-self.time)+self.gains.kvco*integral+rail_phase+self.frequency_noise.phase_integral(self.time,time)
         return trial,phase
 

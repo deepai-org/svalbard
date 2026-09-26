@@ -1,5 +1,61 @@
 # Power allocation revision, pass 6
 
+The [normative architecture and diagram](block-diagram.md) own selected functional
+boundaries. Numerical studies below are conditional evidence, not frozen circuit
+topologies or qualified component specifications.
+
+## Current whole-chip ledger
+
+`verification/check_contract.py` now emits `resource_ledger` from the contract:
+50 terminals, 14 supply/return terminals, 12.92 mm² allocated core area including
+2.92 mm² explicit reserve, and 350 mA summed domain planning ceilings. The
+reserve is included in the area total, not additional free area. These are
+allocations; implemented area/current/storage totals remain null, not zero.
+The ledger stays open until physical instances, sharing, clock trees, storage,
+internal switching, inactive leakage and pad/package effects are accounted for.
+The analytic feasibility screen now derives current ceilings from this same
+contract instead of maintaining a second hard-coded copy.
+
+Do not add isolated FIFO mappings to parent-core area that already contains
+them. RF/wired exclusivity changes active demand, not the physical area or an
+assumption that inactive blocks draw no current. External FPGA storage/logic
+belongs in a separate board budget, not in the silicon total.
+
+The selected USB bridge inventory now identifies **3,792 on-chip data-bank
+bits**: two 8×84-bit CDC FIFOs, two 80-bit return frames, three 80-bit commit
+frames and 2,048 playback bits. These coexist in the candidate; they are not
+alternatives. This is a partial capacity subtotal, not a flip-flop count.
+Capture record encoding, decoder state, playback boundary locations, counters,
+reset/epoch controls and sharing with other modes remain unpriced. The external
+FPGA's 1,024-byte payload buffer and eight-record ingress are accounted separately.
+`resource_ledger.storage.selected_bridge` owns the itemized inventory; isolated
+FIFO area does not price these additional banks or establish complete fit.
+
+### Storage placement policy
+
+Keep packet buffers, capture history and waveform storage in the external FPGA.
+On-chip storage is for bounded clock crossings, serializer/converter service and
+short transport interruptions. Do not size a chip buffer to hold a whole packet
+when a paced stream can meet the same requirement. Reduction requires an explicit
+host service envelope, occupancy bound and underrun/overflow behavior; external
+storage cannot compensate for a missed response deadline or missing wire sample.
+
+The playback model now accepts `playback_capacity_bits` and reports peak queued
+bits. Its 2,048-bit default remains a comparison allocation until the smaller
+candidate has a service bound; it is not a required packet buffer size. A finite
+4,096-bit paced-response screen delivered with 128 bits (peak 66 bits) at
+±100 ppm across selected phases; 64 bits overflowed. The selected packet/ACK
+path peaked at 36 bits and met the fast-host deadline in its sampled cases.
+Exact settings are in the closure inventory’s `playback_capacity_screen`.
+
+External decoupling and RC/LC supply filtering may use many SMD components;
+external passive count is not a constraint. Compare such networks with local
+on-chip reservoirs, accounting for package/board impedance, component loss and
+regulator/loop stability where relevant. External capacitors do not automatically
+replace local charge storage behind package inductance. The
+[passive allowance](../../../docs/roadmap/programmable-transceiver-pin-plan.md#external-passive-component-allowance)
+owns this design decision; added supply/filter access still consumes terminals.
+
 ## Candidate allocation within 50 terminals
 
 Preserve all 36 signal terminals and 14 supply/ground terminals. Reassign `VDD_CORE_1` / `VSS_CORE_1` to `VDD_HOST_1` / `VSS_HOST_1`. The host now has two dedicated supply/return paths, and the core has one. This is a candidate tradeoff, not proof that the core can spare a path.
@@ -109,6 +165,95 @@ Pass 9 [native driver comparison](host-driver-selection.md): 12 mA mode reduces 
 Pass 10 [8 mA candidate](host-driver-selection.md#8-ma-candidate): the nominal 10 pF HOST_B estimate is 53.80 mA with unchanged allowances. This passes the limited planning comparison but leaves only 1.20 mA headroom; no package/bank/operating-envelope closure is implied.
 
 ## Coupled mathematical load accounting
+
+The active `behavioral.SharedRail` accepts an explicit constant
+`bias_current_a`, in addition to host/converter/FIFO charge impulses. RC/RLC
+intervals solve about the loaded equilibrium (droop R·I, feed current I), and
+the pulse and sampled synthesizers use the same loaded voltage integral.
+Reports separate integrated bias charge from total charge and retain charge
+balance. This current remains active throughout that rail object's lifetime;
+mode-dependent current switching is not implied. The independent matrix-
+exponential check covers the RLC affine state equations, alongside the RC
+closed form. The default stays zero for historical comparisons, so callers
+must explicitly declare a load to claim bias-current coverage.
+
+The independent nonlinear TX diagnostic passes with a declared 12 mA load:
+minimum rail 3.22357 V, 6.1553% EVM and zero bit errors under its unchanged
+limits. This is a conditional DC-load sensitivity, not a derived driver-current
+estimate or a complete mode-dependent current inventory. Output swing remains
+prescribed within the accepted rail range; signal-dependent current, headroom,
+impedance and efficiency still require a coupled output-stage model.
+
+An optional `tx_electrical_budget` now checks the observed TX envelope against
+declared voltage/current/energy bounds. The single-ended internal Thevenin
+source is centered at VDD/2 with 0.3 V headroom to each rail and an explicitly
+AC-coupled 50-ohm load through 50-ohm source impedance. A 3 mA driver allocation
+is reserved within the already charged 12 mA rail load, with a 2 mA output
+current limit; it is not added twice. The nonlinear live TX capture needs
+0.103224 V peak source swing and 1.03224 mA peak load current, within the
+declared bounds at the observed minimum 3.22357 V rail. Peak-envelope RF power
+in source plus load is 53.2758 µW versus at least 9.6707 mW allocated DC power.
+The 6.1553% EVM result retains the unchanged quality limit. This conservatively
+compares minimum rail and peak envelope; a failed bound rejects qualification
+but does not synthesize a clipped waveform. Unit controls reject low headroom,
+insufficient peak current and bias allocations that exceed the live rail load.
+These assumptions still need device/noise/impedance validation.
+
+The pin contract has `RF_TX_P/N`, so the compliance helper now distinguishes
+differential from the earlier single-ended sensitivity case. For differential
+operation, voltages and impedances are across both pins and each leg's swing is
+half the differential swing. This doubles voltage headroom for the same per-leg
+rail margins; it does not double available load current or supply power.
+
+Time-weighting the reduced-drive OFDM payload at its actual converter intervals
+gives 9.93005 µW average load power and an 8.8342 peak/average power ratio.
+Reaching the retained 1 mW planning value by linear scaling would require
+18.7981 mA peak current and 1.87981 V peak open-circuit differential swing at
+the declared 50-ohm source and load impedances. These are required capabilities,
+not evidence that the original 3 mA driver allocation can supply them.
+
+A separate candidate increases the voltage scale from 0.5 to 5.02 V per
+normalized unit, reserves 20 mA for the driver, and charges 29 mA total constant
+bias to the rail. With the actual synthesizer and nonlinear output assumptions,
+it delivers 1.00096 mW average during the diagnostic payload at 6.3056% EVM
+and zero errors. Across training plus payload, peak load current is 19.4654 mA
+and peak source swing 1.94654 V; minimum rail 3.18979 V allows 2.58979 V
+differential swing under the declared 0.3 V per-leg headroom. This allocation
+is below the RF domain's 48 mA planning ceiling, but the full current/area
+inventory is not closed. It is a revised candidate, not a passing result for
+the old 12 mA rail budget. Noise, arbitrary waveform peaks, emissions, matching
+loss and physical driver bandwidth/linearity remain unqualified.
+
+The subsequent 32-seed fast OFDM crest screen rejects seven payloads at the
+20 mA limit, with no DAC clipping. Seed 977 is worst: the full host/synthesizer
+run demands 26.2687 mA and 2.62687 V, violating both the declared current and
+voltage bounds even though in-band EVM passes. Thus the seed-953 result above
+does not establish an adequate driver envelope.
+
+A revised candidate declares 40-ohm total differential source resistance,
+50-ohm load, 4.518 V/unit voltage scale, 28 mA driver allocation and 37 mA total
+rail bias. Reducing scale in proportion to source-plus-load impedance preserves
+delivered voltage/current; it reduces required internal source swing, not load
+current. All 32 fast-screen payloads fit the revised current limit. The worst
+seed's full run gives 0.998967 mW average payload power, 6.4493% EVM, zero errors,
+26.2687 mA peak current and 2.36418 V source swing versus 2.57657 V allowed.
+The RF planning ceiling leaves 11 mA before additional unaccounted loads.
+Neither the finite seed set nor midpoint-observed peaks bound every waveform;
+noise, emissions, impedance realization and a complete current/area inventory
+remain necessary. Both earlier failed electrical budgets remain recorded.
+
+Electrical qualification now uses interval-end peaks instead of only midpoint
+observations. Within each held-DAC interval the one-pole envelope traces a line
+segment in complex I/Q. Affine imbalance/leakage retains that line segment;
+magnitude is convex, and the output model's cubic radial law is checked to be
+monotonic. The maximum therefore occurs at an endpoint. Unit-magnitude LO
+rotation cannot increase it. This bound follows the actual nonuniform DAC
+intervals in the live model and is retained across transfer chunks.
+The revised 32-seed screen still passes, with worst uniform-clock current
+26.3146 mA. The full worst-seed run bounds current at 26.3096 mA and source
+swing at 2.36787 V, retaining 6.4493% EVM and zero errors. These replace
+midpoint maxima for qualification of this model; higher-order filters,
+reactive matching, output noise and physical overshoot require their own bounds.
 
 The integrated candidate now expresses wired output load in physical units:
 `Vdiff = 0.4 V * serializer.drive`, `Ptermination = Vdiff^2 / 100 ohm`, and
@@ -671,3 +816,149 @@ At 1 MHz the two coupling fractions give about 5/50 mV peak ripple and roughly
 The sinusoidal envelope is not a measured host switching spectrum. Separate
 rails do not alone prove isolation; shared return, regulator transfer and
 board/package impedance must ultimately constrain the effective coupling.
+
+## Wired mitigation requirements, before circuit sizing
+
+The consolidated robustness report's `wired_resource_requirements` records
+inverse constraints at 2.5 Gb/s. It does not claim physical implementation fit.
+The 48 mA PLL allocation supports at most 4.36, 2.91 or 1.45 pF of equivalent
+full-swing clock capacitance at 3.3 V when other clock circuitry consumes 12,
+24 or 36 mA respectively. Equivalent capacitance includes activity/frequency
+ratios; account for each load once. Low-swing clock networks require a separate
+static/dynamic model. A cleaner external source still leaves input conditioning,
+local distribution and independent incoming-data CDR costs.
+
+For a hypothetical single internal driver pole, tau=C/gm implies that reducing
+the time constant from 100 to 50 ps doubles required effective gm at unchanged
+capacitance. At 0.5 pF internal capacitance and assumed gm/Id=10 V⁻¹, the conditional
+pole bias increases from 0.5 to 1 mA. These are topology assumptions, not device
+characterization or a complete driver estimate. The internal pole capacitance
+is distinct from the pad load: reducing the latter from 2 to 1 pF needs an actual
+ESD, pad and package solution. No area estimate follows without geometry and
+parasitic information. Serializer, level shifting, RX, CDR and leakage remain
+unpriced in this screen.
+
+The modeled differential output uses one 8 mA tail total. Its 3.3 V termination
+source supplies 26.4 mW, shared between termination resistors and chip dissipation.
+An external termination supply moves that source power off chip but still loads
+chip returns; it does not remove die dissipation. Pad charging is already supplied
+by this path: do not add a separate C*V*f term to the same current-steering tail.
+The report subtracts tail and conditional internal-pole bias from the aggregate
+96 mA WIRE **return** allowance. That residual is not unused supply capacity or
+a whole-lane estimate, and it does not prove either individual 48 mA connection
+is adequate. Area, per-connection allocation and joint fit remain unresolved.
+
+## Joined RF, clock and host planning screen
+
+`joined_rf_resources` in the consolidated robustness report now costs the
+existing hypotheses together: 37 mA RF reservation (including the 28 mA driver),
+clock static bias plus equivalent switched capacitance, 20 mA assumed CORE current,
+and the host's 10 pF external loads plus 7 pC internal charge per changed output.
+RF output power divided by an assumed efficiency is **not** added again to the
+same driver reservation. Inactive leakage and unimplemented internal loads remain
+unpriced; allocation headroom is not measured spare current.
+
+The external-LO candidate provides the host's outgoing clock at LO/16 and DDR
+word rate at LO/8. Five data outputs per bank use symmetric rising probabilities
+0.25 (random) or 0.5 (alternating). Internal transition probability is twice the
+rising probability; the forwarded clock changes on every DDR word. At alternating
+activity, HOST_B draws 44.30, 44.95 and 45.78 mA at the three tested LO settings,
+including internal charge. Its 55 mA ceiling is a planning limit, not GPIO timing
+or pad qualification. Host arithmetic capacity passes at the same settings;
+finite transport and actual FPGA timing are still open.
+
+| Assigned clock bias / equivalent switched load | 2.400 GHz | 2.437 GHz | 2.484 GHz |
+| --- | --- | --- | --- |
+| 12 mA / 1.5 pF | Allocation screen passes | Passes | Passes |
+| 24 mA / 3 pF | Passes | PLL ceiling exceeded | PLL ceiling exceeded |
+| 36 mA / 3 pF | PLL ceiling exceeded | PLL ceiling exceeded | PLL ceiling exceeded |
+
+The first row at alternating host activity draws about 0.536–0.546 W from the
+modeled chip supplies. This is supply-power accounting, not die heat: pad/load
+energy flows and package thermal impedance are not modeled. External oscillator,
+board components and FPGA power are additional. Droop uses the existing simple
+2 ohm feeds and 0.1 ohm shared return; dynamic PDN and substrate effects require
+their separate models. Signal-quality runs have not all been rerun at these
+exact rails and activity spectra, so this table does not close joint operation.
+The RF reservation also does not prove simultaneous RF TX/RX current or capability.
+
+### DC rail fed back into signal quality
+
+`rf_dc_quality` now reuses the joined budget's exact RF DC rail in the spectral
+receiver at 2.437 GHz, for the lower-load clock hypothesis. Random and alternating
+host data produce 3.21320 and 3.20962 V respectively. Both use the same explicit
+board loss and configured gain restoration as the earlier receive comparison.
+The test verifies that actual modeled PGA signal amplitude changes with the
+rail ratio, rather than merely copying supply values into metadata.
+
+With the assigned clean external clock, 20 dB board blocker attenuation and 1 mV
+residual ripple, diagnostic EVM is about 8.54% at both rails. A noisy external
+source remains around 18.5%; 10 mV ripple gives about 58% for the clean source.
+Thus the modeled DC drop alone does not break this selected candidate, while
+clock/supply quality still does. These are one-realization conditional results
+under 65 MHz/V residual pushing, not a statistical or protocol qualification.
+
+Only DC accounting is joined here: ripple amplitude remains an assigned stress,
+not a prediction from the joined budget's switching current. Supply-dependent
+ENOB, filter poles, compression, tuning and actual headroom are not modeled by
+scaling RF gain. Area, physical current, thermal behavior and dynamic coexistence
+remain open; this is not whole-chip resource-and-quality closure.
+
+### Host charge propagated through the clock-supply network
+
+`host_charge_coupling` includes the same 7 pC output-transition hypothesis in
+the host data-activity tone, alongside 10 pF capacitive loads. At 2.437 GHz LO
+and random host data, a 50% sinusoidal modulation of activity creates a 17.90 mA
+peak 1 MHz current tone, versus 12.57 mA from capacitive loads alone. Rising
+probability ranges from 0.125 to 0.375; this modulation is not applied around the
+maximum alternating-data activity, which would exceed the physical bound.
+Clock switching and static bank bias contribute to DC but not this data-activity
+tone. Internal and capacitive activity envelopes are assumed coherent.
+
+| Board hypothesis | Differential clock-rail ripple | Diagnostic RX EVM with board blocker filtering |
+| --- | --- | --- |
+| 10 uF, 50 milliohm ESR | 1.236 mV peak | 9.40% |
+| 20 uF, 50 milliohm ESR | 1.231 mV peak | 9.36% |
+| 10 uF, 20 milliohm ESR | 0.722 mV peak | 7.74% |
+
+These use the existing series damping and assigned 20 milliohm / 0.5 nH shared
+return. More nominal capacitance alone provides almost no improvement at this
+frequency; impedance, including ESR and return paths, matters. The 10 kHz–1 GHz
+network scan still peaks near 275 MHz at about 5.4 ohms; a 1 MHz improvement
+does not establish broadband immunity. Capacitor values/ESR/ESL are hypotheses,
+not selected characterized components, and no measured host spectrum is claimed.
+Unfiltered-blocker cases still fail.
+
+For this explicit shared clock/host feed, allocated constant host and clock
+currents imply a clock-victim DC rail of 3.108 V, including damping/return drops.
+The RF waveform continues to use the separate budget's 3.213 V RF rail. This is
+a particular coupling topology, not a complete multi-rail package network.
+The source spectra and 65 MHz/V residual pushing remain assigned; clock startup,
+tuning, additive noise and bias at 3.108 V have **not** been demonstrated. Lower
+ESR fixes neither that DC drop nor the missing clock operating-point evidence.
+Thus the waveform result remains conditional even though current, network
+phasor and RF gain assumptions are now connected more explicitly.
+
+### Preserve clock DC voltage without removing branch damping
+
+The same host-charge/network study now compares a 0.1 ohm shared board feed
+against the earlier 2 ohm feed, retaining the clock branch's 2 ohm series damping,
+inductances and return hypothesis. At the same allocated constant currents, the
+clock rail rises from 3.108 to 3.243 V. Shared-feed resistor loss falls from
+10.09 to 0.50 mW; clock-branch series loss remains about 1.16 mW. This is a board
+impedance target, not a selected regulator or a verified source impedance model.
+No signal/supply pin reassignment or additional on-chip storage is involved.
+
+| Lower-feed-resistance board hypothesis | Clock-rail ripple at 1 MHz | Filtered diagnostic RX EVM |
+| --- | --- | --- |
+| 10 uF, 20 milliohm ESR | 0.674 mV peak | 7.61% |
+| Adverse 5 uF, 50 milliohm ESR | 1.015 mV peak | 8.60% |
+
+The same allocated clock current and assigned spectra are retained; the result
+does not demonstrate transistor startup, tuning or additive noise at 3.243 V.
+The RF rail stays at the previous separate-budget value. Blocker-filter bypass
+controls still fail. The wider network scan peaks around 288 MHz at 5.65–5.69
+ohms, slightly above the original approximately 5.4 ohm peak. Consequently the
+DC and 1 MHz improvement is not broadband coexistence closure. Regulator output
+impedance/stability, actual component parasitics and host edge-current spectra
+remain required board evidence.

@@ -1,8 +1,22 @@
 {
-  "scope": "Aligned RX block algorithm/reference comparison; no RTL, gearbox, timing, CDC or protocol-latency qualification",
+  "scope": "Aligned RX content comparison plus block-FIFO digital CDC edge comparison against existing RTL; no physical timing or protocol-latency qualification",
+  "fifo_edges": {
+    "events": 2400,
+    "writes": 260,
+    "reads": 252,
+    "shared_resets": 3,
+    "full_stalls": 48,
+    "empty_stalls": 85,
+    "coincident_edges": 145,
+    "invalid_accepted": 288,
+    "rtl_edge_equivalent": true,
+    "ordered_scoreboard": true,
+    "scope": "Ideal digital synchronizers; excludes metastability, bus skew and independent reset domains"
+  },
   "cases": [
     {
       "mode": 0,
+      "owner": null,
       "words_per_block": 2,
       "frames": 884,
       "blocks": 28288,
@@ -17,6 +31,7 @@
     },
     {
       "mode": 0,
+      "owner": null,
       "words_per_block": 4,
       "frames": 884,
       "blocks": 14144,
@@ -31,6 +46,7 @@
     },
     {
       "mode": 0,
+      "owner": null,
       "words_per_block": 8,
       "frames": 884,
       "blocks": 7072,
@@ -44,7 +60,98 @@
       "header_collection_delay_after_word4_ns": 12
     },
     {
+      "mode": 0,
+      "owner": "wire",
+      "words_per_block": 2,
+      "frames": 60,
+      "blocks": 1920,
+      "peak_payload_words_per_block": {
+        "wire": 2,
+        "iq": 0
+      },
+      "core_clock_mhz": 125.0,
+      "block_period_ns": 8,
+      "max_collection_delay_ns": 4,
+      "header_collection_delay_after_word4_ns": 4
+    },
+    {
+      "mode": 0,
+      "owner": "wire",
+      "words_per_block": 4,
+      "frames": 60,
+      "blocks": 960,
+      "peak_payload_words_per_block": {
+        "wire": 4,
+        "iq": 0
+      },
+      "core_clock_mhz": 62.5,
+      "block_period_ns": 16,
+      "max_collection_delay_ns": 12,
+      "header_collection_delay_after_word4_ns": 12
+    },
+    {
+      "mode": 0,
+      "owner": "wire",
+      "words_per_block": 8,
+      "frames": 60,
+      "blocks": 480,
+      "peak_payload_words_per_block": {
+        "wire": 8,
+        "iq": 0
+      },
+      "core_clock_mhz": 31.25,
+      "block_period_ns": 32,
+      "max_collection_delay_ns": 28,
+      "header_collection_delay_after_word4_ns": 12
+    },
+    {
+      "mode": 0,
+      "owner": "iq",
+      "words_per_block": 2,
+      "frames": 60,
+      "blocks": 1920,
+      "peak_payload_words_per_block": {
+        "wire": 0,
+        "iq": 2
+      },
+      "core_clock_mhz": 125.0,
+      "block_period_ns": 8,
+      "max_collection_delay_ns": 4,
+      "header_collection_delay_after_word4_ns": 4
+    },
+    {
+      "mode": 0,
+      "owner": "iq",
+      "words_per_block": 4,
+      "frames": 60,
+      "blocks": 960,
+      "peak_payload_words_per_block": {
+        "wire": 0,
+        "iq": 4
+      },
+      "core_clock_mhz": 62.5,
+      "block_period_ns": 16,
+      "max_collection_delay_ns": 12,
+      "header_collection_delay_after_word4_ns": 12
+    },
+    {
+      "mode": 0,
+      "owner": "iq",
+      "words_per_block": 8,
+      "frames": 60,
+      "blocks": 480,
+      "peak_payload_words_per_block": {
+        "wire": 0,
+        "iq": 8
+      },
+      "core_clock_mhz": 31.25,
+      "block_period_ns": 32,
+      "max_collection_delay_ns": 28,
+      "header_collection_delay_after_word4_ns": 12
+    },
+    {
       "mode": 1,
+      "owner": null,
       "words_per_block": 2,
       "frames": 424,
       "blocks": 13568,
@@ -59,6 +166,7 @@
     },
     {
       "mode": 1,
+      "owner": null,
       "words_per_block": 4,
       "frames": 424,
       "blocks": 6784,
@@ -73,6 +181,7 @@
     },
     {
       "mode": 1,
+      "owner": null,
       "words_per_block": 8,
       "frames": 424,
       "blocks": 3392,
@@ -84,20 +193,114 @@
       "block_period_ns": 25.6,
       "max_collection_delay_ns": 22.400000000000002,
       "header_collection_delay_after_word4_ns": 9.600000000000001
+    },
+    {
+      "mode": 1,
+      "owner": "wire",
+      "words_per_block": 2,
+      "frames": 60,
+      "blocks": 1920,
+      "peak_payload_words_per_block": {
+        "wire": 2,
+        "iq": 0
+      },
+      "core_clock_mhz": 156.25,
+      "block_period_ns": 6.4,
+      "max_collection_delay_ns": 3.2,
+      "header_collection_delay_after_word4_ns": 3.2
+    },
+    {
+      "mode": 1,
+      "owner": "wire",
+      "words_per_block": 4,
+      "frames": 60,
+      "blocks": 960,
+      "peak_payload_words_per_block": {
+        "wire": 4,
+        "iq": 0
+      },
+      "core_clock_mhz": 78.125,
+      "block_period_ns": 12.8,
+      "max_collection_delay_ns": 9.600000000000001,
+      "header_collection_delay_after_word4_ns": 9.600000000000001
+    },
+    {
+      "mode": 1,
+      "owner": "wire",
+      "words_per_block": 8,
+      "frames": 60,
+      "blocks": 480,
+      "peak_payload_words_per_block": {
+        "wire": 8,
+        "iq": 0
+      },
+      "core_clock_mhz": 39.0625,
+      "block_period_ns": 25.6,
+      "max_collection_delay_ns": 22.400000000000002,
+      "header_collection_delay_after_word4_ns": 9.600000000000001
+    },
+    {
+      "mode": 1,
+      "owner": "iq",
+      "words_per_block": 2,
+      "frames": 60,
+      "blocks": 1920,
+      "peak_payload_words_per_block": {
+        "wire": 0,
+        "iq": 2
+      },
+      "core_clock_mhz": 156.25,
+      "block_period_ns": 6.4,
+      "max_collection_delay_ns": 3.2,
+      "header_collection_delay_after_word4_ns": 3.2
+    },
+    {
+      "mode": 1,
+      "owner": "iq",
+      "words_per_block": 4,
+      "frames": 60,
+      "blocks": 960,
+      "peak_payload_words_per_block": {
+        "wire": 0,
+        "iq": 4
+      },
+      "core_clock_mhz": 78.125,
+      "block_period_ns": 12.8,
+      "max_collection_delay_ns": 9.600000000000001,
+      "header_collection_delay_after_word4_ns": 9.600000000000001
+    },
+    {
+      "mode": 1,
+      "owner": "iq",
+      "words_per_block": 8,
+      "frames": 60,
+      "blocks": 480,
+      "peak_payload_words_per_block": {
+        "wire": 0,
+        "iq": 8
+      },
+      "core_clock_mhz": 39.0625,
+      "block_period_ns": 25.6,
+      "max_collection_delay_ns": 22.400000000000002,
+      "header_collection_delay_after_word4_ns": 9.600000000000001
     }
   ],
   "checks": [
-    "All 1308 legal frame count pairs at each of three widths",
+    "All 1308 legacy count pairs and all 60 counts per exclusive owner/mode at each of three widths",
     "Continuous sequence wraps and source ordering",
-    "All 50 single header-bit flips per mode/width suppress effects and latch fault"
+    "All 50 single header-bit flips per mode/width/owner suppress effects and latch fault",
+    "Protected inactive-owner metadata faults before effects"
   ],
   "source_sha256": {
-    "block_receiver_model.py": "379156e53201e40bde148e1b3bb22eaf2dd2dff5fd74e1e0a241217805550189",
-    "check_block_receiver.py": "1cf93dc5c41fe3d1fe53e57c23509768476236aaa0405e9ae65f32d25a7331e3",
-    "stream_codec.py": "4515bf61e3c83f041eee97740e61c075dca1681da388dc651117cdd10d1a0088",
-    "transport_model.py": "fb93356b2851ee253d3f8e49bb25b2018e22175500ec3d14b8ebaa78814da09d"
+    "block_receiver_model.py": "39bbf8b86cc37e18030972b14bbd333c3553f0fa318b2f0fecf5cbe2297e84b1",
+    "check_block_receiver.py": "6368e83e16c0b1b74f1b7117310b1ae0ba57c5ad0caa88ab100232e2094c055f",
+    "stream_codec.py": "641bc54f6d7337240b00e49edda93c5fb1f8e6567edd6476315b51925ad023c1",
+    "transport_model.py": "accda58cfe3c130a8a4967bd9704cdc36bc5e0026f0a0a794ab8077a566d8a8f",
+    "rtl/pt_fifo.sv": "993815ea2911f6158e78d3a731d4fde866fe115e602b7188431260be0932497b",
+    "rtl/pt_block_fifo.sv": "f13f801248743598db862040d47eac0144d6772ab153b2d0ed83cd42109615ae"
   },
   "limitations": [
+    "The FIFO CDC model is not yet integrated with whole-chip queue staging.",
     "No bit/word alignment acquisition, source drift, backpressure or physical clock model.",
     "Parallel outputs require multi-enqueue storage; existing single-word FIFOs cannot accept these blocks directly.",
     "Collection delays exclude gearbox handoff, processing, CDC and output serialization.",

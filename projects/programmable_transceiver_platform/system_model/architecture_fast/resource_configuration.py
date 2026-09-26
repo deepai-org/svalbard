@@ -92,10 +92,14 @@ def validate_wire_timing(line_rate_bps, clock_source='embedded', reference_hz=No
 
 
 def validate_rf_settings(sample_hz=40e6, tx_cutoff_hz=20e6,
-                         rx_cutoff_hz=9.157407e6, rx_gain=1., rx_filter_order=1, converter_bits=12):
+                         rx_cutoff_hz=9.157407e6, rx_gain=1., rx_filter_order=1, converter_bits=12,
+                         sample_clock_source='reference', lo_hz=None, lo_divider=None):
     """Generic candidate filter-bank/divider settings, not protocol selectors.
 
-    Sample divisors reuse 40 MHz; 8/12-bit precision is independent of rate.
+    Reference divisors reuse 40 MHz. An alternate direct-LO candidate uses
+    uniform integer division, without a second reference or fractional edges.
+    This validates rate ownership, not a physical divider or input receiver.
+    8/12-bit precision is independent of rate.
     Cutoffs are one-sided analog poles, not occupied channel bandwidths.
     """
     import math
@@ -106,10 +110,23 @@ def validate_rf_settings(sample_hz=40e6, tx_cutoff_hz=20e6,
     values=(sample_hz,tx_cutoff_hz,rx_cutoff_hz,rx_gain)
     if not all(math.isfinite(v) and v>0 for v in values):
         raise ValueError('Positive finite RF settings required')
-    if sample_hz not in (5e6,10e6,20e6,40e6):
-        raise ValueError('Unsupported reference divider')
+    clock={}
+    if sample_clock_source=='reference':
+        if lo_hz is not None or lo_divider is not None:
+            raise ValueError('Reference sampling must not claim an external LO owner')
+        if sample_hz not in (5e6,10e6,20e6,40e6):
+            raise ValueError('Unsupported reference divider')
+    elif sample_clock_source=='external_lo':
+        if (lo_hz is None or not math.isfinite(lo_hz) or not 2.4e9<=lo_hz<=2.484e9
+                or type(lo_divider) is not int or lo_divider not in (64,128,256,512)):
+            raise ValueError('External LO candidate needs bounded carrier and integer divider')
+        if not math.isclose(sample_hz,lo_hz/lo_divider,rel_tol=1e-12):
+            raise ValueError('Converter rate must follow its actual external LO divider')
+        clock=dict(sample_clock_source=sample_clock_source,lo_hz=lo_hz,lo_divider=lo_divider)
+    else:
+        raise ValueError('Unknown RF sample clock owner')
     if not (.1e6<=rx_cutoff_hz<=9.157407e6 and .1e6<=tx_cutoff_hz<=20e6
             and max(tx_cutoff_hz,rx_cutoff_hz)<=sample_hz/2 and .5<=rx_gain<=2.):
         raise ValueError('RF setting outside candidate envelope')
     return dict(sample_hz=sample_hz,tx_cutoff_hz=tx_cutoff_hz,
-                rx_cutoff_hz=rx_cutoff_hz,rx_gain=rx_gain,rx_filter_order=rx_filter_order,converter_bits=converter_bits)
+                rx_cutoff_hz=rx_cutoff_hz,rx_gain=rx_gain,rx_filter_order=rx_filter_order,converter_bits=converter_bits,**clock)

@@ -1,5 +1,61 @@
 # Open high-speed analog design survey
 
+The ongoing [measured GF180 AFE reverse analysis](../verification/reference_afe/README.md)
+reconstructs the submitted circuits and pad paths, tests bootstrap and loading mechanisms,
+and distinguishes measured constraints from conditional physical estimates. Its findings
+now inform finite-acquisition, noise and distortion scenarios in the transceiver model.
+
+## Process specifications and performance estimates
+
+This assessment includes the permitted external clocks/LOs and generous SMD
+passives. Evidence classes must stay distinct: **published GF180 specification**,
+**same-process simulation**, **measured other-process precedent**, and **engineering
+sweep assumption**. Node name alone does not equate devices or RF passives.
+
+| Quantity / source | Verified information | Use in this design |
+| --- | --- | --- |
+| [GF180 3.3 V device specs](https://gf180mcu-pdk.readthedocs.io/en/latest/analog/spice/elec_specs/elec_specs_1.html) | At W/L=10/0.28 and absolute VGS=VDS=3.3 V: NMOS Idsat 430/510/590 µA/µm; PMOS magnitude 210/250/290 µA/µm. Typical threshold 0.63 V NMOS, −0.73 V PMOS. | Quantitative device/bias anchors. Saturation current at this bias is not linear RF drive current, gm, fT or a speed guarantee. |
+| [GF180 I/O electrical specs](https://gf180mcu-pdk.readthedocs.io/en/latest/IPs/IO/gf180mcu_fd_io/electrical.html) | Listed 4–24 mA digital drive strengths are specified at DVDD=4.5–5.5 V under stated output-level conditions. | Do not import these current guarantees into the 3.3 V host model; use relevant library/circuit evidence. |
+| [Same-process open PLL](https://github.com/2AMLogic/gf180-pll) | Pre-layout/pre-silicon; 150 MHz deterministic period-jitter study, random/noise-driven jitter explicitly missing, and unresolved closed-loop corner failures. | Useful methodology and circuits, not a GHz RF phase-noise bound. Proposal-only GHz PLL targets are excluded as achieved evidence. |
+| [Same-process SAR](https://github.com/2AMLogic/gf180-sar-adc) | 10-bit, 1 MS/s target, 2 MS/s stretch; no silicon and retained distortion failures. | Comparator/reference/switch lessons, not a 40 MS/s ceiling or proof. |
+| [Measured TSMC 180 nm LNAs, thesis abstract](https://ethesys.lis.nsysu.edu.tw/ETD-db/ETD-search-c/view_etd?URN=etd-0919123-233952) | At 2.4 GHz: one circuit reports 9.6 dB gain, 4.9 dB NF, about 10 mW; another 12 dB gain, 7.9 dB NF, 3.2 mW and −4.5 dBm IIP3. | Concrete modest-performance RF precedents, not best-case ideal simulations. GF180 devices, matching, bias and loading still need evaluation. |
+| [Measured 180 nm SAR, conference author abstract S01.5](https://vlsicad2025.conf.tw/site/userdata/1639/file/session/Oral_1.pdf) | 40 MS/s, 9.21 ENOB, peak SNDR 57.2 dB, 1.7 mW; process is not identified as GF180. | Tens-of-MS/s conversion is plausible in this node class. Neither power nor peak ENOB is a GF180 prediction or guaranteed Nyquist performance. |
+
+### Working estimates, not process guarantees
+
+Use the following **initial engineering sweep ranges**, informed by these
+precedents but deliberately not called measured GF180 limits or statistical
+confidence intervals. Values outside them remain possible; update from our PDK
+circuits rather than declaring failure at a range endpoint.
+
+- 2.4 GHz LNA: investigate 8–15 dB gain, 4–8 dB NF and 5–20 mW as a first
+  design region. Gain, noise, linearity and power are coupled, not independently
+  selectable knobs. Include worse cases and matching/filter insertion loss.
+- Complete receiver: retain 10 dB NF as a working scenario and sweep roughly
+  6–15 dB. Derive it from stage gains/noise and passive loss, rather than assigning
+  the LNA's NF to the whole receiver. The measured other-process LNA examples
+  combined with an assumed 15 dB downstream NF and 2 dB pre-LNA loss provide
+  explicit cascade scenarios in `feasibility-bounds.json`.
+- Converter: sweep 6–9 effective bits at the required 20–40 MS/s operating
+  points before relying on 9 ENOB. This is a useful sensitivity study, not a
+  GF180 achievable range or a reduction of the intended capability. Budget
+  reference/driver/clock/logic overhead separately from a published ADC core.
+- External clock path: retain 0.5–10 ps added-jitter scenarios as **requirements
+  exploration only**, not literature-derived GF180 performance estimates. Use a
+  common integration band and distinguish source noise from receiver/buffer and
+  distribution noise. A scalar jitter value does not replace a phase-noise mask.
+- No defensible GF180 RF fT/fmax, 2.4 GHz oscillator phase-noise mask, or
+  package-specific parasitic interval was established by this search. Their
+  absence is not a negative performance result. The next estimation step is
+  PDK operating-point/AC/noise characterization with explicit geometry, bias,
+  finger/gate resistance and load, plus board/package uncertainty sweeps.
+
+The UMC 180 nm sub-mW LNA paper encountered in this search is post-layout
+simulation and states that certain inductor parasitic resistances were ignored;
+its optimistic noise/power figures are not used as GF180 expectations.
+[Paper](https://link.springer.com/article/10.1007/s42452-021-04402-0).
+
+
 Searched online 2026-09-20 at user request. Primary repositories and papers
 inspected; no design has been ported or independently reproduced in this survey.
 These are reference candidates, not evidence that our GF180 chip meets its goals.
@@ -155,3 +211,76 @@ common-mode and switching-load scenarios even with narrow supply/temperature.
 Decision: retain as a concrete reference for a future controlled ADC switching
 comparison and calibration work. Do not replace our ADC or infer a speed/power
 benefit without matched GF180 experiments. Current implementation priorities are maintained in [risk priorities](risk-priorities.md).
+
+## Silicon-unknowns research refresh — 2026-09-26
+
+Architecture selection remains open. This pass searched specifically for measured
+GF180/GF180MCU device, oscillator, converter, mixer and wafer.space characterization,
+then inspected primary project and PDK pages. It does not establish absence of
+unindexed/private results. No new measured GHz performance bound was recovered.
+
+| Unknown that can change our architecture | Evidence needed | What this search resolves |
+| --- | --- | --- |
+| Loaded transistor speed at 2.4–5 GHz | De-embedded S-parameters, fT/fmax versus bias/geometry, or measured loaded RF blocks with current and voltage stated | Still open. DC current and simulated gm/C are not measured RF power gain. |
+| Autonomous and buffer-added phase noise | Silicon phase-noise spectra, supply pushing, output loading and integration limits | Still open. A directly relevant new RF test-chip project exists, but does not provide measured noise or a functioning closed PLL. |
+| Mixer/LNA noise and linearity | Measured conversion gain, NF, compression/IIP3 versus LO drive, bias and load | Still open. Located mixer work shows simulations and planned measurements, not a measured RF receiver. |
+| Converter precision versus sample rate | Measured SNDR/SFDR versus input frequency/amplitude with reference, bias and power conditions | Existing sensor AFE remains useful but incomplete; newer SAR repository explicitly has no silicon. |
+| Pad, protection, package and substrate coupling | Biased RF S-parameters, package model or measured aggressor/victim transfer | Still open. New GF180 I/O testing is a lead; digital functionality does not establish RF transparency or isolation. |
+| Device variation, matching and low-frequency noise | Multi-die distributions, DC/CV/mismatch and noise data tied to geometry | Partially grounded by public PDK characterization; no new GHz statistical validation located. |
+
+### Primary-source leads and exclusions
+
+- [2026 RFIC characterization project](https://github.com/sscs-ose/sscs-chipathon-2026/issues/143):
+  directly relevant LC-VCO and CML quadrature-divider work. Current scope is
+  open-loop characterization; the authors explicitly explain why the feedback
+  divider/PFD combination cannot demonstrate closed-loop lock. Treat it as a
+  design/test opportunity, not a silicon-proven PLL.
+- Its [layout review](https://github.com/Zachnad0/AUS-NZ-Track-A-RFIC-Workspace/blob/main/docs/layout-review-sep01.md)
+  reports simulated GHz operation, but no oscillator phase-noise result. Inductor
+  EM validation and full tank/varactor extraction remain incomplete. It also
+  records extracted output-converter degradation and later corrections. This is
+  useful independent evidence that clock conversion and parasitics deserve
+  attention, not a quantitative measured GF180 limit. Do not adopt its simulated
+  GHz values as a hardware guarantee.
+- [ORConf 2026 primary program](https://fossi-foundation.org/orconf/2026) announces
+  returned silicon and characterization in Tim Edwards' talk. The abstract mixes
+  Sky130 Chipalooza analog work with GF180 3.3 V SRAM/I/O support. No numerical
+  GF180 RF dataset or slides were recovered from the inspected program links.
+  Follow the GF180-specific measurements, not the broad “all circuits functional”
+  wording, before changing our analog assumptions.
+- [ICELab wafer.space Run 2 listing](https://github.com/wafer-space/ws-run2)
+  includes NFET/PFET characterization cells and transconductance amplifiers;
+  [ASHES-GF180nm](https://github.com/GTIceLab/ASHES-GF180nm) is the source repository.
+  The inspected landing page establishes design availability, not measurement
+  results. This is a promising device-characterization lead, not a recovered dataset.
+- [2025 Gilbert mixer project](https://www.landflier.com/projects/chip-design/gilbert-cell/)
+  shows 100 MHz LO / 89.3 MHz RF simulation, including protection/loading work;
+  the testing section describes future equipment use and unfilled measured
+  metrics. It does not establish measured 2.4 GHz conversion gain or noise figure.
+- [2AMLogic SAR ADC](https://github.com/2AMLogic/gf180-sar-adc) explicitly reports
+  pre-tapeout status and no silicon. Its detailed “measured” characterization is
+  simulation, including documented extraction limitations; do not count it as
+  independent silicon validation of our converter assumptions.
+
+### What the primary PDK actually supports
+
+The [MOS extraction table](https://gf180mcu-pdk.readthedocs.io/en/latest/analog/model_parameters/LV/LV_2_2.html)
+separates measured extraction geometries from pseudo devices, including measured
+3.3 V devices at 0.28 µm length. The
+[noise page](https://gf180mcu-pdk.readthedocs.io/en/latest/analog/model_parameters/LV/LV_2_3.html)
+records median-die fitting from 10 Hz–100 kHz measurements, including 10/0.28 µm
+3.3 V devices at specified biases. This grounds low-frequency device modeling;
+it does not validate RF gate noise, oscillator upconversion or a phase-noise mask.
+
+Search summaries can mislabel the documentation: a third-party result called
+LV_6 an RF-NMOS/S-parameter section, whereas the
+[actual LV_6 page](https://gf180mcu-pdk.readthedocs.io/en/latest/analog/model_parameters/LV/LV_6.html)
+is MOSCAP models. No RF characterization claim is accepted from that summary.
+
+Decision: do not select external LO/divide-by-64 based on an assumed autonomous
+silicon failure, and do not select autonomous operation based on simulated GHz
+frequency alone. Highest-value evidence follow-ups are measured RFIC VCO/divider
+results, GF180-specific wafer.space I/O data, and actual ICELab transistor data.
+Until those yield numbers, retain bounded design scenarios and mark RF device
+speed/noise and package coupling as unresolved. This research pass does not
+restart the reference-AFE simulation campaign or change performance defaults.

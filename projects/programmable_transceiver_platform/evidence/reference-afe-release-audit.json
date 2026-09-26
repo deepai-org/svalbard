@@ -1,0 +1,65 @@
+{
+  "commit": "5a6040bfe6735d6898d926b5b01a6d7650d50106",
+  "review_date": "2026-09-25",
+  "sources": [
+    {
+      "path": "adc-gen/comparator/src/comparator.spice",
+      "url": "https://raw.githubusercontent.com/idea-fasoc/openfasoc-tapeouts/5a6040bfe6735d6898d926b5b01a6d7650d50106/mpw18h1/adc-gen/comparator/src/comparator.spice",
+      "sha256": "78e6b2e5464d7eec6c74e8324dfb7bbb5e0ffae099edd82f4b883101dfc83ecd"
+    },
+    {
+      "path": "adc-gen/comparator/spice/comparator_control.sp",
+      "url": "https://raw.githubusercontent.com/idea-fasoc/openfasoc-tapeouts/5a6040bfe6735d6898d926b5b01a6d7650d50106/mpw18h1/adc-gen/comparator/spice/comparator_control.sp",
+      "sha256": "1554721c3acd7f1dbf4ae950452062ef087b192622b88f8cdcbf6c93711a1e69"
+    },
+    {
+      "path": "notebooks/gf180fet_characterization.ipynb",
+      "url": "https://raw.githubusercontent.com/idea-fasoc/openfasoc-tapeouts/5a6040bfe6735d6898d926b5b01a6d7650d50106/mpw18h1/notebooks/gf180fet_characterization.ipynb",
+      "sha256": "3ba08e62c56ba3503418bb1d7f0c9346b6ff590635d38a7beb3ef78d59c37e5c"
+    },
+    {
+      "path": "opamp-gen/Programmable_2stage/README.md",
+      "url": "https://raw.githubusercontent.com/idea-fasoc/openfasoc-tapeouts/5a6040bfe6735d6898d926b5b01a6d7650d50106/mpw18h1/opamp-gen/Programmable_2stage/README.md",
+      "sha256": "f300f0c988541312a462ec421675ce262b6b2b13e729ae08c959e80b8ad3dee7"
+    },
+    {
+      "path": "opamp-gen/Programmable_2stage/netlist/Programmable_2stage_opamp.spice",
+      "url": "https://raw.githubusercontent.com/idea-fasoc/openfasoc-tapeouts/5a6040bfe6735d6898d926b5b01a6d7650d50106/mpw18h1/opamp-gen/Programmable_2stage/netlist/Programmable_2stage_opamp.spice",
+      "sha256": "4686d57e8a53a0cf380d12d0222ff458010ed9375cc3b7eed03255e49eaac6e4"
+    },
+    {
+      "path": "opamp-gen/Programmable_2stage/template/Programmable_2stage_opamp_testbench.spice",
+      "url": "https://raw.githubusercontent.com/idea-fasoc/openfasoc-tapeouts/5a6040bfe6735d6898d926b5b01a6d7650d50106/mpw18h1/opamp-gen/Programmable_2stage/template/Programmable_2stage_opamp_testbench.spice",
+      "sha256": "84d42466f52487425c09183ba93eb16350db42cd4ba2ba8e15c9873a1da36b9e"
+    }
+  ],
+  "findings": [
+    "Released comparator has12XM devices and400nm lengths; fabricated comparator reconstruction has97 fingers with280nm lengths. They are not interchangeable measurement testbenches.",
+    "Comparator control file defines simulation clock1440ps and Monte Carlo-style loops, not laboratory operating settings for the submitted comparator.",
+    "FET notebook loads../../binary files through ltspice parser and reads model internals gm,gds,cgs,cgd,vth; fT is computed from gm and gate capacitances. This is simulator characterization, not measured RF transistor data.",
+    "NIST alternate title Fully integrated multifunctional sensor and open-source ASIC for flexible wearables links pub_id957346, the same already-analyzed paper; it is not independent corroboration."
+  ],
+  "limitations": [
+    "Targeted source review did not locate measured preamp bias, calibration state or raw ADC records; this is not proof that no such material exists elsewhere."
+  ],
+  "amplifier_baseline_audit": {
+    "repository_tree_query": "https://api.github.com/repos/idea-fasoc/openfasoc-tapeouts/git/trees/5a6040bfe6735d6898d926b5b01a6d7650d50106?recursive=1",
+    "tree_truncated": false,
+    "released_amplifier_family": "Programmable two-stage amplifier; NMOS input pair L1um, PMOS output L0.7um, single Miller branch and series resistor.",
+    "reconstructed_measured_candidate": "opamp2_to_fix, complementary input pairs L0.3um, folded-cascode/classAB topology and two output-to-gate compensation branches.",
+    "conclusion": "The released two-stage testbench is not the hybrid folded-cascode simulation baseline in Table1. Its bias/load settings cannot be transferred as measured hybrid-amplifier conditions.",
+    "folded_cascode_testbench_found_in_pinned_tree": false,
+    "external_bias_evidence": {
+      "source": "reference-afe-pad-routing.json",
+      "connections": {
+        "vbiasn": "VBIASN",
+        "vbiasp": "VBIASP",
+        "vprog": "VPROG",
+        "vout_t": "VOUT"
+      },
+      "internal_vout_has_top_label": false
+    },
+    "implication": "Vprog1V does not determine the separate external cascode voltages. Current sweeps are scenarios, not reconstruction of the measurement bias point.",
+    "scope": "Pinned public tree and previously reconstructed metal connectivity; not an exhaustive claim about private files, other revisions or all online materials."
+  }
+}

@@ -85,7 +85,7 @@ def check(c):
     t = c['transport']
     u=t['usb_short_frame']
     require((u['frame_words'],u['word_bits'],u['control_words'],u['payload_words'])==(8,10,5,3), 'USB reused frame geometry')
-    require(u['host_profile']=='ddr125', 'USB reused host clock')
+    require(u['host_profile']=='ddr156', 'USB selected faster host clock')
     require(t['word_bits'] == 10 and t['frame_words'] == 64 and t['control_words'] == 5, 'transport geometry')
     scheduling = t['scheduling']
     require(scheduling['control_slots'] == [0, 1, 2, 3, 4], 'control slot allocation')
@@ -124,6 +124,79 @@ def check(c):
     return results
 
 
+def bridge_storage_inventory():
+    """Selected USB model's coexisting storage; payload subtotal, not cell area.
+
+    Trace: TimedRecordReturn/TimedRecordPlayback, pt_block_fifo and
+    RawBurstPlayback. Python object/timestamp sizes are not hardware widths.
+    External observation traces and stimulus generators are not chip resources.
+    """
+    rows = [
+        dict(instance='d2h_block_cdc', owner='chip', entries=8, bits_per_entry=84,
+             source='rtl/pt_block_fifo.sv', omitted='pointer/reset/fault state'),
+        dict(instance='h2d_block_cdc', owner='chip', entries=8, bits_per_entry=84,
+             source='rtl/pt_block_fifo.sv', omitted='pointer/reset/fault state'),
+        dict(instance='d2h_active_and_prepared_frames', owner='chip', entries=2, bits_per_entry=80,
+             source='TimedRecordReturn', omitted='sequence/valid/control state'),
+        dict(instance='h2d_pending_commit_frames', owner='chip', entries=3, bits_per_entry=80,
+             source='TimedRecordPlayback', omitted='valid/age/control state'),
+        dict(instance='raw_playback_data', owner='chip', entries=2048, bits_per_entry=1,
+             source='RawBurstPlayback', omitted='16 boundary locations, pointers and status'),
+        dict(instance='raw_capture_records', owner='chip', entries=16, bits_per_entry=None,
+             source='usb_observed_response: BitEventStream', omitted='record representation and control'),
+        dict(instance='h2d_frame_decoder', owner='chip', entries=None, bits_per_entry=None,
+             source='TimedRecordPlayback.receiver/frame_records', omitted='decoder/header/partial-record state'),
+        dict(instance='fpga_ingress', owner='external_fpga', entries=8, bits_per_entry=None,
+             source='usb_observed_response: fpga_ingress', omitted='packed record width, CDC pointers'),
+        dict(instance='fpga_packet_payload', owner='external_fpga', entries=1024, bits_per_entry=8,
+             source='USBStreamingPacket', omitted='CRC/parser/control and prepared response storage'),
+    ]
+    for row in rows:
+        row['identified_bits'] = (row['entries'] * row['bits_per_entry']
+            if row['entries'] is not None and row['bits_per_entry'] is not None else None)
+    return dict(configuration='USB short-frame bridge candidate; both directions coexist',
+        instances=rows,
+        chip_identified_bits=sum(r['identified_bits'] or 0 for r in rows if r['owner']=='chip'),
+        external_fpga_identified_bits=sum(r['identified_bits'] or 0 for r in rows if r['owner']=='external_fpga'),
+        complete=False,
+        scope='Identified data-bank capacity only; not total flip-flops, area or memory allocation. '
+              'Unknown widths and omitted state remain open. Do not add these banks again through parent mappings. '
+              'Sharing with bulk wired/RF transport and diagnostic memory is not yet resolved.')
+
+
+def resource_ledger(c):
+    """One contract-derived planning ledger; missing implementation is not zero."""
+    domains={}
+    for domain in c['power']['domains']:
+        require(len(domain['supply_pins'])==len(domain['return_pins']), 'unpaired supply domain')
+        domains[domain['id']]=dict(supply_pairs=len(domain['supply_pins']),
+            allocation_ma=len(domain['supply_pins'])*domain['per_connection_budget_ma'],
+            demonstrated_current_ma=None)
+    area=[dict(group=name,allocation_um2=value,implemented_area_um2=None)
+          for name,value in c['area_um2'].items()]
+    return dict(status='open_planning_ledger',closed=False,
+        terminals=dict(allocated=len(c['pins']),limit=c['limits']['total_terminals'],
+            supply_return=sum(len(x['supply_pins'])+len(x['return_pins']) for x in c['power']['domains'])),
+        area=dict(limit_um2=c['limits']['core_area_um2'],allocations=area,
+            allocated_um2=sum(c['area_um2'].values()),
+            unallocated_um2=c['limits']['core_area_um2']-sum(c['area_um2'].values()),
+            explicit_reserve_um2=c['area_um2'].get('reserve',0),implemented_total_um2=None),
+        power_domains=domains,total_allocated_current_ma=sum(x['allocation_ma'] for x in domains.values()),
+        mode_domains=dict(wire=['CORE','HOST','WIRE','PLL'],rf=['CORE','HOST','RF','PLL']),
+        inactive_domain_current_ma=None,
+        storage=dict(status=c['transport']['scheduling']['fifo_budget_status'],
+            physical_instance_bits=None,selected_bridge=bridge_storage_inventory(),scope='FIFO allocations and isolated mappings do not establish simultaneous physical instances'),
+        usb_host_profile=c['transport']['usb_short_frame']['host_profile'],
+        unresolved=['implemented physical instances and shared/duplicated ownership',
+            'complete digital/analog area including clock trees and isolation',
+            'domain current with internal cell/data/clock and inactive leakage',
+            'simultaneous storage, CDC and staging instances',
+            'pad/protection/package and thermal closure',
+            'external FPGA resources and physical host timing'],
+        scope='Contract planning values only. Domain allocation sum is not consumption; exclusive modes do not make inactive leakage zero. Isolated cell mapping must not be summed with overlapping parent implementations.')
+
+
 if __name__ == '__main__':
     print(json.dumps({'scope': 'planning arithmetic only; not implementation qualification',
-                      'modes': check(json.loads(CONTRACT.read_text()))}, indent=2))
+                      'modes': check(json.loads(CONTRACT.read_text())),
+                      'resource_ledger': resource_ledger(json.loads(CONTRACT.read_text()))}, indent=2))

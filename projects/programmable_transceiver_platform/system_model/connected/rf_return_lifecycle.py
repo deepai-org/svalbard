@@ -9,10 +9,11 @@ from timed_lifecycle import TimedChip
 from rf_cascade_state import RfCascadeState, controls as cascade_controls
 
 class ReturnChip(TimedChip):
-    def __init__(self,adc_latency_s=0.,adc_pipeline_capacity=4,adc_recovery_tau_s=0.,adc_recovery_gain=0.,**kwargs):
+    def __init__(self,adc_latency_s=0.,adc_pipeline_capacity=4,adc_recovery_tau_s=0.,adc_recovery_gain=0.,adc_impairments=None,**kwargs):
         if not math.isfinite(adc_latency_s) or adc_latency_s<0 or not isinstance(adc_pipeline_capacity,int) or adc_pipeline_capacity<1:
             raise ValueError('Invalid ADC pipeline contract')
         self.adc_recovery=ADCRecovery(adc_recovery_tau_s,adc_recovery_gain)
+        self.adc_impairments=adc_impairments
         super().__init__(**kwargs)
         self.adc_latency=adc_latency_s;self.adc_pipeline_capacity=adc_pipeline_capacity
         self.adc_pending=deque();self.adc_sampled=0;self.adc_completed=0;self.adc_cancelled=0
@@ -92,7 +93,9 @@ class ReturnChip(TimedChip):
         return codes[0] | (codes[1] << self.bits)
 
     def convert_adc(self,value):
-        return self.quantize_adc(self.adc_recovery.sample(value,self.tx.time))
+        value=self.adc_recovery.sample(value,self.tx.time)
+        if self.adc_impairments is not None:value=self.adc_impairments.sample(value)
+        return self.quantize_adc(value)
 
     def adc_became_valid(self,word,time):
         pass

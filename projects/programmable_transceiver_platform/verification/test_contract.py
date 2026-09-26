@@ -2,11 +2,27 @@
 import copy
 import json
 import unittest
-from check_contract import CONTRACT, check
+from check_contract import CONTRACT, check, resource_ledger
 
 class ContractTests(unittest.TestCase):
     def setUp(self):
         self.c = json.loads(CONTRACT.read_text())
+
+    def test_resource_ledger_does_not_treat_allocations_as_measurements(self):
+        r=resource_ledger(self.c)
+        self.assertFalse(r['closed'])
+        self.assertIsNone(r['area']['implemented_total_um2'])
+        self.assertIsNone(r['inactive_domain_current_ma'])
+        self.assertIsNone(r['storage']['physical_instance_bits'])
+        self.assertEqual(r['area']['allocated_um2'],12920000)
+        self.assertEqual(r['area']['unallocated_um2'],0)
+        self.assertEqual(r['area']['explicit_reserve_um2'],2920000)
+        self.assertEqual(r['total_allocated_current_ma'],350)
+        self.assertEqual(r['terminals']['supply_return'],14)
+        self.c['power']['domains'][0]['per_connection_budget_ma']=40
+        self.assertEqual(resource_ledger(self.c)['total_allocated_current_ma'],342)
+        self.c['transport']['usb_short_frame']['host_profile']='ddr125'
+        with self.assertRaisesRegex(ValueError,'USB selected faster host clock'):check(self.c)
 
     def test_declared_modes(self):
         modes = check(self.c)

@@ -11,6 +11,26 @@ This is the executable reference for replacing compulsory bulk CRC/quarantine. A
 
 Each 64-word frame contains five header words at positions 0–4 and 59 scheduled payload positions 5–63. Words remain ten bits. The existing smooth weighted scheduler uses quotas 33 wired/25 IQ/one idle in the lower profile and 52 wired/seven IQ in the higher profile. Thus nominal capacities and reserved service rates are unchanged. This moves the existing five overhead slots to the beginning of the frame; it does not create extra bandwidth. Source word counts and bit packing retain their meanings.
 
+The intended exclusive-owner allocation assigns all 59 payload positions to the
+selected wired or I/Q stream. It keeps the same header, count widths, padding,
+sequence and guard. The inactive source count must be zero. Owner selection is
+stopped configuration shared with the FPGA; it is not a new protocol identifier
+or an in-band automatic format detector. The legacy/exclusive selector is a
+model comparison control, not a requirement for another silicon mode bit; the
+intended final schedule follows the existing active-engine selection. Nominal payload capacity is 2.3046875
+Gb/s at 250 Mword/s or 2.880859375 Gb/s at 312.5 Mword/s. Converter precision
+and host clock selection are independent.
+
+This allocation is now an explicit codec/live-model candidate:
+`slots/encode/Receiver(..., owner="wire"|"iq")` selects it. Omitting `owner`
+retains the legacy allocation above for current RTL comparisons. Short USB
+frames retain three wired payload words; short I/Q framing rejects. The fast
+chip uses `configure_transport("exclusive")` while stopped, and the live RF
+helper accepts independent `host_mode=0|1` and
+`transport_allocation="exclusive"`. Connected RF observers now select this allocation by default; low-level
+compatibility controls, RTL migration and independent host agreement remain open. Do not claim the wider internal datapath or its
+physical timing is implemented by changing the frame schedule.
+
 Metadata has 30 data bits: wired count [5:0], IQ count [11:6], sequence [17:12], opcode [21:18], argument [29:22]. Use shortened extended Hamming **for detection only**: positions 1–36 have parity at 1,2,4,8,16,32, and the 30 data bits occupy the other positions in ascending order, least significant first. Each parity subset has even parity. Bit 36 of the encoded integer is overall even parity across those 36 positions. Integer bits 37–39 contain constant tag 101. Words 0–3 transmit the encoded integer in ten-bit chunks, least significant chunk first. Word 4 is fixed guard 0x2d3.
 
 This affine code has minimum distance four: it detects every one-, two- or three-bit change within the 50 header bits. **Do not correct single-bit syndromes:** correction could turn a triple error into accepted wrong metadata. Four-bit errors can be undetected; e.g. the codewords for zero wired count and one wired count differ by four bits. This is not authentication, burst-error immunity or an adequate BER argument by itself. The fixed tag/guard is not proof of acquisition: payload can mimic it.
@@ -46,6 +66,119 @@ Commands stay associated with the same snapshot as their payload even if the com
 `pt_stream_link_tx` holds its payload engine reset while sending eight ten-bit words: 3A5, 05A, 2D3, 12C, 369, 096, 21E, 1E1. The next word is frame-zero header word zero. No source FIFO is popped during training. `pt_stream_link_rx` searches for that exact sequence only while unlocked after explicit reset; repeated first-prefix words restart the match. After the eighth matching word, it releases its payload engine for the next clock edge. Once locked it never scans payload for training markers. Header faults remain sticky until reset. `locked` means the training sequence was seen, not that the first protected header has been accepted or the link is physically qualified.
 
 The receiver must be armed before the finite TX prefix. If no full match arrives in 1,024 receiving clock edges, acquisition faults; a complete match on the last edge wins. The nominal budget is 4.096 µs or 3.2768 µs at the two host word rates. This counter cannot detect a stopped input clock. A reference-domain clock-presence watchdog remains required. Late-joining receivers may miss the prefix and require coordinated restart; no silent resynchronization is promised. An arbitrary incoming stream can imitate any finite preamble; this is an expected-startup protocol, not an adversarial or statistical acquisition guarantee.
+
+The mathematical raw-record candidate now includes an external FPGA
+`TrainedRecordReceiver` using that same preamble and 1,024-edge acquisition
+limit, plus an independently timed, configurable clock-presence watchdog
+(100 ns in the focused fixture). Clock loss faults the receiver even with no
+incoming edges. Resumed words cannot clear the fault; explicit coordinated
+arming and a complete new preamble are required. Tests stop at every one of
+64 frame positions and reject stale continuation before restarting. A complete
+preamble on acquisition edge 1,024 wins; a word exactly at the watchdog deadline
+wins when processed before the independent timer event. This is a mathematical
+receiver test, not physical clock detection or connected source-bank flushing.
+Startup and steady clock-loss timeouts must differ when management starts the
+link. The existing serialized management model takes 6.45 us to apply an idle
+20 MHz SPI request and 12.85 us to finish its reply. Arming a 100 ns watchdog
+at submission therefore faults before the preamble; arming after the reply
+misses the finite preamble. The external `TrainedRecordReceiver` now accepts a
+separate bounded startup wait. A 20 us example permits the idle transaction;
+after the first word edge, the 100 ns active timeout applies immediately.
+No clock at all still faults at the startup deadline. The startup budget must
+also include already queued commands and control-phase uncertainty; 20 us is
+not sufficient for every allowed four-command queue. This parameter belongs
+to the external FPGA receiver, not a chip protocol profile. A focused composition now dispatches a candidate `restart_raw_return` callback
+through the existing management scheduler, including its epoch fence and reply
+visibility. With zero/three preceding commands and two control phases, an
+external 60 us startup window covers the tested command application (nominally
+6.45/45 us). The FPGA receiver remains armed from submission, with no rearm at
+application. Source flush, preamble, fresh payload and accepted reply pass;
+stale-epoch restart is rejected without restarting the source. This is a named
+command fixture, not an allocated SPI opcode or RTL control implementation.
+Complete control encoding, reset acknowledgment and interrupted-command handling
+remain open.
+
+The source must discard old queued/prepared data during the coordinated restart;
+receiver rearming alone cannot establish a fresh epoch.
+
+### Selected bridge recovery sequence
+
+Use one outstanding recovery operation at a time. The independent management
+reference domain owns the state; SPI transports requests and reads stable
+responses. `pt_control.enable` is not a flush acknowledgment. The existing
+128-bit behavioral management transaction is not the RTL's 32-bit SPI ABI;
+its timing must not be used as evidence for an encoded RTL recovery command.
+The candidate encoding below replaces that callback-only contract; RTL integration
+and coherent physical mailbox implementation remain gaps.
+
+| State | Required action and acknowledgment condition |
+| --- | --- |
+| Running → stopping | A host request or sticky transport/watchdog fault disables new publication. Assert pad-safe output independently of host clocks; invalidate FPGA packet/parser state and pacing credits. No new response can be authorized from a partial packet. |
+| Stopping → reset held | Assert reset to both ends of each chip block FIFO, all pending commit/return frames, packer residuals, raw capture/playback queues and boundary state. Do not wait for a missing host clock to assert reset. FPGA separately holds its ingress, frame builder and parser in reset. |
+| Reset held | Management may report reset asserted and pad safe, but must not report trained, ready or reset released. Asynchronous assertion makes stale storage inaccessible; it does not prove that each clock domain has resumed. |
+| Reset held → training | With clocks present, each local domain synchronously releases reset and returns an acknowledgment after its release pipeline. Synchronize those acknowledgments back to management. Keep payload gated. A missing acknowledgment times out to a sticky fault. |
+| Training → ready | Arm both receivers before either finite preamble. Both directions must report trained and a valid first header. Clear old sequence counters and establish the new epoch; no payload from a previous epoch survives. |
+| Ready → running | Explicit run authorization for the acknowledged epoch enables publication. FPGA pacing must establish a fresh counter baseline and observe progress. Any fault before run invalidates ready. |
+
+#### Recovery mailbox encoding
+
+Use the existing mode-0, MSB-first `command8/address8/data16` SPI transaction
+(`0x80` write, `0x00` read). Reserve these candidate addresses, currently absent
+from `pt_control`; do not treat them as implemented hardware registers:
+
+| Address | Access | Meaning |
+| --- | --- | --- |
+| `0x30` | Write | Expected 16-bit epoch shadow |
+| `0x31` | Write | 16-bit request tag shadow |
+| `0x32` | Write | Commit: 1 stop/flush, 2 release/train, 3 run; all other values invalid |
+| `0x34` | Read | Completed response tag |
+| `0x35` | Read | Completed response epoch |
+| `0x36` | Read | Bit 15 valid, bit 14 pending; result bits 1:0: success, stale epoch, illegal state, timeout |
+
+Both shadow fields must be freshly written before commit. Clock 32 commits one
+immutable request bank, matching `pt_spi`; fewer clocks do not write, extra
+clocks do not repeat the write. A pending request blocks all three writes.
+Cross a publication toggle through two reference stages while holding the bank;
+return a stable response bank through two SCLK stages. Pending includes that
+return crossing. Response fields remain stable until the next accepted commit.
+Read status before tag/epoch; allow only one SPI master and one outstanding
+request. Software must match tag and epoch, never infer success from zero reads.
+
+Retrying the last completed tag with exactly the same fields returns its cached
+response without executing again. Different fields with that tag are rejected.
+Tags must not be reused for another operation during a session. Reset before
+tag/epoch wrap; an older noncached request is not an idempotent retry. The backend
+must validate expected epoch before any state change and complete only the
+request it accepted. Invalid/busy writes leave the previous response intact;
+a caller cannot treat that previous response as acknowledgment of a new tag.
+
+`verification/recovery_mailbox.py` models transaction atomicity, both ideal
+publication crossings and response identity. It does not implement pad safety,
+domain reset acknowledgments, backend state transitions or electrical SPI.
+Three writes require 96 SCLK periods (4.8 µs at 20 MHz), plus reference crossing
+and actual operation time; response polling adds its own transactions. No USB
+packet response depends on this management path.
+
+Each response must identify the submitted request and its epoch. A successful
+stop/flush establishes one new epoch; retries of the same request must return
+the cached outcome rather than incrementing it again. An old-epoch train/run
+request is rejected. An interrupted SPI transfer cannot partially apply a
+request. Do not reuse an epoch after wrap while stale commands may exist;
+require a coordinated full-session reset first. Reading a response is not a
+request acknowledgment unless the response identifier matches.
+
+Reset-held, reset-released, trained and running are distinct observable states.
+A stopped host clock may leave the bridge safely reset-held indefinitely; it
+must not produce a false ready acknowledgment. Loss of the management reference
+requires the fail-safe reset/output path, not a software timeout in that domain.
+The FPGA may restart a failed protocol transaction only after the complete
+sequence; diagnostic preambles do not stand in for target-protocol retraining.
+
+This sequence selects recovery behavior, not a claimed implementation. Closure
+requires the same operation to traverse the encoded SPI mailbox, actual domain
+reset acknowledgments, both transport paths and FPGA adapter. Existing callback
+and isolated watchdog tests prove only their own portions of this sequence.
+
 
 The wrappers operate on already correctly assembled ten-bit words. They do not train DDR sampling phase, correct lane skew/bit slips, cross clock domains or qualify timing. The host-control/enable handshake must ensure word alignment and receiver-before-transmitter ordering. Shared physical core integration is still pending.
 
@@ -131,6 +264,17 @@ with 60.33 ns remaining, conditional on those unqualified implementation budgets
 An explicit minimum-gap guard applies if a faster configuration could respond
 too early. The same conservative staging bound fails for 64-word frames.
 
+**The 339.67 ns comparison does not qualify the newer block/CDC candidate.**
+`usb_framed_turnaround(h2d_commit_words=16, h2d_cdc_hz=40e6)` replaces the old
+combined four-word CDC allowance with the H2D crossing's three-read-edge visibility
+bound and adds the two registered commit beats. The resulting partial bounds are
+462.67 ns at 250 Mword/s and 408.27 ns at 312.5 Mword/s. Both exceed the unchanged
+400 ns model budget. D2H crossing and further physical margins are still omitted.
+The behavioral USB check preserves these as explicit budget failures. They show
+that the inherited conservative argument no longer closes, not that all actual
+transactions fail or that USB is impossible. Trace actual packet-end to response
+start through the intended buffers/control path before selecting a latency fix.
+
 No built-in-hub or cable extension is borrowed for the local chip/FPGA budget.
 Longer FPGA decisions and queue stalls are tested as failures. This is not a
 peer-compliance result. The older 100 ns stress example is not a USB requirement
@@ -171,6 +315,23 @@ pins are added. Timestamps are not transmitted. The streaming decoder emits
 data immediately and the event after the final data; event-only frames emit at
 the guard. Consumers must accept two ordered records on the final data edge.
 Malformed frames latch a fault, and prior payload cannot be retracted.
+
+The mathematical `RawBurstPlayback` candidate extends this same explicitly
+selected record interpretation to transmit. Data records are raw physical line
+levels in least-significant-bit-first order. A configured opaque boundary value
+ends the burst and selects released output on the following serializer edge;
+it does not encode or recognize USB packets. Storage is bounded to 2,048 data
+bits and 16 boundary markers, with markers/control still needing common area
+accounting. Underrun faults rather than repeating data; overflow rejects the
+whole incoming batch and latches fault. Once faulted, ticks request released
+output and queued data cannot restart transmission. The pad-driving integration
+must also release immediately when an enqueue/tick exception signals a fault.
+
+This is a modeled candidate, not a new supported RTL command. Explicit format
+selection, timed admission/CDC, startup prefill, abort/epoch semantics and
+response deadline remain open. Current pad checks preload framed records and
+verify exact partial-word termination across consecutive bursts; they do not
+establish connected response operation or packet compliance.
 
 `test_bit_event_codec.py` consolidates queue, pad-observation, codec, corruption,
 sequence-wrap, snapshot-boundary and stop/reset unit checks. Snapshot tests cover
@@ -378,3 +539,64 @@ Do not simply delete the CRC comparison from current RTL: valid counts decide ho
 No measured savings are claimed. Removing CRC quarantine can eliminate receive frame retention and associated mux/control costs; transmit staging is separately required by the current count-snapshot format and does not automatically disappear. CDC/elastic buffering remains necessary. The 1,280 declared receive-bank bits are only a candidate saving, not all 8,576 declared memory bits. Whether CRC-free streaming satisfies every application is unresolved until an explicit error budget exists.
 
 Current status (rechecked): streaming v2 is the default in `pt_core` and `pt_digital` (`STREAM_V2=1`), and contract version 4 describes it. Payload CRC/quarantine is absent from this path; a detection-only extended-Hamming header protects scheduling metadata and fast commands. Legacy CRC v1 remains a compile-time comparison, not mandatory hardware in the default build. Pass 28 in the [archived project journal](https://github.com/deepai-org/svalbard/blob/53f84a75542b80ff2611fc5eb785e680197a6bd9/projects/programmable_transceiver_platform/README.md) records integration tests and measured savings; the migration estimates above describe the original recommendation, not current implementation status. Host-link BER qualification and physical timing closure remain open. The full RF/wired rates, 50 terminals and one-slot target remain unchanged.
+
+### Connected RF stopped-link watchdog control
+
+The behavioral RF transfer can expose every emitted header, padding and payload
+word with its timestamp through `host_word_observer`. A retained test connects
+those words to the existing trained watchdog wrapper and ordinary I/Q decoder.
+After an injected active clock-qualification fault stops the modeled link, the
+independent 100 ns watchdog invalidates the external buffered candidate. Source
+pending queues are discarded only by explicit stop; analog state is retained.
+This is a stopped-link candidate with assumed initial alignment/training, not a
+new status opcode or RTL clock-gating implementation. If the host clock continues
+through an RF fault, this watchdog cannot detect it; ordered fault metadata and
+its delivery latency remain an explicit integration requirement.
+
+### Provisional running-clock discontinuity header
+
+The mathematical candidate uses protected opcode 3, argument 1, zero wired/IQ
+counts to force receiver fault at the next frame header. The default decoder and
+RTL still reject this reserved command; `Receiver(..., fault_status=True)` gives
+it the explicit discontinuity diagnosis. This is not an adopted RTL ABI.
+
+After detection, finish any started header, replace the current frame's remaining
+payload with invalid filler, then send the zero-count discontinuity header with
+the normal sequence. `discontinuity_suffix` models those words. No pending source
+sample is drained. The receiver must retain candidate packets until the maximum
+fault-notification delay has elapsed: detection + crossing + serialization.
+Serialization alone is at most 68 word periods (272 ns at 250 Mword/s or 217.6 ns
+at 312.5 Mword/s), assuming the next scheduled host edge is available. The slow
+frequency-count observer's detection delay is additional; it is not a fast phase
+quality monitor. If the clock stops, use the independent watchdog instead.
+
+Tests attach the suffix to actual emitted RF host words and cover all frame
+positions/sequence wrap. They show external candidate invalidation, not physical
+CDC timing, bounded healthy packet release, standard packet recognition or
+coordinated recovery. Neither transport metadata nor filler may be interpreted
+as a promise that previously returned payload remains valid.
+
+The external `PacketHoldback` candidate gives completed receiver-validated packets
+a finite word budget and explicit notification delay. Release is strictly after
+the deadline, so a fault processed at that timestamp can still invalidate the
+packet. Overflow faults and clears pending packets; coordinated restart remains
+an external obligation. This is not an on-chip protocol block. At nominal
+20 MS/s, 12-bit I/Q, a 1 ms detection bound plus 272 ns serialization requires
+48,014 ten-bit words (about 60 kB packed) before packet-size/CDC/timing margins.
+The active packet buffer is additional. Such storage must be charged to the
+external FPGA, and the fault-detection bound must be established independently.
+
+The notification bound is **not established for general RF faults**. A retained
+count-observer counterexample remains acquired through a 10 us, +1000 ppm burst
+that accumulates 24.12 oscillator cycles. The two-window frequency bound applies
+to sustained errors only. Buffer sizing from that bound does not guarantee
+transient rejection; a justified fast detector or independent packet-quality
+rejection must cover those cases before holdback becomes a delivery guarantee.
+
+Receiver waveform quality produces candidate bits, not verified packet delivery.
+The mathematical GFSK observer now reports `candidate_payload_bits` and
+`integrity_checked=False`. An external CRC test demonstrates the distinction:
+a clean altered waveform can pass quality but fail its unchanged checksum.
+Protocol integrity remains in the FPGA; no CRC engine or protocol profile is
+added to the chip. Historical diagnostic reports using `delivered_payload_bits`
+do not establish integrity or standard packet acceptance.

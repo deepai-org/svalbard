@@ -41,7 +41,23 @@ A suitable FPGA supplies high-throughput processing and protocol logic, includin
 CRC/FEC, MACs and endpoints. An MCU can configure the chip and use lower-rate or
 buffered functions; GPIO bandwidth determines achievable throughput. Board-level
 matching, protection, reference-clock and interface circuitry remain necessary.
+**Many external SMD passives are explicitly acceptable.** Matching, filtering,
+decoupling and suitable timing networks may live on the board to simplify the
+chip; low external component count is not a goal. See the
+[external passive allowance](../../docs/roadmap/programmable-transceiver-pin-plan.md#external-passive-component-allowance)
+for the pin-budget and modeling boundary.
+External oscillators, clock modules and RF LO sources are also allowed operating
+options. Autonomous on-chip synthesis need not serve every configuration; input
+bandwidth, clock conditioning and terminal allocation must support the chosen
+source. See the [clock allowance](../../docs/roadmap/programmable-transceiver-pin-plan.md#external-oscillator-and-clock-allowance).
 Narrow temperature and supply ranges are acceptable design targets.
+
+The [normative architecture](spec/block-diagram.md) selects both autonomous and
+external timing paths, configurable narrow/wide RF filtering, and FPGA-owned
+resampling, TX interpolation and bulk storage. External LO operation reuses
+`REF_IN` and still needs a qualified RF input branch. Dedicated wired RX clock
+recovery remains necessary. The main diagram shows these selected boundaries;
+detailed circuit candidates are linked separately.
 
 ## Where the design stands
 
@@ -51,6 +67,16 @@ behavior. Some target configurations pass their conditional screens; others
 still fail. **Full mathematical verification, the complete transistor schematic,
 and layout are unfinished.** Passing regression tests also verify expected
 failures; they do not mean every target works.
+
+The reference-chip investigation has been consolidated into
+[explicit assumptions and uncertainty ranges](spec/risk-priorities.md#adopted-assumptions-and-uncertainty-ranges).
+Active work now targets connected clock quality, complete RF conversion and
+pad/package/power coexistence; further reference-chip simulation is paused.
+
+For current capability status and unresolved failures, use the
+[current status table](spec/risk-priorities.md#current-status). Historical
+measurements and expected-rejection tests are kept separately in the closure
+inventory; their number does not measure chip completeness.
 
 The development order is a connected mathematical model, then a complete
 transistor/passive schematic with simulation, then layout and extraction using

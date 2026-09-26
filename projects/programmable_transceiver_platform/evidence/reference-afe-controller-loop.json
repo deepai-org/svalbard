@@ -1,0 +1,296 @@
+{
+  "status": "conditional_fixed_input_loop_completed",
+  "coarse_two_cycles": {
+    "exact_mos_groups": 2597,
+    "supply_ramp_1ns": true,
+    "maximum_timestep_ns": 0.1,
+    "source_gds_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+    "raw_sha256": "31cc15ee5285c9a61e65be3bb8190c31d33001aa6231cc88a8c102b204483dd0",
+    "map_sha256": "41a930ac95c75e010020d72439d51c25aaa2720262fef048328a7e5aab7038dd",
+    "cycles": [
+      {
+        "window_ns": [
+          5,
+          50
+        ],
+        "valid_rises_ns": [
+          6.393464650338358,
+          8.918760440744629,
+          11.45755413472588,
+          13.9910883251758,
+          16.52307441291335,
+          19.055948842696942,
+          21.588327684251983,
+          24.12077794892348,
+          26.65325805901854,
+          29.185413225342717,
+          31.7130832585249,
+          34.25793755667671,
+          36.791252991954906,
+          39.32422246974841
+        ],
+        "stage_rises_ns": [
+          [
+            6.7735045854749805
+          ],
+          [
+            9.308736734002407
+          ],
+          [
+            11.841026760483949
+          ],
+          [
+            14.37397289209288
+          ],
+          [
+            16.90758754938474
+          ],
+          [
+            19.440552298658123
+          ],
+          [
+            21.9735552795651
+          ],
+          [
+            24.50659992994852
+          ],
+          [
+            27.03967805957659
+          ],
+          [
+            29.57277659262567
+          ],
+          [
+            32.105867732230635
+          ],
+          [
+            34.638983491175814
+          ],
+          [
+            37.17211785364854
+          ],
+          [
+            39.68611712935859
+          ]
+        ],
+        "final_stage_voltages": [
+          3.299999983013761,
+          3.29999998302209,
+          3.299999983032844,
+          3.299999983046954,
+          3.299999983065736,
+          3.299999983091232,
+          3.299999983126582,
+          3.299999983176866,
+          3.299999983250632,
+          3.299999983362983,
+          3.299999983542337,
+          3.299999983846567,
+          3.299999984406761,
+          3.299994323941962
+        ]
+      },
+      {
+        "window_ns": [
+          55,
+          100
+        ],
+        "valid_rises_ns": [
+          56.39331944762511,
+          58.924432384228744,
+          61.450294107010215,
+          63.98912373326335,
+          66.52308556052154,
+          69.05563555698662,
+          71.58747637707653,
+          74.12044985070351,
+          76.6524200003468,
+          79.18592648746368,
+          81.71283860766682,
+          84.24822267149025,
+          86.79075894117187,
+          89.3238435566988
+        ],
+        "stage_rises_ns": [
+          [
+            56.77520243430695
+          ],
+          [
+            59.308773753559116
+          ],
+          [
+            61.84171060426908
+          ],
+          [
+            64.37463085860585
+          ],
+          [
+            66.9075438254849
+          ],
+          [
+            69.44045219473342
+          ],
+          [
+            71.97341630591566
+          ],
+          [
+            74.50640413228005
+          ],
+          [
+            77.03942052903032
+          ],
+          [
+            79.5724615852675
+          ],
+          [
+            82.10552444927829
+          ],
+          [
+            84.63869038447137
+          ],
+          [
+            87.17177911833522
+          ],
+          [
+            89.68574023640406
+          ]
+        ],
+        "final_stage_voltages": [
+          3.29999998301388,
+          3.299999983022163,
+          3.299999983032866,
+          3.299999983046888,
+          3.29999998306557,
+          3.299999983090908,
+          3.299999983126027,
+          3.299999983175967,
+          3.299999983249199,
+          3.299999983360655,
+          3.299999983538449,
+          3.299999983839726,
+          3.299999984393466,
+          3.299994324168348
+        ]
+      }
+    ],
+    "limitations": [
+      "Nominal3.3V25C, fixed10mV differential preamp input,1.2V bias, ideal references/reset pulses.",
+      "Array loading is assigned area-only capacitance to ground; no capacitor feedback to analog input. This tests control circulation, not SAR conversion accuracy.",
+      "No wire parasitics, noise, mismatch, package, actual pulse-generator waveform or setup/hold qualification."
+    ],
+    "model_sha256": {
+      "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+      "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+    }
+  },
+  "refined_first_cycle": {
+    "stop_time_ns": 50.0,
+    "exact_mos_groups": 2597,
+    "supply_ramp_1ns": true,
+    "maximum_timestep_ns": 0.05,
+    "source_gds_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+    "raw_sha256": "31cc15ee5285c9a61e65be3bb8190c31d33001aa6231cc88a8c102b204483dd0",
+    "map_sha256": "41a930ac95c75e010020d72439d51c25aaa2720262fef048328a7e5aab7038dd",
+    "cycles": [
+      {
+        "window_ns": [
+          5,
+          50
+        ],
+        "valid_rises_ns": [
+          6.393893824594117,
+          8.917391254460306,
+          11.4575648511705,
+          13.99113567237555,
+          16.523121954351918,
+          19.05599556716267,
+          21.588379809580612,
+          24.120826683169692,
+          26.653307000046688,
+          29.185460197884648,
+          31.71313094033025,
+          34.25798630860795,
+          36.791304893273775,
+          39.32427127218633
+        ],
+        "stage_rises_ns": [
+          [
+            6.775922223539483
+          ],
+          [
+            9.30878893461905
+          ],
+          [
+            11.84107356634441
+          ],
+          [
+            14.37402121594374
+          ],
+          [
+            16.90763624088792
+          ],
+          [
+            19.44060097931971
+          ],
+          [
+            21.97360397903406
+          ],
+          [
+            24.50664869157896
+          ],
+          [
+            27.0397268140024
+          ],
+          [
+            29.572825425391688
+          ],
+          [
+            32.10591642199107
+          ],
+          [
+            34.63903218688064
+          ],
+          [
+            37.17216654895601
+          ],
+          [
+            39.68616591605422
+          ]
+        ],
+        "final_stage_voltages": [
+          3.299999983016407,
+          3.299999983024728,
+          3.299999983035495,
+          3.299999983049598,
+          3.299999983068397,
+          3.299999983093898,
+          3.299999983129259,
+          3.299999983179555,
+          3.299999983253337,
+          3.299999983365725,
+          3.29999998354513,
+          3.29999998384947,
+          3.299999984409482,
+          3.299994320356965
+        ]
+      }
+    ],
+    "limitations": [
+      "Nominal3.3V25C, fixed10mV differential preamp input,1.2V bias, ideal references/reset pulses.",
+      "Array loading is assigned area-only capacitance to ground; no capacitor feedback to analog input. This tests control circulation, not SAR conversion accuracy.",
+      "No wire parasitics, noise, mismatch, package, actual pulse-generator waveform or setup/hold qualification."
+    ],
+    "model_sha256": {
+      "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+      "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+    }
+  },
+  "maximum_stage_time_difference_ns": 0.0024176380645029028,
+  "interpretation": [
+    "Fourteen valid edges and one rise per stage in each of two cycles; stop until next reset under tested fixed-input conditions.",
+    "Stage14 completes about34.586ns after end of reset-release edge; this scenario does not reproduce >30MS/s full14-decision operation.",
+    "1ns coordinated ideal supply/input ramp with UIC avoids full-supply DC initialization; not a tested general startup envelope.",
+    "4501MOS fingers represented by2597 exact-identical geometry/connectivity groups using multiplicity; sizes and model bins retained."
+  ],
+  "earlier_attempts": "Full-supply DC-start runs timed out at60s; ramp run made20.38ns simulated progress in30s. Grouping identical devices and saving selected nodes enabled completion. No timeout interpreted as hardware failure."
+}

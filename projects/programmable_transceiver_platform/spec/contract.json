@@ -339,10 +339,22 @@
       "word_bits": 10,
       "control_words": 5,
       "payload_words": 3,
-      "host_profile": "ddr125",
+      "host_profile": "ddr156",
       "header": "unchanged counts/sequence/opcode/argument with parity/tag/guard",
       "staging": "reuse two banks with shorter frame counter",
-      "implementation": "Canonical frame geometry, receiver, return scheduler and activation hooks; component lifecycle verified. USB timed pad packet adapter, canonical acquired active traffic and RTL remain pending."
+      "implementation": "Canonical frame geometry, receiver, return scheduler and activation hooks; component lifecycle verified. USB timed pad packet adapter, canonical acquired active traffic and RTL remain pending.",
+      "selection_scope": "Faster host required by current latency candidate; slower setting retained as failing comparison, not qualified USB service."
+    },
+    "exclusive_owner_allocation": {
+      "status": "codec_and_connected_rf_quality_model_migration_rtl_pending",
+      "frame_words": 64,
+      "control_words": 5,
+      "payload_words": 59,
+      "owner": "existing_selected_engine_wire_or_iq",
+      "inactive_owner_count": 0,
+      "host_rate_independent_of_converter_precision": true,
+      "legacy_allocation": "Retained by older model controls and current RTL; not the intended final mutually exclusive schedule.",
+      "short_frame": "Existing eight-word wired geometry unchanged; no short I/Q format."
     }
   },
   "modes": [
@@ -1456,6 +1468,30 @@
     ],
     "rf_scope": "Existing 2.4 GHz chain; LoRa means 2.4 GHz, not sub-GHz",
     "cost_policy": "Reuse clock dividers, switched RC filter banks and PGA trims; no extra lane, pins, modem or on-chip resampler; physical area/power delta unestimated",
-    "rx_filter_order": 5
+    "rx_filter_order": 5,
+    "external_lo_sampling_candidate": {
+      "status": "numeric_waveform_and_rate_candidate_not_selected_or_physical_qualification",
+      "input_pin": "REF_IN",
+      "lo_range_hz": [
+        2400000000.0,
+        2484000000.0
+      ],
+      "uniform_sample_dividers": [
+        64,
+        128,
+        256,
+        512
+      ],
+      "sample_rate_rule": "sample_hz = lo_hz / lo_divider; no independent 40 MHz input in this mode",
+      "candidate_d2h_clock_divider": 16,
+      "fpga_resampling": "Optional external FPGA finite FIR; explicit latency and cost in robustness-envelope.json",
+      "additional_signal_pins": 0,
+      "unresolved": [
+        "physical clock receiver, quadrature, divider and noise",
+        "live clock-edge ownership and host pacing/recovery",
+        "area and complete power ledger",
+        "FPGA resampler throughput and coefficient precision"
+      ]
+    }
   }
 }

@@ -2,6 +2,150 @@
 
 The current 10-bit word-rate digital core fails global-route-estimated setup by more than 11 ns at a 3.2 ns host-word period. More placement legality or a narrow supply/temperature agreement does not remove that gap. Explore an 80-bit, eight-word internal transport beat while preserving both existing external profiles, all frame bits, 50 terminals and the full wired/RF companion scope. This is a candidate architecture, not an implemented replacement or a speed claim.
 
+## Current exclusive-owner model
+
+The mathematical block receiver now takes the same fixed `owner='wire'` or
+`owner='iq'` setting as the scalar codec. All 59 payload slots belong to that
+owner; no extra header field, package terminal or simultaneous RF/wired use is
+introduced. The legacy split schedule remains an explicit comparison default.
+Owner is fixed when constructing the receiver; live switching is not supported.
+
+`verification/check_block_receiver.py` compares both host modes and 2/4/8-word
+blocks against the scalar decoder. It covers every 0–59 exclusive count, the
+legacy count combinations, all 50 single header-bit corruptions and protected
+metadata that illegally requests inactive-owner payload. Invalid headers produce
+no effects and latch fault. The eight-word exclusive case can emit **eight words
+to one destination per beat**, replacing the lower legacy peaks quoted below.
+
+This removes a model scheduling inconsistency; it does not migrate the block RTL
+or make its storage/CDC/physical timing pass. Before main-model integration, use
+one fixed-block transaction with a valid count up to eight, retain partial words,
+and account for collection, two-stage commit, actual queue capacity and CDC
+latency. The behavioral whole-chip transport now optionally collects H2D words into
+eight-word beats and commits each atomically two host block periods later. D2H
+staging and decoder/command effects remain unintegrated. Optional H2D CDC
+visibility now follows the checked fixed-block FIFO model. No timing closure is claimed by scalar/vector
+content equivalence.
+
+### Live H2D staging check
+
+`BehavioralChip.transfer(tx_word_observer=...)` exposes each actual consumed
+word and its absolute consumption time after staging/CDC. The observer binds
+for the stream lifetime, receives prefill as actually consumed, and receives
+nothing on an immediate underflow. A +100 ppm H2D/40 MHz CDC test checks exact
+timing, consumed-bit accounting and uninterrupted versus 3+13-frame equivalence.
+`EmittedWordChannel` now attaches an ideal-cadence ten-bit serializer, the
+existing one-pole channel and an external CDR to that boundary. Sampling beyond
+elapsed or supplied history is refused; forecasts do not commit receiver state.
+Two 64-frame runs with ±100 ppm initial receiver error recover 3,276 words,
+with 3,076 scored words error-free after a 200-word diagnostic guard. Tests
+also preserve split-run equality and reject a discontinuous launch cadence.
+Histories are diagnostic storage, not on-chip buffers. The 31-test codec suite
+passes. This remains TX-only with prescribed serializer timing, not autonomous
+clock, standard framing, simultaneous RX or physical qualification.
+
+`BehavioralChip.transfer(host_block_words=8)` retains one collection beat and
+up to three pending entries (including same-time arrival before commit). It
+preserves the frame count snapshot at word zero. Host charge occurs at the pin
+word event; destination FIFO bits become visible only at block commit. A block
+that does not fit faults without partial acceptance. At equal times, converter
+consumption precedes commit. Pending blocks persist across transfer chunks; stop
+reports staged bits separately from destination FIFO bits. No extra switching
+charge or physical CDC behavior is inferred from these registered stages.
+
+At 2.5 Gb/s with the high host rate, an 80-bit initial fill survives the former
+immediate-word delivery but underflows at 32 ns with staging, before any block
+commits. A larger fill survives; this is a latency requirement exposed by the
+model, not a reduction of line-rate goals. `host_block_staging_controls()` checks
+this negative control, ordered payload, chunk equivalence, atomic capacity failure,
+stop accounting and timed RF conversion. Whole-chip closure still needs D2H
+staging/crossing, complete clock/reset envelopes, actual command semantics and
+physical boundary timing. The optional scalar path remains a comparison.
+
+### Checked mathematical block CDC semantics
+
+`verification/block_receiver_model.py:BlockFIFO` models the existing eight-entry
+block FIFO with two receiving-clock pointer stages and per-domain two-edge reset
+release. Every accepted block advances the pointer once regardless of valid-word
+count. Simultaneous edges sample the same pre-edge pointer state. Full and empty
+are derived from synchronized remote pointers, so freed capacity and newly written
+data do not become visible immediately. Invalid accepted counts fault without
+occupying storage; reset assertion flushes both domains together.
+
+The existing block-receiver checker now compares this model directly against
+`pt_block_fifo`/`pt_async_fifo` RTL over 2,400 event ticks, including unrelated and
+coincident edges, a stopped read clock, invalid counts and three resets. An
+independent transaction scoreboard checks ordering (260 accepted writes and 252
+reads; resets discard queued entries). This checks ideal digital edge semantics,
+not metastability, skew, memory implementation or independent reset safety.
+`transfer(host_block_words=8, host_cdc_read_hz=40e6)` now inserts this crossing
+between staged commit and destination bit-queue visibility. The destination clock
+and fractional phase are explicit assumptions. Write/read edges that coincide
+use one pre-edge snapshot; the write clock runs even for empty payload beats.
+A nonempty commit refused by full CDC storage faults the continuous source. The
+read side waits until an entire block fits in the destination queue. Collection,
+pipeline, crossing and destination bits have separate conserved accounting; stop
+discards the remaining bits explicitly. The bit-queue enqueue represents a
+functional unpacker, not a timing-qualified variable-width hardware gearbox.
+
+At 2.5 Gb/s, 40 MHz destination service passes three tested phases with exact
+payload order and transfer-chunk equivalence. A 31.25 MHz service clock underflows:
+partial blocks consume read cycles, so 80 times the clock rate overstates useful
+payload service. A separate stalled-consumer case fills all eight crossing entries
+and reports `host_cdc_full`. Timed loaded-PLL GFSK also passes through the crossing
+at 5.9704% EVM with exact split equivalence. These finite fixtures do not establish
+arbitrary-phase/drift closure, CDC physical margins or the extra clock's power.
+D2H staging/crossing and actual command effects remain open.
+
+### Storage and clock budget reconciliation
+
+The current live H2D option has a 2,048-bit destination queue plus modeled
+capacity for one eight-word collection beat, three pending beat entries and eight
+crossing entries. At 80 payload bits plus four valid-count bits per entry, the
+additional representable storage is 1,008 bits (960 payload + 48 count), giving
+3,056 bits including the destination queue. This is a model-capacity inventory,
+not an exact flop count: the simultaneous-event pending entry may share physical
+collection/stage registers. Header/control, pointers, reset, D2H and gearbox
+implementation storage are not included. Do not silently assign all of it to the
+old 2,048-bit queue budget.
+
+The existing mapped block FIFO (eight 84-bit entries plus control) has 707 flops
+and 76,568.576 µm² of standard-cell area, about 9.01% of the 850,000 µm² memory
+allocation. Its RTL, mapping artifacts and Liberty fingerprints were checked
+before reuse; no new synthesis or layout was performed. This one block's cell
+area does not establish the complete memory/digital fit or placed utilization.
+
+`report_block_fifo_mapping.py --lib <original-liberty>` now derives clock-pin
+loads from that mapped netlist and its exact original library. At nominal 3.3 V,
+690 write-clocked flops present 2.199204 pF and 17 read-clocked flops present
+0.056882 pF. Q=C·V gives 7.2573732 pC and 0.1877106 pC per respective rising
+edge. At 31.25/39.0625 MHz write service and 40 MHz read service, their pin-only
+supply estimates are 0.773194/0.960299 mW. These exclude internal cell power,
+clock drivers/wires, data activity and rail transfer; they are conditional
+nominal calculations, not a physical power guarantee.
+
+`timed_cdc_host` remains the uncharged comparison. The `cdc_charge_0.0`,
+`cdc_charge_0.1` and `cdc_charge_1.0` cases now inject these actual write/read
+clock-edge charges into the live shared rail and PLL with explicit 0/10/100%
+effective coupling. They give 5.97039/5.96952/5.97026% EVM respectively for the
+same 1,024-bit GFSK fixture; full coupling injects 328.397 nC and retains exact
+split-run samples and accounting. Small nonmonotonic differences do not establish
+an improving trend or an operating envelope. The unchanged 10% screen remains.
+An independent RC impulse sum checks edge charge/voltage accounting. This closes
+only active FIFO clock-pin charging: internal cell power, clock-tree wires and
+buffers, destination gearbox, and startup/parked clock lifetime remain missing.
+The zero-coupling case is a control, not the selected physical implementation.
+
+### USB deadline consequence
+
+The wider path cannot inherit the older short-frame USB turnaround result.
+Replacing its four-word combined CDC allowance with H2D three-edge visibility at
+40 MHz and adding two commit beats gives 462.67/408.27 ns partial bounds at the
+two host rates, against the model's 400 ns limit. D2H crossing is still absent.
+This is a failed conservative budget argument, not proof that every response is
+late. Actual packet-end/control/response composition and reduction of existing
+buffering latency are required before claiming this architecture supports USB.
+
 ## Rate and latency accounting
 
 | Words per internal beat | Internal width | Low-profile clock | High-profile clock | High-profile period |
@@ -483,3 +627,16 @@ coverage plus explicit oldest-command refusal with younger work in flight and
 reset with both stages occupied. Four mutations are detected: capacity bypass,
 command bypass, wrong-stage valid and next-beat mask. Structural synthesis passes.
 No stage timing, mapped equivalence or actual queue/CDC integration is claimed.
+
+### Raw-record return grouping candidate
+
+The connected request/reply model optionally groups D2H data before publishing a
+FIFO entry. A lone record may wait one additional 40 MHz edge; a second record
+or boundary permits publication immediately when FIFO space is available. This
+uses the existing record queue and fixed-block FIFO, plus a one-edge hold state.
+The bounded wait avoids indefinite latency for sparse data. Source preparation
+and its timing remain a functional assumption. With external FPGA TX pacing,
+this reduces long-burst return backlog; see the measured cases and remaining
+400 ns misses in [risk priorities](risk-priorities.md). The ungrouped baseline
+remains checked. No host format, extra terminal or protocol-specific command is
+introduced by this scheduling option.

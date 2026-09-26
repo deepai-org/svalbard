@@ -1,0 +1,7 @@
+circuit adc_preamp_v2 (o_outp=o_outp,o_outn=o_outn,vdd=vdd,vss=vss,nbias=nbias,i_inn=i_inn,i_inp=i_inp);
+  device nmos $1 (S=$5,G=i_inp,D=o_outn) (L=0.28,W=24,AS=6.6,AD=6.6,PS=32.6,PD=32.6);
+  device nmos $13 (S=vss,G=nbias,D=$5) (L=0.28,W=24,AS=6.6,AD=6.6,PS=32.6,PD=32.6);
+  device nmos $25 (S=$5,G=i_inn,D=o_outp) (L=0.28,W=24,AS=6.6,AD=6.6,PS=32.6,PD=32.6);
+  device resistor $37 (A=o_outn,B=vdd) (R=1000,L=10,W=10,A=100,P=220);
+  device resistor $38 (A=vdd,B=o_outp) (R=1000,L=10,W=10,A=100,P=220);
+end;

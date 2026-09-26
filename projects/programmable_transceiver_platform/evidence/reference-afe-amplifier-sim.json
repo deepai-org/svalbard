@@ -1,0 +1,3126 @@
+{
+  "output_switch_scaling": {
+    "reference_total_width_um": 36.0,
+    "reference_length_um": 0.28,
+    "reference_ron_ohm": 198.9260697627361,
+    "cases": [
+      {
+        "target_r_ohm": 50,
+        "width_scale": 3.978521395254722,
+        "total_width_um": 143.22677022916997,
+        "nominal_gate_oxide_cap_f": 1.764553809223374e-13
+      },
+      {
+        "target_r_ohm": 10,
+        "width_scale": 19.89260697627361,
+        "total_width_um": 716.1338511458499,
+        "nominal_gate_oxide_cap_f": 8.822769046116869e-13
+      },
+      {
+        "target_r_ohm": 5,
+        "width_scale": 39.78521395254722,
+        "total_width_um": 1432.2677022916998,
+        "nominal_gate_oxide_cap_f": 1.7645538092233738e-12
+      }
+    ],
+    "assumption": "Ideal inverse-width resistance scaling at the same bias and geometry ratios; oxide area capacitance only, not measured RF port capacitance. No junction, overlap, interconnect or well parasitics."
+  },
+  "bulk_audit": {
+    "terminal_counts": {
+      "nmos": {
+        "vss": 218
+      },
+      "pmos": {
+        "vdd": 274
+      }
+    },
+    "isolated_pwell_regions": 20,
+    "deep_nwell_regions": 20,
+    "uncovered_gate_area_um2": {
+      "nmos": 0.0,
+      "pmos": 0.0
+    }
+  },
+  "source_gds_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+  "raw_extraction_sha256": "98f11e5b206b668a94e885c583df22530add04be206e5551a4f8f104b69ee31c",
+  "model_sha256": {
+    "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+    "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+  },
+  "simulator": [
+    "******",
+    "** ngspice-42 : Circuit level simulation program",
+    "** Compiled with KLU Direct Linear Solver",
+    "** The U. C. Berkeley CAD Group"
+  ],
+  "cases": [
+    {
+      "output_node": "vout",
+      "vbiasn_v": 1.2,
+      "vbiasp_v": 1.2,
+      "load_pf": 1,
+      "compensation_scale": 1,
+      "assigned_mim_density_ff_per_um2": 2,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.92606976273612,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.211821e-05,
+          "gds": 2.36942e-07,
+          "vds": -0.492074,
+          "vdsat": 0.09278144,
+          "id": 4.197188e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.211821e-05,
+          "gds": 2.36942e-07,
+          "vds": 0.4920741,
+          "vdsat": 0.09278144,
+          "id": 4.197188e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.211964e-05,
+          "gds": 2.355694e-07,
+          "vds": -0.499326,
+          "vdsat": 0.09276947,
+          "id": 4.197253e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.211964e-05,
+          "gds": 2.355694e-07,
+          "vds": 0.4993259,
+          "vdsat": 0.09276947,
+          "id": 4.197253e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832073e-05,
+          "gds": 1.5809e-07,
+          "vds": 0.306392,
+          "vdsat": 0.1834505,
+          "id": 2.098593e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832073e-05,
+          "gds": 1.5809e-07,
+          "vds": -0.306392,
+          "vdsat": 0.1834505,
+          "id": 2.098593e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832027e-05,
+          "gds": 1.587747e-07,
+          "vds": 0.3061014,
+          "vdsat": 0.1834535,
+          "id": 2.098626e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832027e-05,
+          "gds": 1.587747e-07,
+          "vds": -0.306101,
+          "vdsat": 0.1834535,
+          "id": 2.098626e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832027e-05,
+          "gds": 1.587747e-07,
+          "vds": 0.3061014,
+          "vdsat": 0.1834535,
+          "id": 2.098626e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832027e-05,
+          "gds": 1.587747e-07,
+          "vds": -0.306101,
+          "vdsat": 0.1834535,
+          "id": 2.098626e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832073e-05,
+          "gds": 1.5809e-07,
+          "vds": 0.306392,
+          "vdsat": 0.1834505,
+          "id": 2.098593e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832073e-05,
+          "gds": 1.5809e-07,
+          "vds": -0.306392,
+          "vdsat": 0.1834505,
+          "id": 2.098593e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.798727,
+      "low_frequency_gain_db": 118.36715038661927,
+      "unity_gain_hz": 20186784.263245642,
+      "phase_margin_deg": 45.80978749475577,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout",
+      "vbiasn_v": 1.2,
+      "vbiasp_v": 1.5,
+      "load_pf": 1,
+      "compensation_scale": 1,
+      "assigned_mim_density_ff_per_um2": 2,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.92606976273612,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.188353e-05,
+          "gds": 2.36195e-07,
+          "vds": -0.491815,
+          "vdsat": 0.09265267,
+          "id": 4.17943e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.188353e-05,
+          "gds": 2.36195e-07,
+          "vds": 0.4918147,
+          "vdsat": 0.09265267,
+          "id": 4.17943e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.188516e-05,
+          "gds": 2.347636e-07,
+          "vds": -0.499414,
+          "vdsat": 0.09264022,
+          "id": 4.179509e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.188516e-05,
+          "gds": 2.347636e-07,
+          "vds": 0.4994136,
+          "vdsat": 0.09264022,
+          "id": 4.179509e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.841602e-05,
+          "gds": 3.188547e-08,
+          "vds": 0.5256837,
+          "vdsat": 0.1785073,
+          "id": 2.089714e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.841602e-05,
+          "gds": 3.188547e-08,
+          "vds": -0.525684,
+          "vdsat": 0.1785073,
+          "id": 2.089714e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.841616e-05,
+          "gds": 3.191689e-08,
+          "vds": 0.5253779,
+          "vdsat": 0.1785092,
+          "id": 2.089754e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.841616e-05,
+          "gds": 3.191689e-08,
+          "vds": -0.525378,
+          "vdsat": 0.1785092,
+          "id": 2.089754e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.841616e-05,
+          "gds": 3.191689e-08,
+          "vds": 0.5253779,
+          "vdsat": 0.1785092,
+          "id": 2.089754e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.841616e-05,
+          "gds": 3.191689e-08,
+          "vds": -0.525378,
+          "vdsat": 0.1785092,
+          "id": 2.089754e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.841602e-05,
+          "gds": 3.188547e-08,
+          "vds": 0.5256837,
+          "vdsat": 0.1785073,
+          "id": 2.089714e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.841602e-05,
+          "gds": 3.188547e-08,
+          "vds": -0.525684,
+          "vdsat": 0.1785073,
+          "id": 2.089714e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.807736,
+      "low_frequency_gain_db": 119.29519218934544,
+      "unity_gain_hz": 20250393.171937734,
+      "phase_margin_deg": 45.73932263885513,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout",
+      "vbiasn_v": 1.2,
+      "vbiasp_v": 1.8,
+      "load_pf": 1,
+      "compensation_scale": 1,
+      "assigned_mim_density_ff_per_um2": 2,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.92606976273612,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.126852e-05,
+          "gds": 2.342379e-07,
+          "vds": -0.491134,
+          "vdsat": 0.09231498,
+          "id": 4.133021e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.126852e-05,
+          "gds": 2.342379e-07,
+          "vds": 0.4911337,
+          "vdsat": 0.09231498,
+          "id": 4.133021e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.127031e-05,
+          "gds": 2.326537e-07,
+          "vds": -0.499643,
+          "vdsat": 0.0923011,
+          "id": 4.133109e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.127031e-05,
+          "gds": 2.326537e-07,
+          "vds": 0.499643,
+          "vdsat": 0.0923011,
+          "id": 4.133109e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831045e-05,
+          "gds": 2.030116e-08,
+          "vds": 0.7408465,
+          "vdsat": 0.1730074,
+          "id": 2.06651e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831045e-05,
+          "gds": 2.030116e-08,
+          "vds": -0.740847,
+          "vdsat": 0.1730074,
+          "id": 2.06651e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831064e-05,
+          "gds": 2.031106e-08,
+          "vds": 0.7405045,
+          "vdsat": 0.1730093,
+          "id": 2.066554e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831064e-05,
+          "gds": 2.031106e-08,
+          "vds": -0.740505,
+          "vdsat": 0.1730093,
+          "id": 2.066554e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831064e-05,
+          "gds": 2.031106e-08,
+          "vds": 0.7405045,
+          "vdsat": 0.1730093,
+          "id": 2.066554e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831064e-05,
+          "gds": 2.031106e-08,
+          "vds": -0.740505,
+          "vdsat": 0.1730093,
+          "id": 2.066554e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831045e-05,
+          "gds": 2.030116e-08,
+          "vds": 0.7408465,
+          "vdsat": 0.1730074,
+          "id": 2.06651e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831045e-05,
+          "gds": 2.030116e-08,
+          "vds": -0.740847,
+          "vdsat": 0.1730074,
+          "id": 2.06651e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.831396999999999,
+      "low_frequency_gain_db": 119.30371355836934,
+      "unity_gain_hz": 19994522.734530352,
+      "phase_margin_deg": 47.008988109198185,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.2,
+      "load_pf": 1,
+      "compensation_scale": 1,
+      "assigned_mim_density_ff_per_um2": 2,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9260697627361,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.207428e-05,
+          "gds": 3.58254e-07,
+          "vds": -0.262744,
+          "vdsat": 0.09471774,
+          "id": 4.198965e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.207428e-05,
+          "gds": 3.58254e-07,
+          "vds": 0.2627437,
+          "vdsat": 0.09471774,
+          "id": 4.198965e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.20868e-05,
+          "gds": 3.456459e-07,
+          "vds": -0.271086,
+          "vdsat": 0.09469683,
+          "id": 4.199076e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.20868e-05,
+          "gds": 3.456459e-07,
+          "vds": 0.2710864,
+          "vdsat": 0.09469683,
+          "id": 4.199076e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832504e-05,
+          "gds": 1.581176e-07,
+          "vds": 0.3064396,
+          "vdsat": 0.1834846,
+          "id": 2.099481e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832504e-05,
+          "gds": 1.581176e-07,
+          "vds": -0.30644,
+          "vdsat": 0.1834846,
+          "id": 2.099481e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832457e-05,
+          "gds": 1.589243e-07,
+          "vds": 0.3060986,
+          "vdsat": 0.1834888,
+          "id": 2.099537e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832457e-05,
+          "gds": 1.589243e-07,
+          "vds": -0.306099,
+          "vdsat": 0.1834888,
+          "id": 2.099537e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832457e-05,
+          "gds": 1.589243e-07,
+          "vds": 0.3060986,
+          "vdsat": 0.1834888,
+          "id": 2.099537e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832457e-05,
+          "gds": 1.589243e-07,
+          "vds": -0.306099,
+          "vdsat": 0.1834888,
+          "id": 2.099537e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832504e-05,
+          "gds": 1.581176e-07,
+          "vds": 0.3064396,
+          "vdsat": 0.1834846,
+          "id": 2.099481e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832504e-05,
+          "gds": 1.581176e-07,
+          "vds": -0.30644,
+          "vdsat": 0.1834846,
+          "id": 2.099481e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.79777,
+      "low_frequency_gain_db": 115.7958067859444,
+      "unity_gain_hz": 20233129.15857256,
+      "phase_margin_deg": 45.61767500996598,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.5,
+      "load_pf": 1,
+      "compensation_scale": 1,
+      "assigned_mim_density_ff_per_um2": 2,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9260697627361,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": -0.262482,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": 0.2624818,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": -0.27117,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": 0.2711701,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.806812,
+      "low_frequency_gain_db": 116.49338723527528,
+      "unity_gain_hz": 20297097.296941902,
+      "phase_margin_deg": 45.54479914336136,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.8,
+      "load_pf": 1,
+      "compensation_scale": 1,
+      "assigned_mim_density_ff_per_um2": 2,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9260697627361,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.122749e-05,
+          "gds": 3.543109e-07,
+          "vds": -0.261794,
+          "vdsat": 0.09424296,
+          "id": 4.134787e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.122749e-05,
+          "gds": 3.543109e-07,
+          "vds": 0.2617937,
+          "vdsat": 0.09424296,
+          "id": 4.134787e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.124177e-05,
+          "gds": 3.400618e-07,
+          "vds": -0.271389,
+          "vdsat": 0.09421918,
+          "id": 4.134929e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.124177e-05,
+          "gds": 3.400618e-07,
+          "vds": 0.2713891,
+          "vdsat": 0.09421918,
+          "id": 4.134929e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831479e-05,
+          "gds": 2.03087e-08,
+          "vds": 0.7408933,
+          "vdsat": 0.1730397,
+          "id": 2.067393e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831479e-05,
+          "gds": 2.03087e-08,
+          "vds": -0.740893,
+          "vdsat": 0.1730397,
+          "id": 2.067393e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831511e-05,
+          "gds": 2.032029e-08,
+          "vds": 0.7404998,
+          "vdsat": 0.1730426,
+          "id": 2.067464e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831511e-05,
+          "gds": 2.032029e-08,
+          "vds": -0.7405,
+          "vdsat": 0.1730426,
+          "id": 2.067464e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831511e-05,
+          "gds": 2.032029e-08,
+          "vds": 0.7404998,
+          "vdsat": 0.1730426,
+          "id": 2.067464e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831511e-05,
+          "gds": 2.032029e-08,
+          "vds": -0.7405,
+          "vdsat": 0.1730426,
+          "id": 2.067464e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831479e-05,
+          "gds": 2.03087e-08,
+          "vds": 0.7408933,
+          "vdsat": 0.1730397,
+          "id": 2.067393e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831479e-05,
+          "gds": 2.03087e-08,
+          "vds": -0.740893,
+          "vdsat": 0.1730397,
+          "id": 2.067393e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.83044,
+      "low_frequency_gain_db": 116.49911163758156,
+      "unity_gain_hz": 20040991.501319364,
+      "phase_margin_deg": 46.822622062298734,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout",
+      "vbiasn_v": 1.8,
+      "vbiasp_v": 1.2,
+      "load_pf": 1,
+      "compensation_scale": 1,
+      "assigned_mim_density_ff_per_um2": 2,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.92749434986237,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 4.954015e-05,
+          "gds": 5.857908e-05,
+          "vds": -0.0502468,
+          "vdsat": 0.1118798,
+          "id": 4.198304e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 4.954015e-05,
+          "gds": 5.857908e-05,
+          "vds": 0.05024685,
+          "vdsat": 0.1118798,
+          "id": 4.198304e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 5.221798e-05,
+          "gds": 4.972297e-05,
+          "vds": -0.0552298,
+          "vdsat": 0.1088528,
+          "id": 4.214445e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 5.221798e-05,
+          "gds": 4.972297e-05,
+          "vds": 0.05522983,
+          "vdsat": 0.1088528,
+          "id": 4.214445e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832355e-05,
+          "gds": 1.57983e-07,
+          "vds": 0.3064753,
+          "vdsat": 0.1834716,
+          "id": 2.099151e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832355e-05,
+          "gds": 1.57983e-07,
+          "vds": -0.306475,
+          "vdsat": 0.1834716,
+          "id": 2.099151e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.836078e-05,
+          "gds": 1.601899e-07,
+          "vds": 0.3060748,
+          "vdsat": 0.1837859,
+          "id": 2.107222e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.836078e-05,
+          "gds": 1.601899e-07,
+          "vds": -0.306075,
+          "vdsat": 0.1837859,
+          "id": 2.107222e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.836078e-05,
+          "gds": 1.601899e-07,
+          "vds": 0.3060748,
+          "vdsat": 0.1837859,
+          "id": 2.107222e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.836078e-05,
+          "gds": 1.601899e-07,
+          "vds": -0.306075,
+          "vdsat": 0.1837859,
+          "id": 2.107222e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832355e-05,
+          "gds": 1.57983e-07,
+          "vds": 0.3064753,
+          "vdsat": 0.1834716,
+          "id": 2.099151e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.832355e-05,
+          "gds": 1.57983e-07,
+          "vds": -0.306475,
+          "vdsat": 0.1834716,
+          "id": 2.099151e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.650039,
+      "power_mw": 5.789916,
+      "low_frequency_gain_db": 75.5640945493345,
+      "unity_gain_hz": 20124023.998562485,
+      "phase_margin_deg": 46.08989984601723,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout",
+      "vbiasn_v": 1.8,
+      "vbiasp_v": 1.5,
+      "load_pf": 1,
+      "compensation_scale": 1,
+      "assigned_mim_density_ff_per_um2": 2,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.92754183645133,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 4.934172e-05,
+          "gds": 5.86322e-05,
+          "vds": -0.0500634,
+          "vdsat": 0.1117918,
+          "id": 4.180463e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 4.934172e-05,
+          "gds": 5.86322e-05,
+          "vds": 0.05006339,
+          "vdsat": 0.1117918,
+          "id": 4.180463e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 5.211475e-05,
+          "gds": 4.945209e-05,
+          "vds": -0.0552341,
+          "vdsat": 0.1086527,
+          "id": 4.197305e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 5.211475e-05,
+          "gds": 4.945209e-05,
+          "vds": 0.05523411,
+          "vdsat": 0.1086527,
+          "id": 4.197305e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.841855e-05,
+          "gds": 3.188642e-08,
+          "vds": 0.5257673,
+          "vdsat": 0.1785266,
+          "id": 2.090231e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.841855e-05,
+          "gds": 3.188642e-08,
+          "vds": -0.525767,
+          "vdsat": 0.1785266,
+          "id": 2.090231e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.845946e-05,
+          "gds": 3.208193e-08,
+          "vds": 0.5253405,
+          "vdsat": 0.178843,
+          "id": 2.098652e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.845946e-05,
+          "gds": 3.208193e-08,
+          "vds": -0.525341,
+          "vdsat": 0.178843,
+          "id": 2.098652e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.845946e-05,
+          "gds": 3.208193e-08,
+          "vds": 0.5253405,
+          "vdsat": 0.178843,
+          "id": 2.098652e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.845946e-05,
+          "gds": 3.208193e-08,
+          "vds": -0.525341,
+          "vdsat": 0.178843,
+          "id": 2.098652e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.841855e-05,
+          "gds": 3.188642e-08,
+          "vds": 0.5257673,
+          "vdsat": 0.1785266,
+          "id": 2.090231e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.841855e-05,
+          "gds": 3.188642e-08,
+          "vds": -0.525767,
+          "vdsat": 0.1785266,
+          "id": 2.090231e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.650041,
+      "power_mw": 5.798628,
+      "low_frequency_gain_db": 75.62168309705905,
+      "unity_gain_hz": 20187486.980654515,
+      "phase_margin_deg": 46.020224795540514,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout",
+      "vbiasn_v": 1.8,
+      "vbiasp_v": 1.8,
+      "load_pf": 1,
+      "compensation_scale": 1,
+      "assigned_mim_density_ff_per_um2": 2,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9277317830338,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 4.882219e-05,
+          "gds": 5.877167e-05,
+          "vds": -0.0495824,
+          "vdsat": 0.1115615,
+          "id": 4.1338e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 4.882219e-05,
+          "gds": 5.877167e-05,
+          "vds": 0.04958237,
+          "vdsat": 0.1115615,
+          "id": 4.1338e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 5.184049e-05,
+          "gds": 4.873876e-05,
+          "vds": -0.0552457,
+          "vdsat": 0.1081246,
+          "id": 4.152117e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 5.184049e-05,
+          "gds": 4.873876e-05,
+          "vds": 0.05524566,
+          "vdsat": 0.1081246,
+          "id": 4.152117e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831237e-05,
+          "gds": 2.030272e-08,
+          "vds": 0.7409313,
+          "vdsat": 0.1730216,
+          "id": 2.066899e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831237e-05,
+          "gds": 2.030272e-08,
+          "vds": -0.740931,
+          "vdsat": 0.1730216,
+          "id": 2.066899e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.835729e-05,
+          "gds": 2.040752e-08,
+          "vds": 0.7404556,
+          "vdsat": 0.1733576,
+          "id": 2.076058e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.835729e-05,
+          "gds": 2.040752e-08,
+          "vds": -0.740456,
+          "vdsat": 0.1733576,
+          "id": 2.076058e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.835729e-05,
+          "gds": 2.040752e-08,
+          "vds": 0.7404556,
+          "vdsat": 0.1733576,
+          "id": 2.076058e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.835729e-05,
+          "gds": 2.040752e-08,
+          "vds": -0.740456,
+          "vdsat": 0.1733576,
+          "id": 2.076058e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831237e-05,
+          "gds": 2.030272e-08,
+          "vds": 0.7409313,
+          "vdsat": 0.1730216,
+          "id": 2.066899e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.831237e-05,
+          "gds": 2.030272e-08,
+          "vds": -0.740931,
+          "vdsat": 0.1730216,
+          "id": 2.066899e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.650045,
+      "power_mw": 5.821562999999999,
+      "low_frequency_gain_db": 75.58603000448075,
+      "unity_gain_hz": 19932117.367893726,
+      "phase_margin_deg": 47.32087773672433,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.5,
+      "load_pf": 5,
+      "compensation_scale": 1,
+      "assigned_mim_density_ff_per_um2": 2,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9260697627361,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": -0.262482,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": 0.2624818,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": -0.27117,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": 0.2711701,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.806812,
+      "low_frequency_gain_db": 116.49338722229545,
+      "unity_gain_hz": 20295677.39127899,
+      "phase_margin_deg": 43.86065158310973,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.5,
+      "load_pf": 20,
+      "compensation_scale": 1,
+      "assigned_mim_density_ff_per_um2": 2,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9260697627361,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": -0.262482,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": 0.2624818,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": -0.27117,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": 0.2711701,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.806812,
+      "low_frequency_gain_db": 116.4933871670541,
+      "unity_gain_hz": 20209649.87894886,
+      "phase_margin_deg": 37.75825482974747,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.5,
+      "load_pf": 1,
+      "compensation_scale": 0.9,
+      "assigned_mim_density_ff_per_um2": 1.8,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9260697627361,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": -0.262482,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": 0.2624818,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": -0.27117,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": 0.2711701,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.806812,
+      "low_frequency_gain_db": 116.4939229965058,
+      "unity_gain_hz": 21407949.80490913,
+      "phase_margin_deg": 44.25851409953995,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.5,
+      "load_pf": 1,
+      "compensation_scale": 1.1,
+      "assigned_mim_density_ff_per_um2": 2.2,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9260697627361,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": -0.262482,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": 0.2624818,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": -0.27117,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": 0.2711701,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.806812,
+      "low_frequency_gain_db": 116.49279546776225,
+      "unity_gain_hz": 19264668.263046738,
+      "phase_margin_deg": 47.11981108271078,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.5,
+      "load_pf": 1,
+      "compensation_scale": 1.5,
+      "assigned_mim_density_ff_per_um2": 3.0,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9260697627361,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": -0.262482,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": 0.2624818,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": -0.27117,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": 0.2711701,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.806812,
+      "low_frequency_gain_db": 116.48986885574428,
+      "unity_gain_hz": 15731729.476883395,
+      "phase_margin_deg": 53.943992259884055,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.5,
+      "load_pf": 1,
+      "compensation_scale": 2,
+      "assigned_mim_density_ff_per_um2": 4,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9260697627361,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": -0.262482,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": 0.2624818,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": -0.27117,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": 0.2711701,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.806812,
+      "low_frequency_gain_db": 116.48495392849716,
+      "unity_gain_hz": 12487534.114670584,
+      "phase_margin_deg": 60.638639510507815,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout_t",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.5,
+      "load_pf": 1,
+      "compensation_scale": 1,
+      "assigned_mim_density_ff_per_um2": 2,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9260697627361,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": -0.262482,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": 0.2624818,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": -0.27117,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": 0.2711701,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.806812,
+      "low_frequency_gain_db": 116.49338718952546,
+      "unity_gain_hz": 20291131.682035398,
+      "phase_margin_deg": 44.02471031833093,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout_t",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.5,
+      "load_pf": 5,
+      "compensation_scale": 1,
+      "assigned_mim_density_ff_per_um2": 2,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9260697627361,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": -0.262482,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": 0.2624818,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": -0.27117,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": 0.2711701,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.806812,
+      "low_frequency_gain_db": 116.49338717764202,
+      "unity_gain_hz": 20161173.940419316,
+      "phase_margin_deg": 36.88351698033043,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout_t",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.5,
+      "load_pf": 20,
+      "compensation_scale": 1,
+      "assigned_mim_density_ff_per_um2": 2,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9260697627361,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": -0.262482,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": 0.2624818,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": -0.27117,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": 0.2711701,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.806812,
+      "low_frequency_gain_db": 116.49338712655363,
+      "unity_gain_hz": 18602050.37200363,
+      "phase_margin_deg": 18.231236018386966,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout_t",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.5,
+      "load_pf": 1,
+      "compensation_scale": 0.5,
+      "assigned_mim_density_ff_per_um2": 1.0,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9260697627361,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": -0.262482,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": 0.2624818,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": -0.27117,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": 0.2711701,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.806812,
+      "low_frequency_gain_db": 116.4955055993714,
+      "unity_gain_hz": 28880551.462188814,
+      "phase_margin_deg": 47.623931870322565,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout_t",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.5,
+      "load_pf": 1,
+      "compensation_scale": 0.75,
+      "assigned_mim_density_ff_per_um2": 1.5,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9260697627361,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": -0.262482,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": 0.2624818,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": -0.27117,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": 0.2711701,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.806812,
+      "low_frequency_gain_db": 116.49462154433107,
+      "unity_gain_hz": 23294165.618548866,
+      "phase_margin_deg": 41.69681133103833,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout_t",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.5,
+      "load_pf": 20,
+      "compensation_scale": 0.5,
+      "assigned_mim_density_ff_per_um2": 1.0,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9260697627361,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": -0.262482,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": 0.2624818,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": -0.27117,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": 0.2711701,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.806812,
+      "low_frequency_gain_db": 116.4955055681146,
+      "unity_gain_hz": 24920535.795935683,
+      "phase_margin_deg": 6.547278280875844,
+      "convergence_assistance": true
+    },
+    {
+      "output_node": "vout_t",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.5,
+      "load_pf": 20,
+      "compensation_scale": 0.75,
+      "assigned_mim_density_ff_per_um2": 1.5,
+      "exit_code": 0,
+      "output_switch_dc_incremental_r_ohm": 198.9260697627361,
+      "cascode_fingers": [
+        {
+          "device": "M180",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": -0.262482,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M181",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.184045e-05,
+          "gds": 3.57165e-07,
+          "vds": 0.2624818,
+          "vdsat": 0.0945867,
+          "id": 4.181207e-06
+        },
+        {
+          "device": "M182",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": -0.27117,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M183",
+          "type": "nmos",
+          "bias": "vbiasn",
+          "gm": 7.185358e-05,
+          "gds": 3.440986e-07,
+          "vds": 0.2711701,
+          "vdsat": 0.09456506,
+          "id": 4.181336e-06
+        },
+        {
+          "device": "M280",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M281",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M282",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M283",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M399",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": 0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M400",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842061e-05,
+          "gds": 3.193382e-08,
+          "vds": -0.525374,
+          "vdsat": 0.1785435,
+          "id": 2.090667e-06
+        },
+        {
+          "device": "M401",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": 0.5257308,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        },
+        {
+          "device": "M402",
+          "type": "pmos",
+          "bias": "vbiasp",
+          "gm": 1.842036e-05,
+          "gds": 3.189682e-08,
+          "vds": -0.525731,
+          "vdsat": 0.1785407,
+          "id": 2.090603e-06
+        }
+      ],
+      "status": "conditional_operating_point",
+      "vout_v": 1.65,
+      "power_mw": 5.806812,
+      "low_frequency_gain_db": 116.4946215037425,
+      "unity_gain_hz": 21264022.634753752,
+      "phase_margin_deg": 10.92494664430319,
+      "convergence_assistance": true
+    }
+  ],
+  "assumptions": [
+    "Nominal process,25C,3.3V,Vprog=1V,input common mode=1.65V.",
+    "Bulk terminals taken from generic well/tap extraction; ideal well conductivity.",
+    "Raw fingers retained, no manual device multiplier or gate-width regrouping.",
+    "MIM base 2fF/um2 multiplied by compensation_scale; 0.5/0.75 test 1.0/1.5fF density options; 0.9..1.1 density scenarios, 1.5/2 diagnostic added-capacitance hypotheses. No routing/contact resistance or other interconnect capacitance.",
+    "External cascode biases swept because exact bench voltages are not published.",
+    "Ideal DC feedback holds output; AC loop opened. This does not test startup or closed-loop transient stability.",
+    "Output load is at the selected node: internal vout or external-facing vout_t after the extracted transmission gate. Pad ESD/parasitics and package/test fixture not modeled.",
+    "Agreement with a measured metric is not a unique physical calibration."
+  ]
+}

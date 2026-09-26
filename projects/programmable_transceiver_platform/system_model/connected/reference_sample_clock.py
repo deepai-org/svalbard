@@ -40,8 +40,8 @@ class ReferenceSampleClock:
     def arm(self, not_before, divider=1):
         if not self.present or self.index is not None:
             raise ValueError('Arming requires present reference and idle clock')
-        if type(divider) is not int or divider not in (1,2) or not math.isfinite(not_before):
-            raise ValueError('Finite guard and divide-by-one/two required')
+        if type(divider) is not int or divider not in (1,2,3,4,8) or not math.isfinite(not_before):
+            raise ValueError('Finite guard and divide-by-one/two/three/four/eight required')
         guard=max(not_before,self.last_time)
         index=max(0,math.floor((guard-self.origin)/self.period)+1)
         index+=(-index)%divider

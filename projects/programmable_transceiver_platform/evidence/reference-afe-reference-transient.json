@@ -1,0 +1,2907 @@
+{
+  "analysis_script_sha256": "6889513a4248c5f29dd0875d644f9f42fbf424dea453c679c75263244cc9de45",
+  "timestep_refinement": [
+    {
+      "maximum_reference_charge_difference_pc": 1.8501651095154115e-05,
+      "common_node": "floating",
+      "maximum_sampled_output_difference_mv": 9.344820872669857e-05,
+      "maximum_droop_difference_mv": 9.320867100370833e-05
+    },
+    {
+      "maximum_reference_charge_difference_pc": 2.7692083933050782e-05,
+      "common_node": "clamped",
+      "maximum_sampled_output_difference_mv": 0.0006316791352212192,
+      "maximum_droop_difference_mv": 0.0007931183807485809
+    }
+  ],
+  "source_gds_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+  "raw_extraction_sha256": "4b78aa97a354e67daf624bc81a7292b6d45e5e554d3b9ee1ce3513cd44c5a5f5",
+  "model_sha256": {
+    "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+    "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+  },
+  "cases": [
+    {
+      "terminal_charge_5_to_20ns_pc": {},
+      "gate_edge_ns": 0.2,
+      "reference_charge_5_to_20ns": {},
+      "transition": "low_to_high",
+      "maximum_low_reference_rise_mv": 0.0,
+      "maximum_timestep_ns": 0.02,
+      "common_node": "floating",
+      "reservoir_per_rail_pf": 100,
+      "ideal_reference": true,
+      "maximum_high_reference_droop_mv": 0.0,
+      "settling": [
+        {
+          "ns_after_gate_edge": 1,
+          "output_error_mv": -1.6512284872760574e-05,
+          "reference_error_mv": 0.0,
+          "switch_error_mv": -1.6512284872760574e-05
+        },
+        {
+          "ns_after_gate_edge": 3,
+          "output_error_mv": -1.1197102800508674e-05,
+          "reference_error_mv": 0.0,
+          "switch_error_mv": -1.1197102800508674e-05
+        },
+        {
+          "ns_after_gate_edge": 10,
+          "output_error_mv": -1.1197104132776303e-05,
+          "reference_error_mv": 0.0,
+          "switch_error_mv": -1.1197104132776303e-05
+        }
+      ]
+    },
+    {
+      "terminal_charge_5_to_20ns_pc": {
+        "gate": -0.3710671994066679,
+        "pmos_body": -0.02652482828161078,
+        "nmos_body": -0.026438416729906693,
+        "bias": -1.2390202661630363e-08,
+        "ground_capacitor_charge_change_pc": 0.6374999867106752,
+        "charge_balance_residual_pc": 2.1603127109082187e-05
+      },
+      "gate_edge_ns": 0.2,
+      "reference_charge_5_to_20ns": {
+        "high": {
+          "source_charge_pc": 0.9869504792774532,
+          "reservoir_charge_change_pc": -1.0922285298420318e-08,
+          "net_charge_to_switch_network_pc": 0.9869504901997385
+        },
+        "low": {
+          "source_charge_pc": 0.07460154555422233,
+          "reservoir_charge_change_pc": -1.0892211577129274e-08,
+          "net_charge_to_switch_network_pc": 0.0746015564464339
+        }
+      },
+      "transition": "low_to_high",
+      "maximum_low_reference_rise_mv": 5.772194944242415e-07,
+      "maximum_timestep_ns": 0.02,
+      "common_node": "floating",
+      "reservoir_per_rail_pf": 10,
+      "ideal_reference": false,
+      "maximum_high_reference_droop_mv": 86.75567431216002,
+      "settling": [
+        {
+          "ns_after_gate_edge": 1,
+          "output_error_mv": -77.68876819908411,
+          "reference_error_mv": -76.92808657045758,
+          "switch_error_mv": -0.760681628626525
+        },
+        {
+          "ns_after_gate_edge": 3,
+          "output_error_mv": -49.37479742861495,
+          "reference_error_mv": -48.62715707502075,
+          "switch_error_mv": -0.7476403535942033
+        },
+        {
+          "ns_after_gate_edge": 10,
+          "output_error_mv": -1.177727737555756e-05,
+          "reference_error_mv": -5.801865654575522e-07,
+          "switch_error_mv": -1.1197090810100008e-05
+        }
+      ]
+    },
+    {
+      "terminal_charge_5_to_20ns_pc": {
+        "gate": -0.3710599278486733,
+        "pmos_body": -0.026522963846006102,
+        "nmos_body": -0.026439198441665087,
+        "bias": -1.2520586623275717e-08,
+        "ground_capacitor_charge_change_pc": 0.6374999292169536,
+        "charge_balance_residual_pc": 2.9993606238010173e-05
+      },
+      "gate_edge_ns": 0.2,
+      "reference_charge_5_to_20ns": {
+        "high": {
+          "source_charge_pc": 0.9859849098097897,
+          "reservoir_charge_change_pc": -1.4643103751765807e-05,
+          "net_charge_to_switch_network_pc": 0.9859995529135416
+        },
+        "low": {
+          "source_charge_pc": 0.07555233889001134,
+          "reservoir_charge_change_pc": -1.3367656981344567e-07,
+          "net_charge_to_switch_network_pc": 0.07555247256658115
+        }
+      },
+      "transition": "low_to_high",
+      "maximum_low_reference_rise_mv": 5.772240463386424e-07,
+      "maximum_timestep_ns": 0.02,
+      "common_node": "floating",
+      "reservoir_per_rail_pf": 100,
+      "ideal_reference": false,
+      "maximum_high_reference_droop_mv": 9.244069788858056,
+      "settling": [
+        {
+          "ns_after_gate_edge": 1,
+          "output_error_mv": -8.286861892906394,
+          "reference_error_mv": -8.20996857000278,
+          "switch_error_mv": -0.07689332290361506
+        },
+        {
+          "ns_after_gate_edge": 3,
+          "output_error_mv": -5.304653748471555,
+          "reference_error_mv": -5.227897867175368,
+          "switch_error_mv": -0.0767558812961866
+        },
+        {
+          "ns_after_gate_edge": 10,
+          "output_error_mv": -0.018073124901984983,
+          "reference_error_mv": -0.01714154907839216,
+          "switch_error_mv": -0.0009315758235928229
+        }
+      ]
+    },
+    {
+      "terminal_charge_5_to_20ns_pc": {
+        "gate": -0.3710366695458603,
+        "pmos_body": -0.026497573448578563,
+        "nmos_body": -0.026434179071014852,
+        "bias": -1.2532923910548465e-08,
+        "ground_capacitor_charge_change_pc": 0.6374151116283651,
+        "charge_balance_residual_pc": 3.217183530246359e-05
+      },
+      "gate_edge_ns": 0.2,
+      "reference_charge_5_to_20ns": {
+        "high": {
+          "source_charge_pc": 0.7605749366489588,
+          "reservoir_charge_change_pc": -0.2251737061342851,
+          "net_charge_to_switch_network_pc": 0.9857486427832439
+        },
+        "low": {
+          "source_charge_pc": 0.058674180355949686,
+          "reservoir_charge_change_pc": -0.0169928949228515,
+          "net_charge_to_switch_network_pc": 0.07566707527880119
+        }
+      },
+      "transition": "low_to_high",
+      "maximum_low_reference_rise_mv": 5.772242683832474e-07,
+      "maximum_timestep_ns": 0.02,
+      "common_node": "floating",
+      "reservoir_per_rail_pf": 1000,
+      "ideal_reference": false,
+      "maximum_high_reference_droop_mv": 0.9562670599039258,
+      "settling": [
+        {
+          "ns_after_gate_edge": 1,
+          "output_error_mv": -0.8989232011313852,
+          "reference_error_mv": -0.8942947762919928,
+          "switch_error_mv": -0.004628424839392409
+        },
+        {
+          "ns_after_gate_edge": 3,
+          "output_error_mv": -0.7360622164709341,
+          "reference_error_mv": -0.7322750852485349,
+          "switch_error_mv": -0.003787131222399154
+        },
+        {
+          "ns_after_gate_edge": 10,
+          "output_error_mv": -0.3656775843778881,
+          "reference_error_mv": -0.36379092349392295,
+          "switch_error_mv": -0.0018866608839651633
+        }
+      ]
+    },
+    {
+      "terminal_charge_5_to_20ns_pc": {
+        "gate": -0.3710569092071536,
+        "pmos_body": -0.026522704805959477,
+        "nmos_body": -0.02643935226188751,
+        "bias": -0.0,
+        "common_clamp": -1.27501669156054,
+        "ground_capacitor_charge_change_pc": 0.0,
+        "charge_balance_residual_pc": 1.6270162359166562e-05
+      },
+      "gate_edge_ns": 0.2,
+      "reference_charge_5_to_20ns": {
+        "high": {
+          "source_charge_pc": 1.6328381019479217,
+          "reservoir_charge_change_pc": -1.0879639411598417e-08,
+          "net_charge_to_switch_network_pc": 1.632838112827561
+        },
+        "low": {
+          "source_charge_pc": 0.06621380427810393,
+          "reservoir_charge_change_pc": -1.0892234891812791e-08,
+          "net_charge_to_switch_network_pc": 0.06621381517033881
+        }
+      },
+      "transition": "low_to_high",
+      "maximum_low_reference_rise_mv": 5.772219369148957e-07,
+      "maximum_timestep_ns": 0.02,
+      "common_node": "clamped",
+      "reservoir_per_rail_pf": 10,
+      "ideal_reference": false,
+      "maximum_high_reference_droop_mv": 139.1085266379699,
+      "settling": [
+        {
+          "ns_after_gate_edge": 1,
+          "output_error_mv": -134.45092525656,
+          "reference_error_mv": -133.0784928489912,
+          "switch_error_mv": -1.372432407568791
+        },
+        {
+          "ns_after_gate_edge": 3,
+          "output_error_mv": -107.05669631655424,
+          "reference_error_mv": -105.74643947847883,
+          "switch_error_mv": -1.3102568380753965
+        },
+        {
+          "ns_after_gate_edge": 10,
+          "output_error_mv": -11.317659272429559,
+          "reference_error_mv": -10.082373117414,
+          "switch_error_mv": -1.235286155015558
+        }
+      ]
+    },
+    {
+      "terminal_charge_5_to_20ns_pc": {
+        "gate": -0.371085528466747,
+        "pmos_body": -0.026518567674129235,
+        "nmos_body": -0.026435448554604668,
+        "bias": -0.0,
+        "common_clamp": -1.274998224102437,
+        "ground_capacitor_charge_change_pc": 0.0,
+        "charge_balance_residual_pc": 3.0031069246927444e-06
+      },
+      "gate_edge_ns": 0.2,
+      "reference_charge_5_to_20ns": {
+        "high": {
+          "source_charge_pc": 1.630721638174809,
+          "reservoir_charge_change_pc": -0.0010666331077047177,
+          "net_charge_to_switch_network_pc": 1.6317882712825136
+        },
+        "low": {
+          "source_charge_pc": 0.0672523696340754,
+          "reservoir_charge_change_pc": -1.3098825357715782e-07,
+          "net_charge_to_switch_network_pc": 0.06725250062232897
+        }
+      },
+      "transition": "low_to_high",
+      "maximum_low_reference_rise_mv": 5.772129441083962e-07,
+      "maximum_timestep_ns": 0.02,
+      "common_node": "clamped",
+      "reservoir_per_rail_pf": 100,
+      "ideal_reference": false,
+      "maximum_high_reference_droop_mv": 15.22376956563587,
+      "settling": [
+        {
+          "ns_after_gate_edge": 1,
+          "output_error_mv": -14.748828967872996,
+          "reference_error_mv": -14.57407669048738,
+          "switch_error_mv": -0.17475227738561472
+        },
+        {
+          "ns_after_gate_edge": 3,
+          "output_error_mv": -11.73769998436569,
+          "reference_error_mv": -11.60343256740859,
+          "switch_error_mv": -0.1342674169571012
+        },
+        {
+          "ns_after_gate_edge": 10,
+          "output_error_mv": -1.3511474385876632,
+          "reference_error_mv": -1.232344790447204,
+          "switch_error_mv": -0.11880264814045916
+        }
+      ]
+    },
+    {
+      "terminal_charge_5_to_20ns_pc": {
+        "gate": -0.3710553575996865,
+        "pmos_body": -0.02647820155905981,
+        "nmos_body": -0.02642670947137807,
+        "bias": -0.0,
+        "common_clamp": -1.274720729621941,
+        "ground_capacitor_charge_change_pc": 0.0,
+        "charge_balance_residual_pc": 1.1074067030047985e-06
+      },
+      "gate_edge_ns": 0.2,
+      "reference_charge_5_to_20ns": {
+        "high": {
+          "source_charge_pc": 1.2557311471370118,
+          "reservoir_charge_change_pc": -0.37557033799240364,
+          "net_charge_to_switch_network_pc": 1.6313014851294154
+        },
+        "low": {
+          "source_charge_pc": 0.05224642290457537,
+          "reservoir_charge_change_pc": -0.015134197624777634,
+          "net_charge_to_switch_network_pc": 0.06738062052935301
+        }
+      },
+      "transition": "low_to_high",
+      "maximum_low_reference_rise_mv": 5.772242683832474e-07,
+      "maximum_timestep_ns": 0.02,
+      "common_node": "clamped",
+      "reservoir_per_rail_pf": 1000,
+      "ideal_reference": false,
+      "maximum_high_reference_droop_mv": 1.5562354864400163,
+      "settling": [
+        {
+          "ns_after_gate_edge": 1,
+          "output_error_mv": -1.5448123317693963,
+          "reference_error_mv": -1.4907912996893202,
+          "switch_error_mv": -0.054021032080076026
+        },
+        {
+          "ns_after_gate_edge": 3,
+          "output_error_mv": -1.2318908973543152,
+          "reference_error_mv": -1.2208264965956062,
+          "switch_error_mv": -0.01106440075870907
+        },
+        {
+          "ns_after_gate_edge": 10,
+          "output_error_mv": -0.6121639069172069,
+          "reference_error_mv": -0.6066621013256501,
+          "switch_error_mv": -0.005501805591556774
+        }
+      ]
+    },
+    {
+      "terminal_charge_5_to_20ns_pc": {
+        "gate": -0.3710494906184546,
+        "pmos_body": -0.02652514595702219,
+        "nmos_body": -0.026440803833643344,
+        "bias": -1.2520589156339174e-08,
+        "ground_capacitor_charge_change_pc": 0.6374999292045207,
+        "charge_balance_residual_pc": 3.66460362388743e-05
+      },
+      "gate_edge_ns": 0.2,
+      "reference_charge_5_to_20ns": {
+        "high": {
+          "source_charge_pc": 0.9859664075028287,
+          "reservoir_charge_change_pc": -1.4646449963962025e-05,
+          "net_charge_to_switch_network_pc": 0.9859810539527927
+        },
+        "low": {
+          "source_charge_pc": 0.07557084052651816,
+          "reservoir_charge_change_pc": -1.3369115814398927e-07,
+          "net_charge_to_switch_network_pc": 0.0755709742176763
+        }
+      },
+      "transition": "low_to_high",
+      "maximum_low_reference_rise_mv": 5.772248234947597e-07,
+      "maximum_timestep_ns": 0.01,
+      "common_node": "floating",
+      "reservoir_per_rail_pf": 100,
+      "ideal_reference": false,
+      "maximum_high_reference_droop_mv": 9.24416299752906,
+      "settling": [
+        {
+          "ns_after_gate_edge": 1,
+          "output_error_mv": -8.28695534111512,
+          "reference_error_mv": -8.210061463021834,
+          "switch_error_mv": -0.07689387809328707
+        },
+        {
+          "ns_after_gate_edge": 3,
+          "output_error_mv": -5.304746648335357,
+          "reference_error_mv": -5.22799076293845,
+          "switch_error_mv": -0.07675588539690636
+        },
+        {
+          "ns_after_gate_edge": 10,
+          "output_error_mv": -0.018075157067531933,
+          "reference_error_mv": -0.017143477686776265,
+          "switch_error_mv": -0.0009316793807556678
+        }
+      ]
+    },
+    {
+      "terminal_charge_5_to_20ns_pc": {
+        "gate": -0.37109930320291146,
+        "pmos_body": -0.026517930667149095,
+        "nmos_body": -0.026433773217828135,
+        "bias": -0.0,
+        "common_clamp": -1.2749931609407408,
+        "ground_capacitor_charge_change_pc": 0.0,
+        "charge_balance_residual_pc": -3.4120387570890642e-06
+      },
+      "gate_edge_ns": 0.2,
+      "reference_charge_5_to_20ns": {
+        "high": {
+          "source_charge_pc": 1.6306940320215606,
+          "reservoir_charge_change_pc": -0.0010665471770199275,
+          "net_charge_to_switch_network_pc": 1.6317605791985805
+        },
+        "low": {
+          "source_charge_pc": 0.0672800457853079,
+          "reservoir_charge_change_pc": -1.310059838388611e-07,
+          "net_charge_to_switch_network_pc": 0.06728017679129174
+        }
+      },
+      "transition": "low_to_high",
+      "maximum_low_reference_rise_mv": 5.772250455393646e-07,
+      "maximum_timestep_ns": 0.01,
+      "common_node": "clamped",
+      "reservoir_per_rail_pf": 100,
+      "ideal_reference": false,
+      "maximum_high_reference_droop_mv": 15.222976447255121,
+      "settling": [
+        {
+          "ns_after_gate_edge": 1,
+          "output_error_mv": -14.749460647008217,
+          "reference_error_mv": -14.573833157653482,
+          "switch_error_mv": -0.17562748935473493
+        },
+        {
+          "ns_after_gate_edge": 3,
+          "output_error_mv": -11.737464134917275,
+          "reference_error_mv": -11.603196736543087,
+          "switch_error_mv": -0.13426739837418822
+        },
+        {
+          "ns_after_gate_edge": 10,
+          "output_error_mv": -1.3508817988614474,
+          "reference_error_mv": -1.2321022435597406,
+          "switch_error_mv": -0.11877955530170681
+        }
+      ]
+    }
+  ],
+  "assumptions": [
+    "Nominal PDK,25C,VDD3.3V,reference2.5/0.8V,0.2ns gate edges.",
+    "A .75pF switched capacitor plus .75pF remaining-array capacitor; common node either floating or ideal clamped. No actual capacitance matrix or other bit transitions.",
+    "Finite references are ideal10ohm feedback sources clipped to+/-150uA with assigned local reservoirs. Not characterized source circuits; no delay, ESR, ESL or package.",
+    "Switch body rails are established by full-parent reference_drivers.py; local child body labels alone are insufficient.",
+    "Terminal-current integral uses positive charge delivered by each voltage source. Reference source integrals subtract reservoir storage; total terminal charge closes against the grounded remaining-array capacitor. This is a numerical KCL check, not silicon calibration.",
+    "One switched edge identifies settling mechanisms, not full ADC error, reference-loop stability or RF qualification."
+  ],
+  "high_to_low_replay": {
+    "analysis_script_sha256": "6889513a4248c5f29dd0875d644f9f42fbf424dea453c679c75263244cc9de45",
+    "timestep_refinement": [
+      {
+        "maximum_reference_charge_difference_pc": 4.8726040138780125e-05,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 0.0005829037915683344,
+        "maximum_droop_difference_mv": 0.0006007406337928956
+      },
+      {
+        "maximum_reference_charge_difference_pc": 6.859900172262456e-05,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 0.0008513706691850587,
+        "maximum_droop_difference_mv": 0.0005806675419393059
+      }
+    ],
+    "source_gds_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+    "raw_extraction_sha256": "4b78aa97a354e67daf624bc81a7292b6d45e5e554d3b9ee1ce3513cd44c5a5f5",
+    "model_sha256": {
+      "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+      "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+    },
+    "cases": [
+      {
+        "terminal_charge_5_to_20ns_pc": {},
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {},
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 0.0,
+        "maximum_timestep_ns": 0.02,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": true,
+        "maximum_high_reference_droop_mv": 0.0,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 6.589833456693839e-06,
+            "reference_error_mv": 0.0,
+            "switch_error_mv": 6.589833456693839e-06
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 6.589833234649234e-06,
+            "reference_error_mv": 0.0,
+            "switch_error_mv": 6.589833234649234e-06
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 6.5898329015823265e-06,
+            "reference_error_mv": 0.0,
+            "switch_error_mv": 6.5898329015823265e-06
+          }
+        ]
+      },
+      {
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.37112738219405134,
+          "pmos_body": 0.02648386018577051,
+          "nmos_body": 0.026434845051752528,
+          "bias": 1.2430159801504388e-08,
+          "ground_capacitor_charge_change_pc": -0.6374999866970992,
+          "charge_balance_residual_pc": -5.638305765831575e-06
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.12294471064384933,
+            "reservoir_charge_change_pc": 1.0879812606390258e-08,
+            "net_charge_to_switch_network_pc": -0.12294472152366195
+          },
+          "low": {
+            "source_charge_pc": -0.9386069924061642,
+            "reservoir_charge_change_pc": 1.0934773087001304e-08,
+            "net_charge_to_switch_network_pc": -0.9386070033409373
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 84.90850326986454,
+        "maximum_timestep_ns": 0.02,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 10,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 5.759401844329659e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 73.60875103966247,
+            "reference_error_mv": 73.19014843540128,
+            "switch_error_mv": 0.4186026042611868
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 45.1012065459937,
+            "reference_error_mv": 44.687668902394286,
+            "switch_error_mv": 0.41353764359941536
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 7.171307991882259e-06,
+            "reference_error_mv": 5.814746462107223e-07,
+            "switch_error_mv": 6.589833345671536e-06
+          }
+        ]
+      },
+      {
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.37108611307258926,
+          "pmos_body": 0.02649984962084726,
+          "nmos_body": 0.026439941055749244,
+          "bias": 1.2549971764545026e-08,
+          "ground_capacitor_charge_change_pc": -0.6374999463544018,
+          "charge_balance_residual_pc": -2.5861396018234117e-05
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.12395004053757037,
+            "reservoir_charge_change_pc": 1.495745305390983e-07,
+            "net_charge_to_switch_network_pc": -0.12395019011210091
+          },
+          "low": {
+            "source_charge_pc": -0.9375909867306131,
+            "reservoir_charge_change_pc": 1.0547206863442682e-05,
+            "net_charge_to_switch_network_pc": -0.9376015339374767
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 8.95430341346426,
+        "maximum_timestep_ns": 0.02,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 5.759441812358546e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 7.773329392315675,
+            "reference_error_mv": 7.730696811351301,
+            "switch_error_mv": 0.04263258096437461
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 4.788970713858531,
+            "reference_error_mv": 4.74638971408381,
+            "switch_error_mv": 0.04258099977472174
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 0.01272980733402207,
+            "reference_error_mv": 0.012362906531948603,
+            "switch_error_mv": 0.00036690080207346654
+          }
+        ]
+      },
+      {
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.37108468861573574,
+          "pmos_body": 0.02648701133647329,
+          "nmos_body": 0.02642766218991157,
+          "bias": 1.2561011060497248e-08,
+          "ground_capacitor_charge_change_pc": -0.6374197074204582,
+          "charge_balance_residual_pc": -1.8798767400074468e-05
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.09619933276921337,
+            "reservoir_charge_change_pc": 0.027864626309437313,
+            "net_charge_to_switch_network_pc": -0.1240639590786507
+          },
+          "low": {
+            "source_charge_pc": -0.7239042699343771,
+            "reservoir_charge_change_pc": 0.21346965187796219,
+            "net_charge_to_switch_network_pc": -0.9373739218123393
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 0.9190121098341386,
+        "maximum_timestep_ns": 0.02,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 1000,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 5.75942848968225e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 0.8503282018158531,
+            "reference_error_mv": 0.847900686069547,
+            "switch_error_mv": 0.0024275157463060637
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 0.6962643522673284,
+            "reference_error_mv": 0.6942755913500465,
+            "switch_error_mv": 0.001988760917281951
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 0.3458855922484627,
+            "reference_error_mv": 0.34489446271412927,
+            "switch_error_mv": 0.0009911295343334459
+          }
+        ]
+      },
+      {
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.3710907426280825,
+          "pmos_body": 0.026497741774462402,
+          "nmos_body": 0.02644057656963974,
+          "bias": -0.0,
+          "common_clamp": 1.2750106336294473,
+          "ground_capacitor_charge_change_pc": 0.0,
+          "charge_balance_residual_pc": -1.2030831349818527e-05
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.11308209122700941,
+            "reservoir_charge_change_pc": 1.0879817047282359e-08,
+            "net_charge_to_switch_network_pc": -0.11308210210682645
+          },
+          "low": {
+            "source_charge_pc": -1.5859696124338882,
+            "reservoir_charge_change_pc": 1.0892267088280505e-08,
+            "net_charge_to_switch_network_pc": -1.5859696233261553
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 139.0445400865019,
+        "maximum_timestep_ns": 0.02,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 10,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 5.75942848968225e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 130.76695575808185,
+            "reference_error_mv": 130.02289215934425,
+            "switch_error_mv": 0.7440635987375765
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 103.2350337424247,
+            "reference_error_mv": 102.50020950992955,
+            "switch_error_mv": 0.734824232495157
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 6.880534637702218,
+            "reference_error_mv": 6.175438590172333,
+            "switch_error_mv": 0.7050960475298851
+          }
+        ]
+      },
+      {
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.37109766215193674,
+          "pmos_body": 0.026494119004877574,
+          "nmos_body": 0.026437674966033862,
+          "bias": -0.0,
+          "common_clamp": 1.2750047253372527,
+          "ground_capacitor_charge_change_pc": 0.0,
+          "charge_balance_residual_pc": -1.0367137453837216e-05
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.11414989365093448,
+            "reservoir_charge_change_pc": 1.4638632528374274e-07,
+            "net_charge_to_switch_network_pc": -0.11415004003725977
+          },
+          "low": {
+            "source_charge_pc": -1.584117464202137,
+            "reservoir_charge_change_pc": 0.0007770443581578412,
+            "net_charge_to_switch_network_pc": -1.584894508560295
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 15.079025078752473,
+        "maximum_timestep_ns": 0.02,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 5.759441812358546e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 14.19366253597576,
+            "reference_error_mv": 14.11727221869674,
+            "switch_error_mv": 0.07639031727901813
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 11.220343794187126,
+            "reference_error_mv": 11.14405515065242,
+            "switch_error_mv": 0.07628864353470544
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 0.9507836983696505,
+            "reference_error_mv": 0.9026559990870098,
+            "switch_error_mv": 0.04812769928264071
+          }
+        ]
+      },
+      {
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.37107560742197593,
+          "pmos_body": 0.026481456344209228,
+          "nmos_body": 0.026417313054627252,
+          "bias": -0.0,
+          "common_clamp": 1.2747370626128571,
+          "ground_capacitor_charge_change_pc": 0.0,
+          "charge_balance_residual_pc": -1.0881690211128614e-05
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.08860302441692856,
+            "reservoir_charge_change_pc": 0.025667222427916414,
+            "net_charge_to_switch_network_pc": -0.11427024684484498
+          },
+          "low": {
+            "source_charge_pc": -1.2217700312578905,
+            "reservoir_charge_change_pc": 0.36268204302114526,
+            "net_charge_to_switch_network_pc": -1.5844520742790358
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 1.535456988048356,
+        "maximum_timestep_ns": 0.02,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 1000,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 5.75942848968225e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 1.4472287449995846,
+            "reference_error_mv": 1.4398241811113266,
+            "switch_error_mv": 0.007404563888258053
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 1.1850985142318748,
+            "reference_error_mv": 1.1790416178620866,
+            "switch_error_mv": 0.006056896369788234
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 0.5888779175688974,
+            "reference_error_mv": 0.5858656841208898,
+            "switch_error_mv": 0.0030122334480076063
+          }
+        ]
+      },
+      {
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.3710861904116811,
+          "pmos_body": 0.026499799318687664,
+          "nmos_body": 0.02643962058061184,
+          "bias": 1.2549980033394353e-08,
+          "ground_capacitor_charge_change_pc": -0.6374999463615793,
+          "charge_balance_residual_pc": -2.6157422029160493e-05
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.12399876654142708,
+            "reservoir_charge_change_pc": 1.4961081262754305e-07,
+            "net_charge_to_switch_network_pc": -0.1239989161522397
+          },
+          "low": {
+            "source_charge_pc": -0.937542265213224,
+            "reservoir_charge_change_pc": 1.0545279105489413e-05,
+            "net_charge_to_switch_network_pc": -0.9375528104923294
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 8.953702672830467,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 5.759419607898053e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 7.772746488524107,
+            "reference_error_mv": 7.730113917652326,
+            "switch_error_mv": 0.042632570871781184
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 4.788387810284234,
+            "reference_error_mv": 4.7458068205581405,
+            "switch_error_mv": 0.042580989726093144
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 0.012725955247927523,
+            "reference_error_mv": 0.012359163536923568,
+            "switch_error_mv": 0.00036679171100395536
+          }
+        ]
+      },
+      {
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.37109454168343786,
+          "pmos_body": 0.026495558723240817,
+          "nmos_body": 0.026438987862711275,
+          "bias": -0.0,
+          "common_clamp": 1.2750044926745907,
+          "ground_capacitor_charge_change_pc": 0.0,
+          "charge_balance_residual_pc": -1.093394299145345e-05
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.11421845890197327,
+            "reservoir_charge_change_pc": 1.464264265393922e-07,
+            "net_charge_to_switch_network_pc": -0.1142186053283998
+          },
+          "low": {
+            "source_charge_pc": -1.5840492460034261,
+            "reservoir_charge_change_pc": 0.0007766635551464951,
+            "net_charge_to_switch_network_pc": -1.5848259095585724
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 15.078444411210533,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 5.759419607898053e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 14.192812200182757,
+            "reference_error_mv": 14.116420865628033,
+            "switch_error_mv": 0.07639133455472624
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 11.219492423517941,
+            "reference_error_mv": 11.143203806669334,
+            "switch_error_mv": 0.07628861684860766
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 0.9502068028385269,
+            "reference_error_mv": 0.9021083254240336,
+            "switch_error_mv": 0.048098477414493246
+          }
+        ]
+      }
+    ],
+    "assumptions": [
+      "Nominal PDK,25C,VDD3.3V,reference2.5/0.8V,0.2ns gate edges.",
+      "A .75pF switched capacitor plus .75pF remaining-array capacitor; common node either floating or ideal clamped. No actual capacitance matrix or other bit transitions.",
+      "Finite references are ideal10ohm feedback sources clipped to+/-150uA with assigned local reservoirs. Not characterized source circuits; no delay, ESR, ESL or package.",
+      "Switch body rails are established by full-parent reference_drivers.py; local child body labels alone are insufficient.",
+      "Terminal-current integral uses positive charge delivered by each voltage source. Reference source integrals subtract reservoir storage; total terminal charge closes against the grounded remaining-array capacitor. This is a numerical KCL check, not silicon calibration.",
+      "One switched edge identifies settling mechanisms, not full ADC error, reference-loop stability or RF qualification."
+    ]
+  },
+  "edge_sensitivity": {
+    "cases": [
+      {
+        "gate_edge_ns": 0.05,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": 1.0022070205167473,
+            "reservoir_charge_change_pc": -1.4818068461153189e-05,
+            "net_charge_to_switch_network_pc": 1.0022218385852084
+          },
+          "low": {
+            "source_charge_pc": 0.05933008659613677,
+            "reservoir_charge_change_pc": -1.2746002031605033e-07,
+            "net_charge_to_switch_network_pc": 0.059330214056157085
+          }
+        },
+        "transition": "low_to_high",
+        "maximum_low_reference_rise_mv": 5.772248234947597e-07,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 9.439652868695081,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": -8.528244061152268,
+            "reference_error_mv": -8.451334522380893,
+            "switch_error_mv": -0.07690953877137474
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": -5.5460302583889565,
+            "reference_error_mv": -5.469263709591221,
+            "switch_error_mv": -0.07676654879773537
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": -0.02122631928402896,
+            "reference_error_mv": -0.02013405945477942,
+            "switch_error_mv": -0.0010922598292495422
+          }
+        ],
+        "summed_reference_charge_pc": 1.0615520526413655,
+        "equivalent_extra_endpoint_load_ff": 249.4423839066856
+      },
+      {
+        "gate_edge_ns": 0.05,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": 1.6428403911981206,
+            "reservoir_charge_change_pc": -0.0010502759494546154,
+            "net_charge_to_switch_network_pc": 1.6438906671475753
+          },
+          "low": {
+            "source_charge_pc": 0.05515015783105173,
+            "reservoir_charge_change_pc": -1.2615630762269348e-07,
+            "net_charge_to_switch_network_pc": 0.055150283987359355
+          }
+        },
+        "transition": "low_to_high",
+        "maximum_low_reference_rise_mv": 5.772250455393646e-07,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 15.377818216895989,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": -14.96567418631134,
+            "reference_error_mv": -14.773430343421712,
+            "switch_error_mv": -0.19224384288962781
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": -11.937223022926435,
+            "reference_error_mv": -11.80293989014336,
+            "switch_error_mv": -0.13428313278307513
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": -1.5385382248029877,
+            "reference_error_mv": -1.407481536326749,
+            "switch_error_mv": -0.13105668847623875
+          }
+        ],
+        "summed_reference_charge_pc": 1.6990409511349347,
+        "equivalent_extra_endpoint_load_ff": 249.43585360878518
+      },
+      {
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": 0.9859664075028287,
+            "reservoir_charge_change_pc": -1.4646449963962025e-05,
+            "net_charge_to_switch_network_pc": 0.9859810539527927
+          },
+          "low": {
+            "source_charge_pc": 0.07557084052651816,
+            "reservoir_charge_change_pc": -1.3369115814398927e-07,
+            "net_charge_to_switch_network_pc": 0.0755709742176763
+          }
+        },
+        "transition": "low_to_high",
+        "maximum_low_reference_rise_mv": 5.772248234947597e-07,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 9.24416299752906,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": -8.28695534111512,
+            "reference_error_mv": -8.210061463021834,
+            "switch_error_mv": -0.07689387809328707
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": -5.304746648335357,
+            "reference_error_mv": -5.22799076293845,
+            "switch_error_mv": -0.07675588539690636
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": -0.018075157067531933,
+            "reference_error_mv": -0.017143477686776265,
+            "switch_error_mv": -0.0009316793807556678
+          }
+        ],
+        "summed_reference_charge_pc": 1.061552028170469,
+        "equivalent_extra_endpoint_load_ff": 249.44236951204059
+      },
+      {
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": 1.6306940320215606,
+            "reservoir_charge_change_pc": -0.0010665471770199275,
+            "net_charge_to_switch_network_pc": 1.6317605791985805
+          },
+          "low": {
+            "source_charge_pc": 0.0672800457853079,
+            "reservoir_charge_change_pc": -1.310059838388611e-07,
+            "net_charge_to_switch_network_pc": 0.06728017679129174
+          }
+        },
+        "transition": "low_to_high",
+        "maximum_low_reference_rise_mv": 5.772250455393646e-07,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 15.222976447255121,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": -14.749460647008217,
+            "reference_error_mv": -14.573833157653482,
+            "switch_error_mv": -0.17562748935473493
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": -11.737464134917275,
+            "reference_error_mv": -11.603196736543087,
+            "switch_error_mv": -0.13426739837418822
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": -1.3508817988614474,
+            "reference_error_mv": -1.2321022435597406,
+            "switch_error_mv": -0.11877955530170681
+          }
+        ],
+        "summed_reference_charge_pc": 1.6990407559898724,
+        "equivalent_extra_endpoint_load_ff": 249.43573881757197
+      },
+      {
+        "gate_edge_ns": 1.0,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": 0.9684053426985638,
+            "reservoir_charge_change_pc": -2.081592493929918e-05,
+            "net_charge_to_switch_network_pc": 0.968426158623503
+          },
+          "low": {
+            "source_charge_pc": 0.09312553624409749,
+            "reservoir_charge_change_pc": -1.4842691520300377e-07,
+            "net_charge_to_switch_network_pc": 0.09312568467101269
+          }
+        },
+        "transition": "low_to_high",
+        "maximum_low_reference_rise_mv": 5.772248234947597e-07,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 8.819694080139051,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": -7.624865128152525,
+            "reference_error_mv": -7.548006294552323,
+            "switch_error_mv": -0.07685883360020185
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": -4.64266258910051,
+            "reference_error_mv": -4.56593594422694,
+            "switch_error_mv": -0.0767266448735704
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": -0.011630574787258041,
+            "reference_error_mv": -0.011027303771893315,
+            "switch_error_mv": -0.0006032710153647258
+          }
+        ],
+        "summed_reference_charge_pc": 1.0615518432945157,
+        "equivalent_extra_endpoint_load_ff": 249.4422607614798
+      },
+      {
+        "gate_edge_ns": 1.0,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": 1.609992259161801,
+            "reservoir_charge_change_pc": -0.0014898395183760016,
+            "net_charge_to_switch_network_pc": 1.611482098680177
+          },
+          "low": {
+            "source_charge_pc": 0.08755387071041702,
+            "reservoir_charge_change_pc": -1.4622278943221545e-07,
+            "net_charge_to_switch_network_pc": 0.08755401693320644
+          }
+        },
+        "transition": "low_to_high",
+        "maximum_low_reference_rise_mv": 5.772250455393646e-07,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 14.772391665163198,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": -14.028891840578872,
+            "reference_error_mv": -13.887563260985836,
+            "switch_error_mv": -0.14132857959303635
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": -11.050839232081167,
+            "reference_error_mv": -10.916625881134845,
+            "switch_error_mv": -0.1342133509463217
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": -0.855891598498193,
+            "reference_error_mv": -0.7798841402619772,
+            "switch_error_mv": -0.0760074582362158
+          }
+        ],
+        "summed_reference_charge_pc": 1.6990361156133835,
+        "equivalent_extra_endpoint_load_ff": 249.4330091843433
+      },
+      {
+        "gate_edge_ns": 0.05,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.10676200594150148,
+            "reservoir_charge_change_pc": 1.4226224642754917e-07,
+            "net_charge_to_switch_network_pc": -0.10676214820374791
+          },
+          "low": {
+            "source_charge_pc": -0.9547790007014317,
+            "reservoir_charge_change_pc": 1.0790250182246552e-05,
+            "net_charge_to_switch_network_pc": -0.954789790951614
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 9.158427933877222,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 5.759419607898053e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 8.031384803017016,
+            "reference_error_mv": 7.9887477523733486,
+            "switch_error_mv": 0.04263705064366796
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 5.047026033066171,
+            "reference_error_mv": 5.004440581057645,
+            "switch_error_mv": 0.04258545200852559
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 0.015119007760411307,
+            "reference_error_mv": 0.014684443257806379,
+            "switch_error_mv": 0.0004345645026049283
+          }
+        ],
+        "summed_reference_charge_pc": -1.0615519391553618,
+        "equivalent_extra_endpoint_load_ff": 249.4423171502128
+      },
+      {
+        "gate_edge_ns": 0.05,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.1030258785716366,
+            "reservoir_charge_change_pc": 1.4109056145628074e-07,
+            "net_charge_to_switch_network_pc": -0.10302601966219804
+          },
+          "low": {
+            "source_charge_pc": -1.5952552668229845,
+            "reservoir_charge_change_pc": 0.000763544679083239,
+            "net_charge_to_switch_network_pc": -1.5960188115020677
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 15.222924357142675,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 5.759419607898053e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 14.390232582619177,
+            "reference_error_mv": 14.313825403278857,
+            "switch_error_mv": 0.07640717934032093
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 11.41690317374955,
+            "reference_error_mv": 11.340608370226658,
+            "switch_error_mv": 0.07629480352289164
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 1.083808964762012,
+            "reference_error_mv": 1.0289471797061411,
+            "switch_error_mv": 0.054861785055870804
+          }
+        ],
+        "summed_reference_charge_pc": -1.6990448311642656,
+        "equivalent_extra_endpoint_load_ff": 249.4381359789798
+      },
+      {
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.12399876654142708,
+            "reservoir_charge_change_pc": 1.4961081262754305e-07,
+            "net_charge_to_switch_network_pc": -0.1239989161522397
+          },
+          "low": {
+            "source_charge_pc": -0.937542265213224,
+            "reservoir_charge_change_pc": 1.0545279105489413e-05,
+            "net_charge_to_switch_network_pc": -0.9375528104923294
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 8.953702672830467,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 5.759419607898053e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 7.772746488524107,
+            "reference_error_mv": 7.730113917652326,
+            "switch_error_mv": 0.042632570871781184
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 4.788387810284234,
+            "reference_error_mv": 4.7458068205581405,
+            "switch_error_mv": 0.042580989726093144
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 0.012725955247927523,
+            "reference_error_mv": 0.012359163536923568,
+            "switch_error_mv": 0.00036679171100395536
+          }
+        ],
+        "summed_reference_charge_pc": -1.061551726644569,
+        "equivalent_extra_endpoint_load_ff": 249.44219214386422
+      },
+      {
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.11421845890197327,
+            "reservoir_charge_change_pc": 1.464264265393922e-07,
+            "net_charge_to_switch_network_pc": -0.1142186053283998
+          },
+          "low": {
+            "source_charge_pc": -1.5840492460034261,
+            "reservoir_charge_change_pc": 0.0007766635551464951,
+            "net_charge_to_switch_network_pc": -1.5848259095585724
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 15.078444411210533,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 5.759419607898053e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 14.192812200182757,
+            "reference_error_mv": 14.116420865628033,
+            "switch_error_mv": 0.07639133455472624
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 11.219492423517941,
+            "reference_error_mv": 11.143203806669334,
+            "switch_error_mv": 0.07628861684860766
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 0.9502068028385269,
+            "reference_error_mv": 0.9021083254240336,
+            "switch_error_mv": 0.048098477414493246
+          }
+        ],
+        "summed_reference_charge_pc": -1.6990445148869722,
+        "equivalent_extra_endpoint_load_ff": 249.4379499335131
+      },
+      {
+        "gate_edge_ns": 1.0,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.15322872491144926,
+            "reservoir_charge_change_pc": 1.740751098822102e-07,
+            "net_charge_to_switch_network_pc": -0.15322889898655914
+          },
+          "low": {
+            "source_charge_pc": -0.9083091374072515,
+            "reservoir_charge_change_pc": 1.3369356999248795e-05,
+            "net_charge_to_switch_network_pc": -0.9083225067642507
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 8.350309114002584,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 5.759419607898053e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 6.938302161908605,
+            "reference_error_mv": 6.895684033748961,
+            "switch_error_mv": 0.04261812815964383
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 3.9539437796120014,
+            "reference_error_mv": 3.9113771762621097,
+            "switch_error_mv": 0.04256660334989171
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 0.007299819533734819,
+            "reference_error_mv": 0.007086698981861872,
+            "switch_error_mv": 0.00021312055187294732
+          }
+        ],
+        "summed_reference_charge_pc": -1.06155140575081,
+        "equivalent_extra_endpoint_load_ff": 249.4420033828294
+      },
+      {
+        "gate_edge_ns": 1.0,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.14248549178139233,
+            "reservoir_charge_change_pc": 1.6993677576238045e-07,
+            "net_charge_to_switch_network_pc": -0.14248566171816812
+          },
+          "low": {
+            "source_charge_pc": -1.5555646462381671,
+            "reservoir_charge_change_pc": 0.0009917366501244196,
+            "net_charge_to_switch_network_pc": -1.5565563828882916
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 14.542592049172299,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 5.759419607898053e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 13.370372068114978,
+            "reference_error_mv": 13.294015751077914,
+            "switch_error_mv": 0.07635631703706292
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 10.39706170634014,
+            "reference_error_mv": 10.320798846680802,
+            "switch_error_mv": 0.07626285965933732
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 0.5493031811230065,
+            "reference_error_mv": 0.5215002350900111,
+            "switch_error_mv": 0.02780294603299538
+          }
+        ],
+        "summed_reference_charge_pc": -1.6990420446064598,
+        "equivalent_extra_endpoint_load_ff": 249.43649682732928
+      }
+    ],
+    "timestep_checks": [
+      {
+        "transition": "rising",
+        "gate_edge_ns": 0.05,
+        "maximum_charge_refinement_difference_pc": 4.0407821777499464e-07,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 3.518074720432196e-06,
+        "maximum_droop_difference_mv": 1.599904608795555e-05
+      },
+      {
+        "transition": "rising",
+        "gate_edge_ns": 0.05,
+        "maximum_charge_refinement_difference_pc": 8.234127235606792e-07,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 0.0011825507315599282,
+        "maximum_droop_difference_mv": 0.0006715350742148019
+      },
+      {
+        "transition": "rising",
+        "gate_edge_ns": 0.2,
+        "maximum_charge_refinement_difference_pc": 1.8501651095154115e-05,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 9.344820872669857e-05,
+        "maximum_droop_difference_mv": 9.320867100370833e-05
+      },
+      {
+        "transition": "rising",
+        "gate_edge_ns": 0.2,
+        "maximum_charge_refinement_difference_pc": 2.7692083933050782e-05,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 0.0006316791352212192,
+        "maximum_droop_difference_mv": 0.0007931183807485809
+      },
+      {
+        "transition": "rising",
+        "gate_edge_ns": 1.0,
+        "maximum_charge_refinement_difference_pc": 5.726351039680999e-06,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 0.00013915490848503964,
+        "maximum_droop_difference_mv": 0.000179231714803052
+      },
+      {
+        "transition": "rising",
+        "gate_edge_ns": 1.0,
+        "maximum_charge_refinement_difference_pc": 4.0350117636034355e-06,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 0.0002007401076475901,
+        "maximum_droop_difference_mv": 0.0006642947107948771
+      },
+      {
+        "transition": "falling",
+        "gate_edge_ns": 0.05,
+        "maximum_charge_refinement_difference_pc": 3.40999316283952e-08,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 9.673566392365274e-07,
+        "maximum_droop_difference_mv": 5.4422210080673494e-06
+      },
+      {
+        "transition": "falling",
+        "gate_edge_ns": 0.05,
+        "maximum_charge_refinement_difference_pc": 6.157989451693879e-09,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 6.883576031402328e-05,
+        "maximum_droop_difference_mv": 0.00020217991914073252
+      },
+      {
+        "transition": "falling",
+        "gate_edge_ns": 0.2,
+        "maximum_charge_refinement_difference_pc": 4.8726040138780125e-05,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 0.0005829037915683344,
+        "maximum_droop_difference_mv": 0.0006007406337928956
+      },
+      {
+        "transition": "falling",
+        "gate_edge_ns": 0.2,
+        "maximum_charge_refinement_difference_pc": 6.859900172262456e-05,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 0.0008513706691850587,
+        "maximum_droop_difference_mv": 0.0005806675419393059
+      },
+      {
+        "transition": "falling",
+        "gate_edge_ns": 1.0,
+        "maximum_charge_refinement_difference_pc": 1.6925205998552517e-05,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 0.0003611487450205786,
+        "maximum_droop_difference_mv": 0.0003566832497128303
+      },
+      {
+        "transition": "falling",
+        "gate_edge_ns": 1.0,
+        "maximum_charge_refinement_difference_pc": 1.6920981482648756e-05,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 0.0001214923464054607,
+        "maximum_droop_difference_mv": 0.00012065685106499302
+      }
+    ],
+    "interpretation": [
+      "Integrated reference charge subtracts reservoir storage from source current integral over 5-20ns; positive charge goes from reference into switch network.",
+      "Sum across BOTH references corresponds to about249fF extra equivalent endpoint load for all twelve100pF scenarios. Gate and body-source charges are not separately measured; this is not a physical capacitor extraction.",
+      "Gate edge changes charge partition and peaks despite almost unchanged summed charge. Peak-equivalent capacitance and endpoint-equivalent load are different diagnostics.",
+      "Recovered PDK transistor circuit only; these values do not measure fabricated silicon or uniquely explain ENOB."
+    ],
+    "script_sha256": "0750856472b6a824d954e407c8ebafe3f3c8539017553ac27f54e100a605e8c3"
+  },
+  "terminal_charge_interpretation": {
+    "interval_ns": [
+      5,
+      20
+    ],
+    "sign_convention": "Positive charge delivered from named source into network; references corrected for reservoir storage.",
+    "result": "For100pF and0.2ns edges, additional net reference charge about0.424pC is balanced by about0.371pC gate charge and0.053pC combined body charge, reversing sign between transitions.",
+    "gate_fraction_approx": 0.875,
+    "maximum_charge_balance_residual_pc": 3.66460362388743e-05,
+    "limitations": [
+      "Terminal charge does not separately identify intrinsic channel charge, gate overlap and junction contributions.",
+      "The249fF endpoint equivalent is not an output-to-ground capacitor; gate and reference voltages change together in this experiment.",
+      "Nominal PDK circuit simulation, not measured silicon. No full SAR spectral inference."
+    ]
+  },
+  "span_sensitivity": {
+    "cases": [
+      {
+        "reference_span_v": 0.5,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": -0.2904916484648328,
+          "pmos_body": 0.033988111016190994,
+          "nmos_body": 0.006061843871679477,
+          "bias": -3.6615235022695217e-09,
+          "ground_capacitor_charge_change_pc": 0.18749999434893605,
+          "charge_balance_residual_pc": 9.437868291883866e-07
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": 0.39282698208988764,
+            "reservoir_charge_change_pc": -3.294811534715336e-07,
+            "net_charge_to_switch_network_pc": 0.3928273115710411
+          },
+          "low": {
+            "source_charge_pc": 0.04511527709574978,
+            "reservoir_charge_change_pc": -4.670746012180871e-08,
+            "net_charge_to_switch_network_pc": 0.0451153238032099
+          }
+        },
+        "transition": "low_to_high",
+        "maximum_low_reference_rise_mv": -5.75770986444013e-07,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 3.3070415440989986,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": -2.501766810524275,
+            "reference_error_mv": -2.3725866554296093,
+            "switch_error_mv": -0.12918015509466585
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": -0.4009494455465834,
+            "reference_error_mv": -0.3677256127567752,
+            "switch_error_mv": -0.03322383278980823
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": -0.0003869836482373046,
+            "reference_error_mv": -0.0003499410730078978,
+            "switch_error_mv": -3.704257522940679e-05
+          }
+        ]
+      },
+      {
+        "reference_span_v": 0.5,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": -0.2904881858391558,
+          "pmos_body": 0.03398886070191132,
+          "nmos_body": 0.0060609117521020816,
+          "bias": -0.0,
+          "common_clamp": -0.3750024748754387,
+          "ground_capacitor_charge_change_pc": 0.0,
+          "charge_balance_residual_pc": 1.7279453363716613e-06
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": 0.5838267905679675,
+            "reservoir_charge_change_pc": -1.1416574130507229e-06,
+            "net_charge_to_switch_network_pc": 0.5838279322253805
+          },
+          "low": {
+            "source_charge_pc": 0.04161463838591997,
+            "reservoir_charge_change_pc": -4.5594616970845436e-08,
+            "net_charge_to_switch_network_pc": 0.04161468398053694
+          }
+        },
+        "transition": "low_to_high",
+        "maximum_low_reference_rise_mv": -5.75770986444013e-07,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 4.777432202413001,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": -5.274637161807538,
+            "reference_error_mv": -4.247429795824154,
+            "switch_error_mv": -1.0272073659833847
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": -1.5051588867351917,
+            "reference_error_mv": -1.2982813072242028,
+            "switch_error_mv": -0.20687757951098895
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": -0.0014998932860166292,
+            "reference_error_mv": -0.001278235042923015,
+            "switch_error_mv": -0.00022165824309361426
+          }
+        ]
+      },
+      {
+        "reference_span_v": 1.0,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": -0.3240057680977326,
+          "pmos_body": 0.009121747509167256,
+          "nmos_body": -0.007333472862421167,
+          "bias": -7.348860727975735e-09,
+          "ground_capacitor_charge_change_pc": 0.3749999854836529,
+          "charge_balance_residual_pc": 3.134321861003597e-05
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": 0.640419634879183,
+            "reservoir_charge_change_pc": -1.5707530831576832e-06,
+            "net_charge_to_switch_network_pc": 0.6404212056322661
+          },
+          "low": {
+            "source_charge_pc": 0.05682754131139516,
+            "reservoir_charge_change_pc": -8.255844896609688e-08,
+            "net_charge_to_switch_network_pc": 0.05682762386984412
+          }
+        },
+        "transition": "low_to_high",
+        "maximum_low_reference_rise_mv": -9.564593561606216e-08,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 5.779588955077131,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": -4.906683678544077,
+            "reference_error_mv": -4.808664177806232,
+            "switch_error_mv": -0.09801950073784482
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": -1.9239191338651374,
+            "reference_error_mv": -1.8264218878241145,
+            "switch_error_mv": -0.09749724604102283
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": -0.0019078078818957067,
+            "reference_error_mv": -0.0017762835033963142,
+            "switch_error_mv": -0.00013152437849939247
+          }
+        ]
+      },
+      {
+        "reference_span_v": 1.0,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": -0.32402828695903363,
+          "pmos_body": 0.00912470518959285,
+          "nmos_body": -0.007330460630773749,
+          "bias": -0.0,
+          "common_clamp": -0.7500083314959459,
+          "ground_capacitor_charge_change_pc": 0.0,
+          "charge_balance_residual_pc": 6.235356577066753e-06
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": 1.0208920640169283,
+            "reservoir_charge_change_pc": -1.948141883367782e-05,
+            "net_charge_to_switch_network_pc": 1.020911545435762
+          },
+          "low": {
+            "source_charge_pc": 0.05133698301794132,
+            "reservoir_charge_change_pc": -8.07990341300524e-08,
+            "net_charge_to_switch_network_pc": 0.05133706381697545
+          }
+        },
+        "transition": "low_to_high",
+        "maximum_low_reference_rise_mv": -9.564682379448186e-08,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 9.11716972080212,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": -8.98498376001422,
+            "reference_error_mv": -8.555732470328259,
+            "switch_error_mv": -0.42925128968596127
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": -5.757662496583826,
+            "reference_error_mv": -5.586828492198936,
+            "switch_error_mv": -0.17083400438488994
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": -0.025278533314576634,
+            "reference_error_mv": -0.022411867383276274,
+            "switch_error_mv": -0.0028666659313003606
+          }
+        ]
+      },
+      {
+        "reference_span_v": 2.3,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": -0.4113191931934159,
+          "pmos_body": -0.058197584094578605,
+          "nmos_body": -0.04331424388898815,
+          "bias": -1.6961355963369703e-08,
+          "ground_capacitor_charge_change_pc": 0.8624995854781012,
+          "charge_balance_residual_pc": 3.308144081171083e-05
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": 1.2818813424411,
+            "reservoir_charge_change_pc": -0.00010145942859196566,
+            "net_charge_to_switch_network_pc": 1.281982801869692
+          },
+          "low": {
+            "source_charge_pc": 0.09338072468989864,
+            "reservoir_charge_change_pc": -1.7849766109634402e-07,
+            "net_charge_to_switch_network_pc": 0.09338090318755973
+          }
+        },
+        "transition": "low_to_high",
+        "maximum_low_reference_rise_mv": 1.1569960545187996e-06,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 12.205061181260746,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": -11.188241408687905,
+            "reference_error_mv": -11.122119799353847,
+            "switch_error_mv": -0.06612160933405775
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": -8.20627901848825,
+            "reference_error_mv": -8.140245707555227,
+            "switch_error_mv": -0.06603331093302245
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": -0.12494309069799314,
+            "reference_error_mv": -0.11945601464091737,
+            "switch_error_mv": -0.005487076057075768
+          }
+        ]
+      },
+      {
+        "reference_span_v": 2.3,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": -0.4112943833203513,
+          "pmos_body": -0.05815515031337937,
+          "nmos_body": -0.04330536322882697,
+          "bias": -0.0,
+          "common_clamp": -1.724747122328948,
+          "ground_capacitor_charge_change_pc": 0.0,
+          "charge_balance_residual_pc": 1.44975843623385e-05
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": 2.121417981111472,
+            "reservoir_charge_change_pc": -0.03292362559981221,
+            "net_charge_to_switch_network_pc": 2.1543416067112844
+          },
+          "low": {
+            "source_charge_pc": 0.08317473489074681,
+            "reservoir_charge_change_pc": -1.751738365474154e-07,
+            "net_charge_to_switch_network_pc": 0.08317491006458336
+          }
+        },
+        "transition": "low_to_high",
+        "maximum_low_reference_rise_mv": 1.1570047142583917e-06,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 20.44298538518774,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": -19.84579782644813,
+            "reference_error_mv": -19.722209669020163,
+            "switch_error_mv": -0.12358815742796736
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": -16.866710017139575,
+            "reference_error_mv": -16.751475517163605,
+            "switch_error_mv": -0.11523449997596913
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": -6.4683576654922526,
+            "reference_error_mv": -6.35367043546875,
+            "switch_error_mv": -0.11468723002350245
+          }
+        ]
+      },
+      {
+        "reference_span_v": 0.5,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.2904879641531197,
+          "pmos_body": -0.033998807714495816,
+          "nmos_body": -0.006061066409225579,
+          "bias": 3.6772907060887247e-09,
+          "ground_capacitor_charge_change_pc": -0.18749999462333755,
+          "charge_balance_residual_pc": -1.2204721042463618e-05
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.07570158112990502,
+            "reservoir_charge_change_pc": 5.6768856282474196e-08,
+            "net_charge_to_switch_network_pc": -0.07570163789876129
+          },
+          "low": {
+            "source_charge_pc": -0.36223838326819263,
+            "reservoir_charge_change_pc": 2.7188411522161005e-07,
+            "net_charge_to_switch_network_pc": -0.3622386551523078
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 3.2658382993031587,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": -5.761959798178395e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 2.1283660547777306,
+            "reference_error_mv": 2.0689059673131283,
+            "switch_error_mv": 0.059460087464602296
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 0.31217374660408304,
+            "reference_error_mv": 0.2998191305156883,
+            "switch_error_mv": 0.012354616088394721
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 0.00029771524157062856,
+            "reference_error_mv": 0.0002833099201904332,
+            "switch_error_mv": 1.4405321380195346e-05
+          }
+        ]
+      },
+      {
+        "reference_span_v": 0.5,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.290480530496162,
+          "pmos_body": -0.033995677975496366,
+          "nmos_body": -0.006061486819630987,
+          "bias": -0.0,
+          "common_clamp": 0.37500905610546725,
+          "ground_capacitor_charge_change_pc": 0.0,
+          "charge_balance_residual_pc": -1.0209130633764829e-05
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.07322231784717828,
+            "reservoir_charge_change_pc": 5.597604602058937e-08,
+            "net_charge_to_switch_network_pc": -0.0732223738232243
+          },
+          "low": {
+            "source_charge_pc": -0.5522193400037682,
+            "reservoir_charge_change_pc": 9.171101433835815e-07,
+            "net_charge_to_switch_network_pc": -0.5522202571139114
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 4.895059161223125,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": -5.761959798178395e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 4.0510103094715255,
+            "reference_error_mv": 3.943923539045935,
+            "switch_error_mv": 0.10708677042559067
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 1.1344038027776282,
+            "reference_error_mv": 1.0541297423283247,
+            "switch_error_mv": 0.08027406044930352
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 0.0011077909827239552,
+            "reference_error_mv": 0.0010268785632927546,
+            "switch_error_mv": 8.091241943120053e-05
+          }
+        ]
+      },
+      {
+        "reference_span_v": 1.0,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.32404221653443016,
+          "pmos_body": -0.009148518252900657,
+          "nmos_body": 0.007333467141181978,
+          "bias": 7.3715877739455196e-09,
+          "ground_capacitor_charge_change_pc": -0.3749999869924508,
+          "charge_balance_residual_pc": -2.1683085579315975e-05
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.09380959253287086,
+            "reservoir_charge_change_pc": 9.471725626042372e-08,
+            "net_charge_to_switch_network_pc": -0.09380968725012712
+          },
+          "low": {
+            "source_charge_pc": -0.6034379250825542,
+            "reservoir_charge_change_pc": 1.2305396479561639e-06,
+            "net_charge_to_switch_network_pc": -0.6034391556222022
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 5.64432393854819,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": -9.6135099880712e-08,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 4.493010740288517,
+            "reference_error_mv": 4.442612736040186,
+            "switch_error_mv": 0.05039800424833096
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 1.5086842606559792,
+            "reference_error_mv": 1.4588265097263964,
+            "switch_error_mv": 0.04985775092958278
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 0.0014334964999473954,
+            "reference_error_mv": 0.001381036015324355,
+            "switch_error_mv": 5.2460484623040315e-05
+          }
+        ]
+      },
+      {
+        "reference_span_v": 1.0,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.3240459480850415,
+          "pmos_body": -0.009150485185474368,
+          "nmos_body": 0.007332833511529388,
+          "bias": -0.0,
+          "common_clamp": 0.7500100049023781,
+          "ground_capacitor_charge_change_pc": 0.0,
+          "charge_balance_residual_pc": -1.0388219005896815e-05
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.0887421280678345,
+            "reservoir_charge_change_pc": 9.308460668933094e-08,
+            "net_charge_to_switch_network_pc": -0.0887422211524412
+          },
+          "low": {
+            "source_charge_pc": -0.9834914125426847,
+            "reservoir_charge_change_pc": 1.5055837354616129e-05,
+            "net_charge_to_switch_network_pc": -0.9835064683800393
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 9.133759552927057,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": -9.6135099880712e-08,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 8.28256121231119,
+            "reference_error_mv": 8.192128532253484,
+            "switch_error_mv": 0.090432680057706
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 5.309007382969799,
+            "reference_error_mv": 5.2188314202308295,
+            "switch_error_mv": 0.09017596273896977
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 0.018524316915513594,
+            "reference_error_mv": 0.017410618586399806,
+            "switch_error_mv": 0.001113698329113788
+          }
+        ]
+      },
+      {
+        "reference_span_v": 2.3,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.41140997263921797,
+          "pmos_body": 0.0581487541416352,
+          "nmos_body": 0.043289499418971804,
+          "bias": 1.699440620127565e-08,
+          "ground_capacitor_charge_change_pc": -0.8624997177983984,
+          "charge_balance_residual_pc": 7.5149225806647735e-06
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.15016368636060037,
+            "reservoir_charge_change_pc": 1.968892160419955e-07,
+            "net_charge_to_switch_network_pc": -0.15016388324981642
+          },
+          "low": {
+            "source_charge_pc": -1.2251075474943893,
+            "reservoir_charge_change_pc": 6.901532584313586e-05,
+            "net_charge_to_switch_network_pc": -1.2251765628202325
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 11.805332652452428,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 1.1519709630647412e-06,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 10.59864329504867,
+            "reference_error_mv": 10.560315446522583,
+            "switch_error_mv": 0.038327848526087394
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 7.614402018282784,
+            "reference_error_mv": 7.576110236917732,
+            "switch_error_mv": 0.03829178136505185
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 0.08368601024277833,
+            "reference_error_mv": 0.08154794331272086,
+            "switch_error_mv": 0.0021380669300574695
+          }
+        ]
+      },
+      {
+        "reference_span_v": 2.3,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.4113387632029244,
+          "pmos_body": 0.05816215050332751,
+          "nmos_body": 0.0432766751872814,
+          "bias": -0.0,
+          "common_clamp": 1.724833491190969,
+          "ground_capacitor_charge_change_pc": 0.0,
+          "charge_balance_residual_pc": -1.4663684325899595e-05
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.1378997376389161,
+            "reservoir_charge_change_pc": 1.9289290165147577e-07,
+            "net_charge_to_switch_network_pc": -0.13789993053181776
+          },
+          "low": {
+            "source_charge_pc": -2.076888752188924,
+            "reservoir_charge_change_pc": 0.022837061048086586,
+            "net_charge_to_switch_network_pc": -2.0997258132370105
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 20.17605785141452,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 1.1519709630647412e-06,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 19.258587530672997,
+            "reference_error_mv": 19.18999217859141,
+            "switch_error_mv": 0.06859535208159073
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 16.285402531912684,
+            "reference_error_mv": 16.216874359216483,
+            "switch_error_mv": 0.06852817269620282
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 5.879270833517358,
+            "reference_error_mv": 5.810971371880247,
+            "switch_error_mv": 0.06829946163711131
+          }
+        ]
+      }
+    ],
+    "timestep_checks": [
+      {
+        "transition": "rising",
+        "span_v": 0.5,
+        "maximum_reference_charge_difference_pc": 1.1895920278004457e-07,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 0.00019525750460935853,
+        "maximum_droop_difference_mv": 0.0003249376978597951
+      },
+      {
+        "transition": "rising",
+        "span_v": 0.5,
+        "maximum_reference_charge_difference_pc": 8.731423022101392e-08,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 0.0019530750086094173,
+        "maximum_droop_difference_mv": 0.0005424446529733729
+      },
+      {
+        "transition": "rising",
+        "span_v": 1,
+        "maximum_reference_charge_difference_pc": 3.2426198980153864e-06,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 5.547935399974335e-05,
+        "maximum_droop_difference_mv": 5.562529636904401e-05
+      },
+      {
+        "transition": "rising",
+        "span_v": 1,
+        "maximum_reference_charge_difference_pc": 1.0949597610374062e-05,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 0.0023256417587269596,
+        "maximum_droop_difference_mv": 0.0005091511079413635
+      },
+      {
+        "transition": "rising",
+        "span_v": 2.3,
+        "maximum_reference_charge_difference_pc": 1.0810754311751936e-06,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 1.260336279784724e-05,
+        "maximum_droop_difference_mv": 4.608014858575871e-06
+      },
+      {
+        "transition": "rising",
+        "span_v": 2.3,
+        "maximum_reference_charge_difference_pc": 1.562357678341897e-05,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 0.00013094995221507588,
+        "maximum_droop_difference_mv": 0.0004781817128929333
+      },
+      {
+        "transition": "falling",
+        "span_v": 0.5,
+        "maximum_reference_charge_difference_pc": 8.649728671095147e-07,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 1.071084154702362e-05,
+        "maximum_droop_difference_mv": 3.5270286025124165e-05
+      },
+      {
+        "transition": "falling",
+        "span_v": 0.5,
+        "maximum_reference_charge_difference_pc": 3.265530239549008e-07,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 7.491910558599102e-05,
+        "maximum_droop_difference_mv": 4.574836287574158e-05
+      },
+      {
+        "transition": "falling",
+        "span_v": 1,
+        "maximum_reference_charge_difference_pc": 1.343179581669851e-06,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 0.00023686104344555758,
+        "maximum_droop_difference_mv": 0.00021934042204740933
+      },
+      {
+        "transition": "falling",
+        "span_v": 1,
+        "maximum_reference_charge_difference_pc": 1.2745142962192202e-05,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 0.00025254422086895545,
+        "maximum_droop_difference_mv": 0.0006741735520954251
+      },
+      {
+        "transition": "falling",
+        "span_v": 2.3,
+        "maximum_reference_charge_difference_pc": 2.052838285812597e-05,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 0.00017161681709154664,
+        "maximum_droop_difference_mv": 0.0001537382976479762
+      },
+      {
+        "transition": "falling",
+        "span_v": 2.3,
+        "maximum_reference_charge_difference_pc": 4.086803004454964e-05,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 0.0004155845654274515,
+        "maximum_droop_difference_mv": 0.0002219733080686126
+      }
+    ],
+    "analysis_script_sha256": {
+      "rising_0.5": "a5d065e3ef3e687742727315e17f7728e77f22c8e58ebb5004f678dceef782a5",
+      "rising_1": "a5d065e3ef3e687742727315e17f7728e77f22c8e58ebb5004f678dceef782a5",
+      "rising_2.3": "a5d065e3ef3e687742727315e17f7728e77f22c8e58ebb5004f678dceef782a5",
+      "falling_0.5": "a5d065e3ef3e687742727315e17f7728e77f22c8e58ebb5004f678dceef782a5",
+      "falling_1": "a5d065e3ef3e687742727315e17f7728e77f22c8e58ebb5004f678dceef782a5",
+      "falling_2.3": "a5d065e3ef3e687742727315e17f7728e77f22c8e58ebb5004f678dceef782a5"
+    },
+    "assumptions": [
+      "Reference midpoint fixed1.65V, VDD3.3V and gate0-3.3V. Edge0.2ns, nominal PDK25C; reservoirs100pF,10ohm feedback,150uA limit.",
+      "Charge evaluated over5-20ns; not proof of fully settled endpoint at every span. Gate/body terminal integrals separate actual remaining-array charge from the switch-network terminal charge.",
+      "Nominal1.7V span comparison resides in the main rising/falling cases. No process or measurement calibration."
+    ]
+  },
+  "small_bit_replay": {
+    "cases": [
+      {
+        "bit_label": "B5",
+        "switched_capacitance_pf": 0.010381900000000001,
+        "remaining_capacitance_pf": 0.65532444,
+        "reference_span_v": 1.7,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": -0.09277268622469839,
+          "pmos_body": -0.0066275527705576395,
+          "nmos_body": -0.006610494297866374,
+          "bias": -3.9250827039382924e-10,
+          "ground_capacitor_charge_change_pc": 0.017373984126552288,
+          "charge_balance_residual_pc": 2.300194509769621e-06
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": 0.10026954861783885,
+            "reservoir_charge_change_pc": -6.395355356403343e-08,
+            "net_charge_to_switch_network_pc": 0.1002696125713924
+          },
+          "low": {
+            "source_charge_pc": 0.023117370671430767,
+            "reservoir_charge_change_pc": -3.476386956080546e-08,
+            "net_charge_to_switch_network_pc": 0.023117405435300328
+          }
+        },
+        "transition": "low_to_high",
+        "maximum_low_reference_rise_mv": 1.4430612260696307e-07,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 0.9160252542459446,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": -0.3647838811162707,
+            "reference_error_mv": -0.3585569701214375,
+            "switch_error_mv": -0.00622691099483319
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": -0.049444137269816224,
+            "reference_error_mv": -0.04859078808738815,
+            "switch_error_mv": -0.0008533491824280759
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": -5.658706214717313e-05,
+            "reference_error_mv": -4.466180225648486e-05,
+            "switch_error_mv": -1.1925259890688267e-05
+          }
+        ],
+        "extra_terminal_charge_magnitude_pc": 0.10601073329312241,
+        "ideal_plate_switching_charge_pc": 0.017373984700493013,
+        "extra_to_plate_charge_ratio": 6.101693717395423
+      },
+      {
+        "bit_label": "B5",
+        "switched_capacitance_pf": 0.010381900000000001,
+        "remaining_capacitance_pf": 0.65532444,
+        "reference_span_v": 1.7,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": -0.09277266171416497,
+          "pmos_body": -0.006627497177598094,
+          "nmos_body": -0.006610512929712292,
+          "bias": -0.0,
+          "common_clamp": -0.017649815963602933,
+          "ground_capacitor_charge_change_pc": 0.0,
+          "charge_balance_residual_pc": 1.7754700193106654e-06
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": 0.10055874935495426,
+            "reservoir_charge_change_pc": -6.406484232002185e-08,
+            "net_charge_to_switch_network_pc": 0.10055881341979658
+          },
+          "low": {
+            "source_charge_pc": 0.02310341507595007,
+            "reservoir_charge_change_pc": -3.4759350953095236e-08,
+            "net_charge_to_switch_network_pc": 0.023103449835301024
+          }
+        },
+        "transition": "low_to_high",
+        "maximum_low_reference_rise_mv": 1.4430612260696307e-07,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 0.9184980861798309,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": -0.3659085368097337,
+            "reference_error_mv": -0.35963820268447577,
+            "switch_error_mv": -0.006270334125257904
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": -0.049596712036859,
+            "reference_error_mv": -0.04873747712741405,
+            "switch_error_mv": -0.0008592349094449503
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": -5.672720559957156e-05,
+            "reference_error_mv": -4.479671433799126e-05,
+            "switch_error_mv": -1.19304912615803e-05
+          }
+        ],
+        "extra_terminal_charge_magnitude_pc": 0.10601067182147536,
+        "ideal_plate_switching_charge_pc": 0.017649230000000002,
+        "extra_to_plate_charge_ratio": 6.006532399514049
+      },
+      {
+        "bit_label": "B5",
+        "switched_capacitance_pf": 0.010381900000000001,
+        "remaining_capacitance_pf": 0.65532444,
+        "reference_span_v": 1.7,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.0927743887029151,
+          "pmos_body": 0.0066265876473932,
+          "nmos_body": 0.006609567742593544,
+          "bias": 3.9300550986625397e-10,
+          "ground_capacitor_charge_change_pc": -0.017373984126092035,
+          "charge_balance_residual_pc": -2.296548768446205e-06
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.03781720278765724,
+            "reservoir_charge_change_pc": 3.955098470953544e-08,
+            "net_charge_to_switch_network_pc": -0.03781724233864195
+          },
+          "low": {
+            "source_charge_pc": -0.08556952480512357,
+            "reservoir_charge_change_pc": 5.801700231344853e-08,
+            "net_charge_to_switch_network_pc": -0.08556958282212589
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 0.8023307180688999,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 1.4398304770679715e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 0.3036709016422945,
+            "reference_error_mv": 0.3011328348078157,
+            "switch_error_mv": 0.0025380668344787694
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 0.041142357725565404,
+            "reference_error_mv": 0.040792900444674984,
+            "switch_error_mv": 0.0003494572808904195
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 4.4344884098102e-05,
+            "reference_error_mv": 3.746684540395506e-05,
+            "switch_error_mv": 6.878038694146937e-06
+          }
+        ],
+        "extra_terminal_charge_magnitude_pc": 0.10601054409290184,
+        "ideal_plate_switching_charge_pc": 0.017373984700493013,
+        "extra_to_plate_charge_ratio": 6.1016828275377515
+      },
+      {
+        "bit_label": "B5",
+        "switched_capacitance_pf": 0.010381900000000001,
+        "remaining_capacitance_pf": 0.65532444,
+        "reference_span_v": 1.7,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.09277685921853236,
+          "pmos_body": 0.006625479813725505,
+          "nmos_body": 0.006609326901766393,
+          "bias": -0.0,
+          "common_clamp": 0.017649472309542384,
+          "ground_capacitor_charge_change_pc": 0.0,
+          "charge_balance_residual_pc": -9.326986815105798e-07
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.03779288940415495,
+            "reservoir_charge_change_pc": 3.954334637512602e-08,
+            "net_charge_to_switch_network_pc": -0.037792928947501324
+          },
+          "low": {
+            "source_charge_pc": -0.08586908386630032,
+            "reservoir_charge_change_pc": 5.81284465006604e-08,
+            "net_charge_to_switch_network_pc": -0.08586914199474682
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 0.8050746877014126,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 1.4398304770679715e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 0.3047785387483293,
+            "reference_error_mv": 0.30221935160512636,
+            "switch_error_mv": 0.0025591871432029123
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 0.04129253845963632,
+            "reference_error_mv": 0.04094021951828175,
+            "switch_error_mv": 0.000352318941354568
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 4.448261747835858e-05,
+            "reference_error_mv": 3.7602057356700413e-05,
+            "switch_error_mv": 6.8805601216581636e-06
+          }
+        ],
+        "extra_terminal_charge_magnitude_pc": 0.10601166593402427,
+        "ideal_plate_switching_charge_pc": 0.017649230000000002,
+        "extra_to_plate_charge_ratio": 6.0065887256284975
+      },
+      {
+        "bit_label": "B12",
+        "switched_capacitance_pf": 0.00011977600000000001,
+        "remaining_capacitance_pf": 0.665586564,
+        "reference_span_v": 1.7,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": -0.09276384727601279,
+          "pmos_body": -0.006633017216372473,
+          "nmos_body": -0.00661122261767427,
+          "bias": -4.531074663880238e-12,
+          "ground_capacitor_charge_change_pc": 0.00020358255720399334,
+          "charge_balance_residual_pc": 4.946418183943233e-06
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": 0.08209562474823712,
+            "reservoir_charge_change_pc": -5.6991300567688086e-08,
+            "net_charge_to_switch_network_pc": 0.08209568173953768
+          },
+          "low": {
+            "source_charge_pc": 0.024120899258822364,
+            "reservoir_charge_change_pc": -3.509161849990505e-08,
+            "net_charge_to_switch_network_pc": 0.024120934350440864
+          }
+        },
+        "transition": "low_to_high",
+        "maximum_low_reference_rise_mv": 1.4430612260696307e-07,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 0.7594567061159907,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": -0.29487078954026913,
+            "reference_error_mv": -0.291054806414337,
+            "switch_error_mv": -0.003815983125932121
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": -0.03996146342810647,
+            "reference_error_mv": -0.03943486708246624,
+            "switch_error_mv": -0.000526596345640229
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": -4.7872383390767936e-05,
+            "reference_error_mv": -3.624698718951436e-05,
+            "switch_error_mv": -1.162539620125358e-05
+          }
+        ],
+        "extra_terminal_charge_magnitude_pc": 0.10600808711005953,
+        "ideal_plate_switching_charge_pc": 0.00020358256418652826,
+        "extra_to_plate_charge_ratio": 520.7129968798893
+      },
+      {
+        "bit_label": "B12",
+        "switched_capacitance_pf": 0.00011977600000000001,
+        "remaining_capacitance_pf": 0.665586564,
+        "reference_span_v": 1.7,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": -0.09276384715869046,
+          "pmos_body": -0.006633017228855174,
+          "nmos_body": -0.006611222650183656,
+          "bias": -0.0,
+          "common_clamp": -0.00020364551787189626,
+          "ground_capacitor_charge_change_pc": 0.0,
+          "charge_balance_residual_pc": 4.920171451289201e-06
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": 0.08209566390594038,
+            "reservoir_charge_change_pc": -5.699050120711036e-08,
+            "net_charge_to_switch_network_pc": 0.08209572089644157
+          },
+          "low": {
+            "source_charge_pc": 0.02412089673914785,
+            "reservoir_charge_change_pc": -3.5091463068681605e-08,
+            "net_charge_to_switch_network_pc": 0.024120931830610915
+          }
+        },
+        "transition": "low_to_high",
+        "maximum_low_reference_rise_mv": 1.4430612260696307e-07,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 0.7594570731179751,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": -0.2948709386312309,
+            "reference_error_mv": -0.29105495097958567,
+            "switch_error_mv": -0.0038159876516452584
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": -0.03996148365681407,
+            "reference_error_mv": -0.039434886694778015,
+            "switch_error_mv": -0.0005265969620360522
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": -4.787240825976369e-05,
+            "reference_error_mv": -3.624701028215327e-05,
+            "switch_error_mv": -1.1625397977610419e-05
+          }
+        ],
+        "extra_terminal_charge_magnitude_pc": 0.10600808703772929,
+        "ideal_plate_switching_charge_pc": 0.00020361920000000003,
+        "extra_to_plate_charge_ratio": 520.6193081876821
+      },
+      {
+        "bit_label": "B12",
+        "switched_capacitance_pf": 0.00011977600000000001,
+        "remaining_capacitance_pf": 0.665586564,
+        "reference_span_v": 1.7,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.09277530306126376,
+          "pmos_body": 0.006624478062846301,
+          "nmos_body": 0.006610206185842946,
+          "bias": 4.536581491342729e-12,
+          "ground_capacitor_charge_change_pc": -0.00020358255771002598,
+          "charge_balance_residual_pc": -2.821080944916289e-06
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.03950080955933466,
+            "reservoir_charge_change_pc": 4.009588217002147e-08,
+            "net_charge_to_switch_network_pc": -0.03950084965521682
+          },
+          "low": {
+            "source_charge_pc": -0.0667154902651164,
+            "reservoir_charge_change_pc": 5.1032811310136594e-08,
+            "net_charge_to_switch_network_pc": -0.06671554129792771
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 0.6262632954012748,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "floating",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 1.4398304770679715e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 0.23453766155723255,
+            "reference_error_mv": 0.23314658231754493,
+            "switch_error_mv": 0.0013910792396876204
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 0.03177077967031483,
+            "reference_error_mv": 0.03157671587517008,
+            "switch_error_mv": 0.00019406379514474992
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 3.5749612603552805e-05,
+            "reference_error_mv": 2.9013968561031334e-05,
+            "switch_error_mv": 6.735644042521471e-06
+          }
+        ],
+        "extra_terminal_charge_magnitude_pc": 0.10600998730995301,
+        "ideal_plate_switching_charge_pc": 0.00020358256418652826,
+        "extra_to_plate_charge_ratio": 520.7223306845844
+      },
+      {
+        "bit_label": "B12",
+        "switched_capacitance_pf": 0.00011977600000000001,
+        "remaining_capacitance_pf": 0.665586564,
+        "reference_span_v": 1.7,
+        "terminal_charge_5_to_20ns_pc": {
+          "gate": 0.09277530184281575,
+          "pmos_body": 0.006624477679275144,
+          "nmos_body": 0.006610206321509916,
+          "bias": -0.0,
+          "common_clamp": 0.0002036308541452963,
+          "ground_capacitor_charge_change_pc": 0.0,
+          "charge_balance_residual_pc": -2.809627272795656e-06
+        },
+        "gate_edge_ns": 0.2,
+        "reference_charge_5_to_20ns": {
+          "high": {
+            "source_charge_pc": -0.039500804465637515,
+            "reservoir_charge_change_pc": 4.009534926296965e-08,
+            "net_charge_to_switch_network_pc": -0.03950084456098678
+          },
+          "low": {
+            "source_charge_pc": -0.06671553073133184,
+            "reservoir_charge_change_pc": 5.103270028783413e-08,
+            "net_charge_to_switch_network_pc": -0.06671558176403213
+          }
+        },
+        "transition": "high_to_low",
+        "maximum_low_reference_rise_mv": 0.6262636948879408,
+        "maximum_timestep_ns": 0.01,
+        "common_node": "clamped",
+        "reservoir_per_rail_pf": 100,
+        "ideal_reference": false,
+        "maximum_high_reference_droop_mv": 1.4398304770679715e-07,
+        "settling": [
+          {
+            "ns_after_gate_edge": 1,
+            "output_error_mv": 0.2345378091177519,
+            "reference_error_mv": 0.23314672778751433,
+            "switch_error_mv": 0.0013910813302375757
+          },
+          {
+            "ns_after_gate_edge": 3,
+            "output_error_mv": 0.03177079966776297,
+            "reference_error_mv": 0.03157673559051055,
+            "switch_error_mv": 0.00019406407725242047
+          },
+          {
+            "ns_after_gate_edge": 10,
+            "output_error_mv": 3.574963092223271e-05,
+            "reference_error_mv": 2.9013986102555123e-05,
+            "switch_error_mv": 6.735644819677589e-06
+          }
+        ],
+        "extra_terminal_charge_magnitude_pc": 0.10600998584360082,
+        "ideal_plate_switching_charge_pc": 0.00020361920000000003,
+        "extra_to_plate_charge_ratio": 520.628633466789
+      }
+    ],
+    "provenance": {
+      "rising_B5": {
+        "driver_cell": "lib_dac_sw",
+        "source_gds_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+        "raw_extraction_sha256": "7e68384d27918784370f16b1cdf07704ee655f000ace82f493918a551531cf6e",
+        "model_sha256": {
+          "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+          "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+        },
+        "cap_geometry_sha256": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+        "analysis_script_sha256": "7a688b9450fcf8e0dec480ecf4f724a948f37a731e986df98e5e7d67c492e3d0"
+      },
+      "falling_B5": {
+        "driver_cell": "lib_dac_sw",
+        "source_gds_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+        "raw_extraction_sha256": "7e68384d27918784370f16b1cdf07704ee655f000ace82f493918a551531cf6e",
+        "model_sha256": {
+          "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+          "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+        },
+        "cap_geometry_sha256": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+        "analysis_script_sha256": "7a688b9450fcf8e0dec480ecf4f724a948f37a731e986df98e5e7d67c492e3d0"
+      },
+      "rising_B12": {
+        "driver_cell": "lib_dac_sw",
+        "source_gds_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+        "raw_extraction_sha256": "7e68384d27918784370f16b1cdf07704ee655f000ace82f493918a551531cf6e",
+        "model_sha256": {
+          "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+          "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+        },
+        "cap_geometry_sha256": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+        "analysis_script_sha256": "7a688b9450fcf8e0dec480ecf4f724a948f37a731e986df98e5e7d67c492e3d0"
+      },
+      "falling_B12": {
+        "driver_cell": "lib_dac_sw",
+        "source_gds_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+        "raw_extraction_sha256": "7e68384d27918784370f16b1cdf07704ee655f000ace82f493918a551531cf6e",
+        "model_sha256": {
+          "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+          "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+        },
+        "cap_geometry_sha256": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+        "analysis_script_sha256": "7a688b9450fcf8e0dec480ecf4f724a948f37a731e986df98e5e7d67c492e3d0"
+      }
+    },
+    "timestep_checks": [
+      {
+        "bit_label": "B5",
+        "transition": "rising",
+        "maximum_reference_charge_difference_pc": 8.185976177466081e-08,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 2.6259225904823325e-06,
+        "maximum_droop_difference_mv": 2.2609829120057157e-05
+      },
+      {
+        "bit_label": "B5",
+        "transition": "rising",
+        "maximum_reference_charge_difference_pc": 1.4707781662015584e-07,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 5.443294703866286e-06,
+        "maximum_droop_difference_mv": 5.133911962218463e-06
+      },
+      {
+        "bit_label": "B5",
+        "transition": "falling",
+        "maximum_reference_charge_difference_pc": 4.329073033521036e-07,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 2.2106420027867557e-06,
+        "maximum_droop_difference_mv": 1.6736561136987405e-05
+      },
+      {
+        "bit_label": "B5",
+        "transition": "falling",
+        "maximum_reference_charge_difference_pc": 1.478721555134288e-07,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 7.954253367081776e-06,
+        "maximum_droop_difference_mv": 4.507680340104514e-06
+      },
+      {
+        "bit_label": "B12",
+        "transition": "rising",
+        "maximum_reference_charge_difference_pc": 5.528533509602251e-07,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 4.962261268559587e-06,
+        "maximum_droop_difference_mv": 1.6618230791465294e-05
+      },
+      {
+        "bit_label": "B12",
+        "transition": "rising",
+        "maximum_reference_charge_difference_pc": 5.528551128702874e-07,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 4.960552413280084e-06,
+        "maximum_droop_difference_mv": 1.6565881999497378e-05
+      },
+      {
+        "bit_label": "B12",
+        "transition": "falling",
+        "maximum_reference_charge_difference_pc": 1.719352133479346e-06,
+        "common_node": "floating",
+        "maximum_sampled_output_difference_mv": 8.911970161840088e-06,
+        "maximum_droop_difference_mv": 1.538104921205985e-05
+      },
+      {
+        "bit_label": "B12",
+        "transition": "falling",
+        "maximum_reference_charge_difference_pc": 1.7188989616806483e-06,
+        "common_node": "clamped",
+        "maximum_sampled_output_difference_mv": 8.912304116925895e-06,
+        "maximum_droop_difference_mv": 1.5370125727720563e-05
+      }
+    ],
+    "extraction_command": "preamp_extract.py submitted.gds lib_dac_sw --json --raw",
+    "interpretation": [
+      "Recovered small driver has16NMOS0.5um fingers and16PMOS1um fingers, L0.28um; total W8/16um. Body connections follow the separately traced parent.",
+      "B5 and B12 use actual area-only capacitor weights with remaining-array load. Missing fringe/full capacitance matrix makes ratios conditional.",
+      "Extra terminal charge about0.106pC agrees with quarter-sized MSB driver at this operating point; not evidence of universal geometry/PVT scaling.",
+      "Large overhead-to-plate ratio measures reference/control charge, not direct top-plate injection or ADC code error. Ideal references can absorb this activity without ratio distortion.",
+      "Supply/control edge, cumulative reference state and decision timing must be included before predicting measured ENOB."
+    ]
+  }
+}

@@ -169,7 +169,7 @@ def fixture(profile,variant='',seed=81):
     raise ValueError('Profile has no RF waveform')
 
 
-def receiver_projection(w,poles,weights,bits=12,amplitude=.2,phase_rad=None,frontend=None,gain=1.,sample_stride=1):
+def receiver_projection(w,poles,weights,bits=12,amplitude=.2,phase_rad=None,frontend=None,gain=1.,sample_stride=1,adc_impairments=None):
     """Fast reduction of canonical RX filter with frozen rails and uniform sampling.
 
     Does not acquire clocks or run host queues. No fitted/ideal LO correction.
@@ -192,6 +192,11 @@ def receiver_projection(w,poles,weights,bits=12,amplitude=.2,phase_rad=None,fron
         # Projection must not consume live RNG/state or alter chip time.
         import copy
         observer=copy.deepcopy(frontend)
+        out=np.asarray([observer.sample(complex(value)) for value in out])
+    if adc_impairments is not None:
+        # Match canonical ADC ordering, without consuming live scenario noise.
+        import copy
+        observer=copy.deepcopy(adc_impairments)
         out=np.asarray([observer.sample(complex(value)) for value in out])
     scale=2**(bits-1)
     clipped=int(np.count_nonzero((abs(out.real)>1)|(abs(out.imag)>1)))
@@ -226,7 +231,7 @@ class TrainedBlockEqualizer:
     packet acquisition, carrier recovery or fitted payload correction. Training
     must illuminate every requested bin; deep fades are rejected, not inverted.
     """
-    def __init__(self,fft_size,cp_samples,bins,min_gain=.001):
+    def __init__(self,fft_size,cp_samples,bins,min_gain=.001,channel_delays=None):
         self.fft_size=int(fft_size);self.cp_samples=int(cp_samples)
         self.bins=np.asarray(bins,int).copy()
         if (self.fft_size<2 or not 0<=self.cp_samples<=self.fft_size or
@@ -235,6 +240,15 @@ class TrainedBlockEqualizer:
                 np.any((self.bins<0)|(self.bins>=self.fft_size)) or
                 not math.isfinite(min_gain) or min_gain<=0):
             raise ValueError('Invalid block equalizer geometry')
+        self.channel_basis=None
+        if channel_delays is not None:
+            delays=np.asarray(channel_delays)
+            if (delays.ndim!=1 or not len(delays) or not np.issubdtype(delays.dtype,np.integer)
+                    or len(np.unique(delays%self.fft_size))!=len(delays) or len(delays)>len(self.bins)):
+                raise ValueError('Distinct integer channel delays supported by training bins required')
+            self.channel_basis=np.exp(-2j*np.pi*self.bins[:,None]*delays[None,:]/self.fft_size)
+            if np.linalg.matrix_rank(self.channel_basis)!=len(delays):
+                raise ValueError('Training bins do not identify channel delays')
         self.min_gain=min_gain;self.response=None
 
     def spectrum(self,samples):
@@ -253,6 +267,11 @@ class TrainedBlockEqualizer:
         energy=np.sum(abs(x)**2,axis=0)
         if np.any(energy<1e-12):raise ValueError('Training leaves unobserved bins')
         response=np.sum(x.conj()*y,axis=0)/energy
+        if self.channel_basis is not None:
+            # Weighted projection uses known training only, never payload.
+            basis=self.channel_basis*np.sqrt(energy)[:,None]
+            taps=np.linalg.lstsq(basis,response*np.sqrt(energy),rcond=None)[0]
+            response=self.channel_basis@taps
         if np.any(abs(response)<self.min_gain):raise ValueError('Unusable channel estimate')
         self.response=response
         self.response.flags.writeable=False
@@ -281,3 +300,14 @@ def repeated_training_frequency(samples,lag,sample_hz,min_coherence=.8):
     coherence=float(abs(correlation)/power)
     if coherence<min_coherence:raise ValueError('Incoherent repeated training')
     return float(np.angle(correlation)*sample_hz/(2*math.pi*lag)),coherence
+
+
+def pcie_gen1_compliance_bits(repetitions=1):
+    """External compliance stimulus, serial a..j order; no link training claim.
+
+    PCI Express Base Specification 2.1 section 4.2.8, table on printed p.263:
+    https://www.intel.com/content/dam/support/us/en/programmable/support-resources/fpga-wiki/asset03/pci-express-base-r2.1.pdf
+    K28.5-, D21.5, K28.5+, D10.2; disparity alternates at the commas.
+    """
+    if type(repetitions) is not int or repetitions<1:raise ValueError('Positive compliance repetition count')
+    return [int(bit) for bit in '0011111010' '1010101010' '1100000101' '0101010101']*repetitions

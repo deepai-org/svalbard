@@ -1,0 +1,151 @@
+{
+  "constant_offset_spectral_screen": [
+    {
+      "input_amplitude": 0.5,
+      "constant_offset": 0.0,
+      "clipped_fraction": 0.0,
+      "sfdr_db": 92.33998965520256,
+      "sndr_db": 68.01969054256627
+    },
+    {
+      "input_amplitude": 0.5,
+      "constant_offset": 0.05,
+      "clipped_fraction": 0.0,
+      "sfdr_db": 94.04531705899188,
+      "sndr_db": 67.9585094751865
+    },
+    {
+      "input_amplitude": 0.5,
+      "constant_offset": 0.15,
+      "clipped_fraction": 0.0,
+      "sfdr_db": 92.24907774610485,
+      "sndr_db": 68.00268494057582
+    },
+    {
+      "input_amplitude": 0.9,
+      "constant_offset": 0.0,
+      "clipped_fraction": 0.0,
+      "sfdr_db": 98.87053815100181,
+      "sndr_db": 73.12879662344079
+    },
+    {
+      "input_amplitude": 0.9,
+      "constant_offset": 0.05,
+      "clipped_fraction": 0.0,
+      "sfdr_db": 100.79346829977402,
+      "sndr_db": 73.06549937495885
+    },
+    {
+      "input_amplitude": 0.9,
+      "constant_offset": 0.15,
+      "clipped_fraction": 0.1071319580078125,
+      "sfdr_db": 42.266719539278206,
+      "sndr_db": 35.712426498504215
+    },
+    {
+      "input_amplitude": 0.99,
+      "constant_offset": 0.0,
+      "clipped_fraction": 0.0,
+      "sfdr_db": 99.39081932258367,
+      "sndr_db": 73.87762181772965
+    },
+    {
+      "input_amplitude": 0.99,
+      "constant_offset": 0.05,
+      "clipped_fraction": 0.0913543701171875,
+      "sfdr_db": 46.30846191073796,
+      "sndr_db": 38.953781300832084
+    },
+    {
+      "input_amplitude": 0.99,
+      "constant_offset": 0.15,
+      "clipped_fraction": 0.1716461181640625,
+      "sfdr_db": 30.555776183756393,
+      "sndr_db": 26.39133256105229
+    }
+  ],
+  "acquisition_step_response": [
+    {
+      "sampling_r_ohm": 1000.0,
+      "sampling_c_pf": 0.666,
+      "acquisition_ns": 2.0,
+      "first_sample_unsettled_fraction": 0.04963778191806214
+    },
+    {
+      "sampling_r_ohm": 1000.0,
+      "sampling_c_pf": 1.5,
+      "acquisition_ns": 2.0,
+      "first_sample_unsettled_fraction": 0.2635971381157267
+    },
+    {
+      "sampling_r_ohm": 1000.0,
+      "sampling_c_pf": 3.0,
+      "acquisition_ns": 2.0,
+      "first_sample_unsettled_fraction": 0.513417119032592
+    }
+  ],
+  "clocked_conversion_chain": [
+    {
+      "profile": "wifi_he20",
+      "samples": 2176,
+      "adc_impairment_change_rms": 0.011116232202685615,
+      "clipped_samples": 0,
+      "scope": "Frozen-rail TX/pad/channel/RX/ADC projection; no packet or acquired-clock claim"
+    },
+    {
+      "profile": "bluetooth_le",
+      "samples": 2720,
+      "adc_impairment_change_rms": 0.008347340456941946,
+      "clipped_samples": 0,
+      "scope": "Frozen-rail TX/pad/channel/RX/ADC projection; no packet or acquired-clock claim"
+    },
+    {
+      "profile": "bluetooth_br_edr",
+      "samples": 2720,
+      "adc_impairment_change_rms": 0.00834864770621891,
+      "clipped_samples": 0,
+      "scope": "Frozen-rail TX/pad/channel/RX/ADC projection; no packet or acquired-clock claim"
+    },
+    {
+      "profile": "ieee802154_24",
+      "samples": 5160,
+      "adc_impairment_change_rms": 0.008416338902280319,
+      "clipped_samples": 0,
+      "scope": "Frozen-rail TX/pad/channel/RX/ADC projection; no packet or acquired-clock claim"
+    },
+    {
+      "profile": "lora_24",
+      "samples": 50413,
+      "adc_impairment_change_rms": 0.008581798690670698,
+      "clipped_samples": 0,
+      "scope": "Frozen-rail TX/pad/channel/RX/ADC projection; no packet or acquired-clock claim"
+    }
+  ],
+  "clocked_adc_scenario": {
+    "sampling_r_ohm": 1000.0,
+    "sampling_c_f": 1.5e-12,
+    "acquisition_s": 2e-09,
+    "calibrated_to_silicon": false
+  },
+  "measured": {
+    "enob": 4.27,
+    "snr_db": 41,
+    "sfdr_db": 33.7
+  },
+  "single_cubic_scenario": {
+    "cubic": -0.07779492349607352,
+    "input_referred_noise_rms": 0.005934392524241666,
+    "measured_fft_sfdr_db": 33.69999999999996,
+    "sndr_db": 32.949859089695344,
+    "enob": 5.181039715896237
+  },
+  "target_sndr_from_enob_db": 27.4654,
+  "conclusion": "One cubic spur plus the reported SNR does not reproduce the reported ENOB; additional distortion, definitions, or differing test conditions matter.",
+  "limitations": [
+    "Full-scale sine scenario, not a unique fit to silicon.",
+    "Measured table lacks enough test-condition detail to identify coefficients or error spectrum uniquely.",
+    "Noise and nonlinear transfer are optional in ReturnChip before quantization; defaults retain prior behavior.",
+    "Finite acquisition uses a piecewise-constant input target and explicit R/C/time scenarios; no signal-dependent resistance or bootstrap calibration.",
+    "Clocked chain verifies impairment propagation through the configured RF reduction; no new EVM, packet or physical qualification claim."
+  ]
+}

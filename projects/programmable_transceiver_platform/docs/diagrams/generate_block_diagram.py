@@ -46,7 +46,7 @@ def pin(x,y,w,name,count):
 def panel(x,y,w,h,title,fill):
     rect(x,y,w,h,fill,'#b5c3ce',True);label(x+18,y+29,title,22,True,'start')
 put('''<svg xmlns="http://www.w3.org/2000/svg" width="2600" height="30000" viewBox="0 0 2600 30000" role="img" aria-labelledby="title desc"><title id="title">Svalbard circuit-block schematic and approximate placement</title><desc id="desc">Explicit RF I and Q mixer, gain, filter and converter paths; PLL feedback loops; wired equalizer, sampler, CDR and serializer; programmable analog tiles; references and host control. All external terminals are at the perimeter. Intended circuits, not a completed transistor schematic.</desc><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L9 4 L0 8" fill="#233e50"/></marker></defs><rect width="2600" height="30000" fill="white"/><g font-family="DejaVu Sans,sans-serif">''')
-label(55,48,'SVALBARD / CIRCUIT-BLOCK SCHEMATIC',32,True,'start')
+label(55,48,'SVALBARD / CIRCUIT CANDIDATES — NOT NORMATIVE',32,True,'start')
 label(55,80,'Proposed connectivity with RF west, wired east, clocks north and digital south',21,anchor='start')
 label(2540,48,'50 TERMINALS',25,True,'end');label(2540,80,'36 signal + 14 supply / return',19,anchor='end')
 label(55,120,'RF OR WIRED PAYLOAD ACTIVE — not simultaneous',19,True,'start')
@@ -1310,7 +1310,7 @@ label(55,29860,'720p / 1080p: integer and /1.001 clocks; intermediate x10 rates.
 label(55,29910,'Open gates: DC pad / ESD, x10 clock and word phase, cross-die skew, FIFO / CDC, independent video compliance.',19,anchor='start')
 
 put('</g></svg>')
-Path(__file__).with_name('transceiver-block-diagram.svg').write_text('\n'.join(A)+'\n')
+Path(__file__).with_name('transceiver-circuit-candidates.svg').write_text('\n'.join(A)+'\n')
 
 # Focused sheets reuse only their own elements, plus shared SVG definitions.
 def write_detail(filename, start, end, y):
@@ -1321,3 +1321,7 @@ def write_detail(filename, start, end, y):
 
 write_detail('transceiver-rf-loaded-detail.svg', rf_start, rf_end, 23500)
 write_detail('transceiver-video-detail.svg', video_start, len(A) - 1, 28250)
+
+# Generate the normative overview after the retained candidate sheets.
+import runpy
+runpy.run_path(str(Path(__file__).with_name("generate_normative_diagram.py")))

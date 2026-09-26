@@ -47,7 +47,7 @@ def parameters():
             '150 MHz exclusive transport remains a separate candidate, not an installed model option.'])
 
 
-def make_chip(*, rf_noise_rms_hz=0., protocol=None, rf_solver_method="Radau"):
+def make_chip(*, rf_noise_rms_hz=0., protocol=None, rf_solver_method="Radau", adc_impairments=None):
     """One physical-resource composition; scenarios may vary declared noise."""
     profiles = protocol_requirements()
     if protocol is not None:
@@ -65,7 +65,7 @@ def make_chip(*, rf_noise_rms_hz=0., protocol=None, rf_solver_method="Radau"):
     holder={}
     def load(time,voltage):
         return BACKGROUND_A[holder['chip'].active_engine]
-    c=IntegratedTransceiverChip(coupled_analog=True,rf_solver_method=rf_solver_method,
+    c=IntegratedTransceiverChip(coupled_analog=True,rf_solver_method=rf_solver_method,adc_impairments=adc_impairments,
         domain_supply=DomainSupply(DOMAINS,[3.3]*7,[2.]*7,[100e-12]*7,.1),
         domain_minimum_v=[2.5]*7,domain_load=load,host_bank=host,
         charge_per_transition=50e-15,return_charge_per_transition=0.,

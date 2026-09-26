@@ -1,0 +1,520 @@
+{
+  "paper": {
+    "url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=957346",
+    "location": "Tables1-2, printed54; amplifier conditions printed52-53; Figure7 printed54.",
+    "measured_amplifier": {
+      "gain_db": 92.0,
+      "gbw_mhz": 12.5,
+      "power_upper_mw": 10.0
+    },
+    "authors_amplifier_simulation": {
+      "gain_db": 99.0,
+      "gbw_mhz": 14.0,
+      "power_mw": 5.0
+    },
+    "adc": {
+      "functional_rate_msps": ">30",
+      "enob_at_20msps": 4.27,
+      "snr_at_20msps_db": 41,
+      "sfdr_db": 33.7,
+      "input_range_vpp": 6
+    },
+    "measurement_conditions_unidentified": [
+      "Amplifier external cascode biases, output loading/measurement plane and phase margin.",
+      "ADC FFT input amplitude, source/reference impedances, bias/calibration settings and raw code records.",
+      "Figure7 Nyquist input near4.99MHz is not established as the same test as20MS/s table metrics."
+    ]
+  },
+  "amplifier_baseline_provenance": {
+    "repository_tree_query": "https://api.github.com/repos/idea-fasoc/openfasoc-tapeouts/git/trees/5a6040bfe6735d6898d926b5b01a6d7650d50106?recursive=1",
+    "tree_truncated": false,
+    "released_amplifier_family": "Programmable two-stage amplifier; NMOS input pair L1um, PMOS output L0.7um, single Miller branch and series resistor.",
+    "reconstructed_measured_candidate": "opamp2_to_fix, complementary input pairs L0.3um, folded-cascode/classAB topology and two output-to-gate compensation branches.",
+    "conclusion": "The released two-stage testbench is not the hybrid folded-cascode simulation baseline in Table1. Its bias/load settings cannot be transferred as measured hybrid-amplifier conditions.",
+    "folded_cascode_testbench_found_in_pinned_tree": false,
+    "external_bias_evidence": {
+      "source": "reference-afe-pad-routing.json",
+      "connections": {
+        "vbiasn": "VBIASN",
+        "vbiasp": "VBIASP",
+        "vprog": "VPROG",
+        "vout_t": "VOUT"
+      },
+      "internal_vout_has_top_label": false
+    },
+    "implication": "Vprog1V does not determine the separate external cascode voltages. Current sweeps are scenarios, not reconstruction of the measurement bias point.",
+    "scope": "Pinned public tree and previously reconstructed metal connectivity; not an exhaustive claim about private files, other revisions or all online materials."
+  },
+  "amplifier_comparisons": [
+    {
+      "configuration": {
+        "output_node": "vout",
+        "vbiasn_v": 1.2,
+        "vbiasp_v": 1.2,
+        "load_pf": 1,
+        "compensation_scale": 1
+      },
+      "gain_db": 118.36715038661927,
+      "gbw_mhz": 20.18678426324564,
+      "gain_error_vs_measured_db": 26.367150386619272,
+      "gbw_error_vs_measured_percent": 61.49427410596513,
+      "gain_error_vs_author_sim_db": 19.367150386619272,
+      "gbw_error_vs_author_sim_percent": 44.19131616604031
+    },
+    {
+      "configuration": {
+        "output_node": "vout",
+        "vbiasn_v": 1.2,
+        "vbiasp_v": 1.5,
+        "load_pf": 1,
+        "compensation_scale": 1
+      },
+      "gain_db": 119.29519218934544,
+      "gbw_mhz": 20.250393171937734,
+      "gain_error_vs_measured_db": 27.295192189345443,
+      "gbw_error_vs_measured_percent": 62.003145375501866,
+      "gain_error_vs_author_sim_db": 20.295192189345443,
+      "gbw_error_vs_author_sim_percent": 44.645665513840946
+    },
+    {
+      "configuration": {
+        "output_node": "vout",
+        "vbiasn_v": 1.2,
+        "vbiasp_v": 1.8,
+        "load_pf": 1,
+        "compensation_scale": 1
+      },
+      "gain_db": 119.30371355836934,
+      "gbw_mhz": 19.994522734530353,
+      "gain_error_vs_measured_db": 27.30371355836934,
+      "gbw_error_vs_measured_percent": 59.95618187624283,
+      "gain_error_vs_author_sim_db": 20.30371355836934,
+      "gbw_error_vs_author_sim_percent": 42.81801953235966
+    },
+    {
+      "configuration": {
+        "output_node": "vout",
+        "vbiasn_v": 1.5,
+        "vbiasp_v": 1.2,
+        "load_pf": 1,
+        "compensation_scale": 1
+      },
+      "gain_db": 115.7958067859444,
+      "gbw_mhz": 20.23312915857256,
+      "gain_error_vs_measured_db": 23.795806785944393,
+      "gbw_error_vs_measured_percent": 61.86503326858048,
+      "gain_error_vs_author_sim_db": 16.795806785944393,
+      "gbw_error_vs_author_sim_percent": 44.52235113266114
+    },
+    {
+      "configuration": {
+        "output_node": "vout",
+        "vbiasn_v": 1.5,
+        "vbiasp_v": 1.5,
+        "load_pf": 1,
+        "compensation_scale": 1
+      },
+      "gain_db": 116.49338723527528,
+      "gbw_mhz": 20.297097296941903,
+      "gain_error_vs_measured_db": 24.49338723527528,
+      "gbw_error_vs_measured_percent": 62.37677837553521,
+      "gain_error_vs_author_sim_db": 17.49338723527528,
+      "gbw_error_vs_author_sim_percent": 44.97926640672787
+    },
+    {
+      "configuration": {
+        "output_node": "vout",
+        "vbiasn_v": 1.5,
+        "vbiasp_v": 1.8,
+        "load_pf": 1,
+        "compensation_scale": 1
+      },
+      "gain_db": 116.49911163758156,
+      "gbw_mhz": 20.040991501319365,
+      "gain_error_vs_measured_db": 24.499111637581564,
+      "gbw_error_vs_measured_percent": 60.32793201055491,
+      "gain_error_vs_author_sim_db": 17.499111637581564,
+      "gbw_error_vs_author_sim_percent": 43.14993929513833
+    },
+    {
+      "configuration": {
+        "output_node": "vout",
+        "vbiasn_v": 1.8,
+        "vbiasp_v": 1.2,
+        "load_pf": 1,
+        "compensation_scale": 1
+      },
+      "gain_db": 75.5640945493345,
+      "gbw_mhz": 20.124023998562485,
+      "gain_error_vs_measured_db": -16.4359054506655,
+      "gbw_error_vs_measured_percent": 60.992191988499876,
+      "gain_error_vs_author_sim_db": -23.4359054506655,
+      "gbw_error_vs_author_sim_percent": 43.743028561160614
+    },
+    {
+      "configuration": {
+        "output_node": "vout",
+        "vbiasn_v": 1.8,
+        "vbiasp_v": 1.5,
+        "load_pf": 1,
+        "compensation_scale": 1
+      },
+      "gain_db": 75.62168309705905,
+      "gbw_mhz": 20.187486980654516,
+      "gain_error_vs_measured_db": -16.378316902940952,
+      "gbw_error_vs_measured_percent": 61.49989584523612,
+      "gain_error_vs_author_sim_db": -23.378316902940952,
+      "gbw_error_vs_author_sim_percent": 44.19633557610367
+    },
+    {
+      "configuration": {
+        "output_node": "vout",
+        "vbiasn_v": 1.8,
+        "vbiasp_v": 1.8,
+        "load_pf": 1,
+        "compensation_scale": 1
+      },
+      "gain_db": 75.58603000448075,
+      "gbw_mhz": 19.932117367893724,
+      "gain_error_vs_measured_db": -16.413969995519253,
+      "gbw_error_vs_measured_percent": 59.45693894314979,
+      "gain_error_vs_author_sim_db": -23.413969995519253,
+      "gbw_error_vs_author_sim_percent": 42.3722669135266
+    },
+    {
+      "configuration": {
+        "output_node": "vout",
+        "vbiasn_v": 1.5,
+        "vbiasp_v": 1.5,
+        "load_pf": 5,
+        "compensation_scale": 1
+      },
+      "gain_db": 116.49338722229545,
+      "gbw_mhz": 20.29567739127899,
+      "gain_error_vs_measured_db": 24.493387222295453,
+      "gbw_error_vs_measured_percent": 62.3654191302319,
+      "gain_error_vs_author_sim_db": 17.493387222295453,
+      "gbw_error_vs_author_sim_percent": 44.96912422342134
+    },
+    {
+      "configuration": {
+        "output_node": "vout",
+        "vbiasn_v": 1.5,
+        "vbiasp_v": 1.5,
+        "load_pf": 20,
+        "compensation_scale": 1
+      },
+      "gain_db": 116.4933871670541,
+      "gbw_mhz": 20.20964987894886,
+      "gain_error_vs_measured_db": 24.493387167054095,
+      "gbw_error_vs_measured_percent": 61.67719903159088,
+      "gain_error_vs_author_sim_db": 17.493387167054095,
+      "gbw_error_vs_author_sim_percent": 44.354641992491864
+    },
+    {
+      "configuration": {
+        "output_node": "vout",
+        "vbiasn_v": 1.5,
+        "vbiasp_v": 1.5,
+        "load_pf": 1,
+        "compensation_scale": 0.9
+      },
+      "gain_db": 116.4939229965058,
+      "gbw_mhz": 21.40794980490913,
+      "gain_error_vs_measured_db": 24.493922996505802,
+      "gbw_error_vs_measured_percent": 71.26359843927304,
+      "gain_error_vs_author_sim_db": 17.493922996505802,
+      "gbw_error_vs_author_sim_percent": 52.91392717792236
+    },
+    {
+      "configuration": {
+        "output_node": "vout",
+        "vbiasn_v": 1.5,
+        "vbiasp_v": 1.5,
+        "load_pf": 1,
+        "compensation_scale": 1.1
+      },
+      "gain_db": 116.49279546776225,
+      "gbw_mhz": 19.264668263046737,
+      "gain_error_vs_measured_db": 24.49279546776225,
+      "gbw_error_vs_measured_percent": 54.11734610437389,
+      "gain_error_vs_author_sim_db": 17.49279546776225,
+      "gbw_error_vs_author_sim_percent": 37.60477330747669
+    },
+    {
+      "configuration": {
+        "output_node": "vout",
+        "vbiasn_v": 1.5,
+        "vbiasp_v": 1.5,
+        "load_pf": 1,
+        "compensation_scale": 1.5
+      },
+      "gain_db": 116.48986885574428,
+      "gbw_mhz": 15.731729476883395,
+      "gain_error_vs_measured_db": 24.489868855744277,
+      "gbw_error_vs_measured_percent": 25.85383581506715,
+      "gain_error_vs_author_sim_db": 17.489868855744277,
+      "gbw_error_vs_author_sim_percent": 12.369496263452827
+    },
+    {
+      "configuration": {
+        "output_node": "vout",
+        "vbiasn_v": 1.5,
+        "vbiasp_v": 1.5,
+        "load_pf": 1,
+        "compensation_scale": 2
+      },
+      "gain_db": 116.48495392849716,
+      "gbw_mhz": 12.487534114670584,
+      "gain_error_vs_measured_db": 24.484953928497163,
+      "gbw_error_vs_measured_percent": -0.09972708263532581,
+      "gain_error_vs_author_sim_db": 17.484953928497163,
+      "gbw_error_vs_author_sim_percent": -10.803327752352965
+    },
+    {
+      "configuration": {
+        "output_node": "vout_t",
+        "vbiasn_v": 1.5,
+        "vbiasp_v": 1.5,
+        "load_pf": 1,
+        "compensation_scale": 1
+      },
+      "gain_db": 116.49338718952546,
+      "gbw_mhz": 20.2911316820354,
+      "gain_error_vs_measured_db": 24.493387189525464,
+      "gbw_error_vs_measured_percent": 62.32905345628319,
+      "gain_error_vs_author_sim_db": 17.493387189525464,
+      "gbw_error_vs_author_sim_percent": 44.93665487168141
+    },
+    {
+      "configuration": {
+        "output_node": "vout_t",
+        "vbiasn_v": 1.5,
+        "vbiasp_v": 1.5,
+        "load_pf": 5,
+        "compensation_scale": 1
+      },
+      "gain_db": 116.49338717764202,
+      "gbw_mhz": 20.161173940419317,
+      "gain_error_vs_measured_db": 24.49338717764202,
+      "gbw_error_vs_measured_percent": 61.28939152335453,
+      "gain_error_vs_author_sim_db": 17.49338717764202,
+      "gbw_error_vs_author_sim_percent": 44.008385288709405
+    },
+    {
+      "configuration": {
+        "output_node": "vout_t",
+        "vbiasn_v": 1.5,
+        "vbiasp_v": 1.5,
+        "load_pf": 20,
+        "compensation_scale": 1
+      },
+      "gain_db": 116.49338712655363,
+      "gbw_mhz": 18.602050372003628,
+      "gain_error_vs_measured_db": 24.49338712655363,
+      "gbw_error_vs_measured_percent": 48.816402976029025,
+      "gain_error_vs_author_sim_db": 17.49338712655363,
+      "gbw_error_vs_author_sim_percent": 32.87178837145448
+    },
+    {
+      "configuration": {
+        "output_node": "vout_t",
+        "vbiasn_v": 1.5,
+        "vbiasp_v": 1.5,
+        "load_pf": 1,
+        "compensation_scale": 0.5
+      },
+      "gain_db": 116.4955055993714,
+      "gbw_mhz": 28.880551462188812,
+      "gain_error_vs_measured_db": 24.4955055993714,
+      "gbw_error_vs_measured_percent": 131.0444116975105,
+      "gain_error_vs_author_sim_db": 17.4955055993714,
+      "gbw_error_vs_author_sim_percent": 106.28965330134865
+    },
+    {
+      "configuration": {
+        "output_node": "vout_t",
+        "vbiasn_v": 1.5,
+        "vbiasp_v": 1.5,
+        "load_pf": 1,
+        "compensation_scale": 0.75
+      },
+      "gain_db": 116.49462154433107,
+      "gbw_mhz": 23.294165618548867,
+      "gain_error_vs_measured_db": 24.494621544331068,
+      "gbw_error_vs_measured_percent": 86.35332494839093,
+      "gain_error_vs_author_sim_db": 17.494621544331068,
+      "gbw_error_vs_author_sim_percent": 66.38689727534906
+    },
+    {
+      "configuration": {
+        "output_node": "vout_t",
+        "vbiasn_v": 1.5,
+        "vbiasp_v": 1.5,
+        "load_pf": 20,
+        "compensation_scale": 0.5
+      },
+      "gain_db": 116.4955055681146,
+      "gbw_mhz": 24.920535795935685,
+      "gain_error_vs_measured_db": 24.495505568114595,
+      "gbw_error_vs_measured_percent": 99.36428636748546,
+      "gain_error_vs_author_sim_db": 17.495505568114595,
+      "gbw_error_vs_author_sim_percent": 78.00382711382632
+    },
+    {
+      "configuration": {
+        "output_node": "vout_t",
+        "vbiasn_v": 1.5,
+        "vbiasp_v": 1.5,
+        "load_pf": 20,
+        "compensation_scale": 0.75
+      },
+      "gain_db": 116.4946215037425,
+      "gbw_mhz": 21.264022634753754,
+      "gain_error_vs_measured_db": 24.494621503742493,
+      "gbw_error_vs_measured_percent": 70.11218107803003,
+      "gain_error_vs_author_sim_db": 17.494621503742493,
+      "gbw_error_vs_author_sim_percent": 51.885875962526804
+    }
+  ],
+  "closest_bandwidth_case": {
+    "configuration": {
+      "output_node": "vout",
+      "vbiasn_v": 1.5,
+      "vbiasp_v": 1.5,
+      "load_pf": 1,
+      "compensation_scale": 2
+    },
+    "gain_db": 116.48495392849716,
+    "gbw_mhz": 12.487534114670584,
+    "gain_error_vs_measured_db": 24.484953928497163,
+    "gbw_error_vs_measured_percent": -0.09972708263532581,
+    "gain_error_vs_author_sim_db": 17.484953928497163,
+    "gbw_error_vs_author_sim_percent": -10.803327752352965
+  },
+  "identifiability": {
+    "equivalent_model": "A=gm/go; fu=gm/(2*pi*C). Illustrative, not the reconstructed two-branch compensation circuit.",
+    "log_parameter_order": [
+      "gm",
+      "C",
+      "go"
+    ],
+    "log_observable_order": [
+      "gain",
+      "unity_frequency"
+    ],
+    "jacobian": [
+      [
+        1,
+        0,
+        -1
+      ],
+      [
+        1,
+        -1,
+        0
+      ]
+    ],
+    "rank": 2,
+    "unobservable_scaling_direction": [
+      1,
+      1,
+      1
+    ],
+    "indistinguishable_equivalent_examples": [
+      {
+        "equivalent_capacitance_pf": 5.0,
+        "effective_gm_ms": 0.3926990816987241,
+        "effective_output_resistance_mohm": 101.37715851826765
+      },
+      {
+        "equivalent_capacitance_pf": 10.0,
+        "effective_gm_ms": 0.7853981633974482,
+        "effective_output_resistance_mohm": 50.688579259133824
+      }
+    ],
+    "conclusion": "Even exact gain and bandwidth do not identify gm,C,go independently. Actual topology, known passives and additional observables are needed; missing bench conditions add ambiguity."
+  },
+  "adc_range_consistency": {
+    "sensor_board_reference_high_v": 2.5,
+    "sensor_board_reference_low_v": 0.8,
+    "maximum_ideal_differential_correction_v": 1.6999999999999995,
+    "maximum_ideal_differential_range_vpp": 3.399999999999999,
+    "published_range_vpp": 6,
+    "minimum_reference_span_for_unattenuated_6vpp_v": 3,
+    "maximum_input_transfer_gain_to_fit_6vpp_at_sensor_references": 0.5666666666666665,
+    "clipping_example": {
+      "input_vpp": 6,
+      "output_limit_v": 1.6999999999999995,
+      "clipped_sample_fraction": 0.6165771484375,
+      "noiseless_sndr_db": 13.930381907446478,
+      "sfdr_db": 14.083772841786972
+    },
+    "interpretation": "The reconstructed direct-sampled monotonic array with2.5/0.8V references does not cover6Vpp differential input. Figure9 sensor-board references are not established ADC characterization settings; the table range is not the FFT tone amplitude.",
+    "limitations": [
+      "Area-only normalized weights and unity sampled-input transfer; no measured full-transfer reproduction.",
+      "Additional top-to-ground capacitance reduces DAC correction under direct top-plate sampling; it does not independently expand this range.",
+      "Different references or input attenuation could change the range. Neither is inferred as the actual characterization setup.",
+      "Clipping example is not a fit to measured ADC spectrum and does not establish that the fabricated ADC clipped."
+    ]
+  },
+  "adc_noise_identifiability": {
+    "assumed_temperature_k": 300.0,
+    "assumptions": [
+      "41dB SNR represents total noise relative to a sinusoidal signal, excluding harmonics.",
+      "Input-referred unity sampling gain, independent thermal noise in equal sampling capacitors, and no noise cancellation or filtering.",
+      "Small independent aperture jitter; tone frequencies below are scenarios, not recovered table conditions."
+    ],
+    "amplitude_scenarios": [
+      {
+        "assumed_differential_tone_peak_v": 0.3,
+        "total_input_referred_noise_rms_v": 0.0018906287462797313,
+        "minimum_per_leg_sampling_capacitance_f": 2.3175121478242724e-15
+      },
+      {
+        "assumed_differential_tone_peak_v": 1.53,
+        "total_input_referred_noise_rms_v": 0.00964220660602663,
+        "minimum_per_leg_sampling_capacitance_f": 8.910081306513926e-17
+      },
+      {
+        "assumed_differential_tone_peak_v": 3.0,
+        "total_input_referred_noise_rms_v": 0.018906287462797315,
+        "minimum_per_leg_sampling_capacitance_f": 2.317512147824272e-17
+      }
+    ],
+    "jitter_scenarios": [
+      {
+        "assumed_tone_hz": 5000000.0,
+        "maximum_rms_aperture_jitter_s": 2.836939846785493e-10
+      },
+      {
+        "assumed_tone_hz": 10000000.0,
+        "maximum_rms_aperture_jitter_s": 1.4184699233927464e-10
+      }
+    ],
+    "interpretation": "These are necessary lower bounds on C and upper bounds on jitter only under the stated model. Other noise sources make the limits stricter. They do not identify actual capacitance, aperture jitter, oscillator phase noise or measurement bandwidth.",
+    "limitation": "Unknown tone amplitude removes an absolute capacitance bound from the publication alone. Unknown table tone frequency prevents a numerical measured jitter bound. Correlation, filtering and noise definitions can invalidate the simple decomposition."
+  },
+  "adc_normalized_constraints": {
+    "sndr_db": 27.4654,
+    "noise_over_signal_rms": 0.008912509381337459,
+    "distortion_over_signal_rms": 0.041389257369770345,
+    "condition": "ENOB-to-SNDR convention and compatible measurement conditions assumed. Absolute voltage errors scale with unknown tone amplitude.",
+    "uniquely_identified_physical_parameters": []
+  },
+  "decisions": [
+    "Do not calibrate physical parasitics to a single matching metric. The bandwidth-matching amplifier scenario misses measured gain by about24.5dB.",
+    "Resolve reconstructed-vs-author-simulation discrepancy before attributing differences to fabricated device physics.",
+    "Reference-sequence agreement is a simulation-to-simulation surrogate check; it is not measurement validation.",
+    "Next silicon-facing ADC comparison must jointly address noise,total distortion,largest spur and functional timing without assuming the table andFigure7 share conditions.",
+    "No measured GHz fT/fmax,RF NF or PLL phase noise is supplied by this AFE. Do not upgrade transceiver RF/clock assumptions based on local reference-driver success."
+  ],
+  "source_sha256": {
+    "reference-afe-amplifier-sim.json": "902e2e12a45c8da25c361f8226fcfc37318bc2b5e52d1d1d1913772ca82c8b7f",
+    "reference-afe-release-audit.json": "1520bbb2e0cb3ec01be9397165d312bec3b788078863db87e4ccd35124ac0953",
+    "reference-afe-pad-routing.json": "37c9afc649b3930119e47ec3d75bd33371026489d854371dc27fd47e196c055a",
+    "reference-afe-cap-geometry.json": "42266c77a6711244215a6ba7d527a67e3fd0edaf82ce043b77d76d96d1a87025",
+    "capacitor_network.py": "070cc8646dcb1d8ff819b4430cc4f03203f98b97e8f2fada0b0ced5e920ecd6b",
+    "measurement_audit.py": "0880056293e9c412b1884385c58138695abb93a6b8c8b96ac3bf79a8416eac76"
+  }
+}

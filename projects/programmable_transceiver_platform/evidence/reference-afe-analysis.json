@@ -1,0 +1,101 @@
+{
+  "sources": [
+    {
+      "sha256": "feac9ee1b2be0a9da1f605630af91fbf4f34fb20a2b9adce212a66acbb019018",
+      "dbu_um": 0.001,
+      "cells": 1206,
+      "tops": [
+        "TOP_HARNESS_minimum_v4_TO_VERSION"
+      ]
+    },
+    {
+      "sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+      "dbu_um": 0.001,
+      "cells": 1208,
+      "tops": [
+        "user_project_wrapper"
+      ]
+    }
+  ],
+  "blocks": {
+    "adc_top_final_deliver": {
+      "width_um": 972.9200000000001,
+      "height_um": 309.64,
+      "bounding_area_mm2": 0.30125494880000003,
+      "polygon_difference_layers": []
+    },
+    "opamp1_v2_to_fix": {
+      "width_um": 284.23,
+      "height_um": 349.575,
+      "bounding_area_mm2": 0.09935970225,
+      "polygon_difference_layers": []
+    },
+    "opamp2_to_fix": {
+      "width_um": 334.88000000000005,
+      "height_um": 164.89000000000001,
+      "bounding_area_mm2": 0.055218363200000016,
+      "polygon_difference_layers": []
+    },
+    "adc_bootsw_debug5": {
+      "width_um": 82.64,
+      "height_um": 37.150000000000006,
+      "bounding_area_mm2": 0.0030700760000000006,
+      "polygon_difference_layers": []
+    },
+    "adc_comp_miyahara_offcal": {
+      "width_um": 24.439999999999998,
+      "height_um": 19.09,
+      "bounding_area_mm2": 0.00046655959999999995,
+      "polygon_difference_layers": []
+    },
+    "adc_preamp_v2": {
+      "width_um": 30.840000000000003,
+      "height_um": 19.595,
+      "bounding_area_mm2": 0.0006043098,
+      "polygon_difference_layers": []
+    },
+    "lib_cap_array": {
+      "width_um": 383.5,
+      "height_um": 131.0,
+      "bounding_area_mm2": 0.0502385,
+      "polygon_difference_layers": []
+    },
+    "lib_unit_cap_32x": {
+      "width_um": 0.5,
+      "height_um": 32.0,
+      "bounding_area_mm2": 1.6e-05,
+      "polygon_difference_layers": []
+    },
+    "lib_unit_cap_8192x": {
+      "width_um": 192.0,
+      "height_um": 32.0,
+      "bounding_area_mm2": 0.006144,
+      "polygon_difference_layers": []
+    }
+  },
+  "measurement_inferences": {
+    "equivalent_sndr_db": 27.4654,
+    "noise_rms_over_signal_rms": 0.008912509381337459,
+    "noise_plus_distortion_rms_over_signal_rms": 0.04233796699291922,
+    "distortion_rms_over_signal_rms": 0.041389257369770345,
+    "largest_spur_amplitude_over_fundamental": 0.02065380155810529,
+    "cmrr_input_equivalent_v_per_v": 0.0012589254117941675,
+    "psrr_input_equivalent_v_per_v": 8.413951416451947e-05,
+    "offset_input_equivalent_v": [
+      0.005,
+      0.02
+    ],
+    "distortion_power_over_largest_spur_power": 4.015829523259083,
+    "hypothetical_jitter_only_snr_bound_s_at_5mhz": 2.836939846785493e-10,
+    "gbw_measured_over_simulated": 0.8928571428571429,
+    "dc_gain_measured_over_simulated": 0.44668359215096315,
+    "status": "Derived, conditional on compatible measurement definitions; not fitted device parameters"
+  },
+  "limitations": [
+    "Polygon XOR ignores text and does not prove electrical equivalence.",
+    "Bounding boxes include routing and do not measure active device area.",
+    "This report covers provenance and algebraic measurement constraints; separate reports contain circuit reconstruction.",
+    "CMRR/PSRR give input-equivalent response ratios, not measured threshold mismatch or device sensitivity.",
+    "The 5 MHz jitter-only bound is hypothetical: table SNR and figure tone may be different measurements."
+  ]
+}

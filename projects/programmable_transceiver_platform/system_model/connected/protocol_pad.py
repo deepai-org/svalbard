@@ -118,6 +118,123 @@ def usb_decode(levels):
     return out
 
 
+def usb_crc16(data):
+    """External FPGA fixture CRC-16/USB; never a chip primitive."""
+    crc=0xffff
+    for byte in bytes(data):
+        crc^=byte
+        for _ in range(8):crc=(crc>>1)^(0xa001 if crc&1 else 0)
+    return crc^0xffff
+
+
+def usb_hs_packet(pid,payload=b''):
+    """External direct-link DATA0/DATA1/ACK fixture, full SYNC and no hub dribble.
+
+    USB 2.0 sections 7.1.10, 7.1.13.2 and 8: body is stuffed, EOP is not.
+    This helper does not implement token/address/endpoint transaction state.
+    """
+    if pid not in (0xc3,0x4b,0xd2):raise ValueError('Unsupported fixture PID')
+    payload=bytes(payload)
+    if pid==0xd2 and payload:raise ValueError('ACK has no payload')
+    body=bytes([pid])+payload
+    if pid!=0xd2:body+=usb_crc16(payload).to_bytes(2,'little')
+    bits=[0]*31+[1]+[(byte>>n)&1 for byte in body for n in range(8)]
+    levels=usb_nrzi(bits)
+    # EOP begins with a transition, then seven unstuffed ones.
+    levels.extend([1-levels[-1]]*8)
+    return levels
+
+
+def usb_hs_decode_packet(levels):
+    """External receiver validates observed framing/PID/CRC, without payload truth."""
+    levels=list(levels)
+    if len(levels)<48 or any(type(x) is not int or x not in (0,1) for x in levels):
+        raise ValueError('Invalid HS packet levels')
+    previous=1;raw=[]
+    for level in levels:raw.append(int(level==previous));previous=level
+    if raw[:32]!=[0]*31+[1]:raise ValueError('HS SYNC')
+    if raw[-8:]!=[0]+[1]*7:raise ValueError('HS EOP')
+    bits=usb_decode(levels[:-8])[32:]
+    if len(bits)%8:raise ValueError('Partial packet byte')
+    body=bytes(sum(bits[k+n]<<n for n in range(8)) for k in range(0,len(bits),8))
+    pid=body[0]
+    if ((pid>>4)^(pid&15))!=15:raise ValueError('PID complement')
+    if pid==0xd2:
+        if len(body)!=1:raise ValueError('ACK length')
+        return pid,b''
+    if pid not in (0xc3,0x4b) or len(body)<3:raise ValueError('Unsupported data packet')
+    payload=body[1:-2]
+    if int.from_bytes(body[-2:],'little')!=usb_crc16(payload):raise ValueError('USB CRC16')
+    return pid,payload
+
+
+
+class USBStreamingPacket:
+    """External FPGA parser reference; finite storage, no chip protocol logic.
+
+    Eight raw levels are held back for unstuffed EOP. Two body bytes are held
+    back for CRC. Payload is retained until validation, bounded by max_payload.
+    feed() implements ordered bit updates; a parallel implementation must
+    realize these dependencies within its declared processing-cycle budget.
+    """
+    def __init__(self,max_payload=1024):
+        if type(max_payload) is not int or max_payload<0:raise ValueError('Payload capacity')
+        self.max_payload=max_payload;self.tail=[];self.previous=1;self.raw_count=0
+        self.ones=0;self.byte=0;self.byte_bits=0;self.pid=None
+        self.crc=0xffff;self.crc_tail=[];self.payload=bytearray();self.fault=None
+        self.finished=False
+
+    def feed(self,levels):
+        if self.finished:raise ValueError('Packet already finalized')
+        for level in levels:
+            if self.fault:continue
+            try:
+                if type(level) is not int or level not in (0,1):raise ValueError('Invalid HS packet levels')
+                self.tail.append(level)
+                if len(self.tail)<=8:continue
+                value=self.tail.pop(0);bit=int(value==self.previous);self.previous=value
+                self.raw_count+=1
+                if self.raw_count<=32:
+                    if bit!=int(self.raw_count==32):raise ValueError('HS SYNC')
+                    self.ones=bit
+                    continue
+                if self.ones==6:
+                    if bit:raise ValueError('USB bit stuffing violation')
+                    self.ones=0;continue
+                self.ones=self.ones+1 if bit else 0
+                self.byte|=bit<<self.byte_bits;self.byte_bits+=1
+                if self.byte_bits!=8:continue
+                value=self.byte;self.byte=0;self.byte_bits=0
+                if self.pid is None:
+                    if ((value>>4)^(value&15))!=15:raise ValueError('PID complement')
+                    if value not in (0xc3,0x4b,0xd2):raise ValueError('Unsupported data packet')
+                    self.pid=value
+                else:
+                    if self.pid==0xd2:raise ValueError('ACK length')
+                    self.crc_tail.append(value)
+                    if len(self.crc_tail)>2:
+                        byte=self.crc_tail.pop(0)
+                        if len(self.payload)>=self.max_payload:raise ValueError('Payload capacity exceeded')
+                        self.payload.append(byte);self.crc^=byte
+                        for _ in range(8):self.crc=(self.crc>>1)^(0xa001 if self.crc&1 else 0)
+            except ValueError as error:self.fault=str(error)
+
+    def finish(self):
+        if self.finished:raise ValueError('Packet already finalized')
+        self.finished=True
+        if self.fault:raise ValueError(self.fault)
+        if self.raw_count<40 or len(self.tail)!=8:raise ValueError('Invalid HS packet levels')
+        previous=self.previous;raw=[]
+        for level in self.tail:raw.append(int(level==previous));previous=level
+        if raw!=[0]+[1]*7:raise ValueError('HS EOP')
+        if self.ones==6:raise ValueError('Missing stuffed bit')
+        if self.byte_bits:raise ValueError('Partial packet byte')
+        if self.pid!=0xd2:
+            if len(self.crc_tail)!=2:raise ValueError('Unsupported data packet')
+            if int.from_bytes(bytes(self.crc_tail),'little')!=self.crc^0xffff:raise ValueError('USB CRC16')
+        return self.pid,bytes(self.payload)
+
+
 def sata_oob(kind):
     if kind not in ('reset','init','wake'):raise ValueError('SATA OOB kind')
     burst=160/1.5e9;gap=(160 if kind=='wake' else 480)/1.5e9
@@ -149,7 +266,8 @@ def response_budget(*,word_hz,rx_words,tx_words,fpga_s,turnaround_s,deadline_s,
 
 
 def usb_framed_turnaround(frame_words=8,word_hz=250e6,fpga_s=40e-9,
-                          analog_s=34e-9,cdc_words=4,queue_words=4,packing_bits=20):
+                          analog_s=34e-9,cdc_words=4,queue_words=4,packing_bits=20,
+                          h2d_commit_words=0,h2d_cdc_hz=None):
     """Conservative round-trip bound for the existing two-bank frame snapshots.
 
     Each direction: <1 frame to snapshot, one frame until emission, <=1 frame
@@ -157,10 +275,16 @@ def usb_framed_turnaround(frame_words=8,word_hz=250e6,fpga_s=40e-9,
     ordinary host/device responses, measured at the relevant port boundaries.
     No built-in-hub or cable allowance is consumed by this local chip/FPGA budget.
     """
-    values=(word_hz,fpga_s,analog_s,cdc_words,queue_words,packing_bits)
+    values=(word_hz,fpga_s,analog_s,cdc_words,queue_words,packing_bits,h2d_commit_words)
     if frame_words not in (8,64) or not all(math.isfinite(v) for v in values) or word_hz<=0 or any(v<0 for v in values[1:]):
         raise ValueError('USB framed timing envelope')
+    if h2d_cdc_hz is not None and (not math.isfinite(h2d_cdc_hz) or h2d_cdc_hz<=0):
+        raise ValueError('Positive destination CDC clock required')
     worst=(6*frame_words+cdc_words+queue_words)/word_hz+fpga_s+analog_s+packing_bits/480e6
+    # Replace the old combined CDC placeholder with H2D visibility only.
+    # D2H crossing is deliberately still unbudgeted in this comparison.
+    extra_cdc=0. if h2d_cdc_hz is None else 3/h2d_cdc_hz-cdc_words/word_hz
+    worst+=h2d_commit_words/word_hz+extra_cdc
     earliest=fpga_s+analog_s
     minimum=8/480e6;maximum=192/480e6
     return dict(frame_words=frame_words,word_hz=word_hz,
@@ -169,7 +293,10 @@ def usb_framed_turnaround(frame_words=8,word_hz=250e6,fpga_s=40e-9,
                 minimum_guard_s=max(0.,minimum-earliest),margin_s=maximum-max(worst,minimum),
                 meets_bound=max(worst,minimum)<=maximum,
                 assumptions=dict(fpga_s=fpga_s,analog_s=analog_s,cdc_words=cdc_words,
-                                 queue_words=queue_words,packing_bits=packing_bits))
+                                 queue_words=queue_words,packing_bits=packing_bits,
+                                 h2d_commit_words=h2d_commit_words,h2d_cdc_hz=h2d_cdc_hz,
+                                 h2d_visibility_s=None if h2d_cdc_hz is None else 3/h2d_cdc_hz,
+                                 cdc_scope='legacy combined word allowance' if h2d_cdc_hz is None else 'H2D only; D2H crossing and physical margins missing'))
 
 
 class BurstEnvelopeReceiver:

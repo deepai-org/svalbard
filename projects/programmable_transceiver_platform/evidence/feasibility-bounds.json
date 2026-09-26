@@ -1,6 +1,344 @@
 {
   "status": "conditional_analytic_scenarios_not_qualification",
   "temperature_k": 300.15,
+  "analog_assumption_audit": {
+    "literature_informed_receiver_cascades": [
+      {
+        "lna_gain_db": 9.6,
+        "lna_nf_db": 4.9,
+        "assumed_pre_lna_loss_db": 2.0,
+        "assumed_downstream_nf_db": 15.0,
+        "inferred_total_nf_db": 10.094261143584198,
+        "scope": "Measured TSMC180 LNA precedent plus assumed matched power-gain/noise stages; not GF180 or measured complete receiver."
+      },
+      {
+        "lna_gain_db": 12.0,
+        "lna_nf_db": 7.9,
+        "assumed_pre_lna_loss_db": 2.0,
+        "assumed_downstream_nf_db": 15.0,
+        "inferred_total_nf_db": 11.083840255809088,
+        "scope": "Measured TSMC180 LNA precedent plus assumed matched power-gain/noise stages; not GF180 or measured complete receiver."
+      }
+    ],
+    "lna_precedent_source": "https://ethesys.lis.nsysu.edu.tw/ETD-db/ETD-search-c/view_etd?URN=etd-0919123-233952",
+    "process_interpretation": {
+      "verdict": "No process-wide impossibility established by this audit",
+      "candidate_failures_are_not_process_limits": true,
+      "missing_characterization_is_not_failure": true,
+      "historical_supply_slope_is_not_an_achievable_lower_bound": true,
+      "pad_package_values_are_scenarios_not_measurements": true
+    },
+    "external_clock_scenarios": [
+      {
+        "carrier_hz": 2437000000.0,
+        "external_jitter_ps": 0.5,
+        "input_added_jitter_ps": 0.5,
+        "distribution_added_jitter_ps": 1.0,
+        "total_uncorrelated_jitter_ps": 1.224744871391589,
+        "equivalent_phase_rms_rad": 0.018753443616626772,
+        "scope": "Assumed independent integrated timing errors over one common bandwidth; not measured GF180 jitter, a phase-noise mask or packet EVM prediction."
+      },
+      {
+        "carrier_hz": 2437000000.0,
+        "external_jitter_ps": 0.5,
+        "input_added_jitter_ps": 1.0,
+        "distribution_added_jitter_ps": 1.0,
+        "total_uncorrelated_jitter_ps": 1.5,
+        "equivalent_phase_rms_rad": 0.022968183890394976,
+        "scope": "Assumed independent integrated timing errors over one common bandwidth; not measured GF180 jitter, a phase-noise mask or packet EVM prediction."
+      },
+      {
+        "carrier_hz": 2437000000.0,
+        "external_jitter_ps": 0.5,
+        "input_added_jitter_ps": 3.0,
+        "distribution_added_jitter_ps": 1.0,
+        "total_uncorrelated_jitter_ps": 3.2015621187164243,
+        "equivalent_phase_rms_rad": 0.04902271165280092,
+        "scope": "Assumed independent integrated timing errors over one common bandwidth; not measured GF180 jitter, a phase-noise mask or packet EVM prediction."
+      },
+      {
+        "carrier_hz": 2437000000.0,
+        "external_jitter_ps": 0.5,
+        "input_added_jitter_ps": 10.0,
+        "distribution_added_jitter_ps": 1.0,
+        "total_uncorrelated_jitter_ps": 10.062305898749054,
+        "equivalent_phase_rms_rad": 0.15407526149591624,
+        "scope": "Assumed independent integrated timing errors over one common bandwidth; not measured GF180 jitter, a phase-noise mask or packet EVM prediction."
+      }
+    ],
+    "external_support_risk_partition": {
+      "potentially_bypassed": "Local oscillator only when a qualified direct external-LO/clock path is selected; external reference alone is insufficient.",
+      "retained": [
+        "input/ESD loading",
+        "clock receiver and distribution noise",
+        "required quadrature/division",
+        "incoming serial CDR",
+        "RF conversion/converter/driver performance"
+      ],
+      "analog_pad_dc_rating_a": 0.01,
+      "pad_source": "https://gf180mcu-pdk.readthedocs.io/en/latest/IPs/IO/gf180mcu_fd_io/datasheet.html",
+      "pad_scope": "Standard asig_5p0 cell rating, not a universal RF peak-current or bandwidth limit."
+    },
+    "mim_area_scenarios": [
+      {
+        "capacitance_nf": 0.1,
+        "density_ff_per_um2": 1.0,
+        "ideal_plate_area_mm2": 0.1,
+        "scope": "Plate area only; one process option, excludes routing/spacing/ESR/ESL"
+      },
+      {
+        "capacitance_nf": 0.1,
+        "density_ff_per_um2": 1.5,
+        "ideal_plate_area_mm2": 0.06666666666666667,
+        "scope": "Plate area only; one process option, excludes routing/spacing/ESR/ESL"
+      },
+      {
+        "capacitance_nf": 0.1,
+        "density_ff_per_um2": 2.0,
+        "ideal_plate_area_mm2": 0.05,
+        "scope": "Plate area only; one process option, excludes routing/spacing/ESR/ESL"
+      },
+      {
+        "capacitance_nf": 1.0,
+        "density_ff_per_um2": 1.0,
+        "ideal_plate_area_mm2": 1.0,
+        "scope": "Plate area only; one process option, excludes routing/spacing/ESR/ESL"
+      },
+      {
+        "capacitance_nf": 1.0,
+        "density_ff_per_um2": 1.5,
+        "ideal_plate_area_mm2": 0.6666666666666666,
+        "scope": "Plate area only; one process option, excludes routing/spacing/ESR/ESL"
+      },
+      {
+        "capacitance_nf": 1.0,
+        "density_ff_per_um2": 2.0,
+        "ideal_plate_area_mm2": 0.5,
+        "scope": "Plate area only; one process option, excludes routing/spacing/ESR/ESL"
+      }
+    ],
+    "mim_source": "https://gf180mcu-pdk.readthedocs.io/en/latest/analog/spice/elec_specs/elec_specs_6_4.html",
+    "loaded_vco_tuning": {
+      "source": "evidence/vco-capture-tuning.json",
+      "source_sha256": "86f71ff2b12b1390c742915c2a502a6aedd5a8eb04d82216018458a76b9d7728",
+      "positive_and_negative_slopes": true,
+      "slopes_hz_per_v": [
+        254799530.35339165,
+        -207376669.43655592,
+        -424259396.39784455
+      ],
+      "limitations": [
+        "Nominal seeded/prebiased RF hierarchy; no acquisition, phase noise or process/mismatch.",
+        "Four tuning points do not establish global monotonicity or a loop-stability model.",
+        "Actual mixer/buffer load but ideal biases/sample clocks; actual seven-stage divider/interface/PFD load.",
+        "41ns snapshots; final slow divider/PFD acquisition not exercised. No precise turning point or globally monotonic interval established."
+      ],
+      "model_assumption": "Pulse PLL uses constant positive 200 MHz/V and +/-1 V tuning; physical branch and control range are not established."
+    },
+    "oscillator_supply": {
+      "model_hz_per_v": 10000000.0,
+      "historical_dc_slope_hz_per_v": 64775664.77451462,
+      "ratio": 6.477566477451462,
+      "source": "evidence/vco-supply-screen.json",
+      "source_sha256": "701cd1e89c1de15e8e3626354a6dabdefb8d773f1bfd56f55fa3ab9a6f15c0d5",
+      "scope": "Historical transistor candidate local DC slope near 3.3 V, not measured silicon or an RF transfer function."
+    },
+    "supply_phase_scenarios": [
+      {
+        "offset_hz": 1000000.0,
+        "ripple_peak_v": 0.001,
+        "k_hz_per_v": 10000000.0,
+        "uncorrected_phase_rms_rad": 0.0070710678118654745
+      },
+      {
+        "offset_hz": 1000000.0,
+        "ripple_peak_v": 0.01,
+        "k_hz_per_v": 10000000.0,
+        "uncorrected_phase_rms_rad": 0.07071067811865475
+      },
+      {
+        "offset_hz": 5000000.0,
+        "ripple_peak_v": 0.001,
+        "k_hz_per_v": 10000000.0,
+        "uncorrected_phase_rms_rad": 0.0014142135623730948
+      },
+      {
+        "offset_hz": 5000000.0,
+        "ripple_peak_v": 0.01,
+        "k_hz_per_v": 10000000.0,
+        "uncorrected_phase_rms_rad": 0.014142135623730949
+      },
+      {
+        "offset_hz": 10000000.0,
+        "ripple_peak_v": 0.001,
+        "k_hz_per_v": 10000000.0,
+        "uncorrected_phase_rms_rad": 0.0007071067811865474
+      },
+      {
+        "offset_hz": 10000000.0,
+        "ripple_peak_v": 0.01,
+        "k_hz_per_v": 10000000.0,
+        "uncorrected_phase_rms_rad": 0.0070710678118654745
+      },
+      {
+        "offset_hz": 1000000.0,
+        "ripple_peak_v": 0.001,
+        "k_hz_per_v": 64775664.77451462,
+        "uncorrected_phase_rms_rad": 0.045803311817925865
+      },
+      {
+        "offset_hz": 1000000.0,
+        "ripple_peak_v": 0.01,
+        "k_hz_per_v": 64775664.77451462,
+        "uncorrected_phase_rms_rad": 0.4580331181792587
+      },
+      {
+        "offset_hz": 5000000.0,
+        "ripple_peak_v": 0.001,
+        "k_hz_per_v": 64775664.77451462,
+        "uncorrected_phase_rms_rad": 0.009160662363585172
+      },
+      {
+        "offset_hz": 5000000.0,
+        "ripple_peak_v": 0.01,
+        "k_hz_per_v": 64775664.77451462,
+        "uncorrected_phase_rms_rad": 0.09160662363585173
+      },
+      {
+        "offset_hz": 10000000.0,
+        "ripple_peak_v": 0.001,
+        "k_hz_per_v": 64775664.77451462,
+        "uncorrected_phase_rms_rad": 0.004580331181792586
+      },
+      {
+        "offset_hz": 10000000.0,
+        "ripple_peak_v": 0.01,
+        "k_hz_per_v": 64775664.77451462,
+        "uncorrected_phase_rms_rad": 0.045803311817925865
+      }
+    ],
+    "receiver_thermal_floor": [
+      {
+        "signal_dbm": -56.86,
+        "noise_figure_db": 5.0,
+        "noise_dbm": -95.81548373965893,
+        "thermal_noise_only_evm": 0.011277836990450438
+      },
+      {
+        "signal_dbm": -56.86,
+        "noise_figure_db": 10.0,
+        "noise_dbm": -90.81548373965893,
+        "thermal_noise_only_evm": 0.020055145309893344
+      },
+      {
+        "signal_dbm": -56.86,
+        "noise_figure_db": 15.0,
+        "noise_dbm": -85.81548373965893,
+        "thermal_noise_only_evm": 0.03566365196992201
+      },
+      {
+        "signal_dbm": -66.86,
+        "noise_figure_db": 5.0,
+        "noise_dbm": -95.81548373965893,
+        "thermal_noise_only_evm": 0.03566365196992201
+      },
+      {
+        "signal_dbm": -66.86,
+        "noise_figure_db": 10.0,
+        "noise_dbm": -90.81548373965893,
+        "thermal_noise_only_evm": 0.06341993798490637
+      },
+      {
+        "signal_dbm": -66.86,
+        "noise_figure_db": 15.0,
+        "noise_dbm": -85.81548373965893,
+        "thermal_noise_only_evm": 0.11277836990450438
+      },
+      {
+        "signal_dbm": -76.86,
+        "noise_figure_db": 5.0,
+        "noise_dbm": -95.81548373965893,
+        "thermal_noise_only_evm": 0.11277836990450438
+      },
+      {
+        "signal_dbm": -76.86,
+        "noise_figure_db": 10.0,
+        "noise_dbm": -90.81548373965893,
+        "thermal_noise_only_evm": 0.20055145309893344
+      },
+      {
+        "signal_dbm": -76.86,
+        "noise_figure_db": 15.0,
+        "noise_dbm": -85.81548373965893,
+        "thermal_noise_only_evm": 0.3566365196992201
+      }
+    ],
+    "tx_retained_case_margins": {
+      "current_limit_a": 0.028,
+      "peak_current_a": 0.02631193677,
+      "remaining_peak_current_a": 0.0016880632300000017,
+      "minimum_rail_v": 3.169463,
+      "headroom_per_rail_v": 0.3,
+      "peak_open_differential_v": 2.368074,
+      "remaining_differential_headroom_v": 0.20138899999999982,
+      "scope": "Arithmetic from one retained loaded TX fixture; no process/load/crest-factor envelope."
+    },
+    "package_series_reactance": [
+      {
+        "carrier_hz": 2400000000.0,
+        "inductance_nh": 0.2,
+        "series_reactance_ohm": 3.0159289474462017
+      },
+      {
+        "carrier_hz": 2400000000.0,
+        "inductance_nh": 1.0,
+        "series_reactance_ohm": 15.079644737231007
+      },
+      {
+        "carrier_hz": 2400000000.0,
+        "inductance_nh": 5.0,
+        "series_reactance_ohm": 75.39822368615503
+      },
+      {
+        "carrier_hz": 2500000000.0,
+        "inductance_nh": 0.2,
+        "series_reactance_ohm": 3.1415926535897936
+      },
+      {
+        "carrier_hz": 2500000000.0,
+        "inductance_nh": 1.0,
+        "series_reactance_ohm": 15.707963267948966
+      },
+      {
+        "carrier_hz": 2500000000.0,
+        "inductance_nh": 5.0,
+        "series_reactance_ohm": 78.53981633974483
+      }
+    ],
+    "pad_shunt_reactance": [
+      {
+        "carrier_hz": 2437000000.0,
+        "capacitance_pf": 0.2,
+        "shunt_reactance_magnitude_ohm": 326.5386604265395
+      },
+      {
+        "carrier_hz": 2437000000.0,
+        "capacitance_pf": 1.0,
+        "shunt_reactance_magnitude_ohm": 65.3077320853079
+      },
+      {
+        "carrier_hz": 2437000000.0,
+        "capacitance_pf": 3.0,
+        "shunt_reactance_magnitude_ohm": 21.769244028435967
+      }
+    ],
+    "limitations": [
+      "Supply phase values omit PLL suppression and receiver tracking; they are open-loop sinusoidal susceptibility, not payload EVM predictions.",
+      "Thermal floor excludes conversion distortion, phase noise, blockers and ADC noise; gain cannot recover the lost input SNR.",
+      "Package/pad reactances are exploratory lumped examples, not a measured network, insertion loss, or matched-port prediction.",
+      "Default finite oscillator noise covers eight discrete tones at 250 kHz through 2 MHz, not a calibrated broadband phase-noise mask."
+    ]
+  },
   "lo_residual_phase_scenarios": [
     {
       "total_evm_db": -20,
@@ -141,6 +479,64 @@
       "noise_figure_db": 15,
       "required_snr_db": 30,
       "sensitivity_dbm": -55.81548373965893
+    }
+  ],
+  "receiver_reference_plane_scenarios": [
+    {
+      "noise_figure_db": 5.0,
+      "noise_bandwidth_hz": 20000000.0,
+      "frontend_noise_evm_rms": 0.04,
+      "rf_resistance_ohm": 50.0,
+      "normalized_complex_signal_rms": 0.2,
+      "differential_volts_per_normalized_unit": 0.5,
+      "filter_output_complex_signal_rms_v": 0.1,
+      "required_rf_input_dbm": -67.85668356621818,
+      "required_conversion_voltage_gain_db": 57.85668356621818
+    },
+    {
+      "noise_figure_db": 10.0,
+      "noise_bandwidth_hz": 20000000.0,
+      "frontend_noise_evm_rms": 0.04,
+      "rf_resistance_ohm": 50.0,
+      "normalized_complex_signal_rms": 0.2,
+      "differential_volts_per_normalized_unit": 0.5,
+      "filter_output_complex_signal_rms_v": 0.1,
+      "required_rf_input_dbm": -62.85668356621818,
+      "required_conversion_voltage_gain_db": 52.85668356621818
+    },
+    {
+      "noise_figure_db": 15.0,
+      "noise_bandwidth_hz": 20000000.0,
+      "frontend_noise_evm_rms": 0.04,
+      "rf_resistance_ohm": 50.0,
+      "normalized_complex_signal_rms": 0.2,
+      "differential_volts_per_normalized_unit": 0.5,
+      "filter_output_complex_signal_rms_v": 0.1,
+      "required_rf_input_dbm": -57.85668356621818,
+      "required_conversion_voltage_gain_db": 47.85668356621818
+    }
+  ],
+  "gain_noise_reference_scenarios": [
+    {
+      "rx_gain": 0.5,
+      "frontend_evm_rms": 0.04,
+      "converter_excess_noise_evm_rms": 0.015822120845722314,
+      "combined_evm_rms": 0.043015572855149106,
+      "legacy_post_gain_combined_evm_rms": 0.08154961378238797
+    },
+    {
+      "rx_gain": 1.0,
+      "frontend_evm_rms": 0.04,
+      "converter_excess_noise_evm_rms": 0.007911060422861157,
+      "combined_evm_rms": 0.04077480689119398,
+      "legacy_post_gain_combined_evm_rms": 0.04077480689119398
+    },
+    {
+      "rx_gain": 2.0,
+      "frontend_evm_rms": 0.04,
+      "converter_excess_noise_evm_rms": 0.003955530211430578,
+      "combined_evm_rms": 0.04019510193112514,
+      "legacy_post_gain_combined_evm_rms": 0.02038740344559699
     }
   ],
   "planning_current_a": {
@@ -289,7 +685,9 @@
     "Sampling C assumes two independent kT/C legs and thermal RMS <= half quantization RMS. Other circuit noise and settling excluded.",
     "350 mA is a sum of unqualified planning ceilings, not measured current or safe pad/package capacity.",
     "L di/dt omits decoupling/resonance; I dt/C omits ESR/ESL. Neither predicts the actual PDN.",
+    "Reference-plane scenarios assume 20 MHz equivalent noise bandwidth and ideal linear conversion into 1 Vpp differential I/Q ranges; no matching, loading, mixer sideband or actual gain/NF calibration is inferred.",
+    "Gain-noise scenarios isolate frontend versus excess ADC ENOB noise; ideal quantization, filters, clock error, blockers and channel estimation remain additional.",
     "No finite sensitivity sweep proves tolerance of an unknown physical quantity with no justified bound."
   ],
-  "source_sha256": "9adae013588776c4e9401c642d8b848527eb36a9a01836f4a1802d594dc5c7ae"
+  "source_sha256": "269f89a8be551d32b7bf823129c07b2d810a369e9a209240c11bacc90186b575"
 }

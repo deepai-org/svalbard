@@ -1,0 +1,305 @@
+{
+  "status": "conditional_capacitor_feedback_conversion",
+  "coarse": {
+    "capacitor_feedback": true,
+    "stop_time_ns": 50.0,
+    "exact_mos_groups": 2597,
+    "supply_ramp_1ns": true,
+    "maximum_timestep_ns": 0.1,
+    "source_gds_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+    "raw_sha256": "31cc15ee5285c9a61e65be3bb8190c31d33001aa6231cc88a8c102b204483dd0",
+    "map_sha256": "41a930ac95c75e010020d72439d51c25aaa2720262fef048328a7e5aab7038dd",
+    "model_sha256": {
+      "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+      "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+    },
+    "cycles": [
+      {
+        "window_ns": [
+          5,
+          50
+        ],
+        "valid_rises_ns": [
+          6.393931640006656,
+          8.842818199729109,
+          11.33971880878199,
+          13.8526169073378,
+          16.38314108823391,
+          18.94681298078632,
+          21.55919784548628,
+          24.22150077032814,
+          26.862162754856648,
+          29.57051112328655,
+          32.26030364720257,
+          35.15067416183037,
+          37.853856690299295,
+          40.57943063021384
+        ],
+        "stage_rises_ns": [
+          [
+            6.775842700382821
+          ],
+          [
+            9.229641722534561
+          ],
+          [
+            11.7252726946073
+          ],
+          [
+            14.23680900037268
+          ],
+          [
+            16.77126962364168
+          ],
+          [
+            19.335607695755428
+          ],
+          [
+            21.939079687951523
+          ],
+          [
+            24.61389915489865
+          ],
+          [
+            27.243526546496128
+          ],
+          [
+            29.955063881857868
+          ],
+          [
+            32.64873784762912
+          ],
+          [
+            35.53776468403075
+          ],
+          [
+            38.24377634691284
+          ],
+          [
+            40.94621660523265
+          ]
+        ],
+        "final_stage_voltages": [
+          3.299999983011857,
+          3.299999983019863,
+          3.299999983030593,
+          3.299999983044613,
+          3.299999983063254,
+          3.299999983088612,
+          3.299999983124098,
+          3.299999983175677,
+          3.299999983252242,
+          3.299999983372958,
+          3.299999983573367,
+          3.299999983959707,
+          3.299999984712222,
+          3.299993265720118
+        ],
+        "final_differential_input_v": 0.0002726189403325918,
+        "stored_positive_decisions": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1
+        ],
+        "differential_input_before_valid_edges_v": [
+          0.01000007272814507,
+          -0.804844713405736,
+          -0.3955146753044144,
+          -0.1927403248406031,
+          -0.0914643714242751,
+          -0.04081445689592378,
+          -0.015495559402440962,
+          -0.0028543184321421222,
+          0.003443988019050992,
+          0.0003188085064863566,
+          -0.0012199343616118297,
+          -2.7472474366851962e-05,
+          0.0005650204798002267,
+          0.0002726623511501991
+        ]
+      }
+    ],
+    "limitations": [
+      "Nominal3.3V25C,10mV differential sampled source,1.2V preamp bias, ideal references/reset pulses.",
+      "Area-only plate capacitors feed preamp inputs through ideal sampling switches; no bootstrap error, coupling matrix or capacitor mismatch.",
+      "No wire parasitics, noise, mismatch, package, actual pulse-generator waveform or setup/hold qualification."
+    ]
+  },
+  "refined": {
+    "capacitor_feedback": true,
+    "stop_time_ns": 50.0,
+    "exact_mos_groups": 2597,
+    "supply_ramp_1ns": true,
+    "maximum_timestep_ns": 0.05,
+    "source_gds_sha256": "3edb03c0878cc1b754f41a554a364698e41dc921faa852d69cdd9696463f5b10",
+    "raw_sha256": "31cc15ee5285c9a61e65be3bb8190c31d33001aa6231cc88a8c102b204483dd0",
+    "map_sha256": "41a930ac95c75e010020d72439d51c25aaa2720262fef048328a7e5aab7038dd",
+    "model_sha256": {
+      "design.ngspice": "8d9721a5bf8f079d3fddbd03339af9a0c84d4feb06db8e06465fbd02c7500508",
+      "sm141064.ngspice": "73fc67d38747d95ce03f3c2ba5f0a25c98f56a293363a9df4c971a3a28a3dcda"
+    },
+    "cycles": [
+      {
+        "window_ns": [
+          5,
+          50
+        ],
+        "valid_rises_ns": [
+          6.393848263373715,
+          8.84281689530016,
+          11.3397123951489,
+          13.8525551787575,
+          16.38313908691313,
+          18.94680997091281,
+          21.55919509295684,
+          24.22149811162429,
+          26.8621601111451,
+          29.5705087376639,
+          32.260300927820275,
+          35.15440918693713,
+          37.851622429330426,
+          40.57719662736708
+        ],
+        "stage_rises_ns": [
+          [
+            6.775882525456243
+          ],
+          [
+            9.229639591572848
+          ],
+          [
+            11.72527014880874
+          ],
+          [
+            14.23680721079125
+          ],
+          [
+            16.771266785917593
+          ],
+          [
+            19.335604965359238
+          ],
+          [
+            21.939076929686152
+          ],
+          [
+            24.61389646027536
+          ],
+          [
+            27.243523832478818
+          ],
+          [
+            29.95506115180221
+          ],
+          [
+            32.64873513573189
+          ],
+          [
+            35.53553798074936
+          ],
+          [
+            38.24154244249398
+          ],
+          [
+            40.943982594838914
+          ]
+        ],
+        "final_stage_voltages": [
+          3.299999983013086,
+          3.299999983021085,
+          3.299999983031817,
+          3.299999983045821,
+          3.299999983064455,
+          3.299999983089806,
+          3.299999983125282,
+          3.299999983176856,
+          3.299999983253409,
+          3.29999998337412,
+          3.299999983574533,
+          3.299999983960655,
+          3.299999984712917,
+          3.299993263034513
+        ],
+        "final_differential_input_v": 0.0002726192227848756,
+        "stored_positive_decisions": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1
+        ],
+        "differential_input_before_valid_edges_v": [
+          0.010000072900723023,
+          -0.8048447131480921,
+          -0.3955146750600196,
+          -0.19274032462489188,
+          -0.09146437114011297,
+          -0.040814456620296924,
+          -0.015495559122459701,
+          -0.002854318150305346,
+          0.0034439883019544704,
+          0.0003188087885808155,
+          -0.0012199340794954994,
+          -2.746853910440272e-05,
+          0.0005650207625887971,
+          0.00027266263352354603
+        ]
+      }
+    ],
+    "limitations": [
+      "Nominal3.3V25C,10mV differential sampled source,1.2V preamp bias, ideal references/reset pulses.",
+      "Area-only plate capacitors feed preamp inputs through ideal sampling switches; no bootstrap error, coupling matrix or capacitor mismatch.",
+      "No wire parasitics, noise, mismatch, package, actual pulse-generator waveform or setup/hold qualification."
+    ]
+  },
+  "ideal_area_only_decisions": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    1,
+    1,
+    0,
+    0
+  ],
+  "decision_word_stable_with_refinement": true,
+  "maximum_stage_time_difference_ns": 0.002234010393735275,
+  "first_step": {
+    "ideal_plate_step_v": 0.8499446617858559,
+    "observed_differential_step_v": 0.8148447860488152,
+    "reduction_percent": 4.129666002406662,
+    "equivalent_extra_top_capacitance_ff_if_only_cause": 28.67565726800936
+  },
+  "limitations": [
+    "Single10mV input, not INL/DNL, ENOB or a measured transfer comparison.",
+    "Equivalent top capacitance folds nonlinear gate loading, common-mode changes and kickback into one number; not a separately extracted parasitic.",
+    "A decision-word discrepancy can include gain/offset; it is not by itself proof of spectral distortion.",
+    "Recovered monotonic decisions switch high-to-low reference; realistic low-reference sink behavior is still omitted."
+  ]
+}

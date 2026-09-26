@@ -21,6 +21,58 @@
     "scratch/transceiver-block-fifo-mapping/mapped.v": "703313418a52fd1411046de9ff70c4cf3378325869c9dee1322f976e16ea2e53",
     "scratch/transceiver-block-fifo-mapping/stat.json": "00eb86b12b0b052b0f0df8114d625e90e010705a7c2e54fd6c2f0c4ee33a4dd7",
     "scratch/transceiver-block-fifo-mapping/timing.log": "e0d7017437ff672e1cbe2de983e7106d6d143268a45cbf8ad6e862257aa0ccc3",
-    "scratch/transceiver-block-fifo-mapping/library.sha256": "63f746b08d8105af8a803731675c322662d70056ecde4239087246914f7f6f20"
+    "scratch/transceiver-block-fifo-mapping/library.sha256": "63f746b08d8105af8a803731675c322662d70056ecde4239087246914f7f6f20",
+    "scratch/transceiver-block-fifo-mapping/mapped.json": "5008c13ce34beec6b8e7c3e85ddf0a3aa1eee6b50abb583a66da52892056ee03",
+    "projects/programmable_transceiver_platform/verification/report_block_fifo_mapping.py": "a8194eb340dd88d15e3f2a375f4c798e37bc6a279d54218de61e3a70686a7b3f"
+  },
+  "clock_pin_load": {
+    "library_sha256": "f9dee07cf158324934b0c59144d970a2e8313f43533ede6283ec3c136f82fe53",
+    "voltage_v": 3.3,
+    "capacitance_per_cell_f": {
+      "gf180mcu_fd_sc_mcu7t5v0__dffq_1": 3.183e-15,
+      "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1": 3.346e-15
+    },
+    "cells_per_clock": {
+      "wr_clk": {
+        "gf180mcu_fd_sc_mcu7t5v0__dffq_1": 672,
+        "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1": 18
+      },
+      "rd_clk": {
+        "gf180mcu_fd_sc_mcu7t5v0__dffrnq_1": 17
+      }
+    },
+    "clock_pin_capacitance_f": {
+      "wr_clk": 2.199204e-12,
+      "rd_clk": 5.6882e-14
+    },
+    "operating_points": [
+      {
+        "host_word_hz": 250000000.0,
+        "clock_hz": {
+          "wr_clk": 31250000.0,
+          "rd_clk": 40000000.0
+        },
+        "charge_per_rising_edge_c": {
+          "wr_clk": 7.2573732e-12,
+          "rd_clk": 1.8771059999999998e-13
+        },
+        "supply_current_a": 0.0002343013365,
+        "supply_power_w": 0.00077319441045
+      },
+      {
+        "host_word_hz": 312500000.0,
+        "clock_hz": {
+          "wr_clk": 39062500.0,
+          "rd_clk": 40000000.0
+        },
+        "charge_per_rising_edge_c": {
+          "wr_clk": 7.2573732e-12,
+          "rd_clk": 1.8771059999999998e-13
+        },
+        "supply_current_a": 0.00029099956462500003,
+        "supply_power_w": 0.0009602985632625001
+      }
+    ],
+    "scope": "Nominal mapped clock-pin capacitance only: Q=C*V per rising edge and P=C*V^2*f. Excludes cell internal power, data switching, clock buffers/interconnect, leakage and rail transfer. Not a complete current or physical lower-bound guarantee."
   }
 }

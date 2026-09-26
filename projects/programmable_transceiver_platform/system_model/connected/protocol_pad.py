@@ -16,6 +16,8 @@ class SharedWiredPad:
         self.invC=np.linalg.inv(self.C);self.voltage=np.zeros(2);self.time=0.
         self.mode='isolated';self.role='device';self.speed='fs'
         self.local='Z';self.peer='Z';self.attached=False
+        self.local_passives=None
+        self.local_drive=None
         self.peer_supply=3.3;self.hs_current=.4/(1/(1/45+1/45))
         self.source_energy_j=0.;self.external_energy_j=0.;self.dissipated_j=0.
 
@@ -24,11 +26,59 @@ class SharedWiredPad:
             raise ValueError('Pad profile')
         if self.local!='Z' or self.peer!='Z':raise ValueError('Release both drivers before pad reconfiguration')
         self.mode=mode;self.role=role;self.speed=speed;self.attached=bool(attached)
+        self.local_passives=None
+        self.local_drive=None
+
+    def set_local_passives(self,*,pull_up_ohm=(None,None),
+                           pull_down_ohm=(None,None),termination_ohm=(None,None)):
+        """Atomic mathematical apply of independent local passive branches.
+
+        Tuple order is P,N; None disconnects a branch. Pull-ups use the local
+        rail; pull-downs and terminations use local return. Remote drive and
+        passives are unchanged. No switch injection, latency or ABI is implied.
+        """
+        if self.mode!='usb':raise ValueError('Local bidirectional branch must own pads')
+        candidate={}
+        for name,values in (('up',pull_up_ohm),('down',pull_down_ohm),('term',termination_ohm)):
+            if len(values)!=2 or any(v is not None and
+                    (not isinstance(v,(int,float)) or not math.isfinite(v) or v<=0) for v in values):
+                raise ValueError('Two positive finite resistances or disconnected branches required')
+            candidate[name]=tuple(values)
+        self.local_passives=candidate
+
+    def set_local_drive(self,style,*,node=0,levels=(0,0),current_a=.017777777777777778,resistance_ohm=30.):
+        """Independent local drive hypothesis; numeric states, no negotiation FSM.
+
+        A bounded current source may operate against a remote voltage driver.
+        Two active voltage drivers remain rejected. Levels are rail fractions
+        restricted to 0/1; current steering selects the physical P/N leg.
+        """
+        if self.mode!='usb' or style not in ('off','voltage','current'):
+            raise ValueError('Bidirectional pad ownership and supported drive style required')
+        if node not in (0,1) or len(levels)!=2 or any(v not in (0,1) for v in levels):
+            raise ValueError('Physical leg and binary voltage levels required')
+        if not all(math.isfinite(v) and v>0 for v in (current_a,resistance_ohm)):
+            raise ValueError('Positive finite current and resistance required')
+        if style=='voltage' and self.peer!='Z':raise ValueError('Competing voltage drive is not a supported state')
+        self.local_drive=dict(style=style,node=node,levels=tuple(levels),current_a=current_a,resistance_ohm=resistance_ohm)
+        self.local='Z'
+
+    def sense(self,*,low_v=.3,high_v=.8,squelch_v=.1):
+        """Raw ideal comparators, independent of speed; no delay or hysteresis."""
+        if not all(math.isfinite(v) for v in (low_v,high_v,squelch_v)) or not 0<=low_v<high_v or squelch_v<0:
+            raise ValueError('Ordered finite sensing thresholds required')
+        return dict(single_ended_low=tuple(bool(v<low_v) for v in self.voltage),
+            single_ended_high=tuple(bool(v>high_v) for v in self.voltage),
+            differential_positive=bool(self.voltage[0]>self.voltage[1]),
+            squelch=bool(abs(self.voltage[0]-self.voltage[1])<squelch_v),timestamp_s=self.time)
 
     def drive(self,local='Z',peer='Z'):
         if local not in ('Z','J','K','SE0') or peer not in ('Z','J','K','SE0'):
             raise ValueError('Line state')
         if self.mode!='usb' and (local!='Z' or peer!='Z'):raise ValueError('USB branch is isolated')
+        if self.local_drive is not None:
+            if local!='Z':raise ValueError('Use numeric local drive while override is active')
+            if peer!='Z' and self.local_drive['style']=='voltage':raise ValueError('Competing voltage drive is not supported')
         if local!='Z' and peer!='Z':raise ValueError('USB bus contention')
         if self.speed=='hs' and (local=='SE0' or peer=='SE0'):
             raise ValueError('HS zero state is driver release, not FS push-pull SE0')
@@ -49,15 +99,31 @@ class SharedWiredPad:
         if self.mode=='usb':
             if self.speed=='hs':
                 for n in range(2):
-                    resistor(n,0.,45.,'ground')
+                    if self.local_passives is None:resistor(n,0.,45.,'ground')
                     if self.attached:resistor(n,0.,45.,'ground')
             else:
                 # Host pull-downs; a connected device advertises FS on D+ or LS on D-.
                 for n in range(2):
-                    if self.role=='host' or self.attached:resistor(n,0.,15000.,'ground')
-                if self.role=='device' or self.attached:
+                    if ((self.role=='host' and self.local_passives is None) or
+                            (self.role=='device' and self.attached)):resistor(n,0.,15000.,'ground')
+                if ((self.role=='device' and self.local_passives is None) or
+                        (self.role=='host' and self.attached)):
                     local_device=self.role=='device'
                     resistor(1 if self.speed=='ls' else 0,rail if local_device else self.peer_supply,1500.,'local' if local_device else 'peer')
+            if self.local_passives is not None:
+                for n in range(2):
+                    for branch,target,owner in (('up',rail,'local'),('down',0.,'ground'),('term',0.,'ground')):
+                        resistance=self.local_passives[branch][n]
+                        if resistance is not None:resistor(n,target,resistance,owner)
+            if self.local_drive is not None:
+                d=self.local_drive
+                if d['style']=='current':
+                    node=d['node'];i=d['current_a']*max(0.,min(1.,(rail-v[node])/.3))
+                    current[node]+=i;supply+=i;loss+=(rail-v[node])*i
+                elif d['style']=='voltage':
+                    for n in range(2):
+                        target=rail*d['levels'][n]
+                        resistor(n,target,d['resistance_ohm'],'local' if target else 'ground')
             for state,owner,source in ((self.local,'local',rail),(self.peer,'peer',self.peer_supply)):
                 if state=='Z':continue
                 jnode=1 if self.speed=='ls' else 0
@@ -90,8 +156,14 @@ class SharedWiredPad:
         a=np.column_stack([self.electrical(np.eye(2)[i]*.01,rail)[0]-b for i in range(2)])/.01
         aug=np.zeros((3,3));aug[:2,:2]=a;aug[:2,2]=b
         out=(expm(aug*dt)@np.r_[self.voltage,1])[:2]
-        if self.speed=='hs' and self.mode=='usb' and max(out)>rail-.3:
-            raise ValueError('Use coupled nonlinear solver outside HS compliance')
+        current_legs=[]
+        if self.local_drive is not None and self.local_drive['style']=='current':
+            current_legs.append((self.local_drive['node'],rail))
+        if self.speed=='hs' and self.mode=='usb':
+            for state,source in ((self.local,rail),(self.peer,self.peer_supply)):
+                if state!='Z':current_legs.append((0 if state=='J' else 1,source))
+        if any(max(out[node],self.voltage[node])>source-.3 for node,source in current_legs):
+            raise ValueError('Use coupled nonlinear solver outside current-source compliance')
         self.voltage=out;self.time=time
 
 

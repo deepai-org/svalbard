@@ -6,9 +6,55 @@ This pass creates a runnable digital implementation and a whole-chip connection 
 
 `pt_digital` and `pt_core` default to `STREAM_V2=1`, using protected-header streaming without payload quarantine. `STREAM_V2=0` retains v1 for comparison, not as a runtime extra protocol. The 1,280-bit declared RX frame bank and its read pipeline are eliminated; declared data arrays fall from 8,576 to 7,296 bits. TX staging and all other FIFOs/capture/playback remain. The older storage description below describes the original v1 baseline. Both rate profiles pass finite functional tests in both variants. Canonical contract version 4 reflects v2; legacy queue-model evidence is explicitly separated. Current physical results and their limitations are in the pass-28 report.
 
+## Current generic control-surface audit
+
+`spec/contract.json:generic_control_surface` owns the external capability-to-service
+mapping; `robustness-envelope.json:control_surface_coverage` reports the gaps.
+Protocol names appear only in the external requirements, never in a chip opcode.
+The inspected physical skeleton and control RTL do **not** implement the entire
+intended control surface.
+
+| Generic service | Existing boundary | Required extension / qualification |
+|---|---|---|
+| Atomic numeric configuration | SPI enable/mode and RF/wired/clock 16-bit trims; behavioral numeric validators | Defined fields and atomic apply/ack for compatible settings; trim storage alone has no physical semantics |
+| Clock readiness/loss | Clock outputs from analog macro; behavioral qualification and recovery | Source/CDR status, missing-clock event, bounded observation and recovery |
+| Wired electrical controls | `wire_trim`, `wire_idle`; separate electrical models | Swing, postcursor, termination, DC mode and receiver-detection control/status |
+| USB local pad state | Bidirectional `WIRE_RX`; behavioral HS/FS/LS pad model | Timed drive/termination/pull changes, squelch and disconnect observations |
+| Timed actions | Mathematical event services; small current stream command set | Generic scheduled state/burst/gap actions with epoch, capacity, late policy and apply latency |
+| RF direction and tuning | RF trim/mute, numeric settings and transition budget | Independent same-channel direction/gain/filter changes, settling and useful overload status |
+| Continuous stream | FIFO/gearbox/transport/pacing candidates | One selected physical bridge with latency, occupancy and safe underrun behavior |
+| Recovery | Candidate SPI mailbox 0x30–0x36, behavioral mailbox | Actual `pt_control` registers and live RF/wired/host reset/epoch integration |
+| Board coordination | External FPGA GPIO ownership | RF switch/PA, USB VBUS, display sidebands and SDI frontend timing included in budgets |
+
+`pt_control` currently resides in `rtl/pt_spi.sv`: write address 1 enables;
+2 selects mode; 0x10–0x12 store trims; 0x20–0x26 service diagnostic memory/status.
+The recovery mailbox addresses are not implemented there. The three trim words
+cannot be counted as arbitrary fast reconfiguration or complete protocol control.
+The fast framed reference currently permits no-op, wired idle and RF mute;
+that is not a complete scheduled electrical-state service.
+
+No worst-case serialized-command-to-pad latency is yet qualified for these
+services. A behavioral callback timestamp, an SPI write edge and a pad effect
+are different events. For deadline-critical operation, prearmed generic actions
+need explicit lead time and local timing; asynchronous host decisions cannot be
+assumed instantaneous. Keep bounded local event/CDC storage, not packet buffers.
+
+The joined packet model now holds a bounded DAC prefill
+until a timestamped stream-consumption start, while converter clocks keep
+running. An RF-mute bit alone does not provide that behavior: draining samples
+while muted would empty the buffer before launch. Treat sample consumption,
+output unmute and late/underflow cancellation as explicit generic apply events;
+a finite mathematical queue now exercises them, but the present physical
+control boundary has not demonstrated them.
+
+All original targets plus HD-SDI, custom GFSK/SDR and the two existing RF stretch
+goals are mapped. USB and PCIe remain lifecycle anchors; this prioritization does
+not drop SATA OOB, TMDS multi-chip alignment or any other target. Continue the
+mathematical interface work before new RTL/schematic implementation.
+
 ## Physical interface
 
-The top-level has exactly 50 terminal bits: 20 data, 2 host clocks, 4 SPI, reset, reference, 8 analog and 14 power/ground. This is a logical connection contract, not a pad placement, package assignment, ESD network or electrical qualification. `pt_host_physical` owns the GPIO pads and DDR gearbox; `pt_analog_physical` owns RF/wired pads and the analog/clock hierarchy. Supply domains must remain distinct through physical implementation.
+The top-level has exactly 50 terminal bits: 20 data, 2 host clocks, 4 SPI, reset, reference, 8 analog and 14 power/ground. This is a logical connection contract, not a pad placement, package assignment, ESD network or electrical qualification. `pt_host_physical` owns the GPIO pads and DDR gearbox; `pt_analog_physical` owns RF/wired pads and the analog/clock hierarchy. Domain names are logical load groups, not proven independent external rails. Provider-compatible fixed power/ground connections take precedence; qualify any local isolation behind that boundary.
 
 The digital host word clocks are 250/312.5 MHz. DDR host pin clocks are 125/156.25 MHz. A host macro must produce one correctly ordered 10-bit word per internal clock without missing either DDR edge. This high internal frequency is an explicit GF180 timing risk; structural synthesis cannot establish feasibility. A two-word-wide implementation is a possible refinement if timing fails, with corresponding scheduling changes.
 
@@ -78,6 +124,82 @@ The host macro reuses its existing queues, header codec and staging banks with
 a configurable eight-word frame counter and slot mask for response-critical traffic. No constant-zero tied control may be presented as
 working support. Reject unsupported control combinations until their required controls
 and data paths are implemented.
+
+### Independent shared-pad electrical controls
+
+This is the normative required macro boundary, not a claim that current RTL
+ports or `SharedWiredPad.configure()` implement it. Preserve one generic pad
+state vector; the FPGA supplies protocol sequences. A speed/role convenience
+function may construct vectors in a testbench, but must not hide unavailable
+hardware actions.
+
+| Resource | Independent configuration / action | Required observation |
+|---|---|---|
+| Weak bias on each leg | Enable/disable pull-up and pull-down independently; select supported resistance and pull-up source | Applied state, pad level; source and voltage limits declared |
+| Termination | Enable each supported termination path independently of driver enable and weak pulls; trim resistance and bias while stopped | Applied state and settling qualification |
+| Active drive | High impedance, voltage drive or current steering; output enable, polarity/level and numeric strength | Applied state, electrical fault where detectable; no inferred protocol state |
+| Receive sensing | Differential receiver, both single-ended comparators, squelch and detection thresholds independently enabled | Timestamped raw/qualified levels with explicit threshold, filtering and latency |
+| Capture/playback | Start/stop sample or bit delivery independently of passive pad state | Epoch, alignment, overflow/underrun and stopped status |
+
+Only physically realizable combinations are accepted. Examples needing explicit
+validation include weak pull plus a peer-driven reset state, current drive
+with the selected passive load during negotiation, and passive termination
+changes while the remote transmitter remains active. Required ranges and
+current-source compliance remain circuit-feasibility gates; exposing a field
+does not prove its range. The peer's state is a bench stimulus or observation,
+never a command the chip can enforce.
+
+Distinguish two kinds of transition:
+
+1. **Topology or trim change:** stop local active drive and capture/publication
+   as required, apply break-before-make, wait the declared settling interval,
+   then qualify and acknowledge the applied vector. Switching serial/DC branch
+   ownership belongs here. A peer can still be electrically active; the selected
+   pad topology must tolerate that state or the operation must reject it.
+2. **Prevalidated live electrical action:** apply only its allowed mask of
+   output enable, level, weak-pull or termination bits at a scheduled boundary.
+   Preserve unrelated receive sensing and clock state. Local output release
+   must not imply removal of every pull or termination. Do not require a remote
+   driver to release merely because the local FPGA changes a passive state.
+
+Each accepted action needs an epoch, apply timestamp or bounded immediate
+latency, and applied-state acknowledgement distinct from command receipt.
+Unsupported combinations and missed deadlines leave the prior valid state or
+enter an explicitly specified released-drive fault state; never silently apply
+a partial new vector. Fault policy specifies which passive loads remain so
+that 'safe' is not an ambiguous blanket disconnection. Device-off leakage and
+externally driven voltage tolerance must hold independently of software.
+
+**Architecture decision:** extend the generic electrical-state boundary rather
+than add a USB negotiation engine or protocol profile. No extra package pins
+or packet buffers are allocated by this decision. The event storage, command
+fields, state interlocks, comparator delays, switch charge injection and
+settling cost still require implementation and joint lifecycle verification.
+The existing probe sequence that jumps from FS to HS remains partial evidence.
+
+The mathematical pad now exposes `set_local_passives()` with independent
+per-leg pull-up, pull-down and termination resistance (or disconnected state).
+It changes only the local passive network, preserving the remote drive/load and
+existing capacitor voltage. This is an instantaneous equation-level apply, not
+a serialized command implementation. Its resistor/supply energy accounting and
+legacy-state equivalence are checked in `verification/test_shared_pad_controls.py`.
+`set_local_drive()` now independently selects released, voltage or current drive
+with numeric strength and physical leg/levels. A bounded local current source
+can operate against a remote voltage drive; competing voltage drives are
+rejected. `sense()` exposes ideal single-ended high/low, differential polarity
+and squelch at supplied numeric thresholds. These functions preserve the peer's
+configuration and do not infer protocol states.
+
+A tested intermediate sequence removes a local pull, applies 18 mA to N while
+the peer continues driving SE0, then releases local current. The observed
+voltage matches the explicit parallel resistance and instantaneous power
+balance. This proves representability of an electrical intermediate state,
+not valid USB chirp amplitude or timing. Seven focused tests plus both legacy
+role probes pass. Scheduled apply, sensing delays/hysteresis, physical range
+qualification, switch charge injection and complete negotiation remain open.
+The affine step refuses active-current operation outside its compliance region;
+the nonlinear electrical primitive is required there.
+
 
 DisplayPort AUX/HPD and USB VBUS switch/sense connect externally to FPGA GPIOs.
 Their clocks, levels and response latency belong in peer tests, even though

@@ -2,7 +2,7 @@
 import copy
 import json
 import unittest
-from check_contract import CONTRACT, check, resource_ledger
+from check_contract import CONTRACT, check, resource_ledger, assembly_ledger, operating_clock_ledger, periodic_stream_bound
 
 class ContractTests(unittest.TestCase):
     def setUp(self):
@@ -28,6 +28,56 @@ class ContractTests(unittest.TestCase):
         modes = check(self.c)
         self.assertEqual(modes[0]['used_words_per_direction'], {'d2h': 58, 'h2d': 58})
         self.assertEqual(modes[1]['used_words_per_direction'], {'d2h': 59, 'h2d': 59})
+
+    def test_physical_sites_cannot_be_hidden_by_logical_budget(self):
+        r=assembly_ledger(self.c)
+        self.assertEqual((r['provider_sites'],r['provider_signal_sites'],r['fixed_supply_return_sites']),(74,56,18))
+        self.assertEqual(r['required_signals_plus_fixed_supply_sites'],54)
+        self.assertEqual(r['minimum_excess_over_logical_target'],4)
+        self.assertEqual(r['spare_signal_sites'],20)
+        self.assertFalse(r['closed'])
+        self.assertIsNone(r['delivered_board_terminal_count'])
+        sites=self.c['assembly_policy']['provider_site_inventory']['ordered_sites_by_side']
+        sites['south'].remove('dvss_pads[0].pad')
+        with self.assertRaisesRegex(ValueError,'missing fixed provider'):assembly_ledger(self.c)
+
+    def test_signal_map_preserves_supplies_and_pair_adjacency(self):
+        mapping=self.c['assembly_policy']['candidate_signal_sites']
+        mapping['REF_IN']='dvss_pads[5].pad'
+        with self.assertRaisesRegex(ValueError,'fixed supply site'):assembly_ledger(self.c)
+        mapping['REF_IN']='inputs[1].pad'
+        mapping['RF_RX_N']='inputs[9].pad'
+        with self.assertRaisesRegex(ValueError,'pair adjacency'):assembly_ledger(self.c)
+        mapping['RF_RX_N']='inputs[10].pad'
+        mapping['HOST_MISO']=mapping['HOST_MOSI']
+        with self.assertRaisesRegex(ValueError,'duplicate provider'):assembly_ledger(self.c)
+
+    def test_clock_ownership_and_half_rate_rf_capacity(self):
+        rows=operating_clock_ledger(self.c)['configurations']
+        self.assertTrue(all(r['d2h_capacity_with_ppm_margin'] and r['h2d_capacity_with_ppm_margin'] and r['d2h_within_host_rate_ceiling'] for r in rows))
+        slow=next(r for r in rows if r['configuration']=='rf_direct_lo_2400000000_div64_hostdiv32')
+        self.assertEqual(slow['fpga_tx_items_per_d2h_word'],[1,4])
+        self.assertEqual(slow['d2h_word_hz'],150e6)
+        self.assertEqual(slow['payload_demand_bps'],900e6)
+        self.assertAlmostEqual(slow['frame_duration_s'],64/150e6)
+        self.assertTrue(slow['retune_changes_conversion_and_d2h'])
+        self.assertFalse(slow['sustained_fifo_verified'])
+        self.c['transport']['control_words']=40
+        overloaded=operating_clock_ledger(self.c)['configurations']
+        self.assertTrue(any(not r['d2h_capacity_with_ppm_margin'] for r in overloaded))
+
+    def test_service_bound_prices_gaps_and_rejects_persistent_overload(self):
+        args=dict(arrival_item_hz=40e6,item_bits=24,word_hz=156.25e6,
+                  frame_words=64,payload_words=59,staging_frames=2,cdc_words=2)
+        base=periodic_stream_bound(**args)
+        stalled=periodic_stream_bound(**args,extra_service_gap_s=1e-6)
+        self.assertTrue(base['rate_stable'])
+        self.assertLessEqual(base['backlog_bound_bits'],1024)
+        self.assertGreater(stalled['backlog_bound_bits'],1024)
+        self.assertEqual(stalled['backlog_bound_bits']-base['backlog_bound_bits'],960)
+        overload=periodic_stream_bound(**dict(args,word_hz=50e6))
+        self.assertFalse(overload['rate_stable'])
+        self.assertIsNone(overload['backlog_bound_bits'])
 
     def test_hidden_terminal(self):
         self.c['pins'].append({'name':'PADDLE','direction':'power','kind':'ground'})

@@ -78,7 +78,7 @@ def wired_operating_envelopes(contract):
             'multi-chip clock alignment, sustained host service and interoperability'])
 
 
-def causal_receiver_envelope(*, impaired=False):
+def causal_receiver_envelope(*, impaired=False, timing_scenarios=None):
     """Existing sampled feedback loop against physical-time two-pole channels.
 
     Source bits are available only to the voltage fixture and offline scoreboard,
@@ -106,7 +106,8 @@ def causal_receiver_envelope(*, impaired=False):
             # Continuous aperture displacement: all four analog observations
             # move, while the controller retains its nominal clock labels.
             displacement=math.sqrt(2)*q['jitter_rms_s']*math.sin(2*math.pi*q['jitter_hz']*time_ui/self.rate)
-            time_ui+=displacement*self.rate
+            displacement+=sum(t['delay_peak_s']*math.cos(2*math.pi*t['frequency_hz']*nominal_ui/self.rate+t['delay_phase_rad']) for t in q.get('delay_tones',[]))
+            time_ui+=float(displacement)*self.rate
             if time_ui<0:return 0.
             index=math.floor(time_ui)
             if index>=len(self.bits):raise ValueError('Finite fixture exhausted')
@@ -115,7 +116,7 @@ def causal_receiver_envelope(*, impaired=False):
             dt=(time_ui-index)/self.rate;a=self.driver_tau;b=self.load_tau
             ea=math.exp(-dt/a);eb=math.exp(-dt/b)
             kernel=(dt/b)*eb if abs(a-b)<1e-8*b else a/(a-b)*(ea-eb)
-            signal=.4*(drive+(voltage-drive)*eb+(current-drive)*kernel)
+            signal=.4*q.get('signal_scale',1.)*(drive+(voltage-drive)*eb+(current-drive)*kernel)
             disturbance=q['offset_v']+math.sqrt(2)*q['noise_rms_v']*math.sin(2*math.pi*173e6*nominal_ui/self.rate+.71)
             observed=signal+disturbance
             # Last observation at each bit_index is the actual data decision;
@@ -131,6 +132,20 @@ def causal_receiver_envelope(*, impaired=False):
         scenarios += [dict(name='cleaner_aperture_same_voltage',jitter_rms_s=2e-12,jitter_hz=25e6,noise_rms_v=.01,offset_v=.02),
                       dict(name='moderate_aperture_voltage',jitter_rms_s=10e-12,jitter_hz=25e6,noise_rms_v=.01,offset_v=.02),
                       dict(name='adverse_aperture_voltage',jitter_rms_s=50e-12,jitter_hz=100e6,noise_rms_v=.02,offset_v=.04)]
+    if timing_scenarios is not None:
+        if impaired or not timing_scenarios:raise ValueError('Choose explicit timing scenarios or legacy impairment sweep')
+        scenarios=[]
+        for scenario in timing_scenarios:
+            tones=scenario['delay_tones']
+            scale=scenario.get('signal_scale',1.)
+            if not math.isfinite(scale) or not 0<scale<=1:
+                raise ValueError('Finite positive attenuating signal scale required')
+            if any(not all(math.isfinite(t[k]) for k in ('frequency_hz','delay_peak_s','delay_phase_rad')) or t['frequency_hz']<=0 or t['delay_peak_s']<0 for t in tones):
+                raise ValueError('Finite physical timing tones required')
+            slope=sum(2*math.pi*t['frequency_hz']*abs(t['delay_peak_s']) for t in tones)
+            if not math.isfinite(slope) or slope>=1:raise ValueError('Timing displacement cannot guarantee monotonic sampling')
+            scenarios.append(dict(name=scenario['name'],jitter_rms_s=0.,jitter_hz=25e6,
+                                  noise_rms_v=.01,offset_v=.02,delay_tones=tones,signal_scale=scale))
     for impairment in scenarios:
         for cap,tau in ((1e-12,50e-12),(2e-12,100e-12),(2e-12,200e-12)):
             for phase in (-.35,.35):
@@ -157,9 +172,9 @@ def causal_receiver_envelope(*, impaired=False):
                         final_phase_ui=rx.phase,first_qualified_bit=rx.first_qualified_bit))
     return dict(cases=rows,status='causal_receiver_conditional_screen',
         assumptions=['Existing four-observation feedback receiver with its assigned 5 ps IID detector timestamp noise.',
-            'Fixed physical two-pole channel, 400 mV differential peak, zero voltage decision threshold.',
+            'Fixed physical two-pole channel, 400 mV nominal differential peak with optional declared amplitude scale, zero voltage decision threshold.',
             'Random NRZ fixture; independent held-out scoreboard interval; no source labels reach the controller.',
-            'Optional sinusoidal aperture jitter moves analog observation times; sinusoidal voltage noise plus DC offset precedes decisions. Assigned stresses, not measured spectra.'],
+            'Sinusoidal or supplied multi-tone aperture displacement moves all analog observations; voltage noise plus DC offset precedes decisions. Supplied tones must guarantee monotonic time. Assigned stresses, not measured spectra.'],
         unresolved=['Detector timestamp noise is not transmitter or sampling-clock jitter.',
             'Zero decision errors do not establish the 100 mV envelope threshold, BER or protocol compliance.',
             'Physical detector, stochastic noise tails, SSC, longer runs and voltage/timing variation remain open.'])

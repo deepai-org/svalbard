@@ -11,6 +11,58 @@ consolidated in [risk priorities](risk-priorities.md).
 
 **Current operating decision:** RF and wired payload operation are mutually exclusive on the same chip. Both capabilities remain required; additional physical resource sharing is encouraged. See the [exclusive-engine policy](exclusive-engine-policy.md), which supersedes simultaneous-operation requirements below. Model/RTL enforcement and resource rebudgeting remain implementation work.
 
+## Turnaround is distinct from retuning
+
+Keep LO, conversion and host timing running through same-channel RX/TX
+turnaround where required. Channel retuning has a separate stop/lock/train/new-epoch
+lifecycle. Compare fixed-clock and LO-derived options with real source and
+CDC costs; FPGA resampling alone does not make LO-derived clocks fixed.
+The shared timing and transition gates are in [feasibility gates](feasibility-gates.md).
+
+The [enabled analog inventory](power-partition.md#enabled-analog-inventory-and-turnaround-decision)
+selects warm, muted TX bias for the conservative fast-response path. Keeping
+clocks running does not establish analog readiness: converter references,
+filter state, output bias and RX overload recovery have separate obligations.
+Parked-bias wake is an alternative requiring its supply transient and settling
+to fit the same deadline. The currently assigned 2 us analog-settle interval
+is not evidence that this wake sequence works.
+
+## Executable transition service contract
+
+`resource_configuration.rf_transition_budget` validates numeric RF endpoints
+and computes an explicit event timeline for turnaround, retune and fault
+recovery. It is a service/clock-ownership contract, not a simulation of analog
+switching or glitch-free gating. `rf_transition_requirements` in the consolidated
+robustness report exercises 25 assigned cases without protocol IDs in chip
+configuration.
+
+Turnaround requires identical settings, no source relock, no capture retraining
+and the same stream epoch. Retune/fault recovery requires command and training
+service, discards the old epoch and publishes a new one. Fixed-host timing
+requires an explicitly supplied independent frequency; it does not freeze an
+LO-derived converter clock. Old-epoch rejection is a specified policy here,
+not newly demonstrated enforcement in the live RF stream implementation.
+
+For H0, an eight-word command plus two 40 MHz control cycles costs 75.6 ns.
+The assigned conservative 64-word service boundary contributes about 210 ns.
+Prearming removes command arrival from the response interval only if it was
+submitted that far ahead; it does not eliminate the boundary or analog settling.
+At an illustrative 10 µs deadline, maximum analog settling is about 9.714 µs
+for a reactive command or 9.790 µs prearmed. Assigned 2 µs settling fits;
+12 µs does not. These are diagnostic windows, not universally valid protocol
+response deadlines or measured chip performance.
+
+The same contract gives about 24.70–204.70 µs retune time when assigning
+20/200 µs source acquisition, 2 µs analog settling, 128 host training words
+and 2 µs FPGA recovery. Fixed host timing barely changes this budget because
+source acquisition dominates; no reduction in training was assumed without
+proof. Same-channel exchange must therefore avoid paying the retune sequence.
+
+Next integrate this contract with persistent RF/host execution, measured or
+bounded path-settling dynamics, real packet deadlines and the transport ABI.
+The existing physical retune guard remains in force; this calculator does not
+silently reset or replace retained analog filter/clock state.
+
 ## External timing sources are permitted
 
 External oscillators, clock modules, synthesizers and RF LO sources are allowed
@@ -22,6 +74,133 @@ remains the existing allocation; RF injection, sample-clock derivation and
 quadrature generation require explicit electrical/timing contracts. Additional
 inputs require a pin-budget revision. External timing does not remove incoming
 serial CDR, independent-clock rate matching or on-chip distribution noise.
+
+## Whole-chip clock configurations and a lower-switching RF candidate
+
+`verification/check_contract.py` now includes `operating_clock_ledger`: one
+source/rate inventory covering reference-synthesized RF, direct external LO,
+reference-synthesized serial and forwarded ×10 serial timing. It derives dense
+payload capacity, independent clock-tolerance margin, D2H frame duration and the
+FPGA's exact TX-item/D2H-word ratio. These are executable requirements, not
+implemented clock trees or a sustained FIFO proof. USB's short-frame response
+path still needs its separate latency model.
+
+| Configuration | REF_IN owns | Conversion / serial timing | D2H word rate | FPGA TX pacing |
+|---|---|---|---|---|
+| Reference-synthesized RF | External frequency reference; frequency/electrical contract still open | Separate LO synthesis; conversion up to 40 MS/s | 312.5 Mword/s evaluated baseline; 156.25 Mword/s capacity candidate | 16/125 or 32/125 I/Q pairs per D2H word at 40 MS/s |
+| Direct external LO RF | The LO; no simultaneous independent reference on this pin | Conversion = LO/64, /128, /256 or /512 | LO/8 baseline; LO/16 lower-switching candidate | At /64 conversion, 1/8 or 1/4 I/Q pairs per D2H word |
+| Reference-synthesized wired | External frequency reference | Independent TX synthesis and incoming-data CDR | 312.5 Mword/s envelope | TX words follow local TX/D2H ratio; RX follows incoming clock |
+| Forwarded ×10 wired | External word/pixel clock | Serial = 10 × input; phase acquisition remains necessary | 2 × input, DDR clock = input | 1/2 serial word per D2H word |
+
+**Useful mitigation:** at 40 MS/s and 24 bits per I/Q pair, demand is 960 Mb/s.
+Halving RF D2H to 156.25 Mword/s still supplies 1.4404 Gb/s after the 59/64
+payload allocation. Direct-LO RF at LO/64 similarly fits with D2H = LO/16
+throughout 2.400–2.484 GHz: demand is 900–931.5 Mb/s versus capacity
+1.3828–1.4312 Gb/s. Independent ±100 ppm source/host margins still fit.
+The additional divider is a configuration candidate, not a new clock input.
+
+At unchanged voltage, load and edge activity per word, halving D2H frequency
+halves its ideal capacitive switching-power term. It does not halve total chip
+power, and shifted harmonics may worsen a package resonance or RF spur. The
+frame interval doubles to 409.6 ns for reference timing and approximately
+412–427 ns for direct LO. Keep H2D at the fast setting for response service;
+re-evaluate acquisition/status latency, CDC, queue bounds and the combined
+power/timing/RF model before selecting this option.
+
+The joined report's `rf_host_rate_comparison` now compares the two rates at
+2.437 GHz LO with identical RF conversion, H2D activity, assigned network and
+clock/reference coupling. It includes six full-rate or twelve half-rate D2H
+harmonics, maintaining the same 913.875 MHz upper frequency, plus unchanged
+H2D harmonics through 937.5 MHz. Assigned current drops by 21.476 mA, or
+70.871 mW from a 3.3 V source. With small H2D internal charge, diagnostic EVM
+stays near 7.34–7.37%; with the larger 7 pC hypothesis it improves from
+11.45–12.39% to 9.45–9.84%. The latter crosses the fixture's 10% threshold,
+not a protocol acceptance limit. Large-case rail RMS still reaches about
+360 mV, outside demonstrated validity of the linear physical assumptions.
+
+**Decision: retain the slower D2H configuration as a serious mitigation
+candidate.** This is a paired receiver/power result, not evidence that the live
+transport supports that clock or meets packet response deadlines. It does not
+replace the existing full-rate baseline or establish GF180 performance.
+
+### Host-rate choice must include TX spurs
+
+The shared-environment periodic TX comparison now shows a competing cost:
+LO/32 reduces output switching, but its fundamental clock sidebands can fall
+inside the RF band near tuning edges. LO/16 moves the fundamentals farther out,
+while nonlinear combinations with H2D still create difference-frequency spurs.
+An ideal fixed full-band output filter does not remove those in-band products.
+
+Retain both existing choices. LO/24 is an exploratory mathematical comparison,
+not an enabled configuration; it requires divider implementation, additive
+noise/current, source ownership and paced transport closure before adoption.
+Do not give it a free copy of the binary divider's physical performance.
+The [current joined risk assessment](risk-priorities.md#current-joined-host-power-and-receiver-assessment)
+owns the sweep, current tradeoffs and inverse supply-sensitivity requirements.
+
+### Conditional storage and response envelope
+
+The same executable clock ledger now prices continuous D2H service, rather
+than inferring queue safety from average bandwidth. Its arrival envelope is
+`b + r*t`, with one complete 24-bit I/Q pair as burst `b`. Its required service
+envelope is `R*max(0,t-T)`, where `R` is the framed payload rate and `T` charges
+two staging frames, the five-word header gap, two assigned CDC words and one
+word for discrete completion. Independent ±100 ppm source/host margins remain
+included. For `r <= R`, sufficient bounds are backlog `b+r*T` and delay
+`T+b/R`; persistent overload has no finite bound.
+
+| RF configuration | Outstanding-bit bound | D2H delay bound | Extra one-off service-gap allowance against 1,024 bits |
+|---|---:|---:|---:|
+| 40 MS/s, full D2H | 442 bits | 0.444 µs | 0.606 µs |
+| 40 MS/s, half D2H | 860 bits | 0.887 µs | 0.171 µs |
+| 2.400 GHz LO/64, full D2H | 433 bits | 0.462 µs | 0.658 µs |
+| 2.400 GHz LO/64, half D2H | 841 bits | 0.924 µs | 0.204 µs |
+
+This is a sufficient abstract service contract, not actual FIFO occupancy or
+a proof that the implemented scheduler provides this service. The 1,024-bit
+comparison is the existing planning allocation; placement of holding registers,
+staging and CDC storage still needs reconciliation. Do not add this aggregate
+bound to each separate stage. A one-microsecond extra interruption exceeds the
+planning allocation under this bound; recurring gaps must reduce the guaranteed
+service rate or be explicitly bounded, not repeatedly treated as one-off gaps.
+
+For an illustrative 10 µs end-of-receive-to-transmit window, add D2H observation
+delay, a worst full H2D frame wait, eight H2D command words, two 40 MHz control
+cycles and one D2H frame boundary before switching. The half-rate choices leave
+about **8.37–8.42 µs for FPGA processing/resampler delay plus analog and board
+settling together**. This is an inverse requirement, not a passing packet
+turnaround result. A real protocol deadline, modem pipeline, scheduled command
+ABI and path-settling model must replace those assignments before acceptance.
+
+The joined LE 1M scan-request case now prices an actual received packet before
+response preparation. LO/256 conversion and LO/32 forwarded D2H clock remain
+running through same-channel turnaround; `rf_transition_budget` explicitly
+accepts the selected host divider rather than silently using LO/16. ADC sample
+availability, resampler lookahead, FPGA work, command service and sample prefill
+all precede readiness. A finite timestamped sample queue now holds prefill
+through running clocks and drives the loaded DAC/filter/driver reply. The peer
+decodes the waveform, but uncalibrated RX delay, assigned launch/gate behavior
+and the diagnostic envelope-threshold marker still prevent a standards air-
+timing verdict. The [current packet assessment](risk-priorities.md#current-joined-host-power-and-receiver-assessment)
+owns numeric results and remaining limitations.
+
+**Architectural consequence:** keep the slower RF D2H option for continuously
+serviced FPGA links, with the full-rate option retained. Bulk storage on the
+FPGA cannot absorb samples that have not crossed the chip link. Do not promise
+arbitrary host stalls or a response verdict based only on the analog settling
+budget. The next acceptance work must demonstrate the required service curve
+and complete response path, rather than increasing chip storage by default.
+
+An independent fixed converter clock during external-LO retuning is **not an
+allocated fallback**. It needs either another qualified input or a specifically
+modeled on-chip source, including its power, noise and CDC. Using H2D as that
+source would transfer FPGA clock noise into conversion and requires its own
+qualification. FPGA resampling alone cannot create the missing physical clock.
+
+The two RF rows preserve clocks during same-channel turnaround. Direct-LO
+retuning changes conversion and D2H together; the slower D2H option does not
+remove stop/retrain/new-epoch recovery. All rows retain shared-feed supply
+sensitivity and unqualified pad/distribution noise.
 
 ## FPGA response-path clock selection
 

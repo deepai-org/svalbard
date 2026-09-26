@@ -1,4 +1,4 @@
-# Programmable analog/PHY companion: one slot, 50 connections
+# Programmable analog/PHY companion: one slot, packaging-compatible connections
 
 **Current operating decision:** RF and wired payload operation are mutually exclusive on the same chip. Both capabilities remain required; additional physical resource sharing is encouraged. See the [exclusive-engine policy](../../projects/programmable_transceiver_platform/spec/exclusive-engine-policy.md), which supersedes simultaneous-operation requirements below. Model/RTL enforcement and resource rebudgeting remain implementation work.
 
@@ -34,7 +34,7 @@ terminals support them. Their use is permission to evaluate an architecture,
 not a claim that the present pinout already exposes internal oscillator or
 loop-filter nodes.
 
-Keep all chip connections within the existing 50-terminal budget. Explicitly
+The original 50-total-terminal target remains unresolved against the provider inventory below. Explicitly
 reallocate pins before adopting a topology needing additional analog nodes;
 include pad/ESD capacitance, package inductance, board parasitics, tolerances and
 loss in its model. Count board area/BOM separately from die resources. Model
@@ -76,11 +76,129 @@ against configurations that actually require autonomous synthesis.
 
 ## Physical envelope
 
-Use one wafer.space **1×1 slot** and **50 total external connections: 36 signals plus 14 provisional supply/ground connections**. Provider information checked 2026-09-23: [wafer.space](https://wafer.space/price.html) lists a 3.93 × 5.12 mm full die and 12.92 mm² default-ring core. The current provider page lists 56 default I/O pads; older template pad counts are not the project terminal budget. This design needs a custom mixed-signal pad ring and custom bare-die assembly or an explicitly accepted equivalent; the standard chip-on-board offer requires the default ring.
+Use one wafer.space **1×1 slot**. The earlier **50-total-connection target (36 signals plus 14 provisional supply/ground connections)** conflicts with the fixed provider pad inventory and is unresolved; it is not a validated physical allocation. Provider information checked 2026-09-23: [wafer.space](https://wafer.space/price.html) lists a 3.93 × 5.12 mm full die and 12.92 mm² default-ring core. The pinned provider template has 56 signal sites plus 18 fixed supply/return sites, 74 sites total. User decision (2026-09-26): retain the default pad ring, or a demonstrably compatible variant, and use wafer.space’s provided chip-on-board packaging. Third-party assembly is not the baseline. Preserve the provider bond-pad positions and power/ground assignments; qualify analog signal-pad substitutions against that boundary.
 
 Retain a conservative **12.92 mm² core ceiling** until placed pads, ESD, seal ring, and isolation establish the actual usable envelope. This is an area budget, not demonstrated fit. Count every electrically connected package terminal, including any exposed ground paddle; do not hide additional supplies, loop-filter terminals, or references outside the 50 budget.
 
+### Packaging compatibility is an open mapping gate
+
+**Signal-cell decision:** preserve wire-bond/package compatibility, not ordinary
+GPIO signal-cell circuitry. Use suitable analog signal pads or custom analog
+frontends behind compatible bond sites for RF, GHz clock and fast wired paths.
+Retain appropriate protection; an analog pad is not automatically low-capacitance
+or RF-qualified. Changes must preserve provider bond geometry, keepouts,
+metallization/landing requirements and fixed supply/ground connections, and pass
+applicable DRC/ESD and packaging checks. Standard GPIO remains a candidate for
+SPI/reset and host signals only where its actual electrical model meets timing.
+
+
+The [provider template](https://github.com/wafer-space/gf180mcu-project-template/tree/0de7e394337a1f7f5303ac7a3681bf2481b58176)
+permits changing signal-pad types, including analog pads, while preserving pad
+positions and power/ground pads for its breakout. Its `src/chip_top.sv` ties
+core and I/O supplies together in the foundry-pad configuration. Do not infer
+seven independent external rails from our logical domain names.
+
+The allocation below is a **logical target, not a compatible bond map**.
+Reconcile 50 project connections with all bonded provider pads, including fixed
+power/ground bonds and unused sites; do not silently change the terminal limit
+or claim that leaving a signal unused removes its physical bond. Map provider
+PCB rail connectivity before assigning local isolation, power ceilings or
+neighboring grounds. Extra ground bonds and moved supply pads are not freely
+available mitigations. A failed mapping requires a reported pin/power-plan
+change within the packaging constraint, not a silent switch to custom assembly.
+
+### Executable physical inventory and immediate consequences
+
+The contract now records the provider's ordered site inventory, and
+`verification/check_contract.py` reports it separately from the logical pin
+budget. There are 36 required functional signals, 20 spare signal sites and
+18 fixed supply/return sites. Even an imagined assembly omitting every spare
+signal bond would retain **54 required signal/supply sites**, exceeding a hard
+50-total limit. The standard template itself retains all 74 sites. These are
+pad counts; the public Run 1 board has 70 numbered connector contacts, as detailed below.
+
+The physical terminal-limit decision remains pending; do not remove host bits,
+analog ports or provider power pads to manufacture a passing count. Functional
+signal capacity is sufficient. Physical assignment and electrical suitability
+remain open. In particular:
+
+- Spare signal sites are not automatically spare power/ground bonds or qualified
+  extra clock inputs. Any use must preserve compatible board and pad behavior.
+- External passives can filter the board supply, but cannot independently filter
+  a logical island through an external supply pin that does not exist. Isolation
+  behind the shared feed needs local circuitry, with headroom and area costs.
+- The existing single `REF_IN` supports alternative reference/LO configurations;
+  independent simultaneous external LO and converter clocks require an explicit
+  signal reassignment and electrical budget before they count as a fallback.
+- The north and south template edges each offer 16 signal sites. The two 11-wire
+  fast host directions cannot both fit on one such edge. The illustrative
+  south-host floorplan must eventually split the host interface across edges or
+  use a different placement within the fixed geometry; it is not a bond map.
+
+### Public Run 1 assembly evidence
+
+The [pinned Run 1 PCB](https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs/blob/4f05ed1ea1994d8101a265d5d4f995bcea86d5a1/run-1/1x1-cob/1x1-mezzanine.kicad_pcb)
+connects 74 die bond sites to 70 numbered mezzanine contacts: 56 signals,
+eight supply feeds and six ground contacts. Grounds share one board net. Each
+supply feed has a capacitor footprint labeled 1 µF. Separate board feeds do
+not prove separate chip rails: the default die template ties core/I/O supplies.
+Capacitor population, impedance and high-frequency isolation remain unknown.
+
+The reproducible [connectivity audit](../../projects/programmable_transceiver_platform/evidence/provider-cob-audit.json)
+records the source hash and all 36 candidate signal mappings. Matching fixed
+power positions requires reversing the template's west-side list relative to
+PCB pad numbering. This is an inferred orientation pending GDS/bond-drawing
+verification, not an approved bond map. Die-side neighboring ground also does
+not establish a short return path at the connector.
+
+The provider's [wirebond rules](https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs/blob/4f05ed1ea1994d8101a265d5d4f995bcea86d5a1/run-1/wirebonding/README.md)
+bound wire length below 3 mm and require clearance from the die; they do not
+supply measured inductance or RF qualification. This is Run 1 evidence, not a
+guarantee of a later run's assembly. Keep later-run applicability and the
+original terminal-limit conflict open.
+
 ## Exact signal budget
+
+### Candidate provider-site assignment
+
+`assembly_policy.candidate_signal_sites` in the executable contract now assigns
+every functional signal to one retained provider signal site. This is a
+connectivity/placement candidate, **not a verified bond/PCB electrical map**.
+Every one of the 74 provider sites remains present; the terminal-limit conflict
+above is unchanged. No spare signal site is relabeled as a supply or ground.
+
+| Edge | Functional signals → provider sites |
+|---|---|
+| West | RF_RX P/N → `inputs[11]/[10].pad`; RF_TX P/N → `inputs[5]/[4].pad`; REF_IN → `inputs[1].pad` |
+| East | WIRE_RX P/N (USB D+/D−) → `bidir[14]/[15].pad`; WIRE_TX P/N → `bidir[20]/[21].pad` |
+| South | D2H_D[0] → `clk_pad`; D2H_D[1:5] → `bidir[0:4].pad`; D2H_D[6:9] → `bidir[6:9].pad`; D2H_CLK → `bidir[5].pad` |
+| South | RESET_N → `rst_n_pad`; CS_N/SCLK/MOSI/MISO → `bidir[10:13].pad`, respectively |
+| North | H2D_D[0:7] → `bidir[26:33].pad`; H2D_D[8:9] → `bidir[35:36].pad`; H2D_CLK → `bidir[34].pad` |
+
+Ranges here map in ascending index order. All four analog pairs occupy
+consecutive sites. D2H_CLK borders `dvss_pads[0]`, H2D_CLK borders
+`dvss_pads[4]`, and REF_IN borders `dvss_pads[5]`. Each analog pair starts next
+to an existing ground site. These are list adjacencies, not extracted physical
+distances, ground-signal-ground structures or independent quiet returns.
+
+Twenty signal sites remain unused: eight east, five north and seven west.
+Keep their loading, protection, bonding and board nets in the physical design;
+unused does not mean absent. `clk_pad` becomes a data-output site, and several
+input/bidirectional sites require different signal cells. The provider permits
+signal-cell substitutions, but landing geometry and actual PCB connectivity,
+including any attached clock/reset components, must still be checked.
+
+The two host directions are physically split across opposite edges. Keep local
+capture/launch and forwarded-clock routing near each bank; the shared transport
+logic need not sit entirely at the south edge. D2H_D[0] is eight list positions
+from the nearest same-edge ground, so a uniformly short-return host bank cannot
+be assumed. Corner returns and actual bond paths require geometry. Re-evaluate
+simultaneous switching against this map before selecting drive strength or
+claiming the high-rate GPIO interface works.
+
+The contract checker rejects missing/duplicate functional assignments, use of
+fixed supply sites and broken differential-pair adjacency. It reports every
+signal's nearest same-edge ground and leaves physical qualification open.
 
 Logical IDs are allocation labels, not package numbering. Final ordering follows pad placement, return paths, and bond-wire extraction.
 
@@ -110,7 +228,7 @@ processing/storage cost. Clock routes, physical qualification, finite pacing
 and area remain open; this is an alternative under evaluation, not a selected
 replacement for autonomous synthesis.
 
-## Power/ground: provisional 14
+## Legacy logical power allocation: 14, not the physical supply map
 
 | Domain | Supply connections | Ground connections | Total |
 |---|---:|---:|---:|
@@ -121,7 +239,7 @@ replacement for autonomous synthesis.
 | PLL/reference | 1 | 1 | 2 |
 | **Total** | **7** | **7** | **14** |
 
-Use qualified device/pad voltages; 3.3 V is the initial digital compatibility baseline. A separately supplied host I/O domain enables characterization of additional voltages but is not itself evidence of 1.8/2.5 V support. GPIO compatibility requires matching thresholds, drive, supply sequencing, and absolute limits. Level translation is acceptable at low speed; the full-speed path needs its own timing-qualified solution.
+This table records earlier logical allocation only. It does not replace the provider’s 18 fixed supply/return sites or establish separately powered domains. Use qualified device/pad voltages; 3.3 V is the initial digital compatibility baseline. A separately supplied host I/O domain is unproven under the compatible assembly; no 1.8/2.5 V support is established. GPIO compatibility requires matching thresholds, drive, supply sequencing, and absolute limits. Level translation is acceptable at low speed; the full-speed path needs its own timing-qualified solution.
 
 Fourteen is not a calculated minimum. The [pass-6 power partition](../../projects/programmable_transceiver_platform/spec/power-partition.md) replaces the insufficient single host supply/return pair with two local segments of five and six fast outputs, taking one pair from CORE. The core now has an explicit unmeasured 48 mA ceiling; the two host paths each target at most 55 mA. The limited current extrapolation fits those host ceilings but does not qualify any domain. Distribute physical grounds for short RF, clock, and wired returns; provide board filtering and local decoupling. Freeze this count only after current, ground-bounce, bond-wire inductance, ESD, substrate, and thermal analysis. If it fails, redesign within 50 terminals and republish affected budgets; do not quietly remove host bits or add a hidden paddle. Do not fabricate a smaller substitute chip.
 
@@ -223,7 +341,7 @@ Place wired and RF islands on opposite sides, host parallel pins adjacent to dig
 
 Protocol flexibility reallocates 0.80 mm² from the prior 3.72 mm² reserve; the total remains 12.92 mm². These are ceilings, not measured areas or promised buffer capacities. Determine memory depth from actual macro availability, host stalls, and protocol latency; do not assume a dense SRAM exists. Close the fast GPIO pad/return budget and representative analog layouts before expanding programmability. Area pressure is addressed by resource sharing and bounded buffering, preserving the full companion target.
 
-Before fabrication, publish the 50-terminal bond map, actual placed area, rail/current/thermal budget, extracted die/package/board timing and RF models, host training/transport specification, and mode/resource conflict table. Demonstrate raw serial and RF transport with external FPGA logic in hardware-in-the-loop, then prove the exact PCIe and Ethernet adapters against peers. Exercise transport corruption, clock loss, flow-control failure, receiver errors, and every reset state. Carry all pre-silicon uncertainty into O1–O4 claims; one-slot fit, maximum GPIO rate, RF performance, and standards interoperability remain separate gates.
+Before fabrication, resolve the terminal-count conflict and publish the packaging-compatible bond map, actual placed area, rail/current/thermal budget, extracted die/package/board timing and RF models, host training/transport specification, and mode/resource conflict table. Demonstrate raw serial and RF transport with external FPGA logic in hardware-in-the-loop, then prove the exact PCIe and Ethernet adapters against peers. Exercise transport corruption, clock loss, flow-control failure, receiver errors, and every reset state. Carry all pre-silicon uncertainty into O1–O4 claims; one-slot fit, maximum GPIO rate, RF performance, and standards interoperability remain separate gates.
 
 Host evidence: the [first FPGA screen](../../projects/programmable_transceiver_platform/spec/fpga-host-screen.md) rejects ECP5 as a documented full-rate LVCMOS host for the current top profile. Lower profiles remain candidates; full-rate host selection and electrical closure remain required.
 

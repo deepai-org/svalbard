@@ -54,6 +54,38 @@ def gfsk(bits,rate=1e6,h=.5,fs=20e6):
                     dict(sps=sps,delay=2*sps,h=h,symbol_rate=rate,bt=.5))
 
 
+def ble_crc_bits(bits,initial=0x555555):
+    """External packet source/observer only; CRC stays off the transceiver."""
+    state=initial
+    for bit in bits:
+        feedback=(state>>23)^int(bit)
+        state=(state<<1)&0xffffff
+        if feedback:state^=0x65b
+    return np.array([(state>>i)&1 for i in range(23,-1,-1)],int)
+
+
+def ble_whiten(bits,channel):
+    if type(channel) is not int or not 0<=channel<=39:raise ValueError('BLE physical channel required')
+    state=channel|64;result=[]
+    for bit in bits:
+        result.append(int(bit)^(state&1))
+        if state&1:state^=0x88
+        state>>=1
+    return np.array(result,int)
+
+
+def ble_advertising_bits(pdu,channel=38):
+    """LE 1M advertising framing; Core 6.1 Vol 6 B 2.1/3.1/3.2.
+
+    Independent published vector: Vol 6 C 4.2.1. No extra training symbols.
+    Caller supplies advertising PDU bytes, including its two-byte header.
+    """
+    if len(pdu)<2 or len(pdu)!=2+(pdu[1]&63):raise ValueError('Advertising PDU length mismatch')
+    data=np.array([(byte>>i)&1 for byte in pdu for i in range(8)],int)
+    prefix=np.array([0,1]*4+[(0x8e89bed6>>i)&1 for i in range(32)],int)
+    return np.r_[prefix,ble_whiten(np.r_[data,ble_crc_bits(data)],channel)]
+
+
 def rrc(sps,alpha=.4,span=8):
     t=np.arange(-span*sps,span*sps+1)/sps
     h=np.empty_like(t)

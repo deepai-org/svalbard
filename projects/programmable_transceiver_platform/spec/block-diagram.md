@@ -10,7 +10,17 @@ circuit topology. The drawing places RF west, wired east, timing north and host
 logic south, with terminals at the perimeter. Neighborhoods are intentional;
 block areas and routes are not a physical fit result.
 
+See the [decision gates and operating ledger](feasibility-gates.md#decision-sequence-several-credible-ways-to-succeed) for the packaging-first closure sequence.
+
+The [whole-architecture assessment](risk-priorities.md#architecture-assessment-one-implementation-several-ways-to-succeed) records the cross-system conflicts, operating sequences and every interface family’s open gate.
+
 ## Selected boundaries
+
+Packaging compatibility preserves bond-site geometry and fixed power/ground
+connections; it does not require ordinary GPIO circuitry on RF, fast wired or
+GHz clock signals. Qualify analog pads/custom frontends and their protection
+within that mechanically compatible ring.
+
 
 - One GF180MCU die in one wafer.space slot, 50 total terminals. The 12.92 mm²
   core allocation includes 2.92 mm² reserve; neither is an implemented area.
@@ -49,10 +59,30 @@ See [clock ownership](clock-rate-ownership.md) for detailed obligations.
 
 ## RF conversion chain
 
-RX: board preselection/matching → protected differential LNA → separate I/Q
-mixers → selectable PGA/LPF with offset/common-mode control → paired ADCs → host.
-The schematic must resolve PGA/filter ordering and stage headroom; an ADC that
-never clips does not prove the upstream chain stayed linear.
+RX: board preselection/matching → protected differential LNA with selectable
+early gain → separate I/Q mixers → channel-select LPF → main variable-gain
+stage with offset/common-mode control → paired ADCs → host.
+Place the main gain after blocker rejection. Distribute limited gain through
+the earlier stages only as their noise/headroom budgets justify; an active
+filter may itself contain gain and must expose its internal-node headroom.
+This selects functional ordering, not a transistor topology or a proven noise
+figure. An ADC that never clips does not prove the upstream chain stayed linear.
+
+AGC must choose gain from an interval bounded below by converter noise and above
+by wanted peaks plus residual blockers. It must not always drive the wanted
+signal to a fixed ADC level. If the interval is empty, gain adjustment alone
+cannot fix the case: change achievable rejection, converter performance or the
+declared operating envelope. Strong-signal attenuation/low gain and a high-gain
+weak-signal setting remain generic controls, with no on-chip protocol selector.
+See the absolute RF and gain/headroom requirements in [risk priorities](risk-priorities.md).
+
+The wideband filter investigation now includes finite transmission zeros within
+the existing channel-filter boundary. Ideal elliptic responses can supply the
+missing close-offset rejection without narrowing the wanted band or assuming
+external selectivity. High Q, coefficient tuning, delay, noise and internal
+swing remain unclosed; the [filter requirements](risk-priorities.md) do not yet
+select a circuit or alter the current Butterworth waveform controls. Do not
+freeze the generic filter as cutoff-only before this architecture decision.
 
 TX: FPGA interpolation/resampling → host → registered paired DACs → selectable
 reconstruction filtering/gain → I/Q upmixers/summation → RF driver → board
@@ -60,6 +90,14 @@ matching/filtering and optional external PA. Use proper interpolation in the
 system model; sample repetition is a comparison fixture, not the selected
 wideband TX implementation. Filter order and transistor realization remain open;
 older two-biquad drawings do not freeze them.
+
+For same-channel timed TX, keep LO/converter/host clocks running while holding
+bounded prefetched samples. DAC sample consumption and RF unmute must have an
+explicit scheduled start; clocks running must not drain the prefill during the
+wait. Late, stale-epoch or underfilled launches stay muted. This is a required
+generic stream/gate behavior, now exercised by the mathematical sample queue;
+physical control and RF launch timing remain unverified.
+Price reconstruction-filter delay and board-switch/PA timing at the air boundary.
 
 Keep narrow and wide filter settings. Wider settings improve some clean-channel
 fixtures but admit more blockers; narrow settings must remain available.
@@ -80,6 +118,12 @@ swing model alone does not qualify HDMI/DVI.
 receivers/drivers, squelch, pulls and switchable termination. `WIRE_TX_P/N` is
 high impedance in USB operation. USB controller and VBUS circuitry remain
 external. No RF routing through the USB protection network.
+Pulls, terminations, active drive and receive sensing require independent generic
+controls; selecting a nominal speed must not atomically conceal unavailable
+intermediate electrical states. The [shared-pad control boundary](../integration/macro-contract.md#independent-shared-pad-electrical-controls)
+owns live versus stopped transition semantics. FPGA logic performs negotiation;
+the chip applies validated electrical states and reports timestamped observations.
+
 
 HDMI/DVI uses multiple identical lane dies plus external forwarded-clock
 interface/fanout. Cross-die phase alignment and continuous FIFO operation remain
@@ -89,7 +133,9 @@ these are conditional capabilities, not compliance claims.
 
 ## Supplies, references and board support
 
-Keep seven supply/return pairs: CORE ×1, HOST ×2, WIRE ×2, RF ×1, PLL ×1.
+Retain wafer.space default-ring/COB compatibility. The existing CORE ×1, HOST
+×2, WIRE ×2, RF ×1, PLL ×1 pair allocation is a logical budget awaiting a
+compatible bond/board map, not seven demonstrated independent external rails.
 Provide startup/trimmed bias, buffered converter references, local reservoirs
 and isolation. Share reference sources only if dynamic loading permits; retain
 local buffers or replicas and account for their current. On-chip regulators

@@ -246,3 +246,18 @@ Do not run long coupled startup simulations as the default architecture loop.
 
 Keep experimental measurements in evidence reports and current conclusions in
 these owners. Do not append chronological progress logs to this guide.
+
+
+The consolidated robustness report also includes `shared_timing_requirements`:
+coherent host-rail harmonics propagate through assigned frequency-dependent
+buffer/phase/distribution delay responses into RF, sample-time and wired timing
+metrics. This yields tolerable sensitivity ceilings, not physical qualification
+or packet-level RF EVM. See the current risk assessment for the numerical scope.
+
+
+The same report's `host_driven_rf_receiver` and `host_driven_wired_receiver`
+propagate assigned host rail harmonics into actual RF filtering/acquisition and
+causal wired sampling. RF uses 64/128 mixer substeps for high-offset tones and
+implicit LO-derived ADC crossings; default lower-band fixtures retain their
+existing first-order timing. This is still diagnostic waveform evidence, with
+physical bounds and real packet acceptance open. The later `bidirectional_host_receiver` section adds separate H2D internal-load and external-capacitive-return ports; complete DC/reference/gain coupling remains open.

@@ -139,7 +139,7 @@ class CoverageTests(unittest.TestCase):
             quality=dict(conditional_waveform_pass=passed,evm_rms=evm,symbol_errors=errors))
             for name,passed,evm,errors in [('a',True,.08,0),('b',False,.2,3)]]
         report=capability_coverage(contract,configs,observations)
-        self.assertEqual({r['target'] for r in report['capabilities']},{r['id'] for r in contract['protocol_profiles']})
+        self.assertEqual({r['target'] for r in report['capabilities']},set(contract['generic_control_surface']['external_interface_requirements']))
         row=report['external_lo_resampled_rf_slices'][0]
         self.assertEqual(row['lo_hz_with_a_diagnostic_passing_configuration'],[2.4e9])
         self.assertEqual(row['maximum_fixture_symbol_errors'],3)
@@ -551,6 +551,504 @@ class WiredEnvelopeTests(unittest.TestCase):
             self.assertGreaterEqual(row['phase_adjusted_minimum_signed_sample_v']+1e-14,row['minimum_signed_sample_v'])
         covered={name for row in report['cases'] for name in row['targets']}
         self.assertTrue({p['id'] for p in c['protocol_profiles'] if p['engine']=='wire'}<=covered)
+
+
+
+
+
+class SharedSupplyTimingTests(unittest.TestCase):
+    def test_units_and_coherent_stage_sum(self):
+        from robustness_envelope import supply_delay_tones
+        tones=[dict(frequency_hz=1e6,clock_rail_voltage_peak_v=.1,voltage_phase_rad=.7)]
+        stage=dict(ps_per_mv=1.,pole_hz=1e6,latency_s=0.)
+        one=supply_delay_tones(tones,[stage])
+        self.assertAlmostEqual(one['rms_delay_s']/1e-12,50.,places=10)
+        two=supply_delay_tones(tones,[stage,stage])
+        self.assertAlmostEqual(two['rms_delay_s']/one['rms_delay_s'],2.)
+        cancel=supply_delay_tones(tones,[stage,dict(stage,ps_per_mv=-1.)])
+        self.assertEqual(cancel['rms_delay_s'],0.)
+
+    def test_phase_latency_and_duplicate_rejection(self):
+        from robustness_envelope import supply_delay_tones
+        tone=dict(frequency_hz=1e6,clock_rail_voltage_peak_v=.1,voltage_phase_rad=0.)
+        stage=dict(ps_per_mv=1.,pole_hz=1e6,latency_s=0.)
+        cancel=supply_delay_tones([tone],[stage,dict(stage,latency_s=.5e-6)])
+        self.assertLess(cancel['rms_delay_s'],1e-25)
+        with self.assertRaises(ValueError):supply_delay_tones([tone,tone],[stage])
+
+    def test_shared_rf_wired_inverse_budget(self):
+        from robustness_envelope import shared_timing_requirements
+        h=dict(cases=[dict(network='unit',internal_charge_tau_s=1e-9,tones=[
+            dict(frequency_hz=1e6,clock_rail_voltage_peak_v=.01,voltage_phase_rad=0.)])])
+        r=shared_timing_requirements(h)
+        self.assertFalse(r['complete'])
+        for row in r['cases']:
+            rms=row['unit_response']['rms_delay_s']
+            limits=row['aggregate_dc_sensitivity_ceiling_ps_per_mv']
+            self.assertAlmostEqual(rms*limits['wired_2ps_rms_allocation']/1e-12,2.)
+            self.assertAlmostEqual(rms*limits['rf_5percent_small_phase_allocation']*2*math.pi*2.437e9,.05)
+            low=row['assigned_sensitivity_studies'][0]
+            self.assertAlmostEqual(low['rf_untracked_carrier_error_rms']/(2*math.pi*2.437e9*rms*.01),1.,places=5)
+
+
+class RFTransitionBudgetTests(unittest.TestCase):
+    def test_turnaround_does_not_inherit_retune_cost(self):
+        from robustness_envelope import rf_transition_requirements
+        r=rf_transition_requirements()
+        fast=[x for x in r['cases'] if x['operation']=='turnaround' and x['deadline_s']==10e-6]
+        self.assertEqual(len(fast),4)
+        for row in fast:
+            self.assertTrue(row['clocks_kept_running'])
+            self.assertEqual(row['old_epoch'],row['new_epoch'])
+            self.assertFalse(row['host_clock_rate_changes'])
+            self.assertAlmostEqual(row['total_s']+row['margin_s'],10e-6)
+            self.assertEqual(row['fits_assigned_deadline'],row['total_s']<10e-6)
+        self.assertEqual(sum(x['fits_assigned_deadline'] for x in fast),2)
+
+    def test_prearm_charges_lead_and_fixed_host_does_not_fix_sample_clock(self):
+        from robustness_envelope import rf_transition_requirements
+        rows=rf_transition_requirements()['cases']
+        pre=next(x for x in rows if x['prearm_required_lead_s'])
+        self.assertAlmostEqual(pre['prearm_required_lead_s'],8/312.5e6+2/40e6)
+        for row in rows:
+            if row['operation']=='turnaround':continue
+            self.assertEqual(row['new_epoch'],row['old_epoch']+1)
+            self.assertFalse(row['clocks_kept_running'])
+            self.assertEqual(row['queue_policy'],'discard_old_epoch_before_rearm')
+            if row['operation']=='retune' and not row['host_clock_rate_changes']:
+                self.assertNotEqual(row['old_sample_hz'],row['new_sample_hz'])
+            if row['deadline_s']==10e-6:self.assertFalse(row['fits_assigned_deadline'])
+
+    def test_reject_disguised_retune_as_turnaround(self):
+        from resource_configuration import rf_transition_budget
+        old=dict(sample_hz=2.4e9/64,tx_cutoff_hz=10e6,rx_cutoff_hz=9e6,
+                 sample_clock_source='external_lo',lo_hz=2.4e9,lo_divider=64)
+        new=dict(old,sample_hz=2.48e9/64,lo_hz=2.48e9)
+        with self.assertRaises(ValueError):
+            rf_transition_budget(before=old,after=new,operation='turnaround',epoch=1,
+                host_word_hz=312.5e6,command_words=8,cdc_cycles=2,control_hz=40e6,
+                boundary_wait_s=0.,analog_settle_s=1e-6,source_lock_s=0.,
+                host_training_words=0,fpga_recovery_s=0.,deadline_s=10e-6)
+
+
+class HostDrivenReceiverTests(unittest.TestCase):
+    def test_host_tones_reach_causal_receiver_and_qualification(self):
+        from robustness_envelope import host_driven_wired_receiver
+        coupling=json.loads((P/'evidence/robustness-envelope.json').read_text())['host_charge_coupling']
+        result=host_driven_wired_receiver(coupling)
+        json.dumps(result,allow_nan=False)
+        self.assertEqual(result['host_word_hz'],312.5e6)
+        self.assertFalse(result['complete'])
+        rows=[x for x in result['receiver']['cases'] if x['switch_tau_s']==100e-12]
+        zero=[x for x in rows if x['impairment']['name']=='zero_supply_timing_control']
+        bad=[x for x in rows if x['impairment']['name']=='pole_1e+09_sensitivity_1']
+        rescued=[x for x in rows if x['impairment']['name']=='pole_1e+08_sensitivity_0.1']
+        self.assertTrue(all(x['heldout_errors']==0 and x['heldout_qualified_fraction']==1 for x in zero+rescued))
+        self.assertGreater(sum(x['heldout_errors'] for x in bad),0)
+        self.assertTrue(all(x['heldout_qualified_fraction']==0 for x in bad))
+        self.assertTrue(all(x['heldout_minimum_actual_sample_interval_s']>0 for x in rows))
+
+    def test_unphysical_sampling_clock_is_rejected(self):
+        from wired_envelope import causal_receiver_envelope
+        tone=dict(frequency_hz=1e9,delay_peak_s=1e-9,delay_phase_rad=0.)
+        with self.assertRaises(ValueError):
+            causal_receiver_envelope(timing_scenarios=[dict(name='backward_time',delay_tones=[tone])])
+
+
+class HostDrivenRFTests(unittest.TestCase):
+    def test_implicit_crossings_against_independent_root_solver(self):
+        from scipy.optimize import brentq
+        carrier=2.437e9
+        phase=PhaseNoise(((913.875e6,.3,.71),(152.3125e6,.05,.2)))
+        times=np.arange(32)/38.078125e6
+        errors=phase.crossing_error(times,carrier)
+        for t,dt in zip(times,errors):
+            # Solve in delay coordinates, avoiding loss of relative precision.
+            expected=brentq(lambda x:x+float(phase.phase(t+x))/(2*math.pi*carrier),
+                            -30e-12,30e-12,xtol=1e-25)
+            self.assertAlmostEqual(dt/1e-12,expected/1e-12,places=8)
+        with self.assertRaises(ValueError):
+            PhaseNoise(((1e9,2.,0.),)).crossing_error(times,carrier)
+
+    def test_shared_host_spectrum_filters_before_adc_and_refines(self):
+        from robustness_envelope import host_driven_rf_receiver
+        contract=json.loads((P/'spec/contract.json').read_text())
+        coupling=json.loads((P/'evidence/robustness-envelope.json').read_text())['host_charge_coupling']
+        result=host_driven_rf_receiver(contract,coupling)
+        json.dumps(result,allow_nan=False)
+        self.assertFalse(result['complete'])
+        for sensitivity in (0.,.1,.3):
+            rows=[x for x in result['cases'] if x['aggregate_dc_ps_per_mv']==sensitivity]
+            filtered=[x for x in rows if x['board_blocker_attenuation_db']==20.]
+            unfiltered=[x for x in rows if x['board_blocker_attenuation_db']==0.]
+            self.assertTrue(all(x['quality']['conditional_waveform_pass'] for x in filtered))
+            self.assertTrue(all(not x['quality']['conditional_waveform_pass'] for x in unfiltered))
+            self.assertLess(abs(filtered[0]['quality']['evm_rms']-filtered[1]['quality']['evm_rms']),.0002)
+
+
+class BidirectionalHostTests(unittest.TestCase):
+    def test_current_ports_and_kcl_do_not_charge_fpga_load_to_die(self):
+        from robustness_envelope import h2d_current_ports,shared_return_transfer
+        odd=h2d_current_ports(156.25e6,312.5e6,1)
+        even=h2d_current_ports(312.5e6,312.5e6,2)
+        self.assertEqual(odd['chip_internal_peak_a'],0j)
+        self.assertEqual(even['external_cap_return_peak_a'],0j)
+        self.assertGreater(abs(odd['external_cap_return_peak_a']),0.)
+        self.assertGreater(abs(even['chip_internal_peak_a']),0.)
+        for injection in ((0.,-1.,1.),(0.,0.,1.),(-1.,0.,1.)):
+            for f in (1e6,156.25e6,312.5e6):
+                r=shared_return_transfer(f,injection_weights=injection,board_c=10e-6)
+                self.assertLess(r['kcl_residual_a'],1e-10)
+                self.assertLess(abs(r['power_residual_w']),1e-10)
+        # Quasi-DC internal load sees feed, package and return resistance;
+        # return-only injection does not draw through supply feed at DC.
+        internal=shared_return_transfer(1.,injection_weights=(0.,-1.,1.),die_c=1e-15)
+        external=shared_return_transfer(1.,injection_weights=(0.,0.,1.),die_c=1e-15)
+        self.assertAlmostEqual(internal['differential_ohm'].real,-2.2,places=8)
+        self.assertAlmostEqual(external['differential_ohm'].real,-.1,places=8)
+
+    def test_both_host_directions_reach_receivers(self):
+        from robustness_envelope import bidirectional_host_receiver_screen
+        contract=json.loads((P/'spec/contract.json').read_text())
+        coupling=json.loads((P/'evidence/robustness-envelope.json').read_text())['host_charge_coupling']
+        r=bidirectional_host_receiver_screen(contract,coupling)
+        json.dumps(r,allow_nan=False)
+        small=[x for x in r['cases'] if x['environment']['internal_charge_c']==.3e-12]
+        large=[x for x in r['cases'] if x['environment']['internal_charge_c']==7e-12]
+        self.assertTrue(all(x['quality']['conditional_waveform_pass'] for x in small))
+        self.assertTrue(all(not x['quality']['conditional_waveform_pass'] for x in large))
+        for row in r['wired_environments']:
+            tones=row['environment']['tones']
+            self.assertEqual(len(tones),6) # equal frequencies summed as phasors
+        self.assertEqual(len(r['wired_receiver']['cases']),72)
+        self.assertFalse(r['complete'])
+
+
+class CommonFeedPowerTests(unittest.TestCase):
+    def test_half_d2h_changes_only_output_dynamic_loads(self):
+        from robustness_envelope import common_feed_dc_ledger,host_harmonic_screen
+        contract=json.loads((P/'spec/contract.json').read_text())
+        full=common_feed_dc_ledger(contract)
+        half=common_feed_dc_ledger(contract,d2h_word_hz=2.437e9/16)
+        for key,value in full['loads_a'].items():
+            self.assertAlmostEqual(half['loads_a'][key],value/2 if key in ('d2h_capacitive','d2h_internal') else value)
+        self.assertAlmostEqual(half['power_balance_residual_w'],0.,places=12)
+        coupling=json.loads((P/'evidence/robustness-envelope.json').read_text())['host_charge_coupling']
+        fast=host_harmonic_screen(coupling)
+        slow=host_harmonic_screen(coupling,word_hz=2.437e9/16,harmonics=12)
+        self.assertEqual(fast['cases'][0]['omitted_harmonics_above_hz'],slow['cases'][0]['omitted_harmonics_above_hz'])
+        self.assertEqual(len(slow['cases'][0]['tones']),12)
+
+    def test_common_feed_conservation_and_h2d_cost(self):
+        from robustness_envelope import common_feed_dc_ledger
+        contract=json.loads((P/'spec/contract.json').read_text())
+        low=common_feed_dc_ledger(contract,h2d_internal_charge_c=.3e-12,h2d_alternating=True)
+        high=common_feed_dc_ledger(contract,h2d_internal_charge_c=7e-12,h2d_alternating=True)
+        extra=11*312.5e6*(7e-12-.3e-12)
+        self.assertAlmostEqual(high['total_chip_supply_current_a']-low['total_chip_supply_current_a'],extra)
+        self.assertAlmostEqual(low['rf_clock_core_rail_v']-high['rf_clock_core_rail_v'],extra*(.1+2.+.02))
+        for row in (low,high):
+            self.assertAlmostEqual(row['source_power_w'],row['delivered_electrical_power_w']+sum(row['resistive_losses_w'].values()),places=12)
+            self.assertAlmostEqual(sum(row['loads_a'].values()),row['total_chip_supply_current_a'])
+            self.assertEqual(row['loads_a']['rf_driver_and_conversion_reservation'],.037)
+            self.assertFalse(row['physical_pin_current_qualification'])
+        ideal=common_feed_dc_ledger(contract,feed_r=0.,branch_r=0.,return_r=0.)
+        self.assertEqual(ideal['rf_clock_core_rail_v'],3.3)
+        self.assertEqual(sum(ideal['resistive_losses_w'].values()),0.)
+
+    def test_rf_observer_uses_shared_feed_voltage(self):
+        from robustness_envelope import common_feed_rf_screen
+        contract=json.loads((P/'spec/contract.json').read_text())
+        coupling=json.loads((P/'evidence/robustness-envelope.json').read_text())['host_charge_coupling']
+        r=common_feed_rf_screen(contract,coupling)
+        json.dumps(r,allow_nan=False)
+        self.assertFalse(r['complete'])
+        for row in r['cases']:
+            self.assertLess(row['ledger']['rf_clock_core_rail_v'],3.21)
+            self.assertEqual(row['quality']['conditional_waveform_pass'],row['h2d_internal_charge_c']==.3e-12)
+            self.assertLess(abs(row['ledger']['power_balance_residual_w']),1e-12)
+
+
+class AbsoluteRFTests(unittest.TestCase):
+    def test_filter_or_enob_can_open_gain_interval_without_claiming_sensitivity(self):
+        from robustness_envelope import rf_gain_headroom_budget
+        args=dict(wanted_dbm=-85.,blocker_dbm=-30.,wanted_loss_db=2.,
+            blocker_attenuation_db=20.,blocker_offset_hz=12e6,cutoff_hz=9.157407e6,
+            filter_order=5,enob=8.,adc_noise_evm_limit=.05,component_peak_limit_v=.8)
+        base=rf_gain_headroom_budget(**args)
+        self.assertFalse(base['gain_interval_exists'])
+        improved=rf_gain_headroom_budget(**dict(args,blocker_attenuation_db=26.))
+        self.assertTrue(improved['gain_interval_exists'])
+        finer=rf_gain_headroom_budget(**dict(args,enob=10.))
+        self.assertTrue(finer['gain_interval_exists'])
+        self.assertAlmostEqual(finer['minimum_wanted_adc_rms_v']*4,base['minimum_wanted_adc_rms_v'])
+        self.assertEqual(finer['maximum_wanted_adc_rms_v'],base['maximum_wanted_adc_rms_v'])
+        edge=rf_gain_headroom_budget(**dict(args,blocker_attenuation_db=20.+base['additional_rejection_needed_db']))
+        self.assertAlmostEqual(edge['minimum_wanted_adc_rms_v'],edge['maximum_wanted_adc_rms_v'])
+
+    def test_no_selective_external_filter_credit_is_retained(self):
+        from robustness_envelope import rf_gain_headroom_requirements
+        rows=rf_gain_headroom_requirements()['cases']
+        self.assertEqual(len(rows),24)
+        for bits in (8.,10.):
+            base=next(r for r in rows if r['wanted_dbm']==-85. and r['blocker_dbm']==-30.
+                and r['enob']==bits and r['external_selective_rejection_db']==0.)
+            assisted=next(r for r in rows if r['wanted_dbm']==-85. and r['blocker_dbm']==-30.
+                and r['enob']==bits and r['external_selective_rejection_db']==18.)
+            self.assertFalse(base['gain_interval_exists'])
+            self.assertEqual(base['minimum_voltage_gain_db'],assisted['minimum_voltage_gain_db'])
+            self.assertLess(base['maximum_voltage_gain_db'],assisted['maximum_voltage_gain_db'])
+            # Direct independent headroom bound on the desired + blocker peaks.
+            wanted=base['minimum_wanted_adc_rms_v']
+            ratio=10**((55.-base['filter_rejection_db'])/20)
+            self.assertGreater(wanted*(3.+ratio),.8)
+
+    def test_absolute_noise_is_not_scaled_away_with_weak_signal(self):
+        from robustness_envelope import absolute_rf_screen
+        contract=json.loads((P/'spec/contract.json').read_text())
+        coupling=json.loads((P/'evidence/robustness-envelope.json').read_text())['host_charge_coupling']
+        r=absolute_rf_screen(contract,coupling)
+        rows=r['cases'][::4]
+        self.assertFalse(r['complete'])
+        for previous,current in zip(rows,rows[1:]):
+            a=previous['electrical_noise_budget'];b=current['electrical_noise_budget']
+            self.assertAlmostEqual(a['input_noise_dbm'],b['input_noise_dbm'])
+            self.assertAlmostEqual(b['frontend_evm_rms']/a['frontend_evm_rms'],math.sqrt(10))
+            self.assertAlmostEqual(current['required_conversion_voltage_gain_db']-previous['required_conversion_voltage_gain_db'],10)
+        self.assertGreater(rows[-1]['quality']['evm_rms'],rows[0]['quality']['evm_rms'])
+
+
+class ReferenceSupplyTests(unittest.TestCase):
+    def test_reference_changes_codes_and_clipping_without_oracle_correction(self):
+        from behavioral import adc_reference_conversion
+        values=np.array([.25+.125j,.25+.125j,.75+0j])
+        codes,clipped=adc_reference_conversion(values,np.array([1.,.5,.5]),12)
+        self.assertEqual(codes[0],.25+.125j)
+        self.assertEqual(codes[1],.5+.25j)
+        self.assertEqual(codes[2],1-2/4096)
+        self.assertEqual(clipped,1)
+        with self.assertRaises(ValueError):adc_reference_conversion(values,np.array([1.,0.,1.]),12)
+        with self.assertRaises(ValueError):adc_reference_conversion(values,np.ones(2),12)
+
+    def test_independent_host_reference_tone_aliases_inband(self):
+        fs=2.437e9/64;f=156.25e6;alias=f-4*fs
+        self.assertAlmostEqual(alias,3.9375e6)
+        times=np.arange(1024)/fs
+        self.assertTrue(np.allclose(np.cos(2*math.pi*f*times),np.cos(2*math.pi*alias*times),atol=1e-10))
+
+    def test_reference_rejection_restores_joined_receiver(self):
+        from robustness_envelope import reference_supply_screen
+        contract=json.loads((P/'spec/contract.json').read_text())
+        coupling=json.loads((P/'evidence/robustness-envelope.json').read_text())['host_charge_coupling']
+        r=reference_supply_screen(contract,coupling)
+        json.dumps(r,allow_nan=False)
+        high=[x for x in r['cases'] if x['h2d_internal_charge_c']==7e-12]
+        for row in high:
+            weak=row['reference_fraction_per_v']==1. and row['reference_pole_hz']==1e9
+            self.assertEqual(row['quality']['conditional_waveform_pass'],not weak)
+            self.assertGreater(row['reference_modulation']['minimum_scale'],0.)
+            if weak:self.assertGreater(row['quality']['evm_rms'],.35)
+        self.assertFalse(r['complete'])
+
+
+class WholeChipEnvironmentTests(unittest.TestCase):
+    def test_modes_share_network_and_source_but_not_active_payload_current(self):
+        from robustness_envelope import whole_chip_operating_envelopes
+        result=whole_chip_operating_envelopes(json.loads((P/'spec/contract.json').read_text()))
+        self.assertFalse(result['complete'])
+        for case in result['cases']:
+            rf,wire=(case['modes'][mode] for mode in ('rf','wire'))
+            self.assertEqual(rf['network'],wire['network'])
+            self.assertEqual(rf['source_spectrum'],wire['source_spectrum'])
+            for env in (rf,wire):
+                ledger=env['ledger']
+                self.assertAlmostEqual(ledger['power_balance_residual_w'],0.,places=12)
+                self.assertEqual(env['host_spectrum']['d2h_internal_tau_s'],.5e-9)
+                self.assertTrue(env['transport']['rate_stable'])
+                # Independently evaluate the phase-to-time adapter, including
+                # the sign of supply-derived and source-derived phase terms.
+                phase=PhaseNoise(tuple(env['delivered_phase_tones']))
+                times=np.array([.123e-6,.783e-6,5.679e-6])
+                dt=sum(t['delay_peak_s']*np.cos(2*math.pi*t['frequency_hz']*times+t['delay_phase_rad'])
+                    for t in env['crossing_delay_tones'])
+                np.testing.assert_allclose(dt,-phase.phase(times)/(2*math.pi*env['carrier_hz']),atol=1e-23)
+                self.assertEqual(env['linear_fixture_voltage_range_guaranteed'],
+                    env['host_spectrum']['internal_charge_c']==.3e-12 or env['network']['network']['die_c']==500e-12)
+            self.assertNotIn('wired_frontend_reservation',rf['ledger']['loads_a'])
+            self.assertNotIn('rf_driver_and_conversion_reservation',wire['ledger']['loads_a'])
+            self.assertGreater(wire['ledger']['total_chip_supply_current_a'],rf['ledger']['total_chip_supply_current_a'])
+
+
+class RFClockSpurTests(unittest.TestCase):
+    def test_ideal_full_band_filter_cannot_remove_inside_band_sideband(self):
+        from robustness_envelope import periodic_phase_spurs
+        from scipy.special import jv
+        tones=[(75e6,.1,.3)]
+        low=periodic_phase_spurs(2.402e9,tones)
+        high=periodic_phase_spurs(2.480e9,tones)
+        center=periodic_phase_spurs(2.442e9,tones)
+        expected=float((jv(1,.1)/jv(0,.1))**2)
+        for result in (low,high):
+            self.assertAlmostEqual(result['total_power_fraction'],1.,places=12)
+            self.assertAlmostEqual(result['retained_unwanted_to_carrier'],expected,places=12)
+        self.assertEqual(low['strongest_retained_lines'][0]['rf_hz'],2.477e9)
+        self.assertEqual(high['strongest_retained_lines'][0]['rf_hz'],2.405e9)
+        self.assertEqual(center['ideal_band_filter_retained_unwanted_fraction'],0.)
+
+    def test_rational_divider_grid_and_correlated_phase_cancellation(self):
+        from robustness_envelope import periodic_phase_spurs
+        frequency=2.402e9/24
+        result=periodic_phase_spurs(2.402e9,[(frequency,.1,.3),(frequency,-.1,.3)])
+        self.assertAlmostEqual(result['carrier_power_fraction'],1.,places=12)
+        self.assertLess(result['beyond_40mhz_fraction'],1e-24)
+
+
+class LocalCapacitorNetworkTests(unittest.TestCase):
+    def test_nonideal_capacitor_conserves_power_for_all_current_ports(self):
+        from robustness_envelope import shared_return_transfer
+        for frequency in (1e6,156.25e6,625e6,1e9):
+            for port in ((-1.,0.,1.),(0.,-1.,1.),(0.,0.,1.)):
+                result=shared_return_transfer(frequency,die_c=500e-12,
+                    die_esr=.5,die_esl=200e-12,injection_weights=port)
+                self.assertLess(result['kcl_residual_a'],1e-12)
+                self.assertLess(abs(result['power_residual_w']),1e-12)
+
+    def test_capacitor_disconnection_and_ideal_return_limits(self):
+        from robustness_envelope import board_die_transfer,shared_return_transfer
+        # With negligible capacitor admittance the die follows the board:
+        # a one-ampere board load drops the feed's complex impedance.
+        f=100e6
+        result=board_die_transfer(f,die_esr=1e15)
+        self.assertLess(abs(result['die_ohm']-complex(-2.,-2*math.pi*f*2e-9)),1e-11)
+        n=dict(die_c=500e-12,die_esr=.5,die_esl=200e-12)
+        a=board_die_transfer(f,**n)
+        b=shared_return_transfer(f,return_r=0.,return_l=0.,**n)
+        self.assertAlmostEqual(abs(a['die_ohm']-b['differential_ohm']),0.)
+
+
+class LoadedClockInputTests(unittest.TestCase):
+    def test_am_crossing_waveform_and_variance_match_direct_threshold_equation(self):
+        from oscillator_noise import loaded_clock_input_phase
+        phase,report=loaded_clock_input_phase(2.4e9)
+        times=np.arange(512)/512e6
+        omega=2*math.pi*2.4e9
+        exact=np.arcsin(.020/(report['receiver_peak_v']*(1+.1*np.sin(2*math.pi*1e6*times))))/omega
+        exact-=exact.mean()
+        am=PhaseNoise(phase.tones[:20])
+        np.testing.assert_allclose(-am.phase(times)/omega,exact,atol=1e-25)
+        self.assertAlmostEqual(am.variance_rad2/omega**2/report['am_time_rms_s']**2,1.,places=12)
+        random=PhaseNoise(phase.tones[20:])
+        expected=report['receiver_random_time_rms_s']**2+report['downstream_random_time_rms_s']**2
+        self.assertAlmostEqual(random.variance_rad2/omega**2/expected,1.,places=12)
+
+    def test_reciprocal_mixing_quadrature_and_finite_tone_resolution(self):
+        from scipy.integrate import quad
+        from oscillator_noise import loaded_clock_input_phase
+        phase,report=loaded_clock_input_phase(2.426e9)
+        ssb=10**(report['equivalent_additive_ssb_floor_dbc_hz']/10)
+        for cutoff in (.475e6,.5e6,.7e6):
+            power=lambda frequency:1/(1+(abs(frequency)/cutoff)**10)
+            integral=quad(lambda f:power(2e6-f)+power(2e6+f),1e3,8e6,
+                points=[1.5e6,2e6,2.5e6],epsabs=1e-5)[0]
+            # Each real phase tone has two sidebands of amplitude a/2.
+            discrete=sum(a*a/4*(power(2e6-f)+power(2e6+f)) for f,a,_ in phase.tones[20:])
+            self.assertLess(abs(discrete/(ssb*integral)-1),.17)
+            edges=np.geomspace(1e3,8e6,513)
+            dense=sum((hi-lo)*(power(2e6-math.sqrt(lo*hi))+power(2e6+math.sqrt(lo*hi)))
+                      for lo,hi in zip(edges[:-1],edges[1:]))
+            self.assertLess(abs(dense/integral-1),2e-5)
+            # Well inside the phase band, a flat spectrum gives the two-sided
+            # Butterworth noise bandwidth; finite band truncation is tiny.
+            enbw=2*cutoff*math.pi/(10*math.sin(math.pi/10))
+            self.assertLess(abs(integral/enbw-1),1e-6)
+
+    def test_noise_allocation_scaling_preserves_input_am(self):
+        from oscillator_noise import loaded_clock_input_phase
+        base,a=loaded_clock_input_phase(2.426e9)
+        quiet,b=loaded_clock_input_phase(2.426e9,receiver_noise_v=.25e-3,downstream_stage_rms_s=.075e-12)
+        self.assertEqual(base.tones[:20],quiet.tones[:20])
+        self.assertAlmostEqual(PhaseNoise(base.tones[20:]).variance_rad2/PhaseNoise(quiet.tones[20:]).variance_rad2,16.)
+        self.assertAlmostEqual(a['equivalent_additive_ssb_floor_dbc_hz']-b['equivalent_additive_ssb_floor_dbc_hz'],10*math.log10(16.))
+        with self.assertRaises(ValueError):loaded_clock_input_phase(2.426e9,receiver_noise_v=-1.)
+
+    def test_loading_is_not_an_ideal_noise_free_buffer(self):
+        from oscillator_noise import loaded_clock_input_phase
+        _,high=loaded_clock_input_phase(2.4e9)
+        _,terminated=loaded_clock_input_phase(2.4e9,termination_ohm=50.)
+        self.assertLess(terminated['receiver_peak_v'],high['receiver_peak_v'])
+        self.assertGreater(terminated['receiver_random_time_rms_s'],high['receiver_random_time_rms_s'])
+        with self.assertRaises(ValueError):loaded_clock_input_phase(2.4e9,cap_f=.8e-12,bond_l_h=5e-9)
+
+
+class AnalogWakeTests(unittest.TestCase):
+    def test_transient_network_matches_independent_nodal_frequency_solve(self):
+        from robustness_envelope import local_load_state_space, shared_board_candidate, shared_return_transfer
+        candidate=shared_board_candidate()
+        candidate['network'].update(die_c=500e-12,die_esr=.5,die_esl=200e-12)
+        ss=local_load_state_space(candidate)
+        for frequency in np.geomspace(1e3,1e10,35):
+            jw=2j*math.pi*frequency
+            # State-space input is load derivative, nodal input is load current.
+            actual=((ss.C@np.linalg.solve(jw*np.eye(5)-ss.A,ss.B)+ss.D)*jw).item()
+            expected=shared_return_transfer(frequency,return_r=candidate['return_r_ohm'],
+                return_l=candidate['return_l_h'],injection_weights=(0.,-1.,1.),
+                **candidate['network'])['differential_ohm']
+            self.assertLess(abs(actual-expected),1e-8*max(1.,abs(expected)))
+
+    def test_wake_mute_preserves_state_and_recovers(self):
+        from robustness_envelope import analog_wake_envelope
+        result=analog_wake_envelope()
+        for row in result['cases']:
+            self.assertAlmostEqual(row['final_load_a'],0.,places=12)
+            self.assertLess(abs(row['final_rail_perturbation_v']),1e-6)
+            self.assertAlmostEqual(row['plateau_droop_v'],row['dc_expected_drop_v'],delta=1e-4)
+            if row['load_step_a']==0:
+                self.assertEqual(row['peak_droop_v'],0.)
+                self.assertEqual(row['peak_overshoot_v'],0.)
+            else:
+                self.assertGreater(row['peak_droop_v'],0.)
+                self.assertGreaterEqual(row['peak_overshoot_v'],0.)
+                self.assertIsNotNone(row['mute_recovery_to_1mv_s'])
+        for ramp in (20e-9,100e-9,1e-6):
+            small=next(r for r in result['cases'] if r['ramp_s']==ramp and r['load_step_a']==.007)
+            large=next(r for r in result['cases'] if r['ramp_s']==ramp and r['load_step_a']==.028)
+            self.assertAlmostEqual(large['peak_droop_v'],4*small['peak_droop_v'],places=10)
+
+
+class WidebandFilterRequirementsTests(unittest.TestCase):
+    def test_bandwidth_is_preserved_and_tuning_sensitivity_is_not_hidden(self):
+        from robustness_envelope import wideband_filter_requirements
+        result=wideband_filter_requirements()
+        self.assertEqual(result['wanted_edge_hz'],9.53125e6)
+        for row in result['cases']:
+            ap=result['passband_loss_limit_db'];astop=row['required_blocker_rejection_db']
+            ratio=result['blocker_offset_hz']/result['wanted_edge_hz']
+            for order,meets in ((row['butterworth_minimum_order'],True),
+                                (row['butterworth_minimum_order']-1,False)):
+                stop=10*math.log10(1+(10**(ap/10)-1)*ratio**(2*order))
+                self.assertEqual(stop>=astop,meets)
+            nominal=next(v for v in row['variations'] if v['frequency_scale']==1.)
+            lower=next(v for v in row['variations'] if v['frequency_scale']==.98)
+            self.assertTrue(nominal['magnitude_requirement_met'])
+            self.assertFalse(lower['magnitude_requirement_met'])
+            self.assertLess(lower['conservative_headroom_margin_db'],0.)
+            self.assertGreater(row['maximum_pole_q'],8.)
+
+
+class WidebandFilterWaveformTests(unittest.TestCase):
+    def test_filter_memory_and_external_equalization_at_two_resolutions(self):
+        from robustness_envelope import wideband_filter_waveform
+        coarse=wideband_filter_waveform(oversample=8)['cases']
+        fine=wideband_filter_waveform(oversample=16)['cases']
+        for a,b in zip(coarse,fine):
+            self.assertLess(abs(a['known_training_per_tone_evm']-b['known_training_per_tone_evm']),2e-4)
+            self.assertEqual(b['bpsk_errors_after_equalization'],0)
+            self.assertGreater(b['common_only_evm'],.5)
+        candidate=[r for r in fine if r['filter']=='finite_zero_candidate']
+        self.assertGreater(candidate[0]['known_training_per_tone_evm'],.005)
+        self.assertLess(candidate[0]['known_training_per_tone_evm'],.01)
+        self.assertGreater(candidate[0]['known_training_per_tone_evm'],candidate[1]['known_training_per_tone_evm'])
+        self.assertGreater(candidate[1]['known_training_per_tone_evm'],candidate[2]['known_training_per_tone_evm'])
 
 
 if __name__=='__main__':unittest.main()

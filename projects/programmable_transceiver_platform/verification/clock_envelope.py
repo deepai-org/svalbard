@@ -50,6 +50,52 @@ for cap in [.79e-12,1.07e-12,3e-12]:
         maximum_receiver_rms_noise_mv_for_0_5ps=slew*.5e-12*1e3,
         scope='One-pole capacitive load and sine zero crossing; no package resonance, threshold offset, protection nonlinearity or input bandwidth guarantee.'))
 contract=json.loads((P/'spec/contract.json').read_text())
+# Shared protected input branch: extend the old RC-only requirement to a
+# series bond plus shunt pad/receiver capacitance. All L/C values are hypotheses.
+external_loaded=[]
+for f in (2.4e9,2.484e9,4.8e9):
+ for cap in (.8e-12,1.1e-12,3e-12,5e-12):
+  for bond_l in (.5e-9,2e-9,5e-9):
+   for termination in (None,50.):
+    omega=2*math.pi*f;source=.5;rs=50.;bond_r=.2
+    admittance=1j*omega*cap+(0. if termination is None else 1/termination)
+    series=rs+bond_r+1j*omega*bond_l
+    transfer=1/(1+series*admittance)
+    node=source*transfer;current=node*admittance
+    # KVL and AC power conservation independently check the voltage divider.
+    assert abs(source-node-current*series)<1e-12
+    delivered=(source*current.conjugate()).real/2
+    losses=abs(current)**2*(rs+bond_r)/2+(0. if termination is None else abs(node)**2/(2*termination))
+    assert abs(delivered-losses)<1e-12
+    peak=abs(node);threshold=.020;low=.9*peak;high=1.1*peak
+    slew=omega*math.sqrt(max(0.,peak**2-threshold**2))
+    am_to_time=(math.asin(threshold/low)-math.asin(threshold/high))/omega if low>threshold else None
+    left=0.;right=low*(1-1e-12)
+    for _ in range(50):
+        middle=(left+right)/2
+        if (math.asin(middle/low)-math.asin(middle/high))/omega<=.5e-12:left=middle
+        else:right=middle
+    # Independent zero-L, high-Z limit recovers the historical one-pole screen.
+    rc=1/(1+(rs+bond_r)*1j*omega*cap)
+    assert math.isclose(abs(rc),1/math.sqrt(1+((rs+bond_r)*omega*cap)**2),rel_tol=1e-12)
+    shifted=1/(1+series*(1j*omega*cap*1.01+(0. if termination is None else 1/termination)))
+    external_loaded.append(dict(frequency_hz=f,pad_receiver_cap_pf=cap*1e12,bond_l_nh=bond_l*1e9,
+        termination_ohm=termination,receiver_peak_v=peak,
+        threshold_slew_v_per_ns=slew*1e-9,
+        receiver_noise_mv_for_0_5ps=slew*.5e-12*1e3,
+        jitter_ps_with_1mv_receiver_noise=1e9/slew if slew else None,
+        amplitude_modulation_10percent_threshold_offset_20mv_pp_ps=None if am_to_time is None else am_to_time*1e12,
+        maximum_threshold_offset_mv_for_0_5ps_pp_at_10percent_am=left*1e3,
+        phase_delay_change_for_1percent_cap_change_ps=abs(np.angle(shifted/transfer))/omega*1e12,
+        within_assigned_0_6v_peak=peak<=.6))
+external_loading=dict(cases=external_loaded,qualified=False,
+ assumptions=['0.5 V peak open-circuit Thevenin source, 50 ohm source resistance, 0.2 ohm bond resistance; matched available source power about -2.04 dBm.',
+ 'Series bond L includes an assigned effective return loop; C combines pad/protection/receiver and disconnected-branch loading. No extracted package or nonlinear ESD model.',
+ '50 ohm or high-impedance die termination; no external matching network has been granted ideal compensation.',
+ '20 mV threshold offset, 1 mV integrated receiver noise, 0.5 ps additive jitter and 0.6 V peak are diagnostic assignments, not GF180 limits.',
+ '10 percent source AM converts to timing only with nonzero threshold offset; report is peak-to-peak, not independent random RMS jitter.',
+ 'A fixed capacitance error gives static phase/delay, not jitter. The 1 percent differential only bounds sensitivity if capacitance changes with signal, supply or temperature.',
+ '4.8 GHz illustrates divide-by-two quadrature input burden, not a selected new carrier target. Intrinsic receiver speed, bias, I/Q generation, noise spectra and physical power remain open.'])
 pll_domain=next(d for d in contract['power']['domains'] if d['id']=='PLL')
 clock_ceiling_ma=len(pll_domain['supply_pins'])*pll_domain['per_connection_budget_ma']
 assert clock_ceiling_ma==48, 'Update clock envelope when domain allocation changes'
@@ -145,6 +191,67 @@ for row in spectral:
       dominant_contributor=max({'random':random,'iq_image':imbalance['image_evm_squared'],'spur':spur_variance},key=lambda k:{'random':random,'iq_image':imbalance['image_evm_squared'],'spur':spur_variance}[k])))
 assert any(r['within_joint_clock_allocation'] for r in combined)
 assert any(not r['within_joint_clock_allocation'] for r in combined)
+# Loaded input and source share one RF clock allowance. Replace the old
+# conditioning placeholder with input-noise/slew and exact AM crossing error;
+# retain only phase-generation and distribution as two 0.3 ps placeholders.
+loaded_joint=[]
+base_spectrum=next(x for x in spectral if x['mode']=='external_lo' and x['tracking_pole_hz']==0.)
+for index,port in enumerate(external_loaded):
+ input_hz=port['frequency_hz'];division=2 if input_hz==4.8e9 else 1
+ carrier=input_hz/division;omega=2*math.pi*carrier
+ peak=port['receiver_peak_v'];threshold=.020
+ amplitude_ok=1.1*peak<=.6
+ crossings_ok=.9*peak>threshold
+ common=dict(input_case_index=index,input_hz=input_hz,rf_carrier_hz=carrier,
+     input_to_lo_division=division,amplitude_with_10percent_am_within_assigned_limit=amplitude_ok,
+     crossings_preserved=crossings_ok)
+ if not crossings_ok:
+  loaded_joint.append(dict(**common,source_budget_exists=False,reason='missing_crossings',maximum_source_colored_L100khz_dbc_hz=None))
+  continue
+ phase_grid=np.arange(512)*2*math.pi/512
+ crossing=np.arcsin(threshold/(peak*(1+.1*np.sin(phase_grid))))/(2*math.pi*input_hz)
+ crossing-=crossing.mean()
+ # AM is 1 MHz; retain harmonics in the same 1 kHz–20 MHz budget band.
+ coeff=np.fft.rfft(crossing)/len(crossing)
+ am_time_variance=2*float(np.sum(abs(coeff[1:21])**2))
+ assert am_time_variance<=float(np.mean(crossing**2))*(1+1e-12)
+ # Average additive-noise timing variance over the AM cycle; nominal slew
+ # alone slightly understates noise when input amplitude varies.
+ input_time_variance=float(np.mean(1e-6/((2*math.pi*input_hz)**2*((peak*(1+.1*np.sin(phase_grid)))**2-threshold**2))))
+ other_time_variance=2*(.3e-12)**2
+ image=iq[1]['image_evm_squared'] # 0.1 dB, 0.5 degree assigned imbalance
+ source_floor_variance=2*10**(-145/10)*base_spectrum['source_white_integral_hz']/division**2
+ limit=(10**(-30/20)/2)**2
+ reserved=omega**2*(am_time_variance+input_time_variance+other_time_variance)+image+source_floor_variance
+ remaining=limit-reserved
+ maximum_source=(10*math.log10(remaining*division**2/(2*1e10*base_spectrum['source_colored_integral'])) if remaining>0 else None)
+ if maximum_source is not None:
+  restored=2*10**(maximum_source/10)*1e10*base_spectrum['source_colored_integral']/division**2
+  assert math.isclose(restored+reserved,limit,rel_tol=1e-12)
+ # Evaluate the -115 dBc/Hz source hypothesis used by the joined model,
+ # now at the external input plane rather than after ideal conditioning.
+ tested_source_l100=-115.
+ tested_source_power=2*10**(tested_source_l100/10)*1e10*base_spectrum['source_colored_integral']/division**2
+ loaded_joint.append(dict(**common,evaluated_external_source_L100khz_dbc_hz=tested_source_l100,
+     evaluated_source_colored_error_power=tested_source_power,
+     evaluated_total_clock_error_power=reserved+tested_source_power,
+     evaluated_source_and_input_fit=amplitude_ok and reserved+tested_source_power<=limit,
+     source_budget_exists=remaining>0,
+     input_receiver_random_time_rms_ps=math.sqrt(input_time_variance)*1e12,
+     input_am_time_rms_ps=math.sqrt(am_time_variance)*1e12,
+     downstream_other_time_rms_ps=math.sqrt(other_time_variance)*1e12,
+     reserved_clock_error_power=reserved,clock_error_power_limit=limit,
+     remaining_source_colored_phase_variance=remaining,
+     maximum_source_colored_L100khz_dbc_hz=maximum_source,
+     conditional_input_and_clock_budget_fit=amplitude_ok and remaining>0))
+loaded_joint_budget=dict(cases=loaded_joint,qualified=False,
+ assumptions=['Same quarter of -30 dB EVM power as preceding clock budget; not a protocol acceptance mask.',
+ '1 kHz–20 MHz offset band, no carrier tracking; source colored spectrum follows inverse-square offset, plus fixed -145 dBc/Hz floor.',
+ 'Input receiver noise is assigned 1 mV RMS in this band; AM is +/-10 percent at 1 MHz with 20 mV threshold offset.',
+ 'Input stage replaces one additive placeholder; quadrature generation and distribution each retain assigned 0.3 ps RMS, plus 0.1 dB/0.5 degree I/Q mismatch.',
+ 'Independent random contributors add in variance. Correlation with AM, host supply and source noise is not modeled; common disturbances must not be blindly RSS combined.',
+ 'Ideal divide-by-two reduces source phase noise by four in variance but preserves absolute crossing time error. Divider additive noise is not free.',
+ 'Positive source budget is a requirement, not demonstrated source/receiver/phase-generation capability. RF reciprocal mixing and packet acquisition remain separate.'])
 # Published external-source precedent, not a measured GF180 source model.
 external_precedent=dict(device='ADF4351',source_url='https://www.analog.com/media/en/technical-documentation/data-sheets/adf4351.pdf',
  datasheet_revision='A',table_pages=[3,4],output_range_hz=[34.375e6,4.4e9],
@@ -180,7 +287,7 @@ for row in adc:
  j=row['quarter_noise_power_aperture_jitter_ps']*1e-12
  assert math.isclose((2*math.pi*row['input_hz']*j)**2,.25*10**(-row['noise_budget_snr_db']/10))
 assert rf[-1]['maximum_source_ps_with_other_three_at_0_5ps'] is None
-report=dict(status='conditional_feasibility_envelope_not_physical_qualification',rf=rf,
+report=dict(status='conditional_feasibility_envelope_not_physical_qualification',rf=rf,external_loaded_input=external_loading,external_loaded_joint_budget=loaded_joint_budget,
  converter_clock_candidates=converter_clock,external_source_precedent=external_precedent,iq_image_scenarios=iq,joint_clock_scenarios=combined,spectral_source_boundaries=spectral,spectral_quadrature_relative_change=max_quadrature_change,adc=adc,wired=wired,supply_pushing=pushing,external_receiver=external,power=power,
  assumptions=['RF residual phase uses one common integration band after explicitly selected tracking; no phase-noise spectrum or tracking transfer is inferred.',
  'Joint scenarios allocate the SAME quarter EVM power to random phase, IQ image and output spur together. Synthetic source spectra are not GF180 predictions. Proper-complex waveform and small independent phase errors assumed; no correlated image/spur cross terms or reciprocal mixing.',

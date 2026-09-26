@@ -1,5 +1,234 @@
 # Three whole-platform feasibility questions
 
+## Decision sequence: several credible ways to succeed
+
+Adopted 2026-09-26. Finish mathematical closure before new circuit/layout work.
+This sequence replaces open-ended accumulation of isolated passing fixtures.
+Every gate records **keep, change, or proposed scope reduction**, evidence,
+remaining uncertainty and the next owner. A scope reduction requires an explicit
+product decision; a failed test does not silently drop a requested capability.
+No calendar estimate is a completion claim.
+
+| Gate | Work and decision | Completion condition |
+|---|---|---|
+| G0: shared foundations | Operating ledger below; host electrical baseline; per-target acceptance contracts | Every conflict resolved or assigned to G1–G4. Every target has a proposed tier and numerical acceptance tuple; unknown entries keep the gate open. |
+| G1: packaging, pads, power | Preserve provider COB compatibility; map bonds, board rails, pad branches and return paths; bound full host/package transfer | All critical paths meet their electrical budgets across justified bounds, including interior resonances. Otherwise change the compatible pin/pad/power plan. |
+| G2: unified timing | Shared source/stage/supply spectra, reference-input loading, independent RX CDR, separate retune and turnaround state machines | One versioned timing environment consumed by RF and wired benches; choose supported clock ownership and recovery policy. |
+| G3: full RF chain | Actual packets, weak signal, blockers, AGC, clipping, noise, ppm, switching and TX emissions together | Each radio has a sensitivity/selectivity/TX envelope with numerical packet-level criteria, or an explicit unresolved/experimental verdict. |
+| G4: generic control coverage | Map electrical actions and command-to-pad latency; USB + PCIe lifecycle anchors; sustained Ethernet; other interfaces audited | Every required behavior has a demonstrated generic control or specified external implementation. Unsupported behaviors prevent capability closure. |
+
+G1 geometry work and G0 host selection can proceed together. Numerical host
+current injection must use a frozen host scenario before the PDN result is
+interpreted. The FPGA model affects H2D drive and D2H input loading; chip output
+cells, actual traffic, firmware clocks and board routing also determine the
+harmonics. An FPGA family name alone does not establish those quantities.
+
+### G0 host and operating-conditions ledger
+
+User owns a Zynq-7000-series device; exact board is unspecified and physical
+hardware is not needed at this stage. Keep it as a future bring-up candidate,
+not proof that a particular connector/bank supports the link. No board purchase
+or arbitrary replacement board is selected.
+
+Freeze paper scenario H0: two ten-bit source-synchronous DDR buses, nominal
+3.3 V LVCMOS electrical target; H2D forwarded clock 156.25 MHz; RF D2H candidate
+LO/16 (150–155.25 MHz over the modeled LO interval). Retain 10 pF load and 7 pC
+internal switching charge as assigned study points, **not measured Zynq/board
+values or upper bounds**. Use quiet, random, alternating and burst traffic with
+explicit edge shape, simultaneous switching and both directions. Wired D2H
+ownership must be specified separately per selected rate. Final FPGA pin/bank,
+I/O standard, drive/slew and connector qualification remains open.
+
+In this ledger, 3.3 V is a modeling nominal, not a guaranteed operating window.
+For every row, allowed rail ripple is unresolved in four bands: DC–10 kHz,
+10 kHz–1 MHz, 1–100 MHz and >100 MHz through the relevant edge bandwidth.
+Jitter tolerances require offset-dependent masks; no scalar RMS limit is yet a
+whole-chip acceptance criterion. Entries marked open must be resolved, not zeroed.
+
+| Block | Logical supply / voltage | Clock / range and tolerance | Pad, common mode, coupling, termination | Required concurrent activity | Conflict owner |
+|---|---|---|---|---|---|
+| REF input / alternate GHz branch | PLL / 3.3 V nominal | Reference or 2.4–2.484 GHz LO study; input slew/additive jitter open | Same REF_IN site; analog branch, CM/swing/termination open; ordinary Schmitt path insufficient evidence | Selected synthesis, host, control | G1/G2: unused-branch loading and shared rail |
+| RF synthesis / quadrature / dividers | PLL / 3.3 V nominal | Autonomous or external LO; sample ÷64/128/256/512; noise mask open | Internal; external loop nodes not allocated | RX or TX chain, host, bias | G1/G2: shared supply and retune propagation |
+| Wired TX PLL / distribution | PLL / 3.3 V nominal | Selected serial rate up to 2.5 Gb/s; fractional ×10 timing; tolerance open | REF_IN conditioning mode-dependent | Wired RX CDR, TX driver, host | G2: independent RX and TX timing |
+| Wired RX equalizer / sampler / CDR | WIRE / 3.3 V nominal | Incoming serial, independently recovered | WIRE_RX pair; AC serial or USB DC branch; CM/termination by mode, numerical masks open | Wired TX, host, control | G1/G4: switch/protection capacitance |
+| Wired serializer / driver / detect | WIRE / 3.3 V nominal | TX source; jitter envelope open | WIRE_TX pair; serial AC or TMDS DC; load detect/idle; TMDS external pull-up | Wired RX and host | G1/G4: bias levels, off-state and driver load |
+| USB local HS and FS/LS branches | WIRE / 3.3 V nominal | HS sampling/drive and line-state timing; mode-specific masks open | Bidirectional WIRE_RX; pulls, HS termination, squelch; serial branch inactive but loaded | Host response path, control; WIRE_TX off | G1/G4: inactive capacitance and response latency |
+| RF LNA / RX mixers | RF / 3.3 V nominal | Local quadrature LO | RF_RX analog pair; board match/preselection; bias/CM/termination open | PGA/filter, ADC, reference, host | G1/G3: package + blockers + reciprocal mixing |
+| RX PGA / LPF / I/Q ADC | RF / 3.3 V nominal | LO-derived sample rate; aperture mask open | Internal differential CM/headroom open | RX mixer, paired converter/reference, host | G3: stage clipping/reference loading |
+| I/Q DAC / TX LPF / mixers / driver | RF / 3.3 V nominal | Sample clock + quadrature LO | RF_TX analog pair; external match/filter/optional PA; headroom open | Paired DAC/reference, interpolation service, host | G3: output current, images, switching |
+| Bias / reference buffers | RF/PLL/CORE allocation must be itemized / 3.3 V | Slow control plus converter impulse loads | Internal reservoirs; no extra reference pins | All selected analog blocks | G1/G3: shared loading and non-overlapping current inventory |
+| Host capture/launch | HOST logical domains / 3.3 V target | H0 above; setup/hold/eye open | 20 data + 2 clocks, LVCMOS target; board/FPGA loads open | Active payload, core; remains active in RF | G0/G1/G2: rail injection and clock loss |
+| Control / bounded queues | CORE / 3.3 V nominal | H2D, D2H, engine and SPI domains | SPI/reset; no new IRQ/test pins | Every operating mode | G4: CDC, bounded latency, resets and epochs |
+
+Across all rows, RF and wired payload exclusivity remains mandatory. RF RX/TX
+turnaround does not imply simultaneous same-frequency duplex. Wired RX and TX
+may operate together. Shared physical rails remain active regardless of logical
+domain names. The provider bond map may force rail sharing not in earlier models.
+
+### Target tiers and acceptance contracts
+
+Priority is not evidence status. All currently requested interfaces remain in
+scope pending a product decision on tiers. Proposed anchor investigations are
+1000BASE-X, PCIe Gen1 and a useful 2.4 GHz radio; USB is also a lifecycle stress
+anchor. Do not downgrade SATA, SGMII, USB host/device, TMDS HDMI/DVI, DP RBR,
+HD-SDI, HE20, BLE, BR/EDR, 802.15.4 or 2.4 GHz LoRa merely by calling them stretch.
+Lower-frequency RF and external frequency conversion remain existing stretch goals.
+
+Each wired acceptance tuple must name rate, coupling/termination, voltage mask,
+channel loss/load, jitter spectrum, BER limit/confidence, acquisition/recovery
+limit and sustained host service. Each radio tuple must name PHY/modulation,
+packet length, PER limit/confidence, sensitivity reference plane, wanted level,
+blocker powers/offsets, phase spectrum, TX mask/EVM and turnaround limit.
+These numerical protocol contracts remain to be populated from the exact
+standard/version: G0 is **not complete**. Diagnostic 10% EVM and zero errors in
+short fixtures are not substitutes. For perspective, zero errors in about
+3×10^12 independent bits only establishes an approximately 10^-12 one-sided
+95% BER upper bound; short behavioral runs require separate analytic evidence.
+
+### Capability-wide evidence gaps and next decisions
+
+The coverage denominator is the 17 entries in
+`generic_control_surface.external_interface_requirements`, not only the 13
+legacy waveform/line-rate entries. Those entries are external application
+requirements, never on-chip protocol IDs. HD-SDI, custom GFSK/SDR and the two
+RF stretch paths must remain visible even without dedicated report fixtures.
+USB host and device share one entry but require separate role validation.
+
+| Target family | Evidence that can currently be reused | Essential missing proof / next decision |
+|---|---|---|
+| PCIe Gen1 | Generic 2.5 Gb/s causal receiver and separate detection/idle studies | Join loaded receiver detection, idle, acquisition, sustained traffic and recovery under one supply/timing environment; decide whether every electrical action has a usable generic control. |
+| 1000BASE-X / SGMII | Generic 1.25 Gb/s timing and transport arithmetic | Continuous independently clocked link, required coding/control traffic, negotiation and loss/recovery; qualify each interface separately despite the shared rate. |
+| SATA Gen1 | Causal OOB observer and peer startup reaching alignment wait | Loaded OOB-to-data handoff and alignment/CDR acquisition. OOB detection alone never means link ready. |
+| USB 2.0 host/device | Separate electrical/response and bridge/storage studies | One lifecycle combining single-ended and differential pad states, attach/chirp, HS traffic, turnaround, disconnect and recovery for both roles; include inactive branch loading on the fastest serial mode. |
+| DisplayPort RBR | Generic serial timing/control mapping | Training with actual swing/pre-emphasis range and clock variation, sustained stream and recovery; explicitly external AUX implementation. |
+| HDMI TMDS / single-link DVI | Static loaded TMDS, forwarded-clock and opaque-word/FIFO studies | Common-mode/off-state behavior plus continuous independent video/control validation across three dies, including fractional clocks and cross-die alignment recovery. |
+| HD-SDI | Numeric rate and generic control mapping; external cable interface architecture | Dedicated sustained scrambled-stream/CDR evidence and the defined external equalizer/driver boundary; no dedicated target fixture in the consolidated report. |
+| Wi-Fi HE20 | Synthetic BPSK acquisition, blocked RX and loaded TX diagnostics | Remove unproven close-offset external-filter credit; close the joint wideband noise/headroom/selectivity budget. Then real allowed training, sensitivity under blockers, TX masks and response deadline; set modulation/coding from evidence rather than nominal converter precision. |
+| Bluetooth LE | Actual LE 1M addressed request and timed loaded reply to independent peer | Weak-signal/blocker and emissions acceptance, calibrated air timing and channel-hop recovery; LE 1M evidence does not establish other LE PHYs. |
+| Bluetooth BR/EDR | Generic RF modulation/rate fixtures | Real packet acquisition, hopping, modulation-specific quality, blockers and timed TDD using the same analog settings and clock model. |
+| IEEE 802.15.4 at 2.4 GHz | Generic O-QPSK/DSSS fixture | Actual packet synchronization/decoding, sensitivity/blockers and complete turnaround. |
+| 2.4 GHz LoRa | Synthetic chirp/training/filter comparisons | Real preamble and packet acquisition at selected bandwidths, interference rejection and TX spectrum; longer synthetic training is not acceptance evidence. |
+| Custom GFSK / SDR | Configurable filter/gain/rate and sample-stream building blocks | Declare a numeric bandwidth, deviation, dynamic-range and continuous-service envelope; validate it rather than implying arbitrary waveforms work. |
+| Lower-frequency RF stretch | Generic controls and proposed frequency flexibility | Establish tuning/input/matching/conversion coverage; a 2.4 GHz pass does not transfer automatically. |
+| External frequency-conversion stretch | External-parts allowance and control mapping | Explicit mixer/LO/filter interface, image/noise/linearity and total timing budget; no dedicated fixture currently establishes a complete converted-band path. |
+
+**Work order:** after the shared analog envelope, close the USB shared-pad and
+PCIe detection/recovery anchors because they can require different pad circuitry
+or missing controls. In parallel in the work plan, retain the real RF exchange
+as the noise/emission/turnaround anchor; remaining radio families require their
+own acquisition evidence. Continuous Ethernet and video then test sustained
+clock/service behavior. This is an investigation order, not permission to remove
+or downgrade the remaining targets. A control mapping or borrowed rate fixture
+never substitutes for the missing behavior listed here.
+
+### G1/G2 coupling and timing decisions
+
+Use the provider-compatible ring and breakout as the assembly baseline. Pin
+neighbor rules are preferences within fixed bond positions, not permission to
+move supply pads. Enumerate pad/protection/switch C, bond/return L, mutual terms
+and PCB impedance with provenance and justified ranges. No claimed worst case
+from arbitrary multipliers. Audit the logical 50-terminal plan against all
+provider bonds and board connections before assigning physical rails.
+
+Convert injected supply spectra with stage-specific complex transfer functions
+H_delay(f), in ps/mV, including input buffer, oscillator, divider, quadrature
+and distribution. A sinusoidal rail tone Vpk gives delay amplitude |H|Vpk;
+phase amplitude is 2π f_carrier times delay in seconds. Preserve coherent phase
+and cross-spectra for common supplies; do not RSS correlated disturbances.
+Oscillator frequency pushing, PLL suppression and sample-clock timing require
+their own transfer functions. A static sensitivity or the 1 MHz model cannot
+qualify the 60–124 mV high-frequency harmonic stress result. Small-phase spur
+approximations fail when phase modulation is large.
+
+The paired `whole_chip_operating_envelopes` study now holds the board and host
+pulse hypotheses fixed while changing payload mode, rate and reserved current.
+Its conservative rail interval must remain inside its declared model-validity
+range before clean decoding contributes to a feasibility argument. An interval
+extending outside the range means validity is not guaranteed; it is not proof
+of an actual excursion. A receiver diagnostic pass never overrides this gate.
+The assigned 2.5–3.6 V comparison range is not the product's accepted operating
+window or a demonstrated device limit. See the [current joined assessment](risk-priorities.md#current-joined-host-power-and-receiver-assessment).
+
+Mitigations to price: permitted existing supply/return paths, local isolation
+and decoupling, board damping, reduced host swing/rate where compatible, and
+chosen clock/pattern relationships. Extra bonds require provider compatibility.
+The periodic TX sweep now confirms both direct clock sidebands near RF band
+edges and nonlinear difference-frequency products inside a full-band filter.
+Price host-rate changes against current, divider noise and spectral placement
+together. An ideal-filter projection or a favorable exploratory divider is not
+an implemented mitigation; require actual filter/load and clock-transfer bounds.
+Host spread spectrum is only an experiment: it spreads energy, introduces
+clock modulation and may worsen RF/CDR/CDC; it is not a default mitigation.
+
+Separate **same-channel turnaround** (LO/sample/host timing stays running;
+change RX/TX bias, gain, external switch/PA and scheduled payload) from **channel
+retune** (stop publication → safe clock gate → retune/lock → sample reset → host
+capture training → flush/new epoch → ready). Account for each duration and
+clock-loss behavior. Do not charge a full retune to every packet response or
+assume a truncated clock edge is harmless to FPGA clocking.
+
+Compare variable LO-derived conversion/D2H with independently fixed conversion
+and host timing. Resampling in the FPGA alone cannot keep a clock physically
+fixed when its source is still LO/N; the fixed option needs a real clock source,
+routing, CDC and power/pin budget. Retain on-chip independent wired RX CDR;
+FPGA ordinary GPIO sampling does not replace it at full line rate.
+
+Protocol timing constants are version/PHY-specific. The familiar BLE 150 µs
+IFS is not a generic channel-retune deadline, and newer Bluetooth versions
+allow additional spacing choices. Uncoded 1M/2M preambles are 8/16 bits,
+respectively; coded PHY differs. 802.15.4 turnaround and Wi-Fi SIFS must be tied
+to selected PHY/exchange. LoRa preamble configuration is not universally eight
+symbols, and Wi-Fi acquisition must include the actual selected packet fields.
+Use primary specifications rather than copying generic durations into tests.
+
+### G3/G4 integrated campaigns and decisions
+
+RF: combine sensitivity+3 dB wanted signal, specified blocker matrix, shared
+timing spectra, reference error, AGC, converter/reference limits and RX/TX
+switching; use actual preambles and payloads. Evaluate TX emissions and higher
+modulations independently of RX decoding. Keep the sensitivity/blocker Pareto
+frontier: a setting may be useful for a clean channel while another is needed
+for selectivity; discard it only if no declared operating envelope benefits.
+Publish required external filtering and interferers it cannot remove.
+
+Sensitivity sweeps must use fixed physical input-referred noise at a stated
+temperature, equivalent noise bandwidth and gain setting. A fixed frontend-EVM
+percentage that scales noise with wanted amplitude cannot qualify sensitivity.
+If AGC changes gain, price its realizable range, noise figure, current,
+compression/headroom and settling; do not grant ideal constant ADC amplitude
+for free. The current absolute-input diagnostic exposes this distinction but
+still assigns NF/ENBW/gain and uses synthetic training. Its failures must remain
+visible alongside strong-signal passes.
+
+The LE 1M joined packet bench now connects actual acquisition/CRC, shared
+supply/timing/reference disturbances, input-referred thermal noise and timed
+loaded TX through an independent strong-signal peer. A finite sample queue
+holds its prefill until launch and fails muted on underrun. Host arrival timing
+and control application are still supplied bounds, not the real bridge. RF
+half-amplitude onset is a diagnostic marker, not qualified first-bit timing;
+require calibrated launch bounds, TX-load feedback and emission limits before
+closing this gate. The joined TX result already shows that clean peer decoding
+can coexist with substantial far-offset output power; external filtering must
+be evaluated across carriers, including spurs inside its passband. Weak input
+levels still fail without a blocker; the older
+ideal-gain packet results cannot replace those failures.
+
+Controls: for every target, record electrical state, timing, generic register/
+event action, host-to-pad latency including queue/clock phase, observation and
+external assistance. First lifecycle benches are **USB HS** (shared DC pads,
+attach/reset/chirp, host and device response) and **PCIe Gen1** (AC coupling,
+receiver detection, idle, training/error/recovery). SATA OOB gets a separate
+burst/gap/handoff check; TMDS gets DC load and cross-die clock/FIFO checks.
+DP training/swing/pre-emphasis and external AUX, SDI external coax interfaces,
+and sustained 1000BASE-X/SGMII negotiation/recovery remain explicit obligations.
+Use the existing fast connected model first; co-simulation is for actual RTL
+boundaries, not a reason to replace fast mathematical work with long runs.
+
+Sources checked 2026-09-26: [provider template](https://github.com/wafer-space/gf180mcu-project-template/tree/0de7e394337a1f7f5303ac7a3681bf2481b58176),
+[provider packaging](https://wafer.space/price.html),
+[Bluetooth link layer](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/low-energy-controller/link-layer-specification.html).
+
+
 **Current operating decision:** RF and wired payload operation are mutually exclusive on the same chip. Both capabilities remain required; additional physical resource sharing is encouraged. See the [exclusive-engine policy](exclusive-engine-policy.md), which supersedes simultaneous-operation requirements below. Behavioral payload exclusivity is enforced; complete RTL/physical enforcement and resource rebudgeting remain open.
 
 This is the active feasibility work program following the user's explicit
@@ -364,6 +593,63 @@ or loaded pads. No current model result is relabeled as a new protocol pass.
    baseline PCIe/Ethernet/RF tests. Physical qualification still needs the open
    PDK, transistor simulations and later extraction; no validated fab RF/package
    data is assumed available.
+
+
+### Shared USB/serial pad: inactive-loading decision
+
+The current `SharedWiredPad` has a two-node capacitance matrix with nominal
+2 pF pad-to-return, 0.3 pF inactive-branch capacitance and 0.2 pF mutual
+capacitance. Under balanced differential drive, the per-leg effective
+capacitance is `Cpad + Coff + 2*Cmutual`: **2.7 pF**, not 2.3 pF. Its
+common-mode effective value is instead `Cpad + Coff`. Neither may silently be
+replaced by the serial screen's standalone 2 pF case.
+
+An inverse calculation using the existing `wired_envelope.history_margin`
+provides an initial inactive-loading requirement. Use 2.5 Gb/s, 400 mV
+nominal differential peak, 50 Ω equivalent leg resistance, no pre-emphasis,
+5 ps assigned random RMS jitter, and a timing half-window of 0.05 UI + 7σ.
+Select the best of 0.5/0.65/0.8 UI sample centers, sample 21 timing positions
+per window, and require at least 100 mV signed margin for the bounded binary
+history. Bisect total effective capacitance over 0.001–10 pF for 40 iterations.
+These are internal diagnostic assumptions, not a PCIe voltage/jitter mask.
+
+| Driver time constant | Largest sampled passing effective capacitance | Remaining Coff after 2 pF pad + 0.4 pF mutual contribution | Signed margin with current 2.7 pF assumption |
+|---|---:|---:|---:|
+| 50 ps | 4.259 pF | 1.859 pF | 224 mV |
+| 100 ps | 3.036 pF | 0.636 pF | 128 mV |
+| 200 ps | 1.204 pF | None: base load already exceeds limit | −21 mV |
+
+**Decision:** retain shared pads, but require an explicit total differential
+capacitance budget. At the middle driver assumption the nominal 0.3 pF disabled
+branch leaves only about 0.336 pF of additional effective loading before this
+diagnostic boundary. Protection, switch drains, routing and mutual coupling
+must share that allowance unless already included in the 2 pF pad assumption.
+At 200 ps, eliminating the USB branch alone cannot rescue the modeled lane;
+driver bandwidth, receiver equalization or base pad loading must change.
+This is a circuit requirement to investigate, not evidence of achievable GF180
+bandwidth or capacitance. Optimistic phase selection, lumped RC, omitted bond
+inductance and the finite timing grid prevent qualification.
+
+The existing `usb_pad_lifecycle` is also explicitly a probe sequence: FS idle,
+reset-like SE0, an immediate configuration jump to HS, then NRZI data. It does
+not implement chirp negotiation. `SharedWiredPad.configure()` jointly selects
+pulls, terminations and drive style from speed/role and requires both drivers
+released. A true negotiation model must allow independent generic pull,
+termination, sensing and drive controls, including switching local state while
+a peer is driving when required. The helper's speed switch must not be mistaken
+for implemented chip negotiation or proof that the required controls exist.
+Preserve the current probe as a component check; it cannot close G4.
+The [normative macro boundary](../integration/macro-contract.md#independent-shared-pad-electrical-controls)
+now requires that independence and distinguishes live passive-state actions
+from stopped topology/trim changes. The mathematical `set_local_passives()` subset now permits independent local
+pull/termination changes with a peer still driving. Four focused circuit tests
+check remote reset with local pull removal, remote termination retention,
+instantaneous power conservation, invalid-update preservation and equivalence
+to default FS/LS/HS passive states. Existing host/device probe sequences still
+pass. Independent numeric local drive and raw sensing now also exist, including a
+bounded current-drive probe against peer-held SE0 without a speed change.
+Physical switches, valid drive/comparator ranges, command timing and actual
+negotiation are still required before this becomes a negotiation lifecycle.
 
 
 ## Protocol and physical specification sources

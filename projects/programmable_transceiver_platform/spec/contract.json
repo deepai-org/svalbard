@@ -1493,5 +1493,401 @@
         "FPGA resampler throughput and coefficient precision"
       ]
     }
+  },
+  "assembly_policy": {
+    "route": "wafer_space_provided_chip_on_board",
+    "pad_ring": "default_or_demonstrably_packaging_compatible",
+    "preserve_bond_positions": true,
+    "preserve_provider_power_ground_assignments": true,
+    "signal_pad_substitution": "analog_cells_or_custom_frontends_at_compatible_bond_sites_not_required_to_use_standard_gpio_signal_circuitry",
+    "mapping_status": "candidate_signal_assignment_fixed_provider_sites_terminal_limit_and_electrical_map_open",
+    "power_domains": "logical_budgets_not_demonstrated_independent_external_rails",
+    "provider_template_commit": "0de7e394337a1f7f5303ac7a3681bf2481b58176",
+    "provider_site_inventory": {
+      "source": "librelane/slots/slot_1x1.yaml",
+      "ordered_sites_by_side": {
+        "south": [
+          "clk_pad",
+          "rst_n_pad",
+          "bidir[0].pad",
+          "bidir[1].pad",
+          "bidir[2].pad",
+          "bidir[3].pad",
+          "bidir[4].pad",
+          "bidir[5].pad",
+          "dvss_pads[0].pad",
+          "bidir[6].pad",
+          "bidir[7].pad",
+          "bidir[8].pad",
+          "bidir[9].pad",
+          "bidir[10].pad",
+          "bidir[11].pad",
+          "bidir[12].pad",
+          "bidir[13].pad"
+        ],
+        "east": [
+          "dvdd_pads[0].pad",
+          "dvss_pads[1].pad",
+          "bidir[14].pad",
+          "bidir[15].pad",
+          "bidir[16].pad",
+          "bidir[17].pad",
+          "bidir[18].pad",
+          "bidir[19].pad",
+          "dvdd_pads[1].pad",
+          "dvss_pads[2].pad",
+          "bidir[20].pad",
+          "bidir[21].pad",
+          "bidir[22].pad",
+          "bidir[23].pad",
+          "bidir[24].pad",
+          "bidir[25].pad",
+          "vss_pads[0].pad",
+          "vdd_pads[0].pad",
+          "dvss_pads[3].pad",
+          "dvdd_pads[2].pad"
+        ],
+        "north": [
+          "analog[1].pad",
+          "analog[0].pad",
+          "bidir[39].pad",
+          "bidir[38].pad",
+          "bidir[37].pad",
+          "bidir[36].pad",
+          "bidir[35].pad",
+          "bidir[34].pad",
+          "dvss_pads[4].pad",
+          "bidir[33].pad",
+          "bidir[32].pad",
+          "bidir[31].pad",
+          "bidir[30].pad",
+          "bidir[29].pad",
+          "bidir[28].pad",
+          "bidir[27].pad",
+          "bidir[26].pad"
+        ],
+        "west": [
+          "dvdd_pads[5].pad",
+          "dvss_pads[7].pad",
+          "vdd_pads[1].pad",
+          "vss_pads[1].pad",
+          "inputs[11].pad",
+          "inputs[10].pad",
+          "inputs[9].pad",
+          "inputs[8].pad",
+          "inputs[7].pad",
+          "inputs[6].pad",
+          "dvdd_pads[4].pad",
+          "dvss_pads[6].pad",
+          "inputs[5].pad",
+          "inputs[4].pad",
+          "inputs[3].pad",
+          "inputs[2].pad",
+          "dvdd_pads[3].pad",
+          "dvss_pads[5].pad",
+          "inputs[1].pad",
+          "inputs[0].pad"
+        ]
+      },
+      "status": "template_inventory_not_extracted_bond_or_board_map",
+      "delivered_board_terminal_count": null,
+      "signal_assignment_status": "candidate_complete_functional_signals_not_board_or_electrical_qualification",
+      "unused_signal_sites_remove_bonds": false
+    },
+    "candidate_signal_sites": {
+      "D2H_D[0]": "clk_pad",
+      "RESET_N": "rst_n_pad",
+      "D2H_CLK": "bidir[5].pad",
+      "H2D_CLK": "bidir[34].pad",
+      "WIRE_RX_P": "bidir[14].pad",
+      "WIRE_RX_N": "bidir[15].pad",
+      "WIRE_TX_P": "bidir[20].pad",
+      "WIRE_TX_N": "bidir[21].pad",
+      "RF_RX_P": "inputs[11].pad",
+      "RF_RX_N": "inputs[10].pad",
+      "RF_TX_P": "inputs[5].pad",
+      "RF_TX_N": "inputs[4].pad",
+      "REF_IN": "inputs[1].pad",
+      "D2H_D[1]": "bidir[0].pad",
+      "D2H_D[2]": "bidir[1].pad",
+      "D2H_D[3]": "bidir[2].pad",
+      "D2H_D[4]": "bidir[3].pad",
+      "D2H_D[5]": "bidir[4].pad",
+      "D2H_D[6]": "bidir[6].pad",
+      "D2H_D[7]": "bidir[7].pad",
+      "D2H_D[8]": "bidir[8].pad",
+      "D2H_D[9]": "bidir[9].pad",
+      "H2D_D[0]": "bidir[26].pad",
+      "H2D_D[1]": "bidir[27].pad",
+      "H2D_D[2]": "bidir[28].pad",
+      "H2D_D[3]": "bidir[29].pad",
+      "H2D_D[4]": "bidir[30].pad",
+      "H2D_D[5]": "bidir[31].pad",
+      "H2D_D[6]": "bidir[32].pad",
+      "H2D_D[7]": "bidir[33].pad",
+      "H2D_D[8]": "bidir[35].pad",
+      "H2D_D[9]": "bidir[36].pad",
+      "HOST_CS_N": "bidir[10].pad",
+      "HOST_SCLK": "bidir[11].pad",
+      "HOST_MOSI": "bidir[12].pad",
+      "HOST_MISO": "bidir[13].pad"
+    }
+  },
+  "generic_control_surface": {
+    "scope": "external verification requirements, not on-chip protocol profiles or implemented opcodes",
+    "services": {
+      "atomic_configuration": {
+        "actions": [
+          "select exclusive RF/wired ownership",
+          "commit compatible numeric clock/pad/filter/gain settings while stopped"
+        ],
+        "evidence": "numeric validators and queued behavioral configuration; coarse RTL trim storage only",
+        "source": "system_model/architecture_fast/resource_configuration.py",
+        "gap": "Versioned serialized fields, atomic apply/ack and physical trim semantics",
+        "serialized_to_physical_verified": false,
+        "worst_case_apply_latency_s": null
+      },
+      "clock_qualification": {
+        "actions": [
+          "select source and rate",
+          "observe source/CDR readiness and loss",
+          "rearm with new epoch"
+        ],
+        "evidence": "clock/lifecycle models and candidate recovery mailbox; physical macro returns clocks but lacks full qualification interface",
+        "source": "integration/pt_chip.sv",
+        "gap": "Clock-status/event ABI, CDC and bounded loss detection",
+        "serialized_to_physical_verified": false,
+        "worst_case_apply_latency_s": null
+      },
+      "wire_electrical": {
+        "actions": [
+          "swing/pre-emphasis/termination/common mode",
+          "serial versus DC-current-sink branch",
+          "idle and receiver detection"
+        ],
+        "evidence": "wire trim word and wire_idle port; specialized electrical models separate",
+        "source": "integration/pt_chip.sv",
+        "gap": "Numeric electrical controls and receiver-detect/status wiring with apply latency",
+        "serialized_to_physical_verified": false,
+        "worst_case_apply_latency_s": null
+      },
+      "usb_line_state": {
+        "actions": [
+          "HS/FS/LS drive and receive",
+          "pull/termination selection",
+          "squelch/disconnect and line-state observation"
+        ],
+        "evidence": "bidirectional package pin and behavioral pad model; no complete physical macro controls",
+        "source": "system_model/connected/protocol_pad.py",
+        "gap": "Timed bidirectional pad command/status and HS/FS/LS transition contract",
+        "serialized_to_physical_verified": false,
+        "worst_case_apply_latency_s": null
+      },
+      "timed_action": {
+        "actions": [
+          "schedule generic electrical state/gate at a timestamp",
+          "bounded burst/gap sequence",
+          "cancel on stale epoch or fault"
+        ],
+        "evidence": "timed mathematical services; existing fast RTL command does not encode full scheduled states",
+        "source": "spec/streaming-transport-v2.md",
+        "gap": "Bounded event format, capacity, deadline/late policy and clock-domain apply guarantee",
+        "serialized_to_physical_verified": false,
+        "worst_case_apply_latency_s": null
+      },
+      "rf_path_control": {
+        "actions": [
+          "local RX/TX direction without LO restart",
+          "gain/filter/sample controls",
+          "mute and settled/overload observations"
+        ],
+        "evidence": "numeric RF settings and transition budget; physical interface has trim and mute only",
+        "source": "system_model/architecture_fast/resource_configuration.py",
+        "gap": "Independent direction/gain/filter commit semantics and meaningful settle/overload observation",
+        "serialized_to_physical_verified": false,
+        "worst_case_apply_latency_s": null
+      },
+      "continuous_stream": {
+        "actions": [
+          "paced sample/word delivery",
+          "word alignment and fixed pipeline",
+          "finite FIFO service and underrun/overflow fallback"
+        ],
+        "evidence": "framed transport, FIFO, pacing and receiver models; incomplete selected implementation",
+        "source": "spec/streaming-transport-v2.md",
+        "gap": "One bridge architecture with bounded rate, latency, occupancy and physical GPIO timing",
+        "serialized_to_physical_verified": false,
+        "worst_case_apply_latency_s": null
+      },
+      "epoch_recovery": {
+        "actions": [
+          "stop publication and pad-safe fallback",
+          "flush stale data",
+          "reset/train/acknowledge/run current epoch"
+        ],
+        "evidence": "candidate SPI recovery addresses 0x30-0x36 and behavioral mailbox; absent from pt_control RTL",
+        "source": "verification/recovery_mailbox.py",
+        "gap": "Persistent RF/wired path integration and serialized-to-pad recovery latency",
+        "serialized_to_physical_verified": false,
+        "worst_case_apply_latency_s": null
+      },
+      "board_coordination": {
+        "actions": [
+          "FPGA controls external RF switch/PA",
+          "FPGA sidebands and external interface parts"
+        ],
+        "evidence": "documented board ownership; no extra chip pins allocated",
+        "source": "docs/roadmap/programmable-transceiver-pin-plan.md",
+        "gap": "Board signal level/timing contracts included in each end-to-end deadline",
+        "serialized_to_physical_verified": false,
+        "worst_case_apply_latency_s": null
+      }
+    },
+    "external_interface_requirements": {
+      "pcie_gen1": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "wire_electrical",
+        "timed_action"
+      ],
+      "ethernet_1000basex": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "wire_electrical"
+      ],
+      "sgmii": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "wire_electrical"
+      ],
+      "sata_gen1": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "wire_electrical",
+        "timed_action"
+      ],
+      "displayport_rbr": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "wire_electrical",
+        "board_coordination"
+      ],
+      "dvi_single_link": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "wire_electrical",
+        "board_coordination"
+      ],
+      "hdmi_tmds": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "wire_electrical",
+        "board_coordination"
+      ],
+      "hd_sdi": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "wire_electrical",
+        "board_coordination"
+      ],
+      "usb2": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "usb_line_state",
+        "timed_action",
+        "board_coordination"
+      ],
+      "wifi_he20": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "rf_path_control",
+        "timed_action",
+        "board_coordination"
+      ],
+      "bluetooth_le": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "rf_path_control",
+        "timed_action",
+        "board_coordination"
+      ],
+      "bluetooth_br_edr": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "rf_path_control",
+        "timed_action",
+        "board_coordination"
+      ],
+      "ieee802154_24": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "rf_path_control",
+        "timed_action",
+        "board_coordination"
+      ],
+      "lora_24": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "rf_path_control",
+        "timed_action",
+        "board_coordination"
+      ],
+      "custom_gfsk_sdr": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "rf_path_control",
+        "timed_action",
+        "board_coordination"
+      ],
+      "lower_frequency_rf_stretch": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "rf_path_control",
+        "timed_action",
+        "board_coordination"
+      ],
+      "external_frequency_conversion_stretch": [
+        "atomic_configuration",
+        "clock_qualification",
+        "continuous_stream",
+        "epoch_recovery",
+        "rf_path_control",
+        "timed_action",
+        "board_coordination"
+      ]
+    },
+    "completion_rule": "Every required service needs serialized-to-physical semantics, bounded apply/observe latency and target-specific end-to-end evidence; mapping alone is not a pass."
   }
 }

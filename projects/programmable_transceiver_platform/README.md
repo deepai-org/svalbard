@@ -7,7 +7,9 @@ links, digital-video lanes, and a configurable 2.4 GHz radio. Reuse the same chi
 across network interfaces, FPGA peripherals, video bridges, wireless instruments,
 and custom software-defined radios by changing its configuration and FPGA logic.
 
-The ambition is one GF180MCU chip, one wafer.space slot, and 50 total terminals.
+The ambition is one GF180MCU chip, one wafer.space slot, and 50 total terminals,
+using the provider’s standard chip-on-board packaging with a compatible pad ring.
+Mapping the logical terminal/power allocation to that fixed assembly is an open gate.
 This is an active design: the capabilities below are targets, with partial
 mathematical evidence, not demonstrated silicon or certified protocol support.
 
@@ -68,12 +70,41 @@ still fail. **Full mathematical verification, the complete transistor schematic,
 and layout are unfinished.** Passing regression tests also verify expected
 failures; they do not mean every target works.
 
+A shared RF/wired environment comparison now connects assigned power, host
+switching, package impedance and delivered timing. It exposes cases where clean
+receiver diagnostics coexist with an unproven supply-voltage envelope. Run
+`python3 verification/robustness_envelope.py --whole-chip` from this directory
+for the short comparison; the [risk review](spec/risk-priorities.md#current-joined-host-power-and-receiver-assessment)
+explains its assumptions and decisions.
+The same environment now reaches LE 1M packet reception, finite timed DAC
+playback, loaded transmission and independent peer decoding (`--packet-lifecycle`).
+Weak-signal failures, substantial modeled clock-induced TX sidebands and
+unqualified air timing remain explicit; this is a conditional exchange, not a
+qualified radio.
+
+The principal unresolved analog issue is now **combined performance**: clock
+noise that looks acceptable in a clean signal test can fail under a blocker,
+and a low-noise receiver also needs sufficient linearity before filtering.
+Wideband RF also has a converter/headroom gap when unproven close-offset
+external-filter rejection is removed; narrowband packet success does not close it.
+Local supply filtering and RF filter retuning help selected cases, but no
+complete physical operating point is yet demonstrated. The
+[current system decisions](spec/risk-priorities.md#current-system-decisions)
+separate those useful mitigations from remaining failures and costs.
+
+The immediate priority is [big-picture architecture closure](spec/risk-priorities.md#big-picture-closure-priorities):
+reconcile physical/resource budgets, establish one usable analog operating
+envelope, close representative full lifecycles, and assess each target against
+explicit acceptance criteria. More passing local tests do not replace these
+four decisions. Schematic work remains deferred.
+
 The reference-chip investigation has been consolidated into
 [explicit assumptions and uncertainty ranges](spec/risk-priorities.md#adopted-assumptions-and-uncertainty-ranges).
 Active work now targets connected clock quality, complete RF conversion and
 pad/package/power coexistence; further reference-chip simulation is paused.
 
-For current capability status and unresolved failures, use the
+For the [whole-architecture assessment and keep/change decisions](spec/risk-priorities.md#architecture-assessment-one-implementation-several-ways-to-succeed),
+start with the risk review. For current capability status and unresolved failures, use the
 [current status table](spec/risk-priorities.md#current-status). Historical
 measurements and expected-rejection tests are kept separately in the closure
 inventory; their number does not measure chip completeness.

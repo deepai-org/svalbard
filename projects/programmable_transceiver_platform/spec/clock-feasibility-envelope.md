@@ -155,6 +155,88 @@ receiver allocation then permits 2.93–3.24 mV integrated threshold noise. At
 protection nonlinearity remain missing; these are requirements, not receiver
 performance predictions.
 
+### Protected input with bond loading and amplitude-to-timing conversion
+
+The same report now includes `external_loaded_input`: a 50 Ω Thevenin source,
+0.2 Ω series bond resistance and an assigned effective bond/return inductance
+driving total pad/protection/receiver capacitance. Die termination is either
+50 Ω or high impedance. The sweep covers 2.400/2.484 GHz and a 4.8 GHz
+quadrature-source comparison. KVL, real-power conservation and the zero-L RC
+limit are checked. These are circuit-network hypotheses, not extracted bounds.
+
+Source voltage is 0.5 V peak open circuit. The example receiver has an assigned
+20 mV threshold offset. The following values show why capacitance alone cannot
+qualify the external-clock option:
+
+| Frequency / loading | Input peak | RMS jitter from assigned 1 mV receiver noise | Peak-to-peak timing from ±10% source AM |
+|---|---:|---:|---:|
+| 2.4 GHz, 0.8 pF, 5 nH, high-Z | 0.817 V | 0.081 ps | 0.328 ps |
+| Same load, 50 Ω termination | 0.210 V | 0.317 ps | 1.281 ps |
+| 2.4 GHz, 3 pF, 2 nH, high-Z | 0.217 V | 0.306 ps | 1.238 ps |
+| 2.4 GHz, 5 pF, 5 nH, 50 Ω | 0.078 V | 0.885 ps | 3.579 ps |
+| 4.8 GHz, 5 pF, 5 nH, 50 Ω | 0.021 V | 4.237 ps | Crossing lost at low amplitude |
+
+The low-capacitance high-Z example resonates above the assigned 0.6 V peak
+ceiling. Termination damps it but lowers slew. That ceiling and the noise/offset
+values are engineering assignments, not device absolute ratings or performance
+measurements. RMS random jitter and peak-to-peak deterministic timing are kept
+separate; they cannot each spend the entire same clock budget.
+
+For a 0.5 ps peak-to-peak AM timing allocation, the 3 pF/2 nH high-Z example
+requires threshold offset below about 8.1 mV; the 5 pF/5 nH terminated example
+requires about 2.9 mV. Lower source AM or better bias/threshold centering can
+relax that condition. The model also reports phase sensitivity to a 1% C change:
+a *fixed* C error changes static phase, not jitter. Dynamic protection/input
+capacitance would need its own voltage/supply-dependent model before using this
+sensitivity as a timing disturbance.
+
+**Design decision:** keep external timing, with input amplitude, bias/threshold,
+termination and total loading treated as one qualification requirement. External
+matching/damping and AC coupling/bias networks are permitted, but must be
+modeled with their losses and common-mode behavior. Do not grant ideal matching
+or a noiseless threshold trim. The RF port has analogous loading concerns, but
+its matching/noise budget must use its actual input impedance rather than
+inheriting this clock-input verdict. A 4.8 GHz divide-by-two option remains a
+separate, harder input contract, not an automatic cure for I/Q phase quality.
+
+### One allowance for the source and loaded input
+
+`external_loaded_joint_budget` connects each loaded input to the same quarter
+of −30 dB EVM power used above. It **replaces**, rather than adds to, the old
+input-conditioning placeholder. Two remaining 0.3 ps RMS terms represent phase
+generation and distribution; assigned I/Q mismatch remains 0.1 dB/0.5 degree.
+Input noise is 1 mV RMS in the 1 kHz–20 MHz offset band. The source has a fixed
+−145 dBc/Hz white floor plus an unknown inverse-square colored component.
+No carrier tracking is credited.
+
+Source AM is a ±10% sinusoid at 1 MHz. Exact threshold crossing times are
+computed over its cycle, mean delay removed, and harmonic power inside the
+same offset band retained. Receiver random timing variance uses the varying
+slew over that cycle. This avoids treating a peak-to-peak number as random RMS
+or combining differently defined integration bands.
+
+| Assigned 2.4 GHz input | Remaining colored-source requirement at 100 kHz | System consequence |
+|---|---|---|
+| 0.8 pF, 5 nH, high-Z | Positive timing margin, but amplitude exceeds the assigned ceiling | Source quality alone cannot qualify this operating point; amplitude/matching must change |
+| 0.8 pF, 5 nH, 50 Ω | At or below approximately −113.6 dBc/Hz | Conditional margin exists if the other assignments are achievable |
+| 3 pF, 2 nH, high-Z | At or below approximately −113.4 dBc/Hz | Conditional margin exists; retain as a loading/bias design requirement |
+| 5 pF, 5 nH, 50 Ω | No remaining allowance | Input noise/AM and downstream assignments already exceed the allocation |
+
+These are bounds on the **colored component** of the assigned spectrum, not a
+single-point phase-noise specification that guarantees a source will work.
+For 4.8 GHz divided by two, source phase variance reduces by four while input
+crossing time error remains unchanged. The additive divider/phase-generation
+budget remains charged. Cases without reliable crossings cannot use a
+phase-noise budget at all.
+
+**Decision:** select an external source only together with an admissible input
+network, bias and delivered-clock budget. If the input consumes the allowance,
+evaluate amplitude/matching, threshold centering, reduced AM or lower receiver
+noise before spending effort on a cleaner oscillator. Conversely, good input
+slew does not excuse excessive voltage. Shared supply correlations, reciprocal
+mixing, actual receiver bandwidth and circuit power remain unjoined; no row is
+a GF180 or packet-performance qualification.
+
 ### Published external-source precedent
 
 The [ADF4351 Rev. A datasheet](https://www.analog.com/media/en/technical-documentation/data-sheets/adf4351.pdf),
@@ -881,3 +963,263 @@ unknown field traffic. Physical capture throughput, firmware/configuration paths
 mixed faults and stage isolation remain unverified. No new on-chip monitor or
 pin is claimed by this procedure, and this does not close first-silicon
 observability for the whole transceiver.
+
+
+### Explicit external-source and input intersection
+
+`external_loaded_joint_budget` now evaluates the joined model's assigned
+−115 dBc/Hz at 100 kHz source directly against the loaded input budget, rather
+than only reporting an inverse source requirement. It retains the −145 dBc/Hz
+floor and the existing 1 kHz–20 MHz integration, input AM/threshold noise,
+phase-generation/distribution allowances and I/Q mismatch. This is a separate
+budget calculation: the packet model still uses a delivered-source hypothesis
+with 1 kHz–8 MHz source tones; the two are not identical waveform environments.
+
+At 2.4 GHz with 3 pF receiver/pad C and 2 nH bond L:
+
+| Input termination | Receiver random timing | AM-induced timing | Total evaluated error power | Diagnostic allowance | Verdict |
+|---|---:|---:|---:|---:|---|
+| High impedance | 0.309 ps RMS | 0.437 ps RMS | 0.0002216 | 0.0002500 | Fits assigned budget |
+| 50 Ω | 0.396 ps RMS | 0.561 ps RMS | 0.0002638 | 0.0002500 | Exceeds assigned budget |
+
+The latter requires source L(100 kHz) at most −116.07 dBc/Hz with the other
+hypotheses unchanged, versus −113.39 dBc/Hz for the high-impedance example.
+Termination can control voltage peaking, but reduces slew and can tighten noise
+requirements. Do not choose high impedance solely from this row: other loads
+in the grid exceed the assumed input-amplitude ceiling. Across the finite grid,
+11/24 cases at 2.4 GHz, 12/24 at 2.484 GHz and 15/24 at 4.8 GHz fit; the
+4.8 GHz cases assume ideal divide-by-two and two cases lose crossings.
+These counts describe sampled hypotheses, not yield or coverage of physical
+corners. Required input slew/noise, power, division and amplitude tolerance
+remain unimplemented.
+
+**Decision:** preserve an input matching/termination choice and qualify it
+jointly with source amplitude, threshold offset and noise. A delivered-clock
+phase-noise assumption does not qualify the external source path. Supply-driven
+host tones, reciprocal mixing and actual packet/serial acceptance remain separate
+obligations; the internal quarter-of-−30 dB-EVM allowance is not a protocol mask.
+
+
+### Loaded input propagated through receiver waveforms
+
+`oscillator_noise.loaded_clock_input_phase()` now translates the assigned
+RLC input, 20 mV threshold offset and ±10% / 1 MHz AM into a shared finite
+phase realization. It adds stationary-equivalent receiver noise from 1 mV RMS
+and two 0.3 ps downstream allowances. The waveform environment uses 1 kHz–8 MHz
+for source and additive random noise, while retaining twenty AM harmonics.
+The separate inverse budget above uses 1 kHz–20 MHz; do not compare their
+integrated totals as though the bands were identical.
+
+`operating_environment(external_input=...)` places source noise at the external
+plane and adds the input phase to the same delivered realization already used
+for RF mixing, converter crossings and wired sampling. Default environments
+retain the prior ideal-delivered-source comparison. The paired whole-chip
+screen uses 3 pF / 2 nH input hypotheses and the 500 pF / 0.5 Ω / 200 pH local
+supply candidate with adverse 7 pC H2D activity:
+
+| Clock path | Synthetic RF diagnostic EVM | Wired short-case errors |
+|---|---:|---:|
+| Ideal delivered source | 7.26% | 0 |
+| Loaded high-impedance input | 7.40% | 0 |
+| Loaded 50 Ω input | 7.47% | 0 |
+
+The AM waveform is independently checked against the direct threshold-crossing
+equation; integrated additive variance and loading/noise ordering are checked.
+The same underlying path parameters apply at each mode's carrier frequency.
+These comparisons establish causal model integration, not protocol acceptance.
+Source PM is still passed with unity gain through the input network; sideband
+dispersion, cyclostationary noise, correlated input/supply noise, circuit
+bandwidth/current and startup remain unqualified. Static propagation delay is
+omitted. The paired loaded-input packet comparison below now exercises reception and
+conditional replies; it retains the resulting failures. Protocol timing and RF
+TX qualification remain open.
+
+
+### Blocking imposes a stronger spectral clock requirement
+
+The `loaded_clock_packet_exchange` report now holds the 500 pF nonideal supply
+candidate, 6 dB chip-input NF, 500 kHz filter, −90 dBm wanted and −40 dBm
+2 MHz-offset blocker fixed while changing only the clock-input path. The same
+six seeds are used in each case; source phase continues through any loaded reply.
+
+| Input path | Acquired / accepted requests | Correctly decoded replies |
+|---|---:|---:|
+| Ideal delivered clock | 6/6 acquired, 5/6 accepted | 5 |
+| Loaded high impedance | 0/6 acquired | 0 |
+| Loaded 50 Ω | 0/6 acquired | 0 |
+
+Run `verification/robustness_envelope.py --loaded-clock-exchange` for this
+comparison. Failure prevents replies from being armed; absence of a transmitted
+reply is not a TX decoding failure. The ideal-path uncorrected RF start marker
+is 151.30–151.62 µs after source packet end, so even those replies do not close
+the calibrated air-timing requirement.
+
+A separate attribution control on the same six high-impedance cases removes
+only the input/distribution random lines while retaining input AM, source noise,
+host supply phase and all RF settings: 5/6 acquire and 5/6 are accepted.
+Removing only the twenty input-AM harmonics while retaining the random lines
+leaves 0/6 acquired. These nonphysical removals identify the added random-noise
+hypothesis as the main limiting contribution in this experiment; neither is a
+design option. They were evaluated from the saved environment's phase tones
+using the same packet observer.
+
+The result is consistent with reciprocal mixing from the assigned broad
+additive clock noise, an effect clean-signal EVM does not constrain strongly.
+At 2.426 GHz the input/distribution random time variances imply white-equivalent
+SSB floors of **−113.98 dBc/Hz high impedance** and **−113.11 dBc/Hz terminated**
+over 1 kHz–8 MHz. The finite-tone waveform approximates these continuous spectra;
+it is not measured silicon noise. The external source's low floor does not
+remove noise added by the on-chip input/distribution stages.
+
+As an independent approximate necessary budget, the blocker reaches the chip
+at −42 dBm after 2 dB loss. The 6 dB-NF input-referred noise density at 300.15 K
+is −167.83 dBm/Hz. Keeping single-blocker reciprocal-mixing density below that
+level requires total LO SSB noise near the relevant blocker offsets no higher
+than **−125.83 dBc/Hz**. This compares one blocker sideband with one input noise
+reference; it is not a standard mask or a complete in-band convolution. A flat
+floor at that ceiling across 1 kHz–8 MHz corresponds to only **0.134 ps RMS**
+at 2.426 GHz, versus the larger input/distribution assumptions used here. Other
+source noise and spurs consume some of the same allowance. A frequency-shaped
+noise spectrum must be integrated with the actual blocker and receive filter;
+its permissible total RMS can differ greatly from this flat example.
+
+**Decision:** qualify delivered LO noise at blocker offsets, in addition to
+integrated timing/EVM. The external-clock route remains an option, but its
+assigned 1 mV in-band receiver noise and 0.3 ps per downstream stage do not
+support this weak-wanted/strong-blocker example when modeled as white-equivalent
+noise. These are stress hypotheses, not evidence that GF180 cannot do better.
+Do not respond merely by selecting a cleaner external oscillator: the added
+receiver/distribution noise must be reduced or shaped, or pre-mixer blocker
+power reduced. Additional baseband rejection cannot undo reciprocal mixing
+already translated into the wanted band. None of those mitigations is free of
+current, headroom, frequency coverage or control costs.
+
+
+### Noise allocation with a physical implementation still required
+
+The loaded-input helper now exposes receiver voltage noise and each downstream
+stage's time noise as numeric hypotheses. Defaults remain 1 mV and 0.3 ps;
+changing them does not change input amplitude, threshold offset, AM, supply
+noise or RF settings. An exploratory quieter allocation is 250 µV RMS at the
+receiver and 50 fs RMS for each of the two downstream stages, integrated over
+1 kHz–8 MHz. Independent checks verify quadratic variance scaling while the
+AM waveform stays unchanged.
+
+| Input | White-equivalent additive floor | Accepted weak blocked requests | Decoded replies |
+|---|---:|---:|---:|
+| High impedance, original noise | −113.98 dBc/Hz | 0/6 | 0 |
+| 50 Ω, original noise | −113.11 dBc/Hz | 0/6 | 0 |
+| High impedance, quieter allocation | −127.97 dBc/Hz | 3/6 | 3 |
+| 50 Ω, quieter allocation | −126.69 dBc/Hz | 3/6 | 3 |
+
+Use the same −90/−40 dBm, 2 MHz blocker and 6 dB NF / 500 kHz settings as
+above. These added-noise allocations are requirements to investigate, not GF180
+measurements or completed circuit designs. In particular, the 50 fs number is
+**in-band additive jitter**, not total broadband edge jitter or static phase skew.
+No current or area saving is inferred from lowering the parameter.
+
+The approximate −125.83 dBc/Hz boundary only keeps reciprocal-mixing noise
+below the thermal-noise contribution, rather than making it negligible. At the
+quieter high-impedance and terminated floors, simple flat-density addition
+still increases that combined noise by roughly 2.1 and 2.6 dB respectively.
+This explains why crossing the rough equal-noise ceiling need not recover all
+packets. An illustrative tenfold margin below thermal density would require
+about −135.83 dBc/Hz and limit this contribution to about 0.41 dB noise rise;
+flat additive noise at that level corresponds to approximately 42 fs RMS over
+1 kHz–8 MHz. Source noise and discrete spurs must share the same budget.
+
+The report also retains a moderate-signal control: −80 dBm wanted, −40 dBm
+blocker, baseline 10 dB NF and 700 kHz cutoff, using the original loaded-input
+noise assumptions. High impedance acquires 5/6 and accepts 3/6; 50 Ω acquires
+5/6 and accepts 2/6. Thus the loaded-input noise hypothesis affects the earlier
+useful-signal point as well as the −90 dBm stress case. These controls exercise
+reception only and do not qualify a reply or choose a reduced product scope.
+
+An independent continuous-spectrum check now validates the scale of the mixing
+problem. For real phase noise with SSB density `L(f)`, the first-order unwanted
+power fraction from a tone at offset Δ is
+`integral L(f) * (|H(Δ-f)|² + |H(Δ+f)|²) df` over positive offsets. Each finite
+phase tone of peak amplitude a contributes `a²/4` to each translated sideband.
+This uses consistent one-sided SSB / two-sided phase conventions.
+
+For the original high-impedance additive-noise spectrum and 500 kHz fifth-order
+filter, numerical quadrature gives a fraction 4.0704e-6, or **−95.90 dBm** from
+the −42 dBm chip-input blocker. The wanted chip-input power is −92 dBm before
+receive-filter distortion, only 3.90 dB above that noise contribution. The
+32-tone approximation gives 4.5095e-6, 10.79% higher (+0.45 dB). Its error is
++15.92% at 475 kHz and −7.49% at 700 kHz. Thus sparse spectral sampling cannot
+explain away the large failure, but can affect marginal packet outcomes.
+
+A 512-bin quadrature matches the continuous integral within 0.002% at all three
+cutoffs; the independent flat-spectrum Butterworth noise-bandwidth check agrees
+within 1e-6 relative. These are expected-power checks, not proof of finite-burst
+statistics or a valid physical spectrum. The executable checks reside in
+`LoadedClockInputTests.test_reciprocal_mixing_quadrature_and_finite_tone_resolution`.
+Keep the existing fast waveform grid for exploration, but require spectral
+resolution and independent noise-realization checks before treating near-boundary
+packet counts as a verified operating envelope. No default has been tuned to
+make those counts pass.
+
+**Decision:** keep the quieter allocation as an explicit, still-failing candidate.
+Pursue a delivered spectral mask with margin and demonstrate where each stage's
+noise lies in frequency; do not treat a chosen RMS value as proof of a flat
+physical spectrum. Lower input/distribution noise, frequency shaping and reduced
+pre-mixer blocker power are distinct mitigation options, each requiring a real
+circuit/board path and cost. The current experiment establishes none of those
+physical implementations and does not change the normative supported scope.
+
+
+### Is the tighter additive-noise requirement physically absurd?
+
+A conditional thermal/slew calculation does **not** establish a fundamental
+impossibility, but also does not qualify GF180. The illustrative −135.83 dBc/Hz
+flat allocation corresponds to 42.43 fs aggregate RMS over 1 kHz–8 MHz at
+2.426 GHz. Dividing its variance equally between input conditioning and two
+following stages gives 24.50 fs per stage. For a local threshold crossing,
+`σv = slew * σt`; white-equivalent voltage density is `en = σv/sqrt(B)`.
+
+| Local crossing slew | Allowed stage voltage noise in band | White-equivalent density | Capacitive edge current at 0.1 / 1 pF |
+|---|---:|---:|---:|
+| 0.5 V/ns | 12.25 µV RMS | 4.33 nV/√Hz | 0.05 / 0.5 mA |
+| 1 V/ns | 24.50 µV RMS | 8.66 nV/√Hz | 0.1 / 1 mA |
+| 5 V/ns | 122.48 µV RMS | 43.31 nV/√Hz | 0.5 / 5 mA |
+
+Current is `C*dv/dt`, a charging requirement, not total bias or supply power.
+Equal variance allocation is a budgeting example; the real three stages have
+different loads, transfer functions and correlations. Discrete AM/supply spurs
+and static skew are not included in this random-noise allocation.
+
+As a deliberately simplified input-referred thermal screen, use
+`en² = 4*k*T*γ/gm` at 300.15 K and an **assigned** effective γ range of 1–3.
+The corresponding gm ranges for the three rows are 0.884–2.651 mS,
+0.221–0.663 mS and 0.00884–0.02651 mS. This assumes the relevant voltage noise
+can be referred through unity gain; load resistance noise, induced gate noise,
+flicker conversion and periodically time-varying operation are omitted. These
+numbers are not GF180 transistor parameter bounds or predicted circuit noise.
+
+Bandwidth can be more demanding. In a separate one-pole `fp = gm/(2πC)`
+hypothesis, a pole at three times the 2.426 GHz carrier requires approximately
+4.57 mS for 0.1 pF or 45.7 mS for 1 pF. With the illustrative strong-inversion
+relation `gm ≈ 2I/Vov` and Vov=0.2 V, those become about 0.46 / 4.57 mA per
+stage before overhead. This is not a transistor design: increasing device width
+also increases parasitic capacitance, and neither that pole nor a useful input
+gain is established by choosing gm independently. Pad capacitance, actual
+fanout and device speed must constrain the same calculation.
+
+**Architecture implication:** keep clock loads and fanout explicit, favor only
+buffering that earns its bandwidth/noise benefit, and budget the input,
+phase-generation/division and distribution separately against one delivered
+spectral mask. The requirements are not ruled out by this thermal arithmetic;
+the high-risk unknown is their simultaneous realization with GHz gain, dynamic
+noise folding, flicker/supply conversion, headroom and the common current/area
+budget. Narrow voltage/temperature operation does not remove those AC effects.
+Do not label the original 1 mV / 0.3 ps stress points as measured limits, or
+claim the tighter allocation is proven because this lower-bound screen fits.
+
+
+The [combined RF requirements point](risk-priorities.md#combined-rf-requirements-point)
+now joins the input/distribution spectrum with finite frontend IIP3, rather
+than borrowing a pass from the ideal-clock linearity fixture. The 75 µV / 15 fs
+high-impedance allocation accepts six tested requests; its terminated counterpart
+accepts five. These are bounded experiments under unqualified physical
+parameters, not proof of a delivered spectral mask or a complete alternative.

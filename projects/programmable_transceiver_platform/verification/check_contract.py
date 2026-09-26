@@ -164,6 +164,144 @@ def bridge_storage_inventory():
               'Sharing with bulk wired/RF transport and diagnostic memory is not yet resolved.')
 
 
+def assembly_ledger(c):
+    """Separate required functions, retained pad sites and unknown board terminals."""
+    inventory=c['assembly_policy']['provider_site_inventory']
+    sides=inventory['ordered_sites_by_side']
+    sites=[site for group in sides.values() for site in group]
+    require(len(set(sites))==len(sites), 'duplicate provider site')
+    fixed={f'{prefix}_pads[{i}].pad'
+           for prefix,count in [('dvdd',6),('dvss',8),('vdd',2),('vss',2)]
+           for i in range(count)}
+    require(fixed.issubset(sites), 'missing fixed provider supply site')
+    signals=[p for p in c['pins'] if p['direction']!='power']
+    mapping=c['assembly_policy']['candidate_signal_sites']
+    require(set(mapping)=={p['name'] for p in signals},'provider signal mapping coverage')
+    require(len(set(mapping.values()))==len(mapping),'duplicate provider signal assignment')
+    require(set(mapping.values())<=set(sites)-fixed,'provider signal uses unavailable or fixed supply site')
+    locations={site:(side,index) for side,group in sides.items() for index,site in enumerate(group)}
+    for prefix in ('RF_RX','RF_TX','WIRE_RX','WIRE_TX'):
+        positive=locations[mapping[prefix+'_P']];negative=locations[mapping[prefix+'_N']]
+        require(positive[0]==negative[0] and abs(positive[1]-negative[1])==1,'differential pair adjacency')
+    neighbors=[]
+    for name,site in mapping.items():
+        side,index=locations[site]
+        grounds=[(abs(index-j),v) for j,v in enumerate(sides[side]) if v.startswith(('dvss_pads','vss_pads'))]
+        distance,ground=min(grounds)
+        neighbors.append(dict(signal=name,site=site,side=side,nearest_same_edge_ground=ground,
+            separation_in_list_positions=distance))
+    minimum=len(signals)+len(fixed)
+    return dict(status='open_physical_mapping',closed=False,
+        provider_sites=len(sites),fixed_supply_return_sites=len(fixed),
+        provider_signal_sites=len(sites)-len(fixed),
+        required_functional_signals=len(signals),
+        spare_signal_sites=len(sites)-len(fixed)-len(signals),
+        required_signals_plus_fixed_supply_sites=minimum,
+        logical_terminal_target=c['limits']['total_terminals'],
+        minimum_excess_over_logical_target=max(0,minimum-c['limits']['total_terminals']),
+        retained_site_excess_over_logical_target=max(0,len(sites)-c['limits']['total_terminals']),
+        delivered_board_terminal_count=inventory['delivered_board_terminal_count'],
+        candidate_signal_assignment=neighbors,
+        unused_signal_sites=[s for s in sites if s not in fixed and s not in mapping.values()],
+        differential_pairs_adjacent_in_template=True,
+        independent_external_domain_rails_proven=False,
+        scope='Candidate signal assignment and template-list adjacency only, not physical distance or return impedance. Unused signals do not remove physical sites or bonds; board connector count and electrical qualification remain unknown.')
+
+
+def periodic_stream_bound(*, arrival_item_hz, item_bits, word_hz,
+                          frame_words, payload_words, staging_frames,
+                          cdc_words, extra_service_gap_s=0):
+    """Arrival b+r*t and guaranteed rate-latency service R*max(0,t-T).
+
+    Requires backlog-aware periodic service and no recurring unpriced stalls.
+    This is a sufficient abstract bound, not a model of actual FIFO placement.
+    """
+    import math
+    values=(arrival_item_hz,item_bits,word_hz,frame_words,payload_words,staging_frames,cdc_words,extra_service_gap_s)
+    require(all(math.isfinite(v) for v in values),'finite service parameters')
+    require(min(arrival_item_hz,item_bits,word_hz,payload_words)>0 and
+            frame_words>=payload_words and min(staging_frames,cdc_words,extra_service_gap_s)>=0,
+            'positive rate and bounded service geometry')
+    arrival=arrival_item_hz*item_bits
+    service=word_hz*10*payload_words/frame_words
+    # One additional word prices discrete completion, beyond the header gap.
+    latency=(staging_frames*frame_words+frame_words-payload_words+cdc_words+1)/word_hz+extra_service_gap_s
+    stable=arrival<=service
+    return dict(arrival_bps=arrival,guaranteed_service_bps=service,
+        service_latency_s=latency,rate_stable=stable,
+        backlog_bound_bits=math.ceil(item_bits+arrival*latency) if stable else None,
+        delay_bound_s=latency+item_bits/service if stable else None,
+        scope='Conditional arrival/service-curve bound; actual scheduler, CDC, queue placement and recurring-stall guarantee unverified')
+
+
+def operating_clock_ledger(c):
+    """Whole-path rate obligations; this does not establish realizable PLLs."""
+    t=c['transport']
+    payload_fraction=Fraction(t['frame_words']-t['control_words'],t['frame_words'])
+    host_max=max(Fraction(p['clock_hz'])*p['edges'] for p in t['profiles'].values())
+    rows=[]
+    def add(name,engine,source,ref_hz,consumer_hz,item_bits,d2h_word_hz,
+            converter_tracks_lo=False):
+        consumer_hz=Fraction(str(consumer_hz));d2h_word_hz=Fraction(str(d2h_word_hz))
+        demand=consumer_hz*item_bits
+        capacity=d2h_word_hz*t['word_bits']*payload_fraction
+        ratio=consumer_hz/d2h_word_hz
+        # Compare worst independent tolerances; a shared source may cancel some.
+        demand_worst=demand*Fraction(1000000+t['source_fast_ppm'],1000000)
+        capacity_worst=capacity*Fraction(1000000-t['host_slow_ppm'],1000000)
+        service=periodic_stream_bound(arrival_item_hz=float(consumer_hz)*(1+t['source_fast_ppm']/1e6),
+            item_bits=item_bits,word_hz=float(d2h_word_hz)*(1-t['host_slow_ppm']/1e6),
+            frame_words=t['frame_words'],payload_words=t['frame_words']-t['control_words'],
+            staging_frames=t['scheduling']['staging_frames'],cdc_words=2)
+        allocation=t['scheduling']['ingress_bits_per_source']
+        service['comparison_allocation_bits']=allocation
+        service['additional_one_off_gap_budget_s']=(allocation-item_bits)/service['arrival_bps']-service['service_latency_s'] if service['rate_stable'] else None
+        if engine=='rf':
+            # Diagnostic deadline only. Residual must cover DSP/resampling,
+            # decision work and real analog/board settling together.
+            overhead=(service['delay_bound_s']+64/float(host_max)+8/float(host_max)+2/40e6+
+                      64/float(d2h_word_hz)) if service['rate_stable'] else None
+            service['diagnostic_response_deadline_s']=10e-6
+            service['response_transport_overhead_s']=overhead
+            service['remaining_fpga_and_analog_budget_s']=10e-6-overhead if overhead is not None else None
+        rows.append(dict(configuration=name,engine=engine,ref_in_role=source,
+            ref_in_hz=ref_hz,consumer_item_hz=float(consumer_hz),item_bits=item_bits,
+            d2h_word_hz=float(d2h_word_hz),d2h_ddr_clock_hz=float(d2h_word_hz/2),
+            h2d_word_hz=float(host_max),payload_demand_bps=float(demand),
+            d2h_payload_capacity_bps=float(capacity),
+            d2h_capacity_with_ppm_margin=bool(demand_worst<=capacity_worst),
+            h2d_capacity_with_ppm_margin=bool(demand_worst<=host_max*t['word_bits']*payload_fraction*Fraction(1000000-t['host_slow_ppm'],1000000)),
+            d2h_within_host_rate_ceiling=bool(d2h_word_hz<=host_max),
+            fpga_tx_items_per_d2h_word=[ratio.numerator,ratio.denominator],
+            fpga_tx_pacing='D2H-derived rational enables; independent H2D only transports prepared items',
+            converter_tracks_lo=converter_tracks_lo,
+            same_channel_turnaround='preserve source, conversion and host clocks' if engine=='rf' else None,
+            retune_changes_conversion_and_d2h=converter_tracks_lo if engine=='rf' else None,
+            frame_duration_s=float(Fraction(t['frame_words'])/d2h_word_hz),
+            conditional_d2h_service_bound=service,
+            physical_clock_path_qualified=False,sustained_fifo_verified=False))
+    # Frequency-reference synthesis requires separate LO and conversion/host outputs.
+    add('rf_reference_synthesized','rf','frequency_reference',None,40e6,24,host_max)
+    add('rf_reference_half_d2h_candidate','rf','frequency_reference',None,40e6,24,host_max/2)
+    candidate=c['generic_configuration_target']['external_lo_sampling_candidate']
+    for lo in candidate['lo_range_hz']:
+        for divisor in candidate['uniform_sample_dividers']:
+            for host_divider in (candidate['candidate_d2h_clock_divider'],2*candidate['candidate_d2h_clock_divider']):
+                add(f'rf_direct_lo_{int(lo)}_div{divisor}_hostdiv{host_divider}','rf','external_lo',lo,
+                    Fraction(str(lo))/divisor,24,Fraction(str(lo))/host_divider*2,True)
+    for rate in c['physical_services']['serial_target_rates_bps']:
+        add(f'wire_reference_{rate}','wire','frequency_reference',None,Fraction(str(rate))/10,10,host_max)
+    for pixel in (Fraction(74250000),Fraction(148500000),Fraction(74250000000,1001),Fraction(148500000000,1001)):
+        add(f'wire_forwarded_x10_{float(pixel)}','wire','forwarded_word_clock',float(pixel),pixel,10,2*pixel)
+    return dict(configurations=rows,closed=False,
+        ref_in_consumers_mutually_exclusive=True,
+        independent_external_fixed_converter_clock_allocated=False,
+        wire_rx_clock_owner='independent incoming transitions, on-chip CDR; external TX reference does not replace it',
+        supply_topology='shared external feed until compatible map proves otherwise',
+        source_frequency_reference_hz=None,
+        scope='Rate and source-ownership requirements only. Dense I/Q packing assumed; finite scheduling/CDC, source spectra, synthesizer ratios, power, electrical input and FPGA implementation remain unqualified. USB short-frame response service is separate from this bulk capacity screen.')
+
+
 def resource_ledger(c):
     """One contract-derived planning ledger; missing implementation is not zero."""
     domains={}
@@ -175,6 +313,8 @@ def resource_ledger(c):
     area=[dict(group=name,allocation_um2=value,implemented_area_um2=None)
           for name,value in c['area_um2'].items()]
     return dict(status='open_planning_ledger',closed=False,
+        assembly=assembly_ledger(c),
+        operating_clocks=operating_clock_ledger(c),
         terminals=dict(allocated=len(c['pins']),limit=c['limits']['total_terminals'],
             supply_return=sum(len(x['supply_pins'])+len(x['return_pins']) for x in c['power']['domains'])),
         area=dict(limit_um2=c['limits']['core_area_um2'],allocations=area,

@@ -1,0 +1,602 @@
+{
+  "status": "public_run1_connectivity_evidence_not_current_assembly_signoff",
+  "qualified": false,
+  "provider_commit": "4f05ed1ea1994d8101a265d5d4f995bcea86d5a1",
+  "board_path": "run-1/1x1-cob/1x1-mezzanine.kicad_pcb",
+  "board_sha256": "b0de95dacd95a0e7ce6c4f997747d313230c8f4f259d64994fb9e6ab4f69dd8b",
+  "source_url": "https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs/blob/4f05ed1ea1994d8101a265d5d4f995bcea86d5a1/run-1/1x1-cob/1x1-mezzanine.kicad_pcb",
+  "die_bond_sites": 74,
+  "connector_numbered_contacts": 70,
+  "connector_ground_contacts": [
+    10,
+    18,
+    25,
+    45,
+    53,
+    61
+  ],
+  "common_ground_net": "GND",
+  "distinct_supply_nets": [
+    "PWR_AUX_0",
+    "PWR_AUX_1",
+    "VDD_CORE_0",
+    "VDD_CORE_1",
+    "VDD_IO_0",
+    "VDD_IO_1",
+    "VDD_IO_2",
+    "VDD_IO_3"
+  ],
+  "supply_mapping": [
+    {
+      "site": "dvdd_pads[0].pad",
+      "bond_pad": 18,
+      "board_net": "VDD_IO_0",
+      "connector_contacts": [
+        62
+      ]
+    },
+    {
+      "site": "dvdd_pads[1].pad",
+      "bond_pad": 26,
+      "board_net": "PWR_AUX_0",
+      "connector_contacts": [
+        54
+      ]
+    },
+    {
+      "site": "vdd_pads[0].pad",
+      "bond_pad": 35,
+      "board_net": "VDD_CORE_0",
+      "connector_contacts": [
+        46
+      ]
+    },
+    {
+      "site": "dvdd_pads[2].pad",
+      "bond_pad": 37,
+      "board_net": "VDD_IO_1",
+      "connector_contacts": [
+        44
+      ]
+    },
+    {
+      "site": "dvdd_pads[3].pad",
+      "bond_pad": 58,
+      "board_net": "VDD_IO_2",
+      "connector_contacts": [
+        24
+      ]
+    },
+    {
+      "site": "dvdd_pads[4].pad",
+      "bond_pad": 64,
+      "board_net": "PWR_AUX_1",
+      "connector_contacts": [
+        19
+      ]
+    },
+    {
+      "site": "vdd_pads[1].pad",
+      "bond_pad": 72,
+      "board_net": "VDD_CORE_1",
+      "connector_contacts": [
+        11
+      ]
+    },
+    {
+      "site": "dvdd_pads[5].pad",
+      "bond_pad": 74,
+      "board_net": "VDD_IO_3",
+      "connector_contacts": [
+        9
+      ]
+    }
+  ],
+  "candidate_signal_mapping": [
+    {
+      "signal": "D2H_D[0]",
+      "site": "clk_pad",
+      "bond_pad": 1,
+      "board_net": "/pad_0",
+      "connector_contact": 8,
+      "other_component_references": []
+    },
+    {
+      "signal": "RESET_N",
+      "site": "rst_n_pad",
+      "bond_pad": 2,
+      "board_net": "/pad_1",
+      "connector_contact": 7,
+      "other_component_references": []
+    },
+    {
+      "signal": "D2H_CLK",
+      "site": "bidir[5].pad",
+      "bond_pad": 8,
+      "board_net": "/pad_7",
+      "connector_contact": 1,
+      "other_component_references": []
+    },
+    {
+      "signal": "H2D_CLK",
+      "site": "bidir[34].pad",
+      "bond_pad": 45,
+      "board_net": "/pad_44",
+      "connector_contact": 36,
+      "other_component_references": []
+    },
+    {
+      "signal": "WIRE_RX_P",
+      "site": "bidir[14].pad",
+      "bond_pad": 20,
+      "board_net": "/pad_19",
+      "connector_contact": 60,
+      "other_component_references": []
+    },
+    {
+      "signal": "WIRE_RX_N",
+      "site": "bidir[15].pad",
+      "bond_pad": 21,
+      "board_net": "/pad_20",
+      "connector_contact": 59,
+      "other_component_references": []
+    },
+    {
+      "signal": "WIRE_TX_P",
+      "site": "bidir[20].pad",
+      "bond_pad": 28,
+      "board_net": "/pad_27",
+      "connector_contact": 52,
+      "other_component_references": []
+    },
+    {
+      "signal": "WIRE_TX_N",
+      "site": "bidir[21].pad",
+      "bond_pad": 29,
+      "board_net": "/pad_28",
+      "connector_contact": 51,
+      "other_component_references": []
+    },
+    {
+      "signal": "RF_RX_P",
+      "site": "inputs[11].pad",
+      "bond_pad": 70,
+      "board_net": "/pad_69",
+      "connector_contact": 12,
+      "other_component_references": []
+    },
+    {
+      "signal": "RF_RX_N",
+      "site": "inputs[10].pad",
+      "bond_pad": 69,
+      "board_net": "/pad_68",
+      "connector_contact": 13,
+      "other_component_references": []
+    },
+    {
+      "signal": "RF_TX_P",
+      "site": "inputs[5].pad",
+      "bond_pad": 62,
+      "board_net": "/pad_61",
+      "connector_contact": 20,
+      "other_component_references": []
+    },
+    {
+      "signal": "RF_TX_N",
+      "site": "inputs[4].pad",
+      "bond_pad": 61,
+      "board_net": "/pad_60",
+      "connector_contact": 21,
+      "other_component_references": []
+    },
+    {
+      "signal": "REF_IN",
+      "site": "inputs[1].pad",
+      "bond_pad": 56,
+      "board_net": "/pad_55",
+      "connector_contact": 26,
+      "other_component_references": []
+    },
+    {
+      "signal": "D2H_D[1]",
+      "site": "bidir[0].pad",
+      "bond_pad": 3,
+      "board_net": "/pad_2",
+      "connector_contact": 6,
+      "other_component_references": []
+    },
+    {
+      "signal": "D2H_D[2]",
+      "site": "bidir[1].pad",
+      "bond_pad": 4,
+      "board_net": "/pad_3",
+      "connector_contact": 5,
+      "other_component_references": []
+    },
+    {
+      "signal": "D2H_D[3]",
+      "site": "bidir[2].pad",
+      "bond_pad": 5,
+      "board_net": "/pad_4",
+      "connector_contact": 4,
+      "other_component_references": []
+    },
+    {
+      "signal": "D2H_D[4]",
+      "site": "bidir[3].pad",
+      "bond_pad": 6,
+      "board_net": "/pad_5",
+      "connector_contact": 3,
+      "other_component_references": []
+    },
+    {
+      "signal": "D2H_D[5]",
+      "site": "bidir[4].pad",
+      "bond_pad": 7,
+      "board_net": "/pad_6",
+      "connector_contact": 2,
+      "other_component_references": []
+    },
+    {
+      "signal": "D2H_D[6]",
+      "site": "bidir[6].pad",
+      "bond_pad": 10,
+      "board_net": "/pad_9",
+      "connector_contact": 70,
+      "other_component_references": []
+    },
+    {
+      "signal": "D2H_D[7]",
+      "site": "bidir[7].pad",
+      "bond_pad": 11,
+      "board_net": "/pad_10",
+      "connector_contact": 69,
+      "other_component_references": []
+    },
+    {
+      "signal": "D2H_D[8]",
+      "site": "bidir[8].pad",
+      "bond_pad": 12,
+      "board_net": "/pad_11",
+      "connector_contact": 68,
+      "other_component_references": []
+    },
+    {
+      "signal": "D2H_D[9]",
+      "site": "bidir[9].pad",
+      "bond_pad": 13,
+      "board_net": "/pad_12",
+      "connector_contact": 67,
+      "other_component_references": []
+    },
+    {
+      "signal": "H2D_D[0]",
+      "site": "bidir[26].pad",
+      "bond_pad": 54,
+      "board_net": "/pad_53",
+      "connector_contact": 28,
+      "other_component_references": []
+    },
+    {
+      "signal": "H2D_D[1]",
+      "site": "bidir[27].pad",
+      "bond_pad": 53,
+      "board_net": "/pad_52",
+      "connector_contact": 29,
+      "other_component_references": []
+    },
+    {
+      "signal": "H2D_D[2]",
+      "site": "bidir[28].pad",
+      "bond_pad": 52,
+      "board_net": "/pad_51",
+      "connector_contact": 30,
+      "other_component_references": []
+    },
+    {
+      "signal": "H2D_D[3]",
+      "site": "bidir[29].pad",
+      "bond_pad": 51,
+      "board_net": "/pad_50",
+      "connector_contact": 31,
+      "other_component_references": []
+    },
+    {
+      "signal": "H2D_D[4]",
+      "site": "bidir[30].pad",
+      "bond_pad": 50,
+      "board_net": "/pad_49",
+      "connector_contact": 32,
+      "other_component_references": []
+    },
+    {
+      "signal": "H2D_D[5]",
+      "site": "bidir[31].pad",
+      "bond_pad": 49,
+      "board_net": "/pad_48",
+      "connector_contact": 33,
+      "other_component_references": []
+    },
+    {
+      "signal": "H2D_D[6]",
+      "site": "bidir[32].pad",
+      "bond_pad": 48,
+      "board_net": "/pad_47",
+      "connector_contact": 34,
+      "other_component_references": []
+    },
+    {
+      "signal": "H2D_D[7]",
+      "site": "bidir[33].pad",
+      "bond_pad": 47,
+      "board_net": "/pad_46",
+      "connector_contact": 35,
+      "other_component_references": []
+    },
+    {
+      "signal": "H2D_D[8]",
+      "site": "bidir[35].pad",
+      "bond_pad": 44,
+      "board_net": "/pad_43",
+      "connector_contact": 37,
+      "other_component_references": []
+    },
+    {
+      "signal": "H2D_D[9]",
+      "site": "bidir[36].pad",
+      "bond_pad": 43,
+      "board_net": "/pad_42",
+      "connector_contact": 38,
+      "other_component_references": []
+    },
+    {
+      "signal": "HOST_CS_N",
+      "site": "bidir[10].pad",
+      "bond_pad": 14,
+      "board_net": "/pad_13",
+      "connector_contact": 66,
+      "other_component_references": []
+    },
+    {
+      "signal": "HOST_SCLK",
+      "site": "bidir[11].pad",
+      "bond_pad": 15,
+      "board_net": "/pad_14",
+      "connector_contact": 65,
+      "other_component_references": []
+    },
+    {
+      "signal": "HOST_MOSI",
+      "site": "bidir[12].pad",
+      "bond_pad": 16,
+      "board_net": "/pad_15",
+      "connector_contact": 64,
+      "other_component_references": []
+    },
+    {
+      "signal": "HOST_MISO",
+      "site": "bidir[13].pad",
+      "bond_pad": 17,
+      "board_net": "/pad_16",
+      "connector_contact": 63,
+      "other_component_references": []
+    }
+  ],
+  "components": [
+    {
+      "reference": "U102",
+      "value": "~",
+      "nets": [
+        "/pad_0",
+        "/pad_1",
+        "/pad_10",
+        "/pad_11",
+        "/pad_12",
+        "/pad_13",
+        "/pad_14",
+        "/pad_15",
+        "/pad_16",
+        "/pad_19",
+        "/pad_2",
+        "/pad_20",
+        "/pad_21",
+        "/pad_22",
+        "/pad_23",
+        "/pad_24",
+        "/pad_27",
+        "/pad_28",
+        "/pad_29",
+        "/pad_3",
+        "/pad_30",
+        "/pad_31",
+        "/pad_32",
+        "/pad_37",
+        "/pad_38",
+        "/pad_39",
+        "/pad_4",
+        "/pad_40",
+        "/pad_41",
+        "/pad_42",
+        "/pad_43",
+        "/pad_44",
+        "/pad_46",
+        "/pad_47",
+        "/pad_48",
+        "/pad_49",
+        "/pad_5",
+        "/pad_50",
+        "/pad_51",
+        "/pad_52",
+        "/pad_53",
+        "/pad_54",
+        "/pad_55",
+        "/pad_58",
+        "/pad_59",
+        "/pad_6",
+        "/pad_60",
+        "/pad_61",
+        "/pad_64",
+        "/pad_65",
+        "/pad_66",
+        "/pad_67",
+        "/pad_68",
+        "/pad_69",
+        "/pad_7",
+        "/pad_9",
+        "GND",
+        "PWR_AUX_0",
+        "PWR_AUX_1",
+        "VDD_CORE_0",
+        "VDD_CORE_1",
+        "VDD_IO_0",
+        "VDD_IO_1",
+        "VDD_IO_2",
+        "VDD_IO_3"
+      ]
+    },
+    {
+      "reference": "C106",
+      "value": "1 uF",
+      "nets": [
+        "GND",
+        "PWR_AUX_1"
+      ]
+    },
+    {
+      "reference": "C108",
+      "value": "1 uF",
+      "nets": [
+        "GND",
+        "VDD_IO_2"
+      ]
+    },
+    {
+      "reference": "C104",
+      "value": "1 uF",
+      "nets": [
+        "GND",
+        "VDD_CORE_1"
+      ]
+    },
+    {
+      "reference": "C101",
+      "value": "1 uF",
+      "nets": [
+        "GND",
+        "VDD_IO_1"
+      ]
+    },
+    {
+      "reference": "C102",
+      "value": "1 uF",
+      "nets": [
+        "GND",
+        "VDD_IO_3"
+      ]
+    },
+    {
+      "reference": "C107",
+      "value": "1 uF",
+      "nets": [
+        "GND",
+        "VDD_IO_0"
+      ]
+    },
+    {
+      "reference": "C105",
+      "value": "1 uF",
+      "nets": [
+        "GND",
+        "PWR_AUX_0"
+      ]
+    },
+    {
+      "reference": "C103",
+      "value": "1 uF",
+      "nets": [
+        "GND",
+        "VDD_CORE_0"
+      ]
+    },
+    {
+      "reference": "U101",
+      "value": "~",
+      "nets": [
+        "/pad_0",
+        "/pad_1",
+        "/pad_10",
+        "/pad_11",
+        "/pad_12",
+        "/pad_13",
+        "/pad_14",
+        "/pad_15",
+        "/pad_16",
+        "/pad_19",
+        "/pad_2",
+        "/pad_20",
+        "/pad_21",
+        "/pad_22",
+        "/pad_23",
+        "/pad_24",
+        "/pad_27",
+        "/pad_28",
+        "/pad_29",
+        "/pad_3",
+        "/pad_30",
+        "/pad_31",
+        "/pad_32",
+        "/pad_37",
+        "/pad_38",
+        "/pad_39",
+        "/pad_4",
+        "/pad_40",
+        "/pad_41",
+        "/pad_42",
+        "/pad_43",
+        "/pad_44",
+        "/pad_46",
+        "/pad_47",
+        "/pad_48",
+        "/pad_49",
+        "/pad_5",
+        "/pad_50",
+        "/pad_51",
+        "/pad_52",
+        "/pad_53",
+        "/pad_54",
+        "/pad_55",
+        "/pad_58",
+        "/pad_59",
+        "/pad_6",
+        "/pad_60",
+        "/pad_61",
+        "/pad_64",
+        "/pad_65",
+        "/pad_66",
+        "/pad_67",
+        "/pad_68",
+        "/pad_69",
+        "/pad_7",
+        "/pad_9",
+        "GND",
+        "PWR_AUX_0",
+        "PWR_AUX_1",
+        "VDD_CORE_0",
+        "VDD_CORE_1",
+        "VDD_IO_0",
+        "VDD_IO_1",
+        "VDD_IO_2",
+        "VDD_IO_3"
+      ]
+    }
+  ],
+  "project_contract_sha256": "f1f5d77f5062e9d3b43b94af197408f37a755903839a2e58b07ac1e7ac1429e5",
+  "limitations": [
+    "Run 1 only; provider explicitly says later-run pinouts and footprints may change.",
+    "South-origin/west-reversal die-to-board permutation inferred from fixed-power sequence; verify against actual GDS and wirebond drawing before freezing signal names.",
+    "Signal netnames and component connectivity are read from PCB source; routed impedance, copper integrity, loading and connector bandwidth are not qualified.",
+    "Eight distinct board supply nets do not prove isolated on-die rails. Default foundry-pad chip_top ties supplies; segmentation remains a separate design question.",
+    "Capacitor footprints labeled 1 uF do not prove actual populated values or high-frequency decoupling.",
+    "Extra U102 ground shapes and U101 MP pads are not additional numbered signal contacts; physical grounding geometry remains to be modeled."
+  ]
+}

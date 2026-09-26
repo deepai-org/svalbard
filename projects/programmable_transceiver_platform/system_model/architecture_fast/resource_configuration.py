@@ -130,3 +130,68 @@ def validate_rf_settings(sample_hz=40e6, tx_cutoff_hz=20e6,
         raise ValueError('RF setting outside candidate envelope')
     return dict(sample_hz=sample_hz,tx_cutoff_hz=tx_cutoff_hz,
                 rx_cutoff_hz=rx_cutoff_hz,rx_gain=rx_gain,rx_filter_order=rx_filter_order,converter_bits=converter_bits,**clock)
+
+
+def rf_transition_budget(*, before, after, operation, epoch, host_word_hz,
+                         command_words, cdc_cycles, control_hz,
+                         boundary_wait_s, analog_settle_s, source_lock_s,
+                         host_training_words, fpga_recovery_s, deadline_s,
+                         prearmed=False, fixed_host_clock_hz=None,d2h_lo_divider=16):
+    """Generic control/service requirement, not an analog transition simulation.
+
+    Durations are explicit assigned upper bounds. Retune/fault recovery requires
+    a new epoch; same-channel turnaround preserves clocks and stream identity.
+    Existing numeric resource validation applies to both endpoints.
+    """
+    import math
+    old=validate_rf_settings(**before);new=validate_rf_settings(**after)
+    if type(d2h_lo_divider) is not int or d2h_lo_divider not in (16,32):
+        raise ValueError('Explicit supported LO-to-D2H clock divider required')
+    if operation not in ('turnaround','retune','fault_recovery'):
+        raise ValueError('Unknown RF transition')
+    if type(epoch) is not int or epoch<0 or type(prearmed) is not bool:
+        raise ValueError('Nonnegative epoch and explicit prearm choice required')
+    if any(type(v) is not int or v<0 for v in (command_words,cdc_cycles,host_training_words)):
+        raise ValueError('Nonnegative integer service counts required')
+    values=(host_word_hz,control_hz,boundary_wait_s,analog_settle_s,source_lock_s,fpga_recovery_s,deadline_s)
+    if not all(math.isfinite(v) for v in values) or min(host_word_hz,control_hz,deadline_s)<=0 or min(boundary_wait_s,analog_settle_s,source_lock_s,fpga_recovery_s)<0:
+        raise ValueError('Explicit finite rate/time bounds required')
+    if fixed_host_clock_hz is not None and (not math.isfinite(fixed_host_clock_hz) or fixed_host_clock_hz<=0):
+        raise ValueError('Independent fixed host clock must have a real positive rate')
+    if operation=='turnaround' and (old!=new or source_lock_s or host_training_words or fpga_recovery_s):
+        raise ValueError('Same-channel turnaround preserves settings and qualified clocks')
+    if operation!='turnaround' and (not host_training_words or not command_words):
+        raise ValueError('Retune/fault recovery requires explicit command and training service')
+    def d2h(settings):
+        if fixed_host_clock_hz is not None:return fixed_host_clock_hz
+        if settings.get('sample_clock_source')=='external_lo':return settings['lo_hz']/d2h_lo_divider
+        raise ValueError('Reference-sampled configuration needs explicit host clock ownership')
+    old_host=d2h(old);new_host=d2h(new)
+    events=[];now=0.
+    def step(name,duration,owner):
+        nonlocal now
+        events.append(dict(state=name,start_s=now,end_s=now+duration,owner=owner));now+=duration
+    command_time=command_words/host_word_hz+cdc_cycles/control_hz
+    step('scheduled_trigger' if prearmed else 'command_and_cdc',0. if prearmed else command_time,'host/control')
+    step('quiesce_at_safe_boundary',boundary_wait_s,'chip')
+    if operation!='turnaround':
+        step('invalidate_old_epoch_and_gate_affected_clocks',0.,'chip/FPGA')
+        step('source_reacquisition',source_lock_s,'timing_source')
+    step('analog_path_settling',analog_settle_s,'chip/board')
+    if operation!='turnaround':
+        step('host_capture_training',host_training_words/(2*new_host),'chip/FPGA')
+        step('fpga_resampler_and_queue_recovery',fpga_recovery_s,'FPGA')
+    step('ready_for_current_epoch',0.,'chip/FPGA')
+    overhead=now-analog_settle_s
+    return dict(operation=operation,old_epoch=epoch,new_epoch=epoch+(operation!='turnaround'),
+        preserves_stream_epoch=operation=='turnaround',clocks_kept_running=operation=='turnaround',
+        old_sample_hz=old['sample_hz'],new_sample_hz=new['sample_hz'],
+        old_d2h_clock_hz=old_host,new_d2h_clock_hz=new_host,
+        h2d_clock_unchanged=True,host_clock_rate_changes=old_host!=new_host,
+        d2h_lo_divider=d2h_lo_divider if fixed_host_clock_hz is None else None,
+        queue_policy='retain_paced_current_epoch' if operation=='turnaround' else 'discard_old_epoch_before_rearm',
+        prearm_required_lead_s=command_time if prearmed else 0.,events=events,
+        total_s=now,deadline_s=deadline_s,margin_s=deadline_s-now,
+        maximum_analog_settle_s=deadline_s-overhead,
+        fits_assigned_deadline=now<=deadline_s,
+        scope='Control/service timing contract only: no pad switching, PLL settling waveform, glitchless gate or packet acceptance proof')

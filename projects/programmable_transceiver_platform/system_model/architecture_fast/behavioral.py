@@ -1940,7 +1940,73 @@ def bandlimited_samples(values, positions, half_width=32, cutoff=1.):
     return result
 
 
-def waveform_screen(wave, a, power, *, seed=81, settings=None, carrier_offset_hz=0., recover_carrier=False, blocker=None, rx_order=None, frontend_saturation_v=None, supply_ripple=None, fpga_resampling=False, mixer_phase_noise=None, sample_phase_noise=None, mixer_substeps=1, frontend_loss_db=0., pga_peak_limit_v=None, training_samples=512):
+def timed_dac_playback(prepared_samples,arrival_times_s,clock_edges_s,*,launch_s,
+                       depth_samples,minimum_prefill_samples):
+    """Finite generic sample FIFO with timestamped consumption and fail-mute.
+
+    Prepared samples are external FPGA storage. Only arrived entries occupy
+    the chip FIFO; running DAC clocks consume none before launch. The caller
+    owns serialized arrival timing, which must already include CDC visibility.
+    Equal-time arrivals are visible before that DAC edge. No protocol parser.
+    """
+    samples=np.asarray(prepared_samples,complex)
+    arrivals=np.asarray(arrival_times_s,float);edges=np.asarray(clock_edges_s,float)
+    if (samples.ndim!=1 or not len(samples) or arrivals.shape!=samples.shape or
+            edges.ndim!=1 or not len(edges) or not np.all(np.isfinite(samples)) or
+            not np.all(np.isfinite(arrivals)) or not np.all(np.isfinite(edges)) or
+            np.any(np.diff(arrivals)<0) or np.any(np.diff(edges)<=0) or
+            not math.isfinite(launch_s) or type(depth_samples) is not int or
+            type(minimum_prefill_samples) is not int or
+            not 1<=minimum_prefill_samples<=min(depth_samples,len(samples))):
+        raise ValueError('Ordered finite stream events and bounded sample storage required')
+    fifo=deque();next_arrival=0;consumed=0;peak=0;minimum=None;fault=None;fault_time=None
+    first=None;last=None;prelaunch_edges=0;output=np.zeros(len(edges),complex)
+    for k,t in enumerate(edges):
+        if fault is not None:continue
+        while next_arrival<len(samples) and arrivals[next_arrival]<=t:
+            if len(fifo)>=depth_samples:
+                fault='overflow';fault_time=float(t);break
+            fifo.append(samples[next_arrival]);next_arrival+=1;peak=max(peak,len(fifo))
+        if fault is not None:continue
+        if t<launch_s:
+            prelaunch_edges+=1;continue
+        if consumed==len(samples):continue
+        if first is None and len(fifo)<minimum_prefill_samples:
+            fault='insufficient_prefill';fault_time=float(t);continue
+        if not fifo:
+            fault='underflow';fault_time=float(t);continue
+        if first is None:first=float(t)
+        output[k]=fifo.popleft();consumed+=1;last=float(t)
+        minimum=len(fifo) if minimum is None else min(minimum,len(fifo))
+    return output,dict(fault=fault,fault_time_s=fault_time,first_consumption_s=first,
+        last_consumption_s=last,consumed_samples=consumed,prepared_samples=len(samples),
+        arrived_samples=next_arrival,peak_occupancy_samples=peak,
+        minimum_after_consumption_samples=minimum,remaining_samples=len(fifo),
+        prelaunch_clock_edges_without_consumption=prelaunch_edges,depth_samples=depth_samples,
+        minimum_prefill_samples=minimum_prefill_samples,
+        complete_burst=consumed==len(samples) and fault is None,
+        scope='Finite event-driven FIFO and timestamped consumption; supplied arrival/clock events are hypotheses, not the physical bridge or serialized command implementation')
+
+
+def adc_reference_conversion(values,reference_scale,bits):
+    """Quantize against time-varying full scale; return nominally decoded codes.
+
+    Reference is observed by the ADC, not supplied to the external receiver as
+    an oracle correction. Independent noise is applied by the caller beforehand.
+    """
+    z=np.asarray(values,complex);scale=np.asarray(reference_scale,float)
+    if scale.shape!=z.shape or not np.all(np.isfinite(scale)) or np.any(scale<=0):
+        raise ValueError('Finite positive reference at every conversion required')
+    if type(bits) is not int or bits not in (8,12) or not np.all(np.isfinite(z)):
+        raise ValueError('Supported converter and finite analog samples required')
+    step=2/(1<<bits);normalized=z/scale
+    clipped=int(np.count_nonzero((abs(normalized.real)>1)|(abs(normalized.imag)>1)))
+    codes=(np.rint(np.clip(normalized.real,-1,1-step)/step)*step+
+           1j*np.rint(np.clip(normalized.imag,-1,1-step)/step)*step)
+    return codes,clipped
+
+
+def waveform_screen(wave, a, power, *, seed=81, settings=None, carrier_offset_hz=0., recover_carrier=False, blocker=None, rx_order=None, frontend_saturation_v=None, supply_ripple=None, fpga_resampling=False, mixer_phase_noise=None, sample_phase_noise=None, mixer_substeps=1, frontend_loss_db=0., pga_peak_limit_v=None, training_samples=512, adc_reference_scale=None):
     """Seeded sampled-envelope screen; no RF carrier or analog ODE integration.
 
     Selectable conversion, ZOH source contract, causal one-pole TX/RX
@@ -1950,7 +2016,7 @@ def waveform_screen(wave, a, power, *, seed=81, settings=None, carrier_offset_hz
         raise ValueError('Diagnostic prefix requires 512–4096 samples in multiples of 64')
     if not math.isfinite(carrier_offset_hz):raise ValueError('Finite carrier offset required')
     if type(fpga_resampling) is not bool:raise ValueError('Boolean FPGA resampling selection required')
-    if type(mixer_substeps) is not int or mixer_substeps not in (1,2,4,8):
+    if type(mixer_substeps) is not int or mixer_substeps not in (1,2,4,8,16,32,64,128):
         raise ValueError('Bounded mixer refinement required')
     if not math.isfinite(frontend_loss_db) or frontend_loss_db<0:
         raise ValueError('Finite nonnegative frontend insertion loss required')
@@ -1978,13 +2044,15 @@ def waveform_screen(wave, a, power, *, seed=81, settings=None, carrier_offset_hz
     if mixer_phase_noise is not None:
         if a.relative_lo_phase_rms_rad!=0:
             raise ValueError('Select spectral mixer phase or legacy IID phase, not both')
-        if mixer_phase_noise.maximum_offset_hz>=converter_hz/2:
-            raise ValueError('Mixer noise needs a resolved offset band below converter Nyquist')
+        if mixer_phase_noise.maximum_offset_hz>=converter_hz*mixer_substeps/2:
+            raise ValueError('Mixer noise needs a resolved offset band below internal mixer Nyquist')
     if sample_phase_noise is not None:
         if settings.get('sample_clock_source')!='external_lo':
             raise ValueError('Shared LO sample error requires the explicit direct-LO divider')
-        if sample_phase_noise.maximum_offset_hz>=converter_hz/2:
-            raise ValueError('Sample phase noise exceeds the resolved offset band')
+        if sample_phase_noise.maximum_offset_hz>=converter_hz*mixer_substeps/2:
+            raise ValueError('Sample phase noise exceeds the internal resolved offset band')
+        if sum(abs(a)*f/settings['lo_hz'] for f,a,_ in sample_phase_noise.tones)>=.5:
+            raise ValueError('Sample phase requires a monotonic, contractive crossing solution')
     payload_count=math.ceil(len(x)/wave.sample_hz*converter_hz)
     count=payload_count
     ratio=Fraction(str(wave.sample_hz))/Fraction(str(converter_hz))
@@ -2065,6 +2133,10 @@ def waveform_screen(wave, a, power, *, seed=81, settings=None, carrier_offset_hz
         # does not reduce source absolute timing error. Independent aperture
         # error is the separately declared sample_jitter_s above.
         shared_jitter=-sample_phase_noise.phase(times)/(2*math.pi*settings['lo_hz'])
+        if sample_phase_noise.maximum_offset_hz>=converter_hz/2:
+            # High-offset noise must be evaluated at actual crossings. The
+            # derivative bound above guarantees contraction and monotonic phase.
+            shared_jitter=sample_phase_noise.crossing_error(times,settings['lo_hz'])
         jitter+=shared_jitter
     if np.any(np.diff(times+jitter)<=0):raise ValueError('Nonmonotonic converter sample times')
     sampled=(np.interp(times+jitter,np.r_[0.,filter_times],np.r_[0.,filtered.real])+
@@ -2086,7 +2158,9 @@ def waveform_screen(wave, a, power, *, seed=81, settings=None, carrier_offset_hz
     # noise follows it. Sum independent variances at the converter input.
     sigma=np.hypot(frontend_sigma*(gain+settings['rx_gain']*ripple_v/a.supply_v),adc_sigma)
     z+=sigma*(rng.normal(size=count)+1j*rng.normal(size=count))
-    received,adc_clipped=quantize(z)
+    reference_scale=(np.ones(count) if adc_reference_scale is None else
+                     np.asarray(adc_reference_scale((times+jitter).copy()),float))
+    received,adc_clipped=adc_reference_conversion(z,reference_scale,settings['converter_bits'])
     carrier=dict(enabled=recover_carrier,acquired=False,estimate_hz=None,
                  capture_limit_hz=converter_hz/(2*repetition),repetition_samples=repetition)
     if recover_carrier:
@@ -2153,8 +2227,11 @@ def waveform_screen(wave, a, power, *, seed=81, settings=None, carrier_offset_hz
     return dict(symbols=len(wave.symbols),symbol_errors=errors,evm_rms=evm,equalized=equalized,
         dac_clipped_samples=dac_clipped,adc_clipped_samples=adc_clipped,
         pga_headroom=dict(frontend_loss_db=frontend_loss_db,configured_gain=settings['rx_gain'],signal_peak_per_component_v=pga_peak,peak_limit_v=pga_peak_limit_v,clipped_signal_samples=pga_clipped,sampled_slew_lower_bound_v_per_s=pga_slew,scope='Signal headroom before injected noise; sampled slew is a lower bound, not continuous-time drive qualification.'),
+        reference_modulation=dict(minimum_scale=float(np.min(reference_scale)),maximum_scale=float(np.max(reference_scale)),
+            rms_fraction=float(np.sqrt(np.mean((reference_scale-1)**2))),
+            injection='ADC full scale at actual sample times; no oracle reference correction'),
         converter_hz=converter_hz,mixer_substeps=mixer_substeps,rx_filter_order=rx_order,supply_ripple=supply_ripple,peak_supply_phase_rad=float(np.max(abs(ripple_phase))),blocker=blocker,frontend_compression=compression,carrier_offset_hz=carrier_offset_hz,carrier_recovery=carrier,dac_updates=count,adc_samples=count,
-        spectral_clock=None if mixer_phase_noise is None else dict(injection='receive_mixer_before_filter',realization_line_phase_variance_rad2=mixer_phase_noise.variance_rad2,realized_phase_rms_rad=float(np.sqrt(np.mean(mixer_phase**2))),shared_sample_time_error_rms_s=float(np.sqrt(np.mean(shared_jitter**2))),sample_time_model='first-order LO phase crossing plus independent aperture error; stimulus DAC remains independently timed',maximum_offset_hz=mixer_phase_noise.maximum_offset_hz),
+        spectral_clock=None if mixer_phase_noise is None else dict(injection='receive_mixer_before_filter',realization_line_phase_variance_rad2=mixer_phase_noise.variance_rad2,realized_phase_rms_rad=float(np.sqrt(np.mean(mixer_phase**2))),shared_sample_time_error_rms_s=float(np.sqrt(np.mean(shared_jitter**2))),sample_time_model='implicit LO crossing for offsets above converter Nyquist; first-order below; independent aperture error and independently timed stimulus DAC',maximum_offset_hz=mixer_phase_noise.maximum_offset_hz),
         tx_filter_cutoff_hz=settings['tx_cutoff_hz'],rx_filter_cutoff_hz=settings['rx_cutoff_hz'],rx_gain=settings['rx_gain'],
         timing_recovery=acquisition,unaligned_evm_rms=raw_evm,fixture_samples=len(x),fixture_sample_hz=wave.sample_hz,duration_s=wave.duration,training_samples=training_samples,training_and_guard_s=(training_samples+32)/converter_hz+(len(block_training)/wave.sample_hz if block_training is not None else 0)+(2*resampler['tx_latency_s'] if resampler else 0),fpga_resampler=resampler,
         raw_received_rms_v=float(np.sqrt(np.mean(abs(raw)**2))),received_rms_v=float(np.sqrt(np.mean(abs(received)**2))),rf_rail_gain=gain,seed=seed,conditional_screen_pass=(not recover_carrier or carrier['acquired']) and acquisition['acquired'] and (equalized is None or equalized['acquired']) and quality_evm<=.10 and quality_errors==0 and pga_clipped==0,

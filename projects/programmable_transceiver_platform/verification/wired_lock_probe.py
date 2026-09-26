@@ -83,7 +83,7 @@ def environment_for(contract,peak,offset,*,internal_loads=(),die_cap_f=500e-12,s
     if not math.isfinite(die_cap_f) or die_cap_f<=0:raise ValueError('Positive local capacitance required')
     original['network']['network']['die_c']=die_cap_f
     original=dict(original,internal_switching_loads=internal_loads)
-    environment,_=b.reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=peak,sensitivity_ps_per_mv=sensitivity_ps_per_mv)
+    environment,_=b.single_ended_reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=peak,sensitivity_ps_per_mv=sensitivity_ps_per_mv)
     if environment is None:raise ValueError('Reference clock rejected')
     return peer_for_environment(environment,offset)
 
@@ -131,7 +131,7 @@ def mitigation_payload_campaign(contract, *, sensitivity=False):
             original=b.selected_environment(contract,'rf',carrier,carrier/16)
             original['network']['network']['die_c']=cap
             original['internal_switching_loads']=[dict(loads[0],event_hz=carrier/16),loads[1]]
-            e,clock=b.reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=.75,sensitivity_ps_per_mv=gain)
+            e,clock=b.single_ended_reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=.75,sensitivity_ps_per_mv=gain)
             receiver=None if e is None else b.coupled_wideband_feedback(e,wanted_dbm=-85.,gain_db=54.,oversample=1024)
             rf.append(dict(die_cap_f=cap,sensitivity_ps_per_mv=gain,carrier_hz=carrier,clock=clock,receiver=receiver))
             print('Mitigation RF',cap,gain,carrier,flush=True)

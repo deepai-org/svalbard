@@ -4,13 +4,18 @@ The [normative architecture and diagram](block-diagram.md) own selected function
 boundaries. Numerical studies below are conditional evidence, not frozen circuit
 topologies or qualified component specifications.
 
+The current differential revision allocates 44 mA to timing/reference and
+1.60 mm² to timing. Historical waveform sections below retain their original
+236/288/242 mA single-ended fixtures; they do not qualify the current revision.
+The extra 4 mA buys an input allowance, not demonstrated supply rejection.
+
 ## Provisional implementation allocation
 
 These are **rough design allocations**, selected to make the first-chip
 architecture concrete. They are not device-derived estimates. Layout and
 extraction will determine actual area; unknown layout area alone must not keep
 this architecture review open indefinitely. Preserve the existing contract's
-12.92 mm² total and 2.92 mm² support/growth reserve. Do not count both a parent
+12.92 mm² total and 2.77 mm² support/growth reserve. Do not count both a parent
 allowance and its subdivisions. Current numbers below are targets for the next
 joined model, not retroactive proof for earlier lower-current simulations.
 
@@ -25,13 +30,13 @@ joined model, not retroactive proof for earlier lower-current simulations.
 | Two ADCs | 0.60 | RF: 4 mA total | 12-bit words; 8 ENOB initial requirement, not guaranteed resolution; approximately 4.69–38.81 MS/s across selected dividers/LO interval. |
 | Two DACs | 0.35 | RF: 2 mA total | Same word/rate family; deterministic prefill/start, no burst-time reference reset. |
 | Converter references, buffers, local decoupling and converter growth | 0.35 = references 0.25 + growth 0.10 | PLL/reference budget below; reference charge is not an extra RF reservation | No new reference pins assumed; load settling at actual conversion events, including simultaneous I/Q. |
-| RF source, wired TX source, RX CDR, external conditioning/phase generation and clock distribution | 1.45 = 0.35 + 0.25 + 0.35 + 0.30 + 0.20 | PLL/reference: 40 mA total planning target: sources 12, CDR 8, external input/phase 8, distribution 6, master bias/converter reference 6. Includes static and switching; no second C·V·f charge on top. | One REF_IN; external GHz branch plus normal reference branch selected while stopped; independent RX recovery, common qualified timing model, stop/train/epoch after source changes. |
+| RF source, wired TX source, RX CDR, external conditioning/phase generation and clock distribution | 1.60 = 0.35 + 0.25 + 0.35 + 0.45 + 0.20 | PLL/reference: 44 mA total planning target: sources 12, CDR 8, external input/phase 12, distribution 6, master bias/converter reference 6. Includes static and switching; no second C·V·f charge on top. | One differential REF_IN/REF_IN_N port; external GHz branch plus normal reference branch selected while stopped; independent RX recovery, common qualified timing model, stop/train/epoch after source changes. |
 | Host/control/transport/reset logic and predrivers | 1.65 = host logic 0.45 + control 0.35 + transport 0.55 + reset/epoch 0.30 | CORE: 40 mA including memory below; HOST output/input-cell activity separately capped at 55 mA per segment | 22 host signals plus four SPI and reset; H2D 312.5 Mword/s, selected RF D2H LO/16 words, wired up to 312.5 Mword/s. Maintain bounded service and fault delivery. |
 | Short queues, CDC and staging storage | 0.85 | Included in CORE 40 mA, not charged again | No external pins; set an 8,192-bit total data-bank/staging/queue ceiling, including metadata storage. Retain the 3,792-bit partial inventory inside it, not in addition. Ordinary FSM logic stays in the digital owner; bulk packets/captures remain on FPGA. |
-| Shared support and global growth | 2.92 = additional local reservoirs 0.60 + isolation/routing 1.20 + power conditioning 0.40 + unassigned growth 0.72 | Consumption must be charged to its RF/PLL/CORE/HOST/WIRE owner; no invisible extra supply domain | No extra functional pins; preserve provider power sites and common-return constraints. External regulation is baseline; no mandatory on-chip LDO array. |
+| Shared support and global growth | 2.77 = additional local reservoirs 0.60 + isolation/routing 1.20 + power conditioning 0.40 + unassigned growth 0.57 | Consumption must be charged to its RF/PLL/CORE/HOST/WIRE owner; no invisible extra supply domain | Clock negative leg consumes one previously spare site; preserve provider power sites and common-return constraints. External regulation is baseline; no mandatory on-chip LDO array. |
 
 Totals: RF analog **2.40 mm²**, converters **1.30 mm²**, and the other owner
-totals match the unchanged contract. Pad macro geometry is peripheral; any
+totals match the revised contract; the overall core ceiling is unchanged. Pad macro geometry is peripheral; any
 intrusion into the core consumes these allowances. All fabricated inactive
 blocks retain their area. The support capacitor allowance is distinct from
 converter-local decoupling already included in the converter owner. Within its
@@ -49,9 +54,9 @@ Do not sum full active RF and wired payload currents on one die.
 
 | State | CORE | HOST, two segments | PLL/reference | RF | WIRE | Total / source power at 3.3 V |
 |---|---:|---:|---:|---:|---:|---:|
-| Warm RF RX/turnaround/TX planning bound | 40 mA | 110 mA | 40 mA | 44 mA | 2 mA | 236 mA / 0.779 W |
-| Wired simultaneous RX/TX planning bound | 40 mA | 110 mA | 40 mA | 2 mA | 96 mA | 288 mA / 0.950 W |
-| One active bidirectional wired branch; other serial branch disabled | 40 mA | 110 mA | 40 mA | 2 mA | 50 mA = 48 active + 2 inactive | 242 mA / 0.799 W |
+| Warm RF RX/turnaround/TX planning bound | 40 mA | 110 mA | 44 mA | 44 mA | 2 mA | 240 mA / 0.792 W |
+| Wired simultaneous RX/TX planning bound | 40 mA | 110 mA | 44 mA | 2 mA | 96 mA | 292 mA / 0.964 W |
+| One active bidirectional wired branch; other serial branch disabled | 40 mA | 110 mA | 44 mA | 2 mA | 50 mA = 48 active + 2 inactive | 246 mA / 0.812 W |
 
 These are deliberately conservative allocation sums, not traffic-averaged
 predictions or die heat. Source power includes energy dissipated in external
@@ -977,10 +982,10 @@ COB bond map. Shared board/pad rails can invalidate earlier independent-feed
 assumptions; rerun those studies after G1 mapping. See [decision gates](feasibility-gates.md).
 
 `verification/check_contract.py` now emits `resource_ledger` from the contract:
-a logical 50-terminal allocation with 14 supply/return terminals, separately
+a logical 51-terminal allocation with 14 supply/return terminals, separately
 from the provider inventory of 56 signal and 18 fixed supply/return sites.
 It also records 12.92 mm² allocated core area including
-2.92 mm² explicit reserve, and 350 mA summed domain planning ceilings. The
+2.77 mm² explicit reserve, and 350 mA summed domain planning ceilings. The
 reserve is included in the area total, not additional free area. These are
 allocations; implemented area/current/storage totals remain null, not zero.
 The ledger stays open until physical instances, sharing, clock trees, storage,
@@ -1016,7 +1021,7 @@ currents are assigned budgets, not GF180 performance estimates.
 | RF and conversion | 37 mA, including 28 mA TX-drive reservation | Only 9 mA remains for enabled mixers, gain/filter stages, converters and local bias when that driver reservation is active. Reference circuitry is charged to its separate PLL/reference owner. |
 | PLL/reference | 12 mA static plus 1.5 pF equivalent switching at 3.3 V and 2.426 GHz: 24.01 mA total | External-input receiver, phase generation/distribution, enabled reference/bias circuitry and any active loop must share the static and switching allowances; quieter clock settings add no allowance. |
 | CORE | 20 mA excluding separately itemized host I/O | Transport, control, active digital clock trees and storage. This is a placeholder, not a bound established by the present model. |
-| Physical support | 2.92 mm² closure reserve | A 500 pF capacitor alone takes 0.278–0.556 mm² at the cited minimum MIM densities, leaving 2.364–2.642 mm² for other support before capacitor routing/guard overhead. Functional owner allowances remain separate and unproven. |
+| Physical support | 2.77 mm² closure reserve | A 500 pF capacitor alone takes 0.278–0.556 mm² at the cited minimum MIM densities, leaving 2.214–2.492 mm² for other support before capacitor routing/guard overhead. Functional owner allowances remain separate and unproven. |
 
 The RF planning ceiling is 48 mA, but the 11 mA difference is **not free margin
 in this waveform result**. Spending it changes DC droop, switching disturbance
@@ -1139,7 +1144,7 @@ or protocol gains a pass from this screen.
 
 ### Area ownership and fit decision
 
-The contract's allocations sum to the full 12.92 mm² ceiling. The 2.92 mm²
+The contract's allocations sum to the full 12.92 mm² ceiling. The 2.77 mm²
 reserve is the only explicit closure allowance; there is no additional free
 area outside that sum. Assign support circuits to these owners before claiming
 fit. The following is an accounting boundary, not a physical area estimate.
@@ -1149,10 +1154,10 @@ fit. The following is an accounting boundary, not a physical area estimate.
 | Wired | 2.35 | RX/TX analog frontends, termination/detection, shared USB/TMDS electrical functions, local bias and switching |
 | RF | 2.40 | Both fabricated RX and TX paths, mixers, filters, gain stages, output drive, RF switching and local bias |
 | Converters | 1.30 | I/Q ADC and DAC paths, sampling networks, reference generation/buffering and local reference decoupling |
-| Timing | 1.45 | Autonomous sources/loops, external-clock receiver, wired CDR, phase generation, dividers and distribution |
+| Timing | 1.60 | Autonomous sources/loops, external-clock receiver, wired CDR, phase generation, dividers and distribution |
 | Digital | 1.65 | Host/control logic, generic events, clock/reset/epoch controls, diagnostics and non-storage state |
 | Memory | 0.85 | All physical elastic/CDC/playback data storage; exclude it from digital totals when separately accounted |
-| Closure reserve | 2.92 | As-yet unpriced shared bias/power conditioning, supply decoupling, isolation/guard spacing, routing and growth beyond owner allowances |
+| Closure reserve | 2.77 | As-yet unpriced shared bias/power conditioning, supply decoupling, isolation/guard spacing, routing and growth beyond owner allowances |
 
 Provider peripheral pad-ring area lies outside the allocated core rectangle.
 Custom signal-pad circuits must fit compatible sites; any circuitry extending
@@ -1171,7 +1176,7 @@ clock isolation, pad protection and required timing can coexist in that space.
 
 ### First quantitative reserve boundary: local capacitance
 
-The six functional allocations consume 10.00 mm², leaving 2.92 mm² for
+The six functional allocations consume 10.15 mm², leaving 2.77 mm² for
 closure. An inexpensive arithmetic screen already limits a potential supply
 mitigation: large on-die capacitors. Using `A = C / density`, ideal plate area is:
 
@@ -1227,7 +1232,7 @@ Intervals are DC ± sum of harmonic peak magnitudes, not observed excursions.
 The 500 pF case restores containment within the fixture's 2.5–3.6 V validity
 window for these assigned cases. That window is not a qualified operating
 specification. At the listed minimum densities, 500 pF costs 0.278–0.556 mm²
-of ideal plate, materially less than the 2.92 mm² reserve. Thus moderate local
+of ideal plate, materially less than the 2.77 mm² reserve. Thus moderate local
 capacitance is worth carrying forward alongside reduced host activity and
 clock/reference rejection; multi-nanofarad capacitance is not yet necessary
 for this particular voltage screen.
@@ -1858,7 +1863,7 @@ result cannot close power feasibility.
 ## Additional protocol resource budgets
 
 One slot means approximately 3.93 × 5.12 mm, not 1 mm². Retain the
-conservative 12.92 mm² core ceiling. The logical 36-signal + 14-power/ground
+conservative 12.92 mm² core ceiling. The logical 37-signal + 14-power/ground
 allocation is not a physical bond map: the pinned provider template has 56
 signal sites plus 18 fixed supply/return sites. Public Run 1 assembly has 74
 die bonds and 70 numbered connector contacts. These counts describe different
@@ -1872,7 +1877,8 @@ owns provider provenance and the candidate signal assignment.
 Reserve **0.80 mm² within the existing 3.72 mm² closure reserve** for expansion:
 0.35 wired/USB local circuits, 0.15 timing/rate controls, 0.10 RF bandwidth/gain
 controls, 0.15 digital event/streaming helpers and 0.05 configuration memory.
-The residual reserve is 2.92 mm². These are allocation caps, not transistor area
+A further 0.15 mm² is assigned to differential clock input conditioning.
+The residual reserve is 2.77 mm². These are allocation caps, not transistor area
 estimates. No reduction in return pins, baseline buffers or converter performance
 is assumed. If the allocation fails, revisit sharing/circuit choice and report
 the conflict; do not quietly drop a requested capability or expand the die.

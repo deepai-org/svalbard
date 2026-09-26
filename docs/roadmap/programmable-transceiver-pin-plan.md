@@ -7,11 +7,11 @@ Implementation progress and the executable budget are tracked in the [project](.
 
 ## Selected physical boundary
 
-Retain the provider-compatible 74-site ring: 36 functional signals, 18 fixed
-supply/return sites and 20 spare signal sites. This is the selected first-chip
+Retain the provider-compatible 74-site ring: 37 functional signals, 18 fixed
+supply/return sites and 19 spare signal sites. This is the selected first-chip
 boundary and supersedes the early approximate 50-total-terminal target. It does
 not authorize removing unused bonds, relabeling signal pads as supplies, or
-changing the provided packaging route. The existing 50-entry executable pin
+changing the provided packaging route. The 51-entry executable pin
 list is retained as a legacy logical interface model pending migration; its
 arithmetic checks are not physical site-count qualification. Current site
 assignment and provider connectivity below remain the physical evidence.
@@ -69,7 +69,7 @@ generation is no longer a mandatory condition for every supported configuration.
 Retain it where useful; evaluate external-clock configurations as legitimate
 operating choices, not merely laboratory debug fallbacks.
 
-The existing `REF_IN` is an allocated reference input, with external-LO injection
+The `REF_IN`/`REF_IN_N` pair is the allocated differential reference input, with external-LO injection
 already a separately qualified candidate. Its name alone does not prove RF
 bandwidth, permitted swing/common mode, termination, noise, duty cycle or I/Q
 compatibility. Specify those requirements and any buffering, division or
@@ -110,7 +110,7 @@ core and I/O supplies together in the foundry-pad configuration. Do not infer
 seven independent external rails from our logical domain names.
 
 The allocation below is a **logical target, not a compatible bond map**.
-Reconcile the 36 functional signals with all 74 retained provider sites, including
+Reconcile the 37 functional signals with all 74 retained provider sites, including
 fixed power/ground bonds and unused sites; do not silently change that physical inventory
 or claim that leaving a signal unused removes its physical bond. Map provider
 PCB rail connectivity before assigning local isolation, power ceilings or
@@ -131,9 +131,9 @@ connections. See the [USB return-path gate](../../projects/programmable_transcei
 
 The contract now records the provider's ordered site inventory, and
 `verification/check_contract.py` reports it separately from the logical pin
-budget. There are 36 required functional signals, 20 spare signal sites and
+budget. There are 37 required functional signals, 19 spare signal sites and
 18 fixed supply/return sites. Even an imagined assembly omitting every spare
-signal bond would retain **54 required signal/supply sites**, exceeding a hard
+signal bond would retain **55 required signal/supply sites**, exceeding a hard
 50-total limit. The standard template itself retains all 74 sites. These are
 pad counts; the public Run 1 board has 70 numbered connector contacts, as detailed below.
 
@@ -147,7 +147,7 @@ remain open. In particular:
 - External passives can filter the board supply, but cannot independently filter
   a logical island through an external supply pin that does not exist. Isolation
   behind the shared feed needs local circuitry, with headroom and area costs.
-- The existing single `REF_IN` supports alternative reference/LO configurations;
+- The differential `REF_IN`/`REF_IN_N` port supports alternative reference/LO configurations;
   independent simultaneous external LO and converter clocks require an explicit
   signal reassignment and electrical budget before they count as a fallback.
 - The north and south template edges each offer 16 signal sites. The two 11-wire
@@ -189,19 +189,19 @@ physical allocation, superseding the earlier approximate terminal count. No spar
 
 | Edge | Functional signals → provider sites |
 |---|---|
-| West | RF_RX P/N → `inputs[11]/[10].pad`; RF_TX P/N → `inputs[5]/[4].pad`; REF_IN → `inputs[1].pad` |
+| West | RF_RX P/N → `inputs[11]/[10].pad`; RF_TX P/N → `inputs[5]/[4].pad`; REF_IN/REF_IN_N → `inputs[1]/[0].pad` |
 | East | WIRE_RX P/N (USB D+/D−) → `bidir[14]/[15].pad`; WIRE_TX P/N → `bidir[20]/[21].pad` |
 | South | D2H_D[0] → `clk_pad`; D2H_D[1:5] → `bidir[0:4].pad`; D2H_D[6:9] → `bidir[6:9].pad`; D2H_CLK → `bidir[5].pad` |
 | South | RESET_N → `rst_n_pad`; CS_N/SCLK/MOSI/MISO → `bidir[10:13].pad`, respectively |
 | North | H2D_D[0:7] → `bidir[26:33].pad`; H2D_D[8:9] → `bidir[35:36].pad`; H2D_CLK → `bidir[34].pad` |
 
-Ranges here map in ascending index order. All four analog pairs occupy
+Ranges here map in ascending index order. All five analog/reference pairs occupy
 consecutive sites. D2H_CLK borders `dvss_pads[0]`, H2D_CLK borders
 `dvss_pads[4]`, and REF_IN borders `dvss_pads[5]`. Each analog pair starts next
 to an existing ground site. These are list adjacencies, not extracted physical
 distances, ground-signal-ground structures or independent quiet returns.
 
-Twenty signal sites remain unused: eight east, five north and seven west.
+Nineteen signal sites remain unused: eight east, five north and six west.
 Keep their loading, protection, bonding and board nets in the physical design;
 unused does not mean absent. `clk_pad` becomes a data-output site, and several
 input/bidirectional sites require different signal cells. The provider permits
@@ -228,21 +228,22 @@ Logical IDs are allocation labels, not package numbering. Final ordering follows
 | S03–S04 | `WIRE_RX_P/N` | 2 | Serial termination/EQ/slicer/CDR input; USB mode: bidirectional D+/D− |
 | S05–S06 | `RF_RX_P/N` | 2 | Differential RF receiver input |
 | S07–S08 | `RF_TX_P/N` | 2 | Differential RF transmitter output |
-| S09 | `REF_IN` | 1 | External reference oscillator; separately qualified external-LO injection mode |
+| S09 | `REF_IN` | 1 | Positive leg of differential reference/LO port |
 | S10–S13 | `HOST_CS_N`, `HOST_SCLK`, `HOST_MOSI`, `HOST_MISO` | 4 | Dedicated four-wire SPI control, FIFO access, calibration, and recovery |
 | S14 | `RESET_N` | 1 | Whole-chip reset; individual engine resets are registers/fast-link commands |
 | S15–S24 | `D2H_D[9:0]` | 10 | Chip-to-FPGA words |
 | S25 | `D2H_CLK` | 1 | Forwarded chip-to-FPGA clock |
 | S26–S35 | `H2D_D[9:0]` | 10 | FPGA-to-chip words |
 | S36 | `H2D_CLK` | 1 | Forwarded FPGA-to-chip clock |
-| | **Signals** | **36** | |
+| S37 | `REF_IN_N` | 1 | Negative clock leg paired with S09; adjacent west provider site |
+| | **Signals** | **37** | |
 
 There is no dedicated interrupt, crystal pair, general GPIO bank, external-memory interface, or wide analog monitor bus. Poll status over SPI or receive events in the fast link. The host FPGA directly drives board PA enable, RF switch, and other connector sidebands; deterministic scheduled TX and timestamped status support that coordination. An MCU can drive those board controls too. External PA, baluns/matching, RF filtering, reference oscillator, and antenna remain board components.
 
-`REF_IN` normally accepts a qualified single-ended clock. PCIe's differential common reference needs a suitable external clock receiver/buffer; its jitter contribution belongs in the budget. Do not route an arbitrary fabric-generated FPGA clock into the RF PLL and assume adequate phase noise. External LO injection is an alternate local RF input mode that requires separate pad/loading qualification, not permission to put GHz signals through an ordinary digital buffer. Autonomous synthesis and externally supplied timing are both intended operating paths; neither is physically qualified. No claim of simultaneous reference and external LO use on this one pin.
+`REF_IN`/`REF_IN_N` form one differential clock input. PCIe common-reference electrical compatibility still needs bias, swing and termination qualification; single-ended board sources require external conversion/buffering with its noise charged. Do not route an arbitrary fabric-generated FPGA clock into the RF PLL and assume adequate phase noise. External LO injection is an alternate local RF input mode that requires separate pad/loading qualification, not permission to put GHz signals through an ordinary digital buffer. Autonomous synthesis and externally supplied timing are both intended operating paths; neither is physically qualified. No claim of simultaneous reference and external LO use on this one differential port.
 The [direct-LO rate candidate](../../projects/programmable_transceiver_platform/spec/clock-feasibility-envelope.md#direct-lo-mitigation-in-the-fast-waveform-model)
 uses uniform LO division for ADC/DAC and proposes LO/16 for D2H_CLK, retaining
-H2D_CLK from the FPGA. It adds no terminal. Variable-rate conversion may require
+H2D_CLK from the FPGA. The selected differential frontend adds one signal site versus the historical single-ended model. Variable-rate conversion may require
 explicit FPGA resampling; the model now accounts for its latency and estimated
 processing/storage cost. Clock routes, physical qualification, finite pacing
 and area remain open; this is an alternative under evaluation, not a selected
@@ -353,13 +354,13 @@ Place wired and RF islands on opposite sides, host parallel pins adjacent to dig
 | One full-duplex wired PHY plus local USB branch | 2.35 |
 | RF RX/TX and programmable analog baseband | 2.40 |
 | I/Q converters and analog calibration | 1.3 |
-| Synthesizers, timing, references | 1.45 |
+| Synthesizers, timing, references | 1.60 |
 | GPIO transport, generic digital helpers and control | 1.65 |
 | FIFO/capture/playback/configuration memory | 0.85 |
-| Top-level isolation, routing, decoupling and closure reserve | 2.92 |
+| Top-level isolation, routing, decoupling and closure reserve | 2.77 |
 | **Core ceiling** | **12.92** |
 
-Protocol flexibility reallocates 0.80 mm² from the prior 3.72 mm² reserve; the total remains 12.92 mm². These are ceilings, not measured areas or promised buffer capacities. Determine memory depth from actual macro availability, host stalls, and protocol latency; do not assume a dense SRAM exists. Close the fast GPIO pad/return budget and representative analog layouts before expanding programmability. Area pressure is addressed by resource sharing and bounded buffering, preserving the full companion target.
+Protocol flexibility and differential timing reallocate 0.95 mm² from the prior 3.72 mm² reserve; the total remains 12.92 mm². These are ceilings, not measured areas or promised buffer capacities. Determine memory depth from actual macro availability, host stalls, and protocol latency; do not assume a dense SRAM exists. Close the fast GPIO pad/return budget and representative analog layouts before expanding programmability. Area pressure is addressed by resource sharing and bounded buffering, preserving the full companion target.
 
 Before fabrication, resolve the terminal-count conflict and publish the packaging-compatible bond map, actual placed area, rail/current/thermal budget, extracted die/package/board timing and RF models, host training/transport specification, and mode/resource conflict table. Demonstrate raw serial and RF transport with external FPGA logic in hardware-in-the-loop, then prove the exact PCIe and Ethernet adapters against peers. Exercise transport corruption, clock loss, flow-control failure, receiver errors, and every reset state. Carry all pre-silicon uncertainty into O1–O4 claims; one-slot fit, maximum GPIO rate, RF performance, and standards interoperability remain separate gates.
 

@@ -1,5 +1,12 @@
 # Clock architecture feasibility envelope
 
+Current clock interface: `REF_IN` (positive) and `REF_IN_N` (negative) form one
+differential reference/LO port, selected while stopped. Both legs require analog
+conditioning/protection; source frequency and protocol ownership are unchanged.
+See the [normative architecture](block-diagram.md) for the selected 44 mA timing allocation
+and 0.025 ps/mV aggregate supply-delay requirement. Saved single-ended studies
+below are historical controls, not qualification of this revision.
+
 The [coupled REF_IN edge screen](power-partition.md#ref_in-voltage-and-clock-edges-with-moving-return)
 now includes board-referenced input voltage against moving analog ground and
 the input capacitance's own return current. At the selected package target,

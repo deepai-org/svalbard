@@ -1,4 +1,4 @@
-"""Costed differential REF_IN hypothesis; not the selected architecture.
+"""Selected differential REF_IN model and explicit single-ended controls.
 
 Run --check for independent passive-network validation, or without flags for
 matched assigned-ENOB RF controls. Add --causal to test SAR/load feedback at
@@ -93,13 +93,14 @@ def check_network():
     return dict(compared_points=count,maximum_input_voltage_difference_v=maximum,maximum_kcl_residual_a=residual,maximum_power_residual_w=power,
         load_transfer_points=load_count,maximum_load_transfer_difference_ohm=load_error)
 
-def paired_environment(original,opts,*,sign=1.,sensitivity_ps_per_mv=.1,ledger=None):
-    """Reusable paired input for either engine; caller charges its DC bias cost."""
+def paired_environment(original,opts,*,sign=1.,sensitivity_ps_per_mv=.025,ledger=None,source_peak_v=1.):
+    """Reusable paired input for either engine; DC bias is included once in the selected mode ledger."""
+    if not np.isfinite(source_peak_v) or source_peak_v<=0:raise ValueError('Positive finite differential source peak required')
     carrier=original['carrier_hz'];gain=b.supply_delay_gain(sensitivity_ps_per_mv,sign)
     if ledger is None:
-        _,base=b.reference_payload_environment(original,dict(link_r_ohm=1e-5),False)
+        _,base=b.single_ended_reference_payload_environment(original,dict(link_r_ohm=1e-5),False)
         ledger=base['ledger']
-    wanted=port(carrier,original['network'],np.zeros(5),source_diff=1.,**opts)
+    wanted=port(carrier,original['network'],np.zeros(5),source_diff=source_peak_v,**opts)
     tones=[];rails=[];delays=[];bound=abs(wanted['local']).copy()
     for frequency,injection in b.partitioned_host_sources(original).items():
         r=port(frequency,original['network'],injection,**opts)
@@ -119,7 +120,7 @@ def paired_environment(original,opts,*,sign=1.,sensitivity_ps_per_mv=.1,ledger=N
         accepted=accepted,per_leg_bound_v=bound.tolist(),current_a=ledger['total_chip_supply_current_a'],clock=resolved)
     if not accepted:return None,row
     equivalent=original['external_clock_input']['source_peak_v']*abs(wanted['effective'])/original['external_clock_input']['receiver_peak_v']
-    noise,_=loaded_clock_input_phase(carrier,receiver_noise_v=np.sqrt(2)*75e-6,downstream_stage_rms_s=15e-15,source_peak_v=equivalent)
+    noise,input_report=loaded_clock_input_phase(carrier,receiver_noise_v=np.sqrt(2)*75e-6,downstream_stage_rms_s=15e-15,source_peak_v=equivalent)
     reference=[]
     for t in rails:
         h=.1/(1+1j*t['frequency_hz']/10e6)
@@ -130,6 +131,9 @@ def paired_environment(original,opts,*,sign=1.,sensitivity_ps_per_mv=.1,ledger=N
         delivered_phase_tones=tuple(original['phase_components']['source'])+tuple(noise.tones),
         reference_return_options=dict(link_r_ohm=1e-5),local_supply_delay_sign=sign,local_supply_sensitivity_ps_per_mv=sensitivity_ps_per_mv,
         reference_load_parameters=dict(differential=opts),
+        external_clock_input=dict(input_report,topology='differential',physical_source_peak_v=source_peak_v,
+            source_peak_interpretation='source_peak_v is gain-equivalent; physical_source_peak_v is differential Thevenin peak'),
+        phase_components=dict(source=original['phase_components']['source'],input=noise.tones,supply=()),
         reference_threshold=dict(carrier_v=wanted['effective'],input_tones=tones,
             downstream_delay_tones=delays,threshold_v=.020,input_edges_s=capture['input_edges_s'],period_s=capture['period_s']))
     return e,row
@@ -162,7 +166,7 @@ def single_rf(causal=False):
       original=b.selected_environment(contract,'rf',carrier,carrier/16,return_l=return_l,die_esl=die_esl)
       for peak in (.5,.75,1.):
        for sign in (1.,-1.):
-        e,report=b.reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=peak,supply_sign=sign)
+        e,report=b.single_ended_reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=peak,supply_sign=sign)
         row=dict(network_case=label,carrier_hz=carrier,source_peak_v=peak,supply_sign=sign,clock=report)
         if e is not None:
          row['rf']=wideband_receive(e,oversample=256,wanted_dbm=-85.,gain_settings_db=(54.,))
@@ -179,18 +183,18 @@ def shared_internal_campaign(*,single=False):
     from wired_lock_probe import peer_for_environment,resolved_case
     rows=[];saved={mode:b.MODE_CURRENT_A[mode]['timing'] for mode in ('rf','wire')}
     try:
-        for mode in saved:b.MODE_CURRENT_A[mode]['timing']=saved[mode]+.004
+        for mode in saved:b.MODE_CURRENT_A[mode]['timing']=saved[mode]
         for mode,carrier,word in (('rf',2.4e9,150e6),('rf',2.484e9,155.25e6),('wire',2.5e9,312.5e6)):
             original=b.selected_environment(contract,mode,carrier,word)
             original['internal_switching_loads']=[dict(owner='timing',mean_a=.010,event_hz=carrier/16,tau_s=.2e-9,harmonics=64),
                 dict(owner='core',mean_a=.020,event_hz=156.25e6,tau_s=.2e-9,harmonics=64)]
             base=None
-            if not single:_,base=b.reference_payload_environment(original,dict(link_r_ohm=1e-5),False)
+            if not single:_,base=b.single_ended_reference_payload_environment(original,dict(link_r_ohm=1e-5),False)
             for mismatch,opposed,cm_gain in (((0.,False,0.),) if single else ((.1,True,.1),(.2,False,-.1))):
                 for sensitivity in (.1,.025):
                     for sign in (1.,-1.):
                         if single:
-                            e,report=b.reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=1.,supply_sign=sign,sensitivity_ps_per_mv=sensitivity)
+                            e,report=b.single_ended_reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=1.,supply_sign=sign,sensitivity_ps_per_mv=sensitivity)
                             row=dict(carrier_hz=carrier,supply_sign=sign,sensitivity_ps_per_mv=sensitivity,
                                 accepted=e is not None,current_a=report['ledger']['total_chip_supply_current_a'],clock=report['resolved_crossings'])
                         else:
@@ -223,17 +227,17 @@ def shared_rf_campaign(carrier,output,*,acquisition=False,transmit=False):
         report['scope']='Matched single/paired clock input with full internal switching, 240 mA RF budget, 500 pF, current package target, 1 V source, 0.025 ps/mV and both signs/mismatches. Native DAC, third-order reconstruction, upconversion and resistive output port at 20.48 GHz numerical rate. Warm driver with fixed current budget; no causal signal-dependent DAC/driver current, physical glitches, external filter, real framing, FIFO or standard emission-mask qualification. Broad band powers and diagnostic peer decoding only.'
     saved=b.MODE_CURRENT_A['rf']['timing']
     try:
-        b.MODE_CURRENT_A['rf']['timing']=saved+.004
+        b.MODE_CURRENT_A['rf']['timing']=saved
         original=b.selected_environment(contract,'rf',carrier,carrier/16)
         original['internal_switching_loads']=[dict(owner='timing',mean_a=.010,event_hz=carrier/16,tau_s=.2e-9,harmonics=64),
             dict(owner='core',mean_a=.020,event_hz=156.25e6,tau_s=.2e-9,harmonics=64)]
-        _,base=b.reference_payload_environment(original,dict(link_r_ohm=1e-5),False)
+        _,base=b.single_ended_reference_payload_environment(original,dict(link_r_ohm=1e-5),False)
         variants=([(None,True),(dict(mismatch=.2,opposed=False,cm_gain=-.1),True),(dict(mismatch=.2,opposed=False,cm_gain=-.1),False)] if acquisition else
             [(opts,True) for opts in (None,dict(mismatch=.1,opposed=True,cm_gain=.1),dict(mismatch=.2,opposed=False,cm_gain=-.1))])
         for opts,wanted_present in variants:
             for sign in ((-1.,) if acquisition else (1.,-1.)):
                 if opts is None:
-                    e,clock=b.reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=1.,supply_sign=sign,sensitivity_ps_per_mv=.025)
+                    e,clock=b.single_ended_reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=1.,supply_sign=sign,sensitivity_ps_per_mv=.025)
                 else:
                     e,clock=paired_environment(original,opts,sign=sign,sensitivity_ps_per_mv=.025,ledger=base['ledger'])
                 row=dict(carrier_hz=carrier,frontend='single' if opts is None else 'paired',input_parameters=opts,supply_sign=sign,clock=clock,receiver=None)
@@ -268,13 +272,13 @@ def shared_wake_campaign(carrier,output):
         scope='240 mA full-mode budget, full internal pulses, 500 pF/current package target, 1 V source, negative 0.025 ps/mV. Single-ended and 20% aligned-mismatch paired input. Driver starts warm or ramps from 0 to its already-budgeted 28 mA at nominal source start, in 20 ns or 1 us. Coupled rail/input/reference/delay and available tail-current limit are applied. Early waveform is compared with matched warm output without fitting away phase/amplitude. No physical bias-readiness, RF switch, preamble, TX mask, signal-dependent DAC/driver current or protocol turnaround qualification.')
     saved=b.MODE_CURRENT_A['rf']['timing']
     try:
-        b.MODE_CURRENT_A['rf']['timing']=saved+.004
+        b.MODE_CURRENT_A['rf']['timing']=saved
         original=b.selected_environment(contract,'rf',carrier,carrier/16)
         original['internal_switching_loads']=[dict(owner='timing',mean_a=.010,event_hz=carrier/16,tau_s=.2e-9,harmonics=64),dict(owner='core',mean_a=.020,event_hz=156.25e6,tau_s=.2e-9,harmonics=64)]
-        _,base=b.reference_payload_environment(original,dict(link_r_ohm=1e-5),False)
+        _,base=b.single_ended_reference_payload_environment(original,dict(link_r_ohm=1e-5),False)
         for opts in (None,dict(mismatch=.2,opposed=False,cm_gain=-.1)):
             if opts is None:
-                e,clock=b.reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=1.,supply_sign=-1.,sensitivity_ps_per_mv=.025)
+                e,clock=b.single_ended_reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=1.,supply_sign=-1.,sensitivity_ps_per_mv=.025)
             else:e,clock=paired_environment(original,opts,sign=-1.,sensitivity_ps_per_mv=.025,ledger=base['ledger'])
             if e is None:raise ValueError('Wake clock rejected')
             warm={}
@@ -339,7 +343,7 @@ def main():
         return
     original=b.MODE_CURRENT_A['rf']['timing']
     try:
-        b.MODE_CURRENT_A['rf']['timing']=original+.004
+        b.MODE_CURRENT_A['rf']['timing']=original
         paired=paired_rf(args.causal)
         controls=single_rf(args.causal)
     finally:

@@ -5,7 +5,9 @@
 [Multi-chip video detail](transceiver-video-detail.svg)
 
 The overview places RF west, wired east, clocks north and host/digital services
-south, with all 50 terminals grouped at the perimeter. Detailed sheets expand
+south, with 37 functional signals, 18 fixed supply/return sites and 19 spare
+signal sites in the compatible 74-site ring. REF_IN/REF_IN_N is one differential
+port. Detailed candidate sheets expand
 amplifiers, mixers, filters, converters, reference/bias services, PLL/CDR feedback,
 host queues, calibration and power connections. This is intended connectivity
 and approximate placement, not a transistor netlist or a scaled physical layout.
@@ -36,7 +38,7 @@ The diagnostic path temporarily owns the I-channel ADC. These are circuit
 candidates; switch timing, conditioning, references and parasitics need schematic
 and extracted verification. No diagram establishes physical qualification.
 
-Focused SVGs are generated from the same sheet elements as the full drawing,
+Focused SVGs are generated from the retained candidate-sheet elements,
 with shared definitions but without embedding the other sheets.
 
 ## Regenerate
@@ -48,7 +50,9 @@ python3 projects/programmable_transceiver_platform/docs/diagrams/generate_block_
 rsvg-convert -w 2000 projects/programmable_transceiver_platform/docs/diagrams/transceiver-block-diagram.svg -o projects/programmable_transceiver_platform/docs/diagrams/transceiver-block-diagram.png
 ```
 
-The generator produces the full SVG and both focused SVGs from the same drawing.
+The generator preserves exploratory circuit candidates and focused sheets, then
+runs `generate_normative_diagram.py` for the selected whole-chip overview. The
+candidate sheets are not additional required circuitry.
 Use `rsvg-convert` on a focused SVG for a readable local preview. Inspect rendered
 changed sheets for overlap, clipped labels and ambiguous junctions; XML validity
 alone does not establish readable wiring.

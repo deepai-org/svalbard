@@ -1,5 +1,18 @@
 # First implementation baseline
 
+`pt_analog_physical` owns both external clock legs and exports the conditioned
+`ref_clk` event interface to digital control. `pt_host_physical` owns neither
+clock leg. The black boxes do not implement a differential receiver or prove
+common-mode range, phase quality, or protection. GHz input must bypass ordinary
+host GPIO circuitry.
+
+Current clock interface: `REF_IN` (positive) and `REF_IN_N` (negative) form one
+differential reference/LO port, selected while stopped. Both legs require analog
+conditioning/protection; source frequency and protocol ownership are unchanged.
+See the [normative architecture](../spec/block-diagram.md) for the selected 44 mA timing allocation
+and 0.025 ps/mV aggregate supply-delay requirement. Saved single-ended studies
+below are historical controls, not qualification of this revision.
+
 This pass creates a runnable digital implementation and a whole-chip connection skeleton. It is **not an entire transistor-level transceiver implementation**. The two physical macros in `pt_chip.sv` are explicit black boxes. No resulting netlist is suitable for fabrication. The full first-silicon objective is unchanged.
 
 ## Current transport implementation (pass 28)

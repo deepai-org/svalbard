@@ -7,6 +7,28 @@ from robustness_envelope import shared_board_candidate
 
 
 class BaselineBudgetTests(unittest.TestCase):
+    def test_selected_differential_clock_routes_both_legs_and_charges_bias_once(self):
+        from baseline_envelope import selected_environment,reference_payload_environment,P
+        from reference_input_probe import paired_environment
+        c=json.loads((P/'spec/contract.json').read_text())
+        for mode,carrier,current in [('rf',2.4e9,.240),('rf',2.484e9,.240),('wire',2.5e9,.292)]:
+            raw=selected_environment(c,mode,carrier,carrier/16 if mode=='rf' else 312.5e6)
+            raw['internal_switching_loads']=[dict(owner='timing',mean_a=.010,event_hz=carrier/16,tau_s=.2e-9,harmonics=64),
+                dict(owner='core',mean_a=.020,event_hz=156.25e6,tau_s=.2e-9,harmonics=64)]
+            e,r=reference_payload_environment(raw,dict(link_r_ohm=1e-5),False)
+            self.assertIsNotNone(e)
+            self.assertEqual(e['external_clock_input']['topology'],'differential')
+            self.assertAlmostEqual(e['ledger']['total_chip_supply_current_a'],current)
+            self.assertAlmostEqual(e['local_supply_sensitivity_ps_per_mv'],.025)
+            self.assertEqual(e['reference_load_parameters']['differential'],c['physical_services']['external_clock_input']['input_model'])
+            self.assertEqual(len(r['per_leg_bound_v']),2)
+            self.assertLess(max(r['per_leg_bound_v']),.6)
+            control,_=paired_environment(raw,e['reference_load_parameters']['differential'],ledger=e['ledger'])
+            np.testing.assert_allclose(e['periodic_clock']['edges_s'],control['periodic_clock']['edges_s'],rtol=0,atol=1e-20)
+        rejected,_=reference_payload_environment(raw,dict(link_r_ohm=1e-5),False,source_peak_v=4.)
+        self.assertIsNone(rejected)
+        with self.assertRaises(ValueError):reference_payload_environment(raw,{},True)
+
     def test_internal_switching_charge_fourier_ports_and_budget(self):
         from baseline_envelope import internal_switching_sources
         rate=156.25e6;tau=.2e-9;mean=.020;origin=.17/rate
@@ -84,9 +106,9 @@ class BaselineBudgetTests(unittest.TestCase):
             self.assertAlmostEqual(a.voltage(t*rate),b.voltage(t*rate),places=11)
 
     def test_actual_tx_events_preserve_transport_bits_and_chunking(self):
-        from baseline_envelope import selected_environment,reference_payload_environment,wired_transmit_transport,P
+        from baseline_envelope import selected_environment,single_ended_reference_payload_environment,wired_transmit_transport,P
         contract=json.loads((P/'spec/contract.json').read_text())
-        e,_=reference_payload_environment(selected_environment(contract,'wire',2.5e9,312.5e6),
+        e,_=single_ended_reference_payload_environment(selected_environment(contract,'wire',2.5e9,312.5e6),
             dict(link_r_ohm=1e-5),False,source_peak_v=.75)
         whole,trace=wired_transmit_transport(e,frames=16,host_service_ppm=-100.)
         split,other=wired_transmit_transport(e,frames=16,host_service_ppm=-100.,chunks=(3,5,8))
@@ -104,9 +126,9 @@ class BaselineBudgetTests(unittest.TestCase):
         self.assertEqual(trace['bits'],expected)
 
     def test_observed_reference_halt_drains_actual_tx_queue(self):
-        from baseline_envelope import selected_environment,reference_payload_environment,wired_transmit_transport,P
+        from baseline_envelope import selected_environment,single_ended_reference_payload_environment,wired_transmit_transport,P
         contract=json.loads((P/'spec/contract.json').read_text())
-        e,_=reference_payload_environment(selected_environment(contract,'wire',2.5e9,312.5e6),
+        e,_=single_ended_reference_payload_environment(selected_environment(contract,'wire',2.5e9,312.5e6),
             dict(link_r_ohm=1e-5),False,source_peak_v=.75)
         result,_=wired_transmit_transport(e,frames=16,reference_stop_s=.5e-6)
         self.assertEqual(result['flow']['fault'],'underflow')
@@ -156,12 +178,12 @@ class BaselineBudgetTests(unittest.TestCase):
             self.assertAlmostEqual(rx.voltage(time*1e-9*2.5e9),.4*float((c@state).item()),places=11)
 
     def test_wired_shared_rails_preserve_mode_budget_and_clock_ownership(self):
-        from baseline_envelope import selected_environment,reference_payload_environment,wired_shared_impairment,P
+        from baseline_envelope import selected_environment,single_ended_reference_payload_environment,wired_shared_impairment,P
         contract=json.loads((P/'spec/contract.json').read_text())
         original=selected_environment(contract,'wire',2.5e9,312.5e6)
-        e,report=reference_payload_environment(original,dict(link_r_ohm=1e-5),False)
+        e,report=single_ended_reference_payload_environment(original,dict(link_r_ohm=1e-5),False)
         self.assertIsNotNone(e)
-        self.assertAlmostEqual(report['ledger']['total_chip_supply_current_a'],.288)
+        self.assertAlmostEqual(report['ledger']['total_chip_supply_current_a'],.292)
         self.assertLess(abs(report['ledger']['power_balance_residual_w']),1e-12)
         impairment=wired_shared_impairment(e)
         self.assertTrue(any(t['frequency_hz']==2.5e9 for t in impairment['rail_tones']))
@@ -220,11 +242,11 @@ class BaselineBudgetTests(unittest.TestCase):
 
     def test_current_ownership_and_independent_resistive_node_solution(self):
         c=shared_board_candidate();n=c['network']
-        for mode,wire_current,total in [('rf',None,.236),('wire',None,.288),('wire',.050,.242)]:
+        for mode,wire_current,total in [('rf',None,.240),('wire',None,.292),('wire',.050,.246)]:
             r=selected_dc_ledger(mode,c,wire_current_a=wire_current)
             self.assertAlmostEqual(r['total_chip_supply_current_a'],total)
             self.assertAlmostEqual(r['host_node_current_a']+r['h2d_internal_current_within_host_a'],.110)
-            self.assertEqual(r['owner_current_a']['timing'],.040)
+            self.assertEqual(r['owner_current_a']['timing'],.044)
             gs=1/n['feed_r'];gp=1/n['package_r'];gg=1/c['return_r_ohm']
             vb,vd,vg=np.linalg.solve([[gs+gp,-gp,0],[-gp,gp,0],[0,0,gg]],
                 [gs*3.3-r['host_node_current_a'],-r['local_branch_current_a'],total])
@@ -301,7 +323,7 @@ class HSPadReturnTests(unittest.TestCase):
         for node in (None,0,1):
             r=usb_hs_output(e,ledger,drive_node=node)
             board=np.array(r['board_dc_v']);g=r['loaded_dc_ground_v']
-            self.assertAlmostEqual(g/e['network']['return_r_ohm']+sum(board)/45.,.242,places=12)
+            self.assertAlmostEqual(g/e['network']['return_r_ohm']+sum(board)/45.,.246,places=12)
             current=np.zeros(2)
             if node is not None:current[node]=.4/22.5
             die=np.array(r['die_local_dc_v'])+g
@@ -322,7 +344,7 @@ class HostRateTradeoffTests(unittest.TestCase):
             word=c['word_hz'];dc=c['ledger']
             self.assertGreaterEqual(c['d2h_harmonics']*word/2,1.875e9)
             self.assertGreaterEqual(c['h2d_harmonics']*word/2,937.5e6)
-            self.assertAlmostEqual(dc['total_chip_supply_current_a'],.242)
+            self.assertAlmostEqual(dc['total_chip_supply_current_a'],.246)
             self.assertAlmostEqual(dc['host_node_current_a']+dc['h2d_internal_current_within_host_a'],.110)
             for t in c['transport']:
                 # Independent accounting of six frame traversals, four queue
@@ -356,15 +378,15 @@ class PartitionedReturnTests(unittest.TestCase):
         e=selected_environment(json.loads((P/'spec/contract.json').read_text()),'wire',2.5e9,312.5e6);n=e['network'];c=.1
         rg=n['return_r_ohm'];rf=n['network']['feed_r'];rp=n['network']['package_r']
         for input_at_feed in (False,True):
-            host_feed=.110 if input_at_feed else .110-.0240625;local=.242-host_feed
-            source=[3.3/rf-host_feed,-local,.110,.132,0.]
+            host_feed=.110 if input_at_feed else .110-.0240625;local=.246-host_feed
+            source=[3.3/rf-host_feed,-local,.110,.136,0.]
             for fraction in (0.,.25,.5,.75):
                 result=partitioned_return_solution(0.,n,source,host_cap_fraction=fraction)
-                vb=3.3-rf*.242;common=c*rg*.242
+                vb=3.3-rf*.246;common=c*rg*.246
                 expected=[vb,vb-rp*local,common+2*(1-c)*rg*.110,
-                    common+2*(1-c)*rg*.132,common]
+                    common+2*(1-c)*rg*.136,common]
                 np.testing.assert_allclose(result['voltage'],expected,rtol=1e-12,atol=1e-14)
-                self.assertAlmostEqual((3.3-result['voltage'][0].real)/rf,.242,places=12)
+                self.assertAlmostEqual((3.3-result['voltage'][0].real)/rf,.246,places=12)
 
     def test_passive_power_balance_with_capacitive_and_conductive_coupling(self):
         from baseline_envelope import partitioned_return_solution,selected_environment,hs_pad_transfer,P
@@ -454,31 +476,31 @@ class PeriodicClockConsumerTests(unittest.TestCase):
         with self.assertRaises(ValueError):clock.crossing_error(ideal,carrier/2)
 
     def test_coupled_environment_balances_power_and_rejects_broken_clock(self):
-        from baseline_envelope import selected_environment,reference_payload_environment,P
+        from baseline_envelope import selected_environment,single_ended_reference_payload_environment,P
         contract=json.loads((P/'spec/contract.json').read_text())
         e=selected_environment(contract,'rf',2.4e9,2.4e9/16)
-        _,nominal=reference_payload_environment(e,dict(link_r_ohm=1e-5),False)
-        stronger,large=reference_payload_environment(e,dict(link_r_ohm=1e-5),False,source_peak_v=1.)
+        _,nominal=single_ended_reference_payload_environment(e,dict(link_r_ohm=1e-5),False)
+        stronger,large=single_ended_reference_payload_environment(e,dict(link_r_ohm=1e-5),False,source_peak_v=1.)
         self.assertIsNotNone(stronger)
         self.assertAlmostEqual(large['receiver_carrier_peak_v']/nominal['receiver_carrier_peak_v'],2.)
         self.assertAlmostEqual(large['source_carrier_return_peak_a']/nominal['source_carrier_return_peak_a'],2.)
         self.assertAlmostEqual(large['source_carrier_real_power_w']/nominal['source_carrier_real_power_w'],4.)
-        rejected,report=reference_payload_environment(e,dict(link_r_ohm=1e-5),False,source_peak_v=2.)
+        rejected,report=single_ended_reference_payload_environment(e,dict(link_r_ohm=1e-5),False,source_peak_v=2.)
         self.assertIsNone(rejected)
         self.assertEqual(report['status'],'clock_not_accepted_for_payload')
         for invalid in (0.,-1.,float('nan')):
             with self.assertRaises(ValueError):
-                reference_payload_environment(e,dict(link_r_ohm=1e-5),False,source_peak_v=invalid)
+                single_ended_reference_payload_environment(e,dict(link_r_ohm=1e-5),False,source_peak_v=invalid)
         for options,move in ((dict(link_r_ohm=1e-5),False),(dict(host_cap_fraction=.5,coupling_f=2e-12,host_return_share=.2),True)):
-            trial,r=reference_payload_environment(e,options,move)
+            trial,r=single_ended_reference_payload_environment(e,options,move)
             self.assertIsNotNone(trial)
             self.assertLess(abs(r['ledger']['power_balance_residual_w']),1e-12)
-            self.assertAlmostEqual(r['ledger']['total_chip_supply_current_a'],.236)
+            self.assertAlmostEqual(r['ledger']['total_chip_supply_current_a'],.240)
             self.assertEqual(trial['phase_components']['supply'],())
             self.assertEqual(trial['rail_maximum_offset_hz'],2.4e9)
             self.assertEqual(len(trial['periodic_clock']['edges_s']),r['resolved_crossings']['carrier_cycles'])
         bad=selected_environment(contract,'rf',2.4e9,2.4e9/16,return_l=2e-9,die_esl=1e-9)
-        trial,r=reference_payload_environment(bad,dict(link_r_ohm=1e-5),False)
+        trial,r=single_ended_reference_payload_environment(bad,dict(link_r_ohm=1e-5),False)
         self.assertIsNone(trial)
         self.assertEqual(r['status'],'clock_not_accepted_for_payload')
 

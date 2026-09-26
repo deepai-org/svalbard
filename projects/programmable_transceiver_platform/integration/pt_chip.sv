@@ -1,7 +1,7 @@
 // WIRE_RX is bidirectional for planned USB D+/D-; USB control/data macros remain unimplemented.
-// 50-terminal integration skeleton. Black-box macros are obligations, not fabricated IP.
+// 51-logical-terminal integration skeleton; physical ring retains 74 sites. Black-box macros are obligations, not fabricated IP.
 module pt_chip(
- input wire RESET_N,REF_IN,SPI_SCLK,SPI_CS_N,SPI_MOSI,output wire SPI_MISO,
+ input wire RESET_N,REF_IN,REF_IN_N,SPI_SCLK,SPI_CS_N,SPI_MOSI,output wire SPI_MISO,
  input wire[9:0]H2D,input wire H2D_CLK,output wire[9:0]D2H,output wire D2H_CLK,
  inout wire WIRE_RX_P,WIRE_RX_N,output wire WIRE_TX_P,WIRE_TX_N,
  input wire RF_RX_P,RF_RX_N,output wire RF_TX_P,RF_TX_N,
@@ -11,10 +11,10 @@ module pt_chip(
  wire ht,hr,wr,wt,rr,rt,enable,mode8,wv,wvalid,wrequest,rv,rvalid,rrequest,idle,mute,above;
  wire[9:0]h2d,d2h,wire_rx,wire_tx;wire[23:0]rf_rx,rf_tx;
  wire[15:0]rf_trim,wire_trim,clock_trim,status;wire[11:0]trial;
- pt_host_physical host(RESET_N,REF_IN,SPI_SCLK,SPI_CS_N,SPI_MOSI,SPI_MISO,
+ pt_host_physical host(RESET_N,SPI_SCLK,SPI_CS_N,SPI_MOSI,SPI_MISO,
  H2D,H2D_CLK,D2H,D2H_CLK,VDD_CORE,VSS_CORE,VDD_HOST_A,VSS_HOST_A,VDD_HOST_B,VSS_HOST_B,
- rst_n,ref_clk,sclk,cs_n,mosi,miso,miso_oe,ht,hr,h2d,d2h);
- pt_analog_physical analog(WIRE_RX_P,WIRE_RX_N,WIRE_TX_P,WIRE_TX_N,RF_RX_P,RF_RX_N,RF_TX_P,RF_TX_N,
+ rst_n,sclk,cs_n,mosi,miso,miso_oe,ht,hr,h2d,d2h);
+ pt_analog_physical analog(REF_IN,REF_IN_N,WIRE_RX_P,WIRE_RX_N,WIRE_TX_P,WIRE_TX_N,RF_RX_P,RF_RX_N,RF_TX_P,RF_TX_N,
  VDD_CORE,VSS_CORE,VDD_WIRE_A,VSS_WIRE_A,VDD_WIRE_B,VSS_WIRE_B,VDD_RF,VSS_RF,VDD_PLL,VSS_PLL,
  rst_n,ref_clk,enable,mode8,rf_trim,wire_trim,clock_trim,trial,above,
  ht,wr,wt,rr,rt,wire_rx,wv,wire_tx,wvalid,wrequest,idle,rf_rx,rv,rf_tx,rvalid,rrequest,mute);
@@ -25,19 +25,21 @@ endmodule
 
 // Must implement actual pads, level shifting, DDR capture/launch and clock phase alignment.
 (* blackbox *) module pt_host_physical(
- input wire RESET_N,REF_IN,SPI_SCLK,SPI_CS_N,SPI_MOSI,output wire SPI_MISO,
+ input wire RESET_N,SPI_SCLK,SPI_CS_N,SPI_MOSI,output wire SPI_MISO,
  input wire[9:0]H2D,input wire H2D_CLK,output wire[9:0]D2H,output wire D2H_CLK,
  inout wire VDD_CORE,VSS_CORE,VDD_HOST_A,VSS_HOST_A,VDD_HOST_B,VSS_HOST_B,
- output wire rst_n,ref_clk,sclk,cs_n,mosi,input wire miso,miso_oe,host_tx_clk,
+ output wire rst_n,sclk,cs_n,mosi,input wire miso,miso_oe,host_tx_clk,
  output wire host_rx_clk,output wire[9:0]h2d_word,input wire[9:0]d2h_word);
 endmodule
 
 // Internal architecture and circuit implementation tracked in macro-contract.md.
+// Differential reference protection/conditioning belongs here, not in host GPIO.
 (* blackbox *) module pt_analog_physical(
+ input wire REF_IN,REF_IN_N,
  inout wire WIRE_RX_P,WIRE_RX_N,output wire WIRE_TX_P,WIRE_TX_N,
  input wire RF_RX_P,RF_RX_N,output wire RF_TX_P,RF_TX_N,
  inout wire VDD_CORE,VSS_CORE,VDD_WIRE_A,VSS_WIRE_A,VDD_WIRE_B,VSS_WIRE_B,VDD_RF,VSS_RF,VDD_PLL,VSS_PLL,
- input wire rst_n,ref_clk,enable,mode8,input wire[15:0]rf_trim,wire_trim,clock_trim,
+ input wire rst_n,output wire ref_clk,input wire enable,mode8,input wire[15:0]rf_trim,wire_trim,clock_trim,
  input wire[11:0]calibration_trial,output wire calibration_above_target,
  output wire host_tx_clk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_tx_clk,
  output wire[9:0]wire_rx_data,output wire wire_rx_valid,input wire[9:0]wire_tx_data,

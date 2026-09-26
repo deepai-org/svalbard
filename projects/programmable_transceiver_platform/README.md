@@ -9,8 +9,8 @@ and custom software-defined radios by changing its configuration and FPGA logic.
 
 The ambition is one GF180MCU chip in one wafer.space slot, using the provider’s
 standard chip-on-board packaging and compatible pad ring. The selected physical
-allocation retains 74 provider sites: 36 functional signals, 18 fixed power/return
-sites and 20 spare signals. This supersedes the earlier approximate 50-terminal
+allocation retains 74 provider sites: 37 functional signals, 18 fixed power/return
+sites and 19 spare signals. This supersedes the earlier approximate 50-terminal
 drawing; electrical qualification of the assembly remains open.
 This is an active design: the capabilities below are targets, with partial
 mathematical evidence, not demonstrated silicon or certified protocol support.
@@ -153,8 +153,8 @@ pad/package/power coexistence; further reference-chip simulation is paused.
 The [keep-or-change decision](spec/risk-priorities.md#keep-or-change-decision-change-the-delivered-clock-architecture)
 keeps the full chip and selects a differential external clock input plus a lower
 clock supply-sensitivity requirement. It includes pin/current/area reservations.
-Migration of the executable baseline and diagram is the next task; the
-mathematical model and physical feasibility remain incomplete.
+The contract, diagram and selected payload clock model use this revision;
+mathematical verification and physical feasibility remain incomplete.
 
 For the [whole-architecture assessment and keep/change decisions](spec/risk-priorities.md#architecture-assessment-one-implementation-several-ways-to-succeed),
 start with the risk review. For current capability status and unresolved failures, use the

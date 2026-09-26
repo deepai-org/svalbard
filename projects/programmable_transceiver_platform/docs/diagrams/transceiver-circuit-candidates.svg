@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2600" height="30000" viewBox="0 0 2600 30000" role="img" aria-labelledby="title desc"><title id="title">Svalbard circuit-block schematic and approximate placement</title><desc id="desc">Explicit RF I and Q mixer, gain, filter and converter paths; PLL feedback loops; wired equalizer, sampler, CDR and serializer; programmable analog tiles; references and host control. All external terminals are at the perimeter. Intended circuits, not a completed transistor schematic.</desc><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L9 4 L0 8" fill="#233e50"/></marker></defs><rect width="2600" height="30000" fill="white"/><g font-family="DejaVu Sans,sans-serif">
 <text x="55" y="48" font-size="32" font-weight="600" text-anchor="start" fill="#172a3a">SVALBARD / CIRCUIT CANDIDATES — NOT NORMATIVE</text>
 <text x="55" y="80" font-size="21" font-weight="400" text-anchor="start" fill="#172a3a">Proposed connectivity with RF west, wired east, clocks north and digital south</text>
-<text x="2540" y="48" font-size="25" font-weight="600" text-anchor="end" fill="#172a3a">50 TERMINALS</text>
-<text x="2540" y="80" font-size="19" font-weight="400" text-anchor="end" fill="#172a3a">36 signal + 14 supply / return</text>
+<text x="2540" y="48" font-size="25" font-weight="600" text-anchor="end" fill="#172a3a">74 PROVIDER SITES</text>
+<text x="2540" y="80" font-size="19" font-weight="400" text-anchor="end" fill="#172a3a">37 signals + 18 fixed + 19 spare</text>
 <text x="55" y="120" font-size="19" font-weight="600" text-anchor="start" fill="#172a3a">RF OR WIRED PAYLOAD ACTIVE — not simultaneous</text>
 <text x="55" y="150" font-size="17" font-weight="400" text-anchor="start" fill="#172a3a">Shared services; further analog / clock sharing under evaluation</text>
 <rect x="120" y="190" width="2280" height="1920" fill="#fcfdfe" stroke="#8196a6" stroke-width="2"/>
 <rect x="1100" y="110" width="270" height="65" fill="#f7f9fb" stroke="#233e50" stroke-width="2"/>
-<text x="1235.0" y="142.5" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">REF_IN</text>
-<text x="1235.0" y="166.5" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">1 terminal</text>
+<text x="1235.0" y="142.5" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">REF_IN/N</text>
+<text x="1235.0" y="166.5" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">2 terminals</text>
 <rect x="1145" y="210" width="180" height="58" fill="white" stroke="#233e50" stroke-width="2"/>
 <text x="1235.0" y="245.0" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">REF buffer</text>
 <path d="M 1235,175 L 1235,210" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
@@ -598,7 +598,7 @@
 <path d="M 585,3032 L 680,3032" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
 <path d="M 880,3032 L 975,3032" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
 <circle cx="185" cy="2980" r="4" fill="#233e50"/>
-<text x="185" y="2968" font-size="16" font-weight="600" text-anchor="middle" fill="#172a3a">REF_IN</text>
+<text x="185" y="2968" font-size="16" font-weight="600" text-anchor="middle" fill="#172a3a">REF_IN/N</text>
 <path d="M 185,2980 L 185,3000" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4" marker-end="url(#arrow)"/>
 <circle cx="477" cy="2980" r="4" fill="#233e50"/>
 <text x="477" y="2968" font-size="16" font-weight="600" text-anchor="middle" fill="#172a3a">PLL / CDR OBS</text>
@@ -826,7 +826,7 @@
 <text x="1318" y="4954" font-size="22" font-weight="600" text-anchor="start" fill="#172a3a">RF CLOCK ACQUISITION — COUNT, COARSE TUNE, FINE LOOP</text>
 <rect x="1330" y="5035" width="180" height="65" fill="white" stroke="#233e50" stroke-width="2"/>
 <text x="1420.0" y="5067.5" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">REF buffer</text>
-<text x="1420.0" y="5091.5" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">REF_IN</text>
+<text x="1420.0" y="5091.5" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">REF_IN/N</text>
 <rect x="1600" y="5035" width="210" height="65" fill="white" stroke="#233e50" stroke-width="2"/>
 <text x="1705.0" y="5067.5" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">Window / timer</text>
 <text x="1705.0" y="5091.5" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">REF ticks</text>
@@ -1564,7 +1564,7 @@
 <text x="95" y="14390" font-size="16" font-weight="400" text-anchor="start" fill="#172a3a">Control bundles contain independent signals. Reset release is synchronized per destination clock; analog startup remains a separate circuit obligation.</text>
 <text x="55" y="14460" font-size="17" font-weight="400" text-anchor="start" fill="#172a3a">These connections complete service routing at circuit-block granularity. Component pins, values and parasitics require the subsequent electrical schematic.</text>
 <text x="55" y="14545" font-size="29" font-weight="600" text-anchor="start" fill="#172a3a">PACKAGE-TO-CIRCUIT WIRING / DOMAIN CROSSINGS</text>
-<text x="55" y="14585" font-size="18" font-weight="400" text-anchor="start" fill="#172a3a">Same 50 terminals as the overview. Named destinations join existing sheets; no additional external test or bias pins.</text>
+<text x="55" y="14585" font-size="18" font-weight="400" text-anchor="start" fill="#172a3a">Same 74 provider sites as the overview. Named destinations join existing sheets; no additional external test or bias pins.</text>
 <rect x="55" y="14620" width="2490" height="810" fill="#f1f8f5" stroke="#b5c3ce" stroke-width="2" stroke-dasharray="8 6"/>
 <text x="73" y="14649" font-size="22" font-weight="600" text-anchor="start" fill="#172a3a">ANALOG TERMINALS — EACH P AND N CONDUCTOR REMAINS INDEPENDENT</text>
 <rect x="100" y="14720" width="270" height="105" fill="white" stroke="#233e50" stroke-width="2"/>
@@ -1760,10 +1760,10 @@
 <path d="M 380,16807 L 665,16807" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
 <path d="M 1255,16807 L 1670,16807" fill="none" stroke="#233e50" stroke-width="2.5" marker-end="url(#arrow)"/>
 <rect x="90" y="16885" width="290" height="65" fill="white" stroke="#233e50" stroke-width="2"/>
-<text x="235.0" y="16917.5" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">REF_IN</text>
+<text x="235.0" y="16917.5" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">REF_IN/N</text>
 <text x="235.0" y="16941.5" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">one perimeter terminal</text>
 <rect x="665" y="16885" width="590" height="65" fill="white" stroke="#233e50" stroke-width="2"/>
-<text x="960.0" y="16923.5" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">Qualified reference input buffer</text>
+<text x="960.0" y="16923.5" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">Differential reference input buffer</text>
 <rect x="1670" y="16885" width="790" height="65" fill="white" stroke="#233e50" stroke-width="2"/>
 <text x="2065.0" y="16923.5" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">RF PLL / wired PLL / timing reference</text>
 <path d="M 380,16917 L 665,16917" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4" marker-end="url(#arrow)"/>
@@ -2457,7 +2457,7 @@
 <path d="M 850,27880 L 415,27880 L 415,27720" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4" marker-end="url(#arrow)"/>
 <text x="100" y="28015" font-size="20" font-weight="400" text-anchor="start" fill="#172a3a">RF: HE20 Wi-Fi / LE / BR-EDR / O-QPSK / LoRa. Independent waveform, hopping and turnaround gates.</text>
 <text x="100" y="28065" font-size="20" font-weight="400" text-anchor="start" fill="#172a3a">Serial: 0.480–2.50 Gb/s; video x10 fractional references; HD-SDI 1.485 and 1.485/1.001 Gb/s (external coax).</text>
-<text x="100" y="28115" font-size="20" font-weight="400" text-anchor="start" fill="#172a3a">One resource configuration; DP one RBR lane; RF one 20 MHz stream. 50 terminals, 12.92 mm² allocation ceiling.</text>
+<text x="100" y="28115" font-size="20" font-weight="400" text-anchor="start" fill="#172a3a">One resource configuration; DP one RBR lane; RF one 20 MHz stream. 74 provider sites, 12.92 mm² allocation ceiling.</text>
 <text x="100" y="28165" font-size="20" font-weight="400" text-anchor="start" fill="#172a3a">Shared-pad capacitance and FPGA response latency are feasibility gates, not assumptions of successful support.</text>
 <text x="55" y="28380" font-size="30" font-weight="600" text-anchor="start" fill="#172a3a">HDMI / DVI — THREE IDENTICAL SINGLE-LANE DIES</text>
 <text x="55" y="28425" font-size="20" font-weight="400" text-anchor="start" fill="#172a3a">Board assembly, not extra lanes on the 1x1 die. Source shown; sink reverses data direction.</text>
@@ -2473,7 +2473,7 @@
 <rect x="2240" y="28645" width="300" height="90" fill="white" stroke="#233e50" stroke-width="2"/>
 <text x="2390.0" y="28690.0" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">TMDS DATA 0</text>
 <text x="2390.0" y="28714.0" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">one differential pair</text>
-<text x="1395" y="28750" font-size="17" font-weight="400" text-anchor="middle" fill="#172a3a">REF_IN / x10 word clock / phase control</text>
+<text x="1395" y="28750" font-size="17" font-weight="400" text-anchor="middle" fill="#172a3a">REF_IN/N pair / x10 word clock / phase control</text>
 <rect x="1050" y="28900" width="700" height="180" fill="#f0f8f4" stroke="#233e50" stroke-width="2"/>
 <text x="1400.0" y="28990.0" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">Chip 1: existing wired lane</text>
 <text x="1400.0" y="29014.0" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">host FIFO &gt; serializer / sampler &gt; DC pad</text>
@@ -2483,7 +2483,7 @@
 <rect x="2240" y="28945" width="300" height="90" fill="white" stroke="#233e50" stroke-width="2"/>
 <text x="2390.0" y="28990.0" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">TMDS DATA 1</text>
 <text x="2390.0" y="29014.0" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">one differential pair</text>
-<text x="1395" y="29050" font-size="17" font-weight="400" text-anchor="middle" fill="#172a3a">REF_IN / x10 word clock / phase control</text>
+<text x="1395" y="29050" font-size="17" font-weight="400" text-anchor="middle" fill="#172a3a">REF_IN/N pair / x10 word clock / phase control</text>
 <rect x="1050" y="29200" width="700" height="180" fill="#f0f8f4" stroke="#233e50" stroke-width="2"/>
 <text x="1400.0" y="29290.0" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">Chip 2: existing wired lane</text>
 <text x="1400.0" y="29314.0" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">host FIFO &gt; serializer / sampler &gt; DC pad</text>
@@ -2493,7 +2493,7 @@
 <rect x="2240" y="29245" width="300" height="90" fill="white" stroke="#233e50" stroke-width="2"/>
 <text x="2390.0" y="29290.0" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">TMDS DATA 2</text>
 <text x="2390.0" y="29314.0" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">one differential pair</text>
-<text x="1395" y="29350" font-size="17" font-weight="400" text-anchor="middle" fill="#172a3a">REF_IN / x10 word clock / phase control</text>
+<text x="1395" y="29350" font-size="17" font-weight="400" text-anchor="middle" fill="#172a3a">REF_IN/N pair / x10 word clock / phase control</text>
 <rect x="1040" y="29600" width="700" height="130" fill="#f9f1fb" stroke="#233e50" stroke-width="2"/>
 <text x="1390.0" y="29665.0" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">External clock driver / receiver + fanout</text>
 <text x="1390.0" y="29689.0" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">TMDS clock pair; 74.25/1.001–148.5 MHz</text>
@@ -2506,7 +2506,7 @@
 <path d="M 1040,29665 L 950,29665" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4"/>
 <path d="M 950,28870 L 1400,28870 L 1400,28900" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4"/>
 <path d="M 950,29170 L 1400,29170 L 1400,29200" fill="none" stroke="#80549c" stroke-width="2.5" stroke-dasharray="7 4"/>
-<text x="55" y="29810" font-size="19" font-weight="400" text-anchor="start" fill="#172a3a">Each die: 50 terminals, one wafer.space slot; RF payload off. FPGA/board owns DDC, HPD, 5 V and optional CEC.</text>
+<text x="55" y="29810" font-size="19" font-weight="400" text-anchor="start" fill="#172a3a">Each die: 74 provider sites, one wafer.space slot; RF payload off. FPGA/board owns DDC, HPD, 5 V and optional CEC.</text>
 <text x="55" y="29860" font-size="19" font-weight="400" text-anchor="start" fill="#172a3a">720p / 1080p: integer and /1.001 clocks; intermediate x10 rates. Framed GPIO links; no chip protocol IDs.</text>
 <text x="55" y="29910" font-size="19" font-weight="400" text-anchor="start" fill="#172a3a">Open gates: DC pad / ESD, x10 clock and word phase, cross-die skew, FIFO / CDC, independent video compliance.</text>
 </g></svg>

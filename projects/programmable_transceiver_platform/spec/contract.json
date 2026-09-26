@@ -1,8 +1,8 @@
 {
-  "version": 5,
+  "version": 6,
   "status": "design_targets_not_qualified",
   "limits": {
-    "total_terminals": 50,
+    "total_terminals": 51,
     "core_area_um2": 12920000
   },
   "pins": [
@@ -57,7 +57,14 @@
     {
       "name": "REF_IN",
       "direction": "in",
-      "kind": "reference"
+      "kind": "reference",
+      "role": "positive leg of differential reference/LO input"
+    },
+    {
+      "name": "REF_IN_N",
+      "direction": "in",
+      "kind": "reference",
+      "role": "negative leg of differential reference/LO input"
     },
     {
       "name": "HOST_CS_N",
@@ -269,10 +276,10 @@
     "wired": 2350000,
     "rf": 2400000,
     "converters": 1300000,
-    "timing": 1450000,
+    "timing": 1600000,
     "digital": 1650000,
     "memory": 850000,
-    "reserve": 2920000
+    "reserve": 2770000
   },
   "transport": {
     "word_bits": 10,
@@ -580,6 +587,24 @@
       "encoding_owner": "External FPGA: TMDS/control symbols, HDMI packets/audio/guard bands, optional HDCP; chip transfers opaque 10-bit words",
       "electrical": "DC current-sink differential TX; RX 50 ohm per leg to 3.3 V, disabled for AC serial modes; source/sink and voltage tolerance unqualified",
       "per_die_constraints_unchanged": true
+    },
+    "external_clock_input": {
+      "topology": "differential",
+      "pins": [
+        "REF_IN",
+        "REF_IN_N"
+      ],
+      "source_differential_peak_v": 1.0,
+      "supply_sensitivity_ps_per_mv": 0.025,
+      "supply_delay_pole_hz": 1000000000.0,
+      "input_current_allowance_ma": 12,
+      "total_timing_current_ma": 44,
+      "status": "selected_requirements_not_physical_qualification",
+      "input_model": {
+        "mismatch": 0.2,
+        "opposed": false,
+        "cm_gain": -0.1
+      }
     }
   },
   "protocol_profiles": [
@@ -1470,8 +1495,7 @@
     "cost_policy": "Reuse clock dividers, switched RC filter banks and PGA trims; no extra lane, pins, modem or on-chip resampler; physical area/power delta unestimated",
     "rx_filter_order": 5,
     "external_lo_sampling_candidate": {
-      "status": "numeric_waveform_and_rate_candidate_not_selected_or_physical_qualification",
-      "input_pin": "REF_IN",
+      "status": "selected_architecture_not_physical_qualification",
       "lo_range_hz": [
         2400000000.0,
         2484000000.0
@@ -1485,12 +1509,16 @@
       "sample_rate_rule": "sample_hz = lo_hz / lo_divider; no independent 40 MHz input in this mode",
       "candidate_d2h_clock_divider": 16,
       "fpga_resampling": "Optional external FPGA finite FIR; explicit latency and cost in robustness-envelope.json",
-      "additional_signal_pins": 0,
+      "additional_signal_pins": 1,
       "unresolved": [
         "physical clock receiver, quadrature, divider and noise",
         "live clock-edge ownership and host pacing/recovery",
         "area and complete power ledger",
         "FPGA resampler throughput and coefficient precision"
+      ],
+      "input_pins": [
+        "REF_IN",
+        "REF_IN_N"
       ]
     }
   },
@@ -1630,7 +1658,8 @@
       "HOST_CS_N": "bidir[10].pad",
       "HOST_SCLK": "bidir[11].pad",
       "HOST_MOSI": "bidir[12].pad",
-      "HOST_MISO": "bidir[13].pad"
+      "HOST_MISO": "bidir[13].pad",
+      "REF_IN_N": "inputs[0].pad"
     }
   },
   "generic_control_surface": {

@@ -48,12 +48,12 @@ def panel(x,y,w,h,title,fill):
 put('''<svg xmlns="http://www.w3.org/2000/svg" width="2600" height="30000" viewBox="0 0 2600 30000" role="img" aria-labelledby="title desc"><title id="title">Svalbard circuit-block schematic and approximate placement</title><desc id="desc">Explicit RF I and Q mixer, gain, filter and converter paths; PLL feedback loops; wired equalizer, sampler, CDR and serializer; programmable analog tiles; references and host control. All external terminals are at the perimeter. Intended circuits, not a completed transistor schematic.</desc><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L9 4 L0 8" fill="#233e50"/></marker></defs><rect width="2600" height="30000" fill="white"/><g font-family="DejaVu Sans,sans-serif">''')
 label(55,48,'SVALBARD / CIRCUIT CANDIDATES — NOT NORMATIVE',32,True,'start')
 label(55,80,'Proposed connectivity with RF west, wired east, clocks north and digital south',21,anchor='start')
-label(2540,48,'50 TERMINALS',25,True,'end');label(2540,80,'36 signal + 14 supply / return',19,anchor='end')
+label(2540,48,'74 PROVIDER SITES',25,True,'end');label(2540,80,'37 signals + 18 fixed + 19 spare',19,anchor='end')
 label(55,120,'RF OR WIRED PAYLOAD ACTIVE — not simultaneous',19,True,'start')
 label(55,150,'Shared services; further analog / clock sharing under evaluation',17,anchor='start')
 rect(120,190,2280,1920,'#fcfdfe','#8196a6')
 # external ref and split
-pin(1100,110,270,'REF_IN','1 terminal')
+pin(1100,110,270,'REF_IN/N','2 terminals')
 block(1145,210,180,58,'REF buffer')
 wire([(1235,175),(1235,210)])
 wire([(1145,239),(345,239),(345,338)],clock=True)
@@ -324,7 +324,7 @@ block(370,3000,215,65,'Lock qualifier','RF / wired / CDR')
 block(680,3000,200,65,'Run controller','reset / arm / fault')
 block(975,3000,235,65,'Local clock gates','sample / update / TX')
 for a,b in [(280,370),(585,680),(880,975)]:wire([(a,3032),(b,3032)])
-port(185,2980,'REF_IN');wire([(185,2980),(185,3000)],clock=True)
+port(185,2980,'REF_IN/N');wire([(185,2980),(185,3000)],clock=True)
 port(477,2980,'PLL / CDR OBS');wire([(477,2980),(477,3000)],clock=True)
 block(90,3160,220,65,'Calibration FSM','request / compare')
 block(425,3160,220,65,'Trim registers','bias / offset / tune')
@@ -445,7 +445,7 @@ label(90,5510,'*Memory requests from SPI / RX capture / TX playback are arbitrat
 label(90,5540,'Capture: RF / wired RX taps → memory. Playback: MEM_TX_RF / WIRE.',16,anchor='start')
 
 panel(1300,4925,1245,635,'RF CLOCK ACQUISITION — COUNT, COARSE TUNE, FINE LOOP','#f8f3fc')
-block(1330,5035,180,65,'REF buffer','REF_IN')
+block(1330,5035,180,65,'REF buffer','REF_IN/N')
 block(1600,5035,210,65,'Window / timer','REF ticks')
 block(1910,5035,245,65,'Coarse controller','search / guard / qualify')
 block(2265,5035,240,65,'VCO bank latch','coarse frequency')
@@ -826,7 +826,7 @@ label(55,14460,'These connections complete service routing at circuit-block gran
 
 # Package boundary detail: separate electrical conductors and receiving pins.
 label(55,14545,'PACKAGE-TO-CIRCUIT WIRING / DOMAIN CROSSINGS',29,True,'start')
-label(55,14585,'Same 50 terminals as the overview. Named destinations join existing sheets; no additional external test or bias pins.',18,anchor='start')
+label(55,14585,'Same 74 provider sites as the overview. Named destinations join existing sheets; no additional external test or bias pins.',18,anchor='start')
 panel(55,14620,2490,810,'ANALOG TERMINALS — EACH P AND N CONDUCTOR REMAINS INDEPENDENT','#f1f8f5')
 for row,(name,dest,domain,tx) in enumerate([
  ('RF_RX','LNA differential input','RF',False),
@@ -876,13 +876,13 @@ for i,(pinname,condition,destination,reverse) in enumerate([
  ('HOST_MOSI','Input pad / domain boundary','SPI shift-register data input',False),
  ('HOST_MISO','Tristate output pad / domain boundary','SPI readback shift-register Q',True),
  ('RESET_N','Input pad / reset qualification','Async assert → per-domain sync release',False),
- ('REF_IN','Qualified reference input buffer','RF PLL / wired PLL / timing reference',False)]):
+ ('REF_IN/N','Differential reference input buffer','RF PLL / wired PLL / timing reference',False)]):
     y=16335+i*110
     block(90,y,290,65,pinname,'one perimeter terminal')
     block(665,y,590,65,condition)
     block(1670,y,790,65,destination)
     for a,b in [(380,665),(1255,1670)]:
-        wire([(b,y+32),(a,y+32)] if reverse else [(a,y+32),(b,y+32)],clock=pinname in ('HOST_SCLK','REF_IN'))
+        wire([(b,y+32),(a,y+32)] if reverse else [(a,y+32),(b,y+32)],clock=pinname in ('HOST_SCLK','REF_IN/N'))
 # MISO enable is a distinct control conductor, not the output data net.
 wire([(1600,16615),(1600,16645),(940,16645),(940,16665)])
 label(1600,16605,'SPI_SELECTED',14)
@@ -1283,7 +1283,7 @@ wire([(1915,27720),(1915,27880),(1320,27880)])
 wire([(850,27880),(415,27880),(415,27720)],clock=True)
 label(100,28015,'RF: HE20 Wi-Fi / LE / BR-EDR / O-QPSK / LoRa. Independent waveform, hopping and turnaround gates.',20,anchor='start')
 label(100,28065,'Serial: 0.480–2.50 Gb/s; video x10 fractional references; HD-SDI 1.485 and 1.485/1.001 Gb/s (external coax).',20,anchor='start')
-label(100,28115,'One resource configuration; DP one RBR lane; RF one 20 MHz stream. 50 terminals, 12.92 mm² allocation ceiling.',20,anchor='start')
+label(100,28115,'One resource configuration; DP one RBR lane; RF one 20 MHz stream. 74 provider sites, 12.92 mm² allocation ceiling.',20,anchor='start')
 label(100,28165,'Shared-pad capacitance and FPGA response latency are feasibility gates, not assumptions of successful support.',20,anchor='start')
 
 video_start = len(A)
@@ -1297,7 +1297,7 @@ for i,y in enumerate((28600,28900,29200)):
     label(845,y+55,'10-bit host + clock',18)
     wire([(1750,y+90),(2240,y+90)],False)
     block(2240,y+45,300,90,f'TMDS DATA {i}','one differential pair')
-    label(1395,y+150,'REF_IN / x10 word clock / phase control',17)
+    label(1395,y+150,'REF_IN/N pair / x10 word clock / phase control',17)
 block(1040,29600,700,130,'External clock driver / receiver + fanout','TMDS clock pair; 74.25/1.001–148.5 MHz','#f9f1fb')
 wire([(385,29540),(385,29665),(1040,29665)],False,True)
 wire([(1740,29665),(2240,29665)],False,True)
@@ -1305,7 +1305,7 @@ block(2240,29615,300,100,'TMDS CLOCK','fourth cable pair')
 wire([(950,29665),(950,28510),(1400,28510),(1400,28600)],False,True)
 wire([(1040,29665),(950,29665)],False,True)
 for y in (28900,29200):wire([(950,y-30),(1400,y-30),(1400,y)],False,True)
-label(55,29810,'Each die: 50 terminals, one wafer.space slot; RF payload off. FPGA/board owns DDC, HPD, 5 V and optional CEC.',19,anchor='start')
+label(55,29810,'Each die: 74 provider sites, one wafer.space slot; RF payload off. FPGA/board owns DDC, HPD, 5 V and optional CEC.',19,anchor='start')
 label(55,29860,'720p / 1080p: integer and /1.001 clocks; intermediate x10 rates. Framed GPIO links; no chip protocol IDs.',19,anchor='start')
 label(55,29910,'Open gates: DC pad / ESD, x10 clock and word phase, cross-die skew, FIFO / CDC, independent video compliance.',19,anchor='start')
 

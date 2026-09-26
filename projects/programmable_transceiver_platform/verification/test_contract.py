@@ -16,7 +16,7 @@ class ContractTests(unittest.TestCase):
         self.assertIsNone(r['storage']['physical_instance_bits'])
         self.assertEqual(r['area']['allocated_um2'],12920000)
         self.assertEqual(r['area']['unallocated_um2'],0)
-        self.assertEqual(r['area']['explicit_reserve_um2'],2920000)
+        self.assertEqual(r['area']['explicit_reserve_um2'],2770000)
         self.assertEqual(r['total_allocated_current_ma'],350)
         self.assertEqual(r['terminals']['supply_return'],14)
         self.c['power']['domains'][0]['per_connection_budget_ma']=40
@@ -32,9 +32,9 @@ class ContractTests(unittest.TestCase):
     def test_physical_sites_cannot_be_hidden_by_logical_budget(self):
         r=assembly_ledger(self.c)
         self.assertEqual((r['provider_sites'],r['provider_signal_sites'],r['fixed_supply_return_sites']),(74,56,18))
-        self.assertEqual(r['required_signals_plus_fixed_supply_sites'],54)
+        self.assertEqual(r['required_signals_plus_fixed_supply_sites'],55)
         self.assertEqual(r['minimum_excess_over_logical_target'],4)
-        self.assertEqual(r['spare_signal_sites'],20)
+        self.assertEqual(r['spare_signal_sites'],19)
         self.assertFalse(r['closed'])
         self.assertIsNone(r['delivered_board_terminal_count'])
         sites=self.c['assembly_policy']['provider_site_inventory']['ordered_sites_by_side']
@@ -46,6 +46,9 @@ class ContractTests(unittest.TestCase):
         mapping['REF_IN']='dvss_pads[5].pad'
         with self.assertRaisesRegex(ValueError,'fixed supply site'):assembly_ledger(self.c)
         mapping['REF_IN']='inputs[1].pad'
+        mapping['REF_IN_N']='inputs[2].pad'
+        with self.assertRaisesRegex(ValueError,'reference pair adjacency'):assembly_ledger(self.c)
+        mapping['REF_IN_N']='inputs[0].pad'
         mapping['RF_RX_N']='inputs[9].pad'
         with self.assertRaisesRegex(ValueError,'pair adjacency'):assembly_ledger(self.c)
         mapping['RF_RX_N']='inputs[10].pad'

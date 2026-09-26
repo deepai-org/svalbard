@@ -20,8 +20,8 @@ from converter_dynamics import SARParameters, load_response, response_change, to
 
 
 MODE_CURRENT_A = {
-    'rf': dict(core=.040, host=.110, timing=.040, rf=.044, wire=.002),
-    'wire': dict(core=.040, host=.110, timing=.040, rf=.002, wire=.096),
+    'rf': dict(core=.040, host=.110, timing=.044, rf=.044, wire=.002),
+    'wire': dict(core=.040, host=.110, timing=.044, rf=.002, wire=.096),
 }
 
 
@@ -40,7 +40,7 @@ def selected_dc_ledger(mode, candidate, *, source_v=3.3, h2d_internal_a=.0240625
 
     Unspent HOST allocation is a constant feed-node burden. Its switching
     spectrum is unknown, not silently represented by a duplicate clock load.
-    All timing static and switching power is already inside the 40 mA budget.
+    All timing static and switching power is already inside the 44 mA budget.
     """
     budget=dict(MODE_CURRENT_A[mode])
     if wire_current_a is not None:
@@ -87,6 +87,11 @@ def rail_excursion(tones, *, dc_v, samples_per_fastest_period=16):
 
 
 def selected_environment(contract, mode, carrier, word, *, return_l=BASELINE_PACKAGE[1], die_esl=BASELINE_PACKAGE[2], external_input=None):
+    """Electrical seed; use reference_payload_environment for the selected delivered clock.
+
+    Direct consumers are retained pre-migration diagnostic controls, not a
+    differential input model. USB static screens intentionally omit REF loading.
+    """
     candidate=shared_board_candidate()
     candidate['return_l_h']=return_l
     candidate['network'].update(die_c=500e-12,die_esr=.5,die_esl=die_esl)
@@ -98,12 +103,13 @@ def selected_environment(contract, mode, carrier, word, *, return_l=BASELINE_PAC
     # AC network is linear and independent of DC. Replace the legacy ledger
     # before any rail/headroom consumer, including real packet campaigns.
     e['ledger']=selected_dc_ledger(mode,candidate)
+    e['clock_input_configuration']=dict(contract['physical_services']['external_clock_input'])
     e['control_hz']=e['host_spectrum']['h2d_word_hz']/8
     e['control_clock_owner']='FPGA H2D physical DDR clock divided by four; SPI/reset recovery is separate'
     return e
 
 
-def narrowband_exchange(contract,*,source_peak_v=.5,include_swing_controls=True):
+def narrowband_exchange(contract,*,source_peak_v=1.,include_swing_controls=True):
     rows=[]
     for label,return_l,die_esl in NETWORK_CASES:
         e=selected_environment(contract,'rf',2.426e9,2.426e9/16,return_l=return_l,die_esl=die_esl)
@@ -176,7 +182,7 @@ def narrowband_exchange(contract,*,source_peak_v=.5,include_swing_controls=True)
         source_swing_control_scope='Same package catalog, receiver and reply chain, with independent calibration at 0.75 V external Thevenin peak; does not replace the 0.5 V baseline. Previous-environment attribution controls are baseline-only.',
         source_swing_controls=[narrowband_exchange(contract,source_peak_v=.75,include_swing_controls=False)]
             if include_swing_controls else [],
-        scope='Actual LE 1M request/reply with causal paired SAR state, code-driven delayed AGC, 18 ns conversion latency and each capture\'s own reference-current feedback. Selected fifth-order all-pole narrow RX and third-order TX. Shared 236 mA allocation, corrected coupled REF_IN events and uninterrupted source phase; recharge-induced input voltage and supply delay perturb actual roots. The solved load tail relaxes before timed reply rather than being reset at RX end. Clock rejection and failed independent calibration stop dependent cases explicitly. Same-grid old-environment and blocker-removal controls retain the current-package seed-719 failure. Both uncorrected timing and independent fixed calibration are retained. RF threshold remains diagnostic; six held-out seeds per package are not a PER estimate.')
+        scope='Actual LE 1M request/reply with causal paired SAR state, code-driven delayed AGC, 18 ns conversion latency and each capture\'s own reference-current feedback. Selected fifth-order all-pole narrow RX and third-order TX. Shared 240 mA allocation, corrected coupled REF_IN events and uninterrupted source phase; recharge-induced input voltage and supply delay perturb actual roots. The solved load tail relaxes before timed reply rather than being reset at RX end. Clock rejection and failed independent calibration stop dependent cases explicitly. Same-grid old-environment and blocker-removal controls retain the current-package seed-719 failure. Both uncorrected timing and independent fixed calibration are retained. RF threshold remains diagnostic; six held-out seeds per package are not a PER estimate.')
 
 
 def converter_feedback(contract):
@@ -243,7 +249,7 @@ def transmitter_wake_campaign(contract):
         _,long_guard=driver_wake_response(e,released_current_a=.028,wake_start_s=2e-6,grid_s=.5e-9,guard_s=16e-6,reference_input={})
         rows.append(dict(network_case=label,carrier_hz=e['carrier_hz'],clock=clock,cases=cases,resolution_control=fine,guard_control=long_guard))
     return dict(cases=rows,complete=False,
-        scope='Warm, partial and full driver wake hypotheses within the same 236 mA maximum mode allocation. Corrected REF_IN clock and coupled local-load transfer include direct input-voltage perturbations, supply delay and returned carrier. Guarded FFT response uses 0.5/0.25 ns grids and 8/16 us guard controls; ideal linear-ramp corners make peak estimates resolution-sensitive. Host ripple, moving reference, clock crossings and RF port observation are joined. These are bounded load transitions, not a transistor prediction or proof of analog wake readiness. Known DATA training can hide early transient damage; real preamble acquisition and emissions remain open.')
+        scope='Warm, partial and full driver wake hypotheses within the same 240 mA maximum mode allocation. Corrected REF_IN clock and coupled local-load transfer include direct input-voltage perturbations, supply delay and returned carrier. Guarded FFT response uses 0.5/0.25 ns grids and 8/16 us guard controls; ideal linear-ramp corners make peak estimates resolution-sensitive. Host ripple, moving reference, clock crossings and RF port observation are joined. These are bounded load transitions, not a transistor prediction or proof of analog wake readiness. Known DATA training can hide early transient damage; real preamble acquisition and emissions remain open.')
 
 
 def wired_transmit_transport(environment,*,host_service_ppm=0.,frames=512,
@@ -315,7 +321,7 @@ def wired_transmit_transport(environment,*,host_service_ppm=0.,frames=512,
     return report,trace
 
 
-def wired_transmit_campaign(contract,*,source_peak_v=.5,include_swing_controls=True):
+def wired_transmit_campaign(contract,*,source_peak_v=1.,include_swing_controls=True):
     """Delivered TX edges through a finite channel to an independent peer CDR."""
     from selected_rf import DeliveredClock
     rows=[]
@@ -454,7 +460,7 @@ def wired_recovery_campaign(contract):
                     ctle_zero_s=selected_impairment.get('ctle_zero_s'),ctle_pole_s=selected_impairment.get('ctle_pole_s'),
                     lifecycle=lifecycle,analog_diagnostics=diagnostics))
     return dict(cases=rows,complete=False,selected_ctle=dict(zero_s=200e-12,pole_s=80e-12,dc_gain=1.,high_frequency_gain=2.5),
-        scope='Selected 288 mA allocation with corrected coupled REF_IN loading and returned carrier on the shared rails. TX reference rejection gates full-duplex cases, not RX-only capability. RX aperture uses assigned local supply sensitivity independently of TX reference phase; supply-proportional local RX gain joins causal CDR, bounded raw/status transport and FPGA marker framing. Independent +/-100 ppm host/line clocks, line gaps, host-clock halt and explicit restart. Reference-presence pulses and independent watchdog are lifecycle stimuli, not a qualified clock monitor. No SATA ALIGN, PCIe LTSSM, USB electrical lifecycle or protocol qualification. Physical clock distribution, analog pad transitions and host GPIO timing remain open.')
+        scope='Selected 292 mA allocation with corrected coupled REF_IN loading and returned carrier on the shared rails. TX reference rejection gates full-duplex cases, not RX-only capability. RX aperture uses assigned local supply sensitivity independently of TX reference phase; supply-proportional local RX gain joins causal CDR, bounded raw/status transport and FPGA marker framing. Independent +/-100 ppm host/line clocks, line gaps, host-clock halt and explicit restart. Reference-presence pulses and independent watchdog are lifecycle stimuli, not a qualified clock monitor. No SATA ALIGN, PCIe LTSSM, USB electrical lifecycle or protocol qualification. Physical clock distribution, analog pad transitions and host GPIO timing remain open.')
 
 
 def pad_ground_tones(environment):
@@ -579,7 +585,7 @@ def usb_internal_campaign(contract):
         for name,termination,bonds in (('matched',(45.,45.),(2e-9,2e-9)),('asymmetric',(42.75,47.25),(1.6e-9,2.4e-9))):
             states=[usb_hs_output(e,ledger,drive_node=drive,termination_ohm=termination,bond_l_h=bonds) for drive in (None,0,1)]
             rows.append(dict(load_scale=scale,fixture=name,ledger=ledger,internal_loads=e['internal_switching_loads'],states=states))
-    return dict(cases=rows,complete=False,scope='Static USB HS pad states under full-rate host switching, 242 mA single-active-wired-branch budget, 500 pF and current package target. Internal timing/core pulse means replace portions of their existing 40 mA owners. 156.25 MHz internal pulses are assigned stress loads, not a USB clock implementation. Two signal bonds, local/remote terminations and pad-return feedback included. No REF_IN current, signal-dependent driver loading, real edges, squelch/chirp, packet lifecycle or protocol qualification. 20 mV quiet-pin value is the existing instantaneous design guard; observer-bandwidth controls are diagnostic, not a compliance instrument.')
+    return dict(cases=rows,complete=False,scope='Static USB HS pad states under full-rate host switching, 246 mA single-active-wired-branch budget, 500 pF and current package target. Internal timing/core pulse means replace portions of their existing 40 mA owners. 156.25 MHz internal pulses are assigned stress loads, not a USB clock implementation. Two signal bonds, local/remote terminations and pad-return feedback included. No REF_IN current, signal-dependent driver loading, real edges, squelch/chirp, packet lifecycle or protocol qualification. 20 mV quiet-pin value is the existing instantaneous design guard; observer-bandwidth controls are diagnostic, not a compliance instrument.')
 
 
 def hs_pad_transfer(frequency_hz, *, termination_ohm=(45.,45.),
@@ -794,7 +800,7 @@ def internal_switching_sources(loads):
             raise ValueError('Invalid internal-current pulse parameters')
         if type(count) is not int or not 1<=count<=256:raise ValueError('Invalid harmonic count')
         totals[owner]+=mean
-        if totals[owner]>.040+1e-15:raise ValueError('Internal pulse mean exceeds owner DC budget')
+        if totals[owner]>MODE_CURRENT_A['rf'][owner]+1e-15:raise ValueError('Internal pulse mean exceeds owner DC budget')
         for k in range(1,count+1):
             f=k*rate
             current=2*mean*np.exp(-2j*np.pi*f*origin)/(1+2j*np.pi*f*tau)**3
@@ -832,7 +838,7 @@ def internal_switching_campaign(contract):
                 loads=[dict(owner='timing',mean_a=.010*scale,event_hz=carrier/16,tau_s=.2e-9,harmonics=count),
                     dict(owner='core',mean_a=.020*scale,event_hz=156.25e6,tau_s=.2e-9,harmonics=count)]
                 e=dict(original,internal_switching_loads=loads if scale else [])
-                _,report=reference_payload_environment(e,dict(link_r_ohm=1e-5),False,source_peak_v=.75)
+                _,report=single_ended_reference_payload_environment(e,dict(link_r_ohm=1e-5),False,source_peak_v=.75)
                 rows.append(dict(mode=mode,carrier_hz=carrier,load_scale=scale,harmonics=count,
                     loads=loads if scale else [],clock=report))
     return dict(cases=rows,scope='Assigned positive pulse loads replace portions of CORE/timing DC allocations; nominal coherent phases, positive supply sensitivity, current package target and 0.75 V source. 32/64 harmonic comparison only, not a bounded infinite-frequency tail or packet verdict. No full-rate clock switching, delivered-edge/load feedback, phase sweep or physical pulse characterization.')
@@ -848,7 +854,7 @@ def internal_pulse_campaign(contract):
             loads=[dict(owner='timing',mean_a=.010,event_hz=carrier/16,tau_s=tau,harmonics=harmonics),
                 dict(owner='core',mean_a=.020,event_hz=156.25e6,tau_s=tau,harmonics=harmonics,origin_s=phase/156.25e6)]
             original['internal_switching_loads']=loads
-            _,clock=reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=.75)
+            _,clock=single_ended_reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=.75)
             e=clock['resolved_crossings'];a=e['centered_edge_error_rms_ps'];d=e['downstream_delay_rms_at_edges_ps'];total=e['combined_edge_error_rms_ps']
             covariance=None if None in (a,d,total) else (total**2-a**2-d**2)/2
             correlation=None if covariance is None or a*d==0 else covariance/(a*d)
@@ -882,7 +888,7 @@ def internal_sensitivity_campaign(contract):
             carrier=case['carrier_hz'];word=carrier/16 if case['mode']=='rf' else 312.5e6
             original=selected_environment(contract,case['mode'],carrier,word)
             original['internal_switching_loads']=case['loads']
-            _,actual=reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=.75,supply_sign=-1.)
+            _,actual=single_ended_reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=.75,supply_sign=-1.)
             predicted=next(v['edge_rms_ps'] for v in values if v['signed_sensitivity_ps_per_mv']==-.1)
             observed=actual['resolved_crossings']['combined_edge_error_rms_ps']
             if abs(predicted-observed)>1e-8:raise AssertionError((predicted,observed))
@@ -903,7 +909,7 @@ def internal_decoupling_campaign(contract, *, damping=False):
             original['internal_switching_loads']=[
                 dict(owner='timing',mean_a=.010,event_hz=carrier/16,tau_s=.2e-9,harmonics=64),
                 dict(owner='core',mean_a=.020,event_hz=156.25e6,tau_s=.2e-9,harmonics=64)]
-            trial,clock=reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=.75)
+            trial,clock=single_ended_reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=.75)
             rail=None
             if trial is not None:
                 phasors={}
@@ -926,11 +932,11 @@ def internal_switching_rf_campaign(contract):
             loads=[dict(owner='timing',mean_a=.010*scale,event_hz=carrier/16,tau_s=.2e-9,harmonics=64),
                 dict(owner='core',mean_a=.020*scale,event_hz=156.25e6,tau_s=.2e-9,harmonics=64)] if scale else []
             original=dict(selected_environment(contract,'rf',carrier,carrier/16),internal_switching_loads=loads)
-            e,clock=reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=.75)
+            e,clock=single_ended_reference_payload_environment(original,dict(link_r_ohm=1e-5),False,source_peak_v=.75)
             receiver=None if e is None else coupled_wideband_feedback(e,wanted_dbm=-85.,gain_db=54.,oversample=1024)
             rows.append(dict(carrier_hz=carrier,load_scale=scale,loads=loads,clock=clock,receiver=receiver))
             print('RF internal switching',carrier,scale,'complete',flush=True)
-    return dict(cases=rows,scope='Current package target, 0.75 V external source, 236 mA unchanged DC budget; positive supply sensitivity and nominal coherent internal-current phases. Matched 20.48 GHz numerical mixer rate resolves retained tones through 10 GHz; no infinite-tail convergence claim. Weak wanted signal plus adjacent blocker, causal SAR/reference-current feedback, fixed 54 dB gain and known DATA training. No real acquisition, AGC, packet/PER or physical device qualification.')
+    return dict(cases=rows,scope='Current package target, 0.75 V external source, 240 mA unchanged DC budget; positive supply sensitivity and nominal coherent internal-current phases. Matched 20.48 GHz numerical mixer rate resolves retained tones through 10 GHz; no infinite-tail convergence claim. Weak wanted signal plus adjacent blocker, causal SAR/reference-current feedback, fixed 54 dB gain and known DATA training. No real acquisition, AGC, packet/PER or physical device qualification.')
 
 
 def return_partition_campaign(contract):
@@ -1011,7 +1017,7 @@ def return_partition_campaign(contract):
     return dict(cases=rows,complete=False,
         site_count_hypothesis=dict(host=host_sites,quiet=quiet_sites,host_fraction=host_share,
             qualified_isolation_or_impedance=False),
-        scope='Five-node linear routing requirements at unchanged host rate, edge charge, 242 mA wired / 236 mA RF budgets and 500 pF reservoir. Hypothetical existing ground groups, not a provider bond assignment. Matching tied-return control preserves original parallel return R/L. The 0.2 host share is an equal-per-site impedance hypothesis for the two north/south ground sites versus eight east/west sites, not extracted conductance or an approved isolated ring. Quiet pad terminations close into the wired network and are disabled in RF mode; host return can still enter the quiet reservoir through shared supplies. Moved input supply is a physical routing requirement, not relabeled current. Host reservoir allocation consumes existing capacitance, scaling ESR inversely with area. No mutual inductance, nonlinear substrate/ESD coupling, physical GPIO capture, RF packet/clock qualification or fabrication proof. RF comparisons propagate quiet rail to voltage, reference and supply-induced phase at fixed 54 dB gain, retaining the same external source/input noise. They use assigned-ENOB conversion; causal SAR load feedback and other benches still require the partitioned network before any architecture adoption. The external REF_IN response to moving quiet ground and its own return current are not yet included; source/input noise remains assigned. Ground differences and both rail envelopes are retained; a quiet pin alone cannot select a mitigation.')
+        scope='Five-node linear routing requirements at unchanged host rate, edge charge, 246 mA wired / 240 mA RF budgets and 500 pF reservoir. Hypothetical existing ground groups, not a provider bond assignment. Matching tied-return control preserves original parallel return R/L. The 0.2 host share is an equal-per-site impedance hypothesis for the two north/south ground sites versus eight east/west sites, not extracted conductance or an approved isolated ring. Quiet pad terminations close into the wired network and are disabled in RF mode; host return can still enter the quiet reservoir through shared supplies. Moved input supply is a physical routing requirement, not relabeled current. Host reservoir allocation consumes existing capacitance, scaling ESR inversely with area. No mutual inductance, nonlinear substrate/ESD coupling, physical GPIO capture, RF packet/clock qualification or fabrication proof. RF comparisons propagate quiet rail to voltage, reference and supply-induced phase at fixed 54 dB gain, retaining the same external source/input noise. They use assigned-ENOB conversion; causal SAR load feedback and other benches still require the partitioned network before any architecture adoption. The external REF_IN response to moving quiet ground and its own return current are not yet included; source/input noise remains assigned. Ground differences and both rail envelopes are retained; a quiet pin alone cannot select a mitigation.')
 
 
 def reference_input_solution(frequency_hz,candidate,injection,*,source_v=0j,
@@ -1138,10 +1144,29 @@ def reference_return_campaign(contract):
                     kcl_residual_a=max(x['kcl_residual_a'] for x in residuals+[wanted]),
                     power_residual_w=max(abs(x['power_residual_w']) for x in residuals+[wanted])))
     return dict(cases=rows,complete=False,
-        scope='Coupled passive single-ended REF_IN: 0.5 V peak Thevenin source, 50.2 ohms, 2 nH signal bond, 3 pF input, 20 mV incremental threshold. Both source carrier return and host-induced local input voltage are solved in the same PDN. Assigned 0.1 ps/mV, 1 GHz-pole downstream supply delay is evaluated at the actual input crossings, including the returned carrier; combined timing retains correlation rather than adding RMS values. Wired full-duplex 288 mA and RF 236 mA reservations retained; no USB test terminations are active. One coherent nominal-rate period, rising edges resolved at 32 and 64 samples/UI with bracketed roots. Source-only controls remove host tones without changing loading. No receiver bias/common-mode or protection model, source AM/noise, additive receiver noise, qualified threshold/supply sensitivity, autonomous PLL, fractional host-rate/phase corners or RF/serial payload propagation. Existing full-chip payload benches still omit this direct input-ground path; their clock results remain conditional until migrated.')
+        scope='Coupled passive single-ended REF_IN: 0.5 V peak Thevenin source, 50.2 ohms, 2 nH signal bond, 3 pF input, 20 mV incremental threshold. Both source carrier return and host-induced local input voltage are solved in the same PDN. Assigned 0.1 ps/mV, 1 GHz-pole downstream supply delay is evaluated at the actual input crossings, including the returned carrier; combined timing retains correlation rather than adding RMS values. Wired full-duplex 292 mA and RF 240 mA reservations retained; no USB test terminations are active. One coherent nominal-rate period, rising edges resolved at 32 and 64 samples/UI with bracketed roots. Source-only controls remove host tones without changing loading. No receiver bias/common-mode or protection model, source AM/noise, additive receiver noise, qualified threshold/supply sensitivity, autonomous PLL, fractional host-rate/phase corners or RF/serial payload propagation. Existing full-chip payload benches still omit this direct input-ground path; their clock results remain conditional until migrated.')
 
 
-def reference_payload_environment(environment,options,move_input,*,supply_sign=1.,source_peak_v=.5,sensitivity_ps_per_mv=.1):
+def reference_payload_environment(environment,options,move_input,*,supply_sign=1.,source_peak_v=None,sensitivity_ps_per_mv=None):
+    """Selected differential frontend; explicit single-ended helper retains controls."""
+    if move_input or options != dict(link_r_ohm=1e-5):
+        raise ValueError('Selected differential input requires the common-return baseline')
+    from reference_input_probe import paired_environment
+    _,base=single_ended_reference_payload_environment(environment,options,False)
+    config=environment['clock_input_configuration']
+    if config['topology']!='differential':raise ValueError('Selected input must be differential')
+    opts=dict(config['input_model'])
+    if source_peak_v is None:source_peak_v=config['source_differential_peak_v']
+    if sensitivity_ps_per_mv is None:sensitivity_ps_per_mv=config['supply_sensitivity_ps_per_mv']
+    trial,row=paired_environment(environment,opts,sign=supply_sign,
+        sensitivity_ps_per_mv=sensitivity_ps_per_mv,ledger=base['ledger'],source_peak_v=source_peak_v)
+    report=dict(row,frontend='differential',ledger=base['ledger'],resolved_crossings=row['clock'],
+        physical_source_peak_v=source_peak_v,supply_sensitivity_ps_per_mv=sensitivity_ps_per_mv,
+        supply_sensitivity_sign=supply_sign,status='clock_accepted_for_conditional_payload' if trial is not None else 'clock_not_accepted_for_payload')
+    return trial,report
+
+
+def single_ended_reference_payload_environment(environment,options,move_input,*,supply_sign=1.,source_peak_v=.5,sensitivity_ps_per_mv=.1):
     """RF or wired environment rebuilt from the same clock-input/return solution.
 
     Random/AM phase allocations are overlaid after deterministic event solving;
@@ -1261,11 +1286,12 @@ def reference_payload_campaign(contract):
             e=selected_environment(contract,'rf',carrier,carrier/16,return_l=return_l,die_esl=die_esl)
             for name,options,move_input in variants:
                 for sign in (1.,-1.):
-                    trial,clock=reference_payload_environment(e,options,move_input,supply_sign=sign)
+                    factory=reference_payload_environment if name=='tied_baseline' else single_ended_reference_payload_environment
+                    trial,clock=factory(e,options,move_input,supply_sign=sign)
                     rx=tx=None;resolution=[];legacy=None;swing_controls=[];converter_port=None;weak_converter=None
                     if name=='tied_baseline' and sign==1.:
                         for swing in (.75,1.):
-                            swing_trial,swing_clock=reference_payload_environment(e,options,move_input,
+                            swing_trial,swing_clock=single_ended_reference_payload_environment(e,options,move_input,
                                 supply_sign=sign,source_peak_v=swing)
                             swing_controls.append(dict(clock=swing_clock,receiver=None if swing_trial is None else
                                 wideband_receive(swing_trial,oversample=256,gain_settings_db=(54.,)),
@@ -1409,13 +1435,15 @@ def assemble_baseline(contract,packets,converters,diagnosis):
     sources=['verification/baseline_envelope.py','verification/robustness_envelope.py',
              'system_model/connected/oscillator_noise.py','verification/wired_envelope.py',
              'verification/selected_rf.py','verification/ble_packet.py',
-             'verification/converter_dynamics.py','system_model/connected/protocol_pad.py',
+             'verification/converter_dynamics.py','verification/reference_input_probe.py','system_model/connected/protocol_pad.py',
              'verification/check_contract.py','system_model/architecture_fast/resource_configuration.py',
              'system_model/connected/protocol_signals.py','system_model/connected/tx_output_stage.py',
              'system_model/connected/tx_output_candidate.py',
              'system_model/connected/wired_blocks.py','system_model/architecture_fast/behavioral.py','spec/contract.json',
              'spec/block-diagram.md','spec/power-partition.md']
     result=dict(status='selected_baseline_electrical_screen_not_complete_chip_test',complete=False,
+        clock_revision='differential_v6',
+        legacy_control_sections=['converter_reference_feedback','wideband_rf','wideband_rf_controls','wideband_diagnosis','return_partition','reference_return'],
         rf_converter_evidence_owner='narrowband_rf uses corrected REF_IN timing and causal SAR/input-voltage feedback. reference_payload includes assigned-ENOB controls plus moderate and weak tied-return causal feedback. converter_reference_feedback and wideband_rf retain previous-environment controls.',
         mode_current_a=MODE_CURRENT_A,cases=rows,
         wired_receiver=causal_receiver_envelope(timing_scenarios=wired_scenarios,
@@ -1471,7 +1499,7 @@ def assemble_baseline(contract,packets,converters,diagnosis):
     narrow=next(row for row in result['narrowband_rf']['cases'] if row['network_case']==BASELINE_PACKAGE_CASE)
     transmitted=next(row for row in result['wired_transmit']['cases'] if row['network_case']==BASELINE_PACKAGE_CASE)
     result['current_target_observations']=dict(
-        scope='Selected package target and original 0.5 V source only. Numerical convergence is separate from signal acceptance. Mitigation controls do not replace baseline failures; these are fixture observations, not protocol verdicts or chip-completeness scores.',
+        scope='Selected differential package-target cases; single-ended amplitude and split-return controls remain explicitly separate. Numerical convergence is separate from signal acceptance. Mitigation controls do not replace baseline failures; these are fixture observations, not protocol verdicts or chip-completeness scores.',
         weak_wideband=rf_observations,
         narrowband=dict(status=narrow['status'],exercised_requests=len(narrow['cases']),
             correct_requests=sum(c['received']['correct_request'] for c in narrow['cases']),

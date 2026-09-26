@@ -1,7 +1,7 @@
 """Normative architecture; SVG is reproducible using only the standard library."""
 from pathlib import Path
 from html import escape
-A=['''<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1590" viewBox="0 0 1800 1590" role="img" aria-labelledby="title desc"><title id="title">Svalbard normative transceiver architecture</title><desc id="desc">RF west, wired east, timing north, host south. Fifty terminals. RF and wired payload operation exclusive. External clock input is an alternate mode of REF_IN. Physical performance remains unqualified.</desc><defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 0L8 4L0 8" fill="#355269"/></marker></defs><rect width="1800" height="1590" fill="white"/><g font-family="DejaVu Sans,sans-serif" fill="#172a3a">''']
+A=['''<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1590" viewBox="0 0 1800 1590" role="img" aria-labelledby="title desc"><title id="title">Svalbard normative transceiver architecture</title><desc id="desc">RF west, wired east, timing north, host south. 74 provider sites, 37 functional signals. RF and wired payload operation exclusive. External clock input is one differential REF_IN / REF_IN_N port. Physical performance remains unqualified.</desc><defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 0L8 4L0 8" fill="#355269"/></marker></defs><rect width="1800" height="1590" fill="white"/><g font-family="DejaVu Sans,sans-serif" fill="#172a3a">''']
 def text(x,y,t,size=16,bold=False):
  A.append(f'<text x="{x}" y="{y}" font-size="{size}" font-weight="{600 if bold else 400}">{escape(t)}</text>')
 def box(x,y,w,h,title,lines=(),fill='#f1f6fa'):
@@ -14,9 +14,9 @@ text(30,38,'SVALBARD / NORMATIVE ARCHITECTURE',28,True)
 text(30,67,'Selected functional boundaries • circuit topology and physical performance remain to be qualified',17)
 box(210,150,1380,970,'ONE GF180MCU DIE • RF OR WIRED PAYLOAD • 74 PROVIDER-COMPATIBLE SITES',(), '#fcfdfe')
 text(230,203,'Functional paths; candidate pads: RF/REF west, wired east, H2D north, D2H/control south. Core budget: 12.92 mm².',14)
-box(590,85,610,65,'REF_IN (1) • west-edge candidate',('Alternate external reference / clock / RF LO; no simultaneous inputs',),'#fff6df')
+box(590,85,610,65,'REF_IN / REF_IN_N (2) • west-edge pair',('Alternate external reference / clock / RF LO; no simultaneous inputs',),'#fff6df')
 wire([(1190,150),(1115,150),(1115,205),(1080,205),(1080,220)],True)
-box(700,220,400,110,'Qualified input + stopped source selection',('Separate RF-capable conditioning branch required', 'Reference → autonomous loop OR clock/LO bypass', 'Input bandwidth, swing and additive noise: open'))
+box(700,220,400,110,'Differential clock input / source select',('Two protected legs; RF-capable conditioning', 'Reference → autonomous loop OR clock/LO bypass', 'Input bandwidth, swing and additive noise: open'))
 box(245,220,405,110,'RF synthesis + local quadrature',('PFD / charge pump / loop filter / ring VCO', 'External LO bypass → I/Q phase generation', 'Local LO buffers; programmable sample divider'))
 box(1150,220,405,110,'Wired TX synthesis + phase control',('PFD / charge pump / filter / oscillator / divider', 'External timing or synthesis; flexible ×10 mode', 'Independent RX CDR remains mandatory'))
 wire([(700,266),(650,266)],True);wire([(1100,266),(1150,266)],True)
@@ -65,7 +65,7 @@ box(245,1190,1305,145,'EXTERNAL FPGA + BOARD • explicitly outside the die budg
 wire([(450,1190),(450,1135)],both=True);wire([(900,1190),(900,1135)]);wire([(1350,1135),(1350,1190)])
 text(30,1380,'READING THE DIAGRAM',18,True)
 text(30,1410,'Solid arrows: bundled payload / functional paths. Purple dashed arrows: timing. Local service fanout is named, not individually routed.',16)
-text(30,1440,'36 functional signals + 18 fixed supply/return + 20 spare signal sites = 74. Supersedes the early approximate 50-total target.',16)
+text(30,1440,'37 functional signals + 18 fixed supply/return + 19 spare signal sites = 74. Supersedes the early approximate 50-total target.',16)
 text(30,1470,'Multiple identical dies can supply HDMI/DVI data lanes; forwarded-clock interface and cross-die alignment remain board/FPGA obligations.',16)
 text(30,1500,'Analog signal pads / custom frontends at compatible bond sites; standard GPIO signal circuitry is not required for RF / fast lanes.',16)
 text(30,1530,'Circuit candidate sheets are exploratory detail, not additional required blocks. RF and wired exclusivity saves activity, not fabricated area.',16)

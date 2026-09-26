@@ -107,13 +107,11 @@ The keep-or-change question is closed: **adopt the combined clock change**.
 Do not postpone this decision until every protocol passes, or describe it as
 proof that all protocols will pass. The model-completion gate remains open.
 
-The executable contract, diagram and old baseline generators currently encode
-the evaluated single-ended revision. The paired campaigns already evaluate the
-selected change, but they do not migrate every consumer. The next bounded task
-is to integrate this decision into one revision of those owners, including the
-pin/current/area ledger, without overwriting historical controls or relabeling
-their hashes. Then qualify the combined input/distribution requirement across
-bounded package/current/phase variations and representative RF/wired lifecycles.
+The executable contract, diagram and selected payload-clock factory now encode
+this revision. Single-ended helpers and saved evidence remain explicit historical
+controls. Migration is not a new payload/PER qualification: next qualify the
+combined input/distribution requirement across bounded package/current/phase
+variations and representative RF/wired lifecycles.
 A failure to fit the selected physical budgets reopens the affected clock
 implementation, not the protocol list by default. No new transistor schematic
 or layout work precedes mathematical closure.
@@ -128,7 +126,7 @@ verdict for each capability. Physical qualification remains a later obligation.
 
 | Rank | Risk / reach | Severity and fallback | Next discriminating experiment / decision |
 |---|---|---|---|
-| 1 | Physical interface and shared supply: all high-speed modes | Can invalidate the entire chip. Default-compatible pads, board damping and external regulation help; a custom package is not the baseline escape. | Apply the 236/288 mA mode allocations, actual shared-return topology and bounded pin loading to one fast electrical/timing envelope. Check both host directions and GHz/serial/RF pads. Change the compatible pad/feed plan if no common window exists. |
+| 1 | Physical interface and shared supply: all high-speed modes | Can invalidate the entire chip. Default-compatible pads, board damping and external regulation help; a custom package is not the baseline escape. | Apply the 240/292 mA mode allocations, actual shared-return topology and bounded pin loading to one fast electrical/timing envelope. Check both host directions and GHz/serial/RF pads. Change the compatible pad/feed plan if no common window exists. |
 | 2 | Delivered timing and independent RX recovery: wired and RF | Can defeat all fast modes even with a good external oscillator. External input is selected first; autonomous operation is secondary qualification, not an unpriced rescue. | Bound source → loaded input → phase/distribution and supply sensitivity together; retain independent wired CDR. Determine the allowable device/load ranges, then test acquisition and recovery at those limits. |
 | 3 | Converter/filter/reference dynamic range: every radio, especially wideband | Can remove much of the radio value. Finite-zero filtering is selected; interleaving or higher precision costs explicit current/area and calibration. | Join the selected response, absolute noise, blockers, reference load, clipping and clock spectrum at the revised current. Include a narrow and a wide RF configuration so one setting cannot stand in for the entire range. |
 | 4 | Generic electrical actions and recovery: USB, PCIe, SATA, video; shared pad loading affects other wired modes | A missing physical state may require redesign, not FPGA firmware. Independent controls and specialized branches are selected; external helpers cover only named board functions. | Audit command-to-pad actions, then run one DC-coupled and one detection/OOB lifecycle with finite host service. Keep the target-specific exceptions in the capability table. |
@@ -1004,8 +1002,8 @@ bond-wire geometry, board-net isolation or pad electrical performance.
 [Provider source](https://github.com/wafer-space/gf180mcu-project-template/tree/0de7e394337a1f7f5303ac7a3681bf2481b58176).
 
 The executable resource ledger now separates provider sites from logical pins:
-36 functional signals + 18 fixed supply/return sites = **54**, even before
-counting 20 spare signal sites. Thus unused signals alone cannot reconcile a
+37 functional signals + 18 fixed supply/return sites = **55**, even before
+counting 19 spare signal sites. Thus unused signals alone cannot reconcile a
 hard 50-total limit. The selected decision is standard-compatible packaging; the earlier approximate
 limit is superseded for the physical design. No functionality has been removed. Also, neither the north
 nor south edge's 16 signal sites can contain both 11-wire host directions;
@@ -1013,10 +1011,10 @@ the functional diagram's south-host grouping is not a physical pad placement.
 See the [physical inventory](../../../docs/roadmap/programmable-transceiver-pin-plan.md#executable-physical-inventory-and-immediate-consequences).
 
 A [candidate provider-site assignment](../../../docs/roadmap/programmable-transceiver-pin-plan.md#candidate-provider-site-assignment)
-now places all 36 functional signals: RF/reference west, wired east, D2H/control
+now places all 37 functional signals: RF/reference west, wired east, D2H/control
 south and H2D north. It preserves fixed supplies and adjacent analog pairs,
 with both forwarded clocks and REF_IN next to existing ground sites. It leaves
-20 unused signal sites, not 20 removed bonds. Host data returns, actual PCB
+19 unused signal sites, not 19 removed bonds. Host data returns, actual PCB
 connectivity, specialized signal-cell geometry and electrical qualification
 remain open; the selected provider-compatible physical allocation supersedes
 the former approximate 50-total limit.

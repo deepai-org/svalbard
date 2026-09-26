@@ -72,7 +72,7 @@ def check_protocol_profiles(c):
 
 def check(c):
     pins = c['pins']
-    require(len(pins) == c['limits']['total_terminals'] == 50, 'terminal budget')
+    require(len(pins) == c['limits']['total_terminals'] == 51, 'terminal budget')
     require(len({p['name'] for p in pins}) == len(pins), 'duplicate terminal')
     require(sum(p['kind'] in ('supply', 'ground') for p in pins) == 14, 'power budget')
     for bus, direction in [('D2H', 'out'), ('H2D', 'in')]:
@@ -183,6 +183,8 @@ def assembly_ledger(c):
     for prefix in ('RF_RX','RF_TX','WIRE_RX','WIRE_TX'):
         positive=locations[mapping[prefix+'_P']];negative=locations[mapping[prefix+'_N']]
         require(positive[0]==negative[0] and abs(positive[1]-negative[1])==1,'differential pair adjacency')
+    positive=locations[mapping['REF_IN']];negative=locations[mapping['REF_IN_N']]
+    require(positive[0]==negative[0] and abs(positive[1]-negative[1])==1,'reference pair adjacency')
     neighbors=[]
     for name,site in mapping.items():
         side,index=locations[site]

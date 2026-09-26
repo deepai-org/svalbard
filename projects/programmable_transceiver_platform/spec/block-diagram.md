@@ -14,20 +14,14 @@ See the [decision gates and operating ledger](feasibility-gates.md#decision-sequ
 
 The [whole-architecture assessment](risk-priorities.md#architecture-assessment-one-implementation-several-ways-to-succeed) records the cross-system conflicts, operating sequences and every interface family’s open gate.
 
-## Approved next-revision change
+## Selected differential clock revision
 
 The [keep-or-change decision](risk-priorities.md#keep-or-change-decision-change-the-delivered-clock-architecture)
-selects a differential external high-speed clock input together with a
-0.025 ps/mV aggregate downstream supply-delay requirement. It reserves the
-adjacent `inputs[0].pad` for `REF_IN_N`, adds 4 mA of input allowance, and moves
-0.15 mm² from global growth into timing. The decision record owns the exact
-costs, evidence and remaining physical uncertainty.
-
-**Migration status:** the diagram, executable contract and baseline tables below
-still describe the evaluated single-ended revision. Their single-ended-default
-and no-new-clock-pin decisions are superseded for the next revision by the
-linked decision. Preserve those controls until model migration is complete;
-do not claim that the differential diagnostic campaigns verify the whole chip.
+is implemented in the contract, diagram and selected payload clock model.
+`REF_IN` is the positive leg and `REF_IN_N` the negative leg of one differential
+reference/LO port. The 0.025 ps/mV aggregate supply-delay target remains an
+unqualified physical requirement. Historical single-ended studies retain their
+original provenance and are explicit controls, not evidence for this revision.
 
 ## Provisional first-chip baseline
 
@@ -40,22 +34,34 @@ source works.
 
 | Boundary | Selected baseline | Alternative and its cost |
 |---|---|---|
-| Assembly and pins | Provider-compatible 1×1 COB geometry, all fixed supply/return sites retained; 36 functional signal assignments, analog/custom fast signal cells | No custom-package escape is assumed. The provider has 74 sites; 36 signals plus 18 fixed supply/return sites already require 54 assignments. The earlier approximate 50-total target is superseded by this provider-compatible physical allocation; the legacy 50-entry logical model is not the bond map. |
+| Assembly and pins | Provider-compatible 1×1 COB geometry, all fixed supply/return sites retained; 37 functional signal assignments, analog/custom fast signal cells | No custom-package escape is assumed. The provider has 74 sites; 37 signals plus 18 fixed supply/return sites already require 55 assignments. The earlier approximate 50-total target is superseded by this provider-compatible physical allocation; the 51-entry logical model is not the bond map. |
 | RF chain | Differential RF input/output, two RX mixers, two channel filters/PGAs, two ADCs, two DACs and two TX reconstruction/upconversion branches; one summed output driver | RX/TX bias reuse can reduce active current, but both paths occupy area. ADC/DAC sharing that interrupts timely turnaround is not selected. |
 | RF selectivity | Reserve a tunable fifth-order channel-filter realization capable of finite transmission zeros as well as the existing all-pole control response | The elliptic transfer function is a candidate setting, not a fixed topology. Q/zero tuning and internal headroom must fit the filter allocation. Higher ENOB is a costed alternative, not the default cure for blocking. |
 | Wired chain | One independent RX CDR/deserializer and one TX serializer/driver; simultaneous wired RX/TX allowed | Do not replace the CDR with ordinary FPGA GPIO sampling or borrow the RF ADCs as line-rate samplers. |
 | Specialized electrical branches | USB HS plus FS/LS and independent pulls/termination/sensing on WIRE_RX; idle/detection and DC TMDS capability retained on the wired frontend | Disabled-branch capacitance counts against serial bandwidth. External AUX, cable interfaces and USB VBUS support stay outside the chip. |
-| RF clocks | External 2.4–2.484 GHz LO through the dedicated REF_IN analog branch is the first qualification route; autonomous RF synthesis remains fabricated | One REF_IN, selected while stopped; no simultaneous independent reference and LO inputs. A fixed sample-clock alternative needs a real extra source and CDC allocation before adoption. |
+| RF clocks | External 2.4–2.484 GHz LO through the dedicated REF_IN analog branch is the first qualification route; autonomous RF synthesis remains fabricated | One differential REF_IN/REF_IN_N port, selected while stopped; no simultaneous independent reference and LO inputs. A fixed sample-clock alternative needs a real extra source and CDC allocation before adoption. |
 | RF conversion/host rates | LO ÷64/128/256/512 conversion; start with LO ÷32 physical D2H clock, hence LO ÷16 DDR words. H2D remains 156.25 MHz clock / 312.5 Mword/s | The faster LO ÷16 D2H clock is an optional higher-switching configuration. The selected slower return path needs bounded service gaps and FPGA resampling. |
 | Wired clocks/host | TX synthesis or external timing as appropriate; RX has independent recovery. Up to 312.5 Mword/s on each ten-bit host bus | Incoming recovered data crosses a bounded queue; continuous rate matching and recovery remain required. Multi-die TMDS needs shared board timing and alignment. |
 | Shared services | One control/transport owner, shared master bias with local reference buffers/reservoirs, local clock branches; RF and wired payload exclusive | Share slow sources and reusable circuit designs, not a universal RF/serial switch fabric. Inactive leakage and quiet detection remain budgeted. |
 | Fast radio response | LO, sample and host clocks remain running; warm/muted TX path, scheduled DAC release/unmute, retained reference state | Parked bias is allowed after its wake transient and readiness sequence pass. Retuning stops traffic, settles/relocks, retrains and starts a new epoch. |
 | Digital boundary | FPGA owns framing/modems/controllers, CRC/FEC, equalization, resampling and bulk storage; chip owns electrical actions, bounded queues and clock recovery | No assumption that arbitrary FPGA GPIOs sustain full rate, or that host memory can repair chip FIFO overflow. No on-chip protocol profiles. |
 
+### Differential boundaries
+
+RF RX/TX and the wired high-speed lane pairs are already differential. The
+external reference/LO pair closes the missing fast off-chip timing boundary.
+Preserve differential analog signal paths through mixers, I/Q filtering and
+converter sampling where the existing circuit inventory requires them; I and Q
+are separate signals, not the two legs of one differential signal. Evaluate
+balanced local LO/phase distribution and converter reference delivery against
+noise, headroom and current budgets during circuit refinement. Differential
+signaling does not itself establish low supply-to-delay sensitivity or quiet
+board-referenced USB levels. Keep the wide FPGA bus, SPI and reset single-ended;
+no additional host-clock pins or doubled data bus are selected without evidence.
+
 ### Choices fixed for the next model revision
 
-Use a high-impedance protected RF clock input, driven from a nominal 50-ohm
-external source, rather than an on-die 50-ohm termination by default. Retain
+Use a high-impedance protected differential RF clock input, driven through nominal 50-ohm source resistance per leg, rather than an on-die 50-ohm termination by default. Retain
 input loading and threshold/noise effects; the high-impedance route has the
 better combined packet evidence. Standard low-frequency reference conditioning
 is a separate selected branch. Autonomous synthesis starts from tunable
@@ -151,7 +157,7 @@ assumption. Keep the preceding converter, filter, clock and wired selections.
 | Fixed versus LO-derived RF sampling | Keep LO-derived sampling and FPGA resampling. Same-channel RX/TX response keeps clocks running; channel retuning stops payload and starts a new capture epoch. Do not add an independent sample oscillator or pins for this revision. |
 | Host selection | Freeze the H0 electrical/transport contract, not an unspecified Zynq board. Preserve full-rate wired operation and the slower RF return clock. A future board must satisfy the contract; arbitrary FPGA GPIO compatibility is not a requirement. |
 | Host interference mitigation | Keep worst-case concurrent host activity in qualification. Allow scheduled quiet data intervals as an additional generic operating configuration only after an actual transport trace proves data service and response deadlines. Do not assume RF TDD makes host switching disappear. |
-| Additional hardware mitigation | No new clock-input pin, regulator bank, deep FIFO, interleaved ADC or universal analog crossbar in the baseline. First test configuration, board conditioning and existing circuit budgets. A hardware addition requires a demonstrated failure mechanism and a charged pin/area/current cost. |
+| Additional hardware mitigation | The differential clock port consumes one former spare signal site. No regulator bank, deep FIFO, interleaved ADC or universal analog crossbar is selected. First test configuration, board conditioning and existing circuit budgets. A hardware addition requires a demonstrated failure mechanism and a charged pin/area/current cost. |
 | Scope and verification order | Preserve all requested targets. First close shared electrical/timing feasibility, then wide/narrow RF and wired lifecycle coverage. USB and PCIe remain the DC-coupled and detection/idle lifecycle anchors; Ethernet supplies sustained-stream coverage. This order does not downgrade the other targets. |
 | First fabrication | Retain the full wired-and-RF chip, with generic bypass, observability and recovery controls. No separate reduced feasibility tapeout is selected. Complete mathematical closure before new schematic or layout work. |
 
@@ -168,11 +174,11 @@ into the next connected-model revision.
 
 | Question | Decision now | Evidence and trigger for change |
 |---|---|---|
-| Single-ended or differential external timing input? | Keep the single high-impedance REF_IN and current pin map. Retain the paired-input probe as a fallback, not a second default frontend. | The paired probe now improves joined RF/wired diagnostics, including 64/64 continuously ready wired corners at an assumed 0.025 ps/mV downstream sensitivity. That sensitivity is unpriced; common-mode range, protection, area and lifecycle behavior remain unqualified. Adoption must charge the extra signal and input bias separately from distribution improvements. |
+| Single-ended or differential external timing input? | Select the high-impedance differential REF_IN/REF_IN_N port. | Joined RF/wired diagnostics favor the combined differential-input and reduced-sensitivity change. Charge one signal, 4 mA input bias and 0.15 mm² from growth; physical input and distribution performance remain unqualified. |
 | Increase clock drive until everything passes? | Expose drive amplitude as a board operating requirement; do not declare one tested amplitude universally sufficient. | The 0.75 V source-peak acquisition fixture recovers 5/6 payloads, while even the 1 V refined wired fixture retains readiness failures. Source amplitude is not the voltage at the die pad; pad limits remain binding. |
 | Solve wired readiness by enlarging the loop or adding a DFE? | Keep CTLE plus the existing CDR boundary. Resolve numerical crossing error before changing its physical architecture. | Root-refined crossings improve the 1 V diagnostic from 22/32 to 30/32 continuously qualified windows, without proving the assumed detector precision or eliminating failures. Numerical root finding is not an implementation of the detector. |
 | Rely on host silence to make RF work? | Require a baseline with concurrent host service. Keep quiet intervals optional and explicitly scheduled. | Samples and replies still need transport. A quiet-window proposal must include a feasible queue/service trace and must not borrow unallocated storage. |
-| Add circuitry to cover uncertain performance? | Spend existing configuration and board-assistance options first; retain only costed, failure-specific hardware fallbacks. | Converter interleaving, differential timing input and active regulation introduce their own loading, area, timing and startup obligations. None is selected simply as insurance. |
+| Add circuitry to cover uncertain performance? | Spend existing configuration and board-assistance options first; retain only costed, failure-specific hardware fallbacks. | Converter interleaving, active regulation introduces their own loading, area, timing and startup obligations. None is selected simply as insurance. |
 | Which host should drive the model? | Keep H0 as the fixed electrical contract. Use the owned Zynq-7000 as a later integration candidate once its board and bank details are known. | The family name does not specify loading, drive, return currents or attainable GPIO service. A guessed board would add false precision. |
 
 The next decision is whether this **one baseline has a common feasible operating
@@ -237,7 +243,7 @@ within that mechanically compatible ring.
 
 - One GF180MCU die in one wafer.space slot, using the provider-compatible
   physical boundary above. The historical 50-total drawing is a legacy logical model, not the physical budget. The 12.92 mm²
-  core allocation includes 2.92 mm² reserve; neither is an implemented area.
+  core allocation includes 2.77 mm² reserve; neither is an implemented area.
 - Both RF and wired capabilities are fabricated, but their payload operation is
   mutually exclusive. Retain specialized RF frontends and wired line-rate
   samplers. Share transport, control, slow bias/reference services and reusable

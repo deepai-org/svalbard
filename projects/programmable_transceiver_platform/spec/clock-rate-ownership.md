@@ -1,5 +1,12 @@
 # Clock ownership and sustained-rate obligations
 
+Current clock interface: `REF_IN` (positive) and `REF_IN_N` (negative) form one
+differential reference/LO port, selected while stopped. Both legs require analog
+conditioning/protection; source frequency and protocol ownership are unchanged.
+See the [normative architecture](block-diagram.md) for the selected 44 mA timing allocation
+and 0.025 ps/mV aggregate supply-delay requirement. Saved single-ended studies
+below are historical controls, not qualification of this revision.
+
 The [normative architecture and diagram](block-diagram.md) own selected functional
 boundaries. Numerical studies below are conditional evidence, not frozen circuit
 topologies or qualified component specifications.

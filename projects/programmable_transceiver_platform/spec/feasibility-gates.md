@@ -1,5 +1,12 @@
 # Three whole-platform feasibility questions
 
+Current clock interface: `REF_IN` (positive) and `REF_IN_N` (negative) form one
+differential reference/LO port, selected while stopped. Both legs require analog
+conditioning/protection; source frequency and protocol ownership are unchanged.
+See the [normative architecture](block-diagram.md) for the selected 44 mA timing allocation
+and 0.025 ps/mV aggregate supply-delay requirement. Saved single-ended studies
+below are historical controls, not qualification of this revision.
+
 ## Decision sequence: several credible ways to succeed
 
 Adopted 2026-09-26. Finish mathematical closure before new circuit/layout work.

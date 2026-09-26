@@ -4,6 +4,943 @@ The [normative architecture and diagram](block-diagram.md) own selected function
 boundaries. Numerical studies below are conditional evidence, not frozen circuit
 topologies or qualified component specifications.
 
+## Provisional implementation allocation
+
+These are **rough design allocations**, selected to make the first-chip
+architecture concrete. They are not device-derived estimates. Layout and
+extraction will determine actual area; unknown layout area alone must not keep
+this architecture review open indefinitely. Preserve the existing contract's
+12.92 mm² total and 2.92 mm² support/growth reserve. Do not count both a parent
+allowance and its subdivisions. Current numbers below are targets for the next
+joined model, not retroactive proof for earlier lower-current simulations.
+
+| Fabricated circuit inventory | Area allocation, mm² | Current ownership / provisional allowance | Pins, bandwidth and timing obligation |
+|---|---:|---|---|
+| Wired TX serializer/driver; RX equalizer/slicers/deserializer; shared USB/TMDS/detection switches and local bias | 2.35 = TX 0.75 + RX 0.85 + electrical controls 0.45 + local growth 0.30 | WIRE_A/B: 48 mA each including local bias, switched load and uncertainty; RX CDR analog circuitry charged to timing | Four wired pins; independent TX/RX through 2.5 Gb/s; USB on RX pair. Apply idle/pulls/termination/drive independently; inactive branches remain capacitance loads. |
+| RF input/LNA and two RX mixers | 0.55 | RF: 4 mA | RF_RX pair; initial 2.4–2.484 GHz tuning; limited early gain and blocker headroom. |
+| Two channel filters and PGAs, including Q/zero/offset control | 0.75 | RF: 3 mA | Internal I/Q; preserve wideband fixture tones through ±9.53125 MHz and narrow settings; settle with real acquisition/AGC deadlines. |
+| Two TX reconstruction/upconversion branches | 0.55 | RF: 2 mA | Internal I/Q, same LO coverage; FPGA interpolation precedes DAC; reconstruction and image/emission requirements remain. |
+| Summed RF output driver | 0.40 | RF: 28 mA | RF_TX pair; retain the existing loaded-driver study as a requirement point, not a promised RF output-power specification. |
+| RF isolation, local bias and inactive leakage allowance | 0.15 | RF: 1 mA | No additional pins; warm/mute and isolate states must preserve recovery. |
+| Two ADCs | 0.60 | RF: 4 mA total | 12-bit words; 8 ENOB initial requirement, not guaranteed resolution; approximately 4.69–38.81 MS/s across selected dividers/LO interval. |
+| Two DACs | 0.35 | RF: 2 mA total | Same word/rate family; deterministic prefill/start, no burst-time reference reset. |
+| Converter references, buffers, local decoupling and converter growth | 0.35 = references 0.25 + growth 0.10 | PLL/reference budget below; reference charge is not an extra RF reservation | No new reference pins assumed; load settling at actual conversion events, including simultaneous I/Q. |
+| RF source, wired TX source, RX CDR, external conditioning/phase generation and clock distribution | 1.45 = 0.35 + 0.25 + 0.35 + 0.30 + 0.20 | PLL/reference: 40 mA total planning target: sources 12, CDR 8, external input/phase 8, distribution 6, master bias/converter reference 6. Includes static and switching; no second C·V·f charge on top. | One REF_IN; external GHz branch plus normal reference branch selected while stopped; independent RX recovery, common qualified timing model, stop/train/epoch after source changes. |
+| Host/control/transport/reset logic and predrivers | 1.65 = host logic 0.45 + control 0.35 + transport 0.55 + reset/epoch 0.30 | CORE: 40 mA including memory below; HOST output/input-cell activity separately capped at 55 mA per segment | 22 host signals plus four SPI and reset; H2D 312.5 Mword/s, selected RF D2H LO/16 words, wired up to 312.5 Mword/s. Maintain bounded service and fault delivery. |
+| Short queues, CDC and staging storage | 0.85 | Included in CORE 40 mA, not charged again | No external pins; set an 8,192-bit total data-bank/staging/queue ceiling, including metadata storage. Retain the 3,792-bit partial inventory inside it, not in addition. Ordinary FSM logic stays in the digital owner; bulk packets/captures remain on FPGA. |
+| Shared support and global growth | 2.92 = additional local reservoirs 0.60 + isolation/routing 1.20 + power conditioning 0.40 + unassigned growth 0.72 | Consumption must be charged to its RF/PLL/CORE/HOST/WIRE owner; no invisible extra supply domain | No extra functional pins; preserve provider power sites and common-return constraints. External regulation is baseline; no mandatory on-chip LDO array. |
+
+Totals: RF analog **2.40 mm²**, converters **1.30 mm²**, and the other owner
+totals match the unchanged contract. Pad macro geometry is peripheral; any
+intrusion into the core consumes these allowances. All fabricated inactive
+blocks retain their area. The support capacitor allowance is distinct from
+converter-local decoupling already included in the converter owner. Within its
+0.60 mm² allocation, 500 pF at the cited minimum 0.9 fF/µm² density leaves very
+little overhead; a denser permitted option or reallocation may be necessary.
+This is a cost warning, not a claim of layout fit.
+
+### Whole-mode current planning, not isolated-block addition
+
+Use the conservative warm RF subtotal **44 mA** (4 + 3 + 2 + 28 + 1 + 4 + 2)
+for the next complete inventory, versus the 37 mA reservation in retained
+waveform studies. Reserve **2 mA** for the inactive other frontend in each mode;
+this is an explicit leakage/quiet-detection hypothesis, not measured standby.
+Do not sum full active RF and wired payload currents on one die.
+
+| State | CORE | HOST, two segments | PLL/reference | RF | WIRE | Total / source power at 3.3 V |
+|---|---:|---:|---:|---:|---:|---:|
+| Warm RF RX/turnaround/TX planning bound | 40 mA | 110 mA | 40 mA | 44 mA | 2 mA | 236 mA / 0.779 W |
+| Wired simultaneous RX/TX planning bound | 40 mA | 110 mA | 40 mA | 2 mA | 96 mA | 288 mA / 0.950 W |
+| One active bidirectional wired branch; other serial branch disabled | 40 mA | 110 mA | 40 mA | 2 mA | 50 mA = 48 active + 2 inactive | 242 mA / 0.799 W |
+
+These are deliberately conservative allocation sums, not traffic-averaged
+predictions or die heat. Source power includes energy dissipated in external
+loads; package temperature is still unqualified. HOST includes H2D input-cell
+switching and D2H charging; CORE excludes those already counted currents.
+Converter maintenance during wired operation must replace the 2 mA RF standby
+assumption with its enabled load and re-evaluate that mode. Startup charge and
+load steps remain separate from steady current ceilings.
+
+**Decision:** use these allocations to test architectural plausibility now.
+Do not require transistor layout to justify their last decimal, or silently
+raise them to make a test pass. Earlier 20 mA CORE, 24 mA-class clock and 37 mA
+RF fixtures are controls; they do not qualify this larger first-chip budget.
+The next broad screen must propagate the revised mode loads through the same
+package/supply/timing model before detailed filter optimization. Logical domain
+ceilings are not independently bonded rails; check actual pad/feed currents.
+
+### Timing and signal-quality allocations for the selected blocks
+
+Use one set of numerical requirements in the next model revision. These are
+initial design allocations with identified owners, not measured limits or
+protocol-compliance claims. Target-specific packet and electrical criteria
+remain additional acceptance obligations.
+
+| Owner / event | Initial allowance | Interpretation |
+|---|---|---|
+| External RF timing path | Existing −115 dBc/Hz at 100 kHz source point with −145 dBc/Hz floor; input noise 75 uV RMS and two downstream stages at 15 fs RMS each over 1 kHz–8 MHz | Reuse the combined high-impedance clock requirement point, including input loading and coherent supply effects. This is a demanding assigned spectrum, not a purchased source or GF180 noise prediction. |
+| Wired sample/launch timing | 5 ps RMS random-timing study point at 2.5 Gb/s; preserve the existing 0.05 UI plus seven-sigma eye allowance as a diagnostic screen | Random jitter does not replace CDR tracking, deterministic jitter, pad/channel loss or target-specific masks. |
+| ADC acquisition and decisions | At 38.8125 MS/s, 25.765 ns period: allocate 5 ns acquisition, 18 ns for ten SAR decisions, 2 ns reset/control, leaving about 0.765 ns. Allocate the ten bit intervals as 3/2.6/2.4/2.1/1.9/1.6/1.3/1.1/1/1 ns, including 0.5 ns comparator time each. | Spend more settling time on large DAC steps without increasing conversion time. These are circuit timing targets, not a qualified sequencer or arbitrary-resolution programmable delay. Interleaving remains the costed fallback. |
+| Converter aperture | 10 ps RMS added sampling uncertainty allocation at the converter, separate from the much tighter RF LO path | At the existing 9.53125 MHz outer tone this contributes about 0.060% small-error RMS EVM. Preserve correlation with common clocks when present. |
+| RX channel filtering / AGC | Existing 1 dB passband-loss investigation allocation through ±9.53125 MHz; retain 0.2 us gain-settling and 2 us command-service study points | Finite-zero group delay and real training are included in acquisition; these numbers do not authorize extra preamble symbols. |
+| Same-channel RF changeover | Initial 2 us analog-readiness allowance, with clocks/reference retained and TX prefilled | Includes bias/output/filter settling actually required by the selected state transition. Overall protocol deadline also includes FPGA work, observation latency and calibrated air timing. |
+| Timed generic pad action | Selected 76.8 ns H0 command service (H2D clock divided by four) plus at most one 64-word boundary wait; prearm exact launches | Some protocol events need the separate faster electrical path. SPI alone is not the selected packet-response mechanism; validate those cases through the existing short-frame bridge. |
+| Host queues / clocks | 59/64 payload schedule, independent ±100 ppm study margins, bounded chip queues and explicit underflow mute | No finite queue permits unbounded rate error. Preserve source-clock-derived pacing or qualified feedback and independent recovery when clocks stop. |
+
+These allocations deliberately expose the difficult decisions: short late SAR
+steps, quiet RF phase distribution, high-Q filtering and bounded host service.
+They give the next mathematical model requirements to meet; exact transistor
+sizes and extracted parasitics are later work. The existing reports use their
+recorded settings and are not relabeled as passing this entire table.
+
+### First selected-baseline electrical result
+
+Run `python3 verification/baseline_envelope.py` from the project directory. This
+fast entry point reuses the existing network and timing functions but replaces
+the legacy DC load with the selected 236/288 mA mode budget. It writes
+[evidence/selected-baseline.json](../evidence/selected-baseline.json), separately
+from historical fixture evidence. H2D internal current is charged once within
+HOST, physically injected at the local node; the 40 mA timing reservation already
+includes switching. No extra C·V·f term is added to it.
+
+At a nominal 3.3 V board source, the selected 500 pF / 0.5-ohm ESR / 200 pH ESL
+reservoir and 0.5 nH shared return give coherent sampled local-rail ranges of
+approximately **2.882–3.052 V for RF** over the two LO endpoints and
+**2.787–2.925 V for wired** at 2.5 Gb/s. The first sums of tone amplitudes were
+more conservative; the report retains both and adds a derivative-based enclosure
+between sample points. Nominal supply-induced delay is about 3.56–3.58 ps RMS
+for RF and 3.74 ps for wired under the assigned delay transfer. These coherent
+tones are not independently random jitter and must enter the actual eye/RF model.
+
+An uncertainty probe with 2 nH return and 1 nH local-capacitor ESL produces an
+actual sampled wired minimum of **2.489 V**, below the old fixture's 2.5 V
+validity floor, with 9.30 ps RMS host-induced delay. This is a counterexample
+within an assigned network hypothesis, not evidence of a measured package
+excursion or an asserted maximum parasitic value. It prevents claiming that
+local capacitance alone makes the selected architecture insensitive to assembly.
+
+**Decision:** retain the selected network but require its effective return and
+reservoir impedance to be bounded, or change damping/host activity before a
+whole-chip pass. Continue integrating the selected converters, filtering and
+loaded RF/wired paths; do not count this electrical screen as complete baseline
+verification. Board-source ±1% cases currently vary DC only. Missing converter/
+core switching spectra, current versus voltage, nonlinear input behavior and
+thermal control remain explicit. The 27 °C junction target is not established by
+setting a noise-model temperature.
+
+The same baseline report now feeds the delivered source/input/supply timing
+into the existing causal wired receiver at 2.5 Gb/s, with a 100 ps driver pole
+and 2.7 pF effective load (including the assigned disabled-branch/mutual terms).
+It evaluates the rail at each actual displaced receiver observation. An assigned
+local signal-gain sensitivity proportional to rail voltage couples the voltage
+variation into the samples; this is not a measured CTLE law or a claim that a
+remote transmitter follows our supply.
+
+In the earlier unequalized control, across initial phase ±0.35 UI and clock
+error ±100 ppm, the selected network has zero errors in each 1,200-bit held-out interval and about 190 mV minimum
+signed sample margin. The higher-inductance probe also has zero errors and
+about 153 mV margin, but 149–150 receiver observations per case lie below the
+legacy 2.5 V floor (minimum about 2.488 V). Those cases are **not qualified**.
+Voltage-validity diagnostics persist through the receiver's forecast/consume
+snapshots, so decoding cannot erase an out-of-domain observation.
+
+The selected receiver now includes the CTLE setting and generic recovery test
+below; the unequalized eye figures above remain a control. Neither establishes
+PCIe/USB/SATA startup, sustained BER or complete wired qualification.
+Current-steering TX compliance, physical CTLE gain,
+independent remote-source impairments and protocol-specific electrical states
+remain to be joined. The controller sees only observed voltage/timing; source
+bits are used only for the external scoreboard and separate fixed-lag training.
+
+### Wired equalization, host delivery and recovery
+
+The `wired_recovery` section of the selected-baseline report connects the same
+288 mA power allocation, 2.7 pF load, 100 ps driver pole, delivered timing and
+rail-dependent local gain to the existing persistent CDR, ordered raw/status
+transport, bounded queues and FPGA marker framing. Host and line clocks have
+opposing ±100 ppm errors. Publication uses H2D clock divided by four
+(nominally 39.0625 MHz), including the host ppm error, instead of the legacy
+40 MHz service assumption. The fixture interrupts host/publication clocks while
+CDR continues, explicitly flushes/retrains, and exercises line gaps of 0, 1,000
+and 10,000 bits. All delivered frames must match source payloads in order;
+source payloads are unavailable to the receiver/controller. Terminal source
+level is held continuously after the finite stimulus, without resetting filters.
+
+The corrected shared-rail version includes REF_IN loading and its returned
+carrier while preserving independent RX CDR timing. At the current 0.25 nH
+target, unequalized readiness transitions overflow the fixed raw/status queue
+at about 3.58–3.82 us. The 0.5 and 2 nH cases fail the TX reference-clock gate
+before the full-duplex lifecycle; their RX-only capability is not assessed by
+that gate.
+Increasing storage or relaxing readiness criteria is not the chosen remedy.
+
+**Selected requirement:** include the already-planned tunable CTLE, starting
+from unity DC gain, a 200 ps zero (about 796 MHz) and an 80 ps pole (about
+1.99 GHz), giving 2.5× asymptotic gain (about 8 dB). Its transfer is evaluated
+with continuous physical-time channel state, independently checked against a
+state-space solution. The existing 10 mV RMS output-noise and 20 mV offset
+hypotheses remain requirements **after** equalization; this is not evidence
+that a GF180 equalizer provides the bandwidth, noise, swing or current together.
+Its consumption must fit the existing wired allocation, with no extra free stage.
+
+With that setting, both current-package clock corners meet the unchanged
+delivery minimum through the gap/restart lifecycle. The weaker 150 ps zero /
+80 ps pole control also meets it under the corrected shared environment;
+retain both controls without treating either as a physical equalizer proof.
+
+The separate `wired_transmit` campaign sends nonuniform bit boundaries from
+the corrected delivered clock through the driver/channel/CTLE model to an
+independent peer CDR. Channel state integrates the actual interval between
+transitions; TX phase is not copied into the peer sampling clock. At the current
+target, centered TX edge variation is about 11.12 ps RMS and the shortest UI is
+368.3 ps at nominal 2.5 Gb/s. Four initial phase/ppm cases each produce zero
+errors in 1,200 held-out bits, but readiness holds for only 29.25–53% of that
+interval and all finish unqualified. With ideal TX timing and the same rail,
+channel, noise and CTLE assumptions, all four remain qualified throughout.
+This is a transmitter-timing/peer-readiness failure despite good sampled voltage
+margin, not a statistical BER result or protocol-compliance verdict. Serializer
+logic, output-current feedback, real cable behavior and pad nonlinearity remain
+unverified. Focused runs establish these results; the full artifact must be
+regenerated to include the new transmit campaign.
+
+The readiness rule requires all 64 recent detected transitions to have loop
+error below 0.1 UI (40 ps here); it is an assigned peer-model rule, not a
+protocol mask. The baseline's final windows reach 0.116–0.120 UI. Raising the
+external Thevenin source peak to 0.75 V reduces centered TX edge variation to
+7.40 ps RMS and final-window maxima to 0.084–0.088 UI; all four cases remain
+qualified across the held-out interval with zero errors. At 1.0 V, variation
+is 5.78 ps RMS and those short cases also pass. This is the same source-swing
+mitigation that helps RF, with no readiness relaxation. It is package-dependent:
+at 0.5 nH, 0.75 V admits the TX clock but still fails continuous peer readiness,
+while 1.0 V is rejected at the clock gate. The 2 nH probe rejects every swing.
+Keep the 0.5 V baseline failure and the full source-current/loading cost; these
+controls do not qualify bias/protection, serializer timing, BER or all peers.
+
+The finite TX transport is now connected to actual word-consumption events
+from that clock, using the existing exclusive 59/64 schedule, 2,048-bit queue,
+1,024-bit prefill, eight-word staging and 40 MHz CDC. At both ±100 ppm host
+service offsets, a 104.8576 µs focused run emits 262,140 correct bits without a
+transport fault; minimum queued data is 94/84 bits. Stopping observed pacing
+edges at 5 µs instead produces underflow at about 5.412 µs with a correct
+emitted prefix. This tests logical underflow, not pad muting or recovery.
+Chunked and uninterrupted execution agree in the focused checks.
+
+Only the first 2,600 emitted bits are propagated through the peer channel/CDR;
+do not extend its 1,200-bit scored interval to the entire transport run. The
+stream starts at an absolute clock/rail phase 4 ns later than the direct-source
+control, after an assumed 20 µs startup. At the current package target, the
+0.5 V source then has 11–21.3% peer readiness, and **0.75 V has only 69.3–80%**,
+despite zero held-out bit errors. At 1.0 V these short windows remain qualified.
+A paired launch-phase check reproduces the 0.75 V difference without transport:
+0 and 20 µs origins pass, while 4 ns and 20.004 µs origins give the same reduced
+readiness. The earlier favorable launch window therefore does not qualify the
+stronger source across host/clock phases. At 0.5 nH, the admitted 0.75 V clock
+still has only 7.5–7.7% readiness in this window; rejected clocks remain rejected.
+
+The TX amplitude placement is now corrected: NRZ drive is multiplied by the
+continuous rail waveform **before** the driver pole, load pole and CTLE. Their
+states persist across actual bit boundaries. Sinusoidal particular solutions
+and homogeneous transitions avoid a GHz integration grid. Independent real
+augmented-state calculations, a frequency-response check and the constant-rail
+limit verify this implementation, including nearly coincident poles. The
+rail/drive coefficient is still assigned; this does not establish nonlinear
+driver behavior, output-current feedback or physical headroom.
+
+The corrected model retains the launch-phase failure. The current package
+target now exercises all eight even-bit launch phases visited by ten-bit words
+against the nominal /16 host physical clock. Each has four peer phase/ppm
+corners and 1,200 held-out bits:
+
+| External source peak | Continuously qualified corners | Lowest readiness fraction | Periodic-clock controls at the same mean delay |
+|---|---|---|---|
+| 0.5 V baseline | 0 / 32 | 11.0% | 32 / 32 qualified |
+| 0.75 V candidate | 9 / 32 | 68.6% | 32 / 32 qualified |
+| 1.0 V candidate | 22 / 32 | 80.4% | 32 / 32 qualified |
+
+All these short data observations still have zero errors. The controls retain
+the same data, rail forcing, channel, noise, mean clock delay and readiness
+rule, removing only varying TX edge error. Thus varying delivered timing is
+necessary for these modeled readiness failures; the comparison does not isolate
+source, input or downstream supply sensitivity as its unique cause. Neither
+stronger source is a complete wired remedy, despite its favorable first window.
+Do not relax readiness or change the baseline to hide this result.
+
+The host ppm control still changes data service while interference harmonics
+remain nominal. This discrete phase grid is not continuous or asynchronous
+phase coverage. The next timing requirement must cover waveform/phase dependence
+and peer recovery, not only aggregate RMS jitter or one preferred launch instant.
+These focused results follow the last complete report snapshot; source hashes
+identify that older snapshot until the full artifact is regenerated.
+
+The higher-inductance probe still overflows even with the selected CTLE, and
+its rail leaves the legacy validity interval. It remains rejected. The fixture
+uses generic markers and synthetic reference-presence/watchdog events, not real
+SATA ALIGN, PCIe LTSSM or a validated physical clock monitor. The 128-record
+source queue is an existing diagnostic allocation, not closure of the complete
+8,192-bit on-chip storage inventory. The next gate is to carry the same analog
+conditions through protocol-specific electrical actions and duplex operation.
+
+### USB static output voltage and return-path gate
+
+The new `usb_static_voltage` section tests a necessary USB electrical condition
+under the same loaded PDN and worst-rate host harmonic stimulus. The original
+[USB 2.0 specification, §7.1.1 and Table 7-7](https://www.seriesten.org/docs/protocols/USB_2.0_Specification.pdf)
+requires a driven high above 2.8 V into 15 kohm and a driven low below 0.3 V
+with 1.5 kohm to 3.6 V; see also the [USB-IF specification library](https://www.usb.org/document-library/usb-20-specification).
+The model uses 30-ohm voltage drivers and the existing two-node pad capacitance
+(2 pF local, 0.3 pF inactive branch, 0.2 pF mutual). It solves pad voltage
+relative to board return, including the **coherent die-ground motion**, rather
+than treating differential die supply as the absolute output voltage.
+
+| Condition | Lower enclosed high at 3.267 V source | Upper enclosed low | Verdict |
+|---|---:|---:|---|
+| Selected 0.5 nH common return, full 96 mA wired allocation | 2.701 V | 0.299 V | Fails driven-high requirement even at nominal source voltage |
+| Same network, one active branch at 50 mA total WIRE allocation | 2.797 V | 0.298 V | Sampled high actually reaches about 2.7993 V; failure is not merely enclosure conservatism |
+| Same 50 mA case, tighter 3.2835 V minimum source | 2.814 V | 0.298 V | High condition passes, but modeled low margin is under 2 mV; not selected as a sufficient mitigation |
+| 0.25 nH common-return target, 50 mA WIRE allocation | 2.844 V | 0.194 V | Conditional voltage margin across the original ±1% source window |
+
+The 2 nH higher-inductance probe fails by much more, including driven-low
+voltage. These are static signaling states with periodic rail/ground noise;
+they do not establish a USB eye, edge-rate compliance, chirp, negotiation,
+disconnect or HS traffic. Signal-bond inductance, cable, switch charge and
+pad-current feedback into the PDN are still missing. Fixed nominal-source AC
+spectra are retained at the DC source corners. Fine time sampling is enclosed
+using a derivative bound; small borderline misses are not rounded into passes.
+
+**Decision:** USB bidirectional operation disables the unused serial branch;
+reserve 48 mA for its active branch and 2 mA for the inactive branch, with
+CORE/HOST/timing allowances unchanged. This is an enabled-block allocation,
+not an on-chip protocol profile. Keep the 96 mA simultaneous serial budget for
+configurations that actually enable both branches. Do not add the modeled pad
+load a second time to its reservation.
+
+Adopt **0.25 nH common return as the common assembly target**, retaining
+provider-compatible wire bonding and existing ground sites. This target is an
+uncertain equivalent-network requirement, not a proven bond geometry. The original
+0.5 nH whole-chip fixture does not close USB. The lower-return candidate
+now runs across the existing RF, clock, converter, wired and USB benches using
+one package catalog. The report rejects missing package cases; this coverage
+check does not supply missing behaviors or establish physical assembly feasibility.
+The voltage pass alone cannot qualify the whole chip. The shared comparison now
+preserves selected SAR precision, narrowband packet exchange and wired recovery
+at 0.25 nH, while weak wideband blocking still fails. Evidence ID `selected`
+remains the original 0.5 nH control; `baseline_package_case` now identifies
+`lower_return_probe` as the common target. This naming preserves old evidence
+identities instead of silently relabeling earlier measurements. Additional
+return bonds/placement and quieter host activity are possible physical remedies,
+not yet demonstrated substitutes for that test. No extra supply or signal pin
+has been silently introduced.
+
+### USB high-speed quiet-pin and common-return gate
+
+`usb_hs_levels` adds released, P-driven and N-driven static states of the same
+bidirectional branch. Host and device use these same physical primitives; this
+is not a negotiation controller or an on-chip protocol profile. It consumes the
+same 242 mA single-branch allocation, two host-current spectra and all three
+package cases. Local 45-ohm terminations return to die ground; precision remote
+45-ohm loads return to board ground. The existing pad/inactive/mutual capacitance
+is retained. Separate 0.2-ohm signal bonds include a 2 nH nominal hypothesis,
+a zero-inductance control, and a sensitivity probe with 1.6/2.4 nH bonds and
+42.75/47.25-ohm local terminations. These are unmeasured hypotheses.
+
+Crucially, the remote terminations create additional return paths. Their
+harmonic currents feed back into the three-node supply/return network before
+computing pad voltages. DC current returning through the remote loads is
+redirected from the common ground bond, not added again to the WIRE budget.
+An independent seven-node nodal solution checks the frequency-domain reduction;
+DC KCL separately checks current ownership. Ideal current steering remains
+inside the existing reservation; physical output impedance, supply sensitivity
+and switched current are not yet represented.
+
+The [USB-IF electrical test specification, EL_9 and §4.3](https://www.usb.org/sites/default/files/USB%202%200%20Electrical%20Compliance%20Specification(v1.07).pdf)
+specifies ±20 mV for undriven HS pins with precision terminations. The report
+separates DC, an unfiltered instantaneous guard and hypothetical measurement
+bandwidth controls. No chosen observer bandwidth is claimed to be the required
+compliance instrument response.
+
+| Common return, matched 2 nH signal bonds, released state | Sampled quiet-pin absolute peak | Enclosed peak | DC result |
+|---|---:|---:|---|
+| Original 0.5 nH control | 129.7 mV | 130.9 mV | Within ±20 mV |
+| Current 0.25 nH target | 70.7 mV | 71.3 mV | Within ±20 mV |
+| 2 nH uncertainty probe | 421.3 mV | 425.2 mV | Within ±20 mV |
+
+At the current target, matched legs cancel the host-induced differential signal
+while retaining this board-referenced disturbance. The asymmetric probe instead
+has a differential interval of about −2.67 to +3.82 mV and a 72.2 mV quiet-pin
+enclosure. This is why a clean differential eye or DC level cannot close the
+physical-interface gate. The result is not created by the new signal inductance:
+the zero-signal-inductance control still reaches 69.6 mV.
+
+For the matched current target, illustrative single-pole observer bandwidths
+of 20 MHz, 200 MHz and 1 GHz produce quiet-pin enclosures of 4.63, 23.53 and
+54.50 mV respectively. The large bandwidth dependence prevents relabeling this
+as a formal USB compliance failure. It does establish unclosed high-frequency
+common-mode behavior, with a measured instrument/channel definition still needed.
+
+**Decision:** keep USB and the existing pad branch, but do not treat 0.25 nH as
+sufficient physical-interface closure. Preserve that package target while
+resolving how host return current couples into the wired termination reference
+through the fixed provider ground sites. For the unchanged matched spectrum,
+a uniform host-induced AC reduction to about 0.255 of its present amplitude
+would suffice for the unfiltered guard; this is an inverse requirement, not
+proof that slower edges, a lower host rate or return segregation achieves it.
+Any remedy must also preserve host throughput and response deadlines and be
+rerun through the common clock/RF environment. Do not simply tighten the assumed
+common inductance until a test passes, or assume additional ground bonds.
+Full USB electrical lifecycle, packet timing, cable behavior, source compliance
+and dynamic pad-current feedback remain open.
+
+### Host-rate reduction does not close the USB return/noise gate
+
+The HS campaign now tests simultaneous D2H/H2D word rates from 62.5 to
+312.5 Mword/s, including intermediate rates near the response-time boundary.
+This is a counterfactual mitigation screen, not an adopted host-clock change.
+Each case regenerates both host-current spectra and relocates the corresponding
+H2D internal mean current inside the unchanged 110 mA HOST / 242 mA total
+reservation. Pulse shapes, charge per edge and the selected package stay fixed.
+Control still follows H2D physical clock divided by four.
+
+**Preserve absolute spectral coverage when comparing rates.** The number of
+harmonics grows at lower repetition rates, covering at least 1.875 GHz on D2H
+and 937.5 MHz on H2D. Holding the original harmonic count would suppress fast
+edge content as the clock slows and falsely suggest that the peak disturbance
+had disappeared. These remain finite-band assigned current spectra, not
+converged physical switching waveforms.
+
+The same candidate rates feed the existing generic short/bulk frame timing
+calculation. Eight-word frames provide three ten-bit payload words; 64-word
+frames provide 59. The calculation includes frame publication, queuing, the
+selected H2D control CDC, 40 ns FPGA processing, 34 ns analog allocation and
+20 serial bit times of packing. D2H CDC, physical GPIO and cable margins remain
+missing, so a passing timing number is insufficient for protocol qualification.
+
+| Both host word rates, current 0.25 nH target | Enclosed quiet-pin peak | Eight-word payload capacity | Incomplete response allowance |
+|---|---:|---:|---:|
+| 312.5 Mword/s | 71.3 mV | 1,172 Mb/s | 358.9 ns |
+| 300 Mword/s | 72.1 mV | 1,125 Mb/s | 369.0 ns |
+| 267.5 Mword/s | 86.0 mV | 1,003 Mb/s | 399.8 ns |
+| 250 Mword/s | 74.9 mV | 938 Mb/s | 419.7 ns |
+| 156.25 Mword/s | 75.6 mV | 586 Mb/s | 602.1 ns |
+| 62.5 Mword/s | 74.4 mV | 234 Mb/s | 1,331.7 ns |
+
+The ordinary local-response comparison is 400 ns (192 HS bit times). Even
+before missing margins, the eight-word expression requires at least about
+267.3 Mword/s. The larger frame can carry 576 Mb/s at 62.5 Mword/s, but its
+calculated response allowance is 6.71 us. Throughput alone does not establish
+usability. None of the 36 package/rate combinations meets the unfiltered
+quiet-pin, throughput and incomplete turnaround guards together. This does
+not prove that every possible rate, transport or physical implementation fails.
+
+**Decision:** retain the selected host rate and reject simple clock reduction
+as the present remedy. Peak edge current and host-to-wired-return transfer must
+be addressed, with edge shaping and physical return segregation evaluated
+against actual GPIO timing and the fixed provider sites. Lower average switching
+power is not equivalent to lower instantaneous ground disturbance. The observer
+bandwidth caveat of the quiet-pin screen still applies; neither this rate sweep
+nor a transport calculation establishes USB compliance or a full lifecycle.
+
+### Return partitioning must close both ground and supply loops
+
+`return_partition` replaces the single die return with host, analog and common
+board-return nodes. The shared supply feed, damped analog supply, board capacitor
+and total 500 pF local reservoir remain explicit. Parallel branch impedances
+plus the common segment reproduce the original return R/L when the die returns
+are tied; that limit is independently checked against the three-node model.
+The campaign also checks DC current paths, KCL and passive power balance.
+
+Ground separation alone leaves host input current on the analog supply and
+allows the analog reservoir to carry its return current. Additional cases move
+that input supply to the HOST feed and allocate 125, 250 or 375 pF of the
+existing reservoir to HOST. Capacitance is conserved and ESR scales inversely
+with allocated area. No independent external rail or extra ground terminal is
+granted. Inter-return coupling spans assigned capacitances and a conductive
+path; these are requirements to investigate, not extracted substrate/ESD values.
+
+At the current 0.25 nH equivalent return target, with unchanged worst-rate host
+activity and the 242 mA bidirectional-branch reservation:
+
+| Hypothesis | Quiet-pin absolute enclosure | Host rail upper enclosure | Largest host/analog ground difference |
+|---|---:|---:|---:|
+| Tied-return control | 71.3 mV | 3.421 V | Approximately zero |
+| Separate returns only | 278.8 mV | 3.901 V | 987 mV |
+| Separate returns, HOST input supply, 250/250 pF split, 2 pF coupling; equal return groups | 16.4 mV | 3.492 V | 200 mV |
+| Same low-coupling case, site-count-weighted groups | 10.0 mV | 3.618 V | 314 mV |
+
+The site-count hypothesis is read from the retained provider inventory: two
+north/south ground sites near the host buses and eight east/west sites. Equal
+per-site impedance is only a hypothesis; neither the aggregate weights nor a
+physically isolated on-die ground network is proven. All existing sites remain.
+The original template's common nets do not establish this partition.
+
+The same hypotheses also run at both RF band endpoints with the 236 mA RF
+budget and inactive USB terminations. Quiet-supply motion drives reference
+modulation and the existing supply-to-clock-delay model. At 2.4 GHz the
+site-weighted low-coupling case increases assigned supply-induced timing RMS
+from about 2.83 to 4.07 ps and weak-blocked BPSK errors from 18 to 46 of 2,340;
+at 2.484 GHz the error count remains 12, while timing RMS rises from 2.81 to
+4.15 ps. These short assigned-ENOB, known-DATA comparisons do not establish
+packet performance. The causal SAR load-feedback network is not yet migrated.
+
+**Decision:** do not adopt return separation from a USB-only pass. Retain the
+baseline and the coupled alternatives. A credible partition must account for
+host input supply ownership, local reservoir allocation, inter-domain voltage
+and timing, and substrate/ESD coupling within the fixed geometry. Ground labels
+alone provide no isolation.
+
+The [coupled REF_IN screen](#ref_in-voltage-and-clock-edges-with-moving-return)
+below now resolves the direct input-voltage path and input-capacitance return
+current. The RF payload comparisons above retain their earlier clock model;
+they must be migrated before selecting a partition or qualifying external timing.
+
+### REF_IN voltage and clock edges with moving return
+
+`reference_return` closes the previously omitted board-to-die voltage path.
+The existing 0.5 V-peak / 50.2-ohm source, 2 nH signal bond, 3 pF input and
+20 mV incremental threshold are now solved with the five-node PDN. Input
+capacitance is a real return-current path: both its carrier current and its
+loading of host-induced ground motion participate in the solution. This is a
+linearized input about an unspecified bias; absolute common-mode, protection
+and transistor receiver behavior remain unqualified.
+
+The campaign covers three package cases, three return arrangements and RF
+2.4/2.484 GHz plus wired 2.5 GHz external-clock operation. Full wired-duplex
+288 mA and RF 236 mA allocations remain reserved; no USB test terminations
+are enabled. Positive threshold crossings are located by bracketing roots over
+one coherent nominal-rate period. All rising crossings resolved on each
+32-sample/UI grid are counted, with a 64-sample/UI refinement. A source-only
+control keeps the same physical loading while removing host activity.
+Independent series-Thevenin, power-balance, analytic phasor-shift, edge-loss and
+correlated-delay checks verify the mathematical implementation.
+
+Downstream supply delay uses the retained assigned 0.1 ps/mV sensitivity and
+1 GHz pole, evaluated at actual input crossings. The source's own returned
+carrier contributes supply ripple as well. Direct input displacement and
+supply delay remain coherent; their RMS values must not be added independently.
+At the selected 0.25 nH equivalent package target:
+
+| External clock / return hypothesis | Direct input-edge RMS | Combined with assigned supply delay | Combined peak-to-peak |
+|---|---:|---:|---:|
+| Wired 2.5 GHz, tied baseline | 11.06 ps | 11.12 ps | 46.97 ps |
+| RF 2.4 GHz, tied baseline | 8.93 ps | 9.13 ps | 45.25 ps |
+| RF 2.484 GHz, tied baseline | 9.05 ps | 9.25 ps | 47.27 ps |
+| RF 2.484 GHz, equal split, 250/250 pF, 2 pF coupling | 3.16 ps | 2.54 ps | 13.56 ps |
+| RF 2.484 GHz, site-weighted split with the same capacitances | 2.15 ps | 3.29 ps | 15.35 ps |
+
+All nine current-package cases retain one resolved rising edge per nominal UI
+and ordered output edges at both resolutions. This is a finite deterministic
+clock screen, not statistical jitter or phase-noise qualification. Loaded
+carrier amplitude remains around 0.20–0.21 V and the external clock returns
+about 9.4–9.7 mA peak through its input capacitance. That alternating externally
+supplied current is not another on-chip DC current allocation.
+
+The original 0.5 nH tied wired case has an empty rising-edge window even in this
+passive model. Several higher-inductance cases also lose windows; three have
+counts that change with refinement. Exact loss counts in those cases are not
+converged and must not be reported as reliable clock behavior. No clean clock
+is inferred from their nominal frequency or RMS alone.
+
+**Decision:** retain external timing as an implementation route, but withdraw
+any inference that the old source/input-noise plus supply-delay budget covered
+its complete clock path. Return-partition choices must be reevaluated with
+this path included: the same correlation that worsened an isolated supply-delay
+metric can improve the complete deterministic edge result.
+
+The [coupled RF payload comparison](#corrected-ref_in-clock-in-the-rf-conversion-chain)
+now carries these events into the assigned-ENOB wideband RX/TX path. Other
+payload benches still need migration, particularly causal SAR/reference loads,
+narrowband packet timing and the wired external-TX path with independently
+owned RX CDR. Nominal coherent phases, unknown bias/sensitivity and unextracted
+coupling still prevent whole-chip timing closure.
+
+### Corrected REF_IN clock in the RF conversion chain
+
+The `weak_converter_feedback` control now joins causal SAR decisions/recharge
+to the corrected clock at both band endpoints and both assigned supply-delay
+signs, at fixed 54 dB gain and the same −85 dBm wanted / −30 dBm blocker.
+All accepted tied-return loops converge. At 0.25 nH, positive/negative cases
+retain 58/60 errors at 2.4 GHz and 23/27 at 2.484 GHz; at 0.5 nH the counts
+are 208/266 and 156/168. The 2 nH clocks are rejected before conversion.
+The transient supply-delay sign follows its periodic counterpart; neither
+rail nor input-voltage disturbance is artificially sign-flipped. The main
+assigned-ENOB comparisons below remain controls. Explicit conversion dynamics
+do not remove this short uncoded blocked-reception failure; known-DATA training,
+numerical sensitivity and missing packet acquisition still limit interpretation.
+
+`reference_payload` connects the solved periodic rising edges to RF LO phase
+and divided ADC/DAC event timing. Phase is continuous and advances between the
+ordered edges; static phase is retained, not removed using payload truth.
+Missing, unordered, unresolved or out-of-envelope clock records are rejected
+before running payloads. The same coupled network supplies rail/headroom and
+reference modulation, including the external clock's own returned carrier.
+DC current relocation and resistor losses are accounted without changing the
+236 mA RF reservation. Both assigned supply-sensitivity signs are tested.
+
+Source phase, source-AM conversion and receiver/distribution noise remain
+assigned small perturbations on that clock. The input-noise calculation is
+gain-normalized to the coupled carrier amplitude; the physical source remains
+0.5 V peak. These perturbations are not yet solved jointly at the analog
+threshold. The old host-induced supply-phase term is replaced, avoiding double
+counting. Rising-edge interpolation does not specify falling edges, quadrature,
+buffer waveforms or a strict phase-spectrum bandlimit.
+
+The previous environment is rerun on the same 256× envelope grid. At the current
+0.25 nH package target, the weak −85 dBm wanted / −30 dBm +12 MHz blocker fixture
+and fixed 54 dB gain produce these **uncoded errors out of 2,340 held-out bits**:
+
+| Environment | 2.4 GHz | 2.484 GHz |
+|---|---:|---:|
+| Previous environment, same grid | 13 | 5 |
+| Corrected tied clock, positive sensitivity | 59 | 20 |
+| Corrected tied clock, negative sensitivity | 56 | 24 |
+| Equal low-coupling split, positive / negative sensitivity | 10 / 24 | 5 / 6 |
+| Site-weighted low-coupling split, positive / negative sensitivity | 19 / 35 | 5 / 5 |
+
+The 2 nH tied cases are rejected at the clock gate for both band endpoints;
+no smooth substitute clock is supplied. Split cases are evaluated at the current
+package target only. The hypotheses remain unextracted, and the receiver still
+uses assigned-ENOB conversion and two known DATA training symbols rather than
+real preamble acquisition, FEC or a packet-error criterion. These counts cannot
+be treated as protocol sensitivity or statistical BER.
+
+**Numerical limit:** the noiseless 2.4 GHz tied case has RX EVM 1.104, 1.206 and
+1.281 at 256×, 512× and 1024× grids, with 42, 44 and 45 bit errors. The failure
+persists, but its EVM is not converged; do not derive a precise silicon budget
+or select a partition from that value. At 2.484 GHz the same control changes
+from 0.38150 to 0.38191 EVM and retains 20 errors at 256×/512×. Faster clock-return
+and interpolated phase content require numerical care even in a mathematical
+model. The old lower-bandwidth simulation cannot silently stand in for it.
+
+A focused integration control uses exact piecewise-linear forcing of the same
+analog poles, independently checked against real state-space integration for
+complex I/Q inputs. At 2.4 GHz its 256×/512×/1024× EVM is 1.397/1.330/1.381,
+with 43/43/46 errors: changing the integrator does not establish convergence.
+New observation diagnostics locate 72–82% of squared equalized error on
+subcarrier +71 across both integration methods. The smallest training gain is
+only 7.6–9.8% of the median data-tone gain. This identifies strong amplification
+by the two-symbol channel estimate as a contributor to EVM sensitivity, not
+proof of the underlying analog cause. Keep the receiver and its errors intact;
+next separate training contamination from pre-equalization signal impairment.
+The linear-forcing controls are now generated alongside existing resolution
+controls; legacy ZOH remains the default. These focused results postdate the
+retained full-report snapshot until that report is regenerated.
+
+The paired blocker-removal control keeps the corrected clock, rails, gain and
+native converter unchanged. With random noise disabled, clean RX EVM is
+1.727/1.712/1.704% on the same three grids, with zero errors. Substituting only
+its training interval into the blocked receiver leaves EVM 0.724/0.734/0.738
+and **30 errors at every grid**, versus 42/44/45 with contaminated training.
+The clean estimate is an attribution tool, not an available receiver feature;
+blocked held-out data and pilots remain untouched. No payload-time PGA clipping
+or ADC saturation occurs in these cases. Training contamination amplifies the
+reported impairment but cannot explain away the blocked failure. Preserve that
+failure and investigate blocker conversion through the delivered timing/rail
+paths before tightening ADC precision or declaring the package qualified.
+
+TX in-band EVM changes little in this fixture: about 4.00% versus 4.00% at
+2.4 GHz and 3.927% versus 3.927% at 2.484 GHz for the previous and corrected
+tied environments. TX grid controls are much more stable than the problematic
+2.4 GHz RX case. This is not a spectral-mask, blocker, real-preamble or packet
+qualification.
+
+**Decision:** retain the corrected event-clock path and keep both tied and
+partitioned cases. Receiver blocking remains the material concern; a clock-only
+RMS improvement does not establish a usable RF configuration. Resolve numerical
+sensitivity and migrate causal converter/load feedback and real acquisition
+before accepting a common operating envelope. This bench does not silently
+replace the independently recovered wired RX clock or qualify wired TX timing.
+
+### Selected wideband RF under the same environment
+
+The same `selected-baseline.json` now joins the fifth-order finite-zero RX
+filter, native 10-bit ADC/DAC transfer and third-order TX reconstruction to the
+236 mA RF mode allocation, both LO endpoints and the shared package catalog.
+RF input levels are absolute, with 2 dB external loss for wanted and blocker
+alike; no selective board rejection is credited. The ADC returns signed 10-bit
+codes shifted left two positions in the 12-bit transport word. DAC inputs round
+to 10 bits with saturation, never wrapping. Neither transfer proves a physical
+SAR, converter linearity or reference settling.
+
+The RX hypotheses are 6 dB chip-input NF, 0 dBm IIP3, 20 dB early gain, 8 ENOB,
+10 ps independent aperture noise, the shared delivered-clock spectrum and
+reference ripple. Early gain and PGA headroom track the instantaneous loaded
+rail with assigned sensitivities. Four fixed PGA settings (42/48/54/60 dB) are
+reported separately; this search is not AGC. A 12 MHz-offset blocker is −30 dBm.
+
+| Wideband operating point | Observed result | Meaning |
+|---|---|---|
+| Wanted −65 dBm, PGA 42 dB | About 6.1–7.7% EVM, no errors in 2,340 held-out BPSK bits per case, no PGA clipping during the source burst | Useful conditional wideband evidence under both package hypotheses, not a packet or higher-modulation qualification. |
+| Wanted −85 dBm, same blocker | Every tested gain setting has errors; best EVM is roughly 62–146% across the four environments | Finite-zero filtering is necessary here but insufficient to establish this weak-signal/blocker operating point. More gain eventually clips; it is not a general cure. |
+| Fifth-order all-pole comparison at −85 dBm, 2.4 GHz | All source-burst ADC sampling instants encounter PGA clipping at every tested gain; roughly half the BPSK bits are wrong | Retain finite-zero selectivity in the baseline. A different gain range might prevent clipping but would need its converter-noise budget rechecked. |
+| TX, third-order 20 MHz reconstruction, 0.12 RMS nominal DAC drive | About 3.9–4.0% EVM, zero short-fixture BPSK errors; within assigned differential port voltage/current/energy limits | The existing 28 mA driver reservation can support this modeled operating point within RF 44 mA. This is not measured TX power, an emissions pass or proof of the driver. |
+
+The higher-inductance probe raises TX power above 50 MHz offset from about
+0.31–0.33% to 1.43–1.52% of the within-10-MHz power, before external RF filtering.
+This illustrates why a clean decoded waveform does not establish RF spectral
+quality. These broad integrals are not standard measurement bandwidths or masks.
+
+Two known DATA symbols train the external equalizer; fixed fixture pilots track
+common phase and ten DATA symbols are held out. Ideal symbol boundaries are
+provided. There is no real preamble, packet acquisition, CFO search or PER
+claim. FPGA interpolation/resampling uses 64 taps with explicit lookahead;
+continuous host service and timed launch are separate missing obligations.
+
+The high-rate envelope resolves the host/LO tones before analog filtering.
+TX reconstruction propagates exact nonuniform DAC edge times, avoiding artificial
+jitter from snapping edges to the simulation grid. Independent state-space
+checks verify both uniform analog filtering and this event-driven reconstruction.
+Resolution controls at 2.56/5.12 GHz, plus a 10.24 GHz weak-RX check, retain the
+loaded clock realization while removing random thermal/converter/aperture draws.
+TX EVM changes by less than 0.005 percentage points; the difficult RX case has
+up to about 1.3 percentage points of EVM spread, so precise weak-case EVM and bit
+counts are not converged qualifications. Its failure remains at every resolution.
+
+**Remaining joined RF work:** calibrated air-boundary timing across radio settings,
+physical SAR/reference timing and broader dynamic-current coverage;
+filter internal swing/noise/tuning; real FPGA control/service; output-current
+feedback into the PDN; and spectral masks with explicit board filtering.
+Retain the selected architecture while testing these obligations. Do not promote
+the −85/−30 dBm stress point to a supported operating envelope.
+
+### Weak wideband failure: paired impairment diagnosis
+
+The `wideband_diagnosis` campaign keeps the −85 dBm wanted signal, −30 dBm
+blocker at +12 MHz, shared package/rail realization, fixed noise seeds and fixed
+gain sweep. It disables one modeled contribution at a time and retains all
+package cases. These interventions identify causes; they are not cheaper or
+qualified operating configurations. Source, supply-induced phase and external
+input phase now have explicit provenance within the same delivered-clock model.
+The input model separately records AM conversion and additive receiver/distribution
+noise; its source swing, threshold offset and AM depth are explicit hypotheses.
+
+At the current 0.25 nH target and fixed PGA 54 dB, the two LO endpoints give:
+
+| Intervention | Uncoded errors / 2,340 evaluated bits | Interpretation |
+|---|---:|---|
+| All effects | 18 / 12 | Existing weak/blocker failure retained |
+| Remove converter excess noise | 18 / 13 | Native quantization remains; converter noise is not the dominant remedy at this gain |
+| Assume 9 ENOB instead of 8 | 18 / 13 | Does not justify spending the converter-upgrade budget to solve this failure |
+| Remove frontend thermal noise | 6 / 3 | Thermal noise materially affects EVM, but does not explain all blocker errors |
+| Remove input/distribution additive phase noise | 6 / 1 | Strongest individual clock-path improvement |
+| Remove input AM conversion | 18 / 12 | The larger integrated AM timing number does not identify the important interference mechanism |
+| Remove all delivered phase noise | 0 / 0 | Counterfactual diagnostic; rail/reference movement and other impairments remain |
+| Remove blocker | 0 / 0 | Short clean-channel decoding does not establish sensitivity/PER |
+
+The input/additive hypothesis is about −138 dBc/Hz equivalent SSB floor in
+1 kHz–8 MHz, alongside a much larger coherent AM-to-phase contribution.
+Centering the input threshold from 20 to 2 mV, lowering AM from 10% to 1%, or
+raising source peak swing from 0.5 to 0.75 V does not resolve the blocker case.
+An unpriced 25 uV receiver / 5 fs-per-downstream-stage hypothesis improves it
+but still has 7 / 2 errors at this gain. No noise allocation is silently promoted
+to demonstrated GF180 performance, and no extra bias current is free.
+
+Because finite phase lines can concentrate interference on individual OFDM
+subcarriers, the selected target also runs 128- and 512-bin input-noise controls
+and a second 512-bin realization. Integrated additive noise power is preserved.
+Errors remain (11 / 8 at 128 bins, 12 / 7 at 512, 13 / 8 for the second seed),
+but exact EVM/error counts change. This supports the qualitative failure and
+work priority; it does not establish statistical convergence, a unique phase-noise
+mask, or packet error rate. Known two-DATA-symbol training, uncoded BPSK and the
+lack of a real preamble/FEC remain explicit limitations.
+
+**Decision:** retain the selected converter and channel-filter allocation.
+Prioritize the delivered clock's far-offset additive noise and blocker reciprocal
+mixing, together with the complete receiver/acquisition model. Do not spend the
+ADC fallback budget or optimize only aggregate RMS jitter based on this fixture.
+Any mitigation must retain power/headroom accounting and pass packet-level tests;
+the +12 MHz stress alone is not a standard Wi-Fi qualification condition.
+
+### Selected narrowband packet exchange
+
+The same entry point now runs real LE 1M scan requests and replies at 2.426 GHz,
+with the complete 236 mA allocation and the shared package catalog. It uses native
+10-bit conversion in 12-bit transport, a fifth-order 500 kHz all-pole RX setting,
+third-order 1.5 MHz TX reconstruction, 10 ps aperture noise and instantaneous
+rail-dependent gain/headroom. The all-pole narrow setting and finite-zero
+wideband setting use the same selected configurable filter boundary. The older
+packet fixtures retain their explicit 12-bit/one-pole defaults as controls.
+
+At −80 dBm wanted with two −30 dBm blockers at +2/+4 MHz, the assigned 6 dB NF,
+0 dBm IIP3 and the causal paired-SAR requirements now use corrected REF_IN
+events and recharge-induced input-voltage feedback. At the 0.25 nH target,
+five of six held-out requests pass CRC and receive independently decoded replies;
+seed 719 acquires but fails CRC. At 0.5 nH all six stressed requests fail
+acquisition; the 2 nH clock is rejected before packet simulation. These results
+supersede the old-clock six-of-six result. Acquisition and gain
+control use received codes; no synthetic training prefix or payload oracle is
+provided. Six trials do not establish PER or Bluetooth qualification.
+For seed 719, the previous environment at the same 1024-substep grid passes,
+as does the corrected environment with blockers removed. Both controls retain
+causal conversion and their respective load-feedback paths. This ties the
+failure to the combined corrected environment and blocker exposure, rather
+than the grid change alone; it is not a single-impairment attribution.
+
+Uncorrected diagnostic RF launch gaps are approximately **about 151–152 µs**
+against the model's 150 µs target. A separate −60 dBm, blocker-free training
+packet supplies one fixed RX timestamp correction (about 1.190 µs) and one TX
+launch advance (about 0.319 µs) per package setting. Applied unchanged to all
+held-out packets, the five successful current-package exchanges give
+**149.964–150.179 µs** diagnostic gaps and correct peer decoding. The failed
+request does not arm a reply. This establishes the usefulness of external timestamp/
+launch calibration; it does not establish a standard air-boundary measurement,
+physical calibration procedure, or stability across channels, filters and PVT.
+No scored packet's actual source end is used to correct its launch.
+
+The source-swing control now repeats this complete exchange at **0.75 V
+external Thevenin peak**, including separate strong calibration at that setting.
+At the 0.25 nH target, all six requests and replies decode correctly, all causal
+reference-feedback loops converge, and calibrated diagnostic gaps span
+**149.964–150.179 µs**. Replies have no DAC clipping and meet the assigned port
+voltage/current/energy bounds, with about 3.145–3.150 mW active output power.
+The same change yields only **one of six** successful exchanges at 0.5 nH;
+the 2 nH clock is still rejected. This supersedes the earlier RX-only mitigation
+check, not the failed 0.5 V baseline. Both source settings remain in the report.
+Baseline-only previous-environment attribution controls are not reused as
+matched-source comparisons for the stronger-clock experiment.
+
+The stronger source is a common RF/wired mitigation candidate, not a qualified
+input requirement. Its source/pad bias, nonlinear loading, stage-sensitivity
+corners and broader channel coverage remain open. The reply's broad spectral
+integrals remain diagnostics before external filtering, not emission-mask
+measurements; TX-load feedback and physical switching transients are absent.
+Six successful exchanges do not establish PER or a standard turnaround limit.
+
+The actual event-driven reply FIFO peaks at **32 samples in a 42-sample queue**
+(1,008 bits at 24 bits/sample). It retains prefill while clocks run during the
+wait, then consumes on actual perturbed DAC edges. A 10 µs host-stall test exposes
+underflow after 32 samples and prevents a complete decoded reply. Bulk waveform
+storage remains in the FPGA; this does not close the complete 8,192-bit chip
+inventory or prove the physical host interface's service guarantee.
+
+**Decision:** retain warm clocks/bias, finite prefilling and host-owned fixed
+latency calibration. The closed-loop converter study below now addresses one
+reference-load path in this packet loop. Gain commands use completed codes,
+18 ns conversion latency delays availability without moving the air timestamp,
+and each packet supplies its own reference-current feedback trajectory.
+Post-RX load relaxation is retained into the reply. No additional assigned
+8-ENOB noise is added to the causal converter. Next include output-current
+feedback into the PDN. The packet result still uses assigned analog
+settling, NF, linearity, phase noise and drive; it does not close those physical
+risks or the wideband blocker failure above.
+
+### Driver wake under the selected shared environment
+
+The selected-baseline report's `transmitter_wake` campaign now joins the local
+PDN wake response to wideband TX clock crossings, DAC reference, RF gain and
+available driver current. The response now includes REF_IN loading and direct
+input-voltage movement, with threshold events solved before applying downstream
+supply delay. It uses the same 236 mA maximum allocation, host
+switching and package catalog at 2.484 GHz; the 2 nH clock is rejected before
+payload simulation. Warm bias, a 7 mA change,
+and the full 28 mA driver reservation are compared, with 20 ns ramps at waveform
+launch or 2 us ahead. A 1 us full-current ramp is also tested with 2 us lead.
+
+The accounting starts at a settled reduced load and returns to the existing
+full-current DC budget. It does **not** add another 28 mA to that budget.
+Restoring full bias removes about 59.36 mV of initial rail relief. At the current
+target, full wake produces about 0.56 mV peak incremental REF_IN voltage and
+5.94 ps peak assigned downstream supply delay. The guarded frequency-domain
+response uses 0.5/0.25 ns grids and 8/16 us settling guards. Independent
+state-space comparison with input loading removed agrees within 20 uV away
+from the ideal ramp corners and 2 uV RMS over the record. Inductive voltage
+jumps at those corners make instantaneous peaks resolution-sensitive; do not
+reuse the old-network undershoot numbers as corrected bounds. Reference and clock filters retain
+state. The RF source is clipped to available tail current during wake, so a
+fully parked driver cannot produce the unchanged waveform before turning on.
+
+These short, known-DATA fixtures retain about 3.93% held-out EVM at 0.25 nH
+and 4.01% at 0.5 nH, with zero BPSK errors in 2,340 evaluated bits. Grid and
+guard controls are retained separately from the payload score.
+This is useful supply/timing evidence, **not wake or packet qualification**:
+the receiver skips two known DATA training symbols, which can hide startup
+corruption. The report separately counts current clipping during the source.
+Bias readiness, real preambles, signal-dependent RF-cycle current, DAC glitches,
+external filtering and emissions limits remain unproved.
+
+**Decision:** keep warm/muted bias as the baseline. The modeled PDN does not
+currently justify spending more area on a wake-only supply remedy. Preserve
+parked bias as a conditional alternative until actual analog readiness and
+acquisition are represented; prioritize host coupling and continuous output-load
+behavior over further isolated wake sweeps.
+
+### Closed-loop converter and reference-load requirements
+
+The baseline now includes an input-driven paired SAR model. Acquisition state,
+DAC output and the shared reference reservoir persist across conversions. Each
+trial decision determines the next trial code and reference charge; no measured
+reference trajectory or known final code is supplied. Reference recharge feeds
+the same package/PDN, whose disturbance returns to RF gain/headroom, reference
+voltage and LO/sample timing. Each tested loop converges in two passes under the
+reported numerical criterion. This is a conditional mathematical result, not
+identification of physical GF180 device parameters.
+
+Select **unequal bit-time allocation within the existing 18 ns budget**, as listed
+above. The initial requirement point uses 0.5 pF per sampling leg with 200 ohm
+acquisition resistance; 1 pF effective switched DAC capacitance per converter;
+a 300 ps DAC settling pole; and a shared 100 pF reference reservoir driven by
+50 ohms, with 1 mA source-current limit and 2 mA standing bias. Reference and DAC
+resistance-related time constants scale as 3.3 V / loaded rail in this model.
+Comparator noise is an assigned 1 mV RMS per decision, plus calculated sampling
+kT/C noise. None of these numbers is a measured process bound. The reference
+capacitor alone has a 0.111 mm² ideal plate floor at 0.9 fF/µm², inside the
+existing 0.25 mm² reference/buffer allowance before layout overhead.
+
+At 38.8125 MS/s and 0.65 V peak per I/Q component, independent near-1-MHz and
+near-9.457-MHz sine measurements give approximately **8.60–8.67 full-scale-
+normalized effective bits** across the two package hypotheses. A fundamental
+and DC fit removes only gain, phase and offset; noise and harmonic distortion
+remain in the residual. Each sine has its own reference-current feedback, not
+the load waveform of a different RF fixture. The 0.65 V swing is deliberately
+larger than the modest-signal BPSK case that could conceal converter errors.
+
+| Same total conversion time | Converter precision result | Design implication |
+|---|---|---|
+| Selected unequal intervals, 300 ps DAC pole, 50 ohm / 100 pF reference | About 8.60–8.67 effective bits | Retain this requirement point and timing allocation. Physical poles, noise and comparator readiness must still be demonstrated. |
+| Uniform 1.8 ns intervals with the same devices | About 8.02–8.17 bits | Little margin; unequal allocation helps without adding another ADC or increasing the period. |
+| 400 ps DAC pole together with 100 ohm / 50 pF reference | About 7.99–8.05 bits | The combined uncertainty consumes the margin. Do not label this corner supported merely because its BPSK fixture decodes. |
+| 800 ps DAC pole, selected unequal intervals and reference | About 5.75–5.91 bits | Clearly misses the 8-bit requirement, even though the short moderate BPSK fixture still has zero errors. |
+
+The selected reference load adds roughly **0.014–0.016 ps RMS** of timing
+disturbance in the moderate wideband run, much smaller than the existing
+multi-picosecond host contribution under these assumptions. Incremental sampled
+rail excursions are about −0.61 mV / +0.24 mV for the selected network and
+−1.02 mV / +0.26 mV for the higher-inductance probe. Halving the PDN time grid
+changes the latter minimum to about −1.14 mV while changing its RMS timing
+disturbance by less than 0.001 ps; peak waveform detail is not a precision claim.
+Reference-source charge is conserved, sink current gets no supply-energy credit,
+and reference current is not added again to the 40 mA timing/reference budget.
+The full planning DC load is retained as a conservative stress; the report
+separately identifies its excess over predicted reference consumption.
+
+**Decision:** keep the single-core SAR and improve its local timing allocation
+before spending the interleaving fallback budget. Stop treating packet decoding
+as proof of converter precision. Remaining physical gaps include comparator
+regeneration/metastability within the assigned 0.5 ns, capacitor mismatch,
+reference-loop higher poles, PGA sampling drive, and realizable bit sequencing.
+The causal conversion latency is 18 ns; the selected packet fixtures now join
+this detailed converter state and latency to live AGC and service. Earlier
+native-transfer fixtures remain controls. The reference-current study also does not substitute for
+DAC/TX output-current, core switching or thermal/package closure.
+
+### Fallbacks with explicit allocation costs
+
+These are substitutions triggered by failed requirements, not simultaneously
+selected features. Area/current deltas are rough reservations, not circuit
+estimates. Recompute the complete mode whenever a fallback is used.
+
+| Fallback | Trigger | Cost and boundary |
+|---|---|---|
+| Autonomous source in place of external timing | Required standalone operation and delivered spectral/timing budget passes | Source circuits already occupy the timing allowance; their active current must fit 40 mA planning / 48 mA ceiling. Saves an external source, not input/distribution or wired CDR obligations. No extra RF tank pins. |
+| Two-way SAR interleaving | Single-core conversion cannot meet the selected rate and ENOB together | Reserve +0.30 mm² from the 0.72 mm² unassigned growth and +4 mA RF current (44 → 48 mA). Requires skew/offset/gain calibration and held-sample/reference state. This consumes the RF current margin; it is not combined freely with another converter upgrade. |
+| Higher converter precision | The joined filter/headroom result still requires more dynamic range | Reserve +0.35 mm² growth and +4 mA RF as an alternative to the interleaving allocation; assess actual ENOB, reference load and timing. Increasing word width alone is not this upgrade. |
+| Park RF bias between exchanges | Warm-path current or heat is unacceptable and the full wake/recovery sequence fits | No assumed area saving. Model enabled-instance current and startup charge explicitly; current reduction is not booked until a state inventory establishes it. Retain warm operation for deadlines it cannot meet. |
+| Stronger board filtering or RF output amplification | A realizable external response closes a remaining image/emission/drive requirement | No new chip pins for inline RF parts; board area, loss, power and tuning/control belong to the FPGA/board budget. Nearby-channel rejection remains uncredited until specified. External parts cannot repair pre-existing chip clipping or internally generated interference. |
+| Reduced host switching | Full-rate host activity invalidates timing/RF quality | The slower RF return clock is already baseline. Further reductions must preserve sustained payload and service bounds; they cannot silently discard HE20 or wired throughput. Board load/slew changes must still close GPIO timing. |
+
+Do not spend the same 0.72 mm² growth or 4 mA RF headroom twice. If a combined
+fallback needs both, revise owner allocations within the fixed die envelope and
+rerun the whole-chip budget. A larger die, custom package, extra analog pins or
+removal of requested capabilities is not an automatic fallback.
+
 ## Current whole-chip ledger
 
 Reference supply rejection is an independent obligation from clock rejection.
@@ -226,9 +1163,9 @@ blocks count once only after their connectivity and simultaneous-use obligations
 are established. Regulator/filter/decoupling alternatives consume real area and
 headroom; they are not free consequences of drawing separate logical rails.
 
-**Decision:** retain these allocation caps, but keep fit unproven. The next
-resource closure must itemize each owner's circuit population and bounded area,
-then charge shared support and routing against the reserve. An allocation sum
+**Decision:** retain these allocation caps and the provisional subdivisions
+above. Final fit remains unproven until layout; mathematical architecture work
+uses the rough allocations now and revises them only for identified conflicts. An allocation sum
 passing is only arithmetic consistency. It is not evidence that ADC precision,
 clock isolation, pad protection and required timing can coexist in that space.
 
@@ -400,7 +1337,7 @@ replace local charge storage behind package inductance. The
 [passive allowance](../../../docs/roadmap/programmable-transceiver-pin-plan.md#external-passive-component-allowance)
 owns this design decision; added supply/filter access still consumes terminals.
 
-## Candidate allocation within 50 terminals
+## Legacy logical allocation within 50 entries
 
 Preserve all 36 signal terminals and 14 supply/ground terminals. Reassign `VDD_CORE_1` / `VSS_CORE_1` to `VDD_HOST_1` / `VSS_HOST_1`. The host now has two dedicated supply/return paths, and the core has one. This is a candidate tradeoff, not proof that the core can spare a path.
 
@@ -926,7 +1863,8 @@ allocation is not a physical bond map: the pinned provider template has 56
 signal sites plus 18 fixed supply/return sites. Public Run 1 assembly has 74
 die bonds and 70 numbered connector contacts. These counts describe different
 boundaries and do not contradict each other. The selected assembly remains
-provider-compatible COB; the original 50-total constraint is unresolved.
+provider-compatible COB; the selected 74-site physical allocation supersedes
+the original approximate 50-total constraint.
 Logical domain allocations are accounting groups, not established independent
 external rails. The [pin plan](../../../docs/roadmap/programmable-transceiver-pin-plan.md)
 owns provider provenance and the candidate signal assignment.

@@ -1251,9 +1251,10 @@ def operating_environment(contract, candidate, *, carrier_hz, d2h_word_hz,
         dict(ps_per_mv=clock_sensitivity_ps_per_mv,pole_hz=1e9,latency_s=0.)])
     source=PhaseNoise.from_ssb(colored_at_100khz_dbc_hz=-115.,floor_dbc_hz=-145.,
         offset_band_hz=(1e3,8e6),bins=16,seed=831)
-    phase=source.plus(PhaseNoise(tuple((x['frequency_hz'],
-        -2*math.pi*carrier_hz*x['delay_peak_s'],x['delay_phase_rad']) for x in delay['tones'])))
-    input_report=None
+    supply_phase=PhaseNoise(tuple((x['frequency_hz'],
+        -2*math.pi*carrier_hz*x['delay_peak_s'],x['delay_phase_rad']) for x in delay['tones']))
+    phase=source.plus(supply_phase)
+    input_report=None;input_phase=PhaseNoise(())
     if external_input is not None:
         input_phase,input_report=loaded_clock_input_phase(carrier_hz,**external_input)
         phase=phase.plus(input_phase)
@@ -1268,6 +1269,7 @@ def operating_environment(contract, candidate, *, carrier_hz, d2h_word_hz,
     return dict(payload_engine=payload_engine,carrier_hz=carrier_hz,
         network=candidate,ledger=ledger,host_spectrum=environment,external_clock_input=input_report,
         supply_delay=delay,delivered_phase_tones=phase.tones,
+        phase_components=dict(source=source.tones,supply=supply_phase.tones,input=input_phase.tones),
         crossing_delay_tones=crossing,reference_fraction_tones=reference,
         source_spectrum=dict(colored_at_100khz_dbc_hz=-115.,floor_dbc_hz=-145.,
             offset_band_hz=[1e3,8e6],location=('assigned external source before loaded receiver' if external_input is not None else 'assigned delivered source before supply-delay contribution')),

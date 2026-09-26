@@ -11,6 +11,22 @@ consolidated in [risk priorities](risk-priorities.md).
 
 **Current operating decision:** RF and wired payload operation are mutually exclusive on the same chip. Both capabilities remain required; additional physical resource sharing is encouraged. See the [exclusive-engine policy](exclusive-engine-policy.md), which supersedes simultaneous-operation requirements below. Model/RTL enforcement and resource rebudgeting remain implementation work.
 
+The [selected first-chip baseline](block-diagram.md#provisional-first-chip-baseline)
+uses external timing first for qualification and LO/32 as the physical RF D2H
+clock (LO/16 DDR words). The faster LO/16-clock fixtures below remain controls
+and optional configurations. Fixed independent converter timing is not selected;
+retuning follows stop/settle/train/new epoch, while same-channel turnaround keeps
+clocks and references running. These are decisions, not alternative default modes.
+
+
+The active control/timestamp clock is the FPGA H2D physical DDR clock divided
+by four: 39.0625 MHz (25.6 ns ticks) in H0. This avoids assuming an extra 40 MHz
+source while REF_IN carries the GHz LO. An eight-word command plus two control
+cycles takes 76.8 ns. Use this same clock for command service and scheduled
+launch quantization. H2D must keep running through a scheduled exchange;
+clock loss invalidates that timing contract. SPI/reset recovery stays independent.
+Physical clock-loss detection, gating and restart remain implementation obligations.
+
 ## Turnaround is distinct from retuning
 
 Keep LO, conversion and host timing running through same-channel RX/TX
@@ -43,7 +59,9 @@ requires an explicitly supplied independent frequency; it does not freeze an
 LO-derived converter clock. Old-epoch rejection is a specified policy here,
 not newly demonstrated enforcement in the live RF stream implementation.
 
-For H0, an eight-word command plus two 40 MHz control cycles costs 75.6 ns.
+The legacy 40 MHz fixture gives 75.6 ns for an eight-word command plus two
+control cycles; the selected H0 clock gives 76.8 ns. The illustrative budgets
+below retain the legacy fixture.
 The assigned conservative 64-word service boundary contributes about 210 ns.
 Prearming removes command arrival from the response interval only if it was
 submitted that far ahead; it does not eliminate the boundary or analog settling.

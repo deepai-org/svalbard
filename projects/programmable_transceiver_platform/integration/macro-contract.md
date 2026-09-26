@@ -301,6 +301,20 @@ Expose reference ratio/divider, filter-bank selection, converter clock divisor
 and PGA trim independently of protocol names. The behavioral numeric configuration
 is not yet an RTL/register ABI. Keep the existing legacy resource-word encoding
 stable until a versioned mapping is defined. Reuse existing blocks and retain the
-50-terminal, single-slot allocation; added switches/dividers and calibration need
+provider-compatible 74-site, single-slot allocation; added switches/dividers and calibration need
 an area/power estimate before accepting the cost. HD-SDI requires external coax
 analog circuitry. RF and wired payload remain mutually exclusive per die.
+
+
+## Selected converter width boundary
+
+The provisional first-chip choice is native 10-bit ADC/DAC conversion targeting
+8 ENOB, with existing 12-bit signed I/Q transport words. Do not treat transport
+width as physical precision or instantiate separate converters for each word
+format. For the 12-bit format, sign-convert the native ADC result and left-align
+it by two bits; the low two bits are zero before any external processing. DAC
+input rounds to the nearest native 10-bit code and saturates at its rails rather
+than wrapping. Existing narrower transport settings are quantized representations
+of the same converter, not extra ADC/DAC instances. The current mathematical
+quantizer/word-width coupling is a legacy abstraction to migrate; it does not
+prove this selected converter implementation or its effective resolution.

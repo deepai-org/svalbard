@@ -1,9 +1,46 @@
 # Clock architecture feasibility envelope
 
+The [coupled REF_IN edge screen](power-partition.md#ref_in-voltage-and-clock-edges-with-moving-return)
+now includes board-referenced input voltage against moving analog ground and
+the input capacitance's own return current. At the selected package target,
+the tied baseline adds roughly 9 ps RF / 11 ps wired deterministic input-edge
+RMS before other impairments. Coherent supply delay and partition alternatives
+are compared explicitly. The [assigned-ENOB wideband RF bench](power-partition.md#corrected-ref_in-clock-in-the-rf-conversion-chain)
+now consumes corrected event timing with retained source/input noise. Moderate
+wideband SAR feedback and the narrowband packet exchange also use that input
+path, including recharge-induced threshold movement and supply delay. The
+corrected narrowband campaign exposes packet failures described in the
+[current risk assessment](risk-priorities.md#whole-chip-risk-ranking).
+Weak-wideband causal feedback, TX load transitions and wired timing consumers
+still require migration; receiver numerical sensitivity remains open. Independent wired RX
+CDR must not inherit an external-TX timing path by assumption.
+The observed cancellation is conditional on the assigned positive 0.1 ps/mV
+supply sensitivity and its 1 GHz pole. Characterization has not established
+the sign, magnitude or stage distribution; migration must bracket those
+quantities rather than assume the favorable correlation persists.
+
+An exact sign-flip diagnostic can be obtained from the saved edge variances:
+`var(input - delay) = 2 var(input) + 2 var(delay) - var(input + delay)`.
+At 2.484 GHz and the current package target, reversing the entire assigned
+downstream sensitivity gives 9.71 ps RMS for the tied baseline,
+5.60 ps for the equal split and 5.72 ps for the site-weighted split,
+compared with 9.25, 2.54 and 3.29 ps for the original sign. These are deductions
+from [recorded deterministic edge statistics](../evidence/selected-baseline.json),
+with input crossings and supply transfer held fixed; they do not bracket
+arbitrary stage-specific phases, magnitude or nonlinear threshold dependence.
+
 This is a conditional requirements envelope, not demonstrated GF180 clock quality.
 [Executable calculations](../verification/clock_envelope.py) produce the
 [source-hashed report](../evidence/clock-envelope.json). Values are engineering
 allocations, not protocol masks. Reference-AFE measurements do not calibrate them.
+
+The [selected baseline](block-diagram.md#provisional-first-chip-baseline) uses
+the high-impedance external clock input for initial qualification, with retained
+ring-based autonomous synthesis. Terminated-input studies remain controls and
+possible future configurations; they are not the default. The source/input/
+distribution allocations and revised whole-mode currents are owned by
+[power and timing allocations](power-partition.md#timing-and-signal-quality-allocations-for-the-selected-blocks).
+Existing evidence below keeps its original assumptions until the model migrates.
 
 ## Complete path boundaries
 
@@ -18,12 +55,14 @@ not the ordinary digital input buffer. External coupling/bias/termination is
 allowed but must respect protection limits; input voltage limits remain to be
 specified from the selected pad circuit. No new pins are assumed.
 
-Keep two phase-generation candidates open: same-frequency quadrature generation
-(with amplitude/phase imbalance and tuning uncertainty), or divide-by-two from
-approximately 4.8 GHz (with harder input/oscillator bandwidth and power). Ideal
+The selected 2.4–2.484 GHz input route requires same-frequency quadrature
+generation, including amplitude/phase imbalance and tuning uncertainty.
+Divide-by-two from approximately 4.8 GHz remains a historical comparison,
+not another baseline input requirement; it has harder bandwidth and power
+requirements. Ideal
 frequency division lowers phase noise in radians but does not improve source
 absolute time error; divider additive error remains. Neither architecture is
-selected by this arithmetic. Static I/Q error consumes a separate EVM allocation.
+qualified by this arithmetic. Static I/Q error consumes a separate EVM allocation.
 
 ## RF LO requirement
 

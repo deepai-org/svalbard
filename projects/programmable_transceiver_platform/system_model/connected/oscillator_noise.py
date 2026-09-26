@@ -137,10 +137,11 @@ class PhaseNoise:
 
 def loaded_clock_input_phase(carrier_hz,*,cap_f=3e-12,bond_l_h=2e-9,
                              termination_ohm=None,seed=1831,
-                             receiver_noise_v=1e-3,downstream_stage_rms_s=.3e-12):
+                             receiver_noise_v=1e-3,downstream_stage_rms_s=.3e-12,
+                             source_peak_v=.5,threshold_v=.020,am_depth=.1,noise_bins=32):
     """Assigned external-input RLC, threshold AM conversion and additive noise.
 
-    Source is 0.5 V peak Thevenin/50 ohms. Finite spectral noise uses the same
+    Source defaults to 0.5 V peak Thevenin/50 ohms. Finite spectral noise uses the same
     1 kHz–8 MHz band as the joined source; 1 MHz AM retains twenty harmonics.
     Static transfer delay is omitted. This is not a transistor receiver model.
     """
@@ -151,36 +152,45 @@ def loaded_clock_input_phase(carrier_hz,*,cap_f=3e-12,bond_l_h=2e-9,
         raise ValueError('Positive termination or high impedance required')
     if not all(math.isfinite(v) and v>=0 for v in (receiver_noise_v,downstream_stage_rms_s)):
         raise ValueError('Finite nonnegative input/distribution noise required')
+    if type(noise_bins) is not int or not 1<=noise_bins<=4096:
+        raise ValueError('Bounded positive additive-noise spectral resolution required')
     omega=2*math.pi*carrier_hz
     admittance=1j*omega*cap_f+(0 if termination_ohm is None else 1/termination_ohm)
     transfer=1/(1+(50.2+1j*omega*bond_l_h)*admittance)
-    peak=.5*abs(transfer);threshold=.020
-    if .9*peak<=threshold or 1.1*peak>.6:
+    if (not all(math.isfinite(v) for v in (source_peak_v,threshold_v,am_depth))
+            or source_peak_v<=0 or not 0<=am_depth<1):
+        raise ValueError('Finite positive source, finite threshold and bounded AM required')
+    peak=source_peak_v*abs(transfer);threshold=threshold_v
+    if (1-am_depth)*peak<=abs(threshold) or (1+am_depth)*peak>.6:
         raise ValueError('Assigned input crossing/amplitude envelope exceeded')
     grid=np.arange(512)*2*math.pi/512
-    amplitude=peak*(1+.1*np.sin(grid))
+    amplitude=peak*(1+am_depth*np.sin(grid))
     crossing=np.arcsin(threshold/amplitude)/omega
     crossing-=crossing.mean()
     coeff=np.fft.rfft(crossing)/len(crossing)
     delay=[(k*1e6,2*float(abs(coeff[k])),float(np.angle(coeff[k]))) for k in range(1,21)]
+    am_phase=tuple((f,-omega*a,p) for f,a,p in delay)
     # Stationary equivalent: average input noise/slew variance over AM cycle.
     receiver_variance=float(np.mean(receiver_noise_v**2/(omega**2*(amplitude**2-threshold**2))))
     downstream_variance=2*downstream_stage_rms_s**2
     rng=np.random.default_rng(seed)
-    edges=np.geomspace(1e3,8e6,33)
+    edges=np.geomspace(1e3,8e6,noise_bins+1)
     for lo,hi in zip(edges[:-1],edges[1:]):
         variance=(receiver_variance+downstream_variance)*(hi-lo)/(8e6-1e3)
         delay.append((math.sqrt(lo*hi),math.sqrt(2*variance),float(rng.uniform(-math.pi,math.pi))))
     phase=PhaseNoise(tuple((f,-omega*a,p) for f,a,p in delay))
     return phase,dict(carrier_hz=carrier_hz,cap_f=cap_f,bond_l_h=bond_l_h,
         termination_ohm=termination_ohm,receiver_peak_v=peak,
+        source_peak_v=source_peak_v,threshold_v=threshold_v,am_depth=am_depth,
+        additive_noise_bins=noise_bins,
+        phase_components=dict(am=am_phase,additive=phase.tones[len(am_phase):]),
         receiver_noise_v=receiver_noise_v,downstream_stage_rms_s=downstream_stage_rms_s,
         equivalent_additive_ssb_floor_dbc_hz=(10*math.log10(omega**2*(receiver_variance+downstream_variance)/(2*(8e6-1e3))) if receiver_variance+downstream_variance>0 else None),
         receiver_random_time_rms_s=math.sqrt(receiver_variance),
         downstream_random_time_rms_s=math.sqrt(downstream_variance),
         am_time_rms_s=math.sqrt(2*float(sum(abs(coeff[1:21])**2))),
         phase_variance_rad2=phase.variance_rad2,seed=seed,
-        limitations=['0.5 V source, declared receiver noise, 20 mV offset and +/-10 percent AM are hypotheses.',
+        limitations=['Source amplitude, receiver noise, threshold offset and AM depth are explicit hypotheses, not a qualified input circuit.',
             'Two declared downstream noise allocations; stationary white-equivalent noise in 1 kHz–8 MHz.',
             'Input AM at 1 MHz; cyclostationary additive-noise modulation omitted.',
             'Source PM passes with unity gain; loaded sideband dispersion, stage power/startup and supply correlation unqualified.',

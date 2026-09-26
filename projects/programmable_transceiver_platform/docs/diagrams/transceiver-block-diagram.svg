@@ -2,7 +2,7 @@
 <text x="30" y="38" font-size="28" font-weight="600">SVALBARD / NORMATIVE ARCHITECTURE</text>
 <text x="30" y="67" font-size="17" font-weight="400">Selected functional boundaries • circuit topology and physical performance remain to be qualified</text>
 <rect x="210" y="150" width="1380" height="970" rx="5" fill="#fcfdfe" stroke="#8096a6"/>
-<text x="222" y="175" font-size="17" font-weight="600">ONE GF180MCU DIE • RF OR WIRED PAYLOAD • PHYSICAL TERMINAL COUNT OPEN</text>
+<text x="222" y="175" font-size="17" font-weight="600">ONE GF180MCU DIE • RF OR WIRED PAYLOAD • 74 PROVIDER-COMPATIBLE SITES</text>
 <text x="230" y="203" font-size="14" font-weight="400">Functional paths; candidate pads: RF/REF west, wired east, H2D north, D2H/control south. Core budget: 12.92 mm².</text>
 <rect x="590" y="85" width="610" height="65" rx="5" fill="#fff6df" stroke="#8096a6"/>
 <text x="602" y="110" font-size="17" font-weight="600">REF_IN (1) • west-edge candidate</text>
@@ -15,7 +15,7 @@
 <text x="712" y="311" font-size="14" font-weight="400">Input bandwidth, swing and additive noise: open</text>
 <rect x="245" y="220" width="405" height="110" rx="5" fill="#f1f6fa" stroke="#8096a6"/>
 <text x="257" y="245" font-size="17" font-weight="600">RF synthesis + local quadrature</text>
-<text x="257" y="269" font-size="14" font-weight="400">PFD / charge pump / loop filter / tunable VCO</text>
+<text x="257" y="269" font-size="14" font-weight="400">PFD / charge pump / loop filter / ring VCO</text>
 <text x="257" y="290" font-size="14" font-weight="400">External LO bypass → I/Q phase generation</text>
 <text x="257" y="311" font-size="14" font-weight="400">Local LO buffers; programmable sample divider</text>
 <rect x="1150" y="220" width="405" height="110" rx="5" fill="#f1f6fa" stroke="#8096a6"/>
@@ -40,12 +40,12 @@
 <text x="472" y="470" font-size="14" font-weight="400">Separate branches</text>
 <rect x="675" y="400" width="200" height="95" rx="5" fill="#f1f6fa" stroke="#8096a6"/>
 <text x="687" y="425" font-size="17" font-weight="600">LPF → main PGA</text>
-<text x="687" y="449" font-size="14" font-weight="400">Bound early-stage gain</text>
+<text x="687" y="449" font-size="14" font-weight="400">Tunable poles / Q / zeros</text>
 <text x="687" y="470" font-size="14" font-weight="400">Offset / common-mode</text>
 <rect x="910" y="400" width="180" height="95" rx="5" fill="#f1f6fa" stroke="#8096a6"/>
 <text x="922" y="425" font-size="17" font-weight="600">I / Q ADCs</text>
-<text x="922" y="449" font-size="14" font-weight="400">Sampling / quantization</text>
-<text x="922" y="470" font-size="14" font-weight="400">Buffered references</text>
+<text x="922" y="449" font-size="14" font-weight="400">10-bit SAR; 8 ENOB</text>
+<text x="922" y="470" font-size="14" font-weight="400">12-bit host words</text>
 <polyline points="190,455 245,455" fill="none" stroke="#355269" stroke-width="2" marker-end="url(#a)" />
 <polyline points="425,455 460,455" fill="none" stroke="#355269" stroke-width="2" marker-end="url(#a)" />
 <polyline points="640,455 675,455" fill="none" stroke="#355269" stroke-width="2" marker-end="url(#a)" />
@@ -68,11 +68,11 @@
 <rect x="675" y="565" width="200" height="95" rx="5" fill="#f1f6fa" stroke="#8096a6"/>
 <text x="687" y="590" font-size="17" font-weight="600">Reconstruction LPF</text>
 <text x="687" y="614" font-size="14" font-weight="400">Selectable cutoff / gain</text>
-<text x="687" y="635" font-size="14" font-weight="400">Order not yet frozen</text>
+<text x="687" y="635" font-size="14" font-weight="400">Third-order all-pole</text>
 <rect x="910" y="565" width="180" height="95" rx="5" fill="#f1f6fa" stroke="#8096a6"/>
 <text x="922" y="590" font-size="17" font-weight="600">I / Q DACs</text>
-<text x="922" y="614" font-size="14" font-weight="400">Registered update</text>
-<text x="922" y="635" font-size="14" font-weight="400">Buffered references</text>
+<text x="922" y="614" font-size="14" font-weight="400">Segmented 10-bit DAC</text>
+<text x="922" y="635" font-size="14" font-weight="400">12-bit host words</text>
 <polyline points="245,615 190,615" fill="none" stroke="#355269" stroke-width="2" marker-end="url(#a)" />
 <polyline points="460,615 425,615" fill="none" stroke="#355269" stroke-width="2" marker-end="url(#a)" />
 <polyline points="675,615 640,615" fill="none" stroke="#355269" stroke-width="2" marker-end="url(#a)" />
@@ -123,7 +123,7 @@
 <text x="1152" y="740" font-size="17" font-weight="600">Supply / return distribution</text>
 <text x="1152" y="764" font-size="14" font-weight="400">CORE / HOST / WIRE / RF / PLL logical budgets</text>
 <text x="1152" y="785" font-size="14" font-weight="400">Fixed COB power/ground map; rail isolation open</text>
-<text x="1152" y="806" font-size="14" font-weight="400">Local isolation and filtering; regulators not frozen</text>
+<text x="1152" y="806" font-size="14" font-weight="400">Local damping / decoupling; external regulation</text>
 <text x="1152" y="827" font-size="14" font-weight="400">Host harmonics and package coupling remain risks</text>
 <polyline points="1000,495 1105,495 1105,885 900,885 900,910" fill="none" stroke="#355269" stroke-width="2" marker-end="url(#a)" />
 <polyline points="870,910 870,865 1115,865 1115,645 1090,645" fill="none" stroke="#355269" stroke-width="2" marker-end="url(#a)" />
@@ -157,7 +157,7 @@
 <rect x="245" y="1190" width="1305" height="145" rx="5" fill="#eaf3ff" stroke="#8096a6"/>
 <text x="257" y="1215" font-size="17" font-weight="600">EXTERNAL FPGA + BOARD • explicitly outside the die budget</text>
 <text x="257" y="1239" font-size="14" font-weight="400">FPGA: protocol controllers / PCS / modem / CRC / FEC; fractional-rate resampling and TX FIR interpolation; bulk storage.</text>
-<text x="257" y="1260" font-size="14" font-weight="400">RF rate candidate: LO ÷64/128/256/512 samples; LO ÷16 or ÷32 forwarded DDR clock candidates. FPGA pays causal latency.</text>
+<text x="257" y="1260" font-size="14" font-weight="400">RF baseline: LO ÷64/128/256/512 samples; LO ÷32 forwarded DDR clock (÷16 optional). FPGA pays causal latency.</text>
 <text x="257" y="1281" font-size="14" font-weight="400">Recovery: actual protocol preambles / tracking; selectable filter settings trade clean-signal fidelity against blocker rejection.</text>
 <text x="257" y="1302" font-size="14" font-weight="400">Board: clean oscillator / LO, RF preselection / matching, optional PA, power / decoupling; specialized wired support as required.</text>
 <polyline points="450,1190 450,1135" fill="none" stroke="#355269" stroke-width="2" marker-end="url(#a)" marker-start="url(#a)"/>
@@ -165,7 +165,7 @@
 <polyline points="1350,1135 1350,1190" fill="none" stroke="#355269" stroke-width="2" marker-end="url(#a)" />
 <text x="30" y="1380" font-size="18" font-weight="600">READING THE DIAGRAM</text>
 <text x="30" y="1410" font-size="16" font-weight="400">Solid arrows: bundled payload / functional paths. Purple dashed arrows: timing. Local service fanout is named, not individually routed.</text>
-<text x="30" y="1440" font-size="16" font-weight="400">36 functional signals + 18 fixed supply/return sites = 54; provider template retains 74 sites. Earlier 50-total target unresolved.</text>
+<text x="30" y="1440" font-size="16" font-weight="400">36 functional signals + 18 fixed supply/return + 20 spare signal sites = 74. Supersedes the early approximate 50-total target.</text>
 <text x="30" y="1470" font-size="16" font-weight="400">Multiple identical dies can supply HDMI/DVI data lanes; forwarded-clock interface and cross-die alignment remain board/FPGA obligations.</text>
 <text x="30" y="1500" font-size="16" font-weight="400">Analog signal pads / custom frontends at compatible bond sites; standard GPIO signal circuitry is not required for RF / fast lanes.</text>
 <text x="30" y="1530" font-size="16" font-weight="400">Circuit candidate sheets are exploratory detail, not additional required blocks. RF and wired exclusivity saves activity, not fabricated area.</text>

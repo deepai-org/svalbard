@@ -31,8 +31,9 @@ not proof that a particular connector/bank supports the link. No board purchase
 or arbitrary replacement board is selected.
 
 Freeze paper scenario H0: two ten-bit source-synchronous DDR buses, nominal
-3.3 V LVCMOS electrical target; H2D forwarded clock 156.25 MHz; RF D2H candidate
-LO/16 (150–155.25 MHz over the modeled LO interval). Retain 10 pF load and 7 pC
+3.3 V LVCMOS electrical target; H2D forwarded clock 156.25 MHz; baseline RF D2H clock
+LO/32 (75–77.625 MHz, hence 150–155.25 Mword/s DDR). LO/16 clock remains an
+optional higher-switching setting. Retain 10 pF load and 7 pC
 internal switching charge as assigned study points, **not measured Zynq/board
 values or upper bounds**. Use quiet, random, alternating and burst traffic with
 explicit edge shape, simultaneous switching and both directions. Wired D2H
@@ -68,7 +69,8 @@ domain names. The provider bond map may force rail sharing not in earlier models
 ### Target tiers and acceptance contracts
 
 Priority is not evidence status. All currently requested interfaces remain in
-scope pending a product decision on tiers. Proposed anchor investigations are
+scope as baseline capability objectives, except the two already named stretch
+paths. Investigation anchors are
 1000BASE-X, PCIe Gen1 and a useful 2.4 GHz radio; USB is also a lifecycle stress
 anchor. Do not downgrade SATA, SGMII, USB host/device, TMDS HDMI/DVI, DP RBR,
 HD-SDI, HE20, BLE, BR/EDR, 802.15.4 or 2.4 GHz LoRa merely by calling them stretch.
@@ -94,23 +96,25 @@ requirements, never on-chip protocol IDs. HD-SDI, custom GFSK/SDR and the two
 RF stretch paths must remain visible even without dedicated report fixtures.
 USB host and device share one entry but require separate role validation.
 
-| Target family | Evidence that can currently be reused | Essential missing proof / next decision |
+| Target | Selected architectural provision | Unique remaining proof / boundary |
 |---|---|---|
-| PCIe Gen1 | Generic 2.5 Gb/s causal receiver and separate detection/idle studies | Join loaded receiver detection, idle, acquisition, sustained traffic and recovery under one supply/timing environment; decide whether every electrical action has a usable generic control. |
-| 1000BASE-X / SGMII | Generic 1.25 Gb/s timing and transport arithmetic | Continuous independently clocked link, required coding/control traffic, negotiation and loss/recovery; qualify each interface separately despite the shared rate. |
-| SATA Gen1 | Causal OOB observer and peer startup reaching alignment wait | Loaded OOB-to-data handoff and alignment/CDR acquisition. OOB detection alone never means link ready. |
-| USB 2.0 host/device | Separate electrical/response and bridge/storage studies | One lifecycle combining single-ended and differential pad states, attach/chirp, HS traffic, turnaround, disconnect and recovery for both roles; include inactive branch loading on the fastest serial mode. |
-| DisplayPort RBR | Generic serial timing/control mapping | Training with actual swing/pre-emphasis range and clock variation, sustained stream and recovery; explicitly external AUX implementation. |
-| HDMI TMDS / single-link DVI | Static loaded TMDS, forwarded-clock and opaque-word/FIFO studies | Common-mode/off-state behavior plus continuous independent video/control validation across three dies, including fractional clocks and cross-die alignment recovery. |
-| HD-SDI | Numeric rate and generic control mapping; external cable interface architecture | Dedicated sustained scrambled-stream/CDR evidence and the defined external equalizer/driver boundary; no dedicated target fixture in the consolidated report. |
-| Wi-Fi HE20 | Synthetic BPSK acquisition, blocked RX and loaded TX diagnostics | Remove unproven close-offset external-filter credit; close the joint wideband noise/headroom/selectivity budget. Then real allowed training, sensitivity under blockers, TX masks and response deadline; set modulation/coding from evidence rather than nominal converter precision. |
-| Bluetooth LE | Actual LE 1M addressed request and timed loaded reply to independent peer | Weak-signal/blocker and emissions acceptance, calibrated air timing and channel-hop recovery; LE 1M evidence does not establish other LE PHYs. |
-| Bluetooth BR/EDR | Generic RF modulation/rate fixtures | Real packet acquisition, hopping, modulation-specific quality, blockers and timed TDD using the same analog settings and clock model. |
-| IEEE 802.15.4 at 2.4 GHz | Generic O-QPSK/DSSS fixture | Actual packet synchronization/decoding, sensitivity/blockers and complete turnaround. |
-| 2.4 GHz LoRa | Synthetic chirp/training/filter comparisons | Real preamble and packet acquisition at selected bandwidths, interference rejection and TX spectrum; longer synthetic training is not acceptance evidence. |
-| Custom GFSK / SDR | Configurable filter/gain/rate and sample-stream building blocks | Declare a numeric bandwidth, deviation, dynamic-range and continuous-service envelope; validate it rather than implying arbitrary waveforms work. |
-| Lower-frequency RF stretch | Generic controls and proposed frequency flexibility | Establish tuning/input/matching/conversion coverage; a 2.4 GHz pass does not transfer automatically. |
-| External frequency-conversion stretch | External-parts allowance and control mapping | Explicit mixer/LO/filter interface, image/noise/linearity and total timing budget; no dedicated fixture currently establishes a complete converted-band path. |
+| PCIe Gen1 | Keep dedicated 2.5 Gb/s TX/RX, independent CDR, receiver detection and electrical idle; FPGA endpoint/PCS. | Detection and idle are physical actions, not serial symbols. Loaded startup/recovery and command latency remain unverified. |
+| 1000BASE-X | Use the wired pair at 1.25 Gb/s; FPGA owns coding, ordered sets and negotiation. | Sustained independently clocked operation and recovery; no 1000BASE-T magnetics/copper PHY is implied. |
+| SGMII | Reuse the same 1.25 Gb/s electrical path with external SGMII PCS/control. | Validate SGMII control/rate adaptation separately from BASE-X; equal baud rate is not equal protocol behavior. |
+| SATA Gen1 | Retain 1.5 Gb/s operation, timed OOB drive/detection and CDR handoff. | OOB burst/gap sensing and transition to aligned data must work without an ideal reset of analog/CDR state. |
+| USB 2.0 HS, host and device | Use WIRE_RX as D+/D−; independent HS/FS/LS drive, pulls, termination and sensing. FPGA controller; external host VBUS. | Both roles need attach/reset/chirp, HS traffic, turnaround and disconnect. Disabled USB branches still load the fastest serial configuration. |
+| DisplayPort RBR | One 1.62 Gb/s lane per die, programmable swing/pre-emphasis, FPGA training and external AUX. | Prove training levels and sustained clock tolerance. Multiple lanes multiply dies and alignment obligations. |
+| Single-link DVI | Three lane dies with DC TMDS branches, external clock fanout and FPGA encoding/alignment. | DC common mode/off-state protection, fractional ×10 timing, continuous FIFO and recovery after one lane faults. |
+| HDMI TMDS | Same three-die video boundary; FPGA/board owns control-period encoding and ancillary interfaces. | Retain 720p/1080p fractional-clock goals. TMDS evidence does not imply HDMI FRL, higher-rate modes or complete HDMI system functionality. |
+| HD-SDI | Keep 1.485 and 1.485/1.001 Gb/s; external coax driver/equalizer and FPGA scrambling/framing. | Stress CDR with actual scrambled/pathological patterns and sustained transport; a generic NRZ eye is insufficient. |
+| 2.4 GHz Wi-Fi HE20 | Keep wideband I/Q, finite-zero channel filtering, paired converters and external FPGA modem/equalization. | Joint sensitivity/blocking, actual training, modulation-dependent EVM, TX spectrum and turnaround. Narrowband success cannot close this requirement. |
+| Bluetooth LE | Use selectable narrow RF settings and warm same-channel turnaround; FPGA framing/modem. | Retain LE PHY goals; current LE 1M request/reply does not cover other PHYs, hopping, masks or calibrated air timing. |
+| Bluetooth Classic BR/EDR | Use the same I/Q chain with phase-preserving modulation and retune control; FPGA hopping/baseband. | Real packet acquisition, channel changes and modulation-specific phase quality/turnaround must fit the selected clock architecture. |
+| IEEE 802.15.4, 2.4 GHz | Reuse narrow I/Q filtering, O-QPSK/DSSS processing on FPGA and warm RX/TX control. | Real synchronization header, blockers, gain settling and response timing; generic DSSS data is not a packet result. |
+| 2.4 GHz LoRa | Use narrow bandwidth/divider settings; FPGA chirp acquisition, resampling and modem. | Actual finite preamble, CFO drift, blockers and transmit spectrum; longer diagnostic training is not the selected remedy. |
+| Custom GFSK / SDR | Expose numeric rate/gain/filter/timing controls and continuous I/Q streams within the same envelope. | Publish achieved ranges and error bounds rather than arbitrary-waveform promises; host service is part of the bandwidth limit. |
+| Lower-frequency RF stretch | Keep existing external timing/divider flexibility; do not allocate a second multiband LNA or a new matching network on die. | Direct coverage is earned by tuning/matching tests. Below that range, use the external-conversion boundary rather than silently claiming native operation. |
+| External frequency conversion stretch | Translate another band into the qualified on-chip RF band with board mixer/LO/filter; no extra chip analog pins. | Include conversion loss/noise, images, linearity, LO coherence and board power. This is an external system, not native wideband RF coverage. |
 
 **Work order:** after the shared analog envelope, close the USB shared-pad and
 PCIe detection/recovery anchors because they can require different pad circuitry
@@ -127,8 +131,8 @@ Use the provider-compatible ring and breakout as the assembly baseline. Pin
 neighbor rules are preferences within fixed bond positions, not permission to
 move supply pads. Enumerate pad/protection/switch C, bond/return L, mutual terms
 and PCB impedance with provenance and justified ranges. No claimed worst case
-from arbitrary multipliers. Audit the logical 50-terminal plan against all
-provider bonds and board connections before assigning physical rails.
+from arbitrary multipliers. Use the selected 74-site provider allocation; the legacy 50-entry logical plan
+is not a physical limit. Map board connections before assigning physical rails.
 
 Convert injected supply spectra with stage-specific complex transfer functions
 H_delay(f), in ps/mV, including input buffer, oscillator, divider, quadrature
@@ -234,7 +238,7 @@ Sources checked 2026-09-26: [provider template](https://github.com/wafer-space/g
 This is the active feasibility work program following the user's explicit
 request to account for unknowns that an open PDK does not resolve and the fab
 may never disclose. Preserve the full first-fabrication companion scope, the
-50-terminal limit, one slot, RF and wired functions, ordinary compatible FPGA
+provider-compatible site allocation, one slot, RF and wired functions, ordinary compatible FPGA
 GPIO interface, and narrow temperature/supply allowance. No smaller substitute
 chip is authorized by this program.
 
@@ -417,15 +421,16 @@ matching and gradients, passive Q/nonlinearity, ESD leakage/capacitance, switchi
 noise folding and reference contamination. Gaussian Monte Carlo numbers cannot
 substitute for missing validated distributions.
 
-**Next decisive work:** establish converter noise/settling/current envelopes and
-choose a real ADC/DAC candidate; test receiver noise/blocker budgets jointly
+**Next decisive work:** establish noise/settling/current envelopes for the
+selected paired 10-bit SAR ADCs and segmented DACs; test receiver noise/blocker budgets jointly
 with gain and filtering. Do not spend another long run merely increasing
 nominal mixer gain.
 
 ## 3. Coexistence on this die and package
 
-**Present evidence:** custom ring/package are unselected and actual mixed-signal
-coexistence is unproved. Logical area/current allocations are not physical fit.
+**Present evidence:** provider-compatible bond geometry with custom analog/fast
+signal circuitry is selected; actual mixed-signal coexistence is unproved.
+Logical area/current allocations are not physical fit.
 The latest 80-bit receiver/pulse/capture diagnostic consumes 78.36 mA, without
 TX, CDR and host processing. Its clock and receiver currents share one bench
 supply; do not silently charge them to or exclude them from the PLL budget.
@@ -445,7 +450,7 @@ alone cannot establish clean RF/clock supplies.
 
 **Required demonstrations:**
 
-- An actual candidate 50-terminal ring/bond map, stack and package geometry,
+- An actual provider-compatible 74-site ring/bond map, stack and package geometry,
   with all grounds counted and routing/ESD/guard-ring/isolation area included.
   Confirm assembly compatibility rather than assuming the standard provider
   package accepts the custom ring. Do not add hidden supplies or a paddle.

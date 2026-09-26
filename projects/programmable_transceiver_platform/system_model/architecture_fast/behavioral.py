@@ -939,7 +939,13 @@ class BehavioralChip:
 
     def transfer(self, *, mode, source_hz, sample_bits, frames=128, depth_bits=2048,
                  host_pause_frames=0, epoch, directions=('rx','tx'), tx_prefill_bits=512,
-                 feedback=False, feedback_stop_after=None, rx_source=None, tx_source=None, tx_prefill_value=0, rx_event_time=None, rx_valid=None, rx_cancel=None, host_block_words=1, host_cdc_read_hz=None, host_cdc_phase=0.,host_word_observer=None,tx_word_observer=None,tx_reference_pacing=False,tx_reference_ticks=None):
+                 feedback=False, feedback_stop_after=None, rx_source=None, tx_source=None, tx_prefill_value=0, rx_event_time=None, rx_valid=None, rx_cancel=None, host_block_words=1, host_cdc_read_hz=None, host_cdc_phase=0.,host_word_observer=None,tx_word_observer=None,tx_reference_pacing=False,tx_reference_ticks=None,tx_event_time=None):
+        # Consumption events are relative to the stream origin. Only the chip
+        # consumer sees this callback; FPGA pacing still observes elapsed D2H
+        # edges. Independent simultaneous RX/TX event queues are not implied.
+        if tx_event_time is not None and (not callable(tx_event_time) or
+                directions!=('tx',) or self.resources['engine']!='wire' or rx_event_time is not None):
+            raise ValueError('Explicit TX events require wired TX-only service')
         if tx_reference_ticks is not None and (not tx_reference_pacing or not callable(tx_reference_ticks)):
             raise ValueError('Reference-edge observer requires reference pacing')
         if type(tx_reference_pacing) is not bool or (tx_reference_pacing and ('tx' not in directions or feedback)):
@@ -1003,7 +1009,7 @@ class BehavioralChip:
         name = 'iq' if self.resources['engine'] == 'rf' else 'wire'
         host_hz = (250e6 if mode == 0 else 312.5e6) * self.a.host_clock_scale
         rate = source_hz * self.a.source_clock_scale
-        signature=(mode,source_hz,sample_bits,depth_bits,tuple(directions),tx_prefill_bits,host_pause_frames,feedback,feedback_stop_after,rx_source,tx_source,tx_prefill_value,rx_event_time,rx_valid,rx_cancel,host_block_words,host_cdc_read_hz,host_cdc_phase,tx_word_observer,tx_reference_pacing,tx_reference_ticks)
+        signature=(mode,source_hz,sample_bits,depth_bits,tuple(directions),tx_prefill_bits,host_pause_frames,feedback,feedback_stop_after,rx_source,tx_source,tx_prefill_value,rx_event_time,rx_valid,rx_cancel,host_block_words,host_cdc_read_hz,host_cdc_phase,tx_word_observer,tx_reference_pacing,tx_reference_ticks,tx_event_time)
         if self.stream is not None and self.stream['signature']!=signature:
             raise ValueError('Stop before changing stream geometry or prefill')
         if self.stream is None:
@@ -1036,13 +1042,14 @@ class BehavioralChip:
         # before a simultaneous host write. Slot counters preserve frame phase.
         reference_checked=self.time
         while True:
-            if rx_event_time is None:source_time=(sample_index+state['source_phase'])/rate
+            event_time=tx_event_time if tx_event_time is not None else rx_event_time
+            if event_time is None:source_time=(sample_index+state['source_phase'])/rate
             else:
                 if state['next_source_time'] is None:
-                    candidate=rx_event_time(sample_index)
+                    candidate=event_time(sample_index)
                     missing_converter=(candidate==math.inf and self.rf_clock is not None and not self.rf_clock.present)
                     if not missing_converter and (not math.isfinite(candidate) or candidate<0 or candidate<=state['last_source_time']):
-                        raise ValueError('Recovered sample times must be finite and strictly increasing')
+                        raise ValueError('Source event times must be finite and strictly increasing')
                     state['next_source_time']=candidate
                 source_time=state['next_source_time']
             watchdog_time=math.inf
@@ -2344,6 +2351,10 @@ class RecoveredWordSource:
         target=.2 if self.bits[index] else -.2
         return -self.tau_ui*math.log(-target/(before-target))
 
+    def locate_crossing(self,left,right,left_voltage,right_voltage):
+        """Numerical crossing estimate; physical fixtures may refine this root."""
+        return left+(right-left)*(-left_voltage)/(right_voltage-left_voltage)
+
     def forecast(self,index):
         if index!=self.word_index or self.pending is not None:
             raise ValueError('Consume current CDR word before requesting next')
@@ -2373,10 +2384,10 @@ class RecoveredWordSource:
             # Four voltage observations on the receiver's own interval. No
             # source-bit index or analytic source-boundary crossing is queried.
             voltage=self.detector_voltage
-            for at in np.linspace(previous_time,sample_time,5)[1:]:
+            for at in np.linspace(previous_time,sample_time,getattr(self,'voltage_substeps',4)+1)[1:]:
                 current=self.voltage(float(at))
                 if voltage*current<0:
-                    edge=previous_time+(float(at)-previous_time)*(-voltage)/(current-voltage)
+                    edge=self.locate_crossing(previous_time,float(at),voltage,current)
                     crossings.append(edge)
                 previous_time=float(at);voltage=current
             self.detector_time_ui=sample_time;self.detector_voltage=voltage
@@ -5946,7 +5957,7 @@ def usb_staged_response_trace(*,d2h_cdc=False,commit_beats=2,fused_d2h_snapshot=
         scope='Optional D2H candidate: 40 MHz source to host frame clock via the checked block FIFO, next-edge publication/snapshot. Generic boundary token and response prefix, actual short-frame codec and block FIFO, steady idle/no backlog. Assumed packing, queue, FPGA and analog delays retained. D2H is a candidate only when enabled; actual USB packet/EOP detection, command application and pad timing are not composed; no whole-chip turnaround qualification.')
 
 
-def raw_host_alignment_controls(reference_gap=False,host_clock_gap=False,*,remote_clock_ppm=0.,host_clock_ppm=0.):
+def raw_host_alignment_controls(reference_gap=False,host_clock_gap=False,*,remote_clock_ppm=0.,host_clock_ppm=0.,source_factory=None,publication_hz=40e6):
     """External alignment sees only serialized raw records and ordered status."""
     from bit_event_stream import BitEventStream
     if host_clock_gap:reference_gap=True
@@ -5960,8 +5971,8 @@ def raw_host_alignment_controls(reference_gap=False,host_clock_gap=False,*,remot
     rows=[]
     for gap in (0,1000,10000):
         bits=[0,1]*1020+framed+[0]*gap+framed+[0]*200
-        raw=RecoveredWordSource(bits,line_rate,.35,100.)
-        records=BitEventStream(128);host=TimedBulkRecordReturn(records,word_hz=host_rate,trained=host_clock_gap)
+        raw=(source_factory or RecoveredWordSource)(bits,line_rate,.35,100.)
+        records=BitEventStream(128);host=TimedBulkRecordReturn(records,word_hz=host_rate,trained=host_clock_gap,source_hz=publication_hz)
         gate=ObservedFrameAlignment(marker,160);released=[]
         source_good=False;fpga_good=False;now=0.;read_index=0;events=[]
         records.event(2,0.);source_events=[(0.,2)]
@@ -6027,15 +6038,19 @@ def raw_host_alignment_controls(reference_gap=False,host_clock_gap=False,*,remot
         expected=iter(payloads+payloads)
         for frame in released:
             assert any(candidate==frame for candidate in expected),'Corrupt, duplicate or reordered payload'
-        assert len(released)>=(32 if reference_gap else 44) and not fpga_good and gate.pending is None
+        minimum_frames=32 if reference_gap else 44
+        if source_factory is None:assert len(released)>=minimum_frames
+        assert not fpga_good and gate.pending is None
         if reference_gap:
             assert [good for _,good in reference_changes]==[True,False,True]
             assert max(discarded)>0,'Reference loss did not exercise pending payload'
         if host_clock_gap:assert timeout_seen and len(restart_discards)==1
         rows.append(dict(cdr_bits_during_clock_stop=cdr_advanced_during_stop,host_clock_gap=host_clock_gap,timeout_seen=timeout_seen,restart_discards=restart_discards,cancelled_status=cancelled_status,reference_changes=reference_changes,discarded_candidate_bits=discarded,gap_bits=gap,released_frames=len(released),
             timing_events=len(events),maximum_status_latency_s=max(latencies),raw_bits=raw.bit_index,high_water=host.high_water,
-            ordered_payload_identity=True))
+            ordered_payload_identity=True,minimum_released_frames=minimum_frames,
+            minimum_release_met=len(released)>=minimum_frames))
     return dict(cases=rows,remote_clock_ppm=remote_clock_ppm,host_clock_ppm=host_clock_ppm,line_rate_bps=line_rate,host_word_hz=host_rate,alignment_after_host=True,
+        external_channel_factory=source_factory is not None,publication_hz=publication_hz,
         scope='Persistent CDR/channel to raw bit/status packing, 84-bit bounded CDC, long frames and FPGA marker holdback. Word-atomic source publication; diagnostic markers, assumed CDR detector and unqualified physical host timing. Missing-reference pulses use an independent watchdog; the reference-only case retains host/publication clocks. Optional coordinated host/publication-clock halt and explicit digital flush/retraining preserve CDR evolution; management handshake/reset distribution and actual standard framing remain open.')
 
 
@@ -6213,22 +6228,25 @@ def staged_wired_duplex(*,remote_clock_ppm=100.,host_clock_ppm=-100.,chunks=(64,
 class TimedBulkRecordReturn:
     """Raw records through 84-bit CDC, bounded staging and long host frames.
 
-    Source service is 40 MHz; host preparation/CDC reads occur every eight
+    Source service defaults to the legacy 40 MHz fixture; an explicit rate
+    selects the owned publication clock. Host preparation/CDC reads occur every eight
     host words. Two frame banks prevent same-edge CDC reads reaching output.
     These are mathematical schedules, not qualified physical timing.
     """
-    def __init__(self,stream,word_hz=312.5e6,source_phase=0.,trained=False):
+    def __init__(self,stream,word_hz=312.5e6,source_phase=0.,trained=False,source_hz=40e6):
         from bit_event_stream import BitEventStream
         from bit_event_codec import StreamingRecordReceiver,TrainedRecordReceiver,encode_records
         from block_receiver_model import RecordBlockFIFO
         if not math.isfinite(word_hz) or word_hz<=0 or not math.isfinite(source_phase) or not 0<=source_phase<1:
             raise ValueError('Positive host rate and source phase in [0,1) required')
+        if not math.isfinite(source_hz) or source_hz<=0:raise ValueError('Positive source publication rate required')
+        self.source_hz=source_hz
         self.stream=stream;self.staged=BitEventStream(67);self.fifo=RecordBlockFIFO()
         self.receiver=TrainedRecordReceiver(64) if trained else StreamingRecordReceiver(64)
         self.trained=trained;self.clock_active=True;self.origin=0.;self.clock_index=0
         self.training_index=0;self.epoch=0
         self.word_hz=word_hz;self.source_phase=source_phase
-        self.source_index=self.word_index=0;self.next_source=source_phase/40e6
+        self.source_index=self.word_index=0;self.next_source=source_phase/self.source_hz
         self.frame=encode_records([],0,64);self.prepared=None;self.sequence=1
         self.time=0.;self.observed=[];self.high_water=[0,0,0];self.writes=self.reads=0
 
@@ -6248,7 +6266,7 @@ class TimedBulkRecordReturn:
         self.stream.reset();self.stream.time=time;self.staged.reset();self.fifo.reset()
         self.frame=encode_records([],0,64);self.prepared=None;self.sequence=1
         self.source_index=self.word_index=self.clock_index=self.training_index=0
-        self.origin=time;self.next_source=time+self.source_phase/40e6
+        self.origin=time;self.next_source=time+self.source_phase/self.source_hz
         if not receiver_already_armed:self.receiver.arm(time)
         self.clock_active=True;self.epoch+=1
         return discarded
@@ -6297,7 +6315,7 @@ class TimedBulkRecordReturn:
                 else:self.word_index+=1
                 self.clock_index+=1
             if source:
-                self.source_index+=1;self.next_source=self.origin+(self.source_index+self.source_phase)/40e6
+                self.source_index+=1;self.next_source=self.origin+(self.source_index+self.source_phase)/self.source_hz
             self.high_water=[max(a,b) for a,b in zip(self.high_water,
                 (len(self.stream.records),(self.fifo.wb-self.fifo.rb)%16,len(self.staged.records)))]
         self.time=time

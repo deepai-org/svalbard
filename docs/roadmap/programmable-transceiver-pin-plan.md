@@ -5,6 +5,17 @@
 Implementation progress and the executable budget are tracked in the [project](../../projects/programmable_transceiver_platform/README.md). Run `make transceiver-contract` to check the current planning invariants; this does not verify physical feasibility or tapeout readiness.
 
 
+## Selected physical boundary
+
+Retain the provider-compatible 74-site ring: 36 functional signals, 18 fixed
+supply/return sites and 20 spare signal sites. This is the selected first-chip
+boundary and supersedes the early approximate 50-total-terminal target. It does
+not authorize removing unused bonds, relabeling signal pads as supplies, or
+changing the provided packaging route. The existing 50-entry executable pin
+list is retained as a legacy logical interface model pending migration; its
+arithmetic checks are not physical site-count qualification. Current site
+assignment and provider connectivity below remain the physical evidence.
+
 ## Product and boundary
 
 Build the full `programmable_transceiver_platform` as a **generic analog/PHY companion for FPGA regular GPIOs**, with SPI-only MCU operation at lower throughput. The chip owns analog conversion, RF translation, high-speed electrical signaling, precise timing, and bounded data movement. The external FPGA owns Wi-Fi modem/MAC, Ethernet PCS/MAC as needed, PCIe link/transaction/endpoint logic, and application processing. Example configurations exercise common primitives; they do not define three independent fixed-function chips.
@@ -15,7 +26,7 @@ The first fabrication is the complete companion, not a feasibility coupon. Keep 
 
 The user explicitly accepts operation over relatively narrow temperature and supply-voltage ranges, including peak performance around a specific controlled operating point. Broad commercial/industrial environmental coverage is not required for this chip. Optimize the full companion for that controlled envelope rather than spending performance or area on an unrequested broad range.
 
-Numerical limits remain to be selected from evidence: specify junction temperature (not just room temperature), each rail's voltage at the die, ripple/droop and control tolerances, warm-up/calibration conditions, and any required board regulation or thermal control. Account for self-heating in each active mode and transients when switching modes. Process variation and mismatch remain separate uncertainties; this preference does not assume a typical-process die or authorize unsafe bias. Characterize out-of-envelope behavior separately without treating every exploratory corner as a required peak-performance pass. Freeze the required operating window and process/yield claims explicitly before signoff.
+The initial selected qualification target is 27 °C ±5 °C junction temperature and a 3.3 V ±1% board source, with controlled board temperature/cooling if required. Local rail voltages and thermal feasibility still need qualification: specify junction temperature (not just room temperature), each rail's voltage at the die, ripple/droop and control tolerances, warm-up/calibration conditions, and any required board regulation or thermal control. Account for self-heating in each active mode and transients when switching modes. Process variation and mismatch remain separate uncertainties; this preference does not assume a typical-process die or authorize unsafe bias. Characterize out-of-envelope behavior separately without treating every exploratory corner as a required peak-performance pass. Freeze the required operating window and process/yield claims explicitly before signoff.
 
 ## External passive component allowance
 
@@ -34,7 +45,7 @@ terminals support them. Their use is permission to evaluate an architecture,
 not a claim that the present pinout already exposes internal oscillator or
 loop-filter nodes.
 
-The original 50-total-terminal target remains unresolved against the provider inventory below. Explicitly
+The selected provider-compatible inventory below supersedes the original approximate 50-total-terminal target. Explicitly
 reallocate pins before adopting a topology needing additional analog nodes;
 include pad/ESD capacitance, package inductance, board parasitics, tolerances and
 loss in its model. Count board area/BOM separately from die resources. Model
@@ -63,7 +74,7 @@ already a separately qualified candidate. Its name alone does not prove RF
 bandwidth, permitted swing/common mode, termination, noise, duty cycle or I/Q
 compatibility. Specify those requirements and any buffering, division or
 quadrature generation before claiming an external source solves LO quality.
-Additional clock/LO inputs require explicit allocation within 50 terminals;
+Additional clock/LO inputs require explicit allocation within the selected compatible site map;
 reference, converter and RF-clock needs may not all fit one input simultaneously.
 
 Update the system model for the selected source's phase-noise/jitter spectrum,
@@ -76,9 +87,9 @@ against configurations that actually require autonomous synthesis.
 
 ## Physical envelope
 
-Use one wafer.space **1×1 slot**. The earlier **50-total-connection target (36 signals plus 14 provisional supply/ground connections)** conflicts with the fixed provider pad inventory and is unresolved; it is not a validated physical allocation. Provider information checked 2026-09-23: [wafer.space](https://wafer.space/price.html) lists a 3.93 × 5.12 mm full die and 12.92 mm² default-ring core. The pinned provider template has 56 signal sites plus 18 fixed supply/return sites, 74 sites total. User decision (2026-09-26): retain the default pad ring, or a demonstrably compatible variant, and use wafer.space’s provided chip-on-board packaging. Third-party assembly is not the baseline. Preserve the provider bond-pad positions and power/ground assignments; qualify analog signal-pad substitutions against that boundary.
+Use one wafer.space **1×1 slot**. The earlier **50-total-connection target (36 signals plus 14 provisional supply/ground connections)** is superseded by the selected fixed provider pad inventory; it remains only a legacy logical allocation. Provider information checked 2026-09-23: [wafer.space](https://wafer.space/price.html) lists a 3.93 × 5.12 mm full die and 12.92 mm² default-ring core. The pinned provider template has 56 signal sites plus 18 fixed supply/return sites, 74 sites total. User decision (2026-09-26): retain the default pad ring, or a demonstrably compatible variant, and use wafer.space’s provided chip-on-board packaging. Third-party assembly is not the baseline. Preserve the provider bond-pad positions and power/ground assignments; qualify analog signal-pad substitutions against that boundary.
 
-Retain a conservative **12.92 mm² core ceiling** until placed pads, ESD, seal ring, and isolation establish the actual usable envelope. This is an area budget, not demonstrated fit. Count every electrically connected package terminal, including any exposed ground paddle; do not hide additional supplies, loop-filter terminals, or references outside the 50 budget.
+Retain a conservative **12.92 mm² core ceiling** until placed pads, ESD, seal ring, and isolation establish the actual usable envelope. This is an area budget, not demonstrated fit. Count every electrically connected package terminal, including any exposed ground paddle; do not hide additional supplies, loop-filter terminals, or references outside the selected compatible site map.
 
 ### Packaging compatibility is an open mapping gate
 
@@ -99,13 +110,22 @@ core and I/O supplies together in the foundry-pad configuration. Do not infer
 seven independent external rails from our logical domain names.
 
 The allocation below is a **logical target, not a compatible bond map**.
-Reconcile 50 project connections with all bonded provider pads, including fixed
-power/ground bonds and unused sites; do not silently change the terminal limit
+Reconcile the 36 functional signals with all 74 retained provider sites, including
+fixed power/ground bonds and unused sites; do not silently change that physical inventory
 or claim that leaving a signal unused removes its physical bond. Map provider
 PCB rail connectivity before assigning local isolation, power ceilings or
 neighboring grounds. Extra ground bonds and moved supply pads are not freely
 available mitigations. A failed mapping requires a reported pin/power-plan
 change within the packaging constraint, not a silent switch to custom assembly.
+
+The shared mathematical comparison now targets 0.25 nH equivalent common-return
+inductance; the original 0.5 nH and adverse cases remain controls. This target
+restores modeled USB output margin with only its bidirectional branch active
+and preserves the tested RF/converter/wired behaviors. It is not a measured
+COB parameter or proof that these fixed ground sites achieve it. Validate the
+existing bond/board geometry or reduce the required host-current coupling and
+rerun the common model; do not satisfy the target by assuming unprovided ground
+connections. See the [USB return-path gate](../../projects/programmable_transceiver_platform/spec/power-partition.md#usb-static-output-voltage-and-return-path-gate). The [HS quiet-pin screen](../../projects/programmable_transceiver_platform/spec/power-partition.md#usb-high-speed-quiet-pin-and-common-return-gate) still shows common-mode disturbance at that target, so physical host-to-wired-return coupling must be resolved as well.
 
 ### Executable physical inventory and immediate consequences
 
@@ -164,8 +184,8 @@ original terminal-limit conflict open.
 `assembly_policy.candidate_signal_sites` in the executable contract now assigns
 every functional signal to one retained provider signal site. This is a
 connectivity/placement candidate, **not a verified bond/PCB electrical map**.
-Every one of the 74 provider sites remains present; the terminal-limit conflict
-above is unchanged. No spare signal site is relabeled as a supply or ground.
+Every one of the 74 provider sites remains present; this is the selected
+physical allocation, superseding the earlier approximate terminal count. No spare signal site is relabeled as a supply or ground.
 
 | Edge | Functional signals → provider sites |
 |---|---|
@@ -241,7 +261,7 @@ replacement for autonomous synthesis.
 
 This table records earlier logical allocation only. It does not replace the provider’s 18 fixed supply/return sites or establish separately powered domains. Use qualified device/pad voltages; 3.3 V is the initial digital compatibility baseline. A separately supplied host I/O domain is unproven under the compatible assembly; no 1.8/2.5 V support is established. GPIO compatibility requires matching thresholds, drive, supply sequencing, and absolute limits. Level translation is acceptable at low speed; the full-speed path needs its own timing-qualified solution.
 
-Fourteen is not a calculated minimum. The [pass-6 power partition](../../projects/programmable_transceiver_platform/spec/power-partition.md) replaces the insufficient single host supply/return pair with two local segments of five and six fast outputs, taking one pair from CORE. The core now has an explicit unmeasured 48 mA ceiling; the two host paths each target at most 55 mA. The limited current extrapolation fits those host ceilings but does not qualify any domain. Distribute physical grounds for short RF, clock, and wired returns; provide board filtering and local decoupling. Freeze this count only after current, ground-bounce, bond-wire inductance, ESD, substrate, and thermal analysis. If it fails, redesign within 50 terminals and republish affected budgets; do not quietly remove host bits or add a hidden paddle. Do not fabricate a smaller substitute chip.
+Fourteen is not a calculated minimum. The [pass-6 power partition](../../projects/programmable_transceiver_platform/spec/power-partition.md) replaces the insufficient single host supply/return pair with two local segments of five and six fast outputs, taking one pair from CORE. The core now has an explicit unmeasured 48 mA ceiling; the two host paths each target at most 55 mA. The limited current extrapolation fits those host ceilings but does not qualify any domain. Distribute physical grounds for short RF, clock, and wired returns; provide board filtering and local decoupling. Freeze this count only after current, ground-bounce, bond-wire inductance, ESD, substrate, and thermal analysis. If it fails, redesign within the compatible provider ring and republish affected budgets; do not quietly remove host bits or add a hidden paddle. Do not fabricate a smaller substitute chip.
 
 ## Generic resources
 
@@ -380,7 +400,7 @@ pixel clock, 742.5 Mb/s per lane) and 1080p60 (148.5 MHz, 1.485 Gb/s), 8 bits pe
 color. These are reduced-model targets, not compliance claims. No HDMI FRL,
 4K/high-refresh, deep color or dual-link DVI is implied.
 
-Each die retains 50 terminals (36 signal, 14 supply) and its own wafer.space 1x1
+Each die retains the provider-compatible 74-site ring and its own wafer.space 1x1
 slot/area ceiling. Three board instances require three dies, not three lanes
 inside one slot. All participating dies own the wired engine; RF payload is off.
 Source: WIRE_TX pair drives one TMDS data pair. Sink: WIRE_RX pair receives one.

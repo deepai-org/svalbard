@@ -7,9 +7,11 @@ links, digital-video lanes, and a configurable 2.4 GHz radio. Reuse the same chi
 across network interfaces, FPGA peripherals, video bridges, wireless instruments,
 and custom software-defined radios by changing its configuration and FPGA logic.
 
-The ambition is one GF180MCU chip, one wafer.space slot, and 50 total terminals,
-using the provider’s standard chip-on-board packaging with a compatible pad ring.
-Mapping the logical terminal/power allocation to that fixed assembly is an open gate.
+The ambition is one GF180MCU chip in one wafer.space slot, using the provider’s
+standard chip-on-board packaging and compatible pad ring. The selected physical
+allocation retains 74 provider sites: 36 functional signals, 18 fixed power/return
+sites and 20 spare signals. This supersedes the earlier approximate 50-terminal
+drawing; electrical qualification of the assembly remains open.
 This is an active design: the capabilities below are targets, with partial
 mathematical evidence, not demonstrated silicon or certified protocol support.
 
@@ -30,6 +32,10 @@ Fractional video clocks such as 74.25/1.001 and 148.5/1.001 MHz are part of the
 numeric timing design. Narrower RF settings aim to serve low-rate radios without
 forcing every application through a wide Wi-Fi channel. Lower-frequency RF and
 other bands through external frequency conversion are stretch goals.
+
+The [selected baseline and decision rules](spec/block-diagram.md#remaining-architecture-choices-closed-for-implementation)
+commit to one implementation. Remaining physical uncertainties are verification
+obligations, not an open menu of chip architectures.
 
 ## One platform, configurable building blocks
 
@@ -61,7 +67,25 @@ resampling, TX interpolation and bulk storage. External LO operation reuses
 recovery remains necessary. The main diagram shows these selected boundaries;
 detailed circuit candidates are linked separately.
 
+The [provisional first-chip baseline](spec/block-diagram.md#provisional-first-chip-baseline)
+now makes the implementation choices: external timing first for qualification,
+autonomous paths retained, high-impedance clock input, slower RF return clock,
+paired SAR/DAC conversion and a tunable finite-zero channel filter. The
+[implementation allocations](spec/power-partition.md#provisional-implementation-allocation)
+assign rough area and complete-mode current budgets; actual area remains a
+layout result. The [capability review](spec/feasibility-gates.md#capability-wide-evidence-gaps-and-next-decisions)
+records each target's required circuitry and distinct open proof. These are
+selected requirements for the next model revision, not claims that existing
+simulations already implement or pass them all.
+
 ## Where the design stands
+
+Architecture choices are [selected for implementation](spec/block-diagram.md#remaining-architecture-choices-closed-for-implementation):
+provider-compatible common returns, external timing/regulation as the primary
+qualification route, autonomous timing retained, and LO-derived RF sampling
+with FPGA resampling. All application targets remain in scope. Remaining work
+must establish one consistent operating envelope, rather than keep alternative
+architectures open or infer completeness from passing test counts.
 
 The fast whole-chip behavioral model exercises generic configurations, finite
 host queues, RF conversion/filtering, wired recovery and selected lifecycle
@@ -70,17 +94,40 @@ still fail. **Full mathematical verification, the complete transistor schematic,
 and layout are unfinished.** Passing regression tests also verify expected
 failures; they do not mean every target works.
 
-A shared RF/wired environment comparison now connects assigned power, host
-switching, package impedance and delivered timing. It exposes cases where clean
-receiver diagnostics coexist with an unproven supply-voltage envelope. Run
-`python3 verification/robustness_envelope.py --whole-chip` from this directory
-for the short comparison; the [risk review](spec/risk-priorities.md#current-joined-host-power-and-receiver-assessment)
-explains its assumptions and decisions.
-The same environment now reaches LE 1M packet reception, finite timed DAC
-playback, loaded transmission and independent peer decoding (`--packet-lifecycle`).
-Weak-signal failures, substantial modeled clock-induced TX sidebands and
-unqualified air timing remain explicit; this is a conditional exchange, not a
-qualified radio.
+Run `python3 verification/baseline_envelope.py` from this directory for the
+selected baseline under shared power, host switching, package impedance and
+delivered timing. It joins the complete mode-current allocations to causal wired
+reception, wideband RF and real LE 1M packet exchange, using the selected native
+10-bit converters and filters. The [joined results](spec/power-partition.md#first-selected-baseline-electrical-result)
+retain failures: a package probe leaves the wired voltage-validity interval,
+weak wideband reception fails under a strong blocker, and RF emissions worsen
+despite clean decoding. Fixed latency calibration helps the narrowband reply,
+but air timing and physical analog performance remain unqualified. A
+[closed-loop converter study](spec/power-partition.md#closed-loop-converter-and-reference-load-requirements)
+now connects SAR decisions, reference charge and shared-supply feedback. It
+checks converter precision separately from packet decoding and selects unequal
+bit timing within the existing conversion budget. The detailed converter now
+joins live packet AGC, conversion availability and reference-load feedback.
+Active control/timestamps use H2D clock divided by four, avoiding an unowned
+independent clock source.
+The corrected shared clock/input model now reaches causal converter feedback,
+real narrowband packets, bounded TX wake and wired recovery/transmit tests.
+It retains failures: the current package target passes five of six stressed
+narrowband exchanges, while short wired TX cases can have zero bit errors yet
+lose receiver readiness. A stronger external clock source is a promising
+mitigation, with additional return-current and input-voltage obligations.
+The report's `current_target_observations` separates numerical convergence,
+packet outcomes and receiver readiness; it is not a completeness score.
+The [wired recovery join](spec/power-partition.md#wired-equalization-host-delivery-and-recovery)
+now includes pad/channel loading, CTLE, finite host transport and clock-loss
+restart. Equalization prevents the selected-network status-queue failure; the
+higher-inductance package probe remains rejected. The common package target is
+now 0.25 nH return inductance after comparison across every existing joined
+bench; physical assembly feasibility remains unproven. The original 0.5 nH
+and adverse package cases remain explicit controls.
+`verification/robustness_envelope.py` retains the earlier fixtures and mitigation
+comparisons; their older current/converter/filter assumptions do not qualify the
+selected baseline.
 
 The principal unresolved analog issue is now **combined performance**: clock
 noise that looks acceptable in a clean signal test can fail under a blocker,
@@ -102,6 +149,10 @@ The reference-chip investigation has been consolidated into
 [explicit assumptions and uncertainty ranges](spec/risk-priorities.md#adopted-assumptions-and-uncertainty-ranges).
 Active work now targets connected clock quality, complete RF conversion and
 pad/package/power coexistence; further reference-chip simulation is paused.
+
+The [latest combined-evidence checkpoint](spec/risk-priorities.md#checkpoint-what-the-latest-combined-evidence-changes)
+summarizes what is selected, what improved, and what still fails. Individual
+passing reports do not establish a complete chip operating envelope.
 
 For the [whole-architecture assessment and keep/change decisions](spec/risk-priorities.md#architecture-assessment-one-implementation-several-ways-to-succeed),
 start with the risk review. For current capability status and unresolved failures, use the

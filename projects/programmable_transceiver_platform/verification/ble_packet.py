@@ -68,7 +68,8 @@ def observe(samples,*,fs=10e6,channel=38):
 
 
 def bounded_gain_conversion(filtered,adc_noise,*,fs=10e6,command_latency_s=2e-6,
-                            initial_gain_db=40.,maximum_gain_db=60.,reference_scale=None,pga_peak_v=.8):
+                            initial_gain_db=40.,maximum_gain_db=60.,reference_scale=None,pga_peak_v=.8,
+                            converter_bits=12):
     """ADC-observed generic gain control; no wanted-power or packet oracle.
 
     One pending command, 1 us observation windows, <=6 dB steps, assigned
@@ -80,19 +81,21 @@ def bounded_gain_conversion(filtered,adc_noise,*,fs=10e6,command_latency_s=2e-6,
     z=np.asarray(filtered,complex);noise=np.asarray(adc_noise,complex)
     if z.shape!=noise.shape or z.ndim!=1:raise ValueError('One noise value per sample required')
     reference=np.ones(len(z)) if reference_scale is None else np.asarray(reference_scale,float)
-    if reference.shape!=z.shape or not np.all(np.isfinite(reference)) or np.any(reference<=0) or not math.isfinite(pga_peak_v) or pga_peak_v<=0:
+    headroom=np.broadcast_to(np.asarray(pga_peak_v,float),z.shape)
+    if (reference.shape!=z.shape or not np.all(np.isfinite(reference)) or np.any(reference<=0) or
+            not np.all(np.isfinite(headroom)) or np.any(headroom<=0) or converter_bits not in (10,12)):
         raise ValueError('Positive reference per sample and physical PGA headroom required')
     window=round(fs*1e-6);delay=math.ceil(command_latency_s*fs)
     target_db=initial_gain_db;gain=10**(target_db/20);alpha=-math.expm1(-1/(fs*.2e-6))
     pending=None;result=[];trace=[];clipped=0;adc_clipped=0;updates=0;energy=0.
-    step=2/4096
+    step=2/(1<<converter_bits)
     for i,value in enumerate(z):
         if pending is not None and i>=pending[0]:
             target_db=pending[1];pending=None;updates+=1
         gain+=alpha*(10**(target_db/20)-gain)
         raw=value*gain
-        clipped+=int(abs(raw.real)>pga_peak_v or abs(raw.imag)>pga_peak_v)
-        output=(complex(np.clip(raw.real,-pga_peak_v,pga_peak_v),np.clip(raw.imag,-pga_peak_v,pga_peak_v))+noise[i])/reference[i]
+        clipped+=int(abs(raw.real)>headroom[i] or abs(raw.imag)>headroom[i])
+        output=(complex(np.clip(raw.real,-headroom[i],headroom[i]),np.clip(raw.imag,-headroom[i],headroom[i]))+noise[i])/reference[i]
         adc_clipped+=int(abs(output.real)>1 or abs(output.imag)>1)
         code=complex(round(np.clip(output.real,-1,1-step)/step)*step,
                      round(np.clip(output.imag,-1,1-step)/step)*step)
@@ -106,7 +109,10 @@ def bounded_gain_conversion(filtered,adc_noise,*,fs=10e6,command_latency_s=2e-6,
     return np.asarray(result),dict(gain_db=trace,pga_clipped_samples=clipped,adc_clipped_samples=adc_clipped,
         applied_updates=updates,command_latency_s=command_latency_s,
         initial_gain_db=initial_gain_db,maximum_gain_db=maximum_gain_db,
-        pga_peak_v=pga_peak_v,reference_scale_min=float(reference.min()),reference_scale_max=float(reference.max()))
+        pga_peak_v=float(headroom.min()),pga_peak_range_v=[float(headroom.min()),float(headroom.max())],
+        converter_bits=converter_bits,transport_bits=12,
+        native_transport_low_two_bits_zero=(bool(np.all(np.rint(np.array([np.real(result),np.imag(result)])*2048).astype(np.int64)%4==0)) if converter_bits==10 else None),
+        reference_scale_min=float(reference.min()),reference_scale_max=float(reference.max()))
 
 
 def transport_service(contract, *, sample_hz, word_hz):
@@ -118,13 +124,13 @@ def transport_service(contract, *, sample_hz, word_hz):
 
 
 def response_budget(observation,settings,environment,contract,*,advertiser_address,
-                    observer_hz=10e6,fpga_work_s=2e-6,analog_settle_s=2e-6):
+                    observer_hz=10e6,fpga_work_s=2e-6,analog_settle_s=2e-6,conversion_latency_s=0.):
     """FPGA policy and generic service timeline, not a transmitted RF waveform.
 
     Source start/payload never enter this decision. Air deadline is estimated
     from decoded timing. A separate scoreboard may compare it to source truth.
     """
-    if not all(math.isfinite(v) and v>=0 for v in (fpga_work_s,analog_settle_s)):
+    if not all(math.isfinite(v) and v>=0 for v in (fpga_work_s,analog_settle_s,conversion_latency_s)):
         raise ValueError('Finite nonnegative processing and settling budgets required')
     decoded=bytes.fromhex(observation.get('pdu_hex',''))
     accepted=(observation.get('crc_ok',False) and len(decoded)==14 and
@@ -132,6 +138,7 @@ def response_budget(observation,settings,environment,contract,*,advertiser_addre
     if not accepted:return dict(request_accepted=False,reply_armed=False,reason='No valid addressed scan request')
     fs=settings['sample_hz'];word=environment['host_spectrum']['d2h_word_hz']
     h2d=environment['host_spectrum']['h2d_word_hz']
+    control_hz=environment.get('control_hz',40e6)
     down=transport_service(contract,sample_hz=fs,word_hz=word)
     up=transport_service(contract,sample_hz=fs,word_hz=h2d)
     if not (down['rate_stable'] and up['rate_stable']):
@@ -146,12 +153,13 @@ def response_budget(observation,settings,environment,contract,*,advertiser_addre
         nonlocal now
         events.append(dict(state=name,start_s=now,end_s=now+duration,owner=owner))
         now+=duration
+    if conversion_latency_s:stage('complete_last_required_conversion',conversion_latency_s,'chip ADC')
     stage('deliver_last_required_samples',down['delay_bound_s'],'chip/host transport')
     stage('resampler_lookahead',32/fs,'FPGA')
     stage('CRC_address_policy_and_response_generation',fpga_work_s,'FPGA')
     stage('wait_for_command_frame',64/h2d,'host transport')
     transition=rf_transition_budget(before=settings,after=settings,operation='turnaround',
-        epoch=7,host_word_hz=h2d,command_words=8,cdc_cycles=2,control_hz=40e6,
+        epoch=7,host_word_hz=h2d,command_words=8,cdc_cycles=2,control_hz=control_hz,
         boundary_wait_s=64/word,analog_settle_s=analog_settle_s,source_lock_s=0.,
         host_training_words=0,fpga_recovery_s=0.,deadline_s=150e-6,d2h_lo_divider=32)
     for event in transition['events']:
@@ -199,7 +207,9 @@ def joined_scan_request(environment,contract,*,seed=81,wanted_dbm=-80.,
                         blocker_dbm=-40.,blocker_attenuation_db=2.,mixer_substeps=256,include_noise=True,
                         fpga_work_s=2e-6,noise_figure_db=10.,adc_enob=8.,
                         initial_gain_db=40.,thermal_noise_enabled=True,adc_noise_enabled=True,
-                        rx_cutoff_hz=.7e6,blocker_offsets_hz=(2e6,),input_iip3_dbm=None):
+                        rx_cutoff_hz=.7e6,blocker_offsets_hz=(2e6,),input_iip3_dbm=None,
+                        converter_bits=12,aperture_rms_s=.3e-12,dynamic_rail=False,
+                        sar_parameters=None,load_capture=None):
     """Real packet RX through one declared rail/clock/reference environment.
 
     Wide internal envelope sampling resolves LO sidebands before analog filtering;
@@ -208,10 +218,12 @@ def joined_scan_request(environment,contract,*,seed=81,wanted_dbm=-80.,
     """
     if environment['payload_engine']!='rf' or not math.isclose(environment['carrier_hz'],2.426e9):
         raise ValueError('This external channel-38 fixture requires an RF environment at 2426 MHz')
-    if type(mixer_substeps) is not int or mixer_substeps not in (256,512):
+    if type(mixer_substeps) is not int or mixer_substeps not in (256,512,1024):
         raise ValueError('Resolved mixer refinement required')
-    if not math.isfinite(noise_figure_db) or noise_figure_db<0 or not math.isfinite(adc_enob) or not 1<=adc_enob<=12:
-        raise ValueError('Finite nonnegative NF and 1..12 ENOB required')
+    if (not math.isfinite(noise_figure_db) or noise_figure_db<0 or not math.isfinite(adc_enob) or
+            converter_bits not in (10,12) or not 1<=adc_enob<=converter_bits or
+            not math.isfinite(aperture_rms_s) or aperture_rms_s<0 or type(dynamic_rail) is not bool):
+        raise ValueError('Finite NF, native resolution, ENOB and nonnegative aperture required')
     noise_factor=10**(noise_figure_db/10)
     lo=environment['carrier_hz'];fs=lo/256;observer_hz=10e6;source_hz=40e6
     settings=validate_rf_settings(sample_hz=fs,tx_cutoff_hz=1.5e6,rx_cutoff_hz=rx_cutoff_hz,
@@ -242,8 +254,11 @@ def joined_scan_request(environment,contract,*,seed=81,wanted_dbm=-80.,
     nonlinearity=None
     if input_iip3_dbm is not None:
         mixed,nonlinearity=third_order_frontend(mixed,input_iip3_dbm)
-    clock=PhaseNoise(tuple(environment['delivered_phase_tones']))
-    if clock.maximum_offset_hz+max(blocker_offsets_hz)+abs(cfo)>=mix_hz/2:
+    if 'local_load_response' in environment or 'periodic_clock' in environment:
+        from selected_rf import DeliveredClock
+        clock=DeliveredClock(environment)
+    else:clock=PhaseNoise(tuple(environment['delivered_phase_tones']))
+    if max(clock.maximum_offset_hz,environment.get('rail_maximum_offset_hz',0.))+max(blocker_offsets_hz)+abs(cfo)>=mix_hz/2:
         raise ValueError('Unresolved LO sidebands must not alias through the receive filter')
     mixed*=np.exp(-1j*clock.phase(times))
     # Fixed input-referred thermal PSD, before the analog filter. Complex
@@ -253,23 +268,48 @@ def joined_scan_request(environment,contract,*,seed=81,wanted_dbm=-80.,
         noise_rng=np.random.default_rng(seed+900)
         mixed+=noise_sigma*(noise_rng.normal(size=len(times))+1j*noise_rng.normal(size=len(times)))
     rail=environment['ledger']['local_payload_clock_core_rail_v']
-    filtered=multipole_envelope(mixed*10*rail/3.3,mix_hz,settings['rx_cutoff_hz'],settings['rx_filter_order'])
+    if dynamic_rail:
+        from selected_rf import rail_at, analog_filter
+        filtered=analog_filter(mixed*10*rail_at(environment,times)/3.3,mix_hz,
+            family='rx_all_pole_control',cutoff_hz=settings['rx_cutoff_hz'])
+    else:
+        filtered=multipole_envelope(mixed*10*rail/3.3,mix_hz,settings['rx_cutoff_hz'],settings['rx_filter_order'])
     filter_times=times+1/mix_hz
     ideal=np.arange(1,math.floor(duration*fs)+1)/fs
     actual=ideal+clock.crossing_error(ideal,lo)
-    if include_noise:actual+=np.random.default_rng(seed+1800).normal(0,.3e-12,len(actual))
+    if include_noise:actual+=np.random.default_rng(seed+1800).normal(0,aperture_rms_s,len(actual))
     if np.any(np.diff(actual)<=0):raise ValueError('Nonmonotonic ADC timestamps')
     sampled=np.interp(actual,filter_times,filtered.real)+1j*np.interp(actual,filter_times,filtered.imag)
     reference=1+sum(a*np.cos(2*math.pi*f*actual+p) for f,a,p in environment['reference_fraction_tones'])
-    step=2/4096
+    step=2/(1<<converter_bits)
     sigma=math.sqrt(max(0.,2**(2-2*adc_enob)-step**2)/12)
     noise_rng=np.random.default_rng(seed+1900)
     adc_noise=sigma*(noise_rng.normal(size=len(actual))+1j*noise_rng.normal(size=len(actual))) if include_noise and adc_noise_enabled else np.zeros(len(actual),complex)
     d2h=environment['host_spectrum']['d2h_word_hz'];h2d=environment['host_spectrum']['h2d_word_hz']
     service=transport_service(contract,sample_hz=fs,word_hz=d2h)
-    agc_delay=service['delay_bound_s']+.5e-6+64/h2d+8/h2d+2/40e6+1/fs
-    codes,agc=bounded_gain_conversion(sampled,adc_noise,fs=fs,command_latency_s=agc_delay,
-        reference_scale=reference,pga_peak_v=.8*rail/3.3,initial_gain_db=initial_gain_db)
+    agc_delay=service['delay_bound_s']+.5e-6+64/h2d+8/h2d+2/environment.get('control_hz',40e6)+1/fs
+    converter=None;conversion_latency=0.
+    if sar_parameters is None:
+        codes,agc=bounded_gain_conversion(sampled,adc_noise,fs=fs,command_latency_s=agc_delay,
+            reference_scale=reference,pga_peak_v=.8*(rail_at(environment,actual) if dynamic_rail else rail)/3.3,
+            initial_gain_db=initial_gain_db,converter_bits=converter_bits)
+    else:
+        if converter_bits!=10 or not dynamic_rail:raise ValueError('Selected SAR requires native 10-bit and moving rails')
+        from converter_dynamics import paired_sar,ObservedGain
+        from selected_rf import rail_at,reference_at
+        beginning=actual-sar_parameters.acquisition_s
+        starts=np.interp(beginning,filter_times,filtered.real)+1j*np.interp(beginning,filter_times,filtered.imag)
+        control=ObservedGain(sample_hz=fs,command_latency_s=agc_delay,
+            acquisition_s=sar_parameters.acquisition_s,initial_gain_db=initial_gain_db,
+            headroom_start=.8*rail_at(environment,beginning)/3.3,
+            headroom_end=.8*rail_at(environment,actual)/3.3)
+        words,converter,load=paired_sar(sampled,starts,actual,
+            lambda t:reference_at(environment,t),lambda t:rail_at(environment,t),
+            parameters=sar_parameters,noise=include_noise and adc_noise_enabled,
+            seed=seed+4900,input_control=control)
+        codes=(words[:,0]+1j*words[:,1])/2048;agc=control.report()
+        conversion_latency=converter['conversion_latency_s']
+        if load_capture is not None:load_capture.update(load)
     trace=agc.pop('gain_db')
     agc.update(minimum_gain_db=min(trace),maximum_observed_gain_db=max(trace),final_gain_db=trace[-1])
     # Nominal code timestamps only: actual jitter/reference are NOT handed to
@@ -278,10 +318,12 @@ def joined_scan_request(environment,contract,*,seed=81,wanted_dbm=-80.,
     observed=bandlimited_samples(codes,observer_times*fs-1,32,cutoff=min(1.,observer_hz/fs))
     observation=observe(observed,fs=observer_hz,channel=38)
     reply=response_budget(observation,settings,environment,contract,
-        advertiser_address=advertiser,fpga_work_s=fpga_work_s)
+        advertiser_address=advertiser,fpga_work_s=fpga_work_s,conversion_latency_s=conversion_latency)
     if reply['request_accepted']:
         reply['scoreboard_uncalibrated_end_error_s']=reply['estimated_request_end_s']-(start_s+len(bits)/1e6)
     peak=sum(t['clock_rail_voltage_peak_v'] for t in environment['host_spectrum']['tones'])
+    load_rail=environment.get('local_load_response',{}).get('rail_v',np.array([0.]))
+    voltage_interval=[rail-peak+float(min(load_rail)),rail+peak+float(max(load_rail))]
     return dict(seed=seed,wanted_dbm=wanted_dbm,blocker_dbm=blocker_dbm,
         blocker_attenuation_db=blocker_attenuation_db,wanted_insertion_loss_db=2.,
         blocker_offsets_hz=list(blocker_offsets_hz),frontend_nonlinearity=nonlinearity,
@@ -289,13 +331,16 @@ def joined_scan_request(environment,contract,*,seed=81,wanted_dbm=-80.,
         source_cfo_hz=cfo,mixer_hz=mix_hz,mixer_substeps=mixer_substeps,
         sample_count=len(codes),adc_crossing_rms_s=float(np.sqrt(np.mean((actual-ideal)**2))),
         thermal_noise_density_v2_per_hz=2*50*1.380649e-23*300.15*noise_factor,
-        noise_figure_db=noise_figure_db,adc_enob=adc_enob,
+        noise_figure_db=noise_figure_db,adc_enob=adc_enob if converter is None else None,
+        native_converter_bits=converter_bits,converter=converter,conversion_latency_s=conversion_latency,
+        settings_precision_scope='Legacy settings.converter_bits is the 12-bit transport format here; native_converter_bits selects the physical transfer model.',
+        aperture_rms_s=aperture_rms_s,dynamic_rail=dynamic_rail,
         thermal_noise_enabled=include_noise and thermal_noise_enabled,
         adc_noise_enabled=include_noise and adc_noise_enabled,
         include_noise=include_noise,gain_control=agc,observation=observation,
         correct_request=observation.get('pdu_hex')==pdu.hex(),response=reply,
-        conservative_local_rail_interval_v=[rail-peak,rail+peak],
-        linear_fixture_voltage_range_guaranteed=rail-peak>=2.5 and rail+peak<=3.6,
+        conservative_local_rail_interval_v=voltage_interval,
+        linear_fixture_voltage_range_guaranteed=voltage_interval[0]>=2.5 and voltage_interval[1]<=3.6,
         complete=False,
         scope='Conditional packet RX and response-readiness timeline. Assigned NF, early gain, gain range, rail scaling, reference rejection and service. No physical early-stage compression, AGC ABI, real TX waveform or protocol-compliance claim.')
 
@@ -323,7 +368,9 @@ def rf_emission_bands(envelope,sample_hz,load_ohm=50.):
 
 
 def transmitted_scan_response(request,environment,contract,*,rx_timestamp_correction_s=0.,
-                              tx_launch_advance_s=0.,host_gap_s=0.,mixer_substeps=256):
+                              tx_launch_advance_s=0.,host_gap_s=0.,mixer_substeps=256,
+                              converter_bits=12,reconstruction_order=1,aperture_rms_s=0.,
+                              dynamic_rail=False,rf_bias_a=.037):
     """Prepared FPGA reply -> finite FIFO -> actual DAC edges -> loaded RF -> peer.
 
     Source request end is used only in the returned scoreboard. Launch policy
@@ -334,8 +381,9 @@ def transmitted_scan_response(request,environment,contract,*,rx_timestamp_correc
     if not reply['reply_armed']:
         return dict(transmitted=False,reason='Reply not armed',complete=False)
     if (not all(math.isfinite(x) and x>=0 for x in
-                (rx_timestamp_correction_s,tx_launch_advance_s,host_gap_s)) or
-            mixer_substeps not in (256,512)):
+                (rx_timestamp_correction_s,tx_launch_advance_s,host_gap_s,aperture_rms_s)) or
+            mixer_substeps not in (256,512,1024) or converter_bits not in (10,12) or
+            reconstruction_order not in (1,3) or type(dynamic_rail) is not bool):
         raise ValueError('Finite nonnegative timing bounds and resolved mixer required')
     fs=request['settings']['sample_hz'];lo=environment['carrier_hz'];source_hz=40e6
     # FPGA packet generation: advertiser address comes from the accepted request,
@@ -349,15 +397,21 @@ def transmitted_scan_response(request,environment,contract,*,rx_timestamp_correc
     prepared=bandlimited_samples(source,np.arange(count)*source_hz/fs,32,cutoff=fs/source_hz)
     codes,dac_clips=adc_reference_conversion(prepared,np.ones(count),12)
     desired=reply['target_air_start_s']-rx_timestamp_correction_s-tx_launch_advance_s
-    # Assigned generic 40 MHz timestamp counter, then the first eligible DAC edge.
-    trigger=math.ceil(desired*40e6)/40e6
+    # Selected host-derived counter, or the explicit legacy 40 MHz fixture.
+    control_hz=environment.get('control_hz',40e6)
+    trigger=math.ceil(desired*control_hz)/control_hz
     if reply['ready_s']>trigger:
         return dict(transmitted=False,reason='Prepared too late for corrected launch',complete=False)
-    clock=PhaseNoise(tuple(environment['delivered_phase_tones']))
+    if 'local_load_response' in environment or 'periodic_clock' in environment:
+        from selected_rf import DeliveredClock
+        clock=DeliveredClock(environment)
+    else:clock=PhaseNoise(tuple(environment['delivered_phase_tones']))
     begin=math.floor(reply['ready_s']*fs)-2
     end=math.ceil(trigger*fs)+count+8
     ideal=np.arange(begin,end)/fs
     edges=ideal+clock.crossing_error(ideal,lo)
+    if aperture_rms_s:
+        edges+=np.random.default_rng(request['seed']+3100).normal(0,aperture_rms_s,len(edges))
     prefill=reply['transport']['prefill_bits']//24
     # FPGA paces on the known consumption rate. Transport is a declared bounded
     # delay, not an instantaneous read from the full prepared FPGA waveform.
@@ -371,29 +425,50 @@ def transmitted_scan_response(request,environment,contract,*,rx_timestamp_correc
     launch=queue['first_consumption_s'];stop=queue['fault_time_s']
     if stop is None:stop=queue['last_consumption_s']+1/fs
     reference=1+sum(a*np.cos(2*math.pi*f*edges+p) for f,a,p in environment['reference_fraction_tones'])
+    if 'local_load_response' in environment:
+        from selected_rf import reference_at
+        reference=reference_at(environment,edges)
     rng=np.random.default_rng(request['seed']+3000)
-    sigma=math.sqrt(max(0.,2**(2-16)-(2/4096)**2)/12)
-    analog_codes=(played+sigma*(rng.normal(size=len(edges))+1j*rng.normal(size=len(edges))))*reference
+    sigma=math.sqrt(max(0.,2**(2-16)-(2/(1<<converter_bits))**2)/12)
+    native_dac_report=None
+    if converter_bits==10:
+        from selected_rf import native_dac
+        words=np.rint(np.column_stack((played.real,played.imag))*2048).astype(np.int64)
+        analog_codes,native_dac_report=native_dac(words,reference)
+        analog_codes+=sigma*(rng.normal(size=len(edges))+1j*rng.normal(size=len(edges)))*reference
+    else:
+        analog_codes=(played+sigma*(rng.normal(size=len(edges))+1j*rng.normal(size=len(edges))))*reference
     mix_hz=fs*mixer_substeps;window_start=trigger-4e-6
+    if max(clock.maximum_offset_hz,environment.get('rail_maximum_offset_hz',0.))+request['settings']['tx_cutoff_hz']>=mix_hz/2:
+        raise ValueError('Resolve delivered clock and rail modulation before TX observation')
     times=window_start+np.arange(math.ceil((count/fs+8e-6)*mix_hz))/mix_hz
-    indices=np.searchsorted(edges,times,side='right')-1
-    held=analog_codes[np.clip(indices,0,len(edges)-1)]
     # Existing causal reconstruction filter; phase rotation remains on the same
     # absolute source realization used during the received request (no reset).
-    reconstructed=multipole_envelope(held,mix_hz,request['settings']['tx_cutoff_hz'],1)
+    if reconstruction_order==3:
+        from selected_rf import analog_hold_at
+        reconstructed=analog_hold_at(analog_codes,edges,times,family='tx_third_order',
+            cutoff_hz=request['settings']['tx_cutoff_hz'])
+        rf_times=times
+    else:
+        indices=np.searchsorted(edges,times,side='right')-1
+        held=analog_codes[np.clip(indices,0,len(edges)-1)]
+        reconstructed=multipole_envelope(held,mix_hz,request['settings']['tx_cutoff_hz'],1)
+        rf_times=times+1/mix_hz
     rail=environment['ledger']['local_payload_clock_core_rail_v']
     gain=4.5*rail/3.3
-    rf_times=times+1/mix_hz
-    opened=gain*output_envelope(reconstructed,np.exp(1j*clock.phase(rf_times)),**TX_PARAMETERS)
+    if dynamic_rail:
+        from selected_rf import rail_at
+        instantaneous_gain=4.5*rail_at(environment,rf_times)/3.3
+    else:instantaneous_gain=gain
+    opened=instantaneous_gain*output_envelope(reconstructed,np.exp(1j*clock.phase(rf_times)),**TX_PARAMETERS)
     # Assigned 50 ns output-enable rise, hard fail-mute. This is an explicit
     # transient hypothesis, not evidence about physical switching splatter.
     gate=np.where((rf_times>=launch)&(rf_times<stop),-np.expm1(-np.maximum(0,rf_times-launch)/50e-9),0.)
     opened*=gate
     port=rf_tx_resistive_port(opened,source_resistance_ohm=40.,load_resistance_ohm=50.)
     emitted=port['envelope_v']
-    rail_peak=sum(t['clock_rail_voltage_peak_v'] for t in environment['host_spectrum']['tones'])
     electrical=rf_tx_compliance_budget(peak_open_v=float(np.max(abs(opened))),
-        minimum_supply_v=rail-rail_peak,total_rail_bias_a=.037,
+        minimum_supply_v=request['conservative_local_rail_interval_v'][0],total_rail_bias_a=rf_bias_a,
         source_resistance_ohm=40.,load_resistance_ohm=50.,driver_bias_current_a=.028,
         peak_current_limit_a=.028,headroom_per_rail_v=.3,differential=True)
     # Independent remote downconversion/filter/sampling: no shared-LO subtraction,
@@ -410,9 +485,13 @@ def transmitted_scan_response(request,environment,contract,*,rx_timestamp_correc
     if peer['acquired']:peer['absolute_start_estimate_s']=float(peer_times[0]+peer['start_sample']/peer_hz)
     active=(rf_times>=launch)&(rf_times<min(stop,launch+len(bits)/1e6))
     return dict(transmitted=True,complete=False,playback=queue,dac_clipped_samples=dac_clips,
+        converter_bits=converter_bits,reconstruction_order=reconstruction_order,
+        aperture_rms_s=aperture_rms_s,dynamic_rail=dynamic_rail,native_dac=native_dac_report,
+        exact_nonuniform_reconstruction=reconstruction_order==3,
         rx_timestamp_correction_s=rx_timestamp_correction_s,tx_launch_advance_s=tx_launch_advance_s,
         host_gap_s=host_gap_s,desired_launch_s=desired,control_trigger_s=trigger,
         first_dac_consumption_s=launch,rf_half_amplitude_start_s=half_start,
+        control_counter_hz=control_hz,
         scoreboard_rf_half_amplitude_gap_s=None if half_start is None else half_start-request['source_packet_end_s'],
         peer=peer,peer_correct_response=peer.get('pdu_hex')==pdu.hex(),
         fpga_waveform_storage='Static scan-response samples can be prepared in FPGA memory before the request; no full-packet chip buffer',

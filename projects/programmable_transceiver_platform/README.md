@@ -150,9 +150,11 @@ The reference-chip investigation has been consolidated into
 Active work now targets connected clock quality, complete RF conversion and
 pad/package/power coexistence; further reference-chip simulation is paused.
 
-The [latest combined-evidence checkpoint](spec/risk-priorities.md#checkpoint-what-the-latest-combined-evidence-changes)
-summarizes what is selected, what improved, and what still fails. Individual
-passing reports do not establish a complete chip operating envelope.
+The [keep-or-change decision](spec/risk-priorities.md#keep-or-change-decision-change-the-delivered-clock-architecture)
+keeps the full chip and selects a differential external clock input plus a lower
+clock supply-sensitivity requirement. It includes pin/current/area reservations.
+Migration of the executable baseline and diagram is the next task; the
+mathematical model and physical feasibility remain incomplete.
 
 For the [whole-architecture assessment and keep/change decisions](spec/risk-priorities.md#architecture-assessment-one-implementation-several-ways-to-succeed),
 start with the risk review. For current capability status and unresolved failures, use the

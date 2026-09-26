@@ -27,57 +27,96 @@ point: loaded-clock spectral noise, RF noise/linearity, pad loading and physical
 current/area must fit together. A passing block cannot be combined with another
 block merely because each passed a different fixture.
 
-### Decision freeze and the next system-level verdict
+### Keep-or-change decision: change the delivered-clock architecture
 
-The [mitigation dispositions](block-diagram.md#disposition-of-remaining-mitigation-choices)
-close the remaining architecture alternatives. Preserve uncertainty bounds as
-acceptance tests; do not describe an unmeasured physical property as a pending
-architecture choice.
+**Decision, 2026-09-26: keep the full companion chip; change the external
+high-speed clock frontend to a differential input and require lower
+supply-to-delay sensitivity in its downstream clock path.** The unchanged
+single-ended baseline has not earned continued selection for high-performance
+qualification. This is an architecture decision for the next model revision,
+not a declaration that the revised chip has a verified operating envelope.
 
-Proceed with the selected full-chip architecture in the normative document.
-External timing, external regulation/passives, common returns in compatible COB
-geometry, LO-derived RF sampling, warm same-channel radio turnaround, independent
-wired RX recovery, and FPGA-owned protocol processing are implementation decisions.
-The H0 host contract is selected; choosing a specific development board is deferred
-until board integration and is not a prerequisite for mathematical closure.
+The decision is based on matched internal-load studies, not the number of
+passing tests. Both inputs use a 1 V nominal Thevenin source amplitude (single
+versus differential), the same mean-current allowance, current-pulse hypothesis,
+package target, CDR and launch corners. Delivered voltage, source power and pad
+loading differ and are modeled; this is not an equal-source-power comparison.
 
-Retain the single-ended high-impedance REF_IN baseline for this checkpoint.
-The differential fallback now has joined RF/wired evidence: with the assigned
-0.025 ps/mV downstream sensitivity it maintains readiness in 64/64 tested wired
-corners, and the blocked RF acquisition diagnostic recovers its tested payloads.
-That is a reason to prioritize it, not physical qualification: the reduced
-sensitivity is unpriced, and input common-mode range, protection, area and the
-extra signal assignment remain unqualified. The additional 4 mA input allowance
-does not buy the assumed improvement in downstream clock distribution.
+| Input / downstream sensitivity hypothesis | Continuously ready wired cases | Interpretation |
+|---|---:|---|
+| Single-ended / 0.1 ps/mV | 0/32 | The original sensitivity hypothesis remains inadequate. |
+| Differential / 0.1 ps/mV | 0/64 | Changing the input alone is insufficient. |
+| Single-ended / 0.025 ps/mV | 28/32 | Distribution improvement alone leaves tested failures. |
+| Differential / 0.025 ps/mV | 64/64 | The combined change has the strongest joined evidence. |
 
-### Checkpoint: what the latest combined evidence changes
+The differential cases include two mismatch hypotheses and both supply-delay
+signs; the single-ended cases include both signs. All short records have zero
+bit errors, including unready cases. These are readiness comparisons, not BER
+or yield estimates. Sources: [single-ended](../evidence/shared-single-internal.json)
+and [differential](../evidence/shared-input-internal.json).
 
-| System question | Current evidence | Decision at this checkpoint |
-|---|---|---|
-| Can the selected clock path tolerate internal switching? | Added budgeted current pulses break wired readiness and worsen blocked RF. Increasing capacitance alone does not close both. | Keep failed controls; prioritize a feasible clock-input/distribution requirement envelope. |
-| Does a credible mitigation exist? | Differential input plus reduced downstream sensitivity improves both RF and wired diagnostics. Physical attainability remains assumed. | Retain one costed fallback; do not expand the hardware option list. |
-| Is RF packet success sufficient? | Acquisition/coding diagnostics recover tested packets, but are not complete standards-valid HE packets or PER evidence. Cold TX wake damages the onset even when later bits decode. | Keep warm/muted TX selected; require complete acquisition and switching behavior. |
-| Can slowing the host rescue USB? | The rate audit below finds no joint pass; slower rates reduce response margin and leave the instantaneous pad guard failing. | Keep full-rate transport; resolve measurement/receiver meaning and actual CDC latency before adding hardware. |
-| Is the chip mathematically complete? | No shared envelope covers all lifecycle and capability obligations. | Stop exploratory sweeps here; close the common envelope and representative lifecycles next. |
+The change also has RF evidence. At both 2.400 and 2.484 GHz, the stressed
+acquisition/coded-DATA diagnostic recovers the tested wanted payload with the
+paired input and rejects its no-wanted control. The matched single-ended input
+also recovers those payloads, so this is evidence against a demonstrated RF
+regression, not proof of a unique RF solution. Raw errors and far-offset TX
+power generally improve in the paired studies. These are limited diagnostic
+waveforms, not standards-valid HE packets, PER or spectral-mask qualification.
+See the existing acquisition, TX and wake sections below for exact scope.
 
-Reports retain the source hashes from their original runs. Older reports are
-historical comparisons, not fresh executions of the current tree. Focused test
-counts verify model mechanics; they are not a measure of chip completeness.
+#### Selected change and its cost
 
-The next milestone is a **baseline keep-or-change verdict**, not another expansion
-of the protocol list. Evaluate one consistent operating envelope across weak
-blocked RF reception, wired continuous readiness and USB shared-return conditions.
-Keep existing failed controls. Prefer board conditioning and configuration changes;
-change on-chip hardware when an identified failure survives those remedies and the
-replacement closes more of the system within the pin/current/area allocations.
-After that verdict, finish startup, sustained operation and recovery using the
-same envelope, followed by capability-wide acceptance. No new schematic or layout
-work precedes mathematical closure.
+| Item | Selected next-revision requirement |
+|---|---|
+| Physical clock input | One differential clock port: retain `REF_IN` as its positive leg at `inputs[1].pad`; allocate `REF_IN_N` at adjacent unused `inputs[0].pad`. There are then 37 functional signals, 18 unchanged fixed power/return sites and 19 unused signals, totaling the same 74 provider sites. No new package or ground bond is assumed. |
+| Clock modes | Differential external GHz timing is the primary high-performance route. Retain low-frequency reference conditioning and autonomous synthesis. A single-ended board source may use external conversion/buffering; its noise, loading and bias count. No simultaneous independent reference and LO sources on this one port. |
+| Input current | Allocate an additional 4 mA to external input/phase conditioning: timing/reference 40 → 44 mA, within its existing 48 mA planning ceiling. Warm RF becomes 240 mA, duplex wired 292 mA, single-active-branch wired 246 mA. These are planning bounds; only the first two have the matched paired experiments. |
+| Area reservation | Move 0.15 mm² from unassigned global growth to input/protection/conditioning: timing 1.45 → 1.60 mm²; reserve 2.92 → 2.77 mm²; unassigned growth 0.72 → 0.57 mm². Total stays 12.92 mm². This is a provisional allocation cap, not an inferred cell area or demonstrated fit. |
+| Distribution requirement | Target magnitude 0.025 ps/mV in the current aggregate 1 GHz-pole supply-delay model, retaining both signs. The existing distribution allowance remains 6 mA and 0.20 mm². The input's extra 4 mA does not pay for this improvement. Stage-specific spectra, quadrature and additive noise must replace the scalar approximation before qualification. |
+| Board/input requirement | Use the tested 1 V differential Thevenin-peak case as the first requirement point, with modeled per-leg loads and mismatch. It is not a guaranteed input range. Establish actual common-mode bias, protection, bandwidth, duty cycle and source-noise limits before treating the interface as realizable. |
 
-Unknown device noise, pad capacitance, assembly inductance and thermal resistance
-remain bounded requirements to verify. Decisiveness selects an implementation;
-it cannot select the physical answer to an unknown. In particular, retain 0.25 nH
-as an assembly target, not a claim that compatible packaging achieves it.
+The site inventory confirms the additional pin is adjacent and unassigned.
+This does not establish compatible PCB routing, bond mutual coupling or RF
+performance. The area/current arithmetic closes the planning allocation only.
+0.025 ps/mV is a successful tested hypothesis, not a measured achievable bound,
+a monotonic acceptance threshold or a demonstrated margin across all phases.
+
+#### Keep, reject, and leave unqualified
+
+- **Keep:** all requested protocol targets, RF/wired payload exclusivity,
+  external regulation/passives, provider-compatible common returns, 0.25 nH
+  assembly target with worse controls, 500 pF reservoir, LO-derived sampling,
+  independent wired CDR, existing converters/filters, warm/muted RF turnaround,
+  full-rate H0 transport, FPGA-owned protocol processing and small chip queues.
+- **Reject as the primary remedy:** stronger single-ended drive, capacitance
+  increases alone, favorable switching-phase cancellation, assumed host silence,
+  deep buffering, or relaxed readiness criteria. None has earned joint closure.
+- **USB:** keep host/device scope and the shared-pad architecture for now.
+  Differential timing does not fix board-referenced pad return. The rate audit
+  finds no combined pass, but the instantaneous quiet-pin screen is not a full
+  compliance measurement. There is insufficient evidence to justify a specific
+  pad redesign or to drop USB; receiver behavior and real response-path latency
+  remain separate blocking obligations.
+- **Physical feasibility:** still unqualified. A package that misses its target,
+  unattainable distribution sensitivity, or incompatible pad bias could defeat
+  the revised design. External clocks do not bypass these on-chip obligations.
+
+#### Decision closure and next execution boundary
+
+The keep-or-change question is closed: **adopt the combined clock change**.
+Do not postpone this decision until every protocol passes, or describe it as
+proof that all protocols will pass. The model-completion gate remains open.
+
+The executable contract, diagram and old baseline generators currently encode
+the evaluated single-ended revision. The paired campaigns already evaluate the
+selected change, but they do not migrate every consumer. The next bounded task
+is to integrate this decision into one revision of those owners, including the
+pin/current/area ledger, without overwriting historical controls or relabeling
+their hashes. Then qualify the combined input/distribution requirement across
+bounded package/current/phase variations and representative RF/wired lifecycles.
+A failure to fit the selected physical budgets reopens the affected clock
+implementation, not the protocol list by default. No new transistor schematic
+or layout work precedes mathematical closure.
 
 ### Whole-chip risk ranking
 

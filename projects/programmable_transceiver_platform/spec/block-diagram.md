@@ -14,6 +14,21 @@ See the [decision gates and operating ledger](feasibility-gates.md#decision-sequ
 
 The [whole-architecture assessment](risk-priorities.md#architecture-assessment-one-implementation-several-ways-to-succeed) records the cross-system conflicts, operating sequences and every interface family’s open gate.
 
+## Approved next-revision change
+
+The [keep-or-change decision](risk-priorities.md#keep-or-change-decision-change-the-delivered-clock-architecture)
+selects a differential external high-speed clock input together with a
+0.025 ps/mV aggregate downstream supply-delay requirement. It reserves the
+adjacent `inputs[0].pad` for `REF_IN_N`, adds 4 mA of input allowance, and moves
+0.15 mm² from global growth into timing. The decision record owns the exact
+costs, evidence and remaining physical uncertainty.
+
+**Migration status:** the diagram, executable contract and baseline tables below
+still describe the evaluated single-ended revision. Their single-ended-default
+and no-new-clock-pin decisions are superseded for the next revision by the
+linked decision. Preserve those controls until model migration is complete;
+do not claim that the differential diagnostic campaigns verify the whole chip.
+
 ## Provisional first-chip baseline
 
 This is the selected architecture for the next whole-chip mathematical model,

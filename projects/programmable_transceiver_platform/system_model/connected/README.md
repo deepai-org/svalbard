@@ -1,26 +1,23 @@
-# Supporting connected models
+# Supporting circuit and timing models
 
-Use the [active whole-chip guide](../architecture_fast/README.md) for current
-commands, coverage and limitations. [ARCHITECTURE.md](ARCHITECTURE.md) maps the
-supporting model layers to their authoritative specifications and explains the
-detailed regression. [The model overview](../README.md) describes the relationship
-between behavioral and coupled compositions.
+The [active model guide](../architecture_fast/README.md) owns current commands,
+coverage and limitations. The [architecture inventory](../../spec/analog-architecture.json)
+owns the planned chip; this directory does not define another architecture.
 
-This directory contains shared implementation layers and scoped experiments.
-Earlier modules remain dependencies of current compositions; historical names
-alone do not make them obsolete. Concurrent four-path fixtures are optional
-stress tests under the accepted exclusive RF/wired payload policy.
+Retain reusable numerical primitives and explicitly scoped experiments here.
+Simplified and deliberately adverse inputs are valid, but a superseded chip
+composition is not a substitute for current-design verification. The retired managed-chip and concurrent RF/wired lifecycle trees are removed.
+Importing a shared module does not establish that its entire test suite matches
+the current design.
 
-For specific experiments, the [connected runner](run_architecture.py) owns the
-scenario list and expected report paths. Its passing checks do not establish
-whole-chip closure, transistor performance or standards compliance. Consult the
-[closure inventory](../../spec/mathematical-closure.json) and
-[current priorities](../../spec/risk-priorities.md) for those decisions.
+`shared_supply_lifecycle.py` contains independent passive-supply equations and
+numerical controls. `reference_sample_clock.py` checks bounded clock-edge
+forecast and commit behavior. Their standalone commands do not construct a
+chip, qualify physical pads, or prove joined RF/wired operation. The obsolete
+aggregate architecture runner is removed; use the current bounded regression
+and selected lifecycle commands in the active guide.
 
-The former pass-674–687 journal, including original commands, pilot-calibration
-examples, measurements and limitations, is preserved in its
-[complete immutable Git snapshot](https://github.com/deepai-org/svalbard/blob/3d06e6263892b2e6755c9f6a6e6d5bf7da4dc678/projects/programmable_transceiver_platform/system_model/connected/README.md).
-Its prefill, running-container and next-step statements are historical; use the
-current source and guides above for present behavior. In particular, the journal's
-QPSK/multicarrier fixtures and assumed ADC noise/reference-memory sweeps are
-scoped numerical experiments, not Wi-Fi qualification or characterized ADC noise.
+The [closure inventory](../../spec/mathematical-closure.json) and
+[current priorities](../../spec/risk-priorities.md) own completion decisions.
+Stored historical results retain their original assumptions and provenance;
+source changes require review or rerun, never a replacement hash alone.

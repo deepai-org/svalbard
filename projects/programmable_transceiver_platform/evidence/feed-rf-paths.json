@@ -1,0 +1,1274 @@
+{
+  "design_provenance": {
+    "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+    "fingerprint_format": "canonical-json-sha256-v1",
+    "circuit_experiments": [],
+    "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"}
+  },
+  "cases": [
+    {
+      "design_provenance": {
+        "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+        "fingerprint_format": "canonical-json-sha256-v1",
+        "circuit_experiments": [
+          {
+            "changes": [
+              {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+            ],
+            "kind": "hypothetical_circuit",
+            "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+            "reason": "RF feed-resistance mitigation probe"
+          }
+        ],
+        "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+      },
+      "resolved_configuration": {
+        "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+        "fingerprint_format": "canonical-json-sha256-v1",
+        "circuit_experiments": [
+          {
+            "changes": [
+              {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+            ],
+            "kind": "hypothetical_circuit",
+            "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+            "reason": "RF feed-resistance mitigation probe"
+          }
+        ],
+        "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+        "engine": "rf",
+        "direction": "rx",
+        "clock_source": "external_high",
+        "reference_hz": 2400000000.0,
+        "host_divider": 16,
+        "host_word_hz": 150000000.0,
+        "host_clock_source": "reference_divider",
+        "host_input_hz": null,
+        "inventory_mode": "rf_rx",
+        "sample_divider": 64,
+        "sample_hz": 37500000.0,
+        "pga_gain_db": 42,
+        "lna_gain_db": 20
+      },
+      "scenario_overrides": [],
+      "scenario_stimuli": {"wanted_dbm":-85.0,"blocker_dbm":-30.0,"reference_peak_v":null},
+      "probe_assumptions": {
+        "internal_switching_loads": [
+          {"owner":"timing","mean_a":0.02,"event_hz":150000000.0,"tau_s":2e-10,"harmonics":64},
+          {"owner":"core","mean_a":0.04,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+        ],
+        "sensitivity_ps_per_mv": 0.0125,
+        "supply_sign": -1.0
+      },
+      "clock": {
+        "design_provenance": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "RF feed-resistance mitigation probe"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "RF feed-resistance mitigation probe"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+          "engine": "rf",
+          "direction": "rx",
+          "clock_source": "external_high",
+          "reference_hz": 2400000000.0,
+          "host_divider": 16,
+          "host_word_hz": 150000000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "rf_rx",
+          "sample_divider": 64,
+          "sample_hz": 37500000.0,
+          "pga_gain_db": 42,
+          "lna_gain_db": 20
+        },
+        "scenario_overrides": [],
+        "scenario_assumptions": {},
+        "operating_conditions": {"temperature_c":27.0,"temperature_k":300.15,"scope":"Temperature affects frontend and sampling thermal noise only; gain, delay, phase noise, leakage and current temperature coefficients are not modeled."},
+        "carrier_hz": 2400000000.0,
+        "source_differential_peak_v": 1.0,
+        "source_leg_skew_s": 5e-12,
+        "cm_gain": -0.1,
+        "mismatch": 0.2,
+        "opposed": false,
+        "reference_acceptance_parameters": {"effective_peak_limit_v":0.6,"leg_peak_limit_v":0.6,"threshold_v":0.02},
+        "supply_sign": -1.0,
+        "sensitivity_ps_per_mv": 0.0125,
+        "supply_delay_pole_hz": 1000000000.0,
+        "capacitance_f_per_leg": 2.7e-12,
+        "reference_package_parameters": {"cap_f":2.7e-12,"bond_l_h":2e-09,"mutual_l_h":4e-10,"source_r_ohm":50.2},
+        "accepted": true,
+        "acceptance_checks": {"complete_ordered_edge_capture":true,"crossing_count_grid_agreement":true,"effective_input_envelope":true,"individual_leg_envelope":true},
+        "rejected_checks": [],
+        "envelope_scope": "Assigned shared incremental input envelopes. Conservative peak bounds exceeding it do not prove actual overvoltage, physical damage or loss of clock edges.",
+        "per_leg_bound_v": [0.3223263992553967,0.4624784596222813],
+        "current_a": 0.22999999999999998,
+        "clock": {
+          "carrier_cycles": 384,
+          "period_s": 1.6e-07,
+          "grid_substeps": 64,
+          "missing_rising_edge_windows": 0,
+          "multiple_rising_edge_windows": 0,
+          "unique_edge_windows": 384,
+          "all_windows_have_one_rising_edge": true,
+          "centered_edge_error_rms_ps": 1.1810044617029156,
+          "edge_error_peak_to_peak_ps": 5.434527863976227,
+          "static_mean_edge_shift_ps": 0.012548832744992758,
+          "maximum_root_voltage_residual_v": 1.5910224526738403e-12,
+          "linearization_maximum_error_ps": 0.02655783777485237,
+          "dominant_edge_error_tones": [
+            {"frequency_hz":781250000,"edge_error_peak_ps":1.2232834968378064},
+            {"frequency_hz":468750000,"edge_error_peak_ps":0.7839566891664869},
+            {"frequency_hz":156250000,"edge_error_peak_ps":0.5296082320589245},
+            {"frequency_hz":750000000,"edge_error_peak_ps":0.3315610615976139},
+            {"frequency_hz":900000000,"edge_error_peak_ps":0.2675025111567256},
+            {"frequency_hz":600000000,"edge_error_peak_ps":0.20936037281445802},
+            {"frequency_hz":150000000,"edge_error_peak_ps":0.2061461581983788},
+            {"frequency_hz":312500000,"edge_error_peak_ps":0.18870808284119198}
+          ],
+          "combined_edge_error_rms_ps": 3.1379581948636055,
+          "combined_edge_error_peak_to_peak_ps": 13.081281601362223,
+          "downstream_delay_rms_at_edges_ps": 2.8175804498627395,
+          "minimum_output_edge_spacing_s": 4.119842027166751e-10,
+          "output_clock_order_preserved": true,
+          "local_input_conservative_peak_v": 0.5467256079747529,
+          "incremental_envelope_met": true,
+          "threshold_v": 0.02,
+          "peak_limit_v": 0.6
+        },
+        "frontend": "differential",
+        "internal_switching_loads": [
+          {"owner":"timing","mean_a":0.02,"event_hz":150000000.0,"tau_s":2e-10,"harmonics":64},
+          {"owner":"core","mean_a":0.04,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+        ],
+        "ledger": {
+          "owner_current_a": {"core":0.043,"host":0.11009999999999999,"timing":0.032299999999999995,"rf":0.043,"wire":0.0016},
+          "total_chip_supply_current_a": 0.22999999999999998,
+          "host_node_current_a": 0.08603749999999999,
+          "local_branch_current_a": 0.1439625,
+          "h2d_internal_current_within_host_a": 0.0240625,
+          "board_supply_v": 3.2769999999999992,
+          "die_return_v": 0.004600024496597439,
+          "local_payload_clock_core_rail_v": 3.1284374755034015,
+          "rf_clock_core_rail_v": 3.1284374755034015,
+          "host_rail_v": 3.2724000244965974,
+          "source_v": 3.3,
+          "source_power_w": 0.7589999999999999,
+          "delivered_electrical_power_w": 0.7319267983536832,
+          "resistive_loss_w": 0.027073201646316866,
+          "power_balance_residual_w": -2.0816681711721685e-16,
+          "physical_pin_current_qualification": false
+        },
+        "resolved_crossings": {
+          "carrier_cycles": 384,
+          "period_s": 1.6e-07,
+          "grid_substeps": 64,
+          "missing_rising_edge_windows": 0,
+          "multiple_rising_edge_windows": 0,
+          "unique_edge_windows": 384,
+          "all_windows_have_one_rising_edge": true,
+          "centered_edge_error_rms_ps": 1.1810044617029156,
+          "edge_error_peak_to_peak_ps": 5.434527863976227,
+          "static_mean_edge_shift_ps": 0.012548832744992758,
+          "maximum_root_voltage_residual_v": 1.5910224526738403e-12,
+          "linearization_maximum_error_ps": 0.02655783777485237,
+          "dominant_edge_error_tones": [
+            {"frequency_hz":781250000,"edge_error_peak_ps":1.2232834968378064},
+            {"frequency_hz":468750000,"edge_error_peak_ps":0.7839566891664869},
+            {"frequency_hz":156250000,"edge_error_peak_ps":0.5296082320589245},
+            {"frequency_hz":750000000,"edge_error_peak_ps":0.3315610615976139},
+            {"frequency_hz":900000000,"edge_error_peak_ps":0.2675025111567256},
+            {"frequency_hz":600000000,"edge_error_peak_ps":0.20936037281445802},
+            {"frequency_hz":150000000,"edge_error_peak_ps":0.2061461581983788},
+            {"frequency_hz":312500000,"edge_error_peak_ps":0.18870808284119198}
+          ],
+          "combined_edge_error_rms_ps": 3.1379581948636055,
+          "combined_edge_error_peak_to_peak_ps": 13.081281601362223,
+          "downstream_delay_rms_at_edges_ps": 2.8175804498627395,
+          "minimum_output_edge_spacing_s": 4.119842027166751e-10,
+          "output_clock_order_preserved": true,
+          "local_input_conservative_peak_v": 0.5467256079747529,
+          "incremental_envelope_met": true,
+          "threshold_v": 0.02,
+          "peak_limit_v": 0.6
+        },
+        "physical_source_peak_v": 1.0,
+        "supply_sensitivity_ps_per_mv": 0.0125,
+        "supply_sensitivity_sign": -1.0,
+        "status": "clock_accepted_for_conditional_payload"
+      },
+      "status": "clock_accepted",
+      "control": "constant_reference_target",
+      "rf": {
+        "seed": 431,
+        "source_start_sample": 137,
+        "source_carrier_offset_hz": -120000.0,
+        "transmitted": true,
+        "analog": {
+          "design_provenance": {
+            "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+            "fingerprint_format": "canonical-json-sha256-v1",
+            "circuit_experiments": [
+              {
+                "changes": [
+                  {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+                ],
+                "kind": "hypothetical_circuit",
+                "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+                "reason": "RF feed-resistance mitigation probe"
+              }
+            ],
+            "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+          },
+          "resolved_configuration": {
+            "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+            "fingerprint_format": "canonical-json-sha256-v1",
+            "circuit_experiments": [
+              {
+                "changes": [
+                  {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+                ],
+                "kind": "hypothetical_circuit",
+                "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+                "reason": "RF feed-resistance mitigation probe"
+              }
+            ],
+            "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+            "engine": "rf",
+            "direction": "rx",
+            "clock_source": "external_high",
+            "reference_hz": 2400000000.0,
+            "host_divider": 16,
+            "host_word_hz": 150000000.0,
+            "host_clock_source": "reference_divider",
+            "host_input_hz": null,
+            "inventory_mode": "rf_rx",
+            "sample_divider": 64,
+            "sample_hz": 37500000.0,
+            "pga_gain_db": 42,
+            "lna_gain_db": 20
+          },
+          "scenario_overrides": [],
+          "scenario_assumptions": {},
+          "operating_conditions": {"temperature_c":27.0,"temperature_k":300.15,"scope":"Temperature affects frontend and sampling thermal noise only; gain, delay, phase noise, leakage and current temperature coefficients are not modeled."},
+          "receiver": {
+            "design_provenance": {
+              "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+              "fingerprint_format": "canonical-json-sha256-v1",
+              "circuit_experiments": [
+                {
+                  "changes": [
+                    {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+                  ],
+                  "kind": "hypothetical_circuit",
+                  "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+                  "reason": "RF feed-resistance mitigation probe"
+                }
+              ],
+              "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+            },
+            "resolved_configuration": {
+              "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+              "fingerprint_format": "canonical-json-sha256-v1",
+              "circuit_experiments": [
+                {
+                  "changes": [
+                    {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+                  ],
+                  "kind": "hypothetical_circuit",
+                  "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+                  "reason": "RF feed-resistance mitigation probe"
+                }
+              ],
+              "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+              "engine": "rf",
+              "direction": "rx",
+              "clock_source": "external_high",
+              "reference_hz": 2400000000.0,
+              "host_divider": 16,
+              "host_word_hz": 150000000.0,
+              "host_clock_source": "reference_divider",
+              "host_input_hz": null,
+              "inventory_mode": "rf_rx",
+              "sample_divider": 64,
+              "sample_hz": 37500000.0,
+              "pga_gain_db": 42,
+              "lna_gain_db": 20
+            },
+            "scenario_overrides": [],
+            "scenario_assumptions": {},
+            "operating_conditions": {"temperature_c":27.0,"temperature_k":300.15,"scope":"Temperature affects frontend and sampling thermal noise only; gain, delay, phase noise, leakage and current temperature coefficients are not modeled."},
+            "pga_nominal_peak_limit_v": 0.8,
+            "gain_hypothesis_reason": null,
+            "unsupported_gain_settings_db": [],
+            "receiver_diagnostic_overrides": {},
+            "result_role": "design_gain_settings",
+            "wanted_antenna_dbm": -85.0,
+            "blocker_antenna_dbm": -30.0,
+            "blocker_offset_hz": 12000000.0,
+            "external_loss_db": 2.0,
+            "external_selective_rejection_db": 0.0,
+            "chip_input_noise_figure_db": 6.0,
+            "early_voltage_gain_db": 20,
+            "input_iip3_dbm": 0.0,
+            "thermal_noise_temperature_k": 300.15,
+            "frontend_nonlinearity": {"input_iip3_dbm":0.0,"maximum_cubic_gain_reduction_fraction":0.0006575771066605512,"within_assigned_small_compression_range":true,"scope":"Ten-percent peak cubic gain reduction is an assigned model-validity screen, not a compression specification."},
+            "filter_family": "rx_finite_zero",
+            "cutoff_hz": 9531250.0,
+            "filter_integrator_ratio": null,
+            "filter_retune_ratio": null,
+            "native_bits": 10,
+            "enob_hypothesis": null,
+            "converter_model": "closed_loop_sar_requirement",
+            "comparator_model": null,
+            "gain_codes_db": [-6,-3,0,3,6,9,12,15,18,21,24,27,30,33,36,39,42],
+            "gain_transition": {"initial_db":null,"tau_s":2e-07,"command_s":0.0},
+            "aperture_rms_s": 1e-11,
+            "adc_hz": 37500000.0,
+            "mixer_hz": 20480000000.0,
+            "oversample": 1024,
+            "filter_interpolation": "zoh",
+            "noise_enabled": true,
+            "noise_sources": {"thermal":true,"converter":true,"aperture":true},
+            "coupled_load_clock": {"edge_count":478080,"local_polynomial_degree":12,"local_polynomial_remainder_bound_v":1.5369113632447415e-16,"maximum_input_shift_s":5.615083183651325e-16,"maximum_root_residual_v":3.0490847673834515e-10,"minimum_bracket_slope_v_per_s":5957845761.104166,"scope":"Unique ordered local root continuations; extra crossings outside the brackets are not independently excluded."},
+            "observed_rail_interval_v": [2.611175189951883,3.474252337472361],
+            "reference_interval_v": [1.0,1.0],
+            "resampler_taps": 64,
+            "fpga_resampler_lookahead_s": 8.533333333333334e-07,
+            "gain_cases": [
+              {
+                "pga_gain_db": 42,
+                "gain_supported_by_design": true,
+                "pga_clipped_samples": 10,
+                "pga_clipped_samples_during_source": 0,
+                "adc": {
+                  "input_test": [0,0],
+                  "diagnostic_reference_charge_c": 0.0,
+                  "diagnostic_scope": "Ratiometric internal endpoint with optional effective source charge per quarter-reference lane, lumped at acquisition end. Same finite acquisition and retained reference/DAC/comparator path. Zero effective capacitance is an ideal-load control. Continuous source impedance/bias, ratio mismatch and switch injection remain unmodeled. Cannot establish absolute VREF or independent gain accuracy.",
+                  "initial_reference_v": 1.0000921450624067,
+                  "first_acquisition_reference_v": 1.000905665006925,
+                  "parameters": {
+                    "acquisition_s": 5e-09,
+                    "bit_durations_s": [3e-09,2.6e-09,2.4e-09,2.1e-09,1.9e-09,1.6e-09,1.3e-09,1.1e-09,1e-09,1e-09],
+                    "comparator_s": 5e-10,
+                    "reset_control_s": 2e-09,
+                    "sample_cap_per_leg_f": 5e-13,
+                    "sample_resistance_ohm": 200.0,
+                    "dac_effective_cap_f": 1e-12,
+                    "dac_tau_s": 3e-10,
+                    "reference_cap_f": 1e-10,
+                    "reference_r_ohm": 50.0,
+                    "reference_limit_a": 0.001,
+                    "reference_idle_a": 0.002,
+                    "comparator_noise_rms_v": 0.001,
+                    "temperature_k": 300.15,
+                    "diagnostic_input_cap_f": 5e-14,
+                    "diagnostic_series_resistance_ohm": 100.0,
+                    "diagnostic_reference_effective_cap_per_lane_f": 0.0,
+                    "unmodeled_cycle_uncertainty_s": 2e-10
+                  },
+                  "native_bits": 10,
+                  "transport_bits": 12,
+                  "maximum_rate_hz": 39682539.68253968,
+                  "schedule_margin_s": 1.4141813326734309e-09,
+                  "conversion_latency_s": 1.8e-08,
+                  "actual_conversion_latency_interval_s": [1.799999999999881e-08,1.8000000000012364e-08],
+                  "comparator_model": null,
+                  "comparator_decision_interval_s": [5e-10,5e-10],
+                  "actual_completion_margin_s": -1.2364695796442658e-20,
+                  "timing_ownership": "Acquisition timestamps supplied by sample clock; allocated local completion intervals need no further external LO edges. Not a physical sequencer implementation.",
+                  "evaluated_supply_interval_v": [2.649767525903715,3.474264255217728],
+                  "sampling_thermal_rms_per_component_v": 0.00012275649175205654,
+                  "noise_enabled": true,
+                  "idle_integration_step_s": null,
+                  "code_error_rms_lsb": 0.9899028659183178,
+                  "maximum_code_error_lsb": 10.0,
+                  "acquisition_error_rms_v": 0.001779604191463307,
+                  "reference_interval_v": [0.9784279450847336,1.000905665006925],
+                  "decision_reference_interval_v": [0.9866068793372982,0.9999471855741269],
+                  "maximum_dac_following_error_at_decision_v": 0.002693435509094715,
+                  "reference_charge_drawn_c": 1.579621259604629e-08,
+                  "signed_reference_recharge_c": 1.5795948560041848e-08,
+                  "reference_charge_balance_residual_c": 8.75542203664145e-24,
+                  "reference_source_average_a": 8.044408728927823e-05,
+                  "reference_source_peak_a": 0.00048135713976326923,
+                  "reference_with_bias_average_a": 0.002080444087289278,
+                  "reference_with_bias_peak_a": 0.002481357139763269,
+                  "current_limited_segments": 0,
+                  "scope": "Predictive conditional charge/settling/decision recurrence, not fitted silicon. Effective CDAC charge uses absolute code steps and dissipative switching; return-charge reuse and capacitor mismatch are unmodeled. Input acquisition uses linear endpoints; half-LSB midpoint convention is assigned. Optional asynchronous regeneration uses a snapshot input and explicit exponential law; both I/Q wait for the slower decision, DAC settling intervals are preserved, and shared reference forcing is reevaluated at actual event times. Its input snapshot, fixed launch and regeneration law are hypotheses, not physical metastability or sequencer qualification. Fixed-slot mode still assumes timely ideal-sign decisions."
+                },
+                "observation": {"scope":"Continuous capture delivered to external acquisition receiver; no oracle DATA alignment."}
+              }
+            ],
+            "complete": false,
+            "scope": "Shared loaded source/input/supply spectrum and environment-owned mode budget. Assigned instantaneous early-gain rail sensitivity; fixed NF/IIP3 and ideal linear filter internals. ADC uses causal trial decisions, limited reference recovery and finite acquisition/DAC settling; pole/current/noise hypotheses are unqualified, with no mismatch; optional comparator regeneration remains an assigned requirement model. Known DATA training/ideal boundaries, no real preamble, CFO search, AGC or packet/PER qualification. Finite RF record does not qualify emissions or continuous host service."
+          },
+          "load_resolution": [
+            {
+              "grid_s": 2.5e-10,
+              "supply_current_tau_s": 2e-10,
+              "coupled_reference_input": {
+                "differential": {"cm_gain":-0.1,"mismatch":0.2,"opposed":false,"mutual_l_h":4e-10},
+                "cap_f": 2.7e-12,
+                "bond_l_h": 2e-09,
+                "source_r_ohm": 50.2
+              },
+              "supply_sensitivity_sign": -1.0,
+              "supply_sensitivity_ps_per_mv": 0.0125,
+              "direct_input_voltage_in_timing": false,
+              "dc_reference_a": 0.001,
+              "settled_quiet_background": {
+                "rail_v": 0.0011200024996528262,
+                "delay_s": -1.400003124566033e-14,
+                "reference_fraction": 0.00011200024996528263,
+                "input_v": -2.0002499652826005e-06,
+                "return_v": -2.0002499652826003e-05,
+                "input_leg_v": [2.0002499652826003e-05,2.0002499652826003e-05]
+              },
+              "final_guard_residual": {
+                "rail_v": 2.0407599434987822e-08,
+                "delay_s": 5.101069104448644e-19,
+                "reference_fraction": -5.605973556188897e-11,
+                "input_v": 3.034785651778818e-09,
+                "return_v": -9.031168459116233e-10,
+                "input_leg_v": [-4.4267260601733025e-09,-6.895405151374155e-09]
+              },
+              "current_accounting": "fixed_reserved_current_replaced_by_actual_recharge",
+              "sampled_source_average_a": 8.043497640050533e-05,
+              "integrated_source_charge_c": 1.580106904774113e-08,
+              "charge_resampling_residual_c": -2.415367388654841e-22,
+              "rail_interval_v": [0.0005279219472917534,0.0012447687089802435],
+              "rail_rms_v": 0.0010379572644831716,
+              "clock_delay_rms_s": 1.2973384609030263e-14,
+              "reference_fraction_rms": 0.00010311070870017632,
+              "scope": "Local reference recharge port only, superposed with host ripple at full planning DC. Positive source charge is conserved; sink current receives no supply-energy credit. Assigned 200 ps supply-current pole requires an internal charge path; not a validated buffer. FFT guards, finite grid and linear fixed PDN do not qualify physical peak current or broadband transistor noise. Fixed reserved current is replaced by recharge; zero-recharge prehistory/tail and settled DC background are explicit assumptions. FFT response remains a finite guarded approximation. Coupled tied-return REF_IN voltage is exposed; the delivered-clock consumer must separately solve perturbed threshold events.",
+              "input_voltage_abs_peak_v": 4.382024015778037e-06,
+              "input_voltage_rms_v": 2.098993449858365e-06,
+              "return_voltage_abs_peak_v": 3.8789388203961785e-05,
+              "input_leg_voltage_abs_peak_v": [3.881760145994347e-05,3.8905978599388814e-05]
+            },
+            {
+              "grid_s": 1.25e-10,
+              "supply_current_tau_s": 2e-10,
+              "coupled_reference_input": {
+                "differential": {"cm_gain":-0.1,"mismatch":0.2,"opposed":false,"mutual_l_h":4e-10},
+                "cap_f": 2.7e-12,
+                "bond_l_h": 2e-09,
+                "source_r_ohm": 50.2
+              },
+              "supply_sensitivity_sign": -1.0,
+              "supply_sensitivity_ps_per_mv": 0.0125,
+              "direct_input_voltage_in_timing": false,
+              "dc_reference_a": 0.001,
+              "settled_quiet_background": {
+                "rail_v": 0.0011200024996528262,
+                "delay_s": -1.400003124566033e-14,
+                "reference_fraction": 0.00011200024996528263,
+                "input_v": -2.0002499652826005e-06,
+                "return_v": -2.0002499652826003e-05,
+                "input_leg_v": [2.0002499652826003e-05,2.0002499652826003e-05]
+              },
+              "final_guard_residual": {
+                "rail_v": -3.069182169697371e-09,
+                "delay_s": -8.721791165806596e-20,
+                "reference_fraction": 7.603296844124058e-12,
+                "input_v": -4.842420534613817e-10,
+                "return_v": -2.08386037104432e-11,
+                "input_leg_v": [2.2644210591088888e-10,6.660590991270645e-10]
+              },
+              "current_accounting": "fixed_reserved_current_replaced_by_actual_recharge",
+              "sampled_source_average_a": 8.043502758208619e-05,
+              "integrated_source_charge_c": 1.5801069047741612e-08,
+              "charge_resampling_residual_c": 2.415367388654841e-22,
+              "rail_interval_v": [0.0005040390806073886,0.0012464082313703305],
+              "rail_rms_v": 0.0010379795762594072,
+              "clock_delay_rms_s": 1.2973538723366447e-14,
+              "reference_fraction_rms": 0.00010311071197953047,
+              "scope": "Local reference recharge port only, superposed with host ripple at full planning DC. Positive source charge is conserved; sink current receives no supply-energy credit. Assigned 200 ps supply-current pole requires an internal charge path; not a validated buffer. FFT guards, finite grid and linear fixed PDN do not qualify physical peak current or broadband transistor noise. Fixed reserved current is replaced by recharge; zero-recharge prehistory/tail and settled DC background are explicit assumptions. FFT response remains a finite guarded approximation. Coupled tied-return REF_IN voltage is exposed; the delivered-clock consumer must separately solve perturbed threshold events.",
+              "input_voltage_abs_peak_v": 4.638931125318135e-06,
+              "input_voltage_rms_v": 2.1058064425190797e-06,
+              "return_voltage_abs_peak_v": 3.903078979876362e-05,
+              "input_leg_voltage_abs_peak_v": [3.8811967834833515e-05,3.8966266019476635e-05]
+            }
+          ],
+          "iterations": [
+            {
+              "iteration": 0,
+              "rail_rms_change_v": null,
+              "rail_peak_change_v": null,
+              "input_voltage_peak_change_v": null,
+              "clock": null,
+              "load": {
+                "grid_s": 2.5e-10,
+                "supply_current_tau_s": 2e-10,
+                "coupled_reference_input": {
+                  "differential": {"cm_gain":-0.1,"mismatch":0.2,"opposed":false,"mutual_l_h":4e-10},
+                  "cap_f": 2.7e-12,
+                  "bond_l_h": 2e-09,
+                  "source_r_ohm": 50.2
+                },
+                "supply_sensitivity_sign": -1.0,
+                "supply_sensitivity_ps_per_mv": 0.0125,
+                "direct_input_voltage_in_timing": false,
+                "dc_reference_a": 0.001,
+                "settled_quiet_background": {
+                  "rail_v": 0.0011200024996528262,
+                  "delay_s": -1.400003124566033e-14,
+                  "reference_fraction": 0.00011200024996528263,
+                  "input_v": -2.0002499652826005e-06,
+                  "return_v": -2.0002499652826003e-05,
+                  "input_leg_v": [2.0002499652826003e-05,2.0002499652826003e-05]
+                },
+                "final_guard_residual": {
+                  "rail_v": 2.0399698536302524e-08,
+                  "delay_s": 5.099094204535727e-19,
+                  "reference_fraction": -5.6038031921484995e-11,
+                  "input_v": 3.0336107156758858e-09,
+                  "return_v": -9.027672001706607e-10,
+                  "input_leg_v": [-4.425012232502079e-09,-6.892735558623628e-09]
+                },
+                "current_accounting": "fixed_reserved_current_replaced_by_actual_recharge",
+                "sampled_source_average_a": 8.042554187651315e-05,
+                "integrated_source_charge_c": 1.5799215680316515e-08,
+                "charge_resampling_residual_c": -5.790264287871194e-22,
+                "rail_interval_v": [0.0005277177254823548,0.0012447261193191796],
+                "rail_rms_v": 0.0010379675122123857,
+                "clock_delay_rms_s": 1.2973513120813982e-14,
+                "reference_fraction_rms": 0.00010311175976335554,
+                "scope": "Local reference recharge port only, superposed with host ripple at full planning DC. Positive source charge is conserved; sink current receives no supply-energy credit. Assigned 200 ps supply-current pole requires an internal charge path; not a validated buffer. FFT guards, finite grid and linear fixed PDN do not qualify physical peak current or broadband transistor noise. Fixed reserved current is replaced by recharge; zero-recharge prehistory/tail and settled DC background are explicit assumptions. FFT response remains a finite guarded approximation. Coupled tied-return REF_IN voltage is exposed; the delivered-clock consumer must separately solve perturbed threshold events.",
+                "input_voltage_abs_peak_v": 4.382355958328783e-06,
+                "input_voltage_rms_v": 2.0989504166986466e-06,
+                "return_voltage_abs_peak_v": 3.879532587229485e-05,
+                "input_leg_voltage_abs_peak_v": [3.882365771776252e-05,3.891224823907526e-05]
+              }
+            },
+            {
+              "iteration": 1,
+              "rail_rms_change_v": 6.849312010774344e-08,
+              "rail_peak_change_v": 2.694154787503478e-06,
+              "input_voltage_peak_change_v": 2.5694697893240876e-08,
+              "clock": {"edge_count":478080,"local_polynomial_degree":12,"local_polynomial_remainder_bound_v":1.5369113632447415e-16,"maximum_input_shift_s":5.615083183651325e-16,"maximum_root_residual_v":3.0490847673834515e-10,"minimum_bracket_slope_v_per_s":5957845761.104166,"scope":"Unique ordered local root continuations; extra crossings outside the brackets are not independently excluded."},
+              "load": {
+                "grid_s": 2.5e-10,
+                "supply_current_tau_s": 2e-10,
+                "coupled_reference_input": {
+                  "differential": {"cm_gain":-0.1,"mismatch":0.2,"opposed":false,"mutual_l_h":4e-10},
+                  "cap_f": 2.7e-12,
+                  "bond_l_h": 2e-09,
+                  "source_r_ohm": 50.2
+                },
+                "supply_sensitivity_sign": -1.0,
+                "supply_sensitivity_ps_per_mv": 0.0125,
+                "direct_input_voltage_in_timing": false,
+                "dc_reference_a": 0.001,
+                "settled_quiet_background": {
+                  "rail_v": 0.0011200024996528262,
+                  "delay_s": -1.400003124566033e-14,
+                  "reference_fraction": 0.00011200024996528263,
+                  "input_v": -2.0002499652826005e-06,
+                  "return_v": -2.0002499652826003e-05,
+                  "input_leg_v": [2.0002499652826003e-05,2.0002499652826003e-05]
+                },
+                "final_guard_residual": {
+                  "rail_v": 2.0407599434987822e-08,
+                  "delay_s": 5.101069104448644e-19,
+                  "reference_fraction": -5.605973556188897e-11,
+                  "input_v": 3.034785651778818e-09,
+                  "return_v": -9.031168459116233e-10,
+                  "input_leg_v": [-4.4267260601733025e-09,-6.895405151374155e-09]
+                },
+                "current_accounting": "fixed_reserved_current_replaced_by_actual_recharge",
+                "sampled_source_average_a": 8.043497640050533e-05,
+                "integrated_source_charge_c": 1.580106904774113e-08,
+                "charge_resampling_residual_c": -2.415367388654841e-22,
+                "rail_interval_v": [0.0005279219472917534,0.0012447687089802435],
+                "rail_rms_v": 0.0010379572644831716,
+                "clock_delay_rms_s": 1.2973384609030263e-14,
+                "reference_fraction_rms": 0.00010311070870017632,
+                "scope": "Local reference recharge port only, superposed with host ripple at full planning DC. Positive source charge is conserved; sink current receives no supply-energy credit. Assigned 200 ps supply-current pole requires an internal charge path; not a validated buffer. FFT guards, finite grid and linear fixed PDN do not qualify physical peak current or broadband transistor noise. Fixed reserved current is replaced by recharge; zero-recharge prehistory/tail and settled DC background are explicit assumptions. FFT response remains a finite guarded approximation. Coupled tied-return REF_IN voltage is exposed; the delivered-clock consumer must separately solve perturbed threshold events.",
+                "input_voltage_abs_peak_v": 4.382024015778037e-06,
+                "input_voltage_rms_v": 2.098993449858365e-06,
+                "return_voltage_abs_peak_v": 3.8789388203961785e-05,
+                "input_leg_voltage_abs_peak_v": [3.881760145994347e-05,3.8905978599388814e-05]
+              }
+            }
+          ],
+          "feedback_closed": true,
+          "numerical_feedback_converged": true,
+          "scope": "Causal SAR recharge drives the tied-return PDN including REF_IN loading. Perturbed local threshold roots and reevaluated downstream supply delay drive the next pass. Numerical guards: 1 uV RMS / 20 uV peak rail change and 1 uV peak input change. Extra crossings outside local root brackets, real acquisition and physical devices remain unqualified."
+        },
+        "acquisition": {"status":"legacy_training_acquired","data_start_sample":458,"coarse_start_sample":128,"ltf_start_sample":330,"decision_sample":558,"coarse_cfo_hz":-225846.74060655065,"estimated_cfo_hz":-136239.58545906714,"ltf_score":0.4080577885422084,"legacy_training_acquired":true,"he_packet_acquired":false,"coarse_metric_threshold":0.25},
+        "strict_coarse_control": {"status":"preamble_not_acquired","legacy_training_acquired":false,"he_packet_acquired":false,"coarse_metric_threshold":0.6},
+        "receiver": {
+          "status": "decoded",
+          "crc_ok": false,
+          "tail_zero": true,
+          "payload_hex": "60462dc6864fcf0efcf6b2b2685facd6314e2781561b778e87177e851b8fa88f3b752d6318c86c1d00e1525d8971e6e28d3d9f7ba27c656a67c8bebdd1568f2fd2d4e6d5d26c2d4cc936189f64607ee51e2071e2f71530ce11b653cc0536532d15a48a2c3078b88808958345a3df12fe11e58af2d0b9635ead7fbd30cf0e5dbc",
+          "geometry": {"payload_bytes":128,"framed_bytes":132,"framed_bits":1056,"data_symbols":10,"total_symbols":12,"uncoded_bits":1170},
+          "soft_metric": "unweighted Euclidean",
+          "known_data_training_symbols": 2,
+          "real_preamble_acquisition": false
+        },
+        "estimated_data_start_error_samples": 1,
+        "raw_bit_errors": 148,
+        "payload_correct": false,
+        "scope": "Actual legacy training sequences precede diagnostic coded HE20 DATA. Arrival and CFO are unknown to the receiver; fixed gain, known DATA training and fixed geometry remain. No HE signaling/HE-LTF, scrambling/pilot sequence, AGC, sample-rate ppm, packet timing or PER qualification."
+      }
+    },
+    {
+      "design_provenance": {
+        "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+        "fingerprint_format": "canonical-json-sha256-v1",
+        "circuit_experiments": [
+          {
+            "changes": [
+              {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+            ],
+            "kind": "hypothetical_circuit",
+            "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+            "reason": "RF feed-resistance mitigation probe"
+          }
+        ],
+        "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+      },
+      "resolved_configuration": {
+        "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+        "fingerprint_format": "canonical-json-sha256-v1",
+        "circuit_experiments": [
+          {
+            "changes": [
+              {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+            ],
+            "kind": "hypothetical_circuit",
+            "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+            "reason": "RF feed-resistance mitigation probe"
+          }
+        ],
+        "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+        "engine": "rf",
+        "direction": "rx",
+        "clock_source": "external_high",
+        "reference_hz": 2400000000.0,
+        "host_divider": 16,
+        "host_word_hz": 150000000.0,
+        "host_clock_source": "reference_divider",
+        "host_input_hz": null,
+        "inventory_mode": "rf_rx",
+        "sample_divider": 64,
+        "sample_hz": 37500000.0,
+        "pga_gain_db": 42,
+        "lna_gain_db": 20
+      },
+      "scenario_overrides": [],
+      "scenario_stimuli": {"wanted_dbm":-85.0,"blocker_dbm":-30.0,"reference_peak_v":null},
+      "probe_assumptions": {
+        "internal_switching_loads": [
+          {"owner":"timing","mean_a":0.02,"event_hz":150000000.0,"tau_s":2e-10,"harmonics":64},
+          {"owner":"core","mean_a":0.04,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+        ],
+        "sensitivity_ps_per_mv": 0.0125,
+        "supply_sign": -1.0
+      },
+      "clock": {
+        "design_provenance": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "RF feed-resistance mitigation probe"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "RF feed-resistance mitigation probe"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+          "engine": "rf",
+          "direction": "rx",
+          "clock_source": "external_high",
+          "reference_hz": 2400000000.0,
+          "host_divider": 16,
+          "host_word_hz": 150000000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "rf_rx",
+          "sample_divider": 64,
+          "sample_hz": 37500000.0,
+          "pga_gain_db": 42,
+          "lna_gain_db": 20
+        },
+        "scenario_overrides": [],
+        "scenario_assumptions": {},
+        "operating_conditions": {"temperature_c":27.0,"temperature_k":300.15,"scope":"Temperature affects frontend and sampling thermal noise only; gain, delay, phase noise, leakage and current temperature coefficients are not modeled."},
+        "carrier_hz": 2400000000.0,
+        "source_differential_peak_v": 1.0,
+        "source_leg_skew_s": 5e-12,
+        "cm_gain": -0.1,
+        "mismatch": 0.2,
+        "opposed": false,
+        "reference_acceptance_parameters": {"effective_peak_limit_v":0.6,"leg_peak_limit_v":0.6,"threshold_v":0.02},
+        "supply_sign": -1.0,
+        "sensitivity_ps_per_mv": 0.0125,
+        "supply_delay_pole_hz": 1000000000.0,
+        "capacitance_f_per_leg": 2.7e-12,
+        "reference_package_parameters": {"cap_f":2.7e-12,"bond_l_h":2e-09,"mutual_l_h":4e-10,"source_r_ohm":50.2},
+        "accepted": true,
+        "acceptance_checks": {"complete_ordered_edge_capture":true,"crossing_count_grid_agreement":true,"effective_input_envelope":true,"individual_leg_envelope":true},
+        "rejected_checks": [],
+        "envelope_scope": "Assigned shared incremental input envelopes. Conservative peak bounds exceeding it do not prove actual overvoltage, physical damage or loss of clock edges.",
+        "per_leg_bound_v": [0.3223263992553967,0.4624784596222813],
+        "current_a": 0.22999999999999998,
+        "clock": {
+          "carrier_cycles": 384,
+          "period_s": 1.6e-07,
+          "grid_substeps": 64,
+          "missing_rising_edge_windows": 0,
+          "multiple_rising_edge_windows": 0,
+          "unique_edge_windows": 384,
+          "all_windows_have_one_rising_edge": true,
+          "centered_edge_error_rms_ps": 1.1810044617029156,
+          "edge_error_peak_to_peak_ps": 5.434527863976227,
+          "static_mean_edge_shift_ps": 0.012548832744992758,
+          "maximum_root_voltage_residual_v": 1.5910224526738403e-12,
+          "linearization_maximum_error_ps": 0.02655783777485237,
+          "dominant_edge_error_tones": [
+            {"frequency_hz":781250000,"edge_error_peak_ps":1.2232834968378064},
+            {"frequency_hz":468750000,"edge_error_peak_ps":0.7839566891664869},
+            {"frequency_hz":156250000,"edge_error_peak_ps":0.5296082320589245},
+            {"frequency_hz":750000000,"edge_error_peak_ps":0.3315610615976139},
+            {"frequency_hz":900000000,"edge_error_peak_ps":0.2675025111567256},
+            {"frequency_hz":600000000,"edge_error_peak_ps":0.20936037281445802},
+            {"frequency_hz":150000000,"edge_error_peak_ps":0.2061461581983788},
+            {"frequency_hz":312500000,"edge_error_peak_ps":0.18870808284119198}
+          ],
+          "combined_edge_error_rms_ps": 3.1379581948636055,
+          "combined_edge_error_peak_to_peak_ps": 13.081281601362223,
+          "downstream_delay_rms_at_edges_ps": 2.8175804498627395,
+          "minimum_output_edge_spacing_s": 4.119842027166751e-10,
+          "output_clock_order_preserved": true,
+          "local_input_conservative_peak_v": 0.5467256079747529,
+          "incremental_envelope_met": true,
+          "threshold_v": 0.02,
+          "peak_limit_v": 0.6
+        },
+        "frontend": "differential",
+        "internal_switching_loads": [
+          {"owner":"timing","mean_a":0.02,"event_hz":150000000.0,"tau_s":2e-10,"harmonics":64},
+          {"owner":"core","mean_a":0.04,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+        ],
+        "ledger": {
+          "owner_current_a": {"core":0.043,"host":0.11009999999999999,"timing":0.032299999999999995,"rf":0.043,"wire":0.0016},
+          "total_chip_supply_current_a": 0.22999999999999998,
+          "host_node_current_a": 0.08603749999999999,
+          "local_branch_current_a": 0.1439625,
+          "h2d_internal_current_within_host_a": 0.0240625,
+          "board_supply_v": 3.2769999999999992,
+          "die_return_v": 0.004600024496597439,
+          "local_payload_clock_core_rail_v": 3.1284374755034015,
+          "rf_clock_core_rail_v": 3.1284374755034015,
+          "host_rail_v": 3.2724000244965974,
+          "source_v": 3.3,
+          "source_power_w": 0.7589999999999999,
+          "delivered_electrical_power_w": 0.7319267983536832,
+          "resistive_loss_w": 0.027073201646316866,
+          "power_balance_residual_w": -2.0816681711721685e-16,
+          "physical_pin_current_qualification": false
+        },
+        "resolved_crossings": {
+          "carrier_cycles": 384,
+          "period_s": 1.6e-07,
+          "grid_substeps": 64,
+          "missing_rising_edge_windows": 0,
+          "multiple_rising_edge_windows": 0,
+          "unique_edge_windows": 384,
+          "all_windows_have_one_rising_edge": true,
+          "centered_edge_error_rms_ps": 1.1810044617029156,
+          "edge_error_peak_to_peak_ps": 5.434527863976227,
+          "static_mean_edge_shift_ps": 0.012548832744992758,
+          "maximum_root_voltage_residual_v": 1.5910224526738403e-12,
+          "linearization_maximum_error_ps": 0.02655783777485237,
+          "dominant_edge_error_tones": [
+            {"frequency_hz":781250000,"edge_error_peak_ps":1.2232834968378064},
+            {"frequency_hz":468750000,"edge_error_peak_ps":0.7839566891664869},
+            {"frequency_hz":156250000,"edge_error_peak_ps":0.5296082320589245},
+            {"frequency_hz":750000000,"edge_error_peak_ps":0.3315610615976139},
+            {"frequency_hz":900000000,"edge_error_peak_ps":0.2675025111567256},
+            {"frequency_hz":600000000,"edge_error_peak_ps":0.20936037281445802},
+            {"frequency_hz":150000000,"edge_error_peak_ps":0.2061461581983788},
+            {"frequency_hz":312500000,"edge_error_peak_ps":0.18870808284119198}
+          ],
+          "combined_edge_error_rms_ps": 3.1379581948636055,
+          "combined_edge_error_peak_to_peak_ps": 13.081281601362223,
+          "downstream_delay_rms_at_edges_ps": 2.8175804498627395,
+          "minimum_output_edge_spacing_s": 4.119842027166751e-10,
+          "output_clock_order_preserved": true,
+          "local_input_conservative_peak_v": 0.5467256079747529,
+          "incremental_envelope_met": true,
+          "threshold_v": 0.02,
+          "peak_limit_v": 0.6
+        },
+        "physical_source_peak_v": 1.0,
+        "supply_sensitivity_ps_per_mv": 0.0125,
+        "supply_sensitivity_sign": -1.0,
+        "status": "clock_accepted_for_conditional_payload"
+      },
+      "status": "clock_accepted",
+      "control": "source_noise_only_clock",
+      "rf": {
+        "seed": 431,
+        "source_start_sample": 137,
+        "source_carrier_offset_hz": -120000.0,
+        "transmitted": true,
+        "analog": {
+          "design_provenance": {
+            "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+            "fingerprint_format": "canonical-json-sha256-v1",
+            "circuit_experiments": [
+              {
+                "changes": [
+                  {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+                ],
+                "kind": "hypothetical_circuit",
+                "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+                "reason": "RF feed-resistance mitigation probe"
+              }
+            ],
+            "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+          },
+          "resolved_configuration": {
+            "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+            "fingerprint_format": "canonical-json-sha256-v1",
+            "circuit_experiments": [
+              {
+                "changes": [
+                  {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+                ],
+                "kind": "hypothetical_circuit",
+                "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+                "reason": "RF feed-resistance mitigation probe"
+              }
+            ],
+            "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+            "engine": "rf",
+            "direction": "rx",
+            "clock_source": "external_high",
+            "reference_hz": 2400000000.0,
+            "host_divider": 16,
+            "host_word_hz": 150000000.0,
+            "host_clock_source": "reference_divider",
+            "host_input_hz": null,
+            "inventory_mode": "rf_rx",
+            "sample_divider": 64,
+            "sample_hz": 37500000.0,
+            "pga_gain_db": 42,
+            "lna_gain_db": 20
+          },
+          "scenario_overrides": [],
+          "scenario_assumptions": {},
+          "operating_conditions": {"temperature_c":27.0,"temperature_k":300.15,"scope":"Temperature affects frontend and sampling thermal noise only; gain, delay, phase noise, leakage and current temperature coefficients are not modeled."},
+          "receiver": {
+            "design_provenance": {
+              "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+              "fingerprint_format": "canonical-json-sha256-v1",
+              "circuit_experiments": [
+                {
+                  "changes": [
+                    {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+                  ],
+                  "kind": "hypothetical_circuit",
+                  "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+                  "reason": "RF feed-resistance mitigation probe"
+                }
+              ],
+              "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+            },
+            "resolved_configuration": {
+              "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+              "fingerprint_format": "canonical-json-sha256-v1",
+              "circuit_experiments": [
+                {
+                  "changes": [
+                    {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+                  ],
+                  "kind": "hypothetical_circuit",
+                  "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+                  "reason": "RF feed-resistance mitigation probe"
+                }
+              ],
+              "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+              "engine": "rf",
+              "direction": "rx",
+              "clock_source": "external_high",
+              "reference_hz": 2400000000.0,
+              "host_divider": 16,
+              "host_word_hz": 150000000.0,
+              "host_clock_source": "reference_divider",
+              "host_input_hz": null,
+              "inventory_mode": "rf_rx",
+              "sample_divider": 64,
+              "sample_hz": 37500000.0,
+              "pga_gain_db": 42,
+              "lna_gain_db": 20
+            },
+            "scenario_overrides": [],
+            "scenario_assumptions": {},
+            "operating_conditions": {"temperature_c":27.0,"temperature_k":300.15,"scope":"Temperature affects frontend and sampling thermal noise only; gain, delay, phase noise, leakage and current temperature coefficients are not modeled."},
+            "pga_nominal_peak_limit_v": 0.8,
+            "gain_hypothesis_reason": null,
+            "unsupported_gain_settings_db": [],
+            "receiver_diagnostic_overrides": {},
+            "result_role": "design_gain_settings",
+            "wanted_antenna_dbm": -85.0,
+            "blocker_antenna_dbm": -30.0,
+            "blocker_offset_hz": 12000000.0,
+            "external_loss_db": 2.0,
+            "external_selective_rejection_db": 0.0,
+            "chip_input_noise_figure_db": 6.0,
+            "early_voltage_gain_db": 20,
+            "input_iip3_dbm": 0.0,
+            "thermal_noise_temperature_k": 300.15,
+            "frontend_nonlinearity": {"input_iip3_dbm":0.0,"maximum_cubic_gain_reduction_fraction":0.0006575771066605512,"within_assigned_small_compression_range":true,"scope":"Ten-percent peak cubic gain reduction is an assigned model-validity screen, not a compression specification."},
+            "filter_family": "rx_finite_zero",
+            "cutoff_hz": 9531250.0,
+            "filter_integrator_ratio": null,
+            "filter_retune_ratio": null,
+            "native_bits": 10,
+            "enob_hypothesis": null,
+            "converter_model": "closed_loop_sar_requirement",
+            "comparator_model": null,
+            "gain_codes_db": [-6,-3,0,3,6,9,12,15,18,21,24,27,30,33,36,39,42],
+            "gain_transition": {"initial_db":null,"tau_s":2e-07,"command_s":0.0},
+            "aperture_rms_s": 1e-11,
+            "adc_hz": 37500000.0,
+            "mixer_hz": 20480000000.0,
+            "oversample": 1024,
+            "filter_interpolation": "zoh",
+            "noise_enabled": true,
+            "noise_sources": {"thermal":true,"converter":true,"aperture":true},
+            "coupled_load_clock": {"edge_count":478080,"local_polynomial_degree":12,"local_polynomial_remainder_bound_v":1.5369113632447415e-16,"maximum_input_shift_s":5.342417322229756e-16,"maximum_root_residual_v":3.054791814815658e-10,"minimum_bracket_slope_v_per_s":5957842693.265813,"scope":"Unique ordered local root continuations; extra crossings outside the brackets are not independently excluded."},
+            "observed_rail_interval_v": [2.6110844983752823,3.474265809983036],
+            "reference_interval_v": [0.9997064680641238,1.0032769490116953],
+            "resampler_taps": 64,
+            "fpga_resampler_lookahead_s": 8.533333333333334e-07,
+            "gain_cases": [
+              {
+                "pga_gain_db": 42,
+                "gain_supported_by_design": true,
+                "pga_clipped_samples": 10,
+                "pga_clipped_samples_during_source": 0,
+                "adc": {
+                  "input_test": [0,0],
+                  "diagnostic_reference_charge_c": 0.0,
+                  "diagnostic_scope": "Ratiometric internal endpoint with optional effective source charge per quarter-reference lane, lumped at acquisition end. Same finite acquisition and retained reference/DAC/comparator path. Zero effective capacitance is an ideal-load control. Continuous source impedance/bias, ratio mismatch and switch injection remain unmodeled. Cannot establish absolute VREF or independent gain accuracy.",
+                  "initial_reference_v": 1.001340705357775,
+                  "first_acquisition_reference_v": 1.000804034700049,
+                  "parameters": {
+                    "acquisition_s": 5e-09,
+                    "bit_durations_s": [3e-09,2.6e-09,2.4e-09,2.1e-09,1.9e-09,1.6e-09,1.3e-09,1.1e-09,1e-09,1e-09],
+                    "comparator_s": 5e-10,
+                    "reset_control_s": 2e-09,
+                    "sample_cap_per_leg_f": 5e-13,
+                    "sample_resistance_ohm": 200.0,
+                    "dac_effective_cap_f": 1e-12,
+                    "dac_tau_s": 3e-10,
+                    "reference_cap_f": 1e-10,
+                    "reference_r_ohm": 50.0,
+                    "reference_limit_a": 0.001,
+                    "reference_idle_a": 0.002,
+                    "comparator_noise_rms_v": 0.001,
+                    "temperature_k": 300.15,
+                    "diagnostic_input_cap_f": 5e-14,
+                    "diagnostic_series_resistance_ohm": 100.0,
+                    "diagnostic_reference_effective_cap_per_lane_f": 0.0,
+                    "unmodeled_cycle_uncertainty_s": 2e-10
+                  },
+                  "native_bits": 10,
+                  "transport_bits": 12,
+                  "maximum_rate_hz": 39682539.68253968,
+                  "schedule_margin_s": 1.4178411299311604e-09,
+                  "conversion_latency_s": 1.8e-08,
+                  "actual_conversion_latency_interval_s": [1.799999999999881e-08,1.8000000000012364e-08],
+                  "comparator_model": null,
+                  "comparator_decision_interval_s": [5e-10,5e-10],
+                  "actual_completion_margin_s": -1.2364695796442658e-20,
+                  "timing_ownership": "Acquisition timestamps supplied by sample clock; allocated local completion intervals need no further external LO edges. Not a physical sequencer implementation.",
+                  "evaluated_supply_interval_v": [2.6124367687982266,3.473029576158101],
+                  "sampling_thermal_rms_per_component_v": 0.00012275649175205654,
+                  "noise_enabled": true,
+                  "idle_integration_step_s": null,
+                  "code_error_rms_lsb": 0.9595752635395303,
+                  "maximum_code_error_lsb": 9.0,
+                  "acquisition_error_rms_v": 0.001612117434297339,
+                  "reference_interval_v": [0.9781885562765262,1.001340705357775],
+                  "decision_reference_interval_v": [0.9861584688740702,1.0002355493037112],
+                  "maximum_dac_following_error_at_decision_v": 0.0028913975527362066,
+                  "reference_charge_drawn_c": 1.5796320787442833e-08,
+                  "signed_reference_recharge_c": 1.5795936091547563e-08,
+                  "reference_charge_balance_residual_c": 5.1543893868102274e-23,
+                  "reference_source_average_a": 8.04565332881173e-05,
+                  "reference_source_peak_a": 0.0004690496312592322,
+                  "reference_with_bias_average_a": 0.0020804565332881173,
+                  "reference_with_bias_peak_a": 0.0024690496312592325,
+                  "current_limited_segments": 0,
+                  "scope": "Predictive conditional charge/settling/decision recurrence, not fitted silicon. Effective CDAC charge uses absolute code steps and dissipative switching; return-charge reuse and capacitor mismatch are unmodeled. Input acquisition uses linear endpoints; half-LSB midpoint convention is assigned. Optional asynchronous regeneration uses a snapshot input and explicit exponential law; both I/Q wait for the slower decision, DAC settling intervals are preserved, and shared reference forcing is reevaluated at actual event times. Its input snapshot, fixed launch and regeneration law are hypotheses, not physical metastability or sequencer qualification. Fixed-slot mode still assumes timely ideal-sign decisions."
+                },
+                "observation": {"scope":"Continuous capture delivered to external acquisition receiver; no oracle DATA alignment."}
+              }
+            ],
+            "complete": false,
+            "scope": "Shared loaded source/input/supply spectrum and environment-owned mode budget. Assigned instantaneous early-gain rail sensitivity; fixed NF/IIP3 and ideal linear filter internals. ADC uses causal trial decisions, limited reference recovery and finite acquisition/DAC settling; pole/current/noise hypotheses are unqualified, with no mismatch; optional comparator regeneration remains an assigned requirement model. Known DATA training/ideal boundaries, no real preamble, CFO search, AGC or packet/PER qualification. Finite RF record does not qualify emissions or continuous host service."
+          },
+          "load_resolution": [
+            {
+              "grid_s": 2.5e-10,
+              "supply_current_tau_s": 2e-10,
+              "coupled_reference_input": {
+                "differential": {"cm_gain":-0.1,"mismatch":0.2,"opposed":false,"mutual_l_h":4e-10},
+                "cap_f": 2.7e-12,
+                "bond_l_h": 2e-09,
+                "source_r_ohm": 50.2
+              },
+              "supply_sensitivity_sign": -1.0,
+              "supply_sensitivity_ps_per_mv": 0.0125,
+              "direct_input_voltage_in_timing": false,
+              "dc_reference_a": 0.001,
+              "settled_quiet_background": {
+                "rail_v": 0.0011200024996528262,
+                "delay_s": -1.400003124566033e-14,
+                "reference_fraction": 0.00011200024996528263,
+                "input_v": -2.0002499652826005e-06,
+                "return_v": -2.0002499652826003e-05,
+                "input_leg_v": [2.0002499652826003e-05,2.0002499652826003e-05]
+              },
+              "final_guard_residual": {
+                "rail_v": -1.8693083924086612e-08,
+                "delay_s": -4.672510545235095e-19,
+                "reference_fraction": 5.1349858095012593e-11,
+                "input_v": -2.7798209100401924e-09,
+                "return_v": 8.272427726452325e-10,
+                "input_leg_v": [4.054820777026205e-09,6.316095855439632e-09]
+              },
+              "current_accounting": "fixed_reserved_current_replaced_by_actual_recharge",
+              "sampled_source_average_a": 8.044762919056824e-05,
+              "integrated_source_charge_c": 1.580351440443334e-08,
+              "charge_resampling_residual_c": -5.426304818347862e-22,
+              "rail_interval_v": [0.0005347939151745579,0.0012504027989901718],
+              "rail_rms_v": 0.0010380270221135915,
+              "clock_delay_rms_s": 1.2974242207756652e-14,
+              "reference_fraction_rms": 0.00010310903731168833,
+              "scope": "Local reference recharge port only, superposed with host ripple at full planning DC. Positive source charge is conserved; sink current receives no supply-energy credit. Assigned 200 ps supply-current pole requires an internal charge path; not a validated buffer. FFT guards, finite grid and linear fixed PDN do not qualify physical peak current or broadband transistor noise. Fixed reserved current is replaced by recharge; zero-recharge prehistory/tail and settled DC background are explicit assumptions. FFT response remains a finite guarded approximation. Coupled tied-return REF_IN voltage is exposed; the delivered-clock consumer must separately solve perturbed threshold events.",
+              "input_voltage_abs_peak_v": 4.2705404257545035e-06,
+              "input_voltage_rms_v": 2.1032273958934897e-06,
+              "return_voltage_abs_peak_v": 3.698955965101612e-05,
+              "input_leg_voltage_abs_peak_v": [3.669082549782828e-05,3.6746877802093454e-05]
+            },
+            {
+              "grid_s": 1.25e-10,
+              "supply_current_tau_s": 2e-10,
+              "coupled_reference_input": {
+                "differential": {"cm_gain":-0.1,"mismatch":0.2,"opposed":false,"mutual_l_h":4e-10},
+                "cap_f": 2.7e-12,
+                "bond_l_h": 2e-09,
+                "source_r_ohm": 50.2
+              },
+              "supply_sensitivity_sign": -1.0,
+              "supply_sensitivity_ps_per_mv": 0.0125,
+              "direct_input_voltage_in_timing": false,
+              "dc_reference_a": 0.001,
+              "settled_quiet_background": {
+                "rail_v": 0.0011200024996528262,
+                "delay_s": -1.400003124566033e-14,
+                "reference_fraction": 0.00011200024996528263,
+                "input_v": -2.0002499652826005e-06,
+                "return_v": -2.0002499652826003e-05,
+                "input_leg_v": [2.0002499652826003e-05,2.0002499652826003e-05]
+              },
+              "final_guard_residual": {
+                "rail_v": 7.588832635647275e-09,
+                "delay_s": 2.1565430880305768e-19,
+                "reference_fraction": -1.8800070360073043e-11,
+                "input_v": 1.1973329709150568e-09,
+                "return_v": 5.15256231913919e-11,
+                "input_leg_v": [-5.598979945684545e-10,-1.6468914911817699e-09]
+              },
+              "current_accounting": "fixed_reserved_current_replaced_by_actual_recharge",
+              "sampled_source_average_a": 8.044762919056824e-05,
+              "integrated_source_charge_c": 1.5803514404433914e-08,
+              "charge_resampling_residual_c": 3.3087224502121107e-23,
+              "rail_interval_v": [0.0005273873930881557,0.0012510221960552392],
+              "rail_rms_v": 0.0010380503233298243,
+              "clock_delay_rms_s": 1.297440433192939e-14,
+              "reference_fraction_rms": 0.00010310904711291748,
+              "scope": "Local reference recharge port only, superposed with host ripple at full planning DC. Positive source charge is conserved; sink current receives no supply-energy credit. Assigned 200 ps supply-current pole requires an internal charge path; not a validated buffer. FFT guards, finite grid and linear fixed PDN do not qualify physical peak current or broadband transistor noise. Fixed reserved current is replaced by recharge; zero-recharge prehistory/tail and settled DC background are explicit assumptions. FFT response remains a finite guarded approximation. Coupled tied-return REF_IN voltage is exposed; the delivered-clock consumer must separately solve perturbed threshold events.",
+              "input_voltage_abs_peak_v": 4.624486928008249e-06,
+              "input_voltage_rms_v": 2.110248959640707e-06,
+              "return_voltage_abs_peak_v": 3.71089954072928e-05,
+              "input_leg_voltage_abs_peak_v": [3.6834158644114094e-05,3.7133667256184434e-05]
+            }
+          ],
+          "iterations": [
+            {
+              "iteration": 0,
+              "rail_rms_change_v": null,
+              "rail_peak_change_v": null,
+              "input_voltage_peak_change_v": null,
+              "clock": null,
+              "load": {
+                "grid_s": 2.5e-10,
+                "supply_current_tau_s": 2e-10,
+                "coupled_reference_input": {
+                  "differential": {"cm_gain":-0.1,"mismatch":0.2,"opposed":false,"mutual_l_h":4e-10},
+                  "cap_f": 2.7e-12,
+                  "bond_l_h": 2e-09,
+                  "source_r_ohm": 50.2
+                },
+                "supply_sensitivity_sign": -1.0,
+                "supply_sensitivity_ps_per_mv": 0.0125,
+                "direct_input_voltage_in_timing": false,
+                "dc_reference_a": 0.001,
+                "settled_quiet_background": {
+                  "rail_v": 0.0011200024996528262,
+                  "delay_s": -1.400003124566033e-14,
+                  "reference_fraction": 0.00011200024996528263,
+                  "input_v": -2.0002499652826005e-06,
+                  "return_v": -2.0002499652826003e-05,
+                  "input_leg_v": [2.0002499652826003e-05,2.0002499652826003e-05]
+                },
+                "final_guard_residual": {
+                  "rail_v": -1.868039966636259e-08,
+                  "delay_s": -4.669339997531117e-19,
+                  "reference_fraction": 5.131501443927412e-11,
+                  "input_v": -2.7779346520480793e-09,
+                  "return_v": 8.266814442024664e-10,
+                  "input_leg_v": [4.05206936430821e-09,6.311810045841115e-09]
+                },
+                "current_accounting": "fixed_reserved_current_replaced_by_actual_recharge",
+                "sampled_source_average_a": 8.043783040386163e-05,
+                "integrated_source_charge_c": 1.5801589484228595e-08,
+                "charge_resampling_residual_c": -4.036641389258775e-22,
+                "rail_interval_v": [0.0005347027346547907,0.001250375797833599],
+                "rail_rms_v": 0.001038037855328466,
+                "clock_delay_rms_s": 1.2974377995887194e-14,
+                "reference_fraction_rms": 0.0001031101282743472,
+                "scope": "Local reference recharge port only, superposed with host ripple at full planning DC. Positive source charge is conserved; sink current receives no supply-energy credit. Assigned 200 ps supply-current pole requires an internal charge path; not a validated buffer. FFT guards, finite grid and linear fixed PDN do not qualify physical peak current or broadband transistor noise. Fixed reserved current is replaced by recharge; zero-recharge prehistory/tail and settled DC background are explicit assumptions. FFT response remains a finite guarded approximation. Coupled tied-return REF_IN voltage is exposed; the delivered-clock consumer must separately solve perturbed threshold events.",
+                "input_voltage_abs_peak_v": 4.271383176888181e-06,
+                "input_voltage_rms_v": 2.1031949845877427e-06,
+                "return_voltage_abs_peak_v": 3.699523492728487e-05,
+                "input_leg_voltage_abs_peak_v": [3.6696769870926716e-05,3.675312327653858e-05]
+              }
+            },
+            {
+              "iteration": 1,
+              "rail_rms_change_v": 7.042032398812002e-08,
+              "rail_peak_change_v": 2.7273473836645886e-06,
+              "input_voltage_peak_change_v": 2.7735918644840066e-08,
+              "clock": {"edge_count":478080,"local_polynomial_degree":12,"local_polynomial_remainder_bound_v":1.5369113632447415e-16,"maximum_input_shift_s":5.342417322229756e-16,"maximum_root_residual_v":3.054791814815658e-10,"minimum_bracket_slope_v_per_s":5957842693.265813,"scope":"Unique ordered local root continuations; extra crossings outside the brackets are not independently excluded."},
+              "load": {
+                "grid_s": 2.5e-10,
+                "supply_current_tau_s": 2e-10,
+                "coupled_reference_input": {
+                  "differential": {"cm_gain":-0.1,"mismatch":0.2,"opposed":false,"mutual_l_h":4e-10},
+                  "cap_f": 2.7e-12,
+                  "bond_l_h": 2e-09,
+                  "source_r_ohm": 50.2
+                },
+                "supply_sensitivity_sign": -1.0,
+                "supply_sensitivity_ps_per_mv": 0.0125,
+                "direct_input_voltage_in_timing": false,
+                "dc_reference_a": 0.001,
+                "settled_quiet_background": {
+                  "rail_v": 0.0011200024996528262,
+                  "delay_s": -1.400003124566033e-14,
+                  "reference_fraction": 0.00011200024996528263,
+                  "input_v": -2.0002499652826005e-06,
+                  "return_v": -2.0002499652826003e-05,
+                  "input_leg_v": [2.0002499652826003e-05,2.0002499652826003e-05]
+                },
+                "final_guard_residual": {
+                  "rail_v": -1.8693083924086612e-08,
+                  "delay_s": -4.672510545235095e-19,
+                  "reference_fraction": 5.1349858095012593e-11,
+                  "input_v": -2.7798209100401924e-09,
+                  "return_v": 8.272427726452325e-10,
+                  "input_leg_v": [4.054820777026205e-09,6.316095855439632e-09]
+                },
+                "current_accounting": "fixed_reserved_current_replaced_by_actual_recharge",
+                "sampled_source_average_a": 8.044762919056824e-05,
+                "integrated_source_charge_c": 1.580351440443334e-08,
+                "charge_resampling_residual_c": -5.426304818347862e-22,
+                "rail_interval_v": [0.0005347939151745579,0.0012504027989901718],
+                "rail_rms_v": 0.0010380270221135915,
+                "clock_delay_rms_s": 1.2974242207756652e-14,
+                "reference_fraction_rms": 0.00010310903731168833,
+                "scope": "Local reference recharge port only, superposed with host ripple at full planning DC. Positive source charge is conserved; sink current receives no supply-energy credit. Assigned 200 ps supply-current pole requires an internal charge path; not a validated buffer. FFT guards, finite grid and linear fixed PDN do not qualify physical peak current or broadband transistor noise. Fixed reserved current is replaced by recharge; zero-recharge prehistory/tail and settled DC background are explicit assumptions. FFT response remains a finite guarded approximation. Coupled tied-return REF_IN voltage is exposed; the delivered-clock consumer must separately solve perturbed threshold events.",
+                "input_voltage_abs_peak_v": 4.2705404257545035e-06,
+                "input_voltage_rms_v": 2.1032273958934897e-06,
+                "return_voltage_abs_peak_v": 3.698955965101612e-05,
+                "input_leg_voltage_abs_peak_v": [3.669082549782828e-05,3.6746877802093454e-05]
+              }
+            }
+          ],
+          "feedback_closed": true,
+          "numerical_feedback_converged": true,
+          "scope": "Causal SAR recharge drives the tied-return PDN including REF_IN loading. Perturbed local threshold roots and reevaluated downstream supply delay drive the next pass. Numerical guards: 1 uV RMS / 20 uV peak rail change and 1 uV peak input change. Extra crossings outside local root brackets, real acquisition and physical devices remain unqualified."
+        },
+        "acquisition": {"status":"legacy_training_acquired","data_start_sample":458,"coarse_start_sample":94,"ltf_start_sample":330,"decision_sample":524,"coarse_cfo_hz":-130346.4639111465,"estimated_cfo_hz":-124065.03946712548,"ltf_score":0.7911152536284762,"legacy_training_acquired":true,"he_packet_acquired":false,"coarse_metric_threshold":0.25},
+        "strict_coarse_control": {"status":"legacy_training_acquired","data_start_sample":458,"coarse_start_sample":127,"ltf_start_sample":330,"decision_sample":557,"coarse_cfo_hz":-122256.93880196787,"estimated_cfo_hz":-124065.03946712548,"ltf_score":0.7907284644269713,"legacy_training_acquired":true,"he_packet_acquired":false,"coarse_metric_threshold":0.6},
+        "receiver": {
+          "status": "decoded",
+          "crc_ok": true,
+          "tail_zero": true,
+          "payload_hex": "60462dc6864fcf0efcf6b2b2685facd6314e2781d651778e87177e851b8fa88f3b752d6318c86c1d00e1525d8971e6e28d3d9f7ba27c656a67c8bebdd1568f2fd2d4e6d5d26c2d4cc936189f64607ee51e2071e2f71530ce11b653cc0536532d15a48a2c3078b88808958345a3df12fe11e58af2d0b9635ead7fbd30cf0e5dbc",
+          "geometry": {"payload_bytes":128,"framed_bytes":132,"framed_bits":1056,"data_symbols":10,"total_symbols":12,"uncoded_bits":1170},
+          "soft_metric": "unweighted Euclidean",
+          "known_data_training_symbols": 2,
+          "real_preamble_acquisition": false
+        },
+        "estimated_data_start_error_samples": 1,
+        "raw_bit_errors": 15,
+        "payload_correct": true,
+        "scope": "Actual legacy training sequences precede diagnostic coded HE20 DATA. Arrival and CFO are unknown to the receiver; fixed gain, known DATA training and fixed geometry remain. No HE signaling/HE-LTF, scrambling/pilot sequence, AGC, sample-rate ppm, packet timing or PER qualification."
+      }
+    }
+  ],
+  "sources_sha256": {"spec/analog-architecture.json":"13c1b6681b7bd51c7c5b5833d83662376ac348b5f299e4b3fd38fc5c9742b8c0","spec/block-diagram.md":"5668e9884a88d137c54699c6ffb41b1cd204ae4d008ee51dbea0301845ae1362","spec/contract.json":"e0e0e01aed0edd692d4ac4467432f60b979e5e03eecb4133d1b34a4d1b353c90","spec/power-partition.md":"0939d93d16f24d4f53deb60f9783d56bc19e8c86659e67d9b1308fae9ab17ac7","system_model/architecture_fast/behavioral.py":"789de0c8652068ee9e70b60769f84b23a56239355004db4d04c001d9ee72afb6","system_model/architecture_fast/design_definition.py":"fcf5294175594ad29078bfa5856cd8259d8c61c6427bd280925bc90c6309edb5","system_model/architecture_fast/direct_stream.py":"63a867e3822ca3e7d619eb8381c232eafb52e3d31be76a4590c6e05eb22f2c58","system_model/architecture_fast/receive_qualification.py":"3dc2b764cc475f05ec673c48be82a0807fd84059bf9698d639b0d9c5db1ec62e","system_model/architecture_fast/resource_configuration.py":"a4ccb386b0d22908d47cc037451c4d3ebaf847a5ab6a71ee415384f75197fcb6","system_model/architecture_fast/rf_air_timing.py":"8fe69abd513384cfcfb188bdc4746fc6f104a1f8716fe4af29fb0a59ef9f9a93","system_model/architecture_fast/rf_quality_budget.py":"6d22c9637bc0165cdae9c6f5ee4a4116156f82f44cb878f9e46c5a24ec2955d7","system_model/connected/autonomous_pll.py":"874c8d1cf55ee0147f0b532fa942979adc5ef8a142656a58cb69ca568c5c284d","system_model/connected/bit_event_stream.py":"bb366ecdf97b25beb07a7562926321e4253c2b55323261f5fe4ff6d90a4746da","system_model/connected/burst_codec.py":"924f843f70f68cdede2def9fcc4bca91971e24fe194cb928c87dce2437dddd90","system_model/connected/charge_pump_filter.py":"30352d2ccfdc8b5b071838f55d7eba78e370167ca3daf4ba9d99e7a51f06e9f9","system_model/connected/chip_model.py":"acdcc87e84021edf7b8ed3044b4ac8ea75910378befd6d066a1577442fba10ee","system_model/connected/compliant_edge_pll.py":"24d4cc5658766e4ddb051440d868db2ffe77dd7d32172c9a94211d2e78055374","system_model/connected/compliant_pump_filter.py":"666f6c9b44e7caa4614b1355d944457e17daf01d9472d95b5e480971122af48b","system_model/connected/edge_pump_pll.py":"93d0d1997e7477af86b3d508ef23ef33c482aea6a925c488cbc0d93e7847cbeb","system_model/connected/fractional_pulse_pll.py":"5eff5b4baa16d5d04dadf616f255ef457042d5907a97800478fcfb7f5f2ef6ab","system_model/connected/fractional_pulse_screen.py":"f9945e04bea0d5442a5054459d149c902540f8c747fcfcde05c6423a7757a51b","system_model/connected/lane_group.py":"83803ee2a0b0b9c2a6f22df0bcca0eea93b83b2bbf3cd9e61da8031be8636d95","system_model/connected/loopback_return.py":"e14913a01e40e6e2e8c41e6f5594a42c39e76467a06e88d0ee930e82e4dd0a20","system_model/connected/oscillator_noise.py":"0faed15e487ba1873bb2952cb1a670fdac95401dc95f8cce19fc5b43a6ed8357","system_model/connected/protocol_pad.py":"5952cd92525700b75b9a5cbb2537d759d03c080e64750cb1e7836d744926dc09","system_model/connected/protocol_signals.py":"40a3162c7cea53d2647f4a30f39c83aa127077a6a30ec55788535885150ac019","system_model/connected/reference_sample_clock.py":"eac299cab5a031e0261380f7d27a0b61e85702a1e34b6e9d45d5f8c1b820d67a","system_model/connected/sampled_pll.py":"809db79a6cd5315d1f46a7f6d42a06dd9f64a308c2b63726729b79734daf86b6","system_model/connected/shaped_fractional_pll.py":"0fcf1e9a56d1174b53fb718762e7a59e1c425239f10d4373ba60ebda848def03","system_model/connected/tx_dac_correction.py":"016e5a860d1a06170b991f3fff4f8c4d6667282464b97f747e07589f7361e6d2","system_model/connected/tx_iq_calibration.py":"dce73e9f545e7b2a4d0d45a5375e5e1c6d30d8cd9d335e0fec874a765a623a7b","system_model/connected/tx_output_candidate.py":"e2f9a092ca4da7c27a9eb3ea06a8c9efc27eed9bb5a34246eb600b0c61528684","system_model/connected/tx_output_stage.py":"f011be67bd9250711ba64433ccd8d19cdd06494dfc0ba72f7d7382f970bf5210","system_model/connected/wired_blocks.py":"51f635f16d6782e73f2706fa5235589dde0154c0e57bd7c65744b7cf150176be","verification/baseline_envelope.py":"40258ebd9e28223a486b7b456e4f6d36d00a3546474f5b98aba4fb486da0d959","verification/bit_event_codec.py":"61174512d20bd5197c92457a0a0b4f376a3c52b180df4021da1ad323b52c1b87","verification/ble_packet.py":"24ccdf40ba344683e90a25b79e05ccb3cf889f7dc9f30808ac95f04bf39f84a6","verification/block_receiver_model.py":"07bcc89f8970de4ef8ebe8add99eaea0a08d7c388b43148daa4f9841a891f58e","verification/check_contract.py":"592870be20a7e58e29d19e8e78aa96f581cb1b8add0e66c2fa6902f58622559c","verification/converter_dynamics.py":"abc70d2e3226723e960eceeca92a8bd2a85cdfd2bce7527e4f7584604845dc94","verification/feed_failure_probe.py":"ae50ad23d8121faa3c61ccb6b75e3f3beb4b61a71100a02d878cf6e2f8ef348b","verification/feed_rf_probe.py":"d410f32dd72fcbee95c01ad5469874b367b10a4ed50537b7ce891bd243d53114","verification/recovery_mailbox.py":"db93895b2246618aaf16322a332228726d5d61dd11ce00a30ab5299a184d1d95","verification/reference_input_probe.py":"bd6118b10571c816abecc9dda5dd1aa1ba250def211a13fd0790dd313ac93872","verification/rf_gain_command.py":"263fc534ce1992f81a5c156bb950cfadde2f9ed0c63e855a0fff131b1b6a70f3","verification/rf_power_calibration.py":"84f15999b083aba65e2df46c3945148f53c95cc85685c1bd2f508155b6dde4ef","verification/rf_timing_command.py":"797fe4ba20c61ee73e9b3cacee05c320151d731bae492bcf21f998b3e85a3f26","verification/robustness_envelope.py":"0259b23c24d2d49a4eea4bec656a9502bb3a89668b54a1e0aa2d3bf0f05aca38","verification/selected_lifecycle.py":"f7a53d54cb1d13a8ea6d71bbc453775c2c9b5f1f9b8a03a90eb90026e5a735e1","verification/selected_revision_check.py":"a42b15d922c2c5ed41598a2e6af9cb3d80929a0531afa4ce691db97768257ed6","verification/selected_rf.py":"ec710fa7c9524f7089b54b7bce5917f03b1267197b94ca3c2c5e002d0caae1d9","verification/stream_codec.py":"4ac4a5c6663a963105905edcb3478feefacecede391df3d021e3daab4dd3bda7","verification/transport_model.py":"accda58cfe3c130a8a4967bd9704cdc36bc5e0026f0a0a794ab8077a566d8a8f","verification/usb_selected_timing.py":"b2acb539ff638601ffa9890df381172c4c42bced6d7681f21ddbe9d09b688906","verification/wideband_packet.py":"2aa64e80b6425805b66872da05c7597e153b0fd4a8380eb93e553b83bdc50538","verification/wired_envelope.py":"f0eaf08d4f3acb3039b8c0570cf41a20fc9fcdc25f9faeaf5ee4976fbe95b5ba","verification/wired_lock_probe.py":"a8d47e1411b11da82deabadfa69f911171a2b9c0b5cf02997d76324e6042fe0b"},
+  "scope": "Failed 1 ohm/doubled-activity/0.0125 ps/mV 2.4 GHz candidate. Diagnostic interventions: constant reference target retains SAR internal reference dynamics; source-noise-only clock retains assigned source/input noise but removes periodic/load-derived edge phase at LO and sampling consumers. Rail waveforms and causal SAR load recomputation retained. Computed load-edge reports in clock intervention are unused diagnostics. Neither intervention is an implementable mitigation or compliance claim."
+}

@@ -31,8 +31,18 @@ from autonomous_pll import AutonomousPLL
 from reference_sample_clock import ReferenceSampleClock
 
 
+from design_definition import load_design
+
+
 @dataclass(frozen=True)
 class Assumptions:
+    """Explicit behavioral hypotheses, not an inventory-derived physical corner.
+
+    Defaults support functional and sensitivity controls. Selected electrical
+    benches resolve current/converter/pad parameters from the architecture and
+    compose the delivered clock separately; these scalar noise and bias values
+    must not substitute for that joined evidence.
+    """
     startup_s: float = 20e-6
     converter_enob: float = 9.
     sample_jitter_s: float = 2e-12
@@ -120,6 +130,17 @@ class SharedRail:
             ec=(slow+fast)/2;es=(slow-fast)/(2*root)
         return (self.r*self.bias+ec*droop+es*(alpha*droop-current/self.c),
                 self.bias+ec*current+es*(droop/self.l-alpha*current))
+
+    def set_bias_current(self,time,current_a):
+        """Change mode load after integrating the old load; retain stored energy."""
+        if not math.isfinite(current_a) or current_a<0:
+            raise ValueError('Finite nonnegative rail bias required')
+        if not math.isfinite(time) or time<self.time:
+            raise ValueError('Monotonic load transition time required')
+        if time>self.time:self.advance(time)
+        if self.time!=time:
+            raise ValueError('Rail/clock integration stopped before load transition')
+        self.bias=current_a
 
     def droop_at(self,dt):
         if self.l:return self._transition(dt,self.droop,self.current)[0]
@@ -492,6 +513,75 @@ class ClockQualificationError(ValueError):
     pass
 
 
+class AnalogQualificationError(ValueError):
+    """Observed analog validity was lost; stop and requalify before payload."""
+
+
+class AnalogQualification:
+    """Model-observed validity transitions, not an implemented analog sensor."""
+    def __init__(self,events,*,max_age_s=None):
+        events=list(events)
+        if max_age_s is not None and (not math.isfinite(max_age_s) or max_age_s<=0):
+            raise ValueError('Positive finite analog observation age required')
+        self.max_age_s=max_age_s
+        if (not events or events[0][0]!=0 or any(type(valid) is not bool for _,valid in events)
+                or any(not math.isfinite(t) or t<0 for t,_ in events)
+                or any(b[0]<=a[0] for a,b in zip(events,events[1:]))):
+            raise ValueError('Ordered finite validity events starting at zero required')
+        self.times=[t for t,_ in events];self.valid=[v for _,v in events]
+        self.since=[];since=None
+        for t,valid in events:
+            if not valid:since=None
+            elif since is None:since=t
+            self.since.append(since)
+        self.invalid=[t for t,valid in events if not valid]
+        self.observation_times=[t for t,_ in events]
+        self.fresh_since=[];fresh=0.
+        for i,time in enumerate(self.observation_times):
+            if i and max_age_s is not None and time-self.observation_times[i-1]>max_age_s:
+                fresh=time
+            self.fresh_since.append(fresh)
+
+    def observe(self,time,valid):
+        """Append a causal model observation; held validity is not a sensor proof."""
+        previous=getattr(self,'observed_until',self.times[-1])
+        if type(valid) is not bool or not math.isfinite(time) or time<previous:
+            raise ValueError('Chronological finite analog validity observations required')
+        if time==self.times[-1] and valid!=self.valid[-1]:
+            raise ValueError('Conflicting validity at an existing event time')
+        self.observed_until=time
+        if time>self.observation_times[-1]:
+            fresh=(time if self.max_age_s is not None and
+                   time-self.observation_times[-1]>self.max_age_s else self.fresh_since[-1])
+            self.observation_times.append(time);self.fresh_since.append(fresh)
+        if valid==self.valid[-1]:return
+        self.times.append(time);self.valid.append(valid)
+        self.since.append(time if valid else None)
+        if not valid:self.invalid.append(time)
+
+    def deadline(self,armed_at,time,guard):
+        since=self.since[bisect_right(self.times,time)-1]
+        observed=bisect_right(self.observation_times,time)-1
+        if self.max_age_s is not None:
+            if time-self.observation_times[observed]>self.max_age_s:return math.inf
+            if since is not None:since=max(since,self.fresh_since[observed])
+        return math.inf if since is None else max(armed_at,since)+guard
+
+    def loss_between(self,start,end):
+        if not self.valid[bisect_right(self.times,start)-1]:return start
+        index=bisect_right(self.invalid,start)
+        invalid=self.invalid[index] if index<len(self.invalid) and self.invalid[index]<=end else None
+        if self.max_age_s is None:return invalid
+        index=bisect_right(self.observation_times,start)-1
+        expiry=self.observation_times[index]+self.max_age_s
+        for observation in self.observation_times[index+1:]:
+            if observation>end or observation>expiry:break
+            expiry=observation+self.max_age_s
+        stale=max(start,expiry) if end>expiry else None
+        if invalid is None:return stale
+        return invalid if stale is None else min(invalid,stale)
+
+
 class BehavioralChip:
     """Exclusive ownership, timed startup and finite directional host queues.
 
@@ -519,18 +609,154 @@ class BehavioralChip:
         self.parked_rf=None;self.rf_idle_phase=0.
         self.shared_rail=None
         self.reference=None
+        self.analog_qualification=None;self.armed_at=0.
         self.lo_clock=None
         self.rf_sample_time=None
         self.transport_allocation='legacy'
+        self.direct_session=None
+        self.wired_pad=None;self.wired_pad_supply=None;self.wired_pad_supply_step_s=None
+        self.converter_input_test=(0,0)
         self.rf_clock=None;self.rf_clock_origin=None;self.rf_clock_config=None;self.rf_timing_recovery_required=False
         self.reference_return_measurements=None
         self.pending_common_reference_loss=None
+        self.rf_direction_events=None;self.rf_rx_analog_events=None;self.rf_rx_completion_latency_s=0.
+        self.rf_launch=None;self.rf_launch_events=[];self.rf_launch_output_events=[]
+
+    def enable_rf_direction_gate(self, *, initial='rx', rx_completion_latency_s=0.):
+        """Arm generic TDD gates without changing the clock/transport geometry."""
+        if (self.state!='active' or self.resources['engine']!='rf' or self.stream is not None
+                or self.rf_direction_events is not None or initial not in ('rx','tx','mute')
+                or not math.isfinite(rx_completion_latency_s) or rx_completion_latency_s<0):
+            raise ValueError('Arm RF direction gate once before streaming with finite completion latency')
+        self.rf_direction_events=[(-math.inf,initial)]
+        self.rf_rx_analog_events=[(-math.inf,initial=='rx')]
+        self.rf_rx_completion_latency_s=rx_completion_latency_s
+
+    def enable_rf_sample_launch(self):
+        """Opt-in generic sample-domain output gate; existing modes unchanged."""
+        from rf_air_timing import SampleLaunch
+        if self.state!='active' or self.rf_direction_events is None or self.stream is not None or self.rf_launch is not None:
+            raise ValueError('Enable sample launch before active RF streaming')
+        self.rf_launch=SampleLaunch(epoch=self.epoch%65536)
+        self.rf_launch_events=[]
+        self.rf_launch_output_events=[(-math.inf,False)]
+
+    def arm_rf_gain_transition(self,header,sequence,*,commit_sample,settling_samples):
+        """Admit one delivered gain command onto the existing RX sample grid.
+
+        Caller prices H2D delivery/CDC and supplies an analog settling bound.
+        This path implements queue discard and D2H status, not analog gain.
+        """
+        from rf_gain_command import decode_gain,MAX_INVALID_PAIRS,MAX_STALE_PAIRS
+        command=decode_gain(header,sequence,rf_owned=self.resources['engine']=='rf')
+        state=self.stream
+        if (state is None or self.transport_allocation!='exclusive' or
+                self.resources['frame_words']!=64 or
+                state.get('rf_snapshot_fragment',0)!=6 or
+                state.get('rf_gain_pending') is not None):
+            raise ValueError('Gain transition requires completed snapshot and no pending update')
+        signature=state['signature']
+        if (signature[2]!=24 or signature[9] is None or signature[12] is not None or
+                signature[13] is not None or state.get('source_phase',0.)!=0.):
+            raise ValueError('Gain transition requires uniform actual24-bit RX pairs')
+        if type(commit_sample) is not int or commit_sample<state['sample_index']:
+            raise ValueError('Future gain commit sample required')
+        if type(settling_samples) is not int or not 0<=settling_samples<=MAX_INVALID_PAIRS-MAX_STALE_PAIRS:
+            raise ValueError('Fast gain settling must leave room for24stale pairs')
+        state['rf_gain_pending']=dict(**command,commit=commit_sample,
+            ready=commit_sample+settling_samples,committed=False)
+
+    def arm_rf_sample_launch(self,headers,sequence):
+        """Complete descriptor has arrived; external transport must price arrival."""
+        from rf_timing_command import decode_time
+        if self.state!='active' or self.rf_launch is None:
+            raise ValueError('Active sample launch service required')
+        descriptor=decode_time(headers,sequence,rf_owned=self.resources['engine']=='rf')
+        self.rf_launch.arm(descriptor['epoch'],descriptor['counter'])
+
+    def schedule_rf_direction(self, direction, *, at_s, settle_s):
+        """Command has arrived now; caller must account for host/CDC latency."""
+        if (self.state!='active' or self.rf_direction_events is None or direction not in ('rx','tx')
+                or not math.isfinite(at_s) or not math.isfinite(settle_s) or settle_s<0
+                or at_s<self.time or at_s<=self.rf_direction_events[-1][0]):
+            raise ValueError('Future ordered direction action on active RF gate required')
+        self.rf_direction_events.extend([(at_s,'mute'),(at_s+settle_s,direction)])
+        # RX frontend may settle while payload delivery remains muted.
+        # Ideal switch timing here; physical break-before-make remains external.
+        self.rf_rx_analog_events.append((at_s,direction=='rx'))
+        return dict(gated_at_s=at_s,ready_at_s=at_s+settle_s,epoch=self.epoch)
+
+    def rf_rx_analog_enabled_at(self,time):
+        if self.rf_rx_analog_events is None:return False
+        return next(enabled for when,enabled in reversed(self.rf_rx_analog_events) if when<=time)
+
+    def _rf_direction_at(self,time,*,apply_launch=True):
+        if self.rf_direction_events is None:return None
+        direction=next(direction for when,direction in reversed(self.rf_direction_events) if when<=time)
+        if apply_launch and direction=='tx' and self.rf_launch is not None:
+            enabled=next(value for when,value in reversed(self.rf_launch_output_events) if when<=time)
+            if not enabled:return 'mute'
+        return direction
+
+    def bind_stream_callback(self,callback):
+        """Bind an external source/event callback to this active stream epoch.
+
+        Adapter ownership guard, not additional silicon state or a clock model.
+        Reject stale work before invoking a possibly stateful external source.
+        """
+        if self.state!='active' or not callable(callback):
+            raise ValueError('Active chip and callable stream source required')
+        epoch=self.epoch
+        def bound(*args,**kwargs):
+            if self.state!='active' or self.epoch!=epoch:
+                raise ValueError('Stale or inactive stream callback')
+            return callback(*args,**kwargs)
+        return bound
+
+    def configure_converter_input_test(self,i_code,q_code):
+        if self.state!='reset':raise ValueError('ADC input-test changes require stopped chip')
+        if any(type(code) is not int or code not in (0,1,2,3) for code in (i_code,q_code)):
+            raise ValueError('Numeric ADC input-test code outside 0..3')
+        self.converter_input_test=(i_code,q_code)
+
+    def bind_sar_converter(self,**configuration):
+        """Epoch-guarded analog adapter; caller owns conversion event scheduling."""
+        if self.resources is None or self.resources.get('engine')!='rf':
+            raise ValueError('RF converter ownership required')
+        if 'input_test' in configuration:raise ValueError('Chip owns ADC input selection')
+        from converter_dynamics import paired_sar
+        selected=self.converter_input_test
+        def convert(*args,**kwargs):
+            return paired_sar(*args,input_test=selected,**configuration,**kwargs)
+        return self.bind_stream_callback(convert)
+
+    def attach_wired_pad(self,pad,*,rail_source=None,max_step_s=None):
+        if self.state!='reset' or self.wired_pad is not None or not isinstance(pad,SharedWiredPad):
+            raise ValueError('Attach one shared pad while stopped')
+        if rail_source is not None and not callable(rail_source):raise ValueError('Callable pad supply required')
+        pad.advance_network(self.time,self.a.supply_v if rail_source is None else rail_source,max_step_s=max_step_s)
+        self.wired_pad=pad
+        self.wired_pad_supply=rail_source;self.wired_pad_supply_step_s=max_step_s
+
+    def advance_wired_pad(self,time):
+        if self.wired_pad is None:raise ValueError('No attached pad')
+        self.wired_pad.advance_network(time,self.a.supply_v if self.wired_pad_supply is None else self.wired_pad_supply,
+                                       max_step_s=self.wired_pad_supply_step_s)
+
+    def release_wired_output(self):
+        if self.wired_pad is not None:
+            self.advance_wired_pad(self.time)
+            self.wired_pad.local='Z'
+            self.wired_pad.local_drive=None
 
     def configure_transport(self,allocation):
         if self.state!='reset' or self.stream is not None:
             raise ValueError('Transport allocation changes require stopped chip')
-        if allocation not in ('legacy','exclusive'):raise ValueError('Unknown transport allocation')
+        if allocation not in ('legacy','exclusive','direct'):raise ValueError('Unknown transport allocation')
+        if self.direct_session is not None:self.direct_session.close()
         self.transport_allocation=allocation
+        from direct_stream import DirectSession
+        self.direct_session=DirectSession(self) if allocation=='direct' else None
 
     def attach_rf_timing(self,configuration):
         if self.state!='reset' or self.rf_stream is None or self.rf_clock is not None:
@@ -693,10 +919,20 @@ class BehavioralChip:
                 self.state='fault';self.ready_at=math.inf
                 raise
             finally:self.rf_sample_time=None
+        self._refresh_analog_readiness()
         if (self.state=='acquiring' and self.time>=self.ready_at
                 and (self.reference is None or self.reference.qualified(self.time))
                 and (self.lo_clock is None or self.lo_clock.locked)):
             self.state='active'
+
+    def attach_analog_qualification(self,events,*,max_age_s=None):
+        if self.state!='reset' or self.time!=0 or self.analog_qualification is not None:
+            raise ValueError('Attach analog qualification once before startup')
+        self.analog_qualification=AnalogQualification(events,max_age_s=max_age_s)
+
+    def _refresh_analog_readiness(self):
+        if self.state=='acquiring' and self.analog_qualification is not None:
+            self.ready_at=self.analog_qualification.deadline(self.armed_at,self.time,self.a.startup_s)
 
     def attach_reference(self,edges,**parameters):
         if self.state!='reset' or self.reference is not None:
@@ -796,6 +1032,7 @@ class BehavioralChip:
         self.resources.update(settings)
 
     def attach_rf_stream(self,input_source,*,offset_hz=0.,seed=81,**impairments):
+        if any(self.converter_input_test):raise ValueError('ADC diagnostics require the retained SAR adapter')
         if self.state!='reset' or self.resources is None or 'sample_hz' not in self.resources or not callable(input_source):
             raise ValueError('Configured idle numeric RF resource required')
         settings={key:self.resources[key] for key in ('sample_hz','tx_cutoff_hz','rx_cutoff_hz','rx_gain','rx_filter_order','converter_bits')}
@@ -820,6 +1057,7 @@ class BehavioralChip:
         self.rf_stream=core;self.rf_source=produce
 
     def resume_rf_stream(self,input_source):
+        if any(self.converter_input_test):raise ValueError('ADC diagnostics require the retained SAR adapter')
         if self.state!='reset' or self.parked_rf is None or not callable(input_source):
             raise ValueError('Stopped retained RF core required')
         if self.rf_timing_recovery_required:raise ValueError('Timed fault recovery requires missing-edge/analog recovery model')
@@ -833,15 +1071,24 @@ class BehavioralChip:
         if self.rf_timing_recovery_required:raise ValueError('Timed fault recovery requires missing-edge/analog recovery model')
         if self.resources is None or self.state != 'reset':
             raise ValueError('Configured reset state required')
+        if self.resources['engine']=='rf' and self.rf_source is not None and any(self.converter_input_test):
+            raise ValueError('ADC diagnostics require the retained SAR adapter; normal RF source is attached')
         if self.lo_clock is not None and self.resources['engine']!='rf':
             raise ValueError('LO adapter currently qualifies RF ownership only')
         if self.parked_rf is not None and self.resources['engine']=='rf' and self.rf_source is None:
             raise ValueError('Resume retained RF before arming')
+        if self.transport_allocation=='direct':
+            if self.resources['engine']!='wire':raise ValueError('Direct transport requires wired engine')
+            if self.direct_session is None or self.direct_session.closed:
+                from direct_stream import DirectSession
+                self.direct_session=DirectSession(self)
         self.state = 'acquiring'
         if self.reference is not None:self.reference.armed_at=self.time
         if self.lo_clock is not None:
             self.lo_clock.set_reference(True,self.time);self.lo_clock.last_observation=None
+        self.armed_at=self.time
         self.ready_at = self.time + self.a.startup_s
+        self._refresh_analog_readiness()
 
     def advance(self, end):
         if self.state=='fault':raise ValueError('Stop faulted chip before advancing')
@@ -852,6 +1099,8 @@ class BehavioralChip:
             raise ValueError('Monotonic event time required')
         if self.stream is not None and end!=self.time:
             raise ValueError('Advance active stream through transfer, or stop first')
+        analog_loss=(self.analog_qualification.loss_between(self.time,end) if self.analog_qualification is not None and self.state=='active' else None)
+        if analog_loss is not None:end=analog_loss
         loss=None
         if self.reference is not None and (self.state in ('acquiring','active') or (self.parked_rf is not None and self.rf_clock is not None)):
             loss=self.reference.fault_between(self.time,end)
@@ -859,9 +1108,15 @@ class BehavioralChip:
         if self.parked_rf is not None and self.rf_clock is not None:
             if self.rf_clock.index is None:raise ValueError('Stopped timed RF requires previously armed converter clock')
             self._advance_timed_rf_idle(end,loss)
+            if analog_loss is not None:
+                self.state='fault';self.ready_at=math.inf
+                raise AnalogQualificationError('Analog validity lost')
             return
         if self.lo_clock is not None:
             self._advance_with_lo(end,loss)
+            if analog_loss is not None:
+                self.state='fault';self.ready_at=math.inf
+                raise AnalogQualificationError('Analog validity lost')
             return
         if self.parked_rf is not None:
             elapsed=self.rf_idle_phase+(end-self.time)*self.parked_rf.actual_sample_hz
@@ -882,6 +1137,10 @@ class BehavioralChip:
         if loss is not None:
             self.state='fault';self.ready_at=math.inf
             raise ReferenceLossError('Reference pulse timeout')
+        if analog_loss is not None:
+            self.state='fault';self.ready_at=math.inf
+            raise AnalogQualificationError('Analog validity lost')
+        self._refresh_analog_readiness()
         if (self.state == 'acquiring' and end >= self.ready_at
                 and (self.reference is None or self.reference.qualified(end))):
             self.state = 'active'
@@ -907,11 +1166,26 @@ class BehavioralChip:
             self.state='fault';self.ready_at=math.inf
             if clock_loss is not None:raise ClockQualificationError('Observed LO qualification lost')
             raise ReferenceLossError('Reference pulse timeout')
+        self._refresh_analog_readiness()
         if (self.state=='acquiring' and self.time>=self.ready_at and self.lo_clock.locked
                 and self.reference.qualified(self.time)):
             self.state='active'
 
+    def wait_faulted(self,end):
+        """Elapsed management time with payload latched off.
+
+        Attached live RF cores need their explicit analog idle continuation;
+        external rail/CDR fixtures remain responsible for their own evolution.
+        """
+        if self.state!='fault' or not math.isfinite(end) or end<self.time:
+            raise ValueError('Monotonic time and latched fault required')
+        if self.rf_stream is not None or self.parked_rf is not None:
+            raise ValueError('Live RF state requires explicit analog continuation')
+        self.time=end
+
     def stop(self):
+        self.release_wired_output()
+        if self.direct_session is not None:self.direct_session.close()
         if self.state=='fault' and self.rf_clock is not None:self.rf_timing_recovery_required=True
         discarded=dict(rx_bits=self.stream['occupancy'] if self.stream else 0,
                        tx_bits=self.stream['tx_bits'] if self.stream else 0)
@@ -924,6 +1198,8 @@ class BehavioralChip:
             self.rf_idle_phase=((self.time-self.stream['origin'])*self.rf_stream.actual_sample_hz-self.stream['sample_index']-self.stream.get('source_phase',0.)
                                 if self.stream is not None else 0.)
         self.stream=None
+        self.rf_direction_events=None;self.rf_rx_analog_events=None
+        self.rf_launch=None;self.rf_launch_events=[];self.rf_launch_output_events=[]
         self.rf_stream=None;self.rf_source=None
         self.state = 'reset'
         self.ready_at = math.inf
@@ -939,13 +1215,32 @@ class BehavioralChip:
 
     def transfer(self, *, mode, source_hz, sample_bits, frames=128, depth_bits=2048,
                  host_pause_frames=0, epoch, directions=('rx','tx'), tx_prefill_bits=512,
-                 feedback=False, feedback_stop_after=None, rx_source=None, tx_source=None, tx_prefill_value=0, rx_event_time=None, rx_valid=None, rx_cancel=None, host_block_words=1, host_cdc_read_hz=None, host_cdc_phase=0.,host_word_observer=None,tx_word_observer=None,tx_reference_pacing=False,tx_reference_ticks=None,tx_event_time=None):
+                 feedback=False, feedback_stop_after=None, rx_source=None, tx_source=None, tx_prefill_value=0, rx_event_time=None, rx_valid=None, rx_cancel=None, host_block_words=1, host_cdc_read_hz=None, host_cdc_phase=0.,host_word_observer=None,tx_word_observer=None,tx_reference_pacing=False,tx_reference_ticks=None,tx_event_time=None,until_s=None,d2h_event_time=None,tx_host_enable=None,fault_on_rx_loss=False,analog_observer=None,analog_observation_period_s=100e-9):
+        if self.transport_allocation=='direct':raise ValueError('Use direct transport session')
+        gated_rf=self.rf_direction_events is not None
+        if gated_rf and (directions!=('rx','tx') or self.resources['engine']!='rf' or tx_prefill_bits!=0
+                or host_block_words!=1 or feedback):
+            raise ValueError('RF direction gate needs paired queues, actual host prefill and direct host words')
+        if tx_host_enable is not None and (not gated_rf or not callable(tx_host_enable)):
+            raise ValueError('Explicit host write schedule requires gated RF transport')
+        if d2h_event_time is not None and (not callable(d2h_event_time) or directions!=('rx',) or feedback or until_s is None):
+            raise ValueError('Explicit D2H clock requires bounded RX-only service without feedback')
+        # Optional observation horizon, relative to the persistent stream origin.
+        # It bounds replay; it is neither STOP nor evidence of clock loss.
+        if self.stream is not None and self.stream.get('capture_exhausted',False) and until_s is None:
+            raise ValueError('Exhausted capture requires an explicit observation horizon')
+        elapsed=0. if self.stream is None else self.time-self.stream['origin']
+        if until_s is not None and (not math.isfinite(until_s) or until_s<=elapsed):
+            raise ValueError('Capture horizon must be finite and later than current stream time')
         # Consumption events are relative to the stream origin. Only the chip
         # consumer sees this callback; FPGA pacing still observes elapsed D2H
-        # edges. Independent simultaneous RX/TX event queues are not implied.
+        # edges. Explicit wired duplex TX has a separate event index/queue.
         if tx_event_time is not None and (not callable(tx_event_time) or
-                directions!=('tx',) or self.resources['engine']!='wire' or rx_event_time is not None):
-            raise ValueError('Explicit TX events require wired TX-only service')
+                'tx' not in directions or (self.resources['engine']!='wire' and not (self.resources['engine']=='rf' and (directions==('tx',) or gated_rf))) or ('rx' not in directions and rx_event_time is not None)):
+            raise ValueError('Explicit TX events require wired, RF TX-only or gated RF service')
+        split_tx_events=tx_event_time is not None and 'rx' in directions
+        if self.rf_launch is not None and (rx_event_time is not None or tx_event_time is not None):
+            raise ValueError('Sample launch currently requires the shared uniform converter-edge grid; delayed RX completion is not a TX clock')
         if tx_reference_ticks is not None and (not tx_reference_pacing or not callable(tx_reference_ticks)):
             raise ValueError('Reference-edge observer requires reference pacing')
         if type(tx_reference_pacing) is not bool or (tx_reference_pacing and ('tx' not in directions or feedback)):
@@ -955,6 +1250,9 @@ class BehavioralChip:
         if host_word_observer is not None and not callable(host_word_observer):raise ValueError('Callable host word observer required')
         if tx_word_observer is not None and (not callable(tx_word_observer) or tx_source is None or 'tx' not in directions):
             raise ValueError('TX observation requires a concrete enabled source and callable observer')
+        if analog_observer is not None and (not callable(analog_observer) or self.analog_qualification is None
+                or not math.isfinite(analog_observation_period_s) or analog_observation_period_s<=0):
+            raise ValueError('Analog observation needs a callable, monitor and positive finite period')
         if type(host_block_words) is not int or host_block_words not in (1,8):
             raise ValueError('Host block width must be one or eight words')
         if host_cdc_read_hz is not None and (host_block_words!=8 or not math.isfinite(host_cdc_read_hz) or host_cdc_read_hz<=0 or 'tx' not in directions):
@@ -1002,14 +1300,15 @@ class BehavioralChip:
         if type(tx_prefill_value) is not int or not 0<=tx_prefill_value<(1<<tx_prefill_bits):
             raise ValueError('TX prefill value must fit prefill bit count')
         if rx_event_time is not None and (not callable(rx_event_time) or
-                (directions!=('rx',) and not (self.resources['engine']=='rf' and directions==('rx','tx') and self.rf_stream is not None))):
-            raise ValueError('Timed source requires RX-only service or paired live RF conversion')
+                (directions!=('rx',) and not split_tx_events and not (self.resources['engine']=='rf' and directions==('rx','tx') and self.rf_stream is not None) and not gated_rf)):
+            raise ValueError('Timed source requires RX-only, independently timed wired duplex, or paired live RF conversion')
         owner=('iq' if self.resources['engine']=='rf' else 'wire') if self.transport_allocation=='exclusive' else None
         plan = slots(mode, self.resources['frame_words'],owner=owner)
         name = 'iq' if self.resources['engine'] == 'rf' else 'wire'
         host_hz = (250e6 if mode == 0 else 312.5e6) * self.a.host_clock_scale
         rate = source_hz * self.a.source_clock_scale
-        signature=(mode,source_hz,sample_bits,depth_bits,tuple(directions),tx_prefill_bits,host_pause_frames,feedback,feedback_stop_after,rx_source,tx_source,tx_prefill_value,rx_event_time,rx_valid,rx_cancel,host_block_words,host_cdc_read_hz,host_cdc_phase,tx_word_observer,tx_reference_pacing,tx_reference_ticks,tx_event_time)
+        if type(fault_on_rx_loss) is not bool:raise ValueError('Explicit RX loss policy required')
+        signature=(mode,source_hz,sample_bits,depth_bits,tuple(directions),tx_prefill_bits,host_pause_frames,feedback,feedback_stop_after,rx_source,tx_source,tx_prefill_value,rx_event_time,rx_valid,rx_cancel,host_block_words,host_cdc_read_hz,host_cdc_phase,tx_word_observer,tx_reference_pacing,tx_reference_ticks,tx_event_time,d2h_event_time,tx_host_enable,fault_on_rx_loss,analog_observer,analog_observation_period_s)
         if self.stream is not None and self.stream['signature']!=signature:
             raise ValueError('Stop before changing stream geometry or prefill')
         if self.stream is None:
@@ -1019,10 +1318,12 @@ class BehavioralChip:
                 tx_bits=initial,tx_min=initial,tx_high=initial,tx_in=0,tx_out=0,
                 reports=deque(),snapshot=None,last_report=None,reports_received=0,quota_phase=0.,last_source_time=-math.inf,next_source_time=None)
             self.stream['source_phase']=max(0.,-self.rf_idle_phase) if self.parked_rf is not None and self.rf_source is not None else 0.
+            self.stream['rx_ever_qualified']=False
             self.stream['rx_cancel']=rx_cancel
             if rx_source is not None:self.stream.update(rx_buffer=0,rx_words=[])
             if tx_source is not None:self.stream.update(tx_buffer=tx_prefill_value,tx_samples=[])
         state=self.stream
+        state.setdefault('analog_observation_index',1)
         if host_block_words==8 and 'host_blocks' not in state:
             state.update(host_blocks=deque(),host_collect=[],host_captured=0,host_committed=0,host_block_high=0)
         if host_cdc_read_hz is not None and 'host_cdc' not in state:
@@ -1038,17 +1339,43 @@ class BehavioralChip:
         tx_hz=host_hz*self.a.h2d_clock_scale
         end_frame=state['frame']+frames
         end=end_frame*len(plan)/host_hz
+        if until_s is not None:end=min(end,until_s)
         # Ordered source, D2H and H2D events. Conservative ties consume TX
         # before a simultaneous host write. Slot counters preserve frame phase.
         reference_checked=self.time
+        if split_tx_events:
+            state.setdefault('tx_event_index',0);state.setdefault('next_tx_event',None);state.setdefault('last_tx_event',-math.inf)
         while True:
-            event_time=tx_event_time if tx_event_time is not None else rx_event_time
+            d2h_time=rx_slot/rx_hz if 'rx' in directions or feedback else math.inf
+            if d2h_event_time is not None:
+                if state.get('next_d2h_time') is None:
+                    candidate=d2h_event_time(rx_slot)
+                    if candidate is None:
+                        candidate=math.inf;state['d2h_capture_exhausted']=True
+                    elif not math.isfinite(candidate) or candidate<0 or candidate<=state.get('last_d2h_time',-math.inf):
+                        raise ValueError('D2H clock events must be finite and strictly increasing')
+                    state['next_d2h_time']=candidate
+                d2h_time=state['next_d2h_time']
+            tx_time=math.inf
+            if split_tx_events:
+                if state['next_tx_event'] is None:
+                    candidate=tx_event_time(state['tx_event_index'])
+                    if not math.isfinite(candidate) or candidate<0 or candidate<=state['last_tx_event']:
+                        raise ValueError('TX event times must be finite and strictly increasing')
+                    state['next_tx_event']=candidate
+                tx_time=state['next_tx_event']
+            event_time=rx_event_time if split_tx_events else tx_event_time if tx_event_time is not None else rx_event_time
             if event_time is None:source_time=(sample_index+state['source_phase'])/rate
             else:
                 if state['next_source_time'] is None:
                     candidate=event_time(sample_index)
+                    if candidate is None:
+                        if until_s is None or directions!=('rx',) or self.rf_clock is not None:
+                            raise ValueError('Finite capture end requires bounded RX-only replay without a live converter clock')
+                        state['capture_exhausted']=True
+                        candidate=math.inf
                     missing_converter=(candidate==math.inf and self.rf_clock is not None and not self.rf_clock.present)
-                    if not missing_converter and (not math.isfinite(candidate) or candidate<0 or candidate<=state['last_source_time']):
+                    if not (missing_converter or state.get('capture_exhausted',False)) and (not math.isfinite(candidate) or candidate<0 or candidate<=state['last_source_time']):
                         raise ValueError('Source event times must be finite and strictly increasing')
                     state['next_source_time']=candidate
                 source_time=state['next_source_time']
@@ -1061,24 +1388,31 @@ class BehavioralChip:
                     # Explicit independent timer event; no converter or GPIO
                     # edge is required to observe the strict timeout boundary.
                     watchdog_time=math.nextafter(last+timeout,math.inf)-state['origin']
-            now,kind=min((source_time,0),
-                (rx_slot/rx_hz if 'rx' in directions or feedback else math.inf,1),
+            now,kind=min((source_time,0),(tx_time,-3),
+                (d2h_time,1),
                 (tx_slot/tx_hz if 'tx' in directions else math.inf,2),
                 (state['reports'][0][0] if state['reports'] else math.inf,3),
                 ((7+8*state['cdc_wr_index'])/tx_hz if host_cdc_read_hz is not None else
                  state['host_blocks'][0][0] if host_block_words==8 and state['host_blocks'] else math.inf,4),
                 ((state['cdc_rd_index']+host_cdc_phase)/host_cdc_read_hz if host_cdc_read_hz is not None else math.inf,5),
                 (self.pending_common_reference_loss-state['origin'] if self.pending_common_reference_loss is not None else math.inf,-1),
-                (watchdog_time,-2))
+                (watchdog_time,-2),
+                (state['analog_observation_index']*analog_observation_period_s if analog_observer is not None else math.inf,-4))
+            analog_loss=(self.analog_qualification.loss_between(reference_checked,state['origin']+min(now,end)) if self.analog_qualification is not None else None)
             reference_loss=None
             if self.reference is not None:
                 target=state['origin']+min(now,end)
                 reference_loss=self.reference.fault_between(reference_checked,target)
                 if reference_loss is not None:now=reference_loss-state['origin']
                 reference_checked=target
+            if analog_loss is not None and (reference_loss is None or analog_loss<reference_loss):
+                now=analog_loss-state['origin'];reference_loss=None
+            else:analog_loss=None
             clock_loss=self._lo_to(state['origin']+min(now,end))
             if clock_loss is not None:
                 now=clock_loss-state['origin'];fault='lo_unqualified';break
+            if analog_loss is not None:
+                fault='analog_unqualified';break
             if reference_loss is not None:
                 fault='reference_lost';break
             if now>end or (now==end and kind!=-2):
@@ -1087,6 +1421,21 @@ class BehavioralChip:
                 self.shared_rail.advance(state['origin']+now)
                 if self.shared_rail.voltage<self.a.minimum_supply_v:
                     fault='shared_supply_low';break
+            if kind==-4:
+                observed_at=state['origin']+now
+                try:valid=analog_observer(observed_at)
+                except SupplyRangeError:
+                    fault='shared_supply_low';break
+                except ClockQualificationError:
+                    fault='lo_unqualified';break
+                except AnalogQualificationError:
+                    fault='analog_unqualified';break
+                if valid is not None:
+                    self.analog_qualification.observe(observed_at,valid)
+                    if not valid:
+                        fault='analog_unqualified';break
+                state['analog_observation_index']+=1
+                continue
             if kind==-1:
                 self.time=state['origin']+now
                 self.set_common_reference(False)
@@ -1094,18 +1443,56 @@ class BehavioralChip:
                 continue
             if kind==-2:
                 fault='reference_lost';break
-            if kind==0:
-                if 'tx' in directions and tx_bits<sample_bits:
+            if kind in (0,-3):
+                if kind==0 and self.rf_launch is not None:
+                    launch=self.rf_launch
+                    direction=self._rf_direction_at(state['origin']+now,apply_launch=False)
+                    before=launch.output
+                    due=launch.target==(launch.counter+1)%(1<<48)
+                    if launch.output and direction!='tx':launch.stop()
+                    launched=launch.edge(queued_pairs=min(42,tx_bits//24),
+                                         board_ready=not due or direction=='tx')
+                    if launch.output!=before:self.rf_launch_output_events.append((state['origin']+now,launch.output))
+                    if launched:self.rf_launch_events.append(dict(counter=launch.counter,time_s=state['origin']+now,epoch=launch.epoch))
+                    if launch.status in ('underflow','fault'):
+                        fault='rf_launch_'+launch.status;break
+                tx_tick='tx' in directions and (kind==-3 or not split_tx_events) and (not gated_rf or self._rf_direction_at(state['origin']+now)=='tx')
+                if self.rf_launch is not None:tx_tick=tx_tick and self.rf_launch.output
+                if tx_tick and tx_bits<sample_bits:
                     fault='underflow';break
-                if 'rx' not in directions and self.rf_source is not None:
+                if kind==0 and 'rx' not in directions and self.rf_source is not None:
                     try:self.rf_source(sample_index)  # Advance analog TX even without RX host service.
                     except SupplyRangeError:
                         fault='shared_supply_low';break
                     except ClockQualificationError:
                         fault='lo_unqualified';break
-                if 'rx' in directions:
+                if kind==0 and 'rx' in directions and (not gated_rf or self._rf_direction_at(state['origin']+now-self.rf_rx_completion_latency_s)=='rx'):
+                    gain=state.get('rf_gain_pending')
+                    if gain is not None and not gain['committed'] and sample_index>=gain['commit']:
+                        if (sample_bits!=24 or rx_source is None or rx_valid is not None or
+                                state.get('source_phase',0.)!=0.):
+                            raise ValueError('Gain transition requires uniform actual24-bit RX pairs')
+                        # Complete the old frame's already-announced payload.
+                        # Everything after it is stale; a partial old pair is
+                        # included in the gap from the first incomplete pair.
+                        staged_bits=quota*10
+                        first=state.get('rf_gain_segment_start',0)+(returned-
+                            state.get('rf_gain_segment_returned',0)+staged_bits)//24
+                        stale=sample_index-first
+                        gap=gain['ready']-first
+                        if not 0<=stale<=24 or not 0<=gap<=127:
+                            fault='rf_gain_gap_overflow';break
+                        state['rf_gain_discarded_bits']=state.get('rf_gain_discarded_bits',0)+occupancy-staged_bits
+                        occupancy=staged_bits
+                        state['rx_buffer']&=(1<<staged_bits)-1
+                        gain.update(committed=True,gap=gap,first_invalid=first)
                     valid=True if rx_valid is None else rx_valid(sample_index)
+                    if gain is not None and gain['committed'] and sample_index<gain['ready']:
+                        valid=False
                     if type(valid) is not bool:raise ValueError('RX validity must be boolean')
+                    if fault_on_rx_loss and state['rx_ever_qualified'] and not valid:
+                        fault='rx_qualification_lost';break
+                    if valid:state['rx_ever_qualified']=True
                     if valid and occupancy+sample_bits>depth_bits:
                         fault='overflow';break
                     if rx_source is not None:
@@ -1114,31 +1501,68 @@ class BehavioralChip:
                             fault='shared_supply_low';break
                         except ClockQualificationError:
                             fault='lo_unqualified';break
+                        except AnalogQualificationError:
+                            fault='analog_unqualified';break
                         if type(value) is not int or not 0<=value<(1<<sample_bits):
                             raise ValueError('RX sample must fit configured unsigned packing width')
                         if valid:state['rx_buffer']|=value<<occupancy
                     if valid:
+                        if self.rf_launch is not None and produced==0:
+                            state['rf_snapshot_counter']=self.rf_launch.counter
                         occupancy+=sample_bits;produced+=sample_bits;high=max(high,occupancy)
                     else:state['invalid_rx_events']=state.get('invalid_rx_events',0)+1
-                if 'tx' in directions:
+                if tx_tick:
                     if tx_bits<sample_bits:
                         fault='underflow';break
                     if tx_source is not None:
                         emitted_word=state['tx_buffer']&((1<<sample_bits)-1)
+                        if tx_word_observer is not None:
+                            try:tx_word_observer(state['origin']+now,emitted_word)
+                            except SupplyRangeError:
+                                fault='shared_supply_low';break
+                            except ClockQualificationError:
+                                fault='lo_unqualified';break
+                            except AnalogQualificationError:
+                                fault='analog_unqualified';break
                         state['tx_samples'].append(emitted_word)
                         state['tx_buffer']>>=sample_bits
-                        if tx_word_observer is not None:tx_word_observer(state['origin']+now,emitted_word)
                     tx_bits-=sample_bits;tx_out+=sample_bits;tx_min=min(tx_min,tx_bits)
-                state['next_source_time']=None
-                state['last_source_time']=source_time
-                sample_index+=1
+                if kind==-3:
+                    state['next_tx_event']=None;state['last_tx_event']=tx_time;state['tx_event_index']+=1
+                else:
+                    state['next_source_time']=None
+                    state['last_source_time']=source_time
+                    sample_index+=1
             elif kind==1:
+                if d2h_event_time is not None:
+                    state['last_d2h_time']=d2h_time;state['next_d2h_time']=None
                 frame,slot=divmod(rx_slot,len(plan))
                 rail_word=0 if full_activity or host_word_observer is not None else None
                 if slot==0:
                     quota=min(plan.count(name),occupancy//10) if frame>=host_pause_frames else 0
+                    if self.rf_launch is not None and not state.get('rf_snapshot_started',False):
+                        # First snapshot must precede any payload and start on a pair boundary.
+                        if quota<3:quota=0
+                        else:
+                            state['rf_snapshot_started']=True
+                            state['rf_snapshot_fragment']=0
+                            state['rf_snapshot_value']=state['rf_snapshot_counter']|(self.rf_launch.epoch<<48)
                     if feedback:state['snapshot']=(now,math.ceil(tx_bits*255/depth_bits),self.epoch)
                     if full_activity or host_word_observer is not None:state['rx_header']=stream_metadata(quota if name=='wire' else 0,quota if name=='iq' else 0,frame%64)
+                    fragment=state.get('rf_snapshot_fragment',6)
+                    if self.rf_launch is not None and fragment<6:
+                        part=(state['rf_snapshot_value']>>(11*fragment))&2047
+                        state['rx_header']=stream_metadata(part&63,quota,frame%64,op=8,arg=(fragment<<5)|(part>>6))
+                        state['rf_snapshot_fragment']=fragment+1
+                    gain=state.get('rf_gain_pending')
+                    if gain is not None and gain['committed'] and sample_index>=gain['ready']:
+                        from rf_gain_command import encode_gain
+                        state['rx_header']=encode_gain(gain['lna_db'],gain['pga_db'],
+                            frame%64,invalid_pairs=gain['gap'],iq_words=quota,status=True)
+                        state['rf_gain_segment_start']=gain['ready']
+                        state['rf_gain_segment_returned']=returned
+                        state.setdefault('rf_gain_status_events',[]).append(dict(gain,time_s=state['origin']+now))
+                        state['rf_gain_pending']=None
                 if (full_activity or host_word_observer is not None) and slot<5:rail_word=state['rx_header'][slot]
                 if slot==4 and feedback and (feedback_stop_after is None or frame<feedback_stop_after):
                     # Proposed occupancy use of the existing 8-bit header argument.
@@ -1187,7 +1611,9 @@ class BehavioralChip:
                     if frame<host_pause_frames:tx_quota=0
                     if full_activity:state['tx_header']=stream_metadata(tx_quota if name=='wire' else 0,tx_quota if name=='iq' else 0,frame%64)
                 if full_activity and slot<5:input_word=state['tx_header'][slot]
-                if plan[slot]==name and tx_quota:
+                host_enabled=True if tx_host_enable is None else tx_host_enable(state['origin']+now,tx_in//10)
+                if type(host_enabled) is not bool:raise ValueError('Host write schedule must return Boolean')
+                if plan[slot]==name and tx_quota and host_enabled:
                     if host_block_words==1 and tx_bits+10>depth_bits:
                         fault='tx_overflow';break
                     value=0
@@ -1258,7 +1684,7 @@ class BehavioralChip:
                 state['last_report']=(captured,code);state['reports_received']+=1
         if self.shared_rail is not None:self.shared_rail.advance(state['origin']+now)
         self.time=state['origin']+now
-        state.update(frame=end_frame,occupancy=occupancy,produced=produced,returned=returned,
+        state.update(frame=(end_frame if now==end_frame*len(plan)/host_hz else math.floor(now*host_hz/len(plan))),occupancy=occupancy,produced=produced,returned=returned,
             high=high,sample_index=sample_index,rx_slot=rx_slot,tx_slot=tx_slot,
             rx_quota=quota,tx_quota=tx_quota,tx_bits=tx_bits,tx_min=tx_min,
             tx_high=tx_high,tx_in=tx_in,tx_out=tx_out)
@@ -1268,9 +1694,11 @@ class BehavioralChip:
             fifo=state['host_cdc']
             assert state['cdc_bits']==sum(10*len(fifo.memory[(fifo.rb+i)%8]) for i in range((fifo.wb-fifo.rb)%16))
             assert state['cdc_written']==state['host_committed']+state['cdc_bits']
-        assert produced == returned + occupancy
+        assert produced == returned + occupancy + state.get('rf_gain_discarded_bits',0)
         assert (tx_prefill_bits if "tx" in directions else 0)+tx_in==tx_out+tx_bits
         if fault:
+            if self.rf_launch is not None:
+                self.rf_launch.stop();self.rf_launch_output_events.append((self.time,False))
             self.state = 'fault'
             self.ready_at = math.inf
         staging={} if host_block_words==1 else dict(host_staging=dict(
@@ -1283,6 +1711,8 @@ class BehavioralChip:
                 write_edges=state['cdc_wr_index'],read_edges=state['cdc_rd_index'],
                 scope='Ideal two-stage pointers and shared reset; no physical skew/metastability or clock-power claim')
         return dict(**staging,fault=fault, directions=list(directions),
+                    observed_until_s=now,capture_exhausted=state.get('capture_exhausted',False),
+                    d2h_timing=('explicit_observed_edges' if d2h_event_time is not None else 'uniform_assigned_rate'),
                     feedback=dict(enabled=feedback,reports_received=state["reports_received"],
                         pending_reports=len(state["reports"]),header_argument_bits=8 if feedback else 0),
                     tx=dict(prefill_bits=tx_prefill_bits if 'tx' in directions else 0,
@@ -1584,7 +2014,11 @@ class SampledRFStream:
             # the previously latched code, including across chunk boundaries.
             held=np.r_[self.held_dac,dac[:-1]]
             tx=np.array([self.tx.step(value,dt) for value,dt in zip(held,intervals)])
-        else:tx=self.tx.process(dac)
+        else:
+            # Implicit uniform timestamps have the same DAC-edge semantics:
+            # a code arriving now cannot drive the interval that just elapsed.
+            held=np.r_[self.held_dac,dac[:-1]]
+            tx=self.tx.process(held)
         self.held_dac=complex(dac[-1])
         drive=np.r_[self.previous_tx,tx[:-1]];self.previous_tx=complex(tx[-1])
         if incoming is not None:
@@ -2309,10 +2743,151 @@ def transition_cdr_screen(rate, *, initial_ppm=100., gap_bits=10000,
                 assumptions='Ideal wrapped transition detector, empirical PI gains, bounded correction, 5 ps IID transition jitter; no physical CDR qualification')
 
 
+def early_late_phase_decision(previous, boundary, current):
+    """Three-sample detector: +1 late, -1 early, 0 no data transition.
+
+    The result is a direction, never an error magnitude or a lock indication.
+    Equal adjacent DATA samples contain no usable transition evidence here.
+    """
+    if any(value not in (0,1) for value in (previous,boundary,current)):
+        raise ValueError('Binary detector samples required')
+    if previous==current:return 0
+    return 1 if boundary==current else -1
+
+
+def sampled_phase_bracket(previous,current,decisions,nominal_times):
+    """Decode a single monotonic thermometer edge; no voltage interpolation.
+
+    Only nominal local phase slots and comparator bits enter this encoder.
+    Clock jitter remains measurement uncertainty, not a known timestamp offset.
+    Bubbles, missing brackets and equal endpoint DATA bits produce no update.
+    """
+    decisions=np.asarray(decisions);times=np.asarray(nominal_times,float)
+    if previous not in (0,1) or current not in (0,1) or decisions.ndim!=1 or len(decisions)<2 or times.shape!=decisions.shape or np.any((decisions!=0)&(decisions!=1)) or not np.all(np.isfinite(times)) or np.any(np.diff(times)<=0):
+        raise ValueError('Ordered finite phase slots and binary decisions required')
+    changes=np.flatnonzero(decisions[1:]!=decisions[:-1])
+    if previous==current or len(changes)!=1 or decisions[0]!=previous or decisions[-1]!=current:
+        return None
+    k=int(changes[0]);return float((times[k]+times[k+1])/2),float((times[k+1]-times[k])/2)
+
+
+def quadratic_phase_endpoint(moments,elapsed_cycles,window_cycles):
+    """Endpoint period excess and slew from eight normalized phase moments.
+
+    The fit uses observed local edge codes only; no source frequency or phase.
+    No confidence bound or finite-arithmetic implementation is implied.
+    """
+    if len(moments)!=8 or not all(math.isfinite(v) for v in moments) or moments[0]<8 or not math.isfinite(window_cycles) or window_cycles<=0 or not math.isfinite(elapsed_cycles) or elapsed_cycles<=0:
+        raise ValueError('Finite phase moments with at least eight observations required')
+    n,s1,s2,s3,s4,sy,sxy,sx2y=moments
+    matrix=np.array([[n,s1,s2],[s1,s2,s3],[s2,s3,s4]])
+    if np.linalg.cond(matrix)>1e12:raise ValueError('Phase fit lacks independent time coverage')
+    _,linear,quadratic=np.linalg.solve(matrix,np.array([sy,sxy,sx2y]))
+    endpoint=(linear+2*quadratic*elapsed_cycles/window_cycles)/window_cycles
+    return float(endpoint),float(2*quadratic/window_cycles**2)
+
+
 class RecoveredWordSource:
     """Incremental voltage-crossing payload CDR with one cached output word."""
-    def __init__(self,bits,rate,phase_ui,residual_ppm,channel_tau_ui=.1):
+    def __init__(self,bits,rate,phase_ui,residual_ppm,channel_tau_ui=.1,*,
+                 holdover_ui=64,holdover_residual_ppm=50.,frequency_correction_limit_ppm=7000.,
+                 holdover_frequency_slew_ppm_s=330e6,
+                 phase_gain=.15,frequency_gain=.0002,frequency_slope_gain=0.,detector_noise_rms_s=5e-12,detector_model="timestamp_fixture",detector_phase_bins=24,detector_phase_span_ui=.375,large_error_phase_gain=0.,phase_error_threshold_ui=.03125,detector_window_ui=0.,gap_frequency_boost=1.,gap_frequency_boost_after_ui=64,detector_wide_window_ui=0.,detector_widen_after_ui=64,
+                 frequency_window_ui=0,frequency_average_gain=1.,frequency_fit="interval",frequency_fit_hop_ui=0,periodic_clock_compute_delay_s=None,periodic_observation_link=None,period_control_lsb_ppm=0.,phase_control_steps=0,edge_time_bound_s=None,aperture_motion_bound_s=None):
+        if (not math.isfinite(rate) or rate<=0 or
+                not math.isfinite(holdover_frequency_slew_ppm_s) or holdover_frequency_slew_ppm_s<0):
+            raise ValueError('Positive rate and nonnegative finite holdover frequency slew required')
+        if not math.isfinite(frequency_slope_gain) or frequency_slope_gain<0 or (frequency_slope_gain and frequency_window_ui):
+            raise ValueError('Slope integrator requires nonnegative gain and the integral frequency loop')
+        if detector_model not in ('timestamp_fixture','early_late','phase_bank'):
+            raise ValueError('Unknown CDR detector model')
+        if detector_model=='early_late' and (frequency_window_ui or edge_time_bound_s is not None):
+            raise ValueError('Early/late decisions do not provide timestamp estimates')
+        if type(detector_phase_bins) is not int or not 2<=detector_phase_bins<=128 or not math.isfinite(detector_phase_span_ui) or not 0<detector_phase_span_ui<.5:
+            raise ValueError('Phase bank requires2..128bins and span below half UI')
+        if not math.isfinite(large_error_phase_gain) or not 0<=large_error_phase_gain<=1 or (large_error_phase_gain and (detector_model!='phase_bank' or large_error_phase_gain<phase_gain)) or not math.isfinite(phase_error_threshold_ui) or not 0<phase_error_threshold_ui<.5:
+            raise ValueError('Large-error phase gain requires a phase bank, ordered gains and a finite threshold')
+        self.large_error_phase_gain=large_error_phase_gain
+        self.phase_error_threshold_ui=phase_error_threshold_ui
+        self.detector_phase_bins=detector_phase_bins
+        self.detector_phase_span_ui=detector_phase_span_ui
+        self.detector_model=detector_model
+        if not math.isfinite(detector_window_ui) or not 0<=detector_window_ui<.25 or (detector_window_ui and detector_model!='early_late'):
+            raise ValueError('Phase window requires early/late detector and width below quarter UI')
+        self.detector_window_ui=detector_window_ui
+        if not math.isfinite(gap_frequency_boost) or not 1<=gap_frequency_boost<=16 or type(gap_frequency_boost_after_ui) is not int or gap_frequency_boost_after_ui<1:
+            raise ValueError('Finite frequency boost1..16 and positive integer gap threshold required')
+        if gap_frequency_boost!=1 and detector_model!='early_late':
+            raise ValueError('Gap frequency boost requires explicit early/late controller')
+        self.gap_frequency_boost=gap_frequency_boost
+        self.gap_frequency_boost_after_ui=gap_frequency_boost_after_ui
+        if not math.isfinite(detector_wide_window_ui) or detector_wide_window_ui<0 or detector_wide_window_ui>=.25 or (detector_wide_window_ui and not 0<detector_window_ui<detector_wide_window_ui) or type(detector_widen_after_ui) is not int or detector_widen_after_ui<1:
+            raise ValueError('Wide phase window requires ordered widths below quarter UI and a positive gap threshold')
+        self.detector_wide_window_ui=detector_wide_window_ui
+        self.detector_widen_after_ui=detector_widen_after_ui
+        self.detector_window_wide=False
+        self.detector_wide_last_sign=None
+        self.frequency_slope_gain=frequency_slope_gain
+        self.frequency_slope=0.
+        self.frequency_slope_limit=2*holdover_frequency_slew_ppm_s*1e-6/rate
+        # Controller range includes estimation transients; incoming-source slew
+        # stays unchanged. Holdover charges actual predictor slew separately.
+        self.holdover_frequency_slew_ppm_s=holdover_frequency_slew_ppm_s
+        self.holdover_slew_ui_per_gap_squared=.5*holdover_frequency_slew_ppm_s*1e-6/rate
         if not math.isfinite(channel_tau_ui) or channel_tau_ui<=0:raise ValueError('Positive channel time constant required')
+        if (type(holdover_ui) is not int or not 1<=holdover_ui<=65535 or
+                not math.isfinite(holdover_residual_ppm) or holdover_residual_ppm<0 or
+                .1+.0625+holdover_ui*holdover_residual_ppm*1e-6+
+                self.holdover_slew_ui_per_gap_squared*holdover_ui**2>=.25):
+            raise ValueError('Holdover counter must fit declared phase-error budget')
+        if not math.isfinite(frequency_correction_limit_ppm) or frequency_correction_limit_ppm<=0:
+            raise ValueError('Positive finite CDR correction range required')
+        if (not math.isfinite(phase_gain) or not 0<phase_gain<=1 or
+                not math.isfinite(frequency_gain) or not 0<frequency_gain<=1 or
+                not math.isfinite(detector_noise_rms_s) or detector_noise_rms_s<0):
+            raise ValueError('Finite positive loop gains <=1 and nonnegative detector noise required')
+        self.phase_gain=phase_gain;self.frequency_gain=frequency_gain
+        if (type(frequency_window_ui) is not int or not 0<=frequency_window_ui<=4096 or
+                not math.isfinite(frequency_average_gain) or not 0<frequency_average_gain<=1):
+            raise ValueError('Frequency window 0..4096 and averaging gain (0,1] required')
+        if frequency_fit not in ('interval','least_squares','quadratic'):raise ValueError('Unknown frequency estimator')
+        if edge_time_bound_s is not None and (
+                not math.isfinite(edge_time_bound_s) or edge_time_bound_s<0 or
+                frequency_fit!='least_squares' or not frequency_window_ui or frequency_average_gain!=1.):
+            raise ValueError('Bounded edge timing requires a finite bound and unaveraged windowed least-squares fit')
+        if aperture_motion_bound_s is not None and not callable(aperture_motion_bound_s):
+            raise ValueError('Aperture movement bound must be callable')
+        self.aperture_motion_bound_s=aperture_motion_bound_s
+        self.phase_anchor_time_ui=None;self.last_phase_correction_ui=0.
+        self.edge_time_bound_s=edge_time_bound_s
+        self.edge_phase_uncertainty_ui=max(.0625,0. if edge_time_bound_s is None else edge_time_bound_s*rate)
+        self.observed_frequency_bound_ppm=math.inf
+        self.frequency_bound_at_ui=None
+        if type(frequency_fit_hop_ui) is not int or frequency_fit_hop_ui<0 or (frequency_fit_hop_ui and (frequency_fit!='quadratic' or not frequency_window_ui or frequency_fit_hop_ui>frequency_window_ui or frequency_window_ui%frequency_fit_hop_ui)):
+            raise ValueError('Quadratic fit hop must divide its positive window')
+        if not math.isfinite(period_control_lsb_ppm) or period_control_lsb_ppm<0:
+            raise ValueError('Finite nonnegative period control resolution required')
+        self.period_control_lsb=period_control_lsb_ppm*1e-6
+        if type(phase_control_steps) is not int or phase_control_steps<0:
+            raise ValueError('Nonnegative integer phase control steps required')
+        self.phase_control_steps=phase_control_steps;self.phase_control_residue=0.
+        self.periodic_clock_controller=None
+        if periodic_clock_compute_delay_s is not None:
+            if detector_model!='phase_bank':raise ValueError('Periodic learner requires observed phase bins')
+            from timing_services import PeriodicClockController
+            self.periodic_clock_controller=PeriodicClockController(rate,periodic_clock_compute_delay_s,periodic_observation_link)
+        self.frequency_fit_hop_ui=frequency_fit_hop_ui
+        self.quadratic_banks=()
+        self.next_quadratic_bank_ui=0
+        self.frequency_fit=frequency_fit
+        self.frequency_sums=(1,0.,0.,0.,0.)
+        self.quadratic_frequency_sums=(1,0.,0.,0.,0.,0.,0.,0.)
+        self.frequency_window_ui=frequency_window_ui
+        self.frequency_average_gain=frequency_average_gain
+        self.frequency_anchor_ui=None;self.frequency_previous_edge_ui=None;self.frequency_elapsed_ui=0
+        self.holdover_ui=holdover_ui
+        self.holdover_residual_ppm=holdover_residual_ppm
+        self.frequency_correction_limit=frequency_correction_limit_ppm*1e-6
         self.tau_ui=channel_tau_ui
         self.bits=list(bits);self.rate=rate;self.phase=phase_ui
         # External NRZ channel state at each transmitted bit boundary.
@@ -2321,6 +2896,7 @@ class RecoveredWordSource:
         for bit in self.bits:
             target=.2 if bit else -.2
             self.boundaries.append(target+(self.boundaries[-1]-target)*decay)
+        self.detector_noise_rms_s=detector_noise_rms_s
         self.detected_edges=0
         self.edge_errors=deque(maxlen=64)
         self.timing_qualified=False;self.first_qualified_bit=None
@@ -2329,7 +2905,7 @@ class RecoveredWordSource:
         self.bit_index=0;self.gap=0;self.word_index=0
         self.pending=None;self.words=[];self.rng=np.random.default_rng(421)
         self.predicted=None
-        self.bit_observer=None;self.last_timestamp=None
+        self.bit_observer=None;self.timing_observer=None;self.last_timestamp=None
         self.detector_time_ui=None;self.detector_voltage=None
         self.latest_crossing_ui=None
 
@@ -2351,6 +2927,42 @@ class RecoveredWordSource:
         target=.2 if self.bits[index] else -.2
         return -self.tau_ui*math.log(-target/(before-target))
 
+    def update_staggered_phase_fit(self,measured_edge,sample_time):
+        """Overlapping fixed-moment banks, committed only with local observations."""
+        empty=(1,0.,0.,0.,0.,0.,0.,0.)
+        if self.frequency_anchor_ui is None:
+            self.frequency_anchor_ui=measured_edge;self.frequency_elapsed_ui=0
+            self.quadratic_banks=((0,measured_edge,empty),)
+            self.next_quadratic_bank_ui=self.frequency_fit_hop_ui
+        else:
+            self.frequency_elapsed_ui+=max(1,round((measured_edge-self.frequency_previous_edge_ui)/(1+self.frequency+self.correction)))
+            now=self.frequency_elapsed_ui;pending=[];ready=[]
+            for start,anchor,moments in self.quadratic_banks:
+                age=now-start;u=age/self.frequency_window_ui;y=measured_edge-anchor-age
+                terms=(1,u,u*u,u**3,u**4,y,u*y,u*u*y)
+                moments=tuple(a+b for a,b in zip(moments,terms))
+                if age>=self.frequency_window_ui:
+                    # Expire sparse windows too: missing observations must not
+                    # turn a fixed estimator into an unbounded history buffer.
+                    if moments[0]>=8:ready.append((start,age,moments))
+                else:pending.append((start,anchor,moments))
+            if ready:
+                _,age,moments=max(ready,key=lambda row:row[0])
+                endpoint,slew=quadratic_phase_endpoint(moments,age,self.frequency_window_ui)
+                self.frequency_slope=float(np.clip(slew,-self.frequency_slope_limit,self.frequency_slope_limit))
+                endpoint+=self.frequency_slope*(sample_time-measured_edge)/(1+self.frequency+self.correction)
+                estimate=endpoint-self.frequency
+                self.correction+=self.frequency_average_gain*(estimate-self.correction)
+            if now>=self.next_quadratic_bank_ui:
+                pending.append((now,measured_edge,empty))
+                self.next_quadratic_bank_ui=now+self.frequency_fit_hop_ui
+            self.quadratic_banks=tuple(pending)
+        self.frequency_previous_edge_ui=measured_edge
+
+    def phase_bank_voltages(self,times):
+        """Batch evaluation is an optional simulator optimization, not feedback."""
+        return np.array([self.voltage(float(t)) for t in times])
+
     def locate_crossing(self,left,right,left_voltage,right_voltage):
         """Numerical crossing estimate; physical fixtures may refine this root."""
         return left+(right-left)*(-left_voltage)/(right_voltage-left_voltage)
@@ -2360,19 +2972,36 @@ class RecoveredWordSource:
             raise ValueError('Consume current CDR word before requesting next')
         predicted=copy.copy(self)
         predicted.edge_errors=self.edge_errors.copy()
+        if self.periodic_clock_controller is not None:
+            predicted.periodic_clock_controller=self.periodic_clock_controller.clone()
         predicted.rng=copy.deepcopy(self.rng)
-        observations=[]
+        observations=[];timing_observations=[]
         predicted.bit_observer=lambda bit,qualified:observations.append((bit,qualified))
+        predicted.timing_observer=lambda observation:timing_observations.append(observation)
         timestamp=predicted._forecast_word()
         self.pending=predicted.pending
-        self.predicted=(predicted,observations)
+        self.predicted=(predicted,observations,timing_observations)
         return timestamp
+
+    def commanded_period_offset(self):
+        offset=self.frequency+self.correction
+        return (round(offset/self.period_control_lsb)*self.period_control_lsb
+                if self.period_control_lsb else offset)
 
     def _forecast_word(self):
         word=0
         for j in range(10):
             i=self.bit_index
-            self.phase+=self.frequency+self.correction
+            feedforward=0.;feedforward_slew_bound=0.
+            if self.periodic_clock_controller is not None:
+                activated,predicted_period,feedforward=self.periodic_clock_controller.step(
+                    i,-math.inf if self.detector_time_ui is None else self.detector_time_ui)
+                feedforward_slew_bound=self.periodic_clock_controller.period_slew_bound()
+                if activated:
+                    self.correction=predicted_period-1-self.frequency
+                    self.frequency_slope=0.
+            self.correction=float(np.clip(self.correction+self.frequency_slope+feedforward,-self.frequency_correction_limit,self.frequency_correction_limit))
+            self.phase+=self.commanded_period_offset()
             sample_time=i+.5+self.phase
             previous_time=self.detector_time_ui
             if previous_time is None:
@@ -2380,34 +3009,266 @@ class RecoveredWordSource:
                 self.detector_voltage=self.voltage(previous_time)
             if sample_time<=previous_time:raise ValueError('Nonmonotonic receiver sampling clock')
             self.gap+=1
+            incoming_bound=None
+            if self.aperture_motion_bound_s is not None and self.edge_errors:
+                elapsed=max(0.,sample_time-self.phase_anchor_time_ui)/self.rate
+                movement=self.aperture_motion_bound_s(elapsed)
+                if not math.isfinite(movement) or movement<0:
+                    raise ValueError('Finite nonnegative aperture movement bound required')
+                residual=self.holdover_residual_ppm
+                if self.edge_time_bound_s is not None:
+                    age=math.inf if self.frequency_bound_at_ui is None else max(0.,sample_time-self.frequency_bound_at_ui)/self.rate+self.edge_time_bound_s
+                    residual=max(residual,self.observed_frequency_bound_ppm+self.holdover_frequency_slew_ppm_s*age)
+                incoming_bound=(self.edge_errors[-1]+self.edge_phase_uncertainty_ui+
+                    elapsed*self.rate*residual*1e-6+
+                    .5*self.holdover_frequency_slew_ppm_s*1e-6*self.rate*elapsed**2+
+                    movement*self.rate+self.last_phase_correction_ui+
+                    .5*(abs(self.frequency_slope)+feedforward_slew_bound)*(elapsed*self.rate)**2)
             crossings=[]
-            # Four voltage observations on the receiver's own interval. No
-            # source-bit index or analytic source-boundary crossing is queried.
-            voltage=self.detector_voltage
-            for at in np.linspace(previous_time,sample_time,getattr(self,'voltage_substeps',4)+1)[1:]:
-                current=self.voltage(float(at))
-                if voltage*current<0:
-                    edge=self.locate_crossing(previous_time,float(at),voltage,current)
-                    crossings.append(edge)
-                previous_time=float(at);voltage=current
+            binary_error=0
+            phase_window_observed=False
+            gap_frequency_boost_applied=False
+            detector_window_used_ui=self.detector_window_ui
+            if self.detector_model=='phase_bank':
+                # All local phase slots finish before this DATA decision.
+                nominal_boundary=(previous_time+sample_time)/2
+                slots=nominal_boundary+np.linspace(-self.detector_phase_span_ui,
+                    self.detector_phase_span_ui,self.detector_phase_bins+1)*(sample_time-previous_time)
+                actual=slots+self.rng.normal(0,self.detector_noise_rms_s*self.rate,len(slots))
+                if np.any(actual<=previous_time) or np.any(actual>=sample_time):
+                    raise ValueError('Phase-bank sample outside completed clock interval')
+                decisions=(np.asarray(self.phase_bank_voltages(actual))>0).astype(int)
+                voltage=self.voltage(sample_time);sample=int(voltage>0)
+                bracket=sampled_phase_bracket(int(self.detector_voltage>0),sample,decisions,slots)
+                phase_window_bound=None
+                if bracket is not None:
+                    estimate,half_bin=bracket
+                    crossings=[estimate]
+                    phase_window_observed=True
+                    phase_window_bound=abs(nominal_boundary-estimate)+half_bin
+                    detector_window_used_ui=half_bin
+            elif self.detector_model=='early_late':
+                # Only the preceding DATA bit, a boundary sample and this DATA
+                # bit reach the detector. The channel's roots/source labels
+                # never enter feedback. Boundary timing noise is applied before
+                # its voltage decision, not converted into a precise timestamp.
+                nominal_boundary=(previous_time+sample_time)/2
+                boundary=nominal_boundary+self.rng.normal(0,self.detector_noise_rms_s*self.rate)
+                if not previous_time<boundary<sample_time:
+                    raise ValueError('Detector boundary sample outside current clock interval')
+                previous=int(self.detector_voltage>0)
+                phase_window_bound=None
+                if self.detector_window_ui:
+                    if self.detector_wide_window_ui and self.gap>=self.detector_widen_after_ui:
+                        self.detector_window_wide=True
+                        self.detector_wide_last_sign=None
+                    detector_window_used_ui=self.detector_wide_window_ui if self.detector_window_wide else self.detector_window_ui
+                    # Added boundary-window observations are separate physical
+                    # sampler outputs. Their noise is not averaged into an
+                    # invented precise timestamp.
+                    width=detector_window_used_ui*(sample_time-previous_time)
+                    before=nominal_boundary-width+self.rng.normal(0,self.detector_noise_rms_s*self.rate)
+                    after=nominal_boundary+width+self.rng.normal(0,self.detector_noise_rms_s*self.rate)
+                    if not previous_time<before<after<sample_time:
+                        raise ValueError('Phase-window observations outside current clock interval')
+                    window_before=int(self.voltage(before)>0)
+                    window_after=int(self.voltage(after)>0)
+                boundary_bit=int(self.voltage(boundary)>0)
+                voltage=self.voltage(sample_time)
+                sample=int(voltage>0)
+                binary_error=early_late_phase_decision(previous,boundary_bit,sample)
+                if self.detector_window_ui and previous!=sample:
+                    if window_before==previous and window_after==sample:
+                        phase_window_observed=True
+                        phase_window_bound=width
+                    elif incoming_bound is not None:
+                        # A window miss supplies no tighter magnitude bound.
+                        # Preserve the conservative prediction from the previous
+                        # observation instead of replacing it with a half-UI
+                        # failure. Its uncertainty reserve is reapplied below;
+                        # elapsed drift, aperture motion and prior control step
+                        # remain in the retained bound. The frequency bound is
+                        # still an independently checked loop requirement.
+                        phase_window_bound=max(width,incoming_bound-self.edge_phase_uncertainty_ui)
+                    else:
+                        phase_window_bound=.5
+                if binary_error:
+                    crossings=[None]
+                    if self.detector_window_wide:
+                        if self.detector_wide_last_sign is not None and binary_error!=self.detector_wide_last_sign:
+                            self.detector_window_wide=False
+                            self.detector_wide_last_sign=None
+                        else:self.detector_wide_last_sign=binary_error
+            else:
+                # Numerical observations are an explicit timestamp fixture,
+                # not the selected early/late detector implementation.
+                voltage=self.detector_voltage
+                for at in np.linspace(previous_time,sample_time,getattr(self,'voltage_substeps',4)+1)[1:]:
+                    current=self.voltage(float(at))
+                    if voltage*current<0:
+                        edge=self.locate_crossing(previous_time,float(at),voltage,current)
+                        crossings.append(edge)
+                    previous_time=float(at);voltage=current
+                sample=int(voltage>0)
             self.detector_time_ui=sample_time;self.detector_voltage=voltage
-            # This decision precedes correction. All observed transitions are
-            # in its past; loop updates affect only later sampling instants.
-            sample=int(voltage>0)
+            # Updates use only observations completed by this DATA decision and
+            # affect subsequent samples; no current sample is retroactively moved.
             for edge in crossings:
                 self.latest_crossing_ui=edge;self.detected_edges+=1
-                error=(sample_time-.5-edge+self.rng.normal(0,5e-12*self.rate)+.5)%1-.5
-                self.correction=float(np.clip(self.correction-.0002*error/max(1,self.gap),-.002,.002))
-                self.phase-=.15*error;self.gap=0
-                self.edge_errors.append(abs(error))
-            if self.gap>64:self.edge_errors.clear()
-            qualified=(len(self.edge_errors)==64 and max(self.edge_errors)<.1)
-            if self.timing_qualified and not qualified:self.qualification_losses+=1
+                if self.detector_model=='early_late':
+                    error=binary_error
+                elif self.detector_model=='phase_bank':
+                    measured_edge=edge
+                    error=nominal_boundary-measured_edge
+                    if self.periodic_clock_controller is not None:
+                        self.periodic_clock_controller.observe(i,measured_edge,sample_time)
+                else:
+                    measured_edge=edge-self.rng.normal(0,self.detector_noise_rms_s*self.rate)
+                    error=(sample_time-.5-measured_edge+.5)%1-.5
+                if self.frequency_fit_hop_ui:
+                    self.update_staggered_phase_fit(measured_edge,sample_time)
+                elif self.frequency_window_ui:
+                    if self.frequency_anchor_ui is None:
+                        self.frequency_anchor_ui=measured_edge;self.frequency_elapsed_ui=0
+                    else:
+                        # Infer elapsed cycles only from observed edge intervals
+                        # and the receiver period; source labels are unavailable.
+                        cycles=max(1,round((measured_edge-self.frequency_previous_edge_ui)/
+                                           (1+self.frequency+self.correction)))
+                        self.frequency_elapsed_ui+=cycles
+                        x=self.frequency_elapsed_ui
+                        y=measured_edge-self.frequency_anchor_ui-x
+                        n,sx,sy,sxx,sxy=self.frequency_sums
+                        self.frequency_sums=(n+1,sx+x,sy+y,sxx+x*x,sxy+x*y)
+                        if self.frequency_fit=='quadratic':
+                            u=x/self.frequency_window_ui
+                            terms=(1,u,u*u,u**3,u**4,y,u*y,u*u*y)
+                            self.quadratic_frequency_sums=tuple(a+b for a,b in zip(self.quadratic_frequency_sums,terms))
+                        enough=(self.frequency_fit!='quadratic' or self.quadratic_frequency_sums[0]>=8)
+                        if self.frequency_elapsed_ui>=self.frequency_window_ui and enough:
+                            if self.frequency_fit=='quadratic':
+                                endpoint,slew=quadratic_phase_endpoint(self.quadratic_frequency_sums,x,self.frequency_window_ui)
+                                self.frequency_slope=float(np.clip(slew,-self.frequency_slope_limit,self.frequency_slope_limit))
+                                age=(sample_time-measured_edge)/(1+self.frequency+self.correction)
+                                estimate=endpoint+self.frequency_slope*age-self.frequency
+                            elif self.frequency_fit=='least_squares':
+                                n,sx,sy,sxx,sxy=self.frequency_sums
+                                estimate=(n*sxy-sx*sy)/(n*sxx-sx*sx)-self.frequency
+                            else:
+                                estimate=(measured_edge-self.frequency_anchor_ui)/self.frequency_elapsed_ui-1-self.frequency
+                            if self.edge_time_bound_s is not None:
+                                # For LS slope, sum|weights| <= sqrt(n/Sxx).
+                                # Bounded timestamp errors plus bounded frequency
+                                # slew over the complete window enclose endpoint
+                                # frequency. This assumes correct inferred cycles.
+                                centered=sxx-sx*sx/n
+                                self.observed_frequency_bound_ppm=(
+                                    self.edge_time_bound_s*self.rate*math.sqrt(n/centered)*1e6+
+                                    self.holdover_frequency_slew_ppm_s*self.frequency_elapsed_ui/self.rate+
+                                    abs(estimate-float(np.clip(estimate,-self.frequency_correction_limit,
+                                        self.frequency_correction_limit)))*1e6)
+                                self.frequency_bound_at_ui=measured_edge
+                            self.frequency_sums=(1,0.,0.,0.,0.)
+                            self.quadratic_frequency_sums=(1,0.,0.,0.,0.,0.,0.,0.)
+                            self.correction+=self.frequency_average_gain*(estimate-self.correction)
+                            self.frequency_anchor_ui=measured_edge;self.frequency_elapsed_ui=0
+                    self.frequency_previous_edge_ui=measured_edge
+                else:
+                    if self.periodic_clock_controller is not None and self.periodic_clock_controller.state=='active':
+                        # The validated periodic predictor owns slew. A second
+                        # error-integrating slope estimate accumulates detector
+                        # noise and extrapolates it through transition gaps.
+                        self.frequency_slope=0.
+                    else:
+                        self.frequency_slope=float(np.clip(self.frequency_slope-self.frequency_slope_gain*error,
+                            -self.frequency_slope_limit,self.frequency_slope_limit))
+                    # A binary detector event requests a fixed signed update.
+                    # Do not attenuate it by the preceding no-transition run;
+                    # that would be a separate, implemented gain scheduler.
+                    gap_frequency_boost_applied=self.detector_model=='early_late' and self.gap>=self.gap_frequency_boost_after_ui and self.gap_frequency_boost>1
+                    gain=self.frequency_gain*(self.gap_frequency_boost if gap_frequency_boost_applied else 1.)
+                    self.correction-=gain*error/(1 if self.frequency_slope_gain or self.detector_model in ('early_late','phase_bank') else max(1,self.gap))
+                self.correction=float(np.clip(self.correction,-self.frequency_correction_limit,self.frequency_correction_limit))
+                phase_gain=(self.large_error_phase_gain if self.large_error_phase_gain and abs(error)>self.phase_error_threshold_ui else self.phase_gain)
+                phase_correction=phase_gain*error
+                if self.phase_control_steps:
+                    requested=phase_correction+self.phase_control_residue
+                    phase_correction=round(requested*self.phase_control_steps)/self.phase_control_steps
+                    self.phase_control_residue=requested-phase_correction
+                self.last_phase_correction_ui=abs(phase_correction)
+                self.phase_anchor_time_ui=sample_time
+                self.phase-=phase_correction;self.gap=0
+                self.edge_errors.append(phase_window_bound if self.detector_model=='phase_bank' or (self.detector_model=='early_late' and self.detector_window_ui) else abs(error))
+            if self.gap>self.holdover_ui:
+                self.edge_errors.clear()
+                self.frequency_anchor_ui=None;self.frequency_previous_edge_ui=None;self.frequency_elapsed_ui=0
+                self.quadratic_banks=();self.next_quadratic_bank_ui=0
+                self.frequency_sums=(1,0.,0.,0.,0.)
+                self.quadratic_frequency_sums=(1,0.,0.,0.,0.,0.,0.,0.)
+            # Acquisition requires a sustained low-error history. Once acquired,
+            # validity follows the remaining eye budget, not the acquisition
+            # window: one marginal edge must not poison 64 later transitions.
+            # Residual frequency is a declared bound, independently checked by
+            # the physical fixture; it is not inferred from source-bit labels.
+            residual_bound=self.holdover_residual_ppm
+            if self.edge_time_bound_s is not None:
+                age=math.inf if self.frequency_bound_at_ui is None else max(0.,sample_time-self.frequency_bound_at_ui)/self.rate+self.edge_time_bound_s
+                residual_bound=max(residual_bound,self.observed_frequency_bound_ppm+
+                    self.holdover_frequency_slew_ppm_s*age)
+            residual_bound+=.5*self.period_control_lsb*1e6
+            holdover_bound=(self.edge_errors[-1]+self.edge_phase_uncertainty_ui+
+                self.gap*residual_bound*1e-6+
+                (self.holdover_slew_ui_per_gap_squared+.5*(abs(self.frequency_slope)+feedforward_slew_bound))*self.gap**2) if self.edge_errors and math.isfinite(residual_bound) else math.inf
+            if incoming_bound is not None and not phase_window_observed:
+                holdover_bound=max(holdover_bound,incoming_bound)
+            # A valid bracket was sampled before this DATA decision and supplies
+            # a new bound for this sample. Intersecting observations with prior
+            # uncertainty must not preserve a looser forecast as a false failure.
+            # Earlier invalid samples remain invalid: they already cleared the
+            # acquisition history. The separate recovered-edge policy still
+            # checks holdover expiry before accepting a returning transition.
+            if self.detector_model=='early_late' and not self.detector_window_ui:
+                # A direction does not establish the phase-error magnitude.
+                # A detector-observable readiness/uncertainty estimator remains
+                # necessary; never qualify using the fixture's true edge error.
+                holdover_bound=math.inf
+            qualified=((holdover_bound<.25 and self.gap<=self.holdover_ui)
+                if self.timing_qualified else
+                (len(self.edge_errors)==64 and max(self.edge_errors)<.1 and
+                 (self.edge_time_bound_s is None or math.isfinite(residual_bound)) and holdover_bound<.25))
+            if self.periodic_clock_controller is not None:
+                qualified=qualified and self.periodic_clock_controller.state=='active' and self.periodic_clock_controller.local_validated
+            if self.timing_qualified and not qualified:
+                self.qualification_losses+=1
+                self.edge_errors.clear()
             self.timing_qualified=qualified
             if qualified and self.first_qualified_bit is None:self.first_qualified_bit=i
             word|=sample<<j
             if self.bit_observer is not None:self.bit_observer(sample,qualified)
             timestamp=sample_time/self.rate
+            if self.timing_observer is not None:
+                self.timing_observer(dict(bit_index=i,time_s=timestamp,
+                    periodic_clock_state=(self.periodic_clock_controller.state if self.periodic_clock_controller is not None else None),
+                    observed_transition_ui=(measured_edge if crossings and self.detector_model=='phase_bank' else None),
+                    transition=bool(crossings),qualified=qualified,gap_ui=self.gap,
+                    detector_model=self.detector_model,phase_magnitude_observed=self.detector_model in ('timestamp_fixture','phase_bank'),
+                    phase_bound_observed=self.detector_model in ('timestamp_fixture','phase_bank') or bool(self.detector_window_ui),
+                    detector_window_ui=self.detector_window_ui,detector_window_used_ui=detector_window_used_ui,phase_window_observed=phase_window_observed,
+                    gap_frequency_boost_applied=gap_frequency_boost_applied,
+                    next_period_ui=1.+self.commanded_period_offset(),
+                    period_control_lsb_ppm=self.period_control_lsb*1e6,
+                    frequency_slope_ui_per_bit=self.frequency_slope,
+                    feedforward_slew_bound_ui_per_bit=feedforward_slew_bound,
+                    detector_history_peak_ui=max(self.edge_errors,default=None) if self.detector_model in ('timestamp_fixture','phase_bank') or self.detector_window_ui else None,
+                    holdover_phase_bound_ui=holdover_bound,
+                    declared_holdover_residual_ppm=self.holdover_residual_ppm,
+                    effective_holdover_residual_ppm=residual_bound,
+                    instantaneous_residual_bound_ppm=residual_bound+
+                        self.holdover_frequency_slew_ppm_s*(max(0.,sample_time-self.phase_anchor_time_ui)/self.rate if self.phase_anchor_time_ui is not None else self.gap*1.01/self.rate)+
+                        (abs(self.frequency_slope)+feedforward_slew_bound)*self.gap*1e6,
+                    edge_time_bound_s=self.edge_time_bound_s,
+                    edge_phase_uncertainty_ui=self.edge_phase_uncertainty_ui,
+                    declared_holdover_frequency_slew_ppm_s=self.holdover_frequency_slew_ppm_s))
             self.bit_index+=1
         self.pending=word;self.last_timestamp=timestamp
         return timestamp
@@ -2416,14 +3277,41 @@ class RecoveredWordSource:
         """Commit one due word; prediction alone cannot update lock/alignment."""
         if index!=self.word_index or self.pending is None:raise ValueError('No current CDR word')
         if self.predicted is not None:
-            predicted,observations=self.predicted
-            for name in ('phase','correction','gap','detected_edges','edge_errors',
+            predicted,observations,timing_observations=self.predicted
+            for name in ('phase','phase_control_residue','correction','frequency_slope','periodic_clock_controller','gap','detected_edges','edge_errors',
+                         'detector_window_wide','detector_wide_last_sign',
                          'timing_qualified','first_qualified_bit','qualification_losses',
-                         'bit_index','rng','last_timestamp','detector_time_ui','detector_voltage','latest_crossing_ui'):
+                         'bit_index','rng','last_timestamp','detector_time_ui','detector_voltage','latest_crossing_ui',
+                         'frequency_anchor_ui','frequency_previous_edge_ui','frequency_elapsed_ui','frequency_sums','quadratic_frequency_sums','quadratic_banks','next_quadratic_bank_ui',
+                         'observed_frequency_bound_ppm','frequency_bound_at_ui','phase_anchor_time_ui','last_phase_correction_ui'):
                 setattr(self,name,getattr(predicted,name))
             self.predicted=None
             if self.bit_observer is not None:
                 for bit,qualified in observations:self.bit_observer(bit,qualified)
+            if self.timing_observer is not None:
+                for observation in timing_observations:self.timing_observer(observation)
+
+    def discard_through(self,time_s):
+        """Advance the live receiver through due words without delivering payload.
+
+        Time is relative to the unchanged peer waveform origin. Leave the first
+        future prediction pending; do not reset CDR phase, noise or qualification.
+        """
+        if not math.isfinite(time_s) or time_s<0:
+            raise ValueError('Finite nonnegative peer time required')
+        if time_s>len(self.bits)/self.rate:
+            raise ValueError('Peer stimulus must cover the entire discard interval')
+        if self.last_timestamp is not None and time_s<self.last_timestamp:
+            raise ValueError('Discard cannot reverse committed receiver time')
+        count=0
+        while True:
+            due=(self.forecast(self.word_index) if self.pending is None else
+                 self.predicted[0].last_timestamp if self.predicted is not None else self.last_timestamp)
+            if due>time_s:break
+            self.consume(self.word_index)
+            self.words.pop()  # Diagnostic payload is discarded, not FIFO storage.
+            count+=1
+        return count
 
     def consume(self,index):
         if index!=self.word_index or self.pending is None:raise ValueError('No current CDR word')
@@ -3921,7 +4809,10 @@ def connected_lo_payload(transport_allocation='exclusive',case_labels=None):
         # Data-dependent rail timing changes with noise placement. Require an
         # observed clock fault before completion, not a historical sample index.
         assert failed['transport']['dac_samples']<failed['source_samples']
-        assert failed['transport']['lo_clock']['last_lock_loss']['time_s']==failed['transport']['observed_until_s']
+        # The same event is represented once as absolute time and once as
+        # origin + elapsed time; tolerate floating-point cancellation only.
+        assert math.isclose(failed['transport']['lo_clock']['last_lock_loss']['time_s'],
+            failed['transport']['observed_until_s'],rel_tol=0.,abs_tol=1e-18)
         assert by_name['rail_sensitivity_0.0']['conditional_quality_pass']
         assert by_name['complete_host_0.0']['conditional_quality_pass'] and by_name['complete_host_3e-13']['conditional_quality_pass']
         assert by_name['complete_host_3e-12']['transport']['flow']['fault']=='lo_unqualified'
@@ -4964,10 +5855,13 @@ def declared_rf_noise(amplitude,bits,a=None,*,frontend_input_referred=True):
 
 
 def rf_demonstration_rail(bias_current_a):
-    """Shared RF demonstration load: actual mapped FIFO clock pins plus bias.
+    """Independent RF demonstration fixture using a historical FIFO mapping.
 
-    Mapping capacitance is evidence; coupling, package and bias remain declared
-    assumptions. Internal cell/clock-tree/data power is not inferred from pins.
+    This is not a shared-design factory: 5 nH package inductance, coupling and
+    transition charge are fixed diagnostic assumptions; bias is a caller input.
+    Saved mapping capacitance belongs to that FIFO experiment, not necessarily
+    the current chip storage. Internal cell/tree/data power is not inferred.
+    Intended-chip campaigns must use configured_environment and owner budgets.
     """
     if not math.isfinite(bias_current_a) or bias_current_a<0:
         raise ValueError('Finite nonnegative RF bias required')
@@ -6329,10 +7223,11 @@ class TimedRecordReturn:
     Idle host frames advance host sequence independently of source sequence.
     """
     def __init__(self,stream,word_hz=250e6,source_phase=0.,coalesce=False):
-        from bit_event_codec import StreamingRecordReceiver,encode_records
+        from bit_event_codec import encode_records
+        from stream_codec import Receiver
         if not math.isfinite(word_hz) or word_hz<=0 or not math.isfinite(source_phase) or not 0<=source_phase<1:
             raise ValueError('Positive host rate and source phase in [0,1) required')
-        self.stream=stream;self.fifo=BlockFIFO();self.receiver=StreamingRecordReceiver()
+        self.stream=stream;self.fifo=BlockFIFO();self.receiver=Receiver(1,frame_words=8,owner="wire",raw_records=True)
         self.word_period=1/word_hz;self.source_period=1/40e6
         self.next_source=source_phase*self.source_period;self.word_index=0
         self.source_sequence=0;self.read_sequence=0;self.host_sequence=1
@@ -6375,7 +7270,7 @@ class TimedRecordReturn:
                 self.prepared=encode_records([(*r,now) for r in records],self.host_sequence)
                 self.host_sequence=(self.host_sequence+1)%64
             if host:
-                for record in self.receiver.feed(self.frame[self.word_index%8]):
+                for record in self.receiver.feed_records(self.frame[self.word_index%8]):
                     self.observed.append((now,record))
                 self.word_index+=1
             if source:self.next_source+=self.source_period
@@ -6387,11 +7282,11 @@ class TimedRecordPlayback:
     """Eight-word collection, two commit beats, block CDC, raw serializer/pad."""
     def __init__(self,pad,word_hz=250e6,read_phase=0.,playback_capacity_bits=2048):
         from bit_event_stream import RawBurstPlayback
-        from bit_event_codec import StreamingRecordReceiver
+        from stream_codec import Receiver
         if not math.isfinite(word_hz) or word_hz<=0 or not math.isfinite(read_phase) or not 0<=read_phase<1:
             raise ValueError('Positive host rate and read phase in [0,1) required')
         self.pad=pad;self.word_period=1/word_hz;self.frame_period=8*self.word_period
-        self.receiver=StreamingRecordReceiver();self.player=RawBurstPlayback(capacity_bits=playback_capacity_bits)
+        self.receiver=Receiver(1,frame_words=8,owner="wire",raw_records=True);self.player=RawBurstPlayback(capacity_bits=playback_capacity_bits)
         self.playback_peak_bits=0
         from collections import deque
         self.fifo=BlockFIFO();self.pending=deque()
@@ -6408,7 +7303,7 @@ class TimedRecordPlayback:
         self.advance(time)
         if self.fault:raise ValueError(self.fault)
         try:
-            self.frame_records.extend(self.receiver.feed(word))
+            self.frame_records.extend(self.receiver.feed_records(word))
             self.input_words+=1
             if self.input_words%8==0:
                 if self.frame_records:
@@ -6461,8 +7356,9 @@ class TimedRecordPlayback:
         self.time=time
 
 
-def usb_observed_response(*,request_lengths=(23,61),split_time=False,usb_data_packet=False,packet_fault=None,retry_after_s=None,h2d_clock_ppm=0.,host_pacing=False,coalesce_return=False,clock_phases=((0.,0.),(.37,.37)),fpga_processing_s=40e-9,command_sync_cycles=0,fpga_ingress=None,playback_capacity_bits=2048,reference_pacing=False):
+def usb_observed_response(*,design=None,request_lengths=(23,61),split_time=False,usb_data_packet=False,packet_fault=None,retry_after_s=None,h2d_clock_ppm=0.,host_pacing=False,coalesce_return=False,clock_phases=((0.,0.),(.37,.37)),fpga_processing_s=40e-9,command_sync_cycles=0,fpga_ingress=None,playback_capacity_bits=2048,reference_pacing=False,peer_termination_ohm=45.):
     """Pad burst to FPGA-derived reply through both candidate host directions."""
+    design=load_design() if design is None else design
     from bit_event_stream import BitEventStream,SampledActivityBoundary
     from bit_event_codec import encode_records,ObservedClockPacer
     if not request_lengths or any(type(n) is not int or n<1 for n in request_lengths):
@@ -6518,7 +7414,10 @@ def usb_observed_response(*,request_lengths=(23,61),split_time=False,usb_data_pa
       for role in ('host','device'):
        for phase,read_phase in clock_phases:
         for request_length in request_lengths:
-         pad=SharedWiredPad();pad.configure('usb',role,'hs',attached=True)
+         pad=SharedWiredPad.from_architecture(design.architecture);pad.configure('usb',role,'hs',attached=True)
+         pad.set_peer_passives(termination_ohm=(peer_termination_ohm,peer_termination_ohm))
+         initial_controls=pad.control_context()
+         active_sample_magnitudes=[]
          source=BitEventStream(16);observer=SampledActivityBoundary(source)
          returned=TimedRecordReturn(source,word_hz=hz,source_phase=phase,coalesce=coalesce_return)
          h2d_hz=hz*(1+h2d_clock_ppm*1e-6)
@@ -6635,6 +7534,7 @@ def usb_observed_response(*,request_lengths=(23,61),split_time=False,usb_data_pa
                  elif kind=='release':pad.drive()
                  else:
                      v=pad.observe();was_active=observer.in_burst
+                     if not v['squelch']:active_sample_magnitudes.append(abs(v['differential_v']))
                      observer.observe(not v['squelch'],int(v['j']),now)
                      if was_active and not observer.in_burst:detected=now
              if abs(now-host_time)<1e-18:
@@ -6661,7 +7561,8 @@ def usb_observed_response(*,request_lengths=(23,61),split_time=False,usb_data_pa
              if playback.fault:break
              if playback.player.completed and now>playback.observed[-1][0]+3*ui:break
          if playback.fault:
-             rows.append(dict(host_word_hz=hz,h2d_word_hz=h2d_hz,role=role,clock_phase=phase,playback_clock_phase=read_phase,request_bits=request_length,
+             rows.append(dict(pad_construction=pad.construction_context(),
+                 pad_initial_controls=copy.deepcopy(initial_controls),pad_final_controls=pad.control_context(),host_word_hz=hz,h2d_word_hz=h2d_hz,role=role,clock_phase=phase,playback_clock_phase=read_phase,request_bits=request_length,
                  delivered=False,fault=playback.fault,pad_released=pad.local=='Z'))
              assert pad.local=='Z'
              continue
@@ -6669,7 +7570,8 @@ def usb_observed_response(*,request_lengths=(23,61),split_time=False,usb_data_pa
              assert now>release+400e-9 and now>packet_rejection['decision_at_s']
              assert not published and not response_records and playback.first_drive is None
              assert not playback.writes and not playback.player.emitted and pad.local=='Z'
-             rows.append(dict(host_word_hz=hz,h2d_word_hz=h2d_hz,role=role,
+             rows.append(dict(pad_construction=pad.construction_context(),
+                 pad_initial_controls=copy.deepcopy(initial_controls),pad_final_controls=pad.control_context(),host_word_hz=hz,h2d_word_hz=h2d_hz,role=role,
                  clock_phase=phase,playback_clock_phase=read_phase,request_bits=request_length,
                  delivered=False,fault=None,packet_rejection=packet_rejection,
                  no_response=True,pad_released=True,observed_until_s=now,
@@ -6686,7 +7588,8 @@ def usb_observed_response(*,request_lengths=(23,61),split_time=False,usb_data_pa
              assert usb_decode([value for _,value in playback.observed])==response_payload
          assert pad.observe()['squelch'] and playback.writes==playback.reads
          latency=playback.first_drive-release
-         rows.append(dict(host_word_hz=hz,h2d_word_hz=h2d_hz,role=role,clock_phase=phase,playback_clock_phase=read_phase,request_bits=request_length,delivered=True,fault=None,
+         rows.append(dict(pad_construction=pad.construction_context(),
+                 pad_initial_controls=copy.deepcopy(initial_controls),pad_final_controls=pad.control_context(),host_word_hz=hz,h2d_word_hz=h2d_hz,role=role,clock_phase=phase,playback_clock_phase=read_phase,request_bits=request_length,delivered=True,fault=None,
              retry_state=retry_state,packet_rejections=rejections,observed_boundary_s=detected,host_notice_s=host_notice,fpga_ready_s=fpga_ready,command_ready_s=decision,
              fpga_ingress=dict(configuration=fpga_ingress,processed_bits=ingress_bits,peak_records=ingress_peak_records,peak_pending_work_s=ingress_peak_work_s,tail_work_s=max(0.,ingress_done-host_notice)),
              response_drive_s=playback.first_drive,response_latency_s=latency,
@@ -6695,11 +7598,15 @@ def usb_observed_response(*,request_lengths=(23,61),split_time=False,usb_data_pa
                  command_crossing=decision-fpga_ready,
                  response_transport_and_launch=playback.first_drive-decision),
              minimum_gap_s=8/480e6,budget_s=400e-9,meets_budget=8/480e6<=latency<=400e-9,
+             peer_termination_ohm=peer_termination_ohm,
+             active_rx_differential_interval_v=[min(active_sample_magnitudes),max(active_sample_magnitudes)],
+             within_fixture_swing_window=all(.36<=v<=.44 for v in active_sample_magnitudes),
              ordered_response=True,h2d_blocks=playback.reads,d2h_blocks=returned.reads,
              d2h_high_water=returned.high_water,d2h_stalls=returned.stalls,playback_peak_bits=playback.playback_peak_bits,playback_capacity_bits=playback_capacity_bits))
     malformed=[]
     for corrupt_slot,mask in ((0,1),(7,8)):
-        pad=SharedWiredPad();pad.configure('usb','device','hs',attached=True)
+        pad=SharedWiredPad.from_architecture(design.architecture);pad.configure('usb','device','hs',attached=True)
+        initial_controls=pad.control_context()
         tx=TimedRecordPlayback(pad)
         frame=encode_records([('data',1,10,0.),('data',1,10,0.),
                               ('data',1,3,0.),('event',7,0,0.)],0)
@@ -6710,19 +7617,21 @@ def usb_observed_response(*,request_lengths=(23,61),split_time=False,usb_data_pa
         else:raise AssertionError('Malformed response frame accepted')
         tx.advance(1e-6)
         assert tx.fault and tx.first_drive is None and not tx.writes and pad.local=='Z'
-        malformed.append(dict(corrupt_slot=corrupt_slot,fault=tx.fault,no_pad_drive=True))
-    return dict(cases=rows,reference_pacing=reference_pacing,host_clocked=host_clocked,command_sync_cycles=command_sync_cycles,fpga_ingress=requested_ingress,fpga_processing_s=(None if requested_ingress is not None and "decision_cycles" in requested_ingress else fpga_processing_s),usb_data_packet=usb_data_packet,packet_fault=packet_fault,retry_after_s=retry_after_s,h2d_clock_ppm=h2d_clock_ppm,host_pacing=host_pacing,coalesce_return=coalesce_return,malformed_frames=malformed,packet_scope=('DATA0 with CRC16 to ACK, full 32-bit SYNC and 8-bit unstuffed EOP, external FPGA parser; prior token/endpoint acceptance assumed, no transaction state or hub dribble' if usb_data_packet else 'Generic burst only'),scope=('Reference pacing uses observed D2H rising edges through ideal two-stage 16-bit counter visibility with sticky watchdog/discontinuity faults, assuming a fixed serializer/D2H clock ratio; no physical CDC or bridge-wide stop/flush recovery proof. ' if reference_pacing else '')+'Optional external FPGA token bucket: 60 raw bits at nominal 480 Mb/s scaled by the FPGA host-clock offset, no instantaneous chip-occupancy knowledge; nonzero sustained rate error eventually overflows or underruns finite storage. Clock tracking/service envelope unqualified. Connected finite generic burst request/reply, observed pad activity and both staged record transports. FPGA derives reply only from delivered records. Warmed clocks, prescribed sampling/serializer, declared bounded FPGA work, fixed pad model and selected phases. Packet framing is optional and described separately; no CDR, autonomous clock/load envelope or full lifecycle qualification.')
+        malformed.append(dict(pad_construction=pad.construction_context(),
+            pad_initial_controls=initial_controls,pad_final_controls=pad.control_context(),corrupt_slot=corrupt_slot,fault=tx.fault,no_pad_drive=True))
+    return dict(cases=rows,design_provenance=design.provenance(),model_role="shared_pad_with_legacy_framed_transport_fixture",reference_pacing=reference_pacing,host_clocked=host_clocked,command_sync_cycles=command_sync_cycles,fpga_ingress=requested_ingress,fpga_processing_s=(None if requested_ingress is not None and "decision_cycles" in requested_ingress else fpga_processing_s),usb_data_packet=usb_data_packet,packet_fault=packet_fault,retry_after_s=retry_after_s,h2d_clock_ppm=h2d_clock_ppm,host_pacing=host_pacing,coalesce_return=coalesce_return,malformed_frames=malformed,packet_scope=('DATA0 with CRC16 to ACK, full 32-bit SYNC and 8-bit unstuffed EOP, external FPGA parser; prior token/endpoint acceptance assumed, no transaction state or hub dribble' if usb_data_packet else 'Generic burst only'),scope=('Reference pacing uses observed D2H rising edges through ideal two-stage 16-bit counter visibility with sticky watchdog/discontinuity faults, assuming a fixed serializer/D2H clock ratio; no physical CDC or bridge-wide stop/flush recovery proof. ' if reference_pacing else '')+'Optional external FPGA token bucket: 60 raw bits at nominal 480 Mb/s scaled by the FPGA host-clock offset, no instantaneous chip-occupancy knowledge; nonzero sustained rate error eventually overflows or underruns finite storage. Clock tracking/service envelope unqualified. Connected finite generic burst request/reply, observed pad activity and both staged record transports. FPGA derives reply only from delivered records. Warmed clocks, prescribed sampling/serializer, declared bounded FPGA work, fixed pad model and selected phases. Packet framing is optional and described separately; no CDR, autonomous clock/load envelope or full lifecycle qualification.')
 
 
 
-def usb_ingress_work_screen(*,processing_phases=(0.,),service_widths=(8,16),synchronizer_cycles=0,command_sync_cycles=0):
+def usb_ingress_work_screen(*,design=None,processing_phases=(0.,),service_widths=(8,16),synchronizer_cycles=0,command_sync_cycles=0):
     """Finite external-FPGA workload screen; no physical timing-closure claim."""
+    design=load_design() if design is None else design
     if not processing_phases or not service_widths:raise ValueError('Nonempty workload sweep required')
     rows=[]
     for processing_phase in processing_phases:
       for width in service_widths:
         for ppm in (-100.,100.):
-            result=usb_observed_response(request_lengths=(8,64,512),
+            result=usb_observed_response(design=design,request_lengths=(8,64,512),
                 usb_data_packet=True,host_pacing=True,coalesce_return=True,
                 clock_phases=tuple((a,b) for a in (0.,.37,.99) for b in (0.,.37,.99)),
                 h2d_clock_ppm=ppm,command_sync_cycles=command_sync_cycles,
@@ -6740,17 +7649,18 @@ def usb_ingress_work_screen(*,processing_phases=(0.,),service_widths=(8,16),sync
                 rejected=sum(not row['delivered'] for row in cases),
                 worst_latency_s=max((row['response_latency_s'] for row in cases if row['delivered']),default=None),
                 peak_records=max(row['fpga_ingress']['peak_records'] if row['delivered'] else row['ingress_peak_records'] for row in cases)))
-    return dict(summary=summary,cases=rows,synchronizer_cycles=synchronizer_cycles,
+    return dict(summary=summary,design_provenance=design.provenance(),model_role="shared_pad_with_legacy_framed_transport_fixture",cases=rows,synchronizer_cycles=synchronizer_cycles,
         scope='Finite 1/8/64-byte DATA0-to-ACK workloads, both roles, nine transport phase pairs and +/-100 ppm H2D. Independent processing clock phases, assumed parallel service with eight-record capacity and incremental parser; no FPGA timing closure, transaction acceptance, CDR or all-phase bound.')
 
 
-def raw_record_playback_controls():
+def raw_record_playback_controls(*,design=None):
     """Generic raw-record decoder to physical pad, without response transport."""
+    design=load_design() if design is None else design
     from bit_event_stream import RawBurstPlayback
     from bit_event_codec import encode_records,StreamingRecordReceiver
     rows=[]
     for role in ('host','device'):
-        pad=SharedWiredPad();pad.configure('usb',role,'hs',attached=True)
+        pad=SharedWiredPad.from_architecture(design.architecture);pad.configure('usb',role,'hs',attached=True)
         playback=RawBurstPlayback();receiver=StreamingRecordReceiver();seq=0
         for length in (1,10,23,61):
             payload=np.random.default_rng(710+length).integers(0,2,length).tolist()
@@ -6792,17 +7702,18 @@ def raw_record_playback_controls():
     except ValueError as error:assert str(error)=='Playback overflow'
     else:raise AssertionError('Playback overflow accepted')
     assert list(player.queue)==before and player.tick() is None
-    return dict(cases=rows,underrun_releases=True,overflow_atomic=True,
+    return dict(design_provenance=design.provenance(),cases=rows,underrun_releases=True,overflow_atomic=True,
         scope='Candidate generic raw-record TX consumer with bounded existing-queue-sized storage. Preloaded framed samples to persistent pad, prescribed serializer clock. No timed H2D/control path, response deadline, USB EOP or compliance proof. Boundary selects generic release, not protocol recognition.')
 
 
-def usb_observed_boundaries():
+def usb_observed_boundaries(*,design=None):
     """Persistent pad to sampled activity records; prescribed sample clock."""
+    design=load_design() if design is None else design
     from bit_event_stream import BitEventStream,SampledActivityBoundary
     from bit_event_codec import snapshot_records,StreamingRecordReceiver
     rows=[]
     for role in ('host','device'):
-        pad=SharedWiredPad();pad.configure('usb',role,'hs',attached=True)
+        pad=SharedWiredPad.from_architecture(design.architecture);pad.configure('usb',role,'hs',attached=True)
         stream=BitEventStream(capacity=16);observer=SampledActivityBoundary(stream)
         transport=TimedRecordReturn(stream,source_phase=.37)
         expected=[];delays=[];boundary_times=[]
@@ -6885,28 +7796,42 @@ def usb_observed_boundaries():
         sustained.append(dict(input_bit_hz=rate,delivered=fault is None,fault=fault,
             cdc_blocks=transport.reads,source_stalls=transport.stalls,
             cdc_high_water=transport.high_water))
-    return dict(cases=rows,sustained_record_controls=sustained,short_dropout_fault=True,
+    return dict(design_provenance=design.provenance(),cases=rows,sustained_record_controls=sustained,short_dropout_fault=True,
         coalescing_single_word_bound=True,boundary_bypasses_coalescing=True,
         scope='Finite pad voltage to generic activity boundary and actual raw-record codec, persistent across three bursts. Prescribed mid-bit sampling, ideal comparator, no CDR or USB packet/EOP recognition. Observed records traverse persistent block CDC, continuous idle/data host frames and one-frame preparation. Source encoding is functional, clocks warmed idle; response application remains unconnected.')
 
 
-def usb_pad_lifecycle():
+def usb_pad_lifecycle(*,design=None):
     """Electrical role/drive sequencing using the existing finite shared pad.
 
     Hold durations are model probes, not a USB attach/reset/chirp compliance trace.
     """
+    design=load_design() if design is None else design
     staged_bounds=[usb_framed_turnaround(word_hz=rate,h2d_commit_words=16,h2d_cdc_hz=40e6)
                    for rate in (250e6,312.5e6)]
     assert all(not row['meets_bound'] for row in staged_bounds)
     payload=[1]*12+np.random.default_rng(119).integers(0,2,52).tolist()
     levels=usb_nrzi(payload);results=[]
     for role in ('host','device'):
-        pad=SharedWiredPad();pad.configure('usb',role,'fs',attached=True)
+        pad=SharedWiredPad.from_architecture(design.architecture);pad.configure('usb',role,'fs',attached=True)
+        if role=='host':pad.set_peer_passives(pull_up_ohm=(1500.,None))
+        else:pad.set_peer_passives(pull_down_ohm=(15000.,15000.))
+        initial_controls=pad.control_context()
         pad.advance(2e-6);idle=pad.observe()
         assert idle['j'] and not idle['se0']
         pad.drive(local='SE0' if role=='host' else 'Z',peer='SE0' if role=='device' else 'Z')
         pad.advance(pad.time+2e-6);assert pad.observe()['se0']
-        pad.drive();pad.configure('usb',role,'hs',attached=True)
+        pad.drive();peer_before=dict(pad.peer_passives)
+        pad.configure('usb',role,'hs',attached=True)
+        assert pad.peer_passives==peer_before
+        pad.drive(local='J');pad.advance(pad.time+20e-9)
+        unmatched_differential=pad.observe()['differential_v']
+        assert abs(unmatched_differential-.4)>.1
+        pad.drive()
+        # External fixture explicitly changes the peer, never local configure.
+        # This is not an observed chirp/negotiation state machine.
+        pad.set_peer_passives(termination_ohm=(45.,45.))
+        hs_controls=pad.control_context()
         for direction in ('local','peer'):
             captured=[]
             for level in levels:
@@ -6915,6 +7840,7 @@ def usb_pad_lifecycle():
                 pad.advance(pad.time+.5/480e6)
                 observation=pad.observe()
                 assert not observation['squelch']
+                assert abs(abs(observation['differential_v'])-.4)<.004
                 captured.append(int(observation['j']))
                 pad.advance(pad.time+.5/480e6)
             assert usb_decode(captured)==payload
@@ -6925,7 +7851,12 @@ def usb_pad_lifecycle():
         except ValueError:pass
         else:raise AssertionError('Bus contention accepted')
         assert (pad.local,pad.peer)==before
-        results.append(dict(role=role,payload_bits=len(payload),stuffed_line_bits=len(levels),
+        results.append(dict(design_provenance=design.provenance(),
+            pad_construction=pad.construction_context(),pad_initial_controls=initial_controls,
+            pad_hs_controls=hs_controls,pad_final_controls=pad.control_context(),role=role,payload_bits=len(payload),stuffed_line_bits=len(levels),
+            independent_peer_passives=True,unmatched_peer_differential_v=unmatched_differential,
+            matched_differential_magnitude_v=.4,
+            scope='Explicit peer electrical sequencing, finite RC and real stuffed NRZI voltage decoding; no chirp negotiation, shared package, host queue or command-latency integration.',
             local_and_peer_decode=True,released_squelch=True,turnaround=usb_framed_turnaround(),
             staged_h2d_turnaround_bounds=staged_bounds))
     assert all(row['turnaround']['meets_bound'] for row in results)
@@ -6967,12 +7898,25 @@ def behavioral_coverage(contract,scenarios,configurations):
             full_behavioral_closure=False))
     rows.append(dict(target='hd_sdi',covered=['numeric rate transport','CDR/holdover and false-lock diagnostics','incremental channel/CDR-to-host random payload at both rates'],
         missing=['encoded pathological patterns','coax interface/channel','integrated acquisition and encoded payload'],full_behavioral_closure=False))
+    for target,missing in (
+        ('custom_gfsk_sdr',['declared modulation/bandwidth envelope','joined acquisition and host delivery across numeric configurations']),
+        ('lower_frequency_rf_stretch',['frequency-dependent matching/gain/noise/tuning envelope','joined lower-band conversion and lifecycle']),
+        ('external_frequency_conversion_stretch',['external mixer/LO/filter gain and noise contract','image/spur/reference-plane budget','joined external-conversion lifecycle'])):
+        rows.append(dict(target=target,covered=['generic service mapping only'],missing=missing,
+            full_behavioral_closure=False,baseline_candidate_pass=False))
+    expected=set(contract['generic_control_surface']['external_interface_requirements'])
+    if {row['target'] for row in rows}!=expected or len(rows)!=len(expected):
+        raise ValueError('Behavioral coverage must account for every intended external interface exactly once')
+    for row in rows:
+        row['lifecycle_on_selected_shared_environment']='not_demonstrated'
+        row['mapping_is_not_lifecycle_evidence']=True
     return rows
 
 
 def run():
     started = time.monotonic()
-    contract = json.loads((P/'spec/contract.json').read_text())
+    design = load_design()
+    contract = design.contract
     assert len(contract['pins']) <= contract['limits']['total_terminals']
     assert sum(contract['area_um2'].values()) <= contract['limits']['core_area_um2']
     scenarios = []
@@ -7325,7 +8269,7 @@ def run():
     aligned_cancel=aligned_reference_cancellation()
     aligned_recovery=aligned_reference_recovery()
     wired_reference_presence=wired_reference_presence_controls()
-    usb_lifecycle=usb_pad_lifecycle()
+    usb_lifecycle=usb_pad_lifecycle(design=design)
     connected_payload=connected_gfsk_payload(12)+connected_gfsk_payload(8)
     rf_tx_only=rf_transmit_without_rx()
     rf_recovery=retained_rf_recovery()
@@ -7434,22 +8378,24 @@ def run():
             'combined_no_additive_noise','combined_no_residual_phase','combined_no_oscillator_noise'),
         settings_overrides=dict(rx_gain=1.5),remote_clock_ppm=0.,training_rate=True,
         pilot_timing=True,receiver_sinc=True,external_substeps=16,payload_seed=952)
-    assert any(row['comparison']=='combined_clock_0.1' and row['offset_hz']==0.
-               and not row['conditional_quality_pass'] for row in he20_combined['cases'])
-    usb_response=usb_observed_response(request_lengths=(23,61,512,4096))
-    usb_paced_response=usb_observed_response(request_lengths=(4096,),host_pacing=True)
-    usb_coalesced_response=usb_observed_response(request_lengths=(23,61,512,4096),
+    nominal_he20=[row for row in he20_combined['cases'] if row['comparison']=='combined_clock_0.1']
+    assert {row['offset_hz'] for row in nominal_he20}=={-48000.,0.,48000.}
+    assert all(row['conditional_quality_pass'] and row['symbol_errors']==0
+               for row in nominal_he20)
+    usb_response=usb_observed_response(design=design,request_lengths=(23,61,512,4096))
+    usb_paced_response=usb_observed_response(design=design,request_lengths=(4096,),host_pacing=True)
+    usb_coalesced_response=usb_observed_response(design=design,request_lengths=(23,61,512,4096),
         host_pacing=True,coalesce_return=True)
     assert all(row.get('delivered',False) for row in usb_coalesced_response['cases'])
     assert any(row.get('fault')=='Playback overflow' for row in usb_response['cases'])
     assert all(row.get('delivered',False) for row in usb_paced_response['cases'])
-    usb_independent_phases=usb_observed_response(request_lengths=(512,),host_pacing=True,
+    usb_independent_phases=usb_observed_response(design=design,request_lengths=(512,),host_pacing=True,
         coalesce_return=True,clock_phases=tuple((a,b) for a in (0.,.37,.83) for b in (0.,.37,.83)))
     assert all(row.get('delivered',False) for row in usb_independent_phases['cases'])
-    usb_response_split=usb_observed_response(request_lengths=(23,),split_time=True)
+    usb_response_split=usb_observed_response(design=design,request_lengths=(23,),split_time=True)
     assert usb_response_split['cases']==[row for row in usb_response['cases'] if row['request_bits']==23]
-    usb_playback=raw_record_playback_controls()
-    usb_observed_records=usb_observed_boundaries()
+    usb_playback=raw_record_playback_controls(design=design)
+    usb_observed_records=usb_observed_boundaries(design=design)
     usb_staged_trace=usb_staged_response_trace()
     usb_bidirectional_trace=usb_staged_response_trace(d2h_cdc=True)
     usb_commit_sensitivity=[usb_staged_response_trace(d2h_cdc=True,commit_beats=n) for n in (0,1)]

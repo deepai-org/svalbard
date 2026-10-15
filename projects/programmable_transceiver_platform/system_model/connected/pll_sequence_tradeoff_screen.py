@@ -3,7 +3,7 @@ import hashlib,json
 from pathlib import Path
 from fractions import Fraction
 from chip_model import P
-from fractional_rf_chip import ShapedRFClock
+from pulse_clock_service import ShapedRFClock
 from fractional_pulse_pll import DividerSequence
 from shaped_fractional_pll import SecondOrderSequence
 from pll_filter_tradeoff_screen import measure

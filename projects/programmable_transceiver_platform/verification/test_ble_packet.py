@@ -1,4 +1,9 @@
-"""Published independent packet vector and blind-observer rejection controls."""
+"""Independent packet vectors/observers plus shared-inventory RX/TX packet checks.
+
+Joined checks use explicit wanted/blocker stimuli and assigned-ENOB conversion.
+The electrical seed has prescribed clock/reference spectra; it does not qualify
+loaded differential REF_IN, retained SAR feedback or physical RF turnaround.
+"""
 import unittest
 import copy
 import json
@@ -7,7 +12,30 @@ from ble_packet import (P,observe,bounded_gain_conversion,joined_scan_request,re
     transmitted_scan_response)
 from protocol_signals import ble_advertising_bits,ble_whiten,ble_crc_bits,gfsk
 
+from design_definition import load_design
+
+TEST_DESIGN_ROLES = {
+    'BLEPacketTests': ('independent_fixture', 'Published packet vector, blind decoder, PRBS and independent gain/nonlinearity examples.'),
+    'JoinedPacketTests': ('shared_design', 'One class-owned snapshot supplies RX/TX configurations and allocations; packet levels and diagnostic impairments are explicit stimuli.'),
+    'TimedPlaybackTests': ('independent_fixture', 'Assigned playback queues and analytical RF power/Parseval examples.'),
+}
+
 class BLEPacketTests(unittest.TestCase):
+    def test_prbs15_interferer_period_and_constant_envelope(self):
+        from ble_packet import prbs15_bits,reference_interferer_phase
+        bits=prbs15_bits(32767+15)
+        np.testing.assert_array_equal(bits[:15],bits[32767:])
+        self.assertEqual(int(bits[:32767].sum()),16384)
+        # Every nonzero 15-bit word occurs once: checks the full maximal period.
+        words={sum(int(bits[i+j])<<j for j in range(15)) for i in range(32767)}
+        self.assertEqual(len(words),32767);self.assertNotIn(0,words)
+        times=np.arange(4001)/40e6;phase=reference_interferer_phase(times)
+        np.testing.assert_allclose(abs(np.exp(1j*phase)),1.,atol=1e-15)
+        deviation=np.diff(phase)*40e6/(2*np.pi)
+        self.assertLessEqual(max(abs(deviation)),250000.0001)
+        self.assertGreater(np.std(deviation),1e5)
+        np.testing.assert_allclose(reference_interferer_phase(times[::4]),phase[::4],atol=1e-12)
+
     def test_input_referred_cubic_matches_two_tone_intercept(self):
         from ble_packet import third_order_frontend
         t=np.arange(4096)/16e6
@@ -83,34 +111,77 @@ class BLEPacketTests(unittest.TestCase):
             self.assertEqual(full[key],future[key])
 
 class JoinedPacketTests(unittest.TestCase):
+    """Shared RX/TX snapshots; known stimuli and simplified converter/readiness laws."""
     @classmethod
     def setUpClass(cls):
-        from robustness_envelope import operating_environment,shared_board_candidate
-        cls.contract=json.loads((P/'spec/contract.json').read_text())
-        cls.environment=operating_environment(cls.contract,shared_board_candidate(),
-            carrier_hz=2.426e9,d2h_word_hz=2.426e9/16,payload_engine='rf',payload_current_a=.037,
-            h2d_internal_charge_c=.3e-12,d2h_harmonics=12,
-            reference_fraction_per_v=.1,reference_pole_hz=10e6)
-        cls.received=joined_scan_request(cls.environment,cls.contract)
+        from baseline_envelope import configured_environment
+        cls.design=load_design();cls.contract=cls.design.contract
+        cls.rx_config=cls.design.configure(engine='rf',direction='rx',reference_hz=2.426e9,
+                                           sample_divider=64,pga_gain_db=39)
+        cls.tx_config=cls.design.configure(engine='rf',direction='tx',reference_hz=2.426e9,
+                                           sample_divider=64)
+        cls.environment=configured_environment(cls.rx_config)
+        cls.tx_environment=configured_environment(cls.tx_config)
+        cls.received=cls.receive()
+
+    @classmethod
+    def receive(cls,**kwargs):
+        # Explicit wanted/blocker stimuli; no gain or noise-budget fitting to decoding.
+        return joined_scan_request(cls.environment,cls.contract,
+            **dict(dict(wanted_dbm=-67.,blocker_dbm=-50.),**kwargs))
+
+    def test_receive_report_owns_its_configuration_metadata(self):
+        row=self.receive()
+        before=copy.deepcopy(self.environment['resolved_configuration'])
+        row['resolved_configuration']['sample_divider']=999
+        row['scenario_overrides'].append({'test_only':'mutation'})
+        self.assertEqual(self.environment['resolved_configuration'],before)
+        self.assertEqual(self.environment['scenario_overrides'],[])
+        self.assertEqual(self.received['resolved_configuration'],before)
 
     def test_noise_requirement_controls_preserve_units_and_independence(self):
-        low=joined_scan_request(self.environment,self.contract,noise_figure_db=0.,adc_enob=10.)
-        self.assertAlmostEqual(self.received['thermal_noise_density_v2_per_hz']/low['thermal_noise_density_v2_per_hz'],10.)
-        a=joined_scan_request(self.environment,self.contract,thermal_noise_enabled=False,noise_figure_db=0.)
-        b=joined_scan_request(self.environment,self.contract,thermal_noise_enabled=False,noise_figure_db=10.)
+        low=self.receive(noise_figure_db=0.,adc_enob=10.)
+        self.assertAlmostEqual(self.received['thermal_noise_density_v2_per_hz']/low['thermal_noise_density_v2_per_hz'],
+                               10**(self.design.architecture['blocks']['lna']['parameters']['noise_figure_db']/10))
+        a=self.receive(thermal_noise_enabled=False,noise_figure_db=0.)
+        b=self.receive(thermal_noise_enabled=False,noise_figure_db=10.)
         self.assertEqual(a['observation'],b['observation'])
         self.assertEqual(a['gain_control'],b['gain_control'])
         self.assertTrue(a['adc_noise_enabled'])
         self.assertFalse(a['thermal_noise_enabled'])
-        with self.assertRaises(ValueError):joined_scan_request(self.environment,self.contract,adc_enob=13.)
+        with self.assertRaises(ValueError):self.receive(adc_enob=13.)
 
     def budget(self,observation=None,environment=None,**kwargs):
         return response_budget(observation or self.received['observation'],self.received['settings'],
             environment or self.environment,self.contract,
             advertiser_address=bytes.fromhex('a6a5a4a3a2c1'),**kwargs)
 
+    def test_response_budget_rejects_conflicting_sample_rate_and_missing_clock(self):
+        settings=dict(self.received['settings'],sample_hz=self.received['settings']['sample_hz']*2)
+        with self.assertRaisesRegex(ValueError,'sample rate conflicts'):
+            response_budget(self.received['observation'],settings,self.environment,self.contract,
+                advertiser_address=bytes.fromhex('a6a5a4a3a2c1'))
+        missing=dict(self.environment);del missing['control_hz']
+        with self.assertRaisesRegex(ValueError,'requires control clock'):
+            self.budget(environment=missing)
+        for value in (None,0.,-1.,True,float('nan')):
+            for environment,call in (
+                (self.environment,lambda env:joined_scan_request(env,self.contract)),
+                (self.tx_environment,lambda env:transmitted_scan_response(self.received,env,self.contract))):
+                damaged=copy.deepcopy(environment)
+                if value is None:del damaged['control_hz']
+                else:damaged['control_hz']=value
+                with self.subTest(value=value,direction=environment['resolved_configuration']['direction']),self.assertRaises(ValueError):
+                    call(damaged)
+        from ble_packet import packet_control_clock
+        self.assertEqual(packet_control_clock({}),40e6)
+
     def test_real_packet_and_causal_reply_budget_keep_clocks_running(self):
         row=self.received;reply=row['response']
+        self.assertEqual(row['control_counter_hz'],self.environment['control_hz'])
+        self.assertEqual(reply['control_counter_hz'],self.environment['control_hz'])
+        self.assertEqual(row['design_provenance'],self.design.provenance())
+        self.assertEqual(row['resolved_configuration'],self.rx_config.record())
         self.assertTrue(row['correct_request'])
         self.assertTrue(reply['reply_armed'])
         self.assertFalse(reply['air_launch_timing_verified'])
@@ -121,7 +192,8 @@ class JoinedPacketTests(unittest.TestCase):
         self.assertTrue(reply['turnaround']['clocks_kept_running'])
         self.assertEqual(reply['turnaround']['old_epoch'],reply['turnaround']['new_epoch'])
         self.assertGreater(reply['ready_s'],row['observation']['crc_decision_s']+32/row['settings']['sample_hz'])
-        self.assertLess(reply['transport']['tx_prefill_plus_service_backlog_bits'],1024)
+        self.assertLess(reply['transport']['tx_prefill_plus_service_backlog_bits'],
+            self.contract['transport']['scheduling']['ingress_bits_per_source'])
         for a,b in zip(reply['events'],reply['events'][1:]):
             self.assertEqual(a['end_s'],b['start_s'])
         # Delaying FPGA computation cannot advance the response or repair a
@@ -130,6 +202,62 @@ class JoinedPacketTests(unittest.TestCase):
         self.assertFalse(late['reply_armed'])
         self.assertAlmostEqual(late['ready_s']-reply['ready_s'],158e-6,places=12)
         self.assertEqual(late['target_air_start_s'],reply['target_air_start_s'])
+
+    def test_packet_supply_laws_follow_changed_shared_design(self):
+        from unittest.mock import patch
+        import ble_packet
+        from baseline_envelope import configured_environment
+        variant=self.design.hypothetical(reason='Packet supply-law propagation control',changes={
+            'model_assumptions.rf_receive_supply.parameters.gain_reference_v':3.0,
+            'model_assumptions.rf_receive_supply.parameters.headroom_reference_v':3.1,
+            'blocks.rfdriver.parameters.gain_reference_v':3.2})
+        environments=[self.environment,configured_environment(variant.configure(
+            engine='rf',direction='rx',reference_hz=2.426e9,sample_divider=64,pga_gain_db=39))]
+        amplitudes=[];rows=[];original=ble_packet.multipole_envelope
+        def observe(signal,*args,**kwargs):
+            amplitudes.append(float(np.max(abs(signal))))
+            return original(signal,*args,**kwargs)
+        for environment in environments:
+            with patch.object(ble_packet,'multipole_envelope',side_effect=observe):
+                rows.append(joined_scan_request(environment,self.contract,wanted_dbm=-67.,blocker_dbm=-50.))
+        self.assertEqual(len(amplitudes),2)
+        rail=self.environment['ledger']['local_payload_clock_core_rail_v']
+        elasticity=self.environment['rf_receive_supply_parameters']['gain_supply_elasticity']
+        expected=(1+elasticity*(rail/3.0-1))/(1+elasticity*(rail/3.3-1))
+        self.assertAlmostEqual(amplitudes[1]/amplitudes[0],expected,places=12)
+        self.assertAlmostEqual(rows[1]['gain_control']['pga_peak_v']/rows[0]['gain_control']['pga_peak_v'],3.3/3.1,places=12)
+        self.assertEqual(rows[1]['design_provenance'],variant.provenance())
+        missing=copy.deepcopy(environments[1]);del missing['rf_receive_supply_parameters']
+        with self.assertRaises(ValueError):joined_scan_request(missing,self.contract)
+        tx_environment=configured_environment(variant.configure(engine='rf',direction='tx',reference_hz=2.426e9,sample_divider=64))
+        normal=transmitted_scan_response(self.received,self.tx_environment,self.contract)
+        changed=transmitted_scan_response(self.received,tx_environment,self.contract)
+        self.assertEqual(changed['driver_settings']['gain_reference_v'],3.2)
+        self.assertAlmostEqual(changed['loaded_peak_envelope_v']/normal['loaded_peak_envelope_v'],3.3/3.2,places=12)
+        self.assertAlmostEqual(changed['loaded_average_active_power_w']/normal['loaded_average_active_power_w'],(3.3/3.2)**2,places=12)
+        self.assertEqual(changed['design_provenance'],variant.provenance())
+
+    def test_reply_reports_its_own_supply_domain_not_received_packet_bounds(self):
+        environment=copy.deepcopy(self.tx_environment)
+        environment['ledger']['local_payload_clock_core_rail_v']=2.4
+        low=transmitted_scan_response(self.received,environment,self.contract)
+        self.assertEqual(low['evaluated_supply_interval_v'],[2.4,2.4])
+        self.assertFalse(low['evaluated_supply_valid'])
+        normal=transmitted_scan_response(self.received,self.tx_environment,self.contract,dynamic_rail=True)
+        self.assertTrue(normal['evaluated_supply_valid'])
+        self.assertGreater(normal['evaluated_supply_interval_v'][1],normal['evaluated_supply_interval_v'][0])
+
+    def test_fast_sample_prefill_fits_existing_fifo_and_plays_reply(self):
+        received=self.receive(lo_divider=64)
+        reply=received['response'];service=reply['transport']
+        self.assertTrue(reply['reply_armed'])
+        self.assertLess(service['prefill_bits'],32*24)
+        self.assertGreaterEqual(service['prefill_bits'],service['h2d']['backlog_bound_bits'])
+        self.assertLessEqual(service['tx_prefill_plus_service_backlog_bits'],
+            self.contract['transport']['scheduling']['ingress_bits_per_source'])
+        transmitted=transmitted_scan_response(received,self.tx_environment,self.contract)
+        self.assertTrue(transmitted['playback']['complete_burst'])
+        self.assertTrue(transmitted['peer_correct_response'])
 
     def test_reply_requires_integrity_address_and_sustained_service(self):
         observation=dict(self.received['observation'],crc_ok=False)
@@ -143,8 +271,8 @@ class JoinedPacketTests(unittest.TestCase):
         self.assertFalse(self.budget(environment=constrained)['reply_armed'])
 
     def test_resolved_mixer_refinement_preserves_acquisition_and_packet(self):
-        coarse=joined_scan_request(self.environment,self.contract,include_noise=False,mixer_substeps=256)
-        fine=joined_scan_request(self.environment,self.contract,include_noise=False,mixer_substeps=512)
+        coarse=self.receive(include_noise=False,mixer_substeps=256)
+        fine=self.receive(include_noise=False,mixer_substeps=512)
         self.assertTrue(coarse['correct_request'] and fine['correct_request'])
         self.assertEqual(coarse['observation']['start_sample'],fine['observation']['start_sample'])
         self.assertEqual(coarse['adc_crossing_rms_s'],fine['adc_crossing_rms_s'])
@@ -152,33 +280,36 @@ class JoinedPacketTests(unittest.TestCase):
         self.assertLess(abs(coarse['observation']['fit_residual']-fine['observation']['fit_residual']),.003)
 
     def test_loaded_reply_decodes_without_source_end_oracle(self):
-        transmitted=transmitted_scan_response(self.received,self.environment,self.contract)
+        transmitted=transmitted_scan_response(self.received,self.tx_environment,self.contract)
         self.assertTrue(transmitted['peer_correct_response'])
         self.assertTrue(transmitted['playback']['complete_burst'])
-        self.assertEqual(transmitted['playback']['peak_occupancy_samples'],32)
+        # The /64, 312.5 Mword/s fixture uses a 25-sample bounded-service prefill.
+        self.assertEqual(transmitted['playback']['peak_occupancy_samples'],25)
+        self.assertEqual(transmitted['design_provenance'],self.design.provenance())
+        self.assertEqual(transmitted['resolved_configuration'],self.tx_config.record())
         self.assertGreater(transmitted['playback']['prelaunch_clock_edges_without_consumption'],1000)
         self.assertFalse(transmitted['phase_time_origin_reset'])
         self.assertFalse(transmitted['air_launch_timing_qualified'])
         # The source boundary is an offline scoreboard input only, never used
         # to set launch timing or help the peer decode.
         changed=dict(self.received,source_packet_end_s=self.received['source_packet_end_s']+1e-3)
-        other=transmitted_scan_response(changed,self.environment,self.contract)
+        other=transmitted_scan_response(changed,self.tx_environment,self.contract)
         self.assertEqual(other['first_dac_consumption_s'],transmitted['first_dac_consumption_s'])
         self.assertEqual(other['peer'],transmitted['peer'])
         self.assertAlmostEqual(other['scoreboard_rf_half_amplitude_gap_s'],
             transmitted['scoreboard_rf_half_amplitude_gap_s']-1e-3,places=12)
 
     def test_tx_calibration_changes_launch_and_host_stall_is_not_hidden(self):
-        baseline=transmitted_scan_response(self.received,self.environment,self.contract)
-        corrected=transmitted_scan_response(self.received,self.environment,self.contract,
+        baseline=transmitted_scan_response(self.received,self.tx_environment,self.contract)
+        corrected=transmitted_scan_response(self.received,self.tx_environment,self.contract,
             rx_timestamp_correction_s=.8e-6,tx_launch_advance_s=.15e-6)
         self.assertTrue(corrected['peer_correct_response'])
         self.assertLess(abs(corrected['scoreboard_rf_half_amplitude_gap_s']-150e-6),
             abs(baseline['scoreboard_rf_half_amplitude_gap_s']-150e-6))
         self.assertAlmostEqual(baseline['desired_launch_s']-corrected['desired_launch_s'],.95e-6,places=12)
-        stalled=transmitted_scan_response(self.received,self.environment,self.contract,host_gap_s=10e-6)
+        stalled=transmitted_scan_response(self.received,self.tx_environment,self.contract,host_gap_s=10e-6)
         self.assertEqual(stalled['playback']['fault'],'underflow')
-        self.assertEqual(stalled['playback']['consumed_samples'],32)
+        self.assertEqual(stalled['playback']['consumed_samples'],25)
         self.assertFalse(stalled['peer_correct_response'])
 
 

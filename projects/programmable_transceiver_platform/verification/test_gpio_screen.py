@@ -1,5 +1,10 @@
+"""Independent Liberty parser/interpolation examples; no intended-chip operating point."""
 import unittest
 from screen_gpio_liberty import groups, interpolate
+
+TEST_DESIGN_ROLES = {
+    'LibertyScreenTests': ('independent_fixture', 'Independent Liberty parsing and bilinear interpolation tables.'),
+}
 
 class LibertyScreenTests(unittest.TestCase):
     def test_nested_group_and_quoted_braces(self):

@@ -1,5 +1,17 @@
 {
-  "scope": "necessary frequency and bandwidth screen; not electrical qualification",
+  "design_provenance": {
+    "design_fingerprint": "ea180bf4fc980e827352e64316c4db1a6b566ba023187a302226c97216e14d8c",
+    "fingerprint_format": "canonical-json-sha256-v1",
+    "circuit_experiments": [],
+    "documents": {
+      "spec/contract.json": "ee71ea7c01cc7954dd569ca83c8e87798c8e2b75c57d56fca2f6f52700e549d0",
+      "spec/analog-architecture.json": "1983efe4cbdb40d063e5f6962b5c33b76cb8c574cefc8c80afd717ccfb725f2c"
+    }
+  },
+  "model_role": "shared_design_legacy_host_accounting",
+  "contract_sha256": "ee71ea7c01cc7954dd569ca83c8e87798c8e2b75c57d56fca2f6f52700e549d0",
+  "contract_sha256_format": "canonical-json-sha256-v1",
+  "scope": "Retained framed-transport frequency and bandwidth accounting; not current byte-stream compatibility or electrical qualification",
   "source": {
     "url": "https://www.latticesemi.com/view_document?document_id=50461",
     "revision": "FPGA-DS-02012-3.4, September 2025",
@@ -9,18 +21,7 @@
     ],
     "pdf_sha256": "26570f8bb2b800123120829cacd75d818d7a985d573797610521b5bda2e293c3"
   },
-  "contract_sha256": "96e2544bfab69e5774896f23b53d93c285d2b5aa3332e1b21813b4cf31b4abc2",
   "profiles": {
-    "sdr25": {
-      "d2h_within_documented_input_clock_limit": true,
-      "h2d_within_documented_output_clock_limit": true,
-      "qualified": false
-    },
-    "sdr50": {
-      "d2h_within_documented_input_clock_limit": true,
-      "h2d_within_documented_output_clock_limit": true,
-      "qualified": false
-    },
     "ddr125": {
       "d2h_within_documented_input_clock_limit": true,
       "h2d_within_documented_output_clock_limit": true,
@@ -29,6 +30,16 @@
     "ddr156": {
       "d2h_within_documented_input_clock_limit": true,
       "h2d_within_documented_output_clock_limit": false,
+      "qualified": false
+    },
+    "sdr25": {
+      "d2h_within_documented_input_clock_limit": true,
+      "h2d_within_documented_output_clock_limit": true,
+      "qualified": false
+    },
+    "sdr50": {
+      "d2h_within_documented_input_clock_limit": true,
+      "h2d_within_documented_output_clock_limit": true,
       "qualified": false
     }
   },

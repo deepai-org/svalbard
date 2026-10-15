@@ -262,8 +262,6 @@ bfm-history-audit:
 transceiver-contract:
 	$(PYTHON) projects/programmable_transceiver_platform/verification/check_contract.py
 	$(PYTHON) projects/programmable_transceiver_platform/verification/test_contract.py
-	$(PYTHON) projects/programmable_transceiver_platform/verification/test_transport.py
-	$(PYTHON) projects/programmable_transceiver_platform/verification/test_frame_codec.py
 	$(PYTHON) projects/programmable_transceiver_platform/verification/test_gpio_screen.py
 	$(PYTHON) projects/programmable_transceiver_platform/verification/check_power.py
 	$(PYTHON) projects/programmable_transceiver_platform/verification/test_power.py
@@ -275,26 +273,6 @@ transceiver-gpio-screen:
 .PHONY: transceiver-gpio-transient
 transceiver-gpio-transient:
 	bash projects/programmable_transceiver_platform/verification/run_gpio_transient.sh
-
-.PHONY: transceiver-baseline
-transceiver-baseline:
-	bash projects/programmable_transceiver_platform/verification/run_baseline.sh
-
-.PHONY: transceiver-synthesis
-transceiver-synthesis:
-	bash projects/programmable_transceiver_platform/verification/run_synthesis.sh
-
-.PHONY: transceiver-timing-screen
-transceiver-timing-screen:
-	bash projects/programmable_transceiver_platform/verification/run_timing_screen.sh
-
-.PHONY: transceiver-buffer-screen
-transceiver-buffer-screen:
-	bash projects/programmable_transceiver_platform/verification/run_buffer_screen.sh
-
-.PHONY: transceiver-clock-power-screen
-transceiver-clock-power-screen:
-	bash projects/programmable_transceiver_platform/verification/run_clock_power_screen.sh
 
 .PHONY: transceiver-stream-codec
 transceiver-stream-codec:
@@ -312,81 +290,17 @@ transceiver-stream-tx:
 transceiver-stream-link:
 	bash projects/programmable_transceiver_platform/verification/run_stream_link.sh
 
-.PHONY: transceiver-delay-mapping
-transceiver-delay-mapping:
-	bash projects/programmable_transceiver_platform/verification/run_delay_mapping.sh
-
-.PHONY: transceiver-mapping-equivalence
-transceiver-mapping-equivalence:
-	bash projects/programmable_transceiver_platform/verification/run_mapping_equivalence.sh
-
-.PHONY: transceiver-placement-screen
-transceiver-placement-screen:
-	bash projects/programmable_transceiver_platform/verification/run_placement_screen.sh
-
-.PHONY: transceiver-placed-timing
-transceiver-placed-timing:
-	bash projects/programmable_transceiver_platform/verification/run_placed_timing.sh
-
-.PHONY: transceiver-tx-stage-compare
-transceiver-tx-stage-compare:
-	bash projects/programmable_transceiver_platform/verification/run_tx_stage_compare.sh
-
 .PHONY: transceiver-pack-stream
 transceiver-pack-stream:
 	bash projects/programmable_transceiver_platform/verification/run_pack_stream.sh
 
-.PHONY: transceiver-sync-fifo-flags
-transceiver-sync-fifo-flags:
-	bash projects/programmable_transceiver_platform/verification/run_sync_fifo_flags.sh
+.PHONY: transceiver-rtl-primitives
+transceiver-rtl-primitives:
+	bash projects/programmable_transceiver_platform/verification/run_rtl_primitives.sh
 
 .PHONY: transceiver-gray-prefix-proof
 transceiver-gray-prefix-proof:
 	bash projects/programmable_transceiver_platform/verification/run_gray_prefix.sh
-
-.PHONY: transceiver-current-placement
-transceiver-current-placement:
-	bash projects/programmable_transceiver_platform/verification/run_current_placement.sh
-
-.PHONY: transceiver-current-repair
-transceiver-current-repair:
-	bash projects/programmable_transceiver_platform/verification/run_current_repair.sh
-
-.PHONY: transceiver-repaired-geometry
-transceiver-repaired-geometry:
-	bash projects/programmable_transceiver_platform/verification/run_repaired_geometry.sh
-
-.PHONY: transceiver-pdn-screen
-transceiver-pdn-screen:
-	bash projects/programmable_transceiver_platform/verification/run_pdn_screen.sh
-
-.PHONY: transceiver-pdn-geometry
-transceiver-pdn-geometry:
-	bash projects/programmable_transceiver_platform/verification/run_pdn_geometry.sh
-
-.PHONY: transceiver-pdn-ir
-transceiver-pdn-ir:
-	bash projects/programmable_transceiver_platform/verification/run_pdn_ir.sh
-
-.PHONY: transceiver-pdn-path-bound
-transceiver-pdn-path-bound:
-	python3 projects/programmable_transceiver_platform/verification/pdn_path_bound.py "$(CURDIR)"
-
-.PHONY: transceiver-wide-pdn
-transceiver-wide-pdn:
-	bash projects/programmable_transceiver_platform/verification/run_wide_pdn.sh
-
-.PHONY: transceiver-pdn-regional-loads
-transceiver-pdn-regional-loads:
-	python3 projects/programmable_transceiver_platform/verification/pdn_regional_loads.py "$(CURDIR)"
-
-.PHONY: transceiver-pdn-routing
-transceiver-pdn-routing:
-	bash projects/programmable_transceiver_platform/verification/run_pdn_routing.sh
-
-.PHONY: transceiver-global-route-timing
-transceiver-global-route-timing:
-	bash projects/programmable_transceiver_platform/verification/run_global_route_timing.sh
 
 .PHONY: transceiver-block-receiver
 transceiver-block-receiver:
@@ -907,10 +821,3 @@ transceiver-behavioral:
 .PHONY: transceiver-math-fast
 transceiver-math-fast:
 	OPENBLAS_NUM_THREADS=1 python3 projects/programmable_transceiver_platform/system_model/architecture_fast/acceptance.py
-
-.PHONY: transceiver-protocol-model transceiver-protocol-coupled
-transceiver-protocol-model:
-	OPENBLAS_NUM_THREADS=1 $(PYTHON) projects/programmable_transceiver_platform/verification/protocol_model_check.py
-
-transceiver-protocol-coupled:
-	OPENBLAS_NUM_THREADS=1 $(PYTHON) projects/programmable_transceiver_platform/verification/protocol_model_check.py --coupled

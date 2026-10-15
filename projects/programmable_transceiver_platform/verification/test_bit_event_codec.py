@@ -1,3 +1,8 @@
+"""Independent record codecs and shared-design chip transport integration.
+
+Synthetic edges, explicit service-clock skew and standalone queue fixtures
+remain independent controls; they do not qualify physical pad or CDR timing.
+"""
 import unittest
 import sys
 from pathlib import Path
@@ -5,7 +10,111 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/connecte
 from bit_event_stream import BitEventStream
 from bit_event_codec import encode_records,decode_records,StreamingRecordReceiver,snapshot_records
 
+TEST_DESIGN_ROLES = {
+    'CodecChecks': ('independent_fixture', 'Assigned clocks, peers, queues and recovery/codec stimuli isolate mathematical and logical behavior.'),
+    'TrainedReturnChecks': ('independent_fixture', 'Synthetic framed-return clocks, startup windows and injected losses.'),
+    'BulkReturnChecks': ('independent_fixture', 'Assigned CDC and record-return fixtures; no selected hardware capacity claim.'),
+    'BitEventChecks': ('independent_fixture', 'Primitive record packing and prescribed passive-pad observations.'),
+    'CodecChecks.test_usb_explicit_final_pipeline_preserves_rejection': ('shared_design', 'Shared pad snapshot with explicitly legacy framed transport, assigned host rates and FPGA pipeline stimuli; no whole-chip USB timing qualification.'),
+    'CodecChecks.test_usb_host_clocked_parser_derives_clock_and_keeps_ingress_crossing': ('shared_design', 'Shared pad snapshot with explicitly legacy framed transport, assigned host rates and FPGA pipeline stimuli; no whole-chip USB timing qualification.'),
+    'CodecChecks.test_usb_return_command_crossing_is_not_free': ('shared_design', 'Shared pad snapshot with explicitly legacy framed transport, assigned host rates and FPGA pipeline stimuli; no whole-chip USB timing qualification.'),
+    'CodecChecks.test_usb_fpga_synchronization_is_charged_before_decision': ('shared_design', 'Shared pad snapshot with explicitly legacy framed transport, assigned host rates and FPGA pipeline stimuli; no whole-chip USB timing qualification.'),
+    'CodecChecks.test_usb_processing_clock_phase_is_independent': ('shared_design', 'Shared pad snapshot with explicitly legacy framed transport, assigned host rates and FPGA pipeline stimuli; no whole-chip USB timing qualification.'),
+    'CodecChecks.test_usb_ingress_capacity_overflow_never_acknowledges': ('shared_design', 'Shared pad snapshot with explicitly legacy framed transport, assigned host rates and FPGA pipeline stimuli; no whole-chip USB timing qualification.'),
+    'CodecChecks.test_usb_parallel_work_width_changes_deadline_outcome': ('shared_design', 'Shared pad snapshot with explicitly legacy framed transport, assigned host rates and FPGA pipeline stimuli; no whole-chip USB timing qualification.'),
+    'CodecChecks.test_usb_ingress_work_cannot_be_hidden_by_fixed_decision_delay': ('shared_design', 'Shared pad snapshot with explicitly legacy framed transport, assigned host rates and FPGA pipeline stimuli; no whole-chip USB timing qualification.'),
+    'CodecChecks.test_usb_processing_budget_is_charged_to_deadline': ('shared_design', 'Shared pad snapshot with explicitly legacy framed transport, assigned host rates and FPGA pipeline stimuli; no whole-chip USB timing qualification.'),
+    'CodecChecks.test_usb_response_independent_host_rates': ('shared_design', 'Shared pad snapshot with explicitly legacy framed transport, assigned host rates and FPGA pipeline stimuli; no whole-chip USB timing qualification.'),
+    'CodecChecks.test_live_usb_damaged_packet_withholds_response': ('shared_design', 'Shared pad snapshot with explicitly legacy framed transport, assigned host rates and FPGA pipeline stimuli; no whole-chip USB timing qualification.'),
+    'CodecChecks.test_usb_retry_preserves_live_transport': ('shared_design', 'Shared pad snapshot with explicitly legacy framed transport, assigned host rates and FPGA pipeline stimuli; no whole-chip USB timing qualification.'),
+    'CodecChecks.test_staged_tx_emission_observer': ('shared_design', 'Shared wired configuration, startup/host timing and queue allocation; deliberate host skew and independent emitted-data checks.'),
+    'CodecChecks.test_emitted_tx_channel_peer': ('shared_design', 'Shared wired configuration, startup/host timing and queue allocation; deliberate host skew and independent emitted-data checks.'),
+    'CodecChecks.test_reference_pacing_prevents_accumulated_host_drift': ('shared_design', 'Shared wired configuration, startup/host timing and queue allocation; deliberate host skew and independent emitted-data checks.'),
+}
+
 class CodecChecks(unittest.TestCase):
+    def shared_snapshot(self):
+        from design_definition import load_design
+        if not hasattr(self,'_shared_snapshot'):
+            self._shared_snapshot=load_design()
+        return self._shared_snapshot
+
+    def configured_usb_response(self,**kwargs):
+        from unittest.mock import patch
+        import behavioral
+        design=self.shared_snapshot()
+        with patch.object(behavioral,'load_design',side_effect=AssertionError('Unexpected design reload')):
+            result=behavioral.usb_observed_response(design=design,**kwargs)
+        self.assertEqual(result['design_provenance'],design.provenance())
+        self.assertEqual(result['model_role'],'shared_pad_with_legacy_framed_transport_fixture')
+        for row in result['cases']+result['malformed_frames']:
+            self.assertEqual(row['pad_construction']['architecture_sha256'],
+                design.provenance()['documents']['spec/analog-architecture.json'])
+            controls=row['pad_initial_controls']['local']
+            self.assertEqual((controls['mode'],controls['speed'],controls['attached']),('usb','hs',True))
+            self.assertEqual(controls['role'],row.get('role','device'))
+            self.assertEqual(row['pad_final_controls']['local']['drive_state'],'Z')
+        # Every row is detached: mutating one inspection record must not leak
+        # into another result or the snapshot used by the calculation.
+        from copy import deepcopy
+        before=deepcopy(result['cases'][1]['pad_construction'])
+        first=deepcopy(result['cases'][0]['pad_construction'])
+        result['cases'][0]['pad_construction']['probe_overrides']['test_mutation']=1
+        self.assertEqual(result['cases'][1]['pad_construction'],before)
+        result['cases'][0]['pad_construction']=first
+        return result
+
+    def configured_wired_chip(self, host_scale):
+        from dataclasses import replace
+        from baseline_envelope import configured_environment
+        from selected_lifecycle import selected_transport_assumptions
+        from behavioral import BehavioralChip
+        design=self.shared_snapshot()
+        config=design.configure(engine='wire',direction='tx',reference_hz=2.5e9,host_divider=8)
+        environment=configured_environment(config)
+        assumptions=selected_transport_assumptions(environment)
+        # Deliberate host-service skew; it does not alter legal clock controls.
+        assumptions=replace(assumptions,h2d_clock_scale=assumptions.h2d_clock_scale*host_scale)
+        chip=BehavioralChip(assumptions)
+        chip.configure_numeric(engine='wire',timing=dict(line_rate_bps=config.line_rate_bps))
+        chip.configure_transport('exclusive');chip.start();chip.advance(chip.ready_at)
+        return chip,design.contract['transport']['scheduling']['egress_bits_per_source']
+
+    def test_sticky_fault_survives_clock_loss_and_rejects_stale_ack(self):
+        from recovery_mailbox import StickyFaultPublication
+        latch=StickyFaultPublication(100e-9)
+        latch.capture(0.,7,'rx_loss')
+        latch.capture(10e-9,7,'another_fault')
+        self.assertIsNone(latch.snapshot(99e-9))
+        with self.assertRaises(ValueError):
+            latch.acknowledge_stop(99e-9,stopped_epoch=7,new_epoch=8)
+        self.assertEqual(latch.snapshot(100e-9),(7,'rx_loss'))
+        self.assertEqual(latch.snapshot(1.),(7,'rx_loss'))
+        with self.assertRaises(ValueError):
+            latch.acknowledge_stop(1.,stopped_epoch=6,new_epoch=8)
+        latch.acknowledge_stop(1.,stopped_epoch=7,new_epoch=8)
+        self.assertIsNone(latch.snapshot(1.))
+
+    def test_fault_polling_budget_covers_adversarial_phase(self):
+        from recovery_mailbox import fault_notification_budget
+        import math
+        args=dict(line_rate_bps=2.5e9,spi_hz=25e6,poll_start_interval_s=10e-6,
+                  detection_s=100e-9,publication_s=100e-9,host_service_s=1e-6)
+        result=fault_notification_budget(**args)
+        self.assertAlmostEqual(result['notification_bound_s'],12.48e-6)
+        self.assertGreaterEqual(result['fpga_quarantine_bytes'],3900)
+        self.assertLessEqual(result['fpga_quarantine_bytes'],3901)
+        for fraction in (0.,1e-9,.1,.5,.999999):
+            fault=fraction*10e-6
+            visible=fault+args['detection_s']+args['publication_s']
+            next_start=math.ceil(visible/10e-6)*10e-6
+            observed=next_start+32/25e6+args['host_service_s']
+            self.assertLessEqual(observed-fault,result['notification_bound_s']+1e-15)
+        with self.assertRaises(ValueError):
+            fault_notification_budget(**dict(args,poll_start_interval_s=1e-6))
+        with self.assertRaises(ValueError):
+            fault_notification_budget(**dict(args,host_service_s=float('inf')))
+
     def test_recovery_mailbox_atomicity_and_response_identity(self):
         from recovery_mailbox import RecoveryMailbox
         m=RecoveryMailbox()
@@ -18,8 +127,8 @@ class CodecChecks(unittest.TestCase):
         self.assertTrue(m.write(m.COMMIT,1,clocks=40))
         self.assertFalse(m.write(m.EPOCH,8))
         self.assertEqual(m.read(m.REPLY_STATUS),0x4000)
-        self.assertIsNone(m.reference_edge())
-        self.assertEqual(m.reference_edge(),(12,7,1))
+        self.assertIsNone(m.management_edge())
+        self.assertEqual(m.management_edge(),(12,7,1))
         with self.assertRaises(ValueError):m.complete(11,8,0)
         m.complete(12,8,0)
         self.assertEqual(m.read(m.REPLY_STATUS),0x4000)
@@ -30,11 +139,28 @@ class CodecChecks(unittest.TestCase):
         for _ in range(2):
             m.write(m.EPOCH,7);m.write(m.TAG,12)
             self.assertTrue(m.write(m.COMMIT,1))
-            self.assertIsNone(m.reference_edge())  # Retry cannot repeat stop.
+            self.assertIsNone(m.management_edge())  # Retry cannot repeat stop.
             self.assertEqual(m.read(m.REPLY_EPOCH),8)
         m.write(m.EPOCH,8);m.write(m.TAG,12)
         self.assertFalse(m.write(m.COMMIT,3))  # Same tag, different operation.
         self.assertEqual(m.read(m.REPLY_EPOCH),8)
+
+    def test_management_recovery_without_payload_clocks_and_shadow_abandon(self):
+        from recovery_mailbox import RecoveryMailbox
+        m=RecoveryMailbox()
+        m.write(m.EPOCH,7);m.write(m.TAG,12)
+        self.assertTrue(m.write(m.COMMIT,0))
+        self.assertFalse(m.write(m.COMMIT,1))
+        self.assertIsNone(m.pending)
+        m.write(m.EPOCH,8);m.write(m.TAG,13)
+        self.assertTrue(m.write(m.COMMIT,1))
+        self.assertFalse(m.write(m.COMMIT,0))  # Cannot retract a pending action.
+        self.assertIsNone(m.management_edge())
+        self.assertEqual(m.management_edge(),(13,8,1))
+        m.complete(13,9,0)
+        m.spi_edge();m.spi_edge()
+        self.assertEqual(m.read(m.REPLY_STATUS),0x8000)
+        # No REF_IN, H2D or D2H edge was needed to publish this response.
 
     def test_observed_clock_pacing_wrap_loss_and_explicit_restart(self):
         from bit_event_codec import ObservedClockPacer
@@ -107,7 +233,7 @@ class CodecChecks(unittest.TestCase):
 
     def test_usb_explicit_final_pipeline_preserves_rejection(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
-        from behavioral import usb_observed_response
+        usb_observed_response=self.configured_usb_response
         config=dict(clock_source='host_ddr',bits_per_cycle=16,capacity_records=8,
                     synchronizer_cycles=2,decision_cycles=3)
         args=dict(request_lengths=(8,),usb_data_packet=True,host_pacing=True,
@@ -125,7 +251,7 @@ class CodecChecks(unittest.TestCase):
 
     def test_usb_host_clocked_parser_derives_clock_and_keeps_ingress_crossing(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
-        from behavioral import usb_observed_response
+        usb_observed_response=self.configured_usb_response
         config=dict(clock_source='host_ddr',bits_per_cycle=16,capacity_records=8,synchronizer_cycles=2)
         args=dict(request_lengths=(8,),usb_data_packet=True,host_pacing=True,
                   coalesce_return=True,clock_phases=((.37,.99),),h2d_clock_ppm=100.,fpga_ingress=config)
@@ -145,7 +271,7 @@ class CodecChecks(unittest.TestCase):
 
     def test_usb_return_command_crossing_is_not_free(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
-        from behavioral import usb_observed_response
+        usb_observed_response=self.configured_usb_response
         args=dict(request_lengths=(8,),usb_data_packet=True,host_pacing=True,
                   coalesce_return=True,clock_phases=((.37,.99),),
                   fpga_ingress=dict(clock_hz=100e6,bits_per_cycle=16,
@@ -166,7 +292,7 @@ class CodecChecks(unittest.TestCase):
 
     def test_usb_fpga_synchronization_is_charged_before_decision(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
-        from behavioral import usb_observed_response
+        usb_observed_response=self.configured_usb_response
         args=dict(request_lengths=(8,),usb_data_packet=True,host_pacing=True,
                   coalesce_return=True,clock_phases=((.37,.99),))
         config=dict(clock_hz=100e6,bits_per_cycle=16,capacity_records=8,phase_cycles=.37)
@@ -183,7 +309,7 @@ class CodecChecks(unittest.TestCase):
 
     def test_usb_processing_clock_phase_is_independent(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
-        from behavioral import usb_observed_response
+        usb_observed_response=self.configured_usb_response
         args=dict(request_lengths=(8,),usb_data_packet=True,host_pacing=True,
                   coalesce_return=True,clock_phases=((.37,.99),))
         for phase in (0.,.37,.99):
@@ -200,7 +326,7 @@ class CodecChecks(unittest.TestCase):
 
     def test_usb_ingress_capacity_overflow_never_acknowledges(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
-        from behavioral import usb_observed_response
+        usb_observed_response=self.configured_usb_response
         args=dict(request_lengths=(512,),usb_data_packet=True,host_pacing=True,
                   coalesce_return=True,clock_phases=((.37,0.),))
         for width,capacity in ((1,8),(16,1)):
@@ -236,7 +362,7 @@ class CodecChecks(unittest.TestCase):
 
     def test_usb_parallel_work_width_changes_deadline_outcome(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
-        from behavioral import usb_observed_response
+        usb_observed_response=self.configured_usb_response
         args=dict(request_lengths=(8,),usb_data_packet=True,host_pacing=True,
                   coalesce_return=True,clock_phases=((.37,0.),),h2d_clock_ppm=-100.)
         reports=[usb_observed_response(**args,fpga_ingress=dict(clock_hz=100e6,bits_per_cycle=w)) for w in (8,16)]
@@ -249,7 +375,7 @@ class CodecChecks(unittest.TestCase):
 
     def test_usb_ingress_work_cannot_be_hidden_by_fixed_decision_delay(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
-        from behavioral import usb_observed_response
+        usb_observed_response=self.configured_usb_response
         args=dict(request_lengths=(512,),usb_data_packet=True,host_pacing=True,
                   coalesce_return=True,clock_phases=((.37,.99),))
         slow=usb_observed_response(**args,fpga_ingress=dict(clock_hz=100e6,bits_per_cycle=1))
@@ -267,7 +393,7 @@ class CodecChecks(unittest.TestCase):
 
     def test_usb_processing_budget_is_charged_to_deadline(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
-        from behavioral import usb_observed_response
+        usb_observed_response=self.configured_usb_response
         args=dict(request_lengths=(8,),usb_data_packet=True,host_pacing=True,
                   coalesce_return=True,clock_phases=((.37,.99),),h2d_clock_ppm=100.)
         fast=usb_observed_response(**args,fpga_processing_s=40e-9)
@@ -284,7 +410,7 @@ class CodecChecks(unittest.TestCase):
 
     def test_usb_response_independent_host_rates(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
-        from behavioral import usb_observed_response
+        usb_observed_response=self.configured_usb_response
         for ppm in (-100.,100.):
             options=dict(request_lengths=(23,),host_pacing=True,coalesce_return=True,
                          h2d_clock_ppm=ppm,clock_phases=((0.,.99),))
@@ -312,7 +438,7 @@ class CodecChecks(unittest.TestCase):
 
     def test_live_usb_damaged_packet_withholds_response(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
-        from behavioral import usb_observed_response
+        usb_observed_response=self.configured_usb_response
         for fault in ('sync','pid','body','eop'):
             report=usb_observed_response(request_lengths=(8,),usb_data_packet=True,
                 packet_fault=fault,host_pacing=True,coalesce_return=True,
@@ -324,7 +450,7 @@ class CodecChecks(unittest.TestCase):
 
     def test_usb_retry_preserves_live_transport(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
-        from behavioral import usb_observed_response
+        usb_observed_response=self.configured_usb_response
         options=dict(request_lengths=(8,),usb_data_packet=True,packet_fault='body',
             retry_after_s=1e-6,host_pacing=True,coalesce_return=True,
             clock_phases=((.37,.99),),h2d_clock_ppm=100.)
@@ -353,17 +479,14 @@ class CodecChecks(unittest.TestCase):
 
     def test_staged_tx_emission_observer(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
-        from behavioral import BehavioralChip,Assumptions
         source=lambda i:(37*i+5)%1024
         def run(chunks,prefill=512):
-            c=BehavioralChip(Assumptions(h2d_clock_scale=1.0001))
-            c.configure_numeric(engine='wire',timing=dict(line_rate_bps=2.5e9))
-            c.configure_transport('exclusive');c.start();c.advance(c.ready_at)
+            c,depth=self.configured_wired_chip(1.0001)
             origin=c.time;events=[]
             observer=lambda time,word:events.append((time,word))
             for frames in chunks:
                 result=c.transfer(mode=1,source_hz=250e6,sample_bits=10,frames=frames,
-                    epoch=c.epoch,directions=('tx',),tx_source=source,
+                    epoch=c.epoch,directions=('tx',),tx_source=source,depth_bits=depth,
                     tx_prefill_bits=prefill,host_block_words=8,host_cdc_read_hz=40e6,
                     host_cdc_phase=.37,tx_word_observer=observer)
             return c,result,events,origin
@@ -379,16 +502,14 @@ class CodecChecks(unittest.TestCase):
 
     def test_emitted_tx_channel_peer(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
-        from behavioral import BehavioralChip,Assumptions,EmittedWordChannel
+        from behavioral import EmittedWordChannel
         source=lambda i:(37*i+5)%1024
         def run(chunks,ppm):
-            c=BehavioralChip(Assumptions(h2d_clock_scale=1.0001))
-            c.configure_numeric(engine='wire',timing=dict(line_rate_bps=2.5e9))
-            c.configure_transport('exclusive');c.start();c.advance(c.ready_at)
+            c,depth=self.configured_wired_chip(1.0001)
             peer=EmittedWordChannel(residual_ppm=ppm)
             for frames in chunks:
                 report=c.transfer(mode=1,source_hz=250e6,sample_bits=10,frames=frames,
-                    epoch=c.epoch,directions=('tx',),tx_source=source,host_block_words=8,
+                    epoch=c.epoch,directions=('tx',),tx_source=source,depth_bits=depth,host_block_words=8,
                     host_cdc_read_hz=40e6,host_cdc_phase=.37,tx_word_observer=peer.emit)
             peer.advance(c.time)
             self.assertIsNone(report['fault']);self.assertTrue(peer.timing_qualified)
@@ -501,14 +622,11 @@ class CodecChecks(unittest.TestCase):
 
     def test_reference_pacing_prevents_accumulated_host_drift(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
-        from behavioral import BehavioralChip,Assumptions
         results=[]
         for paced in (False,True):
-            chip=BehavioralChip(Assumptions(h2d_clock_scale=.999))
-            chip.configure_numeric(engine='wire',timing=dict(line_rate_bps=2.5e9))
-            chip.configure_transport('exclusive');chip.start();chip.advance(chip.ready_at)
+            chip,depth=self.configured_wired_chip(.999)
             results.append(chip.transfer(mode=1,source_hz=250e6,sample_bits=10,
-                frames=2048,epoch=chip.epoch,directions=('tx',),
+                frames=2048,epoch=chip.epoch,directions=('tx',),depth_bits=depth,
                 tx_source=lambda i:(37*i+5)%1024,host_block_words=8,
                 host_cdc_read_hz=40e6,host_cdc_phase=.37,tx_prefill_bits=1024,
                 tx_reference_pacing=paced))
@@ -640,6 +758,7 @@ class CodecChecks(unittest.TestCase):
         with self.assertRaises(ValueError):encode_records([('event',1,0,0),('data',0,10,1)],0)
 
 class TrainedReturnChecks(unittest.TestCase):
+    """Independent training/timeout fixtures with assigned edge and command times."""
     def test_clock_loss_at_every_frame_position(self):
         from bit_event_codec import TrainedRecordReceiver
         frame=encode_records([('data',7,10,0),('event',1,0,0),('data',5,10,0)],0,64)
@@ -661,8 +780,8 @@ class TrainedReturnChecks(unittest.TestCase):
 
     def test_management_delay_requires_separate_startup_window(self):
         from bit_event_codec import TrainedRecordReceiver
-        # Existing management timing: 128 SPI bits at 20 MHz, two 40 MHz
-        # control edges after arrival, then a separate 128-bit reply.
+        # Assigned management-delay fixture: 128 bits at 20 MHz, two 40 MHz
+        # control edges, then a separate reply; not the current SPI ABI.
         apply=128/20e6+2/40e6;reply=apply+128/20e6
         rx=TrainedRecordReceiver();rx.advance(apply)
         self.assertEqual(rx.fault,'Host clock timeout')
@@ -692,6 +811,7 @@ class TrainedReturnChecks(unittest.TestCase):
 
 
 class BulkReturnChecks(unittest.TestCase):
+    """Prescribed recovered-source/CDC examples, not shared-chip timing evidence."""
     def test_alignment_after_serialized_host_records(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
         from behavioral import raw_host_alignment_controls
@@ -720,50 +840,32 @@ class BulkReturnChecks(unittest.TestCase):
             self.assertEqual(row['cancelled_status'],1)
             self.assertGreater(row['restart_discards'][0]['cdc_entries'],0)
 
-    def test_serialized_management_restart_with_queued_commands(self):
+    def test_delayed_restart_flushes_old_records_without_receiver_rearm(self):
+        # Prescribed command arrival tests the current host boundary only.
+        # It does not assert a serialized SPI ABI or queue-latency guarantee.
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
         from behavioral import TimedBulkRecordReturn
-        from diagnostic_tile_lifecycle import DiagnosticChip
-        class Fixture(DiagnosticChip):
-            TILE_COMMANDS=DiagnosticChip.TILE_COMMANDS+('restart_raw_return',)
-            def execute_management(self,operation,payload,time):
-                if operation=='restart_raw_return':
-                    if payload:raise ValueError('Reserved restart payload')
-                    self.discarded=self.host.restart(time,receiver_already_armed=True)
-                    return dict(value=self.host.epoch)
-                return super().execute_management(operation,payload,time)
-        for queued in (0,3):
+        for apply in (5e-6,25e-6):
             for phase in (0.,13e-9):
+                at=apply+phase
                 source=BitEventStream(128);host=TimedBulkRecordReturn(source,trained=True)
                 host.halt(0.)
                 source.event(11,0.)
                 for _ in range(23):source.bit(0,0.)
                 host.receiver.startup_timeout=60e-6;host.receiver.arm(0.)
-                control=Fixture(control_phase_s=phase);control.host=host
-                for _ in range(queued):control.submit('status',0,control.epoch,control.rx_generation)
-                token,apply,reply=control.submit('restart_raw_return',0,control.epoch,control.rx_generation)
-                control.advance(apply-1e-12);self.assertEqual(host.epoch,0)
-                control.advance(apply);self.assertEqual(host.epoch,1)
-                self.assertGreater(control.discarded['source_records'],0)
-                self.assertEqual(host.receiver.armed,0.)  # No magical receiver rearm at apply.
-                source.event(22,apply)
+                host.advance(at-1e-12);self.assertEqual(host.epoch,0)
+                discarded=host.restart(at,receiver_already_armed=True)
+                self.assertEqual(host.epoch,1)
+                self.assertGreater(discarded['source_records'],0)
+                self.assertEqual(host.receiver.armed,0.)
+                source.event(22,at)
                 for i in range(1003):
-                    now=apply+(i+1)/2.5e9;host.advance(now);source.bit(1,now)
-                source.event(23,now);host.advance(reply)
-                result=control.read_reply(token,reply)
-                self.assertTrue(result['accepted']);self.assertEqual(result['value'],1)
+                    now=at+(i+1)/2.5e9;host.advance(now);source.bit(1,now)
+                source.event(23,now);host.advance(now+10e-6)
                 records=[r for _,r in host.observed]
                 self.assertEqual([v for k,v,n in records if k=='event'],[22,23])
                 self.assertEqual([v>>i&1 for k,v,n in records if k=='data' for i in range(n)],[1]*1003)
                 self.assertTrue(host.receiver.locked)
-        # The real queue's epoch fence rejects stale restart before any flush.
-        source=BitEventStream();host=TimedBulkRecordReturn(source,trained=True);host.halt(0.)
-        host.receiver.startup_timeout=60e-6;host.receiver.arm(0.)
-        control=Fixture();control.host=host
-        token,apply,reply=control.submit('restart_raw_return',0,control.epoch+1,control.rx_generation)
-        result=control.read_reply(token,reply)
-        self.assertFalse(result['accepted']);self.assertEqual(host.epoch,0)
-        self.assertFalse(host.clock_active)
 
     def test_connected_clock_stop_flush_and_training(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
@@ -857,6 +959,7 @@ class BulkReturnChecks(unittest.TestCase):
 
 
 class BitEventChecks(unittest.TestCase):
+    """Independent packing and passive-pad observation fixtures."""
     def test_partial_word_and_event_order(self):
         for length in range(41):
             c=BitEventStream();bits=[(i*7+i//3)%2 for i in range(length)]

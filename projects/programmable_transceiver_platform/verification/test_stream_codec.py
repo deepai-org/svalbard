@@ -1,6 +1,14 @@
+"""Independent metadata protection and framed-stream state-machine fixtures.
+
+Bit faults and explicit schedules test the codec; they do not establish the
+current byte-stream hardware allocation or GPIO timing."""
 import itertools
 import unittest
 from stream_codec import Receiver,encode,metadata,protect,unprotect,slots
+
+TEST_DESIGN_ROLES = {
+    'StreamingTests': ('independent_fixture', 'Metadata code basis, exhaustive bit faults and explicitly assigned frame schedules.'),
+}
 
 class StreamingTests(unittest.TestCase):
     def test_all_up_to_three_metadata_bit_errors(self):

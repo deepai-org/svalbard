@@ -3,8 +3,7 @@
 Decoupling voltages and output-to-board voltages are continuous states. A common
 resistive return is algebraic. Rising and falling currents follow their actual
 branches rather than becoming identical two-terminal rail charge impulses.
-This candidate is not yet connected to IntegratedTransceiverChip or fitted to
-native pads. Ideal mutually exclusive pull-up/down controls omit gate energy.
+These circuit primitives are not fitted to native pads or the selected package. Ideal mutually exclusive pull-up/down controls omit gate energy.
 """
 import hashlib
 import copy
@@ -307,7 +306,7 @@ def limited_controls():
     return report
 
 
-def coupled_controls(chip_events=False):
+def coupled_controls():
     """Check shared analog ownership against the standalone supply equations."""
     p = Path(__file__).resolve().parents[1]
     sys.path.insert(0, str(p/'system_model/connected'))
@@ -321,41 +320,6 @@ def coupled_controls(chip_events=False):
     background = np.array([.020, .002, .002, 0., 0., .012, .008])
     d = DomainSupply(('CORE', 'HOST_A', 'HOST_B', 'WIRE_A', 'WIRE_B', 'RF', 'PLL'),
         [3.3]*7, [2.]*7, [100e-12]*7, .1)
-    if chip_events:
-        from fast_exclusive_engine import IntegratedTransceiverChip
-        rows = []
-        for engine in ('rf', 'wire'):
-            c = IntegratedTransceiverChip(coupled_analog=True,
-                rf_hz_per_v=1e6, wire_hz_per_v=1e5,
-                return_charge_per_transition=0., domain_supply=d,
-                domain_minimum_v=[2.5]*7, domain_load=lambda t, v:background.copy(),
-                host_bank=h)
-            c.select_engine(engine);c.advance(10e-9)
-            for word in (1023, 0, 31):
-                c.emitted_return_word(word, c.time);c.advance(c.time+3.2e-9)
-            owner=c.analog_owner;bank=owner.host_bank;domains=owner.domains
-            residual=(domains.source_energy_j-domains.feed_loss_j-domains.load_energy_j
-                -domains.impulse_energy_j-(bank.cap_energy()-bank.initial_energy))
-            assert abs(residual)<1e-17, residual
-            assert bank.time==c.time==owner.time
-            assert all(pll.time==c.time for pll in (c.rf_pll,c.wire_pll) if pll is not None)
-            assert np.max(abs(bank.state[:7]-domains.voltage))<1e-12
-            assert np.max(abs(bank.injected_charge-np.array([0,105e-12,91e-12,0,0,0,0])))<1e-24
-            assert np.max(abs(bank.injected_charge-bank.consumed_charge-bank.pending_charge))<1e-24
-            assert domains.impulse_energy_j==0 and c.return_charge==0
-            assert c.clock_supply_delta()==domains.voltage[6]-domains.nominal[6]
-            rows.append(dict(engine=engine,energy_residual_j=float(residual),
-                voltage_v=domains.voltage.tolist(),feedback_intervals=c.feedback_intervals))
-        report=dict(status='passed',cases=rows,full_chip_closure=False,
-            physical_qualification=False,scope='19.6 ns startup and three output words in each engine',
-            limitations=['No payload throughput or signal-quality qualification.',
-                'Exploratory driver, switching charge and background currents.'],
-            source_sha256={str(f.relative_to(p)):hashlib.sha256(f.read_bytes()).hexdigest()
-                for f in list((p/'system_model/connected').glob('*.py'))+
-                         list((p/'system_model/architecture_fast').glob('*.py'))+
-                         [Path(__file__).resolve(),p/'verification/fast_exclusive_engine.py',p/'verification/fast_loaded_output.py']})
-        (p/'evidence/host-bank-chip-events.json').write_text(json.dumps(report,indent=2)+'\n')
-        print(json.dumps(report,indent=2));return report
     c = LimitedCoupledDriver(domain_supply=d, domain_minimum_v=[2.5]*7,
         domain_load=lambda t, v: background.copy(), host_bank=h)
     c.driver_enabled = False
@@ -527,7 +491,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--limited-controls', action='store_true')
     parser.add_argument('--coupled-controls', action='store_true')
-    parser.add_argument('--chip-events', action='store_true')
     parser.add_argument('--sampling-screen', action='store_true')
     args = parser.parse_args()
-    sampling_screen() if args.sampling_screen else coupled_controls(chip_events=True) if args.chip_events else coupled_controls() if args.coupled_controls else limited_controls() if args.limited_controls else controls()
+    sampling_screen() if args.sampling_screen else coupled_controls() if args.coupled_controls else limited_controls() if args.limited_controls else controls()

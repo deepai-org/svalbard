@@ -94,22 +94,6 @@
   ],
   "candidate_signal_mapping": [
     {
-      "signal": "D2H_D[0]",
-      "site": "clk_pad",
-      "bond_pad": 1,
-      "board_net": "/pad_0",
-      "connector_contact": 8,
-      "other_component_references": []
-    },
-    {
-      "signal": "RESET_N",
-      "site": "rst_n_pad",
-      "bond_pad": 2,
-      "board_net": "/pad_1",
-      "connector_contact": 7,
-      "other_component_references": []
-    },
-    {
       "signal": "D2H_CLK",
       "site": "bidir[5].pad",
       "bond_pad": 8,
@@ -118,83 +102,11 @@
       "other_component_references": []
     },
     {
-      "signal": "H2D_CLK",
-      "site": "bidir[34].pad",
-      "bond_pad": 45,
-      "board_net": "/pad_44",
-      "connector_contact": 36,
-      "other_component_references": []
-    },
-    {
-      "signal": "WIRE_RX_P",
-      "site": "bidir[14].pad",
-      "bond_pad": 20,
-      "board_net": "/pad_19",
-      "connector_contact": 60,
-      "other_component_references": []
-    },
-    {
-      "signal": "WIRE_RX_N",
-      "site": "bidir[15].pad",
-      "bond_pad": 21,
-      "board_net": "/pad_20",
-      "connector_contact": 59,
-      "other_component_references": []
-    },
-    {
-      "signal": "WIRE_TX_P",
-      "site": "bidir[20].pad",
-      "bond_pad": 28,
-      "board_net": "/pad_27",
-      "connector_contact": 52,
-      "other_component_references": []
-    },
-    {
-      "signal": "WIRE_TX_N",
-      "site": "bidir[21].pad",
-      "bond_pad": 29,
-      "board_net": "/pad_28",
-      "connector_contact": 51,
-      "other_component_references": []
-    },
-    {
-      "signal": "RF_RX_P",
-      "site": "inputs[11].pad",
-      "bond_pad": 70,
-      "board_net": "/pad_69",
-      "connector_contact": 12,
-      "other_component_references": []
-    },
-    {
-      "signal": "RF_RX_N",
-      "site": "inputs[10].pad",
-      "bond_pad": 69,
-      "board_net": "/pad_68",
-      "connector_contact": 13,
-      "other_component_references": []
-    },
-    {
-      "signal": "RF_TX_P",
-      "site": "inputs[5].pad",
-      "bond_pad": 62,
-      "board_net": "/pad_61",
-      "connector_contact": 20,
-      "other_component_references": []
-    },
-    {
-      "signal": "RF_TX_N",
-      "site": "inputs[4].pad",
-      "bond_pad": 61,
-      "board_net": "/pad_60",
-      "connector_contact": 21,
-      "other_component_references": []
-    },
-    {
-      "signal": "REF_IN",
-      "site": "inputs[1].pad",
-      "bond_pad": 56,
-      "board_net": "/pad_55",
-      "connector_contact": 26,
+      "signal": "D2H_D[0]",
+      "site": "clk_pad",
+      "bond_pad": 1,
+      "board_net": "/pad_0",
+      "connector_contact": 8,
       "other_component_references": []
     },
     {
@@ -267,6 +179,14 @@
       "bond_pad": 13,
       "board_net": "/pad_12",
       "connector_contact": 67,
+      "other_component_references": []
+    },
+    {
+      "signal": "H2D_CLK",
+      "site": "bidir[34].pad",
+      "bond_pad": 45,
+      "board_net": "/pad_44",
+      "connector_contact": 36,
       "other_component_references": []
     },
     {
@@ -358,11 +278,11 @@
       "other_component_references": []
     },
     {
-      "signal": "HOST_SCLK",
-      "site": "bidir[11].pad",
-      "bond_pad": 15,
-      "board_net": "/pad_14",
-      "connector_contact": 65,
+      "signal": "HOST_MISO",
+      "site": "bidir[13].pad",
+      "bond_pad": 17,
+      "board_net": "/pad_16",
+      "connector_contact": 63,
       "other_component_references": []
     },
     {
@@ -374,11 +294,99 @@
       "other_component_references": []
     },
     {
-      "signal": "HOST_MISO",
-      "site": "bidir[13].pad",
-      "bond_pad": 17,
-      "board_net": "/pad_16",
-      "connector_contact": 63,
+      "signal": "HOST_SCLK",
+      "site": "bidir[11].pad",
+      "bond_pad": 15,
+      "board_net": "/pad_14",
+      "connector_contact": 65,
+      "other_component_references": []
+    },
+    {
+      "signal": "REF_IN",
+      "site": "inputs[1].pad",
+      "bond_pad": 56,
+      "board_net": "/pad_55",
+      "connector_contact": 26,
+      "other_component_references": []
+    },
+    {
+      "signal": "REF_IN_N",
+      "site": "inputs[0].pad",
+      "bond_pad": 55,
+      "board_net": "/pad_54",
+      "connector_contact": 27,
+      "other_component_references": []
+    },
+    {
+      "signal": "RESET_N",
+      "site": "rst_n_pad",
+      "bond_pad": 2,
+      "board_net": "/pad_1",
+      "connector_contact": 7,
+      "other_component_references": []
+    },
+    {
+      "signal": "RF_RX_N",
+      "site": "inputs[10].pad",
+      "bond_pad": 69,
+      "board_net": "/pad_68",
+      "connector_contact": 13,
+      "other_component_references": []
+    },
+    {
+      "signal": "RF_RX_P",
+      "site": "inputs[11].pad",
+      "bond_pad": 70,
+      "board_net": "/pad_69",
+      "connector_contact": 12,
+      "other_component_references": []
+    },
+    {
+      "signal": "RF_TX_N",
+      "site": "inputs[4].pad",
+      "bond_pad": 61,
+      "board_net": "/pad_60",
+      "connector_contact": 21,
+      "other_component_references": []
+    },
+    {
+      "signal": "RF_TX_P",
+      "site": "inputs[5].pad",
+      "bond_pad": 62,
+      "board_net": "/pad_61",
+      "connector_contact": 20,
+      "other_component_references": []
+    },
+    {
+      "signal": "WIRE_RX_N",
+      "site": "bidir[15].pad",
+      "bond_pad": 21,
+      "board_net": "/pad_20",
+      "connector_contact": 59,
+      "other_component_references": []
+    },
+    {
+      "signal": "WIRE_RX_P",
+      "site": "bidir[14].pad",
+      "bond_pad": 20,
+      "board_net": "/pad_19",
+      "connector_contact": 60,
+      "other_component_references": []
+    },
+    {
+      "signal": "WIRE_TX_N",
+      "site": "bidir[21].pad",
+      "bond_pad": 29,
+      "board_net": "/pad_28",
+      "connector_contact": 51,
+      "other_component_references": []
+    },
+    {
+      "signal": "WIRE_TX_P",
+      "site": "bidir[20].pad",
+      "bond_pad": 28,
+      "board_net": "/pad_27",
+      "connector_contact": 52,
       "other_component_references": []
     }
   ],
@@ -590,7 +598,16 @@
       ]
     }
   ],
-  "project_contract_sha256": "f1f5d77f5062e9d3b43b94af197408f37a755903839a2e58b07ac1e7ac1429e5",
+  "design_provenance": {
+    "design_fingerprint": "ad4a306128059706e8c55313a17a720d1393e58b826d36b2b214f80c24df1440",
+    "fingerprint_format": "canonical-json-sha256-v1",
+    "circuit_experiments": [],
+    "documents": {
+      "spec/contract.json": "ee71ea7c01cc7954dd569ca83c8e87798c8e2b75c57d56fca2f6f52700e549d0",
+      "spec/analog-architecture.json": "1add681550d58efb6466b7a4a1e4fff9a6360691f049a32d0b708961b2dde20b"
+    }
+  },
+  "configuration_scope": "assembly_connectivity_audit_not_active_signal_configuration",
   "limitations": [
     "Run 1 only; provider explicitly says later-run pinouts and footprints may change.",
     "South-origin/west-reversal die-to-board permutation inferred from fixed-power sequence; verify against actual GDS and wirebond drawing before freezing signal names.",

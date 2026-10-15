@@ -7,6 +7,10 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model'/'connec
 from fractional_pulse_screen import CountedAcquisition
 
 
+TEST_DESIGN_ROLES = {
+    'CountedAcquisitionTests': ('independent_fixture', 'Assigned clock edges test observer windows, frequency steps and loss; no oscillator qualification.'),
+}
+
 class CountedAcquisitionTests(unittest.TestCase):
     def test_reference_rate_preserves_acquisition_observation_duration(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model'/'architecture_fast'))

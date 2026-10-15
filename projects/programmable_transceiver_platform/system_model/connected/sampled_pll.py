@@ -9,7 +9,8 @@ from autonomous_pll import AutonomousPLL
 
 
 class SampledPLL(AutonomousPLL):
-    def __init__(self,**kwargs):
+    def __init__(self,reference_edge_provider=None,**kwargs):
+        self.reference_edge_provider=reference_edge_provider
         super().__init__(**kwargs)
         self.initialize_reference(0.,1/self.reference_hz)
 
@@ -18,7 +19,10 @@ class SampledPLL(AutonomousPLL):
             raise ValueError('Detector schedule requires a future reference edge at current time')
         self.detector_error=max(-.5,min(.5,self.error))
         self.detector_origin=first_tick-1/self.reference_hz
-        self.detector_index=1;self.next_detector=first_tick
+        self.detector_index=1;self.next_detector=(first_tick if self.reference_edge_provider is None
+            else self.reference_edge_provider(1))
+        if not math.isfinite(self.next_detector) or self.next_detector<=time:
+            raise ValueError('Reference edge must be finite and in the future')
         self.detector_updates=0
 
     def control(self,error=None,integral=None):
@@ -42,7 +46,14 @@ class SampledPLL(AutonomousPLL):
             tick=self.next_detector
             super().advance(tick)
             if self.present:
-                self.detector_error=max(-.5,min(.5,self.error));self.detector_updates+=1
+                # error is stored against a nominal reference to preserve continuous
+                # VCO phase. Only the sampled detector sees actual input timing.
+                reference_phase=(0. if self.reference_edge_provider is None else
+                    self.detector_index-self.reference_hz*tick)
+                self.detector_error=max(-.5,min(.5,self.error+reference_phase));self.detector_updates+=1
             self.detector_index+=1
-            self.next_detector=self.detector_origin+self.detector_index/self.reference_hz
+            self.next_detector=(self.detector_origin+self.detector_index/self.reference_hz
+                if self.reference_edge_provider is None else self.reference_edge_provider(self.detector_index))
+            if not math.isfinite(self.next_detector) or self.next_detector<=tick:
+                raise ValueError('Reference edges must be finite and strictly ordered')
         super().advance(time)

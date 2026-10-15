@@ -1,80 +1,370 @@
 # Whole-chip power and resource allocation
 
-The [normative architecture and diagram](block-diagram.md) own selected functional
-boundaries. Numerical studies below are conditional evidence, not frozen circuit
-topologies or qualified component specifications.
+The [analog inventory](analog-architecture.json) owns selected per-block
+area/current ceilings, supply connections, decoupling and memory allocations.
+The [normative architecture](block-diagram.md#selected-resource-allocation)
+summarizes those selections and its generated connection table identifies every
+power consumer. These allocations are requirements to implement, not evidence
+of physical performance.
 
-The current differential revision allocates 44 mA to timing/reference and
-1.60 mm² to timing. Historical waveform sections below retain their original
-236/288/242 mA single-ended fixtures; they do not qualify the current revision.
-The extra 4 mA buys an input allowance, not demonstrated supply rejection.
+Board bulk capacitance supplements, rather than replaces, the local supply and
+reference allocations. [Implementation ownership](block-diagram.md#silicon-fpga-and-board-allocation)
+keeps sensitive feedback nodes local and calibration computation on the FPGA;
+no speculative offloading savings are deducted from these ceilings.
 
 ## Provisional implementation allocation
 
-These are **rough design allocations**, selected to make the first-chip
-architecture concrete. They are not device-derived estimates. Layout and
-extraction will determine actual area; unknown layout area alone must not keep
-this architecture review open indefinitely. Preserve the existing contract's
-12.92 mm² total and 2.77 mm² support/growth reserve. Do not count both a parent
-allowance and its subdivisions. Current numbers below are targets for the next
-joined model, not retroactive proof for earlier lower-current simulations.
+### One physical operating envelope
 
-| Fabricated circuit inventory | Area allocation, mm² | Current ownership / provisional allowance | Pins, bandwidth and timing obligation |
-|---|---:|---|---|
-| Wired TX serializer/driver; RX equalizer/slicers/deserializer; shared USB/TMDS/detection switches and local bias | 2.35 = TX 0.75 + RX 0.85 + electrical controls 0.45 + local growth 0.30 | WIRE_A/B: 48 mA each including local bias, switched load and uncertainty; RX CDR analog circuitry charged to timing | Four wired pins; independent TX/RX through 2.5 Gb/s; USB on RX pair. Apply idle/pulls/termination/drive independently; inactive branches remain capacitance loads. |
-| RF input/LNA and two RX mixers | 0.55 | RF: 4 mA | RF_RX pair; initial 2.4–2.484 GHz tuning; limited early gain and blocker headroom. |
-| Two channel filters and PGAs, including Q/zero/offset control | 0.75 | RF: 3 mA | Internal I/Q; preserve wideband fixture tones through ±9.53125 MHz and narrow settings; settle with real acquisition/AGC deadlines. |
-| Two TX reconstruction/upconversion branches | 0.55 | RF: 2 mA | Internal I/Q, same LO coverage; FPGA interpolation precedes DAC; reconstruction and image/emission requirements remain. |
-| Summed RF output driver | 0.40 | RF: 28 mA | RF_TX pair; retain the existing loaded-driver study as a requirement point, not a promised RF output-power specification. |
-| RF isolation, local bias and inactive leakage allowance | 0.15 | RF: 1 mA | No additional pins; warm/mute and isolate states must preserve recovery. |
-| Two ADCs | 0.60 | RF: 4 mA total | 12-bit words; 8 ENOB initial requirement, not guaranteed resolution; approximately 4.69–38.81 MS/s across selected dividers/LO interval. |
-| Two DACs | 0.35 | RF: 2 mA total | Same word/rate family; deterministic prefill/start, no burst-time reference reset. |
-| Converter references, buffers, local decoupling and converter growth | 0.35 = references 0.25 + growth 0.10 | PLL/reference budget below; reference charge is not an extra RF reservation | No new reference pins assumed; load settling at actual conversion events, including simultaneous I/Q. |
-| RF source, wired TX source, RX CDR, external conditioning/phase generation and clock distribution | 1.60 = 0.35 + 0.25 + 0.35 + 0.45 + 0.20 | PLL/reference: 44 mA total planning target: sources 12, CDR 8, external input/phase 12, distribution 6, master bias/converter reference 6. Includes static and switching; no second C·V·f charge on top. | One differential REF_IN/REF_IN_N port; external GHz branch plus normal reference branch selected while stopped; independent RX recovery, common qualified timing model, stop/train/epoch after source changes. |
-| Host/control/transport/reset logic and predrivers | 1.65 = host logic 0.45 + control 0.35 + transport 0.55 + reset/epoch 0.30 | CORE: 40 mA including memory below; HOST output/input-cell activity separately capped at 55 mA per segment | 22 host signals plus four SPI and reset; H2D 312.5 Mword/s, selected RF D2H LO/16 words, wired up to 312.5 Mword/s. Maintain bounded service and fault delivery. |
-| Short queues, CDC and staging storage | 0.85 | Included in CORE 40 mA, not charged again | No external pins; set an 8,192-bit total data-bank/staging/queue ceiling, including metadata storage. Retain the 3,792-bit partial inventory inside it, not in addition. Ordinary FSM logic stays in the digital owner; bulk packets/captures remain on FPGA. |
-| Shared support and global growth | 2.77 = additional local reservoirs 0.60 + isolation/routing 1.20 + power conditioning 0.40 + unassigned growth 0.57 | Consumption must be charged to its RF/PLL/CORE/HOST/WIRE owner; no invisible extra supply domain | Clock negative leg consumes one previously spare site; preserve provider power sites and common-return constraints. External regulation is baseline; no mandatory on-chip LDO array. |
+Accept a mode only when its pad loading, source impedance, supply/return
+network, clock sensitivity, converter performance and host switching describe
+the same configuration. Do not combine minimum loading from one board with
+maximum drive or minimum noise from another. External clocks remove source
+synthesis obligations, not input-buffer, distribution or supply-induced jitter.
 
-Totals: RF analog **2.40 mm²**, converters **1.30 mm²**, and the other owner
-totals match the revised contract; the overall core ceiling is unchanged. Pad macro geometry is peripheral; any
-intrusion into the core consumes these allowances. All fabricated inactive
-blocks retain their area. The support capacitor allowance is distinct from
-converter-local decoupling already included in the converter owner. Within its
-0.60 mm² allocation, 500 pF at the cited minimum 0.9 fF/µm² density leaves very
-little overhead; a denser permitted option or reallocation may be necessary.
-This is a cost warning, not a claim of layout fit.
+Retain provider-compatible bond positions and common returns. Carry package
+R/L/C and coupling as explicit uncertainty ranges through rail ripple, clock
+phase error and payload quality. The provisional 0.25 nH return target is not
+a characterized package bound. Decoupling must include ESR/ESL and placement;
+extra ideal capacitance alone cannot qualify the assembly.
 
-### Whole-mode current planning, not isolated-block addition
+Converter admission requires effective accuracy at the actual amplitude and
+sample rate, with reference settling, acquisition, distortion and clock error
+included. Ten-bit words do not imply ten effective bits. Area/current totals
+include inactive branch loading, retained warm clocks, support circuits and
+the simultaneous wired TX/RX case; RF/wired exclusivity saves active power,
+not fabricated area. Check local headroom and transient current as well as
+average current. A numerical allocation is a circuit requirement, not evidence
+that GF180 can implement it.
 
-Use the conservative warm RF subtotal **44 mA** (4 + 3 + 2 + 28 + 1 + 4 + 2)
-for the next complete inventory, versus the 37 mA reservation in retained
-waveform studies. Reserve **2 mA** for the inactive other frontend in each mode;
-this is an explicit leakage/quiet-detection hypothesis, not measured standby.
-Do not sum full active RF and wired payload currents on one die.
+Device-terminal stress is a separate constraint from nominal supply voltage.
+The [GF180 operating-condition rules](https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_1.html)
+require checking gate/node and drain stresses, including mixed-supply and
+bidirectional pass-device operation. Consequently, a nominal 3.3 V pad or a
+disabled branch does not establish safe stress when its local supply is zero.
+The selected wired-pad protection/isolation must cover that state explicitly;
+the PDK voltage rules do not establish an RF bandwidth or protection solution.
 
-| State | CORE | HOST, two segments | PLL/reference | RF | WIRE | Total / source power at 3.3 V |
-|---|---:|---:|---:|---:|---:|---:|
-| Warm RF RX/turnaround/TX planning bound | 40 mA | 110 mA | 44 mA | 44 mA | 2 mA | 240 mA / 0.792 W |
-| Wired simultaneous RX/TX planning bound | 40 mA | 110 mA | 44 mA | 2 mA | 96 mA | 292 mA / 0.964 W |
-| One active bidirectional wired branch; other serial branch disabled | 40 mA | 110 mA | 44 mA | 2 mA | 50 mA = 48 active + 2 inactive | 246 mA / 0.812 W |
+The next physical-feasibility decision must use a common bounded envelope for
+the shared-pad, host-service, CDR and RF cases. If none fits, change the offending
+branch, board loading or timing route explicitly and rerun affected cases;
+do not promote independently favorable block results to a whole-chip verdict.
 
-These are deliberately conservative allocation sums, not traffic-averaged
-predictions or die heat. Source power includes energy dissipated in external
-loads; package temperature is still unqualified. HOST includes H2D input-cell
-switching and D2H charging; CORE excludes those already counted currents.
-Converter maintenance during wired operation must replace the 2 mA RF standby
-assumption with its enabled load and re-evaluate that mode. Startup charge and
-load steps remain separate from steady current ceilings.
+The design retains 2.51 mm² wired, 2.40 mm² RF, 1.30 mm² converters, 1.60 mm² timing,
+1.65 mm² digital and 0.85 mm² memory. Of the 2.61 mm² support reserve,
+1.30 mm² is now assigned to power distribution and 1 nF supply decoupling;
+1.31 mm² remains reserve. The core ceiling remains 12.92 mm². Every fabricated
+block retains its area even when inactive. The separate 100 pF reference
+reservoir is charged to the 0.150 mm² reference-buffer allocation.
 
-**Decision:** use these allocations to test architectural plausibility now.
-Do not require transistor layout to justify their last decimal, or silently
-raise them to make a test pass. Earlier 20 mA CORE, 24 mA-class clock and 37 mA
-RF fixtures are controls; they do not qualify this larger first-chip budget.
-The next broad screen must propagate the revised mode loads through the same
-package/supply/timing model before detailed filter optimization. Logical domain
-ceilings are not independently bonded rails; check actual pad/feed currents.
+At the previously documented 0.9 fF/µm² planning density, 1 nF requires
+1.111 mm² of capacitor plates before routing. Thus the earlier 1.00 mm²
+allocation was insufficient; the design reserves 1.30 mm². No capacitor geometry or
+extracted impedance is claimed by this allocation.
+
+The current ledger is source-specific. The primary external RF clock replaces
+RFPLL12mA with0.1mA using the existing source override; external input,
+quadrature/distribution and all warm analog loads remain charged. Each DAC now
+reserves2mA:1mA steering plus1mA provisional local support (0.25mA static,
+0.75mA switching). At3.3V/40MS/s the switching allowance corresponds to5.68pF
+activity-weighted capacitance; this is a design limit, not extracted capacitance.
+
+| RF configuration | Allocated current | Margin to unchanged240mA ceiling |
+|---|---|---|
+| External clock, selected five-pole filters at4mA each | 240mA | 0mA |
+| Autonomous clock, selected five-pole filters | 251.9mA | −11.9mA |
+
+**Keep the external-clock route as the primary qualification path.** Its
+allocation now reserves4mA per TX filter, consuming the former
+6mA after the paired RX filters increased to8mA. Both RX and TX keep their
+warm-path allocations. Do not fund the selected design from unqualified host-current
+savings or treat zero total margin as physical closure. Autonomous synthesis remains a separate capability requiring an explicit
+current saving or separately qualified envelope; its deficit is not hidden by
+external-clock credit. Wired/USB totals remain272.45/252.2mA.
+`architecture_fast/rf_quality_budget.py` reports these cases and per-rail loads:
+external-clock allocation PLL32.3,CONV23,CORE20,RF53,WIRE1.6,HOST110.1mA.
+The RF rail increases6mA while PLL savings occur on a different rail; total
+margin does not prove local ripple, startup or thermal feasibility. All block
+allocations, including DAC support and filter bias, remain implementation
+hypotheses to carry into the joined supply model.
+
+The retained mathematical fixtures use earlier 240/292/246 mA whole-mode
+ceilings and, in some cases, older lower-current assumptions. Their CORE/PLL
+converter ownership is historical. The design requires rerunning the joined supply
+model with explicit branch loading before its operating envelope is qualified;
+recorded waveform evidence is not silently relabeled. The old allocation table
+has been replaced by the single per-block inventory to avoid competing defaults.
+
+### Supporting-circuit audit
+
+`architecture_fast.rf_quality_budget.support_budget_audit` recomputes the
+following limits from the current inventory. These are allocation deductions,
+not bottom-up transistor estimates. No block has earned its budget merely by
+being assigned to it.
+
+| Supporting circuitry | Existing allocation owner | Coupled acceptance obligation |
+|---|---|---|
+| RF/reference/wired protection and power-off isolation | Respective pad blocks; rxselect/rxlevel for internal selection/level conversion | Pad capacitance, inactive leakage, switch resistance, clamp window and device stress together; no separate invisible ESD area |
+| Clock input, quadrature, fanout and reset release | refinput, quadrature, clocktree and source PLLs | Include every receiver gate, wire and sampling load, static bias, clock slew and additive jitter at actual carrier rate |
+| Bias, reference generation/distribution and reservoirs | bias and refbuf; local reference loads remain in consumer blocks | Startup, source/sink recharge, noise, headroom, routing and common-mode feedback; shared source does not eliminate local buffer cost |
+| Coarse POR, supply monitors, management oscillator and reset/isolation controls | monitor, aosc, digital; local fail-safe devices in each affected block | Startup before precision reference, partial power and asynchronous assertion; distinguish always-on bias from active switching |
+| Trim banks and switched coefficients | Respective filter/PGA/clock/converter blocks; control storage in memory ledger | Switch parasitics and resistor/capacitor bank area remain in the analog owner; register bits alone are not the trim circuitry |
+| ADC diagnostic selection | adc_i/adc_q; four control bits with active/shadow storage | Added input/CDAC loading, charge injection, leakage and routing must fit ADC timing and accuracy; no extra precision source assumed |
+| Host pads, gearbox, CDC and diagnostics | hostio, digital and named memory allocations | Actual load/slew, per-bank current, internal word rate and continuous queue service; no free synchronous CDC |
+
+At the assigned 0.9 fF/µm² density, the 100 pF reference reservoir consumes
+0.1111 mm² of refbuf's 0.1500 mm², leaving at most **0.0389 mm²** for everything
+else. The 1 nF supply plates leave **0.1889 mm²** of the 1.30 mm² power allocation
+for routing/support overhead. Both exclude any unmodeled layout inefficiency.
+Memory allocations now total **7,818 bits**, leaving **374 bits** under the
+8,192-bit cap; this is not a placed-memory area result. The periodic controller
+adds 448 coefficient bits, 256 control-state bits and two enable bits. Its
+1280-byte observation history belongs to the FPGA; pending coefficient commands
+reuse ingress storage. The selected 98-sampler tracking bank and encoder still
+need new physical current/loading/area estimates; inherited analog allocations
+are not evidence that they fit.
+
+ADC acquisition/decision/reset allocations sum to **25 ns**: zero cycle margin
+at the nominal 40 MS/s ceiling, and **0.6 ns** at 2.500 GHz /64. Include test
+switch loading and clock uncertainty before accepting either point; do not
+silently extend the sample period for a passing converter fixture.
+
+The selected ADC now reserves0.2ns for cycle uncertainty not already represented
+in sample-edge timestamps, leaving0.4ns at the maximum direct-LO rate. Diagnostic
+selection is allocated50fF added sampling-node capacitance and100ohm added
+series resistance per leg. These are acceptance requirements, not measured
+switch parameters. `converter_dynamics.parameters_from_inventory` applies them
+to the actual SAR acquisition equations and schedule admission. The old25ns
+schedule cannot qualify40MS/s with this guard; that ceiling requires a faster
+qualified schedule. No advertised direct-LO channel/sample rate is removed.
+
+`selected_revision_check.py --common-envelope` uses the same package catalog,
+selected6pF external host load and inventory currents for RF and wired. Host
+capacitance propagates through both the original spectrum and partitioned
+delivered-clock network; internal output-cell charge remains a separate
+assumption. Current is preserved through the downstream DC network reduction.
+Accepted clock cases feed paired SAR/reference-recharge feedback with diagnostic
+loading, and an independently recovering wired CDR with ordinary and
+transition-drought stimuli. This is a common electrical environment, not a
+single integrated protocol lifecycle or full RF packet qualification.
+
+The present converter experiment is512 samples of a9.689MHz tone at39.0625MS/s,
+with256 scored samples after guards. Its fitted-fundamental effective-bit result
+does not establish broadband accuracy or calibration validity. The wired
+experiment scores1200 held-out bits per phase/offset case. Record timing-valid
+continuity separately from decoded errors; zero errors can accompany lost
+qualification. Full SSC cycles, real SDI pathological sequences, nonlinear
+shared-pad operation and complete fault/recovery remain required.
+
+For perspective only, allocating all current to full-swing switching at 3.3 V
+and 2.5 GHz gives aggregate C-equivalent ceilings of **1.455 pF** for each
+12 mA input/distribution block and **0.606 pF** for the 5 mA quadrature block.
+Real static bias reduces this allowance; current-mode circuitry needs its own
+swing/load calculation. This is a warning about fanout cost, not a transistor
+capacitance prediction or proof that current-mode operation fails.
+
+**Audit verdict:** support circuitry has owners, but sub-block implementation
+costs remain unestimated. The 1.31 mm² unassigned reserve must not be counted
+again inside owner ceilings; the five-pole TX candidate would consume 0.46 mm²
+of it. Primary RF has 10 mA allocated margin, or only 4 mA with that candidate.
+Unknown protection, reset, trim and routing costs cannot be declared zero.
+The next sizing pass must break down these owners before claiming physical fit.
+
+### Selected supply and host implementation requirements
+
+The contract owns `power.mitigation_policy` and `physical_services.host_output`.
+Keep external regulation on provider-compatible feeds with common return; no
+mandatory on-chip regulator, extra power pin or independent quiet rail is assumed.
+Select **6 pF maximum external D2H load per data/clock pin** for full-rate
+312.5 Mword/s service. Include FPGA input and board/connector load; count die-pad
+capacitance separately exactly once after resolving the characterization convention.
+This requires a short point-to-point board, not arbitrary FPGA-board compatibility.
+Existing 10 pF waveforms remain heavier-load controls, not evidence at 6 pF.
+
+| Disturbance | Required treatment | Unjustified shortcut |
+|---|---|---|
+| Upstream source | Regulator/filter transfer, output impedance and own noise before package | Ideal quiet die supply |
+| Host/converter/timing current | Full feed/return impedance, storage and any active loop | Apply upstream PSRR to locally generated ripple |
+| Shared return | Common impedance and differential/common-mode conversion | Separate supply regulators eliminate ground bounce |
+
+The fixed 1 nF host-network comparison already has zero upstream source ripple.
+At native-library H2D internal charge, its separate forcing terms produce:
+
+| Forcing term | HOST_A / RF / timing peak magnitudes |
+|---|---|
+| D2H external-load charging | 278.1 / 20.2 / 38.2 mV |
+| D2H internal switching, assigned 7 pC | 626.2 / 45.2 / 92.3 mV |
+| H2D internal switching | 67.9 / 4.12 / 9.17 mV |
+| H2D external pad return | 82.2 / 30.3 / 64.3 mV |
+
+Complex responses sum before extrema, with superposition residual below 4.5e-16 V.
+Separate peaks are neither simultaneous nor single-tone limits. Assigned current
+kernel, bank-scaled ESL and high-frequency lumped extrapolation remain unqualified;
+converter/timing switching is absent. Do not equate these broadband peaks to the
+10 MHz ripple target below. Better upstream PSRR alone cannot remove these terms;
+a changed source output impedance must be modeled explicitly.
+
+The pinned [GF180 bi_t TT 3.3 V / 25 C Liberty data](https://github.com/google/globalfoundries-pdk-libs-gf180mcu_fd_io/blob/2aeec51ea2824b6cc0b396acfc39f4535f40b23a/cells/bi_t/gf180mcu_fd_io__bi_t__tt_025C_3v30.lib)
+gives 7.69–14.43 pC equivalent internal transition charge at 10 pF across eight
+conditional PAD A-driven settings and three input slews. Sum signed rise/fall
+cycle energy and divide by twice supply voltage; external charging stays separate.
+The unconditional fallback is not another simultaneous contribution. Input-cell
+energy cannot validate output-driver energy. The former 7 pC remains an optimistic
+custom-driver hypothesis, not a conservative stock-cell bound.
+
+Matched timing/current comparisons are:
+
+| External load; PDRV0/PDRV1/SL | HOST_A / HOST_B, full-rate alternating | Maximum rising transition, conservative timing query |
+|---|---:|---:|
+| 10 pF; 0/0/0 | 41.95 / 49.94 mA | 5.16 ns |
+| 10 pF; 1/0/0 | 45.47 / 54.17 mA | 2.63 ns |
+| 10 pF; 1/1/0 | 52.27 / 62.33 mA | 1.40 ns |
+| 6 pF; 0/1/0 | 38.59 / 45.90 mA | 1.30 ns |
+| 6 pF; 1/1/0 | 41.87 / 49.85 mA | 1.03 ns |
+
+Each HOST bank has a 55 mA ceiling. Accounting includes alternating 312.5 Mword/s
+H2D using the input-library including-Y-load upper scenario, the same-setting
+maximum listed output energy, external charging once and existing 2 mA other
+allowance per bank. These terms occupy the HOST reservation, not add to it. The
+older 1.25 screening multiplier is not applied; this is raw mean current only.
+Timing queries conservatively add listed PAD capacitance 2.977816 pF because its
+axis differs from the power axis; both interpretations remain in the evidence.
+This ambiguity is not resolved by the calculation. Transition is not a current
+pulse width or a complete FPGA capture eye; propagation delay is not a rate limit.
+
+**Decision:** retain configurable strength/slew and full-rate host service, with
+6 pF as the selected board target. At 10 pF, the fastest stock setting exceeds
+the clock-bank ceiling; the lowest-energy setting has inadequate demonstrated
+transition margin against a 3.2 ns word interval. Do not mix the cheapest energy
+with fastest timing, substitute random-average traffic, raise budgets silently,
+or assume custom-driver savings. At 6 pF, two faster settings provide credible
+candidate points within mean-current ceilings without extra pins or regulators.
+Final cell choice, board load, FPGA eye, PVT, peak/EM, current-pulse shape and
+VDD/DVDD ownership remain open. Stop nominal table expansion; return to joint
+host/package and RF/wired quality decisions.
+
+Reproduce with `selected_revision_check.py --host-output-source-evidence` and
+`--host-energy-comparison`. Their respective `host_output_library_evidence` and
+`host_receiver_energy_comparison` sections in `selected-revision-check.json`
+retain source tables, source hashes and scope. Public characterization is not
+measured silicon or qualification of custom output circuitry.
+
+The matched `--host-selected-load` package comparison prevents confusing that
+mean-current result with a noise improvement. At fixed RF-mode D2H 150 Mword/s,
+H2D 312.5 Mword/s and the historical 1 nF network, sampled absolute ripple peaks
+are:
+
+| Output hypothesis | HOST_A / RF / timing peak magnitudes |
+|---|---|
+| Historical 10 pF, 7 pC internal | 1.054 V / 90.6 mV / 204.0 mV |
+| 6 pF, PDRV01/SL0 energy 12.27 pC | 1.531 V / 131.7 mV / 276.8 mV |
+| 6 pF, PDRV11/SL0 energy 14.37 pC | 1.719 V / 145.3 mV / 304.6 mV |
+
+**Decision:** keep 6 pF for the matched host timing/current requirement, but do
+not credit it as package-noise mitigation. Higher internal energy outweighs the
+external charging reduction in this fixed hypothesis. These are ripple deltas,
+not absolute supply voltages or measured bounds. The 10 mA charging law, 0.5 ns
+internal pulse and 100 ps smoothing remain assigned; Liberty transitions do not
+validate those current shapes. Neither the selected 500 pF reservoir, full-rate
+wired host forcing nor arbitrary phase is qualified by this 1 nF comparison.
+Evidence: `selected-revision-check.json:selected_host_load_package_comparison`.
+The architectural gate remains actual host current delivery/shared return and
+analog sensitivity; do not select a driver from mean-current fit alone or keep
+sweeping guessed edge times into a pass.
+
+The bounded `--host-loop-topology` comparison identifies one dominant network
+assumption. The old model scales local capacitor ESL inversely with capacitance
+fraction, assigning each 60 pF host bank 3.33 nH in the 1 nF comparison. Replacing
+that rule with explicit 0.2 nH per local capacitor loop, while retaining the same
+capacitance, ESR, branch inductance, common return and 6 pF/PDRV01 forcing, changes
+HOST_A/RF/timing peak magnitudes from 1.531 V/131.7 mV/276.8 mV to
+0.613 V/81.8 mV/117.5 mV. The reduced impedance is independently checked against
+an explicit nine-node circuit for both loop interpretations and external-return
+forcing; that verifies the equations, not the geometry.
+
+**Decision:** local reservoir return-loop geometry is a first-order uncertainty.
+Do not treat inverse-capacitance ESL scaling as a physical law or use its rejected
+waveform as evidence of architectural impossibility. Conversely, do not select
+0.2 nH per loop as measured or proven achievable: it changes aggregate inductance
+and requires distinct short physical return paths. Neither case qualifies the
+supply envelope. Keep both recorded topologies and stop numerical ESL tuning;
+price/justify a concrete local reservoir connection within provider ground sites
+and area, then feed its impedance into the common RF/wired model. Evidence:
+`selected-revision-check.json:host_loop_topology_comparison`.
 
 ### Timing and signal-quality allocations for the selected blocks
+
+The connected shared-stress inverse calculation in
+[risk priorities](risk-priorities.md) now constrains supply/timing requirements
+jointly: at 0.1 ps/mV, a 60 mV peak 10 MHz disturbance translates a +12 MHz
+blocker into the wanted band. Its illustrative 5% incremental allowance implies
+about 9.62 mV peak for the conservative small-signal AM+PM sum under that case.
+This is an inverse requirement, not a package-derived ripple limit or a selected
+physical regulator/filter design. Keep its budget separate from total EVM until
+the capability acceptance allocation is reconciled.
+
+**Mitigation choice:** prioritize reduction of the shared disturbance reaching
+both gain and timing paths. A cleaner external clock alone is insufficient for
+this diagnostic: even ideal timing leaves a 5.76% translated AM sideband against
+the 5% branch allocation. The unchanged AM+PM first-order bound would require
+15.90 dB additional blocker rejection before mixing, rather than the 14.12 dB
+PM-only estimate. That rejection is relative to wanted-signal transmission;
+insertion loss and its sensitivity cost must also be included. A blocker only
+12 MHz away makes narrow preselection a conditional option for wideband modes,
+not a universally available external-passive fix.
+
+Keep three implementation routes for comparison: external low-impedance supply
+and return control; local isolation/regulation with priced dropout/current/area;
+and configuration-dependent preselection combined with timing improvement.
+None is yet selected as a physical circuit or credited as measured attenuation.
+The first two must meet a common gain/timing ripple requirement, not merely
+reduce source phase noise. The third must preserve wanted bandwidth and meet
+sensitivity/blocker requirements together. The 9.62 mV value is a necessary
+planning target within the stated first-order diagnostic, not a sufficient
+whole-chain EVM or PER guarantee. Reproduce these deductions with
+`selected_lifecycle.py --supply-requirement`; do not tune package guesses until
+they happen to produce that voltage.
+
+**Passive isolation budget:** the same inverse screen now checks an optimistic
+one-pole RC filter for the entire 44 mA RF or 47 mA timing/reference owner.
+Even granting either candidate the entire 500 pF reservoir separately, attenuation
+from 60 to 9.62 mV at 10 MHz requires about 196 ohms: its constant-current DC drop
+would be 8.63 or 9.21 V. This is an infeasibility calculation, not a predicted
+negative operating voltage. With a favorable 3.267 V input and 2.5 V load floor,
+capacitance would need at least 5.62 or 6.01 nF before parasitics. The 2.5 V floor
+is borrowed from the converter model and does not qualify the clock circuitry.
+Reject this whole-domain series-R/500-pF solution. This does not reject small
+low-current subcircuit RC filters, external capacitors, or active regulation;
+each has different load, package, dropout and stability obligations. Keep external
+supply/return improvement first, and price active local isolation before adopting it.
+No new capacitance, regulator or current savings is added to the baseline.
+
+**Joined-path check of the ripple target:** `selected_lifecycle.py
+--ripple-envelope` holds source offset at −33 mV, timing sensitivity at four
+times the selected value, frequency at 10 MHz, and all traffic/settings fixed.
+It varies only shared ripple amplitude through the seven-stage RF/wired lifecycle.
+
+| Ripple peak | RF RX EVM over three stages | RF TX EVM before/after recovery | RX held-out errors per stage |
+|---|---|---|---|
+| 0 mV | 5.28–5.33% | 3.67% | 0 / 468 |
+| 9.6 mV | 7.25–9.02% | 3.93–3.96% | 0 / 468 |
+| 60 mV | 19.93–25.75% | 9.65–9.82% | 2 / 468 |
+
+All cases complete the scoped lifecycle. Wired TX has zero errors in 1,300
+held-out bits; wired RX has zero errors in 6,050 held-out delivered bits and only
+the deliberately induced transition-drought qualification loss. This supports
+shared-ripple reduction as useful without changing the signal architecture.
+It does not establish 9.6 mV as sufficient for every RF modulation: residual RX
+EVM exceeds the illustrative 5% *incremental branch* allocation, which is not a
+total EVM limit, and the zero-ripple path itself remains near 5.3%. The comparison
+uses HE20 DATA with known training and low TX amplitude, not packet acquisition,
+PER, emissions or the 0 dBm output goal. Do not convert finite error-free bits into
+a BER bound. No attenuation hardware, regulator cost or continuous frequency/phase
+envelope is demonstrated. Stop refining this three-point diagnostic; next qualify
+a physical supply alternative against the common resource ledger and target-level
+quality requirements. Evidence: `selected-lifecycle.json:joined_ripple_envelope`.
+Its recorded stress prose still says 60 mV in all rows; the numeric
+`ripple_peak_v` is authoritative. Future runs use corrected amplitude-neutral prose.
 
 Use one set of numerical requirements in the next model revision. These are
 initial design allocations with identified owners, not measured limits or
@@ -85,7 +375,7 @@ remain additional acceptance obligations.
 |---|---|---|
 | External RF timing path | Existing −115 dBc/Hz at 100 kHz source point with −145 dBc/Hz floor; input noise 75 uV RMS and two downstream stages at 15 fs RMS each over 1 kHz–8 MHz | Reuse the combined high-impedance clock requirement point, including input loading and coherent supply effects. This is a demanding assigned spectrum, not a purchased source or GF180 noise prediction. |
 | Wired sample/launch timing | 5 ps RMS random-timing study point at 2.5 Gb/s; preserve the existing 0.05 UI plus seven-sigma eye allowance as a diagnostic screen | Random jitter does not replace CDR tracking, deterministic jitter, pad/channel loss or target-specific masks. |
-| ADC acquisition and decisions | At 38.8125 MS/s, 25.765 ns period: allocate 5 ns acquisition, 18 ns for ten SAR decisions, 2 ns reset/control, leaving about 0.765 ns. Allocate the ten bit intervals as 3/2.6/2.4/2.1/1.9/1.6/1.3/1.1/1/1 ns, including 0.5 ns comparator time each. | Spend more settling time on large DAC steps without increasing conversion time. These are circuit timing targets, not a qualified sequencer or arbitrary-resolution programmable delay. Interleaving remains the costed fallback. |
+| ADC acquisition and decisions | At 38.8125 MS/s, 25.765 ns period: allocate 3 ns acquisition, 20 ns for ten SAR decisions, 2 ns reset/control, leaving about 0.765 ns. Allocate the ten bit intervals as 3.2/2.8/2.6/2.3/2.1/1.8/1.5/1.3/1.2/1.2 ns, including 0.7 ns comparator time each. | Spend more settling time on large DAC steps without increasing conversion time. These are circuit timing targets, not a qualified sequencer or arbitrary-resolution programmable delay. Interleaving remains the costed fallback. |
 | Converter aperture | 10 ps RMS added sampling uncertainty allocation at the converter, separate from the much tighter RF LO path | At the existing 9.53125 MHz outer tone this contributes about 0.060% small-error RMS EVM. Preserve correlation with common clocks when present. |
 | RX channel filtering / AGC | Existing 1 dB passband-loss investigation allocation through ±9.53125 MHz; retain 0.2 us gain-settling and 2 us command-service study points | Finite-zero group delay and real training are included in acquisition; these numbers do not authorize extra preamble symbols. |
 | Same-channel RF changeover | Initial 2 us analog-readiness allowance, with clocks/reference retained and TX prefilled | Includes bias/output/filter settling actually required by the selected state transition. Overall protocol deadline also includes FPGA work, observation latency and calibrated air timing. |
@@ -187,6 +477,15 @@ state-space solution. The existing 10 mV RMS output-noise and 20 mV offset
 hypotheses remain requirements **after** equalization; this is not evidence
 that a GF180 equalizer provides the bandwidth, noise, swing or current together.
 Its consumption must fit the existing wired allocation, with no extra free stage.
+
+The selected retained-lifecycle adapter now explicitly uses these same settings
+from `contract.json:physical_services.wired_receiver`. Its initial unequalized
+adapter was a composition omission and is retained only as a control. With the
+selected CTLE, the joined 2.5 Gb/s compliance-pattern case has no qualification
+loss outside its injected transition drought, at the original noise/offset and
+unchanged lock criterion. This aligns two model compositions; it does not add an
+extra equalizer or qualify physical implementation. `risk-priorities.md` owns
+the current joined result and loss/recovery boundary.
 
 With that setting, both current-package clock corners meet the unchanged
 delivery minimum through the gap/restart lifecycle. The weaker 150 ps zero /
@@ -819,7 +1118,7 @@ inventory or prove the physical host interface's service guarantee.
 **Decision:** retain warm clocks/bias, finite prefilling and host-owned fixed
 latency calibration. The closed-loop converter study below now addresses one
 reference-load path in this packet loop. Gain commands use completed codes,
-18 ns conversion latency delays availability without moving the air timestamp,
+20 ns conversion latency delays availability without moving the air timestamp,
 and each packet supplies its own reference-current feedback trajectory.
 Post-RX load relaxation is retained into the reply. No additional assigned
 8-ENOB noise is added to the causal converter. Next include output-current
@@ -878,7 +1177,7 @@ voltage and LO/sample timing. Each tested loop converges in two passes under the
 reported numerical criterion. This is a conditional mathematical result, not
 identification of physical GF180 device parameters.
 
-Select **unequal bit-time allocation within the existing 18 ns budget**, as listed
+Select **unequal bit-time allocation within the selected 20 ns conversion budget**, as listed
 above. The initial requirement point uses 0.5 pF per sampling leg with 200 ohm
 acquisition resistance; 1 pF effective switched DAC capacitance per converter;
 a 300 ps DAC settling pole; and a shared 100 pF reference reservoir driven by
@@ -887,7 +1186,9 @@ resistance-related time constants scale as 3.3 V / loaded rail in this model.
 Comparator noise is an assigned 1 mV RMS per decision, plus calculated sampling
 kT/C noise. None of these numbers is a measured process bound. The reference
 capacitor alone has a 0.111 mm² ideal plate floor at 0.9 fF/µm², inside the
-existing 0.25 mm² reference/buffer allowance before layout overhead.
+selected 0.15 mm² reference/buffer allowance, leaving about0.039 mm² for
+the active buffer and layout overhead. The capacitor density is a planning
+hypothesis, not extracted area.
 
 At 38.8125 MS/s and 0.65 V peak per I/Q component, independent near-1-MHz and
 near-9.457-MHz sine measurements give approximately **8.60–8.67 full-scale-
@@ -917,9 +1218,67 @@ The full planning DC load is retained as a conservative stress; the report
 separately identifies its excess over predicted reference consumption.
 
 **Decision:** keep the single-core SAR and improve its local timing allocation
-before spending the interleaving fallback budget. Stop treating packet decoding
+before spending the interleaving fallback budget. The common-envelope sine bench
+now also checks comparator deadlines against the actual per-bit overdrive from
+the acquisition/DAC/reference trajectory. Its inverse model uses
+`Vout = Vin * exp((t - launch)/tau)`, with explicitly assumed100ps launch,
+200mV output threshold and25/50/75/100ps regeneration constants. A missed
+0.5ns deadline invalidates the ideal-sign decision for that hypothesis; the
+reported ENOB is conditional on decision completion. This screen does not
+simulate metastable logic propagation or identify GF180 comparator parameters.
+
+The common-envelope runner now executes variable comparator completion and
+recomputes shared-reference recharge at each actual event time. Unequal DAC
+settling intervals remain unchanged; the paired fixture waits for the slower I/Q
+decision. The100ps launch assumption does not establish a physical inter-ADC
+handshake or its latency. Both comparator inputs are snapshotted at evaluation
+start; kickback and continuous input motion during regeneration remain open.
+
+At the selected lower-return point,50ps regeneration gives8.56/8.76ENOB and a
+maximum15.98ns conversion, leaving2.02ns inside the18ns budget. At100ps it gives
+8.53/8.78ENOB and a maximum17.63ns conversion, leaving0.365ns. A150ps case is
+rejected for exceeding18ns. Both accepted cases converge with their own
+reference-current feedback; peak reference current including standing bias is
+about2.41mA. Individual comparator decisions can exceed0.5ns without missing
+the total conversion deadline. These are finite512-pair conditional results,
+not tail-probability, broadband-PER or physical comparator qualification.
+
+**Keep the selected single-core asynchronous SAR architecture.** There is a
+credible conditional timing/precision region worth implementing; the fixed
+0.5ns-per-decision screen alone is too restrictive for that architecture. Retain
+18ns as the advertised conversion-latency ceiling and keep the cycle guard.
+Do not spend the observed early-completion margin elsewhere. Independent I/Q
+sequencing or a real paired completion barrier must reproduce this result with
+its actual latency, load and reference forcing. Wider overdrive/noise/mismatch
+coverage remain required. The combined adverse-loading asynchronous screen now
+converges at 50/100 ps regeneration with minimum 8.13/8.09 ENOB and maximum
+15.91/17.68 ns conversion; 150 ps misses the deadline. This includes acquisition
+switch loading, weaker reference drive and doubled comparator noise together,
+with delivered-clock/reference feedback. Keep the architecture conditionally;
+the 100 ps stressed case has only 0.323 ns completion and 0.09 bit precision
+margin. It does not bound rare decisions, diagnostic reference switching,
+kickback, mismatch or physical supply-dependent regeneration.
+
+The rounded 40 MS/s block target is not an admissible clock guarantee. The
+5 ns acquisition + 18 ns conversion + 2 ns reset + 0.2 ns guard requires at
+least 25.2 ns between samples (39.683 MS/s before delivered-clock variation).
+The evaluated 2.5 GHz / 64 configuration is 39.0625 MS/s; its sampled cycle
+margin is 0.358 ns. Numeric clock admission must use the full cycle and actual
+edge-spacing bound, not the rounded block target or average frequency alone.
+Early asynchronous completion does not increase the advertised rate ceiling.
+The retained SAR continuation check also reserves acquisition, reset and the
+cycle guard after the previous completion; splitting a sample stream across
+model calls cannot omit that boundary guard. Batch/split regression covers both
+a rejected 25 ns interval and an accepted 25.3 ns interval.
+
+Do not halve the selected sample rate merely to recover timing margin: the
+existing next divider setting also changes available RF bandwidth and alias
+rejection. The interleaving fallback remains available if the connected
+asynchronous success region cannot be physically realized.
+
+Stop treating packet decoding
 as proof of converter precision. Remaining physical gaps include comparator
-regeneration/metastability within the assigned 0.5 ns, capacitor mismatch,
+regeneration/metastability within the total conversion deadline, capacitor mismatch,
 reference-loop higher poles, PGA sampling drive, and realizable bit sequencing.
 The causal conversion latency is 18 ns; the selected packet fixtures now join
 this detailed converter state and latency to live AGC and service. Earlier
@@ -956,25 +1315,13 @@ load-settling, headroom and current costs still to qualify. The risk assessment
 owns the conditional numerical comparison; no physical PSRR is claimed.
 
 
-The paired `whole_chip_operating_envelopes` study uses one DC/AC environment
-for exclusive RF and wired operation, retaining different active loads and rates.
-Its adverse H2D-charge case cannot guarantee the declared voltage-model range
-even when receiver diagnostics pass. Larger board capacitance alone does not
-resolve the modeled high-frequency return disturbance. Numerical outcomes are
-owned by the current joined assessment linked below.
-
-The `common_feed_rf` robustness study supersedes independently assigned
-RF voltage for that joined receiver comparison: one common external feed and
-shared return supply the itemized logical loads. The [current joined assessment](risk-priorities.md#current-joined-host-power-and-receiver-assessment)
-owns the resulting currents/voltages and limitations. The topology remains a
-hypothesis: public Run 1 connectivity establishes common board ground and eight
-separate supply feeds, but not their impedance or independent on-die rails.
-See the [assembly evidence](../../../docs/roadmap/programmable-transceiver-pin-plan.md#public-run-1-assembly-evidence).
-The joined comparison evaluates 1 µF and 10 µF board capacitance. The latter
-is not established by the Run 1 local footprints labeled 1 µF; additional external capacitance needs its
-connection impedance included. Earlier per-domain
-rail results below remain scoped comparisons, not proof of independent supplies.
-
+Current RF/wired comparisons must use the architecture inventory and selected
+common environment, with an explicit source/return map. The former robustness
+comparison's fixed-current ledger is retired. The
+[current joined assessment](risk-priorities.md#current-joined-host-power-and-receiver-assessment)
+owns the accounting requirements and limitations. Public assembly connectivity
+does not establish bond/board impedance or independent on-die rails; see the
+[assembly evidence](../../../docs/roadmap/programmable-transceiver-pin-plan.md#public-run-1-assembly-evidence).
 
 **Packaging correction (2026-09-26):** preserve provider bond positions and
 power/ground assignments. The seven allocated pairs below are not yet a valid
@@ -1010,48 +1357,25 @@ FIFO area does not price these additional banks or establish complete fit.
 
 ### Resource conditions for the combined RF candidate
 
-The [combined packet comparison](risk-priorities.md#combined-rf-requirements-point)
-is a requirements point, not a costed implementation. Its stronger NF, IIP3 and
-clock-noise settings do not increase the modeled loads. The following inverse
-budget identifies what must fit for that result to remain applicable. All
-currents are assigned budgets, not GF180 performance estimates.
+Use `rf_quality_budget.current_allocation` with `analog-architecture.json`
+for each enabled RX, TX, wired or USB composition. Converters belong to their
+assigned CONV owner; they must not be hidden in the former 37 mA RF reservation.
+Current totals and remaining filter feasibility are recorded in the enabled
+inventory and current risk assessment. Logical supply ceilings do not establish
+current capability through the actual shared bond network.
 
-| Owner | Load used by the candidate | What still has to fit inside it |
-|---|---|---|
-| RF and conversion | 37 mA, including 28 mA TX-drive reservation | Only 9 mA remains for enabled mixers, gain/filter stages, converters and local bias when that driver reservation is active. Reference circuitry is charged to its separate PLL/reference owner. |
-| PLL/reference | 12 mA static plus 1.5 pF equivalent switching at 3.3 V and 2.426 GHz: 24.01 mA total | External-input receiver, phase generation/distribution, enabled reference/bias circuitry and any active loop must share the static and switching allowances; quieter clock settings add no allowance. |
-| CORE | 20 mA excluding separately itemized host I/O | Transport, control, active digital clock trees and storage. This is a placeholder, not a bound established by the present model. |
-| Physical support | 2.77 mm² closure reserve | A 500 pF capacitor alone takes 0.278–0.556 mm² at the cited minimum MIM densities, leaving 2.214–2.492 mm² for other support before capacitor routing/guard overhead. Functional owner allowances remain separate and unproven. |
+Do not increase noise, gain, linearity or clock-performance assumptions without
+pricing the needed stages and updating the shared environment. Bias current and
+switching current must represent distinct physical contributions. External LO
+input can disable an unused oscillator branch, but retains input receiver,
+phase-generation, distribution and reference costs; both fabricated branches
+still occupy area.
 
-The RF planning ceiling is 48 mA, but the 11 mA difference is **not free margin
-in this waveform result**. Spending it changes DC droop, switching disturbance
-and thermal demand; rerun the common environment with the changed load. The
-same rule applies to additional clock or CORE current. Supply-cell ceilings
-also do not establish available current through the actual shared bond network.
-
-A useful clock plausibility boundary comes from the existing illustrative pole
-model, not a new device claim. At a pole of three times 2.426 GHz,
-`gm = 2*pi*3*f*C` and assigned `gm/Id = 10 V^-1`, two stages driving 0.1 pF each
-require about 0.91 mA together; at 1 pF each they require 9.15 mA. Against the
-12 mA static allowance, this leaves respectively 11.09 or 2.85 mA for the input
-receiver and all other static clock/reference loads. These are internal stage
-loads, not the protected input pad's 3 pF. The calculation does not establish
-15 fs jitter, noise folding, voltage headroom or a realizable topology. Static
-bias and the 1.5 pF switching estimate must refer to distinct physical current
-contributions; do not count low-swing biased distribution again as full-swing
-CMOS charging. This boundary makes internal fanout/capacitance an architectural
-budget item before device sizing.
-
-**Decision:** retain the candidate, but reject any fit claim that merely compares
-its total current with summed pad limits. Close an enabled-instance inventory
-for RX acquisition, TX reply and the intervening transition. RF/wired exclusivity
-does not imply that all RF RX and TX loads overlap, nor that either is free.
-Turning off TX bias during acquisition could release RX budget; turning it back
-on costs startup charge, settling time and supply disturbance. Keep the present
-constant reservation until those transitions are modeled. Likewise, external
-LO input can stop an unused oscillator branch but cannot remove receiver,
-phase-generation, distribution or reference costs. Both fabricated branches
-still consume area. These are candidate mitigations, not automatic credits.
+RX/TX reuse earns no automatic budget credit. Turning stages off and on requires
+startup charge, settling, disturbance and turnaround checks. Likewise, capacitor
+area and routing/guard overhead consume real support area. Qualify the complete
+enabled-instance inventory rather than comparing a favorable total against
+summed pad ceilings.
 
 ### Enabled analog inventory and turnaround decision
 
@@ -1073,14 +1397,209 @@ bias disable are distinct controls; mute does not imply a current saving.
 | Host, control, storage / CORE and HOST | Active service and command readiness | Continue service; preserve epoch and timing | Active service | Explicit quiesce/retrain rules; not automatically off |
 | Unselected wired frontend / WIRE | Isolated, inactive leakage unpriced | Same | Same | No RF/wired overlap except separately budgeted maintenance |
 
+The shared ownership lifecycle now has a cumulative reference-reservoir charge
+ledger rather than separate per-stage power claims. Discharged startup and
+represented idle/SAR loads conserve charge through modes and recovery. Its
+3 mA source-plus-idle peak occupies the existing reservation. The short sequence
+has only about 5.95% conversion activity; its 5.63 µA mean recharge therefore
+must not be used as continuous 37.5 MS/s consumption. Reusing the observed code
+statistics gives an 84.3 µA continuous SAR-draw estimate, still excluding TX DAC
+reference loading and coupled package feedback. Do not silently price those
+missing contributions at zero.
+
+Reference bias qualification uses the contract's unchanged 0.98–1.02 V window
+in quiet recovery, at acquisition and at actual comparator decisions. It is
+not an instantaneous ban on normal CDAC charge-step excursions: those remain
+in the reference recovery, DAC settling and conversion-error model. The joined
+lifecycle observes startup at 100 ns steps and admits words only after valid
+consumption-point observations; physical sensing and inter-observation behavior
+remain implementation obligations. This policy does not substitute coarse bias
+readiness for ADC accuracy, nor qualify DAC reference loading.
+
+Filter readiness must include retained signal-path memory, not just warm bias.
+For the selected linear finite-zero RX response, a unit-bounded prior input can
+leave a history error bounded by `sum(U*abs(r)/(-Re(p))*exp(2*pi*fc*Re(p)*t))`.
+The existing model implements this in `selected_rf.filter_settling_requirement`;
+`selected-lifecycle.json:filter_startup` evaluates the current cutoff settings.
+With the assigned 1/1024 normalized residual budget, sufficient settling is
+91.3 us at 300 kHz, 54.8 us at 500 kHz and 27.4 us at 1 MHz. These are conditional
+linear-model bounds, not process measurements or protocol turnaround budgets.
+An independently solved bounded sinusoidal history demonstrates that a 20 us
+wait can actually exceed this allocation at cutoffs through 1 MHz; failure of
+a conservative bound alone is not treated as an observed violation.
+
+Select longer startup qualification when filter memory is unqualified. The
+wired-to-RF replay ANDs the filter certificate with reference/supply validity,
+then applies the existing 20 us guard. No new pin, protocol command, analog
+block or current saving is assumed. Tight same-channel turnaround instead needs
+an undisturbed qualified state, a smaller demonstrated input-history bound, or
+a characterized reset/precharge. Warm bias alone supplies none of these proofs.
+Keep the chosen gain and filter coefficients fixed while using the certificate;
+changing them, saturation, arbitrary initial capacitor charge and TX leakage
+require new state/settling analysis. The certificate bounds old-history error;
+it does not remove noise or blockers arriving during acquisition.
+
+Qualify the selected transfer family as well as its cutoff. The joined BLE
+fixture uses the all-pole setting; its settling time must not be inferred from
+the finite-zero certificate. Both use the intended generic filter boundary.
+`selected-revision-check.json:rx_filter_memory` compares them with the same
+packet, blocker, package and converter feedback. Its prior tone is specified
+after early gain/mixing; it does not establish a preceding RF transaction or
+TX-to-RX isolation. The filter implementation now preserves modal state across
+records instead of requiring every caller to begin at zero.
+
+The finite-integrator requirement screen (`selected-revision-check.json:filter_realization`)
+replaces each ideal normalized integrator `1/z` with `1/[z*(1+z/rho)]`, where
+`rho` is the additional integrator pole divided by channel-filter cutoff. This
+is an explicit shared-pole linear surrogate, not a universal active-RC law or
+measured op-amp GBW. Unchanged finite-zero coefficients require `rho > 22.443`
+for stability in this model. At the 9.53125 MHz wideband cutoff, `rho=32` means
+an effective extra pole at 305 MHz, but still causes 10.40 dB passband peaking.
+Faster circuitry alone is not automatically sufficient: `rho=128` still gives
+1.50 dB positive peaking in this setting.
+
+Inverse-mapping the desired poles/zeros through `q=z+z*z/rho` restores the
+intended slow poles at the characterized ratio. This reuses the intended
+coefficient controls; implementable weights, range, resolution and calibration
+observability remain requirements. Fixed nominal compensation at `rho=32`
+with actual ratio ±10% retains the tested diagnostic DATA, but exceeds the
+original 1 dB passband-ripple probe. Do not replace transfer/headroom requirements
+with that decoding result. Unequal stage poles, finite DC gain, additional phase
+lag, slew, internal saturation and active-device noise are still absent.
+
+For current planning only, ten independent effective `gm/C` stages (five per
+I/Q branch), `C=0.5 pF` per stage and `gm/Id=10 V^-1` cost about 0.958 mA at
+305 MHz or 3.833 mA at 1.220 GHz. The report also varies effective C and gm/Id.
+These are illustrative costs inside the existing 16 mA RF-support remainder,
+not added current and not a demonstrated fit. Real amplifiers, compensation,
+mirrors, output stages, LNA/mixers and warm TX support must all fit together.
+No GF180 speed/noise estimate follows from this single-pole calculation. Select
+finite-bandwidth compensation as a required design study; do not assume ideal
+filter poles merely because the prototype transfer function meets selectivity.
+
+The state-variable budget screen (`selected-revision-check.json:filter_budget`)
+now assigns LP/BP and bandwidth-limited drive voltages to the two biquads and
+real pole. It compares twelve section/zero-pair mappings with identical external
+transfer functions. Independent integrator-noise paths are integrated by a
+Lyapunov solve, checked against frequency quadrature, and constrained at 401
+passband frequencies. An integrated 6 dB allocation alone can conceal about
+12 dB at some wanted frequencies; it is not an adequate allocation rule.
+
+Use **higher-Q biquad → lower-Q biquad → real pole** as the provisional
+low-noise mapping, with the lower-frequency zero pair on the lower-Q section.
+For a 6 dB total chip-input noise target, the two assigned scenarios are:
+
+| Scenario | Frontend NF / gamma / gm/Id / minimum effective C | Paired I/Q integrator bias | Required effective C per integrator |
+|---|---|---:|---:|
+| Lower-noise frontend | 3 dB / 1 / 10 V^-1 / 0.5 pF | 0.958 mA | 0.5 pF |
+| Higher-noise frontend | 5 dB / 2 / 5 V^-1 / 1 pF | 7.506 mA | 1.409–2.496 pF |
+
+These amplifier-drive-noise-only comparisons use `e_n^2=4*k*T*gamma/gm`;
+the total noise allowance is partitioned between frontend and filter. Effective
+pole capacitance grows with gm to retain the assumed 305 MHz extra pole. It is
+not the signal-path integration capacitor.
+
+The same screen now sizes actual integration capacitors and summing resistors,
+including `4*k*T*R0*conductance_weight` drive-noise density. It reserves a
+separate class-A output bank for the peak capacitor current of the −65 dBm
+wanted / −30 dBm blocker tone screen. Both I/Q branches are included:
+
+| Scenario | Input bias | Capacitive drive | Total filter current | Integration capacitance | Plate area at 0.9 / 1.8 fF/µm² |
+|---|---:|---:|---:|---:|---:|
+| Lower-noise frontend | 1.826 mA | 2.627 mA | 4.453 mA | 972.8 pF | 1.081 / 0.540 mm² |
+| Higher-noise frontend | 12.614 mA | 8.921 mA | 21.535 mA | 3545.6 pF | 3.940 / 1.970 mm² |
+
+A convex dual lower bound agrees with each optimized current to numerical
+precision. Under this specific noise and class-A drive model, the higher-noise
+case cannot fit the 16 mA support allowance, even before the other RF blocks.
+The lower-noise case leaves 11.547 mA, whose sufficiency remains unproven.
+This is not a universal amplifier current lower bound: changing drive topology
+or gain distribution requires a new model, not subtraction of the drive reserve.
+
+The RF area owner is 2.4 mm². These are integration-capacitor plate areas only,
+at two planning densities, without routing, tuning, guards or other RF circuits.
+The higher-noise current optimum exceeds that owner at the lower density and
+leaves only 0.430 mm² at the higher density. This is not a minimum-area proof or
+confirmation that either capacitor option is available in the assembly route.
+Internal signal-path capacitors cannot become external decouplers without an
+analog access and pin-budget redesign.
+
+Explicit plate-constrained candidates show that the favorable scenario can fit
+0.600 mm² of plates at 0.9 fF/µm² for 4.645 mA, versus 4.453 mA at its
+1.081 mm² current optimum. At 1.8 fF/µm² the same 0.600 mm² limit does not
+bind the favorable optimum. Thus the earlier area figure is not an unavoidable
+cost. These limits are exploratory suballocations, not additional RF area.
+The harsher scenario requires 30.950 mA in a feasible allocation at 1.200 mm²
+and 0.9 fF/µm² (equivalently 0.600 mm² at 1.8 fF/µm²), or 21.869 mA at
+1.200 mm² and 1.8 fF/µm². No feasible allocation was found at 0.600 mm²
+and the lower density; solver failure alone is not an infeasibility proof.
+The unconstrained current lower bound already rejects the harsher warm-driver
+scenario, independently of these additional area constraints.
+
+A separate resistor-drive screen now sums peak branch currents into ideal
+virtual-ground summers, using the same sizes rather than reoptimizing. Reserving
+an independent class-A bank for those currents adds 3.012/10.284 mA to the
+preferred current-optimal candidates: totals become 7.465/31.819 mA. The compact
+favorable candidate (0.600 mm² at 0.9 fF/µm²) becomes 7.560 mA, leaving
+8.440 mA of support. This is a conservative reservation, not a necessary minimum
+or demonstrated consumption: phase cancellation, shared drivers and class-AB
+operation can alter it. Numerator-summer implementation and nonideal virtual
+grounds remain absent. The candidate remains plausible under favorable assigned
+noise parameters, but the unpriced remainder is materially smaller.
+
+Keep this mapping as a conditional candidate. The always-warm 28 mA TX driver
+plus the higher-noise filter already exceeds even the 48 mA planning ceiling;
+the selected operating allocation remains 44 mA. Parking/reusing driver bias is
+a conditional mitigation requiring wake, settling, turnaround and package-load
+verification; it does not reclaim silicon area. Complete amplifier voltage-noise
+gain, actual output-driver implementation, loop stability with these capacitors, mirrors,
+summer noise/current, physical common mode and nonlinear waveforms remain open.
+
+The mapping trades noise for swing. With upper-rail input-gain excitation and
+lower-rail headroom kept separate, its modeled node peak is 0.248 V for the
+−65 dBm wanted / −30 dBm blocker tones, but 0.747 V for a −20 dBm blocker,
+exceeding the assigned 0.606 V limit. This is a separated-rail steady-tone screen,
+not a time-domain rail transition or OFDM crest-factor bound. A lower-Q-first
+mapping with swapped zero pairing lowers that stress peak to 0.403 V, but costs
+2.837/27.525 mA in the amplifier-only comparison and 12.296/65.351 mA
+with resistor noise and capacitive drive. Retain it as a conditional headroom
+alternative; even the favorable case leaves only 3.704 mA for other RF support. Ordering the real pole first is not a free headroom cure: the
+examined low-Q-then-high-Q mapping needs at least 64.94 mA even in the first
+scenario. None of these results is a physical NF or complete RF-chain verdict.
+
 The table defines required activity, not demonstrated instance consumption.
 Per-owner current must be the sum of the enabled instances, including leakage,
-converter event charge and bias retained for the next deadline. For the warm RF
-path, the presently assigned 9 mA non-driver allowance must cover **both** the
-active RX chain and retained TX support during acquisition, and the converse
-during TX. A later inventory may invalidate that allowance. Do not fit each
-chain separately into the same allowance and then overlap them during turnaround.
+converter event charge and bias retained for the next deadline. For the current warm RF
+path, the 44 mA RF allocation leaves 16 mA outside the 28 mA output driver.
+That remainder must cover **both** the active RX chain and retained TX support
+during acquisition, and the converse during TX. The older 37 mA fixture left
+9 mA; its wake results below retain that original scope. Do not fit each chain
+separately into the same allowance and then overlap them during turnaround.
 Do not grant ADC gating a clock/reference saving unless the actual owner stops.
+
+#### Current block-to-rail accounting
+
+`analog-architecture.json:blocks.*.resource_allocation` and `resource_policy`
+own the current allocation. ADCs, DACs and the reference buffer are assigned to
+CONV. `selected_revision_check.py --owner-current-gate` sums the selected
+RF RX/TX, wired and USB configurations by block and physical supply branch;
+it applies the selected clock-source override once and checks the mode ceiling.
+No overlap credit or transfer of converter current to CORE/RF/PLL is assumed.
+Per-bond current limits and dynamic isolation remain unqualified.
+
+The filter sizing screen compares the paired RX filters with their own itemized
+allocation, currently 4 mA total. Budgets assigned to other RF blocks are not
+available to the filter. A result above that allocation requires a design change;
+a result below it still needs circuit and joined signal-quality verification.
+The current sizing screen's minimum paired estimate including resistor noise
+and separate capacitive drive is 4.407 mA; its added separate resistor-drive
+reservation raises the minimum to 7.251 mA. None of the 24 combined candidate
+costs fits 4 mA. These conditional realization estimates do not rule out a
+different topology, but the candidate cannot claim fit from a 16 mA aggregate
+RF remainder.
+
+The previous seven-domain converter-current redistribution sweeps represented
+a superseded architecture and are available only in Git history.
 
 For a parked TX driver, a 28 mA wake step illustrates why a settling-time label
 is insufficient. With the candidate 500 pF local capacitor, an unsupported step
@@ -1093,6 +1612,51 @@ or 0.56 mV for a 100 ns ramp. These are separate limiting calculations, not an
 additive waveform prediction or an accepted 50 mV ripple specification. The
 coupled feed/return network must supply the charge and bound ringing, timing
 error and reference disturbance throughout wake.
+
+The selected mathematical output-enable model uses a 50 ns exponential unmute
+and a 20 ns linear normal-mute fall. Normal mute begins at the actual completion
+or commanded stop event; RF energy may persist for those additional 20 ns, and
+RX admission must account for that tail. It cannot start early using knowledge
+of future payload. Underflow/fault still uses an ideal abrupt cut as a separate
+stress assumption. Neither behavior qualifies physical switch isolation or
+emissions. The complete waveform report records mute completion separately from
+last DAC consumption. These are generic enable controls, not a protocol profile.
+
+The waveform-dependent sensitivity uses an explicit candidate law:
+`I_driver(t) = 28 mA - 7 mA * min(|V_open(t)/1.2 V|², 1)`.
+It includes the modeled output-enable envelope, so mute retains 28 mA and
+transmitted activity releases at most 7 mA. The fixed voltage normalization
+uses no future packet peak. This explores imperfect current steering within
+the existing reservation; it is not a fitted physical law or evidence that
+all drivers consume less current when transmitting. Positive excess-current
+hypotheses require their own allocation or a smaller standing-bias choice.
+
+The selected differential path now propagates the original held envelope-current
+samples through the passive network's finite modes and algebraic feedthrough,
+including the assigned 200 ps current pole. Exact held-input state recurrences
+retain initial zero incremental state and the natural relaxation tail; current
+is not averaged onto a coarse grid before the frequency-dependent network.
+The resulting rail, input, return, reference and delay samples are retained at
+the native source midpoints and superposed with RX recharge in absolute time.
+A requested coarse grid is recorded as metadata, not applied to this path.
+The native response also returns a serializable state at the end of the supplied
+current window. A later window can restore it and decay the same modes through
+an explicitly zero-incremental-current idle gap. Forecast quiet tails are not
+committed history: when later activity arrives, replace the forecast after that
+boundary rather than adding a second copy of the inherited state. Overlapping
+windows or incompatible network/observer parameters are rejected; a physical
+network change needs an explicit state mapping. These continuation rules apply
+to the modeled load perturbation and do not establish RF filter/bias readiness.
+
+The coarse FFT algorithm remains an explicit diagnostic and single-ended legacy
+path; its charge conservation alone does not establish waveform fidelity.
+
+Native output interpolation, source-waveform sampling, floating-point modal
+reconstruction and the physical current law remain uncertainties. Extending the
+zero-current tail is not source-grid refinement. The reply is rerun with
+perturbed reference, rail gain and threshold-event timing; RX recharge still
+uses its separately scoped guarded FFT. Current-law variation, RF-cycle switching
+and a causal full-state lifecycle remain requirements.
 
 **Decision:** retain warm/muted operation as the fast-turnaround baseline and
 parked bias as a power-saving alternative with a longer, measured-in-model
@@ -1271,51 +1835,13 @@ does not prove TX emissions, RF sensitivity, serial jitter tolerance or a narrow
 regulated operating point. Propagate candidate spectra through payload-quality
 observers before selecting the mitigation.
 
-The paired `whole_chip_operating_envelopes` receiver comparison now carries
-two nonideal 500 pF candidates through the same RF mixer/converter/reference
-and wired sampling paths as the baseline. It retains twelve RF D2H harmonics
-and six wired harmonics, unlike the six-harmonic preliminary supply table.
-With adverse 7 pC H2D charge and 1 µF board capacitance:
-
-| Local candidate | RF diagnostic EVM | Wired held-out errors | Both voltage bounds contained |
-|---|---:|---:|---|
-| Baseline 100 pF ideal | 8.35% | 0 | No |
-| 500 pF, 0.5 Ω, 200 pH | 7.26% | 0 | Yes |
-| 500 pF, 1 Ω, 1 nH | 7.26% | 0 | Yes |
-
-All three RF observations acquire with zero symbol errors in the synthetic
-HE20 BPSK fixture; each wired observation spans twelve short channel cases.
-The useful result is restoration of voltage containment without degrading these
-receiver diagnostics, not a new protocol-support verdict. The RF fixture still
-uses signal-proportional frontend noise and synthetic training. Neither weak
-packet reception nor transmitter emissions is qualified by this comparison.
-The actual LE 1M request/reply comparison now additionally carries the
-500 pF / 0.5 Ω / 200 pH candidate at 7 pC H2D charge through the same loaded
-TX chain and independent peer. Three −80 dBm blocked requests and their
-replies pass; the six −90 dBm blocked/quiet requests still fail. At seed 81,
-broad TX power above 40 MHz offset decreases from 802.4 µW to 9.73 µW
-(24.38% to 0.296% of weighted output power); loaded active power remains about
-3.31 mW. This separates a useful supply-induced TX improvement from the
-unchanged weak-signal limitation. The band integral is neither a mask nor an
-in-band-spur guarantee, and no physical capacitor/branch implementation is
-established. Keep the candidate; continue noise/acquisition and carrier-wide
-emission qualification independently.
-
-The 6 dB NF requirement explored in the packet bench is chip-input referred;
-with its 2 dB external passive loss it becomes 8 dB at the antenna. The
-[RF-chain inverse budget](risk-priorities.md#rf-chain-and-converters) separates
-early-stage available-power gain from the fixture's voltage gain and allocates
-allowable downstream noise. Its current/area/linearity cost is still unpriced
-within the common RF load; a lower numerical NF must not silently change that
-load or be described as implemented performance.
-
-The two-blocker front-end screen now also prices linearity as a requirement:
-with −30 dBm per-tone inputs at +2/+4 MHz, the delivered-clock receiver fails
-at assigned −10 dBm input IIP3 and passes three diagnostic packets at 0 dBm.
-The [RF-chain budget](risk-priorities.md#rf-chain-and-converters) owns conditions
-and the polynomial validity limit. This does not establish that the 6 dB NF,
-gain and 0 dBm IIP3 assumptions can share the existing RF current. Include the
-same LNA/mixer/filter stages in all three budgets before selecting a candidate.
+Local capacitance, ESR/ESL and branch isolation remain physical hypotheses.
+Compare candidate networks using the current current inventory, delivered
+clock and absolute RF signal levels. Voltage containment and clean decoding
+must be reported separately; neither establishes transmitter emissions or
+blocker-limited sensitivity. A quieter supply does not pay for a lower NF,
+higher input IIP3 or additional gain. Retired packet and synthetic-waveform
+counts from the earlier fixed-current ledger are not acceptance evidence.
 
 ### Storage placement policy
 
@@ -1361,6 +1887,30 @@ The core target is now at most 48 mA through its sole supply/return pair, includ
 ## Host segmentation and physical requirements
 
 ### Current mathematical host-load hypothesis
+
+The public native input-cell characterization now provides an energy reference,
+not a pulse-shape fit. At pinned PDK commit
+`2aeec51ea2824b6cc0b396acfc39f4535f40b23a`,
+[`in_c`, TT 3.3 V / 25°C](https://github.com/google/globalfoundries-pdk-libs-gf180mcu_fd_io/blob/2aeec51ea2824b6cc0b396acfc39f4535f40b23a/cells/in_c/gf180mcu_fd_io__in_c__tt_025C_3v30.lib)
+records PAD capacitance 3.135837 pF and signed internal-energy tables across
+0.08/0.5/1 ns input slew and 0–0.5 pF Y load. Summing rise and fall gives
+2.48178–2.77922 pJ per cycle, equivalent to **0.376–0.421 pC per transition**
+on average. Adding the separate `Cload*V²` output switching term gives
+0.376–1.246 pC across the same grid; do not count that load again if CORE already
+owns it. Internal-power energy units are V²·C, not leakage-power units; this
+matches `energyScale()` in the [OpenSTA reader](https://github.com/parallaxsw/OpenSTA/blob/master/liberty/LibertyReader.cc).
+
+This is PDK characterization of a native cell, **not measured silicon**, a
+custom host-receiver qualification or a bound on transient peak current. Negative
+rise entries must not be clipped or turned into negative passive pulses: use
+the signed full-cycle energy. Keep 7 pC as an adverse assigned input-receiver
+case, not a typical value inferred from this library. The 100 ps smoothing
+parameter remains unrelated to the tabulated *input voltage slew*. Rail-port
+allocation, receiver implementation and current time shape remain open.
+The pinned source hashes and full small tables are retained in
+`evidence/selected-revision-check.json:host_input_library_evidence`; reproduce
+with `selected_revision_check.py --host-source-evidence` (network required).
+
 
 The optional integrated host bank now uses explicit 10 pF output capacitors,
 10/12 mA pull-up/down limits, 100/80 ohm on-resistance, and 7 pC internal
@@ -1423,7 +1973,7 @@ The pinned OpenROAD commit `dcf36133a369abc8f3c5e5738cd4d82e4903c0e0` does not i
 
 The zero/24/48 mA control matrix confirms this behavior at all 26,438 load sources on both rails, within export rounding. Approximately 34.105 mA of automatic modeled current remains at zero user load. **That residue is not a measurement or qualified estimate of actual CORE consumption.** These runs have no qualified switching activity, clock-tree power or complete physical design.
 
-Use PDNSim's exported resistor topology with the independent explicit-current solver for the present specified-load sensitivity screens. Do not interpret direct PDNSim voltages as belonging to the requested user-load total, or accept the printed total without auditing the exported current sources. `run_pdn_ir.sh` now runs the zero-load control and source-by-source audit before the independent solve. No binary patch is applied. If the tool revision changes, independently requalify this behavior; do not carry either the bug assumption or an override assumption into a new build without tests.
+Use PDNSim's exported resistor topology with the independent explicit-current solver for the present specified-load sensitivity screens. Do not interpret direct PDNSim voltages as belonging to the requested user-load total, or accept the printed total without auditing the exported current sources. For any future PDNSim flow, require a zero-load control and source-by-source current audit before trusting the solve. The former full-top flow is retired with its obsolete netlist. No binary patch is applied. If the tool revision changes, independently requalify this behavior; do not carry either the bug assumption or an override assumption into a new build without tests.
 
 The independent solve still has nominal resistor models, ideal local feed locations and assumed fixed current distributions. It does not close IR/EM, package effects, process variation, dynamic noise, transistor behavior at reduced supply, or full-chip power signoff. Pass-48 explicit-current results and pass-49 conditional path bounds remain the relevant retained calculations; the diagnosis explains why the earlier direct tool results were rejected.
 
@@ -1627,7 +2177,8 @@ are unavailable in wired maintenance mode.
 | Shared sample converters and diagnostic analog mux | RF | RF payload or explicit maintenance ownership, including wired maintenance |
 | Reference input, master bias, converter reference and analog clock engines | PLL/reference | Shared services remain available; only inactive clock-engine branches may stop |
 
-This is the selected modeling partition, not validated rail routing. Local
+This is the intended physical partition, not the reconciled executable budget
+or validated rail routing; see the logical/physical reconciliation above. Local
 buffers belong to their consuming domain unless their explicit circuit supply
 says otherwise. Distinguish CORE digital clock-tree current from PLL/reference
 analog oscillator/divider current to avoid double counting. A future physically
@@ -1943,37 +2494,16 @@ all five shared-rail KLU snapshots; the corrected report is analysis of retained
 runs, not a successful resimulation. Distinguish collection success from circuit
 success and preserve both false-stability and false-instability concerns.
 
-## Candidate algebraic host-ground acceleration
+## Host-ground solver verification
 
-`verification/host_capture_check.py --ground-solver-check` compares an exact
-piecewise-linear ground solution against the current Brent root. It enumerates
-current-limit breakpoints and interpolates the root only within one affine
-segment; branch resistances and bidirectional current limits remain unchanged.
-Two thousand randomized rail/output/drive cases agree within 1.69e-15 numerical
-units and satisfy return-current balance. One local timing comparison measured
-1.67x faster branch evaluation, not whole-chip speedup.
-
-An eight-interval switched standalone-bank comparison at existing integration
-tolerances reaches 5.18e-9 V state difference, exceeding the provisional 1e-9 V
-comparison gate. Maximum reported final energy difference is 4.08e-19 J. Retain
-this failed strict comparison: tighter integration tolerance/refinement must
-separate solver-equation error from adaptive ODE trajectory differences before
-installation. The running canonical RF model still uses its original solver.
-Refinement at `(rtol,atol)=(1e-10,1e-13)` and `(1e-11,1e-14)` reduces the
-maximum difference to 9.93e-11 V and 7.81e-11 V respectively, passing the unchanged
-1e-9 V comparison gate. Final energy differences are below 8e-21 J. These results
-support adaptive integration error as the coarse discrepancy; the consolidated
-check retains all three tolerance levels. Full coupled-driver/RF trajectory
-comparison and floor-rejection equivalence remain required before promotion.
-
-The companion `--coupled-ground-solver-check` retains a short canonical comparison:
-four host launches over 16 ns with RF off/on. Maximum host/reference state
-differences are 2.25e-11/1.992e-10 V and the powered RF phase difference is
-3.56e-15 cycles, below unchanged 1e-9 V/cycle gates. Both original and candidate
-standalone banks reject a deliberate floor violation with time, capacitor states,
-charge ledgers, drive state and energy ledgers unchanged. This supports a longer
-candidate run after the current source-frozen RF test, not a full-chip speed or
-quality claim; no acquired payload was used in these 16 ns comparisons.
+`verification/host_ground_solver_check.py` compares a piecewise-linear ground
+solution with the Brent solver, checks return-current conservation and compares
+switched trajectories at three numerical tolerances. Both implementations must
+reject a supply-floor violation without committing partial state or charge.
+The explicit fixture has one resistive supply branch and eleven 10 pF loads;
+it is a simplified circuit, not the selected package or GPIO model. The
+candidate solver is not installed by running this check. Physical host capture
+and joined supply/clock behavior remain separate qualification obligations.
 
 ## TMDS electrical and multi-die power budget
 
@@ -2257,3 +2787,11 @@ ohms, slightly above the original approximately 5.4 ohm peak. Consequently the
 DC and 1 MHz improvement is not broadband coexistence closure. Regulator output
 impedance/stability, actual component parasitics and host edge-current spectra
 remain required board evidence.
+
+## Stable RF host timing allocation
+
+The hopping configuration adds a stopped-select mux and H2D/2 branch inside the
+existing clocktree: reserve15,000 µm² and0.5 mA of its RF allocation, without a
+new oscillator or pin. The bounded retune/sample-epoch state reserves192bits
+in the common memory ledger. Clock-distribution activity and physical timing
+remain to qualify. Existing RF sample clocks still derive from the LO.

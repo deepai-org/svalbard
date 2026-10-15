@@ -6,7 +6,14 @@ from fractions import Fraction
 from check_contract import CONTRACT, ceil
 
 
-def screen(c, queues=False):
+def screen(c, queues=False, *, design=None):
+    if design is not None and design.contract!=c:
+        raise ValueError('Host screen contract conflicts with shared design snapshot')
+    canonical=json.dumps(c,sort_keys=True,separators=(',',':'),allow_nan=False)
+    context=dict(design_provenance=None if design is None else design.provenance(),
+        model_role='independent_contract_fixture' if design is None else 'shared_design_legacy_host_accounting',
+        contract_sha256=hashlib.sha256(canonical.encode()).hexdigest(),
+        contract_sha256_format='canonical-json-sha256-v1')
     t = c['transport']
     available = t['frame_words'] - t['control_words']
     profiles = {}
@@ -81,12 +88,11 @@ def screen(c, queues=False):
                     startup_host_words=cfg['startup_words'],
                     scope='Matched constant producer/consumer rates; no stalls, errors, CDC delays or mode transitions')
             exclusive.append(row)
-    return {'scope': 'necessary frequency and bandwidth screen; not electrical qualification',
+    return {**context,'scope': 'Retained framed-transport frequency and bandwidth accounting; not current byte-stream compatibility or electrical qualification',
             'source': {'url': 'https://www.latticesemi.com/view_document?document_id=50461',
                        'revision': 'FPGA-DS-02012-3.4, September 2025',
                        'tables': ['3.21', '3.44'],
                        'pdf_sha256': '26570f8bb2b800123120829cacd75d818d7a985d573797610521b5bda2e293c3'},
-            'contract_sha256': hashlib.sha256(CONTRACT.read_bytes()).hexdigest(),
             'profiles': profiles, 'hypothetical_ddr150': alternatives,
             'exclusive_hypothetical_ddr150': exclusive}
 
@@ -94,4 +100,8 @@ def screen(c, queues=False):
 if __name__ == '__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--queues',action='store_true')
     args=parser.parse_args()
-    print(json.dumps(screen(json.loads(CONTRACT.read_text()),queues=args.queues), indent=2))
+    import sys
+    sys.path.insert(0,str(CONTRACT.parent.parent/'system_model/architecture_fast'))
+    from design_definition import load_design
+    design=load_design()
+    print(json.dumps(screen(design.contract,queues=args.queues,design=design), indent=2))

@@ -1,8 +1,18 @@
-"""Independent coding/decoding checks, not analog or protocol qualification."""
+"""Independent codec checks plus shared-campaign adapter boundary tests.
+
+Numerical codec fixtures remain independent; campaign tests invoke the shared
+factory indirectly and use explicit mocked rejection/analog boundaries. Neither
+role establishes analog or protocol qualification."""
 import itertools
 import unittest
 import numpy as np
 from wideband_packet import encode,decode,source,receive,PERMUTATION,legacy_preamble,acquisition_source,acquire
+
+TEST_DESIGN_ROLES = {
+    'CodedDataTests': ('independent_fixture', 'Polynomial/exhaustive decoder checks and explicitly synthesized acquisition captures.'),
+    'CodedDataTests.test_packet_entry_defaults_follow_the_inventory_gain_limit': ('shared_design', 'Shared packet context and malformed-binding guards; mocked analog entry isolates parameter forwarding.'),
+    'CodedDataTests.test_campaign_records_rejected_clocks_without_decoding': ('shared_design', 'Campaign loads shared design; imposed clock rejection verifies result routing before packet generation.'),
+}
 
 
 def polynomial_encoder(bits):
@@ -13,6 +23,68 @@ def polynomial_encoder(bits):
 
 
 class CodedDataTests(unittest.TestCase):
+    def test_packet_entry_defaults_follow_the_inventory_gain_limit(self):
+        from unittest.mock import patch
+        import wideband_packet as w
+        class ReachedAnalog(Exception):pass
+        for run in (
+            lambda: w.run_case({},431),
+            lambda: w.run_acquisition_case({},431,start_sample=137,carrier_offset_hz=0.),
+        ):
+            with patch.object(w.b,'receiver_inventory_options',return_value={'maximum_gain_db':39.}), \
+                 patch.object(w.b,'coupled_wideband_feedback',side_effect=ReachedAnalog) as analog:
+                with self.assertRaises(ReachedAnalog):run()
+            self.assertEqual(analog.call_args.kwargs['gain_db'],39.)
+        with patch.object(w.b,'coupled_wideband_feedback',side_effect=ReachedAnalog) as analog:
+            with self.assertRaises(ReachedAnalog):
+                w.run_acquisition_case({},431,start_sample=137,carrier_offset_hz=0.,gain_db=54.)
+        self.assertEqual(analog.call_args.kwargs['gain_db'],54.)  # Explicit sensitivity override.
+
+        for environment in ({'design_provenance':{}},{'resolved_configuration':{}},
+                            {'inventory_current_report':{}}):
+            with patch.object(w,'source',side_effect=AssertionError('Source must not run')):
+                with self.assertRaises(ValueError):w.run_case(environment,431)
+                with self.assertRaises(ValueError):
+                    w.run_acquisition_case(environment,431,start_sample=137,carrier_offset_hz=0.)
+        from design_definition import load_design
+        design=load_design()
+        config=design.configure(engine='rf',direction='rx',reference_hz=2.426e9,sample_divider=64,pga_gain_db=39)
+        environment=w.b.configured_environment(config)
+        payload=b'Independent packet context'
+        context=w.packet_context(environment,payload,seed=431,wanted_dbm=-80.,blocker_dbm=-50.)
+        import hashlib
+        self.assertEqual(context['resolved_configuration'],config.record())
+        self.assertEqual(context['packet_stimuli']['payload_sha256'],hashlib.sha256(payload).hexdigest())
+        self.assertEqual(context['packet_stimuli']['payload_bytes'],len(payload))
+        environment['resolved_configuration']['sample_hz']=1.
+        self.assertEqual(context['resolved_configuration'],config.record())
+
+    def test_campaign_records_rejected_clocks_without_decoding(self):
+        from unittest.mock import patch
+        import wideband_packet as w
+        for args in ([],['--acquisition']):
+            with patch.object(w.b,'reference_payload_environment',return_value=(None,{'accepted':False})), \
+                 patch.object(w,'run_case') as coded, patch.object(w,'run_acquisition_case') as acquisition, \
+                 patch.object(w.b,'write_evidence'):
+                report=w.main(args)
+            self.assertEqual(len(report['cases']),4)
+            self.assertTrue(all(row['status']=='clock_rejected' for row in report['cases']))
+            coded.assert_not_called();acquisition.assert_not_called()
+            self.assertIn('spec/analog-architecture.json',report['sources_sha256'])
+
+    def test_variable_length_coded_records_include_4096_octets(self):
+        from wideband_packet import coded_data_geometry
+        for length in (1,128,4092):
+            wave,payload,_=source(431,payload_bytes=length)
+            result,_=receive(wave.samples,payload_bytes=length)
+            self.assertTrue(result['crc_ok']);self.assertTrue(result['tail_zero'])
+            self.assertEqual(bytes.fromhex(result['payload_hex']),payload)
+        g=coded_data_geometry(4092)
+        self.assertEqual(g['framed_bytes'],4096)
+        self.assertGreaterEqual(g['uncoded_bits']-g['framed_bits'],6)
+        self.assertEqual(g['data_symbols'],281)
+        with self.assertRaises(ValueError):coded_data_geometry(0)
+
     def test_encoder_impulse_and_polynomial_convolution(self):
         np.testing.assert_array_equal(encode([1,0,0,0,0,0,0]),[1,1,0,1,1,1,1,1,0,0,1,0,1,1])
         bits=np.random.default_rng(731).integers(0,2,1200)

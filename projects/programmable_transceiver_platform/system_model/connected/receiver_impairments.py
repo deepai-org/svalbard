@@ -1,8 +1,5 @@
-"""Sampled baseband frontend impairments; parameters are sensitivity assumptions."""
-import json,math,random
-from chip_model import P
-from causal_reference_lifecycle import ReferenceChip
-from sustained_lifecycle import run
+"""Standalone sampled frontend sensitivity; not RF compression or chip integration."""
+import math,random
 
 class Frontend:
     def __init__(self,gain_error=0,phase_error=0,saturation=None,noise_rms=0,seed=783):
@@ -21,16 +18,6 @@ class Frontend:
         self.count+=1;self.error_energy+=abs(w-z)**2;self.signal_energy+=abs(z)**2
         return w
 
-class ImpairedChip(ReferenceChip):
-    def __init__(self,frontend=None,**kwargs):
-        super().__init__(**kwargs);self.frontend=Frontend(**(frontend or {}))
-    def convert_adc(self,value):return super().convert_adc(self.frontend.sample(value))
-    def reference_metrics(self):
-        result=super().reference_metrics();f=self.frontend
-        result['frontend']=dict(samples=f.count,relative_rms_error=math.sqrt(f.error_energy/f.signal_energy) if f.signal_energy else None,
-            gain_error=f.g,phase_error_rad=f.p,saturation=f.sat,noise_rms_per_component=f.noise)
-        return result
-
 
 def controls():
     ideal=Frontend()
@@ -47,24 +34,6 @@ def controls():
     assert abs(power/.0002-1)<.03
 
 
-def main():
-    controls();rows=[]
-    for mode in (0,1):
-        baseline=run(mode,100,chip_factory=ReferenceChip,disturbance_sign=1)
-        for sign in (0,-1,1):
-            params={} if not sign else dict(gain_error=sign*.1,phase_error=sign*.08,saturation=.3,noise_rms=.003)
-            factory=lambda **kw:ImpairedChip(frontend=params,**kw)
-            row=run(mode,100,chip_factory=factory,disturbance_sign=1)
-            if not sign:assert row['adc_sha256']==baseline['adc_sha256']
-            else:assert row['adc_sha256']!=baseline['adc_sha256']
-            assert row['reference_metrics']['frontend']['samples']==row['rf_samples_each_direction']
-            rows.append(row)
-    report=dict(status='passed',cases=rows,complete_architecture=False,physical_qualification=False,
-        limitations=['Impairments act after RX filtering at the ADC frontend; not RF LNA/mixer compression or blocker response.',
-        'Independent per-sample Gaussian noise is assumed integrated ADC input noise, not a continuous noise PSD.',
-        'Reported relative RMS error is pre-reference frontend distortion, not calibrated modem EVM.',
-        'Illustrative values and one fixed seed do not establish GF180 capability, uncertainty bounds or yield.'])
-    (P/'evidence/connected-receiver-impairments.json').write_text(json.dumps(report,indent=2)+'\n')
-    print('Passed six sustained receiver-impairment cases and analytic/noise controls')
-
-if __name__=='__main__':main()
+if __name__=="__main__":
+    controls()
+    print("Standalone numerical controls passed; no chip lifecycle exercised.")

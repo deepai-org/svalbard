@@ -6,7 +6,7 @@ Finite coupling-step convergence is required, not assumed exact.
 """
 import copy,math
 from driver_clock_forcing import DriverPulledSpectrum
-from managed_coupled_driver import CoupledLoad
+from rf_driver_transient import CoupledLoad
 from rf_phase_forcing import advance_phase
 
 def _advance_feedback(driver,pll,end,source_terms,hz_per_v,step_s):

@@ -25,6 +25,10 @@ for label,col in [('mixer_output',2),('filter_output',3)]:
  y=b[:,col]-np.interp(t,a[:,0],a[:,col]);c=np.linalg.lstsq(x*weights[:,None],y*weights,rcond=None)[0]
  r['baseline_subtracted_stage_tone_gain'][label]=float(np.hypot(c[1],c[2])/.001)
 
-r['dependency_sha256']={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [ROOT/'projects/programmable_transceiver_platform/analog'/f for f in ('bb_filter_section.spice','bb_pmos_gain.spice','lo_buffer.spice')]+[ROOT/'ip/blocks/analog/wifi_80211b/rf_if_transmission_gate/rf_if_transmission_gate.spice']}
+# Current files are comparison inputs, not proof of the includes used by the
+# recorded simulation. Deck hashes cover include paths, not included contents.
+r['current_dependency_sha256_not_run_provenance']={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [ROOT/'projects/programmable_transceiver_platform/analog'/f for f in ('bb_filter_section.spice','bb_pmos_gain.spice','lo_buffer.spice')]+[ROOT/'ip/blocks/analog/wifi_80211b/rf_if_transmission_gate/rf_if_transmission_gate.spice']}
+r['run_dependency_provenance_verified']=False
+r['dependency_provenance_scope']='Recorded waveform/deck/log hashes are verified above. Circuit include contents and PDK identity are not established by hashing current checkout files; no current-design qualification is inferred.'
 (ROOT/'projects/programmable_transceiver_platform/evidence/rf-autonomous-chain-screen.json').write_text(json.dumps(r,indent=2)+'\n')
 print(json.dumps(dict(gain=r['held_tone_gain'],residual_v=r['fit_residual_rms_v'],blocks=blocks,currents=[c['rf_filter_current_a'] for c in r['cases']],ifs=[c['measured_if_hz'] for c in r['cases']]),indent=2))

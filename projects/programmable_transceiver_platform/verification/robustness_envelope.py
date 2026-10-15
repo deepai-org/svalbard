@@ -22,13 +22,20 @@ from wired_envelope import wired_operating_envelopes, causal_receiver_envelope, 
 from ble_packet import campaign as ble_packet_campaign
 
 
+from design_definition import load_design
+
+
 def write_evidence(path, result):
     """Atomic JSON snapshot; keep flat records compact without discarding data."""
+    def scientific_value(value):
+        if isinstance(value,np.ndarray):return value.tolist()
+        if isinstance(value,np.generic):return value.item()
+        raise TypeError(f'Unsupported evidence value: {type(value).__name__}')
     def encode(value, level=0):
         children=value.values() if isinstance(value,dict) else value
         if (not isinstance(value,(dict,list)) or not value or
                 all(not isinstance(x,(dict,list)) for x in children)):
-            return json.dumps(value,allow_nan=False,separators=(',', ':'))
+            return json.dumps(value,allow_nan=False,separators=(',', ':'),default=scientific_value)
         pad='  '*(level+1);close='  '*level
         if isinstance(value,dict):
             body=(pad+json.dumps(k)+': '+encode(v,level+1) for k,v in value.items())
@@ -787,7 +794,9 @@ def joined_rf_resource_screen(contract):
                     total_assigned_supply_power_w=a.supply_v*sum(currents.values()),
                     conditional_allocation_pass=min(remaining.values())>=0 and min(rails.values())>=a.minimum_supply_v and host['capacity_pass'],
                     over_budget_domains=[domain for domain,value in remaining.items() if value<0]))
-    return dict(cases=rows,status='joined_assigned_costs_not_physical_fit',joint_fit_verified=False,
+    return dict(model_role='frozen_numerical_fixture',current_chip_evidence=False,
+        fixture_reason='Independent assigned current, rail and waveform comparison; not shared architecture performance',
+        cases=rows,status='joined_assigned_costs_not_physical_fit',joint_fit_verified=False,
         assumptions=['RF 37 mA includes the 28 mA TX driver allocation; no extra RF-power/efficiency term is added to that same reservation.',
             'Host 10 pF loads and 7 pC per changed output are existing provisional hypotheses; random and alternating data activity compared.',
             'CORE remains an assigned 20 mA and clock static/current-load combinations are hypotheses. Inactive leakage and complete internal switching remain unpriced.',
@@ -812,7 +821,9 @@ def rf_dc_quality_bridge(contract,resources):
         rows.append(dict(data_rising_probability=budget['data_rising_probability'],
             rf_rail_v=rail,conditional_allocation_pass=budget['conditional_allocation_pass'],
             spectral_cases=result['cases']))
-    return dict(cases=rows,status='dc_rail_join_only',
+    return dict(model_role='frozen_numerical_fixture',current_chip_evidence=False,
+        fixture_reason='Independent assigned current, rail and waveform comparison; not shared architecture performance',
+        cases=rows,status='dc_rail_join_only',
         scope=['RF gain/noise scaling in the receiver uses the exact joined-budget RF DC rail at 2.437 GHz.',
             'Same explicit board insertion loss and configured gain restoration as existing spectral comparison; assigned PGA headroom unchanged.',
             '1/10 mV ripple and 65 MHz/V residual pushing remain assigned stress inputs, not predicted switching-noise spectra from this DC ledger.',
@@ -856,7 +867,9 @@ def host_charge_pdn_bridge(contract,resources):
             host_activity_current_tone_peak_a=tone_peak,**{k:v for k,v in disturbance.items() if k!='name'},
             transfer_scan_peak=dict(frequency_hz=peak[0],transimpedance_ohm=peak[1]),
             kcl_residual_a=transfer['kcl_residual_a'],spectral_cases=result['cases']))
-    return dict(cases=rows,status='host_charge_coupling_candidate_not_full_chip_pdn',
+    return dict(model_role='frozen_numerical_fixture',current_chip_evidence=False,
+        fixture_reason='Independent assigned current, rail and waveform comparison; not shared architecture performance',
+        cases=rows,status='host_charge_coupling_candidate_not_full_chip_pdn',
         assumptions=['Random-data mean rising probability 0.25 with 50% sinusoidal activity modulation: range 0.125–0.375, inside the 0–0.5 physical bound.',
             '7 pC internal charge per transition and 10 pF external loads; their data-activity envelopes are coherent. Clock and static bias affect DC, not this 1 MHz data-activity tone.',
             'Clock victim shares board feed and the specified return with host; RF DC uses the separate joined-budget rail. No complete multi-rail package/substrate matrix is claimed.',
@@ -867,12 +880,28 @@ def host_charge_pdn_bridge(contract,resources):
             'Clock operation and noise at predicted local rail','Physical component/package parasitics and complete dynamic multi-rail accounting'])
 
 
-def host_harmonic_current(frequency_hz,word_hz,harmonic,internal_tau_s=.5e-9):
+def finite_current_edge_factor(frequency_hz,edge_s):
+    """Causal unit-area triangular smoothing of a current waveform.
+
+    Convolution of two uniform kernels on [0, edge_s]. Support is 2*edge_s,
+    centroid delay edge_s, DC charge unchanged. This is an explicit current
+    shape hypothesis, not a measured GPIO edge or a change to average power.
+    Zero retains the historical abrupt source as a negative control.
+    """
+    if not all(math.isfinite(x) for x in (frequency_hz,edge_s)) or frequency_hz<0 or edge_s<0:
+        raise ValueError('Finite nonnegative frequency and current-edge time required')
+    return complex(np.sinc(frequency_hz*edge_s)**2*np.exp(-2j*math.pi*frequency_hz*edge_s))
+
+
+def host_harmonic_current(frequency_hz,word_hz,harmonic,internal_tau_s=.5e-9,*,current_edge_s=0.,internal_charge_c=7e-12,output_cap_f=10e-12,output_voltage_v=3.3):
     """Complex peak line of an assigned periodic mean host-current waveform."""
     if (type(harmonic) is not int or harmonic<1 or not all(math.isfinite(v) and v>0 for v in
             (frequency_hz,word_hz,internal_tau_s)) or not math.isclose(frequency_hz,harmonic*word_hz/2,rel_tol=1e-12)):
         raise ValueError('Positive forwarded-clock harmonic and pulse time required')
-    charge=10e-12*3.3;internal_charge=7e-12
+    if not math.isfinite(internal_charge_c) or internal_charge_c<0:raise ValueError("Finite nonnegative internal charge required")
+    if not math.isfinite(output_cap_f) or output_cap_f<=0:raise ValueError("Positive finite output capacitance required")
+    if isinstance(output_voltage_v,bool) or not math.isfinite(output_voltage_v) or output_voltage_v<=0:raise ValueError('Positive finite output voltage required')
+    charge=output_cap_f*output_voltage_v;internal_charge=internal_charge_c
     # Capacitive charge supplied by a 10 mA rectangular charging pulse.
     width=charge/.010
     hc=np.sinc(frequency_hz*width)*np.exp(-1j*math.pi*frequency_hz*width)
@@ -883,10 +912,10 @@ def host_harmonic_current(frequency_hz,word_hz,harmonic,internal_tau_s=.5e-9):
         # Expected random data charge repeats at word rate. Clock internal
         # charge occurs on both transitions, also at word rate.
         coefficient += word_hz*(10*.25*charge*hc+(10*.5+1)*internal_charge*hi)
-    return complex(2*coefficient)
+    return complex(2*coefficient)*finite_current_edge_factor(frequency_hz,current_edge_s)
 
 
-def host_harmonic_screen(coupling, word_hz=2.437e9/8, harmonics=6):
+def host_harmonic_screen(coupling, word_hz=2.437e9/8, harmonics=6,*,current_edge_s=0.,output_cap_f=10e-12,internal_charge_c=7e-12,output_voltage_v=3.3):
     if type(harmonics) is not int or harmonics<1:raise ValueError("Positive harmonic count required")
     word=word_hz;rows=[]
     for candidate in coupling['cases']:
@@ -895,7 +924,7 @@ def host_harmonic_screen(coupling, word_hz=2.437e9/8, harmonics=6):
             tones=[]
             for harmonic in range(1,harmonics+1):
                 f=harmonic*word/2
-                current=host_harmonic_current(f,word,harmonic,tau)
+                current=host_harmonic_current(f,word,harmonic,tau,current_edge_s=current_edge_s,output_cap_f=output_cap_f,internal_charge_c=internal_charge_c,output_voltage_v=output_voltage_v)
                 transfer=shared_return_transfer(f,return_r=candidate['return_r_ohm'],
                     return_l=candidate['return_l_h'],**candidate['network'])
                 voltage=current*transfer['differential_ohm']
@@ -904,8 +933,8 @@ def host_harmonic_screen(coupling, word_hz=2.437e9/8, harmonics=6):
             rows.append(dict(network=candidate['name'],internal_charge_tau_s=tau,tones=tones,
                 resolved_tone_voltage_rms_v=math.sqrt(sum(t['clock_rail_voltage_peak_v']**2/2 for t in tones)),
                 omitted_harmonics_above_hz=tones[-1]['frequency_hz']))
-    return dict(cases=rows,host_word_hz=word,status='periodic_mean_current_harmonics_not_full_noise_spectrum',
-        scope=['Same random-data mean activity, 10 pF load, 7 pC internal charge and network hypotheses as the DC/activity screen.',
+    return dict(cases=rows,host_word_hz=word,current_edge_s=current_edge_s,internal_charge_c=internal_charge_c,output_cap_f=output_cap_f,status='periodic_mean_current_harmonics_not_full_noise_spectrum',
+        scope=['Assigned random-data mean activity, recorded external load and internal transition charge; network and pulse hypotheses remain unmeasured.',
             'Capacitive current uses a 10 mA rectangular charge pulse; internal charge uses an exponential pulse with assigned 0.25/0.5/1 ns decay.',
             'Pulse origins are aligned. Coherent bank summation models a possible synchronous mean-current component, not an independently verified worst case.',
             f'{harmonics} forwarded-clock harmonics are resolved; random-data continuous spectrum, jitter and higher harmonics are omitted.',
@@ -1029,7 +1058,9 @@ def host_driven_wired_receiver(coupling):
                 dict(ps_per_mv=sensitivity*w,pole_hz=pole,latency_s=0.) for w in (.2,.3,.5)])
             scenarios.append(dict(name=f'pole_{pole:g}_sensitivity_{sensitivity:g}',delay_tones=response['tones']))
     result=causal_receiver_envelope(timing_scenarios=scenarios)
-    return dict(host_word_hz=312.5e6,rail_case=rail,receiver=result,complete=False,
+    return dict(model_role="frozen_numerical_fixture",current_chip_evidence=False,
+        coupling_content_sha256=hashlib.sha256(json.dumps(coupling,sort_keys=True,separators=(",",":"),allow_nan=False).encode()).hexdigest(),
+        host_word_hz=312.5e6,rail_case=rail,receiver=result,complete=False,
         scope=['Same network and pulse-charge hypotheses as RF, evaluated at the explicit wired host word rate.',
             'Largest resolved rail RMS among sampled networks selected for this screen; not a proven physical worst case.',
             'Host rail phasors propagate through coherent stage delay responses into all four receiver voltage observations.',
@@ -1062,7 +1093,12 @@ def host_driven_rf_receiver(contract,coupling):
                 rows.append(dict(aggregate_dc_ps_per_mv=sensitivity,stage_pole_hz=1e9,
                     board_blocker_attenuation_db=attenuation,board_wanted_loss_db=loss,
                     mixer_substeps=steps,quality=summarize_quality(q),spectral_clock=q['spectral_clock']))
-    return dict(cases=rows,rail_case=rail,host_word_hz=harmonics['host_word_hz'],complete=False,
+    return dict(model_role="frozen_numerical_fixture",current_chip_evidence=False,
+        coupling_content_sha256=hashlib.sha256(json.dumps(coupling,sort_keys=True,separators=(",",":"),allow_nan=False).encode()).hexdigest(),
+        contract_content_sha256=hashlib.sha256(json.dumps(contract,sort_keys=True,separators=(",",":"),allow_nan=False).encode()).hexdigest(),
+        fixture_parameters=dict(rf_rail_v=3.21,converter_enob=8.,frontend_evm_rms=.04,
+            sample_jitter_s=.3e-12,pga_peak_limit_v=.8,carrier_hz=carrier,settings=settings),
+        cases=rows,rail_case=rail,host_word_hz=harmonics['host_word_hz'],complete=False,
         scope=['Same assigned host/package spectra as the timing screen, now passed through RX mixing, analog filtering, converter and acquisition.',
             'D2H clock and conversion derive coherently from the same LO; H2D independent-clock current injection is not included.',
             'Shared phase perturbs mixer and implicit ADC crossings; source waveform has independent ideal timing.',
@@ -1073,7 +1109,7 @@ def host_driven_rf_receiver(contract,coupling):
 
 
 def h2d_current_ports(frequency_hz,word_hz,harmonic,*,input_cap_f=5e-12,
-                      internal_charge_c=.3e-12,alternating=False,origin_s=0.):
+                      internal_charge_c=.3e-12,alternating=False,origin_s=0.,current_edge_s=0.):
     """H2D current at distinct chip supply and capacitive-return ports.
 
     FPGA charging power is external. Capacitive return is signed displacement
@@ -1093,14 +1129,16 @@ def h2d_current_ports(frequency_hz,word_hz,harmonic,*,input_cap_f=5e-12,
     if harmonic%2==0:
         transitions=11 if alternating else 6
         internal=2*transitions*internal_charge_c*word_hz/(1+2j*math.pi*frequency_hz*.5e-9)*phase
-    return dict(chip_internal_peak_a=complex(internal),external_cap_return_peak_a=complex(external_return))
+    edge=finite_current_edge_factor(frequency_hz,current_edge_s)
+    return dict(chip_internal_peak_a=complex(internal)*edge,external_cap_return_peak_a=complex(external_return)*edge)
 
 
-def bidirectional_host_spectrum(coupling,*,d2h_word_hz=2.437e9/8,internal_charge_c=.3e-12,
+def bidirectional_host_spectrum(coupling,*,h2d_word_hz=312.5e6,d2h_word_hz=2.437e9/8,internal_charge_c=.3e-12,
                                 alternating=False,origin_s=0.,return_fraction=1.,d2h_harmonics=6,
-                                d2h_internal_tau_s=None):
+                                d2h_internal_tau_s=None,current_edge_s=0.,output_cap_f=10e-12,d2h_internal_charge_c=7e-12,output_voltage_v=3.3):
+    if not math.isfinite(h2d_word_hz) or h2d_word_hz<=0:raise ValueError('Positive finite H2D rate required')
     if not 0<=return_fraction<=1:raise ValueError('Bounded external-return participation required')
-    d2h=host_harmonic_screen(coupling,word_hz=d2h_word_hz,harmonics=d2h_harmonics)
+    d2h=host_harmonic_screen(coupling,word_hz=d2h_word_hz,harmonics=d2h_harmonics,current_edge_s=current_edge_s,output_cap_f=output_cap_f,internal_charge_c=d2h_internal_charge_c,output_voltage_v=output_voltage_v)
     candidates=d2h['cases'] if d2h_internal_tau_s is None else [x for x in d2h['cases'] if x['internal_charge_tau_s']==d2h_internal_tau_s]
     if not candidates:raise ValueError('Explicit D2H pulse shape is not one of the modeled hypotheses')
     rail=max(candidates,key=lambda x:x['resolved_tone_voltage_rms_v'])
@@ -1109,9 +1147,9 @@ def bidirectional_host_spectrum(coupling,*,d2h_word_hz=2.437e9/8,internal_charge
     combined={x['frequency_hz']:x['clock_rail_voltage_peak_v']*np.exp(1j*x['voltage_phase_rad']) for x in rail['tones']}
     rows=[]
     for n in range(1,7):
-        f=n*312.5e6/2
-        currents=h2d_current_ports(f,312.5e6,n,internal_charge_c=internal_charge_c,
-                                   alternating=alternating,origin_s=origin_s)
+        f=n*h2d_word_hz/2
+        currents=h2d_current_ports(f,h2d_word_hz,n,internal_charge_c=internal_charge_c,
+                                   alternating=alternating,origin_s=origin_s,current_edge_s=current_edge_s)
         internal=shared_return_transfer(f,injection_weights=(0.,-1.,1.),**common)
         external=shared_return_transfer(f,injection_weights=(0.,0.,return_fraction),**common)
         vi=currents['chip_internal_peak_a']*internal['differential_ohm']
@@ -1124,11 +1162,11 @@ def bidirectional_host_spectrum(coupling,*,d2h_word_hz=2.437e9/8,internal_charge
             kcl_residual_a=max(internal['kcl_residual_a'],external['kcl_residual_a']),
             power_residual_w=max(abs(internal['power_residual_w']),abs(external['power_residual_w']))))
     tones=[dict(frequency_hz=f,clock_rail_voltage_peak_v=float(abs(v)),voltage_phase_rad=float(np.angle(v))) for f,v in sorted(combined.items())]
-    return dict(d2h_word_hz=d2h_word_hz,h2d_word_hz=312.5e6,network=rail['network'],
-        internal_charge_c=internal_charge_c,alternating=alternating,h2d_origin_s=origin_s,
-        d2h_internal_tau_s=rail['internal_charge_tau_s'],
-        chip_h2d_internal_mean_a=(11 if alternating else 6)*internal_charge_c*312.5e6,
-        fpga_external_capacitive_mean_a=(5.5 if alternating else 3.)*5e-12*3.3*312.5e6,
+    return dict(d2h_word_hz=d2h_word_hz,h2d_word_hz=h2d_word_hz,network=rail['network'],
+        internal_charge_c=internal_charge_c,alternating=alternating,h2d_origin_s=origin_s,current_edge_s=current_edge_s,
+        d2h_internal_tau_s=rail['internal_charge_tau_s'],output_voltage_v=output_voltage_v,output_cap_f=output_cap_f,d2h_internal_charge_c=d2h_internal_charge_c,
+        chip_h2d_internal_mean_a=(11 if alternating else 6)*internal_charge_c*h2d_word_hz,
+        fpga_external_capacitive_mean_a=(5.5 if alternating else 3.)*5e-12*3.3*h2d_word_hz,
         external_capacitive_signed_return_mean_a=0.,
         external_return_fraction=return_fraction,h2d_ports=rows,tones=tones,
         resolved_rail_rms_v=math.sqrt(sum(x['clock_rail_voltage_peak_v']**2/2 for x in tones)),
@@ -1158,7 +1196,9 @@ def bidirectional_host_receiver_screen(contract,coupling):
             name=f'charge_{charge:g}_alternate_{alternating}_origin_{origin:g}'
             wired_scenarios.append(dict(name=name,delay_tones=wire_delay['tones']))
             wired_environments.append(dict(name=name,environment=wire_environment))
-    return dict(cases=rows,wired_environments=wired_environments,
+    return dict(model_role='frozen_numerical_fixture',current_chip_evidence=False,
+        fixture_reason='Independent assigned current, rail and waveform comparison; not shared architecture performance',
+        cases=rows,wired_environments=wired_environments,
         wired_receiver=causal_receiver_envelope(timing_scenarios=wired_scenarios),complete=False,assumptions=[
         'H2D input capacitance 5 pF and internal transition charge 0.3/7 pC are assigned study points, not proven device bounds.',
         'Independent H2D forwarded clock 156.25 MHz; D2H and conversion remain LO-derived. Relative origins are explicit.',
@@ -1172,7 +1212,7 @@ def bidirectional_host_receiver_screen(contract,coupling):
         'Analog reference/gain modulation, supply-dependent bias/startup and real protocol packets remain unjoined.'])
 
 
-def common_feed_dc_ledger(contract,*,lo_hz=2.437e9,h2d_internal_charge_c=.3e-12,
+def common_feed_dc_ledger(contract,*,h2d_word_hz=312.5e6,lo_hz=2.437e9,h2d_internal_charge_c=.3e-12,
                           h2d_alternating=False,d2h_rising_probability=.25,
                           feed_r=.1,branch_r=2.,return_r=.02,source_v=3.3,d2h_word_hz=None,
                           payload_engine="rf",payload_current_a=.037):
@@ -1192,7 +1232,7 @@ def common_feed_dc_ledger(contract,*,lo_hz=2.437e9,h2d_internal_charge_c=.3e-12,
     rise=d2h_rising_probability
     d2h_cap=(10*rise+.5)*word*10e-12*source_v
     d2h_internal=(20*rise+1)*word*7e-12
-    h2d_internal=(11 if h2d_alternating else 6)*312.5e6*h2d_internal_charge_c
+    h2d_internal=(11 if h2d_alternating else 6)*h2d_word_hz*h2d_internal_charge_c
     loads=dict(core_excluding_host_io=.020,clock=.012+1.5e-12*source_v*lo_hz,
         host_static=.004,
         d2h_capacitive=d2h_cap,d2h_internal=d2h_internal,h2d_internal=h2d_internal)
@@ -1214,7 +1254,7 @@ def common_feed_dc_ledger(contract,*,lo_hz=2.437e9,h2d_internal_charge_c=.3e-12,
         payload_engine=payload_engine,payload_current_a=payload_current_a,host_rail_v=host_rail,
         source_power_w=source_power,resistive_losses_w=losses,delivered_electrical_power_w=delivered,
         power_balance_residual_w=source_power-delivered-sum(losses.values()),
-        h2d_external_fpga_capacitive_current_a=(5.5 if h2d_alternating else 3.)*312.5e6*5e-12*source_v,
+        h2d_external_fpga_capacitive_current_a=(5.5 if h2d_alternating else 3.)*h2d_word_hz*5e-12*source_v,
         min_fixture_rail_v=2.5,inside_assigned_voltage_range=min(victim,host_rail)>=2.5,
         physical_pin_current_qualification=False,
         assumptions=['Constant-current first pass; supply-dependent switching/bias must be solved self-consistently later.',
@@ -1225,24 +1265,24 @@ def common_feed_dc_ledger(contract,*,lo_hz=2.437e9,h2d_internal_charge_c=.3e-12,
             'External topology and bond-current distribution remain unverified; no independent logical-rail feeds implied.'])
 
 
-def operating_environment(contract, candidate, *, carrier_hz, d2h_word_hz,
+def operating_environment(contract, candidate, *, carrier_hz, d2h_word_hz,h2d_word_hz=312.5e6,
                           payload_engine, payload_current_a, h2d_internal_charge_c,
                           d2h_harmonics=6, clock_sensitivity_ps_per_mv=.1,
                           reference_fraction_per_v=0., reference_pole_hz=1e9,
-                          d2h_internal_tau_s=.5e-9,external_input=None):
+                          d2h_internal_tau_s=.5e-9,external_input=None,output_cap_f=10e-12,d2h_internal_charge_c=7e-12,output_voltage_v=3.3):
     """One explicit DC/AC/timing environment, consumed by either payload path.
 
     No best-network selection: the caller names the actual candidate network.
     Device transfer functions and source spectra remain assigned hypotheses.
     """
-    for value in (carrier_hz,d2h_word_hz,reference_pole_hz):
+    for value in (carrier_hz,d2h_word_hz,h2d_word_hz,reference_pole_hz):
         if not math.isfinite(value) or value<=0:raise ValueError('Positive finite operating rate required')
     if not math.isfinite(reference_fraction_per_v) or reference_fraction_per_v<0:
         raise ValueError('Nonnegative reference feedthrough required')
     environment=bidirectional_host_spectrum(dict(cases=[candidate]),
-        d2h_word_hz=d2h_word_hz,internal_charge_c=h2d_internal_charge_c,
-        alternating=True,d2h_harmonics=d2h_harmonics,d2h_internal_tau_s=d2h_internal_tau_s)
-    ledger=common_feed_dc_ledger(contract,lo_hz=carrier_hz,
+        h2d_word_hz=h2d_word_hz,d2h_word_hz=d2h_word_hz,internal_charge_c=h2d_internal_charge_c,
+        alternating=True,d2h_harmonics=d2h_harmonics,d2h_internal_tau_s=d2h_internal_tau_s,output_cap_f=output_cap_f,d2h_internal_charge_c=d2h_internal_charge_c,output_voltage_v=output_voltage_v)
+    ledger=common_feed_dc_ledger(contract,h2d_word_hz=h2d_word_hz,lo_hz=carrier_hz,
         h2d_internal_charge_c=h2d_internal_charge_c,h2d_alternating=True,
         feed_r=candidate['network']['feed_r'],branch_r=candidate['network']['package_r'],
         return_r=candidate['return_r_ohm'],d2h_word_hz=d2h_word_hz,
@@ -1324,6 +1364,9 @@ def common_feed_rf_screen(contract,coupling,*,clock_sensitivity_ps_per_mv=.1,ref
                 clock_sensitivity_ps_per_mv=clock_sensitivity_ps_per_mv,reference_fraction_per_v=reference_fraction_per_v,
                 reference_pole_hz=reference_pole_hz,reference_modulation=q['reference_modulation']))
     return dict(cases=rows,complete=False,status='common_feed_dc_and_timing_join_not_physical_power_closure',
+        model_role='frozen_numerical_fixture',current_chip_evidence=False,
+        fixture_assumptions=dict(payload_reservation_a=.037,pga_nominal_peak_v=.8,converter_enob=8.,
+            source='Independent legacy RF/power fixture; not the shared current-block inventory'),
         limitations=['RF gain/noise scaling and assigned PGA headroom now use the calculated shared-feed rail.',
             'PLL startup/noise/tuning, filter poles, ENOB and reference accuracy versus DC supply remain unmodeled.',
             'Optional ADC-reference modulation is assigned linear feedthrough; PGA gain modulation and physical reference output impedance remain open.',
@@ -1338,13 +1381,15 @@ def shared_board_candidate(board_cap_f=1e-6):
             die_c=100e-12,board_c=board_cap_f,board_esr=.02,board_esl=1e-9))
 
 
-def local_load_state_space(candidate):
+def local_load_state_space(candidate,*,include_host_load=False):
     """Same passive PDN as shared_return_transfer, driven by local load slope.
 
     States: feed current, die-cap current, board-cap voltage, die-cap voltage,
     local load current. All are perturbations about an already settled load.
     Input is dIload/dt; output is die supply minus die return perturbation.
     No node is reset when the load changes direction.
+    Optional sixth state is HOST load from the board-feed node to die return,
+    with a second slope input. It shares feed/return but bypasses package supply.
     """
     from scipy.signal import StateSpace
     n=candidate['network']
@@ -1359,16 +1404,136 @@ def local_load_state_space(candidate):
     if np.linalg.det(inductance)<=0:
         raise ValueError('Nonsingular positive inductance network required')
     def derivative(x,u):
-        i,ic,vb,vc,load=x
-        di,dic=np.linalg.solve(inductance,[-(rf+rb)*i+rb*(load+ic)-vb+lb*u,
-            vb-vc+rb*i-(rb+rp)*load-(rb+rp+rd)*ic-(lb+lp)*u])
-        return np.array([di,dic,(i-load-ic)/cb,ic/cd,u])
-    zero=np.zeros(5)
-    a=np.column_stack([derivative(x,0.) for x in np.eye(5)])
-    b=derivative(zero,1.)[:,None]
-    c=np.array([[0.,rd,0.,1.,0.]])+ld*a[1:2,:]
+        i,ic,vb,vc,load=x[:5]
+        host=x[5] if include_host_load else 0.
+        local_slope,host_slope=(u if include_host_load else (u,0.))
+        di,dic=np.linalg.solve(inductance,[-(rf+rb)*i+rb*(load+host+ic)-vb+lb*(local_slope+host_slope),
+            vb-vc+rb*i-(rb+rp)*load-(rb+rp+rd)*ic-
+            (rb+candidate['return_r_ohm'])*host-(lb+lp)*local_slope-
+            (lb+candidate['return_l_h'])*host_slope])
+        base=[di,dic,(i-load-ic-host)/cb,ic/cd,local_slope]
+        return np.array(base+[host_slope] if include_host_load else base)
+    count=6 if include_host_load else 5
+    zero=np.zeros(count);zero_input=np.zeros(2) if include_host_load else 0.
+    a=np.column_stack([derivative(x,zero_input) for x in np.eye(count)])
+    b=(np.column_stack([derivative(zero,u) for u in np.eye(2)]) if include_host_load else derivative(zero,1.)[:,None])
+    c=np.array([[0.,rd,0.,1.,0.]+([0.] if include_host_load else [])])+ld*a[1:2,:]
     d=ld*b[1:2,:]
     return StateSpace(a,b,c,d)
+
+
+class LocalLoadTransient:
+    """Persistent incremental package state around a settled DC operating point.
+
+    Input is piecewise constant load slope in A/s. Mode changes alter the slope,
+    never reset the capacitor voltages or inductor currents. This reduced local
+    load network optionally includes the independent HOST feed-node load;
+    independently driven clock-input ports remain outside this reduction.
+    """
+    def __init__(self,candidate,*,time=0.,clock_pole_hz=None,clock_sensitivity_s_per_v=0.,include_host_load=False):
+        if not math.isfinite(time) or time<0:raise ValueError('Finite nonnegative origin required')
+        self.include_host_load=include_host_load
+        self.host_slope=0.
+        self.system=local_load_state_space(candidate,include_host_load=include_host_load)
+        if not math.isfinite(clock_sensitivity_s_per_v):raise ValueError('Finite timing sensitivity required')
+        if clock_pole_hz is None and clock_sensitivity_s_per_v:
+            raise ValueError('Timing sensitivity requires a pole')
+        self.clock_sensitivity=clock_sensitivity_s_per_v
+        self.timing_enabled=clock_pole_hz is not None
+        if self.timing_enabled:
+            from scipy.signal import StateSpace
+            if not math.isfinite(clock_pole_hz) or clock_pole_hz<=0:raise ValueError('Positive timing pole required')
+            base=self.system;pole=2*math.pi*clock_pole_hz
+            count=len(base.A)
+            a=np.zeros((count+1,count+1));a[:count,:count]=base.A;a[count,:count]=pole*base.C[0];a[count,count]=-pole
+            b=np.vstack((base.B,pole*base.D))
+            self.system=StateSpace(a,b,np.c_[base.C,0.],base.D)
+        self.state=np.zeros(len(self.system.A));self.time=time;self.slope=0.;self._transitions={};self.ramp_end=None;self.load_generation=0
+
+    @property
+    def clock_delay(self):
+        return float(self.state[-1]*self.clock_sensitivity) if self.timing_enabled else 0.
+
+
+    @property
+    def voltage(self):
+        return float((self.system.C@self.state+self.system.D@self._input_slopes()).item())
+
+    def preview_clock_edges(self,times):
+        """Predict edges under the already scheduled load; never advance live state.
+
+        Predictions must be discarded if subsequent load commands change the
+        trajectory. No noise or event-induced current is added by this adapter.
+        """
+        import copy
+        times=np.asarray(times,dtype=float)
+        if times.ndim!=1 or not np.all(np.isfinite(times)) or np.any(times<self.time) or np.any(np.diff(times)<=0):
+            raise ValueError('Finite ordered future nominal edges required')
+        forecast=copy.copy(self);forecast.state=self.state.copy();forecast._transitions=dict(self._transitions)
+        edges=[]
+        for time in times:
+            forecast.advance(float(time));edges.append(time+forecast.clock_delay)
+        edges=np.asarray(edges)
+        if np.any(edges<=self.time) or np.any(np.diff(edges)<=0):
+            raise ValueError('Delayed clock loses future edge ordering')
+        return edges
+
+    def bind_clock_events(self,times,*,origin):
+        """Bind a finite preview to this load schedule; caller owns stream epoch."""
+        if not math.isfinite(origin) or origin>self.time:
+            raise ValueError('Finite stream origin no later than live time required')
+        edges=self.preview_clock_edges(times)-origin;generation=self.load_generation
+        def event(index):
+            if generation!=self.load_generation:
+                raise ValueError('Clock preview invalidated by load command')
+            if type(index) is not int or not 0<=index<len(edges):
+                raise ValueError('Clock preview index outside finite horizon')
+            return float(edges[index])
+        return event
+
+    def _input_slopes(self):
+        return np.array([self.slope,self.host_slope] if self.include_host_load else [self.slope])
+
+    def _advance_constant(self,time):
+        from scipy.linalg import expm
+        if not math.isfinite(time) or time<self.time:raise ValueError('Monotonic finite time required')
+        dt=time-self.time
+        if dt:
+            if dt not in self._transitions:
+                n=len(self.state);inputs=self.system.B.shape[1]
+                augmented=np.zeros((n+inputs,n+inputs));augmented[:n,:n]=self.system.A
+                augmented[:n,n:]=self.system.B
+                self._transitions[dt]=expm(augmented*dt)[:n]
+                if len(self._transitions)>128:
+                    self._transitions={dt:self._transitions[dt]}
+            self.state=self._transitions[dt]@np.r_[self.state,self._input_slopes()]
+            self.time=time
+        return self.voltage
+
+    def advance(self,time):
+        if not math.isfinite(time) or time<self.time:raise ValueError('Monotonic finite time required')
+        if self.ramp_end is not None and self.ramp_end<=time:
+            self._advance_constant(self.ramp_end)
+            self.slope=0.;self.host_slope=0.;self.ramp_end=None
+        return self._advance_constant(time)
+
+    def ramp_to(self,time,increment_a,duration_s,*,host_increment_a=None):
+        """Replace any pending ramp from its reached load, retaining circuit state."""
+        if not all(math.isfinite(x) for x in (increment_a,duration_s,time)) or duration_s<=0 or not math.isfinite(time+duration_s) or time+duration_s<=time:
+            raise ValueError('Finite target and resolvable positive ramp duration required')
+        if host_increment_a is not None and (not self.include_host_load or not math.isfinite(host_increment_a)):
+            raise ValueError('Host load input must be enabled and finite')
+        self.advance(time)
+        self.host_slope=0. if host_increment_a is None else (host_increment_a-self.state[5])/duration_s
+        self.slope=(increment_a-self.state[4])/duration_s
+        self.ramp_end=time+duration_s;self.load_generation+=1
+        return self.voltage
+
+    def set_slope(self,time,slope_a_per_s):
+        if not math.isfinite(slope_a_per_s):raise ValueError('Finite load slope required')
+        self.advance(time)
+        self.slope=float(slope_a_per_s);self.host_slope=0.;self.ramp_end=None;self.load_generation+=1
+        return self.voltage
 
 
 def analog_wake_envelope():
@@ -1426,7 +1591,9 @@ def local_decoupling_envelope(contract):
                     ideal_plate_mm2_at_min_density=[cap/d/1e6 for d in (.9e-15,1.27e-15,1.8e-15)],
                     rail_interval_v=[dc-peak,dc+peak],rail_rms_v=e['host_spectrum']['resolved_rail_rms_v'],
                     supply_delay_rms_s=jitter,within_fixture_voltage_window=dc-peak>=2.5 and dc+peak<=3.6))
-    return dict(cases=rows,complete=False,
+    return dict(cases=rows,complete=False,model_role='frozen_numerical_fixture',current_chip_evidence=False,
+        fixture_assumptions=dict(payload_reservation_a={'rf':.037,'wire':.096},h2d_internal_charge_c=7e-12,
+            source='Independent legacy load/decoupling comparison; not the shared current-block inventory'),
         scope='Assigned RLC grid and 7 pC H2D stress; not a measured or exhaustive tolerance envelope. Timing uses assigned 0.1 ps/mV, 1 GHz pole. No payload quality qualification.',
         limitations=['Series lumped capacitor only; distributed coupling and broadband random switching omitted.',
             'Only nominal carriers and six D2H harmonics; no full carrier sweep or resonance qualification.',
@@ -1526,8 +1693,11 @@ def tx_clock_spur_envelope(contract):
         peaks=r['spectrum'].pop('strongest_retained_lines')
         r['spectrum']['strongest_retained_line']=peaks[0] if peaks else None
     return dict(cases=rows,comparisons=decisions,complete=False,
+        model_role='frozen_numerical_fixture',current_chip_evidence=False,
+        fixture_assumptions=dict(payload_reservation_a=.037,
+            source='Independent legacy load/divider spur comparison; not a resolved chip configuration'),
         status='carrier_range_clock_spur_requirements',
-        assumptions=['Same shared network, bidirectional host currents and 0.1 ps/mV / 1 GHz supply-delay hypothesis as the packet environment.',
+        assumptions=['Frozen numerical network, legacy bidirectional host-current allocation and assigned 0.1 ps/mV / 1 GHz supply-delay hypothesis; not the current packet environment.',
             '2 MHz carrier grid across the requested LO interval; continuous tuning and package-parameter bounds are not certified.',
             'Equal modeled D2H bandwidth (0.375 times LO); unchanged H2D tones through 937.5 MHz. Random continuous host spectra and payload current modulation remain omitted.',
             'Only supply-derived phase included: source phase noise, DAC/reference errors, IQ imbalance and output-stage noise are not replaced by this attribution.',
@@ -1536,215 +1706,10 @@ def tx_clock_spur_envelope(contract):
             'Inverse sensitivity applies to the worst carrier sampled at the assigned sensitivity, with other parameters fixed; not a process-performance bound or standards limit.'])
 
 
-def shared_packet_lifecycle(contract):
-    from ble_packet import joined_scan_request, response_budget, transmitted_scan_response
-    environments={};rows=[]
-    candidates=[(f'h2d_charge_{charge:g}',shared_board_candidate(),charge) for charge in (.3e-12,7e-12)]
-    mitigated=shared_board_candidate()
-    mitigated['network'].update(die_c=500e-12,die_esr=.5,die_esl=200e-12)
-    candidates.append(('local_500pf_adverse_h2d',mitigated,7e-12))
-    for key,candidate,charge in candidates:
-        env=operating_environment(contract,candidate,carrier_hz=2.426e9,
-            d2h_word_hz=2.426e9/16,payload_engine='rf',payload_current_a=.037,
-            h2d_internal_charge_c=charge,d2h_harmonics=12,
-            reference_fraction_per_v=.1,reference_pole_hz=10e6)
-        environments[key]=env
-        for wanted,blocker in ((-80.,-40.),(-90.,-40.),(-90.,None)):
-            for seed in (17,81,203):
-                received=joined_scan_request(env,contract,seed=seed,wanted_dbm=wanted,blocker_dbm=blocker)
-                received['transmission']=transmitted_scan_response(received,env,contract)
-                rows.append(dict(environment=key,**received))
-    attribution=[]
-    for name,changes in (
-            ('baseline',{}),('thermal_noise_removed_control',dict(thermal_noise_enabled=False)),
-            ('adc_noise_removed_control',dict(adc_noise_enabled=False)),
-            ('nf_6db_requirement',dict(noise_figure_db=6.)),
-            ('adc_10enob_requirement',dict(adc_enob=10.)),
-            ('initial_gain_60db_requirement',dict(initial_gain_db=60.))):
-        for blocker in (None,-40.):
-            trials=[joined_scan_request(environments['local_500pf_adverse_h2d'],contract,
-                seed=seed,wanted_dbm=-90.,blocker_dbm=blocker,**changes) for seed in (17,81,203)]
-            attribution.append(dict(change=name,parameters=changes,blocker_dbm=blocker,
-                acquired=sum(x['observation']['acquired'] for x in trials),
-                correct_requests=sum(x['correct_request'] for x in trials),
-                trials=[dict(seed=x['seed'],correct_request=x['correct_request'],
-                    observation=x['observation'],gain_control=x['gain_control']) for x in trials]))
-    filter_trials=[]
-    for cutoff in (.475e6,.5e6,.525e6):
-        for seed in (317,401,509,613,719,827):
-            trial=joined_scan_request(environments['local_500pf_adverse_h2d'],contract,
-                seed=seed,wanted_dbm=-90.,blocker_dbm=-40.,noise_figure_db=6.,rx_cutoff_hz=cutoff)
-            filter_trials.append(dict(cutoff_hz=cutoff,**trial))
-    linearity_trials=[]
-    for intercept in (None,-20.,-10.,0.):
-        for seed in (17,81,203):
-            trial=joined_scan_request(environments['local_500pf_adverse_h2d'],contract,
-                seed=seed,wanted_dbm=-80.,blocker_dbm=-30.,noise_figure_db=6.,rx_cutoff_hz=.5e6,
-                blocker_offsets_hz=(2e6,4e6),input_iip3_dbm=intercept)
-            linearity_trials.append(dict(input_iip3_dbm=intercept,**trial))
-    nominal=environments['h2d_charge_3e-13']
-    refinement=[joined_scan_request(nominal,contract,include_noise=False,mixer_substeps=n)
-        for n in (256,512)]
-    first=next(r for r in rows if r['environment']=='h2d_charge_3e-13' and r['correct_request'])
-    late=response_budget(first['observation'],first['settings'],nominal,contract,
-        advertiser_address=bytes.fromhex('a6a5a4a3a2c1'),fpga_work_s=160e-6)
-    return dict(environments=environments,cases=rows,
-        frontend_linearity=dict(environment='local_500pf_adverse_h2d',cases=linearity_trials,
-            scope='Two equal-power external blockers at +2/+4 MHz; cubic IM3 lands at wanted carrier. Delivered-clock comparison isolates frontend linearity; not the loaded-clock envelope. Constant NF/current versus IIP3 is an unpriced hypothesis; polynomial-invalid cases cannot qualify performance.'),
-        weak_signal_attribution=dict(environment='local_500pf_adverse_h2d',wanted_dbm=-90.,cases=attribution,
-            scope='One-factor hypotheses at fixed supply/clock/reference/gain limits. Noise removal is nonphysical attribution; NF/ENOB changes have unpriced circuit costs. Three seeds do not establish PER.'),
-        filter_retuning=dict(environment='local_500pf_adverse_h2d',noise_figure_db=6.,cases=filter_trials,
-            representative_reply=transmitted_scan_response(next(x for x in filter_trials if x['cutoff_hz']==.5e6 and x['seed']==317),environments['local_500pf_adverse_h2d'],contract),
-            scope='Existing five-stage filter; independent held-out seeds at selected cutoff and +/-5 percent. No added stages. NF and filter precision/current remain hypotheses; no PER confidence or mask qualification.'),
-        additive_noise_disabled_mixer_refinement=refinement,
-        additive_noise_disabled_weak_control=joined_scan_request(nominal,contract,wanted_dbm=-90.,blocker_dbm=None,include_noise=False),
-        late_host_control=late,
-        fixed_timing_correction_controls=[dict(seed=r['seed'],**transmitted_scan_response(r,nominal,contract,
-            rx_timestamp_correction_s=.8e-6,tx_launch_advance_s=.15e-6)) for r in rows
-            if r['environment']=='h2d_charge_3e-13' and r['correct_request']],
-        host_stall_control=transmitted_scan_response(first,nominal,contract,host_gap_s=10e-6),
-        tx_refinement_control=transmitted_scan_response(first,nominal,contract,mixer_substeps=512),
-        complete=False,status='shared_environment_packet_exchange_conditional',
-        protocol_reference='https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-61/out/en/low-energy-controller/link-layer-specification.html',
-        assumptions=['External FPGA parses LE 1M channel-38 SCAN_REQ, CRC and advertiser address; no chip protocol profile or CRC engine.',
-            'Already inside a valid scannable advertising receive window. Preceding advertisement and scanner state machine are not simulated.',
-            '2 dB external insertion loss for both wanted and the adjacent 2 MHz blocker: no free external adjacent-channel rejection.',
-            '10 dB NF, 20 dB early gain, bounded 0–60 dB main PGA, 8 ENOB and rail-proportional gain/headroom are assigned requirements, not GF180 measurements.',
-            'The same source phase drives mixer and divided ADC crossings; reference ripple reaches quantization. Thermal noise has fixed input-referred density before filtering.',
-            'FIFO service bounds, 64-tap FPGA resampler lookahead, command framing, CDC, settling and bounded sample prefill are charged to response preparation.',
-            '150 us is the fixed primary-advertising inter-frame spacing, not a channel-retune allowance. LO/sample/host clocks and stream epoch remain running.',
-            'Finite timestamped DAC playback now emits a loaded reply through the shared clock/reference environment to an independent strong-signal peer. Arrival times still assume the bounded host service, not the implemented bridge.',
-            'Static response samples reside in FPGA memory; a 32-sample prefill is held on-chip until launch. Clock phase continues across RX, wait and TX. Underflow latches mute.',
-            'Fixed 0.8 us RX and 0.15 us TX timing corrections are hypotheses, not fitted per packet or physically calibrated. Half-amplitude RF start is a diagnostic marker, not a standards timing verdict.',
-            'TX uses existing assigned IQ/compression parameters, 40 ohm source and 50 ohm load, with 28 mA driver reservation already inside the 37 mA RF allowance. TX-load PDN feedback and emission limits remain open.',
-            'Three packet seeds per point do not establish PER, sensitivity or standards compliance.'])
 
 
-def loaded_clock_packet_exchange(contract):
-    """Paired complete exchange: same RF/PDN, delivered vs loaded clock input."""
-    from ble_packet import joined_scan_request,transmitted_scan_response
-    environments={};rows=[]
-    candidate=shared_board_candidate()
-    candidate['network'].update(die_c=500e-12,die_esr=.5,die_esl=200e-12)
-    for name,options in (('ideal_delivered',None),('high_impedance',dict(termination_ohm=None)),
-                         ('terminated_50ohm',dict(termination_ohm=50.)),
-                         ('quiet_high_impedance_requirement',dict(termination_ohm=None,receiver_noise_v=.25e-3,downstream_stage_rms_s=.05e-12)),
-                         ('quiet_terminated_requirement',dict(termination_ohm=50.,receiver_noise_v=.25e-3,downstream_stage_rms_s=.05e-12)),
-                         ('lower_noise_high_impedance_requirement',dict(termination_ohm=None,receiver_noise_v=.075e-3,downstream_stage_rms_s=.015e-12)),
-                         ('lower_noise_terminated_requirement',dict(termination_ohm=50.,receiver_noise_v=.075e-3,downstream_stage_rms_s=.015e-12))):
-        env=operating_environment(contract,candidate,carrier_hz=2.426e9,
-            d2h_word_hz=2.426e9/16,payload_engine='rf',payload_current_a=.037,
-            h2d_internal_charge_c=7e-12,d2h_harmonics=12,
-            reference_fraction_per_v=.1,reference_pole_hz=10e6,external_input=options)
-        environments[name]=env
-        for seed in (317,401,509,613,719,827):
-            received=joined_scan_request(env,contract,seed=seed,wanted_dbm=-90.,
-                blocker_dbm=-40.,noise_figure_db=6.,rx_cutoff_hz=.5e6)
-            transmission=transmitted_scan_response(received,env,contract)
-            rows.append(dict(environment=name,received=received,transmission=transmission))
-    moderate=[]
-    for name in ('high_impedance','terminated_50ohm'):
-        for seed in (317,401,509,613,719,827):
-            received=joined_scan_request(environments[name],contract,seed=seed,
-                wanted_dbm=-80.,blocker_dbm=-40.)
-            moderate.append(dict(environment=name,received=received))
-    combined=[]
-    for name in ('ideal_delivered','quiet_high_impedance_requirement','quiet_terminated_requirement',
-                 'lower_noise_high_impedance_requirement','lower_noise_terminated_requirement'):
-        for seed in (317,401,509,613,719,827):
-            received=joined_scan_request(environments[name],contract,seed=seed,wanted_dbm=-80.,
-                blocker_dbm=-30.,noise_figure_db=6.,rx_cutoff_hz=.5e6,
-                blocker_offsets_hz=(2e6,4e6),input_iip3_dbm=0.)
-            combined.append(dict(environment=name,received=received,
-                transmission=transmitted_scan_response(received,environments[name],contract)))
-    return dict(environments=environments,cases=rows,moderate_signal_controls=moderate,
-        combined_frontend=combined,complete=False,
-        scope='Same six packet seeds, wanted/blocker, PDN, NF, cutoff, host service and driver hypotheses. Source/input phase persists across reception and reply.',
-        limitations=['Only one carrier and candidate input load; finite observations do not establish PER or voltage/phase tolerance.',
-            'Source/input random band 1 kHz–8 MHz; phase sideband dispersion and correlated noise omitted.',
-            '6 dB NF, input receiver and local decoupling have unqualified current/area costs.',
-            'Combined frontend cases use 0 dBm IIP3 with -80 dBm wanted and two -30 dBm blockers; simultaneous noise/linearity/current remains a requirement, not a demonstrated circuit.',
-            'No static input propagation delay or calibrated RF launch; diagnostic amplitude marker is not protocol timing qualification.',
-            'TX spectral bands are broad integrals before external filtering, not emission masks.'])
 
 
-def whole_chip_operating_envelopes(contract):
-    """Compare exclusive payload modes without changing the board assumptions.
-
-    Explicit environments, not independently selected RF/wired corners.
-    The 1 uF case matches a Run 1 footprint value, not qualified impedance.
-    """
-    from check_contract import periodic_stream_bound
-    base=next(x['rf'] for x in contract['behavioral_configuration_cases'] if x['id']=='wifi_he20__40000000.0')
-    rows=[];wire_scenarios=[]
-    wire_allocation=sum(len(d['supply_pins'])*d['per_connection_budget_ma']*1e-3
-        for d in contract['power']['domains'] if d['id']=='WIRE')
-    configurations=[]
-    for cap in (1e-6,10e-6):
-        for charge in (.3e-12,7e-12):
-            configurations.append((f'board_{cap:g}_h2d_charge_{charge:g}',shared_board_candidate(cap),charge,None))
-    for esr,esl in ((.5,200e-12),(1.,1e-9)):
-        candidate=shared_board_candidate()
-        candidate['network'].update(die_c=500e-12,die_esr=esr,die_esl=esl)
-        configurations.append((f'local_500pf_esr_{esr:g}_esl_{esl:g}',candidate,7e-12,None))
-    for termination in (None,50.):
-        candidate=shared_board_candidate()
-        candidate['network'].update(die_c=500e-12,die_esr=.5,die_esl=200e-12)
-        configurations.append((f'loaded_input_termination_{termination}',candidate,7e-12,dict(termination_ohm=termination)))
-    for case_id,candidate,charge,input_options in configurations:
-        modes={}
-        for engine,carrier,word,current,harmonics in (
-            ('rf',2.437e9,2.437e9/16,.037,12),
-            ('wire',2.5e9,312.5e6,wire_allocation,6)):
-            env=operating_environment(contract,candidate,carrier_hz=carrier,
-                d2h_word_hz=word,payload_engine=engine,payload_current_a=current,
-                h2d_internal_charge_c=charge,d2h_harmonics=harmonics,external_input=input_options,
-                reference_fraction_per_v=.1,reference_pole_hz=10e6)
-            rail=env['ledger']['local_payload_clock_core_rail_v']
-            peak=sum(t['clock_rail_voltage_peak_v'] for t in env['host_spectrum']['tones'])
-            env['conservative_local_rail_interval_v']=[rail-peak,rail+peak]
-            env['assigned_linear_fixture_voltage_range_v']=[2.5,3.6]
-            env['linear_fixture_voltage_range_guaranteed']=(rail-peak>=2.5 and rail+peak<=3.6)
-            # Clock and payload reservations are assigned; wire uses its full
-            # planning ceiling to expose shared-feed cost, not measured draw.
-            arrival=carrier/64 if engine=='rf' else carrier/10
-            t=contract['transport']
-            env['transport']=periodic_stream_bound(arrival_item_hz=arrival*(1+t['source_fast_ppm']/1e6),
-                item_bits=24 if engine=='rf' else 10,word_hz=word*(1-t['host_slow_ppm']/1e6),
-                frame_words=t['frame_words'],payload_words=t['frame_words']-t['control_words'],
-                staging_frames=t['scheduling']['staging_frames'],cdc_words=2)
-            if engine=='rf':
-                phase=PhaseNoise(tuple(env['delivered_phase_tones']))
-                q=waveform_screen(fixture('wifi_he20',seed=81),replace(Assumptions(),
-                    converter_enob=8.,frontend_evm_rms=.04,relative_lo_phase_rms_rad=0.,sample_jitter_s=.3e-12),
-                    {'estimated_rail_v':{'RF':rail}},settings=external_settings(base,carrier),
-                    recover_carrier=True,fpga_resampling=True,blocker=dict(offset_hz=12e6,relative_power_db=2.),
-                    frontend_loss_db=2.,frontend_saturation_v=2.,pga_peak_limit_v=.8*rail/3.3,
-                    mixer_phase_noise=phase,sample_phase_noise=phase,mixer_substeps=128,
-                    adc_reference_scale=lambda times:environment_reference_scale(env,times))
-                env['receiver']=summarize_quality(q)
-            else:
-                wire_scenarios.append(dict(name=case_id,delay_tones=env['crossing_delay_tones'],
-                    signal_scale=min(1.,rail/3.3)))
-            modes[engine]=env
-        rows.append(dict(configuration=case_id,modes=modes))
-    wired=causal_receiver_envelope(timing_scenarios=wire_scenarios)
-    for row in rows:
-        cases=[c for c in wired['cases'] if c['impairment']['name']==row['configuration']]
-        row['modes']['wire']['receiver']=dict(channel_cases=cases,
-            heldout_errors=sum(c['heldout_errors'] for c in cases),
-            zero_error_cases=sum(c['heldout_errors']==0 for c in cases),case_count=len(cases))
-    return dict(cases=rows,complete=False,status='shared_environment_exclusive_mode_comparison',
-        decisions=['Retain reduced RF D2H rate; wired top-rate transport still requires its higher host rate.',
-            'Capacitance alone is not isolation: compare current, DC headroom, ripple and received quality together.',
-            'A receiver diagnostic pass cannot establish feasibility when the declared linear fixture voltage envelope is not guaranteed.'],
-        assumptions=['Same board, return, host input load and supplied source spectrum in each paired RF/wired case; payloads never active simultaneously.',
-            '1 uF is an observed Run 1 footprint label, not measured populated impedance. 10 uF requires external support and modeled connection inductance.',
-            '2 ohm local branch and 100 pF baseline or 500 pF candidate require an implementation behind compatible supply sites. Candidate capacitor ESR/ESL are hypotheses, not extracted bounds.',
-            'Wired current equals its whole WIRE planning allocation, including locally supplied drive; it is a budget stress, not predicted draw. Externally supplied TMDS return is not modeled here.',
-            'Wired signal scales linearly with its DC rail as an assigned stress. Driver compliance and sampler threshold supply response require device models.',
-            'RF source spectrum, reference rejection, NF/gain/current and headroom remain conditional; RF uses synthetic acquisition and proportional noise, not a sensitivity test.',
-            'Source startup/retune, true packet turnaround, live FIFO service, TX emissions and all target-specific electrical actions remain open.'])
 
 
 def reference_supply_screen(contract,coupling):
@@ -2079,7 +2044,7 @@ def capability_coverage(contract,configurations,observations):
 
 
 def run():
-    contract = json.loads((P/'spec/contract.json').read_text())
+    contract = load_design().contract
     # Preserve all different waveform/rate/precision recipes; redundant gain
     # probes remain in the main behavioral suite rather than bloating this one.
     recipes = [c for c in contract['behavioral_configuration_cases']
@@ -2170,12 +2135,9 @@ def run():
         host_driven_rf_receiver=host_driven_rf_receiver(contract,host_coupling),
         bidirectional_host_receiver=bidirectional_host_receiver_screen(contract,host_coupling),
         common_feed_rf=common_feed_rf_screen(contract,host_coupling),
-        whole_chip_operating_envelopes=whole_chip_operating_envelopes(contract),
-        shared_packet_lifecycle=shared_packet_lifecycle(contract),
         tx_clock_spurs=tx_clock_spur_envelope(contract),
         local_decoupling=local_decoupling_envelope(contract),
         analog_wake=analog_wake_envelope(),
-        loaded_clock_packet_exchange=loaded_clock_packet_exchange(contract),
         reference_supply=reference_supply_screen(contract,host_coupling),
         rf_host_rate_comparison=rf_host_rate_comparison(contract,host_coupling),
         absolute_rf_input=absolute_rf_screen(contract,host_coupling),
@@ -2226,12 +2188,8 @@ if __name__ == '__main__':
     modes=parser.add_mutually_exclusive_group()
     modes.add_argument('--wideband-filter',action='store_true',help='Fast wideband passband/selectivity architecture requirements')
     modes.add_argument('--analog-wake',action='store_true',help='Fast continuous-state analog load wake/mute disturbance')
-    modes.add_argument('--whole-chip',action='store_true',help='Run only the shared-environment RF/wired comparison and print JSON; does not refresh the full evidence report')
-    modes.add_argument('--loaded-clock-exchange',action='store_true',help='Paired actual packet exchange with delivered versus loaded clock input')
-    modes.add_argument('--local-decoupling',action='store_true',help='Fast shared RF/wired nonideal local-capacitor and timing screen')
-    modes.add_argument('--clock-spurs',action='store_true',help='Fast supply-induced TX spur map across carrier and host divider choices')
-    modes.add_argument('--packet-lifecycle',action='store_true',help='Run shared-environment packet RX, timed DAC reply and peer observation; print JSON')
-    modes.add_argument('--ble-only',action='store_true',help='Refresh packet bench only when every other recorded source hash is unchanged')
+    modes.add_argument('--local-decoupling',action='store_true',help='Independent legacy-load decoupling fixture; not current-chip evidence')
+    modes.add_argument('--clock-spurs',action='store_true',help='Independent legacy-load/divider spur fixture; not current-chip evidence')
     args=parser.parse_args()
     if args.wideband_filter:
         print(json.dumps(dict(requirements=wideband_filter_requirements(),waveform=wideband_filter_waveform()),indent=2,allow_nan=False))
@@ -2239,35 +2197,11 @@ if __name__ == '__main__':
     if args.analog_wake:
         print(json.dumps(analog_wake_envelope(),indent=2,allow_nan=False))
         raise SystemExit(0)
-    if args.loaded_clock_exchange:
-        print(json.dumps(loaded_clock_packet_exchange(json.loads((P/'spec/contract.json').read_text())),indent=2,allow_nan=False))
-        raise SystemExit(0)
     if args.local_decoupling:
-        print(json.dumps(local_decoupling_envelope(json.loads((P/'spec/contract.json').read_text())),indent=2,allow_nan=False))
-        raise SystemExit(0)
-    if args.whole_chip:
-        print(json.dumps(whole_chip_operating_envelopes(json.loads((P/'spec/contract.json').read_text())),indent=2,allow_nan=False))
+        print(json.dumps(local_decoupling_envelope(load_design().contract),indent=2,allow_nan=False))
         raise SystemExit(0)
     if args.clock_spurs:
-        print(json.dumps(tx_clock_spur_envelope(json.loads((P/'spec/contract.json').read_text())),indent=2,allow_nan=False))
-        raise SystemExit(0)
-    if args.packet_lifecycle:
-        print(json.dumps(shared_packet_lifecycle(json.loads((P/'spec/contract.json').read_text())),indent=2,allow_nan=False))
-        raise SystemExit(0)
-    if args.ble_only:
-        path=P/'evidence/robustness-envelope.json'
-        result=json.loads(path.read_text())
-        packet_source='verification/ble_packet.py'
-        changed=[name for name,digest in result['sources_sha256'].items()
-                 if name!=packet_source and hashlib.sha256((P/name).read_bytes()).hexdigest()!=digest]
-        if packet_source not in result['sources_sha256'] or changed:
-            parser.error('Full report required: missing BLE provenance or changed sources: '+', '.join(changed))
-        result['ble_packet_acquisition']=ble_packet_campaign()
-        result['shared_packet_lifecycle']=shared_packet_lifecycle(json.loads((P/'spec/contract.json').read_text()))
-        result['loaded_clock_packet_exchange']=loaded_clock_packet_exchange(json.loads((P/'spec/contract.json').read_text()))
-        result['sources_sha256'][packet_source]=hashlib.sha256((P/packet_source).read_bytes()).hexdigest()
-        write_evidence(path,result)
-        print('BLE packet section refreshed; other recorded model sources unchanged. Whole-chip milestone incomplete.')
+        print(json.dumps(tx_clock_spur_envelope(load_design().contract),indent=2,allow_nan=False))
         raise SystemExit(0)
     result=run()
     path=P/'evidence/robustness-envelope.json'

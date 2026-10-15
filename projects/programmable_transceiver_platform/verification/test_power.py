@@ -1,19 +1,54 @@
+"""Shared power allocations with historical-current extrapolation and adverse fixtures.
+
+The nominal assessment preserves design provenance but does not measure current
+for the present chip. Mutated contract/evidence copies test independent ownership
+and budget-rejection rules; they are not selectable hardware configurations.
+"""
 import copy
 import json
 import unittest
+import sys
 from check_contract import CONTRACT
 from check_power import assess
 
+sys.path.insert(0,str(CONTRACT.parent.parent/'system_model/architecture_fast'))
+from design_definition import load_design
+
+TEST_DESIGN_ROLES = {
+    'PowerTests': ('shared_design', 'Shared contract/snapshot supplies the planning allocation; historical current inputs and deliberately corrupted copies remain explicit accounting controls.'),
+}
+
 class PowerTests(unittest.TestCase):
     def setUp(self):
-        self.c=json.loads(CONTRACT.read_text())
+        self.design=load_design();self.c=self.design.contract
         self.e=json.loads((CONTRACT.parents[1]/self.c['power']['current_evidence']).read_text())
 
     def test_partitioned_candidate_has_planning_margin_only(self):
-        result=assess(self.c,self.e)
+        result=assess(self.c,self.e,design=self.design)
+        self.assertEqual(result["design_provenance"],self.design.provenance())
+        self.assertEqual(result["model_role"],"shared_design_historical_current_extrapolation")
         self.assertTrue(result['all_host_estimates_within_candidate_budget'])
         self.assertIn('CORE',result['unqualified_domains'])
         self.assertAlmostEqual(max(r['with_provisional_allowances_ma'] for r in result['rows']),51.7699716125)
+
+    def test_changed_contract_cannot_claim_the_original_design(self):
+        self.c['power']['screen_output_current_multiplier']+=.1
+        with self.assertRaisesRegex(ValueError,'conflicts with shared design'):
+            assess(self.c,self.e,design=self.design)
+        independent=assess(self.c,self.e)
+        self.assertEqual(independent['model_role'],'independent_contract_fixture')
+        self.assertIsNone(independent['design_provenance'])
+        assumptions=independent['planning_assumptions']
+        self.assertEqual(assumptions['screen_output_current_multiplier'],self.c['power']['screen_output_current_multiplier'])
+        # Independent current/allowance arithmetic, without calling assess again.
+        measured={r['case']:r['two_pad_dvdd_average_a']*500 for r in self.e['results'] if r['pattern']=='alternating'}
+        for row in independent['rows']:
+            expected=measured[row['case']]*row['fast_outputs']*assumptions['screen_output_current_multiplier']+assumptions['screen_other_current_allowance_ma_per_segment']
+            self.assertAlmostEqual(row['with_provisional_allowances_ma'],expected)
+        saved=copy.deepcopy(assumptions)
+        self.c['power']['domains'][0]['per_connection_budget_ma']=1.
+        self.c['power']['host_segments'][0]['fast_outputs'].clear()
+        self.assertEqual(independent['planning_assumptions'],saved)
 
     def test_same_supply_cannot_be_counted_twice(self):
         self.c['power']['host_segments'][1]['supply']='VDD_HOST_0'

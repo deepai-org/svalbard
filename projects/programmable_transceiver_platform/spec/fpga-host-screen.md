@@ -64,10 +64,10 @@ Even a hypothetical 150 MHz DDR profile cannot preserve PCIe plus the declared R
 Reproduce the [retained report](../evidence/ecp5-host-screen.json):
 
 ```sh
-python3 projects/programmable_transceiver_platform/verification/screen_ecp5_host.py
+python3 projects/programmable_transceiver_platform/verification/screen_ecp5_host.py --queues
 ```
 
-The script reads the current contract and records its hash. It does not download or parse the PDF; the documented limits are manually transcribed evidence. Every profile remains explicitly unqualified.
+The command loads the shared design snapshot and records its fingerprint and the canonical hash of the actual contract used. Its retained framed-transport tables are accounting fixtures, not the current byte-stream implementation. Direct calls with standalone contract dictionaries are labeled independent fixtures and hash those dictionaries; they cannot inherit the on-disk contract hash. It does not download or parse the PDF; the documented limits are manually transcribed evidence. Every profile remains explicitly unqualified.
 
 ## Native GF180 GPIO evidence
 

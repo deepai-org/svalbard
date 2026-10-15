@@ -1,3 +1,8 @@
+> The selected warm-hop design is `analog-architecture.json:warm_hop_service`.
+> It keeps host timing stable and changes converter sample epoch. The managed
+> coarse-search fixtures below are startup/calibration evidence, not the
+> normative per-hop sequence or a required host-session restart.
+
 # RF tuning envelope, coarse search and retuning contracts
 
 ## Fractional tuning evidence and range limits

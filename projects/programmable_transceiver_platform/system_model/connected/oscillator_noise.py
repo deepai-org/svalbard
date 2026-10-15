@@ -138,7 +138,7 @@ class PhaseNoise:
 def loaded_clock_input_phase(carrier_hz,*,cap_f=3e-12,bond_l_h=2e-9,
                              termination_ohm=None,seed=1831,
                              receiver_noise_v=1e-3,downstream_stage_rms_s=.3e-12,
-                             source_peak_v=.5,threshold_v=.020,am_depth=.1,noise_bins=32):
+                             source_peak_v=.5,threshold_v=.020,am_depth=.1,noise_bins=32,peak_limit_v=.6):
     """Assigned external-input RLC, threshold AM conversion and additive noise.
 
     Source defaults to 0.5 V peak Thevenin/50 ohms. Finite spectral noise uses the same
@@ -161,7 +161,9 @@ def loaded_clock_input_phase(carrier_hz,*,cap_f=3e-12,bond_l_h=2e-9,
             or source_peak_v<=0 or not 0<=am_depth<1):
         raise ValueError('Finite positive source, finite threshold and bounded AM required')
     peak=source_peak_v*abs(transfer);threshold=threshold_v
-    if (1-am_depth)*peak<=abs(threshold) or (1+am_depth)*peak>.6:
+    if isinstance(peak_limit_v,bool) or not math.isfinite(peak_limit_v) or peak_limit_v<=0:
+        raise ValueError('Positive finite incremental input peak limit required')
+    if (1-am_depth)*peak<=abs(threshold) or (1+am_depth)*peak>peak_limit_v:
         raise ValueError('Assigned input crossing/amplitude envelope exceeded')
     grid=np.arange(512)*2*math.pi/512
     amplitude=peak*(1+am_depth*np.sin(grid))
@@ -181,7 +183,7 @@ def loaded_clock_input_phase(carrier_hz,*,cap_f=3e-12,bond_l_h=2e-9,
     phase=PhaseNoise(tuple((f,-omega*a,p) for f,a,p in delay))
     return phase,dict(carrier_hz=carrier_hz,cap_f=cap_f,bond_l_h=bond_l_h,
         termination_ohm=termination_ohm,receiver_peak_v=peak,
-        source_peak_v=source_peak_v,threshold_v=threshold_v,am_depth=am_depth,
+        source_peak_v=source_peak_v,threshold_v=threshold_v,am_depth=am_depth,peak_limit_v=peak_limit_v,
         additive_noise_bins=noise_bins,
         phase_components=dict(am=am_phase,additive=phase.tones[len(am_phase):]),
         receiver_noise_v=receiver_noise_v,downstream_stage_rms_s=downstream_stage_rms_s,

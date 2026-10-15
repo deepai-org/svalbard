@@ -1,0 +1,552 @@
+{
+  "design_provenance": {
+    "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+    "fingerprint_format": "canonical-json-sha256-v1",
+    "circuit_experiments": [],
+    "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"}
+  },
+  "cases": [
+    {
+      "design_provenance": {
+        "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+        "fingerprint_format": "canonical-json-sha256-v1",
+        "circuit_experiments": [],
+        "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"}
+      },
+      "resolved_configuration": {
+        "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+        "fingerprint_format": "canonical-json-sha256-v1",
+        "circuit_experiments": [],
+        "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"},
+        "engine": "wire",
+        "direction": "duplex",
+        "clock_source": "external_high",
+        "reference_hz": 480000000.0,
+        "host_divider": null,
+        "host_word_hz": 100000000.0,
+        "host_clock_source": "host_follow",
+        "host_input_hz": 100000000.0,
+        "inventory_mode": "usb",
+        "line_rate_bps": 480000000.0,
+        "wired_pad_path": "bidirectional"
+      },
+      "scenario_overrides": [],
+      "host_spectrum_scope": "Existing DDR-shaped harmonic surrogate at configured host rates; not qualified SDR switching",
+      "probe_assumptions": {"source_differential_peak_v":1.0,"source_leg_skew_s":5e-12,"instantaneous_guard_v":0.02,"internal_switching":"No assigned internal pulse spectrum; owner DC ceilings retained"},
+      "pad_fixture_assumptions": {"termination_ohm":[45.0,45.0],"bond_l_h":[2e-09,2e-09]},
+      "local_feed_resistance_ohm": 2.0,
+      "fixture": "matched",
+      "ledger": {
+        "owner_current_a": {"core":0.0375,"host":0.118,"timing":0.044,"rf":0.002,"wire":0.0507},
+        "total_chip_supply_current_a": 0.2522,
+        "host_node_current_a": 0.1103,
+        "local_branch_current_a": 0.14189999999999997,
+        "h2d_internal_current_within_host_a": 0.0077,
+        "board_supply_v": 3.2747799999999985,
+        "die_return_v": 0.005044040494375501,
+        "local_payload_clock_core_rail_v": 2.9859359595056234,
+        "rf_clock_core_rail_v": 2.9859359595056234,
+        "host_rail_v": 3.2697360404943745,
+        "source_v": 3.3,
+        "source_power_w": 0.8322599999999999,
+        "delivered_electrical_power_w": 0.7843561985439907,
+        "resistive_loss_w": 0.04790380145600925,
+        "power_balance_residual_w": -1.0408340855860843e-16,
+        "physical_pin_current_qualification": false
+      },
+      "receiver_local_differential": {
+        "sampled_interval_v": [-2.160783166959212e-18,2.88563108371185e-18],
+        "enclosed_interval_v": [-2.1972549594504574e-18,2.9221028762030953e-18],
+        "grid_enclosure_error_v": 3.6471792491245283e-20,
+        "samples": 8192,
+        "requested_samples": 8192,
+        "grid_capped": false,
+        "period_s": 1e-07,
+        "observed_below_legacy_2p5v_floor": true,
+        "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+        "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+      },
+      "receiver_local_common_mode": {
+        "sampled_interval_v": [-0.023561024554152012,0.011072748950357945],
+        "enclosed_interval_v": [-0.02379203077430007,0.011303755170506006],
+        "grid_enclosure_error_v": 0.00023100622014805966,
+        "samples": 8192,
+        "requested_samples": 8192,
+        "grid_capped": false,
+        "period_s": 1e-07,
+        "observed_below_legacy_2p5v_floor": true,
+        "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+        "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+      },
+      "board_common_mode": {
+        "sampled_interval_v": [-0.011297068850136937,0.023979671365744224],
+        "enclosed_interval_v": [-0.011535339829574059,0.024217942345181348],
+        "grid_enclosure_error_v": 0.00023827097943712286,
+        "samples": 8192,
+        "requested_samples": 8192,
+        "grid_capped": false,
+        "period_s": 1e-07,
+        "observed_below_legacy_2p5v_floor": true,
+        "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+        "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+      },
+      "released_pin_intervals": [
+        {
+          "sampled_interval_v": [-0.011297068850136937,0.023979671365744224],
+          "enclosed_interval_v": [-0.011535339829574059,0.024217942345181348],
+          "grid_enclosure_error_v": 0.00023827097943712286,
+          "samples": 8192,
+          "requested_samples": 8192,
+          "grid_capped": false,
+          "period_s": 1e-07,
+          "observed_below_legacy_2p5v_floor": true,
+          "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+          "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+        },
+        {
+          "sampled_interval_v": [-0.011297068850136937,0.023979671365744224],
+          "enclosed_interval_v": [-0.011535339829574059,0.024217942345181348],
+          "grid_enclosure_error_v": 0.00023827097943712283,
+          "samples": 8192,
+          "requested_samples": 8192,
+          "grid_capped": false,
+          "period_s": 1e-07,
+          "observed_below_legacy_2p5v_floor": true,
+          "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+          "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+        }
+      ],
+      "quiet_pin_enclosed_abs_peak_v": 0.024217942345181348,
+      "instantaneous_20mv_guard_met": false,
+      "feedback_residual_v": 1.788112030672749e-18,
+      "differential": {
+        "sampled_interval_v": [-1.6346381924977762e-18,2.1896800394953444e-18],
+        "enclosed_interval_v": [-1.6644157301976405e-18,2.2194575771952087e-18],
+        "grid_enclosure_error_v": 2.977753769986439e-20,
+        "samples": 8192,
+        "requested_samples": 8192,
+        "grid_capped": false,
+        "period_s": 1e-07,
+        "observed_below_legacy_2p5v_floor": true,
+        "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+        "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+      }
+    },
+    {
+      "design_provenance": {
+        "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+        "fingerprint_format": "canonical-json-sha256-v1",
+        "circuit_experiments": [],
+        "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"}
+      },
+      "resolved_configuration": {
+        "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+        "fingerprint_format": "canonical-json-sha256-v1",
+        "circuit_experiments": [],
+        "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"},
+        "engine": "wire",
+        "direction": "duplex",
+        "clock_source": "external_high",
+        "reference_hz": 480000000.0,
+        "host_divider": null,
+        "host_word_hz": 100000000.0,
+        "host_clock_source": "host_follow",
+        "host_input_hz": 100000000.0,
+        "inventory_mode": "usb",
+        "line_rate_bps": 480000000.0,
+        "wired_pad_path": "bidirectional"
+      },
+      "scenario_overrides": [],
+      "host_spectrum_scope": "Existing DDR-shaped harmonic surrogate at configured host rates; not qualified SDR switching",
+      "probe_assumptions": {"source_differential_peak_v":1.0,"source_leg_skew_s":5e-12,"instantaneous_guard_v":0.02,"internal_switching":"No assigned internal pulse spectrum; owner DC ceilings retained"},
+      "pad_fixture_assumptions": {"termination_ohm":[42.75,47.25],"bond_l_h":[1.6e-09,2.4e-09]},
+      "local_feed_resistance_ohm": 2.0,
+      "fixture": "asymmetric",
+      "ledger": {
+        "owner_current_a": {"core":0.0375,"host":0.118,"timing":0.044,"rf":0.002,"wire":0.0507},
+        "total_chip_supply_current_a": 0.2522,
+        "host_node_current_a": 0.1103,
+        "local_branch_current_a": 0.14189999999999997,
+        "h2d_internal_current_within_host_a": 0.0077,
+        "board_supply_v": 3.2747799999999985,
+        "die_return_v": 0.005044040494375501,
+        "local_payload_clock_core_rail_v": 2.9859359595056234,
+        "rf_clock_core_rail_v": 2.9859359595056234,
+        "host_rail_v": 3.2697360404943745,
+        "source_v": 3.3,
+        "source_power_w": 0.8322599999999999,
+        "delivered_electrical_power_w": 0.7843561985439907,
+        "resistive_loss_w": 0.04790380145600925,
+        "power_balance_residual_w": -1.0408340855860843e-16,
+        "physical_pin_current_qualification": false
+      },
+      "receiver_local_differential": {
+        "sampled_interval_v": [-0.0006142253762047936,0.00128169483974297],
+        "enclosed_interval_v": [-0.0006275237800731279,0.0012949932436113042],
+        "grid_enclosure_error_v": 1.329840386833433e-05,
+        "samples": 8192,
+        "requested_samples": 8192,
+        "grid_capped": false,
+        "period_s": 1e-07,
+        "observed_below_legacy_2p5v_floor": true,
+        "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+        "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+      },
+      "receiver_local_common_mode": {
+        "sampled_interval_v": [-0.023545745830761862,0.011065418332034987],
+        "enclosed_interval_v": [-0.023776597506068683,0.011296270007341808],
+        "grid_enclosure_error_v": 0.000230851675306822,
+        "samples": 8192,
+        "requested_samples": 8192,
+        "grid_capped": false,
+        "period_s": 1e-07,
+        "observed_below_legacy_2p5v_floor": true,
+        "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+        "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+      },
+      "board_common_mode": {
+        "sampled_interval_v": [-0.011304188079279746,0.023994917818731816],
+        "enclosed_interval_v": [-0.011542613345531732,0.024233343084983802],
+        "grid_enclosure_error_v": 0.00023842526625198596,
+        "samples": 8192,
+        "requested_samples": 8192,
+        "grid_capped": false,
+        "period_s": 1e-07,
+        "observed_below_legacy_2p5v_floor": true,
+        "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+        "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+      },
+      "released_pin_intervals": [
+        {
+          "sampled_interval_v": [-0.011556339277157478,0.02453552591482831],
+          "enclosed_interval_v": [-0.011799715676643415,0.024778902314314247],
+          "grid_enclosure_error_v": 0.00024337639948593723,
+          "samples": 8192,
+          "requested_samples": 8192,
+          "grid_capped": false,
+          "period_s": 1e-07,
+          "observed_below_legacy_2p5v_floor": true,
+          "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+          "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+        },
+        {
+          "sampled_interval_v": [-0.011052036881402012,0.023454309722635316],
+          "enclosed_interval_v": [-0.011285511740326938,0.023687784581560244],
+          "grid_enclosure_error_v": 0.00023347485892492726,
+          "samples": 8192,
+          "requested_samples": 8192,
+          "grid_capped": false,
+          "period_s": 1e-07,
+          "observed_below_legacy_2p5v_floor": true,
+          "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+          "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+        }
+      ],
+      "quiet_pin_enclosed_abs_peak_v": 0.024778902314314247,
+      "instantaneous_20mv_guard_met": false,
+      "feedback_residual_v": 1.788112030672749e-18,
+      "differential": {
+        "sampled_interval_v": [-0.000506632836665914,0.0010829221086318445],
+        "enclosed_interval_v": [-0.0005165786441728814,0.001092867916138812],
+        "grid_enclosure_error_v": 9.945807506967515e-06,
+        "samples": 8192,
+        "requested_samples": 8192,
+        "grid_capped": false,
+        "period_s": 1e-07,
+        "observed_below_legacy_2p5v_floor": true,
+        "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+        "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+      }
+    },
+    {
+      "design_provenance": {
+        "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+        "fingerprint_format": "canonical-json-sha256-v1",
+        "circuit_experiments": [
+          {
+            "changes": [
+              {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+            ],
+            "kind": "hypothetical_circuit",
+            "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+            "reason": "USB feed-resistance mitigation experiment"
+          }
+        ],
+        "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+      },
+      "resolved_configuration": {
+        "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+        "fingerprint_format": "canonical-json-sha256-v1",
+        "circuit_experiments": [
+          {
+            "changes": [
+              {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+            ],
+            "kind": "hypothetical_circuit",
+            "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+            "reason": "USB feed-resistance mitigation experiment"
+          }
+        ],
+        "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+        "engine": "wire",
+        "direction": "duplex",
+        "clock_source": "external_high",
+        "reference_hz": 480000000.0,
+        "host_divider": null,
+        "host_word_hz": 100000000.0,
+        "host_clock_source": "host_follow",
+        "host_input_hz": 100000000.0,
+        "inventory_mode": "usb",
+        "line_rate_bps": 480000000.0,
+        "wired_pad_path": "bidirectional"
+      },
+      "scenario_overrides": [],
+      "host_spectrum_scope": "Existing DDR-shaped harmonic surrogate at configured host rates; not qualified SDR switching",
+      "probe_assumptions": {"source_differential_peak_v":1.0,"source_leg_skew_s":5e-12,"instantaneous_guard_v":0.02,"internal_switching":"No assigned internal pulse spectrum; owner DC ceilings retained"},
+      "pad_fixture_assumptions": {"termination_ohm":[45.0,45.0],"bond_l_h":[2e-09,2e-09]},
+      "local_feed_resistance_ohm": 1.0,
+      "fixture": "matched",
+      "ledger": {
+        "owner_current_a": {"core":0.0375,"host":0.118,"timing":0.044,"rf":0.002,"wire":0.0507},
+        "total_chip_supply_current_a": 0.2522,
+        "host_node_current_a": 0.1103,
+        "local_branch_current_a": 0.14189999999999997,
+        "h2d_internal_current_within_host_a": 0.0077,
+        "board_supply_v": 3.2747799999999994,
+        "die_return_v": 0.005044040494375501,
+        "local_payload_clock_core_rail_v": 3.1278359595056235,
+        "rf_clock_core_rail_v": 3.1278359595056235,
+        "host_rail_v": 3.2697360404943754,
+        "source_v": 3.3,
+        "source_power_w": 0.8322599999999999,
+        "delivered_electrical_power_w": 0.8044918085439909,
+        "resistive_loss_w": 0.027768191456009023,
+        "power_balance_residual_w": -7.28583859910259e-17,
+        "physical_pin_current_qualification": false
+      },
+      "receiver_local_differential": {
+        "sampled_interval_v": [-2.5834885575605344e-18,3.0331233834458183e-18],
+        "enclosed_interval_v": [-2.6221853422503665e-18,3.0718201681356505e-18],
+        "grid_enclosure_error_v": 3.869678468983213e-20,
+        "samples": 8192,
+        "requested_samples": 8192,
+        "grid_capped": false,
+        "period_s": 1e-07,
+        "observed_below_legacy_2p5v_floor": true,
+        "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+        "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+      },
+      "receiver_local_common_mode": {
+        "sampled_interval_v": [-0.023258026676263827,0.0106810354488122],
+        "enclosed_interval_v": [-0.023483151564885167,0.01090616033743354],
+        "grid_enclosure_error_v": 0.00022512488862134054,
+        "samples": 8192,
+        "requested_samples": 8192,
+        "grid_capped": false,
+        "period_s": 1e-07,
+        "observed_below_legacy_2p5v_floor": true,
+        "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+        "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+      },
+      "board_common_mode": {
+        "sampled_interval_v": [-0.010905637580207843,0.023665069673598164],
+        "enclosed_interval_v": [-0.011137843662374709,0.02389727575576503],
+        "grid_enclosure_error_v": 0.00023220608216686572,
+        "samples": 8192,
+        "requested_samples": 8192,
+        "grid_capped": false,
+        "period_s": 1e-07,
+        "observed_below_legacy_2p5v_floor": true,
+        "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+        "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+      },
+      "released_pin_intervals": [
+        {
+          "sampled_interval_v": [-0.010905637580207843,0.023665069673598164],
+          "enclosed_interval_v": [-0.011137843662374709,0.02389727575576503],
+          "grid_enclosure_error_v": 0.00023220608216686572,
+          "samples": 8192,
+          "requested_samples": 8192,
+          "grid_capped": false,
+          "period_s": 1e-07,
+          "observed_below_legacy_2p5v_floor": true,
+          "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+          "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+        },
+        {
+          "sampled_interval_v": [-0.010905637580207843,0.02366506967359816],
+          "enclosed_interval_v": [-0.011137843662374709,0.023897275755765026],
+          "grid_enclosure_error_v": 0.00023220608216686572,
+          "samples": 8192,
+          "requested_samples": 8192,
+          "grid_capped": false,
+          "period_s": 1e-07,
+          "observed_below_legacy_2p5v_floor": true,
+          "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+          "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+        }
+      ],
+      "quiet_pin_enclosed_abs_peak_v": 0.02389727575576503,
+      "instantaneous_20mv_guard_met": false,
+      "feedback_residual_v": 1.734723475976807e-18,
+      "differential": {
+        "sampled_interval_v": [-2.06216121251896e-18,1.982001899478935e-18],
+        "enclosed_interval_v": [-2.092365585995437e-18,2.012206272955412e-18],
+        "grid_enclosure_error_v": 3.020437347647708e-20,
+        "samples": 8192,
+        "requested_samples": 8192,
+        "grid_capped": false,
+        "period_s": 1e-07,
+        "observed_below_legacy_2p5v_floor": true,
+        "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+        "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+      }
+    },
+    {
+      "design_provenance": {
+        "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+        "fingerprint_format": "canonical-json-sha256-v1",
+        "circuit_experiments": [
+          {
+            "changes": [
+              {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+            ],
+            "kind": "hypothetical_circuit",
+            "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+            "reason": "USB feed-resistance mitigation experiment"
+          }
+        ],
+        "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+      },
+      "resolved_configuration": {
+        "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+        "fingerprint_format": "canonical-json-sha256-v1",
+        "circuit_experiments": [
+          {
+            "changes": [
+              {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+            ],
+            "kind": "hypothetical_circuit",
+            "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+            "reason": "USB feed-resistance mitigation experiment"
+          }
+        ],
+        "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+        "engine": "wire",
+        "direction": "duplex",
+        "clock_source": "external_high",
+        "reference_hz": 480000000.0,
+        "host_divider": null,
+        "host_word_hz": 100000000.0,
+        "host_clock_source": "host_follow",
+        "host_input_hz": 100000000.0,
+        "inventory_mode": "usb",
+        "line_rate_bps": 480000000.0,
+        "wired_pad_path": "bidirectional"
+      },
+      "scenario_overrides": [],
+      "host_spectrum_scope": "Existing DDR-shaped harmonic surrogate at configured host rates; not qualified SDR switching",
+      "probe_assumptions": {"source_differential_peak_v":1.0,"source_leg_skew_s":5e-12,"instantaneous_guard_v":0.02,"internal_switching":"No assigned internal pulse spectrum; owner DC ceilings retained"},
+      "pad_fixture_assumptions": {"termination_ohm":[42.75,47.25],"bond_l_h":[1.6e-09,2.4e-09]},
+      "local_feed_resistance_ohm": 1.0,
+      "fixture": "asymmetric",
+      "ledger": {
+        "owner_current_a": {"core":0.0375,"host":0.118,"timing":0.044,"rf":0.002,"wire":0.0507},
+        "total_chip_supply_current_a": 0.2522,
+        "host_node_current_a": 0.1103,
+        "local_branch_current_a": 0.14189999999999997,
+        "h2d_internal_current_within_host_a": 0.0077,
+        "board_supply_v": 3.2747799999999994,
+        "die_return_v": 0.005044040494375501,
+        "local_payload_clock_core_rail_v": 3.1278359595056235,
+        "rf_clock_core_rail_v": 3.1278359595056235,
+        "host_rail_v": 3.2697360404943754,
+        "source_v": 3.3,
+        "source_power_w": 0.8322599999999999,
+        "delivered_electrical_power_w": 0.8044918085439909,
+        "resistive_loss_w": 0.027768191456009023,
+        "power_balance_residual_w": -7.28583859910259e-17,
+        "physical_pin_current_qualification": false
+      },
+      "receiver_local_differential": {
+        "sampled_interval_v": [-0.0005922440714050462,0.0012631506299734991],
+        "enclosed_interval_v": [-0.000605203824095624,0.001276110382664077],
+        "grid_enclosure_error_v": 1.2959752690577872e-05,
+        "samples": 8192,
+        "requested_samples": 8192,
+        "grid_capped": false,
+        "period_s": 1e-07,
+        "observed_below_legacy_2p5v_floor": true,
+        "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+        "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+      },
+      "receiver_local_common_mode": {
+        "sampled_interval_v": [-0.023242942730712833,0.010673985840118281],
+        "enclosed_interval_v": [-0.02346791698526412,0.010898960094669568],
+        "grid_enclosure_error_v": 0.00022497425455128667,
+        "samples": 8192,
+        "requested_samples": 8192,
+        "grid_capped": false,
+        "period_s": 1e-07,
+        "observed_below_legacy_2p5v_floor": true,
+        "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+        "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+      },
+      "board_common_mode": {
+        "sampled_interval_v": [-0.010912536471163884,0.023680154631193003],
+        "enclosed_interval_v": [-0.011144892900386349,0.023912511060415465],
+        "grid_enclosure_error_v": 0.0002323564292224637,
+        "samples": 8192,
+        "requested_samples": 8192,
+        "grid_capped": false,
+        "period_s": 1e-07,
+        "observed_below_legacy_2p5v_floor": true,
+        "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+        "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+      },
+      "released_pin_intervals": [
+        {
+          "sampled_interval_v": [-0.011154439929806486,0.024214831451023912],
+          "enclosed_interval_v": [-0.011391621471774067,0.024452012992991493],
+          "grid_enclosure_error_v": 0.00023718154196758094,
+          "samples": 8192,
+          "requested_samples": 8192,
+          "grid_capped": false,
+          "period_s": 1e-07,
+          "observed_below_legacy_2p5v_floor": true,
+          "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+          "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+        },
+        {
+          "sampled_interval_v": [-0.01067063301252129,0.023145477811362083],
+          "enclosed_interval_v": [-0.010898165043345709,0.0233730098421865],
+          "grid_enclosure_error_v": 0.00022753203082441823,
+          "samples": 8192,
+          "requested_samples": 8192,
+          "grid_capped": false,
+          "period_s": 1e-07,
+          "observed_below_legacy_2p5v_floor": true,
+          "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+          "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+        }
+      ],
+      "quiet_pin_enclosed_abs_peak_v": 0.024452012992991493,
+      "instantaneous_20mv_guard_met": false,
+      "feedback_residual_v": 1.939479807224432e-18,
+      "differential": {
+        "sampled_interval_v": [-0.0004857355986146784,0.001070528694345564],
+        "enclosed_interval_v": [-0.0004954286774674753,0.0010802217731983607],
+        "grid_enclosure_error_v": 9.69307885279683e-06,
+        "samples": 8192,
+        "requested_samples": 8192,
+        "grid_capped": false,
+        "period_s": 1e-07,
+        "observed_below_legacy_2p5v_floor": true,
+        "guaranteed_inside_legacy_2p5_to_3p6v_fixture": false,
+        "scope": "Exact finite-tone waveform at sampled times with a conservative derivative enclosure between samples; omitted physical currents/noise are not covered. The legacy fixture interval is not a silicon specification."
+      }
+    }
+  ],
+  "sources_sha256": {"spec/analog-architecture.json":"13c1b6681b7bd51c7c5b5833d83662376ac348b5f299e4b3fd38fc5c9742b8c0","spec/block-diagram.md":"5668e9884a88d137c54699c6ffb41b1cd204ae4d008ee51dbea0301845ae1362","spec/contract.json":"e0e0e01aed0edd692d4ac4467432f60b979e5e03eecb4133d1b34a4d1b353c90","spec/power-partition.md":"0939d93d16f24d4f53deb60f9783d56bc19e8c86659e67d9b1308fae9ab17ac7","system_model/architecture_fast/behavioral.py":"789de0c8652068ee9e70b60769f84b23a56239355004db4d04c001d9ee72afb6","system_model/architecture_fast/design_definition.py":"fcf5294175594ad29078bfa5856cd8259d8c61c6427bd280925bc90c6309edb5","system_model/architecture_fast/direct_stream.py":"63a867e3822ca3e7d619eb8381c232eafb52e3d31be76a4590c6e05eb22f2c58","system_model/architecture_fast/receive_qualification.py":"3dc2b764cc475f05ec673c48be82a0807fd84059bf9698d639b0d9c5db1ec62e","system_model/architecture_fast/resource_configuration.py":"a4ccb386b0d22908d47cc037451c4d3ebaf847a5ab6a71ee415384f75197fcb6","system_model/architecture_fast/rf_air_timing.py":"8fe69abd513384cfcfb188bdc4746fc6f104a1f8716fe4af29fb0a59ef9f9a93","system_model/architecture_fast/rf_quality_budget.py":"6d22c9637bc0165cdae9c6f5ee4a4116156f82f44cb878f9e46c5a24ec2955d7","system_model/connected/autonomous_pll.py":"874c8d1cf55ee0147f0b532fa942979adc5ef8a142656a58cb69ca568c5c284d","system_model/connected/bit_event_stream.py":"bb366ecdf97b25beb07a7562926321e4253c2b55323261f5fe4ff6d90a4746da","system_model/connected/burst_codec.py":"924f843f70f68cdede2def9fcc4bca91971e24fe194cb928c87dce2437dddd90","system_model/connected/charge_pump_filter.py":"30352d2ccfdc8b5b071838f55d7eba78e370167ca3daf4ba9d99e7a51f06e9f9","system_model/connected/chip_model.py":"acdcc87e84021edf7b8ed3044b4ac8ea75910378befd6d066a1577442fba10ee","system_model/connected/compliant_edge_pll.py":"24d4cc5658766e4ddb051440d868db2ffe77dd7d32172c9a94211d2e78055374","system_model/connected/compliant_pump_filter.py":"666f6c9b44e7caa4614b1355d944457e17daf01d9472d95b5e480971122af48b","system_model/connected/edge_pump_pll.py":"93d0d1997e7477af86b3d508ef23ef33c482aea6a925c488cbc0d93e7847cbeb","system_model/connected/fractional_pulse_pll.py":"5eff5b4baa16d5d04dadf616f255ef457042d5907a97800478fcfb7f5f2ef6ab","system_model/connected/fractional_pulse_screen.py":"f9945e04bea0d5442a5054459d149c902540f8c747fcfcde05c6423a7757a51b","system_model/connected/lane_group.py":"83803ee2a0b0b9c2a6f22df0bcca0eea93b83b2bbf3cd9e61da8031be8636d95","system_model/connected/loopback_return.py":"e14913a01e40e6e2e8c41e6f5594a42c39e76467a06e88d0ee930e82e4dd0a20","system_model/connected/oscillator_noise.py":"0faed15e487ba1873bb2952cb1a670fdac95401dc95f8cce19fc5b43a6ed8357","system_model/connected/protocol_pad.py":"5952cd92525700b75b9a5cbb2537d759d03c080e64750cb1e7836d744926dc09","system_model/connected/protocol_signals.py":"40a3162c7cea53d2647f4a30f39c83aa127077a6a30ec55788535885150ac019","system_model/connected/reference_sample_clock.py":"eac299cab5a031e0261380f7d27a0b61e85702a1e34b6e9d45d5f8c1b820d67a","system_model/connected/sampled_pll.py":"809db79a6cd5315d1f46a7f6d42a06dd9f64a308c2b63726729b79734daf86b6","system_model/connected/shaped_fractional_pll.py":"0fcf1e9a56d1174b53fb718762e7a59e1c425239f10d4373ba60ebda848def03","system_model/connected/tx_dac_correction.py":"016e5a860d1a06170b991f3fff4f8c4d6667282464b97f747e07589f7361e6d2","system_model/connected/tx_iq_calibration.py":"dce73e9f545e7b2a4d0d45a5375e5e1c6d30d8cd9d335e0fec874a765a623a7b","system_model/connected/tx_output_candidate.py":"e2f9a092ca4da7c27a9eb3ea06a8c9efc27eed9bb5a34246eb600b0c61528684","system_model/connected/tx_output_stage.py":"f011be67bd9250711ba64433ccd8d19cdd06494dfc0ba72f7d7382f970bf5210","system_model/connected/wired_blocks.py":"51f635f16d6782e73f2706fa5235589dde0154c0e57bd7c65744b7cf150176be","verification/baseline_envelope.py":"40258ebd9e28223a486b7b456e4f6d36d00a3546474f5b98aba4fb486da0d959","verification/bit_event_codec.py":"61174512d20bd5197c92457a0a0b4f376a3c52b180df4021da1ad323b52c1b87","verification/ble_packet.py":"24ccdf40ba344683e90a25b79e05ccb3cf889f7dc9f30808ac95f04bf39f84a6","verification/block_receiver_model.py":"07bcc89f8970de4ef8ebe8add99eaea0a08d7c388b43148daa4f9841a891f58e","verification/check_contract.py":"592870be20a7e58e29d19e8e78aa96f581cb1b8add0e66c2fa6902f58622559c","verification/converter_dynamics.py":"abc70d2e3226723e960eceeca92a8bd2a85cdfd2bce7527e4f7584604845dc94","verification/recovery_mailbox.py":"db93895b2246618aaf16322a332228726d5d61dd11ce00a30ab5299a184d1d95","verification/reference_input_probe.py":"bd6118b10571c816abecc9dda5dd1aa1ba250def211a13fd0790dd313ac93872","verification/rf_gain_command.py":"263fc534ce1992f81a5c156bb950cfadde2f9ed0c63e855a0fff131b1b6a70f3","verification/rf_power_calibration.py":"84f15999b083aba65e2df46c3945148f53c95cc85685c1bd2f508155b6dde4ef","verification/rf_timing_command.py":"797fe4ba20c61ee73e9b3cacee05c320151d731bae492bcf21f998b3e85a3f26","verification/robustness_envelope.py":"0259b23c24d2d49a4eea4bec656a9502bb3a89668b54a1e0aa2d3bf0f05aca38","verification/selected_lifecycle.py":"f7a53d54cb1d13a8ea6d71bbc453775c2c9b5f1f9b8a03a90eb90026e5a735e1","verification/selected_revision_check.py":"a42b15d922c2c5ed41598a2e6af9cb3d80929a0531afa4ce691db97768257ed6","verification/selected_rf.py":"ec710fa7c9524f7089b54b7bce5917f03b1267197b94ca3c2c5e002d0caae1d9","verification/stream_codec.py":"4ac4a5c6663a963105905edcb3478feefacecede391df3d021e3daab4dd3bda7","verification/transport_model.py":"accda58cfe3c130a8a4967bd9704cdc36bc5e0026f0a0a794ab8077a566d8a8f","verification/usb_selected_timing.py":"b2acb539ff638601ffa9890df381172c4c42bced6d7681f21ddbe9d09b688906","verification/wideband_packet.py":"2aa64e80b6425805b66872da05c7597e153b0fd4a8380eb93e553b83bdc50538","verification/wired_envelope.py":"f0eaf08d4f3acb3039b8c0570cf41a20fc9fcdc25f9faeaf5ee4976fbe95b5ba","verification/wired_lock_probe.py":"a8d47e1411b11da82deabadfa69f911171a2b9c0b5cf02997d76324e6042fe0b","verification/feed_usb_probe.py":"4004d4d3e36384602bc6b764a442656b633999adc021a2f173993300ab328ade"},
+  "scope": "Shared USB inventory and configured host rates with simplified released-pad fixtures. Shared-amplitude/skew 480 MHz differential reference loading/return and pad feedback solved together. No internal switching spectrum assigned; this is not a worst-case supply bound. Fixed source phases; no packet, squelch, chirp, cable or edge transients. The 20 mV instantaneous design guard is not an established compliance measurement. Clock sensitivity does not change these passive pin voltages."
+}

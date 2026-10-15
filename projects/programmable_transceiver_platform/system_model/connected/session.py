@@ -1,4 +1,9 @@
-"""Candidate lifecycle contract; readiness inputs are not physical lock detectors."""
+"""Ideal enable/fault fixture for isolated reconstruction/calibration controls.
+
+Mode labels and independent readiness flags are local test inputs, not the chip
+configuration ABI or its RF/wired ownership policy. Current chip lifecycles use
+architecture_fast.behavioral; this stub neither detects lock nor models SPI.
+"""
 class Session:
     def __init__(self):
         self.reset()

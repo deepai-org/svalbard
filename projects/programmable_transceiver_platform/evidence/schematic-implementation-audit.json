@@ -1,6 +1,6 @@
 {
-  "status": "incomplete_schematic_blocks_layout_gate_closed",
-  "layout_gate": "No new layout/recreation until the integrated transistor-level analog schematic meets agreed requirements; retain existing layouts as reference.",
+  "status": "characterization_inventory_selected_schematic_not_complete",
+  "layout_gate": "Complete the whole-chip mathematical model before new schematic implementation; then verify the integrated transistor schematic before new layout. Retained existing circuits/layouts are characterization references.",
   "blocks": [
     {
       "id": "rf_receive",
@@ -55,10 +55,13 @@
         "projects/programmable_transceiver_platform/evidence/lo-receiver-replay.json",
         "projects/programmable_transceiver_platform/evidence/lo-replay-stages.json",
         "projects/programmable_transceiver_platform/evidence/lo-gap-state.json",
-        "projects/programmable_transceiver_platform/evidence/lo-replay-scope.json"
+        "projects/programmable_transceiver_platform/evidence/lo-replay-scope.json",
+        "projects/programmable_transceiver_platform/evidence/lo-interstage.json",
+        "projects/programmable_transceiver_platform/evidence/lo-interstage-cycles.json"
       ],
       "stationary_noise_status": "Separate filter screen:269/344uVrms output over1kHz-20MHz including1kohm source legs. LNA bypass candidate uses448 explicit MIM units; selected series R/L cases retain stationary gain/noise improvement. These separate fixtures do not establish complete switched receiver noise; connected bypass gain improvement is verified separately; no complete receiver noise claim.",
       "port_contract_gap": "Contract declares RF_RX_P/RF_RX_N. Current connected LNA/mixer/filter fixture uses a single-ended50ohm source; differential RF pad/front-end realization, matching, ESD loading and common-mode rejection remain unimplemented or unverified. Do not infer full RF port compliance from this fixture.",
+      "recent_candidate_evidence": "Interstage AC isolation in four LO buffers restores 1280 rising crossings per leg in the completed 512ns loaded replay window and reduces I reference-frequency fundamental from31.613 to0.792mV peak. I duty/period modulation remains. This is recorded-P/N replay, not autonomous qualification; connected8.001us candidate is still running. Production LO cell unchanged.",
       "sources": [
         {
           "path": "projects/programmable_transceiver_platform/analog/rf_rx_candidate.spice",
@@ -107,7 +110,7 @@
         },
         {
           "path": "projects/programmable_transceiver_platform/analog/lna/noise_screen.py",
-          "sha256": "3685570af5b581b99313bda7e87cbea8a2b1800aaa674b636f74b5cb11185ee3",
+          "sha256": "9c892cddd6c4c60e57d06148942c348aaa1ed854e74726c790d4add82de4ece1",
           "subcircuits": []
         },
         {
@@ -193,10 +196,13 @@
         "projects/programmable_transceiver_platform/evidence/vco-channel-kick.json",
         "projects/programmable_transceiver_platform/evidence/ring-noise-ports.json",
         "projects/programmable_transceiver_platform/evidence/ring-noise-models.json",
-        "projects/programmable_transceiver_platform/evidence/latest-lo-upstream.json"
+        "projects/programmable_transceiver_platform/evidence/latest-lo-upstream.json",
+        "projects/programmable_transceiver_platform/evidence/lo-interstage.json",
+        "projects/programmable_transceiver_platform/evidence/lo-interstage-cycles.json"
       ],
       "pump_diagnostic_status": "Original clamped pump+22.395fC/cycle; unadopted steering/follower/MIM candidate nominal-4.509fC/cycle. Completed forced-clock tests:0.98V early300ps/late300ps/late600ps charges-12.190/-0.182/+5.712fC;1.08V +/-300ps-10.532/+1.618fC;1.16V-9.370/+2.857fC;1.30V-7.987/+4.302fC. Low-control offset shifts correction threshold but sourcing remains possible. Follower supply0.461..0.469mW; ideal bias currents and precharge remain. These are finite-history clamped diagnostics, not autonomous acquisition or noise qualification.",
       "integration_gap": "Completed selective-save8.001us history supersedes pending status. Original save-all extension was killed; selective10ns control matched bit-for-bit. Final4.3GB hashing caused post-simulation memory pressure; existing container limit raised4->8GiB without simulation restart, then artifact validation completed. Actual-feedback zero-RF test still uses seeded/precharged states, ideal bias/supplies and lacks ADC/host loading. Reference-periodic I-LO/mixer disturbance is unresolved; no lock/noise or whole-chip coexistence qualification.",
+      "recent_candidate_evidence": "Interstage AC isolation in four LO buffers restores 1280 rising crossings per leg in the completed 512ns loaded replay window and reduces I reference-frequency fundamental from31.613 to0.792mV peak. I duty/period modulation remains. This is recorded-P/N replay, not autonomous qualification; connected8.001us candidate is still running. Production LO cell unchanged.",
       "sources": [
         {
           "path": "ip/blocks/analog/wireline_serdes/pll/ring_vco.spice",
@@ -353,11 +359,16 @@
         "projects/programmable_transceiver_platform/evidence/rx-adc-inband-frames.json",
         "projects/programmable_transceiver_platform/evidence/reference-hybrid-candidates.json",
         "projects/programmable_transceiver_platform/evidence/reference-output2-event.json",
-        "projects/programmable_transceiver_platform/evidence/rx-adc-inband.json"
+        "projects/programmable_transceiver_platform/evidence/rx-adc-inband.json",
+        "projects/programmable_transceiver_platform/evidence/sar-driver-physical.json",
+        "projects/programmable_transceiver_platform/evidence/sar-physical-divergence.json",
+        "projects/programmable_transceiver_platform/evidence/sar-driver-physical-margin.json",
+        "projects/programmable_transceiver_platform/evidence/sar-driver-reservoir.json"
       ],
       "next_integration_gate": "Implement and verify real phase generation and independent skew tolerance; preserve completed610ns separated-event and in-band fixtures as diagnostic comparisons. Gain, reference regulation and autonomous-loop simultaneous operation remain required.",
       "measurement_gap": "Earlier approximately20MHz IF fixture aliases near DC at20MS/s. Completed approximately5MHz IF fixture removes that stimulus limitation but only spans three small-signal frames and codes127/128. Full-scale acquisition, useful gain, adequate records, transfer accuracy and ENOB remain unverified.",
       "rejected_candidate": "Doubling bit6 complement inverter strength reduces selected high peak but improves worst high-reference error only0.055mV, worsens low motion and costs10.87% VDRV energy; retain original driver.",
+      "recent_candidate_evidence": "Single-ADC sample-driver RC100ohm->2kohm with actual references improves selected +/-0.4V codes78/178/78->77/179/76 (ideal76/179/76), retaining115/140/115 at+/-0.1V. First positive frame still diverges at bit0; later correct positive frame has104uV clock-edge residue. These are ideal bias/phase, nominal three-frame experiments at20MS/s, not transfer/noise qualification. Doubled-reservoir interaction tests complete and are rejected: large-input codes worsen77/179/76->78/178/77 despite lower peak rail error; small-input codes unchanged. Production driver unchanged.",
       "sources": [
         {
           "path": "projects/programmable_transceiver_platform/analog/adc/comparator.spice",
@@ -777,9 +788,45 @@
       "source_paths": [],
       "gap": "RF, wired, timing, converters, bias, pads and controls not connected into a complete schematic.",
       "sources": []
+    },
+    {
+      "id": "usb_shared_serial_pad",
+      "status": "not_implemented",
+      "source_paths": [],
+      "remaining": "Implement local HS/FS/LS driver, receivers, pulls, termination and isolation on WIRE_RX_P/N; include off-state capacitance in serial RX, current in wired rails and reset/power-off behavior.",
+      "sources": []
+    },
+    {
+      "id": "protocol_timing_and_rf_contexts",
+      "status": "not_implemented",
+      "source_paths": [],
+      "remaining": "Rate-selectable serial synthesis/CDR, pre-lock envelope detection, bounded line-state timing, RF filter/gain settings and retained channel contexts with settling and current budgets.",
+      "sources": []
     }
   ],
-  "last_evidence_review_pass": 501,
+  "multi_chip_video_requirements": {
+    "status": "not_implemented",
+    "reuse": [
+      "wired current steering TX",
+      "RX sampler and switched termination",
+      "wire PLL/divider and REF_IN"
+    ],
+    "extensions": [
+      "DC current sink compliance and high common-mode RX",
+      "Per-leg 50 ohm termination to 3.3 V with isolation from AC mode",
+      "74.25/148.5 MHz forwarded reference and deterministic x10 word phase"
+    ],
+    "external": [
+      "three-chip deskew and TMDS encoding in FPGA",
+      "TMDS clock driver/receiver and DDC/HPD protection"
+    ],
+    "new_signal_pins": 0,
+    "new_on_chip_protocol_logic": false
+  },
+  "evidence_role": "Existing transistor circuits and replays characterize device/block behavior under their recorded conditions. They are not a second normative architecture or evidence that the selected complete transceiver schematic is implemented.",
+  "design_authority": "spec/analog-architecture.json and spec/contract.json",
   "source_presence_checked": true,
-  "whole_chip_schematic_ready": false
+  "whole_chip_schematic_ready": false,
+  "selected_design_conformance_checked": false,
+  "audit_scope": "Source presence and subcircuit names only. Recorded circuit conditions and results retain their own provenance; this audit neither reruns characterization nor validates current architecture bindings."
 }

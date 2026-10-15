@@ -58,21 +58,19 @@ tap-ratio normalization is a diagnostic control, not an on-chip measurement.
 
 ## Independent transmit observation and failure diagnostics
 
-The original reconstructed-source TX observer forecasts a copy of the oscillator to the observation time and
-rotates the actual reconstructed DAC envelope against an independent nominal
-carrier. It never uses the receiver LO as its reference. That historical fixture
-excludes mixer/driver nonlinearity, I/Q mismatch and LO leakage. The later loaded
-network uses the [pad-observation contract](tx-output-isolation.md#loaded-pad-observation);
-its physical LO phase is already in the pad state and must not be applied again.
+An independent nominal-carrier observer must include the actual loaded output
+network and its nonlinearity, I/Q mismatch and leakage. Follow the
+[pad-observation contract](tx-output-isolation.md#loaded-pad-observation): physical
+LO phase already present in pad state must not be applied again.
 
-The original strict incremental-quality screen fits one complex gain on the first quarter
-of samples and evaluates the remaining samples without refitting. The provisional
-10% limit is unchanged. A passed receive test or correct TX sample count cannot
-replace this measurement. Its ideal comparison shares quantization and the
-one-pole reconstruction response, so spectral quality must be checked separately.
+`rf_quality_screen.py` retains a standalone held-out error metric and synthetic
+controls. It fits one complex gain on the first quarter and freezes it for the
+remaining samples. Its explicit 10% screen is a diagnostic assumption, not a
+protocol EVM threshold or current full-chip result. Matched ideal reconstruction
+can conceal spectral distortion, so spectral quality requires a separate check.
 
-New TX runs retain time, complex outputs, baseband and LO-rotation arrays in NPZ
-files alongside their JSON report. Use `tx_trace_diagnostics.py TRACE --output
+The offline diagnostic accepts time, complex outputs, baseband and LO-rotation
+arrays in an NPZ trace. Use `tx_trace_diagnostics.py TRACE --output
 REPORT` for offline analysis. It decomposes the held-out error into a gain shift
 between training and validation and residual error within validation. The latter
 uses an oracle gain only for diagnosis; it cannot make a failed gate pass. The
@@ -84,19 +82,9 @@ with training and signal-onset boundaries. It requires NumPy and Matplotlib.
 The plotted traces show repeatable phase structure as well as an initial shift;
 this alone does not attribute every feature to a specific circuit mechanism.
 
-The host-preconditioning experiment compares equal 20-us extensions: quiet wait
-versus 64 valid zero-allocation host frames ending at the measurement boundary.
-Unallocated payload slots contain a fixed pseudorandom pattern and are discarded
-by the actual receiver. They exercise modeled pad switching without delivering
-RF/wired data. All 64 sequence numbers wrap back to zero before the real burst.
-Assertions check active state, frame alignment, and unchanged sample consumption.
-The observer excludes prelude samples, but no analog or oscillator state is reset.
-Only the input host bus is preconditioned; this is not a claim that all supplies,
-DAC activity or return-bus activity are already at steady state.
-
-Preconditioning remains a diagnostic fixture, not a required operational sequence
-or an adopted workaround. Full qualification retains startup cases unless an
-explicit implementation contract and its costs are justified and tested.
+Artificial host preconditioning is a diagnostic option, not a required operating
+sequence or a substitute for startup qualification. Its assumptions and omitted
+switching sources must be explicit.
 
 ## Fit-error and settling bounds
 
@@ -123,7 +111,6 @@ cannot eliminate systematic curvature.
 
 | Scoped experiment | Result and limit |
 | --- | --- |
-| Reconstructed managed-host duplex | TX errors 8.286% / 9.631%; finite out/in ±10 MHz powers −43.148 / −38.956 dB. Four-pole elliptic core plus 80 MHz buffer pole, highest pole-pair Q≈5.78; not a protocol mask or realizability result. |
 | Assumed output-stage sensitivity | Mode1 exceeds the unchanged 10% screen with 0.25 dB imbalance, 2° quadrature error or −30 dBc LO feedthrough; combined trial gives 10.891%. These are assumptions, not process tolerances. |
 | Power-fit finite error sweep | Mode1 combined trial improves to 9.637–9.645% with quantization alone; tested 2% monitor error reaches 9.855%, 5% reaches 10.101%, 10% reaches 10.720%. Finite seeds are not adversarial bounds. |
 | Local paired DAC correction | 12-bit/40 MS/s error 7.593%→0.0816%; 8-bit/20 MS/s 7.649%→1.311%. Matched ideal reconstruction comparison excludes full-chip noise/jitter. |

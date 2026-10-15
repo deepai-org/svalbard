@@ -8,40 +8,23 @@ root=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(root/'system_model/connected'))
 sys.path.insert(0,str(root/'verification'))
 from adc_impairments import ADCImpairments
-from full_chip_model import make_chip
+from protocol_signals import fixture
 source=root/'evidence/reference-afe-figure7-screen.json'
 figure=json.loads(source.read_text())['conditional_shape_comparison']
 a=10**(np.array(figure['target_harmonics_dbc'])/20)
 x=np.cos(2*np.pi*np.arange(4096)/4096)
-rows=[]
-chip=make_chip(protocol='wifi_he20');service=chip.protocol_service;wave=service.waveform()
-chip.output_network.configure(True,False)
-for amplitude in [.05,.1,.2]:
-    chip.adc_impairments=None
-    clean=service.project_clocked_link(wave,bits=12,amplitude=amplitude,substeps=2)
-    baseline=np.asarray(clean['samples'])
-    for curve in figure['nonunique_monotone_transfers']:
-        coefficients=a*np.array(curve['harmonic_signs'])
-        impairment=ADCImpairments(odd_chebyshev=coefficients)
-        # Independent Chebyshev evaluation and coherent sine-spectrum check.
-        sampled=np.array([impairment.sample(complex(v,0)).real for v in x])
-        expected=np.polynomial.chebyshev.chebval(x,[0,1,0,coefficients[0],0,coefficients[1],0,coefficients[2]])
-        assert np.max(abs(sampled-expected))<1e-14
-        spectrum=abs(np.fft.rfft(sampled));db=20*np.log10(spectrum[[3,5,7]]/spectrum[1])
-        assert max(abs(db-np.array(figure['target_harmonics_dbc'])))<1e-9
-        chip.adc_impairments=impairment
-        held=impairment.held;state=impairment.rng.getstate()
-        result=service.project_clocked_link(wave,bits=12,amplitude=amplitude,substeps=2)
-        assert impairment.held==held and impairment.rng.getstate()==state and chip.time==0
-        y=np.asarray(result['samples'])
-        gain=np.vdot(baseline,y)/np.vdot(baseline,baseline)
-        error=y-gain*baseline
-        relative=float(np.sqrt(np.mean(abs(error)**2)/np.mean(abs(gain*baseline)**2)))
-        rows.append(dict(tx_amplitude_setting=amplitude,harmonic_signs=curve['harmonic_signs'],
-            gain_removed_difference_percent=relative*100,fitted_gain_magnitude=float(abs(gain)),
-            clean_clipped_samples=clean['adc_clipped_samples'],impaired_clipped_samples=result['adc_clipped_samples'],samples=len(y)))
-# Isolate analog-transfer ambiguity from the low-level quantization differences
-# in the complete chain. Normalize the same RF fixture at the ADC input.
+wave=fixture('wifi_he20')
+# Independent Chebyshev evaluation and coherent sine-spectrum check. These
+# isolated controls intentionally do not construct a chip or include quantization.
+for curve in figure['nonunique_monotone_transfers']:
+    coefficients=a*np.array(curve['harmonic_signs'])
+    impairment=ADCImpairments(odd_chebyshev=coefficients)
+    sampled=np.array([impairment.sample(complex(v,0)).real for v in x])
+    expected=np.polynomial.chebyshev.chebval(x,[0,1,0,coefficients[0],0,coefficients[1],0,coefficients[2]])
+    assert np.max(abs(sampled-expected))<1e-14
+    spectrum=abs(np.fft.rfft(sampled));db=20*np.log10(spectrum[[3,5,7]]/spectrum[1])
+    assert max(abs(db-np.array(figure['target_harmonics_dbc'])))<1e-9
+# Normalize the external RF fixture at the ADC input to isolate transfer ambiguity.
 analog_rows=[]
 for peak in [.3,.6,.9]:
     samples=wave.samples/max(max(abs(wave.samples.real)),max(abs(wave.samples.imag)))*peak
@@ -79,11 +62,10 @@ for signs in figure['nonunique_monotone_transfers']:
     m=ADCImpairments(odd_chebyshev=a*np.array(signs['harmonic_signs']))
     values=[m.sample(complex(v,0)).real for v in [-1.1,-1.000001,-1,-.999999,.999999,1,1.000001,1.1]]
     assert all(b>v for v,b in zip(values,values[1:]))
-print(json.dumps(dict(noise_normalization_scenarios=noise_rows,unquantized_adc_waveform_cases=analog_rows,cases=rows,source_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in [source,audit_path,root/'system_model/connected/adc_impairments.py',Path(__file__)]},
+print(json.dumps(dict(noise_normalization_scenarios=noise_rows,unquantized_adc_waveform_cases=analog_rows,source_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in [source,audit_path,root/'system_model/connected/adc_impairments.py',root/'system_model/connected/protocol_signals.py',Path(__file__)]},
  limitations=['All eight curves match only three conditional harmonic magnitudes of the reference-AFE figure. Harmonic identity and absolute normalization remain assumptions.',
  'Same static per-axis transfer is assigned to I/Q as a sensitivity; not recovered transceiver ADC coefficients.',
- 'Frozen-rail HE20 waveform projection,12bit quantization,no extra noise. Difference is against the clean chain after fitted gain removal, not standard packet EVM or compliance.',
- 'Unquantized cases isolate analog transfer on the HE20 fixture, with declared ADC-axis peak; chain cases also include quantization differences. Neither is standard-compliance EVM.',
+ 'Unquantized cases isolate analog transfer on the synthetic HE20 fixture with declared ADC-axis peak. No chip, conversion-chain or standard-compliance result is implied.',
  'Assigned source amplitudes explore operating level; none is identified as the measured AFE tone level.',
  'Noise-only scenarios use table SNR separately from figure harmonics. They assume white independent I/Q noise, unchanged integrated noise at the RF fixture sampling rate, and linear unity conversion. Unknown measurement bandwidth, filtering and noise spectrum prevent calibration. No quantizer or clipping is applied in these noise-only comparisons.',
  'Passing this experiment proves ambiguity propagation, not physical feasibility. Default ADC behavior remains unchanged.']),indent=2))

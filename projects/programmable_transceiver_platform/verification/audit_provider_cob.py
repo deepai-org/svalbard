@@ -5,6 +5,8 @@ Usage: python3 audit_provider_cob.py /path/to/chip-on-board-wire-bonded-pcbs
 import hashlib,json,re,subprocess,sys
 from pathlib import Path
 P=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(P/'system_model/architecture_fast'))
+from design_definition import load_design
 COMMIT='4f05ed1ea1994d8101a265d5d4f995bcea86d5a1'
 BOARD='run-1/1x1-cob/1x1-mezzanine.kicad_pcb'
 
@@ -24,7 +26,8 @@ def parse(text):
     return root[0]
 
 
-def audit(repository):
+def audit(repository, *, design=None):
+    design=load_design() if design is None else design
     commit=subprocess.check_output(['git','-C',str(repository),'rev-parse','HEAD'],text=True).strip()
     if commit!=COMMIT:raise ValueError('Different provider revision; review before updating pinned evidence')
     path=repository/BOARD;raw=path.read_bytes()
@@ -40,7 +43,7 @@ def audit(repository):
     bond={int(k):v for k,v in footprints['U102'].items() if k.isdigit() and int(k)<=74}
     connector={int(k):v for k,v in footprints['U101'].items() if k.isdigit()}
     assert set(bond)==set(range(1,75)) and set(connector)==set(range(1,71))
-    c=json.loads((P/'spec/contract.json').read_text());a=c['assembly_policy']
+    c=design.contract;a=c['assembly_policy']
     sides=a['provider_site_inventory']['ordered_sites_by_side']
     # Candidate orientation inference: first south site is board pad_0; west
     # list reverses to preserve the documented complete fixed-supply sequence.
@@ -67,7 +70,8 @@ def audit(repository):
         connector_ground_contacts=[k for k,v in connector.items() if v=='GND'],
         common_ground_net='GND',distinct_supply_nets=sorted({x['board_net'] for x in supplies}),
         supply_mapping=supplies,candidate_signal_mapping=signals,components=components,
-        project_contract_sha256=hashlib.sha256((P/'spec/contract.json').read_bytes()).hexdigest(),
+        design_provenance=design.provenance(),
+        configuration_scope='assembly_connectivity_audit_not_active_signal_configuration',
         limitations=['Run 1 only; provider explicitly says later-run pinouts and footprints may change.',
             'South-origin/west-reversal die-to-board permutation inferred from fixed-power sequence; verify against actual GDS and wirebond drawing before freezing signal names.',
             'Signal netnames and component connectivity are read from PCB source; routed impedance, copper integrity, loading and connector bandwidth are not qualified.',

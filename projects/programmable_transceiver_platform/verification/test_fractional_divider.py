@@ -7,6 +7,10 @@ import unittest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model'/'connected'))
 from shaped_fractional_pll import ThirdOrderSequence
 
+TEST_DESIGN_ROLES = {
+    'ThirdOrderDividerTests': ('independent_fixture', 'Exact fractional arithmetic and independent sequence identity; experimental primitive.'),
+}
+
 class ThirdOrderDividerTests(unittest.TestCase):
     def test_exact_error_identity_and_positive_counts(self):
         for denominator in range(2,81):

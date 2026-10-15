@@ -2,7 +2,7 @@
 import copy,json,math
 import numpy as np
 from chip_model import P
-from fractional_rf_chip import ShapedRFClock
+from pulse_clock_service import ShapedRFClock
 from oscillator_noise import FrequencyNoise
 from rf_loaded_detector import LoadedDetector
 from rf_phase_forcing import advance_phase

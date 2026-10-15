@@ -24,7 +24,7 @@ remain part of integration. Isolated filter or clock success is not chip closure
 | Leading small-signal candidate failed acquisition | Both 60 us, 2412/2437 MHz cases completed without qualified lock. Linear noise ranking alone was insufficient. See `evidence/three-cap-acquisition-screen.json` and the historical journal. |
 | Balanced candidate passed isolated two-carrier lock tests | Reference-edge phase deviations were about 0.0352/0.0470 rad under assumed noise and held rail pull; these are not total phase-noise spectra or EVM. |
 | Resistor thermal-noise normalization checked | `evidence/three-cap-thermal-noise.json`: about 0.00762 rad RMS over 100 Hz–10 MHz at 300 K, with equilibrium/convergence checks. Omits pump/VCO/reference/buffer noise, sampled aliasing and fractional mixing. |
-| Nominal coupled quality can pass while calibration uncertainty remains open | A fixture observation bound cannot be promoted to a physical guarantee. See `evidence/calibration-observation-budget.json`. |
+| Calibration uncertainty remains open | `evidence/calibration-observation-budget.json` uses current native ADC precision and an explicit Gaussian error hypothesis; its optimistic sample counts do not qualify actual calibration, SAR thresholds or systematic error. |
 | Stressed resistor-noise mode-1 run passed narrowly | `evidence/thermal-stressed-three-cap-quality-mode1-launch.json`: TX 9.7300707%, RX 5.8541343% against the provisional 10% screen. One finite noise realization and exploratory component stress, not a PDK corner or worst-case bound. |
 | Accelerated solver matched that run's final quality metrics | `evidence/thermal-full-chip-solver-comparison.json`: TX difference 1.8074e-9 absolute, RX exact. Does not establish trajectory/corner equivalence. |
 

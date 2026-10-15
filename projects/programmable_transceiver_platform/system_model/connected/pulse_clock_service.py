@@ -4,7 +4,9 @@ Lock observation uses the chip's declared tolerances and comparison cadence.
 Filter charge and absolute output-phase offset transfer across a divider band
 change; fractional division and artificial phase-step disturbances are rejected.
 """
-import math
+import math,copy
+from fractions import Fraction
+from shaped_fractional_pll import SecondOrderSequence
 from compliant_edge_pll import CompliantEdgePLL
 
 class PulseClockService(CompliantEdgePLL):
@@ -53,3 +55,36 @@ class PulseClockService(CompliantEdgePLL):
     def edge_time(self,target_phase):return super().edge_time(target_phase-self.phase_offset)
     def disturb(self,time,phase_cycles=0.,frequency_hz=0.):
         raise ValueError('Pulse clock uses physical supply/noise forcing; phase-step fixture unsupported')
+
+
+class ShapedRFClock(PulseClockService):
+    SEQUENCE_CLASS=SecondOrderSequence
+    def __init__(self,**kwargs):
+        kwargs.setdefault('bandwidth_hz',300e3)
+        super().__init__(**kwargs)
+        self.sequence=self.SEQUENCE_CLASS(Fraction(str(self.divider)))
+        self.feedback_target=float(self.sequence.step())
+    def observe_lock(self):
+        first=self.first_lock
+        super().observe_lock()
+        # Eight comparisons can qualify a transient quiet patch. Cover at least
+        # two complete second-order divider patterns and4us at40MHz instead.
+        required=max(160,4*self.sequence.ratio.denominator)
+        self.locked=self.good>=required
+        self.first_lock=first if first is not None else (self.time if self.locked else None)
+        return self.locked
+    def feedback_interval(self):return self.sequence.step()
+    def __copy__(self):
+        clone=super().__copy__();clone.sequence=copy.copy(self.sequence);return clone
+    def retarget(self,time,target_hz):
+        ratio=Fraction(target_hz,40000000);sequence=self.SEQUENCE_CLASS(ratio)
+        self.advance(time)
+        # Restart on an integer VCO edge in the periodic sequence, without a
+        # fractional edge or change to analog oscillator phase/filter charge.
+        period_cycles=2*ratio.numerator
+        target=math.floor(self.phase/period_cycles)*period_cycles
+        while target<=self.phase:target+=sequence.step()
+        old=self.current;self.sequence=sequence;self.feedback_target=target
+        self.divider=float(ratio);self.rate=self.reference_hz*self.divider
+        self.up=self.down=False;self.good=0;self.locked=False;self.first_lock=None
+        if old!=self.current:self.transitions.append((time,self.current))

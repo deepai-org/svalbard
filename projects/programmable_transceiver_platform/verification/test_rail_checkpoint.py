@@ -1,6 +1,11 @@
+"""Independent saved-trace integrity checks using synthetic timestamp/voltage arrays."""
 import unittest
 import numpy as np
 from probe_rail_startup import checkpoint_steps
+
+TEST_DESIGN_ROLES = {
+    'CheckpointTests': ('independent_fixture', 'Synthetic timestamp/voltage arrays test trace integrity.'),
+}
 
 class CheckpointTests(unittest.TestCase):
     def test_valid_trace(self):

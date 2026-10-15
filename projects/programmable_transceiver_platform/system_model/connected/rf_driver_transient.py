@@ -68,3 +68,13 @@ class CoupledDriver:
             r.driver_voltage=float(out[8]);r.driver_epoch=time;r.driver_slope=0.
         n.voltage=out[:4]+1j*out[4:8]
         self.rail_v=float(out[8]);self.time=time;n.time=time
+
+
+class CoupledLoad:
+    def __init__(self,driver):
+        self.driver=driver;self.network=driver.network;self.detector=driver.detector
+    def advance(self,time,terms):
+        origin=self.network.time;data=np.asarray(terms,complex)
+        def source(t):return complex(np.sum(data[:,0]*np.exp(data[:,1]*(t-origin))))
+        self.driver.advance(time,source,max_step=1e-9)
+        return self.network.voltage.copy()

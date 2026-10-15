@@ -1,0 +1,826 @@
+{
+  "design_provenance": {
+    "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+    "fingerprint_format": "canonical-json-sha256-v1",
+    "circuit_experiments": [],
+    "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"}
+  },
+  "cases": [
+    {
+      "local_feed_resistance_ohm": 2.0,
+      "internal_pulse_scale": 1.0,
+      "control": "joined",
+      "result": {
+        "design_provenance": {
+          "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"},
+          "engine": "wire",
+          "direction": "tx",
+          "clock_source": "external_high",
+          "reference_hz": 2500000000.0,
+          "host_divider": 8,
+          "host_word_hz": 312500000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "wired",
+          "line_rate_bps": 2500000000.0,
+          "wired_pad_path": "serial"
+        },
+        "scenario_overrides": [],
+        "probe_assumptions": {
+          "internal_switching_loads": [
+            {"owner":"timing","mean_a":0.01,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64},
+            {"owner":"core","mean_a":0.02,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+          ],
+          "reason": "Assigned internal-current pulse activity"
+        },
+        "initial_phase_ui": 0.35,
+        "initial_ppm": -100.0,
+        "substeps": 4,
+        "exact_roots": true,
+        "readiness": 1.0,
+        "final_qualified": true,
+        "detected_edges": 1232,
+        "errors": 0,
+        "minimum_margin_v": 0.28903234717703213
+      },
+      "trace": {
+        "design_provenance": {
+          "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"},
+          "engine": "wire",
+          "direction": "tx",
+          "clock_source": "external_high",
+          "reference_hz": 2500000000.0,
+          "host_divider": 8,
+          "host_word_hz": 312500000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "wired",
+          "line_rate_bps": 2500000000.0,
+          "wired_pad_path": "serial"
+        },
+        "scenario_overrides": [],
+        "probe_assumptions": {
+          "internal_switching_loads": [
+            {"owner":"timing","mean_a":0.01,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64},
+            {"owner":"core","mean_a":0.02,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+          ],
+          "reason": "Assigned internal-current pulse activity"
+        },
+        "readiness": 1.0,
+        "unready_bits": [],
+        "threshold_exceedances": [],
+        "noise_scale": 1.0,
+        "detector_at_bit_2055": [],
+        "heldout_peak_geometric_error_ui": 0.06005013426511141,
+        "scope": "Direct sequential receiver execution, compared with forecast/commit readiness. Latest error records may omit earlier crossings within a multi-crossing sample."
+      },
+      "no_detector_noise": {
+        "design_provenance": {
+          "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"},
+          "engine": "wire",
+          "direction": "tx",
+          "clock_source": "external_high",
+          "reference_hz": 2500000000.0,
+          "host_divider": 8,
+          "host_word_hz": 312500000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "wired",
+          "line_rate_bps": 2500000000.0,
+          "wired_pad_path": "serial"
+        },
+        "scenario_overrides": [],
+        "probe_assumptions": {
+          "internal_switching_loads": [
+            {"owner":"timing","mean_a":0.01,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64},
+            {"owner":"core","mean_a":0.02,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+          ],
+          "reason": "Assigned internal-current pulse activity"
+        },
+        "readiness": 1.0,
+        "unready_bits": [],
+        "threshold_exceedances": [],
+        "noise_scale": 0.0,
+        "detector_at_bit_2055": [],
+        "heldout_peak_geometric_error_ui": 0.058432021388398425,
+        "scope": "Direct sequential receiver execution, compared with forecast/commit readiness. Latest error records may omit earlier crossings within a multi-crossing sample."
+      }
+    },
+    {
+      "local_feed_resistance_ohm": 2.0,
+      "internal_pulse_scale": 1.0,
+      "control": "constant_clock",
+      "result": {
+        "design_provenance": {
+          "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"},
+          "engine": "wire",
+          "direction": "tx",
+          "clock_source": "external_high",
+          "reference_hz": 2500000000.0,
+          "host_divider": 8,
+          "host_word_hz": 312500000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "wired",
+          "line_rate_bps": 2500000000.0,
+          "wired_pad_path": "serial"
+        },
+        "scenario_overrides": [],
+        "probe_assumptions": {
+          "internal_switching_loads": [
+            {"owner":"timing","mean_a":0.01,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64},
+            {"owner":"core","mean_a":0.02,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+          ],
+          "reason": "Assigned internal-current pulse activity"
+        },
+        "initial_phase_ui": 0.35,
+        "initial_ppm": -100.0,
+        "substeps": 4,
+        "exact_roots": true,
+        "readiness": 1.0,
+        "final_qualified": true,
+        "detected_edges": 1232,
+        "errors": 0,
+        "minimum_margin_v": 0.286882818107732
+      },
+      "trace": null,
+      "no_detector_noise": null
+    },
+    {
+      "local_feed_resistance_ohm": 2.0,
+      "internal_pulse_scale": 1.0,
+      "control": "constant_driver_rail",
+      "result": {
+        "design_provenance": {
+          "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"},
+          "engine": "wire",
+          "direction": "tx",
+          "clock_source": "external_high",
+          "reference_hz": 2500000000.0,
+          "host_divider": 8,
+          "host_word_hz": 312500000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "wired",
+          "line_rate_bps": 2500000000.0,
+          "wired_pad_path": "serial"
+        },
+        "scenario_overrides": [],
+        "probe_assumptions": {
+          "internal_switching_loads": [
+            {"owner":"timing","mean_a":0.01,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64},
+            {"owner":"core","mean_a":0.02,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+          ],
+          "reason": "Assigned internal-current pulse activity"
+        },
+        "initial_phase_ui": 0.35,
+        "initial_ppm": -100.0,
+        "substeps": 4,
+        "exact_roots": true,
+        "readiness": 1.0,
+        "final_qualified": true,
+        "detected_edges": 1233,
+        "errors": 0,
+        "minimum_margin_v": 0.3083497836518729
+      },
+      "trace": null,
+      "no_detector_noise": null
+    },
+    {
+      "local_feed_resistance_ohm": 1.0,
+      "internal_pulse_scale": 1.0,
+      "control": "joined",
+      "result": {
+        "design_provenance": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+          "engine": "wire",
+          "direction": "tx",
+          "clock_source": "external_high",
+          "reference_hz": 2500000000.0,
+          "host_divider": 8,
+          "host_word_hz": 312500000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "wired",
+          "line_rate_bps": 2500000000.0,
+          "wired_pad_path": "serial"
+        },
+        "scenario_overrides": [],
+        "probe_assumptions": {
+          "internal_switching_loads": [
+            {"owner":"timing","mean_a":0.01,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64},
+            {"owner":"core","mean_a":0.02,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+          ],
+          "reason": "Assigned internal-current pulse activity"
+        },
+        "initial_phase_ui": 0.35,
+        "initial_ppm": -100.0,
+        "substeps": 4,
+        "exact_roots": true,
+        "readiness": 1.0,
+        "final_qualified": true,
+        "detected_edges": 1232,
+        "errors": 0,
+        "minimum_margin_v": 0.3057623865951996
+      },
+      "trace": {
+        "design_provenance": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+          "engine": "wire",
+          "direction": "tx",
+          "clock_source": "external_high",
+          "reference_hz": 2500000000.0,
+          "host_divider": 8,
+          "host_word_hz": 312500000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "wired",
+          "line_rate_bps": 2500000000.0,
+          "wired_pad_path": "serial"
+        },
+        "scenario_overrides": [],
+        "probe_assumptions": {
+          "internal_switching_loads": [
+            {"owner":"timing","mean_a":0.01,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64},
+            {"owner":"core","mean_a":0.02,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+          ],
+          "reason": "Assigned internal-current pulse activity"
+        },
+        "readiness": 1.0,
+        "unready_bits": [],
+        "threshold_exceedances": [],
+        "noise_scale": 1.0,
+        "detector_at_bit_2055": [],
+        "heldout_peak_geometric_error_ui": 0.06423322014097721,
+        "scope": "Direct sequential receiver execution, compared with forecast/commit readiness. Latest error records may omit earlier crossings within a multi-crossing sample."
+      },
+      "no_detector_noise": {
+        "design_provenance": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+          "engine": "wire",
+          "direction": "tx",
+          "clock_source": "external_high",
+          "reference_hz": 2500000000.0,
+          "host_divider": 8,
+          "host_word_hz": 312500000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "wired",
+          "line_rate_bps": 2500000000.0,
+          "wired_pad_path": "serial"
+        },
+        "scenario_overrides": [],
+        "probe_assumptions": {
+          "internal_switching_loads": [
+            {"owner":"timing","mean_a":0.01,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64},
+            {"owner":"core","mean_a":0.02,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+          ],
+          "reason": "Assigned internal-current pulse activity"
+        },
+        "readiness": 1.0,
+        "unready_bits": [],
+        "threshold_exceedances": [],
+        "noise_scale": 0.0,
+        "detector_at_bit_2055": [],
+        "heldout_peak_geometric_error_ui": 0.06192371203201219,
+        "scope": "Direct sequential receiver execution, compared with forecast/commit readiness. Latest error records may omit earlier crossings within a multi-crossing sample."
+      }
+    },
+    {
+      "local_feed_resistance_ohm": 1.0,
+      "internal_pulse_scale": 1.0,
+      "control": "constant_clock",
+      "result": {
+        "design_provenance": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+          "engine": "wire",
+          "direction": "tx",
+          "clock_source": "external_high",
+          "reference_hz": 2500000000.0,
+          "host_divider": 8,
+          "host_word_hz": 312500000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "wired",
+          "line_rate_bps": 2500000000.0,
+          "wired_pad_path": "serial"
+        },
+        "scenario_overrides": [],
+        "probe_assumptions": {
+          "internal_switching_loads": [
+            {"owner":"timing","mean_a":0.01,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64},
+            {"owner":"core","mean_a":0.02,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+          ],
+          "reason": "Assigned internal-current pulse activity"
+        },
+        "initial_phase_ui": 0.35,
+        "initial_ppm": -100.0,
+        "substeps": 4,
+        "exact_roots": true,
+        "readiness": 1.0,
+        "final_qualified": true,
+        "detected_edges": 1232,
+        "errors": 0,
+        "minimum_margin_v": 0.303063500622881
+      },
+      "trace": null,
+      "no_detector_noise": null
+    },
+    {
+      "local_feed_resistance_ohm": 1.0,
+      "internal_pulse_scale": 1.0,
+      "control": "constant_driver_rail",
+      "result": {
+        "design_provenance": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+          "engine": "wire",
+          "direction": "tx",
+          "clock_source": "external_high",
+          "reference_hz": 2500000000.0,
+          "host_divider": 8,
+          "host_word_hz": 312500000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "wired",
+          "line_rate_bps": 2500000000.0,
+          "wired_pad_path": "serial"
+        },
+        "scenario_overrides": [],
+        "probe_assumptions": {
+          "internal_switching_loads": [
+            {"owner":"timing","mean_a":0.01,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64},
+            {"owner":"core","mean_a":0.02,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+          ],
+          "reason": "Assigned internal-current pulse activity"
+        },
+        "initial_phase_ui": 0.35,
+        "initial_ppm": -100.0,
+        "substeps": 4,
+        "exact_roots": true,
+        "readiness": 1.0,
+        "final_qualified": true,
+        "detected_edges": 1233,
+        "errors": 0,
+        "minimum_margin_v": 0.32971671012504056
+      },
+      "trace": null,
+      "no_detector_noise": null
+    },
+    {
+      "local_feed_resistance_ohm": 2.0,
+      "internal_pulse_scale": 2.0,
+      "status": "load_rejected",
+      "clock": {
+        "status": "load_rejected",
+        "reason": "Internal pulse mean exceeds owner DC budget",
+        "design_provenance": {
+          "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"ec4787859863d3c51be390a0d4c2e32a772757fcd3d3e5400229b52a6bfbee96"},
+          "engine": "wire",
+          "direction": "tx",
+          "clock_source": "external_high",
+          "reference_hz": 2500000000.0,
+          "host_divider": 8,
+          "host_word_hz": 312500000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "wired",
+          "line_rate_bps": 2500000000.0,
+          "wired_pad_path": "serial"
+        },
+        "scenario_overrides": [],
+        "probe_assumptions": {
+          "internal_switching_loads": [
+            {"owner":"timing","mean_a":0.02,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64},
+            {"owner":"core","mean_a":0.04,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+          ],
+          "reason": "Assigned internal-current pulse activity"
+        }
+      }
+    },
+    {
+      "local_feed_resistance_ohm": 1.0,
+      "internal_pulse_scale": 2.0,
+      "status": "load_rejected",
+      "clock": {
+        "status": "load_rejected",
+        "reason": "Internal pulse mean exceeds owner DC budget",
+        "design_provenance": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+          "engine": "wire",
+          "direction": "tx",
+          "clock_source": "external_high",
+          "reference_hz": 2500000000.0,
+          "host_divider": 8,
+          "host_word_hz": 312500000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "wired",
+          "line_rate_bps": 2500000000.0,
+          "wired_pad_path": "serial"
+        },
+        "scenario_overrides": [],
+        "probe_assumptions": {
+          "internal_switching_loads": [
+            {"owner":"timing","mean_a":0.02,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64},
+            {"owner":"core","mean_a":0.04,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+          ],
+          "reason": "Assigned internal-current pulse activity"
+        }
+      }
+    }
+  ],
+  "sensitivity_controls": [
+    {
+      "sensitivity_ps_per_mv": 0.025,
+      "status": "load_rejected",
+      "clock": {
+        "status": "load_rejected",
+        "reason": "Internal pulse mean exceeds owner DC budget",
+        "design_provenance": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+          "engine": "wire",
+          "direction": "tx",
+          "clock_source": "external_high",
+          "reference_hz": 2500000000.0,
+          "host_divider": 8,
+          "host_word_hz": 312500000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "wired",
+          "line_rate_bps": 2500000000.0,
+          "wired_pad_path": "serial"
+        },
+        "scenario_overrides": [],
+        "probe_assumptions": {
+          "internal_switching_loads": [
+            {"owner":"timing","mean_a":0.02,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64},
+            {"owner":"core","mean_a":0.04,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+          ],
+          "reason": "Assigned current pulses and supply-delay sensitivity",
+          "sensitivity_ps_per_mv": 0.025
+        }
+      }
+    },
+    {
+      "sensitivity_ps_per_mv": 0.0125,
+      "status": "load_rejected",
+      "clock": {
+        "status": "load_rejected",
+        "reason": "Internal pulse mean exceeds owner DC budget",
+        "design_provenance": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+          "engine": "wire",
+          "direction": "tx",
+          "clock_source": "external_high",
+          "reference_hz": 2500000000.0,
+          "host_divider": 8,
+          "host_word_hz": 312500000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "wired",
+          "line_rate_bps": 2500000000.0,
+          "wired_pad_path": "serial"
+        },
+        "scenario_overrides": [],
+        "probe_assumptions": {
+          "internal_switching_loads": [
+            {"owner":"timing","mean_a":0.02,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64},
+            {"owner":"core","mean_a":0.04,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+          ],
+          "reason": "Assigned current pulses and supply-delay sensitivity",
+          "sensitivity_ps_per_mv": 0.0125
+        }
+      }
+    },
+    {
+      "sensitivity_ps_per_mv": 0.0,
+      "status": "load_rejected",
+      "clock": {
+        "status": "load_rejected",
+        "reason": "Internal pulse mean exceeds owner DC budget",
+        "design_provenance": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"}
+        },
+        "resolved_configuration": {
+          "design_fingerprint": "aef4f57937385f616e83eb5a98dcdb2e0c32ef185242d89c447e990d8b8f3e0c",
+          "fingerprint_format": "canonical-json-sha256-v1",
+          "circuit_experiments": [
+            {
+              "changes": [
+                {"after":1.0,"before":2.0,"path":"blocks.power.parameters.reduced_pdn_model.network.package_r"}
+              ],
+              "kind": "hypothetical_circuit",
+              "parent_design_fingerprint": "3e9e5bb45fcb892c18a36d17a8fb778197a37c1773535177b8a4230f81703e42",
+              "reason": "Matched feed-resistance mitigation experiment"
+            }
+          ],
+          "documents": {"spec/contract.json":"2750597347f22744ab1b3bad2b04d84752a3d7ccd1cdf66ec678526f9e1c7b9e","spec/analog-architecture.json":"814276f49881ad3919b559ff7e9fbf9b9461a6afe7bd8f0af2490c4d8fcc9dc1"},
+          "engine": "wire",
+          "direction": "tx",
+          "clock_source": "external_high",
+          "reference_hz": 2500000000.0,
+          "host_divider": 8,
+          "host_word_hz": 312500000.0,
+          "host_clock_source": "reference_divider",
+          "host_input_hz": null,
+          "inventory_mode": "wired",
+          "line_rate_bps": 2500000000.0,
+          "wired_pad_path": "serial"
+        },
+        "scenario_overrides": [],
+        "probe_assumptions": {
+          "internal_switching_loads": [
+            {"owner":"timing","mean_a":0.02,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64},
+            {"owner":"core","mean_a":0.04,"event_hz":156250000.0,"tau_s":2e-10,"harmonics":64}
+          ],
+          "reason": "Assigned current pulses and supply-delay sensitivity",
+          "sensitivity_ps_per_mv": 0.0
+        }
+      }
+    }
+  ],
+  "sources_sha256": {"spec/analog-architecture.json":"13c1b6681b7bd51c7c5b5833d83662376ac348b5f299e4b3fd38fc5c9742b8c0","spec/block-diagram.md":"5668e9884a88d137c54699c6ffb41b1cd204ae4d008ee51dbea0301845ae1362","spec/contract.json":"e0e0e01aed0edd692d4ac4467432f60b979e5e03eecb4133d1b34a4d1b353c90","spec/power-partition.md":"0939d93d16f24d4f53deb60f9783d56bc19e8c86659e67d9b1308fae9ab17ac7","system_model/architecture_fast/behavioral.py":"789de0c8652068ee9e70b60769f84b23a56239355004db4d04c001d9ee72afb6","system_model/architecture_fast/design_definition.py":"fcf5294175594ad29078bfa5856cd8259d8c61c6427bd280925bc90c6309edb5","system_model/architecture_fast/direct_stream.py":"63a867e3822ca3e7d619eb8381c232eafb52e3d31be76a4590c6e05eb22f2c58","system_model/architecture_fast/receive_qualification.py":"3dc2b764cc475f05ec673c48be82a0807fd84059bf9698d639b0d9c5db1ec62e","system_model/architecture_fast/resource_configuration.py":"a4ccb386b0d22908d47cc037451c4d3ebaf847a5ab6a71ee415384f75197fcb6","system_model/architecture_fast/rf_air_timing.py":"8fe69abd513384cfcfb188bdc4746fc6f104a1f8716fe4af29fb0a59ef9f9a93","system_model/architecture_fast/rf_quality_budget.py":"6d22c9637bc0165cdae9c6f5ee4a4116156f82f44cb878f9e46c5a24ec2955d7","system_model/connected/autonomous_pll.py":"874c8d1cf55ee0147f0b532fa942979adc5ef8a142656a58cb69ca568c5c284d","system_model/connected/bit_event_stream.py":"bb366ecdf97b25beb07a7562926321e4253c2b55323261f5fe4ff6d90a4746da","system_model/connected/burst_codec.py":"924f843f70f68cdede2def9fcc4bca91971e24fe194cb928c87dce2437dddd90","system_model/connected/charge_pump_filter.py":"30352d2ccfdc8b5b071838f55d7eba78e370167ca3daf4ba9d99e7a51f06e9f9","system_model/connected/chip_model.py":"acdcc87e84021edf7b8ed3044b4ac8ea75910378befd6d066a1577442fba10ee","system_model/connected/compliant_edge_pll.py":"24d4cc5658766e4ddb051440d868db2ffe77dd7d32172c9a94211d2e78055374","system_model/connected/compliant_pump_filter.py":"666f6c9b44e7caa4614b1355d944457e17daf01d9472d95b5e480971122af48b","system_model/connected/edge_pump_pll.py":"93d0d1997e7477af86b3d508ef23ef33c482aea6a925c488cbc0d93e7847cbeb","system_model/connected/fractional_pulse_pll.py":"5eff5b4baa16d5d04dadf616f255ef457042d5907a97800478fcfb7f5f2ef6ab","system_model/connected/fractional_pulse_screen.py":"f9945e04bea0d5442a5054459d149c902540f8c747fcfcde05c6423a7757a51b","system_model/connected/lane_group.py":"83803ee2a0b0b9c2a6f22df0bcca0eea93b83b2bbf3cd9e61da8031be8636d95","system_model/connected/loopback_return.py":"e14913a01e40e6e2e8c41e6f5594a42c39e76467a06e88d0ee930e82e4dd0a20","system_model/connected/oscillator_noise.py":"0faed15e487ba1873bb2952cb1a670fdac95401dc95f8cce19fc5b43a6ed8357","system_model/connected/protocol_pad.py":"5952cd92525700b75b9a5cbb2537d759d03c080e64750cb1e7836d744926dc09","system_model/connected/protocol_signals.py":"40a3162c7cea53d2647f4a30f39c83aa127077a6a30ec55788535885150ac019","system_model/connected/reference_sample_clock.py":"eac299cab5a031e0261380f7d27a0b61e85702a1e34b6e9d45d5f8c1b820d67a","system_model/connected/sampled_pll.py":"809db79a6cd5315d1f46a7f6d42a06dd9f64a308c2b63726729b79734daf86b6","system_model/connected/shaped_fractional_pll.py":"0fcf1e9a56d1174b53fb718762e7a59e1c425239f10d4373ba60ebda848def03","system_model/connected/tx_dac_correction.py":"016e5a860d1a06170b991f3fff4f8c4d6667282464b97f747e07589f7361e6d2","system_model/connected/tx_iq_calibration.py":"dce73e9f545e7b2a4d0d45a5375e5e1c6d30d8cd9d335e0fec874a765a623a7b","system_model/connected/tx_output_candidate.py":"e2f9a092ca4da7c27a9eb3ea06a8c9efc27eed9bb5a34246eb600b0c61528684","system_model/connected/tx_output_stage.py":"f011be67bd9250711ba64433ccd8d19cdd06494dfc0ba72f7d7382f970bf5210","system_model/connected/wired_blocks.py":"51f635f16d6782e73f2706fa5235589dde0154c0e57bd7c65744b7cf150176be","verification/baseline_envelope.py":"40258ebd9e28223a486b7b456e4f6d36d00a3546474f5b98aba4fb486da0d959","verification/bit_event_codec.py":"61174512d20bd5197c92457a0a0b4f376a3c52b180df4021da1ad323b52c1b87","verification/ble_packet.py":"24ccdf40ba344683e90a25b79e05ccb3cf889f7dc9f30808ac95f04bf39f84a6","verification/block_receiver_model.py":"07bcc89f8970de4ef8ebe8add99eaea0a08d7c388b43148daa4f9841a891f58e","verification/check_contract.py":"592870be20a7e58e29d19e8e78aa96f581cb1b8add0e66c2fa6902f58622559c","verification/converter_dynamics.py":"abc70d2e3226723e960eceeca92a8bd2a85cdfd2bce7527e4f7584604845dc94","verification/recovery_mailbox.py":"db93895b2246618aaf16322a332228726d5d61dd11ce00a30ab5299a184d1d95","verification/reference_input_probe.py":"bd6118b10571c816abecc9dda5dd1aa1ba250def211a13fd0790dd313ac93872","verification/rf_gain_command.py":"263fc534ce1992f81a5c156bb950cfadde2f9ed0c63e855a0fff131b1b6a70f3","verification/rf_power_calibration.py":"84f15999b083aba65e2df46c3945148f53c95cc85685c1bd2f508155b6dde4ef","verification/rf_timing_command.py":"797fe4ba20c61ee73e9b3cacee05c320151d731bae492bcf21f998b3e85a3f26","verification/robustness_envelope.py":"0259b23c24d2d49a4eea4bec656a9502bb3a89668b54a1e0aa2d3bf0f05aca38","verification/selected_lifecycle.py":"f7a53d54cb1d13a8ea6d71bbc453775c2c9b5f1f9b8a03a90eb90026e5a735e1","verification/selected_revision_check.py":"a42b15d922c2c5ed41598a2e6af9cb3d80929a0531afa4ce691db97768257ed6","verification/selected_rf.py":"ec710fa7c9524f7089b54b7bce5917f03b1267197b94ca3c2c5e002d0caae1d9","verification/stream_codec.py":"4ac4a5c6663a963105905edcb3478feefacecede391df3d021e3daab4dd3bda7","verification/transport_model.py":"accda58cfe3c130a8a4967bd9704cdc36bc5e0026f0a0a794ab8077a566d8a8f","verification/usb_selected_timing.py":"b2acb539ff638601ffa9890df381172c4c42bced6d7681f21ddbe9d09b688906","verification/wideband_packet.py":"2aa64e80b6425805b66872da05c7597e153b0fd4a8380eb93e553b83bdc50538","verification/wired_envelope.py":"f0eaf08d4f3acb3039b8c0570cf41a20fc9fcdc25f9faeaf5ee4976fbe95b5ba","verification/wired_lock_probe.py":"a8d47e1411b11da82deabadfa69f911171a2b9c0b5cf02997d76324e6042fe0b","verification/feed_failure_probe.py":"ae50ad23d8121faa3c61ccb6b75e3f3beb4b61a71100a02d878cf6e2f8ef348b"},
+  "scope": "Matched 2x2 feed/activity comparison at prescribed launch 12 UI, +0.35 UI peer phase, -100 ppm and positive supply-delay sign. Constant-clock and constant-driver-rail are diagnostic interventions, not implementable mitigations. Root-localized crossings, unchanged readiness, 1200 held-out bits. No full lifecycle, long BER or physical detector qualification."
+}

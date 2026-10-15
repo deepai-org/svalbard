@@ -9,6 +9,44 @@ RATES=(None,480e6,1.25e9,1.5e9,1.62e9,2.5e9,.7425e9,1.485e9)
 MASK=(1<<9)-1
 
 
+def validate_host_service(*, encoding, word_hz, board_max_word_hz,
+                          arrival_bps, queue_bits, burst_bits,
+                          service_latency_s, stall_fraction=0.,
+                          control_fraction=0., source_fast_ppm=0.,
+                          host_slow_ppm=0.):
+    """Conditional per-direction rate/latency admission, not GPIO qualification.
+
+    Caller guarantees rate-latency service even under recurring stalls:
+    departure service >= R*max(0,t-T) for every backlogged interval. A measured
+    mean stall fraction alone cannot establish this guarantee. T includes
+    staging, CDC, framing gaps and maximum accumulated service interruption.
+    """
+    import math
+    values=(word_hz,board_max_word_hz,arrival_bps,queue_bits,burst_bits,
+            service_latency_s,stall_fraction,control_fraction,
+            source_fast_ppm,host_slow_ppm)
+    if not all(math.isfinite(x) and x>=0 for x in values):
+        raise ValueError('Finite nonnegative host-service envelope required')
+    if (encoding not in ('direct','dense') or min(word_hz,board_max_word_hz)<=0
+            or max(stall_fraction,control_fraction)>=1 or host_slow_ppm>=1e6):
+        raise ValueError('Invalid host-service encoding or service fraction')
+    ceiling=100e6 if encoding=='direct' else 312.5e6
+    if word_hz>min(ceiling,board_max_word_hz):
+        raise ValueError('Host word rate exceeds selected encoding or board limit')
+    payload=8 if encoding=='direct' else 10*59/64
+    service=word_hz*(1-host_slow_ppm/1e6)*payload*(1-stall_fraction)*(1-control_fraction)
+    arrival=arrival_bps*(1+source_fast_ppm/1e6)
+    backlog=math.ceil(burst_bits+arrival*service_latency_s)
+    if arrival>service:
+        raise ValueError('Sustained payload exceeds guaranteed host service')
+    if backlog>queue_bits:
+        raise ValueError('Bounded service interruption exceeds queue reserve')
+    return dict(encoding=encoding,arrival_bps=arrival,service_bps=service,
+                backlog_bound_bits=backlog,queue_margin_bits=queue_bits-backlog,
+                physical_qualification=False,
+                scope='Conditional supplied rate-latency envelope, not measured board service')
+
+
 def decode_resource_word(word):
     if type(word) is not int or not 0<=word<=MASK:
         raise ValueError('Reserved resource configuration bits or invalid payload')
@@ -93,7 +131,7 @@ def validate_wire_timing(line_rate_bps, clock_source='embedded', reference_hz=No
 
 def validate_rf_settings(sample_hz=40e6, tx_cutoff_hz=20e6,
                          rx_cutoff_hz=9.157407e6, rx_gain=1., rx_filter_order=1, converter_bits=12,
-                         sample_clock_source='reference', lo_hz=None, lo_divider=None):
+                         sample_clock_source='reference', lo_hz=None, lo_divider=None, filter_ranges=None):
     """Generic candidate filter-bank/divider settings, not protocol selectors.
 
     Reference divisors reuse 40 MHz. An alternate direct-LO candidate uses
@@ -101,6 +139,8 @@ def validate_rf_settings(sample_hz=40e6, tx_cutoff_hz=20e6,
     This validates rate ownership, not a physical divider or input receiver.
     8/12-bit precision is independent of rate.
     Cutoffs are one-sided analog poles, not occupied channel bandwidths.
+    Shared-design adapters supply paired filter ranges; omitted ranges retain
+    the independent primitive candidate envelope.
     """
     import math
     if type(rx_filter_order) is not int or rx_filter_order not in (1,5):
@@ -117,7 +157,7 @@ def validate_rf_settings(sample_hz=40e6, tx_cutoff_hz=20e6,
         if sample_hz not in (5e6,10e6,20e6,40e6):
             raise ValueError('Unsupported reference divider')
     elif sample_clock_source=='external_lo':
-        if (lo_hz is None or not math.isfinite(lo_hz) or not 2.4e9<=lo_hz<=2.484e9
+        if (lo_hz is None or not math.isfinite(lo_hz) or not 2.4e9<=lo_hz<=2.5e9
                 or type(lo_divider) is not int or lo_divider not in (64,128,256,512)):
             raise ValueError('External LO candidate needs bounded carrier and integer divider')
         if not math.isclose(sample_hz,lo_hz/lo_divider,rel_tol=1e-12):
@@ -125,7 +165,15 @@ def validate_rf_settings(sample_hz=40e6, tx_cutoff_hz=20e6,
         clock=dict(sample_clock_source=sample_clock_source,lo_hz=lo_hz,lo_divider=lo_divider)
     else:
         raise ValueError('Unknown RF sample clock owner')
-    if not (.1e6<=rx_cutoff_hz<=9.157407e6 and .1e6<=tx_cutoff_hz<=20e6
+    ranges={'rx':(.1e6,9.53125e6),'tx':(.1e6,20e6)} if filter_ranges is None else filter_ranges
+    if not isinstance(ranges,dict) or set(ranges)!={'rx','tx'}:
+        raise ValueError('Complete paired RX/TX filter ranges required')
+    for pair in ranges.values():
+        if (not isinstance(pair,(tuple,list)) or len(pair)!=2
+                or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) for v in pair)
+                or not 0<pair[0]<=pair[1]):
+            raise ValueError('Positive finite ordered filter ranges required')
+    if not (ranges['rx'][0]<=rx_cutoff_hz<=ranges['rx'][1] and ranges['tx'][0]<=tx_cutoff_hz<=ranges['tx'][1]
             and max(tx_cutoff_hz,rx_cutoff_hz)<=sample_hz/2 and .5<=rx_gain<=2.):
         raise ValueError('RF setting outside candidate envelope')
     return dict(sample_hz=sample_hz,tx_cutoff_hz=tx_cutoff_hz,

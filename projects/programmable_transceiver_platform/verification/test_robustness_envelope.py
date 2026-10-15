@@ -12,10 +12,114 @@ from resource_configuration import validate_rf_settings
 from oscillator_noise import PhaseNoise
 
 
+from design_definition import load_design
+
+
+# Intent declarations do not certify parameter binding or analog feasibility.
+TEST_DESIGN_ROLES = {
+    'EvidenceSerializationTests': ('independent_fixture', 'Synthetic evidence serialization and atomic-write failure controls.'),
+    'AnalogReadinessTests': ('shared_design', 'Shared wire configuration and transport; qualification events are prescribed fault stimuli.'),
+    'RecoveryStudyTests': ('independent_fixture', 'Assigned impairment and known-prefix estimation studies; contract recipes supply waveforms, not a chip factory.'),
+    'CoverageTests': ('independent_fixture', 'Synthetic capability observations and explicitly assigned diagnostic waveform alternatives.'),
+    'RobustnessTests': ('independent_fixture', 'Independent resampling, clipping and clock-rule fixtures with assigned analog performance; no current-chip acceptance.'),
+    'SpectralClockTests': ('independent_fixture', 'Analytical phase spectra, injection guards and assigned mitigation alternatives; not selected clock performance.'),
+    'HostPdnTests': ('independent_fixture', 'Independent passive-network equations and hypothetical damping examples.'),
+    'DiagnosticTests': ('independent_fixture', 'Synthetic observability hypotheses and assigned receiver impairments.'),
+    'TxSpectralTests': ('independent_fixture', 'Assigned DAC, filter and output-compliance studies with independent spectral expectations.'),
+    'WiredEnvelopeTests': ('independent_fixture', 'Hypothetical channel sweeps, inverse resource budgets and independent stateful channel witnesses.'),
+    'SharedSupplyTimingTests': ('independent_fixture', 'Prescribed ripple and delay sensitivities checked against independent units and coherent-sum equations.'),
+    'RFTransitionBudgetTests': ('independent_fixture', 'Assigned clocks, settling intervals and response deadlines exercise transition arithmetic and rejection rules.'),
+    'HostDrivenReceiverTests': ('independent_fixture', 'Deliberately nonmonotonic sampling-clock rejection fixture.'),
+    'HostDrivenRFTests': ('independent_fixture', 'Assigned phase tones checked against an independent root solver.'),
+    'BidirectionalHostTests': ('independent_fixture', 'Independent current-port equations and frozen diagnostic network; not current-chip acceptance.'),
+    'CommonFeedPowerTests': ('independent_fixture', 'Assigned common-feed topology, loads and frozen harmonic fixture checked by conservation.'),
+    'AbsoluteRFTests': ('independent_fixture', 'Assigned gain/noise budgets and frozen diagnostic network; not selected sensitivity qualification.'),
+    'ReferenceSupplyTests': ('independent_fixture', 'Independent conversion/aliasing equations and frozen diagnostic reference-rejection alternatives.'),
+    'RFClockSpurTests': ('independent_fixture', 'Prescribed phase tones checked against Bessel coefficients and cancellation.'),
+    'LocalCapacitorNetworkTests': ('independent_fixture', 'Independent passive-network power conservation and limiting cases.'),
+    'LoadedClockInputTests': ('independent_fixture', 'Assigned clock-input primitive checked against threshold, quadrature and noise-scaling equations.'),
+    'AnalogWakeTests': ('independent_fixture', 'Hypothetical passive network checked against independent nodal solutions and load scaling.'),
+    'WidebandFilterRequirementsTests': ('independent_fixture', 'Inverse filter-order and tuning-sensitivity study with prescribed requirements.'),
+    'WidebandFilterWaveformTests': ('independent_fixture', 'Hypothetical filter alternatives and training waveforms checked at two numerical resolutions.'),
+    'FiniteCaptureTests': ('shared_design', 'Shared wire configuration, startup and queue with explicitly adverse service rate and finite capture stimuli.'),
+    'MissingD2HClockTests': ('shared_design', 'Shared RF transport rates, startup and queue; prescribed reference gaps test watchdog behavior.'),
+    'CoverageTests.test_coverage_does_not_hide_missing_target_or_failed_recipe': ('shared_design', 'Shared contract target inventory checked with deliberately synthetic pass/fail observations.'),
+}
+
+class EvidenceSerializationTests(unittest.TestCase):
+    def test_numpy_results_survive_and_invalid_results_preserve_prior_snapshot(self):
+        from tempfile import TemporaryDirectory
+        from pathlib import Path
+        from robustness_envelope import write_evidence
+        with TemporaryDirectory() as directory:
+            path=Path(directory)/'evidence.json'
+            result={'cases':[{'accepted':np.bool_(False),'count':np.int64(3),
+                              'interval':np.array([1.,2.])}]}
+            write_evidence(path,result)
+            self.assertEqual(json.loads(path.read_text()),
+                {'cases':[{'accepted':False,'count':3,'interval':[1.,2.]}]})
+            before=path.read_bytes()
+            with self.assertRaises(ValueError):write_evidence(path,{'invalid':np.array([np.nan])})
+            self.assertEqual(path.read_bytes(),before)
+            with self.assertRaises(TypeError):write_evidence(path,{'invalid':1j})
+            self.assertEqual(path.read_bytes(),before)
+
+
+class AnalogReadinessTests(unittest.TestCase):
+    """Shared transport with prescribed qualification observations, not analog proof."""
+    def setUp(self):
+        from baseline_envelope import configured_environment
+        from selected_lifecycle import selected_transport_assumptions
+        self.design=load_design()
+        self.config=self.design.configure(engine='wire',direction='rx',
+                                          reference_hz=1.25e9,host_divider=8)
+        self.assumptions=selected_transport_assumptions(configured_environment(self.config))
+        self.guard=self.assumptions.startup_s
+        self.depth=self.design.contract["transport"]["scheduling"]["ingress_bits_per_source"]
+
+    def chip(self,events):
+        chip=BehavioralChip(self.assumptions)
+        chip.configure_numeric(engine='wire',timing=dict(line_rate_bps=self.config.line_rate_bps))
+        chip.configure_transport('exclusive');chip.attach_analog_qualification(events)
+        return chip
+
+    def test_late_qualification_defers_payload_and_restarts_guard(self):
+        chip=self.chip([(0.,False),(self.guard-.05e-6,True)])
+        chip.start();chip.advance(self.guard)
+        self.assertEqual(chip.state,'acquiring')
+        self.assertAlmostEqual(chip.ready_at,2*self.guard-.05e-6,places=16)
+        with self.assertRaises(ValueError):
+            chip.transfer(mode=1,source_hz=125e6,sample_bits=10,frames=4,depth_bits=self.depth,directions=('rx',),epoch=chip.epoch)
+        chip.advance(chip.ready_at);self.assertEqual(chip.state,'active')
+
+    def test_active_analog_loss_stops_before_data_and_requires_new_epoch(self):
+        chip=self.chip([(0.,True),(self.guard+1e-6,False),(self.guard+2e-6,True)])
+        chip.start();chip.advance(chip.ready_at);old_epoch=chip.epoch
+        source=chip.bind_stream_callback(lambda i:(i*13)&1023)
+        flow=chip.transfer(mode=1,source_hz=125e6,sample_bits=10,frames=16,
+            directions=('rx',),depth_bits=self.depth,epoch=old_epoch,rx_source=source,until_s=3e-6)
+        self.assertEqual(flow['fault'],'analog_unqualified')
+        self.assertAlmostEqual(chip.time,self.guard+1e-6,places=16)
+        self.assertGreater(flow['returned_bits'],0)
+        discarded=chip.stop()
+        self.assertEqual(flow['produced_bits'],flow['returned_bits']+discarded['rx_bits'])
+        with self.assertRaises(ValueError):source(0)
+        chip.advance(self.guard+2e-6);chip.start();chip.advance(chip.ready_at)
+        self.assertAlmostEqual(chip.time,2*self.guard+2e-6,places=16)
+        self.assertEqual(chip.state,'active');self.assertNotEqual(chip.epoch,old_epoch)
+
+    def test_idle_active_state_also_detects_analog_loss(self):
+        from behavioral import AnalogQualificationError
+        chip=self.chip([(0.,True),(self.guard+1e-6,False)])
+        chip.start();chip.advance(chip.ready_at)
+        with self.assertRaises(AnalogQualificationError):chip.advance(self.guard+2e-6)
+        self.assertEqual(chip.state,'fault');self.assertAlmostEqual(chip.time,self.guard+1e-6,places=16)
+
+
 class RecoveryStudyTests(unittest.TestCase):
     def test_longer_known_prefix_improves_estimation_without_hiding_wideband_failure(self):
         from robustness_envelope import lora_recovery_suite
-        r=lora_recovery_suite(json.loads((P/'spec/contract.json').read_text()))
+        r=lora_recovery_suite(load_design().contract)
         rows=[x for x in r['cases'] if x['rx_cutoff_multiplier']==1 and x['blocker'] is None]
         for recipe in {x['recipe'] for x in rows}:
             short=[x for x in rows if x['recipe']==recipe and x['training_samples']==512]
@@ -36,7 +140,7 @@ class RecoveryStudyTests(unittest.TestCase):
 
     def test_frequency_estimator_does_not_use_payload_labels(self):
         from robustness_envelope import make_wave, external_settings, CASES
-        c=json.loads((P/'spec/contract.json').read_text())
+        c=load_design().contract
         case=next(x for x in c['behavioral_configuration_cases'] if x['id']=='lora_24__5000000.0')
         settings=external_settings(case['rf'],2.437e9)
         a=replace(Assumptions(),**CASES['moderate_precision'])
@@ -49,69 +153,12 @@ class RecoveryStudyTests(unittest.TestCase):
         self.assertEqual(estimates[0],estimates[1])
 
 
-class ResourceJoinTests(unittest.TestCase):
-    def test_host_internal_charge_and_board_impedance_tradeoff(self):
-        from robustness_envelope import joined_rf_resource_screen,host_charge_pdn_bridge
-        c=json.loads((P/'spec/contract.json').read_text())
-        result=host_charge_pdn_bridge(c,joined_rf_resource_screen(c))
-        rows={r['name']:r for r in result['cases']}
-        base,more,low=[rows[k] for k in ('existing_10uf','more_capacitance','lower_esr')]
-        self.assertAlmostEqual(base['host_activity_current_tone_peak_a'],.5*(base['host_data_capacitive_average_a']+base['host_data_internal_average_a']))
-        self.assertAlmostEqual(base['host_data_internal_average_a']/base['host_data_capacitive_average_a'],14/33)
-        self.assertLess(abs(more['die_ripple_peak_v']/base['die_ripple_peak_v']-1),.01)
-        self.assertLess(low['die_ripple_peak_v'],.6*base['die_ripple_peak_v'])
-        self.assertEqual(base['modeled_clock_rail_dc_v'],low['modeled_clock_rail_dc_v'])
-        self.assertLess(base['modeled_clock_rail_dc_v'],3.12)
-        feed=rows['lower_feed_resistance'];adverse=rows['lower_feed_adverse_cap']
-        self.assertEqual(feed['network']['package_r'],base['network']['package_r'])
-        self.assertAlmostEqual(feed['modeled_clock_rail_dc_v']-base['modeled_clock_rail_dc_v'],1.9*(base['host_average_current_a']+base['clock_victim_current_a']))
-        self.assertAlmostEqual(feed['dc_board_feed_loss_w']/base['dc_board_feed_loss_w'],.05)
-        self.assertGreater(feed['transfer_scan_peak']['transimpedance_ohm'],base['transfer_scan_peak']['transimpedance_ohm'])
-        for candidate in (feed,adverse):
-            self.assertGreater(candidate['modeled_clock_rail_dc_v'],3.24)
-            self.assertTrue(next(x for x in candidate['spectral_cases'] if x['board_blocker_attenuation_db']==20)['quality']['conditional_waveform_pass'])
-
-        for r in rows.values():
-            self.assertLess(r['kcl_residual_a'],1e-10)
-            self.assertTrue(all(not x['quality']['conditional_waveform_pass'] for x in r['spectral_cases'] if x['board_blocker_attenuation_db']==0))
-
-
-    def test_joined_dc_rail_reaches_signal_path_and_retains_clock_failures(self):
-        from robustness_envelope import joined_rf_resource_screen,rf_dc_quality_bridge
-        c=json.loads((P/'spec/contract.json').read_text());budgets=joined_rf_resource_screen(c)
-        report=rf_dc_quality_bridge(c,budgets)
-        chosen=[]
-        for r in report['cases']:
-            budget=next(x for x in budgets['cases'] if x['lo_hz']==2.437e9 and x['clock_static_current_a']==.012 and x['data_rising_probability']==r['data_rising_probability'])
-            self.assertEqual(r['rf_rail_v'],budget['estimated_rail_v']['RF'])
-            good=next(x for x in r['spectral_cases'] if x['clock']=='external_clean' and x['rail_ripple_peak_v']==.001 and x['board_blocker_attenuation_db']==20)
-            self.assertTrue(good['quality']['conditional_waveform_pass'])
-            self.assertTrue(all(not x['quality']['conditional_waveform_pass'] for x in r['spectral_cases'] if x['clock']=='external_noisy' or x['rail_ripple_peak_v']==.01))
-            chosen.append((r['rf_rail_v'],good['pga_headroom']['signal_peak_per_component_v']))
-        self.assertLess(chosen[1][0],chosen[0][0])
-        self.assertAlmostEqual(chosen[1][1]/chosen[0][1],chosen[1][0]/chosen[0][0],places=12)
-
-
-    def test_join_charges_host_transitions_and_rf_driver_once(self):
-        from robustness_envelope import joined_rf_resource_screen
-        report=joined_rf_resource_screen(json.loads((P/'spec/contract.json').read_text()))
-        rows=report['cases']
-        for r in rows:
-            self.assertEqual(r['assigned_current_a']['RF'],.037)
-            self.assertAlmostEqual(r['total_assigned_supply_power_w'],3.3*sum(r['assigned_current_a'].values()))
-        low=[r for r in rows if r['clock_static_current_a']==.012]
-        self.assertTrue(all(r['conditional_allocation_pass'] for r in low))
-        medium=[r for r in rows if r['clock_static_current_a']==.024]
-        self.assertTrue(all(r['conditional_allocation_pass']==(r['lo_hz']==2.4e9) for r in medium))
-        worst=next(r for r in low if r['lo_hz']==2.484e9 and r['data_rising_probability']==.5)
-        self.assertAlmostEqual(worst['assigned_current_a']['HOST_B'],.0457805)
-        self.assertFalse(report['joint_fit_verified'])
 
 
 class CoverageTests(unittest.TestCase):
     def test_weak_recipe_controls_retain_deterministic_error(self):
         from robustness_envelope import weak_rf_recipe_controls
-        r=weak_rf_recipe_controls(json.loads((P/'spec/contract.json').read_text()))
+        r=weak_rf_recipe_controls(load_design().contract)
         ble=next(x for x in r['cases'] if x['recipe'].startswith('bluetooth_le_2m') and x['lo_hz']==2.4e9)
         self.assertGreater(ble['quality']['evm_rms'],.1)
         self.assertEqual(ble['quality']['symbol_errors'],0)
@@ -132,7 +179,7 @@ class CoverageTests(unittest.TestCase):
 
     def test_coverage_does_not_hide_missing_target_or_failed_recipe(self):
         from robustness_envelope import capability_coverage
-        contract=json.loads((P/'spec/contract.json').read_text())
+        contract=load_design().contract
         recipe=next(c['id'] for c in contract['behavioral_configuration_cases'] if c.get('fixture')=='bluetooth_le')
         configs={name:dict(recipe=recipe,clock='external_lo',lo_hz=lo) for name,lo in [('a',2.4e9),('b',2.48e9)]}
         observations=[dict(configuration_id=name,impairment_case='moderate_precision',fpga_resampling=True,
@@ -180,7 +227,7 @@ class RobustnessTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.contract=json.loads((P/'spec/contract.json').read_text())
+        cls.contract=load_design().contract
         cls.settings=next(c['rf'] for c in cls.contract['behavioral_configuration_cases']
                           if c['id']=='wifi_he20__40000000.0')
 
@@ -296,7 +343,7 @@ class SpectralClockTests(unittest.TestCase):
         self.assertLess(cancelled.variance_rad2,1e-25)
 
     def test_shared_clock_and_legacy_phase_are_not_double_counted(self):
-        contract=json.loads((P/'spec/contract.json').read_text())
+        contract=load_design().contract
         base=next(c['rf'] for c in contract['behavioral_configuration_cases']
                   if c['id']=='wifi_he20__40000000.0')
         s=external_settings(base,2.437e9)
@@ -334,7 +381,7 @@ class SpectralClockTests(unittest.TestCase):
 
     def test_joint_mitigation_has_two_conditional_paths_and_retains_failures(self):
         from robustness_envelope import spectral_rf_mitigations
-        contract=json.loads((P/'spec/contract.json').read_text())
+        contract=load_design().contract
         result=spectral_rf_mitigations(contract,seed_offsets=(0,))
         cases={(x['clock'],x['rail_ripple_peak_v'],x['board_blocker_attenuation_db']):x
                for x in result['cases']}
@@ -428,7 +475,7 @@ class DiagnosticTests(unittest.TestCase):
 
     def test_interventions_discriminate_but_do_not_invent_hidden_noise_source(self):
         from robustness_envelope import diagnostic_observability_suite
-        report=diagnostic_observability_suite(json.loads((P/'spec/contract.json').read_text()))
+        report=diagnostic_observability_suite(load_design().contract)
         for row in report['observations']:
             for observation in row['observations'].values():
                 self.assertEqual(set(observation),{'evm_rms','digitized_rms','acquired'})
@@ -483,7 +530,7 @@ class TxSpectralTests(unittest.TestCase):
 class WiredEnvelopeTests(unittest.TestCase):
     def test_inverse_resource_requirements_and_nonclosure(self):
         from wired_envelope import wired_resource_requirements
-        r=wired_resource_requirements(json.loads((P/'spec/contract.json').read_text()))
+        r=wired_resource_requirements(load_design().contract)
         for x in r['clock_distribution']:
             current=x['static_current_ma']+1000*x['maximum_equivalent_full_swing_cap_f']*3.3*r['rate_bps']
             self.assertAlmostEqual(current,r['domain_ceiling_ma']['PLL'])
@@ -500,7 +547,9 @@ class WiredEnvelopeTests(unittest.TestCase):
         all_rows=causal_receiver_envelope(impaired=True)['cases']
         rows=[r for r in all_rows if r['impairment']['name']=='baseline']
         good=[r for r in rows if r['switch_tau_s']<=100e-12]
-        slow=[r for r in rows if r['switch_tau_s']>100e-12]
+        # Root-resolved clean crossings qualify even the slow channel. Added
+        # voltage uncertainty still exposes decoding without timing readiness.
+        slow=[r for r in all_rows if r['impairment']['name']=='cleaner_aperture_same_voltage' and r['switch_tau_s']>100e-12]
         self.assertTrue(good and slow)
         self.assertTrue(all(r['heldout_errors']==0 and r['heldout_qualified_fraction']==1 for r in good))
         self.assertTrue(all(r['heldout_errors']==0 and not r['final_timing_qualified'] for r in slow))
@@ -513,7 +562,10 @@ class WiredEnvelopeTests(unittest.TestCase):
         self.assertTrue(cleaner and all(r['heldout_qualified_fraction']==1 for r in cleaner))
         moderate=[r for r in all_rows if r['impairment']['name']=='moderate_aperture_voltage']
         self.assertTrue(all(r['heldout_qualified_fraction']==1 for r in moderate if r['switch_tau_s']==50e-12))
-        self.assertTrue(any(r['heldout_qualified_fraction']<1 for r in moderate if r['switch_tau_s']==100e-12))
+        self.assertTrue(all(r['heldout_qualified_fraction']==1 for r in moderate if r['switch_tau_s']==100e-12))
+        adverse=[r for r in all_rows if r['impairment']['name']=='adverse_aperture_voltage']
+        self.assertTrue(adverse)
+        self.assertTrue(all(r['heldout_errors']==0 and not r['final_timing_qualified'] for r in adverse))
         self.assertTrue(all(r['heldout_minimum_signed_sample_v']>.25 for r in moderate if r['switch_tau_s']==100e-12))
 
 
@@ -536,7 +588,7 @@ class WiredEnvelopeTests(unittest.TestCase):
 
     def test_rate_dependence_and_joint_electrical_mitigation(self):
         from wired_envelope import wired_operating_envelopes
-        c=json.loads((P/'spec/contract.json').read_text());report=wired_operating_envelopes(c)
+        c=load_design().contract;report=wired_operating_envelopes(c)
         def find(rate,cap,tau):
             return next(x for x in report['cases'] if x['rate_bps']==rate and x['pad_cap_f']==cap
                 and x['switch_tau_s']==tau and x['relative_jitter_rms_s']==5e-12 and x['postcursor']==0)
@@ -632,21 +684,6 @@ class RFTransitionBudgetTests(unittest.TestCase):
 
 
 class HostDrivenReceiverTests(unittest.TestCase):
-    def test_host_tones_reach_causal_receiver_and_qualification(self):
-        from robustness_envelope import host_driven_wired_receiver
-        coupling=json.loads((P/'evidence/robustness-envelope.json').read_text())['host_charge_coupling']
-        result=host_driven_wired_receiver(coupling)
-        json.dumps(result,allow_nan=False)
-        self.assertEqual(result['host_word_hz'],312.5e6)
-        self.assertFalse(result['complete'])
-        rows=[x for x in result['receiver']['cases'] if x['switch_tau_s']==100e-12]
-        zero=[x for x in rows if x['impairment']['name']=='zero_supply_timing_control']
-        bad=[x for x in rows if x['impairment']['name']=='pole_1e+09_sensitivity_1']
-        rescued=[x for x in rows if x['impairment']['name']=='pole_1e+08_sensitivity_0.1']
-        self.assertTrue(all(x['heldout_errors']==0 and x['heldout_qualified_fraction']==1 for x in zero+rescued))
-        self.assertGreater(sum(x['heldout_errors'] for x in bad),0)
-        self.assertTrue(all(x['heldout_qualified_fraction']==0 for x in bad))
-        self.assertTrue(all(x['heldout_minimum_actual_sample_interval_s']>0 for x in rows))
 
     def test_unphysical_sampling_clock_is_rejected(self):
         from wired_envelope import causal_receiver_envelope
@@ -670,20 +707,6 @@ class HostDrivenRFTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             PhaseNoise(((1e9,2.,0.),)).crossing_error(times,carrier)
 
-    def test_shared_host_spectrum_filters_before_adc_and_refines(self):
-        from robustness_envelope import host_driven_rf_receiver
-        contract=json.loads((P/'spec/contract.json').read_text())
-        coupling=json.loads((P/'evidence/robustness-envelope.json').read_text())['host_charge_coupling']
-        result=host_driven_rf_receiver(contract,coupling)
-        json.dumps(result,allow_nan=False)
-        self.assertFalse(result['complete'])
-        for sensitivity in (0.,.1,.3):
-            rows=[x for x in result['cases'] if x['aggregate_dc_ps_per_mv']==sensitivity]
-            filtered=[x for x in rows if x['board_blocker_attenuation_db']==20.]
-            unfiltered=[x for x in rows if x['board_blocker_attenuation_db']==0.]
-            self.assertTrue(all(x['quality']['conditional_waveform_pass'] for x in filtered))
-            self.assertTrue(all(not x['quality']['conditional_waveform_pass'] for x in unfiltered))
-            self.assertLess(abs(filtered[0]['quality']['evm_rms']-filtered[1]['quality']['evm_rms']),.0002)
 
 
 class BidirectionalHostTests(unittest.TestCase):
@@ -709,7 +732,8 @@ class BidirectionalHostTests(unittest.TestCase):
 
     def test_both_host_directions_reach_receivers(self):
         from robustness_envelope import bidirectional_host_receiver_screen
-        contract=json.loads((P/'spec/contract.json').read_text())
+        contract=load_design().contract
+        # Frozen numerical network fixture; independent of current chip acceptance.
         coupling=json.loads((P/'evidence/robustness-envelope.json').read_text())['host_charge_coupling']
         r=bidirectional_host_receiver_screen(contract,coupling)
         json.dumps(r,allow_nan=False)
@@ -727,12 +751,13 @@ class BidirectionalHostTests(unittest.TestCase):
 class CommonFeedPowerTests(unittest.TestCase):
     def test_half_d2h_changes_only_output_dynamic_loads(self):
         from robustness_envelope import common_feed_dc_ledger,host_harmonic_screen
-        contract=json.loads((P/'spec/contract.json').read_text())
+        contract=load_design().contract
         full=common_feed_dc_ledger(contract)
         half=common_feed_dc_ledger(contract,d2h_word_hz=2.437e9/16)
         for key,value in full['loads_a'].items():
             self.assertAlmostEqual(half['loads_a'][key],value/2 if key in ('d2h_capacitive','d2h_internal') else value)
         self.assertAlmostEqual(half['power_balance_residual_w'],0.,places=12)
+        # Frozen numerical network fixture; independent of current chip acceptance.
         coupling=json.loads((P/'evidence/robustness-envelope.json').read_text())['host_charge_coupling']
         fast=host_harmonic_screen(coupling)
         slow=host_harmonic_screen(coupling,word_hz=2.437e9/16,harmonics=12)
@@ -741,7 +766,7 @@ class CommonFeedPowerTests(unittest.TestCase):
 
     def test_common_feed_conservation_and_h2d_cost(self):
         from robustness_envelope import common_feed_dc_ledger
-        contract=json.loads((P/'spec/contract.json').read_text())
+        contract=load_design().contract
         low=common_feed_dc_ledger(contract,h2d_internal_charge_c=.3e-12,h2d_alternating=True)
         high=common_feed_dc_ledger(contract,h2d_internal_charge_c=7e-12,h2d_alternating=True)
         extra=11*312.5e6*(7e-12-.3e-12)
@@ -756,17 +781,6 @@ class CommonFeedPowerTests(unittest.TestCase):
         self.assertEqual(ideal['rf_clock_core_rail_v'],3.3)
         self.assertEqual(sum(ideal['resistive_losses_w'].values()),0.)
 
-    def test_rf_observer_uses_shared_feed_voltage(self):
-        from robustness_envelope import common_feed_rf_screen
-        contract=json.loads((P/'spec/contract.json').read_text())
-        coupling=json.loads((P/'evidence/robustness-envelope.json').read_text())['host_charge_coupling']
-        r=common_feed_rf_screen(contract,coupling)
-        json.dumps(r,allow_nan=False)
-        self.assertFalse(r['complete'])
-        for row in r['cases']:
-            self.assertLess(row['ledger']['rf_clock_core_rail_v'],3.21)
-            self.assertEqual(row['quality']['conditional_waveform_pass'],row['h2d_internal_charge_c']==.3e-12)
-            self.assertLess(abs(row['ledger']['power_balance_residual_w']),1e-12)
 
 
 class AbsoluteRFTests(unittest.TestCase):
@@ -805,7 +819,8 @@ class AbsoluteRFTests(unittest.TestCase):
 
     def test_absolute_noise_is_not_scaled_away_with_weak_signal(self):
         from robustness_envelope import absolute_rf_screen
-        contract=json.loads((P/'spec/contract.json').read_text())
+        contract=load_design().contract
+        # Frozen numerical network fixture; independent of current chip acceptance.
         coupling=json.loads((P/'evidence/robustness-envelope.json').read_text())['host_charge_coupling']
         r=absolute_rf_screen(contract,coupling)
         rows=r['cases'][::4]
@@ -838,7 +853,8 @@ class ReferenceSupplyTests(unittest.TestCase):
 
     def test_reference_rejection_restores_joined_receiver(self):
         from robustness_envelope import reference_supply_screen
-        contract=json.loads((P/'spec/contract.json').read_text())
+        contract=load_design().contract
+        # Frozen numerical network fixture; independent of current chip acceptance.
         coupling=json.loads((P/'evidence/robustness-envelope.json').read_text())['host_charge_coupling']
         r=reference_supply_screen(contract,coupling)
         json.dumps(r,allow_nan=False)
@@ -851,32 +867,6 @@ class ReferenceSupplyTests(unittest.TestCase):
         self.assertFalse(r['complete'])
 
 
-class WholeChipEnvironmentTests(unittest.TestCase):
-    def test_modes_share_network_and_source_but_not_active_payload_current(self):
-        from robustness_envelope import whole_chip_operating_envelopes
-        result=whole_chip_operating_envelopes(json.loads((P/'spec/contract.json').read_text()))
-        self.assertFalse(result['complete'])
-        for case in result['cases']:
-            rf,wire=(case['modes'][mode] for mode in ('rf','wire'))
-            self.assertEqual(rf['network'],wire['network'])
-            self.assertEqual(rf['source_spectrum'],wire['source_spectrum'])
-            for env in (rf,wire):
-                ledger=env['ledger']
-                self.assertAlmostEqual(ledger['power_balance_residual_w'],0.,places=12)
-                self.assertEqual(env['host_spectrum']['d2h_internal_tau_s'],.5e-9)
-                self.assertTrue(env['transport']['rate_stable'])
-                # Independently evaluate the phase-to-time adapter, including
-                # the sign of supply-derived and source-derived phase terms.
-                phase=PhaseNoise(tuple(env['delivered_phase_tones']))
-                times=np.array([.123e-6,.783e-6,5.679e-6])
-                dt=sum(t['delay_peak_s']*np.cos(2*math.pi*t['frequency_hz']*times+t['delay_phase_rad'])
-                    for t in env['crossing_delay_tones'])
-                np.testing.assert_allclose(dt,-phase.phase(times)/(2*math.pi*env['carrier_hz']),atol=1e-23)
-                self.assertEqual(env['linear_fixture_voltage_range_guaranteed'],
-                    env['host_spectrum']['internal_charge_c']==.3e-12 or env['network']['network']['die_c']==500e-12)
-            self.assertNotIn('wired_frontend_reservation',rf['ledger']['loads_a'])
-            self.assertNotIn('rf_driver_and_conversion_reservation',wire['ledger']['loads_a'])
-            self.assertGreater(wire['ledger']['total_chip_supply_current_a'],rf['ledger']['total_chip_supply_current_a'])
 
 
 class RFClockSpurTests(unittest.TestCase):
@@ -981,6 +971,20 @@ class LoadedClockInputTests(unittest.TestCase):
 
 
 class AnalogWakeTests(unittest.TestCase):
+    def test_host_and_local_transients_match_independent_nodal_ports(self):
+        from robustness_envelope import local_load_state_space,shared_board_candidate,shared_return_transfer
+        candidate=shared_board_candidate()
+        candidate['network'].update(die_c=500e-12,die_esr=.5,die_esl=200e-12)
+        model=local_load_state_space(candidate,include_host_load=True)
+        for frequency in np.geomspace(1e3,1e10,35):
+            jw=2j*math.pi*frequency
+            response=(model.C@np.linalg.solve(jw*np.eye(6)-model.A,model.B)+model.D)*jw
+            for port,weights in enumerate(((0.,-1.,1.),(-1.,0.,1.))):
+                expected=shared_return_transfer(frequency,return_r=candidate['return_r_ohm'],
+                    return_l=candidate['return_l_h'],injection_weights=weights,
+                    **candidate['network'])['differential_ohm']
+                self.assertLess(abs(response[0,port]-expected),1e-8*max(1.,abs(expected)))
+
     def test_transient_network_matches_independent_nodal_frequency_solve(self):
         from robustness_envelope import local_load_state_space, shared_board_candidate, shared_return_transfer
         candidate=shared_board_candidate()
@@ -1052,3 +1056,86 @@ class WidebandFilterWaveformTests(unittest.TestCase):
 
 
 if __name__=='__main__':unittest.main()
+
+
+class FiniteCaptureTests(unittest.TestCase):
+    def test_partial_frame_replay_matches_continuous_and_discards_remainder(self):
+        from baseline_envelope import configured_environment
+        from selected_lifecycle import selected_transport_assumptions
+        design=load_design()
+        config=design.configure(engine='wire',direction='rx',reference_hz=2.5e9,host_divider=8)
+        assumptions=selected_transport_assumptions(configured_environment(config))
+        # Adverse service-rate fixture: 48% of nominal, not a legal clock setting.
+        assumptions=replace(assumptions,d2h_clock_scale=assumptions.d2h_clock_scale*.48)
+        depth=design.contract['transport']['scheduling']['ingress_bits_per_source']
+        samples=[(i*73+19)&1023 for i in range(73)]
+        times=np.arange(1,74)/(config.line_rate_bps/10)
+        def run(boundaries):
+            chip=BehavioralChip(assumptions)
+            chip.configure_numeric(engine='wire',timing=dict(line_rate_bps=config.line_rate_bps))
+            chip.configure_transport('exclusive');chip.start();chip.advance(chip.ready_at)
+            origin=chip.time;seen=[]
+            def source(i):seen.append(i);return samples[i]
+            def event(i):return float(times[i]) if i<len(times) else None
+            args=dict(mode=1,source_hz=config.line_rate_bps/10,sample_bits=10,frames=16,depth_bits=depth,
+                directions=('rx',),rx_source=source,rx_event_time=event,epoch=chip.epoch)
+            for horizon in boundaries:
+                result=chip.transfer(**args,until_s=horizon)
+                self.assertAlmostEqual(chip.time-origin,horizon,places=18)
+                self.assertIsNone(result['fault'])
+            words=list(chip.stream['rx_words']);state=dict(chip.stream)
+            self.assertEqual(seen,list(range(len(samples))))
+            self.assertTrue(result['capture_exhausted'])
+            self.assertEqual(words,samples[:len(words)])
+            self.assertEqual(result['produced_bits'],730)
+            with self.assertRaisesRegex(ValueError,'explicit observation horizon'):
+                chip.transfer(**args)
+            discarded=chip.stop()
+            self.assertEqual(discarded['rx_bits'],730-10*len(words))
+            return words,state,discarded
+        a=run([.65e-6]);b=run([.1e-6,.292e-6,.31e-6,.5e-6,.65e-6])
+        self.assertEqual(a[0],b[0]);self.assertEqual(a[2],b[2])
+        for key in ('sample_index','rx_slot','rx_quota','occupancy','frame'):
+            self.assertEqual(a[1][key],b[1][key])
+        self.assertTrue(a[0]);self.assertGreater(a[2]['rx_bits'],0)
+
+
+class MissingD2HClockTests(unittest.TestCase):
+    def test_reference_watchdog_runs_without_host_or_converter_edges(self):
+        from baseline_envelope import configured_environment
+        from selected_lifecycle import selected_transport_assumptions
+        design=load_design()
+        config=design.configure(engine='rf',direction='rx',reference_hz=2.4e9,
+            sample_divider=64,pga_gain_db=39)
+        assumptions=selected_transport_assumptions(configured_environment(config))
+        chip=BehavioralChip(assumptions)
+        chip.configure_numeric(engine='rf',rf=dict(sample_hz=config.sample_hz,
+            sample_clock_source='external_lo',lo_hz=config.reference_hz,lo_divider=config.sample_divider,
+            rx_cutoff_hz=1e6,tx_cutoff_hz=3e6))
+        chip.configure_transport('exclusive')
+        origin=assumptions.startup_s;loss=origin+600e-9;restart=origin+900e-9
+        refs=np.arange(1,1001)*1/config.sample_hz
+        refs=refs[(refs<loss)|(refs>=restart)]
+        chip.attach_reference(refs,timeout_s=100e-9,monitor_tick_s=10e-9,required_edges=4)
+        chip.start();chip.advance(origin)
+        samples=np.arange(1,23)*1/config.sample_hz
+        host=np.arange(300)/config.host_word_hz;host=host[(host<600e-9)|(host>=900e-9)]
+        observed=[]
+        # Payload width and filter settings are prescribed transport fixtures.
+        # Queue capacity, clocks and startup belong to the shared chip.
+        depth=design.contract['transport']['scheduling']['ingress_bits_per_source']
+        kwargs=dict(mode=1,source_hz=config.sample_hz,sample_bits=24,frames=16,depth_bits=depth,
+            directions=('rx',),epoch=chip.epoch,rx_source=lambda i:i+100,
+            rx_event_time=lambda i:float(samples[i]) if i<len(samples) else None,
+            d2h_event_time=lambda i:float(host[i]) if i<len(host) else None,
+            host_word_observer=lambda *args:observed.append(args),until_s=1e-6)
+        flow=chip.transfer(**kwargs)
+        self.assertEqual(flow['fault'],'reference_lost')
+        self.assertGreater(chip.time,loss)
+        self.assertLessEqual(chip.time,loss+110e-9)
+        self.assertEqual(chip.stream['rx_slot'],int(np.count_nonzero(host<600e-9)))
+        self.assertEqual(flow['produced_bits'],528)
+        self.assertGreater(flow['returned_bits'],0)
+        self.assertEqual(flow['produced_bits'],flow['returned_bits']+flow['pending_bits'])
+        self.assertTrue(observed)
+        self.assertLess(chip.stream['last_d2h_time'],600e-9)

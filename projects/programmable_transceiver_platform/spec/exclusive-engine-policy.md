@@ -39,11 +39,12 @@ on-chip presets or protocol controllers. Direction changes and timed line-state
 sequences can be local operations; changes requiring clock/bias/route ownership
 transfer must stop, isolate and requalify the affected resources.
 
-`configure_resources` is the mathematical chip API for the currently modeled
-rate/path/direction/framing combinations. `ProtocolService` and the factory's
-optional `protocol=` argument remain testbench conveniences that translate names
-into ordinary settings. The chip never reads their selected name or role.
-The register ABI and RTL still need to encode these independent controls.
+The mathematical chip accepts generic resource, timing and transport settings.
+Protocol names belong to external waveform fixtures and requirement tables;
+there is no on-chip named-protocol selector. `BehavioralChip` owns modeled
+resource admission and lifecycle behavior. Register/RTL implementation must
+encode the same independent controls rather than the retired named-profile
+factory interface.
 
 The low-level ownership selector also rejects transfer while either end drives
 the shared bidirectional pad. Configuration changes advance a mathematical
@@ -107,19 +108,13 @@ shared-resource ownership. Existing rate profiles and pin allocation are retaine
 pending deliberate rebudgeting; this decision does not itself authorize claims
 of higher sample rates, fewer terminals or a smaller die.
 
-The experimental `verification/fast_exclusive_engine.py` adapter now gates payload admission and session enables, including RF descriptors, wired TX queue insertion and local-playback management. Inactive-engine ingress rejects before modifying queue or descriptor state. Its RF→wired→RF test passes 32-sample simultaneous RF TX/RX in both rate profiles, wired receive, overlap rejection and stopped transitions. Each RF entry performs and commits loaded-monitor calibration using relative-gain semantics before transmission. Capture-memory contents match the resulting ADC words; this checks functional flow, not RF signal quality or absolute pad gain. Serialized engine-selection transactions have a separate passing check (`fast_exclusive_management_check.py`). This is not the default model or RTL: inactive bias/clock shutdown, pin-level selection, sustained duplex and complete calibration invalidation coverage remain open. Evidence: `evidence/fast-exclusive-engine.json`.
-
-The loaded-traffic runner with `--exclusive` also passes both rate profiles with count-free RF TX/RX over a finite record, then timed lossy stop. It verifies DAC ordering, ADC host-return agreement, queue bounds, converter accounting, loaded-output isolation, and zero wired accepted/transmitted/returned payload. See `evidence/fast-exclusive-rf-traffic.json`. This does not qualify indefinite service, RF waveform quality, or inactive analog clock/bias shutdown.
-
-Clock dependency is now explicit through `clock_required(engine)`: the concurrent baseline requires both PLLs; the exclusive adapter requires only the selected engine’s PLL. Acquisition still requires the shared reference and existing host/settling gates. An inactive PLL unlock must neither block acquisition nor stop payload, while selected-PLL lock loss must quiesce it. Injected lock-detector tests cover both selections in `fast_exclusive_engine_check.py`; report status and hashes are authoritative. Oscillators still advance in this intermediate implementation: actual shutdown, restart/settling, and bias-current/load transitions remain open.
-
-An experimental `SwitchablePLL` in the exclusive adapter module now represents a stopped VCO with frozen output phase, explicit exponential loop-filter leakage, rejected off-state edge requests, and fresh lock qualification after divider rephasing on restart. Its standalone checks cover phase continuity, leakage subdivision and reacquisition. The baseline exclusive adapter does not install it. An experimental `PoweredExclusiveChip` now connects it to engine selection, stops both oscillators before enabling the selected one, isolates outputs through the existing stopped transition, and guards clock readiness and RF calibration with a configurable settling deadline. The 1 ms leakage fixture is an assumption, and bias startup, output gating and supply-current transitions still need integration and circuit evidence.
-
-Run `verification/fast_exclusive_engine_check.py --power-gated` to check the powered composition; `evidence/fast-powered-exclusive-engine.json` is its separate result. A 20 us guard fixture was also checked with a PLL already locked at 8 us: the session remained acquiring until the guard expired. The default 2 us guard is an assumption, not measured bias settling. This composition still uses two PLL instances and does not model bias current, supply transients or a physically shared synthesizer.
-
-Both rate profiles now pass finite count-free RF TX/RX with `PoweredExclusiveChip` and the loaded output network (`evidence/fast-powered-rf-traffic.json`). Repeated checks during the run verify the wired oscillator is off with zero frequency and fixed phase; transport, queue bounds, conversion accounting and stop isolation also pass. This extends the powered lifecycle evidence to sustained RF transport, not waveform quality, wired-only duplex or physical bias-current behavior.
-
-The powered lifecycle test now covers RF and wired duplex in both rate profiles on the same instance. Wired-only host return starts through `wire_return_start`, independently of RF ADC capture; 32 transmitted and 64 host-received words match exactly per profile with no added ADC samples. Detection is rearmed after stop, and duplicate or RF-mode return starts reject. These are finite nominal bursts; sustained wired service and receiver/error envelopes remain open. Evidence: `evidence/fast-powered-exclusive-engine.json`.
+Current ownership, clock-loss and stopped-reconfiguration checks use
+`architecture_fast.behavioral.BehavioralChip` and
+`verification/selected_lifecycle.py`. `test_resource_configuration.py` exercises
+exclusive numeric configuration and rejection before mutation. Source-specific
+readiness, retained-state recovery and supply transitions require their joined
+lifecycle evidence; a timed readiness guard alone cannot establish analog startup.
+Old dual-PLL adapter demonstrations do not qualify this architecture.
 
 ## Wired rail-feedback scheduling contract
 
@@ -156,7 +151,7 @@ host return switching charge, rail-sensitive clock timing, and an assumed
 regulated wired termination load with explicit efficiency and bias. RF source and mixer signals stop with the RF oscillator;
 retained filter/network state decays. RF and wired driver bias now follow engine selection. Shared reference bias
 remains active; oscillator, converter, receiver and digital currents are still
-incomplete, so this does not establish a whole-chip power-budget saving. Evidence: `evidence/fast-coupled-wire.json`.
+incomplete, so this does not establish a whole-chip power-budget saving. Use the current selected wired/lifecycle evidence for acceptance; the retired coupled-wire snapshot does not qualify it.
 
 ## Multi-chip wired assemblies
 

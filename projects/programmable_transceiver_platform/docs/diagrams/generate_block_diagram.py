@@ -300,7 +300,7 @@ WIRE_COLOR='#b47a20'
 wire([(480,2505),(480,2560)]);port(480,2505,'VREF± / VCM')
 wire([(680,2680),(680,2630)]);port(680,2680,'VCM / CMP_TRIM',False)
 WIRE_COLOR=None
-label(90,2845,'SAR_STEP requires a local conversion clock; its implementation and rate remain to be qualified.',16,anchor='start')
+label(90,2845,'SAR_STEP is local completion timing; LO defines the sampling aperture, not bit decisions.',16,anchor='start')
 panel(1300,2450,1245,425,'DAC × 2 — ONE INSTANCE PER I / Q CHANNEL','#f1f8f5')
 block(1340,2560,180,65,'TX word queue','TX-I / TX-Q')
 block(1600,2560,170,65,'Shadow latch','pending code')

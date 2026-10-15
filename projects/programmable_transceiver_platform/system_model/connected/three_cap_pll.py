@@ -1,7 +1,7 @@
 """Experimental edge PLL adapter; separate pump compliance and VCO control."""
 import numpy as np
 from three_cap_filter import ThreeCapFilter
-from fractional_rf_chip import ShapedRFClock
+from pulse_clock_service import ShapedRFClock
 
 class ThreeCapPLLFilter(ThreeCapFilter):
     @property

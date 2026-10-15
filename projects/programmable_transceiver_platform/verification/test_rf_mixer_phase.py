@@ -1,4 +1,10 @@
-"""Explicit mixer-phase timing and chunk-boundary controls."""
+"""Independent mixer-phase, replay and RF numerical fixtures.
+
+SETTINGS defines a synthetic 10 MS/s, 12-bit stream; it is not the current ADC
+allocation. The demonstration rail uses a historical FIFO mapping and explicit
+5 nH package hypothesis. These tests check algorithms and numerical controls,
+not the intended-chip RF operating point or current storage implementation.
+"""
 import sys
 import unittest
 from pathlib import Path
@@ -12,22 +18,11 @@ from bit_event_codec import TrainedRecordReceiver
 SETTINGS=dict(sample_hz=10e6,tx_cutoff_hz=2.5e6,rx_cutoff_hz=1.25e6,
               rx_filter_order=5,converter_bits=12,rx_gain=1.)
 
+TEST_DESIGN_ROLES = {
+    'MixerPhaseTests': ('independent_fixture', 'Synthetic 10 MS/s, 12-bit RF/replay models, historical rail and assigned clock examples; these do not represent current chip allocations.'),
+}
+
 class MixerPhaseTests(unittest.TestCase):
-    def test_shared_rf_rail_uses_mapped_clock_loads(self):
-        import json
-        from behavioral import rf_demonstration_rail, P
-        caps=json.loads((P/'evidence/block-fifo-mapping.json').read_text())['clock_pin_load']['clock_pin_capacitance_f']
-        rx=rf_demonstration_rail(.012)
-        tx=rf_demonstration_rail(.037)
-        self.assertEqual(tx['block_write_cap_f'],caps['wr_clk'])
-        self.assertEqual(tx['block_read_cap_f'],caps['rd_clk'])
-        self.assertEqual(tx['inductance_h'],5e-9)
-        self.assertTrue(tx['full_host_activity'])
-        self.assertEqual(tx.pop('bias_current_a'),.037)
-        self.assertEqual(rx.pop('bias_current_a'),.012)
-        self.assertEqual(tx,rx)
-        for invalid in (-.001,float('nan'),float('inf')):
-            with self.assertRaises(ValueError):rf_demonstration_rail(invalid)
 
     def test_tx_peak_bound_includes_unsampled_interval_endpoint(self):
         captured=[]
@@ -755,6 +750,18 @@ class MixerPhaseTests(unittest.TestCase):
         whole.process([.5,-.25],sample_times_s=[1e-7,3e-7])
         self.assertEqual(whole.tx.state,first.tx.state)
         self.assertEqual(whole.held_dac,first.held_dac)
+        # The implicit uniform clock has identical edge causality and carries
+        # its held code across calls; changing a future code cannot alter state.
+        uniform=SampledRFStream(SETTINGS,noise_rms=0.)
+        uniform.process([.5])
+        self.assertEqual(uniform.tx.state,0j)
+        uniform.process([-.25])
+        dt=1/SETTINGS['sample_hz']
+        expected=.5*(-np.expm1(-2*np.pi*SETTINGS['tx_cutoff_hz']*dt))
+        self.assertAlmostEqual(uniform.tx.state.real,expected,delta=1e-14)
+        stamped=SampledRFStream(SETTINGS,noise_rms=0.)
+        stamped.process([.5,-.25],sample_times_s=[0.,dt])
+        self.assertAlmostEqual(uniform.tx.state,stamped.tx.state,delta=1e-14)
 
     def test_local_tx_quadrature_is_causal_and_chunk_equivalent(self):
         def make():return SampledRFStream(SETTINGS,external_substeps=16,noise_rms=0.)

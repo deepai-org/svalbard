@@ -1,6 +1,6 @@
 {
-  "status": "incomplete_schematic_blocks_layout_gate_closed",
-  "layout_gate": "No new layout/recreation until the integrated transistor-level analog schematic meets agreed requirements; retain existing layouts as reference.",
+  "status": "characterization_inventory_selected_schematic_not_complete",
+  "layout_gate": "Complete the whole-chip mathematical model before new schematic implementation; then verify the integrated transistor schematic before new layout. Retained existing circuits/layouts are characterization references.",
   "blocks": [
     {
       "id": "rf_receive",
@@ -304,7 +304,6 @@
       "remaining": "Rate-selectable serial synthesis/CDR, pre-lock envelope detection, bounded line-state timing, RF filter/gain settings and retained channel contexts with settling and current budgets."
     }
   ],
-  "last_evidence_review_pass": 501,
   "multi_chip_video_requirements": {
     "status": "not_implemented",
     "reuse": [
@@ -323,5 +322,7 @@
     ],
     "new_signal_pins": 0,
     "new_on_chip_protocol_logic": false
-  }
+  },
+  "evidence_role": "Existing transistor circuits and replays characterize device/block behavior under their recorded conditions. They are not a second normative architecture or evidence that the selected complete transceiver schematic is implemented.",
+  "design_authority": "spec/analog-architecture.json and spec/contract.json"
 }

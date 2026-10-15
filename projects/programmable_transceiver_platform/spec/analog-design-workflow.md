@@ -163,16 +163,19 @@ shared tooling. Never obtain speed by silently weakening the original test.
 
 ### Resume checklist
 
-1. Read `spec/schematic-implementation.json`, the latest relevant risk entry and
-   the last experiment's evidence. Historical pass notes are not current job
-   status or proof that a candidate was adopted.
+1. Read the current architecture, closure gates and risk priorities. During
+   mathematical closure, use the selected behavioral/electrical compositions.
+   `spec/schematic-implementation.json` inventories existing characterization
+   circuits; it does not select another chip design or authorize new schematic
+   work. Historical pass notes are not current job status or adoption evidence.
 2. Check any recorded live job before launching another. Inspect its process,
    log and artifacts; continue observing it if running. If the handle is gone,
    determine completion from the artifacts rather than automatically restarting.
 3. Search this document and existing runners/checkers for the same failure or
    measurement. Identify the best verified baseline and its remaining idealities.
-4. Fill the experiment template before changing the circuit. Start with the
-   cheapest test whose result could change the design decision.
+4. Record the question, scope and assumptions before changing a model. Start
+   with the cheapest test that could change the design decision. Circuit changes
+   require reaching the schematic phase first.
 
 Keep a compact handoff in the pass note: selected circuit, runner and checker
 commands (with working directory), output directory, live job/status if any,
@@ -278,6 +281,18 @@ coincident source edges and initial state; reduce the circuit while preserving
 the suspected interaction. Compare numerical methods or equivalent stimulus
 representations without interpreting numerical damping as physical stability.
 A reduced test that completes narrows the problem only within its retained scope.
+
+Charge conservation is insufficient when reducing a current waveform: bin
+averaging can attenuate in-band components and alias other components before
+their frequency-dependent impedance is applied. Validate reduced propagation
+with analytic tones both below and above the intended coarse-grid Nyquist rate.
+For linear networks, propagate native held inputs with exact state updates or
+preserve their spectrum through the network before reducing observations.
+Distinguish state-propagation accuracy, output interpolation, input-waveform
+sampling and physical bandwidth assumptions; extending a quiet tail is not
+source-grid refinement. Current evidence belongs in the scoped diagnostic
+report, not in a growing narrative of solver trials.
+
 
 Check exported time ordering explicitly. Distinguish backward time from repeated
 printed timestamps: extremely close simulator steps can round to equal exported
@@ -714,16 +729,11 @@ multi-chip lane coordination; each die retains its constraints. The
 [board and pin plan](../../../docs/roadmap/programmable-transceiver-pin-plan.md#hdmidvi-through-multiple-instances)
 owns the three-instance assembly.
 
-For a specific forwarded-clock lifecycle question, the supporting command is:
-
-```sh
-timeout 15s env OPENBLAS_NUM_THREADS=1 python3 projects/programmable_transceiver_platform/verification/protocol_model_check.py --forwarded-lifecycle
-```
-
-Add `--forwarded-direction tx` for TX. These finite RX/TX checks cover host transfer
-and reference-loss draining; they do not establish a continuous three-chip video
-link. TX's canonical serializer observation is internal; independent pad
-observation has a separate scope. Timeouts are not completed traffic evidence.
+Forwarded-clock planning and multi-chip alignment checks are in
+`verification/test_video_alignment.py`; current loaded-clock lifecycle checks
+are in `verification/selected_lifecycle.py`. The old canonical forwarded-clock
+runner has been removed. Neither component planning nor short lifecycle traces
+establish continuous three-chip video, pad timing or external receiver operation.
 
 Mathematical closure requires the connected PHY behavior and declared uncertainty
 envelope, including representative external signaling and recovery fixtures.
@@ -738,9 +748,14 @@ Its running-job statements describe that historical snapshot, not current work.
 
 ## Reduced-model validation and promotion
 
-Use the active behavioral loop above for architecture decisions. The historical
-`system_model/run_fast_suite.py` remains a supporting eleven-script collection
-with report `evidence/fast-suite.json`; it is not the full-chip acceptance gate.
+Use the active behavioral loop and `make transceiver-math-fast` for architecture
+regression. The older aggregate suite and its concurrent RF/wired transport
+campaigns are retired. Independent filter, clock-tracking and recorded-waveform
+controls remain scoped supporting experiments; they are not full-chip acceptance.
+The earlier `pt_digital` top-level synthesis, placement and PDN campaigns are
+retired. Their totals cannot price the selected architecture. Retained FIFO,
+codec and individual-cell checks are component evidence; they do not establish
+a current RTL top level or physical fit.
 Use envelope/event/charge models to screen uncertainty, then short transistor
 windows to characterize the parameters that change decisions, then connected
 transistor verification. Preserve autonomous startup/noise runs where those are

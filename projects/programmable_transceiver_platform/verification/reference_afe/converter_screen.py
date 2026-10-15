@@ -55,15 +55,6 @@ whole=[a.sample(complex(v,0)) for v in signal[:100]]
 parts=[b.sample(complex(v,0)) for v in signal[:37]]+[b.sample(complex(v,0)) for v in signal[37:100]]
 assert whole==parts
 assert ADCImpairments().sample(.2+.7j)==.2+.7j
-from adc_clipping_lifecycle import controls
-from diagnostic_lifecycle import DiagnosticChip
-controls()
-a=DiagnosticChip();a.configure(0,0)
-b=DiagnosticChip(adc_impairments=ADCImpairments(cubic=cubic));b.configure(0,0)
-assert a.convert_adc(.8+.6j)==a.quantize_adc(.8+.6j)
-assert b.convert_adc(.8+.6j)==b.quantize_adc(ADCImpairments(cubic=cubic).sample(.8+.6j))
-assert a.convert_adc(.8+.6j)!=b.convert_adc(.8+.6j)
-
 # Independent transparent-filter check: sampling precedes noise and quantization.
 from protocol_signals import receiver_projection, Waveform
 values=np.asarray([complex(.2+i*.01,-.1) for i in range(20)])
@@ -99,37 +90,16 @@ chunked=copy.deepcopy(rc)
 values=[complex(v,0) for v in signal[:100]]
 assert [rc.sample(v) for v in values]==[chunked.sample(v) for v in values[:37]]+[chunked.sample(v) for v in values[37:]]
 
-from full_chip_model import make_chip
-chain_rows=[]
-for profile in ['wifi_he20','bluetooth_le','bluetooth_br_edr','ieee802154_24','lora_24']:
-    chip=make_chip(protocol=profile,adc_impairments=ADCImpairments(cubic=cubic,noise_rms=sigma,seed=731,sampling_r_ohm=1000.,sampling_c_f=1.5e-12,acquisition_s=2e-9))
-    service=chip.protocol_service;wave=service.waveform()
-    chip.output_network.configure(True,False)
-    state=chip.adc_impairments.rng.getstate();held_before=chip.adc_impairments.held
-    impaired=service.project_clocked_link(wave,bits=12,substeps=2)
-    repeat=service.project_clocked_link(wave,bits=12,substeps=2)
-    assert np.array_equal(impaired['samples'],repeat['samples'])
-    assert chip.adc_impairments.rng.getstate()==state and chip.time==0
-    assert chip.adc_impairments.held==held_before
-    chip.adc_impairments=None
-    clean=service.project_clocked_link(wave,bits=12,substeps=2)
-    delta=np.sqrt(np.mean(abs(impaired['samples']-clean['samples'])**2))
-    assert delta>0
-    chain_rows.append(dict(profile=profile,samples=len(impaired['samples']),
-        adc_impairment_change_rms=float(delta),clipped_samples=impaired['adc_clipped_samples'],
-        scope='Frozen-rail TX/pad/channel/RX/ADC projection; no packet or acquired-clock claim'))
-
 print(json.dumps(dict(
  constant_offset_spectral_screen=offset_rows,
  acquisition_step_response=acquisition_rows,
- clocked_conversion_chain=chain_rows,
- clocked_adc_scenario=dict(sampling_r_ohm=1000.,sampling_c_f=1.5e-12,acquisition_s=2e-9,calibrated_to_silicon=False),
+ acquisition_scenario=dict(sampling_r_ohm=1000.,sampling_c_f=1.5e-12,acquisition_s=2e-9,calibrated_to_silicon=False),
  measured=dict(enob=4.27,snr_db=41,sfdr_db=33.7),
  single_cubic_scenario=dict(cubic=cubic,input_referred_noise_rms=sigma,measured_fft_sfdr_db=-20*math.log10(spur),sndr_db=float(sndr),enob=float((sndr-1.76)/6.02)),
  target_sndr_from_enob_db=6.02*4.27+1.76,
  conclusion='One cubic spur plus the reported SNR does not reproduce the reported ENOB; additional distortion, definitions, or differing test conditions matter.',
  limitations=['Full-scale sine scenario, not a unique fit to silicon.',
  'Measured table lacks enough test-condition detail to identify coefficients or error spectrum uniquely.',
- 'Noise and nonlinear transfer are optional in ReturnChip before quantization; defaults retain prior behavior.',
+ 'Standalone ADC impairment and waveform projection controls; no current chip lifecycle is constructed.',
  'Finite acquisition uses a piecewise-constant input target and explicit R/C/time scenarios; no signal-dependent resistance or bootstrap calibration.',
- 'Clocked chain verifies impairment propagation through the configured RF reduction; no new EVM, packet or physical qualification claim.']),indent=2))
+ 'The illustrative 12-bit quantizer is a characterization control, not the selected native converter resolution; no packet or full-chain qualification claim.']),indent=2))

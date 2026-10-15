@@ -5,7 +5,7 @@ of the candidate operating envelope, not failures of the measurement script.
 """
 import json,math
 from chip_model import P
-from fractional_rf_chip import ShapedRFClock
+from pulse_clock_service import ShapedRFClock
 
 def measure(target,bandwidth_hz=350e3,fast_fraction=.5):
     p=ShapedRFClock(reference_hz=40e6,divider=60,free_hz=2.4e9*.96,bandwidth_hz=bandwidth_hz,fast_fraction=fast_fraction)

@@ -10,5 +10,7 @@ for b in r['blocks']:
   p=ROOT/name;assert p.is_file(),name
   b['sources'].append(dict(path=name,sha256=hashlib.sha256(p.read_bytes()).hexdigest(),subcircuits=re.findall(r'^\.subckt\s+(\S+)',p.read_text(),re.M|re.I)))
 r['source_presence_checked']=True;r['whole_chip_schematic_ready']=False
+r['selected_design_conformance_checked']=False
+r['audit_scope']='Source presence and subcircuit names only. Recorded circuit conditions and results retain their own provenance; this audit neither reruns characterization nor validates current architecture bindings.'
 (P/'evidence/schematic-implementation-audit.json').write_text(json.dumps(r,indent=2)+'\n')
 print('Audited',len(r['blocks']),'block obligations; whole-chip schematic incomplete, layout gate closed.')

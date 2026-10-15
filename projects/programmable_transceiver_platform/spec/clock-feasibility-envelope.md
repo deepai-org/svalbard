@@ -1083,63 +1083,28 @@ TX qualification remain open.
 
 ### Blocking imposes a stronger spectral clock requirement
 
-The `loaded_clock_packet_exchange` report now holds the 500 pF nonideal supply
-candidate, 6 dB chip-input NF, 500 kHz filter, −90 dBm wanted and −40 dBm
-2 MHz-offset blocker fixed while changing only the clock-input path. The same
-six seeds are used in each case; source phase continues through any loaded reply.
+Qualify delivered LO noise at blocker offsets as well as integrated jitter.
+External source noise and the differential input/distribution path contribute
+to the same delivered spectrum. Clean-channel EVM does not bound reciprocal
+mixing from a strong nearby blocker. Use the selected delivered-clock
+composition and current RF packet benches in the
+[model guide](../system_model/architecture_fast/README.md); the older
+`--loaded-clock-exchange` comparison is retired.
 
-| Input path | Acquired / accepted requests | Correctly decoded replies |
-|---|---:|---:|
-| Ideal delivered clock | 6/6 acquired, 5/6 accepted | 5 |
-| Loaded high impedance | 0/6 acquired | 0 |
-| Loaded 50 Ω | 0/6 acquired | 0 |
+An illustrative necessary budget remains useful: a −40 dBm blocker with 2 dB
+external loss reaches the chip at −42 dBm. At 300.15 K and assumed 6 dB chip-input
+NF, an input-referred noise density of −167.83 dBm/Hz gives a single-sideband
+LO ceiling near that blocker of approximately −125.83 dBc/Hz if reciprocal
+mixing alone is allowed the same density. This is not a standard mask or a
+complete blocker/filter convolution. A flat spectrum at that ceiling over
+1 kHz–8 MHz corresponds to about 0.134 ps RMS at 2.426 GHz; shaped spectra
+can have different permissible total RMS. Other noise and spurs share the budget.
 
-Run `verification/robustness_envelope.py --loaded-clock-exchange` for this
-comparison. Failure prevents replies from being armed; absence of a transmitted
-reply is not a TX decoding failure. The ideal-path uncorrected RF start marker
-is 151.30–151.62 µs after source packet end, so even those replies do not close
-the calibrated air-timing requirement.
-
-A separate attribution control on the same six high-impedance cases removes
-only the input/distribution random lines while retaining input AM, source noise,
-host supply phase and all RF settings: 5/6 acquire and 5/6 are accepted.
-Removing only the twenty input-AM harmonics while retaining the random lines
-leaves 0/6 acquired. These nonphysical removals identify the added random-noise
-hypothesis as the main limiting contribution in this experiment; neither is a
-design option. They were evaluated from the saved environment's phase tones
-using the same packet observer.
-
-The result is consistent with reciprocal mixing from the assigned broad
-additive clock noise, an effect clean-signal EVM does not constrain strongly.
-At 2.426 GHz the input/distribution random time variances imply white-equivalent
-SSB floors of **−113.98 dBc/Hz high impedance** and **−113.11 dBc/Hz terminated**
-over 1 kHz–8 MHz. The finite-tone waveform approximates these continuous spectra;
-it is not measured silicon noise. The external source's low floor does not
-remove noise added by the on-chip input/distribution stages.
-
-As an independent approximate necessary budget, the blocker reaches the chip
-at −42 dBm after 2 dB loss. The 6 dB-NF input-referred noise density at 300.15 K
-is −167.83 dBm/Hz. Keeping single-blocker reciprocal-mixing density below that
-level requires total LO SSB noise near the relevant blocker offsets no higher
-than **−125.83 dBc/Hz**. This compares one blocker sideband with one input noise
-reference; it is not a standard mask or a complete in-band convolution. A flat
-floor at that ceiling across 1 kHz–8 MHz corresponds to only **0.134 ps RMS**
-at 2.426 GHz, versus the larger input/distribution assumptions used here. Other
-source noise and spurs consume some of the same allowance. A frequency-shaped
-noise spectrum must be integrated with the actual blocker and receive filter;
-its permissible total RMS can differ greatly from this flat example.
-
-**Decision:** qualify delivered LO noise at blocker offsets, in addition to
-integrated timing/EVM. The external-clock route remains an option, but its
-assigned 1 mV in-band receiver noise and 0.3 ps per downstream stage do not
-support this weak-wanted/strong-blocker example when modeled as white-equivalent
-noise. These are stress hypotheses, not evidence that GF180 cannot do better.
-Do not respond merely by selecting a cleaner external oscillator: the added
-receiver/distribution noise must be reduced or shaped, or pre-mixer blocker
-power reduced. Additional baseband rejection cannot undo reciprocal mixing
-already translated into the wanted band. None of those mitigations is free of
-current, headroom, frequency coverage or control costs.
-
+Improve the additive receiver/distribution spectrum or reduce blocker power
+before mixing when this condition fails. Baseband rejection cannot undo noise
+already translated into the wanted band. Budget each mitigation's current,
+headroom, frequency coverage and control costs together. These deductions do
+not establish physical GF180 noise limits.
 
 ### Noise allocation with a physical implementation still required
 

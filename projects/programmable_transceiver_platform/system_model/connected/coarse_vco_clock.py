@@ -1,6 +1,6 @@
 """Initial-acquisition coarse bank, observed through a prescaled edge counter."""
 import math
-from fractional_rf_chip import ShapedRFClock
+from pulse_clock_service import ShapedRFClock
 
 class IdealBankClock(ShapedRFClock):
     def __init__(self,**kwargs):

@@ -1,6 +1,17 @@
 {
   "status": "conditional_analytic_scenarios_not_qualification",
   "temperature_k": 300.15,
+  "design_provenance": {
+    "design_fingerprint": "ad4a306128059706e8c55313a17a720d1393e58b826d36b2b214f80c24df1440",
+    "fingerprint_format": "canonical-json-sha256-v1",
+    "circuit_experiments": [],
+    "documents": {
+      "spec/contract.json": "ee71ea7c01cc7954dd569ca83c8e87798c8e2b75c57d56fca2f6f52700e549d0",
+      "spec/analog-architecture.json": "1add681550d58efb6466b7a4a1e4fff9a6360691f049a32d0b708961b2dde20b"
+    }
+  },
+  "model_role": "explicit_analytical_requirement_scenarios",
+  "configuration_scope": "unconfigured_design_budget_with_independent_analytical_sweeps",
   "analog_assumption_audit": {
     "literature_informed_receiver_cascades": [
       {
@@ -683,11 +694,11 @@
     "LO phase allocation uses 25% of total EVM power; equivalent time is not a full phase-noise mask or PLL requirement.",
     "Aperture jitter evaluated at baseband frequency, not the RF carrier; independent sampling and LO error budgets.",
     "Sampling C assumes two independent kT/C legs and thermal RMS <= half quantization RMS. Other circuit noise and settling excluded.",
-    "350 mA is a sum of unqualified planning ceilings, not measured current or safe pad/package capacity.",
+    "Summed contract current ceilings are unqualified planning limits, not measured current or safe pad/package capacity; 3.3 V is an explicit power-screen scenario.",
     "L di/dt omits decoupling/resonance; I dt/C omits ESR/ESL. Neither predicts the actual PDN.",
     "Reference-plane scenarios assume 20 MHz equivalent noise bandwidth and ideal linear conversion into 1 Vpp differential I/Q ranges; no matching, loading, mixer sideband or actual gain/NF calibration is inferred.",
     "Gain-noise scenarios isolate frontend versus excess ADC ENOB noise; ideal quantization, filters, clock error, blockers and channel estimation remain additional.",
     "No finite sensitivity sweep proves tolerance of an unknown physical quantity with no justified bound."
   ],
-  "source_sha256": "269f89a8be551d32b7bf823129c07b2d810a369e9a209240c11bacc90186b575"
+  "source_sha256": "fce8dce0a6608e86f8f45319b5b5dc6ac797087c0b45f426fe4d27f513cec7f0"
 }

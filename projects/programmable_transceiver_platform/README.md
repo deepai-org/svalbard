@@ -15,6 +15,17 @@ drawing; electrical qualification of the assembly remains open.
 This is an active design: the capabilities below are targets, with partial
 mathematical evidence, not demonstrated silicon or certified protocol support.
 
+The [block and connection inventory](spec/analog-architecture.json) and
+[block diagram](spec/block-diagram.md) specify the selected implementation.
+[Implementation ownership](spec/block-diagram.md#silicon-fpga-and-board-allocation)
+puts calibration computation and bulk state on the FPGA, and RF interface
+passives on the board; sensitive feedback and sampling stay local.
+The current design is addressing coupled analog feasibility and remaining
+protocol-level gaps. The [current five-area status](spec/risk-priorities.md#closure-of-the-five-requested-areas)
+distinguishes connected model evidence from assumptions and open gates.
+Transistor design and physical performance remain unqualified. Historical
+mathematical fixtures are not automatically evidence for revised settings.
+
 ## What it could enable
 
 | Application | Intended capabilities with suitable external logic | System boundary |
@@ -24,7 +35,7 @@ mathematical evidence, not demonstrated silicon or certified protocol support.
 | USB peripherals and hosts | USB 2.0 High Speed, both device and host | FPGA supplies controller; host VBUS power switching/protection is external |
 | Digital displays and video bridges | HDMI/DVI, initially 720p60 and 1080p60 at 8 bits/color; DisplayPort RBR, one lane | HDMI/DVI uses three identical lane chips plus an external clock interface; FPGA supplies encoding, control and lane coordination |
 | Professional video | HD-SDI at 1.485 and 1.485/1.001 Gb/s | External coax driver/equalizer and FPGA framing/scrambling |
-| Wi-Fi and SDR | 20 MHz 2.4 GHz Wi-Fi, including an 802.11ax/HE20 waveform target; custom I/Q radios | FPGA supplies modem, synchronization, FEC and MAC; current HE20 evidence is a limited BPSK fixture |
+| Wi-Fi and SDR | 20 MHz 2.4 GHz Wi-Fi, including an 802.11ax/HE20 waveform target; custom I/Q radios | FPGA supplies modem, synchronization, FEC and MAC; MCS0–7 interoperability target; coded 64-QAM and ideal-MAC lifecycle evidence, not router interoperability |
 | Personal-area and IoT radio | Bluetooth LE, Bluetooth Classic BR/EDR, IEEE 802.15.4 for Zigbee/Thread-class systems, and 2.4 GHz LoRa | External modem/protocol implementation; LoRa here does not imply sub-GHz coverage |
 | Custom links and instruments | Proprietary GFSK, intermediate serial rates, selectable RF bandwidth/gain/sample rate, capture and waveform playback | Use generic resources within their eventual characterized operating envelope |
 
@@ -34,8 +45,14 @@ forcing every application through a wide Wi-Fi channel. Lower-frequency RF and
 other bands through external frequency conversion are stretch goals.
 
 The [selected baseline and decision rules](spec/block-diagram.md#remaining-architecture-choices-closed-for-implementation)
-commit to one implementation. Remaining physical uncertainties are verification
-obligations, not an open menu of chip architectures.
+define one current design. The immediate priority is to improve that shared
+design until it meets the behavioral requirements. Physical realizability and
+fabrication compatibility are subsequent implementation checks; their unresolved
+costs remain recorded and are not treated as demonstrated fit.
+
+Current modeling milestone: [one coherent, uncertainty-aware whole-chip model](spec/feasibility-gates.md#current-mathematical-model-milestone),
+with explicit capability verdicts and circuit requirements. The model is partial;
+individual passing fixtures do not establish whole-chip or silicon feasibility.
 
 ## One platform, configurable building blocks
 
@@ -75,10 +92,29 @@ paired SAR/DAC conversion and a tunable finite-zero channel filter. The
 assign rough area and complete-mode current budgets; actual area remains a
 layout result. The [capability review](spec/feasibility-gates.md#capability-wide-evidence-gaps-and-next-decisions)
 records each target's required circuitry and distinct open proof. These are
-selected requirements for the next model revision, not claims that existing
+current design requirements, not claims that existing
 simulations already implement or pass them all.
 
 ## Where the design stands
+
+The [open-issue register](spec/risk-priorities.md#open-issue-register) owns the
+current blockers and missing proofs. Selected periodic CDR tracking now passes
+two acquired-state SSC/gap trajectories at 37.06 and 42.17 ppm against the
+50 ppm target, using FPGA-assisted prediction and a finite phase bank. Cold
+acquisition, broader jitter/traffic coverage and physical implementation remain
+open. Green regression tests do not establish that all capabilities work.
+
+Warm RF hopping now selects stable FPGA-facing timing with a bounded 50 µs
+retune/sample-epoch sequence. CDR requirements distinguish incoming offset/SSC
+from residual holdover error. RF gain updates have protected command/status
+encoding and a complete under-3-µs wideband feedback allocation. These are
+selected requirements with component checks, not measured performance.
+
+The [six-finding review](spec/block-diagram.md#review-disposition) now has
+explicit design fixes for detection injection, expected silence, USB bursts,
+multi-chip alignment, live adjustments and traffic-dependent CDR. Component
+checks support the selected mechanisms; complete model/RTL integration and
+physical qualification remain unfinished.
 
 Architecture choices are [selected for implementation](spec/block-diagram.md#remaining-architecture-choices-closed-for-implementation):
 provider-compatible common returns, external timing/regulation as the primary
@@ -94,50 +130,34 @@ still fail. **Full mathematical verification, the complete transistor schematic,
 and layout are unfinished.** Passing regression tests also verify expected
 failures; they do not mean every target works.
 
-Run `python3 verification/baseline_envelope.py` from this directory for the
-selected baseline under shared power, host switching, package impedance and
-delivered timing. It joins the complete mode-current allocations to causal wired
-reception, wideband RF and real LE 1M packet exchange, using the selected native
-10-bit converters and filters. The [joined results](spec/power-partition.md#first-selected-baseline-electrical-result)
-retain failures: a package probe leaves the wired voltage-validity interval,
-weak wideband reception fails under a strong blocker, and RF emissions worsen
-despite clean decoding. Fixed latency calibration helps the narrowband reply,
-but air timing and physical analog performance remain unqualified. A
-[closed-loop converter study](spec/power-partition.md#closed-loop-converter-and-reference-load-requirements)
-now connects SAR decisions, reference charge and shared-supply feedback. It
-checks converter precision separately from packet decoding and selects unequal
-bit timing within the existing conversion budget. The detailed converter now
-joins live packet AGC, conversion availability and reference-load feedback.
-Active control/timestamps use H2D clock divided by four, avoiding an unowned
-independent clock source.
-The corrected shared clock/input model now reaches causal converter feedback,
-real narrowband packets, bounded TX wake and wired recovery/transmit tests.
-It retains failures: the current package target passes five of six stressed
-narrowband exchanges, while short wired TX cases can have zero bit errors yet
-lose receiver readiness. A stronger external clock source is a promising
-mitigation, with additional return-current and input-voltage obligations.
-The report's `current_target_observations` separates numerical convergence,
-packet outcomes and receiver readiness; it is not a completeness score.
-The [wired recovery join](spec/power-partition.md#wired-equalization-host-delivery-and-recovery)
-now includes pad/channel loading, CTLE, finite host transport and clock-loss
-restart. Equalization prevents the selected-network status-queue failure; the
-higher-inductance package probe remains rejected. The common package target is
-now 0.25 nH return inductance after comparison across every existing joined
-bench; physical assembly feasibility remains unproven. The original 0.5 nH
-and adverse package cases remain explicit controls.
-`verification/robustness_envelope.py` retains the earlier fixtures and mitigation
-comparisons; their older current/converter/filter assumptions do not qualify the
-selected baseline.
+The current design uses differential external clock input, a provisional
+0.25 nH shared-return target, external regulation, native 10-bit converters,
+and RF sampling derived from the LO. These are modeled requirements and
+allocations; their physical implementation is unqualified.
 
-The principal unresolved analog issue is now **combined performance**: clock
-noise that looks acceptable in a clean signal test can fail under a blocker,
-and a low-noise receiver also needs sufficient linearity before filtering.
-Wideband RF also has a converter/headroom gap when unproven close-offset
-external-filter rejection is removed; narrowband packet success does not close it.
-Local supply filtering and RF filter retuning help selected cases, but no
-complete physical operating point is yet demonstrated. The
-[current system decisions](spec/risk-priorities.md#current-system-decisions)
-separate those useful mitigations from remaining failures and costs.
+| Area | What the model currently establishes | What remains open |
+| --- | --- | --- |
+| Shared clock and package | Conditional clock screens accept the 0.25/0.5 nH cases. The adverse package produces input excursions beyond the assigned envelope; independent corners show decoupling ESL improvement alone does not rescue it. | Actual package impedance, input bias/headroom/clamps, leg matching, CMRR and supply-to-delay sensitivity. Clock acceptance alone does not qualify payloads. |
+| Complete RF path | Selected fixtures connect conversion, reference-load feedback, filtering and delivered timing. Some diagnostic blocked-signal cases decode; changing feed impedance or internal activity can break acquisition. | One common operating envelope for noise, blockers, gain settling, real preambles, TX spectrum and turnaround. Older narrowband results do not automatically qualify the current design. |
+| Wi-Fi 6 preparation | Independent legacy DATA works in both directions at all eight OFDM rates, including return ACKs through retained RF state and finite queues. Candidate DAC/filter/PA assumptions have a conditional combined margin. | Complete HE SU/TB and router lifecycle; select the TX filter with realistic loading/control; qualify DAC accuracy, board power and overload recovery. External-clock candidate current fits the allocation; autonomous current does not. See the [Wi-Fi gate](spec/feasibility-gates.md#wi-fi-he20-capability-gate) for the single current decision record. |
+| Wired and FPGA service | Finite queues, causal receiver behavior, loaded-clock TX events and selected restart checks execute. A generic 100 MHz SDR direct stream gives the FPGA 120 ns to decide, with a conditional 342.25 ns USB reply bound including CDC. | Protocol electrical lifecycles, long-run error evidence, physical GPIO service and canonical reply-to-pad integration. |
+| Lifecycle and physical fit | The retained RF/wired/USB trajectory joins asynchronous SAR timing, diagnostic selection and delivery, model-observed readiness, fault recovery and FPGA-owned calibration invalidation. | Cold startup, physical sensing and clock acquisition, measured recalibration/correction deployment, serialized fault-service timing and physical fit. |
+
+The [current closure inventory](spec/mathematical-closure.json) retains all
+17 intended interfaces. Numerical acceptance requirements and complete
+per-capability verdicts remain unresolved. `python3 verification/check_contract.py`
+reports these gaps alongside planning arithmetic and source freshness for the
+five selected review areas; successful execution is not a chip-completeness
+score. A matching source manifest is provenance, not a passing capability verdict.
+
+Use the [model guide](system_model/architecture_fast/README.md) for scoped
+commands. `verification/selected_revision_check.py` refreshes selected clock,
+wired or RF sections separately; `--input-envelope` is a fast package-corner
+voltage diagnostic. Each evidence section retains its own source hashes.
+`verification/baseline_envelope.py` contains broader joined experiments,
+including historical configurations; neither its filename nor an older report
+makes every result current. The [risk review](spec/risk-priorities.md) owns
+mitigation decisions and the remaining analog uncertainties.
 
 The immediate priority is [big-picture architecture closure](spec/risk-priorities.md#big-picture-closure-priorities):
 reconcile physical/resource budgets, establish one usable analog operating
@@ -153,7 +173,7 @@ pad/package/power coexistence; further reference-chip simulation is paused.
 The [keep-or-change decision](spec/risk-priorities.md#keep-or-change-decision-change-the-delivered-clock-architecture)
 keeps the full chip and selects a differential external clock input plus a lower
 clock supply-sensitivity requirement. It includes pin/current/area reservations.
-The contract, diagram and selected payload clock model use this revision;
+The contract, diagram and selected payload clock model use this design;
 mathematical verification and physical feasibility remain incomplete.
 
 For the [whole-architecture assessment and keep/change decisions](spec/risk-priorities.md#architecture-assessment-one-implementation-several-ways-to-succeed),

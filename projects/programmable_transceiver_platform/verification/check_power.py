@@ -1,11 +1,14 @@
 """Pin/domain and limited measured-current planning screen, not PDN signoff."""
+from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
 from check_contract import CONTRACT, require
 
 
-def assess(contract, evidence):
+def assess(contract, evidence, *, design=None):
+    if design is not None and design.contract!=contract:
+        raise ValueError("Power contract conflicts with shared design snapshot")
     power=contract['power']
     pins={p['name']:p for p in contract['pins']}
     supplies={p['name'] for p in contract['pins'] if p['kind']=='supply'}
@@ -49,19 +52,28 @@ def assess(contract, evidence):
                          'scaled_average_ma':estimate,'with_provisional_allowances_ma':allowance,
                          'planning_budget_ma':by_id['HOST']['per_connection_budget_ma'],
                          'within_planning_budget':allowance<=by_id['HOST']['per_connection_budget_ma']})
-    return {'scope':'two-pad-current extrapolation only; not bank simulation or power qualification',
+    return {'design_provenance':None if design is None else design.provenance(),
+            'model_role':'independent_contract_fixture' if design is None else 'shared_design_historical_current_extrapolation',
+            'evidence_content_sha256':hashlib.sha256(json.dumps(evidence,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest(),
+            'planning_assumptions':deepcopy({key:power[key] for key in (
+                'screen_output_current_multiplier','screen_other_current_allowance_ma_per_segment',
+                'supply_cell_dc_limit_ma','domains','host_segments')}),
+            'scope':'two-pad-current extrapolation only; not bank simulation or power qualification',
             'all_host_estimates_within_candidate_budget':all(r['within_planning_budget'] for r in rows),
             'rows':rows,'unqualified_domains':[d['id'] for d in domains],
-            'limitations':['25% multiplier and 2 mA allowance are design assumptions, not measured bounds.',
+            'limitations':['Reported screening multiplier, per-segment allowance and connection budgets are design assumptions, not measured bounds.',
             'No FF/hot/high-VDD bank current, peak/SSO, clamp, ground distribution or package data.',
-            'Digital core now has one supply/return pair and a 48 mA ceiling; no core power estimate proves it fits.',
-            'Two segments require actual rail separation and dedicated returns; pad counts alone do not establish it.']}
+            'No core power estimate proves compliance with the reported CORE connection budget.',
+            'Host segments require actual rail separation and dedicated returns; pad counts alone do not establish it.']}
 
 
 if __name__=='__main__':
-    c=json.loads(CONTRACT.read_text());p=CONTRACT.parents[1]/c['power']['current_evidence']
-    result=assess(c,json.loads(p.read_text()))
-    result['contract_sha256']=hashlib.sha256(CONTRACT.read_bytes()).hexdigest()
+    import sys
+    sys.path.insert(0,str(CONTRACT.parents[1]/'system_model/architecture_fast'))
+    from design_definition import load_design
+    design=load_design();c=design.contract;p=CONTRACT.parents[1]/c['power']['current_evidence']
+    result=assess(c,json.loads(p.read_text()),design=design)
+    result['contract_sha256']=design.provenance()['documents']['spec/contract.json']
     result['evidence_sha256']=hashlib.sha256(p.read_bytes()).hexdigest()
     print(json.dumps(result,indent=2))
     require(result['all_host_estimates_within_candidate_budget'],'host-current planning ceiling exceeded')

@@ -67,14 +67,35 @@ def discontinuity_suffix(next_word_index,current_header,frame_words=64):
 
 class Receiver:
     """One input word at a time. No payload quarantine; any error latches fault."""
-    def __init__(self,mode,*,frame_words=64,owner=None,fault_status=False):
+    def __init__(self,mode,*,frame_words=64,owner=None,fault_status=False,raw_records=False,rf_gain_status=False):
         if type(fault_status) is not bool:raise ValueError('Boolean fault status selection')
+        if type(raw_records) is not bool:raise ValueError('Boolean record interpretation required')
+        if raw_records and (frame_words!=8 or owner not in (None,'wire') or fault_status):
+            raise ValueError('Raw records require exclusive short wired framing without legacy fault opcode')
+        if type(rf_gain_status) is not bool or (rf_gain_status and (owner!='iq' or frame_words!=64 or raw_records)):
+            raise ValueError('Gain status requires exclusive long RF frames')
+        self.rf_gain_status=rf_gain_status
+        self.record_receiver=None
+        if raw_records:
+            from bit_event_codec import StreamingRecordReceiver
+            self.record_receiver=StreamingRecordReceiver(frame_words=frame_words)
         self.fault_status=fault_status
         self.plan=slots(mode,frame_words,owner=owner)
         self.reset()
     def reset(self):
         self.pos=0;self.sequence=0;self.header=0;self.fault=False;self.left={}
+        if self.record_receiver is not None:self.record_receiver.reset()
+
+    def feed_records(self,word):
+        """Explicit ordered data/event interface; may emit two records per word."""
+        if self.record_receiver is None:raise ValueError('Raw record interpretation not selected')
+        try:return self.record_receiver.feed(word)
+        finally:
+            self.fault=self.record_receiver.fault
+            self.pos=self.record_receiver.position
+            self.sequence=self.record_receiver.sequence
     def feed(self,word):
+        if self.record_receiver is not None:raise ValueError('Use ordered feed_records for raw record interpretation')
         if self.fault:raise ValueError('receiver fault requires reset/retraining')
         try:
             if not isinstance(word,int) or not 0<=word<1024:raise ValueError('word range')
@@ -87,12 +108,24 @@ class Receiver:
                 h=unprotect(self.header)
                 wc,qc,seq,op,arg=h&63,(h>>6)&63,(h>>12)&63,(h>>18)&15,h>>22
                 if seq!=self.sequence:raise ValueError('sequence')
-                if wc>self.plan.count('wire') or qc>self.plan.count('iq'):raise ValueError('quota')
+                gain_status=self.rf_gain_status and op==4
+                rf_snapshot=self.rf_gain_status and op==8
+                if (not gain_status and not rf_snapshot and wc>self.plan.count('wire')) or qc>self.plan.count('iq'):raise ValueError('quota')
                 if self.fault_status and op==3 and arg==1 and wc==qc==0:
                     raise ValueError('Remote stream discontinuity')
-                if not ((op==0 and arg==0) or (op in (1,2) and arg in (0,1))):raise ValueError('command')
-                self.left={'wire':wc,'iq':qc}
-                event=('command',(op,arg))
+                if rf_snapshot:
+                    if arg>>5>=6:raise ValueError('Snapshot fragment')
+                    self.left={'wire':0,'iq':qc}
+                    event=('snapshot',[(self.header>>(10*i))&1023 for i in range(4)]+[word])
+                elif gain_status:
+                    from rf_gain_command import decode_gain
+                    header=[(self.header>>(10*i))&1023 for i in range(4)]+[word]
+                    gain=decode_gain(header,self.sequence,status=True)
+                    self.left={'wire':0,'iq':qc};event=('gain',gain)
+                else:
+                    if not ((op==0 and arg==0) or (op in (1,2) and arg in (0,1))):raise ValueError('command')
+                    self.left={'wire':wc,'iq':qc}
+                    event=('command',(op,arg))
             else:
                 source=self.plan[self.pos]
                 if self.left.get(source,0):

@@ -1,6 +1,14 @@
+"""Independent crossing extraction, stimulus generation and PDK cell pin-mapping tests.
+
+These tests do not simulate or qualify the intended chip pad waveform."""
 import unittest
 import numpy as np
 from run_gpio_transient import crossing, stimulus, N, output_instance
+
+TEST_DESIGN_ROLES = {
+    'ExtractorTests': ('independent_fixture', 'Synthetic threshold crossings and bit stimulus generation.'),
+    'NativePinMappingTests': ('independent_fixture', 'PDK cell pin mapping and drive-selection strings; no chip pad behavior claim.'),
+}
 
 class ExtractorTests(unittest.TestCase):
     def test_exact_threshold_crossings(self):

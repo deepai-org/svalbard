@@ -35,13 +35,16 @@ def host_margin(path, pattern):
             'clock_measurement_reference_v':1.65,'assumed_aperture_ns':.4,'qualified':False}
 
 
-def main():
+def main(*,design=None):
+    import sys
+    sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
+    from design_definition import load_design
+    design=load_design() if design is None else design
     work=Path('/work')
     matrix=[(load,pattern) for load in (8,10) for pattern in ('alternating','prbs7')]
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
         results=list(pool.map(lambda case:run_case(work,'typical',3.3,25,case[0],case[1],drive_ma=8),matrix))
-    contract_path=Path('/src/spec/contract.json')
-    c=json.loads(contract_path.read_text());power=c['power']
+    c=design.contract;power=c['power']
     budget=next(d['per_connection_budget_ma'] for d in power['domains'] if d['id']=='HOST')
     for r in results:
         r['host_threshold_screen']=host_margin(work/r['case'],r['pattern'])
@@ -52,10 +55,13 @@ def main():
                 r['host_power_extrapolation'].append({'segment':s['id'],'with_allowances_ma':estimate,
                                                      'budget_ma':budget,'within_budget':estimate<=budget})
     report={'scope':'nominal 8 mA native driver characterization, not signoff',
+            'design_provenance':design.provenance(),
+            'model_role':'shared_budget_with_independent_native_pad_characterization',
             'results':results,'pad_spice_sha256':hashlib.sha256(PAD.read_bytes()).hexdigest(),
             'script_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
             'runner_sha256':hashlib.sha256(Path('/src/verification/run_gpio_transient.py').read_bytes()).hexdigest(),
-            'contract_sha256':hashlib.sha256(contract_path.read_bytes()).hexdigest(),
+            'contract_sha256':design.provenance()['documents']['spec/contract.json'],
+            'contract_sha256_format':'canonical-json-sha256-v1',
             'host_threshold_source':'AMD DS181 v1.27.1 Tables 8 and 19; see spec/host-driver-selection.md#artix-load-baseline',
             'limitations':['10 pF is a selected lumped-load stress, not a characterized package/PCB.',
                            'Assumed aperture and clock reference are not receiver setup/hold closure.',

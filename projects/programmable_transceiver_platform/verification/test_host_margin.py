@@ -6,6 +6,10 @@ import numpy as np
 from screen_weak_drive import host_margin
 from run_gpio_transient import START, UI, N
 
+TEST_DESIGN_ROLES = {
+    'HostMarginTests': ('independent_fixture', 'Synthetic saved waveforms with deliberately missing or extra edges.'),
+}
+
 class HostMarginTests(unittest.TestCase):
     def fixture(self, path, glitch=False, missing_clock=False, clock_glitch=False):
         t=np.arange(0,START+(N+4)*UI,UI/100)

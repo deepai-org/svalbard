@@ -1,12 +1,36 @@
-"""Candidate command-word wire-format checks, not serialized integration proof."""
+"""Independent candidate codecs and shared-design resource admission checks.
+
+Lifecycle tests use shared startup/host timing and legal stopped settings;
+changing ownership here does not qualify RF operation or serialized commands.
+"""
 from pathlib import Path
 import sys
 import unittest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'system_model/architecture_fast'))
 from resource_configuration import decode_resource_word,encode_resource_word
 
+TEST_DESIGN_ROLES = {
+    'ResourceWordTests': ('independent_fixture', 'Command-word golden vectors and independently assigned host-service arithmetic.'),
+    'CurrentResourceLifecycleTests': ('shared_design', 'chip constructs the shared environment; legal resource changes and invalid requests exercise admission.'),
+}
+
 
 class ResourceWordTests(unittest.TestCase):
+    def test_host_service_rejects_board_rate_and_queue_shortfalls(self):
+        from resource_configuration import validate_host_service
+        args=dict(encoding='dense',word_hz=312.5e6,board_max_word_hz=312.5e6,
+                  arrival_bps=2.5e9,queue_bits=2048,burst_bits=10,
+                  service_latency_s=200e-9)
+        result=validate_host_service(**args)
+        self.assertEqual(result['backlog_bound_bits'],510)
+        self.assertFalse(result['physical_qualification'])
+        for change in ({'board_max_word_hz':200e6},
+                       {'service_latency_s':1e-6},
+                       {'stall_fraction':.2},
+                       {'encoding':'direct','word_hz':100e6}):
+            with self.assertRaises(ValueError):
+                validate_host_service(**dict(args,**change))
+
     def test_golden_words(self):
         self.assertEqual(encode_resource_word(engine='rf'),0x0c2)
         self.assertEqual(encode_resource_word(engine='wire',line_rate_bps=1.62e9),0x0d1)
@@ -32,95 +56,47 @@ class ResourceWordTests(unittest.TestCase):
         with self.assertRaises(ValueError):encode_resource_word(engine='wire',tx_enabled=1)
 
 
-class QueuedResourceTests(unittest.TestCase):
-    def fixture(self):
-        # Existing queue implementation, with a recording permission callback.
-        # This verifies dispatch/epoch behavior, not canonical analog operation.
-        import full_chip_model  # Establish existing model import paths.
-        from diagnostic_tile_lifecycle import DiagnosticChip
-        from resource_configuration import ResourceConfigurationCommands
-        class Fixture(ResourceConfigurationCommands,DiagnosticChip):
-            TILE_COMMANDS=DiagnosticChip.TILE_COMMANDS+ResourceConfigurationCommands.RESOURCE_COMMANDS
-            def configure_resources(self,**settings):
-                if not self.permitted:raise ValueError('Resources became busy')
-                self.settings=settings
-        c=Fixture();c.settings=None;c.permitted=True
-        return c
+class CurrentResourceLifecycleTests(unittest.TestCase):
+    """Current behavioral resource admission; serialized ABI remains separate."""
+    def chip(self,reference_hz):
+        from behavioral import BehavioralChip
+        from baseline_envelope import configured_environment
+        from selected_lifecycle import selected_transport_assumptions
+        from design_definition import load_design
+        self.design=load_design()
+        config=self.design.configure(engine='wire',direction='rx',reference_hz=reference_hz,host_divider=8)
+        return BehavioralChip(selected_transport_assumptions(configured_environment(config)))
 
-    def test_wire_interface_queued_apply_and_rejection(self):
-        from types import MethodType
-        for rate in (.7425e9,1.485e9):
-            c=self.fixture();c.wire_rate_override=rate;c.interface=None
-            def configure(owner,**settings):
-                if not owner.permitted:raise ValueError('Interface became busy')
-                owner.interface=settings
-            c.configure_wire_interface=MethodType(configure,c)
-            token,apply,reply=c.submit('configure_wire_interface',c.time,c.epoch,c.rx_generation,3)
-            c.advance(apply-1e-12);self.assertIsNone(c.interface)
-            result=c.read_reply(token,reply)
-            self.assertTrue(result['accepted'])
-            self.assertEqual(c.interface['word_reference_hz'],rate/10)
-            self.assertEqual(c.interface['electrical'],'dc_current_sink')
-            before=dict(c.interface)
-            for payload,permission,epoch in ((4,True,c.epoch),(0,False,c.epoch),(0,True,c.epoch+1)):
-                c.permitted=permission
-                token,_,reply=c.submit('configure_wire_interface',c.time,epoch,c.rx_generation,payload)
-                self.assertFalse(c.read_reply(token,reply)['accepted'])
-                self.assertEqual(c.interface,before)
+    def test_invalid_numeric_settings_preserve_selected_owner(self):
+        chip=self.chip(1.485e9)
+        chip.configure_numeric(engine='wire',timing=dict(line_rate_bps=1.485e9))
+        before=dict(chip.resources)
+        for settings in (dict(engine='rf',timing=dict(line_rate_bps=1.25e9)),
+                         dict(engine='wire',timing=dict(line_rate_bps=-1.)),
+                         dict(engine='rf',rf=dict(sample_hz=-1.)),
+                         dict(engine='none')):
+            with self.assertRaises(ValueError):chip.configure_numeric(**settings)
+            self.assertEqual(chip.resources,before)
+        for word in (0,512):
+            with self.assertRaises(ValueError):chip.configure(word)
+            self.assertEqual(chip.resources,before)
 
-    def test_apply_and_reply_times(self):
-        c=self.fixture();word=encode_resource_word(engine='wire',line_rate_bps=1.62e9)
-        token,apply,reply=c.submit('configure_resources',c.time,c.epoch,c.rx_generation,word)
-        c.advance(apply-1e-12);self.assertIsNone(c.settings)
-        c.advance(apply);self.assertEqual(c.settings,decode_resource_word(word))
-        with self.assertRaises(ValueError):c.read_reply(token,apply)
-        result=c.read_reply(token,reply)
-        self.assertTrue(result['accepted']);self.assertEqual(result['applied_at'],apply)
-
-    def test_reserved_word_is_rejected_at_apply(self):
-        c=self.fixture()
-        token,_,reply=c.submit('configure_resources',0,c.epoch,c.rx_generation,1<<31)
-        self.assertFalse(c.read_reply(token,reply)['accepted']);self.assertIsNone(c.settings)
-
-    def test_changed_permission_is_checked_at_apply(self):
-        c=self.fixture();word=encode_resource_word(engine='rf')
-        token,_,reply=c.submit('configure_resources',0,c.epoch,c.rx_generation,word)
-        c.permitted=False
-        self.assertFalse(c.read_reply(token,reply)['accepted']);self.assertIsNone(c.settings)
-
-    def test_stale_epoch_never_reaches_callback(self):
-        c=self.fixture();word=encode_resource_word(engine='rf')
-        token,_,reply=c.submit('configure_resources',0,c.epoch+1,c.rx_generation,word)
-        result=c.read_reply(token,reply)
-        self.assertFalse(result['accepted']);self.assertIn('stale',result['reason'])
-        self.assertIsNone(c.settings)
-
-
-class ConverterDirectionPlanningTests(unittest.TestCase):
-    def test_selected_directions_only(self):
-        from full_chip_model import make_chip
-        for mode in (0,1):
-            for flags,offset in ((1,-1.),(2,-10e-9),(3,-10e-9),(3,10e-9)):
-                c=make_chip();c.enable_reference_converter_clock();c.session.mode=mode
-                tx_before=object();rx_before=object()
-                c.sample_clock=tx_before;c.adc_clock=rx_before
-                c.plan_local_converter_clocks(200e-9,offset,flags)
-                if flags&1:self.assertIsNot(c.sample_clock,tx_before)
-                else:self.assertIs(c.sample_clock,tx_before)
-                if flags&2:self.assertIsNot(c.adc_clock,rx_before)
-                else:self.assertIs(c.adc_clock,rx_before)
-                if flags==3:
-                    tx=c.sample_clock.forecast(lambda t:3.3,maximum_slew_v_per_s=0.)
-                    rx=c.adc_clock.forecast(lambda t:3.3,maximum_slew_v_per_s=0.)
-                    self.assertLess(abs(rx.time-tx.time-offset),1e-18)
-
-    def test_invalid_plan_preserves_both_live_clocks(self):
-        from full_chip_model import make_chip
-        c=make_chip();c.enable_reference_converter_clock()
-        a,b=object(),object();c.sample_clock=a;c.adc_clock=b
-        for flags,offset in ((2,-1.),(3,-1.),(0,0.),(4,0.)):
-            with self.assertRaises(ValueError):c.plan_local_converter_clocks(25e-9,offset,flags)
-            self.assertIs(c.sample_clock,a);self.assertIs(c.adc_clock,b)
+    def test_active_engine_cannot_be_reassigned_before_stop(self):
+        chip=self.chip(1.25e9)
+        chip.configure_numeric(engine='wire',timing=dict(line_rate_bps=1.25e9))
+        chip.start();chip.advance(chip.ready_at)
+        before=dict(chip.resources)
+        config=self.design.configure(engine='rf',direction='rx',reference_hz=2.4e9,
+            sample_divider=256,pga_gain_db=39)
+        rf=dict(sample_hz=config.sample_hz,sample_clock_source='external_lo',
+            lo_hz=config.reference_hz,lo_divider=config.sample_divider,tx_cutoff_hz=3e6,rx_cutoff_hz=1.25e6)
+        with self.assertRaisesRegex(ValueError,'Stop'):
+            chip.configure_numeric(engine='rf',rf=rf)
+        self.assertEqual(chip.resources,before)
+        chip.stop()
+        chip.configure_numeric(engine='rf',rf=rf)
+        self.assertEqual(chip.resources['engine'],'rf')
+        self.assertEqual(chip.resources['sample_hz'],config.sample_hz)
 
 
 if __name__=='__main__':unittest.main()

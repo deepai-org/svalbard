@@ -1,7 +1,7 @@
 """Small staged noisy-acquisition comparison; not full-chip qualification."""
 import json
 from chip_model import P
-from fractional_rf_chip import ShapedRFClock
+from pulse_clock_service import ShapedRFClock
 from oscillator_noise import FrequencyNoise
 
 def main():

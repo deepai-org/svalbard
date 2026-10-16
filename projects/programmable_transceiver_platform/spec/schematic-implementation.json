@@ -638,12 +638,12 @@
       "connected_route_report": "analog/pads/generated/protected-rf-pair/route-screen.json"
     },
     "wired_tx_admittance": {
-      "report": "analog/pads/generated/wired-transmit-loading.json",
+      "report": "analog/pads/generated/wired-primary-protection/double-tails/loading.json",
       "implementation": "analog/pads/wired_tx_loading.py",
       "scope": "Complete extracted pad, calibration bound to that netlist, nine biased configurations, odd/common admittance sweeps. Every branch retained; stiff controls/biases and no package/distributed resistance. Independent AC points supplement lifecycle tests.",
-      "decision": "Share output cascodes across MAIN, POST and TMDS per leg/unit: two 16um L0.7um fingers; two 20um L1um tail devices per branch/unit. Generated layout and full retained-network screens use this topology. Protection remains below published minimum dimensions and is not qualified.",
-      "current_compliance_report": "analog/pads/generated/wired-transmit-compliance.json",
-      "current_compliance_scope": "Fresh exact-circuit calibration; nominal 8mA, aligned maximum 24mA MAIN+POST, and 10mA TMDS meet 3% loaded-current criterion. DC only; distributed resistance, variation and device stress remain open."
+      "decision": "Selected four-tail protected pad is canonical. Earlier selected-layout AC evidence indicates about 2.688 pF per leg disabled and 3.798 pF in detection; exact canonical regeneration still needs refreshed loading and current calibration. Do not interpret earlier small-clamp results as current acceptance.",
+      "current_compliance_report": "analog/pads/generated/wired-primary-protection/double-tails/loaded-calibration.json",
+      "current_compliance_scope": "Earlier selected protected-pad nominal calibration only; not a refreshed calibration of the canonical regenerated model or evidence of dynamic protocol compliance."
     },
     "reference_primary_candidate": {
       "report": "analog/pads/generated/reference-clock-integrated-screen.json",
@@ -710,7 +710,7 @@
       }
     },
     "generation_parameters": {
-      "status": "preferred integration candidates, not canonical electrical acceptance",
+      "status": "selected shared first-pass construction recipes; electrical acceptance remains separate",
       "wired_transmit": {
         "serial_tail_units": 4
       },
@@ -752,7 +752,7 @@
     "tx_integration_fixture": {
       "status": "nominal retained-network engineering fixture, not a protocol profile or calibrated production trim",
       "models": {
-        "pad": "analog/pads/generated/wired-primary-protection/double-tails/physical.spice",
+        "pad": "analog/pads/generated/wired-transmit-extracted-c.spice",
         "buffer": "analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/physical.spice",
         "interlock": "analog/pads/generated/transmit-control-candidate/thick-logic/physical.spice"
       },
@@ -775,6 +775,11 @@
       "bond_inductance_h": 1e-09,
       "data_period_s": 8e-10,
       "data_edge_s": 2e-11
+    },
+    "transmit_primary": {
+      "report": "analog/pads/generated/wired-transmit-integration.json",
+      "implemented_scope": "Canonical 366-device protected pad, connected extracted buffer/interlock and RTL-driven retained-state replay; normal build entry point checks layout graph, area, sampled convergence and provider placement.",
+      "remaining": "Buffer/interlock placement and area, physical detectors/sequencer, protection/core contract, updated AC/current calibration and sustained operation."
     }
   }
 }

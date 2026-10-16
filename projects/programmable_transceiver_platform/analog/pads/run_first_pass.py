@@ -14,10 +14,6 @@ import sys
 from circuits import FAMILIES,build
 from layout import generate,IMAGE,PDK
 from extract_audit import audit
-from screen import screen as wired_screen
-from wired_tx_loading import screen as wired_loading_screen
-from receive_screen import screen as receive_screen
-from loading_audit import screen as loading_screen
 from analog_screen import screen as analog_screen
 
 
@@ -42,13 +38,13 @@ def run(work,pdk,publish,families):
     connected_rf=(rf_metadata.exists() and json.loads(rf_metadata.read_text()).get('connected_protection')
                   and any(family in ('rf_receive','rf_transmit') for family in families))
     for family in families:
-        if family in ('reference_clock','wired_receive_usb'):continue
+        if family in ('reference_clock','wired_receive_usb','wired_transmit'):continue
         if connected_rf and family in ('rf_receive','rf_transmit'):continue
         cell=build(family)
         root=work/family
         generate(root,family)
         audit(root,family)
-        flat='pad_tx_flat' if family=='wired_transmit' else cell.name+'_flat'
+        flat=cell.name+'_flat'
         from gds_roundtrip import check as check_gds_roundtrip
         exported=check_gds_roundtrip(root/'gds-roundtrip',root/(flat+'.gds'),root/'physical.spice',flat)
         if exported['drc_count'] or not exported['device_graph_match']:
@@ -65,31 +61,23 @@ def run(work,pdk,publish,families):
         subprocess.run([sys.executable,str(Path(__file__).with_name('render.py')),str(root/(flat+'.mag')),
                         '--output',str(root/'layout.png'),'--title',family.replace('_',' ')],check=True,timeout=30)
         electrical=root/'electrical'
-        if family=='wired_transmit':
-            wired_screen(electrical,pdk,root/'physical.spice')
-            wired_loading_screen(root/'loading-screen',pdk,root/'physical.spice',electrical/'screen-report.json')
-        elif family=='wired_receive_usb':
-            receive_screen(electrical,pdk,root/'physical.spice')
-            loading_screen(root/'loading-audit',pdk,root/'physical.spice')
-        else:analog_screen(electrical,pdk,root/'physical.spice',family)
+        analog_screen(electrical,pdk,root/'physical.spice',family)
         stem=family.replace('_','-')
         files={'gds-roundtrip/gds-roundtrip.json':stem+'-gds-roundtrip.json',flat+'.gds':stem+'.gds',cell.name+'.spice':stem+'.spice',
                'physical.spice':stem+'-extracted-c.spice','layout.png':stem+'.png',
                'layout-report.json':stem+'-layout.json','extraction-audit.json':stem+'-extraction.json',
                'physical-lvs.txt':stem+'-physical-lvs.txt','stock-export.tcl.log':stem+'-stock-export.log',
                'electrical/screen-report.json':stem+'-screen.json'}
-        if family=='wired_receive_usb':files['loading-audit/loading-audit.json']=stem+'-loading.json'
-        if family=='wired_transmit':
-            files['loading-screen/wired-transmit-loading.json']=stem+'-loading.json'
-            files['electrical/current-compliance/wired-transmit-compliance.json']=stem+'-compliance.json'
         if stock==0:files['stock-lvs.txt']=stem+'-lvs.txt'
         for source,target in files.items():shutil.copyfile(root/source,publish/target)
         results[family]=dict(gds_roundtrip_device_graph_match=exported['device_graph_match'],physical_record_lvs_match=match,stock_export_lvs_match=raw_match,
                             stock_export_returncode=stock,
                             drc_count=json.loads((root/'layout-report.json').read_text())['drc_count'],
-                            electrical_scope='transistor_and_extracted_capacitance_screen' if family in ('wired_transmit','wired_receive_usb') else
-                                             'extracted_capacitance_with_behavioral_core_boundary')
+                            electrical_scope='extracted_capacitance_with_behavioral_core_boundary')
         print('Published '+family,flush=True)
+    if 'wired_transmit' in families:
+        from transmit_integrated import run as integrate_transmit
+        results['wired_transmit'] = integrate_transmit(work/'connected-transmitter', publish, pdk)
     if 'wired_receive_usb' in families:
         from receive_integrated import run as integrate_receive
         results['wired_receive_usb'] = integrate_receive(work/'connected-receiver', publish, pdk)
@@ -210,11 +198,12 @@ def write_coverage(publish,results):
                 combined_retained_screen=retained_evidence,
                 protection_design_audit=protection_evidence,wired_tx_loading=tx_loading_evidence,
                 wired_tx_current_compliance=compliance_evidence,
-                missing=['initialization audit of legacy canonical wired TX fixtures; selected protected TX and canonical RX/USB/RF/reference reruns now reject transient operating-point fallback',
+                missing=['floating-conductor initial charge remains unbounded; current lifecycle screens reject transient operating-point fallback',
+                         'refresh wired TX AC loading and current calibration against the canonical regenerated model',
                          'wired RX/USB trim, slew, termination mutual exclusion and local safe-state controls',
-                         'wired TX termination trim, implemented current-limited common-mode buffer and reset/brownout controls',
+                         'wired TX termination trim, buffer/interlock area and physical integration, readiness and reset/brownout controls',
                          'full-bank host/power and supervisor qualification; independent-host power-off backfeed mitigation',
-                         'legacy wired TX canonical model still needs selected primary-protection adoption; selected RF/reference protection still needs current-capacity, core-stress and whole-ring/package qualification',
+                         'selected pad protection still needs current-capacity, core-stress and whole-ring/package qualification',
                          'distributed interconnect resistance and complete attached-core stress/loading'],
                 scope='Only listed candidates were rebuilt. Other artifacts must retain their original source hashes.')
     (publish/'coverage.json').write_text(json.dumps(report,indent=2)+'\n')

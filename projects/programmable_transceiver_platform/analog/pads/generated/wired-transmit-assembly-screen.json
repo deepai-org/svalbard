@@ -1,0 +1,970 @@
+{
+  "status": "current_families_placement_and_local_rails_pass",
+  "connected_tx_candidate": true,
+  "connected_reference_candidate": false,
+  "connected_receive_candidate": false,
+  "placement": {
+    "status": "no_unexpected_metal_overlap_declared_ground_joins_unverified",
+    "native_ground_landing_top_metal_labels": [
+      "DVSS",
+      "DVSS",
+      "DVSS"
+    ],
+    "roundtrip_all_bond_openings_match": true,
+    "bond_opening_count": 74,
+    "custom_cells": {
+      "reference_clock": {
+        "reference_sites": [
+          "inputs[1].pad",
+          "inputs[0].pad"
+        ],
+        "bond_openings_match": true,
+        "bbox_um": [
+          26.0,
+          4319.78,
+          854.0,
+          4721.0
+        ],
+        "allocated_region_area_um2": 127170.32999999999,
+        "geometry_within_allocation": true,
+        "area_ceiling_um2": 130000,
+        "region_area_within_ceiling": true,
+        "transform": {
+          "rotation": 1,
+          "mirror": true,
+          "x_um": 26.0,
+          "y_um": 4317.0
+        },
+        "gds_sha256": "64796df3103e613e37bc42e0efc7a56e6caa47231163fe5308cb17d26ec76364",
+        "layout_report_sha256": "af18265b339f1fb2748c2a4cb91d77844cb23cd54c05c5be79d6d257e8304f3a",
+        "retained_metal_overlaps": {
+          "metal3": {
+            "area_um2": 8.0,
+            "region_count": 2,
+            "example_boxes_um": [
+              [
+                103.305,
+                4326.0,
+                105.305,
+                4328.0
+              ],
+              [
+                103.305,
+                4537.0,
+                105.305,
+                4539.0
+              ]
+            ]
+          },
+          "metal4": {
+            "area_um2": 8.0,
+            "region_count": 2,
+            "example_boxes_um": [
+              [
+                103.305,
+                4326.0,
+                105.305,
+                4328.0
+              ],
+              [
+                103.305,
+                4537.0,
+                105.305,
+                4539.0
+              ]
+            ]
+          },
+          "metal5": {
+            "area_um2": 8.0,
+            "region_count": 2,
+            "example_boxes_um": [
+              [
+                103.305,
+                4326.0,
+                105.305,
+                4328.0
+              ],
+              [
+                103.305,
+                4537.0,
+                105.305,
+                4539.0
+              ]
+            ]
+          }
+        },
+        "declared_ground_landing_overlaps": {
+          "metal3": {
+            "area_um2": 8.0,
+            "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+          },
+          "metal4": {
+            "area_um2": 8.0,
+            "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+          },
+          "metal5": {
+            "area_um2": 8.0,
+            "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+          }
+        },
+        "unexpected_retained_metal_overlaps": {}
+      },
+      "rf_receive": {
+        "reference_sites": [
+          "inputs[11].pad",
+          "inputs[10].pad"
+        ],
+        "bond_openings_match": true,
+        "bbox_um": [
+          26.0,
+          1362.945,
+          754.0,
+          1673.0
+        ],
+        "allocated_region_area_um2": 123842.11,
+        "geometry_within_allocation": true,
+        "area_ceiling_um2": 130000,
+        "region_area_within_ceiling": true,
+        "transform": {
+          "rotation": 1,
+          "mirror": true,
+          "x_um": 26.0,
+          "y_um": 1363.0
+        },
+        "gds_sha256": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
+        "layout_report_sha256": "af5a10880ad2a25481680eca0f0396febd1d83b6412ea3195b0333491366ec22",
+        "retained_metal_overlaps": {
+          "metal3": {
+            "area_um2": 8.0,
+            "region_count": 2,
+            "example_boxes_um": [
+              [
+                103.305,
+                1372.0,
+                105.305,
+                1374.0
+              ],
+              [
+                103.305,
+                1583.0,
+                105.305,
+                1585.0
+              ]
+            ]
+          },
+          "metal4": {
+            "area_um2": 8.0,
+            "region_count": 2,
+            "example_boxes_um": [
+              [
+                103.305,
+                1372.0,
+                105.305,
+                1374.0
+              ],
+              [
+                103.305,
+                1583.0,
+                105.305,
+                1585.0
+              ]
+            ]
+          },
+          "metal5": {
+            "area_um2": 8.0,
+            "region_count": 2,
+            "example_boxes_um": [
+              [
+                103.305,
+                1372.0,
+                105.305,
+                1374.0
+              ],
+              [
+                103.305,
+                1583.0,
+                105.305,
+                1585.0
+              ]
+            ]
+          }
+        },
+        "declared_ground_landing_overlaps": {
+          "metal3": {
+            "area_um2": 8.0,
+            "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+          },
+          "metal4": {
+            "area_um2": 8.0,
+            "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+          },
+          "metal5": {
+            "area_um2": 8.0,
+            "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+          }
+        },
+        "unexpected_retained_metal_overlaps": {}
+      },
+      "rf_transmit": {
+        "reference_sites": [
+          "inputs[5].pad",
+          "inputs[4].pad"
+        ],
+        "bond_openings_match": true,
+        "bbox_um": [
+          26.0,
+          3050.945,
+          754.0,
+          3361.0
+        ],
+        "allocated_region_area_um2": 123842.11,
+        "geometry_within_allocation": true,
+        "area_ceiling_um2": 130000,
+        "region_area_within_ceiling": true,
+        "transform": {
+          "rotation": 1,
+          "mirror": true,
+          "x_um": 26.0,
+          "y_um": 3051.0
+        },
+        "gds_sha256": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
+        "layout_report_sha256": "67415893e4415099409dce31b9d8a137fa29868a8f0772d3dc5a1a518336b06a",
+        "retained_metal_overlaps": {
+          "metal3": {
+            "area_um2": 8.0,
+            "region_count": 2,
+            "example_boxes_um": [
+              [
+                103.305,
+                3060.0,
+                105.305,
+                3062.0
+              ],
+              [
+                103.305,
+                3271.0,
+                105.305,
+                3273.0
+              ]
+            ]
+          },
+          "metal4": {
+            "area_um2": 8.0,
+            "region_count": 2,
+            "example_boxes_um": [
+              [
+                103.305,
+                3060.0,
+                105.305,
+                3062.0
+              ],
+              [
+                103.305,
+                3271.0,
+                105.305,
+                3273.0
+              ]
+            ]
+          },
+          "metal5": {
+            "area_um2": 8.0,
+            "region_count": 2,
+            "example_boxes_um": [
+              [
+                103.305,
+                3060.0,
+                105.305,
+                3062.0
+              ],
+              [
+                103.305,
+                3271.0,
+                105.305,
+                3273.0
+              ]
+            ]
+          }
+        },
+        "declared_ground_landing_overlaps": {
+          "metal3": {
+            "area_um2": 8.0,
+            "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+          },
+          "metal4": {
+            "area_um2": 8.0,
+            "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+          },
+          "metal5": {
+            "area_um2": 8.0,
+            "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+          }
+        },
+        "unexpected_retained_metal_overlaps": {}
+      },
+      "wired_receive_usb": {
+        "reference_sites": [
+          "bidir[14].pad",
+          "bidir[15].pad"
+        ],
+        "bond_openings_match": true,
+        "bbox_um": [
+          2390.0,
+          943.78,
+          3906.0,
+          1465.0
+        ],
+        "allocated_region_area_um2": 283002.57269999996,
+        "geometry_within_allocation": true,
+        "area_ceiling_um2": 290000,
+        "region_area_within_ceiling": true,
+        "transform": {
+          "rotation": 1,
+          "mirror": false,
+          "x_um": 3906.0,
+          "y_um": 941.0
+        },
+        "gds_sha256": "464a6e24cd0c1f4eeb11afbc955446ecbade471d81c9746595650590ca7ebc94",
+        "layout_report_sha256": "f4d576bdb0366985915524fedc23213ceda0333f86047edef4fe68123a1be0df",
+        "retained_metal_overlaps": {
+          "metal3": {
+            "area_um2": 8.0,
+            "region_count": 2,
+            "example_boxes_um": [
+              [
+                3826.695,
+                950.0,
+                3828.695,
+                952.0
+              ],
+              [
+                3826.695,
+                1161.0,
+                3828.695,
+                1163.0
+              ]
+            ]
+          },
+          "metal4": {
+            "area_um2": 8.0,
+            "region_count": 2,
+            "example_boxes_um": [
+              [
+                3826.695,
+                950.0,
+                3828.695,
+                952.0
+              ],
+              [
+                3826.695,
+                1161.0,
+                3828.695,
+                1163.0
+              ]
+            ]
+          },
+          "metal5": {
+            "area_um2": 8.0,
+            "region_count": 2,
+            "example_boxes_um": [
+              [
+                3826.695,
+                950.0,
+                3828.695,
+                952.0
+              ],
+              [
+                3826.695,
+                1161.0,
+                3828.695,
+                1163.0
+              ]
+            ]
+          }
+        },
+        "declared_ground_landing_overlaps": {
+          "metal3": {
+            "area_um2": 8.0,
+            "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+          },
+          "metal4": {
+            "area_um2": 8.0,
+            "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+          },
+          "metal5": {
+            "area_um2": 8.0,
+            "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+          }
+        },
+        "unexpected_retained_metal_overlaps": {}
+      },
+      "wired_transmit": {
+        "reference_sites": [
+          "bidir[20].pad",
+          "bidir[21].pad"
+        ],
+        "bond_openings_match": true,
+        "bbox_um": [
+          2676.0,
+          2631.78,
+          3906.0,
+          3113.0
+        ],
+        "allocated_region_area_um2": 240640.33,
+        "geometry_within_allocation": true,
+        "area_ceiling_um2": 250000,
+        "region_area_within_ceiling": true,
+        "transform": {
+          "rotation": 1,
+          "mirror": false,
+          "x_um": 3906.0,
+          "y_um": 2629.0
+        },
+        "gds_sha256": "ff35cf0de4ceb2590e8b93ee5ebe346c7dae93a8e31a9be3c3076d87008e19d3",
+        "layout_report_sha256": "14eed9d8e9d52b9c89b0640d333cbdae39b8dabfbeca4afef1db4a17084315f2",
+        "retained_metal_overlaps": {
+          "metal3": {
+            "area_um2": 8.0,
+            "region_count": 2,
+            "example_boxes_um": [
+              [
+                3826.695,
+                2638.0,
+                3828.695,
+                2640.0
+              ],
+              [
+                3826.695,
+                2849.0,
+                3828.695,
+                2851.0
+              ]
+            ]
+          },
+          "metal4": {
+            "area_um2": 8.0,
+            "region_count": 2,
+            "example_boxes_um": [
+              [
+                3826.695,
+                2638.0,
+                3828.695,
+                2640.0
+              ],
+              [
+                3826.695,
+                2849.0,
+                3828.695,
+                2851.0
+              ]
+            ]
+          },
+          "metal5": {
+            "area_um2": 8.0,
+            "region_count": 2,
+            "example_boxes_um": [
+              [
+                3826.695,
+                2638.0,
+                3828.695,
+                2640.0
+              ],
+              [
+                3826.695,
+                2849.0,
+                3828.695,
+                2851.0
+              ]
+            ]
+          }
+        },
+        "declared_ground_landing_overlaps": {
+          "metal3": {
+            "area_um2": 8.0,
+            "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+          },
+          "metal4": {
+            "area_um2": 8.0,
+            "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+          },
+          "metal5": {
+            "area_um2": 8.0,
+            "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+          }
+        },
+        "unexpected_retained_metal_overlaps": {}
+      }
+    },
+    "custom_to_custom_metal_overlaps": [],
+    "replaced_stock_signal_cells": [
+      "bidir[14].pad",
+      "bidir[15].pad",
+      "bidir[20].pad",
+      "bidir[21].pad",
+      "inputs[0].pad",
+      "inputs[10].pad",
+      "inputs[11].pad",
+      "inputs[1].pad",
+      "inputs[4].pad",
+      "inputs[5].pad"
+    ],
+    "restored_native_rail_modules": [
+      "bidir[14].pad",
+      "bidir[15].pad",
+      "bidir[20].pad",
+      "bidir[21].pad",
+      "inputs[0].pad",
+      "inputs[10].pad",
+      "inputs[11].pad",
+      "inputs[1].pad",
+      "inputs[4].pad",
+      "inputs[5].pad"
+    ],
+    "host_cell_replacements": [
+      {
+        "site": "clk_pad",
+        "signal": "D2H_D[0]",
+        "original_master": "gf180mcu_fd_io__in_s",
+        "candidate_master": "gf180mcu_fd_io__bi_t",
+        "settings": {
+          "PDRV0": 0,
+          "PDRV1": 1,
+          "SL": 0,
+          "CS": 0,
+          "IE": 0
+        }
+      },
+      {
+        "site": "bidir[0].pad",
+        "signal": "D2H_D[1]",
+        "original_master": "gf180mcu_fd_io__bi_24t",
+        "candidate_master": "gf180mcu_fd_io__bi_t",
+        "settings": {
+          "PDRV0": 0,
+          "PDRV1": 1,
+          "SL": 0,
+          "CS": 0,
+          "IE": 0
+        }
+      },
+      {
+        "site": "bidir[1].pad",
+        "signal": "D2H_D[2]",
+        "original_master": "gf180mcu_fd_io__bi_24t",
+        "candidate_master": "gf180mcu_fd_io__bi_t",
+        "settings": {
+          "PDRV0": 0,
+          "PDRV1": 1,
+          "SL": 0,
+          "CS": 0,
+          "IE": 0
+        }
+      },
+      {
+        "site": "bidir[2].pad",
+        "signal": "D2H_D[3]",
+        "original_master": "gf180mcu_fd_io__bi_24t",
+        "candidate_master": "gf180mcu_fd_io__bi_t",
+        "settings": {
+          "PDRV0": 0,
+          "PDRV1": 1,
+          "SL": 0,
+          "CS": 0,
+          "IE": 0
+        }
+      },
+      {
+        "site": "bidir[3].pad",
+        "signal": "D2H_D[4]",
+        "original_master": "gf180mcu_fd_io__bi_24t",
+        "candidate_master": "gf180mcu_fd_io__bi_t",
+        "settings": {
+          "PDRV0": 0,
+          "PDRV1": 1,
+          "SL": 0,
+          "CS": 0,
+          "IE": 0
+        }
+      },
+      {
+        "site": "bidir[4].pad",
+        "signal": "D2H_D[5]",
+        "original_master": "gf180mcu_fd_io__bi_24t",
+        "candidate_master": "gf180mcu_fd_io__bi_t",
+        "settings": {
+          "PDRV0": 0,
+          "PDRV1": 1,
+          "SL": 0,
+          "CS": 0,
+          "IE": 0
+        }
+      },
+      {
+        "site": "bidir[5].pad",
+        "signal": "D2H_CLK",
+        "original_master": "gf180mcu_fd_io__bi_24t",
+        "candidate_master": "gf180mcu_fd_io__bi_t",
+        "settings": {
+          "PDRV0": 0,
+          "PDRV1": 1,
+          "SL": 0,
+          "CS": 0,
+          "IE": 0
+        }
+      },
+      {
+        "site": "bidir[6].pad",
+        "signal": "D2H_D[6]",
+        "original_master": "gf180mcu_fd_io__bi_24t",
+        "candidate_master": "gf180mcu_fd_io__bi_t",
+        "settings": {
+          "PDRV0": 0,
+          "PDRV1": 1,
+          "SL": 0,
+          "CS": 0,
+          "IE": 0
+        }
+      },
+      {
+        "site": "bidir[7].pad",
+        "signal": "D2H_D[7]",
+        "original_master": "gf180mcu_fd_io__bi_24t",
+        "candidate_master": "gf180mcu_fd_io__bi_t",
+        "settings": {
+          "PDRV0": 0,
+          "PDRV1": 1,
+          "SL": 0,
+          "CS": 0,
+          "IE": 0
+        }
+      },
+      {
+        "site": "bidir[8].pad",
+        "signal": "D2H_D[8]",
+        "original_master": "gf180mcu_fd_io__bi_24t",
+        "candidate_master": "gf180mcu_fd_io__bi_t",
+        "settings": {
+          "PDRV0": 0,
+          "PDRV1": 1,
+          "SL": 0,
+          "CS": 0,
+          "IE": 0
+        }
+      },
+      {
+        "site": "bidir[9].pad",
+        "signal": "D2H_D[9]",
+        "original_master": "gf180mcu_fd_io__bi_24t",
+        "candidate_master": "gf180mcu_fd_io__bi_t",
+        "settings": {
+          "PDRV0": 0,
+          "PDRV1": 1,
+          "SL": 0,
+          "CS": 0,
+          "IE": 0
+        }
+      },
+      {
+        "site": "bidir[13].pad",
+        "signal": "HOST_MISO",
+        "original_master": "gf180mcu_fd_io__bi_24t",
+        "candidate_master": "gf180mcu_fd_io__bi_t",
+        "settings": {
+          "PDRV0": 0,
+          "PDRV1": 1,
+          "SL": 0,
+          "CS": 0,
+          "IE": 0
+        }
+      }
+    ],
+    "retained_provider_site_count": 64,
+    "retained_power_ground_sites": [
+      "dvdd_pads[0].pad",
+      "dvss_pads[1].pad",
+      "dvdd_pads[1].pad",
+      "dvss_pads[2].pad",
+      "vss_pads[0].pad",
+      "vdd_pads[0].pad",
+      "dvss_pads[3].pad",
+      "dvdd_pads[2].pad",
+      "dvss_pads[4].pad",
+      "dvss_pads[0].pad",
+      "dvdd_pads[5].pad",
+      "dvss_pads[7].pad",
+      "vdd_pads[1].pad",
+      "vss_pads[1].pad",
+      "dvdd_pads[4].pad",
+      "dvss_pads[6].pad",
+      "dvdd_pads[3].pad",
+      "dvss_pads[5].pad"
+    ],
+    "limitations": [
+      "Same-layer overlap is a connectivity hazard, not a net-aware short verdict; intended ground joins also appear.",
+      "Native rail modules are restored geometrically; substrate ties, lower-metal access, net-aware connectivity and current capacity still need verification. No integrated DRC/LVS, power-net hookup, package-return simulation or board qualification.",
+      "Positive bond is the left opening in each generated candidate; electrical polarity remains a graph/LVS obligation.",
+      "Macro containment does not establish routing clearance, density or separation from the future core."
+    ],
+    "source_sha256": {
+      "placement_audit.py": "3cde9142f1495e11cc20ea71608ae815da7f23b7dc0446eb1e34a0a92852f2d2",
+      "assembly-report.json": "9e79ec1f9415be806e96d945c1fa86dfc9bc419d898976ff4f534a7ebf4a9bb9",
+      "custom-map.json": "259aaa8d6e3acec35cf32e8ac4d39ef0b1f74b4414e6741ff0877a7886ff1cf5",
+      "retained-binding.json": "6a2a14cebf348e1b38adbb347ec94f6b8a1a7d22f4ea26bc1f77504a67abf2b5",
+      "provider-reference-ring.gds": "ce7a427036ae7330ae8e1b862594a57e1194db587b17d97acd99dedd106cd651"
+    },
+    "oas_sha256": "2fbaa17ab0c33f8897ddcb9714f2ad8f15a913f4cd7b8980d78e0155dd11c9f4"
+  },
+  "local_rails": {
+    "status": "local_metal_connectivity_pass",
+    "fault_injection": "none",
+    "families": {
+      "wired-transmit": {
+        "pass_metal_connectivity": true,
+        "custom_vss_cluster_id": 5,
+        "protection_rail": {
+          "cluster_id": 72,
+          "isolated_from_ground_signals_and_supplies": true
+        },
+        "ground_landings": [
+          {
+            "center_um": [
+              10.0,
+              78.305
+            ],
+            "metal2_through_metal5_cluster_ids": [
+              5,
+              5,
+              5,
+              5
+            ],
+            "connected_to_custom_vss": true
+          },
+          {
+            "center_um": [
+              221.0,
+              78.305
+            ],
+            "metal2_through_metal5_cluster_ids": [
+              5,
+              5,
+              5,
+              5
+            ],
+            "connected_to_custom_vss": true
+          }
+        ],
+        "supply_rail_conflicts": [],
+        "pad_cluster_ids": {
+          "PAD_P": 1,
+          "PAD_N": 2
+        },
+        "pads_separate_from_ground_and_each_other": true
+      },
+      "wired-receive-usb": {
+        "pass_metal_connectivity": true,
+        "custom_vss_cluster_id": 5,
+        "protection_rail": {
+          "cluster_id": 101,
+          "isolated_from_ground_signals_and_supplies": true
+        },
+        "ground_landings": [
+          {
+            "center_um": [
+              10.0,
+              78.305
+            ],
+            "metal2_through_metal5_cluster_ids": [
+              5,
+              5,
+              5,
+              5
+            ],
+            "connected_to_custom_vss": true
+          },
+          {
+            "center_um": [
+              221.0,
+              78.305
+            ],
+            "metal2_through_metal5_cluster_ids": [
+              5,
+              5,
+              5,
+              5
+            ],
+            "connected_to_custom_vss": true
+          }
+        ],
+        "supply_rail_conflicts": [],
+        "pad_cluster_ids": {
+          "PAD_P": 1,
+          "PAD_N": 2
+        },
+        "pads_separate_from_ground_and_each_other": true
+      },
+      "reference-clock": {
+        "pass_metal_connectivity": true,
+        "custom_vss_cluster_id": 5,
+        "protection_rail": {
+          "cluster_id": 56,
+          "isolated_from_ground_signals_and_supplies": true
+        },
+        "ground_landings": [
+          {
+            "center_um": [
+              10.0,
+              78.305
+            ],
+            "metal2_through_metal5_cluster_ids": [
+              5,
+              5,
+              5,
+              5
+            ],
+            "connected_to_custom_vss": true
+          },
+          {
+            "center_um": [
+              221.0,
+              78.305
+            ],
+            "metal2_through_metal5_cluster_ids": [
+              5,
+              5,
+              5,
+              5
+            ],
+            "connected_to_custom_vss": true
+          }
+        ],
+        "supply_rail_conflicts": [],
+        "pad_cluster_ids": {
+          "PAD_P": 1,
+          "PAD_N": 2
+        },
+        "pads_separate_from_ground_and_each_other": true
+      },
+      "rf-receive": {
+        "pass_metal_connectivity": true,
+        "custom_vss_cluster_id": 4,
+        "protection_rail": {
+          "cluster_id": 41,
+          "isolated_from_ground_signals_and_supplies": true
+        },
+        "ground_landings": [
+          {
+            "center_um": [
+              10.0,
+              78.305
+            ],
+            "metal2_through_metal5_cluster_ids": [
+              4,
+              4,
+              4,
+              4
+            ],
+            "connected_to_custom_vss": true
+          },
+          {
+            "center_um": [
+              221.0,
+              78.305
+            ],
+            "metal2_through_metal5_cluster_ids": [
+              4,
+              4,
+              4,
+              4
+            ],
+            "connected_to_custom_vss": true
+          }
+        ],
+        "supply_rail_conflicts": [],
+        "pad_cluster_ids": {
+          "PAD_P": 1,
+          "PAD_N": 2
+        },
+        "pads_separate_from_ground_and_each_other": true
+      },
+      "rf-transmit": {
+        "pass_metal_connectivity": true,
+        "custom_vss_cluster_id": 4,
+        "protection_rail": {
+          "cluster_id": 41,
+          "isolated_from_ground_signals_and_supplies": true
+        },
+        "ground_landings": [
+          {
+            "center_um": [
+              10.0,
+              78.305
+            ],
+            "metal2_through_metal5_cluster_ids": [
+              4,
+              4,
+              4,
+              4
+            ],
+            "connected_to_custom_vss": true
+          },
+          {
+            "center_um": [
+              221.0,
+              78.305
+            ],
+            "metal2_through_metal5_cluster_ids": [
+              4,
+              4,
+              4,
+              4
+            ],
+            "connected_to_custom_vss": true
+          }
+        ],
+        "supply_rail_conflicts": [],
+        "pad_cluster_ids": {
+          "PAD_P": 1,
+          "PAD_N": 2
+        },
+        "pads_separate_from_ground_and_each_other": true
+      }
+    },
+    "limitations": [
+      "Local custom pair plus two native rail modules only; whole-ring/global supply hookup is outside this check.",
+      "Only metal and via connectivity is extracted; no diffusion/device conduction, distributed resistance, current capacity or ESD qualification.",
+      "No implicit connection by matching net names; every tested connection follows touching metal/via geometry."
+    ],
+    "source_sha256": {
+      "/work/rail_connectivity.py": "f5738a7ca3eeaa0ffc91dcb9a2929ddaf4cbcc3e88ff144c3ad9ae41267a7e1a",
+      "/pdk/gf180mcuD/libs.ref/gf180mcu_fd_io/gds/gf180mcu_fd_io.gds": "c8ccb709da1935bb7c0276fa8abb55b957f45c14d0a2f97b0852ac30dcb98893",
+      "/pdk/gf180mcuD/libs.tech/klayout/tech/gf180mcu.map": "ac49b08c732c00945c054bce61a4d7f413f84887e0e4e1a66fd20018db2f5d28",
+      "/work/wired-transmit.gds": "ff35cf0de4ceb2590e8b93ee5ebe346c7dae93a8e31a9be3c3076d87008e19d3",
+      "/work/wired-transmit-layout.json": "14eed9d8e9d52b9c89b0640d333cbdae39b8dabfbeca4afef1db4a17084315f2",
+      "/work/wired-receive-usb.gds": "464a6e24cd0c1f4eeb11afbc955446ecbade471d81c9746595650590ca7ebc94",
+      "/work/wired-receive-usb-layout.json": "f4d576bdb0366985915524fedc23213ceda0333f86047edef4fe68123a1be0df",
+      "/work/reference-clock.gds": "64796df3103e613e37bc42e0efc7a56e6caa47231163fe5308cb17d26ec76364",
+      "/work/reference-clock-layout.json": "af18265b339f1fb2748c2a4cb91d77844cb23cd54c05c5be79d6d257e8304f3a",
+      "/work/rf-receive.gds": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
+      "/work/rf-receive-layout.json": "af5a10880ad2a25481680eca0f0396febd1d83b6412ea3195b0333491366ec22",
+      "/work/rf-transmit.gds": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
+      "/work/rf-transmit-layout.json": "67415893e4415099409dce31b9d8a137fa29868a8f0772d3dc5a1a518336b06a"
+    }
+  },
+  "limitations": [
+    "No whole-ring extracted-device LVS, package-return model, or current-capacity qualification."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/pad/placement-layout.json": "14eed9d8e9d52b9c89b0640d333cbdae39b8dabfbeca4afef1db4a17084315f2",
+    "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/pad/combined.gds": "ff35cf0de4ceb2590e8b93ee5ebe346c7dae93a8e31a9be3c3076d87008e19d3",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-receive-usb-layout.json": "f4d576bdb0366985915524fedc23213ceda0333f86047edef4fe68123a1be0df",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-receive-usb.gds": "464a6e24cd0c1f4eeb11afbc955446ecbade471d81c9746595650590ca7ebc94",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/reference-clock-layout.json": "af18265b339f1fb2748c2a4cb91d77844cb23cd54c05c5be79d6d257e8304f3a",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/reference-clock.gds": "64796df3103e613e37bc42e0efc7a56e6caa47231163fe5308cb17d26ec76364",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-receive-layout.json": "af5a10880ad2a25481680eca0f0396febd1d83b6412ea3195b0333491366ec22",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-receive.gds": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-transmit-layout.json": "67415893e4415099409dce31b9d8a137fa29868a8f0772d3dc5a1a518336b06a",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-transmit.gds": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protected_assembly.py": "446078da3671ef441abeed8ad994720809247dc6219927bbf934fdf34eb1fd19",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/placement_audit.py": "3cde9142f1495e11cc20ea71608ae815da7f23b7dc0446eb1e34a0a92852f2d2",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/rail_connectivity.py": "f5738a7ca3eeaa0ffc91dcb9a2929ddaf4cbcc3e88ff144c3ad9ae41267a7e1a"
+  }
+}

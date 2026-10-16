@@ -1,7 +1,7 @@
 {
   "status": "generated_candidate_requires_connectivity_and_rule_review",
   "family": "wired_transmit",
-  "flat_cell": "pad_tx_flat",
+  "flat_cell": "tx_with_primary",
   "marker_export": {
     "added_area_um2": {
       "62": 429.43199999999996,
@@ -12,11 +12,14 @@
     },
     "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
     "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
-    "before_gds_sha256": "3f19c2325ae4774f72c924eda802c1be5f3b59cbfcaea08b36cc1bbb8194087e",
-    "after_gds_sha256": "ebe9b249e54920b8665662732059b24bc7e17b119fd8fa735824333bd7de2bf7",
-    "physical_magic_sha256": "79d272adb007ba8e072f630e5889e6b90820e97a849d100c42ff85fb2bf1c40a",
+    "before_gds_sha256": "7b803b52cbe49a93e15219c1cae74d616c621fe4626a2586631dbacd514dbbb1",
+    "after_gds_sha256": "80204070b98eb9c2ca789f5b02aee2aedd01eab65f6eb236365246cbbf0b7eae",
+    "physical_magic_sha256": "4939f241d8c7bbc78282aaa5cdfab3451b16227613c689661756ebb75da99fb8",
     "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
   },
+  "serial_tail_units": 4,
+  "fs_high_width_um": 20.0,
+  "fs_series_geometry_um": null,
   "bond_template": {
     "cell": "Bondpad_5LM",
     "source": "gf180mcu_fd_io",
@@ -32,8 +35,7 @@
     "scope": "Native bond geometry only; ring rails and provider placement remain open."
   },
   "stock_export_returncode": 0,
-  "device_count": 179,
-  "net_count": 80,
+  "requires_attached_primary_protection": false,
   "pad_transverse_width_um": 6.0,
   "pad_trunk_width_um": 0.44,
   "net_track_x_um": {
@@ -204,103 +206,103 @@
   "net_trunk_spans_um": {
     "CASCODE": [
       441.3,
-      1096.5
+      1226.5
     ],
     "DETECT_BLEED_0": [
-      944.9,
-      948.3
+      1065.3,
+      1068.7
     ],
     "DETECT_BLEED_1": [
-      948.1,
-      951.5
+      1068.5,
+      1071.9
     ],
     "DETECT_BLEED_2": [
-      951.3,
-      954.7
+      1071.7,
+      1075.1
     ],
     "DETECT_BLEED_3": [
-      954.5,
-      961.5
+      1074.9,
+      1078.3
     ],
     "DETECT_BLEED_4": [
-      961.3,
-      964.7
+      1078.1,
+      1081.5
     ],
     "DETECT_BLEED_5": [
-      964.5,
-      967.9
+      1081.3,
+      1084.7
     ],
     "DETECT_BLEED_6": [
-      967.7,
-      971.1
+      1084.5,
+      1091.5
     ],
     "DETECT_ENABLE": [
-      928.5,
-      1096.5
+      1048.9,
+      1226.5
     ],
     "DETECT_ENABLE_B": [
-      927.7,
-      942.7
+      1048.1,
+      1059.5
     ],
     "DETECT_ENABLE_LOCAL": [
       558.1,
-      945.1
+      1065.5
     ],
     "DETECT_N_I": [
       557.3,
-      1081.5
+      1201.9
     ],
     "DETECT_PBIAS": [
-      1078.1,
-      1096.5
+      1198.5,
+      1226.5
     ],
     "DETECT_P_I": [
       560.5,
-      1078.3
+      1198.7
     ],
     "MAIN_BIAS": [
       574.5,
-      1096.5
+      1226.5
     ],
     "MAIN_N": [
-      584.1,
-      1096.5
+      590.5,
+      1226.5
     ],
     "MAIN_P": [
-      580.9,
-      1096.5
+      587.3,
+      1226.5
     ],
     "MAIN_TAIL_0": [
       573.7,
-      585.9
+      592.3
     ],
     "MAIN_TAIL_1": [
-      586.5,
-      602.3
-    ],
-    "MAIN_TAIL_2": [
-      602.9,
+      596.5,
       615.1
     ],
-    "MAIN_TAIL_3": [
+    "MAIN_TAIL_2": [
       615.7,
-      631.5
+      637.9
     ],
-    "MAIN_TAIL_4": [
-      632.1,
-      644.3
-    ],
-    "MAIN_TAIL_5": [
-      648.5,
+    "MAIN_TAIL_3": [
+      638.5,
       660.7
     ],
-    "MAIN_TAIL_6": [
+    "MAIN_TAIL_4": [
       661.3,
-      677.1
+      683.5
+    ],
+    "MAIN_TAIL_5": [
+      684.1,
+      706.3
+    ],
+    "MAIN_TAIL_6": [
+      706.9,
+      729.1
     ],
     "MAIN_TAIL_7": [
-      677.7,
-      689.9
+      729.7,
+      748.3
     ],
     "PAD_N": [
       435.5,
@@ -311,242 +313,238 @@
       571.5
     ],
     "POST_BIAS": [
-      691.3,
-      1096.5
+      753.3,
+      1226.5
     ],
     "POST_N": [
-      704.5,
-      1096.5
+      769.3,
+      1226.5
     ],
     "POST_P": [
-      701.3,
-      1096.5
+      766.1,
+      1226.5
     ],
     "POST_TAIL_0": [
-      690.5,
-      706.3
+      752.5,
+      771.1
     ],
     "POST_TAIL_1": [
-      706.9,
-      719.1
-    ],
-    "POST_TAIL_2": [
-      719.7,
-      735.5
-    ],
-    "POST_TAIL_3": [
-      736.1,
-      748.3
-    ],
-    "POST_TAIL_4": [
-      752.5,
-      764.7
-    ],
-    "POST_TAIL_5": [
-      765.3,
-      781.1
-    ],
-    "POST_TAIL_6": [
-      781.7,
+      771.7,
       793.9
     ],
-    "POST_TAIL_7": [
+    "POST_TAIL_2": [
       794.5,
-      810.3
+      816.7
+    ],
+    "POST_TAIL_3": [
+      817.3,
+      839.5
+    ],
+    "POST_TAIL_4": [
+      840.1,
+      862.3
+    ],
+    "POST_TAIL_5": [
+      862.9,
+      885.1
+    ],
+    "POST_TAIL_6": [
+      885.7,
+      904.3
+    ],
+    "POST_TAIL_7": [
+      908.5,
+      927.1
     ],
     "SUM_N_D_0": [
       442.1,
-      821.5
+      941.9
     ],
     "SUM_N_D_1": [
       454.9,
-      837.9
+      954.7
     ],
     "SUM_N_D_2": [
       471.3,
-      850.7
+      971.1
     ],
     "SUM_N_D_3": [
       484.1,
-      867.1
+      987.5
     ],
     "SUM_N_D_4": [
       500.5,
-      883.5
+      1000.3
     ],
     "SUM_N_D_5": [
       513.3,
-      896.3
+      1016.7
     ],
     "SUM_N_D_6": [
       529.7,
-      912.7
+      1029.5
     ],
     "SUM_N_D_7": [
       546.1,
-      925.5
+      1045.9
     ],
     "SUM_P_D_0": [
       445.3,
-      818.3
+      938.7
     ],
     "SUM_P_D_1": [
       458.1,
-      834.7
+      951.5
     ],
     "SUM_P_D_2": [
       474.5,
-      847.5
+      967.9
     ],
     "SUM_P_D_3": [
       487.3,
-      863.9
+      980.7
     ],
     "SUM_P_D_4": [
       503.7,
-      876.7
+      997.1
     ],
     "SUM_P_D_5": [
       520.1,
-      893.1
+      1013.5
     ],
     "SUM_P_D_6": [
       532.9,
-      909.5
+      1026.3
     ],
     "SUM_P_D_7": [
       549.3,
-      922.3
+      1042.7
     ],
     "TERM_BLEED_0": [
-      990.5,
-      993.9
+      1107.3,
+      1110.7
     ],
     "TERM_BLEED_1": [
-      993.7,
-      997.1
+      1110.5,
+      1117.5
     ],
     "TERM_BLEED_2": [
-      996.9,
-      1000.3
+      1117.3,
+      1120.7
     ],
     "TERM_BLEED_3": [
-      1000.1,
-      1003.5
+      1120.5,
+      1123.9
     ],
     "TERM_BLEED_4": [
-      1003.3,
-      1006.7
+      1123.7,
+      1127.1
     ],
     "TERM_BLEED_5": [
-      1006.5,
-      1013.5
+      1126.9,
+      1130.3
     ],
     "TERM_BLEED_6": [
-      1013.3,
-      1016.7
+      1130.1,
+      1133.5
     ],
     "TERM_ENABLE": [
-      974.1,
-      1096.5
+      1094.5,
+      1226.5
     ],
     "TERM_ENABLE_B": [
-      973.3,
-      988.3
+      1093.7,
+      1105.1
     ],
     "TERM_ENABLE_LOCAL": [
-      979.7,
-      1075.9
+      1100.1,
+      1196.3
     ],
     "TERM_N_R": [
       564.5,
-      1075.1
+      1195.5
     ],
     "TERM_P_R": [
       571.3,
-      1045.9
+      1162.7
     ],
     "TERM_VCM": [
-      1020.5,
-      1096.5
+      1137.3,
+      1226.5
     ],
     "TMDS_BIAS": [
-      811.7,
-      1096.5
+      928.5,
+      1226.5
     ],
     "TMDS_N": [
-      821.3,
-      1096.5
+      941.7,
+      1226.5
     ],
     "TMDS_P": [
-      818.1,
-      1096.5
+      938.5,
+      1226.5
     ],
     "TMDS_TAIL_0": [
-      810.9,
-      823.1
+      927.7,
+      943.5
     ],
     "TMDS_TAIL_1": [
-      823.7,
-      839.5
+      944.1,
+      956.3
     ],
     "TMDS_TAIL_2": [
-      840.1,
-      852.3
+      960.5,
+      972.7
     ],
     "TMDS_TAIL_3": [
-      856.5,
-      868.7
+      973.3,
+      989.1
     ],
     "TMDS_TAIL_4": [
-      869.3,
-      885.1
+      989.7,
+      1001.9
     ],
     "TMDS_TAIL_5": [
-      885.7,
-      897.9
+      1002.5,
+      1018.3
     ],
     "TMDS_TAIL_6": [
-      898.5,
-      914.3
+      1018.9,
+      1031.1
     ],
     "TMDS_TAIL_7": [
-      914.9,
-      927.1
+      1031.7,
+      1047.5
     ],
     "VDD": [
-      936.1,
-      1096.5
+      1052.9,
+      1226.5
     ],
     "VSS": [
       435.5,
-      1096.5
+      1226.5
     ]
   },
   "port_heights_um": {
     "PAD_P": 438.0,
     "PAD_N": 438.0,
-    "VDD": 1096.0,
-    "VSS": 1096.0,
-    "CASCODE": 1096.0,
-    "MAIN_P": 1096.0,
-    "MAIN_N": 1096.0,
-    "MAIN_BIAS": 1096.0,
-    "POST_P": 1096.0,
-    "POST_N": 1096.0,
-    "POST_BIAS": 1096.0,
-    "TMDS_P": 1096.0,
-    "TMDS_N": 1096.0,
-    "TMDS_BIAS": 1096.0,
-    "DETECT_ENABLE": 1096.0,
-    "DETECT_PBIAS": 1096.0,
-    "TERM_ENABLE": 1096.0,
-    "TERM_VCM": 1096.0
+    "VDD": 1226.0,
+    "VSS": 1226.0,
+    "CASCODE": 1226.0,
+    "MAIN_P": 1226.0,
+    "MAIN_N": 1226.0,
+    "MAIN_BIAS": 1226.0,
+    "POST_P": 1226.0,
+    "POST_N": 1226.0,
+    "POST_BIAS": 1226.0,
+    "TMDS_P": 1226.0,
+    "TMDS_N": 1226.0,
+    "TMDS_BIAS": 1226.0,
+    "DETECT_ENABLE": 1226.0,
+    "DETECT_PBIAS": 1226.0,
+    "TERM_ENABLE": 1226.0,
+    "TERM_VCM": 1226.0
   },
-  "candidate_size_um": [
-    286.0,
-    1096.0
-  ],
   "reference_pair_size_um": [
     286.0,
     350
@@ -561,7 +559,6 @@
     "bidir[21].pad"
   ],
   "fits_reference_height": false,
-  "area_um2": 313456.0,
   "near_bond_ground_landings_um": [
     [
       9.0,
@@ -576,7 +573,6 @@
       79.305
     ]
   ],
-  "protection_device_centers_y_um": 90.0,
   "allocation_regions_um": [
     [
       0,
@@ -618,27 +614,92 @@
       0,
       418.0,
       150.0,
-      1097.0
+      1227.0
     ],
     [
       150.0,
       418.0,
       286.0,
       440.0
+    ],
+    [
+      159.945,
+      698.0,
+      434.5,
+      988.0
+    ],
+    [
+      33.5,
+      396.0,
+      452.0,
+      404.0
+    ],
+    [
+      444.0,
+      396.0,
+      452.0,
+      744.0
+    ],
+    [
+      342.0,
+      736.0,
+      452.0,
+      744.0
+    ],
+    [
+      244.5,
+      408.0,
+      468.0,
+      416.0
+    ],
+    [
+      460.0,
+      408.0,
+      468.0,
+      764.0
+    ],
+    [
+      346.0,
+      756.0,
+      468.0,
+      764.0
+    ],
+    [
+      296.0,
+      702.0,
+      482.0,
+      706.0
+    ],
+    [
+      476.0,
+      700.0,
+      484.0,
+      1230.0
+    ],
+    [
+      92.22,
+      1224.0,
+      482.0,
+      1228.0
     ]
   ],
-  "area_ceiling_um2": 180000,
-  "fits_assigned_area": false,
+  "area_ceiling_um2": 250000,
+  "fits_assigned_area": true,
   "image_id": "sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
   "sources_sha256": {
-    "analog/pads/layout.py": "a0f7dce309444c5cd6c3c39c082d5afde449c18b5124cd959381d3b7aca8cd29",
+    "analog/pads/layout.py": "0863dc15e08ca20e730a78f4c3fe9f5b5e986687af59d66d88d440ebd2176a1c",
     "analog/pads/gds_markers.py": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4",
     "analog/pads/generated/provider-sites.json": "c58790b22d45497c45bfd20e8cc60e698d8286010856fcc6fa18ab7021d26df4",
-    "analog/pads/circuits.py": "cf91761a58bc90b2137537aba8ab064b01ef264f161ac689c6d2b4a17031682c",
-    "analog/pads/design.py": "1280fd1141770cbd48d65785fcdf3f3f4d8d694a10b39ad58de9b60ef6f8e806",
-    "analog/pads/wired_receive.py": "c17136a1c165093b65974b27143e1ff8e21c725d11940326a6b999585909cc8b",
-    "spec/analog-architecture.json": "2d773c18090b57a6e54291f99d6f828730f843674fe6ceee8a7cdfdda5a58b4d",
-    "spec/contract.json": "9e43600f7d9016469fc825fe4c451a87c4940e98bb3007f7a18b8f6ea3e63c69"
+    "analog/pads/circuits.py": "bccd2850f5023fd97f65c1cf53ee297672157ef1e4dd90f8923a0e4d6f3d2130",
+    "analog/pads/design.py": "bb2e5411c07d02c095dd1bfaad6e824ab8dbf7867a9f6f35efc306ca25be165c",
+    "analog/pads/wired_receive.py": "2854154d036bb59df19a389da99c1348539a71d5fcb6f52d3e8efae229dfafc1",
+    "spec/analog-architecture.json": "5995b7ab33f01f62358b6af52cd3073ba4db89c66a303022bc516214d5bc9916",
+    "spec/contract.json": "9e43600f7d9016469fc825fe4c451a87c4940e98bb3007f7a18b8f6ea3e63c69",
+    "analog/pads/wired_protection_layout.py": "b5e334084c0291c2b709b3ffb28ae4cd89b4227bfa4b1eb89b72f47e538ed2aa",
+    "analog/pads/generated/protection-network/network.gds": "0b7c25860190af02dfaffab9c180d5734f5d9eb771111367adc97ae98fcf493d",
+    "analog/pads/generated/protection-network/network_flat.spice": "f5e3fc1454f7dcf49f91afcf1cf315cc82014bdf6d2191d4f84b109a3b305cf0",
+    "analog/pads/transmit_integrated.py": "a27a418ee8599ec86c3320fef59263cf3deeaf01e0350c926288170d46939ace",
+    "spec/schematic-implementation.json": "b43127f9351e0fd75ffb2792546c2608814afb79e2e0ac27f79ff12eaec3e9e6"
   },
   "drc_count": "0",
   "pcell_terminal_coordinates": {
@@ -734,24 +795,6 @@
     ],
     "primitive_5": [
       [
-        4.300000000000001,
-        0.0
-      ],
-      [
-        0.0,
-        -8.280000000000001
-      ],
-      [
-        -0.8,
-        0.0
-      ],
-      [
-        5.12,
-        8.700000000000001
-      ]
-    ],
-    "primitive_6": [
-      [
         1.26,
         0.0
       ],
@@ -768,7 +811,7 @@
         2.6799999999999997
       ]
     ],
-    "primitive_7": [
+    "primitive_6": [
       [
         0.535,
         0.0
@@ -786,7 +829,7 @@
         2.6799999999999997
       ]
     ],
-    "primitive_8": [
+    "primitive_7": [
       [
         0.0,
         1.08
@@ -800,7 +843,7 @@
         1.12
       ]
     ],
-    "primitive_9": [
+    "primitive_8": [
       [
         0.0,
         6.68
@@ -814,7 +857,7 @@
         7.14
       ]
     ],
-    "primitive_10": [
+    "primitive_9": [
       [
         0.0,
         1.43
@@ -836,5 +879,29 @@
     "Detection enable has a local supply-powered buffer and passive discharge; reset and brownout supervision remain unimplemented.",
     "Protection capacitance, cascode compliance and driver current must be measured, not assumed.",
     "Provider ring metal rails not yet integrated."
-  ]
+  ],
+  "base_device_count": 207,
+  "base_net_count": 80,
+  "base_candidate_size_um": [
+    286.0,
+    1226.0
+  ],
+  "base_area_um2": 350636.0,
+  "physical_bbox_um": [
+    2.7800000000000002,
+    0.0,
+    484.0,
+    1230.0
+  ],
+  "candidate_size_um": [
+    484.0,
+    1230.0
+  ],
+  "area_um2": 240640.33,
+  "area_basis": "Allocated nonrectangular union, not material area or bounding rectangle.",
+  "allocation_union_um2": 240640.33,
+  "connected_primary_candidate": true,
+  "device_count": 366,
+  "connected_protection": true,
+  "integrated_model_scope": "Protected pad plus extracted buffer/interlock in connected lifecycle fixture; core macros not placed here."
 }

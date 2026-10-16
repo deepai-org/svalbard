@@ -7,12 +7,13 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 from design import PROJECT
 
 
-def run(work, generated, pdk):
+def run(work, generated, pdk, publish=True):
     from layout import generate
     from wired_protection_layout import generate as protect
     from transmit_fixture import build
@@ -36,16 +37,61 @@ def run(work, generated, pdk):
     subprocess.run([sys.executable, str(Path(__file__).with_name('render.py')),
                     str(pad/'combined_flat.mag'), '--output', str(pad/'layout.png'),
                     '--title', 'Protected wired TX pad'], check=True)
+    from transmit_sequence_connected import run as replay
+    from protected_assembly import run as assemble
+    seed = generated/'termination-buffer-candidate/source-headroom/reference-reset/feedback/screen.json'
+    for iteration in range(1, 4):
+        electrical = work/f'replay-{iteration}'
+        replay(electrical, work/'fixture.spice', seed)
+        observed = json.loads((electrical/'screen.json').read_text())
+        if observed['sampled_feedback_consistent']:
+            break
+        seed = electrical/'screen.json'
+    else:
+        raise ValueError('TX sampled readiness did not converge within three iterations')
+    if (observed['busy_commit_events'] or not observed['disabled_end_observed']
+            or observed['loaded_traffic_ready_without_detector_ready_s'] != 0
+            or not all(v['qualified'] and v['traffic_ready'] for v in observed['mode_coverage'].values())
+            or not all(v['samples'] for v in observed['states'].values())):
+        raise ValueError('TX retained-state coverage incomplete')
+    assemble(work/'assembly', generated, generated/'provider-assembly-inputs', tx=pad)
     result = dict(status='constructed_not_electrically_accepted',
                   device_count=audit['physical_devices'], area_um2=layout['area_um2'],
                   source_sha256={str(p.resolve()):digest(p) for p in [Path(__file__), spec]},
                   artifact_sha256={str(p):digest(p) for p in [pad/'physical.spice',
                       pad/'combined.gds', pad/'layout-screen.json', pad/'model-audit.json',
                       work/'fixture.spice', work/'fixture.json']},
-                  remaining=['Run retained-state replay against this exact regenerated model.',
+                  remaining=['Nominal sampled replay is not sustained operation or protocol electrical acceptance.',
                              'Combined buffer/interlock placement and area remain unresolved.',
                              'Protection limits, physical readiness and protocol electrical acceptance remain open.'])
     (work/'integration.json').write_text(json.dumps(result, indent=2)+'\n')
+    if publish:
+        stem = 'wired-transmit'
+        metadata = dict(layout)
+        metadata.update(connected_protection=True,
+                        integrated_model_scope='Protected pad plus extracted buffer/interlock in connected lifecycle fixture; core macros not placed here.')
+        metadata['sources_sha256'] = {}
+        for sources in [json.loads((work/'base/layout-report.json').read_text()).get('sources_sha256', {}),
+                        checks['source_sha256'], result['source_sha256']]:
+            for name, value in sources.items():
+                path = Path(name)
+                if not path.is_absolute(): path = PROJECT/path
+                if path.is_relative_to(PROJECT):
+                    metadata['sources_sha256'][str(path.relative_to(PROJECT))] = value
+        (generated/(stem+'-layout.json')).write_text(json.dumps(metadata, indent=2)+'\n')
+        for source, suffix in [(pad/'physical.spice','-extracted-c.spice'),
+                (pad/'combined.gds','.gds'), (pad/'layout.png','.png'),
+                (pad/'model-audit.json','-device-audit.json'),
+                (electrical/'screen.json','-screen.json'),
+                (electrical/'connected.spice','-lifecycle.spice'),
+                (work/'integration.json','-integration.json'),
+                (work/'assembly/assembly-screen.json','-assembly-screen.json')]:
+            shutil.copyfile(source, generated/(stem+suffix))
+        roundtrip = dict(drc_count=0, device_graph_match=True,
+            gds_sha256=digest(pad/'combined.gds'), reference_sha256=digest(pad/'physical.spice'),
+            independent_audit=audit,
+            scope='Combined GDS imported and independently audited; no whole-ring LVS or protection qualification.')
+        (generated/(stem+'-gds-roundtrip.json')).write_text(json.dumps(roundtrip,indent=2)+'\n')
     return result
 
 

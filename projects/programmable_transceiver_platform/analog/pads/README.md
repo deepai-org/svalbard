@@ -39,7 +39,7 @@ matching and fault-injection experiments do not replace canonical artifacts.
 
 | Canonical family | Circuit and attached boundary | Principal evidence |
 | --- | --- | --- |
-| Wired TX | 160 MOS + 19 resistors; shared output cascodes, main/postcursor/TMDS branches, detection, source termination and passive bias discharge | `wired-transmit-screen.json`, `-loading.json`, `-compliance.json` |
+| Wired TX | 366-device protected pad; full main/postcursor/TMDS, detection and termination network; connected extracted buffer/interlock | `wired-transmit-screen.json`, `-integration.json`, `-lifecycle.spice` |
 | Wired RX/USB | 446-device protected network with physical core discharge; divider/bypass, terminations, HS/FS drive and pulls | `wired-receive-usb-screen.json`, `-loading.json` |
 | Differential reference | 175-device primary protection and bias network; receiver remains an explicit `refinput` boundary | `reference-clock-screen.json`, `-terminated-screen.json` |
 | RF RX | Connected 159-device protection network: steering diodes, isolated-rail clamp, MIMs and physical bleed; finite LNA boundary | `rf-receive-screen.json`, `-route-resistance.json` |
@@ -55,28 +55,14 @@ LNA, driver or clock-receiver implementations.
 Every inactive branch remains physically attached. Reconfiguration changes
 controls, not the circuit or external storage network.
 
-Wired TX shares output cascodes across steering branches. Its loaded main,
-aligned main/post and TMDS currents meet the current 3% nominal screen; source
-termination is approximately 51.42 Ω per leg before trim. `TERM_DISCHARGE` is an
-always-connected physical resistor. The common-mode buffer is a bounded
-behavioral boundary with supply-current accounting, not implemented feedback
-circuitry. Its precharge/connect/disconnect/release order is prescribed by the
-fixture. The negative delayed postcursor tap is checked separately from a
-positive delayed-current configuration.
-
-`transmit_controls.py` provides the corresponding behavioral TX mode guard.
-It preserves MAIN+POST with source termination, but rejects overlap of the
-selected TMDS mode with ordinary drive/termination and detection with driven
-or terminated modes. Local supply validity, reset and an external qualification
-input inhibit all mode outputs. `transmit-control-exclusion-screen.json` checks
-all 32 mode-request combinations and retains the extracted TX pad and external
-network while injecting overlap. This is an explicit first-pass control policy,
-not proof that every rejected combination is physically impossible. It is not
-implemented as transistor logic or a replacement for common-mode buffer
-readiness and sequencing. The canonical TX lifecycle and powered-pullup,
-differential-load and external-termination bounded-buffer cases now include
-the guard. The stale-termination-request case explicitly bypasses it to retain
-raw-device fault coverage; individual DC branch fixtures also bypass it.
+Wired TX shares output cascodes across steering branches. The canonical
+retained-state fixture connects the extracted protected pad, compensated
+common-mode buffer and mode interlock, driven by actual sequencing RTL.
+It retains one external differential load through active, reset, disabled,
+unpowered and reconfiguration states. Source-termination readiness is a finite
+behavioral detector; other modes assume readiness. Serializer and bias
+translations remain ideal. See the current wired-TX integration section for
+settling evidence and physical implementation gaps.
 
 Wired RX/USB uses back-to-back high-side PMOS devices with floating wells,
 passive gate restoration and supply-gated pull-down paths. FS-low requests are
@@ -261,58 +247,20 @@ still requiring its own loaded checks.
 
 ## Protection architecture
 
-`protection_attach.py --replace-small-clamps` replaces the four undersized
-TX grounded-gate devices with the extracted isolated-rail macro. All original
-TX branches and extracted wiring capacitance remain. Its full lifecycle and
-calibration complete with all four current targets reached. Same-bias loading
-falls to approximately 2.54 pF/leg disabled and 2.53 pF/leg in main drive;
-detection remains approximately 3.58 pF/leg, above the allocation as in the
-baseline. `generated/wired-primary-protection/` contains the comparison,
-replacement lifecycle and full loading reports. These pre-integration electrical
-results do not include the new connecting routes.
+The selected wired TX uses an isolated protection rail attached to the full
+four-tail branch network. `wired_protection_layout.py` generates its connections
+and checks the streamed device graph; `transmit_integrated.py` rebuilds and
+publishes the 366-device layout and connected lifecycle model. The pad occupies
+240,640 µm² within its 250,000 µm² reservation and preserves the provider bond
+openings. Buffer/interlock placement is not included in that reservation.
 
-`wired_protection_layout.py` now connects the primary macro to the generated
-replacement TX base. The 334-device combined layout passes scoped DRC,
-unique device-level LVS and an independent physical-device graph comparison.
-The rendered geometry has been inspected. It is not canonical: provider placement now preserves all 74 bond openings and has no unexpected
-metal overlap; all five local rail checks pass. The generated TX reservation
-is 220,100 µm² against the current 180,000 µm² allowance, so area funding
-remains open. The completed electrical screens below use the combined extraction.
-The nonlinear well replacement is now audited in `model-audit.json`; the
-combined physical model includes connecting capacitance. Its same-bias 1 GHz
-probe reaches approximately 2.63 pF/leg disabled and 2.62 pF/leg in main mode
-against 2.7 pF, leaving little loading margin. Detection is approximately
-3.67 pF/leg. `connected-loading-comparison.json` records the comparison;
-the full retained-state run now completes and all four current targets are
-reached (`connected-screen.json`). Full loading is in `connected-loading.json`.
-Reconfiguration has an approximately 18 mA return-current peak, essentially
-unchanged from baseline. Resolving current zero crossings gives about 0.22 pC
-positive returned charge and 23 ps above 1 mA (`supply-charge.json`); net charge
-over the window is drawn from the supply. This is a short transient, not an
-established sustained-backfeed or sequencing failure. Physical sequencing and
-package-supply response still require implementation and verification. Distributed route resistance is absent. The retained-network ±100 mA diagnostic pulse test now reaches +7.52/−0.85 V
-at the TX pad and +6.61 V on the protection rail. `protection-decision.json`
-therefore requires changing clamp trigger/rail response before adoption.
-An extracted approximately 10 pF feed-forward MIM attached to that same model
-reduces the positive peak to 6.42 V; the negative peak remains about −0.85 V.
-All four pulse runs complete. Sampled no-injection lifecycle windows change
-PAD_P by less than 58 µV; the sampled disabled/main loading remains below
-2.7 pF/leg, while detection remains about 3.67 pF/leg. These are limited probes,
-not full signal-quality or cold-start acceptance. The capacitor is not placed
-in the combined layout, so its connecting parasitics are absent.
-`feedforward-pulse-screen.json`, `feedforward-no-injection.json`,
-`feedforward-loading.json` and `feedforward-composition.json` retain this
-comparison. The decision remains to complete primary-to-core protection
-coordination before adoption; a smaller pulse peak alone is insufficient.
-This is not an ESD rating or an inferred damage threshold. Core stress and
-discharge-current capacity remain open.
-The base-generator change also requires refreshing older source manifests.
-
-**The legacy wired grounded-gate protection remains insufficient.** Its 32 µm total width
-per leg is below the published HV ESD dimensional guidance. Ordinary DRC/LVS
-must not be represented as ESD qualification. Simply increasing its size exceeds
-some loading allocations. See `generated/protection-audit.json` and the
-[GF180 HV ESD guidance](https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_4_3.html).
+Protection is a first-pass topology, not a survival claim. Earlier diagnostic
+pulse experiments exposed excessive core-facing voltage; neither scoped DRC/LVS
+nor the new nominal lifecycle closes clamp trigger, core-stress or discharge
+current capacity. A feed-forward capacitor experiment is not part of the
+selected physical layout. The current no-injection power-down trace also reaches
+approximately −0.742 V at the pad. Resolve the protection/core voltage contract
+before interpreting any of these excursions as acceptable.
 
 The connected RF replacement is in `generated/protected-rf-pair/`. It contains:
 
@@ -551,8 +499,9 @@ boundaries.
 `transmit_integrated.py` now regenerates the selected four-tail TX pad and
 attached primary protection from shared sizing/placement parameters, checks
 extracted connectivity and scoped layout rules, renders the layout, and builds
-the full pad/buffer/interlock fixture against that newly extracted pad. It does
-not yet replace the legacy TX publication in `run_first_pass.py`.
+the full pad/buffer/interlock fixture against that newly extracted pad. The normal `run_first_pass.py` entry point uses this generator, requires
+converged readiness and complete retained-state coverage, and publishes this
+model after checking provider placement.
 
 The readiness replay accepts its own compact JSON report as `--ready-data`;
 its recorded boolean detector samples are an initial guess, never acceptance.
@@ -572,7 +521,7 @@ predicts acceptable performance.
 | Workstream | Next implementation needed |
 | --- | --- |
 | RF pair | Connected primary protection is canonical, area funded, and RX/TX retained-state and route-loading checks run on that model. Resolve core-facing protection, discharge-current capacity and the narrow modeled TX power margin. |
-| Wired TX and reference | Protected 175-device reference is canonical and rebuilt through the normal entry point; protected 366-device TX still needs adoption. Pad area is funded. Finish protection/core coordination and reference bias startup. Reference receiver remains a behavioral boundary. |
+| Wired TX and reference | Protected 175-device reference is canonical and rebuilt through the normal entry point; protected 366-device TX is also canonical through the normal build entry point. Pad area is funded. Finish protection/core coordination and reference bias startup. Reference receiver remains a behavioral boundary. |
 | Wired RX/USB | Protected 446-device network is canonical and regenerated through the normal entry point. Reduce serial-bypass loading on one leg; implement physical control guard/local disable and trim/slew controls. Protection remains unqualified. |
 | Wired TX controls | Extracted 282-device compensated buffer and 88-device interlock candidates now run connected to the full TX network. Close buffer transients, input power-domain behavior, termination trim and physical safe sequencing; fund/place these core macros. |
 | All families | Retained-network lifecycle windows and explicit core boundaries exist. Implement physical reset/brownout qualification, close whole-ring power connectivity beyond the local metal checks, and refresh manifests after generator changes. |

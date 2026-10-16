@@ -102,6 +102,9 @@ def diode_screen(work,pdk):
 
 
 def audit(work,pdk,generated):
+    metadata=generated/'wired-transmit-layout.json'
+    if metadata.exists() and json.loads(metadata.read_text()).get('connected_protection'):
+        raise ValueError('Small grounded-gate clamp audit does not apply to the selected connected primary protection; use the integrated model and protection pulse screen.')
     work.mkdir(parents=True,exist_ok=False)
     families={}
     for family in FAMILIES:

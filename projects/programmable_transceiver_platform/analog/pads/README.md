@@ -526,6 +526,14 @@ in each timestamped window. Historical window names alone never establish mode
 coverage. Current convergence evidence is linked from
 `spec/schematic-implementation.json` under transaction_sequencer.feedback_iteration.
 The fixed observation interval must not be confused with a protocol deadline.
+The current retained-network replay converges at all 75 feedback samples,
+exercises all four modes through traffic-ready, and reaches final disable, with
+zero observed loaded traffic-ready time while the modeled detector is unready.
+This is a transition check: TMDS has 1 ns of traffic-ready dwell; MAIN, MAIN+POST
+and detection each have 4 ns. Sustained loaded operation remains unverified.
+Only source-termination readiness is measured; other modes assume readiness.
+Published observation windows use timestamps because command handshakes can
+move the actual mode beyond a nominal window.
 
 ## First-pass implementation closure
 
@@ -541,7 +549,7 @@ predicts acceptable performance.
 | RF pair | Connected primary protection is canonical, area funded, and RX/TX retained-state and route-loading checks run on that model. Resolve core-facing protection, discharge-current capacity and the narrow modeled TX power margin. |
 | Wired TX and reference | Protected 366-device TX and 175-device reference candidates have connected layouts and joint provider-placement checks; pad area is funded. Finish protection/core coordination and adopt through the canonical inventory. Reference receiver remains a behavioral boundary. |
 | Wired RX/USB | Protected 446-device candidate integrates core discharge and primary protection; area is funded. Smaller FS devices reduce loading, but one leg remains above the 2.7 pF target. Implement conflicting-control guard/local disable and trim/slew controls, then adopt the connected candidate. |
-| Wired TX controls | Extracted 249-device buffer and 88-device interlock candidates now run connected to the full TX network. Close buffer transients, input power-domain behavior, termination trim and physical safe sequencing; fund/place these core macros. |
+| Wired TX controls | Extracted 282-device compensated buffer and 88-device interlock candidates now run connected to the full TX network. Close buffer transients, input power-domain behavior, termination trim and physical safe sequencing; fund/place these core macros. |
 | All families | Retained-network lifecycle windows and explicit core boundaries exist. Implement physical reset/brownout qualification, close whole-ring power connectivity beyond the local metal checks, and refresh manifests after generator changes. |
 
 Near-term priority is these integration gaps, not additional protocol-specific

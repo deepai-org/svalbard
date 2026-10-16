@@ -21,8 +21,8 @@ initial begin
  $monitor("TRACE %0.3f %0d %0d %0d %0d %0d",$realtime,active_request,qualified,buffer_request,rst_n,traffic_ready);
  #0.01;rst_n=0;#0.09;rst_n=1;
  #3.9;request=4;commit=1;#4;commit=0;
- #18;rst_n=0;#5;rst_n=1;
- #1;supply_ok=0;#20.2;supply_ok=1;analog_ready=0;
+ #23;rst_n=0;#0.5;rst_n=1;
+ #0.5;supply_ok=0;#20.2;supply_ok=1;analog_ready=0;
  #17.8;request=17;commit=1;#4;commit=0;
  #36;analog_ready=1;
  #30;request=19;commit=1;#4;commit=0;
@@ -115,10 +115,10 @@ def run(work,fixture,ready_data=None):
     trace=np.array(rows)
     trace_indices=np.clip(np.searchsorted(trace[:,0]*1e-9,x[:,0],side='right')-1,0,len(trace)-1)
     actual_requests=trace[trace_indices,1].astype(int)
-    for n,a,b in [('reset',27,30),('unpowered',36,43),('precharge',90,109),('main',125,139),('main_post',175,195),('detect',225,239),('disabled',280,299)]:
+    for a,b in [(27,30),(36,43),(90,109),(125,139),(175,195),(225,239),(280,299)]:
         z=x[(x[:,0]>=a*1e-9)&(x[:,0]<=b*1e-9)]
         mode_mask=(x[:,0]>=a*1e-9)&(x[:,0]<=b*1e-9)
-        windows[n]={'actual_request_values':sorted(set(map(int,actual_requests[mode_mask]))),'vcm_min_v':float(z[:,1].min()),'vcm_max_v':float(z[:,1].max()),'max_reference_error_v':float(abs(z[:,1]-z[:,2]).max()),'qualified_max_v':float(z[:,3].max()),'buffer_enable_max_v':float(z[:,4].max()),'termination_enable_max_v':float(z[:,5].max()),'traffic_ready_max_v':float(z[:,7].max()),'measured_ready_max_v':float(z[:,8].max())}
+        windows[f'{a:g}-{b:g}ns']={'actual_request_values':sorted(set(map(int,actual_requests[mode_mask]))),'vcm_min_v':float(z[:,1].min()),'vcm_max_v':float(z[:,1].max()),'max_reference_error_v':float(abs(z[:,1]-z[:,2]).max()),'qualified_max_v':float(z[:,3].max()),'buffer_enable_max_v':float(z[:,4].max()),'termination_enable_max_v':float(z[:,5].max()),'traffic_ready_max_v':float(z[:,7].max()),'measured_ready_max_v':float(z[:,8].max())}
     loaded=(x[:,5]>2.31)&(x[:,3]>2.31)
     premature=loaded&(x[:,7]>2.31)&(x[:,8]<2.31)
     premature_s=float(np.sum(np.diff(x[:,0])*premature[:-1]))

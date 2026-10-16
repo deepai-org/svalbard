@@ -1,5 +1,59 @@
 {
-  "decision": "Feedback iteration is not accepted:12sample mismatches and MAINPOST command dropped whilebusy. Zero measured premature-ready is not closure.",
-  "bench_fix": "Current replay generator waits for command_ready before each feedback-mode command. RTL-only rerun has no BUSY_COMMIT and applies MAINPOST, but remains waiting at300ns under stale input trace; detect/disabled lifecycle coverage absent.",
-  "remaining": "Rerun analog feedback with handshake-correct trace, require sampled consistency AND all requested configurations/states exercised. No physical detector or sequencer mapping claim."
+  "status": "sampled_feedback_consistent_all_modes_exercised_not_sustained_qualification",
+  "report": "screen.json",
+  "feedback_samples": 75,
+  "feedback_mismatches": 0,
+  "loaded_traffic_ready_without_detector_ready_s": 0.0,
+  "mode_durations": {
+    "TMDS": {
+      "traffic_ready_intervals": [
+        {
+          "start_ns": 30.0,
+          "end_ns": 31.0
+        }
+      ],
+      "total_ns": 1.0
+    },
+    "MAIN": {
+      "traffic_ready_intervals": [
+        {
+          "start_ns": 158.0,
+          "end_ns": 162.0
+        }
+      ],
+      "total_ns": 4.0
+    },
+    "MAIN_POST": {
+      "traffic_ready_intervals": [
+        {
+          "start_ns": 230.0,
+          "end_ns": 234.0
+        }
+      ],
+      "total_ns": 4.0
+    },
+    "DETECT": {
+      "traffic_ready_intervals": [
+        {
+          "start_ns": 258.0,
+          "end_ns": 262.0
+        }
+      ],
+      "total_ns": 4.0
+    }
+  },
+  "final_disable_observed": true,
+  "scope": "One nominal retained-network transition fixture. TMDS/detection readiness is assumed; only source-termination readiness is observed. Comparator and sequencer are not physically implemented. Short traffic-ready intervals do not establish sustained operation, protocol deadlines, PVT or reliability.",
+  "remaining": [
+    "Sustained loaded operation with feedback",
+    "Physical readiness/supply detectors and sequencing layout",
+    "Buffer/interlock area allocation and placement",
+    "Canonical full-family model adoption"
+  ],
+  "artifact_sha256": {
+    "connected.spice": "b70f65f05cb27d3cf124c8f6454d6db49bad537f38d4cfc33adb22ee29c8214e",
+    "rtl.txt": "e64e8abb8b930c1eb04ced0168bfc6a5aa6e80693d0aa406512c90f4be12dbed",
+    "screen.json": "c3aa728f2fb935dd4d1aac46f2401d86a8f348e1e09efc7ded09bdcc0d6c2c06",
+    "replay.sv": "a568460811d29aa74a8c969504058b45682fc750e76a6ee8ed536dd2f5fcaa02"
+  }
 }

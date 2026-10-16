@@ -3,11 +3,10 @@
     0,
     4,
     8,
-    17
+    17,
+    19
   ],
-  "busy_commit_events": [
-    "BUSY_COMMIT 142.000"
-  ],
+  "busy_commit_events": [],
   "loaded_traffic_ready_without_detector_ready_s": 0.0,
   "readiness_parameters": {
     "max_reference_error_v": 0.0165,
@@ -17,73 +16,94 @@
   },
   "status": "sampled_readiness_feedback_iteration_not_closed_loop_until_consistent",
   "windows": {
-    "reset": {
-      "vcm_min_v": -0.00218110567,
-      "vcm_max_v": -0.00140796335,
-      "max_reference_error_v": 1.65156915567,
+    "27-30ns": {
+      "actual_request_values": [
+        4
+      ],
+      "vcm_min_v": 6.19944352e-05,
+      "vcm_max_v": 0.000264766372,
+      "max_reference_error_v": 1.6499398755648,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": 0.000366911773,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    },
+    "36-43ns": {
+      "actual_request_values": [
+        0
+      ],
+      "vcm_min_v": -0.244283695,
+      "vcm_max_v": -0.162989661,
+      "max_reference_error_v": 0.2544436664,
       "qualified_max_v": 0.0,
       "buffer_enable_max_v": 0.0,
-      "termination_enable_max_v": 0.000323871996,
+      "termination_enable_max_v": -0.0545082363,
       "traffic_ready_max_v": 0.0,
       "measured_ready_max_v": 0.0
     },
-    "unpowered": {
-      "vcm_min_v": -0.244503014,
-      "vcm_max_v": -0.163354871,
-      "max_reference_error_v": 0.2546562738,
-      "qualified_max_v": 0.0,
-      "buffer_enable_max_v": 0.0,
-      "termination_enable_max_v": -0.153556069,
-      "traffic_ready_max_v": 0.0,
-      "measured_ready_max_v": 0.0
-    },
-    "precharge": {
-      "vcm_min_v": 1.06180172,
-      "vcm_max_v": 1.8180813,
-      "max_reference_error_v": 0.5936458499999999,
+    "90-109ns": {
+      "actual_request_values": [
+        17
+      ],
+      "vcm_min_v": 0.724650795,
+      "vcm_max_v": 1.81808602,
+      "max_reference_error_v": 0.928688455,
       "qualified_max_v": 0.0,
       "buffer_enable_max_v": 3.3,
-      "termination_enable_max_v": 5.8755011e-05,
+      "termination_enable_max_v": 5.90236887e-05,
       "traffic_ready_max_v": 0.0,
       "measured_ready_max_v": 0.0
     },
-    "main": {
-      "vcm_min_v": 1.64743714,
-      "vcm_max_v": 1.6484999,
-      "max_reference_error_v": 0.0025500000000000522,
-      "qualified_max_v": 0.0,
+    "125-139ns": {
+      "actual_request_values": [
+        17
+      ],
+      "vcm_min_v": 1.16525051,
+      "vcm_max_v": 1.64828505,
+      "max_reference_error_v": 0.47698167999999996,
+      "qualified_max_v": 3.3,
       "buffer_enable_max_v": 3.3,
-      "termination_enable_max_v": 1.92887247e-07,
+      "termination_enable_max_v": 3.3077808,
       "traffic_ready_max_v": 0.0,
       "measured_ready_max_v": 3.3
     },
-    "main_post": {
-      "vcm_min_v": 1.64080649,
-      "vcm_max_v": 1.65379726,
-      "max_reference_error_v": 0.008479289999999917,
+    "175-195ns": {
+      "actual_request_values": [
+        19
+      ],
+      "vcm_min_v": 1.46853138,
+      "vcm_max_v": 1.72260022,
+      "max_reference_error_v": 0.162539,
       "qualified_max_v": 3.3,
       "buffer_enable_max_v": 3.3,
-      "termination_enable_max_v": 3.30054263,
+      "termination_enable_max_v": 3.30816115,
       "traffic_ready_max_v": 0.0,
       "measured_ready_max_v": 3.3
     },
-    "detect": {
-      "vcm_min_v": 0.493127137,
-      "vcm_max_v": 1.05107907,
-      "max_reference_error_v": 1.103349493,
+    "225-239ns": {
+      "actual_request_values": [
+        19
+      ],
+      "vcm_min_v": 1.63054059,
+      "vcm_max_v": 2.51735403,
+      "max_reference_error_v": 0.8315720499999999,
       "qualified_max_v": 3.3,
-      "buffer_enable_max_v": 0.0,
-      "termination_enable_max_v": -1.54492445e-05,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 3.36335449,
       "traffic_ready_max_v": 3.3,
-      "measured_ready_max_v": 0.0
+      "measured_ready_max_v": 3.3
     },
-    "disabled": {
-      "vcm_min_v": 0.0210811252,
-      "vcm_max_v": 0.0568585476,
-      "max_reference_error_v": 1.6275826147999999,
+    "280-299ns": {
+      "actual_request_values": [
+        0
+      ],
+      "vcm_min_v": 0.126539359,
+      "vcm_max_v": 0.343860222,
+      "max_reference_error_v": 1.510189081,
       "qualified_max_v": 0.0,
       "buffer_enable_max_v": 0.0,
-      "termination_enable_max_v": -1.08746693e-06,
+      "termination_enable_max_v": -4.40376575e-06,
       "traffic_ready_max_v": 0.0,
       "measured_ready_max_v": 0.0
     }
@@ -94,14 +114,36 @@
   "edge_translation_ns": 0.02,
   "external_network_unchanged": true,
   "source_sha256": {
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "8466c118030b906b1578d327e6aed0d07e8d1dec801b6e6be236734d08a90006",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "24bbbd4cbc96662e37d07da3000b56163677347f35166fb026eaec5ddb7c7382",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "fc3cdc163ae805c33b92a298142718ad36c94f5567ac4bb9bb608be016d58e32",
-    "/home/ubuntu/svalbard/scratch/pad-tx-feedback-iteration1/replay.sv": "acfa76c491b57f4cc738dd90967cde2422ad3333b1e95c0923c53ee7f19b8448",
+    "/home/ubuntu/svalbard/scratch/pad-tx-complete-mode-feedback-1/replay.sv": "a568460811d29aa74a8c969504058b45682fc750e76a6ee8ed536dd2f5fcaa02",
     "/home/ubuntu/svalbard/scratch/pad-tx-restore-reference-extracted.spice": "760c0fecfa8d79286df7de95ead0b5b138a12ef4677b3f9528ac96f1d7228b0f",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "7c4b09b56910abe0eaa594a0cefae3c676706596c713ba8f04cb737367fcce57",
-    "/home/ubuntu/svalbard/scratch/pad-tx-feedback-iteration1/connected.spice": "c515184ce17a37eae19d693a9202b3f1d78ea83c374fc0211df083fcdec7d481"
+    "/home/ubuntu/svalbard/scratch/pad-tx-complete-mode-feedback-1/connected.spice": "b70f65f05cb27d3cf124c8f6454d6db49bad537f38d4cfc33adb22ee29c8214e"
   },
-  "feedback_sample_mismatches": 12,
+  "mode_coverage": {
+    "TMDS": {
+      "qualified": true,
+      "traffic_ready": true
+    },
+    "MAIN": {
+      "qualified": true,
+      "traffic_ready": true
+    },
+    "MAIN_POST": {
+      "qualified": true,
+      "traffic_ready": true
+    },
+    "DETECT": {
+      "qualified": true,
+      "traffic_ready": true
+    }
+  },
+  "disabled_end_observed": true,
+  "feedback_sample_mismatches": 0,
+  "first_feedback_mismatch_ns": null,
+  "consistent_prefix_sample_count": 75,
+  "sampled_feedback_consistent": true,
   "feedback_sample_times_ns": [
     1.0,
     5.0,
@@ -179,5 +221,6 @@
     293.0,
     297.0
   ],
-  "feedback_input_sha256": "d1ac336c0dbe0c3261a914e58c9ffbd0b066f49aa36dc5dcf491558c1fe4cdb6"
+  "feedback_input_sha256": "8187727199ecb9ae1db898352336ce81309b0f27792b7c563726a68791ddd56b",
+  "report_postprocessing": "Window keys renamed to actual time intervals; numerical results and simulation source hashes unchanged. Use actual_request_values and rtl.txt to identify operating state."
 }

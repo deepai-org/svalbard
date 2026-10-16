@@ -96,7 +96,8 @@ def run(work,fixture,ready_data=None,scenario="transitions"):
                 old=value
         events.append((300,events[-1][1]))
         return 'PWL('+' '.join(f'{t:g}n {v:g}' for t,v in events)+')'
-    deck=fixture.read_text().split('.control')[0]
+    from loading_audit import anchor_floating_conductors
+    deck, anchors = anchor_floating_conductors(fixture.read_text().split('.control')[0], 1e12)
     low,high=json.loads((PROJECT/'spec/analog-architecture.json').read_text())['blocks']['monitor']['parameters']['supply_window_v']
     replacements={'VTX_RESET':'VTX_RESET TX_RESET 0 '+wave(4,3.3,invert=True),
                   'VTX_QUALIFIED':'VTX_QUALIFIED TX_QUALIFIED 0 '+wave(2,3.3),
@@ -117,7 +118,7 @@ def run(work,fixture,ready_data=None,scenario="transitions"):
     deck+=f'RREADY_FILTER READY_WINDOW READY_FILTER 1000\nCREADY_FILTER READY_FILTER 0 {tau/1000}\n'
     deck+=f'BMEASURED_READY MEASURED_READY 0 V=V(VDD)*(V(READY_FILTER)>={threshold})\n'
     deck+=control(work,'connected','tran 5p 300n','v(TERM_VCM) v(BUF_REF) v(TX_QUALIFIED) v(BUF_ENABLE) v(TERM_ENABLE) i(VDD) v(TRAFFIC_READY) v(MEASURED_READY) v(READY_WINDOW)')
-    x=run_spice(work,'connected',deck)
+    x=run_spice(work,'connected',deck,reject_transient_op=True)
     if not np.isfinite(x).all() or x[-1,0]<299.99e-9:raise ValueError('Incomplete connected replay')
     windows={}
     trace=np.array(rows)
@@ -134,6 +135,11 @@ def run(work,fixture,ready_data=None,scenario="transitions"):
     qualified_modes={int(row[1]) for row in rows if row[2]}
     traffic_modes={int(row[1]) for row in rows if row[5]}
     r['mode_coverage']={name:{'qualified':value in qualified_modes,'traffic_ready':value in traffic_modes} for name,value in [('TMDS',4),('MAIN',17),('MAIN_POST',19),('DETECT',8)]}
+    r['numerical_floating_conductor_anchors']=anchors
+    r['operating_point_policy']='Reject transient operating-point fallback; numerical anchors are not physical resistors.'
+    for helper in ['loading_audit.py','screen.py']:
+        path=Path(__file__).with_name(helper)
+        r['source_sha256'][str(path.resolve())]=hashlib.sha256(path.read_bytes()).hexdigest()
     r['scenario']=scenario
     r['traffic_ready_intervals_ns']={name:[[a[0],b[0]] for a,b in zip(rows,rows[1:]+[[300]]) if a[1]==value and a[5]] for name,value in [('TMDS',4),('MAIN',17),('MAIN_POST',19),('DETECT',8)]}
     r['requested_loaded_hold_ns']=64 if scenario != 'transitions' else None

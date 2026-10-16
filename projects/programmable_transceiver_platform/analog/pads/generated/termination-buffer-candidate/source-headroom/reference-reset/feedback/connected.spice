@@ -7,9 +7,7 @@ Wired pad candidate with explicit core control interfaces
 XPHYSICAL PAD_P PAD_N VDD VSS CASCODE MAIN_P MAIN_N MAIN_BIAS POST_P POST_N POST_BIAS TMDS_P TMDS_N TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_VCM ESD_RAIL combined_flat
 .ends tx_protected_pad
 * NGSPICE file created from combined_flat.ext - technology: gf180mcuD
-.subckt combined_flat PAD_P PAD_N VDD VSS CASCODE MAIN_P MAIN_N MAIN_BIAS POST_P POST_N
-+ POST_BIAS TMDS_P TMDS_N TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_VCM
-+ ESD_RAIL
+.subckt combined_flat PAD_P PAD_N VDD VSS CASCODE MAIN_P MAIN_N MAIN_BIAS POST_P POST_N POST_BIAS TMDS_P TMDS_N TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_VCM ESD_RAIL
 X0 TERM_BLEED_6 VSS VSS ppolyf_u_1k r_width=1u r_length=12.5u
 X1 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
 X2 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
@@ -1954,6 +1952,7 @@ C1574 DETECT_P_I VSS 13.6197f
 C1575 TERM_N_R VSS 65.0923f
 C1576 TERM_ENABLE_LOCAL VSS 30.5432f
 DWELL_ARRAY VSS ESD_RAIL diode_nw2ps_06v0 area=569.4528p pj=470.72u
+RNUM_FLOAT_0 m2_34279_176800# VSS 1e+12
 .ends
 .lib /home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.ngspice diode_typical
 .lib /home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.ngspice mimcap_typical
@@ -3285,7 +3284,7 @@ BMEASURED_READY MEASURED_READY 0 V=V(VDD)*(V(READY_FILTER)>=0.99)
 set wr_singlescale
 set wr_vecnames
 tran 5p 300n
-wrdata /home/ubuntu/svalbard/scratch/pad-tx-complete-mode-feedback-1/connected.dat v(TERM_VCM) v(BUF_REF) v(TX_QUALIFIED) v(BUF_ENABLE) v(TERM_ENABLE) i(VDD) v(TRAFFIC_READY) v(MEASURED_READY) v(READY_WINDOW)
+wrdata /home/ubuntu/svalbard/scratch/pad-tx-anchored-transitions-1/connected.dat v(TERM_VCM) v(BUF_REF) v(TX_QUALIFIED) v(BUF_ENABLE) v(TERM_ENABLE) i(VDD) v(TRAFFIC_READY) v(MEASURED_READY) v(READY_WINDOW)
 quit
 .endc
 .end

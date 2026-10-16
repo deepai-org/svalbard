@@ -14,13 +14,15 @@ from design import PROJECT
 from transmit_controls import attach as attach_transmit_guard
 
 
-def run_spice(work,name,text):
+def run_spice(work,name,text, *, reject_transient_op=False):
     path=work/(name+'.spice')
     path.write_text(text)
     (work/(name+'.dat')).unlink(missing_ok=True)
     result=subprocess.run(['ngspice','-b',str(path)],capture_output=True,text=True,timeout=120)
     (work/(name+'.log')).write_text(result.stdout+result.stderr)
     result.check_returncode()
+    if reject_transient_op and 'Transient op started' in result.stdout+result.stderr:
+        raise ValueError('DC solve fell back to transient initialization: '+str(path))
     return np.loadtxt(work/(name+'.dat'),skiprows=1)
 
 

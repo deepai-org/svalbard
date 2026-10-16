@@ -5,18 +5,19 @@
     162.0,
     230.0
   ],
-  "max_reference_error_v": 0.014117829999999998,
+  "max_reference_error_v": 0.014080470000000123,
   "reference_error_limit_v": 0.0165,
   "minimum_detector_v": 3.3,
-  "peak_connected_supply_draw_a": 0.0353174486,
+  "peak_connected_supply_draw_a": 0.0353153389,
   "feedback_sample_mismatches": 0,
   "loaded_traffic_ready_without_detector_ready_s": 0,
   "final_disable_observed": true,
   "scope": "Same extracted full TX/buffer/interlock and external network as the transition bench; MAIN+POST starts directly after supply recovery. Repetitive data continues throughout. Behavioral detector, ideal control-edge translation, and unmapped RTL remain; no PVT, long-duration, current-capacity or reliability qualification. A different initial feedback guess accelerated convergence; only the final self-consistent run is acceptance evidence.",
   "artifact_sha256": {
-    "connected.spice": "c6a53c5d9e101b0b16247d891f49816dc0f407d955c3916d121578da2e688857",
-    "rtl.txt": "ade44d2253b3243edd5ee2f9cb8e66c08408b56b356c8f28474e20610238ac93",
-    "screen.json": "100629983e956184297e7469f700f969665e15b03fdf23f0d14fa80ceafcd40c",
-    "replay.sv": "88f53342c8a8ba3df7a6250c726ef358ef8b27bd53a8dfcfeff4a831184e4182"
-  }
+    "screen.json": "0546f0a7097a07a5ac65242dbcb74fb554b220a11bd4f31bd9a13ffaaec4f0b9",
+    "connected.spice": "0e6ed7e55a1e425ea6b3477f1bf7547d5fc2a5ef149bd8832cb4737f733e1277",
+    "replay.sv": "88f53342c8a8ba3df7a6250c726ef358ef8b27bd53a8dfcfeff4a831184e4182",
+    "rtl.txt": "65aabed0a489c293737e4edbd66f7e6f886f36675e2a76d6faf00e7f381b6087"
+  },
+  "initialization_policy": "Checked DC operating point with a declared 1 Tohm numerical anchor on capacitor-only metal; transient operating-point fallback rejected. No physical resistor added."
 }

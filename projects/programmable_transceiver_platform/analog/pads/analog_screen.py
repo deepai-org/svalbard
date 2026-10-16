@@ -29,10 +29,7 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
     if rf_tx_gain is not None and family!='rf_transmit':raise ValueError('RF TX gain applies only to RF transmit')
     work.mkdir(parents=True,exist_ok=True)
     def run_spice(directory, name, deck):
-        result = raw_run_spice(directory, name, deck)
-        if family == 'reference_clock' and 'Transient op started' in (directory/(name+'.log')).read_text():
-            raise ValueError('Reference DC solve fell back to transient initialization: '+name)
-        return result
+        return raw_run_spice(directory, name, deck, reject_transient_op=True)
     circuit=build(family)
     if external_termination_ohm is not None and (family!='reference_clock' or
             not np.isfinite(external_termination_ohm) or external_termination_ohm<=0):
@@ -45,12 +42,10 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
         from rf_route import augment
         model,route_evidence=augment(model,family,route_report,capacitance_location,resistance_corner)
         (work/'segmented-pad.spice').write_text(model)
-    anchors = []
-    if family == 'reference_clock':
-        if not np.isfinite(numerical_anchor_resistance) or numerical_anchor_resistance < 1e12:
-            raise ValueError('Numerical floating-metal anchors must be at least 1 Tohm')
-        from loading_audit import anchor_floating_conductors
-        model, anchors = anchor_floating_conductors(model, numerical_anchor_resistance)
+    if not np.isfinite(numerical_anchor_resistance) or numerical_anchor_resistance < 1e12:
+        raise ValueError('Numerical floating-metal anchors must be at least 1 Tohm')
+    from loading_audit import anchor_floating_conductors
+    model, anchors = anchor_floating_conductors(model, numerical_anchor_resistance)
     core_prefix='COREPAD' if route_evidence else 'PAD'
     subckt=next(line.split()[1] for line in model.splitlines() if line.startswith('.subckt '))
     declared=next(line.split()[2:] for line in model.splitlines() if line.startswith('.subckt '))
@@ -472,10 +467,10 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
         report['large_coupling_diagnostic']=screen(work/'large-coupling',pdk,physical,family,
             external_coupling_f=10e-9)
     report['numerical_floating_conductor_anchors'] = anchors
-    if ref:
-        helper = Path(__file__).with_name('loading_audit.py')
-        report['source_sha256'][str(helper)] = hashlib.sha256(helper.read_bytes()).hexdigest()
-        report['operating_point_policy'] = 'Capacitor-only internal metal receives a declared numerical DC anchor; reject transient operating-point fallback. Anchors are not fabricated resistors.'
+    helper = Path(__file__).with_name('loading_audit.py')
+    report['source_sha256'][str(helper)] = hashlib.sha256(helper.read_bytes()).hexdigest()
+    report['source_sha256'][str(Path(__file__).with_name('screen.py'))] = hashlib.sha256(Path(__file__).with_name('screen.py').read_bytes()).hexdigest()
+    report['operating_point_policy'] = 'Capacitor-only internal metal receives a declared numerical DC anchor; reject transient operating-point fallback. Anchors are not fabricated resistors.'
     (work/'screen-report.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(dict(family=family,capacitance_f_per_leg=caps,states=states),indent=2))
     return report

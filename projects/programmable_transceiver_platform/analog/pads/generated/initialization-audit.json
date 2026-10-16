@@ -1,0 +1,139 @@
+{
+  "status": "selected_reference_RF_and_TX_initialization_checked_not_all_legacy_fixtures",
+  "dc_anchor_sensitivity": {
+    "rf_rx": {
+      "1T": {
+        "values": [
+          1.1168656,
+          1.64898355,
+          1.64898355,
+          3.3,
+          -1.01027405e-05,
+          1.01027405e-05
+        ],
+        "anchors": [
+          {
+            "cell": "pad_flat",
+            "node": "m2_2279_124800#",
+            "resistance_ohm": 1000000000000.0
+          }
+        ],
+        "fallback": false
+      },
+      "1P": {
+        "values": [
+          1.1168656,
+          1.64898355,
+          1.64898355,
+          3.3,
+          -1.01027405e-05,
+          1.01027405e-05
+        ],
+        "anchors": [
+          {
+            "cell": "pad_flat",
+            "node": "m2_2279_124800#",
+            "resistance_ohm": 1000000000000000.0
+          }
+        ],
+        "fallback": false
+      }
+    },
+    "rf_tx": {
+      "1T": {
+        "values": [
+          1.1178255,
+          1.64996591,
+          1.64996591,
+          3.3,
+          -3.40890968e-06,
+          3.40890968e-06
+        ],
+        "anchors": [
+          {
+            "cell": "pad_flat",
+            "node": "m2_2279_124800#",
+            "resistance_ohm": 1000000000000.0
+          }
+        ],
+        "fallback": false
+      },
+      "1P": {
+        "values": [
+          1.1178255,
+          1.64996591,
+          1.64996591,
+          3.3,
+          -3.40890968e-06,
+          3.40890968e-06
+        ],
+        "anchors": [
+          {
+            "cell": "pad_flat",
+            "node": "m2_2279_124800#",
+            "resistance_ohm": 1000000000000000.0
+          }
+        ],
+        "fallback": false
+      }
+    },
+    "wired_tx": {
+      "1T": {
+        "values": [
+          6.59400298e-10,
+          9.24552076e-05,
+          9.24552076e-05,
+          3.3,
+          -0.00195000046,
+          0.00195000046
+        ],
+        "anchors": [
+          {
+            "cell": "combined_flat",
+            "node": "m2_34279_176800#",
+            "resistance_ohm": 1000000000000.0
+          }
+        ],
+        "fallback": false
+      },
+      "1P": {
+        "values": [
+          6.59400298e-10,
+          9.24551746e-05,
+          9.24551746e-05,
+          3.3,
+          -0.00195000046,
+          0.00195000046
+        ],
+        "anchors": [
+          {
+            "cell": "combined_flat",
+            "node": "m2_34279_176800#",
+            "resistance_ohm": 1000000000000000.0
+          }
+        ],
+        "fallback": false
+      }
+    }
+  },
+  "dc_vector_order": [
+    "simulator_scale",
+    "pad_p_v",
+    "pad_n_v",
+    "supply_v",
+    "supply_current_a",
+    "return_current_a"
+  ],
+  "canonical_RF_and_selected_TX_transients_reject_fallback": true,
+  "known_bad_unanchored_RF_fixture_rejected": true,
+  "remaining": "Legacy canonical wired TX and RX/USB fixtures, arbitrary floating-metal initial charge, variation and physical readiness detectors remain outside this audit. RF core protection/current capacity remain unresolved.",
+  "report_sha256": {
+    "projects/programmable_transceiver_platform/analog/pads/generated/rf-receive-screen.json": "bc13f2259e221e882fa2015c10bba2876f29ea32bf8e9ef227438f14e9b86c55",
+    "projects/programmable_transceiver_platform/analog/pads/generated/rf-transmit-screen.json": "7dfc0c8b28c311bd27ab468f6824e40e7a55d51aa6696b8c71acba9a09e2cb55",
+    "projects/programmable_transceiver_platform/analog/pads/generated/rf-transmit-maximum-screen.json": "440b797b57884e47ada15e86f10ccc8c09f7b068515028a2b706290168fdaa38",
+    "projects/programmable_transceiver_platform/analog/pads/generated/rf-protection-pulse-screen.json": "22c0f51302d79fbe3425aad0d0dbaa20b441edebf724f76c9085f59868517c00",
+    "projects/programmable_transceiver_platform/analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/feedback/screen.json": "c873ab08ccfe58392a1a519ca279f25e89cbf90c801594f7fed3916f64d7408c",
+    "projects/programmable_transceiver_platform/analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/loaded-hold/screen.json": "0546f0a7097a07a5ac65242dbcb74fb554b220a11bd4f31bd9a13ffaaec4f0b9"
+  },
+  "rejected_fixture_log_sha256": "ff8084bf6170e580e365adaced67707c1f67666adf2a106c12ba85540db493b9"
+}

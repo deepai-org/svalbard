@@ -71,7 +71,7 @@
         "model": "9151d6e786a66c59be3fa0bdf25546ea1bcf9c6adc0254de5b8a9721c426b6ed",
         "layout": "af18265b339f1fb2748c2a4cb91d77844cb23cd54c05c5be79d6d257e8304f3a",
         "gds": "64796df3103e613e37bc42e0efc7a56e6caa47231163fe5308cb17d26ec76364",
-        "screen": "5cafa8e12b8bf9af9a76f40897b66fd6aeb390230d856238c6a0c5134f4def12"
+        "screen": "2e1e017328cac0e0dacb7ff4a787e53cfc249431a1b4f82555cc0703d92a1300"
       },
       "reported_transient_complete": true,
       "required_state_windows": {
@@ -110,7 +110,7 @@
         "model": "6412e885c6ce2a7b47b5e088aa45d9935faaeb8111e952ab507e8fae6f7a1050",
         "layout": "af5a10880ad2a25481680eca0f0396febd1d83b6412ea3195b0333491366ec22",
         "gds": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
-        "screen": "ca24d32a1953546c27f65183d41e5677f1e2245b44d691d8e82a0ae6bfe1e565"
+        "screen": "bc13f2259e221e882fa2015c10bba2876f29ea32bf8e9ef227438f14e9b86c55"
       },
       "reported_transient_complete": true,
       "required_state_windows": {
@@ -132,10 +132,7 @@
       },
       "all_required_state_names_present": true,
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/analog_screen.py",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json"
-      ],
+      "stale_screen_sources": [],
       "stale_layout_sources": [
         "analog/pads/generated/rf-receive-layout.json",
         "analog/pads/generated/rf-transmit-layout.json"
@@ -155,7 +152,7 @@
         "model": "6412e885c6ce2a7b47b5e088aa45d9935faaeb8111e952ab507e8fae6f7a1050",
         "layout": "67415893e4415099409dce31b9d8a137fa29868a8f0772d3dc5a1a518336b06a",
         "gds": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
-        "screen": "313049edd9f5f84533237e3587c945df64b6a8ac2d91a8a268503c19ecb7b05a"
+        "screen": "7dfc0c8b28c311bd27ab468f6824e40e7a55d51aa6696b8c71acba9a09e2cb55"
       },
       "reported_transient_complete": true,
       "required_state_windows": {
@@ -177,10 +174,7 @@
       },
       "all_required_state_names_present": true,
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/analog_screen.py",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json"
-      ],
+      "stale_screen_sources": [],
       "stale_layout_sources": [
         "analog/pads/generated/rf-receive-layout.json",
         "analog/pads/generated/rf-transmit-layout.json"
@@ -275,7 +269,7 @@
     "scope": "Nominal extracted-circuit DC check, including aligned maximum MAIN+POST; not timing or variation qualification."
   },
   "missing": [
-    "RF and wired-TX operating-point initialization robustness: retained logs used transient fallback; reference numerical-anchor correction does not validate them",
+    "initialization audit of legacy canonical wired TX and RX/USB fixtures; selected protected TX and canonical RF/reference reruns now reject transient operating-point fallback",
     "wired RX/USB trim, slew, termination mutual exclusion and local safe-state controls",
     "wired TX termination trim, implemented current-limited common-mode buffer and reset/brownout controls",
     "full-bank host/power and supervisor qualification; independent-host power-off backfeed mitigation",

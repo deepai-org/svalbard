@@ -210,7 +210,7 @@ def write_coverage(publish,results):
                 combined_retained_screen=retained_evidence,
                 protection_design_audit=protection_evidence,wired_tx_loading=tx_loading_evidence,
                 wired_tx_current_compliance=compliance_evidence,
-                missing=['RF and wired-TX operating-point initialization robustness: retained logs used transient fallback; reference numerical-anchor correction does not validate them',
+                missing=['initialization audit of legacy canonical wired TX and RX/USB fixtures; selected protected TX and canonical RF/reference reruns now reject transient operating-point fallback',
                          'wired RX/USB trim, slew, termination mutual exclusion and local safe-state controls',
                          'wired TX termination trim, implemented current-limited common-mode buffer and reset/brownout controls',
                          'full-bank host/power and supervisor qualification; independent-host power-off backfeed mitigation',

@@ -429,10 +429,14 @@ coupling, nominal one-percent bias settling takes about 5.22 ms. Clock readiness
 must follow actual bias/clock validity, not just the 20 µs supervisor guard.
 The numerical anchor is not a fabricated resistor; physical clock reception
 and readiness detection remain unqualified.
-An audit also found transient operating-point fallback in the retained RF and
-wired-TX logs. Their published transients remain recorded observations, but
-initial-state robustness must be rechecked before treating them as electrical
-acceptance. The reference correction does not retroactively validate those runs.
+The same correction now applies to canonical RF screens and the selected
+protected TX transition/hold replays. All reruns reject transient operating-point
+fallback; the TX replays retain converged feedback and the 68 ns loaded hold.
+RF power remains about −1.34 dBm at nominal gain and +0.16 dBm at maximum gain.
+The diagnostic core pulse extremes remain approximately +4.54/−1.00 V, so
+protection is still unqualified. See `generated/initialization-audit.json`.
+Legacy wired fixtures and arbitrary floating-metal initial charge still need
+review; the new checks do not retroactively validate historical runs.
 Whole-core fit, distributed route resistance, core protection and the physical
 receiver remain open.
 

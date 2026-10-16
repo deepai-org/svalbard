@@ -5,19 +5,19 @@
   "physical_model": "/home/ubuntu/svalbard/scratch/pad-rf-current-shared-refresh/routed/physical.spice",
   "gds": "/home/ubuntu/svalbard/scratch/pad-rf-current-shared-refresh/pad/pad.gds",
   "family_screens": {
-    "rf_receive": "/home/ubuntu/svalbard/scratch/pad-rf-current-shared-refresh/routed/rf_receive/screen-report.json",
-    "rf_transmit": "/home/ubuntu/svalbard/scratch/pad-rf-current-shared-refresh/routed/rf_transmit/screen-report.json"
+    "rf_receive": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-receive-screen.json",
+    "rf_transmit": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-transmit-screen.json"
   },
-  "nominal_gain_high_resistance_power_dbm": -1.3410638523146061,
-  "maximum_gain_high_resistance_power_dbm": 0.16305079839448655,
+  "nominal_gain_high_resistance_power_dbm": -1.3407274184571234,
+  "maximum_gain_high_resistance_power_dbm": 0.16339140641578737,
   "core_pulse_extrema": {
     "positive_100mA": {
-      "min": 1.64665207,
-      "max": 4.54036201
+      "min": 1.64665742,
+      "max": 4.54300682
     },
     "negative_100mA": {
-      "min": -1.00452682,
-      "max": 1.64665207
+      "min": -1.00452646,
+      "max": 1.64665742
     }
   },
   "limitations": [
@@ -36,5 +36,14 @@
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/rf_integrated.py": "81f2e3f0ec34ae6de341e7c0e4bb79ba9a1632a6a3e48e43d622353b07c4ce48",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "31ff538f4d198f8559b7a62d3dc7dece47a0d2e702eb31c344d09bedd22dd77b",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/contract.json": "9e43600f7d9016469fc825fe4c451a87c4940e98bb3007f7a18b8f6ea3e63c69"
+  },
+  "electrical_refresh": {
+    "scope": "Same selected physical network, route overlay and external networks. Numerical floating-metal anchors declared; all new RF screens and pulse cases reject transient operating-point fallback. Older construction manifests are preserved, not restamped.",
+    "report_sha256": {
+      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-receive-screen.json": "bc13f2259e221e882fa2015c10bba2876f29ea32bf8e9ef227438f14e9b86c55",
+      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-transmit-screen.json": "7dfc0c8b28c311bd27ab468f6824e40e7a55d51aa6696b8c71acba9a09e2cb55",
+      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-transmit-maximum-screen.json": "440b797b57884e47ada15e86f10ccc8c09f7b068515028a2b706290168fdaa38",
+      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-protection-pulse-screen.json": "22c0f51302d79fbe3425aad0d0dbaa20b441edebf724f76c9085f59868517c00"
+    }
   }
 }

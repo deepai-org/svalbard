@@ -2600,7 +2600,7 @@
         "capacitance_f_per_leg": 2.7e-12,
         "common_mode_v": 1.65,
         "input_r_ohm": 100000.0,
-        "protection": "Ground-referenced drain-SAB primary protection candidate, without an upper supply steering diode. The core common-mode bias path remains connected through its finite bias resistance. Trigger window, ESD current survival and attached receiver stress remain unqualified."
+        "protection": "Ground-referenced primary network with steering junctions into an isolated protection rail, a triggered MOS clamp, physical MIM timing/storage capacitors and a bleed resistor. No upper steering path into functional PLL_VDD. Finite common-mode bias remains connected. Core coordination, trigger window, ESD current capacity and receiver stress remain unqualified."
       },
       "ports": {
         "clock_in": {

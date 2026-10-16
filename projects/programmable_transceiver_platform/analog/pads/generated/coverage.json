@@ -1,13 +1,11 @@
 {
   "first_pass_complete": false,
   "candidates": {
-    "rf_receive": {
-      "rebuilt": true,
-      "report": "rf-receive-screen.json"
-    },
-    "rf_transmit": {
-      "rebuilt": true,
-      "report": "rf-transmit-screen.json"
+    "reference_clock": {
+      "drc_count": 0,
+      "device_count": 175,
+      "electrical_scope": "connected_primary_protection_with_behavioral_reference_receiver",
+      "integrated_report": "reference-clock-integrated-screen.json"
     }
   },
   "integrated_model_inventory": {
@@ -54,6 +52,8 @@
       "stale_layout_sources": [
         "analog/pads/layout.py",
         "analog/pads/circuits.py",
+        "analog/pads/design.py",
+        "analog/pads/wired_receive.py",
         "spec/analog-architecture.json"
       ],
       "exported_layout_device_graph_matches_current_model": true,
@@ -68,10 +68,10 @@
         "screen": "reference-clock-screen.json"
       },
       "artifact_sha256": {
-        "model": "5c2a24e1f8bd6ca2aa185acdeb1d75b2d25935373f4e7a2e5d8ac209b39ead78",
-        "layout": "a61528d5319c69623838065d0a6b6e67e9a1dfb2d69c5b82d7de615e0d9c7ae4",
-        "gds": "4f7c5b7bf18bc3bb0b21377fdd511389ec30d313027e82a63655427f6846e624",
-        "screen": "bf87f3244f4eba4106bc80d206882a98d4a161848edaa0b72c32eb86779c48e8"
+        "model": "4d060711e611774a2de4eb9668ae22c6cd07f0e35f4a3a1745943796084ac7c1",
+        "layout": "01458d3a52fd35ddb9950f97d3587d7fa2b4f2c4503417bc489444a7bbeb2653",
+        "gds": "541e7958e886095340d7a35c7ed696007e848c9db0fc02a0bd3707f7554e4fa9",
+        "screen": "4bdd182a9e9fd9435ed85ea942c984abad8e1eadbce112ea514698fde86bdeb9"
       },
       "reported_transient_complete": true,
       "required_state_windows": {
@@ -93,15 +93,8 @@
       },
       "all_required_state_names_present": true,
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/circuits.py",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json"
-      ],
-      "stale_layout_sources": [
-        "analog/pads/layout.py",
-        "analog/pads/circuits.py",
-        "spec/analog-architecture.json"
-      ],
+      "stale_screen_sources": [],
+      "stale_layout_sources": [],
       "exported_layout_device_graph_matches_current_model": true,
       "source_manifest_present": true,
       "scope": "Canonical family candidate only; named windows and matching input bytes do not prove performance, safety, or unchanged external-network topology."
@@ -139,7 +132,9 @@
       },
       "all_required_state_names_present": true,
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [],
+      "stale_screen_sources": [
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json"
+      ],
       "stale_layout_sources": [
         "analog/pads/generated/rf-receive-layout.json",
         "analog/pads/generated/rf-transmit-layout.json"
@@ -181,7 +176,9 @@
       },
       "all_required_state_names_present": true,
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [],
+      "stale_screen_sources": [
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json"
+      ],
       "stale_layout_sources": [
         "analog/pads/generated/rf-receive-layout.json",
         "analog/pads/generated/rf-transmit-layout.json"
@@ -230,6 +227,7 @@
       "stale_screen_sources": [
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/receive_screen.py",
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/receive_core.py",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/wired_receive.py",
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/circuits.py",
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py",
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json"
@@ -237,6 +235,8 @@
       "stale_layout_sources": [
         "analog/pads/layout.py",
         "analog/pads/circuits.py",
+        "analog/pads/design.py",
+        "analog/pads/wired_receive.py",
         "spec/analog-architecture.json"
       ],
       "exported_layout_device_graph_matches_current_model": true,
@@ -276,7 +276,7 @@
     "wired RX/USB trim, slew, termination mutual exclusion and local safe-state controls",
     "wired TX termination trim, implemented current-limited common-mode buffer and reset/brownout controls",
     "full-bank host/power and supervisor qualification; independent-host power-off backfeed mitigation",
-    "primary protection dimensions below published HV ESD minima; replacement architecture/loading, current capacity, whole-ring/device rails and package returns",
+    "legacy wired canonical models still need selected primary-protection adoption; selected RF/reference protection still needs current-capacity, core-stress and whole-ring/package qualification",
     "distributed interconnect resistance and complete attached-core stress/loading"
   ],
   "scope": "Only listed candidates were rebuilt. Other artifacts must retain their original source hashes."

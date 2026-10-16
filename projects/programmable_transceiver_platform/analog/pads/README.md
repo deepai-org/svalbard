@@ -41,7 +41,7 @@ matching and fault-injection experiments do not replace canonical artifacts.
 | --- | --- | --- |
 | Wired TX | 160 MOS + 19 resistors; shared output cascodes, main/postcursor/TMDS branches, detection, source termination and passive bias discharge | `wired-transmit-screen.json`, `-loading.json`, `-compliance.json` |
 | Wired RX/USB | 237 MOS + 54 resistors; divider/bypass, differential and shunt termination, HS/FS drive, pullups/pulldowns | `wired-receive-usb-screen.json`, `-loading.json` |
-| Differential reference | 4 protection MOS + 16 bias resistors; receiver remains an explicit `refinput` boundary | `reference-clock-screen.json`, `-terminated-screen.json` |
+| Differential reference | 175-device primary protection and bias network; receiver remains an explicit `refinput` boundary | `reference-clock-screen.json`, `-terminated-screen.json` |
 | RF RX | Connected 159-device protection network: steering diodes, isolated-rail clamp, MIMs and physical bleed; finite LNA boundary | `rf-receive-screen.json`, `-route-resistance.json` |
 | RF TX | Same connected protection network; supply-connected, current/headroom-limited driver boundary | `rf-transmit-screen.json`, `-route-resistance.json` |
 
@@ -313,7 +313,7 @@ This is not an ESD rating or an inferred damage threshold. Core stress and
 discharge-current capacity remain open.
 The base-generator change also requires refreshing older source manifests.
 
-**Wired/reference grounded-gate protection remains insufficient.** Its 32 µm total width
+**The legacy wired grounded-gate protection remains insufficient.** Its 32 µm total width
 per leg is below the published HV ESD dimensional guidance. Ordinary DRC/LVS
 must not be represented as ESD qualification. Simply increasing its size exceeds
 some loading allocations. See `generated/protection-audit.json` and the
@@ -412,16 +412,19 @@ Neither is adopted. The ±24 mA reversal is an adverse standalone source/sink
 test, not ordinary TX operation; retained-pad lifecycle results remain decisive.
 The ramp controls load demand, not serial data-edge speed.
 
-A connected reference-clock primary-protection candidate now exists in
-`generated/reference-primary-protection/`: 175 devices, local DRC and
-independent device/LVS checks, corrected nonlinear well model, inspected layout
-render and retained-network lifecycle/loading screens. Nominal odd-mode loading
-is approximately 0.572 pF/leg at 1 GHz. Its allocated union is 127,170 µm² against
-a 60,000 µm² allowance, before the current reserve transfer. It is not adopted. Joint provider placement with the doubled-tail TX and all other families now
-preserves bond openings and passes metal-overlap/local-rail checks after moving
-reference protection inward. Whole-core fit,
-distributed route resistance, core protection and reference-bias startup remain
-open; completing the short lifecycle is not clock-receiver acceptance.
+The canonical reference-clock model now contains the selected 175-device
+primary-protection and bias network. `reference_integrated.py` regenerates its
+base and combined layout from shared parameters, reruns both retained-network
+reference fixtures, and checks joint provider placement before publication.
+`run_first_pass.py --families reference_clock` uses this path. Canonical artifacts
+are `generated/reference-clock-*`; earlier candidate evidence is superseded.
+Odd-mode loading is approximately 0.572 pF/leg at 1 GHz and the allocated union
+is 127,170 µm² within the 130,000 µm² reservation. Local DRC, independent device
+checks, bond openings, metal-overlap and local-rail checks pass. The short active
+window still has common mode near 16 mV rather than the intended 1.65 V: it
+exposes unfinished bias startup and does not establish clock reception.
+Whole-core fit, distributed route resistance, core protection and the physical
+receiver remain open.
 
 The complete RX/USB primary-protection candidate is in
 `generated/receive-primary-protection/`: 446 devices including the existing
@@ -556,7 +559,7 @@ predicts acceptable performance.
 | Workstream | Next implementation needed |
 | --- | --- |
 | RF pair | Connected primary protection is canonical, area funded, and RX/TX retained-state and route-loading checks run on that model. Resolve core-facing protection, discharge-current capacity and the narrow modeled TX power margin. |
-| Wired TX and reference | Protected 366-device TX and 175-device reference candidates have connected layouts and joint provider-placement checks; pad area is funded. Finish protection/core coordination and adopt through the canonical inventory. Reference receiver remains a behavioral boundary. |
+| Wired TX and reference | Protected 175-device reference is canonical and rebuilt through the normal entry point; protected 366-device TX still needs adoption. Pad area is funded. Finish protection/core coordination and reference bias startup. Reference receiver remains a behavioral boundary. |
 | Wired RX/USB | Protected 446-device candidate integrates core discharge and primary protection; area is funded. Smaller FS devices reduce loading, but one leg remains above the 2.7 pF target. Implement conflicting-control guard/local disable and trim/slew controls, then adopt the connected candidate. |
 | Wired TX controls | Extracted 282-device compensated buffer and 88-device interlock candidates now run connected to the full TX network. Close buffer transients, input power-domain behavior, termination trim and physical safe sequencing; fund/place these core macros. |
 | All families | Retained-network lifecycle windows and explicit core boundaries exist. Implement physical reset/brownout qualification, close whole-ring power connectivity beyond the local metal checks, and refresh manifests after generator changes. |

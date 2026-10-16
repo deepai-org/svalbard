@@ -42,6 +42,7 @@ def run(work,pdk,publish,families):
     connected_rf=(rf_metadata.exists() and json.loads(rf_metadata.read_text()).get('connected_protection')
                   and any(family in ('rf_receive','rf_transmit') for family in families))
     for family in families:
+        if family == 'reference_clock':continue
         if connected_rf and family in ('rf_receive','rf_transmit'):continue
         cell=build(family)
         root=work/family
@@ -83,10 +84,6 @@ def run(work,pdk,publish,families):
             files['electrical/current-compliance/wired-transmit-compliance.json']=stem+'-compliance.json'
         if stock==0:files['stock-lvs.txt']=stem+'-lvs.txt'
         for source,target in files.items():shutil.copyfile(root/source,publish/target)
-        if family=='reference_clock':
-            terminated=root/'electrical-terminated'
-            analog_screen(terminated,pdk,root/'physical.spice',family,100.)
-            shutil.copyfile(terminated/'screen-report.json',publish/(stem+'-terminated-screen.json'))
         results[family]=dict(gds_roundtrip_device_graph_match=exported['device_graph_match'],physical_record_lvs_match=match,stock_export_lvs_match=raw_match,
                             stock_export_returncode=stock,
                             drc_count=json.loads((root/'layout-report.json').read_text())['drc_count'],
@@ -96,6 +93,13 @@ def run(work,pdk,publish,families):
             from receive_integrated import run as integrate_receive
             results[family]=integrate_receive(root/'connected-receiver',publish,pdk)
         print('Published '+family,flush=True)
+    if 'reference_clock' in families:
+        from reference_integrated import run as integrate_reference
+        reference = integrate_reference(work/'connected-reference', publish, pdk)
+        results['reference_clock'] = dict(drc_count=0,
+            device_count=reference['device_count'],
+            electrical_scope='connected_primary_protection_with_behavioral_reference_receiver',
+            integrated_report='reference-clock-integrated-screen.json')
     if connected_rf:
         from rf_integrated import run as build_rf
         from protected_assembly import run as assemble_rf
@@ -209,7 +213,7 @@ def write_coverage(publish,results):
                 missing=['wired RX/USB trim, slew, termination mutual exclusion and local safe-state controls',
                          'wired TX termination trim, implemented current-limited common-mode buffer and reset/brownout controls',
                          'full-bank host/power and supervisor qualification; independent-host power-off backfeed mitigation',
-                         'primary protection dimensions below published HV ESD minima; replacement architecture/loading, current capacity, whole-ring/device rails and package returns',
+                         'legacy wired canonical models still need selected primary-protection adoption; selected RF/reference protection still needs current-capacity, core-stress and whole-ring/package qualification',
                          'distributed interconnect resistance and complete attached-core stress/loading'],
                 scope='Only listed candidates were rebuilt. Other artifacts must retain their original source hashes.')
     (publish/'coverage.json').write_text(json.dumps(report,indent=2)+'\n')

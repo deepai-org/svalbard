@@ -12,17 +12,17 @@ import subprocess
 from layout import IMAGE
 
 
-def run(work, generated, assembly, rf, tx=None, reference=None, receive=None):
+def run(work, generated, assembly, rf=None, tx=None, reference=None, receive=None):
     work.mkdir(parents=True,exist_ok=False)
     for name in ('assembly-report.json','custom-map.json','retained-binding.json',
                  'provider-reference-ring.gds','placement-transforms.json'):
         shutil.copyfile(assembly/name,work/name)
     inputs=[]
-    rfmeta=json.loads((rf/'pad-layout.json').read_text())
+    rfmeta=json.loads((rf/'pad-layout.json').read_text()) if rf is not None else None
     for family in ('wired_transmit','wired_receive_usb','reference_clock','rf_receive','rf_transmit'):
         stem=family.replace('_','-');meta=generated/(stem+'-layout.json')
         metadata=json.loads(meta.read_text());gds=generated/(stem+'.gds')
-        if family.startswith('rf_'):
+        if family.startswith('rf_') and rf is not None:
             gds=rf/'pad.gds'
             metadata.update(flat_cell='rf_protected_pad_pair',
                 allocation_regions_um=rfmeta['geometry']['allocation_regions_um'],
@@ -53,15 +53,16 @@ def run(work, generated, assembly, rf, tx=None, reference=None, receive=None):
         connected_tx_candidate=tx is not None,connected_reference_candidate=reference is not None,connected_receive_candidate=receive is not None,placement=placement,local_rails=json.loads((work/'native-rail-screen.json').read_text()),
         limitations=['No whole-ring extracted-device LVS, package-return model, or current-capacity qualification.'],
         source_sha256={str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in
-            inputs+[rf/'pad-layout.json',Path(__file__),Path(__file__).with_name('placement_audit.py'),Path(__file__).with_name('rail_connectivity.py')]})
+            inputs+([rf/'pad-layout.json'] if rf is not None else [])+[Path(__file__),Path(__file__).with_name('placement_audit.py'),Path(__file__).with_name('rail_connectivity.py')]})
     (work/'assembly-screen.json').write_text(json.dumps(report,indent=2)+'\n')
     if not passed:raise ValueError('Provider placement failed; inspect assembly-screen.json')
 
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
-    for name in ('output-dir','generated','assembly-dir','rf-dir'):p.add_argument('--'+name,type=Path,required=True)
+    for name in ('output-dir','generated','assembly-dir'):p.add_argument('--'+name,type=Path,required=True)
+    p.add_argument('--rf-dir',type=Path)
     p.add_argument('--tx-dir',type=Path)
     p.add_argument('--reference-dir',type=Path)
     p.add_argument('--receive-dir',type=Path)
-    a=p.parse_args();run(a.output_dir.resolve(),a.generated.resolve(),a.assembly_dir.resolve(),a.rf_dir.resolve(),a.tx_dir.resolve() if a.tx_dir else None,a.reference_dir.resolve() if a.reference_dir else None,a.receive_dir.resolve() if a.receive_dir else None)
+    a=p.parse_args();run(a.output_dir.resolve(),a.generated.resolve(),a.assembly_dir.resolve(),a.rf_dir.resolve() if a.rf_dir else None,a.tx_dir.resolve() if a.tx_dir else None,a.reference_dir.resolve() if a.reference_dir else None,a.receive_dir.resolve() if a.receive_dir else None)

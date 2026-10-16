@@ -560,7 +560,7 @@
         "interpretation": "Do not transfer external-pullup DC current calibration to internal source termination. Internal switch/driver headroom must be addressed or configuration-qualified. Existing external-source-termination capability remains a separate path, not proof that this internal combination works.",
         "loaded_calibration_update": "The original device set can reach both DC targets after joint loaded calibration, but MAIN requires3.175V bias. Preferred doubled MAIN/POST tail candidate reaches16.07/7.99mA at1.680/1.125V; this is reachability at one loaded point, not compliance or dynamic acceptance.",
         "candidate_decision": "analog/pads/generated/wired-primary-protection/double-tails/decision.json",
-        "candidate_scope": "Connected366-device layout, nominal2.688pF/leg disabled loading,240640um2 allocated union. Not funded/adopted; integrated finite-buffer high-drive lifecycle still fails intended common-mode regulation."
+        "candidate_scope": "Connected 366-device layout, nominal 2.688 pF/leg disabled loading and 240640 um2 allocated union, funded within the pad allocation. Not canonical yet. Selected extracted buffer/interlock now pass nominal transition and 68 ns MAIN+POST hold feedback checks; physical controls, wider operating coverage and core macro funding remain open."
       },
       "sustained_load_diagnostic": {
         "report": "analog/pads/generated/termination-buffer-candidate/source-capacity-diagnostic/compensated/load-step.json",
@@ -646,9 +646,9 @@
       "current_compliance_scope": "Fresh exact-circuit calibration; nominal 8mA, aligned maximum 24mA MAIN+POST, and 10mA TMDS meet 3% loaded-current criterion. DC only; distributed resistance, variation and device stress remain open."
     },
     "reference_primary_candidate": {
-      "report": "analog/pads/generated/reference-primary-protection/decision.json",
-      "implemented_scope": "Connected 175-device primary network and reference bias layout; independent physical graph, LVS, local DRC and retained-state/loading screens. Not canonical or provider-placement qualified.",
-      "remaining": "Whole-ring LVS, core clearance, core protection, distributed route loss, bias startup and actual clock receiver remain. Current primary pad geometry is area-funded and jointly placed."
+      "report": "analog/pads/generated/reference-clock-integrated-screen.json",
+      "implemented_scope": "Canonical connected 175-device reference pad, rebuilt from shared placement and pad parameters. Includes primary protection and finite bias resistors, local DRC/device audit, retained-state/loading screens and joint provider placement/local-rail checks. Receiver is a behavioral boundary.",
+      "remaining": "Whole-ring device LVS, core clearance/protection, distributed route loss, bias startup and actual clock receiver. Short active window does not establish correct common-mode bias or clock reception."
     },
     "receive_primary_candidate": {
       "report": "analog/pads/generated/receive-primary-protection/decision.json",
@@ -735,6 +735,12 @@
         "tolerant_logic": true
       },
       "scope": "Single recipe for chosen circuit sizing. Primary protection, core bleed, compensation and provider assembly are composed by their existing layout generators; this recipe alone is not a complete extracted pad."
+    },
+    "primary_placement_um": {
+      "reference_clock": [
+        80.0,
+        540.0
+      ]
     }
   }
 }

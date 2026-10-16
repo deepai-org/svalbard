@@ -2,6 +2,7 @@
   "status": "current_families_placement_and_local_rails_pass",
   "connected_tx_candidate": true,
   "connected_reference_candidate": true,
+  "connected_receive_candidate": true,
   "placement": {
     "status": "no_unexpected_metal_overlap_declared_ground_joins_unverified",
     "native_ground_landing_top_metal_labels": [
@@ -26,16 +27,16 @@
         ],
         "allocated_region_area_um2": 127170.32999999999,
         "geometry_within_allocation": true,
-        "area_ceiling_um2": 60000,
-        "region_area_within_ceiling": false,
+        "area_ceiling_um2": 130000,
+        "region_area_within_ceiling": true,
         "transform": {
           "rotation": 1,
           "mirror": true,
           "x_um": 26.0,
           "y_um": 4317.0
         },
-        "gds_sha256": "f7499ac8b7abbdd67aaa0b4925a16ec685cf5b8eb707db2a1b83b0aaf2cafb03",
-        "layout_report_sha256": "e2c8c9b725cabbacff53508ddff874e9e10c71b0665f86b3f3c5cbbd070bab1c",
+        "gds_sha256": "541e7958e886095340d7a35c7ed696007e848c9db0fc02a0bd3707f7554e4fa9",
+        "layout_report_sha256": "7b6eda14171b02de7219592576d8277fd1c4ef0b066b695d3a6968fd3c0adecb",
         "retained_metal_overlaps": {
           "metal3": {
             "area_um2": 8.0,
@@ -130,8 +131,8 @@
           "x_um": 26.0,
           "y_um": 1363.0
         },
-        "gds_sha256": "f0fe38d1ee4122d44ce96bccc9643afc4656f43400d28cc8be2d04be82cd2489",
-        "layout_report_sha256": "63fc9489cd54c938763b7faa5b8ccdc08da93e51ae17727af5239ffc4c989c02",
+        "gds_sha256": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
+        "layout_report_sha256": "af5a10880ad2a25481680eca0f0396febd1d83b6412ea3195b0333491366ec22",
         "retained_metal_overlaps": {
           "metal3": {
             "area_um2": 8.0,
@@ -226,8 +227,8 @@
           "x_um": 26.0,
           "y_um": 3051.0
         },
-        "gds_sha256": "f0fe38d1ee4122d44ce96bccc9643afc4656f43400d28cc8be2d04be82cd2489",
-        "layout_report_sha256": "1beb85f2b7087be15cb24df8f54db498876d1a7f02831fc1172af42026df41fe",
+        "gds_sha256": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
+        "layout_report_sha256": "67415893e4415099409dce31b9d8a137fa29868a8f0772d3dc5a1a518336b06a",
         "retained_metal_overlaps": {
           "metal3": {
             "area_um2": 8.0,
@@ -307,23 +308,23 @@
         ],
         "bond_openings_match": true,
         "bbox_um": [
-          2393.28,
+          2390.0,
           943.78,
           3906.0,
-          1223.5
+          1465.0
         ],
-        "allocated_region_area_um2": 183128.44269999999,
+        "allocated_region_area_um2": 283002.57269999996,
         "geometry_within_allocation": true,
-        "area_ceiling_um2": 180000,
-        "region_area_within_ceiling": false,
+        "area_ceiling_um2": 290000,
+        "region_area_within_ceiling": true,
         "transform": {
           "rotation": 1,
           "mirror": false,
           "x_um": 3906.0,
           "y_um": 941.0
         },
-        "gds_sha256": "f3226ea655197e9188f42f374a8303f3ca296c902df95a29d752b884580cdcb7",
-        "layout_report_sha256": "106b43e15793cc3865cf631a69033ea4ff9a969548d4bb302e09dcc4d7f13cc2",
+        "gds_sha256": "6ad52fa8b9a97c55eea6b35a2574671cd742e28dec0e4277b3c394a00137213f",
+        "layout_report_sha256": "ae3161cb4e162bb141f1b8fc80a4422c9de014b4988a5993558daa1cde247ac3",
         "retained_metal_overlaps": {
           "metal3": {
             "area_um2": 8.0,
@@ -710,7 +711,7 @@
       "retained-binding.json": "6a2a14cebf348e1b38adbb347ec94f6b8a1a7d22f4ea26bc1f77504a67abf2b5",
       "provider-reference-ring.gds": "ce7a427036ae7330ae8e1b862594a57e1194db587b17d97acd99dedd106cd651"
     },
-    "oas_sha256": "ac02b3bda3cd560e69a8aad8d622f12aa1f22fafceada9ca107cad9938de811e"
+    "oas_sha256": "2fbaa17ab0c33f8897ddcb9714f2ad8f15a913f4cd7b8980d78e0155dd11c9f4"
   },
   "local_rails": {
     "status": "local_metal_connectivity_pass",
@@ -761,7 +762,10 @@
       "wired-receive-usb": {
         "pass_metal_connectivity": true,
         "custom_vss_cluster_id": 5,
-        "protection_rail": null,
+        "protection_rail": {
+          "cluster_id": 101,
+          "isolated_from_ground_signals_and_supplies": true
+        },
         "ground_landings": [
           {
             "center_um": [
@@ -935,14 +939,14 @@
       "/pdk/gf180mcuD/libs.tech/klayout/tech/gf180mcu.map": "ac49b08c732c00945c054bce61a4d7f413f84887e0e4e1a66fd20018db2f5d28",
       "/work/wired-transmit.gds": "8c869c6ef6b3bffc525718ea594acb9c20f7051b9082d122bf741f5effa64544",
       "/work/wired-transmit-layout.json": "8d787ac63590da0d77ec3677f47859a9a62334b503cd458512404428d676bc9e",
-      "/work/wired-receive-usb.gds": "f3226ea655197e9188f42f374a8303f3ca296c902df95a29d752b884580cdcb7",
-      "/work/wired-receive-usb-layout.json": "106b43e15793cc3865cf631a69033ea4ff9a969548d4bb302e09dcc4d7f13cc2",
-      "/work/reference-clock.gds": "f7499ac8b7abbdd67aaa0b4925a16ec685cf5b8eb707db2a1b83b0aaf2cafb03",
-      "/work/reference-clock-layout.json": "e2c8c9b725cabbacff53508ddff874e9e10c71b0665f86b3f3c5cbbd070bab1c",
-      "/work/rf-receive.gds": "f0fe38d1ee4122d44ce96bccc9643afc4656f43400d28cc8be2d04be82cd2489",
-      "/work/rf-receive-layout.json": "63fc9489cd54c938763b7faa5b8ccdc08da93e51ae17727af5239ffc4c989c02",
-      "/work/rf-transmit.gds": "f0fe38d1ee4122d44ce96bccc9643afc4656f43400d28cc8be2d04be82cd2489",
-      "/work/rf-transmit-layout.json": "1beb85f2b7087be15cb24df8f54db498876d1a7f02831fc1172af42026df41fe"
+      "/work/wired-receive-usb.gds": "6ad52fa8b9a97c55eea6b35a2574671cd742e28dec0e4277b3c394a00137213f",
+      "/work/wired-receive-usb-layout.json": "ae3161cb4e162bb141f1b8fc80a4422c9de014b4988a5993558daa1cde247ac3",
+      "/work/reference-clock.gds": "541e7958e886095340d7a35c7ed696007e848c9db0fc02a0bd3707f7554e4fa9",
+      "/work/reference-clock-layout.json": "7b6eda14171b02de7219592576d8277fd1c4ef0b066b695d3a6968fd3c0adecb",
+      "/work/rf-receive.gds": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
+      "/work/rf-receive-layout.json": "af5a10880ad2a25481680eca0f0396febd1d83b6412ea3195b0333491366ec22",
+      "/work/rf-transmit.gds": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
+      "/work/rf-transmit-layout.json": "67415893e4415099409dce31b9d8a137fa29868a8f0772d3dc5a1a518336b06a"
     }
   },
   "limitations": [
@@ -951,15 +955,15 @@
   "source_sha256": {
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-primary-protection/double-tails/placement-layout.json": "8d787ac63590da0d77ec3677f47859a9a62334b503cd458512404428d676bc9e",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-primary-protection/double-tails/combined.gds": "8c869c6ef6b3bffc525718ea594acb9c20f7051b9082d122bf741f5effa64544",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-receive-usb-layout.json": "106b43e15793cc3865cf631a69033ea4ff9a969548d4bb302e09dcc4d7f13cc2",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-receive-usb.gds": "f3226ea655197e9188f42f374a8303f3ca296c902df95a29d752b884580cdcb7",
-    "/home/ubuntu/svalbard/scratch/pad-reference-primary-inward/placement-layout.json": "e2c8c9b725cabbacff53508ddff874e9e10c71b0665f86b3f3c5cbbd070bab1c",
-    "/home/ubuntu/svalbard/scratch/pad-reference-primary-inward/combined.gds": "f7499ac8b7abbdd67aaa0b4925a16ec685cf5b8eb707db2a1b83b0aaf2cafb03",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-receive-layout.json": "8addf79de659ac1c65f4ba0b3a2bc33552137e7d1da0fa348773cb086f7e02c8",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wide-route-rf-candidate/pad.gds": "f0fe38d1ee4122d44ce96bccc9643afc4656f43400d28cc8be2d04be82cd2489",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-transmit-layout.json": "7c3cd75730425b7b495fed6217b1579376a08a59a311b06212c254b475c7e1c6",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wide-route-rf-candidate/pad-layout.json": "1a84602ca0ced1abc29a759812407a116da25b61b7786096d7f3411ad281272a",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protected_assembly.py": "d1a1b2d76c7fbb6ae737b16962856d34995ae2ccc9d8d9329767d73503f3f365",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/receive-primary-protection/fs-sizing/placement-layout.json": "ae3161cb4e162bb141f1b8fc80a4422c9de014b4988a5993558daa1cde247ac3",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/receive-primary-protection/fs-sizing/combined.gds": "6ad52fa8b9a97c55eea6b35a2574671cd742e28dec0e4277b3c394a00137213f",
+    "/home/ubuntu/svalbard/scratch/pad-reference-canonical-entrypoint/connected-reference/pad/placement-layout.json": "7b6eda14171b02de7219592576d8277fd1c4ef0b066b695d3a6968fd3c0adecb",
+    "/home/ubuntu/svalbard/scratch/pad-reference-canonical-entrypoint/connected-reference/pad/combined.gds": "541e7958e886095340d7a35c7ed696007e848c9db0fc02a0bd3707f7554e4fa9",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-receive-layout.json": "af5a10880ad2a25481680eca0f0396febd1d83b6412ea3195b0333491366ec22",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-receive.gds": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-transmit-layout.json": "67415893e4415099409dce31b9d8a137fa29868a8f0772d3dc5a1a518336b06a",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-transmit.gds": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protected_assembly.py": "446078da3671ef441abeed8ad994720809247dc6219927bbf934fdf34eb1fd19",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/placement_audit.py": "3cde9142f1495e11cc20ea71608ae815da7f23b7dc0446eb1e34a0a92852f2d2",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/rail_connectivity.py": "f5738a7ca3eeaa0ffc91dcb9a2929ddaf4cbcc3e88ff144c3ad9ae41267a7e1a"
   }

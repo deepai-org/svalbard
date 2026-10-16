@@ -567,6 +567,14 @@ nor the independent-device layout automatically. Folded diffusion changes
 parasitics; full-pad integration, routing/current capacity, streamed-GDS audit,
 loading and the connected current/lifecycle checks remain necessary.
 
+The folded bank also passes streamed-GDS round-trip DRC and independent
+device-graph comparison. `folded_tail.py --dc-screen-dir ...` substitutes its
+extracted 32-finger banks into the connected DC fixture. MAIN-only reaches
+16.239 mA; MAIN+POST gives 16.200/8.117 mA and 15.767/7.919 mA, within 1.5% of
+the shared maximum-current targets. `tx-folded-tail/connected-screen.json`
+records this hybrid check. Old full-pad routing capacitance remains, so final
+pad area, loading and timing still require physical integration and extraction.
+
 ## First-pass implementation closure
 
 The first pass must connect the selected circuits, their generated layouts and

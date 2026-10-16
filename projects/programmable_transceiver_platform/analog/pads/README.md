@@ -530,6 +530,18 @@ why readiness alone does not prove output-current fidelity. The source-terminate
 current source needs headroom/output-resistance improvement or a demonstrated
 control strategy across data states. DC probes do not replace switching tests.
 
+The optional `transmit_loaded_dc.py --probe-headroom` diagnostic keeps the
+same extracted network and samples MAIN bias from 1.3 to 1.8 V, with the selected
+POST bias fixed. At a 1.65 V reference, the best sampled MAIN setting still has
+10.3% worst-state error. Raising the reference divider target to 1.8–2.2 V does
+not resolve it: the buffer output stalls around 1.70–1.75 V, while best sampled
+MAIN error remains about 9%. `wired-transmit-headroom-probe.json` records these
+explicit overrides; none is selected as the design. This excludes a simple
+reference-divider adjustment within the tested range, not all possible bias
+settings or architectures. Prioritize current-source headroom/output resistance
+and buffer output range together; do not tune a single steering state and claim
+full branch-current accuracy.
+
 ## First-pass implementation closure
 
 The first pass must connect the selected circuits, their generated layouts and

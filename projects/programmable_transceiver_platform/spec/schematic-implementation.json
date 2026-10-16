@@ -651,10 +651,9 @@
       "remaining": "Whole-ring device LVS, core clearance/protection, distributed route loss and actual clock receiver/readiness detector. Corrected nominal bias envelope settles in about 5.22 ms with 10 nF coupling; smaller reference startup delay is not established. Floating-metal numerical anchors are declared simulation aids, not physical resistors."
     },
     "receive_primary_candidate": {
-      "report": "analog/pads/generated/receive-primary-protection/decision.json",
-      "implemented_scope": "Connected446-device primary network, RX/USB branches and physical core-discharge layout. Local DRC/LVS/independent graph and retained lifecycle screens completed.",
-      "remaining": "Serial bypass exceeds2.7pF/leg. Detailed attribution is resolved with a documented capacitor-only-node DC anchor and1Tohm/1Pohm sensitivity check. Physical control and protection qualification remain open; area and joint provider placement pass.",
-      "sizing_candidate": "analog/pads/generated/receive-primary-protection/fs-sizing/decision.json"
+      "report": "analog/pads/generated/wired-receive-usb-integration.json",
+      "implemented_scope": "Canonical 446-device protected RX/USB network with shared 14 um FS sizing and integrated physical discharge resistors. Rebuilt by receive_integrated.py and the normal first-pass entry point, with local DRC/device checks and retained-state simulations rejecting transient operating-point fallback.",
+      "remaining": "Serial bypass still exceeds the 2.7 pF allocation on one leg (about 2.764 pF). Physical control, trim, slew and protection qualification remain open. Publication selects the shared implementation; it does not waive these failures."
     },
     "primary_protection_assembly": {
       "report": "analog/pads/generated/primary-protection-assembly/assembly-screen.json",
@@ -740,6 +739,10 @@
       "reference_clock": [
         80.0,
         540.0
+      ],
+      "wired_receive_usb": [
+        200.0,
+        800.0
       ]
     }
   }

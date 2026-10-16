@@ -42,8 +42,7 @@ def run(work, generated, pdk, publish=True):
         if not screens[name]['transient_complete']:
             raise ValueError('Incomplete reference retained-state screen')
     assemble(work/'assembly', generated, generated/'provider-assembly-inputs',
-             reference=pad, tx=generated/'wired-primary-protection/double-tails',
-             receive=generated/'receive-primary-protection/fs-sizing')
+             reference=pad, tx=generated/'wired-primary-protection/double-tails')
     subprocess.run([sys.executable, str(Path(__file__).with_name('render.py')),
         str(pad/'combined_flat.mag'), '--output', str(pad/'layout.png'),
         '--title', 'Protected differential reference pad'], check=True)

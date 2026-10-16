@@ -1,41 +1,31 @@
 {
-  "status": "connected_RX_layout_device_graph_verified_not_canonical",
+  "status": "selected_protected_RX_model_not_electrically_qualified",
+  "gds_roundtrip_device_graph_match": true,
   "drc_count": 0,
-  "device_count": 291,
-  "independent_device_graph_matches": true,
-  "independent_export_matches": true,
-  "allocation_union_um2": 183128.4427,
-  "metal_connectivity": {
-    "P": [
-      5,
-      5
-    ],
-    "N": [
-      4,
-      4
-    ],
-    "VSS": [
-      3,
-      3
-    ]
-  },
+  "device_count": 446,
+  "integrated_receiver_discharge": true,
+  "area_um2": 283002.57269999996,
+  "electrical_scope": "Complete extracted protected pad/discharge, behavioral controls and core capacitance; retained external network.",
   "limitations": [
-    "Provider placement and area attribution require separate assembly check.",
-    "Capacitance included; distributed route resistance, core stress and ESD qualification absent."
+    "Serial-bypass loading may exceed the shared allocation; publication does not waive it.",
+    "Physical control guard, trim and slew implementation remain open.",
+    "No whole-ring device LVS, core-stress/current-capacity or ESD qualification."
   ],
   "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/receive_integrated.py": "570017a52cc8961fe9b25b131bc7d609c285f46db467a9e040be090826a73f2e",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "f887d4eb595ef1da511777c78283e8e71abe97fcfe05dd1444fcef4615905f43",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "5995b7ab33f01f62358b6af52cd3073ba4db89c66a303022bc516214d5bc9916",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/contract.json": "9e43600f7d9016469fc825fe4c451a87c4940e98bb3007f7a18b8f6ea3e63c69",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/layout.py": "0863dc15e08ca20e730a78f4c3fe9f5b5e986687af59d66d88d440ebd2176a1c",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/receive_pad_layout.py": "4b500ca0e01a3e3458879e5a03a3cb4ae578e7690f0e4fe0522ae66eaa7b99e9",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/receiver-pad-base/wired-receive-usb-extracted-c.spice": "016aa3df3cd9d2c1eb5294dbd71a7ae4d8b7ace006f03f8fe540e1aa1a02180f",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/receiver-pad-base/wired-receive-usb-layout.json": "964f0c9225bccff05d96c5492897d675bd164e30a5772d432485565055dcebf8",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/receiver-pad-base/wired-receive-usb.gds": "7c5b3dcceaabbe468995f09c416d5563f56e97a3c5d9b0739b6797b94b7013ba",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/receiver-core-discharge/receiver-core.gds": "489ce55ce2b554ef074045c03d90a9e33c522a8eb84288dc07f53e0ae789fc2d",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/receiver-core-discharge/physical.spice": "cd8f9d4a2064bd6db9ea5898833d5052f57bcc8e1fe1b9ecd0b1c1e84e98c0d0",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/extract_audit.py": "b3e9f311401ea251c5adb47f406d9e6170448865026108ad3ca7dd14c67d3b68",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/layout.py": "a0f7dce309444c5cd6c3c39c082d5afde449c18b5124cd959381d3b7aca8cd29"
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/wired_protection_layout.py": "b5e334084c0291c2b709b3ffb28ae4cd89b4227bfa4b1eb89b72f47e538ed2aa",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/wired_receive.py": "2854154d036bb59df19a389da99c1348539a71d5fcb6f52d3e8efae229dfafc1"
   },
-  "artifact_sha256": {
-    "combined.gds": "f3226ea655197e9188f42f374a8303f3ca296c902df95a29d752b884580cdcb7",
-    "physical.spice": "55133d2b0a2d373907a6605cd7761034ed8a9debe5645cef6428ee785bdc9eef",
-    "layout-report.json": "894641183ee9194aecfcafdab656c0e3aedfd0f6c09f1daac88084e255cefeb4"
+  "report_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-rx-canonical-protected/connected-receiver/pad/model-audit.json": "5de7063b4141bee4708b67c8ea416e365c4d65493007d77eaddf63d2a1e6aac8",
+    "/home/ubuntu/svalbard/scratch/pad-rx-canonical-protected/connected-receiver/pad/layout-screen.json": "7d77f12f418934491725b090d6f47dbf252d0defb0007ac81dfbf90ce2a2a5c8",
+    "/home/ubuntu/svalbard/scratch/pad-rx-canonical-protected/connected-receiver/electrical/screen-report.json": "6da08f748fdcbe24424d9e7a5194cf6777e4a29dd915d99c9383a65e8ef94617",
+    "/home/ubuntu/svalbard/scratch/pad-rx-canonical-protected/connected-receiver/loading/loading-audit.json": "ace6bcc7d7cca6291a1cc43088ae2799ce9395bbba5c51cf3c329aeabfc96d39",
+    "/home/ubuntu/svalbard/scratch/pad-rx-canonical-protected/connected-receiver/placement/assembly-screen.json": "dcaf77aefceec69c5c4dfbf3b8bd538c7a800bb50f442797f3851c54a6ef2c14"
   }
 }

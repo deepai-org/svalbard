@@ -1,7 +1,7 @@
 {
-  "status": "integrated_receiver_pad_scoped_checks_complete_not_qualified",
+  "status": "selected_protected_RX_model_not_electrically_qualified",
   "family": "wired_receive_usb",
-  "flat_cell": "rx_pad_with_discharge",
+  "flat_cell": "tx_with_primary",
   "marker_export": {
     "added_area_um2": {
       "62": 1144.296,
@@ -12,11 +12,17 @@
     },
     "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
     "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
-    "before_gds_sha256": "f9d03cbe568441f66c10516a8c1c71957bf0a642c8862bc0dceca226238cd2e6",
-    "after_gds_sha256": "7c5b3dcceaabbe468995f09c416d5563f56e97a3c5d9b0739b6797b94b7013ba",
-    "physical_magic_sha256": "132061ea47f1eb2fc9b4e461df08e3b4ae881d7695328b76b9d1c921a6203e73",
+    "before_gds_sha256": "ea56db51d5a638683aa19cb4f763de5d09021f43e6a3575c2d1b01f9b3cf5d2c",
+    "after_gds_sha256": "228586c933c95051d0a81def6e69c5b5f70c17cd5df5aabde8fe9a248cfb488c",
+    "physical_magic_sha256": "14f5a4e4c27cb8d1df318c4965eb3cd62f12c818e86f5298de89bd3d1b659787",
     "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
   },
+  "serial_tail_units": null,
+  "fs_high_width_um": 14.0,
+  "fs_series_geometry_um": [
+    2.0,
+    3.5
+  ],
   "bond_template": {
     "cell": "Bondpad_5LM",
     "source": "gf180mcu_fd_io",
@@ -32,8 +38,7 @@
     "scope": "Native bond geometry only; ring rails and provider placement remain open."
   },
   "stock_export_returncode": 0,
-  "device_count": 291,
-  "net_count": 117,
+  "requires_attached_primary_protection": false,
   "pad_transverse_width_um": 6.0,
   "pad_trunk_width_um": 0.44,
   "net_track_x_um": {
@@ -769,10 +774,6 @@
     "PULLDOWN_P": 1512.0,
     "PULLDOWN_N": 1512.0
   },
-  "candidate_size_um": [
-    286.0,
-    1512.0
-  ],
   "reference_pair_size_um": [
     286.0,
     350
@@ -787,7 +788,6 @@
     "bidir[15].pad"
   ],
   "fits_reference_height": false,
-  "area_um2": 432432.0,
   "near_bond_ground_landings_um": [
     [
       9.0,
@@ -802,7 +802,6 @@
       79.305
     ]
   ],
-  "protection_device_centers_y_um": 90.0,
   "allocation_regions_um": [
     [
       0,
@@ -1271,22 +1270,80 @@
       451.5,
       184.43,
       537.715
+    ],
+    [
+      199.945,
+      798.0,
+      474.5,
+      1088.0
+    ],
+    [
+      33.5,
+      396.0,
+      492.0,
+      404.0
+    ],
+    [
+      484.0,
+      396.0,
+      492.0,
+      844.0
+    ],
+    [
+      382.0,
+      836.0,
+      492.0,
+      844.0
+    ],
+    [
+      244.5,
+      408.0,
+      508.0,
+      416.0
+    ],
+    [
+      500.0,
+      408.0,
+      508.0,
+      864.0
+    ],
+    [
+      386.0,
+      856.0,
+      508.0,
+      864.0
+    ],
+    [
+      336.0,
+      802.0,
+      522.0,
+      806.0
+    ],
+    [
+      516.0,
+      800.0,
+      524.0,
+      1516.0
+    ],
+    [
+      129.22,
+      1510.0,
+      522.0,
+      1514.0
     ]
   ],
-  "area_ceiling_um2": 180000,
-  "fits_assigned_area": false,
+  "area_ceiling_um2": 290000,
+  "fits_assigned_area": true,
   "image_id": "sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
   "sources_sha256": {
-    "analog/pads/layout.py": "a0f7dce309444c5cd6c3c39c082d5afde449c18b5124cd959381d3b7aca8cd29",
-    "analog/pads/gds_markers.py": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4",
-    "analog/pads/generated/provider-sites.json": "c58790b22d45497c45bfd20e8cc60e698d8286010856fcc6fa18ab7021d26df4",
-    "analog/pads/circuits.py": "cf91761a58bc90b2137537aba8ab064b01ef264f161ac689c6d2b4a17031682c",
-    "analog/pads/design.py": "1280fd1141770cbd48d65785fcdf3f3f4d8d694a10b39ad58de9b60ef6f8e806",
-    "analog/pads/wired_receive.py": "c17136a1c165093b65974b27143e1ff8e21c725d11940326a6b999585909cc8b",
-    "spec/analog-architecture.json": "2d773c18090b57a6e54291f99d6f828730f843674fe6ceee8a7cdfdda5a58b4d",
+    "analog/pads/receive_integrated.py": "570017a52cc8961fe9b25b131bc7d609c285f46db467a9e040be090826a73f2e",
+    "spec/schematic-implementation.json": "f887d4eb595ef1da511777c78283e8e71abe97fcfe05dd1444fcef4615905f43",
+    "spec/analog-architecture.json": "5995b7ab33f01f62358b6af52cd3073ba4db89c66a303022bc516214d5bc9916",
     "spec/contract.json": "9e43600f7d9016469fc825fe4c451a87c4940e98bb3007f7a18b8f6ea3e63c69",
-    "analog/pads/receive_integrated.py": "4f81edfba5315f05608adb30718a0e03fa35564292e5634e4f88795eadf6d490",
-    "analog/pads/receive_pad_layout.py": "4b500ca0e01a3e3458879e5a03a3cb4ae578e7690f0e4fe0522ae66eaa7b99e9"
+    "analog/pads/layout.py": "0863dc15e08ca20e730a78f4c3fe9f5b5e986687af59d66d88d440ebd2176a1c",
+    "analog/pads/receive_pad_layout.py": "4b500ca0e01a3e3458879e5a03a3cb4ae578e7690f0e4fe0522ae66eaa7b99e9",
+    "analog/pads/wired_protection_layout.py": "b5e334084c0291c2b709b3ffb28ae4cd89b4227bfa4b1eb89b72f47e538ed2aa",
+    "analog/pads/wired_receive.py": "2854154d036bb59df19a389da99c1348539a71d5fcb6f52d3e8efae229dfafc1"
   },
   "drc_count": "0",
   "pcell_terminal_coordinates": {
@@ -1400,24 +1457,6 @@
     ],
     "primitive_6": [
       [
-        4.300000000000001,
-        0.0
-      ],
-      [
-        0.0,
-        -8.280000000000001
-      ],
-      [
-        -0.8,
-        0.0
-      ],
-      [
-        5.12,
-        8.700000000000001
-      ]
-    ],
-    "primitive_7": [
-      [
         0.4,
         0.0
       ],
@@ -1434,7 +1473,7 @@
         1.6800000000000002
       ]
     ],
-    "primitive_8": [
+    "primitive_7": [
       [
         0.4,
         0.0
@@ -1452,7 +1491,7 @@
         2.6799999999999997
       ]
     ],
-    "primitive_9": [
+    "primitive_8": [
       [
         0.4,
         0.0
@@ -1468,6 +1507,24 @@
       [
         1.09,
         4.68
+      ]
+    ],
+    "primitive_9": [
+      [
+        0.4,
+        0.0
+      ],
+      [
+        0.0,
+        -7.6
+      ],
+      [
+        -0.4,
+        0.0
+      ],
+      [
+        1.09,
+        7.68
       ]
     ],
     "primitive_10": [
@@ -1509,20 +1566,6 @@
     "primitive_12": [
       [
         0.0,
-        1.26
-      ],
-      [
-        0.0,
-        -1.26
-      ],
-      [
-        1.09,
-        1.3
-      ]
-    ],
-    "primitive_13": [
-      [
-        0.0,
         1.825
       ],
       [
@@ -1532,6 +1575,20 @@
       [
         1.09,
         1.865
+      ]
+    ],
+    "primitive_13": [
+      [
+        0.0,
+        1.93
+      ],
+      [
+        0.0,
+        -1.93
+      ],
+      [
+        1.59,
+        1.97
       ]
     ],
     "primitive_14": [
@@ -1602,21 +1659,28 @@
     "Provider ring metal rails not yet integrated."
   ],
   "integrated_receiver_discharge": true,
-  "allocation_accounting": {
-    "status": "discharge_increment_fits_existing_rxlevel_allowance",
-    "wirepad": {
-      "charged_um2": 179978.2,
-      "budget_um2": 180000
-    },
-    "rxlevel": {
-      "discharge_and_routes_um2": 3150.2427000000025,
-      "budget_um2": 50000,
-      "remaining_before_other_core_work_um2": 46849.7573
-    },
-    "combined_reserved_um2": 183128.4427,
-    "scope": "Incremental geometric union only. Other receiver circuitry, routing clearance and whole-core fit remain unproven.",
-    "source_sha256": {
-      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "2d773c18090b57a6e54291f99d6f828730f843674fe6ceee8a7cdfdda5a58b4d"
-    }
-  }
+  "base_device_count": 287,
+  "base_net_count": 117,
+  "base_candidate_size_um": [
+    286.0,
+    1512.0
+  ],
+  "base_area_um2": 432432.0,
+  "physical_bbox_um": [
+    2.7800000000000002,
+    0.0,
+    524.0,
+    1516.0
+  ],
+  "candidate_size_um": [
+    524.0,
+    1516.0
+  ],
+  "area_um2": 283002.57269999996,
+  "area_basis": "Allocated nonrectangular union, not material area or bounding rectangle.",
+  "allocation_union_um2": 283002.57269999996,
+  "connected_primary_candidate": true,
+  "device_count": 446,
+  "connected_protection": true,
+  "allocation_basis": "Complete pad/protection/discharge union within wirepad allowance; no separate discharge increment charged."
 }

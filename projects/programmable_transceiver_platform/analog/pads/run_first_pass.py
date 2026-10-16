@@ -42,7 +42,7 @@ def run(work,pdk,publish,families):
     connected_rf=(rf_metadata.exists() and json.loads(rf_metadata.read_text()).get('connected_protection')
                   and any(family in ('rf_receive','rf_transmit') for family in families))
     for family in families:
-        if family == 'reference_clock':continue
+        if family in ('reference_clock','wired_receive_usb'):continue
         if connected_rf and family in ('rf_receive','rf_transmit'):continue
         cell=build(family)
         root=work/family
@@ -89,10 +89,10 @@ def run(work,pdk,publish,families):
                             drc_count=json.loads((root/'layout-report.json').read_text())['drc_count'],
                             electrical_scope='transistor_and_extracted_capacitance_screen' if family in ('wired_transmit','wired_receive_usb') else
                                              'extracted_capacitance_with_behavioral_core_boundary')
-        if family=='wired_receive_usb':
-            from receive_integrated import run as integrate_receive
-            results[family]=integrate_receive(root/'connected-receiver',publish,pdk)
         print('Published '+family,flush=True)
+    if 'wired_receive_usb' in families:
+        from receive_integrated import run as integrate_receive
+        results['wired_receive_usb'] = integrate_receive(work/'connected-receiver', publish, pdk)
     if 'reference_clock' in families:
         from reference_integrated import run as integrate_reference
         reference = integrate_reference(work/'connected-reference', publish, pdk)
@@ -210,11 +210,11 @@ def write_coverage(publish,results):
                 combined_retained_screen=retained_evidence,
                 protection_design_audit=protection_evidence,wired_tx_loading=tx_loading_evidence,
                 wired_tx_current_compliance=compliance_evidence,
-                missing=['initialization audit of legacy canonical wired TX and RX/USB fixtures; selected protected TX and canonical RF/reference reruns now reject transient operating-point fallback',
+                missing=['initialization audit of legacy canonical wired TX fixtures; selected protected TX and canonical RX/USB/RF/reference reruns now reject transient operating-point fallback',
                          'wired RX/USB trim, slew, termination mutual exclusion and local safe-state controls',
                          'wired TX termination trim, implemented current-limited common-mode buffer and reset/brownout controls',
                          'full-bank host/power and supervisor qualification; independent-host power-off backfeed mitigation',
-                         'legacy wired canonical models still need selected primary-protection adoption; selected RF/reference protection still needs current-capacity, core-stress and whole-ring/package qualification',
+                         'legacy wired TX canonical model still needs selected primary-protection adoption; selected RF/reference protection still needs current-capacity, core-stress and whole-ring/package qualification',
                          'distributed interconnect resistance and complete attached-core stress/loading'],
                 scope='Only listed candidates were rebuilt. Other artifacts must retain their original source hashes.')
     (publish/'coverage.json').write_text(json.dumps(report,indent=2)+'\n')

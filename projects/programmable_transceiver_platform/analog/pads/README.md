@@ -40,7 +40,7 @@ matching and fault-injection experiments do not replace canonical artifacts.
 | Canonical family | Circuit and attached boundary | Principal evidence |
 | --- | --- | --- |
 | Wired TX | 160 MOS + 19 resistors; shared output cascodes, main/postcursor/TMDS branches, detection, source termination and passive bias discharge | `wired-transmit-screen.json`, `-loading.json`, `-compliance.json` |
-| Wired RX/USB | 237 MOS + 54 resistors; divider/bypass, differential and shunt termination, HS/FS drive, pullups/pulldowns | `wired-receive-usb-screen.json`, `-loading.json` |
+| Wired RX/USB | 446-device protected network with physical core discharge; divider/bypass, terminations, HS/FS drive and pulls | `wired-receive-usb-screen.json`, `-loading.json` |
 | Differential reference | 175-device primary protection and bias network; receiver remains an explicit `refinput` boundary | `reference-clock-screen.json`, `-terminated-screen.json` |
 | RF RX | Connected 159-device protection network: steering diodes, isolated-rail clamp, MIMs and physical bleed; finite LNA boundary | `rf-receive-screen.json`, `-route-resistance.json` |
 | RF TX | Same connected protection network; supply-connected, current/headroom-limited driver boundary | `rf-transmit-screen.json`, `-route-resistance.json` |
@@ -157,29 +157,24 @@ layout yet and does not implement sticky fault storage, comparator accuracy,
 asynchronous hazard control or break-before-make timing. Lifecycle QUALIFIED
 remains prescribed rather than a proven supervisor output.
 
-`receive_integrated.py` publishes the canonical connected RX pad and is invoked
-by `run_first_pass.py`. `receive_pad_layout.py` generates the macro connections,
-checks access coordinates, streams and extracts GDS, compares all 291 device
-records and computes allocation from generated geometry. The base pad in
-`generated/receiver-pad-base/` is an input component, not an alternate family
-model. The independent round-trip audit, lifecycle and loading benches all use
-the integrated physical model; `receive_core.py` detects the embedded resistor
-pair and adds no duplicate discharge instances. The largest serial-bypass
-loading in this screen is approximately 2.63 pF/leg against the shared 2.7 pF
-budget. Short unpowered windows still retain approximately 1.16–1.30 V at the
-receiver; neither discharge nor passing connectivity establishes safe stress.
+`receive_integrated.py` rebuilds the canonical protected RX/USB family through
+`run_first_pass.py --families wired_receive_usb`. It consumes the shared FS
+sizing (14 µm PMOS fingers, 2 × 3.5 µm series resistors) and primary placement,
+generates the base, attaches the physical discharge macro and primary protection,
+and checks the full 446-device layout/model. Local DRC/device correspondence,
+retained-state tests and joint provider-placement checks pass. Numerical anchors
+on capacitor-only metal are declared and DC initialization fallback is rejected.
+The complete allocated union is 283,003 µm² within the 290,000 µm² wirepad
+reservation, including protection and discharge geometry.
 
-The integrated build with `--assembly-dir` also preserves provider bond openings
-and checks for unexpected metal overlaps. Area is charged once: approximately
-179,978 µm² to the existing `wirepad` allowance and 3,150 µm² of incremental
-discharge/routes to `rxlevel`, leaving 46,850 µm² before other receiver-core work.
-The generator reads both ceilings from the shared architecture and rejects
-allocation overruns. Whole-core fit, distributed resistance and integrated
-ring signoff remain open. Canonical `wired-receive-usb-integration.json`,
-`-allocation.json`, `-gds-roundtrip.json`, `-screen.json` and `-loading.json`
-record the current build and electrical evidence. Base schematic/LVS artifacts
-refer to the base component; the 291-device integration audit covers the
-connected family.
+Canonical `wired-receive-usb-integration.json`, `-assembly-screen.json`,
+`-gds-roundtrip.json`, `-screen.json` and `-loading.json` record this implementation.
+Serial-bypass loading is approximately 2.764/2.637 pF per leg at 1 GHz: one leg
+still exceeds the shared 2.7 pF allocation. FS-high output resistance remains
+approximately 45 Ω. `receive_core.py` detects embedded discharge resistors and
+adds no duplicate instances. Publication does not establish safe core stress,
+physical control sequencing, trim/slew behavior, whole-ring device LVS or ESD
+qualification. Older RX family revisions live in Git history.
 
 `termination_buffer.py`, `termination_buffer_layout.py` and
 `termination_compensation_layout.py` now provide a connected buffer candidate
@@ -440,14 +435,6 @@ review; the new checks do not retroactively validate historical runs.
 Whole-core fit, distributed route resistance, core protection and the physical
 receiver remain open.
 
-The complete RX/USB primary-protection candidate is in
-`generated/receive-primary-protection/`: 446 devices including the existing
-physical receiver discharge, generated layout, local DRC, LVS and independent
-physical-model checks. Its retained-network lifecycle completes with the
-behavioral control guard. At 1 GHz serial-bypass loading is approximately
-2.873/2.746 pF per leg, exceeding the shared 2.7 pF allocation; its allocation
-union is approximately 283,003 µm². It is not adopted. Joint provider placement and current area funding now pass; loading reduction
-and protection/control qualification remain open.
 
 All five current primary-protection candidates now pass a joint provider
 placement check: bond openings match, no unexpected retained/custom metal
@@ -470,24 +457,11 @@ The focused route regression now checks the selected full protection topology
 in all three resistance corners, retaining every extracted device and capacitor.
 Older four-device pad artifacts are not the selected RF regression target.
 
-RX/USB loading attribution is now resolved for the connected primary candidate:
-`receive-primary-protection/loading-attribution.json` reports an explicit
-numerical DC path on one capacitor-only extracted conductor. Changing this
-anchor from 1 TΩ to 1 PΩ leaves reported loading unchanged; original port
-admittance and summed branch currents meet the unchanged equivalence/KCL
-criteria. The physical netlist has no added resistor. Serial-bypass contributions
-are led by termination (0.54–0.68 pF), interconnect (about 0.63 pF), and disabled
-FS high-side circuitry (about 0.60 pF); protection contributes about 0.235 pF.
-Investigate FS sizing/series resistance and termination before shrinking ESD
-structures. Total loading still exceeds its allocation.
-
-`receive-primary-protection/fs-sizing/` contains the smaller-FS implementation
-candidate: 14 µm PMOS fingers and 2 × 3.5 µm series resistors. The connected
-446-device layout passes DRC/device checks and combined provider placement;
-its retained lifecycle completes. Extracted serial-bypass attribution drops to
-approximately 2.764/2.637 pF per leg while retaining approximately 45 Ω FS-high
-output resistance. Prefer it for further refinement, but do not adopt yet:
-one leg still exceeds 2.7 pF, and protection/control qualification remains open.
+RX/USB loading attribution now uses the canonical protected physical model in
+`wired-receive-usb-loading.json`, with the same documented numerical DC anchor.
+The branch accounting retains protection and inactive paths. Use that report to
+reduce loading without silently removing a required branch or weakening the
+protection network.
 
 ## Current wired-TX integration
 
@@ -574,7 +548,7 @@ predicts acceptable performance.
 | --- | --- |
 | RF pair | Connected primary protection is canonical, area funded, and RX/TX retained-state and route-loading checks run on that model. Resolve core-facing protection, discharge-current capacity and the narrow modeled TX power margin. |
 | Wired TX and reference | Protected 175-device reference is canonical and rebuilt through the normal entry point; protected 366-device TX still needs adoption. Pad area is funded. Finish protection/core coordination and reference bias startup. Reference receiver remains a behavioral boundary. |
-| Wired RX/USB | Protected 446-device candidate integrates core discharge and primary protection; area is funded. Smaller FS devices reduce loading, but one leg remains above the 2.7 pF target. Implement conflicting-control guard/local disable and trim/slew controls, then adopt the connected candidate. |
+| Wired RX/USB | Protected 446-device network is canonical and regenerated through the normal entry point. Reduce serial-bypass loading on one leg; implement physical control guard/local disable and trim/slew controls. Protection remains unqualified. |
 | Wired TX controls | Extracted 282-device compensated buffer and 88-device interlock candidates now run connected to the full TX network. Close buffer transients, input power-domain behavior, termination trim and physical safe sequencing; fund/place these core macros. |
 | All families | Retained-network lifecycle windows and explicit core boundaries exist. Implement physical reset/brownout qualification, close whole-ring power connectivity beyond the local metal checks, and refresh manifests after generator changes. |
 

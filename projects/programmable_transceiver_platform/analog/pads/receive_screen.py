@@ -7,19 +7,23 @@ from wired_receive import build
 import receive_core
 from receive_controls import attach as attach_control_guard
 from design import PROJECT
-from screen import header, control, run_spice
+from screen import header, control, run_spice as raw_run_spice
+from loading_audit import anchor_floating_conductors
 
 
 def screen(work,pdk,physical=None):
     work.mkdir(parents=True,exist_ok=True)
     circuit=build()
+    model_header, anchors = anchor_floating_conductors(header(circuit,pdk,physical),1e12)
+    def run_spice(directory,name,deck):
+        return raw_run_spice(directory,name,deck,reject_transient_op=True)
     probe_prefix="xpad.xphysical" if physical and any(l.startswith("XPHYSICAL ") for l in physical.read_text().splitlines()) else "xpad"
     architecture=json.loads((PROJECT/'spec/analog-architecture.json').read_text())
     core_cap=architecture['blocks']['rxlevel']['parameters']['output_cap_budget_f_per_leg']
     controls=[p for p in circuit.ports if p not in ('PAD_P','PAD_N','VDD','VSS','RX_P','RX_N')]
     def fixture(overrides=None):
         values={'HS_PBIAS':3.3,**(overrides or {})}
-        text=header(circuit,pdk,physical)+receive_core.model(physical)+'VDD VDD 0 3.3\n'
+        text=model_header+receive_core.model(physical)+'VDD VDD 0 3.3\n'
         for port in controls:text+=f'V{port} {port} 0 {values.get(port,0)}\n'
         text+=receive_core.loads(physical)
         return text
@@ -97,7 +101,7 @@ def screen(work,pdk,physical=None):
     data=run_spice(work,'hs_bias',deck);index=int(np.argmin(abs(data[:,1]-target)))
     bias=float(data[index,0]);calibration=dict(bias_v=bias,current_a=float(data[index,1]),target_a=target)
     def pwl(points):return 'PWL('+' '.join(f'{t}n {v}' for t,v in points)+')'
-    deck=header(circuit,pdk,physical)+receive_core.model(physical)
+    deck=model_header+receive_core.model(physical)
     deck+='VDD VDD 0 '+pwl([(0,3.3),(36,3.3),(37,0),(48,0),(49,1.5),(60,1.5),(61,3.3),(100,3.3)])+'\n'
     spans={'DIFF_ENABLE':(16,24),'DIV_ENABLE':(4,12),'BYPASS_ENABLE':(16,24),'TERM_ENABLE':(66,74),
            'FS_HIGH_P':(78,86),'FS_LOW_N':(78,86),'PULLUP_P':(90,96),'PULLDOWN_N':(90,96),
@@ -196,6 +200,11 @@ def screen(work,pdk,physical=None):
             [Path(__file__),Path(receive_core.__file__),receive_core.PRIMITIVE,receive_core.LAYOUT,Path(__file__).with_name('receive_controls.py'),Path(__file__).with_name('wired_receive.py'),Path(__file__).with_name('circuits.py'),
              Path(__file__).with_name('screen.py'),PROJECT/'spec/analog-architecture.json',
              pdk/'design.ngspice',pdk/'sm141064.ngspice',pdk/'sm141064.spice']+([physical] if physical else [])})
+    report['numerical_floating_conductor_anchors']=anchors
+    report['operating_point_policy']='Transient operating-point fallback rejected; floating-metal anchors are numerical, not fabricated resistors.'
+    for name in ['screen.py','loading_audit.py']:
+        path=Path(__file__).with_name(name)
+        report['source_sha256'][str(path)]=hashlib.sha256(path.read_bytes()).hexdigest()
     (work/'screen-report.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(dict(branch_dc=measured,hs_calibration=calibration),indent=2))
 

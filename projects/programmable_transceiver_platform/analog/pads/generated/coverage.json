@@ -1,11 +1,36 @@
 {
   "first_pass_complete": false,
   "candidates": {
-    "reference_clock": {
+    "wired_receive_usb": {
+      "status": "selected_protected_RX_model_not_electrically_qualified",
+      "gds_roundtrip_device_graph_match": true,
       "drc_count": 0,
-      "device_count": 175,
-      "electrical_scope": "connected_primary_protection_with_behavioral_reference_receiver",
-      "integrated_report": "reference-clock-integrated-screen.json"
+      "device_count": 446,
+      "integrated_receiver_discharge": true,
+      "area_um2": 283002.57269999996,
+      "electrical_scope": "Complete extracted protected pad/discharge, behavioral controls and core capacitance; retained external network.",
+      "limitations": [
+        "Serial-bypass loading may exceed the shared allocation; publication does not waive it.",
+        "Physical control guard, trim and slew implementation remain open.",
+        "No whole-ring device LVS, core-stress/current-capacity or ESD qualification."
+      ],
+      "source_sha256": {
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/receive_integrated.py": "570017a52cc8961fe9b25b131bc7d609c285f46db467a9e040be090826a73f2e",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "f887d4eb595ef1da511777c78283e8e71abe97fcfe05dd1444fcef4615905f43",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "5995b7ab33f01f62358b6af52cd3073ba4db89c66a303022bc516214d5bc9916",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/contract.json": "9e43600f7d9016469fc825fe4c451a87c4940e98bb3007f7a18b8f6ea3e63c69",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/layout.py": "0863dc15e08ca20e730a78f4c3fe9f5b5e986687af59d66d88d440ebd2176a1c",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/receive_pad_layout.py": "4b500ca0e01a3e3458879e5a03a3cb4ae578e7690f0e4fe0522ae66eaa7b99e9",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/wired_protection_layout.py": "b5e334084c0291c2b709b3ffb28ae4cd89b4227bfa4b1eb89b72f47e538ed2aa",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/wired_receive.py": "2854154d036bb59df19a389da99c1348539a71d5fcb6f52d3e8efae229dfafc1"
+      },
+      "report_sha256": {
+        "/home/ubuntu/svalbard/scratch/pad-rx-canonical-protected/connected-receiver/pad/model-audit.json": "5de7063b4141bee4708b67c8ea416e365c4d65493007d77eaddf63d2a1e6aac8",
+        "/home/ubuntu/svalbard/scratch/pad-rx-canonical-protected/connected-receiver/pad/layout-screen.json": "7d77f12f418934491725b090d6f47dbf252d0defb0007ac81dfbf90ce2a2a5c8",
+        "/home/ubuntu/svalbard/scratch/pad-rx-canonical-protected/connected-receiver/electrical/screen-report.json": "6da08f748fdcbe24424d9e7a5194cf6777e4a29dd915d99c9383a65e8ef94617",
+        "/home/ubuntu/svalbard/scratch/pad-rx-canonical-protected/connected-receiver/loading/loading-audit.json": "ace6bcc7d7cca6291a1cc43088ae2799ce9395bbba5c51cf3c329aeabfc96d39",
+        "/home/ubuntu/svalbard/scratch/pad-rx-canonical-protected/connected-receiver/placement/assembly-screen.json": "dcaf77aefceec69c5c4dfbf3b8bd538c7a800bb50f442797f3851c54a6ef2c14"
+      }
     }
   },
   "integrated_model_inventory": {
@@ -94,7 +119,10 @@
       "all_required_state_names_present": true,
       "model_bytes_match_recorded_screen_input": true,
       "stale_screen_sources": [],
-      "stale_layout_sources": [],
+      "stale_layout_sources": [
+        "analog/pads/reference_integrated.py",
+        "spec/schematic-implementation.json"
+      ],
       "exported_layout_device_graph_matches_current_model": true,
       "source_manifest_present": true,
       "scope": "Canonical family candidate only; named windows and matching input bytes do not prove performance, safety, or unchanged external-network topology."
@@ -191,10 +219,10 @@
         "screen": "wired-receive-usb-screen.json"
       },
       "artifact_sha256": {
-        "model": "55133d2b0a2d373907a6605cd7761034ed8a9debe5645cef6428ee785bdc9eef",
-        "layout": "106b43e15793cc3865cf631a69033ea4ff9a969548d4bb302e09dcc4d7f13cc2",
-        "gds": "f3226ea655197e9188f42f374a8303f3ca296c902df95a29d752b884580cdcb7",
-        "screen": "03f668ad1fc6d52304b6027e3b6d00c28ece7ed44891574db2ac52fe1c7bd53b"
+        "model": "bde81aa0e9bcbe1414e1318d0850757a7db6c45c3577bdbfb713a093da934415",
+        "layout": "f4d576bdb0366985915524fedc23213ceda0333f86047edef4fe68123a1be0df",
+        "gds": "464a6e24cd0c1f4eeb11afbc955446ecbade471d81c9746595650590ca7ebc94",
+        "screen": "6da08f748fdcbe24424d9e7a5194cf6777e4a29dd915d99c9383a65e8ef94617"
       },
       "reported_transient_complete": true,
       "required_state_windows": {
@@ -220,21 +248,8 @@
       },
       "all_required_state_names_present": true,
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/receive_screen.py",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/receive_core.py",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/wired_receive.py",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/circuits.py",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json"
-      ],
-      "stale_layout_sources": [
-        "analog/pads/layout.py",
-        "analog/pads/circuits.py",
-        "analog/pads/design.py",
-        "analog/pads/wired_receive.py",
-        "spec/analog-architecture.json"
-      ],
+      "stale_screen_sources": [],
+      "stale_layout_sources": [],
       "exported_layout_device_graph_matches_current_model": true,
       "source_manifest_present": true,
       "scope": "Canonical family candidate only; named windows and matching input bytes do not prove performance, safety, or unchanged external-network topology."
@@ -269,11 +284,11 @@
     "scope": "Nominal extracted-circuit DC check, including aligned maximum MAIN+POST; not timing or variation qualification."
   },
   "missing": [
-    "initialization audit of legacy canonical wired TX and RX/USB fixtures; selected protected TX and canonical RF/reference reruns now reject transient operating-point fallback",
+    "initialization audit of legacy canonical wired TX fixtures; selected protected TX and canonical RX/USB/RF/reference reruns now reject transient operating-point fallback",
     "wired RX/USB trim, slew, termination mutual exclusion and local safe-state controls",
     "wired TX termination trim, implemented current-limited common-mode buffer and reset/brownout controls",
     "full-bank host/power and supervisor qualification; independent-host power-off backfeed mitigation",
-    "legacy wired canonical models still need selected primary-protection adoption; selected RF/reference protection still needs current-capacity, core-stress and whole-ring/package qualification",
+    "legacy wired TX canonical model still needs selected primary-protection adoption; selected RF/reference protection still needs current-capacity, core-stress and whole-ring/package qualification",
     "distributed interconnect resistance and complete attached-core stress/loading"
   ],
   "scope": "Only listed candidates were rebuilt. Other artifacts must retain their original source hashes."

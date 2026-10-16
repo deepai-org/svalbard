@@ -1,27 +1,42 @@
 {
   "drc_count": 0,
   "device_graph_match": true,
-  "extraction_error": null,
-  "expected_models": {
-    "ppolyf_s": 4,
-    "nfet_06v0": 42,
-    "nfet_03v3": 38,
-    "nfet_06v0_dss": 4,
-    "pfet_03v3": 153,
-    "ppolyf_u_1k_6p0": 2,
-    "ppolyf_u_1k": 48
+  "gds_sha256": "464a6e24cd0c1f4eeb11afbc955446ecbade471d81c9746595650590ca7ebc94",
+  "reference_sha256": "bde81aa0e9bcbe1414e1318d0850757a7db6c45c3577bdbfb713a093da934415",
+  "independent_audit": {
+    "status": "physical_MOS_resistor_diode_MIM_graph_comparison",
+    "device_graph_matches": true,
+    "physical_devices": 446,
+    "simulated_devices": 446,
+    "missing": [],
+    "unexpected": [],
+    "supplemental_device_counts": {
+      "csubckt:cap_mim_2f0_m4m5_noshield": 2,
+      "ndiode:diode_nd2ps_06v0": 12,
+      "pdiode:diode_pd2nw_06v0": 8
+    },
+    "excluded_devices": {
+      "explicit_well_replacement": [
+        "DWELL_ARRAY VSS ESD_RAIL diode_nw2ps_06v0 area=569.4528p pj=470.72u"
+      ]
+    },
+    "scope": "MOS/resistor bodies and sizes, steering-diode polarity/area/perimeter, and ordered MIM terminals/dimensions checked. Explicit well replacement and parasitic values not certified; no ESD rating.",
+    "source_sha256": {
+      "/home/ubuntu/svalbard/scratch/pad-rx-canonical-protected/connected-receiver/pad/combined_flat.ext": "c1b9d4cce7e1cc757d368422de09ce687cab799b75437252980350839854215d",
+      "/home/ubuntu/svalbard/scratch/pad-rx-canonical-protected/connected-receiver/pad/physical.spice": "bde81aa0e9bcbe1414e1318d0850757a7db6c45c3577bdbfb713a093da934415",
+      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_device_audit.py": "faca1155b3ec8d51ec1db7a43fd2d1102d0e0441cf036f494fc71c4b318512f5",
+      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/extract_audit.py": "b3e9f311401ea251c5adb47f406d9e6170448865026108ad3ca7dd14c67d3b68",
+      "/home/ubuntu/svalbard/scratch/pad-rx-canonical-protected/connected-receiver/pad/combined_flat.spice": "7163fccdb11ee622fa3586d056fa0f500f9857b4fc83b12eaa048fae2d856e20"
+    },
+    "well_replacement": {
+      "extracted_well_area_um2": 569.4528,
+      "extracted_well_perimeter_um": 470.72,
+      "linear_capacitance_removed_ff": 68.3343359999999,
+      "expected_removal_ff": 68.33433600000001,
+      "other_extracted_capacitances_unchanged": true,
+      "scope": "Terminal well areas assume isolated, nonshared array wells as established by array geometry; no nonlinear junction accuracy or ESD qualification.",
+      "raw_spice_sha256": "7163fccdb11ee622fa3586d056fa0f500f9857b4fc83b12eaa048fae2d856e20"
+    }
   },
-  "actual_models": {
-    "ppolyf_s": 4,
-    "nfet_06v0": 42,
-    "nfet_03v3": 38,
-    "nfet_06v0_dss": 4,
-    "pfet_03v3": 153,
-    "ppolyf_u_1k_6p0": 2,
-    "ppolyf_u_1k": 48
-  },
-  "missing_devices": [],
-  "unexpected_devices": [],
-  "gds_sha256": "f3226ea655197e9188f42f374a8303f3ca296c902df95a29d752b884580cdcb7",
-  "reference_sha256": "55133d2b0a2d373907a6605cd7761034ed8a9debe5645cef6428ee785bdc9eef"
+  "scope": "Combined streamed GDS imported and checked; physical device graph and nonlinear well correction audited. Not electrical or protection qualification."
 }

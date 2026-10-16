@@ -542,6 +542,21 @@ settings or architectures. Prioritize current-source headroom/output resistance
 and buffer output range together; do not tune a single steering state and claim
 full branch-current accuracy.
 
+`transmit_tail_probe.py` checks a prospective current-source change while
+retaining the complete connected DC load. Eightfold MAIN/POST tail multiplicity,
+with sampled biases 0.873/0.802 V, gives 16.20/8.12 mA and 15.77/7.92 mA in the
+two tested steering states: maximum error 1.46%. This improves the same 16/8 mA
+target without raising the termination reference. It is not selected: intrinsic
+device multiplicity changed while extracted routing capacitance stayed fixed.
+The required area, regenerated parasitics, MAIN-only operation, bias controls,
+startup and switching performance must be checked before adoption. See
+`wired-transmit-tail-probe.json`; this result motivates a physical sizing pass,
+not a claim that the canonical current error is fixed.
+A direct generated layout with 32 tail fingers per unit passes scoped local
+DRC but needs 826,540 µm² for the base alone, before primary protection, versus
+the 250,000 µm² reservation. Reject direct replication; compact placement or a
+different current-source architecture is required before this can be selected.
+
 ## First-pass implementation closure
 
 The first pass must connect the selected circuits, their generated layouts and

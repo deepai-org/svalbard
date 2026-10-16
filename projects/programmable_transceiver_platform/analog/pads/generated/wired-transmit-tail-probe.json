@@ -1,0 +1,59 @@
+{
+  "status": "tail_multiplicity_diagnostic_not_selected_layout",
+  "cases": [
+    {
+      "multiplier": 8,
+      "main_bias_v": 0.873,
+      "post_bias_v": 0.802,
+      "worst_error_fraction": 0.014631901250000023,
+      "states": [
+        [
+          0.873,
+          0.873,
+          0.802,
+          0.0161998528,
+          0.00811705521,
+          1.6458212
+        ],
+        [
+          0.873,
+          0.873,
+          0.802,
+          0.0157673364,
+          0.00791903294,
+          1.6458999
+        ]
+      ]
+    }
+  ],
+  "targets_a": [
+    0.016,
+    0.008
+  ],
+  "scope": "Diagnostic tail-device multiplicity sweep on a verified connected TX DC fixture.\n\nDevice multiplicity scales intrinsic devices, not extracted routing. No changed\nlayout, AC loading or transient qualification is implied.\n",
+  "columns": [
+    "sweep_main_bias_v",
+    "main_bias_v",
+    "post_bias_v",
+    "main_a",
+    "post_a",
+    "vcm_v"
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_tail_probe.py": "444a1d15cdcb386d264de26818dc6a5060eb5b408d28ae3281e276d7021929c6",
+    "/home/ubuntu/svalbard/scratch/pad-tx-headroom-verified/main_post.spice": "68d3b38d5fc1a7833d2089ec9ce07bbc3a8885fadcc6b6fa5ad8d3908c80ecbe",
+    "/home/ubuntu/svalbard/scratch/pad-tx-headroom-verified/screen.json": "13b3b7fd18434e58bb94e79c765c9fb3e1fcfcfc9f24643b509d0e73b1b48cb6",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "5995b7ab33f01f62358b6af52cd3073ba4db89c66a303022bc516214d5bc9916"
+  },
+  "layout_probe": {
+    "serial_tail_units": 32,
+    "base_area_um2": 826540.0,
+    "area_ceiling_um2": 250000,
+    "fits_assigned_area": false,
+    "scoped_drc_count": "0",
+    "primary_protection_attached": false,
+    "decision": "Reject direct replication as selected layout: base alone exceeds reservation. Compact placement or different current-source architecture required.",
+    "report": "/home/ubuntu/svalbard/scratch/pad-tx-tail-eight-layout/layout-report.json",
+    "report_sha256": "f6092217c9c0d8ba1c1df2899c7a9dfe5b560a609ae3537db638e822d2f099e5"
+  }
+}

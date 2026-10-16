@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 from circuits import build
 from design import PROJECT
-from screen import run_spice,control as base_control
+from screen import run_spice as raw_run_spice,control as base_control
 
 
 def control(work,name,analysis,vectors):
@@ -21,13 +21,18 @@ def control(work,name,analysis,vectors):
 
 
 def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_report=None,
-           capacitance_location="bond", resistance_corner="nominal", external_coupling_f=None, rf_tx_gain=None, external_series_l_h=0., external_inductor_q=30.):
+           capacitance_location="bond", resistance_corner="nominal", external_coupling_f=None, rf_tx_gain=None, external_series_l_h=0., external_inductor_q=30., numerical_anchor_resistance=1e12):
     if not np.isfinite(external_series_l_h) or external_series_l_h<0 or not np.isfinite(external_inductor_q) or external_inductor_q<=0:
         raise ValueError('External inductance must be nonnegative and Q positive')
     if external_series_l_h and family!='rf_transmit':
         raise ValueError('External series-match probe currently supports RF TX only')
     if rf_tx_gain is not None and family!='rf_transmit':raise ValueError('RF TX gain applies only to RF transmit')
     work.mkdir(parents=True,exist_ok=True)
+    def run_spice(directory, name, deck):
+        result = raw_run_spice(directory, name, deck)
+        if family == 'reference_clock' and 'Transient op started' in (directory/(name+'.log')).read_text():
+            raise ValueError('Reference DC solve fell back to transient initialization: '+name)
+        return result
     circuit=build(family)
     if external_termination_ohm is not None and (family!='reference_clock' or
             not np.isfinite(external_termination_ohm) or external_termination_ohm<=0):
@@ -40,6 +45,12 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
         from rf_route import augment
         model,route_evidence=augment(model,family,route_report,capacitance_location,resistance_corner)
         (work/'segmented-pad.spice').write_text(model)
+    anchors = []
+    if family == 'reference_clock':
+        if not np.isfinite(numerical_anchor_resistance) or numerical_anchor_resistance < 1e12:
+            raise ValueError('Numerical floating-metal anchors must be at least 1 Tohm')
+        from loading_audit import anchor_floating_conductors
+        model, anchors = anchor_floating_conductors(model, numerical_anchor_resistance)
     core_prefix='COREPAD' if route_evidence else 'PAD'
     subckt=next(line.split()[1] for line in model.splitlines() if line.startswith('.subckt '))
     declared=next(line.split()[2:] for line in model.splitlines() if line.startswith('.subckt '))
@@ -368,6 +379,46 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
             peak_bias_target_error_v=float(np.max(abs(x[:,3]-x[:,12]))),
             peak_core_input_above_supply_v=float(np.max(x[:,6:8]-x[:,11,None])),
             bias_endpoint_v=float(x[-1,3]))
+    if ref:
+        # Separate slow bias dynamics from GHz carrier steps, retaining every
+        # device and external storage element. Start genuinely unpowered.
+        target = architecture['blocks']['refpad']['parameters']['common_mode_v']
+        supply = 2*target
+        tau = architecture['blocks']['refpad']['parameters']['input_r_ohm'] * coupling
+        rise = tau/100
+        off = 8*tau + 2*rise
+        on = off + 8*tau + rise
+        stop = on + 8*tau + rise
+        lines = []
+        for line in retained_network.splitlines():
+            if line.startswith('VDD VDD '):
+                line = (f'VDD VDD 0 PWL(0 0 {rise} 0 {2*rise} {supply} '
+                        f'{off} {supply} {off+rise} 0 {on} 0 {on+rise} {supply} {stop} {supply})')
+            elif line.startswith('VEN ENABLE '):
+                line = 'VEN ENABLE 0 0'
+            elif line.startswith(('VEXT_P ', 'VEXT_N ')):
+                line = ' '.join(line.split()[:3])+' 0'
+            lines.append(line)
+        slow = run_spice(work, 'reference_bias_envelope', '\n'.join(lines)+'\n'+
+                         control(work, 'reference_bias_envelope', f'tran {tau/100} {stop}', vectors))
+        if not np.isfinite(slow).all() or slow[-1,0] < stop*(1-1e-9):
+            raise ValueError('Incomplete reference bias envelope')
+        target = architecture['blocks']['refpad']['parameters']['common_mode_v']
+        cm = .5*(slow[:,1]+slow[:,2])
+        def settled(start, end):
+            indices = np.flatnonzero((slow[:,0]>=start)&(slow[:,0]<=end))
+            bad = np.flatnonzero(abs(cm[indices]-target)>.01*target)
+            i = int(bad[-1]+1) if len(bad) else 0
+            return float(slow[indices[i],0]-start) if i<len(indices) else None
+        report['reference_bias_envelope'] = dict(
+            scope='Same extracted pad, numerical anchor and external network; carrier removed and enable held low. One-percent settling is a diagnostic, not an allocated clock-ready deadline. Ideal bias source remains.',
+            transient_complete=True, estimated_rc_s=tau,
+            cold_settling_to_one_percent_s=settled(2*rise,off),
+            restored_settling_to_one_percent_s=settled(on+rise,stop),
+            bias_before_power_off_v=float(np.interp(off,slow[:,0],cm)),
+            bias_after_unpowered_interval_v=float(np.interp(on,slow[:,0],cm)),
+            final_common_mode_v=float(cm[-1]),
+            source_sha256=hashlib.sha256((work/'reference_bias_envelope.spice').read_bytes()).hexdigest())
     if finite_bias:
         # Carrier-free common-mode diagnostic: preserve every device, load and
         # storage element, but remove the RF stimulus to span bias time scales.
@@ -420,6 +471,11 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
     if finite_bias and external_coupling_f is None and route_report is None:
         report['large_coupling_diagnostic']=screen(work/'large-coupling',pdk,physical,family,
             external_coupling_f=10e-9)
+    report['numerical_floating_conductor_anchors'] = anchors
+    if ref:
+        helper = Path(__file__).with_name('loading_audit.py')
+        report['source_sha256'][str(helper)] = hashlib.sha256(helper.read_bytes()).hexdigest()
+        report['operating_point_policy'] = 'Capacitor-only internal metal receives a declared numerical DC anchor; reject transient operating-point fallback. Anchors are not fabricated resistors.'
     (work/'screen-report.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(dict(family=family,capacitance_f_per_leg=caps,states=states),indent=2))
     return report
@@ -434,6 +490,7 @@ if __name__=='__main__':
     p.add_argument('--external-differential-termination-ohm',type=float)
     p.add_argument('--external-coupling-f',type=float)
     p.add_argument('--route-report',type=Path)
+    p.add_argument('--numerical-anchor-resistance',type=float,default=1e12)
     p.add_argument('--rf-tx-gain',type=float)
     p.add_argument('--external-series-l-h',type=float,default=0.)
     p.add_argument('--external-inductor-q',type=float,default=30.)
@@ -444,4 +501,4 @@ if __name__=='__main__':
            a.external_differential_termination_ohm,route_report=a.route_report,
            capacitance_location=a.capacitance_location,resistance_corner=a.resistance_corner,
            external_coupling_f=a.external_coupling_f,rf_tx_gain=a.rf_tx_gain,
-           external_series_l_h=a.external_series_l_h,external_inductor_q=a.external_inductor_q)
+           external_series_l_h=a.external_series_l_h,external_inductor_q=a.external_inductor_q,numerical_anchor_resistance=a.numerical_anchor_resistance)

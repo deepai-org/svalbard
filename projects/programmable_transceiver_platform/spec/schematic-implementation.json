@@ -648,7 +648,7 @@
     "reference_primary_candidate": {
       "report": "analog/pads/generated/reference-clock-integrated-screen.json",
       "implemented_scope": "Canonical connected 175-device reference pad, rebuilt from shared placement and pad parameters. Includes primary protection and finite bias resistors, local DRC/device audit, retained-state/loading screens and joint provider placement/local-rail checks. Receiver is a behavioral boundary.",
-      "remaining": "Whole-ring device LVS, core clearance/protection, distributed route loss, bias startup and actual clock receiver. Short active window does not establish correct common-mode bias or clock reception."
+      "remaining": "Whole-ring device LVS, core clearance/protection, distributed route loss and actual clock receiver/readiness detector. Corrected nominal bias envelope settles in about 5.22 ms with 10 nF coupling; smaller reference startup delay is not established. Floating-metal numerical anchors are declared simulation aids, not physical resistors."
     },
     "receive_primary_candidate": {
       "report": "analog/pads/generated/receive-primary-protection/decision.json",

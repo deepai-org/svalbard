@@ -56,7 +56,7 @@ def run(work, generated, pdk, publish=True):
             [Path(__file__), spec, PROJECT/'spec/analog-architecture.json', PROJECT/'spec/contract.json']},
         report_sha256={str(p):digest(p) for p in reports},
         limitations=['Reference receiver is a behavioral boundary.',
-                    'Short lifecycle does not establish common-mode bias startup or clock reception.',
+                    'Carrier-free bias envelope covers nominal cold start/recovery; physical clock reception and readiness detection remain unqualified.',
                     'No whole-ring device LVS, distributed route resistance, current-capacity or ESD qualification.'])
     (work/'integrated-screen.json').write_text(json.dumps(result, indent=2)+'\n')
     if publish:
@@ -78,6 +78,7 @@ def run(work, generated, pdk, publish=True):
                 (work/'electrical/screen-report.json','-screen.json'),
                 (work/'terminated/screen-report.json','-terminated-screen.json'),
                 (work/'electrical/lifecycle.spice','-lifecycle.spice'),
+                (work/'electrical/reference_bias_envelope.spice','-bias-envelope.spice'),
                 (work/'integrated-screen.json','-integrated-screen.json'),
                 (work/'assembly/assembly-screen.json','-assembly-screen.json')]:
             shutil.copyfile(source, generated/(stem+suffix))

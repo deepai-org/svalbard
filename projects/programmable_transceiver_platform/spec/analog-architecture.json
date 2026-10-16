@@ -2513,7 +2513,8 @@
         "reference_divider_range": [
           1,
           256
-        ]
+        ],
+        "startup_policy": "Qualify reference common-mode settling and usable input clock before declaring readiness. External AC-coupling capacitance and finite pad bias set a potentially millisecond cold-start/recovery interval; the supervisor guard follows established validity and is not a substitute for bias settling."
       },
       "ports": {
         "clock_pair": {

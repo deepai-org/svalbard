@@ -1,0 +1,31 @@
+{
+  "status": "reference_numerical_anchor_sensitivity_checked",
+  "resistance_ohm": [
+    1000000000000.0,
+    1000000000000000.0
+  ],
+  "anchors": [
+    {
+      "cell": "combined_flat",
+      "node": "m2_18279_144800#",
+      "resistance_ohm": 1000000000000.0
+    }
+  ],
+  "max_interpolated_lifecycle_voltage_difference_v": {
+    "pad_p": 4.9013015868126786e-11,
+    "pad_n": 3.4634073386996533e-11,
+    "bias": 0.0
+  },
+  "cold_settling_to_one_percent_s": [
+    0.005216003900549056,
+    0.005216003900549056
+  ],
+  "transient_operating_point_fallback": false,
+  "scope": "Numerical anchoring of capacitor-only extracted metal, not a physical resistor or leakage assumption. Same physical model, external network and controls in both cases. Does not bound arbitrary initial floating-metal charge or validate other pad families.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-reference-bias-qualified-model/connected-reference/electrical/screen-report.json": "5cafa8e12b8bf9af9a76f40897b66fd6aeb390230d856238c6a0c5134f4def12",
+    "/home/ubuntu/svalbard/scratch/pad-reference-anchor-sensitivity/screen-report.json": "840d1ef28440fea020af0ae59fb5a5cf2464ee4f91a6e5d8aec8efe6217d538f",
+    "/home/ubuntu/svalbard/scratch/pad-reference-bias-qualified-model/connected-reference/electrical/lifecycle.spice": "13a164a53bcb7cd61a9757c3ca6a98c46b364ab0d39a6374c6e9297c1ed6b0d2",
+    "/home/ubuntu/svalbard/scratch/pad-reference-anchor-sensitivity/lifecycle.spice": "9a5711721cc621e20569d5c45732443de33d8b3435e2013df847a145595e8a1b"
+  }
+}

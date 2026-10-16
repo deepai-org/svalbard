@@ -68,10 +68,10 @@
         "screen": "reference-clock-screen.json"
       },
       "artifact_sha256": {
-        "model": "4d060711e611774a2de4eb9668ae22c6cd07f0e35f4a3a1745943796084ac7c1",
-        "layout": "01458d3a52fd35ddb9950f97d3587d7fa2b4f2c4503417bc489444a7bbeb2653",
-        "gds": "541e7958e886095340d7a35c7ed696007e848c9db0fc02a0bd3707f7554e4fa9",
-        "screen": "4bdd182a9e9fd9435ed85ea942c984abad8e1eadbce112ea514698fde86bdeb9"
+        "model": "9151d6e786a66c59be3fa0bdf25546ea1bcf9c6adc0254de5b8a9721c426b6ed",
+        "layout": "af18265b339f1fb2748c2a4cb91d77844cb23cd54c05c5be79d6d257e8304f3a",
+        "gds": "64796df3103e613e37bc42e0efc7a56e6caa47231163fe5308cb17d26ec76364",
+        "screen": "5cafa8e12b8bf9af9a76f40897b66fd6aeb390230d856238c6a0c5134f4def12"
       },
       "reported_transient_complete": true,
       "required_state_windows": {
@@ -133,6 +133,7 @@
       "all_required_state_names_present": true,
       "model_bytes_match_recorded_screen_input": true,
       "stale_screen_sources": [
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/analog_screen.py",
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json"
       ],
       "stale_layout_sources": [
@@ -177,6 +178,7 @@
       "all_required_state_names_present": true,
       "model_bytes_match_recorded_screen_input": true,
       "stale_screen_sources": [
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/analog_screen.py",
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json"
       ],
       "stale_layout_sources": [
@@ -273,6 +275,7 @@
     "scope": "Nominal extracted-circuit DC check, including aligned maximum MAIN+POST; not timing or variation qualification."
   },
   "missing": [
+    "RF and wired-TX operating-point initialization robustness: retained logs used transient fallback; reference numerical-anchor correction does not validate them",
     "wired RX/USB trim, slew, termination mutual exclusion and local safe-state controls",
     "wired TX termination trim, implemented current-limited common-mode buffer and reset/brownout controls",
     "full-bank host/power and supervisor qualification; independent-host power-off backfeed mitigation",

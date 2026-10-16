@@ -3,22 +3,22 @@
   "device_count": 175,
   "area_um2": 127170.32999999999,
   "source_sha256": {
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/reference_integrated.py": "3168fa0d757d28133e40a9594a5426c5ad36cfc60d8c7c6b5e86745e1cfe8cbb",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "4d7b3cb88006f5f8b8a9540e8efc85212bff206adb91eec981d71164802403fb",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "68989e478b5c990b92289d2f02c55e8ef625d39723149bb0970d6295703ba972",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/reference_integrated.py": "26c1f46374830af0c7bba2db7728890ccbce33c6db4b8f01d8ec1fc92efd96ca",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "22fd6e4d410340e36733fd97ac516636c36777fed3ca0810e99741c6bead0a62",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "5995b7ab33f01f62358b6af52cd3073ba4db89c66a303022bc516214d5bc9916",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/contract.json": "9e43600f7d9016469fc825fe4c451a87c4940e98bb3007f7a18b8f6ea3e63c69"
   },
   "report_sha256": {
-    "/home/ubuntu/svalbard/scratch/pad-reference-canonical-entrypoint/connected-reference/pad/layout-screen.json": "53eee0c4a6a587445af2ab1e5ee418b08f608775d886c3e91fbb629208bb1cca",
-    "/home/ubuntu/svalbard/scratch/pad-reference-canonical-entrypoint/connected-reference/pad/model-audit.json": "757bc468aee20630ce564e5400ed11d5cd593c40ef2d4c8fc887b2b0049f9ee6",
-    "/home/ubuntu/svalbard/scratch/pad-reference-canonical-entrypoint/connected-reference/pad/placement-layout.json": "7b6eda14171b02de7219592576d8277fd1c4ef0b066b695d3a6968fd3c0adecb",
-    "/home/ubuntu/svalbard/scratch/pad-reference-canonical-entrypoint/connected-reference/electrical/screen-report.json": "4bdd182a9e9fd9435ed85ea942c984abad8e1eadbce112ea514698fde86bdeb9",
-    "/home/ubuntu/svalbard/scratch/pad-reference-canonical-entrypoint/connected-reference/terminated/screen-report.json": "be8b1ec7a9fdb645e92c01dfea152a574101c9ecf6312c1d86a0a74f51651b6e",
-    "/home/ubuntu/svalbard/scratch/pad-reference-canonical-entrypoint/connected-reference/assembly/assembly-screen.json": "095fee8758c41c5a61a3c385cd378c009ad70678c2c1043cfe8e3b387ff96002"
+    "/home/ubuntu/svalbard/scratch/pad-reference-bias-qualified-model/connected-reference/pad/layout-screen.json": "c1f88e431eb4b116eddb73d9fcf3054d143e0d854f6fa02d1493d4670633e3b7",
+    "/home/ubuntu/svalbard/scratch/pad-reference-bias-qualified-model/connected-reference/pad/model-audit.json": "977959c7ea5db5b3160a3e1da143b150c6a1d839bcb243196186e59fe871ae16",
+    "/home/ubuntu/svalbard/scratch/pad-reference-bias-qualified-model/connected-reference/pad/placement-layout.json": "55e84c0ebd9e45529231249596f2f0e5c86fd624709ed92543a6d526a09b4a4f",
+    "/home/ubuntu/svalbard/scratch/pad-reference-bias-qualified-model/connected-reference/electrical/screen-report.json": "5cafa8e12b8bf9af9a76f40897b66fd6aeb390230d856238c6a0c5134f4def12",
+    "/home/ubuntu/svalbard/scratch/pad-reference-bias-qualified-model/connected-reference/terminated/screen-report.json": "c4a67a5f563c6aa86d5921a10dc2e756d24693f1d3239c4d03c79a715a1adbcc",
+    "/home/ubuntu/svalbard/scratch/pad-reference-bias-qualified-model/connected-reference/assembly/assembly-screen.json": "dfb702d6af6c503f73eea4fab8a77ab2b8738b5d6b9ede16e001a7c9d5823522"
   },
   "limitations": [
     "Reference receiver is a behavioral boundary.",
-    "Short lifecycle does not establish common-mode bias startup or clock reception.",
+    "Carrier-free bias envelope covers nominal cold start/recovery; physical clock reception and readiness detection remain unqualified.",
     "No whole-ring device LVS, distributed route resistance, current-capacity or ESD qualification."
   ]
 }

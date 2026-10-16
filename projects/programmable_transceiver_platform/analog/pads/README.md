@@ -420,9 +420,19 @@ reference fixtures, and checks joint provider placement before publication.
 are `generated/reference-clock-*`; earlier candidate evidence is superseded.
 Odd-mode loading is approximately 0.572 pF/leg at 1 GHz and the allocated union
 is 127,170 µm² within the 130,000 µm² reservation. Local DRC, independent device
-checks, bond openings, metal-overlap and local-rail checks pass. The short active
-window still has common mode near 16 mV rather than the intended 1.65 V: it
-exposes unfinished bias startup and does not establish clock reception.
+checks, bond openings, metal-overlap and local-rail checks pass. The former 16 mV result came from a failed DC solve followed by ngspice
+transient initialization, not demonstrated DC bias failure. A declared numerical
+anchor on capacitor-only floating metal restores the DC solve near 1.644 V;
+reference screens reject that fallback. An explicit carrier-free cold-start and
+power-cycle envelope retains the same circuit and external network. With 10 nF
+coupling, nominal one-percent bias settling takes about 5.22 ms. Clock readiness
+must follow actual bias/clock validity, not just the 20 µs supervisor guard.
+The numerical anchor is not a fabricated resistor; physical clock reception
+and readiness detection remain unqualified.
+An audit also found transient operating-point fallback in the retained RF and
+wired-TX logs. Their published transients remain recorded observations, but
+initial-state robustness must be rechecked before treating them as electrical
+acceptance. The reference correction does not retroactively validate those runs.
 Whole-core fit, distributed route resistance, core protection and the physical
 receiver remain open.
 

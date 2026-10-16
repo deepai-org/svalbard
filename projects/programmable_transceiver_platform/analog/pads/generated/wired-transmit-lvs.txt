@@ -1,0 +1,206 @@
+
+Circuit 1 cell ppolyf_u_1k and Circuit 2 cell ppolyf_u_1k are black boxes.
+Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
+Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: ppolyf_u_1k                     |Circuit 2: ppolyf_u_1k                     
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ppolyf_u_1k and ppolyf_u_1k are equivalent.
+
+Circuit 1 cell nfet_03v3 and Circuit 2 cell nfet_03v3 are black boxes.
+Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: nfet_03v3                       |Circuit 2: nfet_03v3                       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes nfet_03v3 and nfet_03v3 are equivalent.
+
+Circuit 1 cell pfet_06v0 and Circuit 2 cell pfet_06v0 are black boxes.
+Warning: Equate pins:  cell pfet_06v0 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell pfet_06v0 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: pfet_06v0                       |Circuit 2: pfet_06v0                       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes pfet_06v0 and pfet_06v0 are equivalent.
+
+Circuit 1 cell nfet_06v0 and Circuit 2 cell nfet_06v0 are black boxes.
+Warning: Equate pins:  cell nfet_06v0 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell nfet_06v0 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: nfet_06v0                       |Circuit 2: nfet_06v0                       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes nfet_06v0 and nfet_06v0 are equivalent.
+
+Circuit 1 cell nfet_06v0_dss and Circuit 2 cell nfet_06v0_dss are black boxes.
+Warning: Equate pins:  cell nfet_06v0_dss is a placeholder, treated as a black box.
+Warning: Equate pins:  cell nfet_06v0_dss is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: nfet_06v0_dss                   |Circuit 2: nfet_06v0_dss                   
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes nfet_06v0_dss and nfet_06v0_dss are equivalent.
+
+Circuit 1 cell pfet_03v3 and Circuit 2 cell pfet_03v3 are black boxes.
+Warning: Equate pins:  cell pfet_03v3 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell pfet_03v3 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: pfet_03v3                       |Circuit 2: pfet_03v3                       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes pfet_03v3 and pfet_03v3 are equivalent.
+
+Circuit 1 cell ppolyf_s and Circuit 2 cell ppolyf_s are black boxes.
+Warning: Equate pins:  cell ppolyf_s is a placeholder, treated as a black box.
+Warning: Equate pins:  cell ppolyf_s is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: ppolyf_s                        |Circuit 2: ppolyf_s                        
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ppolyf_s and ppolyf_s are equivalent.
+
+Class pad_tx_flat (0):  Merged 55 parallel devices.
+Class pad_tx_flat (0):  Merged 14 series devices.
+Class pad_wired_transmit (1):  Merged 56 parallel devices.
+Class pad_wired_transmit (1):  Merged 14 series devices.
+Subcircuit summary:
+Circuit 1: pad_tx_flat                     |Circuit 2: pad_wired_transmit              
+-------------------------------------------|-------------------------------------------
+nfet_03v3 (112->74)                        |nfet_03v3 (112->74)                        
+pfet_06v0 (4)                              |pfet_06v0 (4)                              
+ppolyf_u_1k (17->3)                        |ppolyf_u_1k (17->3)                        
+nfet_06v0 (38->22)                         |nfet_06v0 (38->22)                         
+nfet_06v0_dss (4->3)                       |nfet_06v0_dss (4->2) **Mismatch**          
+pfet_03v3 (2)                              |pfet_03v3 (2)                              
+ppolyf_s (2)                               |ppolyf_s (2)                               
+Number of devices: 110 **Mismatch**        |Number of devices: 109 **Mismatch**        
+Number of nets: 66                         |Number of nets: 66                         
+---------------------------------------------------------------------------------------
+NET mismatches: Class fragments follow (with fanout counts):
+Circuit 1: pad_tx_flat                     |Circuit 2: pad_wired_transmit              
+
+---------------------------------------------------------------------------------------
+Net: TERM_P_R                              |Net: TERM_P_R                              
+  ppolyf_s/(1|2) = 1                       |  ppolyf_s/(1|2) = 1                       
+  nfet_03v3/(1|3) = 1                      |  nfet_03v3/(1|3) = 1                      
+  nfet_06v0_dss/4 = 1                      |                                           
+                                           |                                           
+Net: TERM_N_R                              |Net: TERM_N_R                              
+  nfet_03v3/(1|3) = 1                      |  nfet_03v3/(1|3) = 1                      
+  ppolyf_s/(1|2) = 1                       |  ppolyf_s/(1|2) = 1                       
+                                           |                                           
+Net: PAD_P                                 |Net: PAD_P                                 
+  nfet_06v0/(1|3) = 9                      |  nfet_06v0/(1|3) = 9                      
+  nfet_06v0_dss/(1|3) = 1                  |  nfet_06v0_dss/(1|3) = 1                  
+  ppolyf_s/(1|2) = 1                       |  ppolyf_s/(1|2) = 1                       
+                                           |                                           
+Net: PAD_N                                 |Net: PAD_N                                 
+  nfet_06v0_dss/(1|3) = 2                  |  nfet_06v0_dss/(1|3) = 1                  
+  nfet_06v0/(1|3) = 9                      |  nfet_06v0/(1|3) = 9                      
+  ppolyf_s/(1|2) = 1                       |  ppolyf_s/(1|2) = 1                       
+                                           |                                           
+Net: VSS                                   |Net: VSS                                   
+  nfet_03v3/(1|3) = 24                     |  nfet_03v3/(1|3) = 24                     
+  nfet_03v3/4 = 74                         |  nfet_03v3/4 = 74                         
+  ppolyf_u_1k/(1|2) = 3                    |  ppolyf_u_1k/(1|2) = 3                    
+  ppolyf_u_1k/3 = 3                        |  ppolyf_u_1k/3 = 3                        
+  nfet_06v0/4 = 22                         |  nfet_06v0/4 = 22                         
+  nfet_06v0_dss/2 = 3                      |  nfet_06v0_dss/2 = 2                      
+  nfet_06v0_dss/(1|3) = 3                  |  nfet_06v0_dss/(1|3) = 2                  
+  nfet_06v0_dss/4 = 2                      |  nfet_06v0_dss/4 = 2                      
+  ppolyf_s/3 = 2                           |  ppolyf_s/3 = 2                           
+  nfet_06v0/(1|3) = 4                      |  nfet_06v0/(1|3) = 4                      
+---------------------------------------------------------------------------------------
+DEVICE mismatches: Class fragments follow (with node fanout counts):
+Circuit 1: pad_tx_flat                     |Circuit 2: pad_wired_transmit              
+
+---------------------------------------------------------------------------------------
+Instance: nfet_06v0_dss:18                 |Instance: nfet_06v0_dss:ESD_P_0            
+  (1,3) = (140,12)                         |  (1,3) = (138,11)                         
+  2 = 140                                  |  2 = 138                                  
+  4 = 3                                    |  4 = 138                                  
+                                           |                                           
+Instance: nfet_06v0_dss:78                 |Instance: nfet_06v0_dss:ESD_N_0            
+  (1,3) = (140,11)                         |  (1,3) = (138,11)                         
+  2 = 140                                  |  2 = 138                                  
+  4 = 140                                  |  4 = 138                                  
+                                           |                                           
+Instance: nfet_06v0_dss:139                |(no matching instance)                     
+  (1,3) = (140,12)                         |                                           
+  2 = 140                                  |                                           
+  4 = 140                                  |                                           
+                                           |                                           
+---------------------------------------------------------------------------------------
+Netlists do not match.
+Port matching may fail to disambiguate symmetries.
+
+Subcircuit pins:
+Circuit 1: pad_tx_flat                     |Circuit 2: pad_wired_transmit              
+-------------------------------------------|-------------------------------------------
+VSS                                        |(no pin, node is TERM_P_R)                 
+PAD_N                                      |PAD_N                                      
+PAD_P                                      |VSS **Mismatch**                           
+VDD                                        |VDD                                        
+DETECT_PBIAS                               |DETECT_PBIAS                               
+TERM_ENABLE                                |TERM_ENABLE                                
+DETECT_ENABLE                              |DETECT_ENABLE                              
+TERM_VCM                                   |TERM_VCM                                   
+CASCODE                                    |CASCODE                                    
+POST_BIAS                                  |MAIN_BIAS **Mismatch**                     
+TMDS_BIAS                                  |POST_BIAS **Mismatch**                     
+MAIN_BIAS                                  |TMDS_BIAS **Mismatch**                     
+MAIN_N                                     |MAIN_P **Mismatch**                        
+TMDS_N                                     |MAIN_N **Mismatch**                        
+POST_N                                     |POST_P **Mismatch**                        
+TMDS_P                                     |POST_N **Mismatch**                        
+MAIN_P                                     |TMDS_P **Mismatch**                        
+POST_P                                     |TMDS_N **Mismatch**                        
+(no pin, node is PAD_P)                    |PAD_P                                      
+---------------------------------------------------------------------------------------
+Cell pin lists for pad_tx_flat and pad_wired_transmit altered to match.
+Device classes pad_tx_flat and pad_wired_transmit are equivalent.
+
+Final result: Top level cell failed pin matching.

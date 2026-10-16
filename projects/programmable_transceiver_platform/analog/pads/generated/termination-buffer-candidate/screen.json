@@ -1,0 +1,84 @@
+{
+  "status": "transistor_buffer_DC_candidate_not_adopted",
+  "device_count": 31,
+  "load_range_a": [
+    -0.024,
+    0.024
+  ],
+  "output_range_v": [
+    1.64056377,
+    1.64898292
+  ],
+  "maximum_target_error_v": 0.009436229999999934,
+  "supply_draw_range_a": [
+    0.00218526134,
+    0.024456604
+  ],
+  "wired_tx_current_budget_a": 0.036000000000000004,
+  "assumptions": {
+    "supply_v": 3.3,
+    "reference_v": 1.65,
+    "tail_bias_v": 0.9,
+    "temperature_c": 27
+  },
+  "limitations": [
+    "Complementary second stage has unregulated quiescent current.",
+    "Explicit reference/tail bias; no current limit, enable or power-off isolation.",
+    "Compensation and layout remain to be designed; DC convergence is not stability."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer.py": "ab7f63f73ae0467a7da4937b185a690599db3a52a1d9c7741de6b65a16849037",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "2d773c18090b57a6e54291f99d6f828730f843674fe6ceee8a7cdfdda5a58b4d",
+    "/home/ubuntu/svalbard/scratch/pad-termination-buffer-repro/candidate.spice": "57101cee54fa172e13e9fd7b82f1c7ec724f69e07850ffbf7a9821843a1c866b",
+    "/home/ubuntu/svalbard/scratch/pad-termination-buffer-repro/dc.spice": "51a91be868f4981a2f8f53feb1b41d9c82c5c88b662e352a0703c28c69612f88",
+    "/home/ubuntu/svalbard/scratch/pad-termination-buffer-repro/uncompensated.spice": "924f0beb82bab91f05786524c51ccfe39a7228727b9a14d537ff4df6c2bb2589",
+    "/home/ubuntu/svalbard/scratch/pad-termination-buffer-repro/compensated.spice": "45e103a731af5b13b0b6f3f4efa7d087772623c71fff190879c0815d4c911df2"
+  },
+  "load_steps": {
+    "uncompensated": {
+      "output_min_v": -0.251347018,
+      "output_max_v": 3.76084853,
+      "windows": {
+        "source": {
+          "min_v": 1.40372139,
+          "max_v": 1.82164084,
+          "peak_to_peak_v": 0.41791944999999986
+        },
+        "sink": {
+          "min_v": 1.27558442,
+          "max_v": 2.82704588,
+          "peak_to_peak_v": 1.55146146
+        },
+        "recovered": {
+          "min_v": 1.43855741,
+          "max_v": 1.87107582,
+          "peak_to_peak_v": 0.4325184099999999
+        }
+      },
+      "scope": "Standalone 10pF load; ideal 100ohm/10pF series Miller compensation when selected. No stability margin or retained-pad lifecycle claim."
+    },
+    "compensated": {
+      "output_min_v": 0.94530828,
+      "output_max_v": 2.46736703,
+      "windows": {
+        "source": {
+          "min_v": 1.04491882,
+          "max_v": 1.07881188,
+          "peak_to_peak_v": 0.03389306000000003
+        },
+        "sink": {
+          "min_v": 2.32482729,
+          "max_v": 2.36009925,
+          "peak_to_peak_v": 0.03527196000000021
+        },
+        "recovered": {
+          "min_v": 1.64490944,
+          "max_v": 1.64531481,
+          "peak_to_peak_v": 0.0004053699999999605
+        }
+      },
+      "scope": "Standalone 10pF load; ideal 100ohm/10pF series Miller compensation when selected. No stability margin or retained-pad lifecycle claim."
+    }
+  },
+  "decision": "Keep as transistor starting point only. Uncompensated loop rings; tested compensation leaves large loaded error at the sampled deadlines. Resolve loop bandwidth and stability before integration."
+}

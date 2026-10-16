@@ -1,0 +1,72 @@
+{
+  "status": "sustained_loaded_TX_diagnostic_not_deadline_acceptance",
+  "transient_complete": true,
+  "windows": {
+    "original_main_early": {
+      "start_ns": 104,
+      "stop_ns": 107,
+      "vcm_min_v": 1.12491516,
+      "vcm_max_v": 1.21238925,
+      "max_reference_error_v": 0.5168578400000001,
+      "differential_pad_min_v": -0.403358612,
+      "differential_pad_max_v": 0.39985791699999995,
+      "peak_supply_draw_a": 0.0271855128
+    },
+    "main_settled": {
+      "start_ns": 140,
+      "stop_ns": 147,
+      "vcm_min_v": 1.63970704,
+      "vcm_max_v": 1.65200321,
+      "max_reference_error_v": 0.009556770000000103,
+      "differential_pad_min_v": -0.5256012929999999,
+      "differential_pad_max_v": 0.526957661,
+      "peak_supply_draw_a": 0.0288028053
+    },
+    "post_early": {
+      "start_ns": 149,
+      "stop_ns": 151,
+      "vcm_min_v": 1.5661095,
+      "vcm_max_v": 1.59037985,
+      "max_reference_error_v": 0.08014071999999994,
+      "differential_pad_min_v": -0.6423960080000001,
+      "differential_pad_max_v": 0.641367917,
+      "peak_supply_draw_a": 0.031848095
+    },
+    "post_settled": {
+      "start_ns": 184,
+      "stop_ns": 191,
+      "vcm_min_v": 1.61515304,
+      "vcm_max_v": 1.63572595,
+      "max_reference_error_v": 0.03347776000000002,
+      "differential_pad_min_v": -0.653033507,
+      "differential_pad_max_v": 0.6541776820000001,
+      "peak_supply_draw_a": 0.0312724926
+    },
+    "reconfiguration": {
+      "start_ns": 196,
+      "stop_ns": 198,
+      "vcm_min_v": 1.68573006,
+      "vcm_max_v": 2.43160305,
+      "max_reference_error_v": 0.7380101600000002,
+      "differential_pad_min_v": -0.006672869999999831,
+      "differential_pad_max_v": 0.5354681379999999,
+      "peak_supply_draw_a": 0.0429936819
+    },
+    "recovered": {
+      "start_ns": 214,
+      "stop_ns": 219,
+      "vcm_min_v": 0.752535978,
+      "vcm_max_v": 1.01395948,
+      "max_reference_error_v": 0.886224882,
+      "differential_pad_min_v": -0.0004914099999999699,
+      "differential_pad_max_v": -1.2400000000134526e-06,
+      "peak_supply_draw_a": 0.0334887844
+    }
+  },
+  "scope": "Exact connected extracted TX/buffer and external differential load retained. Only PWL events at/after108ns and112ns shifted40ns each. Data clocks/edges, biases, compensation and loading unchanged. Original main early failure remains measured. No new ready detector, muted startup, physical sequencer or protocol deadline qualification.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_loaded_hold.py": "68f96fe7b6672b4751822cabe53e5f093148cc4d03648283672ba3a760484ae2",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-bounded-lifecycle/connected.spice": "41acf3f8b66eb37c839f11b9c22fec3ab9e7f7a71f19881c2ef5d02394e3bec1",
+    "/home/ubuntu/svalbard/scratch/pad-tx-sustained-loaded-hold/hold.spice": "c4cee0bded46d3df6fdbdf1cdcf57fb53805c1978850341cc77bc75999368975"
+  }
+}

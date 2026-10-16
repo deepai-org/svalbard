@@ -1,0 +1,56 @@
+{
+  "status": "resistance_extraction_unavailable_in_current_pilot",
+  "cases": [
+    {
+      "name": "resistance-diagnostic",
+      "returncode": 139,
+      "interpretation": "RF layout loads; ext2sim crashes before returning and leaves an empty SIM file.",
+      "script": "load pad_rf_receive_flat\nputs \"STAGE loaded\"\next2sim labels on\nputs \"STAGE before_ext2sim\"\next2sim\nputs \"STAGE after_ext2sim\"\nquit -noprompt\n",
+      "log": "\nMagic 8.3 revision 623 - Compiled on Tue Mar 17 08:19:43 UTC 2026.\nStarting magic under Tcl interpreter\nUsing the terminal as the console.\nWARNING: RLIMIT_NOFILE is above 1024 and Tcl_Version<9 this may cause runtime issues [rlim_cur=524288]\nUsing NULL graphics device.\nProcessing system .magicrc file\nSwitching to WIRING tool.\nSwitching to NETLIST tool.\nSwitching to PICK tool.\nSwitching to BOX tool.\nSourcing design .magicrc for technology gf180mcuD ...\n10 Magic internal units = 1 Lambda\nInput style import: scaleFactor=10, multiplier=2\nThe following types are not handled by extraction and will be treated as non-electrical types:\n    obsactive mvobsactive filldiff fillpoly m1hole obsm1 fillm1 obsv1 m2hole obsm2 fillm2 obsv2 m3hole obsm3 fillm3 m4hole obsm4 fillm4 m5hole obsm5 fillm5 glass fillblock lvstext obscomment \nScaled tech values by 10 / 1 to match internal grid scaling\nLoading gf180mcuD Device Generator Menu ...\nLoading \"/work/resistance-diagnostic.tcl\" from command line.\nWarning: cell <pad_rf_receive_flat> from file pad_rf_receive_flat.mag is not writeable\nCell pad_rf_receive_flat read from current working directory\npad_rf_receive_flat: 10000 rects\npad_rf_receive_flat: 20000 rects\npad_rf_receive_flat: 30000 rects\npad_rf_receive_flat: 40000 rects\npad_rf_receive_flat: 50000 rects\npad_rf_receive_flat: 60000 rects\npad_rf_receive_flat: 70000 rects\npad_rf_receive_flat: 80000 rects\npad_rf_receive_flat: 90000 rects\npad_rf_receive_flat: 100000 rects\npad_rf_receive_flat: 110000 rects\npad_rf_receive_flat: 120000 rects\nSTAGE loaded\nSTAGE before_ext2sim\n",
+      "source_sha256": {
+        "resistance-diagnostic.tcl": "577a6f2a8c5678489cef5b3f45a246cd297bd4bc453dbfac7c8a30bf7cc86b95",
+        "resistance-diagnostic.tcl.log": "0d15bc503fc615e4848a22ad30f664dbb85b5ae025bf868112208abc5aeb9c04"
+      }
+    },
+    {
+      "name": "metal-control",
+      "returncode": 139,
+      "interpretation": "Metal-only ext2sim returns; subsequent resistance attempt crashes. This attempt also reports invalid zero tolerance and cell lookup diagnostics.",
+      "script": "load metal_control\nbox values 0 0 2000 80\npaint metal2\nbox values 0 0 80 80\nlabel A center metal2\nport make 1\nbox values 1920 0 2000 80\nlabel B center metal2\nport make 2\nsave\nextract all\nputs \"STAGE before_ext2sim\"\next2sim\nputs \"STAGE after_ext2sim\"\nextresist threshold 0\nextresist tolerance 0\nextresist simplify off\nextresist all\nextresist\nputs \"STAGE after_extresist\"\nquit -noprompt\n",
+      "log": "\nMagic 8.3 revision 623 - Compiled on Tue Mar 17 08:19:43 UTC 2026.\nStarting magic under Tcl interpreter\nUsing the terminal as the console.\nWARNING: RLIMIT_NOFILE is above 1024 and Tcl_Version<9 this may cause runtime issues [rlim_cur=524288]\nUsing NULL graphics device.\nProcessing system .magicrc file\nSwitching to WIRING tool.\nSwitching to NETLIST tool.\nSwitching to PICK tool.\nSwitching to BOX tool.\nSourcing design .magicrc for technology gf180mcuD ...\n10 Magic internal units = 1 Lambda\nInput style import: scaleFactor=10, multiplier=2\nThe following types are not handled by extraction and will be treated as non-electrical types:\n    obsactive mvobsactive filldiff fillpoly m1hole obsm1 fillm1 obsv1 m2hole obsm2 fillm2 obsv2 m3hole obsm3 fillm3 m4hole obsm4 fillm4 m5hole obsm5 fillm5 glass fillblock lvstext obscomment \nScaled tech values by 10 / 1 to match internal grid scaling\nLoading gf180mcuD Device Generator Menu ...\nLoading \"/work/metal-control.tcl\" from command line.\nCreating new cell\nExtracting metal_control into metal_control.ext:\nSTAGE before_ext2sim\nexttosim finished.\nSTAGE after_ext2sim\nCell metal_control couldn't be read\nNo such file or directory\nWarning:  Ports \"B\" and \"A\" are electrically shorted.\nWarning:  Ports \"B\" and \"A\" are electrically shorted.\nUsage:  extresist tolerance [value]\n",
+      "source_sha256": {
+        "metal-control.tcl": "29619b41c45fe3676792414d776b94863677e0f3c2ee378c8d037e6548ea9e9b",
+        "metal-control.tcl.log": "d1e0f0623fd18ed446e0ffccb64698b0bc272bec27c7c08825e38fcb756bff36"
+      }
+    },
+    {
+      "name": "metal-resistance-reload",
+      "returncode": 0,
+      "interpretation": "Reload returns without extraction: tool reports no definition corresponding to box. Exit zero is not success.",
+      "script": "path search +/work\nload metal_control\nputs \"STAGE loaded\"\nextresist tolerance 1\nextresist simplify off\nextresist all\nputs \"STAGE all_returned\"\nextresist\nputs \"STAGE extraction_returned\"\nquit -noprompt\n",
+      "log": "\nMagic 8.3 revision 623 - Compiled on Tue Mar 17 08:19:43 UTC 2026.\nStarting magic under Tcl interpreter\nUsing the terminal as the console.\nWARNING: RLIMIT_NOFILE is above 1024 and Tcl_Version<9 this may cause runtime issues [rlim_cur=524288]\nUsing NULL graphics device.\nProcessing system .magicrc file\nSwitching to WIRING tool.\nSwitching to NETLIST tool.\nSwitching to PICK tool.\nSwitching to BOX tool.\nSourcing design .magicrc for technology gf180mcuD ...\n10 Magic internal units = 1 Lambda\nInput style import: scaleFactor=10, multiplier=2\nThe following types are not handled by extraction and will be treated as non-electrical types:\n    obsactive mvobsactive filldiff fillpoly m1hole obsm1 fillm1 obsv1 m2hole obsm2 fillm2 obsv2 m3hole obsm3 fillm3 m4hole obsm4 fillm4 m5hole obsm5 fillm5 glass fillblock lvstext obscomment \nScaled tech values by 10 / 1 to match internal grid scaling\nLoading gf180mcuD Device Generator Menu ...\nLoading \"/work/metal-resistance-reload.tcl\" from command line.\nCell metal_control read from current working directory\nScaled magic input cell metal_control geometry by factor of 10\nSTAGE loaded\nSTAGE all_returned\nSTAGE extraction_returned\nCouldn't find def corresponding to box\nCouldn't find def corresponding to box\n",
+      "source_sha256": {
+        "metal-resistance-reload.tcl": "daabfc55d7e2a5c17c9abca6c2e972e9c1243ac256f557f0b64bed2ddb98c41b",
+        "metal-resistance-reload.tcl.log": "1d5b825fc9243dca0b51f04a44566090fd7a7b37f2562a86228e05c3829f1ac0"
+      }
+    },
+    {
+      "name": "metal-resistance-selected",
+      "returncode": 139,
+      "interpretation": "Explicit cell selection and positive tolerance still crash; precise failing command not isolated.",
+      "script": "path search +/work\nload metal_control\nselect top cell\nbox values 0 0 10 10\nextresist cell metal_control\nextresist tolerance 1\nextresist simplify off\nextresist all\nextresist\nextresist stats\nquit -noprompt\n",
+      "log": "\nMagic 8.3 revision 623 - Compiled on Tue Mar 17 08:19:43 UTC 2026.\nStarting magic under Tcl interpreter\nUsing the terminal as the console.\nWARNING: RLIMIT_NOFILE is above 1024 and Tcl_Version<9 this may cause runtime issues [rlim_cur=524288]\nUsing NULL graphics device.\nProcessing system .magicrc file\nSwitching to WIRING tool.\nSwitching to NETLIST tool.\nSwitching to PICK tool.\nSwitching to BOX tool.\nSourcing design .magicrc for technology gf180mcuD ...\n10 Magic internal units = 1 Lambda\nInput style import: scaleFactor=10, multiplier=2\nThe following types are not handled by extraction and will be treated as non-electrical types:\n    obsactive mvobsactive filldiff fillpoly m1hole obsm1 fillm1 obsv1 m2hole obsm2 fillm2 obsv2 m3hole obsm3 fillm3 m4hole obsm4 fillm4 m5hole obsm5 fillm5 glass fillblock lvstext obscomment \nScaled tech values by 10 / 1 to match internal grid scaling\nLoading gf180mcuD Device Generator Menu ...\nLoading \"/work/metal-resistance-selected.tcl\" from command line.\nCell metal_control read from current working directory\nScaled magic input cell metal_control geometry by factor of 10\n",
+      "source_sha256": {
+        "metal-resistance-selected.tcl": "5454cb115c0aa404a78751e25531d39df1183ccd6ea975dbe78be19f258477a2",
+        "metal-resistance-selected.tcl.log": "cdb150f37e07da98df27a9a25f59d0434a125a455a0f202e051c99b2c88951d6"
+      }
+    }
+  ],
+  "layout_sha256": "f29bc6b76d5c537f1ac71f4dbdc3e38ada98ceb794002659d05a8c16080eaf25",
+  "limitations": [
+    "No distributed resistance network produced.",
+    "No cause established; do not attribute the failure solely to RF devices.",
+    "Do not treat zero process exit status or empty resistor files as extraction success."
+  ],
+  "next_action": "Use a separately validated extraction path or geometry-derived segmented network; preserve branch attachment locations and independently check resistance on known metal structures."
+}

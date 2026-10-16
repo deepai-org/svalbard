@@ -1,0 +1,11 @@
+* Independent exporter of physical Magic .ext; no schematic substitutions.
+* Extracted capacitance included; distributed wire resistance remains absent.
+.subckt pad_rf_transmit_flat_physical PAD_P PAD_N VSS
+X0 PAD_N VSS VSS VSS nfet_06v0_dss w=16u l=0.6u ad=60.48p as=4.48p pd=39.56u ps=32.56u d_sab=3.78u s_sab=0.28u
+X1 PAD_N VSS VSS VSS nfet_06v0_dss w=16u l=0.6u ad=60.48p as=4.48p pd=39.56u ps=32.56u d_sab=3.78u s_sab=0.28u
+X2 PAD_P VSS VSS VSS nfet_06v0_dss w=16u l=0.6u ad=60.48p as=4.48p pd=39.56u ps=32.56u d_sab=3.78u s_sab=0.28u
+X3 PAD_P VSS VSS VSS nfet_06v0_dss w=16u l=0.6u ad=60.48p as=4.48p pd=39.56u ps=32.56u d_sab=3.78u s_sab=0.28u
+C2 PAD_N VSS 2.40147e-13
+C7 PAD_P VSS 2.19113e-13
+C10 PAD_P PAD_N 2.97245e-15
+.ends pad_rf_transmit_flat_physical

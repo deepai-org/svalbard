@@ -1,0 +1,3210 @@
+Wired pad candidate with explicit core control interfaces
+.include /home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/design.ngspice
+.lib /home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.ngspice typical
+.lib /home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.ngspice res_typical
+.temp 27
+.subckt tx_protected_pad PAD_P PAD_N VDD VSS TERM_VCM TERM_ENABLE DIFF_ENABLE DIV_ENABLE BYPASS_ENABLE RX_P RX_N HS_PBIAS HS_P HS_N FS_HIGH_P FS_HIGH_N FS_LOW_P FS_LOW_N PULLUP_P PULLUP_N PULLDOWN_P PULLDOWN_N
+XPHYSICAL PAD_P PAD_N VDD VSS TERM_VCM TERM_ENABLE DIFF_ENABLE DIV_ENABLE BYPASS_ENABLE RX_P RX_N HS_PBIAS HS_P HS_N FS_HIGH_P FS_HIGH_N FS_LOW_P FS_LOW_N PULLUP_P PULLUP_N PULLDOWN_P PULLDOWN_N ESD_RAIL combined_flat
+.ends tx_protected_pad
+* NGSPICE file created from combined_flat.ext - technology: gf180mcuD
+
+.subckt combined_flat PAD_P PAD_N VDD VSS TERM_VCM TERM_ENABLE DIFF_ENABLE DIV_ENABLE
++ BYPASS_ENABLE RX_P RX_N HS_PBIAS HS_P HS_N FS_HIGH_P FS_HIGH_N FS_LOW_P FS_LOW_N
++ PULLUP_P PULLUP_N PULLDOWN_P PULLDOWN_N ESD_RAIL
+X0 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X1 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X2 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X3 ESD_RAIL a_44789_189064# a_42245_162628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X4 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X5 TERM_P_R TERM_GATE_P TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X6 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X7 HS_N_5 HS_N PAD_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+D0 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
+X8 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X9 TERM_GATE_P TERM_GATE_P_BLEED_0 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X10 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X11 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X12 FS_P_CONTROL_S VDD VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X13 HS_P_4 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X14 TERM_N_R TERM_GATE_N TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X15 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X16 TERM_P_R TERM_GATE_P TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X17 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X18 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X19 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X20 PULLUP_N_OUT PULLUP_N_GATE PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X21 HS_N_4 HS_N PAD_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X22 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X23 TERM_N_R TERM_GATE_N TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+D1 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+X24 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X25 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X26 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X27 FS_P_WELL FS_P_BLEED_0 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X28 TERM_GATE_N TERM_GATE_N_BLEED_0 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X29 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X30 TERM_OR_N_B FS_LOW_N TERM_OR_N_S VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X31 PULLUP_P_BLEED_2 PULLUP_P_BLEED_3 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X32 PULLUP_P_GATE VDD PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X33 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X34 PULLUP_N_OUT PULLUP_N_GATE PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X35 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X36 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X37 ESD_RAIL a_41005_203545# a_43813_189064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X38 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X39 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X40 FS_N_WELL FS_N_BLEED_0 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X41 HS_P_9 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+D2 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
+X42 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X43 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X44 a_42245_162628# a_44789_189064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X45 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X46 HS_N_9 HS_N PAD_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X47 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X48 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X49 a_41005_204385# a_53878_204105# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X50 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X51 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X52 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X53 HS_P_7 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X54 PULLUP_P_GATE PULLUP_P PULLUP_P_CONTROL_S VSS nfet_06v0 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.7u
+X55 HS_P_11 HS_P PAD_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X56 PULLUP_N_CONTROL_S VDD VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X57 TERM_P_R TERM_GATE_P TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X58 PAD_P PULLDOWN_P_R VSS ppolyf_u_1k r_width=1u r_length=14.2u
+D3 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+X59 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X60 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X61 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X62 a_42245_162628# a_44789_189064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X63 PAD_P BYPASS_ENABLE RX_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X64 HS_N_6 HS_N PAD_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+D4 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X65 DIV_LOW_P DIV_ENABLE VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X66 HS_N_7 HS_N PAD_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X67 a_42245_162628# a_44789_189064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X68 PULLUP_P_OUT PULLUP_P_GATE PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X69 ESD_RAIL a_44789_189064# a_42245_162628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X70 TERM_P_R DIFF_ENABLE TERM_N_R VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X71 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X72 HS_N_2 HS_N PAD_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X73 TERM_OR_N_B FS_LOW_N TERM_OR_N_NS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X74 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X75 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X76 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X77 HS_N_7 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X78 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X79 PULLUP_N_OUT PULLUP_N_GATE PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X80 a_42245_162628# a_44789_189064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X81 ESD_RAIL a_44789_189064# a_42245_162628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X82 a_42245_162628# a_44789_189064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X83 ESD_RAIL a_41005_203545# a_43813_189064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X84 FS_P_BLEED_1 FS_P_BLEED_2 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X85 HS_N_9 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X86 PULLUP_N_BLEED_5 PULLUP_N_BLEED_6 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X87 a_41005_203825# a_53878_204105# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X88 TERM_P_R DIFF_ENABLE TERM_N_R VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X89 TERM_OR_P_S TERM_ENABLE VDD VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X90 FS_P_BLEED_3 FS_P_BLEED_4 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X91 PULLUP_P_OUT PULLUP_P_GATE PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X92 a_42245_162628# a_44789_189064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X93 HS_N_13 HS_N PAD_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X94 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X95 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X96 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X97 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X98 HS_N_3 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X99 VCM_LOW_OK TERM_VCM VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X100 PULLUP_N_BLEED_3 PULLUP_N_BLEED_4 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X101 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X102 FS_N_OUT PAD_N VSS ppolyf_s r_width=1u r_length=2.16u
+X103 HS_P_11 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+D5 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X104 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X105 a_41005_204945# a_53878_205225# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X106 a_42245_162628# a_44789_189064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X107 FS_N_GATE FS_HIGH_N FS_N_CONTROL_S VSS nfet_06v0 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.7u
+X108 PULLUP_P_OUT PAD_P VSS ppolyf_u_1k r_width=1u r_length=1.18u
+X109 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X110 HS_P_3 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X111 FS_N_BLEED_2 FS_N_BLEED_3 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X112 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X113 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X114 VSS a_44789_189064# a_42245_162628# VSS nfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+X115 ESD_RAIL a_44789_189064# a_42245_162628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X116 a_42245_162628# a_44789_189064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X117 PULLUP_P_CONTROL_S VDD VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X118 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X119 ESD_RAIL a_44789_189064# a_42245_162628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X120 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X121 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X122 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X123 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X124 a_41005_206065# a_53878_206345# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X125 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X126 a_42245_162628# a_44789_189064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X127 ESD_RAIL a_44789_189064# a_42245_162628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X128 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X129 TERM_OR_N_S TERM_ENABLE VDD VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X130 a_42245_162628# a_44789_189064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X131 HS_P_13 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X132 a_43813_189064# a_41005_203545# VSS VSS nfet_06v0 ad=2.2p pd=10.88u as=2.2p ps=10.88u w=5u l=0.7u
+X133 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X134 PAD_N DIV_N VSS ppolyf_u_1k r_width=1u r_length=2u
+X135 ESD_RAIL VSS cap_mim_2f0_m4m5_noshield c_width=31.6u c_length=31.6u
+X136 TERM_GATE_N_BLEED_2 VSS VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X137 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X138 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X139 a_42245_162628# a_44789_189064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X140 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X141 PULLUP_P_BLEED_5 PULLUP_P_BLEED_6 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X142 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X143 VSS a_43813_189064# a_44789_189064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X144 a_42245_162628# a_44789_189064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X145 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+D6 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X146 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+D7 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X147 VSS a_43813_189064# a_44789_189064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X148 TERM_OR_P_B VCM_LOW_OK TERM_OR_P_S VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X149 VCM_LOW_OK TERM_VCM VSS VSS nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X150 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X151 VSS ESD_RAIL VSS ppolyf_u_1k_6p0 r_width=1u r_length=9.98874m
+X152 TERM_GATE_P_BLEED_2 VSS VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X153 PAD_P TERM_P_R VSS ppolyf_s r_width=1u r_length=3.29u
+X154 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X155 FS_N_GATE VDD FS_N_WELL FS_N_WELL pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X156 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X157 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X158 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X159 HS_N_12 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X160 PULLUP_N_GATE VDD PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X161 HS_P_10 HS_P PAD_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X162 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X163 TERM_P_R TERM_GATE_P TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X164 PAD_N PULLDOWN_N_R VSS ppolyf_u_1k r_width=1u r_length=14.2u
+X165 PAD_P BYPASS_ENABLE RX_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X166 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X167 HS_P_5 HS_P PAD_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X168 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X169 DIV_P DIV_ENABLE RX_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X170 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X171 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X172 HS_P_6 HS_P PAD_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+D8 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X173 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X174 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X175 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X176 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X177 DIV_LOW_N DIV_ENABLE VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X178 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X179 VDD PULLUP_N_GATE PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X180 TERM_P_R TERM_GATE_P TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X181 HS_P_3 HS_P PAD_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X182 FS_P_BLEED_0 FS_P_BLEED_1 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X183 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D9 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X184 TERM_GATE_N TERM_OR_N_B VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X185 FS_P_BLEED_2 FS_P_BLEED_3 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+D10 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X186 VDD PULLUP_P_GATE PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+D11 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X187 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X188 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X189 TERM_N_R TERM_GATE_N TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X190 PULLDOWN_N_R PULLDOWN_N VSS VSS nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X191 HS_P_12 HS_P PAD_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X192 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X193 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X194 HS_N_2 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X195 VDD PULLUP_N_GATE PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X196 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X197 FS_N_BLEED_3 FS_N_BLEED_4 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X198 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X199 DIV_N DIV_ENABLE RX_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X200 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X201 a_41005_203825# a_53878_203545# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X202 FS_P_GATE FS_HIGH_P FS_P_CONTROL_S VSS nfet_06v0 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.7u
+X203 HS_P_10 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X204 a_44789_189064# a_43813_189064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X205 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X206 VSS RX_P VSS ppolyf_u_1k_6p0 r_width=1u r_length=0.31954m
+X207 TERM_N_R TERM_GATE_N TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X208 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X209 PULLUP_N_OUT PAD_N VSS ppolyf_u_1k r_width=1u r_length=1.18u
+X210 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X211 PULLUP_N_GATE PULLUP_N PULLUP_N_CONTROL_S VSS nfet_06v0 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.7u
+X212 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X213 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X214 FS_N_BLEED_1 FS_N_BLEED_2 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X215 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X216 a_41005_204945# a_53878_204665# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X217 PULLUP_P_BLEED_0 PULLUP_P_BLEED_1 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X218 HS_P_6 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X219 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X220 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X221 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X222 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X223 HS_P_12 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X224 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X225 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X226 PULLUP_N_BLEED_0 PULLUP_N_BLEED_1 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X227 TERM_GATE_N_BLEED_1 TERM_GATE_N_BLEED_2 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X228 ESD_RAIL a_44789_189064# a_42245_162628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X229 PULLUP_P_BLEED_4 PULLUP_P_BLEED_5 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X230 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X231 FS_N_CONTROL_S VDD VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X232 TERM_GATE_P TERM_OR_P_B VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X233 HS_N_8 HS_N PAD_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X234 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X235 HS_N_13 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X236 PULLUP_N_BLEED_6 PULLUP_N_GATE VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X237 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X238 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X239 TERM_OR_P_B FS_LOW_P TERM_OR_P_S VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X240 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X241 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X242 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X243 TERM_P_R DIFF_ENABLE TERM_N_R VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X244 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X245 a_43813_189064# a_41005_203545# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X246 a_42245_162628# a_44789_189064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X247 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X248 TERM_GATE_P TERM_OR_P_B VDD VDD pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X249 VSS RX_N VSS ppolyf_u_1k_6p0 r_width=1u r_length=0.31954m
+X250 HS_N_11 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X251 a_41005_203545# VSS cap_mim_2f0_m4m5_noshield c_width=31.6u c_length=31.6u
+X252 TERM_OR_P_B FS_LOW_P TERM_OR_P_NS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X253 FS_N_BLEED_5 FS_N_BLEED_6 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X254 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X255 a_44789_189064# a_43813_189064# ESD_RAIL ESD_RAIL pfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+X256 a_41005_206065# a_53878_205785# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X257 PULLUP_N_BLEED_2 PULLUP_N_BLEED_3 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X258 FS_P_BLEED_5 FS_P_BLEED_6 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+D12 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
+X259 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X260 PULLUP_P_OUT PULLUP_P_GATE PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X261 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X262 HS_N_1 HS_N PAD_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X263 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X264 HS_N_5 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X265 ESD_RAIL a_44789_189064# a_42245_162628# ESD_RAIL pfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+X266 a_42245_162628# a_44789_189064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X267 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X268 DIV_N DIV_LOW_N VSS ppolyf_u_1k r_width=1u r_length=2u
+D13 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+X269 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X270 HS_N_10 HS_N PAD_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X271 TERM_P_R TERM_GATE_P TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X272 PAD_N BYPASS_ENABLE RX_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X273 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X274 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X275 ESD_RAIL a_44789_189064# a_42245_162628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X276 HS_N_3 HS_N PAD_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X277 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X278 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X279 PULLUP_N_OUT PULLUP_N_GATE PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X280 ESD_RAIL a_43813_189064# a_44789_189064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X281 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D14 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
+X282 TERM_N_R TERM_GATE_N TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X283 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X284 a_42245_162628# a_44789_189064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X285 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X286 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X287 a_43813_189064# a_41005_203545# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X288 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X289 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X290 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X291 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X292 TERM_OR_N_B VCM_LOW_OK TERM_OR_N_S VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X293 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X294 HS_N_1 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X295 HS_P_1 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X296 PULLUP_P_BLEED_1 PULLUP_P_BLEED_2 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X297 a_44789_189064# a_43813_189064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D15 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+X298 TERM_N_R TERM_GATE_N TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X299 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X300 HS_P_0 HS_P PAD_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X301 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X302 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X303 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X304 PAD_P BYPASS_ENABLE RX_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X305 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X306 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X307 PULLUP_P_OUT PULLUP_P_GATE PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X308 PAD_P BYPASS_ENABLE RX_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X309 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X310 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X311 ESD_RAIL a_44789_189064# a_42245_162628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X312 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X313 PULLUP_P_WELL PULLUP_P_BLEED_0 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+D16 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X314 HS_P_5 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X315 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X316 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X317 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X318 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X319 HS_P_8 HS_P PAD_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X320 PULLUP_N_WELL PULLUP_N_BLEED_0 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X321 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X322 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X323 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X324 a_41005_203545# a_53878_203545# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X325 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X326 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X327 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X328 VSS a_43813_189064# a_44789_189064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X329 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X330 TERM_GATE_P_BLEED_0 TERM_GATE_P_BLEED_1 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X331 HS_P_7 HS_P PAD_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X332 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X333 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X334 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X335 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X336 FS_P_BLEED_6 FS_P_GATE VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X337 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X338 VSS a_44789_189064# a_42245_162628# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X339 VDD PULLUP_P_GATE PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X340 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X341 DIV_P DIV_LOW_P VSS ppolyf_u_1k r_width=1u r_length=2u
+X342 VSS a_44789_189064# a_42245_162628# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X343 TERM_N_R TERM_GATE_N TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X344 TERM_P_R DIFF_ENABLE TERM_N_R VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X345 TERM_OR_N_B TERM_ENABLE VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X346 HS_P_1 HS_P PAD_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X347 ESD_RAIL a_44789_189064# a_42245_162628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X348 TERM_P_R TERM_GATE_P TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X349 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X350 HS_N_6 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X351 HS_P_4 HS_P PAD_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X352 a_41005_204385# a_53878_204665# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X353 TERM_N_R TERM_GATE_N TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X354 FS_P_GATE VDD FS_P_WELL FS_P_WELL pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X355 FS_N_BLEED_4 FS_N_BLEED_5 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+D17 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X356 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X357 a_44789_189064# a_43813_189064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D18 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X358 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X359 TERM_GATE_N_BLEED_0 TERM_GATE_N_BLEED_1 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X360 PULLUP_N_BLEED_1 PULLUP_N_BLEED_2 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X361 FS_P_BLEED_4 FS_P_BLEED_5 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X362 VDD PULLUP_P_GATE PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X363 PULLUP_P_BLEED_3 PULLUP_P_BLEED_4 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X364 FS_N_BLEED_6 FS_N_GATE VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X365 TERM_GATE_N TERM_OR_N_B VDD VDD pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X366 HS_P_13 HS_P PAD_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X367 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X368 VDD PULLUP_N_GATE PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X369 HS_N_4 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X370 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X371 a_41005_205505# a_53878_205785# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X372 FS_N_BLEED_0 FS_N_BLEED_1 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X373 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X374 HS_N_12 HS_N PAD_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X375 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X376 PAD_N BYPASS_ENABLE RX_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X377 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X378 PULLDOWN_P_R PULLDOWN_P VSS VSS nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X379 HS_P_9 HS_P PAD_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X380 VDD PULLUP_N_GATE PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+D19 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X381 HS_P_2 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X382 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X383 HS_P_8 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X384 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X385 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X386 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X387 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X388 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X389 ESD_RAIL a_44789_189064# a_42245_162628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X390 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X391 PAD_P DIV_P VSS ppolyf_u_1k r_width=1u r_length=2u
+X392 HS_N_0 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X393 HS_P_0 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X394 a_41005_205505# a_53878_205225# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X395 a_44789_189064# a_43813_189064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X396 TERM_P_R TERM_GATE_P TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X397 PULLUP_P_BLEED_6 PULLUP_P_GATE VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X398 HS_P_2 HS_P PAD_P VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X399 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X400 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X401 HS_N_8 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X402 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X403 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X404 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X405 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X406 VSS a_42245_162628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X407 VDD PULLUP_P_GATE PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X408 FS_P_OUT PAD_P VSS ppolyf_s r_width=1u r_length=2.16u
+X409 HS_N_10 HS_PBIAS VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X410 TERM_OR_P_B TERM_ENABLE VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X411 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X412 TERM_P_R DIFF_ENABLE TERM_N_R VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X413 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X414 ESD_RAIL a_53878_206345# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X415 TERM_OR_N_NS VCM_LOW_OK VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X416 TERM_OR_P_NS VCM_LOW_OK VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X417 TERM_GATE_P_BLEED_1 TERM_GATE_P_BLEED_2 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X418 PAD_N TERM_N_R VSS ppolyf_s r_width=1u r_length=3.29u
+X419 HS_N_11 HS_N PAD_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X420 HS_N_0 HS_N PAD_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X421 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X422 PAD_N BYPASS_ENABLE RX_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X423 PAD_N BYPASS_ENABLE RX_N VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X424 PULLUP_N_BLEED_4 PULLUP_N_BLEED_5 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X425 ESD_RAIL a_42245_162628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+C0 TERM_ENABLE FS_HIGH_P 0.02051f
+C1 HS_N_8 HS_P_0 0.03523f
+C2 HS_P_6 HS_P_7 31.6746f
+C3 VCM_LOW_OK PULLDOWN_P_R 0.06553f
+C4 TERM_ENABLE FS_P_BLEED_1 0.11038f
+C5 FS_N_GATE FS_N_BLEED_6 1.43361f
+C6 TERM_ENABLE PULLDOWN_N 0.06103f
+C7 TERM_OR_N_S HS_N_2 0.06335f
+C8 VDD HS_P_3 6.14484f
+C9 HS_N_4 FS_P_BLEED_4 0.03258f
+C10 FS_LOW_P HS_N_8 0.08561f
+C11 HS_N_5 PULLUP_P 0
+C12 HS_N_6 TERM_OR_P_B 0.07211f
+C13 FS_N_BLEED_2 FS_N_BLEED_0 0.11777f
+C14 VDD HS_P_2 5.70329f
+C15 DIV_N HS_N 0.04977f
+C16 PULLUP_P_WELL FS_P_BLEED_0 0
+C17 VDD TERM_GATE_P_BLEED_1 0.07121f
+C18 DIV_ENABLE DIV_N 33.0014f
+C19 FS_N_WELL PULLDOWN_N_R 2.2767f
+C20 TERM_GATE_N FS_HIGH_P 0.00415f
+C21 HS_P_7 HS_P_3 0.06116f
+C22 PULLUP_P_BLEED_1 PULLUP_P_BLEED_4 0.0078f
+C23 TERM_OR_N_B TERM_N_R 5.99904f
+C24 HS_N_13 HS_N_1 0.09085f
+C25 HS_N_6 PULLUP_P_BLEED_6 0.03306f
+C26 HS_N_13 FS_P_BLEED_5 0.06178f
+C27 HS_N_3 PULLDOWN_N_R 0.02404f
+C28 HS_N_13 TERM_GATE_N_BLEED_1 0.03489f
+C29 HS_PBIAS PULLUP_N_BLEED_1 0.04828f
+C30 HS_P_7 HS_P_2 0.06184f
+C31 HS_P_13 HS_P_0 0.01899f
+C32 PULLDOWN_N PULLUP_N_BLEED_4 0.00763f
+C33 TERM_ENABLE FS_P_OUT 0.54337f
+C34 TERM_OR_N_S PULLUP_P_BLEED_6 0.00257f
+C35 HS_P_6 HS_P_12 0.07018f
+C36 FS_LOW_N HS_N_8 0.04574f
+C37 TERM_ENABLE HS_P_10 0.0768f
+C38 HS_N_13 PULLUP_P_BLEED_4 0.03489f
+C39 VCM_LOW_OK HS_P_9 0.0458f
+C40 DIFF_ENABLE TERM_ENABLE 0.03355f
+C41 HS_P_5 HS_N_13 0.03489f
+C42 HS_P_13 FS_LOW_P 0.04601f
+C43 TERM_GATE_P HS_N_8 0.12805f
+C44 HS_N_13 HS_N_4 0.14463f
+C45 PULLUP_P_CONTROL_S PULLUP_P_OUT 0.01177f
+C46 PAD_P TERM_P_R 0.15545f
+C47 HS_N_2 HS_PBIAS 2.89631f
+C48 HS_N_5 FS_P_BLEED_0 0.06178f
+C49 VCM_LOW_OK HS_N_0 0.03489f
+C50 PULLUP_P_WELL FS_P_GATE 0.00565f
+C51 PULLUP_N_GATE PULLDOWN_N_R 1.24845f
+C52 PULLUP_N_OUT DIV_N 0
+C53 FS_P_BLEED_1 HS_P 0.06178f
+C54 FS_N_CONTROL_S FS_N_OUT 0.04187f
+C55 HS_N_3 PULLUP_P_GATE 0.07211f
+C56 HS_P_12 HS_P_3 0.02899f
+C57 FS_N_WELL TERM_N_R 1.69175f
+C58 TERM_ENABLE VDD 14.7303f
+C59 PAD_P HS_P_8 1.09993f
+C60 PAD_P HS_N_7 0.03829f
+C61 HS_N HS_P_11 0.6688f
+C62 FS_LOW_P FS_P_BLEED_2 0.07139f
+C63 PULLUP_P_BLEED_3 PULLUP_P_BLEED_4 3.81017f
+C64 PAD_P HS_P_1 1.23389f
+C65 HS_P_12 HS_P_2 0.00206f
+C66 PULLUP_N_CONTROL_S PULLDOWN_P 0.03065f
+C67 HS_N_9 TERM_GATE_P_BLEED_0 0.00105f
+C68 HS_N_3 TERM_N_R 0.05893f
+C69 HS_P_8 TERM_P_R 0.08296f
+C70 HS_N_7 TERM_P_R 0.0959f
+C71 VDD PULLUP_N_BLEED_0 0.77784f
+C72 FS_N_BLEED_3 PULLUP_N_WELL 0
+C73 a_53878_206345# a_53878_205785# 0.0346f
+C74 HS_N_13 PULLDOWN_P 0.04428f
+C75 HS_P_13 TERM_GATE_P 0.15775f
+C76 TERM_ENABLE HS_P_7 0.02404f
+C77 HS_N_2 TERM_OR_P_B 0.07258f
+C78 TERM_P_R HS_P_1 0.10249f
+C79 HS_PBIAS PULLUP_P_BLEED_6 0.17406f
+C80 FS_LOW_P FS_N_BLEED_5 0.06639f
+C81 TERM_VCM TERM_OR_N_NS 0.05974f
+C82 TERM_GATE_N VDD 5.37222f
+C83 FS_N_BLEED_2 FS_N_BLEED_6 0.00763f
+C84 HS_N_1 PULLUP_P_WELL 0.23015f
+C85 PULLUP_P_WELL FS_P_BLEED_5 0
+C86 FS_N_OUT HS_N 1.24111f
+C87 HS_P_8 HS_P_1 0.02404f
+C88 HS_N_7 HS_P_1 0
+C89 FS_P_OUT HS_P 0.68531f
+C90 HS_N_5 FS_P_GATE 1.02138f
+C91 FS_P_BLEED_6 FS_N_OUT 0.04877f
+C92 DIV_ENABLE FS_N_OUT 0.15376f
+C93 VCM_LOW_OK FS_P_WELL 1.37128f
+C94 PULLUP_N_GATE TERM_N_R 0.16855f
+C95 FS_LOW_P DIV_LOW_N 0.08856f
+C96 HS_N_2 PULLUP_P_BLEED_6 0.02404f
+C97 PULLUP_N_BLEED_2 TERM_P_R 0.00257f
+C98 DIFF_ENABLE HS_P 0.1651f
+C99 HS_P HS_P_10 2.44809f
+C100 HS_N_12 PULLDOWN_N_R 0.06159f
+C101 VCM_LOW_OK HS_N_10 0.03489f
+C102 PULLUP_N_OUT HS_P_11 0.08824f
+C103 PULLUP_P_WELL PULLUP_P_BLEED_4 0.00257f
+C104 TERM_GATE_N_BLEED_2 HS_N_8 0.0525f
+C105 PULLUP_P_WELL HS_N_4 0.18371f
+C106 PULLUP_P_CONTROL_S HS_N_8 0.03489f
+C107 PAD_N PULLDOWN_N_R 4.48191f
+C108 FS_LOW_N FS_N_BLEED_5 0
+C109 TERM_ENABLE HS_P_12 0.02404f
+C110 HS_N_6 HS_N_11 0
+C111 VCM_LOW_OK TERM_OR_P_S 1.87902f
+C112 FS_N_BLEED_1 FS_N_BLEED_3 0.12036f
+C113 VDD HS_P 1.70325f
+C114 PULLUP_P_BLEED_1 PULLDOWN_P_R 0.01413f
+C115 PAD_P HS_P_4 1.13663f
+C116 HS_N_0 FS_P_BLEED_3 0
+C117 HS_N_1 HS_N_5 0.04302f
+C118 TERM_VCM TERM_OR_P_NS 0.0013f
+C119 PAD_P PULLUP_P_OUT 0.43807f
+C120 DIV_LOW_N FS_LOW_N 0.06178f
+C121 TERM_OR_N_S HS_N_11 0.06335f
+C122 HS_N_5 FS_P_BLEED_5 0.06219f
+C123 TERM_GATE_N_BLEED_0 TERM_GATE_N_BLEED_2 0
+C124 TERM_P_R HS_P_4 0.1254f
+C125 HS_N_5 TERM_GATE_N_BLEED_1 0.03489f
+C126 VCM_LOW_OK PULLUP_P_BLEED_2 0.01462f
+C127 VCM_LOW_OK HS_N_9 0.03624f
+C128 PULLUP_N_OUT FS_N_OUT 0.514f
+C129 PULLUP_P_GATE HS_N_12 0.07326f
+C130 HS_P_6 DIV_P 0.03388f
+C131 PULLUP_P_OUT TERM_P_R 0.30489f
+C132 HS_P_7 HS_P 0.53303f
+C133 HS_N_3 DIV_N 0.03354f
+C134 HS_N_13 PULLDOWN_P_R 0.02404f
+C135 HS_P_8 HS_P_4 0.0312f
+C136 HS_N_5 PULLUP_P_BLEED_4 0.03489f
+C137 HS_P_5 HS_N_5 0.10295f
+C138 TERM_ENABLE PULLUP_P 0.09052f
+C139 TERM_N_R HS_N_12 0.0597f
+C140 HS_N_5 HS_N_4 0.12189p
+C141 TERM_GATE_P TERM_GATE_P_BLEED_2 0.40344f
+C142 HS_N_7 PULLUP_P_OUT 0.02404f
+C143 TERM_VCM HS_N_6 0.13016f
+C144 HS_P_1 HS_P_4 0.03207f
+C145 FS_N_GATE PULLDOWN_P 1.32493f
+C146 HS_P_8 PULLUP_P_OUT 0.00135f
+C147 HS_N_0 FS_P_BLEED_4 0.02973f
+C148 PAD_N TERM_N_R 0.08909f
+C149 PAD_N RX_P 1.67336f
+C150 PULLUP_P PULLUP_N_BLEED_0 0.10442f
+C151 TERM_OR_N_S TERM_VCM 0
+C152 FS_P_BLEED_3 FS_P_WELL 0.00602f
+C153 TERM_ENABLE FS_N_BLEED_6 0.06151f
+C154 HS_N_10 FS_P_BLEED_3 0
+C155 PAD_P BYPASS_ENABLE 8.2284f
+C156 TERM_GATE_N PULLUP_P 0.26296f
+C157 FS_LOW_P FS_N_CONTROL_S 0.04634f
+C158 HS_PBIAS HS_N_11 1.09598f
+C159 HS_P_12 HS_P 3.63983f
+C160 PULLUP_P PULLUP_N_BLEED_4 0
+C161 HS_N_1 HS_P_6 0.06023f
+C162 HS_N_5 PULLDOWN_P 0.05303f
+C163 a_53878_204665# a_53878_204105# 0.0346f
+C164 HS_N_13 PULLUP_P_BLEED_5 0.0525f
+C165 FS_HIGH_N PULLUP_N_BLEED_1 0.16603f
+C166 FS_P_BLEED_1 PULLDOWN_N_R 0.10124f
+C167 PAD_P HS_N_8 0.43522f
+C168 HS_PBIAS FS_HIGH_N 0.03743f
+C169 HS_N_2 HS_N_11 0.03504f
+C170 PULLDOWN_N PULLDOWN_N_R 5.82803f
+C171 TERM_ENABLE FS_P_BLEED_0 0.08071f
+C172 HS_N HS_P_0 0.54906f
+C173 HS_PBIAS FS_N_BLEED_4 0.08856f
+C174 TERM_P_R HS_N_8 0.10054f
+C175 HS_N_13 HS_N_0 0.07747f
+C176 HS_N_10 FS_P_BLEED_4 0.02915f
+C177 HS_P_5 HS_P_6 32.3343f
+C178 TERM_VCM PULLUP_N_BLEED_1 0.04263f
+C179 TERM_VCM HS_PBIAS 0.8645f
+C180 PULLUP_P_OUT HS_P_4 0.05519f
+C181 PULLUP_P_WELL PULLDOWN_P_R 0.54541f
+C182 HS_P_6 HS_N_4 0.0599f
+C183 HS_N_11 TERM_OR_P_B 0.07338f
+C184 DIV_N DIV_LOW_P 0.89345f
+C185 FS_LOW_P HS_N 0.10015f
+C186 HS_P_8 HS_N_8 0.09066f
+C187 HS_N_7 HS_N_8 0.11905p
+C188 FS_LOW_P DIV_ENABLE 0.10858f
+C189 HS_N_1 HS_P_3 0.02599f
+C190 FS_N_WELL FS_N_OUT 0.22656p
+C191 PULLUP_P_BLEED_3 PULLUP_P_BLEED_5 0
+C192 FS_HIGH_P PULLUP_P_GATE 0.02645f
+C193 HS_N_3 FS_N_OUT 0.06167f
+C194 HS_N_1 HS_P_2 0.00649f
+C195 DIV_N HS_N_12 0.03311f
+C196 HS_P_1 HS_N_8 0.02866f
+C197 FS_P_BLEED_1 PULLUP_P_GATE 0
+C198 TERM_VCM HS_N_2 0.12324f
+C199 TERM_P_R TERM_GATE_N_BLEED_0 0.10627f
+C200 PAD_P HS_P_13 1.35247f
+C201 FS_P_OUT PULLDOWN_N_R 0.68986f
+C202 HS_N_11 PULLUP_P_BLEED_6 0.02434f
+C203 FS_HIGH_P TERM_N_R 0.09473f
+C204 HS_P_5 HS_P_3 0.03192f
+C205 TERM_ENABLE FS_P_GATE 1.01177f
+C206 HS_P_10 PULLDOWN_N_R 0.07466f
+C207 PAD_N DIV_N 0.68859f
+C208 FS_P_BLEED_1 TERM_N_R 0.11444f
+C209 HS_P FS_N_BLEED_6 0.04811f
+C210 DIFF_ENABLE PULLDOWN_N_R 0
+C211 HS_P_13 TERM_P_R 0.08554f
+C212 HS_N_9 FS_P_BLEED_4 0.0479f
+C213 PULLDOWN_N TERM_N_R 0.20696f
+C214 HS_N_4 HS_P_3 0.00972f
+C215 FS_P_CONTROL_S FS_N_OUT 0.00663f
+C216 HS_P_5 HS_P_2 0.03142f
+C217 HS_N_13 FS_P_WELL 1.9566f
+C218 PULLUP_N_OUT HS_P_0 0.09237f
+C219 FS_LOW_N HS_N 0.07689f
+C220 FS_N_BLEED_2 PULLDOWN_P 0.07407f
+C221 HS_N_4 HS_P_2 0.00376f
+C222 TERM_VCM TERM_OR_P_B 0.06303f
+C223 DIV_ENABLE FS_LOW_N 0.0351f
+C224 HS_N_5 PULLDOWN_P_R 0.02404f
+C225 HS_N TERM_GATE_P 0.17562f
+C226 DIV_ENABLE TERM_GATE_P 0.00432f
+C227 HS_P_8 HS_P_13 0.05624f
+C228 HS_P_13 HS_N_7 0.02404f
+C229 HS_N_13 HS_N_10 0.03794f
+C230 PULLUP_N PULLUP_N_BLEED_3 0.18975f
+C231 FS_LOW_P PULLUP_N_OUT 0.07132f
+C232 VDD PULLDOWN_N_R 3.41738f
+C233 FS_P_BLEED_2 TERM_P_R 0.04766f
+C234 FS_P_BLEED_0 HS_P 0.06178f
+C235 PULLUP_P_WELL PULLUP_P_BLEED_5 0
+C236 HS_P_13 HS_P_1 0.11352f
+C237 PULLUP_P_BLEED_2 PULLUP_P_BLEED_1 0.76129f
+C238 ESD_RAIL a_53878_205225# 0.53916f
+C239 HS_N_0 PULLUP_P_WELL 0.38231f
+C240 FS_P_OUT TERM_N_R 0.38548f
+C241 HS_P_11 HS_N_12 0.11035f
+C242 TERM_ENABLE HS_N_1 0.10607f
+C243 FS_P_BLEED_2 HS_N_7 0.03472f
+C244 FS_P_OUT RX_P 0.01238f
+C245 HS_P_7 PULLDOWN_N_R 0.02418f
+C246 HS_P_4 HS_N_8 0.02404f
+C247 TERM_ENABLE TERM_GATE_N_BLEED_1 0.04881f
+C248 TERM_N_R HS_P_10 0.05037f
+C249 PULLUP_N_WELL PULLUP_N_BLEED_3 0.002f
+C250 TERM_P_R FS_N_BLEED_5 0.11141f
+C251 HS_N_13 HS_N_9 0.15155f
+C252 DIFF_ENABLE TERM_N_R 4.32386f
+C253 PULLUP_P_OUT HS_N_8 0.02404f
+C254 PAD_N HS_P_11 1.42473f
+C255 HS_P DIV_P 0.08005f
+C256 ESD_RAIL a_53878_205785# 0.53942f
+C257 PULLUP_N_OUT FS_LOW_N 0.06426f
+C258 RX_P RX_N 12.5825f
+C259 PULLUP_P_CONTROL_S PULLUP_P_BLEED_0 0
+C260 TERM_ENABLE HS_P_5 0.02404f
+C261 PULLUP_P_GATE VDD 16.5757f
+C262 FS_N_OUT DIV_LOW_P 0.05525f
+C263 TERM_ENABLE PULLUP_P_BLEED_4 0.06028f
+C264 PULLUP_N_OUT TERM_GATE_P 0.37427f
+C265 TERM_ENABLE HS_N_4 0.04808f
+C266 HS_N_5 PULLUP_P_BLEED_5 0.0525f
+C267 FS_P_GATE HS_P 1.05516f
+C268 FS_N_OUT HS_N_12 0.00528f
+C269 VCM_LOW_OK TERM_OR_N_NS 2.03284f
+C270 TERM_GATE_N HS_N_1 0.05206f
+C271 VDD TERM_N_R 6.61679f
+C272 HS_N_6 TERM_GATE_P_BLEED_0 0
+C273 DIV_N FS_HIGH_P 8.52636f
+C274 TERM_GATE_N TERM_GATE_N_BLEED_1 0.56312f
+C275 HS_N_0 HS_N_5 0.03911f
+C276 HS_P_6 PULLDOWN_P_R 0.02404f
+C277 HS_N_7 DIV_LOW_N 0.06178f
+C278 PULLUP_P_BLEED_2 PULLUP_P_BLEED_3 2.29663f
+C279 TERM_P_R TERM_GATE_P_BLEED_2 0.06551f
+C280 HS_P_13 HS_P_4 0.14463f
+C281 PAD_N FS_N_OUT 4.10443f
+C282 HS_P_12 PULLDOWN_N_R 0.02404f
+C283 PULLUP_P_WELL HS_N_10 0.2167f
+C284 HS_N TERM_GATE_N_BLEED_2 0.10264f
+C285 PULLUP_P_CONTROL_S HS_N 0.04828f
+C286 DIV_ENABLE TERM_GATE_N_BLEED_2 0
+C287 TERM_OR_N_B FS_LOW_N 1.10292f
+C288 TERM_GATE_N HS_N_4 0.04808f
+C289 TERM_ENABLE PULLDOWN_P 0.03743f
+C290 FS_N_GATE HS_N_10 0.0213f
+C291 PULLDOWN_P_R HS_P_3 0.07466f
+C292 HS_N_1 HS_P 0.17892f
+C293 FS_LOW_P FS_N_WELL 1.62691f
+C294 FS_P_BLEED_5 HS_P 0.06337f
+C295 FS_P_BLEED_2 PULLUP_P_OUT 0.05902f
+C296 TERM_GATE_N_BLEED_1 HS_P 0.03489f
+C297 a_53878_203545# a_53878_204105# 0.0346f
+C298 PULLDOWN_P PULLUP_N_BLEED_0 0.00106f
+C299 PULLDOWN_P_R HS_P_2 0.07466f
+C300 HS_N_3 FS_LOW_P 0.08505f
+C301 VCM_LOW_OK TERM_OR_P_NS 2.92628f
+C302 FS_P_OUT DIV_N 0.06954f
+C303 PULLUP_P PULLDOWN_N_R 0.05768f
+C304 PULLDOWN_P_R TERM_GATE_P_BLEED_1 0.01413f
+C305 FS_N_GATE FS_N_BLEED_3 0.1926f
+C306 PULLUP_P_BLEED_2 PULLUP_P_WELL 0.12013f
+C307 HS_N_5 FS_P_WELL 1.93199f
+C308 HS_N_9 PULLUP_P_WELL 0.21266f
+C309 PULLUP_N PULLUP_N_BLEED_1 0.54926f
+C310 HS_P_5 HS_P 5.05127f
+C311 HS_P_9 HS_P_6 0.00106f
+C312 HS_P PULLUP_P_BLEED_4 0.03489f
+C313 HS_PBIAS PULLUP_N 0.02682f
+C314 HS_N_5 HS_N_10 0
+C315 TERM_VCM HS_N_11 0.12019f
+C316 FS_N_BLEED_4 FS_HIGH_N 0
+C317 HS_N_9 FS_N_GATE 0.00226f
+C318 TERM_GATE_N PULLDOWN_P 0.17903f
+C319 DIV_N RX_N 1.36638f
+C320 HS_N_4 HS_P 0.32519f
+C321 PULLUP_N_GATE PULLUP_N_BLEED_5 0.26272f
+C322 PULLUP_P_CONTROL_S PULLUP_N_OUT 0.05462f
+C323 PULLUP_N_OUT TERM_GATE_N_BLEED_2 0.09196f
+C324 PULLDOWN_P PULLUP_N_BLEED_4 0.08014f
+C325 FS_N_WELL FS_LOW_N 1.02632f
+C326 VCM_LOW_OK HS_N_6 0.03549f
+C327 HS_N_0 HS_P_6 0.06114f
+C328 FS_N_BLEED_6 PULLDOWN_N_R 0.04811f
+C329 FS_LOW_P PULLUP_N_GATE 0.04939f
+C330 HS_N_3 FS_LOW_N 0.04574f
+C331 FS_N_CONTROL_S TERM_P_R 0.0414f
+C332 PULLUP_N_WELL PULLUP_N_BLEED_1 0.08208f
+C333 DIV_N VDD 0.44545f
+C334 VCM_LOW_OK TERM_OR_N_S 4.63203f
+C335 PULLUP_P_GATE PULLUP_P 3.89342f
+C336 TERM_VCM FS_N_BLEED_4 0.02041f
+C337 HS_P_9 HS_P_3 0.04194f
+C338 HS_PBIAS PULLUP_N_WELL 0.46702f
+C339 HS_N_3 TERM_GATE_P 0.11104f
+C340 HS_P_13 HS_N_8 0.04828f
+C341 FS_N_OUT FS_HIGH_P 0.09983f
+C342 FS_P_BLEED_2 BYPASS_ENABLE 0.00766f
+C343 HS_P_9 HS_P_2 0.0419f
+C344 HS_N_9 HS_N_5 0.04079f
+C345 FS_P_BLEED_1 FS_N_OUT 0.14463f
+C346 PULLUP_P TERM_N_R 0.50582f
+C347 HS_N_7 PULLUP_P_BLEED_0 0
+C348 PULLUP_P_OUT TERM_GATE_P_BLEED_2 0.04242f
+C349 TERM_ENABLE PULLDOWN_P_R 0.04377f
+C350 FS_P_BLEED_0 PULLDOWN_N_R 0.10124f
+C351 HS_N_0 HS_P_3 0.02686f
+C352 TERM_GATE_P_BLEED_0 TERM_OR_P_B 0.0048f
+C353 PULLUP_N_GATE FS_LOW_N 0.09329f
+C354 PAD_P HS_N 1.23865f
+C355 HS_P_10 HS_P_11 48.3384f
+C356 FS_P_BLEED_2 HS_N_8 0.03472f
+C357 PAD_P DIV_ENABLE 0.14682f
+C358 HS_N_12 HS_P_0 0.04378f
+C359 FS_LOW_P DIV_LOW_P 0.12545f
+C360 TERM_P_R HS_N 0.28926f
+C361 TERM_N_R FS_N_BLEED_6 0.06105f
+C362 DIV_ENABLE TERM_P_R 0
+C363 PAD_N HS_P_0 0.38312f
+C364 HS_P_6 HS_N_10 0.0597f
+C365 DIV_P PULLDOWN_N_R 0.01299f
+C366 FS_LOW_P HS_N_12 0.08505f
+C367 FS_P_OUT FS_N_OUT 1.00131f
+C368 FS_P_BLEED_6 HS_N_7 0.06178f
+C369 HS_P_8 HS_N 0.19016f
+C370 HS_N_7 HS_N 0.69419f
+C371 VDD HS_P_11 5.06957f
+C372 DIV_LOW_N BYPASS_ENABLE 0.00106f
+C373 DIV_ENABLE HS_N_7 0.03089f
+C374 HS_PBIAS FS_N_BLEED_1 0.07798f
+C375 VCM_LOW_OK HS_PBIAS 0.40479f
+C376 HS_P_1 HS_N 0.75007f
+C377 DIV_N HS_P_12 0.01246f
+C378 FS_P_GATE PULLDOWN_N_R 1.44476f
+C379 FS_N_OUT RX_N 0.01566f
+C380 FS_P_BLEED_0 TERM_N_R 0.05729f
+C381 FS_N_BLEED_2 FS_N_BLEED_3 4.62519f
+C382 DIV_LOW_N HS_N_8 0.06178f
+C383 TERM_ENABLE HS_P_9 0.07435f
+C384 TERM_ENABLE PULLUP_P_BLEED_5 0
+C385 VCM_LOW_OK HS_N_2 0.03489f
+C386 HS_P_7 HS_P_11 0.0963f
+C387 PAD_P PULLUP_N_OUT 0.11127f
+C388 HS_N_10 HS_P_3 0.02545f
+C389 PULLUP_P_CONTROL_S HS_N_3 0.03489f
+C390 TERM_GATE_P DIV_LOW_P 0.00428f
+C391 HS_N_9 HS_P_6 0.05493f
+C392 HS_N_3 TERM_GATE_N_BLEED_2 0.0525f
+C393 TERM_VCM PULLUP_N_BLEED_6 0.02041f
+C394 FS_LOW_N HS_N_12 0.04599f
+C395 PULLUP_N_BLEED_2 HS_N 0.12943f
+C396 PULLUP_N_OUT TERM_P_R 0.26239f
+C397 TERM_ENABLE HS_N_0 0.10336f
+C398 FS_N_OUT VDD 11.9109f
+C399 HS_N_12 TERM_GATE_P 0.10814f
+C400 PULLUP_N_BLEED_2 DIV_ENABLE 0
+C401 PULLDOWN_P_R HS_P 0.03048f
+C402 VCM_LOW_OK TERM_OR_P_B 2.10826f
+C403 PULLUP_P_GATE FS_P_GATE 0.05697f
+C404 HS_P_8 PULLUP_N_OUT 0.0429f
+C405 HS_N_7 PULLUP_N_OUT 0.05812f
+C406 RX_P DIV_P 1.39534f
+C407 HS_N_1 PULLDOWN_N_R 0.06832f
+C408 HS_N_6 FS_P_BLEED_4 0.03585f
+C409 FS_P_BLEED_5 PULLDOWN_N_R 0.05931f
+C410 TERM_GATE_N_BLEED_1 PULLDOWN_N_R 0.04828f
+C411 PULLUP_N_OUT HS_P_1 0.05947f
+C412 HS_N_9 HS_P_3 0.03089f
+C413 FS_P_GATE TERM_N_R 0.75462f
+C414 HS_P_12 HS_P_11 46.9655f
+C415 HS_P_4 HS_N 0.15877f
+C416 HS_N_9 HS_P_2 0.03089f
+C417 TERM_GATE_N HS_N_0 0.05238f
+C418 HS_P_5 PULLDOWN_N_R 0.02411f
+C419 PULLUP_P_BLEED_4 PULLDOWN_N_R 0.05462f
+C420 TERM_OR_N_B TERM_P_R 0.36281f
+C421 FS_P_BLEED_6 PULLUP_P_OUT 0.05127f
+C422 PULLUP_P_OUT HS_N 0.09516f
+C423 TERM_ENABLE FS_P_WELL 2.59586f
+C424 HS_N_4 PULLDOWN_N_R 0.02404f
+C425 a_41005_205505# a_41005_206065# 0.0346f
+C426 HS_N_1 PULLUP_P_GATE 0.07485f
+C427 HS_P_9 HS_P 6.36218f
+C428 FS_LOW_P FS_HIGH_P 8.66124f
+C429 HS_N_7 TERM_OR_N_B 0.02846f
+C430 TERM_ENABLE HS_N_10 0.04835f
+C431 PULLUP_P_BLEED_5 HS_P 0.0525f
+C432 PULLUP_N_BLEED_5 PULLDOWN_N 0.0078f
+C433 PULLUP_P_GATE FS_P_BLEED_5 0
+C434 HS_N_1 TERM_N_R 0.12593f
+C435 FS_N_OUT HS_P_12 0.12335f
+C436 HS_N_13 HS_N_6 0.08101f
+C437 HS_N_0 HS_P 0.16181f
+C438 TERM_ENABLE TERM_OR_P_S 0.23041f
+C439 TERM_GATE_N_BLEED_1 TERM_N_R 0.20108f
+C440 PULLUP_P_GATE PULLUP_P_BLEED_4 0.27788f
+C441 TERM_ENABLE FS_N_BLEED_3 0.01168f
+C442 PULLUP_P_BLEED_0 HS_N_8 0
+C443 TERM_OR_N_S HS_N_13 0.06335f
+C444 PULLUP_P_GATE HS_N_4 0.07211f
+C445 PULLUP_N_OUT HS_P_4 0.0863f
+C446 TERM_GATE_N_BLEED_2 HS_N_12 0.05263f
+C447 PULLUP_P_CONTROL_S HS_N_12 0.03489f
+C448 PULLDOWN_P PULLDOWN_N_R 87.4701f
+C449 PAD_P HS_N_3 0.09104f
+C450 FS_P_OUT HS_P_0 0.09146f
+C451 TERM_ENABLE HS_N_9 0.04808f
+C452 FS_N_WELL TERM_P_R 1.52918f
+C453 HS_PBIAS FS_P_BLEED_4 0.08384f
+C454 TERM_GATE_N HS_N_10 0.04869f
+C455 TERM_ENABLE PULLUP_P_BLEED_2 0.08221f
+C456 PULLUP_P_OUT PULLUP_N_OUT 0.17397f
+C457 TERM_N_R PULLUP_P_BLEED_4 0.06105f
+C458 DIV_N DIV_P 48.6079f
+C459 FS_HIGH_P FS_LOW_N 93.86971f
+C460 HS_N_4 TERM_N_R 0.05893f
+C461 HS_N BYPASS_ENABLE 0.01049f
+C462 HS_N_3 TERM_P_R 0.05893f
+C463 HS_P_10 HS_P_0 2.2381f
+C464 FS_HIGH_N PULLUP_N_WELL 0.14189f
+C465 DIV_ENABLE BYPASS_ENABLE 74.5289f
+C466 FS_N_OUT PULLUP_P 0.46602f
+C467 FS_P_OUT FS_LOW_P 0.56711f
+C468 HS_N_2 FS_P_BLEED_4 0.02846f
+C469 FS_N_BLEED_4 PULLUP_N_WELL 0
+C470 DIV_N FS_P_GATE 0.09341f
+C471 DIFF_ENABLE FS_LOW_P 0.22091f
+C472 FS_LOW_P HS_P_10 0.05509f
+C473 HS_N_3 HS_N_7 0.02877f
+C474 FS_P_BLEED_6 HS_N_8 0.06178f
+C475 HS_N HS_N_8 2.60585f
+C476 DIV_ENABLE HS_N_8 0.03089f
+C477 HS_P FS_P_WELL 2.05815f
+C478 PULLUP_P_GATE PULLDOWN_P 0.03883f
+C479 TERM_VCM PULLUP_N_WELL 0.30585f
+C480 TERM_GATE_N HS_N_9 0.05603f
+C481 PULLUP_N_CONTROL_S PULLUP_N_BLEED_1 0
+C482 VDD HS_P_0 3.95338f
+C483 HS_N_10 HS_P 0.20736f
+C484 PULLUP_N_GATE TERM_P_R 0.17963f
+C485 PULLUP_N_CONTROL_S HS_PBIAS 0.09332f
+C486 PULLDOWN_P TERM_N_R 0.31604f
+C487 FS_LOW_P VDD 4.01828f
+C488 VCM_LOW_OK HS_N_11 0.03489f
+C489 FS_P_CONTROL_S HS_N_7 0.03226f
+C490 HS_N_13 HS_PBIAS 4.9299f
+C491 HS_P_7 HS_P_0 0.00469f
+C492 FS_P_OUT TERM_GATE_P 0.22814f
+C493 DIFF_ENABLE FS_LOW_N 0.25257f
+C494 FS_N_BLEED_3 HS_P 0.08856f
+C495 HS_N_1 DIV_N 0.03451f
+C496 FS_N_BLEED_1 FS_HIGH_N 0
+C497 PULLUP_P_WELL HS_N_6 0.18412f
+C498 HS_P_10 TERM_GATE_P 0.17903f
+C499 FS_N_OUT FS_P_BLEED_0 0.28479f
+C500 FS_N_BLEED_4 FS_N_BLEED_1 0.12236f
+C501 DIV_N TERM_GATE_N_BLEED_1 0.10151f
+C502 HS_P_13 HS_N 0.35374f
+C503 PULLDOWN_P_R PULLDOWN_N_R 33.0605f
+C504 HS_N_13 HS_N_2 0.12504p
+C505 HS_N_9 HS_P 0.12031p
+C506 FS_LOW_P HS_P_7 0.04566f
+C507 a_41005_203545# a_41005_203825# 0.03725f
+C508 PULLUP_N PULLUP_N_BLEED_6 0.05624f
+C509 PULLUP_N_OUT HS_N_8 0.06129f
+C510 FS_P_GATE HS_P_11 0
+C511 HS_N_5 TERM_OR_P_NS 0.00258f
+C512 PAD_P ESD_RAIL 24.1165f
+C513 VCM_LOW_OK TERM_VCM 0.10422p
+C514 FS_LOW_N VDD 1.92499f
+C515 DIV_N PULLUP_P_BLEED_4 0.10151f
+C516 HS_P_5 DIV_N 0.01203f
+C517 PAD_P HS_N_12 2.18792f
+C518 TERM_P_R DIV_LOW_P 0.00106f
+C519 FS_N_BLEED_0 FS_LOW_P 0.83515f
+C520 FS_HIGH_P TERM_GATE_N_BLEED_2 0.01347f
+C521 HS_N_13 TERM_OR_P_B 0.07271f
+C522 FS_P_BLEED_2 HS_N 0.04405f
+C523 PULLUP_P_CONTROL_S FS_HIGH_P 0.00941f
+C524 VDD TERM_GATE_P 7.09843f
+C525 DIV_N HS_N_4 0.03311f
+C526 PULLUP_N_BLEED_2 PULLUP_N_GATE 0.06887f
+C527 DIV_ENABLE FS_P_BLEED_2 0.01375f
+C528 FS_N_OUT DIV_P 2.20134f
+C529 TERM_P_R HS_N_12 0.0597f
+C530 HS_P_12 HS_P_0 0.08899f
+C531 HS_N_3 PULLUP_P_OUT 0.02404f
+C532 PAD_P PAD_N 55.5603f
+C533 HS_N_5 HS_N_6 0.12117p
+C534 PULLUP_P_GATE PULLDOWN_P_R 0.24897f
+C535 HS_N_13 PULLUP_P_BLEED_6 0.02404f
+C536 HS_P_7 TERM_GATE_P 0.15508f
+C537 FS_N_OUT FS_P_GATE 0.35576f
+C538 FS_LOW_P HS_P_12 0.17418f
+C539 HS_N_7 HS_N_12 0.02955f
+C540 HS_N FS_N_BLEED_5 0.11535f
+C541 HS_N_1 HS_P_11 0.02846f
+C542 TERM_OR_N_S HS_N_5 0.06593f
+C543 HS_P_13 PULLUP_N_OUT 0.02868f
+C544 TERM_OR_N_B HS_N_8 0.02879f
+C545 HS_P_9 PULLDOWN_N_R 4.1634f
+C546 PULLUP_P_BLEED_5 PULLDOWN_N_R 0.09196f
+C547 a_41005_204945# a_41005_205505# 0.0346f
+C548 FS_N_BLEED_0 FS_LOW_N 0.08492f
+C549 HS_P_8 PAD_N 0.85512f
+C550 PAD_N HS_N_7 1.7635f
+C551 DIV_N PULLDOWN_P 0.04613f
+C552 PULLUP_P_WELL HS_PBIAS 0.58979f
+C553 HS_N_11 FS_P_BLEED_3 0
+C554 DIV_ENABLE DIV_LOW_N 8.13107f
+C555 DIV_LOW_N HS_N 0.08856f
+C556 HS_N_0 PULLDOWN_N_R 0.06832f
+C557 PAD_N HS_P_1 0.56708f
+C558 HS_PBIAS FS_N_GATE 2.74154f
+C559 PULLUP_N_BLEED_5 PULLUP_P 0.05132f
+C560 TERM_OR_N_B TERM_GATE_N_BLEED_0 0.00477f
+C561 FS_P_BLEED_2 PULLUP_N_OUT 0.06151f
+C562 HS_P_5 HS_P_11 0.03881f
+C563 HS_P_6 TERM_OR_P_NS 0.02846f
+C564 HS_N_4 HS_P_11 0.06606f
+C565 FS_N_WELL BYPASS_ENABLE 0.06525f
+C566 PULLUP_P_WELL HS_N_2 0.17784f
+C567 PULLUP_P_GATE PULLUP_P_BLEED_5 0.14759f
+C568 FS_N_OUT TERM_GATE_N_BLEED_1 0.06167f
+C569 HS_P_12 TERM_GATE_P 0.16452f
+C570 FS_N_OUT FS_P_BLEED_5 0.05624f
+C571 PULLUP_N_OUT FS_N_BLEED_5 0.10124f
+C572 HS_N_11 FS_P_BLEED_4 0.029f
+C573 HS_P_6 HS_N_6 0.06938f
+C574 PULLUP_P_CONTROL_S VDD 7.26698f
+C575 FS_N_OUT PULLUP_P_BLEED_4 0.06167f
+C576 HS_N_3 HS_N_8 0
+C577 HS_N_0 PULLUP_P_GATE 0.07594f
+C578 HS_N_5 HS_PBIAS 2.62068f
+C579 HS_P_5 FS_N_OUT 0.06167f
+C580 TERM_OR_P_NS HS_P_3 0.02846f
+C581 FS_LOW_P FS_N_BLEED_6 0.18143f
+C582 DIV_LOW_N PULLUP_N_OUT 0.04911f
+C583 FS_LOW_N PULLUP_P 0.06426f
+C584 TERM_OR_P_NS HS_P_2 0.02846f
+C585 PULLDOWN_N_R FS_P_WELL 2.76564f
+C586 HS_N_5 HS_N_2 0.00106f
+C587 HS_N_0 TERM_N_R 0.12127f
+C588 PULLUP_P_OUT HS_N_12 0.02482f
+C589 FS_P_CONTROL_S HS_N_8 0.03238f
+C590 HS_N_10 PULLDOWN_N_R 0.02404f
+C591 PULLUP_N PULLUP_N_WELL 0.11608f
+C592 FS_HIGH_P TERM_P_R 0.01008f
+C593 PAD_N HS_P_4 0.27735f
+C594 m2_42279_196800# a_41005_203825# 0
+C595 FS_P_BLEED_1 TERM_P_R 0.10934f
+C596 HS_N_6 HS_P_3 0.03089f
+C597 TERM_P_R PULLDOWN_N 0.78117f
+C598 PAD_N PULLUP_P_OUT 0.20199f
+C599 HS_N_5 TERM_OR_P_B 0.07211f
+C600 FS_LOW_N FS_N_BLEED_6 0.07134f
+C601 HS_N_6 HS_P_2 0.03089f
+C602 FS_P_BLEED_1 HS_N_7 0.06178f
+C603 FS_N_BLEED_3 PULLDOWN_N_R 0.09111f
+C604 HS_P_13 HS_N_3 0.02404f
+C605 HS_N_13 HS_N_11 0.10514f
+C606 FS_N_OUT PULLDOWN_P 0.6144f
+C607 FS_N_CONTROL_S HS_N 0.11872f
+C608 a_53878_204665# a_53878_205225# 0.0346f
+C609 HS_N_5 PULLUP_P_BLEED_6 0.03069f
+C610 HS_N_9 PULLDOWN_N_R 0.02404f
+C611 PAD_P FS_P_OUT 5.93556f
+C612 BYPASS_ENABLE DIV_LOW_P 0
+C613 PULLUP_P_GATE HS_N_10 0.07414f
+C614 TERM_N_R FS_P_WELL 1.58654f
+C615 FS_LOW_P DIV_P 2.36145f
+C616 PAD_P HS_P_10 1.26307f
+C617 HS_N_3 FS_P_BLEED_2 0.03472f
+C618 HS_PBIAS HS_P_6 2.09103f
+C619 TERM_ENABLE TERM_OR_P_NS 0.1642f
+C620 FS_P_OUT TERM_P_R 0.43231f
+C621 HS_N_10 TERM_N_R 0.06034f
+C622 FS_N_BLEED_2 HS_PBIAS 0.09926f
+C623 PULLUP_N_BLEED_2 FS_HIGH_P 0.01347f
+C624 TERM_P_R HS_P_10 0.14229f
+C625 PAD_P RX_N 0.37917f
+C626 DIFF_ENABLE TERM_P_R 2.11502f
+C627 FS_LOW_P FS_P_GATE 0.48115f
+C628 FS_P_OUT HS_N_7 0.52477f
+C629 DIV_N PULLUP_P_BLEED_5 0
+C630 TERM_VCM HS_N_13 0.12019f
+C631 FS_N_WELL FS_N_BLEED_5 0
+C632 PULLDOWN_P_R HS_P_11 0.07466f
+C633 HS_N_2 HS_P_6 0.05876f
+C634 PAD_N BYPASS_ENABLE 11.6896f
+C635 FS_P_CONTROL_S FS_P_BLEED_2 0
+C636 TERM_N_R TERM_OR_P_S 0.0546f
+C637 PULLUP_N_BLEED_4 PULLUP_N_BLEED_3 2.05029f
+C638 PAD_P VDD 0
+C639 HS_N_12 HS_N_8 0
+C640 HS_P_8 HS_P_10 0.00926f
+C641 HS_N_7 HS_P_10 0
+C642 HS_N_9 PULLUP_P_GATE 0.07724f
+C643 FS_P_BLEED_6 HS_N 0.08043f
+C644 PULLUP_P_BLEED_2 PULLUP_P_GATE 0.20496f
+C645 TERM_ENABLE HS_N_6 0.08996f
+C646 DIV_ENABLE HS_N 0.05802f
+C647 HS_PBIAS HS_P_3 6.23881f
+C648 HS_N_0 DIV_N 0.04097f
+C649 FS_N_CONTROL_S PULLUP_N_OUT 0.1046f
+C650 PULLUP_P TERM_GATE_N_BLEED_2 0.09196f
+C651 PULLUP_P_CONTROL_S PULLUP_P 3.928f
+C652 HS_P_1 HS_P_10 37.0279f
+C653 DIV_P TERM_GATE_P 0.02274f
+C654 TERM_P_R VDD 6.10049f
+C655 HS_N_1 HS_P_0 0.04113f
+C656 HS_N_9 TERM_N_R 0.05948f
+C657 PAD_N HS_N_8 1.07245f
+C658 HS_P_6 TERM_OR_P_B 0.10133f
+C659 PULLUP_N_OUT PULLUP_P_BLEED_0 0.09268f
+C660 PULLUP_P_BLEED_2 TERM_N_R 0.05729f
+C661 FS_N_BLEED_1 PULLUP_N_WELL 0
+C662 HS_PBIAS HS_P_2 3.95109f
+C663 TERM_OR_N_S TERM_ENABLE 7.06942f
+C664 HS_N_3 DIV_LOW_N 0.06178f
+C665 PAD_P HS_P_7 1.52213f
+C666 HS_N_2 HS_P_3 0.02451f
+C667 TERM_VCM PULLUP_P_BLEED_3 0.09096f
+C668 m2_42279_196800# a_41005_206065# 0
+C669 HS_P_8 VDD 4.99906f
+C670 HS_N_7 VDD 6.97232f
+C671 FS_P_BLEED_1 PULLUP_P_OUT 0.11038f
+C672 HS_N_1 FS_LOW_P 0.08505f
+C673 HS_P PULLUP_N_BLEED_3 0.11785f
+C674 TERM_P_R HS_P_7 0.08343f
+C675 PULLUP_N_GATE FS_N_BLEED_5 0
+C676 VDD HS_P_1 5.54122f
+C677 PULLUP_P_WELL HS_N_11 0.2035f
+C678 HS_N_2 HS_P_2 0.06704f
+C679 FS_LOW_P TERM_GATE_N_BLEED_1 0.06271f
+C680 HS_P_5 HS_P_0 0.00297f
+C681 TERM_GATE_N HS_N_6 0.05143f
+C682 HS_P_13 HS_N_12 0.02465f
+C683 HS_N_4 HS_P_0 0.03432f
+C684 HS_N_11 FS_N_GATE 0.01488f
+C685 HS_P_9 HS_P_11 0.00817f
+C686 HS_P_5 FS_LOW_P 0.17341f
+C687 HS_P_8 HS_P_7 30.9838f
+C688 HS_N_7 HS_P_7 0
+C689 FS_LOW_P PULLUP_P_BLEED_4 0.06866f
+C690 HS_P_3 TERM_OR_P_B 0.10238f
+C691 TERM_OR_N_S TERM_GATE_N 0.01207f
+C692 DIV_ENABLE PULLUP_N_OUT 0.05062f
+C693 HS_P TERM_OR_P_NS 0.04056f
+C694 FS_P_BLEED_6 PULLUP_N_OUT 0.05922f
+C695 PULLUP_N_OUT HS_N 0.10855f
+C696 HS_P_2 TERM_OR_P_B 0.10307f
+C697 DIV_N FS_P_WELL 0.99685f
+C698 FS_LOW_P HS_N_4 0.08505f
+C699 TERM_GATE_P_BLEED_1 TERM_OR_P_B 0.00371f
+C700 HS_P_7 HS_P_1 0.05962f
+C701 a_41005_204945# a_41005_203545# 0
+C702 HS_P_13 PAD_N 0.16938f
+C703 FS_N_GATE FS_HIGH_N 5.97522f
+C704 PULLUP_N_BLEED_2 VDD 0
+C705 FS_P_BLEED_2 HS_N_12 0.03472f
+C706 DIV_N HS_N_10 0.03311f
+C707 FS_N_BLEED_4 FS_N_GATE 0.21315f
+C708 HS_N_1 FS_LOW_N 0.04626f
+C709 PAD_P HS_P_12 1.66835f
+C710 TERM_ENABLE PULLUP_N_BLEED_1 0.06151f
+C711 FS_LOW_N TERM_GATE_N_BLEED_1 0.07127f
+C712 FS_P_OUT PULLUP_P_OUT 0.57566f
+C713 HS_P_10 HS_P_4 0
+C714 HS_N_1 TERM_GATE_P 0.10974f
+C715 TERM_VCM PULLUP_P_WELL 0.38283f
+C716 TERM_ENABLE HS_PBIAS 0.73336f
+C717 HS_N_5 HS_N_11 0
+C718 TERM_P_R HS_P_12 0.11066f
+C719 PULLUP_P_OUT HS_P_10 0.05276f
+C720 TERM_VCM FS_N_GATE 1.09313f
+C721 FS_HIGH_P BYPASS_ENABLE 0
+C722 HS_N_6 HS_P 1.04391f
+C723 FS_N_OUT PULLUP_P_BLEED_5 0.06376f
+C724 PULLUP_N_BLEED_5 PULLDOWN_P 0.0032f
+C725 PULLUP_N_BLEED_0 PULLUP_N_BLEED_1 4.9716f
+C726 FS_LOW_N PULLUP_P_BLEED_4 0.02199f
+C727 HS_P_5 TERM_GATE_P 0.15599f
+C728 HS_N_7 HS_P_12 0.03489f
+C729 TERM_OR_N_B HS_N 0.08496f
+C730 FS_LOW_N HS_N_4 0.04574f
+C731 TERM_ENABLE HS_N_2 0.04808f
+C732 TERM_OR_N_S HS_P 0.09563f
+C733 HS_P_8 HS_P_12 0
+C734 VDD HS_P_4 4.77123f
+C735 HS_N_0 FS_N_OUT 0.06167f
+C736 HS_N_9 DIV_N 0.03311f
+C737 FS_N_CONTROL_S FS_N_WELL 0.71916f
+C738 HS_N_4 TERM_GATE_P 0.11218f
+C739 FS_P_BLEED_1 HS_N_8 0.06178f
+C740 HS_P_12 HS_P_1 0.05935f
+C741 PULLUP_P_OUT VDD 4.02871f
+C742 PULLUP_N_BLEED_4 PULLUP_N_BLEED_1 0
+C743 TERM_GATE_N HS_PBIAS 0.17456f
+C744 DIV_LOW_N HS_N_12 0.06178f
+C745 TERM_P_R PULLUP_P 0.26978f
+C746 TERM_ENABLE TERM_OR_P_B 5.36669f
+C747 TERM_VCM HS_N_5 0.12753f
+C748 HS_PBIAS PULLUP_N_BLEED_4 0.01633f
+C749 HS_P_7 HS_P_4 0.06067f
+C750 HS_N_10 HS_P_11 0.00351f
+C751 TERM_GATE_N HS_N_2 0.0506f
+C752 HS_N_7 PULLUP_P 0.05062f
+C753 FS_LOW_N PULLDOWN_P 0.08215f
+C754 TERM_ENABLE PULLUP_P_BLEED_6 0
+C755 DIFF_ENABLE BYPASS_ENABLE 6.50064f
+C756 TERM_P_R FS_N_BLEED_6 0.04766f
+C757 BYPASS_ENABLE RX_N 7.14256f
+C758 FS_N_WELL HS_N 5.1841f
+C759 HS_P PULLUP_N_BLEED_1 0.04828f
+C760 FS_P_OUT HS_N_8 0.43367f
+C761 PULLUP_N_CONTROL_S PULLUP_N 1.77933f
+C762 DIV_ENABLE FS_N_WELL 0.26747f
+C763 PULLUP_N_OUT TERM_OR_N_B 0.13769f
+C764 HS_P_6 HS_N_11 0.05932f
+C765 FS_N_OUT FS_P_WELL 0.95146f
+C766 HS_N_1 TERM_GATE_N_BLEED_2 0.05286f
+C767 HS_PBIAS HS_P 0.16547p
+C768 PULLUP_P_CONTROL_S HS_N_1 0.03489f
+C769 FS_P_BLEED_6 HS_N_3 0.06178f
+C770 HS_N_3 HS_N 2.50774f
+C771 HS_N_3 DIV_ENABLE 0.03089f
+C772 HS_P_10 HS_N_8 0.0286f
+C773 PULLDOWN_P_R HS_P_0 0.03037f
+C774 FS_N_OUT HS_N_10 0.00528f
+C775 HS_N_9 HS_P_11 0.03103f
+C776 TERM_GATE_N_BLEED_1 TERM_GATE_N_BLEED_2 7.29504f
+C777 VDD BYPASS_ENABLE 0.04516f
+C778 HS_P_12 HS_P_4 0
+C779 FS_N_BLEED_2 FS_HIGH_N 0
+C780 FS_P_BLEED_2 FS_HIGH_P 0.16613f
+C781 HS_N_2 HS_P 0.85293f
+C782 FS_P_BLEED_1 FS_P_BLEED_2 8.68609f
+C783 FS_N_BLEED_2 FS_N_BLEED_4 0.12309f
+C784 TERM_P_R FS_P_BLEED_0 0.04596f
+C785 FS_LOW_P PULLDOWN_P_R 0.06539f
+C786 FS_P_CONTROL_S HS_N 0.04342f
+C787 VDD HS_N_8 5.59181f
+C788 HS_N_11 HS_P_3 0.02508f
+C789 PULLUP_N_CONTROL_S PULLUP_N_WELL 0.08371f
+C790 HS_N_4 TERM_GATE_N_BLEED_2 0.0525f
+C791 PULLUP_P_CONTROL_S HS_N_4 0.03489f
+C792 TERM_VCM HS_P_6 0.09615f
+C793 PULLUP_N_GATE HS_N 0.17972f
+C794 HS_N_7 FS_P_BLEED_0 0.06178f
+C795 PULLDOWN_N_R PULLUP_N_BLEED_3 0.07928f
+C796 HS_P_13 FS_P_OUT 0.1275f
+C797 FS_HIGH_P FS_N_BLEED_5 0
+C798 DIV_ENABLE PULLUP_N_GATE 0
+C799 PAD_P DIV_P 2.52939f
+C800 HS_P TERM_OR_P_B 0.0917f
+C801 PULLUP_N_OUT FS_N_WELL 2.29376f
+C802 m2_42279_196800# a_41005_204945# 0
+C803 HS_N_9 FS_N_OUT 0.06167f
+C804 HS_P_13 HS_P_10 0.09466f
+C805 TERM_P_R DIV_P 0.02242f
+C806 HS_P_7 HS_N_8 0.09182f
+C807 HS_N_3 PULLUP_N_OUT 0.00232f
+C808 FS_LOW_N PULLDOWN_P_R 0.00864f
+C809 PULLUP_P_BLEED_6 HS_P 0.10214f
+C810 TERM_GATE_N_BLEED_0 VDD 0.97216f
+C811 DIV_LOW_N FS_HIGH_P 0.16534f
+C812 TERM_OR_N_NS TERM_N_R 0.00361f
+C813 PULLUP_P_OUT PULLUP_P 0.00546f
+C814 TERM_OR_P_NS PULLDOWN_N_R 0.04591f
+C815 FS_P_OUT FS_P_BLEED_2 0.00305f
+C816 PULLDOWN_P_R TERM_GATE_P 0.30143f
+C817 TERM_VCM HS_P_3 0.12019f
+C818 m2_42279_196800# a_41005_205505# 0
+C819 TERM_P_R FS_P_GATE 0.76035f
+C820 PULLDOWN_P TERM_GATE_N_BLEED_2 0.07928f
+C821 HS_P_13 VDD 6.64852f
+C822 HS_P_9 FS_LOW_P 0.05657f
+C823 TERM_VCM HS_P_2 0.09615f
+C824 HS_N_0 HS_P_0 0.04061f
+C825 FS_LOW_P PULLUP_P_BLEED_5 0.0781f
+C826 a_53878_206345# ESD_RAIL 0.5677f
+C827 HS_N DIV_LOW_P 0.06611f
+C828 PULLUP_N_OUT PULLUP_N_GATE 18.1444f
+C829 DIV_ENABLE DIV_LOW_P 2.67093f
+C830 a_44789_189064# ESD_RAIL 13.9519f
+C831 HS_N_7 FS_P_GATE 1.02868f
+C832 HS_N_6 PULLDOWN_N_R 0.06832f
+C833 FS_LOW_P HS_N_0 0.08516f
+C834 HS_P_13 HS_P_7 0.14204f
+C835 FS_P_BLEED_6 HS_N_12 0.06178f
+C836 HS_N HS_N_12 8.83112f
+C837 VCM_LOW_OK HS_N_13 0.03489f
+C838 HS_N_3 TERM_OR_N_B 0.02846f
+C839 FS_P_BLEED_2 VDD 0.44675f
+C840 HS_P_12 HS_N_8 0.06335f
+C841 TERM_ENABLE HS_N_11 0.0483f
+C842 DIV_ENABLE HS_N_12 0.03143f
+C843 PAD_P HS_N_1 0.48214f
+C844 TERM_OR_N_S PULLDOWN_N_R 0.12757f
+C845 PAD_N HS_N 35.6371f
+C846 PAD_N DIV_ENABLE 0.03382f
+C847 TERM_N_R TERM_OR_P_NS 0.1011f
+C848 FS_LOW_N PULLUP_P_BLEED_5 0.08298f
+C849 HS_N_1 TERM_P_R 0.10227f
+C850 TERM_P_R TERM_GATE_N_BLEED_1 0.04766f
+C851 PULLUP_P_OUT FS_P_BLEED_0 0.14615f
+C852 TERM_ENABLE FS_HIGH_N 0.01513f
+C853 HS_P_9 TERM_GATE_P 0.22051f
+C854 PAD_P HS_P_5 1.15443f
+C855 TERM_ENABLE FS_N_BLEED_4 0.08954f
+C856 VDD FS_N_BLEED_5 0.55431f
+C857 PULLUP_P_GATE HS_N_6 0.07429f
+C858 HS_N_1 HS_N_7 0.0739f
+C859 HS_N_7 FS_P_BLEED_5 0.06246f
+C860 VCM_LOW_OK PULLUP_P_BLEED_3 0.15602f
+C861 HS_N_0 FS_LOW_N 0.04608f
+C862 FS_P_BLEED_3 FS_P_BLEED_4 0.46081f
+C863 PAD_P HS_N_4 0.06517f
+C864 HS_P_5 TERM_P_R 0.08374f
+C865 TERM_GATE_N HS_N_11 0.04856f
+C866 HS_N_7 TERM_GATE_N_BLEED_1 0.03489f
+C867 TERM_P_R PULLUP_P_BLEED_4 0.04766f
+C868 PULLUP_P HS_N_8 0.05062f
+C869 HS_N_10 HS_P_0 0.06989f
+C870 TERM_ENABLE TERM_VCM 0.52207f
+C871 HS_N_0 TERM_GATE_P 0.11083f
+C872 HS_N_1 HS_P_1 0.09066f
+C873 HS_N_6 TERM_N_R 0.05893f
+C874 DIV_LOW_N VDD 0.00118f
+C875 FS_LOW_P FS_P_WELL 2.24752f
+C876 TERM_P_R HS_N_4 0.05893f
+C877 HS_P_13 HS_P_12 47.0352f
+C878 BYPASS_ENABLE FS_N_BLEED_6 0.00766f
+C879 PULLUP_P_CONTROL_S PULLDOWN_P_R 0.05462f
+C880 PULLUP_N_OUT HS_N_12 0.01368f
+C881 HS_N_5 TERM_GATE_P_BLEED_0 0
+C882 HS_P_5 HS_P_8 0.00106f
+C883 HS_P_5 HS_N_7 0.03489f
+C884 FS_LOW_P HS_N_10 0.08505f
+C885 HS_N_7 PULLUP_P_BLEED_4 0.03489f
+C886 PULLUP_N_BLEED_1 PULLDOWN_N_R 0.04848f
+C887 TERM_VCM PULLUP_N_BLEED_0 0.13459f
+C888 TERM_OR_N_S TERM_N_R 0.13199f
+C889 HS_P_5 HS_P_1 0.02411f
+C890 HS_N_7 HS_N_4 0.06976f
+C891 HS_PBIAS PULLDOWN_N_R 0.77848f
+C892 VDD TERM_GATE_P_BLEED_2 0.084f
+C893 PAD_N PULLUP_N_OUT 1.29226f
+C894 PULLUP_P_OUT FS_P_GATE 1.62552f
+C895 FS_N_BLEED_0 FS_N_BLEED_5 0.10542f
+C896 HS_N_4 HS_P_1 0.0586f
+C897 TERM_GATE_N TERM_VCM 26.4092f
+C898 HS_N_9 HS_P_0 0.03791f
+C899 FS_LOW_P TERM_OR_P_S 0.36544f
+C900 HS_N_11 HS_P 0.76455f
+C901 FS_LOW_P FS_N_BLEED_3 0.10387f
+C902 VCM_LOW_OK PULLUP_P_WELL 0.31926f
+C903 TERM_P_R PULLDOWN_P 0.13388f
+C904 HS_N_2 PULLDOWN_N_R 0.02404f
+C905 FS_P_CONTROL_S HS_N_3 0.03226f
+C906 FS_N_BLEED_1 FS_N_GATE 0.17071f
+C907 FS_LOW_P HS_N_9 0.21326f
+C908 FS_LOW_N HS_N_10 0.04615f
+C909 TERM_OR_N_B HS_N_12 0.02944f
+C910 FS_HIGH_N HS_P 0.03743f
+C911 FS_P_BLEED_0 HS_N_8 0.06178f
+C912 HS_N_7 PULLDOWN_P 0.04428f
+C913 FS_N_BLEED_4 HS_P 0.08856f
+C914 HS_N_10 TERM_GATE_P 0.10903f
+C915 FS_HIGH_P HS_N 0
+C916 DIV_ENABLE FS_HIGH_P 4.86815f
+C917 FS_P_BLEED_1 HS_N 0.08043f
+C918 HS_PBIAS PULLUP_P_GATE 0.16217f
+C919 TERM_OR_P_B PULLDOWN_N_R 0.16954f
+C920 DIV_P BYPASS_ENABLE 0.05958f
+C921 HS_N_1 PULLUP_P_OUT 0.02599f
+C922 TERM_N_R PULLUP_N_BLEED_1 0.06105f
+C923 TERM_ENABLE PULLUP_N_BLEED_6 0.08954f
+C924 FS_LOW_N FS_N_BLEED_3 0
+C925 TERM_VCM HS_P 0.23967f
+C926 HS_PBIAS TERM_N_R 0.82298f
+C927 HS_P_6 TERM_GATE_P_BLEED_0 0.02404f
+C928 HS_N_2 PULLUP_P_GATE 0.07258f
+C929 PULLUP_P_CONTROL_S HS_N_0 0.03489f
+C930 HS_N_13 FS_P_BLEED_4 0.02846f
+C931 PULLUP_P_BLEED_6 PULLDOWN_N_R 0.09196f
+C932 HS_N_0 TERM_GATE_N_BLEED_2 0.05293f
+C933 HS_P_5 HS_P_4 32.9896f
+C934 VCM_LOW_OK HS_N_5 0.03535f
+C935 HS_N_9 FS_LOW_N 0.08747f
+C936 DIV_N HS_N_6 0.03311f
+C937 HS_N_4 HS_P_4 0
+C938 HS_N_9 TERM_GATE_P 0.13605f
+C939 HS_N_2 TERM_N_R 0.06245f
+C940 PULLUP_N_BLEED_2 PULLDOWN_P 0.06517f
+C941 PULLUP_P FS_N_BLEED_5 0.10124f
+C942 PULLUP_P_OUT HS_N_4 0.02404f
+C943 FS_N_CONTROL_S VDD 0.70784f
+C944 FS_N_BLEED_2 PULLUP_N_WELL 0
+C945 FS_N_WELL HS_N_12 0.02014f
+C946 VDD PULLUP_P_BLEED_0 0.0048f
+C947 TERM_OR_N_S DIV_N 0
+C948 FS_P_GATE HS_N_8 1.03439f
+C949 FS_P_OUT HS_N 20.4712f
+C950 PAD_P PULLDOWN_P_R 2.92129f
+C951 FS_P_OUT DIV_ENABLE 0.0629f
+C952 TERM_GATE_P_BLEED_0 HS_P_3 0.02464f
+C953 DIV_LOW_N PULLUP_P 0.04819f
+C954 HS_N_3 HS_N_12 0.06413f
+C955 TERM_N_R TERM_OR_P_B 1.12426f
+C956 HS_P_10 HS_N 0.34498f
+C957 FS_P_BLEED_1 PULLUP_N_OUT 0.11535f
+C958 PULLUP_N_BLEED_4 PULLUP_N_BLEED_6 0
+C959 DIFF_ENABLE HS_N 0.22317f
+C960 TERM_P_R PULLDOWN_P_R 0.16322f
+C961 PULLUP_P_GATE PULLUP_P_BLEED_6 3.36504f
+C962 FS_N_BLEED_6 FS_N_BLEED_5 9.22595f
+C963 TERM_OR_P_NS HS_P_11 0.04285f
+C964 DIFF_ENABLE DIV_ENABLE 6.75692f
+C965 TERM_GATE_P_BLEED_0 HS_P_2 0.02483f
+C966 DIV_ENABLE RX_N 0.7437f
+C967 FS_P_BLEED_2 FS_P_BLEED_0 0.00855f
+C968 TERM_GATE_P_BLEED_1 TERM_GATE_P_BLEED_0 2.63577f
+C969 PULLUP_P_WELL FS_P_BLEED_3 0
+C970 PAD_N HS_N_3 1.66755f
+C971 TERM_GATE_N_BLEED_1 BYPASS_ENABLE 0.00766f
+C972 FS_P_CONTROL_S HS_N_12 0.03226f
+C973 HS_P_8 PULLDOWN_P_R 0.08554f
+C974 HS_N_7 PULLDOWN_P_R 0.02404f
+C975 m2_42279_196800# a_41005_203545# 0.05457f
+C976 PULLUP_P_CONTROL_S HS_N_10 0.03489f
+C977 FS_P_BLEED_6 VDD 0.00118f
+C978 VDD HS_N 2.63612f
+C979 PULLUP_P_BLEED_3 PULLUP_P_BLEED_1 0.10974f
+C980 HS_N_10 TERM_GATE_N_BLEED_2 0.0527f
+C981 PULLDOWN_P_R HS_P_1 0.08595f
+C982 DIV_ENABLE VDD 0.14629f
+C983 HS_P_13 FS_P_GATE 0.24779f
+C984 HS_N_1 HS_N_8 0.04294f
+C985 FS_P_BLEED_5 HS_N_8 0.06266f
+C986 HS_N_6 HS_P_11 0.03089f
+C987 BYPASS_ENABLE PULLUP_P_BLEED_4 0.00766f
+C988 TERM_GATE_N_BLEED_1 HS_N_8 0.03489f
+C989 FS_N_BLEED_2 FS_N_BLEED_1 3.07801f
+C990 FS_P_OUT PULLUP_N_OUT 0.58322f
+C991 VCM_LOW_OK HS_P_6 0.03489f
+C992 HS_P_7 HS_N 0.15132f
+C993 PAD_P HS_P_9 1.35439f
+C994 PULLUP_P_WELL FS_P_BLEED_4 0
+C995 DIV_N HS_PBIAS 0.13901f
+C996 PULLUP_N_OUT HS_P_10 0.08961f
+C997 HS_P_5 HS_N_8 0.05893f
+C998 FS_P_BLEED_2 FS_P_GATE 0.20009f
+C999 PULLUP_P_BLEED_4 HS_N_8 0.03489f
+C1000 HS_P_9 TERM_P_R 0.11568f
+C1001 HS_N_4 HS_N_8 0.04062f
+C1002 TERM_GATE_N_BLEED_0 TERM_GATE_N_BLEED_1 2.88199f
+C1003 HS_N_9 TERM_GATE_N_BLEED_2 0.0525f
+C1004 PULLUP_P_CONTROL_S HS_N_9 0.03489f
+C1005 DIV_N HS_N_2 0.03311f
+C1006 PAD_P HS_N_0 0.14558f
+C1007 TERM_ENABLE TERM_GATE_P_BLEED_0 0.09803f
+C1008 FS_N_BLEED_0 HS_N 0.02118f
+C1009 FS_N_BLEED_0 DIV_ENABLE 0
+C1010 VCM_LOW_OK HS_P_3 0.09096f
+C1011 PULLUP_N PULLUP_N_BLEED_0 0.79203f
+C1012 HS_P_9 HS_P_8 30.3927f
+C1013 PULLUP_N_OUT VDD 5.36442f
+C1014 HS_N_0 TERM_P_R 0.09876f
+C1015 HS_N_7 PULLUP_P_BLEED_5 0.0525f
+C1016 HS_P_13 HS_N_1 0.12155f
+C1017 PULLUP_P_WELL PULLUP_P_BLEED_1 0.12285f
+C1018 HS_N_12 DIV_LOW_P 0.00136f
+C1019 HS_N_11 PULLDOWN_N_R 0.02404f
+C1020 TERM_OR_N_S FS_N_OUT 0.0683f
+C1021 HS_P_9 HS_P_1 0.03494f
+C1022 VCM_LOW_OK HS_P_2 0.03489f
+C1023 TERM_ENABLE PULLUP_N_WELL 0.54844f
+C1024 DIV_N TERM_OR_P_B 0.00135f
+C1025 FS_N_WELL FS_HIGH_P 1.84613f
+C1026 FS_N_CONTROL_S PULLUP_P 0.1046f
+C1027 PULLDOWN_P_R HS_P_4 0.07466f
+C1028 HS_N_0 HS_N_7 0.07113f
+C1029 HS_N_5 FS_P_BLEED_4 0.03392f
+C1030 HS_P_5 HS_P_13 0.26928f
+C1031 PULLUP_P PULLUP_P_BLEED_0 0.85278f
+C1032 HS_P_12 HS_N 0.5567f
+C1033 PULLUP_N PULLUP_N_BLEED_4 0.24104f
+C1034 PULLUP_P_OUT PULLDOWN_P_R 0.10481f
+C1035 PULLDOWN_P HS_N_8 0.04428f
+C1036 FS_HIGH_N PULLDOWN_N_R 0.03743f
+C1037 PULLUP_N_OUT HS_P_7 0.02846f
+C1038 PAD_N ESD_RAIL 22.0614f
+C1039 HS_N_1 FS_P_BLEED_2 0.03472f
+C1040 PULLUP_N_BLEED_0 PULLUP_N_WELL 2.56376f
+C1041 PAD_N HS_N_12 1.21768f
+C1042 HS_N_13 PULLUP_P_WELL 0.18668f
+C1043 FS_P_BLEED_1 HS_N_3 0.06178f
+C1044 HS_P_13 HS_N_4 0.02957f
+C1045 HS_PBIAS HS_P_11 9.38284f
+C1046 FS_N_BLEED_4 PULLDOWN_N_R 0.08856f
+C1047 HS_N_13 FS_N_GATE 0.19945f
+C1048 a_42245_162628# a_44789_189064# 10.1844f
+C1049 TERM_VCM PULLDOWN_N_R 0.35898f
+C1050 TERM_OR_N_B VDD 14.119f
+C1051 a_41005_204385# ESD_RAIL 0.53823f
+C1052 PULLUP_P_GATE HS_N_11 0.07363f
+C1053 FS_P_CONTROL_S FS_HIGH_P 0.47537f
+C1054 FS_P_BLEED_1 FS_P_CONTROL_S 0.00276f
+C1055 PAD_P HS_N_10 0.11949f
+C1056 HS_N_2 HS_P_11 0.03089f
+C1057 TERM_P_R FS_P_WELL 1.45352f
+C1058 PULLUP_N HS_P 0.0019f
+C1059 FS_P_BLEED_2 HS_N_4 0.03472f
+C1060 PULLUP_N_GATE FS_HIGH_P 0.00415f
+C1061 PULLUP_P_WELL PULLUP_P_BLEED_3 0
+C1062 HS_N_11 TERM_N_R 0.05996f
+C1063 TERM_P_R HS_N_10 0.06034f
+C1064 DIV_ENABLE PULLUP_P 0.05062f
+C1065 PULLUP_N_GATE PULLDOWN_N 0.00133f
+C1066 a_44789_189064# a_43813_189064# 2.94235f
+C1067 HS_N_1 DIV_LOW_N 0.06926f
+C1068 HS_P TERM_GATE_P_BLEED_0 0.00154f
+C1069 VCM_LOW_OK TERM_ENABLE 0.15048f
+C1070 FS_N_OUT HS_PBIAS 0.94939f
+C1071 HS_N_7 FS_P_WELL 1.952f
+C1072 HS_P_11 TERM_OR_P_B 0.11938f
+C1073 HS_P_9 HS_P_4 0.042f
+C1074 PULLUP_N_OUT HS_P_12 0.03006f
+C1075 FS_P_OUT HS_N_3 0.48792f
+C1076 HS_N_13 HS_N_5 0.10387f
+C1077 HS_N_7 HS_N_10 0.03027f
+C1078 FS_HIGH_N TERM_N_R 0.09517f
+C1079 HS_P_9 PULLUP_P_OUT 0.06897f
+C1080 TERM_P_R TERM_OR_P_S 2.01371f
+C1081 PULLUP_N_BLEED_5 PULLUP_N_BLEED_3 0.06568f
+C1082 HS_N_2 FS_N_OUT 0.06167f
+C1083 FS_N_BLEED_4 TERM_N_R 0.05729f
+C1084 TERM_VCM PULLUP_P_GATE 0.16966f
+C1085 HS_N FS_N_BLEED_6 0.06151f
+C1086 PAD_P HS_N_9 1.20851f
+C1087 DIV_ENABLE FS_N_BLEED_6 0.03564f
+C1088 HS_P PULLUP_N_WELL 0.29195f
+C1089 FS_P_CONTROL_S FS_P_OUT 0
+C1090 HS_N_9 TERM_P_R 0.0592f
+C1091 FS_N_WELL VDD 0.13637p
+C1092 DIV_LOW_N HS_N_4 0.06178f
+C1093 PULLUP_P_BLEED_2 TERM_P_R 0.04588f
+C1094 TERM_OR_P_NS HS_P_0 0.07621f
+C1095 TERM_OR_N_NS FS_LOW_N 0.70648f
+C1096 TERM_VCM TERM_N_R 17.4845f
+C1097 HS_N_0 PULLUP_P_OUT 0.02689f
+C1098 VCM_LOW_OK TERM_GATE_N 0.0053f
+C1099 PULLDOWN_P_R HS_N_8 0.02404f
+C1100 HS_N_3 VDD 5.42295f
+C1101 FS_N_OUT TERM_OR_P_B 0.05082f
+C1102 PULLUP_N_OUT PULLUP_P 29.5964f
+C1103 HS_N_7 HS_N_9 0.04151f
+C1104 FS_LOW_P TERM_OR_P_NS 0.39723f
+C1105 HS_P_8 HS_N_9 0.10431f
+C1106 FS_P_BLEED_0 HS_N 0.07763f
+C1107 FS_HIGH_P HS_N_12 0
+C1108 PULLUP_N_BLEED_6 PULLDOWN_N_R 0.08243f
+C1109 PULLDOWN_P FS_N_BLEED_5 0.08856f
+C1110 HS_N_9 HS_P_1 0.0312f
+C1111 FS_P_BLEED_1 HS_N_12 0.06178f
+C1112 HS_N_6 HS_P_0 0.03737f
+C1113 FS_P_CONTROL_S VDD 0.38621f
+C1114 DIV_LOW_N PULLDOWN_P 0.08775f
+C1115 FS_N_BLEED_0 FS_N_WELL 0.38709f
+C1116 PULLUP_N_OUT FS_N_BLEED_6 0.05445f
+C1117 PULLUP_N_GATE VDD 12.2975f
+C1118 FS_N_BLEED_1 HS_P 0.09679f
+C1119 FS_LOW_P HS_N_6 0.08542f
+C1120 HS_N DIV_P 0.08005f
+C1121 VCM_LOW_OK HS_P 0.04312f
+C1122 PULLUP_P_OUT FS_P_WELL 3.18549f
+C1123 HS_N_13 HS_P_6 0.05888f
+C1124 HS_P_13 PULLDOWN_P_R 0.02404f
+C1125 DIV_N HS_N_11 0.03311f
+C1126 DIV_ENABLE DIV_P 4.76769f
+C1127 FS_P_OUT DIV_LOW_P 0.13605f
+C1128 TERM_OR_N_B PULLUP_P 0.13572f
+C1129 TERM_OR_N_S FS_LOW_P 0.08194f
+C1130 HS_P_9 HS_N_8 0.00649f
+C1131 PULLUP_P_OUT HS_N_10 0.02545f
+C1132 PULLUP_P_WELL HS_N_5 0.17988f
+C1133 PULLUP_P_BLEED_5 HS_N_8 0.0525f
+C1134 FS_P_BLEED_6 FS_P_GATE 5.18505f
+C1135 FS_P_GATE HS_N 2.28325f
+C1136 FS_P_OUT HS_N_12 0.43801f
+C1137 DIV_ENABLE FS_P_GATE 0.00424f
+C1138 PULLUP_N_OUT FS_P_BLEED_0 0.11535f
+C1139 FS_P_BLEED_2 PULLDOWN_P_R 0.05445f
+C1140 HS_P_10 HS_N_12 0.04371f
+C1141 TERM_N_R PULLUP_N_BLEED_6 0.05729f
+C1142 PULLUP_P_OUT TERM_OR_P_S 0.00441f
+C1143 HS_N_0 HS_N_8 0.03911f
+C1144 HS_N_13 HS_P_3 0.02464f
+C1145 HS_N_3 HS_P_12 0.03489f
+C1146 HS_N_6 FS_LOW_N 0.04574f
+C1147 FS_P_OUT PAD_N 1.89403f
+C1148 HS_N_6 TERM_GATE_P 0.11785f
+C1149 HS_N_9 HS_P_4 0.03089f
+C1150 TERM_VCM DIV_N 0.7231f
+C1151 PAD_N HS_P_10 0.42477f
+C1152 TERM_OR_N_S FS_LOW_N 0.5416f
+C1153 HS_N_9 PULLUP_P_OUT 0.02404f
+C1154 PULLUP_N_BLEED_5 PULLUP_N_BLEED_1 0.00449f
+C1155 PULLUP_P_BLEED_0 PULLUP_P_BLEED_4 0.00257f
+C1156 HS_PBIAS HS_P_0 0.94883f
+C1157 PAD_N RX_N 9.8031f
+C1158 VDD HS_N_12 6.63143f
+C1159 HS_P_9 HS_P_13 0.04877f
+C1160 FS_N_WELL PULLUP_P 1.97293f
+C1161 FS_P_BLEED_6 HS_N_1 0.06178f
+C1162 HS_N_1 HS_N 3.90933f
+C1163 BYPASS_ENABLE FS_P_WELL 0.05759f
+C1164 FS_LOW_P PULLUP_N_BLEED_1 0.06271f
+C1165 HS_N_1 DIV_ENABLE 0.03528f
+C1166 HS_N_11 HS_P_11 0.06806f
+C1167 FS_P_BLEED_6 FS_P_BLEED_5 3.5401f
+C1168 FS_P_BLEED_5 HS_N 0.08043f
+C1169 TERM_GATE_N_BLEED_1 HS_N 0.04828f
+C1170 PULLUP_N_OUT FS_P_GATE 1.26827f
+C1171 DIV_ENABLE TERM_GATE_N_BLEED_1 0.01375f
+C1172 HS_N_2 HS_P_0 0.03722f
+C1173 PAD_N VDD 0.00457f
+C1174 FS_LOW_P HS_PBIAS 0.34356f
+C1175 HS_P_13 HS_N_0 0.02661f
+C1176 PULLUP_N PULLDOWN_N_R 0.09205f
+C1177 TERM_ENABLE PULLUP_P_BLEED_1 0.00606f
+C1178 FS_P_BLEED_1 FS_HIGH_P 0
+C1179 HS_N_8 FS_P_WELL 1.96551f
+C1180 TERM_GATE_P_BLEED_0 PULLDOWN_N_R 0.0553f
+C1181 HS_P_5 HS_N 0.39228f
+C1182 HS_N PULLUP_P_BLEED_4 0.04828f
+C1183 DIV_ENABLE PULLUP_P_BLEED_4 0.01375f
+C1184 FS_LOW_P HS_N_2 0.21255f
+C1185 FS_N_WELL FS_N_BLEED_6 0.00637f
+C1186 HS_P_5 DIV_ENABLE 0.00252f
+C1187 FS_N_CONTROL_S PULLDOWN_P 0.09193f
+C1188 DIV_ENABLE HS_N_4 0.03089f
+C1189 TERM_OR_P_B HS_P_0 0.09384f
+C1190 FS_P_BLEED_6 HS_N_4 0.06178f
+C1191 HS_N_4 HS_N 1.43714f
+C1192 PAD_N HS_P_7 0.3613f
+C1193 FS_N_BLEED_2 FS_N_GATE 0.17946f
+C1194 FS_N_OUT HS_N_11 0.00528f
+C1195 FS_LOW_N PULLUP_N_BLEED_1 0.07126f
+C1196 FS_P_BLEED_2 HS_N_0 0.03472f
+C1197 PULLUP_N_GATE PULLUP_P 1.41779f
+C1198 TERM_VCM HS_P_11 0.13824f
+C1199 TERM_ENABLE HS_N_13 0.08853f
+C1200 HS_PBIAS FS_LOW_N 0.34933f
+C1201 PULLUP_N_WELL PULLDOWN_N_R 0.3205f
+C1202 PULLUP_N_CONTROL_S PULLUP_N_BLEED_0 0.00553f
+C1203 FS_LOW_P TERM_OR_P_B 1.1369f
+C1204 HS_N_1 PULLUP_N_OUT 0.05062f
+C1205 HS_PBIAS TERM_GATE_P 0.02241f
+C1206 FS_N_OUT FS_HIGH_N 0.0203f
+C1207 PULLUP_N_OUT FS_P_BLEED_5 0
+C1208 PULLUP_N_OUT TERM_GATE_N_BLEED_1 0.05462f
+C1209 FS_P_OUT FS_HIGH_P 0.11224f
+C1210 HS_N_6 TERM_GATE_N_BLEED_2 0.0525f
+C1211 PULLUP_P_CONTROL_S HS_N_6 0.03489f
+C1212 HS_N_2 FS_LOW_N 0.08747f
+C1213 HS_P_13 FS_P_WELL 0.22121f
+C1214 HS_P FS_P_BLEED_4 0.08804f
+C1215 HS_P_12 HS_N_12 0.08272f
+C1216 PULLUP_N TERM_N_R 0.22413f
+C1217 HS_N_3 FS_P_BLEED_0 0.06178f
+C1218 HS_N_9 HS_N_8 0.11834p
+C1219 PULLUP_N_GATE FS_N_BLEED_6 0.00548f
+C1220 HS_N_2 TERM_GATE_P 0.10747f
+C1221 HS_N_5 HS_P_6 0.05828f
+C1222 HS_P_13 HS_N_10 0.0252f
+C1223 HS_P_5 PULLUP_N_OUT 0.02859f
+C1224 DIV_ENABLE PULLDOWN_P 0.04428f
+C1225 DIFF_ENABLE FS_HIGH_P 0.1992f
+C1226 TERM_N_R TERM_GATE_P_BLEED_0 0.14463f
+C1227 TERM_ENABLE PULLUP_P_BLEED_3 0.11229f
+C1228 PULLUP_N_OUT PULLUP_P_BLEED_4 0.05472f
+C1229 TERM_GATE_N HS_N_13 0.04808f
+C1230 TERM_VCM FS_N_OUT 0.4771f
+C1231 PULLUP_N_OUT HS_N_4 0.00298f
+C1232 DIFF_ENABLE PULLDOWN_N 0.12241f
+C1233 PAD_N HS_P_12 0.22324f
+C1234 HS_N_0 DIV_LOW_N 0.06949f
+C1235 FS_P_CONTROL_S FS_P_BLEED_0 0.04299f
+C1236 FS_P_BLEED_2 FS_P_WELL 0.04643f
+C1237 TERM_OR_N_NS TERM_P_R 0.17892f
+C1238 a_42245_162628# ESD_RAIL 0.24219p
+C1239 TERM_GATE_P TERM_OR_P_B 12.9405f
+C1240 HS_N_1 TERM_OR_N_B 0.03096f
+C1241 HS_N_3 DIV_P 0.03388f
+C1242 TERM_N_R PULLUP_N_WELL 0.28431f
+C1243 FS_P_BLEED_2 HS_N_10 0.03472f
+C1244 FS_HIGH_P VDD 0.83682f
+C1245 HS_N_5 HS_P_3 0.03089f
+C1246 PULLUP_P HS_N_12 0
+C1247 FS_P_BLEED_1 VDD 0.62129f
+C1248 TERM_OR_N_B TERM_GATE_N_BLEED_1 0
+C1249 VCM_LOW_OK PULLDOWN_N_R 0.09092f
+C1250 PULLDOWN_N VDD 0.45423f
+C1251 FS_LOW_N PULLUP_P_BLEED_6 0.08298f
+C1252 PULLUP_N_CONTROL_S HS_P 0.03228f
+C1253 ESD_RAIL a_43813_189064# 4.89902f
+C1254 HS_N_5 HS_P_2 0.03089f
+C1255 HS_P_13 HS_N_9 0.05493f
+C1256 HS_N_3 FS_P_GATE 1.011f
+C1257 PULLDOWN_P_R PULLUP_P_BLEED_0 0.12409f
+C1258 HS_N_13 HS_P 0.10519f
+C1259 TERM_P_R PULLUP_N_BLEED_3 0.00257f
+C1260 PULLUP_N_OUT PULLDOWN_P 0.07847f
+C1261 TERM_OR_N_B HS_N_4 0.02846f
+C1262 TERM_ENABLE PULLUP_P_WELL 2.3244f
+C1263 FS_P_OUT RX_N 0.00505f
+C1264 FS_P_BLEED_2 HS_N_9 0.03472f
+C1265 TERM_ENABLE FS_N_GATE 1.09657f
+C1266 FS_N_BLEED_0 FS_HIGH_P 0.014f
+C1267 HS_PBIAS TERM_GATE_N_BLEED_2 0.07928f
+C1268 PULLUP_P_CONTROL_S HS_PBIAS 0.04828f
+C1269 FS_P_CONTROL_S FS_P_GATE 1.43654f
+C1270 VCM_LOW_OK PULLUP_P_GATE 0.34939f
+C1271 DIV_LOW_N HS_N_10 0.06178f
+C1272 TERM_P_R TERM_OR_P_NS 0.22589f
+C1273 FS_P_OUT VDD 11.0126f
+C1274 FS_P_BLEED_6 PULLDOWN_P_R 0.11255f
+C1275 PULLDOWN_P_R HS_N 0.04388f
+C1276 FS_N_BLEED_3 FS_N_BLEED_5 0.10633f
+C1277 PULLUP_P_CONTROL_S HS_N_2 0.03489f
+C1278 VDD HS_P_10 6.63169f
+C1279 VCM_LOW_OK TERM_N_R 0.14699f
+C1280 HS_N_2 TERM_GATE_N_BLEED_2 0.0525f
+C1281 HS_N_1 HS_N_3 0.08226f
+C1282 HS_P_8 TERM_OR_P_NS 0.02846f
+C1283 HS_N_7 TERM_OR_P_NS 0.00491f
+C1284 FS_P_BLEED_0 HS_N_12 0.06178f
+C1285 HS_N_3 FS_P_BLEED_5 0.06178f
+C1286 PAD_P HS_N_6 2.14046f
+C1287 HS_N_3 TERM_GATE_N_BLEED_1 0.03489f
+C1288 TERM_OR_N_B PULLDOWN_P 0.08713f
+C1289 HS_N_11 HS_P_0 0.04389f
+C1290 PULLUP_P_BLEED_5 PULLUP_P_BLEED_0 0
+C1291 HS_P_6 HS_P_3 0.07261f
+C1292 TERM_ENABLE HS_N_5 0.04808f
+C1293 HS_N_6 TERM_P_R 0.05893f
+C1294 HS_P_1 TERM_OR_P_NS 0.04312f
+C1295 PULLUP_N_BLEED_2 PULLUP_N_BLEED_3 3.56186f
+C1296 HS_P_7 HS_P_10 0.10683f
+C1297 DIV_P DIV_LOW_P 0.50398f
+C1298 HS_N_3 PULLUP_P_BLEED_4 0.03489f
+C1299 HS_N_9 DIV_LOW_N 0.06178f
+C1300 HS_P_5 HS_N_3 0.03489f
+C1301 FS_P_CONTROL_S HS_N_1 0.0324f
+C1302 HS_P_6 HS_P_2 0.06956f
+C1303 HS_N_3 HS_N_4 0.1223p
+C1304 FS_LOW_P HS_N_11 0.08505f
+C1305 TERM_OR_N_S TERM_P_R 0.30551f
+C1306 HS_N_7 HS_N_6 0.11975p
+C1307 PULLUP_P_WELL HS_P 0.29185f
+C1308 FS_LOW_P FS_HIGH_N 0.0591f
+C1309 HS_N_6 HS_P_1 0.03099f
+C1310 PULLUP_N_OUT PULLDOWN_P_R 0.06256f
+C1311 HS_P_7 VDD 4.96081f
+C1312 PAD_N DIV_P 0.47479f
+C1313 HS_P_9 HS_N 0.12189f
+C1314 TERM_OR_N_S HS_N_7 0.06826f
+C1315 PULLUP_P_BLEED_5 HS_N 0.1021f
+C1316 DIV_ENABLE PULLUP_P_BLEED_5 0
+C1317 TERM_GATE_N HS_N_5 0.05061f
+C1318 FS_P_GATE HS_N_12 1.01722f
+C1319 FS_LOW_P FS_N_BLEED_4 0.08101f
+C1320 TERM_VCM HS_P_0 0.19537f
+C1321 FS_N_GATE HS_P 1.51174f
+C1322 FS_P_CONTROL_S HS_N_4 0.03226f
+C1323 HS_P_2 HS_P_3 34.3283f
+C1324 PULLDOWN_N PULLUP_P 0.06103f
+C1325 FS_P_OUT HS_P_12 0.10923f
+C1326 FS_N_WELL PULLDOWN_P 2.85309f
+C1327 HS_N_11 FS_LOW_N 0.04607f
+C1328 FS_P_BLEED_6 HS_N_0 0.06178f
+C1329 FS_N_BLEED_0 VDD 0
+C1330 HS_N_0 HS_N 0.13402p
+C1331 TERM_VCM FS_LOW_P 0.24716f
+C1332 HS_P_12 HS_P_10 0.07589f
+C1333 TERM_GATE_P_BLEED_0 HS_P_11 0.03689f
+C1334 DIV_ENABLE HS_N_0 1.72358f
+C1335 PULLUP_P_GATE FS_P_BLEED_3 0
+C1336 HS_N_11 TERM_GATE_P 0.10852f
+C1337 FS_HIGH_P FS_N_BLEED_6 0.09407f
+C1338 HS_P_4 TERM_OR_P_NS 0.02846f
+C1339 TERM_P_R PULLUP_N_BLEED_1 0.04766f
+C1340 FS_LOW_N FS_HIGH_N 0.04574f
+C1341 HS_N_1 DIV_LOW_P 0.00376f
+C1342 PULLUP_P_OUT TERM_OR_P_NS 0.1011f
+C1343 TERM_ENABLE HS_P_6 0.02404f
+C1344 VCM_LOW_OK DIV_N 0
+C1345 FS_N_BLEED_4 FS_LOW_N 0
+C1346 HS_N_5 HS_P 0.87187f
+C1347 HS_PBIAS TERM_P_R 0.54217f
+C1348 HS_N_1 HS_N_12 0.07584f
+C1349 HS_P_12 VDD 4.78775f
+C1350 PAD_P HS_N_2 1.25659f
+C1351 HS_P_9 PULLUP_N_OUT 0.07928f
+C1352 FS_P_BLEED_5 HS_N_12 0.06178f
+C1353 TERM_GATE_N_BLEED_1 HS_N_12 0.03489f
+C1354 PULLUP_N_OUT PULLUP_P_BLEED_5 0.09196f
+C1355 PULLUP_P_BLEED_1 PULLDOWN_N_R 0.00195f
+C1356 HS_P_5 DIV_LOW_P 0.00305f
+C1357 TERM_VCM FS_LOW_N 0.12878f
+C1358 PULLUP_N_GATE PULLDOWN_P 0.20689f
+C1359 DIFF_ENABLE PULLUP_P 0.0661f
+C1360 HS_P_8 HS_PBIAS 1.54227f
+C1361 HS_N_7 HS_PBIAS 7.23833f
+C1362 HS_N_2 TERM_P_R 0.0594f
+C1363 HS_N_6 HS_P_4 0.03738f
+C1364 FS_HIGH_P FS_P_BLEED_0 0.01425f
+C1365 PAD_N HS_N_1 1.13339f
+C1366 PULLUP_P_GATE FS_P_BLEED_4 0
+C1367 FS_P_BLEED_1 FS_P_BLEED_0 7.1724f
+C1368 TERM_VCM TERM_GATE_P 26.4481f
+C1369 HS_PBIAS HS_P_1 2.59892f
+C1370 PULLUP_P_OUT HS_N_6 0.02404f
+C1371 DIV_ENABLE FS_P_WELL 0.094f
+C1372 PULLUP_N_CONTROL_S PULLDOWN_N_R 0.03764f
+C1373 HS_N FS_P_WELL 41.0032f
+C1374 HS_P_5 HS_N_12 0.03489f
+C1375 HS_P_7 HS_P_12 0.11376f
+C1376 TERM_ENABLE HS_P_3 0.0768f
+C1377 PULLUP_P_BLEED_4 HS_N_12 0.03489f
+C1378 HS_N_0 PULLUP_N_OUT 0.05062f
+C1379 HS_N_9 PULLUP_P_BLEED_0 0.00105f
+C1380 FS_P_BLEED_6 HS_N_10 0.06178f
+C1381 HS_N_13 PULLDOWN_N_R 0.06832f
+C1382 HS_N_7 HS_N_2 0.02926f
+C1383 HS_N_10 HS_N 3.84913f
+C1384 HS_N_4 HS_N_12 0
+C1385 DIV_ENABLE HS_N_10 0.03182f
+C1386 TERM_ENABLE HS_P_2 0.06392f
+C1387 PULLUP_N_BLEED_5 PULLUP_N_BLEED_6 1.37599f
+C1388 PULLUP_P VDD 2.44148f
+C1389 HS_N_2 HS_P_1 0.09798f
+C1390 HS_P_5 PAD_N 1.55482f
+C1391 TERM_ENABLE TERM_GATE_P_BLEED_1 0.10319f
+C1392 TERM_P_R TERM_OR_P_B 0.76857f
+C1393 PULLUP_N_BLEED_2 PULLUP_N_BLEED_1 5.20556f
+C1394 PAD_N HS_N_4 1.29614f
+C1395 PULLUP_P_BLEED_1 PULLUP_P_GATE 0.12099f
+C1396 PULLUP_N_BLEED_2 HS_PBIAS 0.07928f
+C1397 FS_N_BLEED_3 HS_N 0.11535f
+C1398 VCM_LOW_OK HS_P_11 0.06673f
+C1399 HS_P_8 TERM_OR_P_B 0.10057f
+C1400 HS_N_7 TERM_OR_P_B 0.07211f
+C1401 HS_N_3 PULLDOWN_P_R 0.02404f
+C1402 FS_HIGH_P FS_P_GATE 0.43634f
+C1403 HS_N_11 TERM_GATE_N_BLEED_2 0.05266f
+C1404 HS_P_1 TERM_OR_P_B 0.08191f
+C1405 PULLUP_P_CONTROL_S HS_N_11 0.03489f
+C1406 HS_N_9 HS_N 5.92574f
+C1407 VDD FS_N_BLEED_6 0.45117f
+C1408 HS_N_0 TERM_OR_N_B 0.03206f
+C1409 FS_P_BLEED_1 FS_P_GATE 0.16375f
+C1410 FS_P_BLEED_6 HS_N_9 0.06178f
+C1411 PULLUP_N_OUT FS_P_WELL 2.65152f
+C1412 HS_P_6 HS_P 3.46603f
+C1413 DIV_ENABLE HS_N_9 0.03089f
+C1414 FS_N_BLEED_2 HS_P 0.09016f
+C1415 HS_N_7 PULLUP_P_BLEED_6 0.03663f
+C1416 PULLDOWN_P HS_N_12 0.05194f
+C1417 TERM_OR_P_NS HS_N_8 0.00704f
+C1418 HS_N_13 PULLUP_P_GATE 0.07271f
+C1419 DIV_N FS_P_BLEED_3 0
+C1420 HS_N_13 TERM_N_R 0.05952f
+C1421 HS_PBIAS HS_P_4 8.54683f
+C1422 FS_N_OUT FS_N_BLEED_1 0
+C1423 VCM_LOW_OK FS_N_OUT 0.06167f
+C1424 FS_P_OUT DIV_P 0.01279f
+C1425 PULLUP_P_OUT HS_PBIAS 0.50651f
+C1426 FS_P_BLEED_0 VDD 0.25026f
+C1427 HS_N_6 HS_N_8 0.04946f
+C1428 HS_P HS_P_3 1.89056f
+C1429 HS_N_1 FS_HIGH_P 0
+C1430 TERM_VCM TERM_GATE_N_BLEED_2 0.01503f
+C1431 PULLUP_P_CONTROL_S TERM_VCM 0.03425f
+C1432 DIV_P RX_N 0.37599f
+C1433 PULLUP_N_OUT FS_N_BLEED_3 0.05216f
+C1434 PULLUP_P_BLEED_3 PULLUP_P_GATE 0.18954f
+C1435 HS_N_3 PULLUP_P_BLEED_5 0.0525f
+C1436 FS_HIGH_P TERM_GATE_N_BLEED_1 0.15807f
+C1437 a_53878_204665# ESD_RAIL 0.53916f
+C1438 FS_N_BLEED_0 FS_N_BLEED_6 0.00763f
+C1439 FS_P_BLEED_1 HS_N_1 0.06178f
+C1440 FS_P_OUT FS_P_GATE 0.13538p
+C1441 HS_P HS_P_2 7.07711f
+C1442 TERM_OR_N_S HS_N_8 0.07039f
+C1443 PULLUP_P_OUT HS_N_2 0.02451f
+C1444 HS_P_13 TERM_OR_P_NS 0.02895f
+C1445 TERM_ENABLE PULLUP_N_BLEED_0 0.11535f
+C1446 PULLUP_P_WELL PULLDOWN_N_R 0.41482f
+C1447 HS_N_9 PULLUP_N_OUT 0.01492f
+C1448 PULLUP_P_BLEED_3 TERM_N_R 0.11444f
+C1449 PULLUP_P_BLEED_2 PULLUP_N_OUT 0
+C1450 FS_N_GATE PULLDOWN_N_R 1.21497f
+C1451 FS_HIGH_P PULLUP_P_BLEED_4 0.16441f
+C1452 HS_P_4 TERM_OR_P_B 0.10189f
+C1453 TERM_OR_N_B HS_N_10 0.03027f
+C1454 HS_N_3 HS_N_0 0.07842f
+C1455 VDD DIV_P 0.11168f
+C1456 TERM_ENABLE TERM_GATE_N 10.7923f
+C1457 PULLUP_P_OUT TERM_OR_P_B 0.19951f
+C1458 PULLUP_N_BLEED_5 PULLUP_N 0.08999f
+C1459 TERM_OR_N_S TERM_GATE_N_BLEED_0 0.00179f
+C1460 FS_P_BLEED_1 HS_N_4 0.06178f
+C1461 HS_P_13 HS_N_6 0.05493f
+C1462 TERM_GATE_P_BLEED_0 HS_P_0 0.00591f
+C1463 BYPASS_ENABLE PULLUP_N_BLEED_1 0.00766f
+C1464 FS_P_GATE VDD 28.8959f
+C1465 a_42245_162628# a_43813_189064# 0.00994f
+C1466 PULLDOWN_P_R HS_N_12 0.02424f
+C1467 FS_P_CONTROL_S HS_N_0 0.03296f
+C1468 FS_P_OUT HS_N_1 0.44686f
+C1469 PULLUP_P_WELL PULLUP_P_GATE 35.8752f
+C1470 PAD_P HS_N_11 0.38848f
+C1471 HS_N_9 TERM_OR_N_B 0.02889f
+C1472 HS_N_1 HS_P_10 0.0348f
+C1473 HS_N_5 PULLDOWN_N_R 0.06159f
+C1474 PULLUP_P_WELL TERM_N_R 0.33261f
+C1475 FS_P_BLEED_2 HS_N_6 0.03472f
+C1476 PAD_N PULLDOWN_P_R 0.0844f
+C1477 HS_PBIAS HS_N_8 9.64282f
+C1478 HS_P_5 FS_P_OUT 0.05462f
+C1479 HS_N_13 DIV_N 0.03311f
+C1480 HS_N_11 TERM_P_R 0.05996f
+C1481 PULLUP_P FS_N_BLEED_6 0.05445f
+C1482 TERM_ENABLE HS_P 0.05441f
+C1483 HS_N_3 FS_P_WELL 1.91956f
+C1484 FS_N_WELL HS_N_10 0.01997f
+C1485 FS_N_OUT FS_P_BLEED_3 0.13926f
+C1486 FS_N_GATE TERM_N_R 0.81764f
+C1487 FS_LOW_P PULLUP_N_WELL 0.22587f
+C1488 FS_P_OUT HS_N_4 0.43331f
+C1489 PULLDOWN_N PULLDOWN_P 2.82816f
+C1490 HS_P_5 HS_P_10 0.0481f
+C1491 HS_N_1 VDD 5.26905f
+C1492 HS_N_3 HS_N_10 0.07409f
+C1493 FS_P_BLEED_5 VDD 0.00257f
+C1494 HS_N_7 HS_N_11 0.02985f
+C1495 HS_N_2 HS_N_8 0
+C1496 TERM_P_R FS_HIGH_N 0.00719f
+C1497 HS_N_4 HS_P_10 0.07706f
+C1498 VDD TERM_GATE_N_BLEED_1 0.45188f
+C1499 HS_P_12 DIV_P 0.03388f
+C1500 FS_N_BLEED_4 TERM_P_R 0.04588f
+C1501 PAD_P TERM_VCM 0.0027f
+C1502 HS_N_5 PULLUP_P_GATE 0.07376f
+C1503 TERM_GATE_P_BLEED_0 TERM_GATE_P 4.84915f
+C1504 FS_P_CONTROL_S FS_P_WELL 0.19479f
+C1505 FS_N_WELL FS_N_BLEED_3 0
+C1506 PULLUP_P_BLEED_5 HS_N_12 0.05263f
+C1507 HS_N_0 DIV_LOW_P 0.00585f
+C1508 FS_P_CONTROL_S HS_N_10 0.03236f
+C1509 TERM_GATE_N HS_P 0.05933f
+C1510 HS_P_5 VDD 4.75167f
+C1511 DIV_LOW_N HS_N_6 0.06178f
+C1512 PULLUP_N_BLEED_4 HS_P 0.00212f
+C1513 HS_N_5 TERM_N_R 0.05893f
+C1514 TERM_VCM TERM_P_R 0.19786p
+C1515 VDD PULLUP_P_BLEED_4 0.44664f
+C1516 HS_N_8 TERM_OR_P_B 0.07245f
+C1517 HS_P_13 HS_PBIAS 2.35174f
+C1518 FS_N_OUT FS_P_BLEED_4 0.06639f
+C1519 FS_LOW_N PULLUP_N_WELL 0.13755f
+C1520 HS_P_12 FS_P_GATE 0.00599f
+C1521 VDD HS_N_4 5.65472f
+C1522 VCM_LOW_OK HS_P_0 0.04122f
+C1523 HS_P_9 PAD_N 6.47937f
+C1524 HS_N_3 HS_N_9 0.00333f
+C1525 HS_N_0 HS_N_12 0.03942f
+C1526 TERM_VCM HS_P_8 0.09671f
+C1527 TERM_VCM HS_N_7 0.18446f
+C1528 PULLUP_P_BLEED_6 HS_N_8 0.04188f
+C1529 HS_P_6 PULLDOWN_N_R 0.02414f
+C1530 HS_P_5 HS_P_7 0.03078f
+C1531 FS_LOW_P FS_N_BLEED_1 0.23767f
+C1532 HS_P_13 HS_N_2 0.07762f
+C1533 DIFF_ENABLE PULLDOWN_P 0.11011f
+C1534 FS_N_BLEED_2 PULLDOWN_N_R 0.05188f
+C1535 PAD_N HS_N_0 1.42664f
+C1536 VCM_LOW_OK FS_LOW_P 0.22718f
+C1537 FS_P_BLEED_2 HS_PBIAS 0.04811f
+C1538 TERM_VCM HS_P_1 0.15005f
+C1539 PULLUP_N_BLEED_2 FS_HIGH_N 0.00933f
+C1540 FS_P_CONTROL_S HS_N_9 0.03242f
+C1541 FS_P_BLEED_2 HS_N_2 0.03472f
+C1542 FS_P_BLEED_1 PULLDOWN_P_R 0.10124f
+C1543 HS_P_13 TERM_OR_P_B 0.10389f
+C1544 PULLUP_P_WELL DIV_N 0.08038f
+C1545 PULLDOWN_P VDD 1.69557f
+C1546 HS_N_1 HS_P_12 0.06335f
+C1547 HS_P_3 PULLDOWN_N_R 0.07217f
+C1548 HS_N_13 FS_N_OUT 0.00552f
+C1549 HS_N_10 DIV_LOW_P 0.00259f
+C1550 HS_PBIAS FS_N_BLEED_5 0.08856f
+C1551 VCM_LOW_OK FS_LOW_N 0.0742f
+C1552 FS_N_BLEED_1 FS_LOW_N 0.00106f
+C1553 PULLUP_P_OUT HS_N_11 0.02508f
+C1554 HS_N_12 FS_P_WELL 1.97719f
+C1555 HS_P_2 PULLDOWN_N_R 0.07217f
+C1556 VCM_LOW_OK TERM_GATE_P 0.20188f
+C1557 TERM_GATE_P_BLEED_1 PULLDOWN_N_R 0.00195f
+C1558 HS_P_5 HS_P_12 0.03887f
+C1559 HS_N_10 HS_N_12 0.011f
+C1560 TERM_P_R PULLUP_N_BLEED_6 0.04606f
+C1561 DIV_LOW_N HS_PBIAS 0.1046f
+C1562 HS_P_12 HS_N_4 0.07181f
+C1563 a_53878_203545# ESD_RAIL 0.56772f
+C1564 HS_N_1 PULLUP_P 0.05062f
+C1565 PAD_N HS_N_10 1.35483f
+C1566 HS_N PULLUP_N_BLEED_3 0.06387f
+C1567 PULLUP_P TERM_GATE_N_BLEED_1 0.05462f
+C1568 FS_P_OUT PULLDOWN_P_R 0.75661f
+C1569 TERM_VCM HS_P_4 0.12461f
+C1570 HS_N_5 DIV_N 0.03311f
+C1571 DIV_LOW_N HS_N_2 0.06178f
+C1572 FS_HIGH_P PULLUP_P_BLEED_5 0.03577f
+C1573 PULLDOWN_P_R HS_P_10 0.07466f
+C1574 TERM_VCM PULLUP_P_OUT 0.39727f
+C1575 FS_P_BLEED_0 FS_P_GATE 0.22183f
+C1576 HS_N_6 PULLUP_P_BLEED_0 0
+C1577 TERM_N_R HS_P_3 0.05037f
+C1578 PULLUP_P PULLUP_P_BLEED_4 0.22457f
+C1579 HS_N_9 HS_N_12 0.03489f
+C1580 HS_N_0 FS_HIGH_P 0
+C1581 FS_LOW_P FS_P_BLEED_3 0.0781f
+C1582 FS_P_BLEED_1 HS_N_0 0.06178f
+C1583 PAD_N HS_N_9 1.0992f
+C1584 TERM_N_R TERM_GATE_P_BLEED_1 0.23767f
+C1585 TERM_ENABLE PULLDOWN_N_R 0.13638f
+C1586 PULLDOWN_P_R VDD 1.96881f
+C1587 FS_HIGH_N BYPASS_ENABLE 0
+C1588 TERM_GATE_P_BLEED_2 TERM_OR_P_B 0.00349f
+C1589 FS_P_BLEED_6 HS_N_6 0.06178f
+C1590 HS_N_6 HS_N 7.99416f
+C1591 DIV_ENABLE HS_N_6 0.03089f
+C1592 PULLUP_N_OUT PULLUP_N_BLEED_3 0
+C1593 PULLUP_N_BLEED_0 PULLDOWN_N_R 0
+C1594 HS_N_1 FS_P_BLEED_0 0.06178f
+C1595 PULLUP_P_WELL FS_N_OUT 0.14446f
+C1596 HS_P_7 PULLDOWN_P_R 0.02411f
+C1597 FS_N_OUT FS_N_GATE 0.15103p
+C1598 HS_N_5 HS_P_11 0.03089f
+C1599 TERM_OR_N_NS TERM_OR_N_B 0.94577f
+C1600 HS_P_9 HS_P_10 0.00887f
+C1601 VCM_LOW_OK PULLUP_P_CONTROL_S 0.03762f
+C1602 TERM_OR_N_S HS_N 0.11245f
+C1603 TERM_VCM BYPASS_ENABLE 0.00889f
+C1604 TERM_GATE_N PULLDOWN_N_R 0.15401f
+C1605 FS_P_OUT HS_N_0 0.5609f
+C1606 PULLUP_N_OUT TERM_OR_P_NS 0.11021f
+C1607 FS_HIGH_P FS_P_WELL 1.22539f
+C1608 DIV_N HS_P_6 0
+C1609 TERM_ENABLE PULLUP_P_GATE 0.88804f
+C1610 PULLUP_N_BLEED_4 PULLDOWN_N_R 0.08997f
+C1611 FS_P_BLEED_1 FS_P_WELL 0.11939f
+C1612 FS_P_BLEED_0 HS_N_4 0.06178f
+C1613 FS_N_CONTROL_S HS_PBIAS 0.09193f
+C1614 FS_HIGH_P HS_N_10 0
+C1615 TERM_P_R PULLUP_N 0.18126f
+C1616 TERM_VCM HS_N_8 0.17659f
+C1617 HS_PBIAS PULLUP_P_BLEED_0 0.01397f
+C1618 FS_P_BLEED_1 HS_N_10 0.06178f
+C1619 HS_P_9 VDD 6.02581f
+C1620 TERM_ENABLE TERM_N_R 0.54729f
+C1621 HS_N_0 RX_N 0.00305f
+C1622 HS_P_13 HS_N_11 0.02487f
+C1623 TERM_P_R TERM_GATE_P_BLEED_0 0.00257f
+C1624 PULLDOWN_P FS_N_BLEED_6 0.04811f
+C1625 PULLUP_N_OUT HS_N_6 0.04914f
+C1626 HS_N_1 FS_P_GATE 1.02597f
+C1627 FS_HIGH_P FS_N_BLEED_3 0
+C1628 FS_P_GATE FS_P_BLEED_5 0.30746f
+C1629 HS_P_12 PULLDOWN_P_R 0.02404f
+C1630 PULLUP_N_BLEED_0 TERM_N_R 0.11444f
+C1631 HS_N_0 VDD 4.92227f
+C1632 HS_P_8 TERM_GATE_P_BLEED_0 0.0271f
+C1633 HS_N_7 TERM_GATE_P_BLEED_0 0
+C1634 HS_P PULLDOWN_N_R 0.04198f
+C1635 HS_P_9 HS_P_7 0.00206f
+C1636 FS_P_BLEED_2 HS_N_11 0.03472f
+C1637 HS_N PULLUP_N_BLEED_1 0.06167f
+C1638 HS_N_13 FS_LOW_P 0.08505f
+C1639 TERM_VCM TERM_GATE_N_BLEED_0 0.11862f
+C1640 TERM_OR_N_S PULLUP_N_OUT 0.14657f
+C1641 TERM_P_R PULLUP_N_WELL 0.25282f
+C1642 HS_P_1 TERM_GATE_P_BLEED_0 0.05525f
+C1643 HS_N_9 FS_HIGH_P 0.01124f
+C1644 DIV_ENABLE PULLUP_N_BLEED_1 0.03564f
+C1645 FS_P_OUT FS_P_WELL 0.21028p
+C1646 FS_P_BLEED_6 HS_PBIAS 0.08856f
+C1647 HS_PBIAS HS_N 0.39671f
+C1648 TERM_GATE_N TERM_N_R 27.6669f
+C1649 FS_P_BLEED_1 HS_N_9 0.06178f
+C1650 DIV_ENABLE HS_PBIAS 0.06119f
+C1651 TERM_VCM HS_P_13 0.09664f
+C1652 FS_P_GATE HS_N_4 1.011f
+C1653 FS_P_OUT HS_N_10 0.44249f
+C1654 HS_P_6 HS_P_11 0.06713f
+C1655 PULLUP_N_BLEED_2 PULLUP_N 0.2265f
+C1656 HS_N_10 HS_P_10 0.09288f
+C1657 FS_P_BLEED_6 HS_N_2 0.06178f
+C1658 PULLDOWN_P_R PULLUP_P 0
+C1659 HS_N_2 HS_N 6.79185f
+C1660 TERM_OR_N_B HS_N_6 0.02846f
+C1661 DIV_ENABLE HS_N_2 0.03089f
+C1662 HS_N_1 TERM_GATE_N_BLEED_1 0.03489f
+C1663 HS_N_1 FS_P_BLEED_5 0.06178f
+C1664 HS_N_13 FS_LOW_N 0.04574f
+C1665 PULLUP_P_GATE HS_P 0.0794f
+C1666 TERM_VCM FS_P_BLEED_2 0.03472f
+C1667 TERM_OR_N_S TERM_OR_N_B 5.00768f
+C1668 VDD FS_P_WELL 0.13079p
+C1669 HS_N_13 TERM_GATE_P 0.1076f
+C1670 VCM_LOW_OK PAD_P 0.00476f
+C1671 TERM_N_R HS_P 0.17334f
+C1672 DIV_LOW_N HS_N_11 0.06178f
+C1673 HS_N TERM_OR_P_B 0.1311f
+C1674 HS_N_1 PULLUP_P_BLEED_4 0.03489f
+C1675 DIV_ENABLE TERM_OR_P_B 0
+C1676 HS_P_11 HS_P_3 0.02877f
+C1677 HS_P_5 HS_N_1 0.03489f
+C1678 FS_N_BLEED_4 FS_N_BLEED_5 7.71303f
+C1679 FS_P_OUT HS_N_9 0.43377f
+C1680 VDD HS_N_10 5.34851f
+C1681 PULLUP_N_OUT PULLUP_N_BLEED_1 0.00305f
+C1682 PULLUP_N_BLEED_2 PULLUP_N_WELL 0.01138f
+C1683 FS_N_OUT HS_P_6 0.06167f
+C1684 VCM_LOW_OK TERM_P_R 0.34828f
+C1685 HS_N_1 HS_N_4 0.04305f
+C1686 TERM_ENABLE DIV_N 0.00135f
+C1687 HS_N_3 TERM_OR_P_NS 0.00153f
+C1688 PULLUP_N_OUT HS_PBIAS 0.80187f
+C1689 HS_P_2 HS_P_11 0.00106f
+C1690 FS_P_BLEED_5 HS_N_4 0.06178f
+C1691 HS_N_9 HS_P_10 0.03109f
+C1692 TERM_GATE_N_BLEED_1 HS_N_4 0.03489f
+C1693 HS_N_0 HS_P_12 0.07547f
+C1694 PULLUP_P_BLEED_6 HS_N 0.05048f
+C1695 TERM_VCM FS_N_BLEED_5 0.13759f
+C1696 HS_P_4 TERM_GATE_P_BLEED_0 0.02451f
+C1697 VDD TERM_OR_P_S 4.39982f
+C1698 VCM_LOW_OK HS_P_8 0.03489f
+C1699 VCM_LOW_OK HS_N_7 0.03566f
+C1700 PULLUP_N_GATE PULLUP_N_BLEED_3 0.08138f
+C1701 PULLUP_P_OUT TERM_GATE_P_BLEED_0 0.1011f
+C1702 FS_LOW_P PULLUP_P_WELL 0.27223f
+C1703 HS_N_4 PULLUP_P_BLEED_4 0.03489f
+C1704 PULLUP_P_BLEED_5 PULLUP_P 0.15607f
+C1705 HS_P_5 HS_N_4 0.03511f
+C1706 VCM_LOW_OK HS_P_1 0.03489f
+C1707 TERM_VCM DIV_LOW_N 0.32996f
+C1708 FS_P_BLEED_0 PULLDOWN_P_R 0.10124f
+C1709 HS_N_3 HS_N_6 0.00106f
+C1710 PULLUP_P_BLEED_2 VDD 0.0176f
+C1711 HS_N_9 VDD 5.06755f
+C1712 FS_LOW_P FS_N_GATE 0.40434f
+C1713 TERM_GATE_N DIV_N 0.01703f
+C1714 PULLUP_N_OUT TERM_OR_P_B 0.20772f
+C1715 HS_N_0 PULLUP_P 0.05062f
+C1716 HS_N_1 PULLDOWN_P 0.04428f
+C1717 TERM_OR_N_S HS_N_3 0.06488f
+C1718 TERM_VCM TERM_GATE_P_BLEED_2 0.02194f
+C1719 PULLDOWN_P TERM_GATE_N_BLEED_1 0.04828f
+C1720 TERM_OR_N_B HS_PBIAS 0.05921f
+C1721 PULLUP_P_CONTROL_S PULLUP_P_BLEED_1 0
+C1722 HS_N_5 HS_P_0 0.03733f
+C1723 HS_N_9 HS_P_7 0.0401f
+C1724 HS_P_12 FS_P_WELL 0.01315f
+C1725 FS_P_CONTROL_S HS_N_6 0.03226f
+C1726 FS_N_BLEED_0 FS_N_BLEED_3 0.1187f
+C1727 PULLUP_N_OUT PULLUP_P_BLEED_6 0.09196f
+C1728 PULLDOWN_P PULLUP_P_BLEED_4 0
+C1729 HS_P_12 HS_N_10 0.07709f
+C1730 TERM_OR_N_B HS_N_2 0.02905f
+C1731 TERM_ENABLE HS_P_11 0.07923f
+C1732 PULLUP_P_CONTROL_S HS_N_13 0.03489f
+C1733 FS_N_GATE FS_LOW_N 0.73509f
+C1734 FS_LOW_P HS_N_5 0.08533f
+C1735 HS_N_13 TERM_GATE_N_BLEED_2 0.0525f
+C1736 FS_P_GATE PULLDOWN_P_R 1.5993f
+C1737 DIV_N HS_P 0.03581f
+C1738 VCM_LOW_OK HS_P_4 0.06673f
+C1739 FS_N_WELL HS_PBIAS 3.62026f
+C1740 TERM_GATE_P_BLEED_0 HS_N_8 0
+C1741 FS_N_CONTROL_S FS_HIGH_N 5.89986f
+C1742 TERM_ENABLE FS_N_OUT 0.54764f
+C1743 VCM_LOW_OK PULLUP_P_OUT 0.20679f
+C1744 PULLUP_N_WELL BYPASS_ENABLE 0.00823f
+C1745 HS_N_9 HS_P_12 0.06578f
+C1746 HS_N_0 FS_P_BLEED_0 0.06178f
+C1747 HS_N_3 HS_PBIAS 1.39899f
+C1748 HS_N_5 FS_LOW_N 0.04574f
+C1749 HS_N_5 TERM_GATE_P 0.11502f
+C1750 HS_N_1 PULLDOWN_P_R 0.02445f
+C1751 FS_P_BLEED_5 PULLDOWN_P_R 0.08553f
+C1752 HS_N_3 HS_N_2 0.12299p
+C1753 TERM_VCM FS_N_CONTROL_S 0.0423f
+C1754 FS_P_BLEED_6 HS_N_11 0.06178f
+C1755 HS_N_11 HS_N 5.51295f
+C1756 HS_N_6 HS_N_12 0
+C1757 HS_P_6 HS_P_0 0.04603f
+C1758 PULLUP_P FS_N_BLEED_3 0.04819f
+C1759 HS_N_0 DIV_P 0.03388f
+C1760 FS_P_CONTROL_S HS_PBIAS 0.04861f
+C1761 DIV_ENABLE HS_N_11 0.03161f
+C1762 TERM_GATE_N FS_N_OUT 0.05082f
+C1763 PULLUP_N_GATE PULLUP_N_BLEED_1 0.18141f
+C1764 PULLUP_P_BLEED_2 PULLUP_P 0.14463f
+C1765 HS_P HS_P_11 5.65023f
+C1766 PULLDOWN_P_R PULLUP_P_BLEED_4 0.05462f
+C1767 HS_P_13 TERM_GATE_P_BLEED_0 0.0256f
+C1768 PULLUP_P_GATE PULLDOWN_N_R 0.22243f
+C1769 HS_P_5 PULLDOWN_P_R 0.02404f
+C1770 TERM_OR_N_S HS_N_12 0.06335f
+C1771 PULLUP_N_GATE HS_PBIAS 0.16144f
+C1772 FS_LOW_P HS_P_6 0.04566f
+C1773 DIV_ENABLE FS_HIGH_N 3.74927f
+C1774 PAD_N HS_N_6 1.1595f
+C1775 FS_N_BLEED_2 FS_LOW_P 0.14463f
+C1776 FS_HIGH_N HS_N 0.05082f
+C1777 HS_N_7 FS_P_BLEED_4 0.03872f
+C1778 HS_N_0 FS_P_GATE 1.01462f
+C1779 PULLDOWN_P_R HS_N_4 0.02404f
+C1780 HS_N_3 TERM_OR_P_B 0.07211f
+C1781 FS_P_CONTROL_S HS_N_2 0.03226f
+C1782 FS_P_BLEED_0 FS_P_WELL 4.87941f
+C1783 FS_N_BLEED_4 HS_N 0.11535f
+C1784 FS_N_BLEED_3 FS_N_BLEED_6 0.0078f
+C1785 TERM_N_R PULLDOWN_N_R 0.22255f
+C1786 PULLUP_P_CONTROL_S PULLUP_P_WELL 0.38592f
+C1787 HS_P_3 HS_P_0 0.03772f
+C1788 FS_P_BLEED_0 HS_N_10 0.06178f
+C1789 HS_N_3 PULLUP_P_BLEED_6 0.02795f
+C1790 TERM_VCM HS_N 0.21161f
+C1791 PAD_P HS_N_13 0.08152f
+C1792 TERM_VCM DIV_ENABLE 0.2249f
+C1793 HS_P_2 HS_P_0 0.00431f
+C1794 HS_N_1 PULLUP_P_BLEED_5 0.05286f
+C1795 FS_LOW_P HS_P_3 0.04607f
+C1796 VCM_LOW_OK HS_N_8 0.03589f
+C1797 FS_N_OUT HS_P 0.76324f
+C1798 HS_N_13 TERM_P_R 0.05952f
+C1799 FS_N_BLEED_2 FS_LOW_N 0
+C1800 FS_LOW_P HS_P_2 0.04618f
+C1801 PULLDOWN_P_R PULLDOWN_P 0.59344f
+C1802 HS_P_6 TERM_GATE_P 0.15508f
+C1803 HS_N_1 HS_N_0 0.12463p
+C1804 HS_PBIAS DIV_LOW_P 0
+C1805 HS_P_9 HS_P_5 0
+C1806 PULLUP_N_OUT FS_HIGH_N 0.04377f
+C1807 PULLUP_P_GATE TERM_N_R 0.20833f
+C1808 PULLUP_P_BLEED_5 PULLUP_P_BLEED_4 6.36804f
+C1809 HS_N_0 FS_P_BLEED_5 0.06178f
+C1810 FS_P_GATE FS_P_WELL 0.26358p
+C1811 HS_N_13 HS_N_7 0.09546f
+C1812 HS_N_0 TERM_GATE_N_BLEED_1 0.03489f
+C1813 HS_N_9 FS_P_BLEED_0 0.06178f
+C1814 HS_PBIAS HS_N_12 2.63945f
+C1815 PULLUP_N_OUT FS_N_BLEED_4 0.10124f
+C1816 HS_N_5 TERM_GATE_N_BLEED_2 0.0525f
+C1817 PULLUP_P_CONTROL_S HS_N_5 0.03489f
+C1818 PULLUP_P_BLEED_5 HS_N_4 0.0525f
+C1819 HS_N_2 DIV_LOW_P 0
+C1820 VCM_LOW_OK TERM_GATE_N_BLEED_0 0.08402f
+C1821 FS_P_GATE HS_N_10 1.02198f
+C1822 HS_P_5 HS_N_0 0.03489f
+C1823 PULLUP_N_WELL FS_N_BLEED_5 0
+C1824 PULLUP_P_BLEED_3 TERM_P_R 0.11141f
+C1825 HS_N_0 PULLUP_P_BLEED_4 0.03489f
+C1826 VCM_LOW_OK HS_P_13 0.03489f
+C1827 HS_N_2 HS_N_12 0.03554f
+C1828 TERM_VCM PULLUP_N_OUT 0.50736f
+C1829 HS_P_3 TERM_GATE_P 0.15659f
+C1830 TERM_OR_N_B HS_N_11 0.02978f
+C1831 HS_N_0 HS_N_4 0.03919f
+C1832 TERM_GATE_P_BLEED_0 TERM_GATE_P_BLEED_2 0.10759f
+C1833 HS_P_2 TERM_GATE_P 0.15718f
+C1834 TERM_ENABLE HS_P_0 0.03037f
+C1835 TERM_ENABLE PULLUP_N_BLEED_5 0.01168f
+C1836 TERM_OR_N_NS VDD 0.30741f
+C1837 PAD_N HS_N_2 1.16258f
+C1838 TERM_GATE_P_BLEED_1 TERM_GATE_P 0.37616f
+C1839 FS_P_BLEED_1 HS_N_6 0.06178f
+C1840 HS_N_1 FS_P_WELL 2.0924f
+C1841 HS_N_12 TERM_OR_P_B 0.07307f
+C1842 TERM_OR_N_S FS_HIGH_P 0.00369f
+C1843 PULLUP_P_BLEED_5 PULLDOWN_P 0
+C1844 HS_N_9 FS_P_GATE 1.0428f
+C1845 DIV_N PULLDOWN_N_R 0.04202f
+C1846 VCM_LOW_OK FS_P_BLEED_2 0.0381f
+C1847 TERM_ENABLE FS_LOW_P 0.2004f
+C1848 HS_N_1 HS_N_10 0.12499p
+C1849 FS_P_BLEED_5 HS_N_10 0.06178f
+C1850 TERM_GATE_N_BLEED_1 HS_N_10 0.03489f
+C1851 HS_P_10 TERM_OR_P_NS 0.04329f
+C1852 HS_N_0 PULLDOWN_P 0.04428f
+C1853 TERM_VCM TERM_OR_N_B 0.02456f
+C1854 PULLUP_P_BLEED_6 HS_N_12 0.02427f
+C1855 PULLUP_P_WELL TERM_P_R 0.32267f
+C1856 FS_N_BLEED_1 FS_N_BLEED_5 0.10542f
+C1857 HS_N_4 FS_P_WELL 1.94169f
+C1858 FS_N_GATE TERM_P_R 0.80425f
+C1859 FS_N_WELL HS_N_11 0.01997f
+C1860 HS_P_5 HS_N_10 0.03489f
+C1861 PULLUP_N_BLEED_5 PULLUP_N_BLEED_4 0.55147f
+C1862 HS_N_10 PULLUP_P_BLEED_4 0.03489f
+C1863 HS_N_7 PULLUP_P_WELL 0.19018f
+C1864 FS_P_OUT HS_N_6 0.43331f
+C1865 HS_N_4 HS_N_10 0
+C1866 HS_N_13 PULLUP_P_OUT 0.02464f
+C1867 DIV_N PULLUP_P_GATE 0.00135f
+C1868 TERM_GATE_N FS_LOW_P 0.04939f
+C1869 TERM_ENABLE FS_LOW_N 0.2377f
+C1870 HS_N_3 HS_N_11 0.06439f
+C1871 ESD_RAIL a_41005_203825# 0.53823f
+C1872 HS_N_1 HS_N_9 0.04294f
+C1873 HS_N_6 HS_P_10 0.03097f
+C1874 VDD TERM_OR_P_NS 0.04366f
+C1875 FS_N_WELL FS_HIGH_N 0.63286f
+C1876 TERM_ENABLE TERM_GATE_P 1.60491f
+C1877 HS_N_9 TERM_GATE_N_BLEED_1 0.03489f
+C1878 HS_N_9 FS_P_BLEED_5 0.06295f
+C1879 DIV_N TERM_N_R 0.19787f
+C1880 FS_HIGH_P PULLUP_N_BLEED_1 0.094f
+C1881 FS_P_BLEED_4 HS_N_8 0.04285f
+C1882 DIV_N RX_P 0.72665f
+C1883 PAD_P HS_N_5 0.34243f
+C1884 HS_P_11 PULLDOWN_N_R 0.07466f
+C1885 FS_HIGH_P HS_PBIAS 0.03865f
+C1886 HS_P HS_P_0 17.7665f
+C1887 VCM_LOW_OK TERM_GATE_P_BLEED_2 0.01429f
+C1888 FS_P_CONTROL_S HS_N_11 0.03234f
+C1889 HS_P_7 TERM_OR_P_NS 0.02846f
+C1890 PULLUP_P_BLEED_2 PULLUP_P_BLEED_4 0.00855f
+C1891 HS_N_5 TERM_P_R 0.05893f
+C1892 FS_P_BLEED_1 HS_PBIAS 0.08856f
+C1893 HS_N_9 PULLUP_P_BLEED_4 0.03489f
+C1894 HS_P_5 HS_N_9 0.06578f
+C1895 TERM_VCM FS_N_WELL 2.07231f
+C1896 HS_N_6 VDD 6.53266f
+C1897 HS_N_9 HS_N_4 0.03262f
+C1898 TERM_GATE_N FS_LOW_N 0.09035f
+C1899 HS_P_9 PULLDOWN_P_R 0.07466f
+C1900 HS_N_2 FS_HIGH_P 0.01124f
+C1901 PULLUP_P_BLEED_5 PULLDOWN_P_R 0.09204f
+C1902 FS_LOW_P HS_P 0.09863f
+C1903 HS_N_7 HS_N_5 0.07798f
+C1904 FS_P_BLEED_1 HS_N_2 0.06178f
+C1905 TERM_VCM HS_N_3 0.12454f
+C1906 a_41005_204385# a_41005_203825# 0.0346f
+C1907 TERM_OR_N_S VDD 13.5629f
+C1908 PULLUP_N_GATE FS_HIGH_N 0.00262f
+C1909 FS_P_BLEED_2 FS_P_BLEED_3 1.49098f
+C1910 HS_N_5 HS_P_1 0.03097f
+C1911 HS_N_0 PULLDOWN_P_R 0.02508f
+C1912 FS_N_OUT PULLDOWN_N_R 0.60822f
+C1913 PULLDOWN_P FS_N_BLEED_3 0.09712f
+C1914 FS_P_OUT HS_PBIAS 0.98203f
+C1915 TERM_VCM PULLUP_N_GATE 0.25356f
+C1916 HS_P_12 TERM_OR_P_NS 0.03931f
+C1917 DIFF_ENABLE PULLUP_N_BLEED_1 0.00113f
+C1918 HS_N_13 HS_N_8 0.05624f
+C1919 TERM_N_R HS_P_11 0.05722f
+C1920 HS_PBIAS HS_P_10 8.55407f
+C1921 FS_LOW_N HS_P 0.04574f
+C1922 PULLUP_P_WELL PULLUP_P_OUT 32.0321f
+C1923 DIFF_ENABLE HS_PBIAS 0.17138f
+C1924 HS_N_11 DIV_LOW_P 0.00184f
+C1925 HS_P TERM_GATE_P 0.22621f
+C1926 PULLUP_P PULLUP_N_BLEED_3 0
+C1927 PAD_P HS_P_6 1.8306f
+C1928 FS_P_OUT HS_N_2 0.43576f
+C1929 PULLUP_N_WELL HS_N 0.71566f
+C1930 TERM_ENABLE PULLUP_P_CONTROL_S 0.05711f
+C1931 DIV_ENABLE PULLUP_N_WELL 0.02583f
+C1932 TERM_ENABLE TERM_GATE_N_BLEED_2 0.07928f
+C1933 HS_N_11 HS_N_12 0.13666p
+C1934 FS_N_OUT PULLUP_P_GATE 0.05082f
+C1935 HS_N_2 HS_P_10 0.03089f
+C1936 ESD_RAIL a_41005_206065# 0.57348f
+C1937 VDD PULLUP_N_BLEED_1 0.45607f
+C1938 HS_P_6 TERM_P_R 0.08356f
+C1939 HS_N_6 HS_P_12 0.06578f
+C1940 HS_PBIAS VDD 83.5191f
+C1941 PULLDOWN_P_R FS_P_WELL 3.3755f
+C1942 PULLUP_N_OUT PULLUP_N 0.00105f
+C1943 FS_N_OUT TERM_N_R 0.43893f
+C1944 FS_P_OUT TERM_OR_P_B 0.16122f
+C1945 PAD_N HS_N_11 1.22201f
+C1946 HS_N_0 PULLUP_P_BLEED_5 0.05292f
+C1947 FS_N_OUT RX_P 0.01284f
+C1948 HS_P_8 HS_P_6 0.00206f
+C1949 HS_N_7 HS_P_6 0.02536f
+C1950 HS_P_13 HS_N_13 0.0245f
+C1951 HS_N_5 HS_P_4 0.13307f
+C1952 PULLDOWN_P_R HS_N_10 0.02436f
+C1953 PAD_P HS_P_3 1.68578f
+C1954 PULLUP_N_OUT TERM_GATE_P_BLEED_0 0.10679f
+C1955 HS_P_10 TERM_OR_P_B 0.09644f
+C1956 HS_P_6 HS_P_1 0.06271f
+C1957 TERM_VCM DIV_LOW_P 0.00257f
+C1958 PULLUP_P_OUT HS_N_5 0.02404f
+C1959 HS_N_2 VDD 4.87598f
+C1960 HS_PBIAS HS_P_7 0.78499f
+C1961 TERM_GATE_N TERM_GATE_N_BLEED_2 0.40639f
+C1962 PAD_P HS_P_2 1.20139f
+C1963 TERM_P_R HS_P_3 0.12136f
+C1964 TERM_VCM HS_N_12 0.12019f
+C1965 PULLUP_P_WELL BYPASS_ENABLE 0.00823f
+C1966 HS_N_6 PULLUP_P 0.04377f
+C1967 PULLUP_N_OUT PULLUP_N_WELL 32.5189f
+C1968 TERM_P_R HS_P_2 0.08491f
+C1969 HS_N_13 FS_P_BLEED_2 0.03472f
+C1970 VCM_LOW_OK HS_N 0.04122f
+C1971 FS_N_BLEED_1 HS_N 0.07097f
+C1972 TERM_P_R TERM_GATE_P_BLEED_1 0.00257f
+C1973 VDD TERM_OR_P_B 16.0128f
+C1974 HS_P_8 HS_P_3 0.03109f
+C1975 PULLUP_N_GATE PULLUP_N_BLEED_6 3.03119f
+C1976 HS_N_9 PULLDOWN_P_R 0.02404f
+C1977 TERM_VCM PAD_N 0.001f
+C1978 TERM_OR_N_S PULLUP_P 0.14657f
+C1979 PULLUP_P_WELL HS_N_8 0.19877f
+C1980 HS_P_8 HS_P_2 0.03103f
+C1981 HS_P_1 HS_P_3 0.06154f
+C1982 HS_P_1 HS_P_2 0.0568f
+C1983 FS_N_GATE HS_N_8 0
+C1984 HS_P TERM_GATE_N_BLEED_2 0.0525f
+C1985 HS_P_7 TERM_OR_P_B 0.10117f
+C1986 PULLUP_P_CONTROL_S HS_P 0.03489f
+C1987 PULLUP_P_BLEED_5 HS_N_10 0.0527f
+C1988 HS_PBIAS HS_P_12 4.10448f
+C1989 HS_N_0 FS_P_WELL 2.67877f
+C1990 HS_P_0 PULLDOWN_N_R 0.03037f
+C1991 HS_N_13 DIV_LOW_N 0.06178f
+C1992 HS_N_0 HS_N_10 2.19009f
+C1993 PULLUP_N_BLEED_5 PULLDOWN_N_R 0.04934f
+C1994 HS_P_6 HS_P_4 0.06956f
+C1995 HS_N_2 HS_P_12 0.06578f
+C1996 VCM_LOW_OK PULLUP_N_OUT 0.15823f
+C1997 DIV_N FS_N_OUT 0.07748f
+C1998 FS_HIGH_P HS_N_11 0
+C1999 HS_N_6 FS_P_BLEED_0 0.06178f
+C2000 HS_N_5 HS_N_8 0.04894f
+C2001 TERM_ENABLE TERM_P_R 0.54261f
+C2002 FS_LOW_P PULLDOWN_N_R 0.0629f
+C2003 FS_P_BLEED_1 HS_N_11 0.06178f
+C2004 HS_P_9 HS_N_9 0.06704f
+C2005 PULLUP_P PULLUP_N_BLEED_1 0.05744f
+C2006 HS_N_9 PULLUP_P_BLEED_5 0.0525f
+C2007 HS_PBIAS PULLUP_P 0.31274f
+C2008 FS_HIGH_P FS_HIGH_N 30.5739f
+C2009 HS_P_12 TERM_OR_P_B 0.13059f
+C2010 TERM_ENABLE HS_P_8 0.02404f
+C2011 TERM_ENABLE HS_N_7 0.10332f
+C2012 TERM_P_R PULLUP_N_BLEED_0 0.1115f
+C2013 HS_P_4 HS_P_3 33.6448f
+C2014 FS_HIGH_P FS_N_BLEED_4 0
+C2015 FS_P_BLEED_2 PULLUP_P_WELL 0.00542f
+C2016 HS_N_0 HS_N_9 0.03911f
+C2017 TERM_ENABLE HS_P_1 0.02404f
+C2018 PULLUP_P_OUT HS_P_3 0.05276f
+C2019 HS_P_4 HS_P_2 0.03986f
+C2020 FS_P_BLEED_6 FS_P_BLEED_3 0.06069f
+C2021 FS_P_BLEED_3 HS_N 0.01431f
+C2022 HS_N_10 FS_P_WELL 2.04554f
+C2023 DIV_ENABLE FS_P_BLEED_3 0
+C2024 TERM_GATE_N TERM_P_R 0.14873f
+C2025 TERM_VCM FS_HIGH_P 0.13567f
+C2026 FS_LOW_N PULLDOWN_N_R 0.05913f
+C2027 VCM_LOW_OK TERM_OR_N_B 4.35323f
+C2028 PULLUP_P_OUT HS_P_2 0.06773f
+C2029 HS_PBIAS FS_N_BLEED_6 0.04811f
+C2030 TERM_P_R PULLUP_N_BLEED_4 0
+C2031 FS_P_BLEED_1 TERM_VCM 0.08802f
+C2032 a_53878_205225# a_53878_205785# 0.0346f
+C2033 HS_N_6 FS_P_GATE 1.02474f
+C2034 FS_LOW_P PULLUP_P_GATE 0.06878f
+C2035 RX_P HS_P_0 0
+C2036 PULLUP_P_OUT TERM_GATE_P_BLEED_1 0.14929f
+C2037 TERM_VCM PULLDOWN_N 0.0428f
+C2038 FS_P_OUT HS_N_11 0.43976f
+C2039 TERM_GATE_P PULLDOWN_N_R 0.26213f
+C2040 PULLUP_N_GATE PULLUP_N 1.51486f
+C2041 HS_P_13 HS_N_5 0.05493f
+C2042 a_44789_189064# a_41005_203545# 0.02879f
+C2043 HS_N_11 HS_P_10 0.1403f
+C2044 FS_LOW_P TERM_N_R 0.22736f
+C2045 TERM_GATE_N HS_N_7 0.05242f
+C2046 PULLUP_P_BLEED_1 PULLUP_P_BLEED_0 1.16396f
+C2047 FS_N_GATE FS_N_BLEED_5 0.25005f
+C2048 ESD_RAIL a_41005_204945# 0.53823f
+C2049 PAD_P HS_P 39.8004f
+C2050 HS_PBIAS FS_P_BLEED_0 0.08856f
+C2051 DIFF_ENABLE FS_HIGH_N 0.25832f
+C2052 PULLUP_N_BLEED_2 PULLUP_N_BLEED_0 0
+C2053 PULLUP_P_BLEED_6 PULLUP_P 0.14694f
+C2054 FS_P_BLEED_6 FS_P_BLEED_4 0.12036f
+C2055 FS_P_BLEED_2 HS_N_5 0.03472f
+C2056 HS_N FS_P_BLEED_4 0.0463f
+C2057 HS_P_6 HS_N_8 0.04808f
+C2058 HS_N_9 FS_P_WELL 1.99234f
+C2059 TERM_P_R HS_P 0.1669f
+C2060 PULLUP_N_GATE PULLUP_N_WELL 36.3413f
+C2061 HS_N_11 VDD 6.23318f
+C2062 HS_P_5 TERM_OR_P_NS 0.02846f
+C2063 HS_N_9 HS_N_10 0.04457f
+C2064 TERM_VCM FS_P_OUT 0.38638f
+C2065 FS_N_WELL FS_N_BLEED_1 0.00455f
+C2066 HS_N_1 HS_N_6 0.04294f
+C2067 HS_N_4 TERM_OR_P_NS 0.00196f
+C2068 HS_N_2 FS_P_BLEED_0 0.06178f
+C2069 ESD_RAIL a_41005_205505# 0.53842f
+C2070 HS_N_6 TERM_GATE_N_BLEED_1 0.03489f
+C2071 TERM_VCM HS_P_10 0.13491f
+C2072 TERM_ENABLE HS_P_4 0.07923f
+C2073 HS_P_8 HS_P 3.0077f
+C2074 HS_N_7 HS_P 0.33458f
+C2075 FS_LOW_N TERM_N_R 0.19132f
+C2076 HS_N_6 FS_P_BLEED_5 0.06231f
+C2077 PULLUP_N_BLEED_2 PULLUP_N_BLEED_4 0.00326f
+C2078 FS_HIGH_N VDD 0.05856f
+C2079 TERM_OR_N_S HS_N_1 0.06335f
+C2080 VCM_LOW_OK HS_N_3 0.03489f
+C2081 TERM_N_R TERM_GATE_P 1.39719f
+C2082 TERM_ENABLE PULLUP_P_OUT 11.5152f
+C2083 HS_P HS_P_1 4.17389f
+C2084 HS_P_3 HS_N_8 0.02404f
+C2085 PULLDOWN_P PULLUP_N_BLEED_3 0.06517f
+C2086 FS_N_BLEED_4 VDD 0.0157f
+C2087 HS_N_6 PULLUP_P_BLEED_4 0.03489f
+C2088 a_41005_204385# a_41005_204945# 0.0346f
+C2089 HS_P_5 HS_N_6 0.1437f
+C2090 DIV_LOW_N HS_N_5 0.06178f
+C2091 HS_P_2 HS_N_8 0.02404f
+C2092 HS_P_13 HS_P_6 0.15959f
+C2093 HS_N_6 HS_N_4 0.07075f
+C2094 HS_PBIAS FS_P_GATE 1.89121f
+C2095 TERM_VCM VDD 40.3484f
+C2096 PULLDOWN_N PULLUP_N_BLEED_6 0.00832f
+C2097 FS_P_BLEED_6 HS_N_13 0.06178f
+C2098 HS_N_13 HS_N 0.98202f
+C2099 HS_N_13 DIV_ENABLE 0.03089f
+C2100 PULLUP_N_BLEED_2 HS_P 0.07928f
+C2101 TERM_OR_N_S HS_N_4 0.06531f
+C2102 TERM_GATE_N_BLEED_2 PULLDOWN_N_R 0.07928f
+C2103 PULLUP_P_CONTROL_S PULLDOWN_N_R 0.05462f
+C2104 HS_N_2 FS_P_GATE 1.01182f
+C2105 DIV_P TERM_OR_P_B 0.0223f
+C2106 FS_N_BLEED_0 FS_HIGH_N 0.00964f
+C2107 TERM_VCM HS_P_7 0.09615f
+C2108 FS_N_BLEED_0 FS_N_BLEED_4 0.12212f
+C2109 FS_LOW_P DIV_N 6.00722f
+C2110 HS_P_13 HS_P_3 0.2651f
+C2111 PULLUP_N_OUT PULLUP_P_BLEED_1 0.04643f
+C2112 HS_N_11 HS_P_12 0.06914f
+C2113 HS_N_6 PULLDOWN_P 0.04428f
+C2114 HS_P_13 HS_P_2 36.317f
+C2115 HS_N_1 HS_PBIAS 9.60149f
+C2116 PULLUP_N_CONTROL_S PULLUP_N_OUT 0
+C2117 HS_P HS_P_4 1.7567f
+C2118 HS_PBIAS TERM_GATE_N_BLEED_1 0.04828f
+C2119 HS_PBIAS FS_P_BLEED_5 0.09926f
+C2120 FS_N_BLEED_2 FS_N_BLEED_5 0.10559f
+C2121 PULLUP_P_CONTROL_S PULLUP_P_GATE 1.59532f
+C2122 PULLUP_P_WELL PULLUP_P_BLEED_0 2.68055f
+C2123 TERM_OR_N_S PULLDOWN_P 0.12757f
+C2124 FS_N_CONTROL_S FS_N_GATE 3.06729f
+C2125 PULLUP_P_OUT HS_P 0.02404f
+C2126 HS_N_1 HS_N_2 0.11091f
+C2127 TERM_ENABLE HS_N_8 0.10575f
+C2128 HS_N_13 PULLUP_N_OUT 0.04377f
+C2129 DIV_N FS_LOW_N 0.03543f
+C2130 HS_P_5 HS_PBIAS 3.80328f
+C2131 PULLUP_P_CONTROL_S TERM_N_R 0.06058f
+C2132 HS_N_2 FS_P_BLEED_5 0.06178f
+C2133 HS_PBIAS PULLUP_P_BLEED_4 0.04828f
+C2134 HS_N_2 TERM_GATE_N_BLEED_1 0.03489f
+C2135 TERM_N_R TERM_GATE_N_BLEED_2 0.11565f
+C2136 DIV_N TERM_GATE_P 0.00178f
+C2137 HS_P_11 HS_P_0 0.06445f
+C2138 TERM_VCM HS_P_12 0.107f
+C2139 HS_PBIAS HS_N_4 1.07268f
+C2140 VCM_LOW_OK HS_N_12 0.03489f
+C2141 VDD PULLUP_N_BLEED_6 0.0157f
+C2142 HS_N_1 TERM_OR_P_B 0.07438f
+C2143 HS_P_5 HS_N_2 0.03489f
+C2144 FS_LOW_P HS_P_11 0.05239f
+C2145 HS_N_2 PULLUP_P_BLEED_4 0.03489f
+C2146 TERM_ENABLE TERM_GATE_N_BLEED_0 0.00206f
+C2147 PULLDOWN_P_R TERM_OR_P_NS 0.05654f
+C2148 PULLUP_P FS_HIGH_N 0.04377f
+C2149 FS_P_BLEED_6 PULLUP_P_WELL 0.03054f
+C2150 PULLUP_P_WELL HS_N 0.4257f
+C2151 DIV_ENABLE PULLUP_P_WELL 0.01343f
+C2152 PULLUP_P_BLEED_3 PULLUP_N_OUT 0
+C2153 HS_N_2 HS_N_4 0.00206f
+C2154 TERM_GATE_N HS_N_8 0.05386f
+C2155 FS_N_BLEED_4 PULLUP_P 0.10124f
+C2156 PULLDOWN_N PULLUP_N 0.05397f
+C2157 HS_N_5 PULLUP_P_BLEED_0 0
+C2158 FS_N_GATE HS_N 2.05519f
+C2159 DIV_ENABLE FS_N_GATE 0.00451f
+C2160 HS_N_1 PULLUP_P_BLEED_6 0.02451f
+C2161 TERM_ENABLE HS_P_13 0.02404f
+C2162 HS_N_13 TERM_OR_N_B 0.02922f
+C2163 HS_P_5 TERM_OR_P_B 0.10156f
+C2164 HS_N_3 FS_P_BLEED_4 0.03168f
+C2165 PULLDOWN_P PULLUP_N_BLEED_1 0.04153f
+C2166 PAD_P PULLDOWN_N_R 1.40429f
+C2167 TERM_VCM PULLUP_P 0.24287f
+C2168 HS_N_4 TERM_OR_P_B 0.07211f
+C2169 HS_PBIAS PULLDOWN_P 0.43878f
+C2170 HS_N_6 PULLDOWN_P_R 0.02404f
+C2171 FS_HIGH_N FS_N_BLEED_6 0.1661f
+C2172 TERM_GATE_N TERM_GATE_N_BLEED_0 2.02705f
+C2173 TERM_P_R PULLDOWN_N_R 0.17892f
+C2174 FS_N_BLEED_4 FS_N_BLEED_6 0.00855f
+C2175 FS_HIGH_P PULLUP_N_WELL 0.21354f
+C2176 FS_LOW_P FS_N_OUT 0.46426f
+C2177 PULLUP_P_BLEED_6 PULLUP_P_BLEED_4 0.00153f
+C2178 TERM_ENABLE FS_P_BLEED_2 0.05902f
+C2179 PULLUP_P_BLEED_6 HS_N_4 0.02906f
+C2180 HS_N_11 FS_P_BLEED_0 0.06178f
+C2181 HS_P_11 TERM_GATE_P 0.1736f
+C2182 HS_P HS_N_8 0.59635f
+C2183 TERM_GATE_P_BLEED_1 TERM_GATE_P_BLEED_2 1.09058f
+C2184 HS_N_5 HS_N 4.65354f
+C2185 DIV_ENABLE HS_N_5 0.03089f
+C2186 TERM_VCM FS_N_BLEED_6 0.04263f
+C2187 FS_P_BLEED_6 HS_N_5 0.06178f
+C2188 HS_P_8 PULLDOWN_N_R 0.06544f
+C2189 HS_N_7 PULLDOWN_N_R 0.06832f
+C2190 PULLUP_P_WELL PULLUP_N_OUT 0.60048f
+C2191 HS_P_9 TERM_OR_P_NS 0.03937f
+C2192 HS_P_1 PULLDOWN_N_R 0.06544f
+C2193 PULLUP_N_OUT FS_N_GATE 1.11467f
+C2194 DIFF_ENABLE PULLUP_N 0.13679f
+C2195 DIV_N TERM_GATE_N_BLEED_2 0
+C2196 TERM_ENABLE FS_N_BLEED_5 0.11535f
+C2197 HS_N_13 FS_N_WELL 0.02097f
+C2198 PULLUP_P_CONTROL_S DIV_N 0
+C2199 HS_P_10 TERM_GATE_P_BLEED_0 0.03777f
+C2200 FS_N_OUT FS_LOW_N 0.31421f
+C2201 PULLUP_P_GATE TERM_P_R 0.20871f
+C2202 HS_N_13 HS_N_3 0.30894f
+C2203 FS_N_OUT TERM_GATE_P 0.1125f
+C2204 PAD_P TERM_N_R 0.18868f
+C2205 FS_P_BLEED_3 HS_N_12 0
+C2206 PAD_P RX_P 8.52519f
+C2207 TERM_VCM FS_P_BLEED_0 0.0189f
+C2208 HS_N_6 PULLUP_P_BLEED_5 0.0525f
+C2209 PULLUP_P_BLEED_6 PULLDOWN_P 0.00512f
+C2210 TERM_ENABLE DIV_LOW_N 0.04513f
+C2211 PULLUP_N VDD 0.01619f
+C2212 PULLUP_N_BLEED_2 PULLDOWN_N_R 0.07928f
+C2213 TERM_P_R TERM_N_R 35.4953f
+C2214 HS_N_11 FS_P_GATE 1.01933f
+C2215 FS_HIGH_P FS_N_BLEED_1 0
+C2216 HS_P_13 HS_P 0.71007f
+C2217 HS_N_7 PULLUP_P_GATE 0.07492f
+C2218 PULLUP_P PULLUP_N_BLEED_6 0.10721f
+C2219 PULLUP_N_CONTROL_S PULLUP_N_GATE 1.19294f
+C2220 ESD_RAIL a_41005_203545# 96.5489f
+C2221 TERM_OR_N_S PULLUP_P_BLEED_5 0.00257f
+C2222 VCM_LOW_OK FS_P_BLEED_1 0.14974f
+C2223 VDD TERM_GATE_P_BLEED_0 0.12131f
+C2224 HS_N_5 PULLUP_N_OUT 0.0184f
+C2225 FS_P_CONTROL_S HS_N_13 0.03226f
+C2226 HS_N_0 HS_N_6 0.03911f
+C2227 HS_PBIAS PULLDOWN_P_R 0.50594f
+C2228 TERM_ENABLE TERM_GATE_P_BLEED_2 0.07306f
+C2229 HS_N_7 TERM_N_R 0.1093f
+C2230 TERM_VCM DIV_P 0.13218f
+C2231 FS_P_BLEED_2 HS_P 0.03472f
+C2232 FS_P_BLEED_4 HS_N_12 0.02888f
+C2233 TERM_OR_N_S HS_N_0 0.06384f
+C2234 HS_P_7 TERM_GATE_P_BLEED_0 0.02404f
+C2235 HS_P_6 HS_N 0.5265f
+C2236 VDD PULLUP_N_WELL 22.6537f
+C2237 HS_N_2 PULLDOWN_P_R 0.02404f
+C2238 TERM_GATE_N DIV_LOW_N 0.02985f
+C2239 FS_N_BLEED_2 HS_N 0.11535f
+C2240 HS_P_4 PULLDOWN_N_R 0.07217f
+C2241 TERM_VCM FS_P_GATE 0.62486f
+C2242 HS_N_1 HS_N_11 0.07584f
+C2243 PULLUP_P_OUT PULLDOWN_N_R 0.04901f
+C2244 HS_N_11 FS_P_BLEED_5 0.06178f
+C2245 HS_N_11 TERM_GATE_N_BLEED_1 0.03489f
+C2246 a_41005_204385# a_41005_203545# 0
+C2247 HS_P FS_N_BLEED_5 0.08856f
+C2248 VCM_LOW_OK FS_P_OUT 0.41274f
+C2249 PULLDOWN_P_R TERM_OR_P_B 0.17949f
+C2250 HS_N_5 TERM_OR_N_B 0.02846f
+C2251 VCM_LOW_OK HS_P_10 0.09044f
+C2252 HS_N HS_P_3 0.27803f
+C2253 HS_N_6 FS_P_WELL 1.94094f
+C2254 TERM_OR_P_NS TERM_OR_P_S 0.00736f
+C2255 HS_P_5 HS_N_11 0.03489f
+C2256 HS_N_11 PULLUP_P_BLEED_4 0.03489f
+C2257 FS_N_BLEED_0 PULLUP_N_WELL 0
+C2258 HS_P_9 HS_PBIAS 3.39603f
+C2259 HS_N_13 DIV_LOW_P 0.00103f
+C2260 HS_PBIAS PULLUP_P_BLEED_5 0.07928f
+C2261 FS_N_WELL FS_N_GATE 0.29543p
+C2262 HS_N_3 PULLUP_P_WELL 0.18066f
+C2263 DIV_LOW_N HS_P 0.06178f
+C2264 PULLDOWN_P_R PULLUP_P_BLEED_6 0.09395f
+C2265 HS_N_6 HS_N_10 0
+C2266 HS_N HS_P_2 0.46352f
+C2267 FS_N_OUT TERM_GATE_N_BLEED_2 0.06408f
+C2268 PULLUP_P_CONTROL_S FS_N_OUT 0.06167f
+C2269 HS_N_11 HS_N_4 0
+C2270 FS_LOW_P HS_P_0 0.0932f
+C2271 PAD_P DIV_N 0.45367f
+C2272 HS_P_12 TERM_GATE_P_BLEED_0 0.03636f
+C2273 HS_N_13 HS_N_12 0.13526p
+C2274 HS_N_9 TERM_OR_P_NS 0.01002f
+C2275 PULLUP_P_OUT PULLUP_P_GATE 18.3667f
+C2276 PULLUP_N_OUT HS_P_6 0.02846f
+C2277 FS_N_BLEED_2 PULLUP_N_OUT 0
+C2278 TERM_VCM HS_N_1 0.16434f
+C2279 DIV_N TERM_P_R 0
+C2280 TERM_N_R HS_P_4 0.05722f
+C2281 HS_N_0 HS_PBIAS 5.90003f
+C2282 TERM_VCM TERM_GATE_N_BLEED_1 0.04283f
+C2283 HS_N_2 PULLUP_P_BLEED_5 0.0525f
+C2284 TERM_OR_N_S HS_N_10 0.06335f
+C2285 VCM_LOW_OK VDD 57.6691f
+C2286 TERM_ENABLE FS_N_CONTROL_S 0.07644f
+C2287 FS_HIGH_P FS_P_BLEED_3 0.03577f
+C2288 PULLUP_P_OUT TERM_N_R 0.14287f
+C2289 FS_P_BLEED_1 FS_P_BLEED_3 0
+C2290 HS_N_13 PAD_N 1.56314f
+C2291 HS_N_7 DIV_N 0.03311f
+C2292 HS_P_5 TERM_VCM 0.09615f
+C2293 TERM_VCM PULLUP_P_BLEED_4 0.03472f
+C2294 HS_N_0 HS_N_2 0.03925f
+C2295 VCM_LOW_OK HS_P_7 0.03489f
+C2296 HS_P_9 TERM_OR_P_B 0.1442f
+C2297 HS_N_9 HS_N_6 0.04101f
+C2298 TERM_VCM HS_N_4 0.12576f
+C2299 HS_N_3 HS_N_5 0.00206f
+C2300 PULLUP_N_OUT HS_P_3 0.08633f
+C2301 TERM_GATE_P HS_P_0 0.25837f
+C2302 HS_N_8 PULLDOWN_N_R 0.06832f
+C2303 TERM_OR_N_S HS_N_9 0.07337f
+C2304 HS_N_0 TERM_OR_P_B 0.07497f
+C2305 PULLUP_N_OUT HS_P_2 0.07964f
+C2306 FS_N_BLEED_0 FS_N_BLEED_1 1.54554f
+C2307 PULLUP_P_BLEED_5 PULLUP_P_BLEED_6 4.72363f
+C2308 FS_LOW_P FS_LOW_N 93.9795f
+C2309 PULLDOWN_P FS_HIGH_N 0.03743f
+C2310 PULLUP_N_OUT TERM_GATE_P_BLEED_1 0.05318f
+C2311 TERM_ENABLE FS_P_BLEED_6 0.00258f
+C2312 TERM_ENABLE HS_N 0.06822f
+C2313 TERM_ENABLE DIV_ENABLE 0.03192f
+C2314 FS_P_CONTROL_S HS_N_5 0.03226f
+C2315 FS_LOW_P TERM_GATE_P 0.15357f
+C2316 PAD_P HS_P_11 1.25724f
+C2317 HS_PBIAS FS_P_WELL 3.64298f
+C2318 PULLUP_P PULLUP_N_WELL 8.30565f
+C2319 FS_N_BLEED_4 PULLDOWN_P 0.08856f
+C2320 FS_P_OUT FS_P_BLEED_3 0
+C2321 ESD_RAIL m2_42279_196800# 5.47988f
+C2322 HS_PBIAS HS_N_10 1.07528f
+C2323 TERM_P_R HS_P_11 0.14852f
+C2324 HS_N_0 PULLUP_P_BLEED_6 0.02492f
+C2325 HS_N_2 FS_P_WELL 1.92332f
+C2326 TERM_N_R BYPASS_ENABLE 0.00444f
+C2327 TERM_VCM PULLDOWN_P 0.18548f
+C2328 VCM_LOW_OK HS_P_12 0.03489f
+C2329 RX_P BYPASS_ENABLE 4.95631f
+C2330 a_53878_204105# ESD_RAIL 0.53942f
+C2331 PULLUP_P_GATE HS_N_8 0.07585f
+C2332 FS_N_CONTROL_S HS_P 0.09193f
+C2333 HS_P_13 PULLDOWN_N_R 0.02404f
+C2334 PULLUP_P_WELL HS_N_12 0.19366f
+C2335 PULLUP_N_WELL FS_N_BLEED_6 0.02164f
+C2336 HS_N_2 HS_N_10 0.04415f
+C2337 HS_P_8 HS_P_11 0.00792f
+C2338 HS_N_7 HS_P_11 0
+C2339 TERM_GATE_N HS_N 0.08686f
+C2340 HS_PBIAS FS_N_BLEED_3 0.08856f
+C2341 TERM_GATE_N DIV_ENABLE 0.1284f
+C2342 PULLUP_P_BLEED_0 HS_P 0.00154f
+C2343 TERM_N_R HS_N_8 0.11657f
+C2344 FS_N_GATE HS_N_12 0.02567f
+C2345 HS_P_1 HS_P_11 0.05935f
+C2346 PAD_P FS_N_OUT 0.17927f
+C2347 VDD FS_P_BLEED_3 0.00257f
+C2348 FS_N_BLEED_2 FS_N_WELL 0.00108f
+C2349 FS_N_OUT TERM_P_R 0.34518f
+C2350 HS_N_9 HS_PBIAS 3.54149f
+C2351 HS_N_10 TERM_OR_P_B 0.0738f
+C2352 a_41005_204385# m2_42279_196800# 0
+C2353 HS_N_3 HS_P_6 0.05828f
+C2354 TERM_ENABLE PULLUP_N_OUT 0.19243f
+C2355 FS_P_BLEED_2 PULLDOWN_N_R 0.05445f
+C2356 FS_P_BLEED_1 HS_N_13 0.06178f
+C2357 HS_N_11 PULLDOWN_P_R 0.02429f
+C2358 VCM_LOW_OK PULLUP_P 0.07118f
+C2359 TERM_GATE_N_BLEED_0 TERM_N_R 0.16943f
+C2360 HS_N_9 HS_N_2 0
+C2361 TERM_OR_P_S TERM_OR_P_B 1.83456f
+C2362 PULLUP_P_BLEED_6 HS_N_10 0.02441f
+C2363 FS_P_BLEED_6 HS_P 0.06178f
+C2364 HS_P HS_N 2.27647f
+C2365 DIV_ENABLE HS_P 0.03818f
+C2366 HS_N_5 HS_N_12 0
+C2367 VDD FS_P_BLEED_4 0.00257f
+C2368 FS_N_BLEED_5 PULLDOWN_N_R 0.08856f
+C2369 FS_LOW_P TERM_GATE_N_BLEED_2 0.05872f
+C2370 HS_N_9 TERM_OR_P_B 0.07254f
+C2371 HS_N_3 HS_P_3 0.03733f
+C2372 FS_N_BLEED_1 FS_N_BLEED_6 0.00763f
+C2373 PULLUP_P_CONTROL_S FS_LOW_P 0.08479f
+C2374 TERM_GATE_N PULLUP_N_OUT 0.27495f
+C2375 PAD_N HS_N_5 1.1645f
+C2376 FS_P_BLEED_2 PULLUP_P_GATE 0.00448f
+C2377 TERM_VCM PULLDOWN_P_R 0.22328f
+C2378 TERM_ENABLE TERM_OR_N_B 0.3874f
+C2379 FS_P_OUT HS_N_13 0.52823f
+C2380 HS_P_4 HS_P_11 0
+C2381 DIV_LOW_N PULLDOWN_N_R 0.08868f
+C2382 PULLUP_P_BLEED_1 VDD 0.00371f
+C2383 DIV_N BYPASS_ENABLE 0.09436f
+C2384 PULLUP_P_OUT HS_P_11 0.05519f
+C2385 HS_N_9 PULLUP_P_BLEED_6 0.04869f
+C2386 FS_P_BLEED_2 TERM_N_R 0.06105f
+C2387 HS_N_11 PULLUP_P_BLEED_5 0.05266f
+C2388 VCM_LOW_OK FS_P_BLEED_0 0.01461f
+C2389 PULLUP_N_CONTROL_S VDD 0.45153f
+C2390 FS_LOW_N TERM_GATE_N_BLEED_2 0.0839f
+C2391 PULLUP_N_OUT HS_P 0.09364f
+C2392 DIV_N HS_N_8 0.03311f
+C2393 HS_N_0 HS_N_11 0.03964f
+C2394 PULLUP_P_WELL FS_HIGH_P 0.27585f
+C2395 TERM_GATE_N TERM_OR_N_B 2.35341f
+C2396 TERM_N_R FS_N_BLEED_5 0.11444f
+C2397 HS_N_13 VDD 6.76594f
+C2398 FS_P_BLEED_1 PULLUP_P_WELL 0
+C2399 FS_HIGH_P FS_N_GATE 0.04256f
+C2400 HS_P_6 HS_N_12 0.05906f
+C2401 TERM_ENABLE FS_N_WELL 2.79697f
+C2402 VCM_LOW_OK DIV_P 0.00892f
+C2403 HS_P_9 TERM_VCM 0.1405f
+C2404 DIV_LOW_N TERM_N_R 0.30544f
+C2405 HS_P_5 TERM_GATE_P_BLEED_0 0.0244f
+C2406 TERM_ENABLE HS_N_3 0.04808f
+C2407 PAD_N HS_P_6 0.31264f
+C2408 PULLUP_P_BLEED_3 VDD 0.52408f
+C2409 VCM_LOW_OK FS_P_GATE 1.26536f
+C2410 a_42245_162628# a_41005_203545# 0.0135f
+C2411 TERM_VCM HS_N_0 0.18419f
+C2412 PAD_P HS_P_0 1.64024f
+C2413 TERM_N_R TERM_GATE_P_BLEED_2 0.8432f
+C2414 TERM_OR_N_B HS_P 0.02904f
+C2415 TERM_P_R HS_P_0 0.07626f
+C2416 HS_P_3 HS_N_12 0.02482f
+C2417 HS_N_11 FS_P_WELL 2.00581f
+C2418 FS_P_BLEED_1 HS_N_5 0.06178f
+C2419 a_43813_189064# a_41005_203545# 2.2693f
+C2420 PULLUP_N_BLEED_5 TERM_P_R 0
+C2421 HS_P_11 HS_N_8 0.02857f
+C2422 TERM_ENABLE PULLUP_N_GATE 0.23036f
+C2423 HS_N_11 HS_N_10 0.13701p
+C2424 TERM_OR_N_S TERM_OR_N_NS 0.01635f
+C2425 PULLDOWN_P PULLUP_N 5.71742f
+C2426 TERM_GATE_N HS_N_3 0.04808f
+C2427 HS_N_7 HS_P_0 0
+C2428 FS_LOW_P TERM_P_R 0.25019f
+C2429 PAD_N HS_P_3 0.257f
+C2430 FS_P_BLEED_2 DIV_N 0.10151f
+C2431 FS_N_CONTROL_S PULLDOWN_N_R 0.09193f
+C2432 PAD_N HS_P_2 2.43754f
+C2433 PULLUP_P_BLEED_0 PULLDOWN_N_R 0.05779f
+C2434 HS_N_13 HS_P_12 0.03621f
+C2435 HS_P_1 HS_P_0 36.4065f
+C2436 PULLUP_N_GATE PULLUP_N_BLEED_0 0.20139f
+C2437 HS_P_8 FS_LOW_P 0.04566f
+C2438 FS_LOW_P HS_N_7 0.0855f
+C2439 VCM_LOW_OK HS_N_1 0.03489f
+C2440 PULLUP_P_WELL VDD 29.4887f
+C2441 PULLUP_P_BLEED_1 PULLUP_P 0.27145f
+C2442 TERM_VCM FS_P_WELL 1.57773f
+C2443 FS_LOW_P HS_P_1 0.11262f
+C2444 FS_N_WELL HS_P 2.924f
+C2445 PULLDOWN_P PULLUP_N_WELL 0.43199f
+C2446 FS_P_OUT HS_N_5 0.43331f
+C2447 FS_N_GATE VDD 27.2268f
+C2448 HS_N_9 HS_N_11 0.03511f
+C2449 FS_HIGH_N FS_N_BLEED_3 0
+C2450 TERM_VCM HS_N_10 0.12019f
+C2451 HS_N_6 TERM_OR_P_NS 0.00351f
+C2452 PULLUP_N_CONTROL_S PULLUP_P 0.00111f
+C2453 TERM_P_R FS_LOW_N 0.10507f
+C2454 VCM_LOW_OK PULLUP_P_BLEED_4 0.0381f
+C2455 HS_P_13 HS_P_11 0.08851f
+C2456 HS_N_3 HS_P 0.17867f
+C2457 PULLUP_N_GATE PULLUP_N_BLEED_4 0.10387f
+C2458 VCM_LOW_OK HS_P_5 0.03489f
+C2459 PULLUP_N_BLEED_2 PULLUP_N_BLEED_5 0.00252f
+C2460 FS_N_BLEED_4 FS_N_BLEED_3 6.17691f
+C2461 HS_N_5 HS_P_10 0.03089f
+C2462 FS_P_BLEED_6 PULLDOWN_N_R 0.10378f
+C2463 HS_N PULLDOWN_N_R 0.03055f
+C2464 HS_N_13 PULLUP_P 0.04377f
+C2465 VCM_LOW_OK HS_N_4 0.03489f
+C2466 TERM_P_R TERM_GATE_P 26.175f
+C2467 DIV_LOW_N DIV_N 5.26099f
+C2468 DIV_ENABLE PULLDOWN_N_R 0.04455f
+C2469 PULLUP_P_GATE PULLUP_P_BLEED_0 0.05117f
+C2470 FS_N_CONTROL_S TERM_N_R 0.05859f
+C2471 PULLUP_N_BLEED_2 FS_LOW_P 0.05872f
+C2472 TERM_VCM TERM_OR_P_S 0.05962f
+C2473 HS_N_7 FS_LOW_N 0.04574f
+C2474 TERM_ENABLE HS_N_12 0.04825f
+C2475 FS_N_BLEED_2 FS_HIGH_P 0
+C2476 FS_P_CONTROL_S HS_P 0.03246f
+C2477 FS_P_GATE FS_P_BLEED_3 0.11666f
+C2478 HS_P_8 TERM_GATE_P 0.15508f
+C2479 HS_N_7 TERM_GATE_P 0.12198f
+C2480 HS_N_5 VDD 6.45763f
+C2481 PULLUP_N_GATE HS_P 0.1185f
+C2482 TERM_VCM PULLUP_P_BLEED_2 0.01882f
+C2483 TERM_VCM HS_N_9 0.14875f
+C2484 HS_P_1 TERM_GATE_P 0.25434f
+C2485 HS_P_4 HS_P_0 0.00219f
+C2486 FS_N_BLEED_0 FS_N_GATE 0.10608f
+C2487 TERM_OR_N_S HS_N_6 0.06686f
+C2488 PULLUP_N_BLEED_1 PULLUP_N_BLEED_3 0.00153f
+C2489 PULLUP_P_BLEED_3 PULLUP_P 0.10387f
+C2490 PULLDOWN_P_R TERM_GATE_P_BLEED_0 0.12409f
+C2491 FS_P_BLEED_6 PULLUP_P_GATE 0.06116f
+C2492 PULLUP_P_GATE HS_N 0.16609f
+C2493 VCM_LOW_OK PULLDOWN_P 0.03743f
+C2494 HS_PBIAS PULLUP_N_BLEED_3 0.17679f
+C2495 DIV_ENABLE PULLUP_P_GATE 0
+C2496 PULLUP_N_BLEED_2 FS_LOW_N 0.08389f
+C2497 TERM_GATE_N HS_N_12 0.04844f
+C2498 FS_LOW_P HS_P_4 0.04599f
+C2499 DIV_ENABLE TERM_N_R 0.16935f
+C2500 FS_P_GATE FS_P_BLEED_4 0.29324f
+C2501 PULLUP_N_OUT PULLDOWN_N_R 0.12053f
+C2502 FS_LOW_P PULLUP_P_OUT 0.06604f
+C2503 TERM_N_R HS_N 0.27948f
+C2504 FS_P_BLEED_2 FS_N_OUT 0.27889f
+C2505 DIV_ENABLE RX_P 0.88297f
+C2506 FS_P_OUT HS_P_6 0.15673f
+C2507 HS_N_1 FS_P_BLEED_3 0
+C2508 HS_N_13 FS_P_BLEED_0 0.06178f
+C2509 FS_P_BLEED_5 FS_P_BLEED_3 0.12831f
+C2510 HS_P_6 HS_P_10 0.07646f
+C2511 PULLUP_P_WELL PULLUP_P 0.41138f
+C2512 PULLUP_P_CONTROL_S TERM_P_R 0.04719f
+C2513 HS_P HS_N_12 0.78589f
+C2514 HS_N_5 HS_P_12 0.06578f
+C2515 HS_P_4 TERM_GATE_P 0.15627f
+C2516 FS_P_OUT HS_P_3 0.09146f
+C2517 FS_N_GATE PULLUP_P 1.05236f
+C2518 HS_PBIAS HS_N_6 4.87661f
+C2519 PULLUP_N_OUT PULLUP_P_GATE 0.29848f
+C2520 HS_P_6 VDD 6.8233f
+C2521 HS_N_1 FS_P_BLEED_4 0.02938f
+C2522 TERM_OR_N_B PULLDOWN_N_R 0.08064f
+C2523 HS_P_9 TERM_GATE_P_BLEED_0 0.03888f
+C2524 HS_P_10 HS_P_3 0.02866f
+C2525 DIV_LOW_N FS_N_OUT 0.11535f
+C2526 FS_P_BLEED_5 FS_P_BLEED_4 1.99363f
+C2527 PULLUP_P_OUT TERM_GATE_P 0.40537f
+C2528 HS_N_7 TERM_GATE_N_BLEED_2 0.0525f
+C2529 PAD_N HS_P 1.82419f
+C2530 PULLUP_N_OUT TERM_N_R 0.29617f
+C2531 PULLUP_P_CONTROL_S HS_N_7 0.03489f
+C2532 HS_N_13 FS_P_GATE 1.01205f
+C2533 TERM_OR_P_NS TERM_OR_P_B 3.40561f
+C2534 TERM_OR_N_S HS_PBIAS 0.18642f
+C2535 HS_P_10 HS_P_2 0
+C2536 HS_N_2 HS_N_6 0
+C2537 RX_N VSS 40.3558f
+C2538 RX_P VSS 39.629f
+C2539 BYPASS_ENABLE VSS 60.4691f
+C2540 HS_N VSS 56.4163f
+C2541 HS_P VSS 40.6952f
+C2542 FS_LOW_P VSS 37.4596f
+C2543 PAD_P VSS 0.40468p
+C2544 PAD_N VSS 0.40041p
+C2545 FS_HIGH_P VSS 6.50743f
+C2546 PULLUP_P VSS 20.3883f
+C2547 PULLDOWN_P VSS 13.1542f
+C2548 FS_LOW_N VSS 8.93339f
+C2549 TERM_ENABLE VSS 50.4049f
+C2550 DIV_ENABLE VSS 22.4642f
+C2551 TERM_VCM VSS 0.11492p
+C2552 HS_PBIAS VSS 49.2915f
+C2553 FS_HIGH_N VSS 3.6476f
+C2554 PULLUP_N VSS 3.16537f
+C2555 PULLDOWN_N VSS 5.09355f
+C2556 DIFF_ENABLE VSS 14.2384f
+C2557 ESD_RAIL VSS 1674.155664f
+C2558 VDD VSS 0.73053p
+C2559 m2_42279_196800# VSS 7.46506f $ **FLOATING
+C2560 TERM_OR_P_S VSS 3.53275f
+C2561 TERM_OR_P_NS VSS 10.0639f
+C2562 TERM_GATE_P_BLEED_2 VSS 3.28565f
+C2563 TERM_GATE_P_BLEED_1 VSS 5.10072f
+C2564 TERM_GATE_P_BLEED_0 VSS 7.68181f
+C2565 TERM_OR_P_B VSS 21.153f
+C2566 TERM_GATE_P VSS 27.0289f
+C2567 HS_P_4 VSS 7.08828f
+C2568 HS_P_3 VSS 7.10742f
+C2569 HS_P_2 VSS 6.92881f
+C2570 HS_P_1 VSS 5.64833f
+C2571 HS_P_0 VSS 7.04643f
+C2572 DIV_LOW_P VSS 7.23693f
+C2573 DIV_P VSS 14.1199f
+C2574 HS_P_11 VSS 8.66739f
+C2575 HS_P_10 VSS 6.56271f
+C2576 HS_P_9 VSS 7.07185f
+C2577 HS_P_8 VSS 5.6877f
+C2578 HS_P_7 VSS 4.83643f
+C2579 HS_P_6 VSS 5.96197f
+C2580 HS_P_5 VSS 7.82827f
+C2581 HS_P_13 VSS 6.12394f
+C2582 HS_P_12 VSS 7.61216f
+C2583 a_42245_162628# VSS 0.24797p
+C2584 a_44789_189064# VSS 12.0947f
+C2585 a_43813_189064# VSS 5.60447f
+C2586 FS_P_BLEED_1 VSS 5.43533f
+C2587 FS_P_BLEED_0 VSS 4.65426f
+C2588 FS_P_CONTROL_S VSS 4.50389f
+C2589 FS_P_OUT VSS 33.2441f
+C2590 FS_P_GATE VSS 54.1782f
+C2591 FS_P_BLEED_6 VSS 4.11494f
+C2592 FS_P_BLEED_5 VSS 3.49709f
+C2593 FS_P_BLEED_4 VSS 3.14909f
+C2594 FS_P_BLEED_3 VSS 3.74647f
+C2595 FS_P_BLEED_2 VSS 8.07498f
+C2596 PULLUP_P_OUT VSS 19.6241f
+C2597 a_41005_203545# VSS 0.10822p
+C2598 a_53878_203545# VSS 0.07835f
+C2599 a_41005_203825# VSS 0.07377f
+C2600 a_53878_204105# VSS 0.07394f
+C2601 a_41005_204385# VSS 0.07377f
+C2602 a_53878_204665# VSS 0.07394f
+C2603 a_41005_204945# VSS 0.07377f
+C2604 a_53878_205225# VSS 0.07394f
+C2605 a_41005_205505# VSS 0.07377f
+C2606 a_53878_205785# VSS 0.07394f
+C2607 a_41005_206065# VSS 0.07377f
+C2608 PULLUP_P_BLEED_3 VSS 4.19596f
+C2609 PULLUP_P_BLEED_2 VSS 3.20038f
+C2610 PULLUP_P_BLEED_1 VSS 3.21015f
+C2611 PULLUP_P_BLEED_0 VSS 5.16157f
+C2612 PULLUP_P_CONTROL_S VSS 6.8319f
+C2613 a_53878_206345# VSS 0.07838f
+C2614 TERM_OR_N_NS VSS 4.57584f
+C2615 PULLDOWN_P_R VSS 20.8086f
+C2616 PULLUP_P_GATE VSS 20.3625f
+C2617 PULLUP_P_BLEED_6 VSS 8.95891f
+C2618 PULLUP_P_BLEED_5 VSS 11.915f
+C2619 PULLUP_P_BLEED_4 VSS 8.3128f
+C2620 TERM_GATE_N_BLEED_0 VSS 3.5755f
+C2621 VCM_LOW_OK VSS 18.323f
+C2622 TERM_OR_N_B VSS 10.5692f
+C2623 TERM_OR_N_S VSS 5.67982f
+C2624 TERM_GATE_N_BLEED_2 VSS 19.0723f
+C2625 TERM_GATE_N_BLEED_1 VSS 8.32567f
+C2626 HS_N_1 VSS 10.8501f
+C2627 HS_N_0 VSS 11.5294f
+C2628 DIV_LOW_N VSS 7.76439f
+C2629 DIV_N VSS 18.1827f
+C2630 TERM_GATE_N VSS 16.1057f
+C2631 HS_N_8 VSS 9.4609f
+C2632 HS_N_7 VSS 8.02897f
+C2633 HS_N_6 VSS 8.95527f
+C2634 HS_N_5 VSS 8.31305f
+C2635 HS_N_4 VSS 7.38867f
+C2636 HS_N_3 VSS 7.80958f
+C2637 HS_N_2 VSS 9.75539f
+C2638 HS_N_13 VSS 8.71443f
+C2639 HS_N_12 VSS 9.8184f
+C2640 HS_N_11 VSS 9.16147f
+C2641 HS_N_10 VSS 8.85941f
+C2642 HS_N_9 VSS 9.6175f
+C2643 FS_N_CONTROL_S VSS 5.47781f
+C2644 FS_N_OUT VSS 66.9277f
+C2645 FS_N_BLEED_5 VSS 5.98424f
+C2646 FS_N_BLEED_4 VSS 4.95494f
+C2647 FS_N_BLEED_3 VSS 4.38381f
+C2648 FS_N_BLEED_2 VSS 3.88023f
+C2649 FS_N_BLEED_1 VSS 3.51417f
+C2650 FS_N_BLEED_0 VSS 3.2728f
+C2651 FS_N_GATE VSS 57.66f
+C2652 FS_N_BLEED_6 VSS 8.07787f
+C2653 PULLUP_N_BLEED_0 VSS 4.40019f
+C2654 PULLUP_N_CONTROL_S VSS 4.58281f
+C2655 PULLUP_N_OUT VSS 44.2339f
+C2656 PULLDOWN_N_R VSS 36.3783f
+C2657 PULLUP_N_GATE VSS 12.7893f
+C2658 PULLUP_N_BLEED_6 VSS 3.40901f
+C2659 PULLUP_N_BLEED_5 VSS 3.00905f
+C2660 PULLUP_N_BLEED_4 VSS 4.15562f
+C2661 PULLUP_N_BLEED_3 VSS 6.97402f
+C2662 PULLUP_N_BLEED_2 VSS 9.92042f
+C2663 PULLUP_N_BLEED_1 VSS 8.17871f
+C2664 TERM_P_R VSS 95.52579f
+C2665 TERM_N_R VSS 0.11938p
+C2666 FS_P_WELL VSS 0.54109p
+C2667 PULLUP_P_WELL VSS 96.6713f
+C2668 FS_N_WELL VSS 0.55266p
+C2669 PULLUP_N_WELL VSS 95.1067f
+DWELL_ARRAY VSS ESD_RAIL diode_nw2ps_06v0 area=569.4528p pj=470.72u
+.ends
+
+.lib /home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.ngspice diode_typical
+.lib /home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.ngspice mimcap_typical
+Xpad PAD_P PAD_N VDD VSS TERM_VCM TERM_ENABLE DIFF_ENABLE DIV_ENABLE BYPASS_ENABLE RX_P RX_N HS_PBIAS HS_P HS_N FS_HIGH_P FS_HIGH_N FS_LOW_P FS_LOW_N PULLUP_P PULLUP_N PULLDOWN_P PULLDOWN_N tx_protected_pad
+VSS VSS 0 0
+VDD VDD 0 PWL(0n 3.3 36n 3.3 37n 0 48n 0 49n 1.5 60n 1.5 61n 3.3 100n 3.3)
+VTERM_VCM TERM_VCM 0 0
+VE_TERM_ENABLE E_TERM_ENABLE 0 PWL(0n 0 66n 0 66.2n 1 74n 1 74.2n 0)
+BTERM_ENABLE REQ_TERM_ENABLE 0 V=V(VDD)*V(E_TERM_ENABLE)
+VE_DIFF_ENABLE E_DIFF_ENABLE 0 PWL(0n 0 16n 0 16.2n 1 24n 1 24.2n 0)
+BDIFF_ENABLE REQ_DIFF_ENABLE 0 V=V(VDD)*V(E_DIFF_ENABLE)
+VE_DIV_ENABLE E_DIV_ENABLE 0 PWL(0n 0 4n 0 4.2n 1 12n 1 12.2n 0)
+BDIV_ENABLE REQ_DIV_ENABLE 0 V=V(VDD)*V(E_DIV_ENABLE)
+VE_BYPASS_ENABLE E_BYPASS_ENABLE 0 PWL(0n 0 16n 0 16.2n 1 24n 1 24.2n 0)
+BBYPASS_ENABLE REQ_BYPASS_ENABLE 0 V=V(VDD)*V(E_BYPASS_ENABLE)
+BHS_PBIAS HS_PBIAS 0 V=V(VDD)-3.11*V(E_HS_P)
+VE_HS_P E_HS_P 0 PWL(0n 0 66n 0 66.2n 1 74n 1 74.2n 0)
+BHS_P REQ_HS_P 0 V=V(VDD)*V(E_HS_P)
+VE_HS_N E_HS_N 0 PWL(0n 0 102n 0 102.2n 1 104n 1 104.2n 0)
+BHS_N REQ_HS_N 0 V=V(VDD)*V(E_HS_N)
+VE_FS_HIGH_P E_FS_HIGH_P 0 PWL(0n 0 78n 0 78.2n 1 86n 1 86.2n 0)
+BFS_HIGH_P REQ_FS_HIGH_P 0 V=V(VDD)*V(E_FS_HIGH_P)
+VE_FS_HIGH_N E_FS_HIGH_N 0 PWL(0n 0 102n 0 102.2n 1 104n 1 104.2n 0)
+BFS_HIGH_N REQ_FS_HIGH_N 0 V=V(VDD)*V(E_FS_HIGH_N)
+VE_FS_LOW_P E_FS_LOW_P 0 PWL(0n 0 102n 0 102.2n 1 104n 1 104.2n 0)
+BFS_LOW_P REQ_FS_LOW_P 0 V=V(VDD)*V(E_FS_LOW_P)
+VE_FS_LOW_N E_FS_LOW_N 0 PWL(0n 0 78n 0 78.2n 1 86n 1 86.2n 0)
+BFS_LOW_N REQ_FS_LOW_N 0 V=V(VDD)*V(E_FS_LOW_N)
+VE_PULLUP_P E_PULLUP_P 0 PWL(0n 0 90n 0 90.2n 1 96n 1 96.2n 0)
+BPULLUP_P REQ_PULLUP_P 0 V=V(VDD)*V(E_PULLUP_P)
+VE_PULLUP_N E_PULLUP_N 0 PWL(0n 0 102n 0 102.2n 1 104n 1 104.2n 0)
+BPULLUP_N REQ_PULLUP_N 0 V=V(VDD)*V(E_PULLUP_N)
+VE_PULLDOWN_P E_PULLDOWN_P 0 PWL(0n 0 102n 0 102.2n 1 104n 1 104.2n 0)
+BPULLDOWN_P REQ_PULLDOWN_P 0 V=V(VDD)*V(E_PULLDOWN_P)
+VE_PULLDOWN_N E_PULLDOWN_N 0 PWL(0n 0 90n 0 90.2n 1 96n 1 96.2n 0)
+BPULLDOWN_N REQ_PULLDOWN_N 0 V=V(VDD)*V(E_PULLDOWN_N)
+VEXT_P EXT_P 0 3.3
+RPULL_P EXT_P BOARD_P 1500
+RLOAD_P BOARD_P 0 15000
+CBOARD_P BOARD_P 0 10p
+RBOND_P BOARD_P BOND_P 1
+LBOND_P BOND_P PAD_P 1n
+VEXT_N EXT_N 0 3.3
+RPULL_N EXT_N BOARD_N 1500
+RLOAD_N BOARD_N 0 15000
+CBOARD_N BOARD_N 0 10p
+RBOND_N BOARD_N BOND_N 1
+LBOND_N BOND_N PAD_N 1n
+CCORE_P RX_P VSS 5e-14
+CCORE_N RX_N VSS 5e-14
+.subckt receive_control_guard VDD VSS RESET QUALIFIED CONFLICT REQ_TERM_ENABLE REQ_DIFF_ENABLE REQ_DIV_ENABLE REQ_BYPASS_ENABLE REQ_HS_P REQ_HS_N REQ_FS_HIGH_P REQ_FS_HIGH_N REQ_FS_LOW_P REQ_FS_LOW_N REQ_PULLUP_P REQ_PULLUP_N REQ_PULLDOWN_P REQ_PULLDOWN_N TERM_ENABLE DIFF_ENABLE DIV_ENABLE BYPASS_ENABLE HS_P HS_N FS_HIGH_P FS_HIGH_N FS_LOW_P FS_LOW_N PULLUP_P PULLUP_N PULLDOWN_P PULLDOWN_N
+BCONFLICT CONFLICT VSS V=(((V(REQ_DIV_ENABLE,VSS)>1.65)*(V(REQ_BYPASS_ENABLE,VSS)>1.65))+((V(REQ_DIFF_ENABLE,VSS)>1.65)*(V(REQ_TERM_ENABLE,VSS)>1.65))+((V(REQ_DIFF_ENABLE,VSS)>1.65)*(V(REQ_FS_HIGH_P,VSS)>1.65))+((V(REQ_DIFF_ENABLE,VSS)>1.65)*(V(REQ_FS_HIGH_N,VSS)>1.65))+((V(REQ_TERM_ENABLE,VSS)>1.65)*(V(REQ_FS_HIGH_P,VSS)>1.65))+((V(REQ_TERM_ENABLE,VSS)>1.65)*(V(REQ_FS_HIGH_N,VSS)>1.65))+((V(REQ_DIFF_ENABLE,VSS)>1.65)*(V(REQ_FS_LOW_P,VSS)>1.65))+((V(REQ_DIFF_ENABLE,VSS)>1.65)*(V(REQ_FS_LOW_N,VSS)>1.65))+((V(REQ_HS_P,VSS)>1.65)*(V(REQ_FS_HIGH_P,VSS)>1.65))+((V(REQ_HS_P,VSS)>1.65)*(V(REQ_FS_HIGH_N,VSS)>1.65))+((V(REQ_HS_P,VSS)>1.65)*(V(REQ_FS_LOW_P,VSS)>1.65))+((V(REQ_HS_P,VSS)>1.65)*(V(REQ_FS_LOW_N,VSS)>1.65))+((V(REQ_HS_N,VSS)>1.65)*(V(REQ_FS_HIGH_P,VSS)>1.65))+((V(REQ_HS_N,VSS)>1.65)*(V(REQ_FS_HIGH_N,VSS)>1.65))+((V(REQ_HS_N,VSS)>1.65)*(V(REQ_FS_LOW_P,VSS)>1.65))+((V(REQ_HS_N,VSS)>1.65)*(V(REQ_FS_LOW_N,VSS)>1.65))+((V(REQ_FS_HIGH_P,VSS)>1.65)*(V(REQ_FS_LOW_P,VSS)>1.65))+((V(REQ_FS_HIGH_N,VSS)>1.65)*(V(REQ_FS_LOW_N,VSS)>1.65))>0)
+BVALID VALID VSS V=(V(VDD,VSS)>=2.5)*(V(VDD,VSS)<=3.6)*(V(RESET,VSS)<1.65)*(V(QUALIFIED,VSS)>1.65)*(V(CONFLICT,VSS)<.5)
+BTERM_ENABLE TERM_ENABLE VSS V=V(VDD,VSS)*V(VALID,VSS)*(V(REQ_TERM_ENABLE,VSS)>1.65)
+BDIFF_ENABLE DIFF_ENABLE VSS V=V(VDD,VSS)*V(VALID,VSS)*(V(REQ_DIFF_ENABLE,VSS)>1.65)
+BDIV_ENABLE DIV_ENABLE VSS V=V(VDD,VSS)*V(VALID,VSS)*(V(REQ_DIV_ENABLE,VSS)>1.65)
+BBYPASS_ENABLE BYPASS_ENABLE VSS V=V(VDD,VSS)*V(VALID,VSS)*(V(REQ_BYPASS_ENABLE,VSS)>1.65)
+BHS_P HS_P VSS V=V(VDD,VSS)*V(VALID,VSS)*(V(REQ_HS_P,VSS)>1.65)
+BHS_N HS_N VSS V=V(VDD,VSS)*V(VALID,VSS)*(V(REQ_HS_N,VSS)>1.65)
+BFS_HIGH_P FS_HIGH_P VSS V=V(VDD,VSS)*V(VALID,VSS)*(V(REQ_FS_HIGH_P,VSS)>1.65)
+BFS_HIGH_N FS_HIGH_N VSS V=V(VDD,VSS)*V(VALID,VSS)*(V(REQ_FS_HIGH_N,VSS)>1.65)
+BFS_LOW_P FS_LOW_P VSS V=V(VDD,VSS)*V(VALID,VSS)*(V(REQ_FS_LOW_P,VSS)>1.65)
+BFS_LOW_N FS_LOW_N VSS V=V(VDD,VSS)*V(VALID,VSS)*(V(REQ_FS_LOW_N,VSS)>1.65)
+BPULLUP_P PULLUP_P VSS V=V(VDD,VSS)*V(VALID,VSS)*(V(REQ_PULLUP_P,VSS)>1.65)
+BPULLUP_N PULLUP_N VSS V=V(VDD,VSS)*V(VALID,VSS)*(V(REQ_PULLUP_N,VSS)>1.65)
+BPULLDOWN_P PULLDOWN_P VSS V=V(VDD,VSS)*V(VALID,VSS)*(V(REQ_PULLDOWN_P,VSS)>1.65)
+BPULLDOWN_N PULLDOWN_N VSS V=V(VDD,VSS)*V(VALID,VSS)*(V(REQ_PULLDOWN_N,VSS)>1.65)
+.ends receive_control_guard
+XCONTROL_GUARD VDD VSS PAD_RESET PAD_QUALIFIED PAD_CONFLICT REQ_TERM_ENABLE REQ_DIFF_ENABLE REQ_DIV_ENABLE REQ_BYPASS_ENABLE REQ_HS_P REQ_HS_N REQ_FS_HIGH_P REQ_FS_HIGH_N REQ_FS_LOW_P REQ_FS_LOW_N REQ_PULLUP_P REQ_PULLUP_N REQ_PULLDOWN_P REQ_PULLDOWN_N TERM_ENABLE DIFF_ENABLE DIV_ENABLE BYPASS_ENABLE HS_P HS_N FS_HIGH_P FS_HIGH_N FS_LOW_P FS_LOW_N PULLUP_P PULLUP_N PULLDOWN_P PULLDOWN_N receive_control_guard
+VPAD_RESET PAD_RESET VSS PWL(0n 0 31n 0 31.2n 3.3 35n 3.3 35.2n 0 100n 0)
+VPAD_QUALIFIED PAD_QUALIFIED VSS 3.3
+.control
+set wr_singlescale
+set wr_vecnames
+tran 20p 100n
+wrdata /home/ubuntu/svalbard/scratch/pad-rx-primary-screen-hierarchy/lifecycle.dat v(PAD_P) v(PAD_N) v(RX_P) v(RX_N) i(VDD)
+quit
+.endc
+.end

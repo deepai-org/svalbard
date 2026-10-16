@@ -1,0 +1,227 @@
+{
+  "status": "local_metal_connectivity_pass",
+  "fault_injection": "none",
+  "families": {
+    "wired-transmit": {
+      "pass_metal_connectivity": true,
+      "custom_vss_cluster_id": 5,
+      "protection_rail": null,
+      "ground_landings": [
+        {
+          "center_um": [
+            10.0,
+            78.305
+          ],
+          "metal2_through_metal5_cluster_ids": [
+            5,
+            5,
+            5,
+            5
+          ],
+          "connected_to_custom_vss": true
+        },
+        {
+          "center_um": [
+            221.0,
+            78.305
+          ],
+          "metal2_through_metal5_cluster_ids": [
+            5,
+            5,
+            5,
+            5
+          ],
+          "connected_to_custom_vss": true
+        }
+      ],
+      "supply_rail_conflicts": [],
+      "pad_cluster_ids": {
+        "PAD_P": 1,
+        "PAD_N": 2
+      },
+      "pads_separate_from_ground_and_each_other": true
+    },
+    "wired-receive-usb": {
+      "pass_metal_connectivity": true,
+      "custom_vss_cluster_id": 5,
+      "protection_rail": null,
+      "ground_landings": [
+        {
+          "center_um": [
+            10.0,
+            78.305
+          ],
+          "metal2_through_metal5_cluster_ids": [
+            5,
+            5,
+            5,
+            5
+          ],
+          "connected_to_custom_vss": true
+        },
+        {
+          "center_um": [
+            221.0,
+            78.305
+          ],
+          "metal2_through_metal5_cluster_ids": [
+            5,
+            5,
+            5,
+            5
+          ],
+          "connected_to_custom_vss": true
+        }
+      ],
+      "supply_rail_conflicts": [],
+      "pad_cluster_ids": {
+        "PAD_P": 1,
+        "PAD_N": 2
+      },
+      "pads_separate_from_ground_and_each_other": true
+    },
+    "reference-clock": {
+      "pass_metal_connectivity": true,
+      "custom_vss_cluster_id": 5,
+      "protection_rail": null,
+      "ground_landings": [
+        {
+          "center_um": [
+            10.0,
+            78.305
+          ],
+          "metal2_through_metal5_cluster_ids": [
+            5,
+            5,
+            5,
+            5
+          ],
+          "connected_to_custom_vss": true
+        },
+        {
+          "center_um": [
+            221.0,
+            78.305
+          ],
+          "metal2_through_metal5_cluster_ids": [
+            5,
+            5,
+            5,
+            5
+          ],
+          "connected_to_custom_vss": true
+        }
+      ],
+      "supply_rail_conflicts": [],
+      "pad_cluster_ids": {
+        "PAD_P": 1,
+        "PAD_N": 2
+      },
+      "pads_separate_from_ground_and_each_other": true
+    },
+    "rf-receive": {
+      "pass_metal_connectivity": true,
+      "custom_vss_cluster_id": 4,
+      "protection_rail": {
+        "cluster_id": 41,
+        "isolated_from_ground_signals_and_supplies": true
+      },
+      "ground_landings": [
+        {
+          "center_um": [
+            10.0,
+            78.305
+          ],
+          "metal2_through_metal5_cluster_ids": [
+            4,
+            4,
+            4,
+            4
+          ],
+          "connected_to_custom_vss": true
+        },
+        {
+          "center_um": [
+            221.0,
+            78.305
+          ],
+          "metal2_through_metal5_cluster_ids": [
+            4,
+            4,
+            4,
+            4
+          ],
+          "connected_to_custom_vss": true
+        }
+      ],
+      "supply_rail_conflicts": [],
+      "pad_cluster_ids": {
+        "PAD_P": 1,
+        "PAD_N": 2
+      },
+      "pads_separate_from_ground_and_each_other": true
+    },
+    "rf-transmit": {
+      "pass_metal_connectivity": true,
+      "custom_vss_cluster_id": 4,
+      "protection_rail": {
+        "cluster_id": 41,
+        "isolated_from_ground_signals_and_supplies": true
+      },
+      "ground_landings": [
+        {
+          "center_um": [
+            10.0,
+            78.305
+          ],
+          "metal2_through_metal5_cluster_ids": [
+            4,
+            4,
+            4,
+            4
+          ],
+          "connected_to_custom_vss": true
+        },
+        {
+          "center_um": [
+            221.0,
+            78.305
+          ],
+          "metal2_through_metal5_cluster_ids": [
+            4,
+            4,
+            4,
+            4
+          ],
+          "connected_to_custom_vss": true
+        }
+      ],
+      "supply_rail_conflicts": [],
+      "pad_cluster_ids": {
+        "PAD_P": 1,
+        "PAD_N": 2
+      },
+      "pads_separate_from_ground_and_each_other": true
+    }
+  },
+  "limitations": [
+    "Local custom pair plus two native rail modules only; whole-ring/global supply hookup is outside this check.",
+    "Only metal and via connectivity is extracted; no diffusion/device conduction, distributed resistance, current capacity or ESD qualification.",
+    "No implicit connection by matching net names; every tested connection follows touching metal/via geometry."
+  ],
+  "source_sha256": {
+    "/work/rail_connectivity.py": "f5738a7ca3eeaa0ffc91dcb9a2929ddaf4cbcc3e88ff144c3ad9ae41267a7e1a",
+    "/pdk/gf180mcuD/libs.ref/gf180mcu_fd_io/gds/gf180mcu_fd_io.gds": "c8ccb709da1935bb7c0276fa8abb55b957f45c14d0a2f97b0852ac30dcb98893",
+    "/pdk/gf180mcuD/libs.tech/klayout/tech/gf180mcu.map": "ac49b08c732c00945c054bce61a4d7f413f84887e0e4e1a66fd20018db2f5d28",
+    "/work/wired-transmit.gds": "0f82c56bd6bb8e6d4f1e6e3c844f7498f848f21f518d3f741350869b79b799ab",
+    "/work/wired-transmit-layout.json": "bca70ab4e19cbd287d02bcd4fb6dbb18f33edb691703b711d644a1ae8e6a6873",
+    "/work/wired-receive-usb.gds": "9645df1b5cafb4d9fcd073fbe53dccadc32e6bc0c9e9c0d068dc430a17b94533",
+    "/work/wired-receive-usb-layout.json": "3b9d75d95cd7e9380036b36fc5dd252c103b3d11647ed0a2adcd4fd5e8fb10d1",
+    "/work/reference-clock.gds": "81bfcfd0d0576dc9b2b79921d73ce135026189a46585af996ee4dc4dda073d2e",
+    "/work/reference-clock-layout.json": "c5bb4477b989139bc13211b25be549397dac303088eb6a2f042077032ffef1be",
+    "/work/rf-receive.gds": "1c49447bb27ab5bd77bcfa1c4748c2e346e01ff87e2760ec099c09771fd81f29",
+    "/work/rf-receive-layout.json": "b085052430930d8aa1c3e8c38e1d461b1c509651a22be38cc5c2c295a3ab95bd",
+    "/work/rf-transmit.gds": "1c49447bb27ab5bd77bcfa1c4748c2e346e01ff87e2760ec099c09771fd81f29",
+    "/work/rf-transmit-layout.json": "621a5d8a7d25311205881089ca34f7d5b30ea32522bb490db445dcd1b3bdb65c"
+  }
+}

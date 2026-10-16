@@ -1,0 +1,95 @@
+{
+  "status": "transistor_buffer_connected_gated_candidate",
+  "transient_complete": true,
+  "device_count": 207,
+  "windows": {
+    "disabled": {
+      "regulation_requested": false,
+      "vcm_min_v": 7.20757815e-07,
+      "vcm_max_v": 7.30750932e-07,
+      "max_reference_difference_v": 1.649999279242185,
+      "reference_min_v": 1.64999993,
+      "reference_max_v": 1.65,
+      "peak_supply_draw_a": 0.00195001549,
+      "peak_supply_return_a": 0.0
+    },
+    "active_tmds": {
+      "regulation_requested": false,
+      "vcm_min_v": -3.01738524e-05,
+      "vcm_max_v": 9.33433191e-05,
+      "max_reference_difference_v": 1.6500212147092999,
+      "reference_min_v": 1.64998678,
+      "reference_max_v": 1.6500162,
+      "peak_supply_draw_a": 0.00196446443,
+      "peak_supply_return_a": 0.0
+    },
+    "reset": {
+      "regulation_requested": false,
+      "vcm_min_v": -0.00140671835,
+      "vcm_max_v": -0.00118650374,
+      "max_reference_difference_v": 1.65145097835,
+      "reference_min_v": 1.65000914,
+      "reference_max_v": 1.65004426,
+      "peak_supply_draw_a": 0.00194998584,
+      "peak_supply_return_a": 0.0
+    },
+    "unpowered": {
+      "regulation_requested": false,
+      "vcm_min_v": -0.0987134575,
+      "vcm_max_v": -0.045121483,
+      "max_reference_difference_v": 0.13871678710000002,
+      "reference_min_v": 0.00129491829,
+      "reference_max_v": 0.0400033296,
+      "peak_supply_draw_a": 0.0,
+      "peak_supply_return_a": 0.000151365607
+    },
+    "active_main": {
+      "regulation_requested": true,
+      "vcm_min_v": 1.67656744,
+      "vcm_max_v": 1.75848964,
+      "max_reference_difference_v": 0.10424013000000021,
+      "reference_min_v": 1.63572186,
+      "reference_max_v": 1.65514218,
+      "peak_supply_draw_a": 0.0178206147,
+      "peak_supply_return_a": 0.0
+    },
+    "active_main_post": {
+      "regulation_requested": true,
+      "vcm_min_v": 1.69744981,
+      "vcm_max_v": 1.71112697,
+      "max_reference_difference_v": 0.06440345000000014,
+      "reference_min_v": 1.64450743,
+      "reference_max_v": 1.65103813,
+      "peak_supply_draw_a": 0.01662392,
+      "peak_supply_return_a": 0.0
+    },
+    "reconfiguration": {
+      "regulation_requested": true,
+      "vcm_min_v": 1.75414421,
+      "vcm_max_v": 1.91451699,
+      "max_reference_difference_v": 0.2524116700000001,
+      "reference_min_v": 1.65103308,
+      "reference_max_v": 1.66484046,
+      "peak_supply_draw_a": 0.0336404537,
+      "peak_supply_return_a": 0.0036550808
+    }
+  },
+  "gated": true,
+  "scope": "Transistor enable/isolation with prescribed precharge/hold and behavioral TX_VALID; autonomous supervisor, current limiting, terminal stress and layout remain open. Same extracted TX and selected external load throughout; Divider bias is a prototype, not a qualified reference. Physical compensation is used only when physical_compensation_used is true; otherwise ideal compensation passives. Core extraction is used only when physical_core_used is true. Pad-to-buffer routing is absent.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-tx-connected-primary-screen/lifecycle.spice": "65c1be2c7d6504d2aee8d2a6e3425786c3f5b335eaa27e54b79bba79e3cacfae",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer.py": "b441a82ce9f510c2dfeaa509d75194b4b639b2814415e9d855ef1b6c1e9f700d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer_connected.py": "9b368560eb9cf947eb5c4d26c9060b48d01d55ff503486e1b5f3d9b54cc3fe30",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-compensated-differential/connected.spice": "af1f3289cdb149ea1cc8b0636afd08c4c017289fa34abdbb7598ece85a49076d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "2d773c18090b57a6e54291f99d6f828730f843674fe6ceee8a7cdfdda5a58b4d",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-compensated-layout-verified/physical.spice": "b9bc81a82366e85539cf92dc778f9e7a16fc152882df26b88ab1d668c7d3f522"
+  },
+  "external_load": "differential",
+  "bias_network": {
+    "divider_scale": 0.1,
+    "shunt_cap_pf": 1.0,
+    "scope": "Explicit passive reference/bias hypothesis; not laid out or qualified."
+  },
+  "physical_compensation_used": true,
+  "physical_core_used": true
+}

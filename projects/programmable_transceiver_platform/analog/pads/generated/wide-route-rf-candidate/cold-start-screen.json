@@ -1,0 +1,74 @@
+{
+  "status": "early_cold_start_exposes_settling_gap",
+  "cases": {
+    "feedforward": {
+      "status": "extracted_feedforward_cold_start_probe_not_qualification",
+      "cases": {
+        "fast": {
+          "rise_s": 1e-10,
+          "transient_complete": true,
+          "reactivated_power_dbm": -0.6628810033141657,
+          "peak_clamp_gate_to_local_return_v": 0.737152361,
+          "late_gate_max_v": 0.736898032,
+          "peak_supply_current_a": 0.0279893334,
+          "late_mean_supply_current_a": 0.00623578464184251
+        },
+        "moderate": {
+          "rise_s": 1e-08,
+          "transient_complete": true,
+          "reactivated_power_dbm": -1.113091031749129,
+          "peak_clamp_gate_to_local_return_v": 0.734102391,
+          "late_gate_max_v": 0.733190668,
+          "peak_supply_current_a": 0.0273394584,
+          "late_mean_supply_current_a": 0.009407162829154547
+        }
+      },
+      "limitations": [
+        "Two prescribed supply ramps only; ideal source and behavioral TX driver remain.",
+        "No externally powered-host sequencing, supply overshoot, full regulator PDN, process corners or long-term recovery claim.",
+        "Supply current includes charging and modeled driver demand; no physical driver quiescent current."
+      ],
+      "source_sha256": {
+        "/home/ubuntu/svalbard/scratch/pad-clamp-physical-feedforward/lifecycle.spice": "6063853dfb329bcd3abce674df471cd2412019821088e270052493547d186210",
+        "/home/ubuntu/svalbard/scratch/pad-feedforward-startup.py": "44c7f5ede43e84833edce53a63e753f573c2ad6c16039f6b3faffac4bb6cc647"
+      }
+    },
+    "baseline": {
+      "status": "baseline_without_feedforward_cold_start_probe_not_qualification",
+      "cases": {
+        "fast": {
+          "rise_s": 1e-10,
+          "transient_complete": true,
+          "reactivated_power_dbm": 0.03507483795223776,
+          "peak_clamp_gate_to_local_return_v": 0.482351244,
+          "late_gate_max_v": 0.452920205,
+          "peak_supply_current_a": 0.0279893291,
+          "late_mean_supply_current_a": 0.005349907215712626
+        },
+        "moderate": {
+          "rise_s": 1e-08,
+          "transient_complete": true,
+          "reactivated_power_dbm": -0.6087166399516042,
+          "peak_clamp_gate_to_local_return_v": 0.368027223,
+          "late_gate_max_v": 0.340563006,
+          "peak_supply_current_a": 0.0273085203,
+          "late_mean_supply_current_a": 0.008846032751869577
+        }
+      },
+      "limitations": [
+        "Two prescribed supply ramps only; ideal source and behavioral TX driver remain.",
+        "No externally powered-host sequencing, supply overshoot, full regulator PDN, process corners or long-term recovery claim.",
+        "Supply current includes charging and modeled driver demand; no physical driver quiescent current."
+      ],
+      "source_sha256": {
+        "/home/ubuntu/svalbard/scratch/pad-clamp-physical-feedforward/lifecycle.spice": "6063853dfb329bcd3abce674df471cd2412019821088e270052493547d186210",
+        "/home/ubuntu/svalbard/scratch/pad-baseline-cold-startup.py": "c5a2d501946c8a0ebbee88969a4b7dea7047a11cba77950c7928709ba8410dce"
+      }
+    }
+  },
+  "decision": "Do not adopt feedforward based only on pulse and prebiased lifecycle results. It worsens early cold-start loading. Determine settling against the shared startup guard before changing trigger topology or claiming a persistent false trigger.",
+  "limitations": [
+    "64..79ns observations do not establish long-term latch-on or failure after the shared qualification guard.",
+    "Baseline also misses early power target with 10ns ramp; finite bias and trigger settling must be separated."
+  ]
+}

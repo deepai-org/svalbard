@@ -1,0 +1,116 @@
+{
+  "status": "transistor_buffer_connected_gated_candidate",
+  "transient_complete": true,
+  "device_count": 249,
+  "windows": {
+    "disabled": {
+      "regulation_requested": false,
+      "vcm_min_v": 1.01876442e-06,
+      "vcm_max_v": 1.05110183e-06,
+      "max_reference_difference_v": 1.64999898123558,
+      "reference_min_v": 1.64999981,
+      "reference_max_v": 1.65,
+      "peak_supply_draw_a": 0.00195001443,
+      "peak_supply_return_a": 0.0
+    },
+    "active_tmds": {
+      "regulation_requested": false,
+      "vcm_min_v": 6.55578979e-05,
+      "vcm_max_v": 0.000271553162,
+      "max_reference_difference_v": 1.6499247336743001,
+      "reference_min_v": 1.64998412,
+      "reference_max_v": 1.65001375,
+      "peak_supply_draw_a": 0.00197560084,
+      "peak_supply_return_a": 0.0
+    },
+    "reset": {
+      "regulation_requested": false,
+      "vcm_min_v": -0.00150740363,
+      "vcm_max_v": -0.00126982991,
+      "max_reference_difference_v": 1.65155470363,
+      "reference_min_v": 1.65001079,
+      "reference_max_v": 1.6500473,
+      "peak_supply_draw_a": 0.00194997819,
+      "peak_supply_return_a": 0.0
+    },
+    "unpowered": {
+      "regulation_requested": false,
+      "vcm_min_v": -0.103702566,
+      "vcm_max_v": -0.0465632234,
+      "max_reference_difference_v": 0.1457499372,
+      "reference_min_v": 0.00124614349,
+      "reference_max_v": 0.0420473712,
+      "peak_supply_draw_a": 0.0,
+      "peak_supply_return_a": 0.000164614117
+    },
+    "active_main": {
+      "regulation_requested": true,
+      "vcm_min_v": 1.12491516,
+      "vcm_max_v": 1.21238925,
+      "max_reference_difference_v": 0.5168578400000001,
+      "reference_min_v": 1.6366158,
+      "reference_max_v": 1.65176613,
+      "peak_supply_draw_a": 0.0271855128,
+      "peak_supply_return_a": 0.0
+    },
+    "active_main_post": {
+      "regulation_requested": true,
+      "vcm_min_v": 1.24868624,
+      "vcm_max_v": 1.34385392,
+      "max_reference_difference_v": 0.39863185999999984,
+      "reference_min_v": 1.6473181,
+      "reference_max_v": 1.65267624,
+      "peak_supply_draw_a": 0.0310077041,
+      "peak_supply_return_a": 0.0
+    },
+    "reconfiguration": {
+      "regulation_requested": true,
+      "vcm_min_v": 1.63974133,
+      "vcm_max_v": 2.33518001,
+      "max_reference_difference_v": 0.6439747400000002,
+      "reference_min_v": 1.65275831,
+      "reference_max_v": 1.69238453,
+      "peak_supply_draw_a": 0.0443078296,
+      "peak_supply_return_a": 0.0
+    }
+  },
+  "gated": true,
+  "scope": "Transistor enable/isolation with prescribed precharge/hold and behavioral TX_VALID; autonomous supervisor, current limiting, terminal stress and layout remain open. Same extracted TX and selected external load throughout; Divider bias is a prototype, not a qualified reference. Physical compensation is used only when physical_compensation_used is true; otherwise ideal compensation passives. Core extraction is used only when physical_core_used is true. Pad-to-buffer routing is absent.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-tx-double-tails-lifecycle.spice": "3f44eb871e3ae723b592eab368309c8001ba656341297a0ee734ae6b0e99d197",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer.py": "64ef9b07ff92328872bfaf84600ed96f9cd43c43df8181b0871031a88ee75a1b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer_connected.py": "a00727b79e0d94ea79c33fa9cb219ded8f2ea8713312de7676dd85048043e79c",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-bounded-lifecycle/connected.spice": "41acf3f8b66eb37c839f11b9c22fec3ab9e7f7a71f19881c2ef5d02394e3bec1",
+    "/home/ubuntu/svalbard/scratch/pad-joint-loaded-calibration-double-tails/screen.json": "4d6e13f0d0d47c4b5c7c4a8256604e41e426d96194fcc8a0f330f80d56340fc6",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "31ff538f4d198f8559b7a62d3dc7dece47a0d2e702eb31c344d09bedd22dd77b",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-bounded-compensation/physical.spice": "f2ec663052c43011c6cbedc2e1f822f57d2798ddce349f2fb6803e8cc7dc7e81"
+  },
+  "precharge": {
+    "extra_ns": 40.0,
+    "nominal_enable_to_termination_ns": 42.0,
+    "last_window_max_reference_difference_v": 0.0021606299999998857,
+    "last_window_vcm_min_v": 1.64778091,
+    "last_window_vcm_max_v": 1.64836769,
+    "scope": "Only PWL events at/after60ns shifted. Data clocks, edge slopes, circuits and external load unchanged; this is a sequencing hypothesis, not an implemented ready detector."
+  },
+  "device_count_scope": "Buffer only; complete TX fixture devices are additional.",
+  "drive_settings": {
+    "biases_v": {
+      "MAIN": 1.68,
+      "POST": 1.125
+    },
+    "targets_a": {
+      "MAIN": 0.016,
+      "POST": 0.008
+    }
+  },
+  "external_load": "differential",
+  "bias_network": {
+    "divider_scale": 0.1,
+    "shunt_cap_pf": 1.0,
+    "scope": "Explicit passive reference/bias hypothesis; not laid out or qualified."
+  },
+  "physical_compensation_used": true,
+  "physical_core_used": true,
+  "extracted_base_with_unextracted_additions": false
+}

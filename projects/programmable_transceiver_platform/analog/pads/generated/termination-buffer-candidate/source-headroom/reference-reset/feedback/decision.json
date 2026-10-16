@@ -1,0 +1,5 @@
+{
+  "decision": "Feedback iteration is not accepted:12sample mismatches and MAINPOST command dropped whilebusy. Zero measured premature-ready is not closure.",
+  "bench_fix": "Current replay generator waits for command_ready before each feedback-mode command. RTL-only rerun has no BUSY_COMMIT and applies MAINPOST, but remains waiting at300ns under stale input trace; detect/disabled lifecycle coverage absent.",
+  "remaining": "Rerun analog feedback with handshake-correct trace, require sampled consistency AND all requested configurations/states exercised. No physical detector or sequencer mapping claim."
+}

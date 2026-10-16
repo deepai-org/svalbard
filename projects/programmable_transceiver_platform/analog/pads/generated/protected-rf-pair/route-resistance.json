@@ -1,0 +1,149 @@
+{
+  "status": "full_protected_rf_pad_route_resistance",
+  "legs": {
+    "P": {
+      "segments": [
+        {
+          "layer": 2,
+          "length_um": 354.0,
+          "width_um": 12.0,
+          "role": "bond corridor"
+        },
+        {
+          "layer": 4,
+          "length_um": 242.5,
+          "width_um": 12.0,
+          "role": "first transverse"
+        },
+        {
+          "layer": 5,
+          "length_um": 64.0,
+          "width_um": 2.0,
+          "role": "outer vertical"
+        },
+        {
+          "layer": 4,
+          "length_um": 94.0,
+          "width_um": 12.0,
+          "role": "protection transverse"
+        }
+      ],
+      "corners": {
+        "nominal": {
+          "metal_only_ohm": 6.458749999999999
+        },
+        "high_resistance": {
+          "metal_only_ohm": 7.552333333333333
+        },
+        "low_resistance": {
+          "metal_only_ohm": 5.365166666666666
+        }
+      }
+    },
+    "N": {
+      "segments": [
+        {
+          "layer": 2,
+          "length_um": 370.0,
+          "width_um": 12.0,
+          "role": "bond corridor"
+        },
+        {
+          "layer": 4,
+          "length_um": 35.5,
+          "width_um": 4.0,
+          "role": "first transverse"
+        },
+        {
+          "layer": 5,
+          "length_um": 68.0,
+          "width_um": 2.0,
+          "role": "outer vertical"
+        },
+        {
+          "layer": 4,
+          "length_um": 94.0,
+          "width_um": 4.0,
+          "role": "protection transverse"
+        }
+      ],
+      "corners": {
+        "nominal": {
+          "metal_only_ohm": 7.04875
+        },
+        "high_resistance": {
+          "metal_only_ohm": 8.239666666666666
+        },
+        "low_resistance": {
+          "metal_only_ohm": 5.857833333333334
+        }
+      }
+    }
+  },
+  "ground_return": {
+    "corners": {
+      "nominal": {
+        "external_metal_only_ohm": 2.836305934972612,
+        "parallel_branch_ohm": {
+          "P": 5.05906875,
+          "N": 4.55281875
+        },
+        "common_segment_ohm": 0.44,
+        "internal_clamp_return_metal_ohm": 2.9107125000000003,
+        "internal_rail_metal_ohm": 1.974725
+      },
+      "high_resistance": {
+        "external_metal_only_ohm": 3.3080646359683517,
+        "parallel_branch_ohm": {
+          "P": 5.846035,
+          "N": 5.261035
+        },
+        "common_segment_ohm": 0.539,
+        "internal_clamp_return_metal_ohm": 3.36349,
+        "internal_rail_metal_ohm": 2.419038125
+      },
+      "low_resistance": {
+        "external_metal_only_ohm": 2.3645472339768725,
+        "parallel_branch_ohm": {
+          "P": 4.2721025,
+          "N": 3.8446024999999997
+        },
+        "common_segment_ohm": 0.34099999999999997,
+        "internal_clamp_return_metal_ohm": 2.457935,
+        "internal_rail_metal_ohm": 1.530411875
+      }
+    },
+    "scope": "External ground traces terminate at two ideal retained ground landings. Their parallel equivalent is inserted outside the complete pad network; no additional core/substrate return path is assumed. Internal clamp return/rail estimates are reported separately and are not inserted into this common-return resistor."
+  },
+  "physical_model_sha256": "340572dcb839f049e382604e65723eab6e0b9060d1009c49a3a53733fce1890d",
+  "technology_sha256": "f0c3a445aa0a2a9b7a1f10530a6c011800a41fcad36c12d8bb9b792a59c74f44",
+  "metal_sheet_ohm_per_square": {
+    "2": [
+      0.09,
+      0.104,
+      0.076
+    ],
+    "4": [
+      0.09,
+      0.104,
+      0.076
+    ],
+    "5": [
+      0.04,
+      0.049,
+      0.031
+    ]
+  },
+  "limitations": [
+    "Signal and external return metal length/width resistance included; vias, internal clamp/rail branch losses, spreading, substrate network and diode access omitted from transient model.",
+    "All extracted pad capacitance is placed after the series resistance as a sensitivity probe; this is not distributed PEX.",
+    "No protection-current or ESD stress verdict."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protected_rf_route.py": "24a74916452d8b3fc60031bdca482f978fd4c7e875ffa89fc7ed27a6d0af33c5",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_pad.py": "be1572ec01523d5420062257d457bb173f38207ab056486da3ed69def3d975db",
+    "/home/ubuntu/svalbard/scratch/pad-via-array-integrated/pad-layout.json": "f9eb683c113fcd9cefe1a964481d5b62c74b6c71c45dc555961841bf490d4d8a",
+    "/home/ubuntu/svalbard/scratch/pad-via-array-integrated/pad-extracted.spice": "0482750820ede9ea8e4e3d22185aca287760d75ceb014d51354a0cbb4c972368",
+    "/home/ubuntu/svalbard/scratch/pad-via-array-integrated/pad.gds": "1c49447bb27ab5bd77bcfa1c4748c2e346e01ff87e2760ec099c09771fd81f29"
+  }
+}

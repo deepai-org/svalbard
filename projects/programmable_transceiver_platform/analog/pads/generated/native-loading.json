@@ -1,0 +1,392 @@
+{
+  "status": "selected_native_clamp_capacitance_augmentation_not_full_PEX",
+  "image": "sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
+  "cells": {
+    "gf180mcu_fd_io__dvdd": {
+      "cell": "gf180mcu_fd_io__dvdd",
+      "physical_to_schematic_nodes": {
+        "a_2256_15028#": "n4",
+        "a_4800_41464#": "n6",
+        "a_3824_41464#": "n7",
+        "GF_NI_DVDD_BASE_0.comp018green_esd_clamp_v5p0_DVDD_0/comp018green_esd_rc_v5p0_0.VRC": "n8",
+        "DVDD": "DVDD",
+        "DVSS": "DVSS",
+        "VSS": "VSS"
+      },
+      "capacitors": [
+        {
+          "a": "DVDD",
+          "b": "n4",
+          "capacitance_f": 2.51346e-13
+        },
+        {
+          "a": "DVDD",
+          "b": "n6",
+          "capacitance_f": 1.39825e-14
+        },
+        {
+          "a": "DVDD",
+          "b": "n7",
+          "capacitance_f": 4.90711e-15
+        },
+        {
+          "a": "DVDD",
+          "b": "n8",
+          "capacitance_f": 1.1246300000000001e-13
+        },
+        {
+          "a": "DVSS",
+          "b": "n4",
+          "capacitance_f": 2.2712100000000002e-13
+        },
+        {
+          "a": "DVSS",
+          "b": "n6",
+          "capacitance_f": 1.13179e-14
+        },
+        {
+          "a": "DVSS",
+          "b": "n7",
+          "capacitance_f": 4.853020000000001e-15
+        },
+        {
+          "a": "DVSS",
+          "b": "n8",
+          "capacitance_f": 6.16913e-14
+        },
+        {
+          "a": "VSS",
+          "b": "n4",
+          "capacitance_f": 2.7899700000000003e-14
+        },
+        {
+          "a": "VSS",
+          "b": "n6",
+          "capacitance_f": 7.77289e-16
+        },
+        {
+          "a": "VSS",
+          "b": "n7",
+          "capacitance_f": 7.7204e-16
+        },
+        {
+          "a": "VSS",
+          "b": "n8",
+          "capacitance_f": 1.51518e-14
+        },
+        {
+          "a": "n4",
+          "b": "n6",
+          "capacitance_f": 1.01844e-14
+        },
+        {
+          "a": "n4",
+          "b": "n7",
+          "capacitance_f": 9.94061e-18
+        },
+        {
+          "a": "n4",
+          "b": "n8",
+          "capacitance_f": 3.634780000000001e-18
+        },
+        {
+          "a": "n6",
+          "b": "n7",
+          "capacitance_f": 2.94235e-15
+        },
+        {
+          "a": "n6",
+          "b": "n8",
+          "capacitance_f": 3.48959e-17
+        },
+        {
+          "a": "n7",
+          "b": "n8",
+          "capacitance_f": 2.2640300000000002e-15
+        }
+      ],
+      "excluded_unmapped_couplings": [
+        {
+          "a": "GF_NI_DVDD_BASE_0.comp018green_esd_clamp_v5p0_DVDD_0/comp018green_esd_rc_v5p0_0.VRC",
+          "b": "a_1016_56225#",
+          "capacitance_f": 3.72538e-17
+        },
+        {
+          "a": "GF_NI_DVDD_BASE_0.comp018green_esd_clamp_v5p0_DVDD_0/comp018green_esd_rc_v5p0_0.VRC",
+          "b": "a_1016_57345#",
+          "capacitance_f": 1.1935300000000002e-19
+        },
+        {
+          "a": "GF_NI_DVDD_BASE_0.comp018green_esd_clamp_v5p0_DVDD_0/comp018green_esd_rc_v5p0_0.VRC",
+          "b": "a_1016_56785#",
+          "capacitance_f": 3.9734600000000003e-19
+        }
+      ],
+      "n6_added_incident_capacitance_f": 3.92393349e-14,
+      "transistor_groups": [
+        {
+          "model": "nfet_06v0",
+          "gate": "a_2256_15028#",
+          "ends": [
+            "DVDD",
+            "DVSS"
+          ],
+          "body": "DVSS",
+          "total_width_um": 4000.0
+        },
+        {
+          "model": "nfet_06v0",
+          "gate": "a_4800_41464#",
+          "ends": [
+            "DVSS",
+            "a_2256_15028#"
+          ],
+          "body": "DVSS",
+          "total_width_um": 30.0
+        },
+        {
+          "model": "nfet_06v0",
+          "gate": "a_3824_41464#",
+          "ends": [
+            "DVSS",
+            "a_4800_41464#"
+          ],
+          "body": "DVSS",
+          "total_width_um": 30.0
+        },
+        {
+          "model": "nfet_06v0",
+          "gate": "GF_NI_DVDD_BASE_0.comp018green_esd_clamp_v5p0_DVDD_0/comp018green_esd_rc_v5p0_0.VRC",
+          "ends": [
+            "DVSS",
+            "a_3824_41464#"
+          ],
+          "body": "DVSS",
+          "total_width_um": 5.0
+        },
+        {
+          "model": "pfet_06v0",
+          "gate": "a_4800_41464#",
+          "ends": [
+            "DVDD",
+            "a_2256_15028#"
+          ],
+          "body": "DVDD",
+          "total_width_um": 120.0
+        },
+        {
+          "model": "pfet_06v0",
+          "gate": "a_3824_41464#",
+          "ends": [
+            "DVDD",
+            "a_4800_41464#"
+          ],
+          "body": "DVDD",
+          "total_width_um": 15.0
+        },
+        {
+          "model": "pfet_06v0",
+          "gate": "GF_NI_DVDD_BASE_0.comp018green_esd_clamp_v5p0_DVDD_0/comp018green_esd_rc_v5p0_0.VRC",
+          "ends": [
+            "DVDD",
+            "a_3824_41464#"
+          ],
+          "body": "DVDD",
+          "total_width_um": 20.0
+        }
+      ],
+      "extraction_sha256": "d58e5181546985a47a6af0bd34d6541dff701d835a42ec03a1be1e44794699e2"
+    },
+    "gf180mcu_fd_io__dvss": {
+      "cell": "gf180mcu_fd_io__dvss",
+      "physical_to_schematic_nodes": {
+        "a_2256_14971#": "n4",
+        "a_4800_41407#": "n6",
+        "a_3824_41407#": "n7",
+        "GF_NI_DVSS_BASE_0.comp018green_esd_clamp_v5p0_DVSS_0/comp018green_esd_rc_v5p0_0.VRC": "n8",
+        "DVDD": "DVDD",
+        "DVSS": "DVSS",
+        "VDD": "VDD"
+      },
+      "capacitors": [
+        {
+          "a": "DVDD",
+          "b": "n4",
+          "capacitance_f": 1.40423e-13
+        },
+        {
+          "a": "DVDD",
+          "b": "n6",
+          "capacitance_f": 1.0176500000000001e-14
+        },
+        {
+          "a": "DVDD",
+          "b": "n7",
+          "capacitance_f": 2.69398e-15
+        },
+        {
+          "a": "DVDD",
+          "b": "n8",
+          "capacitance_f": 5.07478e-15
+        },
+        {
+          "a": "DVSS",
+          "b": "n4",
+          "capacitance_f": 3.65977e-13
+        },
+        {
+          "a": "DVSS",
+          "b": "n6",
+          "capacitance_f": 1.5934e-14
+        },
+        {
+          "a": "DVSS",
+          "b": "n7",
+          "capacitance_f": 7.857710000000001e-15
+        },
+        {
+          "a": "DVSS",
+          "b": "n8",
+          "capacitance_f": 1.84052e-13
+        },
+        {
+          "a": "VDD",
+          "b": "n8",
+          "capacitance_f": 1.86557e-16
+        },
+        {
+          "a": "n4",
+          "b": "n6",
+          "capacitance_f": 1.01843e-14
+        },
+        {
+          "a": "n4",
+          "b": "n7",
+          "capacitance_f": 9.94061e-18
+        },
+        {
+          "a": "n4",
+          "b": "n8",
+          "capacitance_f": 3.634780000000001e-18
+        },
+        {
+          "a": "n6",
+          "b": "n7",
+          "capacitance_f": 2.9423100000000003e-15
+        },
+        {
+          "a": "n6",
+          "b": "n8",
+          "capacitance_f": 3.48959e-17
+        },
+        {
+          "a": "n7",
+          "b": "n8",
+          "capacitance_f": 2.2640300000000002e-15
+        }
+      ],
+      "excluded_unmapped_couplings": [
+        {
+          "a": "a_1016_57288#",
+          "b": "GF_NI_DVSS_BASE_0.comp018green_esd_clamp_v5p0_DVSS_0/comp018green_esd_rc_v5p0_0.VRC",
+          "capacitance_f": 1.1935300000000002e-19
+        },
+        {
+          "a": "GF_NI_DVSS_BASE_0.comp018green_esd_clamp_v5p0_DVSS_0/comp018green_esd_rc_v5p0_0.VRC",
+          "b": "a_1016_56168#",
+          "capacitance_f": 3.72538e-17
+        },
+        {
+          "a": "GF_NI_DVSS_BASE_0.comp018green_esd_clamp_v5p0_DVSS_0/comp018green_esd_rc_v5p0_0.VRC",
+          "b": "a_1016_56728#",
+          "capacitance_f": 3.9734600000000003e-19
+        }
+      ],
+      "n6_added_incident_capacitance_f": 3.92720059e-14,
+      "transistor_groups": [
+        {
+          "model": "nfet_06v0",
+          "gate": "a_2256_14971#",
+          "ends": [
+            "DVDD",
+            "DVSS"
+          ],
+          "body": "DVSS",
+          "total_width_um": 4000.0
+        },
+        {
+          "model": "nfet_06v0",
+          "gate": "a_4800_41407#",
+          "ends": [
+            "DVSS",
+            "a_2256_14971#"
+          ],
+          "body": "DVSS",
+          "total_width_um": 30.0
+        },
+        {
+          "model": "nfet_06v0",
+          "gate": "a_3824_41407#",
+          "ends": [
+            "DVSS",
+            "a_4800_41407#"
+          ],
+          "body": "DVSS",
+          "total_width_um": 30.0
+        },
+        {
+          "model": "nfet_06v0",
+          "gate": "GF_NI_DVSS_BASE_0.comp018green_esd_clamp_v5p0_DVSS_0/comp018green_esd_rc_v5p0_0.VRC",
+          "ends": [
+            "DVSS",
+            "a_3824_41407#"
+          ],
+          "body": "DVSS",
+          "total_width_um": 5.0
+        },
+        {
+          "model": "pfet_06v0",
+          "gate": "a_4800_41407#",
+          "ends": [
+            "DVDD",
+            "a_2256_14971#"
+          ],
+          "body": "DVDD",
+          "total_width_um": 120.0
+        },
+        {
+          "model": "pfet_06v0",
+          "gate": "a_3824_41407#",
+          "ends": [
+            "DVDD",
+            "a_4800_41407#"
+          ],
+          "body": "DVDD",
+          "total_width_um": 15.0
+        },
+        {
+          "model": "pfet_06v0",
+          "gate": "GF_NI_DVSS_BASE_0.comp018green_esd_clamp_v5p0_DVSS_0/comp018green_esd_rc_v5p0_0.VRC",
+          "ends": [
+            "DVDD",
+            "a_3824_41407#"
+          ],
+          "body": "DVDD",
+          "total_width_um": 20.0
+        }
+      ],
+      "extraction_sha256": "dcd2d0382ab14c814853895b7cb9ddd24ce9665750824ede23f37a1b327318a4"
+    }
+  },
+  "limitations": [
+    "No native-cell LVS claim: topology/width checks identify four control nodes only.",
+    "Unmapped RC-chain couplings are explicitly excluded, not grounded or invented.",
+    "All native devices retained; no extracted resistance, package or full-ring coupling.",
+    "Interconnect capacitance uses installed extraction rules, not measured silicon."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/native_loading.py": "45c2347e219fc586ad97878c72272336c6dc34ff63490abf77a5a826a251524d",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/gf180mcu_fd_io.spice": "710732fd6a69e165caa2c29e4cdf81b11af41da32705fcd860b7ecfb09630dd1"
+  },
+  "augmented_library_sha256": "0e8acd164e2b93615710536bbf2d263576a64803a5c3043de59b3ca667a3a3da"
+}

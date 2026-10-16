@@ -1,0 +1,49 @@
+{
+  "status": "standalone_bleed_DRC_and_extracted_DC_not_integrated",
+  "drc_count": 0,
+  "gds_roundtrip_checked": true,
+  "hres_export_rule": "Connected poly grown 0.4um on HRES 62/0 and DUALGATE 55/0; materialized because installed snake export omitted these poly enclosures.",
+  "parameters": {
+    "model": "ppolyf_u_1k_6p0",
+    "fingers": 40,
+    "length_um": 250.0,
+    "width_um": 1.0,
+    "res_spacing_um": 0.7
+  },
+  "terminals_um": {
+    "RAIL": [
+      -33.150000000000006,
+      -125.23500000000001
+    ],
+    "VSS": [
+      33.150000000000006,
+      -125.23500000000001
+    ],
+    "BODY": [
+      34.53,
+      0.0
+    ]
+  },
+  "bbox_um": [
+    -34.87,
+    -126.635,
+    34.87,
+    126.635
+  ],
+  "area_envelope_um2": 17663.0498,
+  "dc_3p3v": {
+    "current_a": 3.21187546e-07,
+    "resistance_ohm": 10274370.97452091
+  },
+  "extracted_spice_sha256": "5bed8ce50056ca3e2967acfdafb9c2d871b6ca9c7036463109fbd0cf62dc17af",
+  "limitations": [
+    "BODY must be tied to return during integration.",
+    "Nominal model only; no process/temperature or transient stress qualification.",
+    "Standalone geometry is not yet included in the protection network."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_bleed.py": "6aaeb119f1e40e35300b7939575253690cc04935ddf12ead7a68213842b6ca31",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/layout.py": "a0f7dce309444c5cd6c3c39c082d5afde449c18b5124cd959381d3b7aca8cd29",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24"
+  }
+}

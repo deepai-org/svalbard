@@ -1,0 +1,28 @@
+{
+  "source_url": "https://downloads.sourceforge.net/project/ngspice/ng-spice-rework/47/ngspice-47.tar.gz",
+  "archive_sha256": "894e649651f1838a14095e5a5439e7d3aa63e87ede14d283173fda4fcdef675f",
+  "commands": [
+    [
+      "./configure",
+      "--with-x=no",
+      "--with-readline=no",
+      "--disable-debug",
+      "--enable-xspice",
+      "--disable-cider"
+    ],
+    [
+      "make",
+      "-j4"
+    ]
+  ],
+  "version": "******\n** ngspice-47 : Circuit level simulation program\n** Compiled with KLU Direct Linear Solver\n** The U. C. Berkeley CAD Group\n** Copyright 1985-1994, Regents of the University of California.\n** Copyright 2001-2026, The ngspice team.\n** Please get your ngspice manual from https://ngspice.sourceforge.io/docs.html\n** Please file your bug-reports at http://ngspice.sourceforge.net/bugrep.html\n** Creation Date: Fri Oct 16 14:38:19 UTC 2026\n******\n",
+  "build_note": "Release47 with the recorded nonlinear-capacitor multiplier parser correction and diode sidewall charge continuity correction. System ngspice remains unchanged. PDK models unchanged.",
+  "unmodified_binary_sha256": "845ae09881c4a688032ab805701ec4bc13827930678cbc1c0818bab19980cc1b",
+  "binary_sha256": "fe4c022a189fb6bb56b04e7958614908b83bbc2b76fe609efc4fafc4ab29e810",
+  "patches_sha256": {
+    "ngspice-cap-multiplier.patch": "eda4810b0286f6a30e4e5a61408bdd4c9ff9babaf51c566430c54cd447ed4a67",
+    "ngspice-diode-charge.patch": "789510fbd22020e3c653bfde994b261bed23dc9f4ca473bb17ef0d82e406688b"
+  },
+  "binary_path": "/home/ubuntu/svalbard/scratch/pad-ngspice47/ngspice-47/src/ngspice",
+  "version_note": "Version banner inherited from base build; binary hash and patch list identify this incremental build."
+}

@@ -4,20 +4,30 @@ Use this workflow for subsequent analog passes. Its purpose is to spend less tim
 on uninformative simulations and retain lessons that apply to other blocks.
 It is a living procedure, not a claim that the current design is qualified.
 
-The user-required sequence is: finish the whole-chip mathematical model before
+The default user-required sequence is: finish the whole-chip mathematical model before
 any new schematic work; then complete and verify the connected transistor
 schematic; then layout, extract and repeat the tests. Transmission-line geometry
 and shielding are deferred. Preserve the full programmable RF/wired companion
 scope. An easier isolated circuit is an experiment, not a replacement product.
 
-## Active phase: whole-chip behavioral closure
+## Active phase: parametric IO-pad first pass
+
+The current user request explicitly authorizes a complete first-pass pad design,
+including transistor circuits and layout, before further analysis. This is a
+scoped exception to the whole-chip sequence below. Use shared architecture
+parameters and the six primitive families for reproducible electrical and layout
+views. Cover every pad family and active, disabled, reset, unpowered and
+reconfiguration states with retained external networks. Keep DRC, LVS, extracted
+performance and ESD qualification separate from generation success.
+
+## Whole-chip behavioral closure
 
 User direction: focus on the whole-chip behavioral model until it is satisfactory.
 Use `make transceiver-behavioral` and its source-hashed report as the primary
 architecture loop. Connect lifecycle, both transport directions, waveform quality,
 clock/error envelopes, power/area/pins and uncertainty sweeps in one behavioral
-composition. Do not resume solver optimization, transistor implementation or
-layout while those architecture gaps remain. Detailed existing models provide
+composition. Outside the explicitly authorized pad first pass, do not resume solver
+optimization, transistor implementation or layout while those gaps remain. Detailed existing models provide
 selective parameter evidence, not mandatory per-scenario integration. A successful
 assumption-based screen is not physical qualification or whole-chip completion.
 
@@ -91,7 +101,7 @@ their documented scope; missing correlations remain uncertainties.
 The sequence remains mathematical model closure, then verified connected
 transistor schematic, then layout/extraction. This architecture is a plan, not
 a claim that the primitive library or transistor schematic is complete, and it
-does not authorize starting layout before the schematic gate is satisfied.
+does not authorize other block layouts before the schematic gate is satisfied.
 
 ## 1. Choose the next uncertainty, not the next convenient parameter
 

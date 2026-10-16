@@ -1,0 +1,38 @@
+{
+  "status": "connected_buffer_compensation_candidate",
+  "drc_count": 0,
+  "intended_device_graph_matches": true,
+  "export_device_graph_matches": true,
+  "device_count": 281,
+  "limitations": [
+    "No resistor trim or resistance acceptance; no bias-passive layout, pad hookup or current-capacity qualification.",
+    "Electrical rerun required before adoption; no resistance extraction."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_compensation_layout.py": "518b832bb9505b45b6b59b5ef17a9f18b0152cd1535b80ce72b9bbd78abc0b19",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-restore-high-core/physical.spice": "c2cd7dcdcadcae93cb36499aa60dd4fd06398ca793392d122aa9692f949dc2b5",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-restore-high-core/buffer_core_flat.gds": "0c63a5c60e1731f0042892a13afec3a76e4d90837abf04804714b069db3594d6",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-compensation-mim/feedforward_mim.mag": "6469c894d8a0440f160b6601b25e0b88041518a96dc0e0264e4bc904d4286838"
+  },
+  "gds_marker_repair": {
+    "added_area_um2": {
+      "62": 209.088,
+      "55": 0.0
+    },
+    "selected_poly_components": {
+      "nhighres": 8
+    },
+    "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
+    "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
+    "before_gds_sha256": "30e780fb13f45a02bed14721c9f9fc6c6b72d8e7944873fe3c2f224d0199f93f",
+    "after_gds_sha256": "e68fe8ff01e9514e63adb7b1f332bc6c3727dc2cf505bc02976da7580cbf4b1a",
+    "physical_magic_sha256": "ddaeed3cfe2be42c4842fa36441deee222f5549ccab72b82a81dbf27d92cd0dd",
+    "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
+  },
+  "gds_roundtrip": {
+    "drc_count": 0,
+    "device_graph_matches": true
+  },
+  "physical_sha256": "7d2452d8ae90553e76aa23592da74a88a5e768c31b8ed51a483ae2139e693543",
+  "gds_sha256": "e68fe8ff01e9514e63adb7b1f332bc6c3727dc2cf505bc02976da7580cbf4b1a"
+}

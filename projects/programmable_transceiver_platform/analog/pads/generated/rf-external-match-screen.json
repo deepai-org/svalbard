@@ -1,0 +1,74 @@
+{
+  "status": "external_match_probe_target_not_closed",
+  "baseline_maximum_gain_power_dbm": -0.44042627119376,
+  "cases": {
+    "series_2nH_Q30": {
+      "transient_complete": true,
+      "stale_enable_complete": true,
+      "power_dbm": {
+        "active": -2.289054847228284,
+        "reactivated": -2.27840810189841
+      },
+      "full_report_path": "/home/ubuntu/svalbard/scratch/pad-rf-series-match-2nh/screen-report.json",
+      "full_report_sha256": "b4ab5bfc39c61a14e919ede6ff73cb58e2eb09855e2e74ab563be1d76a433944",
+      "assumptions": {
+        "frequency_hz": 2400000000.0,
+        "source_differential_peak_v": 0.6796537060660398,
+        "external_coupling_f": 1e-10,
+        "bond_h_per_leg": 1e-09,
+        "external_series_matching": {
+          "inductance_h_per_leg": 2e-09,
+          "assumed_q_at_carrier": 30.0,
+          "series_resistance_ohm_per_leg": 1.0053096491487339,
+          "scope": "Fixed series L and R retained in all states; Q is a design assumption, not a selected component. Self-resonance and board parasitics remain absent."
+        },
+        "coupling_scope": "Ideal board capacitor; component ESR/ESL and board traces remain unmodeled. Default RF100pF, reference10nF; fixed throughout each run.",
+        "mutual_bond_h": 0.0,
+        "source_r_ohm_per_leg": null,
+        "package_source": "declared_RF_package_probe",
+        "external_differential_termination_ohm": null,
+        "bond_r_ohm_per_leg": 1,
+        "core_load_f_per_leg": 1e-13
+      }
+    },
+    "coupling_4p7pF": {
+      "transient_complete": true,
+      "stale_enable_complete": true,
+      "power_dbm": {
+        "active": -0.3478665393636699,
+        "reactivated": -0.3423109525205312
+      },
+      "full_report_path": "/home/ubuntu/svalbard/scratch/pad-rf-series-match-4p7pf/screen-report.json",
+      "full_report_sha256": "52ea51541c422a0a3e788cde661fb67e60bc8aafc7ac8e8a2e9c1bfb21d9e018",
+      "assumptions": {
+        "frequency_hz": 2400000000.0,
+        "source_differential_peak_v": 0.6796537060660398,
+        "external_coupling_f": 4.7e-12,
+        "bond_h_per_leg": 1e-09,
+        "external_series_matching": {
+          "inductance_h_per_leg": 0.0,
+          "assumed_q_at_carrier": 30.0,
+          "series_resistance_ohm_per_leg": 0.0,
+          "scope": "Fixed series L and R retained in all states; Q is a design assumption, not a selected component. Self-resonance and board parasitics remain absent."
+        },
+        "coupling_scope": "Ideal board capacitor; component ESR/ESL and board traces remain unmodeled. Default RF100pF, reference10nF; fixed throughout each run.",
+        "mutual_bond_h": 0.0,
+        "source_r_ohm_per_leg": null,
+        "package_source": "declared_RF_package_probe",
+        "external_differential_termination_ohm": null,
+        "bond_r_ohm_per_leg": 1,
+        "core_load_f_per_leg": 1e-13
+      }
+    }
+  },
+  "decision": "Do not adopt added 2nH series inductance. Smaller coupling capacitance is a possible tuning knob but does not by itself meet the target.",
+  "limitations": [
+    "Only 2.4GHz carrier at maximum allowed modeled driver gain.",
+    "No full matching-network optimization, selected-component or board qualification.",
+    "Capacitor ESR/ESL and inductor self-resonance remain absent.",
+    "No modulated waveform crest-factor or spectral-mask claim."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/analog_screen.py": "02ed2cc039a15ed7f095e3666a86ffade3ef4fba6a725b2d2733a59cac8a6a2e"
+  }
+}

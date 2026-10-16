@@ -1,0 +1,9 @@
+* NGSPICE file created from receiver_core_flat.ext - technology: gf180mcuD
+
+.subckt receiver_core_flat RX_P RX_N VSS
+X0 VSS RX_N VSS ppolyf_u_1k_6p0 r_width=1u r_length=0.31954m
+X1 VSS RX_P VSS ppolyf_u_1k_6p0 r_width=1u r_length=0.31954m
+C0 RX_N VSS 0.3121f
+C1 RX_P VSS 0.3092f
+.ends
+

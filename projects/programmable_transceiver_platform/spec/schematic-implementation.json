@@ -1,6 +1,6 @@
 {
   "status": "characterization_inventory_selected_schematic_not_complete",
-  "layout_gate": "Complete the whole-chip mathematical model before new schematic implementation; then verify the integrated transistor schematic before new layout. Retained existing circuits/layouts are characterization references.",
+  "layout_gate": "User-authorized exception: complete a parametric first-pass IO-pad design including schematic, behavioral models and layout, then analyze it. Remaining whole-chip implementation retains mathematical closure followed by verified schematics and extraction. Pad layout generation does not imply DRC/LVS, ESD, package or performance qualification.",
   "blocks": [
     {
       "id": "rf_receive",
@@ -324,5 +324,413 @@
     "new_on_chip_protocol_logic": false
   },
   "evidence_role": "Existing transistor circuits and replays characterize device/block behavior under their recorded conditions. They are not a second normative architecture or evidence that the selected complete transceiver schematic is implemented.",
-  "design_authority": "spec/analog-architecture.json and spec/contract.json"
+  "design_authority": "spec/analog-architecture.json and spec/contract.json",
+  "io_pad_first_pass": {
+    "status": "in_progress_five_custom_families_generated_branch_completion_and_assembly_pending",
+    "implementation": "analog/pads/README.md",
+    "shared_parameter_resolver": "analog/pads/design.py",
+    "assembly_reference": "analog/pads/generated/assembly-report.json",
+    "assembly_status": "All 74 provider bond openings and 18 fixed supply/ground sites preserved. Five custom cells replace ten signal sites; twelve host output sites use the shared bi_t candidate. Near-bond protection devices now sit at local depth90um, with local gate/source/body routing and via arrays to declared DVSS landings. Native top-metal landing components carry only DVSS labels. All custom-to-ring overlaps are confined to those landings; no custom-to-custom overlap. Local metal/via ground joins pass extraction without supply conflicts or pad shorts. Whole-ring/device extraction, current capacity, assembled DRC/LVS and provider board confirmation remain open. Host throughput remains unqualified.",
+    "circuit_and_layout_generator": [
+      "analog/pads/circuits.py",
+      "analog/pads/layout.py"
+    ],
+    "evidence_scope": "Five transistor/passive pad candidates use native library bond geometry and extracted-capacitance lifecycle screens; RF/reference attached cores remain behavioral boundaries. Five physical-record exports match schematics in Netgen; stock ext2spice faults remain recorded. Wired TX now includes locally buffered detection/termination enables and switched physical source resistors, measuring approximately49.6ohm/leg at1.8V common mode in the nominal extracted DC screen. RX/USB nominal1GHz loading now meets its2.7pF/leg budget in four tested configurations (approximately1.68..2.59pF; tolerance and wire resistance unqualified) and still has adverse supply return current (approximately36mA peak and1.3mA late-window peak) during retained-network power collapse with stale enables, despite approximately0.23nA nominal steady DC backfeed after local high-side isolation. Reset/brownout control, impedance trim and finite termination-bias regulation, wired RX/USB trim/slew/interlocks, host/supply integration, distributed resistance and package placement remain open.",
+    "retained_host_supply_evidence": {
+      "report": "analog/pads/generated/retained-screen.json",
+      "status": "retained_host_and_supply_candidate_screen_not_host_or_power_signoff",
+      "network": "Common upstream board source for host output-high voltage and transceiver feed; all eighteen native supply-pad cells, explicit bonds and shared board/local decoupling retained. Selected layout-derived native clamp capacitances are added with checked node mapping; all original devices remain. This is not full native-cell parasitic extraction.",
+      "requested_duration_s": 3e-06,
+      "last_time_s": 3e-06,
+      "unreached_states": [],
+      "dc_unpowered_backfeed_a": 0.0,
+      "interpretation": "Corrected recorded ngspice47 build completes all common-board lifecycle windows with unchanged native devices and retained external network. Source absorption, undershoot/stress, local supervisor and full-bank operation remain unqualified. Independent powered peer remains unsupported due approximately81.6mA DC backfeed.",
+      "host_board_policy": "Host bank output-high voltage and transceiver feed use a common board source, or separately validate external isolation/sequencing. Native host pads do not gain independent power-off tolerance.",
+      "independent_peer_dc_unpowered_backfeed_a": 0.0815870957,
+      "native_layout_loading_report": "analog/pads/generated/native-loading.json",
+      "simulator_build_report": "analog/pads/generated/simulator-build.json",
+      "independent_peer_last_time_s": 3e-06,
+      "independent_peer_interpretation": "All retained windows complete with corrected simulator, but approximately80.20mA mean peer current in unpowered window and81.59mA DC backfeed leave independent host power unsupported without external isolation/sequencing."
+    },
+    "wired_tx_finite_bias_evidence": {
+      "report": "analog/pads/generated/wired-transmit-screen.json",
+      "target_source": "bias.parameters.common_mode_v, supply-tracking",
+      "probe_resistance_ohm": [
+        1,
+        10,
+        100
+      ],
+      "probe_capacitance_f": 1e-11,
+      "all_transients_complete": true,
+      "scope": "Same extracted TX circuit, branch controls and retained external pullups through all states. R/C values are unmeasured sensitivity probes, not regulator parameters. Unlimited sink/source capability and ideal target; physical current limits, supply power and local brownout/reset implementation remain open.",
+      "measurement_location": "finite_common_mode_probes in the linked report"
+    },
+    "analog_pad_transfer_evidence": {
+      "reports": [
+        "analog/pads/generated/rf-receive-screen.json",
+        "analog/pads/generated/rf-transmit-screen.json",
+        "analog/pads/generated/reference-clock-screen.json",
+        "analog/pads/generated/reference-clock-terminated-screen.json"
+      ],
+      "rf_rx_v_per_v_at_2p4ghz": 0.49356014596041237,
+      "rf_tx_v_per_v_at_2p4ghz": 0.5258791693052293,
+      "reference_v_per_v_at_2p5ghz": {
+        "unterminated": 1.1126365631270274,
+        "external_100ohm_differential": 0.5984463024924386
+      },
+      "all_retained_transients_complete": true,
+      "scope": "Physical pad, coupling capacitors, bonds and declared core boundary connected together. Independent active/disabled/unpowered AC points do not retain charge. Voltage ratios include source/load division; not power insertion loss. RX off match and TX 1Mohm passive discharge remain assumed. TX uses finite supply-connected output branches; zero disabled command transfer excludes real driver parasitic feedthrough. Nominal frequency sweeps locate reference peaking; tolerance, jitter, real core and ESD qualification remain open. RX finite bias has supply-connected current limits; actual common-mode loading and input stress remain unqualified. Carrier-free cold-bias settling is separate from RF operation.",
+      "nominal_frequency_sweep": {
+        "start_hz": 100000000.0,
+        "stop_hz": 10000000000.0,
+        "points": 81,
+        "reference_unterminated_peak": {
+          "frequency_hz": 4466835920.0,
+          "voltage_ratio": 1.2623773316785594
+        },
+        "reference_100ohm_board_termination_peak": {
+          "frequency_hz": 5308844440.0,
+          "voltage_ratio": 1.1456128221556743
+        },
+        "decision": "Board termination alone does not remove reference voltage peaking. Retain both reference fixtures; evaluate damping with receiver/package bounds before selecting implementation. RF nominal sweeps show no sampled peaking, not broadband qualification."
+      }
+    },
+    "near_bond_protection_layout_action": {
+      "evidence": "evidence/pad-library-audit.json",
+      "pocket_centers_um": [
+        [
+          25,
+          90
+        ],
+        [
+          50,
+          90
+        ]
+      ],
+      "candidate_ground_landing_center_um": [
+        10,
+        78.305
+      ],
+      "status": "implemented_all_five_families_standalone_drc_lvs_pass_declared_ground_joins_geometrically_verified",
+      "next_action": "Complete whole-ring/device connectivity, protection current capacity and package-return impedance analysis; qualify high-current clamp behavior. Local metal/via joins are now checked. Complete remaining branch/control gaps."
+    },
+    "local_rail_connectivity": {
+      "report": "analog/pads/generated/rail-connectivity.json",
+      "scope": "Actual custom pair plus two native rail modules, M1-M5 and all four via layers. No implicit joining by labels. Not full-ring/device LVS or impedance/current-capacity qualification.",
+      "all_five_families_pass": true,
+      "checker_faults_rejected_in_all_families": [
+        "open_ground_via2",
+        "ground_to_supply_metal_bridge"
+      ]
+    },
+    "wired_rx_differential_termination": {
+      "report": "analog/pads/generated/wired-receive-usb-screen.json",
+      "implementation": "Five parallel 20um NMOS units bridge the inner nodes of the existing two shunt resistors. DIFF_ENABLE selected with TERM_ENABLE low; all branches stay attached.",
+      "differential_ohm_by_common_mode_v": {
+        "1.0": 90.24661838,
+        "1.65": 102.02510108,
+        "2.0": 127.99766327
+      },
+      "scope": "DC slope of the physical transistor/resistor graph with extracted capacitance but ideal interconnect resistance; not bond-pad impedance. Retained lifecycle includes all branches. Trim, common-mode headroom, hardware exclusion and wire resistance remain open."
+    },
+    "wired_rx_loading_attribution": {
+      "report": "analog/pads/generated/wired-receive-usb-loading.json",
+      "method": "Zero-volt current probes in the complete extracted circuit; uninstrumented admittance equivalence within10ppm and KCL closure. No branches removed.",
+      "next_design_action": "Assess distributed interconnect resistance and tolerance margin, and enforce USB ground selection/drive exclusions. All four nominal1GHz loading configurations now meet2.7pF/leg.",
+      "balanced_bias_probe_equivalence_verified": false,
+      "differential_measurement_scope": "Zero DC differential remains unverified at approximately0.33% probe discrepancy. Explicit +/-1mV differential cases pass10ppm equivalence; no threshold relaxation.",
+      "measurement_location": "cases.disabled.branches in the linked report"
+    },
+    "wired_rx_shared_low": {
+      "implementation": "Each leg uses TERM_ENABLE OR (FS_LOW AND VCM_LOW_OK), with a shared skewed CMOS inverter sensing TERM_VCM. Six additional control MOS; same pad-side shunt/resistor bank and passive gate discharge.",
+      "required_configuration": "Ground TERM_VCM before USB drive; hold TERM_ENABLE low for independent FS drive and exclude incompatible requests. Coarse bias qualification blocks a lone FS_LOW at serial common mode; it neither forces ground nor overrides TERM_ENABLE. Trip variation, asynchronous transient stress and full interlocks remain open.",
+      "area_reservation_um2": 179978.2,
+      "measurement_report": "analog/pads/generated/wired-receive-usb-screen.json",
+      "measurement_locations": [
+        "shared_low_controls",
+        "branch_dc.fs_low",
+        "bias_qualification"
+      ]
+    },
+    "wired_rx_bounded_routing": {
+      "source": "analog/pads/layout.py",
+      "scope": "All five families now bound internal trunks to actual endpoints and place pad-connected devices/core ports near the bond-facing edge. RX/USB additionally exposes RX_P/N at that edge; device topology unchanged by routing.",
+      "signal_trunk_spans_um": {
+        "PAD_P": [
+          435.5,
+          613.5
+        ],
+        "PAD_N": [
+          435.5,
+          610.3
+        ],
+        "RX_P": [
+          437.5,
+          475.5
+        ],
+        "RX_N": [
+          437.5,
+          472.3
+        ]
+      },
+      "measurement_report": "analog/pads/generated/wired-receive-usb-screen.json",
+      "measurement_locations": [
+        "loading",
+        "retained_stale_enable"
+      ]
+    },
+    "pad_route_resistance": {
+      "report": "analog/pads/generated/wire-resistance.json",
+      "scope": "Verified generator geometry and installed PDK sheet values; metal-only bond-to-declared-core-port route estimates. Not distributed extraction; excludes vias, device access, branch routing and returns. Existing capacitor-only electrical results are not bond-port impedance qualification.",
+      "decision": "RF RX/TX use12um M2 bond corridors; other families retain4um. All use6um transverse signal routes, bounded internal trunks and bond-facing core ports. RF reservations follow width and end extensions, remaining below allocation. Bond positions are unchanged. Via loss, return impedance and distributed extraction remain open.",
+      "rf_connected_screen": {
+        "report": "analog/pads/generated/rf-route-screen.json",
+        "implementation": "analog/pads/rf_route.py augments physical RF devices/capacitance; analog_screen.py retains the same external network and core boundary.",
+        "scope": "Segmented signal-metal estimate with near-bond protection taps and local arms. Nominal/high sheet variants and endpoint capacitor-placement probes; not spatial RC extraction or proven bounds.",
+        "remaining": "Via/contact/return resistance, spatial capacitance, actual attached core, and routing improvement. Wired and reference screens still omit signal-metal resistance.",
+        "measurement_location": "cases.<family>-<corner>-<placement>.transfer_at_carrier and tx_load_power in the owning report"
+      },
+      "power_return_trunks": {
+        "generator": "analog/pads/layout.py:trunk_geometry",
+        "width_um": 8,
+        "clearance_to_neighbor_um": 1,
+        "measurement_report": "analog/pads/generated/wire-resistance.json",
+        "measurement_location": "families.<family>.power_trunks",
+        "scope": "Allocated M5 power/return trunks with bounded endpoints; device graph, bond positions and cell reservations unchanged. Reported end-to-end metal resistance excludes local branch access, vias, transverse returns, ring and core mesh. No current-capacity or complete IR-drop claim."
+      },
+      "measurement_location": "families.<family>.legs.<leg>.corners.nominal.metal_only_ohm in the owning report"
+    },
+    "wired_tx_termination_buffer": {
+      "report": "analog/pads/generated/wired-transmit-screen.json",
+      "ownership": "Attached-core buffer supplied by wired rail/return; global common-mode reference provides target only. TERM_VCM is its output.",
+      "implemented_scope": "Canonical boundary remains behavioral. The 249-device source-capacity buffer candidate has connected compensation layout, local DRC/device/GDS checks and a sustained-load extracted simulation; it is not adopted.",
+      "current_limit_basis": "Maximum shared main-plus-postcursor current plus measured discharge load, with 10% transient allowance; about28.05mA, below the shared36mA total TX allocation.",
+      "state_coverage": "Two normal buffer/load cases, held-high request fault, and external-source-termination case all reach the full 100ns lifecycle. All retain the complete physical TX pad network.",
+      "remaining": "Loaded loop response, current limiting, safe readiness/disable, residual-charge terminal tolerance, bias-source implementation, pad-to-buffer routing, distributed resistance, area funding and canonical integration.",
+      "passive_discharge": {
+        "implementation": "TERM_DISCHARGE high-resistance-poly resistor between TERM_VCM and VSS, width2um length2um; circuit and layout generated from the same graph.",
+        "nominal_current_at_1p65_v_a": 0.0015021004441666665,
+        "unpowered_window_s": [
+          3.6e-08,
+          4.3e-08
+        ],
+        "scope": "Held-high termination/buffer requests during power loss. Passive discharge, not instant shutdown or reverse-blocking qualification.",
+        "measurement_location": "bounded_common_mode_buffer.cases.stale_termination_request.lifecycle_states.unpowered in the linked report"
+      },
+      "low_power_requirement": "Explicit buffer request disables source/sink output when unused. Candidate transistor gating lowers output-stage reset draw, but its provisional divider bias still consumes about1.95mA; unpowered transient return remains unqualified.",
+      "sequencing": {
+        "precharge_lead_s": 2e-09,
+        "disconnect_hold_s": 2e-09,
+        "scope": "Nominal scheduling probe: precharge buffer, connect termination, disconnect termination, release buffer. Not a physical controller, a qualified settling bound or a replacement for global reference startup.",
+        "candidate_probe_report": "analog/pads/generated/termination-buffer-candidate/compensated/precharge-screen.json",
+        "candidate_probe_result": "42ns enable-to-termination reaches within0.63mV of reference immediately before connection, but current turn-on then causes about404mV sampled active-main reference error. A fixed longer precharge does not close the loaded-response gap; no ready detector is implemented."
+      },
+      "postcursor_fixture": "Negative delayed tap implemented by reversing POST complementary controls; all four cases show increased alternating-pattern swing. No arbitrary-data eye/compliance claim.",
+      "external_source_termination": {
+        "configuration": {
+          "source_pullup_v": 3.3,
+          "source_pullup_ohm_per_leg": 50,
+          "coupling_f_per_leg": 1e-07,
+          "remote_termination_ohm_per_leg": 50.0,
+          "remote_common_mode_v": 1.65,
+          "programmed_current": {
+            "MAIN": {
+              "target_a": 0.016,
+              "calibrated_current_a": 0.0159990934,
+              "bias_v": 2.49,
+              "target_reached": true
+            },
+            "POST": {
+              "target_a": 0.008,
+              "calibrated_current_a": 0.00796158171,
+              "bias_v": 1.6,
+              "target_reached": true
+            }
+          },
+          "scope": "Separate serial board fixture. Source pullups and AC-coupled receiver stay attached in all states; its TMDS window is an electrical stress probe, not a valid TMDS connection. Board traces and distributed metal R remain absent."
+        },
+        "decision": "Retain as an external-passive route that avoids the on-chip termination buffer; no pad branches removed. Board traces, distributed on-chip R, long-run settling and compliance remain unverified.",
+        "measurement_location": "bounded_common_mode_buffer.cases.external_source_termination in the linked report"
+      },
+      "candidate_report": "analog/pads/generated/termination-buffer-candidate/source-capacity-diagnostic/compensated/lifecycle.json",
+      "candidate_layout_report": "analog/pads/generated/termination-buffer-candidate/source-capacity-diagnostic/compensated/layout.json",
+      "source_termination_headroom": {
+        "report": "analog/pads/generated/wired-primary-protection/source-headroom-screen.json",
+        "finding": "With shared100ohm differential load and complete extracted pad, ideal TERM_VCM=1.65V supports about8.05mA for the8mA main target, but only20.07mA incremental sink for the24mA maximum aligned main/post target. No1.2..2.8V sampled TERM_VCM reaches95percent of24mA.",
+        "interpretation": "Do not transfer external-pullup DC current calibration to internal source termination. Internal switch/driver headroom must be addressed or configuration-qualified. Existing external-source-termination capability remains a separate path, not proof that this internal combination works.",
+        "loaded_calibration_update": "The original device set can reach both DC targets after joint loaded calibration, but MAIN requires3.175V bias. Preferred doubled MAIN/POST tail candidate reaches16.07/7.99mA at1.680/1.125V; this is reachability at one loaded point, not compliance or dynamic acceptance.",
+        "candidate_decision": "analog/pads/generated/wired-primary-protection/double-tails/decision.json",
+        "candidate_scope": "Connected366-device layout, nominal2.688pF/leg disabled loading,240640um2 allocated union. Not funded/adopted; integrated finite-buffer high-drive lifecycle still fails intended common-mode regulation."
+      },
+      "sustained_load_diagnostic": {
+        "report": "analog/pads/generated/termination-buffer-candidate/source-capacity-diagnostic/compensated/load-step.json",
+        "finding": "At ideal fixed bias/reference, extracted buffer sustains +/-24mA and settles within5.4mV of1.65V, but abrupt load reversals produce0.708..3.797V output extrema. Transient response remains unacceptable; settling is not a stability-margin or terminal-safety proof."
+      },
+      "routing_improvement": {
+        "report": "analog/pads/generated/termination-buffer-candidate/source-capacity-diagnostic/compensated/routing-decision.json",
+        "finding": "Bounded internal routing reduces extracted capacitance and improves nominal source-load settling; full-pad loaded response remains insufficient."
+      },
+      "sustained_loaded_update": {
+        "report": "analog/pads/generated/termination-buffer-candidate/source-capacity-diagnostic/compensated/sustained-hold.json",
+        "finding": "MAIN-only late error9.56mV, MAIN+POST late error33.48mV; early droop and2.432V release excursion remain. Supply attribution identifies pad-dominated peak during detection disable; late average buffer draw0.539mA is decaying. No accepted deadline or completed shutdown.",
+        "supply_attribution_report": "analog/pads/generated/termination-buffer-candidate/source-capacity-diagnostic/compensated/supply-attribution.json"
+      },
+      "shutdown_hold": {
+        "report": "analog/pads/generated/termination-buffer-candidate/source-capacity-diagnostic/compensated/shutdown-hold.json",
+        "finding": "Same full circuit at310\u2013319ns: buffer2.19\u20132.47uA, pad~6.9nA, external prototype bias1.950mA; TERM_VCM3.44\u20135.52mV. Slow decay rather than persistent mA buffer fault at nominal condition. Internal LOCAL_OUT~2.262V remains; restart and shutdown deadline unqualified."
+      },
+      "source_headroom_candidate": {
+        "report": "analog/pads/generated/termination-buffer-candidate/source-headroom/decision.json",
+        "finding": "OutputPMOS1280um generated/extracted:MAINPOSTDCerror5.50mV versus49.08mV baseline;MAIN4.12mV. Shared16.5mV target unchanged. Dynamic/stability/area/current checks pending.",
+        "dynamic_finding": "Retained-state replay completes. Premature loaded-ready50.92to44.13ns;MAINPOST reaches measured-ready but startup overshoot2.362to2.652V. Stronger source fixesDC,not dynamic closure. Core157650um2 before compensation exceeds termination150000um2 ceiling; funding/placement open.",
+        "reset_direction_decision": "Rail-highGAINreset rejected:MAINstartup error566mV andunpoweredVCM-0.410V despiteDC5.21mV. See source-headroom/reset-direction/decision.json. Existing reset retained pending bounded initial state.",
+        "reference_reset_candidate": {
+          "report": "analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/decision.json",
+          "finding": "282device physical candidate lowers precharge peak2.652to1.818V;DC5.52mV retained. Premature-ready44.43ns and unpoweredVCM-0.245V remain;no adoption."
+        }
+      }
+    },
+    "attached_core_current_accounting": {
+      "implementation": "analog/pads/analog_screen.py measures finite RX bias and TX output source/sink rail currents, and ideal reference bias demand. TX branches use shared driver resistance/headroom and half the shared bias current as an unqualified per-leg capacity.",
+      "rf_rx_finite_boundary": {
+        "implementation": "analog/pads/analog_screen.py",
+        "report": "analog/pads/generated/rf-receive-screen.json",
+        "measurement_location": "finite_rx_bias and large_coupling_diagnostic.finite_rx_bias in the report",
+        "parameter_sources": [
+          "blocks.bias.parameters.bias_unit_a",
+          "blocks.bias.parameters.common_mode_v",
+          "blocks.bias.parameters.startup_guard_s",
+          "blocks.lna.resource_allocation.current_budget_ma.rf_rx"
+        ],
+        "status": "Supply-connected bounded behavioral bias driver and passive discharge probe, not implemented transistor bias or reverse-current isolation."
+      },
+      "decision": "Require RF cold-bias readiness independently of reference readiness, preserve warm-state bias as needed, and establish retained-input-voltage tolerance or discharge. Actual power-dependent common-source LNA input admittance must replace the conservative split resistive fixture.",
+      "scope": "Finite RX bias is an engineering probe with supply accounting, not transistor-proven capacity or reverse isolation. Reference bias remains ideal; TX lacks physical reverse junctions, quiescent current and driver bandwidth. Its small-signal loading fixture does not prove target output power. External network and stored charge persist.",
+      "external_coupling": {
+        "nominal_rf_f_per_leg": 1e-10,
+        "reference_f_per_leg": 1e-08,
+        "large_coupling_diagnostic_f_per_leg": 1e-08,
+        "decision": "Use100pF per leg in the nominal RF board fixture to reduce cold bias charge/settling. Allow other board coupling through the same model;10nF remains a loading diagnostic, not a second pad design. Component ESR/ESL and board traces remain unqualified."
+      }
+    },
+    "rf_tx_target_power": {
+      "report": "analog/pads/generated/rf-transmit-screen.json",
+      "routing_report": "analog/pads/generated/rf-route-screen.json",
+      "status": "shared_target_command_misses_load_power_target",
+      "interpretation": "Default tone command derives from shared target power and source/load divider. Pad and metal losses leave delivered fundamental power below target; lifecycle completion is not a power pass. Current-limited behavioral driver capacity, gain compensation, physical distortion and modulated headroom remain unqualified.",
+      "gain_headroom": "Shared maximum gain6.4 versus nominal5.36 is exercised with fixed implied driver input, unchanged current/headroom limits and external network. Only one of four routing cases reaches target, without useful margin; maximum gain is not a robust closure. See maximum_gain_cases in the routing report."
+    },
+    "rf_tx_power_transition_exposure": {
+      "report": "analog/pads/generated/rf-transmit-screen.json",
+      "routing_report": "analog/pads/generated/rf-route-screen.json",
+      "scope": "Normal and held-high enable through the same retained supply trajectory and external network. Pin/core voltage relative to supply, supply return current and individual source/sink branch currents measured; endpoint and branch limits checked.",
+      "decision": "Physical driver must account for retained coupling charge and fault transition current. Behavioral rail gating and missing reverse junctions do not establish shutdown, power-off isolation or safe stress. Preserve this gap until actual junction paths and local controls are implemented."
+    },
+    "primary_protection": {
+      "report": "analog/pads/generated/protection-audit.json",
+      "status": "current_geometry_below_published_HV_ESD_minimum_widths",
+      "decision": "Do not accept current small DSS devices as a primary ESD solution. Reconcile a published-rule-sized or otherwise evidenced protection architecture with RF/serial loading, protected-device transient limits, secondary protection and physical discharge paths. Existing layout/lifecycle passes establish neither ESD rule compliance nor survival.",
+      "scope": "Dimensional comparison and compact-model sizing estimate only. No replacement layout or inferred HBM rating. Minimum-width candidate strains RF and RX/USB capacitance allocations; wired TX now has common-mode-specific admittance and protection-sizing estimates.",
+      "alternative_direction": "Connected RF replacement uses extracted steering diodes, an isolated protection rail, native-derived clamp, MIM timing/storage capacitors and a physical approximately10.27Mohm bleed. Wider bond corridors and routes reserve123842.11um2 per pair; shared budget is now130000um2 per pair, funded by140000um2 from unused reserve with no total die-area increase. Independent audit matches159 extracted devices and verifies nonlinear well replacement without double-counting linear capacitance. Maximum modeled gain reaches approximately+0.26dBm nominal and+0.16dBm at high metal resistance. Provider bond openings and overlap checks pass. Primary-to-core protection coordination, discharge-current capacity, complete rail/package integration and physical RF driver readiness remain open; candidate not yet canonical. Rebuild evidence against the updated shared area allocation before adoption.",
+      "export_roundtrip_report": "analog/pads/generated/gds-roundtrip.json",
+      "export_model_equivalence_report": "analog/pads/generated/gds-export-electrical-equivalence.json",
+      "integrated_candidate_report": "analog/pads/generated/protected-rf-pair/pad-screen.json",
+      "connected_route_report": "analog/pads/generated/protected-rf-pair/route-screen.json"
+    },
+    "wired_tx_admittance": {
+      "report": "analog/pads/generated/wired-transmit-loading.json",
+      "implementation": "analog/pads/wired_tx_loading.py",
+      "scope": "Complete extracted pad, calibration bound to that netlist, nine biased configurations, odd/common admittance sweeps. Every branch retained; stiff controls/biases and no package/distributed resistance. Independent AC points supplement lifecycle tests.",
+      "decision": "Share output cascodes across MAIN, POST and TMDS per leg/unit: two 16um L0.7um fingers; two 20um L1um tail devices per branch/unit. Generated layout and full retained-network screens use this topology. Protection remains below published minimum dimensions and is not qualified.",
+      "current_compliance_report": "analog/pads/generated/wired-transmit-compliance.json",
+      "current_compliance_scope": "Fresh exact-circuit calibration; nominal 8mA, aligned maximum 24mA MAIN+POST, and 10mA TMDS meet 3% loaded-current criterion. DC only; distributed resistance, variation and device stress remain open."
+    },
+    "reference_primary_candidate": {
+      "report": "analog/pads/generated/reference-primary-protection/decision.json",
+      "implemented_scope": "Connected 175-device primary network and reference bias layout; independent physical graph, LVS, local DRC and retained-state/loading screens. Not canonical or provider-placement qualified.",
+      "remaining": "Whole-ring LVS, core clearance, core protection, distributed route loss, bias startup and actual clock receiver remain. Current primary pad geometry is area-funded and jointly placed."
+    },
+    "receive_primary_candidate": {
+      "report": "analog/pads/generated/receive-primary-protection/decision.json",
+      "implemented_scope": "Connected446-device primary network, RX/USB branches and physical core-discharge layout. Local DRC/LVS/independent graph and retained lifecycle screens completed.",
+      "remaining": "Serial bypass exceeds2.7pF/leg. Detailed attribution is resolved with a documented capacitor-only-node DC anchor and1Tohm/1Pohm sensitivity check. Physical control and protection qualification remain open; area and joint provider placement pass.",
+      "sizing_candidate": "analog/pads/generated/receive-primary-protection/fs-sizing/decision.json"
+    },
+    "primary_protection_assembly": {
+      "report": "analog/pads/generated/primary-protection-assembly/assembly-screen.json",
+      "area_report": "analog/pads/generated/primary-protection-assembly/area-allocation.json",
+      "scope": "All five primary candidates jointly preserve provider bond openings and pass metal overlap/local-rail checks. Areas funded from existing reserve; no electrical acceptance, whole-core fit or full-ring LVS claim."
+    },
+    "transmit_control_circuit_candidate": {
+      "report": "analog/pads/generated/transmit-control-candidate/decision.json",
+      "implemented_scope": "88-device CMOS static exclusion circuit and connected layout; extracted256-case truth table matches policy.",
+      "remaining": "Implement blanking/commit sequencing: direct request changes produce hazards. Bounded internal routing plus prescribed2ns blanking removes observed overlap in nominal50/500fF probes only. Actual fanout/skew, PVT, supervisor/readiness and pad integration remain.",
+      "connected_lifecycle": {
+        "report": "analog/pads/generated/transmit-control-candidate/connected-screen.json",
+        "implementation": "analog/pads/transmit_control_connected.py",
+        "finding": "Direct physical termination control integrated with full TX/buffer; loaded plateaus preserved. Negative unpowered termination-enable voltage requires stress/recovery analysis. Other serializer/bias fanout and supply qualification remain behavioral; no safe-state acceptance."
+      },
+      "connected_terminal_exposure": {
+        "report": "analog/pads/generated/transmit-control-candidate/connected-terminal-exposure.json",
+        "finding": "4.079V gate-drain exposure during32.2ns supply collapse in3.3V control devices. Requires power-domain interface and internal transient treatment before adoption; no reliability verdict inferred."
+      },
+      "tolerant_input_candidate": {
+        "report": "analog/pads/generated/transmit-control-candidate/tolerant-inputs/decision.json",
+        "finding": "Keep thick-oxide input treatment as candidate direction; change internal/output transient handling before adoption. Collapse4.126V exposure is on06v0 inputs;03v3 internal gate-source still reaches3.825V on release. Prescribed2ns blanking removes measured above-threshold conflict at50/500fF; hardware sequencing absent."
+      },
+      "thick_logic_candidate": {
+        "report": "analog/pads/generated/transmit-control-candidate/thick-logic/decision.json",
+        "finding": "Preferred88MOS06v0static interlock. Local layout/static checks pass and connected lifecycle completes. Measured max|Vgd|4.151V,max|Vgs|4.095V;no oxide lifetime verdict.4ns prescribed blanking clears tested50/500fF threshold overlap. Physical sequencer, supervisor and fanout still missing."
+      },
+      "preferred_implementation": "analog/pads/generated/transmit-control-candidate/thick-logic/decision.json",
+      "transaction_sequencer": {
+        "implementation": "rtl/pt_tx_pad_sequence.sv",
+        "verification": "analog/pads/tx_pad_sequence_tb.sv",
+        "status": "RTL behavior verified with Icarus; synthesis/layout and extracted mixed-signal connection pending",
+        "contract": "Synchronous commit/request/analog_ready; async disable on reset or invalid local supply; synchronized release required. Preblank, atomically apply captured request, postblank, wait current-configuration analog readiness. Buffer request independent of qualified. Invalid command disables; loss of readiness faults; no automatic rearm.",
+        "remaining": "Physical readiness/supply detectors, clock/count budget including detector latency, benign serializer startup behavior, synthesis/layout and current-version mixed-signal replay.",
+        "connected_replay": {
+          "implementation": "analog/pads/transmit_sequence_connected.py",
+          "report": "analog/pads/generated/transmit-control-candidate/thick-logic/sequence-connected/screen.json",
+          "finding": "Actual RTL outputs drive extracted interlock/fullTX/buffer, same external network. Open-loop readiness only. Precharge peak2.362V; sampled loaded MAIN/MAINPOST errors121/130mV. Sequencing does not close analog startup; no readiness acceptance."
+        },
+        "loaded_readiness": "QUALIFIED enables analog load; TRAFFIC_READY asserts only after LOAD_CYCLES contiguous good analog_ready samples under load. Startup bad sample restarts dwell without removing load; readiness loss after traffic-ready faults. RTL checks pass; earlier open-loop replay predates this update.",
+        "readiness_observation": {
+          "report": "analog/pads/generated/transmit-control-candidate/thick-logic/readiness-observed/screen.json",
+          "parameters": "blocks.txpad.parameters.termination_readiness in analog-architecture.json",
+          "finding": "50.92ns loaded traffic-ready without measured detector ready; sampled MAINPOST never measured-ready. Updated RTL replay is open-loop; prescribed analog_ready is not acceptable proof. Comparator physical implementation, offset/loading/current absent."
+        },
+        "feedback_iteration": {
+          "report": "analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/feedback/handshake-iteration4/decision.json",
+          "finding": "Fourhandshake iterations advance firstmismatch121,129,153,165ns. Latest27mismatches,allmodesqualified/finaldisableobserved,1.042ns prematureloadedready;not converged. Distinguish prefix convergence,modecoverage,electrical acceptance."
+        }
+      }
+    },
+    "generation_parameters": {
+      "status": "preferred integration candidates, not canonical electrical acceptance",
+      "wired_transmit": {
+        "serial_tail_units": 4
+      },
+      "wired_receive_usb": {
+        "fs_high_width_um": 14.0,
+        "fs_series_geometry_um": [
+          2.0,
+          3.5
+        ]
+      },
+      "termination_buffer": {
+        "input_width": 20.0,
+        "source_width": 1280.0,
+        "sink_width": 160.0,
+        "first_stage_scale": 10.0,
+        "gated": true,
+        "complementary_isolation": true,
+        "restore_reference": true
+      },
+      "transmit_interlock": {
+        "tolerant_logic": true
+      },
+      "scope": "Single recipe for chosen circuit sizing. Primary protection, core bleed, compensation and provider assembly are composed by their existing layout generators; this recipe alone is not a complete extracted pad."
+    }
+  }
 }

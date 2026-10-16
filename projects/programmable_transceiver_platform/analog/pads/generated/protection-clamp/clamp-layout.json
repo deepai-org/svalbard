@@ -1,0 +1,320 @@
+{
+  "status": "standalone_clamp_DRC_and_device_LVS_pass_not_ESD_qualification",
+  "native_base": "GF_NI_DVDD_BASE",
+  "source_gds_sha256": "c8ccb709da1935bb7c0276fa8abb55b957f45c14d0a2f97b0852ac30dcb98893",
+  "removed_mos_capacitors": [
+    {
+      "cell": "nmoscap_6p0_CDNS_406619531450",
+      "transform": "r0 *1 21.355,268.275",
+      "role": "rail"
+    },
+    {
+      "cell": "nmoscap_6p0_CDNS_406619531450",
+      "transform": "r0 *1 38.535,268.275",
+      "role": "rail"
+    },
+    {
+      "cell": "nmoscap_6p0_CDNS_406619531454",
+      "transform": "m0 *1 26.34,181.515",
+      "role": "timing"
+    },
+    {
+      "cell": "nmoscap_6p0_CDNS_406619531454",
+      "transform": "m0 *1 38.52,181.515",
+      "role": "timing"
+    },
+    {
+      "cell": "nmoscap_6p0_CDNS_406619531454",
+      "transform": "m0 *1 50.7,181.515",
+      "role": "timing"
+    },
+    {
+      "cell": "nmoscap_6p0_CDNS_406619531454",
+      "transform": "m0 *1 14.16,181.515",
+      "role": "timing"
+    },
+    {
+      "cell": "nmoscap_6p0_CDNS_406619531454",
+      "transform": "r0 *1 50.7,186.575",
+      "role": "timing"
+    },
+    {
+      "cell": "nmoscap_6p0_CDNS_406619531454",
+      "transform": "r0 *1 38.52,186.575",
+      "role": "timing"
+    },
+    {
+      "cell": "nmoscap_6p0_CDNS_406619531454",
+      "transform": "r0 *1 26.34,186.575",
+      "role": "timing"
+    },
+    {
+      "cell": "nmoscap_6p0_CDNS_406619531454",
+      "transform": "r0 *1 14.16,186.575",
+      "role": "timing"
+    },
+    {
+      "cell": "nmoscap_6p0_CDNS_406619531450",
+      "transform": "r0 *1 55.715,268.275",
+      "role": "rail"
+    },
+    {
+      "cell": "nmoscap_6p0_CDNS_406619531450",
+      "transform": "r0 *1 4.175,268.275",
+      "role": "rail"
+    }
+  ],
+  "preserved_leaf_layers": [
+    34,
+    35,
+    36,
+    38,
+    42
+  ],
+  "gate_landings_um": {
+    "timing": [
+      11.605,
+      143.84
+    ],
+    "rail": [
+      6.055,
+      275.0
+    ]
+  },
+  "ground_landing_um": [
+    12.905000000000001,
+    267.0
+  ],
+  "mim_centers_um": {
+    "timing": [
+      105.0,
+      175.0
+    ],
+    "rail": [
+      105.0,
+      245.0
+    ]
+  },
+  "bbox_um": "(-0.055,0;122,288)",
+  "capacitor_parameters": {
+    "model": "cap_mim_2f0_m4m5_noshield",
+    "pcell": "cap_mim_2p0fF",
+    "timing_side_um": 31.6,
+    "rail_side_um": 31.6
+  },
+  "limitations": [
+    "Native transistor/resistor/diode geometry retained; modified clamp is not inherited ESD qualification.",
+    "New interconnect uses single vias and is not discharge-current qualified.",
+    "Standalone clamp macro; no pad array, protection rail or whole-ring integration."
+  ],
+  "drc_count": 0,
+  "device_graph_lvs_match": true,
+  "topology": {
+    "cell": "gf180mcu_fd_io__dvdd",
+    "physical_to_schematic_nodes": {
+      "a_2245_2628#": "n4",
+      "a_4789_29064#": "n6",
+      "a_3813_29064#": "n7",
+      "TIMING": "n8",
+      "DVDD": "DVDD",
+      "DVSS": "DVSS",
+      "VSS": "VSS"
+    },
+    "capacitors": [
+      {
+        "a": "DVDD",
+        "b": "n4",
+        "capacitance_f": 2.4218700000000004e-13
+      },
+      {
+        "a": "DVDD",
+        "b": "n6",
+        "capacitance_f": 1.39519e-14
+      },
+      {
+        "a": "DVDD",
+        "b": "n7",
+        "capacitance_f": 4.8990200000000005e-15
+      },
+      {
+        "a": "DVDD",
+        "b": "n8",
+        "capacitance_f": 9.65489e-14
+      },
+      {
+        "a": "DVSS",
+        "b": "n4",
+        "capacitance_f": 2.2007000000000002e-13
+      },
+      {
+        "a": "DVSS",
+        "b": "n6",
+        "capacitance_f": 1.12918e-14
+      },
+      {
+        "a": "DVSS",
+        "b": "n7",
+        "capacitance_f": 4.83107e-15
+      },
+      {
+        "a": "DVSS",
+        "b": "n8",
+        "capacitance_f": 3.41122e-14
+      },
+      {
+        "a": "n4",
+        "b": "n6",
+        "capacitance_f": 1.01844e-14
+      },
+      {
+        "a": "n4",
+        "b": "n7",
+        "capacitance_f": 9.94061e-18
+      },
+      {
+        "a": "n4",
+        "b": "n8",
+        "capacitance_f": 1.35048e-17
+      },
+      {
+        "a": "n6",
+        "b": "n7",
+        "capacitance_f": 2.94235e-15
+      },
+      {
+        "a": "n6",
+        "b": "n8",
+        "capacitance_f": 2.8789e-17
+      },
+      {
+        "a": "n7",
+        "b": "n8",
+        "capacitance_f": 2.2693000000000004e-15
+      }
+    ],
+    "excluded_unmapped_couplings": [
+      {
+        "a": "a_2245_2628#",
+        "b": "a_246_1179#",
+        "capacitance_f": 2.7899700000000003e-14
+      },
+      {
+        "a": "a_4789_29064#",
+        "b": "a_246_1179#",
+        "capacitance_f": 8.02903e-16
+      },
+      {
+        "a": "a_3813_29064#",
+        "b": "a_246_1179#",
+        "capacitance_f": 7.733980000000001e-16
+      },
+      {
+        "a": "TIMING",
+        "b": "a_246_1179#",
+        "capacitance_f": 7.410530000000001e-14
+      },
+      {
+        "a": "TIMING",
+        "b": "a_1005_43825#",
+        "capacitance_f": 3.72538e-17
+      },
+      {
+        "a": "TIMING",
+        "b": "a_1005_44385#",
+        "capacitance_f": 3.9734600000000003e-19
+      },
+      {
+        "a": "TIMING",
+        "b": "a_1005_44945#",
+        "capacitance_f": 1.1935300000000002e-19
+      },
+      {
+        "a": "TIMING",
+        "b": "m2_2279_36800#",
+        "capacitance_f": 5.4570000000000005e-17
+      }
+    ],
+    "n6_added_incident_capacitance_f": 3.8399239e-14,
+    "transistor_groups": [
+      {
+        "model": "nfet_06v0",
+        "gate": "a_2245_2628#",
+        "ends": [
+          "DVDD",
+          "DVSS"
+        ],
+        "body": "DVSS",
+        "total_width_um": 4000.0
+      },
+      {
+        "model": "nfet_06v0",
+        "gate": "a_4789_29064#",
+        "ends": [
+          "DVSS",
+          "a_2245_2628#"
+        ],
+        "body": "DVSS",
+        "total_width_um": 30.0
+      },
+      {
+        "model": "nfet_06v0",
+        "gate": "a_3813_29064#",
+        "ends": [
+          "DVSS",
+          "a_4789_29064#"
+        ],
+        "body": "DVSS",
+        "total_width_um": 30.0
+      },
+      {
+        "model": "nfet_06v0",
+        "gate": "TIMING",
+        "ends": [
+          "DVSS",
+          "a_3813_29064#"
+        ],
+        "body": "DVSS",
+        "total_width_um": 5.0
+      },
+      {
+        "model": "pfet_06v0",
+        "gate": "a_4789_29064#",
+        "ends": [
+          "DVDD",
+          "a_2245_2628#"
+        ],
+        "body": "DVDD",
+        "total_width_um": 120.0
+      },
+      {
+        "model": "pfet_06v0",
+        "gate": "a_3813_29064#",
+        "ends": [
+          "DVDD",
+          "a_4789_29064#"
+        ],
+        "body": "DVDD",
+        "total_width_um": 15.0
+      },
+      {
+        "model": "pfet_06v0",
+        "gate": "TIMING",
+        "ends": [
+          "DVDD",
+          "a_3813_29064#"
+        ],
+        "body": "DVDD",
+        "total_width_um": 20.0
+      }
+    ],
+    "extraction_sha256": "b11f5f13550159ca87154e39e738a9b6a9f4a69ffea5f70ee46d74101faa66b2"
+  },
+  "extracted_spice_sha256": "359fae1202b5160ed5f17cb1c88fdf77ba8df2119b2c3627f3e83370e0d4a9b0",
+  "extracted_capacitor_count": 75,
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/clamp_layout.py": "cf3cc9f53a0f62eae3a38595199224bf78222f309bc509ef00c88fd5c6331eb2",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_candidate.py": "bec4913b3fd87e052cd95979da6e07763887f868c3fec396f5d8eeb3178761ed",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/layout.py": "a0f7dce309444c5cd6c3c39c082d5afde449c18b5124cd959381d3b7aca8cd29",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/gf180mcu_fd_io.spice": "710732fd6a69e165caa2c29e4cdf81b11af41da32705fcd860b7ecfb09630dd1"
+  }
+}

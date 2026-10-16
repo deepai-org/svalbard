@@ -1,0 +1,69 @@
+{
+  "status": "attached_core_bleed_characterization_not_selected_layout",
+  "cases": {
+    "1000000000": {
+      "resistance_ohm": 1000000000.0,
+      "pad_to_core_gain_db": -0.4452997639582728,
+      "active_receiver_v": [
+        1.64999964,
+        1.64999964
+      ],
+      "transient_complete": true,
+      "off_receiver_max_abs_v": 1.811335,
+      "deck_sha256": "d97996791929acbd8fb9f30fad59c4bd3d08eca42eb5ead2d708fec75501e968"
+    },
+    "100000": {
+      "resistance_ohm": 100000.0,
+      "pad_to_core_gain_db": -0.5164030752306765,
+      "active_receiver_v": [
+        1.64643161,
+        1.64643161
+      ],
+      "transient_complete": true,
+      "off_receiver_max_abs_v": 2.30205988e-07,
+      "deck_sha256": "6f01004686f1338b123ac01764210fdd71e902b1939583c28ac4d246c82613fa"
+    },
+    "330000": {
+      "resistance_ohm": 330000.0,
+      "pad_to_core_gain_db": -0.4670161287474422,
+      "active_receiver_v": [
+        1.64891422,
+        1.64891422
+      ],
+      "transient_complete": true,
+      "off_receiver_max_abs_v": 8.39496488e-07,
+      "deck_sha256": "78bfb0853dd37ebbb0f1a2578f6bef13457d07ed4ab6823288be4ce3272c5b50"
+    },
+    "1000000": {
+      "resistance_ohm": 1000000.0,
+      "pad_to_core_gain_db": -0.45247839618465335,
+      "active_receiver_v": [
+        1.64964126,
+        1.64964126
+      ],
+      "transient_complete": true,
+      "off_receiver_max_abs_v": 0.00283994491,
+      "deck_sha256": "e097b39672ead90336d9f15b09ba5df8330575c6da300b00734162a573a28c17"
+    }
+  },
+  "active_common_mode_v": 1.65,
+  "core_capacitance_f_per_leg": 5e-14,
+  "frequency_hz": 1250000000.0,
+  "off_observation_s": [
+    1.95e-06,
+    2.205e-06
+  ],
+  "limitations": [
+    "Nominal bypass only; half-divider, corners and noise unqualified.",
+    "Discharge components and supervisor are not implemented physical circuitry.",
+    "Off voltage is a measurement, not a core reliability acceptance threshold."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-receive-usb-extracted-c.spice": "0017276f08e6a0518b5a585d2480a9df74a5c25c7027d0dd0d041ffedb5fbed1",
+    "/home/ubuntu/svalbard/scratch/pad-receiver-qualification/qualified_bypass.spice": "4e7cb21e45cfdd3df561113677343b8a28e843d18f6177f9e67efa75fe86be73",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "0974c3c93656155b4746d36214503858d7a7c5e8fe29913d27518c4f2e126db8",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/receive_bleed.py": "1aece206a758724cdbd2f55583b71c6f3fda0bc2c7051497bfdc33e9810bc231",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "d45109a5e4399d143c283a6fccf78745e8a24f29749825847073c97a11c0143f",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/wired_receive.py": "c17136a1c165093b65974b27143e1ff8e21c725d11940326a6b999585909cc8b"
+  }
+}

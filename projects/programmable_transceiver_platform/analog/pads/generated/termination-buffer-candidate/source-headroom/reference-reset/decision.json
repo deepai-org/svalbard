@@ -1,0 +1,8 @@
+{
+  "status": "bounded_gain_reset_candidate_not_adopted",
+  "implementation": "282device extracted buffer,sourcePMOS1280um;disabled gain node connected to existingREF by10umNMOS/20umPMOS transmission gate;same compensation and external network.",
+  "decision": "Reference reset is the preferred startup direction over rail-high reset. Do not adopt until power-off coupling and closed-loop readiness are resolved.",
+  "finding": "Precharge peak2.652to1.818V,MAINerror96.26to93.52mV;DCMAINPOST5.52mV. Premature-ready44.43ns remains. UnpoweredVCM minimum worsens-0.117to-0.245V. No relaxed readiness target.",
+  "checks": "LocalDRC/connectivity/GDSroundtrip pass;render inspected;full retained-state replay and connectedDC completed.",
+  "remaining": "Reference load/current and terminal stress,power-off coupling,closed-loop readiness,compensation and area/current allocation. Physical supervisor/current limiter still absent."
+}

@@ -1,0 +1,9 @@
+* NGSPICE file created from diode_pd2nw_06v0.ext - technology: gf180mcuD
+
+.subckt diode_pd2nw_06v0 A K SUB
+D0 A K diode_pd2nw_06v0 pj=51.8u area=22.5p
+C0 K A 5.25529f
+C1 K SUB 4.30791f
+DWELL SUB K diode_nw2ps_06v0 area=71.1816p pj=58.84u
+.ends
+

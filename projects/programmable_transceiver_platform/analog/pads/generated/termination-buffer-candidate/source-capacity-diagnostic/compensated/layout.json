@@ -1,0 +1,38 @@
+{
+  "status": "connected_buffer_compensation_candidate",
+  "drc_count": 0,
+  "intended_device_graph_matches": true,
+  "export_device_graph_matches": true,
+  "device_count": 249,
+  "limitations": [
+    "No resistor trim or resistance acceptance; no bias-passive layout, pad hookup or current-capacity qualification.",
+    "Electrical rerun required before adoption; no resistance extraction."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_compensation_layout.py": "518b832bb9505b45b6b59b5ef17a9f18b0152cd1535b80ce72b9bbd78abc0b19",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-bounded-core/physical.spice": "5ecd29e9ae025d3c990641a865f366aca9935b3e151ee023604bfb47c56896e7",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-bounded-core/buffer_core_flat.gds": "3e8d6527c8ed5079c127026bbf845db72fe8896b47bd3ac94089e783e04fdddc",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-compensation-mim/feedforward_mim.mag": "6469c894d8a0440f160b6601b25e0b88041518a96dc0e0264e4bc904d4286838"
+  },
+  "gds_marker_repair": {
+    "added_area_um2": {
+      "62": 209.088,
+      "55": 0.0
+    },
+    "selected_poly_components": {
+      "nhighres": 8
+    },
+    "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
+    "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
+    "before_gds_sha256": "93d42f73c9b1c5d66bf3245d37ec1261cd577066de7cf36ecd6481a6d027d59c",
+    "after_gds_sha256": "fa2cd0fd228a940f19c33710e91dab9f2e031fdf4416c987de010f852af6f445",
+    "physical_magic_sha256": "9dc121e723590dde0d86f90374ff30066fa5fb00fdd6d813ef9046f4dae115a9",
+    "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
+  },
+  "gds_roundtrip": {
+    "drc_count": 0,
+    "device_graph_matches": true
+  },
+  "physical_sha256": "f2ec663052c43011c6cbedc2e1f822f57d2798ddce349f2fb6803e8cc7dc7e81",
+  "gds_sha256": "fa2cd0fd228a940f19c33710e91dab9f2e031fdf4416c987de010f852af6f445"
+}

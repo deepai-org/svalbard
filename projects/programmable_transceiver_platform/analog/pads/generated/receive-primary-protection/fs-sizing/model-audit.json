@@ -1,0 +1,35 @@
+{
+  "status": "physical_MOS_resistor_diode_MIM_graph_comparison",
+  "device_graph_matches": true,
+  "physical_devices": 446,
+  "simulated_devices": 446,
+  "missing": [],
+  "unexpected": [],
+  "supplemental_device_counts": {
+    "csubckt:cap_mim_2f0_m4m5_noshield": 2,
+    "ndiode:diode_nd2ps_06v0": 12,
+    "pdiode:diode_pd2nw_06v0": 8
+  },
+  "excluded_devices": {
+    "explicit_well_replacement": [
+      "DWELL_ARRAY VSS ESD_RAIL diode_nw2ps_06v0 area=569.4528p pj=470.72u"
+    ]
+  },
+  "scope": "MOS/resistor bodies and sizes, steering-diode polarity/area/perimeter, and ordered MIM terminals/dimensions checked. Explicit well replacement and parasitic values not certified; no ESD rating.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-rx-fs-sized-primary/combined_flat.ext": "4d5b2e6f6a17464110da777820ce1eeb4b87c5925d1b2833da8986c523a02642",
+    "/home/ubuntu/svalbard/scratch/pad-rx-fs-sized-primary/physical.spice": "fe94e06c050f13795cbba2f0911e107e83e00ff847114c37ab471c3f38ac73ea",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_device_audit.py": "faca1155b3ec8d51ec1db7a43fd2d1102d0e0441cf036f494fc71c4b318512f5",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/extract_audit.py": "b3e9f311401ea251c5adb47f406d9e6170448865026108ad3ca7dd14c67d3b68",
+    "/home/ubuntu/svalbard/scratch/pad-rx-fs-sized-primary/combined_flat.spice": "fae931705f222b54342f9e9085d949dadb271c9de127a3880f55054899a47002"
+  },
+  "well_replacement": {
+    "extracted_well_area_um2": 569.4528,
+    "extracted_well_perimeter_um": 470.72,
+    "linear_capacitance_removed_ff": 68.3343359999999,
+    "expected_removal_ff": 68.33433600000001,
+    "other_extracted_capacitances_unchanged": true,
+    "scope": "Terminal well areas assume isolated, nonshared array wells as established by array geometry; no nonlinear junction accuracy or ESD qualification.",
+    "raw_spice_sha256": "fae931705f222b54342f9e9085d949dadb271c9de127a3880f55054899a47002"
+  }
+}

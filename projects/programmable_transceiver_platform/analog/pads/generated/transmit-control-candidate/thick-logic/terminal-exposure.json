@@ -1,0 +1,4343 @@
+{
+  "status": "terminal_voltage_exposure_not_safe_stress_verdict",
+  "transient_complete": true,
+  "instance": "xctl",
+  "port_nodes": {
+    "VDD": "VDD",
+    "VSS": "VSS",
+    "REQ_MAIN": "CTL_REQ_MAIN",
+    "REQ_POST": "CTL_REQ_POST",
+    "REQ_TMDS": "CTL_REQ_TMDS",
+    "REQ_DETECT": "CTL_REQ_DETECT",
+    "REQ_TERM": "REQ_TERM_ENABLE",
+    "RESET": "TX_RESET",
+    "QUALIFIED": "TX_QUALIFIED",
+    "SUPPLY_OK": "CTL_OK",
+    "CONFLICT": "CTL_CONFLICT",
+    "VALID": "CTL_VALID",
+    "EN_MAIN": "CTL_EN_MAIN",
+    "EN_POST": "CTL_EN_POST",
+    "EN_TMDS": "CTL_EN_TMDS",
+    "EN_DETECT": "CTL_EN_DETECT",
+    "EN_TERM": "TERM_ENABLE"
+  },
+  "stop_time_s": 2.2e-07,
+  "transistor_count": 88,
+  "node_count": 54,
+  "original_network_and_stimuli_preserved": true,
+  "per_model": {
+    "nfet_06v0": {
+      "GS": {
+        "max_absolute_v": 4.095251218,
+        "device": "X48",
+        "signed_v": 4.095251218,
+        "time_s": 3.22e-08
+      },
+      "GD": {
+        "max_absolute_v": 4.1509476329999995,
+        "device": "X48",
+        "signed_v": 4.1509476329999995,
+        "time_s": 3.22e-08
+      },
+      "GB": {
+        "max_absolute_v": 3.78078958,
+        "device": "X17",
+        "signed_v": 3.78078958,
+        "time_s": 1.980925e-07
+      },
+      "DS": {
+        "max_absolute_v": 3.78078958,
+        "device": "X20",
+        "signed_v": 3.78078958,
+        "time_s": 1.980925e-07
+      },
+      "DB": {
+        "max_absolute_v": 3.78078958,
+        "device": "X20",
+        "signed_v": 3.78078958,
+        "time_s": 1.980925e-07
+      },
+      "SB": {
+        "max_absolute_v": 2.28941353,
+        "device": "X50",
+        "signed_v": 2.28941353,
+        "time_s": 3.17425e-08
+      }
+    },
+    "pfet_06v0": {
+      "GS": {
+        "max_absolute_v": 3.63414183,
+        "device": "X7",
+        "signed_v": -3.63414183,
+        "time_s": 8.0925e-09
+      },
+      "GD": {
+        "max_absolute_v": 4.1509476329999995,
+        "device": "X36",
+        "signed_v": 4.1509476329999995,
+        "time_s": 3.22e-08
+      },
+      "GB": {
+        "max_absolute_v": 3.606722011,
+        "device": "X85",
+        "signed_v": -3.606722011,
+        "time_s": 1.96086006e-07
+      },
+      "DS": {
+        "max_absolute_v": 3.7254055500265904,
+        "device": "X13",
+        "signed_v": -3.7254055500265904,
+        "time_s": 1.0224209e-07
+      },
+      "DB": {
+        "max_absolute_v": 3.615450965,
+        "device": "X64",
+        "signed_v": -3.615450965,
+        "time_s": 1.96747862e-07
+      },
+      "SB": {
+        "max_absolute_v": 2.0768772799999997,
+        "device": "X7",
+        "signed_v": -2.0768772799999997,
+        "time_s": 2.40532029e-08
+      }
+    }
+  },
+  "devices": [
+    {
+      "name": "X0",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G2_MID",
+        "DATA_REQUEST",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.4419025449999996,
+          "max_v": 0.13336338999999997,
+          "min_time_s": 1.003075e-07,
+          "max_time_s": 1.963425e-07
+        },
+        "GD": {
+          "min_v": -3.5625535439,
+          "max_v": 1.5531880999999998,
+          "min_time_s": 1.000875e-07,
+          "max_time_s": 1.963925e-07
+        },
+        "GB": {
+          "min_v": -3.4419025449999996,
+          "max_v": 0.13336338999999997,
+          "min_time_s": 1.003075e-07,
+          "max_time_s": 1.963425e-07
+        },
+        "DS": {
+          "min_v": -1.73849876,
+          "max_v": 0.775171314,
+          "min_time_s": 1.96692862e-07,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -1.73849876,
+          "max_v": 0.775171314,
+          "min_time_s": 1.96692862e-07,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X1",
+      "model": "nfet_06v0",
+      "nodes": [
+        "DATA_REQUEST",
+        "G0_INV",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.144104062,
+          "max_v": 3.38316852,
+          "min_time_s": 1.961e-07,
+          "max_time_s": 1.000575e-07
+        },
+        "GD": {
+          "min_v": -3.399823917,
+          "max_v": 3.3218627925999997,
+          "min_time_s": 1.921e-07,
+          "max_time_s": 1.000575e-07
+        },
+        "GB": {
+          "min_v": -0.144104062,
+          "max_v": 3.38316852,
+          "min_time_s": 1.961e-07,
+          "max_time_s": 1.000575e-07
+        },
+        "DS": {
+          "min_v": -0.89259999,
+          "max_v": 3.43336339,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.963425e-07
+        },
+        "DB": {
+          "min_v": -0.89259999,
+          "max_v": 3.43336339,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.963425e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X2",
+      "model": "pfet_06v0",
+      "nodes": [
+        "DATA_REQUEST",
+        "G0_INV",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.4441040619999996,
+          "max_v": 0.8475447349999999,
+          "min_time_s": 1.961e-07,
+          "max_time_s": 3.21832977e-08
+        },
+        "GD": {
+          "min_v": -3.399823917,
+          "max_v": 3.3218627925999997,
+          "min_time_s": 1.921e-07,
+          "max_time_s": 1.000575e-07
+        },
+        "GB": {
+          "min_v": -3.4441040619999996,
+          "max_v": 0.8475447349999999,
+          "min_time_s": 1.961e-07,
+          "max_time_s": 3.21832977e-08
+        },
+        "DS": {
+          "min_v": -3.4419025449999996,
+          "max_v": 0.13336338999999997,
+          "min_time_s": 1.003075e-07,
+          "max_time_s": 1.963425e-07
+        },
+        "DB": {
+          "min_v": -3.4419025449999996,
+          "max_v": 0.13336338999999997,
+          "min_time_s": 1.003075e-07,
+          "max_time_s": 1.963425e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X3",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G0_INV",
+        "REQ_POST",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -1.5620244e-17,
+          "max_v": 3.3,
+          "min_time_s": 1.921e-07,
+          "max_time_s": 1.481e-07
+        },
+        "GD": {
+          "min_v": -3.38316852,
+          "max_v": 3.3000460575291997,
+          "min_time_s": 1.000575e-07,
+          "max_time_s": 1.48842415e-07
+        },
+        "GB": {
+          "min_v": -1.5620244e-17,
+          "max_v": 3.3,
+          "min_time_s": 1.921e-07,
+          "max_time_s": 1.481e-07
+        },
+        "DS": {
+          "min_v": -0.144104062,
+          "max_v": 3.38316852,
+          "min_time_s": 1.961e-07,
+          "max_time_s": 1.000575e-07
+        },
+        "DB": {
+          "min_v": -0.144104062,
+          "max_v": 3.38316852,
+          "min_time_s": 1.961e-07,
+          "max_time_s": 1.000575e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X4",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G0_INV",
+        "REQ_MAIN",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 0.0,
+          "max_time_s": 1.001e-07
+        },
+        "GD": {
+          "min_v": -3.31230548,
+          "max_v": 3.4281131769999997,
+          "min_time_s": 8.6275e-09,
+          "max_time_s": 1.921e-07
+        },
+        "GB": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 0.0,
+          "max_time_s": 1.001e-07
+        },
+        "DS": {
+          "min_v": -0.144104062,
+          "max_v": 3.38316852,
+          "min_time_s": 1.961e-07,
+          "max_time_s": 1.000575e-07
+        },
+        "DB": {
+          "min_v": -0.144104062,
+          "max_v": 3.38316852,
+          "min_time_s": 1.961e-07,
+          "max_time_s": 1.000575e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X5",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G0_INV",
+        "REQ_POST",
+        "G0_MID",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.57947541,
+          "max_v": 1.6410695199999998,
+          "min_time_s": 1.000875e-07,
+          "max_time_s": 1.49244178e-07
+        },
+        "GD": {
+          "min_v": -3.38316852,
+          "max_v": 3.3000460575291997,
+          "min_time_s": 1.000575e-07,
+          "max_time_s": 1.48842415e-07
+        },
+        "GB": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -2.366443974,
+          "max_v": 0.23382763000000018,
+          "min_time_s": 1.961625e-07,
+          "max_time_s": 3.21132977e-08
+        },
+        "DB": {
+          "min_v": -3.4441040619999996,
+          "max_v": 0.8475447349999999,
+          "min_time_s": 1.961e-07,
+          "max_time_s": 3.21832977e-08
+        },
+        "SB": {
+          "min_v": -2.05982471,
+          "max_v": 0.812293591,
+          "min_time_s": 1.96046006e-07,
+          "max_time_s": 3.22e-08
+        }
+      }
+    },
+    {
+      "name": "X6",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G0_MID",
+        "REQ_MAIN",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": -3.30643669,
+          "max_v": 1.95464614,
+          "min_time_s": 8.6475e-09,
+          "max_time_s": 1.921e-07
+        },
+        "GB": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -2.05982471,
+          "max_v": 0.812293591,
+          "min_time_s": 1.96046006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -2.05982471,
+          "max_v": 0.812293591,
+          "min_time_s": 1.96046006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X7",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G4_INV",
+        "REQ_DETECT",
+        "G4_MID",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.63414183,
+          "max_v": 0.010185499999999958,
+          "min_time_s": 8.0925e-09,
+          "max_time_s": 1.98374941e-07
+        },
+        "GD": {
+          "min_v": -3.42096661,
+          "max_v": 3.2999999971723284,
+          "min_time_s": 8.0625e-09,
+          "max_time_s": 2.078475e-07
+        },
+        "GB": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.358675122,
+          "max_v": 0.19430119,
+          "min_time_s": 2.140275e-07,
+          "max_time_s": 3.21082977e-08
+        },
+        "DB": {
+          "min_v": -3.555371572,
+          "max_v": 0.841690195,
+          "min_time_s": 2.140775e-07,
+          "max_time_s": 3.21632977e-08
+        },
+        "SB": {
+          "min_v": -2.0768772799999997,
+          "max_v": 0.820607213,
+          "min_time_s": 2.40532029e-08,
+          "max_time_s": 3.22e-08
+        }
+      }
+    },
+    {
+      "name": "X8",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G4_MID",
+        "REQ_TMDS",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 8.1e-09
+        },
+        "GD": {
+          "min_v": -3.65547475,
+          "max_v": 1.8919949799999998,
+          "min_time_s": 1.980875e-07,
+          "max_time_s": 2.4e-08
+        },
+        "GB": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 8.1e-09
+        },
+        "DS": {
+          "min_v": -2.0768772799999997,
+          "max_v": 0.820607213,
+          "min_time_s": 2.40532029e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -2.0768772799999997,
+          "max_v": 0.820607213,
+          "min_time_s": 2.40532029e-08,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X9",
+      "model": "nfet_06v0",
+      "nodes": [
+        "ORDINARY_REQUEST",
+        "G2_INV",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.0853168089,
+          "max_v": 3.69898941,
+          "min_time_s": 1.96041006e-07,
+          "max_time_s": 1.000825e-07
+        },
+        "GD": {
+          "min_v": -3.3695594989,
+          "max_v": 3.6761532008,
+          "min_time_s": 1.96041006e-07,
+          "max_time_s": 1.000875e-07
+        },
+        "GB": {
+          "min_v": -0.0853168089,
+          "max_v": 3.69898941,
+          "min_time_s": 1.96041006e-07,
+          "max_time_s": 1.000825e-07
+        },
+        "DS": {
+          "min_v": -0.768935894,
+          "max_v": 3.40557216,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.970525e-07
+        },
+        "DB": {
+          "min_v": -0.768935894,
+          "max_v": 3.40557216,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.970525e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X10",
+      "model": "pfet_06v0",
+      "nodes": [
+        "ORDINARY_REQUEST",
+        "G2_INV",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3853168089,
+          "max_v": 0.83911075,
+          "min_time_s": 1.96041006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": -3.3695594989,
+          "max_v": 3.6761532008,
+          "min_time_s": 1.96041006e-07,
+          "max_time_s": 1.000875e-07
+        },
+        "GB": {
+          "min_v": -3.3853168089,
+          "max_v": 0.83911075,
+          "min_time_s": 1.96041006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.4014674869999997,
+          "max_v": 0.10557216000000036,
+          "min_time_s": 1.002125e-07,
+          "max_time_s": 1.970525e-07
+        },
+        "DB": {
+          "min_v": -3.4014674869999997,
+          "max_v": 0.10557216000000036,
+          "min_time_s": 1.002125e-07,
+          "max_time_s": 1.970525e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X11",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G2_INV",
+        "REQ_TERM",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 0.0,
+          "max_time_s": 1.001e-07
+        },
+        "GD": {
+          "min_v": -3.30696917,
+          "max_v": 3.30138342928,
+          "min_time_s": 2.41925e-08,
+          "max_time_s": 1.92041237e-07
+        },
+        "GB": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 0.0,
+          "max_time_s": 1.001e-07
+        },
+        "DS": {
+          "min_v": -0.0853168089,
+          "max_v": 3.69898941,
+          "min_time_s": 1.96041006e-07,
+          "max_time_s": 1.000825e-07
+        },
+        "DB": {
+          "min_v": -0.0853168089,
+          "max_v": 3.69898941,
+          "min_time_s": 1.96041006e-07,
+          "max_time_s": 1.000825e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X12",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G2_INV",
+        "DATA_REQUEST",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.89259999,
+          "max_v": 3.43336339,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.963425e-07
+        },
+        "GD": {
+          "min_v": -3.6532871439,
+          "max_v": 3.3440815319,
+          "min_time_s": 1.000875e-07,
+          "max_time_s": 1.963675e-07
+        },
+        "GB": {
+          "min_v": -0.89259999,
+          "max_v": 3.43336339,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.963425e-07
+        },
+        "DS": {
+          "min_v": -0.0853168089,
+          "max_v": 3.69898941,
+          "min_time_s": 1.96041006e-07,
+          "max_time_s": 1.000825e-07
+        },
+        "DB": {
+          "min_v": -0.0853168089,
+          "max_v": 3.69898941,
+          "min_time_s": 1.96041006e-07,
+          "max_time_s": 1.000825e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X13",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G2_INV",
+        "REQ_TERM",
+        "G2_MID",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.30314536,
+          "max_v": 0.011175479999999904,
+          "min_time_s": 2.42325e-08,
+          "max_time_s": 1.003325e-07
+        },
+        "GD": {
+          "min_v": -3.30696917,
+          "max_v": 3.30138342928,
+          "min_time_s": 2.41925e-08,
+          "max_time_s": 1.92041237e-07
+        },
+        "GB": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.7254055500265904,
+          "max_v": 0.2472676899999997,
+          "min_time_s": 1.0224209e-07,
+          "max_time_s": 3.21232977e-08
+        },
+        "DB": {
+          "min_v": -3.3853168089,
+          "max_v": 0.83911075,
+          "min_time_s": 1.96041006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": -1.73849876,
+          "max_v": 0.775171314,
+          "min_time_s": 1.96692862e-07,
+          "max_time_s": 3.22e-08
+        }
+      }
+    },
+    {
+      "name": "X14",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G6_INV",
+        "ORDINARY_REQUEST",
+        "G6_MID",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -1.57806944329,
+          "max_v": 1.50307532,
+          "min_time_s": 1.984425e-07,
+          "max_time_s": 1.007175e-07
+        },
+        "GD": {
+          "min_v": -3.4137436746,
+          "max_v": 0.09757082000000006,
+          "min_time_s": 1.985925e-07,
+          "max_time_s": 1.970575e-07
+        },
+        "GB": {
+          "min_v": -0.768935894,
+          "max_v": 3.40557216,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.970525e-07
+        },
+        "DS": {
+          "min_v": 0.856255184,
+          "max_v": 3.547329444,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 3.11525e-08
+        },
+        "DB": {
+          "min_v": 0.480304987,
+          "max_v": 3.39207194,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 1.004575e-07
+        },
+        "SB": {
+          "min_v": -0.596028733,
+          "max_v": 2.21153075,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.970525e-07
+        }
+      }
+    },
+    {
+      "name": "X15",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G6_INV",
+        "SPECIAL_REQUEST",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3596628462,
+          "max_v": 0.08818656000000002,
+          "min_time_s": 1.98219941e-07,
+          "max_time_s": 2.142375e-07
+        },
+        "GD": {
+          "min_v": -3.3790467393,
+          "max_v": 0.08019402999999992,
+          "min_time_s": 1.004525e-07,
+          "max_time_s": 2.142375e-07
+        },
+        "GB": {
+          "min_v": -3.3596628462,
+          "max_v": 0.08818656000000002,
+          "min_time_s": 1.98219941e-07,
+          "max_time_s": 2.142375e-07
+        },
+        "DS": {
+          "min_v": -0.44558167999999965,
+          "max_v": 0.818859785,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -0.44558167999999965,
+          "max_v": 0.818859785,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X16",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G6_INV",
+        "ORDINARY_REQUEST",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.4014674869999997,
+          "max_v": 0.10557216000000036,
+          "min_time_s": 1.002125e-07,
+          "max_time_s": 1.970525e-07
+        },
+        "GD": {
+          "min_v": -3.4137436746,
+          "max_v": 0.09757082000000006,
+          "min_time_s": 1.985925e-07,
+          "max_time_s": 1.970575e-07
+        },
+        "GB": {
+          "min_v": -3.4014674869999997,
+          "max_v": 0.10557216000000036,
+          "min_time_s": 1.002125e-07,
+          "max_time_s": 1.970525e-07
+        },
+        "DS": {
+          "min_v": -0.44558167999999965,
+          "max_v": 0.818859785,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -0.44558167999999965,
+          "max_v": 0.818859785,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X17",
+      "model": "nfet_06v0",
+      "nodes": [
+        "SPECIAL_REQUEST",
+        "G4_INV",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.255371572,
+          "max_v": 3.78078958,
+          "min_time_s": 2.140775e-07,
+          "max_time_s": 1.980925e-07
+        },
+        "GD": {
+          "min_v": -3.533908675,
+          "max_v": 3.7676765548,
+          "min_time_s": 2.140825e-07,
+          "max_time_s": 1.980925e-07
+        },
+        "GB": {
+          "min_v": -0.255371572,
+          "max_v": 3.78078958,
+          "min_time_s": 2.140775e-07,
+          "max_time_s": 1.980925e-07
+        },
+        "DS": {
+          "min_v": -0.666834442,
+          "max_v": 3.38818656,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 2.142375e-07
+        },
+        "DB": {
+          "min_v": -0.666834442,
+          "max_v": 3.38818656,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 2.142375e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X18",
+      "model": "pfet_06v0",
+      "nodes": [
+        "SPECIAL_REQUEST",
+        "G4_INV",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.555371572,
+          "max_v": 0.841690195,
+          "min_time_s": 2.140775e-07,
+          "max_time_s": 3.21632977e-08
+        },
+        "GD": {
+          "min_v": -3.533908675,
+          "max_v": 3.7676765548,
+          "min_time_s": 2.140825e-07,
+          "max_time_s": 1.980925e-07
+        },
+        "GB": {
+          "min_v": -3.555371572,
+          "max_v": 0.841690195,
+          "min_time_s": 2.140775e-07,
+          "max_time_s": 3.21632977e-08
+        },
+        "DS": {
+          "min_v": -3.3596628462,
+          "max_v": 0.08818656000000002,
+          "min_time_s": 1.98219941e-07,
+          "max_time_s": 2.142375e-07
+        },
+        "DB": {
+          "min_v": -3.3596628462,
+          "max_v": 0.08818656000000002,
+          "min_time_s": 1.98219941e-07,
+          "max_time_s": 2.142375e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X19",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G4_INV",
+        "REQ_DETECT",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 0.0,
+          "max_time_s": 1.981e-07
+        },
+        "GD": {
+          "min_v": -3.42096661,
+          "max_v": 3.2999999971723284,
+          "min_time_s": 8.0625e-09,
+          "max_time_s": 2.078475e-07
+        },
+        "GB": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 0.0,
+          "max_time_s": 1.981e-07
+        },
+        "DS": {
+          "min_v": -0.255371572,
+          "max_v": 3.78078958,
+          "min_time_s": 2.140775e-07,
+          "max_time_s": 1.980925e-07
+        },
+        "DB": {
+          "min_v": -0.255371572,
+          "max_v": 3.78078958,
+          "min_time_s": 2.140775e-07,
+          "max_time_s": 1.980925e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X20",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G4_INV",
+        "REQ_TMDS",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -9.04970014e-18,
+          "max_v": 3.3,
+          "min_time_s": 2.41e-08,
+          "max_time_s": 8.1e-09
+        },
+        "GD": {
+          "min_v": -3.78078958,
+          "max_v": 3.2999064462473,
+          "min_time_s": 1.980925e-07,
+          "max_time_s": 2.4e-08
+        },
+        "GB": {
+          "min_v": -9.04970014e-18,
+          "max_v": 3.3,
+          "min_time_s": 2.41e-08,
+          "max_time_s": 8.1e-09
+        },
+        "DS": {
+          "min_v": -0.255371572,
+          "max_v": 3.78078958,
+          "min_time_s": 2.140775e-07,
+          "max_time_s": 1.980925e-07
+        },
+        "DB": {
+          "min_v": -0.255371572,
+          "max_v": 3.78078958,
+          "min_time_s": 2.140775e-07,
+          "max_time_s": 1.980925e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X21",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G8_MID",
+        "REQ_DETECT",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 0.0,
+          "max_time_s": 1.981e-07
+        },
+        "GD": {
+          "min_v": -2.13754369,
+          "max_v": 3.300176718978,
+          "min_time_s": 2.4e-08,
+          "max_time_s": 1.98274941e-07
+        },
+        "GB": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 0.0,
+          "max_time_s": 1.981e-07
+        },
+        "DS": {
+          "min_v": -0.470523685,
+          "max_v": 2.13754369,
+          "min_time_s": 2.141e-07,
+          "max_time_s": 2.4e-08
+        },
+        "DB": {
+          "min_v": -0.470523685,
+          "max_v": 2.13754369,
+          "min_time_s": 2.141e-07,
+          "max_time_s": 2.4e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X22",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G8_INV",
+        "REQ_TMDS",
+        "G8_MID",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -1.88897273,
+          "max_v": 2.07841401,
+          "min_time_s": 1.980475e-07,
+          "max_time_s": 8.1e-09
+        },
+        "GD": {
+          "min_v": -3.50906574,
+          "max_v": 0.08358412999999976,
+          "min_time_s": 1.980875e-07,
+          "max_time_s": 8.2425e-09
+        },
+        "GB": {
+          "min_v": -9.04970014e-18,
+          "max_v": 3.3,
+          "min_time_s": 2.41e-08,
+          "max_time_s": 8.1e-09
+        },
+        "DS": {
+          "min_v": -0.8877648109999999,
+          "max_v": 3.731564617,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 2.1439625e-07
+        },
+        "DB": {
+          "min_v": 0.522785379,
+          "max_v": 3.52728353,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 8.0825e-09
+        },
+        "SB": {
+          "min_v": -0.470523685,
+          "max_v": 2.13754369,
+          "min_time_s": 2.141e-07,
+          "max_time_s": 2.4e-08
+        }
+      }
+    },
+    {
+      "name": "X23",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G8_INV",
+        "REQ_DETECT",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": -3.52728353,
+          "max_v": 9.99999993922529e-09,
+          "min_time_s": 8.0825e-09,
+          "max_time_s": 2.029925e-07
+        },
+        "GB": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -0.4237493099999998,
+          "max_v": 0.842814774,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -0.4237493099999998,
+          "max_v": 0.842814774,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X24",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G8_INV",
+        "REQ_TMDS",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 8.1e-09
+        },
+        "GD": {
+          "min_v": -3.50906574,
+          "max_v": 0.08358412999999976,
+          "min_time_s": 1.980875e-07,
+          "max_time_s": 8.2425e-09
+        },
+        "GB": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 8.1e-09
+        },
+        "DS": {
+          "min_v": -0.4237493099999998,
+          "max_v": 0.842814774,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -0.4237493099999998,
+          "max_v": 0.842814774,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X25",
+      "model": "nfet_06v0",
+      "nodes": [
+        "MIXED_CONFLICT",
+        "G6_INV",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": 0.480304987,
+          "max_v": 3.39207194,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 1.004575e-07
+        },
+        "GD": {
+          "min_v": 0.549229806,
+          "max_v": 3.39076050768,
+          "min_time_s": 4.41325e-08,
+          "max_time_s": 1.004625e-07
+        },
+        "GB": {
+          "min_v": 0.480304987,
+          "max_v": 3.39207194,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 1.004575e-07
+        },
+        "DS": {
+          "min_v": -0.874362327,
+          "max_v": 0.740834638,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 4.42e-08
+        },
+        "DB": {
+          "min_v": -0.874362327,
+          "max_v": 0.740834638,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 4.42e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X26",
+      "model": "pfet_06v0",
+      "nodes": [
+        "MIXED_CONFLICT",
+        "G6_INV",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.44558167999999965,
+          "max_v": 0.818859785,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": 0.549229806,
+          "max_v": 3.39076050768,
+          "min_time_s": 4.41325e-08,
+          "max_time_s": 1.004625e-07
+        },
+        "GB": {
+          "min_v": -0.44558167999999965,
+          "max_v": 0.818859785,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.3032660675299996,
+          "max_v": -0.10943943,
+          "min_time_s": 1.98129941e-07,
+          "max_time_s": 4.4e-08
+        },
+        "DB": {
+          "min_v": -3.3032660675299996,
+          "max_v": -0.10943943,
+          "min_time_s": 1.98129941e-07,
+          "max_time_s": 4.4e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X27",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G6_MID",
+        "SPECIAL_REQUEST",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.666834442,
+          "max_v": 3.38818656,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 2.142375e-07
+        },
+        "GD": {
+          "min_v": -2.211033752059,
+          "max_v": 3.387175279834,
+          "min_time_s": 1.970575e-07,
+          "max_time_s": 2.142425e-07
+        },
+        "GB": {
+          "min_v": -0.666834442,
+          "max_v": 3.38818656,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 2.142375e-07
+        },
+        "DS": {
+          "min_v": -0.596028733,
+          "max_v": 2.21153075,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.970525e-07
+        },
+        "DB": {
+          "min_v": -0.596028733,
+          "max_v": 2.21153075,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.970525e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X28",
+      "model": "pfet_06v0",
+      "nodes": [
+        "CONFLICT",
+        "G10_INV",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.7494351099999998,
+          "max_v": 0.842945546,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": 0.5917145445,
+          "max_v": 3.3742627066999997,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 2.147125e-07
+        },
+        "GB": {
+          "min_v": -0.7494351099999998,
+          "max_v": 0.842945546,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.3774929687,
+          "max_v": -0.0913579595,
+          "min_time_s": 2.147075e-07,
+          "max_time_s": 4.4e-08
+        },
+        "DB": {
+          "min_v": -3.3774929687,
+          "max_v": -0.0913579595,
+          "min_time_s": 2.147075e-07,
+          "max_time_s": 4.4e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X29",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G10_INV",
+        "SPECIAL_CONFLICT",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.883100031,
+          "max_v": 0.70712294,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 4.42e-08
+        },
+        "GD": {
+          "min_v": -3.3270545717,
+          "max_v": -0.5878708243,
+          "min_time_s": 3.11e-08,
+          "max_time_s": 4.4e-08
+        },
+        "GB": {
+          "min_v": -0.883100031,
+          "max_v": 0.70712294,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 4.42e-08
+        },
+        "DS": {
+          "min_v": 0.500356585,
+          "max_v": 3.30881212,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 2.61e-08
+        },
+        "DB": {
+          "min_v": 0.500356585,
+          "max_v": 3.30881212,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 2.61e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X30",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G10_INV",
+        "MIXED_CONFLICT",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.874362327,
+          "max_v": 0.740834638,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 4.42e-08
+        },
+        "GD": {
+          "min_v": -3.30761267103,
+          "max_v": -0.577500142,
+          "min_time_s": 2.61e-08,
+          "max_time_s": 4.41275e-08
+        },
+        "GB": {
+          "min_v": -0.874362327,
+          "max_v": 0.740834638,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 4.42e-08
+        },
+        "DS": {
+          "min_v": 0.500356585,
+          "max_v": 3.30881212,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 2.61e-08
+        },
+        "DB": {
+          "min_v": 0.500356585,
+          "max_v": 3.30881212,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 2.61e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X31",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G10_INV",
+        "SPECIAL_CONFLICT",
+        "G10_MID",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3303998717,
+          "max_v": -0.5656622203,
+          "min_time_s": 3.11e-08,
+          "max_time_s": 4.4e-08
+        },
+        "GD": {
+          "min_v": -3.3270545717,
+          "max_v": -0.5878708243,
+          "min_time_s": 3.11e-08,
+          "max_time_s": 4.4e-08
+        },
+        "GB": {
+          "min_v": -3.3358109817,
+          "max_v": -0.0875142393,
+          "min_time_s": 3.11e-08,
+          "max_time_s": 4.4e-08
+        },
+        "DS": {
+          "min_v": -0.3148944899999999,
+          "max_v": 0.26104777999999995,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.21332977e-08
+        },
+        "DB": {
+          "min_v": -0.7494351099999998,
+          "max_v": 0.842945546,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": -0.43454061999999993,
+          "max_v": 0.721023798,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        }
+      }
+    },
+    {
+      "name": "X32",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G10_MID",
+        "MIXED_CONFLICT",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3032660675299996,
+          "max_v": -0.10943943,
+          "min_time_s": 1.98129941e-07,
+          "max_time_s": 4.4e-08
+        },
+        "GD": {
+          "min_v": -3.30429800103,
+          "max_v": -0.587587411,
+          "min_time_s": 2.61e-08,
+          "max_time_s": 4.4e-08
+        },
+        "GB": {
+          "min_v": -3.3032660675299996,
+          "max_v": -0.10943943,
+          "min_time_s": 1.98129941e-07,
+          "max_time_s": 4.4e-08
+        },
+        "DS": {
+          "min_v": -0.43454061999999993,
+          "max_v": 0.721023798,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -0.43454061999999993,
+          "max_v": 0.721023798,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X33",
+      "model": "nfet_06v0",
+      "nodes": [
+        "SPECIAL_CONFLICT",
+        "G8_INV",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": 0.522785379,
+          "max_v": 3.52728353,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 8.0825e-09
+        },
+        "GD": {
+          "min_v": 0.5214561240000001,
+          "max_v": 3.5139493504,
+          "min_time_s": 4.41525e-08,
+          "max_time_s": 8.0825e-09
+        },
+        "GB": {
+          "min_v": 0.522785379,
+          "max_v": 3.52728353,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 8.0825e-09
+        },
+        "DS": {
+          "min_v": -0.883100031,
+          "max_v": 0.70712294,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 4.42e-08
+        },
+        "DB": {
+          "min_v": -0.883100031,
+          "max_v": 0.70712294,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 4.42e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X34",
+      "model": "pfet_06v0",
+      "nodes": [
+        "SPECIAL_CONFLICT",
+        "G8_INV",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.4237493099999998,
+          "max_v": 0.842814774,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": 0.5214561240000001,
+          "max_v": 3.5139493504,
+          "min_time_s": 4.41525e-08,
+          "max_time_s": 8.0825e-09
+        },
+        "GB": {
+          "min_v": -0.4237493099999998,
+          "max_v": 0.842814774,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.3358109817,
+          "max_v": -0.0875142393,
+          "min_time_s": 3.11e-08,
+          "max_time_s": 4.4e-08
+        },
+        "DB": {
+          "min_v": -3.3358109817,
+          "max_v": -0.0875142393,
+          "min_time_s": 3.11e-08,
+          "max_time_s": 4.4e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X35",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G14_INV",
+        "SUPPLY_OK",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -2.4675,
+          "max_v": 0.0,
+          "min_time_s": 5.21075e-08,
+          "max_time_s": 0.0
+        },
+        "GD": {
+          "min_v": -1.93054462,
+          "max_v": 3.3110213639999997,
+          "min_time_s": 5.21075e-08,
+          "max_time_s": 3.11e-08
+        },
+        "GB": {
+          "min_v": -2.4675,
+          "max_v": 0.0,
+          "min_time_s": 5.21075e-08,
+          "max_time_s": 0.0
+        },
+        "DS": {
+          "min_v": -3.3110213639999997,
+          "max_v": -7.887000000006417e-05,
+          "min_time_s": 3.11e-08,
+          "max_time_s": 5.2e-08
+        },
+        "DB": {
+          "min_v": -3.3110213639999997,
+          "max_v": -7.887000000006417e-05,
+          "min_time_s": 3.11e-08,
+          "max_time_s": 5.2e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X36",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G14_INV",
+        "QUALIFIED",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": 1.03794253,
+          "max_v": 4.1509476329999995,
+          "min_time_s": 5.2133422e-08,
+          "max_time_s": 3.22e-08
+        },
+        "GB": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.3110213639999997,
+          "max_v": -7.887000000006417e-05,
+          "min_time_s": 3.11e-08,
+          "max_time_s": 5.2e-08
+        },
+        "DB": {
+          "min_v": -3.3110213639999997,
+          "max_v": -7.887000000006417e-05,
+          "min_time_s": 3.11e-08,
+          "max_time_s": 5.2e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X37",
+      "model": "nfet_06v0",
+      "nodes": [
+        "NO_RESET",
+        "RESET",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 0.0,
+          "max_time_s": 2.61e-08
+        },
+        "GD": {
+          "min_v": -3.30800495,
+          "max_v": 3.300291217976,
+          "min_time_s": 1.001e-07,
+          "max_time_s": 2.80075e-08
+        },
+        "GB": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 0.0,
+          "max_time_s": 2.61e-08
+        },
+        "DS": {
+          "min_v": -0.129899247,
+          "max_v": 3.49132467,
+          "min_time_s": 3.10625e-08,
+          "max_time_s": 2.60625e-08
+        },
+        "DB": {
+          "min_v": -0.129899247,
+          "max_v": 3.49132467,
+          "min_time_s": 3.10625e-08,
+          "max_time_s": 2.60625e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X38",
+      "model": "pfet_06v0",
+      "nodes": [
+        "NO_RESET",
+        "RESET",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 2.61e-08
+        },
+        "GD": {
+          "min_v": -3.30800495,
+          "max_v": 3.300291217976,
+          "min_time_s": 1.001e-07,
+          "max_time_s": 2.80075e-08
+        },
+        "GB": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 2.61e-08
+        },
+        "DS": {
+          "min_v": -3.429899247,
+          "max_v": 0.859455728,
+          "min_time_s": 3.10625e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -3.429899247,
+          "max_v": 0.859455728,
+          "min_time_s": 3.10625e-08,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X39",
+      "model": "nfet_06v0",
+      "nodes": [
+        "NO_CONFLICT",
+        "CONFLICT",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.71202657,
+          "max_v": 0.48520915,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 4.42e-08
+        },
+        "GD": {
+          "min_v": -3.3756668967,
+          "max_v": -0.5687308295,
+          "min_time_s": 2.147125e-07,
+          "max_time_s": 4.4e-08
+        },
+        "GB": {
+          "min_v": -0.71202657,
+          "max_v": 0.48520915,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 4.42e-08
+        },
+        "DS": {
+          "min_v": 0.47737287,
+          "max_v": 3.35303157,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 2.66775e-08
+        },
+        "DB": {
+          "min_v": 0.47737287,
+          "max_v": 3.35303157,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 2.66775e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X40",
+      "model": "pfet_06v0",
+      "nodes": [
+        "NO_CONFLICT",
+        "CONFLICT",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3774929687,
+          "max_v": -0.0913579595,
+          "min_time_s": 2.147075e-07,
+          "max_time_s": 4.4e-08
+        },
+        "GD": {
+          "min_v": -3.3756668967,
+          "max_v": -0.5687308295,
+          "min_time_s": 2.147125e-07,
+          "max_time_s": 4.4e-08
+        },
+        "GB": {
+          "min_v": -3.3774929687,
+          "max_v": -0.0913579595,
+          "min_time_s": 2.147075e-07,
+          "max_time_s": 4.4e-08
+        },
+        "DS": {
+          "min_v": -0.6442332399999997,
+          "max_v": 0.84541482,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -0.6442332399999997,
+          "max_v": 0.84541482,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X41",
+      "model": "nfet_06v0",
+      "nodes": [
+        "CONFLICT",
+        "G10_INV",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": 0.500356585,
+          "max_v": 3.30881212,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 2.61e-08
+        },
+        "GD": {
+          "min_v": 0.5917145445,
+          "max_v": 3.3742627066999997,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 2.147125e-07
+        },
+        "GB": {
+          "min_v": 0.500356585,
+          "max_v": 3.30881212,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 2.61e-08
+        },
+        "DS": {
+          "min_v": -0.71202657,
+          "max_v": 0.48520915,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 4.42e-08
+        },
+        "DB": {
+          "min_v": -0.71202657,
+          "max_v": 0.48520915,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 4.42e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X42",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G16_INV",
+        "NO_RESET",
+        "G16_MID",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.12641407941,
+          "max_v": 3.4730043348,
+          "min_time_s": 3.10625e-08,
+          "max_time_s": 2.60625e-08
+        },
+        "GD": {
+          "min_v": -3.408198707,
+          "max_v": 3.461070195,
+          "min_time_s": 3.10625e-08,
+          "max_time_s": 2.60625e-08
+        },
+        "GB": {
+          "min_v": -0.129899247,
+          "max_v": 3.49132467,
+          "min_time_s": 3.10625e-08,
+          "max_time_s": 2.60625e-08
+        },
+        "DS": {
+          "min_v": -0.24390285599999995,
+          "max_v": 3.4058493911,
+          "min_time_s": 3.21732977e-08,
+          "max_time_s": 3.12125e-08
+        },
+        "DB": {
+          "min_v": -0.864584239,
+          "max_v": 3.45429553,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 3.12325e-08
+        },
+        "SB": {
+          "min_v": -0.66323648,
+          "max_v": 0.37471575,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 3.15775e-08
+        }
+      }
+    },
+    {
+      "name": "X43",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G16_INV",
+        "NO_CONFLICT",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.6442332399999997,
+          "max_v": 0.84541482,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": -0.11039278000000019,
+          "max_v": 3.433323251,
+          "min_time_s": 3.12275e-08,
+          "max_time_s": 2.62175e-08
+        },
+        "GB": {
+          "min_v": -0.6442332399999997,
+          "max_v": 0.84541482,
+          "min_time_s": 5.22e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.4952771009999997,
+          "max_v": 0.15429553000000018,
+          "min_time_s": 2.62175e-08,
+          "max_time_s": 3.12325e-08
+        },
+        "DB": {
+          "min_v": -3.4952771009999997,
+          "max_v": 0.15429553000000018,
+          "min_time_s": 2.62175e-08,
+          "max_time_s": 3.12325e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X44",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G16_INV",
+        "NO_RESET",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.429899247,
+          "max_v": 0.859455728,
+          "min_time_s": 3.10625e-08,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": -3.408198707,
+          "max_v": 3.461070195,
+          "min_time_s": 3.10625e-08,
+          "max_time_s": 2.60625e-08
+        },
+        "GB": {
+          "min_v": -3.429899247,
+          "max_v": 0.859455728,
+          "min_time_s": 3.10625e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.4952771009999997,
+          "max_v": 0.15429553000000018,
+          "min_time_s": 2.62175e-08,
+          "max_time_s": 3.12325e-08
+        },
+        "DB": {
+          "min_v": -3.4952771009999997,
+          "max_v": 0.15429553000000018,
+          "min_time_s": 2.62175e-08,
+          "max_time_s": 3.12325e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X45",
+      "model": "nfet_06v0",
+      "nodes": [
+        "QUALIFIED_SUPPLY",
+        "G14_INV",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.850947633,
+          "max_v": 2.26205747,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 5.2133422e-08
+        },
+        "GD": {
+          "min_v": -3.4635688284,
+          "max_v": 1.9236362649999998,
+          "min_time_s": 2.73075e-08,
+          "max_time_s": 5.2133422e-08
+        },
+        "GB": {
+          "min_v": -0.850947633,
+          "max_v": 2.26205747,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 5.2133422e-08
+        },
+        "DS": {
+          "min_v": 6.95837988e-05,
+          "max_v": 3.46469136,
+          "min_time_s": 5.2e-08,
+          "max_time_s": 2.72975e-08
+        },
+        "DB": {
+          "min_v": 6.95837988e-05,
+          "max_v": 3.46469136,
+          "min_time_s": 5.2e-08,
+          "max_time_s": 2.72975e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X46",
+      "model": "pfet_06v0",
+      "nodes": [
+        "QUALIFIED_SUPPLY",
+        "G14_INV",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3110213639999997,
+          "max_v": -7.887000000006417e-05,
+          "min_time_s": 3.11e-08,
+          "max_time_s": 5.2e-08
+        },
+        "GD": {
+          "min_v": -3.4635688284,
+          "max_v": 1.9236362649999998,
+          "min_time_s": 2.73075e-08,
+          "max_time_s": 5.2133422e-08
+        },
+        "GB": {
+          "min_v": -3.3110213639999997,
+          "max_v": -7.887000000006417e-05,
+          "min_time_s": 3.11e-08,
+          "max_time_s": 5.2e-08
+        },
+        "DS": {
+          "min_v": -3.001948009,
+          "max_v": 0.840565794,
+          "min_time_s": 5.22275e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -3.001948009,
+          "max_v": 0.840565794,
+          "min_time_s": 5.22275e-08,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X47",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G14_MID",
+        "SUPPLY_OK",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 3.20525e-08,
+          "max_time_s": 0.0
+        },
+        "GD": {
+          "min_v": -1.71920631,
+          "max_v": 3.30546169532,
+          "min_time_s": 5.21075e-08,
+          "max_time_s": 3.11005e-08
+        },
+        "GB": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 3.20525e-08,
+          "max_time_s": 0.0
+        },
+        "DS": {
+          "min_v": -0.795251218,
+          "max_v": 2.04247374,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 5.21125e-08
+        },
+        "DB": {
+          "min_v": -0.795251218,
+          "max_v": 2.04247374,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 5.21125e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X48",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G14_INV",
+        "QUALIFIED",
+        "G14_MID",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": 1.2575262599999997,
+          "max_v": 4.095251218,
+          "min_time_s": 5.21125e-08,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": 1.03794253,
+          "max_v": 4.1509476329999995,
+          "min_time_s": 5.2133422e-08,
+          "max_time_s": 3.22e-08
+        },
+        "GB": {
+          "min_v": 3.3,
+          "max_v": 3.3,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        },
+        "DS": {
+          "min_v": -0.103045884,
+          "max_v": 1.3561926659999999,
+          "min_time_s": 3.20475e-08,
+          "max_time_s": 5.2168422e-08
+        },
+        "DB": {
+          "min_v": -0.850947633,
+          "max_v": 2.26205747,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 5.2133422e-08
+        },
+        "SB": {
+          "min_v": -0.795251218,
+          "max_v": 2.04247374,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 5.21125e-08
+        }
+      }
+    },
+    {
+      "name": "X49",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G18_MID",
+        "LEGAL_REQUEST",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.0399447672,
+          "max_v": 3.37413707,
+          "min_time_s": 3.14875e-08,
+          "max_time_s": 2.64975e-08
+        },
+        "GD": {
+          "min_v": -2.1138671772000004,
+          "max_v": 3.37082197593,
+          "min_time_s": 3.14875e-08,
+          "max_time_s": 2.64975e-08
+        },
+        "GB": {
+          "min_v": -0.0399447672,
+          "max_v": 3.37413707,
+          "min_time_s": 3.14875e-08,
+          "max_time_s": 2.64975e-08
+        },
+        "DS": {
+          "min_v": -0.250441341,
+          "max_v": 2.28941353,
+          "min_time_s": 3.22568474e-08,
+          "max_time_s": 3.17425e-08
+        },
+        "DB": {
+          "min_v": -0.250441341,
+          "max_v": 2.28941353,
+          "min_time_s": 3.22568474e-08,
+          "max_time_s": 3.17425e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X50",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G18_INV",
+        "QUALIFIED_SUPPLY",
+        "G18_MID",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": 7.111594989999999e-05,
+          "max_v": 3.39860983975,
+          "min_time_s": 5.2e-08,
+          "max_time_s": 1.981e-07
+        },
+        "GD": {
+          "min_v": -2.5806197010000003,
+          "max_v": 3.3936305484,
+          "min_time_s": 5.22575e-08,
+          "max_time_s": 1.981e-07
+        },
+        "GB": {
+          "min_v": 6.95837988e-05,
+          "max_v": 3.46469136,
+          "min_time_s": 5.2e-08,
+          "max_time_s": 2.72975e-08
+        },
+        "DS": {
+          "min_v": -0.11130651699999997,
+          "max_v": 3.140972536,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 5.23825e-08
+        },
+        "DB": {
+          "min_v": -0.338872635,
+          "max_v": 3.42801358,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 3.18425e-08
+        },
+        "SB": {
+          "min_v": -0.250441341,
+          "max_v": 2.28941353,
+          "min_time_s": 3.22568474e-08,
+          "max_time_s": 3.17425e-08
+        }
+      }
+    },
+    {
+      "name": "X51",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G18_INV",
+        "LEGAL_REQUEST",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3399447672,
+          "max_v": 0.828424023,
+          "min_time_s": 3.14875e-08,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": -3.3297935672000003,
+          "max_v": 3.36819680871,
+          "min_time_s": 3.14875e-08,
+          "max_time_s": 2.64975e-08
+        },
+        "GB": {
+          "min_v": -3.3399447672,
+          "max_v": 0.828424023,
+          "min_time_s": 3.14875e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.3698098143,
+          "max_v": 0.12801358000000018,
+          "min_time_s": 2.68125e-08,
+          "max_time_s": 3.18425e-08
+        },
+        "DB": {
+          "min_v": -3.3698098143,
+          "max_v": 0.12801358000000018,
+          "min_time_s": 2.68125e-08,
+          "max_time_s": 3.18425e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X52",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G18_INV",
+        "QUALIFIED_SUPPLY",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.001948009,
+          "max_v": 0.840565794,
+          "min_time_s": 5.22275e-08,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": -2.5806197010000003,
+          "max_v": 3.3936305484,
+          "min_time_s": 5.22575e-08,
+          "max_time_s": 1.981e-07
+        },
+        "GB": {
+          "min_v": -3.001948009,
+          "max_v": 0.840565794,
+          "min_time_s": 5.22275e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.3698098143,
+          "max_v": 0.12801358000000018,
+          "min_time_s": 2.68125e-08,
+          "max_time_s": 3.18425e-08
+        },
+        "DB": {
+          "min_v": -3.3698098143,
+          "max_v": 0.12801358000000018,
+          "min_time_s": 2.68125e-08,
+          "max_time_s": 3.18425e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X53",
+      "model": "nfet_06v0",
+      "nodes": [
+        "LEGAL_REQUEST",
+        "G16_INV",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.864584239,
+          "max_v": 3.45429553,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 3.12325e-08
+        },
+        "GD": {
+          "min_v": -3.4846045169999997,
+          "max_v": 3.45134301777,
+          "min_time_s": 2.62225e-08,
+          "max_time_s": 3.12325e-08
+        },
+        "GB": {
+          "min_v": -0.864584239,
+          "max_v": 3.45429553,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 3.12325e-08
+        },
+        "DS": {
+          "min_v": -0.0399447672,
+          "max_v": 3.37413707,
+          "min_time_s": 3.14875e-08,
+          "max_time_s": 2.64975e-08
+        },
+        "DB": {
+          "min_v": -0.0399447672,
+          "max_v": 3.37413707,
+          "min_time_s": 3.14875e-08,
+          "max_time_s": 2.64975e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X54",
+      "model": "pfet_06v0",
+      "nodes": [
+        "LEGAL_REQUEST",
+        "G16_INV",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.4952771009999997,
+          "max_v": 0.15429553000000018,
+          "min_time_s": 2.62175e-08,
+          "max_time_s": 3.12325e-08
+        },
+        "GD": {
+          "min_v": -3.4846045169999997,
+          "max_v": 3.45134301777,
+          "min_time_s": 2.62225e-08,
+          "max_time_s": 3.12325e-08
+        },
+        "GB": {
+          "min_v": -3.4952771009999997,
+          "max_v": 0.15429553000000018,
+          "min_time_s": 2.62175e-08,
+          "max_time_s": 3.12325e-08
+        },
+        "DS": {
+          "min_v": -3.3399447672,
+          "max_v": 0.828424023,
+          "min_time_s": 3.14875e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -3.3399447672,
+          "max_v": 0.828424023,
+          "min_time_s": 3.14875e-08,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X55",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G16_MID",
+        "NO_CONFLICT",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": 0.47737287,
+          "max_v": 3.35303157,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 2.66775e-08
+        },
+        "GD": {
+          "min_v": 0.590221262,
+          "max_v": 3.3511948319999996,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 2.61875e-08
+        },
+        "GB": {
+          "min_v": 0.47737287,
+          "max_v": 3.35303157,
+          "min_time_s": 4.4e-08,
+          "max_time_s": 2.66775e-08
+        },
+        "DS": {
+          "min_v": -0.66323648,
+          "max_v": 0.37471575,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 3.15775e-08
+        },
+        "DB": {
+          "min_v": -0.66323648,
+          "max_v": 0.37471575,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 3.15775e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X56",
+      "model": "pfet_06v0",
+      "nodes": [
+        "EN_MAIN",
+        "G20_INV",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.536629091,
+          "max_v": 0.835579478,
+          "min_time_s": 1.96076006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": -3.5232748753100003,
+          "max_v": 3.487657635,
+          "min_time_s": 1.48713508e-07,
+          "max_time_s": 2.147175e-07
+        },
+        "GB": {
+          "min_v": -3.536629091,
+          "max_v": 0.835579478,
+          "min_time_s": 1.96076006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.4951216439999997,
+          "max_v": 0.22534926000000022,
+          "min_time_s": 2.147125e-07,
+          "max_time_s": 1.48703508e-07
+        },
+        "DB": {
+          "min_v": -3.4951216439999997,
+          "max_v": 0.22534926000000022,
+          "min_time_s": 2.147125e-07,
+          "max_time_s": 1.48703508e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X57",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G20_MID",
+        "VALID",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.921814601,
+          "max_v": 3.34306161,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "GD": {
+          "min_v": -0.501116611,
+          "max_v": 3.425519388,
+          "min_time_s": 3.20732977e-08,
+          "max_time_s": 1.96066006e-07
+        },
+        "GB": {
+          "min_v": -0.921814601,
+          "max_v": 3.34306161,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "DS": {
+          "min_v": -0.528501569,
+          "max_v": 0.534548686,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.001425e-07
+        },
+        "DB": {
+          "min_v": -0.528501569,
+          "max_v": 0.534548686,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.001425e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X58",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G20_INV",
+        "REQ_MAIN",
+        "G20_MID",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.143011986,
+          "max_v": 3.30520831091,
+          "min_time_s": 5.2193422e-08,
+          "max_time_s": 1.92599433e-07
+        },
+        "GD": {
+          "min_v": -3.31700402,
+          "max_v": 3.3101093117,
+          "min_time_s": 5.37225e-08,
+          "max_time_s": 1.92589433e-07
+        },
+        "GB": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 0.0,
+          "max_time_s": 1.001e-07
+        },
+        "DS": {
+          "min_v": -0.106527744,
+          "max_v": 3.494376728,
+          "min_time_s": 1.96091006e-07,
+          "max_time_s": 3.2e-08
+        },
+        "DB": {
+          "min_v": -0.236629091,
+          "max_v": 3.49327549,
+          "min_time_s": 1.96076006e-07,
+          "max_time_s": 1.000575e-07
+        },
+        "SB": {
+          "min_v": -0.528501569,
+          "max_v": 0.534548686,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.001425e-07
+        }
+      }
+    },
+    {
+      "name": "X59",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G20_INV",
+        "VALID",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3164859504999997,
+          "max_v": 0.04306161000000008,
+          "min_time_s": 3.2e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "GD": {
+          "min_v": -3.517008991,
+          "max_v": 3.516227491,
+          "min_time_s": 3.20525e-08,
+          "max_time_s": 1.96076006e-07
+        },
+        "GB": {
+          "min_v": -3.3164859504999997,
+          "max_v": 0.04306161000000008,
+          "min_time_s": 3.2e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "DS": {
+          "min_v": -3.536629091,
+          "max_v": 0.835579478,
+          "min_time_s": 1.96076006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -3.536629091,
+          "max_v": 0.835579478,
+          "min_time_s": 1.96076006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X60",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G20_INV",
+        "REQ_MAIN",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": -3.31700402,
+          "max_v": 3.3101093117,
+          "min_time_s": 5.37225e-08,
+          "max_time_s": 1.92589433e-07
+        },
+        "GB": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.536629091,
+          "max_v": 0.835579478,
+          "min_time_s": 1.96076006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -3.536629091,
+          "max_v": 0.835579478,
+          "min_time_s": 1.96076006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X61",
+      "model": "nfet_06v0",
+      "nodes": [
+        "VALID",
+        "G18_INV",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.338872635,
+          "max_v": 3.42801358,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 3.18425e-08
+        },
+        "GD": {
+          "min_v": -3.3673072443,
+          "max_v": 3.4258654107,
+          "min_time_s": 2.68125e-08,
+          "max_time_s": 3.18425e-08
+        },
+        "GB": {
+          "min_v": -0.338872635,
+          "max_v": 3.42801358,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 3.18425e-08
+        },
+        "DS": {
+          "min_v": -0.921814601,
+          "max_v": 3.34306161,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "DB": {
+          "min_v": -0.921814601,
+          "max_v": 3.34306161,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X62",
+      "model": "pfet_06v0",
+      "nodes": [
+        "VALID",
+        "G18_INV",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3698098143,
+          "max_v": 0.12801358000000018,
+          "min_time_s": 2.68125e-08,
+          "max_time_s": 3.18425e-08
+        },
+        "GD": {
+          "min_v": -3.3673072443,
+          "max_v": 3.4258654107,
+          "min_time_s": 2.68125e-08,
+          "max_time_s": 3.18425e-08
+        },
+        "GB": {
+          "min_v": -3.3698098143,
+          "max_v": 0.12801358000000018,
+          "min_time_s": 2.68125e-08,
+          "max_time_s": 3.18425e-08
+        },
+        "DS": {
+          "min_v": -3.3164859504999997,
+          "max_v": 0.04306161000000008,
+          "min_time_s": 3.2e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "DB": {
+          "min_v": -3.3164859504999997,
+          "max_v": 0.04306161000000008,
+          "min_time_s": 3.2e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X63",
+      "model": "nfet_06v0",
+      "nodes": [
+        "EN_POST",
+        "G22_INV",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.195202647,
+          "max_v": 3.4576648,
+          "min_time_s": 1.92071237e-07,
+          "max_time_s": 1.48055973e-07
+        },
+        "GD": {
+          "min_v": -3.461830237,
+          "max_v": 3.600822469,
+          "min_time_s": 1.92076237e-07,
+          "max_time_s": 1.96762862e-07
+        },
+        "GB": {
+          "min_v": -0.195202647,
+          "max_v": 3.4576648,
+          "min_time_s": 1.92071237e-07,
+          "max_time_s": 1.48055973e-07
+        },
+        "DS": {
+          "min_v": -0.633203509,
+          "max_v": 3.4654945,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.922775e-07
+        },
+        "DB": {
+          "min_v": -0.633203509,
+          "max_v": 3.4654945,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.922775e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X64",
+      "model": "pfet_06v0",
+      "nodes": [
+        "EN_POST",
+        "G22_INV",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.4952026469999997,
+          "max_v": 0.836978652,
+          "min_time_s": 1.92071237e-07,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": -3.461830237,
+          "max_v": 3.600822469,
+          "min_time_s": 1.92076237e-07,
+          "max_time_s": 1.96762862e-07
+        },
+        "GB": {
+          "min_v": -3.4952026469999997,
+          "max_v": 0.836978652,
+          "min_time_s": 1.92071237e-07,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.615450965,
+          "max_v": 0.16549450000000032,
+          "min_time_s": 1.96747862e-07,
+          "max_time_s": 1.922775e-07
+        },
+        "DB": {
+          "min_v": -3.615450965,
+          "max_v": 0.16549450000000032,
+          "min_time_s": 1.96747862e-07,
+          "max_time_s": 1.922775e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X65",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G22_MID",
+        "VALID",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.921814601,
+          "max_v": 3.34306161,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "GD": {
+          "min_v": -0.5395030060000001,
+          "max_v": 3.4154979470000004,
+          "min_time_s": 3.20732977e-08,
+          "max_time_s": 1.92061237e-07
+        },
+        "GB": {
+          "min_v": -0.921814601,
+          "max_v": 3.34306161,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "DS": {
+          "min_v": -0.510097089,
+          "max_v": 0.536431863,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.481375e-07
+        },
+        "DB": {
+          "min_v": -0.510097089,
+          "max_v": 0.536431863,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.481375e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X66",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G22_INV",
+        "REQ_POST",
+        "G22_MID",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.140133407,
+          "max_v": 3.3000715289719,
+          "min_time_s": 5.2188422e-08,
+          "max_time_s": 1.82847475e-07
+        },
+        "GD": {
+          "min_v": -3.32433763,
+          "max_v": 3.300145278378,
+          "min_time_s": 1.0042e-07,
+          "max_time_s": 1.82842475e-07
+        },
+        "GB": {
+          "min_v": -1.5620244e-17,
+          "max_v": 3.3,
+          "min_time_s": 1.921e-07,
+          "max_time_s": 1.481e-07
+        },
+        "DS": {
+          "min_v": -0.08206075330000001,
+          "max_v": 3.472698447,
+          "min_time_s": 1.92091237e-07,
+          "max_time_s": 3.2e-08
+        },
+        "DB": {
+          "min_v": -0.195202647,
+          "max_v": 3.4576648,
+          "min_time_s": 1.92071237e-07,
+          "max_time_s": 1.48055973e-07
+        },
+        "SB": {
+          "min_v": -0.510097089,
+          "max_v": 0.536431863,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.481375e-07
+        }
+      }
+    },
+    {
+      "name": "X67",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G22_INV",
+        "VALID",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3164859504999997,
+          "max_v": 0.04306161000000008,
+          "min_time_s": 3.2e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "GD": {
+          "min_v": -3.523484981,
+          "max_v": 3.4880223669999997,
+          "min_time_s": 3.20525e-08,
+          "max_time_s": 1.92071237e-07
+        },
+        "GB": {
+          "min_v": -3.3164859504999997,
+          "max_v": 0.04306161000000008,
+          "min_time_s": 3.2e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "DS": {
+          "min_v": -3.4952026469999997,
+          "max_v": 0.836978652,
+          "min_time_s": 1.92071237e-07,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -3.4952026469999997,
+          "max_v": 0.836978652,
+          "min_time_s": 1.92071237e-07,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X68",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G22_INV",
+        "REQ_POST",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": -3.32433763,
+          "max_v": 3.300145278378,
+          "min_time_s": 1.0042e-07,
+          "max_time_s": 1.82842475e-07
+        },
+        "GB": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.4952026469999997,
+          "max_v": 0.836978652,
+          "min_time_s": 1.92071237e-07,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -3.4952026469999997,
+          "max_v": 0.836978652,
+          "min_time_s": 1.92071237e-07,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X69",
+      "model": "nfet_06v0",
+      "nodes": [
+        "EN_MAIN",
+        "G20_INV",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.236629091,
+          "max_v": 3.49327549,
+          "min_time_s": 1.96076006e-07,
+          "max_time_s": 1.000575e-07
+        },
+        "GD": {
+          "min_v": -3.5232748753100003,
+          "max_v": 3.487657635,
+          "min_time_s": 1.48713508e-07,
+          "max_time_s": 2.147175e-07
+        },
+        "GB": {
+          "min_v": -0.236629091,
+          "max_v": 3.49327549,
+          "min_time_s": 1.96076006e-07,
+          "max_time_s": 1.000575e-07
+        },
+        "DS": {
+          "min_v": -0.530407559,
+          "max_v": 3.52534926,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.48703508e-07
+        },
+        "DB": {
+          "min_v": -0.530407559,
+          "max_v": 3.52534926,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.48703508e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X70",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G26_INV",
+        "REQ_DETECT",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": -3.32018409,
+          "max_v": 3.299999995557926,
+          "min_time_s": 5.37225e-08,
+          "max_time_s": 2.0442e-07
+        },
+        "GB": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.5854531979999997,
+          "max_v": 0.837557844,
+          "min_time_s": 2.140825e-07,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -3.5854531979999997,
+          "max_v": 0.837557844,
+          "min_time_s": 2.140825e-07,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X71",
+      "model": "nfet_06v0",
+      "nodes": [
+        "EN_TMDS",
+        "G24_INV",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.216464702,
+          "max_v": 3.48032899,
+          "min_time_s": 2.40732029e-08,
+          "max_time_s": 8.0525e-09
+        },
+        "GD": {
+          "min_v": -3.477050107,
+          "max_v": 3.4547401892,
+          "min_time_s": 2.40782029e-08,
+          "max_time_s": 8.0575e-09
+        },
+        "GB": {
+          "min_v": -0.216464702,
+          "max_v": 3.48032899,
+          "min_time_s": 2.40732029e-08,
+          "max_time_s": 8.0525e-09
+        },
+        "DS": {
+          "min_v": -0.618344804,
+          "max_v": 3.46789131,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 2.42625e-08
+        },
+        "DB": {
+          "min_v": -0.618344804,
+          "max_v": 3.46789131,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 2.42625e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X72",
+      "model": "pfet_06v0",
+      "nodes": [
+        "EN_TMDS",
+        "G24_INV",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.516464702,
+          "max_v": 0.834198183,
+          "min_time_s": 2.40732029e-08,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": -3.477050107,
+          "max_v": 3.4547401892,
+          "min_time_s": 2.40782029e-08,
+          "max_time_s": 8.0575e-09
+        },
+        "GB": {
+          "min_v": -3.516464702,
+          "max_v": 0.834198183,
+          "min_time_s": 2.40732029e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.482691251,
+          "max_v": 0.16789131000000035,
+          "min_time_s": 8.2025e-09,
+          "max_time_s": 2.42625e-08
+        },
+        "DB": {
+          "min_v": -3.482691251,
+          "max_v": 0.16789131000000035,
+          "min_time_s": 8.2025e-09,
+          "max_time_s": 2.42625e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X73",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G24_MID",
+        "VALID",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.921814601,
+          "max_v": 3.34306161,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "GD": {
+          "min_v": -0.6217972469999999,
+          "max_v": 3.418306075,
+          "min_time_s": 3.20782977e-08,
+          "max_time_s": 2.40632029e-08
+        },
+        "GB": {
+          "min_v": -0.921814601,
+          "max_v": 3.34306161,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "DS": {
+          "min_v": -0.396329318,
+          "max_v": 0.539379327,
+          "min_time_s": 3.29925e-08,
+          "max_time_s": 8.1375e-09
+        },
+        "DB": {
+          "min_v": -0.396329318,
+          "max_v": 0.539379327,
+          "min_time_s": 3.29925e-08,
+          "max_time_s": 8.1375e-09
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X74",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G24_INV",
+        "REQ_TMDS",
+        "G24_MID",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.101259858,
+          "max_v": 3.3000109753605,
+          "min_time_s": 5.2183422e-08,
+          "max_time_s": 2.36215923e-08
+        },
+        "GD": {
+          "min_v": -3.31700376,
+          "max_v": 3.300025793822,
+          "min_time_s": 5.37125e-08,
+          "max_time_s": 2.362e-08
+        },
+        "GB": {
+          "min_v": -9.04970014e-18,
+          "max_v": 3.3,
+          "min_time_s": 2.41e-08,
+          "max_time_s": 8.1e-09
+        },
+        "DS": {
+          "min_v": -0.1087498066,
+          "max_v": 3.443670211,
+          "min_time_s": 2.40882029e-08,
+          "max_time_s": 3.2e-08
+        },
+        "DB": {
+          "min_v": -0.216464702,
+          "max_v": 3.48032899,
+          "min_time_s": 2.40732029e-08,
+          "max_time_s": 8.0525e-09
+        },
+        "SB": {
+          "min_v": -0.396329318,
+          "max_v": 0.539379327,
+          "min_time_s": 3.29925e-08,
+          "max_time_s": 8.1375e-09
+        }
+      }
+    },
+    {
+      "name": "X75",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G24_INV",
+        "VALID",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3164859504999997,
+          "max_v": 0.04306161000000008,
+          "min_time_s": 3.2e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "GD": {
+          "min_v": -3.513558411,
+          "max_v": 3.509311822,
+          "min_time_s": 3.20525e-08,
+          "max_time_s": 2.40732029e-08
+        },
+        "GB": {
+          "min_v": -3.3164859504999997,
+          "max_v": 0.04306161000000008,
+          "min_time_s": 3.2e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "DS": {
+          "min_v": -3.516464702,
+          "max_v": 0.834198183,
+          "min_time_s": 2.40732029e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -3.516464702,
+          "max_v": 0.834198183,
+          "min_time_s": 2.40732029e-08,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X76",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G24_INV",
+        "REQ_TMDS",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 8.1e-09
+        },
+        "GD": {
+          "min_v": -3.31700376,
+          "max_v": 3.300025793822,
+          "min_time_s": 5.37125e-08,
+          "max_time_s": 2.362e-08
+        },
+        "GB": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 8.1e-09
+        },
+        "DS": {
+          "min_v": -3.516464702,
+          "max_v": 0.834198183,
+          "min_time_s": 2.40732029e-08,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -3.516464702,
+          "max_v": 0.834198183,
+          "min_time_s": 2.40732029e-08,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X77",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G28_INV",
+        "VALID",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3164859504999997,
+          "max_v": 0.04306161000000008,
+          "min_time_s": 3.2e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "GD": {
+          "min_v": -3.510364311,
+          "max_v": 3.587314301,
+          "min_time_s": 3.20525e-08,
+          "max_time_s": 1.96086006e-07
+        },
+        "GB": {
+          "min_v": -3.3164859504999997,
+          "max_v": 0.04306161000000008,
+          "min_time_s": 3.2e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "DS": {
+          "min_v": -3.606722011,
+          "max_v": 0.83723818,
+          "min_time_s": 1.96086006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -3.606722011,
+          "max_v": 0.83723818,
+          "min_time_s": 1.96086006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X78",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G28_INV",
+        "REQ_TERM",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": -3.32511702,
+          "max_v": 3.3070246494099997,
+          "min_time_s": 5.37375e-08,
+          "max_time_s": 1.92609433e-07
+        },
+        "GB": {
+          "min_v": -3.3,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.606722011,
+          "max_v": 0.83723818,
+          "min_time_s": 1.96086006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -3.606722011,
+          "max_v": 0.83723818,
+          "min_time_s": 1.96086006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X79",
+      "model": "nfet_06v0",
+      "nodes": [
+        "EN_DETECT",
+        "G26_INV",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.285453198,
+          "max_v": 3.54227512,
+          "min_time_s": 2.140825e-07,
+          "max_time_s": 1.980625e-07
+        },
+        "GD": {
+          "min_v": -3.549020639,
+          "max_v": 3.5198064981000003,
+          "min_time_s": 2.140875e-07,
+          "max_time_s": 1.980625e-07
+        },
+        "GB": {
+          "min_v": -0.285453198,
+          "max_v": 3.54227512,
+          "min_time_s": 2.140825e-07,
+          "max_time_s": 1.980625e-07
+        },
+        "DS": {
+          "min_v": -0.534267411,
+          "max_v": 3.4370932,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 2.142725e-07
+        },
+        "DB": {
+          "min_v": -0.534267411,
+          "max_v": 3.4370932,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 2.142725e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X80",
+      "model": "pfet_06v0",
+      "nodes": [
+        "EN_DETECT",
+        "G26_INV",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.5854531979999997,
+          "max_v": 0.837557844,
+          "min_time_s": 2.140825e-07,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": -3.549020639,
+          "max_v": 3.5198064981000003,
+          "min_time_s": 2.140875e-07,
+          "max_time_s": 1.980625e-07
+        },
+        "GB": {
+          "min_v": -3.5854531979999997,
+          "max_v": 0.837557844,
+          "min_time_s": 2.140825e-07,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.482323185,
+          "max_v": 0.13709320000000025,
+          "min_time_s": 1.96727862e-07,
+          "max_time_s": 2.142725e-07
+        },
+        "DB": {
+          "min_v": -3.482323185,
+          "max_v": 0.13709320000000025,
+          "min_time_s": 1.96727862e-07,
+          "max_time_s": 2.142725e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X81",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G26_MID",
+        "VALID",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.921814601,
+          "max_v": 3.34306161,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "GD": {
+          "min_v": -0.650115723,
+          "max_v": 3.432624517,
+          "min_time_s": 3.20782977e-08,
+          "max_time_s": 2.140625e-07
+        },
+        "GB": {
+          "min_v": -0.921814601,
+          "max_v": 3.34306161,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "DS": {
+          "min_v": -0.324647048,
+          "max_v": 0.546436058,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.98134941e-07
+        },
+        "DB": {
+          "min_v": -0.324647048,
+          "max_v": 0.546436058,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.98134941e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X82",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G26_INV",
+        "REQ_DETECT",
+        "G26_MID",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.0749390526,
+          "max_v": 3.2999999977163372,
+          "min_time_s": 5.2188422e-08,
+          "max_time_s": 2.050025e-07
+        },
+        "GD": {
+          "min_v": -3.32018409,
+          "max_v": 3.299999995557926,
+          "min_time_s": 5.37225e-08,
+          "max_time_s": 2.0442e-07
+        },
+        "GB": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 0.0,
+          "max_time_s": 1.981e-07
+        },
+        "DS": {
+          "min_v": -0.18930601020000004,
+          "max_v": 3.444363835,
+          "min_time_s": 2.1409625e-07,
+          "max_time_s": 3.2e-08
+        },
+        "DB": {
+          "min_v": -0.285453198,
+          "max_v": 3.54227512,
+          "min_time_s": 2.140825e-07,
+          "max_time_s": 1.980625e-07
+        },
+        "SB": {
+          "min_v": -0.324647048,
+          "max_v": 0.546436058,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.98134941e-07
+        }
+      }
+    },
+    {
+      "name": "X83",
+      "model": "pfet_06v0",
+      "nodes": [
+        "G26_INV",
+        "VALID",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.3164859504999997,
+          "max_v": 0.04306161000000008,
+          "min_time_s": 3.2e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "GD": {
+          "min_v": -3.5299992909999998,
+          "max_v": 3.574073048,
+          "min_time_s": 3.20525e-08,
+          "max_time_s": 2.140825e-07
+        },
+        "GB": {
+          "min_v": -3.3164859504999997,
+          "max_v": 0.04306161000000008,
+          "min_time_s": 3.2e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "DS": {
+          "min_v": -3.5854531979999997,
+          "max_v": 0.837557844,
+          "min_time_s": 2.140825e-07,
+          "max_time_s": 3.22e-08
+        },
+        "DB": {
+          "min_v": -3.5854531979999997,
+          "max_v": 0.837557844,
+          "min_time_s": 2.140825e-07,
+          "max_time_s": 3.22e-08
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X84",
+      "model": "nfet_06v0",
+      "nodes": [
+        "EN_TERM",
+        "G28_INV",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.306722011,
+          "max_v": 3.55843115,
+          "min_time_s": 1.96086006e-07,
+          "max_time_s": 1.000625e-07
+        },
+        "GD": {
+          "min_v": -3.5781408810000004,
+          "max_v": 3.5417922229000003,
+          "min_time_s": 1.96086006e-07,
+          "max_time_s": 1.000675e-07
+        },
+        "GB": {
+          "min_v": -0.306722011,
+          "max_v": 3.55843115,
+          "min_time_s": 1.96086006e-07,
+          "max_time_s": 1.000625e-07
+        },
+        "DS": {
+          "min_v": -0.625841474,
+          "max_v": 3.51497328,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.48728508e-07
+        },
+        "DB": {
+          "min_v": -0.625841474,
+          "max_v": 3.51497328,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.48728508e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X85",
+      "model": "pfet_06v0",
+      "nodes": [
+        "EN_TERM",
+        "G28_INV",
+        "VDD",
+        "VDD"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -3.606722011,
+          "max_v": 0.83723818,
+          "min_time_s": 1.96086006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "GD": {
+          "min_v": -3.5781408810000004,
+          "max_v": 3.5417922229000003,
+          "min_time_s": 1.96086006e-07,
+          "max_time_s": 1.000675e-07
+        },
+        "GB": {
+          "min_v": -3.606722011,
+          "max_v": 0.83723818,
+          "min_time_s": 1.96086006e-07,
+          "max_time_s": 3.22e-08
+        },
+        "DS": {
+          "min_v": -3.489064567,
+          "max_v": 0.21497328000000016,
+          "min_time_s": 2.47107498e-08,
+          "max_time_s": 1.48728508e-07
+        },
+        "DB": {
+          "min_v": -3.489064567,
+          "max_v": 0.21497328000000016,
+          "min_time_s": 2.47107498e-08,
+          "max_time_s": 1.48728508e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X86",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G28_MID",
+        "VALID",
+        "VSS",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.921814601,
+          "max_v": 3.34306161,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "GD": {
+          "min_v": -0.662042088,
+          "max_v": 3.441297858,
+          "min_time_s": 3.20782977e-08,
+          "max_time_s": 1.96066006e-07
+        },
+        "GB": {
+          "min_v": -0.921814601,
+          "max_v": 3.34306161,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.96502862e-07
+        },
+        "DS": {
+          "min_v": -0.301795144,
+          "max_v": 0.545784446,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.001375e-07
+        },
+        "DB": {
+          "min_v": -0.301795144,
+          "max_v": 0.545784446,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.001375e-07
+        },
+        "SB": {
+          "min_v": 0.0,
+          "max_v": 0.0,
+          "min_time_s": 0.0,
+          "max_time_s": 0.0
+        }
+      }
+    },
+    {
+      "name": "X87",
+      "model": "nfet_06v0",
+      "nodes": [
+        "G28_INV",
+        "REQ_TERM",
+        "G28_MID",
+        "VSS"
+      ],
+      "terminal_pairs": {
+        "GS": {
+          "min_v": -0.0698147448,
+          "max_v": 3.30364236896,
+          "min_time_s": 5.2193422e-08,
+          "max_time_s": 1.92614433e-07
+        },
+        "GD": {
+          "min_v": -3.32511702,
+          "max_v": 3.3070246494099997,
+          "min_time_s": 5.37375e-08,
+          "max_time_s": 1.92609433e-07
+        },
+        "GB": {
+          "min_v": 0.0,
+          "max_v": 3.3,
+          "min_time_s": 0.0,
+          "max_time_s": 1.001e-07
+        },
+        "DS": {
+          "min_v": -0.190440057,
+          "max_v": 3.44041756,
+          "min_time_s": 1.961e-07,
+          "max_time_s": 3.2e-08
+        },
+        "DB": {
+          "min_v": -0.306722011,
+          "max_v": 3.55843115,
+          "min_time_s": 1.96086006e-07,
+          "max_time_s": 1.000625e-07
+        },
+        "SB": {
+          "min_v": -0.301795144,
+          "max_v": 0.545784446,
+          "min_time_s": 3.22e-08,
+          "max_time_s": 1.001375e-07
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "No reliability limits inferred from device model names.",
+    "No junction current-density, avalanche, thermal or ESD qualification.",
+    "Ideal supply waveform is retained; package supply impedance is absent."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-tx-thick-control-connected/connected.spice": "3beca7f11f2140d1ab15e17e2fbdd200a3b36ff5ca3a343fd24ec9ee9f9f0cfc",
+    "/home/ubuntu/svalbard/scratch/pad-tx-thick-control-layout/physical.spice": "e0a8c45ac4e8efdfde286d89f65451379448d1c7dd1829681e901c72b2f5c6d5",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/terminal_exposure.py": "5a06863fd8d902d7a59c5543ca5fca3d5e5dd1679641f61297a4634a84a847f5",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "0facf83c1caaf4ebef9038978d6ebd3dc20b419e12cc78de8427d7b163d5e14c"
+  }
+}

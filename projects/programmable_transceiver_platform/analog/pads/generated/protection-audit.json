@@ -1,0 +1,630 @@
+{
+  "status": "current_protection_dimensions_do_not_meet_published_HV_ESD_guidance",
+  "simulator_path": "/home/ubuntu/svalbard/scratch/pad-ngspice47/ngspice-47/src/ngspice",
+  "simulator_sha256": "fe4c022a189fb6bb56b04e7958614908b83bbc2b76fe609efc4fafc4ab29e810",
+  "published_rules": {
+    "source": "https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_4_3.html",
+    "minimum_finger_width_um": 20,
+    "minimum_total_width_um": 200,
+    "recommended_minimum_channel_length_um": 0.8,
+    "required_marker": "ESD_MK",
+    "note": "Dimensional subset only; recommended rules distinguished from minima. Full marker, ballast, contacts, guard-ring and interconnect checks remain required."
+  },
+  "published_tlp": {
+    "source": "https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_5_5.html",
+    "trigger_v_approx": 10.7,
+    "holding_v_approx": 6.2,
+    "second_breakdown_current_a_per_um_approx": 0.007,
+    "second_breakdown_v_approx": 8,
+    "applicability": "Published no-ESD-implant HV NMOS characterization, not qualification of our geometry or an HBM rating. Do not extrapolate these values to the current 32um candidate."
+  },
+  "current_families": {
+    "wired_transmit": {
+      "P": {
+        "unit_count": 2,
+        "widths_um": [
+          16.0,
+          16.0
+        ],
+        "lengths_um": [
+          0.6,
+          0.6
+        ],
+        "total_width_um": 32.0,
+        "minimum_finger_width_met": false,
+        "minimum_total_width_met": false,
+        "recommended_minimum_length_met": false
+      },
+      "N": {
+        "unit_count": 2,
+        "widths_um": [
+          16.0,
+          16.0
+        ],
+        "lengths_um": [
+          0.6,
+          0.6
+        ],
+        "total_width_um": 32.0,
+        "minimum_finger_width_met": false,
+        "minimum_total_width_met": false,
+        "recommended_minimum_length_met": false
+      }
+    },
+    "reference_clock": {
+      "P": {
+        "unit_count": 2,
+        "widths_um": [
+          16.0,
+          16.0
+        ],
+        "lengths_um": [
+          0.6,
+          0.6
+        ],
+        "total_width_um": 32.0,
+        "minimum_finger_width_met": false,
+        "minimum_total_width_met": false,
+        "recommended_minimum_length_met": false
+      },
+      "N": {
+        "unit_count": 2,
+        "widths_um": [
+          16.0,
+          16.0
+        ],
+        "lengths_um": [
+          0.6,
+          0.6
+        ],
+        "total_width_um": 32.0,
+        "minimum_finger_width_met": false,
+        "minimum_total_width_met": false,
+        "recommended_minimum_length_met": false
+      }
+    },
+    "rf_receive": {
+      "P": {
+        "unit_count": 2,
+        "widths_um": [
+          16.0,
+          16.0
+        ],
+        "lengths_um": [
+          0.6,
+          0.6
+        ],
+        "total_width_um": 32.0,
+        "minimum_finger_width_met": false,
+        "minimum_total_width_met": false,
+        "recommended_minimum_length_met": false
+      },
+      "N": {
+        "unit_count": 2,
+        "widths_um": [
+          16.0,
+          16.0
+        ],
+        "lengths_um": [
+          0.6,
+          0.6
+        ],
+        "total_width_um": 32.0,
+        "minimum_finger_width_met": false,
+        "minimum_total_width_met": false,
+        "recommended_minimum_length_met": false
+      }
+    },
+    "rf_transmit": {
+      "P": {
+        "unit_count": 2,
+        "widths_um": [
+          16.0,
+          16.0
+        ],
+        "lengths_um": [
+          0.6,
+          0.6
+        ],
+        "total_width_um": 32.0,
+        "minimum_finger_width_met": false,
+        "minimum_total_width_met": false,
+        "recommended_minimum_length_met": false
+      },
+      "N": {
+        "unit_count": 2,
+        "widths_um": [
+          16.0,
+          16.0
+        ],
+        "lengths_um": [
+          0.6,
+          0.6
+        ],
+        "total_width_um": 32.0,
+        "minimum_finger_width_met": false,
+        "minimum_total_width_met": false,
+        "recommended_minimum_length_met": false
+      }
+    },
+    "wired_receive_usb": {
+      "P": {
+        "unit_count": 2,
+        "widths_um": [
+          16.0,
+          16.0
+        ],
+        "lengths_um": [
+          0.6,
+          0.6
+        ],
+        "total_width_um": 32.0,
+        "minimum_finger_width_met": false,
+        "minimum_total_width_met": false,
+        "recommended_minimum_length_met": false
+      },
+      "N": {
+        "unit_count": 2,
+        "widths_um": [
+          16.0,
+          16.0
+        ],
+        "lengths_um": [
+          0.6,
+          0.6
+        ],
+        "total_width_um": 32.0,
+        "minimum_finger_width_met": false,
+        "minimum_total_width_met": false,
+        "recommended_minimum_length_met": false
+      }
+    }
+  },
+  "device_capacitance_experiments": {
+    "current": {
+      "unit_count": 2,
+      "width_um": 16.0,
+      "length_um": 0.6,
+      "device_only_capacitance_f": 1.9888076809896382e-13,
+      "model": "nfet_06v0_dss",
+      "drain_sab_um": 3.78,
+      "source_sab_um": 0.28
+    },
+    "minimum_width_candidate": {
+      "unit_count": 10,
+      "width_um": 20.0,
+      "length_um": 0.8,
+      "device_only_capacitance_f": 1.2368915542121017e-12,
+      "model": "nfet_06v0_dss",
+      "drain_sab_um": 3.78,
+      "source_sab_um": 0.28
+    }
+  },
+  "device_capacitance_by_common_mode": {
+    "0.4": {
+      "current": {
+        "unit_count": 2,
+        "width_um": 16.0,
+        "length_um": 0.6,
+        "device_only_capacitance_f": 2.489628450417577e-13,
+        "model": "nfet_06v0_dss",
+        "drain_sab_um": 3.78,
+        "source_sab_um": 0.28
+      },
+      "minimum_width_candidate": {
+        "unit_count": 10,
+        "width_um": 20.0,
+        "length_um": 0.8,
+        "device_only_capacitance_f": 1.549508633602636e-12,
+        "model": "nfet_06v0_dss",
+        "drain_sab_um": 3.78,
+        "source_sab_um": 0.28
+      }
+    },
+    "1.65": {
+      "current": {
+        "unit_count": 2,
+        "width_um": 16.0,
+        "length_um": 0.6,
+        "device_only_capacitance_f": 1.9888076809896382e-13,
+        "model": "nfet_06v0_dss",
+        "drain_sab_um": 3.78,
+        "source_sab_um": 0.28
+      },
+      "minimum_width_candidate": {
+        "unit_count": 10,
+        "width_um": 20.0,
+        "length_um": 0.8,
+        "device_only_capacitance_f": 1.2368915542121017e-12,
+        "model": "nfet_06v0_dss",
+        "drain_sab_um": 3.78,
+        "source_sab_um": 0.28
+      }
+    },
+    "1.8": {
+      "current": {
+        "unit_count": 2,
+        "width_um": 16.0,
+        "length_um": 0.6,
+        "device_only_capacitance_f": 1.9536689592734857e-13,
+        "model": "nfet_06v0_dss",
+        "drain_sab_um": 3.78,
+        "source_sab_um": 0.28
+      },
+      "minimum_width_candidate": {
+        "unit_count": 10,
+        "width_um": 20.0,
+        "length_um": 0.8,
+        "device_only_capacitance_f": 1.2149599935047419e-12,
+        "model": "nfet_06v0_dss",
+        "drain_sab_um": 3.78,
+        "source_sab_um": 0.28
+      }
+    },
+    "3.0": {
+      "current": {
+        "unit_count": 2,
+        "width_um": 16.0,
+        "length_um": 0.6,
+        "device_only_capacitance_f": 1.7471982383610173e-13,
+        "model": "nfet_06v0_dss",
+        "drain_sab_um": 3.78,
+        "source_sab_um": 0.28
+      },
+      "minimum_width_candidate": {
+        "unit_count": 10,
+        "width_um": 20.0,
+        "length_um": 0.8,
+        "device_only_capacitance_f": 1.086099765703592e-12,
+        "model": "nfet_06v0_dss",
+        "drain_sab_um": 3.78,
+        "source_sab_um": 0.28
+      }
+    }
+  },
+  "added_device_capacitance_f": 1.038010786113138e-12,
+  "loading_estimates": {
+    "reference_clock": {
+      "current_extracted_odd_capacitance_f_per_leg": [
+        3.746757647123294e-13,
+        3.9459362148535286e-13
+      ],
+      "estimated_capacitance_f_per_leg": [
+        1.4126865508254674e-12,
+        1.4326044075984909e-12
+      ],
+      "assigned_budget_f_per_leg": 2.7e-12
+    },
+    "rf_receive": {
+      "current_extracted_odd_capacitance_f_per_leg": [
+        4.1463774424582137e-13,
+        4.3567174424582147e-13
+      ],
+      "estimated_capacitance_f_per_leg": [
+        1.4526485303589593e-12,
+        1.4736825303589596e-12
+      ],
+      "assigned_budget_f_per_leg": 1e-12
+    },
+    "rf_transmit": {
+      "current_extracted_odd_capacitance_f_per_leg": [
+        4.1463774424582137e-13,
+        4.3567174424582147e-13
+      ],
+      "estimated_capacitance_f_per_leg": [
+        1.4526485303589593e-12,
+        1.4736825303589596e-12
+      ],
+      "assigned_budget_f_per_leg": 1e-12
+    },
+    "wired_receive_usb": {
+      "disabled": {
+        "estimated_capacitance_f_per_leg": [
+          3.341760962549925e-12,
+          3.2336703991180374e-12
+        ],
+        "assigned_budget_f_per_leg": 2.7e-12
+      },
+      "serial_bypass": {
+        "estimated_capacitance_f_per_leg": [
+          3.646778380675426e-12,
+          3.5394100305443006e-12
+        ],
+        "assigned_budget_f_per_leg": 2.7e-12
+      },
+      "usb_terminated": {
+        "estimated_capacitance_f_per_leg": [
+          2.744620105393798e-12,
+          2.7640655894956898e-12
+        ],
+        "assigned_budget_f_per_leg": 2.7e-12
+      },
+      "differential_terminated": {
+        "estimated_capacitance_f_per_leg": [
+          2.7548867706036065e-12,
+          2.728178852279401e-12
+        ],
+        "assigned_budget_f_per_leg": 2.7e-12
+      }
+    },
+    "wired_transmit": {
+      "disabled": {
+        "pad_common_mode_v": 1.8,
+        "current_effective_capacitance_f_per_leg": [
+          2.399482991359895e-12,
+          2.4283271781891286e-12
+        ],
+        "estimated_capacitance_f_per_leg": [
+          3.4190760889372883e-12,
+          3.4479202757665216e-12
+        ],
+        "assigned_budget_f_per_leg": 2.7e-12
+      },
+      "reset": {
+        "pad_common_mode_v": 1.8,
+        "current_effective_capacitance_f_per_leg": [
+          1.3252636453755384e-12,
+          1.35241633134198e-12
+        ],
+        "estimated_capacitance_f_per_leg": [
+          2.3448567429529316e-12,
+          2.372009428919373e-12
+        ],
+        "assigned_budget_f_per_leg": 2.7e-12
+      },
+      "unpowered_external_peer": {
+        "pad_common_mode_v": 1.8,
+        "current_effective_capacitance_f_per_leg": [
+          1.3255198494905891e-12,
+          1.3520239770834892e-12
+        ],
+        "estimated_capacitance_f_per_leg": [
+          2.3451129470679824e-12,
+          2.3716170746608825e-12
+        ],
+        "assigned_budget_f_per_leg": 2.7e-12
+      },
+      "source_termination": {
+        "pad_common_mode_v": 1.8,
+        "current_effective_capacitance_f_per_leg": [
+          2.0555416300434273e-12,
+          2.0841465275381514e-12
+        ],
+        "estimated_capacitance_f_per_leg": [
+          3.0751347276208207e-12,
+          3.103739625115545e-12
+        ],
+        "assigned_budget_f_per_leg": 2.7e-12
+      },
+      "main": {
+        "pad_common_mode_v": 1.8,
+        "current_effective_capacitance_f_per_leg": [
+          1.9374314373976604e-12,
+          2.424639337364097e-12
+        ],
+        "estimated_capacitance_f_per_leg": [
+          2.9570245349750534e-12,
+          3.44423243494149e-12
+        ],
+        "assigned_budget_f_per_leg": 2.7e-12
+      },
+      "main_post": {
+        "pad_common_mode_v": 1.8,
+        "current_effective_capacitance_f_per_leg": [
+          1.928999374859536e-12,
+          2.136934898869091e-12
+        ],
+        "estimated_capacitance_f_per_leg": [
+          2.9485924724369295e-12,
+          3.156527996446484e-12
+        ],
+        "assigned_budget_f_per_leg": 2.7e-12
+      },
+      "main_post_terminated": {
+        "pad_common_mode_v": 1.8,
+        "current_effective_capacitance_f_per_leg": [
+          1.58503417987505e-12,
+          1.7927847760402886e-12
+        ],
+        "estimated_capacitance_f_per_leg": [
+          2.6046272774524435e-12,
+          2.8123778736176816e-12
+        ],
+        "assigned_budget_f_per_leg": 2.7e-12
+      },
+      "tmds": {
+        "pad_common_mode_v": 3.0,
+        "current_effective_capacitance_f_per_leg": [
+          1.3547586059383193e-12,
+          1.3288747597991415e-12
+        ],
+        "estimated_capacitance_f_per_leg": [
+          2.2661385478058096e-12,
+          2.2402547016666318e-12
+        ],
+        "assigned_budget_f_per_leg": 2.7e-12
+      },
+      "detection": {
+        "pad_common_mode_v": 0.4,
+        "current_effective_capacitance_f_per_leg": [
+          3.4825946915284406e-12,
+          3.513678966102658e-12
+        ],
+        "estimated_capacitance_f_per_leg": [
+          4.783140480089319e-12,
+          4.814224754663536e-12
+        ],
+        "assigned_budget_f_per_leg": 2.7e-12
+      }
+    }
+  },
+  "diode_alternative": {
+    "status": "device_only_alternative_screen_not_adopted",
+    "cases": {
+      "1": {
+        "fingers_per_diode": 1,
+        "finger_width_um": 25.0,
+        "junction_length_um": 0.9,
+        "area_m2_per_finger": 2.25e-11,
+        "perimeter_m_per_finger": 5.179999999999999e-05,
+        "two_diode_capacitance_f": {
+          "0.4": 4.435557895794436e-14,
+          "1.65": 4.23599012265122e-14,
+          "3.0": 4.517279295832291e-14,
+          "3.3": 4.7169811251840725e-14
+        },
+        "unpowered_functional_rail": {
+          "pad_v": 1.28945424,
+          "backfeed_a": 0.0402109152,
+          "source_current_a": 0.0402109152,
+          "source_v": 3.3,
+          "source_resistance_ohm": 50
+        }
+      },
+      "2": {
+        "fingers_per_diode": 2,
+        "finger_width_um": 25.0,
+        "junction_length_um": 0.9,
+        "area_m2_per_finger": 2.25e-11,
+        "perimeter_m_per_finger": 5.179999999999999e-05,
+        "two_diode_capacitance_f": {
+          "0.4": 8.871115791588872e-14,
+          "1.65": 8.471980261217935e-14,
+          "3.0": 9.034558591664581e-14,
+          "3.3": 9.433962234452652e-14
+        },
+        "unpowered_functional_rail": {
+          "pad_v": 1.1102369,
+          "backfeed_a": 0.043795262,
+          "source_current_a": 0.043795262,
+          "source_v": 3.3,
+          "source_resistance_ohm": 50
+        }
+      },
+      "4": {
+        "fingers_per_diode": 4,
+        "finger_width_um": 25.0,
+        "junction_length_um": 0.9,
+        "area_m2_per_finger": 2.25e-11,
+        "perimeter_m_per_finger": 5.179999999999999e-05,
+        "two_diode_capacitance_f": {
+          "0.4": 1.7742231615008732e-13,
+          "1.65": 1.6943960554266857e-13,
+          "3.0": 1.8069117246991144e-13,
+          "3.3": 1.886792450073629e-13
+        },
+        "unpowered_functional_rail": {
+          "pad_v": 1.00060301,
+          "backfeed_a": 0.0459879398,
+          "source_current_a": 0.0459879398,
+          "source_v": 3.3,
+          "source_resistance_ohm": 50
+        }
+      }
+    },
+    "rules_source": "https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_4_5.html",
+    "tlp_source": "https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_5_8.html",
+    "decision": "Do not steer into functional VDD when powered-off peer drive is required. Evaluate a dedicated isolated protection rail and its real clamp before adopting this topology.",
+    "limitations": [
+      "Finger count is a sensitivity sweep, not a selected ESD rating or extrapolation of published TLP.",
+      "AC rail is ideally fixed at 3.3V. Floating-rail rectification, rail impedance and cross-pad coupling are absent.",
+      "No Nwell/substrate junction, guard ring, metal, package, rail clamp or secondary protection layout is included.",
+      "Ordinary diode models establish nominal loading and backfeed, not ESD survival."
+    ]
+  },
+  "isolated_rail_alternative": {
+    "status": "isolated_rail_architecture_probe_not_adopted",
+    "transient_complete": true,
+    "native_clamp": "gf180mcu_fd_io__dvdd",
+    "rail_bleed_ohm": 10000000.0,
+    "states": {
+      "cold_unpowered": {
+        "rail_min_v": 0.1833419225885978,
+        "rail_max_v": 2.39128996825167,
+        "pad_min_v": 1.132469287575952,
+        "pad_max_v": 3.211123783646388,
+        "peak_functional_supply_backfeed_a": 3.371918862813994e-05,
+        "peak_peer_source_a": 0.04335061424848097,
+        "clamp_gate_peak_v": 1.111864968892396
+      },
+      "powered": {
+        "rail_min_v": 1.123332087740579,
+        "rail_max_v": 2.632101593905048,
+        "pad_min_v": 2.060468443474705,
+        "pad_max_v": 3.302717774013186,
+        "peak_functional_supply_backfeed_a": 3.097421921285558e-06,
+        "peak_peer_source_a": 0.02479063113050591,
+        "clamp_gate_peak_v": 1.138509422109433
+      },
+      "supply_fall": {
+        "rail_min_v": 2.58517831056732,
+        "rail_max_v": 2.593272049163705,
+        "pad_min_v": 3.297667323727824,
+        "pad_max_v": 3.298234820568908,
+        "peak_functional_supply_backfeed_a": 7.172166782044024e-08,
+        "peak_peer_source_a": 4.665352544351716e-05,
+        "clamp_gate_peak_v": 9.677471849939091e-06
+      },
+      "unpowered": {
+        "rail_min_v": 2.634494597728353,
+        "rail_max_v": 2.681454982296996,
+        "pad_min_v": 3.299590061354972,
+        "pad_max_v": 3.299927993532212,
+        "peak_functional_supply_backfeed_a": 1.749827974653342e-10,
+        "peak_peer_source_a": 8.198772900552557e-06,
+        "clamp_gate_peak_v": 1.311991635804057e-05
+      },
+      "recovery": {
+        "rail_min_v": 2.681454982296996,
+        "rail_max_v": 2.698940750685018,
+        "pad_min_v": 3.299927993532212,
+        "pad_max_v": 3.299962642385386,
+        "peak_functional_supply_backfeed_a": 7.765236955224568e-11,
+        "peak_peer_source_a": 1.440129355763944e-06,
+        "clamp_gate_peak_v": 4.713584878260278e-06
+      },
+      "recovered": {
+        "rail_min_v": 2.705111897535821,
+        "rail_max_v": 2.710666225903193,
+        "pad_min_v": 3.29997040898644,
+        "pad_max_v": 3.299976027343584,
+        "peak_functional_supply_backfeed_a": 0.0,
+        "peak_peer_source_a": 5.918202711949344e-07,
+        "clamp_gate_peak_v": 1.238632910175827e-06
+      }
+    },
+    "decision": "Do not adopt as a drop-in protection circuit: ordinary startup activates the clamp and loads the peer. Determine allowed readiness/charging behavior and verify false-trigger immunity before selecting or modifying the clamp.",
+    "limitations": [
+      "Two unchanged 3.3V peers through 50ohm sources; initially discharged rail uses UIC.",
+      "Functional VDD feeds the isolated rail through a small PDK diode; reverse displacement current is retained.",
+      "Native clamp schematic only; no custom layout, package, well/substrate extraction or attached core.",
+      "No RF modulation, ESD pulse, protected-device survival or normal-signal false-trigger qualification."
+    ]
+  },
+  "limitations": [
+    "Minimum-width candidate has no generated layout or verified multi-finger triggering/current sharing.",
+    "Additive device-capacitance estimate holds current wiring fixed; replacement geometry and mode-dependent nonlinear loading are absent. Not a physical bound or integrated compliance result.",
+    "Ordinary compact models do not establish snapback, second breakdown, oxide survival or discharge-path current capacity.",
+    "Positive trigger and holding voltages require explicit coordination with protected-device transient limits and any secondary clamp.",
+    "No ESD qualification is implied by ordinary DRC/LVS or normal-voltage lifecycle completion."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_audit.py": "aa75bc6970e2a709923ff1e28fbb20e0eb72e6edf00cf2929f57ea6d138009de",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/circuits.py": "798aabb3c4aa416da9469b0c5be3ec5a4d30a428f5f5ca13ce31f1ef284e458a",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/wired_receive.py": "44eacc18a6a3a08eee141e47bcaacf6f6a10a41103f467c90642b07d7627f2dc",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/reference-clock-screen.json": "5af34ff35f2f60dd3dbb8939800d244475681ad031e94d37f747aab01271bc5e",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-receive-screen.json": "9a65264014d9051e60bc3a7084884b171072161d3de96bcc6e5de6e834f997fb",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-transmit-screen.json": "5d848c69db072c7a1792d391ba05344c1664a231598b981557c2281f494af6ca",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-receive-usb-screen.json": "0c6cf194fcac5284856dc1ec180402ac29af0748a05c681b2a7abf7ea230b6f4",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-transmit-loading.json": "e7b073c29d57df8899fd9ed93b79f5e8cfd7a445c6c3852d5ddc9543046000b3",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/design.py": "1280fd1141770cbd48d65785fcdf3f3f4d8d694a10b39ad58de9b60ef6f8e806",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "d45109a5e4399d143c283a6fccf78745e8a24f29749825847073c97a11c0143f",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "0974c3c93656155b4746d36214503858d7a7c5e8fe29913d27518c4f2e126db8",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/contract.json": "fc394976047216c24a79a0d09cb9312142c76e5ac7a2c4c8a61896f45dfd5679",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/home/ubuntu/svalbard/scratch/pad-ngspice47/ngspice-47/src/ngspice": "fe4c022a189fb6bb56b04e7958614908b83bbc2b76fe609efc4fafc4ab29e810",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/gf180mcu_fd_io.spice": "710732fd6a69e165caa2c29e4cdf81b11af41da32705fcd860b7ecfb09630dd1"
+  }
+}

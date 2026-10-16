@@ -1,0 +1,90 @@
+{
+  "status": "steering_junction_primitives_not_integrated_or_ESD_qualified",
+  "junction_width_um": 0.9,
+  "finger_width_um": 25.0,
+  "primitives": {
+    "diode_nd2ps_06v0": {
+      "terminals_um": {
+        "A": [
+          1.03,
+          0.0
+        ],
+        "K": [
+          0.0,
+          0.0
+        ]
+      },
+      "nwell_area_um2": 0,
+      "nwell_perimeter_um": 0,
+      "drc_count": 0,
+      "extracted_area_um2": 22.5,
+      "extracted_perimeter_um": 51.8,
+      "well_junction_device_extracted": false,
+      "extracted_capacitor_count": 1
+    },
+    "diode_pd2nw_06v0": {
+      "terminals_um": {
+        "A": [
+          0.0,
+          0.0
+        ],
+        "K": [
+          0.99,
+          0.0
+        ],
+        "SUB": [
+          1.87,
+          0.0
+        ]
+      },
+      "nwell_area_um2": 71.1816,
+      "nwell_perimeter_um": 58.84,
+      "drc_count": 0,
+      "extracted_area_um2": 22.5,
+      "extracted_perimeter_um": 51.8,
+      "well_junction_device_extracted": false,
+      "extracted_capacitor_count": 2,
+      "removed_linear_well_capacitance_ff": 8.54179,
+      "residual_well_substrate_capacitance_ff": 4.30791,
+      "nonlinear_well_model": "diode_nw2ps_06v0"
+    }
+  },
+  "image_id": "sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
+  "extraction_technology_sha256": "f0c3a445aa0a2a9b7a1f10530a6c011800a41fcad36c12d8bb9b792a59c74f44",
+  "limitations": [
+    "Ordinary DRC and extracted junction polarity/geometry checks only, not ESD qualification.",
+    "Single-finger units. Finger array, discharge interconnect, rail clamp and secondary protection are not laid out here.",
+    "Positive diode well junction is reconstructed from physical Nwell area/perimeter and labeled terminals. Its linear extraction area cap is removed while residual coupling is retained; this supplements, not duplicates, the extractor device graph.",
+    "Retained pad layouts still use their declared grounded-gate protection. These primitives are not a replacement circuit."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_layout.py": "83d50a8fb7f9006abdb93f58631f35470f26618f608c9dd603d081339881847c",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/layout.py": "9618b858b79f438f41dae7e2ae830be685758a368874ef4e22e256ee815c0236",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/render.py": "39f47a05bfd70b24658f953df2a7b1f44a8844b35e8dbc778f1a1fd54d373c74",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "d45109a5e4399d143c283a6fccf78745e8a24f29749825847073c97a11c0143f",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24"
+  },
+  "electrical": {
+    "fingers_per_diode": 4,
+    "pad_dc_v": 1.65,
+    "rail_dc_v": 3.3,
+    "frequency_hz": 1000000000.0,
+    "measurements": {
+      "pad": {
+        "pad_imaginary_admittance_s": 0.00131677019,
+        "rail_imaginary_admittance_s": -0.000662055385,
+        "pad_effective_capacitance_f": 2.0957048465455422e-13,
+        "rail_effective_capacitance_f": -1.0536938712335787e-13
+      },
+      "rail": {
+        "pad_imaginary_admittance_s": -0.000662055385,
+        "rail_imaginary_admittance_s": 0.00146546591,
+        "pad_effective_capacitance_f": -1.0536938712335787e-13,
+        "rail_effective_capacitance_f": 2.3323614350916263e-13
+      }
+    },
+    "scope": "Extracted primitive capacitance plus nonlinear well junction; ideal rail and no inter-unit routing or clamp."
+  }
+}

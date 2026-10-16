@@ -1,0 +1,24 @@
+* Generated from circuits.py; external bias/control circuitry is explicit.
+* No ESD survival claim. Zero ideal pad capacitance is added to device capacitance.
+.subckt pad_reference_clock PAD_P PAD_N VSS VCM
+XESD_P_0 PAD_P VSS VSS VSS nfet_06v0_dss w=16.0u l=0.6u nf=1 m=1 ad=67.52p as=11.52p pd=40.44u ps=33.44u d_sab=3.78u s_sab=0.28u
+XESD_P_1 PAD_P VSS VSS VSS nfet_06v0_dss w=16.0u l=0.6u nf=1 m=1 ad=67.52p as=11.52p pd=40.44u ps=33.44u d_sab=3.78u s_sab=0.28u
+XESD_N_0 PAD_N VSS VSS VSS nfet_06v0_dss w=16.0u l=0.6u nf=1 m=1 ad=67.52p as=11.52p pd=40.44u ps=33.44u d_sab=3.78u s_sab=0.28u
+XESD_N_1 PAD_N VSS VSS VSS nfet_06v0_dss w=16.0u l=0.6u nf=1 m=1 ad=67.52p as=11.52p pd=40.44u ps=33.44u d_sab=3.78u s_sab=0.28u
+XBIAS_P_0 PAD_P BIAS_P_0 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XBIAS_P_1 BIAS_P_0 BIAS_P_1 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XBIAS_P_2 BIAS_P_1 BIAS_P_2 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XBIAS_P_3 BIAS_P_2 BIAS_P_3 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XBIAS_P_4 BIAS_P_3 BIAS_P_4 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XBIAS_P_5 BIAS_P_4 BIAS_P_5 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XBIAS_P_6 BIAS_P_5 BIAS_P_6 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XBIAS_P_7 BIAS_P_6 VCM VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XBIAS_N_0 PAD_N BIAS_N_0 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XBIAS_N_1 BIAS_N_0 BIAS_N_1 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XBIAS_N_2 BIAS_N_1 BIAS_N_2 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XBIAS_N_3 BIAS_N_2 BIAS_N_3 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XBIAS_N_4 BIAS_N_3 BIAS_N_4 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XBIAS_N_5 BIAS_N_4 BIAS_N_5 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XBIAS_N_6 BIAS_N_5 BIAS_N_6 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XBIAS_N_7 BIAS_N_6 VCM VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+.ends pad_reference_clock

@@ -1,0 +1,28 @@
+* NGSPICE file created from array_flat.ext - technology: gf180mcuD
+
+.subckt array_flat VSS RAIL PADP PADN
+D0 PADN RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+D1 VSS PADP diode_nd2ps_06v0 pj=51.8u area=22.5p
+D2 VSS PADN diode_nd2ps_06v0 pj=51.8u area=22.5p
+D3 VSS PADP diode_nd2ps_06v0 pj=51.8u area=22.5p
+D4 PADN RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+D5 PADP RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+D6 VSS PADN diode_nd2ps_06v0 pj=51.8u area=22.5p
+D7 PADP RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+D8 PADP RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+D9 PADN RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+D10 VSS PADP diode_nd2ps_06v0 pj=51.8u area=22.5p
+D11 VSS PADN diode_nd2ps_06v0 pj=51.8u area=22.5p
+D12 VSS PADP diode_nd2ps_06v0 pj=51.8u area=22.5p
+D13 PADP RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+D14 VSS PADN diode_nd2ps_06v0 pj=51.8u area=22.5p
+D15 PADN RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+C0 PADP PADN 4.8219f
+C1 PADN RAIL 21.8246f
+C2 PADP RAIL 21.8246f
+C3 PADP VSS 33.4454f
+C4 PADN VSS 34.0925f
+C5 RAIL VSS 53.204f
+DWELL VSS RAIL diode_nw2ps_06v0 area=569.4528p pj=470.72u
+.ends
+

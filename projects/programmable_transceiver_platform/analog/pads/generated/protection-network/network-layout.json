@@ -1,0 +1,59 @@
+{
+  "status": "connected_protection_network_DRC_and_device_LVS_pass_not_ESD_qualification",
+  "drc_count": 0,
+  "device_graph_lvs_match": true,
+  "physical_bleed_included": true,
+  "bleed_dc": {
+    "current_a": 3.21187546e-07,
+    "resistance_ohm": 10274370.97452091
+  },
+  "geometry": {
+    "bbox_um": "(-0.055,-2;274.5,288)",
+    "array_origin_um": [
+      150.0,
+      20.0
+    ],
+    "ports_um": {
+      "VSS": [
+        138.0,
+        4.0
+      ],
+      "RAIL": [
+        130.0,
+        4.0
+      ],
+      "PADP": [
+        186.0,
+        4.0
+      ],
+      "PADN": [
+        190.0,
+        4.0
+      ]
+    },
+    "routing_parameters": {
+      "rail_width_um": 8.0,
+      "return_width_um": 12.0,
+      "port_via_cuts_per_axis": 3,
+      "port_via_pitch_um": 0.6
+    },
+    "rail_route_length_um": 394.945,
+    "return_route_length_um": 388.095
+  },
+  "array_well_capacitance_removed_ff": 68.33433600000001,
+  "extracted_spice_sha256": "6d864b087415f406a9f5ff9b7aa9da6140e43c0f2af6d84be30e1aeb99564212",
+  "limitations": [
+    "Pad attachment is not implemented in this macro; bleed geometry and its extracted model are included.",
+    "Rail and return interconnect use single vias; discharge-current capacity unqualified.",
+    "Ordinary DRC and device LVS do not prove ESD survival."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_network.py": "d768bcde9e8898ad3c3510ca33e4ed023c67d324a6f772978d88a94844b52f5e",
+    "/home/ubuntu/svalbard/scratch/pad-via-array-inputs/protection-clamp/clamp.gds": "049a387fbcfd0472827c1b03b396290198980f7b7c568173233907913a769bc3",
+    "/home/ubuntu/svalbard/scratch/pad-via-array-inputs/protection-clamp/clamp-layout.json": "3146928dc5435e75cbdbc264aaf3eae4f0529046f535124a3136c57a4c513a6a",
+    "/home/ubuntu/svalbard/scratch/pad-via-array-inputs/protection-array/array.gds": "d1bbd09f7b32d06a124c8e178130a6ca216185cf85b16db1f01dcc89e2fea5d0",
+    "/home/ubuntu/svalbard/scratch/pad-via-array-inputs/protection-array/array-layout.json": "ecc893b8d38c49a274e0328b2766dc45c2969b75b55916b23c1e5af31d58fa22",
+    "/home/ubuntu/svalbard/scratch/pad-via-array-inputs/protection-bleed/bleed.gds": "ee35af9f4fdc8fa4890b9411912da4d0cafd019ec8ab4ee93636e2d8f0b32dd5",
+    "/home/ubuntu/svalbard/scratch/pad-via-array-inputs/protection-bleed/bleed-layout.json": "8371f915023bd3dc688730d63ff69053dbc079c3de5c046ae65503d2aab86dcb"
+  }
+}

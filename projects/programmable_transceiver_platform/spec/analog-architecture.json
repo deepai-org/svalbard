@@ -20,10 +20,10 @@
     "converters": 1300000,
     "digital": 1650000,
     "memory": 850000,
-    "reserve": 2150000,
-    "rf": 2860000,
-    "timing": 1600000,
-    "wired": 2510000
+    "reserve": 1760000,
+    "rf": 3000000,
+    "timing": 1670000,
+    "wired": 2690000
   },
   "blocks": {
     "adc_i": {
@@ -2600,7 +2600,7 @@
         "capacitance_f_per_leg": 2.7e-12,
         "common_mode_v": 1.65,
         "input_r_ohm": 100000.0,
-        "protection": "low-capacitance rail clamp and series limiter"
+        "protection": "Ground-referenced drain-SAB primary protection candidate, without an upper supply steering diode. The core common-mode bias path remains connected through its finite bias resistance. Trigger window, ESD current survival and attached receiver stress remain unqualified."
       },
       "ports": {
         "clock_in": {
@@ -2625,7 +2625,7 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 60000,
+        "area_ceiling_um2": 130000,
         "area_group": "timing",
         "current_budget_ma": {
           "rf_rx": 0,
@@ -2779,7 +2779,7 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 60000,
+        "area_ceiling_um2": 130000,
         "area_group": "rf",
         "current_budget_ma": {
           "rf_rx": 0,
@@ -2917,7 +2917,7 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 60000,
+        "area_ceiling_um2": 130000,
         "area_group": "rf",
         "current_budget_ma": {
           "rf_rx": 0,
@@ -4033,7 +4033,13 @@
         "capacitance_f_per_leg": 2.7e-12,
         "off_r_ohm": 1000000.0,
         "topology": "Protected differential pad with exclusive serial/TMDS/detect branches; detect routes two current-source outputs to same nodes sensed by detect.tx_pad. Ground-referenced primary protection and power-off-tolerant branch isolation prevent normal external pullups from back-powering WIRE_VDD through secondary clamps or output devices; physical protection window remains unqualified.",
-        "voltage_max_v": 3.6
+        "voltage_max_v": 3.6,
+        "termination_readiness": {
+          "max_reference_error_v": 0.0165,
+          "detector_time_constant_s": 1e-09,
+          "detector_assert_threshold": 0.99,
+          "scope": "First-pass modeled1percent-of1.65V window allocation; not measured detector performance or protocol deadline. Finite detector response followed by sequencer loaded dwell; readiness applies only when source termination is requested."
+        }
       },
       "ports": {
         "config": {
@@ -4073,7 +4079,7 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 180000,
+        "area_ceiling_um2": 250000,
         "area_group": "wired",
         "current_budget_ma": {
           "rf_rx": 0.1,
@@ -4546,7 +4552,7 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 180000,
+        "area_ceiling_um2": 290000,
         "area_group": "wired",
         "current_budget_ma": {
           "rf_rx": 0.2,
@@ -10309,7 +10315,8 @@
           "protection_capacitance_voltage_dependence",
           "input_leg_mismatch_bounds",
           "physical_clamp_stress"
-        ]
+        ],
+        "implementation_boundary": "Pad cell contains protection and common-mode bias resistors. Receiver and high/low clock branching are in refinput. Optional differential termination is an external board component, not an on-chip switched branch; include its loading in the selected external network."
       },
       "rf_receive": {
         "behavior": "Differential AC-coupled low-capacitance input; common mode and external source impedance explicit. No digital driver or USB/wired protection path.",
@@ -10575,7 +10582,8 @@
       "pll": 1,
       "rf": 1,
       "wire": 1
-    }
+    },
+    "rf_pad_area_accounting": "Each RF pair reserves130000um2 for the connected protection/pad implementation (measured reservation123842.11um2). Transfer140000um2 from unused reserve into RF; total die budget unchanged. This closes the planning-area overrun only, not core fit, protection-to-core coordination or RF margin."
   },
   "resource_totals": {
     "area_used_um2": {
@@ -10583,9 +10591,9 @@
       "digital": 1650000,
       "external": 0,
       "reserve": 1300000,
-      "rf": 2860000,
-      "timing": 1600000,
-      "wired": 2510000
+      "rf": 3000000,
+      "timing": 1670000,
+      "wired": 2690000
     },
     "current_ma": {
       "rf_rx": 251.9,

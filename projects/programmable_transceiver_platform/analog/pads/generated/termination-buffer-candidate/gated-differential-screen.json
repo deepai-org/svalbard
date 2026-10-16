@@ -1,0 +1,94 @@
+{
+  "status": "transistor_buffer_connected_gated_candidate",
+  "transient_complete": true,
+  "device_count": 205,
+  "windows": {
+    "disabled": {
+      "regulation_requested": false,
+      "vcm_min_v": 7.20914515e-07,
+      "vcm_max_v": 7.28370788e-07,
+      "max_reference_difference_v": 1.649999279085485,
+      "reference_min_v": 1.64999995,
+      "reference_max_v": 1.65,
+      "peak_supply_draw_a": 0.00195001546,
+      "peak_supply_return_a": 0.0
+    },
+    "active_tmds": {
+      "regulation_requested": false,
+      "vcm_min_v": -3.12993423e-05,
+      "vcm_max_v": 9.42476392e-05,
+      "max_reference_difference_v": 1.6500241523172,
+      "reference_min_v": 1.64998771,
+      "reference_max_v": 1.65001536,
+      "peak_supply_draw_a": 0.0019644349,
+      "peak_supply_return_a": 0.0
+    },
+    "reset": {
+      "regulation_requested": false,
+      "vcm_min_v": -0.00140939948,
+      "vcm_max_v": -0.00118815598,
+      "max_reference_difference_v": 1.65145370948,
+      "reference_min_v": 1.65000921,
+      "reference_max_v": 1.65004431,
+      "peak_supply_draw_a": 0.00194998568,
+      "peak_supply_return_a": 0.0
+    },
+    "unpowered": {
+      "regulation_requested": false,
+      "vcm_min_v": -0.0986196468,
+      "vcm_max_v": -0.0450441788,
+      "max_reference_difference_v": 0.1386315717,
+      "reference_min_v": 0.00129302616,
+      "reference_max_v": 0.0400119249,
+      "peak_supply_draw_a": 0.0,
+      "peak_supply_return_a": 0.000151327869
+    },
+    "active_main": {
+      "regulation_requested": true,
+      "vcm_min_v": 1.67648339,
+      "vcm_max_v": 1.75844754,
+      "max_reference_difference_v": 0.1042221200000002,
+      "reference_min_v": 1.63578077,
+      "reference_max_v": 1.65512679,
+      "peak_supply_draw_a": 0.0178225019,
+      "peak_supply_return_a": 0.0
+    },
+    "active_main_post": {
+      "regulation_requested": true,
+      "vcm_min_v": 1.69732432,
+      "vcm_max_v": 1.71107481,
+      "max_reference_difference_v": 0.06437578,
+      "reference_min_v": 1.64448574,
+      "reference_max_v": 1.6510162,
+      "peak_supply_draw_a": 0.0166426412,
+      "peak_supply_return_a": 0.0
+    },
+    "reconfiguration": {
+      "regulation_requested": true,
+      "vcm_min_v": 1.75391234,
+      "vcm_max_v": 1.91436362,
+      "max_reference_difference_v": 0.25223551,
+      "reference_min_v": 1.65104586,
+      "reference_max_v": 1.66486638,
+      "peak_supply_draw_a": 0.0336750369,
+      "peak_supply_return_a": 0.00363557983
+    }
+  },
+  "gated": true,
+  "scope": "Transistor enable/isolation with prescribed precharge/hold and behavioral TX_VALID; autonomous supervisor, current limiting, terminal stress and layout remain open. Same extracted TX and selected external load throughout; Divider bias is a prototype, not a qualified reference. Ideal compensation passives; transistor-core extraction is used only when physical_core_used is true; no connected compensation or pad-to-buffer layout.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-tx-connected-primary-screen/lifecycle.spice": "65c1be2c7d6504d2aee8d2a6e3425786c3f5b335eaa27e54b79bba79e3cacfae",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer.py": "b441a82ce9f510c2dfeaa509d75194b4b639b2814415e9d855ef1b6c1e9f700d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer_connected.py": "0949e40123e6df86b410758255d959fef2638c19abf1d770e2a3d68bd0fe8b10",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-gated-differential/connected.spice": "6e0800ee2615638b0466e56199f20f4639dbe1d9605687808985493eb7fa5bd6",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "2d773c18090b57a6e54291f99d6f828730f843674fe6ceee8a7cdfdda5a58b4d",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-gated-layout-startup/physical.spice": "9612c21659758ae597216dbc7921149ecef32d611a2701689a5cc869ab621280"
+  },
+  "external_load": "differential",
+  "bias_network": {
+    "divider_scale": 0.1,
+    "shunt_cap_pf": 1.0,
+    "scope": "Explicit passive reference/bias hypothesis; not laid out or qualified."
+  },
+  "physical_core_used": true
+}

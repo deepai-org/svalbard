@@ -1,0 +1,15 @@
+--- a/src/spicelib/devices/dio/dioload.c
++++ b/src/spicelib/devices/dio/dioload.c
+@@ -556,7 +556,11 @@
+                     deplcapSW = czeroSW*sargSW;
+                 } else {
+                     czof2SW=czeroSW/here->DIOtF2SW;
+-                    deplchargeSW = czeroSW*here->DIOtF1+czof2SW*(here->DIOtF3SW*(vdx-here->DIOtDepSWCap)+
++                    /* Match sidewall charge at its own forward-capacitance boundary.
++                     * The area-junction F1 uses different PB/M/FC parameters. */
++                    deplchargeSW = czeroSW*here->DIOtJctSWPot*
++                        (1-exp((1-model->DIOgradingSWCoeff)*log(1-model->DIOdepletionSWcapCoeff)))/
++                        (1-model->DIOgradingSWCoeff)+czof2SW*(here->DIOtF3SW*(vdx-here->DIOtDepSWCap)+
+                                    (model->DIOgradingSWCoeff/(here->DIOtJctSWPot+here->DIOtJctSWPot))*(vdx*vdx-here->DIOtDepSWCap*here->DIOtDepSWCap));
+                     deplcapSW = czof2SW*(here->DIOtF3SW+model->DIOgradingSWCoeff*vdx/here->DIOtJctSWPot);
+                 }

@@ -1,0 +1,215 @@
+{
+  "status": "protected_RF_pair_fits_reference_ring_geometry_budget_and_electrical_acceptance_open",
+  "roundtrip_all_bond_openings_match": true,
+  "bond_opening_count": 74,
+  "custom_to_custom_metal_overlaps": [],
+  "rf_cells": {
+    "rf_receive": {
+      "reference_sites": [
+        "inputs[11].pad",
+        "inputs[10].pad"
+      ],
+      "bond_openings_match": true,
+      "bbox_um": [
+        26.0,
+        1362.945,
+        754.0,
+        1649.0
+      ],
+      "allocated_region_area_um2": 113933.90999999999,
+      "geometry_within_allocation": true,
+      "area_ceiling_um2": 60000,
+      "region_area_within_ceiling": false,
+      "transform": {
+        "rotation": 1,
+        "mirror": true,
+        "x_um": 26.0,
+        "y_um": 1363.0
+      },
+      "gds_sha256": "ff8663954ce0694afc636a76da4ab8617ebda57fc98e78f4b50777830d5841cf",
+      "layout_report_sha256": "b085052430930d8aa1c3e8c38e1d461b1c509651a22be38cc5c2c295a3ab95bd",
+      "retained_metal_overlaps": {
+        "metal3": {
+          "area_um2": 8.0,
+          "region_count": 2,
+          "example_boxes_um": [
+            [
+              103.305,
+              1372.0,
+              105.305,
+              1374.0
+            ],
+            [
+              103.305,
+              1583.0,
+              105.305,
+              1585.0
+            ]
+          ]
+        },
+        "metal4": {
+          "area_um2": 8.0,
+          "region_count": 2,
+          "example_boxes_um": [
+            [
+              103.305,
+              1372.0,
+              105.305,
+              1374.0
+            ],
+            [
+              103.305,
+              1583.0,
+              105.305,
+              1585.0
+            ]
+          ]
+        },
+        "metal5": {
+          "area_um2": 8.0,
+          "region_count": 2,
+          "example_boxes_um": [
+            [
+              103.305,
+              1372.0,
+              105.305,
+              1374.0
+            ],
+            [
+              103.305,
+              1583.0,
+              105.305,
+              1585.0
+            ]
+          ]
+        }
+      },
+      "declared_ground_landing_overlaps": {
+        "metal3": {
+          "area_um2": 8.0,
+          "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+        },
+        "metal4": {
+          "area_um2": 8.0,
+          "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+        },
+        "metal5": {
+          "area_um2": 8.0,
+          "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+        }
+      },
+      "unexpected_retained_metal_overlaps": {}
+    },
+    "rf_transmit": {
+      "reference_sites": [
+        "inputs[5].pad",
+        "inputs[4].pad"
+      ],
+      "bond_openings_match": true,
+      "bbox_um": [
+        26.0,
+        3050.945,
+        754.0,
+        3337.0
+      ],
+      "allocated_region_area_um2": 113933.90999999999,
+      "geometry_within_allocation": true,
+      "area_ceiling_um2": 60000,
+      "region_area_within_ceiling": false,
+      "transform": {
+        "rotation": 1,
+        "mirror": true,
+        "x_um": 26.0,
+        "y_um": 3051.0
+      },
+      "gds_sha256": "ff8663954ce0694afc636a76da4ab8617ebda57fc98e78f4b50777830d5841cf",
+      "layout_report_sha256": "621a5d8a7d25311205881089ca34f7d5b30ea32522bb490db445dcd1b3bdb65c",
+      "retained_metal_overlaps": {
+        "metal3": {
+          "area_um2": 8.0,
+          "region_count": 2,
+          "example_boxes_um": [
+            [
+              103.305,
+              3060.0,
+              105.305,
+              3062.0
+            ],
+            [
+              103.305,
+              3271.0,
+              105.305,
+              3273.0
+            ]
+          ]
+        },
+        "metal4": {
+          "area_um2": 8.0,
+          "region_count": 2,
+          "example_boxes_um": [
+            [
+              103.305,
+              3060.0,
+              105.305,
+              3062.0
+            ],
+            [
+              103.305,
+              3271.0,
+              105.305,
+              3273.0
+            ]
+          ]
+        },
+        "metal5": {
+          "area_um2": 8.0,
+          "region_count": 2,
+          "example_boxes_um": [
+            [
+              103.305,
+              3060.0,
+              105.305,
+              3062.0
+            ],
+            [
+              103.305,
+              3271.0,
+              105.305,
+              3273.0
+            ]
+          ]
+        }
+      },
+      "declared_ground_landing_overlaps": {
+        "metal3": {
+          "area_um2": 8.0,
+          "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+        },
+        "metal4": {
+          "area_um2": 8.0,
+          "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+        },
+        "metal5": {
+          "area_um2": 8.0,
+          "scope": "Geometric overlap at declared DVSS landing only; not extracted rail connectivity or current-capacity signoff."
+        }
+      },
+      "unexpected_retained_metal_overlaps": {}
+    }
+  },
+  "reservation_correction": "Use complete native bond-stack height from GDS, not 64um opening-based reservation.",
+  "decision": "Treat 60000um2 per pair as a provisional budget conflict, not demonstrated inability to fit the die. Full core placement and rail connectivity remain required before reallocating or adopting.",
+  "limitations": [
+    "Geometry-only substitution, not electrical or ESD signoff.",
+    "No complete core floorplan or high-frequency coupling analysis.",
+    "Source manifests of the standalone electrical alternative still require refresh after generator changes.",
+    "Does not waive RF loss or transient protection gaps."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-protected-rf-placement/placement-audit.json": "e849f65d6ad987e1b774caa065aab138583bdb23cfaf9b8ac3da214a7fcb51ec",
+    "/home/ubuntu/svalbard/scratch/pad-protected-rf-placement/candidate_rf_receive.gds": "ff8663954ce0694afc636a76da4ab8617ebda57fc98e78f4b50777830d5841cf",
+    "/home/ubuntu/svalbard/scratch/pad-protected-rf-placement/candidate_rf_receive-layout.json": "b085052430930d8aa1c3e8c38e1d461b1c509651a22be38cc5c2c295a3ab95bd",
+    "/home/ubuntu/svalbard/scratch/pad-protected-rf-placement/candidate_rf_transmit-layout.json": "621a5d8a7d25311205881089ca34f7d5b30ea32522bb490db445dcd1b3bdb65c",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_pad.py": "be1572ec01523d5420062257d457bb173f38207ab056486da3ed69def3d975db"
+  }
+}

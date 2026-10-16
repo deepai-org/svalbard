@@ -1,0 +1,28 @@
+{
+  "status": "change_primary_clamp_response_before_adoption",
+  "positive_pulse_pad_peak_v": 7.52479175,
+  "positive_pulse_rail_peak_v": 6.61431348,
+  "negative_pulse_pad_min_v": -0.850138691,
+  "decision": "Keep the connected TX layout as the integration base; do not adopt its primary protection unchanged. Prioritize clamp trigger/rail response from the wired powered-peer initial bias. Area funding alone would not close the protection issue.",
+  "scope": "Diagnostic 2ns current pulses with retained peer and ideal supply waveform; no ESD rating or inferred device damage threshold.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-tx-connected-primary-pulses/pulse-screen.json": "72194c1f44ac3af04eff66862ca9c2d40acd01952b467244f8d22603c1285369",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-primary-protection/feedforward-pulse-screen.json": "2402a5cd0621871254a5d691e598e4b6e31d82234c1481807b05b311fb587a0f",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-primary-protection/feedforward-no-injection.json": "76c5e0b5051f1b5a8e716973c09efd9595b58c77c370b4c565a81f7219bf0053",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-primary-protection/feedforward-loading.json": "faa51358062ee639f4c34811d1099d0f3ae9195da364710bd7b2b5901b90ba23",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-primary-protection/feedforward-composition.json": "b591b21b8de002003ee1593be035e7aa792bb3d365b7c665a8836482e7a0bd7d"
+  },
+  "feedforward_candidate": {
+    "positive_pulse_pad_peak_v": 6.42101109,
+    "reduction_v": 1.10378066,
+    "negative_pulse_pad_min_v": -0.850137503,
+    "decision": "Do not adopt on peak reduction alone. Complete primary-to-core protection coordination; feed-forward alone does not establish a safe terminal envelope.",
+    "physical_scope": "Extracted standalone MIM attached to combined TX extraction; capacitor placement and connecting routes not integrated.",
+    "remaining_checks": [
+      "Core terminal voltage-duration limits and coordinated secondary protection",
+      "Cold startup and powered-peer initial conditions",
+      "Distributed routing resistance and current capacity",
+      "Combined capacitor placement and extraction if selected"
+    ]
+  }
+}

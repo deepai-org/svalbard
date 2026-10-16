@@ -1,0 +1,47 @@
+{
+  "status": "current_primary_pad_geometry_funded_within_unchanged_die_budget",
+  "changes": {
+    "txpad": {
+      "before_um2": 180000,
+      "after_um2": 250000,
+      "reserve_transfer_um2": 70000
+    },
+    "wirepad": {
+      "before_um2": 180000,
+      "after_um2": 290000,
+      "reserve_transfer_um2": 110000
+    },
+    "refpad": {
+      "before_um2": 60000,
+      "after_um2": 130000,
+      "reserve_transfer_um2": 70000
+    }
+  },
+  "families": {
+    "wired_transmit": {
+      "geometry_area_um2": 240640.33,
+      "block": "txpad",
+      "budget_um2": 250000,
+      "remaining_um2": 9359.670000000013,
+      "geometry_sha256": "8c869c6ef6b3bffc525718ea594acb9c20f7051b9082d122bf741f5effa64544"
+    },
+    "wired_receive_usb": {
+      "geometry_area_um2": 283002.57269999996,
+      "block": "wirepad",
+      "budget_um2": 290000,
+      "remaining_um2": 6997.427300000039,
+      "geometry_sha256": "3c6e2a7afb0451a7b91256e54980a4545bb18c1651d27c1bc2fca303631ab04f"
+    },
+    "reference_clock": {
+      "geometry_area_um2": 127170.32999999999,
+      "block": "refpad",
+      "budget_um2": 130000,
+      "remaining_um2": 2829.670000000013,
+      "geometry_sha256": "f7499ac8b7abbdd67aaa0b4925a16ec685cf5b8eb707db2a1b83b0aaf2cafb03"
+    }
+  },
+  "total_area_budget_um2": 12920000,
+  "unassigned_reserve_after_existing_allocations_um2": 460000,
+  "scope": "Allocation-only update. Existing electrical reports retain original source hashes; no electrical parameters or geometry changed. Historic placement metadata records previous ceilings; this report evaluates identical GDS against current shared ceilings. Buffer/bias/controller integration, whole-core placement, full-ring LVS and current capacity remain open.",
+  "architecture_sha256": "31ff538f4d198f8559b7a62d3dc7dece47a0d2e702eb31c344d09bedd22dd77b"
+}

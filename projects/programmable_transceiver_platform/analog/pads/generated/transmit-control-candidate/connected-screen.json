@@ -1,0 +1,51 @@
+{
+  "status": "connected_extracted_control_diagnostic",
+  "windows": {
+    "reset": {
+      "vcm_min_v": -0.00156597553,
+      "vcm_max_v": -0.00130717311,
+      "peak_supply_draw_a": 0.00246361354,
+      "termination_enable_max_v": 5.48808388e-05
+    },
+    "unpowered": {
+      "vcm_min_v": -0.105968219,
+      "vcm_max_v": -0.0487190015,
+      "peak_supply_draw_a": -2.20364116e-05,
+      "termination_enable_max_v": -0.348875398
+    },
+    "main_settled": {
+      "vcm_min_v": 1.63972771,
+      "vcm_max_v": 1.6520748,
+      "peak_supply_draw_a": 0.0288022297,
+      "termination_enable_max_v": 3.30054695
+    },
+    "post_settled": {
+      "vcm_min_v": 1.6151546,
+      "vcm_max_v": 1.6357301,
+      "peak_supply_draw_a": 0.0312715941,
+      "termination_enable_max_v": 3.3013746
+    },
+    "release": {
+      "vcm_min_v": 1.68299616,
+      "vcm_max_v": 2.46001185,
+      "peak_supply_draw_a": 0.0310837923,
+      "termination_enable_max_v": 3.35927054
+    },
+    "disabled": {
+      "vcm_min_v": 0.733731595,
+      "vcm_max_v": 0.987781704,
+      "peak_supply_draw_a": 0.0056050175,
+      "termination_enable_max_v": 0.00576970989
+    }
+  },
+  "scope": "Same extracted pad/buffer and external network; static interlock replaced with extracted88MOS circuit. Direct TERM_ENABLE loading. Other outputs retain ideal serializer/bias boundary translation and do not exercise actual fanout. Supply monitor and qualification remain behavioral; no implemented blanking or readiness sequencer. Not adoption or protocol acceptance.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_control_connected.py": "c7ebd066c2428dc8b976068b2118e04334019d002eea079fb27a6d7621db6ad3",
+    "/home/ubuntu/svalbard/scratch/pad-tx-sustained-loaded-hold/hold.spice": "c4cee0bded46d3df6fdbdf1cdcf57fb53805c1978850341cc77bc75999368975",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/transmit-control-candidate/physical.spice": "c90a852b4afe26f581263ab09c02d3e2f914a3a5c05fae918018a730b6040ffe",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "31ff538f4d198f8559b7a62d3dc7dece47a0d2e702eb31c344d09bedd22dd77b",
+    "/home/ubuntu/svalbard/scratch/pad-tx-extracted-control-connected/connected.spice": "360541ebc1308e0bc0b533b63336eb8965b18400e2da999e4cc807bf127ad26b"
+  },
+  "unpowered_termination_enable_min_v": -0.352206416,
+  "interpretation": "Loaded nominal plateaus remain near behavioral-control baseline. Unpowered termination-enable becomes negative: retained charge/control clamping needs terminal-stress and recovery analysis. This is an integration diagnostic, not safe-state acceptance."
+}

@@ -1,0 +1,71 @@
+{
+  "status": "connected_static_regulation_not_startup_acceptance",
+  "cases": {
+    "main": {
+      "error_limit_v": 0.0165,
+      "max_reference_error_v": 0.0041524200000000455,
+      "within_nominal_window": true,
+      "states": [
+        {
+          "data_v": 0.0,
+          "vcm_v": 1.64582444,
+          "reference_v": 1.64997686,
+          "bias_v": 0.899996382,
+          "gain_v": 1.34762853,
+          "local_out_v": 2.1876171,
+          "pad_p_v": 1.42527005,
+          "pad_n_v": 0.929592216,
+          "supply_source_current_a": -0.0319547892
+        },
+        {
+          "data_v": 3.3,
+          "vcm_v": 1.64617654,
+          "reference_v": 1.65,
+          "bias_v": 0.899999998,
+          "gain_v": 1.34768314,
+          "local_out_v": 2.1859837,
+          "pad_p_v": 0.929801397,
+          "pad_n_v": 1.42544231,
+          "supply_source_current_a": -0.0319281301
+        }
+      ]
+    },
+    "main_post": {
+      "error_limit_v": 0.0165,
+      "max_reference_error_v": 0.005184099999999914,
+      "within_nominal_window": true,
+      "states": [
+        {
+          "data_v": 0.0,
+          "vcm_v": 1.64478623,
+          "reference_v": 1.64997033,
+          "bias_v": 0.900000718,
+          "gain_v": 0.986306534,
+          "local_out_v": 2.65534117,
+          "pad_p_v": 1.12709754,
+          "pad_n_v": 0.866602461,
+          "supply_source_current_a": -0.0346547173
+        },
+        {
+          "data_v": 3.3,
+          "vcm_v": 1.64601465,
+          "reference_v": 1.65000381,
+          "bias_v": 0.900003561,
+          "gain_v": 1.26695354,
+          "local_out_v": 2.38077324,
+          "pad_p_v": 0.815697432,
+          "pad_n_v": 1.39035932,
+          "supply_source_current_a": -0.0339167932
+        }
+      ]
+    }
+  },
+  "scope": "Measure connected static TX regulation separately from startup settling.\n\nExact extracted pad/buffer/control and external network; only source settings\nare held in active DC states. Does not replace retained-state transient tests.\n",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_loaded_dc.py": "2cd12e634adcd06b70dd52f6778be09104c2ae3680dd15b8f7e715ff1f4e955e",
+    "/home/ubuntu/svalbard/scratch/pad-tx-source1280-hypothesis.spice": "63b9d7b30df8b6939cd3e279a3e95c1820d6078169bfbe8f165f554dfd6859ff",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "7c4b09b56910abe0eaa594a0cefae3c676706596c713ba8f04cb737367fcce57",
+    "/home/ubuntu/svalbard/scratch/pad-tx-source1280-loaded-dc/main.spice": "ffd7cc04ae82b0d7b877e8a44e05c745701dcbdb2caced0e13cbf6457ab24a44",
+    "/home/ubuntu/svalbard/scratch/pad-tx-source1280-loaded-dc/main_post.spice": "311038f571982c1dd0385423a35fcd356c897ef6609caae482c7faaf26884338"
+  }
+}

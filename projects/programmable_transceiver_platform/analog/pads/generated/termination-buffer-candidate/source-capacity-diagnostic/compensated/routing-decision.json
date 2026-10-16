@@ -1,0 +1,17 @@
+{
+  "decision": "Keep bounded internal routing in the249-device buffer candidate; do not adopt buffer into canonical TX yet.",
+  "sum_extracted_lumped_capacitance_pf": {
+    "previous": 9.49133248,
+    "current": 7.218772619999998
+  },
+  "source_step_last_outside_1percent_band_after_edge_ns": {
+    "previous": 21.69,
+    "current": 13.25
+  },
+  "scope": "Same circuit, device graph, compensation, load and nominal conditions.1percent is a comparative diagnostic band, not an allocated ready deadline. Full TX lifecycle retains large loaded error and reconfiguration excursion.",
+  "sustained_loaded_update": {
+    "report": "sustained-hold.json",
+    "finding": "MAIN-only late window reaches at most9.56mV reference error; MAIN+POST late window still reaches33.48mV. Early failure remains. Load release reaches2.432V and sampled post-disable supply draw reaches33.49mA; attribute current and verify shutdown before adoption.",
+    "scope": "No protocol deadline, turn-off safety or ready detector qualification. Extended dwell is diagnostic only."
+  }
+}

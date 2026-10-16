@@ -1,0 +1,101 @@
+{
+  "status": "autonomous_assist_tradeoffs_not_adopted",
+  "cases": {
+    "direct_pmos": {
+      "status": "autonomous_RC_driven_PMOS_assist_schematic_probe_not_layout",
+      "parameters": {
+        "parallel_pmos": 24,
+        "width_um_each": 5,
+        "length_um": 0.7,
+        "timing_node": "a_1005_131545#"
+      },
+      "results": {
+        "lifecycle": {
+          "transient_complete": true,
+          "power_dbm": {
+            "active": 0.1629780134881747,
+            "reactivated": 0.16799822872585166
+          }
+        },
+        "pulse": {
+          "transient_complete": true,
+          "pulse": {
+            "core_to_return_v": {
+              "min": 1.64614623,
+              "max": 4.51523301
+            },
+            "rail_to_return_v": {
+              "min": 1.15106154,
+              "max": 3.62107924
+            },
+            "gate_to_return_v": {
+              "min": -1.01177383e-05,
+              "max": 1.23789252
+            },
+            "timing_to_return_v": {
+              "min": 1.11920905,
+              "max": 1.39956444
+            }
+          }
+        }
+      },
+      "limitations": [
+        "Additional PMOS geometry and junction/routing parasitics not extracted.",
+        "Existing RC node and all original circuitry retained; no external trigger.",
+        "Cold-start ramp, RF false triggering, corners and current capacity not qualified."
+      ],
+      "source_sha256": {
+        "/home/ubuntu/svalbard/scratch/pad-wide-bond-corridor-maxgain-corner/lifecycle.spice": "bb37e0c8f973c6eb0281f5e697a95f50de039755409784a70e4dc4de70483bee",
+        "/home/ubuntu/svalbard/scratch/pad-wide-bond-corridor-pulses/positive_100mA.spice": "9f76bbb14c29f6fc41063b1c6fc62cad21090196f22900fa2e0bdd6adb0cc2be",
+        "/home/ubuntu/svalbard/scratch/pad-clamp-autonomous-assist.py": "e36c404ea2ed41d2f56e3db9ef851bcbb04ac93949cc64623326c50b4eba40ac"
+      }
+    },
+    "capacitive_feedforward": {
+      "status": "autonomous_capacitive_feedforward_probe_not_layout",
+      "parameters": {
+        "feedforward_capacitance_f": 1e-11
+      },
+      "results": {
+        "lifecycle": {
+          "transient_complete": true,
+          "power_dbm": {
+            "active": 0.1579767998808747,
+            "reactivated": 0.1638348058131745
+          }
+        },
+        "pulse": {
+          "transient_complete": true,
+          "pulse": {
+            "core_to_return_v": {
+              "min": 1.64603877,
+              "max": 3.95168674
+            },
+            "rail_to_return_v": {
+              "min": 1.13278364,
+              "max": 2.95922002
+            },
+            "gate_to_return_v": {
+              "min": -1.69824487e-05,
+              "max": 1.04716704
+            },
+            "timing_to_return_v": {
+              "min": 1.11103198,
+              "max": 1.22459808
+            }
+          }
+        }
+      },
+      "limitations": [
+        "Added capacitor is ideal; MIM geometry and routing parasitics not extracted.",
+        "Existing RC node and all original circuitry retained; no external trigger.",
+        "Cold-start ramp, RF false triggering, corners and current capacity not qualified."
+      ],
+      "source_sha256": {
+        "/home/ubuntu/svalbard/scratch/pad-wide-bond-corridor-maxgain-corner/lifecycle.spice": "bb37e0c8f973c6eb0281f5e697a95f50de039755409784a70e4dc4de70483bee",
+        "/home/ubuntu/svalbard/scratch/pad-wide-bond-corridor-pulses/positive_100mA.spice": "9f76bbb14c29f6fc41063b1c6fc62cad21090196f22900fa2e0bdd6adb0cc2be",
+        "/home/ubuntu/svalbard/scratch/pad-clamp-feedforward.py": "8a9e56de2ff850ddc574de6da3d8211a9647b1d19aa759ac3b6cc5866e103880"
+      }
+    }
+  },
+  "decision": "Reject direct RC-node PMOS assist as insufficient benefit. Capacitive feedforward merits further integrated evaluation, but 10pF still leaves a 3.95V core peak and has no implemented layout or safety qualification."
+}

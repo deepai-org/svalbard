@@ -1,0 +1,108 @@
+{
+  "status": "schematic_restore_sizing_not_layout_or_reset_qualification",
+  "external_network_unchanged": true,
+  "cases": {
+    "4.0": {
+      "transient_complete": true,
+      "windows": {
+        "power_collapse": {
+          "peak_supply_backfeed_a": 0.0371927659,
+          "positive_supply_charge_c": 3.4173302443200015e-11,
+          "pad_min_v": 0.393506431,
+          "pad_max_v": 2.96506449
+        },
+        "late_unpowered": {
+          "peak_supply_backfeed_a": 1.44171135e-06,
+          "positive_supply_charge_c": 1.5843115102209984e-14,
+          "pad_min_v": 2.98355281,
+          "pad_max_v": 2.99934513
+        },
+        "brownout": {
+          "peak_supply_backfeed_a": 0.00815082445,
+          "positive_supply_charge_c": 2.267652754770001e-11,
+          "pad_min_v": 1.57165828,
+          "pad_max_v": 2.82672321
+        },
+        "recovered": {
+          "peak_supply_backfeed_a": 0.0,
+          "positive_supply_charge_c": 0.0,
+          "pad_min_v": 3.12785663,
+          "pad_max_v": 3.29017538
+        }
+      },
+      "deck_sha256": "017d7e512f0f24db0cfdc456903d7de914f2bb458c1a1b08f335a3a3531ff19b"
+    },
+    "8.0": {
+      "transient_complete": true,
+      "windows": {
+        "power_collapse": {
+          "peak_supply_backfeed_a": 0.0372305673,
+          "positive_supply_charge_c": 3.352890595220001e-11,
+          "pad_min_v": 0.393318094,
+          "pad_max_v": 2.96420624
+        },
+        "late_unpowered": {
+          "peak_supply_backfeed_a": 1.31096942e-06,
+          "positive_supply_charge_c": 1.5712910932209986e-14,
+          "pad_min_v": 2.98444549,
+          "pad_max_v": 2.99939807
+        },
+        "brownout": {
+          "peak_supply_backfeed_a": 0.00788662184,
+          "positive_supply_charge_c": 2.35080202347e-11,
+          "pad_min_v": 1.57217833,
+          "pad_max_v": 2.85845351
+        },
+        "recovered": {
+          "peak_supply_backfeed_a": 0.0,
+          "positive_supply_charge_c": 0.0,
+          "pad_min_v": 3.12788408,
+          "pad_max_v": 3.29017538
+        }
+      },
+      "deck_sha256": "dae1b2f63bc2c897120c000077668122bd9d1ec8b1d7ca2d3cf72c834189864f"
+    },
+    "20.0": {
+      "transient_complete": true,
+      "windows": {
+        "power_collapse": {
+          "peak_supply_backfeed_a": 0.0373399411,
+          "positive_supply_charge_c": 3.298213519480001e-11,
+          "pad_min_v": 0.392761323,
+          "pad_max_v": 2.96171583
+        },
+        "late_unpowered": {
+          "peak_supply_backfeed_a": 1.37511405e-06,
+          "positive_supply_charge_c": 1.6426682189689983e-14,
+          "pad_min_v": 2.98510645,
+          "pad_max_v": 2.99942326
+        },
+        "brownout": {
+          "peak_supply_backfeed_a": 0.00708770598,
+          "positive_supply_charge_c": 1.9395175168259993e-11,
+          "pad_min_v": 1.6172553,
+          "pad_max_v": 2.92871156
+        },
+        "recovered": {
+          "peak_supply_backfeed_a": 0.0,
+          "positive_supply_charge_c": 0.0,
+          "pad_min_v": 3.12795114,
+          "pad_max_v": 3.29017538
+        }
+      },
+      "deck_sha256": "1ea159841877bc5e7db8c361ab1b0caaa6fe4179fbe371afc509283eeb9be824"
+    }
+  },
+  "limitations": [
+    "No extracted metal capacitance.",
+    "Fixed 3.3V stale enables; no reset or power-good supervisor.",
+    "Supply-return current includes displacement charge."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/receive_restore.py": "c31dcb2d54b1c839363c3729af52bc91ae10632b31c02561025d28d3ff889c7a",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "0974c3c93656155b4746d36214503858d7a7c5e8fe29913d27518c4f2e126db8",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/wired_receive.py": "44eacc18a6a3a08eee141e47bcaacf6f6a10a41103f467c90642b07d7627f2dc",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/circuits.py": "798aabb3c4aa416da9469b0c5be3ec5a4d30a428f5f5ca13ce31f1ef284e458a"
+  },
+  "decision": "Keep current restore size pending supply-qualified control; sizing alone does not close retained-peer brownout backfeed."
+}

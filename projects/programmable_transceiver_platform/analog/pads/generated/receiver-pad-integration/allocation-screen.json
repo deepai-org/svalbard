@@ -1,0 +1,23 @@
+{
+  "status": "provider_placement_clear_combined_pad_core_allocation_explicit",
+  "all_bond_openings_match": true,
+  "custom_to_custom_overlaps": [],
+  "unexpected_retained_overlaps": {},
+  "allocation": {
+    "base_pad_um2": 179978.19999999998,
+    "connected_macro_total_um2": 183254.78999999998,
+    "incremental_receiver_core_and_routes_um2": 3276.5899999999965,
+    "wirepad_budget_um2": 180000,
+    "rxlevel_budget_um2": 50000,
+    "base_pad_within_own_budget": true,
+    "increment_within_rxlevel_budget": true,
+    "remaining_rxlevel_allowance_before_other_core_work_um2": 46723.41
+  },
+  "decision": "Account original pad footprint to wirepad and incremental discharge/route area to rxlevel. No increase to shared block or die budgets; remaining rxlevel circuitry must fit its residual allowance. Whole-core fit is not established.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "0974c3c93656155b4746d36214503858d7a7c5e8fe29913d27518c4f2e126db8",
+    "/home/ubuntu/svalbard/scratch/pad-rx-combined-provider-placement/placement-audit.json": "db3d333c68167005bd8cb491f4af6dedf1785bc1fbc04884f4060dbece8d296b",
+    "/home/ubuntu/svalbard/scratch/pad-rx-combined-provider-placement/candidate_wired_receive_usb-layout.json": "6a593dec5ad3d693398091a854b589a5e1c0d33d1ee2a63825628247136159e1",
+    "/home/ubuntu/svalbard/scratch/pad-tx-hv-control-assembly/placement-audit.json": "59d2d5029ce5c3ac6e4f69bd1807548b5df1aaa1bcca5e11e7e59f47b784c37f"
+  }
+}

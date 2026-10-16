@@ -1,0 +1,163 @@
+{
+  "status": "connected_array_DRC_and_diode_graph_pass_not_ESD_qualification",
+  "drc_count": 0,
+  "fingers_per_diode": 4,
+  "diode_count": 16,
+  "geometry": {
+    "bbox_um": "(-21,-17;41,137)",
+    "placements": [
+      {
+        "model": "diode_nd2ps_06v0",
+        "pad": "PADP",
+        "origin_um": [
+          0.0,
+          0
+        ]
+      },
+      {
+        "model": "diode_nd2ps_06v0",
+        "pad": "PADP",
+        "origin_um": [
+          8.0,
+          0
+        ]
+      },
+      {
+        "model": "diode_nd2ps_06v0",
+        "pad": "PADP",
+        "origin_um": [
+          16.0,
+          0
+        ]
+      },
+      {
+        "model": "diode_nd2ps_06v0",
+        "pad": "PADP",
+        "origin_um": [
+          24.0,
+          0
+        ]
+      },
+      {
+        "model": "diode_pd2nw_06v0",
+        "pad": "PADP",
+        "origin_um": [
+          0.0,
+          40
+        ]
+      },
+      {
+        "model": "diode_pd2nw_06v0",
+        "pad": "PADP",
+        "origin_um": [
+          8.0,
+          40
+        ]
+      },
+      {
+        "model": "diode_pd2nw_06v0",
+        "pad": "PADP",
+        "origin_um": [
+          16.0,
+          40
+        ]
+      },
+      {
+        "model": "diode_pd2nw_06v0",
+        "pad": "PADP",
+        "origin_um": [
+          24.0,
+          40
+        ]
+      },
+      {
+        "model": "diode_nd2ps_06v0",
+        "pad": "PADN",
+        "origin_um": [
+          0.0,
+          80
+        ]
+      },
+      {
+        "model": "diode_nd2ps_06v0",
+        "pad": "PADN",
+        "origin_um": [
+          8.0,
+          80
+        ]
+      },
+      {
+        "model": "diode_nd2ps_06v0",
+        "pad": "PADN",
+        "origin_um": [
+          16.0,
+          80
+        ]
+      },
+      {
+        "model": "diode_nd2ps_06v0",
+        "pad": "PADN",
+        "origin_um": [
+          24.0,
+          80
+        ]
+      },
+      {
+        "model": "diode_pd2nw_06v0",
+        "pad": "PADN",
+        "origin_um": [
+          0.0,
+          120
+        ]
+      },
+      {
+        "model": "diode_pd2nw_06v0",
+        "pad": "PADN",
+        "origin_um": [
+          8.0,
+          120
+        ]
+      },
+      {
+        "model": "diode_pd2nw_06v0",
+        "pad": "PADN",
+        "origin_um": [
+          16.0,
+          120
+        ]
+      },
+      {
+        "model": "diode_pd2nw_06v0",
+        "pad": "PADN",
+        "origin_um": [
+          24.0,
+          120
+        ]
+      }
+    ],
+    "buses_um": {
+      "VSS": -12.0,
+      "RAIL": -20.0,
+      "PADP": 36.0,
+      "PADN": 40.0
+    },
+    "wells": {
+      "area_um2": 569.4528,
+      "perimeter_um": 470.72,
+      "count": 8
+    }
+  },
+  "removed_linear_well_capacitance_ff": 68.33599999999998,
+  "extracted_spice_sha256": "0563d3f71a36e1eba6b96655bd9e11cc7efeaa312ae679dc89e208ee470682b2",
+  "limitations": [
+    "Not connected to pads or clamp yet.",
+    "Single terminal vias are not discharge-current qualified.",
+    "Nonlinear well junction reconstructed from isolated physical wells; linear well-area term removed, other extracted coupling retained."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_array.py": "56d2b6176d8863b89ef5ec663eca0abc2ab0e212cc94987643d75dec246fe3e9",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/protection-primitives/protection-primitives.json": "c04a326346f4d90c3f46c3c43f3242696976822d6fb4c75e58a35e39bb12e5d0",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/protection-primitives/diode_nd2ps_06v0.gds": "9348230557bf367cf9cc9e4c97900a24f9a5afa6e476b51dfea6d3ab7b565a2c",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/protection-primitives/diode_pd2nw_06v0.gds": "6900facb9b034cca8919f3041c9594ac4ef1dbc29968b1d7180b1d660e922134"
+  }
+}

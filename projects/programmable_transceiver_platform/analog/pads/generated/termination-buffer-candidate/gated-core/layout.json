@@ -1,0 +1,42 @@
+{
+  "status": "gated_buffer_transistor_layout_candidate",
+  "drc_count": 0,
+  "device_count": 205,
+  "device_graph_matches": true,
+  "envelope_um": [
+    150,
+    791.0
+  ],
+  "envelope_area_um2": 118650.0,
+  "limitations": [
+    "Compensation/reference/bias passives and TX pad integration absent.",
+    "Load-current trunks are 8um; individual device accesses and total current capacity remain unqualified.",
+    "No analog performance or whole-chip area acceptance."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer_layout.py": "14b27f17b3dcf3c4492074f6c4045b64198dbe1acdb6ca29a6fc6f68e68ffecf",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer.py": "b441a82ce9f510c2dfeaa509d75194b4b639b2814415e9d855ef1b6c1e9f700d"
+  },
+  "gds_roundtrip": {
+    "drc_count": 0,
+    "device_graph_matches": true
+  },
+  "trunk_widths_um": {
+    "BIAS": 0.44,
+    "BOTTOM": 8.0,
+    "ENABLE": 0.44,
+    "ENABLE_B": 0.44,
+    "GAIN": 0.44,
+    "LOCAL_OUT": 8.0,
+    "MIR": 0.44,
+    "OUT": 8.0,
+    "REF": 0.44,
+    "TAIL": 0.44,
+    "TAIL_RETURN": 0.44,
+    "TOP": 8.0,
+    "VDD": 8.0,
+    "VSS": 8.0
+  },
+  "physical_sha256": "9612c21659758ae597216dbc7921149ecef32d611a2701689a5cc869ab621280",
+  "gds_sha256": "bdd7776212034a5cf9a2724200e90e63e7e3335e6793d75627269bd5a41ce303"
+}

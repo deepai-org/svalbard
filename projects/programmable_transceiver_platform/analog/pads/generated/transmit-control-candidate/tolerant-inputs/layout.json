@@ -1,0 +1,308 @@
+{
+  "status": "connected_small_circuit_layout_candidate",
+  "circuit": "tx_mode_interlock",
+  "flat_cell": "tx_mode_interlock_flat",
+  "drc_count": 0,
+  "device_count": 88,
+  "device_graph_matches": true,
+  "envelope_um": [
+    150,
+    349.0
+  ],
+  "envelope_area_um2": 52350.0,
+  "limitations": [
+    "Compensation/reference/bias passives and TX pad integration absent.",
+    "Load-current trunks are 8um; individual device accesses and total current capacity remain unqualified.",
+    "No analog performance or whole-chip area acceptance."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer_layout.py": "034bc79657c7948860475f573ddd78014e84b8f70704697fa0785807984c2081",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer.py": "64ef9b07ff92328872bfaf84600ed96f9cd43c43df8181b0871031a88ee75a1b"
+  },
+  "gds_marker_repair": {
+    "status": "no_high_resistance_devices",
+    "before_gds_sha256": "1be4df98c225a01786edf26edf168f60259c70c2fef20aede681880bd19986d4",
+    "after_gds_sha256": "1be4df98c225a01786edf26edf168f60259c70c2fef20aede681880bd19986d4"
+  },
+  "gds_roundtrip": {
+    "drc_count": 0,
+    "device_graph_matches": true
+  },
+  "trunk_widths_um": {
+    "CONFLICT": 0.44,
+    "DATA_REQUEST": 0.44,
+    "EN_DETECT": 0.44,
+    "EN_MAIN": 0.44,
+    "EN_POST": 0.44,
+    "EN_TERM": 0.44,
+    "EN_TMDS": 0.44,
+    "G0_INV": 0.44,
+    "G0_MID": 0.44,
+    "G10_INV": 0.44,
+    "G10_MID": 0.44,
+    "G14_INV": 0.44,
+    "G14_MID": 0.44,
+    "G16_INV": 0.44,
+    "G16_MID": 0.44,
+    "G18_INV": 0.44,
+    "G18_MID": 0.44,
+    "G20_INV": 0.44,
+    "G20_MID": 0.44,
+    "G22_INV": 0.44,
+    "G22_MID": 0.44,
+    "G24_INV": 0.44,
+    "G24_MID": 0.44,
+    "G26_INV": 0.44,
+    "G26_MID": 0.44,
+    "G28_INV": 0.44,
+    "G28_MID": 0.44,
+    "G2_INV": 0.44,
+    "G2_MID": 0.44,
+    "G4_INV": 0.44,
+    "G4_MID": 0.44,
+    "G6_INV": 0.44,
+    "G6_MID": 0.44,
+    "G8_INV": 0.44,
+    "G8_MID": 0.44,
+    "LEGAL_REQUEST": 0.44,
+    "MIXED_CONFLICT": 0.44,
+    "NO_CONFLICT": 0.44,
+    "NO_RESET": 0.44,
+    "ORDINARY_REQUEST": 0.44,
+    "QUALIFIED": 0.44,
+    "QUALIFIED_SUPPLY": 0.44,
+    "REQ_DETECT": 0.44,
+    "REQ_MAIN": 0.44,
+    "REQ_POST": 0.44,
+    "REQ_TERM": 0.44,
+    "REQ_TMDS": 0.44,
+    "RESET": 0.44,
+    "SPECIAL_CONFLICT": 0.44,
+    "SPECIAL_REQUEST": 0.44,
+    "SUPPLY_OK": 0.44,
+    "VALID": 0.44,
+    "VDD": 8.0,
+    "VSS": 8.0
+  },
+  "bounded_internal_routes": true,
+  "net_trunk_spans_um": {
+    "CONFLICT": [
+      3.5,
+      348.5
+    ],
+    "DATA_REQUEST": [
+      17.3,
+      35.5
+    ],
+    "EN_DETECT": [
+      3.5,
+      348.5
+    ],
+    "EN_MAIN": [
+      3.5,
+      348.5
+    ],
+    "EN_POST": [
+      3.5,
+      348.5
+    ],
+    "EN_TERM": [
+      3.5,
+      348.5
+    ],
+    "EN_TMDS": [
+      3.5,
+      348.5
+    ],
+    "G0_INV": [
+      7.699999999999999,
+      22.3
+    ],
+    "G0_MID": [
+      4.5,
+      10.3
+    ],
+    "G10_INV": [
+      118.1,
+      136.3
+    ],
+    "G10_MID": [
+      114.9,
+      120.7
+    ],
+    "G14_INV": [
+      150.5,
+      171.9
+    ],
+    "G14_MID": [
+      162.1,
+      164.7
+    ],
+    "G16_INV": [
+      173.3,
+      194.7
+    ],
+    "G16_MID": [
+      181.3,
+      187.5
+    ],
+    "G18_INV": [
+      196.1,
+      217.5
+    ],
+    "G18_MID": [
+      204.1,
+      206.7
+    ],
+    "G20_INV": [
+      218.9,
+      240.3
+    ],
+    "G20_MID": [
+      226.9,
+      229.5
+    ],
+    "G22_INV": [
+      241.7,
+      259.5
+    ],
+    "G22_MID": [
+      249.7,
+      252.3
+    ],
+    "G24_INV": [
+      264.5,
+      282.3
+    ],
+    "G24_MID": [
+      272.5,
+      275.1
+    ],
+    "G26_INV": [
+      283.7,
+      305.1
+    ],
+    "G26_MID": [
+      295.3,
+      297.9
+    ],
+    "G28_INV": [
+      306.5,
+      327.9
+    ],
+    "G28_MID": [
+      318.1,
+      320.7
+    ],
+    "G2_INV": [
+      30.5,
+      45.1
+    ],
+    "G2_MID": [
+      23.700000000000003,
+      33.1
+    ],
+    "G4_INV": [
+      49.7,
+      67.9
+    ],
+    "G4_MID": [
+      46.5,
+      52.3
+    ],
+    "G6_INV": [
+      69.3,
+      90.7
+    ],
+    "G6_MID": [
+      77.3,
+      83.5
+    ],
+    "G8_INV": [
+      92.1,
+      113.5
+    ],
+    "G8_MID": [
+      100.1,
+      102.7
+    ],
+    "LEGAL_REQUEST": [
+      189.7,
+      207.5
+    ],
+    "MIXED_CONFLICT": [
+      85.7,
+      123.1
+    ],
+    "NO_CONFLICT": [
+      137.7,
+      188.3
+    ],
+    "NO_RESET": [
+      144.1,
+      181.5
+    ],
+    "ORDINARY_REQUEST": [
+      40.1,
+      77.5
+    ],
+    "QUALIFIED": [
+      3.5,
+      348.5
+    ],
+    "QUALIFIED_SUPPLY": [
+      166.9,
+      204.3
+    ],
+    "REQ_DETECT": [
+      3.5,
+      348.5
+    ],
+    "REQ_MAIN": [
+      3.5,
+      348.5
+    ],
+    "REQ_POST": [
+      3.5,
+      348.5
+    ],
+    "REQ_TERM": [
+      3.5,
+      348.5
+    ],
+    "REQ_TMDS": [
+      3.5,
+      348.5
+    ],
+    "RESET": [
+      3.5,
+      348.5
+    ],
+    "SPECIAL_CONFLICT": [
+      108.5,
+      126.3
+    ],
+    "SPECIAL_REQUEST": [
+      62.9,
+      84.3
+    ],
+    "SUPPLY_OK": [
+      3.5,
+      348.5
+    ],
+    "VALID": [
+      3.5,
+      348.5
+    ],
+    "VDD": [
+      3.5,
+      348.5
+    ],
+    "VSS": [
+      3.5,
+      348.5
+    ]
+  },
+  "physical_sha256": "e54d70a80662ff24150c88533b050cfac3c4de42c1eda45d1d9ce3e507a12180",
+  "gds_sha256": "1be4df98c225a01786edf26edf168f60259c70c2fef20aede681880bd19986d4"
+}

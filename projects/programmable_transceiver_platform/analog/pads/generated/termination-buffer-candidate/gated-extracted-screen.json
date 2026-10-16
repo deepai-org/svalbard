@@ -1,0 +1,77 @@
+{
+  "status": "transistor_buffer_connected_gated_candidate",
+  "transient_complete": true,
+  "device_count": 205,
+  "windows": {
+    "active_tmds": {
+      "regulation_requested": false,
+      "vcm_min_v": 0.000224127857,
+      "vcm_max_v": 0.000741216695,
+      "max_reference_difference_v": 1.649734453499,
+      "reference_min_v": 1.64994329,
+      "reference_max_v": 1.65004691,
+      "peak_supply_draw_a": 0.000213423107,
+      "peak_supply_return_a": -0.000188855736
+    },
+    "reset": {
+      "regulation_requested": false,
+      "vcm_min_v": -0.000375198006,
+      "vcm_max_v": -0.000321040673,
+      "max_reference_difference_v": 1.650353191367,
+      "reference_min_v": 1.64996748,
+      "reference_max_v": 1.65000961,
+      "peak_supply_draw_a": 0.00019502679,
+      "peak_supply_return_a": -0.0001950004
+    },
+    "unpowered": {
+      "regulation_requested": false,
+      "vcm_min_v": -0.0935915267,
+      "vcm_max_v": -0.049497402,
+      "max_reference_difference_v": 0.8032525607000001,
+      "reference_min_v": 0.195007394,
+      "reference_max_v": 0.709661034,
+      "peak_supply_draw_a": -4.4185437e-05,
+      "peak_supply_return_a": 0.000126027776
+    },
+    "active_main": {
+      "regulation_requested": true,
+      "vcm_min_v": 1.93210724,
+      "vcm_max_v": 2.09436668,
+      "max_reference_difference_v": 0.3005857999999999,
+      "reference_min_v": 1.79378088,
+      "reference_max_v": 1.88566084,
+      "peak_supply_draw_a": 0.00394887339,
+      "peak_supply_return_a": -0.00273795699
+    },
+    "active_main_post": {
+      "regulation_requested": true,
+      "vcm_min_v": 2.16685982,
+      "vcm_max_v": 2.18657358,
+      "max_reference_difference_v": 0.4847045299999999,
+      "reference_min_v": 1.70170701,
+      "reference_max_v": 1.74262843,
+      "peak_supply_draw_a": 0.00346391377,
+      "peak_supply_return_a": -0.00324539154
+    },
+    "reconfiguration": {
+      "regulation_requested": true,
+      "vcm_min_v": 2.04004503,
+      "vcm_max_v": 2.20871053,
+      "max_reference_difference_v": 0.5341040199999998,
+      "reference_min_v": 1.61527329,
+      "reference_max_v": 1.67462696,
+      "peak_supply_draw_a": 0.0255781599,
+      "peak_supply_return_a": 0.0119019352
+    }
+  },
+  "gated": true,
+  "scope": "Transistor enable/isolation with prescribed precharge/hold and behavioral TX_VALID; autonomous supervisor, current limiting, terminal stress and layout remain open. Same extracted TX and powered external peer throughout; Divider bias is a prototype, not a qualified reference. Ideal compensation passives; transistor-core extraction is used only when physical_core_used is true; no connected compensation or pad-to-buffer layout.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-tx-connected-primary-screen/lifecycle.spice": "65c1be2c7d6504d2aee8d2a6e3425786c3f5b335eaa27e54b79bba79e3cacfae",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer.py": "b441a82ce9f510c2dfeaa509d75194b4b639b2814415e9d855ef1b6c1e9f700d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer_connected.py": "8018f4897ff9714b1529ba15e4bd00e57f6e126492432bb54e6b5a6671f1e5d6",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-gated-startup-extracted/connected.spice": "4d496b021bbb3ac2cd3e986c2aa6317a3c862f0d17f449e2804c35277b4a1375",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-gated-layout-startup/physical.spice": "9612c21659758ae597216dbc7921149ecef32d611a2701689a5cc869ab621280"
+  },
+  "physical_core_used": true
+}

@@ -1,0 +1,87 @@
+{
+  "status": "shared_reduced_PDN_pad_probe_not_native_supply_ring_qualification",
+  "network": {
+    "board_c": 1e-06,
+    "board_esl": 1e-09,
+    "board_esr": 0.02,
+    "die_c": 5e-10,
+    "die_esl": 2e-10,
+    "die_esr": 0.5,
+    "feed_l": 2e-09,
+    "feed_r": 0.1,
+    "package_r": 2.0
+  },
+  "control_time_scale": 15,
+  "pad_current_sensor_positive_direction": "local supply toward pad VDD; negative is backfeed",
+  "cases": {
+    "stale": {
+      "transient_complete": true,
+      "windows": {
+        "commanded_off": {
+          "rail_min_v": 1.30677823e-07,
+          "rail_max_v": 4.67670803e-07,
+          "peak_pad_backfeed_a": 6.7305696e-08,
+          "pad_min_v": 2.99993547,
+          "pad_max_v": 2.99995264
+        },
+        "commanded_brownout": {
+          "rail_min_v": 0.543959703,
+          "rail_max_v": 1.15361609,
+          "peak_pad_backfeed_a": 0.00298609586,
+          "pad_min_v": 2.23374646,
+          "pad_max_v": 3.0021712
+        },
+        "recovered": {
+          "rail_min_v": 3.28260481,
+          "rail_max_v": 3.29583437,
+          "peak_pad_backfeed_a": 0.0,
+          "pad_min_v": 3.13298181,
+          "pad_max_v": 3.28610279
+        }
+      },
+      "peak_upstream_return_current_a": 20.7740222,
+      "deck_sha256": "8203e3f21e89fc49cd6a5f100d4037f6e7dd495d776e28db853356ba4451750b"
+    },
+    "trip_0p5ns": {
+      "transient_complete": true,
+      "windows": {
+        "commanded_off": {
+          "rail_min_v": 1.3075041e-07,
+          "rail_max_v": 4.68006944e-07,
+          "peak_pad_backfeed_a": 6.74225832e-08,
+          "pad_min_v": 2.99993491,
+          "pad_max_v": 2.99995318
+        },
+        "commanded_brownout": {
+          "rail_min_v": 0.543960939,
+          "rail_max_v": 1.14850712,
+          "peak_pad_backfeed_a": 0.0,
+          "pad_min_v": 3.00209759,
+          "pad_max_v": 3.00314946
+        },
+        "recovered": {
+          "rail_min_v": 3.28261933,
+          "rail_max_v": 3.29583733,
+          "peak_pad_backfeed_a": 0.0,
+          "pad_min_v": 3.13298982,
+          "pad_max_v": 3.28610566
+        }
+      },
+      "peak_upstream_return_current_a": 20.7739376,
+      "deck_sha256": "cf863669578ae86c4e827eddf4285db39df740ab2a0207d0095cd5151a4062bc"
+    }
+  },
+  "limitations": [
+    "Reduced package resistor used once; explicit native supply pads and parallel bond paths are absent.",
+    "Upstream voltage source can absorb returned charge; actual regulator behavior is unqualified.",
+    "State labels describe upstream commands; local rail is measured rather than presumed zero.",
+    "Control timing is prescribed, not a local supervisor."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "0974c3c93656155b4746d36214503858d7a7c5e8fe29913d27518c4f2e126db8",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-receive-usb-extracted-c.spice": "0017276f08e6a0518b5a585d2480a9df74a5c25c7027d0dd0d041ffedb5fbed1",
+    "/home/ubuntu/svalbard/scratch/pad-rx-pdn-probe.py": "5e7e3927d53ecee1aba20cc4097ace950034957659cdf30d780ceb856fe0e187"
+  },
+  "decision": "Qualify control requests using local supply state, not upstream commanded voltage. Actual regulator reverse-current behavior remains an integration requirement.",
+  "timing_note": "All original PWL times scaled by 15; trip_0p5ns is the inherited case label, not a 0.5ns delay in this slower fixture."
+}

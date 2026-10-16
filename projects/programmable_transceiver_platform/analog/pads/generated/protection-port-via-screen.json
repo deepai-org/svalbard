@@ -1,0 +1,46 @@
+{
+  "status": "protection_port_arrays_integrated_RF_layout_and_lifecycle_verified",
+  "parameters": {
+    "rail_width_um": 8.0,
+    "return_width_um": 12.0,
+    "port_via_cuts_per_axis": 3,
+    "port_via_pitch_um": 0.6
+  },
+  "drc_count": 0,
+  "device_graph_lvs_match": true,
+  "exported_cut_counts": {
+    "RAIL": {
+      "40": {
+        "cut_count": 9,
+        "total_cut_area_um2": 0.7056
+      },
+      "41": {
+        "cut_count": 9,
+        "total_cut_area_um2": 0.7056
+      }
+    },
+    "VSS": {
+      "40": {
+        "cut_count": 9,
+        "total_cut_area_um2": 0.7056
+      }
+    }
+  },
+  "limitations": [
+    "No ESD current rating inferred from cut count.",
+    "Diode contacts and native clamp attachment still have unqualified restrictions.",
+    "Integrated protected RF alternative is not adopted in the normative ring."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_network.py": "d768bcde9e8898ad3c3510ca33e4ed023c67d324a6f772978d88a94844b52f5e",
+    "/home/ubuntu/svalbard/scratch/pad-via-array-network/network.gds": "0b7c25860190af02dfaffab9c180d5734f5d9eb771111367adc97ae98fcf493d",
+    "/home/ubuntu/svalbard/scratch/pad-via-array-network/network-layout.json": "dd5dc5a822680028b1a1937c48b41a571c737d70e93f35b434b3d3bed92f9145",
+    "/home/ubuntu/svalbard/scratch/pad-via-array-network/network-with-well.spice": "6d864b087415f406a9f5ff9b7aa9da6140e43c0f2af6d84be30e1aeb99564212"
+  },
+  "integrated_reports": {
+    "generated/protected-rf-pair/pad-layout.json": "f9eb683c113fcd9cefe1a964481d5b62c74b6c71c45dc555961841bf490d4d8a",
+    "generated/protected-rf-pair/pad-screen.json": "98d9f6cf34597f0e3cb58a45cafb96e31458b6c254cf3ba23bdfde86f0372961",
+    "generated/protected-rf-pair/route-screen.json": "d49e9ffc3bd53e529125f328d60d2983366725d45425d36515b9ccf27afabafb",
+    "generated/protected-rf-pair/rail-connectivity.json": "a3686399db30a1451d984833074ab284ffd4e0ee0b21692f1721433e9e2c2de5"
+  }
+}

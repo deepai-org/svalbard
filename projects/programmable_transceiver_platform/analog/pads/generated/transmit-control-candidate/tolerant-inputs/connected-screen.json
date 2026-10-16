@@ -1,0 +1,49 @@
+{
+  "status": "connected_extracted_control_diagnostic",
+  "windows": {
+    "reset": {
+      "vcm_min_v": -0.00157324302,
+      "vcm_max_v": -0.00131081509,
+      "peak_supply_draw_a": 0.00246030245,
+      "termination_enable_max_v": 7.72409237e-05
+    },
+    "unpowered": {
+      "vcm_min_v": -0.105965768,
+      "vcm_max_v": -0.0487587927,
+      "peak_supply_draw_a": -2.21680469e-05,
+      "termination_enable_max_v": -0.372097605
+    },
+    "main_settled": {
+      "vcm_min_v": 1.63972967,
+      "vcm_max_v": 1.65208257,
+      "peak_supply_draw_a": 0.0288022108,
+      "termination_enable_max_v": 3.30054693
+    },
+    "post_settled": {
+      "vcm_min_v": 1.61515425,
+      "vcm_max_v": 1.63572997,
+      "peak_supply_draw_a": 0.0312715768,
+      "termination_enable_max_v": 3.30137192
+    },
+    "release": {
+      "vcm_min_v": 1.67980345,
+      "vcm_max_v": 2.43378385,
+      "peak_supply_draw_a": 0.0325089588,
+      "termination_enable_max_v": 3.3498645
+    },
+    "disabled": {
+      "vcm_min_v": 0.727626774,
+      "vcm_max_v": 0.97928065,
+      "peak_supply_draw_a": 0.00657380162,
+      "termination_enable_max_v": 0.00505747201
+    }
+  },
+  "scope": "Same extracted pad/buffer and external network; static interlock replaced with extracted88MOS circuit. Direct TERM_ENABLE loading. Other outputs retain ideal serializer/bias boundary translation and do not exercise actual fanout. Supply monitor and qualification remain behavioral; no implemented blanking or readiness sequencer. Not adoption or protocol acceptance.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_control_connected.py": "c7ebd066c2428dc8b976068b2118e04334019d002eea079fb27a6d7621db6ad3",
+    "/home/ubuntu/svalbard/scratch/pad-tx-sustained-loaded-hold/hold.spice": "c4cee0bded46d3df6fdbdf1cdcf57fb53805c1978850341cc77bc75999368975",
+    "/home/ubuntu/svalbard/scratch/pad-tx-tolerant-control-layout/physical.spice": "e54d70a80662ff24150c88533b050cfac3c4de42c1eda45d1d9ce3e507a12180",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "31ff538f4d198f8559b7a62d3dc7dece47a0d2e702eb31c344d09bedd22dd77b",
+    "/home/ubuntu/svalbard/scratch/pad-tx-tolerant-control-connected/connected.spice": "8938f791b3a193a9345210319a6c8b46b967e1b5bbcdbae6d1d523630386cd64"
+  }
+}

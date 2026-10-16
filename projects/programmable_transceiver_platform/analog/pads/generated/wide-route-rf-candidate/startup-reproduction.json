@@ -1,0 +1,55 @@
+{
+  "status": "reproducible_startup_with_PWL_resolution_check",
+  "cases": {
+    "64": {
+      "status": "shared_guard_RF_startup_characterization",
+      "transient_complete": true,
+      "guard_s": 2e-05,
+      "supply_rise_s": 1e-08,
+      "frequency_hz": 2400000000.0,
+      "gain": 6.4,
+      "command_peak_per_leg_v": 0.3398268530330199,
+      "samples_per_cycle": 64,
+      "power_dbm": 0.22654200583613782,
+      "meets_tone_target": true,
+      "gate_at_guard_v": 2.44450407e-08,
+      "limitations": [
+        "Bias driver active during guard; external peer silent, passive network retained.",
+        "Ideal supply, nominal devices and PWL carrier; not complete startup or reliability qualification."
+      ],
+      "source_sha256": {
+        "/home/ubuntu/svalbard/scratch/pad-wide-bond-corridor-maxgain-corner/lifecycle.spice": "bb37e0c8f973c6eb0281f5e697a95f50de039755409784a70e4dc4de70483bee",
+        "/home/ubuntu/svalbard/scratch/pad-wide-bond-corridor-maxgain-corner/segmented-pad.spice": "0a5ada0a33d48be26b16a8562d405337c3825ac6bca043861e7e4e6102d124c7",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "0974c3c93656155b4746d36214503858d7a7c5e8fe29913d27518c4f2e126db8",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/rf_startup.py": "2f0f3911add51fe41c925256117196c7935643feac1b2d0de0329957d8165fa8",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "d45109a5e4399d143c283a6fccf78745e8a24f29749825847073c97a11c0143f"
+      }
+    },
+    "128": {
+      "status": "shared_guard_RF_startup_characterization",
+      "transient_complete": true,
+      "guard_s": 2e-05,
+      "supply_rise_s": 1e-08,
+      "frequency_hz": 2400000000.0,
+      "gain": 6.4,
+      "command_peak_per_leg_v": 0.3398268530330199,
+      "samples_per_cycle": 128,
+      "power_dbm": 0.23196336263350628,
+      "meets_tone_target": true,
+      "gate_at_guard_v": 2.44450407e-08,
+      "limitations": [
+        "Bias driver active during guard; external peer silent, passive network retained.",
+        "Ideal supply, nominal devices and PWL carrier; not complete startup or reliability qualification."
+      ],
+      "source_sha256": {
+        "/home/ubuntu/svalbard/scratch/pad-wide-bond-corridor-maxgain-corner/lifecycle.spice": "bb37e0c8f973c6eb0281f5e697a95f50de039755409784a70e4dc4de70483bee",
+        "/home/ubuntu/svalbard/scratch/pad-wide-bond-corridor-maxgain-corner/segmented-pad.spice": "0a5ada0a33d48be26b16a8562d405337c3825ac6bca043861e7e4e6102d124c7",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "0974c3c93656155b4746d36214503858d7a7c5e8fe29913d27518c4f2e126db8",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/rf_startup.py": "2f0f3911add51fe41c925256117196c7935643feac1b2d0de0329957d8165fa8",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "d45109a5e4399d143c283a6fccf78745e8a24f29749825847073c97a11c0143f"
+      }
+    }
+  },
+  "power_difference_db": 0.005421356797368465,
+  "scope": "Same exact extracted pad and retained passive network; numerical carrier-resolution comparison, not PVT qualification."
+}

@@ -1,0 +1,6 @@
+{
+  "decision": "Reject rail-high gain reset as default. Retain source-headroom candidate with existing reset while designing bounded initial gain state.",
+  "finding": "Rail-high reset retainsDCerror5.21mV but precharge only reaches0.406V in90\u2013109ns,MAINerror566mV versus96mV;unpoweredTERM_VCM drops to-0.410V versus-0.117V. Premature-ready49.00ns versus44.13ns. Removing one overshoot shifts failure into slow startup and power-off coupling.",
+  "implementation": "termination_buffer.build(restore_high=True), PMOS20um/.28um restoresGAINtoVDD instead ofNMOS10um/.28umtoVSS. Actual281device compensated layout generated, localDRC/devicegraph/GDSroundtrip pass;render inspected.",
+  "scope": "Same extractedTX/control and externalnetwork;behavioral readiness remains open-loop. Rejected diagnostic, not normative variant."
+}

@@ -1,0 +1,23 @@
+{
+  "status": "connected_TX_primary_layout_verified_not_canonical",
+  "drc_count": 0,
+  "device_count": 366,
+  "device_lvs_match": true,
+  "independent_device_graph_match": true,
+  "limitations": [
+    "ESD_RAIL is an extraction port to hide inside the simulation wrapper, not a new bond pin.",
+    "Nonlinear well correction, extracted loading screens, provider placement and area accounting pending.",
+    "No ESD rating, core-survival or current-capacity claim."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/wired_protection_layout.py": "fd217a61bd882946164540818e8cae6470624e98c202e168d95a78440129431a",
+    "/home/ubuntu/svalbard/scratch/pad-tx-double-tails-base/pad_tx_flat.gds": "1224fa1c4572422918d0a65f53e446e29bda604af979012b3fd29c9f1ab78875",
+    "/home/ubuntu/svalbard/scratch/pad-tx-double-tails-base/pad_wired_transmit.spice": "0123ad2bb57c730bbc229191b06bef86b041b9a57c77ff2b87bbb14e68ed1480",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/protection-network/network.gds": "0b7c25860190af02dfaffab9c180d5734f5d9eb771111367adc97ae98fcf493d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/protection-network/network_flat.spice": "f5e3fc1454f7dcf49f91afcf1cf315cc82014bdf6d2191d4f84b109a3b305cf0"
+  },
+  "simulation_model_sha256": "567ee946b0671879fefbf840a67befbee2c8254adceb6db71f23c59e5955fa5a",
+  "nonlinear_well_replacement_checked": true,
+  "raw_extraction_model_sha256": "ac61b1cdd20aa9b5f04570473945accfc829a9fa76513bae49477d188b554c94",
+  "model_publication": "Exact tested SPICE order retained. Repeated extraction differs only in capacitor naming/order/orientation; strict order-equivalence and tested-model physical audit attached."
+}

@@ -1,0 +1,10 @@
+{
+  "status": "preferred_static_control_physical_candidate_pending_sequencer",
+  "implementation": "build(tolerant_logic=True);88MOS06v0,0.7um length,2.5x width;same ports/function.",
+  "evidence": "LocalDRC/connectivity/GDSroundtrip pass;256DC cases pass;render inspected;full retainedTX/buffer lifecycle completed.",
+  "tradeoff": "2ns prescribed blanking leaves1.005ns overlap at50fF.4ns prescribed blanking tested separately; see blank4-screen. This is not a hardware sequencer.",
+  "remaining": "Implement physical sequencing/supervision and actual serializer/bias fanout, core placement and supply-return integration; qualify currents and corners. No hardware blanking sequencer exists yet.",
+  "generator_sha256": "3749b1ee1995dc05da0cd7f3e09cac621f55c2dcf6f39d340d3ec8e7d3c5e4cc",
+  "decision": "Keep all-thick-oxide static interlock for continued integration. Do not adopt thin or mixed alternatives.",
+  "terminal_exposure": "All88devices06v0; maximum measured absolute gate-drain4.151V, gate-source4.095V in the retained lifecycle. No thin-oxide devices remain in this macro. This is not a junction-current, oxide-lifetime or package/PVT qualification."
+}

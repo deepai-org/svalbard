@@ -1,0 +1,185 @@
+{
+  "status": "generated_candidate_requires_connectivity_and_rule_review",
+  "family": "rf_transmit",
+  "flat_cell": "pad_rf_transmit_flat",
+  "marker_export": {
+    "status": "no_high_resistance_devices",
+    "before_gds_sha256": "76af1871029356119e99d96923fa528a3e20bfb6921a67eeaf434b80da662776",
+    "after_gds_sha256": "76af1871029356119e99d96923fa528a3e20bfb6921a67eeaf434b80da662776"
+  },
+  "bond_template": {
+    "cell": "Bondpad_5LM",
+    "source": "gf180mcu_fd_io",
+    "reference_parent": "5LM_METAL_RAIL_PAD_60",
+    "reference_offset_um": [
+      5.5,
+      0
+    ],
+    "opening_um": [
+      60,
+      60
+    ],
+    "scope": "Native bond geometry only; ring rails and provider placement remain open."
+  },
+  "stock_export_returncode": 139,
+  "device_count": 4,
+  "net_count": 3,
+  "pad_transverse_width_um": 6.0,
+  "pad_trunk_width_um": 0.44,
+  "net_track_x_um": {
+    "PAD_N": 3.0,
+    "PAD_P": 4.0,
+    "VSS": 9.22
+  },
+  "net_trunk_widths_um": {
+    "PAD_N": 0.44,
+    "PAD_P": 0.44,
+    "VSS": 8.0
+  },
+  "bounded_internal_routes": true,
+  "net_trunk_spans_um": {
+    "PAD_N": [
+      435.5,
+      438.5
+    ],
+    "PAD_P": [
+      435.5,
+      438.5
+    ],
+    "VSS": [
+      435.5,
+      446.5
+    ]
+  },
+  "port_heights_um": {
+    "PAD_P": 438.0,
+    "PAD_N": 438.0,
+    "VSS": 446.0
+  },
+  "candidate_size_um": [
+    286.0,
+    446.0
+  ],
+  "reference_pair_size_um": [
+    286.0,
+    350
+  ],
+  "bond_pitch_um": 211.0,
+  "escape_layer": "metal2",
+  "escape_width_um": 12.0,
+  "active_origin_um": 440.0,
+  "core_clearance_depth_um": 416.0,
+  "reference_sites": [
+    "inputs[5].pad",
+    "inputs[4].pad"
+  ],
+  "fits_reference_height": false,
+  "area_um2": 127556.0,
+  "near_bond_ground_landings_um": [
+    [
+      9.0,
+      77.305,
+      11.0,
+      79.305
+    ],
+    [
+      220.0,
+      77.305,
+      222.0,
+      79.305
+    ]
+  ],
+  "protection_device_centers_y_um": 90.0,
+  "allocation_regions_um": [
+    [
+      0,
+      0,
+      75,
+      104
+    ],
+    [
+      211.0,
+      0,
+      286.0,
+      104
+    ],
+    [
+      8.5,
+      104,
+      11.5,
+      440.0
+    ],
+    [
+      219.5,
+      104,
+      222.5,
+      440.0
+    ],
+    [
+      31.3,
+      76,
+      43.7,
+      442.0
+    ],
+    [
+      242.3,
+      76,
+      254.7,
+      442.0
+    ],
+    [
+      0,
+      418.0,
+      150.0,
+      447.0
+    ],
+    [
+      150.0,
+      418.0,
+      286.0,
+      440.0
+    ]
+  ],
+  "area_ceiling_um2": 130000,
+  "fits_assigned_area": true,
+  "image_id": "sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
+  "sources_sha256": {
+    "analog/pads/layout.py": "a0f7dce309444c5cd6c3c39c082d5afde449c18b5124cd959381d3b7aca8cd29",
+    "analog/pads/gds_markers.py": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4",
+    "analog/pads/generated/provider-sites.json": "c58790b22d45497c45bfd20e8cc60e698d8286010856fcc6fa18ab7021d26df4",
+    "analog/pads/circuits.py": "cf91761a58bc90b2137537aba8ab064b01ef264f161ac689c6d2b4a17031682c",
+    "analog/pads/design.py": "1280fd1141770cbd48d65785fcdf3f3f4d8d694a10b39ad58de9b60ef6f8e806",
+    "analog/pads/wired_receive.py": "c17136a1c165093b65974b27143e1ff8e21c725d11940326a6b999585909cc8b",
+    "spec/analog-architecture.json": "2d773c18090b57a6e54291f99d6f828730f843674fe6ceee8a7cdfdda5a58b4d",
+    "spec/contract.json": "9e43600f7d9016469fc825fe4c451a87c4940e98bb3007f7a18b8f6ea3e63c69"
+  },
+  "drc_count": "0",
+  "pcell_terminal_coordinates": {
+    "primitive_0": [
+      [
+        4.300000000000001,
+        0.0
+      ],
+      [
+        0.0,
+        -8.280000000000001
+      ],
+      [
+        -0.8,
+        0.0
+      ],
+      [
+        5.12,
+        8.700000000000001
+      ]
+    ]
+  },
+  "limitations": [
+    "PAD_P/N are both bond and core-facing signal nets; the attached front end is outside this cell.",
+    "External coupling/matching and the attached core load are retained bench networks, not hidden ideal isolation.",
+    "Protection geometry is a candidate only; ESD trigger/current survival is unqualified.",
+    "Interconnect resistance/capacitance and mutual coupling require extraction; do not add the full capacitance budget.",
+    "Input common mode, power-off loading and clamp stress require the attached core and external network together.",
+    "Provider ring metal rails not yet integrated."
+  ]
+}

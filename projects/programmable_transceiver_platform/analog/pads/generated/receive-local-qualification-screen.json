@@ -1,0 +1,53 @@
+{
+  "status": "local_rail_and_sticky_fault_behavioral_boundary_not_supervisor_schematic",
+  "transient_complete": true,
+  "supply_window_v": [
+    2.5,
+    3.6
+  ],
+  "qualification_filter_tau_s": 1e-09,
+  "fault_capture_tau_s": 1e-09,
+  "shared_requalification_guard_s": 2e-05,
+  "windows": {
+    "active": {
+      "rail_min_v": 3.29920615,
+      "rail_max_v": 3.29920615,
+      "maximum_enable_v": 3.29920615,
+      "minimum_fault": 0.0,
+      "peak_pad_backfeed_a": 0.0
+    },
+    "commanded_off": {
+      "rail_min_v": 1.30655246e-07,
+      "rail_max_v": 4.67847719e-07,
+      "maximum_enable_v": 0.0,
+      "minimum_fault": 0.999999999,
+      "peak_pad_backfeed_a": 6.73550611e-08
+    },
+    "commanded_brownout": {
+      "rail_min_v": 0.543960942,
+      "rail_max_v": 1.14850712,
+      "maximum_enable_v": 0.0,
+      "minimum_fault": 0.999999999,
+      "peak_pad_backfeed_a": 0.0
+    },
+    "supply_recovered_not_rearmed": {
+      "rail_min_v": 3.28338768,
+      "rail_max_v": 3.29662542,
+      "maximum_enable_v": 0.0,
+      "minimum_fault": 0.999999529,
+      "peak_pad_backfeed_a": 0.0
+    }
+  },
+  "limitations": [
+    "Starts already qualified; cold startup and explicit rearm not implemented by this probe.",
+    "One-nanosecond filter/capture assumptions are not demonstrated comparator or logic latency.",
+    "Abstract state-storage elements are not a physical circuit or its power model.",
+    "Shared PDN retains ideal bidirectional upstream source; native supply cells absent."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "0974c3c93656155b4746d36214503858d7a7c5e8fe29913d27518c4f2e126db8",
+    "/home/ubuntu/svalbard/scratch/pad-rx-shared-pdn/stale.spice": "8203e3f21e89fc49cd6a5f100d4037f6e7dd495d776e28db853356ba4451750b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "d45109a5e4399d143c283a6fccf78745e8a24f29749825847073c97a11c0143f",
+    "/home/ubuntu/svalbard/scratch/pad-local-qualification.py": "f08926ad3c938951af3aaa7304b98bc71abf03c5f473ac1c49fa7689bfddb2df"
+  }
+}

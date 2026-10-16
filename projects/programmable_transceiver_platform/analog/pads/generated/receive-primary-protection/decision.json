@@ -1,0 +1,43 @@
+{
+  "status": "connected_RX_USB_primary_candidate_not_adopted",
+  "device_count": 446,
+  "transient_complete": true,
+  "states": [
+    "active_divider",
+    "active_bypass",
+    "disabled",
+    "reset",
+    "unpowered",
+    "brownout",
+    "reconfiguration",
+    "active_hs",
+    "active_fs",
+    "active_pulls"
+  ],
+  "area_um2": 283002.57269999996,
+  "serial_bypass_loading_f_per_leg": [
+    2.873232081723164e-12,
+    2.7455933506032006e-12
+  ],
+  "decision": "Do not adopt unchanged: serial-bypass loading exceeds2.7pF/leg and area is not funded. Preserve complete primary protection and physical core discharge while addressing pad-connected loading.",
+  "limitations": [
+    "Provider placement with this RX candidate not checked.",
+    "Physical safe-state controller, protection survival, core stress and distributed route resistance remain open."
+  ],
+  "attribution_diagnostic": {
+    "status": "resolved_with_explicit_numerical_DC_anchor",
+    "report": "loading-attribution.json",
+    "sensitivity": "loading-anchor-sensitivity.json",
+    "anchor_nodes": [
+      {
+        "cell": "combined_flat",
+        "node": "m2_42279_196800#",
+        "resistance_ohm": 1000000000000.0
+      }
+    ],
+    "maximum_1Tohm_vs_1Pohm_capacitance_difference_f": 0.0,
+    "scope": "One capacitor-only conductor gets a numerical DC path in this diagnostic. Physical netlist/layout unchanged; model is not claiming a fabricated leakage resistor. Both runs retain unchanged10ppm port-equivalence and1ppm KCL limits.",
+    "next_design_target": "Investigate disabled FS high-side device sizing/resistor tradeoff and termination loading before reducing protection."
+  },
+  "current_area_and_assembly": "See generated/primary-protection-assembly: all five candidate families jointly pass provider geometry/local-rail checks; measured candidate areas fit revised shared ceilings. Earlier area/placement limitations below are superseded only by these scoped checks."
+}

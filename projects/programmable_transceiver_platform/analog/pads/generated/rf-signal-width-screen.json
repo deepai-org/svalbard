@@ -1,0 +1,61 @@
+{
+  "status": "wider_signal_routes_improve_loss_but_do_not_close_RF_pad",
+  "decision": "retain as evaluated routing option; not adopted in assembled ring",
+  "configuration": {
+    "active_origin_um": 440.0,
+    "bond_pitch_um": 211.0,
+    "escape_width_um": 12.0,
+    "area_ceiling_um2": 60000,
+    "return_routing": {
+      "corridor_width_um": 8.0,
+      "transverse_width_um": 8.0,
+      "vertical_width_um": 4.0,
+      "transverse_offset_um": -40.0
+    },
+    "signal_routes": [
+      {
+        "leg": "P",
+        "bond_center_x_um": 37.5,
+        "escape_offset_um": -24.0,
+        "outer_trunk_x_um": 288.0,
+        "landing_x_um": 186.0,
+        "landing_offset_um": 40.0,
+        "transverse_width_um": 12.0,
+        "vertical_width_um": 12.0
+      },
+      {
+        "leg": "N",
+        "bond_center_x_um": 248.5,
+        "escape_offset_um": -8.0,
+        "outer_trunk_x_um": 304.0,
+        "landing_x_um": 190.0,
+        "landing_offset_um": 60.0,
+        "transverse_width_um": 12.0,
+        "vertical_width_um": 12.0
+      }
+    ]
+  },
+  "drc_count": 0,
+  "device_graph_lvs_match": true,
+  "all_lifecycle_screens_complete": true,
+  "area_um2": 115594.95999999999,
+  "area_increase_percent": 1.6067933959033498,
+  "tx_power_dbm": {
+    "capacitance_only": -0.6481552721829809,
+    "high_resistance": -1.5997085118195224,
+    "high_resistance_maximum_gain": -0.09286658453929021
+  },
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-rf-wide-signal/pad-layout.json": "48fabd4c44f6112939530b9b950fc2e0612c620712632db10671f81c669a739b",
+    "/home/ubuntu/svalbard/scratch/pad-rf-wide-signal/pad-screen.json": "6285a27332ebd113e9bda2f461c22429f4ce70da472e6c29e11035948a4536b2",
+    "/home/ubuntu/svalbard/scratch/pad-rf-wide-signal-loss-run/route-screen.json": "ba736e8d7cbb8352533f4c8ed542d0598ae68425f3f1b712843fbf9f2a9de4c8",
+    "/home/ubuntu/svalbard/scratch/pad-rf-wide-signal-loss-run/max-gain/screen-report.json": "7e54d3adedbd252bd7de0b535bbb2a00a641dbb9d981a18dd7a9392caedf3c4c",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_pad.py": "d8b0472dce1d51986e933d49bffaae5745735b1d9e5fefcb1fca3c92f9ec350e"
+  },
+  "limitations": [
+    "Still exceeds assigned area and misses 0dBm target.",
+    "Resistance is a lumped geometry-derived sensitivity model, not distributed PEX.",
+    "No ESD/current-capacity qualification; single-via restrictions remain.",
+    "Baseline pad manifests predate the optional wide-signals generator change; their exact artifacts and simulation results remain unchanged."
+  ]
+}

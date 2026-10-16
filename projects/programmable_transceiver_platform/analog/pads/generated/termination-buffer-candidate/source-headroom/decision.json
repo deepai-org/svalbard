@@ -1,0 +1,26 @@
+{
+  "status": "source_headroom_candidate_DC_improved_dynamic_incomplete",
+  "change": "Output sourcePMOS totalwidth640to1280um, identical0.5um length;32additional20um fingers. Same compensation geometry and isolation topology, regenerated layout/parasitics.",
+  "finding": "Connected baseline MAINPOST DC worst error49.08mV;new extracted candidate5.50mV,MAIN4.12mV,within shared16.5mVwindow. Supports output-drive/first-stage-headroom limitation, not timing-only failure.",
+  "checks": "LocalDRC,devicegraph,GDSroundtrip pass;render inspected. Full connected static circuit with external network retained.",
+  "remaining": "Compensation/startup overshoot, closed-loop readiness, current limiting, terminal stress and area/current allocation. Local layout/connectivity is not performance closure.",
+  "dynamic_result": {
+    "report": "readiness-screen.json",
+    "premature_loaded_ready_ns": 44.127938,
+    "baseline_premature_loaded_ready_ns": 50.91779,
+    "precharge_peak_v": 2.65164242,
+    "baseline_precharge_peak_v": 2.36223381,
+    "windows": {
+      "main": {
+        "measured_ready_time_fraction": 0.11074341123144031,
+        "last_sample_reference_error_v": -0.0011292000000000524
+      },
+      "main_post": {
+        "measured_ready_time_fraction": 0.21436486215339304,
+        "last_sample_reference_error_v": -0.013067150000000138
+      }
+    }
+  },
+  "decision": "Keep stronger source bank for further compensation/startup work: fixes DC limitation but worsens precharge overshoot. Not ready for canonical adoption.",
+  "area_current_cost": "Core alone reserves157650um2 before compensation versus termination150000um2 ceiling; buffer/control core funding/placement unresolved. ConnectedDC total supply31.9\u201334.5mA includes prototype biases and fullTX/control."
+}

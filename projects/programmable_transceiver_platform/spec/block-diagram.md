@@ -957,6 +957,84 @@ linearity and modulation quality must close together at actual supply/headroom.
 
 ## Pad behavioral specification
 
+The [parametric pad implementation](../analog/pads/README.md) now has wired-TX,
+reference-clock, RF-RX, RF-TX and shared wired-RX/USB circuit/layout candidates. Reference termination
+is an optional external differential resistor; its common-mode bias resistors
+and ground-referenced primary protection are on chip. Receiver/clock branching,
+LNA, RF driver and wired sensing amplifiers remain explicit core interfaces.
+Current primary-protection device widths fall below the published GF180 HV
+ESD minima. Their ordinary DRC/LVS and lifecycle results do not establish
+protection adequacy. The pad protection audit records the rule-sized loading
+conflict; protection architecture and protected-core stress coordination remain
+open before the pad first pass can be accepted.
+The wired-RX/USB candidate now physically qualifies each FS-low request with
+a shared coarse termination-bias detector. This blocks a lone request at serial
+common mode; it does not force ground, override TERM_ENABLE, or replace local
+sequencing and stress validation. The pad implementation report owns trip,
+transition-current and layout-allocation results.
+RF RX now has a finite supply-connected bias boundary in its pad bench. The
+retained split-resistor input match is a conservative fixture, not proof of the
+common-source LNA's DC/common-mode impedance. The nominal RF board fixture uses
+100 pF coupling per leg, configurable for another matching network; reference
+coupling remains10 nF. With the100 µA bias probe, cold settling is approximately
+3.1 µs; the same-model10 nF loading diagnostic requires approximately344 µs.
+Both retain approximately1.65 V input common mode during rapid power loss.
+Require explicit RF bias readiness and retained-charge stress/discharge analysis.
+The reference startup guard alone cannot cover every board network, and cold
+settling must not be applied to every warm RX/TX transition. Actual LNA input
+admittance, bias transistor implementation, reverse current paths and external
+component parasitics remain open.
+Wired source termination additionally requires a dedicated source/sink buffer:
+quiet VCM provides its target, while WIRE_VDD/VSS supply its load current.
+The connected model now bounds that buffer's current and headroom, retains its
+output charge through power loss, and tests differential and powered-pullup
+loads separately. A generated on-chip passive bleed resistor provides discharge without a
+powered controller; residual voltage remains during rapid power loss. The
+buffer transistor circuit, feedback dynamics and power-off isolation
+are still required. Core control must precharge the buffer before connecting
+termination and disconnect termination before releasing the buffer; the
+current behavioral fixture probes a2 ns lead and hold, not a qualified limit; directly loading the global bias rail is not the design.
+The serial driver can instead use board source-termination resistors with its
+on-chip termination and buffer disabled. That retained-network fixture now
+includes AC coupling and a receiver load; no pad branch is removed. It offers
+an external-passive route but does not establish an eye or protocol compliance.
+The negative-postcursor fixture reverses the delayed tap's complementary gate
+controls; positive delayed current is a different available configuration.
+Wired RX/USB now reuses its termination resistors for a selectable differential
+bridge and shares each shunt bank with its independently controlled FS
+pull-down. USB requires a grounded common-mode return. Trim, slew, bias/drive
+exclusion, local power-off controls
+and package/ring integration remain incomplete. Physical-record LVS
+and extracted-capacitance screens do not establish ESD or interconnect-current
+qualification. All five generated layouts now place primary-protection candidates
+behind each bond with local return routing and declared native DVSS contacts.
+Standalone DRC/LVS passes; assembled geometry preserves every bond opening and
+confines ring overlap to those contacts. Local metal/via extraction also verifies the ground joins and supply isolation
+for all five pairs. Whole-ring/device extraction, package-return analysis and
+high-current qualification remain open. RX/USB signal devices and core connections now
+sit at the bond-facing edge, with bounded internal routes. Four nominal1GHz
+loading configurations meet the2.7pF/leg allocation; resistance and variation
+are not yet included. All pad families now use bounded internal
+routes and wider transverse signal wiring. Power/return trunks now use8 µm M5
+with explicit track clearance and bounded endpoints, preserving the cell
+reservations. Their individual conductor resistance is reported separately;
+local access, vias, ring returns and the core power mesh remain unqualified. The PDK-sheet screen still finds
+approximately9.3–12.3 ohms per leg from bond to declared core port, excluding
+vias and branch access. Bond-pad impedance and timing therefore remain open
+even where capacitance-only screens pass. RF RX/TX now additionally exercise
+segmented metal resistance in the same retained-network bench. Nominal2.4GHz
+voltage transfer is about0.446 RX and0.433 TX; capacitance-placement probes
+and higher sheet resistance also complete every declared lifecycle window.
+This estimate preserves near-bond protection but omits via/return resistance
+and is not distributed extraction or an RF performance qualification.
+
+Native host/control pads require coordinated board power. The first-pass
+fixture uses a common upstream source for the host output-high voltage and
+transceiver feed, retaining local feed/decoupling lag. Independent host power
+requires validated isolation/sequencing; native cells are not power-off tolerant.
+The independent-powered-peer adverse case remains in the evidence, and combined
+recovery is still numerically incomplete.
+
 IO pads are stateful analog blocks in the high-level design. The normative
 `pad_behavioral_contract` in [analog-architecture.json](analog-architecture.json)
 owns their behavior and state obligations; existing block parameters retain
@@ -984,7 +1062,9 @@ board and on-die loads twice. The shared-pad factory rejects inconsistent budget
 Protection probes remain explicit adverse hypotheses. The factory does not
 silently turn missing protection into a safe ideal clamp. A schematic must
 ultimately meet these behavioral obligations under the selected package load;
-transistor and layout work remain deferred until the mathematical milestone.
+the user-authorized parametric pad first pass now includes transistor and layout
+views, while the remaining whole-chip implementation retains its mathematical
+closure gate. Generated pad geometry is not qualification.
 
 ## Wired paths and specialized pad branches
 

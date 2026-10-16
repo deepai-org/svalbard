@@ -1,0 +1,20 @@
+{
+  "status": "RTL_loaded_readiness_checks_pass_not_physical_or_closed_loop",
+  "verification": "Icarus compiled and vvp passed tx_pad_sequence_tb",
+  "checks": [
+    "startup load remains applied through readiness dip",
+    "contiguous loaded-ready dwell",
+    "no premature traffic-ready",
+    "snapshot",
+    "pre/post blanking",
+    "conflict",
+    "release order",
+    "readiness loss after activation",
+    "async supply/reset",
+    "explicit rearm"
+  ],
+  "source_sha256": {
+    "projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "fc3cdc163ae805c33b92a298142718ad36c94f5567ac4bb9bb608be016d58e32",
+    "projects/programmable_transceiver_platform/analog/pads/tx_pad_sequence_tb.sv": "fa5ef9daaa3b1bd78e35dc52ab4b83254091f35c49a9d233bc96681cc3ac81c6"
+  }
+}

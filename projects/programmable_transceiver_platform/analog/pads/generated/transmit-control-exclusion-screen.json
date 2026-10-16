@@ -1,0 +1,28 @@
+{
+  "status": "TX_behavioral_mode_guard_on_extracted_pad",
+  "request_combinations_verified": 32,
+  "results": {
+    "normal": {
+      "transient_complete": true,
+      "main_post_window_conflict_max": 0.0,
+      "pad_min_v": 2.24510167,
+      "pad_max_v": 2.88804191
+    },
+    "conflict": {
+      "transient_complete": true,
+      "main_post_window_conflict_max": 1.0,
+      "pad_min_v": 3.11883725,
+      "pad_max_v": 3.29593637
+    }
+  },
+  "limitations": [
+    "Ideal mode decisions; no physical logic, hazard rejection, qualification latch or bias sequencing implementation.",
+    "TERM_VCM source remains fixture boundary; guard does not establish buffer readiness."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-tx-hv-control-connected/wired_transmit/electrical/lifecycle.spice": "5886abe5e06bb10c73fdcf04dd7de28f499e943df760f50a80a8ac142171a79b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-transmit-extracted-c.spice": "a94670ad2a9a08285faa3fe466a25878d398a8325b90d3ae1d2ca289e2ca3d79",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_controls.py": "5b9d3d944392d8e45c07425f6bf5e9912d2ec682be3e10ed171be21cf717e571",
+    "/home/ubuntu/svalbard/scratch/pad-tx-mode-guard-check.py": "e0cc0581f48de8bfb3387361105e24741ee2ceb97fedf7846695ec7ac77c2b37"
+  }
+}

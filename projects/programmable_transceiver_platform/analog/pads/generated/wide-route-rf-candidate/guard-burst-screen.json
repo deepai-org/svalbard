@@ -1,0 +1,26 @@
+{
+  "status": "guard_then_RF_burst_same_retained_state",
+  "qualification_guard_s": 2e-05,
+  "cases": {
+    "baseline": {
+      "transient_complete": true,
+      "power_dbm": 0.2264166825706632,
+      "late_gate_max_v": 0.000290651108
+    },
+    "feedforward": {
+      "transient_complete": true,
+      "power_dbm": 0.2246000462585681,
+      "late_gate_max_v": 0.00206354716
+    }
+  },
+  "limitations": [
+    "Carrier-free bias startup followed by 64-point-per-cycle PWL RF burst; external peer has no tone.",
+    "PWL approximation, nominal devices, single ramp and ideal supply; no complete startup or RF qualification."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "0974c3c93656155b4746d36214503858d7a7c5e8fe29913d27518c4f2e126db8",
+    "/home/ubuntu/svalbard/scratch/pad-clamp-guard-burst.py": "4dae3f9e36bcf8691b63ae6413c53a695778bf314de30d4104aec65d0f0ea1be",
+    "/home/ubuntu/svalbard/scratch/pad-clamp-recovery-envelope/baseline.spice": "17ca2a3ff3ecabbc5188d5f53c35d272a829dfeb61e2bc133edeb6a3f50510d3",
+    "/home/ubuntu/svalbard/scratch/pad-clamp-recovery-envelope/feedforward.spice": "555fc0e66fc329b3da07174002491a6de05178ff4ba4a32f10773c928e1ff88d"
+  }
+}

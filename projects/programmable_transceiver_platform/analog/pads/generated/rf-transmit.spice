@@ -1,0 +1,8 @@
+* Generated from circuits.py; external bias/control circuitry is explicit.
+* No ESD survival claim. Zero ideal pad capacitance is added to device capacitance.
+.subckt pad_rf_transmit PAD_P PAD_N VSS
+XESD_P_0 PAD_P VSS VSS VSS nfet_06v0_dss w=16.0u l=0.6u nf=1 m=1 ad=67.52p as=11.52p pd=40.44u ps=33.44u d_sab=3.78u s_sab=0.28u
+XESD_P_1 PAD_P VSS VSS VSS nfet_06v0_dss w=16.0u l=0.6u nf=1 m=1 ad=67.52p as=11.52p pd=40.44u ps=33.44u d_sab=3.78u s_sab=0.28u
+XESD_N_0 PAD_N VSS VSS VSS nfet_06v0_dss w=16.0u l=0.6u nf=1 m=1 ad=67.52p as=11.52p pd=40.44u ps=33.44u d_sab=3.78u s_sab=0.28u
+XESD_N_1 PAD_N VSS VSS VSS nfet_06v0_dss w=16.0u l=0.6u nf=1 m=1 ad=67.52p as=11.52p pd=40.44u ps=33.44u d_sab=3.78u s_sab=0.28u
+.ends pad_rf_transmit

@@ -1,0 +1,108 @@
+{
+  "status": "complete_TX_with_attached_primary_lifecycle_complete_loading_tight",
+  "capacitance_budget_f_per_leg": 2.7e-12,
+  "cases": {
+    "disabled": {
+      "baseline_f_per_leg": [
+        2.3997656338063905e-12,
+        2.427944248164081e-12
+      ],
+      "with_primary_f_per_leg": [
+        2.700097257664814e-12,
+        2.727782562852656e-12
+      ]
+    },
+    "reset": {
+      "baseline_f_per_leg": [
+        1.3255546585319552e-12,
+        1.3520267145491513e-12
+      ],
+      "with_primary_f_per_leg": [
+        1.6259635738508827e-12,
+        1.6519427329929232e-12
+      ]
+    },
+    "unpowered_external_peer": {
+      "baseline_f_per_leg": [
+        1.3255276281497735e-12,
+        1.3520132679822694e-12
+      ],
+      "with_primary_f_per_leg": [
+        1.6261453893275589e-12,
+        1.6521391827852725e-12
+      ]
+    },
+    "source_termination": {
+      "baseline_f_per_leg": [
+        2.0653220964618257e-12,
+        2.0938019098993358e-12
+      ],
+      "with_primary_f_per_leg": [
+        2.3658405007816076e-12,
+        2.393826591278473e-12
+      ]
+    },
+    "main": {
+      "baseline_f_per_leg": [
+        1.9377272599879366e-12,
+        2.4242441290486195e-12
+      ],
+      "with_primary_f_per_leg": [
+        2.2382289241589476e-12,
+        2.713527979895987e-12
+      ]
+    },
+    "main_post": {
+      "baseline_f_per_leg": [
+        1.929288152140299e-12,
+        2.1365466328902164e-12
+      ],
+      "with_primary_f_per_leg": [
+        2.229916065600017e-12,
+        2.4366903436496714e-12
+      ]
+    },
+    "main_post_terminated": {
+      "baseline_f_per_leg": [
+        1.5948214466185484e-12,
+        1.8024339196642162e-12
+      ],
+      "with_primary_f_per_leg": [
+        1.895292131074274e-12,
+        2.1024236536252644e-12
+      ]
+    },
+    "tmds": {
+      "baseline_f_per_leg": [
+        1.3550443027805613e-12,
+        1.3284833830230767e-12
+      ],
+      "with_primary_f_per_leg": [
+        1.6506710224602407e-12,
+        1.6236229148483579e-12
+      ]
+    },
+    "detection": {
+      "baseline_f_per_leg": [
+        3.481054697393611e-12,
+        3.5134646974518634e-12
+      ],
+      "with_primary_f_per_leg": [
+        3.784738777391688e-12,
+        3.8166554606852124e-12
+      ]
+    }
+  },
+  "decision": "Retain primary macro for layout exploration. Do not adopt added-on topology unchanged: disabled/main exceed capacitance allocation slightly, detection exceeds it substantially. Assess replacement of undersized grounded-gate devices instead of keeping redundant primary structures.",
+  "limitations": [
+    "No combined layout or added connection parasitics.",
+    "Lifecycle completion and current targets are not timing, protection or protocol acceptance.",
+    "Base screen device_count refers to original TX circuit; attached macro is additional."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-tx-attached-protection-screen/screen-report.json": "6065ec9a12a5c9c845c495cd30d986a8349e7d89bfe0bf452d9897d3071b83a5",
+    "/home/ubuntu/svalbard/scratch/pad-tx-attached-protection-loading/wired-transmit-loading.json": "b7fad57b1a1abd14ea0d265379abd2f105e765a01e55fc164846ea641ddacc20",
+    "/home/ubuntu/svalbard/scratch/pad-tx-attached-protection.json": "ae350bef12063b2f958b6dcc40d2d973003f8b12ac72c8892f5eacce18def80a",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-transmit-loading.json": "3648efbc1ccba0f4c978a998f59d2bdc2e8411b03e265d55558b385968783ab8"
+  }
+}

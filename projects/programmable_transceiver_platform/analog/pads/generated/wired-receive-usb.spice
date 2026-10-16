@@ -1,0 +1,293 @@
+* Generated from circuits.py; external bias/control circuitry is explicit.
+* No ESD survival claim. Zero ideal pad capacitance is added to device capacitance.
+.subckt pad_wired_receive_usb PAD_P PAD_N VDD VSS TERM_VCM TERM_ENABLE DIFF_ENABLE DIV_ENABLE BYPASS_ENABLE RX_P RX_N HS_PBIAS HS_P HS_N FS_HIGH_P FS_HIGH_N FS_LOW_P FS_LOW_N PULLUP_P PULLUP_N PULLDOWN_P PULLDOWN_N
+XVCM_LOW_SENSE_N VCM_LOW_OK TERM_VCM VSS VSS nfet_03v3 w=8.0u l=0.28u nf=1 m=1 ad=3.52p as=3.52p pd=16.88u ps=16.88u
+XVCM_LOW_SENSE_P VCM_LOW_OK TERM_VCM VDD VDD pfet_03v3 w=2.0u l=0.28u nf=1 m=1 ad=0.88p as=0.88p pd=4.88u ps=4.88u
+XESD_P_0 PAD_P VSS VSS VSS nfet_06v0_dss w=16.0u l=0.6u nf=1 m=1 ad=67.52p as=11.52p pd=40.44u ps=33.44u d_sab=3.78u s_sab=0.28u
+XESD_P_1 PAD_P VSS VSS VSS nfet_06v0_dss w=16.0u l=0.6u nf=1 m=1 ad=67.52p as=11.52p pd=40.44u ps=33.44u d_sab=3.78u s_sab=0.28u
+XTERM_OR_P_N0 TERM_OR_P_B TERM_ENABLE VSS VSS nfet_03v3 w=2.0u l=0.28u nf=1 m=1 ad=0.88p as=0.88p pd=4.88u ps=4.88u
+XTERM_OR_P_N1 TERM_OR_P_B FS_LOW_P TERM_OR_P_NS VSS nfet_03v3 w=2.0u l=0.28u nf=1 m=1 ad=0.88p as=0.88p pd=4.88u ps=4.88u
+XTERM_OR_P_QUAL_N TERM_OR_P_NS VCM_LOW_OK VSS VSS nfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XTERM_OR_P_P0 TERM_OR_P_S TERM_ENABLE VDD VDD pfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XTERM_OR_P_P1 TERM_OR_P_B FS_LOW_P TERM_OR_P_S VDD pfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XTERM_OR_P_QUAL_P TERM_OR_P_B VCM_LOW_OK TERM_OR_P_S VDD pfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XTERM_OR_P_OUT_N TERM_GATE_P TERM_OR_P_B VSS VSS nfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XTERM_OR_P_OUT_P TERM_GATE_P TERM_OR_P_B VDD VDD pfet_03v3 w=8.0u l=0.28u nf=1 m=1 ad=3.52p as=3.52p pd=16.88u ps=16.88u
+XTERM_GATE_P_BLEED_0 TERM_GATE_P TERM_GATE_P_BLEED_0 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XTERM_GATE_P_BLEED_1 TERM_GATE_P_BLEED_0 TERM_GATE_P_BLEED_1 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XTERM_GATE_P_BLEED_2 TERM_GATE_P_BLEED_1 TERM_GATE_P_BLEED_2 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XTERM_GATE_P_BLEED_3 TERM_GATE_P_BLEED_2 VSS VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XTERM_P PAD_P TERM_P_R VSS ppolyf_s r_width=1.0u r_length=3.29u
+XTERM_P_0 TERM_P_R TERM_GATE_P TERM_VCM VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XTERM_P_1 TERM_P_R TERM_GATE_P TERM_VCM VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XTERM_P_2 TERM_P_R TERM_GATE_P TERM_VCM VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XTERM_P_3 TERM_P_R TERM_GATE_P TERM_VCM VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XTERM_P_4 TERM_P_R TERM_GATE_P TERM_VCM VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XTERM_P_5 TERM_P_R TERM_GATE_P TERM_VCM VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XTERM_P_6 TERM_P_R TERM_GATE_P TERM_VCM VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XTERM_P_7 TERM_P_R TERM_GATE_P TERM_VCM VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XDIV_TOP_P PAD_P DIV_P VSS ppolyf_u_1k r_width=1.0u r_length=2.0u
+XDIV_BOTTOM_P DIV_P DIV_LOW_P VSS ppolyf_u_1k r_width=1.0u r_length=2.0u
+XDIV_GROUND_P DIV_LOW_P DIV_ENABLE VSS VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XDIV_SELECT_P DIV_P DIV_ENABLE RX_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XBYPASS_P_0 PAD_P BYPASS_ENABLE RX_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XBYPASS_P_1 PAD_P BYPASS_ENABLE RX_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XBYPASS_P_2 PAD_P BYPASS_ENABLE RX_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XBYPASS_P_3 PAD_P BYPASS_ENABLE RX_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_0_SOURCE HS_P_0 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_0_ISOLATE HS_P_0 HS_P PAD_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_1_SOURCE HS_P_1 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_1_ISOLATE HS_P_1 HS_P PAD_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_2_SOURCE HS_P_2 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_2_ISOLATE HS_P_2 HS_P PAD_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_3_SOURCE HS_P_3 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_3_ISOLATE HS_P_3 HS_P PAD_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_4_SOURCE HS_P_4 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_4_ISOLATE HS_P_4 HS_P PAD_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_5_SOURCE HS_P_5 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_5_ISOLATE HS_P_5 HS_P PAD_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_6_SOURCE HS_P_6 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_6_ISOLATE HS_P_6 HS_P PAD_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_7_SOURCE HS_P_7 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_7_ISOLATE HS_P_7 HS_P PAD_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_8_SOURCE HS_P_8 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_8_ISOLATE HS_P_8 HS_P PAD_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_9_SOURCE HS_P_9 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_9_ISOLATE HS_P_9 HS_P PAD_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_10_SOURCE HS_P_10 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_10_ISOLATE HS_P_10 HS_P PAD_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_11_SOURCE HS_P_11 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_11_ISOLATE HS_P_11 HS_P PAD_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_12_SOURCE HS_P_12 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_12_ISOLATE HS_P_12 HS_P PAD_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_13_SOURCE HS_P_13 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_P_13_ISOLATE HS_P_13 HS_P PAD_P VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_0 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_0 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_1 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_1 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_2 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_2 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_3 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_3 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_4 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_4 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_5 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_5 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_6 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_6 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_7 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_7 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_8 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_8 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_9 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_9 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_10 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_10 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_11 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_11 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_12 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_12 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_13 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_13 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_14 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_14 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_15 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_15 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_16 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_16 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_17 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_17 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_18 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_18 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_19 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_19 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_20 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_20 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_21 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_21 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_22 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_22 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_SUP_23 VDD FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_PAD_23 FS_P_OUT FS_P_GATE FS_P_WELL FS_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_P_CONTROL FS_P_GATE FS_HIGH_P FS_P_CONTROL_S VSS nfet_06v0 w=2.0u l=0.7u nf=1 m=1 ad=0.88p as=0.88p pd=4.88u ps=4.88u
+XFS_P_POWER FS_P_CONTROL_S VDD VSS VSS nfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XFS_P_RESTORE FS_P_GATE VDD FS_P_WELL FS_P_WELL pfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XFS_P_BLEED_0 FS_P_WELL FS_P_BLEED_0 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XFS_P_BLEED_1 FS_P_BLEED_0 FS_P_BLEED_1 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XFS_P_BLEED_2 FS_P_BLEED_1 FS_P_BLEED_2 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XFS_P_BLEED_3 FS_P_BLEED_2 FS_P_BLEED_3 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XFS_P_BLEED_4 FS_P_BLEED_3 FS_P_BLEED_4 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XFS_P_BLEED_5 FS_P_BLEED_4 FS_P_BLEED_5 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XFS_P_BLEED_6 FS_P_BLEED_5 FS_P_BLEED_6 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XFS_P_BLEED_7 FS_P_BLEED_6 FS_P_GATE VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XFS_P_R FS_P_OUT PAD_P VSS ppolyf_s r_width=1.0u r_length=2.16u
+XPULLUP_P_SUP_0 VDD PULLUP_P_GATE PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XPULLUP_P_PAD_0 PULLUP_P_OUT PULLUP_P_GATE PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XPULLUP_P_SUP_1 VDD PULLUP_P_GATE PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XPULLUP_P_PAD_1 PULLUP_P_OUT PULLUP_P_GATE PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XPULLUP_P_SUP_2 VDD PULLUP_P_GATE PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XPULLUP_P_PAD_2 PULLUP_P_OUT PULLUP_P_GATE PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XPULLUP_P_SUP_3 VDD PULLUP_P_GATE PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XPULLUP_P_PAD_3 PULLUP_P_OUT PULLUP_P_GATE PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XPULLUP_P_CONTROL PULLUP_P_GATE PULLUP_P PULLUP_P_CONTROL_S VSS nfet_06v0 w=2.0u l=0.7u nf=1 m=1 ad=0.88p as=0.88p pd=4.88u ps=4.88u
+XPULLUP_P_POWER PULLUP_P_CONTROL_S VDD VSS VSS nfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XPULLUP_P_RESTORE PULLUP_P_GATE VDD PULLUP_P_WELL PULLUP_P_WELL pfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XPULLUP_P_BLEED_0 PULLUP_P_WELL PULLUP_P_BLEED_0 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XPULLUP_P_BLEED_1 PULLUP_P_BLEED_0 PULLUP_P_BLEED_1 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XPULLUP_P_BLEED_2 PULLUP_P_BLEED_1 PULLUP_P_BLEED_2 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XPULLUP_P_BLEED_3 PULLUP_P_BLEED_2 PULLUP_P_BLEED_3 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XPULLUP_P_BLEED_4 PULLUP_P_BLEED_3 PULLUP_P_BLEED_4 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XPULLUP_P_BLEED_5 PULLUP_P_BLEED_4 PULLUP_P_BLEED_5 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XPULLUP_P_BLEED_6 PULLUP_P_BLEED_5 PULLUP_P_BLEED_6 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XPULLUP_P_BLEED_7 PULLUP_P_BLEED_6 PULLUP_P_GATE VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XPULLUP_P_R PULLUP_P_OUT PAD_P VSS ppolyf_u_1k r_width=1.0u r_length=1.18u
+XPULLDOWN_P PAD_P PULLDOWN_P_R VSS ppolyf_u_1k r_width=1.0u r_length=14.2u
+XPULLDOWN_P PULLDOWN_P_R PULLDOWN_P VSS VSS nfet_03v3 w=8.0u l=0.28u nf=1 m=1 ad=3.52p as=3.52p pd=16.88u ps=16.88u
+XESD_N_0 PAD_N VSS VSS VSS nfet_06v0_dss w=16.0u l=0.6u nf=1 m=1 ad=67.52p as=11.52p pd=40.44u ps=33.44u d_sab=3.78u s_sab=0.28u
+XESD_N_1 PAD_N VSS VSS VSS nfet_06v0_dss w=16.0u l=0.6u nf=1 m=1 ad=67.52p as=11.52p pd=40.44u ps=33.44u d_sab=3.78u s_sab=0.28u
+XTERM_OR_N_N0 TERM_OR_N_B TERM_ENABLE VSS VSS nfet_03v3 w=2.0u l=0.28u nf=1 m=1 ad=0.88p as=0.88p pd=4.88u ps=4.88u
+XTERM_OR_N_N1 TERM_OR_N_B FS_LOW_N TERM_OR_N_NS VSS nfet_03v3 w=2.0u l=0.28u nf=1 m=1 ad=0.88p as=0.88p pd=4.88u ps=4.88u
+XTERM_OR_N_QUAL_N TERM_OR_N_NS VCM_LOW_OK VSS VSS nfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XTERM_OR_N_P0 TERM_OR_N_S TERM_ENABLE VDD VDD pfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XTERM_OR_N_P1 TERM_OR_N_B FS_LOW_N TERM_OR_N_S VDD pfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XTERM_OR_N_QUAL_P TERM_OR_N_B VCM_LOW_OK TERM_OR_N_S VDD pfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XTERM_OR_N_OUT_N TERM_GATE_N TERM_OR_N_B VSS VSS nfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XTERM_OR_N_OUT_P TERM_GATE_N TERM_OR_N_B VDD VDD pfet_03v3 w=8.0u l=0.28u nf=1 m=1 ad=3.52p as=3.52p pd=16.88u ps=16.88u
+XTERM_GATE_N_BLEED_0 TERM_GATE_N TERM_GATE_N_BLEED_0 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XTERM_GATE_N_BLEED_1 TERM_GATE_N_BLEED_0 TERM_GATE_N_BLEED_1 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XTERM_GATE_N_BLEED_2 TERM_GATE_N_BLEED_1 TERM_GATE_N_BLEED_2 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XTERM_GATE_N_BLEED_3 TERM_GATE_N_BLEED_2 VSS VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XTERM_N PAD_N TERM_N_R VSS ppolyf_s r_width=1.0u r_length=3.29u
+XTERM_N_0 TERM_N_R TERM_GATE_N TERM_VCM VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XTERM_N_1 TERM_N_R TERM_GATE_N TERM_VCM VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XTERM_N_2 TERM_N_R TERM_GATE_N TERM_VCM VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XTERM_N_3 TERM_N_R TERM_GATE_N TERM_VCM VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XTERM_N_4 TERM_N_R TERM_GATE_N TERM_VCM VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XTERM_N_5 TERM_N_R TERM_GATE_N TERM_VCM VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XTERM_N_6 TERM_N_R TERM_GATE_N TERM_VCM VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XTERM_N_7 TERM_N_R TERM_GATE_N TERM_VCM VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XDIV_TOP_N PAD_N DIV_N VSS ppolyf_u_1k r_width=1.0u r_length=2.0u
+XDIV_BOTTOM_N DIV_N DIV_LOW_N VSS ppolyf_u_1k r_width=1.0u r_length=2.0u
+XDIV_GROUND_N DIV_LOW_N DIV_ENABLE VSS VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XDIV_SELECT_N DIV_N DIV_ENABLE RX_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XBYPASS_N_0 PAD_N BYPASS_ENABLE RX_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XBYPASS_N_1 PAD_N BYPASS_ENABLE RX_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XBYPASS_N_2 PAD_N BYPASS_ENABLE RX_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XBYPASS_N_3 PAD_N BYPASS_ENABLE RX_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_0_SOURCE HS_N_0 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_0_ISOLATE HS_N_0 HS_N PAD_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_1_SOURCE HS_N_1 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_1_ISOLATE HS_N_1 HS_N PAD_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_2_SOURCE HS_N_2 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_2_ISOLATE HS_N_2 HS_N PAD_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_3_SOURCE HS_N_3 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_3_ISOLATE HS_N_3 HS_N PAD_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_4_SOURCE HS_N_4 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_4_ISOLATE HS_N_4 HS_N PAD_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_5_SOURCE HS_N_5 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_5_ISOLATE HS_N_5 HS_N PAD_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_6_SOURCE HS_N_6 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_6_ISOLATE HS_N_6 HS_N PAD_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_7_SOURCE HS_N_7 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_7_ISOLATE HS_N_7 HS_N PAD_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_8_SOURCE HS_N_8 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_8_ISOLATE HS_N_8 HS_N PAD_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_9_SOURCE HS_N_9 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_9_ISOLATE HS_N_9 HS_N PAD_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_10_SOURCE HS_N_10 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_10_ISOLATE HS_N_10 HS_N PAD_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_11_SOURCE HS_N_11 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_11_ISOLATE HS_N_11 HS_N PAD_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_12_SOURCE HS_N_12 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_12_ISOLATE HS_N_12 HS_N PAD_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_13_SOURCE HS_N_13 HS_PBIAS VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XHS_N_13_ISOLATE HS_N_13 HS_N PAD_N VSS nfet_06v0 w=20.0u l=0.7u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_0 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_0 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_1 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_1 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_2 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_2 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_3 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_3 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_4 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_4 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_5 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_5 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_6 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_6 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_7 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_7 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_8 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_8 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_9 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_9 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_10 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_10 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_11 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_11 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_12 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_12 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_13 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_13 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_14 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_14 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_15 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_15 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_16 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_16 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_17 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_17 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_18 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_18 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_19 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_19 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_20 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_20 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_21 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_21 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_22 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_22 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_SUP_23 VDD FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_PAD_23 FS_N_OUT FS_N_GATE FS_N_WELL FS_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XFS_N_CONTROL FS_N_GATE FS_HIGH_N FS_N_CONTROL_S VSS nfet_06v0 w=2.0u l=0.7u nf=1 m=1 ad=0.88p as=0.88p pd=4.88u ps=4.88u
+XFS_N_POWER FS_N_CONTROL_S VDD VSS VSS nfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XFS_N_RESTORE FS_N_GATE VDD FS_N_WELL FS_N_WELL pfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XFS_N_BLEED_0 FS_N_WELL FS_N_BLEED_0 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XFS_N_BLEED_1 FS_N_BLEED_0 FS_N_BLEED_1 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XFS_N_BLEED_2 FS_N_BLEED_1 FS_N_BLEED_2 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XFS_N_BLEED_3 FS_N_BLEED_2 FS_N_BLEED_3 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XFS_N_BLEED_4 FS_N_BLEED_3 FS_N_BLEED_4 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XFS_N_BLEED_5 FS_N_BLEED_4 FS_N_BLEED_5 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XFS_N_BLEED_6 FS_N_BLEED_5 FS_N_BLEED_6 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XFS_N_BLEED_7 FS_N_BLEED_6 FS_N_GATE VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XFS_N_R FS_N_OUT PAD_N VSS ppolyf_s r_width=1.0u r_length=2.16u
+XPULLUP_N_SUP_0 VDD PULLUP_N_GATE PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XPULLUP_N_PAD_0 PULLUP_N_OUT PULLUP_N_GATE PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XPULLUP_N_SUP_1 VDD PULLUP_N_GATE PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XPULLUP_N_PAD_1 PULLUP_N_OUT PULLUP_N_GATE PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XPULLUP_N_SUP_2 VDD PULLUP_N_GATE PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XPULLUP_N_PAD_2 PULLUP_N_OUT PULLUP_N_GATE PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XPULLUP_N_SUP_3 VDD PULLUP_N_GATE PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XPULLUP_N_PAD_3 PULLUP_N_OUT PULLUP_N_GATE PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XPULLUP_N_CONTROL PULLUP_N_GATE PULLUP_N PULLUP_N_CONTROL_S VSS nfet_06v0 w=2.0u l=0.7u nf=1 m=1 ad=0.88p as=0.88p pd=4.88u ps=4.88u
+XPULLUP_N_POWER PULLUP_N_CONTROL_S VDD VSS VSS nfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XPULLUP_N_RESTORE PULLUP_N_GATE VDD PULLUP_N_WELL PULLUP_N_WELL pfet_03v3 w=4.0u l=0.28u nf=1 m=1 ad=1.76p as=1.76p pd=8.88u ps=8.88u
+XPULLUP_N_BLEED_0 PULLUP_N_WELL PULLUP_N_BLEED_0 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XPULLUP_N_BLEED_1 PULLUP_N_BLEED_0 PULLUP_N_BLEED_1 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XPULLUP_N_BLEED_2 PULLUP_N_BLEED_1 PULLUP_N_BLEED_2 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XPULLUP_N_BLEED_3 PULLUP_N_BLEED_2 PULLUP_N_BLEED_3 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XPULLUP_N_BLEED_4 PULLUP_N_BLEED_3 PULLUP_N_BLEED_4 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XPULLUP_N_BLEED_5 PULLUP_N_BLEED_4 PULLUP_N_BLEED_5 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XPULLUP_N_BLEED_6 PULLUP_N_BLEED_5 PULLUP_N_BLEED_6 VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XPULLUP_N_BLEED_7 PULLUP_N_BLEED_6 PULLUP_N_GATE VSS ppolyf_u_1k r_width=1.0u r_length=12.5u
+XPULLUP_N_R PULLUP_N_OUT PAD_N VSS ppolyf_u_1k r_width=1.0u r_length=1.18u
+XPULLDOWN_N PAD_N PULLDOWN_N_R VSS ppolyf_u_1k r_width=1.0u r_length=14.2u
+XPULLDOWN_N PULLDOWN_N_R PULLDOWN_N VSS VSS nfet_03v3 w=8.0u l=0.28u nf=1 m=1 ad=3.52p as=3.52p pd=16.88u ps=16.88u
+XDIFF_TERM_0 TERM_P_R DIFF_ENABLE TERM_N_R VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XDIFF_TERM_1 TERM_P_R DIFF_ENABLE TERM_N_R VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XDIFF_TERM_2 TERM_P_R DIFF_ENABLE TERM_N_R VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XDIFF_TERM_3 TERM_P_R DIFF_ENABLE TERM_N_R VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XDIFF_TERM_4 TERM_P_R DIFF_ENABLE TERM_N_R VSS nfet_03v3 w=20.0u l=0.28u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+.ends pad_wired_receive_usb

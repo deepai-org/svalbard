@@ -1,0 +1,73 @@
+{
+  "status": "RTL_to_extracted_TX_open_loop_replay",
+  "windows": {
+    "reset": {
+      "vcm_min_v": -0.00211368721,
+      "vcm_max_v": -0.00136702683,
+      "max_reference_error_v": 1.65189241721,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": 0.000323825127
+    },
+    "unpowered": {
+      "vcm_min_v": -0.105450098,
+      "vcm_max_v": -0.0478143222,
+      "max_reference_error_v": 0.1475383629,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": -0.15431163
+    },
+    "precharge": {
+      "vcm_min_v": 1.59491416,
+      "vcm_max_v": 2.36223381,
+      "max_reference_error_v": 0.7201398000000001,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 2.37130313e-05
+    },
+    "main": {
+      "vcm_min_v": 1.5322923,
+      "vcm_max_v": 1.66290909,
+      "max_reference_error_v": 0.12114163000000011,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 3.30054036
+    },
+    "main_post": {
+      "vcm_min_v": 1.52231136,
+      "vcm_max_v": 1.63562605,
+      "max_reference_error_v": 0.13006884000000007,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 3.3012079
+    },
+    "detect": {
+      "vcm_min_v": 0.476180291,
+      "vcm_max_v": 1.06966598,
+      "max_reference_error_v": 1.171587449,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": -1.48310572e-05
+    },
+    "disabled": {
+      "vcm_min_v": 0.0186414851,
+      "vcm_max_v": 0.0515925719,
+      "max_reference_error_v": 1.6313118749,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": -1.00999208e-06
+    }
+  },
+  "scope": "Replay actual RTL sequencer outputs into the retained extracted TX circuit.\n\nOpen-loop RTL-to-SPICE integration: analog_ready is a prescribed test stimulus,\nnot a detector observing SPICE. No electrical feedback or physical RTL mapping.\n",
+  "clock_period_ns": 4,
+  "pre_post_cycles": 2,
+  "edge_translation_ns": 0.02,
+  "external_network_unchanged": true,
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "3ee375dddf33cf97e10490ff54a86d8ae73d9b0c55f133a1956def057b5d47e1",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "8775facabf7c5126b79684ffdd86853f52c2bf41a7a88bbe59f74fb3464b7842",
+    "/home/ubuntu/svalbard/scratch/pad-tx-sequenced-connected-initialized/replay.sv": "9f8569b56e1c5f90f1eb6e18c0f71a126a9123868492f54f7f3f832a43eeff9d",
+    "/home/ubuntu/svalbard/scratch/pad-tx-thick-control-connected/connected.spice": "3beca7f11f2140d1ab15e17e2fbdd200a3b36ff5ca3a343fd24ec9ee9f9f0cfc",
+    "/home/ubuntu/svalbard/scratch/pad-tx-sequenced-connected-initialized/connected.spice": "c7adb4b380c2c9ea442870c151661220fda5340a441b114c2d320cedc12b39d3"
+  }
+}

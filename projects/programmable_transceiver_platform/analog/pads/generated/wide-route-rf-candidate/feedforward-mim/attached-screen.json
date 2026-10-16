@@ -1,0 +1,47 @@
+{
+  "status": "extracted_MIM_feedforward_connected_not_placed_in_pad",
+  "parameters": {
+    "feedforward_capacitance_f": 1e-11
+  },
+  "results": {
+    "lifecycle": {
+      "transient_complete": true,
+      "power_dbm": {
+        "active": 0.15793881392517348,
+        "reactivated": 0.1638092025679376
+      }
+    },
+    "pulse": {
+      "transient_complete": true,
+      "pulse": {
+        "core_to_return_v": {
+          "min": 1.64603803,
+          "max": 3.95155648
+        },
+        "rail_to_return_v": {
+          "min": 1.1327171,
+          "max": 2.95901027
+        },
+        "gate_to_return_v": {
+          "min": -1.65222311e-05,
+          "max": 1.04697198
+        },
+        "timing_to_return_v": {
+          "min": 1.11099314,
+          "max": 1.22455588
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Standalone MIM device and extracted parasitics included; integration routes absent.",
+    "Existing RC node and all original circuitry retained; no external trigger.",
+    "Cold-start ramp, RF false triggering, corners and current capacity not qualified."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-wide-bond-corridor-maxgain-corner/lifecycle.spice": "bb37e0c8f973c6eb0281f5e697a95f50de039755409784a70e4dc4de70483bee",
+    "/home/ubuntu/svalbard/scratch/pad-wide-bond-corridor-pulses/positive_100mA.spice": "9f76bbb14c29f6fc41063b1c6fc62cad21090196f22900fa2e0bdd6adb0cc2be",
+    "/home/ubuntu/svalbard/scratch/pad-clamp-physical-feedforward.py": "c21345521c172feca51eee6d517bdcf18e4f20bf002c6dbd2d7f6c0c3f3a311c",
+    "/home/ubuntu/svalbard/scratch/pad-feedforward-mim-roundtrip/physical.spice": "372fd0f782e4032a3d191e3b25065dde8e80a6fea5798586d45722a07266393a"
+  }
+}

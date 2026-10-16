@@ -1,0 +1,60 @@
+{
+  "status": "external_load_tradeoff_not_selected_match",
+  "cases": [
+    {
+      "coupling_f_per_leg": 2.2e-12,
+      "load_ohm_per_leg": 25.0,
+      "power_dbm": {
+        "active": -0.8869179493087613,
+        "reactivated": -0.8802834154241383
+      },
+      "transient_complete": true
+    },
+    {
+      "coupling_f_per_leg": 3.3e-12,
+      "load_ohm_per_leg": 25.0,
+      "power_dbm": {
+        "active": -0.47426620589941354,
+        "reactivated": -0.46873006498817116
+      },
+      "transient_complete": true
+    },
+    {
+      "coupling_f_per_leg": 6.8e-12,
+      "load_ohm_per_leg": 25.0,
+      "power_dbm": {
+        "active": -0.3198305666653607,
+        "reactivated": -0.314109735235708
+      },
+      "transient_complete": true
+    },
+    {
+      "coupling_f_per_leg": 4.7e-12,
+      "load_ohm_per_leg": 37.5,
+      "power_dbm": {
+        "active": -0.3435061461124429,
+        "reactivated": -0.3351339893759889
+      },
+      "transient_complete": true
+    },
+    {
+      "coupling_f_per_leg": 4.7e-12,
+      "load_ohm_per_leg": 50.0,
+      "power_dbm": {
+        "active": -0.5709909204257423,
+        "reactivated": -0.5609281960790133
+      },
+      "transient_complete": true
+    }
+  ],
+  "limitations": [
+    "Only 2.4GHz tone, maximum modeled gain, nominal package and driver.",
+    "Loads other than 25ohm per leg require an external impedance transformation; insertion loss and realizable network absent.",
+    "Capacitors ideal; no tolerance, ESR, ESL or modulation qualification."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-rf-series-match-4p7pf/lifecycle.spice": "b9719bffe864c571d718330a75258509078cd5668de67549f160e3e50ae3f36a",
+    "/home/ubuntu/svalbard/scratch/pad-rf-load-match-probe.py": "ec7849b13bde80fa90b32ff055d97403df1ae20c6afdf010c7d7695770502fcb"
+  },
+  "decision": "Do not treat coupling-capacitor or resistive-load tuning as closing protected RF TX. All five cases miss 0 dBm before component insertion loss. Prioritize route/driver/protection co-design over further narrow capacitor tuning."
+}

@@ -1,0 +1,95 @@
+{
+  "loaded_traffic_ready_without_detector_ready_s": 4.9002401e-08,
+  "readiness_parameters": {
+    "max_reference_error_v": 0.0165,
+    "detector_time_constant_s": 1e-09,
+    "detector_assert_threshold": 0.99,
+    "scope": "First-pass modeled1percent-of1.65V window allocation; not measured detector performance or protocol deadline. Finite detector response followed by sequencer loaded dwell; readiness applies only when source termination is requested."
+  },
+  "status": "RTL_to_extracted_TX_open_loop_replay",
+  "windows": {
+    "reset": {
+      "vcm_min_v": -0.00213373956,
+      "vcm_max_v": -0.00136340311,
+      "max_reference_error_v": 1.65202240956,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": 0.00032384617,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    },
+    "unpowered": {
+      "vcm_min_v": -0.409810151,
+      "vcm_max_v": -0.286382457,
+      "max_reference_error_v": 0.4220492149,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": -0.15208749,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    },
+    "precharge": {
+      "vcm_min_v": -0.00461016821,
+      "vcm_max_v": 0.40626628,
+      "max_reference_error_v": 1.65287240821,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 3.19497833e-05,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    },
+    "main": {
+      "vcm_min_v": 1.08653528,
+      "vcm_max_v": 1.68887208,
+      "max_reference_error_v": 0.5663525899999999,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 3.30050946,
+      "traffic_ready_max_v": 3.3,
+      "measured_ready_max_v": 0.0
+    },
+    "main_post": {
+      "vcm_min_v": 1.55322565,
+      "vcm_max_v": 1.65378249,
+      "max_reference_error_v": 0.09961803000000002,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 3.30119392,
+      "traffic_ready_max_v": 3.3,
+      "measured_ready_max_v": 3.3
+    },
+    "detect": {
+      "vcm_min_v": 0.590312404,
+      "vcm_max_v": 1.27427128,
+      "max_reference_error_v": 1.057492656,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": -1.83736836e-05,
+      "traffic_ready_max_v": 3.3,
+      "measured_ready_max_v": 0.0
+    },
+    "disabled": {
+      "vcm_min_v": 0.0232571361,
+      "vcm_max_v": 0.064297349,
+      "max_reference_error_v": 1.6266548239,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": -1.14916456e-06,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    }
+  },
+  "scope": "Replay actual RTL sequencer outputs into the retained extracted TX circuit.\n\nOpen-loop RTL-to-SPICE integration: analog_ready is a prescribed test stimulus,\nnot a detector observing SPICE. No electrical feedback or physical RTL mapping.\n",
+  "clock_period_ns": 4,
+  "pre_post_cycles": 2,
+  "edge_translation_ns": 0.02,
+  "external_network_unchanged": true,
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "5e4b20fdaacb35f1b79119d21b07ba55102e988b80bf7ed50280dc2bc628d2dc",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "fc3cdc163ae805c33b92a298142718ad36c94f5567ac4bb9bb608be016d58e32",
+    "/home/ubuntu/svalbard/scratch/pad-tx-restore-high-readiness/replay.sv": "24f6feb152ec821e49c569943ffc9c339d1d02ce823a631a105dc242a457353e",
+    "/home/ubuntu/svalbard/scratch/pad-tx-restore-high-extracted.spice": "6ca0a0133db87745efda3790a0f4f1841e8d975e064a0b47a4447b003c77f02f",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "7c4b09b56910abe0eaa594a0cefae3c676706596c713ba8f04cb737367fcce57",
+    "/home/ubuntu/svalbard/scratch/pad-tx-restore-high-readiness/connected.spice": "637051fa3e97a57a52fe0c1a87d50dabd929eb897469b56c3a7fb9e525b38898"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "status": "physical_input_tolerance_candidate_not_adopted",
+  "implementation": "build(tolerant_inputs=True): every external-control gate uses06v0 model,0.7um length,2.5x width; internal gates unchanged.88devices; identical logic function.",
+  "evidence": "LocalDRC/devicegraph/GDSroundtrip pass;256DC cases pass;full connected lifecycle completes. Render inspected.",
+  "remaining": "Internal/output transient handling, physical sequencing/supervision, actual serializer/bias fanout, and corner checks. No reliability qualification.",
+  "generator_sha256": "c6b9b5c4c95349d31c7ed7dabc5d65fde95ebaea38a91669cf8f6f592b5c2532",
+  "decision": "Keep thick-oxide external input treatment as the candidate direction; change internal/output transient handling before canonical adoption.",
+  "terminal_exposure": "Supply-collapse4.126V gate-drain exposure now occurs on06v0 input devices. Remaining03v3 devices reach3.825V gate-source during release; this exceeds nominal rail and is not qualified. Device names do not establish safe lifetime.",
+  "transition_result": "Direct transitions retain2.825ns/2.025ns aggregate conflicting overlap at50fF/500fF. Prescribed2ns qualification blanking gives zero overlap above2.31V in these cases; hardware sequencer and actual full fanout remain absent."
+}

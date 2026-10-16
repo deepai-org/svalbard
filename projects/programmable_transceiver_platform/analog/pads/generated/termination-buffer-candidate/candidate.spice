@@ -1,0 +1,35 @@
+* Generated from circuits.py; external bias/control circuitry is explicit.
+* No ESD survival claim. Zero ideal pad capacitance is added to device capacitance.
+.subckt termination_buffer_candidate VDD VSS REF BIAS OUT
+XINPUT_FB_0 MIR OUT TAIL VSS nfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XINPUT_REF_0 GAIN REF TAIL VSS nfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XMIRROR_REF_0 MIR MIR VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XMIRROR_REF_1 MIR MIR VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XMIRROR_OUT_0 GAIN MIR VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XMIRROR_OUT_1 GAIN MIR VDD VDD pfet_03v3 w=20.0u l=1.0u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XTAIL_0 TAIL BIAS VSS VSS nfet_03v3 w=10.0u l=1.0u nf=1 m=1 ad=4.4p as=4.4p pd=20.88u ps=20.88u
+XSOURCE_0 OUT GAIN VDD VDD pfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSOURCE_1 OUT GAIN VDD VDD pfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSOURCE_2 OUT GAIN VDD VDD pfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSOURCE_3 OUT GAIN VDD VDD pfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSOURCE_4 OUT GAIN VDD VDD pfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSOURCE_5 OUT GAIN VDD VDD pfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSOURCE_6 OUT GAIN VDD VDD pfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSOURCE_7 OUT GAIN VDD VDD pfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSOURCE_8 OUT GAIN VDD VDD pfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSOURCE_9 OUT GAIN VDD VDD pfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSOURCE_10 OUT GAIN VDD VDD pfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSOURCE_11 OUT GAIN VDD VDD pfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSOURCE_12 OUT GAIN VDD VDD pfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSOURCE_13 OUT GAIN VDD VDD pfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSOURCE_14 OUT GAIN VDD VDD pfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSOURCE_15 OUT GAIN VDD VDD pfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSINK_0 OUT GAIN VSS VSS nfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSINK_1 OUT GAIN VSS VSS nfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSINK_2 OUT GAIN VSS VSS nfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSINK_3 OUT GAIN VSS VSS nfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSINK_4 OUT GAIN VSS VSS nfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSINK_5 OUT GAIN VSS VSS nfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSINK_6 OUT GAIN VSS VSS nfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+XSINK_7 OUT GAIN VSS VSS nfet_03v3 w=20.0u l=0.5u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u
+.ends termination_buffer_candidate

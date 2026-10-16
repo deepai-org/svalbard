@@ -1,0 +1,28 @@
+{
+  "status": "prefer_double_serial_tails_candidate_not_canonical",
+  "decision": "Keep four tail fingers per MAIN/POST unit for next integration; retain two TMDS tail fingers and the existing pad cascodes/termination topology. Do not adopt PMOS pad complement or fourfold tail enlargement on current evidence.",
+  "evidence": {
+    "joint_loaded_main_a": 0.016068846,
+    "joint_loaded_post_a": 0.00799116512,
+    "biases_v": {
+      "MAIN": 1.68,
+      "POST": 1.125
+    },
+    "max_disabled_1ghz_odd_capacitance_pf_per_leg": 2.68766,
+    "allocated_area_um2": 240640.33,
+    "current_area_ceiling_um2": 250000
+  },
+  "remaining": [
+    "Integrate chosen buffer/control: source-headroom/reference-reset has5.52mV connectedDC error but startup/poweroff/readiness convergence remain open.",
+    "Only about12fF nominal disabled loading margin against2.7pF; variation and routing resistance unqualified.",
+    "Current pad area allocation funds candidate and jointproviderplacement passes; attachedbuffer/control core funding and whole-ringdeviceLVS remain open.",
+    "Core-facing protection coordination and pulse-current capacity remain unqualified."
+  ],
+  "scope": "DC reachability with calibration in the intended load is distinct from voltage compliance across loads. Earlier external-pullup bias transfer failure is not proof of impossible current setting.",
+  "current_area_and_assembly": "See generated/primary-protection-assembly: all five candidate families jointly pass provider geometry/local-rail checks; measured candidate areas fit revised shared ceilings. Earlier area/placement limitations below are superseded only by these scoped checks.",
+  "current_integration_evidence": {
+    "buffer": "../../termination-buffer-candidate/source-headroom/reference-reset/decision.json",
+    "control": "../../transmit-control-candidate/thick-logic/decision.json",
+    "area": "../../primary-protection-assembly/area-allocation.json"
+  }
+}

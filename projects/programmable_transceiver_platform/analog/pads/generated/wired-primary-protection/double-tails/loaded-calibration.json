@@ -1,0 +1,78 @@
+{
+  "status": "joint_loaded_bias_calibration_not_compliance_or_transient_acceptance",
+  "tail_device_counts": {
+    "MAIN": 32,
+    "POST": 32
+  },
+  "biases_v": {
+    "MAIN": 1.68,
+    "POST": 1.125
+  },
+  "targets_a": {
+    "MAIN": 0.016,
+    "POST": 0.008
+  },
+  "history": [
+    {
+      "iteration": 0,
+      "adjusted": "MAIN",
+      "bias_v": 2.21,
+      "main_a": 0.0160022773,
+      "post_a": 0.00980150783,
+      "pad_p_v": 0.757216452,
+      "pad_n_v": 1.37469255
+    },
+    {
+      "iteration": 0,
+      "adjusted": "POST",
+      "bias_v": 1.15,
+      "main_a": 0.0172072809,
+      "post_a": 0.00796757154,
+      "pad_p_v": 0.778898036,
+      "pad_n_v": 1.38135827
+    },
+    {
+      "iteration": 1,
+      "adjusted": "MAIN",
+      "bias_v": 1.735,
+      "main_a": 0.0159995496,
+      "post_a": 0.00839959223,
+      "pad_p_v": 0.805639407,
+      "pad_n_v": 1.38958062
+    },
+    {
+      "iteration": 1,
+      "adjusted": "POST",
+      "bias_v": 1.13,
+      "main_a": 0.016225993,
+      "post_a": 0.00802762176,
+      "pad_p_v": 0.810656244,
+      "pad_n_v": 1.39112332
+    },
+    {
+      "iteration": 2,
+      "adjusted": "MAIN",
+      "bias_v": 1.68,
+      "main_a": 0.01600857,
+      "post_a": 0.00809203217,
+      "pad_p_v": 0.815931119,
+      "pad_n_v": 1.3927454
+    },
+    {
+      "iteration": 2,
+      "adjusted": "POST",
+      "bias_v": 1.125,
+      "main_a": 0.016068846,
+      "post_a": 0.00799116512,
+      "pad_p_v": 0.817330453,
+      "pad_n_v": 1.39317573
+    }
+  ],
+  "both_currents_within_3_percent": true,
+  "scope": "Complete existing pad and protection, ideal1.65V common-mode source, actual enabled source switches/resistors and shared differential load; complementary states and lifecycle remain to test with these new biases.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_loaded_calibration.py": "8ddaed0fbbcf6dcd155430ee5f4731344e8739dc48864e1d3791833b114bb67f",
+    "/home/ubuntu/svalbard/scratch/pad-tx-double-tails-lifecycle.spice": "3f44eb871e3ae723b592eab368309c8001ba656341297a0ee734ae6b0e99d197",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "2d773c18090b57a6e54291f99d6f828730f843674fe6ceee8a7cdfdda5a58b4d"
+  }
+}

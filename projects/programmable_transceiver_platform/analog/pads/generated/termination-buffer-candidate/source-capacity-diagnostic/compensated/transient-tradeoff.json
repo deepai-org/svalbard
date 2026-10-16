@@ -1,0 +1,278 @@
+{
+  "status": "transient_response_tradeoff_not_acceptance",
+  "cases": {
+    "baseline": {
+      "status": "standalone_sustained_load_diagnostic",
+      "load_a": 0.024,
+      "windows": {
+        "early_source": {
+          "output_min_v": 0.895941593,
+          "output_max_v": 1.31323632,
+          "max_reference_error_v": 0.7540584069999999,
+          "gain_range_v": [
+            0.995101153,
+            1.0185891
+          ]
+        },
+        "settled_source": {
+          "output_min_v": 1.64462182,
+          "output_max_v": 1.64462182,
+          "max_reference_error_v": 0.005378179999999899,
+          "gain_range_v": [
+            0.99581491,
+            0.99581491
+          ]
+        },
+        "settled_sink": {
+          "output_min_v": 1.64960357,
+          "output_max_v": 1.64960358,
+          "max_reference_error_v": 0.00039642999999989215,
+          "gain_range_v": [
+            2.26625463,
+            2.26625463
+          ]
+        },
+        "recovered": {
+          "output_min_v": 1.64722762,
+          "output_max_v": 1.64722762,
+          "max_reference_error_v": 0.0027723799999999077,
+          "gain_range_v": [
+            1.62724555,
+            1.62724555
+          ]
+        }
+      },
+      "output_extrema_v": [
+        0.70765849,
+        3.79738376
+      ],
+      "scope": "Exact supplied model, ideal fixed reference/bias/enable, retained 10pF output load. No pad, power-state or stability-margin acceptance.",
+      "source_sha256": {
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/buffer_load_step.py": "a2d40f38c41217d3f06613f99cbbc4ef6e4b0aa04abce87c860fb74ce0d23c7e",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "2d773c18090b57a6e54291f99d6f828730f843674fe6ceee8a7cdfdda5a58b4d",
+        "/home/ubuntu/svalbard/scratch/pad-buffer-combined-compensation/physical.spice": "57e590038bdbe77c14f53026d0c08a735b39a3edd3d47823597a2b6096b0b210",
+        "/home/ubuntu/svalbard/scratch/pad-buffer-combined-compensation-step/step.spice": "8ad713e0689e50304e4f1039694ea9a9193adf44bb45075eac66d86ba4ef621b"
+      }
+    },
+    "half_compensation": {
+      "status": "standalone_sustained_load_diagnostic",
+      "load_a": 0.024,
+      "windows": {
+        "early_source": {
+          "output_min_v": 0.746008031,
+          "output_max_v": 1.42312505,
+          "max_reference_error_v": 0.9039919689999999,
+          "gain_range_v": [
+            0.961022108,
+            1.0054285
+          ]
+        },
+        "settled_source": {
+          "output_min_v": 1.64462182,
+          "output_max_v": 1.64462182,
+          "max_reference_error_v": 0.005378179999999899,
+          "gain_range_v": [
+            0.99581491,
+            0.99581491
+          ]
+        },
+        "settled_sink": {
+          "output_min_v": 1.64958687,
+          "output_max_v": 1.64962771,
+          "max_reference_error_v": 0.00041312999999987277,
+          "gain_range_v": [
+            2.26624222,
+            2.26626324
+          ]
+        },
+        "recovered": {
+          "output_min_v": 1.64722711,
+          "output_max_v": 1.647228,
+          "max_reference_error_v": 0.002772889999999917,
+          "gain_range_v": [
+            1.6272454,
+            1.6272458
+          ]
+        }
+      },
+      "output_extrema_v": [
+        0.545044037,
+        4.28316885
+      ],
+      "compensation_area_scale": 0.5,
+      "scope": "Supplied extracted model; scaled MIM geometry when requested retains original wiring parasitics and is not a new layout. Uses, ideal fixed reference/bias/enable, retained 10pF output load. No pad, power-state or stability-margin acceptance.",
+      "source_sha256": {
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/buffer_load_step.py": "da5e26a560f6f8c83c79e0395d133381af8400d8f341b7007333c9f4650bd486",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "2d773c18090b57a6e54291f99d6f828730f843674fe6ceee8a7cdfdda5a58b4d",
+        "/home/ubuntu/svalbard/scratch/pad-buffer-combined-compensation/physical.spice": "57e590038bdbe77c14f53026d0c08a735b39a3edd3d47823597a2b6096b0b210",
+        "/home/ubuntu/svalbard/scratch/pad-buffer-compensation-half/step.spice": "756c32c28088505aeb155c7c5473b99fee02725caa40b38f705a33fcdc0ec38a"
+      }
+    },
+    "tenth_compensation": {
+      "status": "standalone_sustained_load_diagnostic",
+      "load_a": 0.024,
+      "windows": {
+        "early_source": {
+          "output_min_v": 0.248698783,
+          "output_max_v": 1.51953793,
+          "max_reference_error_v": 1.4013012169999999,
+          "gain_range_v": [
+            0.877370209,
+            1.0054005
+          ]
+        },
+        "settled_source": {
+          "output_min_v": 1.64462182,
+          "output_max_v": 1.64462182,
+          "max_reference_error_v": 0.005378179999999899,
+          "gain_range_v": [
+            0.99581491,
+            0.99581491
+          ]
+        },
+        "settled_sink": {
+          "output_min_v": 1.32102976,
+          "output_max_v": 2.03135382,
+          "max_reference_error_v": 0.3813538200000002,
+          "gain_range_v": [
+            2.14709133,
+            2.4130599
+          ]
+        },
+        "recovered": {
+          "output_min_v": 1.41788958,
+          "output_max_v": 1.86755629,
+          "max_reference_error_v": 0.23211041999999993,
+          "gain_range_v": [
+            1.54733477,
+            1.71788807
+          ]
+        }
+      },
+      "output_extrema_v": [
+        0.165184373,
+        4.69957927
+      ],
+      "compensation_area_scale": 0.1,
+      "scope": "Supplied extracted model; scaled MIM geometry when requested retains original wiring parasitics and is not a new layout. Uses, ideal fixed reference/bias/enable, retained 10pF output load. No pad, power-state or stability-margin acceptance.",
+      "source_sha256": {
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/buffer_load_step.py": "da5e26a560f6f8c83c79e0395d133381af8400d8f341b7007333c9f4650bd486",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "2d773c18090b57a6e54291f99d6f828730f843674fe6ceee8a7cdfdda5a58b4d",
+        "/home/ubuntu/svalbard/scratch/pad-buffer-combined-compensation/physical.spice": "57e590038bdbe77c14f53026d0c08a735b39a3edd3d47823597a2b6096b0b210",
+        "/home/ubuntu/svalbard/scratch/pad-buffer-compensation-tenth/step.spice": "325ef05447a455508421f2f62ee8d4ca471600992ae469c2ba8c059049d47841"
+      }
+    },
+    "quad_compensation": {
+      "status": "standalone_sustained_load_diagnostic",
+      "load_a": 0.024,
+      "windows": {
+        "early_source": {
+          "output_min_v": 1.02808676,
+          "output_max_v": 1.1517027,
+          "max_reference_error_v": 0.6219132399999998,
+          "gain_range_v": [
+            1.03173427,
+            1.03836794
+          ]
+        },
+        "settled_source": {
+          "output_min_v": 1.64462131,
+          "output_max_v": 1.64462159,
+          "max_reference_error_v": 0.005378689999999908,
+          "gain_range_v": [
+            0.99581519,
+            0.99581553
+          ]
+        },
+        "settled_sink": {
+          "output_min_v": 1.64960357,
+          "output_max_v": 1.64960357,
+          "max_reference_error_v": 0.00039642999999989215,
+          "gain_range_v": [
+            2.26625463,
+            2.26625463
+          ]
+        },
+        "recovered": {
+          "output_min_v": 1.64722762,
+          "output_max_v": 1.64722762,
+          "max_reference_error_v": 0.0027723799999999077,
+          "gain_range_v": [
+            1.62724555,
+            1.62724555
+          ]
+        }
+      },
+      "output_extrema_v": [
+        0.927629002,
+        3.18687862
+      ],
+      "compensation_area_scale": 4.0,
+      "scope": "Supplied extracted model; scaled MIM geometry when requested retains original wiring parasitics and is not a new layout. Uses, ideal fixed reference/bias/enable, retained 10pF output load. No pad, power-state or stability-margin acceptance.",
+      "source_sha256": {
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/buffer_load_step.py": "da5e26a560f6f8c83c79e0395d133381af8400d8f341b7007333c9f4650bd486",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "2d773c18090b57a6e54291f99d6f828730f843674fe6ceee8a7cdfdda5a58b4d",
+        "/home/ubuntu/svalbard/scratch/pad-buffer-combined-compensation/physical.spice": "57e590038bdbe77c14f53026d0c08a735b39a3edd3d47823597a2b6096b0b210",
+        "/home/ubuntu/svalbard/scratch/pad-buffer-compensation-quad/step.spice": "482025bbc04ae44628cf45d39a4a18d36c0d12d0250505371ae1e2738cc6bd9f"
+      }
+    },
+    "ten_ns_current_ramp": {
+      "status": "standalone_sustained_load_diagnostic",
+      "load_a": 0.024,
+      "windows": {
+        "early_source": {
+          "output_min_v": 1.32191743,
+          "output_max_v": 1.39284655,
+          "max_reference_error_v": 0.32808256999999985,
+          "gain_range_v": [
+            1.04732227,
+            1.34868219
+          ]
+        },
+        "settled_source": {
+          "output_min_v": 1.64462182,
+          "output_max_v": 1.64462182,
+          "max_reference_error_v": 0.005378179999999899,
+          "gain_range_v": [
+            0.99581491,
+            0.99581491
+          ]
+        },
+        "settled_sink": {
+          "output_min_v": 1.64960357,
+          "output_max_v": 1.64960358,
+          "max_reference_error_v": 0.00039642999999989215,
+          "gain_range_v": [
+            2.26625463,
+            2.26625463
+          ]
+        },
+        "recovered": {
+          "output_min_v": 1.64722762,
+          "output_max_v": 1.64722762,
+          "max_reference_error_v": 0.0027723799999999077,
+          "gain_range_v": [
+            1.62724555,
+            1.62724555
+          ]
+        }
+      },
+      "output_extrema_v": [
+        1.23397423,
+        3.03234378
+      ],
+      "compensation_area_scale": 1.0,
+      "load_edge_ns": 10.0,
+      "scope": "Supplied extracted model; scaled MIM geometry when requested retains original wiring parasitics and is not a new layout. Uses, ideal fixed reference/bias/enable, retained 10pF output load. No pad, power-state or stability-margin acceptance.",
+      "source_sha256": {
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/buffer_load_step.py": "f2c3960a235196c34729637c6021c99baab8add3a3b5c5d15e23d6c74ea54e52",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "2d773c18090b57a6e54291f99d6f828730f843674fe6ceee8a7cdfdda5a58b4d",
+        "/home/ubuntu/svalbard/scratch/pad-buffer-combined-compensation/physical.spice": "57e590038bdbe77c14f53026d0c08a735b39a3edd3d47823597a2b6096b0b210",
+        "/home/ubuntu/svalbard/scratch/pad-buffer-load-ramp-ten/step.spice": "6db351c0218b46c66a2da8070d7e68f49e8db258a2d0887368858b5a5b515209"
+      }
+    }
+  },
+  "decision": "Retain baseline compensation until loop redesign is justified. Smaller compensation worsens excursions and can leave sustained oscillation; larger compensation and a 10ns load ramp each reduce excursions but do not close the dynamic error. No new capacitor geometry or ramp implementation is adopted.",
+  "next_action": "Measure loaded loop response and evaluate local output-stage feedback or explicit controlled current turn-on/off. Preserve sustained drive and all power-state requirements.",
+  "scope": "Standalone ideal current sink/source includes a +/-24mA reversal, more adverse than ordinary unidirectional TX supply loading; use retained-pad lifecycle for actual capability decisions. Ramp changes current demand only, not serial data edge rate."
+}

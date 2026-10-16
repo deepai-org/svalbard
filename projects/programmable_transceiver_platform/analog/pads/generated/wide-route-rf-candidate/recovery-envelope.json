@@ -1,0 +1,46 @@
+{
+  "status": "carrier_free_bias_recovery_not_RF_readiness",
+  "qualification_guard_s": 2e-05,
+  "cases": {
+    "baseline": {
+      "transient_complete": true,
+      "at_guard": {
+        "core_p_v": 1.64996591,
+        "core_n_v": 1.64996591,
+        "rail_to_return_v": 1.1177636100000001,
+        "gate_to_return_v": 2.4590961049999993e-08,
+        "timing_to_return_v": 1.117734185,
+        "supply_current_a": -3.4091862e-06
+      },
+      "final_microsecond_gate_range_v": [
+        2.10376339e-08,
+        2.45888242e-08
+      ]
+    },
+    "feedforward": {
+      "transient_complete": true,
+      "at_guard": {
+        "core_p_v": 1.64996588,
+        "core_n_v": 1.64996588,
+        "rail_to_return_v": 1.1169831600000002,
+        "gate_to_return_v": 9.059524679999996e-07,
+        "timing_to_return_v": 1.116813705,
+        "supply_current_a": -3.412443025e-06
+      },
+      "final_microsecond_gate_range_v": [
+        7.35768326e-07,
+        9.05857774e-07
+      ]
+    }
+  },
+  "limitations": [
+    "Carrier removed from both internal drive and external peer; passive network and switching requests retained.",
+    "This establishes DC recovery only; no RF power, blocker or false-trigger verdict at ready time.",
+    "Ideal supply, nominal device models, high metal resistance; supervisor not implemented."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "0974c3c93656155b4746d36214503858d7a7c5e8fe29913d27518c4f2e126db8",
+    "/home/ubuntu/svalbard/scratch/pad-feedforward-startup/moderate.spice": "7bb35fd98bd72b3c9b24d4fc33410dc1405a86913163b00692a17d4fc0f6f698",
+    "/home/ubuntu/svalbard/scratch/pad-clamp-recovery-envelope.py": "a3407be85f742d4ebe07ca79f3e2e5c3599124828a504522e08a74e009760a51"
+  }
+}

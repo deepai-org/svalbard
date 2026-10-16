@@ -1,0 +1,283 @@
+{
+  "first_pass_complete": false,
+  "candidates": {
+    "rf_receive": {
+      "rebuilt": true,
+      "report": "rf-receive-screen.json"
+    },
+    "rf_transmit": {
+      "rebuilt": true,
+      "report": "rf-transmit-screen.json"
+    }
+  },
+  "integrated_model_inventory": {
+    "wired_transmit": {
+      "artifacts": {
+        "model": "wired-transmit-extracted-c.spice",
+        "layout": "wired-transmit-layout.json",
+        "gds": "wired-transmit.gds",
+        "screen": "wired-transmit-screen.json"
+      },
+      "artifact_sha256": {
+        "model": "2842f24620fd09cdc5f90298517f369b643c8ce9481f7e8045ca5ae4c260f3f8",
+        "layout": "449b40b6f1df7db56c01d38cebba650f98c83ea486e89689ef470f65292fe889",
+        "gds": "ebe9b249e54920b8665662732059b24bc7e17b119fd8fa735824333bd7de2bf7",
+        "screen": "205c4386555b2563fa608711f1528fefc817d21056109fc2c474e936495bb0ed"
+      },
+      "reported_transient_complete": true,
+      "required_state_windows": {
+        "active": [
+          "active_tmds",
+          "active_main",
+          "active_main_post"
+        ],
+        "disabled": [
+          "disabled"
+        ],
+        "reset": [
+          "reset"
+        ],
+        "unpowered": [
+          "unpowered"
+        ],
+        "reconfiguration": [
+          "reconfiguration"
+        ]
+      },
+      "all_required_state_names_present": true,
+      "model_bytes_match_recorded_screen_input": true,
+      "stale_screen_sources": [
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/circuits.py",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json"
+      ],
+      "stale_layout_sources": [
+        "analog/pads/layout.py",
+        "analog/pads/circuits.py",
+        "spec/analog-architecture.json"
+      ],
+      "exported_layout_device_graph_matches_current_model": true,
+      "source_manifest_present": true,
+      "scope": "Canonical family candidate only; named windows and matching input bytes do not prove performance, safety, or unchanged external-network topology."
+    },
+    "reference_clock": {
+      "artifacts": {
+        "model": "reference-clock-extracted-c.spice",
+        "layout": "reference-clock-layout.json",
+        "gds": "reference-clock.gds",
+        "screen": "reference-clock-screen.json"
+      },
+      "artifact_sha256": {
+        "model": "5c2a24e1f8bd6ca2aa185acdeb1d75b2d25935373f4e7a2e5d8ac209b39ead78",
+        "layout": "a61528d5319c69623838065d0a6b6e67e9a1dfb2d69c5b82d7de615e0d9c7ae4",
+        "gds": "4f7c5b7bf18bc3bb0b21377fdd511389ec30d313027e82a63655427f6846e624",
+        "screen": "bf87f3244f4eba4106bc80d206882a98d4a161848edaa0b72c32eb86779c48e8"
+      },
+      "reported_transient_complete": true,
+      "required_state_windows": {
+        "active": [
+          "active"
+        ],
+        "disabled": [
+          "disabled"
+        ],
+        "reset": [
+          "reset"
+        ],
+        "unpowered": [
+          "unpowered"
+        ],
+        "reconfiguration": [
+          "reconfiguration"
+        ]
+      },
+      "all_required_state_names_present": true,
+      "model_bytes_match_recorded_screen_input": true,
+      "stale_screen_sources": [
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/circuits.py",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json"
+      ],
+      "stale_layout_sources": [
+        "analog/pads/layout.py",
+        "analog/pads/circuits.py",
+        "spec/analog-architecture.json"
+      ],
+      "exported_layout_device_graph_matches_current_model": true,
+      "source_manifest_present": true,
+      "scope": "Canonical family candidate only; named windows and matching input bytes do not prove performance, safety, or unchanged external-network topology."
+    },
+    "rf_receive": {
+      "artifacts": {
+        "model": "rf-receive-extracted-c.spice",
+        "layout": "rf-receive-layout.json",
+        "gds": "rf-receive.gds",
+        "screen": "rf-receive-screen.json"
+      },
+      "artifact_sha256": {
+        "model": "6412e885c6ce2a7b47b5e088aa45d9935faaeb8111e952ab507e8fae6f7a1050",
+        "layout": "af5a10880ad2a25481680eca0f0396febd1d83b6412ea3195b0333491366ec22",
+        "gds": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
+        "screen": "ca24d32a1953546c27f65183d41e5677f1e2245b44d691d8e82a0ae6bfe1e565"
+      },
+      "reported_transient_complete": true,
+      "required_state_windows": {
+        "active": [
+          "active"
+        ],
+        "disabled": [
+          "disabled"
+        ],
+        "reset": [
+          "reset"
+        ],
+        "unpowered": [
+          "unpowered"
+        ],
+        "reconfiguration": [
+          "reconfiguration"
+        ]
+      },
+      "all_required_state_names_present": true,
+      "model_bytes_match_recorded_screen_input": true,
+      "stale_screen_sources": [],
+      "stale_layout_sources": [
+        "analog/pads/generated/rf-receive-layout.json",
+        "analog/pads/generated/rf-transmit-layout.json"
+      ],
+      "exported_layout_device_graph_matches_current_model": true,
+      "source_manifest_present": true,
+      "scope": "Canonical family candidate only; named windows and matching input bytes do not prove performance, safety, or unchanged external-network topology."
+    },
+    "rf_transmit": {
+      "artifacts": {
+        "model": "rf-transmit-extracted-c.spice",
+        "layout": "rf-transmit-layout.json",
+        "gds": "rf-transmit.gds",
+        "screen": "rf-transmit-screen.json"
+      },
+      "artifact_sha256": {
+        "model": "6412e885c6ce2a7b47b5e088aa45d9935faaeb8111e952ab507e8fae6f7a1050",
+        "layout": "67415893e4415099409dce31b9d8a137fa29868a8f0772d3dc5a1a518336b06a",
+        "gds": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
+        "screen": "313049edd9f5f84533237e3587c945df64b6a8ac2d91a8a268503c19ecb7b05a"
+      },
+      "reported_transient_complete": true,
+      "required_state_windows": {
+        "active": [
+          "active"
+        ],
+        "disabled": [
+          "disabled"
+        ],
+        "reset": [
+          "reset"
+        ],
+        "unpowered": [
+          "unpowered"
+        ],
+        "reconfiguration": [
+          "reconfiguration"
+        ]
+      },
+      "all_required_state_names_present": true,
+      "model_bytes_match_recorded_screen_input": true,
+      "stale_screen_sources": [],
+      "stale_layout_sources": [
+        "analog/pads/generated/rf-receive-layout.json",
+        "analog/pads/generated/rf-transmit-layout.json"
+      ],
+      "exported_layout_device_graph_matches_current_model": true,
+      "source_manifest_present": true,
+      "scope": "Canonical family candidate only; named windows and matching input bytes do not prove performance, safety, or unchanged external-network topology."
+    },
+    "wired_receive_usb": {
+      "artifacts": {
+        "model": "wired-receive-usb-extracted-c.spice",
+        "layout": "wired-receive-usb-layout.json",
+        "gds": "wired-receive-usb.gds",
+        "screen": "wired-receive-usb-screen.json"
+      },
+      "artifact_sha256": {
+        "model": "55133d2b0a2d373907a6605cd7761034ed8a9debe5645cef6428ee785bdc9eef",
+        "layout": "106b43e15793cc3865cf631a69033ea4ff9a969548d4bb302e09dcc4d7f13cc2",
+        "gds": "f3226ea655197e9188f42f374a8303f3ca296c902df95a29d752b884580cdcb7",
+        "screen": "03f668ad1fc6d52304b6027e3b6d00c28ece7ed44891574db2ac52fe1c7bd53b"
+      },
+      "reported_transient_complete": true,
+      "required_state_windows": {
+        "active": [
+          "active_divider",
+          "active_bypass",
+          "active_hs",
+          "active_fs",
+          "active_pulls"
+        ],
+        "disabled": [
+          "disabled"
+        ],
+        "reset": [
+          "reset"
+        ],
+        "unpowered": [
+          "unpowered"
+        ],
+        "reconfiguration": [
+          "reconfiguration"
+        ]
+      },
+      "all_required_state_names_present": true,
+      "model_bytes_match_recorded_screen_input": true,
+      "stale_screen_sources": [
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/receive_screen.py",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/receive_core.py",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/circuits.py",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json"
+      ],
+      "stale_layout_sources": [
+        "analog/pads/layout.py",
+        "analog/pads/circuits.py",
+        "spec/analog-architecture.json"
+      ],
+      "exported_layout_device_graph_matches_current_model": true,
+      "source_manifest_present": true,
+      "scope": "Canonical family candidate only; named windows and matching input bytes do not prove performance, safety, or unchanged external-network topology."
+    }
+  },
+  "combined_retained_screen": {
+    "status": "retained_host_and_supply_candidate_screen_not_host_or_power_signoff",
+    "transient_complete": true,
+    "source_hashes_current": false,
+    "report_sha256": "ff95c5b56c052d2a49bd9f01f7731040b9fe4c76021774f84062c79902f81627",
+    "scope": "Combined representative host/control cells and all eighteen native supply pads; DC is not retained-state coverage."
+  },
+  "protection_design_audit": {
+    "status": "current_protection_dimensions_do_not_meet_published_HV_ESD_guidance",
+    "source_hashes_current": false,
+    "report_sha256": "3d114c8482584249090f76916128dbe33a78141e9a1917c4b4e60e1fbcac2b26",
+    "minimum_widths_met": false,
+    "scope": "Published dimensional comparison and compact-model loading estimate; not ESD qualification."
+  },
+  "wired_tx_loading": {
+    "source_hashes_current": false,
+    "report_sha256": "3648efbc1ccba0f4c978a998f59d2bdc2e8411b03e265d55558b385968783ab8",
+    "cases_exceeding_1ghz_odd_budget": [
+      "detection"
+    ],
+    "scope": "Biased small-signal characterization; exceeding the loading allocation is not by itself a protocol-failure verdict."
+  },
+  "wired_tx_current_compliance": {
+    "source_hashes_current": false,
+    "report_sha256": "c83a130578c22b3340847d810bc56f20c12c9ff0677233fabc3073c98f147863",
+    "all_loaded_currents_within_3_percent": true,
+    "scope": "Nominal extracted-circuit DC check, including aligned maximum MAIN+POST; not timing or variation qualification."
+  },
+  "missing": [
+    "wired RX/USB trim, slew, termination mutual exclusion and local safe-state controls",
+    "wired TX termination trim, implemented current-limited common-mode buffer and reset/brownout controls",
+    "full-bank host/power and supervisor qualification; independent-host power-off backfeed mitigation",
+    "primary protection dimensions below published HV ESD minima; replacement architecture/loading, current capacity, whole-ring/device rails and package returns",
+    "distributed interconnect resistance and complete attached-core stress/loading"
+  ],
+  "scope": "Only listed candidates were rebuilt. Other artifacts must retain their original source hashes."
+}

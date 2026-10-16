@@ -1,0 +1,145 @@
+{
+  "status": "buffer_isolation_DC_diagnostic_not_lifecycle_acceptance",
+  "cases": {
+    "double_source_complement": {
+      "load_range_a": [
+        -0.024,
+        0.024
+      ],
+      "source_endpoint": {
+        "output_v": 1.64462238,
+        "local_output_v": 2.2838618,
+        "gain_v": 0.995842046,
+        "supply_draw_a": 0.0265047191
+      },
+      "sink_endpoint": {
+        "output_v": 1.64960357,
+        "local_output_v": 1.438104,
+        "gain_v": 2.26625463,
+        "supply_draw_a": 0.00191846501
+      },
+      "max_reference_error_v": 0.005377619999999972
+    },
+    "quad_source_complement": {
+      "load_range_a": [
+        -0.024,
+        0.024
+      ],
+      "source_endpoint": {
+        "output_v": 1.64602222,
+        "local_output_v": 2.29144071,
+        "gain_v": 1.30821586,
+        "supply_draw_a": 0.0310675959
+      },
+      "sink_endpoint": {
+        "output_v": 1.64973177,
+        "local_output_v": 1.4381883,
+        "gain_v": 2.29927496,
+        "supply_draw_a": 0.00261544671
+      },
+      "max_reference_error_v": 0.00397777999999982
+    },
+    "double_source": {
+      "load_range_a": [
+        -0.024,
+        0.024
+      ],
+      "source_endpoint": {
+        "output_v": 1.58157334,
+        "local_output_v": 2.66048728,
+        "gain_v": 0.668992562,
+        "supply_draw_a": 0.0244357053
+      },
+      "sink_endpoint": {
+        "output_v": 1.64960746,
+        "local_output_v": 1.42353441,
+        "gain_v": 2.26725986,
+        "supply_draw_a": 0.00190878517
+      },
+      "max_reference_error_v": 0.06842665999999986
+    },
+    "quad_source": {
+      "load_range_a": [
+        -0.024,
+        0.024
+      ],
+      "source_endpoint": {
+        "output_v": 1.59028368,
+        "local_output_v": 2.91703173,
+        "gain_v": 0.679792301,
+        "supply_draw_a": 0.0244522913
+      },
+      "sink_endpoint": {
+        "output_v": 1.64973522,
+        "local_output_v": 1.42361164,
+        "gain_v": 2.30016014,
+        "supply_draw_a": 0.00260201144
+      },
+      "max_reference_error_v": 0.059716319999999934
+    },
+    "original": {
+      "load_range_a": [
+        -0.024,
+        0.024
+      ],
+      "source_endpoint": {
+        "output_v": 1.45068958,
+        "local_output_v": 1.69636194,
+        "gain_v": 0.542422831,
+        "supply_draw_a": 0.0243742173
+      },
+      "sink_endpoint": {
+        "output_v": 1.64950327,
+        "local_output_v": 1.42347142,
+        "gain_v": 2.24024395,
+        "supply_draw_a": 0.00133937895
+      },
+      "max_reference_error_v": 0.19931042
+    },
+    "ideal_bypass": {
+      "load_range_a": [
+        -0.024,
+        0.024
+      ],
+      "source_endpoint": {
+        "output_v": 1.47321985,
+        "local_output_v": 1.47321985,
+        "gain_v": 0.562015943,
+        "supply_draw_a": 0.024376391
+      },
+      "sink_endpoint": {
+        "output_v": 1.64947583,
+        "local_output_v": 1.64947583,
+        "gain_v": 2.23310379,
+        "supply_draw_a": 0.00137592752
+      },
+      "max_reference_error_v": 0.1767801499999999
+    },
+    "pmos_complement": {
+      "load_range_a": [
+        -0.024,
+        0.024
+      ],
+      "source_endpoint": {
+        "output_v": 1.45287547,
+        "local_output_v": 1.67269419,
+        "gain_v": 0.544293709,
+        "supply_draw_a": 0.0243893801
+      },
+      "sink_endpoint": {
+        "output_v": 1.64949896,
+        "local_output_v": 1.4380352,
+        "gain_v": 2.23912384,
+        "supply_draw_a": 0.00134572032
+      },
+      "max_reference_error_v": 0.19712452999999996
+    }
+  },
+  "scope": "Extracted compensated core and fixed DC sources. Source-size hypotheses replicate real MOS fingers including junctions but omit new layout parasitics. Ideal bypass is a diagnostic only. PMOS complement is a new transistor/passive hypothesis with junction loading, no new wiring/well extraction; disable, power-off, dynamics and layout remain to test.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/buffer_isolation_screen.py": "3a899a49ef4bfea4fd6ed2a55d9fa0391a17251c81c3c1b87f46539296217b19",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_switch_candidate.py": "bffa3797fff0084cffa5660adba66be164691d382f65319d94d55b26a8383b41",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-compensated-layout-verified/physical.spice": "b9bc81a82366e85539cf92dc778f9e7a16fc152882df26b88ab1d668c7d3f522",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "2d773c18090b57a6e54291f99d6f828730f843674fe6ceee8a7cdfdda5a58b4d"
+  }
+}

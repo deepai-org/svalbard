@@ -1,0 +1,17 @@
+{
+  "decision": "Do not adopt: combined source/isolation change improves DC but retained-network high-drive transient regulation still fails. Resolve feedback dynamics and loaded settling before compensation-layout integration.",
+  "evidence": "screen.json",
+  "maximum_DC_error_v": 0.005377619999999972,
+  "compared_original_error_v": 0.19931042,
+  "added_devices": 42,
+  "limitations": [
+    "Nominal DC only with ideal reference, bias and enable.",
+    "New source fingers and PMOS link include device junctions, but new routing and well extraction are absent.",
+    "Loop stability, reset, unpowered behavior, terminal exposure, current capacity and area remain open."
+  ],
+  "lifecycle_evidence": "lifecycle.json",
+  "extracted_lifecycle_evidence": "compensated/lifecycle.json",
+  "extracted_layout_evidence": "compensated/layout.json",
+  "sustained_load_evidence": "compensated/load-step.json",
+  "transient_tradeoff": "compensated/transient-tradeoff.json"
+}

@@ -1,0 +1,95 @@
+{
+  "loaded_traffic_ready_without_detector_ready_s": 5.091779000000001e-08,
+  "readiness_parameters": {
+    "max_reference_error_v": 0.0165,
+    "detector_time_constant_s": 1e-09,
+    "detector_assert_threshold": 0.99,
+    "scope": "First-pass modeled1percent-of1.65V window allocation; not measured detector performance or protocol deadline. Finite detector response followed by sequencer loaded dwell; readiness applies only when source termination is requested."
+  },
+  "status": "RTL_to_extracted_TX_open_loop_replay",
+  "windows": {
+    "reset": {
+      "vcm_min_v": -0.00211368721,
+      "vcm_max_v": -0.00136702683,
+      "max_reference_error_v": 1.65189241721,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": 0.000323825127,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    },
+    "unpowered": {
+      "vcm_min_v": -0.105450098,
+      "vcm_max_v": -0.0478143222,
+      "max_reference_error_v": 0.1475383629,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": -0.15431163,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    },
+    "precharge": {
+      "vcm_min_v": 1.59491416,
+      "vcm_max_v": 2.3622338,
+      "max_reference_error_v": 0.7201397899999997,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 2.37130313e-05,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 3.3
+    },
+    "main": {
+      "vcm_min_v": 1.5322923,
+      "vcm_max_v": 1.66290909,
+      "max_reference_error_v": 0.12114163000000011,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 3.30054036,
+      "traffic_ready_max_v": 3.3,
+      "measured_ready_max_v": 3.3
+    },
+    "main_post": {
+      "vcm_min_v": 1.52231136,
+      "vcm_max_v": 1.63562698,
+      "max_reference_error_v": 0.13006884000000007,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 3.3012079,
+      "traffic_ready_max_v": 3.3,
+      "measured_ready_max_v": 0.0
+    },
+    "detect": {
+      "vcm_min_v": 0.476185013,
+      "vcm_max_v": 1.06967766,
+      "max_reference_error_v": 1.171582647,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": -1.48312092e-05,
+      "traffic_ready_max_v": 3.3,
+      "measured_ready_max_v": 0.0
+    },
+    "disabled": {
+      "vcm_min_v": 0.018641664,
+      "vcm_max_v": 0.0515930695,
+      "max_reference_error_v": 1.631311696,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": -1.00999711e-06,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    }
+  },
+  "scope": "Replay actual RTL sequencer outputs into the retained extracted TX circuit.\n\nOpen-loop RTL-to-SPICE integration: analog_ready is a prescribed test stimulus,\nnot a detector observing SPICE. No electrical feedback or physical RTL mapping.\n",
+  "clock_period_ns": 4,
+  "pre_post_cycles": 2,
+  "edge_translation_ns": 0.02,
+  "external_network_unchanged": true,
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "5e4b20fdaacb35f1b79119d21b07ba55102e988b80bf7ed50280dc2bc628d2dc",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "fc3cdc163ae805c33b92a298142718ad36c94f5567ac4bb9bb608be016d58e32",
+    "/home/ubuntu/svalbard/scratch/pad-tx-sequence-readiness-observed/replay.sv": "24f6feb152ec821e49c569943ffc9c339d1d02ce823a631a105dc242a457353e",
+    "/home/ubuntu/svalbard/scratch/pad-tx-thick-control-connected/connected.spice": "3beca7f11f2140d1ab15e17e2fbdd200a3b36ff5ca3a343fd24ec9ee9f9f0cfc",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "7c4b09b56910abe0eaa594a0cefae3c676706596c713ba8f04cb737367fcce57",
+    "/home/ubuntu/svalbard/scratch/pad-tx-sequence-readiness-observed/connected.spice": "7619a888a0252d1272be53f747f274e04704eae24b37234d380ddeab03bc452a"
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "status": "FS_sizing_DC_AC_hypothesis_not_layout_or_lifecycle_acceptance",
+  "cases": {
+    "baseline": {
+      "width_um": 20,
+      "series_resistor_geometry_um": [
+        1,
+        2.16
+      ],
+      "numerical_anchors": [
+        {
+          "cell": "combined_flat",
+          "node": "m2_42279_196800#",
+          "resistance_ohm": 1000000000000.0
+        }
+      ],
+      "fs_high_ohm_at_3p2v": 45.157407659536304,
+      "odd_capacitance_f_per_leg": [
+        2.8693491913089462e-12,
+        2.7421261983651296e-12
+      ]
+    },
+    "small_short": {
+      "width_um": 14,
+      "series_resistor_geometry_um": [
+        2,
+        2.16
+      ],
+      "numerical_anchors": [
+        {
+          "cell": "combined_flat",
+          "node": "m2_42279_196800#",
+          "resistance_ohm": 1000000000000.0
+        }
+      ],
+      "fs_high_ohm_at_3p2v": 40.217299700704906,
+      "odd_capacitance_f_per_leg": [
+        2.7948865299156262e-12,
+        2.6690308275386153e-12
+      ]
+    },
+    "small_medium": {
+      "width_um": 14,
+      "series_resistor_geometry_um": [
+        2,
+        3.5
+      ],
+      "numerical_anchors": [
+        {
+          "cell": "combined_flat",
+          "node": "m2_42279_196800#",
+          "resistance_ohm": 1000000000000.0
+        }
+      ],
+      "fs_high_ohm_at_3p2v": 45.110997526631714,
+      "odd_capacitance_f_per_leg": [
+        2.7942218447605932e-12,
+        2.6682347981752466e-12
+      ]
+    },
+    "small_long": {
+      "width_um": 14,
+      "series_resistor_geometry_um": [
+        2,
+        5.0
+      ],
+      "numerical_anchors": [
+        {
+          "cell": "combined_flat",
+          "node": "m2_42279_196800#",
+          "resistance_ohm": 1000000000000.0
+        }
+      ],
+      "fs_high_ohm_at_3p2v": 50.604766174478854,
+      "odd_capacitance_f_per_leg": [
+        2.793150805204859e-12,
+        2.6669819782097103e-12
+      ]
+    }
+  },
+  "shared_output_resistance_target_ohm": 45,
+  "scope": "Retained complete primary protection and inactive branches. Source MOS finger junction areas/perimeters scale with width; original extracted routing and well parasitics remain. Resistor geometry changes need new layout. Nominal DC at3.2V and AC at1GHz only. Numerical capacitor-only-node DC anchor reported.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/receive_fs_sizing.py": "b95aa62a4d4e1126f62607583ea81103ab9ff170cf6d96b483dc8414bfc5ea95",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/receive-primary-protection/physical.spice": "8c4252b1143d56a3bcb14d56cbe6f3740f0852cbe32be74c7d440180e032d8e9",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "31ff538f4d198f8559b7a62d3dc7dece47a0d2e702eb31c344d09bedd22dd77b",
+    "/home/ubuntu/svalbard/scratch/pad-rx-primary-screen-hierarchy/fs_high.spice": "7db5541d6d55df7c936c4a4cb1d301bea9430573718b369f8d2746fde6584c07",
+    "/home/ubuntu/svalbard/scratch/pad-rx-primary-screen-hierarchy/loading_serial_bypass.spice": "af77b5b27efee85a2dc0f305708c54e53d9125f03827ba48b05218e87525efa5"
+  }
+}

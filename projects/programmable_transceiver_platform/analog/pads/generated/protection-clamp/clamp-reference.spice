@@ -1,0 +1,38 @@
+.subckt clamp_reference DVSS DVDD TIMING
+X0 n6 n7 DVDD DVDD pfet_06v0 m=1.0 w=15e-6 l=700e-9 nf=1.0 as=6.6e-12 ad=6.6e-12
++ ps=30.88e-6 pd=30.88e-6 nrd=29.333e-3 nrs=29.333e-3 sa=440e-9 sb=440e-9
++ sd=0.0 dtemp=0.0 par=1
+X1 n7 TIMING DVDD DVDD pfet_06v0 m=1.0 w=20e-6 l=700e-9 nf=1.0 as=8.8e-12 ad=8.8e-12
++ ps=40.88e-6 pd=40.88e-6 nrd=22e-3 nrs=22e-3 sa=440e-9 sb=440e-9 sd=0.0
++ dtemp=0.0 par=1
+X2 n4 n6 DVDD DVDD pfet_06v0 m=1.0 w=120e-6 l=700e-9 nf=2.0 as=52.8e-12 ad=31.2e-12
++ ps=241.76e-6 pd=121.04e-6 nrd=2.167e-3 nrs=3.667e-3 sa=440e-9 sb=440e-9
++ sd=520e-9 dtemp=0.0 par=1
+X3 TIMING DVSS cap_mim_2f0_m4m5_noshield c_length=31.6u c_width=31.6u
+X4 n11 n15 DVDD ppolyf_u r_width=800e-9 r_length=63.855e-6 m=1.0 r=29.999e3 par=1
+X5 n10 n11 DVDD ppolyf_u r_width=800e-9 r_length=63.855e-6 m=1.0 r=29.999e3 par=1
+X6 n19 n10 DVDD ppolyf_u r_width=800e-9 r_length=63.855e-6 m=1.0 r=29.999e3 par=1
+X7 n21 n19 DVDD ppolyf_u r_width=800e-9 r_length=63.855e-6 m=1.0 r=29.999e3 par=1
+X8 n17 n21 DVDD ppolyf_u r_width=800e-9 r_length=63.855e-6 m=1.0 r=29.999e3 par=1
+X9 n20 TIMING DVDD ppolyf_u r_width=800e-9 r_length=63.855e-6 m=1.0 r=29.999e3 par=1
+X10 n22 n20 DVDD ppolyf_u r_width=800e-9 r_length=63.855e-6 m=1.0 r=29.999e3 par=1
+X11 n18 n22 DVDD ppolyf_u r_width=800e-9 r_length=63.855e-6 m=1.0 r=29.999e3 par=1
+X12 n13 n18 DVDD ppolyf_u r_width=800e-9 r_length=63.855e-6 m=1.0 r=29.999e3 par=1
+X13 n12 n13 DVDD ppolyf_u r_width=800e-9 r_length=63.855e-6 m=1.0 r=29.999e3 par=1
+X14 n15 n12 DVDD ppolyf_u r_width=800e-9 r_length=63.855e-6 m=1.0 r=29.999e3 par=1
+X15 DVDD n17 DVDD ppolyf_u r_width=800e-9 r_length=63.855e-6 m=1.0 r=29.999e3 par=1
+X16 n7 TIMING DVSS DVSS nfet_06v0 m=1.0 w=5e-6 l=700e-9 nf=1.0 as=2.2e-12 ad=2.2e-12
++ ps=10.88e-6 pd=10.88e-6 nrd=88e-3 nrs=88e-3 sa=440e-9 sb=440e-9 sd=0.0
++ dtemp=0.0 par=1
+X17 DVDD n4 DVSS DVSS nfet_06v0 m=1.0 w=4e-3 l=700e-9 nf=80.0 as=1.058e-9 ad=1.04e-9
++ ps=4.14232e-3 pd=4.0416e-3 nrd=65e-6 nrs=66e-6 sa=440e-9 sb=440e-9 sd=520e-9
++ dtemp=0.0 par=1
+X18 n4 n6 DVSS DVSS nfet_06v0 m=1.0 w=30e-6 l=700e-9 nf=1.0 as=13.2e-12 ad=13.2e-12
++ ps=60.88e-6 pd=60.88e-6 nrd=14.667e-3 nrs=14.667e-3 sa=440e-9 sb=440e-9
++ sd=0.0 dtemp=0.0 par=1
+X19 n6 n7 DVSS DVSS nfet_06v0 m=1.0 w=30e-6 l=700e-9 nf=1.0 as=13.2e-12 ad=13.2e-12
++ ps=60.88e-6 pd=60.88e-6 nrd=14.667e-3 nrs=14.667e-3 sa=440e-9 sb=440e-9
++ sd=0.0 dtemp=0.0 par=1
+D20 DVSS DVDD diode_nd2ps_06v0 m=4.0 area=40e-12 pj=82e-6
+X21 DVDD DVSS cap_mim_2f0_m4m5_noshield c_length=31.6u c_width=31.6u
+.ends clamp_reference

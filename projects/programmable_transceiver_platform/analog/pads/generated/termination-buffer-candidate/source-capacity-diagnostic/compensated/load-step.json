@@ -1,0 +1,55 @@
+{
+  "status": "standalone_sustained_load_diagnostic",
+  "load_a": 0.024,
+  "windows": {
+    "early_source": {
+      "output_min_v": 0.935190303,
+      "output_max_v": 1.36842543,
+      "max_reference_error_v": 0.714809697,
+      "gain_range_v": [
+        0.99425802,
+        1.01442087
+      ]
+    },
+    "settled_source": {
+      "output_min_v": 1.64462182,
+      "output_max_v": 1.64462182,
+      "max_reference_error_v": 0.005378179999999899,
+      "gain_range_v": [
+        0.99581491,
+        0.99581491
+      ]
+    },
+    "settled_sink": {
+      "output_min_v": 1.64960357,
+      "output_max_v": 1.64960357,
+      "max_reference_error_v": 0.00039642999999989215,
+      "gain_range_v": [
+        2.26625463,
+        2.26625463
+      ]
+    },
+    "recovered": {
+      "output_min_v": 1.64722762,
+      "output_max_v": 1.64722762,
+      "max_reference_error_v": 0.0027723799999999077,
+      "gain_range_v": [
+        1.62724555,
+        1.62724555
+      ]
+    }
+  },
+  "output_extrema_v": [
+    0.723539125,
+    3.76848906
+  ],
+  "compensation_area_scale": 1.0,
+  "load_edge_ns": 1.0,
+  "scope": "Supplied extracted model; scaled MIM geometry when requested retains original wiring parasitics and is not a new layout. Uses, ideal fixed reference/bias/enable, retained 10pF output load. No pad, power-state or stability-margin acceptance.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/buffer_load_step.py": "f2c3960a235196c34729637c6021c99baab8add3a3b5c5d15e23d6c74ea54e52",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "31ff538f4d198f8559b7a62d3dc7dece47a0d2e702eb31c344d09bedd22dd77b",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-bounded-compensation/physical.spice": "f2ec663052c43011c6cbedc2e1f822f57d2798ddce349f2fb6803e8cc7dc7e81",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-bounded-step/step.spice": "44f195358c5f16f434f46ed0c561d7c9ae3601e9fd45bb7ad97b29dd5286df32"
+  }
+}

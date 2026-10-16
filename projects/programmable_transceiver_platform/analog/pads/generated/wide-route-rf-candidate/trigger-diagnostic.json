@@ -1,0 +1,32 @@
+{
+  "status": "ideal_gate_assist_causal_diagnostic_not_implemented",
+  "transient_complete": true,
+  "pulse": {
+    "core_to_return_v": {
+      "min": 1.63073335,
+      "max": 2.29865274
+    },
+    "rail_to_return_v": {
+      "min": 0.78881535,
+      "max": 1.21940471
+    },
+    "gate_to_return_v": {
+      "min": -1.07840432e-05,
+      "max": 1.21870371
+    },
+    "local_return_v": {
+      "min": -3.00484523e-06,
+      "max": 0.249673819
+    }
+  },
+  "limitations": [
+    "Ideal externally timed 1ohm gate-to-protection-rail switch is a diagnostic intervention, not a realizable trigger design.",
+    "Existing trigger circuitry and all external network components retained.",
+    "No ESD rating, thermal or transistor survival claim."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-wide-bond-corridor-pulses/positive_100mA.spice": "9f76bbb14c29f6fc41063b1c6fc62cad21090196f22900fa2e0bdd6adb0cc2be",
+    "/home/ubuntu/svalbard/scratch/pad-clamp-drive-diagnostic.py": "4a9e18d7f143a4f405b490ac4584b245231c466ddfb19d255d7df1c5a66b68cf"
+  },
+  "decision": "Prioritize autonomous trigger/drive timing before enlarging the discharge device. Ideal timely gate assist substantially reduces positive core excursion, but residual voltage and off-state false-trigger behavior still require core coordination."
+}

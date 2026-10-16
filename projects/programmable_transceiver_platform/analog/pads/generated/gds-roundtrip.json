@@ -1,0 +1,111 @@
+{
+  "status": "exported_GDS_roundtrip_device_audit",
+  "all_device_graphs_match": true,
+  "families": {
+    "wired-transmit": {
+      "drc_count": 0,
+      "device_graph_match": true,
+      "extraction_error": null,
+      "expected_models": {
+        "pfet_03v3": 6,
+        "ppolyf_s": 2,
+        "nfet_03v3": 116,
+        "nfet_06v0_dss": 4,
+        "ppolyf_u_1k": 17,
+        "nfet_06v0": 34
+      },
+      "actual_models": {
+        "pfet_03v3": 6,
+        "ppolyf_s": 2,
+        "nfet_03v3": 116,
+        "nfet_06v0_dss": 4,
+        "ppolyf_u_1k": 17,
+        "nfet_06v0": 34
+      },
+      "missing_devices": [],
+      "unexpected_devices": [],
+      "gds_sha256": "6ef63b8e7968d68c07794c229e15542118ff7c23fa6e1aea8dcd43c96a900422",
+      "reference_sha256": "0de0f0c78e0b08e57f1fe86b5cb239762a220b8b02388375e2ceb0b944afa0b9"
+    },
+    "wired-receive-usb": {
+      "drc_count": 0,
+      "device_graph_match": true,
+      "extraction_error": null,
+      "expected_models": {
+        "pfet_03v3": 153,
+        "ppolyf_s": 4,
+        "nfet_03v3": 42,
+        "nfet_06v0_dss": 4,
+        "ppolyf_u_1k": 48,
+        "nfet_06v0": 38
+      },
+      "actual_models": {
+        "pfet_03v3": 153,
+        "ppolyf_s": 4,
+        "nfet_03v3": 42,
+        "nfet_06v0_dss": 4,
+        "ppolyf_u_1k": 48,
+        "nfet_06v0": 38
+      },
+      "missing_devices": [],
+      "unexpected_devices": [],
+      "gds_sha256": "d0d6eeb98d4ee01b2b611878c905d3fa4e054ffd568951619fec1cd72820ae6a",
+      "reference_sha256": "7909ea371617fc78d908ab3bc1025b992df3b61555aa5b415861849f16bad1bf"
+    },
+    "reference-clock": {
+      "drc_count": 0,
+      "device_graph_match": true,
+      "extraction_error": null,
+      "expected_models": {
+        "nfet_06v0_dss": 4,
+        "ppolyf_u_1k": 16
+      },
+      "actual_models": {
+        "nfet_06v0_dss": 4,
+        "ppolyf_u_1k": 16
+      },
+      "missing_devices": [],
+      "unexpected_devices": [],
+      "gds_sha256": "05ab2edc18bd10b430ee65a355741b748a5e5a832f433d5a9ae7802c0c2fe69e",
+      "reference_sha256": "a9476506f119b745788785ce4b719d3e475db0964fe2113c83aa5b6f17927c1f"
+    },
+    "rf-receive": {
+      "drc_count": 0,
+      "device_graph_match": true,
+      "extraction_error": null,
+      "expected_models": {
+        "nfet_06v0_dss": 4
+      },
+      "actual_models": {
+        "nfet_06v0_dss": 4
+      },
+      "missing_devices": [],
+      "unexpected_devices": [],
+      "gds_sha256": "0d978ed3156b731084189534594b2fad9f7c70c3128bea4ae4a9dc66ea525642",
+      "reference_sha256": "325ae3c726257de589248526ba04ecece14e62380c1399fbc5b14de8cbe17074"
+    },
+    "rf-transmit": {
+      "drc_count": 0,
+      "device_graph_match": true,
+      "extraction_error": null,
+      "expected_models": {
+        "nfet_06v0_dss": 4
+      },
+      "actual_models": {
+        "nfet_06v0_dss": 4
+      },
+      "missing_devices": [],
+      "unexpected_devices": [],
+      "gds_sha256": "36b72439c6af304de5db1442ef5f859d95ed34888ba9a6c3111cdaa08866cbc8",
+      "reference_sha256": "5f9d83c3ec96af8eb52853ba8e8455f2542babffef1afdb1e19368b93700dc15"
+    }
+  },
+  "limitations": [
+    "Device graph and ordinary DRC only; capacitance, routing resistance, ESD and assembly checks are separate."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/gds_roundtrip.py": "8a96d058afb12aa736537e03d1cf72fce8552b5ce9855c59d579031c23b03fa3",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/extract_audit.py": "b3e9f311401ea251c5adb47f406d9e6170448865026108ad3ca7dd14c67d3b68",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/layout.py": "a4e9da5f84b6e6dae7f5a8635411837a8d9acf45198b64e80df54bfad831d864"
+  }
+}

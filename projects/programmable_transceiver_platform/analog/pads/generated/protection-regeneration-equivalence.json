@@ -1,0 +1,38 @@
+{
+  "status": "regenerated_primitives_and_connected_RF_pair_refreshed",
+  "primitives": {
+    "clamp": {
+      "regenerated_manifest": "/home/ubuntu/svalbard/scratch/pad-clamp-export-refresh/clamp-layout.json",
+      "regenerated_manifest_sha256": "7d354c8202e3876c9c906ecdc41420d107fe4aa99a0d87919faefb018f658680",
+      "drc_count": 0,
+      "electrical_equivalence": "identical device records and capacitor multiset",
+      "published_manifest_sha256": "b31111bab012e06e0de87571b4fd783fa5e901eb7691bb049d92df548271301d",
+      "source_hashes_current": true
+    },
+    "bleed": {
+      "regenerated_manifest": "/home/ubuntu/svalbard/scratch/pad-bleed-export-refresh/bleed-layout.json",
+      "regenerated_manifest_sha256": "3f5988b52f82e3527fd1f7c907fb10ac1a090cf21a9581c8765662e095e83c2d",
+      "drc_count": 0,
+      "electrical_equivalence": "identical extracted-model SHA256",
+      "published_manifest_sha256": "6fbe695ce2703a738f6d80fd2344470b9afbd81406f760a377b0e8edd5da80ae",
+      "source_hashes_current": true
+    }
+  },
+  "clamp_models": {
+    "projects/programmable_transceiver_platform/analog/pads/generated/protection-clamp/clamp-extracted.spice": "a9910ad7e538aed0166db598166da2f0b373e275a04a02c73a145006012d6f09",
+    "scratch/pad-clamp-export-refresh/clamp_flat.spice": "a430df4c8a7e89e011d76b368c7d905091d5d0f679003be7f4d4f2d78c5a87f3"
+  },
+  "limitations": [
+    "Equivalence covers extracted electrical records, not ESD qualification or package performance."
+  ],
+  "connected_rf_refresh": {
+    "capacitance_lifecycle_complete": true,
+    "series_resistance_lifecycle_complete": true,
+    "maximum_gain_transient_complete": true,
+    "ordinary_drc_count": 0,
+    "device_graph_lvs_match": true,
+    "native_library_import_preserves_geometry": true,
+    "area_closed": false,
+    "tx_power_target_met": false
+  }
+}

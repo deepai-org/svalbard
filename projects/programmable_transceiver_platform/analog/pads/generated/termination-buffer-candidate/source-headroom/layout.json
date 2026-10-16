@@ -1,0 +1,38 @@
+{
+  "status": "connected_buffer_compensation_candidate",
+  "drc_count": 0,
+  "intended_device_graph_matches": true,
+  "export_device_graph_matches": true,
+  "device_count": 281,
+  "limitations": [
+    "No resistor trim or resistance acceptance; no bias-passive layout, pad hookup or current-capacity qualification.",
+    "Electrical rerun required before adoption; no resistance extraction."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_compensation_layout.py": "518b832bb9505b45b6b59b5ef17a9f18b0152cd1535b80ce72b9bbd78abc0b19",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-source1280-core/physical.spice": "c2c46b6fbed4c7fd08dfb7558b51e3ba1439937d7a0a66e685eb046657c9391d",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-source1280-core/buffer_core_flat.gds": "201e8bf515f3c34d70a10b1cb6c84cffc65abaa033292192769d2be8308dc435",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-compensation-mim/feedforward_mim.mag": "6469c894d8a0440f160b6601b25e0b88041518a96dc0e0264e4bc904d4286838"
+  },
+  "gds_marker_repair": {
+    "added_area_um2": {
+      "62": 209.088,
+      "55": 0.0
+    },
+    "selected_poly_components": {
+      "nhighres": 8
+    },
+    "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
+    "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
+    "before_gds_sha256": "46f42f457b5de29dfc969af3899d0ea95f7719d02a636538fe9209bc98727518",
+    "after_gds_sha256": "43bb7f643928e3c84a6e0c077a5ae683f5aa3573e19d6c4ed389a445efafd9e8",
+    "physical_magic_sha256": "efa74338b9d88b1e7de2a163b6e309cd7ed9ef5c5d241729ca622d22edc73c1e",
+    "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
+  },
+  "gds_roundtrip": {
+    "drc_count": 0,
+    "device_graph_matches": true
+  },
+  "physical_sha256": "f4cbd99176302b0ad98c9a3007f1317f1321605da6ab4a577b6432aa8fdd6368",
+  "gds_sha256": "43bb7f643928e3c84a6e0c077a5ae683f5aa3573e19d6c4ed389a445efafd9e8"
+}

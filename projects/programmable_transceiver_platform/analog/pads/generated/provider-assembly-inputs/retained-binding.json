@@ -1,0 +1,64 @@
+{
+  "status": "first_pass_candidate_not_full_rate_or_power_off_qualification",
+  "output_master": "gf180mcu_fd_io__bi_t",
+  "output_sites": {
+    "D2H_CLK": "bidir[5].pad",
+    "D2H_D[0]": "clk_pad",
+    "D2H_D[1]": "bidir[0].pad",
+    "D2H_D[2]": "bidir[1].pad",
+    "D2H_D[3]": "bidir[2].pad",
+    "D2H_D[4]": "bidir[3].pad",
+    "D2H_D[5]": "bidir[4].pad",
+    "D2H_D[6]": "bidir[6].pad",
+    "D2H_D[7]": "bidir[7].pad",
+    "D2H_D[8]": "bidir[8].pad",
+    "D2H_D[9]": "bidir[9].pad",
+    "HOST_MISO": "bidir[13].pad"
+  },
+  "settings": {
+    "PDRV0": 0,
+    "PDRV1": 1,
+    "SL": 0,
+    "CS": 0,
+    "IE": 0
+  },
+  "drive_ma": 12,
+  "supply_sites": [
+    "dvdd_pads[0].pad",
+    "dvss_pads[1].pad",
+    "dvdd_pads[1].pad",
+    "dvss_pads[2].pad",
+    "vss_pads[0].pad",
+    "vdd_pads[0].pad",
+    "dvss_pads[3].pad",
+    "dvdd_pads[2].pad",
+    "dvss_pads[4].pad",
+    "dvss_pads[0].pad",
+    "dvdd_pads[5].pad",
+    "dvss_pads[7].pad",
+    "vdd_pads[1].pad",
+    "vss_pads[1].pad",
+    "dvdd_pads[4].pad",
+    "dvss_pads[6].pad",
+    "dvdd_pads[3].pad",
+    "dvss_pads[5].pad"
+  ],
+  "host_output": {
+    "acceptance": "Both HOST banks within existing ceilings under arbitrary legal traffic, plus FPGA capture eye, package/source-return transient, ringing, overshoot and narrow operating-range verification.",
+    "board_requirement": "Short low-capacitance point-to-point connection to suitable FPGA. Generic GPIO compatibility does not guarantee full rate at arbitrary board load.",
+    "definition": "External lumped load per D2H data/clock pin including FPGA input, board and connector contribution; die pad capacitance must be accounted separately exactly once after library load convention is resolved.",
+    "drive_selection": "Programmable strength/slew; choose a common setting from matched timing and energy under actual load, not independent minima. No stock-cell implementation selected.",
+    "full_rate_external_load_target_f": 6e-12,
+    "heavy_load_comparison_f": 1e-11,
+    "legacy_scope": "Existing 10 pF package waveforms remain heavy-load controls; no silent substitution of 6 pF into their evidence.",
+    "maximum_word_rate_hz": 312500000.0,
+    "status": "selected_board_requirement_not_electrical_qualification",
+    "voltage_v": 3.3
+  },
+  "provider_foundry_rail_policy": "VDD=DVDD and VSS=DVSS in the pinned provider top-level; logical domains are not separate external rails",
+  "limitations": [
+    "Native clock-input cell at clk_pad cannot implement D2H_D[0]; use the selected bidirectional output candidate at that bond site.",
+    "Host inputs/reset retain native input-capable cells; their upper clamps do not imply unpowered tolerance.",
+    "Native supply-pad circuits and finite external bonds do not include distributed on-die ring impedance."
+  ]
+}

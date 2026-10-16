@@ -1,0 +1,898 @@
+{
+  "status": "generated_candidate_requires_connectivity_and_rule_review",
+  "family": "wired_transmit",
+  "flat_cell": "tx_with_primary",
+  "marker_export": {
+    "added_area_um2": {
+      "62": 429.43199999999996,
+      "55": 0.0
+    },
+    "selected_poly_components": {
+      "nhighres": 17
+    },
+    "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
+    "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
+    "before_gds_sha256": "b8a4f6c91a5857f87c1476f02f5a939adc1dc47c50d88d35431fda57c36d05c5",
+    "after_gds_sha256": "1224fa1c4572422918d0a65f53e446e29bda604af979012b3fd29c9f1ab78875",
+    "physical_magic_sha256": "25542fda96265147f8c9c4eece8a42f07939a8de59f022e1f7b84a3b0e0b15e6",
+    "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
+  },
+  "serial_tail_units": 4,
+  "bond_template": {
+    "cell": "Bondpad_5LM",
+    "source": "gf180mcu_fd_io",
+    "reference_parent": "5LM_METAL_RAIL_PAD_60",
+    "reference_offset_um": [
+      5.5,
+      0
+    ],
+    "opening_um": [
+      60,
+      60
+    ],
+    "scope": "Native bond geometry only; ring rails and provider placement remain open."
+  },
+  "stock_export_returncode": 0,
+  "requires_attached_primary_protection": false,
+  "pad_transverse_width_um": 6.0,
+  "pad_trunk_width_um": 0.44,
+  "net_track_x_um": {
+    "CASCODE": 3.0,
+    "DETECT_BLEED_0": 4.0,
+    "DETECT_BLEED_1": 5.0,
+    "DETECT_BLEED_2": 6.0,
+    "DETECT_BLEED_3": 7.0,
+    "DETECT_BLEED_4": 8.0,
+    "DETECT_BLEED_5": 9.0,
+    "DETECT_BLEED_6": 10.0,
+    "DETECT_ENABLE": 11.0,
+    "DETECT_ENABLE_B": 12.0,
+    "DETECT_ENABLE_LOCAL": 13.0,
+    "DETECT_N_I": 14.0,
+    "DETECT_PBIAS": 15.0,
+    "DETECT_P_I": 16.0,
+    "MAIN_BIAS": 17.0,
+    "MAIN_N": 18.0,
+    "MAIN_P": 19.0,
+    "MAIN_TAIL_0": 20.0,
+    "MAIN_TAIL_1": 21.0,
+    "MAIN_TAIL_2": 22.0,
+    "MAIN_TAIL_3": 23.0,
+    "MAIN_TAIL_4": 24.0,
+    "MAIN_TAIL_5": 25.0,
+    "MAIN_TAIL_6": 26.0,
+    "MAIN_TAIL_7": 27.0,
+    "PAD_N": 28.0,
+    "PAD_P": 29.0,
+    "POST_BIAS": 30.0,
+    "POST_N": 31.0,
+    "POST_P": 32.0,
+    "POST_TAIL_0": 33.0,
+    "POST_TAIL_1": 34.0,
+    "POST_TAIL_2": 35.0,
+    "POST_TAIL_3": 36.0,
+    "POST_TAIL_4": 37.0,
+    "POST_TAIL_5": 38.0,
+    "POST_TAIL_6": 39.0,
+    "POST_TAIL_7": 40.0,
+    "SUM_N_D_0": 41.0,
+    "SUM_N_D_1": 42.0,
+    "SUM_N_D_2": 43.0,
+    "SUM_N_D_3": 44.0,
+    "SUM_N_D_4": 45.0,
+    "SUM_N_D_5": 46.0,
+    "SUM_N_D_6": 47.0,
+    "SUM_N_D_7": 48.0,
+    "SUM_P_D_0": 49.0,
+    "SUM_P_D_1": 50.0,
+    "SUM_P_D_2": 51.0,
+    "SUM_P_D_3": 52.0,
+    "SUM_P_D_4": 53.0,
+    "SUM_P_D_5": 54.0,
+    "SUM_P_D_6": 55.0,
+    "SUM_P_D_7": 56.0,
+    "TERM_BLEED_0": 57.0,
+    "TERM_BLEED_1": 58.0,
+    "TERM_BLEED_2": 59.0,
+    "TERM_BLEED_3": 60.0,
+    "TERM_BLEED_4": 61.0,
+    "TERM_BLEED_5": 62.0,
+    "TERM_BLEED_6": 63.0,
+    "TERM_ENABLE": 64.0,
+    "TERM_ENABLE_B": 65.0,
+    "TERM_ENABLE_LOCAL": 66.0,
+    "TERM_N_R": 67.0,
+    "TERM_P_R": 68.0,
+    "TERM_VCM": 69.0,
+    "TMDS_BIAS": 70.0,
+    "TMDS_N": 71.0,
+    "TMDS_P": 72.0,
+    "TMDS_TAIL_0": 73.0,
+    "TMDS_TAIL_1": 74.0,
+    "TMDS_TAIL_2": 75.0,
+    "TMDS_TAIL_3": 76.0,
+    "TMDS_TAIL_4": 77.0,
+    "TMDS_TAIL_5": 78.0,
+    "TMDS_TAIL_6": 79.0,
+    "TMDS_TAIL_7": 80.0,
+    "VDD": 85.22,
+    "VSS": 94.22
+  },
+  "net_trunk_widths_um": {
+    "CASCODE": 0.44,
+    "DETECT_BLEED_0": 0.44,
+    "DETECT_BLEED_1": 0.44,
+    "DETECT_BLEED_2": 0.44,
+    "DETECT_BLEED_3": 0.44,
+    "DETECT_BLEED_4": 0.44,
+    "DETECT_BLEED_5": 0.44,
+    "DETECT_BLEED_6": 0.44,
+    "DETECT_ENABLE": 0.44,
+    "DETECT_ENABLE_B": 0.44,
+    "DETECT_ENABLE_LOCAL": 0.44,
+    "DETECT_N_I": 0.44,
+    "DETECT_PBIAS": 0.44,
+    "DETECT_P_I": 0.44,
+    "MAIN_BIAS": 0.44,
+    "MAIN_N": 0.44,
+    "MAIN_P": 0.44,
+    "MAIN_TAIL_0": 0.44,
+    "MAIN_TAIL_1": 0.44,
+    "MAIN_TAIL_2": 0.44,
+    "MAIN_TAIL_3": 0.44,
+    "MAIN_TAIL_4": 0.44,
+    "MAIN_TAIL_5": 0.44,
+    "MAIN_TAIL_6": 0.44,
+    "MAIN_TAIL_7": 0.44,
+    "PAD_N": 0.44,
+    "PAD_P": 0.44,
+    "POST_BIAS": 0.44,
+    "POST_N": 0.44,
+    "POST_P": 0.44,
+    "POST_TAIL_0": 0.44,
+    "POST_TAIL_1": 0.44,
+    "POST_TAIL_2": 0.44,
+    "POST_TAIL_3": 0.44,
+    "POST_TAIL_4": 0.44,
+    "POST_TAIL_5": 0.44,
+    "POST_TAIL_6": 0.44,
+    "POST_TAIL_7": 0.44,
+    "SUM_N_D_0": 0.44,
+    "SUM_N_D_1": 0.44,
+    "SUM_N_D_2": 0.44,
+    "SUM_N_D_3": 0.44,
+    "SUM_N_D_4": 0.44,
+    "SUM_N_D_5": 0.44,
+    "SUM_N_D_6": 0.44,
+    "SUM_N_D_7": 0.44,
+    "SUM_P_D_0": 0.44,
+    "SUM_P_D_1": 0.44,
+    "SUM_P_D_2": 0.44,
+    "SUM_P_D_3": 0.44,
+    "SUM_P_D_4": 0.44,
+    "SUM_P_D_5": 0.44,
+    "SUM_P_D_6": 0.44,
+    "SUM_P_D_7": 0.44,
+    "TERM_BLEED_0": 0.44,
+    "TERM_BLEED_1": 0.44,
+    "TERM_BLEED_2": 0.44,
+    "TERM_BLEED_3": 0.44,
+    "TERM_BLEED_4": 0.44,
+    "TERM_BLEED_5": 0.44,
+    "TERM_BLEED_6": 0.44,
+    "TERM_ENABLE": 0.44,
+    "TERM_ENABLE_B": 0.44,
+    "TERM_ENABLE_LOCAL": 0.44,
+    "TERM_N_R": 0.44,
+    "TERM_P_R": 0.44,
+    "TERM_VCM": 0.44,
+    "TMDS_BIAS": 0.44,
+    "TMDS_N": 0.44,
+    "TMDS_P": 0.44,
+    "TMDS_TAIL_0": 0.44,
+    "TMDS_TAIL_1": 0.44,
+    "TMDS_TAIL_2": 0.44,
+    "TMDS_TAIL_3": 0.44,
+    "TMDS_TAIL_4": 0.44,
+    "TMDS_TAIL_5": 0.44,
+    "TMDS_TAIL_6": 0.44,
+    "TMDS_TAIL_7": 0.44,
+    "VDD": 8.0,
+    "VSS": 8.0
+  },
+  "bounded_internal_routes": true,
+  "net_trunk_spans_um": {
+    "CASCODE": [
+      441.3,
+      1226.5
+    ],
+    "DETECT_BLEED_0": [
+      1065.3,
+      1068.7
+    ],
+    "DETECT_BLEED_1": [
+      1068.5,
+      1071.9
+    ],
+    "DETECT_BLEED_2": [
+      1071.7,
+      1075.1
+    ],
+    "DETECT_BLEED_3": [
+      1074.9,
+      1078.3
+    ],
+    "DETECT_BLEED_4": [
+      1078.1,
+      1081.5
+    ],
+    "DETECT_BLEED_5": [
+      1081.3,
+      1084.7
+    ],
+    "DETECT_BLEED_6": [
+      1084.5,
+      1091.5
+    ],
+    "DETECT_ENABLE": [
+      1048.9,
+      1226.5
+    ],
+    "DETECT_ENABLE_B": [
+      1048.1,
+      1059.5
+    ],
+    "DETECT_ENABLE_LOCAL": [
+      558.1,
+      1065.5
+    ],
+    "DETECT_N_I": [
+      557.3,
+      1201.9
+    ],
+    "DETECT_PBIAS": [
+      1198.5,
+      1226.5
+    ],
+    "DETECT_P_I": [
+      560.5,
+      1198.7
+    ],
+    "MAIN_BIAS": [
+      574.5,
+      1226.5
+    ],
+    "MAIN_N": [
+      590.5,
+      1226.5
+    ],
+    "MAIN_P": [
+      587.3,
+      1226.5
+    ],
+    "MAIN_TAIL_0": [
+      573.7,
+      592.3
+    ],
+    "MAIN_TAIL_1": [
+      596.5,
+      615.1
+    ],
+    "MAIN_TAIL_2": [
+      615.7,
+      637.9
+    ],
+    "MAIN_TAIL_3": [
+      638.5,
+      660.7
+    ],
+    "MAIN_TAIL_4": [
+      661.3,
+      683.5
+    ],
+    "MAIN_TAIL_5": [
+      684.1,
+      706.3
+    ],
+    "MAIN_TAIL_6": [
+      706.9,
+      729.1
+    ],
+    "MAIN_TAIL_7": [
+      729.7,
+      748.3
+    ],
+    "PAD_N": [
+      435.5,
+      564.7
+    ],
+    "PAD_P": [
+      435.5,
+      571.5
+    ],
+    "POST_BIAS": [
+      753.3,
+      1226.5
+    ],
+    "POST_N": [
+      769.3,
+      1226.5
+    ],
+    "POST_P": [
+      766.1,
+      1226.5
+    ],
+    "POST_TAIL_0": [
+      752.5,
+      771.1
+    ],
+    "POST_TAIL_1": [
+      771.7,
+      793.9
+    ],
+    "POST_TAIL_2": [
+      794.5,
+      816.7
+    ],
+    "POST_TAIL_3": [
+      817.3,
+      839.5
+    ],
+    "POST_TAIL_4": [
+      840.1,
+      862.3
+    ],
+    "POST_TAIL_5": [
+      862.9,
+      885.1
+    ],
+    "POST_TAIL_6": [
+      885.7,
+      904.3
+    ],
+    "POST_TAIL_7": [
+      908.5,
+      927.1
+    ],
+    "SUM_N_D_0": [
+      442.1,
+      941.9
+    ],
+    "SUM_N_D_1": [
+      454.9,
+      954.7
+    ],
+    "SUM_N_D_2": [
+      471.3,
+      971.1
+    ],
+    "SUM_N_D_3": [
+      484.1,
+      987.5
+    ],
+    "SUM_N_D_4": [
+      500.5,
+      1000.3
+    ],
+    "SUM_N_D_5": [
+      513.3,
+      1016.7
+    ],
+    "SUM_N_D_6": [
+      529.7,
+      1029.5
+    ],
+    "SUM_N_D_7": [
+      546.1,
+      1045.9
+    ],
+    "SUM_P_D_0": [
+      445.3,
+      938.7
+    ],
+    "SUM_P_D_1": [
+      458.1,
+      951.5
+    ],
+    "SUM_P_D_2": [
+      474.5,
+      967.9
+    ],
+    "SUM_P_D_3": [
+      487.3,
+      980.7
+    ],
+    "SUM_P_D_4": [
+      503.7,
+      997.1
+    ],
+    "SUM_P_D_5": [
+      520.1,
+      1013.5
+    ],
+    "SUM_P_D_6": [
+      532.9,
+      1026.3
+    ],
+    "SUM_P_D_7": [
+      549.3,
+      1042.7
+    ],
+    "TERM_BLEED_0": [
+      1107.3,
+      1110.7
+    ],
+    "TERM_BLEED_1": [
+      1110.5,
+      1117.5
+    ],
+    "TERM_BLEED_2": [
+      1117.3,
+      1120.7
+    ],
+    "TERM_BLEED_3": [
+      1120.5,
+      1123.9
+    ],
+    "TERM_BLEED_4": [
+      1123.7,
+      1127.1
+    ],
+    "TERM_BLEED_5": [
+      1126.9,
+      1130.3
+    ],
+    "TERM_BLEED_6": [
+      1130.1,
+      1133.5
+    ],
+    "TERM_ENABLE": [
+      1094.5,
+      1226.5
+    ],
+    "TERM_ENABLE_B": [
+      1093.7,
+      1105.1
+    ],
+    "TERM_ENABLE_LOCAL": [
+      1100.1,
+      1196.3
+    ],
+    "TERM_N_R": [
+      564.5,
+      1195.5
+    ],
+    "TERM_P_R": [
+      571.3,
+      1162.7
+    ],
+    "TERM_VCM": [
+      1137.3,
+      1226.5
+    ],
+    "TMDS_BIAS": [
+      928.5,
+      1226.5
+    ],
+    "TMDS_N": [
+      941.7,
+      1226.5
+    ],
+    "TMDS_P": [
+      938.5,
+      1226.5
+    ],
+    "TMDS_TAIL_0": [
+      927.7,
+      943.5
+    ],
+    "TMDS_TAIL_1": [
+      944.1,
+      956.3
+    ],
+    "TMDS_TAIL_2": [
+      960.5,
+      972.7
+    ],
+    "TMDS_TAIL_3": [
+      973.3,
+      989.1
+    ],
+    "TMDS_TAIL_4": [
+      989.7,
+      1001.9
+    ],
+    "TMDS_TAIL_5": [
+      1002.5,
+      1018.3
+    ],
+    "TMDS_TAIL_6": [
+      1018.9,
+      1031.1
+    ],
+    "TMDS_TAIL_7": [
+      1031.7,
+      1047.5
+    ],
+    "VDD": [
+      1052.9,
+      1226.5
+    ],
+    "VSS": [
+      435.5,
+      1226.5
+    ]
+  },
+  "port_heights_um": {
+    "PAD_P": 438.0,
+    "PAD_N": 438.0,
+    "VDD": 1226.0,
+    "VSS": 1226.0,
+    "CASCODE": 1226.0,
+    "MAIN_P": 1226.0,
+    "MAIN_N": 1226.0,
+    "MAIN_BIAS": 1226.0,
+    "POST_P": 1226.0,
+    "POST_N": 1226.0,
+    "POST_BIAS": 1226.0,
+    "TMDS_P": 1226.0,
+    "TMDS_N": 1226.0,
+    "TMDS_BIAS": 1226.0,
+    "DETECT_ENABLE": 1226.0,
+    "DETECT_PBIAS": 1226.0,
+    "TERM_ENABLE": 1226.0,
+    "TERM_VCM": 1226.0
+  },
+  "reference_pair_size_um": [
+    286.0,
+    350
+  ],
+  "bond_pitch_um": 211.0,
+  "escape_layer": "metal2",
+  "escape_width_um": 4.0,
+  "active_origin_um": 440.0,
+  "core_clearance_depth_um": 416.0,
+  "reference_sites": [
+    "bidir[20].pad",
+    "bidir[21].pad"
+  ],
+  "fits_reference_height": false,
+  "near_bond_ground_landings_um": [
+    [
+      9.0,
+      77.305,
+      11.0,
+      79.305
+    ],
+    [
+      220.0,
+      77.305,
+      222.0,
+      79.305
+    ]
+  ],
+  "allocation_regions_um": [
+    [
+      0,
+      0,
+      75,
+      104
+    ],
+    [
+      211.0,
+      0,
+      286.0,
+      104
+    ],
+    [
+      8.5,
+      104,
+      11.5,
+      440.0
+    ],
+    [
+      219.5,
+      104,
+      222.5,
+      440.0
+    ],
+    [
+      35.3,
+      76,
+      39.7,
+      440.0
+    ],
+    [
+      246.3,
+      76,
+      250.7,
+      440.0
+    ],
+    [
+      0,
+      418.0,
+      150.0,
+      1227.0
+    ],
+    [
+      150.0,
+      418.0,
+      286.0,
+      440.0
+    ],
+    [
+      159.945,
+      698.0,
+      434.5,
+      988.0
+    ],
+    [
+      33.5,
+      396.0,
+      452.0,
+      404.0
+    ],
+    [
+      444.0,
+      396.0,
+      452.0,
+      744.0
+    ],
+    [
+      342.0,
+      736.0,
+      452.0,
+      744.0
+    ],
+    [
+      244.5,
+      408.0,
+      468.0,
+      416.0
+    ],
+    [
+      460.0,
+      408.0,
+      468.0,
+      764.0
+    ],
+    [
+      346.0,
+      756.0,
+      468.0,
+      764.0
+    ],
+    [
+      296.0,
+      702.0,
+      482.0,
+      706.0
+    ],
+    [
+      476.0,
+      700.0,
+      484.0,
+      1230.0
+    ],
+    [
+      92.22,
+      1224.0,
+      482.0,
+      1228.0
+    ]
+  ],
+  "area_ceiling_um2": 180000,
+  "fits_assigned_area": false,
+  "image_id": "sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
+  "sources_sha256": {
+    "analog/pads/layout.py": "2eff935f3709e06322f58073d8b590a710d3f22ed6fb28f0c0a79f5a4bc944c6",
+    "analog/pads/gds_markers.py": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4",
+    "analog/pads/generated/provider-sites.json": "c58790b22d45497c45bfd20e8cc60e698d8286010856fcc6fa18ab7021d26df4",
+    "analog/pads/circuits.py": "bccd2850f5023fd97f65c1cf53ee297672157ef1e4dd90f8923a0e4d6f3d2130",
+    "analog/pads/design.py": "1280fd1141770cbd48d65785fcdf3f3f4d8d694a10b39ad58de9b60ef6f8e806",
+    "analog/pads/wired_receive.py": "c17136a1c165093b65974b27143e1ff8e21c725d11940326a6b999585909cc8b",
+    "spec/analog-architecture.json": "2d773c18090b57a6e54291f99d6f828730f843674fe6ceee8a7cdfdda5a58b4d",
+    "spec/contract.json": "9e43600f7d9016469fc825fe4c451a87c4940e98bb3007f7a18b8f6ea3e63c69"
+  },
+  "drc_count": "0",
+  "pcell_terminal_coordinates": {
+    "primitive_0": [
+      [
+        0.4,
+        0.0
+      ],
+      [
+        0.0,
+        -10.6
+      ],
+      [
+        -0.4,
+        0.0
+      ],
+      [
+        1.09,
+        10.680000000000001
+      ]
+    ],
+    "primitive_1": [
+      [
+        0.76,
+        0.0
+      ],
+      [
+        0.0,
+        -10.6
+      ],
+      [
+        -0.76,
+        0.0
+      ],
+      [
+        1.45,
+        10.680000000000001
+      ]
+    ],
+    "primitive_2": [
+      [
+        0.61,
+        0.0
+      ],
+      [
+        0.0,
+        -1.6
+      ],
+      [
+        -0.61,
+        0.0
+      ],
+      [
+        1.33,
+        1.6800000000000002
+      ]
+    ],
+    "primitive_3": [
+      [
+        0.61,
+        0.0
+      ],
+      [
+        0.0,
+        -2.5999999999999996
+      ],
+      [
+        -0.61,
+        0.0
+      ],
+      [
+        1.33,
+        2.6799999999999997
+      ]
+    ],
+    "primitive_4": [
+      [
+        0.61,
+        0.0
+      ],
+      [
+        0.0,
+        -8.6
+      ],
+      [
+        -0.61,
+        0.0
+      ],
+      [
+        1.33,
+        8.680000000000001
+      ]
+    ],
+    "primitive_5": [
+      [
+        1.26,
+        0.0
+      ],
+      [
+        0.0,
+        -2.5999999999999996
+      ],
+      [
+        -1.26,
+        0.0
+      ],
+      [
+        1.95,
+        2.6799999999999997
+      ]
+    ],
+    "primitive_6": [
+      [
+        0.535,
+        0.0
+      ],
+      [
+        0.0,
+        -2.5999999999999996
+      ],
+      [
+        -0.535,
+        0.0
+      ],
+      [
+        1.2550000000000001,
+        2.6799999999999997
+      ]
+    ],
+    "primitive_7": [
+      [
+        0.0,
+        1.08
+      ],
+      [
+        0.0,
+        -1.08
+      ],
+      [
+        1.09,
+        1.12
+      ]
+    ],
+    "primitive_8": [
+      [
+        0.0,
+        6.68
+      ],
+      [
+        0.0,
+        -6.68
+      ],
+      [
+        1.3800000000000001,
+        7.14
+      ]
+    ],
+    "primitive_9": [
+      [
+        0.0,
+        1.43
+      ],
+      [
+        0.0,
+        -1.43
+      ],
+      [
+        1.8800000000000001,
+        1.89
+      ]
+    ]
+  },
+  "limitations": [
+    "Grounded-gate drain-SAB devices are protection candidates, not a qualified ESD clamp.",
+    "Sense comparator uses the same PAD_P/N nodes; comparator and core DACs are external to this cell.",
+    "Source termination includes switched resistors and a passive TERM_VCM discharge resistor; impedance trim and the physical current-limited buffer remain unimplemented.",
+    "Detection enable has a local supply-powered buffer and passive discharge; reset and brownout supervision remain unimplemented.",
+    "Protection capacitance, cascode compliance and driver current must be measured, not assumed.",
+    "Provider ring metal rails not yet integrated."
+  ],
+  "base_device_count": 207,
+  "base_net_count": 80,
+  "base_candidate_size_um": [
+    286.0,
+    1226.0
+  ],
+  "base_area_um2": 350636.0,
+  "physical_bbox_um": [
+    2.7800000000000002,
+    0.0,
+    484.0,
+    1230.0
+  ],
+  "candidate_size_um": [
+    484.0,
+    1230.0
+  ],
+  "area_um2": 240640.33,
+  "area_basis": "Allocated nonrectangular union, not material area or bounding rectangle.",
+  "allocation_union_um2": 240640.33,
+  "connected_primary_candidate": true,
+  "device_count": 366
+}

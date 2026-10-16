@@ -1,0 +1,72 @@
+{
+  "status": "same_bias_three_topology_loading_comparison",
+  "frequency_hz": 1000000000.0,
+  "cases": {
+    "baseline": {
+      "disabled": [
+        2.3997656338063884e-12,
+        2.4279442481640798e-12
+      ],
+      "main": [
+        1.9377272599879366e-12,
+        2.424244129048618e-12
+      ],
+      "detection": [
+        3.4810546973936115e-12,
+        3.513464697451864e-12
+      ]
+    },
+    "additive": {
+      "disabled": [
+        2.700097257664813e-12,
+        2.727782562852655e-12
+      ],
+      "main": [
+        2.238228924158946e-12,
+        2.7135279798959856e-12
+      ],
+      "detection": [
+        3.784738777391687e-12,
+        3.816655460685209e-12
+      ]
+    },
+    "replacement": {
+      "disabled": [
+        2.5138593029185577e-12,
+        2.541544608116466e-12
+      ],
+      "main": [
+        2.0519918992223318e-12,
+        2.527290954958173e-12
+      ],
+      "detection": [
+        3.5475326825679044e-12,
+        3.579449365861426e-12
+      ]
+    },
+    "combined_layout": {
+      "disabled": [
+        2.6252600482941178e-12,
+        2.6328433229934656e-12
+      ],
+      "main": [
+        2.1633925355080037e-12,
+        2.618589395500855e-12
+      ],
+      "detection": [
+        3.658931508044846e-12,
+        3.6707449152577105e-12
+      ]
+    }
+  },
+  "scope": "All topologies use existing baseline calibration voltages, not new calibrations. Original extracted wiring capacitance retained. New connecting routes absent; no layout or protection acceptance.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-transmit-extracted-c.spice": "2842f24620fd09cdc5f90298517f369b643c8ce9481f7e8045ca5ae4c260f3f8",
+    "/home/ubuntu/svalbard/scratch/pad-tx-attached-protection.spice": "a96f8cf55f2bda243f4a1802f75dcb966c7e4be38c5bed97b205913708115f04",
+    "/home/ubuntu/svalbard/scratch/pad-tx-replacement-protection.spice": "45db357b91db67b5ed302be5f0ac51c0c6d17407aac3bdcf18df134aaf8814dc",
+    "/home/ubuntu/svalbard/scratch/pad-tx-connected-primary-model/physical.spice": "43e425d5882d8dfced4ada16651c1a2963e6745cac4f5562c8dc686ae185a4fa",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-transmit-screen.json": "205c4386555b2563fa608711f1528fefc817d21056109fc2c474e936495bb0ed",
+    "/home/ubuntu/svalbard/scratch/compare-tx-connected-loading.py": "fe71507fe6ca96b1439c00731f9b5650dd9c4c188a9be0330787de030af538e1",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "3381c87eb71ca724a802628c4b9f1291f030eea11690c90478cde0ba6b419f41"
+  }
+}

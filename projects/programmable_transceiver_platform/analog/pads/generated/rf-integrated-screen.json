@@ -1,0 +1,40 @@
+{
+  "status": "integrated_RF_first_pass_built_not_protection_qualified",
+  "construction_checks_complete": true,
+  "area_fits": true,
+  "physical_model": "/home/ubuntu/svalbard/scratch/pad-rf-current-shared-refresh/routed/physical.spice",
+  "gds": "/home/ubuntu/svalbard/scratch/pad-rf-current-shared-refresh/pad/pad.gds",
+  "family_screens": {
+    "rf_receive": "/home/ubuntu/svalbard/scratch/pad-rf-current-shared-refresh/routed/rf_receive/screen-report.json",
+    "rf_transmit": "/home/ubuntu/svalbard/scratch/pad-rf-current-shared-refresh/routed/rf_transmit/screen-report.json"
+  },
+  "nominal_gain_high_resistance_power_dbm": -1.3410638523146061,
+  "maximum_gain_high_resistance_power_dbm": 0.16305079839448655,
+  "core_pulse_extrema": {
+    "positive_100mA": {
+      "min": 1.64665207,
+      "max": 4.54036201
+    },
+    "negative_100mA": {
+      "min": -1.00452682,
+      "max": 1.64665207
+    }
+  },
+  "limitations": [
+    "Core protection coordination and current capacity unresolved.",
+    "Behavioral RF core boundaries; routing loss is a sheet-resistance approximation.",
+    "Provider assembly is a separate mandatory integration check before publication."
+  ],
+  "report_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-rf-current-shared-refresh/pad/pad-layout.json": "ce4d9565a972a35f92e237d847bb85ea57d228cce94bebb255bbb679cdf24988",
+    "/home/ubuntu/svalbard/scratch/pad-rf-current-shared-refresh/pad/independent-device-audit.json": "050063fc461f126702a0ab1e04d21d68f615d79f23d53bf54e5f70bcbe296f55",
+    "/home/ubuntu/svalbard/scratch/pad-rf-current-shared-refresh/routed/route-screen.json": "2870700b542bdd741396222500ad9ceb59d63acdf8d25151cb257f995cef058e",
+    "/home/ubuntu/svalbard/scratch/pad-rf-current-shared-refresh/maximum-gain/screen-report.json": "bca9fdfe9d151518bf6740312ba72929d187008c96b661f0be91b6041fb3a64c",
+    "/home/ubuntu/svalbard/scratch/pad-rf-current-shared-refresh/pulses/pulse-screen.json": "b2a06b2a6d0d457f27ae965bc719affacb391dabb781ad18eb548e89cee3f88c"
+  },
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/rf_integrated.py": "81f2e3f0ec34ae6de341e7c0e4bb79ba9a1632a6a3e48e43d622353b07c4ce48",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "31ff538f4d198f8559b7a62d3dc7dece47a0d2e702eb31c344d09bedd22dd77b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/contract.json": "9e43600f7d9016469fc825fe4c451a87c4940e98bb3007f7a18b8f6ea3e63c69"
+  }
+}

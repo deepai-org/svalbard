@@ -1,0 +1,75 @@
+{
+  "physical_extraction_used": true,
+  "status": "transistor_control_DC_truth_table_verified_not_dynamic_or_layout_qualified",
+  "device_count": 88,
+  "cases": [
+    {
+      "reset": 0,
+      "qualified": 0,
+      "supply_ok": 0,
+      "cases": 32,
+      "max_rail_error_v": 2.38611653e-09
+    },
+    {
+      "reset": 0,
+      "qualified": 0,
+      "supply_ok": 1,
+      "cases": 32,
+      "max_rail_error_v": 2.38611653e-09
+    },
+    {
+      "reset": 0,
+      "qualified": 1,
+      "supply_ok": 0,
+      "cases": 32,
+      "max_rail_error_v": 2.38611653e-09
+    },
+    {
+      "reset": 0,
+      "qualified": 1,
+      "supply_ok": 1,
+      "cases": 32,
+      "max_rail_error_v": 3.190000000152793e-06
+    },
+    {
+      "reset": 1,
+      "qualified": 0,
+      "supply_ok": 0,
+      "cases": 32,
+      "max_rail_error_v": 2.38611653e-09
+    },
+    {
+      "reset": 1,
+      "qualified": 0,
+      "supply_ok": 1,
+      "cases": 32,
+      "max_rail_error_v": 2.38611653e-09
+    },
+    {
+      "reset": 1,
+      "qualified": 1,
+      "supply_ok": 0,
+      "cases": 32,
+      "max_rail_error_v": 2.38611653e-09
+    },
+    {
+      "reset": 1,
+      "qualified": 1,
+      "supply_ok": 1,
+      "cases": 32,
+      "max_rail_error_v": 2.38611653e-09
+    }
+  ],
+  "total_cases": 256,
+  "limitations": [
+    "Full-rail logic interface; legacy0/1 behavioral enables require explicit boundary conversion.",
+    "SUPPLY_OK and QUALIFIED are supplied inputs, not implemented monitors.",
+    "Combinational exclusion only: no hazard-free guarantee, break-before-make sequencing or buffer-ready detector.",
+    "Output loading, propagation delay, physical layout and PVT require verification."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_control_circuit.py": "3749b1ee1995dc05da0cd7f3e09cac621f55c2dcf6f39d340d3ec8e7d3c5e4cc",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_controls.py": "5b9d3d944392d8e45c07425f6bf5e9912d2ec682be3e10ed171be21cf717e571",
+    "/home/ubuntu/svalbard/scratch/pad-tx-thick-control-dc/circuit.spice": "e0a8c45ac4e8efdfde286d89f65451379448d1c7dd1829681e901c72b2f5c6d5"
+  }
+}

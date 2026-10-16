@@ -1,0 +1,82 @@
+{
+  "status": "keep_connected_RF_protection_raise_existing_area_allocation",
+  "components": [
+    {
+      "cell": "svrfpad__protection_network",
+      "bbox_um": [
+        -0.055,
+        438.0,
+        274.5,
+        728.0
+      ],
+      "bbox_area_um2": 79620.95,
+      "children": [
+        {
+          "cell": "svrfpad__pad_isolated_rail_clamp_layout",
+          "bbox_um": [
+            -0.055,
+            0.0,
+            122.0,
+            288.0
+          ],
+          "bbox_area_um2": 35151.840000000004
+        },
+        {
+          "cell": "svrfpad__steering_array",
+          "bbox_um": [
+            129.0,
+            3.0,
+            191.0,
+            157.0
+          ],
+          "bbox_area_um2": 9548.0
+        },
+        {
+          "cell": "svrfpad__bleed",
+          "bbox_um": [
+            200.05,
+            17.285,
+            269.95,
+            270.71500000000003
+          ],
+          "bbox_area_um2": 17714.756999999998
+        }
+      ],
+      "child_union_area_um2": 62414.596999999994
+    },
+    {
+      "cell": "svrfpad__Bondpad_5LM",
+      "bbox_um": [
+        3.5,
+        0.0,
+        71.5,
+        65.325
+      ],
+      "bbox_area_um2": 4442.1
+    },
+    {
+      "cell": "svrfpad__Bondpad_5LM",
+      "bbox_um": [
+        214.5,
+        0.0,
+        282.5,
+        65.325
+      ],
+      "bbox_area_um2": 4442.1
+    }
+  ],
+  "measured_pair_allocation_um2": 123842.11,
+  "pair_budget_um2": 130000,
+  "pair_remaining_um2": 6157.889999999999,
+  "total_reserve_transfer_um2": 140000,
+  "unassigned_reserve_after_power_distribution_um2": 710000,
+  "limitations": [
+    "Applies to this fixed set of physical macro geometries; not a lower bound on alternative circuits.",
+    "Area allocation is not whole-core placement or protection qualification."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "2d773c18090b57a6e54291f99d6f828730f843674fe6ceee8a7cdfdda5a58b4d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/contract.json": "9e43600f7d9016469fc825fe4c451a87c4940e98bb3007f7a18b8f6ea3e63c69",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wide-route-rf-candidate/pad.gds": "d2e57ecbb28437d6553fd107693d30f04035a5cac2dc1644176eb3667aacfb82"
+  }
+}

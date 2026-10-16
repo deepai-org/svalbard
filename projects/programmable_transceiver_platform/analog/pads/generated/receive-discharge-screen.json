@@ -1,0 +1,142 @@
+{
+  "status": "receiver_control_and_discharge_boundary_probe_not_layout_change",
+  "cases": {
+    "stale_bypass": {
+      "transient_complete": true,
+      "windows": {
+        "active": {
+          "rail_min_v": 3.29920614,
+          "rail_max_v": 3.29920614,
+          "bypass_gate_max_v": 3.3,
+          "receiver_min_v": 2.29379779,
+          "receiver_max_v": 2.29699687,
+          "pad_min_v": 3.14175662,
+          "pad_max_v": 3.28939022
+        },
+        "commanded_off": {
+          "rail_min_v": 1.30671044e-07,
+          "rail_max_v": 4.67871227e-07,
+          "bypass_gate_max_v": 3.3,
+          "receiver_min_v": 2.26427535,
+          "receiver_max_v": 2.29514001,
+          "pad_min_v": 2.99992694,
+          "pad_max_v": 2.99995052
+        },
+        "brownout": {
+          "rail_min_v": 0.54399045,
+          "rail_max_v": 1.14852573,
+          "bypass_gate_max_v": 3.3,
+          "receiver_min_v": 2.2696086,
+          "receiver_max_v": 2.29490031,
+          "pad_min_v": 3.00209136,
+          "pad_max_v": 3.00314673
+        },
+        "recovered_not_rearmed": {
+          "rail_min_v": 3.28335109,
+          "rail_max_v": 3.29661798,
+          "bypass_gate_max_v": 3.3,
+          "receiver_min_v": 2.27548876,
+          "receiver_max_v": 2.29411453,
+          "pad_min_v": 3.00001857,
+          "pad_max_v": 3.00012166
+        }
+      },
+      "deck_sha256": "8209fc0f8741a4a4ed70c5d9be40a5b2ed0a8d10de8b775f6c93f52848980336"
+    },
+    "qualified_bypass": {
+      "transient_complete": true,
+      "windows": {
+        "active": {
+          "rail_min_v": 3.29920614,
+          "rail_max_v": 3.29920614,
+          "bypass_gate_max_v": 3.29920614,
+          "receiver_min_v": 2.29315519,
+          "receiver_max_v": 2.29635318,
+          "pad_min_v": 3.14175662,
+          "pad_max_v": 3.28939022
+        },
+        "commanded_off": {
+          "rail_min_v": 1.30631531e-07,
+          "rail_max_v": 4.67493616e-07,
+          "bypass_gate_max_v": 0.0,
+          "receiver_min_v": 1.77715242,
+          "receiver_max_v": 1.811335,
+          "pad_min_v": 2.99993491,
+          "pad_max_v": 2.99995302
+        },
+        "brownout": {
+          "rail_min_v": 0.543959632,
+          "rail_max_v": 1.14850629,
+          "bypass_gate_max_v": 0.0,
+          "receiver_min_v": 1.77558016,
+          "receiver_max_v": 1.80831873,
+          "pad_min_v": 3.00209745,
+          "pad_max_v": 3.00314935
+        },
+        "recovered_not_rearmed": {
+          "rail_min_v": 3.28338765,
+          "rail_max_v": 3.29662542,
+          "bypass_gate_max_v": 0.0,
+          "receiver_min_v": 1.76981162,
+          "receiver_max_v": 1.80271037,
+          "pad_min_v": 3.00002355,
+          "pad_max_v": 3.00012396
+        }
+      },
+      "deck_sha256": "4e7cb21e45cfdd3df561113677343b8a28e843d18f6177f9e67efa75fe86be73"
+    },
+    "qualified_with_core_bleed": {
+      "transient_complete": true,
+      "windows": {
+        "active": {
+          "rail_min_v": 3.29914505,
+          "rail_max_v": 3.29914505,
+          "bypass_gate_max_v": 3.29914505,
+          "receiver_min_v": 2.01668655,
+          "receiver_max_v": 2.02020057,
+          "pad_min_v": 3.12732239,
+          "pad_max_v": 3.28845228
+        },
+        "commanded_off": {
+          "rail_min_v": 1.30746325e-07,
+          "rail_max_v": 4.6779746e-07,
+          "bypass_gate_max_v": 0.0,
+          "receiver_min_v": 1.80967478e-07,
+          "receiver_max_v": 2.30205988e-07,
+          "pad_min_v": 2.99993504,
+          "pad_max_v": 2.99995316
+        },
+        "brownout": {
+          "rail_min_v": 0.543946795,
+          "rail_max_v": 1.1484982,
+          "bypass_gate_max_v": 0.0,
+          "receiver_min_v": -1.89747604e-05,
+          "receiver_max_v": 1.32275551e-05,
+          "pad_min_v": 3.00209764,
+          "pad_max_v": 3.0031495
+        },
+        "recovered_not_rearmed": {
+          "rail_min_v": 3.28338768,
+          "rail_max_v": 3.29662542,
+          "bypass_gate_max_v": 0.0,
+          "receiver_min_v": -2.13350641e-06,
+          "receiver_max_v": -2.69080036e-07,
+          "pad_min_v": 3.00002369,
+          "pad_max_v": 3.00012411
+        }
+      },
+      "deck_sha256": "2be95daa29de12f0557f4867e25f98a63bfb00a042f1ba998b8735216c8788d2"
+    }
+  },
+  "limitations": [
+    "Same extracted pad and retained external network; 100kohm case changes an explicit attached-core load only.",
+    "Core bleed is a sizing hypothesis, not a selected physical resistor.",
+    "No input-noise or bandwidth acceptance inferred from this DC/common-mode test.",
+    "Detector and latch remain behavioral; native supply pads and regulator reverse-current limits absent."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-rx-local-qualification/qualified.spice": "7ca9b7c7f9cd319729b090d42333000fd1ba50bf5b20ec30ec939179ca4f4855",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "d45109a5e4399d143c283a6fccf78745e8a24f29749825847073c97a11c0143f",
+    "/home/ubuntu/svalbard/scratch/pad-receiver-qualification.py": "d5c785ae06191a73f3c9f8f63d8066924ff0e9369b928803e7c4d007545d5589"
+  }
+}

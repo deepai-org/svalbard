@@ -1,0 +1,16 @@
+{
+  "status": "comparison_baseline_superseded_by_thick_logic_candidate",
+  "device_count": 88,
+  "truth_table_cases": 256,
+  "implemented": "All seven forbidden request pairings, reset, external qualification and supply-valid gating. Full-rail CMOS outputs for four branches and termination.",
+  "remaining": [
+    "Implement and verify the blanking/commit sequencer with actual fanout, skew, PVT and analog branch conduction; static guard alone is unsafe.",
+    "Actual branch control loading and pad interconnect extraction.",
+    "SUPPLY_OK monitor, buffer readiness and qualification source circuits.",
+    "Explicit mapping between full-rail transistor controls and legacy normalized behavioral enables.",
+    "Whole-chip area attribution and placement."
+  ],
+  "scope": "Files directly in this directory preserve the earlier thin-oxide comparison evidence. Preferred implementation and latest results are in thick-logic/. Canonical pad guard remains behavioral pending integration.",
+  "transition_result": "Direct mode changes produce conflicting enable overlap. Prescribed2ns pre/post qualification blanking gives no overlap above2.31V in the tested50/500fF cases after bounded internal routing. Not PVT or arbitrary-skew qualification.",
+  "preferred_candidate": "thick-logic/decision.json"
+}

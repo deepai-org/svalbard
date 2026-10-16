@@ -1,0 +1,55 @@
+{
+  "status": "transistor_buffer_connected_diagnostic_no_enable_or_isolation",
+  "transient_complete": true,
+  "device_count": 89,
+  "windows": {
+    "active_tmds": {
+      "vcm_min_v": 1.6462418,
+      "vcm_max_v": 1.64669203,
+      "max_target_error_v": 0.0037034899999999205,
+      "peak_supply_draw_a": 0.0120934171,
+      "peak_supply_return_a": -0.0120673768
+    },
+    "reset": {
+      "vcm_min_v": 1.64652006,
+      "vcm_max_v": 1.64663211,
+      "max_target_error_v": 0.0034678200000000103,
+      "peak_supply_draw_a": 0.0120745785,
+      "peak_supply_return_a": -0.0120740902
+    },
+    "unpowered": {
+      "vcm_min_v": 0.244046335,
+      "vcm_max_v": 0.435114749,
+      "max_target_error_v": 0.32166617599999997,
+      "peak_supply_draw_a": 8.15367368e-06,
+      "peak_supply_return_a": 0.000121617345
+    },
+    "active_main": {
+      "vcm_min_v": 1.7147899,
+      "vcm_max_v": 1.86185642,
+      "max_target_error_v": 0.18516763999999997,
+      "peak_supply_draw_a": 0.0120071123,
+      "peak_supply_return_a": -0.00839228041
+    },
+    "active_main_post": {
+      "vcm_min_v": 1.77730147,
+      "vcm_max_v": 1.82288952,
+      "max_target_error_v": 0.1678838600000001,
+      "peak_supply_draw_a": 0.00703721101,
+      "peak_supply_return_a": -0.00581885139
+    },
+    "reconfiguration": {
+      "vcm_min_v": 1.11843794,
+      "vcm_max_v": 1.70063116,
+      "max_target_error_v": 0.43655723999999996,
+      "peak_supply_draw_a": 0.0230577221,
+      "peak_supply_return_a": 0.0144967239
+    }
+  },
+  "scope": "Same extracted TX and powered external peer throughout; buffer is deliberately always attached and lacks enable, current limit and power-off isolation. Divider bias is a prototype, not a qualified reference. Ideal compensation passives; no buffer layout.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-tx-connected-primary-screen/lifecycle.spice": "65c1be2c7d6504d2aee8d2a6e3425786c3f5b335eaa27e54b79bba79e3cacfae",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer.py": "fcd28f3017dbcc3ccc4d78d66ee56906d2ce3ea088930cf1063b337ce347ad13",
+    "/home/ubuntu/svalbard/scratch/pad-buffer-connected/connected.spice": "12196a1469a05d181f9cdb1ab62c86fd6f6ba25f219f1e1c29ed777dead75dd7"
+  }
+}

@@ -33,7 +33,9 @@ end
 endmodule
 '''
 
-def feedback_tb(data):
+def feedback_tb(data, scenario="transitions"):
+    if scenario not in ("transitions", "hold-main", "hold-main-post"):
+        raise ValueError("Unknown replay scenario")
     x=np.loadtxt(data,skiprows=1)
     if x.shape[1]!=10 or x[-1,0]<299.99e-9:raise ValueError('Feedback requires complete readiness replay data')
     times=np.arange(1.,300.,4.)
@@ -41,8 +43,12 @@ def feedback_tb(data):
     text=TB.replace('commit=0,analog_ready=1;', 'commit=0;reg measured_ready=0;')
     text=text.replace('pt_tx_pad_sequence #', 'wire analog_ready=active_request[4] ? measured_ready : 1\'b1;\npt_tx_pad_sequence #')
     text=text.replace(';analog_ready=0;', ';').replace('#36;analog_ready=1;', '#36;')
+    schedule='send(17,70);send(19,140);send(8,200);send(0,240);'
+    if scenario != 'transitions':
+        request = 17 if scenario == 'hold-main' else 19
+        schedule=f'send({request},70);wait(traffic_ready);#64;send(0,0);'
     text=re.sub(r'#17\.8;request=17;.*?#56;\$finish;',
-                'send(17,70);send(19,140);send(8,200);send(0,240);',text,flags=re.S)
+                schedule,text,flags=re.S)
     task='''task send(input [4:0] value,input integer earliest_ns);
  begin
   if($realtime<earliest_ns) #(earliest_ns-$realtime);
@@ -58,12 +64,14 @@ initial begin #300;$finish;end
     return text,times,values
 
 
-def run(work,fixture,ready_data=None):
+def run(work,fixture,ready_data=None,scenario="transitions"):
+    if scenario != "transitions" and ready_data is None:
+        raise ValueError("Hold scenarios require sampled feedback input")
     work.mkdir(parents=True,exist_ok=False)
     rtl=PROJECT/'rtl/pt_tx_pad_sequence.sv';tb=work/'replay.sv'
     feedback=None
     if ready_data is not None:
-        text,times,values=feedback_tb(ready_data);tb.write_text(text);feedback=(times,values)
+        text,times,values=feedback_tb(ready_data,scenario);tb.write_text(text);feedback=(times,values)
     else:tb.write_text(TB)
     subprocess.run(['iverilog','-g2012','-s','replay','-o',str(work/'replay.vvp'),str(rtl),str(tb)],check=True,capture_output=True,text=True)
     result=subprocess.run(['vvp',str(work/'replay.vvp')],check=True,capture_output=True,text=True)
@@ -126,6 +134,9 @@ def run(work,fixture,ready_data=None):
     qualified_modes={int(row[1]) for row in rows if row[2]}
     traffic_modes={int(row[1]) for row in rows if row[5]}
     r['mode_coverage']={name:{'qualified':value in qualified_modes,'traffic_ready':value in traffic_modes} for name,value in [('TMDS',4),('MAIN',17),('MAIN_POST',19),('DETECT',8)]}
+    r['scenario']=scenario
+    r['traffic_ready_intervals_ns']={name:[[a[0],b[0]] for a,b in zip(rows,rows[1:]+[[300]]) if a[1]==value and a[5]] for name,value in [('TMDS',4),('MAIN',17),('MAIN_POST',19),('DETECT',8)]}
+    r['requested_loaded_hold_ns']=64 if scenario != 'transitions' else None
     r['disabled_end_observed']=bool(rows[-1][1]==0 and rows[-1][2]==0 and rows[-1][3]==0)
     if feedback is not None:
         times,values=feedback;new_values=np.interp(times*1e-9,x[:,0],x[:,8])>2.31
@@ -144,4 +155,5 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output-dir',type=Path,required=True);p.add_argument('--fixture',type=Path,required=True)
     p.add_argument('--ready-data',type=Path)
-    a=p.parse_args();run(a.output_dir.resolve(),a.fixture.resolve(),a.ready_data.resolve() if a.ready_data else None)
+    p.add_argument('--scenario',choices=['transitions','hold-main','hold-main-post'],default='transitions')
+    a=p.parse_args();run(a.output_dir.resolve(),a.fixture.resolve(),a.ready_data.resolve() if a.ready_data else None,a.scenario)

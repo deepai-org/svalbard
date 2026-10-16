@@ -688,7 +688,7 @@
         "verification": "analog/pads/tx_pad_sequence_tb.sv",
         "status": "RTL behavior verified with Icarus; synthesis/layout and extracted mixed-signal connection pending",
         "contract": "Synchronous commit/request/analog_ready; async disable on reset or invalid local supply; synchronized release required. Preblank, atomically apply captured request, postblank, wait current-configuration analog readiness. Buffer request independent of qualified. Invalid command disables; loss of readiness faults; no automatic rearm.",
-        "remaining": "Physical readiness/supply detectors, clock/count budget including detector latency, benign serializer startup behavior, synthesis/layout and current-version mixed-signal replay.",
+        "remaining": "Physical readiness/supply detectors, clock/count budget including detector latency, benign serializer startup behavior, synthesis/layout and broader loaded-operation/variation coverage; nominal extracted transition and MAIN+POST hold replays now converge.",
         "connected_replay": {
           "implementation": "analog/pads/transmit_sequence_connected.py",
           "report": "analog/pads/generated/transmit-control-candidate/thick-logic/sequence-connected/screen.json",
@@ -703,6 +703,10 @@
         "feedback_iteration": {
           "report": "analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/feedback/decision.json",
           "finding": "Sampled feedback converges with all four requested modes reaching traffic-ready and final disable observed. No loaded traffic-ready interval without detector readiness. Short transition fixture only; see explicit per-mode dwell durations. Physical detectors and sustained-operation verification remain open."
+        },
+        "loaded_hold": {
+          "report": "analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/loaded-hold/decision.json",
+          "finding": "Direct MAIN+POST startup reaches traffic-ready and holds for 68 ns with converged sampled feedback, maximum 14.12 mV reference error within 16.5 mV allocation, then disables. Repetitive nominal test only; physical detectors, variation, longer operation and other configurations remain."
         }
       }
     },

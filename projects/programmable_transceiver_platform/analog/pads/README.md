@@ -534,7 +534,12 @@ The current retained-network replay converges at all 75 feedback samples,
 exercises all four modes through traffic-ready, and reaches final disable, with
 zero observed loaded traffic-ready time while the modeled detector is unready.
 This is a transition check: TMDS has 1 ns of traffic-ready dwell; MAIN, MAIN+POST
-and detection each have 4 ns. Sustained loaded operation remains unverified.
+and detection each have 4 ns. A separate `--scenario hold-main-post` replay
+starts directly in MAIN+POST, reaches traffic-ready, and holds for 68 ns before
+disable, with converged feedback and maximum 14.12 mV reference error against
+the 16.5 mV allocation. See `reference-reset/loaded-hold/decision.json` beneath
+the buffer source-headroom evidence. This extends nominal repetitive-data
+coverage; longer operation, variation and other loaded configurations remain.
 Only source-termination readiness is measured; other modes assume readiness.
 Published observation windows use timestamps because command handshakes can
 move the actual mode beyond a nominal window.

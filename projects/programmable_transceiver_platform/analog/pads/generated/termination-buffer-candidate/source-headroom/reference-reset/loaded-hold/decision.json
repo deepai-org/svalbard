@@ -1,0 +1,22 @@
+{
+  "status": "nominal_MAIN_POST_loaded_hold_sampled_feedback_consistent",
+  "requested_hold_ns": 64,
+  "observed_traffic_ready_interval_ns": [
+    162.0,
+    230.0
+  ],
+  "max_reference_error_v": 0.014117829999999998,
+  "reference_error_limit_v": 0.0165,
+  "minimum_detector_v": 3.3,
+  "peak_connected_supply_draw_a": 0.0353174486,
+  "feedback_sample_mismatches": 0,
+  "loaded_traffic_ready_without_detector_ready_s": 0,
+  "final_disable_observed": true,
+  "scope": "Same extracted full TX/buffer/interlock and external network as the transition bench; MAIN+POST starts directly after supply recovery. Repetitive data continues throughout. Behavioral detector, ideal control-edge translation, and unmapped RTL remain; no PVT, long-duration, current-capacity or reliability qualification. A different initial feedback guess accelerated convergence; only the final self-consistent run is acceptance evidence.",
+  "artifact_sha256": {
+    "connected.spice": "c6a53c5d9e101b0b16247d891f49816dc0f407d955c3916d121578da2e688857",
+    "rtl.txt": "ade44d2253b3243edd5ee2f9cb8e66c08408b56b356c8f28474e20610238ac93",
+    "screen.json": "100629983e956184297e7469f700f969665e15b03fdf23f0d14fa80ceafcd40c",
+    "replay.sv": "88f53342c8a8ba3df7a6250c726ef358ef8b27bd53a8dfcfeff4a831184e4182"
+  }
+}

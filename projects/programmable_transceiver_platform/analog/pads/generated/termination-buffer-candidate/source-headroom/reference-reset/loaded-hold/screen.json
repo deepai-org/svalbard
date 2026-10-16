@@ -1,0 +1,242 @@
+{
+  "observed_request_values": [
+    0,
+    4,
+    19
+  ],
+  "busy_commit_events": [],
+  "loaded_traffic_ready_without_detector_ready_s": 0.0,
+  "readiness_parameters": {
+    "max_reference_error_v": 0.0165,
+    "detector_time_constant_s": 1e-09,
+    "detector_assert_threshold": 0.99,
+    "scope": "First-pass modeled1percent-of1.65V window allocation; not measured detector performance or protocol deadline. Finite detector response followed by sequencer loaded dwell; readiness applies only when source termination is requested."
+  },
+  "status": "sampled_readiness_feedback_iteration_not_closed_loop_until_consistent",
+  "windows": {
+    "27-30ns": {
+      "actual_request_values": [
+        4
+      ],
+      "vcm_min_v": 6.19944352e-05,
+      "vcm_max_v": 0.000264766372,
+      "max_reference_error_v": 1.6499398755648,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": 0.000366911773,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    },
+    "36-43ns": {
+      "actual_request_values": [
+        0
+      ],
+      "vcm_min_v": -0.244283695,
+      "vcm_max_v": -0.162989661,
+      "max_reference_error_v": 0.2544436664,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": -0.0545082363,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    },
+    "90-109ns": {
+      "actual_request_values": [
+        19
+      ],
+      "vcm_min_v": 0.724618691,
+      "vcm_max_v": 1.81808594,
+      "max_reference_error_v": 0.928720009,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 5.90164574e-05,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    },
+    "125-139ns": {
+      "actual_request_values": [
+        19
+      ],
+      "vcm_min_v": 1.09808667,
+      "vcm_max_v": 1.64818899,
+      "max_reference_error_v": 0.5436862900000001,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 3.30810806,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 3.3
+    },
+    "175-195ns": {
+      "actual_request_values": [
+        19
+      ],
+      "vcm_min_v": 1.63565091,
+      "vcm_max_v": 1.65655771,
+      "max_reference_error_v": 0.013089719999999971,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 3.3011941,
+      "traffic_ready_max_v": 3.3,
+      "measured_ready_max_v": 3.3
+    },
+    "225-239ns": {
+      "actual_request_values": [
+        0,
+        19
+      ],
+      "vcm_min_v": 1.6320889,
+      "vcm_max_v": 2.5970458,
+      "max_reference_error_v": 0.9332360900000003,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 3.3633678,
+      "traffic_ready_max_v": 3.3,
+      "measured_ready_max_v": 3.3
+    },
+    "280-299ns": {
+      "actual_request_values": [
+        0
+      ],
+      "vcm_min_v": 0.102825454,
+      "vcm_max_v": 0.278899663,
+      "max_reference_error_v": 1.536624086,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": -3.63545334e-06,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    }
+  },
+  "scope": "Prior analog detector trace sampled1ns before each RTL clock edge; one waveform-relaxation iteration. Zero feedback mismatches establishes sampled consistency only for this fixture. Busy commit events and missing configurations invalidate lifecycle coverage. Nontermination readiness is assumed true; detector and RTL physical implementation absent.",
+  "clock_period_ns": 4,
+  "pre_post_cycles": 2,
+  "edge_translation_ns": 0.02,
+  "external_network_unchanged": true,
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "e51312bb51bedc66d0845363f37e7a1de381f049945e71948b19148b3e6f1040",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "fc3cdc163ae805c33b92a298142718ad36c94f5567ac4bb9bb608be016d58e32",
+    "/home/ubuntu/svalbard/scratch/pad-tx-hold-main-post-predicted-2/replay.sv": "88f53342c8a8ba3df7a6250c726ef358ef8b27bd53a8dfcfeff4a831184e4182",
+    "/home/ubuntu/svalbard/scratch/pad-tx-restore-reference-extracted.spice": "760c0fecfa8d79286df7de95ead0b5b138a12ef4677b3f9528ac96f1d7228b0f",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "7c4b09b56910abe0eaa594a0cefae3c676706596c713ba8f04cb737367fcce57",
+    "/home/ubuntu/svalbard/scratch/pad-tx-hold-main-post-predicted-2/connected.spice": "c6a53c5d9e101b0b16247d891f49816dc0f407d955c3916d121578da2e688857"
+  },
+  "mode_coverage": {
+    "TMDS": {
+      "qualified": true,
+      "traffic_ready": true
+    },
+    "MAIN": {
+      "qualified": false,
+      "traffic_ready": false
+    },
+    "MAIN_POST": {
+      "qualified": true,
+      "traffic_ready": true
+    },
+    "DETECT": {
+      "qualified": false,
+      "traffic_ready": false
+    }
+  },
+  "scenario": "hold-main-post",
+  "traffic_ready_intervals_ns": {
+    "TMDS": [
+      [
+        30.0,
+        31.0
+      ]
+    ],
+    "MAIN": [],
+    "MAIN_POST": [
+      [
+        162.0,
+        230.0
+      ]
+    ],
+    "DETECT": []
+  },
+  "requested_loaded_hold_ns": 64,
+  "disabled_end_observed": true,
+  "feedback_sample_mismatches": 0,
+  "first_feedback_mismatch_ns": null,
+  "consistent_prefix_sample_count": 75,
+  "sampled_feedback_consistent": true,
+  "feedback_sample_times_ns": [
+    1.0,
+    5.0,
+    9.0,
+    13.0,
+    17.0,
+    21.0,
+    25.0,
+    29.0,
+    33.0,
+    37.0,
+    41.0,
+    45.0,
+    49.0,
+    53.0,
+    57.0,
+    61.0,
+    65.0,
+    69.0,
+    73.0,
+    77.0,
+    81.0,
+    85.0,
+    89.0,
+    93.0,
+    97.0,
+    101.0,
+    105.0,
+    109.0,
+    113.0,
+    117.0,
+    121.0,
+    125.0,
+    129.0,
+    133.0,
+    137.0,
+    141.0,
+    145.0,
+    149.0,
+    153.0,
+    157.0,
+    161.0,
+    165.0,
+    169.0,
+    173.0,
+    177.0,
+    181.0,
+    185.0,
+    189.0,
+    193.0,
+    197.0,
+    201.0,
+    205.0,
+    209.0,
+    213.0,
+    217.0,
+    221.0,
+    225.0,
+    229.0,
+    233.0,
+    237.0,
+    241.0,
+    245.0,
+    249.0,
+    253.0,
+    257.0,
+    261.0,
+    265.0,
+    269.0,
+    273.0,
+    277.0,
+    281.0,
+    285.0,
+    289.0,
+    293.0,
+    297.0
+  ],
+  "feedback_input_sha256": "cde705abf3f852b1fb26527ce8c5f56dff870cd4e54427087f47df8657436390"
+}

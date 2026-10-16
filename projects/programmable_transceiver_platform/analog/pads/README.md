@@ -548,6 +548,18 @@ The builder joins extracted circuits, not a placed/routed combined macro;
 serializer, bias translations and readiness detection still include ideal
 boundaries.
 
+`transmit_integrated.py` now regenerates the selected four-tail TX pad and
+attached primary protection from shared sizing/placement parameters, checks
+extracted connectivity and scoped layout rules, renders the layout, and builds
+the full pad/buffer/interlock fixture against that newly extracted pad. It does
+not yet replace the legacy TX publication in `run_first_pass.py`.
+
+The readiness replay accepts its own compact JSON report as `--ready-data`;
+its recorded boolean detector samples are an initial guess, never acceptance.
+The new analog simulation must independently agree with every sampled value.
+This removes the need to retain a large waveform solely to reproduce the next
+iteration. The scenario and exact sample schedule are checked before use.
+
 ## First-pass implementation closure
 
 The first pass must connect the selected circuits, their generated layouts and

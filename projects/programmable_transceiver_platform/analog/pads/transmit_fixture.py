@@ -12,12 +12,13 @@ import re
 from design import PROJECT
 
 
-def build(output, pdk):
+def build(output, pdk, pad_override=None):
     spec=PROJECT/'spec/schematic-implementation.json'
     arch=PROJECT/'spec/analog-architecture.json'
     cfg=json.loads(spec.read_text())['io_pad_first_pass']['tx_integration_fixture']
     a=json.loads(arch.read_text())
     models={name:PROJECT/path for name,path in cfg['models'].items()}
+    if pad_override is not None: models['pad']=pad_override.resolve()
     expected={'pad':['PAD_P','PAD_N','VDD','VSS','CASCODE','MAIN_P','MAIN_N','MAIN_BIAS','POST_P','POST_N','POST_BIAS','TMDS_P','TMDS_N','TMDS_BIAS','DETECT_ENABLE','DETECT_PBIAS','TERM_ENABLE','TERM_VCM'],
               'buffer':['VDD','VSS','REF','BIAS','OUT','ENABLE'],
               'interlock':['VDD','VSS','REQ_MAIN','REQ_POST','REQ_TMDS','REQ_DETECT','REQ_TERM','RESET','QUALIFIED','SUPPLY_OK','CONFLICT','VALID','EN_MAIN','EN_POST','EN_TMDS','EN_DETECT','EN_TERM']}

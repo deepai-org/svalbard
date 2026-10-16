@@ -36,10 +36,19 @@ endmodule
 def feedback_tb(data, scenario="transitions"):
     if scenario not in ("transitions", "hold-main", "hold-main-post"):
         raise ValueError("Unknown replay scenario")
-    x=np.loadtxt(data,skiprows=1)
-    if x.shape[1] not in (10,13) or x[-1,0]<299.99e-9:raise ValueError('Feedback requires complete readiness replay data')
     times=np.arange(1.,300.,4.)
-    values=np.interp(times*1e-9,x[:,0],x[:,8])>2.31
+    if data.suffix == '.json':
+        seed=json.loads(data.read_text())
+        if seed.get('scenario') != scenario or seed.get('feedback_sample_times_ns') != times.tolist():
+            raise ValueError('Feedback seed scenario or sample times differ')
+        raw=seed.get('feedback_output_values', [])
+        if len(raw)!=len(times) or any(type(v) is not bool for v in raw):
+            raise ValueError('Feedback seed must contain one boolean per detector sample')
+        values=np.array(raw,dtype=bool)
+    else:
+        x=np.loadtxt(data,skiprows=1)
+        if x.shape[1] not in (10,13) or x[-1,0]<299.99e-9:raise ValueError('Feedback requires complete readiness replay data')
+        values=np.interp(times*1e-9,x[:,0],x[:,8])>2.31
     text=TB.replace('commit=0,analog_ready=1;', 'commit=0;reg measured_ready=0;')
     text=text.replace('pt_tx_pad_sequence #', 'wire analog_ready=active_request[4] ? measured_ready : 1\'b1;\npt_tx_pad_sequence #')
     text=text.replace(';analog_ready=0;', ';').replace('#36;analog_ready=1;', '#36;')
@@ -185,6 +194,7 @@ def run(work,fixture,ready_data=None,scenario="transitions"):
         r['consistent_prefix_sample_count']=int(mismatches[0]) if len(mismatches) else len(times)
         r['sampled_feedback_consistent']=not bool(len(mismatches))
         r['feedback_sample_times_ns']=times.tolist()
+        r['feedback_output_values']=new_values.tolist()
         r['feedback_input_sha256']=hashlib.sha256(ready_data.read_bytes()).hexdigest()
         r['scope']='Prior analog detector trace sampled1ns before each RTL clock edge; one waveform-relaxation iteration. Zero feedback mismatches establishes sampled consistency only for this fixture. Busy commit events and missing configurations invalidate lifecycle coverage. Nontermination readiness is assumed true; detector and RTL physical implementation absent.'
     (work/'screen.json').write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))

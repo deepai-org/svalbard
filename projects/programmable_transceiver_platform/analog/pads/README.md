@@ -557,6 +557,16 @@ DRC but needs 826,540 µm² for the base alone, before primary protection, versu
 the 250,000 µm² reservation. Reject direct replication; compact placement or a
 different current-source architecture is required before this can be selected.
 
+`folded_tail.py` provides a compact layout building block for that sizing
+experiment. A 32-finger bank of 20 µm/1 µm NMOS devices, with connected gates,
+alternating drain/source contacts and a body contact, occupies approximately
+50.62 × 23.16 µm (1,172 µm²). Scoped local DRC and the extracted parallel-device
+graph pass; the rendered layout was inspected. `generated/tx-folded-tail/`
+contains its netlist, image and report. This replaces neither the canonical pad
+nor the independent-device layout automatically. Folded diffusion changes
+parasitics; full-pad integration, routing/current capacity, streamed-GDS audit,
+loading and the connected current/lifecycle checks remain necessary.
+
 ## First-pass implementation closure
 
 The first pass must connect the selected circuits, their generated layouts and

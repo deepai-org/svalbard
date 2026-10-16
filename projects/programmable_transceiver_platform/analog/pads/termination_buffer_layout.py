@@ -15,9 +15,16 @@ from layout import magic, terminals, trunk_geometry
 from extract_audit import extracted_graph, export_extracted, key
 
 
-def generate(work, source_width=320., complementary_isolation=False, circuit=None, cell_name="buffer_core", bounded_internal_routes=False):
+def generate(work, source_width=None, complementary_isolation=None, circuit=None, cell_name="buffer_core", bounded_internal_routes=True):
     work.mkdir(parents=True,exist_ok=False)
-    if circuit is None:circuit=build(first_stage_scale=10,gated=True,source_width=source_width,complementary_isolation=complementary_isolation)
+    selected_recipe = circuit is None and source_width is None and complementary_isolation is None
+    if selected_recipe:
+        from design import build_integration_candidate
+        circuit = build_integration_candidate('termination_buffer')
+    elif circuit is None:
+        circuit = build(first_stage_scale=10,gated=True,
+                        source_width=320. if source_width is None else source_width,
+                        complementary_isolation=bool(complementary_isolation))
     if not cell_name.replace("_","").isalnum():raise ValueError("Invalid cell name")
     kinds=sorted({(d.model,d.w_um,d.l_um) for d in circuit.devices})
     cells={k:f'primitive_{i}' for i,k in enumerate(kinds)}
@@ -84,6 +91,11 @@ def generate(work, source_width=320., complementary_isolation=False, circuit=Non
     (rt/'check.tcl').write_text('crashbackups stop\ngds read buffer_core_flat.gds\nload buffer_core_flat\nselect top cell\nexpand\ndrc check\ndrc catchup\nset f [open drc.txt w]\nputs $f [drc list count total]\nclose $f\nextract all\nquit -noprompt\n'.replace('buffer_core',cell_name))
     magic(rt,'check.tcl')
     report['gds_roundtrip']={'drc_count':int((rt/'drc.txt').read_text()),'device_graph_matches':extracted_graph(rt/(cell_name+'_flat.ext'))==actual}
+    report['selected_shared_recipe']=selected_recipe
+    if selected_recipe:
+        from design import PROJECT
+        for path in [Path(__file__).with_name('design.py'),PROJECT/'spec/schematic-implementation.json']:
+            report['source_sha256'][str(path.resolve())]=hashlib.sha256(path.read_bytes()).hexdigest()
     report['trunk_widths_um']=widths
     report['bounded_internal_routes']=bounded_internal_routes
     report['net_trunk_spans_um']=spans
@@ -96,6 +108,6 @@ def generate(work, source_width=320., complementary_isolation=False, circuit=Non
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output-dir',type=Path,required=True)
-    p.add_argument("--source-width",type=float,default=320.)
-    p.add_argument("--complementary-isolation",action="store_true")
+    p.add_argument("--source-width",type=float,default=None)
+    p.add_argument("--complementary-isolation",action="store_true",default=None)
     a=p.parse_args();generate(a.output_dir.resolve(),a.source_width,a.complementary_isolation)

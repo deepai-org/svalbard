@@ -1,0 +1,166 @@
+{
+  "status": "connected_small_circuit_layout_candidate",
+  "circuit": "termination_buffer_candidate",
+  "flat_cell": "buffer_core_flat",
+  "drc_count": 0,
+  "device_count": 280,
+  "device_graph_matches": true,
+  "envelope_um": [
+    150,
+    1051.0
+  ],
+  "envelope_area_um2": 157650.0,
+  "limitations": [
+    "Compensation/reference/bias passives and TX pad integration absent.",
+    "Load-current trunks are 8um; individual device accesses and total current capacity remain unqualified.",
+    "No analog performance or whole-chip area acceptance."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer_layout.py": "a698a658288df0e4b2ce0c7d9fb02209d61f77a5e2d135e671acc49494b8c60d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer.py": "9b73b61646c07d00d7bef6092a32d42a8389bdd3d3c7732a1755c5d3274839ff",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/design.py": "bb2e5411c07d02c095dd1bfaad6e824ab8dbf7867a9f6f35efc306ca25be165c",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "21fb3151577835e090bda4264a9d2cd34309ba1885dd621ccfbc4d138150ed34"
+  },
+  "gds_marker_repair": {
+    "added_area_um2": {
+      "62": 209.088,
+      "55": 0.0
+    },
+    "selected_poly_components": {
+      "nhighres": 8
+    },
+    "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
+    "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
+    "before_gds_sha256": "95fc29bf3c55fa755a0d1c3a513ef51c0cd8995928e5cb106703d1ae7142a682",
+    "after_gds_sha256": "0dabc541433e8c620f3020a267abfa616fd40b1db1e4fab9831f7d06b9bac42f",
+    "physical_magic_sha256": "3a3e22e6cc4ada447dad69e9bbfbe9717107f897f021069d1f19cad1a71a62be",
+    "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
+  },
+  "gds_roundtrip": {
+    "drc_count": 0,
+    "device_graph_matches": true
+  },
+  "selected_shared_recipe": true,
+  "trunk_widths_um": {
+    "BIAS": 0.44,
+    "BOTTOM": 8.0,
+    "BUFFER_COMPLEMENT_BLEED_0": 0.44,
+    "BUFFER_COMPLEMENT_BLEED_1": 0.44,
+    "BUFFER_COMPLEMENT_BLEED_2": 0.44,
+    "BUFFER_COMPLEMENT_BLEED_3": 0.44,
+    "BUFFER_COMPLEMENT_BLEED_4": 0.44,
+    "BUFFER_COMPLEMENT_BLEED_5": 0.44,
+    "BUFFER_COMPLEMENT_BLEED_6": 0.44,
+    "BUFFER_COMPLEMENT_GATE": 0.44,
+    "BUFFER_COMPLEMENT_WELL": 8.0,
+    "ENABLE": 0.44,
+    "ENABLE_B": 0.44,
+    "GAIN": 0.44,
+    "LOCAL_OUT": 8.0,
+    "MIR": 0.44,
+    "OUT": 8.0,
+    "REF": 0.44,
+    "TAIL": 0.44,
+    "TAIL_RETURN": 0.44,
+    "TOP": 8.0,
+    "VDD": 8.0,
+    "VSS": 8.0
+  },
+  "bounded_internal_routes": true,
+  "net_trunk_spans_um": {
+    "BIAS": [
+      3.5,
+      1050.5
+    ],
+    "BOTTOM": [
+      483.7,
+      694.3
+    ],
+    "BUFFER_COMPLEMENT_BLEED_0": [
+      1012.5,
+      1019.5
+    ],
+    "BUFFER_COMPLEMENT_BLEED_1": [
+      1019.3,
+      1022.7
+    ],
+    "BUFFER_COMPLEMENT_BLEED_2": [
+      1022.5,
+      1025.9
+    ],
+    "BUFFER_COMPLEMENT_BLEED_3": [
+      1025.7,
+      1029.1
+    ],
+    "BUFFER_COMPLEMENT_BLEED_4": [
+      1028.9,
+      1032.3
+    ],
+    "BUFFER_COMPLEMENT_BLEED_5": [
+      1032.1,
+      1035.5
+    ],
+    "BUFFER_COMPLEMENT_BLEED_6": [
+      1035.3,
+      1038.7
+    ],
+    "BUFFER_COMPLEMENT_GATE": [
+      947.7,
+      1039.5
+    ],
+    "BUFFER_COMPLEMENT_WELL": [
+      948.5,
+      1012.7
+    ],
+    "ENABLE": [
+      3.5,
+      1050.5
+    ],
+    "ENABLE_B": [
+      511.3,
+      717.9
+    ],
+    "GAIN": [
+      40.1,
+      720.3
+    ],
+    "LOCAL_OUT": [
+      244.9,
+      999.9
+    ],
+    "MIR": [
+      4.5,
+      223.9
+    ],
+    "OUT": [
+      3.5,
+      1050.5
+    ],
+    "REF": [
+      3.5,
+      1050.5
+    ],
+    "TAIL": [
+      6.1,
+      242.7
+    ],
+    "TAIL_RETURN": [
+      226.9,
+      713.9
+    ],
+    "TOP": [
+      246.5,
+      635.9
+    ],
+    "VDD": [
+      3.5,
+      1050.5
+    ],
+    "VSS": [
+      3.5,
+      1050.5
+    ]
+  },
+  "physical_sha256": "d431d870e75ad4601250cd12f3c092ba56915c6ffe00bbdd2d8cfc51e4a7bf75",
+  "gds_sha256": "0dabc541433e8c620f3020a267abfa616fd40b1db1e4fab9831f7d06b9bac42f"
+}

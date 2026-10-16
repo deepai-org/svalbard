@@ -14,7 +14,11 @@ or fabrication-readiness verdict.
 and consumed by `design.build_integration_candidate()`. Device primitives remain
 in the circuit generators; electrical budgets must not be copied into a second
 configuration. `generated/selected-recipe-audit.json` verifies the selected
-buffer/interlock device graphs against their existing physical extractions.
+buffer/interlock device graphs against their existing physical extractions. The buffer layout
+generator now defaults to this shared selection and bounded internal routing;
+explicit sizing arguments remain available for experiments. A default rebuild
+passes local DRC and GDS graph checks and reproduces the selected core
+extraction up to capacitor ordering.
 Primary protection, core discharge and compensation are composed by their
 layout generators; the recipe builder alone does not create a complete pad. Never add a budget-sized ideal capacitor on top of extracted
 physical capacitance.

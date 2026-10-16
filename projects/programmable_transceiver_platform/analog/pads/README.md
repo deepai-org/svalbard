@@ -519,6 +519,17 @@ finite core impedance, retained charge or a data eye. They supplement the
 connected lifecycle. The normal build regenerates this loading report; fresh
 loaded-current calibration remains outstanding.
 
+`wired-transmit-loaded-current.json` checks the selected shared biases with the
+actual extracted buffer, interlock, source termination and retained differential
+load, using zero-volt tail-current sensors. No bias is retuned for this check.
+MAIN alone delivers about 20.72 mA versus the 16 mA maximum setting. With POST
+enabled, one static steering state delivers approximately 19.80/8.89 mA; the
+other reaches 16.04/7.98 mA versus 16/8 mA. These are a current-regulation gap,
+not passing calibration. Buffer DC reference error stays below 5.43 mV, showing
+why readiness alone does not prove output-current fidelity. The source-terminated
+current source needs headroom/output-resistance improvement or a demonstrated
+control strategy across data states. DC probes do not replace switching tests.
+
 ## First-pass implementation closure
 
 The first pass must connect the selected circuits, their generated layouts and

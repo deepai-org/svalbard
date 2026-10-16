@@ -43,18 +43,19 @@
     }
   },
   "final_disable_observed": true,
-  "scope": "One nominal retained-network transition fixture. TMDS/detection readiness is assumed; only source-termination readiness is observed. Comparator and sequencer are not physically implemented. Short traffic-ready intervals do not establish sustained operation, protocol deadlines, PVT or reliability.",
+  "scope": "One nominal retained-network transition fixture. TMDS/detection readiness is assumed; only source-termination readiness is observed. Comparator and sequencer are not physically implemented. Short traffic-ready intervals do not establish sustained operation, protocol deadlines, PVT or reliability. The retained 100 ohm differential network is not a TMDS pull-up receiver; mode coverage does not establish TMDS electrical compatibility. State extrema include transitions, and returned supply charge is not static leakage.",
   "remaining": [
     "Longer loaded operation, variation, and other configurations; nominal MAIN+POST 68 ns hold is covered by ../loaded-hold/decision.json",
     "Physical readiness/supply detectors and sequencing layout",
     "Buffer/interlock area allocation and placement",
-    "Canonical full-family model adoption"
+    "Canonical full-family model adoption",
+    "Review power-down pad excursion to -0.742 V and reconfiguration excursions against a physical protection/core voltage contract"
   ],
   "artifact_sha256": {
-    "screen.json": "c873ab08ccfe58392a1a519ca279f25e89cbf90c801594f7fed3916f64d7408c",
-    "connected.spice": "533a2a8484fa144683a126106ab866448d368e9edeeda523d51d57a0eed181eb",
+    "screen.json": "9a5ef59648cc661156bf0eb1fac182980ed59d441dbcce6045b92b8373ef164f",
+    "connected.spice": "2ca5947607c5257310d6d8bc66c0f57b61052a53426fc85e5cc3a9ec64f55d26",
     "replay.sv": "a568460811d29aa74a8c969504058b45682fc750e76a6ee8ed536dd2f5fcaa02",
-    "rtl.txt": "065851b963714e8ba34f3d4df8f7e2ab8d7b1f2067d4c5b5e4c3940cbc61c471"
+    "rtl.txt": "809defd6efdb5d7f3575808a4aa9f877a72557b40899b827eb9c2f0310695bd4"
   },
   "initialization_policy": "Checked DC operating point with a declared 1 Tohm numerical anchor on capacitor-only metal; transient operating-point fallback rejected. No physical resistor added."
 }

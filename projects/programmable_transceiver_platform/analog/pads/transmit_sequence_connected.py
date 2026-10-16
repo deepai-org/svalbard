@@ -37,7 +37,7 @@ def feedback_tb(data, scenario="transitions"):
     if scenario not in ("transitions", "hold-main", "hold-main-post"):
         raise ValueError("Unknown replay scenario")
     x=np.loadtxt(data,skiprows=1)
-    if x.shape[1]!=10 or x[-1,0]<299.99e-9:raise ValueError('Feedback requires complete readiness replay data')
+    if x.shape[1] not in (10,13) or x[-1,0]<299.99e-9:raise ValueError('Feedback requires complete readiness replay data')
     times=np.arange(1.,300.,4.)
     values=np.interp(times*1e-9,x[:,0],x[:,8])>2.31
     text=TB.replace('commit=0,analog_ready=1;', 'commit=0;reg measured_ready=0;')
@@ -68,6 +68,17 @@ def run(work,fixture,ready_data=None,scenario="transitions"):
     if scenario != "transitions" and ready_data is None:
         raise ValueError("Hold scenarios require sampled feedback input")
     work.mkdir(parents=True,exist_ok=False)
+    component_sources={}
+    manifest_path=fixture.with_suffix('.json')
+    if manifest_path.exists():
+        manifest=json.loads(manifest_path.read_text())
+        if manifest.get('fixture_sha256')!=hashlib.sha256(fixture.read_bytes()).hexdigest():
+            raise ValueError('Fixture differs from its build manifest')
+        component_sources=manifest['source_sha256']
+        for name,digest in component_sources.items():
+            if hashlib.sha256(Path(name).read_bytes()).hexdigest()!=digest:
+                raise ValueError('Stale composed fixture input: '+name)
+        component_sources[str(manifest_path)]=hashlib.sha256(manifest_path.read_bytes()).hexdigest()
     rtl=PROJECT/'rtl/pt_tx_pad_sequence.sv';tb=work/'replay.sv'
     feedback=None
     if ready_data is not None:
@@ -117,7 +128,7 @@ def run(work,fixture,ready_data=None,scenario="transitions"):
     deck+=f'BREADY_WINDOW READY_WINDOW 0 V=(abs(V(TERM_VCM)-V(BUF_REF))<={error})*(V(BUF_ENABLE)>1.65)\n'
     deck+=f'RREADY_FILTER READY_WINDOW READY_FILTER 1000\nCREADY_FILTER READY_FILTER 0 {tau/1000}\n'
     deck+=f'BMEASURED_READY MEASURED_READY 0 V=V(VDD)*(V(READY_FILTER)>={threshold})\n'
-    deck+=control(work,'connected','tran 5p 300n','v(TERM_VCM) v(BUF_REF) v(TX_QUALIFIED) v(BUF_ENABLE) v(TERM_ENABLE) i(VDD) v(TRAFFIC_READY) v(MEASURED_READY) v(READY_WINDOW)')
+    deck+=control(work,'connected','tran 5p 300n','v(TERM_VCM) v(BUF_REF) v(TX_QUALIFIED) v(BUF_ENABLE) v(TERM_ENABLE) i(VDD) v(TRAFFIC_READY) v(MEASURED_READY) v(READY_WINDOW) v(PAD_P) v(PAD_N) v(VDD)')
     x=run_spice(work,'connected',deck,reject_transient_op=True)
     if not np.isfinite(x).all() or x[-1,0]<299.99e-9:raise ValueError('Incomplete connected replay')
     windows={}
@@ -135,6 +146,27 @@ def run(work,fixture,ready_data=None,scenario="transitions"):
     qualified_modes={int(row[1]) for row in rows if row[2]}
     traffic_modes={int(row[1]) for row in rows if row[5]}
     r['mode_coverage']={name:{'qualified':value in qualified_modes,'traffic_ready':value in traffic_modes} for name,value in [('TMDS',4),('MAIN',17),('MAIN_POST',19),('DETECT',8)]}
+    r['source_sha256'].update(component_sources)
+    r['transient_complete']=True
+    r['states']={}
+    powered=x[:,12]>=low
+    reset=trace[trace_indices,4]==0
+    masks={'disabled':(actual_requests==0)&powered&~reset,
+           'reset':reset&powered,'unpowered':x[:,12]<.1,
+           'reconfiguration':(actual_requests!=0)&(x[:,3]<2.31)&powered&~reset}
+    for name,request in [('active_tmds',4),('active_main',17),('active_main_post',19),('active_detect',8)]:
+        masks[name]=(actual_requests==request)&(x[:,3]>2.31)&(x[:,7]>2.31)&powered
+    for name,mask in masks.items():
+        y=x[mask]
+        r['states'][name]={'status':'observed_not_electrical_acceptance' if len(y) else 'not_reached',
+                          'samples':len(y)}
+        if len(y):r['states'][name].update(
+            pad_min_v=float(y[:,10:12].min()),pad_max_v=float(y[:,10:12].max()),
+            differential_min_v=float((y[:,10]-y[:,11]).min()),
+            differential_max_v=float((y[:,10]-y[:,11]).max()),
+            vcm_min_v=float(y[:,1].min()),vcm_max_v=float(y[:,1].max()),
+            peak_supply_draw_a=float(max(0,-y[:,6].min())),
+            peak_supply_return_a=float(max(0,y[:,6].max())))
     r['numerical_floating_conductor_anchors']=anchors
     r['operating_point_policy']='Reject transient operating-point fallback; numerical anchors are not physical resistors.'
     for helper in ['loading_audit.py','screen.py']:

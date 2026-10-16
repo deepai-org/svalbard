@@ -744,6 +744,33 @@
         200.0,
         800.0
       ]
+    },
+    "tx_integration_fixture": {
+      "status": "nominal retained-network engineering fixture, not a protocol profile or calibrated production trim",
+      "models": {
+        "pad": "analog/pads/generated/wired-primary-protection/double-tails/physical.spice",
+        "buffer": "analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/physical.spice",
+        "interlock": "analog/pads/generated/transmit-control-candidate/thick-logic/physical.spice"
+      },
+      "bias_v": {
+        "MAIN": 1.68,
+        "POST": 1.125,
+        "TMDS": 1.38,
+        "DETECT": 0.45
+      },
+      "bias_resistors_ohm": {
+        "reference_top": 1000.0,
+        "reference_bottom": 1000.0,
+        "bias_top": 8000.0,
+        "bias_bottom": 3000.0
+      },
+      "reference_capacitance_f": 1e-12,
+      "bias_capacitance_f": 1e-12,
+      "termination_load_f": 1e-11,
+      "bond_resistance_ohm": 1.0,
+      "bond_inductance_h": 1e-09,
+      "data_period_s": 8e-10,
+      "data_edge_s": 2e-11
     }
   }
 }

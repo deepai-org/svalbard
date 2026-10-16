@@ -46,9 +46,9 @@
       "actual_request_values": [
         17
       ],
-      "vcm_min_v": 0.717319938,
+      "vcm_min_v": 0.717319934,
       "vcm_max_v": 1.83898559,
-      "max_reference_error_v": 0.9358969119999999,
+      "max_reference_error_v": 0.9358969159999999,
       "qualified_max_v": 0.0,
       "buffer_enable_max_v": 3.3,
       "termination_enable_max_v": 5.89714885e-05,
@@ -114,12 +114,18 @@
   "edge_translation_ns": 0.02,
   "external_network_unchanged": true,
   "source_sha256": {
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "e883f13ab369b84de7bdbe73d2d0b6bea40d428e256a581beb72ac03bd9ec896",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "0571ed260b0289a96ae8363820798ce932c30d493a70d5eaa97184c51cf6e2db",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "fc3cdc163ae805c33b92a298142718ad36c94f5567ac4bb9bb608be016d58e32",
-    "/home/ubuntu/svalbard/scratch/pad-tx-anchored-transitions-1/replay.sv": "a568460811d29aa74a8c969504058b45682fc750e76a6ee8ed536dd2f5fcaa02",
-    "/home/ubuntu/svalbard/scratch/pad-tx-restore-reference-extracted.spice": "760c0fecfa8d79286df7de95ead0b5b138a12ef4677b3f9528ac96f1d7228b0f",
+    "/home/ubuntu/svalbard/scratch/pad-tx-reproducible-transitions-1/replay.sv": "a568460811d29aa74a8c969504058b45682fc750e76a6ee8ed536dd2f5fcaa02",
+    "/home/ubuntu/svalbard/scratch/pad-tx-reproducible-fixture.spice": "397e850b112693fdb2a028e67dc54bebf712b22e62f2ee2bc42cbd5a5ef0ed4a",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "5995b7ab33f01f62358b6af52cd3073ba4db89c66a303022bc516214d5bc9916",
-    "/home/ubuntu/svalbard/scratch/pad-tx-anchored-transitions-1/connected.spice": "533a2a8484fa144683a126106ab866448d368e9edeeda523d51d57a0eed181eb",
+    "/home/ubuntu/svalbard/scratch/pad-tx-reproducible-transitions-1/connected.spice": "2ca5947607c5257310d6d8bc66c0f57b61052a53426fc85e5cc3a9ec64f55d26",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_fixture.py": "618d369671e54fd092f2349cddffa6fa320edde46e11f9c9900348e04994c363",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "80722ed33fc67a131910276b6e6ee6583acd38738459ab0837bc9ed3333d048f",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-primary-protection/double-tails/physical.spice": "567ee946b0671879fefbf840a67befbee2c8254adceb6db71f23c59e5955fa5a",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/physical.spice": "45b1ab7c83edd98901cdcfa78611e29d140dcfd57b70b4c303a8292b5d572be6",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/transmit-control-candidate/thick-logic/physical.spice": "e0a8c45ac4e8efdfde286d89f65451379448d1c7dd1829681e901c72b2f5c6d5",
+    "/home/ubuntu/svalbard/scratch/pad-tx-reproducible-fixture.json": "0c40e6f08164cf4aa68895e4da3bf5dfdc60acedd4df6d337cf9a888b6d042e8",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/loading_audit.py": "2b01aee3f378ac60e325fcee31129957e3353b7253f8edbb9f28325779fa846c",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "f035d0f7f351d640ac3398ffe991cb6e6be2117920c1f90b70c8323a36448b37"
   },
@@ -139,6 +145,105 @@
     "DETECT": {
       "qualified": true,
       "traffic_ready": true
+    }
+  },
+  "transient_complete": true,
+  "states": {
+    "disabled": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 15997,
+      "pad_min_v": -0.322535419,
+      "pad_max_v": 1.30358261,
+      "differential_min_v": -0.1023655247,
+      "differential_max_v": 0.010781784800000001,
+      "vcm_min_v": -0.045849121,
+      "vcm_max_v": 0.585099447,
+      "peak_supply_draw_a": 0.109277973,
+      "peak_supply_return_a": 0.0997859606
+    },
+    "reset": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 152,
+      "pad_min_v": -0.0966871098,
+      "pad_max_v": 0.0319272152,
+      "differential_min_v": -0.0612092342,
+      "differential_max_v": 0.1278771366,
+      "vcm_min_v": 2.65665049e-08,
+      "vcm_max_v": 0.0012112626,
+      "peak_supply_draw_a": 0.0209136523,
+      "peak_supply_return_a": 0.00188161764
+    },
+    "unpowered": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 2549,
+      "pad_min_v": -0.742140457,
+      "pad_max_v": -0.403926897,
+      "differential_min_v": -0.04534547699999991,
+      "differential_max_v": 0.010094468000000023,
+      "vcm_min_v": -0.296139596,
+      "vcm_max_v": -0.150706521,
+      "peak_supply_draw_a": 0.0447138842,
+      "peak_supply_return_a": 0.187926894
+    },
+    "reconfiguration": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 21533,
+      "pad_min_v": -0.000214459888,
+      "pad_max_v": 1.9403052,
+      "differential_min_v": -0.6548131559999999,
+      "differential_max_v": 0.664184516,
+      "vcm_min_v": -9.62129815e-06,
+      "vcm_max_v": 2.59007195,
+      "peak_supply_draw_a": 0.107782358,
+      "peak_supply_return_a": 0.111066467
+    },
+    "active_tmds": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 217,
+      "pad_min_v": -0.105793425,
+      "pad_max_v": 0.0247049972,
+      "differential_min_v": -0.1258267644,
+      "differential_max_v": 0.1263897062,
+      "vcm_min_v": 0.000984182167,
+      "vcm_max_v": 0.00112316078,
+      "peak_supply_draw_a": 0.001977039,
+      "peak_supply_return_a": 0.0
+    },
+    "active_main": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 869,
+      "pad_min_v": 0.88842506,
+      "pad_max_v": 1.41773445,
+      "differential_min_v": -0.5257021649999999,
+      "differential_max_v": 0.527065987,
+      "vcm_min_v": 1.64080638,
+      "vcm_max_v": 1.65259819,
+      "peak_supply_draw_a": 0.0380896928,
+      "peak_supply_return_a": 0.0
+    },
+    "active_main_post": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 869,
+      "pad_min_v": 0.711947379,
+      "pad_max_v": 1.38565789,
+      "differential_min_v": -0.6543088239999999,
+      "differential_max_v": 0.655530602,
+      "vcm_min_v": 1.63412112,
+      "vcm_max_v": 1.65481461,
+      "peak_supply_draw_a": 0.0393526948,
+      "peak_supply_return_a": 0.0
+    },
+    "active_detect": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 858,
+      "pad_min_v": 1.35489269,
+      "pad_max_v": 1.37502034,
+      "differential_min_v": -0.00048320000000012797,
+      "differential_max_v": -0.00038066999999997186,
+      "vcm_min_v": 0.900095638,
+      "vcm_max_v": 1.11919635,
+      "peak_supply_draw_a": 0.00708540266,
+      "peak_supply_return_a": 0.0
     }
   },
   "numerical_floating_conductor_anchors": [
@@ -259,5 +364,5 @@
     293.0,
     297.0
   ],
-  "feedback_input_sha256": "c10ba2e9cda8e8c9b72e2abafc963bbd384904449f3f5ce128899c38353ed77b"
+  "feedback_input_sha256": "87e3faba8a104f61ae91e85c6c696a6bc5b875b86a806d9af58818ebaaa39e19"
 }

@@ -535,6 +535,19 @@ Only source-termination readiness is measured; other modes assume readiness.
 Published observation windows use timestamps because command handshakes can
 move the actual mode beyond a nominal window.
 
+`transmit_fixture.py` builds the selected TX composition from shared
+`io_pad_first_pass.tx_integration_fixture` parameters. A verified source manifest
+binds it to the exact pad, buffer, interlock and specifications. The replay now
+records pad voltages and currents in active, disabled, reset, unpowered and
+reconfiguration states. These are observations, not electrical acceptance:
+the retained 100 Ω differential load is not a TMDS pull-up receiver. TMDS mode
+coverage does not establish TMDS compatibility. The power-down trace reaches
+−0.742 V at a pad; protection/core voltage limits and transient current capacity
+remain unresolved. Supply return includes stored charge, not just leakage.
+The builder joins extracted circuits, not a placed/routed combined macro;
+serializer, bias translations and readiness detection still include ideal
+boundaries.
+
 ## First-pass implementation closure
 
 The first pass must connect the selected circuits, their generated layouts and

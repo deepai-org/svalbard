@@ -1,28 +1,7 @@
 {
   "first_pass_complete": false,
   "candidates": {
-    "wired_transmit": {
-      "status": "constructed_not_electrically_accepted",
-      "device_count": 366,
-      "area_um2": 240640.33,
-      "source_sha256": {
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_integrated.py": "a27a418ee8599ec86c3320fef59263cf3deeaf01e0350c926288170d46939ace",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "b43127f9351e0fd75ffb2792546c2608814afb79e2e0ac27f79ff12eaec3e9e6"
-      },
-      "artifact_sha256": {
-        "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/pad/physical.spice": "c772d37254b8f72ec59e0afd1030469b2563220bb1c8fb90d1b21c295055683c",
-        "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/pad/combined.gds": "ff35cf0de4ceb2590e8b93ee5ebe346c7dae93a8e31a9be3c3076d87008e19d3",
-        "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/pad/layout-screen.json": "85180ac7ef40190f9e6a72bce34234a1f7d694cf14abe12f3b477a25defd2576",
-        "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/pad/model-audit.json": "90f85b60ed8f65f6563808c805fc969b844135c01d5dd1230b3d4eddc1cd81db",
-        "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/fixture.spice": "4d50d6f6f486d6b3b8c6ae80967c1ad021a22de8af42b53c60885bd6eddd0491",
-        "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/fixture.json": "983a8e69f058a1142abf20d182cfce7088133dab7fbeecaae047d888e6dd0750"
-      },
-      "remaining": [
-        "Nominal sampled replay is not sustained operation or protocol electrical acceptance.",
-        "Combined buffer/interlock placement and area remain unresolved.",
-        "Protection limits, physical readiness and protocol electrical acceptance remain open."
-      ]
-    }
+    "wired_transmit_loading": "refreshed against canonical extracted model and shared lifecycle biases"
   },
   "integrated_model_inventory": {
     "wired_transmit": {
@@ -253,11 +232,18 @@
     "minimum_widths_met": false,
     "scope": "Published dimensional comparison and compact-model loading estimate; not ESD qualification."
   },
-  "wired_tx_loading": null,
+  "wired_tx_loading": {
+    "source_hashes_current": true,
+    "report_sha256": "96be9607286d82d4f62d4256115780d267302ec16ed0457c7adaa7d6084892ef",
+    "cases_exceeding_1ghz_odd_budget": [
+      "detection"
+    ],
+    "scope": "Biased small-signal characterization; exceeding the loading allocation is not by itself a protocol-failure verdict."
+  },
   "wired_tx_current_compliance": null,
   "missing": [
     "floating-conductor initial charge remains unbounded; current lifecycle screens reject transient operating-point fallback",
-    "refresh wired TX AC loading and current calibration against the canonical regenerated model",
+    "refresh wired TX current calibration; disabled loading has about 12 fF margin and detection exceeds the allocation",
     "wired RX/USB trim, slew, termination mutual exclusion and local safe-state controls",
     "wired TX termination trim, buffer/interlock area and physical integration, readiness and reset/brownout controls",
     "full-bank host/power and supervisor qualification; independent-host power-off backfeed mitigation",

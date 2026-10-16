@@ -509,6 +509,16 @@ The new analog simulation must independently agree with every sampled value.
 This removes the need to retain a large waveform solely to reproduce the next
 iteration. The scenario and exact sample schedule are checked before use.
 
+The canonical `wired-transmit-loading.json` now measures the regenerated pad
+at the shared lifecycle bias settings, with all branches attached and strict
+operating-point checks. At 1 GHz, odd-mode disabled loading is 2.6846/2.6880 pF
+per leg against 2.7 pF; detection is 3.7864/3.7993 pF and exceeds that allocation.
+Other tested configurations stay below it. These independent biased AC probes
+use stiff controls and pad voltage sources; they do not include package loss,
+finite core impedance, retained charge or a data eye. They supplement the
+connected lifecycle. The normal build regenerates this loading report; fresh
+loaded-current calibration remains outstanding.
+
 ## First-pass implementation closure
 
 The first pass must connect the selected circuits, their generated layouts and

@@ -78,6 +78,9 @@ def run(work,pdk,publish,families):
     if 'wired_transmit' in families:
         from transmit_integrated import run as integrate_transmit
         results['wired_transmit'] = integrate_transmit(work/'connected-transmitter', publish, pdk)
+        from wired_tx_loading import screen as tx_loading
+        tx_loading(work/'transmit-loading', pdk, publish/'wired-transmit-extracted-c.spice')
+        shutil.copyfile(work/'transmit-loading/wired-transmit-loading.json', publish/'wired-transmit-loading.json')
     if 'wired_receive_usb' in families:
         from receive_integrated import run as integrate_receive
         results['wired_receive_usb'] = integrate_receive(work/'connected-receiver', publish, pdk)
@@ -199,7 +202,7 @@ def write_coverage(publish,results):
                 protection_design_audit=protection_evidence,wired_tx_loading=tx_loading_evidence,
                 wired_tx_current_compliance=compliance_evidence,
                 missing=['floating-conductor initial charge remains unbounded; current lifecycle screens reject transient operating-point fallback',
-                         'refresh wired TX AC loading and current calibration against the canonical regenerated model',
+                         'refresh wired TX current calibration; disabled loading has about 12 fF margin and detection exceeds the allocation',
                          'wired RX/USB trim, slew, termination mutual exclusion and local safe-state controls',
                          'wired TX termination trim, buffer/interlock area and physical integration, readiness and reset/brownout controls',
                          'full-bank host/power and supervisor qualification; independent-host power-off backfeed mitigation',

@@ -9,19 +9,30 @@ import json
 from pathlib import Path
 import numpy as np
 from circuits import wired_transmit
+from design import PROJECT
+from loading_audit import anchor_floating_conductors
 from screen import header,control,run_spice
 
 
-def screen(work,pdk,physical,calibration_report):
+def screen(work,pdk,physical,calibration_report=None):
     work.mkdir(parents=True,exist_ok=False)
     circuit=wired_transmit()
-    calibration=json.loads(calibration_report.read_text())
-    for path,digest in calibration['sources_sha256'].items():
-        if hashlib.sha256(Path(path).read_bytes()).hexdigest()!=digest:
-            raise ValueError('Stale TX calibration source: '+path)
-    if not calibration['physical_capacitance_included'] or hashlib.sha256(physical.read_bytes()).hexdigest() not in calibration['sources_sha256'].values():
-        raise ValueError('TX calibration is not bound to this extracted circuit')
-    currents=calibration['calibration']
+    spec=PROJECT/'spec/schematic-implementation.json'
+    if calibration_report is None:
+        cfg=json.loads(spec.read_text())['io_pad_first_pass']['tx_integration_fixture']
+        currents={name:dict(bias_v=value) for name,value in cfg['bias_v'].items()}
+        bias_source=spec
+        bias_scope='Selected shared lifecycle biases; not independent DC recalibration.'
+    else:
+        calibration=json.loads(calibration_report.read_text())
+        for path,digest in calibration['sources_sha256'].items():
+            if hashlib.sha256(Path(path).read_bytes()).hexdigest()!=digest:
+                raise ValueError('Stale TX calibration source: '+path)
+        if not calibration['physical_capacitance_included'] or hashlib.sha256(physical.read_bytes()).hexdigest() not in calibration['sources_sha256'].values():
+            raise ValueError('TX calibration is not bound to this extracted circuit')
+        currents=calibration['calibration'];bias_source=calibration_report
+        bias_scope='Separate DC calibration; not loaded lifecycle biases.'
+    model,anchors=anchor_floating_conductors(header(circuit,pdk,physical),1e12)
     baseline={'CASCODE':3.3,'DETECT_PBIAS':3.3,'TERM_VCM':1.8}
     configurations={
         'disabled':(3.3,1.8,{}),
@@ -39,7 +50,7 @@ def screen(work,pdk,physical,calibration_report):
     cases={}
     for name,(supply,common,settings) in configurations.items():
         values={**baseline,**settings}
-        base=header(circuit,pdk,physical)+f'VDD VDD 0 {supply}\n'
+        base=model+f'VDD VDD 0 {supply}\n'
         for port in circuit.ports[4:]:base+=f'V{port} {port} 0 {values.get(port,0)}\n'
         cases[name]=dict(supply_v=supply,pad_common_mode_v=common,controls=values,modes={})
         for mode,negative_amplitude in [('odd',-.5),('common',.5)]:
@@ -47,7 +58,7 @@ def screen(work,pdk,physical,calibration_report):
             vectors='real(i(VP)) imag(i(VP)) real(i(VN)) imag(i(VN))'
             label=name+'_'+mode
             command=control(work,label,'ac dec 20 100Meg 10G',vectors).replace('.control\n','.control\nset numdgt=15\n',1)
-            rows=np.atleast_2d(run_spice(work,label,deck+command))
+            rows=np.atleast_2d(run_spice(work,label,deck+command,reject_transient_op=True))
             if rows.shape[1]!=5 or not np.isfinite(rows).all() or rows[-1,0]<9.999e9:
                 raise ValueError('Incomplete TX admittance sweep: '+label)
             frequency=rows[:,0]
@@ -61,6 +72,8 @@ def screen(work,pdk,physical,calibration_report):
                 effective_capacitance_f_per_leg=capacitance.tolist(),
                 at_1ghz=dict(effective_capacitance_f_per_leg=capacitance[index].tolist(),real_admittance_s_per_leg=real[index].tolist()))
     report=dict(status='complete_branch_TX_admittance_screen_not_compliance',cases=cases,
+        bias_scope=bias_scope, numerical_floating_conductor_anchors=anchors,
+        operating_point_policy='Reject transient operating-point fallback; anchors are numerical only.',
         assigned_budget_f_per_leg=circuit.requirements['electrical_parameters']['capacitance_f_per_leg'],
         limitations=['Same extracted pad in every case; no inactive branch removed and no budget-sized capacitor added.',
             'Ideal pad voltage probes characterize the local port; board/package and distributed wire resistance are absent.',
@@ -69,7 +82,7 @@ def screen(work,pdk,physical,calibration_report):
             'Independent biased operating points discard stored charge; existing lifecycle and reconfiguration benches remain required.',
             'Small-signal analysis does not establish ESD survival, large-signal distortion or data eye margin.'],
         source_sha256={str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in
-            [Path(__file__),Path(__file__).with_name('circuits.py'),Path(__file__).with_name('design.py'),Path(__file__).with_name('screen.py'),physical,calibration_report,
+            [Path(__file__),Path(__file__).with_name('circuits.py'),Path(__file__).with_name('design.py'),Path(__file__).with_name('screen.py'),physical,bias_source,Path(__file__).with_name('loading_audit.py'),
              Path(__file__).resolve().parents[2]/'spec/analog-architecture.json',Path(__file__).resolve().parents[2]/'spec/contract.json',pdk/'design.ngspice',pdk/'sm141064.ngspice',pdk/'sm141064.spice']})
     (work/'wired-transmit-loading.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps({name:case['modes']['odd']['at_1ghz'] for name,case in cases.items()},indent=2))
@@ -81,5 +94,5 @@ if __name__=='__main__':
     p.add_argument('--output-dir',type=Path,required=True)
     p.add_argument('--pdk-model-dir',type=Path,required=True)
     p.add_argument('--physical',type=Path,required=True)
-    p.add_argument('--calibration-report',type=Path,required=True)
-    a=p.parse_args();screen(a.output_dir.resolve(),a.pdk_model_dir.resolve(),a.physical.resolve(),a.calibration_report.resolve())
+    p.add_argument('--calibration-report',type=Path)
+    a=p.parse_args();screen(a.output_dir.resolve(),a.pdk_model_dir.resolve(),a.physical.resolve(),a.calibration_report.resolve() if a.calibration_report else None)

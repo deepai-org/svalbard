@@ -141,7 +141,8 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
             nominal=driver['gain_reference_v']
             finite_tx=dict(current_limit_a_per_leg=limit,output_r_ohm_per_leg=resistance,
                 headroom_v=headroom,passive_bleed_ohm_per_leg=1e6,
-                scope='Supply-connected bounded output boundary. Half the shared bias current per leg is an assumed capacity, not a proven transistor driver. No quiescent current, reverse junctions or feedback bandwidth model.')
+                active_bias_current_floor_a=driver['bias_current_a'],
+                scope='Supply-connected bounded output boundary with a declared active bias-current floor. Sourced output current consumes that floor rather than being counted twice. Half the shared bias current per leg is an assumed capacity, not a proven transistor driver. Reverse junctions and feedback bandwidth remain unmodeled.')
             node=f'{core_prefix}_{leg}'
             network+=f'BREQUEST_{leg} REQUEST_{leg} 0 V={limit}*tanh((V(CORE_{leg})-V({node}))/({resistance}*{limit}))*V(ENABLE)*min(max(V(VDD)/{nominal},0),1)\n'
             network+=f'BSOURCE_{leg} VDD SOURCE_{leg} I=max(V(REQUEST_{leg}),0)*min(max((V(VDD)-V({node}))/{headroom},0),1)\n'
@@ -174,6 +175,13 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
             network+=f'RBOND_{leg} CAP_{leg} BOND_{leg} 1\n'
             bond_start=f'BOND_{leg}'
         network+=f'LBOND_{leg} {bond_start} PAD_{leg} {bond_l}\n'
+    if tx:
+        # Complete the active bias draw without adding output current twice.
+        # This is an explicit behavioral assumption for the intended biased
+        # transconductance driver, not an extracted bias/control implementation.
+        floor=f"{driver['bias_current_a']}*min(max(V(ENABLE),0),1)*min(max(V(VDD)/{nominal},0),1)"
+        network+=f'BBIAS_FLOOR VDD BIAS_FLOOR_RETURN I=max(({floor})-I(VSOURCE_P)-I(VSOURCE_N),0)\n'
+        network+='VBIAS_FLOOR BIAS_FLOOR_RETURN VSS 0\n'
     if mutual_l:
         network+=f'KBOND LBOND_P LBOND_N {mutual_l/bond_l}\n'
     if external_termination_ohm is not None:
@@ -220,12 +228,12 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
     bias_vector='i(VBIAS)' if finite_bias else 'i(BVCM)'
     vectors=f'v(PAD_P) v(PAD_N) v(VCM) i(VSS) i(VDD) v({core_prefix}_P) v({core_prefix}_N) {bias_vector}'
     if finite_bias:vectors+=' i(VBIAS_SOURCE_I) i(VBIAS_SINK_I) v(VDD) v(VCM_TARGET)'
-    if tx:vectors+=' i(VSOURCE_P) i(VSINK_P) i(VSOURCE_N) i(VSINK_N) v(BOARD_P) v(BOARD_N) v(EXT_P) v(EXT_N) v(VDD)'
+    if tx:vectors+=' i(VSOURCE_P) i(VSINK_P) i(VSOURCE_N) i(VSINK_N) v(BOARD_P) v(BOARD_N) v(EXT_P) v(EXT_N) v(VDD) i(VBIAS_FLOOR)'
     retained_network=network
     network+=control(work,'lifecycle','tran 2p 80n',vectors)
     x=run_spice(work,'lifecycle',network)
     if finite_bias:x[:,8]*=-1  # match voltage-source sink-positive convention
-    if x.shape[1]!=(18 if tx else 13 if finite_bias else 9):raise ValueError('Analog vector column mismatch')
+    if x.shape[1]!=(19 if tx else 13 if finite_bias else 9):raise ValueError('Analog vector column mismatch')
     if not np.isfinite(x).all():raise ValueError('Nonfinite analog lifecycle')
     windows={'active':(4,11),'disabled':(14,19),'reset':(22,27),'unpowered':(32,39),
              'brownout':(43,47),'reconfiguration':(48,60),'reactivated':(65,79)}
@@ -236,7 +244,9 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
         if tx:
             return dict(peak_source_current_a=float(np.max(data[:,9]+data[:,11])),
                         peak_sink_current_a=float(np.max(data[:,10]+data[:,12])),
-                        peak_supply_source_current_a=float(np.max(-data[:,5])))
+                        peak_supply_source_current_a=float(np.max(-data[:,5])),
+                        mean_supply_draw_a=float(np.trapezoid(-data[:,5],data[:,0])/(data[-1,0]-data[0,0])),
+                        mean_bias_completion_current_a=float(np.trapezoid(data[:,18],data[:,0])/(data[-1,0]-data[0,0])))
         currents=data[:,8:9]
         return dict(peak_source_current_a=float(np.max(np.maximum(-currents,0).sum(axis=1))),
                     peak_sink_current_a=float(np.max(np.maximum(currents,0).sum(axis=1))),
@@ -314,8 +324,8 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
         lines[controls[0]]='VEN ENABLE 0 1'
         stale_deck='\n'.join(lines)+'\n'+control(work,'stale_enable','tran 2p 80n',vectors)
         stale=run_spice(work,'stale_enable',stale_deck)
-        if stale.shape[1]!=18 or not np.isfinite(stale).all():raise ValueError('Invalid RF stale-enable waveform')
-        stale_error=float(np.max(abs(stale[:,5]+stale[:,9]+stale[:,11])))
+        if stale.shape[1]!=19 or not np.isfinite(stale).all():raise ValueError('Invalid RF stale-enable waveform')
+        stale_error=float(np.max(abs(stale[:,5]+stale[:,9]+stale[:,11]+stale[:,18])))
         stale_peak=float(stale[:,9:13].max())
         if stale_error>1e-10 or stale_peak>finite_tx['current_limit_a_per_leg']*(1+1e-6):
             raise ValueError('RF stale-enable branch limit or rail accounting failure')
@@ -323,7 +333,7 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
             last_time_s=float(stale[-1,0]),supply_current_accounting_error_a=stale_error,
             maximum_branch_current_a=stale_peak,exposure=supply_exposure(stale),
             scope='Enable request held high through supply collapse, brownout and recovery. Only VEN differs from nominal retained network. The behavioral rail/headroom gates are not an implemented supervisor; absent driver reverse junctions prevent a power-off safety claim.')
-        error=float(np.max(abs(x[:,5]+x[:,9]+x[:,11])))
+        error=float(np.max(abs(x[:,5]+x[:,9]+x[:,11]+x[:,18])))
         maximum=float(np.max(x[:,9:13]))
         if error>1e-10 or maximum>finite_tx['current_limit_a_per_leg']*(1+1e-6):
             raise ValueError('TX rail accounting or branch current limit violated')

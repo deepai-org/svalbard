@@ -12,6 +12,21 @@ class DesignBoundary(unittest.TestCase):
         self.architecture = json.loads((PROJECT / 'spec/analog-architecture.json').read_text())
         self.contract = json.loads((PROJECT / 'spec/contract.json').read_text())
 
+    def test_tmds_power_uses_its_branch_owner_and_override(self):
+        from run_first_pass import tx_macro_power_budget
+        with TemporaryDirectory() as directory:
+            root=Path(directory)
+            data={'macro_supply_currents':{'modes':{'TMDS':{
+                'mean_currents_a':{'Xpad':0,'XBUF':0,'XCTL':0,'XDRIVE_MAIN_P':0,'XDRIVE_TMDS_P':.030},
+                'mean_total_vdd_draw_a':.030}}}}
+            (root/'wired-transmit-screen.json').write_text(json.dumps(data))
+            result=tx_macro_power_budget(root)['modes']['TMDS']['blocks']
+            override=self.architecture['resource_policy']['branch_current_overrides_ma']['wired_tmds']
+            self.assertEqual(result['tmds']['wired_mode_allocation_ma'],override['tmds'])
+            self.assertEqual(result['wiredtx']['wired_mode_allocation_ma'],override['wiredtx'])
+            self.assertTrue(result['tmds']['measured_macro_alone_exceeds_allocation'])
+            self.assertFalse(result['wiredtx']['measured_macro_alone_exceeds_allocation'])
+
     def test_external_pullup_changes_only_retained_board_network(self):
         from transmit_fixture import build
         with TemporaryDirectory() as directory:

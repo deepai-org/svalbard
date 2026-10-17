@@ -616,8 +616,8 @@ The current MAIN+POST window draws approximately 92.4 mA: 57.6 mA in steering
 drivers, 32.9 mA in the termination buffer and 2.0 mA in top-level bias circuitry.
 The interlock contribution is negligible in this window. The driver and buffer
 alone exceed their respective 36 mA and 8 mA block allocations. The WIRE supply
-allocation is 96 mA; adding the other wire blocks' 34.75 mA allocations to this
-measured TX burden gives a 127.2 mA planning screen. This is a real design-budget
+allocation is 96 mA; adding the other wire blocks' approximately 34.6 mA allocations to this
+measured TX burden gives an approximately 127 mA planning screen. This is a real design-budget
 conflict, not a measured package-current limit or a sustained-current result.
 `coverage.json:wired_tx_macro_power` derives that comparison from the shared
 architecture and contract. Reduce the TX drive/buffer burden or explicitly
@@ -660,6 +660,27 @@ excursions. No core-survival, steady leakage, eye-mask or HDMI compliance claim
 follows from this nominal load case. The differential-load lifecycle remains
 the all-mode case; the two reports exercise one selected chip with different
 retained external networks.
+
+RF TX now accounts for the shared 28 mA active bias-current floor in addition
+to observing output-branch currents. The extra behavioral rail draw fills only
+the difference between the floor and sourced output current, avoiding double
+counting. It is an assigned biased-driver model, not measured transistor bias
+or a physical bias circuit. Its instantaneous compensation must not be used as
+proof of supply-noise rejection or an accurate RF ripple spectrum. Disabled
+zero draw is likewise behavioral; reverse junctions and real bias shutdown
+remain unimplemented. Nominal and maximum-gain retained-state screens, including
+held-enable faults, preserve the signal results (about −1.34 and +0.16 dBm at
+high route resistance) while now drawing the assigned 28 mA when active.
+
+The shared RF-domain allocations total 53 mA in warm RF operation against the
+contract's 48 mA domain allocation. `coverage.json:rf_supply_planning` exposes
+this independently of the whole-chip current ceiling. Neither number is a
+measured bond-wire rating. The current-accounting audit also applies the shared
+TMDS branch override: its active steering buffers consume about 30.3 mA in the
+short all-mode window against the TMDS block's 16 mA allocation. They must not
+be hidden under the unrelated normal wired-TX allocation. These supply and
+power gaps join protection/core coordination and actual RF core loading as
+first-pass integration decisions; no allocation has been increased to hide them.
 
 ## First-pass implementation closure
 

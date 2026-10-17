@@ -25,16 +25,21 @@
             "measured_macro_alone_exceeds_allocation": false
           },
           "wiredtx": {
-            "measured_macro_mean_ma": 30.307371461307028,
-            "wired_mode_allocation_ma": 36,
+            "measured_macro_mean_ma": 0.000694159844981552,
+            "wired_mode_allocation_ma": 0.2,
             "measured_macro_alone_exceeds_allocation": false
+          },
+          "tmds": {
+            "measured_macro_mean_ma": 30.306677301462045,
+            "wired_mode_allocation_ma": 16,
+            "measured_macro_alone_exceeds_allocation": true
           }
         },
         "observed_tx_mean_ma": 32.256809345411604,
         "wire_domain_allocation_ma": 96,
         "headroom_for_other_wire_blocks_ma": 63.743190654588396,
-        "other_wire_block_allocations_ma": 34.75,
-        "observed_tx_plus_other_allocations_ma": 67.0068093454116,
+        "other_wire_block_allocations_ma": 34.550000000000004,
+        "observed_tx_plus_other_allocations_ma": 66.80680934541161,
         "combined_allocation_screen_exceeds": false
       },
       "MAIN": {
@@ -50,16 +55,21 @@
             "measured_macro_alone_exceeds_allocation": true
           },
           "wiredtx": {
-            "measured_macro_mean_ma": 29.087341266935578,
+            "measured_macro_mean_ma": 29.08734073910052,
             "wired_mode_allocation_ma": 36,
+            "measured_macro_alone_exceeds_allocation": false
+          },
+          "tmds": {
+            "measured_macro_mean_ma": 5.278350608531773e-07,
+            "wired_mode_allocation_ma": 0.2,
             "measured_macro_alone_exceeds_allocation": false
           }
         },
         "observed_tx_mean_ma": 62.15587108045606,
         "wire_domain_allocation_ma": 96,
         "headroom_for_other_wire_blocks_ma": 33.84412891954394,
-        "other_wire_block_allocations_ma": 34.75,
-        "observed_tx_plus_other_allocations_ma": 96.90587108045605,
+        "other_wire_block_allocations_ma": 34.550000000000004,
+        "observed_tx_plus_other_allocations_ma": 96.70587108045606,
         "combined_allocation_screen_exceeds": true
       },
       "MAIN_POST": {
@@ -75,24 +85,29 @@
             "measured_macro_alone_exceeds_allocation": true
           },
           "wiredtx": {
-            "measured_macro_mean_ma": 57.56214591549233,
+            "measured_macro_mean_ma": 57.562145465737565,
             "wired_mode_allocation_ma": 36,
             "measured_macro_alone_exceeds_allocation": true
+          },
+          "tmds": {
+            "measured_macro_mean_ma": 4.4975476822340594e-07,
+            "wired_mode_allocation_ma": 0.2,
+            "measured_macro_alone_exceeds_allocation": false
           }
         },
         "observed_tx_mean_ma": 92.40793889532058,
         "wire_domain_allocation_ma": 96,
         "headroom_for_other_wire_blocks_ma": 3.5920611046794164,
-        "other_wire_block_allocations_ma": 34.75,
-        "observed_tx_plus_other_allocations_ma": 127.15793889532058,
+        "other_wire_block_allocations_ma": 34.550000000000004,
+        "observed_tx_plus_other_allocations_ma": 126.95793889532058,
         "combined_allocation_screen_exceeds": true
       },
       "DETECT": {
         "blocks": {
-          "txpad": {
+          "detect": {
             "measured_macro_mean_ma": 0.2254027653905938,
-            "wired_mode_allocation_ma": 0.1,
-            "measured_macro_alone_exceeds_allocation": true
+            "wired_mode_allocation_ma": 4,
+            "measured_macro_alone_exceeds_allocation": false
           },
           "termination": {
             "measured_macro_mean_ma": 0.03169805386800931,
@@ -100,16 +115,21 @@
             "measured_macro_alone_exceeds_allocation": false
           },
           "wiredtx": {
-            "measured_macro_mean_ma": 2.4077687197971793e-06,
+            "measured_macro_mean_ma": 1.722010958518618e-06,
             "wired_mode_allocation_ma": 36,
+            "measured_macro_alone_exceeds_allocation": false
+          },
+          "tmds": {
+            "measured_macro_mean_ma": 6.857577612785614e-07,
+            "wired_mode_allocation_ma": 0.2,
             "measured_macro_alone_exceeds_allocation": false
           }
         },
         "observed_tx_mean_ma": 2.3044405232228122,
         "wire_domain_allocation_ma": 96,
         "headroom_for_other_wire_blocks_ma": 93.69555947677719,
-        "other_wire_block_allocations_ma": 34.75,
-        "observed_tx_plus_other_allocations_ma": 37.05444052322281,
+        "other_wire_block_allocations_ma": 30.650000000000002,
+        "observed_tx_plus_other_allocations_ma": 32.954440523222814,
         "combined_allocation_screen_exceeds": false
       }
     },
@@ -135,6 +155,59 @@
     "contiguous_ready_hold_ns": 68.0,
     "active_peer_mean_draw_a": 0.009981790737635953,
     "scope": "Same selected physical TX components, independent continuously powered split pull-up network. Nominal active/reset/off/reconfiguration evidence, not eye-mask, protocol or protection acceptance."
+  },
+  "rf_supply_planning": {
+    "status": "RF_domain_planning_consistency_not_measured_pin_capacity",
+    "modes": {
+      "rf_rx": {
+        "primary_current_case": "external_rf_clock",
+        "block_allocations_ma": {
+          "lna": 3,
+          "pga_i": 0.5,
+          "pga_q": 0.5,
+          "rfdriver": 28,
+          "rfpad": 0,
+          "rftxpad": 0,
+          "rxfilter_i": 4,
+          "rxfilter_q": 4,
+          "rxmix_i": 1,
+          "rxmix_q": 1,
+          "txfilter_i": 4.0,
+          "txfilter_q": 4.0,
+          "txmix_i": 1,
+          "txmix_q": 1,
+          "txsum": 1
+        },
+        "total_block_allocations_ma": 53.0,
+        "domain_allocation_ma": 48,
+        "allocations_exceed_domain": true
+      },
+      "rf_tx": {
+        "primary_current_case": "external_rf_clock",
+        "block_allocations_ma": {
+          "lna": 3,
+          "pga_i": 0.5,
+          "pga_q": 0.5,
+          "rfdriver": 28,
+          "rfpad": 0,
+          "rftxpad": 0,
+          "rxfilter_i": 4,
+          "rxfilter_q": 4,
+          "rxmix_i": 1,
+          "rxmix_q": 1,
+          "txfilter_i": 4.0,
+          "txfilter_q": 4.0,
+          "txmix_i": 1,
+          "txmix_q": 1,
+          "txsum": 1
+        },
+        "total_block_allocations_ma": 53.0,
+        "domain_allocation_ma": 48,
+        "allocations_exceed_domain": true
+      }
+    },
+    "modeled_driver_active_bias_floor_a": 0.028,
+    "scope": "Warm block allocations are retained; the RF driver current floor is an assigned behavioral load, not measured transistor performance. Supply/return distribution and current capacity remain unqualified."
   },
   "integrated_model_inventory": {
     "wired_transmit": {
@@ -231,6 +304,7 @@
       "missing_required_states": [],
       "model_bytes_match_recorded_screen_input": true,
       "stale_screen_sources": [
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/analog_screen.py",
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json",
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/contract.json",
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py"
@@ -285,6 +359,7 @@
       "missing_required_states": [],
       "model_bytes_match_recorded_screen_input": true,
       "stale_screen_sources": [
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/analog_screen.py",
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json",
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/contract.json",
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py"
@@ -308,7 +383,7 @@
         "model": "6412e885c6ce2a7b47b5e088aa45d9935faaeb8111e952ab507e8fae6f7a1050",
         "layout": "67415893e4415099409dce31b9d8a137fa29868a8f0772d3dc5a1a518336b06a",
         "gds": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
-        "screen": "7dfc0c8b28c311bd27ab468f6824e40e7a55d51aa6696b8c71acba9a09e2cb55"
+        "screen": "5f49eb3f17dccea92315dcc107778b272ad12aee08d31e0d5a05652f2950fdb8"
       },
       "reported_transient_complete": true,
       "required_state_windows": {
@@ -334,11 +409,7 @@
       "all_required_state_names_present": true,
       "missing_required_states": [],
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/contract.json",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py"
-      ],
+      "stale_screen_sources": [],
       "stale_layout_sources": [
         "analog/pads/generated/rf-receive-layout.json",
         "analog/pads/generated/rf-transmit-layout.json"

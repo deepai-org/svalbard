@@ -180,23 +180,24 @@ def tx_macro_power_budget(publish):
     contract=json.loads(contract_path.read_text())
     wire=next(v for v in contract['power']['domains'] if v['id']=='WIRE')
     ceiling=wire['per_connection_budget_ma']*len(wire['supply_pins'])
-    represented={'txpad',*(a['block'] for a in allocations.values())}
-    other=sum(b['resource_allocation']['current_budget_ma']['wired'] for name,b in architecture['blocks'].items()
-              if b['supply']=='wire' and name not in represented)
     modes={}
     for mode,result in screen['macro_supply_currents']['modes'].items():
         if result['mean_currents_a'] is None:continue
         owners={}
         for instance,current in result['mean_currents_a'].items():
-            if instance=='Xpad':owner='txpad'
+            if instance=='Xpad':owner='detect' if mode=='DETECT' else 'txpad'
             elif instance=='XBUF':owner=allocations['buffer']['block']
             elif instance=='XCTL':owner=allocations['interlock']['block']
+            elif instance.startswith('XDRIVE_TMDS_'):owner='tmds'
             elif instance.startswith('XDRIVE_'):owner=allocations['steering_driver']['block']
             else:raise ValueError('Unmapped macro current: '+instance)
             owners[owner]=owners.get(owner,0)+current*1000
+        overrides=architecture['resource_policy']['branch_current_overrides_ma'].get('wired_tmds',{}) if mode=='TMDS' else {}
+        budget=lambda name:overrides.get(name,architecture['blocks'][name]['resource_allocation']['current_budget_ma']['wired'])
+        other=sum(budget(name) for name,b in architecture['blocks'].items() if b['supply']=='wire' and name not in owners)
         blocks={name:dict(measured_macro_mean_ma=value,
-            wired_mode_allocation_ma=architecture['blocks'][name]['resource_allocation']['current_budget_ma']['wired'],
-            measured_macro_alone_exceeds_allocation=value>architecture['blocks'][name]['resource_allocation']['current_budget_ma']['wired'])
+            wired_mode_allocation_ma=budget(name),
+            measured_macro_alone_exceeds_allocation=value>budget(name))
             for name,value in owners.items()}
         total=result['mean_total_vdd_draw_a']*1000
         modes[mode]=dict(blocks=blocks,observed_tx_mean_ma=total,
@@ -207,6 +208,28 @@ def tx_macro_power_budget(publish):
     return dict(status='short_window_measurement_against_design_allocations_not_pin_ratings',modes=modes,
         scope='Macro currents are partial block burdens. Other wire blocks use allocations, not measurements, and are included as a simultaneous-operation planning screen. Top-level fixture bias current remains in total TX draw. No power-budget increase, sustained-current guarantee or package rating is inferred.',
         source_sha256={str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in (path,arch_path,spec_path,contract_path)})
+
+
+def rf_supply_planning(publish):
+    from design import PROJECT
+    architecture=json.loads((PROJECT/'spec/analog-architecture.json').read_text())
+    contract=json.loads((PROJECT/'spec/contract.json').read_text())
+    domain=next(d for d in contract['power']['domains'] if d['id']=='RF')
+    ceiling=domain['per_connection_budget_ma']*len(domain['supply_pins'])
+    modes={}
+    for mode in ('rf_rx','rf_tx'):
+        branch=architecture['resource_policy']['primary_current_case_by_mode'].get(mode)
+        overrides=architecture['resource_policy']['branch_current_overrides_ma'].get(branch,{})
+        blocks={name:overrides.get(name,b['resource_allocation']['current_budget_ma'][mode])
+                for name,b in architecture['blocks'].items() if b['supply']=='rf'}
+        total=sum(blocks.values())
+        modes[mode]=dict(primary_current_case=branch,block_allocations_ma=blocks,
+            total_block_allocations_ma=total,domain_allocation_ma=ceiling,allocations_exceed_domain=total>ceiling)
+    path=publish/'rf-transmit-screen.json'
+    evidence=json.loads(path.read_text()) if path.exists() else {}
+    return dict(status='RF_domain_planning_consistency_not_measured_pin_capacity',modes=modes,
+        modeled_driver_active_bias_floor_a=evidence.get('finite_tx_driver',{}).get('active_bias_current_floor_a'),
+        scope='Warm block allocations are retained; the RF driver current floor is an assigned behavioral load, not measured transistor performance. Supply/return distribution and current capacity remain unqualified.')
 
 
 def write_coverage(publish,results):
@@ -277,6 +300,7 @@ def write_coverage(publish,results):
             scope='Selected attached TX macro footprints and reservations only; not whole-ring placement or routing acceptance.')
     report=dict(first_pass_complete=False,candidates=results,attached_core_area=area_evidence,
                 wired_tx_macro_power=tx_macro_power_budget(publish),wired_tx_pullup_evidence=pullup_evidence,
+                rf_supply_planning=rf_supply_planning(publish),
                 integrated_model_inventory=integrated_model_inventory(publish),
                 combined_retained_screen=retained_evidence,
                 protection_design_audit=protection_evidence,wired_tx_loading=tx_loading_evidence,

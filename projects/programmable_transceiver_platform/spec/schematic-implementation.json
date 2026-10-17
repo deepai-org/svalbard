@@ -790,11 +790,27 @@
     "tx_attached_macro_allocations": {
       "buffer": {
         "block": "termination",
-        "reservation_um2": 175000
+        "reservation_um2": 175000,
+        "placement": {
+          "rotation_degrees": 90,
+          "lower_left_um": [
+            1500,
+            3150
+          ],
+          "minimum_clearance_um": 20
+        }
       },
       "interlock": {
         "block": "wiredtx",
-        "reservation_um2": 60000
+        "reservation_um2": 60000,
+        "placement": {
+          "rotation_degrees": 0,
+          "lower_left_um": [
+            2450,
+            2700
+          ],
+          "minimum_clearance_um": 20
+        }
       }
     }
   }

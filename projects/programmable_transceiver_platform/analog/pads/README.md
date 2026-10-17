@@ -651,6 +651,17 @@ These reservations do not establish placement, routing clearance, bias-passive
 fit or funding of the remaining monitor/control circuitry. In particular the
 buffer is roughly 1.12 mm long in its current generated arrangement.
 
+Passing `--assembly` to `core_area.py` also places the selected GDS macros into
+the audited pad assembly using shared placement parameters. The buffer is
+rotated horizontally above/left of wired TX; the interlock is immediately left
+of it. The generator checks provider-core containment, 20 µm envelope clearance
+from the custom pads/other macro, and actual same-layer metal collisions against
+the native ring and existing instances. `generated/attached-core-placement.svg`
+is an envelope preview, not a wiring diagram; `attached-core-assembly.oas` holds
+the actual macro instances. These are **unrouted**: no signal/supply hookup or
+whole-chip core placement is established. Area-only rebuilds intentionally do
+not claim this optional placement evidence.
+
 ## Extraction and assembly rules
 
 `circuits.py` / `wired_receive.py` drive SPICE and layout. `extract_audit.py`

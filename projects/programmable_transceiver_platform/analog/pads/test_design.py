@@ -12,6 +12,28 @@ class DesignBoundary(unittest.TestCase):
         self.architecture = json.loads((PROJECT / 'spec/analog-architecture.json').read_text())
         self.contract = json.loads((PROJECT / 'spec/contract.json').read_text())
 
+    def test_coverage_cannot_omit_shared_brownout_requirement(self):
+        from run_first_pass import integrated_model_inventory
+        with TemporaryDirectory() as directory:
+            root=Path(directory)
+            stem='wired-transmit'
+            (root/(stem+'-extracted-c.spice')).write_text('* fixture model\n')
+            (root/(stem+'.gds')).write_bytes(b'fixture only')
+            (root/(stem+'-layout.json')).write_text('{}')
+            screen=root/(stem+'-screen.json')
+            states={name:{} for name in ('active_main','disabled','reset','unpowered','reconfiguration')}
+            screen.write_text(json.dumps(dict(states=states,transient_complete=True)))
+            item=integrated_model_inventory(root)['wired_transmit']
+            self.assertEqual(item['missing_required_states'],['brownout'])
+            self.assertFalse(item['all_required_state_names_present'])
+            states['brownout']={}
+            screen.write_text(json.dumps(dict(states=states,transient_complete=True)))
+            item=integrated_model_inventory(root)['wired_transmit']
+            self.assertTrue(item['all_required_state_names_present'])
+            # State names alone still cannot establish model or layout acceptance.
+            self.assertFalse(item['model_bytes_match_recorded_screen_input'])
+            self.assertFalse(item['exported_layout_device_graph_matches_current_model'])
+
     def test_protection_audit_detects_diode_polarity_and_mim_terminal_faults(self):
         from protection_device_audit import supplemental_graphs
         records=['scale 1000 1 0.5',

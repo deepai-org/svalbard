@@ -26,7 +26,9 @@ physical capacitance.
 `generated/coverage.json` indexes each canonical extracted netlist, GDS, layout
 report and state screen. Its `integrated_model_inventory` separately checks:
 
-- Active, disabled, reset, unpowered and reconfiguration window names.
+- Required state-window names resolved from the shared design, including brownout.
+  The current canonical wired TX report lacks a brownout window; the other four
+  families name it. A named window alone does not establish safe behavior.
 - Published netlist bytes against the recorded simulation input.
 - Source freshness.
 - Exported-GDS device connectivity against that exact netlist.

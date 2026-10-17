@@ -627,15 +627,21 @@
       "decision": "Physical driver must account for retained coupling charge and fault transition current. Behavioral rail gating and missing reverse junctions do not establish shutdown, power-off isolation or safe stress. Preserve this gap until actual junction paths and local controls are implemented."
     },
     "primary_protection": {
-      "report": "analog/pads/generated/protection-audit.json",
-      "status": "current_geometry_below_published_HV_ESD_minimum_widths",
-      "decision": "Do not accept current small DSS devices as a primary ESD solution. Reconcile a published-rule-sized or otherwise evidenced protection architecture with RF/serial loading, protected-device transient limits, secondary protection and physical discharge paths. Existing layout/lifecycle passes establish neither ESD rule compliance nor survival.",
-      "scope": "Dimensional comparison and compact-model sizing estimate only. No replacement layout or inferred HBM rating. Minimum-width candidate strains RF and RX/USB capacitance allocations; wired TX now has common-mode-specific admittance and protection-sizing estimates.",
-      "alternative_direction": "Connected RF replacement uses extracted steering diodes, an isolated protection rail, native-derived clamp, MIM timing/storage capacitors and a physical approximately10.27Mohm bleed. Wider bond corridors and routes reserve123842.11um2 per pair; shared budget is now130000um2 per pair, funded by140000um2 from unused reserve with no total die-area increase. Independent audit matches159 extracted devices and verifies nonlinear well replacement without double-counting linear capacitance. Maximum modeled gain reaches approximately+0.26dBm nominal and+0.16dBm at high metal resistance. Provider bond openings and overlap checks pass. Primary-to-core protection coordination, discharge-current capacity, complete rail/package integration and physical RF driver readiness remain open; candidate not yet canonical. Rebuild evidence against the updated shared area allocation before adoption.",
+      "report": "analog/pads/generated/coverage.json",
+      "status": "canonical_primary_networks_present_core_coordination_incomplete",
+      "decision": "Retain the canonical isolated-rail primary protection networks as the first-pass baseline. Complete protection-to-core coordination, physical discharge-current paths and safe-state controls. Layout/device-graph agreement and compact-model pulse response establish neither ESD qualification nor core survival.",
+      "scope": "Five canonical pad families include primary protection. Use their canonical extracted models and retained-state reports; the earlier small-clamp dimensional audit is historical diagnostic evidence, not the selected implementation status.",
       "export_roundtrip_report": "analog/pads/generated/gds-roundtrip.json",
       "export_model_equivalence_report": "analog/pads/generated/gds-export-electrical-equivalence.json",
-      "integrated_candidate_report": "analog/pads/generated/protected-rf-pair/pad-screen.json",
-      "connected_route_report": "analog/pads/generated/protected-rf-pair/route-screen.json"
+      "integrated_candidate_report": "analog/pads/generated/rf-integrated-screen.json",
+      "connected_route_report": "analog/pads/generated/rf-route-screen.json",
+      "implementation": "RF RX/TX use extracted steering diodes, an isolated protection rail, native-derived clamp, MIM timing/storage capacitors and physical bleed. Each RF pair reserves 130000 um2. Wired TX, RX/USB and differential reference also include primary protection in their canonical generated layouts. Attached RF and reference cores remain behavioral boundaries; primary-to-core coordination and whole-ring/package current paths are incomplete.",
+      "core_boundary_policy": {
+        "normal_operation": "Use each shared architecture block and retained external network for common-mode, swing, loading and power. Protection must preserve those operating conditions.",
+        "power_transitions": "Evaluate each connected core against its local rails during reset, brownout, unpowered and reconfiguration states; external coupling capacitors do not eliminate retained charge or external excitation.",
+        "transient_survival": "Unqualified until actual attached devices and allowed terminal voltage/current versus duration are established. Neither nominal device voltage labels nor behavioral rail clipping supply a survival limit.",
+        "implementation_gate": "Include secondary protection or isolation wherever the primary network cannot meet the attached-device contract. Account for its capacitance, resistance, current path and area in the same generated family, rather than adding an ideal clamp only in the bench."
+      }
     },
     "wired_tx_admittance": {
       "report": "analog/pads/generated/wired-primary-protection/double-tails/loading.json",

@@ -110,7 +110,8 @@ def run(work,pdk,publish,families):
 
 def integrated_model_inventory(publish):
     """Inventory canonical family artifacts; state presence is not acceptance."""
-    from design import PROJECT
+    from design import PROJECT, resolve
+    requirements=resolve()["families"]
     inventory={}
     for family in FAMILIES:
         stem=family.replace('_','-')
@@ -127,7 +128,7 @@ def integrated_model_inventory(publish):
         states=screen.get('states',screen.get('lifecycle_states',{}))
         required={name:([key for key in states if key=='active' or key.startswith('active_')]
                         if name=='active' else [name] if name in states else [])
-                  for name in ('active','disabled','reset','unpowered','reconfiguration')}
+                  for name in requirements[family]['required_states']}
         hashes={kind:hashlib.sha256(path.read_bytes()).hexdigest() for kind,path in paths.items()}
         stale=[]
         for name,digest in sources.items():
@@ -148,6 +149,7 @@ def integrated_model_inventory(publish):
         inventory[family]=dict(artifacts={kind:str(path.name) for kind,path in paths.items()},
             artifact_sha256=hashes,reported_transient_complete=screen.get('transient_complete',False),
             required_state_windows=required,all_required_state_names_present=all(required.values()),
+            missing_required_states=[name for name,windows in required.items() if not windows],
             model_bytes_match_recorded_screen_input=any(
                 name.endswith('.spice') and digest==hashes['model'] for name,digest in sources.items()),
             stale_screen_sources=stale,stale_layout_sources=stale_layout,

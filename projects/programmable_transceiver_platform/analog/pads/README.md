@@ -27,8 +27,9 @@ physical capacitance.
 report and state screen. Its `integrated_model_inventory` separately checks:
 
 - Required state-window names resolved from the shared design, including brownout.
-  The current canonical wired TX report lacks a brownout window; the other four
-  families name it. A named window alone does not establish safe behavior.
+  All five families now name brownout. TX brownout was recovered by postprocessing
+  its saved waveform; original simulation source hashes remain unchanged. A named
+  window alone does not establish safe behavior.
 - Published netlist bytes against the recorded simulation input.
 - Source freshness.
 - Exported-GDS device connectivity against that exact netlist.
@@ -674,6 +675,15 @@ checks transformed openings, actual metal overlap and local ground connectivity.
 `generated/custom-assembly-candidate.oas` and its renders are the canonical
 geometric assembly. Full-ring device LVS, integrated signoff, package returns,
 full-bank switching and core clearance remain open.
+
+The canonical TX retained waveform includes approximately 8.24 ns below the
+shared supply-valid threshold and above 0.1 V, including a 1.5 V plateau.
+Postprocessing records zero traffic-ready and buffer-enable, but a pad minimum
+of about −0.726 V and termination-enable maximum of about 0.476 V. These are
+exposures requiring protection/control coordination, not proof of damage or
+proof of isolation. `transmit_sequence_connected.refresh_brownout()` validates
+the saved deck and architecture hashes before reanalysis; the report preserves
+original simulation provenance separately from postprocessing provenance.
 
 ## Host and power boundary
 

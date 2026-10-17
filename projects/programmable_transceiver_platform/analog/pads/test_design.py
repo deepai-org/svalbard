@@ -12,6 +12,24 @@ class DesignBoundary(unittest.TestCase):
         self.architecture = json.loads((PROJECT / 'spec/analog-architecture.json').read_text())
         self.contract = json.loads((PROJECT / 'spec/contract.json').read_text())
 
+    def test_brownout_reports_pad_exposure_despite_logical_disable(self):
+        import numpy as np
+        from transmit_sequence_connected import brownout_summary
+        x=np.zeros((4,13))
+        x[:,0]=np.arange(4)*1e-9
+        x[:,12]=[3.3,1.5,1.5,0]
+        x[:,10:12]=[[1.6,1.6],[-.7,-.2],[-.4,-.1],[-.9,-.9]]
+        x[1:3,5]=.4
+        result=brownout_summary(x,2.5)
+        self.assertEqual(result['samples'],2)
+        self.assertAlmostEqual(result['duration_s'],2e-9)
+        self.assertEqual(result['traffic_ready_max_v'],0)
+        self.assertEqual(result['termination_enable_max_v'],.4)
+        self.assertEqual(result['pad_below_local_ground_max_v'],.7)
+        self.assertEqual(result['pad_above_local_supply_max_v'],0)
+        x[:,12]=3.3
+        self.assertEqual(brownout_summary(x,2.5)['status'],'not_reached')
+
     def test_coverage_cannot_omit_shared_brownout_requirement(self):
         from run_first_pass import integrated_model_inventory
         with TemporaryDirectory() as directory:

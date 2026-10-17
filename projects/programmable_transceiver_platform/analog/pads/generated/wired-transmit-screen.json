@@ -244,6 +244,24 @@
       "vcm_max_v": 1.11919635,
       "peak_supply_draw_a": 0.00708540266,
       "peak_supply_return_a": 0.0
+    },
+    "brownout": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 1775,
+      "duration_s": 8.241235599999996e-09,
+      "scope": "Includes rail ramps and undervoltage plateau. Supply qualification is behavioral; this is not physical supervisor or core-survival evidence.",
+      "supply_min_v": 0.110255857,
+      "supply_max_v": 2.4675,
+      "pad_min_v": -0.725569937,
+      "pad_max_v": -0.0336710551,
+      "pad_above_local_supply_max_v": 0.0,
+      "pad_below_local_ground_max_v": 0.725569937,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": 0.475598335,
+      "traffic_ready_max_v": 0.0,
+      "peak_supply_draw_a": 0.0603263705,
+      "peak_supply_return_a": 0.187002496
     }
   },
   "numerical_floating_conductor_anchors": [
@@ -441,5 +459,13 @@
     false,
     false
   ],
-  "feedback_input_sha256": "fd225bd4e45ed07a0fd369a6be2f5bdc95128d8ca9cb4775174a5d79a1952e05"
+  "feedback_input_sha256": "fd225bd4e45ed07a0fd369a6be2f5bdc95128d8ca9cb4775174a5d79a1952e05",
+  "brownout_reanalysis": {
+    "scope": "Postprocessing saved waveform, not a new simulation. Original source hashes retained. Waveform digest recorded at reanalysis, not at original simulation.",
+    "source_sha256": {
+      "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/replay-1/connected.dat": "9454b4ded9021068c7b91ffe2038518b47c8169c4e1f2565857eac866284f251",
+      "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/replay-1/connected.spice": "02816aa839ce319234db99992d1fbb03e28af5f8c1aa223699e05f4f0470b72d",
+      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "2c11a42248851d9ea64e115c860382e9c6a3ba512aedb7b764d41c5bea733ea0"
+    }
+  }
 }

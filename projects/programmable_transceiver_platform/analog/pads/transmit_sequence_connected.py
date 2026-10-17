@@ -73,6 +73,49 @@ initial begin #300;$finish;end
     return text,times,values
 
 
+def brownout_summary(x, low):
+    """Observe the retained supply transition, without inferring device safety."""
+    if x.ndim != 2 or x.shape[1] != 13 or not np.isfinite(x).all():
+        raise ValueError('Expected finite full connected TX waveform')
+    mask=(x[:,12]>=.1)&(x[:,12]<low)
+    y=x[mask]
+    result=dict(status='observed_not_electrical_acceptance' if len(y) else 'not_reached',
+                samples=len(y), duration_s=float(np.sum(np.diff(x[:,0])*mask[:-1])),
+                scope='Includes rail ramps and undervoltage plateau. Supply qualification is behavioral; this is not physical supervisor or core-survival evidence.')
+    if len(y):
+        result.update(supply_min_v=float(y[:,12].min()),supply_max_v=float(y[:,12].max()),
+            pad_min_v=float(y[:,10:12].min()),pad_max_v=float(y[:,10:12].max()),
+            pad_above_local_supply_max_v=float(max(0,np.max(y[:,10:12]-y[:,12,None]))),
+            pad_below_local_ground_max_v=float(max(0,-y[:,10:12].min())),
+            qualified_max_v=float(y[:,3].max()),buffer_enable_max_v=float(y[:,4].max()),
+            termination_enable_max_v=float(y[:,5].max()),traffic_ready_max_v=float(y[:,7].max()),
+            peak_supply_draw_a=float(max(0,-y[:,6].min())),
+            peak_supply_return_a=float(max(0,y[:,6].max())))
+    return result
+
+
+def refresh_brownout(report_path, waveform):
+    """Reanalyze saved data; preserve the simulation's original source hashes."""
+    report=json.loads(report_path.read_text())
+    deck=waveform.with_suffix('.spice')
+    expected=report['source_sha256'].get(str(deck.resolve()))
+    if not expected or hashlib.sha256(deck.read_bytes()).hexdigest()!=expected:
+        raise ValueError('Saved deck does not match recorded simulation')
+    x=np.loadtxt(waveform,skiprows=1)
+    if x[-1,0]<299.99e-9 or not report.get('transient_complete'):
+        raise ValueError('Incomplete saved simulation')
+    arch=PROJECT/'spec/analog-architecture.json'
+    if hashlib.sha256(arch.read_bytes()).hexdigest()!=report['source_sha256'].get(str(arch)):
+        raise ValueError('Shared architecture differs from recorded simulation')
+    low=json.loads(arch.read_text())['blocks']['monitor']['parameters']['supply_window_v'][0]
+    report['states']['brownout']=brownout_summary(x,low)
+    report['brownout_reanalysis']=dict(
+        scope='Postprocessing saved waveform, not a new simulation. Original source hashes retained. Waveform digest recorded at reanalysis, not at original simulation.',
+        source_sha256={str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest()
+                       for p in (waveform,deck,Path(__file__))})
+    report_path.write_text(json.dumps(report,indent=2)+'\n')
+
+
 def run(work,fixture,ready_data=None,scenario="transitions",spice_timeout_s=120):
     if scenario != "transitions" and ready_data is None:
         raise ValueError("Hold scenarios require sampled feedback input")
@@ -177,6 +220,7 @@ def run(work,fixture,ready_data=None,scenario="transitions",spice_timeout_s=120)
             vcm_min_v=float(y[:,1].min()),vcm_max_v=float(y[:,1].max()),
             peak_supply_draw_a=float(max(0,-y[:,6].min())),
             peak_supply_return_a=float(max(0,y[:,6].max())))
+    r['states']['brownout']=brownout_summary(x,low)
     r['numerical_floating_conductor_anchors']=anchors
     r['operating_point_policy']='Reject transient operating-point fallback; numerical anchors are not physical resistors.'
     for helper in ['loading_audit.py','screen.py']:

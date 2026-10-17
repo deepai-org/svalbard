@@ -109,6 +109,8 @@ def build_integration_candidate(name):
         from termination_buffer import build as factory
     elif name == "transmit_interlock":
         from transmit_control_circuit import build as factory
+    elif name == "tx_steering_buffer":
+        from steering_buffer import build as factory
     elif name == "wired_transmit":
         from circuits import wired_transmit as factory
     elif name == "wired_receive_usb":

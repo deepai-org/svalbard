@@ -22,7 +22,7 @@ def build(output, pdk, pad_override=None, bias_override=None, bias_resistance_oh
         cfg['bias_v'].update(bias_override)
     models={name:PROJECT/path for name,path in cfg['models'].items()}
     if pad_override is not None: models['pad']=pad_override.resolve()
-    expected={'pad':['PAD_P','PAD_N','VDD','VSS','CASCODE','MAIN_P','MAIN_N','MAIN_BIAS','POST_P','POST_N','POST_BIAS','TMDS_P','TMDS_N','TMDS_BIAS','DETECT_ENABLE','DETECT_PBIAS','TERM_ENABLE','TERM_VCM'],
+    expected={'steering_driver':['VDD','VSS','IN','OUT'],'pad':['PAD_P','PAD_N','VDD','VSS','CASCODE','MAIN_P','MAIN_N','MAIN_BIAS','POST_P','POST_N','POST_BIAS','TMDS_P','TMDS_N','TMDS_BIAS','DETECT_ENABLE','DETECT_PBIAS','TERM_ENABLE','TERM_VCM'],
               'buffer':['VDD','VSS','REF','BIAS','OUT','ENABLE'],
               'interlock':['VDD','VSS','REQ_MAIN','REQ_POST','REQ_TMDS','REQ_DETECT','REQ_TERM','RESET','QUALIFIED','SUPPLY_OK','CONFLICT','VALID','EN_MAIN','EN_POST','EN_TMDS','EN_DETECT','EN_TERM']}
     cells={};texts=[]
@@ -72,6 +72,16 @@ def build(output, pdk, pad_override=None, bias_override=None, bias_resistance_oh
             lines += [f'BBIAS_{branch} {branch}_BIAS 0 V={cfg["bias_v"][branch]}*V(EN_{branch})',
                       f'BP_{branch} {branch}_P 0 V={positive}*V(EN_{branch})',
                       f'BN_{branch} {branch}_N 0 V={negative}*V(EN_{branch})']
+    if 'steering_driver' in cells:
+        for branch in ('MAIN','POST','TMDS'):
+            for polarity,prefix in (('P','BP_'),('N','BN_')):
+                node=f'{branch}_{polarity}'
+                source=prefix+branch
+                matches=[i for i,line in enumerate(lines) if line.startswith(source+' '+node+' 0 ')]
+                if len(matches)!=1:raise ValueError('Unexpected steering-source graph')
+                index=matches[0]
+                lines[index]=lines[index].replace(source+' '+node+' 0 ',source+' CMD_'+node+' 0 ',1)
+                lines.append(f'XDRIVE_{node} VDD VSS CMD_{node} {node} '+cells['steering_driver'])
     lines += [f'BCTL_VALID_BOUNDARY TX_VALID VSS V=V(CTL_VALID)/{v}',
               'XCTL VDD VSS CTL_REQ_MAIN CTL_REQ_POST CTL_REQ_TMDS CTL_REQ_DETECT REQ_TERM_ENABLE TX_RESET TX_QUALIFIED CTL_OK CTL_CONFLICT CTL_VALID CTL_EN_MAIN CTL_EN_POST CTL_EN_TMDS CTL_EN_DETECT TERM_ENABLE '+cells['interlock']]
     if bias_resistance_ohm is not None:

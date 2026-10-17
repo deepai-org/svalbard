@@ -43,7 +43,7 @@ def run(work, generated, pdk, publish=True):
     from transmit_feedback_closure import verify as verify_closure
     for iteration in range(1, 5):
         electrical = work/f'replay-{iteration}'
-        replay(electrical, work/'fixture.spice', seed, spice_timeout_s=240 if audit['physical_devices']>500 else 120)
+        replay(electrical, work/'fixture.spice', seed, spice_timeout_s=240 if audit['physical_devices']>500 or 'steering_driver' in cfg['tx_integration_fixture']['models'] else 120)
         observed = json.loads((electrical/'screen.json').read_text())
         closure_dir=work/f'closure-{iteration}'
         closure=verify_closure(closure_dir,electrical)

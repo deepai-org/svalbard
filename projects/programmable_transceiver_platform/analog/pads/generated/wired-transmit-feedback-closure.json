@@ -1,0 +1,21 @@
+{
+  "status": "feedback_changes_controls_requires_new_analog_run",
+  "controls_identical": false,
+  "previous_event_count": 20,
+  "updated_event_count": 20,
+  "raw_feedback_sample_mismatches": 1,
+  "complete_mode_coverage": true,
+  "loaded_traffic_ready_without_detector_ready_s": 0.0,
+  "lifecycle_gate_pass": false,
+  "scope": "Verify a sampled feedback fixed point without repeating identical analog work.\n\nFeed a completed detector report back through actual RTL and compare every\nemitted control event with the events that drove that completed analog run.\nIdentical controls imply the same deterministic analog problem. Raw detector\nsamples in unused states may differ, so they remain reported separately.\n Only this nominal deterministic fixture and sampled RTL feedback; not physical detectors, sustained data, PVT or protection acceptance.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_feedback_closure.py": "542d182c677db0c5f3b58080a9d651fa5908449fad4b6b45e06fd4ea3bdf44fd",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "90ad7ff6d59962aa779136484992eed35bb91926c4921f7558065ddf18573881",
+    "/home/ubuntu/svalbard/scratch/pad-finite-steering/replay/screen.json": "0d66785e9f0222d6db5542680c42ae31eb6cfc8e82df18f255dbc29f21c65a90",
+    "/home/ubuntu/svalbard/scratch/pad-finite-steering/replay/rtl.log": "746f67f3f143754e2b265567c4f73fb3b4663176a050cb41ff77559886085714",
+    "/home/ubuntu/svalbard/scratch/pad-finite-steering/replay/connected.spice": "2942319ace1ef7dda45bc2a58f09e78eb23905819f602e6fa399305d2061392e",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "fc3cdc163ae805c33b92a298142718ad36c94f5567ac4bb9bb608be016d58e32",
+    "/home/ubuntu/svalbard/scratch/pad-finite-steering/closure/replay.sv": "2dc47778a6be0c9308fd8510283be246f37d6947ad4aefc86c626dde3b99799b",
+    "/home/ubuntu/svalbard/scratch/pad-finite-steering/closure/rtl.log": "c9a40954dfd0a294083819e7b0b62d71156cecd5f25d550de153250ad8e55afa"
+  }
+}

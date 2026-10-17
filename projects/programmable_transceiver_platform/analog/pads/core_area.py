@@ -36,11 +36,13 @@ def run(project, output):
         block=allocation['block']
         budget=architecture['blocks'][block]['resource_allocation']['area_ceiling_um2']
         reservation=allocation['reservation_um2']
+        count=allocation.get('instance_count',1)
+        if type(count) is not int or count<1:raise ValueError('Invalid macro instance count')
         macros[name]=dict(block=block,model=str(model.relative_to(project)),
             gds=str(gds.relative_to(project)),
             bbox_um=[bounds.left,bounds.bottom,bounds.right,bounds.top],
-            minimum_rectangular_footprint_um2=bounds.area(),reservation_um2=reservation,
-            fits_reservation=bounds.area()<=reservation,owner_block_budget_um2=budget)
+            minimum_rectangular_footprint_um2=bounds.area()*count,instance_count=count,reservation_um2=reservation,
+            fits_reservation=bounds.area()*count<=reservation,owner_block_budget_um2=budget)
         sources.extend([model,gds,layout_path])
     owners={}
     for block in sorted({m['block'] for m in macros.values()}):
@@ -79,8 +81,10 @@ def place(project, assembly, output):
     glass_index=layout.find_layer(37,0)
     original_openings=db.Region(top.begin_shapes_rec(glass_index)).merged()
     obstacles=[(name,db.DBox(*item['bbox_um'])) for name,item in pad_report['custom_cells'].items()]
-    report={}
+    report={};unplaced=[]
     for name,macro in area['macros'].items():
+        if macro['instance_count']!=1 or 'placement' not in allocations[name]:
+            unplaced.append(name);continue
         policy=allocations[name]['placement']
         other=db.Layout();other.read(str(project/macro['gds']))
         cell=layout.create_cell('attached_tx_'+name);cell.copy_tree(other.top_cell())
@@ -117,7 +121,7 @@ def place(project, assembly, output):
     if check.top_cell().child_instances()!=top.child_instances():raise ValueError('Assembly roundtrip changed instances')
     exported_openings=db.Region(check.top_cell().begin_shapes_rec(check.find_layer(37,0))).merged()
     if not (original_openings ^ exported_openings).is_empty():raise ValueError('Bond openings changed')
-    area['placement']=dict(status='geometry_only_unrouted',macros=report,
+    area['placement']=dict(status='geometry_only_unrouted',macros=report,unplaced_macros=unplaced,
         exported_bond_opening_polygons_match_original=True,
         same_layer_metal_collision_check_pass=True,
         oas_sha256=hashlib.sha256(oas.read_bytes()).hexdigest(),

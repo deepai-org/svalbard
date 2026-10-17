@@ -739,7 +739,18 @@
       "transmit_interlock": {
         "tolerant_logic": true
       },
-      "scope": "Single recipe for chosen circuit sizing. Primary protection, core bleed, compensation and provider assembly are composed by their existing layout generators; this recipe alone is not a complete extracted pad."
+      "scope": "Single recipe for chosen circuit sizing. Primary protection, core bleed, compensation and provider assembly are composed by their existing layout generators; this recipe alone is not a complete extracted pad.",
+      "tx_steering_buffer": {
+        "n_widths_um": [
+          2.0,
+          8.0,
+          32.0,
+          128.0
+        ],
+        "p_to_n_ratio": 2.0,
+        "unit_width_um": 16.0,
+        "length_um": 0.28
+      }
     },
     "primary_placement_um": {
       "reference_clock": [
@@ -760,7 +771,8 @@
       "models": {
         "pad": "analog/pads/generated/wired-transmit-extracted-c.spice",
         "buffer": "analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/physical.spice",
-        "interlock": "analog/pads/generated/transmit-control-candidate/thick-logic/physical.spice"
+        "interlock": "analog/pads/generated/transmit-control-candidate/thick-logic/physical.spice",
+        "steering_driver": "analog/pads/generated/steering-buffer/physical.spice"
       },
       "bias_v": {
         "MAIN": 1.68,
@@ -811,6 +823,11 @@
           ],
           "minimum_clearance_um": 20
         }
+      },
+      "steering_driver": {
+        "block": "wiredtx",
+        "reservation_um2": 140000,
+        "instance_count": 6
       }
     }
   }

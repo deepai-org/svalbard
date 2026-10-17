@@ -1,0 +1,77 @@
+{
+  "status": "connected_small_circuit_layout_candidate",
+  "circuit": "tx_steering_buffer",
+  "flat_cell": "tx_steering_buffer_flat",
+  "drc_count": 0,
+  "device_count": 34,
+  "device_graph_matches": true,
+  "envelope_um": [
+    150,
+    141.0
+  ],
+  "envelope_area_um2": 21150.0,
+  "limitations": [
+    "Compensation/reference/bias passives and TX pad integration absent.",
+    "Load-current trunks are 8um; individual device accesses and total current capacity remain unqualified.",
+    "No analog performance or whole-chip area acceptance."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer_layout.py": "a698a658288df0e4b2ce0c7d9fb02209d61f77a5e2d135e671acc49494b8c60d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer.py": "9b73b61646c07d00d7bef6092a32d42a8389bdd3d3c7732a1755c5d3274839ff",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/steering_buffer.py": "cf04dba71425a40dd050e2d8f66b92f3b5323933bf6fac8bf35a0ad353bea975",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "020dfd38d6aad5851aef4377a26332d3a17353e517da62be8dc4e164d9203d94"
+  },
+  "gds_marker_repair": {
+    "status": "no_high_resistance_devices",
+    "before_gds_sha256": "8136c5d434fae2c877cd7e9fc40824be8dea0d0d92fee8f52eef1c107a975582",
+    "after_gds_sha256": "8136c5d434fae2c877cd7e9fc40824be8dea0d0d92fee8f52eef1c107a975582"
+  },
+  "gds_roundtrip": {
+    "drc_count": 0,
+    "device_graph_matches": true
+  },
+  "selected_shared_recipe": false,
+  "trunk_widths_um": {
+    "IN": 0.44,
+    "OUT": 8.0,
+    "STAGE_0": 0.44,
+    "STAGE_1": 0.44,
+    "STAGE_2": 0.44,
+    "VDD": 8.0,
+    "VSS": 8.0
+  },
+  "bounded_internal_routes": true,
+  "net_trunk_spans_um": {
+    "IN": [
+      3.5,
+      140.5
+    ],
+    "OUT": [
+      3.5,
+      140.5
+    ],
+    "STAGE_0": [
+      4.5,
+      15.9
+    ],
+    "STAGE_1": [
+      10.9,
+      38.7
+    ],
+    "STAGE_2": [
+      17.3,
+      126.3
+    ],
+    "VDD": [
+      3.5,
+      140.5
+    ],
+    "VSS": [
+      3.5,
+      140.5
+    ]
+  },
+  "physical_sha256": "5ccda054383f3a507d1736300b61c9300aed3542f454281266afc416e1200d65",
+  "gds_sha256": "8136c5d434fae2c877cd7e9fc40824be8dea0d0d92fee8f52eef1c107a975582",
+  "scope": "One noninverting steering buffer, repeated six times in the connected TX fixture. Macro DRC/device equivalence only; integrated timing and routing remain unqualified."
+}

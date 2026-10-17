@@ -12,6 +12,7 @@
         1119.965
       ],
       "minimum_rectangular_footprint_um2": 155657.5503,
+      "instance_count": 1,
       "reservation_um2": 175000,
       "fits_reservation": true,
       "owner_block_budget_um2": 200000
@@ -27,7 +28,24 @@
         348.5
       ],
       "minimum_rectangular_footprint_um2": 48099.90000000001,
+      "instance_count": 1,
       "reservation_um2": 60000,
+      "fits_reservation": true,
+      "owner_block_budget_um2": 300000
+    },
+    "steering_driver": {
+      "block": "wiredtx",
+      "model": "analog/pads/generated/steering-buffer/physical.spice",
+      "gds": "analog/pads/generated/steering-buffer/tx_steering_buffer_flat.gds",
+      "bbox_um": [
+        2.7800000000000002,
+        3.5,
+        142.20000000000002,
+        140.5
+      ],
+      "minimum_rectangular_footprint_um2": 114603.24,
+      "instance_count": 6,
+      "reservation_um2": 140000,
       "fits_reservation": true,
       "owner_block_budget_um2": 300000
     }
@@ -40,9 +58,9 @@
       "reservations_fit": true
     },
     "wiredtx": {
-      "reserved_um2": 60000,
+      "reserved_um2": 200000,
       "budget_um2": 300000,
-      "unreserved_um2": 240000,
+      "unreserved_um2": 100000,
       "reservations_fit": true
     }
   },
@@ -53,15 +71,18 @@
     "No placement or connectivity to the assembled pad ring is established."
   ],
   "source_sha256": {
-    "spec/schematic-implementation.json": "c31d37d50f6b07cf896812b29824fcd94889ee3867f8a84a6c002a52d81cfe70",
+    "spec/schematic-implementation.json": "020dfd38d6aad5851aef4377a26332d3a17353e517da62be8dc4e164d9203d94",
     "spec/analog-architecture.json": "b1b0dec79b6f9dc94733f71a8c425ec2a5c114188cd36acaf435694210944385",
-    "analog/pads/core_area.py": "f8e580914060fddf1d55d7139ae52b6952a99533d742a101c6a2bd6c4102aa6e",
+    "analog/pads/core_area.py": "76fce5979b4ef0747a526d1f85f365df034b002b046d9b20c2624ce6ba07a0cc",
     "analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/physical.spice": "45b1ab7c83edd98901cdcfa78611e29d140dcfd57b70b4c303a8292b5d572be6",
     "analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/buffer_compensated_flat.gds": "db901eb61f2dce71a5e75fbb5c734b71044124287fd52da035757f154cd73fa8",
     "analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/layout.json": "729ee5fb9e8203dbb639c4580fe6b1c19a0388016877162f941c9d9c480a7ad4",
     "analog/pads/generated/transmit-control-candidate/thick-logic/physical.spice": "e0a8c45ac4e8efdfde286d89f65451379448d1c7dd1829681e901c72b2f5c6d5",
     "analog/pads/generated/transmit-control-candidate/thick-logic/tx_mode_interlock_flat.gds": "235b5c37b0b5490d9ad32857ca35dd297dbcee40f11c982353fb37b5db923752",
     "analog/pads/generated/transmit-control-candidate/thick-logic/layout.json": "8e43ca980ec5c75ef380f454bb7c1e20c6818c181d95bc31133e7ddd6769d10b",
+    "analog/pads/generated/steering-buffer/physical.spice": "5ccda054383f3a507d1736300b61c9300aed3542f454281266afc416e1200d65",
+    "analog/pads/generated/steering-buffer/tx_steering_buffer_flat.gds": "8136c5d434fae2c877cd7e9fc40824be8dea0d0d92fee8f52eef1c107a975582",
+    "analog/pads/generated/steering-buffer/layout.json": "f5db4b4c0caba93078b9d40fa4771efaa66c2c21ec2ba07765844ee17bda1da5",
     "../../scratch/pad-attached-core-assembly/custom-assembly-candidate.oas": "2fbaa17ab0c33f8897ddcb9714f2ad8f15a913f4cd7b8980d78e0155dd11c9f4",
     "../../scratch/pad-attached-core-assembly/placement-audit.json": "dd086764803bc6418607ac59c9d28f12ea3bd8d950cc96b3f090488278a989a6",
     "../../scratch/pad-attached-core-assembly/assembly-report.json": "9e79ec1f9415be806e96d945c1fa86dfc9bc419d898976ff4f534a7ebf4a9bb9"
@@ -92,6 +113,9 @@
         "electrical_connection_status": "unrouted_no_supply_or_signal_hookup"
       }
     },
+    "unplaced_macros": [
+      "steering_driver"
+    ],
     "exported_bond_opening_polygons_match_original": true,
     "same_layer_metal_collision_check_pass": true,
     "oas_sha256": "a11a656ad033e91218434653214fa78e8f4a1e523533dbae0040bfec839c23ef",

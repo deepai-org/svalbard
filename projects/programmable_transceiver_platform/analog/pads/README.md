@@ -604,10 +604,10 @@ DC probes and oversized direct-replication experiment are diagnostic evidence,
 not alternative normative pad designs. Full regenerated layout evidence takes
 precedence over those sizing estimates.
 
-The canonical TX lifecycle now measures the top-level behavioral voltage
+The TX lifecycle measures the top-level behavioral voltage
 sources as well as VDD. `wired-transmit-screen.json:ideal_driver_burden` records
-positive delivered, absorbed and net energy separately. In the 300 ns retained
-fixture, the ideal sources deliver approximately 1.67 nJ of positive energy;
+positive delivered, absorbed and net energy separately. Before inserting finite steering buffers, the 300 ns retained
+fixture recorded approximately 1.67 nJ of positive energy;
 MAIN/POST steering-source current peaks span approximately 93–125 mA, and the
 buffer-enable source reaches approximately 575 mA. The ideal edges and supply
 qualification discontinuities influence these peaks: they are not characterized
@@ -615,8 +615,30 @@ physical-driver requirements. Nevertheless, VDD-only accounting misses this
 burden. Finite predrivers, enable drivers and bias drivers are required before
 claiming realistic timing or total supply power. The observer covers top-level
 behavioral voltage sources, not independent ideal command sources, driver
-internal losses or a sustained-traffic power budget. The refreshed lifecycle
-has zero sampled feedback mismatches; that does not close these physical gaps.
+internal losses or a sustained-traffic power budget. That earlier ideal-steering lifecycle had zero sampled feedback mismatches;
+it did not establish realistic drive capability.
+
+The selected TX fixture now inserts six copies of the extracted
+`steering-buffer/physical.spice` between upstream data gating and the MAIN,
+POST and TMDS steering gates. Each copy is a 34-device, four-stage noninverting
+CMOS chain; output charge and discharge currents therefore flow through real
+PDK transistors connected to VDD/VSS. `generation_parameters.tx_steering_buffer`
+owns the sizing recipe. Rebuild it with `termination_buffer_layout.generate()`
+using `design.build_integration_candidate("tx_steering_buffer")` and
+`cell_name="tx_steering_buffer"`. The same generic layout generator checks DRC,
+extracted connectivity and the exported GDS graph. The six measured macro
+rectangles total approximately 114603 µm² and reserve 140000 µm² inside wired TX,
+in addition to the interlock's 60000 µm²; 100000 µm² remains for other wired-TX
+implementation. These six macros have not yet been placed or routed into the
+ring. Upstream data gating, bias drivers and buffer-enable drive remain explicit
+boundaries; steering-buffer insertion does not complete the whole control path. The
+first connected finite-driver run reaches every mode but has one feedback
+mismatch that changes RTL control timing; `wired-transmit-feedback-closure.json`
+therefore rejects lifecycle closure. During the short traffic-ready windows,
+time-weighted VDD draw rises from about 33 to 62 mA for MAIN and from about
+35 to 92 mA for MAIN+POST. This is a material power-budget issue, not a sustained
+current specification. `ready_supply_reanalysis` records the measured windows.
+Do not call the new physical-driver path qualified from its mode coverage.
 
 ## First-pass implementation closure
 

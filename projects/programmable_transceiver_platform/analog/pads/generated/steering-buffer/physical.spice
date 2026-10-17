@@ -1,0 +1,59 @@
+* Independent exporter of physical Magic .ext; no schematic substitutions.
+* Extracted capacitance included; distributed wire resistance remains absent.
+.subckt tx_steering_buffer_flat_physical VDD VSS IN OUT
+X0 STAGE_2 STAGE_1 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X1 STAGE_2 STAGE_1 VSS VSS nfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X2 STAGE_2 STAGE_1 VSS VSS nfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X3 STAGE_1 STAGE_0 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X4 STAGE_1 STAGE_0 VSS VSS nfet_03v3 w=8u l=0.28u ad=3.52p as=3.52p pd=16.88u ps=16.88u
+X5 STAGE_0 IN VDD VDD pfet_03v3 w=4u l=0.28u ad=1.76p as=1.76p pd=8.88u ps=8.88u
+X6 STAGE_0 IN VSS VSS nfet_03v3 w=2u l=0.28u ad=0.88p as=0.88p pd=4.88u ps=4.88u
+X7 OUT STAGE_2 VSS VSS nfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X8 OUT STAGE_2 VSS VSS nfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X9 OUT STAGE_2 VSS VSS nfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X10 OUT STAGE_2 VSS VSS nfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X11 STAGE_2 STAGE_1 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X12 STAGE_2 STAGE_1 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X13 STAGE_2 STAGE_1 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X14 OUT STAGE_2 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X15 OUT STAGE_2 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X16 OUT STAGE_2 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X17 OUT STAGE_2 VSS VSS nfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X18 OUT STAGE_2 VSS VSS nfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X19 OUT STAGE_2 VSS VSS nfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X20 OUT STAGE_2 VSS VSS nfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X21 OUT STAGE_2 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X22 OUT STAGE_2 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X23 OUT STAGE_2 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X24 OUT STAGE_2 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X25 OUT STAGE_2 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X26 OUT STAGE_2 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X27 OUT STAGE_2 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X28 OUT STAGE_2 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X29 OUT STAGE_2 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X30 OUT STAGE_2 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X31 OUT STAGE_2 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X32 OUT STAGE_2 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+X33 OUT STAGE_2 VDD VDD pfet_03v3 w=16u l=0.28u ad=7.04p as=7.04p pd=32.88u ps=32.88u
+C0 STAGE_0 VSS 8.55957e-15
+C1 IN VSS 7.86622e-15
+C2 STAGE_1 VSS 2.73832e-14
+C3 OUT VSS 9.70014e-14
+C4 STAGE_2 VSS 8.963e-14
+C5 VDD VSS 2.47979e-13
+C6 VDD OUT 1.31593e-13
+C7 STAGE_0 OUT 1.36357e-15
+C8 IN OUT 1.69717e-14
+C9 STAGE_1 OUT 1.48707e-15
+C10 STAGE_2 VDD 1.32515e-13
+C11 STAGE_2 STAGE_0 1.83661e-16
+C12 STAGE_2 IN 3.20295e-18
+C13 STAGE_2 STAGE_1 3.36195e-14
+C14 VDD STAGE_0 7.68546e-15
+C15 VDD IN 1.79083e-15
+C16 VDD STAGE_1 2.39205e-14
+C17 STAGE_0 IN 2.25929e-15
+C18 STAGE_0 STAGE_1 9.49981e-15
+C19 IN STAGE_1 2.86494e-16
+C20 STAGE_2 OUT 1.33499e-13
+.ends tx_steering_buffer_flat_physical

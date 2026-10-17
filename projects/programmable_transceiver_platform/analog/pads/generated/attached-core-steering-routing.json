@@ -1,0 +1,233 @@
+{
+  "status": "six_steering_output_routes_only",
+  "routes": {
+    "MAIN_P": {
+      "source_macro": "steering_driver_MAIN_P",
+      "source_port": "OUT",
+      "destination_port": "MAIN_P",
+      "route_points_um": [
+        [
+          2355.44,
+          2236.25
+        ],
+        [
+          2355.44,
+          2240.0
+        ],
+        [
+          2652.0,
+          2240.0
+        ],
+        [
+          2652.0,
+          2648.0
+        ],
+        [
+          2680.25,
+          2648.0
+        ]
+      ],
+      "manhattan_length_um": 736.56,
+      "via4_count": 4,
+      "pair_length_skew_um": null,
+      "electrical_status": "geometry_connected_requires_extraction_and_timing"
+    },
+    "MAIN_N": {
+      "source_macro": "steering_driver_MAIN_N",
+      "source_port": "OUT",
+      "destination_port": "MAIN_N",
+      "route_points_um": [
+        [
+          2515.44,
+          2236.25
+        ],
+        [
+          2515.44,
+          2244.0
+        ],
+        [
+          2434.94,
+          2244.0
+        ],
+        [
+          2434.94,
+          2248.0
+        ],
+        [
+          2655.0,
+          2248.0
+        ],
+        [
+          2655.0,
+          2647.0
+        ],
+        [
+          2680.25,
+          2647.0
+        ]
+      ],
+      "manhattan_length_um": 736.56,
+      "via4_count": 6,
+      "pair_length_skew_um": 0.0,
+      "electrical_status": "geometry_connected_requires_extraction_and_timing"
+    },
+    "POST_P": {
+      "source_macro": "steering_driver_POST_P",
+      "source_port": "OUT",
+      "destination_port": "POST_P",
+      "route_points_um": [
+        [
+          2355.44,
+          2396.25
+        ],
+        [
+          2355.44,
+          2400.0
+        ],
+        [
+          2658.0,
+          2400.0
+        ],
+        [
+          2658.0,
+          2661.0
+        ],
+        [
+          2680.25,
+          2661.0
+        ]
+      ],
+      "manhattan_length_um": 589.56,
+      "via4_count": 4,
+      "pair_length_skew_um": null,
+      "electrical_status": "geometry_connected_requires_extraction_and_timing"
+    },
+    "POST_N": {
+      "source_macro": "steering_driver_POST_N",
+      "source_port": "OUT",
+      "destination_port": "POST_N",
+      "route_points_um": [
+        [
+          2515.44,
+          2396.25
+        ],
+        [
+          2515.44,
+          2404.0
+        ],
+        [
+          2434.94,
+          2404.0
+        ],
+        [
+          2434.94,
+          2408.0
+        ],
+        [
+          2661.0,
+          2408.0
+        ],
+        [
+          2661.0,
+          2660.0
+        ],
+        [
+          2680.25,
+          2660.0
+        ]
+      ],
+      "manhattan_length_um": 589.56,
+      "via4_count": 6,
+      "pair_length_skew_um": 0.0,
+      "electrical_status": "geometry_connected_requires_extraction_and_timing"
+    },
+    "TMDS_P": {
+      "source_macro": "steering_driver_TMDS_P",
+      "source_port": "OUT",
+      "destination_port": "TMDS_P",
+      "route_points_um": [
+        [
+          2355.44,
+          2556.25
+        ],
+        [
+          2355.44,
+          2560.0
+        ],
+        [
+          2664.0,
+          2560.0
+        ],
+        [
+          2664.0,
+          2701.0
+        ],
+        [
+          2680.25,
+          2701.0
+        ]
+      ],
+      "manhattan_length_um": 469.56,
+      "via4_count": 4,
+      "pair_length_skew_um": null,
+      "electrical_status": "geometry_connected_requires_extraction_and_timing"
+    },
+    "TMDS_N": {
+      "source_macro": "steering_driver_TMDS_N",
+      "source_port": "OUT",
+      "destination_port": "TMDS_N",
+      "route_points_um": [
+        [
+          2515.44,
+          2556.25
+        ],
+        [
+          2515.44,
+          2564.0
+        ],
+        [
+          2434.94,
+          2564.0
+        ],
+        [
+          2434.94,
+          2568.0
+        ],
+        [
+          2667.0,
+          2568.0
+        ],
+        [
+          2667.0,
+          2700.0
+        ],
+        [
+          2680.25,
+          2700.0
+        ]
+      ],
+      "manhattan_length_um": 469.56,
+      "via4_count": 6,
+      "pair_length_skew_um": 0.0,
+      "electrical_status": "geometry_connected_requires_extraction_and_timing"
+    }
+  },
+  "unchanged_other_macro_connections": "Unrouted buffer, interlock, supplies, bias and upstream data/control remain incomplete.",
+  "same_layer_unintended_intersections": false,
+  "exported_route_metal_matches": true,
+  "exported_bond_openings_preserved": true,
+  "limitations": [
+    "Intersection checks are not spacing DRC or extracted LVS.",
+    "Equal drawn pair lengths do not establish matched RC or timing; vias and bends differ.",
+    "Routing resistance/capacitance and supply-return timing are not yet included in the connected simulation.",
+    "Nominal geometry only; no current-density or reliability qualification."
+  ],
+  "source_sha256": {
+    "analog/pads/generated/attached-core-assembly.oas": "88bcd3b6dc9f934b21480a46ac95349107131f94ccb3f00f695af5bc22c46b49",
+    "spec/schematic-implementation.json": "349c72e5bee1cf6b25939887f332b1198665d3a539b14fab8ae578e057f51561",
+    "../../scratch/pad-attached-core-assembly/placement-audit.json": "dd086764803bc6418607ac59c9d28f12ea3bd8d950cc96b3f090488278a989a6",
+    "../../scratch/pad-attached-core-assembly/assembly-report.json": "9e79ec1f9415be806e96d945c1fa86dfc9bc419d898976ff4f534a7ebf4a9bb9",
+    "analog/pads/core_area.py": "a7a447c62c5157d6a4a5f593e0130513adce52e337f9017398acb37356303ab9"
+  },
+  "routed_oas_sha256": "679dae7e7b7cec3000a301d261213372a2532a33f46690f7f3555fb626f9dff8"
+}

@@ -644,7 +644,8 @@ rectangles total approximately 114603 µm² and reserve 140000 µm² inside wire
 in addition to the interlock's 60000 µm²; 100000 µm² remains for other wired-TX
 implementation. All six macros now have named placements beside the wired-TX pad, with
 provider-core containment, envelope-clearance and same-layer collision checks.
-They remain unrouted. Upstream data gating, bias drivers and buffer-enable drive remain explicit
+Six output-to-pad routes are now generated separately from the placement stage;
+supply and other signal hookups remain incomplete. Upstream data gating, bias drivers and buffer-enable drive remain explicit
 boundaries; steering-buffer insertion does not complete the whole control path. The
 current connected run reaches every mode and reproduces identical RTL control
 events when its measured readiness is fed back. One raw detector sample differs
@@ -767,7 +768,7 @@ optimization. The remaining work is not just parameter tuning:
 | --- | --- | --- |
 | 1. Protection compatible with the attached core | Primary protection is physically present, but diagnostic RF pulses still reach roughly +4.54/−1.00 V at the core boundary. Survival and discharge-current capacity are unqualified. | Specify allowed voltage/current versus duration for each attached core and choose a coordinated protection/isolation circuit. Check normal signal loading and powered/unpowered exposure together. Do not interpret diagnostic pulses as an ESD rating. |
 | 2. Safe behavior without an already-working host | Reset, brownout and readiness still depend partly on prescribed or behavioral controls. Independently powered host operation has recorded substantial backfeed and is unsupported without isolation/sequencing. | Implement local disable, power-domain crossings and readiness sufficient to keep every connected branch safe through startup, rail loss and mode changes. Retain the external network and account for stored energy. |
-| 3. Real pad-to-core interfaces | RF LNA/driver and reference receiver remain explicit behavioral boundaries; TX bias and serializer drive remain idealized. Extracted TX buffer/interlock and steering macros have area reservations and checked placements, but remain unrouted. Connected TX current exceeds current planning allocations; RF domain allocations also exceed their domain budget. | Assign physical implementations and power/loading budgets to the interfaces that determine pad operation. Decide whether the complete circuits fit and meet headroom before optimizing individual bias values. |
+| 3. Real pad-to-core interfaces | RF LNA/driver and reference receiver remain explicit behavioral boundaries; TX bias and serializer drive remain idealized. Extracted TX buffer/interlock and steering macros have area reservations and checked placements; six steering output routes are generated, while supply/control/buffer routing remains incomplete. Connected TX current exceeds current planning allocations; RF domain allocations also exceed their domain budget. | Assign physical implementations and power/loading budgets to the interfaces that determine pad operation. Decide whether the complete circuits fit and meet headroom before optimizing individual bias values. |
 | 4. Whole-ring and package integration | Provider openings and local geometry/connectivity checks pass. Attached TX macro clearance is checked, but full-core integration, full-ring device LVS, distributed returns/coupling and full-bank switching are incomplete. | Preserve provider-compatible bond sites, place/fund attached macros, connect the complete supply/return network and evaluate bounded package loading and host switching on that same assembly. Local DRC is not this gate. |
 | 5. Representative electrical capability | The all-mode 100 Ω TX fixture is supplemented by an independently powered split-pull-up hold case; nominal current and feedback are demonstrated, but electrical/protection acceptance remains open. RX bypass loading exceeds its budget on one leg; RF TX power margin is narrow; reference startup is millisecond-scale with the retained external bias capacitor. | Exercise representative DC-coupled, AC-coupled, USB bidirectional, RF and reference interfaces with their actual external networks and acceptance limits. Include sustained operation and transitions; distinguish failed limits from missing evidence. |
 
@@ -842,9 +843,24 @@ from the custom pads/other macro, and actual same-layer metal collisions against
 the native ring and existing instances. `generated/attached-core-placement.svg`
 is an envelope preview, not a wiring diagram; `attached-core-assembly.oas` holds
 the actual macro instances. The six named steering instances are included in the same placement. These
-are **unrouted**: no signal/supply hookup or
-whole-chip core placement is established. Area-only rebuilds intentionally do
-not claim this optional placement evidence.
+are unrouted in this intermediate placement artifact. Area-only rebuilds
+intentionally do not claim placement evidence.
+
+Add `--route-steering` to generate the selected six output connections in
+`attached-core-steering-routed.oas`, with the report and preview in
+`attached-core-steering-routing.json` and `.svg`. Shared
+`io_pad_first_pass.steering_output_routing` sets the channels, widths and escape
+spacing. The generator resolves actual transformed GDS port labels, lands on
+the corresponding M5 conductors, and uses M4/M5 routes with via4 transitions.
+It rejects unintended intersections with existing metal or other routes and
+checks exported route metal and preserved bond openings. P/N drawn lengths are
+matched; differing bends/vias mean this is not matched RC or timing evidence.
+
+This advances physical integration, but **does not complete the assembly**:
+buffer, interlock, supply/return, bias and upstream-data hookups remain open.
+Spacing DRC, extracted connectivity and routed transient timing still need to
+be checked before these wires can replace ideal connections in the electrical
+model. The routing preview shows paths over macro envelopes, not full mask detail.
 
 ## Extraction and assembly rules
 

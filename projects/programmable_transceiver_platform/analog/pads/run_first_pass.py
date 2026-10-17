@@ -354,7 +354,20 @@ def write_coverage(publish,results):
         area_evidence=dict(all_reservations_fit=data['all_reservations_fit'],
             source_hashes_current=current,report_sha256=hashlib.sha256(area_path.read_bytes()).hexdigest(),
             scope='Selected attached TX macro footprints and reservations only; not whole-ring placement or routing acceptance.')
+    routing_evidence=None
+    routing_path=publish/'attached-core-steering-routing.json'
+    routed_oas=publish/'attached-core-steering-routed.oas'
+    if routing_path.exists():
+        from design import PROJECT
+        data=json.loads(routing_path.read_text())
+        routing_evidence=dict(status=data['status'],route_count=len(data['routes']),
+            report_sha256=hashlib.sha256(routing_path.read_bytes()).hexdigest(),
+            source_hashes_current=all((PROJECT/name).exists() and hashlib.sha256((PROJECT/name).read_bytes()).hexdigest()==digest
+                for name,digest in data['source_sha256'].items()),
+            routed_artifact_matches=routed_oas.exists() and hashlib.sha256(routed_oas.read_bytes()).hexdigest()==data['routed_oas_sha256'],
+            scope='Six steering output routes only; supplies, control and buffer hookups, DRC/LVS and routed timing remain incomplete.')
     report=dict(first_pass_complete=False,candidates=results,attached_core_area=area_evidence,
+                attached_core_steering_routes=routing_evidence,
                 wired_tx_macro_power=tx_macro_power_budget(publish),wired_tx_pullup_evidence=pullup_evidence,
                 rf_supply_planning=rf_supply_planning(publish),
                 integrated_model_inventory=integrated_model_inventory(publish),

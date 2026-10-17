@@ -1,0 +1,28 @@
+{
+  "status": "shared_guard_RF_startup_characterization",
+  "transient_complete": true,
+  "guard_s": 2e-05,
+  "supply_rise_s": 1e-08,
+  "frequency_hz": 2400000000.0,
+  "gain": 6.4,
+  "command_peak_per_leg_v": 0.3398268530330199,
+  "samples_per_cycle": 64,
+  "power_dbm": 0.22654206198561772,
+  "meets_tone_target": true,
+  "gate_at_guard_v": 2.4465319e-08,
+  "supply_gain_at_guard": 1.0,
+  "shared_supply_gain_state_retained": true,
+  "limitations": [
+    "Bias driver active during guard; external peer silent, passive network retained.",
+    "Ideal supply, nominal devices and PWL carrier; not complete startup or reliability qualification.",
+    "Command-gain response is extrapolated through cold supply startup; this is an assigned behavioral law, not a physical bias startup model.",
+    "Guard is applied by this fixture, not by a connected physical readiness supervisor."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/rf-shared-supply-gain-maximum/lifecycle.spice": "04460163f05a94ba4c9c9fb259e037b7e36b6ddbe0cc09af0d7ae6afef1f5a68",
+    "/home/ubuntu/svalbard/scratch/rf-shared-supply-gain-maximum/anchored-pad.spice": "1fee90b72436ecb992a15632fcc85a9d338def6d6e5208da4a7a42702cffd762",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "e931f969248a4d115beec67fc6c28ad02fc030e8436c385acabe22410f9ecfe8",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/rf_startup.py": "42ebce5970b1c82245acde1318c784fc4d1c710bad477b0500d384f429fcca8b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "377e2d4c75fcc2b3d49344c6d2a3e686e7468a735425d18ec1260d1189d0f8d5"
+  }
+}

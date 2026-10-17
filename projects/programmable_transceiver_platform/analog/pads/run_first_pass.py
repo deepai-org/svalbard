@@ -197,6 +197,20 @@ def electrical_findings(publish):
         observations={}
         if family=='reference_clock':
             observations['bias_settling']=data.get('reference_bias_envelope')
+        if family=='rf_transmit':
+            startup_path=publish/'rf-transmit-startup-screen.json'
+            if startup_path.exists():
+                startup=json.loads(startup_path.read_text())
+                observations['guarded_startup']=dict(
+                    report=startup_path.name,
+                    report_sha256=hashlib.sha256(startup_path.read_bytes()).hexdigest(),
+                    source_hashes_current=bool(startup.get('source_sha256')) and all(
+                        Path(name).exists() and hashlib.sha256(Path(name).read_bytes()).hexdigest()==digest
+                        for name,digest in startup.get('source_sha256',{}).items()),
+                    guard_s=startup['guard_s'],gain=startup['gain'],
+                    power_dbm=startup['power_dbm'],meets_tone_target=startup['meets_tone_target'],
+                    shared_supply_gain_state_retained=startup['shared_supply_gain_state_retained'],
+                    scope='Fixture-imposed cold-start guard, quiet peer and tone at stated gain. Not physical supervisor, nominal-gain or modulated acceptance.')
         findings[family]=dict(status='incomplete_electrical_acceptance',
             source_report=path.name,source_report_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
             recorded_limit_checks=limits,observations=observations,

@@ -23,6 +23,8 @@ def run(work, fixture, physical, gain, rise_s, samples_per_cycle):
         raise ValueError('Positive rise time and at least 32 samples/cycle required')
     text = fixture.read_text().split('.control')[0]
     assert physical.read_text() in text, 'Fixture must contain exact supplied model'
+    if 'BRF_SUPPLY_GAIN RF_SUPPLY_GAIN ' not in text:
+        raise ValueError('Startup fixture must retain the shared RF supply-gain state')
     gates = Counter()
     for line in physical.read_text().splitlines():
         fields = line.split()
@@ -45,14 +47,14 @@ def run(work, fixture, physical, gain, rise_s, samples_per_cycle):
     replace(r'^VEN ENABLE .*$', 'VEN ENABLE 0 1')
     for leg, sign in (('P', 1), ('N', -1)):
         replace(rf'^VEXT_{leg} .*$', f'VEXT_{leg} EXT_{leg} 0 0')
-        replace(rf'^BCORE_{leg} .*$', f'BCORE_{leg} CORE_{leg} 0 V=V(VCM)+V(STARTUP_DRIVE_{leg})')
+        replace(rf'^BCORE_{leg} .*$', f'BCORE_{leg} CORE_{leg} 0 V=V(VCM)+max(V(RF_SUPPLY_GAIN),0)*V(STARTUP_DRIVE_{leg})')
         points = '0 0 ' + ' '.join(
             f'{start+i/(samples_per_cycle*frequency):.15g} {sign*peak*np.sin(2*np.pi*i/samples_per_cycle):.15g}'
             for i in range(192*samples_per_cycle+1))
         text += f'VSTARTUP_{leg} STARTUP_DRIVE_{leg} 0 PWL({points})\n'
     work.mkdir(parents=True, exist_ok=False)
     (work / '.spiceinit').write_text('set ngbehavior=hs\n')
-    vectors = f'v(BOARD_P) v(BOARD_N) v(EXT_P) v(EXT_N) v(xpad.xphysical.{gate},xpad.LOCAL_PAD_RETURN)'
+    vectors = f'v(BOARD_P) v(BOARD_N) v(EXT_P) v(EXT_N) v(xpad.xphysical.{gate},xpad.LOCAL_PAD_RETURN) v(RF_SUPPLY_GAIN)'
     deck = text + control(work, 'startup', f'tran 1n {stop}', vectors)
     previous = Path.cwd()
     try:
@@ -72,8 +74,12 @@ def run(work, fixture, physical, gain, rise_s, samples_per_cycle):
                   gain=gain, command_peak_per_leg_v=float(peak), samples_per_cycle=samples_per_cycle,
                   power_dbm=float(10*np.log10(power/1e-3)), meets_tone_target=bool(power >= target_w),
                   gate_at_guard_v=float(np.interp(start, data[:, 0], data[:, 5])),
+                  supply_gain_at_guard=float(np.interp(start, data[:, 0], data[:, 6])),
+                  shared_supply_gain_state_retained=True,
                   limitations=['Bias driver active during guard; external peer silent, passive network retained.',
-                               'Ideal supply, nominal devices and PWL carrier; not complete startup or reliability qualification.'],
+                               'Ideal supply, nominal devices and PWL carrier; not complete startup or reliability qualification.',
+                               'Command-gain response is extrapolated through cold supply startup; this is an assigned behavioral law, not a physical bias startup model.',
+                               'Guard is applied by this fixture, not by a connected physical readiness supervisor.'],
                   source_sha256={str(f): hashlib.sha256(f.read_bytes()).hexdigest()
                                  for f in (fixture, physical, architecture, Path(__file__).resolve(),
                                            Path(__file__).with_name('screen.py').resolve())})

@@ -548,7 +548,19 @@
           "scope": "Recorded tone target only; not modulated RF acceptance."
         }
       ],
-      "observations": {},
+      "observations": {
+        "guarded_startup": {
+          "report": "rf-transmit-startup-screen.json",
+          "report_sha256": "3084dbe76e5b9a51b5a1e84daca3f48dbe522566d22214d426bd3b87745da229",
+          "source_hashes_current": true,
+          "guard_s": 2e-05,
+          "gain": 6.4,
+          "power_dbm": 0.22654206198561772,
+          "meets_tone_target": true,
+          "shared_supply_gain_state_retained": true,
+          "scope": "Fixture-imposed cold-start guard, quiet peer and tone at stated gain. Not physical supervisor, nominal-gain or modulated acceptance."
+        }
+      },
       "unresolved": [
         "core_terminal_voltage_current_duration_limits",
         "physical_local_safe_state_controls",

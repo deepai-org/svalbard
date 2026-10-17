@@ -721,11 +721,25 @@ Signal-path bandwidth and physical bias startup remain unimplemented.
 This correction leaves initial nominal tone power at about −1.34 dBm but lowers
 the post-shutdown reactivated window to about −2.97 dBm. Maximum-gain results
 must likewise be assessed separately before and after rail recovery in the
-published reports. **Re-enable is not RF readiness:** the common controller must
-allow retained bias/gain state to recover before accepting payload. This is an
-additional requirement to clock validity and local rail qualification, not a
-reason to reset the mathematical state or recalibrate the input amplitude.
-The 80 ns case exposes the gap but does not establish a worst-case recovery time.
+published reports. **Re-enable is not RF readiness:** this 80 ns stress fixture
+deliberately bypasses the architecture's existing 20 µs cold-start guard and
+bias/reference qualification. It therefore does not demonstrate a missing
+architectural guard or a failure of normal guarded startup. The remaining gap
+is connecting and validating those readiness controls against the attached
+circuits. Warm direction changes keep bias/reference valid and use the separate
+H2D guard; they must not be modeled as rail shutdown followed by cold startup.
+Do not reset mathematical state or recalibrate input amplitude to hide recovery.
+Neither this short exposure nor the assigned gain law establishes physical
+bias startup or a worst-case recovery time.
+
+`generated/rf-transmit-startup-screen.json` now exercises the selected routed pad
+with that existing 20 µs guard, retained shared gain state and a quiet external
+peer followed by a 2.4 GHz burst. At maximum gain it produces about +0.23 dBm,
+meeting the tone target, with command supply-gain recovered to 1.0. This supports
+keeping the current startup policy for the assigned model. The guard is imposed
+by the fixture, not a connected supervisor; the gain law through zero supply is
+an explicit extrapolation. Physical readiness, modulated performance and warm
+turnaround still require their own evidence. The nominal-gain power miss remains.
 
 The shared RF-domain allocations total 53 mA in warm RF operation against the
 contract's 48 mA domain allocation. `coverage.json:rf_supply_planning` exposes
@@ -935,7 +949,8 @@ and 1.25 GHz transfer. It does not select a physical discharge resistor.
 `rf_startup.py` consumes an exact integrated model and existing lifecycle
 fixture, derives the guard and drive amplitude from shared parameters, and
 runs quiet bias startup followed by a resolved RF burst without resetting
-stored state. It keeps passive components attached and declares its silent
+stored state. It requires and preserves the shared command supply-gain response
+when replacing the carrier with its guarded burst. It keeps passive components attached and declares its silent
 external-peer assumption. `wide-route-rf-candidate/startup-reproduction.json`
 records a 64/128-sample-per-cycle resolution comparison for this bench.
 

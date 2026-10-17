@@ -121,6 +121,21 @@
       "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/contract.json": "7082c21cfb1bc84d61097a5d74f0549b022b480cdb490902ecdfcb9377c2189f"
     }
   },
+  "wired_tx_pullup_evidence": {
+    "external_network": {
+      "topology": "split_pullup",
+      "voltage_v": 3.3,
+      "resistance_ohm_per_leg": 50,
+      "peer_power": "independent_continuously_present"
+    },
+    "source_hashes_current": true,
+    "report_sha256": "47d037133c03b3dc93da03838ef589228d7bfdec83be49db5588cf30331ca5d9",
+    "closure_binds_report": true,
+    "sampled_lifecycle_gate_pass": true,
+    "contiguous_ready_hold_ns": 68.0,
+    "active_peer_mean_draw_a": 0.009981790737635953,
+    "scope": "Same selected physical TX components, independent continuously powered split pull-up network. Nominal active/reset/off/reconfiguration evidence, not eye-mask, protocol or protection acceptance."
+  },
   "integrated_model_inventory": {
     "wired_transmit": {
       "artifacts": {
@@ -162,7 +177,10 @@
       "all_required_state_names_present": true,
       "missing_required_states": [],
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [],
+      "stale_screen_sources": [
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_fixture.py"
+      ],
       "stale_layout_sources": [
         "analog/pads/layout.py",
         "analog/pads/design.py",

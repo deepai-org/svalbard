@@ -645,6 +645,22 @@ but does not change any control event; `wired-transmit-feedback-closure.json`
 therefore establishes nominal sampled-control closure. This does not establish
 physical detector behavior, sustained timing or acceptable power.
 
+The same fixture builder also supports `external_network="split_pullup"`:
+two receiver-side resistors and an independent supply use the shared TMDS
+50 Ω / 3.3 V parameters. The resistor/peer supply network remains connected
+through all states; no chip circuitry or protocol-specific pad variant is
+substituted. `wired-transmit-pullup-screen.json` exercises reset, power-off,
+brownout, reconfiguration and a 68 ns continuous TMDS ready interval with the
+same extracted drivers and pad. Active peer draw averages approximately
+9.98 mA against the shared 10 mA target; pad differential peaks reach about
+±0.456 V. Its separate closure report establishes sampled-control consistency
+for the requested hold scenario, not coverage of every wired mode on this load.
+Power-off and transition windows still show rail-return currents and pad
+excursions. No core-survival, steady leakage, eye-mask or HDMI compliance claim
+follows from this nominal load case. The differential-load lifecycle remains
+the all-mode case; the two reports exercise one selected chip with different
+retained external networks.
+
 ## First-pass implementation closure
 
 The first pass must connect the selected circuits, their generated layouts and
@@ -663,7 +679,7 @@ optimization. The remaining work is not just parameter tuning:
 | 2. Safe behavior without an already-working host | Reset, brownout and readiness still depend partly on prescribed or behavioral controls. Independently powered host operation has recorded substantial backfeed and is unsupported without isolation/sequencing. | Implement local disable, power-domain crossings and readiness sufficient to keep every connected branch safe through startup, rail loss and mode changes. Retain the external network and account for stored energy. |
 | 3. Real pad-to-core interfaces | RF LNA/driver and reference receiver remain explicit behavioral boundaries; TX bias and serializer drive remain idealized. Extracted TX buffer/interlock macros now have explicit area reservations but still need placement and routing in the full chip. | Assign physical implementations and power/loading budgets to the interfaces that determine pad operation. Decide whether the complete circuits fit and meet headroom before optimizing individual bias values. |
 | 4. Whole-ring and package integration | Provider openings and local geometry/connectivity checks pass. Full-ring device LVS, core clearance, distributed returns/coupling and full-bank switching are incomplete. | Preserve provider-compatible bond sites, place/fund attached macros, connect the complete supply/return network and evaluate bounded package loading and host switching on that same assembly. Local DRC is not this gate. |
-| 5. Representative electrical capability | State-window coverage exists, but the wired TX lifecycle's 100 Ω load does not establish TMDS pull-up compatibility. RX bypass loading exceeds its budget on one leg; RF TX power margin is narrow; reference startup is millisecond-scale with the retained external bias capacitor. | Exercise representative DC-coupled, AC-coupled, USB bidirectional, RF and reference interfaces with their actual external networks and acceptance limits. Include sustained operation and transitions; distinguish failed limits from missing evidence. |
+| 5. Representative electrical capability | The all-mode 100 Ω TX fixture is supplemented by an independently powered split-pull-up hold case; nominal current and feedback are demonstrated, but electrical/protection acceptance remains open. RX bypass loading exceeds its budget on one leg; RF TX power margin is narrow; reference startup is millisecond-scale with the retained external bias capacitor. | Exercise representative DC-coupled, AC-coupled, USB bidirectional, RF and reference interfaces with their actual external networks and acceptance limits. Include sustained operation and transitions; distinguish failed limits from missing evidence. |
 
 The canonical wired TX also misses its intended current settings in connected
 static checks. A compact folded-tail candidate improves those currents and fits

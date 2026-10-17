@@ -1,0 +1,733 @@
+{
+  "observed_request_values": [
+    0,
+    4
+  ],
+  "busy_commit_events": [],
+  "loaded_traffic_ready_without_detector_ready_s": 0.0,
+  "readiness_parameters": {
+    "max_reference_error_v": 0.0165,
+    "detector_time_constant_s": 1e-09,
+    "detector_assert_threshold": 0.99,
+    "scope": "First-pass modeled1percent-of1.65V window allocation; not measured detector performance or protocol deadline. Finite detector response followed by sequencer loaded dwell; readiness applies only when source termination is requested."
+  },
+  "status": "sampled_readiness_feedback_iteration_not_closed_loop_until_consistent",
+  "windows": {
+    "27-30ns": {
+      "actual_request_values": [
+        4
+      ],
+      "vcm_min_v": 0.000545177248,
+      "vcm_max_v": 0.00106289596,
+      "max_reference_error_v": 1.649498637934,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": 0.000961430738,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    },
+    "36-43ns": {
+      "actual_request_values": [
+        0
+      ],
+      "vcm_min_v": -0.241596803,
+      "vcm_max_v": -0.160778934,
+      "max_reference_error_v": 0.2517319228,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": -0.0574958178,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    },
+    "90-109ns": {
+      "actual_request_values": [
+        4
+      ],
+      "vcm_min_v": 0.00794396334,
+      "vcm_max_v": 0.0203194339,
+      "max_reference_error_v": 1.64115697666,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": 0.149565219,
+      "traffic_ready_max_v": 3.3,
+      "measured_ready_max_v": 0.0
+    },
+    "125-139ns": {
+      "actual_request_values": [
+        4
+      ],
+      "vcm_min_v": 0.00149711423,
+      "vcm_max_v": 0.00358887434,
+      "max_reference_error_v": 1.6483021337200001,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": 0.000912754155,
+      "traffic_ready_max_v": 3.3,
+      "measured_ready_max_v": 0.0
+    },
+    "175-195ns": {
+      "actual_request_values": [
+        0
+      ],
+      "vcm_min_v": -0.000450385088,
+      "vcm_max_v": -0.000143553078,
+      "max_reference_error_v": 1.650378725088,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": 7.15187635e-06,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    },
+    "225-239ns": {
+      "actual_request_values": [
+        0
+      ],
+      "vcm_min_v": -2.94313613e-05,
+      "vcm_max_v": -1.39564312e-05,
+      "max_reference_error_v": 1.6500328713613002,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": 4.09369876e-09,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    },
+    "280-299ns": {
+      "actual_request_values": [
+        0
+      ],
+      "vcm_min_v": -1.32815721e-06,
+      "vcm_max_v": -2.78393976e-07,
+      "max_reference_error_v": 1.65000151815721,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": 3.15247639e-09,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    }
+  },
+  "scope": "Prior analog detector trace sampled1ns before each RTL clock edge; one waveform-relaxation iteration. Zero feedback mismatches establishes sampled consistency only for this fixture. Busy commit events and missing configurations invalidate lifecycle coverage. Nontermination readiness is assumed true; detector and RTL physical implementation absent.",
+  "clock_period_ns": 4,
+  "pre_post_cycles": 2,
+  "edge_translation_ns": 0.02,
+  "external_network_unchanged": true,
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "2c2573016f4ece61bc530a70186bffc21d78ae29301be2911dd8fa2632ab734e",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "fc3cdc163ae805c33b92a298142718ad36c94f5567ac4bb9bb608be016d58e32",
+    "/home/ubuntu/svalbard/scratch/pad-pullup-lifecycle/replay/replay.sv": "ea692257a4067842d03431722dd2a8b7c5c8b903797e85047963c6de5e02d5cf",
+    "/home/ubuntu/svalbard/scratch/pad-pullup-lifecycle/fixture.spice": "fc8c6a11af94e79927f09a7780403b730032cbf9423a34038c32a7ee29e374d3",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "b1b0dec79b6f9dc94733f71a8c425ec2a5c114188cd36acaf435694210944385",
+    "/home/ubuntu/svalbard/scratch/pad-pullup-lifecycle/replay/connected.spice": "78649961f71ff65da1f97b027924e41dc63eecf126a4b0dd442fd54e3f29fe28",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_fixture.py": "6dbcac5c7049f133bdc5b5313c6c00af67c225b76ff5404ee1e850ba881d7e7b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "664236fe102fab03c1a3b9bcd0ece8fca478e845e91e5a67079eec62bd335067",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-transmit-extracted-c.spice": "c772d37254b8f72ec59e0afd1030469b2563220bb1c8fb90d1b21c295055683c",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/physical.spice": "45b1ab7c83edd98901cdcfa78611e29d140dcfd57b70b4c303a8292b5d572be6",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/transmit-control-candidate/thick-logic/physical.spice": "e0a8c45ac4e8efdfde286d89f65451379448d1c7dd1829681e901c72b2f5c6d5",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/steering-buffer/physical.spice": "5ccda054383f3a507d1736300b61c9300aed3542f454281266afc416e1200d65",
+    "/home/ubuntu/svalbard/scratch/pad-pullup-lifecycle/fixture.json": "20c507805644116870ee8bc88c450b9447661578bff221c2006c642c4c22fc8d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/loading_audit.py": "2b01aee3f378ac60e325fcee31129957e3353b7253f8edbb9f28325779fa846c",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "377e2d4c75fcc2b3d49344c6d2a3e686e7468a735425d18ec1260d1189d0f8d5"
+  },
+  "mode_coverage": {
+    "TMDS": {
+      "qualified": true,
+      "traffic_ready": true
+    },
+    "MAIN": {
+      "qualified": false,
+      "traffic_ready": false
+    },
+    "MAIN_POST": {
+      "qualified": false,
+      "traffic_ready": false
+    },
+    "DETECT": {
+      "qualified": false,
+      "traffic_ready": false
+    }
+  },
+  "spice_timeout_s": 240.0,
+  "transient_complete": true,
+  "states": {
+    "disabled": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 36637,
+      "pad_min_v": 2.98630801,
+      "pad_max_v": 3.37131496,
+      "differential_min_v": -0.03335786999999968,
+      "differential_max_v": 0.18963483000000014,
+      "vcm_min_v": -0.0441240961,
+      "vcm_max_v": 0.13335911,
+      "peak_supply_draw_a": 0.177828855,
+      "peak_supply_return_a": 0.182367912
+    },
+    "reset": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 152,
+      "pad_min_v": 2.76006252,
+      "pad_max_v": 3.30002477,
+      "differential_min_v": -0.5053485200000001,
+      "differential_max_v": 0.27135679999999995,
+      "vcm_min_v": 2.63012294e-07,
+      "vcm_max_v": 0.000879041179,
+      "peak_supply_draw_a": 0.0546276401,
+      "peak_supply_return_a": 0.00190400076
+    },
+    "unpowered": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 2549,
+      "pad_min_v": 3.17867126,
+      "pad_max_v": 3.31000848,
+      "differential_min_v": -2.030000000097232e-06,
+      "differential_max_v": 0.0016186499999997217,
+      "vcm_min_v": -0.291748069,
+      "vcm_max_v": -0.148628596,
+      "peak_supply_draw_a": 0.0741843055,
+      "peak_supply_return_a": 0.285861577
+    },
+    "reconfiguration": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 5170,
+      "pad_min_v": 2.77379585,
+      "pad_max_v": 3.30033921,
+      "differential_min_v": -0.49326457999999995,
+      "differential_max_v": 0.45961688,
+      "vcm_min_v": -0.000581186532,
+      "vcm_max_v": 0.0309147507,
+      "peak_supply_draw_a": 0.0531633141,
+      "peak_supply_return_a": 0.0125489706
+    },
+    "active_tmds": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 14830,
+      "pad_min_v": 2.81245131,
+      "pad_max_v": 3.2891315,
+      "differential_min_v": -0.45543827000000014,
+      "differential_max_v": 0.4562604800000001,
+      "vcm_min_v": 0.000234171317,
+      "vcm_max_v": 0.0141828596,
+      "peak_supply_draw_a": 0.0525089126,
+      "peak_supply_return_a": 0.0
+    },
+    "active_main": {
+      "status": "not_reached",
+      "samples": 0
+    },
+    "active_main_post": {
+      "status": "not_reached",
+      "samples": 0
+    },
+    "active_detect": {
+      "status": "not_reached",
+      "samples": 0
+    },
+    "brownout": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 1775,
+      "duration_s": 8.241234699999995e-09,
+      "scope": "Includes rail ramps and undervoltage plateau. Supply qualification is behavioral; this is not physical supervisor or core-survival evidence.",
+      "supply_min_v": 0.110285281,
+      "supply_max_v": 2.4675,
+      "pad_min_v": 3.17841494,
+      "pad_max_v": 3.36178955,
+      "pad_above_local_supply_max_v": 3.198558219,
+      "pad_below_local_ground_max_v": 0.0,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": 0.466367521,
+      "traffic_ready_max_v": 0.0,
+      "peak_supply_draw_a": 0.119584212,
+      "peak_supply_return_a": 0.286092703
+    }
+  },
+  "external_network": {
+    "topology": "split_pullup",
+    "voltage_v": 3.3,
+    "resistance_ohm_per_leg": 50,
+    "peer_power": "independent_continuously_present"
+  },
+  "external_peer_states": {
+    "disabled": {
+      "board_min_v": 2.99736245,
+      "board_max_v": 3.36783796,
+      "peer_peak_draw_a": 0.0102488763,
+      "peer_peak_return_a": 0.00266251929,
+      "observed_duration_s": 1.7032974999999998e-07,
+      "peer_mean_draw_a": 1.76112371016195e-05
+    },
+    "reset": {
+      "board_min_v": 2.77652096,
+      "board_max_v": 3.30001206,
+      "peer_peak_draw_a": 0.0112558636,
+      "peer_peak_return_a": 3.40491792e-07,
+      "observed_duration_s": 5.999999999999978e-10,
+      "peer_mean_draw_a": 0.00860808367271359
+    },
+    "unpowered": {
+      "board_min_v": 3.18141739,
+      "board_max_v": 3.3022695,
+      "peer_peak_draw_a": 0.00470485564,
+      "peer_peak_return_a": 9.0604666e-05,
+      "observed_duration_s": 1.1813765300000002e-08,
+      "peer_mean_draw_a": 2.3466230317269836e-05
+    },
+    "reconfiguration": {
+      "board_min_v": 2.78839788,
+      "board_max_v": 3.30019155,
+      "peer_peak_draw_a": 0.0110108447,
+      "peer_peak_return_a": 5.00703701e-06,
+      "observed_duration_s": 2.4017318799999992e-08,
+      "peer_mean_draw_a": 0.0011135770772193719
+    },
+    "active_tmds": {
+      "board_min_v": 2.82548661,
+      "board_max_v": 3.28376163,
+      "peer_peak_draw_a": 0.0105249833,
+      "peer_peak_return_a": 0.0,
+      "observed_duration_s": 6.896673309999999e-08,
+      "peer_mean_draw_a": 0.009981790737635953
+    },
+    "brownout": {
+      "board_min_v": 3.18133983,
+      "board_max_v": 3.35570135,
+      "peer_peak_draw_a": 0.00469806815,
+      "peer_peak_return_a": 0.00222437462,
+      "observed_duration_s": 8.232892699999996e-09,
+      "peer_mean_draw_a": 1.0247691533692406e-05
+    }
+  },
+  "ideal_driver_burden": {
+    "status": "ideal_driver_burden_not_physical_driver_power",
+    "observation_duration_s": 3e-07,
+    "sources": {
+      "BCAS": {
+        "output_node": "CASCODE",
+        "peak_absolute_current_a": 0.0142549449,
+        "delivered_energy_j": 7.040038716004689e-11,
+        "absorbed_energy_j": 7.005823330162023e-11,
+        "net_delivered_energy_j": 3.421538584266615e-13
+      },
+      "BBUF_ENABLE": {
+        "output_node": "BUF_ENABLE",
+        "peak_absolute_current_a": 0.00801072921,
+        "delivered_energy_j": 0.0,
+        "absorbed_energy_j": 0.0,
+        "net_delivered_energy_j": 0.0
+      },
+      "BCTL_OK": {
+        "output_node": "CTL_OK",
+        "peak_absolute_current_a": 0.108570651,
+        "delivered_energy_j": 1.5436665736223355e-11,
+        "absorbed_energy_j": 1.5111983260602697e-11,
+        "net_delivered_energy_j": 3.246824756206593e-13
+      },
+      "BCTL_REQ_MAIN": {
+        "output_node": "CTL_REQ_MAIN",
+        "peak_absolute_current_a": 0.00157612336,
+        "delivered_energy_j": 0.0,
+        "absorbed_energy_j": 0.0,
+        "net_delivered_energy_j": 0.0
+      },
+      "BCTL_BOUNDARY_MAIN": {
+        "output_node": "EN_MAIN",
+        "peak_absolute_current_a": 0.0,
+        "delivered_energy_j": 0.0,
+        "absorbed_energy_j": 0.0,
+        "net_delivered_energy_j": 0.0
+      },
+      "BBIAS_MAIN": {
+        "output_node": "MAIN_BIAS",
+        "peak_absolute_current_a": 0.00735711569,
+        "delivered_energy_j": 1.6570677920806464e-13,
+        "absorbed_energy_j": 1.8711342275945442e-13,
+        "net_delivered_energy_j": -2.1406643551389797e-14
+      },
+      "BP_MAIN": {
+        "output_node": "CMD_MAIN_P",
+        "peak_absolute_current_a": 0.000378498844,
+        "delivered_energy_j": 6.635682012957733e-15,
+        "absorbed_energy_j": 1.9228683601520767e-14,
+        "net_delivered_energy_j": -1.2593001588563037e-14
+      },
+      "BN_MAIN": {
+        "output_node": "CMD_MAIN_N",
+        "peak_absolute_current_a": 0.00036456094,
+        "delivered_energy_j": 1.2122824946116067e-15,
+        "absorbed_energy_j": 1.3347211025171647e-15,
+        "net_delivered_energy_j": -1.2243860790555813e-16
+      },
+      "BCTL_REQ_POST": {
+        "output_node": "CTL_REQ_POST",
+        "peak_absolute_current_a": 0.0017118548,
+        "delivered_energy_j": 0.0,
+        "absorbed_energy_j": 0.0,
+        "net_delivered_energy_j": 0.0
+      },
+      "BCTL_BOUNDARY_POST": {
+        "output_node": "EN_POST",
+        "peak_absolute_current_a": 0.0,
+        "delivered_energy_j": 0.0,
+        "absorbed_energy_j": 0.0,
+        "net_delivered_energy_j": 0.0
+      },
+      "BBIAS_POST": {
+        "output_node": "POST_BIAS",
+        "peak_absolute_current_a": 0.0055157441,
+        "delivered_energy_j": 8.963567322206981e-14,
+        "absorbed_energy_j": 8.717704929618957e-14,
+        "net_delivered_energy_j": 2.4586239258802337e-15
+      },
+      "BP_POST": {
+        "output_node": "CMD_POST_P",
+        "peak_absolute_current_a": 0.000509075159,
+        "delivered_energy_j": 9.457898153037668e-15,
+        "absorbed_energy_j": 2.38662555680949e-14,
+        "net_delivered_energy_j": -1.4408357415057232e-14
+      },
+      "BN_POST": {
+        "output_node": "CMD_POST_N",
+        "peak_absolute_current_a": 0.000478586575,
+        "delivered_energy_j": 2.6704865174758565e-15,
+        "absorbed_energy_j": 2.7820765667993675e-15,
+        "net_delivered_energy_j": -1.1159004932351063e-16
+      },
+      "BCTL_REQ_TMDS": {
+        "output_node": "CTL_REQ_TMDS",
+        "peak_absolute_current_a": 0.0441829519,
+        "delivered_energy_j": 2.966469220678765e-12,
+        "absorbed_energy_j": 2.656529513732995e-12,
+        "net_delivered_energy_j": 3.099397069457708e-13
+      },
+      "BCTL_BOUNDARY_TMDS": {
+        "output_node": "EN_TMDS",
+        "peak_absolute_current_a": 0.0,
+        "delivered_energy_j": 0.0,
+        "absorbed_energy_j": 0.0,
+        "net_delivered_energy_j": 0.0
+      },
+      "BBIAS_TMDS": {
+        "output_node": "TMDS_BIAS",
+        "peak_absolute_current_a": 0.00514329714,
+        "delivered_energy_j": 3.2495430366243305e-11,
+        "absorbed_energy_j": 3.3151931330977394e-11,
+        "net_delivered_energy_j": -6.565009647340877e-13
+      },
+      "BP_TMDS": {
+        "output_node": "CMD_TMDS_P",
+        "peak_absolute_current_a": 0.00655461233,
+        "delivered_energy_j": 4.3614675148440045e-11,
+        "absorbed_energy_j": 2.074586220033443e-11,
+        "net_delivered_energy_j": 2.286881294810561e-11
+      },
+      "BN_TMDS": {
+        "output_node": "CMD_TMDS_N",
+        "peak_absolute_current_a": 0.00658611008,
+        "delivered_energy_j": 4.339909591688878e-11,
+        "absorbed_energy_j": 2.0574717931521843e-11,
+        "net_delivered_energy_j": 2.2824377985366935e-11
+      },
+      "BCTL_REQ_DETECT": {
+        "output_node": "CTL_REQ_DETECT",
+        "peak_absolute_current_a": 0.00341181637,
+        "delivered_energy_j": 0.0,
+        "absorbed_energy_j": 0.0,
+        "net_delivered_energy_j": 0.0
+      },
+      "BCTL_BOUNDARY_DETECT": {
+        "output_node": "EN_DETECT",
+        "peak_absolute_current_a": 0.0,
+        "delivered_energy_j": 0.0,
+        "absorbed_energy_j": 0.0,
+        "net_delivered_energy_j": 0.0
+      },
+      "BDETECTBIAS": {
+        "output_node": "DETECT_PBIAS",
+        "peak_absolute_current_a": 0.000567263313,
+        "delivered_energy_j": 1.7515715885467503e-13,
+        "absorbed_energy_j": 1.2113753589288732e-13,
+        "net_delivered_energy_j": 5.4019622961787715e-14
+      },
+      "BDETECTEN": {
+        "output_node": "DETECT_ENABLE",
+        "peak_absolute_current_a": 0.000834224604,
+        "delivered_energy_j": 5.452496843319359e-16,
+        "absorbed_energy_j": 1.4606452295957575e-14,
+        "net_delivered_energy_j": -1.4061202611625639e-14
+      },
+      "BCTL_VALID_BOUNDARY": {
+        "output_node": "TX_VALID",
+        "peak_absolute_current_a": 0.0,
+        "delivered_energy_j": 0.0,
+        "absorbed_energy_j": 0.0,
+        "net_delivered_energy_j": 0.0
+      }
+    },
+    "total_positive_delivered_energy_j": 2.0876374475866837e-10,
+    "scope": "Energy supplied by top-level ideal voltage drivers is not charged to VDD. This is a transient load burden, not actual driver dissipation or a sustained-data power budget. Positive and absorbed energy are separated; no energy recovery is assumed. Observers added by the replay are excluded."
+  },
+  "numerical_floating_conductor_anchors": [
+    {
+      "cell": "combined_flat",
+      "node": "m2_34279_176800#",
+      "resistance_ohm": 1000000000000.0
+    }
+  ],
+  "operating_point_policy": "Reject transient operating-point fallback; numerical anchors are not physical resistors.",
+  "scenario": "hold-tmds",
+  "traffic_ready_intervals_ns": {
+    "TMDS": [
+      [
+        30.0,
+        31.0
+      ],
+      [
+        98.0,
+        166.0
+      ]
+    ],
+    "MAIN": [],
+    "MAIN_POST": [],
+    "DETECT": []
+  },
+  "macro_supply_currents": {
+    "status": "measured_macro_supply_currents_not_sustained_power_acceptance",
+    "modes": {
+      "TMDS": {
+        "observed_duration_s": 6.899950000000001e-08,
+        "mean_currents_a": {
+          "Xpad": -9.400652284570345e-09,
+          "XBUF": -1.3122417462871134e-08,
+          "XDRIVE_MAIN_P": 4.1108094826213754e-08,
+          "XDRIVE_MAIN_N": -1.8016499135666614e-08,
+          "XDRIVE_POST_P": 4.042053952053303e-08,
+          "XDRIVE_POST_N": -1.8114028998404698e-08,
+          "XDRIVE_TMDS_P": 0.013626796229527349,
+          "XDRIVE_TMDS_N": 0.013736767798309521,
+          "XCTL": 5.277906819507993e-08
+        },
+        "mean_total_vdd_draw_a": 0.029314067325117217,
+        "mean_other_top_level_vdd_draw_a": 0.0019504276431756874
+      },
+      "MAIN": {
+        "observed_duration_s": 0,
+        "mean_currents_a": null
+      },
+      "MAIN_POST": {
+        "observed_duration_s": 0,
+        "mean_currents_a": null
+      },
+      "DETECT": {
+        "observed_duration_s": 0,
+        "mean_currents_a": null
+      }
+    },
+    "probes": [
+      {
+        "instance": "Xpad",
+        "source": "VSUPPLY_Xpad",
+        "node": "MEASURE_Xpad_VDD"
+      },
+      {
+        "instance": "XBUF",
+        "source": "VSUPPLY_XBUF",
+        "node": "MEASURE_XBUF_VDD"
+      },
+      {
+        "instance": "XDRIVE_MAIN_P",
+        "source": "VSUPPLY_XDRIVE_MAIN_P",
+        "node": "MEASURE_XDRIVE_MAIN_P_VDD"
+      },
+      {
+        "instance": "XDRIVE_MAIN_N",
+        "source": "VSUPPLY_XDRIVE_MAIN_N",
+        "node": "MEASURE_XDRIVE_MAIN_N_VDD"
+      },
+      {
+        "instance": "XDRIVE_POST_P",
+        "source": "VSUPPLY_XDRIVE_POST_P",
+        "node": "MEASURE_XDRIVE_POST_P_VDD"
+      },
+      {
+        "instance": "XDRIVE_POST_N",
+        "source": "VSUPPLY_XDRIVE_POST_N",
+        "node": "MEASURE_XDRIVE_POST_N_VDD"
+      },
+      {
+        "instance": "XDRIVE_TMDS_P",
+        "source": "VSUPPLY_XDRIVE_TMDS_P",
+        "node": "MEASURE_XDRIVE_TMDS_P_VDD"
+      },
+      {
+        "instance": "XDRIVE_TMDS_N",
+        "source": "VSUPPLY_XDRIVE_TMDS_N",
+        "node": "MEASURE_XDRIVE_TMDS_N_VDD"
+      },
+      {
+        "instance": "XCTL",
+        "source": "VSUPPLY_XCTL",
+        "node": "MEASURE_XCTL_VDD"
+      }
+    ],
+    "scope": "Positive current flows from VDD into each macro. Time-weighted means include only observed traffic-ready intervals. The remainder includes top-level bias passives; separate ideal source energy is not folded into VDD current. No package impedance, driver tuning or power-budget waiver."
+  },
+  "requested_loaded_hold_ns": 64,
+  "disabled_end_observed": true,
+  "feedback_sample_mismatches": 0,
+  "first_feedback_mismatch_ns": null,
+  "consistent_prefix_sample_count": 75,
+  "sampled_feedback_consistent": true,
+  "feedback_sample_times_ns": [
+    1.0,
+    5.0,
+    9.0,
+    13.0,
+    17.0,
+    21.0,
+    25.0,
+    29.0,
+    33.0,
+    37.0,
+    41.0,
+    45.0,
+    49.0,
+    53.0,
+    57.0,
+    61.0,
+    65.0,
+    69.0,
+    73.0,
+    77.0,
+    81.0,
+    85.0,
+    89.0,
+    93.0,
+    97.0,
+    101.0,
+    105.0,
+    109.0,
+    113.0,
+    117.0,
+    121.0,
+    125.0,
+    129.0,
+    133.0,
+    137.0,
+    141.0,
+    145.0,
+    149.0,
+    153.0,
+    157.0,
+    161.0,
+    165.0,
+    169.0,
+    173.0,
+    177.0,
+    181.0,
+    185.0,
+    189.0,
+    193.0,
+    197.0,
+    201.0,
+    205.0,
+    209.0,
+    213.0,
+    217.0,
+    221.0,
+    225.0,
+    229.0,
+    233.0,
+    237.0,
+    241.0,
+    245.0,
+    249.0,
+    253.0,
+    257.0,
+    261.0,
+    265.0,
+    269.0,
+    273.0,
+    277.0,
+    281.0,
+    285.0,
+    289.0,
+    293.0,
+    297.0
+  ],
+  "feedback_output_values": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "feedback_input_sha256": "552e0af08613447a47bc0d4ca65bfa3276db2dfb9f7b0cba47157d04f9266636"
+}

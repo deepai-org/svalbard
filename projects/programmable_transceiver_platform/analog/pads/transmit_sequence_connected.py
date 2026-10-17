@@ -34,7 +34,7 @@ endmodule
 '''
 
 def feedback_tb(data, scenario="transitions"):
-    if scenario not in ("transitions", "hold-main", "hold-main-post"):
+    if scenario not in ("transitions", "hold-main", "hold-main-post", "hold-tmds"):
         raise ValueError("Unknown replay scenario")
     times=np.arange(1.,300.,4.)
     if data.suffix == '.json':
@@ -54,7 +54,7 @@ def feedback_tb(data, scenario="transitions"):
     text=text.replace(';analog_ready=0;', ';').replace('#36;analog_ready=1;', '#36;')
     schedule='send(17,70);send(19,140);send(8,200);send(0,240);'
     if scenario != 'transitions':
-        request = 17 if scenario == 'hold-main' else 19
+        request = {'hold-main':17,'hold-main-post':19,'hold-tmds':4}[scenario]
         schedule=f'send({request},70);wait(traffic_ready);#64;send(0,0);'
     text=re.sub(r'#17\.8;request=17;.*?#56;\$finish;',
                 schedule,text,flags=re.S)
@@ -199,12 +199,13 @@ def run(work,fixture,ready_data=None,scenario="transitions",spice_timeout_s=120)
     if scenario != "transitions" and ready_data is None:
         raise ValueError("Hold scenarios require sampled feedback input")
     work.mkdir(parents=True,exist_ok=False)
-    component_sources={}
+    component_sources={};external_network=None
     manifest_path=fixture.with_suffix('.json')
     if manifest_path.exists():
         manifest=json.loads(manifest_path.read_text())
         if manifest.get('fixture_sha256')!=hashlib.sha256(fixture.read_bytes()).hexdigest():
             raise ValueError('Fixture differs from its build manifest')
+        external_network=manifest.get('external_network')
         component_sources=manifest['source_sha256']
         for name,digest in component_sources.items():
             if hashlib.sha256(Path(name).read_bytes()).hexdigest()!=digest:
@@ -266,6 +267,8 @@ def run(work,fixture,ready_data=None,scenario="transitions",spice_timeout_s=120)
     deck=deck.replace('\nquit\n',f'\nwrdata {work}/ideal-drive.dat {drive_vectors}\nquit\n')
     supply_vectors=' '.join(f"i({p['source']})" for p in supply_probes)
     deck=deck.replace('\nquit\n',f'\nwrdata {work}/macro-supply.dat {supply_vectors}\nquit\n')
+    peer_present=bool(re.search(r'^VPEER ',deck,re.M))
+    if peer_present:deck=deck.replace('\nquit\n',f'\nwrdata {work}/peer.dat v(BOARD_P) v(BOARD_N) i(VPEER)\nquit\n')
     x=run_spice(work,'connected',deck,reject_transient_op=True,timeout_s=spice_timeout_s)
     if not np.isfinite(x).all() or x[-1,0]<299.99e-9:raise ValueError('Incomplete connected replay')
     windows={}
@@ -287,6 +290,10 @@ def run(work,fixture,ready_data=None,scenario="transitions",spice_timeout_s=120)
     r['spice_timeout_s']=spice_timeout_s
     r['transient_complete']=True
     r['states']={}
+    r['external_network']=external_network
+    peer=np.loadtxt(work/'peer.dat',skiprows=1) if peer_present else None
+    if peer is not None and (peer.shape!=(len(x),4) or not np.isfinite(peer).all() or not np.array_equal(peer[:,0],x[:,0])):
+        raise ValueError('External peer observations differ from lifecycle timebase')
     powered=x[:,12]>=low
     reset=trace[trace_indices,4]==0
     masks={'disabled':(actual_requests==0)&powered&~reset,
@@ -306,6 +313,18 @@ def run(work,fixture,ready_data=None,scenario="transitions",spice_timeout_s=120)
             peak_supply_draw_a=float(max(0,-y[:,6].min())),
             peak_supply_return_a=float(max(0,y[:,6].max())))
     r['states']['brownout']=brownout_summary(x,low)
+    if peer is not None:
+        r['external_peer_states']={}
+        masks['brownout']=(x[:,12]>=.1)&(x[:,12]<low)
+        for name,mask in masks.items():
+            y=peer[mask]
+            if not len(y):continue
+            weights=np.diff(x[:,0])*(mask[:-1]&mask[1:]);duration=float(weights.sum())
+            draw=-peer[:,3]
+            r['external_peer_states'][name]=dict(board_min_v=float(y[:,1:3].min()),board_max_v=float(y[:,1:3].max()),
+                peer_peak_draw_a=float(max(0,-y[:,3].min())),peer_peak_return_a=float(max(0,y[:,3].max())),
+                observed_duration_s=duration,peer_mean_draw_a=float(np.sum((draw[:-1]+draw[1:])*.5*weights)/duration) if duration else None)
+
     drive_data=np.loadtxt(work/'ideal-drive.dat',skiprows=1)
     if len(drive_data)!=len(x) or not np.array_equal(drive_data[:,0],x[:,0]):
         raise ValueError('Driver observations do not match lifecycle timebase')
@@ -339,6 +358,6 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output-dir',type=Path,required=True);p.add_argument('--fixture',type=Path,required=True)
     p.add_argument('--ready-data',type=Path)
-    p.add_argument('--scenario',choices=['transitions','hold-main','hold-main-post'],default='transitions')
+    p.add_argument('--scenario',choices=['transitions','hold-main','hold-main-post','hold-tmds'],default='transitions')
     p.add_argument('--spice-timeout-s',type=float,default=120)
     a=p.parse_args();run(a.output_dir.resolve(),a.fixture.resolve(),a.ready_data.resolve() if a.ready_data else None,a.scenario,a.spice_timeout_s)

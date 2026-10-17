@@ -12,7 +12,7 @@ import re
 from design import PROJECT
 
 
-def build(output, pdk, pad_override=None, bias_override=None, bias_resistance_ohm=None, steering_override=None):
+def build(output, pdk, pad_override=None, bias_override=None, bias_resistance_ohm=None, steering_override=None, external_network="differential"):
     spec=PROJECT/'spec/schematic-implementation.json'
     arch=PROJECT/'spec/analog-architecture.json'
     cfg=json.loads(spec.read_text())['io_pad_first_pass']['tx_integration_fixture']
@@ -42,9 +42,18 @@ def build(output, pdk, pad_override=None, bias_override=None, bias_resistance_oh
     lines=['Selected integrated TX retained-network fixture',f'.include {pdk}/design.ngspice']
     lines += [f'.lib {pdk}/sm141064.ngspice {corner}' for corner in ['typical','res_typical','diode_typical','mimcap_typical']]
     lines += ['.temp 27',*texts,'Xpad '+' '.join(expected['pad'])+' '+cells['pad'],'VSS VSS 0 0',
-              f'RDIFF_LOAD BOARD_P BOARD_N {a["blocks"]["termination"]["parameters"]["differential_ohm"]}',
               f'VDD VDD 0 PWL(0n {v} 32n {v} 32.2n 0 44n 0 44.2n 1.5 52n 1.5 52.2n {v} 300n {v})',
               'XBUF VDD VSS BUF_REF BUF_BIAS TERM_VCM BUF_ENABLE '+cells['buffer']]
+    if external_network=='differential':
+        network=dict(topology=external_network,differential_ohm=a['blocks']['termination']['parameters']['differential_ohm'])
+        lines.append(f"RDIFF_LOAD BOARD_P BOARD_N {network['differential_ohm']}")
+    elif external_network=='split_pullup':
+        parameters=a['blocks']['tmds']['parameters']
+        network=dict(topology=external_network,voltage_v=parameters['external_pullup_v'],
+                     resistance_ohm_per_leg=parameters['external_pullup_ohm_per_leg'],peer_power='independent_continuously_present')
+        lines.append(f"VPEER PEER_SUPPLY VSS {network['voltage_v']}")
+        for leg in ('P','N'):lines.append(f"RPEER_{leg} PEER_SUPPLY BOARD_{leg} {network['resistance_ohm_per_leg']}")
+    else:raise ValueError('Unknown external load topology')
     for leg in ['P','N']:
         lines += [f'RB{leg} BOARD_{leg} BOND_{leg} {cfg["bond_resistance_ohm"]}',
                   f'LB{leg} BOND_{leg} PAD_{leg} {cfg["bond_inductance_h"]}']
@@ -93,7 +102,7 @@ def build(output, pdk, pad_override=None, bias_override=None, bias_resistance_oh
             i=matches[0];lines[i]=lines[i].replace(f'{branch}_BIAS 0',f'DRIVE_{branch}_BIAS 0',1)
             lines.append(f'RDRIVE_{branch} DRIVE_{branch}_BIAS {branch}_BIAS {bias_resistance_ohm}')
     output.parent.mkdir(parents=True,exist_ok=True);output.write_text('\n'.join(lines)+'\n')
-    manifest=dict(scope=__doc__,bias_override=bias_override,bias_resistance_ohm=bias_resistance_ohm,
+    manifest=dict(scope=__doc__,external_network=network,bias_override=bias_override,bias_resistance_ohm=bias_resistance_ohm,
                   bias_driver_scope="Finite Thevenin reference boundary when resistance specified; source power not charged to VDD, no physical driver or precharge implied.",fixture_sha256=hashlib.sha256(output.read_bytes()).hexdigest(),
                   source_sha256={str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in [Path(__file__),spec,arch,*models.values()]})
     output.with_suffix('.json').write_text(json.dumps(manifest,indent=2)+'\n')

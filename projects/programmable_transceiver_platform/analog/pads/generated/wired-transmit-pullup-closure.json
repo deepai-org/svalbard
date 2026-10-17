@@ -1,0 +1,25 @@
+{
+  "status": "identical_RTL_controls_prove_sampled_feedback_closure",
+  "controls_identical": true,
+  "previous_event_count": 12,
+  "updated_event_count": 12,
+  "raw_feedback_sample_mismatches": 0,
+  "complete_mode_coverage": true,
+  "required_modes": [
+    "TMDS"
+  ],
+  "observed_contiguous_ready_hold_ns": 68.0,
+  "loaded_traffic_ready_without_detector_ready_s": 0.0,
+  "lifecycle_gate_pass": true,
+  "scope": "Verify a sampled feedback fixed point without repeating identical analog work.\n\nFeed a completed detector report back through actual RTL and compare every\nemitted control event with the events that drove that completed analog run.\nIdentical controls imply the same deterministic analog problem. Raw detector\nsamples in unused states may differ, so they remain reported separately.\n Only this nominal deterministic fixture and sampled RTL feedback; not physical detectors, sustained data, PVT or protection acceptance.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_feedback_closure.py": "b3eea0db2c61034efe31b0a1bf75c5a96ad5c74e73af2a13d9b706f704ba85b2",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "2c2573016f4ece61bc530a70186bffc21d78ae29301be2911dd8fa2632ab734e",
+    "/home/ubuntu/svalbard/scratch/pad-pullup-lifecycle/replay/screen.json": "47d037133c03b3dc93da03838ef589228d7bfdec83be49db5588cf30331ca5d9",
+    "/home/ubuntu/svalbard/scratch/pad-pullup-lifecycle/replay/rtl.log": "961c18f5e89e6333f4b9f5c900d34367c489f633175c32ab38d427392145600d",
+    "/home/ubuntu/svalbard/scratch/pad-pullup-lifecycle/replay/connected.spice": "78649961f71ff65da1f97b027924e41dc63eecf126a4b0dd442fd54e3f29fe28",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "fc3cdc163ae805c33b92a298142718ad36c94f5567ac4bb9bb608be016d58e32",
+    "/home/ubuntu/svalbard/scratch/pad-pullup-lifecycle/closure/replay.sv": "ea692257a4067842d03431722dd2a8b7c5c8b903797e85047963c6de5e02d5cf",
+    "/home/ubuntu/svalbard/scratch/pad-pullup-lifecycle/closure/rtl.log": "93f6c61baf8846cbc814cef7a092adbc827d8ac02eababb1c3a8879d35ff734d"
+  }
+}

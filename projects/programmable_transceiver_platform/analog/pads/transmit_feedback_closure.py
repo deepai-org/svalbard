@@ -38,12 +38,20 @@ def verify(work,completed):
     (work/'rtl.log').write_text(simulation.stdout)
     prior=events((completed/'rtl.log').read_text());current=events(simulation.stdout)
     same=prior==current
+    required={'transitions':['TMDS','MAIN','MAIN_POST','DETECT'],
+              'hold-main':['TMDS','MAIN'],'hold-main-post':['TMDS','MAIN_POST'],
+              'hold-tmds':['TMDS']}[report['scenario']]
+    held=None
+    if report['scenario']!='transitions':
+        mode=required[-1]
+        held=max((end-start for start,end in report['traffic_ready_intervals_ns'][mode]),default=0)
     coverage=(not report['busy_commit_events'] and 'BUSY_COMMIT' not in simulation.stdout and report['disabled_end_observed']
-        and all(c['qualified'] and c['traffic_ready'] for c in report['mode_coverage'].values()))
+        and all(report['mode_coverage'][name]['qualified'] and report['mode_coverage'][name]['traffic_ready'] for name in required)
+        and (held is None or held>=report['requested_loaded_hold_ns']))
     result=dict(status='identical_RTL_controls_prove_sampled_feedback_closure' if same else 'feedback_changes_controls_requires_new_analog_run',
         controls_identical=same,previous_event_count=len(prior),updated_event_count=len(current),
         raw_feedback_sample_mismatches=report['feedback_sample_mismatches'],
-        complete_mode_coverage=coverage,
+        complete_mode_coverage=coverage,required_modes=required,observed_contiguous_ready_hold_ns=held,
         loaded_traffic_ready_without_detector_ready_s=report['loaded_traffic_ready_without_detector_ready_s'],
         lifecycle_gate_pass=bool(same and coverage and report['loaded_traffic_ready_without_detector_ready_s']==0),
         scope=__doc__+' Only this nominal deterministic fixture and sampled RTL feedback; not physical detectors, sustained data, PVT or protection acceptance.',

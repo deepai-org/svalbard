@@ -251,6 +251,20 @@ def write_coverage(publish,results):
             report_sha256=hashlib.sha256(compliance_path.read_bytes()).hexdigest(),
             all_loaded_currents_within_3_percent=all(c['loaded_current_within_3_percent'] for c in data['cases'].values()),
             scope='Nominal extracted-circuit DC check, including aligned maximum MAIN+POST; not timing or variation qualification.')
+    pullup_evidence=None
+    pullup_path=publish/'wired-transmit-pullup-screen.json'
+    pullup_closure=publish/'wired-transmit-pullup-closure.json'
+    if pullup_path.exists() and pullup_closure.exists():
+        data=json.loads(pullup_path.read_text());closure=json.loads(pullup_closure.read_text())
+        digest=hashlib.sha256(pullup_path.read_bytes()).hexdigest()
+        pullup_evidence=dict(external_network=data['external_network'],
+            source_hashes_current=all(Path(name).exists() and hashlib.sha256(Path(name).read_bytes()).hexdigest()==value
+                for name,value in data['source_sha256'].items()),
+            report_sha256=digest,closure_binds_report=digest in closure['source_sha256'].values(),
+            sampled_lifecycle_gate_pass=closure['lifecycle_gate_pass'],
+            contiguous_ready_hold_ns=closure['observed_contiguous_ready_hold_ns'],
+            active_peer_mean_draw_a=data['external_peer_states']['active_tmds']['peer_mean_draw_a'],
+            scope='Same selected physical TX components, independent continuously powered split pull-up network. Nominal active/reset/off/reconfiguration evidence, not eye-mask, protocol or protection acceptance.')
     area_path=publish/'attached-core-area.json'
     area_evidence=None
     if area_path.exists():
@@ -262,7 +276,7 @@ def write_coverage(publish,results):
             source_hashes_current=current,report_sha256=hashlib.sha256(area_path.read_bytes()).hexdigest(),
             scope='Selected attached TX macro footprints and reservations only; not whole-ring placement or routing acceptance.')
     report=dict(first_pass_complete=False,candidates=results,attached_core_area=area_evidence,
-                wired_tx_macro_power=tx_macro_power_budget(publish),
+                wired_tx_macro_power=tx_macro_power_budget(publish),wired_tx_pullup_evidence=pullup_evidence,
                 integrated_model_inventory=integrated_model_inventory(publish),
                 combined_retained_screen=retained_evidence,
                 protection_design_audit=protection_evidence,wired_tx_loading=tx_loading_evidence,

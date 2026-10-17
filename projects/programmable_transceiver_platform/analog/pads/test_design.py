@@ -12,6 +12,22 @@ class DesignBoundary(unittest.TestCase):
         self.architecture = json.loads((PROJECT / 'spec/analog-architecture.json').read_text())
         self.contract = json.loads((PROJECT / 'spec/contract.json').read_text())
 
+    def test_external_pullup_changes_only_retained_board_network(self):
+        from transmit_fixture import build
+        with TemporaryDirectory() as directory:
+            root=Path(directory);pdk=Path('/unused/pdk')
+            first=root/'differential.spice';second=root/'pullup.spice'
+            build(first,pdk);manifest=build(second,pdk,external_network='split_pullup')
+            remove=lambda text:'\n'.join(line for line in text.splitlines()
+                if not line.startswith(('RDIFF_LOAD ','RPEER_','VPEER ')))
+            self.assertEqual(remove(first.read_text()),remove(second.read_text()))
+            peer=next(line for line in second.read_text().splitlines() if line.startswith('VPEER '))
+            self.assertNotIn('VDD',peer)
+            self.assertNotIn('PWL',peer)
+            self.assertEqual(manifest['external_network']['peer_power'],'independent_continuously_present')
+            self.assertEqual(manifest['external_network']['resistance_ohm_per_leg'],
+                self.architecture['blocks']['tmds']['parameters']['external_pullup_ohm_per_leg'])
+
     def test_macro_supply_observer_preserves_interfaces_and_excludes_gaps(self):
         import numpy as np
         from transmit_sequence_connected import instrument_macro_supplies,macro_supply_summary

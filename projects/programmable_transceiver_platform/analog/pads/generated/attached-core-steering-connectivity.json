@@ -1,0 +1,177 @@
+{
+  "status": "steering_metal_connectivity_pass",
+  "fault_injection": "none",
+  "routes": {
+    "MAIN_P": {
+      "source_cluster": 15,
+      "destination_cluster": 15,
+      "connected": true,
+      "forbidden_port_connections": []
+    },
+    "MAIN_N": {
+      "source_cluster": 16,
+      "destination_cluster": 16,
+      "connected": true,
+      "forbidden_port_connections": []
+    },
+    "POST_P": {
+      "source_cluster": 44,
+      "destination_cluster": 44,
+      "connected": true,
+      "forbidden_port_connections": []
+    },
+    "POST_N": {
+      "source_cluster": 45,
+      "destination_cluster": 45,
+      "connected": true,
+      "forbidden_port_connections": []
+    },
+    "TMDS_P": {
+      "source_cluster": 67,
+      "destination_cluster": 67,
+      "connected": true,
+      "forbidden_port_connections": []
+    },
+    "TMDS_N": {
+      "source_cluster": 68,
+      "destination_cluster": 68,
+      "connected": true,
+      "forbidden_port_connections": []
+    }
+  },
+  "output_nets_separate": true,
+  "non_output_ports_checked": 938,
+  "scope": "Drawing-only metal/via extraction of the complete TX macro cluster and adjacent native pad geometry. Text identifies probe locations only; equal names never join nets. MIM top-plate contacts are separated from ordinary via4.",
+  "limitations": [
+    "Not transistor LVS, spacing DRC, parasitic timing or current-capacity qualification.",
+    "Other macro connections remain unrouted; passing these six outputs is not assembly completion.",
+    "Connectivity outside the TX cluster crop is not extracted. Whole-ring connectivity remains unverified."
+  ],
+  "pdk_layer_map_sha256": "ac49b08c732c00945c054bce61a4d7f413f84887e0e4e1a66fd20018db2f5d28",
+  "source_sha256": {
+    "analog/pads/rail_connectivity.py": "665e78496c92475a120dc5faba088b1a32704415c9e37b6b3bcf93829ba3318a",
+    "analog/pads/generated/attached-core-steering-routed.oas": "679dae7e7b7cec3000a301d261213372a2532a33f46690f7f3555fb626f9dff8",
+    "analog/pads/generated/attached-core-steering-routing.json": "c36b5f31336338a08f3d8283f34aa4b2f9cb31a41b5b9f071ccb8454fc2c5bc1",
+    "analog/pads/generated/attached-core-area.json": "5e13dcadeb0d18455a17872d870fe1a0c3e5ba6bd61bc9633864acbb75e8fe4d",
+    "../../scratch/pad-attached-core-assembly/placement-audit.json": "dd086764803bc6418607ac59c9d28f12ea3bd8d950cc96b3f090488278a989a6"
+  },
+  "fault_detection": {
+    "open_route": {
+      "status": "steering_metal_connectivity_fail",
+      "fault_injection": "open_route",
+      "routes": {
+        "MAIN_P": {
+          "source_cluster": 15,
+          "destination_cluster": 105,
+          "connected": false,
+          "forbidden_port_connections": []
+        },
+        "MAIN_N": {
+          "source_cluster": 16,
+          "destination_cluster": 16,
+          "connected": true,
+          "forbidden_port_connections": []
+        },
+        "POST_P": {
+          "source_cluster": 44,
+          "destination_cluster": 44,
+          "connected": true,
+          "forbidden_port_connections": []
+        },
+        "POST_N": {
+          "source_cluster": 45,
+          "destination_cluster": 45,
+          "connected": true,
+          "forbidden_port_connections": []
+        },
+        "TMDS_P": {
+          "source_cluster": 67,
+          "destination_cluster": 67,
+          "connected": true,
+          "forbidden_port_connections": []
+        },
+        "TMDS_N": {
+          "source_cluster": 68,
+          "destination_cluster": 68,
+          "connected": true,
+          "forbidden_port_connections": []
+        }
+      },
+      "output_nets_separate": true,
+      "non_output_ports_checked": 938,
+      "scope": "Drawing-only metal/via extraction of the complete TX macro cluster and adjacent native pad geometry. Text identifies probe locations only; equal names never join nets. MIM top-plate contacts are separated from ordinary via4.",
+      "limitations": [
+        "Not transistor LVS, spacing DRC, parasitic timing or current-capacity qualification.",
+        "Other macro connections remain unrouted; passing these six outputs is not assembly completion.",
+        "Connectivity outside the TX cluster crop is not extracted. Whole-ring connectivity remains unverified."
+      ],
+      "pdk_layer_map_sha256": "ac49b08c732c00945c054bce61a4d7f413f84887e0e4e1a66fd20018db2f5d28",
+      "source_sha256": {
+        "analog/pads/rail_connectivity.py": "665e78496c92475a120dc5faba088b1a32704415c9e37b6b3bcf93829ba3318a",
+        "analog/pads/generated/attached-core-steering-routed.oas": "679dae7e7b7cec3000a301d261213372a2532a33f46690f7f3555fb626f9dff8",
+        "analog/pads/generated/attached-core-steering-routing.json": "c36b5f31336338a08f3d8283f34aa4b2f9cb31a41b5b9f071ccb8454fc2c5bc1",
+        "analog/pads/generated/attached-core-area.json": "5e13dcadeb0d18455a17872d870fe1a0c3e5ba6bd61bc9633864acbb75e8fe4d",
+        "../../scratch/pad-attached-core-assembly/placement-audit.json": "dd086764803bc6418607ac59c9d28f12ea3bd8d950cc96b3f090488278a989a6"
+      }
+    },
+    "short_routes": {
+      "status": "steering_metal_connectivity_fail",
+      "fault_injection": "short_routes",
+      "routes": {
+        "MAIN_P": {
+          "source_cluster": 15,
+          "destination_cluster": 15,
+          "connected": true,
+          "forbidden_port_connections": []
+        },
+        "MAIN_N": {
+          "source_cluster": 15,
+          "destination_cluster": 15,
+          "connected": true,
+          "forbidden_port_connections": []
+        },
+        "POST_P": {
+          "source_cluster": 43,
+          "destination_cluster": 43,
+          "connected": true,
+          "forbidden_port_connections": []
+        },
+        "POST_N": {
+          "source_cluster": 44,
+          "destination_cluster": 44,
+          "connected": true,
+          "forbidden_port_connections": []
+        },
+        "TMDS_P": {
+          "source_cluster": 66,
+          "destination_cluster": 66,
+          "connected": true,
+          "forbidden_port_connections": []
+        },
+        "TMDS_N": {
+          "source_cluster": 67,
+          "destination_cluster": 67,
+          "connected": true,
+          "forbidden_port_connections": []
+        }
+      },
+      "output_nets_separate": false,
+      "non_output_ports_checked": 938,
+      "scope": "Drawing-only metal/via extraction of the complete TX macro cluster and adjacent native pad geometry. Text identifies probe locations only; equal names never join nets. MIM top-plate contacts are separated from ordinary via4.",
+      "limitations": [
+        "Not transistor LVS, spacing DRC, parasitic timing or current-capacity qualification.",
+        "Other macro connections remain unrouted; passing these six outputs is not assembly completion.",
+        "Connectivity outside the TX cluster crop is not extracted. Whole-ring connectivity remains unverified."
+      ],
+      "pdk_layer_map_sha256": "ac49b08c732c00945c054bce61a4d7f413f84887e0e4e1a66fd20018db2f5d28",
+      "source_sha256": {
+        "analog/pads/rail_connectivity.py": "665e78496c92475a120dc5faba088b1a32704415c9e37b6b3bcf93829ba3318a",
+        "analog/pads/generated/attached-core-steering-routed.oas": "679dae7e7b7cec3000a301d261213372a2532a33f46690f7f3555fb626f9dff8",
+        "analog/pads/generated/attached-core-steering-routing.json": "c36b5f31336338a08f3d8283f34aa4b2f9cb31a41b5b9f071ccb8454fc2c5bc1",
+        "analog/pads/generated/attached-core-area.json": "5e13dcadeb0d18455a17872d870fe1a0c3e5ba6bd61bc9633864acbb75e8fe4d",
+        "../../scratch/pad-attached-core-assembly/placement-audit.json": "dd086764803bc6418607ac59c9d28f12ea3bd8d950cc96b3f090488278a989a6"
+      }
+    }
+  },
+  "faults_detected": true
+}

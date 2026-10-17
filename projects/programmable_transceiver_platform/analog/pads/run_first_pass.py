@@ -366,8 +366,19 @@ def write_coverage(publish,results):
                 for name,digest in data['source_sha256'].items()),
             routed_artifact_matches=routed_oas.exists() and hashlib.sha256(routed_oas.read_bytes()).hexdigest()==data['routed_oas_sha256'],
             scope='Six steering output routes only; supplies, control and buffer hookups, DRC/LVS and routed timing remain incomplete.')
+    steering_connectivity=None
+    connectivity_path=publish/'attached-core-steering-connectivity.json'
+    if connectivity_path.exists():
+        from design import PROJECT
+        data=json.loads(connectivity_path.read_text())
+        steering_connectivity=dict(status=data['status'],faults_detected=data['faults_detected'],
+            report_sha256=hashlib.sha256(connectivity_path.read_bytes()).hexdigest(),
+            source_hashes_current=all((PROJECT/name).exists() and hashlib.sha256((PROJECT/name).read_bytes()).hexdigest()==digest
+                for name,digest in data['source_sha256'].items()),
+            scope='Geometry-only extraction of six routes in the complete TX cluster. Not whole-ring connectivity, transistor LVS, spacing DRC or routed timing.')
     report=dict(first_pass_complete=False,candidates=results,attached_core_area=area_evidence,
                 attached_core_steering_routes=routing_evidence,
+                attached_core_steering_connectivity=steering_connectivity,
                 wired_tx_macro_power=tx_macro_power_budget(publish),wired_tx_pullup_evidence=pullup_evidence,
                 rf_supply_planning=rf_supply_planning(publish),
                 integrated_model_inventory=integrated_model_inventory(publish),

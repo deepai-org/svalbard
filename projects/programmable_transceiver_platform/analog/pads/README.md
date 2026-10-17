@@ -856,9 +856,20 @@ It rejects unintended intersections with existing metal or other routes and
 checks exported route metal and preserved bond openings. P/N drawn lengths are
 matched; differing bends/vias mean this is not matched RC or timing evidence.
 
+`rail_connectivity.py --steering` extracts the complete TX macro cluster and
+adjacent native pad geometry from that routed assembly. The drawing-only
+extraction uses metal and vias, with MIM contacts handled separately; labels
+locate probes but cannot join disconnected metal. The current
+`attached-core-steering-connectivity.json` confirms all six intended connections,
+separation between outputs and absence of connections to the other checked ports.
+A removed landing via and a bridge between MAIN outputs are both detected.
+The campaign leaves the canonical geometry unchanged. Whole-ring connectivity
+outside the cluster remains unverified; the existing full-assembly intersection
+check is a different, weaker check and must not be described as ring LVS.
+
 This advances physical integration, but **does not complete the assembly**:
 buffer, interlock, supply/return, bias and upstream-data hookups remain open.
-Spacing DRC, extracted connectivity and routed transient timing still need to
+Spacing DRC, complete device/supply connectivity and routed transient timing still need to
 be checked before these wires can replace ideal connections in the electrical
 model. The routing preview shows paths over macro envelopes, not full mask detail.
 

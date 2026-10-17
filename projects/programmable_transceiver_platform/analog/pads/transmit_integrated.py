@@ -33,7 +33,13 @@ def run(work, generated, pdk, publish=True):
             and checks['drc_count'] == 0 and checks['device_lvs_match']
             and checks['simulation_model_sha256'] == digest(pad/'physical.spice')):
         raise ValueError('Protected TX construction failed')
-    build(work/'fixture.spice', pdk, pad_override=pad/'physical.spice')
+    steering=None
+    if 'steering_driver' in cfg['tx_integration_fixture']['models']:
+        from steering_buffer import generate as generate_steering
+        steering=work/'steering-driver'
+        generate_steering(steering)
+    build(work/'fixture.spice', pdk, pad_override=pad/'physical.spice',
+          steering_override=steering/'physical.spice' if steering else None)
     subprocess.run([sys.executable, str(Path(__file__).with_name('render.py')),
                     str(pad/'combined_flat.mag'), '--output', str(pad/'layout.png'),
                     '--title', 'Protected wired TX pad'], check=True)
@@ -69,6 +75,9 @@ def run(work, generated, pdk, publish=True):
                              'Protection limits, physical readiness and protocol electrical acceptance remain open.'])
     (work/'integration.json').write_text(json.dumps(result, indent=2)+'\n')
     if publish:
+        if steering is not None:
+            from steering_buffer import publish as publish_steering
+            publish_steering(steering,generated/'steering-buffer')
         stem = 'wired-transmit'
         metadata = dict(layout)
         metadata.update(connected_protection=True,

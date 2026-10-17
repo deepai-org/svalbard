@@ -28,3 +28,41 @@ def build(n_widths_um=(2.,8.,32.,128.), p_to_n_ratio=2., unit_width_um=16., leng
         'Supply-powered finite driver; input data gating and qualification are upstream boundaries.',
         'Nominal sizing is not a demonstrated edge-rate, loading, power or PVT specification.',
         'Default-off input behavior, upstream power-domain crossings and shared supply impedance require integration.'])
+
+
+def generate(work):
+    """Build the shared selected recipe and verify its physical implementation."""
+    import hashlib
+    import json
+    import subprocess
+    import sys
+    from pathlib import Path
+    from design import PROJECT, build_integration_candidate
+    from termination_buffer_layout import generate as layout_generate
+    circuit=build_integration_candidate('tx_steering_buffer')
+    layout_generate(work,circuit=circuit,cell_name='tx_steering_buffer')
+    report_path=work/'layout.json'
+    report=json.loads(report_path.read_text())
+    report['source_sha256'].update({str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest()
+        for p in (Path(__file__),Path(__file__).with_name('design.py'),PROJECT/'spec/schematic-implementation.json')})
+    report['scope']='One steering buffer; repeated instances and electrical acceptance belong to the connected TX fixture.'
+    report_path.write_text(json.dumps(report,indent=2)+'\n')
+    subprocess.run([sys.executable,str(Path(__file__).with_name('render.py')),
+        str(work/'tx_steering_buffer_flat.mag'),'--output',str(work/'layout.png'),
+        '--primitive','--title','TX steering buffer: connected four-stage CMOS chain'],check=True)
+    return report
+
+
+def publish(work, destination):
+    import shutil
+    destination.mkdir(parents=True,exist_ok=True)
+    for name in ('physical.spice','tx_steering_buffer_flat.gds','tx_steering_buffer_flat.mag','layout.json','layout.png'):
+        shutil.copyfile(work/name,destination/name)
+
+
+if __name__=='__main__':
+    import argparse
+    from pathlib import Path
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output-dir',type=Path,required=True)
+    args=parser.parse_args();generate(args.output_dir.resolve())

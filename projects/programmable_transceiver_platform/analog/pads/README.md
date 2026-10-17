@@ -623,14 +623,15 @@ The selected TX fixture now inserts six copies of the extracted
 POST and TMDS steering gates. Each copy is a 34-device, four-stage noninverting
 CMOS chain; output charge and discharge currents therefore flow through real
 PDK transistors connected to VDD/VSS. `generation_parameters.tx_steering_buffer`
-owns the sizing recipe. Rebuild it with `termination_buffer_layout.generate()`
-using `design.build_integration_candidate("tx_steering_buffer")` and
-`cell_name="tx_steering_buffer"`. The same generic layout generator checks DRC,
+owns the sizing recipe. `steering_buffer.py --output-dir <new-directory>`
+regenerates the selected circuit and layout; the normal TX integration build
+also regenerates it and uses that fresh extraction in the connected fixture. The same generic layout generator checks DRC,
 extracted connectivity and the exported GDS graph. The six measured macro
 rectangles total approximately 114603 µm² and reserve 140000 µm² inside wired TX,
 in addition to the interlock's 60000 µm²; 100000 µm² remains for other wired-TX
-implementation. These six macros have not yet been placed or routed into the
-ring. Upstream data gating, bias drivers and buffer-enable drive remain explicit
+implementation. All six macros now have named placements beside the wired-TX pad, with
+provider-core containment, envelope-clearance and same-layer collision checks.
+They remain unrouted. Upstream data gating, bias drivers and buffer-enable drive remain explicit
 boundaries; steering-buffer insertion does not complete the whole control path. The
 first connected finite-driver run reaches every mode but has one feedback
 mismatch that changes RTL control timing; `wired-transmit-feedback-closure.json`
@@ -694,7 +695,8 @@ of it. The generator checks provider-core containment, 20 µm envelope clearance
 from the custom pads/other macro, and actual same-layer metal collisions against
 the native ring and existing instances. `generated/attached-core-placement.svg`
 is an envelope preview, not a wiring diagram; `attached-core-assembly.oas` holds
-the actual macro instances. These are **unrouted**: no signal/supply hookup or
+the actual macro instances. The six named steering instances are included in the same placement. These
+are **unrouted**: no signal/supply hookup or
 whole-chip core placement is established. Area-only rebuilds intentionally do
 not claim this optional placement evidence.
 

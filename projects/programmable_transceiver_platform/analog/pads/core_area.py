@@ -81,13 +81,24 @@ def place(project, assembly, output):
     glass_index=layout.find_layer(37,0)
     original_openings=db.Region(top.begin_shapes_rec(glass_index)).merged()
     obstacles=[(name,db.DBox(*item['bbox_um'])) for name,item in pad_report['custom_cells'].items()]
-    report={};unplaced=[]
-    for name,macro in area['macros'].items():
-        if macro['instance_count']!=1 or 'placement' not in allocations[name]:
-            unplaced.append(name);continue
-        policy=allocations[name]['placement']
-        other=db.Layout();other.read(str(project/macro['gds']))
-        cell=layout.create_cell('attached_tx_'+name);cell.copy_tree(other.top_cell())
+    report={};unplaced=[];jobs=[];masters={}
+    for family,macro in area['macros'].items():
+        allocation=allocations[family]
+        policies=allocation.get('placements')
+        if policies is None and 'placement' in allocation:policies=[allocation['placement']]
+        if policies is None:unplaced.append(family);continue
+        if len(policies)!=macro['instance_count']:raise ValueError('Placement count differs from reserved instances: '+family)
+        for index,policy in enumerate(policies):
+            suffix=policy.get('name',str(index))
+            name=family if macro['instance_count']==1 else family+'_'+suffix
+            if any(job[0]==name for job in jobs):raise ValueError('Duplicate instance name: '+name)
+            jobs.append((name,family,macro,policy))
+    for name,family,macro,policy in jobs:
+        if family not in masters:
+            other=db.Layout();other.read(str(project/macro['gds']))
+            cell=layout.create_cell('attached_tx_'+family);cell.copy_tree(other.top_cell())
+            masters[family]=cell
+        cell=masters[family]
         rotation=db.DCplxTrans(1,policy['rotation_degrees'],False,0,0)
         rotated=rotation*cell.dbbox()
         x,y=policy['lower_left_um']
@@ -111,7 +122,7 @@ def place(project, assembly, output):
             if not (existing & moved).is_empty():raise ValueError(name+' metal collision on '+str(layer))
         top.insert(db.DCellInstArray(cell.cell_index(),transform))
         obstacles.append((name,box))
-        report[name]=dict(bbox_um=[box.left,box.bottom,box.right,box.top],
+        report[name]=dict(macro_family=family,instance_name=policy.get('name',family),bbox_um=[box.left,box.bottom,box.right,box.top],
             rotation_degrees=policy['rotation_degrees'],minimum_clearance_um=clearance,
             electrical_connection_status='unrouted_no_supply_or_signal_hookup')
     oas=output.with_name('attached-core-assembly.oas')
@@ -139,7 +150,8 @@ def place(project, assembly, output):
         svg.append(f'<rect x="{b.left}" y="{die.top-b.top}" width="{b.width()}" height="{b.height()}" fill="{color}" stroke="#334155" stroke-width="5"/>')
         cx=(b.left+b.right)/2;cy=die.top-(b.top+b.bottom)/2
         angle=-90 if b.height()>b.width() else 0
-        svg.append(f'<text x="{cx}" y="{cy}" text-anchor="middle" dominant-baseline="middle" transform="rotate({angle} {cx} {cy})" font-size="65">{label}</text>')
+        display=label.removeprefix('steering_driver_')
+        svg.append(f'<text x="{cx}" y="{cy}" text-anchor="middle" dominant-baseline="middle" transform="rotate({angle} {cx} {cy})" font-size="{min(65, max(b.width(),b.height())/(max(1,len(display))*.62))}">{display}</text>')
     svg.append('</svg>')
     output.with_name('attached-core-placement.svg').write_text('\n'.join(svg))
 

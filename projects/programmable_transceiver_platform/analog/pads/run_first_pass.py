@@ -105,6 +105,12 @@ def run(work,pdk,publish,families):
         for family in ('rf_receive','rf_transmit'):
             results[family]=dict(gds_roundtrip_device_graph_match=True,drc_count=0,
                 electrical_scope='connected_RF_protection_with_routing_overlay_and_behavioral_core')
+    from design import PROJECT
+    subprocess.run(['docker','run','--rm','--network','none','--entrypoint','python3',
+        '--mount',f'type=bind,src={PROJECT},dst=/project,readonly',
+        '--mount',f'type=bind,src={publish.resolve()},dst=/output',IMAGE,
+        '/project/analog/pads/core_area.py','--project','/project',
+        '--output','/output/attached-core-area.json'],check=True,timeout=60)
     write_coverage(publish,results)
 
 
@@ -201,7 +207,17 @@ def write_coverage(publish,results):
             report_sha256=hashlib.sha256(compliance_path.read_bytes()).hexdigest(),
             all_loaded_currents_within_3_percent=all(c['loaded_current_within_3_percent'] for c in data['cases'].values()),
             scope='Nominal extracted-circuit DC check, including aligned maximum MAIN+POST; not timing or variation qualification.')
-    report=dict(first_pass_complete=False,candidates=results,
+    area_path=publish/'attached-core-area.json'
+    area_evidence=None
+    if area_path.exists():
+        from design import PROJECT
+        data=json.loads(area_path.read_text())
+        current=all((PROJECT/name).exists() and hashlib.sha256((PROJECT/name).read_bytes()).hexdigest()==digest
+                    for name,digest in data['source_sha256'].items())
+        area_evidence=dict(all_reservations_fit=data['all_reservations_fit'],
+            source_hashes_current=current,report_sha256=hashlib.sha256(area_path.read_bytes()).hexdigest(),
+            scope='Selected attached TX macro footprints and reservations only; not whole-ring placement or routing acceptance.')
+    report=dict(first_pass_complete=False,candidates=results,attached_core_area=area_evidence,
                 integrated_model_inventory=integrated_model_inventory(publish),
                 combined_retained_screen=retained_evidence,
                 protection_design_audit=protection_evidence,wired_tx_loading=tx_loading_evidence,

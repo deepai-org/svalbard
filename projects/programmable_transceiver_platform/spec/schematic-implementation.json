@@ -786,6 +786,16 @@
       "report": "analog/pads/generated/wired-transmit-integration.json",
       "implemented_scope": "Canonical 366-device protected pad, connected extracted buffer/interlock and RTL-driven retained-state replay; normal build entry point checks layout graph, area, sampled convergence and provider placement.",
       "remaining": "Buffer/interlock placement and area, physical detectors/sequencer, protection/core contract, updated AC/current calibration and sustained operation."
+    },
+    "tx_attached_macro_allocations": {
+      "buffer": {
+        "block": "termination",
+        "reservation_um2": 175000
+      },
+      "interlock": {
+        "block": "wiredtx",
+        "reservation_um2": 60000
+      }
     }
   }
 }

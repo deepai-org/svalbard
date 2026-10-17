@@ -620,7 +620,7 @@ optimization. The remaining work is not just parameter tuning:
 | --- | --- | --- |
 | 1. Protection compatible with the attached core | Primary protection is physically present, but diagnostic RF pulses still reach roughly +4.54/−1.00 V at the core boundary. Survival and discharge-current capacity are unqualified. | Specify allowed voltage/current versus duration for each attached core and choose a coordinated protection/isolation circuit. Check normal signal loading and powered/unpowered exposure together. Do not interpret diagnostic pulses as an ESD rating. |
 | 2. Safe behavior without an already-working host | Reset, brownout and readiness still depend partly on prescribed or behavioral controls. Independently powered host operation has recorded substantial backfeed and is unsupported without isolation/sequencing. | Implement local disable, power-domain crossings and readiness sufficient to keep every connected branch safe through startup, rail loss and mode changes. Retain the external network and account for stored energy. |
-| 3. Real pad-to-core interfaces | RF LNA/driver and reference receiver remain explicit behavioral boundaries; TX bias and serializer drive remain idealized. Extracted TX buffer/interlock macros exist but still need placement and area funding in the full chip. | Assign physical implementations and power/loading budgets to the interfaces that determine pad operation. Decide whether the complete circuits fit and meet headroom before optimizing individual bias values. |
+| 3. Real pad-to-core interfaces | RF LNA/driver and reference receiver remain explicit behavioral boundaries; TX bias and serializer drive remain idealized. Extracted TX buffer/interlock macros now have explicit area reservations but still need placement and routing in the full chip. | Assign physical implementations and power/loading budgets to the interfaces that determine pad operation. Decide whether the complete circuits fit and meet headroom before optimizing individual bias values. |
 | 4. Whole-ring and package integration | Provider openings and local geometry/connectivity checks pass. Full-ring device LVS, core clearance, distributed returns/coupling and full-bank switching are incomplete. | Preserve provider-compatible bond sites, place/fund attached macros, connect the complete supply/return network and evaluate bounded package loading and host switching on that same assembly. Local DRC is not this gate. |
 | 5. Representative electrical capability | State-window coverage exists, but the wired TX lifecycle's 100 Ω load does not establish TMDS pull-up compatibility. RX bypass loading exceeds its budget on one leg; RF TX power margin is narrow; reference startup is millisecond-scale with the retained external bias capacitor. | Exercise representative DC-coupled, AC-coupled, USB bidirectional, RF and reference interfaces with their actual external networks and acceptance limits. Include sustained operation and transitions; distinguish failed limits from missing evidence. |
 
@@ -638,6 +638,18 @@ variants or more small probes. A named lifecycle window or a completed transient
 is coverage, not acceptance. `generated/coverage.json` remains incomplete until
 the circuit/model and layout gaps are closed; later silicon characterization
 and protection qualification remain separate requirements.
+
+The selected attached TX macros are accounted separately from the pad cell.
+`core_area.py` reads the selected model paths, verifies layout/model hashes and
+measures their actual GDS bounding rectangles. The buffer occupies approximately
+155658 µm²: reserve 175000 µm² inside a 200000 µm² termination block. The interlock
+occupies approximately 48100 µm²: reserve 60000 µm² inside the existing 300000 µm²
+wired-TX block. Increasing termination by 50000 µm² transfers that amount from
+reserve without increasing the total die budget; contract and architecture area
+groups agree. `generated/attached-core-area.json` records the geometry check.
+These reservations do not establish placement, routing clearance, bias-passive
+fit or funding of the remaining monitor/control circuitry. In particular the
+buffer is roughly 1.12 mm long in its current generated arrangement.
 
 ## Extraction and assembly rules
 

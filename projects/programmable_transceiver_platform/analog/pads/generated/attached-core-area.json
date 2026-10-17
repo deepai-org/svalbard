@@ -1,0 +1,66 @@
+{
+  "status": "attached_macro_area_accounting_not_placement_signoff",
+  "macros": {
+    "buffer": {
+      "block": "termination",
+      "model": "analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/physical.spice",
+      "gds": "analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/buffer_compensated_flat.gds",
+      "bbox_um": [
+        2.7800000000000002,
+        3.5,
+        142.20000000000002,
+        1119.965
+      ],
+      "minimum_rectangular_footprint_um2": 155657.5503,
+      "reservation_um2": 175000,
+      "fits_reservation": true,
+      "owner_block_budget_um2": 200000
+    },
+    "interlock": {
+      "block": "wiredtx",
+      "model": "analog/pads/generated/transmit-control-candidate/thick-logic/physical.spice",
+      "gds": "analog/pads/generated/transmit-control-candidate/thick-logic/tx_mode_interlock_flat.gds",
+      "bbox_um": [
+        2.7800000000000002,
+        3.5,
+        142.20000000000002,
+        348.5
+      ],
+      "minimum_rectangular_footprint_um2": 48099.90000000001,
+      "reservation_um2": 60000,
+      "fits_reservation": true,
+      "owner_block_budget_um2": 300000
+    }
+  },
+  "owners": {
+    "termination": {
+      "reserved_um2": 175000,
+      "budget_um2": 200000,
+      "unreserved_um2": 25000,
+      "reservations_fit": true
+    },
+    "wiredtx": {
+      "reserved_um2": 60000,
+      "budget_um2": 300000,
+      "unreserved_um2": 240000,
+      "reservations_fit": true
+    }
+  },
+  "all_reservations_fit": true,
+  "limitations": [
+    "Bounding rectangles exclude additional routing, guard separation, bias passives and missing control/monitor circuits.",
+    "Unreserved owner area must also fund its other circuitry; it is not free die reserve.",
+    "No placement or connectivity to the assembled pad ring is established."
+  ],
+  "source_sha256": {
+    "spec/schematic-implementation.json": "0d7778e84fcb52635b0ccd7b2c3a9f2717294a671f06c32a5da4d8c0b8fdc020",
+    "spec/analog-architecture.json": "b1b0dec79b6f9dc94733f71a8c425ec2a5c114188cd36acaf435694210944385",
+    "analog/pads/core_area.py": "05b6a31ff1513f2c33d9b23c6b3466bd2b653a5abdd734cb917bd054e9c6e37e",
+    "analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/physical.spice": "45b1ab7c83edd98901cdcfa78611e29d140dcfd57b70b4c303a8292b5d572be6",
+    "analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/buffer_compensated_flat.gds": "db901eb61f2dce71a5e75fbb5c734b71044124287fd52da035757f154cd73fa8",
+    "analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/layout.json": "729ee5fb9e8203dbb639c4580fe6b1c19a0388016877162f941c9d9c480a7ad4",
+    "analog/pads/generated/transmit-control-candidate/thick-logic/physical.spice": "e0a8c45ac4e8efdfde286d89f65451379448d1c7dd1829681e901c72b2f5c6d5",
+    "analog/pads/generated/transmit-control-candidate/thick-logic/tx_mode_interlock_flat.gds": "235b5c37b0b5490d9ad32857ca35dd297dbcee40f11c982353fb37b5db923752",
+    "analog/pads/generated/transmit-control-candidate/thick-logic/layout.json": "8e43ca980ec5c75ef380f454bb7c1e20c6818c181d95bc31133e7ddd6769d10b"
+  }
+}

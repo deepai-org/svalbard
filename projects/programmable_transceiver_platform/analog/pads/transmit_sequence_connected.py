@@ -73,6 +73,50 @@ initial begin #300;$finish;end
     return text,times,values
 
 
+def instrument_macro_supplies(deck):
+    """Insert zero-volt probes only at top-level macro VDD ports."""
+    deck=re.sub(r'\n\+\s*',' ',deck)
+    definitions={line.split()[1]:line.split()[2:] for line in deck.splitlines()
+                 if line.lower().startswith('.subckt ')}
+    lines=[];probes=[];depth=0
+    for line in deck.splitlines():
+        fields=line.split()
+        if fields and fields[0].lower()=='.subckt':depth+=1
+        elif fields and fields[0].lower()=='.ends':depth-=1
+        elif depth==0 and fields and fields[0].upper().startswith('X'):
+            ports=definitions.get(fields[-1])
+            if ports is None or len(fields)!=len(ports)+2:raise ValueError('Unknown top-level macro interface')
+            if 'VDD' in ports:
+                index=ports.index('VDD')+1
+                if fields[index]!='VDD':raise ValueError('Unexpected macro supply domain')
+                node='MEASURE_'+fields[0]+'_VDD';probe='VSUPPLY_'+fields[0]
+                fields[index]=node;line=' '.join(fields)
+                probes.append(dict(instance=fields[0],source=probe,node=node))
+        lines.append(line)
+    if not probes:raise ValueError('No macro supplies observed')
+    lines.extend(f"{p['source']} VDD {p['node']} 0" for p in probes)
+    return '\n'.join(lines)+'\n',probes
+
+
+def macro_supply_summary(x,measured,probes,intervals):
+    if measured.shape!=(len(x),len(probes)+1) or not np.isfinite(measured).all() or not np.array_equal(measured[:,0],x[:,0]):
+        raise ValueError('Macro observations differ from lifecycle timebase')
+    dt=np.diff(x[:,0]);modes={}
+    for mode,windows in intervals.items():
+        selected=np.zeros(len(dt),dtype=bool)
+        for lo,hi in windows:selected|=(x[:-1,0]>=lo*1e-9)&(x[1:,0]<=hi*1e-9)
+        weights=dt*selected;duration=float(weights.sum())
+        if duration<=0:
+            modes[mode]=dict(observed_duration_s=0,mean_currents_a=None);continue
+        average=lambda v:float(np.sum((v[:-1]+v[1:])*.5*weights)/duration)
+        currents={p['instance']:average(measured[:,i+1]) for i,p in enumerate(probes)}
+        total=average(-x[:,6])
+        modes[mode]=dict(observed_duration_s=duration,mean_currents_a=currents,
+            mean_total_vdd_draw_a=total,mean_other_top_level_vdd_draw_a=total-sum(currents.values()))
+    return dict(status='measured_macro_supply_currents_not_sustained_power_acceptance',modes=modes,
+        probes=probes,scope='Positive current flows from VDD into each macro. Time-weighted means include only observed traffic-ready intervals. The remainder includes top-level bias passives; separate ideal source energy is not folded into VDD current. No package impedance, driver tuning or power-budget waiver.')
+
+
 def ideal_drive_sources(deck):
     """Only top-level behavioral voltage drivers, excluding later observers."""
     sources=[];depth=0
@@ -207,6 +251,7 @@ def run(work,fixture,ready_data=None,scenario="transitions",spice_timeout_s=120)
     for name,new in replacements.items():
         deck,count=re.subn(r'^'+name+r' .*$',new,deck,flags=re.M)
         if count!=1:raise ValueError('Unexpected source '+name)
+    deck,supply_probes=instrument_macro_supplies(deck)
     drive_sources=ideal_drive_sources(deck)
     deck+='VTRAFFIC_READY TRAFFIC_READY 0 '+wave(5,3.3)+'\n'
     architecture=json.loads((PROJECT/'spec/analog-architecture.json').read_text())
@@ -219,6 +264,8 @@ def run(work,fixture,ready_data=None,scenario="transitions",spice_timeout_s=120)
     deck+=control(work,'connected','tran 5p 300n','v(TERM_VCM) v(BUF_REF) v(TX_QUALIFIED) v(BUF_ENABLE) v(TERM_ENABLE) i(VDD) v(TRAFFIC_READY) v(MEASURED_READY) v(READY_WINDOW) v(PAD_P) v(PAD_N) v(VDD)')
     drive_vectors=' '.join((f"v({v['positive']})" if v['negative']=='0' else f"v({v['positive']},{v['negative']})")+f" i({v['name']})" for v in drive_sources)
     deck=deck.replace('\nquit\n',f'\nwrdata {work}/ideal-drive.dat {drive_vectors}\nquit\n')
+    supply_vectors=' '.join(f"i({p['source']})" for p in supply_probes)
+    deck=deck.replace('\nquit\n',f'\nwrdata {work}/macro-supply.dat {supply_vectors}\nquit\n')
     x=run_spice(work,'connected',deck,reject_transient_op=True,timeout_s=spice_timeout_s)
     if not np.isfinite(x).all() or x[-1,0]<299.99e-9:raise ValueError('Incomplete connected replay')
     windows={}
@@ -270,6 +317,8 @@ def run(work,fixture,ready_data=None,scenario="transitions",spice_timeout_s=120)
         r['source_sha256'][str(path.resolve())]=hashlib.sha256(path.read_bytes()).hexdigest()
     r['scenario']=scenario
     r['traffic_ready_intervals_ns']={name:[[a[0],b[0]] for a,b in zip(rows,rows[1:]+[[300]]) if a[1]==value and a[5]] for name,value in [('TMDS',4),('MAIN',17),('MAIN_POST',19),('DETECT',8)]}
+    supply_data=np.loadtxt(work/'macro-supply.dat',skiprows=1)
+    r['macro_supply_currents']=macro_supply_summary(x,supply_data,supply_probes,r['traffic_ready_intervals_ns'])
     r['requested_loaded_hold_ns']=64 if scenario != 'transitions' else None
     r['disabled_end_observed']=bool(rows[-1][1]==0 and rows[-1][2]==0 and rows[-1][3]==0)
     if feedback is not None:

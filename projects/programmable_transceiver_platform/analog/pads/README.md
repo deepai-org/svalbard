@@ -604,19 +604,25 @@ DC probes and oversized direct-replication experiment are diagnostic evidence,
 not alternative normative pad designs. Full regenerated layout evidence takes
 precedence over those sizing estimates.
 
-The TX lifecycle measures the top-level behavioral voltage
-sources as well as VDD. `wired-transmit-screen.json:ideal_driver_burden` records
-positive delivered, absorbed and net energy separately. Before inserting finite steering buffers, the 300 ns retained
-fixture recorded approximately 1.67 nJ of positive energy;
-MAIN/POST steering-source current peaks span approximately 93–125 mA, and the
-buffer-enable source reaches approximately 575 mA. The ideal edges and supply
-qualification discontinuities influence these peaks: they are not characterized
-physical-driver requirements. Nevertheless, VDD-only accounting misses this
-burden. Finite predrivers, enable drivers and bias drivers are required before
-claiming realistic timing or total supply power. The observer covers top-level
-behavioral voltage sources, not independent ideal command sources, driver
-internal losses or a sustained-traffic power budget. That earlier ideal-steering lifecycle had zero sampled feedback mismatches;
-it did not establish realistic drive capability.
+The TX lifecycle measures both remaining ideal-source energy and actual macro
+supply currents. `wired-transmit-screen.json:ideal_driver_burden` separates
+positive delivered, absorbed and net energy; `macro_supply_currents` uses
+zero-volt supply probes at top-level macro ports. Means are time-weighted over
+traffic-ready intervals, excluding gaps. Ideal-source energy is not silently
+charged to VDD or treated as recoverable energy. Independent ideal command
+sources and physical upstream driver losses remain outside this accounting.
+
+The current MAIN+POST window draws approximately 92.4 mA: 57.6 mA in steering
+drivers, 32.9 mA in the termination buffer and 2.0 mA in top-level bias circuitry.
+The interlock contribution is negligible in this window. The driver and buffer
+alone exceed their respective 36 mA and 8 mA block allocations. The WIRE supply
+allocation is 96 mA; adding the other wire blocks' 34.75 mA allocations to this
+measured TX burden gives a 127.2 mA planning screen. This is a real design-budget
+conflict, not a measured package-current limit or a sustained-current result.
+`coverage.json:wired_tx_macro_power` derives that comparison from the shared
+architecture and contract. Reduce the TX drive/buffer burden or explicitly
+redesign the power allocation and distribution; do not hide it by increasing
+budgets without a whole-system check.
 
 The selected TX fixture now inserts six copies of the extracted
 `steering-buffer/physical.spice` between upstream data gating and the MAIN,
@@ -633,13 +639,11 @@ implementation. All six macros now have named placements beside the wired-TX pad
 provider-core containment, envelope-clearance and same-layer collision checks.
 They remain unrouted. Upstream data gating, bias drivers and buffer-enable drive remain explicit
 boundaries; steering-buffer insertion does not complete the whole control path. The
-first connected finite-driver run reaches every mode but has one feedback
-mismatch that changes RTL control timing; `wired-transmit-feedback-closure.json`
-therefore rejects lifecycle closure. During the short traffic-ready windows,
-time-weighted VDD draw rises from about 33 to 62 mA for MAIN and from about
-35 to 92 mA for MAIN+POST. This is a material power-budget issue, not a sustained
-current specification. `ready_supply_reanalysis` records the measured windows.
-Do not call the new physical-driver path qualified from its mode coverage.
+current connected run reaches every mode and reproduces identical RTL control
+events when its measured readiness is fed back. One raw detector sample differs
+but does not change any control event; `wired-transmit-feedback-closure.json`
+therefore establishes nominal sampled-control closure. This does not establish
+physical detector behavior, sustained timing or acceptable power.
 
 ## First-pass implementation closure
 

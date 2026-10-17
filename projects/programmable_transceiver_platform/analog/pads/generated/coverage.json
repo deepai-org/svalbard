@@ -9,6 +9,118 @@
     "report_sha256": "94031b942b8d61ad885eb72053d314853e6a94f4a43041658e094e444feec3cb",
     "scope": "Selected attached TX macro footprints and reservations only; not whole-ring placement or routing acceptance."
   },
+  "wired_tx_macro_power": {
+    "status": "short_window_measurement_against_design_allocations_not_pin_ratings",
+    "modes": {
+      "TMDS": {
+        "blocks": {
+          "txpad": {
+            "measured_macro_mean_ma": -0.0004962356893259808,
+            "wired_mode_allocation_ma": 0.1,
+            "measured_macro_alone_exceeds_allocation": false
+          },
+          "termination": {
+            "measured_macro_mean_ma": -7.369008283166844e-06,
+            "wired_mode_allocation_ma": 8,
+            "measured_macro_alone_exceeds_allocation": false
+          },
+          "wiredtx": {
+            "measured_macro_mean_ma": 30.307371461307028,
+            "wired_mode_allocation_ma": 36,
+            "measured_macro_alone_exceeds_allocation": false
+          }
+        },
+        "observed_tx_mean_ma": 32.256809345411604,
+        "wire_domain_allocation_ma": 96,
+        "headroom_for_other_wire_blocks_ma": 63.743190654588396,
+        "other_wire_block_allocations_ma": 34.75,
+        "observed_tx_plus_other_allocations_ma": 67.0068093454116,
+        "combined_allocation_screen_exceeds": false
+      },
+      "MAIN": {
+        "blocks": {
+          "txpad": {
+            "measured_macro_mean_ma": 0.030962933803903452,
+            "wired_mode_allocation_ma": 0.1,
+            "measured_macro_alone_exceeds_allocation": false
+          },
+          "termination": {
+            "measured_macro_mean_ma": 31.08755661933261,
+            "wired_mode_allocation_ma": 8,
+            "measured_macro_alone_exceeds_allocation": true
+          },
+          "wiredtx": {
+            "measured_macro_mean_ma": 29.087341266935578,
+            "wired_mode_allocation_ma": 36,
+            "measured_macro_alone_exceeds_allocation": false
+          }
+        },
+        "observed_tx_mean_ma": 62.15587108045606,
+        "wire_domain_allocation_ma": 96,
+        "headroom_for_other_wire_blocks_ma": 33.84412891954394,
+        "other_wire_block_allocations_ma": 34.75,
+        "observed_tx_plus_other_allocations_ma": 96.90587108045605,
+        "combined_allocation_screen_exceeds": true
+      },
+      "MAIN_POST": {
+        "blocks": {
+          "txpad": {
+            "measured_macro_mean_ma": 0.030825976441525633,
+            "wired_mode_allocation_ma": 0.1,
+            "measured_macro_alone_exceeds_allocation": false
+          },
+          "termination": {
+            "measured_macro_mean_ma": 32.86496944747198,
+            "wired_mode_allocation_ma": 8,
+            "measured_macro_alone_exceeds_allocation": true
+          },
+          "wiredtx": {
+            "measured_macro_mean_ma": 57.56214591549233,
+            "wired_mode_allocation_ma": 36,
+            "measured_macro_alone_exceeds_allocation": true
+          }
+        },
+        "observed_tx_mean_ma": 92.40793889532058,
+        "wire_domain_allocation_ma": 96,
+        "headroom_for_other_wire_blocks_ma": 3.5920611046794164,
+        "other_wire_block_allocations_ma": 34.75,
+        "observed_tx_plus_other_allocations_ma": 127.15793889532058,
+        "combined_allocation_screen_exceeds": true
+      },
+      "DETECT": {
+        "blocks": {
+          "txpad": {
+            "measured_macro_mean_ma": 0.2254027653905938,
+            "wired_mode_allocation_ma": 0.1,
+            "measured_macro_alone_exceeds_allocation": true
+          },
+          "termination": {
+            "measured_macro_mean_ma": 0.03169805386800931,
+            "wired_mode_allocation_ma": 8,
+            "measured_macro_alone_exceeds_allocation": false
+          },
+          "wiredtx": {
+            "measured_macro_mean_ma": 2.4077687197971793e-06,
+            "wired_mode_allocation_ma": 36,
+            "measured_macro_alone_exceeds_allocation": false
+          }
+        },
+        "observed_tx_mean_ma": 2.3044405232228122,
+        "wire_domain_allocation_ma": 96,
+        "headroom_for_other_wire_blocks_ma": 93.69555947677719,
+        "other_wire_block_allocations_ma": 34.75,
+        "observed_tx_plus_other_allocations_ma": 37.05444052322281,
+        "combined_allocation_screen_exceeds": false
+      }
+    },
+    "scope": "Macro currents are partial block burdens. Other wire blocks use allocations, not measurements, and are included as a simultaneous-operation planning screen. Top-level fixture bias current remains in total TX draw. No power-budget increase, sustained-current guarantee or package rating is inferred.",
+    "source_sha256": {
+      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-transmit-screen.json": "63b70e5d5c0b942d605eea28a19d5f42ad9990d6f82384a74051fea6c0cfdc7c",
+      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "b1b0dec79b6f9dc94733f71a8c425ec2a5c114188cd36acaf435694210944385",
+      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "664236fe102fab03c1a3b9bcd0ece8fca478e845e91e5a67079eec62bd335067",
+      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/contract.json": "7082c21cfb1bc84d61097a5d74f0549b022b480cdb490902ecdfcb9377c2189f"
+    }
+  },
   "integrated_model_inventory": {
     "wired_transmit": {
       "artifacts": {
@@ -21,7 +133,7 @@
         "model": "c772d37254b8f72ec59e0afd1030469b2563220bb1c8fb90d1b21c295055683c",
         "layout": "0681957053db1dd3b6594674a66e9cb24bcbe920d6d6d4a860ff61b87c467e61",
         "gds": "ff35cf0de4ceb2590e8b93ee5ebe346c7dae93a8e31a9be3c3076d87008e19d3",
-        "screen": "e216b0decc6977ffd773eac3d657bdc5a698cff73b2d7eb068c8faf546cf6d8a"
+        "screen": "63b70e5d5c0b942d605eea28a19d5f42ad9990d6f82384a74051fea6c0cfdc7c"
       },
       "reported_transient_complete": true,
       "required_state_windows": {
@@ -50,10 +162,7 @@
       "all_required_state_names_present": true,
       "missing_required_states": [],
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_fixture.py",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json"
-      ],
+      "stale_screen_sources": [],
       "stale_layout_sources": [
         "analog/pads/layout.py",
         "analog/pads/design.py",

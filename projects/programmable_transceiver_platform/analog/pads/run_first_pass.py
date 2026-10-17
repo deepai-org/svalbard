@@ -165,6 +165,50 @@ def integrated_model_inventory(publish):
     return inventory
 
 
+def tx_macro_power_budget(publish):
+    """Compare measured supply currents with allocations, not silicon ratings."""
+    from design import PROJECT
+    path=publish/'wired-transmit-screen.json'
+    if not path.exists():return None
+    screen=json.loads(path.read_text())
+    if 'macro_supply_currents' not in screen:return None
+    arch_path=PROJECT/'spec/analog-architecture.json'
+    spec_path=PROJECT/'spec/schematic-implementation.json'
+    contract_path=PROJECT/'spec/contract.json'
+    architecture=json.loads(arch_path.read_text())
+    allocations=json.loads(spec_path.read_text())['io_pad_first_pass']['tx_attached_macro_allocations']
+    contract=json.loads(contract_path.read_text())
+    wire=next(v for v in contract['power']['domains'] if v['id']=='WIRE')
+    ceiling=wire['per_connection_budget_ma']*len(wire['supply_pins'])
+    represented={'txpad',*(a['block'] for a in allocations.values())}
+    other=sum(b['resource_allocation']['current_budget_ma']['wired'] for name,b in architecture['blocks'].items()
+              if b['supply']=='wire' and name not in represented)
+    modes={}
+    for mode,result in screen['macro_supply_currents']['modes'].items():
+        if result['mean_currents_a'] is None:continue
+        owners={}
+        for instance,current in result['mean_currents_a'].items():
+            if instance=='Xpad':owner='txpad'
+            elif instance=='XBUF':owner=allocations['buffer']['block']
+            elif instance=='XCTL':owner=allocations['interlock']['block']
+            elif instance.startswith('XDRIVE_'):owner=allocations['steering_driver']['block']
+            else:raise ValueError('Unmapped macro current: '+instance)
+            owners[owner]=owners.get(owner,0)+current*1000
+        blocks={name:dict(measured_macro_mean_ma=value,
+            wired_mode_allocation_ma=architecture['blocks'][name]['resource_allocation']['current_budget_ma']['wired'],
+            measured_macro_alone_exceeds_allocation=value>architecture['blocks'][name]['resource_allocation']['current_budget_ma']['wired'])
+            for name,value in owners.items()}
+        total=result['mean_total_vdd_draw_a']*1000
+        modes[mode]=dict(blocks=blocks,observed_tx_mean_ma=total,
+            wire_domain_allocation_ma=ceiling,headroom_for_other_wire_blocks_ma=ceiling-total,
+            other_wire_block_allocations_ma=other,
+            observed_tx_plus_other_allocations_ma=total+other,
+            combined_allocation_screen_exceeds=total+other>ceiling)
+    return dict(status='short_window_measurement_against_design_allocations_not_pin_ratings',modes=modes,
+        scope='Macro currents are partial block burdens. Other wire blocks use allocations, not measurements, and are included as a simultaneous-operation planning screen. Top-level fixture bias current remains in total TX draw. No power-budget increase, sustained-current guarantee or package rating is inferred.',
+        source_sha256={str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in (path,arch_path,spec_path,contract_path)})
+
+
 def write_coverage(publish,results):
     retained_path=publish/'retained-screen.json'
     retained_evidence=None
@@ -218,6 +262,7 @@ def write_coverage(publish,results):
             source_hashes_current=current,report_sha256=hashlib.sha256(area_path.read_bytes()).hexdigest(),
             scope='Selected attached TX macro footprints and reservations only; not whole-ring placement or routing acceptance.')
     report=dict(first_pass_complete=False,candidates=results,attached_core_area=area_evidence,
+                wired_tx_macro_power=tx_macro_power_budget(publish),
                 integrated_model_inventory=integrated_model_inventory(publish),
                 combined_retained_screen=retained_evidence,
                 protection_design_audit=protection_evidence,wired_tx_loading=tx_loading_evidence,

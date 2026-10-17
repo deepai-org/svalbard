@@ -12,6 +12,23 @@ class DesignBoundary(unittest.TestCase):
         self.architecture = json.loads((PROJECT / 'spec/analog-architecture.json').read_text())
         self.contract = json.loads((PROJECT / 'spec/contract.json').read_text())
 
+    def test_macro_supply_observer_preserves_interfaces_and_excludes_gaps(self):
+        import numpy as np
+        from transmit_sequence_connected import instrument_macro_supplies,macro_supply_summary
+        deck='.subckt load IN VDD VSS\nRLOAD VDD VSS 1000\n.ends load\nXLOAD DATA VDD VSS load\n'
+        measured,probes=instrument_macro_supplies(deck)
+        self.assertIn('RLOAD VDD VSS 1000',measured)
+        self.assertIn('XLOAD DATA MEASURE_XLOAD_VDD VSS load',measured)
+        self.assertIn('VSUPPLY_XLOAD VDD MEASURE_XLOAD_VDD 0',measured)
+        x=np.zeros((4,13));x[:,0]=np.array([0,1,10,11])*1e-9;x[:,6]=-.01
+        currents=np.column_stack((x[:,0],np.array([1,3,5,7])*1e-3))
+        result=macro_supply_summary(x,currents,probes,{'active':[[0,1],[10,11]]})['modes']['active']
+        self.assertAlmostEqual(result['mean_currents_a']['XLOAD'],.004)
+        self.assertAlmostEqual(result['mean_other_top_level_vdd_draw_a'],.006)
+        self.assertAlmostEqual(result['observed_duration_s'],2e-9)
+        with self.assertRaisesRegex(ValueError,'supply domain'):
+            instrument_macro_supplies(deck.replace('XLOAD DATA VDD','XLOAD DATA OTHER_RAIL'))
+
     def test_ideal_driver_energy_separates_delivery_from_absorption(self):
         import numpy as np
         from transmit_sequence_connected import ideal_drive_sources,ideal_drive_summary

@@ -12,6 +12,27 @@ class DesignBoundary(unittest.TestCase):
         self.architecture = json.loads((PROJECT / 'spec/analog-architecture.json').read_text())
         self.contract = json.loads((PROJECT / 'spec/contract.json').read_text())
 
+    def test_electrical_inventory_does_not_turn_coverage_into_acceptance(self):
+        from run_first_pass import electrical_findings
+        with TemporaryDirectory() as directory:
+            root=Path(directory)
+            # Even a complete transient with all state names has no safety verdict.
+            data={'transient_complete':True,'states':{s:{} for s in
+                ('active','disabled','reset','unpowered','brownout','reconfiguration')}}
+            path=root/'wired-receive-usb-screen.json'
+            path.write_text(json.dumps(data))
+            first=electrical_findings(root)
+            self.assertEqual(first['rf_transmit']['status'],'missing_screen')
+            self.assertEqual(first['wired_receive_usb']['status'],'incomplete_electrical_acceptance')
+            self.assertEqual(first['wired_receive_usb']['recorded_limit_checks'],[])
+            budget=resolve()['families']['wired_receive_usb']['electrical_parameters']['capacitance_f_per_leg']
+            data['loading']={'serial_bypass':{
+                'odd_mode_effective_capacitance_f_per_leg':[budget*1.1,budget*.9]}}
+            path.write_text(json.dumps(data))
+            second=electrical_findings(root)['wired_receive_usb']
+            self.assertEqual(second['recorded_limit_checks'][0]['status'],'recorded_limit_miss')
+            self.assertIn('core_terminal_voltage_current_duration_limits',second['unresolved'])
+
     def test_tmds_power_uses_its_branch_owner_and_override(self):
         from run_first_pass import tx_macro_power_budget
         with TemporaryDirectory() as directory:

@@ -34,6 +34,13 @@ report and state screen. Its `integrated_model_inventory` separately checks:
 - Source freshness.
 - Exported-GDS device connectivity against that exact netlist.
 
+The same coverage report's `electrical_findings` surfaces recorded RX loading
+and RF TX tone-power misses separately from lifecycle coverage. It preserves
+reference startup as an observation without inventing a ready deadline, and
+keeps missing core-survival limits and physical safe controls unresolved for
+every family. Read these findings together with source freshness and the
+existing TX/RF power-budget sections; they are not whole-family acceptance.
+
 Generator edits can stale the recorded source hashes; inspect the current
 inventory rather than treating older successful runs as a fresh rebuild. Reset is a prescribed
 control condition; RX/USB uses a behavioral control guard, not an implemented

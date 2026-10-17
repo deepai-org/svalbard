@@ -5,7 +5,7 @@
   },
   "attached_core_area": {
     "all_reservations_fit": true,
-    "source_hashes_current": true,
+    "source_hashes_current": false,
     "report_sha256": "94031b942b8d61ad885eb72053d314853e6a94f4a43041658e094e444feec3cb",
     "scope": "Selected attached TX macro footprints and reservations only; not whole-ring placement or routing acceptance."
   },
@@ -136,7 +136,7 @@
     "scope": "Macro currents are partial block burdens. Other wire blocks use allocations, not measurements, and are included as a simultaneous-operation planning screen. Top-level fixture bias current remains in total TX draw. No power-budget increase, sustained-current guarantee or package rating is inferred.",
     "source_sha256": {
       "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-transmit-screen.json": "63b70e5d5c0b942d605eea28a19d5f42ad9990d6f82384a74051fea6c0cfdc7c",
-      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "b1b0dec79b6f9dc94733f71a8c425ec2a5c114188cd36acaf435694210944385",
+      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "e931f969248a4d115beec67fc6c28ad02fc030e8436c385acabe22410f9ecfe8",
       "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "664236fe102fab03c1a3b9bcd0ece8fca478e845e91e5a67079eec62bd335067",
       "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/contract.json": "7082c21cfb1bc84d61097a5d74f0549b022b480cdb490902ecdfcb9377c2189f"
     }
@@ -148,7 +148,7 @@
       "resistance_ohm_per_leg": 50,
       "peer_power": "independent_continuously_present"
     },
-    "source_hashes_current": true,
+    "source_hashes_current": false,
     "report_sha256": "47d037133c03b3dc93da03838ef589228d7bfdec83be49db5588cf30331ca5d9",
     "closure_binds_report": true,
     "sampled_lifecycle_gate_pass": true,
@@ -252,6 +252,7 @@
       "model_bytes_match_recorded_screen_input": true,
       "stale_screen_sources": [
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json",
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_fixture.py"
       ],
       "stale_layout_sources": [
@@ -409,7 +410,10 @@
       "all_required_state_names_present": true,
       "missing_required_states": [],
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [],
+      "stale_screen_sources": [
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/analog_screen.py",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json"
+      ],
       "stale_layout_sources": [
         "analog/pads/generated/rf-receive-layout.json",
         "analog/pads/generated/rf-transmit-layout.json"
@@ -472,6 +476,141 @@
       "exported_layout_device_graph_matches_current_model": true,
       "source_manifest_present": true,
       "scope": "Canonical family candidate only; named windows and matching input bytes do not prove performance, safety, or unchanged external-network topology."
+    }
+  },
+  "electrical_findings": {
+    "wired_transmit": {
+      "status": "incomplete_electrical_acceptance",
+      "source_report": "wired-transmit-screen.json",
+      "source_report_sha256": "63b70e5d5c0b942d605eea28a19d5f42ad9990d6f82384a74051fea6c0cfdc7c",
+      "recorded_limit_checks": [],
+      "observations": {},
+      "unresolved": [
+        "core_terminal_voltage_current_duration_limits",
+        "physical_local_safe_state_controls",
+        "complete_supply_return_and_package_integration"
+      ],
+      "scope": "Read with integrated_model_inventory source freshness. A recorded pass is neither current revalidation nor family acceptance; absent checks remain unassessed."
+    },
+    "reference_clock": {
+      "status": "incomplete_electrical_acceptance",
+      "source_report": "reference-clock-screen.json",
+      "source_report_sha256": "2e1e017328cac0e0dacb7ff4a787e53cfc249431a1b4f82555cc0703d92a1300",
+      "recorded_limit_checks": [],
+      "observations": {
+        "bias_settling": {
+          "scope": "Same extracted pad, numerical anchor and external network; carrier removed and enable held low. One-percent settling is a diagnostic, not an allocated clock-ready deadline. Ideal bias source remains.",
+          "transient_complete": true,
+          "estimated_rc_s": 0.001,
+          "cold_settling_to_one_percent_s": 0.005216003900549056,
+          "restored_settling_to_one_percent_s": 0.0052162754020033605,
+          "bias_before_power_off_v": 1.6436103564271065,
+          "bias_after_unpowered_interval_v": 0.0007611601426870008,
+          "final_common_mode_v": 1.643610714962622,
+          "source_sha256": "cfbdd78ea5b5b4f6c668d7a23b56b275a7395cead840951f6d1854795e5ea5f1"
+        }
+      },
+      "unresolved": [
+        "core_terminal_voltage_current_duration_limits",
+        "physical_local_safe_state_controls",
+        "complete_supply_return_and_package_integration"
+      ],
+      "scope": "Read with integrated_model_inventory source freshness. A recorded pass is neither current revalidation nor family acceptance; absent checks remain unassessed."
+    },
+    "rf_receive": {
+      "status": "incomplete_electrical_acceptance",
+      "source_report": "rf-receive-screen.json",
+      "source_report_sha256": "bc13f2259e221e882fa2015c10bba2876f29ea32bf8e9ef227438f14e9b86c55",
+      "recorded_limit_checks": [],
+      "observations": {},
+      "unresolved": [
+        "core_terminal_voltage_current_duration_limits",
+        "physical_local_safe_state_controls",
+        "complete_supply_return_and_package_integration"
+      ],
+      "scope": "Read with integrated_model_inventory source freshness. A recorded pass is neither current revalidation nor family acceptance; absent checks remain unassessed."
+    },
+    "rf_transmit": {
+      "status": "incomplete_electrical_acceptance",
+      "source_report": "rf-transmit-screen.json",
+      "source_report_sha256": "5f49eb3f17dccea92315dcc107778b272ad12aee08d31e0d5a05652f2950fdb8",
+      "recorded_limit_checks": [
+        {
+          "quantity": "fundamental_tone_power",
+          "mode": "active",
+          "measured_dbm": -1.3407274184576254,
+          "status": "recorded_limit_miss",
+          "scope": "Recorded tone target only; not modulated RF acceptance."
+        },
+        {
+          "quantity": "fundamental_tone_power",
+          "mode": "reactivated",
+          "measured_dbm": -1.3385420527757041,
+          "status": "recorded_limit_miss",
+          "scope": "Recorded tone target only; not modulated RF acceptance."
+        }
+      ],
+      "observations": {},
+      "unresolved": [
+        "core_terminal_voltage_current_duration_limits",
+        "physical_local_safe_state_controls",
+        "complete_supply_return_and_package_integration"
+      ],
+      "scope": "Read with integrated_model_inventory source freshness. A recorded pass is neither current revalidation nor family acceptance; absent checks remain unassessed."
+    },
+    "wired_receive_usb": {
+      "status": "incomplete_electrical_acceptance",
+      "source_report": "wired-receive-usb-screen.json",
+      "source_report_sha256": "6da08f748fdcbe24424d9e7a5194cf6777e4a29dd915d99c9383a65e8ef94617",
+      "recorded_limit_checks": [
+        {
+          "quantity": "odd_mode_capacitance_f_per_leg",
+          "mode": "disabled",
+          "measured": [
+            2.4373899720099848e-12,
+            2.310211313267116e-12
+          ],
+          "limit": 2.7e-12,
+          "status": "recorded_within_limit"
+        },
+        {
+          "quantity": "odd_mode_capacitance_f_per_leg",
+          "mode": "serial_bypass",
+          "measured": [
+            2.763912208693933e-12,
+            2.6366290265337383e-12
+          ],
+          "limit": 2.7e-12,
+          "status": "recorded_limit_miss"
+        },
+        {
+          "quantity": "odd_mode_capacitance_f_per_leg",
+          "mode": "usb_terminated",
+          "measured": [
+            1.8403164214792914e-12,
+            1.840668752326111e-12
+          ],
+          "limit": 2.7e-12,
+          "status": "recorded_within_limit"
+        },
+        {
+          "quantity": "odd_mode_capacitance_f_per_leg",
+          "mode": "differential_terminated",
+          "measured": [
+            1.850592804689925e-12,
+            1.8047643298125456e-12
+          ],
+          "limit": 2.7e-12,
+          "status": "recorded_within_limit"
+        }
+      ],
+      "observations": {},
+      "unresolved": [
+        "core_terminal_voltage_current_duration_limits",
+        "physical_local_safe_state_controls",
+        "complete_supply_return_and_package_integration"
+      ],
+      "scope": "Read with integrated_model_inventory source freshness. A recorded pass is neither current revalidation nor family acceptance; absent checks remain unassessed."
     }
   },
   "combined_retained_screen": {

@@ -165,6 +165,48 @@ def integrated_model_inventory(publish):
     return inventory
 
 
+def electrical_findings(publish):
+    """Surface recorded failures without treating missing safety limits as passes.
+
+    These are scoped observations, not a replacement for report provenance or
+    a complete acceptance specification. Never promote a candidate to canonical.
+    """
+    from design import resolve
+    requirements=resolve()['families']
+    findings={}
+    for family in FAMILIES:
+        path=publish/(family.replace('_','-')+'-screen.json')
+        if not path.exists():
+            findings[family]={'status':'missing_screen'}
+            continue
+        data=json.loads(path.read_text())
+        limits=[]
+        if family=='wired_receive_usb':
+            budget=requirements[family]['electrical_parameters']['capacitance_f_per_leg']
+            for mode,values in data.get('loading',{}).items():
+                measured=values['odd_mode_effective_capacitance_f_per_leg']
+                limits.append(dict(quantity='odd_mode_capacitance_f_per_leg',mode=mode,
+                    measured=measured,limit=budget,
+                    status='recorded_limit_miss' if any(v>budget for v in measured) else 'recorded_within_limit'))
+        if family=='rf_transmit':
+            for mode,values in data.get('tx_load_power',{}).get('windows',{}).items():
+                limits.append(dict(quantity='fundamental_tone_power',mode=mode,
+                    measured_dbm=values['fundamental_power_dbm'],
+                    status='recorded_within_limit' if values['meets_target_power'] else 'recorded_limit_miss',
+                    scope='Recorded tone target only; not modulated RF acceptance.'))
+        observations={}
+        if family=='reference_clock':
+            observations['bias_settling']=data.get('reference_bias_envelope')
+        findings[family]=dict(status='incomplete_electrical_acceptance',
+            source_report=path.name,source_report_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+            recorded_limit_checks=limits,observations=observations,
+            unresolved=['core_terminal_voltage_current_duration_limits',
+                        'physical_local_safe_state_controls',
+                        'complete_supply_return_and_package_integration'],
+            scope='Read with integrated_model_inventory source freshness. A recorded pass is neither current revalidation nor family acceptance; absent checks remain unassessed.')
+    return findings
+
+
 def tx_macro_power_budget(publish):
     """Compare measured supply currents with allocations, not silicon ratings."""
     from design import PROJECT
@@ -302,6 +344,7 @@ def write_coverage(publish,results):
                 wired_tx_macro_power=tx_macro_power_budget(publish),wired_tx_pullup_evidence=pullup_evidence,
                 rf_supply_planning=rf_supply_planning(publish),
                 integrated_model_inventory=integrated_model_inventory(publish),
+                electrical_findings=electrical_findings(publish),
                 combined_retained_screen=retained_evidence,
                 protection_design_audit=protection_evidence,wired_tx_loading=tx_loading_evidence,
                 wired_tx_current_compliance=compliance_evidence,

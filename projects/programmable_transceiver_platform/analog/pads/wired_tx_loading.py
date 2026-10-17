@@ -14,16 +14,20 @@ from loading_audit import anchor_floating_conductors
 from screen import header,control,run_spice
 
 
-def screen(work,pdk,physical,calibration_report=None):
+def screen(work,pdk,physical,calibration_report=None,bias_override=None):
     work.mkdir(parents=True,exist_ok=False)
     circuit=wired_transmit()
     spec=PROJECT/'spec/schematic-implementation.json'
     if calibration_report is None:
         cfg=json.loads(spec.read_text())['io_pad_first_pass']['tx_integration_fixture']
+        if bias_override:
+            if set(bias_override)-set(cfg['bias_v']):raise ValueError('Unknown bias override')
+            cfg['bias_v'].update(bias_override)
         currents={name:dict(bias_v=value) for name,value in cfg['bias_v'].items()}
         bias_source=spec
-        bias_scope='Selected shared lifecycle biases; not independent DC recalibration.'
+        bias_scope='Explicit candidate lifecycle bias overrides; not independent DC recalibration.' if bias_override else 'Selected shared lifecycle biases; not independent DC recalibration.'
     else:
+        if bias_override:raise ValueError('Calibration and bias override cannot be combined')
         calibration=json.loads(calibration_report.read_text())
         for path,digest in calibration['sources_sha256'].items():
             if hashlib.sha256(Path(path).read_bytes()).hexdigest()!=digest:
@@ -72,7 +76,7 @@ def screen(work,pdk,physical,calibration_report=None):
                 effective_capacitance_f_per_leg=capacitance.tolist(),
                 at_1ghz=dict(effective_capacitance_f_per_leg=capacitance[index].tolist(),real_admittance_s_per_leg=real[index].tolist()))
     report=dict(status='complete_branch_TX_admittance_screen_not_compliance',cases=cases,
-        bias_scope=bias_scope, numerical_floating_conductor_anchors=anchors,
+        bias_scope=bias_scope, bias_override=bias_override, numerical_floating_conductor_anchors=anchors,
         operating_point_policy='Reject transient operating-point fallback; anchors are numerical only.',
         assigned_budget_f_per_leg=circuit.requirements['electrical_parameters']['capacitance_f_per_leg'],
         limitations=['Same extracted pad in every case; no inactive branch removed and no budget-sized capacitor added.',

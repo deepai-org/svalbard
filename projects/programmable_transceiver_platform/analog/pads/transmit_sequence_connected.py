@@ -73,7 +73,7 @@ initial begin #300;$finish;end
     return text,times,values
 
 
-def run(work,fixture,ready_data=None,scenario="transitions"):
+def run(work,fixture,ready_data=None,scenario="transitions",spice_timeout_s=120):
     if scenario != "transitions" and ready_data is None:
         raise ValueError("Hold scenarios require sampled feedback input")
     work.mkdir(parents=True,exist_ok=False)
@@ -138,7 +138,7 @@ def run(work,fixture,ready_data=None,scenario="transitions"):
     deck+=f'RREADY_FILTER READY_WINDOW READY_FILTER 1000\nCREADY_FILTER READY_FILTER 0 {tau/1000}\n'
     deck+=f'BMEASURED_READY MEASURED_READY 0 V=V(VDD)*(V(READY_FILTER)>={threshold})\n'
     deck+=control(work,'connected','tran 5p 300n','v(TERM_VCM) v(BUF_REF) v(TX_QUALIFIED) v(BUF_ENABLE) v(TERM_ENABLE) i(VDD) v(TRAFFIC_READY) v(MEASURED_READY) v(READY_WINDOW) v(PAD_P) v(PAD_N) v(VDD)')
-    x=run_spice(work,'connected',deck,reject_transient_op=True)
+    x=run_spice(work,'connected',deck,reject_transient_op=True,timeout_s=spice_timeout_s)
     if not np.isfinite(x).all() or x[-1,0]<299.99e-9:raise ValueError('Incomplete connected replay')
     windows={}
     trace=np.array(rows)
@@ -156,6 +156,7 @@ def run(work,fixture,ready_data=None,scenario="transitions"):
     traffic_modes={int(row[1]) for row in rows if row[5]}
     r['mode_coverage']={name:{'qualified':value in qualified_modes,'traffic_ready':value in traffic_modes} for name,value in [('TMDS',4),('MAIN',17),('MAIN_POST',19),('DETECT',8)]}
     r['source_sha256'].update(component_sources)
+    r['spice_timeout_s']=spice_timeout_s
     r['transient_complete']=True
     r['states']={}
     powered=x[:,12]>=low
@@ -204,4 +205,5 @@ if __name__=='__main__':
     p.add_argument('--output-dir',type=Path,required=True);p.add_argument('--fixture',type=Path,required=True)
     p.add_argument('--ready-data',type=Path)
     p.add_argument('--scenario',choices=['transitions','hold-main','hold-main-post'],default='transitions')
-    a=p.parse_args();run(a.output_dir.resolve(),a.fixture.resolve(),a.ready_data.resolve() if a.ready_data else None,a.scenario)
+    p.add_argument('--spice-timeout-s',type=float,default=120)
+    a=p.parse_args();run(a.output_dir.resolve(),a.fixture.resolve(),a.ready_data.resolve() if a.ready_data else None,a.scenario,a.spice_timeout_s)

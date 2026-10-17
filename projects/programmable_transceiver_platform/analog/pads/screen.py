@@ -14,11 +14,17 @@ from design import PROJECT
 from transmit_controls import attach as attach_transmit_guard
 
 
-def run_spice(work,name,text, *, reject_transient_op=False):
+def run_spice(work,name,text, *, reject_transient_op=False, timeout_s=120):
     path=work/(name+'.spice')
     path.write_text(text)
     (work/(name+'.dat')).unlink(missing_ok=True)
-    result=subprocess.run(['ngspice','-b',str(path)],capture_output=True,text=True,timeout=120)
+    if not 0<timeout_s<=600:raise ValueError('SPICE timeout must be within600 seconds')
+    try:
+        result=subprocess.run(['ngspice','-b',str(path)],capture_output=True,text=True,timeout=timeout_s)
+    except subprocess.TimeoutExpired as error:
+        def decoded(value):return value.decode(errors='replace') if isinstance(value,bytes) else value or ''
+        (work/(name+'.log')).write_text(decoded(error.stdout)+decoded(error.stderr))
+        raise
     (work/(name+'.log')).write_text(result.stdout+result.stderr)
     result.check_returncode()
     if reject_transient_op and 'Transient op started' in result.stdout+result.stderr:

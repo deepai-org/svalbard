@@ -1,0 +1,447 @@
+{
+  "observed_request_values": [
+    0,
+    4,
+    8,
+    17,
+    19
+  ],
+  "busy_commit_events": [],
+  "loaded_traffic_ready_without_detector_ready_s": 0.0,
+  "readiness_parameters": {
+    "max_reference_error_v": 0.0165,
+    "detector_time_constant_s": 1e-09,
+    "detector_assert_threshold": 0.99,
+    "scope": "First-pass modeled1percent-of1.65V window allocation; not measured detector performance or protocol deadline. Finite detector response followed by sequencer loaded dwell; readiness applies only when source termination is requested."
+  },
+  "status": "sampled_readiness_feedback_iteration_not_closed_loop_until_consistent",
+  "windows": {
+    "27-30ns": {
+      "actual_request_values": [
+        4
+      ],
+      "vcm_min_v": 0.00393551237,
+      "vcm_max_v": 0.00469002988,
+      "max_reference_error_v": 1.64636131158,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": 0.000266853561,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    },
+    "36-43ns": {
+      "actual_request_values": [
+        0
+      ],
+      "vcm_min_v": -0.245327344,
+      "vcm_max_v": -0.163680517,
+      "max_reference_error_v": 0.255483179,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": -0.0652451067,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    },
+    "90-109ns": {
+      "actual_request_values": [
+        17
+      ],
+      "vcm_min_v": 0.717176494,
+      "vcm_max_v": 1.83907145,
+      "max_reference_error_v": 0.9360388659999999,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 0.000367604095,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    },
+    "125-139ns": {
+      "actual_request_values": [
+        17
+      ],
+      "vcm_min_v": 1.16507868,
+      "vcm_max_v": 1.71113834,
+      "max_reference_error_v": 0.47569068000000003,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 3.30636524,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 3.3
+    },
+    "175-195ns": {
+      "actual_request_values": [
+        19
+      ],
+      "vcm_min_v": 1.08227997,
+      "vcm_max_v": 1.66194241,
+      "max_reference_error_v": 0.5586053599999998,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 3.30694452,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 3.3
+    },
+    "225-239ns": {
+      "actual_request_values": [
+        8,
+        19
+      ],
+      "vcm_min_v": 1.6242647,
+      "vcm_max_v": 2.41306209,
+      "max_reference_error_v": 0.7451172899999998,
+      "qualified_max_v": 3.3,
+      "buffer_enable_max_v": 3.3,
+      "termination_enable_max_v": 3.35794489,
+      "traffic_ready_max_v": 3.3,
+      "measured_ready_max_v": 3.3
+    },
+    "280-299ns": {
+      "actual_request_values": [
+        0
+      ],
+      "vcm_min_v": 0.0948906498,
+      "vcm_max_v": 0.256623046,
+      "max_reference_error_v": 1.5457817302,
+      "qualified_max_v": 0.0,
+      "buffer_enable_max_v": 0.0,
+      "termination_enable_max_v": -2.00806408e-05,
+      "traffic_ready_max_v": 0.0,
+      "measured_ready_max_v": 0.0
+    }
+  },
+  "scope": "Prior analog detector trace sampled1ns before each RTL clock edge; one waveform-relaxation iteration. Zero feedback mismatches establishes sampled consistency only for this fixture. Busy commit events and missing configurations invalidate lifecycle coverage. Nontermination readiness is assumed true; detector and RTL physical implementation absent.",
+  "clock_period_ns": 4,
+  "pre_post_cycles": 2,
+  "edge_translation_ns": 0.02,
+  "external_network_unchanged": true,
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "73ac72339580ac1eb26067eba53d284e55f80effa8a08fe72bfc27f1fbfa8ba9",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "fc3cdc163ae805c33b92a298142718ad36c94f5567ac4bb9bb608be016d58e32",
+    "/home/ubuntu/svalbard/scratch/pad-tx-folded-replay-4/replay.sv": "a7d380794738c43e4991ede46d5f5b4798b46a48d2652fbdaf5973ba2c68f6b6",
+    "/home/ubuntu/svalbard/scratch/pad-tx-folded-fixture.spice": "6a3116d8e2f373aa9b82dfbb0c9e1d655afbf583cd386826eb6a5cd7ad1ffb7f",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "5995b7ab33f01f62358b6af52cd3073ba4db89c66a303022bc516214d5bc9916",
+    "/home/ubuntu/svalbard/scratch/pad-tx-folded-replay-4/connected.spice": "1a5d7d4b69c075ea42f563642b04daeabffdbe01a961cc12ab31d0ddc2a4885e",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_fixture.py": "8ade813e28a403201fbeabd4b1f86bf775c32449246c9523126f89061652396b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "b43127f9351e0fd75ffb2792546c2608814afb79e2e0ac27f79ff12eaec3e9e6",
+    "/home/ubuntu/svalbard/scratch/pad-tx-folded-protected-clean/physical.spice": "9c1972b52a5d440d5e657d996f0cca2725e11d39a7bf1051c0962ee659b69c28",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/physical.spice": "45b1ab7c83edd98901cdcfa78611e29d140dcfd57b70b4c303a8292b5d572be6",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/transmit-control-candidate/thick-logic/physical.spice": "e0a8c45ac4e8efdfde286d89f65451379448d1c7dd1829681e901c72b2f5c6d5",
+    "/home/ubuntu/svalbard/scratch/pad-tx-folded-fixture.json": "db492c1a6b4663cb73170168cc9cc7ca6af5f233ebe854e81f700185fb547c67",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/loading_audit.py": "2b01aee3f378ac60e325fcee31129957e3353b7253f8edbb9f28325779fa846c",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "377e2d4c75fcc2b3d49344c6d2a3e686e7468a735425d18ec1260d1189d0f8d5"
+  },
+  "mode_coverage": {
+    "TMDS": {
+      "qualified": true,
+      "traffic_ready": true
+    },
+    "MAIN": {
+      "qualified": true,
+      "traffic_ready": true
+    },
+    "MAIN_POST": {
+      "qualified": true,
+      "traffic_ready": true
+    },
+    "DETECT": {
+      "qualified": true,
+      "traffic_ready": true
+    }
+  },
+  "spice_timeout_s": 240.0,
+  "transient_complete": true,
+  "states": {
+    "disabled": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 16857,
+      "pad_min_v": -0.327539729,
+      "pad_max_v": 1.33043461,
+      "differential_min_v": -0.10806826199999998,
+      "differential_max_v": 0.011351590100000003,
+      "vcm_min_v": -0.0476482497,
+      "vcm_max_v": 0.537961773,
+      "peak_supply_draw_a": 0.109861362,
+      "peak_supply_return_a": 0.100895102
+    },
+    "reset": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 154,
+      "pad_min_v": -0.102914359,
+      "pad_max_v": 0.0358406773,
+      "differential_min_v": -0.0629055549,
+      "differential_max_v": 0.1377121965,
+      "vcm_min_v": 2.65517659e-08,
+      "vcm_max_v": 0.0040118878,
+      "peak_supply_draw_a": 0.0209170643,
+      "peak_supply_return_a": 0.0018806232
+    },
+    "unpowered": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 2549,
+      "pad_min_v": -0.751033596,
+      "pad_max_v": -0.394192173,
+      "differential_min_v": -0.04762175000000002,
+      "differential_max_v": 0.010709712000000038,
+      "vcm_min_v": -0.297549805,
+      "vcm_max_v": -0.151430721,
+      "peak_supply_draw_a": 0.0452092997,
+      "peak_supply_return_a": 0.187329909
+    },
+    "reconfiguration": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 20672,
+      "pad_min_v": -0.000248888759,
+      "pad_max_v": 1.92759422,
+      "differential_min_v": -0.5974372750000001,
+      "differential_max_v": 0.633666524,
+      "vcm_min_v": -2.65134467e-05,
+      "vcm_max_v": 2.41306209,
+      "peak_supply_draw_a": 0.106932965,
+      "peak_supply_return_a": 0.111101393
+    },
+    "active_tmds": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 218,
+      "pad_min_v": -0.112325645,
+      "pad_max_v": 0.0282002202,
+      "differential_min_v": -0.1352832098,
+      "differential_max_v": 0.1355303027,
+      "vcm_min_v": 0.00360284657,
+      "vcm_max_v": 0.00389405858,
+      "peak_supply_draw_a": 0.00200223681,
+      "peak_supply_return_a": 0.0
+    },
+    "active_main": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 858,
+      "pad_min_v": 1.08225618,
+      "pad_max_v": 1.49846914,
+      "differential_min_v": -0.39431448,
+      "differential_max_v": 0.40338403,
+      "vcm_min_v": 1.64093448,
+      "vcm_max_v": 1.65492936,
+      "peak_supply_draw_a": 0.0331115216,
+      "peak_supply_return_a": 0.0
+    },
+    "active_main_post": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 880,
+      "pad_min_v": 0.80025672,
+      "pad_max_v": 1.43447355,
+      "differential_min_v": -0.598462886,
+      "differential_max_v": 0.609708447,
+      "vcm_min_v": 1.63486999,
+      "vcm_max_v": 1.66014475,
+      "peak_supply_draw_a": 0.0376368886,
+      "peak_supply_return_a": 0.0
+    },
+    "active_detect": {
+      "status": "observed_not_electrical_acceptance",
+      "samples": 858,
+      "pad_min_v": 1.38920924,
+      "pad_max_v": 1.40502485,
+      "differential_min_v": -0.00027297000000015004,
+      "differential_max_v": -0.00017914999999990577,
+      "vcm_min_v": 0.826128325,
+      "vcm_max_v": 1.02631918,
+      "peak_supply_draw_a": 0.00706585063,
+      "peak_supply_return_a": 0.0
+    }
+  },
+  "numerical_floating_conductor_anchors": [
+    {
+      "cell": "combined_flat",
+      "node": "m2_34279_176800#",
+      "resistance_ohm": 1000000000000.0
+    }
+  ],
+  "operating_point_policy": "Reject transient operating-point fallback; numerical anchors are not physical resistors.",
+  "scenario": "transitions",
+  "traffic_ready_intervals_ns": {
+    "TMDS": [
+      [
+        30.0,
+        31.0
+      ]
+    ],
+    "MAIN": [
+      [
+        158.0,
+        162.0
+      ]
+    ],
+    "MAIN_POST": [
+      [
+        226.0,
+        230.0
+      ]
+    ],
+    "DETECT": [
+      [
+        254.0,
+        258.0
+      ]
+    ]
+  },
+  "requested_loaded_hold_ns": null,
+  "disabled_end_observed": true,
+  "feedback_sample_mismatches": 17,
+  "first_feedback_mismatch_ns": 233.0,
+  "consistent_prefix_sample_count": 58,
+  "sampled_feedback_consistent": false,
+  "feedback_sample_times_ns": [
+    1.0,
+    5.0,
+    9.0,
+    13.0,
+    17.0,
+    21.0,
+    25.0,
+    29.0,
+    33.0,
+    37.0,
+    41.0,
+    45.0,
+    49.0,
+    53.0,
+    57.0,
+    61.0,
+    65.0,
+    69.0,
+    73.0,
+    77.0,
+    81.0,
+    85.0,
+    89.0,
+    93.0,
+    97.0,
+    101.0,
+    105.0,
+    109.0,
+    113.0,
+    117.0,
+    121.0,
+    125.0,
+    129.0,
+    133.0,
+    137.0,
+    141.0,
+    145.0,
+    149.0,
+    153.0,
+    157.0,
+    161.0,
+    165.0,
+    169.0,
+    173.0,
+    177.0,
+    181.0,
+    185.0,
+    189.0,
+    193.0,
+    197.0,
+    201.0,
+    205.0,
+    209.0,
+    213.0,
+    217.0,
+    221.0,
+    225.0,
+    229.0,
+    233.0,
+    237.0,
+    241.0,
+    245.0,
+    249.0,
+    253.0,
+    257.0,
+    261.0,
+    265.0,
+    269.0,
+    273.0,
+    277.0,
+    281.0,
+    285.0,
+    289.0,
+    293.0,
+    297.0
+  ],
+  "feedback_output_values": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "feedback_input_sha256": "659bdb5c37456ef576bd9979990d4953601c9d6b8379589b61dad30dcc4168dd"
+}

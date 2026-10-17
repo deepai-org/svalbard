@@ -40,16 +40,19 @@ def run(work, generated, pdk, publish=True):
     from transmit_sequence_connected import run as replay
     from protected_assembly import run as assemble
     seed = generated/'termination-buffer-candidate/source-headroom/reference-reset/feedback/screen.json'
-    for iteration in range(1, 4):
+    from transmit_feedback_closure import verify as verify_closure
+    for iteration in range(1, 5):
         electrical = work/f'replay-{iteration}'
-        replay(electrical, work/'fixture.spice', seed)
+        replay(electrical, work/'fixture.spice', seed, spice_timeout_s=240 if audit['physical_devices']>500 else 120)
         observed = json.loads((electrical/'screen.json').read_text())
-        if observed['sampled_feedback_consistent']:
+        closure_dir=work/f'closure-{iteration}'
+        closure=verify_closure(closure_dir,electrical)
+        if closure['controls_identical']:
             break
         seed = electrical/'screen.json'
     else:
-        raise ValueError('TX sampled readiness did not converge within three iterations')
-    if (observed['busy_commit_events'] or not observed['disabled_end_observed']
+        raise ValueError('TX feedback controls did not converge within four iterations')
+    if (not closure['lifecycle_gate_pass'] or observed['busy_commit_events'] or not observed['disabled_end_observed']
             or observed['loaded_traffic_ready_without_detector_ready_s'] != 0
             or not all(v['qualified'] and v['traffic_ready'] for v in observed['mode_coverage'].values())
             or not all(v['samples'] for v in observed['states'].values())):
@@ -83,6 +86,7 @@ def run(work, generated, pdk, publish=True):
                 (pad/'combined.gds','.gds'), (pad/'layout.png','.png'),
                 (pad/'model-audit.json','-device-audit.json'),
                 (electrical/'screen.json','-screen.json'),
+                (closure_dir/'closure.json','-feedback-closure.json'),
                 (electrical/'connected.spice','-lifecycle.spice'),
                 (work/'integration.json','-integration.json'),
                 (work/'assembly/assembly-screen.json','-assembly-screen.json')]:

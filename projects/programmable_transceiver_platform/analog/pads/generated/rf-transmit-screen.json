@@ -137,8 +137,8 @@
     ]
   },
   "dc": {
-    "pad_source_current_at_minus_0p8_v_a": 0.0006681902295317929,
-    "pad_source_current_at_3p6_v_a": -2.947356820453429e-07,
+    "pad_source_current_at_minus_0p8_v_a": 0.000668190149161107,
+    "pad_source_current_at_3p6_v_a": -2.947358853967555e-07,
     "scope": "DC loading/clamp probe only; -0.8V and 4V endpoints are adverse, not safe operating claims."
   },
   "assigned_budget_f_per_leg": 1e-12,
@@ -149,6 +149,14 @@
     "headroom_v": 0.3,
     "passive_bleed_ohm_per_leg": 1000000.0,
     "active_bias_current_floor_a": 0.028,
+    "supply_gain_model": {
+      "dc_elasticity": 1.0,
+      "definition": "Fractional gain response to fractional rail variation: H(s)=high_frequency_elasticity+(dc_elasticity-high_frequency_elasticity)/(1+s/(2*pi*pole_hz)). Equal unit coefficients retain the existing rail-proportional law; the pole is inactive in that baseline. Headroom always uses actual rail. Nonunit values require qualified bias/output rejection and resources; no ideal regulation assumed.",
+      "high_frequency_elasticity": 0.02,
+      "pole_hz": 5000000.0,
+      "status": "assigned_response_not_measured"
+    },
+    "supply_gain_scope": "Shared command-gain state retained while disabled. Mathematical RC state, not physical bias. Existing rail-dependent output conductance, current capacity and headroom remain additional boundary assumptions; this is not the full system RF chain.",
     "scope": "Supply-connected bounded output boundary with a declared active bias-current floor. Sourced output current consumes that floor rather than being counted twice. Half the shared bias current per leg is an assumed capacity, not a proven transistor driver. Reverse junctions and feedback bandwidth remain unmodeled.",
     "supply_current_accounting_error_a": 1.0408340855860843e-17,
     "maximum_branch_current_a": 0.005037722621901225
@@ -170,10 +178,10 @@
   "attached_core_source_demand": {
     "whole_transient": {
       "peak_source_current_a": 0.005037722621901225,
-      "peak_sink_current_a": 0.004978102310258777,
+      "peak_sink_current_a": 0.004930271637240784,
       "peak_supply_source_current_a": 0.028,
       "mean_supply_draw_a": 0.011199999999999998,
-      "mean_bias_completion_current_a": 0.00994758968928393
+      "mean_bias_completion_current_a": 0.010090850693055195
     },
     "scope": "Finite supply-connected TX branch currents, summed without cancellation; behavioral capacity is unqualified."
   },
@@ -201,14 +209,14 @@
     "disabled": {
       "status": "window_reached_not_acceptance",
       "samples": 2500,
-      "pad_min_v": 1.644760474581751,
-      "pad_max_v": 1.654850692470332,
-      "core_common_mode_min_v": 1.649708751876592,
-      "core_common_mode_max_v": 1.6498731530130155,
+      "pad_min_v": 1.64476047458172,
+      "pad_max_v": 1.654850692470273,
+      "core_common_mode_min_v": 1.649708751876634,
+      "core_common_mode_max_v": 1.6498731530128956,
       "bias_min_v": 1.65,
       "bias_max_v": 1.65,
-      "differential_pp_v": 0.011076501806572825,
-      "core_differential_pp_v": 0.011061909871377118,
+      "differential_pp_v": 0.011076501806486894,
+      "core_differential_pp_v": 0.011061909871276976,
       "attached_core_source_demand": {
         "peak_source_current_a": 0.0,
         "peak_sink_current_a": 0.0,
@@ -216,19 +224,19 @@
         "mean_supply_draw_a": 0.0,
         "mean_bias_completion_current_a": 0.0
       },
-      "peak_pad_and_core_return_current_a": 4.523563341542051e-06
+      "peak_pad_and_core_return_current_a": 4.523563314962501e-06
     },
     "reset": {
       "status": "window_reached_not_acceptance",
       "samples": 2500,
-      "pad_min_v": 1.644625543158805,
-      "pad_max_v": 1.654718056224369,
-      "core_common_mode_min_v": 1.6495766304836275,
-      "core_common_mode_max_v": 1.6497342535232806,
+      "pad_min_v": 1.644625543158695,
+      "pad_max_v": 1.654718056224358,
+      "core_common_mode_min_v": 1.6495766304835475,
+      "core_common_mode_max_v": 1.6497342535232487,
       "bias_min_v": 1.65,
       "bias_max_v": 1.65,
-      "differential_pp_v": 0.011076467936165901,
-      "core_differential_pp_v": 0.011062028416600977,
+      "differential_pp_v": 0.011076467936177004,
+      "core_differential_pp_v": 0.011062028416569003,
       "attached_core_source_demand": {
         "peak_source_current_a": 0.0,
         "peak_sink_current_a": 0.0,
@@ -236,19 +244,19 @@
         "mean_supply_draw_a": 0.0,
         "mean_bias_completion_current_a": 0.0
       },
-      "peak_pad_and_core_return_current_a": 4.517423252102357e-06
+      "peak_pad_and_core_return_current_a": 4.517423256587526e-06
     },
     "unpowered": {
       "status": "window_reached_not_acceptance",
       "samples": 3500,
-      "pad_min_v": 1.644427697095589,
-      "pad_max_v": 1.654550690470574,
-      "core_common_mode_min_v": 1.6493750056983265,
-      "core_common_mode_max_v": 1.6495673760008014,
+      "pad_min_v": 1.644427697095586,
+      "pad_max_v": 1.654550690470745,
+      "core_common_mode_min_v": 1.64937500569832,
+      "core_common_mode_max_v": 1.6495673760008174,
       "bias_min_v": 0.0,
       "bias_max_v": 0.0,
-      "differential_pp_v": 0.011076710034364945,
-      "core_differential_pp_v": 0.011062149239075003,
+      "differential_pp_v": 0.011076710034270132,
+      "core_differential_pp_v": 0.011062149239295938,
       "attached_core_source_demand": {
         "peak_source_current_a": 0.0,
         "peak_sink_current_a": 0.0,
@@ -256,19 +264,19 @@
         "mean_supply_draw_a": 0.0,
         "mean_bias_completion_current_a": 0.0
       },
-      "peak_pad_and_core_return_current_a": 4.516870463763646e-06
+      "peak_pad_and_core_return_current_a": 4.516870457573745e-06
     },
     "brownout": {
       "status": "window_reached_not_acceptance",
       "samples": 2000,
-      "pad_min_v": 1.644292801512304,
-      "pad_max_v": 1.654362432200657,
-      "core_common_mode_min_v": 1.6492429184888695,
-      "core_common_mode_max_v": 1.6493866138138975,
+      "pad_min_v": 1.644292801512321,
+      "pad_max_v": 1.654362432200824,
+      "core_common_mode_min_v": 1.6492429184888866,
+      "core_common_mode_max_v": 1.649386613813971,
       "bias_min_v": 0.7499999999999999,
       "bias_max_v": 0.7499999999999999,
-      "differential_pp_v": 0.011076345082622119,
-      "core_differential_pp_v": 0.011061905800791916,
+      "differential_pp_v": 0.011076345082463135,
+      "core_differential_pp_v": 0.011061905800793914,
       "attached_core_source_demand": {
         "peak_source_current_a": 0.0,
         "peak_sink_current_a": 0.0,
@@ -276,19 +284,19 @@
         "mean_supply_draw_a": 0.0,
         "mean_bias_completion_current_a": 0.0
       },
-      "peak_pad_and_core_return_current_a": 4.516405112129573e-06
+      "peak_pad_and_core_return_current_a": 4.516405097226328e-06
     },
     "reconfiguration": {
       "status": "window_reached_not_acceptance",
       "samples": 6007,
-      "pad_min_v": 1.644074219212526,
-      "pad_max_v": 1.654278771696347,
-      "core_common_mode_min_v": 1.6490274461210621,
-      "core_common_mode_max_v": 1.649303196274701,
+      "pad_min_v": 1.644074219212451,
+      "pad_max_v": 1.654278771696394,
+      "core_common_mode_min_v": 1.6490274461211292,
+      "core_common_mode_max_v": 1.6493031962747136,
       "bias_min_v": 0.7499999999999999,
       "bias_max_v": 1.65,
-      "differential_pp_v": 0.011077071740974942,
-      "core_differential_pp_v": 0.011062633029482072,
+      "differential_pp_v": 0.011077071740948963,
+      "core_differential_pp_v": 0.011062633029395919,
       "attached_core_source_demand": {
         "peak_source_current_a": 0.0,
         "peak_sink_current_a": 0.0,
@@ -296,27 +304,27 @@
         "mean_supply_draw_a": 0.0,
         "mean_bias_completion_current_a": 0.0
       },
-      "peak_pad_and_core_return_current_a": 4.516167004420658e-06
+      "peak_pad_and_core_return_current_a": 4.516167007533506e-06
     },
     "reactivated": {
       "status": "window_reached_not_acceptance",
       "samples": 7000,
-      "pad_min_v": 1.484551744066813,
-      "pad_max_v": 1.815347182180632,
-      "core_common_mode_min_v": 1.6481489547519774,
-      "core_common_mode_max_v": 1.652187024979574,
+      "pad_min_v": 1.506661442122317,
+      "pad_max_v": 1.792938178057616,
+      "core_common_mode_min_v": 1.6484950182154845,
+      "core_common_mode_max_v": 1.6518420727921606,
       "bias_min_v": 1.65,
       "bias_max_v": 1.65,
-      "differential_pp_v": 0.652800194255168,
-      "core_differential_pp_v": 0.731146924952637,
+      "differential_pp_v": 0.5645648496788509,
+      "core_differential_pp_v": 0.6324228977208868,
       "attached_core_source_demand": {
-        "peak_source_current_a": 0.004952172032463112,
-        "peak_sink_current_a": 0.004953638127517056,
+        "peak_source_current_a": 0.00427162994365916,
+        "peak_sink_current_a": 0.004267260534978756,
         "peak_supply_source_current_a": 0.028,
         "mean_supply_draw_a": 0.027999999999999994,
-        "mean_bias_completion_current_a": 0.024873526048827987
+        "mean_bias_completion_current_a": 0.0254105064847935
       },
-      "peak_pad_and_core_return_current_a": 0.0281593156982203
+      "peak_pad_and_core_return_current_a": 0.02813723775016606
     }
   },
   "transfer_at_carrier": {
@@ -1134,7 +1142,10 @@
     "package_source": "declared_RF_package_probe",
     "external_differential_termination_ohm": null,
     "bond_r_ohm_per_leg": 1,
-    "core_load_f_per_leg": 1e-13
+    "core_load_f_per_leg": 1e-13,
+    "core_load_source": "blocks.rfdriver.parameters.output_capacitance_f_per_leg",
+    "selected_core_load_f_per_leg": 1e-13,
+    "core_load_override": false
   },
   "limitations": [
     "Physical pad devices and extracted capacitance are connected; full distributed interconnect R is absent. Optional segmented metal estimate is identified separately.",
@@ -1152,9 +1163,9 @@
   ],
   "source_sha256": {
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-transmit-extracted-c.spice": "6412e885c6ce2a7b47b5e088aa45d9935faaeb8111e952ab507e8fae6f7a1050",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/analog_screen.py": "c36549bf5e0189a491e3b6a74e73f4328c37c347454fdc84c3a2c35e6afebd05",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/analog_screen.py": "39445732538612b65583177d51e026a9d1248af3719d841b1e0be1f17b844c1d",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/circuits.py": "bccd2850f5023fd97f65c1cf53ee297672157ef1e4dd90f8923a0e4d6f3d2130",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "b1b0dec79b6f9dc94733f71a8c425ec2a5c114188cd36acaf435694210944385",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "e931f969248a4d115beec67fc6c28ad02fc030e8436c385acabe22410f9ecfe8",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/contract.json": "7082c21cfb1bc84d61097a5d74f0549b022b480cdb490902ecdfcb9377c2189f",
     "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
     "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
@@ -1165,41 +1176,41 @@
   "retained_supply_exposure": {
     "supply_fall": {
       "status": "exposure_measured_not_safe_stress_verdict",
-      "peak_pad_above_supply_v": 1.654599639847698,
-      "peak_core_above_supply_v": 1.654591708477041,
+      "peak_pad_above_supply_v": 1.654599639847707,
+      "peak_core_above_supply_v": 1.654591708476996,
       "peak_core_below_ground_v": 0.0,
       "peak_supply_return_current_a": 0.0,
-      "peak_ground_return_current_a": 4.517102879566681e-06,
+      "peak_ground_return_current_a": 4.517102882159852e-06,
       "peak_source_branch_current_a": 0.0,
       "peak_sink_branch_current_a": 0.0
     },
     "unpowered": {
       "status": "exposure_measured_not_safe_stress_verdict",
-      "peak_pad_above_supply_v": 1.654550690470574,
-      "peak_core_above_supply_v": 1.654542762847165,
+      "peak_pad_above_supply_v": 1.654550690470745,
+      "peak_core_above_supply_v": 1.654542762847306,
       "peak_core_below_ground_v": 0.0,
       "peak_supply_return_current_a": 0.0,
-      "peak_ground_return_current_a": 4.516870463763646e-06,
+      "peak_ground_return_current_a": 4.516870457573745e-06,
       "peak_source_branch_current_a": 0.0,
       "peak_sink_branch_current_a": 0.0
     },
     "brownout": {
       "status": "exposure_measured_not_safe_stress_verdict",
-      "peak_pad_above_supply_v": 0.15436243220065693,
-      "peak_core_above_supply_v": 0.15435450541763296,
+      "peak_pad_above_supply_v": 0.1543624322008239,
+      "peak_core_above_supply_v": 0.154354505417704,
       "peak_core_below_ground_v": 0.0,
       "peak_supply_return_current_a": 0.0,
-      "peak_ground_return_current_a": 4.516405112129573e-06,
+      "peak_ground_return_current_a": 4.516405097226328e-06,
       "peak_source_branch_current_a": 0.0,
       "peak_sink_branch_current_a": 0.0
     },
     "supply_recovery": {
       "status": "exposure_measured_not_safe_stress_verdict",
-      "peak_pad_above_supply_v": 0.14930229457189292,
-      "peak_core_above_supply_v": 0.14936381107827001,
+      "peak_pad_above_supply_v": 0.14930229457199395,
+      "peak_core_above_supply_v": 0.14936381107836905,
       "peak_core_below_ground_v": 0.0,
       "peak_supply_return_current_a": 0.0,
-      "peak_ground_return_current_a": 4.516167004420658e-06,
+      "peak_ground_return_current_a": 4.516167007533506e-06,
       "peak_source_branch_current_a": 0.0,
       "peak_sink_branch_current_a": 0.0
     },
@@ -1209,34 +1220,34 @@
       "peak_core_above_supply_v": 0.0,
       "peak_core_below_ground_v": 0.0,
       "peak_supply_return_current_a": 0.0,
-      "peak_ground_return_current_a": 0.0281593156982203,
-      "peak_source_branch_current_a": 0.004952172032463112,
-      "peak_sink_branch_current_a": 0.004953638127517056
+      "peak_ground_return_current_a": 0.02813723775016606,
+      "peak_source_branch_current_a": 0.00427162994365916,
+      "peak_sink_branch_current_a": 0.004267260534978756
     }
   },
   "stale_enable_diagnostic": {
     "transient_complete": true,
     "last_time_s": 8e-08,
     "supply_current_accounting_error_a": 1.3877787807814457e-17,
-    "maximum_branch_current_a": 0.01194708869368066,
+    "maximum_branch_current_a": 0.01101563356622483,
     "exposure": {
       "supply_fall": {
         "status": "exposure_measured_not_safe_stress_verdict",
-        "peak_pad_above_supply_v": 1.617847171971297,
-        "peak_core_above_supply_v": 1.617691648092157,
+        "peak_pad_above_supply_v": 1.617818422705075,
+        "peak_core_above_supply_v": 1.617662923518152,
         "peak_core_below_ground_v": 0.0,
         "peak_supply_return_current_a": 0.0,
-        "peak_ground_return_current_a": 0.03302664274100851,
-        "peak_source_branch_current_a": 0.004579222500736063,
-        "peak_sink_branch_current_a": 0.009120735818450966
+        "peak_ground_return_current_a": 0.03302848121753267,
+        "peak_source_branch_current_a": 0.004579174795023276,
+        "peak_sink_branch_current_a": 0.009109277135573055
       },
       "unpowered": {
         "status": "exposure_measured_not_safe_stress_verdict",
-        "peak_pad_above_supply_v": 1.610031309668346,
-        "peak_core_above_supply_v": 1.610023504719816,
+        "peak_pad_above_supply_v": 1.610003136529799,
+        "peak_core_above_supply_v": 1.609995331734914,
         "peak_core_below_ground_v": 0.0,
         "peak_supply_return_current_a": 0.0,
-        "peak_ground_return_current_a": 4.399045892212338e-06,
+        "peak_ground_return_current_a": 4.399023372946147e-06,
         "peak_source_branch_current_a": 0.0,
         "peak_sink_branch_current_a": 0.0
       },
@@ -1246,9 +1257,9 @@
         "peak_core_above_supply_v": 0.0,
         "peak_core_below_ground_v": 0.0,
         "peak_supply_return_current_a": 0.0,
-        "peak_ground_return_current_a": 0.02483600806149342,
+        "peak_ground_return_current_a": 0.02478516132401545,
         "peak_source_branch_current_a": 0.0,
-        "peak_sink_branch_current_a": 0.006323183051461979
+        "peak_sink_branch_current_a": 0.006282769247951161
       },
       "supply_recovery": {
         "status": "exposure_measured_not_safe_stress_verdict",
@@ -1256,9 +1267,9 @@
         "peak_core_above_supply_v": 0.0,
         "peak_core_below_ground_v": 0.0,
         "peak_supply_return_current_a": 0.0,
-        "peak_ground_return_current_a": 0.02596211137232975,
-        "peak_source_branch_current_a": 0.01194708869368066,
-        "peak_sink_branch_current_a": 0.00642501857533772
+        "peak_ground_return_current_a": 0.02589645475710242,
+        "peak_source_branch_current_a": 0.01101563356622483,
+        "peak_sink_branch_current_a": 0.005909256287266433
       },
       "recovered": {
         "status": "exposure_measured_not_safe_stress_verdict",
@@ -1266,9 +1277,9 @@
         "peak_core_above_supply_v": 0.0,
         "peak_core_below_ground_v": 0.0,
         "peak_supply_return_current_a": 0.0,
-        "peak_ground_return_current_a": 0.02810696668128725,
-        "peak_source_branch_current_a": 0.005309329265223651,
-        "peak_sink_branch_current_a": 0.004913370449053721
+        "peak_ground_return_current_a": 0.02808661900564553,
+        "peak_source_branch_current_a": 0.004295619150837628,
+        "peak_sink_branch_current_a": 0.004242688860751192
       }
     },
     "scope": "Enable request held high through supply collapse, brownout and recovery. Only VEN differs from nominal retained network. The behavioral rail/headroom gates are not an implemented supervisor; absent driver reverse junctions prevent a power-off safety claim."
@@ -1296,20 +1307,20 @@
       "reactivated": {
         "status": "measured_not_compliance",
         "cycles": 33,
-        "fundamental_differential_peak_v": 0.2710646582180239,
-        "fundamental_power_w": 0.0007347604893485412,
-        "fundamental_power_dbm": -1.3385420527757041,
-        "differential_ac_power_w": 0.0007347692308207209,
-        "target_power_ratio": 0.7347604893485412,
+        "fundamental_differential_peak_v": 0.2245643754790069,
+        "fundamental_power_w": 0.000504291587342764,
+        "fundamental_power_dbm": -2.973182767369409,
+        "differential_ac_power_w": 0.0005046334492787686,
+        "target_power_ratio": 0.5042915873427639,
         "meets_target_power": false,
         "harmonic_peak_v": [
-          0.2710646582180239,
-          2.369927610991033e-05,
-          0.0008409424178855839,
-          2.357973382781408e-06,
-          1.4352569752509817e-05
+          0.2245643754790069,
+          9.55188345771689e-05,
+          0.0004422202053599286,
+          2.840043914322325e-05,
+          2.5598998233315687e-05
         ],
-        "harmonics_2_to_5_ratio": 0.003104063905892823
+        "harmonics_2_to_5_ratio": 0.0020218315221954253
       }
     },
     "scope": "Differential voltage across the actual external resistors, subtracting the retained peer-source voltage. Excludes common-mode dissipation. Integer-cycle tone measurement with interpolation; not EVM, spectral-mask or modulated-power qualification."

@@ -20,6 +20,20 @@ def control(work,name,analysis,vectors):
     return base_control(work,name,analysis,vectors).replace('.control\n','.control\nset numdgt=15\n',1)
 
 
+def supply_gain_network(driver):
+    """Shared command-gain law; R/C realize mathematical, not physical, state."""
+    model=driver['supply_gain_model']
+    dc=model['dc_elasticity'];hf=model['high_frequency_elasticity'];pole=model['pole_hz']
+    nominal=driver['gain_reference_v']
+    if (any(isinstance(v,bool) or not np.isfinite(v) for v in (dc,hf,pole,nominal))
+            or not 0<=hf<=dc or pole<=0 or nominal<=0):
+        raise ValueError('Invalid shared RF supply-gain response')
+    return (f'BRF_RAIL_FRACTION RF_RAIL_FRACTION 0 V=V(VDD)/{nominal}-1\n'
+        'RRF_GAIN_STATE RF_RAIL_FRACTION RF_GAIN_STATE 1\n'
+        f'CRF_GAIN_STATE RF_GAIN_STATE 0 {1/(2*np.pi*pole)}\n'
+        f'BRF_SUPPLY_GAIN RF_SUPPLY_GAIN 0 V=1+{hf}*V(RF_RAIL_FRACTION)+{dc-hf}*V(RF_GAIN_STATE)\n')
+
+
 def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_report=None,
            capacitance_location="bond", resistance_corner="nominal", external_coupling_f=None, rf_tx_gain=None, external_series_l_h=0., external_inductor_q=30., numerical_anchor_resistance=1e12, core_load_f_per_leg=None):
     if not np.isfinite(external_series_l_h) or external_series_l_h<0 or not np.isfinite(external_inductor_q) or external_inductor_q<=0:
@@ -135,6 +149,7 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
             f'CBIAS VCM VSS {output_c}\nRBIAS_BLEED VCM VSS {bleed}\n')
     else:network+='BVCM VCM 0 V=.5*V(VDD)\n'
     network+='VEN ENABLE 0 PWL(0 1 12n 1 12.2n 0 60n 0 60.2n 1 80n 1)\n'
+    if tx:network+=supply_gain_network(architecture['blocks']['rfdriver']['parameters'])
     for leg,sign in [('P',1),('N',-1)]:
         if tx:
             driver=architecture['blocks']['rfdriver']['parameters']
@@ -142,13 +157,15 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
             resistance=driver['source_r_ohm_differential']/2
             # Commands are unloaded; output current comes from the rails.
             # Passive bleed is retained when the behavioral driver turns off.
-            network+=f'BCORE_{leg} CORE_{leg} 0 V=V(VCM)+{sign*peak/2}*V(ENABLE)*sin(2*pi*{frequency}*time)\n'
+            network+=f'BCORE_{leg} CORE_{leg} 0 V=V(VCM)+{sign*peak/2}*V(ENABLE)*max(V(RF_SUPPLY_GAIN),0)*sin(2*pi*{frequency}*time)\n'
             limit=driver['bias_current_a']/2
             headroom=driver['headroom_per_rail_v']
             nominal=driver['gain_reference_v']
             finite_tx=dict(current_limit_a_per_leg=limit,output_r_ohm_per_leg=resistance,
                 headroom_v=headroom,passive_bleed_ohm_per_leg=1e6,
                 active_bias_current_floor_a=driver['bias_current_a'],
+                supply_gain_model=driver['supply_gain_model'],
+                supply_gain_scope='Shared command-gain state retained while disabled. Mathematical RC state, not physical bias. Existing rail-dependent output conductance, current capacity and headroom remain additional boundary assumptions; this is not the full system RF chain.',
                 scope='Supply-connected bounded output boundary with a declared active bias-current floor. Sourced output current consumes that floor rather than being counted twice. Half the shared bias current per leg is an assumed capacity, not a proven transistor driver. Reverse junctions and feedback bandwidth remain unmodeled.')
             node=f'{core_prefix}_{leg}'
             network+=f'BREQUEST_{leg} REQUEST_{leg} 0 V={limit}*tanh((V(CORE_{leg})-V({node}))/({resistance}*{limit}))*V(ENABLE)*min(max(V(VDD)/{nominal},0),1)\n'

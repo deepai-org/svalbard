@@ -137,7 +137,7 @@
     "source_sha256": {
       "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-transmit-screen.json": "63b70e5d5c0b942d605eea28a19d5f42ad9990d6f82384a74051fea6c0cfdc7c",
       "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "e931f969248a4d115beec67fc6c28ad02fc030e8436c385acabe22410f9ecfe8",
-      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "664236fe102fab03c1a3b9bcd0ece8fca478e845e91e5a67079eec62bd335067",
+      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "a7ea093454a3812f6998e655cbc48b813bb1ea76fd033ecadcc08dc7108b29ac",
       "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/contract.json": "7082c21cfb1bc84d61097a5d74f0549b022b480cdb490902ecdfcb9377c2189f"
     }
   },
@@ -253,7 +253,8 @@
       "stale_screen_sources": [
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py",
         "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_fixture.py"
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_fixture.py",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json"
       ],
       "stale_layout_sources": [
         "analog/pads/layout.py",
@@ -384,7 +385,7 @@
         "model": "6412e885c6ce2a7b47b5e088aa45d9935faaeb8111e952ab507e8fae6f7a1050",
         "layout": "67415893e4415099409dce31b9d8a137fa29868a8f0772d3dc5a1a518336b06a",
         "gds": "55b45d8279e0d08fef6f82193cd85c1abb28685aa54e3d84fdd106592d34794a",
-        "screen": "5f49eb3f17dccea92315dcc107778b272ad12aee08d31e0d5a05652f2950fdb8"
+        "screen": "f2789512266822019396481672862cc9ccb99367dd644dfcff2410fbdceafc7c"
       },
       "reported_transient_complete": true,
       "required_state_windows": {
@@ -410,10 +411,7 @@
       "all_required_state_names_present": true,
       "missing_required_states": [],
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/analog_screen.py",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json"
-      ],
+      "stale_screen_sources": [],
       "stale_layout_sources": [
         "analog/pads/generated/rf-receive-layout.json",
         "analog/pads/generated/rf-transmit-layout.json"
@@ -533,7 +531,7 @@
     "rf_transmit": {
       "status": "incomplete_electrical_acceptance",
       "source_report": "rf-transmit-screen.json",
-      "source_report_sha256": "5f49eb3f17dccea92315dcc107778b272ad12aee08d31e0d5a05652f2950fdb8",
+      "source_report_sha256": "f2789512266822019396481672862cc9ccb99367dd644dfcff2410fbdceafc7c",
       "recorded_limit_checks": [
         {
           "quantity": "fundamental_tone_power",
@@ -545,7 +543,7 @@
         {
           "quantity": "fundamental_tone_power",
           "mode": "reactivated",
-          "measured_dbm": -1.3385420527757041,
+          "measured_dbm": -2.973182767369409,
           "status": "recorded_limit_miss",
           "scope": "Recorded tone target only; not modulated RF acceptance."
         }

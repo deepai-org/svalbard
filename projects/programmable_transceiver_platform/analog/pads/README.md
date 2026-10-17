@@ -709,6 +709,24 @@ remain unimplemented. Nominal and maximum-gain retained-state screens, including
 held-enable faults, preserve the signal results (about −1.34 and +0.16 dBm at
 high route resistance) while now drawing the assigned 28 mA when active.
 
+The RF pad driver now consumes `rfdriver.supply_gain_model` for its command
+amplitude, retaining the one-pole state through disabled and power-off windows.
+Previously this shared response was absent from the pad bench. Its behavioral
+RC state is mathematical, not a proposed physical capacitor or bias circuit;
+output-stage current/headroom and rail-dependent conductance remain separate
+boundary assumptions. The response matches the shared analytic transfer law
+at 61 frequencies from 1 kHz to 1 GHz (maximum complex error below 3e-16).
+Signal-path bandwidth and physical bias startup remain unimplemented.
+
+This correction leaves initial nominal tone power at about −1.34 dBm but lowers
+the post-shutdown reactivated window to about −2.97 dBm. Maximum-gain results
+must likewise be assessed separately before and after rail recovery in the
+published reports. **Re-enable is not RF readiness:** the common controller must
+allow retained bias/gain state to recover before accepting payload. This is an
+additional requirement to clock validity and local rail qualification, not a
+reason to reset the mathematical state or recalibrate the input amplitude.
+The 80 ns case exposes the gap but does not establish a worst-case recovery time.
+
 The shared RF-domain allocations total 53 mA in warm RF operation against the
 contract's 48 mA domain allocation. `coverage.json:rf_supply_planning` exposes
 this independently of the whole-chip current ceiling. Neither number is a

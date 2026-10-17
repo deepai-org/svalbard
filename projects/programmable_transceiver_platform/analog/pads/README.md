@@ -577,6 +577,20 @@ controls and stale inputs, avoiding another expensive analog run only when the
 same deterministic circuit inputs are proven. The normal TX builder uses this
 check; identical events do not prove sustained operation or physical detectors.
 
+`transmit_loaded_dc.py --probe-bias-driver` now tests finite 200 Ω and 1 kΩ
+reference-drive resistance, with and without 40 ns precharge, in both static
+steering states. The full extracted circuit and external differential network
+remain connected. At 200 Ω, both tail currents enter the ±3% band within
+14.8–25.8 ns after enable and remain there through the observation window;
+peak bias-source current is about 4.15/3.81 mA. Three of four 1 kΩ cases fail
+the 80 ns post-enable settling window. Precharge does not eliminate steering
+kickback or common-mode settling. `full-pad/bias-driver-screen.json` records
+these cases. This motivates a roughly 200 Ω drive target and explicit settling
+qualification, not a claim that an actual driver meets it. The probe starts
+with supply and termination regulation established, uses static data, and does
+not charge ideal reference-source power to VDD. Full finite-driver lifecycle,
+supply/current accounting and physical implementation remain open.
+
 This candidate is not the canonical selection. Finite bias-driver behavior and the physical bias/control implementation
 remain adoption gates; the nominal ideal-bias lifecycle is now closed. The earlier hybrid
 DC probes and oversized direct-replication experiment are diagnostic evidence,

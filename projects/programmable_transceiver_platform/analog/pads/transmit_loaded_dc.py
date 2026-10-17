@@ -92,9 +92,46 @@ def probe_headroom(work, dc_work):
     (work/'screen.json').write_text(json.dumps(report,indent=2)+'\n')
     return report
 
+
+def probe_bias_driver(work,dc_work):
+    """Finite Thevenin driver diagnostic; not a physical driver or full lifecycle."""
+    work.mkdir(parents=True,exist_ok=False)
+    previous=json.loads((dc_work/'screen.json').read_text())
+    for name,digest in previous['source_sha256'].items():
+        if hashlib.sha256(Path(name).read_bytes()).hexdigest()!=digest:raise ValueError('Stale DC input '+name)
+    source=(dc_work/'main_post.spice').read_text().split('.control')[0]
+    biases={branch:float(re.search(r'^BBIAS_'+branch+r' .*? V=([0-9.]+)',source,re.M)[1]) for branch in ('MAIN','POST')}
+    supply=float(re.search(r'^VDD VDD 0 ([0-9.]+)$',source,re.M)[1])
+    targets=previous['cases']['main_post']['tail_targets_a']
+    results=[]
+    for resistance in (200,1000):
+     for early in (True,False):
+      for data in (0,supply):
+       deck=source
+       for branch,bias in biases.items():
+        start=20 if early else 60
+        deck,n=re.subn(r'^BBIAS_'+branch+r' .*$',f'VBIAS_{branch} DRIVE_{branch} 0 PWL(0 0 {start}n 0 {start+.2}n {bias} 140n {bias})\nRBIAS_{branch} DRIVE_{branch} {branch}_BIAS {resistance}',deck,flags=re.M);assert n==1
+        deck,n=re.subn(r'^VEN_'+branch+r' .*$',f'VEN_{branch} REQ_EN_{branch} 0 PWL(0 0 60n 0 60.2n 1 140n 1)',deck,flags=re.M);assert n==1
+       deck,n=re.subn(r'^VDATA .*$',f'VDATA DATA 0 {data}',deck,flags=re.M);assert n==1
+       name=f'r{resistance}_pre{int(early)}_data{int(data)}'
+       deck+=control(work,name,'tran .1n 140n 0 .25n','v(MAIN_BIAS) v(POST_BIAS) i(v.xpad.xphysical.vsense_main) i(v.xpad.xphysical.vsense_post) i(VBIAS_MAIN) i(VBIAS_POST) v(TERM_VCM)')
+       x=run_spice(work,name,deck,reject_transient_op=True)
+       assert x[-1,0]>139.99e-9
+       good=(abs(x[:,3]/targets['MAIN']-1)<.03)&(abs(x[:,4]/targets['POST']-1)<.03)
+       bad=np.flatnonzero(~good | (x[:,0]<60.2e-9));last=bad[-1]
+       settled=float((x[last+1,0]-60.2e-9)*1e9) if last+1<len(x) and x[last+1,0]<=120e-9 else None
+       results.append(dict(resistance_ohm=resistance,precharge=early,data_v=data,settle_after_enable_ns=settled,peak_bias_current_a=np.max(-x[:,5:7],axis=0).tolist(),bias_at_enable_v=[float(np.interp(60e-9,x[:,0],x[:,i])) for i in (1,2)],final_tail_a=x[-1,3:5].tolist()))
+    report=dict(status='finite_bias_driver_diagnostic_not_selected_design',cases=results,
+        biases_v=biases,targets_a=targets,
+        scope='Same full extracted pad/buffer/interlock and differential load; finite series resistance after ideal reference sources. Bias starts at20ns or60ns; steering starts at60ns. Static data only, supply and termination buffer already established. Settling requires both currents within3percent through140ns, with at least20ns observed hold. Reference power is not charged to VDD; no physical driver, brownout, variation or serial-data acceptance.',
+        source_sha256={str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in [Path(__file__),Path(__file__).with_name('screen.py'),dc_work/'main_post.spice',dc_work/'screen.json']})
+    (work/'screen.json').write_text(json.dumps(report,indent=2)+'\n');return report
+
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output-dir',type=Path,required=True);p.add_argument('--fixture',type=Path,required=True)
     p.add_argument('--probe-headroom',action='store_true')
+    p.add_argument('--probe-bias-driver',action='store_true')
     a=p.parse_args();run(a.output_dir.resolve(),a.fixture.resolve())
     if a.probe_headroom:probe_headroom(a.output_dir.resolve()/'headroom-probe',a.output_dir.resolve())
+    if a.probe_bias_driver:probe_bias_driver(a.output_dir.resolve()/'bias-driver',a.output_dir.resolve())

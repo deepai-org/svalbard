@@ -1,0 +1,164 @@
+{
+  "status": "finite_bias_driver_diagnostic_not_selected_design",
+  "cases": [
+    {
+      "resistance_ohm": 200,
+      "precharge": true,
+      "data_v": 0,
+      "settle_after_enable_ns": 25.742544800000008,
+      "peak_bias_current_a": [
+        0.00414524996,
+        0.00380722979
+      ],
+      "bias_at_enable_v": [
+        0.872976701,
+        0.801991605
+      ],
+      "final_tail_a": [
+        0.0162096803,
+        0.00812142458
+      ]
+    },
+    {
+      "resistance_ohm": 200,
+      "precharge": true,
+      "data_v": 3.3,
+      "settle_after_enable_ns": 14.811543200000001,
+      "peak_bias_current_a": [
+        0.00414524999,
+        0.00380722978
+      ],
+      "bias_at_enable_v": [
+        0.872976701,
+        0.801991605
+      ],
+      "final_tail_a": [
+        0.0157855527,
+        0.00791437974
+      ]
+    },
+    {
+      "resistance_ohm": 200,
+      "precharge": false,
+      "data_v": 0,
+      "settle_after_enable_ns": 17.6725172,
+      "peak_bias_current_a": [
+        0.00415005475,
+        0.00381076875
+      ],
+      "bias_at_enable_v": [
+        2.61073348e-16,
+        6.05085704e-16
+      ],
+      "final_tail_a": [
+        0.0161966063,
+        0.00811883615
+      ]
+    },
+    {
+      "resistance_ohm": 200,
+      "precharge": false,
+      "data_v": 3.3,
+      "settle_after_enable_ns": 24.174360100000005,
+      "peak_bias_current_a": [
+        0.00414837935,
+        0.00381075177
+      ],
+      "bias_at_enable_v": [
+        2.24679099e-16,
+        3.40949182e-16
+      ],
+      "final_tail_a": [
+        0.0157699913,
+        0.00792214044
+      ]
+    },
+    {
+      "resistance_ohm": 1000,
+      "precharge": true,
+      "data_v": 0,
+      "settle_after_enable_ns": null,
+      "peak_bias_current_a": [
+        0.000864001768,
+        0.000793692593
+      ],
+      "bias_at_enable_v": [
+        0.823650696,
+        0.766357617
+      ],
+      "final_tail_a": [
+        0.0164780758,
+        0.00831274118
+      ]
+    },
+    {
+      "resistance_ohm": 1000,
+      "precharge": true,
+      "data_v": 3.3,
+      "settle_after_enable_ns": 35.86769,
+      "peak_bias_current_a": [
+        0.000864001769,
+        0.000793692592
+      ],
+      "bias_at_enable_v": [
+        0.823650696,
+        0.766357617
+      ],
+      "final_tail_a": [
+        0.0157989049,
+        0.0079063228
+      ]
+    },
+    {
+      "resistance_ohm": 1000,
+      "precharge": false,
+      "data_v": 0,
+      "settle_after_enable_ns": null,
+      "peak_bias_current_a": [
+        0.000864686663,
+        0.000794144432
+      ],
+      "bias_at_enable_v": [
+        8.04677894e-16,
+        7.39450156e-16
+      ],
+      "final_tail_a": [
+        0.0149618637,
+        0.00767386895
+      ]
+    },
+    {
+      "resistance_ohm": 1000,
+      "precharge": false,
+      "data_v": 3.3,
+      "settle_after_enable_ns": null,
+      "peak_bias_current_a": [
+        0.000864361643,
+        0.000794151822
+      ],
+      "bias_at_enable_v": [
+        1.9372232e-17,
+        1.27756178e-15
+      ],
+      "final_tail_a": [
+        0.0144902171,
+        0.00713678105
+      ]
+    }
+  ],
+  "biases_v": {
+    "MAIN": 0.873,
+    "POST": 0.802
+  },
+  "targets_a": {
+    "MAIN": 0.016,
+    "POST": 0.008
+  },
+  "scope": "Same full extracted pad/buffer/interlock and differential load; finite series resistance after ideal reference sources. Bias starts at20ns or60ns; steering starts at60ns. Static data only, supply and termination buffer already established. Settling requires both currents within3percent through140ns, with at least20ns observed hold. Reference power is not charged to VDD; no physical driver, brownout, variation or serial-data acceptance.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_loaded_dc.py": "d83bbf6a28422c4f35779b58be8a8aa1a8f88fa8b202d607d687b8f8f063889c",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "377e2d4c75fcc2b3d49344c6d2a3e686e7468a735425d18ec1260d1189d0f8d5",
+    "/home/ubuntu/svalbard/scratch/pad-tx-bias-drive-final/main_post.spice": "609c91e332eb5b0595e91bca8e0bdd8074eeb710ac27c6a5770696bf2c7bb097",
+    "/home/ubuntu/svalbard/scratch/pad-tx-bias-drive-final/screen.json": "c7f05e8bcad8cf68f29f64958e5226329840c6ba035f6188e306d2e232102dce"
+  }
+}

@@ -899,6 +899,18 @@
       "scope": "First-pass M4/M5 steering output routes; actual parasitic timing and integrated DRC/LVS remain required.",
       "match_pair_lengths": true,
       "meander_step_um": 4
+    },
+    "layout_parameters": {
+      "wired_transmit": {
+        "trunk_width_overrides_um": {
+          "PAD_P": 8.0,
+          "PAD_N": 8.0,
+          "TERM_P_R": 8.0,
+          "TERM_N_R": 8.0,
+          "TERM_VCM": 8.0
+        },
+        "scope": "Selected current-carrying bus widths; regeneration and routed resistance/capacitance acceptance required. Width alone does not qualify vias or electromigration."
+      }
     }
   }
 }

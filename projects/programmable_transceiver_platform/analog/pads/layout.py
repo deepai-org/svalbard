@@ -18,12 +18,16 @@ PDK = '/pdk/gf180mcuD'
 
 
 
-def trunk_geometry(nets, *, power_width_um=8.):
+def trunk_geometry(nets, *, power_width_um=8., width_overrides_um=None):
     """Allocate explicit power/return widths without crowding signal tracks."""
     if not .44<=power_width_um<=12:raise ValueError('Power trunk width outside reserved range')
+    overrides={} if width_overrides_um is None else dict(width_overrides_um)
+    if set(overrides)-set(nets):raise ValueError('Width override names an absent net')
+    if any(isinstance(v,bool) or not math.isfinite(v) or not .44<=v<=12 for v in overrides.values()):
+        raise ValueError('Trunk width outside reserved range')
     tracks={};widths={};edge=2.78;previous=None
     for net in sorted(nets):
-        width=power_width_um if net in ('VDD','VSS') else .44
+        width=overrides.get(net,power_width_um if net in ('VDD','VSS') else .44)
         if previous is not None:edge+=1. if max(previous,width)>.44 else .56
         tracks[net]=round(edge+width/2,4);widths[net]=width
         edge+=width;previous=width
@@ -73,7 +77,7 @@ def terminals(path):
     return [center(drain), center(gate), center(source), (bx, bodyrect[3]-.2)]
 
 
-def generate(work,family='wired_transmit', *, external_primary=False, serial_tail_units=None, folded_tails=False, fs_high_width_um=20., fs_series_geometry_um=None):
+def generate(work,family='wired_transmit', *, external_primary=False, serial_tail_units=None, folded_tails=False, fs_high_width_um=20., fs_series_geometry_um=None, trunk_width_overrides_um=None):
     if serial_tail_units is not None:
         if family!='wired_transmit':raise ValueError('Serial tail sizing applies only to wired TX')
         from circuits import wired_transmit
@@ -197,7 +201,10 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
         placements=[(12+(i%columns)*pitch,active_origin+(i//columns)*row_height+13,
                      active_origin+(i//columns)*row_height+1+(i%columns)*4*.8) for i in range(len(core_devices))]
         height = active_origin + math.ceil(len(core_devices)/columns)*row_height + 6
-    tracks,trunk_widths=trunk_geometry(nets)
+    layout_spec=PROJECT/'spec/schematic-implementation.json'
+    selected_layout=json.loads(layout_spec.read_text())['io_pad_first_pass'].get('layout_parameters',{}).get(family,{})
+    if trunk_width_overrides_um is None:trunk_width_overrides_um=selected_layout.get('trunk_width_overrides_um',{})
+    tracks,trunk_widths=trunk_geometry(nets,width_overrides_um=trunk_width_overrides_um)
     port_heights={port:(active_origin-2 if bounded_routes and port in signal_ports else height)
                   for port in circuit.ports}
     net_spans={net:(active_origin-4,height) for net in nets}
@@ -300,7 +307,7 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
             rect(metal,cx-1.,bond_y-1.,cx+1.,bond_y+1.)
         wire('metal4',cx,bond_y,tracks['PAD_'+leg],bond_y,width=6.)
         via(tracks['PAD_'+leg],bond_y,4,5)
-        wire('metal5',tracks['PAD_'+leg],bond_y,tracks['PAD_'+leg],active_origin-4)
+        wire('metal5',tracks['PAD_'+leg],bond_y,tracks['PAD_'+leg],active_origin-4,width=trunk_widths['PAD_'+leg])
     for index, port in enumerate(circuit.ports,1):
         x = tracks[port];y=port_heights[port]
         commands += [f'box values {x-.2} {y-.5} {x+.2} {y}',
@@ -332,7 +339,8 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
                   stock_export_returncode=stock.returncode,
                   device_count=len(circuit.devices), net_count=len(nets),
                   requires_attached_primary_protection=external_primary,
-                  pad_transverse_width_um=6.,pad_trunk_width_um=.44,
+                  pad_transverse_width_um=6.,pad_trunk_width_um=trunk_widths["PAD_P"],
+                  pad_trunk_widths_um={leg:trunk_widths["PAD_"+leg] for leg in ("P","N")},
                   net_track_x_um=tracks,net_trunk_widths_um=trunk_widths,
                   bounded_internal_routes=bounded_routes,net_trunk_spans_um=net_spans,port_heights_um=port_heights,
                   candidate_size_um=[candidate_width,height], reference_pair_size_um=[candidate_width,350],
@@ -352,7 +360,7 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
                   sources_sha256={str(p.relative_to(PROJECT)):hashlib.sha256(p.read_bytes()).hexdigest()
                                   for p in (Path(__file__),Path(__file__).with_name('gds_markers.py'),placement_source,Path(__file__).with_name('circuits.py'),
                                             Path(__file__).with_name('design.py'),Path(__file__).with_name('wired_receive.py'),Path(__file__).with_name('folded_tail.py'),
-                                            PROJECT/'spec/analog-architecture.json',PROJECT/'spec/contract.json')},
+                                            PROJECT/'spec/analog-architecture.json',PROJECT/'spec/contract.json',layout_spec)},
                   drc_count=(work/'drc-count.txt').read_text().strip(),
                   pcell_terminal_coordinates={keys[k]:v for k,v in pinloc.items()},
                   limitations=circuit.limitations+['Provider ring metal rails not yet integrated.'])

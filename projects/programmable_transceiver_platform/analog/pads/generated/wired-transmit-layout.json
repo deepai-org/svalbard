@@ -12,12 +12,13 @@
     },
     "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
     "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
-    "before_gds_sha256": "7b803b52cbe49a93e15219c1cae74d616c621fe4626a2586631dbacd514dbbb1",
-    "after_gds_sha256": "80204070b98eb9c2ca789f5b02aee2aedd01eab65f6eb236365246cbbf0b7eae",
-    "physical_magic_sha256": "4939f241d8c7bbc78282aaa5cdfab3451b16227613c689661756ebb75da99fb8",
+    "before_gds_sha256": "2912bb2bc643ca7755ddea35e6caf45bb6ee4c9a2c8c86f41e6eb6331fd8466e",
+    "after_gds_sha256": "413629d202d2851436a1bdf783c81ad22f98c6044dc099fc5d5ff01b565b1066",
+    "physical_magic_sha256": "48665df1443bd79782e7caadb34f3a22305ed5b1ecdbdc32ac32b5c6e8b615fc",
     "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
   },
   "serial_tail_units": 4,
+  "folded_tail_layout": null,
   "fs_high_width_um": 20.0,
   "fs_series_geometry_um": null,
   "bond_template": {
@@ -37,7 +38,11 @@
   "stock_export_returncode": 0,
   "requires_attached_primary_protection": false,
   "pad_transverse_width_um": 6.0,
-  "pad_trunk_width_um": 0.44,
+  "pad_trunk_width_um": 8.0,
+  "pad_trunk_widths_um": {
+    "P": 8.0,
+    "N": 8.0
+  },
   "net_track_x_um": {
     "CASCODE": 3.0,
     "DETECT_BLEED_0": 4.0,
@@ -64,61 +69,61 @@
     "MAIN_TAIL_5": 25.0,
     "MAIN_TAIL_6": 26.0,
     "MAIN_TAIL_7": 27.0,
-    "PAD_N": 28.0,
-    "PAD_P": 29.0,
-    "POST_BIAS": 30.0,
-    "POST_N": 31.0,
-    "POST_P": 32.0,
-    "POST_TAIL_0": 33.0,
-    "POST_TAIL_1": 34.0,
-    "POST_TAIL_2": 35.0,
-    "POST_TAIL_3": 36.0,
-    "POST_TAIL_4": 37.0,
-    "POST_TAIL_5": 38.0,
-    "POST_TAIL_6": 39.0,
-    "POST_TAIL_7": 40.0,
-    "SUM_N_D_0": 41.0,
-    "SUM_N_D_1": 42.0,
-    "SUM_N_D_2": 43.0,
-    "SUM_N_D_3": 44.0,
-    "SUM_N_D_4": 45.0,
-    "SUM_N_D_5": 46.0,
-    "SUM_N_D_6": 47.0,
-    "SUM_N_D_7": 48.0,
-    "SUM_P_D_0": 49.0,
-    "SUM_P_D_1": 50.0,
-    "SUM_P_D_2": 51.0,
-    "SUM_P_D_3": 52.0,
-    "SUM_P_D_4": 53.0,
-    "SUM_P_D_5": 54.0,
-    "SUM_P_D_6": 55.0,
-    "SUM_P_D_7": 56.0,
-    "TERM_BLEED_0": 57.0,
-    "TERM_BLEED_1": 58.0,
-    "TERM_BLEED_2": 59.0,
-    "TERM_BLEED_3": 60.0,
-    "TERM_BLEED_4": 61.0,
-    "TERM_BLEED_5": 62.0,
-    "TERM_BLEED_6": 63.0,
-    "TERM_ENABLE": 64.0,
-    "TERM_ENABLE_B": 65.0,
-    "TERM_ENABLE_LOCAL": 66.0,
-    "TERM_N_R": 67.0,
-    "TERM_P_R": 68.0,
-    "TERM_VCM": 69.0,
-    "TMDS_BIAS": 70.0,
-    "TMDS_N": 71.0,
-    "TMDS_P": 72.0,
-    "TMDS_TAIL_0": 73.0,
-    "TMDS_TAIL_1": 74.0,
-    "TMDS_TAIL_2": 75.0,
-    "TMDS_TAIL_3": 76.0,
-    "TMDS_TAIL_4": 77.0,
-    "TMDS_TAIL_5": 78.0,
-    "TMDS_TAIL_6": 79.0,
-    "TMDS_TAIL_7": 80.0,
-    "VDD": 85.22,
-    "VSS": 94.22
+    "PAD_N": 32.22,
+    "PAD_P": 41.22,
+    "POST_BIAS": 46.44,
+    "POST_N": 47.44,
+    "POST_P": 48.44,
+    "POST_TAIL_0": 49.44,
+    "POST_TAIL_1": 50.44,
+    "POST_TAIL_2": 51.44,
+    "POST_TAIL_3": 52.44,
+    "POST_TAIL_4": 53.44,
+    "POST_TAIL_5": 54.44,
+    "POST_TAIL_6": 55.44,
+    "POST_TAIL_7": 56.44,
+    "SUM_N_D_0": 57.44,
+    "SUM_N_D_1": 58.44,
+    "SUM_N_D_2": 59.44,
+    "SUM_N_D_3": 60.44,
+    "SUM_N_D_4": 61.44,
+    "SUM_N_D_5": 62.44,
+    "SUM_N_D_6": 63.44,
+    "SUM_N_D_7": 64.44,
+    "SUM_P_D_0": 65.44,
+    "SUM_P_D_1": 66.44,
+    "SUM_P_D_2": 67.44,
+    "SUM_P_D_3": 68.44,
+    "SUM_P_D_4": 69.44,
+    "SUM_P_D_5": 70.44,
+    "SUM_P_D_6": 71.44,
+    "SUM_P_D_7": 72.44,
+    "TERM_BLEED_0": 73.44,
+    "TERM_BLEED_1": 74.44,
+    "TERM_BLEED_2": 75.44,
+    "TERM_BLEED_3": 76.44,
+    "TERM_BLEED_4": 77.44,
+    "TERM_BLEED_5": 78.44,
+    "TERM_BLEED_6": 79.44,
+    "TERM_ENABLE": 80.44,
+    "TERM_ENABLE_B": 81.44,
+    "TERM_ENABLE_LOCAL": 82.44,
+    "TERM_N_R": 87.66,
+    "TERM_P_R": 96.66,
+    "TERM_VCM": 105.66,
+    "TMDS_BIAS": 110.88,
+    "TMDS_N": 111.88,
+    "TMDS_P": 112.88,
+    "TMDS_TAIL_0": 113.88,
+    "TMDS_TAIL_1": 114.88,
+    "TMDS_TAIL_2": 115.88,
+    "TMDS_TAIL_3": 116.88,
+    "TMDS_TAIL_4": 117.88,
+    "TMDS_TAIL_5": 118.88,
+    "TMDS_TAIL_6": 119.88,
+    "TMDS_TAIL_7": 120.88,
+    "VDD": 126.1,
+    "VSS": 135.1
   },
   "net_trunk_widths_um": {
     "CASCODE": 0.44,
@@ -146,8 +151,8 @@
     "MAIN_TAIL_5": 0.44,
     "MAIN_TAIL_6": 0.44,
     "MAIN_TAIL_7": 0.44,
-    "PAD_N": 0.44,
-    "PAD_P": 0.44,
+    "PAD_N": 8.0,
+    "PAD_P": 8.0,
     "POST_BIAS": 0.44,
     "POST_N": 0.44,
     "POST_P": 0.44,
@@ -185,9 +190,9 @@
     "TERM_ENABLE": 0.44,
     "TERM_ENABLE_B": 0.44,
     "TERM_ENABLE_LOCAL": 0.44,
-    "TERM_N_R": 0.44,
-    "TERM_P_R": 0.44,
-    "TERM_VCM": 0.44,
+    "TERM_N_R": 8.0,
+    "TERM_P_R": 8.0,
+    "TERM_VCM": 8.0,
     "TMDS_BIAS": 0.44,
     "TMDS_N": 0.44,
     "TMDS_P": 0.44,
@@ -221,7 +226,7 @@
       1075.1
     ],
     "DETECT_BLEED_3": [
-      1074.9,
+      1074.8999999999999,
       1078.3
     ],
     "DETECT_BLEED_4": [
@@ -237,7 +242,7 @@
       1091.5
     ],
     "DETECT_ENABLE": [
-      1048.9,
+      1048.8999999999999,
       1226.5
     ],
     "DETECT_ENABLE_B": [
@@ -245,7 +250,7 @@
       1059.5
     ],
     "DETECT_ENABLE_LOCAL": [
-      558.1,
+      558.0999999999999,
       1065.5
     ],
     "DETECT_N_I": [
@@ -274,7 +279,7 @@
     ],
     "MAIN_TAIL_0": [
       573.7,
-      592.3
+      592.3000000000001
     ],
     "MAIN_TAIL_1": [
       596.5,
@@ -294,7 +299,7 @@
     ],
     "MAIN_TAIL_5": [
       684.1,
-      706.3
+      706.3000000000001
     ],
     "MAIN_TAIL_6": [
       706.9,
@@ -302,7 +307,7 @@
     ],
     "MAIN_TAIL_7": [
       729.7,
-      748.3
+      748.3000000000001
     ],
     "PAD_N": [
       435.5,
@@ -321,7 +326,7 @@
       1226.5
     ],
     "POST_P": [
-      766.1,
+      766.0999999999999,
       1226.5
     ],
     "POST_TAIL_0": [
@@ -342,7 +347,7 @@
     ],
     "POST_TAIL_4": [
       840.1,
-      862.3
+      862.3000000000001
     ],
     "POST_TAIL_5": [
       862.9,
@@ -350,7 +355,7 @@
     ],
     "POST_TAIL_6": [
       885.7,
-      904.3
+      904.3000000000001
     ],
     "POST_TAIL_7": [
       908.5,
@@ -361,7 +366,7 @@
       941.9
     ],
     "SUM_N_D_1": [
-      454.9,
+      454.90000000000003,
       954.7
     ],
     "SUM_N_D_2": [
@@ -377,7 +382,7 @@
       1000.3
     ],
     "SUM_N_D_5": [
-      513.3,
+      513.3000000000001,
       1016.7
     ],
     "SUM_N_D_6": [
@@ -405,7 +410,7 @@
       980.7
     ],
     "SUM_P_D_4": [
-      503.7,
+      503.70000000000005,
       997.1
     ],
     "SUM_P_D_5": [
@@ -417,7 +422,7 @@
       1026.3
     ],
     "SUM_P_D_7": [
-      549.3,
+      549.3000000000001,
       1042.7
     ],
     "TERM_BLEED_0": [
@@ -441,7 +446,7 @@
       1127.1
     ],
     "TERM_BLEED_5": [
-      1126.9,
+      1126.8999999999999,
       1130.3
     ],
     "TERM_BLEED_6": [
@@ -477,7 +482,7 @@
       1226.5
     ],
     "TMDS_N": [
-      941.7,
+      941.6999999999999,
       1226.5
     ],
     "TMDS_P": [
@@ -490,7 +495,7 @@
     ],
     "TMDS_TAIL_1": [
       944.1,
-      956.3
+      956.3000000000001
     ],
     "TMDS_TAIL_2": [
       960.5,
@@ -506,7 +511,7 @@
     ],
     "TMDS_TAIL_5": [
       1002.5,
-      1018.3
+      1018.3000000000001
     ],
     "TMDS_TAIL_6": [
       1018.9,
@@ -517,7 +522,7 @@
       1047.5
     ],
     "VDD": [
-      1052.9,
+      1052.8999999999999,
       1226.5
     ],
     "VSS": [
@@ -677,7 +682,7 @@
       1230.0
     ],
     [
-      92.22,
+      133.1,
       1224.0,
       482.0,
       1228.0
@@ -687,19 +692,20 @@
   "fits_assigned_area": true,
   "image_id": "sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
   "sources_sha256": {
-    "analog/pads/layout.py": "0863dc15e08ca20e730a78f4c3fe9f5b5e986687af59d66d88d440ebd2176a1c",
+    "analog/pads/layout.py": "7e76bff6db1a458f5eb0d16f351db7cfcdabd4f76c3bc008ad7ec829454c4b25",
     "analog/pads/gds_markers.py": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4",
     "analog/pads/generated/provider-sites.json": "c58790b22d45497c45bfd20e8cc60e698d8286010856fcc6fa18ab7021d26df4",
     "analog/pads/circuits.py": "bccd2850f5023fd97f65c1cf53ee297672157ef1e4dd90f8923a0e4d6f3d2130",
-    "analog/pads/design.py": "bb2e5411c07d02c095dd1bfaad6e824ab8dbf7867a9f6f35efc306ca25be165c",
+    "analog/pads/design.py": "7330ebd9a33ffcfe6a0c9949cd8d51d08a8e6564521b14ae4ec57fd66a1a40f9",
     "analog/pads/wired_receive.py": "2854154d036bb59df19a389da99c1348539a71d5fcb6f52d3e8efae229dfafc1",
-    "spec/analog-architecture.json": "5995b7ab33f01f62358b6af52cd3073ba4db89c66a303022bc516214d5bc9916",
-    "spec/contract.json": "9e43600f7d9016469fc825fe4c451a87c4940e98bb3007f7a18b8f6ea3e63c69",
+    "analog/pads/folded_tail.py": "7d8ddd4f655ac25e8ebbfdcb4c1599b53374f7b6b795e521ecdade18da2ed386",
+    "spec/analog-architecture.json": "e931f969248a4d115beec67fc6c28ad02fc030e8436c385acabe22410f9ecfe8",
+    "spec/contract.json": "7082c21cfb1bc84d61097a5d74f0549b022b480cdb490902ecdfcb9377c2189f",
+    "spec/schematic-implementation.json": "be77f0031fd674dc95cde0806f9fda50bdc7992c512853900daba6c652d436d8",
     "analog/pads/wired_protection_layout.py": "b5e334084c0291c2b709b3ffb28ae4cd89b4227bfa4b1eb89b72f47e538ed2aa",
     "analog/pads/generated/protection-network/network.gds": "0b7c25860190af02dfaffab9c180d5734f5d9eb771111367adc97ae98fcf493d",
     "analog/pads/generated/protection-network/network_flat.spice": "f5e3fc1454f7dcf49f91afcf1cf315cc82014bdf6d2191d4f84b109a3b305cf0",
-    "analog/pads/transmit_integrated.py": "a27a418ee8599ec86c3320fef59263cf3deeaf01e0350c926288170d46939ace",
-    "spec/schematic-implementation.json": "b43127f9351e0fd75ffb2792546c2608814afb79e2e0ac27f79ff12eaec3e9e6"
+    "analog/pads/transmit_integrated.py": "28867ca0b288ca0ae58ecd17eb04f2a73705cdf4d64d3a492c3e88ee9a6e6123"
   },
   "drc_count": "0",
   "pcell_terminal_coordinates": {
@@ -897,9 +903,9 @@
     484.0,
     1230.0
   ],
-  "area_um2": 240640.33,
+  "area_um2": 240599.44999999998,
   "area_basis": "Allocated nonrectangular union, not material area or bounding rectangle.",
-  "allocation_union_um2": 240640.33,
+  "allocation_union_um2": 240599.44999999998,
   "connected_primary_candidate": true,
   "device_count": 366,
   "connected_protection": true,

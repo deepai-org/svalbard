@@ -6,13 +6,13 @@
   "attached_core_area": {
     "all_reservations_fit": true,
     "source_hashes_current": true,
-    "report_sha256": "5e13dcadeb0d18455a17872d870fe1a0c3e5ba6bd61bc9633864acbb75e8fe4d",
+    "report_sha256": "979b7831f5b4ef5da9435b504fc2247b0f4bf26c873d5fd4252e974ccc4495b1",
     "scope": "Selected attached TX macro footprints and reservations only; not whole-ring placement or routing acceptance."
   },
   "attached_core_steering_routes": {
     "status": "six_steering_output_routes_only",
     "route_count": 6,
-    "report_sha256": "c36b5f31336338a08f3d8283f34aa4b2f9cb31a41b5b9f071ccb8454fc2c5bc1",
+    "report_sha256": "9ec3a55c65a5588c0c243fd5d1710c32e799cb62d4f2fe300856fe4dde7c0eb1",
     "source_hashes_current": true,
     "routed_artifact_matches": true,
     "scope": "Six steering output routes only; supplies, control and buffer hookups, DRC/LVS and routed timing remain incomplete."
@@ -20,7 +20,7 @@
   "attached_core_steering_connectivity": {
     "status": "steering_metal_connectivity_pass",
     "faults_detected": true,
-    "report_sha256": "70d51f2d7e11e71db06476f72c2cf890c42ffd497e8e1818fa67cf6095e9e738",
+    "report_sha256": "cc82f00bedc0731196617e1490f1a7bd96056cbea708879707dfc43731331e8f",
     "source_hashes_current": true,
     "scope": "Geometry-only extraction of six routes in the complete TX cluster. Not whole-ring connectivity, transistor LVS, spacing DRC or routed timing."
   },
@@ -30,130 +30,192 @@
       "TMDS": {
         "blocks": {
           "txpad": {
-            "measured_macro_mean_ma": -0.0004962356893259808,
+            "measured_macro_mean_ma": -0.0005992166909612464,
             "wired_mode_allocation_ma": 0.1,
             "measured_macro_alone_exceeds_allocation": false
           },
           "termination": {
-            "measured_macro_mean_ma": -7.369008283166844e-06,
+            "measured_macro_mean_ma": -4.5825519933249235e-05,
             "wired_mode_allocation_ma": 8,
             "measured_macro_alone_exceeds_allocation": false
           },
           "wiredtx": {
-            "measured_macro_mean_ma": 0.000694159844981552,
+            "measured_macro_mean_ma": 0.000684678140821487,
             "wired_mode_allocation_ma": 0.2,
             "measured_macro_alone_exceeds_allocation": false
           },
           "tmds": {
-            "measured_macro_mean_ma": 30.306677301462045,
+            "measured_macro_mean_ma": 30.419055367589127,
             "wired_mode_allocation_ma": 16,
             "measured_macro_alone_exceeds_allocation": true
           }
         },
-        "observed_tx_mean_ma": 32.256809345411604,
+        "observed_tx_mean_ma": 32.36906402909035,
         "wire_domain_allocation_ma": 96,
-        "headroom_for_other_wire_blocks_ma": 63.743190654588396,
+        "headroom_for_other_wire_blocks_ma": 63.63093597090965,
         "other_wire_block_allocations_ma": 34.550000000000004,
-        "observed_tx_plus_other_allocations_ma": 66.80680934541161,
+        "observed_tx_plus_other_allocations_ma": 66.91906402909035,
         "combined_allocation_screen_exceeds": false
       },
       "MAIN": {
         "blocks": {
           "txpad": {
-            "measured_macro_mean_ma": 0.030962933803903452,
+            "measured_macro_mean_ma": 0.030954536689787333,
             "wired_mode_allocation_ma": 0.1,
             "measured_macro_alone_exceeds_allocation": false
           },
           "termination": {
-            "measured_macro_mean_ma": 31.08755661933261,
+            "measured_macro_mean_ma": 31.07170872298918,
             "wired_mode_allocation_ma": 8,
             "measured_macro_alone_exceeds_allocation": true
           },
           "wiredtx": {
-            "measured_macro_mean_ma": 29.08734073910052,
+            "measured_macro_mean_ma": 29.06429870073121,
             "wired_mode_allocation_ma": 36,
             "measured_macro_alone_exceeds_allocation": false
           },
           "tmds": {
-            "measured_macro_mean_ma": 5.278350608531773e-07,
+            "measured_macro_mean_ma": 4.009575676819913e-07,
             "wired_mode_allocation_ma": 0.2,
             "measured_macro_alone_exceeds_allocation": false
           }
         },
-        "observed_tx_mean_ma": 62.15587108045606,
+        "observed_tx_mean_ma": 62.11697110164557,
         "wire_domain_allocation_ma": 96,
-        "headroom_for_other_wire_blocks_ma": 33.84412891954394,
+        "headroom_for_other_wire_blocks_ma": 33.88302889835443,
         "other_wire_block_allocations_ma": 34.550000000000004,
-        "observed_tx_plus_other_allocations_ma": 96.70587108045606,
+        "observed_tx_plus_other_allocations_ma": 96.66697110164557,
         "combined_allocation_screen_exceeds": true
       },
       "MAIN_POST": {
         "blocks": {
           "txpad": {
-            "measured_macro_mean_ma": 0.030825976441525633,
+            "measured_macro_mean_ma": 0.03083034235871548,
             "wired_mode_allocation_ma": 0.1,
             "measured_macro_alone_exceeds_allocation": false
           },
           "termination": {
-            "measured_macro_mean_ma": 32.86496944747198,
+            "measured_macro_mean_ma": 32.855327736289446,
             "wired_mode_allocation_ma": 8,
             "measured_macro_alone_exceeds_allocation": true
           },
           "wiredtx": {
-            "measured_macro_mean_ma": 57.562145465737565,
+            "measured_macro_mean_ma": 57.468059454634385,
             "wired_mode_allocation_ma": 36,
             "measured_macro_alone_exceeds_allocation": true
           },
           "tmds": {
-            "measured_macro_mean_ma": 4.4975476822340594e-07,
+            "measured_macro_mean_ma": 3.620777707795302e-07,
             "wired_mode_allocation_ma": 0.2,
             "measured_macro_alone_exceeds_allocation": false
           }
         },
-        "observed_tx_mean_ma": 92.40793889532058,
+        "observed_tx_mean_ma": 92.30421522922644,
         "wire_domain_allocation_ma": 96,
-        "headroom_for_other_wire_blocks_ma": 3.5920611046794164,
+        "headroom_for_other_wire_blocks_ma": 3.6957847707735567,
         "other_wire_block_allocations_ma": 34.550000000000004,
-        "observed_tx_plus_other_allocations_ma": 126.95793889532058,
+        "observed_tx_plus_other_allocations_ma": 126.85421522922644,
         "combined_allocation_screen_exceeds": true
       },
       "DETECT": {
         "blocks": {
           "detect": {
-            "measured_macro_mean_ma": 0.2254027653905938,
+            "measured_macro_mean_ma": 0.22633883332850005,
             "wired_mode_allocation_ma": 4,
             "measured_macro_alone_exceeds_allocation": false
           },
           "termination": {
-            "measured_macro_mean_ma": 0.03169805386800931,
+            "measured_macro_mean_ma": 0.031718520712281185,
             "wired_mode_allocation_ma": 8,
             "measured_macro_alone_exceeds_allocation": false
           },
           "wiredtx": {
-            "measured_macro_mean_ma": 1.722010958518618e-06,
+            "measured_macro_mean_ma": 1.6682506799262747e-06,
             "wired_mode_allocation_ma": 36,
             "measured_macro_alone_exceeds_allocation": false
           },
           "tmds": {
-            "measured_macro_mean_ma": 6.857577612785614e-07,
+            "measured_macro_mean_ma": 6.696550465543428e-07,
             "wired_mode_allocation_ma": 0.2,
             "measured_macro_alone_exceeds_allocation": false
           }
         },
-        "observed_tx_mean_ma": 2.3044405232228122,
+        "observed_tx_mean_ma": 2.305225405306562,
         "wire_domain_allocation_ma": 96,
-        "headroom_for_other_wire_blocks_ma": 93.69555947677719,
+        "headroom_for_other_wire_blocks_ma": 93.69477459469344,
         "other_wire_block_allocations_ma": 30.650000000000002,
-        "observed_tx_plus_other_allocations_ma": 32.954440523222814,
+        "observed_tx_plus_other_allocations_ma": 32.955225405306564,
         "combined_allocation_screen_exceeds": false
       }
     },
     "scope": "Macro currents are partial block burdens. Other wire blocks use allocations, not measurements, and are included as a simultaneous-operation planning screen. Top-level fixture bias current remains in total TX draw. No power-budget increase, sustained-current guarantee or package rating is inferred.",
     "source_sha256": {
-      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-transmit-screen.json": "63b70e5d5c0b942d605eea28a19d5f42ad9990d6f82384a74051fea6c0cfdc7c",
+      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-transmit-screen.json": "15ca5f0c47e30642001c52c86df2c28adae0e68fda12489b9d931f491545330e",
       "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "e931f969248a4d115beec67fc6c28ad02fc030e8436c385acabe22410f9ecfe8",
-      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "349c72e5bee1cf6b25939887f332b1198665d3a539b14fab8ae578e057f51561",
+      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "be77f0031fd674dc95cde0806f9fda50bdc7992c512853900daba6c652d436d8",
       "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/contract.json": "7082c21cfb1bc84d61097a5d74f0549b022b480cdb490902ecdfcb9377c2189f"
+    }
+  },
+  "wired_tx_current_bus_estimate": {
+    "status": "geometry_sheet_estimate_not_distributed_PEX",
+    "nets": {
+      "PAD_P": {
+        "actual_width_um": 8.0,
+        "selected_width_um": 8.0,
+        "selected_width_present": true,
+        "trunk_span_um": 136.0,
+        "nominal_ohm": 0.68,
+        "high_resistance_ohm": 0.8330000000000001,
+        "low_resistance_ohm": 0.527
+      },
+      "PAD_N": {
+        "actual_width_um": 8.0,
+        "selected_width_um": 8.0,
+        "selected_width_present": true,
+        "trunk_span_um": 129.20000000000005,
+        "nominal_ohm": 0.6460000000000002,
+        "high_resistance_ohm": 0.7913500000000003,
+        "low_resistance_ohm": 0.5006500000000002
+      },
+      "TERM_P_R": {
+        "actual_width_um": 8.0,
+        "selected_width_um": 8.0,
+        "selected_width_present": true,
+        "trunk_span_um": 591.4000000000001,
+        "nominal_ohm": 2.9570000000000003,
+        "high_resistance_ohm": 3.622325000000001,
+        "low_resistance_ohm": 2.291675
+      },
+      "TERM_N_R": {
+        "actual_width_um": 8.0,
+        "selected_width_um": 8.0,
+        "selected_width_present": true,
+        "trunk_span_um": 631.0,
+        "nominal_ohm": 3.1550000000000002,
+        "high_resistance_ohm": 3.864875,
+        "low_resistance_ohm": 2.445125
+      },
+      "TERM_VCM": {
+        "actual_width_um": 8.0,
+        "selected_width_um": 8.0,
+        "selected_width_present": true,
+        "trunk_span_um": 89.20000000000005,
+        "nominal_ohm": 0.44600000000000023,
+        "high_resistance_ohm": 0.5463500000000003,
+        "low_resistance_ohm": 0.3456500000000002
+      }
+    },
+    "pdk_metal5_sheet_ohm_per_square": [
+      0.04,
+      0.049,
+      0.031
+    ],
+    "scope": "End-to-end uniform trunk only. Does not include transverse/device access, vias, spreading, returns or current distribution among taps. Not total termination impedance or a guarantee of modeled performance.",
+    "model_gap": "Current connected wired extraction includes capacitance but does not insert these signal-metal resistances.",
+    "source_sha256": {
+      "analog/pads/generated/wired-transmit-layout.json": "a73fe3055f7f7f478702493281b4b78353660725a8a9f5863a474b1bd084da69",
+      "analog/pads/generated/rf-transmit-route-resistance.json": "b51407ea79a04ddbf0b9993ae58205fef0f7a7f950e7efa6aefc8500b9599192",
+      "spec/schematic-implementation.json": "be77f0031fd674dc95cde0806f9fda50bdc7992c512853900daba6c652d436d8"
     }
   },
   "wired_tx_pullup_evidence": {
@@ -169,7 +231,7 @@
     "sampled_lifecycle_gate_pass": true,
     "contiguous_ready_hold_ns": 68.0,
     "active_peer_mean_draw_a": 0.009981790737635953,
-    "scope": "Same selected physical TX components, independent continuously powered split pull-up network. Nominal active/reset/off/reconfiguration evidence, not eye-mask, protocol or protection acceptance."
+    "scope": "Recorded extracted TX components with an independent continuously powered split pull-up network. Consult source freshness: this can predate the selected geometry. Not eye-mask, protocol or protection acceptance."
   },
   "rf_supply_planning": {
     "status": "RF_domain_planning_consistency_not_measured_pin_capacity",
@@ -233,10 +295,10 @@
         "screen": "wired-transmit-screen.json"
       },
       "artifact_sha256": {
-        "model": "c772d37254b8f72ec59e0afd1030469b2563220bb1c8fb90d1b21c295055683c",
-        "layout": "0681957053db1dd3b6594674a66e9cb24bcbe920d6d6d4a860ff61b87c467e61",
-        "gds": "ff35cf0de4ceb2590e8b93ee5ebe346c7dae93a8e31a9be3c3076d87008e19d3",
-        "screen": "63b70e5d5c0b942d605eea28a19d5f42ad9990d6f82384a74051fea6c0cfdc7c"
+        "model": "a5472408f4bf267aa7e53000163135b94d76ab9e482a19f5e786628605b4ed44",
+        "layout": "a73fe3055f7f7f478702493281b4b78353660725a8a9f5863a474b1bd084da69",
+        "gds": "f81e00c21758d7b8bf1fc1265700ba41b0c6fc93ee8a25c2450cb36d8bdaedd1",
+        "screen": "15ca5f0c47e30642001c52c86df2c28adae0e68fda12489b9d931f491545330e"
       },
       "reported_transient_complete": true,
       "required_state_windows": {
@@ -265,20 +327,8 @@
       "all_required_state_names_present": true,
       "missing_required_states": [],
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_fixture.py",
-        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json"
-      ],
-      "stale_layout_sources": [
-        "analog/pads/layout.py",
-        "analog/pads/design.py",
-        "spec/analog-architecture.json",
-        "spec/contract.json",
-        "analog/pads/transmit_integrated.py",
-        "spec/schematic-implementation.json"
-      ],
+      "stale_screen_sources": [],
+      "stale_layout_sources": [],
       "exported_layout_device_graph_matches_current_model": true,
       "source_manifest_present": true,
       "scope": "Canonical family candidate only; named windows and matching input bytes do not prove performance, safety, or unchanged external-network topology."
@@ -495,7 +545,7 @@
     "wired_transmit": {
       "status": "incomplete_electrical_acceptance",
       "source_report": "wired-transmit-screen.json",
-      "source_report_sha256": "63b70e5d5c0b942d605eea28a19d5f42ad9990d6f82384a74051fea6c0cfdc7c",
+      "source_report_sha256": "15ca5f0c47e30642001c52c86df2c28adae0e68fda12489b9d931f491545330e",
       "recorded_limit_checks": [],
       "observations": {},
       "unresolved": [
@@ -653,9 +703,11 @@
     "scope": "Published dimensional comparison and compact-model loading estimate; not ESD qualification."
   },
   "wired_tx_loading": {
-    "source_hashes_current": false,
-    "report_sha256": "96be9607286d82d4f62d4256115780d267302ec16ed0457c7adaa7d6084892ef",
+    "source_hashes_current": true,
+    "report_sha256": "6116b5712ee6cab2049b6c9e71c0c57416eacde2fdfc9c21f6a1af857aeb93ff",
     "cases_exceeding_1ghz_odd_budget": [
+      "disabled",
+      "main",
       "detection"
     ],
     "scope": "Biased small-signal characterization; exceeding the loading allocation is not by itself a protocol-failure verdict."

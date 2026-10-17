@@ -221,6 +221,34 @@ def electrical_findings(publish):
     return findings
 
 
+def tx_current_bus_estimate(publish):
+    """Trunk-only sheet estimates, not distributed extraction or branch impedance."""
+    from design import PROJECT
+    geometry_path=publish/'wired-transmit-layout.json'
+    sheet_path=publish/'rf-transmit-route-resistance.json'
+    spec_path=PROJECT/'spec/schematic-implementation.json'
+    if not geometry_path.exists() or not sheet_path.exists():return None
+    geometry=json.loads(geometry_path.read_text());sheet=json.loads(sheet_path.read_text())
+    selected=json.loads(spec_path.read_text())['io_pad_first_pass']['layout_parameters']['wired_transmit']['trunk_width_overrides_um']
+    values=sheet['metal_sheet_ohm_per_square']['5']
+    if len(values)!=3:raise ValueError('Unexpected PDK sheet resistance variants')
+    nets={}
+    for name,width in selected.items():
+        actual=geometry['net_trunk_widths_um'][name]
+        low,high=geometry['net_trunk_spans_um'][name]
+        squares=(high-low)/actual
+        nets[name]=dict(actual_width_um=actual,selected_width_um=width,
+            selected_width_present=actual==width,trunk_span_um=high-low,
+            nominal_ohm=squares*values[0],high_resistance_ohm=squares*values[1],
+            low_resistance_ohm=squares*values[2])
+    return dict(status='geometry_sheet_estimate_not_distributed_PEX',nets=nets,
+        pdk_metal5_sheet_ohm_per_square=values,
+        scope='End-to-end uniform trunk only. Does not include transverse/device access, vias, spreading, returns or current distribution among taps. Not total termination impedance or a guarantee of modeled performance.',
+        model_gap='Current connected wired extraction includes capacitance but does not insert these signal-metal resistances.',
+        source_sha256={str(p.resolve().relative_to(PROJECT)):hashlib.sha256(p.read_bytes()).hexdigest()
+                       for p in (geometry_path,sheet_path,spec_path)})
+
+
 def tx_macro_power_budget(publish):
     """Compare measured supply currents with allocations, not silicon ratings."""
     from design import PROJECT
@@ -343,7 +371,7 @@ def write_coverage(publish,results):
             sampled_lifecycle_gate_pass=closure['lifecycle_gate_pass'],
             contiguous_ready_hold_ns=closure['observed_contiguous_ready_hold_ns'],
             active_peer_mean_draw_a=data['external_peer_states']['active_tmds']['peer_mean_draw_a'],
-            scope='Same selected physical TX components, independent continuously powered split pull-up network. Nominal active/reset/off/reconfiguration evidence, not eye-mask, protocol or protection acceptance.')
+            scope='Recorded extracted TX components with an independent continuously powered split pull-up network. Consult source freshness: this can predate the selected geometry. Not eye-mask, protocol or protection acceptance.')
     area_path=publish/'attached-core-area.json'
     area_evidence=None
     if area_path.exists():
@@ -379,7 +407,8 @@ def write_coverage(publish,results):
     report=dict(first_pass_complete=False,candidates=results,attached_core_area=area_evidence,
                 attached_core_steering_routes=routing_evidence,
                 attached_core_steering_connectivity=steering_connectivity,
-                wired_tx_macro_power=tx_macro_power_budget(publish),wired_tx_pullup_evidence=pullup_evidence,
+                wired_tx_macro_power=tx_macro_power_budget(publish),
+                wired_tx_current_bus_estimate=tx_current_bus_estimate(publish),wired_tx_pullup_evidence=pullup_evidence,
                 rf_supply_planning=rf_supply_planning(publish),
                 integrated_model_inventory=integrated_model_inventory(publish),
                 electrical_findings=electrical_findings(publish),

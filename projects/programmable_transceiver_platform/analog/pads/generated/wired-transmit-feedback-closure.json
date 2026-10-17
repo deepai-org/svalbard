@@ -5,17 +5,24 @@
   "updated_event_count": 20,
   "raw_feedback_sample_mismatches": 1,
   "complete_mode_coverage": true,
+  "required_modes": [
+    "TMDS",
+    "MAIN",
+    "MAIN_POST",
+    "DETECT"
+  ],
+  "observed_contiguous_ready_hold_ns": null,
   "loaded_traffic_ready_without_detector_ready_s": 0.0,
   "lifecycle_gate_pass": true,
   "scope": "Verify a sampled feedback fixed point without repeating identical analog work.\n\nFeed a completed detector report back through actual RTL and compare every\nemitted control event with the events that drove that completed analog run.\nIdentical controls imply the same deterministic analog problem. Raw detector\nsamples in unused states may differ, so they remain reported separately.\n Only this nominal deterministic fixture and sampled RTL feedback; not physical detectors, sustained data, PVT or protection acceptance.",
   "source_sha256": {
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_feedback_closure.py": "542d182c677db0c5f3b58080a9d651fa5908449fad4b6b45e06fd4ea3bdf44fd",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "89baea583f02c09b1ac44e84b755398e0936c063f35bed8227dbd0dd3815b61d",
-    "/home/ubuntu/svalbard/scratch/pad-macro-supply/replay/screen.json": "63b70e5d5c0b942d605eea28a19d5f42ad9990d6f82384a74051fea6c0cfdc7c",
-    "/home/ubuntu/svalbard/scratch/pad-macro-supply/replay/rtl.log": "8fc0b2c075fab9eefb8ed0492492b198d6ebdee76803bc6734363badbee70113",
-    "/home/ubuntu/svalbard/scratch/pad-macro-supply/replay/connected.spice": "5cbe2f3fa0a35cbbd863153362e52beebc00389f4a8abc70a762ece1cf736e36",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_feedback_closure.py": "b3eea0db2c61034efe31b0a1bf75c5a96ad5c74e73af2a13d9b706f704ba85b2",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "0e687776387e602170cbce98789ebf36071ce97b76bbee6f6a9c4d976473a4b1",
+    "/home/ubuntu/svalbard/scratch/pad-wide-current-buses-integrated/replay-2/screen.json": "15ca5f0c47e30642001c52c86df2c28adae0e68fda12489b9d931f491545330e",
+    "/home/ubuntu/svalbard/scratch/pad-wide-current-buses-integrated/replay-2/rtl.log": "58d8e3fb8a6ba7a09278f4f3cb6afae39757a21c77d65eb150ee5e5f8edd3f99",
+    "/home/ubuntu/svalbard/scratch/pad-wide-current-buses-integrated/replay-2/connected.spice": "9f8c715cc23e82b44d6294b3fcd82a89c103185bc78fa27837660f12e6ea02c0",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "fc3cdc163ae805c33b92a298142718ad36c94f5567ac4bb9bb608be016d58e32",
-    "/home/ubuntu/svalbard/scratch/pad-macro-supply/closure/replay.sv": "9475a21a2e952f1d9c1e0d51c56114157d0e3c9d4fa3e669735e15e9fe168aaa",
-    "/home/ubuntu/svalbard/scratch/pad-macro-supply/closure/rtl.log": "3f8a7cc40c4af5a60a5bd691c2315c31d60da65e90d0858d9c01ccf238bf2525"
+    "/home/ubuntu/svalbard/scratch/pad-wide-current-buses-integrated/closure-2/replay.sv": "9475a21a2e952f1d9c1e0d51c56114157d0e3c9d4fa3e669735e15e9fe168aaa",
+    "/home/ubuntu/svalbard/scratch/pad-wide-current-buses-integrated/closure-2/rtl.log": "4b7ef103d6fbafcd073110dd04a4e7c70d4ea00c16c1029820eae6e3991346ce"
   }
 }

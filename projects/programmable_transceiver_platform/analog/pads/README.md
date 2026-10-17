@@ -808,6 +808,30 @@ does not justify another capacitance sweep: actual driver bandwidth, impedance,
 protection exposure and bias behavior are still missing, and the absolute power
 margin remains narrow. Neither case establishes modulated RF performance.
 
+The current-carrying TX buses also need explicit physical sizing. The former
+uniform 0.44 µm non-supply trunks made the long `TERM_P_R`/`TERM_N_R` trunks
+approximately 54/57 Ω end-to-end at the PDK nominal M5 sheet value, before via
+and transverse losses. Those are trunk estimates, not a complete termination
+impedance, but they invalidate treating this wiring as ideal. The selected
+layout now assigns 8 µm to those two trunks, `TERM_VCM` and both pad trunks,
+through `io_pad_first_pass.layout_parameters.wired_transmit`. The generator
+validates names, spacing allocation and bank fit; other signal widths remain
+unchanged. `coverage.json:wired_tx_current_bus_estimate` compares selected and
+published widths and reports the same geometry/sheet calculation for the actual
+published layout. Distributed resistance must still enter the connected model.
+Do not accept a capacitor-only result as a wired impedance or timing verdict.
+The widened protected layout retains 366 devices, passes local DRC and device
+connectivity, fits the existing pad reservation, and reaches sampled readiness
+closure in the connected lifecycle. Its disabled odd-mode loading is about
+2.706/2.713 pF per leg against 2.7 pF; one active MAIN leg also exceeds that
+allocation, and the existing detection-loading miss remains. These are recorded
+failures, not waived budgets. Widening addresses a large resistance omission;
+it does not complete impedance, current-capacity or timing qualification.
+The canonical all-mode lifecycle and loading reports are rebuilt for these
+widths. Supplemental split-pull-up and AC-coupled TX reports predate this geometry
+change and require refresh before being used as current electrical evidence;
+their topology/control lessons do not substitute for that rerun.
+
 The canonical wired TX also misses its intended current settings in connected
 static checks. A compact folded-tail candidate improves those currents and fits
 the pad reservation, but is not selected: finite bias drive and physical control

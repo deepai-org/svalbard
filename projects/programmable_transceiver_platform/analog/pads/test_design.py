@@ -33,6 +33,19 @@ class DesignBoundary(unittest.TestCase):
             self.assertEqual(second['recorded_limit_checks'][0]['status'],'recorded_limit_miss')
             self.assertIn('core_terminal_voltage_current_duration_limits',second['unresolved'])
 
+    def test_current_bus_width_policy_rejects_typoes_and_unbuildable_banks(self):
+        from layout import trunk_geometry
+        spec=json.loads((PROJECT/'spec/schematic-implementation.json').read_text())
+        selected=spec['io_pad_first_pass']['layout_parameters']['wired_transmit']['trunk_width_overrides_um']
+        meta=json.loads((PROJECT/'analog/pads/generated/wired-transmit-layout.json').read_text())
+        nets=set(meta['net_track_x_um'])
+        tracks,widths=trunk_geometry(nets,width_overrides_um=selected)
+        self.assertTrue(all(widths[n]==w for n,w in selected.items()))
+        ordered=sorted(nets,key=tracks.get)
+        self.assertTrue(all(tracks[b]-widths[b]/2>tracks[a]+widths[a]/2 for a,b in zip(ordered,ordered[1:])))
+        with self.assertRaises(ValueError):trunk_geometry(nets,width_overrides_um={'TERM_P_typo':8.})
+        with self.assertRaises(ValueError):trunk_geometry(nets,width_overrides_um={n:12. for n in nets})
+
     def test_tmds_power_uses_its_branch_owner_and_override(self):
         from run_first_pass import tx_macro_power_budget
         with TemporaryDirectory() as directory:

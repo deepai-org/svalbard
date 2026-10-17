@@ -48,6 +48,24 @@ class DesignBoundary(unittest.TestCase):
             self.assertTrue(result['tmds']['measured_macro_alone_exceeds_allocation'])
             self.assertFalse(result['wiredtx']['measured_macro_alone_exceeds_allocation'])
 
+    def test_ac_coupled_peer_preserves_chip_and_retains_charge(self):
+        from transmit_fixture import build
+        with TemporaryDirectory() as directory:
+            root=Path(directory)
+            direct=root/'direct.spice';ac=root/'ac.spice'
+            build(direct,Path('/unused/pdk'))
+            manifest=build(ac,Path('/unused/pdk'),external_network='ac_coupled')
+            remove=lambda text:'\n'.join(line for line in text.splitlines()
+                if not line.startswith(('RDIFF_LOAD ','RPEER_','VPEER ','CCOUPLE_')))
+            self.assertEqual(remove(direct.read_text()),remove(ac.read_text()))
+            caps=[line for line in ac.read_text().splitlines() if line.startswith('CCOUPLE_')]
+            self.assertEqual(len(caps),2)
+            for leg,line in zip(('P','N'),caps):
+                self.assertEqual(line.split()[1:3],['BOARD_'+leg,'RECEIVER_'+leg])
+                self.assertNotIn('IC=',line.upper())
+                self.assertEqual(float(line.split()[3]),manifest['external_network']['coupling_f_per_leg'])
+            self.assertEqual(manifest['external_network']['peer_power'],'independent_continuously_present')
+
     def test_external_pullup_changes_only_retained_board_network(self):
         from transmit_fixture import build
         with TemporaryDirectory() as directory:

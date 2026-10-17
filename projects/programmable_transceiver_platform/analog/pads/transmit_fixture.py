@@ -47,6 +47,19 @@ def build(output, pdk, pad_override=None, bias_override=None, bias_resistance_oh
     if external_network=='differential':
         network=dict(topology=external_network,differential_ohm=a['blocks']['termination']['parameters']['differential_ohm'])
         lines.append(f"RDIFF_LOAD BOARD_P BOARD_N {network['differential_ohm']}")
+    elif external_network=='ac_coupled':
+        network=dict(topology=external_network,
+            coupling_f_per_leg=cfg['ac_coupling_f_per_leg'],
+            resistance_ohm_per_leg=a['blocks']['termination']['parameters']['differential_ohm']/2,
+            voltage_v=a['blocks']['bias']['parameters']['common_mode_v'],
+            peer_power='independent_continuously_present',
+            initial_charge='DC_operating_point_then_retained_not_reset_between_states')
+        if not 0<network['coupling_f_per_leg']<1:
+            raise ValueError('Invalid external coupling capacitance')
+        lines.append(f"VPEER PEER_SUPPLY VSS {network['voltage_v']}")
+        for leg in ('P','N'):
+            lines += [f"CCOUPLE_{leg} BOARD_{leg} RECEIVER_{leg} {network['coupling_f_per_leg']}",
+                      f"RPEER_{leg} PEER_SUPPLY RECEIVER_{leg} {network['resistance_ohm_per_leg']}"]
     elif external_network=='split_pullup':
         parameters=a['blocks']['tmds']['parameters']
         network=dict(topology=external_network,voltage_v=parameters['external_pullup_v'],

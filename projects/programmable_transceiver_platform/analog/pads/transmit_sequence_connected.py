@@ -269,6 +269,10 @@ def run(work,fixture,ready_data=None,scenario="transitions",spice_timeout_s=120)
     deck=deck.replace('\nquit\n',f'\nwrdata {work}/macro-supply.dat {supply_vectors}\nquit\n')
     peer_present=bool(re.search(r'^VPEER ',deck,re.M))
     if peer_present:deck=deck.replace('\nquit\n',f'\nwrdata {work}/peer.dat v(BOARD_P) v(BOARD_N) i(VPEER)\nquit\n')
+    ac_coupled=external_network is not None and external_network.get('topology')=='ac_coupled'
+    if ac_coupled:
+        deck=deck.replace('\nquit\n',f'\nwrdata {work}/coupling.dat v(RECEIVER_P) v(RECEIVER_N) v(BOARD_P,RECEIVER_P) v(BOARD_N,RECEIVER_N)\nquit\n')
+
     x=run_spice(work,'connected',deck,reject_transient_op=True,timeout_s=spice_timeout_s)
     if not np.isfinite(x).all() or x[-1,0]<299.99e-9:raise ValueError('Incomplete connected replay')
     windows={}
@@ -324,6 +328,21 @@ def run(work,fixture,ready_data=None,scenario="transitions",spice_timeout_s=120)
             r['external_peer_states'][name]=dict(board_min_v=float(y[:,1:3].min()),board_max_v=float(y[:,1:3].max()),
                 peer_peak_draw_a=float(max(0,-y[:,3].min())),peer_peak_return_a=float(max(0,y[:,3].max())),
                 observed_duration_s=duration,peer_mean_draw_a=float(np.sum((draw[:-1]+draw[1:])*.5*weights)/duration) if duration else None)
+
+    if ac_coupled:
+        coupling=np.loadtxt(work/'coupling.dat',skiprows=1)
+        if coupling.shape!=(len(x),5) or not np.array_equal(coupling[:,0],x[:,0]):
+            raise ValueError('AC coupling observations do not match lifecycle timebase')
+        r['ac_coupled_receiver_states']={}
+        for name,mask in masks.items():
+            y=coupling[mask]
+            if not len(y):continue
+            cm=(y[:,1]+y[:,2])/2;diff=y[:,1]-y[:,2]
+            r['ac_coupled_receiver_states'][name]=dict(
+                receiver_common_mode_min_v=float(cm.min()),receiver_common_mode_max_v=float(cm.max()),
+                receiver_differential_min_v=float(diff.min()),receiver_differential_max_v=float(diff.max()),
+                coupling_voltage_min_v=float(y[:,3:5].min()),coupling_voltage_max_v=float(y[:,3:5].max()),
+                scope='Retained capacitor charge and receiver exposure; no receiver protection or eye-mask acceptance.')
 
     drive_data=np.loadtxt(work/'ideal-drive.dat',skiprows=1)
     if len(drive_data)!=len(x) or not np.array_equal(drive_data[:,0],x[:,0]):

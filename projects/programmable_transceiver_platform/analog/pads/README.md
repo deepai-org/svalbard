@@ -668,6 +668,36 @@ follows from this nominal load case. The differential-load lifecycle remains
 the all-mode case; the two reports exercise one selected chip with different
 retained external networks.
 
+The same builder also supports `external_network="ac_coupled"`, retaining
+one shared-fixture coupling capacitor per leg and a split remote termination
+at the shared nominal common-mode voltage. The remote bias stays powered
+through chip rail loss. The physical TX, buffer and interlock are unchanged;
+capacitor charge evolves continuously from the initial DC operating point.
+The lifecycle observer records receiver common-mode/differential voltage and
+coupling-capacitor voltage separately from chip-side pad voltage. This boundary
+is needed because AC coupling blocks steady DC but still transfers power and
+mode-change transients. A short lifecycle does not establish long-run baseline
+wander, receiver survival or protocol compliance.
+
+`generated/wired-transmit-ac-coupled-screen.json` records the first 300 ns
+open-loop RTL replay through this network, with all mode/state windows reached.
+Receiver common mode reaches about 2.47 V during reconfiguration and remains
+about 2.03–2.30 V during the active MAIN window, despite the remote 1.65 V bias.
+The 100 nF coupling capacitors retain approximately −1.65 V from the initial
+operating point. This is a startup/transition exposure, not settled data or a
+receiver-survival verdict. TMDS/detection windows in this generic sequence are
+stress configurations, not claims that those interfaces operate through this
+AC network. Sampled analog feedback closure is not established for this run.
+
+**Design consequence:** local termination readiness must not be interpreted as
+remote receiver readiness. Startup, wake and mode changes need a defined
+common-mode settling/training interval at the system boundary before payload
+acceptance. The host must coordinate that interval with the external receiver;
+the chip cannot infer remote capacitor charge from its local buffer detector.
+A cold/discharged capacitor case and sustained operation are still needed to
+bound that interval. Do not invent a fixed delay from this short transient or
+change the local detector threshold to hide the remote excursion.
+
 RF TX now accounts for the shared 28 mA active bias-current floor in addition
 to observing output-branch currents. The extra behavioral rail draw fills only
 the difference between the floor and sourced output current, avoiding double

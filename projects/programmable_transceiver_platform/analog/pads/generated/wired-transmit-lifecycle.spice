@@ -3286,7 +3286,8 @@ BMEASURED_READY MEASURED_READY 0 V=V(VDD)*(V(READY_FILTER)>=0.99)
 set wr_singlescale
 set wr_vecnames
 tran 5p 300n
-wrdata /home/ubuntu/svalbard/scratch/pad-tx-canonical-final/replay-1/connected.dat v(TERM_VCM) v(BUF_REF) v(TX_QUALIFIED) v(BUF_ENABLE) v(TERM_ENABLE) i(VDD) v(TRAFFIC_READY) v(MEASURED_READY) v(READY_WINDOW) v(PAD_P) v(PAD_N) v(VDD)
+wrdata /home/ubuntu/svalbard/scratch/pad-drive-accounting/replay-observed/connected.dat v(TERM_VCM) v(BUF_REF) v(TX_QUALIFIED) v(BUF_ENABLE) v(TERM_ENABLE) i(VDD) v(TRAFFIC_READY) v(MEASURED_READY) v(READY_WINDOW) v(PAD_P) v(PAD_N) v(VDD)
+wrdata /home/ubuntu/svalbard/scratch/pad-drive-accounting/replay-observed/ideal-drive.dat v(CASCODE) i(BCAS) v(BUF_ENABLE,VSS) i(BBUF_ENABLE) v(CTL_OK,VSS) i(BCTL_OK) v(CTL_REQ_MAIN,VSS) i(BCTL_REQ_MAIN) v(EN_MAIN,VSS) i(BCTL_BOUNDARY_MAIN) v(MAIN_BIAS) i(BBIAS_MAIN) v(MAIN_P) i(BP_MAIN) v(MAIN_N) i(BN_MAIN) v(CTL_REQ_POST,VSS) i(BCTL_REQ_POST) v(EN_POST,VSS) i(BCTL_BOUNDARY_POST) v(POST_BIAS) i(BBIAS_POST) v(POST_P) i(BP_POST) v(POST_N) i(BN_POST) v(CTL_REQ_TMDS,VSS) i(BCTL_REQ_TMDS) v(EN_TMDS,VSS) i(BCTL_BOUNDARY_TMDS) v(TMDS_BIAS) i(BBIAS_TMDS) v(TMDS_P) i(BP_TMDS) v(TMDS_N) i(BN_TMDS) v(CTL_REQ_DETECT,VSS) i(BCTL_REQ_DETECT) v(EN_DETECT,VSS) i(BCTL_BOUNDARY_DETECT) v(DETECT_PBIAS) i(BDETECTBIAS) v(DETECT_ENABLE) i(BDETECTEN) v(TX_VALID,VSS) i(BCTL_VALID_BOUNDARY)
 quit
 .endc
 .end

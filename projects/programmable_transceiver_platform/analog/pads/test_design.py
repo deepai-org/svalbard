@@ -12,6 +12,21 @@ class DesignBoundary(unittest.TestCase):
         self.architecture = json.loads((PROJECT / 'spec/analog-architecture.json').read_text())
         self.contract = json.loads((PROJECT / 'spec/contract.json').read_text())
 
+    def test_ideal_driver_energy_separates_delivery_from_absorption(self):
+        import numpy as np
+        from transmit_sequence_connected import ideal_drive_sources,ideal_drive_summary
+        deck='.subckt internal A B\nBHIDDEN A B V=1\n.ends internal\nBOUT OUT VSS V=1\n'
+        sources=ideal_drive_sources(deck)
+        self.assertEqual([v['name'] for v in sources],['BOUT'])
+        # A source delivering one watt then absorbing one watt has zero net
+        # energy; the positive burden must not disappear by cancellation.
+        data=np.array([[0,1,-1],[1,1,-1],[2,1,1],[3,1,1]],dtype=float)
+        result=ideal_drive_summary(data,sources)['sources']['BOUT']
+        self.assertEqual(result['net_delivered_energy_j'],0)
+        self.assertEqual(result['delivered_energy_j'],1.5)
+        self.assertEqual(result['absorbed_energy_j'],1.5)
+        self.assertEqual(result['peak_absolute_current_a'],1)
+
     def test_brownout_reports_pad_exposure_despite_logical_disable(self):
         import numpy as np
         from transmit_sequence_connected import brownout_summary

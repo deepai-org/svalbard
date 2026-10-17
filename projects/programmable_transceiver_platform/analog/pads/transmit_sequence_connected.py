@@ -73,6 +73,41 @@ initial begin #300;$finish;end
     return text,times,values
 
 
+def ideal_drive_sources(deck):
+    """Only top-level behavioral voltage drivers, excluding later observers."""
+    sources=[];depth=0
+    for line in deck.splitlines():
+        fields=line.split()
+        if not fields:continue
+        if fields[0].lower()=='.subckt':depth+=1
+        elif fields[0].lower()=='.ends':depth-=1
+        elif depth==0 and fields[0].upper().startswith('B'):
+            if len(fields)<4 or not fields[3].upper().startswith('V='):
+                raise ValueError('Unsupported behavioral source observation: '+line)
+            sources.append(dict(name=fields[0],positive=fields[1],negative=fields[2]))
+    return sources
+
+
+def ideal_drive_summary(data,sources):
+    if data.ndim!=2 or data.shape[1]!=1+2*len(sources) or not np.isfinite(data).all():
+        raise ValueError('Incomplete ideal-driver observations')
+    time=data[:,0];duration=time[-1]-time[0]
+    if duration<=0 or np.any(np.diff(time)<0):raise ValueError('Invalid observation times')
+    integrate=np.trapezoid if hasattr(np,'trapezoid') else np.trapz
+    results={}
+    for index,source in enumerate(sources):
+        voltage=data[:,1+index*2];current=data[:,2+index*2]
+        delivered=-voltage*current
+        results[source['name']]=dict(output_node=source['positive'],
+            peak_absolute_current_a=float(np.max(abs(current))),
+            delivered_energy_j=float(integrate(np.maximum(delivered,0),time)),
+            absorbed_energy_j=float(integrate(np.maximum(-delivered,0),time)),
+            net_delivered_energy_j=float(integrate(delivered,time)))
+    return dict(status='ideal_driver_burden_not_physical_driver_power',observation_duration_s=float(duration),
+        sources=results,total_positive_delivered_energy_j=sum(v['delivered_energy_j'] for v in results.values()),
+        scope='Energy supplied by top-level ideal voltage drivers is not charged to VDD. This is a transient load burden, not actual driver dissipation or a sustained-data power budget. Positive and absorbed energy are separated; no energy recovery is assumed. Observers added by the replay are excluded.')
+
+
 def brownout_summary(x, low):
     """Observe the retained supply transition, without inferring device safety."""
     if x.ndim != 2 or x.shape[1] != 13 or not np.isfinite(x).all():
@@ -172,6 +207,7 @@ def run(work,fixture,ready_data=None,scenario="transitions",spice_timeout_s=120)
     for name,new in replacements.items():
         deck,count=re.subn(r'^'+name+r' .*$',new,deck,flags=re.M)
         if count!=1:raise ValueError('Unexpected source '+name)
+    drive_sources=ideal_drive_sources(deck)
     deck+='VTRAFFIC_READY TRAFFIC_READY 0 '+wave(5,3.3)+'\n'
     architecture=json.loads((PROJECT/'spec/analog-architecture.json').read_text())
     readiness=architecture['blocks']['txpad']['parameters']['termination_readiness']
@@ -181,6 +217,8 @@ def run(work,fixture,ready_data=None,scenario="transitions",spice_timeout_s=120)
     deck+=f'RREADY_FILTER READY_WINDOW READY_FILTER 1000\nCREADY_FILTER READY_FILTER 0 {tau/1000}\n'
     deck+=f'BMEASURED_READY MEASURED_READY 0 V=V(VDD)*(V(READY_FILTER)>={threshold})\n'
     deck+=control(work,'connected','tran 5p 300n','v(TERM_VCM) v(BUF_REF) v(TX_QUALIFIED) v(BUF_ENABLE) v(TERM_ENABLE) i(VDD) v(TRAFFIC_READY) v(MEASURED_READY) v(READY_WINDOW) v(PAD_P) v(PAD_N) v(VDD)')
+    drive_vectors=' '.join((f"v({v['positive']})" if v['negative']=='0' else f"v({v['positive']},{v['negative']})")+f" i({v['name']})" for v in drive_sources)
+    deck=deck.replace('\nquit\n',f'\nwrdata {work}/ideal-drive.dat {drive_vectors}\nquit\n')
     x=run_spice(work,'connected',deck,reject_transient_op=True,timeout_s=spice_timeout_s)
     if not np.isfinite(x).all() or x[-1,0]<299.99e-9:raise ValueError('Incomplete connected replay')
     windows={}
@@ -221,6 +259,10 @@ def run(work,fixture,ready_data=None,scenario="transitions",spice_timeout_s=120)
             peak_supply_draw_a=float(max(0,-y[:,6].min())),
             peak_supply_return_a=float(max(0,y[:,6].max())))
     r['states']['brownout']=brownout_summary(x,low)
+    drive_data=np.loadtxt(work/'ideal-drive.dat',skiprows=1)
+    if len(drive_data)!=len(x) or not np.array_equal(drive_data[:,0],x[:,0]):
+        raise ValueError('Driver observations do not match lifecycle timebase')
+    r['ideal_driver_burden']=ideal_drive_summary(drive_data,drive_sources)
     r['numerical_floating_conductor_anchors']=anchors
     r['operating_point_policy']='Reject transient operating-point fallback; numerical anchors are not physical resistors.'
     for helper in ['loading_audit.py','screen.py']:

@@ -114,20 +114,20 @@
   "edge_translation_ns": 0.02,
   "external_network_unchanged": true,
   "source_sha256": {
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "58a7734892f3ea57c877d13047ab5b82d07584ed5af0502696f56495e75d7b8c",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "90ad7ff6d59962aa779136484992eed35bb91926c4921f7558065ddf18573881",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "fc3cdc163ae805c33b92a298142718ad36c94f5567ac4bb9bb608be016d58e32",
-    "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/replay-1/replay.sv": "a568460811d29aa74a8c969504058b45682fc750e76a6ee8ed536dd2f5fcaa02",
-    "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/fixture.spice": "4d50d6f6f486d6b3b8c6ae80967c1ad021a22de8af42b53c60885bd6eddd0491",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "5995b7ab33f01f62358b6af52cd3073ba4db89c66a303022bc516214d5bc9916",
-    "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/replay-1/connected.spice": "02816aa839ce319234db99992d1fbb03e28af5f8c1aa223699e05f4f0470b72d",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_fixture.py": "e3f480ea6356526e3499bc2410c9a7642173c63b4632a08628dbf81e5584c035",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "b43127f9351e0fd75ffb2792546c2608814afb79e2e0ac27f79ff12eaec3e9e6",
-    "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/pad/physical.spice": "c772d37254b8f72ec59e0afd1030469b2563220bb1c8fb90d1b21c295055683c",
+    "/home/ubuntu/svalbard/scratch/pad-drive-accounting/replay-observed/replay.sv": "a568460811d29aa74a8c969504058b45682fc750e76a6ee8ed536dd2f5fcaa02",
+    "/home/ubuntu/svalbard/scratch/pad-drive-accounting/fixture.spice": "4d50d6f6f486d6b3b8c6ae80967c1ad021a22de8af42b53c60885bd6eddd0491",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "b1b0dec79b6f9dc94733f71a8c425ec2a5c114188cd36acaf435694210944385",
+    "/home/ubuntu/svalbard/scratch/pad-drive-accounting/replay-observed/connected.spice": "ac8f6ccecb862ea119ab987e2eff57445d2382061aab624e7afa3da30019e743",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_fixture.py": "54099ee8f7f5aa4dcb9049efa20237f8724221f41070d89478949d3a1e232049",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "c31d37d50f6b07cf896812b29824fcd94889ee3867f8a84a6c002a52d81cfe70",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/wired-transmit-extracted-c.spice": "c772d37254b8f72ec59e0afd1030469b2563220bb1c8fb90d1b21c295055683c",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/physical.spice": "45b1ab7c83edd98901cdcfa78611e29d140dcfd57b70b4c303a8292b5d572be6",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/transmit-control-candidate/thick-logic/physical.spice": "e0a8c45ac4e8efdfde286d89f65451379448d1c7dd1829681e901c72b2f5c6d5",
-    "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/fixture.json": "983a8e69f058a1142abf20d182cfce7088133dab7fbeecaae047d888e6dd0750",
+    "/home/ubuntu/svalbard/scratch/pad-drive-accounting/fixture.json": "858ccf0ddf70f392dcfbb81fe8759179696278e7a2ea1fa2ed5a32f5038e5ffa",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/loading_audit.py": "2b01aee3f378ac60e325fcee31129957e3353b7253f8edbb9f28325779fa846c",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "f035d0f7f351d640ac3398ffe991cb6e6be2117920c1f90b70c8323a36448b37"
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "377e2d4c75fcc2b3d49344c6d2a3e686e7468a735425d18ec1260d1189d0f8d5"
   },
   "mode_coverage": {
     "TMDS": {
@@ -147,6 +147,7 @@
       "traffic_ready": true
     }
   },
+  "spice_timeout_s": 240.0,
   "transient_complete": true,
   "states": {
     "disabled": {
@@ -263,6 +264,175 @@
       "peak_supply_draw_a": 0.0603263705,
       "peak_supply_return_a": 0.187002496
     }
+  },
+  "ideal_driver_burden": {
+    "status": "ideal_driver_burden_not_physical_driver_power",
+    "observation_duration_s": 3e-07,
+    "sources": {
+      "BCAS": {
+        "output_node": "CASCODE",
+        "peak_absolute_current_a": 0.0192920741,
+        "delivered_energy_j": 1.388774071663955e-10,
+        "absorbed_energy_j": 1.4291708142373828e-10,
+        "net_delivered_energy_j": -4.039674257342787e-12
+      },
+      "BBUF_ENABLE": {
+        "output_node": "BUF_ENABLE",
+        "peak_absolute_current_a": 0.575360801,
+        "delivered_energy_j": 5.797983287216901e-11,
+        "absorbed_energy_j": 6.262033362385987e-11,
+        "net_delivered_energy_j": -4.640500751690857e-12
+      },
+      "BCTL_OK": {
+        "output_node": "CTL_OK",
+        "peak_absolute_current_a": 0.108570651,
+        "delivered_energy_j": 1.6605057747819823e-11,
+        "absorbed_energy_j": 1.627985185239364e-11,
+        "net_delivered_energy_j": 3.2520589542618365e-13
+      },
+      "BCTL_REQ_MAIN": {
+        "output_node": "CTL_REQ_MAIN",
+        "peak_absolute_current_a": 0.0297819296,
+        "delivered_energy_j": 1.410613160147214e-12,
+        "absorbed_energy_j": 1.7619833981057379e-12,
+        "net_delivered_energy_j": -3.513702379585243e-13
+      },
+      "BCTL_BOUNDARY_MAIN": {
+        "output_node": "EN_MAIN",
+        "peak_absolute_current_a": 0.0,
+        "delivered_energy_j": 0.0,
+        "absorbed_energy_j": 0.0,
+        "net_delivered_energy_j": 0.0
+      },
+      "BBIAS_MAIN": {
+        "output_node": "MAIN_BIAS",
+        "peak_absolute_current_a": 0.0463042197,
+        "delivered_energy_j": 1.3590656631741859e-10,
+        "absorbed_energy_j": 1.3628911619813176e-10,
+        "net_delivered_energy_j": -3.825498807131977e-13
+      },
+      "BP_MAIN": {
+        "output_node": "MAIN_P",
+        "peak_absolute_current_a": 0.106347215,
+        "delivered_energy_j": 3.9162201847152e-10,
+        "absorbed_energy_j": 3.470837704515983e-10,
+        "net_delivered_energy_j": 4.453824801992171e-11
+      },
+      "BN_MAIN": {
+        "output_node": "MAIN_N",
+        "peak_absolute_current_a": 0.125287602,
+        "delivered_energy_j": 4.5636546686205393e-10,
+        "absorbed_energy_j": 4.134955211719227e-10,
+        "net_delivered_energy_j": 4.28699456901312e-11
+      },
+      "BCTL_REQ_POST": {
+        "output_node": "CTL_REQ_POST",
+        "peak_absolute_current_a": 0.0262025622,
+        "delivered_energy_j": 1.0310854644131258e-12,
+        "absorbed_energy_j": 5.977937585755656e-13,
+        "net_delivered_energy_j": 4.3329170583755993e-13
+      },
+      "BCTL_BOUNDARY_POST": {
+        "output_node": "EN_POST",
+        "peak_absolute_current_a": 0.0,
+        "delivered_energy_j": 0.0,
+        "absorbed_energy_j": 0.0,
+        "net_delivered_energy_j": 0.0
+      },
+      "BBIAS_POST": {
+        "output_node": "POST_BIAS",
+        "peak_absolute_current_a": 0.0296911554,
+        "delivered_energy_j": 2.852710577785572e-11,
+        "absorbed_energy_j": 2.8531526780184804e-11,
+        "net_delivered_energy_j": -4.4210023290893416e-15
+      },
+      "BP_POST": {
+        "output_node": "POST_P",
+        "peak_absolute_current_a": 0.0928520995,
+        "delivered_energy_j": 1.7961417332009864e-10,
+        "absorbed_energy_j": 1.5514577904216204e-10,
+        "net_delivered_energy_j": 2.446839427793662e-11
+      },
+      "BN_POST": {
+        "output_node": "POST_N",
+        "peak_absolute_current_a": 0.104680779,
+        "delivered_energy_j": 2.0359304070589959e-10,
+        "absorbed_energy_j": 1.7937481865426504e-10,
+        "net_delivered_energy_j": 2.4218222051634552e-11
+      },
+      "BCTL_REQ_TMDS": {
+        "output_node": "CTL_REQ_TMDS",
+        "peak_absolute_current_a": 0.0441831975,
+        "delivered_energy_j": 1.4702783403624178e-12,
+        "absorbed_energy_j": 1.3715561932524677e-12,
+        "net_delivered_energy_j": 9.872214710995013e-14
+      },
+      "BCTL_BOUNDARY_TMDS": {
+        "output_node": "EN_TMDS",
+        "peak_absolute_current_a": 0.0,
+        "delivered_energy_j": 0.0,
+        "absorbed_energy_j": 0.0,
+        "net_delivered_energy_j": 0.0
+      },
+      "BBIAS_TMDS": {
+        "output_node": "TMDS_BIAS",
+        "peak_absolute_current_a": 0.0179600596,
+        "delivered_energy_j": 4.3503947531116886e-12,
+        "absorbed_energy_j": 4.235415104891622e-12,
+        "net_delivered_energy_j": 1.1497964822006548e-13
+      },
+      "BP_TMDS": {
+        "output_node": "TMDS_P",
+        "peak_absolute_current_a": 0.0778218377,
+        "delivered_energy_j": 2.3688264202992385e-11,
+        "absorbed_energy_j": 2.233525592625888e-11,
+        "net_delivered_energy_j": 1.3530082767335082e-12
+      },
+      "BN_TMDS": {
+        "output_node": "TMDS_N",
+        "peak_absolute_current_a": 0.0829408372,
+        "delivered_energy_j": 2.4671310045231296e-11,
+        "absorbed_energy_j": 2.3586052001656583e-11,
+        "net_delivered_energy_j": 1.085258043574713e-12
+      },
+      "BCTL_REQ_DETECT": {
+        "output_node": "CTL_REQ_DETECT",
+        "peak_absolute_current_a": 0.0435848355,
+        "delivered_energy_j": 2.1326956244827987e-12,
+        "absorbed_energy_j": 1.5340251453781242e-12,
+        "net_delivered_energy_j": 5.986704791046744e-13
+      },
+      "BCTL_BOUNDARY_DETECT": {
+        "output_node": "EN_DETECT",
+        "peak_absolute_current_a": 0.0,
+        "delivered_energy_j": 0.0,
+        "absorbed_energy_j": 0.0,
+        "net_delivered_energy_j": 0.0
+      },
+      "BDETECTBIAS": {
+        "output_node": "DETECT_PBIAS",
+        "peak_absolute_current_a": 0.000520385024,
+        "delivered_energy_j": 8.333701716370724e-13,
+        "absorbed_energy_j": 7.378393852831455e-13,
+        "net_delivered_energy_j": 9.553078635392695e-14
+      },
+      "BDETECTEN": {
+        "output_node": "DETECT_ENABLE",
+        "peak_absolute_current_a": 0.000828588262,
+        "delivered_energy_j": 4.717483228505211e-13,
+        "absorbed_energy_j": 3.448230586636245e-13,
+        "net_delivered_energy_j": 1.2692526418689656e-13
+      },
+      "BCTL_VALID_BOUNDARY": {
+        "output_node": "TX_VALID",
+        "peak_absolute_current_a": 0.0,
+        "delivered_energy_j": 0.0,
+        "absorbed_energy_j": 0.0,
+        "net_delivered_energy_j": 0.0
+      }
+    },
+    "total_positive_delivered_energy_j": 1.6691504293264593e-09,
+    "scope": "Energy supplied by top-level ideal voltage drivers is not charged to VDD. This is a transient load burden, not actual driver dissipation or a sustained-data power budget. Positive and absorbed energy are separated; no energy recovery is assumed. Observers added by the replay are excluded."
   },
   "numerical_floating_conductor_anchors": [
     {
@@ -459,13 +629,5 @@
     false,
     false
   ],
-  "feedback_input_sha256": "fd225bd4e45ed07a0fd369a6be2f5bdc95128d8ca9cb4775174a5d79a1952e05",
-  "brownout_reanalysis": {
-    "scope": "Postprocessing saved waveform, not a new simulation. Original source hashes retained. Waveform digest recorded at reanalysis, not at original simulation.",
-    "source_sha256": {
-      "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/replay-1/connected.dat": "9454b4ded9021068c7b91ffe2038518b47c8169c4e1f2565857eac866284f251",
-      "/home/ubuntu/svalbard/scratch/pad-tx-canonical-final/replay-1/connected.spice": "02816aa839ce319234db99992d1fbb03e28af5f8c1aa223699e05f4f0470b72d",
-      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "2c11a42248851d9ea64e115c860382e9c6a3ba512aedb7b764d41c5bea733ea0"
-    }
-  }
+  "feedback_input_sha256": "82908c815c5513ddb76877d6e84c82133d82961d3fe08f00fc4e9be8b0503421"
 }

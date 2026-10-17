@@ -604,6 +604,20 @@ DC probes and oversized direct-replication experiment are diagnostic evidence,
 not alternative normative pad designs. Full regenerated layout evidence takes
 precedence over those sizing estimates.
 
+The canonical TX lifecycle now measures the top-level behavioral voltage
+sources as well as VDD. `wired-transmit-screen.json:ideal_driver_burden` records
+positive delivered, absorbed and net energy separately. In the 300 ns retained
+fixture, the ideal sources deliver approximately 1.67 nJ of positive energy;
+MAIN/POST steering-source current peaks span approximately 93–125 mA, and the
+buffer-enable source reaches approximately 575 mA. The ideal edges and supply
+qualification discontinuities influence these peaks: they are not characterized
+physical-driver requirements. Nevertheless, VDD-only accounting misses this
+burden. Finite predrivers, enable drivers and bias drivers are required before
+claiming realistic timing or total supply power. The observer covers top-level
+behavioral voltage sources, not independent ideal command sources, driver
+internal losses or a sustained-traffic power budget. The refreshed lifecycle
+has zero sampled feedback mismatches; that does not close these physical gaps.
+
 ## First-pass implementation closure
 
 The first pass must connect the selected circuits, their generated layouts and

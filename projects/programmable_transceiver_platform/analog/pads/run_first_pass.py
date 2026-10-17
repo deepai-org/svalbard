@@ -204,13 +204,15 @@ def write_coverage(publish,results):
                 combined_retained_screen=retained_evidence,
                 protection_design_audit=protection_evidence,wired_tx_loading=tx_loading_evidence,
                 wired_tx_current_compliance=compliance_evidence,
-                missing=['floating-conductor initial charge remains unbounded; current lifecycle screens reject transient operating-point fallback',
-                         'wired TX selected biases miss current targets across steering states; disabled loading has about 12 fF margin and detection exceeds the allocation',
-                         'wired RX/USB trim, slew, termination mutual exclusion and local safe-state controls',
-                         'wired TX termination trim, buffer/interlock area and physical integration, readiness and reset/brownout controls',
-                         'full-bank host/power and supervisor qualification; independent-host power-off backfeed mitigation',
-                         'selected pad protection still needs current-capacity, core-stress and whole-ring/package qualification',
-                         'distributed interconnect resistance and complete attached-core stress/loading'],
+                missing=[
+                    'protection-to-core voltage/current-versus-duration contracts and coordinated circuits; discharge-current capacity remains unqualified',
+                    'physical local reset/brownout/readiness and safe power-domain crossings, including independent-host backfeed isolation or enforced sequencing',
+                    'physical attached RF LNA/driver, reference receiver and TX bias/control interfaces with accounted loading, headroom and power',
+                    'whole-ring device connectivity, core macro area/placement, distributed supply/return paths, bounded package coupling and full-bank host switching',
+                    'representative electrical acceptance with actual external networks: TMDS pull-up load, AC-coupled wired lane, USB bidirectional operation, RF and differential reference',
+                    'canonical wired TX current regulation, RX bypass loading, RF TX margin and reference startup; candidate improvements are not canonical acceptance',
+                    'wired RX/USB trim, slew and physical termination exclusion; wired TX termination trim and buffer/interlock integration',
+                    'floating-conductor initial charge bounds; current screens reject transient operating-point fallback but numerical anchors are not physical discharge paths'],
                 scope='Only listed candidates were rebuilt. Other artifacts must retain their original source hashes.')
     (publish/'coverage.json').write_text(json.dumps(report,indent=2)+'\n')
 

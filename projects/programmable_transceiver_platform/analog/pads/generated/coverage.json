@@ -40,8 +40,15 @@
       },
       "all_required_state_names_present": true,
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [],
-      "stale_layout_sources": [],
+      "stale_screen_sources": [
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_fixture.py",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py"
+      ],
+      "stale_layout_sources": [
+        "analog/pads/layout.py",
+        "analog/pads/transmit_integrated.py"
+      ],
       "exported_layout_device_graph_matches_current_model": true,
       "source_manifest_present": true,
       "scope": "Canonical family candidate only; named windows and matching input bytes do not prove performance, safety, or unchanged external-network topology."
@@ -79,8 +86,11 @@
       },
       "all_required_state_names_present": true,
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [],
+      "stale_screen_sources": [
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py"
+      ],
       "stale_layout_sources": [
+        "analog/pads/layout.py",
         "analog/pads/reference_integrated.py",
         "spec/schematic-implementation.json"
       ],
@@ -121,7 +131,9 @@
       },
       "all_required_state_names_present": true,
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [],
+      "stale_screen_sources": [
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py"
+      ],
       "stale_layout_sources": [
         "analog/pads/generated/rf-receive-layout.json",
         "analog/pads/generated/rf-transmit-layout.json"
@@ -163,7 +175,9 @@
       },
       "all_required_state_names_present": true,
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [],
+      "stale_screen_sources": [
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py"
+      ],
       "stale_layout_sources": [
         "analog/pads/generated/rf-receive-layout.json",
         "analog/pads/generated/rf-transmit-layout.json"
@@ -209,9 +223,12 @@
       },
       "all_required_state_names_present": true,
       "model_bytes_match_recorded_screen_input": true,
-      "stale_screen_sources": [],
+      "stale_screen_sources": [
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py"
+      ],
       "stale_layout_sources": [
-        "spec/schematic-implementation.json"
+        "spec/schematic-implementation.json",
+        "analog/pads/layout.py"
       ],
       "exported_layout_device_graph_matches_current_model": true,
       "source_manifest_present": true,
@@ -233,7 +250,7 @@
     "scope": "Published dimensional comparison and compact-model loading estimate; not ESD qualification."
   },
   "wired_tx_loading": {
-    "source_hashes_current": true,
+    "source_hashes_current": false,
     "report_sha256": "96be9607286d82d4f62d4256115780d267302ec16ed0457c7adaa7d6084892ef",
     "cases_exceeding_1ghz_odd_budget": [
       "detection"
@@ -242,13 +259,14 @@
   },
   "wired_tx_current_compliance": null,
   "missing": [
-    "floating-conductor initial charge remains unbounded; current lifecycle screens reject transient operating-point fallback",
-    "refresh wired TX current calibration; disabled loading has about 12 fF margin and detection exceeds the allocation",
-    "wired RX/USB trim, slew, termination mutual exclusion and local safe-state controls",
-    "wired TX termination trim, buffer/interlock area and physical integration, readiness and reset/brownout controls",
-    "full-bank host/power and supervisor qualification; independent-host power-off backfeed mitigation",
-    "selected pad protection still needs current-capacity, core-stress and whole-ring/package qualification",
-    "distributed interconnect resistance and complete attached-core stress/loading"
+    "protection-to-core voltage/current-versus-duration contracts and coordinated circuits; discharge-current capacity remains unqualified",
+    "physical local reset/brownout/readiness and safe power-domain crossings, including independent-host backfeed isolation or enforced sequencing",
+    "physical attached RF LNA/driver, reference receiver and TX bias/control interfaces with accounted loading, headroom and power",
+    "whole-ring device connectivity, core macro area/placement, distributed supply/return paths, bounded package coupling and full-bank host switching",
+    "representative electrical acceptance with actual external networks: TMDS pull-up load, AC-coupled wired lane, USB bidirectional operation, RF and differential reference",
+    "canonical wired TX current regulation, RX bypass loading, RF TX margin and reference startup; candidate improvements are not canonical acceptance",
+    "wired RX/USB trim, slew and physical termination exclusion; wired TX termination trim and buffer/interlock integration",
+    "floating-conductor initial charge bounds; current screens reject transient operating-point fallback but numerical anchors are not physical discharge paths"
   ],
   "scope": "Only listed candidates were rebuilt. Other artifacts must retain their original source hashes."
 }

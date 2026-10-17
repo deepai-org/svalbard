@@ -588,8 +588,12 @@ kickback or common-mode settling. `full-pad/bias-driver-screen.json` records
 these cases. This motivates a roughly 200 Ω drive target and explicit settling
 qualification, not a claim that an actual driver meets it. The probe starts
 with supply and termination regulation established, uses static data, and does
-not charge ideal reference-source power to VDD. Full finite-driver lifecycle,
-supply/current accounting and physical implementation remain open.
+not charge ideal reference-source power to VDD. A subsequent 300 ns lifecycle probe with 200 Ω MAIN/POST bias drive
+completed but retained four sampled feedback mismatches, beginning at 145 ns;
+it does not establish closed-loop lifecycle acceptance. The fixture builder
+exposes this diagnostic through `bias_resistance_ohm`; it leaves the canonical
+selection unchanged. Full finite-driver lifecycle, supply/current accounting
+and physical implementation remain open.
 
 This candidate is not the canonical selection. Finite bias-driver behavior and the physical bias/control implementation
 remain adoption gates; the nominal ideal-bias lifecycle is now closed. The earlier hybrid

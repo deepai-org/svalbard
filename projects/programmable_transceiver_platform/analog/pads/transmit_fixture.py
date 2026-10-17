@@ -12,7 +12,7 @@ import re
 from design import PROJECT
 
 
-def build(output, pdk, pad_override=None, bias_override=None):
+def build(output, pdk, pad_override=None, bias_override=None, bias_resistance_ohm=None):
     spec=PROJECT/'spec/schematic-implementation.json'
     arch=PROJECT/'spec/analog-architecture.json'
     cfg=json.loads(spec.read_text())['io_pad_first_pass']['tx_integration_fixture']
@@ -32,6 +32,8 @@ def build(output, pdk, pad_override=None, bias_override=None):
         if definition[2:]!=expected[name]:raise ValueError('Selected '+name+' interface changed')
         cells[name]=definition[1]
         texts.append('\n'.join(line for line in text.splitlines() if not line.startswith(('.lib ','.include '))))
+    if bias_resistance_ohm is not None and not 0<bias_resistance_ohm<=10000:
+        raise ValueError('Bias resistance must be positive and bounded')
     v=2*a['blocks']['bias']['parameters']['common_mode_v']
     low,high=a['blocks']['monitor']['parameters']['supply_window_v']
     period=cfg['data_period_s'];edge=cfg['data_edge_s']
@@ -72,8 +74,16 @@ def build(output, pdk, pad_override=None, bias_override=None):
                       f'BN_{branch} {branch}_N 0 V={negative}*V(EN_{branch})']
     lines += [f'BCTL_VALID_BOUNDARY TX_VALID VSS V=V(CTL_VALID)/{v}',
               'XCTL VDD VSS CTL_REQ_MAIN CTL_REQ_POST CTL_REQ_TMDS CTL_REQ_DETECT REQ_TERM_ENABLE TX_RESET TX_QUALIFIED CTL_OK CTL_CONFLICT CTL_VALID CTL_EN_MAIN CTL_EN_POST CTL_EN_TMDS CTL_EN_DETECT TERM_ENABLE '+cells['interlock']]
+    if bias_resistance_ohm is not None:
+        for branch in ('MAIN','POST'):
+            prefix=f'BBIAS_{branch} {branch}_BIAS 0 '
+            matches=[i for i,line in enumerate(lines) if line.startswith(prefix)]
+            if len(matches)!=1:raise ValueError('Unexpected bias-source graph')
+            i=matches[0];lines[i]=lines[i].replace(f'{branch}_BIAS 0',f'DRIVE_{branch}_BIAS 0',1)
+            lines.append(f'RDRIVE_{branch} DRIVE_{branch}_BIAS {branch}_BIAS {bias_resistance_ohm}')
     output.parent.mkdir(parents=True,exist_ok=True);output.write_text('\n'.join(lines)+'\n')
-    manifest=dict(scope=__doc__,bias_override=bias_override,fixture_sha256=hashlib.sha256(output.read_bytes()).hexdigest(),
+    manifest=dict(scope=__doc__,bias_override=bias_override,bias_resistance_ohm=bias_resistance_ohm,
+                  bias_driver_scope="Finite Thevenin reference boundary when resistance specified; source power not charged to VDD, no physical driver or precharge implied.",fixture_sha256=hashlib.sha256(output.read_bytes()).hexdigest(),
                   source_sha256={str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in [Path(__file__),spec,arch,*models.values()]})
     output.with_suffix('.json').write_text(json.dumps(manifest,indent=2)+'\n')
     return manifest

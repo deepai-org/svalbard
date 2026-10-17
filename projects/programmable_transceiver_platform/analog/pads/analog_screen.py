@@ -21,7 +21,7 @@ def control(work,name,analysis,vectors):
 
 
 def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_report=None,
-           capacitance_location="bond", resistance_corner="nominal", external_coupling_f=None, rf_tx_gain=None, external_series_l_h=0., external_inductor_q=30., numerical_anchor_resistance=1e12):
+           capacitance_location="bond", resistance_corner="nominal", external_coupling_f=None, rf_tx_gain=None, external_series_l_h=0., external_inductor_q=30., numerical_anchor_resistance=1e12, core_load_f_per_leg=None):
     if not np.isfinite(external_series_l_h) or external_series_l_h<0 or not np.isfinite(external_inductor_q) or external_inductor_q<=0:
         raise ValueError('External inductance must be nonnegative and Q positive')
     if external_series_l_h and family!='rf_transmit':
@@ -35,6 +35,13 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
             not np.isfinite(external_termination_ohm) or external_termination_ohm<=0):
         raise ValueError('Optional finite positive board termination is a reference-clock fixture')
     architecture=json.loads((PROJECT/'spec/analog-architecture.json').read_text())
+    core_owner,core_key={'rf_receive':('lna','input_capacitance_f_per_leg'),
+        'rf_transmit':('rfdriver','output_capacitance_f_per_leg'),
+        'reference_clock':('refinput','input_capacitance_f_per_leg')}[family]
+    selected_core_load=architecture['blocks'][core_owner]['parameters'][core_key]
+    actual_core_load=selected_core_load if core_load_f_per_leg is None else core_load_f_per_leg
+    if not np.isfinite(actual_core_load) or actual_core_load<0:raise ValueError('Invalid core load capacitance')
+
     contract=json.loads((PROJECT/'spec/contract.json').read_text())
     model=physical.read_text()
     route_evidence=None
@@ -149,7 +156,7 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
             network+=f'BSINK_{leg} SINK_{leg} VSS I=max(-V(REQUEST_{leg}),0)*min(max(V({node})/{headroom},0),1)\n'
             network+=f'VSOURCE_{leg} SOURCE_{leg} {node} 0\nVSINK_{leg} {node} SINK_{leg} 0\n'
             network+=f'RBLEED_{leg} {node} VSS 1e6\n'
-            network+=f'CCORE_{leg} {core_prefix}_{leg} VSS .1p\n'
+            network+=f'CCORE_{leg} {core_prefix}_{leg} VSS {actual_core_load}\n'
             network+=f'VEXT_{leg} EXT_{leg} 0 SIN(0 {sign*.0025} {frequency})\n'
             network+=f'RLOAD_{leg} EXT_{leg} BOARD_{leg} {load}\n'
         else:
@@ -160,7 +167,7 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
                 network+=f'RCORE_{leg} {core_prefix}_{leg} VCM {match}\n'
             # Receiver input device loading remains explicit and separate
             # from the extracted pad. It must be replaced by the real core.
-            network+=f'CCORE_{leg} {core_prefix}_{leg} VSS .1p\n'
+            network+=f'CCORE_{leg} {core_prefix}_{leg} VSS {actual_core_load}\n'
         if external_series_l_h:
             esr=2*np.pi*frequency*external_series_l_h/external_inductor_q
             network+=f'CCOUPLE_{leg} BOARD_{leg} MATCH_{leg} {coupling}\n'
@@ -281,7 +288,9 @@ def screen(work,pdk,physical,family,external_termination_ohm=None, *, route_repo
                                  mutual_bond_h=mutual_l,source_r_ohm_per_leg=source_r if not tx else None,
                                  package_source='shared_reference_input_package' if ref else 'declared_RF_package_probe',
                                  external_differential_termination_ohm=external_termination_ohm,
-                                 bond_r_ohm_per_leg=0 if ref else 1,core_load_f_per_leg=.1e-12),
+                                 bond_r_ohm_per_leg=0 if ref else 1,core_load_f_per_leg=actual_core_load,
+                                 core_load_source=f'blocks.{core_owner}.parameters.{core_key}',
+                                 selected_core_load_f_per_leg=selected_core_load,core_load_override=core_load_f_per_leg is not None),
                 limitations=[
                     'Physical pad devices and extracted capacitance are connected; full distributed interconnect R is absent. Optional segmented metal estimate is identified separately.',
                     'Capacitance/DC probes leave the attached core absent; transfer/lifecycle probes include its declared load.',

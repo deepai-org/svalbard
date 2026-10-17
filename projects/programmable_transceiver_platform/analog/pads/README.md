@@ -698,9 +698,45 @@ optimization. The remaining work is not just parameter tuning:
 | --- | --- | --- |
 | 1. Protection compatible with the attached core | Primary protection is physically present, but diagnostic RF pulses still reach roughly +4.54/−1.00 V at the core boundary. Survival and discharge-current capacity are unqualified. | Specify allowed voltage/current versus duration for each attached core and choose a coordinated protection/isolation circuit. Check normal signal loading and powered/unpowered exposure together. Do not interpret diagnostic pulses as an ESD rating. |
 | 2. Safe behavior without an already-working host | Reset, brownout and readiness still depend partly on prescribed or behavioral controls. Independently powered host operation has recorded substantial backfeed and is unsupported without isolation/sequencing. | Implement local disable, power-domain crossings and readiness sufficient to keep every connected branch safe through startup, rail loss and mode changes. Retain the external network and account for stored energy. |
-| 3. Real pad-to-core interfaces | RF LNA/driver and reference receiver remain explicit behavioral boundaries; TX bias and serializer drive remain idealized. Extracted TX buffer/interlock macros now have explicit area reservations but still need placement and routing in the full chip. | Assign physical implementations and power/loading budgets to the interfaces that determine pad operation. Decide whether the complete circuits fit and meet headroom before optimizing individual bias values. |
-| 4. Whole-ring and package integration | Provider openings and local geometry/connectivity checks pass. Full-ring device LVS, core clearance, distributed returns/coupling and full-bank switching are incomplete. | Preserve provider-compatible bond sites, place/fund attached macros, connect the complete supply/return network and evaluate bounded package loading and host switching on that same assembly. Local DRC is not this gate. |
+| 3. Real pad-to-core interfaces | RF LNA/driver and reference receiver remain explicit behavioral boundaries; TX bias and serializer drive remain idealized. Extracted TX buffer/interlock and steering macros have area reservations and checked placements, but remain unrouted. Connected TX current exceeds current planning allocations; RF domain allocations also exceed their domain budget. | Assign physical implementations and power/loading budgets to the interfaces that determine pad operation. Decide whether the complete circuits fit and meet headroom before optimizing individual bias values. |
+| 4. Whole-ring and package integration | Provider openings and local geometry/connectivity checks pass. Attached TX macro clearance is checked, but full-core integration, full-ring device LVS, distributed returns/coupling and full-bank switching are incomplete. | Preserve provider-compatible bond sites, place/fund attached macros, connect the complete supply/return network and evaluate bounded package loading and host switching on that same assembly. Local DRC is not this gate. |
 | 5. Representative electrical capability | The all-mode 100 Ω TX fixture is supplemented by an independently powered split-pull-up hold case; nominal current and feedback are demonstrated, but electrical/protection acceptance remains open. RX bypass loading exceeds its budget on one leg; RF TX power margin is narrow; reference startup is millisecond-scale with the retained external bias capacitor. | Exercise representative DC-coupled, AC-coupled, USB bidirectional, RF and reference interfaces with their actual external networks and acceptance limits. Include sustained operation and transitions; distinguish failed limits from missing evidence. |
+
+The next milestone is an integrated pad-to-core design decision across these
+five gates. Start by specifying each attached circuit's normal signal envelope,
+allowed transient exposure, off-state behavior and power/loading allowance.
+Use those same interfaces to decide whether the protection, local controls and
+supply/return topology can coexist with the required bandwidth. Unknown core
+limits remain explicit assumptions, not demonstrated survival limits.
+
+Make a keep/change/unresolved decision for each family, supported by the
+existing evidence and only the additional representative checks needed to
+resolve that decision. Power-budget conflicts require a circuit or allocation
+decision with whole-chip accounting; a larger numerical allowance alone is not
+a resolution. Preserve provider-compatible bonding and account for external
+components together with their interconnects. Defer further bias, capacitance
+and geometry sweeps unless their result can change one of these decisions.
+
+### Current first-pass decisions
+
+| Scope | Decision | Consequence for implementation |
+| --- | --- | --- |
+| Family structure and external connections | Keep | Retain the five canonical families and shared parameters. Keep peer supplies, terminations and coupling components attached during every lifecycle state. No additional protocol-specific pad variants are justified by the current evidence. |
+| Protection-to-core interface | Change / incomplete | Primary clamps alone are not an accepted core interface. Complete the core-facing protection/isolation design together with normal signal loading; do not freeze these layouts for fabrication on present pulse results. |
+| Safe-state controls | Change / incomplete | Replace prescribed disable/readiness with physical local controls and explicit power-domain crossings. Upstream power commands and FPGA cooperation cannot substitute for local brownout behavior. |
+| Attached TX circuits and supply plan | Change required | Retain the extracted drivers in the model rather than returning to ideal drives. Their current exposes a real allocation conflict. Rework driver/termination demand or fund it through a complete supply/return and whole-chip budget decision before accepting the implementation. |
+| RF and reference core boundaries | Keep as provisional interfaces | Preserve explicit finite loading and power accounting, but do not label them implemented LNA, driver or receiver circuits. Their physical interfaces remain a first-pass deliverable. |
+| Provider-compatible geometry | Keep; integration incomplete | Preserve bond openings and checked macro placements. Finish electrical routing and shared supply/return integration; placement checks do not establish package performance. |
+
+RF/reference attached capacitances now come from their shared architecture
+blocks rather than hard-coded bench constants. The selected assumption remains
+100 fF per leg. `generated/rf-core-loading-sensitivity.json` records a maximum-gain
+RF TX comparison at high route resistance: 100 and 500 fF per leg produce about
++0.163 and +0.146 dBm respectively in the active tone window. The larger value
+is an explicit sensitivity case, not a characterized bound. This small change
+does not justify another capacitance sweep: actual driver bandwidth, impedance,
+protection exposure and bias behavior are still missing, and the absolute power
+margin remains narrow. Neither case establishes modulated RF performance.
 
 The canonical wired TX also misses its intended current settings in connected
 static checks. A compact folded-tail candidate improves those currents and fits

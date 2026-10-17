@@ -1733,7 +1733,8 @@
         "iip3_dbm": 0.0,
         "input_match_ohm_differential": 100,
         "noise_figure_db": 6.0,
-        "topology": "differential common-source with resistive feedback and bypass attenuator"
+        "topology": "differential common-source with resistive feedback and bypass attenuator",
+        "input_capacitance_f_per_leg": 1e-13
       },
       "ports": {
         "gain": {
@@ -2514,7 +2515,8 @@
           1,
           256
         ],
-        "startup_policy": "Qualify reference common-mode settling and usable input clock before declaring readiness. External AC-coupling capacitance and finite pad bias set a potentially millisecond cold-start/recovery interval; the supervisor guard follows established validity and is not a substitute for bias settling."
+        "startup_policy": "Qualify reference common-mode settling and usable input clock before declaring readiness. External AC-coupling capacitance and finite pad bias set a potentially millisecond cold-start/recovery interval; the supervisor guard follows established validity and is not a substitute for bias settling.",
+        "input_capacitance_f_per_leg": 1e-13
       },
       "ports": {
         "clock_pair": {
@@ -2678,7 +2680,8 @@
           "status": "assigned_response_not_measured"
         },
         "target_mean_power_dbm": 0.0,
-        "topology": "differential resistively loaded RF driver with programmable transconductance"
+        "topology": "differential resistively loaded RF driver with programmable transconductance",
+        "output_capacitance_f_per_leg": 1e-13
       },
       "ports": {
         "gain": {

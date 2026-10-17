@@ -1,0 +1,2872 @@
+.subckt tx_protected_pad PAD_P PAD_N VDD VSS CASCODE MAIN_P MAIN_N MAIN_BIAS POST_P POST_N POST_BIAS TMDS_P TMDS_N TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_VCM
+XPHYSICAL PAD_P PAD_N VDD VSS CASCODE MAIN_P MAIN_N MAIN_BIAS POST_P POST_N POST_BIAS TMDS_P TMDS_N TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_VCM ESD_RAIL combined_flat
+.ends tx_protected_pad
+* NGSPICE file created from combined_flat.ext - technology: gf180mcuD
+
+.subckt combined_flat PAD_P PAD_N VDD VSS CASCODE MAIN_P MAIN_N MAIN_BIAS POST_P POST_N
++ POST_BIAS TMDS_P TMDS_N TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_VCM
++ ESD_RAIL
+X0 POST_TAIL_2 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X1 TERM_ENABLE_LOCAL TERM_ENABLE_B VDD VDD pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
+X2 VSS MAIN_BIAS MAIN_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X3 TMDS_TAIL_2 TMDS_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X4 POST_TAIL_5 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X5 SUM_N_D_7 POST_N POST_TAIL_7 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X6 VSS POST_BIAS POST_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X7 POST_TAIL_2 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X8 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X9 a_36789_169064# a_35813_169064# ESD_RAIL ESD_RAIL pfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+X10 TERM_P_R TERM_ENABLE_LOCAL TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X11 VSS MAIN_BIAS MAIN_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D0 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
+X12 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X13 ESD_RAIL a_36789_169064# a_34245_142628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X14 VSS MAIN_BIAS MAIN_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X15 VSS MAIN_BIAS MAIN_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X16 VSS POST_BIAS POST_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X17 MAIN_TAIL_6 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D1 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
+X18 POST_TAIL_7 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X19 POST_TAIL_0 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X20 TERM_P_R TERM_ENABLE_LOCAL TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X21 VSS MAIN_BIAS MAIN_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X22 VSS MAIN_BIAS MAIN_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X23 VSS POST_BIAS POST_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X24 MAIN_TAIL_6 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X25 SUM_N_D_6 POST_N POST_TAIL_6 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X26 MAIN_TAIL_1 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X27 POST_TAIL_0 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X28 TERM_VCM VSS VSS ppolyf_u_1k r_width=2u r_length=2u
+X29 ESD_RAIL a_36789_169064# a_34245_142628# ESD_RAIL pfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+X30 VSS MAIN_BIAS MAIN_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X31 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X32 DETECT_ENABLE_LOCAL DETECT_BLEED_0 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X33 VSS POST_BIAS POST_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X34 VSS POST_BIAS POST_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X35 a_33005_186065# a_45878_185785# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+D2 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+X36 DETECT_ENABLE_B DETECT_ENABLE VDD VDD pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
+X37 POST_TAIL_5 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X38 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D3 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+X39 SUM_N_D_0 POST_N POST_TAIL_0 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X40 TERM_BLEED_6 VSS VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X41 MAIN_TAIL_0 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X42 VSS MAIN_BIAS MAIN_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X43 VSS MAIN_BIAS MAIN_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X44 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X45 SUM_N_D_1 MAIN_N MAIN_TAIL_1 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X46 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X47 MAIN_TAIL_0 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X48 POST_TAIL_5 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X49 VSS MAIN_BIAS MAIN_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X50 VSS POST_BIAS POST_TAIL_5 VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X51 DETECT_P_I DETECT_ENABLE_LOCAL PAD_P VSS nfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.7u
+X52 TMDS_TAIL_3 TMDS_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X53 SUM_N_D_4 MAIN_N MAIN_TAIL_4 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X54 POST_TAIL_7 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X55 ESD_RAIL a_35813_169064# a_36789_169064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X56 VSS MAIN_BIAS MAIN_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X57 VSS POST_BIAS POST_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X58 MAIN_TAIL_7 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X59 VSS MAIN_BIAS MAIN_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X60 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X61 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X62 SUM_N_D_3 TMDS_N TMDS_TAIL_3 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X63 VSS MAIN_BIAS MAIN_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X64 VSS MAIN_BIAS MAIN_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X65 ESD_RAIL VSS cap_mim_2f0_m4m5_noshield c_width=31.6u c_length=31.6u
+D4 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
+X66 SUM_N_D_7 TMDS_N TMDS_TAIL_7 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X67 a_34245_142628# a_36789_169064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X68 MAIN_TAIL_1 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X69 POST_TAIL_7 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X70 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X71 VSS POST_BIAS POST_TAIL_7 VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X72 SUM_N_D_7 MAIN_N MAIN_TAIL_7 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X73 VSS MAIN_BIAS MAIN_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X74 TERM_BLEED_4 TERM_BLEED_5 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X75 VSS POST_BIAS POST_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X76 SUM_N_D_0 MAIN_N MAIN_TAIL_0 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X77 TMDS_TAIL_6 TMDS_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X78 VSS MAIN_BIAS MAIN_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X79 MAIN_TAIL_6 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X80 a_35813_169064# a_33005_183545# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X81 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X82 VSS MAIN_BIAS MAIN_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X83 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X84 MAIN_TAIL_6 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X85 SUM_N_D_1 TMDS_N TMDS_TAIL_1 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X86 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X87 VSS POST_BIAS POST_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X88 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X89 VSS POST_BIAS POST_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X90 VSS MAIN_BIAS MAIN_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X91 MAIN_TAIL_1 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X92 DETECT_BLEED_4 DETECT_BLEED_5 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X93 VSS MAIN_BIAS MAIN_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X94 VSS POST_BIAS POST_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X95 VSS MAIN_BIAS MAIN_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X96 VSS MAIN_BIAS MAIN_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X97 a_36789_169064# a_35813_169064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X98 VSS MAIN_BIAS MAIN_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D5 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+X99 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X100 MAIN_TAIL_2 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X101 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X102 VSS MAIN_BIAS MAIN_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X103 VSS POST_BIAS POST_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X104 MAIN_TAIL_7 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X105 PAD_P CASCODE SUM_P_D_4 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X106 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X107 VSS MAIN_BIAS MAIN_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X108 VSS MAIN_BIAS MAIN_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X109 MAIN_TAIL_0 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X110 VSS POST_BIAS POST_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X111 VSS POST_BIAS POST_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X112 MAIN_TAIL_2 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X113 MAIN_TAIL_4 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X114 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X115 VSS POST_BIAS POST_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X116 VSS POST_BIAS POST_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X117 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X118 ESD_RAIL a_36789_169064# a_34245_142628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X119 SUM_N_D_0 TMDS_N TMDS_TAIL_0 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X120 DETECT_BLEED_2 DETECT_BLEED_3 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X121 MAIN_TAIL_3 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X122 VSS POST_BIAS POST_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X123 MAIN_TAIL_7 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X124 a_34245_142628# a_36789_169064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X125 POST_TAIL_5 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X126 VSS POST_BIAS POST_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X127 VSS POST_BIAS POST_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X128 MAIN_TAIL_4 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X129 SUM_N_D_4 POST_N POST_TAIL_4 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X130 VSS POST_BIAS POST_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X131 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X132 MAIN_TAIL_1 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X133 VSS MAIN_BIAS MAIN_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X134 VSS POST_BIAS POST_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X135 MAIN_TAIL_6 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X136 MAIN_TAIL_5 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X137 a_34245_142628# a_36789_169064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X138 POST_TAIL_2 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X139 POST_TAIL_7 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X140 VSS POST_BIAS POST_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X141 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X142 VSS POST_BIAS POST_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X143 PAD_P CASCODE SUM_P_D_7 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X144 VSS POST_BIAS POST_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X145 PAD_P CASCODE SUM_P_D_0 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X146 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X147 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X148 TERM_N_R TERM_ENABLE_LOCAL TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X149 POST_TAIL_2 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X150 MAIN_TAIL_2 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X151 VSS POST_BIAS POST_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X152 SUM_N_D_1 POST_N POST_TAIL_1 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X153 PAD_P CASCODE SUM_P_D_2 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X154 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X155 a_34245_142628# a_36789_169064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X156 VSS a_35813_169064# a_36789_169064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X157 ESD_RAIL a_36789_169064# a_34245_142628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X158 MAIN_TAIL_1 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X159 VSS POST_BIAS POST_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X160 TMDS_TAIL_7 TMDS_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X161 SUM_N_D_2 MAIN_N MAIN_TAIL_2 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X162 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X163 VSS POST_BIAS POST_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X164 VSS MAIN_BIAS MAIN_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X165 POST_TAIL_3 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X166 POST_TAIL_0 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X167 MAIN_TAIL_2 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X168 SUM_N_D_2 POST_N POST_TAIL_2 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X169 MAIN_TAIL_7 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X170 PAD_P CASCODE SUM_P_D_5 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X171 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X172 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X173 POST_TAIL_5 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X174 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X175 MAIN_TAIL_4 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X176 VSS POST_BIAS POST_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X177 VSS a_36789_169064# a_34245_142628# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X178 VSS POST_BIAS POST_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X179 TERM_BLEED_0 TERM_BLEED_1 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X180 VSS POST_BIAS POST_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X181 POST_TAIL_0 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X182 VSS MAIN_BIAS MAIN_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X183 MAIN_TAIL_1 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X184 VSS MAIN_BIAS MAIN_TAIL_2 VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X185 ESD_RAIL a_36789_169064# a_34245_142628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X186 TMDS_TAIL_5 TMDS_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X187 MAIN_TAIL_4 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X188 a_33005_183545# a_45878_183545# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X189 POST_TAIL_7 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X190 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X191 TERM_N_R TERM_ENABLE_LOCAL TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X192 POST_TAIL_5 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X193 POST_TAIL_1 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X194 VSS POST_BIAS POST_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X195 MAIN_TAIL_7 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X196 VSS MAIN_BIAS MAIN_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D6 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X197 MAIN_TAIL_3 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X198 POST_TAIL_2 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X199 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X200 a_36789_169064# a_35813_169064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X201 VSS MAIN_BIAS MAIN_TAIL_4 VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X202 VSS MAIN_BIAS MAIN_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D7 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X203 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X204 TERM_P_R TERM_ENABLE_LOCAL TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+D8 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X205 MAIN_TAIL_1 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X206 VSS POST_BIAS POST_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X207 DETECT_BLEED_6 VSS VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X208 VSS POST_BIAS POST_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X209 POST_TAIL_7 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X210 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X211 TERM_P_R TERM_ENABLE_LOCAL TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X212 POST_TAIL_2 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X213 MAIN_TAIL_2 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X214 MAIN_TAIL_5 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X215 TMDS_TAIL_0 TMDS_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X216 MAIN_TAIL_7 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X217 VSS MAIN_BIAS MAIN_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X218 VSS MAIN_BIAS MAIN_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X219 TMDS_TAIL_4 TMDS_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X220 VSS POST_BIAS POST_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X221 SUM_P_D_5 MAIN_P MAIN_TAIL_5 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X222 POST_TAIL_0 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X223 PAD_N CASCODE SUM_N_D_2 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X224 a_33005_184385# a_45878_184665# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X225 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X226 VSS POST_BIAS POST_TAIL_2 VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X227 VSS MAIN_BIAS MAIN_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X228 MAIN_TAIL_4 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X229 VSS a_36789_169064# a_34245_142628# VSS nfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+X230 a_34245_142628# a_36789_169064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X231 VSS POST_BIAS POST_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X232 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X233 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X234 VSS MAIN_BIAS MAIN_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X235 POST_TAIL_5 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X236 POST_TAIL_0 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X237 MAIN_TAIL_7 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X238 VSS MAIN_BIAS MAIN_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X239 POST_TAIL_3 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X240 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X241 MAIN_TAIL_3 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X242 VSS POST_BIAS POST_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X243 VSS MAIN_BIAS MAIN_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X244 MAIN_TAIL_0 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X245 VSS MAIN_BIAS MAIN_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X246 MAIN_TAIL_1 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X247 SUM_P_D_4 MAIN_P MAIN_TAIL_4 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X248 VSS POST_BIAS POST_TAIL_0 VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X249 DETECT_N_I DETECT_PBIAS VDD VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=2u
+X250 POST_TAIL_7 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X251 POST_TAIL_2 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D9 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X252 MAIN_TAIL_5 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X253 SUM_P_D_3 TMDS_P TMDS_TAIL_3 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X254 MAIN_TAIL_3 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X255 a_33005_185505# a_45878_185785# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X256 POST_TAIL_5 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X257 VSS MAIN_BIAS MAIN_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X258 SUM_P_D_7 TMDS_P TMDS_TAIL_7 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X259 POST_TAIL_1 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X260 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X261 a_34245_142628# a_36789_169064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X262 MAIN_TAIL_1 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X263 VSS POST_BIAS POST_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X264 VSS MAIN_BIAS MAIN_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X265 VSS MAIN_BIAS MAIN_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X266 VSS MAIN_BIAS MAIN_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X267 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X268 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X269 ESD_RAIL a_36789_169064# a_34245_142628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X270 POST_TAIL_7 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X271 MAIN_TAIL_5 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X272 MAIN_TAIL_2 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X273 VSS MAIN_BIAS MAIN_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X274 POST_TAIL_0 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X275 MAIN_TAIL_6 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X276 VSS MAIN_BIAS MAIN_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X277 POST_TAIL_3 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X278 MAIN_TAIL_7 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X279 POST_TAIL_5 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X280 VSS POST_BIAS POST_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X281 VSS MAIN_BIAS MAIN_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X282 a_36789_169064# a_35813_169064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X283 SUM_P_D_2 TMDS_P TMDS_TAIL_2 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X284 VSS POST_BIAS POST_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X285 MAIN_TAIL_4 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X286 VSS MAIN_BIAS MAIN_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X287 POST_TAIL_7 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X288 MAIN_TAIL_7 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X289 POST_TAIL_5 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X290 POST_TAIL_3 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X291 VSS MAIN_BIAS MAIN_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X292 VSS MAIN_BIAS MAIN_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X293 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X294 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X295 POST_TAIL_1 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X296 PAD_N CASCODE SUM_N_D_6 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X297 VSS POST_BIAS POST_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X298 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X299 VSS POST_BIAS POST_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X300 VSS MAIN_BIAS MAIN_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X301 VSS MAIN_BIAS MAIN_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X302 SUM_P_D_0 TMDS_P TMDS_TAIL_0 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X303 MAIN_TAIL_0 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X304 VSS MAIN_BIAS MAIN_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X305 VSS POST_BIAS POST_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X306 a_33005_185505# a_45878_185225# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X307 POST_TAIL_2 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X308 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X309 VSS MAIN_BIAS MAIN_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X310 POST_TAIL_7 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X311 POST_TAIL_1 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X312 VSS POST_BIAS POST_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X313 MAIN_TAIL_3 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X314 PAD_N CASCODE SUM_N_D_4 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X315 VSS POST_BIAS POST_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X316 SUM_P_D_6 MAIN_P MAIN_TAIL_6 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X317 VSS POST_BIAS POST_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X318 VSS POST_BIAS POST_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X319 VSS POST_BIAS POST_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X320 SUM_P_D_6 POST_P POST_TAIL_6 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X321 PAD_N CASCODE SUM_N_D_7 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X322 VSS MAIN_BIAS MAIN_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X323 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X324 POST_TAIL_0 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X325 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X326 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X327 MAIN_TAIL_5 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X328 MAIN_TAIL_6 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X329 POST_TAIL_5 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X330 VSS MAIN_BIAS MAIN_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X331 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X332 TERM_P_R TERM_ENABLE_LOCAL TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X333 SUM_P_D_1 POST_P POST_TAIL_1 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X334 PAD_P CASCODE SUM_P_D_3 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X335 VSS MAIN_BIAS MAIN_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X336 VSS POST_BIAS POST_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X337 VSS POST_BIAS POST_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X338 VSS MAIN_BIAS MAIN_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X339 TMDS_TAIL_7 TMDS_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X340 ESD_RAIL a_45878_186345# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X341 VSS POST_BIAS POST_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X342 SUM_P_D_2 MAIN_P MAIN_TAIL_2 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X343 MAIN_TAIL_0 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X344 SUM_P_D_2 POST_P POST_TAIL_2 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X345 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X346 VSS POST_BIAS POST_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X347 POST_TAIL_7 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X348 VSS MAIN_BIAS MAIN_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X349 MAIN_TAIL_0 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X350 POST_TAIL_5 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X351 VSS POST_BIAS POST_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X352 POST_TAIL_3 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X353 MAIN_TAIL_3 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X354 PAD_P TERM_P_R VSS ppolyf_s r_width=1u r_length=1.8u
+X355 VSS MAIN_BIAS MAIN_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X356 MAIN_TAIL_2 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X357 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X358 PAD_N CASCODE SUM_N_D_0 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X359 VSS POST_BIAS POST_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X360 VSS POST_BIAS POST_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X361 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X362 TERM_N_R TERM_ENABLE_LOCAL TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X363 MAIN_TAIL_3 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X364 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X365 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X366 VSS MAIN_BIAS MAIN_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X367 SUM_P_D_7 MAIN_P MAIN_TAIL_7 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X368 TERM_BLEED_3 TERM_BLEED_4 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X369 VSS MAIN_BIAS MAIN_TAIL_3 VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X370 POST_TAIL_7 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X371 VSS POST_BIAS POST_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X372 MAIN_TAIL_5 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X373 MAIN_TAIL_6 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X374 SUM_P_D_0 MAIN_P MAIN_TAIL_0 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X375 TMDS_TAIL_6 TMDS_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X376 MAIN_TAIL_4 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X377 VSS POST_BIAS POST_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X378 PAD_P CASCODE SUM_P_D_3 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X379 VSS POST_BIAS POST_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X380 POST_TAIL_1 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X381 DETECT_BLEED_5 DETECT_BLEED_6 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X382 VSS POST_BIAS POST_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X383 VSS MAIN_BIAS MAIN_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X384 MAIN_TAIL_6 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X385 MAIN_TAIL_5 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X386 VSS MAIN_BIAS MAIN_TAIL_5 VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X387 TMDS_TAIL_0 TMDS_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X388 VSS MAIN_BIAS MAIN_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X389 TERM_ENABLE_B TERM_ENABLE VSS VSS nfet_06v0 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.7u
+X390 MAIN_TAIL_2 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X391 TMDS_TAIL_4 TMDS_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X392 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X393 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X394 POST_TAIL_3 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X395 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X396 ESD_RAIL a_33005_183545# a_35813_169064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X397 VSS MAIN_BIAS MAIN_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X398 POST_TAIL_2 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X399 VSS POST_BIAS POST_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X400 MAIN_TAIL_2 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X401 VSS POST_BIAS POST_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X402 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X403 VSS MAIN_BIAS MAIN_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X404 POST_TAIL_3 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X405 VSS POST_BIAS POST_TAIL_3 VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X406 MAIN_TAIL_4 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X407 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D10 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
+X408 DETECT_BLEED_1 DETECT_BLEED_2 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X409 VSS MAIN_BIAS MAIN_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X410 MAIN_TAIL_4 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X411 VSS MAIN_BIAS MAIN_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X412 VSS POST_BIAS POST_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X413 POST_TAIL_1 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X414 a_34245_142628# a_36789_169064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X415 PAD_P CASCODE SUM_P_D_0 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X416 VSS POST_BIAS POST_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X417 POST_TAIL_0 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X418 VSS MAIN_BIAS MAIN_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X419 DETECT_P_I DETECT_PBIAS VDD VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=2u
+X420 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X421 PAD_P CASCODE SUM_P_D_2 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X422 SUM_N_D_4 TMDS_N TMDS_TAIL_4 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X423 VSS POST_BIAS POST_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X424 POST_TAIL_1 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X425 VSS MAIN_BIAS MAIN_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X426 PAD_P CASCODE SUM_P_D_1 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X427 VSS POST_BIAS POST_TAIL_1 VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X428 VSS MAIN_BIAS MAIN_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X429 VSS POST_BIAS POST_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X430 POST_TAIL_2 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X431 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X432 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X433 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X434 MAIN_TAIL_3 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X435 VSS POST_BIAS POST_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X436 ESD_RAIL a_36789_169064# a_34245_142628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X437 VSS POST_BIAS POST_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X438 POST_TAIL_2 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X439 VSS MAIN_BIAS MAIN_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X440 VSS MAIN_BIAS MAIN_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D11 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+X441 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X442 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X443 VSS MAIN_BIAS MAIN_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X444 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X445 VSS POST_BIAS POST_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X446 PAD_P CASCODE SUM_P_D_6 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X447 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X448 VSS POST_BIAS POST_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X449 MAIN_TAIL_5 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X450 MAIN_TAIL_2 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X451 POST_TAIL_0 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X452 VSS MAIN_BIAS MAIN_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X453 PAD_P CASCODE SUM_P_D_7 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X454 SUM_N_D_5 TMDS_N TMDS_TAIL_5 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X455 ESD_RAIL a_36789_169064# a_34245_142628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X456 VSS POST_BIAS POST_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X457 MAIN_TAIL_2 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X458 VSS MAIN_BIAS MAIN_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X459 POST_TAIL_0 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X460 a_33005_184385# a_45878_184105# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X461 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X462 VSS POST_BIAS POST_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X463 VSS MAIN_BIAS MAIN_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X464 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X465 VSS MAIN_BIAS MAIN_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X466 VSS MAIN_BIAS MAIN_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X467 VSS POST_BIAS POST_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X468 VSS MAIN_BIAS MAIN_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X469 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X470 MAIN_TAIL_4 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X471 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X472 VSS MAIN_BIAS MAIN_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X473 TERM_ENABLE_B TERM_ENABLE VDD VDD pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
+X474 SUM_N_D_3 POST_N POST_TAIL_3 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X475 POST_TAIL_3 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X476 MAIN_TAIL_4 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X477 PAD_P CASCODE SUM_P_D_5 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X478 a_34245_142628# a_36789_169064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X479 MAIN_TAIL_3 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X480 VSS POST_BIAS POST_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D12 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X481 VSS POST_BIAS POST_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X482 VSS MAIN_BIAS MAIN_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X483 ESD_RAIL a_33005_183545# a_35813_169064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X484 MAIN_TAIL_0 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X485 VSS MAIN_BIAS MAIN_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X486 DETECT_ENABLE_LOCAL DETECT_ENABLE_B VDD VDD pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
+X487 VSS POST_BIAS POST_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X488 VSS MAIN_BIAS MAIN_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X489 TERM_P_R TERM_ENABLE_LOCAL TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X490 VSS POST_BIAS POST_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X491 VSS MAIN_BIAS MAIN_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X492 MAIN_TAIL_5 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X493 a_33005_183545# VSS cap_mim_2f0_m4m5_noshield c_width=31.6u c_length=31.6u
+X494 a_34245_142628# a_36789_169064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X495 VSS POST_BIAS POST_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X496 POST_TAIL_2 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X497 MAIN_TAIL_0 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X498 VSS MAIN_BIAS MAIN_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X499 MAIN_TAIL_3 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X500 TERM_N_R TERM_ENABLE_LOCAL TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X501 VSS MAIN_BIAS MAIN_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X502 PAD_N CASCODE SUM_N_D_5 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X503 POST_TAIL_2 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X504 POST_TAIL_1 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X505 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X506 SUM_N_D_5 MAIN_N MAIN_TAIL_5 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X507 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X508 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X509 VSS POST_BIAS POST_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X510 VSS MAIN_BIAS MAIN_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X511 a_34245_142628# a_36789_169064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X512 MAIN_TAIL_1 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X513 SUM_N_D_5 POST_N POST_TAIL_5 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X514 VSS POST_BIAS POST_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X515 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X516 VSS MAIN_BIAS MAIN_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X517 VSS POST_BIAS POST_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X518 MAIN_TAIL_2 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X519 MAIN_TAIL_6 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X520 MAIN_TAIL_5 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X521 TERM_P_R TERM_ENABLE_LOCAL TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X522 POST_TAIL_3 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X523 POST_TAIL_0 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X524 a_33005_183825# a_45878_184105# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X525 VSS POST_BIAS POST_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X526 ESD_RAIL a_36789_169064# a_34245_142628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X527 POST_TAIL_0 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X528 VSS MAIN_BIAS MAIN_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X529 VSS POST_BIAS POST_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X530 MAIN_TAIL_6 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X531 a_34245_142628# a_36789_169064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X532 MAIN_TAIL_4 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X533 TMDS_TAIL_1 TMDS_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X534 VSS POST_BIAS POST_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X535 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X536 VSS POST_BIAS POST_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X537 SUM_N_D_3 MAIN_N MAIN_TAIL_3 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X538 MAIN_TAIL_0 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X539 POST_TAIL_3 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X540 MAIN_TAIL_7 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X541 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X542 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X543 MAIN_TAIL_3 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X544 POST_TAIL_1 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X545 PAD_N CASCODE SUM_N_D_1 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X546 ESD_RAIL a_36789_169064# a_34245_142628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X547 VSS MAIN_BIAS MAIN_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X548 VSS POST_BIAS POST_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X549 ESD_RAIL a_36789_169064# a_34245_142628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X550 VSS POST_BIAS POST_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X551 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X552 MAIN_TAIL_0 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X553 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X554 VSS POST_BIAS POST_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X555 SUM_N_D_6 MAIN_N MAIN_TAIL_6 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X556 PAD_N CASCODE SUM_N_D_3 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X557 TERM_BLEED_2 TERM_BLEED_3 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X558 a_33005_184945# a_45878_185225# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X559 POST_TAIL_2 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X560 MAIN_TAIL_5 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X561 PAD_P CASCODE SUM_P_D_6 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X562 VSS POST_BIAS POST_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X563 VSS POST_BIAS POST_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X564 POST_TAIL_1 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X565 DETECT_N_I DETECT_ENABLE_LOCAL PAD_N VSS nfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.7u
+X566 a_34245_142628# a_36789_169064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X567 ESD_RAIL a_36789_169064# a_34245_142628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X568 TMDS_TAIL_2 TMDS_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X569 VSS MAIN_BIAS MAIN_TAIL_0 VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X570 MAIN_TAIL_3 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X571 a_34245_142628# a_36789_169064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X572 a_35813_169064# a_33005_183545# VSS VSS nfet_06v0 ad=2.2p pd=10.88u as=2.2p ps=10.88u w=5u l=0.7u
+X573 MAIN_TAIL_6 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X574 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X575 VSS POST_BIAS POST_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X576 VSS POST_BIAS POST_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X577 VSS POST_BIAS POST_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X578 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X579 MAIN_TAIL_1 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X580 VSS MAIN_BIAS MAIN_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X581 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X582 VSS POST_BIAS POST_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X583 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X584 POST_TAIL_0 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X585 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X586 MAIN_TAIL_6 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X587 MAIN_TAIL_5 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X588 VSS a_35813_169064# a_36789_169064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X589 a_34245_142628# a_36789_169064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X590 VSS MAIN_BIAS MAIN_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X591 POST_TAIL_3 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X592 MAIN_TAIL_3 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X593 VSS POST_BIAS POST_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D13 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X594 a_33005_186065# a_45878_186345# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+D14 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X595 SUM_P_D_1 TMDS_P TMDS_TAIL_1 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X596 MAIN_TAIL_0 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X597 PAD_N TERM_N_R VSS ppolyf_s r_width=1u r_length=1.8u
+X598 PAD_N CASCODE SUM_N_D_4 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X599 SUM_P_D_6 TMDS_P TMDS_TAIL_6 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X600 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D15 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X601 VSS MAIN_BIAS MAIN_TAIL_6 VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X602 VSS MAIN_BIAS MAIN_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X603 PAD_N CASCODE SUM_N_D_3 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X604 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X605 VSS a_35813_169064# a_36789_169064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X606 DETECT_BLEED_0 DETECT_BLEED_1 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X607 TERM_N_R TERM_ENABLE_LOCAL TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X608 VSS ESD_RAIL VSS ppolyf_u_1k_6p0 r_width=1u r_length=9.98874m
+X609 POST_TAIL_5 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X610 MAIN_TAIL_5 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X611 POST_TAIL_3 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X612 POST_TAIL_1 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X613 MAIN_TAIL_3 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X614 MAIN_TAIL_7 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X615 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X616 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X617 VSS MAIN_BIAS MAIN_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X618 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X619 SUM_P_D_4 TMDS_P TMDS_TAIL_4 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X620 VSS MAIN_BIAS MAIN_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X621 MAIN_TAIL_1 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X622 VSS MAIN_BIAS MAIN_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X623 POST_TAIL_7 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X624 MAIN_TAIL_5 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X625 VSS MAIN_BIAS MAIN_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X626 MAIN_TAIL_6 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X627 POST_TAIL_3 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X628 POST_TAIL_1 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X629 VSS MAIN_BIAS MAIN_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X630 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X631 SUM_P_D_4 POST_P POST_TAIL_4 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X632 PAD_N CASCODE SUM_N_D_1 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X633 VSS POST_BIAS POST_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X634 VSS MAIN_BIAS MAIN_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X635 MAIN_TAIL_1 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X636 VSS MAIN_BIAS MAIN_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X637 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X638 PAD_N CASCODE SUM_N_D_0 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X639 VSS POST_BIAS POST_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X640 SUM_P_D_7 POST_P POST_TAIL_7 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+D16 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X641 PAD_N CASCODE SUM_N_D_7 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X642 MAIN_TAIL_2 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X643 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X644 POST_TAIL_3 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X645 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X646 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X647 VSS a_36789_169064# a_34245_142628# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X648 MAIN_TAIL_3 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X649 MAIN_TAIL_7 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X650 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X651 POST_TAIL_1 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X652 VSS MAIN_BIAS MAIN_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X653 MAIN_TAIL_0 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X654 VSS MAIN_BIAS MAIN_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X655 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X656 VSS MAIN_BIAS MAIN_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X657 TERM_N_R TERM_ENABLE_LOCAL TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X658 VSS POST_BIAS POST_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X659 VSS POST_BIAS POST_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X660 VSS POST_BIAS POST_TAIL_4 VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X661 VSS POST_BIAS POST_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X662 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X663 MAIN_TAIL_4 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X664 SUM_P_D_3 POST_P POST_TAIL_3 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X665 VSS MAIN_BIAS MAIN_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X666 MAIN_TAIL_5 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X667 VSS MAIN_BIAS MAIN_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X668 MAIN_TAIL_3 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X669 POST_TAIL_1 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X670 MAIN_TAIL_7 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X671 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X672 VSS MAIN_BIAS MAIN_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X673 POST_TAIL_5 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X674 VSS POST_BIAS POST_TAIL_6 VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X675 VSS POST_BIAS POST_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X676 VSS POST_BIAS POST_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X677 VSS MAIN_BIAS MAIN_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X678 TERM_ENABLE_LOCAL TERM_BLEED_0 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X679 VSS POST_BIAS POST_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X680 VSS MAIN_BIAS MAIN_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X681 VSS POST_BIAS POST_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X682 TERM_N_R TERM_ENABLE_LOCAL TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X683 MAIN_TAIL_5 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X684 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X685 TMDS_TAIL_5 TMDS_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X686 MAIN_TAIL_6 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X687 VSS MAIN_BIAS MAIN_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X688 SUM_P_D_0 POST_P POST_TAIL_0 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X689 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X690 TERM_BLEED_5 TERM_BLEED_6 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X691 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X692 POST_TAIL_2 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X693 POST_TAIL_7 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X694 POST_TAIL_3 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X695 SUM_P_D_1 MAIN_P MAIN_TAIL_1 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X696 VSS POST_BIAS POST_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X697 VSS MAIN_BIAS MAIN_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X698 SUM_P_D_5 TMDS_P TMDS_TAIL_5 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X699 VSS MAIN_BIAS MAIN_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X700 TMDS_TAIL_3 TMDS_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X701 VSS MAIN_BIAS MAIN_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X702 VSS POST_BIAS POST_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D17 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X703 MAIN_TAIL_1 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X704 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X705 VSS POST_BIAS POST_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X706 VSS MAIN_BIAS MAIN_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X707 a_36789_169064# a_35813_169064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X708 TERM_ENABLE_LOCAL TERM_ENABLE_B VSS VSS nfet_06v0 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.7u
+X709 POST_TAIL_3 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D18 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X710 VSS POST_BIAS POST_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X711 POST_TAIL_0 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X712 MAIN_TAIL_2 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X713 POST_TAIL_1 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D19 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X714 POST_TAIL_5 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X715 TMDS_TAIL_1 TMDS_BIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X716 PAD_P CASCODE SUM_P_D_4 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X717 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X718 VSS POST_BIAS POST_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X719 VSS POST_BIAS POST_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X720 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X721 VSS MAIN_BIAS MAIN_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X722 VSS POST_BIAS POST_TAIL_2 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X723 SUM_P_D_3 MAIN_P MAIN_TAIL_3 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X724 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X725 VSS MAIN_BIAS MAIN_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X726 DETECT_ENABLE_LOCAL DETECT_ENABLE_B VSS VSS nfet_06v0 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.7u
+X727 MAIN_TAIL_4 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X728 POST_TAIL_7 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X729 DETECT_BLEED_3 DETECT_BLEED_4 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X730 a_33005_183825# a_45878_183545# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X731 POST_TAIL_1 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X732 POST_TAIL_5 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X733 VSS POST_BIAS POST_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X734 VSS POST_BIAS POST_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X735 MAIN_TAIL_7 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X736 VSS MAIN_BIAS MAIN_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X737 PAD_N CASCODE SUM_N_D_2 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X738 VSS MAIN_BIAS MAIN_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X739 VSS POST_BIAS POST_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X740 SUM_P_D_5 POST_P POST_TAIL_5 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X741 PAD_N CASCODE SUM_N_D_6 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X742 MAIN_TAIL_1 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X743 VSS POST_BIAS POST_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X744 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X745 MAIN_TAIL_0 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X746 VSS MAIN_BIAS MAIN_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X747 POST_TAIL_7 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X748 POST_TAIL_4 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X749 SUM_N_D_6 TMDS_N TMDS_TAIL_6 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X750 DETECT_ENABLE_B DETECT_ENABLE VSS VSS nfet_06v0 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.7u
+X751 POST_TAIL_2 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X752 MAIN_TAIL_2 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X753 ESD_RAIL a_34245_142628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X754 VSS MAIN_BIAS MAIN_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X755 MAIN_TAIL_1 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X756 VSS MAIN_BIAS MAIN_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X757 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X758 VSS MAIN_BIAS MAIN_TAIL_1 VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X759 VSS POST_BIAS POST_TAIL_4 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X760 VSS POST_BIAS POST_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X761 PAD_P CASCODE SUM_P_D_1 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X762 TERM_N_R TERM_ENABLE_LOCAL TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X763 MAIN_TAIL_2 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X764 a_33005_184945# a_45878_184665# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X765 VSS MAIN_BIAS MAIN_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X766 POST_TAIL_6 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X767 VSS POST_BIAS POST_TAIL_5 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X768 MAIN_TAIL_4 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X769 VSS POST_BIAS POST_TAIL_6 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X770 POST_TAIL_0 POST_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X771 MAIN_TAIL_7 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X772 PAD_N CASCODE SUM_N_D_5 VSS nfet_06v0 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.7u
+X773 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X774 VSS MAIN_BIAS MAIN_TAIL_0 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X775 VSS POST_BIAS POST_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X776 MAIN_TAIL_6 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X777 MAIN_TAIL_4 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X778 SUM_N_D_2 TMDS_N TMDS_TAIL_2 VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X779 MAIN_TAIL_0 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X780 VSS POST_BIAS POST_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X781 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X782 TERM_P_R TERM_ENABLE_LOCAL TERM_VCM VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X783 VSS POST_BIAS POST_TAIL_7 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X784 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X785 VSS MAIN_BIAS MAIN_TAIL_1 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X786 MAIN_TAIL_7 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X787 TERM_BLEED_1 TERM_BLEED_2 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X788 MAIN_TAIL_0 MAIN_BIAS VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X789 VSS MAIN_BIAS MAIN_TAIL_7 VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X790 VSS POST_BIAS POST_TAIL_3 VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X791 VSS a_34245_142628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X792 a_35813_169064# a_33005_183545# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X793 a_34245_142628# a_36789_169064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+C0 POST_TAIL_7 MAIN_TAIL_0 0.09983f
+C1 m2_34279_176800# a_33005_186065# 0
+C2 POST_TAIL_2 TERM_BLEED_3 0.06246f
+C3 POST_P SUM_N_D_4 0.20242f
+C4 SUM_N_D_5 MAIN_TAIL_3 0.06978f
+C5 SUM_P_D_1 POST_TAIL_6 0.03717f
+C6 SUM_P_D_7 SUM_N_D_7 0.58731f
+C7 POST_N TERM_BLEED_3 0.17585f
+C8 TMDS_N MAIN_TAIL_1 0.04835f
+C9 SUM_P_D_1 SUM_P_D_4 0.10352f
+C10 POST_TAIL_4 MAIN_TAIL_1 0.02404f
+C11 MAIN_TAIL_2 MAIN_TAIL_5 0.08046f
+C12 DETECT_ENABLE_LOCAL POST_TAIL_5 0.19351f
+C13 CASCODE MAIN_TAIL_0 0.01799f
+C14 SUM_N_D_0 SUM_P_D_7 0.2111f
+C15 TMDS_P SUM_P_D_3 4.06386f
+C16 POST_TAIL_0 MAIN_TAIL_1 0.02846f
+C17 POST_TAIL_7 TERM_P_R 0.18491f
+C18 SUM_N_D_3 POST_TAIL_5 0.03929f
+C19 SUM_P_D_7 TERM_N_R 0.04055f
+C20 DETECT_BLEED_5 MAIN_TAIL_3 0.06178f
+C21 MAIN_N MAIN_TAIL_1 6.8965f
+C22 MAIN_P SUM_P_D_0 0.48023f
+C23 TERM_ENABLE_B DETECT_BLEED_1 0
+C24 DETECT_BLEED_4 MAIN_TAIL_7 0.08359f
+C25 TERM_BLEED_2 MAIN_TAIL_0 0.03502f
+C26 DETECT_BLEED_1 MAIN_TAIL_7 0.07017f
+C27 SUM_P_D_0 SUM_N_D_6 1.37352f
+C28 PAD_N SUM_P_D_4 2.99633f
+C29 TERM_ENABLE TMDS_N 0
+C30 TERM_ENABLE POST_TAIL_4 0.04811f
+C31 SUM_N_D_5 TMDS_TAIL_2 0.06151f
+C32 VDD TERM_BLEED_0 0.93544f
+C33 CASCODE TERM_P_R 0.00433f
+C34 DETECT_ENABLE TERM_BLEED_3 0.03876f
+C35 DETECT_PBIAS MAIN_TAIL_1 0.03522f
+C36 SUM_N_D_7 SUM_N_D_4 0.15121f
+C37 TMDS_TAIL_0 MAIN_TAIL_3 0.02653f
+C38 TERM_ENABLE POST_TAIL_0 0.11831f
+C39 PAD_P MAIN_TAIL_0 0
+C40 SUM_P_D_2 MAIN_TAIL_3 0.03489f
+C41 TERM_ENABLE MAIN_N 0.03065f
+C42 POST_TAIL_7 MAIN_TAIL_4 0.09983f
+C43 SUM_P_D_5 POST_TAIL_5 1.79466f
+C44 TERM_BLEED_2 TERM_P_R 0.04106f
+C45 SUM_N_D_0 SUM_N_D_4 0.05405f
+C46 TMDS_TAIL_7 POST_TAIL_7 0.07474f
+C47 TMDS_TAIL_4 MAIN_TAIL_0 0.03567f
+C48 TERM_ENABLE_B TERM_BLEED_1 0
+C49 SUM_N_D_4 TERM_N_R 0.12757f
+C50 DETECT_BLEED_3 POST_TAIL_7 0.08856f
+C51 DETECT_ENABLE_B MAIN_TAIL_3 0.12578f
+C52 SUM_P_D_0 DETECT_P_I 0.11312f
+C53 MAIN_P SUM_N_D_6 0.28799f
+C54 POST_TAIL_2 POST_TAIL_7 0.10027f
+C55 POST_TAIL_3 MAIN_TAIL_3 0.02424f
+C56 SUM_P_D_0 SUM_N_D_2 0.40518f
+C57 TERM_BLEED_3 POST_TAIL_5 0.05286f
+C58 a_33005_183825# a_33005_183545# 0.03725f
+C59 PAD_P TERM_P_R 1.6914f
+C60 CASCODE MAIN_TAIL_4 0.01797f
+C61 VDD MAIN_TAIL_1 0.87747f
+C62 DETECT_BLEED_0 POST_TAIL_1 0.03472f
+C63 TMDS_P TERM_ENABLE_B 0.0474f
+C64 POST_N POST_TAIL_7 4.81457f
+C65 TMDS_N MAIN_TAIL_0 0.02414f
+C66 CASCODE TMDS_TAIL_7 0.0124f
+C67 CASCODE DETECT_BLEED_3 0.10387f
+C68 TMDS_P MAIN_TAIL_7 0.16256f
+C69 POST_TAIL_4 MAIN_TAIL_0 0.05254f
+C70 TMDS_TAIL_0 TMDS_TAIL_2 0.00305f
+C71 TMDS_TAIL_4 TERM_P_R 0.10288f
+C72 SUM_P_D_2 TMDS_TAIL_2 1.94411f
+C73 POST_P DETECT_N_I 0.07058f
+C74 TERM_BLEED_2 MAIN_TAIL_4 0.03489f
+C75 CASCODE POST_TAIL_2 0.0306f
+C76 MAIN_P DETECT_P_I 0.18626f
+C77 POST_TAIL_3 TERM_BLEED_4 0.03676f
+C78 POST_BIAS POST_TAIL_7 21.7194f
+C79 POST_P SUM_P_D_6 0.44871f
+C80 POST_TAIL_0 MAIN_TAIL_0 0.11111f
+C81 MAIN_P SUM_N_D_2 0.15723f
+C82 MAIN_N MAIN_TAIL_0 3.46216f
+C83 SUM_N_D_6 DETECT_P_I 0.11312f
+C84 POST_TAIL_3 TMDS_TAIL_2 0.06978f
+C85 TERM_ENABLE VDD 3.45869f
+C86 TMDS_BIAS SUM_P_D_7 0.3087f
+C87 DETECT_BLEED_6 DETECT_N_I 0.10378f
+C88 TMDS_TAIL_5 MAIN_TAIL_1 0.02404f
+C89 SUM_N_D_2 SUM_N_D_6 0.10534f
+C90 POST_TAIL_2 TERM_BLEED_2 0.03489f
+C91 TMDS_N TERM_P_R 0.29297f
+C92 POST_TAIL_4 TERM_P_R 0.14549f
+C93 POST_P MAIN_TAIL_6 0.09479f
+C94 DETECT_ENABLE POST_TAIL_7 0.08856f
+C95 POST_BIAS CASCODE 0.27612f
+C96 POST_N TERM_BLEED_2 0.0458f
+C97 DETECT_PBIAS MAIN_TAIL_0 0.13229f
+C98 TMDS_TAIL_4 MAIN_TAIL_4 0.03489f
+C99 SUM_P_D_1 SUM_P_D_3 0.17511f
+C100 POST_TAIL_0 TERM_P_R 0.18072f
+C101 DETECT_BLEED_2 POST_TAIL_7 0.04239f
+C102 MAIN_N TERM_P_R 0.21056f
+C103 DETECT_BLEED_0 MAIN_TAIL_5 0.03472f
+C104 TMDS_P SUM_N_D_1 0.13313f
+C105 TMDS_BIAS TMDS_TAIL_3 2.83832f
+C106 DETECT_BLEED_6 MAIN_TAIL_6 0.07225f
+C107 SUM_P_D_0 POST_TAIL_6 0.0735f
+C108 DETECT_BLEED_0 MAIN_TAIL_2 0.03472f
+C109 SUM_N_D_2 DETECT_P_I 0.02846f
+C110 SUM_P_D_0 SUM_P_D_4 0.03288f
+C111 SUM_N_D_7 DETECT_N_I 0.06363f
+C112 CASCODE DETECT_ENABLE 5.75227f
+C113 POST_TAIL_2 TMDS_TAIL_4 0.10222f
+C114 DETECT_BLEED_2 CASCODE 0.14463f
+C115 TMDS_N MAIN_TAIL_4 0.02404f
+C116 MAIN_TAIL_4 POST_TAIL_4 0.05254f
+C117 SUM_P_D_6 SUM_N_D_7 0.41993f
+C118 POST_TAIL_7 POST_TAIL_5 0.03959f
+C119 SUM_N_D_0 DETECT_N_I 0.04428f
+C120 SUM_N_D_5 POST_TAIL_1 0.13592f
+C121 PAD_N SUM_P_D_3 0.65236f
+C122 TMDS_BIAS SUM_N_D_4 0.20252f
+C123 POST_N TMDS_TAIL_4 0.05132f
+C124 TMDS_N TMDS_TAIL_7 3.28369f
+C125 VDD MAIN_TAIL_0 0.07012f
+C126 TERM_VCM POST_TAIL_7 0.18579f
+C127 TMDS_TAIL_7 POST_TAIL_4 0.04828f
+C128 TMDS_N DETECT_BLEED_3 0.04198f
+C129 DETECT_ENABLE TERM_BLEED_2 0.16899f
+C130 DETECT_BLEED_3 POST_TAIL_4 0.06178f
+C131 TERM_N_R DETECT_N_I 0.11938f
+C132 SUM_N_D_0 SUM_P_D_6 0.13999f
+C133 POST_TAIL_0 MAIN_TAIL_4 0.11111f
+C134 MAIN_N MAIN_TAIL_4 4.90386f
+C135 MAIN_P POST_TAIL_6 0.09593f
+C136 TMDS_N POST_TAIL_2 0.08727f
+C137 SUM_N_D_7 MAIN_TAIL_6 0.03482f
+C138 POST_TAIL_2 POST_TAIL_4 0.10615f
+C139 TMDS_TAIL_7 POST_TAIL_0 0.09437f
+C140 SUM_P_D_6 TERM_N_R 0.08751f
+C141 DETECT_BLEED_3 POST_TAIL_0 0.06178f
+C142 MAIN_P SUM_P_D_4 0.54828f
+C143 TMDS_TAIL_7 MAIN_N 0.03037f
+C144 CASCODE POST_TAIL_5 0.01263f
+C145 POST_TAIL_6 SUM_N_D_6 1.80571f
+C146 DETECT_BLEED_3 MAIN_N 0.07445f
+C147 DETECT_BLEED_5 POST_TAIL_1 0.06178f
+C148 POST_N POST_TAIL_4 6.9189f
+C149 CASCODE TERM_VCM 0.02456f
+C150 TMDS_P DETECT_ENABLE_LOCAL 0.23419f
+C151 TMDS_N POST_N 0.04467f
+C152 SUM_N_D_0 MAIN_TAIL_6 0.04729f
+C153 SUM_P_D_4 SUM_N_D_6 0.0854f
+C154 MAIN_BIAS POST_TAIL_7 1.24953f
+C155 POST_TAIL_0 POST_TAIL_2 0.23123f
+C156 MAIN_N POST_TAIL_2 0.09193f
+C157 DETECT_PBIAS MAIN_TAIL_4 0.13173f
+C158 VDD TERM_P_R 1.47194f
+C159 a_36789_169064# a_33005_183545# 0.02879f
+C160 TMDS_P SUM_N_D_3 0.21175f
+C161 TERM_N_R MAIN_TAIL_6 0.083f
+C162 POST_N POST_TAIL_0 5.72315f
+C163 POST_BIAS POST_TAIL_4 16.5557f
+C164 TMDS_TAIL_5 MAIN_TAIL_0 0.02404f
+C165 TERM_BLEED_2 POST_TAIL_5 0.03489f
+C166 POST_BIAS TMDS_N 0.14072f
+C167 POST_N MAIN_N 0.0342f
+C168 SUM_P_D_1 MAIN_TAIL_7 0.04146f
+C169 TMDS_TAIL_0 POST_TAIL_1 0.0659f
+C170 DETECT_PBIAS POST_TAIL_2 0.10692f
+C171 TMDS_TAIL_6 POST_TAIL_1 0.07422f
+C172 SUM_P_D_2 POST_TAIL_1 0.41766f
+C173 POST_BIAS POST_TAIL_0 16.1723f
+C174 SUM_N_D_5 MAIN_TAIL_5 3.95683f
+C175 MAIN_BIAS CASCODE 0.27612f
+C176 POST_BIAS MAIN_N 0.36629f
+C177 SUM_P_D_4 DETECT_P_I 0.02846f
+C178 SUM_N_D_2 POST_TAIL_6 0.03151f
+C179 TMDS_N DETECT_ENABLE 0.03903f
+C180 DETECT_PBIAS POST_N 0.04341f
+C181 SUM_N_D_5 MAIN_TAIL_2 0.13308f
+C182 SUM_N_D_2 SUM_P_D_4 0.06118f
+C183 DETECT_ENABLE POST_TAIL_4 0.14398f
+C184 TMDS_TAIL_5 TERM_P_R 0.03037f
+C185 DETECT_BLEED_2 TMDS_N 0
+C186 VDD MAIN_TAIL_4 0.07092f
+C187 POST_TAIL_3 POST_TAIL_1 0.02649f
+C188 DETECT_BLEED_2 POST_TAIL_4 0.02973f
+C189 TERM_BLEED_1 TERM_BLEED_3 0
+C190 DETECT_ENABLE_B POST_TAIL_1 0.12113f
+C191 TMDS_TAIL_4 POST_TAIL_5 0.06087f
+C192 TMDS_P SUM_P_D_5 5.87291f
+C193 DETECT_BLEED_5 MAIN_TAIL_5 0.06178f
+C194 POST_BIAS DETECT_PBIAS 0.90908f
+C195 DETECT_ENABLE POST_TAIL_0 0.14398f
+C196 VDD TMDS_TAIL_7 0.00293f
+C197 DETECT_ENABLE MAIN_N 0.07445f
+C198 SUM_P_D_7 MAIN_TAIL_1 0.1192f
+C199 VDD DETECT_BLEED_3 0.0025f
+C200 DETECT_BLEED_5 MAIN_TAIL_2 0.06178f
+C201 DETECT_BLEED_2 POST_TAIL_0 0.09369f
+C202 DETECT_BLEED_2 MAIN_N 0.07445f
+C203 SUM_N_D_1 SUM_P_D_1 0.85707f
+C204 VDD POST_TAIL_2 0.21061f
+C205 POST_TAIL_3 TERM_ENABLE_LOCAL 0.09892f
+C206 POST_P MAIN_TAIL_3 0.0525f
+C207 TMDS_N POST_TAIL_5 0.098f
+C208 TMDS_BIAS DETECT_N_I 0.08427f
+C209 POST_TAIL_4 POST_TAIL_5 99.9029f
+C210 TERM_VCM POST_TAIL_4 0.09714f
+C211 VDD POST_N 0.31367f
+C212 PAD_P ESD_RAIL 24.1165f
+C213 DETECT_PBIAS DETECT_ENABLE 8.21639f
+C214 TMDS_N TERM_VCM 0.31408f
+C215 TMDS_TAIL_0 MAIN_TAIL_5 0.02826f
+C216 TMDS_TAIL_5 MAIN_TAIL_4 0.02404f
+C217 SUM_P_D_2 MAIN_TAIL_5 0.09424f
+C218 TMDS_BIAS SUM_P_D_6 0.28543f
+C219 SUM_P_D_0 SUM_P_D_3 0.11759f
+C220 TERM_N_R TERM_BLEED_5 0.0329f
+C221 TMDS_TAIL_0 MAIN_TAIL_2 0.02404f
+C222 TMDS_TAIL_7 TMDS_TAIL_5 0.00137f
+C223 POST_TAIL_0 POST_TAIL_5 0.04564f
+C224 TERM_VCM POST_TAIL_0 0.21903f
+C225 DETECT_BLEED_6 MAIN_TAIL_3 0.07225f
+C226 DETECT_BLEED_1 POST_TAIL_7 0
+C227 POST_BIAS VDD 6.18107f
+C228 MAIN_N POST_TAIL_5 0.03037f
+C229 DETECT_BLEED_4 POST_TAIL_7 0.08856f
+C230 SUM_P_D_2 MAIN_TAIL_2 1.863f
+C231 TERM_VCM MAIN_N 0.06075f
+C232 PAD_N SUM_N_D_1 2.05986f
+C233 DETECT_ENABLE_B MAIN_TAIL_5 0.12578f
+C234 TMDS_TAIL_5 POST_TAIL_2 0.02404f
+C235 POST_P TERM_BLEED_4 0.00687f
+C236 SUM_N_D_4 MAIN_TAIL_1 0.05935f
+C237 POST_TAIL_3 MAIN_TAIL_5 0.02424f
+C238 TMDS_BIAS MAIN_TAIL_6 0.05008f
+C239 MAIN_BIAS POST_TAIL_4 0.54055f
+C240 DETECT_ENABLE_B MAIN_TAIL_2 0.12578f
+C241 MAIN_BIAS TMDS_N 0.14072f
+C242 SUM_P_D_4 POST_TAIL_6 0.04058f
+C243 POST_TAIL_3 MAIN_TAIL_2 0.05188f
+C244 DETECT_PBIAS POST_TAIL_5 0
+C245 POST_N TMDS_TAIL_5 0.03494f
+C246 SUM_P_D_1 DETECT_ENABLE_LOCAL 0.04808f
+C247 POST_P TMDS_TAIL_2 0.12806f
+C248 DETECT_PBIAS TERM_VCM 0
+C249 CASCODE DETECT_BLEED_1 0.23767f
+C250 VDD DETECT_ENABLE 0.96882f
+C251 DETECT_BLEED_4 CASCODE 0.08101f
+C252 MAIN_BIAS POST_TAIL_0 0.58208f
+C253 MAIN_P SUM_P_D_3 0.81811f
+C254 MAIN_BIAS MAIN_N 47.8029f
+C255 TMDS_TAIL_0 TMDS_TAIL_1 0.01433f
+C256 SUM_P_D_1 SUM_N_D_3 0.05763f
+C257 TMDS_TAIL_1 SUM_P_D_2 0
+C258 SUM_P_D_3 SUM_N_D_6 0.12509f
+C259 SUM_N_D_0 MAIN_TAIL_3 0.00141f
+C260 MAIN_BIAS DETECT_PBIAS 17.8253f
+C261 SUM_P_D_7 MAIN_TAIL_0 0.03814f
+C262 PAD_N DETECT_ENABLE_LOCAL 5.47486f
+C263 TERM_N_R MAIN_TAIL_3 0.03489f
+C264 TMDS_P POST_TAIL_7 0.18703f
+C265 VDD POST_TAIL_5 1.04366f
+C266 VDD TERM_VCM 4.86051f
+C267 PAD_N SUM_N_D_3 2.73609f
+C268 SUM_P_D_1 SUM_P_D_5 0.14424f
+C269 SUM_P_D_3 DETECT_P_I 0.11312f
+C270 SUM_P_D_0 MAIN_TAIL_7 0.26599f
+C271 SUM_N_D_7 TMDS_TAIL_2 0.09122f
+C272 SUM_N_D_2 SUM_P_D_3 0.16381f
+C273 SUM_P_D_7 TERM_P_R 0.09221f
+C274 TERM_BLEED_1 TERM_BLEED_2 6.20948f
+C275 a_45878_186345# a_45878_185785# 0.0346f
+C276 SUM_N_D_0 TMDS_TAIL_2 0.00305f
+C277 TERM_BLEED_4 TERM_N_R 0
+C278 TMDS_BIAS TERM_BLEED_5 0.0449f
+C279 MAIN_BIAS VDD 6.18107f
+C280 TMDS_TAIL_5 POST_TAIL_5 0.02404f
+C281 TERM_N_R TMDS_TAIL_2 0.12322f
+C282 DETECT_BLEED_0 DETECT_BLEED_5 0.13041f
+C283 SUM_N_D_4 MAIN_TAIL_0 0.03226f
+C284 MAIN_P TERM_ENABLE_B 0.03555f
+C285 TMDS_P TERM_BLEED_2 0.04811f
+C286 DETECT_BLEED_4 POST_TAIL_4 0.06178f
+C287 MAIN_P MAIN_TAIL_7 0.56681f
+C288 PAD_N SUM_P_D_5 0.43322f
+C289 DETECT_BLEED_4 TMDS_N 0.06524f
+C290 DETECT_BLEED_1 POST_TAIL_4 0
+C291 TMDS_TAIL_3 TERM_P_R 0
+C292 SUM_N_D_6 MAIN_TAIL_7 0.03415f
+C293 MAIN_TAIL_1 DETECT_N_I 0.02425f
+C294 DETECT_BLEED_4 POST_TAIL_0 0.06178f
+C295 DETECT_BLEED_1 POST_TAIL_0 0.03041f
+C296 SUM_N_D_1 SUM_P_D_0 0.53337f
+C297 DETECT_BLEED_1 MAIN_N 0.03549f
+C298 DETECT_BLEED_4 MAIN_N 0.07445f
+C299 SUM_P_D_7 MAIN_TAIL_4 0.07921f
+C300 SUM_P_D_6 MAIN_TAIL_1 0.05692f
+C301 SUM_N_D_4 TERM_P_R 0.16425f
+C302 TMDS_TAIL_7 SUM_P_D_7 1.93966f
+C303 TMDS_P TMDS_TAIL_4 2.18032f
+C304 POST_TAIL_2 SUM_P_D_7 0.03489f
+C305 TERM_ENABLE_B DETECT_P_I 0.08428f
+C306 TMDS_N TERM_BLEED_1 0.06178f
+C307 POST_P POST_TAIL_1 7.14985f
+C308 MAIN_TAIL_1 MAIN_TAIL_6 0.05955f
+C309 SUM_P_D_3 POST_TAIL_6 0.03739f
+C310 TMDS_BIAS MAIN_TAIL_3 0.07233f
+C311 DETECT_BLEED_0 DETECT_ENABLE_B 0.02575f
+C312 SUM_N_D_2 MAIN_TAIL_7 0.03089f
+C313 TERM_ENABLE DETECT_N_I 0.09425f
+C314 DETECT_BLEED_0 POST_TAIL_3 0.03472f
+C315 ESD_RAIL a_33005_184385# 0.53823f
+C316 POST_N SUM_P_D_7 0.28442f
+C317 SUM_P_D_3 SUM_P_D_4 49.3864f
+C318 MAIN_P SUM_N_D_1 0.2362f
+C319 ESD_RAIL a_33005_184945# 0.53823f
+C320 SUM_N_D_1 SUM_N_D_6 0.14402f
+C321 TMDS_P TMDS_N 0.10553p
+C322 TMDS_P POST_TAIL_4 0.07309f
+C323 ESD_RAIL a_45878_186345# 0.5677f
+C324 DETECT_BLEED_6 POST_TAIL_1 0.07225f
+C325 SUM_P_D_0 DETECT_ENABLE_LOCAL 0.11405f
+C326 POST_P TERM_ENABLE_LOCAL 0.06216f
+C327 SUM_N_D_4 MAIN_TAIL_4 2.14144f
+C328 SUM_P_D_1 POST_TAIL_7 0.06335f
+C329 TMDS_P POST_TAIL_0 0.13489f
+C330 TMDS_P MAIN_N 0.06108f
+C331 TERM_ENABLE MAIN_TAIL_6 0.02465f
+C332 SUM_P_D_0 SUM_N_D_3 0.55268f
+C333 DETECT_BLEED_4 VDD 0.37579f
+C334 TMDS_BIAS TMDS_TAIL_2 11.0339f
+C335 DETECT_ENABLE SUM_P_D_7 0.13779f
+C336 SUM_N_D_1 DETECT_P_I 0.02846f
+C337 SUM_N_D_1 SUM_N_D_2 50.7622f
+C338 CASCODE SUM_P_D_1 7.43402f
+C339 POST_N SUM_N_D_4 6.19849f
+C340 SUM_N_D_7 POST_TAIL_1 0.11892f
+C341 POST_P MAIN_TAIL_5 0.05436f
+C342 MAIN_P DETECT_ENABLE_LOCAL 0.14904f
+C343 DETECT_N_I MAIN_TAIL_0 0.02432f
+C344 TMDS_TAIL_0 SUM_N_D_5 0.04808f
+C345 SUM_N_D_5 TMDS_TAIL_6 0.00133f
+C346 SUM_N_D_0 POST_TAIL_1 0.32978f
+C347 SUM_N_D_6 DETECT_ENABLE_LOCAL 0.11405f
+C348 POST_P MAIN_TAIL_2 0.09141f
+C349 SUM_P_D_2 SUM_N_D_5 0.12837f
+C350 SUM_P_D_6 MAIN_TAIL_0 0.0035f
+C351 MAIN_P SUM_N_D_3 0.27311f
+C352 TERM_ENABLE_B POST_TAIL_6 0.05997f
+C353 SUM_P_D_0 SUM_P_D_5 0.081f
+C354 TERM_N_R POST_TAIL_1 0.17948f
+C355 POST_TAIL_6 MAIN_TAIL_7 0.04431f
+C356 m2_34279_176800# a_33005_184385# 0
+C357 DETECT_BLEED_6 MAIN_TAIL_5 0.07225f
+C358 VDD TERM_BLEED_1 0.78663f
+C359 SUM_N_D_3 SUM_N_D_6 0.11766f
+C360 m2_34279_176800# a_33005_184945# 0
+C361 SUM_P_D_4 MAIN_TAIL_7 0.03563f
+C362 SUM_P_D_7 POST_TAIL_5 0.0831f
+C363 DETECT_BLEED_6 MAIN_TAIL_2 0.07225f
+C364 POST_TAIL_3 SUM_N_D_5 0.13451f
+C365 TERM_P_R DETECT_N_I 0.17682f
+C366 PAD_N CASCODE 72.225f
+C367 MAIN_TAIL_0 MAIN_TAIL_6 0.07937f
+C368 PAD_P SUM_P_D_1 2.8197f
+C369 TMDS_P VDD 0.39576f
+C370 DETECT_ENABLE_LOCAL DETECT_P_I 8.68943f
+C371 SUM_P_D_6 TERM_P_R 0.11517f
+C372 TERM_N_R TERM_ENABLE_LOCAL 47.9341f
+C373 SUM_N_D_2 DETECT_ENABLE_LOCAL 0.04808f
+C374 MAIN_P SUM_P_D_5 3.82031f
+C375 DETECT_BLEED_5 POST_TAIL_3 0.06178f
+C376 a_45878_185225# a_45878_185785# 0.0346f
+C377 SUM_N_D_3 DETECT_P_I 0.02846f
+C378 SUM_N_D_7 MAIN_TAIL_5 0.05935f
+C379 TERM_ENABLE TERM_BLEED_5 0.27587f
+C380 SUM_N_D_6 SUM_P_D_5 0.21215f
+C381 TMDS_TAIL_0 SUM_P_D_2 0.04808f
+C382 SUM_N_D_2 SUM_N_D_3 51.4815f
+C383 SUM_N_D_7 MAIN_TAIL_2 0.06236f
+C384 TERM_P_R MAIN_TAIL_6 0.083f
+C385 SUM_N_D_0 MAIN_TAIL_5 0.08856f
+C386 SUM_N_D_1 POST_TAIL_6 0.03195f
+C387 PAD_N PAD_P 48.7164f
+C388 MAIN_P TERM_BLEED_3 0.02434f
+C389 MAIN_TAIL_4 DETECT_N_I 0.02404f
+C390 TMDS_P TMDS_TAIL_5 5.60092f
+C391 SUM_N_D_4 POST_TAIL_5 0.03833f
+C392 SUM_N_D_0 MAIN_TAIL_2 0.10329f
+C393 SUM_N_D_1 SUM_P_D_4 0.10003f
+C394 TMDS_TAIL_7 DETECT_N_I 0.04825f
+C395 TMDS_N SUM_P_D_1 0.07955f
+C396 TERM_N_R MAIN_TAIL_5 0.1186f
+C397 SUM_P_D_1 POST_TAIL_4 0.05935f
+C398 SUM_P_D_6 MAIN_TAIL_4 0.03882f
+C399 TMDS_TAIL_0 POST_TAIL_3 0.05893f
+C400 TERM_N_R MAIN_TAIL_2 0.12533f
+C401 DETECT_BLEED_3 DETECT_N_I 0.0931f
+C402 POST_TAIL_3 TMDS_TAIL_6 0.07032f
+C403 MAIN_TAIL_1 MAIN_TAIL_3 0.06038f
+C404 TMDS_TAIL_7 SUM_P_D_6 0.00737f
+C405 SUM_P_D_2 POST_TAIL_3 0.14589f
+C406 POST_TAIL_2 DETECT_N_I 0.13751f
+C407 SUM_P_D_5 DETECT_P_I 0.02846f
+C408 SUM_P_D_1 POST_TAIL_0 1.95905f
+C409 SUM_P_D_1 MAIN_N 0.24755f
+C410 SUM_N_D_2 SUM_P_D_5 0.12892f
+C411 SUM_P_D_6 POST_TAIL_2 0.0642f
+C412 MAIN_TAIL_4 MAIN_TAIL_6 0.14552f
+C413 POST_N DETECT_N_I 0.07916f
+C414 DETECT_ENABLE_B POST_TAIL_3 0.12113f
+C415 TMDS_TAIL_7 MAIN_TAIL_6 0.02866f
+C416 TERM_BLEED_3 DETECT_P_I 0.03772f
+C417 POST_N SUM_P_D_6 0.29627f
+C418 DETECT_BLEED_3 MAIN_TAIL_6 0.06178f
+C419 TERM_ENABLE MAIN_TAIL_3 0.07333f
+C420 TMDS_BIAS POST_TAIL_1 0.16592f
+C421 POST_TAIL_6 DETECT_ENABLE_LOCAL 0.09267f
+C422 POST_TAIL_2 MAIN_TAIL_6 0.129f
+C423 SUM_P_D_0 POST_TAIL_7 0.09824f
+C424 TMDS_TAIL_1 TERM_N_R 0.03774f
+C425 SUM_P_D_4 DETECT_ENABLE_LOCAL 0.04808f
+C426 MAIN_TAIL_1 TMDS_TAIL_2 0.03549f
+C427 PAD_N MAIN_N 0
+C428 SUM_N_D_3 POST_TAIL_6 0.03237f
+C429 POST_N MAIN_TAIL_6 0.17659f
+C430 ESD_RAIL a_45878_185225# 0.53916f
+C431 SUM_N_D_3 SUM_P_D_4 0.1759f
+C432 TERM_P_R TERM_BLEED_5 0.13522f
+C433 TMDS_BIAS TERM_ENABLE_LOCAL 0.32414f
+C434 DETECT_ENABLE DETECT_N_I 6.35638f
+C435 POST_P DETECT_BLEED_0 0.03472f
+C436 SUM_P_D_0 CASCODE 3.79245f
+C437 TERM_ENABLE TERM_BLEED_4 0.14463f
+C438 POST_BIAS MAIN_TAIL_6 0.00585f
+C439 DETECT_BLEED_1 SUM_P_D_7 0
+C440 DETECT_BLEED_2 DETECT_N_I 0.0931f
+C441 SUM_P_D_3 MAIN_TAIL_7 0.03396f
+C442 DETECT_BLEED_0 DETECT_BLEED_6 0.0673f
+C443 SUM_N_D_6 POST_TAIL_7 0.37018f
+C444 POST_TAIL_6 SUM_P_D_5 0.04027f
+C445 TMDS_BIAS MAIN_TAIL_5 0.07386f
+C446 DETECT_ENABLE MAIN_TAIL_6 0.14398f
+C447 MAIN_TAIL_0 MAIN_TAIL_3 0.08007f
+C448 SUM_P_D_4 SUM_P_D_5 49.5778f
+C449 TMDS_BIAS MAIN_TAIL_2 0.04808f
+C450 POST_TAIL_5 DETECT_N_I 0.05221f
+C451 DETECT_BLEED_2 MAIN_TAIL_6 0.06194f
+C452 MAIN_P CASCODE 0.00419f
+C453 TERM_VCM DETECT_N_I 0.16393f
+C454 SUM_P_D_0 PAD_P 2.49309f
+C455 POST_TAIL_6 TERM_BLEED_3 0.0527f
+C456 SUM_P_D_6 POST_TAIL_5 0.0768f
+C457 CASCODE SUM_N_D_6 8.36737f
+C458 DETECT_BLEED_0 SUM_N_D_7 0.00702f
+C459 MAIN_P TERM_BLEED_2 0.03505f
+C460 TERM_P_R MAIN_TAIL_3 0.03489f
+C461 SUM_N_D_1 SUM_P_D_3 0.17167f
+C462 SUM_N_D_2 POST_TAIL_7 0.80213f
+C463 POST_TAIL_5 MAIN_TAIL_6 0.04102f
+C464 TMDS_P SUM_P_D_7 3.64366f
+C465 MAIN_TAIL_0 TMDS_TAIL_2 0.03567f
+C466 ESD_RAIL a_45878_184105# 0.53942f
+C467 TERM_VCM MAIN_TAIL_6 0.05954f
+C468 TMDS_BIAS TMDS_TAIL_1 2.48835f
+C469 DETECT_BLEED_0 TERM_N_R 0.04811f
+C470 MAIN_P PAD_P 0.00125f
+C471 CASCODE DETECT_P_I 0.01892f
+C472 POST_P SUM_N_D_5 0.33687f
+C473 TERM_ENABLE_B MAIN_TAIL_7 0.04542f
+C474 SUM_P_D_0 TMDS_N 0.0031f
+C475 SUM_P_D_0 POST_TAIL_4 0.09424f
+C476 CASCODE SUM_N_D_2 3.93856f
+C477 PAD_P SUM_N_D_6 3.38985f
+C478 TERM_BLEED_4 TERM_P_R 0.00278f
+C479 TERM_BLEED_0 TERM_ENABLE_LOCAL 2.39921f
+C480 MAIN_P TMDS_TAIL_4 0.03593f
+C481 TMDS_P TMDS_TAIL_3 3.94752f
+C482 MAIN_BIAS MAIN_TAIL_6 17.277f
+C483 MAIN_TAIL_4 MAIN_TAIL_3 85.2238f
+C484 TERM_BLEED_2 DETECT_P_I 0.04799f
+C485 SUM_P_D_0 POST_TAIL_0 1.82294f
+C486 TERM_P_R TMDS_TAIL_2 0.10207f
+C487 SUM_N_D_6 TMDS_TAIL_4 0.06178f
+C488 SUM_P_D_0 MAIN_N 0.39305f
+C489 POST_P DETECT_BLEED_5 0.06178f
+C490 TMDS_TAIL_7 MAIN_TAIL_3 0.02605f
+C491 MAIN_TAIL_1 POST_TAIL_1 0.02846f
+C492 DETECT_BLEED_3 MAIN_TAIL_3 0.06178f
+C493 SUM_P_D_3 DETECT_ENABLE_LOCAL 0.11405f
+C494 TMDS_P SUM_N_D_4 0.11741f
+C495 MAIN_P POST_TAIL_4 0.09593f
+C496 PAD_P DETECT_P_I 0.38612f
+C497 POST_TAIL_2 MAIN_TAIL_3 0.055f
+C498 MAIN_P TMDS_N 0.02418f
+C499 DETECT_BLEED_6 DETECT_BLEED_5 8.38857f
+C500 SUM_P_D_3 SUM_N_D_3 0.70072f
+C501 PAD_P SUM_N_D_2 2.13053f
+C502 TMDS_N SUM_N_D_6 2.40568f
+C503 SUM_N_D_6 POST_TAIL_4 0.05935f
+C504 POST_TAIL_6 POST_TAIL_7 0.10233p
+C505 POST_N MAIN_TAIL_3 0.06394f
+C506 TERM_ENABLE_LOCAL MAIN_TAIL_1 0.04808f
+C507 POST_P TMDS_TAIL_6 0.00776f
+C508 TMDS_TAIL_4 DETECT_P_I 0.08466f
+C509 MAIN_P POST_TAIL_0 0.12464f
+C510 POST_P TMDS_TAIL_0 0.12714f
+C511 SUM_N_D_7 SUM_N_D_5 0.07034f
+C512 MAIN_P MAIN_N 0.13268p
+C513 SUM_P_D_4 POST_TAIL_7 0.06335f
+C514 POST_P SUM_P_D_2 1.85121f
+C515 SUM_N_D_1 MAIN_TAIL_7 0.03708f
+C516 SUM_N_D_2 TMDS_TAIL_4 0.00217f
+C517 MAIN_TAIL_4 TMDS_TAIL_2 0.03809f
+C518 TERM_ENABLE POST_TAIL_1 0.11356f
+C519 POST_TAIL_0 SUM_N_D_6 0.05935f
+C520 SUM_N_D_0 SUM_N_D_5 0.14746f
+C521 MAIN_N SUM_N_D_6 0.74557f
+C522 TERM_VCM TERM_BLEED_5 0.07663f
+C523 POST_TAIL_2 TERM_BLEED_4 0.03741f
+C524 POST_P DETECT_ENABLE_B 0.12113f
+C525 SUM_N_D_5 TERM_N_R 0.04185f
+C526 CASCODE POST_TAIL_6 0.01797f
+C527 POST_P POST_TAIL_3 2.23553f
+C528 MAIN_P DETECT_PBIAS 0.03544f
+C529 DETECT_BLEED_4 DETECT_N_I 0.0931f
+C530 POST_TAIL_2 TMDS_TAIL_2 0.07478f
+C531 TMDS_N DETECT_P_I 0.03687f
+C532 DETECT_BLEED_1 DETECT_N_I 0.07256f
+C533 POST_N TERM_BLEED_4 0.0042f
+C534 SUM_P_D_3 SUM_P_D_5 0.2005f
+C535 CASCODE SUM_P_D_4 7.61357f
+C536 ESD_RAIL a_33005_183825# 0.53823f
+C537 TMDS_N SUM_N_D_2 0.58071f
+C538 TERM_ENABLE TERM_ENABLE_LOCAL 6.76644f
+C539 MAIN_TAIL_1 MAIN_TAIL_5 0.03151f
+C540 SUM_N_D_2 POST_TAIL_4 0.06285f
+C541 DETECT_ENABLE MAIN_TAIL_3 0.06178f
+C542 MAIN_TAIL_1 MAIN_TAIL_2 82.72421f
+C543 TMDS_BIAS DETECT_BLEED_0 0.04106f
+C544 POST_N TMDS_TAIL_2 0.14109f
+C545 DETECT_BLEED_6 POST_TAIL_3 0.07225f
+C546 POST_TAIL_6 TERM_BLEED_2 0.03489f
+C547 DETECT_BLEED_2 MAIN_TAIL_3 0.06178f
+C548 MAIN_N DETECT_P_I 28.3382f
+C549 DETECT_BLEED_5 TERM_N_R 0.08856f
+C550 SUM_N_D_2 POST_TAIL_0 0.10662f
+C551 SUM_N_D_2 MAIN_N 8.09055f
+C552 SUM_P_D_1 SUM_P_D_7 0.20486f
+C553 TMDS_TAIL_0 SUM_N_D_7 0.07275f
+C554 DETECT_ENABLE_LOCAL MAIN_TAIL_7 0.12539f
+C555 SUM_P_D_2 SUM_N_D_7 0.91056f
+C556 DETECT_BLEED_1 MAIN_TAIL_6 0.03696f
+C557 SUM_N_D_7 TMDS_TAIL_6 0.04765f
+C558 DETECT_BLEED_4 MAIN_TAIL_6 0.06178f
+C559 MAIN_TAIL_0 POST_TAIL_1 0.16022f
+C560 SUM_N_D_0 TMDS_TAIL_0 1.92488f
+C561 TERM_ENABLE MAIN_TAIL_5 0.0738f
+C562 MAIN_P VDD 0.07426f
+C563 DETECT_PBIAS DETECT_P_I 0.72499f
+C564 PAD_P SUM_P_D_4 1.86116f
+C565 SUM_N_D_0 SUM_P_D_2 0.11385f
+C566 SUM_N_D_3 MAIN_TAIL_7 0.03197f
+C567 TMDS_TAIL_0 TERM_N_R 0.07514f
+C568 DETECT_ENABLE_B SUM_N_D_7 0.1402f
+C569 TERM_ENABLE MAIN_TAIL_2 0.02404f
+C570 POST_TAIL_5 MAIN_TAIL_3 0.04808f
+C571 SUM_N_D_7 POST_TAIL_3 0.12334f
+C572 TERM_VCM MAIN_TAIL_3 0.08914f
+C573 POST_TAIL_6 TMDS_TAIL_4 0.06034f
+C574 TMDS_TAIL_6 TERM_N_R 0.07581f
+C575 SUM_P_D_2 TERM_N_R 0.04185f
+C576 SUM_P_D_4 TMDS_TAIL_4 1.9736f
+C577 PAD_N SUM_P_D_7 0.58979f
+C578 TERM_ENABLE_LOCAL MAIN_TAIL_0 0.04829f
+C579 TMDS_P DETECT_N_I 0.08603f
+C580 SUM_N_D_0 POST_TAIL_3 0.31702f
+C581 TERM_P_R POST_TAIL_1 0.17948f
+C582 DETECT_ENABLE_B TERM_N_R 0.12599f
+C583 TMDS_P SUM_P_D_6 0.70623f
+C584 POST_TAIL_3 TERM_N_R 0.14763f
+C585 m2_34279_176800# a_33005_183825# 0
+C586 SUM_P_D_1 SUM_N_D_4 0.12073f
+C587 MAIN_P TMDS_TAIL_5 0.02404f
+C588 MAIN_TAIL_7 SUM_P_D_5 0.03518f
+C589 TMDS_N POST_TAIL_6 0.07379f
+C590 TERM_BLEED_4 POST_TAIL_5 0.02451f
+C591 SUM_N_D_1 DETECT_ENABLE_LOCAL 0.04808f
+C592 POST_TAIL_6 POST_TAIL_4 0.13309f
+C593 MAIN_BIAS MAIN_TAIL_3 22.5779f
+C594 VDD DETECT_P_I 1.3441f
+C595 TMDS_N SUM_P_D_4 0.04066f
+C596 SUM_P_D_4 POST_TAIL_4 1.81994f
+C597 TMDS_TAIL_5 SUM_N_D_6 0.03698f
+C598 TERM_P_R TERM_ENABLE_LOCAL 26.5257f
+C599 POST_TAIL_5 TMDS_TAIL_2 0.05893f
+C600 TMDS_P MAIN_TAIL_6 0.04907f
+C601 SUM_N_D_1 SUM_N_D_3 0.17124f
+C602 TMDS_BIAS SUM_N_D_5 0.08588f
+C603 POST_TAIL_0 POST_TAIL_6 0.12137f
+C604 MAIN_TAIL_0 MAIN_TAIL_5 0.07981f
+C605 TERM_BLEED_3 MAIN_TAIL_7 0.07652f
+C606 MAIN_N POST_TAIL_6 0.06156f
+C607 SUM_P_D_4 POST_TAIL_0 0.05692f
+C608 MAIN_TAIL_2 MAIN_TAIL_0 0.11902f
+C609 SUM_P_D_4 MAIN_N 0.23445f
+C610 SUM_P_D_3 POST_TAIL_7 0.06335f
+C611 MAIN_TAIL_4 POST_TAIL_1 0.16022f
+C612 PAD_N SUM_N_D_4 1.99439f
+C613 TMDS_TAIL_7 POST_TAIL_1 0.05792f
+C614 DETECT_PBIAS POST_TAIL_6 0.09722f
+C615 TMDS_BIAS DETECT_BLEED_5 0.07445f
+C616 TMDS_TAIL_5 DETECT_P_I 0.0372f
+C617 DETECT_BLEED_3 POST_TAIL_1 0.06178f
+C618 POST_TAIL_2 POST_TAIL_1 93.0228f
+C619 TERM_P_R MAIN_TAIL_5 0.1186f
+C620 SUM_N_D_1 SUM_P_D_5 0.13475f
+C621 TERM_P_R MAIN_TAIL_2 0.12533f
+C622 MAIN_TAIL_4 TERM_ENABLE_LOCAL 0.04808f
+C623 CASCODE SUM_P_D_3 8.26293f
+C624 ESD_RAIL a_36789_169064# 13.9519f
+C625 POST_N POST_TAIL_1 8.90959f
+C626 SUM_N_D_3 DETECT_ENABLE_LOCAL 0.04808f
+C627 TMDS_BIAS TMDS_TAIL_0 11.4618f
+C628 TMDS_BIAS TMDS_TAIL_6 5.09173f
+C629 POST_TAIL_2 TERM_ENABLE_LOCAL 0.11131f
+C630 DETECT_BLEED_0 MAIN_TAIL_1 0.03472f
+C631 TMDS_BIAS SUM_P_D_2 0.0403f
+C632 TMDS_N TERM_BLEED_6 0.07346f
+C633 POST_BIAS POST_TAIL_1 21.2542f
+C634 VDD POST_TAIL_6 0.2244f
+C635 a_34245_142628# a_36789_169064# 10.1844f
+C636 POST_N TERM_ENABLE_LOCAL 0.07962f
+C637 TMDS_BIAS DETECT_ENABLE_B 0.10494f
+C638 MAIN_TAIL_4 MAIN_TAIL_5 89.01221f
+C639 TMDS_BIAS POST_TAIL_3 0.12318f
+C640 DETECT_BLEED_4 MAIN_TAIL_3 0.06178f
+C641 TMDS_P TERM_BLEED_5 0.07455f
+C642 DETECT_BLEED_1 MAIN_TAIL_3 0.03216f
+C643 TMDS_TAIL_7 MAIN_TAIL_5 0.02744f
+C644 MAIN_TAIL_4 MAIN_TAIL_2 0.12581f
+C645 TMDS_TAIL_1 TERM_P_R 0.0308f
+C646 PAD_P SUM_P_D_3 2.27848f
+C647 SUM_P_D_0 SUM_P_D_7 0.10785f
+C648 DETECT_BLEED_3 MAIN_TAIL_5 0.06178f
+C649 DETECT_ENABLE POST_TAIL_1 0.06178f
+C650 SUM_P_D_1 DETECT_N_I 0.03089f
+C651 TERM_ENABLE_B POST_TAIL_7 0.08637f
+C652 TMDS_TAIL_7 MAIN_TAIL_2 0.02404f
+C653 DETECT_ENABLE_LOCAL SUM_P_D_5 0.04808f
+C654 TERM_ENABLE DETECT_BLEED_0 0
+C655 MAIN_TAIL_7 POST_TAIL_7 0.03743f
+C656 DETECT_BLEED_3 MAIN_TAIL_2 0.06178f
+C657 POST_TAIL_2 MAIN_TAIL_5 0.05672f
+C658 DETECT_BLEED_2 POST_TAIL_1 0.04055f
+C659 SUM_P_D_1 SUM_P_D_6 0.13412f
+C660 POST_TAIL_2 MAIN_TAIL_2 0.1219f
+C661 SUM_N_D_3 SUM_P_D_5 0.11588f
+C662 TMDS_TAIL_5 POST_TAIL_6 0.02404f
+C663 POST_N MAIN_TAIL_5 0.06553f
+C664 POST_N MAIN_TAIL_2 0.15473f
+C665 DETECT_ENABLE TERM_ENABLE_LOCAL 0.05888f
+C666 MAIN_P SUM_P_D_7 0.41293f
+C667 SUM_P_D_1 MAIN_TAIL_6 0.03472f
+C668 POST_P DETECT_BLEED_6 0.07225f
+C669 PAD_N DETECT_N_I 0.3677f
+C670 TMDS_N SUM_P_D_3 0.08786f
+C671 POST_TAIL_5 POST_TAIL_1 0.05281f
+C672 SUM_P_D_3 POST_TAIL_4 0.07535f
+C673 SUM_N_D_6 SUM_P_D_7 0.26644f
+C674 TERM_VCM POST_TAIL_1 0.16787f
+C675 PAD_N SUM_P_D_6 1.87283f
+C676 TERM_ENABLE_B TERM_BLEED_2 0
+C677 SUM_P_D_0 SUM_N_D_4 0.62383f
+C678 TMDS_P MAIN_TAIL_3 0.13946f
+C679 VDD TERM_BLEED_6 0.52528f
+C680 SUM_N_D_5 MAIN_TAIL_1 0.13032f
+C681 TERM_BLEED_2 MAIN_TAIL_7 0.0458f
+C682 SUM_P_D_3 POST_TAIL_0 0.05692f
+C683 SUM_P_D_3 MAIN_N 0.27543f
+C684 SUM_N_D_1 POST_TAIL_7 1.00925f
+C685 DETECT_ENABLE MAIN_TAIL_5 0.06178f
+C686 DETECT_BLEED_0 MAIN_TAIL_0 0.03485f
+C687 POST_TAIL_5 TERM_ENABLE_LOCAL 0.09773f
+C688 TERM_VCM TERM_ENABLE_LOCAL 52.5877f
+C689 DETECT_BLEED_2 MAIN_TAIL_5 0.06191f
+C690 DETECT_ENABLE MAIN_TAIL_2 0.14398f
+C691 MAIN_BIAS POST_TAIL_1 0.49111f
+C692 POST_P SUM_N_D_7 0.32721f
+C693 SUM_P_D_7 DETECT_P_I 0.13682f
+C694 DETECT_BLEED_5 MAIN_TAIL_1 0.06178f
+C695 DETECT_BLEED_2 MAIN_TAIL_2 0.06178f
+C696 SUM_N_D_2 SUM_P_D_7 0.16685f
+C697 MAIN_P SUM_N_D_4 0.2447f
+C698 SUM_N_D_0 POST_P 0.34073f
+C699 SUM_N_D_1 CASCODE 13.0522f
+C700 TMDS_TAIL_4 MAIN_TAIL_7 0.0458f
+C701 SUM_N_D_6 SUM_N_D_4 0.14472f
+C702 DETECT_BLEED_0 TERM_P_R 0.04106f
+C703 POST_P TERM_N_R 0.23396f
+C704 TMDS_P TMDS_TAIL_2 4.1045f
+C705 POST_TAIL_5 MAIN_TAIL_5 0.04808f
+C706 TERM_VCM MAIN_TAIL_5 0.09259f
+C707 TMDS_TAIL_0 MAIN_TAIL_1 0.02404f
+C708 POST_TAIL_5 MAIN_TAIL_2 0.04102f
+C709 TMDS_N TERM_ENABLE_B 0.03204f
+C710 TERM_VCM MAIN_TAIL_2 0.04808f
+C711 DETECT_ENABLE_LOCAL POST_TAIL_7 0.13285f
+C712 DETECT_BLEED_6 TERM_N_R 0.09942f
+C713 SUM_P_D_2 MAIN_TAIL_1 1.95154f
+C714 TERM_ENABLE_B POST_TAIL_4 0.0614f
+C715 TMDS_N MAIN_TAIL_7 0.06182f
+C716 MAIN_TAIL_7 POST_TAIL_4 0.02404f
+C717 SUM_N_D_4 DETECT_P_I 0.02846f
+C718 SUM_N_D_3 POST_TAIL_7 0.47907f
+C719 DETECT_ENABLE_B MAIN_TAIL_1 0.12578f
+C720 SUM_N_D_1 PAD_P 2.58545f
+C721 TERM_ENABLE_B POST_TAIL_0 0.04802f
+C722 SUM_N_D_2 SUM_N_D_4 0.0685f
+C723 POST_TAIL_3 MAIN_TAIL_1 0.02424f
+C724 POST_TAIL_0 MAIN_TAIL_7 0.14027f
+C725 TERM_ENABLE_B MAIN_N 0.04226f
+C726 MAIN_N MAIN_TAIL_7 2.36177f
+C727 MAIN_BIAS MAIN_TAIL_5 22.5541f
+C728 DETECT_BLEED_0 MAIN_TAIL_4 0.03472f
+C729 CASCODE DETECT_ENABLE_LOCAL 0.06631f
+C730 SUM_N_D_0 SUM_N_D_7 0.12836f
+C731 MAIN_BIAS MAIN_TAIL_2 17.2905f
+C732 DETECT_BLEED_0 TMDS_TAIL_7 0.02212f
+C733 SUM_N_D_5 MAIN_TAIL_0 0.10403f
+C734 DETECT_BLEED_0 DETECT_BLEED_3 0.12226f
+C735 SUM_N_D_7 TERM_N_R 0.04185f
+C736 CASCODE SUM_N_D_3 7.821f
+C737 DETECT_BLEED_0 POST_TAIL_2 0.03472f
+C738 DETECT_PBIAS MAIN_TAIL_7 0.04626f
+C739 POST_TAIL_6 SUM_P_D_7 0.03839f
+C740 SUM_P_D_0 DETECT_N_I 0.12335f
+C741 SUM_N_D_0 TERM_N_R 0.04185f
+C742 SUM_P_D_4 SUM_P_D_7 0.23126f
+C743 DETECT_BLEED_0 POST_N 0.04563f
+C744 POST_TAIL_7 SUM_P_D_5 0.06335f
+C745 SUM_P_D_0 SUM_P_D_6 0.0669f
+C746 DETECT_BLEED_4 POST_TAIL_1 0.06178f
+C747 TERM_ENABLE POST_TAIL_3 0.09778f
+C748 SUM_N_D_1 POST_TAIL_4 0.06198f
+C749 DETECT_BLEED_5 MAIN_TAIL_0 0.06178f
+C750 DETECT_BLEED_1 POST_TAIL_1 0.01212f
+C751 SUM_N_D_1 TMDS_N 4.09366f
+C752 SUM_N_D_5 TERM_P_R 0.07657f
+C753 PAD_P DETECT_ENABLE_LOCAL 7.12347f
+C754 SUM_N_D_1 POST_TAIL_0 0.07044f
+C755 TERM_BLEED_3 POST_TAIL_7 0.07945f
+C756 SUM_N_D_1 MAIN_N 4.72252f
+C757 SUM_P_D_0 MAIN_TAIL_6 0.06971f
+C758 PAD_P SUM_N_D_3 2.47508f
+C759 CASCODE SUM_P_D_5 2.29498f
+C760 MAIN_P DETECT_N_I 0.06759f
+C761 DETECT_ENABLE_LOCAL TMDS_TAIL_4 0.08279f
+C762 VDD TERM_ENABLE_B 2.27199f
+C763 POST_P TMDS_BIAS 0.10957f
+C764 SUM_N_D_6 DETECT_N_I 0.12335f
+C765 TMDS_TAIL_0 MAIN_TAIL_0 0.02404f
+C766 a_35813_169064# a_36789_169064# 2.94235f
+C767 VDD MAIN_TAIL_7 0.93619f
+C768 MAIN_P SUM_P_D_6 7.10659f
+C769 DETECT_BLEED_5 TERM_P_R 0.07445f
+C770 SUM_P_D_2 MAIN_TAIL_0 0.08767f
+C771 POST_TAIL_6 SUM_N_D_4 0.03255f
+C772 SUM_N_D_3 TMDS_TAIL_4 0.29907f
+C773 SUM_P_D_6 SUM_N_D_6 0.58727f
+C774 DETECT_BLEED_0 DETECT_ENABLE 0.2742f
+C775 SUM_P_D_4 SUM_N_D_4 0.36887f
+C776 TMDS_BIAS DETECT_BLEED_6 0.0853f
+C777 TMDS_N DETECT_ENABLE_LOCAL 0.15719f
+C778 ESD_RAIL a_45878_184665# 0.53916f
+C779 SUM_N_D_5 MAIN_TAIL_4 0.14564f
+C780 DETECT_BLEED_2 DETECT_BLEED_0 0.11928f
+C781 SUM_P_D_1 TMDS_TAIL_2 0.00505f
+C782 DETECT_ENABLE_B MAIN_TAIL_0 0.12578f
+C783 DETECT_ENABLE_LOCAL POST_TAIL_4 0.09267f
+C784 MAIN_P MAIN_TAIL_6 9.69047f
+C785 POST_TAIL_3 MAIN_TAIL_0 0.05188f
+C786 DETECT_BLEED_4 MAIN_TAIL_5 0.06178f
+C787 TERM_BLEED_3 TERM_BLEED_2 3.96947f
+C788 DETECT_BLEED_1 MAIN_TAIL_5 0.03474f
+C789 TMDS_TAIL_0 TERM_P_R 0.0813f
+C790 SUM_N_D_6 MAIN_TAIL_6 2.67583f
+C791 PAD_P SUM_P_D_5 2.76605f
+C792 TMDS_P POST_TAIL_1 0.17192f
+C793 DETECT_P_I DETECT_N_I 29.5954f
+C794 DETECT_BLEED_4 MAIN_TAIL_2 0.06178f
+C795 TMDS_TAIL_6 TERM_P_R 0.06203f
+C796 TMDS_N SUM_N_D_3 5.82404f
+C797 TERM_BLEED_1 TERM_ENABLE_LOCAL 0.174f
+C798 SUM_N_D_3 POST_TAIL_4 0.07788f
+C799 TMDS_TAIL_5 MAIN_TAIL_7 0.03494f
+C800 DETECT_BLEED_1 MAIN_TAIL_2 0.02846f
+C801 SUM_P_D_2 TERM_P_R 0.07657f
+C802 POST_TAIL_0 DETECT_ENABLE_LOCAL 0.09267f
+C803 POST_TAIL_2 SUM_N_D_5 0.07518f
+C804 SUM_N_D_2 DETECT_N_I 0.03089f
+C805 MAIN_N DETECT_ENABLE_LOCAL 0.16847f
+C806 DETECT_BLEED_5 MAIN_TAIL_4 0.06178f
+C807 SUM_P_D_6 DETECT_P_I 0.02846f
+C808 DETECT_BLEED_0 POST_TAIL_5 0.03472f
+C809 TMDS_TAIL_4 SUM_P_D_5 0.15466f
+C810 TMDS_BIAS SUM_N_D_7 0.18804f
+C811 SUM_N_D_2 SUM_P_D_6 0.12684f
+C812 SUM_N_D_3 POST_TAIL_0 0.05935f
+C813 DETECT_ENABLE_B TERM_P_R 0.10482f
+C814 SUM_N_D_3 MAIN_N 0.45134f
+C815 POST_N SUM_N_D_5 1.80646f
+C816 TMDS_P TERM_ENABLE_LOCAL 0.51309f
+C817 POST_TAIL_3 TERM_P_R 0.15808f
+C818 DETECT_BLEED_3 DETECT_BLEED_5 0.12309f
+C819 POST_TAIL_2 DETECT_BLEED_5 0.06178f
+C820 DETECT_P_I MAIN_TAIL_6 0.0372f
+C821 TMDS_BIAS TERM_N_R 0.37279f
+C822 SUM_N_D_2 MAIN_TAIL_6 0.0339f
+C823 TMDS_TAIL_0 MAIN_TAIL_4 0.02724f
+C824 TMDS_N SUM_P_D_5 0.33062f
+C825 SUM_P_D_5 POST_TAIL_4 1.79716f
+C826 POST_N DETECT_BLEED_5 0.08359f
+C827 SUM_P_D_2 MAIN_TAIL_4 0.11032f
+C828 TMDS_TAIL_7 TMDS_TAIL_6 0.62225f
+C829 TMDS_P MAIN_TAIL_5 0.14021f
+C830 POST_TAIL_0 SUM_P_D_5 0.05692f
+C831 TMDS_TAIL_0 POST_TAIL_2 0.06393f
+C832 TERM_BLEED_3 POST_TAIL_4 0.05293f
+C833 MAIN_N SUM_P_D_5 0.36506f
+C834 SUM_P_D_2 POST_TAIL_2 2.14175f
+C835 POST_TAIL_2 TMDS_TAIL_6 0.06733f
+C836 DETECT_ENABLE_B MAIN_TAIL_4 0.12578f
+C837 ESD_RAIL a_33005_185505# 0.53842f
+C838 SUM_P_D_3 SUM_P_D_7 0.18561f
+C839 POST_TAIL_3 MAIN_TAIL_4 0.05188f
+C840 TMDS_P MAIN_TAIL_2 0.04808f
+C841 VDD DETECT_ENABLE_LOCAL 5.942f
+C842 TMDS_TAIL_7 DETECT_ENABLE_B 0.54253f
+C843 TMDS_TAIL_7 POST_TAIL_3 0.0525f
+C844 TMDS_TAIL_0 POST_N 0.14556f
+C845 POST_TAIL_0 TERM_BLEED_3 0.08853f
+C846 POST_N SUM_P_D_2 0.24401f
+C847 POST_N TMDS_TAIL_6 0.00553f
+C848 DETECT_BLEED_3 POST_TAIL_3 0.06178f
+C849 MAIN_N TERM_BLEED_3 0.03075f
+C850 DETECT_ENABLE_B POST_TAIL_2 0.12113f
+C851 POST_TAIL_6 DETECT_N_I 0.00259f
+C852 POST_TAIL_2 POST_TAIL_3 96.7626f
+C853 DETECT_ENABLE DETECT_BLEED_5 0.32681f
+C854 TERM_BLEED_2 POST_TAIL_7 0.04828f
+C855 SUM_P_D_4 DETECT_N_I 0.03089f
+C856 SUM_P_D_6 POST_TAIL_6 2.07921f
+C857 TMDS_TAIL_3 SUM_P_D_3 1.83603f
+C858 POST_N DETECT_ENABLE_B 0.16476f
+C859 DETECT_BLEED_2 DETECT_BLEED_5 0.12236f
+C860 SUM_P_D_4 SUM_P_D_6 0.19988f
+C861 POST_N POST_TAIL_3 3.55878f
+C862 SUM_N_D_5 POST_TAIL_5 2.47743f
+C863 SUM_P_D_0 MAIN_TAIL_3 0.03489f
+C864 POST_P MAIN_TAIL_1 0.0525f
+C865 TMDS_P TMDS_TAIL_1 2.91976f
+C866 TMDS_TAIL_5 DETECT_ENABLE_LOCAL 0.10084f
+C867 POST_BIAS POST_TAIL_3 21.1852f
+C868 CASCODE TERM_BLEED_2 0.02079f
+C869 POST_TAIL_6 MAIN_TAIL_6 0.04905f
+C870 SUM_P_D_3 SUM_N_D_4 0.18097f
+C871 SUM_P_D_4 MAIN_TAIL_6 0.03983f
+C872 DETECT_BLEED_6 MAIN_TAIL_1 0.07225f
+C873 SUM_P_D_1 POST_TAIL_1 1.82764f
+C874 TMDS_TAIL_4 POST_TAIL_7 0.08368f
+C875 DETECT_BLEED_5 POST_TAIL_5 0.06178f
+C876 m2_34279_176800# a_33005_185505# 0
+C877 CASCODE PAD_P 71.55811f
+C878 TERM_BLEED_0 TERM_N_R 0.06178f
+C879 MAIN_P MAIN_TAIL_3 1.41835f
+C880 DETECT_ENABLE DETECT_ENABLE_B 12.1442f
+C881 POST_P TERM_ENABLE 0.03885f
+C882 DETECT_ENABLE POST_TAIL_3 0.06178f
+C883 SUM_P_D_7 MAIN_TAIL_7 1.94042f
+C884 DETECT_BLEED_0 DETECT_BLEED_1 0.8058f
+C885 DETECT_BLEED_4 DETECT_BLEED_0 0.123f
+C886 SUM_N_D_6 MAIN_TAIL_3 0.03964f
+C887 POST_TAIL_7 POST_TAIL_4 0.10125f
+C888 DETECT_BLEED_2 POST_TAIL_3 0.03653f
+C889 TMDS_N POST_TAIL_7 0.12798f
+C890 TMDS_TAIL_0 POST_TAIL_5 0.04944f
+C891 SUM_P_D_2 POST_TAIL_5 0.06071f
+C892 TMDS_TAIL_6 POST_TAIL_5 0.02599f
+C893 SUM_N_D_7 MAIN_TAIL_1 0.05935f
+C894 TERM_ENABLE DETECT_BLEED_6 0.02502f
+C895 TMDS_TAIL_5 SUM_P_D_5 1.8277f
+C896 POST_TAIL_0 POST_TAIL_7 0.10004f
+C897 SUM_N_D_0 MAIN_TAIL_1 0.16241f
+C898 DETECT_ENABLE_B POST_TAIL_5 0.11671f
+C899 CASCODE POST_TAIL_4 0.01797f
+C900 POST_TAIL_3 POST_TAIL_5 0.06374f
+C901 MAIN_P TMDS_TAIL_2 0.03593f
+C902 DETECT_P_I MAIN_TAIL_3 0.03741f
+C903 SUM_P_D_1 MAIN_TAIL_5 0.05935f
+C904 TERM_N_R MAIN_TAIL_1 0.11977f
+C905 TERM_VCM POST_TAIL_3 0.15393f
+C906 SUM_P_D_1 MAIN_TAIL_2 0.07407f
+C907 CASCODE POST_TAIL_0 0.01797f
+C908 SUM_N_D_6 TMDS_TAIL_2 0.06243f
+C909 DETECT_PBIAS POST_TAIL_7 0
+C910 CASCODE MAIN_N 0.0021f
+C911 MAIN_TAIL_7 SUM_N_D_4 0.03226f
+C912 TMDS_N TERM_BLEED_2 0.03472f
+C913 TERM_BLEED_2 POST_TAIL_4 0.03489f
+C914 POST_P MAIN_TAIL_0 0.09152f
+C915 SUM_N_D_1 SUM_P_D_7 0.2029f
+C916 TMDS_P DETECT_BLEED_0 0.05365f
+C917 MAIN_BIAS POST_TAIL_3 0.41329f
+C918 POST_TAIL_0 TERM_BLEED_2 0.03489f
+C919 MAIN_N TERM_BLEED_2 0.04142f
+C920 DETECT_BLEED_6 MAIN_TAIL_0 0.07225f
+C921 TERM_ENABLE TERM_N_R 0.14884f
+C922 CASCODE DETECT_PBIAS 0
+C923 SUM_P_D_3 DETECT_N_I 0.12335f
+C924 DETECT_P_I TMDS_TAIL_2 0.08466f
+C925 POST_P TERM_P_R 0.24797f
+C926 SUM_N_D_2 TMDS_TAIL_2 2.03938f
+C927 TMDS_N TMDS_TAIL_4 0.76111f
+C928 SUM_P_D_1 TMDS_TAIL_1 1.87384f
+C929 VDD POST_TAIL_7 1.106f
+C930 TMDS_TAIL_4 POST_TAIL_4 0.06178f
+C931 SUM_P_D_3 SUM_P_D_6 0.14571f
+C932 TMDS_BIAS TERM_BLEED_0 0.07445f
+C933 PAD_P MAIN_N 0
+C934 DETECT_BLEED_6 TERM_P_R 0.0853f
+C935 POST_TAIL_0 TMDS_TAIL_4 0.07066f
+C936 SUM_N_D_1 SUM_N_D_4 0.10478f
+C937 DETECT_ENABLE_LOCAL SUM_P_D_7 0.18479f
+C938 MAIN_N TMDS_TAIL_4 0.04264f
+C939 DETECT_BLEED_1 DETECT_BLEED_5 0.12219f
+C940 DETECT_BLEED_4 DETECT_BLEED_5 6.87203f
+C941 SUM_N_D_7 MAIN_TAIL_0 0.03424f
+C942 SUM_P_D_3 MAIN_TAIL_6 0.03472f
+C943 CASCODE VDD 0.02339f
+C944 TMDS_N POST_TAIL_4 0.07407f
+C945 SUM_N_D_0 MAIN_TAIL_0 1.81789f
+C946 POST_TAIL_6 MAIN_TAIL_3 0.02653f
+C947 SUM_N_D_3 SUM_P_D_7 0.16356f
+C948 POST_P MAIN_TAIL_4 0.0924f
+C949 TMDS_TAIL_5 POST_TAIL_7 0.03698f
+C950 TERM_BLEED_6 TERM_BLEED_5 1.06973f
+C951 TERM_N_R MAIN_TAIL_0 0.03567f
+C952 TMDS_N POST_TAIL_0 0.18888f
+C953 POST_P TMDS_TAIL_7 0.101f
+C954 SUM_P_D_0 POST_TAIL_1 0.10896f
+C955 POST_TAIL_0 POST_TAIL_4 0.05317f
+C956 TMDS_N MAIN_N 0.03054f
+C957 POST_P DETECT_BLEED_3 0.06178f
+C958 MAIN_N POST_TAIL_4 0.06156f
+C959 VDD TERM_BLEED_2 0.45972f
+C960 TMDS_BIAS MAIN_TAIL_1 0.07233f
+C961 SUM_N_D_7 TERM_P_R 0.07692f
+C962 ESD_RAIL a_45878_183545# 0.56772f
+C963 DETECT_BLEED_6 MAIN_TAIL_4 0.07225f
+C964 POST_P POST_TAIL_2 3.44733f
+C965 TMDS_P SUM_N_D_5 0.05481f
+C966 TMDS_TAIL_3 SUM_N_D_3 2.615f
+C967 POST_TAIL_0 MAIN_N 0.06722f
+C968 POST_TAIL_6 TERM_BLEED_4 0.02441f
+C969 SUM_N_D_0 TERM_P_R 0.09016f
+C970 CASCODE TMDS_TAIL_5 0.01263f
+C971 DETECT_ENABLE_LOCAL SUM_N_D_4 0.04808f
+C972 TERM_ENABLE_B DETECT_N_I 0.09268f
+C973 DETECT_BLEED_6 DETECT_BLEED_3 0.10559f
+C974 DETECT_PBIAS POST_TAIL_4 0.09714f
+C975 POST_TAIL_6 TMDS_TAIL_2 0.05893f
+C976 SUM_P_D_7 SUM_P_D_5 0.20651f
+C977 POST_P POST_N 0.12046p
+C978 DETECT_BLEED_4 POST_TAIL_3 0.06178f
+C979 MAIN_TAIL_7 DETECT_N_I 0.03494f
+C980 TERM_P_R TERM_N_R 72.93279f
+C981 DETECT_BLEED_6 POST_TAIL_2 0.07225f
+C982 SUM_P_D_4 TMDS_TAIL_2 0.14005f
+C983 DETECT_BLEED_1 POST_TAIL_3 0.00612f
+C984 MAIN_P POST_TAIL_1 0
+C985 TMDS_P DETECT_BLEED_5 0.08856f
+C986 SUM_P_D_6 MAIN_TAIL_7 0.0035f
+C987 SUM_N_D_3 SUM_N_D_4 50.6812f
+C988 ESD_RAIL a_33005_183545# 96.5489f
+C989 DETECT_PBIAS POST_TAIL_0 0.20115f
+C990 TMDS_BIAS TERM_ENABLE 0
+C991 POST_P POST_BIAS 1.10321f
+C992 SUM_N_D_6 POST_TAIL_1 0.06236f
+C993 DETECT_PBIAS MAIN_N 1.18286f
+C994 POST_N DETECT_BLEED_6 0.09407f
+C995 SUM_N_D_7 MAIN_TAIL_4 0.06232f
+C996 TERM_ENABLE_B MAIN_TAIL_6 0.03451f
+C997 TMDS_TAIL_7 SUM_N_D_7 1.93817f
+C998 MAIN_P TERM_ENABLE_LOCAL 0.04836f
+C999 MAIN_TAIL_7 MAIN_TAIL_6 91.376f
+C1000 SUM_N_D_0 MAIN_TAIL_4 0.08856f
+C1001 SUM_P_D_0 MAIN_TAIL_5 0.09424f
+C1002 POST_P DETECT_ENABLE 0.06178f
+C1003 TMDS_N VDD 0.20103f
+C1004 a_34245_142628# a_33005_183545# 0.0135f
+C1005 POST_TAIL_2 SUM_N_D_7 0.05564f
+C1006 SUM_P_D_0 MAIN_TAIL_2 0.1107f
+C1007 TMDS_P TMDS_TAIL_0 6.07267f
+C1008 TMDS_P TMDS_TAIL_6 0.9259f
+C1009 VDD POST_TAIL_4 0.34824f
+C1010 MAIN_TAIL_4 TERM_N_R 0.07732f
+C1011 TMDS_P SUM_P_D_2 1.54814f
+C1012 DETECT_BLEED_2 POST_P 0.07246f
+C1013 TMDS_TAIL_5 TMDS_TAIL_4 0.01227f
+C1014 SUM_N_D_4 SUM_P_D_5 0.25055f
+C1015 SUM_N_D_0 POST_TAIL_2 0.19983f
+C1016 TMDS_TAIL_7 TERM_N_R 0.07486f
+C1017 POST_N SUM_N_D_7 4.24722f
+C1018 VDD POST_TAIL_0 0.18467f
+C1019 SUM_N_D_1 DETECT_N_I 0.03089f
+C1020 VDD MAIN_N 0.12836f
+C1021 SUM_N_D_2 POST_TAIL_1 0.11338f
+C1022 DETECT_BLEED_3 TERM_N_R 0.04568f
+C1023 DETECT_ENABLE DETECT_BLEED_6 0.87889f
+C1024 TMDS_P DETECT_ENABLE_B 0.17727f
+C1025 SUM_N_D_0 POST_N 4.86334f
+C1026 SUM_N_D_1 SUM_P_D_6 0.13183f
+C1027 POST_TAIL_2 TERM_N_R 0.10222f
+C1028 TMDS_P POST_TAIL_3 0.16488f
+C1029 DETECT_BLEED_2 DETECT_BLEED_6 0.10542f
+C1030 MAIN_P MAIN_TAIL_5 6.76726f
+C1031 TMDS_BIAS MAIN_TAIL_0 0.04832f
+C1032 POST_N TERM_N_R 0.24056f
+C1033 MAIN_P MAIN_TAIL_2 9.02315f
+C1034 TMDS_N TMDS_TAIL_5 4.84794f
+C1035 TERM_ENABLE_LOCAL DETECT_P_I 0.07373f
+C1036 TMDS_TAIL_5 POST_TAIL_4 0.02404f
+C1037 m2_34279_176800# a_33005_183545# 0.05457f
+C1038 SUM_N_D_6 MAIN_TAIL_5 0.09802f
+C1039 POST_P POST_TAIL_5 8.34869f
+C1040 DETECT_PBIAS VDD 3.71496f
+C1041 POST_P TERM_VCM 0.23443f
+C1042 SUM_N_D_6 MAIN_TAIL_2 0.10162f
+C1043 SUM_N_D_1 MAIN_TAIL_6 0.0339f
+C1044 TMDS_TAIL_5 POST_TAIL_0 0.02404f
+C1045 TMDS_TAIL_5 MAIN_N 0.03037f
+C1046 DETECT_ENABLE SUM_N_D_7 0.12854f
+C1047 DETECT_BLEED_6 POST_TAIL_5 0.07225f
+C1048 TMDS_BIAS TERM_P_R 15.7217f
+C1049 SUM_P_D_3 MAIN_TAIL_3 2.11768f
+C1050 DETECT_ENABLE_LOCAL DETECT_N_I 61.5542f
+C1051 DETECT_BLEED_2 SUM_N_D_7 0
+C1052 SUM_P_D_1 SUM_N_D_5 0.06453f
+C1053 SUM_P_D_7 POST_TAIL_7 1.86699f
+C1054 SUM_P_D_6 DETECT_ENABLE_LOCAL 0.04808f
+C1055 TERM_ENABLE TERM_BLEED_0 0.16586f
+C1056 MAIN_BIAS POST_P 0.51203f
+C1057 DETECT_ENABLE TERM_N_R 0.08348f
+C1058 SUM_N_D_3 DETECT_N_I 0.03089f
+C1059 SUM_N_D_2 MAIN_TAIL_5 0.06178f
+C1060 DETECT_P_I MAIN_TAIL_2 0.00114f
+C1061 SUM_N_D_2 MAIN_TAIL_2 4.03057f
+C1062 SUM_N_D_3 SUM_P_D_6 0.10588f
+C1063 POST_TAIL_6 POST_TAIL_1 0.06818f
+C1064 SUM_N_D_7 POST_TAIL_5 0.06071f
+C1065 DETECT_ENABLE_LOCAL MAIN_TAIL_6 0.19351f
+C1066 CASCODE SUM_P_D_7 2.40783f
+C1067 SUM_P_D_4 POST_TAIL_1 0.06318f
+C1068 SUM_P_D_3 TMDS_TAIL_2 0.21773f
+C1069 SUM_N_D_0 POST_TAIL_5 0.51841f
+C1070 TMDS_BIAS MAIN_TAIL_4 0.04808f
+C1071 PAD_N SUM_N_D_5 2.18304f
+C1072 SUM_N_D_3 MAIN_TAIL_6 0.03988f
+C1073 TMDS_BIAS TMDS_TAIL_7 9.63801f
+C1074 SUM_P_D_5 DETECT_N_I 0.03089f
+C1075 TERM_ENABLE MAIN_TAIL_1 0.07333f
+C1076 POST_TAIL_6 TERM_ENABLE_LOCAL 0.09737f
+C1077 TMDS_BIAS DETECT_BLEED_3 0.04482f
+C1078 POST_TAIL_5 TERM_N_R 0.10899f
+C1079 TERM_VCM TERM_N_R 20.6242f
+C1080 SUM_N_D_4 POST_TAIL_7 0.47907f
+C1081 TMDS_BIAS POST_TAIL_2 0.11131f
+C1082 SUM_P_D_1 TMDS_TAIL_0 0.06088f
+C1083 SUM_P_D_6 SUM_P_D_5 49.4204f
+C1084 SUM_P_D_1 SUM_P_D_2 49.4382f
+C1085 PAD_P SUM_P_D_7 2.11053f
+C1086 TMDS_BIAS POST_N 0.09182f
+C1087 TERM_ENABLE_B MAIN_TAIL_3 0.03451f
+C1088 TERM_BLEED_3 DETECT_N_I 0.06991f
+C1089 MAIN_TAIL_7 MAIN_TAIL_3 0.0447f
+C1090 CASCODE SUM_N_D_4 5.58327f
+C1091 SUM_P_D_5 MAIN_TAIL_6 0.03884f
+C1092 TMDS_BIAS POST_BIAS 0.14057f
+C1093 SUM_P_D_7 TMDS_TAIL_4 0.12969f
+C1094 SUM_P_D_1 POST_TAIL_3 0.06489f
+C1095 POST_TAIL_6 MAIN_TAIL_5 0.02826f
+C1096 TERM_BLEED_0 TERM_P_R 0.07445f
+C1097 POST_TAIL_6 MAIN_TAIL_2 0.04331f
+C1098 SUM_P_D_4 MAIN_TAIL_5 0.07662f
+C1099 PAD_N SUM_P_D_2 2.29631f
+C1100 POST_P DETECT_BLEED_1 0.03643f
+C1101 SUM_P_D_4 MAIN_TAIL_2 0.06328f
+C1102 DETECT_BLEED_4 POST_P 0.06178f
+C1103 MAIN_TAIL_7 TERM_BLEED_4 0
+C1104 TERM_BLEED_3 MAIN_TAIL_6 0.03556f
+C1105 MAIN_TAIL_1 MAIN_TAIL_0 83.6549f
+C1106 MAIN_P DETECT_BLEED_0 0.03488f
+C1107 SUM_P_D_7 POST_TAIL_4 0.1186f
+C1108 TMDS_TAIL_3 TMDS_TAIL_4 0.02304f
+C1109 TMDS_BIAS DETECT_ENABLE 0.03778f
+C1110 TMDS_N SUM_P_D_7 0.13622f
+C1111 MAIN_TAIL_7 TMDS_TAIL_2 0.06607f
+C1112 DETECT_BLEED_1 DETECT_BLEED_6 0.10542f
+C1113 DETECT_BLEED_4 DETECT_BLEED_6 0.09959f
+C1114 PAD_P SUM_N_D_4 2.71277f
+C1115 POST_TAIL_0 SUM_P_D_7 0.223f
+C1116 TERM_ENABLE_LOCAL TERM_BLEED_6 0.18249f
+C1117 MAIN_N SUM_P_D_7 0.3593f
+C1118 TMDS_TAIL_4 SUM_N_D_4 2.36584f
+C1119 a_33005_184945# a_33005_184385# 0.0346f
+C1120 TERM_P_R MAIN_TAIL_1 0.13046f
+C1121 TMDS_N TMDS_TAIL_3 5.26093f
+C1122 TMDS_TAIL_1 SUM_P_D_4 0.00466f
+C1123 TERM_ENABLE MAIN_TAIL_0 0.02423f
+C1124 TMDS_BIAS POST_TAIL_5 0.12279f
+C1125 TMDS_BIAS TERM_VCM 65.3076f
+C1126 a_35813_169064# a_33005_183545# 2.2693f
+C1127 DETECT_BLEED_0 DETECT_P_I 0.04805f
+C1128 SUM_P_D_0 SUM_N_D_5 0.87991f
+C1129 TMDS_N SUM_N_D_4 0.68483f
+C1130 SUM_N_D_4 POST_TAIL_4 3.9302f
+C1131 TMDS_P POST_P 0.05515f
+C1132 POST_TAIL_7 DETECT_N_I 0.00184f
+C1133 SUM_N_D_1 TMDS_TAIL_2 0.00606f
+C1134 SUM_P_D_3 POST_TAIL_1 0.06328f
+C1135 SUM_P_D_6 POST_TAIL_7 0.06441f
+C1136 TERM_ENABLE TERM_P_R 0.14731f
+C1137 DETECT_BLEED_4 TERM_N_R 0.0897f
+C1138 POST_TAIL_0 SUM_N_D_4 0.05935f
+C1139 DETECT_ENABLE_LOCAL MAIN_TAIL_3 0.19351f
+C1140 MAIN_TAIL_4 MAIN_TAIL_1 0.03195f
+C1141 MAIN_N SUM_N_D_4 2.80551f
+C1142 TMDS_P DETECT_BLEED_6 0.09942f
+C1143 MAIN_BIAS TMDS_BIAS 0.14057f
+C1144 TERM_BLEED_3 TERM_BLEED_5 0.00296f
+C1145 CASCODE DETECT_N_I 1.35415f
+C1146 TMDS_TAIL_7 MAIN_TAIL_1 0.02404f
+C1147 SUM_N_D_3 MAIN_TAIL_3 1.82169f
+C1148 DETECT_BLEED_3 MAIN_TAIL_1 0.06178f
+C1149 POST_TAIL_7 MAIN_TAIL_6 0.09983f
+C1150 MAIN_P SUM_N_D_5 0.24439f
+C1151 CASCODE SUM_P_D_6 10.5355f
+C1152 POST_TAIL_2 MAIN_TAIL_1 0.0525f
+C1153 SUM_N_D_6 SUM_N_D_5 51.4063f
+C1154 TERM_BLEED_2 DETECT_N_I 0.06307f
+C1155 POST_N MAIN_TAIL_1 0.06341f
+C1156 SUM_P_D_0 TMDS_TAIL_0 1.94314f
+C1157 TERM_ENABLE MAIN_TAIL_4 0.02404f
+C1158 CASCODE MAIN_TAIL_6 0.0306f
+C1159 SUM_P_D_0 SUM_P_D_2 0.07904f
+C1160 DETECT_ENABLE_LOCAL TMDS_TAIL_2 0.08279f
+C1161 TMDS_P SUM_N_D_7 0.11809f
+C1162 TERM_BLEED_1 TERM_N_R 0.06178f
+C1163 MAIN_P DETECT_BLEED_5 0.06178f
+C1164 PAD_P DETECT_N_I 0.20781f
+C1165 TERM_P_R MAIN_TAIL_0 0.03697f
+C1166 TMDS_P SUM_N_D_0 0.02519f
+C1167 SUM_P_D_3 MAIN_TAIL_5 0.05935f
+C1168 DETECT_BLEED_0 POST_TAIL_6 0.03472f
+C1169 SUM_N_D_3 TMDS_TAIL_2 0.07281f
+C1170 TMDS_TAIL_5 SUM_P_D_7 0.03743f
+C1171 SUM_P_D_3 MAIN_TAIL_2 0.55038f
+C1172 TERM_ENABLE POST_TAIL_2 0.061f
+C1173 SUM_N_D_5 DETECT_P_I 0.19778f
+C1174 TERM_BLEED_2 MAIN_TAIL_6 0.03489f
+C1175 PAD_P SUM_P_D_6 1.81936f
+C1176 SUM_P_D_0 POST_TAIL_3 0.09837f
+C1177 TMDS_TAIL_4 DETECT_N_I 0.09246f
+C1178 TMDS_P TERM_N_R 0.40623f
+C1179 TERM_ENABLE_B POST_TAIL_1 0.06977f
+C1180 SUM_N_D_2 SUM_N_D_5 0.13819f
+C1181 TERM_BLEED_3 MAIN_TAIL_3 0.02904f
+C1182 MAIN_P TMDS_TAIL_0 0.02404f
+C1183 TERM_ENABLE POST_N 0.04516f
+C1184 MAIN_TAIL_7 POST_TAIL_1 0.04172f
+C1185 SUM_P_D_6 TMDS_TAIL_4 0.09313f
+C1186 MAIN_P SUM_P_D_2 5.7607f
+C1187 DETECT_ENABLE MAIN_TAIL_1 0.06178f
+C1188 TMDS_TAIL_0 SUM_N_D_6 0.04808f
+C1189 SUM_N_D_6 TMDS_TAIL_6 2.19102f
+C1190 SUM_P_D_2 SUM_N_D_6 0.14657f
+C1191 DETECT_BLEED_2 MAIN_TAIL_1 0.06178f
+C1192 TERM_ENABLE POST_BIAS 0.26815f
+C1193 DETECT_BLEED_5 DETECT_P_I 0.08712f
+C1194 TERM_ENABLE_B TERM_ENABLE_LOCAL 3.13327f
+C1195 TMDS_N DETECT_N_I 0.04213f
+C1196 MAIN_P DETECT_ENABLE_B 0.12578f
+C1197 POST_TAIL_4 DETECT_N_I 0.00585f
+C1198 MAIN_TAIL_4 MAIN_TAIL_0 0.08921f
+C1199 MAIN_TAIL_7 TERM_ENABLE_LOCAL 0.07246f
+C1200 TMDS_TAIL_4 MAIN_TAIL_6 0.03489f
+C1201 SUM_P_D_5 TMDS_TAIL_2 0.13537f
+C1202 DETECT_BLEED_4 TMDS_BIAS 0.07699f
+C1203 SUM_P_D_3 TMDS_TAIL_1 0.0033f
+C1204 TMDS_N SUM_P_D_6 0.15395f
+C1205 SUM_P_D_6 POST_TAIL_4 0.08891f
+C1206 TMDS_TAIL_7 MAIN_TAIL_0 0.02404f
+C1207 TERM_BLEED_3 TERM_BLEED_4 2.32487f
+C1208 SUM_N_D_6 POST_TAIL_3 0.0615f
+C1209 TMDS_TAIL_5 SUM_N_D_4 0.01433f
+C1210 DETECT_BLEED_3 MAIN_TAIL_0 0.06178f
+C1211 POST_P SUM_P_D_1 5.82972f
+C1212 POST_TAIL_0 DETECT_N_I 0.03079f
+C1213 TERM_ENABLE DETECT_ENABLE 0.06915f
+C1214 MAIN_N DETECT_N_I 0.07767f
+C1215 POST_TAIL_2 MAIN_TAIL_0 0.1219f
+C1216 TMDS_TAIL_0 DETECT_P_I 0.0372f
+C1217 POST_TAIL_5 MAIN_TAIL_1 0.04808f
+C1218 TERM_VCM MAIN_TAIL_1 0.08415f
+C1219 POST_TAIL_0 SUM_P_D_6 0.10549f
+C1220 TMDS_TAIL_0 SUM_N_D_2 0.04808f
+C1221 SUM_P_D_2 DETECT_P_I 0.11312f
+C1222 DETECT_BLEED_2 TERM_ENABLE 0
+C1223 MAIN_N SUM_P_D_6 0.12588f
+C1224 SUM_N_D_2 SUM_P_D_2 0.23071f
+C1225 TMDS_N MAIN_TAIL_6 0.02603f
+C1226 POST_TAIL_4 MAIN_TAIL_6 0.05254f
+C1227 SUM_N_D_1 POST_TAIL_1 4.07371f
+C1228 MAIN_TAIL_4 TERM_P_R 0.08777f
+C1229 TERM_ENABLE_B MAIN_TAIL_5 0.03451f
+C1230 POST_N MAIN_TAIL_0 0.15484f
+C1231 MAIN_TAIL_7 MAIN_TAIL_5 0.0477f
+C1232 TMDS_TAIL_7 TERM_P_R 0.06075f
+C1233 TERM_ENABLE_B MAIN_TAIL_2 0.03498f
+C1234 DETECT_PBIAS DETECT_N_I 2.61397f
+C1235 MAIN_TAIL_7 MAIN_TAIL_2 0.12416f
+C1236 DETECT_ENABLE_B DETECT_P_I 0.17649f
+C1237 DETECT_BLEED_3 TERM_P_R 0.03996f
+C1238 POST_TAIL_0 MAIN_TAIL_6 0.11293f
+C1239 TERM_BLEED_2 TERM_BLEED_5 0
+C1240 POST_TAIL_6 SUM_N_D_5 0.06825f
+C1241 TMDS_BIAS TERM_BLEED_1 0.07445f
+C1242 MAIN_N MAIN_TAIL_6 0.85795f
+C1243 SUM_N_D_2 POST_TAIL_3 0.11419f
+C1244 POST_TAIL_2 TERM_P_R 0.10222f
+C1245 SUM_P_D_4 SUM_N_D_5 0.08506f
+C1246 MAIN_BIAS MAIN_TAIL_1 22.6686f
+C1247 TERM_ENABLE POST_TAIL_5 0.09769f
+C1248 TERM_ENABLE TERM_VCM 6.88813f
+C1249 POST_N TERM_P_R 0.2486f
+C1250 POST_TAIL_7 MAIN_TAIL_3 0.03743f
+C1251 SUM_P_D_1 SUM_N_D_7 1.04142f
+C1252 POST_TAIL_6 DETECT_BLEED_5 0.06178f
+C1253 TMDS_P TMDS_BIAS 1.0692f
+C1254 DETECT_PBIAS MAIN_TAIL_6 0.13206f
+C1255 DETECT_ENABLE MAIN_TAIL_0 0.14398f
+C1256 TMDS_TAIL_7 MAIN_TAIL_4 0.02662f
+C1257 DETECT_ENABLE_LOCAL POST_TAIL_1 0.09267f
+C1258 SUM_N_D_0 SUM_P_D_1 0.23723f
+C1259 VDD DETECT_N_I 2.98683f
+C1260 DETECT_BLEED_2 MAIN_TAIL_0 0.06178f
+C1261 DETECT_BLEED_3 MAIN_TAIL_4 0.06178f
+C1262 SUM_N_D_1 MAIN_TAIL_5 0.06178f
+C1263 CASCODE MAIN_TAIL_3 0.01263f
+C1264 POST_TAIL_2 MAIN_TAIL_4 0.1251f
+C1265 MAIN_BIAS TERM_ENABLE 0.26815f
+C1266 SUM_N_D_3 POST_TAIL_1 0.06245f
+C1267 SUM_P_D_1 TERM_N_R 0.13401f
+C1268 SUM_N_D_1 MAIN_TAIL_2 0.07418f
+C1269 POST_TAIL_7 TERM_BLEED_4 0.03773f
+C1270 TMDS_TAIL_0 POST_TAIL_6 0.04808f
+C1271 TMDS_TAIL_7 POST_TAIL_2 0.05639f
+C1272 SUM_P_D_2 POST_TAIL_6 0.07475f
+C1273 PAD_N SUM_N_D_7 2.59181f
+C1274 DETECT_BLEED_3 POST_TAIL_2 0.06178f
+C1275 POST_TAIL_6 TMDS_TAIL_6 0.02545f
+C1276 POST_N MAIN_TAIL_4 0.15546f
+C1277 DETECT_ENABLE TERM_P_R 0.0765f
+C1278 TMDS_TAIL_0 SUM_P_D_4 0.04808f
+C1279 POST_TAIL_7 TMDS_TAIL_2 0.07758f
+C1280 SUM_P_D_2 SUM_P_D_4 0.03485f
+C1281 POST_TAIL_5 MAIN_TAIL_0 0.04102f
+C1282 VDD MAIN_TAIL_6 0.07393f
+C1283 TERM_BLEED_2 MAIN_TAIL_3 0.03489f
+C1284 TMDS_N TERM_BLEED_5 0.04198f
+C1285 TMDS_TAIL_7 POST_N 0.11213f
+C1286 TERM_VCM MAIN_TAIL_0 0.04808f
+C1287 PAD_N SUM_N_D_0 3.39351f
+C1288 POST_N DETECT_BLEED_3 0.08359f
+C1289 TMDS_TAIL_5 DETECT_N_I 0.04845f
+C1290 DETECT_ENABLE_B POST_TAIL_6 0.11671f
+C1291 POST_N POST_TAIL_2 0.85056f
+C1292 POST_TAIL_6 POST_TAIL_3 0.05988f
+C1293 PAD_N TERM_N_R 5.62224f
+C1294 TMDS_TAIL_5 SUM_P_D_6 0.03774f
+C1295 SUM_P_D_5 POST_TAIL_1 0.06318f
+C1296 SUM_P_D_4 POST_TAIL_3 0.96006f
+C1297 SUM_N_D_1 TMDS_TAIL_1 2.69674f
+C1298 POST_BIAS POST_TAIL_2 16.3293f
+C1299 DETECT_ENABLE_LOCAL MAIN_TAIL_5 0.09267f
+C1300 TERM_BLEED_2 TERM_BLEED_4 0.00153f
+C1301 TERM_P_R POST_TAIL_5 0.10899f
+C1302 DETECT_ENABLE MAIN_TAIL_4 0.14398f
+C1303 DETECT_BLEED_4 MAIN_TAIL_1 0.06178f
+C1304 TMDS_TAIL_4 MAIN_TAIL_3 0.03489f
+C1305 MAIN_BIAS MAIN_TAIL_0 17.167f
+C1306 DETECT_ENABLE_LOCAL MAIN_TAIL_2 0.09267f
+C1307 TERM_BLEED_1 TERM_BLEED_0 4.67769f
+C1308 TERM_VCM TERM_P_R 22.6311f
+C1309 TERM_BLEED_3 POST_TAIL_1 0.06693f
+C1310 TMDS_TAIL_5 MAIN_TAIL_6 0.02404f
+C1311 DETECT_BLEED_1 MAIN_TAIL_1 0.02846f
+C1312 POST_BIAS POST_N 24.8289f
+C1313 SUM_P_D_7 SUM_N_D_4 0.20199f
+C1314 SUM_N_D_3 MAIN_TAIL_5 0.08079f
+C1315 DETECT_BLEED_2 MAIN_TAIL_4 0.06178f
+C1316 TMDS_TAIL_7 DETECT_ENABLE 0.25948f
+C1317 a_33005_186065# a_33005_185505# 0.0346f
+C1318 SUM_N_D_3 MAIN_TAIL_2 0.06236f
+C1319 DETECT_ENABLE DETECT_BLEED_3 0.20501f
+C1320 DETECT_BLEED_2 TMDS_TAIL_7 0
+C1321 DETECT_BLEED_2 DETECT_BLEED_3 3.77403f
+C1322 TMDS_P TERM_BLEED_0 0.08856f
+C1323 DETECT_ENABLE POST_TAIL_2 0.14398f
+C1324 POST_P SUM_P_D_0 2.55722f
+C1325 TMDS_N MAIN_TAIL_3 0.04835f
+C1326 TERM_BLEED_3 TERM_ENABLE_LOCAL 0
+C1327 DETECT_BLEED_2 POST_TAIL_2 0.03788f
+C1328 POST_TAIL_4 MAIN_TAIL_3 0.02404f
+C1329 POST_N DETECT_ENABLE 0.08359f
+C1330 DETECT_BLEED_0 MAIN_TAIL_7 0.04563f
+C1331 TERM_ENABLE DETECT_BLEED_1 0
+C1332 MAIN_TAIL_4 POST_TAIL_5 0.04102f
+C1333 TERM_VCM MAIN_TAIL_4 0.05448f
+C1334 SUM_P_D_3 SUM_N_D_5 0.10429f
+C1335 TMDS_TAIL_4 TMDS_TAIL_2 0.00522f
+C1336 DETECT_BLEED_2 POST_N 0.09297f
+C1337 TMDS_BIAS SUM_P_D_1 0.16227f
+C1338 MAIN_N MAIN_TAIL_3 1.08192f
+C1339 SUM_P_D_5 MAIN_TAIL_5 1.81994f
+C1340 TMDS_TAIL_7 POST_TAIL_5 0.04808f
+C1341 POST_TAIL_0 MAIN_TAIL_3 0.02846f
+C1342 VDD TERM_BLEED_5 0.0025f
+C1343 DETECT_BLEED_3 POST_TAIL_5 0.06178f
+C1344 POST_BIAS DETECT_ENABLE 1.11097f
+C1345 SUM_P_D_5 MAIN_TAIL_2 0.06318f
+C1346 POST_TAIL_2 POST_TAIL_5 0.04779f
+C1347 MAIN_P POST_P 0.03332f
+C1348 TERM_VCM POST_TAIL_2 0.12785f
+C1349 TERM_BLEED_4 POST_TAIL_4 0.02492f
+C1350 TMDS_P MAIN_TAIL_1 0.13946f
+C1351 TERM_BLEED_3 MAIN_TAIL_5 0.03253f
+C1352 POST_P SUM_N_D_6 0.27323f
+C1353 DETECT_PBIAS MAIN_TAIL_3 0.03504f
+C1354 POST_N POST_TAIL_5 1.84101f
+C1355 TERM_BLEED_3 MAIN_TAIL_2 0.02404f
+C1356 TMDS_N TMDS_TAIL_2 1.69944f
+C1357 MAIN_BIAS MAIN_TAIL_4 17.3248f
+C1358 POST_TAIL_4 TMDS_TAIL_2 0.05942f
+C1359 POST_N TERM_VCM 0.26049f
+C1360 SUM_P_D_0 SUM_N_D_7 32.2455f
+C1361 POST_TAIL_0 TERM_BLEED_4 0.06143f
+C1362 MAIN_P DETECT_BLEED_6 0.07225f
+C1363 a_33005_183825# a_33005_184385# 0.0346f
+C1364 TERM_ENABLE TERM_BLEED_1 0.16535f
+C1365 DETECT_BLEED_2 DETECT_ENABLE 0.18447f
+C1366 POST_TAIL_0 TMDS_TAIL_2 0.12036f
+C1367 POST_BIAS POST_TAIL_5 21.1164f
+C1368 SUM_N_D_0 SUM_P_D_0 0.58744f
+C1369 POST_BIAS TERM_VCM 0.18787f
+C1370 MAIN_N TMDS_TAIL_2 0.04264f
+C1371 MAIN_BIAS POST_TAIL_2 0.3797f
+C1372 DETECT_BLEED_1 MAIN_TAIL_0 0.02888f
+C1373 DETECT_BLEED_4 MAIN_TAIL_0 0.06178f
+C1374 TMDS_TAIL_0 SUM_P_D_3 0.04808f
+C1375 TMDS_TAIL_1 SUM_P_D_5 0.02978f
+C1376 POST_TAIL_7 POST_TAIL_1 0.03771f
+C1377 SUM_P_D_3 SUM_P_D_2 50.1232f
+C1378 TMDS_P TERM_ENABLE 0
+C1379 SUM_P_D_0 TERM_N_R 0.03743f
+C1380 POST_P DETECT_P_I 0.03687f
+C1381 MAIN_BIAS POST_N 1.12948f
+C1382 POST_P SUM_N_D_2 0.33135f
+C1383 VDD MAIN_TAIL_3 0.87891f
+C1384 MAIN_P SUM_N_D_7 0.15451f
+C1385 DETECT_ENABLE POST_TAIL_5 0.06178f
+C1386 SUM_P_D_7 DETECT_N_I 0.90968f
+C1387 DETECT_ENABLE TERM_VCM 0.31211f
+C1388 MAIN_TAIL_7 SUM_N_D_5 0.12428f
+C1389 POST_TAIL_7 TERM_ENABLE_LOCAL 0.15069f
+C1390 MAIN_BIAS POST_BIAS 0.69328f
+C1391 SUM_P_D_3 POST_TAIL_3 1.90048f
+C1392 DETECT_BLEED_6 DETECT_P_I 0.09759f
+C1393 DETECT_BLEED_4 TERM_P_R 0.07594f
+C1394 DETECT_BLEED_2 POST_TAIL_5 0.02938f
+C1395 MAIN_P SUM_N_D_0 0.28723f
+C1396 SUM_N_D_6 SUM_N_D_7 50.744f
+C1397 SUM_P_D_6 SUM_P_D_7 49.4353f
+C1398 SUM_N_D_0 SUM_N_D_6 0.10721f
+C1399 MAIN_P TERM_N_R 0.18808f
+C1400 DETECT_BLEED_0 DETECT_ENABLE_LOCAL 9.62348f
+C1401 TERM_BLEED_2 POST_TAIL_1 0.03489f
+C1402 DETECT_BLEED_5 MAIN_TAIL_7 0.08359f
+C1403 SUM_N_D_6 TERM_N_R 0.0565f
+C1404 SUM_P_D_7 MAIN_TAIL_6 0.08391f
+C1405 MAIN_BIAS DETECT_ENABLE 1.1121f
+C1406 TMDS_TAIL_5 MAIN_TAIL_3 0.02404f
+C1407 POST_TAIL_7 MAIN_TAIL_5 0.03743f
+C1408 TERM_VCM POST_TAIL_5 0.13222f
+C1409 ESD_RAIL a_45878_185785# 0.53942f
+C1410 TMDS_P MAIN_TAIL_0 0.04829f
+C1411 SUM_N_D_7 DETECT_P_I 0.03651f
+C1412 SUM_N_D_2 SUM_N_D_7 0.10979f
+C1413 SUM_N_D_4 DETECT_N_I 0.03089f
+C1414 POST_TAIL_7 MAIN_TAIL_2 0.09983f
+C1415 TERM_BLEED_2 TERM_ENABLE_LOCAL 0.05344f
+C1416 TERM_BLEED_1 TERM_P_R 0.07445f
+C1417 DETECT_BLEED_1 MAIN_TAIL_4 0.0332f
+C1418 DETECT_BLEED_4 MAIN_TAIL_4 0.06178f
+C1419 SUM_N_D_0 DETECT_P_I 0.04185f
+C1420 TMDS_TAIL_0 MAIN_TAIL_7 0.05522f
+C1421 SUM_P_D_6 SUM_N_D_4 0.13711f
+C1422 SUM_N_D_0 SUM_N_D_2 0.15422f
+C1423 SUM_N_D_1 SUM_N_D_5 0.17492f
+C1424 TMDS_TAIL_4 POST_TAIL_1 0.10911f
+C1425 TMDS_TAIL_7 DETECT_BLEED_1 0.00169f
+C1426 SUM_P_D_2 MAIN_TAIL_7 0.09196f
+C1427 TERM_N_R DETECT_P_I 0.08565f
+C1428 DETECT_BLEED_1 DETECT_BLEED_3 0.12112f
+C1429 DETECT_BLEED_4 DETECT_BLEED_3 5.32092f
+C1430 POST_P POST_TAIL_6 1.47079f
+C1431 DETECT_BLEED_4 POST_TAIL_2 0.06178f
+C1432 MAIN_BIAS POST_TAIL_5 0.39025f
+C1433 SUM_N_D_2 TERM_N_R 0.04185f
+C1434 DETECT_BLEED_1 POST_TAIL_2 0.00827f
+C1435 TMDS_P TERM_P_R 0.38301f
+C1436 POST_P SUM_P_D_4 3.87586f
+C1437 MAIN_BIAS TERM_VCM 0.18787f
+C1438 CASCODE MAIN_TAIL_2 0.01797f
+C1439 SUM_P_D_1 MAIN_TAIL_1 1.78805f
+C1440 DETECT_ENABLE_B MAIN_TAIL_7 0.1694f
+C1441 SUM_N_D_4 MAIN_TAIL_6 0.039f
+C1442 TERM_ENABLE_B POST_TAIL_3 0.10483f
+C1443 DETECT_BLEED_4 POST_N 0.08359f
+C1444 POST_TAIL_3 MAIN_TAIL_7 0.02424f
+C1445 TMDS_BIAS SUM_P_D_0 0.00294f
+C1446 DETECT_BLEED_6 POST_TAIL_6 0.07225f
+C1447 POST_N DETECT_BLEED_1 0.09943f
+C1448 TERM_BLEED_2 MAIN_TAIL_5 0.03489f
+C1449 TMDS_N POST_TAIL_1 0.11327f
+C1450 POST_TAIL_4 POST_TAIL_1 0.02509f
+C1451 TERM_BLEED_2 MAIN_TAIL_2 0.03489f
+C1452 POST_TAIL_0 POST_TAIL_1 94.4857f
+C1453 MAIN_N POST_TAIL_1 0.00526f
+C1454 DETECT_ENABLE_LOCAL SUM_N_D_5 0.18003f
+C1455 SUM_N_D_1 TMDS_TAIL_0 0.05441f
+C1456 POST_TAIL_4 TERM_ENABLE_LOCAL 0.0981f
+C1457 TMDS_P MAIN_TAIL_4 0.04808f
+C1458 TMDS_N TERM_ENABLE_LOCAL 0.30974f
+C1459 SUM_N_D_1 SUM_P_D_2 0.15632f
+C1460 TMDS_TAIL_4 MAIN_TAIL_5 0.03489f
+C1461 MAIN_P TMDS_BIAS 0.04837f
+C1462 POST_TAIL_6 SUM_N_D_7 0.08703f
+C1463 SUM_N_D_3 SUM_N_D_5 0.14855f
+C1464 TMDS_P TMDS_TAIL_7 5.22524f
+C1465 DETECT_ENABLE DETECT_BLEED_1 0.19793f
+C1466 DETECT_BLEED_4 DETECT_ENABLE 0.24176f
+C1467 TMDS_P DETECT_BLEED_3 0.07455f
+C1468 POST_TAIL_0 TERM_ENABLE_LOCAL 0.222f
+C1469 TMDS_BIAS SUM_N_D_6 0.22276f
+C1470 SUM_P_D_4 SUM_N_D_7 0.51074f
+C1471 TMDS_TAIL_4 MAIN_TAIL_2 0.03536f
+C1472 DETECT_PBIAS POST_TAIL_1 0.03164f
+C1473 SUM_N_D_0 POST_TAIL_6 0.53493f
+C1474 MAIN_N TERM_ENABLE_LOCAL 0.06108f
+C1475 TMDS_P POST_TAIL_2 0.07969f
+C1476 DETECT_BLEED_2 DETECT_BLEED_1 2.30531f
+C1477 DETECT_BLEED_4 DETECT_BLEED_2 0.12036f
+C1478 SUM_N_D_1 POST_TAIL_3 0.06192f
+C1479 SUM_N_D_0 SUM_P_D_4 0.05598f
+C1480 POST_TAIL_6 TERM_N_R 0.06034f
+C1481 TMDS_N MAIN_TAIL_5 0.04985f
+C1482 TMDS_P POST_N 0.08649f
+C1483 SUM_P_D_4 TERM_N_R 0.04185f
+C1484 POST_TAIL_4 MAIN_TAIL_5 0.02404f
+C1485 DETECT_PBIAS TERM_ENABLE_LOCAL 0.00466f
+C1486 a_34245_142628# ESD_RAIL 0.24219p
+C1487 POST_TAIL_4 MAIN_TAIL_2 0.05254f
+C1488 TMDS_N MAIN_TAIL_2 0.02404f
+C1489 DETECT_BLEED_4 POST_TAIL_5 0.06178f
+C1490 SUM_P_D_1 MAIN_TAIL_0 0.17672f
+C1491 TMDS_P POST_BIAS 0.95355f
+C1492 TMDS_TAIL_0 DETECT_ENABLE_LOCAL 0.10084f
+C1493 TMDS_BIAS DETECT_P_I 0.07374f
+C1494 SUM_N_D_5 SUM_P_D_5 0.17488f
+C1495 POST_TAIL_0 MAIN_TAIL_5 0.02861f
+C1496 DETECT_BLEED_1 POST_TAIL_5 0
+C1497 MAIN_N MAIN_TAIL_5 8.14557f
+C1498 SUM_P_D_6 DETECT_N_I 0.03089f
+C1499 SUM_P_D_2 DETECT_ENABLE_LOCAL 0.11405f
+C1500 TMDS_BIAS SUM_N_D_2 0.03371f
+C1501 POST_TAIL_0 MAIN_TAIL_2 0.11111f
+C1502 VDD POST_TAIL_1 1.02769f
+C1503 SUM_P_D_7 MAIN_TAIL_3 0.03489f
+C1504 TMDS_TAIL_0 SUM_N_D_3 0.04808f
+C1505 MAIN_N MAIN_TAIL_2 10.2815f
+C1506 SUM_N_D_3 SUM_P_D_2 0.14803f
+C1507 DETECT_ENABLE_B DETECT_ENABLE_LOCAL 22.1234f
+C1508 DETECT_N_I MAIN_TAIL_6 0.07248f
+C1509 DETECT_ENABLE_LOCAL POST_TAIL_3 0.09267f
+C1510 DETECT_BLEED_0 POST_TAIL_7 0.04811f
+C1511 TMDS_P DETECT_ENABLE 0.05774f
+C1512 DETECT_PBIAS MAIN_TAIL_5 0.03519f
+C1513 m2_34279_176800# ESD_RAIL 5.47988f
+C1514 SUM_P_D_1 TERM_P_R 0.17091f
+C1515 VDD TERM_ENABLE_LOCAL 5.37714f
+C1516 SUM_P_D_6 MAIN_TAIL_6 1.79466f
+C1517 DETECT_PBIAS MAIN_TAIL_2 0.13189f
+C1518 TMDS_N TMDS_TAIL_1 3.71435f
+C1519 SUM_N_D_3 POST_TAIL_3 2.1845f
+C1520 POST_P SUM_P_D_3 0.65621f
+C1521 TMDS_TAIL_5 POST_TAIL_1 0.02404f
+C1522 DETECT_BLEED_0 CASCODE 1.53939f
+C1523 TMDS_TAIL_0 SUM_P_D_5 0.04808f
+C1524 SUM_P_D_7 TMDS_TAIL_2 0.13669f
+C1525 SUM_P_D_2 SUM_P_D_5 0.0904f
+C1526 TERM_N_R TERM_BLEED_6 0.07198f
+C1527 PAD_N TERM_P_R 0.3737f
+C1528 TMDS_P POST_TAIL_5 0.16512f
+C1529 SUM_P_D_0 MAIN_TAIL_1 0.17123f
+C1530 TMDS_P TERM_VCM 0.4611f
+C1531 VDD MAIN_TAIL_5 0.88055f
+C1532 SUM_P_D_1 MAIN_TAIL_4 0.06489f
+C1533 VDD MAIN_TAIL_2 0.06493f
+C1534 POST_TAIL_3 SUM_P_D_5 0.07234f
+C1535 TMDS_BIAS POST_TAIL_6 0.09799f
+C1536 TMDS_TAIL_3 TMDS_TAIL_2 0.01311f
+C1537 TMDS_BIAS SUM_P_D_4 0.1259f
+C1538 TERM_BLEED_3 POST_TAIL_3 0.05989f
+C1539 MAIN_P MAIN_TAIL_1 5.6238f
+C1540 TMDS_P MAIN_BIAS 0.95355f
+C1541 SUM_P_D_3 SUM_N_D_7 0.54631f
+C1542 TMDS_TAIL_5 MAIN_TAIL_5 0.02404f
+C1543 SUM_P_D_1 POST_N 0.16517f
+C1544 SUM_N_D_4 TMDS_TAIL_2 0.06089f
+C1545 SUM_N_D_6 MAIN_TAIL_1 0.09877f
+C1546 SUM_N_D_5 POST_TAIL_7 0.45195f
+C1547 SUM_N_D_0 SUM_P_D_3 0.15342f
+C1548 TMDS_TAIL_5 MAIN_TAIL_2 0.02404f
+C1549 POST_P TERM_ENABLE_B 0.0382f
+C1550 POST_P MAIN_TAIL_7 0.78819f
+C1551 SUM_P_D_3 TERM_N_R 0.05624f
+C1552 DETECT_BLEED_4 DETECT_BLEED_1 0.11971f
+C1553 DETECT_BLEED_0 POST_TAIL_4 0.03472f
+C1554 DETECT_BLEED_5 POST_TAIL_7 0.08856f
+C1555 CASCODE SUM_N_D_5 8.57187f
+C1556 DETECT_BLEED_0 TMDS_N 0.03823f
+C1557 MAIN_P TERM_ENABLE 0.02427f
+C1558 TERM_ENABLE_B DETECT_BLEED_6 0.56318f
+C1559 DETECT_BLEED_6 MAIN_TAIL_7 0.09407f
+C1560 DETECT_P_I MAIN_TAIL_1 0.00152f
+C1561 DETECT_BLEED_0 POST_TAIL_0 0.03472f
+C1562 SUM_N_D_2 MAIN_TAIL_1 0.07044f
+C1563 DETECT_BLEED_0 MAIN_N 0.04125f
+C1564 SUM_P_D_0 MAIN_TAIL_0 1.95401f
+C1565 TMDS_BIAS TERM_BLEED_6 0.08521f
+C1566 CASCODE DETECT_BLEED_5 0.06639f
+C1567 TMDS_TAIL_0 POST_TAIL_7 0.99341f
+C1568 POST_TAIL_7 TMDS_TAIL_6 0.03802f
+C1569 SUM_P_D_2 POST_TAIL_7 0.09775f
+C1570 DETECT_N_I MAIN_TAIL_3 0.07248f
+C1571 PAD_P SUM_N_D_5 0.58557f
+C1572 SUM_N_D_1 POST_P 0.18812f
+C1573 SUM_N_D_7 MAIN_TAIL_7 1.80641f
+C1574 TERM_ENABLE DETECT_P_I 0.03674f
+C1575 DETECT_ENABLE_B POST_TAIL_7 0.17028f
+C1576 SUM_P_D_1 POST_TAIL_5 0.03472f
+C1577 CASCODE TMDS_TAIL_0 0.01263f
+C1578 SUM_P_D_0 TERM_P_R 0.08187f
+C1579 TMDS_TAIL_4 SUM_N_D_5 0.06398f
+C1580 SUM_P_D_7 POST_TAIL_1 0.13476f
+C1581 POST_TAIL_3 POST_TAIL_7 0.03805f
+C1582 TMDS_P DETECT_BLEED_1 0.00369f
+C1583 SUM_N_D_0 MAIN_TAIL_7 0.07219f
+C1584 TMDS_P DETECT_BLEED_4 0.09988f
+C1585 MAIN_P MAIN_TAIL_0 87.05289f
+C1586 CASCODE SUM_P_D_2 4.77667f
+C1587 TERM_ENABLE_B TERM_N_R 0.50548f
+C1588 MAIN_TAIL_3 MAIN_TAIL_6 0.06733f
+C1589 MAIN_TAIL_7 TERM_N_R 0.0458f
+C1590 SUM_N_D_6 MAIN_TAIL_0 0.07297f
+C1591 a_35813_169064# ESD_RAIL 4.89902f
+C1592 DETECT_N_I TMDS_TAIL_2 0.09246f
+C1593 DETECT_BLEED_0 VDD 0.46453f
+C1594 TMDS_N SUM_N_D_5 2.7624f
+C1595 SUM_N_D_5 POST_TAIL_4 0.13291f
+C1596 TMDS_BIAS SUM_P_D_3 0.79541f
+C1597 MAIN_P TERM_P_R 0.20453f
+C1598 SUM_P_D_6 TMDS_TAIL_2 0.09761f
+C1599 POST_TAIL_6 MAIN_TAIL_1 0.02404f
+C1600 POST_P DETECT_ENABLE_LOCAL 0.14805f
+C1601 SUM_P_D_4 MAIN_TAIL_1 0.05692f
+C1602 SUM_P_D_0 MAIN_TAIL_4 0.09837f
+C1603 POST_TAIL_0 SUM_N_D_5 0.13291f
+C1604 TERM_BLEED_4 MAIN_TAIL_6 0
+C1605 SUM_N_D_1 SUM_N_D_7 0.15332f
+C1606 PAD_P SUM_P_D_2 2.04751f
+C1607 SUM_N_D_6 TERM_P_R 0.08417f
+C1608 TERM_BLEED_2 POST_TAIL_3 0.03489f
+C1609 MAIN_N SUM_N_D_5 6.20208f
+C1610 TMDS_P TERM_BLEED_1 0.08856f
+C1611 DETECT_P_I MAIN_TAIL_0 0.00212f
+C1612 SUM_N_D_4 POST_TAIL_1 0.06236f
+C1613 a_35813_169064# a_34245_142628# 0.00994f
+C1614 SUM_N_D_2 MAIN_TAIL_0 0.03708f
+C1615 POST_P SUM_N_D_3 0.27605f
+C1616 TMDS_N DETECT_BLEED_5 0.06178f
+C1617 DETECT_BLEED_5 POST_TAIL_4 0.06178f
+C1618 SUM_N_D_1 SUM_N_D_0 51.4323f
+C1619 TMDS_TAIL_2 MAIN_TAIL_6 0.04062f
+C1620 SUM_P_D_7 MAIN_TAIL_5 0.1186f
+C1621 SUM_P_D_2 TMDS_TAIL_4 0.00305f
+C1622 SUM_P_D_0 POST_TAIL_2 0.03489f
+C1623 SUM_P_D_7 MAIN_TAIL_2 0.12533f
+C1624 POST_TAIL_0 DETECT_BLEED_5 0.06178f
+C1625 SUM_N_D_1 TERM_N_R 0.14021f
+C1626 TERM_ENABLE POST_TAIL_6 0.04835f
+C1627 SUM_P_D_0 POST_N 0.20782f
+C1628 MAIN_N DETECT_BLEED_5 0.07445f
+C1629 MAIN_P MAIN_TAIL_4 4.16529f
+C1630 TERM_P_R DETECT_P_I 0.12966f
+C1631 PAD_N ESD_RAIL 22.0614f
+C1632 TMDS_TAIL_4 POST_TAIL_3 0.1052f
+C1633 SUM_N_D_6 MAIN_TAIL_4 0.10017f
+C1634 TMDS_TAIL_0 POST_TAIL_4 0.04857f
+C1635 TMDS_N TMDS_TAIL_6 1.63369f
+C1636 SUM_N_D_2 TERM_P_R 0.07657f
+C1637 TMDS_N TMDS_TAIL_0 3.25092f
+C1638 MAIN_P TMDS_TAIL_7 0.02404f
+C1639 SUM_P_D_2 POST_TAIL_4 0.08624f
+C1640 TMDS_TAIL_6 POST_TAIL_4 0.02689f
+C1641 MAIN_P DETECT_BLEED_3 0.06178f
+C1642 TMDS_N SUM_P_D_2 0.03289f
+C1643 POST_P SUM_P_D_5 7.29962f
+C1644 TMDS_TAIL_7 SUM_N_D_6 0.012f
+C1645 a_33005_184945# a_33005_185505# 0.0346f
+C1646 MAIN_P POST_TAIL_2 0.11997f
+C1647 DETECT_ENABLE_LOCAL SUM_N_D_7 0.12133f
+C1648 TMDS_TAIL_0 POST_TAIL_0 0.10951f
+C1649 POST_TAIL_0 TMDS_TAIL_6 0.03577f
+C1650 SUM_P_D_2 POST_TAIL_0 0.14669f
+C1651 TMDS_TAIL_0 MAIN_N 0.03037f
+C1652 DETECT_ENABLE_B POST_TAIL_4 0.11691f
+C1653 SUM_P_D_2 MAIN_N 0.21722f
+C1654 TMDS_N DETECT_ENABLE_B 0.09975f
+C1655 SUM_N_D_0 DETECT_ENABLE_LOCAL 0.07486f
+C1656 SUM_N_D_3 SUM_N_D_7 0.12285f
+C1657 TMDS_TAIL_1 SUM_P_D_7 0.06098f
+C1658 SUM_N_D_4 MAIN_TAIL_5 0.07778f
+C1659 TMDS_N POST_TAIL_3 0.09919f
+C1660 TMDS_BIAS TERM_ENABLE_B 0.03838f
+C1661 MAIN_P POST_N 0.04773f
+C1662 POST_TAIL_3 POST_TAIL_4 96.1021f
+C1663 TMDS_BIAS MAIN_TAIL_7 0.09672f
+C1664 POST_P TERM_BLEED_3 0.10558f
+C1665 SUM_N_D_4 MAIN_TAIL_2 0.06245f
+C1666 DETECT_ENABLE_LOCAL TERM_N_R 0.13477f
+C1667 POST_N SUM_N_D_6 1.01327f
+C1668 POST_TAIL_0 DETECT_ENABLE_B 0.12113f
+C1669 MAIN_TAIL_4 DETECT_P_I 0
+C1670 SUM_N_D_0 SUM_N_D_3 0.16327f
+C1671 SUM_N_D_2 MAIN_TAIL_4 0.06178f
+C1672 MAIN_N DETECT_ENABLE_B 0.15112f
+C1673 MAIN_P POST_BIAS 1.23059f
+C1674 POST_TAIL_0 POST_TAIL_3 0.05294f
+C1675 TMDS_TAIL_7 DETECT_P_I 0.03715f
+C1676 POST_TAIL_6 MAIN_TAIL_0 0.04331f
+C1677 TERM_BLEED_4 TERM_BLEED_5 0.8132f
+C1678 SUM_N_D_3 TERM_N_R 0.09356f
+C1679 DETECT_BLEED_3 DETECT_P_I 0.08712f
+C1680 SUM_P_D_4 MAIN_TAIL_0 0.03653f
+C1681 VDD DETECT_BLEED_5 0.78107f
+C1682 POST_TAIL_2 DETECT_P_I 0.0372f
+C1683 TERM_ENABLE TERM_BLEED_6 0.87291f
+C1684 SUM_N_D_2 POST_TAIL_2 1.92725f
+C1685 TMDS_TAIL_5 SUM_N_D_5 1.94257f
+C1686 SUM_N_D_7 SUM_P_D_5 0.38058f
+C1687 DETECT_PBIAS POST_TAIL_3 0
+C1688 SUM_P_D_0 POST_TAIL_5 0.06961f
+C1689 MAIN_P DETECT_ENABLE 0.06178f
+C1690 POST_N DETECT_P_I 0.03687f
+C1691 SUM_N_D_2 POST_N 0.48735f
+C1692 DETECT_N_I POST_TAIL_1 0.05953f
+C1693 SUM_N_D_0 SUM_P_D_5 0.13753f
+C1694 POST_TAIL_6 TERM_P_R 0.06034f
+C1695 MAIN_P DETECT_BLEED_2 0.06178f
+C1696 SUM_P_D_4 TERM_P_R 0.07657f
+C1697 SUM_N_D_1 TMDS_BIAS 0.10742f
+C1698 SUM_P_D_6 POST_TAIL_1 0.11538f
+C1699 SUM_P_D_5 TERM_N_R 0.14267f
+C1700 SUM_P_D_3 MAIN_TAIL_1 0.09635f
+C1701 TERM_ENABLE_LOCAL DETECT_N_I 0.13054f
+C1702 VDD DETECT_ENABLE_B 5.18551f
+C1703 TMDS_P SUM_P_D_1 2.29873f
+C1704 TERM_BLEED_3 TERM_N_R 0
+C1705 MAIN_P POST_TAIL_5 0.02404f
+C1706 POST_TAIL_1 MAIN_TAIL_6 0.16037f
+C1707 MAIN_P TERM_VCM 0.04808f
+C1708 VDD POST_TAIL_3 1.02923f
+C1709 DETECT_ENABLE DETECT_P_I 0.11188f
+C1710 POST_TAIL_6 MAIN_TAIL_4 0.04652f
+C1711 SUM_N_D_6 POST_TAIL_5 0.03482f
+C1712 MAIN_TAIL_3 TMDS_TAIL_2 0.03739f
+C1713 POST_P POST_TAIL_7 2.83888f
+C1714 a_45878_185225# a_45878_184665# 0.0346f
+C1715 SUM_P_D_4 MAIN_TAIL_4 1.90308f
+C1716 DETECT_BLEED_2 DETECT_P_I 0.08712f
+C1717 TMDS_TAIL_5 TMDS_TAIL_6 0.0069f
+C1718 DETECT_BLEED_0 SUM_P_D_7 0.01079f
+C1719 TMDS_TAIL_7 POST_TAIL_6 0.04808f
+C1720 TERM_ENABLE_B TERM_BLEED_0 0.03543f
+C1721 DETECT_BLEED_3 POST_TAIL_6 0.06178f
+C1722 TERM_ENABLE_LOCAL MAIN_TAIL_6 0.05007f
+C1723 DETECT_N_I MAIN_TAIL_5 0.02404f
+C1724 TMDS_BIAS DETECT_ENABLE_LOCAL 0.2993f
+C1725 DETECT_BLEED_6 POST_TAIL_7 0.09904f
+C1726 POST_TAIL_2 POST_TAIL_6 0.08587f
+C1727 MAIN_P MAIN_BIAS 1.37997f
+C1728 MAIN_TAIL_2 DETECT_N_I 0.02419f
+C1729 SUM_P_D_6 MAIN_TAIL_5 1.75417f
+C1730 TMDS_TAIL_5 POST_TAIL_3 0.02404f
+C1731 TMDS_BIAS SUM_N_D_3 0.09055f
+C1732 POST_N POST_TAIL_6 1.67985f
+C1733 POST_TAIL_5 DETECT_P_I 0.0372f
+C1734 TERM_P_R TERM_BLEED_6 0.76623f
+C1735 SUM_P_D_6 MAIN_TAIL_2 0.06318f
+C1736 TERM_VCM DETECT_P_I 0.0744f
+C1737 POST_N SUM_P_D_4 0.24584f
+C1738 SUM_N_D_2 POST_TAIL_5 0.03468f
+C1739 CASCODE DETECT_BLEED_6 0.05624f
+C1740 POST_BIAS POST_TAIL_6 16.7254f
+C1741 POST_P TERM_BLEED_2 0.03489f
+C1742 MAIN_TAIL_5 MAIN_TAIL_6 88.2346f
+C1743 TERM_ENABLE_B MAIN_TAIL_1 0.03511f
+C1744 MAIN_TAIL_7 MAIN_TAIL_1 0.04208f
+C1745 SUM_N_D_7 POST_TAIL_7 3.2055f
+C1746 MAIN_TAIL_2 MAIN_TAIL_6 0.07954f
+C1747 SUM_P_D_3 MAIN_TAIL_0 0.07458f
+C1748 SUM_N_D_0 POST_TAIL_7 4.07814f
+C1749 TMDS_BIAS SUM_P_D_5 0.99004f
+C1750 DETECT_ENABLE POST_TAIL_6 0.14398f
+C1751 TMDS_TAIL_1 SUM_P_D_6 0.06305f
+C1752 a_45878_184105# a_45878_184665# 0.0346f
+C1753 POST_P TMDS_TAIL_4 0.04265f
+C1754 POST_TAIL_7 TERM_N_R 0.17746f
+C1755 DETECT_BLEED_2 POST_TAIL_6 0.02915f
+C1756 CASCODE SUM_N_D_7 2.05583f
+C1757 TERM_ENABLE TERM_ENABLE_B 9.09157f
+C1758 TERM_ENABLE MAIN_TAIL_7 0.085f
+C1759 SUM_P_D_7 SUM_N_D_5 0.10363f
+C1760 TERM_ENABLE_LOCAL TERM_BLEED_5 0.10001f
+C1761 SUM_N_D_0 CASCODE 3.43296f
+C1762 SUM_P_D_3 TERM_P_R 0.0839f
+C1763 CASCODE TERM_N_R 0.00731f
+C1764 SUM_N_D_1 MAIN_TAIL_1 3.17187f
+C1765 POST_P TMDS_N 0.04184f
+C1766 POST_P POST_TAIL_4 6.13291f
+C1767 POST_TAIL_6 POST_TAIL_5 98.4743f
+C1768 TERM_VCM POST_TAIL_6 0.09615f
+C1769 MAIN_P DETECT_BLEED_4 0.06178f
+C1770 MAIN_P DETECT_BLEED_1 0.029f
+C1771 SUM_P_D_4 POST_TAIL_5 0.03884f
+C1772 PAD_P SUM_N_D_7 0.34753f
+C1773 TERM_BLEED_2 TERM_N_R 0.0348f
+C1774 POST_P POST_TAIL_0 99.8734f
+C1775 TMDS_N DETECT_BLEED_6 0.07263f
+C1776 POST_P MAIN_N 0.05245f
+C1777 DETECT_BLEED_6 POST_TAIL_4 0.07225f
+C1778 SUM_N_D_0 PAD_P 1.16528f
+C1779 MAIN_TAIL_3 POST_TAIL_1 0.02846f
+C1780 a_33005_183545# a_33005_184385# 0
+C1781 SUM_P_D_3 MAIN_TAIL_4 0.0657f
+C1782 SUM_N_D_7 TMDS_TAIL_4 0.10638f
+C1783 SUM_N_D_4 SUM_N_D_5 51.5111f
+C1784 TMDS_P SUM_P_D_0 2.96129f
+C1785 TMDS_TAIL_0 SUM_P_D_7 0.09605f
+C1786 TERM_ENABLE_B MAIN_TAIL_0 0.03529f
+C1787 DETECT_BLEED_6 POST_TAIL_0 0.07225f
+C1788 MAIN_TAIL_7 MAIN_TAIL_0 0.12396f
+C1789 PAD_N SUM_P_D_1 2.30977f
+C1790 MAIN_BIAS POST_TAIL_6 0.54541f
+C1791 a_33005_184945# a_33005_183545# 0
+C1792 SUM_P_D_7 TMDS_TAIL_6 0.11731f
+C1793 PAD_P TERM_N_R 0.00564f
+C1794 DETECT_BLEED_6 MAIN_N 0.08492f
+C1795 SUM_P_D_2 SUM_P_D_7 0.10606f
+C1796 POST_P DETECT_PBIAS 0.05263f
+C1797 TERM_ENABLE_LOCAL MAIN_TAIL_3 0.04808f
+C1798 DETECT_ENABLE_LOCAL MAIN_TAIL_1 0.09282f
+C1799 DETECT_BLEED_4 DETECT_P_I 0.08712f
+C1800 TMDS_TAIL_4 TERM_N_R 0.12371f
+C1801 DETECT_BLEED_1 DETECT_P_I 0.04255f
+C1802 DETECT_ENABLE_B SUM_P_D_7 0.18608f
+C1803 TERM_BLEED_4 POST_TAIL_1 0.03872f
+C1804 DETECT_BLEED_0 DETECT_N_I 0.05858f
+C1805 SUM_P_D_7 POST_TAIL_3 0.07921f
+C1806 SUM_N_D_7 POST_TAIL_4 0.0861f
+C1807 TMDS_N SUM_N_D_7 1.37073f
+C1808 SUM_N_D_3 MAIN_TAIL_1 0.05935f
+C1809 POST_N SUM_P_D_3 0.21722f
+C1810 TERM_ENABLE_B TERM_P_R 0.03916f
+C1811 SUM_N_D_0 POST_TAIL_4 0.31697f
+C1812 MAIN_TAIL_7 TERM_P_R 0.0458f
+C1813 SUM_N_D_0 TMDS_N 0.7369f
+C1814 TMDS_TAIL_2 POST_TAIL_1 0.07675f
+C1815 TMDS_BIAS POST_TAIL_7 0.28687f
+C1816 MAIN_P TMDS_P 0.04836f
+C1817 POST_TAIL_0 SUM_N_D_7 0.17559f
+C1818 MAIN_N SUM_N_D_7 0.92136f
+C1819 TERM_VCM TERM_BLEED_6 0.06826f
+C1820 TMDS_N TERM_N_R 0.31539f
+C1821 TMDS_P SUM_N_D_6 0.11365f
+C1822 TERM_BLEED_4 TERM_ENABLE_LOCAL 0
+C1823 POST_TAIL_4 TERM_N_R 0.14549f
+C1824 SUM_N_D_0 POST_TAIL_0 3.38982f
+C1825 POST_P VDD 0.26767f
+C1826 TMDS_TAIL_0 SUM_N_D_4 0.04808f
+C1827 MAIN_TAIL_3 MAIN_TAIL_5 0.05438f
+C1828 SUM_N_D_0 MAIN_N 1.59542f
+C1829 DETECT_BLEED_0 MAIN_TAIL_6 0.03472f
+C1830 SUM_N_D_1 MAIN_TAIL_0 0.05822f
+C1831 SUM_P_D_2 SUM_N_D_4 0.19718f
+C1832 MAIN_TAIL_2 MAIN_TAIL_3 85.8898f
+C1833 POST_TAIL_0 TERM_N_R 0.17027f
+C1834 MAIN_N TERM_N_R 0.19865f
+C1835 VDD DETECT_BLEED_6 0.97128f
+C1836 SUM_P_D_5 MAIN_TAIL_1 0.05692f
+C1837 TERM_ENABLE_B MAIN_TAIL_4 0.03451f
+C1838 POST_TAIL_3 SUM_N_D_4 0.07549f
+C1839 MAIN_TAIL_7 MAIN_TAIL_4 0.12774f
+C1840 TMDS_P DETECT_P_I 0.07373f
+C1841 TMDS_TAIL_7 MAIN_TAIL_7 0.05111f
+C1842 TERM_BLEED_4 MAIN_TAIL_5 0
+C1843 TMDS_BIAS TERM_BLEED_2 0.04106f
+C1844 TMDS_P SUM_N_D_2 0.064f
+C1845 DETECT_PBIAS TERM_N_R 0.00258f
+C1846 TERM_BLEED_3 MAIN_TAIL_1 0.02404f
+C1847 POST_P TMDS_TAIL_5 0.02404f
+C1848 SUM_N_D_1 TERM_P_R 0.16787f
+C1849 DETECT_BLEED_3 MAIN_TAIL_7 0.08359f
+C1850 MAIN_TAIL_5 TMDS_TAIL_2 0.03911f
+C1851 TERM_ENABLE_B POST_TAIL_2 0.09924f
+C1852 DETECT_BLEED_4 POST_TAIL_6 0.06178f
+C1853 POST_TAIL_2 MAIN_TAIL_7 0.08368f
+C1854 DETECT_BLEED_1 POST_TAIL_6 0
+C1855 MAIN_TAIL_2 TMDS_TAIL_2 0.03536f
+C1856 SUM_N_D_5 DETECT_N_I 0.21581f
+C1857 TERM_ENABLE_B POST_N 0.04803f
+C1858 POST_N MAIN_TAIL_7 14.3066f
+C1859 DETECT_ENABLE_LOCAL MAIN_TAIL_0 0.09288f
+C1860 SUM_P_D_3 POST_TAIL_5 0.03983f
+C1861 SUM_P_D_6 SUM_N_D_5 0.0648f
+C1862 TMDS_BIAS TMDS_TAIL_4 8.43774f
+C1863 SUM_N_D_3 MAIN_TAIL_0 0.03197f
+C1864 POST_BIAS MAIN_TAIL_7 0.00496f
+C1865 TERM_ENABLE TERM_BLEED_3 0.10387f
+C1866 SUM_P_D_0 SUM_P_D_1 50.1148f
+C1867 SUM_N_D_1 MAIN_TAIL_4 0.06178f
+C1868 DETECT_BLEED_5 DETECT_N_I 0.0931f
+C1869 VDD TERM_N_R 1.40375f
+C1870 SUM_N_D_5 MAIN_TAIL_6 0.1079f
+C1871 DETECT_ENABLE_LOCAL TERM_P_R 0.20622f
+C1872 TMDS_TAIL_1 TMDS_TAIL_2 0.8581f
+C1873 TMDS_BIAS POST_TAIL_4 0.09872f
+C1874 TERM_ENABLE_B DETECT_ENABLE 0.00718f
+C1875 TMDS_TAIL_5 SUM_N_D_7 0.03698f
+C1876 TMDS_BIAS TMDS_N 0.10606p
+C1877 SUM_N_D_1 POST_TAIL_2 0
+C1878 DETECT_ENABLE MAIN_TAIL_7 0.08359f
+C1879 SUM_N_D_3 TERM_P_R 0.13024f
+C1880 DETECT_BLEED_2 TERM_ENABLE_B 0
+C1881 MAIN_P SUM_P_D_1 2.41271f
+C1882 PAD_N SUM_P_D_0 2.04968f
+C1883 TMDS_TAIL_0 DETECT_N_I 0.04845f
+C1884 TMDS_BIAS POST_TAIL_0 0.31808f
+C1885 TMDS_P POST_TAIL_6 0.07498f
+C1886 SUM_N_D_1 POST_N 8.17241f
+C1887 DETECT_BLEED_2 MAIN_TAIL_7 0.08379f
+C1888 SUM_P_D_5 MAIN_TAIL_0 0.03617f
+C1889 DETECT_BLEED_5 MAIN_TAIL_6 0.06178f
+C1890 SUM_P_D_2 DETECT_N_I 0.12335f
+C1891 TMDS_BIAS MAIN_N 0.06109f
+C1892 TMDS_TAIL_5 TERM_N_R 0.03743f
+C1893 SUM_P_D_1 SUM_N_D_6 0.08323f
+C1894 TMDS_P SUM_P_D_4 0.61691f
+C1895 TMDS_TAIL_0 SUM_P_D_6 0.04808f
+C1896 SUM_P_D_6 TMDS_TAIL_6 2.07081f
+C1897 SUM_P_D_2 SUM_P_D_6 0.0609f
+C1898 POST_TAIL_7 MAIN_TAIL_1 0.03743f
+C1899 TERM_BLEED_0 TERM_BLEED_2 0.00855f
+C1900 DETECT_ENABLE_LOCAL MAIN_TAIL_4 0.09267f
+C1901 TERM_BLEED_3 MAIN_TAIL_0 0.02427f
+C1902 POST_TAIL_3 DETECT_N_I 0.05783f
+C1903 DETECT_ENABLE_B DETECT_N_I 0.15169f
+C1904 TERM_ENABLE_B POST_TAIL_5 0.0605f
+C1905 TMDS_TAIL_7 DETECT_ENABLE_LOCAL 0.11629f
+C1906 TMDS_TAIL_0 MAIN_TAIL_6 0.02977f
+C1907 MAIN_TAIL_7 POST_TAIL_5 0.05898f
+C1908 TERM_VCM MAIN_TAIL_7 0.14651f
+C1909 SUM_P_D_5 TERM_P_R 0.17034f
+C1910 MAIN_P PAD_N 0
+C1911 TERM_ENABLE_LOCAL POST_TAIL_1 0.113f
+C1912 SUM_P_D_2 MAIN_TAIL_6 0.06961f
+C1913 SUM_P_D_6 POST_TAIL_3 0.10438f
+C1914 SUM_N_D_3 MAIN_TAIL_4 0.18934f
+C1915 DETECT_BLEED_0 MAIN_TAIL_3 0.03472f
+C1916 POST_TAIL_2 DETECT_ENABLE_LOCAL 0.19351f
+C1917 SUM_P_D_1 DETECT_P_I 0.02846f
+C1918 PAD_N SUM_N_D_6 1.80476f
+C1919 CASCODE MAIN_TAIL_1 0
+C1920 ESD_RAIL a_33005_186065# 0.57348f
+C1921 SUM_P_D_1 SUM_N_D_2 0.06496f
+C1922 TERM_BLEED_3 TERM_P_R 0.00273f
+C1923 TERM_ENABLE POST_TAIL_7 0.12438f
+C1924 DETECT_ENABLE_B MAIN_TAIL_6 0.12578f
+C1925 POST_N DETECT_ENABLE_LOCAL 0.18077f
+C1926 POST_TAIL_3 MAIN_TAIL_6 0.05188f
+C1927 MAIN_BIAS MAIN_TAIL_7 22.8114f
+C1928 TERM_BLEED_2 MAIN_TAIL_1 0.03489f
+C1929 POST_N SUM_N_D_3 2.88975f
+C1930 MAIN_TAIL_5 POST_TAIL_1 0.02846f
+C1931 TMDS_BIAS VDD 0.20907f
+C1932 POST_P SUM_P_D_7 2.10286f
+C1933 a_45878_183545# a_45878_184105# 0.0346f
+C1934 MAIN_TAIL_2 POST_TAIL_1 0.16022f
+C1935 SUM_P_D_5 MAIN_TAIL_4 0.9081f
+C1936 TMDS_P TERM_BLEED_6 0.1081f
+C1937 PAD_N DETECT_P_I 2.88679f
+C1938 PAD_N SUM_N_D_2 2.3108f
+C1939 SUM_N_D_1 POST_TAIL_5 0.03452f
+C1940 TMDS_N TERM_BLEED_0 0.06178f
+C1941 TERM_ENABLE_LOCAL MAIN_TAIL_5 0.04958f
+C1942 DETECT_ENABLE DETECT_ENABLE_LOCAL 2.03058f
+C1943 TERM_BLEED_3 MAIN_TAIL_4 0.03045f
+C1944 TERM_ENABLE TERM_BLEED_2 0.2244f
+C1945 TERM_ENABLE_LOCAL MAIN_TAIL_2 0.04808f
+C1946 TMDS_TAIL_4 MAIN_TAIL_1 0.03549f
+C1947 TMDS_BIAS TMDS_TAIL_5 6.55013f
+C1948 POST_N SUM_P_D_5 0.22379f
+C1949 CASCODE VSS 0.11112p
+C1950 MAIN_P VSS 21.9244f
+C1951 MAIN_N VSS 19.8397f
+C1952 POST_P VSS 18.7772f
+C1953 POST_N VSS 21.255f
+C1954 PAD_P VSS 0.3638p
+C1955 PAD_N VSS 0.37138p
+C1956 TMDS_BIAS VSS 80.5713f
+C1957 DETECT_ENABLE VSS 9.90119f
+C1958 TMDS_N VSS 19.1907f
+C1959 TMDS_P VSS 29.3808f
+C1960 TERM_ENABLE VSS 21.0115f
+C1961 TERM_VCM VSS 90.1651f
+C1962 DETECT_PBIAS VSS 2.96437f
+C1963 MAIN_BIAS VSS 0.31258p
+C1964 POST_BIAS VSS 0.31365p
+C1965 ESD_RAIL VSS 1674.155664f
+C1966 VDD VSS 0.12503p
+C1967 m2_34279_176800# VSS 7.46506f $ **FLOATING
+C1968 a_34245_142628# VSS 0.24797p
+C1969 a_36789_169064# VSS 12.0947f
+C1970 a_35813_169064# VSS 5.60447f
+C1971 SUM_N_D_1 VSS 29.7063f
+C1972 SUM_P_D_1 VSS 27.109f
+C1973 TMDS_TAIL_1 VSS 17.7134f
+C1974 SUM_N_D_0 VSS 26.7186f
+C1975 SUM_P_D_0 VSS 21.2572f
+C1976 TMDS_TAIL_0 VSS 26.8728f
+C1977 SUM_N_D_3 VSS 27.2065f
+C1978 SUM_P_D_3 VSS 27.1352f
+C1979 TMDS_TAIL_3 VSS 21.7673f
+C1980 SUM_N_D_2 VSS 21.6936f
+C1981 SUM_P_D_2 VSS 20.4195f
+C1982 TMDS_TAIL_2 VSS 24.5488f
+C1983 SUM_P_D_5 VSS 28.2095f
+C1984 SUM_N_D_4 VSS 21.1877f
+C1985 SUM_P_D_4 VSS 20.1303f
+C1986 TMDS_TAIL_4 VSS 21.3092f
+C1987 SUM_N_D_6 VSS 22.6123f
+C1988 SUM_P_D_6 VSS 29.0011f
+C1989 TMDS_TAIL_6 VSS 20.2375f
+C1990 SUM_N_D_5 VSS 26.1486f
+C1991 TMDS_TAIL_5 VSS 26.8553f
+C1992 DETECT_ENABLE_LOCAL VSS 20.6988f
+C1993 DETECT_ENABLE_B VSS 10.2619f
+C1994 SUM_N_D_7 VSS 22.8353f
+C1995 SUM_P_D_7 VSS 30.4766f
+C1996 TMDS_TAIL_7 VSS 28.1143f
+C1997 DETECT_BLEED_6 VSS 13.7558f
+C1998 DETECT_BLEED_5 VSS 6.1477f
+C1999 DETECT_BLEED_4 VSS 5.07044f
+C2000 DETECT_BLEED_3 VSS 4.05277f
+C2001 DETECT_BLEED_2 VSS 3.68242f
+C2002 DETECT_BLEED_1 VSS 3.45401f
+C2003 DETECT_BLEED_0 VSS 10.3538f
+C2004 TERM_BLEED_1 VSS 7.44463f
+C2005 TERM_BLEED_0 VSS 5.05668f
+C2006 TERM_ENABLE_B VSS 7.58604f
+C2007 TERM_BLEED_6 VSS 4.06035f
+C2008 TERM_BLEED_5 VSS 3.10212f
+C2009 TERM_BLEED_4 VSS 4.89207f
+C2010 TERM_BLEED_3 VSS 7.85427f
+C2011 TERM_BLEED_2 VSS 10.2164f
+C2012 a_33005_183545# VSS 0.10822p
+C2013 a_45878_183545# VSS 0.07835f
+C2014 a_33005_183825# VSS 0.07377f
+C2015 a_45878_184105# VSS 0.07394f
+C2016 a_33005_184385# VSS 0.07377f
+C2017 a_45878_184665# VSS 0.07394f
+C2018 a_33005_184945# VSS 0.07377f
+C2019 a_45878_185225# VSS 0.07394f
+C2020 a_33005_185505# VSS 0.07377f
+C2021 a_45878_185785# VSS 0.07394f
+C2022 a_33005_186065# VSS 0.07377f
+C2023 TERM_P_R VSS 50.1691f
+C2024 a_45878_186345# VSS 0.07838f
+C2025 TERM_N_R VSS 56.9004f
+C2026 TERM_ENABLE_LOCAL VSS 30.5183f
+C2027 DETECT_N_I VSS 7.88222f
+C2028 DETECT_P_I VSS 9.74176f
+C2029 MAIN_TAIL_1 VSS 43.5708f
+C2030 MAIN_TAIL_0 VSS 37.3018f
+C2031 MAIN_TAIL_3 VSS 43.4435f
+C2032 MAIN_TAIL_2 VSS 45.493f
+C2033 MAIN_TAIL_5 VSS 45.8613f
+C2034 MAIN_TAIL_4 VSS 37.126f
+C2035 MAIN_TAIL_7 VSS 44.9713f
+C2036 MAIN_TAIL_6 VSS 44.1159f
+C2037 POST_TAIL_1 VSS 50.4251f
+C2038 POST_TAIL_0 VSS 36.5181f
+C2039 POST_TAIL_3 VSS 42.9247f
+C2040 POST_TAIL_2 VSS 39.0872f
+C2041 POST_TAIL_5 VSS 50.8063f
+C2042 POST_TAIL_4 VSS 41.1977f
+C2043 POST_TAIL_7 VSS 54.1163f
+C2044 POST_TAIL_6 VSS 37.8072f
+DWELL_ARRAY VSS ESD_RAIL diode_nw2ps_06v0 area=569.4528p pj=470.72u
+.ends
+
+.lib /home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.ngspice diode_typical
+.lib /home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.ngspice mimcap_typical

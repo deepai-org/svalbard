@@ -12,11 +12,14 @@ import re
 from design import PROJECT
 
 
-def build(output, pdk, pad_override=None):
+def build(output, pdk, pad_override=None, bias_override=None):
     spec=PROJECT/'spec/schematic-implementation.json'
     arch=PROJECT/'spec/analog-architecture.json'
     cfg=json.loads(spec.read_text())['io_pad_first_pass']['tx_integration_fixture']
     a=json.loads(arch.read_text())
+    if bias_override:
+        if set(bias_override)-set(cfg['bias_v']):raise ValueError('Unknown bias override')
+        cfg['bias_v'].update(bias_override)
     models={name:PROJECT/path for name,path in cfg['models'].items()}
     if pad_override is not None: models['pad']=pad_override.resolve()
     expected={'pad':['PAD_P','PAD_N','VDD','VSS','CASCODE','MAIN_P','MAIN_N','MAIN_BIAS','POST_P','POST_N','POST_BIAS','TMDS_P','TMDS_N','TMDS_BIAS','DETECT_ENABLE','DETECT_PBIAS','TERM_ENABLE','TERM_VCM'],
@@ -70,7 +73,7 @@ def build(output, pdk, pad_override=None):
     lines += [f'BCTL_VALID_BOUNDARY TX_VALID VSS V=V(CTL_VALID)/{v}',
               'XCTL VDD VSS CTL_REQ_MAIN CTL_REQ_POST CTL_REQ_TMDS CTL_REQ_DETECT REQ_TERM_ENABLE TX_RESET TX_QUALIFIED CTL_OK CTL_CONFLICT CTL_VALID CTL_EN_MAIN CTL_EN_POST CTL_EN_TMDS CTL_EN_DETECT TERM_ENABLE '+cells['interlock']]
     output.parent.mkdir(parents=True,exist_ok=True);output.write_text('\n'.join(lines)+'\n')
-    manifest=dict(scope=__doc__,fixture_sha256=hashlib.sha256(output.read_bytes()).hexdigest(),
+    manifest=dict(scope=__doc__,bias_override=bias_override,fixture_sha256=hashlib.sha256(output.read_bytes()).hexdigest(),
                   source_sha256={str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in [Path(__file__),spec,arch,*models.values()]})
     output.with_suffix('.json').write_text(json.dumps(manifest,indent=2)+'\n')
     return manifest

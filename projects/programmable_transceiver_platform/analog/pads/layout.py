@@ -73,7 +73,7 @@ def terminals(path):
     return [center(drain), center(gate), center(source), (bx, bodyrect[3]-.2)]
 
 
-def generate(work,family='wired_transmit', *, external_primary=False, serial_tail_units=None, fs_high_width_um=20., fs_series_geometry_um=None):
+def generate(work,family='wired_transmit', *, external_primary=False, serial_tail_units=None, folded_tails=False, fs_high_width_um=20., fs_series_geometry_um=None):
     if serial_tail_units is not None:
         if family!='wired_transmit':raise ValueError('Serial tail sizing applies only to wired TX')
         from circuits import wired_transmit
@@ -151,6 +151,7 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
     pinloc = {k: terminals(work/(name+'.mag')) for k,name in keys.items()}
     nets = sorted({n for d in circuit.devices for n in d.nodes})
     pitch, columns, row_height = 21., 7, 26.
+    folded_names=set();folded_meta=None
     core_reservation_width = 143. if family=="wired_receive_usb" else 150.
     core_devices = [d for d in circuit.devices if not d.name.startswith("ESD_")]
     protection_devices = [d for d in circuit.devices if d.name.startswith("ESD_")]
@@ -164,7 +165,38 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
         front.sort(key=lambda d:(d.name.replace('_P','_PAIR').replace('_N','_PAIR'),d.name))
         core_devices=front+back
 
-    height = active_origin + math.ceil(len(core_devices)/columns)*row_height + 6
+    if folded_tails:
+        if family!='wired_transmit' or serial_tail_units!=32:
+            raise ValueError('Folded placement currently supports the32-finger TX diagnostic only')
+        from folded_tail import generate as generate_folded
+        folded_meta=generate_folded(work/'folded-bank',serial_tail_units)
+        # Parent routes supply net labels. Child port labels would introduce many
+        # duplicate aliases after flattening; preserve geometry, omit labels only.
+        primitive_lines=(work/'folded-bank/folded_tail.mag').read_text().splitlines()
+        geometry=[];in_labels=False
+        for line in primitive_lines:
+            if line.startswith('<< '):in_labels=line=='<< labels >>'
+            if not in_labels:geometry.append(line)
+        (work/'folded_tail.mag').write_text('\n'.join(geometry)+'\n')
+        groups={};ordinary=[]
+        for device in core_devices:
+            if device.name.startswith(('MAIN_TAIL_','POST_TAIL_')):
+                groups.setdefault(device.nodes,[]).append(device)
+            else:ordinary.append(device)
+        if len(groups)!=16 or any(len(v)!=32 for v in groups.values()):raise ValueError('Unexpected tail groups')
+        representatives=[v[0] for v in groups.values()]
+        folded_names={d.name for d in representatives}
+        core_devices=ordinary+representatives
+        ordinary_rows=math.ceil(len(ordinary)/columns)
+        placements=[(12+(i%columns)*pitch,active_origin+(i//columns)*row_height+13,
+                     active_origin+(i//columns)*row_height+1+(i%columns)*4*.8) for i in range(len(ordinary))]
+        placements += [(32+(i%2)*65,active_origin+ordinary_rows*row_height+(i//2)*28+13,
+                        active_origin+ordinary_rows*row_height+(i//2)*28+1+(i%2)*4*.8) for i in range(len(representatives))]
+        height=active_origin+ordinary_rows*row_height+math.ceil(len(representatives)/2)*28+6
+    else:
+        placements=[(12+(i%columns)*pitch,active_origin+(i//columns)*row_height+13,
+                     active_origin+(i//columns)*row_height+1+(i%columns)*4*.8) for i in range(len(core_devices))]
+        height = active_origin + math.ceil(len(core_devices)/columns)*row_height + 6
     tracks,trunk_widths=trunk_geometry(nets)
     port_heights={port:(active_origin-2 if bounded_routes and port in signal_ports else height)
                   for port in circuit.ports}
@@ -172,9 +204,8 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
     if bounded_routes:
         endpoints={net:[] for net in nets}
         for index,device in enumerate(core_devices):
-            row,col=divmod(index,columns)
             for terminal,net in enumerate(device.nodes):
-                endpoints[net].append(active_origin+row*row_height+1+(col*4+terminal)*.8)
+                endpoints[net].append(placements[index][2]+terminal*.8)
         for port,y in port_heights.items():endpoints[port].append(y)
         for net in ('PAD_P','PAD_N','VSS'):endpoints[net].append(active_origin-4)
         if any(not points for points in endpoints.values()):raise ValueError('Unrouted physical net')
@@ -201,16 +232,17 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
         rect('metal5',x-trunk_widths[net]/2,net_spans[net][0]-.22,
              x+trunk_widths[net]/2,net_spans[net][1]+.22)
     for index, device in enumerate(core_devices):
-        row, col = divmod(index, columns)
-        cx, cy = 12+col*pitch, active_origin+row*row_height+13
+        cx,cy,route_base=placements[index]
         key = (device.model,device.w_um,device.l_um)
-        commands += [f'getcell {keys[key]} child 0 0 parent {cx} {cy}', f'identify X{device.name}']
-        for terminal, ((dx,dy), net) in enumerate(zip(pinloc[key],device.nodes)):
+        cell='folded_tail' if device.name in folded_names else keys[key]
+        pins=[folded_meta['pins'][n][:2] for n in ('D','G','S','B')] if device.name in folded_names else pinloc[key]
+        commands += [f'getcell {cell} child 0 0 parent {cx} {cy}', f'identify X{device.name}']
+        for terminal, ((dx,dy), net) in enumerate(zip(pins,device.nodes)):
             x,y = cx+dx,cy+dy
             # Distinct local vertical escapes, with a unique M4 row per pin.
             offsets=(-2.5,0.,4.) if len(device.nodes)==3 else (2.5,0.,-2.5,4.)
             escape = cx + offsets[terminal]
-            route_y = active_origin+row*row_height + 1 + (col*4+terminal)*.8
+            route_y = route_base+terminal*.8
             via(x,y,1,2)
             wire('metal2',x,y,escape,y)
             via(escape,y,2,3)
@@ -292,7 +324,7 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
     (work/'stock-export.tcl').write_text(f'load {flat}\next2spice lvs\next2spice\nquit -noprompt\n')
     stock=magic(work,'stock-export.tcl',allow_failure=True)
     report = dict(status='generated_candidate_requires_connectivity_and_rule_review',
-                  family=family,flat_cell=flat,marker_export=marker_export,serial_tail_units=serial_tail_units,fs_high_width_um=fs_high_width_um,fs_series_geometry_um=fs_series_geometry_um,
+                  family=family,flat_cell=flat,marker_export=marker_export,serial_tail_units=serial_tail_units,folded_tail_layout=folded_meta,fs_high_width_um=fs_high_width_um,fs_series_geometry_um=fs_series_geometry_um,
                   bond_template=dict(cell='Bondpad_5LM',source='gf180mcu_fd_io',
                                      reference_parent='5LM_METAL_RAIL_PAD_60',
                                      reference_offset_um=[5.5,0],opening_um=[60,60],
@@ -319,7 +351,7 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
                   image_id=IMAGE,
                   sources_sha256={str(p.relative_to(PROJECT)):hashlib.sha256(p.read_bytes()).hexdigest()
                                   for p in (Path(__file__),Path(__file__).with_name('gds_markers.py'),placement_source,Path(__file__).with_name('circuits.py'),
-                                            Path(__file__).with_name('design.py'),Path(__file__).with_name('wired_receive.py'),
+                                            Path(__file__).with_name('design.py'),Path(__file__).with_name('wired_receive.py'),Path(__file__).with_name('folded_tail.py'),
                                             PROJECT/'spec/analog-architecture.json',PROJECT/'spec/contract.json')},
                   drc_count=(work/'drc-count.txt').read_text().strip(),
                   pcell_terminal_coordinates={keys[k]:v for k,v in pinloc.items()},
@@ -334,7 +366,8 @@ if __name__ == '__main__':
     parser.add_argument('--family',choices=FAMILIES,default='wired_transmit')
     parser.add_argument('--external-primary',action='store_true',help='Build TX base for an attached primary macro; incomplete standalone pad')
     parser.add_argument("--serial-tail-units",type=int)
+    parser.add_argument("--folded-tails",action="store_true")
     parser.add_argument('--fs-high-width-um',type=float,default=20.)
     parser.add_argument('--fs-series-geometry-um',type=float,nargs=2)
     args=parser.parse_args()
-    generate(args.output_dir.resolve(),args.family,external_primary=args.external_primary,serial_tail_units=args.serial_tail_units,fs_high_width_um=args.fs_high_width_um,fs_series_geometry_um=args.fs_series_geometry_um)
+    generate(args.output_dir.resolve(),args.family,external_primary=args.external_primary,serial_tail_units=args.serial_tail_units,folded_tails=args.folded_tails,fs_high_width_um=args.fs_high_width_um,fs_series_geometry_um=args.fs_series_geometry_um)

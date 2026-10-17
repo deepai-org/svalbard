@@ -1,0 +1,123 @@
+{
+  "status": "connected_static_regulation_not_startup_acceptance",
+  "cases": {
+    "main": {
+      "error_limit_v": 0.0165,
+      "max_reference_error_v": 0.0034780699999998888,
+      "within_nominal_window": true,
+      "states": [
+        {
+          "data_v": 0.0,
+          "vcm_v": 1.64652193,
+          "reference_v": 1.65,
+          "bias_v": 0.9,
+          "gain_v": 1.4378578,
+          "local_out_v": 1.95350813,
+          "pad_p_v": 1.47318096,
+          "pad_n_v": 1.08435659,
+          "supply_source_current_a": -0.029023247,
+          "main_tail_current_a": 0.0162388442,
+          "post_tail_current_a": 1.35731555e-11
+        },
+        {
+          "data_v": 3.3,
+          "vcm_v": 1.64652193,
+          "reference_v": 1.65,
+          "bias_v": 0.9,
+          "gain_v": 1.4378578,
+          "local_out_v": 1.95350813,
+          "pad_p_v": 1.08435659,
+          "pad_n_v": 1.47318096,
+          "supply_source_current_a": -0.029023247,
+          "main_tail_current_a": 0.0162388442,
+          "post_tail_current_a": 1.35731554e-11
+        }
+      ],
+      "tail_targets_a": {
+        "MAIN": 0.016,
+        "POST": 0.0
+      },
+      "tail_current_error_fraction": {
+        "MAIN": [
+          0.014927762500000163,
+          0.014927762500000163
+        ],
+        "POST": null
+      }
+    },
+    "main_post": {
+      "error_limit_v": 0.0165,
+      "max_reference_error_v": 0.004178799999999816,
+      "within_nominal_window": true,
+      "states": [
+        {
+          "data_v": 0.0,
+          "vcm_v": 1.6458212,
+          "reference_v": 1.65,
+          "bias_v": 0.9,
+          "gain_v": 1.25777564,
+          "local_out_v": 2.4002118,
+          "pad_p_v": 1.19257219,
+          "pad_n_v": 0.9993373,
+          "supply_source_current_a": -0.0340359202,
+          "main_tail_current_a": 0.0161998526,
+          "post_tail_current_a": 0.00811705511
+        },
+        {
+          "data_v": 3.3,
+          "vcm_v": 1.6458999,
+          "reference_v": 1.65,
+          "bias_v": 0.9,
+          "gain_v": 1.2773825,
+          "local_out_v": 2.36238222,
+          "pad_p_v": 0.827324493,
+          "pad_n_v": 1.39379033,
+          "supply_source_current_a": -0.0337243143,
+          "main_tail_current_a": 0.0157673342,
+          "post_tail_current_a": 0.00791903285
+        }
+      ],
+      "tail_targets_a": {
+        "MAIN": 0.016,
+        "POST": 0.008
+      },
+      "tail_current_error_fraction": {
+        "MAIN": [
+          0.012490787499999767,
+          -0.014541612499999967
+        ],
+        "POST": [
+          0.0146318887500001,
+          -0.010120893749999915
+        ]
+      }
+    }
+  },
+  "scope": "Measure connected static TX regulation separately from startup settling.\n\nExact extracted pad/buffer/control and external network; only source settings\nare held in active DC states. Does not replace retained-state transient tests.\n",
+  "numerical_floating_conductor_anchors": [
+    {
+      "cell": "combined_flat",
+      "node": "m2_34279_176800#",
+      "resistance_ohm": 1000000000000.0
+    }
+  ],
+  "tail_device_counts": {
+    "MAIN": 256,
+    "POST": 256
+  },
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_loaded_dc.py": "ea69594cc5c552e6e0007f5a9258883b72d12f084ab528508ddb2e23ec68dd39",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/loading_audit.py": "2b01aee3f378ac60e325fcee31129957e3353b7253f8edbb9f28325779fa846c",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "f035d0f7f351d640ac3398ffe991cb6e6be2117920c1f90b70c8323a36448b37",
+    "/home/ubuntu/svalbard/scratch/pad-tx-folded-fixture.spice": "6a3116d8e2f373aa9b82dfbb0c9e1d655afbf583cd386826eb6a5cd7ad1ffb7f",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "5995b7ab33f01f62358b6af52cd3073ba4db89c66a303022bc516214d5bc9916",
+    "/home/ubuntu/svalbard/scratch/pad-tx-folded-dc/main.spice": "7fb7fa8258f4e8541b05e7d59146505bf38d52043b47de3c17089eb8f629ed2c",
+    "/home/ubuntu/svalbard/scratch/pad-tx-folded-dc/main_post.spice": "246fb539aac85ad2f8aa38182bfc3f610d5d73abbbf25410719c025273176f28",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_fixture.py": "8ade813e28a403201fbeabd4b1f86bf775c32449246c9523126f89061652396b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "b43127f9351e0fd75ffb2792546c2608814afb79e2e0ac27f79ff12eaec3e9e6",
+    "/home/ubuntu/svalbard/scratch/pad-tx-folded-protected-clean/physical.spice": "9c1972b52a5d440d5e657d996f0cca2725e11d39a7bf1051c0962ee659b69c28",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/termination-buffer-candidate/source-headroom/reference-reset/physical.spice": "45b1ab7c83edd98901cdcfa78611e29d140dcfd57b70b4c303a8292b5d572be6",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/transmit-control-candidate/thick-logic/physical.spice": "e0a8c45ac4e8efdfde286d89f65451379448d1c7dd1829681e901c72b2f5c6d5",
+    "/home/ubuntu/svalbard/scratch/pad-tx-folded-fixture.json": "db492c1a6b4663cb73170168cc9cc7ca6af5f233ebe854e81f700185fb547c67"
+  }
+}

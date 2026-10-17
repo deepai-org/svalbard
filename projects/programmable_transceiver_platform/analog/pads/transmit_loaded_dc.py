@@ -31,8 +31,11 @@ def run(work,fixture):
         fields=line.split()
         if len(fields)<6 or not fields[0].startswith('X') or fields[5]!='nfet_03v3':continue
         for branch in counts:
-            if fields[1].startswith(branch+'_TAIL_') and fields[2:5]==[branch+'_BIAS','VSS','VSS']:
-                fields[3]=branch+'_RETURN';lines[i]=' '.join(fields);counts[branch]+=1
+            if fields[2]!=branch+'_BIAS' or fields[4]!='VSS':continue
+            if fields[1].startswith(branch+'_TAIL_') and fields[3]=='VSS':ground=3
+            elif fields[3].startswith(branch+'_TAIL_') and fields[1]=='VSS':ground=1
+            else:continue
+            fields[ground]=branch+'_RETURN';lines[i]=' '.join(fields);counts[branch]+=1
     if not counts['MAIN'] or counts['MAIN']!=counts['POST']:
         raise ValueError('Unexpected MAIN/POST tail graph')
     start=next(i for i,l in enumerate(lines) if l.startswith('.subckt combined_flat '))

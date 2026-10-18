@@ -659,7 +659,23 @@
           "transient_allowance": "None assumed. Published guidance discusses duty-cycle/TDDB dependence but supplies no numeric voltage-duration envelope usable to qualify these pulses. Exceedance remains unresolved until bounded by justified evidence or corrected circuit. Passing this gate-only screen cannot qualify junctions, current density, heating, ESD or missing terminals."
         }
       },
-      "release_evidence": "analog/pads/generated/rail-supervisor-screen.json"
+      "release_evidence": "analog/pads/generated/rail-supervisor-screen.json",
+      "acceptance": {
+        "normal_operation": "All intended pad levels, bandwidth/loading, termination and drive requirements must hold with every disabled branch present. No protection-induced persistent clamp or false trigger on legal signal edges.",
+        "power_transitions": "Startup/reset/brownout/power-off and powered peers must satisfy actual terminal stress, backfeed and discharge-current budgets with real local control. Supply current alone does not bound current into the protection rail.",
+        "diagnostic_pulse": "Existing100mA/2ns positive and negative fixtures are diagnostic only. Require released and active initial states, actual exposed terminal voltage/current/duration, recovery and retained package/board loading. Shared conservative gate screen is required but insufficient for device survival.",
+        "production_esd_targets_v": {
+          "HBM": 2000,
+          "CDM": 500
+        },
+        "target_basis": {
+          "source": "https://gf180mcu-pdk.readthedocs.io/en/latest/IPs/IO/gf180mcu_fd_io/esd.html",
+          "checked_utc": "2026-10-18",
+          "interpretation": "Project planning targets chosen to match native IO published targets, not inherited qualification or wafer.space requirements. Native page also lists MM200V; it is reference information, not an added project qualification target."
+        },
+        "production_evidence": "Actual final die and chosen wire-bond assembly require applicable standardized testing with documented pin groups, polarities, sample plan and pre/post functional/leakage limits. Compact-model completion, local DRC/LVS and library targets cannot establish a rating. Exact qualification procedure and test access remain unfinished.",
+        "external_protection": "Allowed for board-level system protection with explicit part/loading/interconnect model and scoped system claims. Does not waive normal-operation safety or establish bare-chip ESD qualification."
+      }
     },
     "wired_tx_admittance": {
       "report": "analog/pads/generated/wired-transmit-loading.json",

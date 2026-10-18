@@ -481,101 +481,10 @@ records completed RF RX/TX lifecycle screens, area fit and the mandatory device
 and well-capacitance audits. Routed-loss and pulse screens are also refreshed against this candidate;
 provider placement and local native-rail checks have also been refreshed using
 all current canonical families plus the connected RF candidate; electrical parameters have not changed. The existing `protected-rf-pair/` is evidence for the earlier
-narrow-route implementation, not a second normative design. `branch_trace_screen(work, reuse=True)`
-reproduces the non-invasive terminal-current diagnostic, retaining every device
-and extracted capacitor. It identifies the entry path into protection, not yet
-a proven remedy. `clamp_state_screen(work, reuse=True)` additionally observes
-the unchanged extracted clamp. During late brownout its timing node is about
-0.763 V, already close to the isolated rail at 0.753 V, while the large shunt
-FET gate remains about 0.757 V. This is consistent with failure of the inverter
-chain to release at its low self-powered rail voltage, rather than an uncharged
-timing capacitor alone. Active and recovered windows also show loaded pads.
-The longer hold confirms that loading persists in the 9–10.179 microsecond
-window: the pad remains about 1.553 V. A candidate adds 100 kilohms nominal
-from the shunt gate to return, using eight schematic PDK resistors while retaining
-all extracted devices and capacitance. In the same extended fixture it releases
-the shunt and restores the pad to about 2.99984 V. This is a concrete release
-candidate, **not selected protection**: pulse clamping, core stress, process
-variation and additional layout parasitics remain unverified. Do not remove or
-weaken the shunt to claim protection completion. Reproduce both comparisons with
-`clamp_state_screen(..., long_hold=True)`, adding `gate_discharge=True` for the
-candidate. Both support exact-deck saved-waveform reuse.
+narrow-route implementation, not a second normative design.
 
-The retained-network pulse comparison now prevents promotion of discharge alone.
-A 100 mA, 2 ns positive pulse after one microsecond of brownout reaches about
-8.10 V on PAD_P and 7.11 V on ESD_RAIL in the released candidate before turn-on;
-the incorrectly conducting baseline reaches 4.01 V. Their different initial
-states are intentional, so this does not isolate the resistor's effect on delay.
-The candidate approaches normal pad voltage again afterward, but that does not
-excuse the peak. Next circuit work must combine **fast turn-on from a correctly
-released state with reliable release**. Do not optimize one in isolation.
-`clamp_release_pulse_screen(work, gate_discharge=..., reuse=True)` reproduces
-both comparisons. This finite pulse is not standardized ESD, actual device
-survival, or a package-current qualification. RX outputs were disabled in this
-fixture; their small excursions do not qualify active receiver core stress.
-
-A direct-trigger diagnostic adds three series diode-connected 6 V NMOS devices
-(100 micrometres wide each, grounded bodies) from the isolated rail to the shunt
-gate. It retains approximately 2.999 V before the pulse but only reduces the pad
-peak to 7.84 V, with a 6.81 V isolated-rail peak. It is **not selected**. The
-comparison is reproducible with `direct_trigger=True` in the same pulse helper.
-Do not pursue an unconstrained sizing sweep: the next architecture decision must
-address sufficient trigger drive and actual primary-to-core coordination together,
-including the capacitance and current cost of any secondary protection.
-
-The saved-waveform terminal audit narrows that decision: the released-candidate
-pulse applies about 8.10 V gate-to-drain to the pad-facing bypass NMOS and about
-8.10 V gate-to-source to the USB HS isolation NMOS, despite their disabled
-controls. Small RX output excursions therefore do not establish safe isolation.
-A secondary clamp only behind these devices cannot protect their exposed
-terminals: the protection design must also bound stress on the first pad-facing
-stage, through primary clamping or a deliberately coordinated input structure.
-`pulse_terminal_exposure(work)` derives only observed nodes and exact fixture
-voltage-source relations. Of 357 pad MOS devices, 88 have all terminal pairs
-observable, 149 only some, and 120 none. Missing internal nodes remain unknown;
-this is a lower-bound exposure audit, not a survival verdict or complete audit.
-
-A separate feed-forward candidate retains the discharge path and adds a nominal
-4 pF PDK MIM capacitor between isolated rail and shunt gate. The same pulse
-peaks at 7.19 V on the pad (6.09 V on the rail), and the recovery window returns
-near 3.00 V. This is an improvement over discharge alone, not protection closure.
-The capacitor plate alone occupies about 2000 square micrometres; new routing,
-normal-edge false triggering and loading remain unverified. Reproduce with
-`feedforward=True` in the pulse helper. Keep this unselected and establish a
-justified terminal-voltage/current/duration protection window before additional
-sizing sweeps; neither voltage-class labels nor ESD ratings of other cells
-establish that window for these attached devices.
-
-The shared `primary_protection.core_boundary_policy.gate_voltage_screen` now
-sets conservative gate-to-terminal screens of 3.63 V for 03v3 MOS and 6.0 V for
-06v0 MOS, based on [PDK section14.1](https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_1.html).
-These are screening thresholds derived from DC guidance, not nanosecond damage
-limits. No transient overvoltage allowance is assumed without a justified
-voltage-duration envelope. Gate, junction, current and thermal qualification
-remain separate requirements.
-
-Reanalysis of existing waveforms finds observed gate-screen exceedances in
-98 devices for discharge alone, 99 for the direct trigger and 18 for feed-forward.
-Counts include parallel extracted fingers and are not independent failure counts.
-The separate static-shunt candidate adds three series banks of twenty 50-micrometre
-NMOS fingers (3000 micrometres of total width). It still peaks at 7.22 V on the
-pad and 6.12 V on the isolated rail, with pre-pulse pad voltage reduced to 2.9933 V.
-It is not selected: the added devices do not close the protection window, even
-before layout and capacitance accounting. Reproduce via `static_shunt=True` in
-the pulse and terminal-exposure helpers. The common conclusion across these
-experiments is that release fixes and simple parallel additions alone have not
-produced a qualified foundation; no family should inherit them as a completed cell.
-
-For a representative exposed USB HS device, sampled time above 6.0 V is roughly
-0.915 ns, 0.819 ns and 1.177 ns respectively: feed-forward lowers the peak but
-lengthens that excursion. None qualifies. These results reuse exact saved decks;
-no further SPICE campaign is needed to establish this decision. Unknown internal
-terminals remain unknown, and sampled durations are not rigorous bounds.
-
-
-
-
-
+See [current protection and shutdown decision](#current-protection-and-shutdown-decision)
+for the shared foundation’s unresolved release and terminal-stress results.
 
 | Current evidence | What it establishes / remaining limitation |
 | --- | --- |
@@ -1052,160 +961,58 @@ a resolution. Preserve provider-compatible bonding and account for external
 components together with their interconnects. Defer further bias, capacitance
 and geometry sweeps unless their result can change one of these decisions.
 
-The current detector building block in `rail_supervisor.py` uses a resistor-biased
-VPNP junction and PMOS-input comparator for an independent supply floor, plus
-PDK FET/resistor window comparators and reset override. Its main reference input
-remains explicit. It is **not connected to selected pad enables**; a diagnostic
-now connects it to the extracted RX/USB pad. The previous
-MOS-threshold floor is retained only as an explicit rejected comparison.
+### Current protection and shutdown decision
 
-`generated/rail-supervisor-screen.json` records all fifteen FET/BJT corner
-combinations at 27 C, typical resistors. With a 1 V main reference the permission
-window starts between 2.625 and 2.7 V, improving the MOS-floor spread. However,
-FS/typical BJT at 0.475 V supply and 0.4 V reference produces a 0.451 V output;
-independent operating-point and fine upward/downward sweeps reproduce it. A
-logic-low or harmless gate voltage cannot be assumed in that state.
+**Keep the reusable foundation architecture and provider-compatible bonds; change
+its unqualified protection/control implementation before reuse.** All current
+release/trigger experiments are diagnostics, not alternative normative cells.
+The evidence and reproducible helper calls are consolidated in
+`generated/rail-supervisor-screen.json` and `rail_supervisor.py`.
 
-The typical transient reaches active and recovered states, rejects the settled
-brownout plateau and responds to reset. It nevertheless retains output above
-1.65 V for approximately 9.06 ns while supply is below 2.5 V during transitions.
-After power loss with reference retained, output remains 0.119–0.298 V in the
-observed window. These are unresolved shutdown/discharge problems, not pad
-safety evidence. The next implementation needs a fast reset-dominant local
-clamp, deliberate discharge and controlled restart, followed by actual final
-gate loading. Do not tune the nominal DC trip point to hide these failures.
+| Implementation question | Current evidence | Decision |
+| --- | --- | --- |
+| Autonomous disable | Junction-floor detector improves normal-reference trip spread to 2.625–2.7 V across fifteen FET/BJT corners, but low-rail output and shutdown overlap remain. A stronger output discharge consumes about 0.50 mA against the whole monitor’s 0.40 mA allocation. | Do not connect it as selected safety control. Complete local disable, discharge and controlled restart with actual gate loading. |
+| Normal-signal protection release | Retained RX/USB pad remains near 1.55 V through a 10 µs brownout despite an external network whose unloaded level is 3 V. Approximately 1.06 mA enters the isolated protection rail from one pad. | The shared protection foundation has a functional loading failure. Low functional-supply backfeed does not establish safe off-state behavior. |
+| Released-state pulse protection | See comparison below. These are the same 100 mA, 2 ns positive diagnostic and retained external network. | No candidate qualifies. Address normal-signal release and protection of the first pad-facing devices together. |
+| Actual transistor stress | Disabled USB HS isolation devices see pad excursions across Vgs; bypass devices see them across Vgd. The discharge-only audit fully observes 88 of 357 MOS, partly observes 149 and leaves 120 unobserved. | A clamp only behind these devices is insufficient. Missing internal terminals remain unknown. |
 
-`rail_supervisor.screen(work, pdk)` reproduces the DC campaign;
-`transient_screen(work, pdk)` reproduces startup, collapse, reset and recovery.
-`reuse_dc=True` / `reuse=True` require exact saved-deck identity. Resistor
-corners, mismatch, temperature variation, hysteresis, routing, final pad loading
-and device-survival qualification remain open. The VPNP schematic device also
-needs a verified physical implementation before using the pad layout generator.
+| Diagnostic candidate | Pre-pulse pad voltage | Positive pulse peak | Observed MOS exceeding gate screen |
+| --- | ---: | ---: | ---: |
+| Existing incorrectly conducting clamp | 1.55 V | 4.01 V | Not an acceptable normal-signal baseline |
+| 100 kΩ clamp-gate discharge | 3.00 V | 8.10 V | 98 |
+| Discharge + direct transistor trigger | 3.00 V | 7.84 V | 99 |
+| Discharge + nominal 4 pF feed-forward MIM | 3.00 V | 7.19 V | 18 |
+| Discharge + three-bank static shunt | 2.993 V | 7.22 V | 38 |
 
-The connected diagnostic retains every RX/USB branch, drives two high-side
-controls from the actual supervisor, and separately measures pad supply current
-so detector consumption cannot hide backfeed. This is a generic branch exercise,
-not a legal USB transaction. The 10 kilohm output-discharge experiment reduces
-retained output voltage but consumes approximately 0.50 mA while active, exceeding
-the entire monitor allocation of 0.40 mA; it is **not selected**. The 100 kilohm
-baseline remains unqualified.
+The shared gate screen is 3.63 V for 03v3 MOS and 6.0 V for 06v0 MOS,
+conservatively derived from [PDK DC reliability guidance](https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_1.html).
+It is not a nanosecond damage threshold; no undocumented transient allowance is
+assumed. Counts include parallel fingers, not independent failure events.
+Feed-forward lowers peak voltage but lengthens one exposed HS device’s sampled
+above-6 V interval from about 0.915 to 1.177 ns. Peak alone is not acceptance.
 
-Extending the 1.5 V brownout hold by one microsecond distinguishes early charge
-transfer from persistent supply leakage: the 10 kilohm fixture's pad-to-supply
-current falls from about 429 microamps early to below 9 nanoamps in the later
-windows. However, externally pulled-up pads remain near 1.55 V, versus the
-external network's unloaded 3.0 V. Zero-volt probes at every non-capacitive PAD_P device terminal identify
-approximately 1.0603 mA entering ESD_RAIL through its four upper steering
-diodes (about 265 microamps each). Functional attachment terminal currents
-are at nanoamp scale in that late window. Thus the protection rail is the
-dominant loading path; a disabled control and low supply backfeed do not prove
-an electrically inactive pad. Separate DC attempts required transient initialization and were rejected,
-so they provide no accepted equilibrium leakage result.
+The MIM plate adds about 2000 µm² before routing; the static shunt adds sixty
+MOS fingers with 3000 µm total width. Disabled branches and these added devices
+remain in their comparison models. Manufacturing variation, normal-edge false
+triggering, full internal stress, extra routing and loading remain unqualified.
+The low RX output excursions are from a disabled receiver, not proof of safe
+active operation. Source/deck hashes and scope are recorded with each result.
 
-**Next safety decision:** resolve the shared protection rail’s holding/release
-behavior under ordinary externally powered peers before further detector tuning,
-then verify actual gate disable, terminal
-stress and restart together. These results use an extracted pad with a schematic
-supervisor and ideal control wiring; they do not qualify the complete ring.
-`connected_receive_screen(work, pdk, physical, reuse=True)` and
-`extended_brownout_screen(work, reuse=True)` reproduce the saved-waveform analysis
-only when generated decks match exactly. Results are consolidated in the same
-`rail-supervisor-screen.json`; the 10 kilohm option is an explicit diagnostic,
-not a second normative design. `branch_trace_screen(work, reuse=True)`
-reproduces the non-invasive terminal-current diagnostic, retaining every device
-and extracted capacitor. It identifies the entry path into protection, not yet
-a proven remedy. `clamp_state_screen(work, reuse=True)` additionally observes
-the unchanged extracted clamp. During late brownout its timing node is about
-0.763 V, already close to the isolated rail at 0.753 V, while the large shunt
-FET gate remains about 0.757 V. This is consistent with failure of the inverter
-chain to release at its low self-powered rail voltage, rather than an uncharged
-timing capacitor alone. Active and recovered windows also show loaded pads.
-The longer hold confirms that loading persists in the 9–10.179 microsecond
-window: the pad remains about 1.553 V. A candidate adds 100 kilohms nominal
-from the shunt gate to return, using eight schematic PDK resistors while retaining
-all extracted devices and capacitance. In the same extended fixture it releases
-the shunt and restores the pad to about 2.99984 V. This is a concrete release
-candidate, **not selected protection**: pulse clamping, core stress, process
-variation and additional layout parasitics remain unverified. Do not remove or
-weaken the shunt to claim protection completion. Reproduce both comparisons with
-`clamp_state_screen(..., long_hold=True)`, adding `gate_discharge=True` for the
-candidate. Both support exact-deck saved-waveform reuse.
+The authoritative acceptance contract is
+`spec/schematic-implementation.json:io_pad_first_pass.primary_protection.acceptance`.
+Normal operation, powered-peer transitions, diagnostic protection and packaged
+ESD qualification are separate gates. The project targets **2 kV HBM and 500 V
+CDM**, informed by the [native I/O targets](https://gf180mcu-pdk.readthedocs.io/en/latest/IPs/IO/gf180mcu_fd_io/esd.html).
+These are neither inherited ratings nor wafer.space submission requirements.
+The 100 mA pulse does not substitute for either target. External board protection
+is allowed but cannot establish the bare-chip rating; it must be modeled with
+its own capacitance and interconnects for assembled-system claims.
 
-The retained-network pulse comparison now prevents promotion of discharge alone.
-A 100 mA, 2 ns positive pulse after one microsecond of brownout reaches about
-8.10 V on PAD_P and 7.11 V on ESD_RAIL in the released candidate before turn-on;
-the incorrectly conducting baseline reaches 4.01 V. Their different initial
-states are intentional, so this does not isolate the resistor's effect on delay.
-The candidate approaches normal pad voltage again afterward, but that does not
-excuse the peak. Next circuit work must combine **fast turn-on from a correctly
-released state with reliable release**. Do not optimize one in isolation.
-`clamp_release_pulse_screen(work, gate_discharge=..., reuse=True)` reproduces
-both comparisons. This finite pulse is not standardized ESD, actual device
-survival, or a package-current qualification. RX outputs were disabled in this
-fixture; their small excursions do not qualify active receiver core stress.
-
-A direct-trigger diagnostic adds three series diode-connected 6 V NMOS devices
-(100 micrometres wide each, grounded bodies) from the isolated rail to the shunt
-gate. It retains approximately 2.999 V before the pulse but only reduces the pad
-peak to 7.84 V, with a 6.81 V isolated-rail peak. It is **not selected**. The
-comparison is reproducible with `direct_trigger=True` in the same pulse helper.
-Do not pursue an unconstrained sizing sweep: the next architecture decision must
-address sufficient trigger drive and actual primary-to-core coordination together,
-including the capacitance and current cost of any secondary protection.
-
-The saved-waveform terminal audit narrows that decision: the released-candidate
-pulse applies about 8.10 V gate-to-drain to the pad-facing bypass NMOS and about
-8.10 V gate-to-source to the USB HS isolation NMOS, despite their disabled
-controls. Small RX output excursions therefore do not establish safe isolation.
-A secondary clamp only behind these devices cannot protect their exposed
-terminals: the protection design must also bound stress on the first pad-facing
-stage, through primary clamping or a deliberately coordinated input structure.
-`pulse_terminal_exposure(work)` derives only observed nodes and exact fixture
-voltage-source relations. Of 357 pad MOS devices, 88 have all terminal pairs
-observable, 149 only some, and 120 none. Missing internal nodes remain unknown;
-this is a lower-bound exposure audit, not a survival verdict or complete audit.
-
-A separate feed-forward candidate retains the discharge path and adds a nominal
-4 pF PDK MIM capacitor between isolated rail and shunt gate. The same pulse
-peaks at 7.19 V on the pad (6.09 V on the rail), and the recovery window returns
-near 3.00 V. This is an improvement over discharge alone, not protection closure.
-The capacitor plate alone occupies about 2000 square micrometres; new routing,
-normal-edge false triggering and loading remain unverified. Reproduce with
-`feedforward=True` in the pulse helper. Keep this unselected and establish a
-justified terminal-voltage/current/duration protection window before additional
-sizing sweeps; neither voltage-class labels nor ESD ratings of other cells
-establish that window for these attached devices.
-
-The shared `primary_protection.core_boundary_policy.gate_voltage_screen` now
-sets conservative gate-to-terminal screens of 3.63 V for 03v3 MOS and 6.0 V for
-06v0 MOS, based on [PDK section14.1](https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_1.html).
-These are screening thresholds derived from DC guidance, not nanosecond damage
-limits. No transient overvoltage allowance is assumed without a justified
-voltage-duration envelope. Gate, junction, current and thermal qualification
-remain separate requirements.
-
-Reanalysis of existing waveforms finds observed gate-screen exceedances in
-98 devices for discharge alone, 99 for the direct trigger and 18 for feed-forward.
-Counts include parallel extracted fingers and are not independent failure counts.
-The separate static-shunt candidate adds three series banks of twenty 50-micrometre
-NMOS fingers (3000 micrometres of total width). It still peaks at 7.22 V on the
-pad and 6.12 V on the isolated rail, with pre-pulse pad voltage reduced to 2.9933 V.
-It is not selected: the added devices do not close the protection window, even
-before layout and capacitance accounting. Reproduce via `static_shunt=True` in
-the pulse and terminal-exposure helpers. The common conclusion across these
-experiments is that release fixes and simple parallel additions alone have not
-produced a qualified foundation; no family should inherit them as a completed cell.
-
-For a representative exposed USB HS device, sampled time above 6.0 V is roughly
-0.915 ns, 0.819 ns and 1.177 ns respectively: feed-forward lowers the peak but
-lengthens that excursion. None qualifies. These results reuse exact saved decks;
-no further SPICE campaign is needed to establish this decision. Unknown internal
-terminals remain unknown, and sampled durations are not rigorous bounds.
-
-
-
-
-
+Next implement a coordinated first-stage protection candidate against these
+same gates. Pause isolated sizing sweeps and further physical propagation until
+normal loading and the observed stress screens are closed together. Silicon ESD
+qualification remains a later production gate, not a reason to leave the
+transistor implementation unfinished.
 
 ### Current first-pass decisions
 

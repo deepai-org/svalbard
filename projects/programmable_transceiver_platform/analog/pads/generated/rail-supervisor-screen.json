@@ -1,0 +1,492 @@
+{
+  "status": "rejected_undervoltage_veto",
+  "unsafe_guarded_corners": [
+    "ff",
+    "fs"
+  ],
+  "decision": "Do not connect this candidate to pad enables. Ratio-only detection follows a degraded reference; the MOS-threshold floor fails undervoltage rejection across process corners. Use an independently qualified reference/floor and reset-dominant final controls before adoption.",
+  "results": [
+    {
+      "corner": "typical",
+      "independent_floor": false,
+      "reset_v": 3.3,
+      "references": [
+        {
+          "reference_v": 0.0,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.79711598e-09
+        },
+        {
+          "reference_v": 0.2,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.79711598e-09
+        },
+        {
+          "reference_v": 0.4,
+          "logic_high_supply_intervals_v": [
+            [
+              1.025,
+              1.375
+            ]
+          ],
+          "undervoltage_assertion": true,
+          "output_at_3p3_v": 2.79711598e-09
+        },
+        {
+          "reference_v": 0.6000000000000001,
+          "logic_high_supply_intervals_v": [
+            [
+              1.55,
+              2.075
+            ]
+          ],
+          "undervoltage_assertion": true,
+          "output_at_3p3_v": 2.79711598e-09
+        },
+        {
+          "reference_v": 0.8,
+          "logic_high_supply_intervals_v": [
+            [
+              2.05,
+              2.775
+            ]
+          ],
+          "undervoltage_assertion": true,
+          "output_at_3p3_v": 2.79711598e-09
+        },
+        {
+          "reference_v": 1.0,
+          "logic_high_supply_intervals_v": [
+            [
+              2.55,
+              3.475
+            ]
+          ],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.26482308
+        },
+        {
+          "reference_v": 1.2000000000000002,
+          "logic_high_supply_intervals_v": [
+            [
+              3.05,
+              3.6
+            ]
+          ],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.26482308
+        }
+      ],
+      "max_supply_current_a": 0.000356655922,
+      "max_output_v": 3.56366618,
+      "dc_complete": true,
+      "deck_sha256": "98c507c37ad1b724adc176243f1f8823cfd47d8eda636adf8185c1620f2e2948"
+    },
+    {
+      "corner": "typical",
+      "independent_floor": true,
+      "reset_v": 3.3,
+      "references": [
+        {
+          "reference_v": 0.0,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.79711598e-09
+        },
+        {
+          "reference_v": 0.2,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.79711598e-09
+        },
+        {
+          "reference_v": 0.4,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.79711598e-09
+        },
+        {
+          "reference_v": 0.6000000000000001,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.79711597e-09
+        },
+        {
+          "reference_v": 0.8,
+          "logic_high_supply_intervals_v": [
+            [
+              2.6,
+              2.775
+            ]
+          ],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.79711598e-09
+        },
+        {
+          "reference_v": 1.0,
+          "logic_high_supply_intervals_v": [
+            [
+              2.6,
+              3.475
+            ]
+          ],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.26482308
+        },
+        {
+          "reference_v": 1.2000000000000002,
+          "logic_high_supply_intervals_v": [
+            [
+              3.05,
+              3.6
+            ]
+          ],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.26482308
+        }
+      ],
+      "max_supply_current_a": 0.000399689381,
+      "max_output_v": 3.56366618,
+      "dc_complete": true,
+      "deck_sha256": "f0de4924302255e133ba104218338e956a1b12709a14c5ca19c40e73867264b9"
+    },
+    {
+      "corner": "ff",
+      "independent_floor": true,
+      "reset_v": 3.3,
+      "references": [
+        {
+          "reference_v": 0.0,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.21743389e-09
+        },
+        {
+          "reference_v": 0.2,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.21743411e-09
+        },
+        {
+          "reference_v": 0.4,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.21743389e-09
+        },
+        {
+          "reference_v": 0.6000000000000001,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.21743412e-09
+        },
+        {
+          "reference_v": 0.8,
+          "logic_high_supply_intervals_v": [
+            [
+              2.175,
+              2.775
+            ]
+          ],
+          "undervoltage_assertion": true,
+          "output_at_3p3_v": 3.21743411e-09
+        },
+        {
+          "reference_v": 1.0,
+          "logic_high_supply_intervals_v": [
+            [
+              2.55,
+              3.475
+            ]
+          ],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.26863304
+        },
+        {
+          "reference_v": 1.2000000000000002,
+          "logic_high_supply_intervals_v": [
+            [
+              3.05,
+              3.6
+            ]
+          ],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.26863304
+        }
+      ],
+      "max_supply_current_a": 0.00043425186,
+      "max_output_v": 3.56737804,
+      "dc_complete": true,
+      "deck_sha256": "10ff767a3f96a64af1625415a04b6787146d80b82bbc959d7cdf2a76bb2fffd0"
+    },
+    {
+      "corner": "ss",
+      "independent_floor": true,
+      "reset_v": 3.3,
+      "references": [
+        {
+          "reference_v": 0.0,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.92820968e-09
+        },
+        {
+          "reference_v": 0.2,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.92820968e-09
+        },
+        {
+          "reference_v": 0.4,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.92820946e-09
+        },
+        {
+          "reference_v": 0.6000000000000001,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.92820961e-09
+        },
+        {
+          "reference_v": 0.8,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.92820968e-09
+        },
+        {
+          "reference_v": 1.0,
+          "logic_high_supply_intervals_v": [
+            [
+              3.0,
+              3.475
+            ]
+          ],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.26050008
+        },
+        {
+          "reference_v": 1.2000000000000002,
+          "logic_high_supply_intervals_v": [
+            [
+              3.05,
+              3.6
+            ]
+          ],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.26050008
+        }
+      ],
+      "max_supply_current_a": 0.000359497493,
+      "max_output_v": 3.55949562,
+      "dc_complete": true,
+      "deck_sha256": "13b90cb9a66cc0884c407c5743a0aacf204aef9fa8b8b5fb9364c972effc2827"
+    },
+    {
+      "corner": "fs",
+      "independent_floor": true,
+      "reset_v": 3.3,
+      "references": [
+        {
+          "reference_v": 0.0,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.58515099e-09
+        },
+        {
+          "reference_v": 0.2,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.58515099e-09
+        },
+        {
+          "reference_v": 0.4,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.58515099e-09
+        },
+        {
+          "reference_v": 0.6000000000000001,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.58515077e-09
+        },
+        {
+          "reference_v": 0.8,
+          "logic_high_supply_intervals_v": [
+            [
+              2.325,
+              2.775
+            ]
+          ],
+          "undervoltage_assertion": true,
+          "output_at_3p3_v": 2.58515077e-09
+        },
+        {
+          "reference_v": 1.0,
+          "logic_high_supply_intervals_v": [
+            [
+              2.55,
+              3.475
+            ]
+          ],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.26192048
+        },
+        {
+          "reference_v": 1.2000000000000002,
+          "logic_high_supply_intervals_v": [
+            [
+              3.05,
+              3.6
+            ]
+          ],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.26192048
+        }
+      ],
+      "max_supply_current_a": 0.000395040903,
+      "max_output_v": 3.5608647,
+      "dc_complete": true,
+      "deck_sha256": "64497f96b2a501ea51789b13e7a041a6d76807ad00e61a8532ae6b8562fd3838"
+    },
+    {
+      "corner": "sf",
+      "independent_floor": true,
+      "reset_v": 3.3,
+      "references": [
+        {
+          "reference_v": 0.0,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.27404048e-09
+        },
+        {
+          "reference_v": 0.2,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.27404026e-09
+        },
+        {
+          "reference_v": 0.4,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.27404026e-09
+        },
+        {
+          "reference_v": 0.6000000000000001,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.27404026e-09
+        },
+        {
+          "reference_v": 0.8,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.27404048e-09
+        },
+        {
+          "reference_v": 1.0,
+          "logic_high_supply_intervals_v": [
+            [
+              2.85,
+              3.475
+            ]
+          ],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.26747837
+        },
+        {
+          "reference_v": 1.2000000000000002,
+          "logic_high_supply_intervals_v": [
+            [
+              3.05,
+              3.6
+            ]
+          ],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 3.26747837
+        }
+      ],
+      "max_supply_current_a": 0.000422919035,
+      "max_output_v": 3.56624793,
+      "dc_complete": true,
+      "deck_sha256": "1516c809224eb448972595a2f0530d54c53aa2c7883be66473bd24365706b8d2"
+    },
+    {
+      "corner": "typical",
+      "independent_floor": true,
+      "reset_v": 0.0,
+      "references": [
+        {
+          "reference_v": 0.0,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.79711598e-09
+        },
+        {
+          "reference_v": 0.2,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.79711598e-09
+        },
+        {
+          "reference_v": 0.4,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.79711598e-09
+        },
+        {
+          "reference_v": 0.6000000000000001,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.79711598e-09
+        },
+        {
+          "reference_v": 0.8,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.79711598e-09
+        },
+        {
+          "reference_v": 1.0,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.79711598e-09
+        },
+        {
+          "reference_v": 1.2000000000000002,
+          "logic_high_supply_intervals_v": [],
+          "undervoltage_assertion": false,
+          "output_at_3p3_v": 2.79711598e-09
+        }
+      ],
+      "max_supply_current_a": 0.000366697903,
+      "max_output_v": 4.55560097e-08,
+      "dc_complete": true,
+      "deck_sha256": "129570cbc94d441b68ce84be7d116c9327261382ad6ab402e4ce756806efe7bd"
+    }
+  ],
+  "temperature_c": 27,
+  "reference_grid_step_v": 0.2,
+  "supply_grid_step_v": 0.025,
+  "scope": "Transistor/resistor DC corner screen with a 500 fF declared load. Logic-high threshold is 0.7 times supply, not proof that lower voltages cannot partially enable a pad. No hysteresis, reference generation, transient reset/brownout, mismatch, extraction or connected-pad safety qualification.",
+  "requirements": {
+    "reference_nominal_v": 1.0,
+    "nominal_ratio_window": [
+      2.55,
+      3.45
+    ],
+    "independent_floor": true,
+    "floor_ratio": 3.2
+  },
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/rail_supervisor.py": "57303b11b2a5ddc2763209c005288e0d13cbb7aa9cecebaeab2e8e46a9bb0353",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/circuits.py": "1c212fbefc7157c2fb50594b3c137aa9ce2f94bfd30075c9386c05a0fa55e2b3",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/screen.py": "377e2d4c75fcc2b3d49344c6d2a3e686e7468a735425d18ec1260d1189d0f8d5",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24"
+  }
+}

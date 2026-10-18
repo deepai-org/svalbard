@@ -922,7 +922,13 @@
       "comparison_report": "analog/pads/generated/pad-composition-comparison.json",
       "decision": "Select reusable foundation with lean functional attachments. Five current use-site families are not a fixed cell-count requirement. Retain specialized wired attachments: simple union and shared-termination candidates fail the RX loading allocation before new routing. Keep RF receive/reference structural sharing as a candidate; do not populate RF pads with wired branches.",
       "promotion_gate": "Same fully populated candidate must meet shared loading, impedance and signal-quality requirements and retained-network off-state safety, including all disabled branches, physical core interfaces and routing. Current RF/reference cores are loading assumptions, not complete transistor implementations.",
-      "simultaneity": "Cell reuse does not remove the need for separate physical instances for simultaneous independent lanes. Current pin and packaging plan remains selected."
+      "simultaneity": "Cell reuse does not remove the need for separate physical instances for simultaneous independent lanes. Current pin and packaging plan remains selected.",
+      "local_safety_evidence": {
+        "report": "analog/pads/generated/rail-supervisor-screen.json",
+        "status": "physical_rail_detector_candidate_rejected_not_connected_to_pads",
+        "finding": "Actual PDK FET/resistor ratio-window detector with reset override was screened at27C across typical/ff/ss/fs/sf FET corners, typical resistors. Degraded reference can lower the ratio-only permission window. Independent MOS-threshold floor still asserts below2.5V in ff/fs; with1V reference, ss begins around3.0V. Reset-low holds output low in the tested typical DC grid. No transient, mismatch, fanout, extraction or core safety qualification.",
+        "decision": "Retain reset-dominant local disable as the requirement. Do not substitute a ratio-only detector or untrimmed MOS threshold for independently qualified rail/reference validity; reference collapse must be tested jointly with supply collapse. Candidate is an analysis building block, not selected physical supervisor."
+      }
     }
   }
 }

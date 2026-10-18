@@ -958,6 +958,25 @@ a resolution. Preserve provider-compatible bonding and account for external
 components together with their interconnects. Defer further bias, capacitance
 and geometry sweeps unless their result can change one of these decisions.
 
+The first physical rail-window detector in `rail_supervisor.py` uses PDK
+transistors and resistors, including its bias source and reset override. Its
+reference input remains explicit. `generated/rail-supervisor-screen.json`
+**rejects it for pad-enable use**: a ratio-only detector follows reference
+collapse; adding an untrimmed MOS-threshold floor still permits logic-high at
+2.175 V in FF and 2.325 V in FS with a 0.8 V reference. With a 1 V reference,
+the guarded SS permission window begins near 3.0 V, conflicting with the current
+lower common-ring operating estimates. Reset-low suppresses output in the
+tested typical DC grid. Peak sweep current reaches about 0.434 mA; this is not
+an allocated or optimized supervisor implementation.
+
+The next safety implementation must establish rail/reference validity
+independently of a collapsing reference and retain reset-dominant final disable.
+Do not spend further effort tuning one nominal FET-divider trip point. These
+27 C FET-corner sweeps use typical resistors and a declared 500 fF load; they
+omit resistor corners, mismatch, hysteresis, startup hold, transients, routing
+and final pad loading. `rail_supervisor.screen(work, pdk)` reproduces the sweep;
+`reuse_dc=True` reanalyzes saved data only after checking exact deck identity.
+
 ### Current first-pass decisions
 
 Keep the five pad families and provider-compatible bond geometry. The next

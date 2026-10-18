@@ -1,18 +1,223 @@
 {
   "status": "common_ring_topology_requirement_screen_not_electrical_closure",
+  "unadopted_split_rc_experiment": {
+    "configuration": {
+      "raw_cap_f": 2.5e-10,
+      "branches": {
+        "rf": {
+          "r_ohm": 1.0,
+          "cap_f": 2.5e-10
+        },
+        "pll": {
+          "r_ohm": 2.0,
+          "cap_f": 2.5e-10
+        },
+        "conv": {
+          "r_ohm": 2.0,
+          "cap_f": 2.5e-10
+        }
+      }
+    },
+    "total_capacitance_f": 1e-09,
+    "dc": [
+      {
+        "mode": "rf_rx",
+        "loads_a": {
+          "raw": 0.13169999999999998,
+          "conv": 0.023,
+          "pll": 0.032299999999999995,
+          "rf": 0.053
+        },
+        "rail_v": {
+          "raw": 2.7912000000000003,
+          "rf": 2.7382000000000004,
+          "pll": 2.7266,
+          "conv": 2.7451999999999996
+        },
+        "kcl_residual_a": 3.5388358909926865e-16,
+        "power_residual_w": -1.3822276656583199e-14
+      },
+      {
+        "mode": "rf_tx",
+        "loads_a": {
+          "raw": 0.13169999999999998,
+          "conv": 0.023,
+          "pll": 0.032299999999999995,
+          "rf": 0.053
+        },
+        "rail_v": {
+          "raw": 2.7912000000000003,
+          "rf": 2.7382000000000004,
+          "pll": 2.7266,
+          "conv": 2.7451999999999996
+        },
+        "kcl_residual_a": 3.5388358909926865e-16,
+        "power_residual_w": -1.3822276656583199e-14
+      },
+      {
+        "mode": "wired",
+        "loads_a": {
+          "raw": 0.22594999999999998,
+          "conv": 0.0005,
+          "pll": 0.044,
+          "rf": 0.002
+        },
+        "rail_v": {
+          "raw": 2.722406,
+          "rf": 2.720406,
+          "pll": 2.634406,
+          "conv": 2.721406
+        },
+        "kcl_residual_a": 3.3306690738754696e-16,
+        "power_residual_w": -8.493206138382448e-15
+      },
+      {
+        "mode": "usb",
+        "loads_a": {
+          "raw": 0.2057,
+          "conv": 0.0005,
+          "pll": 0.044,
+          "rf": 0.002
+        },
+        "rail_v": {
+          "raw": 2.7653360000000005,
+          "rf": 2.7633360000000002,
+          "pll": 2.677336,
+          "conv": 2.7643359999999997
+        },
+        "kcl_residual_a": 7.105427357601002e-15,
+        "power_residual_w": 7.494005416219807e-16
+      }
+    ],
+    "ac": [
+      {
+        "frequency_hz": 1000000.0,
+        "filtered_ohm": {
+          "raw": 2.095197571256414,
+          "rf": 2.095184647220549,
+          "pll": 2.095166553972123,
+          "conv": 2.095166553972123
+        },
+        "equal_cap_unfiltered_ohm": 2.095251694674821,
+        "kcl_residual_a": 5.637209463515033e-16,
+        "power_residual_w": -3.1086244689504383e-15
+      },
+      {
+        "frequency_hz": 50000000.0,
+        "filtered_ohm": {
+          "raw": 2.0157194686961226,
+          "rf": 1.9857697241345982,
+          "pll": 1.9459975439265416,
+          "conv": 1.9459975439265418
+        },
+        "equal_cap_unfiltered_ohm": 2.1005999402136775,
+        "kcl_residual_a": 3.011834797257893e-16,
+        "power_residual_w": 1.9984014443252818e-15
+      },
+      {
+        "frequency_hz": 156250000.0,
+        "filtered_ohm": {
+          "raw": 1.321280019604593,
+          "rf": 1.1758685464478806,
+          "pll": 1.0348160216137097,
+          "conv": 1.0348160216137097
+        },
+        "equal_cap_unfiltered_ohm": 1.0382962466837085,
+        "kcl_residual_a": 2.2382774333091246e-16,
+        "power_residual_w": 4.440892098500626e-16
+      },
+      {
+        "frequency_hz": 312500000.0,
+        "filtered_ohm": {
+          "raw": 0.8973508960475454,
+          "rf": 0.6791515388037866,
+          "pll": 0.537240664841975,
+          "conv": 0.5372406648419749
+        },
+        "equal_cap_unfiltered_ohm": 0.5068191448708939,
+        "kcl_residual_a": 1.8443626986777725e-16,
+        "power_residual_w": -2.220446049250313e-16
+      },
+      {
+        "frequency_hz": 1000000000.0,
+        "filtered_ohm": {
+          "raw": 0.760992781761449,
+          "rf": 0.5201551853041766,
+          "pll": 0.39365985534572767,
+          "conv": 0.39365985534572767
+        },
+        "equal_cap_unfiltered_ohm": 1.1352321375335517,
+        "kcl_residual_a": 2.237726045655905e-16,
+        "power_residual_w": 0.0
+      },
+      {
+        "frequency_hz": 2400000000.0,
+        "filtered_ohm": {
+          "raw": 1.043728924989527,
+          "rf": 0.8721105851320481,
+          "pll": 0.7312033741570829,
+          "conv": 0.7312033741570829
+        },
+        "equal_cap_unfiltered_ohm": 2.8025809710264658,
+        "kcl_residual_a": 3.1401849173675503e-16,
+        "power_residual_w": -1.1102230246251565e-16
+      }
+    ],
+    "sampled_peak_by_rail": {
+      "rf": {
+        "frequency_hz": 1000000.0,
+        "filtered_ohm": {
+          "raw": 2.095197571256414,
+          "rf": 2.095184647220549,
+          "pll": 2.095166553972123,
+          "conv": 2.095166553972123
+        },
+        "equal_cap_unfiltered_ohm": 2.095251694674821,
+        "kcl_residual_a": 5.637209463515033e-16,
+        "power_residual_w": -3.1086244689504383e-15
+      },
+      "pll": {
+        "frequency_hz": 1000000.0,
+        "filtered_ohm": {
+          "raw": 2.095197571256414,
+          "rf": 2.095184647220549,
+          "pll": 2.095166553972123,
+          "conv": 2.095166553972123
+        },
+        "equal_cap_unfiltered_ohm": 2.095251694674821,
+        "kcl_residual_a": 5.637209463515033e-16,
+        "power_residual_w": -3.1086244689504383e-15
+      },
+      "conv": {
+        "frequency_hz": 1000000.0,
+        "filtered_ohm": {
+          "raw": 2.095197571256414,
+          "rf": 2.095184647220549,
+          "pll": 2.095166553972123,
+          "conv": 2.095166553972123
+        },
+        "equal_cap_unfiltered_ohm": 2.095251694674821,
+        "kcl_residual_a": 5.637209463515033e-16,
+        "power_residual_w": -3.1086244689504383e-15
+      }
+    },
+    "decision": "Do not adopt this blanket RC split as isolation: little clock benefit and worse RF coupling at 156.25 MHz, with DC headroom loss. Selected baseline remains common ring with no claimed local isolation.",
+    "scope": "Same total 1 nF for filtered and unfiltered control. Local branches use real passive impedances; no assumed isolation factor."
+  },
   "design_provenance": {
-    "design_fingerprint": "b7fa9caadd274f01a77dce3a040b0316e68d93a9357227dceb649c61674718df",
+    "design_fingerprint": "4b14ac8a660f82b22149523cc5063fb5320052222090bbe8c945671ee342a093",
     "fingerprint_format": "canonical-json-sha256-v1",
     "circuit_experiments": [],
     "documents": {
       "spec/contract.json": "a597e2878cdc4926ecabf0a06e5f40523257418cbde283ccf5184894e8d0e879",
-      "spec/analog-architecture.json": "bc97bc0d68910022478e7c20e94be5394c53a4f4bc55847c2f572716b5111f23"
+      "spec/analog-architecture.json": "294154811408999c4c909c5ac59c6c5b7a55e75168736680bbc683deb8eb56ba"
     }
   },
   "model_source_sha256": {
-    "verification/baseline_envelope.py": "4fdf0a6e587e87a4a82f2dd6c407c09ea5726f11abd86077a6d636770cd71cc4",
+    "verification/baseline_envelope.py": "1342fbeabc8b8d309e9b87f7d0fa4c81c945bb8a3e66ebd9e8c43e4a326ce0a9",
     "verification/robustness_envelope.py": "58c3d4410ebfad7142cafdf80bd59b3cab4280a2b3b70461ddf8a34ed29dc276",
-    "system_model/architecture_fast/rf_quality_budget.py": "6d22c9637bc0165cdae9c6f5ee4a4116156f82f44cb878f9e46c5a24ec2955d7"
+    "system_model/architecture_fast/rf_quality_budget.py": "6d22c9637bc0165cdae9c6f5ee4a4116156f82f44cb878f9e46c5a24ec2955d7",
+    "system_model/architecture_fast/power_distribution.py": "72324939ef31fc49f09ee6f517101c7a3f109460277f20e2a33662f06c0907cf"
   },
   "network": {
     "board_c": 1e-06,
@@ -140,5 +345,67 @@
     "No local isolation is implemented in this unfiltered comparison; the pre-existing package resistance includes hypothetical damping and is not measured.",
     "Frequency samples are not a certified resonance bound; no actual host spectrum, nonlinear large-signal behavior or transistor supply rejection is inferred.",
     "All earlier coupled payload/clock benches require migration to the implemented local network before their outcomes can qualify this ring."
-  ]
+  ],
+  "independent_spice_verification": {
+    "simulator_version": "******\n** ngspice-42 : Circuit level simulation program\n** Compiled with KLU Direct Linear Solver\n** The U. C. Berkeley CAD Group\n** Copyright 1985-1994, Regents of the University of California.\n** Copyright 2001-2023, The ngspice team.\n** Please get your ngspice manual from https://ngspice.sourceforge.io/docs.html\n** Please file your bug-reports at http://ngspice.sourceforge.net/bugrep.html\n** Creation Date: Sun Mar 31 20:15:14 UTC 2024\n******",
+    "cases": [
+      {
+        "circuit": "selected",
+        "mode": "rf_rx",
+        "ac_points": 68,
+        "max_dc_difference_v": 4.440892098500626e-16,
+        "max_ac_difference_ohm": 8.600467185921585e-15
+      },
+      {
+        "circuit": "selected",
+        "mode": "rf_tx",
+        "ac_points": 68,
+        "max_dc_difference_v": 4.440892098500626e-16,
+        "max_ac_difference_ohm": 8.600467185921585e-15
+      },
+      {
+        "circuit": "selected",
+        "mode": "wired",
+        "ac_points": 68,
+        "max_dc_difference_v": 1.3322676295501878e-15,
+        "max_ac_difference_ohm": 8.600467185921585e-15
+      },
+      {
+        "circuit": "selected",
+        "mode": "usb",
+        "ac_points": 68,
+        "max_dc_difference_v": 4.440892098500626e-16,
+        "max_ac_difference_ohm": 8.600467185921585e-15
+      },
+      {
+        "circuit": "split_rc_experiment",
+        "mode": "rf_rx",
+        "ac_points": 68,
+        "max_dc_difference_v": 2.220446049250313e-15,
+        "max_ac_difference_ohm": 4.463041323674983e-15
+      },
+      {
+        "circuit": "split_rc_experiment",
+        "mode": "rf_tx",
+        "ac_points": 68,
+        "max_dc_difference_v": 2.220446049250313e-15,
+        "max_ac_difference_ohm": 4.463041323674983e-15
+      },
+      {
+        "circuit": "split_rc_experiment",
+        "mode": "wired",
+        "ac_points": 68,
+        "max_dc_difference_v": 2.220446049250313e-15,
+        "max_ac_difference_ohm": 4.463041323674983e-15
+      },
+      {
+        "circuit": "split_rc_experiment",
+        "mode": "usb",
+        "ac_points": 68,
+        "max_dc_difference_v": 2.220446049250313e-15,
+        "max_ac_difference_ohm": 4.463041323674983e-15
+      }
+    ],
+    "scope": "Linear passive circuits only. Does not verify transistor startup, protection, noise, current dependence or physical RLC."
+  }
 }

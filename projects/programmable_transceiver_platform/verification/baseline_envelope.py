@@ -114,10 +114,28 @@ def retained_ring_power_screen(design=None):
             common_ring_phase_rad=float(np.angle(ring['differential_ohm'])),
             kcl_residual_a=max(legacy['kcl_residual_a'],ring['kcl_residual_a']),
             power_residual_w=max(abs(legacy['power_residual_w']),abs(ring['power_residual_w']))))
+    from power_distribution import from_design,mode_loads,split_rc_experiment
+    experiment=split_rc_experiment()
+    filtered=from_design(design,local_override=experiment);control=from_design(design)
+    local_dc=[];local_ac=[]
+    for mode in ('rf_rx','rf_tx','wired','usb'):
+        loads=mode_loads(design,mode,local_override=experiment);solution=filtered.solve(0.,loads,supply)
+        local_dc.append(dict(mode=mode,loads_a=loads,rail_v={k:float(v.real) for k,v in solution['rail_v'].items()},
+            kcl_residual_a=solution['kcl_residual_a'],power_residual_w=solution['power_residual_w']))
+    for row in rows:
+        f=row['frequency_hz'];solution=filtered.solve(f,{'raw':1.});unfiltered=control.solve(f,{'raw':1.})
+        local_ac.append(dict(frequency_hz=f,filtered_ohm={k:abs(v) for k,v in solution['rail_v'].items()},
+            equal_cap_unfiltered_ohm=abs(unfiltered['rail_v']['raw']),
+            kcl_residual_a=solution['kcl_residual_a'],power_residual_w=solution['power_residual_w']))
     return dict(status='common_ring_topology_requirement_screen_not_electrical_closure',
+        unadopted_split_rc_experiment=dict(configuration=experiment,total_capacitance_f=filtered.capacitance_f,dc=local_dc,
+            ac=[r for r in local_ac if r['frequency_hz'] in (1e6,50e6,156.25e6,312.5e6,1e9,2.4e9)],
+            sampled_peak_by_rail={name:max(local_ac,key=lambda r:r['filtered_ohm'][name]) for name in filtered.branches},
+            decision='Do not adopt this blanket RC split as isolation: little clock benefit and worse RF coupling at 156.25 MHz, with DC headroom loss. Selected baseline remains common ring with no claimed local isolation.',
+            scope='Same total 1 nF for filtered and unfiltered control. Local branches use real passive impedances; no assumed isolation factor.'),
         design_provenance=design.provenance(),
         model_source_sha256={str(path.relative_to(P)):hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in (Path(__file__),Path(__file__).with_name('robustness_envelope.py'),P/'system_model/architecture_fast/rf_quality_budget.py')},
+            for path in (Path(__file__),Path(__file__).with_name('robustness_envelope.py'),P/'system_model/architecture_fast/rf_quality_budget.py',P/'system_model/architecture_fast/power_distribution.py')},
         network=n,return_r_ohm=rreturn,
         return_l_h=power['shared_return_l_h'],dc_modes=dc,
         transfer=[r for r in rows if r['frequency_hz'] in (1e6,50e6,156.25e6,312.5e6,1e9,2.4e9)],

@@ -78,6 +78,22 @@ These are requirement-screen estimates, not predictions from extracted ring
 resistance: the 2 ohm package/damping value remains hypothetical, actual macro
 currents already have budget overruns, and no host spectrum is applied here.
 
+The executable common-ring circuit is now
+`system_model/architecture_fast/power_distribution.py`, configured by
+`blocks.power.parameters.local_distribution`. Its selected baseline puts all
+chip loads behind the package and assigns the existing 1 nF to the raw supply.
+It emits the same R/L/C circuit as SPICE; DC and AC agree with ngspice in RF RX,
+RF TX, wired and USB modes. This validates circuit equations, not physical values.
+
+A **rejected isolation experiment** partitions that same 1 nF into four 250 pF
+banks with RF 1 ohm and PLL/converter 2 ohm feeds. At 156.25 MHz, clock coupling
+is 1.035 mV/mA versus 1.038 for the equal-capacitance unfiltered control, while
+RF worsens to 1.176 mV/mA. Wired clock DC drops another 88 mV to 2.634 V under
+the existing impedance assumptions. Do not adopt this blanket RC split as an
+isolation solution. The comparison retains all branch capacitor ESR/ESL and
+shared return current; it does not assume ideal local grounds. Values and
+verification are consolidated in `retained-ring-power-screen.json`.
+
 **Power-network gate:** keep the common bonded supply, put every chip load
 behind the package, and implement any RF/clock isolation as a real local branch.
 The current split-load five-port benches place HOST before package impedance;

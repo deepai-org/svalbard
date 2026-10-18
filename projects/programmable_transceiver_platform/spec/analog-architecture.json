@@ -2232,7 +2232,12 @@
         "regulator_on_die": false,
         "shared_return_l_h": 2.5e-10,
         "topology": "One external supply: retained ring physically joins VDD/DVDD and all eight supply bonds. VSS/DVSS and ten return bonds form one separate return. Analog/digital ports denote local branches, not independent external feeds; local isolation and star routing remain to be implemented.",
-        "total_on_die_decoupling_f": 1e-09
+        "total_on_die_decoupling_f": 1e-09,
+        "local_distribution": {
+          "raw_cap_f": 1e-09,
+          "branches": {},
+          "scope": "Selected common-ring electrical baseline: every chip load is downstream of package impedance and shares the raw supply/return. Uses the existing 1 nF allocated decoupling, not extracted capacitance. Local isolation remains unimplemented; the tested split RC experiment is not adopted. Coupled payload benches still require migration."
+        }
       },
       "ports": {
         "analog_supply": {

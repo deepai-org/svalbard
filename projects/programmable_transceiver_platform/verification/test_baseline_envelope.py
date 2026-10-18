@@ -3827,3 +3827,34 @@ class RetainedRingPowerTests(unittest.TestCase):
             retained_ring_power_screen(changed)
 
 TEST_DESIGN_ROLES['RetainedRingPowerTests']=('shared_design','Shared passive values and current allocations, die-side host-port correction; analytic parallel impedance and energy conservation, not physical qualification.')
+
+
+class CommonRingCircuitTests(unittest.TestCase):
+    def test_total_current_and_capacitance_are_not_lost(self):
+        from power_distribution import from_design,mode_loads,split_rc_experiment
+        design=load_design()
+        for override in (None,split_rc_experiment()):
+            circuit=from_design(design,local_override=override)
+            self.assertAlmostEqual(circuit.capacitance_f,1e-9,places=18)
+            for mode in ('rf_rx','rf_tx','wired','usb'):
+                loads=mode_loads(design,mode,local_override=override)
+                result=circuit.solve(0.,loads,3.3)
+                n=circuit.network
+                expected=3.3-sum(loads.values())*(n['feed_r']+n['package_r']+circuit.return_r)
+                self.assertAlmostEqual(result['rail_v']['raw'].real,expected)
+                for name,branch in circuit.branches.items():
+                    self.assertAlmostEqual(result['rail_v'][name].real,expected-loads[name]*branch['r_ohm'])
+                self.assertLess(abs(result['power_residual_w']),1e-11)
+        with self.assertRaisesRegex(ValueError,'die side'):
+            circuit.solve(1e6,{'board':.01})
+
+    def test_generated_circuit_agrees_with_ngspice(self):
+        import shutil,tempfile
+        from power_distribution import verify_spice
+        if not shutil.which('ngspice'):self.skipTest('ngspice required for independent circuit verification')
+        with tempfile.TemporaryDirectory(prefix='common-ring-') as work:
+            result=verify_spice(load_design(),work)
+            self.assertEqual(len(result['cases']),8)
+            self.assertTrue(all(r['ac_points']>=60 for r in result['cases']))
+
+TEST_DESIGN_ROLES['CommonRingCircuitTests']=('shared_design','Selected common ring plus explicitly unadopted equal-capacitance RC control; DC ownership and independent SPICE/nodal agreement, not isolation qualification.')

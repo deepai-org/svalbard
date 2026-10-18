@@ -330,7 +330,7 @@
     "implementation": "analog/pads/README.md",
     "shared_parameter_resolver": "analog/pads/design.py",
     "assembly_reference": "analog/pads/generated/assembly-report.json",
-    "assembly_status": "All 74 provider bond openings and 18 fixed supply/ground sites preserved. Five custom cells replace ten signal sites; twelve host output sites use the shared bi_t candidate. Near-bond protection devices now sit at local depth90um, with local gate/source/body routing and via arrays to declared DVSS landings. Native top-metal landing components carry only DVSS labels. All custom-to-ring overlaps are confined to those landings; no custom-to-custom overlap. Local metal/via ground joins pass extraction without supply conflicts or pad shorts. Whole-ring/device extraction, current capacity, assembled DRC/LVS and provider board confirmation remain open. Host throughput remains unqualified.",
+    "assembly_status": "Existing custom assembly preserves all 74 openings relative to its older placed template and has local clearance/rail checks. Current provider golden-mask audit fails: 34 north/south openings are 0.5um left of required positions; the real seal-ring and required ID/marker assembly are absent. Packaging is the first implementation gate; see contract.json assembly_policy.packaging_gate and analog/pads/generated/packaging-audit.json. Pinned Run 2 board net mapping matches all assigned signals and fixed power/ground sites, but future-run delivery, wire-loop geometry, whole-ring DRC/LVS and current capacity remain unqualified.",
     "circuit_and_layout_generator": [
       "analog/pads/circuits.py",
       "analog/pads/layout.py"

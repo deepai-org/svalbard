@@ -152,7 +152,20 @@
     },
     "provider_template_commit": "0de7e394337a1f7f5303ac7a3681bf2481b58176",
     "route": "wafer_space_provided_chip_on_board",
-    "signal_pad_substitution": "analog_cells_or_custom_frontends_at_compatible_bond_sites_not_required_to_use_standard_gpio_signal_circuitry"
+    "signal_pad_substitution": "analog_cells_or_custom_frontends_at_compatible_bond_sites_not_required_to_use_standard_gpio_signal_circuitry",
+    "packaging_gate": {
+      "priority": "before_freezing_pad_circuit_layouts",
+      "audit_report": "analog/pads/generated/packaging-audit.json",
+      "provider_sources_checked_on": "2026-10-18",
+      "candidate_board": "run-2/1x1-cob/1x1-mezzanine.kicad_pcb at 5cb466897372ac6c9df03142287858c1c8b1c9a7",
+      "candidate_connector_contacts": 70,
+      "delivered_run_board_confirmed": false,
+      "required": "Preserve current golden-mask bond positions and provider power/ground assignments. Use the real seal ring and all four required ID/marker cells at template locations; pass official COB geometry checks before declaring the foundation packaging-compatible. Complete upstream precheck, electrical ring checks and board/bond verification before tapeout.",
+      "current_failure": "Partial routed assembly fails upstream size and pad-mask checks: no seal-ring/ID assembly and 34 north/south openings are 0.5um left of current golden-mask positions. Existing local placement checks are not submission approval.",
+      "ground_topology": "Pinned COB design ties all ten die ground sites to the same board GND; separate on-chip analog return routing does not imply independent off-chip grounds.",
+      "power_topology": "PCB supply names are not proof of independent die rails. Preserve native power sites and verify on-chip joins before assigning external voltages.",
+      "wire_geometry": "Pinned Run 1 published rules: no crossing, angle <=45deg, actual wire length <3mm and >=max(1mm,2*die thickness), bonding area without solder mask. Confirm selected-run applicability and actual landing/loop geometry. Current centered straight-line projection is not wire-length qualification."
+    }
   },
   "assumptions": [
     "Continuous bit packing across word boundaries; per-source static slots, no payload packet headers.",

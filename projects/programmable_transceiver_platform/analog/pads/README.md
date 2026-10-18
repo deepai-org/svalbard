@@ -958,24 +958,34 @@ a resolution. Preserve provider-compatible bonding and account for external
 components together with their interconnects. Defer further bias, capacitance
 and geometry sweeps unless their result can change one of these decisions.
 
-The first physical rail-window detector in `rail_supervisor.py` uses PDK
-transistors and resistors, including its bias source and reset override. Its
-reference input remains explicit. `generated/rail-supervisor-screen.json`
-**rejects it for pad-enable use**: a ratio-only detector follows reference
-collapse; adding an untrimmed MOS-threshold floor still permits logic-high at
-2.175 V in FF and 2.325 V in FS with a 0.8 V reference. With a 1 V reference,
-the guarded SS permission window begins near 3.0 V, conflicting with the current
-lower common-ring operating estimates. Reset-low suppresses output in the
-tested typical DC grid. Peak sweep current reaches about 0.434 mA; this is not
-an allocated or optimized supervisor implementation.
+The current detector building block in `rail_supervisor.py` uses a resistor-biased
+VPNP junction and PMOS-input comparator for an independent supply floor, plus
+PDK FET/resistor window comparators and reset override. Its main reference input
+remains explicit. It is **not connected to pad enables**. The previous
+MOS-threshold floor is retained only as an explicit rejected comparison.
 
-The next safety implementation must establish rail/reference validity
-independently of a collapsing reference and retain reset-dominant final disable.
-Do not spend further effort tuning one nominal FET-divider trip point. These
-27 C FET-corner sweeps use typical resistors and a declared 500 fF load; they
-omit resistor corners, mismatch, hysteresis, startup hold, transients, routing
-and final pad loading. `rail_supervisor.screen(work, pdk)` reproduces the sweep;
-`reuse_dc=True` reanalyzes saved data only after checking exact deck identity.
+`generated/rail-supervisor-screen.json` records all fifteen FET/BJT corner
+combinations at 27 C, typical resistors. With a 1 V main reference the permission
+window starts between 2.625 and 2.7 V, improving the MOS-floor spread. However,
+FS/typical BJT at 0.475 V supply and 0.4 V reference produces a 0.451 V output;
+independent operating-point and fine upward/downward sweeps reproduce it. A
+logic-low or harmless gate voltage cannot be assumed in that state.
+
+The typical transient reaches active and recovered states, rejects the settled
+brownout plateau and responds to reset. It nevertheless retains output above
+1.65 V for approximately 9.06 ns while supply is below 2.5 V during transitions.
+After power loss with reference retained, output remains 0.119–0.298 V in the
+observed window. These are unresolved shutdown/discharge problems, not pad
+safety evidence. The next implementation needs a fast reset-dominant local
+clamp, deliberate discharge and controlled restart, followed by actual final
+gate loading. Do not tune the nominal DC trip point to hide these failures.
+
+`rail_supervisor.screen(work, pdk)` reproduces the DC campaign;
+`transient_screen(work, pdk)` reproduces startup, collapse, reset and recovery.
+`reuse_dc=True` / `reuse=True` require exact saved-deck identity. Resistor
+corners, mismatch, temperature variation, hysteresis, routing, final pad loading
+and device-survival qualification remain open. The VPNP schematic device also
+needs a verified physical implementation before using the pad layout generator.
 
 ### Current first-pass decisions
 

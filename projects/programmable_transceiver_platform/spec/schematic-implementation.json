@@ -925,9 +925,9 @@
       "simultaneity": "Cell reuse does not remove the need for separate physical instances for simultaneous independent lanes. Current pin and packaging plan remains selected.",
       "local_safety_evidence": {
         "report": "analog/pads/generated/rail-supervisor-screen.json",
-        "status": "physical_rail_detector_candidate_rejected_not_connected_to_pads",
-        "finding": "Actual PDK FET/resistor ratio-window detector with reset override was screened at27C across typical/ff/ss/fs/sf FET corners, typical resistors. Degraded reference can lower the ratio-only permission window. Independent MOS-threshold floor still asserts below2.5V in ff/fs; with1V reference, ss begins around3.0V. Reset-low holds output low in the tested typical DC grid. No transient, mismatch, fanout, extraction or core safety qualification.",
-        "decision": "Retain reset-dominant local disable as the requirement. Do not substitute a ratio-only detector or untrimmed MOS threshold for independently qualified rail/reference validity; reference collapse must be tested jointly with supply collapse. Candidate is an analysis building block, not selected physical supervisor."
+        "status": "junction_detector_building_block_unqualified_not_connected_to_pads",
+        "finding": "Grounded-base/collector VPNP floor and PMOS-input comparator narrow1V-reference trip onset to2.625..2.7V across15FET/BJT corner combinations at27C with typical resistors. FS/typical BJT at0.475V supply/0.4V reference gives0.451V output, independently reproduced. Typical500fF-load lifecycle has9.06ns output>1.65V while supply<2.5V and retains0.119..0.298V after power loss. Settled reset/brownout suppression does not qualify transitions.",
+        "decision": "Retain junction detector for refinement, not pad-enable use. Implement reset-dominant fast local clamp/discharge and controlled restart, then qualify actual final gate loads. Main reference generation, mismatch/resistor/temperature coverage, hysteresis and physical layout remain open. Earlier MOS-threshold floor remains a rejected diagnostic control."
       }
     }
   }

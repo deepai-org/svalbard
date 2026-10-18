@@ -3910,3 +3910,20 @@ class CommonRingEnvironmentTests(unittest.TestCase):
             self.assertLess(abs(actual['power_residual_w']),1e-10)
 
 TEST_DESIGN_ROLES['CommonRingEnvironmentTests']=('shared_design','All four operating modes: coupled base DC, coherent host spectra and pad ground compared against independent common-ring nodal circuit; device timing and physical parasitics remain unqualified.')
+
+
+class CommonRingTransientTests(unittest.TestCase):
+    def test_both_load_ports_match_independent_common_ring_impedance(self):
+        from robustness_envelope import local_load_state_space
+        from baseline_envelope import inventory_environment
+        from power_distribution import from_design
+        design=load_design();circuit=from_design(design)
+        e=inventory_environment(design.contract,design.architecture,'rf',2.437e9,156.25e6,design=design)
+        model=local_load_state_space(e['network'],include_host_load=True)
+        for f in (1e3,1e6,50e6,156.25e6,1e9):
+            w=2j*np.pi*f
+            transfer=(model.C@np.linalg.solve(w*np.eye(len(model.A))-model.A,model.B)+model.D)*w
+            expected=circuit.solve(f,{'raw':1.})['rail_v']['raw']
+            for port in (0,1):self.assertLess(abs(transfer[0,port]-expected),1e-8)
+
+TEST_DESIGN_ROLES['CommonRingTransientTests']=('shared_design','Time-domain state-space transfer of both load ports checked against independent common-ring RLC equations; not transistor startup or shutdown qualification.')

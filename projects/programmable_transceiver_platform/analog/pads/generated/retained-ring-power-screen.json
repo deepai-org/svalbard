@@ -205,17 +205,17 @@
     "scope": "Same total 1 nF for filtered and unfiltered control. Local branches use real passive impedances; no assumed isolation factor."
   },
   "design_provenance": {
-    "design_fingerprint": "5e04fb4968bd31b292f1a0d6d85da38e3672c740c01dfe4a84347d45be04cbba",
+    "design_fingerprint": "8284b02ea64642f88076e630a4b244122b847be3794b110f188f303f163f9191",
     "fingerprint_format": "canonical-json-sha256-v1",
     "circuit_experiments": [],
     "documents": {
-      "spec/contract.json": "12be893e398f86427fa0719bf2e861ac084f748fb98ded228e664c9e53616a06",
-      "spec/analog-architecture.json": "83f9bba018327a70c784137d91e7c10807cf13ef2565fe66488c06df3451cdea"
+      "spec/contract.json": "6eb65bff394cb3a8022166687d068e3af9dfe5144f30cd782800c6ed32b8eb47",
+      "spec/analog-architecture.json": "3d434d00169961085c812bd743feb359a39c6887b27197f6fc6daaa975fdcc42"
     }
   },
   "model_source_sha256": {
-    "verification/baseline_envelope.py": "bb64c3a0066acb91b92a010cc6c71fab5bc32c4f422f2d3987bc968429cad4c7",
-    "verification/robustness_envelope.py": "cd66ae3499e19caff9bbffcfa0aea1f48e8070b0694f233efafb77acfd07233c",
+    "verification/baseline_envelope.py": "c0145ac3c37220d50883d1101cb859659050f8643f235931a0f018a9b6480b4f",
+    "verification/robustness_envelope.py": "99bb7ac74bcb2647183c701ff74318506a15a22805c032efdec582ed2dd80729",
     "system_model/architecture_fast/rf_quality_budget.py": "6d22c9637bc0165cdae9c6f5ee4a4116156f82f44cb878f9e46c5a24ec2955d7",
     "system_model/architecture_fast/power_distribution.py": "ba503adaa60104f59f54b670ae41ff8bf00d537996f635833542d66c2a92549d"
   },
@@ -344,10 +344,10 @@
     "Ring connectivity establishes topology, not R/L/C or current distribution.",
     "No local isolation is implemented in this unfiltered comparison; the pre-existing package resistance includes hypothetical damping and is not measured.",
     "Frequency samples are not a certified resonance bound; no actual host spectrum, nonlinear large-signal behavior or transistor supply rejection is inferred.",
-    "Shared DC/host spectra/coupled linear returns are migrated; transient load-response mappings and implemented local-network validation remain open."
+    "Shared DC/host spectra/coupled linear returns and incremental transient ports are migrated; implemented local-network and nonlinear validation remain open."
   ],
   "independent_spice_verification": {
-    "simulator_version": "******\n** ngspice-42 : Circuit level simulation program\n** Compiled with KLU Direct Linear Solver\n** The U. C. Berkeley CAD Group\n** Copyright 1985-1994, Regents of the University of California.\n** Copyright 2001-2023, The ngspice team.\n** Please get your ngspice manual from https://ngspice.sourceforge.io/docs.html\n** Please file your bug-reports at http://ngspice.sourceforge.net/bugrep.html\n** Creation Date: Sun Mar 31 20:15:14 UTC 2024\n******",
+    "simulator_version": "******\n** ngspice-47 : Circuit level simulation program\n** Compiled with KLU Direct Linear Solver\n** The U. C. Berkeley CAD Group\n** Copyright 1985-1994, Regents of the University of California.\n** Copyright 2001-2026, The ngspice team.\n** Please get your ngspice manual from https://ngspice.sourceforge.io/docs.html\n** Please file your bug-reports at http://ngspice.sourceforge.net/bugrep.html\n** Creation Date: Fri Oct 16 14:38:19 UTC 2026\n******",
     "cases": [
       {
         "circuit": "selected",
@@ -407,5 +407,20 @@
       }
     ],
     "scope": "Linear passive circuits only. Does not verify transistor startup, protection, noise, current dependence or physical RLC."
+  },
+  "transient_spice_verification": {
+    "simulator_version": "******\n** ngspice-47 : Circuit level simulation program\n** Compiled with KLU Direct Linear Solver\n** The U. C. Berkeley CAD Group\n** Copyright 1985-1994, Regents of the University of California.\n** Copyright 2001-2026, The ngspice team.\n** Please get your ngspice manual from https://ngspice.sourceforge.io/docs.html\n** Please file your bug-reports at http://ngspice.sourceforge.net/bugrep.html\n** Creation Date: Fri Oct 16 14:38:19 UTC 2026\n******",
+    "samples": 3058,
+    "requested_end_s": 5e-07,
+    "completed_end_s": 5.000000000000001e-07,
+    "load_step_a": 0.01,
+    "ramp_s": 2e-08,
+    "max_consistent_one_sided_difference_v": 1.824790382393406e-06,
+    "max_raw_corner_difference_v": 9.358288769698204e-05,
+    "inductive_corner_step_v": 9.358288770053476e-05,
+    "model_min_increment_v": -0.02076012460219968,
+    "model_max_increment_v": 0.0,
+    "final_increment_v": -8.139773631928814e-06,
+    "scope": "10 mA diagnostic HOST perturbation about allocated RF DC load; rise/hold/fall and retained settling, not a measured load waveform or transistor startup/brownout. Exact PWL corners compare left or right voltage limits explicitly; all other points use a single prediction. Gear integration reaches the requested end time."
   }
 }

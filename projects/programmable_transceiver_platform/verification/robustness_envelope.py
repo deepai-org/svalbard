@@ -1390,8 +1390,9 @@ def local_load_state_space(candidate,*,include_host_load=False):
     local load current. All are perturbations about an already settled load.
     Input is dIload/dt; output is die supply minus die return perturbation.
     No node is reset when the load changes direction.
-    Optional sixth state is HOST load from the board-feed node to die return,
-    with a second slope input. It shares feed/return but bypasses package supply.
+    Optional sixth state is HOST load with a second slope input. In the shared
+    common-ring design it traverses the same package path as the local load.
+    Explicit legacy board-side fixtures retain their bypass topology.
     """
     from scipy.signal import StateSpace
     n=candidate['network']
@@ -1405,14 +1406,16 @@ def local_load_state_space(candidate,*,include_host_load=False):
     inductance=np.array([[lf+lb,-lb],[-lb,lp+ld+lb]])
     if np.linalg.det(inductance)<=0:
         raise ValueError('Nonsingular positive inductance network required')
+    host_r=rp if candidate.get('host_supply_location','board')=='die' else candidate['return_r_ohm']
+    host_l=lp if candidate.get('host_supply_location','board')=='die' else candidate['return_l_h']
     def derivative(x,u):
         i,ic,vb,vc,load=x[:5]
         host=x[5] if include_host_load else 0.
         local_slope,host_slope=(u if include_host_load else (u,0.))
         di,dic=np.linalg.solve(inductance,[-(rf+rb)*i+rb*(load+host+ic)-vb+lb*(local_slope+host_slope),
             vb-vc+rb*i-(rb+rp)*load-(rb+rp+rd)*ic-
-            (rb+candidate['return_r_ohm'])*host-(lb+lp)*local_slope-
-            (lb+candidate['return_l_h'])*host_slope])
+            (rb+host_r)*host-(lb+lp)*local_slope-
+            (lb+host_l)*host_slope])
         base=[di,dic,(i-load-ic-host)/cb,ic/cd,local_slope]
         return np.array(base+[host_slope] if include_host_load else base)
     count=6 if include_host_load else 5
@@ -1429,7 +1432,8 @@ class LocalLoadTransient:
 
     Input is piecewise constant load slope in A/s. Mode changes alter the slope,
     never reset the capacitor voltages or inductor currents. This reduced local
-    load network optionally includes the independent HOST feed-node load;
+    load network optionally includes the separately commanded HOST load at its
+    candidate-selected physical node;
     independently driven clock-input ports remain outside this reduction.
     """
     def __init__(self,candidate,*,time=0.,clock_pole_hz=None,clock_sensitivity_s_per_v=0.,include_host_load=False):

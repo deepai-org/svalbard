@@ -100,9 +100,22 @@ Shared base DC, host harmonic spectra, pad ground motion and the coupled linear
 return solver now use this topology. Host switching draws at the die node and
 native host/analog grounds are exactly joined, including in the differential
 reference-input solve. Legacy standalone split-load fixtures remain explicit
-controls. Transient load-response mappings still need audit/migration. Tests
+controls. Incremental transient HOST/local ports now traverse that same package
+path, retaining capacitor and inductor state through load changes. Tests
 compare these shared paths against the independent common-ring circuit for
 all four operating modes; KCL and energy balance do not qualify physical noise.
+
+The transient circuit check uses the project ngspice47 build: a diagnostic
+10 mA HOST rise/hold/fall, 20 ns ramps and 500 ns observation agrees with the
+retained-state model within 1.83 microvolts. Exact PWL ramp corners have an
+approximately 93.58 microvolt inductive step; the comparison explicitly checks
+left/right limits. It rejects runs that do not reach the requested end time,
+including the aborted stock-ngspice42 trapezoidal run. Stock42 Gear also missed
+the 2 microvolt numerical comparison bound; neither run is acceptance evidence.
+Reproduce with `verify_common_ring_transient(design, work, executable=...)` in
+`verification/baseline_envelope.py`, selecting the project ngspice47 executable.
+This is a linear perturbation around a settled supply, not transistor startup,
+load-dependent current, brownout safety or physical supply qualification.
 
 This checks retained-ring drawing connectivity only: custom pad/core hookup,
 transistor conduction, resistance/current capacity, package coupling and ESD

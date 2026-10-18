@@ -2227,7 +2227,7 @@
             "package_r": 2.0
           },
           "return_r_ohm": 0.02,
-          "scope": "Shared base DC, host harmonic spectra and coupled linear return solver use the common-ring topology: all on-chip loads behind package impedance; native host/quiet grounds exactly connected. Uses the allocated 1 nF, not extracted capacitance. Legacy standalone split-load fixtures remain controls. Transient load-response mappings and complete integrated physical validation remain open; package R/L/C are unmeasured."
+          "scope": "Shared base DC, host harmonic spectra and coupled linear return solver use the common-ring topology: all on-chip loads behind package impedance; native host/quiet grounds exactly connected. Uses the allocated 1 nF, not extracted capacitance. Legacy standalone split-load fixtures remain controls. Incremental transient HOST/local load ports use the same package path and preserve RLC state; frequency response and rise/hold/fall agree with independent circuit equations and ngspice47. Nonlinear startup, safety and complete integrated physical validation remain open; package R/L/C are unmeasured."
         },
         "regulator_on_die": false,
         "shared_return_l_h": 2.5e-10,

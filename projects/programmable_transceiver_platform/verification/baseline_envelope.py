@@ -149,7 +149,55 @@ def retained_ring_power_screen(design=None):
         limitations=['Ring connectivity establishes topology, not R/L/C or current distribution.',
             'No local isolation is implemented in this unfiltered comparison; the pre-existing package resistance includes hypothetical damping and is not measured.',
             'Frequency samples are not a certified resonance bound; no actual host spectrum, nonlinear large-signal behavior or transistor supply rejection is inferred.',
-            'Shared DC/host spectra/coupled linear returns are migrated; transient load-response mappings and implemented local-network validation remain open.'])
+            'Shared DC/host spectra/coupled linear returns and incremental transient ports are migrated; implemented local-network and nonlinear validation remain open.'])
+
+
+def verify_common_ring_transient(design, work, executable="ngspice"):
+    """Compare retained RLC state with SPICE, including PWL corner conventions."""
+    import subprocess
+    from power_distribution import from_design,mode_loads
+    from robustness_envelope import LocalLoadTransient
+    work=Path(work).resolve();work.mkdir(parents=True,exist_ok=True)
+    environment=inventory_environment(design.contract,design.architecture,'rf',2.437e9,156.25e6,design=design)
+    circuit=from_design(design);loads=mode_loads(design,'rf_rx')
+    supply=environment['board_source_v'];base=circuit.solve(0.,loads,supply)['rail_v']['raw'].real
+    deck=work/'host-transient.cir';data=work/'host-transient.dat'
+    deck.write_text(circuit.spice(loads,source_v=supply)+
+        f'ISTEP raw die_return PWL(0 0 10n 0 30n .01 100n .01 120n 0 500n 0)\n'
+        f'.options method=gear maxord=2 reltol=1e-7 abstol=1e-12 vntol=1e-10\n.control\n'
+        f'set wr_singlescale\nset wr_vecnames\nset numdgt=15\ntran .2n 500n 0 .2n\n'
+        f'wrdata {data} v(raw,die_return)\nquit\n.endc\n.end\n')
+    data.unlink(missing_ok=True)
+    version=subprocess.run([executable,'--version'],capture_output=True,text=True,check=True,timeout=10).stdout.strip()
+    run=subprocess.run([executable,'-b',str(deck)],capture_output=True,text=True,timeout=30)
+    deck.with_suffix('.log').write_text(run.stdout+run.stderr)
+    if run.returncode or not data.exists():raise RuntimeError('SPICE transient failed')
+    samples=np.loadtxt(data,skiprows=1)
+    if abs(samples[-1,0]-500e-9)>1e-15:raise RuntimeError('SPICE transient aborted before requested end time')
+    model=LocalLoadTransient(environment['network'],include_host_load=True)
+    events=[(10e-9,.01),(100e-9,0.)];errors=[];corner_errors=[];values=[]
+    # An ideal current-slope change produces an instantaneous inductive voltage
+    # step. SPICE may report the left limit; advance() returns the right limit.
+    corners={10e-9:5e5,30e-9:-5e5,100e-9:-5e5,120e-9:5e5}
+    for time,voltage in samples:
+        while events and events[0][0]<=time:
+            when,current=events.pop(0);model.ramp_to(when,0.,20e-9,host_increment_a=current)
+        predicted=model.advance(float(time));actual=voltage-base;error=abs(actual-predicted)
+        for corner,slope_change in corners.items():
+            if abs(time-corner)<1e-18:
+                jump=float(model.system.D[0,1])*slope_change
+                corner_errors.append(error)
+                error=min(error,abs(actual-(predicted-jump)))
+        errors.append(error);values.append(predicted)
+    maximum=float(max(errors))
+    if maximum>2e-6:raise AssertionError('SPICE/state transient disagreement: '+str(maximum)+' at '+str(samples[int(np.argmax(errors)),0]))
+    return dict(simulator_version=version,samples=len(samples),requested_end_s=500e-9,completed_end_s=float(samples[-1,0]),
+        load_step_a=.01,ramp_s=20e-9,max_consistent_one_sided_difference_v=maximum,
+        max_raw_corner_difference_v=float(max(corner_errors)),
+        inductive_corner_step_v=abs(float(model.system.D[0,1])*5e5),
+        model_min_increment_v=float(min(values)),model_max_increment_v=float(max(values)),
+        final_increment_v=float(values[-1]),
+        scope='10 mA diagnostic HOST perturbation about allocated RF DC load; rise/hold/fall and retained settling, not a measured load waveform or transistor startup/brownout. Exact PWL corners compare left or right voltage limits explicitly; all other points use a single prediction. Gear integration reaches the requested end time.')
 
 
 def rail_excursion(tones, *, dc_v, samples_per_fastest_period=16):
@@ -325,7 +373,7 @@ def inventory_environment(contract,architecture,mode,carrier,word,*,inventory_mo
                               for name in ('pga_i','pga_q','lna','adc_i','adc_q')}
     e['design_parameter_source']='architecture_inventory_with_explicit_case_overrides'
     e['physical_power_topology_qualified']=False
-    e['physical_power_topology_gap']='Base DC, host spectra and shared coupled linear return solver use the common ring. Transient load-response mappings, physical RLC and local isolation remain unqualified.'
+    e['physical_power_topology_gap']='Base DC, host spectra, shared coupled linear returns and incremental transient load ports use the common ring. Physical RLC, local isolation and nonlinear safety remain unqualified.'
     e['design_provenance']=design.provenance()
     e['inventory_current_a']=budget
     e['inventory_current_report']=report

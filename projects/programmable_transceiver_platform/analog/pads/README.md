@@ -514,6 +514,16 @@ both comparisons. This finite pulse is not standardized ESD, actual device
 survival, or a package-current qualification. RX outputs were disabled in this
 fixture; their small excursions do not qualify active receiver core stress.
 
+A direct-trigger diagnostic adds three series diode-connected 6 V NMOS devices
+(100 micrometres wide each, grounded bodies) from the isolated rail to the shunt
+gate. It retains approximately 2.999 V before the pulse but only reduces the pad
+peak to 7.84 V, with a 6.81 V isolated-rail peak. It is **not selected**. The
+comparison is reproducible with `direct_trigger=True` in the same pulse helper.
+Do not pursue an unconstrained sizing sweep: the next architecture decision must
+address sufficient trigger drive and actual primary-to-core coordination together,
+including the capacitance and current cost of any secondary protection.
+
+
 
 | Current evidence | What it establishes / remaining limitation |
 | --- | --- |
@@ -1081,6 +1091,16 @@ released state with reliable release**. Do not optimize one in isolation.
 both comparisons. This finite pulse is not standardized ESD, actual device
 survival, or a package-current qualification. RX outputs were disabled in this
 fixture; their small excursions do not qualify active receiver core stress.
+
+A direct-trigger diagnostic adds three series diode-connected 6 V NMOS devices
+(100 micrometres wide each, grounded bodies) from the isolated rail to the shunt
+gate. It retains approximately 2.999 V before the pulse but only reduces the pad
+peak to 7.84 V, with a 6.81 V isolated-rail peak. It is **not selected**. The
+comparison is reproducible with `direct_trigger=True` in the same pulse helper.
+Do not pursue an unconstrained sizing sweep: the next architecture decision must
+address sufficient trigger drive and actual primary-to-core coordination together,
+including the capacitance and current cost of any secondary protection.
+
 
 
 ### Current first-pass decisions

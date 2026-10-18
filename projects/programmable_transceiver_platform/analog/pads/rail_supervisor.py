@@ -356,7 +356,7 @@ def clamp_state_screen(work,*,reuse=False,long_hold=False,gate_discharge=False):
     return dict(windows=r,gate_discharge_nominal_ohm=100000 if gate_discharge else None,deck_sha256=hashlib.sha256(deck.encode()).hexdigest(),scope='Connected diagnostic with all extracted devices retained; optional100k gate discharge uses eight schematic PDK resistors without added layout routing. Window averages do not establish final equilibrium or ESD survival.')
 
 
-def clamp_release_pulse_screen(work,*,gate_discharge=False,reuse=False):
+def clamp_release_pulse_screen(work,*,gate_discharge=False,reuse=False,direct_trigger=False):
     """Compare a diagnostic protection pulse after the retained brownout hold."""
     from pathlib import Path
     import os,hashlib
@@ -366,6 +366,20 @@ def clamp_release_pulse_screen(work,*,gate_discharge=False,reuse=False):
     source=w/('clamp_long_hold_discharge.spice' if gate_discharge else 'clamp_long_hold.spice')
     base=source.read_text().split('.control')[0]
     name='release_pulse_discharge' if gate_discharge else 'release_pulse_control'
+    if direct_trigger:
+        if not gate_discharge:raise ValueError('Direct trigger diagnostic requires gate discharge')
+        lines=[];inside=False
+        for line in base.splitlines():
+            if line.startswith('.subckt combined_flat '):inside=True
+            if inside and line.startswith('.ends'):
+                node='ESD_RAIL'
+                for i in range(3):
+                    end='a_42245_162628#' if i==2 else f'DIRECT_TRIGGER_{i}'
+                    lines.append(Mos(f'DIRECT_TRIGGER_{i}',(node,node,end,'VSS'),'nfet_06v0',100.,.7).spice())
+                    node=end
+                inside=False
+            lines.append(line)
+        base='\n'.join(lines)+'\n';name+='_direct_trigger'
     deck=base+'IINJECT VSS PAD_P PULSE(0 .1 1000n .1n .1n 2n 20u)\n'
     nodes=['PAD_P','PAD_N','RX_P','RX_N','xpad.ESD_RAIL','xpad.xphysical.a_42245_162628#']
     deck+=control(w,name,'tran .05n 1500n',' '.join('v('+n+')' for n in nodes))
@@ -383,6 +397,6 @@ def clamp_release_pulse_screen(work,*,gate_discharge=False,reuse=False):
         y=x[(x[:,0]>=a*1e-9)&(x[:,0]<=b*1e-9)]
         if len(y)<2:raise ValueError('Missing pulse state')
         windows[name]={n:dict(min_v=float(y[:,i+1].min()),max_v=float(y[:,i+1].max())) for i,n in enumerate(nodes)}
-    return dict(windows=windows,gate_discharge=gate_discharge,deck_sha256=hashlib.sha256(deck.encode()).hexdigest(),
+    return dict(windows=windows,gate_discharge=gate_discharge,direct_trigger=direct_trigger,deck_sha256=hashlib.sha256(deck.encode()).hexdigest(),
         source_deck_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
-        scope='100mA positive2ns diagnostic into PAD_P after1us startup/brownout, all pad attachments and board peers retained. Typical models27C, schematic gate-discharge option. Not a standardized ESD waveform, current-density/thermal qualification, core survival or settled-DC acceptance; transient operating-point initialization is permitted for this lifecycle comparison.')
+        scope='100mA positive2ns diagnostic into PAD_P after1us startup/brownout, all pad attachments and board peers retained. Typical models27C, schematic gate-discharge option and optional three100um diode-connected6V NMOS trigger devices with grounded bodies; no added layout routing. Not a standardized ESD waveform, current-density/thermal qualification, core survival or settled-DC acceptance; transient operating-point initialization is permitted for this lifecycle comparison.')

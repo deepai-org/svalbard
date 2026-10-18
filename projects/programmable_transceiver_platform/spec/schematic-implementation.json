@@ -632,8 +632,8 @@
     },
     "primary_protection": {
       "report": "analog/pads/generated/coverage.json",
-      "status": "canonical_primary_networks_present_core_coordination_incomplete",
-      "decision": "Retain the canonical isolated-rail primary protection networks as the first-pass baseline. Complete protection-to-core coordination, physical discharge-current paths and safe-state controls. Layout/device-graph agreement and compact-model pulse response establish neither ESD qualification nor core survival.",
+      "status": "canonical_primary_networks_present_normal_signal_release_failure_unresolved",
+      "decision": "Keep the provider-compatible shared-foundation architecture, but do not qualify the existing isolated-rail clamp: the retained RX/USB diagnostic shows sustained normal-signal loading. A100k gate-discharge candidate restores signal voltage; require pulse protection, device stress, manufacturing variation and extracted implementation checks before selection. Complete core coordination and physical discharge-current paths. Layout/device-graph agreement and compact-model pulse response establish neither ESD qualification nor core survival.",
       "scope": "Five canonical pad families include primary protection. Use their canonical extracted models and retained-state reports; the earlier small-clamp dimensional audit is historical diagnostic evidence, not the selected implementation status.",
       "export_roundtrip_report": "analog/pads/generated/gds-roundtrip.json",
       "export_model_equivalence_report": "analog/pads/generated/gds-export-electrical-equivalence.json",
@@ -645,7 +645,8 @@
         "power_transitions": "Evaluate each connected core against its local rails during reset, brownout, unpowered and reconfiguration states; external coupling capacitors do not eliminate retained charge or external excitation.",
         "transient_survival": "Unqualified until actual attached devices and allowed terminal voltage/current versus duration are established. Neither nominal device voltage labels nor behavioral rail clipping supply a survival limit.",
         "implementation_gate": "Include secondary protection or isolation wherever the primary network cannot meet the attached-device contract. Account for its capacitance, resistance, current path and area in the same generated family, rather than adding an ideal clamp only in the bench."
-      }
+      },
+      "release_evidence": "analog/pads/generated/rail-supervisor-screen.json"
     },
     "wired_tx_admittance": {
       "report": "analog/pads/generated/wired-transmit-loading.json",
@@ -929,7 +930,7 @@
         "finding": "Grounded-base/collector VPNP floor and PMOS-input comparator narrow1V-reference trip onset to2.625..2.7V across15FET/BJT corner combinations at27C with typical resistors. FS/typical BJT at0.475V supply/0.4V reference gives0.451V output, independently reproduced. Typical500fF-load lifecycle has9.06ns output>1.65V while supply<2.5V and retains0.119..0.298V after power loss. Settled reset/brownout suppression does not qualify transitions.",
         "decision": "Keep the shared-foundation architecture and provider-compatible bond geometry, but do not qualify the present isolated-rail protection circuit for reuse. Resolve its normal-signal holding/release behavior while preserving protective clamping, then finish reset-dominant disable/discharge, controlled restart and actual gate loading. Reference generation, manufacturing variation, physical layout and device-survival qualification remain open.",
         "connected_pad_finding": "Actual extracted RX/USB pad with schematic supervisor retains all branches. Stronger 10k output discharge consumes about0.50mA versus0.40mA total monitor allocation and is not selected. Pad supply backfeed decays, but about1.0603mA enters ESD_RAIL from PAD_P through upper steering diodes during late brownout. The timing node is already near the isolated rail, while the shunt gate stays high; investigate clamp release under normal powered-peer signals before further supervisor tuning.",
-        "release_candidate": "Unchanged clamp still loads PAD_P to1.553V after9us brownout. Schematic100k gate-to-return discharge (eight PDK resistors) restores2.99984V with all extracted devices retained. Candidate not selected until protection pulse/core stress, process variation and layout verification."
+        "release_candidate": "100k gate discharge restores normal signal voltage but is not sufficient: positive100mA/2ns pulse produces8.10V pad/7.11V isolated rail before turn-on, versus4.01V pad in incorrectly conducting baseline. Require fast triggering from released state and reliable release together. No survival claim from compact-model peaks."
       }
     }
   }

@@ -501,6 +501,20 @@ weaken the shunt to claim protection completion. Reproduce both comparisons with
 `clamp_state_screen(..., long_hold=True)`, adding `gate_discharge=True` for the
 candidate. Both support exact-deck saved-waveform reuse.
 
+The retained-network pulse comparison now prevents promotion of discharge alone.
+A 100 mA, 2 ns positive pulse after one microsecond of brownout reaches about
+8.10 V on PAD_P and 7.11 V on ESD_RAIL in the released candidate before turn-on;
+the incorrectly conducting baseline reaches 4.01 V. Their different initial
+states are intentional, so this does not isolate the resistor's effect on delay.
+The candidate approaches normal pad voltage again afterward, but that does not
+excuse the peak. Next circuit work must combine **fast turn-on from a correctly
+released state with reliable release**. Do not optimize one in isolation.
+`clamp_release_pulse_screen(work, gate_discharge=..., reuse=True)` reproduces
+both comparisons. This finite pulse is not standardized ESD, actual device
+survival, or a package-current qualification. RX outputs were disabled in this
+fixture; their small excursions do not qualify active receiver core stress.
+
+
 | Current evidence | What it establishes / remaining limitation |
 | --- | --- |
 | `independent-device-audit.json` | All 159 MOS/resistor/steering-diode/MIM records match the physical extractor. Checks include bodies, diode polarity/area/perimeter and ordered MIM terminals/dimensions. Injected polarity, diode-area, MIM-terminal and MIM-size faults are detected. The explicit well replacement agrees with the eight isolated array wells (569.45 µm², 470.72 µm); 68.33 fF of linear area capacitance is removed and other extracted capacitors are unchanged. Well-polarity, area and double-counting faults are detected. Nonlinear-model accuracy and protection survival remain unqualified. |
@@ -1054,6 +1068,20 @@ variation and additional layout parasitics remain unverified. Do not remove or
 weaken the shunt to claim protection completion. Reproduce both comparisons with
 `clamp_state_screen(..., long_hold=True)`, adding `gate_discharge=True` for the
 candidate. Both support exact-deck saved-waveform reuse.
+
+The retained-network pulse comparison now prevents promotion of discharge alone.
+A 100 mA, 2 ns positive pulse after one microsecond of brownout reaches about
+8.10 V on PAD_P and 7.11 V on ESD_RAIL in the released candidate before turn-on;
+the incorrectly conducting baseline reaches 4.01 V. Their different initial
+states are intentional, so this does not isolate the resistor's effect on delay.
+The candidate approaches normal pad voltage again afterward, but that does not
+excuse the peak. Next circuit work must combine **fast turn-on from a correctly
+released state with reliable release**. Do not optimize one in isolation.
+`clamp_release_pulse_screen(work, gate_discharge=..., reuse=True)` reproduces
+both comparisons. This finite pulse is not standardized ESD, actual device
+survival, or a package-current qualification. RX outputs were disabled in this
+fixture; their small excursions do not qualify active receiver core stress.
+
 
 ### Current first-pass decisions
 

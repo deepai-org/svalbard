@@ -354,3 +354,35 @@ def clamp_state_screen(work,*,reuse=False,long_hold=False,gate_discharge=False):
      if len(y)<2:raise ValueError('Missing clamp state window')
      r[label]={n:float(y[:,i+1].mean()) for i,n in enumerate(['VDD','PAD_P']+nodes)}
     return dict(windows=r,gate_discharge_nominal_ohm=100000 if gate_discharge else None,deck_sha256=hashlib.sha256(deck.encode()).hexdigest(),scope='Connected diagnostic with all extracted devices retained; optional100k gate discharge uses eight schematic PDK resistors without added layout routing. Window averages do not establish final equilibrium or ESD survival.')
+
+
+def clamp_release_pulse_screen(work,*,gate_discharge=False,reuse=False):
+    """Compare a diagnostic protection pulse after the retained brownout hold."""
+    from pathlib import Path
+    import os,hashlib
+    import numpy as np
+    from screen import control,run_spice
+    w=Path(work).resolve()
+    source=w/('clamp_long_hold_discharge.spice' if gate_discharge else 'clamp_long_hold.spice')
+    base=source.read_text().split('.control')[0]
+    name='release_pulse_discharge' if gate_discharge else 'release_pulse_control'
+    deck=base+'IINJECT VSS PAD_P PULSE(0 .1 1000n .1n .1n 2n 20u)\n'
+    nodes=['PAD_P','PAD_N','RX_P','RX_N','xpad.ESD_RAIL','xpad.xphysical.a_42245_162628#']
+    deck+=control(w,name,'tran .05n 1500n',' '.join('v('+n+')' for n in nodes))
+    previous=Path.cwd()
+    try:
+        os.chdir(w)
+        if reuse:
+            if (w/(name+'.spice')).read_text()!=deck:raise ValueError('Saved release pulse differs')
+            x=np.loadtxt(w/(name+'.dat'),skiprows=1)
+        else:x=run_spice(w,name,deck,timeout_s=120)
+    finally:os.chdir(previous)
+    if not np.isfinite(x).all() or x[-1,0]<1499.9e-9:raise ValueError('Incomplete release pulse')
+    windows={}
+    for name,a,b in [('before',990,999),('pulse',1000,1002.2),('after',1002.2,1010),('recovery',1450,1499)]:
+        y=x[(x[:,0]>=a*1e-9)&(x[:,0]<=b*1e-9)]
+        if len(y)<2:raise ValueError('Missing pulse state')
+        windows[name]={n:dict(min_v=float(y[:,i+1].min()),max_v=float(y[:,i+1].max())) for i,n in enumerate(nodes)}
+    return dict(windows=windows,gate_discharge=gate_discharge,deck_sha256=hashlib.sha256(deck.encode()).hexdigest(),
+        source_deck_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
+        scope='100mA positive2ns diagnostic into PAD_P after1us startup/brownout, all pad attachments and board peers retained. Typical models27C, schematic gate-discharge option. Not a standardized ESD waveform, current-density/thermal qualification, core survival or settled-DC acceptance; transient operating-point initialization is permitted for this lifecycle comparison.')

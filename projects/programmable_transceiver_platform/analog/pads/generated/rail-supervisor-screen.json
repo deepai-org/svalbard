@@ -1881,5 +1881,231 @@
     "deck_sha256": "c2f1b725a5e34cd1ff4aa63ec4d08e0624686a8f03a7e35b1278bdaf611c8d22",
     "scope": "Connected diagnostic with all extracted devices retained; optional100k gate discharge uses eight schematic PDK resistors without added layout routing. Window averages do not establish final equilibrium or ESD survival."
   },
-  "protection_release_decision": "Unchanged clamp remains loaded at about1.553V during9..10.179us brownout. Adding100k nominal gate discharge using eight PDK resistors restores about2.99984V and releases the shunt in the same retained-network fixture. Candidate only: verify normal signal loading, protection pulses, core terminal stress and manufacturing variation before layout integration or selection."
+  "protection_release_decision": "Do not promote gate discharge alone. It restores normal signal voltage but the same100mA/2ns diagnostic peaks at8.099V on PAD_P and7.109V on ESD_RAIL before shunt turn-on. Unchanged baseline peaks4.013V but starts incorrectly conducting. Starting states differ by design; this does not isolate resistor-induced delay. Need fast protection from the correctly released state plus reliable release, followed by process/layout/stress verification. Compact-model extrema are not device survival evidence.",
+  "protection_release_pulse": {
+    "False": {
+      "windows": {
+        "before": {
+          "PAD_P": {
+            "min_v": 1.55411415,
+            "max_v": 1.55419932
+          },
+          "PAD_N": {
+            "min_v": 1.55411416,
+            "max_v": 1.55419933
+          },
+          "RX_P": {
+            "min_v": -3.47738355e-05,
+            "max_v": -3.43558737e-05
+          },
+          "RX_N": {
+            "min_v": -3.35817355e-05,
+            "max_v": -3.31740214e-05
+          },
+          "xpad.ESD_RAIL": {
+            "min_v": 0.753735649,
+            "max_v": 0.753822563
+          },
+          "xpad.xphysical.a_42245_162628#": {
+            "min_v": 0.756935162,
+            "max_v": 0.756940827
+          }
+        },
+        "pulse": {
+          "PAD_P": {
+            "min_v": 1.56927547,
+            "max_v": 4.01337703
+          },
+          "PAD_N": {
+            "min_v": 1.54534502,
+            "max_v": 1.74131993
+          },
+          "RX_P": {
+            "min_v": 0.000484938074,
+            "max_v": 0.0960739184
+          },
+          "RX_N": {
+            "min_v": 4.40912548e-05,
+            "max_v": 0.0178028346
+          },
+          "xpad.ESD_RAIL": {
+            "min_v": 0.754438375,
+            "max_v": 2.87280631
+          },
+          "xpad.xphysical.a_42245_162628#": {
+            "min_v": 0.757129078,
+            "max_v": 1.43744253
+          }
+        },
+        "after": {
+          "PAD_P": {
+            "min_v": 0.888971434,
+            "max_v": 1.91698279
+          },
+          "PAD_N": {
+            "min_v": 0.889082845,
+            "max_v": 1.71472896
+          },
+          "RX_P": {
+            "min_v": -0.0345496901,
+            "max_v": 0.0174253355
+          },
+          "RX_N": {
+            "min_v": -0.0320839257,
+            "max_v": 0.00875539859
+          },
+          "xpad.ESD_RAIL": {
+            "min_v": 0.0749593624,
+            "max_v": 0.941642584
+          },
+          "xpad.xphysical.a_42245_162628#": {
+            "min_v": 0.756820041,
+            "max_v": 1.25041317
+          }
+        },
+        "recovery": {
+          "PAD_P": {
+            "min_v": 1.51433932,
+            "max_v": 1.51600489
+          },
+          "PAD_N": {
+            "min_v": 1.5143392,
+            "max_v": 1.5160048
+          },
+          "RX_P": {
+            "min_v": 0.000233843712,
+            "max_v": 0.000316255212
+          },
+          "RX_N": {
+            "min_v": 0.000231541563,
+            "max_v": 0.000314543224
+          },
+          "xpad.ESD_RAIL": {
+            "min_v": 0.713179891,
+            "max_v": 0.714874736
+          },
+          "xpad.xphysical.a_42245_162628#": {
+            "min_v": 0.759414986,
+            "max_v": 0.759514568
+          }
+        }
+      },
+      "gate_discharge": false,
+      "deck_sha256": "504e2c5e6f8009ce777a1f21a54e7c422eb541315f9905b7e55c90efed779225",
+      "source_deck_sha256": "8a60cea559bf5b79dcec9553cefb60be64940988da0e99c02da063620ad01d75",
+      "scope": "100mA positive2ns diagnostic into PAD_P after1us startup/brownout, all pad attachments and board peers retained. Typical models27C, schematic gate-discharge option. Not a standardized ESD waveform, current-density/thermal qualification, core survival or settled-DC acceptance; transient operating-point initialization is permitted for this lifecycle comparison."
+    },
+    "True": {
+      "windows": {
+        "before": {
+          "PAD_P": {
+            "min_v": 2.99992813,
+            "max_v": 2.99992892
+          },
+          "PAD_N": {
+            "min_v": 2.99997467,
+            "max_v": 2.99997484
+          },
+          "RX_P": {
+            "min_v": 8.57322076e-06,
+            "max_v": 9.43858106e-06
+          },
+          "RX_N": {
+            "min_v": -1.28068572e-06,
+            "max_v": -1.13505549e-06
+          },
+          "xpad.ESD_RAIL": {
+            "min_v": 2.55534357,
+            "max_v": 2.55569976
+          },
+          "xpad.xphysical.a_42245_162628#": {
+            "min_v": -5.74867641e-06,
+            "max_v": -5.71864886e-06
+          }
+        },
+        "pulse": {
+          "PAD_P": {
+            "min_v": 1.69910324,
+            "max_v": 8.09922611
+          },
+          "PAD_N": {
+            "min_v": 1.64695036,
+            "max_v": 3.08965284
+          },
+          "RX_P": {
+            "min_v": -0.0617435791,
+            "max_v": 0.197586768
+          },
+          "RX_N": {
+            "min_v": -0.0620194893,
+            "max_v": 0.0290504899
+          },
+          "xpad.ESD_RAIL": {
+            "min_v": 0.713234758,
+            "max_v": 7.10901876
+          },
+          "xpad.xphysical.a_42245_162628#": {
+            "min_v": -4.33932914e-06,
+            "max_v": 1.89622906
+          }
+        },
+        "after": {
+          "PAD_P": {
+            "min_v": 0.929050538,
+            "max_v": 1.67856591
+          },
+          "PAD_N": {
+            "min_v": 0.908760765,
+            "max_v": 1.62583657
+          },
+          "RX_P": {
+            "min_v": -0.103745806,
+            "max_v": -0.0627543825
+          },
+          "RX_N": {
+            "min_v": -0.098808436,
+            "max_v": -0.0629786139
+          },
+          "xpad.ESD_RAIL": {
+            "min_v": 0.113771472,
+            "max_v": 0.692120431
+          },
+          "xpad.xphysical.a_42245_162628#": {
+            "min_v": 0.610005748,
+            "max_v": 1.35084314
+          }
+        },
+        "recovery": {
+          "PAD_P": {
+            "min_v": 2.88483733,
+            "max_v": 2.98362538
+          },
+          "PAD_N": {
+            "min_v": 2.8841577,
+            "max_v": 2.98342015
+          },
+          "RX_P": {
+            "min_v": 0.0245321007,
+            "max_v": 0.0390686864
+          },
+          "RX_N": {
+            "min_v": 0.0237379381,
+            "max_v": 0.0376714606
+          },
+          "xpad.ESD_RAIL": {
+            "min_v": 2.19079204,
+            "max_v": 2.33062142
+          },
+          "xpad.xphysical.a_42245_162628#": {
+            "min_v": 0.000195230578,
+            "max_v": 0.00108254119
+          }
+        }
+      },
+      "gate_discharge": true,
+      "deck_sha256": "fbbf8717de94bfa8c8dfaccdb8d7cc4368ede067e083fcffece9b5c49c7d7909",
+      "source_deck_sha256": "c2f1b725a5e34cd1ff4aa63ec4d08e0624686a8f03a7e35b1278bdaf611c8d22",
+      "scope": "100mA positive2ns diagnostic into PAD_P after1us startup/brownout, all pad attachments and board peers retained. Typical models27C, schematic gate-discharge option. Not a standardized ESD waveform, current-density/thermal qualification, core survival or settled-DC acceptance; transient operating-point initialization is permitted for this lifecycle comparison."
+    }
+  }
 }

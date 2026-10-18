@@ -281,6 +281,35 @@ class DesignBoundary(unittest.TestCase):
         with self.assertRaises(ValueError):
             augment(original.replace('D0 VSS PAD_N','D0 VSS OTHER'),branches)
 
+    def test_composition_retains_every_functional_device_with_one_foundation(self):
+        from circuits import attachment, build, FAMILIES
+        from pad_composition import compose, RECIPES
+        for family in FAMILIES:
+            original=build(family);functional=attachment(original)
+            removed=[d for d in original.devices if d.name.startswith('ESD_')]
+            self.assertEqual(len(removed),4)
+            self.assertEqual(functional.devices,[d for d in original.devices if d not in removed])
+            self.assertEqual(functional.ports,original.ports)
+        for name,families in RECIPES.items():
+            text,ports,mapping,info=compose(name)
+            self.assertEqual(text.count('XFOUNDATION '),1)
+            self.assertEqual(len(ports),len(set(ports)))
+            self.assertNotIn('nfet_06v0_dss',text)
+            self.assertEqual(set(mapping),set(families))
+            for family in families:
+                self.assertEqual(mapping[family]['PAD_P'],'PAD_P')
+                self.assertEqual(mapping[family]['PAD_N'],'PAD_N')
+                self.assertEqual(text.count('X'+family+' '),1)
+        text,ports,mapping,info=compose('wired_combined')
+        self.assertNotEqual(mapping['wired_transmit']['TERM_ENABLE'],mapping['wired_receive_usb']['TERM_ENABLE'])
+        self.assertNotEqual(mapping['wired_transmit']['TERM_VCM'],mapping['wired_receive_usb']['TERM_VCM'])
+        text,ports,mapping,info=compose('wired_shared_termination')
+        self.assertEqual(mapping['wired_transmit']['TERM_VCM'],mapping['wired_receive_usb']['TERM_VCM'])
+        self.assertIn('XTERM_DISCHARGE ',text)
+        self.assertNotIn('TERM_ENABLE_LOCAL',text)
+        self.assertNotIn('TERM_P_SW_0',text)
+        self.assertIn('XTERM_P_0 ',text)
+
     def test_physical_export_rejects_unhandled_device(self):
         with TemporaryDirectory() as tmp:
             root=Path(tmp);source=root/'physical.ext'

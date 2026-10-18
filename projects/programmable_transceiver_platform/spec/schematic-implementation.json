@@ -335,7 +335,7 @@
       "analog/pads/circuits.py",
       "analog/pads/layout.py"
     ],
-    "evidence_scope": "Five transistor/passive pad candidates use native library bond geometry and extracted-capacitance lifecycle screens; RF/reference attached cores remain behavioral boundaries. Five physical-record exports match schematics in Netgen; stock ext2spice faults remain recorded. Wired TX now includes locally buffered detection/termination enables and switched physical source resistors, measuring approximately49.6ohm/leg at1.8V common mode in the nominal extracted DC screen. RX/USB nominal1GHz loading now meets its2.7pF/leg budget in four tested configurations (approximately1.68..2.59pF; tolerance and wire resistance unqualified) and still has adverse supply return current (approximately36mA peak and1.3mA late-window peak) during retained-network power collapse with stale enables, despite approximately0.23nA nominal steady DC backfeed after local high-side isolation. Reset/brownout control, impedance trim and finite termination-bias regulation, wired RX/USB trim/slew/interlocks, host/supply integration, distributed resistance and package placement remain open.",
+    "evidence_scope": "Five use-site families have generated transistor/passive circuits and layouts on a reusable foundation. Local device-graph and DRC evidence is not full-ring acceptance. Current extracted RX bypass and wired TX loading contain recorded budget misses. Wired TX current and warm RF allocations conflict with domain budgets. Physical protection-to-core coordination, local reset/brownout control, core interfaces, distributed returns and package integration remain incomplete. Use analog/pads/generated/coverage.json and the owning reports for scoped measurements; composition screens are comparative candidates, not replacements for canonical extracted evidence.",
     "retained_host_supply_evidence": {
       "report": "analog/pads/generated/retained-screen.json",
       "status": "retained_host_and_supply_candidate_screen_not_host_or_power_signoff",
@@ -487,7 +487,7 @@
         "report": "analog/pads/generated/rf-route-screen.json",
         "implementation": "analog/pads/rf_route.py augments physical RF devices/capacitance; analog_screen.py retains the same external network and core boundary.",
         "scope": "Segmented signal-metal estimate with near-bond protection taps and local arms. Nominal/high sheet variants and endpoint capacitor-placement probes; not spatial RC extraction or proven bounds.",
-        "remaining": "Via/contact/return resistance, spatial capacitance, actual attached core, and routing improvement. Wired and reference screens still omit signal-metal resistance.",
+        "remaining": "Via/contact/return resistance, spatial capacitance and actual attached cores remain open. Wired TX now has a branched metal overlay; reference and canonical wired capacitor-only screens still omit signal-metal resistance.",
         "measurement_location": "cases.<family>-<corner>-<placement>.transfer_at_carrier and tx_load_power in the owning report"
       },
       "power_return_trunks": {
@@ -498,7 +498,11 @@
         "measurement_location": "families.<family>.power_trunks",
         "scope": "Allocated M5 power/return trunks with bounded endpoints; device graph, bond positions and cell reservations unchanged. Reported end-to-end metal resistance excludes local branch access, vias, transverse returns, ring and core mesh. No current-capacity or complete IR-drop claim."
       },
-      "measurement_location": "families.<family>.legs.<leg>.corners.nominal.metal_only_ohm in the owning report"
+      "measurement_location": "families.<family>.legs.<leg>.corners.nominal.metal_only_ohm in the owning report",
+      "wired_connected_screen": {
+        "report": "analog/pads/generated/wired-transmit-branched-route-screen.json",
+        "scope": "Geometry-derived common bond lead plus separate core/protection arms; omit vias, returns and internal core buses. Two feedback iterations have not established readiness closure."
+      }
     },
     "wired_tx_termination_buffer": {
       "report": "analog/pads/generated/wired-transmit-screen.json",
@@ -605,7 +609,7 @@
         "status": "Supply-connected bounded behavioral bias driver and passive discharge probe, not implemented transistor bias or reverse-current isolation."
       },
       "decision": "Require RF cold-bias readiness independently of reference readiness, preserve warm-state bias as needed, and establish retained-input-voltage tolerance or discharge. Actual power-dependent common-source LNA input admittance must replace the conservative split resistive fixture.",
-      "scope": "Finite RX bias is an engineering probe with supply accounting, not transistor-proven capacity or reverse isolation. Reference bias remains ideal; TX lacks physical reverse junctions, quiescent current and driver bandwidth. Its small-signal loading fixture does not prove target output power. External network and stored charge persist.",
+      "scope": "Finite RX bias is a supply-accounted behavioral probe, not transistor-proven capacity or reverse isolation. Reference bias remains ideal. RF TX now includes the shared 28 mA active bias floor and supply-gain response, but physical reverse junctions, bias circuitry, bandwidth and distortion remain unimplemented. External networks and stored charge persist.",
       "external_coupling": {
         "nominal_rf_f_per_leg": 1e-10,
         "reference_f_per_leg": 1e-08,
@@ -644,10 +648,10 @@
       }
     },
     "wired_tx_admittance": {
-      "report": "analog/pads/generated/wired-primary-protection/double-tails/loading.json",
+      "report": "analog/pads/generated/wired-transmit-loading.json",
       "implementation": "analog/pads/wired_tx_loading.py",
       "scope": "Complete extracted pad, calibration bound to that netlist, nine biased configurations, odd/common admittance sweeps. Every branch retained; stiff controls/biases and no package/distributed resistance. Independent AC points supplement lifecycle tests.",
-      "decision": "Selected four-tail protected pad is canonical. Earlier selected-layout AC evidence indicates about 2.688 pF per leg disabled and 3.798 pF in detection; exact canonical regeneration still needs refreshed loading and current calibration. Do not interpret earlier small-clamp results as current acceptance.",
+      "decision": "Selected widened four-tail protected pad remains canonical. Disabled loading is about 2.706/2.713 pF against 2.7 pF; one active MAIN leg and detection also exceed allocation. Canonical lifecycle/loading were rebuilt for widened buses. Branched signal-metal overlay and attachment-composition screens are separate diagnostic evidence, not impedance or readiness qualification.",
       "current_compliance_report": "analog/pads/generated/wired-primary-protection/double-tails/loaded-calibration.json",
       "current_compliance_scope": "Earlier selected protected-pad nominal calibration only; not a refreshed calibration of the canonical regenerated model or evidence of dynamic protocol compliance."
     },
@@ -911,6 +915,14 @@
         },
         "scope": "Selected current-carrying bus widths; regeneration and routed resistance/capacitance acceptance required. Width alone does not qualify vias or electromigration."
       }
+    },
+    "foundation_and_attachments": {
+      "implementation": "analog/pads/circuits.py:foundation_devices, attachment; analog/pads/pad_composition.py",
+      "physical_foundation": "Existing isolated-rail primary-protection macro and provider-compatible bond geometry; shared local-safety requirements do not imply implemented supervisors.",
+      "comparison_report": "analog/pads/generated/pad-composition-comparison.json",
+      "decision": "Select reusable foundation with lean functional attachments. Five current use-site families are not a fixed cell-count requirement. Retain specialized wired attachments: simple union and shared-termination candidates fail the RX loading allocation before new routing. Keep RF receive/reference structural sharing as a candidate; do not populate RF pads with wired branches.",
+      "promotion_gate": "Same fully populated candidate must meet shared loading, impedance and signal-quality requirements and retained-network off-state safety, including all disabled branches, physical core interfaces and routing. Current RF/reference cores are loading assumptions, not complete transistor implementations.",
+      "simultaneity": "Cell reuse does not remove the need for separate physical instances for simultaneous independent lanes. Current pin and packaging plan remains selected."
     }
   }
 }

@@ -61,6 +61,33 @@ class Circuit:
         ])
 
 
+def foundation_devices(leg, units=2, width_um=16.):
+    """Shared local protection footprint; replaced by the primary macro at assembly.
+
+    This is the existing device recipe, not a new ESD qualification. Bond metal,
+    isolated primary rail and returns belong to the common physical foundation.
+    """
+    if leg not in ('P','N') or type(units) is not int or units<1 or not .8<=width_um<=20:
+        raise ValueError('Invalid foundation geometry')
+    return [Mos(f'ESD_{leg}_{unit}',(f'PAD_{leg}','VSS','VSS','VSS'),
+                'nfet_06v0_dss',width_um,.6) for unit in range(units)]
+
+
+def attachment(circuit):
+    """Remove only the replaceable local foundation from a generated device graph.
+
+    All functional devices, including every disabled branch, remain. A composed
+    pad must attach one primary foundation; this function alone is not a pad.
+    """
+    removed=[d for d in circuit.devices if d.name.startswith('ESD_')]
+    if not removed or any(not isinstance(d,Mos) or d.model!='nfet_06v0_dss' or
+        d.nodes[0] not in ('PAD_P','PAD_N') or d.nodes[1:]!=('VSS','VSS','VSS') for d in removed):
+        raise ValueError('Unrecognized replaceable foundation')
+    return Circuit(circuit.name+'_attachment',list(circuit.ports),
+                   [d for d in circuit.devices if d not in removed],
+                   circuit.requirements,list(circuit.limitations))
+
+
 def wired_transmit(*, protection_units=2, protection_width_um=16.,
                    steering_units=8, steering_width_um=20., tail_width_um=20.,
                    cascode_units=2, cascode_width_um=16., tail_units=2, serial_tail_units=None,
@@ -91,9 +118,7 @@ def wired_transmit(*, protection_units=2, protection_width_um=16.,
     def mos(name, d, g, s, b, model='nfet_03v3', w=12., l=.28):
         devices.append(Mos(name, (d, g, s, b), model, w, l))
     for leg in ('P', 'N'):
-        for unit in range(protection_units):
-            mos(f'ESD_{leg}_{unit}', f'PAD_{leg}', 'VSS', 'VSS', 'VSS',
-                'nfet_06v0_dss', protection_width_um, .6)
+        devices.extend(foundation_devices(leg,protection_units,protection_width_um))
     # The three steering branches share each unit's output cascodes. This
     # removes duplicated pad-connected diffusion while retaining independent
     # selectors/tails and the common analog cascode bias interface.
@@ -178,9 +203,7 @@ def analog_port(family, *, protection_units=2, protection_width_um=16.):
     devices=[]
     ports=['PAD_P','PAD_N','VSS']
     for leg in ('P','N'):
-        for unit in range(protection_units):
-            devices.append(Mos(f'ESD_{leg}_{unit}',(f'PAD_{leg}','VSS','VSS','VSS'),
-                               'nfet_06v0_dss',protection_width_um,.6))
+        devices.extend(foundation_devices(leg,protection_units,protection_width_um))
     if family=='reference_clock':
         ports.append('VCM')
         target=required['electrical_parameters']['input_r_ohm']

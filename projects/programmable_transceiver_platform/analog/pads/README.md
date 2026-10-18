@@ -1,10 +1,65 @@
 # Parametric IO-pad implementation
 
-**First pass in progress.** Five canonical pad families have generated circuits,
+**First pass in progress.** One reusable pad foundation serves functional
+attachments. The five current use-site families have generated circuits,
 connected layouts, extracted capacitance and retained-network state screens.
 Protection-to-core coordination and physical local safe-state control remain incomplete.
 A completed transient or matching device graph is not a performance, reliability
 or fabrication-readiness verdict.
+
+## Reusable foundation and attachment decisions
+
+`circuits.py:foundation_devices` centralizes the local protection recipe used
+by every family; `attachment` separates that replaceable foundation from all
+functional devices. The refactor leaves the five existing generated schematic
+graphs byte-for-byte unchanged. The existing isolated-rail primary macro and
+provider bond geometry are the common physical foundation. Safe-state policy is
+shared, but its physical supervisors and final disable circuits remain unfinished.
+The five names describe use sites, not a requirement for five distinct cell designs.
+
+`pad_composition.py` composes exactly one extracted primary macro with complete
+functional attachments. It compares separate wired cells, a simple wired union,
+a wired candidate sharing the RX termination bank, lean RF/reference inputs,
+and a universal candidate. Every disabled functional branch remains attached.
+The shared-bank candidate retains the TX VCM discharge path and independently
+namespaced controls; only the explicitly replaced termination bank is removed.
+A shared cell design would still need separate physical instances wherever
+simultaneous independent lanes are required.
+
+The current comparison is in `generated/pad-composition-comparison.json`:
+
+| Composition | Disabled / RX-bypass loading at 1 GHz, worst leg | Decision |
+| --- | --- | --- |
+| Separate wired TX / RX-USB | 1.802 / 1.155 pF disabled; RX bypass 1.416 pF | Keep specialized selected attachments |
+| Wired union | 2.655 / 2.917 pF | Do not select; bypass exceeds 2.7 pF allocation |
+| Wired shared termination | 2.478 / 2.740 pF | Co-design experiment; still exceeds allocation before new routing |
+| Lean RF receive + reference | 0.504 pF disabled | Promising shared input structure; retain lean attachments |
+| Universal populated attachments | 2.958 / 3.220 pF | Do not select; exceeds RF 1 pF and wired 2.7 pF allocations |
+
+These numbers are **comparison-model values**, not replacements for the
+canonical extracted layouts. The primary macro includes extracted capacitance;
+functional attachments include device junction geometry but not their new
+routing, package or shared returns. RF and clock cores remain the shared assumed
+capacitive loads, and the wired receiver uses its shared output-load allocation.
+The universal candidate contains all currently implemented attachments, not
+invented complete RF transistor cores. Its present failure does not prove that
+all possible co-designed universal pads are impossible.
+
+The screen also measures linear source-to-pad transfer from the same 50 ohm
+differential source and DC peer/supply/bias currents with supplies on and off.
+Sharing the RX termination bank changes the incremental common-mode resistance
+near 1.65 V from about 46.65 to 56.49 ohms per leg in this schematic fixture;
+loading reduction alone does not preserve wired capability. The populated
+reference bias returns about 63 microamps to its ideal VCM source at a 3.3 V
+peer input with the chip off. That source's physical ability to absorb charge
+remains unproven. Neither a low VDD backfeed number nor a small AC loss proves
+safe shutdown, low receiver noise, low distortion or a compliant data eye.
+
+**Selection rule:** share the foundation now; merge functional attachments only
+when the same populated candidate meets loading, impedance/signal quality and
+retained-network off-state requirements. Do not erase disabled devices, waive
+budgets, or use a passing simplified input load to claim missing cores complete.
+No pin-count or package change follows from this code consolidation.
 
 ## Authoritative artifacts
 
@@ -789,14 +844,40 @@ and geometry sweeps unless their result can change one of these decisions.
 
 ### Current first-pass decisions
 
-| Scope | Decision | Consequence for implementation |
-| --- | --- | --- |
-| Family structure and external connections | Keep | Retain the five canonical families and shared parameters. Keep peer supplies, terminations and coupling components attached during every lifecycle state. No additional protocol-specific pad variants are justified by the current evidence. |
-| Protection-to-core interface | Change / incomplete | Primary clamps alone are not an accepted core interface. Complete the core-facing protection/isolation design together with normal signal loading; do not freeze these layouts for fabrication on present pulse results. |
-| Safe-state controls | Change / incomplete | Replace prescribed disable/readiness with physical local controls and explicit power-domain crossings. Upstream power commands and FPGA cooperation cannot substitute for local brownout behavior. |
-| Attached TX circuits and supply plan | Change required | Retain the extracted drivers in the model rather than returning to ideal drives. Their current exposes a real allocation conflict. Rework driver/termination demand or fund it through a complete supply/return and whole-chip budget decision before accepting the implementation. |
-| RF and reference core boundaries | Keep as provisional interfaces | Preserve explicit finite loading and power accounting, but do not label them implemented LNA, driver or receiver circuits. Their physical interfaces remain a first-pass deliverable. |
-| Provider-compatible geometry | Keep; integration incomplete | Preserve bond openings and checked macro placements. Finish electrical routing and shared supply/return integration; placement checks do not establish package performance. |
+Keep the five pad families and provider-compatible bond geometry. The next
+implementation changes must follow these decisions across families:
+
+- **Protection:** keep the isolated primary protection rail; coordinate a
+  core-side secondary network with the actual input/output devices. Do not
+  divert primary discharge into a functional supply rail. RF and reference
+  interfaces require low-loading secondary treatment; a large generic series
+  isolation switch is not selected without a bandwidth/loading demonstration.
+  DC-coupled wired interfaces must preserve their required external levels;
+  external AC coupling is not a universal protection substitute.
+- **Local safety:** use local rail qualification and reset-dominant disable,
+  with passive default-off paths at the final enables/bias controls. Keep
+  break-before-make sequencing separate from static conflict exclusion. A
+  supervisor must remain effective during collapse, or passive device paths
+  must enforce the safe state after it stops operating. Independently powered
+  host GPIO requires external isolation or enforced board sequencing until
+  its backfeed path is resolved. These are implementation requirements, not
+  claims that the existing ideal supervisor has become a physical circuit.
+- **Power:** retain measured macro current and the RF driver bias floor in
+  accounting. Do not reclaim warm RF bias merely because RX and TX data are
+  exclusive; turnaround depends on it. Decide driver/buffer efficiency and
+  the complete supply/return capacity before increasing allocations. External
+  decoupling can reduce ripple but cannot eliminate average-current demand.
+- **Routing:** preserve primary-tap topology, size both bond escapes and
+  internal current buses, and include return paths. Equal drawn P/N lengths
+  alone do not establish matched resistance, capacitance or delay. The new TX
+  resistance overlay is an initial diagnostic, not the final interconnect.
+- **Acceptance:** use the same selected pad with its actual peer network for
+  every lifecycle state. The differential-load TMDS window only exercises
+  controls; TMDS acceptance needs the independently powered pull-up fixture.
+  USB needs bidirectional turnaround and pull/termination handoff; RF needs
+  modulated performance with the real core; the clock input needs jitter and
+  actual bias readiness. Keep failing electrical limits visible even when
+  control feedback converges.
 
 RF/reference attached capacitances now come from their shared architecture
 blocks rather than hard-coded bench constants. The selected assumption remains
@@ -842,8 +923,11 @@ The connected 300 ns open-loop replay is recorded in
 show approximately ±0.437 V and ±0.517 V differential extrema respectively,
 but these extrema are not eye or compliance results. All requested modes are
 reached; the prescribed controller also claims readiness without the loaded
-analog detector for about 40.95 ns. Feedback closure must therefore be rerun
-before accepting readiness for this overlay. The unpowered pad reaches about
+analog detector for about 40.95 ns. Two subsequent sampled-feedback iterations do not establish closure: the
+first has zero premature-ready duration but incomplete mode coverage; the second
+reaches all modes but records about 31.98 ns premature readiness and changes
+controls again. This is unresolved waveform-relaxation/control behavior, not
+proof that the physical circuit must oscillate. The unpowered pad reaches about
 −0.656 V; core-survival limits and physical local controls remain unresolved.
 This is evidence for completing routing and safe-state integration, not a
 passing family verdict or a reason to relax the readiness limit.

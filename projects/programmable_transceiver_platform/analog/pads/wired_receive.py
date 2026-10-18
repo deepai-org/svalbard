@@ -4,7 +4,7 @@ All branches remain physically connected. Controls are voltages supplied by the
 core, not protocol names. Dimensions are candidate sizes, not achieved specs.
 """
 import json
-from circuits import Circuit, Mos, Resistor
+from circuits import Circuit, Mos, Resistor, foundation_devices
 from design import PROJECT, resolve
 
 
@@ -79,8 +79,7 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
     mos('VCM_LOW_SENSE_P','VCM_LOW_OK','TERM_VCM','VDD','VDD','pfet_03v3',2.,.28)
     for leg in ('P','N'):
         pad='PAD_'+leg
-        for i in range(2):
-            mos(f'ESD_{leg}_{i}',pad,'VSS','VSS','VSS','nfet_06v0_dss',16.,.6)
+        devices.extend(foundation_devices(leg))
         # Shared switched shunt: TERM_VCM selects ground for USB or a serial
         # common mode. The differential bridge reuses these physical resistors.
         local_enable=shared_low_enable(leg)

@@ -722,5 +722,63 @@
       "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/wired_tx_route.py": "f91a7d127d51fe7d4fb9f990eafbfa812e5108cc5bc5796ec0b8990974faef27"
     }
   },
-  "acceptance": "Diagnostic open-loop replay only; no sampled-feedback closure or electrical acceptance. TMDS on the differential load is a state exercise, not a TMDS link test."
+  "acceptance": "Diagnostic open-loop replay only; no sampled-feedback closure or electrical acceptance. TMDS on the differential load is a state exercise, not a TMDS link test.",
+  "feedback_trials": [
+    {
+      "status": "feedback_changes_controls_requires_new_analog_run",
+      "controls_identical": false,
+      "previous_event_count": 12,
+      "updated_event_count": 20,
+      "raw_feedback_sample_mismatches": 30,
+      "complete_mode_coverage": false,
+      "required_modes": [
+        "TMDS",
+        "MAIN",
+        "MAIN_POST",
+        "DETECT"
+      ],
+      "observed_contiguous_ready_hold_ns": null,
+      "loaded_traffic_ready_without_detector_ready_s": 0.0,
+      "lifecycle_gate_pass": false,
+      "scope": "Verify a sampled feedback fixed point without repeating identical analog work.\n\nFeed a completed detector report back through actual RTL and compare every\nemitted control event with the events that drove that completed analog run.\nIdentical controls imply the same deterministic analog problem. Raw detector\nsamples in unused states may differ, so they remain reported separately.\n Only this nominal deterministic fixture and sampled RTL feedback; not physical detectors, sustained data, PVT or protection acceptance.",
+      "source_sha256": {
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_feedback_closure.py": "b3eea0db2c61034efe31b0a1bf75c5a96ad5c74e73af2a13d9b706f704ba85b2",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "0e687776387e602170cbce98789ebf36071ce97b76bbee6f6a9c4d976473a4b1",
+        "/home/ubuntu/svalbard/scratch/pad-wired-branched-route/feedback-run/screen.json": "ca50b3c91b2014470cf50a41f85628d435d2be309f166164049803bcfb06aa3d",
+        "/home/ubuntu/svalbard/scratch/pad-wired-branched-route/feedback-run/rtl.log": "3f8e39731fdff87f98d784581e29b1e7bdb0a0da7c37db070cec4ed052c07ce3",
+        "/home/ubuntu/svalbard/scratch/pad-wired-branched-route/feedback-run/connected.spice": "8a8867b54b5a385be4beeb8f1a72924cd2e0954dd79017ea8dfc1a0e629cffda",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "fc3cdc163ae805c33b92a298142718ad36c94f5567ac4bb9bb608be016d58e32",
+        "/home/ubuntu/svalbard/scratch/pad-wired-branched-route/closure/replay.sv": "d449085bf1cb20072b94ead0a46127ed0e46977218a035dac0e7f8022e8f4dc4",
+        "/home/ubuntu/svalbard/scratch/pad-wired-branched-route/closure/rtl.log": "cb43c639cded7a5f37f64d0743bc4cc846816acaa1172e8fc7921e98e77a4763"
+      }
+    },
+    {
+      "status": "feedback_changes_controls_requires_new_analog_run",
+      "controls_identical": false,
+      "previous_event_count": 20,
+      "updated_event_count": 12,
+      "raw_feedback_sample_mismatches": 30,
+      "complete_mode_coverage": true,
+      "required_modes": [
+        "TMDS",
+        "MAIN",
+        "MAIN_POST",
+        "DETECT"
+      ],
+      "observed_contiguous_ready_hold_ns": null,
+      "loaded_traffic_ready_without_detector_ready_s": 3.1982500000000015e-08,
+      "lifecycle_gate_pass": false,
+      "scope": "Verify a sampled feedback fixed point without repeating identical analog work.\n\nFeed a completed detector report back through actual RTL and compare every\nemitted control event with the events that drove that completed analog run.\nIdentical controls imply the same deterministic analog problem. Raw detector\nsamples in unused states may differ, so they remain reported separately.\n Only this nominal deterministic fixture and sampled RTL feedback; not physical detectors, sustained data, PVT or protection acceptance.",
+      "source_sha256": {
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_feedback_closure.py": "b3eea0db2c61034efe31b0a1bf75c5a96ad5c74e73af2a13d9b706f704ba85b2",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/transmit_sequence_connected.py": "0e687776387e602170cbce98789ebf36071ce97b76bbee6f6a9c4d976473a4b1",
+        "/home/ubuntu/svalbard/scratch/pad-wired-branched-route/feedback-second/screen.json": "f9a3cd2c5e6152670d6f427e5e5ba38bfffa9a4ec93a7c9b928a8b3d5749b2d7",
+        "/home/ubuntu/svalbard/scratch/pad-wired-branched-route/feedback-second/rtl.log": "2df0dde44addd18aec34a734e31ea332aa73d6be76095f9915266af68cf09a79",
+        "/home/ubuntu/svalbard/scratch/pad-wired-branched-route/feedback-second/connected.spice": "4d8a0518dc77573bf3252b30b54a828c1829efdeb7809199968fc52f58ceb690",
+        "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "fc3cdc163ae805c33b92a298142718ad36c94f5567ac4bb9bb608be016d58e32",
+        "/home/ubuntu/svalbard/scratch/pad-wired-branched-route/closure-second/replay.sv": "dd2d90b3351ac3caa3f15f712b9faaae6a1a398b174a84a81b83f393e8983912",
+        "/home/ubuntu/svalbard/scratch/pad-wired-branched-route/closure-second/rtl.log": "18470fce62c0862c7874d4abd4a1d9a9e5db08949a1e5d0aef3f77c8433a2b2b"
+      }
+    }
+  ]
 }

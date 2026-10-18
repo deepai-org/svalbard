@@ -645,7 +645,19 @@
         "power_transitions": "Evaluate each connected core against its local rails during reset, brownout, unpowered and reconfiguration states; external coupling capacitors do not eliminate retained charge or external excitation.",
         "transient_survival": "Unqualified until actual attached devices and allowed terminal voltage/current versus duration are established. Neither nominal device voltage labels nor behavioral rail clipping supply a survival limit.",
         "implementation_gate": "Include secondary protection or isolation wherever the primary network cannot meet the attached-device contract. Account for its capacitance, resistance, current path and area in the same generated family, rather than adding an ideal clamp only in the bench.",
-        "pad_facing_stage": "Released-candidate pulse produces about8.10V Vgd on bypass NMOS and8.10V Vgs on USB HS isolation NMOS even disabled. A secondary clamp only behind these devices cannot establish protection of the first stage. Bound exposed gate/junction terminal stress through primary clamping or coordinated input structure; include every added load and current path. Saved-waveform audit covers88/357MOS completely,149partly,120not observed; no survival verdict."
+        "pad_facing_stage": "Released-candidate pulse produces about8.10V Vgd on bypass NMOS and8.10V Vgs on USB HS isolation NMOS even disabled. A secondary clamp only behind these devices cannot establish protection of the first stage. Bound exposed gate/junction terminal stress through primary clamping or coordinated input structure; include every added load and current path. Saved-waveform audit covers88/357MOS completely,149partly,120not observed; no survival verdict.",
+        "gate_voltage_screen": {
+          "source": "https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_1.html",
+          "checked_utc": "2026-10-18",
+          "max_abs_gate_terminal_v": {
+            "nfet_03v3": 3.63,
+            "pfet_03v3": 3.63,
+            "nfet_06v0": 6.0,
+            "pfet_06v0": 6.0
+          },
+          "basis": "PDK14.1.4.2 gives3.63V thin-oxide DC gate-node limit and6.5V/6V thick-oxide wording for5V/6V options. Select6.0V conservatively for06v0 models; do not substitute supply overshoot6.6V. Apply these as conservative excursion screens, not a demonstrated pulse damage threshold.",
+          "transient_allowance": "None assumed. Published guidance discusses duty-cycle/TDDB dependence but supplies no numeric voltage-duration envelope usable to qualify these pulses. Exceedance remains unresolved until bounded by justified evidence or corrected circuit. Passing this gate-only screen cannot qualify junctions, current density, heating, ESD or missing terminals."
+        }
       },
       "release_evidence": "analog/pads/generated/rail-supervisor-screen.json"
     },

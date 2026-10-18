@@ -546,6 +546,24 @@ justified terminal-voltage/current/duration protection window before additional
 sizing sweeps; neither voltage-class labels nor ESD ratings of other cells
 establish that window for these attached devices.
 
+The shared `primary_protection.core_boundary_policy.gate_voltage_screen` now
+sets conservative gate-to-terminal screens of 3.63 V for 03v3 MOS and 6.0 V for
+06v0 MOS, based on [PDK section14.1](https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_1.html).
+These are screening thresholds derived from DC guidance, not nanosecond damage
+limits. No transient overvoltage allowance is assumed without a justified
+voltage-duration envelope. Gate, junction, current and thermal qualification
+remain separate requirements.
+
+Reanalysis of existing waveforms finds observed gate-screen exceedances in
+98 devices for discharge alone, 99 for the direct trigger and 18 for feed-forward.
+Counts include parallel extracted fingers and are not independent failure counts.
+For a representative exposed USB HS device, sampled time above 6.0 V is roughly
+0.915 ns, 0.819 ns and 1.177 ns respectively: feed-forward lowers the peak but
+lengthens that excursion. None qualifies. These results reuse exact saved decks;
+no further SPICE campaign is needed to establish this decision. Unknown internal
+terminals remain unknown, and sampled durations are not rigorous bounds.
+
+
 
 
 
@@ -1148,6 +1166,24 @@ normal-edge false triggering and loading remain unverified. Reproduce with
 justified terminal-voltage/current/duration protection window before additional
 sizing sweeps; neither voltage-class labels nor ESD ratings of other cells
 establish that window for these attached devices.
+
+The shared `primary_protection.core_boundary_policy.gate_voltage_screen` now
+sets conservative gate-to-terminal screens of 3.63 V for 03v3 MOS and 6.0 V for
+06v0 MOS, based on [PDK section14.1](https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_1.html).
+These are screening thresholds derived from DC guidance, not nanosecond damage
+limits. No transient overvoltage allowance is assumed without a justified
+voltage-duration envelope. Gate, junction, current and thermal qualification
+remain separate requirements.
+
+Reanalysis of existing waveforms finds observed gate-screen exceedances in
+98 devices for discharge alone, 99 for the direct trigger and 18 for feed-forward.
+Counts include parallel extracted fingers and are not independent failure counts.
+For a representative exposed USB HS device, sampled time above 6.0 V is roughly
+0.915 ns, 0.819 ns and 1.177 ns respectively: feed-forward lowers the peak but
+lengthens that excursion. None qualifies. These results reuse exact saved decks;
+no further SPICE campaign is needed to establish this decision. Unknown internal
+terminals remain unknown, and sampled durations are not rigorous bounds.
+
 
 
 

@@ -412,15 +412,18 @@ def clamp_release_pulse_screen(work,*,gate_discharge=False,reuse=False,direct_tr
         scope='100mA positive2ns diagnostic into PAD_P after1us startup/brownout, all pad attachments and board peers retained. Typical models27C, schematic gate-discharge option and optional three100um diode-connected6V NMOS trigger devices with grounded bodies; optional44.72um-square MIM feed-forward capacitor from isolated rail to main clamp gate; no added layout routing. Not a standardized ESD waveform, current-density/thermal qualification, core survival or settled-DC acceptance; transient operating-point initialization is permitted for this lifecycle comparison.')
 
 
-def pulse_terminal_exposure(work,*,direct_trigger=False):
+def pulse_terminal_exposure(work,*,direct_trigger=False,feedforward=False):
     """Lower-bound device exposure from saved nodes; unknown terminals stay unknown."""
     from pathlib import Path
-    import re,hashlib
+    import re,hashlib,json
+    from design import PROJECT
     import numpy as np
     work=Path(work).resolve()
     # Validate the exact regenerated fixture before interpreting its waveform.
-    verified=clamp_release_pulse_screen(work,gate_discharge=True,direct_trigger=direct_trigger,reuse=True)
-    name='release_pulse_discharge'+('_direct_trigger' if direct_trigger else '')
+    verified=clamp_release_pulse_screen(work,gate_discharge=True,direct_trigger=direct_trigger,feedforward=feedforward,reuse=True)
+    name='release_pulse_discharge'+('_direct_trigger' if direct_trigger else '')+('_feedforward' if feedforward else '')
+    spec=PROJECT/'spec/schematic-implementation.json'
+    limits=json.loads(spec.read_text())['io_pad_first_pass']['primary_protection']['core_boundary_policy']['gate_voltage_screen']['max_abs_gate_terminal_v']
     deck=(work/(name+'.spice')).read_text()
     x=np.loadtxt(work/(name+'.dat'),skiprows=1)
     known={'0':np.zeros(len(x))}
@@ -453,19 +456,24 @@ def pulse_terminal_exposure(work,*,direct_trigger=False):
     if 'PAD_VDD' not in known:raise ValueError('Missing actual pad supply mapping')
     known['VDD']=known['PAD_VDD']
     mask=(x[:,0]>=990e-9)&(x[:,0]<=1499e-9)
-    records=[];missing={};full=0
+    records=[];missing={};full=0;exceeded=0
     for f in devices:
-        nodes=dict(zip('DGSB',f[1:5]));pairs={}
+        nodes=dict(zip('DGSB',f[1:5]));pairs={};excursions={}
         for pair in ('GS','GD','GB','DS','DB','SB'):
             a,b=(nodes[c] for c in pair)
             if a in known and b in known:
                 z=(known[a]-known[b])[mask]
                 pairs[pair]=float(np.max(np.abs(z)))
+                if pair in ('GS','GD','GB'):
+                    excursions[pair]=float(np.trapezoid((np.abs(z)>limits[f[5]]).astype(float),x[mask,0]))
+        failed=any(pairs.get(pair,0)>limits[f[5]] for pair in ('GS','GD','GB'))
+        exceeded+=int(failed)
         if len(pairs)==6:full+=1
         else:missing[f[0]]=[n for n in nodes.values() if n not in known]
-        if pairs:records.append(dict(device=f[0],model=f[5],nodes=nodes,max_abs_terminal_v=pairs))
+        if pairs:records.append(dict(device=f[0],model=f[5],nodes=nodes,max_abs_terminal_v=pairs,gate_screen_v=limits[f[5]],gate_screen_exceeded=failed,sampled_above_screen_duration_s=excursions))
     records.sort(key=lambda row:max(row['max_abs_terminal_v'].values()),reverse=True)
-    return dict(status='partial_terminal_exposure_not_survival_qualification',
+    return dict(status='observed_gate_screen_exceedances' if exceeded else 'partial_observation_not_qualification',
+        observed_mos_exceeding_gate_screen=exceeded,gate_screen_spec_sha256=hashlib.sha256(spec.read_bytes()).hexdigest(),
         deck_sha256=verified['deck_sha256'],waveform_sha256=hashlib.sha256((work/(name+'.dat')).read_bytes()).hexdigest(),
         mos_count=len(devices),fully_observed_mos_count=full,partly_observed_mos_count=len(records)-full,
         worst_terminal_exposures=records[:8],unobserved_mos_count=len(devices)-len(records),

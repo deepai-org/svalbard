@@ -2223,7 +2223,9 @@
     "decision": "Not selected. Three diode-connected100um6V NMOS devices preserve about2.999V pre-pulse signal but reduce peak only8.099 to7.842V; isolated rail still6.814V. This does not close released-state protection. Avoid blind sizing sweeps; address trigger drive and primary-to-core coordination together."
   },
   "pad_facing_terminal_exposure": {
-    "status": "partial_terminal_exposure_not_survival_qualification",
+    "status": "observed_gate_screen_exceedances",
+    "observed_mos_exceeding_gate_screen": 98,
+    "gate_screen_spec_sha256": "0b282122e3187b0451fcdb6c2437ba73f5ac4d82b76d8c63d53de5c6b845c560",
     "deck_sha256": "fbbf8717de94bfa8c8dfaccdb8d7cc4368ede067e083fcffece9b5c49c7d7909",
     "waveform_sha256": "2e4f558e49c39ea7d8b39c2edb194ed3b16b23cd5ad5ca7523b4344dc003ea36",
     "mos_count": 357,
@@ -2243,6 +2245,12 @@
           "GS": 8.09922611,
           "GB": 0.0,
           "SB": 8.09922611
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 9.149749999999675e-10,
+          "GB": 0.0
         }
       },
       {
@@ -2261,6 +2269,13 @@
           "DS": 7.901724069,
           "DB": 8.09922611,
           "SB": 0.197586768
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 0.0,
+          "GD": 9.149749999999675e-10,
+          "GB": 0.0
         }
       },
       {
@@ -2276,6 +2291,12 @@
           "GS": 8.09922611,
           "GB": 0.0,
           "SB": 8.09922611
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 9.149749999999675e-10,
+          "GB": 0.0
         }
       },
       {
@@ -2294,6 +2315,13 @@
           "DS": 7.901724069,
           "DB": 8.09922611,
           "SB": 0.197586768
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 0.0,
+          "GD": 9.149749999999675e-10,
+          "GB": 0.0
         }
       },
       {
@@ -2309,6 +2337,12 @@
           "GS": 8.09922611,
           "GB": 0.0,
           "SB": 8.09922611
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 9.149749999999675e-10,
+          "GB": 0.0
         }
       },
       {
@@ -2324,6 +2358,12 @@
           "GS": 8.09922611,
           "GB": 0.0,
           "SB": 8.09922611
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 9.149749999999675e-10,
+          "GB": 0.0
         }
       },
       {
@@ -2339,6 +2379,12 @@
           "GS": 8.09922611,
           "GB": 0.0,
           "SB": 8.09922611
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 9.149749999999675e-10,
+          "GB": 0.0
         }
       },
       {
@@ -2354,6 +2400,12 @@
           "GS": 8.09922611,
           "GB": 0.0,
           "SB": 8.09922611
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 9.149749999999675e-10,
+          "GB": 0.0
         }
       }
     ],
@@ -2475,5 +2527,387 @@
     "source_deck_sha256": "c2f1b725a5e34cd1ff4aa63ec4d08e0624686a8f03a7e35b1278bdaf611c8d22",
     "scope": "100mA positive2ns diagnostic into PAD_P after1us startup/brownout, all pad attachments and board peers retained. Typical models27C, schematic gate-discharge option and optional three100um diode-connected6V NMOS trigger devices with grounded bodies; optional44.72um-square MIM feed-forward capacitor from isolated rail to main clamp gate; no added layout routing. Not a standardized ESD waveform, current-density/thermal qualification, core survival or settled-DC acceptance; transient operating-point initialization is permitted for this lifecycle comparison.",
     "decision": "Unselected: nominal4pF MIM feed-forward reduces pulse peak8.10 to7.19V and recovers near3V, but does not establish safe pad-facing terminal stress. Extra nominal capacitor plate area1999.8784um2 excludes spacing/routing. Normal-edge false triggering, loading, manufacturing variation and layout remain untested. Do not promote or size-sweep without a justified protection window."
+  },
+  "direct_trigger_terminal_exposure": {
+    "status": "observed_gate_screen_exceedances",
+    "observed_mos_exceeding_gate_screen": 99,
+    "gate_screen_spec_sha256": "0b282122e3187b0451fcdb6c2437ba73f5ac4d82b76d8c63d53de5c6b845c560",
+    "deck_sha256": "d070e3aaea8accce3983b83b6a7982e599fd764fd2bb330526a60a5990467668",
+    "waveform_sha256": "ab44d9aa23ba977ffdf52a5ccaf232c39d83205295ee2bab050c71f1be64fff2",
+    "mos_count": 360,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 151,
+    "worst_terminal_exposures": [
+      {
+        "device": "X47",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_11",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.84238827,
+          "GB": 0.0,
+          "SB": 7.84238827
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 8.189400000000493e-10,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X54",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "PAD_P",
+          "G": "BYPASS_ENABLE",
+          "S": "RX_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 0.187793049,
+          "GD": 7.84238827,
+          "GB": 0.0,
+          "DS": 7.654595221,
+          "DB": 7.84238827,
+          "SB": 0.187793049
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 0.0,
+          "GD": 8.189400000000493e-10,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X160",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_10",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.84238827,
+          "GB": 0.0,
+          "SB": 7.84238827
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 8.189400000000493e-10,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X164",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "PAD_P",
+          "G": "BYPASS_ENABLE",
+          "S": "RX_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 0.187793049,
+          "GD": 7.84238827,
+          "GB": 0.0,
+          "DS": 7.654595221,
+          "DB": 7.84238827,
+          "SB": 0.187793049
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 0.0,
+          "GD": 8.189400000000493e-10,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X165",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_5",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.84238827,
+          "GB": 0.0,
+          "SB": 7.84238827
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 8.189400000000493e-10,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X169",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_6",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.84238827,
+          "GB": 0.0,
+          "SB": 7.84238827
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 8.189400000000493e-10,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X178",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_3",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.84238827,
+          "GB": 0.0,
+          "SB": 7.84238827
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 8.189400000000493e-10,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X189",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_12",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.84238827,
+          "GB": 0.0,
+          "SB": 7.84238827
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 8.189400000000493e-10,
+          "GB": 0.0
+        }
+      }
+    ],
+    "unobserved_mos_count": 121,
+    "unobserved_internal_node_count": 68,
+    "scope": "990..1499ns includes pulse and recovery. Only measured waveform nodes or exact fixture voltage-source relations are used. Unknown internal voltages are not inferred from off controls or nominal supply. Device voltage class is not a transient survival limit. Full internal-node traces and terminal current/duration limits remain required."
+  },
+  "feedforward_terminal_exposure": {
+    "status": "observed_gate_screen_exceedances",
+    "observed_mos_exceeding_gate_screen": 18,
+    "gate_screen_spec_sha256": "0b282122e3187b0451fcdb6c2437ba73f5ac4d82b76d8c63d53de5c6b845c560",
+    "deck_sha256": "37b32e230a4cf384e6205f8dea9e915f683a1d6920f1bbe5c65186f25f4ad75a",
+    "waveform_sha256": "857b4999a8ac12711d58c06db66323fd6fff6d7d5584334dc8685f93c8ee811a",
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "worst_terminal_exposures": [
+      {
+        "device": "X47",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_11",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.18810446,
+          "GB": 0.0,
+          "SB": 7.18810446
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 1.1771800000000023e-09,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X54",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "PAD_P",
+          "G": "BYPASS_ENABLE",
+          "S": "RX_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 0.163504229,
+          "GD": 7.18810446,
+          "GB": 0.0,
+          "DS": 7.024655843,
+          "DB": 7.18810446,
+          "SB": 0.163504229
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 0.0,
+          "GD": 1.1771800000000023e-09,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X160",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_10",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.18810446,
+          "GB": 0.0,
+          "SB": 7.18810446
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 1.1771800000000023e-09,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X164",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "PAD_P",
+          "G": "BYPASS_ENABLE",
+          "S": "RX_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 0.163504229,
+          "GD": 7.18810446,
+          "GB": 0.0,
+          "DS": 7.024655843,
+          "DB": 7.18810446,
+          "SB": 0.163504229
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 0.0,
+          "GD": 1.1771800000000023e-09,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X165",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_5",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.18810446,
+          "GB": 0.0,
+          "SB": 7.18810446
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 1.1771800000000023e-09,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X169",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_6",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.18810446,
+          "GB": 0.0,
+          "SB": 7.18810446
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 1.1771800000000023e-09,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X178",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_3",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.18810446,
+          "GB": 0.0,
+          "SB": 7.18810446
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 1.1771800000000023e-09,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X189",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_12",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.18810446,
+          "GB": 0.0,
+          "SB": 7.18810446
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 1.1771800000000023e-09,
+          "GB": 0.0
+        }
+      }
+    ],
+    "unobserved_mos_count": 120,
+    "unobserved_internal_node_count": 66,
+    "scope": "990..1499ns includes pulse and recovery. Only measured waveform nodes or exact fixture voltage-source relations are used. Unknown internal voltages are not inferred from off controls or nominal supply. Device voltage class is not a transient survival limit. Full internal-node traces and terminal current/duration limits remain required."
   }
 }

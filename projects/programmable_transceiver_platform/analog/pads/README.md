@@ -484,7 +484,15 @@ all current canonical families plus the connected RF candidate; electrical param
 narrow-route implementation, not a second normative design. `branch_trace_screen(work, reuse=True)`
 reproduces the non-invasive terminal-current diagnostic, retaining every device
 and extracted capacitor. It identifies the entry path into protection, not yet
-the internal clamp state or a proven remedy.
+a proven remedy. `clamp_state_screen(work, reuse=True)` additionally observes
+the unchanged extracted clamp. During late brownout its timing node is about
+0.763 V, already close to the isolated rail at 0.753 V, while the large shunt
+FET gate remains about 0.757 V. This is consistent with failure of the inverter
+chain to release at its low self-powered rail voltage, rather than an uncharged
+timing capacitor alone. Active and recovered windows also show loaded pads.
+A longer hold and a physically implemented release mechanism must distinguish
+persistent holding from delayed recovery. Do not fix this by weakening the ESD
+shunt or simply removing protection from the signal model.
 
 | Current evidence | What it establishes / remaining limitation |
 | --- | --- |
@@ -1023,7 +1031,15 @@ only when generated decks match exactly. Results are consolidated in the same
 not a second normative design. `branch_trace_screen(work, reuse=True)`
 reproduces the non-invasive terminal-current diagnostic, retaining every device
 and extracted capacitor. It identifies the entry path into protection, not yet
-the internal clamp state or a proven remedy.
+a proven remedy. `clamp_state_screen(work, reuse=True)` additionally observes
+the unchanged extracted clamp. During late brownout its timing node is about
+0.763 V, already close to the isolated rail at 0.753 V, while the large shunt
+FET gate remains about 0.757 V. This is consistent with failure of the inverter
+chain to release at its low self-powered rail voltage, rather than an uncharged
+timing capacitor alone. Active and recovered windows also show loaded pads.
+A longer hold and a physically implemented release mechanism must distinguish
+persistent holding from delayed recovery. Do not fix this by weakening the ESD
+shunt or simply removing protection from the signal model.
 
 ### Current first-pass decisions
 

@@ -1760,5 +1760,39 @@
       }
     ],
     "scope": "Zero-volt current probes at all non-capacitive PAD_P device terminals in the unchanged extracted subcircuit; all branches retained. Late brownout means, not ESD qualification or a corrected design."
+  },
+  "protection_clamp_state": {
+    "windows": {
+      "active": {
+        "VDD": 3.3,
+        "PAD_P": 2.2271120066326535,
+        "ESD_RAIL": 1.3036458795918366,
+        "a_42245_162628#": 0.9332880313571429,
+        "a_44789_189064#": 0.29349155834488777,
+        "a_41005_203545#": 0.8133960021836734,
+        "a_43813_189064#": 1.0846348147959184
+      },
+      "late_brownout": {
+        "VDD": 1.5,
+        "PAD_P": 1.5532293938435753,
+        "ESD_RAIL": 0.752832873772067,
+        "a_42245_162628#": 0.7569993863687152,
+        "a_44789_189064#": 0.21870515309944133,
+        "a_41005_203545#": 0.7627719321709499,
+        "a_43813_189064#": 0.00012551701746927373
+      },
+      "recovered": {
+        "VDD": 3.3,
+        "PAD_P": 2.0816199091566263,
+        "ESD_RAIL": 1.1440801595341368,
+        "a_42245_162628#": 0.9720701917108434,
+        "a_44789_189064#": 0.3973249638603454,
+        "a_41005_203545#": 0.8434520993212851,
+        "a_43813_189064#": 0.3690920506442571
+      }
+    },
+    "deck_sha256": "f7414cd42e16eeb7fbac3bb0a94244753656e669f1908409de34041a1b2bf961",
+    "scope": "Unmodified connected diagnostic; internal node voltages only. Window averages do not establish final equilibrium or ESD survival.",
+    "interpretation": "At late brownout the timing node is about 0.763V, close to the 0.753V isolated rail, yet the shunt gate remains about 0.757V. This is consistent with low-voltage inverter-chain release failure rather than an uncharged timing capacitor alone. It does not establish infinite-duration holding or a safe remedy. Active and recovered windows are also loaded."
   }
 }

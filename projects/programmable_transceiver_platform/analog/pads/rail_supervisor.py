@@ -304,3 +304,28 @@ def branch_trace_screen(work,*,reuse=False):
     r=dict(deck_sha256=hashlib.sha256(deck.encode()).hexdigest(),pad_mean_v=float(y[:,2].mean()),branches=sorted([dict(probe=v,device=line,mean_current_a=float(y[:,i+3].mean())) for i,(v,line) in enumerate(probes)],key=lambda a:abs(a['mean_current_a']),reverse=True))
     r['scope']='Zero-volt current probes at all non-capacitive PAD_P device terminals in the unchanged extracted subcircuit; all branches retained. Late brownout means, not ESD qualification or a corrected design.'
     return r
+
+
+def clamp_state_screen(work,*,reuse=False):
+    """Observe the extracted primary clamp without forcing its internal state."""
+    from pathlib import Path
+    import os,json,hashlib
+    import numpy as np
+    from screen import control,run_spice
+    w=Path(work).resolve();base=(w/'extended_brownout.spice').read_text().split('.control')[0]
+    nodes=['ESD_RAIL','a_42245_162628#','a_44789_189064#','a_41005_203545#','a_43813_189064#']
+    name='clamp_state';deck=base+control(w,name,'tran .2n 1500n','v(VDD) v(PAD_P) '+' '.join(('v(xpad.esd_rail)' if n=='ESD_RAIL' else 'v(xpad.xphysical.'+n+')') for n in nodes))
+    previous=Path.cwd()
+    try:
+     os.chdir(w)
+     if reuse:
+      if (w/(name+'.spice')).read_text()!=deck:raise ValueError('Saved clamp state differs')
+      x=np.loadtxt(w/(name+'.dat'),skiprows=1)
+     else:x=run_spice(w,name,deck,timeout_s=120)
+    finally:os.chdir(previous)
+    if not np.isfinite(x).all() or x[-1,0]<1499.9e-9:raise ValueError('Incomplete clamp state trace')
+    r={}
+    for label,a,b in [('active',80,99),('late_brownout',1000,1179),('recovered',1450,1499)]:
+     y=x[(x[:,0]>=a*1e-9)&(x[:,0]<=b*1e-9)]
+     r[label]={n:float(y[:,i+1].mean()) for i,n in enumerate(['VDD','PAD_P']+nodes)}
+    return dict(windows=r,deck_sha256=hashlib.sha256(deck.encode()).hexdigest(),scope='Unmodified connected diagnostic; internal node voltages only. Window averages do not establish final equilibrium or ESD survival.')

@@ -44,8 +44,8 @@ class CommonRingSupply:
         elements.extend((name+'feed','raw',name,b['r_ohm'],0.,0.) for name,b in self.branches.items())
         return elements
 
-    def solve(self, frequency_hz, loads, source_v=0.):
-        if not math.isfinite(frequency_hz) or frequency_hz<0 or not np.isfinite(source_v):raise ValueError('Finite frequency/source required')
+    def solve(self, frequency_hz, loads, source_v=0., *, return_injection_a=0.):
+        if not math.isfinite(frequency_hz) or frequency_hz<0 or not np.isfinite(source_v) or not np.isfinite(return_injection_a):raise ValueError('Finite frequency/source/return injection required')
         if set(loads)-set(self.nodes[1:2]+list(self.branches)):raise ValueError('Loads must draw on the die side of package impedance')
         if not all(np.isfinite(x) for x in loads.values()):raise ValueError('Finite loads required')
         index={name:i for i,name in enumerate(self.nodes)};a=np.zeros((len(index),len(index)),complex);rhs=np.zeros(len(index),complex)
@@ -62,10 +62,12 @@ class CommonRingSupply:
         injection=np.zeros(len(index),complex)
         for node,current in loads.items():
             injection[index[node]]-=current;injection[index['die_return']]+=current
+        injection[index['die_return']]+=return_injection_a
         rhs+=injection;v=np.linalg.solve(a,rhs);voltages={**known,**dict(zip(self.nodes,v))}
         source_current=sum((voltages['source']-voltages[b])*y for a,b,y in elements if a=='source')
         loss=sum(abs(voltages[a]-voltages[b])**2*y.real for a,b,y in elements)
         load_power=sum(((voltages[name]-voltages['die_return'])*complex(i).conjugate()).real for name,i in loads.items())
+        load_power-=(voltages['die_return']*complex(return_injection_a).conjugate()).real
         source_power=(complex(source_v)*source_current.conjugate()).real
         return dict(voltages=voltages,rail_v={name:voltages[name]-voltages['die_return'] for name in ['raw',*self.branches]},
             kcl_residual_a=float(max(abs(a@v-rhs))),power_residual_w=float(source_power-load_power-loss))

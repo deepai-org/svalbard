@@ -3858,3 +3858,55 @@ class CommonRingCircuitTests(unittest.TestCase):
             self.assertTrue(all(r['ac_points']>=60 for r in result['cases']))
 
 TEST_DESIGN_ROLES['CommonRingCircuitTests']=('shared_design','Selected common ring plus explicitly unadopted equal-capacitance RC control; DC ownership and independent SPICE/nodal agreement, not isolation qualification.')
+
+
+class CommonRingEnvironmentTests(unittest.TestCase):
+    def test_dc_and_host_spectrum_match_common_ring_circuit(self):
+        from baseline_envelope import inventory_environment,pad_ground_tones,host_source_parameters
+        from power_distribution import from_design,mode_loads
+        from robustness_envelope import host_harmonic_current,h2d_current_ports
+        design=load_design();circuit=from_design(design)
+        for mode,engine in (('rf_rx','rf'),('rf_tx','rf'),('wired','wire'),('usb','wire')):
+            e=inventory_environment(design.contract,design.architecture,engine,2.437e9,156.25e6,inventory_mode=mode,design=design)
+            dc=circuit.solve(0.,mode_loads(design,mode),3.3)
+            self.assertAlmostEqual(e['ledger']['host_rail_v'],dc['rail_v']['raw'].real)
+            self.assertAlmostEqual(e['ledger']['local_payload_clock_core_rail_v'],dc['rail_v']['raw'].real)
+            self.assertEqual(e['ledger']['host_node_current_a'],0.)
+            s=host_source_parameters(e);sources={}
+            for k in range(1,13):
+                f=k*s['d2h_word_hz']/2
+                current=host_harmonic_current(f,s['d2h_word_hz'],k,s['d2h_internal_tau_s'],output_cap_f=s['output_cap_f'],internal_charge_c=s['d2h_internal_charge_c'],output_voltage_v=s['output_voltage_v'])
+                sources[f]=[current,0j]
+            for k in range(1,7):
+                f=k*s['h2d_word_hz']/2
+                current=h2d_current_ports(f,s['h2d_word_hz'],k,internal_charge_c=s['internal_charge_c'],alternating=s['alternating'],origin_s=s['h2d_origin_s'])
+                row=sources.setdefault(f,[0j,0j]);row[0]+=current['chip_internal_peak_a'];row[1]+=current['external_cap_return_peak_a']*s['external_return_fraction']
+            ground=pad_ground_tones(e)
+            for tone in e['host_spectrum']['tones']:
+                f=tone['frequency_hz'];load,external=sources[f]
+                result=circuit.solve(f,{'raw':load},return_injection_a=external)
+                actual=tone['clock_rail_voltage_peak_v']*np.exp(1j*tone['voltage_phase_rad'])
+                self.assertLess(abs(actual-result['rail_v']['raw']),1e-11)
+                self.assertLess(abs(ground[f]-result['voltages']['die_return']),1e-11)
+                self.assertLess(abs(result['power_residual_w']),1e-11)
+
+    def test_coupled_ports_cannot_create_separate_native_grounds(self):
+        from baseline_envelope import inventory_environment,partitioned_return_solution,partitioned_dc_ledger
+        from power_distribution import from_design
+        design=load_design();circuit=from_design(design)
+        e=inventory_environment(design.contract,design.architecture,'rf',2.437e9,156.25e6,design=design)
+        ledger=partitioned_dc_ledger(e,dict(link_r_ohm=1e-5))
+        self.assertAlmostEqual(ledger['host_rail_v'],e['ledger']['host_rail_v'])
+        self.assertLess(abs(ledger['power_balance_residual_w']),1e-10)
+        for frequency in (1e6,156.25e6,1e9):
+            host=.01+.003j;quiet=.02-.001j;external=.002j
+            expected=circuit.solve(frequency,{'raw':host+quiet},return_injection_a=external)
+            ports=np.array([-host,-quiet,host+external,quiet,0.])
+            actual=partitioned_return_solution(frequency,e['network'],ports)
+            self.assertTrue(actual['die_returns_metal_connected'])
+            self.assertEqual(actual['voltage'][2],actual['voltage'][3])
+            self.assertLess(abs(actual['voltage'][1]-actual['voltage'][3]-expected['rail_v']['raw']),1e-10)
+            self.assertLess(actual['kcl_residual_a'],1e-10)
+            self.assertLess(abs(actual['power_residual_w']),1e-10)
+
+TEST_DESIGN_ROLES['CommonRingEnvironmentTests']=('shared_design','All four operating modes: coupled base DC, coherent host spectra and pad ground compared against independent common-ring nodal circuit; device timing and physical parasitics remain unqualified.')

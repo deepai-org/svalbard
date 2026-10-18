@@ -2219,7 +2219,7 @@
             "board_c": 1e-06,
             "board_esl": 1e-09,
             "board_esr": 0.02,
-            "die_c": 5e-10,
+            "die_c": 1e-09,
             "die_esl": 2e-10,
             "die_esr": 0.5,
             "feed_l": 2e-09,
@@ -2227,7 +2227,7 @@
             "package_r": 2.0
           },
           "return_r_ohm": 0.02,
-          "scope": "Conditional split-load five-port reduction, not the extracted ring: HOST is assigned before package impedance while converter/core/RF loads are downstream. Actual native VDD/DVDD are joined. This isolation assumption is unimplemented; migrate coupled benches to the implemented local network before physical qualification. Local 500 pF is a modeled subset of total die decoupling; package R/L/C remain unmeasured."
+          "scope": "Shared base DC, host harmonic spectra and coupled linear return solver use the common-ring topology: all on-chip loads behind package impedance; native host/quiet grounds exactly connected. Uses the allocated 1 nF, not extracted capacitance. Legacy standalone split-load fixtures remain controls. Transient load-response mappings and complete integrated physical validation remain open; package R/L/C are unmeasured."
         },
         "regulator_on_die": false,
         "shared_return_l_h": 2.5e-10,

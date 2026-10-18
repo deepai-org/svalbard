@@ -205,25 +205,25 @@
     "scope": "Same total 1 nF for filtered and unfiltered control. Local branches use real passive impedances; no assumed isolation factor."
   },
   "design_provenance": {
-    "design_fingerprint": "4b14ac8a660f82b22149523cc5063fb5320052222090bbe8c945671ee342a093",
+    "design_fingerprint": "5e04fb4968bd31b292f1a0d6d85da38e3672c740c01dfe4a84347d45be04cbba",
     "fingerprint_format": "canonical-json-sha256-v1",
     "circuit_experiments": [],
     "documents": {
-      "spec/contract.json": "a597e2878cdc4926ecabf0a06e5f40523257418cbde283ccf5184894e8d0e879",
-      "spec/analog-architecture.json": "294154811408999c4c909c5ac59c6c5b7a55e75168736680bbc683deb8eb56ba"
+      "spec/contract.json": "12be893e398f86427fa0719bf2e861ac084f748fb98ded228e664c9e53616a06",
+      "spec/analog-architecture.json": "83f9bba018327a70c784137d91e7c10807cf13ef2565fe66488c06df3451cdea"
     }
   },
   "model_source_sha256": {
-    "verification/baseline_envelope.py": "1342fbeabc8b8d309e9b87f7d0fa4c81c945bb8a3e66ebd9e8c43e4a326ce0a9",
-    "verification/robustness_envelope.py": "58c3d4410ebfad7142cafdf80bd59b3cab4280a2b3b70461ddf8a34ed29dc276",
+    "verification/baseline_envelope.py": "bb64c3a0066acb91b92a010cc6c71fab5bc32c4f422f2d3987bc968429cad4c7",
+    "verification/robustness_envelope.py": "cd66ae3499e19caff9bbffcfa0aea1f48e8070b0694f233efafb77acfd07233c",
     "system_model/architecture_fast/rf_quality_budget.py": "6d22c9637bc0165cdae9c6f5ee4a4116156f82f44cb878f9e46c5a24ec2955d7",
-    "system_model/architecture_fast/power_distribution.py": "72324939ef31fc49f09ee6f517101c7a3f109460277f20e2a33662f06c0907cf"
+    "system_model/architecture_fast/power_distribution.py": "ba503adaa60104f59f54b670ae41ff8bf00d537996f635833542d66c2a92549d"
   },
   "network": {
     "board_c": 1e-06,
     "board_esl": 1e-09,
     "board_esr": 0.02,
-    "die_c": 5e-10,
+    "die_c": 1e-09,
     "die_esl": 2e-10,
     "die_esr": 0.5,
     "feed_l": 2e-09,
@@ -278,73 +278,73 @@
   "transfer": [
     {
       "frequency_hz": 1000000.0,
-      "board_side_host_transfer_ohm": 0.10196192471396832,
-      "common_ring_host_transfer_ohm": 2.0956019885602264,
-      "common_ring_phase_rad": 3.124198681460207,
-      "kcl_residual_a": 2.349006882347291e-16,
-      "power_residual_w": 1.3877787807814457e-17
+      "board_side_host_transfer_ohm": 0.10194488109644625,
+      "common_ring_host_transfer_ohm": 2.095251694674821,
+      "common_ring_phase_rad": 3.1176177776058394,
+      "kcl_residual_a": 1.1162992078626513e-16,
+      "power_residual_w": 2.220446049250313e-16
     },
     {
       "frequency_hz": 50000000.0,
-      "board_side_host_transfer_ohm": 0.3075464981936467,
-      "common_ring_host_transfer_ohm": 2.373342079807758,
-      "common_ring_phase_rad": -3.081157084615042,
-      "kcl_residual_a": 3.3362687789315884e-16,
-      "power_residual_w": 6.661338147750939e-16
+      "board_side_host_transfer_ohm": 0.27220355683864556,
+      "common_ring_host_transfer_ohm": 2.1005999402136775,
+      "common_ring_phase_rad": 2.866399090853888,
+      "kcl_residual_a": 2.315476552224451e-16,
+      "power_residual_w": 2.220446049250313e-16
     },
     {
       "frequency_hz": 156250000.0,
-      "board_side_host_transfer_ohm": 0.6273736215669223,
-      "common_ring_host_transfer_ohm": 2.4492356562076245,
-      "common_ring_phase_rad": 2.4051023052931435,
-      "kcl_residual_a": 3.163544605896879e-16,
-      "power_residual_w": 1.1102230246251565e-16
+      "board_side_host_transfer_ohm": 0.2659603925372877,
+      "common_ring_host_transfer_ohm": 1.0382962466837085,
+      "common_ring_phase_rad": 2.392002170090052,
+      "kcl_residual_a": 1.1579800315224274e-16,
+      "power_residual_w": 5.551115123125783e-17
     },
     {
       "frequency_hz": 312500000.0,
-      "board_side_host_transfer_ohm": 0.25307556680113885,
-      "common_ring_host_transfer_ohm": 0.8546466445173736,
-      "common_ring_phase_rad": 2.3646450971696655,
-      "kcl_residual_a": 2.363445034868896e-16,
-      "power_residual_w": 5.551115123125783e-17
+      "board_side_host_transfer_ohm": 0.15007786337978493,
+      "common_ring_host_transfer_ohm": 0.5068191448708939,
+      "common_ring_phase_rad": 2.9954249839649116,
+      "kcl_residual_a": 1.3386219432545928e-16,
+      "power_residual_w": 0.0
     },
     {
       "frequency_hz": 1000000000.0,
-      "board_side_host_transfer_ohm": 0.31515986529866213,
-      "common_ring_host_transfer_ohm": 1.0089569357532318,
-      "common_ring_phase_rad": -2.0401545726542407,
-      "kcl_residual_a": 1.1121380998845748e-16,
-      "power_residual_w": 8.326672684688674e-17
+      "board_side_host_transfer_ohm": 0.3546034472528681,
+      "common_ring_host_transfer_ohm": 1.1352321375335517,
+      "common_ring_phase_rad": -1.9791168447400223,
+      "kcl_residual_a": 2.3299971164428953e-16,
+      "power_residual_w": 1.1102230246251565e-16
     },
     {
       "frequency_hz": 2400000000.0,
-      "board_side_host_transfer_ohm": 0.8618593909130593,
-      "common_ring_host_transfer_ohm": 2.7452193712974675,
-      "common_ring_phase_rad": -1.7347056853588227,
-      "kcl_residual_a": 2.220446198698078e-16,
-      "power_residual_w": 5.551115123125783e-17
+      "board_side_host_transfer_ohm": 0.8798680185371862,
+      "common_ring_host_transfer_ohm": 2.8025809710264658,
+      "common_ring_phase_rad": -1.7309946579079947,
+      "kcl_residual_a": 2.246781851021039e-16,
+      "power_residual_w": 8.326672684688674e-17
     }
   ],
   "sampled_peak": {
-    "frequency_hz": 109870793.0175218,
-    "board_side_host_transfer_ohm": 0.6711344625154708,
-    "common_ring_host_transfer_ohm": 3.035656781271495,
-    "common_ring_phase_rad": 2.8145047824920724,
-    "kcl_residual_a": 3.410688338962687e-16,
-    "power_residual_w": 2.220446049250313e-16
+    "frequency_hz": 2400000000.0,
+    "board_side_host_transfer_ohm": 0.8798680185371862,
+    "common_ring_host_transfer_ohm": 2.8025809710264658,
+    "common_ring_phase_rad": -1.7309946579079947,
+    "kcl_residual_a": 2.246781851021039e-16,
+    "power_residual_w": 8.326672684688674e-17
   },
   "sweep_checks": {
     "points": 164,
-    "max_kcl_residual_a": 5.552580778031395e-16,
+    "max_kcl_residual_a": 5.551387766622097e-16,
     "max_power_residual_w": 6.661338147750939e-16
   },
   "units": "Ohms are also mV of rail ripple per mA of sinusoidal current amplitude.",
-  "decision": "Keep the common bonded supply. HOST must draw on the die side of package impedance; any quieter RF/clock supply needs an explicitly implemented local branch. Existing split-load environments are conditional isolation hypotheses, not extracted-ring qualification.",
+  "decision": "Keep the common bonded supply. HOST must draw on the die side of package impedance; any quieter RF/clock supply needs an explicitly implemented local branch. Legacy standalone split-load fixtures are conditional controls. Shared DC/host spectra/coupled linear returns now use the common ring, without physical qualification.",
   "limitations": [
     "Ring connectivity establishes topology, not R/L/C or current distribution.",
     "No local isolation is implemented in this unfiltered comparison; the pre-existing package resistance includes hypothetical damping and is not measured.",
     "Frequency samples are not a certified resonance bound; no actual host spectrum, nonlinear large-signal behavior or transistor supply rejection is inferred.",
-    "All earlier coupled payload/clock benches require migration to the implemented local network before their outcomes can qualify this ring."
+    "Shared DC/host spectra/coupled linear returns are migrated; transient load-response mappings and implemented local-network validation remain open."
   ],
   "independent_spice_verification": {
     "simulator_version": "******\n** ngspice-42 : Circuit level simulation program\n** Compiled with KLU Direct Linear Solver\n** The U. C. Berkeley CAD Group\n** Copyright 1985-1994, Regents of the University of California.\n** Copyright 2001-2023, The ngspice team.\n** Please get your ngspice manual from https://ngspice.sourceforge.io/docs.html\n** Please file your bug-reports at http://ngspice.sourceforge.net/bugrep.html\n** Creation Date: Sun Mar 31 20:15:14 UTC 2024\n******",

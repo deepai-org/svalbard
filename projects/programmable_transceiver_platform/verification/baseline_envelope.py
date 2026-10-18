@@ -45,7 +45,8 @@ BASELINE_PACKAGE_CASE='lower_return_probe'
 def selected_dc_ledger(mode, candidate, *, source_v=3.3, h2d_internal_a=.0240625, wire_current_a=None, owner_current_a=None):
     """Charge H2D internal current once, within HOST, at the local load node.
 
-    Unspent HOST allocation is a constant feed-node burden. Its switching
+    Unspent HOST allocation is a constant burden at the candidate host node (die
+    for the shared design, board for explicit legacy controls). Its switching
     spectrum is unknown, not silently represented by a duplicate clock load.
     All timing static and switching power is already inside the 44 mA budget.
     """
@@ -60,10 +61,11 @@ def selected_dc_ledger(mode, candidate, *, source_v=3.3, h2d_internal_a=.0240625
         raise ValueError('Positive source and H2D current within HOST allowance required')
     total=sum(budget.values())
     host=budget['host']-h2d_internal_a
+    if candidate.get('host_supply_location','board')=='die':host=0.
     local=total-host
     n=candidate['network'];rf=n['feed_r'];rp=n['package_r'];rg=candidate['return_r_ohm']
     board=source_v-rf*total;ground=rg*total
-    rail=board-rp*local-ground;host_rail=board-ground
+    rail=board-rp*local-ground;host_rail=rail if candidate.get('host_supply_location','board')=='die' else board-ground
     loss=rf*total**2+rp*local**2+rg*total**2
     delivered=rail*local+host_rail*host
     return dict(owner_current_a=dict(budget),total_chip_supply_current_a=total,
@@ -143,11 +145,11 @@ def retained_ring_power_screen(design=None):
         sweep_checks=dict(points=len(rows),max_kcl_residual_a=max(r['kcl_residual_a'] for r in rows),
             max_power_residual_w=max(r['power_residual_w'] for r in rows)),
         units='Ohms are also mV of rail ripple per mA of sinusoidal current amplitude.',
-        decision='Keep the common bonded supply. HOST must draw on the die side of package impedance; any quieter RF/clock supply needs an explicitly implemented local branch. Existing split-load environments are conditional isolation hypotheses, not extracted-ring qualification.',
+        decision='Keep the common bonded supply. HOST must draw on the die side of package impedance; any quieter RF/clock supply needs an explicitly implemented local branch. Legacy standalone split-load fixtures are conditional controls. Shared DC/host spectra/coupled linear returns now use the common ring, without physical qualification.',
         limitations=['Ring connectivity establishes topology, not R/L/C or current distribution.',
             'No local isolation is implemented in this unfiltered comparison; the pre-existing package resistance includes hypothetical damping and is not measured.',
             'Frequency samples are not a certified resonance bound; no actual host spectrum, nonlinear large-signal behavior or transistor supply rejection is inferred.',
-            'All earlier coupled payload/clock benches require migration to the implemented local network before their outcomes can qualify this ring.'])
+            'Shared DC/host spectra/coupled linear returns are migrated; transient load-response mappings and implemented local-network validation remain open.'])
 
 
 def rail_excursion(tones, *, dc_v, samples_per_fastest_period=16):
@@ -242,8 +244,12 @@ def inventory_environment(contract,architecture,mode,carrier,word,*,inventory_mo
         raise ValueError('Inventory current lost in network reduction')
     power=architecture['blocks']['power']['parameters']
     reduced=power['reduced_pdn_model']
+    from power_distribution import from_design
+    physical=from_design(design)
+    if physical.branches:raise ValueError('Coupled environment must explicitly map local power branches')
     candidate=dict(name='lower_feed_resistance',return_r_ohm=reduced['return_r_ohm'],
-        network=dict(reduced['network'],package_l=power['bond_l_h']))
+        host_supply_location='die',
+        network=dict(reduced['network'],package_l=power['bond_l_h'],die_c=physical.capacitance_f))
     if 'network_candidate' in options:
         raise ValueError('Change the shared design or declare a physical scenario instead of replacing its network')
     options['network_candidate']=candidate
@@ -319,7 +325,7 @@ def inventory_environment(contract,architecture,mode,carrier,word,*,inventory_mo
                               for name in ('pga_i','pga_q','lna','adc_i','adc_q')}
     e['design_parameter_source']='architecture_inventory_with_explicit_case_overrides'
     e['physical_power_topology_qualified']=False
-    e['physical_power_topology_gap']='Legacy split-load reduction places HOST before package impedance. Extracted ring joins VDD/DVDD; migrate to an implemented local isolation network before claiming physical power/timing qualification.'
+    e['physical_power_topology_gap']='Base DC, host spectra and shared coupled linear return solver use the common ring. Transient load-response mappings, physical RLC and local isolation remain unqualified.'
     e['design_provenance']=design.provenance()
     e['inventory_current_a']=budget
     e['inventory_current_report']=report
@@ -1178,7 +1184,7 @@ def pad_ground_tones(environment):
     for harmonic in range(1,s.get('d2h_harmonics',12)+1):
         f=harmonic*s['d2h_word_hz']/2
         current=host_harmonic_current(f,s['d2h_word_hz'],harmonic,s['d2h_internal_tau_s'],output_cap_f=s.get('output_cap_f',10e-12),internal_charge_c=s.get('d2h_internal_charge_c',7e-12),output_voltage_v=s.get('output_voltage_v',3.3))
-        ground[f]=current*shared_return_transfer(f,**common)['ground_ohm']
+        ground[f]=current*shared_return_transfer(f,injection_weights=(0.,-1.,1.) if n.get('host_supply_location','board')=='die' else (-1.,0.,1.),**common)['ground_ohm']
     for harmonic in range(1,s.get('h2d_harmonics',6)+1):
         f=harmonic*s['h2d_word_hz']/2
         currents=h2d_current_ports(f,s['h2d_word_hz'],harmonic,
@@ -1546,15 +1552,28 @@ def partitioned_return_solution(frequency_hz, candidate, injection, *,
     branch(3,4,(1-host_return_share)/((1-common_fraction)*total))
     branch(4,None,1/(common_fraction*total))
     branch(2,3,(0. if link_r_ohm is None else 1/link_r_ohm)+1j*w*coupling_f)
-    for fraction,a,b in ((1-host_cap_fraction,1,3),(host_cap_fraction,0,2)):
+    for fraction,a,b in ((1-host_cap_fraction,1,3),(host_cap_fraction,1 if candidate.get('host_supply_location','board')=='die' else 0,2)):
         if fraction:
             branch(a,b,capacitor(n['die_c']*fraction,n.get('die_esr',0.)/fraction,n.get('die_esl',0.)))
     branch(3,None,quiet_load_s)
-    v=np.linalg.solve(m,source)
+    if candidate.get('host_supply_location','board')=='die':
+        # Legacy port 0 carries host switching at AC; DC callers put the
+        # actual source Norton current there and use the migrated load ledger.
+        source=source.copy()
+        if frequency_hz:source[1]+=source[0];source[0]=0.
+        # Native VSS/DVSS are one metal net. Collapse host/quiet die returns
+        # exactly, preserving the common board-return segment and all currents.
+        collapse=np.array([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,1,0],[0,0,0,1]],float)
+        reduced_m=collapse.T@m@collapse;reduced_source=collapse.T@source
+        v=collapse@np.linalg.solve(reduced_m,reduced_source)
+        residual=collapse.T@(m@v-source)
+    else:
+        v=np.linalg.solve(m,source);residual=m@v-source
     power=float(np.real(np.vdot(v,source))/2)
     dissipated=sum(abs(v[a]-(0 if b is None else v[b]))**2*y.real/2 for a,b,y in branches)
-    return dict(voltage=v,kcl_residual_a=float(max(abs(m@v-source))),
-        power_residual_w=float(power-dissipated))
+    return dict(voltage=v,kcl_residual_a=float(max(abs(residual))),
+        power_residual_w=float(power-dissipated),
+        die_returns_metal_connected=candidate.get('host_supply_location','board')=='die')
 
 
 
@@ -1817,7 +1836,7 @@ def return_partition_campaign(contract,*,design=None):
                 dc=partitioned_return_solution(0.,n,dc_source,quiet_load_s=dc_load,**options)
                 vd=dc['voltage'].real
                 dc_values=dict(quiet_pin=float((pad_dc['ground_board']*vd[3])[0].real),
-                    quiet_rail=float(vd[1]-vd[3]),host_rail=float(vd[0]-vd[2]),
+                    quiet_rail=float(vd[1]-vd[3]),host_rail=float(vd[1 if n.get('host_supply_location','board')=='die' else 0]-vd[2]),
                     host_to_quiet_return=float(vd[2]-vd[3]))
                 if mode=='rf':del dc_values['quiet_pin']
                 tones={key:[] for key in dc_values};residuals=[]
@@ -1826,7 +1845,7 @@ def return_partition_campaign(contract,*,design=None):
                     result=partitioned_return_solution(f,n,source,quiet_load_s=load,**options)
                     v=result['voltage'];residuals.append(result)
                     values=dict(quiet_pin=pad['ground_board'][0]*v[3],quiet_rail=v[1]-v[3],
-                        host_rail=v[0]-v[2],host_to_quiet_return=v[2]-v[3])
+                        host_rail=v[1 if n.get('host_supply_location','board')=='die' else 0]-v[2],host_to_quiet_return=v[2]-v[3])
                     if mode=='rf':del values['quiet_pin']
                     for key,value in values.items():tones[key].append(dict(frequency_hz=f,
                         clock_rail_voltage_peak_v=float(abs(value)),voltage_phase_rad=float(np.angle(value))))
@@ -2018,10 +2037,11 @@ def partitioned_dc_ledger(environment,options,move_input=False):
     loss=(source_v-vd[0])**2/n['network']['feed_r']+(vd[0]-vd[1])**2/n['network']['package_r']
     loss+=(vd[2]-vd[4])**2*share/((1-common)*rr)+(vd[3]-vd[4])**2*(1-share)/((1-common)*rr)+vd[4]**2/(common*rr)
     if options.get('link_r_ohm') is not None:loss+=(vd[2]-vd[3])**2/options['link_r_ohm']
-    power=host*(vd[0]-vd[2])+internal*(vd[1]-vd[2])+quiet*(vd[1]-vd[3])
+    power=(host_total*(vd[1]-vd[2])+quiet*(vd[1]-vd[3]) if n.get('host_supply_location','board')=='die'
+           else host*(vd[0]-vd[2])+internal*(vd[1]-vd[2])+quiet*(vd[1]-vd[3]))
     ledger=dict(ledger,board_supply_v=float(vd[0]),die_return_v=float(vd[3]),
         local_payload_clock_core_rail_v=float(vd[1]-vd[3]),rf_clock_core_rail_v=float(vd[1]-vd[3]),
-        host_rail_v=float(vd[0]-vd[2]),delivered_electrical_power_w=float(power),resistive_loss_w=float(loss),
+        host_rail_v=float(vd[1 if n.get('host_supply_location','board')=='die' else 0]-vd[2]),delivered_electrical_power_w=float(power),resistive_loss_w=float(loss),
         power_balance_residual_w=float(ledger['source_power_w']-power-loss))
     return ledger
 

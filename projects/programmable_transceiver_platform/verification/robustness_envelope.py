@@ -926,7 +926,9 @@ def host_harmonic_screen(coupling, word_hz=2.437e9/8, harmonics=6,*,current_edge
                 f=harmonic*word/2
                 current=host_harmonic_current(f,word,harmonic,tau,current_edge_s=current_edge_s,output_cap_f=output_cap_f,internal_charge_c=internal_charge_c,output_voltage_v=output_voltage_v)
                 transfer=shared_return_transfer(f,return_r=candidate['return_r_ohm'],
-                    return_l=candidate['return_l_h'],**candidate['network'])
+                    return_l=candidate['return_l_h'],
+                    injection_weights=(0.,-1.,1.) if candidate.get('host_supply_location','board')=='die' else (-1.,0.,1.),
+                    **candidate['network'])
                 voltage=current*transfer['differential_ohm']
                 tones.append(dict(frequency_hz=f,current_peak_a=abs(current),
                     clock_rail_voltage_peak_v=abs(voltage),voltage_phase_rad=math.atan2(voltage.imag,voltage.real)))

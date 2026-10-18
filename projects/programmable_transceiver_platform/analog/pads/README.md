@@ -961,7 +961,8 @@ and geometry sweeps unless their result can change one of these decisions.
 The current detector building block in `rail_supervisor.py` uses a resistor-biased
 VPNP junction and PMOS-input comparator for an independent supply floor, plus
 PDK FET/resistor window comparators and reset override. Its main reference input
-remains explicit. It is **not connected to pad enables**. The previous
+remains explicit. It is **not connected to selected pad enables**; a diagnostic
+now connects it to the extracted RX/USB pad. The previous
 MOS-threshold floor is retained only as an explicit rejected comparison.
 
 `generated/rail-supervisor-screen.json` records all fifteen FET/BJT corner
@@ -986,6 +987,33 @@ gate loading. Do not tune the nominal DC trip point to hide these failures.
 corners, mismatch, temperature variation, hysteresis, routing, final pad loading
 and device-survival qualification remain open. The VPNP schematic device also
 needs a verified physical implementation before using the pad layout generator.
+
+The connected diagnostic retains every RX/USB branch, drives two high-side
+controls from the actual supervisor, and separately measures pad supply current
+so detector consumption cannot hide backfeed. This is a generic branch exercise,
+not a legal USB transaction. The 10 kilohm output-discharge experiment reduces
+retained output voltage but consumes approximately 0.50 mA while active, exceeding
+the entire monitor allocation of 0.40 mA; it is **not selected**. The 100 kilohm
+baseline remains unqualified.
+
+Extending the 1.5 V brownout hold by one microsecond distinguishes early charge
+transfer from persistent supply leakage: the 10 kilohm fixture's pad-to-supply
+current falls from about 429 microamps early to below 9 nanoamps in the later
+windows. However, externally pulled-up pads remain near 1.55 V, versus the
+external network's unloaded 3.0 V. The remaining loading path is unidentified;
+a disabled control and low supply backfeed do not prove an electrically inactive
+pad. Separate DC attempts required transient initialization and were rejected,
+so they provide no accepted equilibrium leakage result.
+
+**Next safety decision:** identify and correct the retained pad-local loading
+path before further detector tuning, then verify actual gate disable, terminal
+stress and restart together. These results use an extracted pad with a schematic
+supervisor and ideal control wiring; they do not qualify the complete ring.
+`connected_receive_screen(work, pdk, physical, reuse=True)` and
+`extended_brownout_screen(work, reuse=True)` reproduce the saved-waveform analysis
+only when generated decks match exactly. Results are consolidated in the same
+`rail-supervisor-screen.json`; the 10 kilohm option is an explicit diagnostic,
+not a second normative design.
 
 ### Current first-pass decisions
 

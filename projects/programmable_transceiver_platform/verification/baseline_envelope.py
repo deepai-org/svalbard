@@ -76,6 +76,62 @@ def selected_dc_ledger(mode, candidate, *, source_v=3.3, h2d_internal_a=.0240625
         physical_pin_current_qualification=False)
 
 
+def retained_ring_power_screen(design=None):
+    """Quantify the package-side HOST placement error without inventing isolation.
+
+    Same passive values, changed current port only. This is a physical-topology
+    requirement screen, not an assertion that assigned package values are extracted.
+    """
+    from robustness_envelope import shared_return_transfer
+    from rf_quality_budget import current_allocation
+    design=load_design() if design is None else design
+    arch=design.architecture;power=arch['blocks']['power']['parameters']
+    reduced=power['reduced_pdn_model'];board=arch['blocks']['board']['parameters']
+    supply=board['analog_supply_v']
+    if supply!=board['digital_supply_v']:
+        raise ValueError('Metal-connected ring supply sites require one external voltage')
+    n=dict(reduced['network'],package_l=power['bond_l_h'])
+    rreturn=reduced['return_r_ohm'];dc=[]
+    for mode in ('rf_rx','rf_tx','wired','usb'):
+        allocation=current_allocation(arch,mode,branch='external_rf_clock' if mode.startswith('rf_') else None)
+        current=allocation['total_ma']/1000
+        # Every chip load, including D2H, traverses package supply and return.
+        local=supply-current*(n['feed_r']+n['package_r']+rreturn)
+        loss=current**2*(n['feed_r']+n['package_r']+rreturn)
+        dc.append(dict(mode=mode,current_allocation_ma=allocation['total_ma'],
+            unfiltered_common_die_supply_v=local,source_power_w=supply*current,
+            delivered_power_w=local*current,resistive_loss_w=loss,
+            power_residual_w=supply*current-local*current-loss,
+            scope='Uses allocated current, not demonstrated transistor consumption; known macro budget overruns remain additional risks.'))
+    rows=[]
+    for frequency in sorted(set([1e6,50e6,156.25e6,312.5e6,1e9,2.4e9,*np.geomspace(1e6,2.4e9,160)])):
+        args=dict(return_r=rreturn,return_l=power['shared_return_l_h'],**n)
+        legacy=shared_return_transfer(frequency,injection_weights=(-1.,0.,1.),**args)
+        ring=shared_return_transfer(frequency,injection_weights=(0.,-1.,1.),**args)
+        rows.append(dict(frequency_hz=float(frequency),
+            board_side_host_transfer_ohm=abs(legacy['differential_ohm']),
+            common_ring_host_transfer_ohm=abs(ring['differential_ohm']),
+            common_ring_phase_rad=float(np.angle(ring['differential_ohm'])),
+            kcl_residual_a=max(legacy['kcl_residual_a'],ring['kcl_residual_a']),
+            power_residual_w=max(abs(legacy['power_residual_w']),abs(ring['power_residual_w']))))
+    return dict(status='common_ring_topology_requirement_screen_not_electrical_closure',
+        design_provenance=design.provenance(),
+        model_source_sha256={str(path.relative_to(P)):hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in (Path(__file__),Path(__file__).with_name('robustness_envelope.py'),P/'system_model/architecture_fast/rf_quality_budget.py')},
+        network=n,return_r_ohm=rreturn,
+        return_l_h=power['shared_return_l_h'],dc_modes=dc,
+        transfer=[r for r in rows if r['frequency_hz'] in (1e6,50e6,156.25e6,312.5e6,1e9,2.4e9)],
+        sampled_peak=max(rows,key=lambda r:r['common_ring_host_transfer_ohm']),
+        sweep_checks=dict(points=len(rows),max_kcl_residual_a=max(r['kcl_residual_a'] for r in rows),
+            max_power_residual_w=max(r['power_residual_w'] for r in rows)),
+        units='Ohms are also mV of rail ripple per mA of sinusoidal current amplitude.',
+        decision='Keep the common bonded supply. HOST must draw on the die side of package impedance; any quieter RF/clock supply needs an explicitly implemented local branch. Existing split-load environments are conditional isolation hypotheses, not extracted-ring qualification.',
+        limitations=['Ring connectivity establishes topology, not R/L/C or current distribution.',
+            'No local isolation is implemented in this unfiltered comparison; the pre-existing package resistance includes hypothetical damping and is not measured.',
+            'Frequency samples are not a certified resonance bound; no actual host spectrum, nonlinear large-signal behavior or transistor supply rejection is inferred.',
+            'All earlier coupled payload/clock benches require migration to the implemented local network before their outcomes can qualify this ring.'])
+
+
 def rail_excursion(tones, *, dc_v, samples_per_fastest_period=16):
     """Coherent periodic trace plus a derivative-bounded grid enclosure."""
     frequencies=[round(t['frequency_hz']) for t in tones]
@@ -244,6 +300,8 @@ def inventory_environment(contract,architecture,mode,carrier,word,*,inventory_mo
     e['receiver_parameters']={name:architecture['blocks'][name]['parameters']
                               for name in ('pga_i','pga_q','lna','adc_i','adc_q')}
     e['design_parameter_source']='architecture_inventory_with_explicit_case_overrides'
+    e['physical_power_topology_qualified']=False
+    e['physical_power_topology_gap']='Legacy split-load reduction places HOST before package impedance. Extracted ring joins VDD/DVDD; migrate to an implemented local isolation network before claiming physical power/timing qualification.'
     e['design_provenance']=design.provenance()
     e['inventory_current_a']=budget
     e['inventory_current_report']=report

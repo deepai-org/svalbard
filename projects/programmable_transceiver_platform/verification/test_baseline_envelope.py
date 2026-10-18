@@ -3796,3 +3796,34 @@ class HostFollowStartupLifecycleTests(unittest.TestCase):
         self.assertGreater(recovery['partial_reply_bits'],0)
         self.assertLess(recovery['partial_reply_bits'],48)
         self.assertGreater(recovery['new_epoch'],recovery['old_epoch'])
+
+
+class RetainedRingPowerTests(unittest.TestCase):
+    def test_die_side_load_matches_independent_two_path_impedance(self):
+        from baseline_envelope import retained_ring_power_screen
+        r=retained_ring_power_screen();n=r['network']
+        for row in r['transfer']:
+            w=2j*np.pi*row['frequency_hz']
+            source=n['feed_r']+w*n['feed_l']
+            board=n['board_esr']+w*n['board_esl']+1/(w*n['board_c'])
+            series=1/(1/source+1/board)+n['package_r']+w*n['package_l']+r['return_r_ohm']+w*r['return_l_h']
+            decap=n['die_esr']+w*n['die_esl']+1/(w*n['die_c'])
+            impedance=-1/(1/series+1/decap)
+            self.assertAlmostEqual(row['common_ring_host_transfer_ohm'],abs(impedance),places=10)
+            self.assertLess(row['kcl_residual_a'],1e-10)
+            self.assertLess(row['power_residual_w'],1e-10)
+        for mode in r['dc_modes']:
+            current=mode['current_allocation_ma']/1000
+            self.assertAlmostEqual(mode['resistive_loss_w'],current**2*(n['feed_r']+n['package_r']+r['return_r_ohm']))
+            self.assertLess(abs(mode['power_residual_w']),1e-12)
+
+    def test_metal_connected_external_sources_cannot_disagree(self):
+        from baseline_envelope import retained_ring_power_screen
+        from design_definition import DesignDefinition
+        design=load_design();contract=design.contract;arch=design.architecture
+        arch['blocks']['board']['parameters']['digital_supply_v']=3.1
+        changed=DesignDefinition.from_documents(contract,arch)
+        with self.assertRaisesRegex(ValueError,'one external voltage'):
+            retained_ring_power_screen(changed)
+
+TEST_DESIGN_ROLES['RetainedRingPowerTests']=('shared_design','Shared passive values and current allocations, die-side host-port correction; analytic parallel impedance and energy conservation, not physical qualification.')

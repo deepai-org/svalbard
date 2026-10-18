@@ -2227,7 +2227,7 @@
             "package_r": 2.0
           },
           "return_r_ohm": 0.02,
-          "scope": "Assigned five-port behavioral reduction for integrated electrical benches; converter current is lumped at the core load node, not physically assigned to DVDD. Local 500 pF is the modeled subset of total on-die decoupling. Unmeasured board/package hypotheses."
+          "scope": "Conditional split-load five-port reduction, not the extracted ring: HOST is assigned before package impedance while converter/core/RF loads are downstream. Actual native VDD/DVDD are joined. This isolation assumption is unimplemented; migrate coupled benches to the implemented local network before physical qualification. Local 500 pF is a modeled subset of total die decoupling; package R/L/C remain unmeasured."
         },
         "regulator_on_die": false,
         "shared_return_l_h": 2.5e-10,

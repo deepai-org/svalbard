@@ -69,6 +69,22 @@ qualification and return routing must be implemented explicitly; the behavioral
 power branches do not establish that isolation. Independently forced supply
 fixtures must not be interpreted as the selected bonded topology.
 
+`generated/retained-ring-power-screen.json` compares the same assumed passive
+network with HOST at the board-side versus die-side port. At 156.25 MHz the
+rail transfer changes from 0.627 to 2.449 mV/mA; at 50 MHz from 0.308 to
+2.373 mV/mA. Allocated chip currents through the full common supply path give
+2.791 V in RF, 2.722 V in wired and 2.765 V in USB from a 3.3 V source.
+These are requirement-screen estimates, not predictions from extracted ring
+resistance: the 2 ohm package/damping value remains hypothetical, actual macro
+currents already have budget overruns, and no host spectrum is applied here.
+
+**Power-network gate:** keep the common bonded supply, put every chip load
+behind the package, and implement any RF/clock isolation as a real local branch.
+The current split-load five-port benches place HOST before package impedance;
+their outcomes remain conditional on unimplemented isolation. They cannot
+qualify this ring until migrated to the implemented network. The screen checks
+KCL and energy balance; neither establishes physical noise performance.
+
 This checks retained-ring drawing connectivity only: custom pad/core hookup,
 transistor conduction, resistance/current capacity, package coupling and ESD
 remain separate gates. Reproduce inside the pinned KLayout container with

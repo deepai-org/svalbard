@@ -166,7 +166,8 @@
       "wire_geometry": "Pinned Run 1 published rules: no crossing, angle <=45deg, actual wire length <3mm and >=max(1mm,2*die thickness), bonding area without solder mask. Confirm selected-run applicability and actual landing/loop geometry. Current centered straight-line projection is not wire-length qualification.",
       "current_status": "Selected packaging assembly passes pinned upstream size, mask and test-ID insertion checks. Horizontal pad placements now retain half-micron arithmetic; real PDK seal ring and provider ID cells are included. Full upstream precheck, final assigned ID, custom-core supply/control hookup and physical signoff remain pending. Retained-ring drawing extraction establishes one supply net and one separate ground net; this is not device LVS or current-capacity qualification.",
       "selected_assembly": "analog/pads/generated/packaging-assembly.gds",
-      "ring_connectivity_report": "analog/pads/generated/retained-ring-connectivity.json"
+      "ring_connectivity_report": "analog/pads/generated/retained-ring-connectivity.json",
+      "power_network_gate": "Native supply connectivity alone supplies no host-to-RF isolation. All chip current traverses package supply/return. Existing split-load power environments remain conditional hypotheses; explicit local branches and their extracted impedance must replace that assumed isolation before coupled clock/RF results qualify the implementation."
     }
   },
   "assumptions": [

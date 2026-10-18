@@ -481,7 +481,10 @@ records completed RF RX/TX lifecycle screens, area fit and the mandatory device
 and well-capacitance audits. Routed-loss and pulse screens are also refreshed against this candidate;
 provider placement and local native-rail checks have also been refreshed using
 all current canonical families plus the connected RF candidate; electrical parameters have not changed. The existing `protected-rf-pair/` is evidence for the earlier
-narrow-route implementation, not a second normative design.
+narrow-route implementation, not a second normative design. `branch_trace_screen(work, reuse=True)`
+reproduces the non-invasive terminal-current diagnostic, retaining every device
+and extracted capacitor. It identifies the entry path into protection, not yet
+the internal clamp state or a proven remedy.
 
 | Current evidence | What it establishes / remaining limitation |
 | --- | --- |
@@ -1000,20 +1003,27 @@ Extending the 1.5 V brownout hold by one microsecond distinguishes early charge
 transfer from persistent supply leakage: the 10 kilohm fixture's pad-to-supply
 current falls from about 429 microamps early to below 9 nanoamps in the later
 windows. However, externally pulled-up pads remain near 1.55 V, versus the
-external network's unloaded 3.0 V. The remaining loading path is unidentified;
-a disabled control and low supply backfeed do not prove an electrically inactive
-pad. Separate DC attempts required transient initialization and were rejected,
+external network's unloaded 3.0 V. Zero-volt probes at every non-capacitive PAD_P device terminal identify
+approximately 1.0603 mA entering ESD_RAIL through its four upper steering
+diodes (about 265 microamps each). Functional attachment terminal currents
+are at nanoamp scale in that late window. Thus the protection rail is the
+dominant loading path; a disabled control and low supply backfeed do not prove
+an electrically inactive pad. Separate DC attempts required transient initialization and were rejected,
 so they provide no accepted equilibrium leakage result.
 
-**Next safety decision:** identify and correct the retained pad-local loading
-path before further detector tuning, then verify actual gate disable, terminal
+**Next safety decision:** resolve the shared protection rail’s holding/release
+behavior under ordinary externally powered peers before further detector tuning,
+then verify actual gate disable, terminal
 stress and restart together. These results use an extracted pad with a schematic
 supervisor and ideal control wiring; they do not qualify the complete ring.
 `connected_receive_screen(work, pdk, physical, reuse=True)` and
 `extended_brownout_screen(work, reuse=True)` reproduce the saved-waveform analysis
 only when generated decks match exactly. Results are consolidated in the same
 `rail-supervisor-screen.json`; the 10 kilohm option is an explicit diagnostic,
-not a second normative design.
+not a second normative design. `branch_trace_screen(work, reuse=True)`
+reproduces the non-invasive terminal-current diagnostic, retaining every device
+and extracted capacitor. It identifies the entry path into protection, not yet
+the internal clamp state or a proven remedy.
 
 ### Current first-pass decisions
 

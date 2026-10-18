@@ -267,3 +267,40 @@ def extended_brownout_screen(work,*,reuse=False):
         baseline_deck_sha256=hashlib.sha256(baseline.encode()).hexdigest(),
         deck_sha256=hashlib.sha256(deck.encode()).hexdigest(),
         scope='Diagnostic 10k supervisor only; same retained pad branches and peers. Early supply backfeed decays, but settled pads remain near 1.55V instead of the unloaded external divider level of 3V. The remaining current path is unidentified. Not steady-state leakage or safety qualification.')
+
+
+def branch_trace_screen(work,*,reuse=False):
+    """Identify retained pad loading without deleting disabled devices."""
+    from pathlib import Path
+    import os,hashlib
+    import numpy as np
+    from screen import control,run_spice
+    w=Path(work).resolve();base=(w/'extended_brownout.spice').read_text().split('.control')[0]
+    lines=[];probes=[];inside=False
+    for line in base.splitlines():
+     if line.startswith('.subckt combined_flat '):inside=True
+     if line.startswith('.ends'):inside=False
+     f=line.split()
+     if inside and f and f[0][0] in 'XD' and 'PAD_P' in f:
+      original=line
+      for i in range(1,len(f)):
+       if f[i]=='PAD_P':
+        node=f'TRACE_{f[0]}_{i}';v=f'VTRACE_{f[0]}_{i}'
+        f[i]=node;lines.append(f'{v} PAD_P {node} 0');probes.append((v,original))
+      line=' '.join(f)
+     lines.append(line)
+    name='branch_trace';vectors='v(VDD) v(PAD_P) '+ ' '.join(f'i(v.xpad.xphysical.{v.lower()})' for v,_ in probes)
+    deck='\n'.join(lines)+'\n'+control(w,name,'tran .2n 1500n',vectors)
+    previous=Path.cwd()
+    try:
+     os.chdir(w)
+     if reuse:
+      if (w/(name+'.spice')).read_text()!=deck:raise ValueError('Saved branch trace differs')
+      x=np.loadtxt(w/(name+'.dat'),skiprows=1)
+     else:x=run_spice(w,name,deck,timeout_s=120)
+    finally:os.chdir(previous)
+    if not np.isfinite(x).all() or x[-1,0]<1499.9e-9:raise ValueError('Incomplete branch trace')
+    y=x[(x[:,0]>=1000e-9)&(x[:,0]<=1179e-9)]
+    r=dict(deck_sha256=hashlib.sha256(deck.encode()).hexdigest(),pad_mean_v=float(y[:,2].mean()),branches=sorted([dict(probe=v,device=line,mean_current_a=float(y[:,i+3].mean())) for i,(v,line) in enumerate(probes)],key=lambda a:abs(a['mean_current_a']),reverse=True))
+    r['scope']='Zero-volt current probes at all non-capacitive PAD_P device terminals in the unchanged extracted subcircuit; all branches retained. Late brownout means, not ESD qualification or a corrected design.'
+    return r
